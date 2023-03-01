@@ -1,4 +1,4 @@
-# Runnoter
+![logo](https://user-images.githubusercontent.com/72093398/222181710-2749fe3d-e7c8-4f59-ad76-f8a639c8e206.png)
 
 ## Description
 Runnoter is an app which helps you manage your running plan. Using this app you can schedule
