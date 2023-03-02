@@ -9,19 +9,19 @@ abstract class BlocWithStatus<Event, State extends BlocState>
 
   void emitLoadingStatus(Emitter<State> emit) {
     emit(state.copyWith(
-      status: const LoadingBlocStatus(),
+      status: const BlocStatusLoading(),
     ));
   }
 
   void emitInfo<T>(Emitter<State> emit, T info) {
     emit(state.copyWith(
-      status: CompleteBlocStatus<T>(info: info),
+      status: BlocStatusComplete<T>(info: info),
     ));
   }
 
   void emitError<T>(Emitter<State> emit, T error) {
     emit(state.copyWith(
-      status: ErrorBlocStatus<T>(error: error),
+      status: BlocStatusError<T>(error: error),
     ));
   }
 }

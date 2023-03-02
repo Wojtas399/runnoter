@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'config/navigation/app_navigator.dart';
 import 'config/theme.dart';
-import 'ui/services/theme_service.dart';
+import 'services/theme_service.dart';
 
 class App extends StatelessWidget {
   const App({

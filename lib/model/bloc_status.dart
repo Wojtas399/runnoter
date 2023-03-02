@@ -7,26 +7,26 @@ abstract class BlocStatus extends Equatable {
   List<Object> get props => [];
 }
 
-class InitialBlocStatus extends BlocStatus {
-  const InitialBlocStatus();
+class BlocStatusInitial extends BlocStatus {
+  const BlocStatusInitial();
 }
 
-class LoadingBlocStatus extends BlocStatus {
-  const LoadingBlocStatus();
+class BlocStatusLoading extends BlocStatus {
+  const BlocStatusLoading();
 }
 
-class CompleteBlocStatus<T> extends BlocStatus {
+class BlocStatusComplete<T> extends BlocStatus {
   final T? info;
 
-  const CompleteBlocStatus({
+  const BlocStatusComplete({
     this.info,
   });
 }
 
-class ErrorBlocStatus<T> extends BlocStatus {
+class BlocStatusError<T> extends BlocStatus {
   final T? error;
 
-  const ErrorBlocStatus({
+  const BlocStatusError({
     this.error,
   });
 }
