@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'ui/config/theme.dart';
+import 'config/navigation/app_navigator.dart';
+import 'config/theme.dart';
 import 'ui/services/theme_service.dart';
 
 class App extends StatelessWidget {
@@ -20,22 +21,7 @@ class App extends StatelessWidget {
             themeMode: themeMode,
             theme: GlobalTheme.lightTheme,
             darkTheme: GlobalTheme.darkTheme,
-            home: Scaffold(
-              body: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text('Hello world!'),
-                    ElevatedButton(
-                      onPressed: () {
-                        context.read<ThemeService>().turnOnDarkTheme();
-                      },
-                      child: Text('Change theme'),
-                    )
-                  ],
-                ),
-              ),
-            ),
+            home: const AppNavigator(),
           );
         },
       ),
