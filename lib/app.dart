@@ -19,7 +19,7 @@ class App extends StatelessWidget {
           return MaterialApp(
             title: 'Runnoter',
             themeMode: themeMode,
-            theme: GlobalTheme.lightTheme,
+            theme: GlobalTheme.darkTheme,
             darkTheme: GlobalTheme.darkTheme,
             home: const AppNavigator(),
           );

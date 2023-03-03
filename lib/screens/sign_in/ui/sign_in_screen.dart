@@ -1,4 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../../components/big_button.dart';
+import '../../../components/password_text_field_component.dart';
+import '../../../components/text_field_component.dart';
+import '../../../services/utils.dart';
+import '../bloc/sign_in_bloc.dart';
+
+part 'sign_in_alternative_options.dart';
+part 'sign_in_form.dart';
+part 'sign_in_screen_content.dart';
+part 'sign_in_submit_button.dart';
 
 class SignInScreen extends StatelessWidget {
   const SignInScreen({
@@ -7,10 +19,26 @@ class SignInScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: Text('Sign in screen'),
+    return const _BlocProvider(
+      child: Scaffold(
+        body: _Content(),
       ),
+    );
+  }
+}
+
+class _BlocProvider extends StatelessWidget {
+  final Widget child;
+
+  const _BlocProvider({
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (_) => SignInBloc(),
+      child: child,
     );
   }
 }
