@@ -7,6 +7,19 @@ void main() {
     return SignInBloc();
   }
 
+  SignInState createState({
+    BlocStatus? status,
+    String? email,
+    String? password,
+  }) {
+    final bloc = createBloc();
+    return bloc.state.copyWith(
+      status: status,
+      email: email,
+      password: password,
+    );
+  }
+
   blocTest(
     "email changed, should update email in state",
     build: () => createBloc(),
@@ -18,8 +31,8 @@ void main() {
       );
     },
     expect: () => [
-      const SignInState(
-        status: BlocStatusComplete(),
+      createState(
+        status: const BlocStatusComplete(),
         email: 'email@example.com',
       ),
     ],
@@ -36,8 +49,8 @@ void main() {
       );
     },
     expect: () => [
-      const SignInState(
-        status: BlocStatusComplete(),
+      createState(
+        status: const BlocStatusComplete(),
         password: 'password 123',
       ),
     ],

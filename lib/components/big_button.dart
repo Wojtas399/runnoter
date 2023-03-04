@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 
 class BigButton extends StatelessWidget {
   final String label;
+  final bool isDisabled;
   final VoidCallback onPressed;
 
   const BigButton({
     super.key,
     required this.label,
+    this.isDisabled = false,
     required this.onPressed,
   });
 
@@ -16,7 +18,7 @@ class BigButton extends StatelessWidget {
       width: 300,
       height: 52,
       child: ElevatedButton(
-        onPressed: onPressed,
+        onPressed: isDisabled ? null : onPressed,
         child: Text(
           label.toUpperCase(),
         ),

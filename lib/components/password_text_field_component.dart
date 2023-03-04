@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class PasswordTextFieldComponent extends StatefulWidget {
+  final Function(String? value)? onChanged;
+
   const PasswordTextFieldComponent({
     super.key,
+    this.onChanged,
   });
 
   @override
@@ -38,6 +41,7 @@ class _State extends State<PasswordTextFieldComponent> {
           onPressed: _onVisibilityIconPressed,
         ),
       ),
+      onChanged: widget.onChanged,
     );
   }
 

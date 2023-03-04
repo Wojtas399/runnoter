@@ -6,14 +6,55 @@ class _SignInForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: [
-        TextFieldComponent(
-          label: AppLocalizations.of(context)!.email,
-          icon: Icons.email,
-        ),
-        const SizedBox(height: 24),
-        const PasswordTextFieldComponent(),
+      children: const [
+        _Email(),
+        SizedBox(height: 24),
+        _Password(),
       ],
     );
+  }
+}
+
+class _Email extends StatelessWidget {
+  const _Email();
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFieldComponent(
+      label: AppLocalizations.of(context)!.email,
+      icon: Icons.email,
+      onChanged: (String? value) {
+        _onChanged(value, context);
+      },
+    );
+  }
+
+  void _onChanged(String? value, BuildContext context) {
+    if (value != null) {
+      context.read<SignInBloc>().add(
+            SignInEventEmailChanged(email: value),
+          );
+    }
+  }
+}
+
+class _Password extends StatelessWidget {
+  const _Password();
+
+  @override
+  Widget build(BuildContext context) {
+    return PasswordTextFieldComponent(
+      onChanged: (String? value) {
+        _onChanged(value, context);
+      },
+    );
+  }
+
+  void _onChanged(String? value, BuildContext context) {
+    if (value != null) {
+      context.read<SignInBloc>().add(
+            SignInEventPasswordChanged(password: value),
+          );
+    }
   }
 }

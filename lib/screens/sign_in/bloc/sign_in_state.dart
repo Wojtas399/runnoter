@@ -1,13 +1,13 @@
 part of 'sign_in_bloc.dart';
 
 class SignInState extends BlocState {
-  final String? email;
-  final String? password;
+  final String email;
+  final String password;
 
   const SignInState({
     required super.status,
-    this.email,
-    this.password,
+    required this.email,
+    required this.password,
   });
 
   @override
@@ -16,6 +16,8 @@ class SignInState extends BlocState {
         email,
         password,
       ];
+
+  bool get isButtonDisabled => email.isEmpty || password.isEmpty;
 
   @override
   SignInState copyWith({

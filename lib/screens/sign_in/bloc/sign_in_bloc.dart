@@ -11,13 +11,18 @@ part 'sign_in_state.dart';
 class SignInBloc extends BlocWithStatus<SignInEvent, SignInState> {
   SignInBloc({
     BlocStatus status = const BlocStatusInitial(),
+    String email = '',
+    String password = '',
   }) : super(
           SignInState(
             status: status,
+            email: email,
+            password: password,
           ),
         ) {
     on<SignInEventEmailChanged>(_emailChanged);
     on<SignInEventPasswordChanged>(_passwordChanged);
+    on<SignInEventSubmit>(_submit);
   }
 
   void _emailChanged(
@@ -36,5 +41,12 @@ class SignInBloc extends BlocWithStatus<SignInEvent, SignInState> {
     emit(state.copyWith(
       password: event.password,
     ));
+  }
+
+  Future<void> _submit(
+    SignInEventSubmit event,
+    Emitter<SignInState> emit,
+  ) async {
+    //TODO
   }
 }
