@@ -13,8 +13,6 @@ scripts: derry.yaml
 dependencies:
   flutter:
     sdk: flutter
-  firebase:
-    path: firebase
 
   cupertino_icons: ^1.0.2
   flutter_bloc: ^8.1.2
@@ -23,6 +21,10 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   intl: any
+  mocktail: ^0.3.0
+  firebase_core: ^2.7.0
+  firebase_auth: ^4.2.9
+  provider: ^6.0.5
 
 dev_dependencies:
   flutter_test:
