@@ -17,6 +17,9 @@ dependencies:
   equatable: ^2.0.5
   bloc_test: ^9.1.1
   material_design_icons_flutter: ^6.0.7096
+  flutter_localizations:
+    sdk: flutter
+  intl: any
 
 dev_dependencies:
   flutter_test:
@@ -26,5 +29,6 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  generate: true
   assets:
     - assets/

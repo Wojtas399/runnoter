@@ -6,10 +6,15 @@ class _SignInAlternativeOptions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: const [
-        Text('Nie masz konta? Zarejestruj się!'),
-        SizedBox(height: 8),
-        Text('Zapomniałeś hasła'),
+      children: [
+        Text(
+          AppLocalizations.of(context)!.sign_in_screen_sign_up_option_info,
+        ),
+        const SizedBox(height: 8),
+        Text(
+          AppLocalizations.of(context)!
+              .sign_in_screen_forgot_password_option_info,
+        ),
       ],
     );
   }

@@ -6,13 +6,13 @@ class _SignInForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: const [
+      children: [
         TextFieldComponent(
-          label: 'E-mail',
+          label: AppLocalizations.of(context)!.email,
           icon: Icons.email,
         ),
-        SizedBox(height: 24),
-        PasswordTextFieldComponent(),
+        const SizedBox(height: 24),
+        const PasswordTextFieldComponent(),
       ],
     );
   }

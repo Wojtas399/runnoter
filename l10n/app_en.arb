@@ -1,0 +1,27 @@
+{
+  "sign_in_screen_title": "Sign in",
+  "@sign_in_screen_title": {
+    "description": "Sign in"
+  },
+  "sign_in_screen_button_label": "sign in",
+  "@sign_in_screen_button_label": {
+    "description": "Label of the button to submit sign in form"
+  },
+  "sign_in_screen_sign_up_option_info": "Don't have account? Sign up!",
+  "@sign_in_screen_sign_up_option_info": {
+    "description": "Info of the option to navigate to sign up form"
+  },
+  "sign_in_screen_forgot_password_option_info": "Forgot password?",
+  "@sign_in_screen_forgot_password_option_info": {
+    "description": "Info of the option to navigate to forgot password screen"
+  },
+
+  "email": "Email",
+  "@email": {
+    "description": "Email"
+  },
+  "password": "Password",
+  "@password": {
+    "description": "Password"
+  }
+}

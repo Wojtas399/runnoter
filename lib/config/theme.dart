@@ -10,6 +10,7 @@ class GlobalTheme {
         useMaterial3: true,
         colorScheme: const ColorScheme.light().copyWith(
           primary: _primary,
+          background: _backgroundLight,
         ),
         scaffoldBackgroundColor: _backgroundLight,
         inputDecorationTheme: InputDecorationTheme(
@@ -31,6 +32,7 @@ class GlobalTheme {
         colorScheme: const ColorScheme.dark().copyWith(
           primary: _primary,
           brightness: Brightness.dark,
+          background: _backgroundDark,
         ),
         scaffoldBackgroundColor: _backgroundDark,
         inputDecorationTheme: InputDecorationTheme(

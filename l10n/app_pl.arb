@@ -1,0 +1,9 @@
+{
+  "sign_in_screen_title": "Logowanie",
+  "sign_in_screen_button_label": "Zaloguj",
+  "sign_in_screen_sign_up_option_info": "Nie masz konta? Zarejestruj się!",
+  "sign_in_screen_forgot_password_option_info": "Zapomniałeś hasła?",
+
+  "email": "Email",
+  "password": "Hasło"
+}

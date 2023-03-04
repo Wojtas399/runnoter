@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class PasswordTextFieldComponent extends StatefulWidget {
   const PasswordTextFieldComponent({
@@ -26,7 +27,9 @@ class _State extends State<PasswordTextFieldComponent> {
       obscuringCharacter: '*',
       obscureText: !_isVisible,
       decoration: InputDecoration(
-        label: const Text('Hasło'),
+        label: Text(
+          AppLocalizations.of(context)!.password,
+        ),
         prefixIcon: const Icon(Icons.lock),
         suffixIcon: IconButton(
           icon: Icon(

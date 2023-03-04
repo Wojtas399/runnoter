@@ -48,7 +48,7 @@ class _FormHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      'Logowanie',
+      AppLocalizations.of(context)!.sign_in_screen_title,
       style: Theme.of(context).textTheme.headlineMedium?.copyWith(
             fontWeight: FontWeight.bold,
           ),

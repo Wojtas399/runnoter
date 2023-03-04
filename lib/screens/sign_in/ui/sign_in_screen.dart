@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../components/big_button.dart';
 import '../../../components/password_text_field_component.dart';
@@ -19,9 +20,12 @@ class SignInScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const _BlocProvider(
+    return _BlocProvider(
       child: Scaffold(
-        body: _Content(),
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).colorScheme.background,
+        ),
+        body: const _Content(),
       ),
     );
   }
