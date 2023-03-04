@@ -145,8 +145,15 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.1.4"
-  firebase_core:
+  firebase:
     dependency: "direct main"
+    description:
+      path: firebase
+      relative: true
+    source: path
+    version: "1.0.0+1"
+  firebase_core:
+    dependency: transitive
     description:
       name: firebase_core
       sha256: fe30ac230f12f8836bb97e6e09197340d3c584526825b1746ea362a82e1e43f7

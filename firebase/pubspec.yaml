@@ -1,0 +1,11 @@
+name: firebase
+description: Firebase for runnoter
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=2.18.6 <3.0.0'
+
+dependencies:
+  firebase_auth: ^4.2.9
+  firebase_core: ^2.7.0
