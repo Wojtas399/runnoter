@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/model/auth_exception.dart';
 import 'package:runnoter/model/bloc_status.dart';
-import 'package:runnoter/ui/screens/sign_in/bloc/sign_in_bloc.dart';
+import 'package:runnoter/ui/screen/sign_in/bloc/sign_in_bloc.dart';
 
 import '../../mock/mock_auth.dart';
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:runnoter/ui/config/navigation/routes.dart';
-import 'package:runnoter/ui/screens/sign_in/ui/sign_in_screen.dart';
+import 'package:runnoter/ui/screen/sign_in/ui/sign_in_screen.dart';
 
 class AppNavigator extends StatelessWidget {
   const AppNavigator({
