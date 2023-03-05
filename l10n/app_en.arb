@@ -23,5 +23,9 @@
   "password": "Password",
   "@password": {
     "description": "Password"
+  },
+  "loading": "Loading",
+  "@loading": {
+    "description": "Loading"
   }
 }

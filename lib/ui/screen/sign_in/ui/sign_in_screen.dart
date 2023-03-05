@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:runnoter/auth/auth.dart';
 import 'package:runnoter/ui/component/big_button_component.dart';
+import 'package:runnoter/ui/component/bloc_with_status_listener_component.dart';
 import 'package:runnoter/ui/component/password_text_field_component.dart';
 import 'package:runnoter/ui/component/text_field_component.dart';
 import 'package:runnoter/ui/screen/sign_in/bloc/sign_in_bloc.dart';
@@ -20,12 +21,9 @@ class SignInScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _BlocProvider(
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Theme.of(context).colorScheme.background,
-        ),
-        body: const _Content(),
+    return const _BlocProvider(
+      child: _BlocListener(
+        child: _Content(),
       ),
     );
   }
@@ -44,6 +42,22 @@ class _BlocProvider extends StatelessWidget {
       create: (BuildContext context) => SignInBloc(
         auth: context.read<Auth>(),
       ),
+      child: child,
+    );
+  }
+}
+
+class _BlocListener extends StatelessWidget {
+  final Widget child;
+
+  const _BlocListener({
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocWithStatusListener<SignInBloc, SignInState, SignInInfo,
+        SignInError>(
       child: child,
     );
   }

@@ -25,6 +25,7 @@ class GlobalTheme {
           ),
         ),
         elevatedButtonTheme: _elevatedButtonTheme,
+        dialogTheme: _dialogTheme,
       );
 
   static ThemeData get darkTheme => ThemeData(
@@ -50,6 +51,7 @@ class GlobalTheme {
           ),
         ),
         elevatedButtonTheme: _elevatedButtonTheme,
+        dialogTheme: _dialogTheme,
       );
 
   static final ElevatedButtonThemeData _elevatedButtonTheme =
@@ -60,6 +62,12 @@ class GlobalTheme {
       shape: RoundedRectangleBorder(
         borderRadius: _borderRadius,
       ),
+    ),
+  );
+
+  static final DialogTheme _dialogTheme = DialogTheme(
+    shape: RoundedRectangleBorder(
+      borderRadius: _borderRadius,
     ),
   );
 }

@@ -5,27 +5,32 @@ class _Content extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: GestureDetector(
-        onTap: () {
-          unfocusInputs();
-        },
-        child: Container(
-          color: Colors.transparent,
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
-              _Logo(),
-              SizedBox(height: 24),
-              _FormHeader(),
-              SizedBox(height: 32),
-              _SignInForm(),
-              SizedBox(height: 32),
-              _SignInSubmitButton(),
-              SizedBox(height: 16),
-              _SignInAlternativeOptions(),
-            ],
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.background,
+      ),
+      body: SafeArea(
+        child: GestureDetector(
+          onTap: () {
+            unfocusInputs();
+          },
+          child: Container(
+            color: Colors.transparent,
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const [
+                _Logo(),
+                SizedBox(height: 24),
+                _FormHeader(),
+                SizedBox(height: 32),
+                _SignInForm(),
+                SizedBox(height: 32),
+                _SignInSubmitButton(),
+                SizedBox(height: 16),
+                _SignInAlternativeOptions(),
+              ],
+            ),
           ),
         ),
       ),

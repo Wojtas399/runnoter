@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:runnoter/model/bloc_state.dart';
 import 'package:runnoter/model/bloc_status.dart';
+import 'package:runnoter/ui/service/dialog_service.dart';
 
 class BlocWithStatusListener<Bloc extends StateStreamable<State>,
     State extends BlocState, Info, Error> extends StatelessWidget {
@@ -47,8 +48,7 @@ class BlocWithStatusListener<Bloc extends StateStreamable<State>,
   }
 
   void _manageLoadingStatus(BuildContext context) {
-    // context.showLoadingDialog();
-    //TODO
+    showLoadingDialog(context: context);
   }
 
   void _manageCompleteStatus(
@@ -76,7 +76,6 @@ class BlocWithStatusListener<Bloc extends StateStreamable<State>,
   }
 
   void _closeLoadingDialog(BuildContext context) {
-    // context.closeLoadingDialog();
-    //TODO
+    closeLoadingDialog(context: context);
   }
 }
