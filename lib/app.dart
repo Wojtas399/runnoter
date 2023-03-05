@@ -3,12 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
-
-import 'auth/auth.dart';
-import 'config/navigation/app_navigator.dart';
-import 'config/theme.dart';
-import 'firebase/fire_auth_service.dart';
-import 'services/theme_service.dart';
+import 'package:runnoter/auth/auth.dart';
+import 'package:runnoter/firebase/fire_auth_service.dart';
+import 'package:runnoter/ui/config/navigation/app_navigator.dart';
+import 'package:runnoter/ui/config/theme.dart';
+import 'package:runnoter/ui/services/theme_service.dart';
 
 class App extends StatelessWidget {
   const App({

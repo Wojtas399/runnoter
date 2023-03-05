@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
-import '../../../auth/auth.dart';
-import '../../../components/big_button.dart';
-import '../../../components/password_text_field_component.dart';
-import '../../../components/text_field_component.dart';
-import '../../../services/utils.dart';
-import '../bloc/sign_in_bloc.dart';
+import 'package:runnoter/auth/auth.dart';
+import 'package:runnoter/ui/components/big_button.dart';
+import 'package:runnoter/ui/components/password_text_field_component.dart';
+import 'package:runnoter/ui/components/text_field_component.dart';
+import 'package:runnoter/ui/screens/sign_in/bloc/sign_in_bloc.dart';
+import 'package:runnoter/ui/services/utils.dart';
 
 part 'sign_in_alternative_options.dart';
 part 'sign_in_form.dart';
