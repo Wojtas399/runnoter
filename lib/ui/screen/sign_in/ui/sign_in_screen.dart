@@ -6,8 +6,10 @@ import 'package:runnoter/ui/component/big_button_component.dart';
 import 'package:runnoter/ui/component/bloc_with_status_listener_component.dart';
 import 'package:runnoter/ui/component/password_text_field_component.dart';
 import 'package:runnoter/ui/component/text_field_component.dart';
+import 'package:runnoter/ui/config/navigation/routes.dart';
 import 'package:runnoter/ui/screen/sign_in/bloc/sign_in_bloc.dart';
 import 'package:runnoter/ui/service/dialog_service.dart';
+import 'package:runnoter/ui/service/navigator_service.dart';
 import 'package:runnoter/ui/service/utils.dart';
 
 part 'sign_in_alternative_options.dart';
@@ -75,7 +77,10 @@ class _BlocListener extends StatelessWidget {
   ) async {
     switch (info) {
       case SignInInfo.signedIn:
-        //TODO: Navigate to home screen
+        navigateTo(
+          context: context,
+          route: Routes.home,
+        );
         break;
     }
   }
