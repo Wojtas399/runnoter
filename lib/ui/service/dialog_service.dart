@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:runnoter/ui/component/loading_dialog_component.dart';
+import 'package:runnoter/ui/component/dialog/loading_dialog_component.dart';
+import 'package:runnoter/ui/component/dialog/message_dialog_component.dart';
 
 bool _isLoadingDialogOpened = false;
 
@@ -20,4 +21,20 @@ void closeLoadingDialog({
     Navigator.of(context, rootNavigator: true).pop();
     _isLoadingDialogOpened = false;
   }
+}
+
+Future<void> showMessageDialog({
+  required BuildContext context,
+  required String title,
+  required String message,
+  String? closeButtonLabel,
+}) async {
+  await showDialog(
+    context: context,
+    builder: (_) => MessageDialogComponent(
+      title: title,
+      message: message,
+      closeButtonLabel: closeButtonLabel,
+    ),
+  );
 }

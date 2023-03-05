@@ -59,9 +59,6 @@ class GlobalTheme {
     style: ElevatedButton.styleFrom(
       backgroundColor: _primary,
       foregroundColor: Colors.white,
-      shape: RoundedRectangleBorder(
-        borderRadius: _borderRadius,
-      ),
     ),
   );
 
@@ -69,5 +66,6 @@ class GlobalTheme {
     shape: RoundedRectangleBorder(
       borderRadius: _borderRadius,
     ),
+    actionsPadding: const EdgeInsets.all(16),
   );
 }

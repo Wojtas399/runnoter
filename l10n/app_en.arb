@@ -15,6 +15,22 @@
   "@sign_in_screen_forgot_password_option_info": {
     "description": "Info of the option to navigate to forgot password screen"
   },
+  "sign_in_screen_user_not_found_title": "User not found",
+  "@sign_in_screen_user_not_found_title": {
+    "description": "Title of the dialog to inform that user does not exist"
+  },
+  "sign_in_screen_user_not_found_message": "User with given email address doesn't exist",
+  "@sign_in_screen_user_not_found_message": {
+    "description": "Message of the dialog to inform that user does not exist"
+  },
+  "sign_in_screen_wrong_password_title": "Wrong password",
+  "@sign_in_screen_wrong_password_title": {
+    "description": "Title of the dialog to inform that password is wrong"
+  },
+  "sign_in_screen_wrong_password_message": "Given password is wrong. Try again with correct password.",
+  "@sign_in_screen_wrong_password_message": {
+    "description": "Message of the dialog to inform that password is wrong"
+  },
 
   "email": "Email",
   "@email": {
@@ -27,5 +43,9 @@
   "loading": "Loading",
   "@loading": {
     "description": "Loading"
+  },
+  "close": "Close",
+  "@close": {
+    "description": "Close"
   }
 }

@@ -3,8 +3,13 @@
   "sign_in_screen_button_label": "Zaloguj",
   "sign_in_screen_sign_up_option_info": "Nie masz konta? Zarejestruj się!",
   "sign_in_screen_forgot_password_option_info": "Zapomniałeś hasła?",
+  "sign_in_screen_user_not_found_title": "Nie znaleziono użytkownika",
+  "sign_in_screen_user_not_found_message": "Użytkownik o podanym adresie email nie istnieje",
+  "sign_in_screen_wrong_password_title": "Błędne hasło",
+  "sign_in_screen_wrong_password_message": "Podane hasło jest niepoprawne. Spróbuj ponownie podając poprawne hasło.",
 
   "email": "Email",
   "password": "Hasło",
-  "loading": "Ładowanie"
+  "loading": "Ładowanie",
+  "close": "Zamknij"
 }
