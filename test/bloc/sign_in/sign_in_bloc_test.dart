@@ -1,6 +1,7 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:runnoter/model/auth_exception.dart';
 import 'package:runnoter/model/bloc_status.dart';
 import 'package:runnoter/screens/sign_in/bloc/sign_in_bloc.dart';
 
@@ -89,20 +90,100 @@ void main() {
         auth.mockSignIn();
       });
 
-      blocTest(
-        "email and password are not empty, should call method responsible for sign in user",
-        build: () => createBloc(
-          email: email,
-          password: password,
-        ),
-        act: callEvent,
-        verify: (_) {
-          verify(
-            () => auth.signIn(
+      group(
+        "email and password are not empty, should call method responsible for signing in user",
+        () {
+          tearDown(() {
+            verify(
+              () => auth.signIn(
+                email: email,
+                password: password,
+              ),
+            ).called(1);
+          });
+
+          blocTest(
+            "method doesn't throw error, should emit complete status",
+            build: () => createBloc(
               email: email,
               password: password,
             ),
-          ).called(1);
+            act: callEvent,
+            expect: () => [
+              createState(
+                status: const BlocStatusLoading(),
+                email: email,
+                password: password,
+              ),
+              createState(
+                status: const BlocStatusComplete<SignInInfo>(
+                  info: SignInInfo.signedIn,
+                ),
+                email: email,
+                password: password,
+              ),
+            ],
+          );
+
+          blocTest(
+            "method throws auth exception with user not found code, should emit appropriate error status",
+            build: () => createBloc(
+              email: email,
+              password: password,
+            ),
+            setUp: () {
+              auth.mockSignIn(
+                throwable: const AuthException(
+                  code: AuthExceptionCode.userNotFound,
+                ),
+              );
+            },
+            act: callEvent,
+            expect: () => [
+              createState(
+                status: const BlocStatusLoading(),
+                email: email,
+                password: password,
+              ),
+              createState(
+                status: const BlocStatusError<SignInError>(
+                  error: SignInError.userNotFound,
+                ),
+                email: email,
+                password: password,
+              ),
+            ],
+          );
+
+          blocTest(
+            "method throws auth exception with wrong password code, should emit appropriate error status",
+            build: () => createBloc(
+              email: email,
+              password: password,
+            ),
+            setUp: () {
+              auth.mockSignIn(
+                throwable: const AuthException(
+                  code: AuthExceptionCode.wrongPassword,
+                ),
+              );
+            },
+            act: callEvent,
+            expect: () => [
+              createState(
+                status: const BlocStatusLoading(),
+                email: email,
+                password: password,
+              ),
+              createState(
+                status: const BlocStatusError<SignInError>(
+                  error: SignInError.wrongPassword,
+                ),
+                email: email,
+                password: password,
+              ),
+            ],
+          );
         },
       );
 

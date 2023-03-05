@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'bloc_state.dart';
 import 'bloc_status.dart';
 
-abstract class BlocWithStatus<Event, State extends BlocState>
+abstract class BlocWithStatus<Event, State extends BlocState, Info, Error>
     extends Bloc<Event, State> {
   BlocWithStatus(super.initialState);
 
@@ -13,15 +13,15 @@ abstract class BlocWithStatus<Event, State extends BlocState>
     ));
   }
 
-  void emitInfo<T>(Emitter<State> emit, T info) {
+  void emitCompleteStatus(Emitter<State> emit, Info? info) {
     emit(state.copyWith(
-      status: BlocStatusComplete<T>(info: info),
+      status: BlocStatusComplete<Info>(info: info),
     ));
   }
 
-  void emitError<T>(Emitter<State> emit, T error) {
+  void emitErrorStatus(Emitter<State> emit, Error? error) {
     emit(state.copyWith(
-      status: BlocStatusError<T>(error: error),
+      status: BlocStatusError<Error>(error: error),
     ));
   }
 }
