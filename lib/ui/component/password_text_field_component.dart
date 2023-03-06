@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class PasswordTextFieldComponent extends StatefulWidget {
+  final String? label;
   final Function(String? value)? onChanged;
 
   const PasswordTextFieldComponent({
     super.key,
+    this.label,
     this.onChanged,
   });
 
@@ -31,7 +33,7 @@ class _State extends State<PasswordTextFieldComponent> {
       obscureText: !_isVisible,
       decoration: InputDecoration(
         label: Text(
-          AppLocalizations.of(context)!.password,
+          widget.label ?? AppLocalizations.of(context)!.password,
         ),
         prefixIcon: const Icon(Icons.lock),
         suffixIcon: IconButton(
