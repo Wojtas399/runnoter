@@ -6,7 +6,7 @@ class _SubmitButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BigButton(
-      label: 'Sign up',
+      label: AppLocalizations.of(context)!.sign_up_screen_button_label,
       onPressed: () {},
     );
   }

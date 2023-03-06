@@ -9,8 +9,8 @@ class _AlternativeOption extends StatelessWidget {
       onTap: () {
         _onPressed(context);
       },
-      child: const Text(
-        'Masz już konto? Zaloguj się!',
+      child: Text(
+        AppLocalizations.of(context)!.sign_up_screen_sign_in_option,
       ),
     );
   }

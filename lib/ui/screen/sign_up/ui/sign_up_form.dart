@@ -8,26 +8,26 @@ class _SignUpForm extends StatelessWidget {
     const gap = SizedBox(height: 24);
 
     return Column(
-      children: const [
+      children: [
         TextFieldComponent(
           icon: Icons.person,
-          label: 'Imię',
+          label: AppLocalizations.of(context)!.name,
         ),
         gap,
         TextFieldComponent(
           icon: Icons.person,
-          label: 'Nazwisko',
+          label: AppLocalizations.of(context)!.surname,
         ),
         gap,
         TextFieldComponent(
           icon: Icons.email,
-          label: 'Email',
+          label: AppLocalizations.of(context)!.email,
         ),
         gap,
-        PasswordTextFieldComponent(),
+        const PasswordTextFieldComponent(),
         gap,
         PasswordTextFieldComponent(
-          label: 'Password confirmation',
+          label: AppLocalizations.of(context)!.passwordConfirmation,
         ),
       ],
     );

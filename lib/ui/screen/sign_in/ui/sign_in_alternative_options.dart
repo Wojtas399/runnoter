@@ -12,13 +12,12 @@ class _SignInAlternativeOptions extends StatelessWidget {
             _onSignUpOptionSelected(context);
           },
           child: Text(
-            AppLocalizations.of(context)!.sign_in_screen_sign_up_option_info,
+            AppLocalizations.of(context)!.sign_in_screen_sign_up_option,
           ),
         ),
         const SizedBox(height: 8),
         Text(
-          AppLocalizations.of(context)!
-              .sign_in_screen_forgot_password_option_info,
+          AppLocalizations.of(context)!.sign_in_screen_forgot_password_option,
         ),
       ],
     );

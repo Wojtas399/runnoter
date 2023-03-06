@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:runnoter/ui/component/big_button_component.dart';
 import 'package:runnoter/ui/component/password_text_field_component.dart';
 import 'package:runnoter/ui/component/text_field_component.dart';
@@ -52,7 +53,7 @@ class _FormHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      'Sign up',
+      AppLocalizations.of(context)!.sign_up_screen_title,
       style: Theme.of(context).textTheme.headlineMedium?.copyWith(
             fontWeight: FontWeight.bold,
           ),

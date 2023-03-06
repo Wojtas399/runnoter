@@ -1,19 +1,19 @@
 {
   "sign_in_screen_title": "Sign in",
   "@sign_in_screen_title": {
-    "description": "Sign in"
+    "description": "Title of sign in screen"
   },
   "sign_in_screen_button_label": "sign in",
   "@sign_in_screen_button_label": {
     "description": "Label of the button to submit sign in form"
   },
-  "sign_in_screen_sign_up_option_info": "Don't have account? Sign up!",
-  "@sign_in_screen_sign_up_option_info": {
-    "description": "Info of the option to navigate to sign up form"
+  "sign_in_screen_sign_up_option": "Don't have account? Sign up!",
+  "@sign_in_screen_sign_up_option": {
+    "description": "Option to navigate to sign up form"
   },
-  "sign_in_screen_forgot_password_option_info": "Forgot password?",
-  "@sign_in_screen_forgot_password_option_info": {
-    "description": "Info of the option to navigate to forgot password screen"
+  "sign_in_screen_forgot_password_option": "Forgot password?",
+  "@sign_in_screen_forgot_password_option": {
+    "description": "Option to navigate to forgot password screen"
   },
   "sign_in_screen_invalid_email_title": "Invalid email",
   "@sign_in_screen_invalid_email_title": {
@@ -40,6 +40,29 @@
     "description": "Message of the dialog to inform that password is wrong"
   },
 
+
+  "sign_up_screen_title": "Sign up",
+  "@sign_up_screen_title": {
+    "description": "Title of sign up screen"
+  },
+  "sign_up_screen_button_label": "sign up",
+  "@sign_up_screen_button_label": {
+    "description": "Label of the button to submit sign up form"
+  },
+  "sign_up_screen_sign_in_option": "Already have an account? Sign in!",
+  "@sign_up_screen_sign_in_option": {
+    "description": "Option to navigate to sign in screen,"
+  },
+
+
+  "name": "Name",
+  "@name": {
+    "description": "Name"
+  },
+  "surname": "Surname",
+  "@surname": {
+    "description": "Surname"
+  },
   "email": "Email",
   "@email": {
     "description": "Email"
@@ -47,6 +70,10 @@
   "password": "Password",
   "@password": {
     "description": "Password"
+  },
+  "passwordConfirmation": "Password confirmation",
+  "@passwordConfirmation": {
+    "description": "Password confirmation"
   },
   "loading": "Loading",
   "@loading": {

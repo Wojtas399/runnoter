@@ -1,8 +1,8 @@
 {
   "sign_in_screen_title": "Logowanie",
   "sign_in_screen_button_label": "Zaloguj",
-  "sign_in_screen_sign_up_option_info": "Nie masz konta? Zarejestruj się!",
-  "sign_in_screen_forgot_password_option_info": "Zapomniałeś hasła?",
+  "sign_in_screen_sign_up_option": "Nie masz konta? Zarejestruj się!",
+  "sign_in_screen_forgot_password_option": "Zapomniałeś hasła?",
   "sign_in_screen_invalid_email_title": "Niepoprawny email",
   "sign_in_screen_invalid_email_message": "Podany adres email jest niepoprawny",
   "sign_in_screen_user_not_found_title": "Nie znaleziono użytkownika",
@@ -10,8 +10,17 @@
   "sign_in_screen_wrong_password_title": "Błędne hasło",
   "sign_in_screen_wrong_password_message": "Podane hasło jest niepoprawne. Spróbuj ponownie podając poprawne hasło.",
 
+
+  "sign_up_screen_title": "Rejestracja",
+  "sign_up_screen_button_label": "Zarejestruj",
+  "sign_up_screen_sign_in_option": "Masz już konto? Zaloguj się!",
+
+
+  "name": "Imię",
+  "surname": "Nazwisko",
   "email": "Email",
   "password": "Hasło",
+  "passwordConfirmation": "Potwierdź hasło",
   "loading": "Ładowanie",
   "close": "Zamknij"
 }
