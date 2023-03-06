@@ -126,6 +126,36 @@ void main() {
           );
 
           blocTest(
+            "method throws auth exception with invalid email code, should emit appropriate error status",
+            build: () => createBloc(
+              email: email,
+              password: password,
+            ),
+            setUp: () {
+              auth.mockSignIn(
+                throwable: const AuthException(
+                  code: AuthExceptionCode.invalidEmail,
+                ),
+              );
+            },
+            act: callEvent,
+            expect: () => [
+              createState(
+                status: const BlocStatusLoading(),
+                email: email,
+                password: password,
+              ),
+              createState(
+                status: const BlocStatusError<SignInError>(
+                  error: SignInError.invalidEmail,
+                ),
+                email: email,
+                password: password,
+              ),
+            ],
+          );
+
+          blocTest(
             "method throws auth exception with user not found code, should emit appropriate error status",
             build: () => createBloc(
               email: email,

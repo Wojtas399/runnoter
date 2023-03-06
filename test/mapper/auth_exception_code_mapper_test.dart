@@ -17,6 +17,18 @@ void main() {
       }
 
       test(
+        "firebase invalid email code should be mapped to domain invalid email code",
+        () {
+          const String firebaseCode = 'invalid-email';
+          const AuthExceptionCode domainCode = AuthExceptionCode.invalidEmail;
+
+          final mappedCode = callMethod(firebaseCode: firebaseCode);
+
+          expect(mappedCode, domainCode);
+        },
+      );
+
+      test(
         "firebase wrong password code should be mapped to domain wrong password code",
         () {
           const String firebaseCode = 'wrong-password';

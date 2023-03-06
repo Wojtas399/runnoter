@@ -5,6 +5,7 @@ enum SignInInfo {
 }
 
 enum SignInError {
+  invalidEmail,
   userNotFound,
   wrongPassword,
 }

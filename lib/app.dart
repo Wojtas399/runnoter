@@ -35,7 +35,7 @@ class App extends StatelessWidget {
                 Locale('pl'),
               ],
               themeMode: themeMode,
-              theme: GlobalTheme.darkTheme,
+              theme: GlobalTheme.lightTheme,
               darkTheme: GlobalTheme.darkTheme,
               home: const AppNavigator(),
             );

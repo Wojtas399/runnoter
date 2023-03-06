@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 enum AuthExceptionCode {
+  invalidEmail,
   wrongPassword,
   userNotFound,
   emailAlreadyTaken,

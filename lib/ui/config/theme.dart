@@ -25,7 +25,10 @@ class GlobalTheme {
           ),
         ),
         elevatedButtonTheme: _elevatedButtonTheme,
-        dialogTheme: _dialogTheme,
+        dialogTheme: _dialogTheme.copyWith(
+          backgroundColor: _backgroundLight,
+          surfaceTintColor: _backgroundLight,
+        ),
       );
 
   static ThemeData get darkTheme => ThemeData(
@@ -51,7 +54,10 @@ class GlobalTheme {
           ),
         ),
         elevatedButtonTheme: _elevatedButtonTheme,
-        dialogTheme: _dialogTheme,
+        dialogTheme: _dialogTheme.copyWith(
+          backgroundColor: _backgroundDark,
+          surfaceTintColor: _backgroundDark,
+        ),
       );
 
   static final ElevatedButtonThemeData _elevatedButtonTheme =

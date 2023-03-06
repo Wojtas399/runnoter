@@ -5,6 +5,8 @@ class AuthExceptionCodeMapper {
     required String firebaseAuthExceptionCode,
   }) {
     switch (firebaseAuthExceptionCode) {
+      case 'invalid-email':
+        return AuthExceptionCode.invalidEmail;
       case 'wrong-password':
         return AuthExceptionCode.wrongPassword;
       case 'user-not-found':
