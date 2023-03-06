@@ -90,6 +90,15 @@ class _BlocListener extends StatelessWidget {
     BuildContext context,
   ) async {
     switch (error) {
+      case SignInError.invalidEmail:
+        await showMessageDialog(
+          context: context,
+          title:
+              AppLocalizations.of(context)!.sign_in_screen_invalid_email_title,
+          message: AppLocalizations.of(context)!
+              .sign_in_screen_invalid_email_message,
+        );
+        break;
       case SignInError.userNotFound:
         await showMessageDialog(
           context: context,
