@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:runnoter/model/bloc_state.dart';
 import 'package:runnoter/model/bloc_status.dart';
 import 'package:runnoter/model/bloc_with_status.dart';
+import 'package:runnoter/ui/service/validation_service.dart' as validator;
 
 part 'sign_up_event.dart';
 part 'sign_up_state.dart';

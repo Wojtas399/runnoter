@@ -17,6 +17,36 @@ void main() {
   });
 
   test(
+    "is password confirmation valid, passwords aren't the same, should be false",
+    () {
+      const String password = 'password';
+      const String passwordConfirmation = 'passw';
+
+      state = state.copyWith(
+        password: password,
+        passwordConfirmation: passwordConfirmation,
+      );
+
+      expect(state.isPasswordConfirmationValid, false);
+    },
+  );
+
+  test(
+    "is password confirmation valid, passwords are the same, should be true",
+    () {
+      const String password = 'password';
+      const String passwordConfirmation = 'password';
+
+      state = state.copyWith(
+        password: password,
+        passwordConfirmation: passwordConfirmation,
+      );
+
+      expect(state.isPasswordConfirmationValid, true);
+    },
+  );
+
+  test(
     "copy with status",
     () {
       const BlocStatus expectedStatus = BlocStatusLoading();

@@ -16,6 +16,16 @@ class SignUpState extends BlocState {
     required this.passwordConfirmation,
   });
 
+  bool get isNameValid => validator.isNameOrSurnameValid(name);
+
+  bool get isSurnameValid => validator.isNameOrSurnameValid(surname);
+
+  bool get isEmailValid => validator.isEmailValid(email);
+
+  bool get isPasswordValid => validator.isPasswordValid(password);
+
+  bool get isPasswordConfirmationValid => password == passwordConfirmation;
+
   @override
   SignUpState copyWith({
     BlocStatus? status,
