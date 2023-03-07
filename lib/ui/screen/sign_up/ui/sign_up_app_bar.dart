@@ -5,6 +5,7 @@ class _AppBar extends StatelessWidget with PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       backgroundColor: Theme.of(context).colorScheme.background,
+      surfaceTintColor: Theme.of(context).colorScheme.background,
       flexibleSpace: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [

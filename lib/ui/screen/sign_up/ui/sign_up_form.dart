@@ -8,28 +8,119 @@ class _SignUpForm extends StatelessWidget {
     const gap = SizedBox(height: 24);
 
     return Column(
-      children: [
-        TextFieldComponent(
-          icon: Icons.person,
-          label: AppLocalizations.of(context)!.name,
-        ),
+      children: const [
+        _Name(),
         gap,
-        TextFieldComponent(
-          icon: Icons.person,
-          label: AppLocalizations.of(context)!.surname,
-        ),
+        _Surname(),
         gap,
-        TextFieldComponent(
-          icon: Icons.email,
-          label: AppLocalizations.of(context)!.email,
-        ),
+        _Email(),
         gap,
-        const PasswordTextFieldComponent(),
+        _Password(),
         gap,
-        PasswordTextFieldComponent(
-          label: AppLocalizations.of(context)!.passwordConfirmation,
-        ),
+        _PasswordConfirmation(),
       ],
     );
+  }
+}
+
+class _Name extends StatelessWidget {
+  const _Name();
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFieldComponent(
+      icon: Icons.person,
+      label: AppLocalizations.of(context)!.name,
+      onChanged: (String? value) {
+        _onChanged(value, context);
+      },
+    );
+  }
+
+  void _onChanged(String? value, BuildContext context) {
+    context.read<SignUpBloc>().add(
+          SignUpEventNameChanged(name: value ?? ''),
+        );
+  }
+}
+
+class _Surname extends StatelessWidget {
+  const _Surname();
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFieldComponent(
+      icon: Icons.person,
+      label: AppLocalizations.of(context)!.surname,
+      onChanged: (String? value) {
+        _onChanged(value, context);
+      },
+    );
+  }
+
+  void _onChanged(String? value, BuildContext context) {
+    context.read<SignUpBloc>().add(
+          SignUpEventSurnameChanged(surname: value ?? ''),
+        );
+  }
+}
+
+class _Email extends StatelessWidget {
+  const _Email();
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFieldComponent(
+      icon: Icons.email,
+      label: AppLocalizations.of(context)!.email,
+      onChanged: (String? value) {
+        _onChanged(value, context);
+      },
+    );
+  }
+
+  void _onChanged(String? value, BuildContext context) {
+    context.read<SignUpBloc>().add(
+          SignUpEventEmailChanged(email: value ?? ''),
+        );
+  }
+}
+
+class _Password extends StatelessWidget {
+  const _Password();
+
+  @override
+  Widget build(BuildContext context) {
+    return PasswordTextFieldComponent(
+      onChanged: (String? value) {
+        _onChanged(value, context);
+      },
+    );
+  }
+
+  void _onChanged(String? value, BuildContext context) {
+    context.read<SignUpBloc>().add(
+          SignUpEventPasswordChanged(password: value ?? ''),
+        );
+  }
+}
+
+class _PasswordConfirmation extends StatelessWidget {
+  const _PasswordConfirmation();
+
+  @override
+  Widget build(BuildContext context) {
+    return PasswordTextFieldComponent(
+      label: AppLocalizations.of(context)!.passwordConfirmation,
+      onChanged: (String? value) {
+        _onChanged(value, context);
+      },
+    );
+  }
+
+  void _onChanged(String? value, BuildContext context) {
+    context.read<SignUpBloc>().add(
+          SignUpEventPasswordChanged(password: value ?? ''),
+        );
   }
 }
