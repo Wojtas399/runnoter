@@ -22,5 +22,6 @@
   "password": "Hasło",
   "passwordConfirmation": "Potwierdź hasło",
   "loading": "Ładowanie",
-  "close": "Zamknij"
+  "close": "Zamknij",
+  "required_field_message": "To pole jest wymagane."
 }

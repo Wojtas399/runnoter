@@ -82,5 +82,9 @@
   "close": "Close",
   "@close": {
     "description": "Close"
+  },
+  "required_field_message": "This field is required.",
+  "@required_field_message": {
+    "description": "Message to inform that field is required."
   }
 }

@@ -4,6 +4,7 @@ class GlobalTheme {
   static const Color _primary = Color(0xFFD65A31);
   static const Color _backgroundLight = Color(0xFFF7F7FA);
   static const Color _backgroundDark = Color(0xFF383E56);
+  static const Color _red = Color(0xFFE94560);
   static final BorderRadius _borderRadius = BorderRadius.circular(8);
 
   static ThemeData get lightTheme => ThemeData(
@@ -13,17 +14,7 @@ class GlobalTheme {
           background: _backgroundLight,
         ),
         scaffoldBackgroundColor: _backgroundLight,
-        inputDecorationTheme: InputDecorationTheme(
-          enabledBorder: OutlineInputBorder(
-            borderRadius: _borderRadius,
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: _borderRadius,
-            borderSide: const BorderSide(
-              color: _primary,
-            ),
-          ),
-        ),
+        inputDecorationTheme: _inputDecoration,
         elevatedButtonTheme: _elevatedButtonTheme,
         dialogTheme: _dialogTheme.copyWith(
           backgroundColor: _backgroundLight,
@@ -39,17 +30,11 @@ class GlobalTheme {
           background: _backgroundDark,
         ),
         scaffoldBackgroundColor: _backgroundDark,
-        inputDecorationTheme: InputDecorationTheme(
+        inputDecorationTheme: _inputDecoration.copyWith(
           enabledBorder: OutlineInputBorder(
             borderRadius: _borderRadius,
             borderSide: BorderSide(
               color: Colors.white.withOpacity(0.5),
-            ),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: _borderRadius,
-            borderSide: const BorderSide(
-              color: _primary,
             ),
           ),
         ),
@@ -59,6 +44,33 @@ class GlobalTheme {
           surfaceTintColor: _backgroundDark,
         ),
       );
+
+  static final InputDecorationTheme _inputDecoration = InputDecorationTheme(
+    enabledBorder: OutlineInputBorder(
+      borderRadius: _borderRadius,
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderRadius: _borderRadius,
+      borderSide: const BorderSide(
+        color: _primary,
+      ),
+    ),
+    errorBorder: OutlineInputBorder(
+      borderRadius: _borderRadius,
+      borderSide: const BorderSide(
+        color: _red,
+      ),
+    ),
+    focusedErrorBorder: OutlineInputBorder(
+      borderRadius: _borderRadius,
+      borderSide: const BorderSide(
+        color: _red,
+      ),
+    ),
+    errorStyle: const TextStyle(
+      color: _red,
+    ),
+  );
 
   static final ElevatedButtonThemeData _elevatedButtonTheme =
       ElevatedButtonThemeData(

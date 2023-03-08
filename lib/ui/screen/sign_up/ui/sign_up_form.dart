@@ -31,6 +31,7 @@ class _Name extends StatelessWidget {
     return TextFieldComponent(
       icon: Icons.person,
       label: AppLocalizations.of(context)!.name,
+      isRequired: true,
       onChanged: (String? value) {
         _onChanged(value, context);
       },
