@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:runnoter/ui/config/navigation/routes.dart';
+import 'package:runnoter/presentation/config/navigation/routes.dart';
 
 void navigateTo({
   required BuildContext context,

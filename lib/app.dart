@@ -5,9 +5,9 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:runnoter/auth/auth.dart';
 import 'package:runnoter/firebase/fire_auth_service.dart';
-import 'package:runnoter/ui/config/navigation/app_navigator.dart';
-import 'package:runnoter/ui/config/theme.dart';
-import 'package:runnoter/ui/service/theme_service.dart';
+import 'package:runnoter/presentation/config/navigation/app_navigator.dart';
+import 'package:runnoter/presentation/config/theme.dart';
+import 'package:runnoter/presentation/service/theme_service.dart';
 
 class App extends StatelessWidget {
   const App({

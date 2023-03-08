@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:runnoter/ui/component/big_button_component.dart';
-import 'package:runnoter/ui/component/password_text_field_component.dart';
-import 'package:runnoter/ui/component/text_field_component.dart';
-import 'package:runnoter/ui/config/navigation/routes.dart';
-import 'package:runnoter/ui/screen/sign_up/bloc/sign_up_bloc.dart';
-import 'package:runnoter/ui/service/navigator_service.dart';
-import 'package:runnoter/ui/service/utils.dart';
+import 'package:runnoter/presentation/component/big_button_component.dart';
+import 'package:runnoter/presentation/component/password_text_field_component.dart';
+import 'package:runnoter/presentation/component/text_field_component.dart';
+import 'package:runnoter/presentation/config/navigation/routes.dart';
+import 'package:runnoter/presentation/screen/sign_up/bloc/sign_up_bloc.dart';
+import 'package:runnoter/presentation/service/navigator_service.dart';
+import 'package:runnoter/presentation/service/utils.dart';
 
 part 'sign_up_alternative_option.dart';
 part 'sign_up_app_bar.dart';
