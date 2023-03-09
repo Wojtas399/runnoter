@@ -12,7 +12,15 @@ class _SubmitButton extends StatelessWidget {
     return BigButton(
       label: AppLocalizations.of(context)!.sign_up_screen_button_label,
       isDisabled: isDisabled,
-      onPressed: () {},
+      onPressed: () {
+        _onPressed(context);
+      },
     );
+  }
+
+  void _onPressed(BuildContext context) {
+    context.read<SignUpBloc>().add(
+          const SignUpEventSubmit(),
+        );
   }
 }

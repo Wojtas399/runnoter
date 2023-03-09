@@ -33,6 +33,7 @@ class SignUpBloc
     on<SignUpEventEmailChanged>(_emailChanged);
     on<SignUpEventPasswordChanged>(_passwordChanged);
     on<SignUpEventPasswordConfirmationChanged>(_passwordConfirmationChanged);
+    on<SignUpEventSubmit>(_submit);
   }
 
   void _nameChanged(
@@ -78,5 +79,12 @@ class SignUpBloc
     emit(state.copyWith(
       passwordConfirmation: event.passwordConfirmation,
     ));
+  }
+
+  Future<void> _submit(
+    SignUpEventSubmit event,
+    Emitter<SignUpState> emit,
+  ) async {
+    //TODO: Connect sign up method
   }
 }
