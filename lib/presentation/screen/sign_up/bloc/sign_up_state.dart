@@ -16,6 +16,16 @@ class SignUpState extends BlocState {
     required this.passwordConfirmation,
   });
 
+  @override
+  List<Object> get props => [
+        status,
+        name,
+        surname,
+        email,
+        password,
+        passwordConfirmation,
+      ];
+
   bool get isNameValid => validator.isNameOrSurnameValid(name);
 
   bool get isSurnameValid => validator.isNameOrSurnameValid(surname);

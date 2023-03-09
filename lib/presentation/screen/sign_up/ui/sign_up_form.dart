@@ -28,12 +28,22 @@ class _Name extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isValid = context.select(
+      (SignUpBloc bloc) => bloc.state.isNameValid,
+    );
+
     return TextFieldComponent(
       icon: Icons.person,
       label: AppLocalizations.of(context)!.name,
       isRequired: true,
       onChanged: (String? value) {
         _onChanged(value, context);
+      },
+      validator: (_) {
+        if (!isValid) {
+          return AppLocalizations.of(context)!.invalid_name_or_surname_message;
+        }
+        return null;
       },
     );
   }
@@ -50,11 +60,22 @@ class _Surname extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isValid = context.select(
+      (SignUpBloc bloc) => bloc.state.isSurnameValid,
+    );
+
     return TextFieldComponent(
       icon: Icons.person,
       label: AppLocalizations.of(context)!.surname,
+      isRequired: true,
       onChanged: (String? value) {
         _onChanged(value, context);
+      },
+      validator: (_) {
+        if (!isValid) {
+          return AppLocalizations.of(context)!.invalid_name_or_surname_message;
+        }
+        return null;
       },
     );
   }
@@ -71,11 +92,22 @@ class _Email extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isValid = context.select(
+      (SignUpBloc bloc) => bloc.state.isEmailValid,
+    );
+
     return TextFieldComponent(
       icon: Icons.email,
       label: AppLocalizations.of(context)!.email,
+      isRequired: true,
       onChanged: (String? value) {
         _onChanged(value, context);
+      },
+      validator: (_) {
+        if (!isValid) {
+          return AppLocalizations.of(context)!.invalid_email_message;
+        }
+        return null;
       },
     );
   }
@@ -92,9 +124,20 @@ class _Password extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isValid = context.select(
+      (SignUpBloc bloc) => bloc.state.isPasswordValid,
+    );
+
     return PasswordTextFieldComponent(
+      isRequired: true,
       onChanged: (String? value) {
         _onChanged(value, context);
+      },
+      validator: (_) {
+        if (!isValid) {
+          return AppLocalizations.of(context)!.invalid_password_message;
+        }
+        return null;
       },
     );
   }
@@ -111,17 +154,31 @@ class _PasswordConfirmation extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isValid = context.select(
+      (SignUpBloc bloc) => bloc.state.isPasswordConfirmationValid,
+    );
+
     return PasswordTextFieldComponent(
       label: AppLocalizations.of(context)!.passwordConfirmation,
+      isRequired: true,
       onChanged: (String? value) {
         _onChanged(value, context);
+      },
+      validator: (_) {
+        if (!isValid) {
+          return AppLocalizations.of(context)!
+              .invalid_password_confirmation_message;
+        }
+        return null;
       },
     );
   }
 
   void _onChanged(String? value, BuildContext context) {
     context.read<SignUpBloc>().add(
-          SignUpEventPasswordChanged(password: value ?? ''),
+          SignUpEventPasswordConfirmationChanged(
+            passwordConfirmation: value ?? '',
+          ),
         );
   }
 }

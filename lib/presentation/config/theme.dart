@@ -4,7 +4,8 @@ class GlobalTheme {
   static const Color _primary = Color(0xFFD65A31);
   static const Color _backgroundLight = Color(0xFFF7F7FA);
   static const Color _backgroundDark = Color(0xFF383E56);
-  static const Color _red = Color(0xFFE94560);
+  static final Color _outlineLight = Colors.white.withOpacity(0.5);
+  static final Color _outlineDark = Colors.black.withOpacity(0.5);
   static final BorderRadius _borderRadius = BorderRadius.circular(8);
 
   static ThemeData get lightTheme => ThemeData(
@@ -12,9 +13,31 @@ class GlobalTheme {
         colorScheme: const ColorScheme.light().copyWith(
           primary: _primary,
           background: _backgroundLight,
+          outline: _outlineDark,
         ),
         scaffoldBackgroundColor: _backgroundLight,
-        inputDecorationTheme: _inputDecoration,
+        inputDecorationTheme: _inputDecoration.copyWith(
+          prefixIconColor: _outlineDark,
+          suffixIconColor: _outlineDark,
+          enabledBorder: OutlineInputBorder(
+            borderRadius: _borderRadius,
+            borderSide: BorderSide(
+              color: _outlineDark,
+            ),
+          ),
+          errorBorder: OutlineInputBorder(
+            borderRadius: _borderRadius,
+            borderSide: BorderSide(
+              color: const ColorScheme.light().error,
+            ),
+          ),
+          focusedErrorBorder: OutlineInputBorder(
+            borderRadius: _borderRadius,
+            borderSide: BorderSide(
+              color: const ColorScheme.light().error,
+            ),
+          ),
+        ),
         elevatedButtonTheme: _elevatedButtonTheme,
         dialogTheme: _dialogTheme.copyWith(
           backgroundColor: _backgroundLight,
@@ -28,13 +51,28 @@ class GlobalTheme {
           primary: _primary,
           brightness: Brightness.dark,
           background: _backgroundDark,
+          outline: _outlineLight,
         ),
         scaffoldBackgroundColor: _backgroundDark,
         inputDecorationTheme: _inputDecoration.copyWith(
+          prefixIconColor: _outlineLight,
+          suffixIconColor: _outlineLight,
           enabledBorder: OutlineInputBorder(
             borderRadius: _borderRadius,
             borderSide: BorderSide(
-              color: Colors.white.withOpacity(0.5),
+              color: _outlineLight,
+            ),
+          ),
+          errorBorder: OutlineInputBorder(
+            borderRadius: _borderRadius,
+            borderSide: BorderSide(
+              color: const ColorScheme.dark().error,
+            ),
+          ),
+          focusedErrorBorder: OutlineInputBorder(
+            borderRadius: _borderRadius,
+            borderSide: BorderSide(
+              color: const ColorScheme.dark().error,
             ),
           ),
         ),
@@ -46,29 +84,11 @@ class GlobalTheme {
       );
 
   static final InputDecorationTheme _inputDecoration = InputDecorationTheme(
-    enabledBorder: OutlineInputBorder(
-      borderRadius: _borderRadius,
-    ),
     focusedBorder: OutlineInputBorder(
       borderRadius: _borderRadius,
       borderSide: const BorderSide(
         color: _primary,
       ),
-    ),
-    errorBorder: OutlineInputBorder(
-      borderRadius: _borderRadius,
-      borderSide: const BorderSide(
-        color: _red,
-      ),
-    ),
-    focusedErrorBorder: OutlineInputBorder(
-      borderRadius: _borderRadius,
-      borderSide: const BorderSide(
-        color: _red,
-      ),
-    ),
-    errorStyle: const TextStyle(
-      color: _red,
     ),
   );
 

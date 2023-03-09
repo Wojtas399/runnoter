@@ -6,17 +6,26 @@ class _AppBar extends StatelessWidget with PreferredSizeWidget {
     return AppBar(
       backgroundColor: Theme.of(context).colorScheme.background,
       surfaceTintColor: Theme.of(context).colorScheme.background,
-      flexibleSpace: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          SizedBox(
-            height: kToolbarHeight,
-            child: Padding(
-              padding: const EdgeInsets.all(8),
-              child: Image.asset('assets/logo.png'),
+      flexibleSpace: Container(
+        decoration: BoxDecoration(
+          border: Border(
+            bottom: BorderSide(
+              color: Theme.of(context).colorScheme.outline,
             ),
           ),
-        ],
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            SizedBox(
+              height: kToolbarHeight,
+              child: Padding(
+                padding: const EdgeInsets.all(8),
+                child: Image.asset('assets/logo.png'),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
