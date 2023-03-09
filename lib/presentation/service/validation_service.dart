@@ -1,5 +1,7 @@
 bool isNameOrSurnameValid(String value) {
-  return value.length >= 2;
+  return RegExp(
+    r"^[a-zA-Z]{2,}$",
+  ).hasMatch(value);
 }
 
 bool isEmailValid(String value) {
