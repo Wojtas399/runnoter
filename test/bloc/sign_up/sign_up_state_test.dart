@@ -46,6 +46,73 @@ void main() {
     },
   );
 
+  group(
+    "is submit button disabled",
+    () {
+      setUp(() {
+        state = state.copyWith(
+          name: 'Jack',
+          surname: 'Obvsky',
+          email: 'jack@example.com',
+          password: 'Password123!',
+          passwordConfirmation: 'Password123!',
+        );
+      });
+
+      test(
+        "all params are valid, should be false",
+        () {
+          expect(state.isSubmitButtonDisabled, false);
+        },
+      );
+
+      test(
+        "name is invalid, should be true",
+        () {
+          state = state.copyWith(name: 'n');
+
+          expect(state.isSubmitButtonDisabled, true);
+        },
+      );
+
+      test(
+        "surname is invalid, should be true",
+        () {
+          state = state.copyWith(surname: 's');
+
+          expect(state.isSubmitButtonDisabled, true);
+        },
+      );
+
+      test(
+        "email is invalid, should be true",
+        () {
+          state = state.copyWith(email: 'jackexample.com');
+
+          expect(state.isSubmitButtonDisabled, true);
+        },
+      );
+
+      test(
+        "password is invalid, should be true",
+        () {
+          state = state.copyWith(password: 'pass');
+
+          expect(state.isSubmitButtonDisabled, true);
+        },
+      );
+
+      test(
+        "password confirmation is invalid, should be true",
+        () {
+          state = state.copyWith(passwordConfirmation: 'Password123');
+
+          expect(state.isSubmitButtonDisabled, true);
+        },
+      );
+    },
+  );
+
   test(
     "copy with status",
     () {

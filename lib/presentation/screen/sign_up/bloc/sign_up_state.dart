@@ -36,6 +36,8 @@ class SignUpState extends BlocState {
 
   bool get isPasswordConfirmationValid => password == passwordConfirmation;
 
+  bool get isSubmitButtonDisabled => !_areAllParamsValid();
+
   @override
   SignUpState copyWith({
     BlocStatus? status,
@@ -53,5 +55,13 @@ class SignUpState extends BlocState {
       password: password ?? this.password,
       passwordConfirmation: passwordConfirmation ?? this.passwordConfirmation,
     );
+  }
+
+  bool _areAllParamsValid() {
+    return isNameValid &&
+        isSurnameValid &&
+        isEmailValid &&
+        isPasswordValid &&
+        isPasswordConfirmationValid;
   }
 }
