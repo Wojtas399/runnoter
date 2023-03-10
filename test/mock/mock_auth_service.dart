@@ -1,7 +1,7 @@
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/domain/interface/auth.dart';
+import 'package:runnoter/domain/service/auth_service.dart';
 
-class MockAuth extends Mock implements Auth {
+class MockAuthService extends Mock implements AuthService {
   void mockSignIn({
     String? userId,
     Object? throwable,

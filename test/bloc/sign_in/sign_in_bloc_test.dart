@@ -5,17 +5,17 @@ import 'package:runnoter/domain/model/auth_exception.dart';
 import 'package:runnoter/presentation/model/bloc_status.dart';
 import 'package:runnoter/presentation/screen/sign_in/bloc/sign_in_bloc.dart';
 
-import '../../mock/mock_auth.dart';
+import '../../mock/mock_auth_service.dart';
 
 void main() {
-  final auth = MockAuth();
+  final authService = MockAuthService();
 
   SignInBloc createBloc({
     final String? email,
     final String? password,
   }) {
     return SignInBloc(
-      auth: auth,
+      authService: authService,
       email: email ?? '',
       password: password ?? '',
     );
@@ -35,7 +35,7 @@ void main() {
   }
 
   tearDown(() {
-    reset(auth);
+    reset(authService);
   });
 
   blocTest(
@@ -87,7 +87,7 @@ void main() {
       }
 
       setUp(() {
-        auth.mockSignIn();
+        authService.mockSignIn();
       });
 
       group(
@@ -95,7 +95,7 @@ void main() {
         () {
           tearDown(() {
             verify(
-              () => auth.signIn(
+              () => authService.signIn(
                 email: email,
                 password: password,
               ),
@@ -132,7 +132,7 @@ void main() {
               password: password,
             ),
             setUp: () {
-              auth.mockSignIn(
+              authService.mockSignIn(
                 throwable: const AuthException(
                   code: AuthExceptionCode.invalidEmail,
                 ),
@@ -162,7 +162,7 @@ void main() {
               password: password,
             ),
             setUp: () {
-              auth.mockSignIn(
+              authService.mockSignIn(
                 throwable: const AuthException(
                   code: AuthExceptionCode.userNotFound,
                 ),
@@ -192,7 +192,7 @@ void main() {
               password: password,
             ),
             setUp: () {
-              auth.mockSignIn(
+              authService.mockSignIn(
                 throwable: const AuthException(
                   code: AuthExceptionCode.wrongPassword,
                 ),
@@ -225,7 +225,7 @@ void main() {
         act: callEvent,
         verify: (_) {
           verifyNever(
-            () => auth.signIn(
+            () => authService.signIn(
               email: any(named: 'email'),
               password: password,
             ),
@@ -241,7 +241,7 @@ void main() {
         act: callEvent,
         verify: (_) {
           verifyNever(
-            () => auth.signIn(
+            () => authService.signIn(
               email: email,
               password: any(named: 'password'),
             ),

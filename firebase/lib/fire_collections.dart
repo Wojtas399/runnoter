@@ -8,3 +8,7 @@ CollectionReference<UserDto> getUsersRef() {
         toFirestore: (UserDto fireUser, _) => fireUser.toJson(),
       );
 }
+
+DocumentReference<UserDto> getUserRef(String userId) {
+  return getUsersRef().doc(userId);
+}

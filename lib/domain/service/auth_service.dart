@@ -1,4 +1,4 @@
-abstract class Auth {
+abstract class AuthService {
   Future<void> signIn({
     required String email,
     required String password,

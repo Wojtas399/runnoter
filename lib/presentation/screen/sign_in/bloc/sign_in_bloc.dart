@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:runnoter/domain/interface/auth.dart';
 import 'package:runnoter/domain/model/auth_exception.dart';
+import 'package:runnoter/domain/service/auth_service.dart';
 import 'package:runnoter/presentation/model/bloc_state.dart';
 import 'package:runnoter/presentation/model/bloc_status.dart';
 import 'package:runnoter/presentation/model/bloc_with_status.dart';
@@ -11,14 +11,14 @@ part 'sign_in_state.dart';
 
 class SignInBloc
     extends BlocWithStatus<SignInEvent, SignInState, SignInInfo, SignInError> {
-  final Auth _auth;
+  final AuthService _authService;
 
   SignInBloc({
-    required Auth auth,
+    required AuthService authService,
     BlocStatus status = const BlocStatusInitial(),
     String email = '',
     String password = '',
-  })  : _auth = auth,
+  })  : _authService = authService,
         super(
           SignInState(
             status: status,
@@ -56,7 +56,7 @@ class SignInBloc
     if (state.email.isNotEmpty && state.password.isNotEmpty) {
       try {
         emitLoadingStatus(emit);
-        await _auth.signIn(
+        await _authService.signIn(
           email: state.email,
           password: state.password,
         );
