@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:runnoter/mapper/auth_exception_code_mapper.dart';
-import 'package:runnoter/model/auth_exception.dart';
+import 'package:runnoter/data/mapper/auth_exception_code_mapper.dart';
+import 'package:runnoter/domain/model/auth_exception.dart';
 
 void main() {
   final mapper = AuthExceptionCodeMapper();
@@ -53,11 +53,11 @@ void main() {
       );
 
       test(
-        "firebase email already taken code should be mapped to domain email already taken code",
+        "firebase email already in use code should be mapped to domain email already in use code",
         () {
-          const String firebaseCode = 'email-already-taken';
+          const String firebaseCode = 'email-already-in-use';
           const AuthExceptionCode domainCode =
-              AuthExceptionCode.emailAlreadyTaken;
+              AuthExceptionCode.emailAlreadyInUse;
 
           final mappedCode = callMethod(firebaseCode: firebaseCode);
 

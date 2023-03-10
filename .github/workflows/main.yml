@@ -8,8 +8,8 @@ on:
       - main
 
 jobs:
-  flutter_test:
-    name: Flutter analyze and test
+  flutter_analyze_syntax:
+    name: Analyze syntax
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -19,6 +19,42 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: "stable"
-      - run: flutter pub get
-      - run: flutter analyze .
-      - run: flutter test
+      - name: Flutter pub get main
+        run: flutter pub get
+      - name: Flutter pub get firebase
+        working-directory: ./firebase
+        run: flutter pub get
+      - name: Flutter analyze
+        run: flutter analyze
+  flutter_test_main:
+      name: Test main
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v2
+        - uses: actions/setup-java@v1
+          with:
+            java-version: "12.x"
+        - uses: subosito/flutter-action@v2
+          with:
+            channel: "stable"
+        - name: Flutter pub get
+          run: flutter pub get
+        - name: Flutter test
+          run: flutter test
+  flutter_test_firebase:
+    name: Test firebase
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-java@v1
+        with:
+          java-version: "12.x"
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: "stable"
+      - name: Flutter pub get
+        working-directory: ./firebase
+        run: flutter pub get
+      - name: Flutter test
+        working-directory: ./firebase
+        run: flutter test

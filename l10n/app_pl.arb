@@ -1,17 +1,113 @@
 {
   "sign_in_screen_title": "Logowanie",
+  "@sign_in_screen_title": {
+    "description": "Title of sign in screen"
+  },
   "sign_in_screen_button_label": "Zaloguj",
-  "sign_in_screen_sign_up_option_info": "Nie masz konta? Zarejestruj się!",
-  "sign_in_screen_forgot_password_option_info": "Zapomniałeś hasła?",
-  "sign_in_screen_invalid_email_title": "Niepoprawny email",
-  "sign_in_screen_invalid_email_message": "Podany adres email jest niepoprawny",
-  "sign_in_screen_user_not_found_title": "Nie znaleziono użytkownika",
+  "@sign_in_screen_button_label": {
+    "description": "Label of the button to submit sign in form"
+  },
+  "sign_in_screen_sign_up_option": "Nie masz konta? Zarejestruj się!",
+  "@sign_in_screen_sign_up_option": {
+    "description": "Option to navigate to sign up form"
+  },
+  "sign_in_screen_forgot_password_option": "Zapomniałeś hasła?",
+  "@sign_in_screen_forgot_password_option": {
+    "description": "Option to navigate to forgot password screen"
+  },
+  "sign_in_screen_invalid_email_title": "Niepoprawny adres email",
+  "@sign_in_screen_invalid_email_title": {
+    "description": "Title of the dialog to inform that given email address is invalid"
+  },
+  "sign_in_screen_invalid_email_message": "Podany adres email jest nieprawidłowy",
+  "@sign_in_screen_invalid_email_message": {
+    "description": "Message of the dialog to inform that given email address is invalid"
+  },
+  "sign_in_screen_user_not_found_title": "Brak użytkownika",
+  "@sign_in_screen_user_not_found_title": {
+    "description": "Title of the dialog to inform that user does not exist"
+  },
   "sign_in_screen_user_not_found_message": "Użytkownik o podanym adresie email nie istnieje",
+  "@sign_in_screen_user_not_found_message": {
+    "description": "Message of the dialog to inform that user does not exist"
+  },
   "sign_in_screen_wrong_password_title": "Błędne hasło",
-  "sign_in_screen_wrong_password_message": "Podane hasło jest niepoprawne. Spróbuj ponownie podając poprawne hasło.",
+  "@sign_in_screen_wrong_password_title": {
+    "description": "Title of the dialog to inform that password is wrong"
+  },
+  "sign_in_screen_wrong_password_message": "Podany hasło jest błędne. Spróbuj ponownie z prawidłowym hasłem.",
+  "@sign_in_screen_wrong_password_message": {
+    "description": "Message of the dialog to inform that password is wrong"
+  },
 
+
+  "sign_up_screen_title": "Rejestracja",
+  "@sign_up_screen_title": {
+    "description": "Title of sign up screen"
+  },
+  "sign_up_screen_button_label": "Zarejestruj",
+  "@sign_up_screen_button_label": {
+    "description": "Label of the button to submit sign up form"
+  },
+  "sign_up_screen_sign_in_option": "Masz już konto? Zaloguj się!",
+  "@sign_up_screen_sign_in_option": {
+    "description": "Option to navigate to sign in screen,"
+  },
+  "sign_up_screen_already_taken_email_title": "Zajęty adres email",
+  "@sign_up_screen_already_taken_email_title": {
+    "description": "Title of the dialog to inform that email is already taken"
+  },
+  "sign_up_screen_already_taken_email_message": "Podany adres email jest już zajęty przez innego użytkownika...",
+  "@sign_up_screen_already_taken_email_message": {
+    "description": "Message of the dialog to inform that email is already taken"
+  },
+
+  "name": "Imię",
+  "@name": {
+    "description": "Name"
+  },
+  "surname": "Nazwisko",
+  "@surname": {
+    "description": "Surname"
+  },
   "email": "Email",
+  "@email": {
+    "description": "Email"
+  },
   "password": "Hasło",
+  "@password": {
+    "description": "Password"
+  },
+  "passwordConfirmation": "Potwierdź hasło",
+  "@passwordConfirmation": {
+    "description": "Password confirmation"
+  },
   "loading": "Ładowanie",
-  "close": "Zamknij"
+  "@loading": {
+    "description": "Loading"
+  },
+  "close": "Zamknij",
+  "@close": {
+    "description": "Close"
+  },
+  "required_field_message": "To pole jest wymagane",
+  "@required_field_message": {
+    "description": "Message to inform that field is required."
+  },
+  "invalid_name_or_surname_message": "Wymogi: \n - Długość minimum 2 znaki \n - Wyłącznie litery",
+  "@invalid_name_or_surname_message": {
+    "description": "Message about invalid name"
+  },
+  "invalid_email_message": "Niepoprawny adres email",
+  "@invalid_email_message": {
+    "description": "Message about invalid email"
+  },
+  "invalid_password_message": "Wymogi: \n - Długość minimum 6 znaków \n - Co najmniej jedna duża litera, \n - Co najmniej jedna mała litera, \n - Co najmniej jedna cyfra, \n - Co najmniej jeden znak specjalny",
+  "@invalid_password_message": {
+    "description": "Message about invalid password"
+  },
+  "invalid_password_confirmation_message": "Hasła nie są jednakowe",
+  "@invalid_password_confirmation_message": {
+    "description": "Message about invalid password confirmation"
+  }
 }
