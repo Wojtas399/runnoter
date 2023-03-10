@@ -12,7 +12,7 @@ void main() {
         'name': name,
         'surname': surname,
       };
-      final UserDto expectedUserDto = UserDto(
+      const UserDto expectedUserDto = UserDto(
         name: name,
         surname: surname,
       );
@@ -30,7 +30,7 @@ void main() {
       final Map<String, dynamic> json = {
         'surname': surname,
       };
-      final UserDto expectedUserDto = UserDto(
+      const UserDto expectedUserDto = UserDto(
         name: null,
         surname: surname,
       );
@@ -48,7 +48,7 @@ void main() {
       final Map<String, dynamic> json = {
         'name': name,
       };
-      final UserDto expectedUserDto = UserDto(
+      const UserDto expectedUserDto = UserDto(
         name: name,
         surname: null,
       );
@@ -63,7 +63,7 @@ void main() {
   test(
     "to json, should map fire user model to json",
     () {
-      final UserDto userDto = UserDto(
+      const UserDto userDto = UserDto(
         name: name,
         surname: surname,
       );
@@ -81,7 +81,7 @@ void main() {
   test(
     "to json, name is null, should not add name to json",
     () {
-      final UserDto userDto = UserDto(
+      const UserDto userDto = UserDto(
         name: null,
         surname: surname,
       );
@@ -98,7 +98,7 @@ void main() {
   test(
     "to json, surname is null, should not add surname to json",
     () {
-      final UserDto userDto = UserDto(
+      const UserDto userDto = UserDto(
         name: name,
         surname: null,
       );
