@@ -19,7 +19,10 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: "stable"
-      - name: Flutter pub get
+      - name: Flutter pub get main
+        run: flutter pub get
+      - name: Flutter pub get firebase
+        working-directory: ./firebase
         run: flutter pub get
       - name: Flutter analyze
         run: flutter analyze
