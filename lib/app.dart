@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
-import 'package:runnoter/auth/auth.dart';
-import 'package:runnoter/firebase/fire_auth_service.dart';
+import 'package:runnoter/data/interface_impl/auth_impl.dart';
+import 'package:runnoter/domain/interface/auth.dart';
 import 'package:runnoter/presentation/config/navigation/app_navigator.dart';
 import 'package:runnoter/presentation/config/theme.dart';
 import 'package:runnoter/presentation/service/theme_service.dart';
@@ -17,7 +17,7 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Provider<Auth>(
-      create: (_) => FireAuthService(),
+      create: (_) => AuthImpl(),
       child: BlocProvider(
         create: (_) => ThemeService(),
         child: BlocBuilder<ThemeService, ThemeMode>(

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:runnoter/auth/auth.dart';
+import 'package:runnoter/domain/interface/auth.dart';
 import 'package:runnoter/presentation/component/big_button_component.dart';
 import 'package:runnoter/presentation/component/bloc_with_status_listener_component.dart';
 import 'package:runnoter/presentation/component/password_text_field_component.dart';

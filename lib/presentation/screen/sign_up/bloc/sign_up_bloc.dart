@@ -1,8 +1,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:runnoter/model/bloc_state.dart';
-import 'package:runnoter/model/bloc_status.dart';
-import 'package:runnoter/model/bloc_with_status.dart';
+import 'package:runnoter/presentation/model/bloc_state.dart';
+import 'package:runnoter/presentation/model/bloc_status.dart';
+import 'package:runnoter/presentation/model/bloc_with_status.dart';
 import 'package:runnoter/presentation/service/validation_service.dart'
     as validator;
 

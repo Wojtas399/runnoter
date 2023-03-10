@@ -1,5 +1,5 @@
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/auth/auth.dart';
+import 'package:runnoter/domain/interface/auth.dart';
 
 class MockAuth extends Mock implements Auth {
   void mockSignIn({
@@ -13,7 +13,7 @@ class MockAuth extends Mock implements Auth {
     }
   }
 
-  Future<String?> _signInCall() {
+  Future<void> _signInCall() {
     return signIn(
       email: any(named: 'email'),
       password: any(named: 'password'),

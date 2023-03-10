@@ -1,28 +1,23 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase/firebase.dart' as firebase;
+import 'package:runnoter/data/mapper/auth_exception_code_mapper.dart';
+import 'package:runnoter/domain/interface/auth.dart';
+import 'package:runnoter/domain/model/auth_exception.dart';
 
-import '../auth/auth.dart';
-import '../mapper/auth_exception_code_mapper.dart';
-import '../model/auth_exception.dart';
-
-class FireAuthService implements Auth {
+class AuthImpl implements Auth {
   final AuthExceptionCodeMapper _authExceptionCodeMapper =
       AuthExceptionCodeMapper();
 
   @override
-  Future<String?> signIn({
+  Future<void> signIn({
     required String email,
     required String password,
   }) async {
     try {
-      final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+      await firebase.signIn(
         email: email,
         password: password,
       );
-      if (credential.user == null) {
-        return null;
-      }
-      return credential.user!.uid;
-    } on FirebaseAuthException catch (exception) {
+    } on firebase.FirebaseAuthException catch (exception) {
       final AuthExceptionCode? code =
           _authExceptionCodeMapper.mapFromFirebaseCodeToDomainCode(
         firebaseAuthExceptionCode: exception.code,
@@ -35,21 +30,24 @@ class FireAuthService implements Auth {
     }
   }
 
-  Future<String?> signUp({
+  @override
+  Future<void> signUp({
+    required String name,
+    required String surname,
     required String email,
     required String password,
   }) async {
     try {
-      final credential =
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      final String? userId = await firebase.signUp(
+        name: name,
+        surname: surname,
         email: email,
         password: password,
       );
-      if (credential.user == null) {
-        return null;
+      if (userId == null) {
+        return;
       }
-      return credential.user!.uid;
-    } on FirebaseAuthException catch (exception) {
+    } on firebase.FirebaseAuthException catch (exception) {
       final AuthExceptionCode? code =
           _authExceptionCodeMapper.mapFromFirebaseCodeToDomainCode(
         firebaseAuthExceptionCode: exception.code,

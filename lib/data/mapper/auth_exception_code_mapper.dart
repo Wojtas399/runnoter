@@ -1,4 +1,4 @@
-import '../../model/auth_exception.dart';
+import '../../domain/model/auth_exception.dart';
 
 class AuthExceptionCodeMapper {
   AuthExceptionCode? mapFromFirebaseCodeToDomainCode({

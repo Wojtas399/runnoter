@@ -1,5 +1,5 @@
 import 'package:bloc_test/bloc_test.dart';
-import 'package:runnoter/model/bloc_status.dart';
+import 'package:runnoter/presentation/model/bloc_status.dart';
 import 'package:runnoter/presentation/screen/sign_up/bloc/sign_up_bloc.dart';
 
 void main() {

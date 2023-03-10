@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:runnoter/model/bloc_state.dart';
-import 'package:runnoter/model/bloc_status.dart';
+import 'package:runnoter/presentation/model/bloc_state.dart';
+import 'package:runnoter/presentation/model/bloc_status.dart';
 import 'package:runnoter/presentation/service/dialog_service.dart';
 
 class BlocWithStatusListener<Bloc extends StateStreamable<State>,

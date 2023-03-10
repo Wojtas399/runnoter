@@ -1,10 +1,10 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:runnoter/auth/auth.dart';
-import 'package:runnoter/model/auth_exception.dart';
-import 'package:runnoter/model/bloc_state.dart';
-import 'package:runnoter/model/bloc_status.dart';
-import 'package:runnoter/model/bloc_with_status.dart';
+import 'package:runnoter/domain/interface/auth.dart';
+import 'package:runnoter/domain/model/auth_exception.dart';
+import 'package:runnoter/presentation/model/bloc_state.dart';
+import 'package:runnoter/presentation/model/bloc_status.dart';
+import 'package:runnoter/presentation/model/bloc_with_status.dart';
 
 part 'sign_in_event.dart';
 part 'sign_in_state.dart';
