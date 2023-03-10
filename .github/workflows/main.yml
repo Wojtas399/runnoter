@@ -8,8 +8,8 @@ on:
       - main
 
 jobs:
-  flutter_analyze:
-    name: Analyze
+  flutter_analyze_syntax:
+    name: Analyze syntax
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
