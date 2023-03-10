@@ -4,7 +4,7 @@ enum AuthExceptionCode {
   invalidEmail,
   wrongPassword,
   userNotFound,
-  emailAlreadyTaken,
+  emailAlreadyInUse,
 }
 
 class AuthException extends Equatable {

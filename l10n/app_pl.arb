@@ -53,6 +53,14 @@
   "@sign_up_screen_sign_in_option": {
     "description": "Option to navigate to sign in screen,"
   },
+  "sign_up_screen_already_taken_email_title": "Zajęty adres email",
+  "@sign_up_screen_already_taken_email_title": {
+    "description": "Title of the dialog to inform that email is already taken"
+  },
+  "sign_up_screen_already_taken_email_message": "Podany adres email jest już zajęty przez innego użytkownika...",
+  "@sign_up_screen_already_taken_email_message": {
+    "description": "Message of the dialog to inform that email is already taken"
+  },
 
   "name": "Imię",
   "@name": {

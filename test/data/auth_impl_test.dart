@@ -177,13 +177,13 @@ void main() {
       );
 
       test(
-        "firebase sign up method throws email already taken exception, should throw auth exception with email already taken code",
+        "firebase sign up method throws email already in use exception, should throw auth exception with email already in use code",
         () async {
           const expectedAuthException = AuthException(
-            code: AuthExceptionCode.emailAlreadyTaken,
+            code: AuthExceptionCode.emailAlreadyInUse,
           );
           firebaseAuthService.mockSignUp(
-            throwable: FirebaseAuthException(code: 'email-already-taken'),
+            throwable: FirebaseAuthException(code: 'email-already-in-use'),
           );
 
           Object? exception;

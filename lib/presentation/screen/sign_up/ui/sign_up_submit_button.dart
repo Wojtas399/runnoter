@@ -19,6 +19,7 @@ class _SubmitButton extends StatelessWidget {
   }
 
   void _onPressed(BuildContext context) {
+    unfocusInputs();
     context.read<SignUpBloc>().add(
           const SignUpEventSubmit(),
         );

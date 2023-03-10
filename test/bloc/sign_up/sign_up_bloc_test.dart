@@ -181,7 +181,7 @@ void main() {
       );
 
       blocTest(
-        "sign up method throws exception with email already taken code, should emit error state with email already taken code",
+        "sign up method throws exception with email already in use code, should emit error state with email already in use code",
         build: () => createBloc(
           name: name,
           surname: surname,
@@ -191,7 +191,7 @@ void main() {
         setUp: () {
           authService.mockSignUp(
             throwable: const AuthException(
-              code: AuthExceptionCode.emailAlreadyTaken,
+              code: AuthExceptionCode.emailAlreadyInUse,
             ),
           );
         },

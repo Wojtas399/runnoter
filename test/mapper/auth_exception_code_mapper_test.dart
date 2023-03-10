@@ -53,11 +53,11 @@ void main() {
       );
 
       test(
-        "firebase email already taken code should be mapped to domain email already taken code",
+        "firebase email already in use code should be mapped to domain email already in use code",
         () {
-          const String firebaseCode = 'email-already-taken';
+          const String firebaseCode = 'email-already-in-use';
           const AuthExceptionCode domainCode =
-              AuthExceptionCode.emailAlreadyTaken;
+              AuthExceptionCode.emailAlreadyInUse;
 
           final mappedCode = callMethod(firebaseCode: firebaseCode);
 

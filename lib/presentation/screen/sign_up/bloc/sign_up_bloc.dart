@@ -101,7 +101,7 @@ class SignUpBloc
       );
       emitCompleteStatus(emit, SignUpInfo.signedUp);
     } on AuthException catch (authException) {
-      if (authException.code == AuthExceptionCode.emailAlreadyTaken) {
+      if (authException.code == AuthExceptionCode.emailAlreadyInUse) {
         emitErrorStatus(emit, SignUpError.emailAlreadyTaken);
       } else {
         rethrow;

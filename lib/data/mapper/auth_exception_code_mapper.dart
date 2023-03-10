@@ -11,8 +11,8 @@ class AuthExceptionCodeMapper {
         return AuthExceptionCode.wrongPassword;
       case 'user-not-found':
         return AuthExceptionCode.userNotFound;
-      case 'email-already-taken':
-        return AuthExceptionCode.emailAlreadyTaken;
+      case 'email-already-in-use':
+        return AuthExceptionCode.emailAlreadyInUse;
       default:
         return null;
     }
