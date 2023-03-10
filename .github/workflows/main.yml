@@ -22,7 +22,7 @@ jobs:
       - name: Flutter pub get
         run: flutter pub get
       - name: Flutter analyze
-        run: flutter analyze .
+        run: flutter analyze
       - name: Flutter test
         run: flutter test
   flutter_test_firebase:
@@ -41,7 +41,7 @@ jobs:
         run: flutter pub get
       - name: Flutter analyze
         working-directory: ./firebase
-        run: flutter analyze .
+        run: flutter analyze
       - name: Flutter test
         working-directory: ./firebase
         run: flutter test
