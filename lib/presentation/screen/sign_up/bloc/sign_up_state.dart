@@ -1,5 +1,13 @@
 part of 'sign_up_bloc.dart';
 
+enum SignUpInfo {
+  signedUp,
+}
+
+enum SignUpError {
+  emailAlreadyTaken,
+}
+
 class SignUpState extends BlocState {
   final String name;
   final String surname;

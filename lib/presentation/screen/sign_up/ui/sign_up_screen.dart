@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:runnoter/domain/service/auth_service.dart';
 import 'package:runnoter/presentation/component/big_button_component.dart';
 import 'package:runnoter/presentation/component/password_text_field_component.dart';
 import 'package:runnoter/presentation/component/text_field_component.dart';
@@ -38,7 +39,9 @@ class _BlocProvider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => SignUpBloc(),
+      create: (_) => SignUpBloc(
+        authService: context.read<AuthService>(),
+      ),
       child: child,
     );
   }

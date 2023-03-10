@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:runnoter/domain/model/auth_exception.dart';
+import 'package:runnoter/domain/service/auth_service.dart';
 import 'package:runnoter/presentation/model/bloc_state.dart';
 import 'package:runnoter/presentation/model/bloc_status.dart';
 import 'package:runnoter/presentation/model/bloc_with_status.dart';
@@ -10,15 +12,19 @@ part 'sign_up_event.dart';
 part 'sign_up_state.dart';
 
 class SignUpBloc
-    extends BlocWithStatus<SignUpEvent, SignUpState, dynamic, dynamic> {
+    extends BlocWithStatus<SignUpEvent, SignUpState, SignUpInfo, SignUpError> {
+  final AuthService _authService;
+
   SignUpBloc({
+    required AuthService authService,
     BlocStatus status = const BlocStatusInitial(),
     String name = '',
     String surname = '',
     String email = '',
     String password = '',
     String passwordConfirmation = '',
-  }) : super(
+  })  : _authService = authService,
+        super(
           SignUpState(
             status: status,
             name: name,
@@ -85,6 +91,21 @@ class SignUpBloc
     SignUpEventSubmit event,
     Emitter<SignUpState> emit,
   ) async {
-    //TODO: Connect sign up method
+    try {
+      emitLoadingStatus(emit);
+      await _authService.signUp(
+        name: state.name,
+        surname: state.surname,
+        email: state.email,
+        password: state.password,
+      );
+      emitCompleteStatus(emit, SignUpInfo.signedUp);
+    } on AuthException catch (authException) {
+      if (authException.code == AuthExceptionCode.emailAlreadyTaken) {
+        emitErrorStatus(emit, SignUpError.emailAlreadyTaken);
+      } else {
+        rethrow;
+      }
+    }
   }
 }
