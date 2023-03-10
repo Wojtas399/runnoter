@@ -16,8 +16,13 @@ class _SignInAlternativeOptions extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 8),
-        Text(
-          AppLocalizations.of(context)!.sign_in_screen_forgot_password_option,
+        GestureDetector(
+          onTap: () {
+            _onForgotPasswordSelected(context);
+          },
+          child: Text(
+            AppLocalizations.of(context)!.sign_in_screen_forgot_password_option,
+          ),
         ),
       ],
     );
@@ -27,6 +32,13 @@ class _SignInAlternativeOptions extends StatelessWidget {
     navigateTo(
       context: context,
       route: Routes.signUp,
+    );
+  }
+
+  void _onForgotPasswordSelected(BuildContext context) {
+    navigateTo(
+      context: context,
+      route: Routes.forgotPassword,
     );
   }
 }
