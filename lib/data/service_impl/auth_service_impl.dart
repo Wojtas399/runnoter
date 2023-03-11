@@ -1,7 +1,8 @@
 import 'package:firebase/firebase.dart';
-import 'package:runnoter/data/mapper/auth_exception_code_mapper.dart';
-import 'package:runnoter/domain/model/auth_exception.dart';
-import 'package:runnoter/domain/service/auth_service.dart';
+
+import '../../domain/model/auth_exception.dart';
+import '../../domain/service/auth_service.dart';
+import '../mapper/auth_exception_code_mapper.dart';
 
 class AuthServiceImpl implements AuthService {
   final FirebaseAuthService _firebaseAuthService;

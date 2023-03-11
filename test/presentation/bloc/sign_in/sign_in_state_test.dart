@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/presentation/model/bloc_status.dart';
-import 'package:runnoter/presentation/screen/sign_in/bloc/sign_in_bloc.dart';
+import 'package:runnoter/presentation/screen/sign_in/bloc/sign_in_state.dart';
 
 void main() {
   late SignInState state;
@@ -14,7 +14,7 @@ void main() {
   });
 
   test(
-    "is button disabled, email is empty, should be true",
+    'is button disabled, email is empty, should be true',
     () {
       state = state.copyWith(
         password: 'password',
@@ -25,7 +25,7 @@ void main() {
   );
 
   test(
-    "is button disabled, password is empty, should be true",
+    'is button disabled, password is empty, should be true',
     () {
       state = state.copyWith(
         email: 'email@example.com',
@@ -48,7 +48,7 @@ void main() {
   );
 
   test(
-    "copy with status",
+    'copy with status',
     () {
       const expectedStatus = BlocStatusLoading();
 
@@ -61,7 +61,7 @@ void main() {
   );
 
   test(
-    "copy with email",
+    'copy with email',
     () {
       const expectedEmail = 'email@example.com';
 
@@ -74,7 +74,7 @@ void main() {
   );
 
   test(
-    "copy with password",
+    'copy with password',
     () {
       const expectedPassword = 'password123';
 

@@ -1,4 +1,6 @@
-part of 'sign_up_bloc.dart';
+import '../../../model/bloc_state.dart';
+import '../../../model/bloc_status.dart';
+import '../../../service/validation_service.dart' as validator;
 
 enum SignUpInfo {
   signedUp,

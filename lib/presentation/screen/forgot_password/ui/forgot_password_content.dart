@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../../component/app_bar_with_logo.dart';
 import '../../../component/big_button_component.dart';
 import '../../../component/text_field_component.dart';
 import '../../../service/utils.dart';
-import 'forgot_password_app_bar.dart';
 
 class ForgotPasswordContent extends StatelessWidget {
   const ForgotPasswordContent({
@@ -14,7 +14,7 @@ class ForgotPasswordContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const ForgotPasswordAppBar(),
+      appBar: const AppBarWithLogo(),
       body: SafeArea(
         child: SingleChildScrollView(
           child: GestureDetector(

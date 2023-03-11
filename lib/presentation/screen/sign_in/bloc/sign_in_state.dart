@@ -1,4 +1,5 @@
-part of 'sign_in_bloc.dart';
+import '../../../model/bloc_state.dart';
+import '../../../model/bloc_status.dart';
 
 enum SignInInfo {
   signedIn,

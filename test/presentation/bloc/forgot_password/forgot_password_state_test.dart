@@ -13,14 +13,14 @@ void main() {
   });
 
   test(
-    "is submit button disabled, email is empty, should be true",
+    'is submit button disabled, email is empty, should be true',
     () {
       expect(state.isSubmitButtonDisabled, true);
     },
   );
 
   test(
-    "is submit button disabled, email is not empty, should be false",
+    'is submit button disabled, email is not empty, should be false',
     () {
       const String email = 'email@example.com';
 
@@ -33,7 +33,7 @@ void main() {
   );
 
   test(
-    "copy with status",
+    'copy with status',
     () {
       const BlocStatus expectedStatus = BlocStatusLoading();
 
@@ -46,7 +46,7 @@ void main() {
   );
 
   test(
-    "copy with email",
+    'copy with email',
     () {
       const String expectedEmail = 'wojtekp@example.com';
 

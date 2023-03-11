@@ -24,7 +24,7 @@ void main() {
   }
 
   blocTest(
-    "email changed, should update email in state",
+    'email changed, should update email in state',
     build: () => createBloc(),
     act: (ForgotPasswordBloc bloc) {
       bloc.add(

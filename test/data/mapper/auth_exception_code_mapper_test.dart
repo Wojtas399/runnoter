@@ -6,7 +6,7 @@ void main() {
   final mapper = AuthExceptionCodeMapper();
 
   group(
-    "map from firebase code to domain code",
+    'map from firebase code to domain code',
     () {
       AuthExceptionCode? callMethod({
         required String firebaseCode,
@@ -17,7 +17,7 @@ void main() {
       }
 
       test(
-        "firebase invalid email code should be mapped to domain invalid email code",
+        'firebase invalid email code should be mapped to domain invalid email code',
         () {
           const String firebaseCode = 'invalid-email';
           const AuthExceptionCode domainCode = AuthExceptionCode.invalidEmail;
@@ -29,7 +29,7 @@ void main() {
       );
 
       test(
-        "firebase wrong password code should be mapped to domain wrong password code",
+        'firebase wrong password code should be mapped to domain wrong password code',
         () {
           const String firebaseCode = 'wrong-password';
           const AuthExceptionCode domainCode = AuthExceptionCode.wrongPassword;
@@ -41,7 +41,7 @@ void main() {
       );
 
       test(
-        "firebase user not found code should be mapped to domain user not found code",
+        'firebase user not found code should be mapped to domain user not found code',
         () {
           const String firebaseCode = 'user-not-found';
           const AuthExceptionCode domainCode = AuthExceptionCode.userNotFound;
@@ -53,7 +53,7 @@ void main() {
       );
 
       test(
-        "firebase email already in use code should be mapped to domain email already in use code",
+        'firebase email already in use code should be mapped to domain email already in use code',
         () {
           const String firebaseCode = 'email-already-in-use';
           const AuthExceptionCode domainCode =

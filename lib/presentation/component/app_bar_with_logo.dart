@@ -1,6 +1,10 @@
-part of 'sign_up_screen.dart';
+import 'package:flutter/material.dart';
 
-class _AppBar extends StatelessWidget with PreferredSizeWidget {
+class AppBarWithLogo extends StatelessWidget with PreferredSizeWidget {
+  const AppBarWithLogo({
+    super.key,
+  });
+
   @override
   Widget build(BuildContext context) {
     return AppBar(

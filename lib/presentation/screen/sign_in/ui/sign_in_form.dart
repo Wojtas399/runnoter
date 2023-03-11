@@ -1,7 +1,16 @@
-part of 'sign_in_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class _SignInForm extends StatelessWidget {
-  const _SignInForm();
+import '../../../component/password_text_field_component.dart';
+import '../../../component/text_field_component.dart';
+import '../bloc/sign_in_bloc.dart';
+import '../bloc/sign_in_event.dart';
+
+class SignInForm extends StatelessWidget {
+  const SignInForm({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {

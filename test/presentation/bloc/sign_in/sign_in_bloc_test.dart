@@ -4,6 +4,8 @@ import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/model/auth_exception.dart';
 import 'package:runnoter/presentation/model/bloc_status.dart';
 import 'package:runnoter/presentation/screen/sign_in/bloc/sign_in_bloc.dart';
+import 'package:runnoter/presentation/screen/sign_in/bloc/sign_in_event.dart';
+import 'package:runnoter/presentation/screen/sign_in/bloc/sign_in_state.dart';
 
 import '../../../mock/mock_auth_service.dart';
 
@@ -39,7 +41,7 @@ void main() {
   });
 
   blocTest(
-    "email changed, should update email in state",
+    'email changed, should update email in state',
     build: () => createBloc(),
     act: (SignInBloc bloc) {
       bloc.add(
@@ -57,7 +59,7 @@ void main() {
   );
 
   blocTest(
-    "password changed, should update password in state",
+    'password changed, should update password in state',
     build: () => createBloc(),
     act: (SignInBloc bloc) {
       bloc.add(
@@ -75,7 +77,7 @@ void main() {
   );
 
   group(
-    "submit",
+    'submit',
     () {
       const String email = 'email@example.com';
       const String password = 'password123';
@@ -91,7 +93,7 @@ void main() {
       });
 
       group(
-        "email and password are not empty, should call method responsible for signing in user",
+        'email and password are not empty, should call method responsible for signing in user',
         () {
           tearDown(() {
             verify(
@@ -126,7 +128,7 @@ void main() {
           );
 
           blocTest(
-            "method throws auth exception with invalid email code, should emit appropriate error status",
+            'method throws auth exception with invalid email code, should emit appropriate error status',
             build: () => createBloc(
               email: email,
               password: password,
@@ -156,7 +158,7 @@ void main() {
           );
 
           blocTest(
-            "method throws auth exception with user not found code, should emit appropriate error status",
+            'method throws auth exception with user not found code, should emit appropriate error status',
             build: () => createBloc(
               email: email,
               password: password,
@@ -186,7 +188,7 @@ void main() {
           );
 
           blocTest(
-            "method throws auth exception with wrong password code, should emit appropriate error status",
+            'method throws auth exception with wrong password code, should emit appropriate error status',
             build: () => createBloc(
               email: email,
               password: password,
