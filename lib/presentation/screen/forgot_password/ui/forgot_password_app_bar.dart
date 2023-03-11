@@ -1,6 +1,10 @@
-part of forgot_password_screen;
+import 'package:flutter/material.dart';
 
-class _AppBar extends StatelessWidget with PreferredSizeWidget {
+class ForgotPasswordAppBar extends StatelessWidget with PreferredSizeWidget {
+  const ForgotPasswordAppBar({
+    super.key,
+  });
+
   @override
   Widget build(BuildContext context) {
     return AppBar(

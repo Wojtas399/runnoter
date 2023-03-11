@@ -1,12 +1,20 @@
-part of forgot_password_screen;
+import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class _Content extends StatelessWidget {
-  const _Content();
+import '../../../component/big_button_component.dart';
+import '../../../component/text_field_component.dart';
+import '../../../service/utils.dart';
+import 'forgot_password_app_bar.dart';
+
+class ForgotPasswordContent extends StatelessWidget {
+  const ForgotPasswordContent({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _AppBar(),
+      appBar: const ForgotPasswordAppBar(),
       body: SafeArea(
         child: SingleChildScrollView(
           child: GestureDetector(
