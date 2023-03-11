@@ -5,7 +5,7 @@ import 'package:runnoter/domain/model/auth_exception.dart';
 import 'package:runnoter/presentation/model/bloc_status.dart';
 import 'package:runnoter/presentation/screen/sign_up/bloc/sign_up_bloc.dart';
 
-import '../../mock/mock_auth_service.dart';
+import '../../../mock/mock_auth_service.dart';
 
 void main() {
   final authService = MockAuthService();
