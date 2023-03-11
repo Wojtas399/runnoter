@@ -62,6 +62,19 @@
     "description": "Message of the dialog to inform that email is already taken"
   },
 
+  "forgot_password_message_title": "Zapomniałeś hasła?",
+  "@forgot_password_message_title": {
+    "description": "Title of the message displaying on forgot password screen"
+  },
+  "forgot_password_message_text": "Podaj adres email, na który wyślecimy Ci link z możliwością zmiany hasła.",
+  "@forgot_password_message_text": {
+    "description": "Text of the message displaying on forgot password screen"
+  },
+  "forgot_password_submit_button_label": "Wyślij",
+  "@forgot_password_submit_button_label": {
+    "description": "Label of the button to send link to change password"
+  },
+
   "name": "Imię",
   "@name": {
     "description": "Name"

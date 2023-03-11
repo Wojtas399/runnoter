@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:runnoter/presentation/config/navigation/routes.dart';
-import 'package:runnoter/presentation/screen/forgot_password_screen.dart';
+import 'package:runnoter/presentation/screen/forgot_password/ui/forgot_password_screen.dart';
 import 'package:runnoter/presentation/screen/home/home_screen.dart';
 import 'package:runnoter/presentation/screen/sign_in/ui/sign_in_screen.dart';
 import 'package:runnoter/presentation/screen/sign_up/ui/sign_up_screen.dart';
