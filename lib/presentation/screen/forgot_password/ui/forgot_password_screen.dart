@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../bloc/forgot_password_bloc.dart';
 import 'forgot_password_content.dart';
 
 class ForgotPasswordScreen extends StatelessWidget {
@@ -9,6 +11,24 @@ class ForgotPasswordScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const ForgotPasswordContent();
+    return const _BlocProvider(
+      child: ForgotPasswordContent(),
+    );
+  }
+}
+
+class _BlocProvider extends StatelessWidget {
+  final Widget child;
+
+  const _BlocProvider({
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (_) => ForgotPasswordBloc(),
+      child: child,
+    );
   }
 }
