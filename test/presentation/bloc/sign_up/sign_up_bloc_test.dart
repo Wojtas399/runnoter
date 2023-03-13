@@ -192,9 +192,7 @@ void main() {
         ),
         setUp: () {
           authService.mockSignUp(
-            throwable: const AuthException(
-              code: AuthExceptionCode.emailAlreadyInUse,
-            ),
+            throwable: AuthException.emailAlreadyInUse,
           );
         },
         act: callEvent,

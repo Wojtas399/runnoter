@@ -61,11 +61,11 @@ class SignInBloc
         emitCompleteStatus(emit, SignInInfo.signedIn);
       } on AuthException catch (authException) {
         SignInError? error;
-        if (authException.code == AuthExceptionCode.invalidEmail) {
+        if (authException == AuthException.invalidEmail) {
           error = SignInError.invalidEmail;
-        } else if (authException.code == AuthExceptionCode.userNotFound) {
+        } else if (authException == AuthException.userNotFound) {
           error = SignInError.userNotFound;
-        } else if (authException.code == AuthExceptionCode.wrongPassword) {
+        } else if (authException == AuthException.wrongPassword) {
           error = SignInError.userNotFound;
         }
         if (error != null) {

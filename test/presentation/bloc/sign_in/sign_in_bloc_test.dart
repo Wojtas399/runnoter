@@ -128,16 +128,14 @@ void main() {
           );
 
           blocTest(
-            'method throws auth exception with invalid email code, should emit appropriate error status',
+            'method throws auth exception with invalid email type, should emit appropriate error status',
             build: () => createBloc(
               email: email,
               password: password,
             ),
             setUp: () {
               authService.mockSignIn(
-                throwable: const AuthException(
-                  code: AuthExceptionCode.invalidEmail,
-                ),
+                throwable: AuthException.invalidEmail,
               );
             },
             act: callEvent,
@@ -165,9 +163,7 @@ void main() {
             ),
             setUp: () {
               authService.mockSignIn(
-                throwable: const AuthException(
-                  code: AuthExceptionCode.userNotFound,
-                ),
+                throwable: AuthException.userNotFound,
               );
             },
             act: callEvent,
@@ -195,9 +191,7 @@ void main() {
             ),
             setUp: () {
               authService.mockSignIn(
-                throwable: const AuthException(
-                  code: AuthExceptionCode.wrongPassword,
-                ),
+                throwable: AuthException.wrongPassword,
               );
             },
             act: callEvent,
