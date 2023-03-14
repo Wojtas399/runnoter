@@ -19,22 +19,20 @@ class ForgotPasswordContent extends StatelessWidget {
     return Scaffold(
       appBar: const AppBarWithLogo(),
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: GestureDetector(
-            onTap: unfocusInputs,
-            child: Container(
-              color: Colors.transparent,
-              width: double.infinity,
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                children: const [
-                  _Header(),
-                  SizedBox(height: 32),
-                  _Email(),
-                  SizedBox(height: 32),
-                  _SubmitButton(),
-                ],
-              ),
+        child: GestureDetector(
+          onTap: unfocusInputs,
+          child: Container(
+            color: Colors.transparent,
+            width: double.infinity,
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              children: const [
+                _Header(),
+                SizedBox(height: 32),
+                _Email(),
+                SizedBox(height: 32),
+                _SubmitButton(),
+              ],
             ),
           ),
         ),
@@ -107,6 +105,7 @@ class _SubmitButton extends StatelessWidget {
   }
 
   void _onPressed(BuildContext context) {
+    unfocusInputs();
     context.read<ForgotPasswordBloc>().add(
           const ForgotPasswordEventSubmit(),
         );

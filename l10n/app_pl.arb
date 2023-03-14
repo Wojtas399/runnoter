@@ -62,6 +62,7 @@
     "description": "Message of the dialog to inform that email is already taken"
   },
 
+
   "forgot_password_message_title": "Zapomniałeś hasła?",
   "@forgot_password_message_title": {
     "description": "Title of the message displaying on forgot password screen"
@@ -74,6 +75,31 @@
   "@forgot_password_submit_button_label": {
     "description": "Label of the button to send link to change password"
   },
+  "forgot_password_screen_sent_email_title": "Wiadomość email została wysłana",
+  "@forgot_password_screen_sent_email_title": {
+    "description": "Title of the dialog to inform that email with link to reset password has been sent"
+  },
+  "forgot_password_screen_sent_email_message": "Pomyślnie wysłano wiadomość na podany adres email. Sprawdź skrzynkę pocztową i postępuj zgodnie z instrukcjami zamieszczonymi w wysłanej wiadomości.",
+  "@forgot_password_screen_sent_email_message": {
+    "description": "Message of the dialog to inform that email with link to reset password has been sent"
+  },
+  "forgot_password_screen_invalid_email_title": "Niepoprawny adres email",
+  "@forgot_password_screen_invalid_email_title": {
+    "description": "Title of the dialog to inform that given email address is invalid"
+  },
+  "forgot_password_screen_invalid_email_message": "Podany adres email jest nieprawidłowy",
+  "@forgot_password_screen_invalid_email_message": {
+    "description": "Message of the dialog to inform that given email address is invalid"
+  },
+  "forgot_password_screen_user_not_found_title": "Brak użytkownika",
+  "@forgot_password_screen_user_not_found_title": {
+    "description": "Title of the dialog to inform that user does not exist"
+  },
+  "forgot_password_screen_user_not_found_message": "Nie możemy wysłać wiadomości, ponieważ użytkownik o podanym adresie email nie istnieje.",
+  "@forgot_password_screen_user_not_found_message": {
+    "description": "Message of the dialog to inform that user does not exist"
+  },
+
 
   "name": "Imię",
   "@name": {

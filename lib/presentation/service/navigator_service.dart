@@ -8,3 +8,9 @@ void navigateTo({
 }) {
   Navigator.of(context).pushNamed(route.path);
 }
+
+void navigateBack({
+  required BuildContext context,
+}) {
+  Navigator.of(context).pop();
+}
