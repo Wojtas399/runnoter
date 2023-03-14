@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../domain/service/auth_service.dart';
 import '../bloc/forgot_password_bloc.dart';
 import 'forgot_password_content.dart';
 
@@ -27,7 +28,9 @@ class _BlocProvider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => ForgotPasswordBloc(),
+      create: (_) => ForgotPasswordBloc(
+        authService: context.read<AuthService>(),
+      ),
       child: child,
     );
   }
