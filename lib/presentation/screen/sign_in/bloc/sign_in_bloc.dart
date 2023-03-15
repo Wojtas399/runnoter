@@ -1,13 +1,11 @@
-import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:runnoter/domain/model/auth_exception.dart';
-import 'package:runnoter/domain/service/auth_service.dart';
-import 'package:runnoter/presentation/model/bloc_state.dart';
-import 'package:runnoter/presentation/model/bloc_status.dart';
-import 'package:runnoter/presentation/model/bloc_with_status.dart';
 
-part 'sign_in_event.dart';
-part 'sign_in_state.dart';
+import '../../../../domain/model/auth_exception.dart';
+import '../../../../domain/service/auth_service.dart';
+import '../../../model/bloc_status.dart';
+import '../../../model/bloc_with_status.dart';
+import 'sign_in_event.dart';
+import 'sign_in_state.dart';
 
 class SignInBloc
     extends BlocWithStatus<SignInEvent, SignInState, SignInInfo, SignInError> {
@@ -63,11 +61,11 @@ class SignInBloc
         emitCompleteStatus(emit, SignInInfo.signedIn);
       } on AuthException catch (authException) {
         SignInError? error;
-        if (authException.code == AuthExceptionCode.invalidEmail) {
+        if (authException == AuthException.invalidEmail) {
           error = SignInError.invalidEmail;
-        } else if (authException.code == AuthExceptionCode.userNotFound) {
+        } else if (authException == AuthException.userNotFound) {
           error = SignInError.userNotFound;
-        } else if (authException.code == AuthExceptionCode.wrongPassword) {
+        } else if (authException == AuthException.wrongPassword) {
           error = SignInError.userNotFound;
         }
         if (error != null) {

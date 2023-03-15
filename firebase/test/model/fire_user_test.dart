@@ -6,7 +6,7 @@ void main() {
   const String surname = 'Gadovsky';
 
   test(
-    "from firestore, should map json to fire user model",
+    'from firestore, should map json to fire user model',
     () {
       final Map<String, dynamic> json = {
         'name': name,
@@ -61,7 +61,7 @@ void main() {
   );
 
   test(
-    "to json, should map fire user model to json",
+    'to json, should map fire user model to json',
     () {
       const UserDto userDto = UserDto(
         name: name,
@@ -79,7 +79,7 @@ void main() {
   );
 
   test(
-    "to json, name is null, should not add name to json",
+    'to json, name is null, should not add name to json',
     () {
       const UserDto userDto = UserDto(
         name: null,
@@ -96,7 +96,7 @@ void main() {
   );
 
   test(
-    "to json, surname is null, should not add surname to json",
+    'to json, surname is null, should not add surname to json',
     () {
       const UserDto userDto = UserDto(
         name: name,

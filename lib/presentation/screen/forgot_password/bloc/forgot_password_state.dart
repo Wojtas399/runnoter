@@ -1,45 +1,39 @@
 import '../../../model/bloc_state.dart';
 import '../../../model/bloc_status.dart';
 
-enum SignInInfo {
-  signedIn,
+enum ForgotPasswordInfo {
+  emailSubmitted,
 }
 
-enum SignInError {
+enum ForgotPasswordError {
   invalidEmail,
   userNotFound,
-  wrongPassword,
 }
 
-class SignInState extends BlocState {
+class ForgotPasswordState extends BlocState {
   final String email;
-  final String password;
 
-  const SignInState({
+  const ForgotPasswordState({
     required super.status,
     required this.email,
-    required this.password,
   });
 
   @override
-  List<Object?> get props => [
+  List<Object> get props => [
         status,
         email,
-        password,
       ];
 
-  bool get isButtonDisabled => email.isEmpty || password.isEmpty;
+  bool get isSubmitButtonDisabled => email.isEmpty;
 
   @override
-  SignInState copyWith({
+  ForgotPasswordState copyWith({
     BlocStatus? status,
     String? email,
-    String? password,
   }) {
-    return SignInState(
+    return ForgotPasswordState(
       status: status ?? const BlocStatusComplete(),
       email: email ?? this.email,
-      password: password ?? this.password,
     );
   }
 }

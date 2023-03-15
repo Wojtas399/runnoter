@@ -1,7 +1,15 @@
-part of 'sign_in_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class _SignInSubmitButton extends StatelessWidget {
-  const _SignInSubmitButton();
+import '../../../component/big_button_component.dart';
+import '../bloc/sign_in_bloc.dart';
+import '../bloc/sign_in_event.dart';
+
+class SignInSubmitButton extends StatelessWidget {
+  const SignInSubmitButton({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {

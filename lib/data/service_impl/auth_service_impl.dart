@@ -1,12 +1,13 @@
 import 'package:firebase/firebase.dart';
-import 'package:runnoter/data/mapper/auth_exception_code_mapper.dart';
-import 'package:runnoter/domain/model/auth_exception.dart';
-import 'package:runnoter/domain/service/auth_service.dart';
+import 'package:firebase/model/firebase_auth_exception_code.dart';
+
+import '../../domain/model/auth_exception.dart';
+import '../../domain/service/auth_service.dart';
+import '../mapper/auth_exception_mapper.dart';
 
 class AuthServiceImpl implements AuthService {
   final FirebaseAuthService _firebaseAuthService;
   final FirebaseUserService _firebaseUserService;
-  final _authExceptionCodeMapper = AuthExceptionCodeMapper();
 
   AuthServiceImpl({
     required FirebaseAuthService firebaseAuthService,
@@ -24,13 +25,11 @@ class AuthServiceImpl implements AuthService {
         email: email,
         password: password,
       );
-    } on FirebaseAuthException catch (exception) {
-      final AuthExceptionCode? code =
-          _authExceptionCodeMapper.mapFromFirebaseCodeToDomainCode(
-        firebaseAuthExceptionCode: exception.code,
-      );
-      if (code != null) {
-        throw AuthException(code: code);
+    } on FirebaseAuthExceptionCode catch (exception) {
+      final AuthException? authException =
+          mapFromFirebaseAuthExceptionCodeToAuthException(exception);
+      if (authException != null) {
+        throw authException;
       } else {
         rethrow;
       }
@@ -58,13 +57,28 @@ class AuthServiceImpl implements AuthService {
           surname: surname,
         );
       }
-    } on FirebaseAuthException catch (exception) {
-      final AuthExceptionCode? code =
-          _authExceptionCodeMapper.mapFromFirebaseCodeToDomainCode(
-        firebaseAuthExceptionCode: exception.code,
-      );
-      if (code != null) {
-        throw AuthException(code: code);
+    } on FirebaseAuthExceptionCode catch (exception) {
+      final AuthException? authException =
+          mapFromFirebaseAuthExceptionCodeToAuthException(exception);
+      if (authException != null) {
+        throw authException;
+      } else {
+        rethrow;
+      }
+    }
+  }
+
+  @override
+  Future<void> sendPasswordResetEmail({
+    required String email,
+  }) async {
+    try {
+      await _firebaseAuthService.sendPasswordResetEmail(email: email);
+    } on FirebaseAuthExceptionCode catch (exception) {
+      final AuthException? authException =
+          mapFromFirebaseAuthExceptionCodeToAuthException(exception);
+      if (authException != null) {
+        throw authException;
       } else {
         rethrow;
       }

@@ -23,6 +23,18 @@ class MockFirebaseAuthService extends Mock implements FirebaseAuthService {
     }
   }
 
+  void mockSendPasswordResetEmail({
+    Object? throwable,
+  }) {
+    if (throwable != null) {
+      when(_sendPasswordResetEmailCall).thenThrow(throwable);
+    } else {
+      when(_sendPasswordResetEmailCall).thenAnswer(
+        (invocation) => Future.value(),
+      );
+    }
+  }
+
   Future<void> _signInCall() {
     return signIn(
       email: any(named: 'email'),
@@ -36,6 +48,12 @@ class MockFirebaseAuthService extends Mock implements FirebaseAuthService {
       surname: any(named: 'surname'),
       email: any(named: 'email'),
       password: any(named: 'password'),
+    );
+  }
+
+  Future<void> _sendPasswordResetEmailCall() {
+    return sendPasswordResetEmail(
+      email: any(named: 'email'),
     );
   }
 }

@@ -1,7 +1,15 @@
-part of 'sign_in_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class _Content extends StatelessWidget {
-  const _Content();
+import '../../../service/utils.dart';
+import 'sign_in_alternative_options.dart';
+import 'sign_in_form.dart';
+import 'sign_in_submit_button.dart';
+
+class SignInContent extends StatelessWidget {
+  const SignInContent({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -21,11 +29,11 @@ class _Content extends StatelessWidget {
                   SizedBox(height: 24),
                   _FormHeader(),
                   SizedBox(height: 32),
-                  _SignInForm(),
+                  SignInForm(),
                   SizedBox(height: 32),
-                  _SignInSubmitButton(),
+                  SignInSubmitButton(),
                   SizedBox(height: 16),
-                  _SignInAlternativeOptions(),
+                  SignInAlternativeOptions(),
                 ],
               ),
             ),

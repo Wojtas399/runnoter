@@ -1,4 +1,4 @@
-part of 'sign_up_bloc.dart';
+import 'package:equatable/equatable.dart';
 
 abstract class SignUpEvent extends Equatable {
   const SignUpEvent();

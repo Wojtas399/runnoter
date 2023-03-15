@@ -1,7 +1,13 @@
-part of 'sign_up_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class _AlternativeOption extends StatelessWidget {
-  const _AlternativeOption();
+import '../../../config/navigation/routes.dart';
+import '../../../service/navigator_service.dart';
+
+class SignUpAlternativeOption extends StatelessWidget {
+  const SignUpAlternativeOption({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -16,6 +22,9 @@ class _AlternativeOption extends StatelessWidget {
   }
 
   void _onPressed(BuildContext context) {
-    navigateTo(context: context, route: Routes.signIn);
+    navigateTo(
+      context: context,
+      route: Routes.signIn,
+    );
   }
 }

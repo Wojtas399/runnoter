@@ -4,8 +4,10 @@ import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/model/auth_exception.dart';
 import 'package:runnoter/presentation/model/bloc_status.dart';
 import 'package:runnoter/presentation/screen/sign_up/bloc/sign_up_bloc.dart';
+import 'package:runnoter/presentation/screen/sign_up/bloc/sign_up_event.dart';
+import 'package:runnoter/presentation/screen/sign_up/bloc/sign_up_state.dart';
 
-import '../../mock/mock_auth_service.dart';
+import '../../../mock/mock_auth_service.dart';
 
 void main() {
   final authService = MockAuthService();
@@ -44,7 +46,7 @@ void main() {
   }
 
   blocTest(
-    "name changed, should update username in state",
+    'name changed, should update username in state',
     build: () => createBloc(),
     act: (SignUpBloc bloc) {
       bloc.add(
@@ -60,7 +62,7 @@ void main() {
   );
 
   blocTest(
-    "surname changed, should update surname in state",
+    'surname changed, should update surname in state',
     build: () => createBloc(),
     act: (SignUpBloc bloc) {
       bloc.add(
@@ -76,7 +78,7 @@ void main() {
   );
 
   blocTest(
-    "email changed, should update email in state",
+    'email changed, should update email in state',
     build: () => createBloc(),
     act: (SignUpBloc bloc) {
       bloc.add(
@@ -92,7 +94,7 @@ void main() {
   );
 
   blocTest(
-    "password changed, should update password in state",
+    'password changed, should update password in state',
     build: () => createBloc(),
     act: (SignUpBloc bloc) {
       bloc.add(
@@ -108,7 +110,7 @@ void main() {
   );
 
   blocTest(
-    "password confirmation changed, should update password confirmation in state",
+    'password confirmation changed, should update password confirmation in state',
     build: () => createBloc(),
     act: (SignUpBloc bloc) {
       bloc.add(
@@ -126,7 +128,7 @@ void main() {
   );
 
   group(
-    "sign up",
+    'sign up',
     () {
       const String name = 'Jack';
       const String surname = 'Gadovsky';
@@ -157,7 +159,7 @@ void main() {
       });
 
       blocTest(
-        "should call method responsible for signing up",
+        'should call method responsible for signing up',
         build: () => createBloc(
           name: name,
           surname: surname,
@@ -181,7 +183,7 @@ void main() {
       );
 
       blocTest(
-        "sign up method throws exception with email already in use code, should emit error state with email already in use code",
+        'sign up method throws exception with email already in use code, should emit error state with email already in use code',
         build: () => createBloc(
           name: name,
           surname: surname,
@@ -190,9 +192,7 @@ void main() {
         ),
         setUp: () {
           authService.mockSignUp(
-            throwable: const AuthException(
-              code: AuthExceptionCode.emailAlreadyInUse,
-            ),
+            throwable: AuthException.emailAlreadyInUse,
           );
         },
         act: callEvent,
@@ -209,7 +209,7 @@ void main() {
       );
 
       blocTest(
-        "sign up method throws unknown error, should rethrow",
+        'sign up method throws unknown error, should rethrow',
         build: () => createBloc(
           name: name,
           surname: surname,

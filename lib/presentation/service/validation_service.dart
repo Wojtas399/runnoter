@@ -1,6 +1,6 @@
 bool isNameOrSurnameValid(String value) {
   return RegExp(
-    r"^[a-zA-Z]{2,}$",
+    r'^[a-zA-Z]{2,}$',
   ).hasMatch(value);
 }
 
@@ -12,6 +12,6 @@ bool isEmailValid(String value) {
 
 bool isPasswordValid(String value) {
   return RegExp(
-    r"^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{6,}$",
+    r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{6,}$',
   ).hasMatch(value);
 }

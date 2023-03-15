@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:runnoter/presentation/component/dialog/loading_dialog_component.dart';
-import 'package:runnoter/presentation/component/dialog/message_dialog_component.dart';
+
+import '../component/dialog/loading_dialog_component.dart';
+import '../component/dialog/message_dialog_component.dart';
 
 bool _isLoadingDialogOpened = false;
 

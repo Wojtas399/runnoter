@@ -1,7 +1,13 @@
-part of 'sign_in_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class _SignInAlternativeOptions extends StatelessWidget {
-  const _SignInAlternativeOptions();
+import '../../../config/navigation/routes.dart';
+import '../../../service/navigator_service.dart';
+
+class SignInAlternativeOptions extends StatelessWidget {
+  const SignInAlternativeOptions({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -16,8 +22,13 @@ class _SignInAlternativeOptions extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 8),
-        Text(
-          AppLocalizations.of(context)!.sign_in_screen_forgot_password_option,
+        GestureDetector(
+          onTap: () {
+            _onForgotPasswordSelected(context);
+          },
+          child: Text(
+            AppLocalizations.of(context)!.sign_in_screen_forgot_password_option,
+          ),
         ),
       ],
     );
@@ -27,6 +38,13 @@ class _SignInAlternativeOptions extends StatelessWidget {
     navigateTo(
       context: context,
       route: Routes.signUp,
+    );
+  }
+
+  void _onForgotPasswordSelected(BuildContext context) {
+    navigateTo(
+      context: context,
+      route: Routes.forgotPassword,
     );
   }
 }

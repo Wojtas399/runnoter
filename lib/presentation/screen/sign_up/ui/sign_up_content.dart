@@ -1,12 +1,21 @@
-part of 'sign_up_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class _Content extends StatelessWidget {
-  const _Content();
+import '../../../component/app_bar_with_logo.dart';
+import '../../../service/utils.dart';
+import 'sign_up_alternative_option.dart';
+import 'sign_up_form.dart';
+import 'sign_up_submit_button.dart';
+
+class SignUpContent extends StatelessWidget {
+  const SignUpContent({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _AppBar(),
+      appBar: const AppBarWithLogo(),
       body: SafeArea(
         child: SingleChildScrollView(
           child: GestureDetector(
@@ -20,11 +29,11 @@ class _Content extends StatelessWidget {
                 children: const [
                   _FormHeader(),
                   SizedBox(height: 32),
-                  _SignUpForm(),
+                  SignUpForm(),
                   SizedBox(height: 32),
-                  _SubmitButton(),
+                  SignUpSubmitButton(),
                   SizedBox(height: 16),
-                  _AlternativeOption(),
+                  SignUpAlternativeOption(),
                 ],
               ),
             ),

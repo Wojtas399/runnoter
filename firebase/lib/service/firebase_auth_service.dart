@@ -5,10 +5,20 @@ class FirebaseAuthService {
     required String email,
     required String password,
   }) async {
-    await FirebaseAuth.instance.signInWithEmailAndPassword(
-      email: email,
-      password: password,
-    );
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+    } on FirebaseAuthException catch (exception) {
+      final FirebaseAuthExceptionCode code = mapFirebaseAuthExceptionCodeToEnum(
+        exception.code,
+      );
+      if (code != FirebaseAuthExceptionCode.unknown) {
+        throw code;
+      }
+      rethrow;
+    }
   }
 
   Future<String?> signUp({
@@ -17,14 +27,42 @@ class FirebaseAuthService {
     required String email,
     required String password,
   }) async {
-    final credential =
-        await FirebaseAuth.instance.createUserWithEmailAndPassword(
-      email: email,
-      password: password,
-    );
-    if (credential.user == null) {
-      return null;
+    try {
+      final credential =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      if (credential.user == null) {
+        return null;
+      }
+      return credential.user!.uid;
+    } on FirebaseAuthException catch (exception) {
+      final FirebaseAuthExceptionCode code = mapFirebaseAuthExceptionCodeToEnum(
+        exception.code,
+      );
+      if (code != FirebaseAuthExceptionCode.unknown) {
+        throw code;
+      }
+      rethrow;
     }
-    return credential.user!.uid;
+  }
+
+  Future<void> sendPasswordResetEmail({
+    required String email,
+  }) async {
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(
+        email: email,
+      );
+    } on FirebaseAuthException catch (exception) {
+      final FirebaseAuthExceptionCode code = mapFirebaseAuthExceptionCodeToEnum(
+        exception.code,
+      );
+      if (code != FirebaseAuthExceptionCode.unknown) {
+        throw code;
+      }
+      rethrow;
+    }
   }
 }

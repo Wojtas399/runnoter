@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/presentation/model/bloc_status.dart';
-import 'package:runnoter/presentation/screen/sign_up/bloc/sign_up_bloc.dart';
+import 'package:runnoter/presentation/screen/sign_up/bloc/sign_up_state.dart';
 
 void main() {
   late SignUpState state;
@@ -32,7 +32,7 @@ void main() {
   );
 
   test(
-    "is password confirmation valid, passwords are the same, should be true",
+    'is password confirmation valid, passwords are the same, should be true',
     () {
       const String password = 'password';
       const String passwordConfirmation = 'password';
@@ -47,7 +47,7 @@ void main() {
   );
 
   group(
-    "is submit button disabled",
+    'is submit button disabled',
     () {
       setUp(() {
         state = state.copyWith(
@@ -60,14 +60,14 @@ void main() {
       });
 
       test(
-        "all params are valid, should be false",
+        'all params are valid, should be false',
         () {
           expect(state.isSubmitButtonDisabled, false);
         },
       );
 
       test(
-        "name is invalid, should be true",
+        'name is invalid, should be true',
         () {
           state = state.copyWith(name: 'n');
 
@@ -76,7 +76,7 @@ void main() {
       );
 
       test(
-        "surname is invalid, should be true",
+        'surname is invalid, should be true',
         () {
           state = state.copyWith(surname: 's');
 
@@ -85,7 +85,7 @@ void main() {
       );
 
       test(
-        "email is invalid, should be true",
+        'email is invalid, should be true',
         () {
           state = state.copyWith(email: 'jackexample.com');
 
@@ -94,7 +94,7 @@ void main() {
       );
 
       test(
-        "password is invalid, should be true",
+        'password is invalid, should be true',
         () {
           state = state.copyWith(password: 'pass');
 
@@ -103,7 +103,7 @@ void main() {
       );
 
       test(
-        "password confirmation is invalid, should be true",
+        'password confirmation is invalid, should be true',
         () {
           state = state.copyWith(passwordConfirmation: 'Password123');
 
@@ -114,7 +114,7 @@ void main() {
   );
 
   test(
-    "copy with status",
+    'copy with status',
     () {
       const BlocStatus expectedStatus = BlocStatusLoading();
 
@@ -127,7 +127,7 @@ void main() {
   );
 
   test(
-    "copy with name",
+    'copy with name',
     () {
       const String expectedName = 'Jack';
 
@@ -140,7 +140,7 @@ void main() {
   );
 
   test(
-    "copy with surname",
+    'copy with surname',
     () {
       const String expectedSurname = 'Sparrowsky';
 
@@ -153,7 +153,7 @@ void main() {
   );
 
   test(
-    "copy with email",
+    'copy with email',
     () {
       const String expectedEmail = 'jack@example.com';
 
@@ -166,7 +166,7 @@ void main() {
   );
 
   test(
-    "copy with password",
+    'copy with password',
     () {
       const String expectedPassword = 'password123';
 
@@ -179,7 +179,7 @@ void main() {
   );
 
   test(
-    "copy with password confirmation",
+    'copy with password confirmation',
     () {
       const String expectedPasswordConfirmation = 'password321';
 

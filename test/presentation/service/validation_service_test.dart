@@ -3,7 +3,7 @@ import 'package:runnoter/presentation/service/validation_service.dart';
 
 void main() {
   test(
-    "is name or surname valid, value contains at least one digit, should be false",
+    'is name or surname valid, value contains at least one digit, should be false',
     () {
       const String value = 'name1';
 
@@ -14,7 +14,7 @@ void main() {
   );
 
   test(
-    "is name or surname valid, value contains at least one special character, should be false",
+    'is name or surname valid, value contains at least one special character, should be false',
     () {
       const String value = 'name!';
 
@@ -25,7 +25,7 @@ void main() {
   );
 
   test(
-    "is name or surname valid, length is lower than 2, should be false",
+    'is name or surname valid, length is lower than 2, should be false',
     () {
       const String value = 's';
 
@@ -36,7 +36,7 @@ void main() {
   );
 
   test(
-    "is name or surname valid, value contains only A-Z and a-z and length is higher than 2, should be true",
+    'is name or surname valid, value contains only A-Z and a-z and length is higher than 2, should be true',
     () {
       const String value = 'surname';
 
@@ -69,7 +69,7 @@ void main() {
   );
 
   test(
-    "is email valid, value is too short, should be false",
+    'is email valid, value is too short, should be false',
     () {
       const String value = 'email';
 
@@ -124,7 +124,7 @@ void main() {
   );
 
   test(
-    "is password valid, length is lower than 6, should be false",
+    'is password valid, length is lower than 6, should be false',
     () {
       const String value = 'passw';
 
@@ -135,7 +135,7 @@ void main() {
   );
 
   test(
-    "is password valid, value performs the conditions, should be true",
+    'is password valid, value performs the conditions, should be true',
     () {
       const String value = 'Password1@';
 
