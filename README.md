@@ -71,3 +71,7 @@ To be able to run the app you have to do below steps:
    ```
    flutter run
    ```
+If you have any troubles with installation process, below is link to the official docs:
+```
+https://docs.flutter.dev/get-started/install
+```
