@@ -1,5 +1,5 @@
 import 'package:firebase/mapper/firebase_auth_exception_code_mapper.dart';
-import 'package:firebase/model/firebase_auth_exception_code.dart';
+import 'package:firebase/model/exception/firebase_auth_exception_code.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

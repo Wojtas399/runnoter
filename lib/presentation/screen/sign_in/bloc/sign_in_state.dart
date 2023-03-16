@@ -9,6 +9,7 @@ enum SignInError {
   invalidEmail,
   userNotFound,
   wrongPassword,
+  noInternetConnection,
 }
 
 class SignInState extends BlocState {

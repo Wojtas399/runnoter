@@ -5,7 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 import 'mapper/firebase_auth_exception_code_mapper.dart';
-import 'model/firebase_auth_exception_code.dart';
+import 'model/exception/firebase_auth_exception_code.dart';
 
 part 'firebase_collections.dart';
 part 'model/dto/user_dto.dart';
