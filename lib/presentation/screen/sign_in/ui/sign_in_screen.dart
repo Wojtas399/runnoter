@@ -113,6 +113,15 @@ class _BlocListener extends StatelessWidget {
               .sign_in_screen_wrong_password_message,
         );
         break;
+      case SignInError.noInternetConnection:
+        await showMessageDialog(
+          context: context,
+          title: AppLocalizations.of(context)!
+              .sign_in_screen_no_internet_connection_title,
+          message: AppLocalizations.of(context)!
+              .sign_in_screen_no_internet_connection_message,
+        );
+        break;
     }
   }
 }

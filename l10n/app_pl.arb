@@ -35,9 +35,17 @@
   "@sign_in_screen_wrong_password_title": {
     "description": "Title of the dialog to inform that password is wrong"
   },
-  "sign_in_screen_wrong_password_message": "Podany hasło jest błędne. Spróbuj ponownie z prawidłowym hasłem.",
+  "sign_in_screen_wrong_password_message": "Podane hasło jest błędne. Spróbuj ponownie z prawidłowym hasłem.",
   "@sign_in_screen_wrong_password_message": {
     "description": "Message of the dialog to inform that password is wrong"
+  },
+  "sign_in_screen_no_internet_connection_title": "Brak połączenia internetowego",
+  "@sign_in_screen_no_internet_connection_title": {
+    "description": "Title of the dialog to inform that user doesn't have internet connection"
+  },
+  "sign_in_screen_no_internet_connection_message": "Nie możemy przeprowadzić procedury logowania, ponieważ utraciłeś połączenie internetowe.",
+  "@sign_in_screen_no_internet_connection_message": {
+    "description": "Message of the dialog to inform that user doesn't have internet connection"
   },
 
 
