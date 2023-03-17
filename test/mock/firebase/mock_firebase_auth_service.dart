@@ -2,6 +2,14 @@ import 'package:firebase/firebase.dart';
 import 'package:mocktail/mocktail.dart';
 
 class MockFirebaseAuthService extends Mock implements FirebaseAuthService {
+  void mockIsUserSignedIn({
+    required bool isSignedIn,
+  }) {
+    when(
+      () => isUserSignedIn(),
+    ).thenReturn(isSignedIn);
+  }
+
   void mockSignIn({
     Object? throwable,
   }) {

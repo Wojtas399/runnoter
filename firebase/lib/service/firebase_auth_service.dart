@@ -1,6 +1,10 @@
 part of firebase;
 
 class FirebaseAuthService {
+  bool isUserSignedIn() {
+    return FirebaseAuth.instance.currentUser != null;
+  }
+
   Future<void> signIn({
     required String email,
     required String password,
