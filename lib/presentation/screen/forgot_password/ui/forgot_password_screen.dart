@@ -4,6 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../../domain/service/auth_service.dart';
 import '../../../component/bloc_with_status_listener_component.dart';
+import '../../../service/connectivity_service.dart';
 import '../../../service/dialog_service.dart';
 import '../../../service/navigator_service.dart';
 import '../bloc/forgot_password_bloc.dart';
@@ -37,6 +38,7 @@ class _BlocProvider extends StatelessWidget {
     return BlocProvider(
       create: (_) => ForgotPasswordBloc(
         authService: context.read<AuthService>(),
+        connectivityService: ConnectivityService(),
       ),
       child: child,
     );
