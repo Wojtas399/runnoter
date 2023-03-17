@@ -1,5 +1,5 @@
 import 'package:firebase/firebase.dart';
-import 'package:firebase/model/firebase_auth_exception_code.dart';
+import 'package:firebase/model/exception/firebase_auth_exception_code.dart';
 
 import '../../domain/model/auth_exception.dart';
 import '../../domain/service/auth_service.dart';

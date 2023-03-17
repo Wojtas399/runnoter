@@ -7,7 +7,7 @@ enum SignUpInfo {
 }
 
 enum SignUpError {
-  emailAlreadyTaken,
+  emailAlreadyInUse,
 }
 
 class SignUpState extends BlocState {

@@ -24,9 +24,17 @@ class BlocStatusComplete<T> extends BlocStatus {
 }
 
 class BlocStatusError<T> extends BlocStatus {
-  final T? error;
+  final T error;
 
   const BlocStatusError({
-    this.error,
+    required this.error,
   });
+}
+
+class BlocStatusUnknownError extends BlocStatus {
+  const BlocStatusUnknownError();
+}
+
+class BlocStatusNoInternetConnection extends BlocStatus {
+  const BlocStatusNoInternetConnection();
 }

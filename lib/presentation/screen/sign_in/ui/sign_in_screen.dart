@@ -5,6 +5,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../../domain/service/auth_service.dart';
 import '../../../component/bloc_with_status_listener_component.dart';
 import '../../../config/navigation/routes.dart';
+import '../../../service/connectivity_service.dart';
 import '../../../service/dialog_service.dart';
 import '../../../service/navigator_service.dart';
 import '../bloc/sign_in_bloc.dart';
@@ -38,6 +39,7 @@ class _BlocProvider extends StatelessWidget {
     return BlocProvider(
       create: (BuildContext context) => SignInBloc(
         authService: context.read<AuthService>(),
+        connectivityService: ConnectivityService(),
       ),
       child: child,
     );
@@ -87,28 +89,28 @@ class _BlocListener extends StatelessWidget {
       case SignInError.invalidEmail:
         await showMessageDialog(
           context: context,
-          title:
-              AppLocalizations.of(context)!.sign_in_screen_invalid_email_title,
+          title: AppLocalizations.of(context)!
+              .sign_in_screen_invalid_email_dialog_title,
           message: AppLocalizations.of(context)!
-              .sign_in_screen_invalid_email_message,
+              .sign_in_screen_invalid_email_dialog_message,
         );
         break;
       case SignInError.userNotFound:
         await showMessageDialog(
           context: context,
-          title:
-              AppLocalizations.of(context)!.sign_in_screen_user_not_found_title,
+          title: AppLocalizations.of(context)!
+              .sign_in_screen_user_not_found_dialog_title,
           message:
-              '${AppLocalizations.of(context)!.sign_in_screen_user_not_found_message}...',
+              '${AppLocalizations.of(context)!.sign_in_screen_user_not_found_dialog_message}...',
         );
         break;
       case SignInError.wrongPassword:
         await showMessageDialog(
           context: context,
-          title:
-              AppLocalizations.of(context)!.sign_in_screen_wrong_password_title,
+          title: AppLocalizations.of(context)!
+              .sign_in_screen_wrong_password_dialog_title,
           message: AppLocalizations.of(context)!
-              .sign_in_screen_wrong_password_message,
+              .sign_in_screen_wrong_password_dialog_message,
         );
         break;
     }

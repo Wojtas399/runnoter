@@ -1,4 +1,4 @@
-import 'package:firebase/model/firebase_auth_exception_code.dart';
+import 'package:firebase/model/exception/firebase_auth_exception_code.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/data/service_impl/auth_service_impl.dart';
