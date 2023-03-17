@@ -8,8 +8,6 @@ enum SignUpInfo {
 
 enum SignUpError {
   emailAlreadyInUse,
-  noInternetConnection,
-  unknown,
 }
 
 class SignUpState extends BlocState {

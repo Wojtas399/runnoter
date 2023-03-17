@@ -19,9 +19,21 @@ abstract class BlocWithStatus<Event, State extends BlocState, Info, Error>
     ));
   }
 
-  void emitErrorStatus(Emitter<State> emit, Error? error) {
+  void emitErrorStatus(Emitter<State> emit, Error error) {
     emit(state.copyWith(
       status: BlocStatusError<Error>(error: error),
+    ));
+  }
+
+  void emitUnknownErrorStatus(Emitter<State> emit) {
+    emit(state.copyWith(
+      status: const BlocStatusUnknownError(),
+    ));
+  }
+
+  void emitNoInternetConnectionStatus(Emitter<State> emit) {
+    emit(state.copyWith(
+      status: const BlocStatusNoInternetConnection(),
     ));
   }
 }

@@ -208,7 +208,7 @@ void main() {
   blocTest(
     'submit, '
     'device does not have internet connection, '
-    'should emit error status with no internet connection error',
+    'should emit no internet connection status',
     build: () => createBloc(
       name: name,
       surname: surname,
@@ -234,9 +234,7 @@ void main() {
         password: password,
       ),
       createState(
-        status: const BlocStatusError<SignUpError>(
-          error: SignUpError.noInternetConnection,
-        ),
+        status: const BlocStatusNoInternetConnection(),
         name: name,
         surname: surname,
         email: email,
@@ -346,9 +344,7 @@ void main() {
         password: password,
       ),
       createState(
-        status: const BlocStatusError<SignUpError>(
-          error: SignUpError.unknown,
-        ),
+        status: const BlocStatusUnknownError(),
         name: name,
         surname: surname,
         email: email,

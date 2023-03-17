@@ -102,10 +102,10 @@ class _BlocListenerState extends State<_BlocListener> {
   Future<void> _showMessageAboutSubmittedEmail(BuildContext context) async {
     await showMessageDialog(
       context: context,
-      title:
-          AppLocalizations.of(context)!.forgot_password_screen_sent_email_title,
+      title: AppLocalizations.of(context)!
+          .forgot_password_screen_sent_email_dialog_title,
       message: AppLocalizations.of(context)!
-          .forgot_password_screen_sent_email_message,
+          .forgot_password_screen_sent_email_dialog_message,
     );
   }
 
@@ -113,9 +113,9 @@ class _BlocListenerState extends State<_BlocListener> {
     showMessageDialog(
       context: context,
       title: AppLocalizations.of(context)!
-          .forgot_password_screen_invalid_email_title,
+          .forgot_password_screen_invalid_email_dialog_title,
       message: AppLocalizations.of(context)!
-          .forgot_password_screen_invalid_email_message,
+          .forgot_password_screen_invalid_email_dialog_message,
     );
   }
 
@@ -123,9 +123,9 @@ class _BlocListenerState extends State<_BlocListener> {
     showMessageDialog(
       context: context,
       title: AppLocalizations.of(context)!
-          .forgot_password_screen_user_not_found_title,
+          .forgot_password_screen_user_not_found_dialog_title,
       message: AppLocalizations.of(context)!
-          .forgot_password_screen_user_not_found_message,
+          .forgot_password_screen_user_not_found_dialog_message,
     );
   }
 }

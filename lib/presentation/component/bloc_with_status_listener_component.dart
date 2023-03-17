@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../model/bloc_state.dart';
 import '../model/bloc_status.dart';
@@ -40,23 +41,26 @@ class BlocWithStatusListener<Bloc extends StateStreamable<State>,
 
   void _manageBlocStatus(BlocStatus blocStatus, BuildContext context) {
     if (blocStatus is BlocStatusLoading) {
-      _manageLoadingStatus(context);
+      showLoadingDialog(context: context);
     } else if (blocStatus is BlocStatusComplete) {
+      _closeLoadingDialog(context);
       _manageCompleteStatus(blocStatus, context);
     } else if (blocStatus is BlocStatusError) {
+      _closeLoadingDialog(context);
       _manageErrorStatus(blocStatus, context);
+    } else if (blocStatus is BlocStatusUnknownError) {
+      closeLoadingDialog(context: context);
+      _showUnknownErrorMessage(context);
+    } else if (blocStatus is BlocStatusNoInternetConnection) {
+      closeLoadingDialog(context: context);
+      _showNoInternetConnectionMessage(context);
     }
-  }
-
-  void _manageLoadingStatus(BuildContext context) {
-    showLoadingDialog(context: context);
   }
 
   void _manageCompleteStatus(
     BlocStatusComplete completeStatus,
     BuildContext context,
   ) {
-    _closeLoadingDialog(context);
     final Info? info = completeStatus.info;
     final Function(Info info)? onCompleteStatusChanged =
         this.onCompleteStatusChanged;
@@ -69,13 +73,29 @@ class BlocWithStatusListener<Bloc extends StateStreamable<State>,
     BlocStatusError errorStatus,
     BuildContext context,
   ) {
-    _closeLoadingDialog(context);
     final Error? error = errorStatus.error;
     final Function(Error error)? onErrorStatusChanged =
         this.onErrorStatusChanged;
     if (error != null && onErrorStatusChanged != null) {
       onErrorStatusChanged(error);
     }
+  }
+
+  void _showUnknownErrorMessage(BuildContext context) {
+    showMessageDialog(
+      context: context,
+      title: AppLocalizations.of(context)!.unknown_error_dialog_title,
+      message: AppLocalizations.of(context)!.unknown_error_dialog_message,
+    );
+  }
+
+  void _showNoInternetConnectionMessage(BuildContext context) {
+    showMessageDialog(
+      context: context,
+      title: AppLocalizations.of(context)!.no_internet_connection_dialog_title,
+      message:
+          AppLocalizations.of(context)!.no_internet_connection_dialog_message,
+    );
   }
 
   void _closeLoadingDialog(BuildContext context) {

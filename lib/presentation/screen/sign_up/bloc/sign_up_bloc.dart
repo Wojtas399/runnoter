@@ -93,20 +93,22 @@ class SignUpBloc
   ) async {
     emitLoadingStatus(emit);
     if (await _connectivityService.hasDeviceInternetConnection() == false) {
-      emitErrorStatus(emit, SignUpError.noInternetConnection);
+      emitNoInternetConnectionStatus(emit);
       return;
     }
     try {
       await _tryToSignUp();
       emitCompleteStatus(emit, SignUpInfo.signedUp);
     } on AuthException catch (authException) {
-      final SignUpError error = _mapAuthExceptionToBlocError(authException);
-      emitErrorStatus(emit, error);
-      if (error == SignUpError.unknown) {
+      final SignUpError? error = _mapAuthExceptionToBlocError(authException);
+      if (error != null) {
+        emitErrorStatus(emit, error);
+      } else {
+        emitUnknownErrorStatus(emit);
         rethrow;
       }
     } catch (_) {
-      emitErrorStatus(emit, SignUpError.unknown);
+      emitUnknownErrorStatus(emit);
       rethrow;
     }
   }
@@ -120,11 +122,10 @@ class SignUpBloc
     );
   }
 
-  SignUpError _mapAuthExceptionToBlocError(AuthException exception) {
+  SignUpError? _mapAuthExceptionToBlocError(AuthException exception) {
     if (exception == AuthException.emailAlreadyInUse) {
       return SignUpError.emailAlreadyInUse;
-    } else {
-      return SignUpError.unknown;
     }
+    return null;
   }
 }

@@ -90,15 +90,10 @@ class _BlocListener extends StatelessWidget {
         await showMessageDialog(
           context: context,
           title: AppLocalizations.of(context)!
-              .sign_up_screen_already_taken_email_title,
+              .sign_up_screen_already_taken_email_dialog_title,
           message: AppLocalizations.of(context)!
-              .sign_up_screen_already_taken_email_message,
+              .sign_up_screen_already_taken_email_dialog_message,
         );
-        break;
-      case SignUpError.noInternetConnection:
-        // TODO: Handle this case.
-        break;
-      case SignUpError.unknown:
         break;
     }
   }

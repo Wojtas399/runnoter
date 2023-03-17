@@ -87,7 +87,7 @@ void main() {
   blocTest(
     'submit, '
     "email doesn't have internet connection, "
-    'should emit error status with no internet connection error',
+    'should emit no internet connection status',
     build: () => createBloc(
       email: email,
       password: password,
@@ -109,9 +109,7 @@ void main() {
         password: password,
       ),
       createState(
-        status: const BlocStatusError<SignInError>(
-          error: SignInError.noInternetConnection,
-        ),
+        status: const BlocStatusNoInternetConnection(),
         email: email,
         password: password,
       ),
@@ -318,7 +316,7 @@ void main() {
   blocTest(
     'submit, '
     'auth service method throws unknown error, '
-    'should emit error status with unknown error and should rethrow',
+    'should emit unknown error status',
     build: () => createBloc(
       email: email,
       password: password,
@@ -343,9 +341,7 @@ void main() {
         password: password,
       ),
       createState(
-        status: const BlocStatusError<SignInError>(
-          error: SignInError.unknown,
-        ),
+        status: const BlocStatusUnknownError(),
         email: email,
         password: password,
       ),

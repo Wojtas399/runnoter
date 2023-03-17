@@ -60,20 +60,22 @@ class SignInBloc
     }
     emitLoadingStatus(emit);
     if (await _connectivityService.hasDeviceInternetConnection() == false) {
-      emitErrorStatus(emit, SignInError.noInternetConnection);
+      emitNoInternetConnectionStatus(emit);
       return;
     }
     try {
       await _tryToSignIn();
       emitCompleteStatus(emit, SignInInfo.signedIn);
     } on AuthException catch (authException) {
-      SignInError error = _mapAuthExceptionToBlocError(authException);
-      emitErrorStatus(emit, error);
-      if (error == SignInError.unknown) {
+      final SignInError? error = _mapAuthExceptionToBlocError(authException);
+      if (error != null) {
+        emitErrorStatus(emit, error);
+      } else {
+        emitUnknownErrorStatus(emit);
         rethrow;
       }
     } catch (_) {
-      emitErrorStatus(emit, SignInError.unknown);
+      emitUnknownErrorStatus(emit);
       rethrow;
     }
   }
@@ -89,15 +91,14 @@ class SignInBloc
     );
   }
 
-  SignInError _mapAuthExceptionToBlocError(AuthException exception) {
+  SignInError? _mapAuthExceptionToBlocError(AuthException exception) {
     if (exception == AuthException.invalidEmail) {
       return SignInError.invalidEmail;
     } else if (exception == AuthException.userNotFound) {
       return SignInError.userNotFound;
     } else if (exception == AuthException.wrongPassword) {
       return SignInError.userNotFound;
-    } else {
-      return SignInError.unknown;
     }
+    return null;
   }
 }
