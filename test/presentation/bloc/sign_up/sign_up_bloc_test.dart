@@ -8,9 +8,15 @@ import 'package:runnoter/presentation/screen/sign_up/bloc/sign_up_event.dart';
 import 'package:runnoter/presentation/screen/sign_up/bloc/sign_up_state.dart';
 
 import '../../../mock/mock_auth_service.dart';
+import '../../../mock/presentation/service/mock_connectivity_service.dart';
 
 void main() {
   final authService = MockAuthService();
+  final connectivityService = MockConnectivityService();
+  const String name = 'Jack';
+  const String surname = 'Gadovsky';
+  const String email = 'jack@example.com';
+  const String password = 'Password1!';
 
   SignUpBloc createBloc({
     String name = '',
@@ -20,6 +26,7 @@ void main() {
   }) {
     return SignUpBloc(
       authService: authService,
+      connectivityService: connectivityService,
       name: name,
       surname: surname,
       email: email,
@@ -45,192 +52,322 @@ void main() {
     );
   }
 
+  tearDown(() {
+    reset(authService);
+    reset(connectivityService);
+  });
+
   blocTest(
-    'name changed, should update username in state',
+    'name changed, '
+    'should update username in state',
     build: () => createBloc(),
     act: (SignUpBloc bloc) {
       bloc.add(
-        const SignUpEventNameChanged(name: 'Jack'),
+        const SignUpEventNameChanged(
+          name: name,
+        ),
       );
     },
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
-        name: 'Jack',
+        name: name,
       ),
     ],
   );
 
   blocTest(
-    'surname changed, should update surname in state',
+    'surname changed, '
+    'should update surname in state',
     build: () => createBloc(),
     act: (SignUpBloc bloc) {
       bloc.add(
-        const SignUpEventSurnameChanged(surname: 'Grealishowsky'),
+        const SignUpEventSurnameChanged(
+          surname: surname,
+        ),
       );
     },
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
-        surname: 'Grealishowsky',
+        surname: surname,
       ),
     ],
   );
 
   blocTest(
-    'email changed, should update email in state',
+    'email changed, '
+    'should update email in state',
     build: () => createBloc(),
     act: (SignUpBloc bloc) {
       bloc.add(
-        const SignUpEventEmailChanged(email: 'jack@example.com'),
+        const SignUpEventEmailChanged(
+          email: email,
+        ),
       );
     },
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
-        email: 'jack@example.com',
+        email: email,
       ),
     ],
   );
 
   blocTest(
-    'password changed, should update password in state',
+    'password changed, '
+    'should update password in state',
     build: () => createBloc(),
     act: (SignUpBloc bloc) {
       bloc.add(
-        const SignUpEventPasswordChanged(password: 'password123'),
+        const SignUpEventPasswordChanged(
+          password: password,
+        ),
       );
     },
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
-        password: 'password123',
+        password: password,
       ),
     ],
   );
 
   blocTest(
-    'password confirmation changed, should update password confirmation in state',
+    'password confirmation changed, '
+    'should update password confirmation in state',
     build: () => createBloc(),
     act: (SignUpBloc bloc) {
       bloc.add(
         const SignUpEventPasswordConfirmationChanged(
-          passwordConfirmation: 'passwordConfirmation123',
+          passwordConfirmation: password,
         ),
       );
     },
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
-        passwordConfirmation: 'passwordConfirmation123',
+        passwordConfirmation: password,
       ),
     ],
   );
 
-  group(
-    'sign up',
-    () {
-      const String name = 'Jack';
-      const String surname = 'Gadovsky';
-      const String email = 'email@example.com';
-      const String password = 'Password1';
-      final SignUpState state = createState(
+  blocTest(
+    'submit, '
+    'should call auth service method to sign up and should emit complete status with signed up info',
+    build: () => createBloc(
+      name: name,
+      surname: surname,
+      email: email,
+      password: password,
+    ),
+    setUp: () {
+      connectivityService.mockHasDeviceInternetConnection(
+        hasConnection: true,
+      );
+      authService.mockSignUp();
+    },
+    act: (SignUpBloc bloc) {
+      bloc.add(
+        const SignUpEventSubmit(),
+      );
+    },
+    expect: () => [
+      createState(
+        status: const BlocStatusLoading(),
         name: name,
         surname: surname,
         email: email,
         password: password,
-      );
-
-      void callEvent(SignUpBloc bloc) {
-        bloc.add(
-          const SignUpEventSubmit(),
-        );
-      }
-
-      tearDown(() {
-        verify(
-          () => authService.signUp(
-            name: name,
-            surname: surname,
-            email: email,
-            password: password,
-          ),
-        ).called(1);
-      });
-
-      blocTest(
-        'should call method responsible for signing up',
-        build: () => createBloc(
+      ),
+      createState(
+        status: const BlocStatusComplete<SignUpInfo>(
+          info: SignUpInfo.signedUp,
+        ),
+        name: name,
+        surname: surname,
+        email: email,
+        password: password,
+      ),
+    ],
+    verify: (_) {
+      verify(
+        () => connectivityService.hasDeviceInternetConnection(),
+      ).called(1);
+      verify(
+        () => authService.signUp(
           name: name,
           surname: surname,
           email: email,
           password: password,
         ),
-        setUp: () {
-          authService.mockSignUp();
-        },
-        act: callEvent,
-        expect: () => [
-          state.copyWith(
-            status: const BlocStatusLoading(),
-          ),
-          state.copyWith(
-            status: const BlocStatusComplete<SignUpInfo>(
-              info: SignUpInfo.signedUp,
-            ),
-          ),
-        ],
-      );
+      ).called(1);
+    },
+  );
 
-      blocTest(
-        'sign up method throws exception with email already in use code, should emit error state with email already in use code',
-        build: () => createBloc(
+  blocTest(
+    'submit, '
+    'device does not have internet connection, '
+    'should emit error status with no internet connection error',
+    build: () => createBloc(
+      name: name,
+      surname: surname,
+      email: email,
+      password: password,
+    ),
+    setUp: () {
+      connectivityService.mockHasDeviceInternetConnection(
+        hasConnection: false,
+      );
+    },
+    act: (SignUpBloc bloc) {
+      bloc.add(
+        const SignUpEventSubmit(),
+      );
+    },
+    expect: () => [
+      createState(
+        status: const BlocStatusLoading(),
+        name: name,
+        surname: surname,
+        email: email,
+        password: password,
+      ),
+      createState(
+        status: const BlocStatusError<SignUpError>(
+          error: SignUpError.noInternetConnection,
+        ),
+        name: name,
+        surname: surname,
+        email: email,
+        password: password,
+      ),
+    ],
+    verify: (_) {
+      verify(
+        () => connectivityService.hasDeviceInternetConnection(),
+      ).called(1);
+      verifyNever(
+        () => authService.signUp(
+          name: any(named: 'name'),
+          surname: any(named: 'surname'),
+          email: any(named: 'email'),
+          password: any(named: 'password'),
+        ),
+      );
+    },
+  );
+
+  blocTest(
+    'submit, '
+    'auth service method throws email already in use exception, '
+    'should emit error status with email already in use error',
+    build: () => createBloc(
+      name: name,
+      surname: surname,
+      email: email,
+      password: password,
+    ),
+    setUp: () {
+      connectivityService.mockHasDeviceInternetConnection(
+        hasConnection: true,
+      );
+      authService.mockSignUp(
+        throwable: AuthException.emailAlreadyInUse,
+      );
+    },
+    act: (SignUpBloc bloc) {
+      bloc.add(
+        const SignUpEventSubmit(),
+      );
+    },
+    expect: () => [
+      createState(
+        status: const BlocStatusLoading(),
+        name: name,
+        surname: surname,
+        email: email,
+        password: password,
+      ),
+      createState(
+        status: const BlocStatusError<SignUpError>(
+          error: SignUpError.emailAlreadyInUse,
+        ),
+        name: name,
+        surname: surname,
+        email: email,
+        password: password,
+      ),
+    ],
+    verify: (_) {
+      verify(
+        () => connectivityService.hasDeviceInternetConnection(),
+      ).called(1);
+      verify(
+        () => authService.signUp(
           name: name,
           surname: surname,
           email: email,
           password: password,
         ),
-        setUp: () {
-          authService.mockSignUp(
-            throwable: AuthException.emailAlreadyInUse,
-          );
-        },
-        act: callEvent,
-        expect: () => [
-          state.copyWith(
-            status: const BlocStatusLoading(),
-          ),
-          state.copyWith(
-            status: const BlocStatusError<SignUpError>(
-              error: SignUpError.emailAlreadyTaken,
-            ),
-          ),
-        ],
-      );
+      ).called(1);
+    },
+  );
 
-      blocTest(
-        'sign up method throws unknown error, should rethrow',
-        build: () => createBloc(
+  blocTest(
+    'submit, '
+    'auth service method throws unknown error, '
+    'should emit error status with unknown error and should rethrow error',
+    build: () => createBloc(
+      name: name,
+      surname: surname,
+      email: email,
+      password: password,
+    ),
+    setUp: () {
+      connectivityService.mockHasDeviceInternetConnection(
+        hasConnection: true,
+      );
+      authService.mockSignUp(
+        throwable: 'Unknown error...',
+      );
+    },
+    act: (SignUpBloc bloc) {
+      bloc.add(
+        const SignUpEventSubmit(),
+      );
+    },
+    expect: () => [
+      createState(
+        status: const BlocStatusLoading(),
+        name: name,
+        surname: surname,
+        email: email,
+        password: password,
+      ),
+      createState(
+        status: const BlocStatusError<SignUpError>(
+          error: SignUpError.unknown,
+        ),
+        name: name,
+        surname: surname,
+        email: email,
+        password: password,
+      ),
+    ],
+    errors: () => ['Unknown error...'],
+    verify: (_) {
+      verify(
+        () => connectivityService.hasDeviceInternetConnection(),
+      ).called(1);
+      verify(
+        () => authService.signUp(
           name: name,
           surname: surname,
           email: email,
           password: password,
         ),
-        setUp: () {
-          authService.mockSignUp(
-            throwable: 'Unknown error',
-          );
-        },
-        act: callEvent,
-        expect: () => [
-          state.copyWith(
-            status: const BlocStatusLoading(),
-          ),
-        ],
-        errors: () => [
-          'Unknown error',
-        ],
-      );
+      ).called(1);
     },
   );
 }

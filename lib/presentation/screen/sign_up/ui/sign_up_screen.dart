@@ -5,6 +5,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../../domain/service/auth_service.dart';
 import '../../../component/bloc_with_status_listener_component.dart';
 import '../../../config/navigation/routes.dart';
+import '../../../service/connectivity_service.dart';
 import '../../../service/dialog_service.dart';
 import '../../../service/navigator_service.dart';
 import '../bloc/sign_up_bloc.dart';
@@ -38,6 +39,7 @@ class _BlocProvider extends StatelessWidget {
     return BlocProvider(
       create: (_) => SignUpBloc(
         authService: context.read<AuthService>(),
+        connectivityService: ConnectivityService(),
       ),
       child: child,
     );
@@ -84,7 +86,7 @@ class _BlocListener extends StatelessWidget {
     BuildContext context,
   ) async {
     switch (error) {
-      case SignUpError.emailAlreadyTaken:
+      case SignUpError.emailAlreadyInUse:
         await showMessageDialog(
           context: context,
           title: AppLocalizations.of(context)!
@@ -92,6 +94,11 @@ class _BlocListener extends StatelessWidget {
           message: AppLocalizations.of(context)!
               .sign_up_screen_already_taken_email_message,
         );
+        break;
+      case SignUpError.noInternetConnection:
+        // TODO: Handle this case.
+        break;
+      case SignUpError.unknown:
         break;
     }
   }

@@ -122,6 +122,9 @@ class _BlocListener extends StatelessWidget {
               .sign_in_screen_no_internet_connection_message,
         );
         break;
+      case SignInError.unknown:
+        // TODO: Handle this case.
+        break;
     }
   }
 }

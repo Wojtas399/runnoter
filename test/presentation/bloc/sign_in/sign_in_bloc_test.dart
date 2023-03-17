@@ -86,7 +86,6 @@ void main() {
 
   blocTest(
     'submit, '
-    'email and password are not empty, '
     "email doesn't have internet connection, "
     'should emit error status with no internet connection error',
     build: () => createBloc(
@@ -129,8 +128,6 @@ void main() {
 
   blocTest(
     'submit, '
-    'email and password are not empty, '
-    'device has internet connection, '
     'should call method responsible for signing in user and should emit complete status with signed in info',
     build: () => createBloc(
       email: email,
@@ -176,8 +173,6 @@ void main() {
 
   blocTest(
     'submit, '
-    'email and password are not empty, '
-    'device has internet connection, '
     'auth service method throws invalid email auth exception, '
     'should emit error status with invalid email error',
     build: () => createBloc(
@@ -226,8 +221,6 @@ void main() {
 
   blocTest(
     'submit, '
-    'email and password are not empty, '
-    'device has internet connection, '
     'auth service method throws user not found auth exception, '
     'should emit error status with user not found error',
     build: () => createBloc(
@@ -276,8 +269,6 @@ void main() {
 
   blocTest(
     'submit, '
-    'email and password are not empty, '
-    'device has internet connection, '
     'auth service method throws wrong password auth exception, '
     'should emit error status with wrong password error',
     build: () => createBloc(
@@ -310,6 +301,57 @@ void main() {
         email: email,
         password: password,
       ),
+    ],
+    verify: (_) {
+      verify(
+        () => connectivityService.hasDeviceInternetConnection(),
+      ).called(1);
+      verify(
+        () => authService.signIn(
+          email: email,
+          password: password,
+        ),
+      ).called(1);
+    },
+  );
+
+  blocTest(
+    'submit, '
+    'auth service method throws unknown error, '
+    'should emit error status with unknown error and should rethrow',
+    build: () => createBloc(
+      email: email,
+      password: password,
+    ),
+    setUp: () {
+      connectivityService.mockHasDeviceInternetConnection(
+        hasConnection: true,
+      );
+      authService.mockSignIn(
+        throwable: 'Unknown error...',
+      );
+    },
+    act: (SignInBloc bloc) {
+      bloc.add(
+        const SignInEventSubmit(),
+      );
+    },
+    expect: () => [
+      createState(
+        status: const BlocStatusLoading(),
+        email: email,
+        password: password,
+      ),
+      createState(
+        status: const BlocStatusError<SignInError>(
+          error: SignInError.unknown,
+        ),
+        email: email,
+        password: password,
+      ),
+    ],
+    errors: () => [
+      'Unknown error...',
     ],
     verify: (_) {
       verify(

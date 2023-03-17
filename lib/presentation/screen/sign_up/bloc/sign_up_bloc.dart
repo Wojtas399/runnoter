@@ -4,15 +4,18 @@ import '../../../../domain/model/auth_exception.dart';
 import '../../../../domain/service/auth_service.dart';
 import '../../../model/bloc_status.dart';
 import '../../../model/bloc_with_status.dart';
+import '../../../service/connectivity_service.dart';
 import 'sign_up_event.dart';
 import 'sign_up_state.dart';
 
 class SignUpBloc
     extends BlocWithStatus<SignUpEvent, SignUpState, SignUpInfo, SignUpError> {
   final AuthService _authService;
+  final ConnectivityService _connectivityService;
 
   SignUpBloc({
     required AuthService authService,
+    required ConnectivityService connectivityService,
     BlocStatus status = const BlocStatusInitial(),
     String name = '',
     String surname = '',
@@ -20,6 +23,7 @@ class SignUpBloc
     String password = '',
     String passwordConfirmation = '',
   })  : _authService = authService,
+        _connectivityService = connectivityService,
         super(
           SignUpState(
             status: status,
@@ -87,21 +91,40 @@ class SignUpBloc
     SignUpEventSubmit event,
     Emitter<SignUpState> emit,
   ) async {
+    emitLoadingStatus(emit);
+    if (await _connectivityService.hasDeviceInternetConnection() == false) {
+      emitErrorStatus(emit, SignUpError.noInternetConnection);
+      return;
+    }
     try {
-      emitLoadingStatus(emit);
-      await _authService.signUp(
-        name: state.name,
-        surname: state.surname,
-        email: state.email,
-        password: state.password,
-      );
+      await _tryToSignUp();
       emitCompleteStatus(emit, SignUpInfo.signedUp);
     } on AuthException catch (authException) {
-      if (authException == AuthException.emailAlreadyInUse) {
-        emitErrorStatus(emit, SignUpError.emailAlreadyTaken);
-      } else {
+      final SignUpError error = _mapAuthExceptionToBlocError(authException);
+      emitErrorStatus(emit, error);
+      if (error == SignUpError.unknown) {
         rethrow;
       }
+    } catch (_) {
+      emitErrorStatus(emit, SignUpError.unknown);
+      rethrow;
+    }
+  }
+
+  Future<void> _tryToSignUp() async {
+    await _authService.signUp(
+      name: state.name,
+      surname: state.surname,
+      email: state.email,
+      password: state.password,
+    );
+  }
+
+  SignUpError _mapAuthExceptionToBlocError(AuthException exception) {
+    if (exception == AuthException.emailAlreadyInUse) {
+      return SignUpError.emailAlreadyInUse;
+    } else {
+      return SignUpError.unknown;
     }
   }
 }

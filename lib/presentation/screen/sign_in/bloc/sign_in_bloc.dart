@@ -55,35 +55,49 @@ class SignInBloc
     SignInEventSubmit event,
     Emitter<SignInState> emit,
   ) async {
-    if (state.email.isEmpty || state.password.isEmpty) {
+    if (_isFormNotCompleted()) {
       return;
     }
-
     emitLoadingStatus(emit);
     if (await _connectivityService.hasDeviceInternetConnection() == false) {
       emitErrorStatus(emit, SignInError.noInternetConnection);
       return;
     }
     try {
-      await _authService.signIn(
-        email: state.email,
-        password: state.password,
-      );
+      await _tryToSignIn();
       emitCompleteStatus(emit, SignInInfo.signedIn);
     } on AuthException catch (authException) {
-      SignInError? error;
-      if (authException == AuthException.invalidEmail) {
-        error = SignInError.invalidEmail;
-      } else if (authException == AuthException.userNotFound) {
-        error = SignInError.userNotFound;
-      } else if (authException == AuthException.wrongPassword) {
-        error = SignInError.userNotFound;
-      }
-      if (error != null) {
-        emitErrorStatus(emit, error);
-      } else {
+      SignInError error = _mapAuthExceptionToBlocError(authException);
+      emitErrorStatus(emit, error);
+      if (error == SignInError.unknown) {
         rethrow;
       }
+    } catch (_) {
+      emitErrorStatus(emit, SignInError.unknown);
+      rethrow;
+    }
+  }
+
+  bool _isFormNotCompleted() {
+    return state.email.isEmpty || state.password.isEmpty;
+  }
+
+  Future<void> _tryToSignIn() async {
+    await _authService.signIn(
+      email: state.email,
+      password: state.password,
+    );
+  }
+
+  SignInError _mapAuthExceptionToBlocError(AuthException exception) {
+    if (exception == AuthException.invalidEmail) {
+      return SignInError.invalidEmail;
+    } else if (exception == AuthException.userNotFound) {
+      return SignInError.userNotFound;
+    } else if (exception == AuthException.wrongPassword) {
+      return SignInError.userNotFound;
+    } else {
+      return SignInError.unknown;
     }
   }
 }
