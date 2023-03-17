@@ -16,6 +16,10 @@ class GlobalTheme {
           background: _backgroundLight,
           outline: _outlineDark,
         ),
+        drawerTheme: const DrawerThemeData(
+          backgroundColor: Colors.white,
+          surfaceTintColor: Colors.transparent,
+        ),
         scaffoldBackgroundColor: _backgroundLight,
         inputDecorationTheme: _inputDecoration.copyWith(
           prefixIconColor: _outlineDark,
@@ -56,6 +60,10 @@ class GlobalTheme {
         ),
         appBarTheme: const AppBarTheme(
           backgroundColor: _itemBackgroundDark,
+        ),
+        drawerTheme: const DrawerThemeData(
+          backgroundColor: _itemBackgroundDark,
+          surfaceTintColor: Colors.transparent,
         ),
         scaffoldBackgroundColor: _backgroundDark,
         inputDecorationTheme: _inputDecoration.copyWith(

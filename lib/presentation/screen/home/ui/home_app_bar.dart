@@ -9,12 +9,6 @@ class HomeAppBar extends StatelessWidget with PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       title: const Text('Obecny tydzień'),
-      leading: IconButton(
-        onPressed: () {},
-        icon: const Icon(
-          Icons.menu,
-        ),
-      ),
       centerTitle: true,
       bottom: PreferredSize(
         preferredSize: const Size.fromHeight(0),

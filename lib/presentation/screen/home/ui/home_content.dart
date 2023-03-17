@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'home_app_bar.dart';
+import 'home_drawer.dart';
 
 class HomeContent extends StatelessWidget {
   const HomeContent({
@@ -11,6 +12,7 @@ class HomeContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Scaffold(
       appBar: HomeAppBar(),
+      drawer: HomeDrawer(),
       body: Center(
         child: Text('Welcome home!'),
       ),
