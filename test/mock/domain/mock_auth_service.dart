@@ -2,6 +2,14 @@ import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/service/auth_service.dart';
 
 class MockAuthService extends Mock implements AuthService {
+  void mockIsUserSignedIn({
+    required bool isSignedIn,
+  }) {
+    when(
+      () => isUserSignedIn,
+    ).thenReturn(isSignedIn);
+  }
+
   void mockSignIn({
     Object? throwable,
   }) {

@@ -28,9 +28,21 @@ class SignInBloc
             password: password,
           ),
         ) {
+    on<SignInEventInitialize>(_initialize);
     on<SignInEventEmailChanged>(_emailChanged);
     on<SignInEventPasswordChanged>(_passwordChanged);
     on<SignInEventSubmit>(_submit);
+  }
+
+  void _initialize(
+    SignInEventInitialize event,
+    Emitter<SignInState> emit,
+  ) {
+    SignInInfo? info;
+    if (_authService.isUserSignedIn) {
+      info = SignInInfo.signedIn;
+    }
+    emitCompleteStatus(emit, info);
   }
 
   void _emailChanged(

@@ -47,6 +47,62 @@ void main() {
   });
 
   blocTest(
+    'initialize, '
+    'user is signed in, '
+    'should emit complete status with signed in info',
+    build: () => createBloc(),
+    setUp: () {
+      authService.mockIsUserSignedIn(
+        isSignedIn: true,
+      );
+    },
+    act: (SignInBloc bloc) {
+      bloc.add(
+        const SignInEventInitialize(),
+      );
+    },
+    expect: () => [
+      createState(
+        status: const BlocStatusComplete<SignInInfo>(
+          info: SignInInfo.signedIn,
+        ),
+      ),
+    ],
+    verify: (_) {
+      verify(
+        () => authService.isUserSignedIn,
+      ).called(1);
+    },
+  );
+
+  blocTest(
+    'initialize, '
+    'user is not signed in, '
+    'should emit complete status without any info',
+    build: () => createBloc(),
+    setUp: () {
+      authService.mockIsUserSignedIn(
+        isSignedIn: false,
+      );
+    },
+    act: (SignInBloc bloc) {
+      bloc.add(
+        const SignInEventInitialize(),
+      );
+    },
+    expect: () => [
+      createState(
+        status: const BlocStatusComplete<SignInInfo>(),
+      ),
+    ],
+    verify: (_) {
+      verify(
+        () => authService.isUserSignedIn,
+      ).called(1);
+    },
+  );
+
+  blocTest(
     'email changed, '
     'should update email in state',
     build: () => createBloc(),

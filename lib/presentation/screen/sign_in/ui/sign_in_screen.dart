@@ -9,6 +9,7 @@ import '../../../service/connectivity_service.dart';
 import '../../../service/dialog_service.dart';
 import '../../../service/navigator_service.dart';
 import '../bloc/sign_in_bloc.dart';
+import '../bloc/sign_in_event.dart';
 import '../bloc/sign_in_state.dart';
 import 'sign_in_screen_content.dart';
 
@@ -40,7 +41,9 @@ class _BlocProvider extends StatelessWidget {
       create: (BuildContext context) => SignInBloc(
         authService: context.read<AuthService>(),
         connectivityService: ConnectivityService(),
-      ),
+      )..add(
+          const SignInEventInitialize(),
+        ),
       child: child,
     );
   }
