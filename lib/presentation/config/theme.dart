@@ -4,6 +4,7 @@ class GlobalTheme {
   static const Color _primary = Color(0xFFD65A31);
   static const Color _backgroundLight = Color(0xFFF7F7FA);
   static const Color _backgroundDark = Color(0xFF383E56);
+  static const Color _itemBackgroundDark = Color(0xFF2A2831);
   static final Color _outlineLight = Colors.white.withOpacity(0.5);
   static final Color _outlineDark = Colors.black.withOpacity(0.5);
   static final BorderRadius _borderRadius = BorderRadius.circular(8);
@@ -52,6 +53,9 @@ class GlobalTheme {
           brightness: Brightness.dark,
           background: _backgroundDark,
           outline: _outlineLight,
+        ),
+        appBarTheme: const AppBarTheme(
+          backgroundColor: _itemBackgroundDark,
         ),
         scaffoldBackgroundColor: _backgroundDark,
         inputDecorationTheme: _inputDecoration.copyWith(
