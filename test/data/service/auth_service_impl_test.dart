@@ -1,4 +1,4 @@
-import 'package:firebase/model/exception/firebase_auth_exception_code.dart';
+import 'package:firebase/firebase.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/data/service_impl/auth_service_impl.dart';
@@ -24,291 +24,390 @@ void main() {
     reset(firebaseUserService);
   });
 
-  group(
-    'sign in',
+  test(
+    'is user signed in, '
+    'should call and return result of firebase function to check if user is signed in',
     () {
-      const String email = 'email@example.com';
-      const String password = 'password123';
-
-      Future<void> callMethod() async {
-        await service.signIn(email: email, password: password);
-      }
-
-      tearDown(() {
-        verify(
-          () => firebaseAuthService.signIn(
-            email: email,
-            password: password,
-          ),
-        ).called(1);
-      });
-
-      test(
-        'should call firebase method responsible for signing in user',
-        () async {
-          firebaseAuthService.mockSignIn();
-
-          await callMethod();
-        },
+      const bool expectedResult = true;
+      firebaseAuthService.mockIsUserSignedIn(
+        isSignedIn: expectedResult,
       );
 
-      test(
-        'firebase invalid email exception, should throw auth exception with invalidEmail type',
-        () async {
-          const expectedAuthException = AuthException.invalidEmail;
-          firebaseAuthService.mockSignIn(
-            throwable: FirebaseAuthExceptionCode.invalidEmail,
-          );
+      final bool result = service.isUserSignedIn;
 
-          Object? exception;
-          try {
-            await callMethod();
-          } catch (e) {
-            exception = e;
-          }
-
-          expect(exception, expectedAuthException);
-        },
-      );
-
-      test(
-        'firebase user not found exception, should throw auth exception with userNotFound type',
-        () async {
-          const expectedAuthException = AuthException.userNotFound;
-          firebaseAuthService.mockSignIn(
-            throwable: FirebaseAuthExceptionCode.userNotFound,
-          );
-
-          Object? exception;
-          try {
-            await callMethod();
-          } catch (e) {
-            exception = e;
-          }
-
-          expect(exception, expectedAuthException);
-        },
-      );
-
-      test(
-        'firebase wrong password exception, should throw auth exception with wrongPassword type',
-        () async {
-          const expectedAuthException = AuthException.wrongPassword;
-          firebaseAuthService.mockSignIn(
-            throwable: FirebaseAuthExceptionCode.wrongPassword,
-          );
-
-          Object? exception;
-          try {
-            await callMethod();
-          } catch (e) {
-            exception = e;
-          }
-
-          expect(exception, expectedAuthException);
-        },
-      );
-
-      test(
-        'unknown exception, should rethrow exception',
-        () async {
-          const expectedException = 'Exception info';
-          firebaseAuthService.mockSignIn(throwable: expectedException);
-
-          Object? exception;
-          try {
-            await callMethod();
-          } catch (e) {
-            exception = e;
-          }
-
-          expect(exception, expectedException);
-        },
-      );
+      expect(result, expectedResult);
     },
   );
 
-  group(
-    'sign up',
-    () {
+  test(
+    'sign in, '
+    'should call firebase method to sign in user',
+    () async {
+      const String email = 'email@example.com';
+      const String password = 'password123';
+      firebaseAuthService.mockSignIn();
+
+      await service.signIn(email: email, password: password);
+
+      verify(
+        () => firebaseAuthService.signIn(
+          email: email,
+          password: password,
+        ),
+      ).called(1);
+    },
+  );
+
+  test(
+    'sign in, '
+    'invalid email firebase exception, '
+    'should throw invalid email auth exception',
+    () async {
+      const String email = 'email@example.com';
+      const String password = 'password123';
+      const AuthException expectedException = AuthException.invalidEmail;
+      firebaseAuthService.mockSignIn(
+        throwable: FirebaseAuthExceptionCode.invalidEmail,
+      );
+
+      Object? exception;
+      try {
+        await service.signIn(email: email, password: password);
+      } catch (e) {
+        exception = e;
+      }
+
+      expect(exception, expectedException);
+      verify(
+        () => firebaseAuthService.signIn(
+          email: email,
+          password: password,
+        ),
+      ).called(1);
+    },
+  );
+
+  test(
+    'sign in, '
+    'user not found firebase exception, '
+    'should throw user not found auth exception',
+    () async {
+      const String email = 'email@example.com';
+      const String password = 'password123';
+      const AuthException expectedException = AuthException.userNotFound;
+      firebaseAuthService.mockSignIn(
+        throwable: FirebaseAuthExceptionCode.userNotFound,
+      );
+
+      Object? exception;
+      try {
+        await service.signIn(email: email, password: password);
+      } catch (e) {
+        exception = e;
+      }
+
+      expect(exception, expectedException);
+      verify(
+        () => firebaseAuthService.signIn(
+          email: email,
+          password: password,
+        ),
+      ).called(1);
+    },
+  );
+
+  test(
+    'sign in, '
+    'wrong password firebase exception, '
+    'should throw user not found auth exception',
+    () async {
+      const String email = 'email@example.com';
+      const String password = 'password123';
+      const AuthException expectedException = AuthException.wrongPassword;
+      firebaseAuthService.mockSignIn(
+        throwable: FirebaseAuthExceptionCode.wrongPassword,
+      );
+
+      Object? exception;
+      try {
+        await service.signIn(email: email, password: password);
+      } catch (e) {
+        exception = e;
+      }
+
+      expect(exception, expectedException);
+      verify(
+        () => firebaseAuthService.signIn(
+          email: email,
+          password: password,
+        ),
+      ).called(1);
+    },
+  );
+
+  test(
+    'sign in, '
+    'unknown exception, '
+    'should rethrow exception',
+    () async {
+      const String email = 'email@example.com';
+      const String password = 'password123';
+      const String expectedException = 'Unknown exception...';
+      firebaseAuthService.mockSignIn(
+        throwable: expectedException,
+      );
+
+      Object? exception;
+      try {
+        await service.signIn(email: email, password: password);
+      } catch (e) {
+        exception = e;
+      }
+
+      expect(exception, expectedException);
+      verify(
+        () => firebaseAuthService.signIn(
+          email: email,
+          password: password,
+        ),
+      ).called(1);
+    },
+  );
+
+  test(
+    'sign up, '
+    'should call firebase method to sign up user and to add personal data of user',
+    () async {
+      const String userId = 'u1';
       const String name = 'Jack';
       const String surname = 'Gadovsky';
-      const String email = 'jack@example.com';
-      const String password = 'Password123!';
+      const String email = 'email@example.com';
+      const String password = 'password123';
+      firebaseAuthService.mockSignUp(
+        userId: userId,
+      );
+      firebaseUserService.mockAddUserPersonalData();
 
-      Future<void> callMethod() async {
+      await service.signUp(
+        name: name,
+        surname: surname,
+        email: email,
+        password: password,
+      );
+
+      verify(
+        () => firebaseAuthService.signUp(
+          name: name,
+          surname: surname,
+          email: email,
+          password: password,
+        ),
+      ).called(1);
+      verify(
+        () => firebaseUserService.addUserPersonalData(
+          userId: userId,
+          name: name,
+          surname: surname,
+        ),
+      ).called(1);
+    },
+  );
+
+  test(
+    'sign up, '
+    'email already in user firebase exception, '
+    'should throw email already in use auth exception',
+    () async {
+      const String name = 'Jack';
+      const String surname = 'Gadovsky';
+      const String email = 'email@example.com';
+      const String password = 'password123';
+      const AuthException expectedException = AuthException.emailAlreadyInUse;
+      firebaseAuthService.mockSignUp(
+        throwable: FirebaseAuthExceptionCode.emailAlreadyInUse,
+      );
+      firebaseUserService.mockAddUserPersonalData();
+
+      Object? exception;
+      try {
         await service.signUp(
           name: name,
           surname: surname,
           email: email,
           password: password,
         );
+      } catch (e) {
+        exception = e;
       }
 
-      tearDown(() {
-        verify(
-          () => firebaseAuthService.signUp(
-            name: name,
-            surname: surname,
-            email: email,
-            password: password,
-          ),
-        ).called(1);
-      });
-
-      test(
-        "should call firebase methods responsible for signing up user and responsible for adding user's personal data",
-        () async {
-          const String userId = 'u1';
-          firebaseAuthService.mockSignUp(userId: userId);
-          firebaseUserService.mockAddUserPersonalData();
-
-          await callMethod();
-
-          verify(
-            () => firebaseUserService.addUserPersonalData(
-              userId: userId,
-              name: name,
-              surname: surname,
-            ),
-          ).called(1);
-        },
-      );
-
-      test(
-        'firebase email already in use exception, should throw auth exception with emailAlreadyInUse type',
-        () async {
-          const expectedAuthException = AuthException.emailAlreadyInUse;
-          firebaseAuthService.mockSignUp(
-            throwable: FirebaseAuthExceptionCode.emailAlreadyInUse,
-          );
-
-          Object? exception;
-          try {
-            await callMethod();
-          } catch (e) {
-            exception = e;
-          }
-
-          expect(exception, expectedAuthException);
-          verifyNever(
-            () => firebaseUserService.addUserPersonalData(
-              userId: any(named: 'userId'),
-              name: name,
-              surname: surname,
-            ),
-          );
-        },
-      );
-
-      test(
-        'unknown exception, should rethrow exception',
-        () async {
-          const expectedException = 'Exception info';
-          firebaseAuthService.mockSignUp(throwable: expectedException);
-
-          Object? exception;
-          try {
-            await callMethod();
-          } catch (e) {
-            exception = e;
-          }
-
-          expect(exception, expectedException);
-          verifyNever(
-            () => firebaseUserService.addUserPersonalData(
-              userId: any(named: 'userId'),
-              name: name,
-              surname: surname,
-            ),
-          );
-        },
+      expect(exception, expectedException);
+      verify(
+        () => firebaseAuthService.signUp(
+          name: name,
+          surname: surname,
+          email: email,
+          password: password,
+        ),
+      ).called(1);
+      verifyNever(
+        () => firebaseUserService.addUserPersonalData(
+          userId: any(named: 'userId'),
+          name: any(named: 'name'),
+          surname: any(named: 'surname'),
+        ),
       );
     },
   );
 
-  group(
-    'send password reset email',
-    () {
+  test(
+    'sign up, '
+    'unknown exception, '
+    'should rethrow exception',
+    () async {
+      const String name = 'Jack';
+      const String surname = 'Gadovsky';
       const String email = 'email@example.com';
+      const String password = 'password123';
+      const String expectedException = 'Unknown exception..';
+      firebaseAuthService.mockSignUp(
+        throwable: expectedException,
+      );
+      firebaseUserService.mockAddUserPersonalData();
 
-      Future<void> callMethod() async {
-        await service.sendPasswordResetEmail(email: email);
+      Object? exception;
+      try {
+        await service.signUp(
+          name: name,
+          surname: surname,
+          email: email,
+          password: password,
+        );
+      } catch (e) {
+        exception = e;
       }
 
-      tearDown(() {
-        verify(
-          () => firebaseAuthService.sendPasswordResetEmail(
-            email: email,
-          ),
-        ).called(1);
-      });
+      expect(exception, expectedException);
+      verify(
+        () => firebaseAuthService.signUp(
+          name: name,
+          surname: surname,
+          email: email,
+          password: password,
+        ),
+      ).called(1);
+      verifyNever(
+        () => firebaseUserService.addUserPersonalData(
+          userId: any(named: 'userId'),
+          name: any(named: 'name'),
+          surname: any(named: 'surname'),
+        ),
+      );
+    },
+  );
 
-      test(
-        'should call method responsible for sending password reset email',
-        () async {
-          firebaseAuthService.mockSendPasswordResetEmail();
+  test(
+    'send password reset email, '
+    'should call firebase method to send password reset email',
+    () async {
+      const String email = 'email@example.com';
+      firebaseAuthService.mockSendPasswordResetEmail();
 
-          await callMethod();
-        },
+      await service.sendPasswordResetEmail(
+        email: email,
       );
 
-      test(
-        'firebase invalid email exception, should throw auth exception with invalidEmail type',
-        () async {
-          const expectedAuthException = AuthException.invalidEmail;
-          firebaseAuthService.mockSendPasswordResetEmail(
-            throwable: FirebaseAuthExceptionCode.invalidEmail,
-          );
+      verify(
+        () => firebaseAuthService.sendPasswordResetEmail(
+          email: email,
+        ),
+      ).called(1);
+    },
+  );
 
-          Object? exception;
-          try {
-            await callMethod();
-          } catch (e) {
-            exception = e;
-          }
-
-          expect(exception, expectedAuthException);
-        },
+  test(
+    'send password reset email, '
+    'invalid email firebase exception, '
+    'should throw invalid email auth exception',
+    () async {
+      const String email = 'email@example.com';
+      const AuthException expectedException = AuthException.invalidEmail;
+      firebaseAuthService.mockSendPasswordResetEmail(
+        throwable: FirebaseAuthExceptionCode.invalidEmail,
       );
 
-      test(
-        'firebase user not found exception, should throw auth exception with userNotFound type',
-        () async {
-          const expectedAuthException = AuthException.userNotFound;
-          firebaseAuthService.mockSendPasswordResetEmail(
-            throwable: FirebaseAuthExceptionCode.userNotFound,
-          );
+      Object? exception;
+      try {
+        await service.sendPasswordResetEmail(
+          email: email,
+        );
+      } catch (e) {
+        exception = e;
+      }
 
-          Object? exception;
-          try {
-            await callMethod();
-          } catch (e) {
-            exception = e;
-          }
+      expect(exception, expectedException);
+      verify(
+        () => firebaseAuthService.sendPasswordResetEmail(
+          email: email,
+        ),
+      ).called(1);
+    },
+  );
 
-          expect(exception, expectedAuthException);
-        },
+  test(
+    'send password reset email, '
+    'user not found firebase exception, '
+    'should throw user not found auth exception',
+    () async {
+      const String email = 'email@example.com';
+      const AuthException expectedException = AuthException.userNotFound;
+      firebaseAuthService.mockSendPasswordResetEmail(
+        throwable: FirebaseAuthExceptionCode.userNotFound,
       );
 
-      test(
-        'unknown exception, should rethrow exception',
-        () async {
-          const expectedException = 'Exception info';
-          firebaseAuthService.mockSendPasswordResetEmail(
-            throwable: expectedException,
-          );
+      Object? exception;
+      try {
+        await service.sendPasswordResetEmail(
+          email: email,
+        );
+      } catch (e) {
+        exception = e;
+      }
 
-          Object? exception;
-          try {
-            await callMethod();
-          } catch (e) {
-            exception = e;
-          }
+      expect(exception, expectedException);
+      verify(
+        () => firebaseAuthService.sendPasswordResetEmail(
+          email: email,
+        ),
+      ).called(1);
+    },
+  );
 
-          expect(exception, expectedException);
-        },
+  test(
+    'send password reset email, '
+    'unknown exception, '
+    'should rethrow exception',
+    () async {
+      const String email = 'email@example.com';
+      const String expectedException = 'Unknown exception...';
+      firebaseAuthService.mockSendPasswordResetEmail(
+        throwable: expectedException,
       );
+
+      Object? exception;
+      try {
+        await service.sendPasswordResetEmail(
+          email: email,
+        );
+      } catch (e) {
+        exception = e;
+      }
+
+      expect(exception, expectedException);
+      verify(
+        () => firebaseAuthService.sendPasswordResetEmail(
+          email: email,
+        ),
+      ).called(1);
     },
   );
 }

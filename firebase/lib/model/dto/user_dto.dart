@@ -1,5 +1,3 @@
-part of firebase;
-
 class UserDto {
   final String? name;
   final String? surname;

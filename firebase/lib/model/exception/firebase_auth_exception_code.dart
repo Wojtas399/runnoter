@@ -1,3 +1,5 @@
+part of firebase;
+
 enum FirebaseAuthExceptionCode {
   invalidEmail,
   userNotFound,

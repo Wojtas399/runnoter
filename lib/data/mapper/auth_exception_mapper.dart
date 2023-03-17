@@ -1,4 +1,4 @@
-import 'package:firebase/model/exception/firebase_auth_exception_code.dart';
+import 'package:firebase/firebase.dart';
 
 import '../../domain/model/auth_exception.dart';
 

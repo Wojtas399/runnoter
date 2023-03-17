@@ -1,4 +1,6 @@
 abstract class AuthService {
+  bool get isUserSignedIn;
+
   Future<void> signIn({
     required String email,
     required String password,

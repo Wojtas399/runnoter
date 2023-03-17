@@ -1,5 +1,4 @@
 import 'package:firebase/firebase.dart';
-import 'package:firebase/model/exception/firebase_auth_exception_code.dart';
 
 import '../../domain/model/auth_exception.dart';
 import '../../domain/service/auth_service.dart';
@@ -14,6 +13,9 @@ class AuthServiceImpl implements AuthService {
     required FirebaseUserService firebaseUserService,
   })  : _firebaseAuthService = firebaseAuthService,
         _firebaseUserService = firebaseUserService;
+
+  @override
+  bool get isUserSignedIn => _firebaseAuthService.isUserSignedIn();
 
   @override
   Future<void> signIn({

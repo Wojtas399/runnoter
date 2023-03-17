@@ -1,4 +1,4 @@
-import '../model/exception/firebase_auth_exception_code.dart';
+import '../firebase.dart';
 
 FirebaseAuthExceptionCode mapFirebaseAuthExceptionCodeToEnum(String code) {
   switch (code) {
