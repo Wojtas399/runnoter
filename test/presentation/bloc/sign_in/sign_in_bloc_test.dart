@@ -7,7 +7,7 @@ import 'package:runnoter/presentation/screen/sign_in/bloc/sign_in_bloc.dart';
 import 'package:runnoter/presentation/screen/sign_in/bloc/sign_in_event.dart';
 import 'package:runnoter/presentation/screen/sign_in/bloc/sign_in_state.dart';
 
-import '../../../mock/mock_auth_service.dart';
+import '../../../mock/domain/mock_auth_service.dart';
 import '../../../mock/presentation/service/mock_connectivity_service.dart';
 
 void main() {

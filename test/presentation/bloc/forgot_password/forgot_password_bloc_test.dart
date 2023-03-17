@@ -6,7 +6,7 @@ import 'package:runnoter/presentation/screen/forgot_password/bloc/forgot_passwor
 import 'package:runnoter/presentation/screen/forgot_password/bloc/forgot_password_event.dart';
 import 'package:runnoter/presentation/screen/forgot_password/bloc/forgot_password_state.dart';
 
-import '../../../mock/mock_auth_service.dart';
+import '../../../mock/domain/mock_auth_service.dart';
 import '../../../mock/presentation/service/mock_connectivity_service.dart';
 
 void main() {
