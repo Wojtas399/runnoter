@@ -73,7 +73,7 @@ class _BlocListener extends StatelessWidget {
   ) async {
     switch (info) {
       case SignUpInfo.signedUp:
-        navigateTo(
+        navigateAndRemoveUntil(
           context: context,
           route: Routes.home,
         );
