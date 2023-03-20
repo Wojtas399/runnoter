@@ -1,4 +1,4 @@
-![logo](https://user-images.githubusercontent.com/72093398/222181710-2749fe3d-e7c8-4f59-ad76-f8a639c8e206.png)
+![logo](https://user-images.githubusercontent.com/72093398/226473308-a2d23071-51c7-4aaf-b0f7-4565b75d7fd2.png)
 
 # Table of contents
 
