@@ -109,7 +109,7 @@ class SignInBloc
     } else if (exception == AuthException.userNotFound) {
       return SignInError.userNotFound;
     } else if (exception == AuthException.wrongPassword) {
-      return SignInError.userNotFound;
+      return SignInError.wrongPassword;
     }
     return null;
   }

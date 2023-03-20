@@ -142,7 +142,7 @@ void main() {
 
   blocTest(
     'submit, '
-    "email doesn't have internet connection, "
+    "device doesn't have internet connection, "
     'should emit no internet connection status',
     build: () => createBloc(
       email: email,
