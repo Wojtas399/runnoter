@@ -100,6 +100,27 @@
     "description": "Message of the dialog to inform that user does not exist"
   },
 
+  "home_drawer_profile_label": "Profil",
+  "@home_drawer_profile_label": {
+    "description": "Label of drawer's profile option"
+  },
+  "home_drawer_mileage_label": "Kilometraż",
+  "@home_drawer_mileage_label": {
+    "description": "Label of drawer's mileage option"
+  },
+  "home_drawer_blood_label": "Krew",
+  "@home_drawer_blood_label": {
+    "description": "Label of drawer's blood option"
+  },
+  "home_drawer_competitions_label": "Starty w zawodach",
+  "@home_drawer_competitions_label": {
+    "description": "Label of drawer's competitions option"
+  },
+  "home_drawer_sign_out_option": "Wyloguj",
+  "@home_drawer_sign_out_option": {
+    "description": "Label of drawer's sign out option"
+  },
+
 
   "no_internet_connection_dialog_title": "Brak połączenia internetowego",
   "@no_internet_connection_dialog_title": {

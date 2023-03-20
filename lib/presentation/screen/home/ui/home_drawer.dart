@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HomeDrawer extends StatelessWidget {
   const HomeDrawer({
@@ -85,7 +86,9 @@ class _Profile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       leading: const Icon(Icons.account_circle),
-      title: const Text('Profil'),
+      title: Text(
+        AppLocalizations.of(context)!.home_drawer_profile_label,
+      ),
       onTap: () {},
     );
   }
@@ -98,7 +101,9 @@ class _Mileage extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       leading: const Icon(Icons.insert_chart),
-      title: const Text('Kilometraż'),
+      title: Text(
+        AppLocalizations.of(context)!.home_drawer_mileage_label,
+      ),
       onTap: () {},
     );
   }
@@ -111,7 +116,9 @@ class _Blood extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       leading: const Icon(Icons.water_drop),
-      title: const Text('Krew'),
+      title: Text(
+        AppLocalizations.of(context)!.home_drawer_blood_label,
+      ),
       onTap: () {},
     );
   }
@@ -124,7 +131,9 @@ class _Competitions extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       leading: const Icon(Icons.emoji_events),
-      title: const Text('Krew'),
+      title: Text(
+        AppLocalizations.of(context)!.home_drawer_competitions_label,
+      ),
       onTap: () {},
     );
   }
@@ -136,7 +145,9 @@ class _SignOut extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: const Text('Wyloguj'),
+      title: Text(
+        AppLocalizations.of(context)!.home_drawer_sign_out_option,
+      ),
       leading: const Icon(Icons.logout),
       onTap: () {},
     );
