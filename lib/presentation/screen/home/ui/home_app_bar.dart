@@ -10,13 +10,6 @@ class HomeAppBar extends StatelessWidget with PreferredSizeWidget {
     return AppBar(
       title: const Text('Obecny tydzień'),
       centerTitle: true,
-      bottom: PreferredSize(
-        preferredSize: const Size.fromHeight(0),
-        child: Container(
-          color: Theme.of(context).colorScheme.outline,
-          height: 1.0,
-        ),
-      ),
     );
   }
 

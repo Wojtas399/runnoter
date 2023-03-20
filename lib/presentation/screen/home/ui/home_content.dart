@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'home_app_bar.dart';
+import 'home_bottom_navigation_bar.dart';
 import 'home_drawer.dart';
 
 class HomeContent extends StatelessWidget {
@@ -13,6 +14,7 @@ class HomeContent extends StatelessWidget {
     return const Scaffold(
       appBar: HomeAppBar(),
       drawer: HomeDrawer(),
+      bottomNavigationBar: HomeBottomNavigationBar(),
       body: Center(
         child: Text('Welcome home!'),
       ),
