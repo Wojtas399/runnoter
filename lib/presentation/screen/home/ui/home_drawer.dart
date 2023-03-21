@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../service/dialog_service.dart';
+import '../bloc/home_bloc.dart';
+import '../bloc/home_event.dart';
 
 class HomeDrawer extends StatelessWidget {
   const HomeDrawer({
@@ -158,13 +161,19 @@ class _SignOut extends StatelessWidget {
   }
 
   Future<void> _onPressed(BuildContext context) async {
-    await askForConfirmation(
+    final HomeBloc bloc = context.read<HomeBloc>();
+    final bool confirmed = await askForConfirmation(
       context: context,
       title:
           AppLocalizations.of(context)!.home_sign_out_confirmation_dialog_title,
       message: AppLocalizations.of(context)!
           .home_sign_out_confirmation_dialog_message,
     );
+    if (confirmed == true) {
+      bloc.add(
+        const HomeEventSignOut(),
+      );
+    }
   }
 }
 
