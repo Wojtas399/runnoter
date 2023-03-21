@@ -100,6 +100,19 @@
     "description": "Message of the dialog to inform that user does not exist"
   },
 
+
+  "home_current_week_page_title": "Obecny tydzień",
+  "@home_current_week_page_title": {
+    "description": "Title of current week page"
+  },
+  "home_calendar_page_title": "Kalendarz",
+  "@home_calendar_page_title": {
+    "description": "Title of calendar page"
+  },
+  "home_pulse_and_weight_page_title": "Puls & Waga",
+  "@home_pulse_and_weight_page_title": {
+    "description": "Title of pulse and weight page"
+  },
   "home_drawer_profile_label": "Profil",
   "@home_drawer_profile_label": {
     "description": "Label of drawer's profile option"

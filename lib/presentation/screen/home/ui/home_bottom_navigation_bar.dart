@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../bloc/home_bloc.dart';
 import '../bloc/home_event.dart';
@@ -21,21 +22,21 @@ class HomeBottomNavigationBar extends StatelessWidget {
         _onCurrentPageChanged(context, pageIndex);
       },
       selectedIndex: currentPage.pageIndex,
-      destinations: const <NavigationDestination>[
+      destinations: <NavigationDestination>[
         NavigationDestination(
-          selectedIcon: Icon(Icons.date_range),
-          icon: Icon(Icons.date_range_outlined),
-          label: 'Obecny tydzień',
+          selectedIcon: const Icon(Icons.date_range),
+          icon: const Icon(Icons.date_range_outlined),
+          label: AppLocalizations.of(context)!.home_current_week_page_title,
         ),
         NavigationDestination(
-          selectedIcon: Icon(Icons.calendar_month),
-          icon: Icon(Icons.calendar_month_outlined),
-          label: 'Kalendarz',
+          selectedIcon: const Icon(Icons.calendar_month),
+          icon: const Icon(Icons.calendar_month_outlined),
+          label: AppLocalizations.of(context)!.home_calendar_page_title,
         ),
         NavigationDestination(
-          selectedIcon: Icon(Icons.health_and_safety),
-          icon: Icon(Icons.health_and_safety_outlined),
-          label: 'Puls & Waga',
+          selectedIcon: const Icon(Icons.health_and_safety),
+          icon: const Icon(Icons.health_and_safety_outlined),
+          label: AppLocalizations.of(context)!.home_pulse_and_weight_page_title,
         ),
       ],
     );
