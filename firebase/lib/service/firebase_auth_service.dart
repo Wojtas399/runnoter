@@ -1,6 +1,18 @@
 part of firebase;
 
 class FirebaseAuthService {
+  Stream<String?> get loggedUserId {
+    return FirebaseAuth.instance.authStateChanges().map(
+          (User? user) => user?.uid,
+        );
+  }
+
+  Stream<String?> get loggedUserEmail {
+    return FirebaseAuth.instance.authStateChanges().map(
+          (User? user) => user?.email,
+        );
+  }
+
   bool isUserSignedIn() {
     return FirebaseAuth.instance.currentUser != null;
   }
