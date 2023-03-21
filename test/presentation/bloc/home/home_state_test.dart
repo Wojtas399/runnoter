@@ -37,4 +37,17 @@ void main() {
       expect(state2.currentPage, expectedCurrentPage);
     },
   );
+
+  test(
+    'copy with logged user email',
+    () {
+      const String expectedEmail = 'email@example.com';
+
+      state = state.copyWith(loggedUserEmail: expectedEmail);
+      final state2 = state.copyWith();
+
+      expect(state.loggedUserEmail, expectedEmail);
+      expect(state2.loggedUserEmail, expectedEmail);
+    },
+  );
 }
