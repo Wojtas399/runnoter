@@ -16,7 +16,6 @@ class MessageDialogComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      contentPadding: const EdgeInsets.all(24),
       title: Text(title),
       content: Text(message),
       actions: [

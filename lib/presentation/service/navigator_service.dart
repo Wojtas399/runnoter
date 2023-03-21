@@ -19,8 +19,9 @@ void navigateAndRemoveUntil({
   );
 }
 
-void navigateBack({
+void navigateBack<T>({
   required BuildContext context,
+  T? result,
 }) {
-  Navigator.of(context).pop();
+  Navigator.of(context).pop(result);
 }

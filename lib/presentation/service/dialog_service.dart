@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../component/dialog/confirmation_dialog_component.dart';
 import '../component/dialog/loading_dialog_component.dart';
 import '../component/dialog/message_dialog_component.dart';
 
@@ -38,4 +39,19 @@ Future<void> showMessageDialog({
       closeButtonLabel: closeButtonLabel,
     ),
   );
+}
+
+Future<bool> askForConfirmation({
+  required BuildContext context,
+  required String title,
+  required String message,
+}) async {
+  return await showDialog(
+        context: context,
+        builder: (_) => ConfirmationDialogComponent(
+          title: title,
+          message: message,
+        ),
+      ) ==
+      true;
 }
