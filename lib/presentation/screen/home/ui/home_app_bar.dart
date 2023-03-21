@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import '../bloc/home_bloc.dart';
+import '../bloc/home_state.dart';
 
 class HomeAppBar extends StatelessWidget with PreferredSizeWidget {
   const HomeAppBar({
@@ -7,8 +12,19 @@ class HomeAppBar extends StatelessWidget with PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    final List<String> pageTitles = [
+      AppLocalizations.of(context)!.home_current_week_page_title,
+      AppLocalizations.of(context)!.home_calendar_page_title,
+      AppLocalizations.of(context)!.home_pulse_and_weight_page_title,
+    ];
+    final HomePage currentPage = context.select(
+      (HomeBloc bloc) => bloc.state.currentPage,
+    );
+
     return AppBar(
-      title: const Text('Obecny tydzień'),
+      title: Text(
+        pageTitles[currentPage.index],
+      ),
       centerTitle: true,
     );
   }
