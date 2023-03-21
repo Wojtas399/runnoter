@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../service/navigator_service.dart';
 
@@ -6,14 +7,14 @@ class ConfirmationDialogComponent extends StatelessWidget {
   final String title;
   final String message;
   final String? cancelButtonLabel;
-  final String? acceptButtonLabel;
+  final String? confirmButtonLabel;
 
   const ConfirmationDialogComponent({
     super.key,
     required this.title,
     required this.message,
     this.cancelButtonLabel,
-    this.acceptButtonLabel,
+    this.confirmButtonLabel,
   });
 
   @override
@@ -30,7 +31,7 @@ class ConfirmationDialogComponent extends StatelessWidget {
             );
           },
           child: Text(
-            cancelButtonLabel ?? 'Anuluj',
+            cancelButtonLabel ?? AppLocalizations.of(context)!.cancel,
           ),
         ),
         TextButton(
@@ -41,7 +42,7 @@ class ConfirmationDialogComponent extends StatelessWidget {
             );
           },
           child: Text(
-            acceptButtonLabel ?? 'Zatwierdź',
+            confirmButtonLabel ?? AppLocalizations.of(context)!.confirm,
           ),
         ),
       ],

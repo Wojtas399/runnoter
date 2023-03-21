@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../../service/dialog_service.dart';
+
 class HomeDrawer extends StatelessWidget {
   const HomeDrawer({
     super.key,
@@ -149,7 +151,17 @@ class _SignOut extends StatelessWidget {
         AppLocalizations.of(context)!.home_drawer_sign_out_option,
       ),
       leading: const Icon(Icons.logout),
-      onTap: () {},
+      onTap: () {
+        _onPressed(context);
+      },
+    );
+  }
+
+  Future<void> _onPressed(BuildContext context) async {
+    await askForConfirmation(
+      context: context,
+      title: 'Wylogowanie',
+      message: 'Czy na pewno chcesz się wylogować?',
     );
   }
 }

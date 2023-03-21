@@ -181,6 +181,16 @@
   "@close": {
     "description": "Close"
   },
+  "cancel": "Anuluj",
+  "@cancel": {
+    "description": "Cancel"
+  },
+  "confirm": "Zatwierdź",
+  "@confirm": {
+    "description": "Confirm"
+  },
+
+
   "required_field_message": "To pole jest wymagane",
   "@required_field_message": {
     "description": "Message to inform that field is required."
