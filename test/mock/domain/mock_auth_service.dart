@@ -18,14 +18,6 @@ class MockAuthService extends Mock implements AuthService {
     ).thenAnswer((invocation) => Stream.value(userEmail));
   }
 
-  void mockIsUserSignedIn({
-    required bool isSignedIn,
-  }) {
-    when(
-      () => isUserSignedIn,
-    ).thenReturn(isSignedIn);
-  }
-
   void mockSignIn({
     Object? throwable,
   }) {

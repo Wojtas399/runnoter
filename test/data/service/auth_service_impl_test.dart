@@ -55,21 +55,6 @@ void main() {
   );
 
   test(
-    'is user signed in, '
-    'should call and return result of firebase function to check if user is signed in',
-    () {
-      const bool expectedResult = true;
-      firebaseAuthService.mockIsUserSignedIn(
-        isSignedIn: expectedResult,
-      );
-
-      final bool result = service.isUserSignedIn;
-
-      expect(result, expectedResult);
-    },
-  );
-
-  test(
     'sign in, '
     'should call firebase method to sign in user',
     () async {

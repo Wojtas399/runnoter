@@ -15,9 +15,6 @@ class AuthServiceImpl implements AuthService {
         _firebaseUserService = firebaseUserService;
 
   @override
-  bool get isUserSignedIn => _firebaseAuthService.isUserSignedIn();
-
-  @override
   Stream<String?> get loggedUserId$ => _firebaseAuthService.loggedUserId$;
 
   @override

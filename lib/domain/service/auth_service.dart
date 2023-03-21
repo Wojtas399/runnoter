@@ -1,6 +1,4 @@
 abstract class AuthService {
-  bool get isUserSignedIn;
-
   Stream<String?> get loggedUserId$;
 
   Stream<String?> get loggedUserEmail$;
