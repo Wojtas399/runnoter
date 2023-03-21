@@ -67,6 +67,10 @@ class _UserInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final String? loggedUserEmail = context.select(
+      (HomeBloc bloc) => bloc.state.loggedUserEmail,
+    );
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
@@ -77,7 +81,9 @@ class _UserInfo extends StatelessWidget {
             style: Theme.of(context).textTheme.titleLarge,
           ),
           const SizedBox(height: 4),
-          const Text('wojtekp@example.com'),
+          Text(
+            loggedUserEmail ?? '',
+          ),
         ],
       ),
     );

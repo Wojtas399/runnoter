@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../domain/service/auth_service.dart';
@@ -8,6 +10,7 @@ import 'home_state.dart';
 
 class HomeBloc extends BlocWithStatus<HomeEvent, HomeState, HomeInfo, dynamic> {
   final AuthService _authService;
+  StreamSubscription<String?>? _loggedUserEmailListener;
 
   HomeBloc({
     required AuthService authService,
@@ -20,8 +23,41 @@ class HomeBloc extends BlocWithStatus<HomeEvent, HomeState, HomeInfo, dynamic> {
             currentPage: currentPage,
           ),
         ) {
+    on<HomeEventInitialize>(_initialize);
+    on<HomeEventLoggedUserEmailChanged>(_loggedUserEmailChanged);
     on<HomeEventCurrentPageChanged>(_currentPageChanged);
     on<HomeEventSignOut>(_signOut);
+  }
+
+  @override
+  Future<void> close() {
+    _loggedUserEmailListener?.cancel();
+    _loggedUserEmailListener = null;
+    return super.close();
+  }
+
+  void _initialize(
+    HomeEventInitialize event,
+    Emitter<HomeState> emit,
+  ) {
+    _loggedUserEmailListener ??= _authService.loggedUserEmail$.listen(
+      (String? loggedUserEmail) {
+        add(
+          HomeEventLoggedUserEmailChanged(
+            loggedUserEmail: loggedUserEmail,
+          ),
+        );
+      },
+    );
+  }
+
+  void _loggedUserEmailChanged(
+    HomeEventLoggedUserEmailChanged event,
+    Emitter<HomeState> emit,
+  ) {
+    emit(state.copyWith(
+      loggedUserEmail: event.loggedUserEmail,
+    ));
   }
 
   void _currentPageChanged(

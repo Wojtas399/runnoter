@@ -19,12 +19,60 @@ void main() {
   HomeState createState({
     BlocStatus status = const BlocStatusInitial(),
     HomePage currentPage = HomePage.currentWeek,
+    String? loggedUserEmail,
   }) {
     return HomeState(
       status: status,
       currentPage: currentPage,
+      loggedUserEmail: loggedUserEmail,
     );
   }
+
+  blocTest(
+    'initialize, '
+    'should set listener on logged user email',
+    build: () => createBloc(),
+    setUp: () {
+      authService.mockGetLoggedUserEmail(
+        userEmail: 'user@example.com',
+      );
+    },
+    act: (HomeBloc bloc) {
+      bloc.add(
+        const HomeEventInitialize(),
+      );
+    },
+    expect: () => [
+      createState(
+        status: const BlocStatusComplete(),
+        loggedUserEmail: 'user@example.com',
+      ),
+    ],
+    verify: (_) {
+      verify(
+        () => authService.loggedUserEmail$,
+      ).called(1);
+    },
+  );
+
+  blocTest(
+    'logged user email changed, '
+    'should update logged user email in state',
+    build: () => createBloc(),
+    act: (HomeBloc bloc) {
+      bloc.add(
+        const HomeEventLoggedUserEmailChanged(
+          loggedUserEmail: 'user@example.com',
+        ),
+      );
+    },
+    expect: () => [
+      createState(
+        status: const BlocStatusComplete(),
+        loggedUserEmail: 'user@example.com',
+      ),
+    ],
+  );
 
   blocTest(
     'current page changed, '

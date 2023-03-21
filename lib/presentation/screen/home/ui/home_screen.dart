@@ -6,6 +6,7 @@ import '../../../component/bloc_with_status_listener_component.dart';
 import '../../../config/navigation/routes.dart';
 import '../../../service/navigator_service.dart';
 import '../bloc/home_bloc.dart';
+import '../bloc/home_event.dart';
 import '../bloc/home_state.dart';
 import 'home_content.dart';
 
@@ -36,7 +37,9 @@ class _BlocProvider extends StatelessWidget {
     return BlocProvider(
       create: (_) => HomeBloc(
         authService: context.read<AuthService>(),
-      ),
+      )..add(
+          const HomeEventInitialize(),
+        ),
       child: child,
     );
   }
