@@ -43,6 +43,12 @@ class MockFirebaseAuthService extends Mock implements FirebaseAuthService {
     }
   }
 
+  void mockSignOut() {
+    when(
+      () => signOut(),
+    ).thenAnswer((invocation) => Future.value());
+  }
+
   Future<void> _signInCall() {
     return signIn(
       email: any(named: 'email'),
