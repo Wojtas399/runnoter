@@ -410,4 +410,18 @@ void main() {
       ).called(1);
     },
   );
+
+  test(
+    'sign out, '
+    'should call firebase method to sign out',
+    () async {
+      firebaseAuthService.mockSignOut();
+
+      await service.signOut();
+
+      verify(
+        () => firebaseAuthService.signOut(),
+      ).called(1);
+    },
+  );
 }
