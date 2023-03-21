@@ -34,12 +34,14 @@ class SignInBloc
     on<SignInEventSubmit>(_submit);
   }
 
-  void _initialize(
+  Future<void> _initialize(
     SignInEventInitialize event,
     Emitter<SignInState> emit,
-  ) {
+  ) async {
+    emitLoadingStatus(emit);
     SignInInfo? info;
-    if (_authService.isUserSignedIn) {
+    final String? loggedUserId = await _authService.loggedUserId$.first;
+    if (loggedUserId != null) {
       info = SignInInfo.signedIn;
     }
     emitCompleteStatus(emit, info);

@@ -48,12 +48,12 @@ void main() {
 
   blocTest(
     'initialize, '
-    'user is signed in, '
+    'logged user id is not null, '
     'should emit complete status with signed in info',
     build: () => createBloc(),
     setUp: () {
-      authService.mockIsUserSignedIn(
-        isSignedIn: true,
+      authService.mockGetLoggedUserId(
+        userId: 'u1',
       );
     },
     act: (SignInBloc bloc) {
@@ -62,6 +62,9 @@ void main() {
       );
     },
     expect: () => [
+      createState(
+        status: const BlocStatusLoading(),
+      ),
       createState(
         status: const BlocStatusComplete<SignInInfo>(
           info: SignInInfo.signedIn,
@@ -70,20 +73,18 @@ void main() {
     ],
     verify: (_) {
       verify(
-        () => authService.isUserSignedIn,
+        () => authService.loggedUserId$,
       ).called(1);
     },
   );
 
   blocTest(
     'initialize, '
-    'user is not signed in, '
+    'logged user id is null, '
     'should emit complete status without any info',
     build: () => createBloc(),
     setUp: () {
-      authService.mockIsUserSignedIn(
-        isSignedIn: false,
-      );
+      authService.mockGetLoggedUserId();
     },
     act: (SignInBloc bloc) {
       bloc.add(
@@ -92,12 +93,15 @@ void main() {
     },
     expect: () => [
       createState(
+        status: const BlocStatusLoading(),
+      ),
+      createState(
         status: const BlocStatusComplete<SignInInfo>(),
       ),
     ],
     verify: (_) {
       verify(
-        () => authService.isUserSignedIn,
+        () => authService.loggedUserId$,
       ).called(1);
     },
   );
