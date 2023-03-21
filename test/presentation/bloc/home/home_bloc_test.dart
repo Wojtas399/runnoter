@@ -37,4 +37,22 @@ void main() {
       ),
     ],
   );
+
+  blocTest(
+    'sign out, '
+    'should emit complete status with user signed out info',
+    build: () => createBloc(),
+    act: (HomeBloc bloc) {
+      bloc.add(
+        const HomeEventSignOut(),
+      );
+    },
+    expect: () => [
+      createState(
+        status: const BlocStatusComplete(
+          info: HomeInfo.userSignedOut,
+        ),
+      ),
+    ],
+  );
 }

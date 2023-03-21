@@ -5,7 +5,7 @@ import '../../../model/bloc_with_status.dart';
 import 'home_event.dart';
 import 'home_state.dart';
 
-class HomeBloc extends BlocWithStatus<HomeEvent, HomeState, dynamic, dynamic> {
+class HomeBloc extends BlocWithStatus<HomeEvent, HomeState, HomeInfo, dynamic> {
   HomeBloc({
     BlocStatus status = const BlocStatusInitial(),
     HomePage currentPage = HomePage.currentWeek,
@@ -16,6 +16,7 @@ class HomeBloc extends BlocWithStatus<HomeEvent, HomeState, dynamic, dynamic> {
           ),
         ) {
     on<HomeEventCurrentPageChanged>(_currentPageChanged);
+    on<HomeEventSignOut>(_signOut);
   }
 
   void _currentPageChanged(
@@ -25,5 +26,13 @@ class HomeBloc extends BlocWithStatus<HomeEvent, HomeState, dynamic, dynamic> {
     emit(state.copyWith(
       currentPage: event.currentPage,
     ));
+  }
+
+  void _signOut(
+    HomeEventSignOut event,
+    Emitter<HomeState> emit,
+  ) {
+    //TODO: call method to sign out user
+    emitCompleteStatus(emit, HomeInfo.userSignedOut);
   }
 }

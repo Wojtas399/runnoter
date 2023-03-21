@@ -21,3 +21,7 @@ class HomeEventCurrentPageChanged extends HomeEvent {
         currentPage,
       ];
 }
+
+class HomeEventSignOut extends HomeEvent {
+  const HomeEventSignOut();
+}

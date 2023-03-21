@@ -1,16 +1,6 @@
 import '../../../model/bloc_state.dart';
 import '../../../model/bloc_status.dart';
 
-enum HomePage {
-  currentWeek(0),
-  calendar(1),
-  pulseAndWeight(2);
-
-  final int pageIndex;
-
-  const HomePage(this.pageIndex);
-}
-
 class HomeState extends BlocState<HomeState> {
   final HomePage currentPage;
 
@@ -35,4 +25,18 @@ class HomeState extends BlocState<HomeState> {
       currentPage: currentPage ?? this.currentPage,
     );
   }
+}
+
+enum HomePage {
+  currentWeek(0),
+  calendar(1),
+  pulseAndWeight(2);
+
+  final int pageIndex;
+
+  const HomePage(this.pageIndex);
+}
+
+enum HomeInfo {
+  userSignedOut,
 }
