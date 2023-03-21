@@ -160,8 +160,10 @@ class _SignOut extends StatelessWidget {
   Future<void> _onPressed(BuildContext context) async {
     await askForConfirmation(
       context: context,
-      title: 'Wylogowanie',
-      message: 'Czy na pewno chcesz się wylogować?',
+      title:
+          AppLocalizations.of(context)!.home_sign_out_confirmation_dialog_title,
+      message: AppLocalizations.of(context)!
+          .home_sign_out_confirmation_dialog_message,
     );
   }
 }
