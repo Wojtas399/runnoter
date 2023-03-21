@@ -61,10 +61,10 @@ class _BlocListener extends StatelessWidget {
     return BlocWithStatusListener<SignInBloc, SignInState, SignInInfo,
         SignInError>(
       child: child,
-      onCompleteStatusChanged: (SignInInfo info) {
+      onInfo: (SignInInfo info) {
         _manageCompletionInfo(info, context);
       },
-      onErrorStatusChanged: (SignInError error) {
+      onError: (SignInError error) {
         _manageError(error, context);
       },
     );

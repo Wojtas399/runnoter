@@ -50,7 +50,7 @@ class _BlocListener extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocWithStatusListener<HomeBloc, HomeState, HomeInfo, dynamic>(
       child: child,
-      onCompleteStatusChanged: (HomeInfo info) {
+      onInfo: (HomeInfo info) {
         _manageInfo(context, info);
       },
     );
