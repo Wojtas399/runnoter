@@ -1,12 +1,19 @@
 import 'package:bloc_test/bloc_test.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/presentation/model/bloc_status.dart';
 import 'package:runnoter/presentation/screen/home/bloc/home_bloc.dart';
 import 'package:runnoter/presentation/screen/home/bloc/home_event.dart';
 import 'package:runnoter/presentation/screen/home/bloc/home_state.dart';
 
+import '../../../mock/domain/mock_auth_service.dart';
+
 void main() {
+  final authService = MockAuthService();
+
   HomeBloc createBloc() {
-    return HomeBloc();
+    return HomeBloc(
+      authService: authService,
+    );
   }
 
   HomeState createState({
@@ -40,8 +47,11 @@ void main() {
 
   blocTest(
     'sign out, '
-    'should emit complete status with user signed out info',
+    'should call auth service method to sign out and should emit complete status with user signed out info',
     build: () => createBloc(),
+    setUp: () {
+      authService.mockSignOut();
+    },
     act: (HomeBloc bloc) {
       bloc.add(
         const HomeEventSignOut(),
@@ -49,10 +59,18 @@ void main() {
     },
     expect: () => [
       createState(
+        status: const BlocStatusLoading(),
+      ),
+      createState(
         status: const BlocStatusComplete(
           info: HomeInfo.userSignedOut,
         ),
       ),
     ],
+    verify: (_) {
+      verify(
+        () => authService.signOut(),
+      ).called(1);
+    },
   );
 }
