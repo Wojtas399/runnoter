@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../bloc/home_bloc.dart';
+import '../bloc/home_event.dart';
+import '../bloc/home_state.dart';
 
 class HomeBottomNavigationBar extends StatelessWidget {
   const HomeBottomNavigationBar({
@@ -7,11 +12,15 @@ class HomeBottomNavigationBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final HomePage currentPage = context.select(
+      (HomeBloc bloc) => bloc.state.currentPage,
+    );
+
     return NavigationBar(
-      onDestinationSelected: (int index) {
-        print('Selected $index');
+      onDestinationSelected: (int pageIndex) {
+        _onCurrentPageChanged(context, pageIndex);
       },
-      selectedIndex: 0,
+      selectedIndex: currentPage.pageIndex,
       destinations: const <NavigationDestination>[
         NavigationDestination(
           selectedIcon: Icon(Icons.date_range),
@@ -30,5 +39,13 @@ class HomeBottomNavigationBar extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  void _onCurrentPageChanged(BuildContext context, int pageIndex) {
+    context.read<HomeBloc>().add(
+          HomeEventCurrentPageChanged(
+            currentPage: HomePage.values[pageIndex],
+          ),
+        );
   }
 }
