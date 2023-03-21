@@ -25,6 +25,36 @@ void main() {
   });
 
   test(
+    'get logged user id, '
+    'should call and return result of firebase logged user id getter',
+    () async {
+      const String expectedLoggedUserId = 'u1';
+      firebaseAuthService.mockGetLoggedUserId(
+        userId: expectedLoggedUserId,
+      );
+
+      final Stream<String?> loggedUserId$ = service.loggedUserId$;
+
+      expect(await loggedUserId$.first, expectedLoggedUserId);
+    },
+  );
+
+  test(
+    'get logged user email, '
+    'should call and return result of firebase logged user email getter',
+    () async {
+      const String expectedLoggedUserEmail = 'email@example.com';
+      firebaseAuthService.mockGetLoggedUserEmail(
+        userEmail: expectedLoggedUserEmail,
+      );
+
+      final Stream<String?> loggedUserEmail$ = service.loggedUserEmail$;
+
+      expect(await loggedUserEmail$.first, expectedLoggedUserEmail);
+    },
+  );
+
+  test(
     'is user signed in, '
     'should call and return result of firebase function to check if user is signed in',
     () {

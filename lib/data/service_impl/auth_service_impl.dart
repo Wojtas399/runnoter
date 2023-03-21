@@ -18,6 +18,12 @@ class AuthServiceImpl implements AuthService {
   bool get isUserSignedIn => _firebaseAuthService.isUserSignedIn();
 
   @override
+  Stream<String?> get loggedUserId$ => _firebaseAuthService.loggedUserId$;
+
+  @override
+  Stream<String?> get loggedUserEmail$ => _firebaseAuthService.loggedUserEmail$;
+
+  @override
   Future<void> signIn({
     required String email,
     required String password,
