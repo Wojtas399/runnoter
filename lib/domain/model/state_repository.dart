@@ -16,6 +16,15 @@ class StateRepository<T extends Entity> {
     _dataStream.close();
   }
 
+  bool doesEntityNotExistInState(String entityId) {
+    for (final T entity in [...?_dataStream.value]) {
+      if (entity.id == entityId) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   void addEntity(T entity) {
     final List<T> updatedData = [...?_dataStream.value];
     final int entityIndex = updatedData.indexWhere(

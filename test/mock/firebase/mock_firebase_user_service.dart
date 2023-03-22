@@ -3,12 +3,14 @@ import 'package:firebase/model/dto/user_dto.dart';
 import 'package:mocktail/mocktail.dart';
 
 class MockFirebaseUserService extends Mock implements FirebaseUserService {
-  void mockGetUser({UserDto? userDto}) {
+  void mockLoadUserById({
+    UserDto? userDto,
+  }) {
     when(
-      () => getUser(
+      () => loadUserById(
         userId: any(named: 'userId'),
       ),
-    ).thenAnswer((invocation) => Stream.value(userDto));
+    ).thenAnswer((invocation) => Future.value(userDto));
   }
 
   void mockAddUserPersonalData() {
