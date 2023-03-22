@@ -50,4 +50,30 @@ void main() {
       expect(state2.loggedUserEmail, expectedEmail);
     },
   );
+
+  test(
+    'copy with logged user name',
+    () {
+      const String expectedName = 'name';
+
+      state = state.copyWith(loggedUserName: expectedName);
+      final state2 = state.copyWith();
+
+      expect(state.loggedUserName, expectedName);
+      expect(state2.loggedUserName, expectedName);
+    },
+  );
+
+  test(
+    'copy with logged user surname',
+    () {
+      const String expectedSurname = 'surname';
+
+      state = state.copyWith(loggedUserSurname: expectedSurname);
+      final state2 = state.copyWith();
+
+      expect(state.loggedUserSurname, expectedSurname);
+      expect(state2.loggedUserSurname, expectedSurname);
+    },
+  );
 }
