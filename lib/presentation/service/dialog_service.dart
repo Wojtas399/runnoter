@@ -45,12 +45,14 @@ Future<bool> askForConfirmation({
   required BuildContext context,
   required String title,
   required String message,
+  String? confirmButtonLabel,
 }) async {
   return await showDialog(
         context: context,
         builder: (_) => ConfirmationDialogComponent(
           title: title,
           message: message,
+          confirmButtonLabel: confirmButtonLabel,
         ),
       ) ==
       true;

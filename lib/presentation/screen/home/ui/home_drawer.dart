@@ -165,6 +165,8 @@ class _SignOut extends StatelessWidget {
           AppLocalizations.of(context)!.home_sign_out_confirmation_dialog_title,
       message: AppLocalizations.of(context)!
           .home_sign_out_confirmation_dialog_message,
+      confirmButtonLabel:
+          AppLocalizations.of(context)!.home_drawer_sign_out_option,
     );
     if (confirmed == true) {
       bloc.add(
