@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../screen/forgot_password/ui/forgot_password_screen.dart';
 import '../../screen/home/ui/home_screen.dart';
+import '../../screen/profile/ui/profile_screen.dart';
 import '../../screen/sign_in/ui/sign_in_screen.dart';
 import '../../screen/sign_up/ui/sign_up_screen.dart';
 import 'routes.dart';
@@ -30,6 +31,8 @@ class AppNavigator extends StatelessWidget {
       screen = const ForgotPasswordScreen();
     } else if (routePath == Routes.home.path) {
       screen = const HomeScreen();
+    } else if (routePath == Routes.profile.path) {
+      screen = const ProfileScreen();
     }
     return MaterialPageRoute(
       builder: (_) => screen,

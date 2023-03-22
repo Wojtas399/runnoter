@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../../config/navigation/routes.dart';
 import '../../../service/dialog_service.dart';
+import '../../../service/navigator_service.dart';
 import '../bloc/home_bloc.dart';
 import '../bloc/home_event.dart';
 
@@ -91,7 +93,16 @@ class _Profile extends StatelessWidget {
       title: Text(
         AppLocalizations.of(context)!.home_drawer_profile_label,
       ),
-      onTap: () {},
+      onTap: () {
+        _onPressed(context);
+      },
+    );
+  }
+
+  void _onPressed(BuildContext context) {
+    navigateTo(
+      context: context,
+      route: Routes.profile,
     );
   }
 }
