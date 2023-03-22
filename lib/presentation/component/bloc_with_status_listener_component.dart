@@ -10,15 +10,15 @@ class BlocWithStatusListener<Bloc extends StateStreamable<State>,
     State extends BlocState, Info, Error> extends StatelessWidget {
   final Widget child;
   final void Function(State state)? onStateChanged;
-  final void Function(Info info)? onCompleteStatusChanged;
-  final void Function(Error error)? onErrorStatusChanged;
+  final void Function(Info info)? onInfo;
+  final void Function(Error error)? onError;
 
   const BlocWithStatusListener({
     super.key,
     required this.child,
     this.onStateChanged,
-    this.onCompleteStatusChanged,
-    this.onErrorStatusChanged,
+    this.onInfo,
+    this.onError,
   });
 
   @override
@@ -62,10 +62,9 @@ class BlocWithStatusListener<Bloc extends StateStreamable<State>,
     BuildContext context,
   ) {
     final Info? info = completeStatus.info;
-    final Function(Info info)? onCompleteStatusChanged =
-        this.onCompleteStatusChanged;
-    if (info != null && onCompleteStatusChanged != null) {
-      onCompleteStatusChanged(info);
+    final Function(Info info)? onInfo = this.onInfo;
+    if (info != null && onInfo != null) {
+      onInfo(info);
     }
   }
 
@@ -74,10 +73,9 @@ class BlocWithStatusListener<Bloc extends StateStreamable<State>,
     BuildContext context,
   ) {
     final Error? error = errorStatus.error;
-    final Function(Error error)? onErrorStatusChanged =
-        this.onErrorStatusChanged;
-    if (error != null && onErrorStatusChanged != null) {
-      onErrorStatusChanged(error);
+    final Function(Error error)? onError = this.onError;
+    if (error != null && onError != null) {
+      onError(error);
     }
   }
 

@@ -9,8 +9,19 @@ void navigateTo({
   Navigator.of(context).pushNamed(route.path);
 }
 
-void navigateBack({
+void navigateAndRemoveUntil({
   required BuildContext context,
+  required Routes route,
 }) {
-  Navigator.of(context).pop();
+  Navigator.of(context).pushNamedAndRemoveUntil(
+    route.path,
+    ModalRoute.withName(route.path),
+  );
+}
+
+void navigateBack<T>({
+  required BuildContext context,
+  T? result,
+}) {
+  Navigator.of(context).pop(result);
 }

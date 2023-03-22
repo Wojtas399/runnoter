@@ -4,7 +4,7 @@ abstract class BlocStatus extends Equatable {
   const BlocStatus();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 class BlocStatusInitial extends BlocStatus {
@@ -21,6 +21,11 @@ class BlocStatusComplete<T> extends BlocStatus {
   const BlocStatusComplete({
     this.info,
   });
+
+  @override
+  List<Object?> get props => [
+        info,
+      ];
 }
 
 class BlocStatusError<T> extends BlocStatus {
@@ -29,6 +34,11 @@ class BlocStatusError<T> extends BlocStatus {
   const BlocStatusError({
     required this.error,
   });
+
+  @override
+  List<Object?> get props => [
+        error,
+      ];
 }
 
 class BlocStatusUnknownError extends BlocStatus {

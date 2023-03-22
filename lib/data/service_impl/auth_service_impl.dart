@@ -1,5 +1,4 @@
 import 'package:firebase/firebase.dart';
-import 'package:firebase/model/exception/firebase_auth_exception_code.dart';
 
 import '../../domain/model/auth_exception.dart';
 import '../../domain/service/auth_service.dart';
@@ -14,6 +13,12 @@ class AuthServiceImpl implements AuthService {
     required FirebaseUserService firebaseUserService,
   })  : _firebaseAuthService = firebaseAuthService,
         _firebaseUserService = firebaseUserService;
+
+  @override
+  Stream<String?> get loggedUserId$ => _firebaseAuthService.loggedUserId$;
+
+  @override
+  Stream<String?> get loggedUserEmail$ => _firebaseAuthService.loggedUserEmail$;
 
   @override
   Future<void> signIn({
@@ -83,5 +88,10 @@ class AuthServiceImpl implements AuthService {
         rethrow;
       }
     }
+  }
+
+  @override
+  Future<void> signOut() async {
+    await _firebaseAuthService.signOut();
   }
 }

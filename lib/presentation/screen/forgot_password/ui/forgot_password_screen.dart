@@ -63,11 +63,11 @@ class _BlocListenerState extends State<_BlocListener> {
   Widget build(BuildContext context) {
     return BlocWithStatusListener<ForgotPasswordBloc, ForgotPasswordState,
         ForgotPasswordInfo, ForgotPasswordError>(
-      onCompleteStatusChanged: (ForgotPasswordInfo info) {
+      onInfo: (ForgotPasswordInfo info) {
         _manageCompleteStatus(info, context);
       },
       child: widget.child,
-      onErrorStatusChanged: (ForgotPasswordError error) {
+      onError: (ForgotPasswordError error) {
         _manageErrorStatus(error, context);
       },
     );

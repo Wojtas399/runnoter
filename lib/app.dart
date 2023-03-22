@@ -1,14 +1,13 @@
-import 'package:firebase/firebase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:provider/provider.dart';
 
-import 'data/service_impl/auth_service_impl.dart';
-import 'domain/service/auth_service.dart';
 import 'presentation/config/navigation/app_navigator.dart';
 import 'presentation/config/theme.dart';
+import 'presentation/provider/auth_provider.dart';
+import 'presentation/provider/repositories_provider.dart';
+import 'presentation/provider/theme_provider.dart';
 import 'presentation/service/theme_service.dart';
 
 class App extends StatelessWidget {
@@ -18,13 +17,8 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Provider<AuthService>(
-      create: (_) => AuthServiceImpl(
-        firebaseAuthService: FirebaseAuthService(),
-        firebaseUserService: FirebaseUserService(),
-      ),
-      child: BlocProvider(
-        create: (_) => ThemeService(),
+    return AuthProvider(
+      child: ThemeProvider(
         child: BlocBuilder<ThemeService, ThemeMode>(
           builder: (BuildContext context, ThemeMode themeMode) {
             return MaterialApp(
@@ -41,7 +35,9 @@ class App extends StatelessWidget {
               themeMode: themeMode,
               theme: GlobalTheme.lightTheme,
               darkTheme: GlobalTheme.darkTheme,
-              home: const AppNavigator(),
+              home: const RepositoriesProvider(
+                child: AppNavigator(),
+              ),
             );
           },
         ),

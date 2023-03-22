@@ -1,18 +1,20 @@
-part of firebase;
-
 class UserDto {
-  final String? name;
-  final String? surname;
+  final String id;
+  final String name;
+  final String surname;
 
   const UserDto({
+    required this.id,
     required this.name,
     required this.surname,
   });
 
   factory UserDto.fromJson(
+    String id,
     Map<String, dynamic>? json,
   ) {
     return UserDto(
+      id: id,
       name: json?[_FireUserFields.name],
       surname: json?[_FireUserFields.surname],
     );
@@ -20,8 +22,8 @@ class UserDto {
 
   Map<String, Object?> toJson() {
     return {
-      if (name != null) _FireUserFields.name: name,
-      if (surname != null) _FireUserFields.surname: surname,
+      _FireUserFields.name: name,
+      _FireUserFields.surname: surname,
     };
   }
 }

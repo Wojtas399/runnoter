@@ -1,6 +1,18 @@
 part of firebase;
 
 class FirebaseAuthService {
+  Stream<String?> get loggedUserId$ {
+    return FirebaseAuth.instance.authStateChanges().map(
+          (User? user) => user?.uid,
+        );
+  }
+
+  Stream<String?> get loggedUserEmail$ {
+    return FirebaseAuth.instance.authStateChanges().map(
+          (User? user) => user?.email,
+        );
+  }
+
   Future<void> signIn({
     required String email,
     required String password,
@@ -64,5 +76,9 @@ class FirebaseAuthService {
       }
       rethrow;
     }
+  }
+
+  Future<void> signOut() async {
+    await FirebaseAuth.instance.signOut();
   }
 }

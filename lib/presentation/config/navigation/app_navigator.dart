@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../screen/forgot_password/ui/forgot_password_screen.dart';
-import '../../screen/home/home_screen.dart';
+import '../../screen/home/ui/home_screen.dart';
 import '../../screen/sign_in/ui/sign_in_screen.dart';
 import '../../screen/sign_up/ui/sign_up_screen.dart';
 import 'routes.dart';
@@ -33,6 +33,7 @@ class AppNavigator extends StatelessWidget {
     }
     return MaterialPageRoute(
       builder: (_) => screen,
+      settings: settings,
     );
   }
 }

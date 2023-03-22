@@ -58,10 +58,10 @@ class _BlocListener extends StatelessWidget {
     return BlocWithStatusListener<SignUpBloc, SignUpState, SignUpInfo,
         SignUpError>(
       child: child,
-      onCompleteStatusChanged: (SignUpInfo info) {
+      onInfo: (SignUpInfo info) {
         _manageCompletionInfo(info, context);
       },
-      onErrorStatusChanged: (SignUpError error) {
+      onError: (SignUpError error) {
         _manageError(error, context);
       },
     );
@@ -73,7 +73,7 @@ class _BlocListener extends StatelessWidget {
   ) async {
     switch (info) {
       case SignUpInfo.signedUp:
-        navigateTo(
+        navigateAndRemoveUntil(
           context: context,
           route: Routes.home,
         );

@@ -2,6 +2,22 @@ import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/service/auth_service.dart';
 
 class MockAuthService extends Mock implements AuthService {
+  void mockGetLoggedUserId({
+    String? userId,
+  }) {
+    when(
+      () => loggedUserId$,
+    ).thenAnswer((invocation) => Stream.value(userId));
+  }
+
+  void mockGetLoggedUserEmail({
+    String? userEmail,
+  }) {
+    when(
+      () => loggedUserEmail$,
+    ).thenAnswer((invocation) => Stream.value(userEmail));
+  }
+
   void mockSignIn({
     Object? throwable,
   }) {
@@ -32,6 +48,12 @@ class MockAuthService extends Mock implements AuthService {
         (invocation) => Future.value(),
       );
     }
+  }
+
+  void mockSignOut() {
+    when(
+      () => signOut(),
+    ).thenAnswer((invocation) => Future.value());
   }
 
   Future<void> _signInCall() {

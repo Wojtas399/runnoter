@@ -9,6 +9,7 @@ import '../../../service/connectivity_service.dart';
 import '../../../service/dialog_service.dart';
 import '../../../service/navigator_service.dart';
 import '../bloc/sign_in_bloc.dart';
+import '../bloc/sign_in_event.dart';
 import '../bloc/sign_in_state.dart';
 import 'sign_in_screen_content.dart';
 
@@ -40,7 +41,9 @@ class _BlocProvider extends StatelessWidget {
       create: (BuildContext context) => SignInBloc(
         authService: context.read<AuthService>(),
         connectivityService: ConnectivityService(),
-      ),
+      )..add(
+          const SignInEventInitialize(),
+        ),
       child: child,
     );
   }
@@ -58,10 +61,10 @@ class _BlocListener extends StatelessWidget {
     return BlocWithStatusListener<SignInBloc, SignInState, SignInInfo,
         SignInError>(
       child: child,
-      onCompleteStatusChanged: (SignInInfo info) {
+      onInfo: (SignInInfo info) {
         _manageCompletionInfo(info, context);
       },
-      onErrorStatusChanged: (SignInError error) {
+      onError: (SignInError error) {
         _manageError(error, context);
       },
     );
@@ -73,7 +76,7 @@ class _BlocListener extends StatelessWidget {
   ) async {
     switch (info) {
       case SignInInfo.signedIn:
-        navigateTo(
+        navigateAndRemoveUntil(
           context: context,
           route: Routes.home,
         );

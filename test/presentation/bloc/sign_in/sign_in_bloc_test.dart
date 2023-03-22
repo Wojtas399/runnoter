@@ -47,6 +47,66 @@ void main() {
   });
 
   blocTest(
+    'initialize, '
+    'logged user id is not null, '
+    'should emit complete status with signed in info',
+    build: () => createBloc(),
+    setUp: () {
+      authService.mockGetLoggedUserId(
+        userId: 'u1',
+      );
+    },
+    act: (SignInBloc bloc) {
+      bloc.add(
+        const SignInEventInitialize(),
+      );
+    },
+    expect: () => [
+      createState(
+        status: const BlocStatusLoading(),
+      ),
+      createState(
+        status: const BlocStatusComplete<SignInInfo>(
+          info: SignInInfo.signedIn,
+        ),
+      ),
+    ],
+    verify: (_) {
+      verify(
+        () => authService.loggedUserId$,
+      ).called(1);
+    },
+  );
+
+  blocTest(
+    'initialize, '
+    'logged user id is null, '
+    'should emit complete status without any info',
+    build: () => createBloc(),
+    setUp: () {
+      authService.mockGetLoggedUserId();
+    },
+    act: (SignInBloc bloc) {
+      bloc.add(
+        const SignInEventInitialize(),
+      );
+    },
+    expect: () => [
+      createState(
+        status: const BlocStatusLoading(),
+      ),
+      createState(
+        status: const BlocStatusComplete<SignInInfo>(),
+      ),
+    ],
+    verify: (_) {
+      verify(
+        () => authService.loggedUserId$,
+      ).called(1);
+    },
+  );
+
+  blocTest(
     'email changed, '
     'should update email in state',
     build: () => createBloc(),
@@ -86,7 +146,7 @@ void main() {
 
   blocTest(
     'submit, '
-    "email doesn't have internet connection, "
+    "device doesn't have internet connection, "
     'should emit no internet connection status',
     build: () => createBloc(
       email: email,

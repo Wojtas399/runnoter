@@ -17,7 +17,7 @@ class BigButton extends StatelessWidget {
     return SizedBox(
       width: 300,
       height: 52,
-      child: ElevatedButton(
+      child: FilledButton(
         onPressed: isDisabled ? null : onPressed,
         child: Text(
           label.toUpperCase(),

@@ -28,9 +28,23 @@ class SignInBloc
             password: password,
           ),
         ) {
+    on<SignInEventInitialize>(_initialize);
     on<SignInEventEmailChanged>(_emailChanged);
     on<SignInEventPasswordChanged>(_passwordChanged);
     on<SignInEventSubmit>(_submit);
+  }
+
+  Future<void> _initialize(
+    SignInEventInitialize event,
+    Emitter<SignInState> emit,
+  ) async {
+    emitLoadingStatus(emit);
+    SignInInfo? info;
+    final String? loggedUserId = await _authService.loggedUserId$.first;
+    if (loggedUserId != null) {
+      info = SignInInfo.signedIn;
+    }
+    emitCompleteStatus(emit, info);
   }
 
   void _emailChanged(
@@ -97,7 +111,7 @@ class SignInBloc
     } else if (exception == AuthException.userNotFound) {
       return SignInError.userNotFound;
     } else if (exception == AuthException.wrongPassword) {
-      return SignInError.userNotFound;
+      return SignInError.wrongPassword;
     }
     return null;
   }
