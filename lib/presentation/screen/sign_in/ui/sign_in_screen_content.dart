@@ -3,6 +3,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../service/utils.dart';
 import 'sign_in_alternative_options.dart';
+import 'sign_in_app_bar.dart';
 import 'sign_in_form.dart';
 import 'sign_in_submit_button.dart';
 
@@ -14,6 +15,7 @@ class SignInContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: const SignInAppBar(),
       body: SafeArea(
         child: SingleChildScrollView(
           child: GestureDetector(
@@ -22,7 +24,7 @@ class SignInContent extends StatelessWidget {
             },
             child: Container(
               color: Colors.transparent,
-              padding: const EdgeInsets.fromLTRB(24, kToolbarHeight, 24, 0),
+              padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
               child: Column(
                 children: const [
                   _Logo(),
