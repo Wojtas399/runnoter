@@ -7,6 +7,7 @@ import 'presentation/config/navigation/app_navigator.dart';
 import 'presentation/config/theme.dart';
 import 'presentation/provider/auth_provider.dart';
 import 'presentation/provider/repositories_provider.dart';
+import 'presentation/provider/theme_provider.dart';
 import 'presentation/service/theme_service.dart';
 
 class App extends StatelessWidget {
@@ -17,8 +18,7 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AuthProvider(
-      child: BlocProvider(
-        create: (_) => ThemeService(),
+      child: ThemeProvider(
         child: BlocBuilder<ThemeService, ThemeMode>(
           builder: (BuildContext context, ThemeMode themeMode) {
             return MaterialApp(
