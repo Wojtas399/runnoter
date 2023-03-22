@@ -6,13 +6,17 @@ import 'package:runnoter/presentation/screen/home/bloc/home_event.dart';
 import 'package:runnoter/presentation/screen/home/bloc/home_state.dart';
 
 import '../../../mock/domain/mock_auth_service.dart';
+import '../../../mock/domain/mock_user_repository.dart';
+import '../../../util/user_creator.dart';
 
 void main() {
   final authService = MockAuthService();
+  final userRepository = MockUserRepository();
 
   HomeBloc createBloc() {
     return HomeBloc(
       authService: authService,
+      userRepository: userRepository,
     );
   }
 
@@ -20,21 +24,35 @@ void main() {
     BlocStatus status = const BlocStatusInitial(),
     HomePage currentPage = HomePage.currentWeek,
     String? loggedUserEmail,
+    String? loggedUserName,
+    String? loggedUserSurname,
   }) {
     return HomeState(
       status: status,
       currentPage: currentPage,
       loggedUserEmail: loggedUserEmail,
+      loggedUserName: loggedUserName,
+      loggedUserSurname: loggedUserSurname,
     );
   }
 
   blocTest(
     'initialize, '
-    'should set listener on logged user email',
+    'should set listener on logged user email and logged user data',
     build: () => createBloc(),
     setUp: () {
       authService.mockGetLoggedUserEmail(
         userEmail: 'user@example.com',
+      );
+      authService.mockGetLoggedUserId(
+        userId: 'u1',
+      );
+      userRepository.mockGetUserById(
+        user: createUser(
+          id: 'u1',
+          name: 'name',
+          surname: 'surname',
+        ),
       );
     },
     act: (HomeBloc bloc) {
@@ -47,10 +65,24 @@ void main() {
         status: const BlocStatusComplete(),
         loggedUserEmail: 'user@example.com',
       ),
+      createState(
+        status: const BlocStatusComplete(),
+        loggedUserEmail: 'user@example.com',
+        loggedUserName: 'name',
+        loggedUserSurname: 'surname',
+      ),
     ],
     verify: (_) {
       verify(
         () => authService.loggedUserEmail$,
+      ).called(1);
+      verify(
+        () => authService.loggedUserId$,
+      ).called(1);
+      verify(
+        () => userRepository.getUserById(
+          userId: 'u1',
+        ),
       ).called(1);
     },
   );
@@ -70,6 +102,30 @@ void main() {
       createState(
         status: const BlocStatusComplete(),
         loggedUserEmail: 'user@example.com',
+      ),
+    ],
+  );
+
+  blocTest(
+    'logged user data changed, '
+    'should update logged user name and surname in state',
+    build: () => createBloc(),
+    act: (HomeBloc bloc) {
+      bloc.add(
+        HomeEventLoggedUserDataChanged(
+          loggedUserData: createUser(
+            id: 'u1',
+            name: 'name',
+            surname: 'surname',
+          ),
+        ),
+      );
+    },
+    expect: () => [
+      createState(
+        status: const BlocStatusComplete(),
+        loggedUserName: 'name',
+        loggedUserSurname: 'surname',
       ),
     ],
   );
