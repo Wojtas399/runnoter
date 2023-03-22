@@ -67,23 +67,14 @@ class _UserInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String? loggedUserEmail = context.select(
-      (HomeBloc bloc) => bloc.state.loggedUserEmail,
-    );
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Wojciech Piekielny',
-            style: Theme.of(context).textTheme.titleLarge,
-          ),
-          const SizedBox(height: 4),
-          Text(
-            loggedUserEmail ?? '',
-          ),
+        children: const [
+          _LoggedUserFullName(),
+          SizedBox(height: 4),
+          _LoggedUserEmail(),
         ],
       ),
     );
@@ -208,5 +199,37 @@ class _AppLogo extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class _LoggedUserFullName extends StatelessWidget {
+  const _LoggedUserFullName();
+
+  @override
+  Widget build(BuildContext context) {
+    final String? name = context.select(
+      (HomeBloc bloc) => bloc.state.loggedUserName,
+    );
+    final String? surname = context.select(
+      (HomeBloc bloc) => bloc.state.loggedUserSurname,
+    );
+
+    return Text(
+      '${name ?? ''} ${surname ?? ''}',
+      style: Theme.of(context).textTheme.titleLarge,
+    );
+  }
+}
+
+class _LoggedUserEmail extends StatelessWidget {
+  const _LoggedUserEmail();
+
+  @override
+  Widget build(BuildContext context) {
+    final String? email = context.select(
+      (HomeBloc bloc) => bloc.state.loggedUserEmail,
+    );
+
+    return Text(email ?? '');
   }
 }
