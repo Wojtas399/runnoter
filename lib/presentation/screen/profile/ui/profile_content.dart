@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import 'profile_user_data_section.dart';
+
 class ProfileContent extends StatelessWidget {
   const ProfileContent({
     super.key,
@@ -15,8 +17,18 @@ class ProfileContent extends StatelessWidget {
         ),
         centerTitle: true,
       ),
-      body: Center(
-        child: Text('Profile screen'),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              children: const [
+                ProfileUserDataSection(),
+                Divider(),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
