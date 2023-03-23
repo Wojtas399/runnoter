@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../component/value_with_label_and_icon_component.dart';
 
@@ -36,7 +37,7 @@ class _Header extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      'Dane użytkownika',
+      AppLocalizations.of(context)!.profile_screen_user_data_section_title,
       style: Theme.of(context).textTheme.titleLarge,
     );
   }
@@ -49,7 +50,7 @@ class _Name extends StatelessWidget {
   Widget build(BuildContext context) {
     return ValueWithLabelAndIconComponent(
       iconData: Icons.person_outline,
-      label: 'Imię',
+      label: AppLocalizations.of(context)!.profile_screen_username_label,
       value: 'Wojtas',
       onPressed: () {
         //TODO
@@ -65,7 +66,7 @@ class _Surname extends StatelessWidget {
   Widget build(BuildContext context) {
     return ValueWithLabelAndIconComponent(
       iconData: Icons.person_outline,
-      label: 'Nazwisko',
+      label: AppLocalizations.of(context)!.profile_screen_surname_label,
       value: 'Piekielny',
       onPressed: () {
         //TODO
@@ -81,7 +82,7 @@ class _Email extends StatelessWidget {
   Widget build(BuildContext context) {
     return ValueWithLabelAndIconComponent(
       iconData: Icons.email_outlined,
-      label: 'Adres email',
+      label: AppLocalizations.of(context)!.profile_screen_email_label,
       value: 'wojtekp@example.com',
       onPressed: () {
         //TODO
@@ -97,7 +98,7 @@ class _ChangePassword extends StatelessWidget {
   Widget build(BuildContext context) {
     return ValueWithLabelAndIconComponent(
       iconData: Icons.lock_outline,
-      value: 'Zmień hasło',
+      value: AppLocalizations.of(context)!.profile_screen_change_password_label,
       onPressed: () {
         //TODO
       },
@@ -112,7 +113,7 @@ class _DeleteAccount extends StatelessWidget {
   Widget build(BuildContext context) {
     return ValueWithLabelAndIconComponent(
       iconData: Icons.no_accounts_outlined,
-      value: 'Usuń konto',
+      value: AppLocalizations.of(context)!.profile_screen_delete_account_label,
       color: Theme.of(context).colorScheme.error,
       onPressed: () {
         //TODO

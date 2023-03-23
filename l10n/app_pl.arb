@@ -147,6 +147,31 @@
   "@profile_screen_title": {
     "description": "Title of the profile screen"
   },
+  "profile_screen_user_data_section_title": "Dane użytkownika",
+  "@profile_screen_user_data_section_title": {
+    "description": "Title of the user data section"
+  },
+  "profile_screen_username_label": "Imię",
+  "@profile_screen_username_label": {
+    "description": "Label of username"
+  },
+  "profile_screen_surname_label": "Nazwisko",
+  "@profile_screen_surname_label": {
+    "description": "Label of surname"
+  },
+  "profile_screen_email_label": "Adres email",
+  "@profile_screen_email_label": {
+    "description": "Label of email"
+  },
+  "profile_screen_change_password_label": "Zmień hasło",
+  "@profile_screen_change_password_label": {
+    "description": "Label of change password option"
+  },
+  "profile_screen_delete_account_label": "Usuń konto",
+  "@profile_screen_delete_account_label": {
+    "description": "Label of delete account option"
+  },
+
 
   "no_internet_connection_dialog_title": "Brak połączenia internetowego",
   "@no_internet_connection_dialog_title": {
