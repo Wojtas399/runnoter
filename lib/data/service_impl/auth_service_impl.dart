@@ -57,9 +57,11 @@ class AuthServiceImpl implements AuthService {
       );
       if (userId != null) {
         await _firebaseUserService.addUserPersonalData(
-          userId: userId,
-          name: name,
-          surname: surname,
+          userDto: UserDto(
+            id: userId,
+            name: name,
+            surname: surname,
+          ),
         );
       }
     } on FirebaseAuthExceptionCode catch (exception) {

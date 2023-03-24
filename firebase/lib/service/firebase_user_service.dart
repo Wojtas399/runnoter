@@ -9,15 +9,21 @@ class FirebaseUserService {
   }
 
   Future<void> addUserPersonalData({
-    required String userId,
-    required String name,
-    required String surname,
+    required UserDto userDto,
   }) async {
-    final UserDto userDto = UserDto(
-      id: userId,
-      name: name,
-      surname: surname,
+    await getUserRef(userDto.id).set(userDto);
+  }
+
+  Future<void> updateUserData({
+    required String userId,
+    String? name,
+    String? surname,
+  }) async {
+    await getUserRef(userId).update(
+      createUserDtoJsonToUpdate(
+        name: name,
+        surname: surname,
+      ),
     );
-    await getUserRef(userId).set(userDto);
   }
 }

@@ -7,10 +7,16 @@ import 'package:runnoter/domain/model/auth_exception.dart';
 import '../../mock/firebase/mock_firebase_auth_service.dart';
 import '../../mock/firebase/mock_firebase_user_service.dart';
 
+class FakeUserDto extends Fake implements UserDto {}
+
 void main() {
   final firebaseAuthService = MockFirebaseAuthService();
   final firebaseUserService = MockFirebaseUserService();
   late AuthServiceImpl service;
+
+  setUpAll(() {
+    registerFallbackValue(FakeUserDto());
+  });
 
   setUp(() {
     service = AuthServiceImpl(
@@ -220,9 +226,11 @@ void main() {
       ).called(1);
       verify(
         () => firebaseUserService.addUserPersonalData(
-          userId: userId,
-          name: name,
-          surname: surname,
+          userDto: const UserDto(
+            id: userId,
+            name: name,
+            surname: surname,
+          ),
         ),
       ).called(1);
     },
@@ -266,9 +274,7 @@ void main() {
       ).called(1);
       verifyNever(
         () => firebaseUserService.addUserPersonalData(
-          userId: any(named: 'userId'),
-          name: any(named: 'name'),
-          surname: any(named: 'surname'),
+          userDto: any(named: 'userDto'),
         ),
       );
     },
@@ -312,9 +318,7 @@ void main() {
       ).called(1);
       verifyNever(
         () => firebaseUserService.addUserPersonalData(
-          userId: any(named: 'userId'),
-          name: any(named: 'name'),
-          surname: any(named: 'surname'),
+          userDto: any(named: 'userDto'),
         ),
       );
     },

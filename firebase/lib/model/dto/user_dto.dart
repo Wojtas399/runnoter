@@ -1,4 +1,6 @@
-class UserDto {
+part of firebase;
+
+class UserDto extends Equatable {
   final String id;
   final String name;
   final String surname;
@@ -8,6 +10,13 @@ class UserDto {
     required this.name,
     required this.surname,
   });
+
+  @override
+  List<Object> get props => [
+        id,
+        name,
+        surname,
+      ];
 
   factory UserDto.fromJson(
     String id,
@@ -26,6 +35,16 @@ class UserDto {
       _FireUserFields.surname: surname,
     };
   }
+}
+
+Map<String, Object> createUserDtoJsonToUpdate({
+  String? name,
+  String? surname,
+}) {
+  return {
+    if (name != null) _FireUserFields.name: name,
+    if (surname != null) _FireUserFields.surname: surname,
+  };
 }
 
 class _FireUserFields {
