@@ -1,4 +1,4 @@
-import 'package:firebase/model/dto/user_dto.dart';
+import 'package:firebase/firebase.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/data/mapper/user_mapper.dart';
 import 'package:runnoter/domain/model/user.dart';

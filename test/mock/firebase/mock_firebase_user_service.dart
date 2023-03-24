@@ -23,6 +23,18 @@ class MockFirebaseUserService extends Mock implements FirebaseUserService {
     ).thenAnswer((_) async => '');
   }
 
+  void mockUpdateUserData({
+    UserDto? userDto,
+  }) {
+    when(
+      () => updateUserData(
+        userId: any(named: 'userId'),
+        name: any(named: 'name'),
+        surname: any(named: 'surname'),
+      ),
+    ).thenAnswer((invocation) => Future.value(userDto));
+  }
+
   void _mockUserDto() {
     registerFallbackValue(FakeUserDto());
   }

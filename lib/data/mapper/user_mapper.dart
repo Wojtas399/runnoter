@@ -1,4 +1,4 @@
-import 'package:firebase/model/dto/user_dto.dart';
+import 'package:firebase/firebase.dart';
 
 import '../../domain/model/user.dart';
 

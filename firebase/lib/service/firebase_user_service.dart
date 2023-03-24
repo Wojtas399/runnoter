@@ -14,16 +14,19 @@ class FirebaseUserService {
     await getUserRef(userDto.id).set(userDto);
   }
 
-  Future<void> updateUserData({
+  Future<UserDto?> updateUserData({
     required String userId,
     String? name,
     String? surname,
   }) async {
-    await getUserRef(userId).update(
+    final userRef = getUserRef(userId);
+    await userRef.update(
       createUserDtoJsonToUpdate(
         name: name,
         surname: surname,
       ),
     );
+    final user = await userRef.get();
+    return user.data();
   }
 }

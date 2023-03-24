@@ -1,4 +1,4 @@
-import 'package:firebase/model/dto/user_dto.dart';
+import 'package:firebase/firebase.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/data/repository_impl/user_repository_impl.dart';
@@ -86,6 +86,88 @@ void main() {
           [null, expectedUser],
         ),
       );
+    },
+  );
+
+  test(
+    'update user, '
+    'user exists in repository'
+    'should call firebase method to update user and should update user in repository state',
+    () async {
+      const String userId = 'u1';
+      const String name = 'name';
+      const String surname = 'surname';
+      const UserDto userDto = UserDto(
+        id: userId,
+        name: name,
+        surname: surname,
+      );
+      const User existingUser = User(
+        id: userId,
+        name: 'username',
+        surname: 'surname1',
+      );
+      const User updatedUser = User(
+        id: userId,
+        name: name,
+        surname: surname,
+      );
+      firebaseUserService.mockUpdateUserData(userDto: userDto);
+      repository = createRepository(initialState: [existingUser]);
+
+      await repository.updateUser(
+        userId: userId,
+        name: name,
+        surname: surname,
+      );
+      final Stream<User?> user$ = repository.getUserById(userId: userId);
+
+      expect(await user$.first, updatedUser);
+      verify(
+        () => firebaseUserService.updateUserData(
+          userId: userId,
+          name: name,
+          surname: surname,
+        ),
+      ).called(1);
+    },
+  );
+
+  test(
+    'update user, '
+    'user does not exist in repository'
+    'should call firebase method to update user and should add user to repository state',
+    () async {
+      const String userId = 'u1';
+      const String name = 'name';
+      const String surname = 'surname';
+      const UserDto userDto = UserDto(
+        id: userId,
+        name: name,
+        surname: surname,
+      );
+      const User updatedUser = User(
+        id: userId,
+        name: name,
+        surname: surname,
+      );
+      firebaseUserService.mockUpdateUserData(userDto: userDto);
+
+      await repository.updateUser(
+        userId: userId,
+        name: name,
+        surname: surname,
+      );
+      final Stream<User?> user$ = repository.getUserById(userId: userId);
+
+      expect(await user$.first, updatedUser);
+      verify(
+        () => firebaseUserService.updateUserData(
+          userId: userId,
+          name: name,
+          surname: surname,
+        ),
+      ).called(1);
     },
   );
 }

@@ -1,5 +1,4 @@
 import 'package:firebase/firebase.dart';
-import 'package:firebase/model/dto/user_dto.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../domain/model/state_repository.dart';
@@ -37,6 +36,27 @@ class UserRepositoryImpl extends StateRepository<User>
         }
       },
     );
+  }
+
+  @override
+  Future<void> updateUser({
+    required String userId,
+    String? name,
+    String? surname,
+  }) async {
+    final UserDto? userDto = await _firebaseUserService.updateUserData(
+      userId: userId,
+      name: name,
+      surname: surname,
+    );
+    if (userDto != null) {
+      final User user = mapUserFromDtoModel(userDto);
+      if (doesEntityNotExistInState(user.id)) {
+        addEntity(user);
+      } else {
+        updateEntity(user);
+      }
+    }
   }
 
   Future<void> _loadUserFromFirebase(String userId) async {
