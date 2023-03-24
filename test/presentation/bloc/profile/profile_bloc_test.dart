@@ -23,13 +23,13 @@ void main() {
 
   ProfileState createState({
     BlocStatus status = const BlocStatusInitial(),
-    String? name,
+    String? username,
     String? surname,
     String? email,
   }) {
     return ProfileState(
       status: status,
-      name: name,
+      username: username,
       surname: surname,
       email: email,
     );
@@ -70,7 +70,7 @@ void main() {
       ),
       createState(
         status: const BlocStatusComplete(),
-        name: 'name',
+        username: 'name',
         surname: 'surname',
         email: 'email@example.com',
       ),
@@ -111,7 +111,7 @@ void main() {
 
   blocTest(
     'user update, '
-    'should update name and surname in state',
+    'should update username and surname in state',
     build: () => createBloc(),
     act: (ProfileBloc bloc) {
       bloc.add(
@@ -126,7 +126,7 @@ void main() {
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
-        name: 'name',
+        username: 'name',
         surname: 'surname',
       ),
     ],

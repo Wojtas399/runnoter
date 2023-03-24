@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../component/value_with_label_and_icon_component.dart';
+import '../bloc/profile_bloc.dart';
 
 class ProfileUserDataSection extends StatelessWidget {
   const ProfileUserDataSection({
@@ -17,7 +19,7 @@ class ProfileUserDataSection extends StatelessWidget {
       children: const [
         _Header(),
         SizedBox(height: 16),
-        _Name(),
+        _Username(),
         gap,
         _Surname(),
         gap,
@@ -43,15 +45,19 @@ class _Header extends StatelessWidget {
   }
 }
 
-class _Name extends StatelessWidget {
-  const _Name();
+class _Username extends StatelessWidget {
+  const _Username();
 
   @override
   Widget build(BuildContext context) {
+    final String? username = context.select(
+      (ProfileBloc bloc) => bloc.state.username,
+    );
+
     return ValueWithLabelAndIconComponent(
       iconData: Icons.person_outline,
       label: AppLocalizations.of(context)!.profile_screen_username_label,
-      value: 'Wojtas',
+      value: username ?? '',
       onPressed: () {
         //TODO
       },
@@ -64,10 +70,14 @@ class _Surname extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final String? surname = context.select(
+      (ProfileBloc bloc) => bloc.state.surname,
+    );
+
     return ValueWithLabelAndIconComponent(
       iconData: Icons.person_outline,
       label: AppLocalizations.of(context)!.profile_screen_surname_label,
-      value: 'Piekielny',
+      value: surname ?? '',
       onPressed: () {
         //TODO
       },
@@ -80,10 +90,14 @@ class _Email extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final String? email = context.select(
+      (ProfileBloc bloc) => bloc.state.email,
+    );
+
     return ValueWithLabelAndIconComponent(
       iconData: Icons.email_outlined,
       label: AppLocalizations.of(context)!.profile_screen_email_label,
-      value: 'wojtekp@example.com',
+      value: email ?? '',
       onPressed: () {
         //TODO
       },

@@ -22,7 +22,7 @@ class ProfileBloc
     required AuthService authService,
     required UserRepository userRepository,
     BlocStatus status = const BlocStatusInitial(),
-    String? name,
+    String? username,
     String? surname,
     String? email,
   })  : _authService = authService,
@@ -30,7 +30,7 @@ class ProfileBloc
         super(
           ProfileState(
             status: status,
-            name: name,
+            username: username,
             surname: surname,
             email: email,
           ),
@@ -71,7 +71,7 @@ class ProfileBloc
     Emitter<ProfileState> emit,
   ) {
     emit(state.copyWith(
-      name: event.user?.name,
+      username: event.user?.name,
       surname: event.user?.surname,
     ));
   }

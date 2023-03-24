@@ -8,7 +8,7 @@ void main() {
   setUp(() {
     state = const ProfileState(
       status: BlocStatusInitial(),
-      name: null,
+      username: null,
       surname: null,
       email: null,
     );
@@ -28,15 +28,15 @@ void main() {
   );
 
   test(
-    'copy with name',
+    'copy with username',
     () {
       const String expectedName = 'Jack';
 
-      state = state.copyWith(name: expectedName);
+      state = state.copyWith(username: expectedName);
       final state2 = state.copyWith();
 
-      expect(state.name, expectedName);
-      expect(state2.name, expectedName);
+      expect(state.username, expectedName);
+      expect(state2.username, expectedName);
     },
   );
 
