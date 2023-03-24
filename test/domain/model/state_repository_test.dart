@@ -35,7 +35,7 @@ void main() {
     'should add new entity to state',
     () async {
       const TestModel entity = TestModel(
-        id: 'model1',
+        id: 'e',
         name: 'model name',
       );
 
@@ -49,25 +49,26 @@ void main() {
   );
 
   test(
-    'add entity, '
-    'there is already entity with given id in state, '
-    'should update existing entity',
+    'update entity, '
+    'should update entity in state',
     () async {
       const TestModel existingEntity = TestModel(
-        id: 'model1',
-        name: 'model name',
+        id: 'e1',
+        name: 'name',
       );
-      const TestModel newEntity = TestModel(
-        id: 'model1',
-        name: 'new model name',
+      const TestModel updatedEntity = TestModel(
+        id: 'e1',
+        name: 'update name',
       );
-      repository = createRepository(initialData: [existingEntity]);
+      repository = createRepository(
+        initialData: [existingEntity],
+      );
 
-      repository.addEntity(newEntity);
+      repository.updateEntity(updatedEntity);
 
       expect(
         await repository.dataStream$.first,
-        [newEntity],
+        [updatedEntity],
       );
     },
   );
