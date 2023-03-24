@@ -12,4 +12,14 @@ class MockUserRepository extends Mock implements UserRepository {
       ),
     ).thenAnswer((invocation) => Stream.value(user));
   }
+
+  void mockUpdateUser() {
+    when(
+      () => updateUser(
+        userId: any(named: 'userId'),
+        name: any(named: 'name'),
+        surname: any(named: 'surname'),
+      ),
+    ).thenAnswer((invocation) => Future.value());
+  }
 }

@@ -12,7 +12,7 @@ import 'profile_event.dart';
 import 'profile_state.dart';
 
 class ProfileBloc
-    extends BlocWithStatus<ProfileEvent, ProfileState, dynamic, dynamic> {
+    extends BlocWithStatus<ProfileEvent, ProfileState, ProfileInfo, dynamic> {
   final AuthService _authService;
   final UserRepository _userRepository;
   StreamSubscription<String?>? _emailListener;
@@ -22,6 +22,7 @@ class ProfileBloc
     required AuthService authService,
     required UserRepository userRepository,
     BlocStatus status = const BlocStatusInitial(),
+    String? userId,
     String? username,
     String? surname,
     String? email,
@@ -30,6 +31,7 @@ class ProfileBloc
         super(
           ProfileState(
             status: status,
+            userId: userId,
             username: username,
             surname: surname,
             email: email,
@@ -38,6 +40,7 @@ class ProfileBloc
     on<ProfileEventInitialize>(_initialize);
     on<ProfileEventEmailUpdated>(_emailUpdated);
     on<ProfileEventUserUpdated>(_userUpdated);
+    on<ProfileEventUpdateUsername>(_updateUsername);
   }
 
   @override
@@ -71,9 +74,26 @@ class ProfileBloc
     Emitter<ProfileState> emit,
   ) {
     emit(state.copyWith(
+      userId: 'u1',
       username: event.user?.name,
       surname: event.user?.surname,
     ));
+  }
+
+  Future<void> _updateUsername(
+    ProfileEventUpdateUsername event,
+    Emitter<ProfileState> emit,
+  ) async {
+    final String? userId = state.userId;
+    if (userId == null) {
+      return;
+    }
+    emitLoadingStatus(emit);
+    await _userRepository.updateUser(
+      userId: userId,
+      name: event.username,
+    );
+    emitCompleteStatus(emit, ProfileInfo.savedData);
   }
 
   void _setEmailListener() {

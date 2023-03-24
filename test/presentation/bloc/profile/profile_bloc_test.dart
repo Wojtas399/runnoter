@@ -14,21 +14,26 @@ void main() {
   final authService = MockAuthService();
   final userRepository = MockUserRepository();
 
-  ProfileBloc createBloc() {
+  ProfileBloc createBloc({
+    String? userId,
+  }) {
     return ProfileBloc(
       authService: authService,
       userRepository: userRepository,
+      userId: userId,
     );
   }
 
   ProfileState createState({
     BlocStatus status = const BlocStatusInitial(),
+    String? userId,
     String? username,
     String? surname,
     String? email,
   }) {
     return ProfileState(
       status: status,
+      userId: userId,
       username: username,
       surname: surname,
       email: email,
@@ -53,6 +58,7 @@ void main() {
       );
       userRepository.mockGetUserById(
         user: createUser(
+          id: 'u1',
           name: 'name',
           surname: 'surname',
         ),
@@ -70,6 +76,7 @@ void main() {
       ),
       createState(
         status: const BlocStatusComplete(),
+        userId: 'u1',
         username: 'name',
         surname: 'surname',
         email: 'email@example.com',
@@ -110,13 +117,14 @@ void main() {
   );
 
   blocTest(
-    'user update, '
-    'should update username and surname in state',
+    'user updated, '
+    'should update user id, username and surname in state',
     build: () => createBloc(),
     act: (ProfileBloc bloc) {
       bloc.add(
         ProfileEventUserUpdated(
           user: createUser(
+            id: 'u1',
             name: 'name',
             surname: 'surname',
           ),
@@ -126,9 +134,74 @@ void main() {
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
+        userId: 'u1',
         username: 'name',
         surname: 'surname',
       ),
     ],
+  );
+
+  blocTest(
+    'update username, '
+    'should call method from user repository to update user and should emit complete status with saved data info',
+    build: () => createBloc(
+      userId: 'u1',
+    ),
+    setUp: () {
+      userRepository.mockUpdateUser();
+    },
+    act: (ProfileBloc bloc) {
+      bloc.add(
+        const ProfileEventUpdateUsername(
+          username: 'new username',
+        ),
+      );
+    },
+    expect: () => [
+      createState(
+        status: const BlocStatusLoading(),
+        userId: 'u1',
+      ),
+      createState(
+        status: const BlocStatusComplete<ProfileInfo>(
+          info: ProfileInfo.savedData,
+        ),
+        userId: 'u1',
+      ),
+    ],
+    verify: (_) {
+      verify(
+        () => userRepository.updateUser(
+          userId: 'u1',
+          name: 'new username',
+        ),
+      ).called(1);
+    },
+  );
+
+  blocTest(
+    'update username, '
+    'user id is null'
+    'should do nothing',
+    build: () => createBloc(),
+    setUp: () {
+      userRepository.mockUpdateUser();
+    },
+    act: (ProfileBloc bloc) {
+      bloc.add(
+        const ProfileEventUpdateUsername(
+          username: 'new username',
+        ),
+      );
+    },
+    expect: () => [],
+    verify: (_) {
+      verifyNever(
+        () => userRepository.updateUser(
+          userId: 'u1',
+          name: 'new username',
+        ),
+      );
+    },
   );
 }
