@@ -3,7 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../component/value_with_label_and_icon_component.dart';
+import '../../../service/dialog_service.dart';
 import '../bloc/profile_bloc.dart';
+import '../bloc/profile_event.dart';
 
 class ProfileUserDataSection extends StatelessWidget {
   const ProfileUserDataSection({
@@ -59,9 +61,27 @@ class _Username extends StatelessWidget {
       label: AppLocalizations.of(context)!.profile_screen_username_label,
       value: username ?? '',
       onPressed: () {
-        //TODO
+        _onPressed(context);
       },
     );
+  }
+
+  Future<void> _onPressed(BuildContext context) async {
+    final ProfileBloc bloc = context.read<ProfileBloc>();
+    final String? newName = await askForValue(
+      context: context,
+      title: 'Podaj nowe imię',
+      label: AppLocalizations.of(context)!.profile_screen_username_label,
+      value: bloc.state.username,
+      isValueRequired: true,
+    );
+    if (newName != null) {
+      bloc.add(
+        ProfileEventUpdateUsername(
+          username: newName,
+        ),
+      );
+    }
   }
 }
 
@@ -98,9 +118,6 @@ class _Email extends StatelessWidget {
       iconData: Icons.email_outlined,
       label: AppLocalizations.of(context)!.profile_screen_email_label,
       value: email ?? '',
-      onPressed: () {
-        //TODO
-      },
     );
   }
 }

@@ -75,7 +75,7 @@ class ProfileBloc
     Emitter<ProfileState> emit,
   ) {
     emit(state.copyWith(
-      userId: 'u1',
+      userId: event.user?.id,
       username: event.user?.name,
       surname: event.user?.surname,
     ));

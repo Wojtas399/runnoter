@@ -227,6 +227,10 @@
   "@confirm": {
     "description": "Confirm"
   },
+  "save": "Zapisz",
+  "@save": {
+    "description": "Save"
+  },
 
 
   "required_field_message": "To pole jest wymagane",
