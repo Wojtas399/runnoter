@@ -204,4 +204,68 @@ void main() {
       );
     },
   );
+
+  blocTest(
+    'update surname, '
+    'should call method from user repository to update user and should emit complete status with saved data info',
+    build: () => createBloc(
+      userId: 'u1',
+    ),
+    setUp: () {
+      userRepository.mockUpdateUser();
+    },
+    act: (ProfileBloc bloc) {
+      bloc.add(
+        const ProfileEventUpdateSurname(
+          surname: 'new surname',
+        ),
+      );
+    },
+    expect: () => [
+      createState(
+        status: const BlocStatusLoading(),
+        userId: 'u1',
+      ),
+      createState(
+        status: const BlocStatusComplete<ProfileInfo>(
+          info: ProfileInfo.savedData,
+        ),
+        userId: 'u1',
+      ),
+    ],
+    verify: (_) {
+      verify(
+        () => userRepository.updateUser(
+          userId: 'u1',
+          surname: 'new surname',
+        ),
+      ).called(1);
+    },
+  );
+
+  blocTest(
+    'update surname, '
+    'user id is null'
+    'should do nothing',
+    build: () => createBloc(),
+    setUp: () {
+      userRepository.mockUpdateUser();
+    },
+    act: (ProfileBloc bloc) {
+      bloc.add(
+        const ProfileEventUpdateSurname(
+          surname: 'new surname',
+        ),
+      );
+    },
+    expect: () => [],
+    verify: (_) {
+      verifyNever(
+        () => userRepository.updateUser(
+          userId: 'u1',
+          surname: 'new surname',
+        ),
+      );
+    },
+  );
 }

@@ -41,6 +41,7 @@ class ProfileBloc
     on<ProfileEventEmailUpdated>(_emailUpdated);
     on<ProfileEventUserUpdated>(_userUpdated);
     on<ProfileEventUpdateUsername>(_updateUsername);
+    on<ProfileEventUpdateSurname>(_updateSurname);
   }
 
   @override
@@ -92,6 +93,22 @@ class ProfileBloc
     await _userRepository.updateUser(
       userId: userId,
       name: event.username,
+    );
+    emitCompleteStatus(emit, ProfileInfo.savedData);
+  }
+
+  Future<void> _updateSurname(
+    ProfileEventUpdateSurname event,
+    Emitter<ProfileState> emit,
+  ) async {
+    final String? userId = state.userId;
+    if (userId == null) {
+      return;
+    }
+    emitLoadingStatus(emit);
+    await _userRepository.updateUser(
+      userId: userId,
+      surname: event.surname,
     );
     emitCompleteStatus(emit, ProfileInfo.savedData);
   }
