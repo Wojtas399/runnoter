@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../component/dialog/confirmation_dialog_component.dart';
 import '../component/dialog/loading_dialog_component.dart';
 import '../component/dialog/message_dialog_component.dart';
+import '../component/dialog/value_dialog_component.dart';
 
 bool _isLoadingDialogOpened = false;
 
@@ -56,4 +57,22 @@ Future<bool> askForConfirmation({
         ),
       ) ==
       true;
+}
+
+Future<String?> askForValue({
+  required BuildContext context,
+  required String title,
+  String? label,
+  String? value,
+  bool isValueRequired = false,
+}) async {
+  return await showDialog<String?>(
+    context: context,
+    builder: (_) => ValueDialogComponent(
+      title: title,
+      label: label,
+      initialValue: value,
+      isValueRequired: isValueRequired,
+    ),
+  );
 }
