@@ -42,6 +42,23 @@ Future<void> showMessageDialog({
   );
 }
 
+void showSnackbarMessage({
+  required BuildContext context,
+  required String message,
+}) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text(message),
+    ),
+  );
+}
+
+void hideSnackbar({
+  required BuildContext context,
+}) {
+  ScaffoldMessenger.of(context).hideCurrentSnackBar();
+}
+
 Future<bool> askForConfirmation({
   required BuildContext context,
   required String title,
@@ -66,6 +83,7 @@ Future<String?> askForValue({
   String? value,
   bool isValueRequired = false,
 }) async {
+  hideSnackbar(context: context);
   return await showDialog<String?>(
     context: context,
     builder: (_) => ValueDialogComponent(
