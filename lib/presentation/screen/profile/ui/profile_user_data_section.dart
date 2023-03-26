@@ -7,6 +7,7 @@ import '../../../service/dialog_service.dart';
 import '../../../service/validation_service.dart';
 import '../bloc/profile_bloc.dart';
 import '../bloc/profile_event.dart';
+import 'profile_update_email_dialog.dart';
 
 class ProfileUserDataSection extends StatelessWidget {
   const ProfileUserDataSection({
@@ -159,6 +160,19 @@ class _Email extends StatelessWidget {
       iconData: Icons.email_outlined,
       label: AppLocalizations.of(context)!.profile_screen_email_label,
       value: email ?? '',
+      onPressed: () {
+        _onPressed(context);
+      },
+    );
+  }
+
+  Future<void> _onPressed(BuildContext context) async {
+    await showDialog(
+      context: context,
+      builder: (_) => BlocProvider(
+        create: (_) => context.read<ProfileBloc>(),
+        child: const ProfileUpdateEmailDialog(),
+      ),
     );
   }
 }
