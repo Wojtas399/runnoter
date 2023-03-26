@@ -4,6 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../component/value_with_label_and_icon_component.dart';
 import '../../../service/dialog_service.dart';
+import '../../../service/validation_service.dart';
 import '../bloc/profile_bloc.dart';
 import '../bloc/profile_event.dart';
 
@@ -68,13 +69,7 @@ class _Username extends StatelessWidget {
 
   Future<void> _onPressed(BuildContext context) async {
     final ProfileBloc bloc = context.read<ProfileBloc>();
-    final String? newName = await askForValue(
-      context: context,
-      title: 'Podaj nowe imię',
-      label: AppLocalizations.of(context)!.profile_screen_username_label,
-      value: bloc.state.username,
-      isValueRequired: true,
-    );
+    final String? newName = await _askForNewUsername(context);
     if (newName != null) {
       bloc.add(
         ProfileEventUpdateUsername(
@@ -82,6 +77,22 @@ class _Username extends StatelessWidget {
         ),
       );
     }
+  }
+
+  Future<String?> _askForNewUsername(BuildContext context) async {
+    return await askForValue(
+      context: context,
+      title: 'Podaj nowe imię',
+      label: AppLocalizations.of(context)!.profile_screen_username_label,
+      value: context.read<ProfileBloc>().state.username,
+      isValueRequired: true,
+      validator: (String? value) {
+        if (value != null && !isNameOrSurnameValid(value)) {
+          return AppLocalizations.of(context)!.invalid_name_or_surname_message;
+        }
+        return null;
+      },
+    );
   }
 }
 
@@ -106,13 +117,7 @@ class _Surname extends StatelessWidget {
 
   Future<void> _onPressed(BuildContext context) async {
     final ProfileBloc bloc = context.read<ProfileBloc>();
-    final String? newSurname = await askForValue(
-      context: context,
-      title: 'Podaj nowe nazwisko',
-      label: AppLocalizations.of(context)!.profile_screen_surname_label,
-      value: bloc.state.surname,
-      isValueRequired: true,
-    );
+    final String? newSurname = await _askForNewSurname(context);
     if (newSurname != null) {
       bloc.add(
         ProfileEventUpdateSurname(
@@ -120,6 +125,22 @@ class _Surname extends StatelessWidget {
         ),
       );
     }
+  }
+
+  Future<String?> _askForNewSurname(BuildContext context) async {
+    return await askForValue(
+      context: context,
+      title: 'Podaj nowe nazwisko',
+      label: AppLocalizations.of(context)!.profile_screen_surname_label,
+      value: context.read<ProfileBloc>().state.surname,
+      isValueRequired: true,
+      validator: (String? value) {
+        if (value != null && !isNameOrSurnameValid(value)) {
+          return AppLocalizations.of(context)!.invalid_name_or_surname_message;
+        }
+        return null;
+      },
+    );
   }
 }
 

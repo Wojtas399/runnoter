@@ -82,6 +82,7 @@ Future<String?> askForValue({
   String? label,
   String? value,
   bool isValueRequired = false,
+  String? Function(String? value)? validator,
 }) async {
   hideSnackbar(context: context);
   return await showDialog<String?>(
@@ -91,6 +92,7 @@ Future<String?> askForValue({
       label: label,
       initialValue: value,
       isValueRequired: isValueRequired,
+      validator: validator,
     ),
   );
 }

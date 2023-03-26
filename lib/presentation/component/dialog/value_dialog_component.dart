@@ -10,6 +10,7 @@ class ValueDialogComponent extends StatefulWidget {
   final String? label;
   final String? initialValue;
   final bool isValueRequired;
+  final String? Function(String? value)? validator;
 
   const ValueDialogComponent({
     super.key,
@@ -17,6 +18,7 @@ class ValueDialogComponent extends StatefulWidget {
     this.label,
     this.initialValue,
     this.isValueRequired = false,
+    this.validator,
   });
 
   @override
@@ -82,6 +84,7 @@ class _State extends State<ValueDialogComponent> {
                     label: widget.label,
                     isRequired: widget.isValueRequired,
                     controller: _textController,
+                    validator: widget.validator,
                   ),
                 ],
               ),
@@ -101,8 +104,14 @@ class _State extends State<ValueDialogComponent> {
 
   void _checkValueChange() {
     final String value = _textController.text;
+    String? validatorMessage;
+    if (widget.validator != null) {
+      validatorMessage = widget.validator!(value);
+    }
     setState(() {
-      _isSaveButtonDisabled = value.isEmpty || value == widget.initialValue;
+      _isSaveButtonDisabled = value.isEmpty ||
+          value == widget.initialValue ||
+          validatorMessage != null;
     });
   }
 }
