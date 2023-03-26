@@ -99,9 +99,27 @@ class _Surname extends StatelessWidget {
       label: AppLocalizations.of(context)!.profile_screen_surname_label,
       value: surname ?? '',
       onPressed: () {
-        //TODO
+        _onPressed(context);
       },
     );
+  }
+
+  Future<void> _onPressed(BuildContext context) async {
+    final ProfileBloc bloc = context.read<ProfileBloc>();
+    final String? newSurname = await askForValue(
+      context: context,
+      title: 'Podaj nowe nazwisko',
+      label: AppLocalizations.of(context)!.profile_screen_surname_label,
+      value: bloc.state.surname,
+      isValueRequired: true,
+    );
+    if (newSurname != null) {
+      bloc.add(
+        ProfileEventUpdateSurname(
+          surname: newSurname,
+        ),
+      );
+    }
   }
 }
 
