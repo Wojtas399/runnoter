@@ -443,4 +443,122 @@ void main() {
       ).called(1);
     },
   );
+
+  test(
+    'update email, '
+    'should call firebase method to update email',
+    () async {
+      const String newEmail = 'email@example.com';
+      const String password = 'password1';
+      firebaseAuthService.mockUpdateEmail();
+
+      await service.updateEmail(
+        newEmail: newEmail,
+        password: password,
+      );
+
+      verify(
+        () => firebaseAuthService.updateEmail(
+          newEmail: newEmail,
+          password: password,
+        ),
+      ).called(1);
+    },
+  );
+
+  test(
+    'update email, '
+    'wrong password firebase exception, '
+    'should throw wrong password auth exception',
+    () async {
+      const String newEmail = 'email@example.com';
+      const String password = 'password1';
+      const AuthException expectedException = AuthException.wrongPassword;
+      firebaseAuthService.mockUpdateEmail(
+        throwable: FirebaseAuthExceptionCode.wrongPassword,
+      );
+
+      Object? exception;
+      try {
+        await service.updateEmail(
+          newEmail: newEmail,
+          password: password,
+        );
+      } catch (e) {
+        exception = e;
+      }
+
+      expect(exception, expectedException);
+      verify(
+        () => firebaseAuthService.updateEmail(
+          newEmail: newEmail,
+          password: password,
+        ),
+      ).called(1);
+    },
+  );
+
+  test(
+    'update email, '
+    'email already in use firebase exception, '
+    'should throw email already in use auth exception',
+    () async {
+      const String newEmail = 'email@example.com';
+      const String password = 'password1';
+      const AuthException expectedException = AuthException.emailAlreadyInUse;
+      firebaseAuthService.mockUpdateEmail(
+        throwable: FirebaseAuthExceptionCode.emailAlreadyInUse,
+      );
+
+      Object? exception;
+      try {
+        await service.updateEmail(
+          newEmail: newEmail,
+          password: password,
+        );
+      } catch (e) {
+        exception = e;
+      }
+
+      expect(exception, expectedException);
+      verify(
+        () => firebaseAuthService.updateEmail(
+          newEmail: newEmail,
+          password: password,
+        ),
+      ).called(1);
+    },
+  );
+
+  test(
+    'update email, '
+    'unknown exception, '
+    'should rethrow exception',
+    () async {
+      const String newEmail = 'email@example.com';
+      const String password = 'password1';
+      const String expectedException = 'Unknown exception...';
+      firebaseAuthService.mockUpdateEmail(
+        throwable: expectedException,
+      );
+
+      Object? exception;
+      try {
+        await service.updateEmail(
+          newEmail: newEmail,
+          password: password,
+        );
+      } catch (e) {
+        exception = e;
+      }
+
+      expect(exception, expectedException);
+      verify(
+        () => firebaseAuthService.updateEmail(
+          newEmail: newEmail,
+          password: password,
+        ),
+      ).called(1);
+    },
+  );
 }

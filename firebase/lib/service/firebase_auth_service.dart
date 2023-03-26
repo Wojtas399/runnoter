@@ -28,8 +28,9 @@ class FirebaseAuthService {
       );
       if (code != FirebaseAuthExceptionCode.unknown) {
         throw code;
+      } else {
+        rethrow;
       }
-      rethrow;
     }
   }
 
@@ -55,8 +56,9 @@ class FirebaseAuthService {
       );
       if (code != FirebaseAuthExceptionCode.unknown) {
         throw code;
+      } else {
+        rethrow;
       }
-      rethrow;
     }
   }
 
@@ -73,8 +75,9 @@ class FirebaseAuthService {
       );
       if (code != FirebaseAuthExceptionCode.unknown) {
         throw code;
+      } else {
+        rethrow;
       }
-      rethrow;
     }
   }
 
@@ -86,8 +89,19 @@ class FirebaseAuthService {
     required String newEmail,
     required String password,
   }) async {
-    await _reauthenticate(password);
-    await FirebaseAuth.instance.currentUser?.updateEmail(newEmail);
+    try {
+      await _reauthenticate(password);
+      await FirebaseAuth.instance.currentUser?.updateEmail(newEmail);
+    } on FirebaseAuthException catch (exception) {
+      final FirebaseAuthExceptionCode code = mapFirebaseAuthExceptionCodeToEnum(
+        exception.code,
+      );
+      if (code != FirebaseAuthExceptionCode.unknown) {
+        throw code;
+      } else {
+        rethrow;
+      }
+    }
   }
 
   Future<void> _reauthenticate(String password) async {

@@ -16,12 +16,14 @@ class HomeDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: const [
-          _TopContent(),
-          _BottomContent(),
-        ],
+      child: SafeArea(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: const [
+            _TopContent(),
+            _BottomContent(),
+          ],
+        ),
       ),
     );
   }
@@ -33,7 +35,7 @@ class _TopContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 42),
+      padding: const EdgeInsets.only(top: 32),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: const [

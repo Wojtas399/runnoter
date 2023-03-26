@@ -20,4 +20,9 @@ abstract class AuthService {
   });
 
   Future<void> signOut();
+
+  Future<void> updateEmail({
+    required String newEmail,
+    required String password,
+  });
 }
