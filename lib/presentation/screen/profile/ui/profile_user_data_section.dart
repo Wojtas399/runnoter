@@ -82,7 +82,8 @@ class _Username extends StatelessWidget {
   Future<String?> _askForNewUsername(BuildContext context) async {
     return await askForValue(
       context: context,
-      title: 'Podaj nowe imię',
+      title: AppLocalizations.of(context)!
+          .profile_screen_new_username_dialog_title,
       label: AppLocalizations.of(context)!.profile_screen_username_label,
       value: context.read<ProfileBloc>().state.username,
       isValueRequired: true,
@@ -130,7 +131,8 @@ class _Surname extends StatelessWidget {
   Future<String?> _askForNewSurname(BuildContext context) async {
     return await askForValue(
       context: context,
-      title: 'Podaj nowe nazwisko',
+      title:
+          AppLocalizations.of(context)!.profile_screen_new_surname_dialog_title,
       label: AppLocalizations.of(context)!.profile_screen_surname_label,
       value: context.read<ProfileBloc>().state.surname,
       isValueRequired: true,
