@@ -64,3 +64,19 @@ class ProfileEventUpdateSurname extends ProfileEvent {
         surname,
       ];
 }
+
+class ProfileEventUpdateEmail extends ProfileEvent {
+  final String newEmail;
+  final String password;
+
+  const ProfileEventUpdateEmail({
+    required this.newEmail,
+    required this.password,
+  });
+
+  @override
+  List<Object> get props => [
+        newEmail,
+        password,
+      ];
+}

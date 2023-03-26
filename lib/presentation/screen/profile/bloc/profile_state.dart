@@ -45,3 +45,8 @@ class ProfileState extends BlocState {
 enum ProfileInfo {
   savedData,
 }
+
+enum ProfileError {
+  emailAlreadyInUse,
+  wrongPassword,
+}

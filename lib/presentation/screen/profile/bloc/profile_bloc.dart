@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
+import '../../../../domain/model/auth_exception.dart';
 import '../../../../domain/model/user.dart';
 import '../../../../domain/repository/user_repository.dart';
 import '../../../../domain/service/auth_service.dart';
@@ -11,8 +12,8 @@ import '../../../model/bloc_with_status.dart';
 import 'profile_event.dart';
 import 'profile_state.dart';
 
-class ProfileBloc
-    extends BlocWithStatus<ProfileEvent, ProfileState, ProfileInfo, dynamic> {
+class ProfileBloc extends BlocWithStatus<ProfileEvent, ProfileState,
+    ProfileInfo, ProfileError> {
   final AuthService _authService;
   final UserRepository _userRepository;
   StreamSubscription<String?>? _emailListener;
@@ -42,6 +43,7 @@ class ProfileBloc
     on<ProfileEventUserUpdated>(_userUpdated);
     on<ProfileEventUpdateUsername>(_updateUsername);
     on<ProfileEventUpdateSurname>(_updateSurname);
+    on<ProfileEventUpdateEmail>(_updateEmail);
   }
 
   @override
@@ -113,6 +115,31 @@ class ProfileBloc
     emitCompleteStatus(emit, ProfileInfo.savedData);
   }
 
+  Future<void> _updateEmail(
+    ProfileEventUpdateEmail event,
+    Emitter<ProfileState> emit,
+  ) async {
+    emitLoadingStatus(emit);
+    try {
+      await _authService.updateEmail(
+        newEmail: event.newEmail,
+        password: event.password,
+      );
+      emitCompleteStatus(emit, ProfileInfo.savedData);
+    } on AuthException catch (authException) {
+      final ProfileError? error = _mapAuthExceptionToBlocError(authException);
+      if (error != null) {
+        emitErrorStatus(emit, error);
+      } else {
+        emitUnknownErrorStatus(emit);
+        rethrow;
+      }
+    } catch (_) {
+      emitUnknownErrorStatus(emit);
+      rethrow;
+    }
+  }
+
   void _setEmailListener() {
     _emailListener ??= _authService.loggedUserEmail$.listen(
       (String? email) {
@@ -142,5 +169,14 @@ class ProfileBloc
         );
       },
     );
+  }
+
+  ProfileError? _mapAuthExceptionToBlocError(AuthException exception) {
+    if (exception == AuthException.wrongPassword) {
+      return ProfileError.wrongPassword;
+    } else if (exception == AuthException.emailAlreadyInUse) {
+      return ProfileError.emailAlreadyInUse;
+    }
+    return null;
   }
 }

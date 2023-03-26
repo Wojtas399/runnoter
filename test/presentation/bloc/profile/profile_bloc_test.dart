@@ -1,6 +1,7 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:runnoter/domain/model/auth_exception.dart';
 import 'package:runnoter/presentation/model/bloc_status.dart';
 import 'package:runnoter/presentation/screen/profile/bloc/profile_bloc.dart';
 import 'package:runnoter/presentation/screen/profile/bloc/profile_event.dart';
@@ -266,6 +267,116 @@ void main() {
           surname: 'new surname',
         ),
       );
+    },
+  );
+
+  blocTest(
+      'update email, '
+      'should call method from auth service to update email and should emit complete status with saved data info',
+      build: () => createBloc(),
+      setUp: () {
+        authService.mockUpdateEmail();
+      },
+      act: (ProfileBloc bloc) {
+        bloc.add(
+          const ProfileEventUpdateEmail(
+            newEmail: 'email@example.com',
+            password: 'Password1!',
+          ),
+        );
+      },
+      expect: () => [
+            createState(
+              status: const BlocStatusLoading(),
+            ),
+            createState(
+              status: const BlocStatusComplete<ProfileInfo>(
+                info: ProfileInfo.savedData,
+              ),
+            ),
+          ],
+      verify: (_) {
+        verify(
+          () => authService.updateEmail(
+            newEmail: 'email@example.com',
+            password: 'Password1!',
+          ),
+        ).called(1);
+      });
+
+  blocTest(
+    'update email, '
+    'email already in use exception'
+    'should emit error status with email already in use error',
+    build: () => createBloc(),
+    setUp: () {
+      authService.mockUpdateEmail(
+        throwable: AuthException.emailAlreadyInUse,
+      );
+    },
+    act: (ProfileBloc bloc) {
+      bloc.add(
+        const ProfileEventUpdateEmail(
+          newEmail: 'email@example.com',
+          password: 'Password1!',
+        ),
+      );
+    },
+    expect: () => [
+      createState(
+        status: const BlocStatusLoading(),
+      ),
+      createState(
+        status: const BlocStatusError<ProfileError>(
+          error: ProfileError.emailAlreadyInUse,
+        ),
+      ),
+    ],
+    verify: (_) {
+      verify(
+        () => authService.updateEmail(
+          newEmail: 'email@example.com',
+          password: 'Password1!',
+        ),
+      ).called(1);
+    },
+  );
+
+  blocTest(
+    'update email, '
+    'wrong password exception'
+    'should emit error status with wrong password error',
+    build: () => createBloc(),
+    setUp: () {
+      authService.mockUpdateEmail(
+        throwable: AuthException.wrongPassword,
+      );
+    },
+    act: (ProfileBloc bloc) {
+      bloc.add(
+        const ProfileEventUpdateEmail(
+          newEmail: 'email@example.com',
+          password: 'Password1!',
+        ),
+      );
+    },
+    expect: () => [
+      createState(
+        status: const BlocStatusLoading(),
+      ),
+      createState(
+        status: const BlocStatusError<ProfileError>(
+          error: ProfileError.wrongPassword,
+        ),
+      ),
+    ],
+    verify: (_) {
+      verify(
+        () => authService.updateEmail(
+          newEmail: 'email@example.com',
+          password: 'Password1!',
+        ),
+      ).called(1);
     },
   );
 }
