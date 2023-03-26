@@ -56,10 +56,13 @@ class _BlocListener extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocWithStatusListener<ProfileBloc, ProfileState, ProfileInfo,
-        dynamic>(
+        ProfileError>(
       child: child,
       onInfo: (ProfileInfo info) {
         _manageInfo(context, info);
+      },
+      onError: (ProfileError error) {
+        _manageError(context, error);
       },
     );
   }
@@ -70,6 +73,26 @@ class _BlocListener extends StatelessWidget {
         showSnackbarMessage(
           context: context,
           message: 'Pomyślnie zapisano zmiany',
+        );
+        break;
+    }
+  }
+
+  void _manageError(BuildContext context, ProfileError error) {
+    switch (error) {
+      case ProfileError.emailAlreadyInUse:
+        showMessageDialog(
+          context: context,
+          title: 'Zajęty adres email',
+          message:
+              'Niestety, nowo podany adres email jest już zajęty przez innego użytkownika...',
+        );
+        break;
+      case ProfileError.wrongPassword:
+        showMessageDialog(
+          context: context,
+          title: 'Błędne hasło',
+          message: 'Podane hasło jest błędne...',
         );
         break;
     }
