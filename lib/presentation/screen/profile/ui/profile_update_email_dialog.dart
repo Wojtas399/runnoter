@@ -58,7 +58,10 @@ class _State extends State<ProfileUpdateEmailDialog> {
       child: Dialog.fullscreen(
         child: Scaffold(
           appBar: AppBar(
-            title: Text('Podaj nowy email'),
+            title: Text(
+              AppLocalizations.of(context)!
+                  .profile_screen_new_email_dialog_title,
+            ),
             leading: IconButton(
               onPressed: () {
                 navigateBack(context: context);

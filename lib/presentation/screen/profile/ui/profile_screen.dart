@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../../domain/repository/user_repository.dart';
 import '../../../../domain/service/auth_service.dart';
@@ -72,7 +73,8 @@ class _BlocListener extends StatelessWidget {
       case ProfileInfo.savedData:
         showSnackbarMessage(
           context: context,
-          message: 'Pomyślnie zapisano zmiany',
+          message: AppLocalizations.of(context)!
+              .profile_screen_successfully_saved_data_message,
         );
         break;
     }
@@ -83,16 +85,19 @@ class _BlocListener extends StatelessWidget {
       case ProfileError.emailAlreadyInUse:
         showMessageDialog(
           context: context,
-          title: 'Zajęty adres email',
-          message:
-              'Niestety, nowo podany adres email jest już zajęty przez innego użytkownika...',
+          title: AppLocalizations.of(context)!
+              .profile_screen_email_already_taken_title,
+          message: AppLocalizations.of(context)!
+              .profile_screen_email_already_taken_message,
         );
         break;
       case ProfileError.wrongPassword:
         showMessageDialog(
           context: context,
-          title: 'Błędne hasło',
-          message: 'Podane hasło jest błędne...',
+          title:
+              AppLocalizations.of(context)!.profile_screen_wrong_password_title,
+          message: AppLocalizations.of(context)!
+              .profile_screen_wrong_password_message,
         );
         break;
     }

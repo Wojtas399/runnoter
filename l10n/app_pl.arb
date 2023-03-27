@@ -179,6 +179,30 @@
   "@profile_screen_new_surname_dialog_title": {
     "description": "Title of the dialog to change surname"
   },
+  "profile_screen_new_email_dialog_title": "Podaj nowy email",
+  "@profile_screen_new_email_dialog_title": {
+    "description": "Title of the dialog to change email"
+  },
+  "profile_screen_successfully_saved_data_message": "Pomyślnie zapisano zmiany",
+  "@profile_screen_successfully_saved_data_message": {
+    "description": "Message to inform that data has been successfully saved"
+  },
+  "profile_screen_email_already_taken_title": "Zajęty adres email",
+  "@profile_screen_email_already_taken_title": {
+    "description": "Title of the dialog to inform that new email is already taken"
+  },
+  "profile_screen_email_already_taken_message": "Niestety, nowo podany adres email jest już zajęty przez innego użytkownika...",
+  "@profile_screen_email_already_taken_message": {
+    "description": "Message of the dialog to inform that new email is already taken"
+  },
+  "profile_screen_wrong_password_title": "Błędne hasło",
+  "@profile_screen_wrong_password_title": {
+    "description": "Title of the dialog to inform that given password is wrong"
+  },
+  "profile_screen_wrong_password_message": "Podane hasło jest błędne...",
+  "@profile_screen_wrong_password_message": {
+    "description": "Message of the dialog to inform that given password is wrong"
+  },
 
 
   "no_internet_connection_dialog_title": "Brak połączenia internetowego",
