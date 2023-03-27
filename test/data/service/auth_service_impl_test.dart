@@ -561,4 +561,90 @@ void main() {
       ).called(1);
     },
   );
+
+  test(
+    'update password, '
+    'should call firebase method to update password',
+    () async {
+      const String newPassword = 'password1';
+      const String currentPassword = 'password2';
+      firebaseAuthService.mockUpdatePassword();
+
+      await service.updatePassword(
+        newPassword: newPassword,
+        currentPassword: currentPassword,
+      );
+
+      verify(
+        () => firebaseAuthService.updatePassword(
+          currentPassword: currentPassword,
+          newPassword: newPassword,
+        ),
+      ).called(1);
+    },
+  );
+
+  test(
+    'update password, '
+    'wrong password firebase exception, '
+    'should throw wrong password auth exception',
+    () async {
+      const String newPassword = 'password1';
+      const String currentPassword = 'password2';
+      const AuthException expectedException = AuthException.wrongPassword;
+      firebaseAuthService.mockUpdatePassword(
+        throwable: FirebaseAuthExceptionCode.wrongPassword,
+      );
+
+      Object? exception;
+      try {
+        await service.updatePassword(
+          newPassword: newPassword,
+          currentPassword: currentPassword,
+        );
+      } catch (e) {
+        exception = e;
+      }
+
+      expect(exception, expectedException);
+      verify(
+        () => firebaseAuthService.updatePassword(
+          currentPassword: currentPassword,
+          newPassword: newPassword,
+        ),
+      ).called(1);
+    },
+  );
+
+  test(
+    'update password, '
+    'unknown exception, '
+    'should rethrow exception',
+    () async {
+      const String newPassword = 'password1';
+      const String currentPassword = 'password2';
+      const String expectedException = 'Exception...';
+      firebaseAuthService.mockUpdatePassword(
+        throwable: expectedException,
+      );
+
+      Object? exception;
+      try {
+        await service.updatePassword(
+          newPassword: newPassword,
+          currentPassword: currentPassword,
+        );
+      } catch (e) {
+        exception = e;
+      }
+
+      expect(exception, expectedException);
+      verify(
+        () => firebaseAuthService.updatePassword(
+          currentPassword: currentPassword,
+          newPassword: newPassword,
+        ),
+      ).called(1);
+    },
+  );
 }

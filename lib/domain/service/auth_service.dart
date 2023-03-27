@@ -25,4 +25,9 @@ abstract class AuthService {
     required String newEmail,
     required String password,
   });
+
+  Future<void> updatePassword({
+    required String newPassword,
+    required String currentPassword,
+  });
 }

@@ -117,4 +117,25 @@ class AuthServiceImpl implements AuthService {
       }
     }
   }
+
+  @override
+  Future<void> updatePassword({
+    required String newPassword,
+    required String currentPassword,
+  }) async {
+    try {
+      await _firebaseAuthService.updatePassword(
+        currentPassword: currentPassword,
+        newPassword: newPassword,
+      );
+    } on FirebaseAuthExceptionCode catch (exception) {
+      final AuthException? authException =
+          mapFromFirebaseAuthExceptionCodeToAuthException(exception);
+      if (authException != null) {
+        throw authException;
+      } else {
+        rethrow;
+      }
+    }
+  }
 }
