@@ -271,42 +271,43 @@ void main() {
   );
 
   blocTest(
-      'update email, '
-      'should call method from auth service to update email and should emit complete status with saved data info',
-      build: () => createBloc(),
-      setUp: () {
-        authService.mockUpdateEmail();
-      },
-      act: (ProfileBloc bloc) {
-        bloc.add(
-          const ProfileEventUpdateEmail(
-            newEmail: 'email@example.com',
-            password: 'Password1!',
-          ),
-        );
-      },
-      expect: () => [
-            createState(
-              status: const BlocStatusLoading(),
-            ),
-            createState(
-              status: const BlocStatusComplete<ProfileInfo>(
-                info: ProfileInfo.savedData,
-              ),
-            ),
-          ],
-      verify: (_) {
-        verify(
-          () => authService.updateEmail(
-            newEmail: 'email@example.com',
-            password: 'Password1!',
-          ),
-        ).called(1);
-      });
+    'update email, '
+    'should call method from auth service to update email and should emit complete status with saved data info',
+    build: () => createBloc(),
+    setUp: () {
+      authService.mockUpdateEmail();
+    },
+    act: (ProfileBloc bloc) {
+      bloc.add(
+        const ProfileEventUpdateEmail(
+          newEmail: 'email@example.com',
+          password: 'Password1!',
+        ),
+      );
+    },
+    expect: () => [
+      createState(
+        status: const BlocStatusLoading(),
+      ),
+      createState(
+        status: const BlocStatusComplete<ProfileInfo>(
+          info: ProfileInfo.savedData,
+        ),
+      ),
+    ],
+    verify: (_) {
+      verify(
+        () => authService.updateEmail(
+          newEmail: 'email@example.com',
+          password: 'Password1!',
+        ),
+      ).called(1);
+    },
+  );
 
   blocTest(
     'update email, '
-    'email already in use exception'
+    'email already in use exception, '
     'should emit error status with email already in use error',
     build: () => createBloc(),
     setUp: () {
@@ -344,7 +345,7 @@ void main() {
 
   blocTest(
     'update email, '
-    'wrong password exception'
+    'wrong password exception, '
     'should emit error status with wrong password error',
     build: () => createBloc(),
     setUp: () {
@@ -375,6 +376,157 @@ void main() {
         () => authService.updateEmail(
           newEmail: 'email@example.com',
           password: 'Password1!',
+        ),
+      ).called(1);
+    },
+  );
+
+  blocTest(
+    'update email, '
+    'unknown exception, '
+    'should emit unknown error status and should rethrow exception',
+    build: () => createBloc(),
+    setUp: () {
+      authService.mockUpdateEmail(
+        throwable: 'Unknown exception',
+      );
+    },
+    act: (ProfileBloc bloc) {
+      bloc.add(
+        const ProfileEventUpdateEmail(
+          newEmail: 'email@example.com',
+          password: 'Password1!',
+        ),
+      );
+    },
+    expect: () => [
+      createState(
+        status: const BlocStatusLoading(),
+      ),
+      createState(
+        status: const BlocStatusUnknownError(),
+      ),
+    ],
+    errors: () => [
+      'Unknown exception',
+    ],
+    verify: (_) {
+      verify(
+        () => authService.updateEmail(
+          newEmail: 'email@example.com',
+          password: 'Password1!',
+        ),
+      ).called(1);
+    },
+  );
+
+  blocTest(
+    'update password, '
+    'should call method from auth service to update password and should emit complete status with saved data info',
+    build: () => createBloc(),
+    setUp: () {
+      authService.mockUpdatePassword();
+    },
+    act: (ProfileBloc bloc) {
+      bloc.add(
+        const ProfileEventUpdatePassword(
+          newPassword: 'newPassword',
+          currentPassword: 'currentPassword',
+        ),
+      );
+    },
+    expect: () => [
+      createState(
+        status: const BlocStatusLoading(),
+      ),
+      createState(
+        status: const BlocStatusComplete<ProfileInfo>(
+          info: ProfileInfo.savedData,
+        ),
+      ),
+    ],
+    verify: (_) {
+      verify(
+        () => authService.updatePassword(
+          newPassword: 'newPassword',
+          currentPassword: 'currentPassword',
+        ),
+      ).called(1);
+    },
+  );
+
+  blocTest(
+    'update password, '
+    'wrong password exception, '
+    'should emit error status with wrong password error',
+    build: () => createBloc(),
+    setUp: () {
+      authService.mockUpdatePassword(
+        throwable: AuthException.wrongPassword,
+      );
+    },
+    act: (ProfileBloc bloc) {
+      bloc.add(
+        const ProfileEventUpdatePassword(
+          newPassword: 'newPassword',
+          currentPassword: 'currentPassword',
+        ),
+      );
+    },
+    expect: () => [
+      createState(
+        status: const BlocStatusLoading(),
+      ),
+      createState(
+        status: const BlocStatusError<ProfileError>(
+          error: ProfileError.wrongPassword,
+        ),
+      ),
+    ],
+    verify: (_) {
+      verify(
+        () => authService.updatePassword(
+          newPassword: 'newPassword',
+          currentPassword: 'currentPassword',
+        ),
+      ).called(1);
+    },
+  );
+
+  blocTest(
+    'update password, '
+    'unknown exception, '
+    'should emit unknown error status and should rethrow exception',
+    build: () => createBloc(),
+    setUp: () {
+      authService.mockUpdatePassword(
+        throwable: 'Unknown exception',
+      );
+    },
+    act: (ProfileBloc bloc) {
+      bloc.add(
+        const ProfileEventUpdatePassword(
+          newPassword: 'newPassword',
+          currentPassword: 'currentPassword',
+        ),
+      );
+    },
+    expect: () => [
+      createState(
+        status: const BlocStatusLoading(),
+      ),
+      createState(
+        status: const BlocStatusUnknownError(),
+      ),
+    ],
+    errors: () => [
+      'Unknown exception',
+    ],
+    verify: (_) {
+      verify(
+        () => authService.updatePassword(
+          newPassword: 'newPassword',
+          currentPassword: 'currentPassword',
         ),
       ).called(1);
     },

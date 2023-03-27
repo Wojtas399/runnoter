@@ -44,6 +44,7 @@ class ProfileBloc extends BlocWithStatus<ProfileEvent, ProfileState,
     on<ProfileEventUpdateUsername>(_updateUsername);
     on<ProfileEventUpdateSurname>(_updateSurname);
     on<ProfileEventUpdateEmail>(_updateEmail);
+    on<ProfileEventUpdatePassword>(_updatePassword);
   }
 
   @override
@@ -124,6 +125,31 @@ class ProfileBloc extends BlocWithStatus<ProfileEvent, ProfileState,
       await _authService.updateEmail(
         newEmail: event.newEmail,
         password: event.password,
+      );
+      emitCompleteStatus(emit, ProfileInfo.savedData);
+    } on AuthException catch (authException) {
+      final ProfileError? error = _mapAuthExceptionToBlocError(authException);
+      if (error != null) {
+        emitErrorStatus(emit, error);
+      } else {
+        emitUnknownErrorStatus(emit);
+        rethrow;
+      }
+    } catch (_) {
+      emitUnknownErrorStatus(emit);
+      rethrow;
+    }
+  }
+
+  Future<void> _updatePassword(
+    ProfileEventUpdatePassword event,
+    Emitter<ProfileState> emit,
+  ) async {
+    emitLoadingStatus(emit);
+    try {
+      await _authService.updatePassword(
+        newPassword: event.newPassword,
+        currentPassword: event.currentPassword,
       );
       emitCompleteStatus(emit, ProfileInfo.savedData);
     } on AuthException catch (authException) {

@@ -80,3 +80,19 @@ class ProfileEventUpdateEmail extends ProfileEvent {
         password,
       ];
 }
+
+class ProfileEventUpdatePassword extends ProfileEvent {
+  final String newPassword;
+  final String currentPassword;
+
+  const ProfileEventUpdatePassword({
+    required this.newPassword,
+    required this.currentPassword,
+  });
+
+  @override
+  List<Object> get props => [
+        newPassword,
+        currentPassword,
+      ];
+}
