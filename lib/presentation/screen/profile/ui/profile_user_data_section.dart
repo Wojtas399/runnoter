@@ -169,8 +169,8 @@ class _Email extends StatelessWidget {
   Future<void> _onPressed(BuildContext context) async {
     await showDialog(
       context: context,
-      builder: (_) => BlocProvider(
-        create: (_) => context.read<ProfileBloc>(),
+      builder: (_) => BlocProvider<ProfileBloc>.value(
+        value: context.read<ProfileBloc>(),
         child: const ProfileUpdateEmailDialog(),
       ),
     );
