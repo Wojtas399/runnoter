@@ -59,7 +59,7 @@ class _Username extends StatelessWidget {
     );
 
     return ValueWithLabelAndIconComponent(
-      iconData: Icons.person_outline,
+      iconData: Icons.person_outline_rounded,
       label: AppLocalizations.of(context)!.profile_screen_username_label,
       value: username ?? '',
       onPressed: () {
@@ -86,6 +86,7 @@ class _Username extends StatelessWidget {
       title: AppLocalizations.of(context)!
           .profile_screen_new_username_dialog_title,
       label: AppLocalizations.of(context)!.profile_screen_username_label,
+      textFieldIcon: Icons.person_rounded,
       value: context.read<ProfileBloc>().state.username,
       isValueRequired: true,
       validator: (String? value) {
@@ -108,7 +109,7 @@ class _Surname extends StatelessWidget {
     );
 
     return ValueWithLabelAndIconComponent(
-      iconData: Icons.person_outline,
+      iconData: Icons.person_outline_rounded,
       label: AppLocalizations.of(context)!.profile_screen_surname_label,
       value: surname ?? '',
       onPressed: () {
@@ -135,6 +136,7 @@ class _Surname extends StatelessWidget {
       title:
           AppLocalizations.of(context)!.profile_screen_new_surname_dialog_title,
       label: AppLocalizations.of(context)!.profile_screen_surname_label,
+      textFieldIcon: Icons.person_rounded,
       value: context.read<ProfileBloc>().state.surname,
       isValueRequired: true,
       validator: (String? value) {

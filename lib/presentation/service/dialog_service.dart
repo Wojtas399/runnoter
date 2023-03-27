@@ -80,6 +80,7 @@ Future<String?> askForValue({
   required BuildContext context,
   required String title,
   String? label,
+  IconData? textFieldIcon,
   String? value,
   bool isValueRequired = false,
   String? Function(String? value)? validator,
@@ -90,6 +91,7 @@ Future<String?> askForValue({
     builder: (_) => ValueDialogComponent(
       title: title,
       label: label,
+      textFieldIcon: textFieldIcon,
       initialValue: value,
       isValueRequired: isValueRequired,
       validator: validator,

@@ -8,6 +8,7 @@ import '../text_field_component.dart';
 class ValueDialogComponent extends StatefulWidget {
   final String title;
   final String? label;
+  final IconData? textFieldIcon;
   final String? initialValue;
   final bool isValueRequired;
   final String? Function(String? value)? validator;
@@ -16,6 +17,7 @@ class ValueDialogComponent extends StatefulWidget {
     super.key,
     required this.title,
     this.label,
+    this.textFieldIcon,
     this.initialValue,
     this.isValueRequired = false,
     this.validator,
@@ -82,6 +84,7 @@ class _State extends State<ValueDialogComponent> {
                 children: [
                   TextFieldComponent(
                     label: widget.label,
+                    icon: widget.textFieldIcon,
                     isRequired: widget.isValueRequired,
                     controller: _textController,
                     validator: widget.validator,
