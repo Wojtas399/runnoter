@@ -8,6 +8,7 @@ import '../../../service/validation_service.dart';
 import '../bloc/profile_bloc.dart';
 import '../bloc/profile_event.dart';
 import 'profile_update_email_dialog.dart';
+import 'profile_update_password_dialog.dart';
 
 class ProfileUserDataSection extends StatelessWidget {
   const ProfileUserDataSection({
@@ -188,8 +189,18 @@ class _ChangePassword extends StatelessWidget {
       iconData: Icons.lock_outline,
       value: AppLocalizations.of(context)!.profile_screen_change_password_label,
       onPressed: () {
-        //TODO
+        _onPressed(context);
       },
+    );
+  }
+
+  Future<void> _onPressed(BuildContext context) async {
+    await showDialog(
+      context: context,
+      builder: (_) => BlocProvider.value(
+        value: context.read<ProfileBloc>(),
+        child: const ProfileUpdatePasswordDialog(),
+      ),
     );
   }
 }
