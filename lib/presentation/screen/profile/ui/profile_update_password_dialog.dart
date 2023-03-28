@@ -46,7 +46,8 @@ class _State extends State<ProfileUpdatePasswordDialog> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-            'Nowe hasło',
+            AppLocalizations.of(context)!
+                .profile_screen_new_password_dialog_title,
           ),
           leading: IconButton(
             onPressed: () {
@@ -79,14 +80,16 @@ class _State extends State<ProfileUpdatePasswordDialog> {
               child: Column(
                 children: [
                   PasswordTextFieldComponent(
-                    label: 'Nowe hasło',
+                    label: AppLocalizations.of(context)!
+                        .profile_screen_new_password_dialog_new_password_label,
                     isRequired: true,
                     controller: _newPasswordController,
                     validator: _validatePassword,
                   ),
                   const SizedBox(height: 32),
                   PasswordTextFieldComponent(
-                    label: 'Obecne hasło',
+                    label: AppLocalizations.of(context)!
+                        .profile_screen_new_password_dialog_current_password_label,
                     isRequired: true,
                     controller: _currentPasswordController,
                   ),

@@ -171,17 +171,29 @@
   "@profile_screen_delete_account_label": {
     "description": "Label of delete account option"
   },
-  "profile_screen_new_username_dialog_title": "Podaj nowe imię",
+  "profile_screen_new_username_dialog_title": "Zmień imię",
   "@profile_screen_new_username_dialog_title": {
     "description": "Title of the dialog to change username"
   },
-  "profile_screen_new_surname_dialog_title": "Podaj nowe nazwisko",
+  "profile_screen_new_surname_dialog_title": "Zmień nazwisko",
   "@profile_screen_new_surname_dialog_title": {
     "description": "Title of the dialog to change surname"
   },
-  "profile_screen_new_email_dialog_title": "Podaj nowy email",
+  "profile_screen_new_email_dialog_title": "Zmień email",
   "@profile_screen_new_email_dialog_title": {
     "description": "Title of the dialog to change email"
+  },
+  "profile_screen_new_password_dialog_title": "Zmień hasło",
+  "@profile_screen_new_password_dialog_title": {
+    "description": "Title of the dialog to update password"
+  },
+  "profile_screen_new_password_dialog_new_password_label": "Nowe hasło",
+  "@profile_screen_new_password_dialog_new_password_label": {
+    "description": "Label of text field to enter new password"
+  },
+  "profile_screen_new_password_dialog_current_password_label": "Obecne hasło",
+  "@profile_screen_new_password_dialog_current_password_label": {
+    "description": "Label of text field to enter current password"
   },
   "profile_screen_successfully_saved_data_message": "Pomyślnie zapisano zmiany",
   "@profile_screen_successfully_saved_data_message": {
