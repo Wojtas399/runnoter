@@ -29,4 +29,10 @@ class FirebaseUserService {
     final user = await userRef.get();
     return user.data();
   }
+
+  Future<void> deleteUserData({
+    required String userId,
+  }) async {
+    await getUserRef(userId).delete();
+  }
 }

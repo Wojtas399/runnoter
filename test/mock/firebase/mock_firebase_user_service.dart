@@ -35,6 +35,14 @@ class MockFirebaseUserService extends Mock implements FirebaseUserService {
     ).thenAnswer((invocation) => Future.value(userDto));
   }
 
+  void mockDeleteUserData() {
+    when(
+      () => deleteUserData(
+        userId: any(named: 'userId'),
+      ),
+    ).thenAnswer((invocation) => Future.value());
+  }
+
   void _mockUserDto() {
     registerFallbackValue(FakeUserDto());
   }
