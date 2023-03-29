@@ -42,4 +42,10 @@ class StateRepository<T extends Entity> {
     updatedData[entityIndex] = entity;
     _dataStream.add(updatedData);
   }
+
+  void removeEntity(String entityId) {
+    final List<T> updatedData = [...?_dataStream.value];
+    updatedData.removeWhere((entity) => entity.id == entityId);
+    _dataStream.add(updatedData);
+  }
 }
