@@ -10,4 +10,8 @@ abstract class UserRepository {
     String? name,
     String? surname,
   });
+
+  Future<void> deleteUser({
+    required String userId,
+  });
 }

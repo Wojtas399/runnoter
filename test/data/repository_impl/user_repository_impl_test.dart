@@ -170,4 +170,31 @@ void main() {
       ).called(1);
     },
   );
+
+  test(
+    'delete user, '
+    'should call firebase method to delete user data and should delete user from repository state',
+    () {
+      final User user = createUser(id: 'u1');
+      firebaseUserService.mockDeleteUserData();
+      repository = createRepository(
+        initialState: [user],
+      );
+
+      final Stream<User?> user$ = repository.getUserById(userId: user.id);
+      repository.deleteUser(userId: user.id);
+
+      expect(
+        user$,
+        emitsInOrder(
+          [user, null],
+        ),
+      );
+      verify(
+        () => firebaseUserService.deleteUserData(
+          userId: user.id,
+        ),
+      ).called(1);
+    },
+  );
 }

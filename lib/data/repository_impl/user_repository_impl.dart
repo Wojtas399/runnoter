@@ -59,6 +59,14 @@ class UserRepositoryImpl extends StateRepository<User>
     }
   }
 
+  @override
+  Future<void> deleteUser({
+    required String userId,
+  }) async {
+    await _firebaseUserService.deleteUserData(userId: userId);
+    removeEntity(userId);
+  }
+
   Future<void> _loadUserFromFirebase(String userId) async {
     final UserDto? userDto = await _firebaseUserService.loadUserById(
       userId: userId,
