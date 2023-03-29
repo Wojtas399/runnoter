@@ -215,6 +215,14 @@
   "@profile_screen_wrong_password_message": {
     "description": "Message of the dialog to inform that given password is wrong"
   },
+  "profile_screen_wrong_current_password_title": "Błędne hasło",
+  "@profile_screen_wrong_current_password_title": {
+    "description": "Title of the dialog to inform that given current password is wrong"
+  },
+  "profile_screen_wrong_current_password_message": "Podane obecne hasło jest błędne...",
+  "@profile_screen_wrong_current_password_message": {
+    "description": "Message of the dialog to inform that given current password is wrong"
+  },
 
 
   "no_internet_connection_dialog_title": "Brak połączenia internetowego",

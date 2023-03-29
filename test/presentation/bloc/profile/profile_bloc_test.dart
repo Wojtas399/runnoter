@@ -458,7 +458,7 @@ void main() {
   blocTest(
     'update password, '
     'wrong password exception, '
-    'should emit error status with wrong password error',
+    'should emit error status with wrong current password error',
     build: () => createBloc(),
     setUp: () {
       authService.mockUpdatePassword(
@@ -479,7 +479,7 @@ void main() {
       ),
       createState(
         status: const BlocStatusError<ProfileError>(
-          error: ProfileError.wrongPassword,
+          error: ProfileError.wrongCurrentPassword,
         ),
       ),
     ],

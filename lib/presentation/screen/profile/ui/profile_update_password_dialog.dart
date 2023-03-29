@@ -3,11 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../component/password_text_field_component.dart';
+import '../../../model/bloc_status.dart';
 import '../../../service/navigator_service.dart';
 import '../../../service/utils.dart';
 import '../../../service/validation_service.dart';
 import '../bloc/profile_bloc.dart';
 import '../bloc/profile_event.dart';
+import '../bloc/profile_state.dart';
 
 class ProfileUpdatePasswordDialog extends StatefulWidget {
   const ProfileUpdatePasswordDialog({
@@ -42,58 +44,67 @@ class _State extends State<ProfileUpdatePasswordDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return Dialog.fullscreen(
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            AppLocalizations.of(context)!
-                .profile_screen_new_password_dialog_title,
-          ),
-          leading: IconButton(
-            onPressed: () {
-              navigateBack(context: context);
-            },
-            icon: const Icon(Icons.close),
-          ),
-          actions: [
-            TextButton(
-              onPressed: _isSaveButtonDisabled
-                  ? null
-                  : () {
-                      _onSaveButtonPressed(context);
-                    },
-              child: Text(
-                AppLocalizations.of(context)!.save,
-              ),
+    return BlocListener<ProfileBloc, ProfileState>(
+      listener: (BuildContext context, ProfileState state) {
+        final BlocStatus blocStatus = state.status;
+        if (blocStatus is BlocStatusComplete &&
+            blocStatus.info == ProfileInfo.savedData) {
+          navigateBack(context: context);
+        }
+      },
+      child: Dialog.fullscreen(
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text(
+              AppLocalizations.of(context)!
+                  .profile_screen_new_password_dialog_title,
             ),
-            const SizedBox(width: 16),
-          ],
-        ),
-        body: SafeArea(
-          child: GestureDetector(
-            onTap: () {
-              unfocusInputs();
-            },
-            child: Container(
-              padding: const EdgeInsets.all(24),
-              color: Colors.transparent,
-              child: Column(
-                children: [
-                  PasswordTextFieldComponent(
-                    label: AppLocalizations.of(context)!
-                        .profile_screen_new_password_dialog_new_password_label,
-                    isRequired: true,
-                    controller: _newPasswordController,
-                    validator: _validatePassword,
-                  ),
-                  const SizedBox(height: 32),
-                  PasswordTextFieldComponent(
-                    label: AppLocalizations.of(context)!
-                        .profile_screen_new_password_dialog_current_password_label,
-                    isRequired: true,
-                    controller: _currentPasswordController,
-                  ),
-                ],
+            leading: IconButton(
+              onPressed: () {
+                navigateBack(context: context);
+              },
+              icon: const Icon(Icons.close),
+            ),
+            actions: [
+              TextButton(
+                onPressed: _isSaveButtonDisabled
+                    ? null
+                    : () {
+                        _onSaveButtonPressed(context);
+                      },
+                child: Text(
+                  AppLocalizations.of(context)!.save,
+                ),
+              ),
+              const SizedBox(width: 16),
+            ],
+          ),
+          body: SafeArea(
+            child: GestureDetector(
+              onTap: () {
+                unfocusInputs();
+              },
+              child: Container(
+                padding: const EdgeInsets.all(24),
+                color: Colors.transparent,
+                child: Column(
+                  children: [
+                    PasswordTextFieldComponent(
+                      label: AppLocalizations.of(context)!
+                          .profile_screen_new_password_dialog_new_password_label,
+                      isRequired: true,
+                      controller: _newPasswordController,
+                      validator: _validatePassword,
+                    ),
+                    const SizedBox(height: 32),
+                    PasswordTextFieldComponent(
+                      label: AppLocalizations.of(context)!
+                          .profile_screen_new_password_dialog_current_password_label,
+                      isRequired: true,
+                      controller: _currentPasswordController,
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

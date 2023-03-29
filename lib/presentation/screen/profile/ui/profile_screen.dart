@@ -100,6 +100,14 @@ class _BlocListener extends StatelessWidget {
               .profile_screen_wrong_password_message,
         );
         break;
+      case ProfileError.wrongCurrentPassword:
+        showMessageDialog(
+          context: context,
+          title: AppLocalizations.of(context)!
+              .profile_screen_wrong_current_password_title,
+          message: AppLocalizations.of(context)!
+              .profile_screen_wrong_current_password_message,
+        );
     }
   }
 }

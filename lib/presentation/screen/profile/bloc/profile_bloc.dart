@@ -153,9 +153,8 @@ class ProfileBloc extends BlocWithStatus<ProfileEvent, ProfileState,
       );
       emitCompleteStatus(emit, ProfileInfo.savedData);
     } on AuthException catch (authException) {
-      final ProfileError? error = _mapAuthExceptionToBlocError(authException);
-      if (error != null) {
-        emitErrorStatus(emit, error);
+      if (authException == AuthException.wrongPassword) {
+        emitErrorStatus(emit, ProfileError.wrongCurrentPassword);
       } else {
         emitUnknownErrorStatus(emit);
         rethrow;

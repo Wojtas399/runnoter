@@ -49,4 +49,5 @@ enum ProfileInfo {
 enum ProfileError {
   emailAlreadyInUse,
   wrongPassword,
+  wrongCurrentPassword,
 }
