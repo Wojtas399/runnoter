@@ -123,8 +123,22 @@ class FirebaseAuthService {
     }
   }
 
-  Future<void> deleteCurrentlyLoggedUser() async {
-    await FirebaseAuth.instance.currentUser?.delete();
+  Future<void> deleteCurrentlyLoggedUser({
+    required String password,
+  }) async {
+    try {
+      await _reauthenticate(password);
+      await FirebaseAuth.instance.currentUser?.delete();
+    } on FirebaseAuthException catch (exception) {
+      final FirebaseAuthExceptionCode code = mapFirebaseAuthExceptionCodeToEnum(
+        exception.code,
+      );
+      if (code != FirebaseAuthExceptionCode.unknown) {
+        throw code;
+      } else {
+        rethrow;
+      }
+    }
   }
 
   Future<void> _reauthenticate(String password) async {

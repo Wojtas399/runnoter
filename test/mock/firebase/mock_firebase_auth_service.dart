@@ -81,10 +81,10 @@ class MockFirebaseAuthService extends Mock implements FirebaseAuthService {
     Object? throwable,
   }) {
     if (throwable != null) {
-      when(deleteCurrentlyLoggedUser).thenThrow(throwable);
+      when(_deleteCurrentlyLoggedUserCall).thenThrow(throwable);
     } else {
       when(
-        deleteCurrentlyLoggedUser,
+        _deleteCurrentlyLoggedUserCall,
       ).thenAnswer((invocation) => Future.value());
     }
   }
@@ -122,6 +122,12 @@ class MockFirebaseAuthService extends Mock implements FirebaseAuthService {
     return updatePassword(
       currentPassword: any(named: 'currentPassword'),
       newPassword: any(named: 'newPassword'),
+    );
+  }
+
+  Future<void> _deleteCurrentlyLoggedUserCall() {
+    return deleteCurrentlyLoggedUser(
+      password: any(named: 'password'),
     );
   }
 }

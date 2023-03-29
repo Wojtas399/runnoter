@@ -30,4 +30,8 @@ abstract class AuthService {
     required String newPassword,
     required String currentPassword,
   });
+
+  Future<void> deleteCurrentlyLoggedUser({
+    required String password,
+  });
 }

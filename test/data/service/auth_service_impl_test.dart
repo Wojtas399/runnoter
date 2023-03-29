@@ -647,4 +647,81 @@ void main() {
       ).called(1);
     },
   );
+
+  test(
+    'delete currently logged user, '
+    'should call firebase method to delete currently logged user',
+    () async {
+      const String password = 'password1';
+      firebaseAuthService.mockDeleteCurrentlyLoggedUser();
+
+      await service.deleteCurrentlyLoggedUser(
+        password: password,
+      );
+
+      verify(
+        () => firebaseAuthService.deleteCurrentlyLoggedUser(
+          password: password,
+        ),
+      ).called(1);
+    },
+  );
+
+  test(
+    'delete currently logged user, '
+    'wrong password firebase exception, '
+    'should throw wrong password auth exception',
+    () async {
+      const String password = 'password1';
+      const AuthException expectedException = AuthException.wrongPassword;
+      firebaseAuthService.mockDeleteCurrentlyLoggedUser(
+        throwable: FirebaseAuthExceptionCode.wrongPassword,
+      );
+
+      Object? exception;
+      try {
+        await service.deleteCurrentlyLoggedUser(
+          password: password,
+        );
+      } catch (e) {
+        exception = e;
+      }
+
+      expect(exception, expectedException);
+      verify(
+        () => firebaseAuthService.deleteCurrentlyLoggedUser(
+          password: password,
+        ),
+      ).called(1);
+    },
+  );
+
+  test(
+    'delete currently logged user, '
+    'unknown exception, '
+    'should rethrow exception',
+    () async {
+      const String password = 'password1';
+      const String expectedException = 'Exception...';
+      firebaseAuthService.mockDeleteCurrentlyLoggedUser(
+        throwable: expectedException,
+      );
+
+      Object? exception;
+      try {
+        await service.deleteCurrentlyLoggedUser(
+          password: password,
+        );
+      } catch (e) {
+        exception = e;
+      }
+
+      expect(exception, expectedException);
+      verify(
+        () => firebaseAuthService.deleteCurrentlyLoggedUser(
+          password: password,
+        ),
+      ).called(1);
+    },
+  );
 }

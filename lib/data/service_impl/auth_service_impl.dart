@@ -138,4 +138,23 @@ class AuthServiceImpl implements AuthService {
       }
     }
   }
+
+  @override
+  Future<void> deleteCurrentlyLoggedUser({
+    required String password,
+  }) async {
+    try {
+      await _firebaseAuthService.deleteCurrentlyLoggedUser(
+        password: password,
+      );
+    } on FirebaseAuthExceptionCode catch (exception) {
+      final AuthException? authException =
+          mapFromFirebaseAuthExceptionCodeToAuthException(exception);
+      if (authException != null) {
+        throw authException;
+      } else {
+        rethrow;
+      }
+    }
+  }
 }
