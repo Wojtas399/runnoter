@@ -77,6 +77,18 @@ class MockFirebaseAuthService extends Mock implements FirebaseAuthService {
     }
   }
 
+  void mockDeleteCurrentlyLoggedUser({
+    Object? throwable,
+  }) {
+    if (throwable != null) {
+      when(deleteCurrentlyLoggedUser).thenThrow(throwable);
+    } else {
+      when(
+        deleteCurrentlyLoggedUser,
+      ).thenAnswer((invocation) => Future.value());
+    }
+  }
+
   Future<void> _signInCall() {
     return signIn(
       email: any(named: 'email'),
