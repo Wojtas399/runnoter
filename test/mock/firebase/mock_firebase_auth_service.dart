@@ -77,13 +77,13 @@ class MockFirebaseAuthService extends Mock implements FirebaseAuthService {
     }
   }
 
-  void mockDeleteLoggedUserAccount({
+  void mockDeleteAccount({
     Object? throwable,
   }) {
     if (throwable != null) {
-      when(_deleteLoggedUserAccount).thenThrow(throwable);
+      when(_deleteAccount).thenThrow(throwable);
     } else {
-      when(_deleteLoggedUserAccount).thenAnswer((invocation) => Future.value());
+      when(_deleteAccount).thenAnswer((invocation) => Future.value());
     }
   }
 
@@ -123,8 +123,8 @@ class MockFirebaseAuthService extends Mock implements FirebaseAuthService {
     );
   }
 
-  Future<void> _deleteLoggedUserAccount() {
-    return deleteLoggedUserAccount(
+  Future<void> _deleteAccount() {
+    return deleteAccount(
       password: any(named: 'password'),
     );
   }

@@ -123,7 +123,7 @@ class FirebaseAuthService {
     }
   }
 
-  Future<void> deleteLoggedUserAccount({
+  Future<void> deleteAccount({
     required String password,
   }) async {
     try {
@@ -135,6 +135,24 @@ class FirebaseAuthService {
       );
       if (code != FirebaseAuthExceptionCode.unknown) {
         throw code;
+      } else {
+        rethrow;
+      }
+    }
+  }
+
+  Future<bool> isPasswordCorrect({
+    required String password,
+  }) async {
+    try {
+      await _reauthenticate(password);
+      return true;
+    } on FirebaseAuthException catch (exception) {
+      final FirebaseAuthExceptionCode code = mapFirebaseAuthExceptionCodeToEnum(
+        exception.code,
+      );
+      if (code == FirebaseAuthExceptionCode.wrongPassword) {
+        return false;
       } else {
         rethrow;
       }

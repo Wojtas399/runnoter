@@ -653,14 +653,14 @@ void main() {
     'should call firebase method to delete currently logged user',
     () async {
       const String password = 'password1';
-      firebaseAuthService.mockDeleteLoggedUserAccount();
+      firebaseAuthService.mockDeleteAccount();
 
       await service.deleteLoggedUserAccount(
         password: password,
       );
 
       verify(
-        () => firebaseAuthService.deleteLoggedUserAccount(
+        () => firebaseAuthService.deleteAccount(
           password: password,
         ),
       ).called(1);
@@ -674,7 +674,7 @@ void main() {
     () async {
       const String password = 'password1';
       const AuthException expectedException = AuthException.wrongPassword;
-      firebaseAuthService.mockDeleteLoggedUserAccount(
+      firebaseAuthService.mockDeleteAccount(
         throwable: FirebaseAuthExceptionCode.wrongPassword,
       );
 
@@ -689,7 +689,7 @@ void main() {
 
       expect(exception, expectedException);
       verify(
-        () => firebaseAuthService.deleteLoggedUserAccount(
+        () => firebaseAuthService.deleteAccount(
           password: password,
         ),
       ).called(1);
@@ -703,7 +703,7 @@ void main() {
     () async {
       const String password = 'password1';
       const String expectedException = 'Exception...';
-      firebaseAuthService.mockDeleteLoggedUserAccount(
+      firebaseAuthService.mockDeleteAccount(
         throwable: expectedException,
       );
 
@@ -718,7 +718,7 @@ void main() {
 
       expect(exception, expectedException);
       verify(
-        () => firebaseAuthService.deleteLoggedUserAccount(
+        () => firebaseAuthService.deleteAccount(
           password: password,
         ),
       ).called(1);

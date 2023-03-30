@@ -144,7 +144,7 @@ class AuthServiceImpl implements AuthService {
     required String password,
   }) async {
     try {
-      await _firebaseAuthService.deleteLoggedUserAccount(
+      await _firebaseAuthService.deleteAccount(
         password: password,
       );
     } on FirebaseAuthExceptionCode catch (exception) {
