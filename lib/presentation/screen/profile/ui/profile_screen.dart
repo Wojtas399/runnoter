@@ -5,7 +5,9 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../../domain/repository/user_repository.dart';
 import '../../../../domain/service/auth_service.dart';
 import '../../../component/bloc_with_status_listener_component.dart';
+import '../../../config/navigation/routes.dart';
 import '../../../service/dialog_service.dart';
+import '../../../service/navigator_service.dart';
 import '../bloc/profile_bloc.dart';
 import '../bloc/profile_event.dart';
 import '../bloc/profile_state.dart';
@@ -75,6 +77,12 @@ class _BlocListener extends StatelessWidget {
           context: context,
           message: AppLocalizations.of(context)!
               .profile_screen_successfully_saved_data_message,
+        );
+        break;
+      case ProfileInfo.accountDeleted:
+        navigateAndRemoveUntil(
+          context: context,
+          route: Routes.signIn,
         );
         break;
     }

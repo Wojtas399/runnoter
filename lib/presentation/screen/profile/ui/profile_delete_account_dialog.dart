@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../component/password_text_field_component.dart';
+import '../../../model/bloc_status.dart';
 import '../../../service/navigator_service.dart';
 import '../../../service/utils.dart';
+import '../bloc/profile_bloc.dart';
+import '../bloc/profile_event.dart';
+import '../bloc/profile_state.dart';
 
 class ProfileDeleteAccountDialog extends StatefulWidget {
   const ProfileDeleteAccountDialog({
@@ -28,55 +33,64 @@ class _State extends State<ProfileDeleteAccountDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return Dialog.fullscreen(
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            AppLocalizations.of(context)!
-                .profile_screen_delete_account_dialog_title,
-          ),
-          leading: IconButton(
-            onPressed: () {
-              navigateBack(context: context);
-            },
-            icon: const Icon(Icons.close),
-          ),
-          actions: [
-            TextButton(
-              onPressed: _isSaveButtonDisabled
-                  ? null
-                  : () {
-                      _onSaveButtonPressed(context);
-                    },
-              child: Text(
-                AppLocalizations.of(context)!.delete,
-              ),
+    return BlocListener<ProfileBloc, ProfileState>(
+      listener: (BuildContext context, ProfileState state) {
+        final BlocStatus blocStatus = state.status;
+        if (blocStatus is BlocStatusComplete &&
+            blocStatus.info == ProfileInfo.accountDeleted) {
+          navigateBack(context: context);
+        }
+      },
+      child: Dialog.fullscreen(
+        child: Scaffold(
+          appBar: AppBar(
+            title: Text(
+              AppLocalizations.of(context)!
+                  .profile_screen_delete_account_dialog_title,
             ),
-            const SizedBox(width: 16),
-          ],
-        ),
-        body: SafeArea(
-          child: GestureDetector(
-            onTap: () {
-              unfocusInputs();
-            },
-            child: Container(
-              padding: const EdgeInsets.all(24),
-              color: Colors.transparent,
-              child: Column(
-                children: [
-                  Text(
-                    AppLocalizations.of(context)!
-                        .profile_screen_delete_account_dialog_message,
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
-                  const SizedBox(height: 24),
-                  PasswordTextFieldComponent(
-                    label: AppLocalizations.of(context)!.password,
-                    controller: _passwordController,
-                    isRequired: true,
-                  ),
-                ],
+            leading: IconButton(
+              onPressed: () {
+                navigateBack(context: context);
+              },
+              icon: const Icon(Icons.close),
+            ),
+            actions: [
+              TextButton(
+                onPressed: _isSaveButtonDisabled
+                    ? null
+                    : () {
+                        _onSaveButtonPressed(context);
+                      },
+                child: Text(
+                  AppLocalizations.of(context)!.delete,
+                ),
+              ),
+              const SizedBox(width: 16),
+            ],
+          ),
+          body: SafeArea(
+            child: GestureDetector(
+              onTap: () {
+                unfocusInputs();
+              },
+              child: Container(
+                padding: const EdgeInsets.all(24),
+                color: Colors.transparent,
+                child: Column(
+                  children: [
+                    Text(
+                      AppLocalizations.of(context)!
+                          .profile_screen_delete_account_dialog_message,
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
+                    const SizedBox(height: 24),
+                    PasswordTextFieldComponent(
+                      label: AppLocalizations.of(context)!.password,
+                      controller: _passwordController,
+                      isRequired: true,
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -92,6 +106,10 @@ class _State extends State<ProfileDeleteAccountDialog> {
   }
 
   void _onSaveButtonPressed(BuildContext context) {
-    //TODO
+    context.read<ProfileBloc>().add(
+          ProfileEventDeleteAccount(
+            password: _passwordController.text,
+          ),
+        );
   }
 }
