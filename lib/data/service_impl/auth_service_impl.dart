@@ -140,7 +140,16 @@ class AuthServiceImpl implements AuthService {
   }
 
   @override
-  Future<void> deleteLoggedUserAccount({
+  Future<bool> isPasswordCorrect({
+    required String password,
+  }) async {
+    return await _firebaseAuthService.isPasswordCorrect(
+      password: password,
+    );
+  }
+
+  @override
+  Future<void> deleteAccount({
     required String password,
   }) async {
     try {

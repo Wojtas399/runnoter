@@ -537,7 +537,7 @@ void main() {
     'should call method from auth service to delete account and should emit complete status with account deleted info',
     build: () => createBloc(),
     setUp: () {
-      authService.mockDeleteLoggedUserAccount();
+      authService.mockdeleteAccount();
     },
     act: (ProfileBloc bloc) {
       bloc.add(
@@ -558,7 +558,7 @@ void main() {
     ],
     verify: (_) {
       verify(
-        () => authService.deleteLoggedUserAccount(
+        () => authService.deleteAccount(
           password: 'password1',
         ),
       ).called(1);
@@ -571,7 +571,7 @@ void main() {
     'should emit error status with wrong password error',
     build: () => createBloc(),
     setUp: () {
-      authService.mockDeleteLoggedUserAccount(
+      authService.mockdeleteAccount(
         throwable: AuthException.wrongPassword,
       );
     },
@@ -594,7 +594,7 @@ void main() {
     ],
     verify: (_) {
       verify(
-        () => authService.deleteLoggedUserAccount(
+        () => authService.deleteAccount(
           password: 'password1',
         ),
       ).called(1);
@@ -607,7 +607,7 @@ void main() {
     'should emit unknown error status and should rethrow error',
     build: () => createBloc(),
     setUp: () {
-      authService.mockDeleteLoggedUserAccount(
+      authService.mockdeleteAccount(
         throwable: 'Unknown exception...',
       );
     },
@@ -631,7 +631,7 @@ void main() {
     ],
     verify: (_) {
       verify(
-        () => authService.deleteLoggedUserAccount(
+        () => authService.deleteAccount(
           password: 'password1',
         ),
       ).called(1);

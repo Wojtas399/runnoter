@@ -77,6 +77,16 @@ class MockFirebaseAuthService extends Mock implements FirebaseAuthService {
     }
   }
 
+  void mockIsPasswordCorrect({
+    bool isCorrect = true,
+  }) {
+    when(
+      () => isPasswordCorrect(
+        password: any(named: 'password'),
+      ),
+    ).thenAnswer((invocation) => Future.value(isCorrect));
+  }
+
   void mockDeleteAccount({
     Object? throwable,
   }) {

@@ -649,13 +649,34 @@ void main() {
   );
 
   test(
-    'delete logged user account, '
+    'is password correct, '
+    'should return result of firebase auth service method to check password correctness',
+    () async {
+      const String password = 'password1';
+      const bool expectedResult = true;
+      firebaseAuthService.mockIsPasswordCorrect(isCorrect: expectedResult);
+
+      final bool result = await service.isPasswordCorrect(
+        password: password,
+      );
+
+      expect(result, expectedResult);
+      verify(
+        () => firebaseAuthService.isPasswordCorrect(
+          password: password,
+        ),
+      ).called(1);
+    },
+  );
+
+  test(
+    'delete account, '
     'should call firebase method to delete currently logged user',
     () async {
       const String password = 'password1';
       firebaseAuthService.mockDeleteAccount();
 
-      await service.deleteLoggedUserAccount(
+      await service.deleteAccount(
         password: password,
       );
 
@@ -680,7 +701,7 @@ void main() {
 
       Object? exception;
       try {
-        await service.deleteLoggedUserAccount(
+        await service.deleteAccount(
           password: password,
         );
       } catch (e) {
@@ -709,7 +730,7 @@ void main() {
 
       Object? exception;
       try {
-        await service.deleteLoggedUserAccount(
+        await service.deleteAccount(
           password: password,
         );
       } catch (e) {

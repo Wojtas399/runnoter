@@ -172,7 +172,7 @@ class ProfileBloc extends BlocWithStatus<ProfileEvent, ProfileState,
   ) async {
     emitLoadingStatus(emit);
     try {
-      await _authService.deleteLoggedUserAccount(
+      await _authService.deleteAccount(
         password: event.password,
       );
       emitCompleteStatus(emit, ProfileInfo.accountDeleted);

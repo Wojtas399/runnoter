@@ -76,14 +76,14 @@ class MockAuthService extends Mock implements AuthService {
     }
   }
 
-  void mockDeleteLoggedUserAccount({
+  void mockdeleteAccount({
     Object? throwable,
   }) {
     if (throwable != null) {
-      when(_deleteLoggedUserAccountCall).thenThrow(throwable);
+      when(_deleteAccountCall).thenThrow(throwable);
     } else {
       when(
-        _deleteLoggedUserAccountCall,
+        _deleteAccountCall,
       ).thenAnswer((invocation) => Future.value());
     }
   }
@@ -124,8 +124,8 @@ class MockAuthService extends Mock implements AuthService {
     );
   }
 
-  Future<void> _deleteLoggedUserAccountCall() {
-    return deleteLoggedUserAccount(
+  Future<void> _deleteAccountCall() {
+    return deleteAccount(
       password: any(named: 'password'),
     );
   }

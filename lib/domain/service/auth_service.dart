@@ -31,7 +31,11 @@ abstract class AuthService {
     required String currentPassword,
   });
 
-  Future<void> deleteLoggedUserAccount({
+  Future<bool> isPasswordCorrect({
+    required String password,
+  });
+
+  Future<void> deleteAccount({
     required String password,
   });
 }
