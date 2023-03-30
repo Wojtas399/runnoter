@@ -45,6 +45,7 @@ class ProfileBloc extends BlocWithStatus<ProfileEvent, ProfileState,
     on<ProfileEventUpdateSurname>(_updateSurname);
     on<ProfileEventUpdateEmail>(_updateEmail);
     on<ProfileEventUpdatePassword>(_updatePassword);
+    on<ProfileEventDeleteAccount>(_deleteAccount);
   }
 
   @override
@@ -155,6 +156,32 @@ class ProfileBloc extends BlocWithStatus<ProfileEvent, ProfileState,
     } on AuthException catch (authException) {
       if (authException == AuthException.wrongPassword) {
         emitErrorStatus(emit, ProfileError.wrongCurrentPassword);
+      } else {
+        emitUnknownErrorStatus(emit);
+        rethrow;
+      }
+    } catch (_) {
+      emitUnknownErrorStatus(emit);
+      rethrow;
+    }
+  }
+
+  Future<void> _deleteAccount(
+    ProfileEventDeleteAccount event,
+    Emitter<ProfileState> emit,
+  ) async {
+    emitLoadingStatus(emit);
+    try {
+      await _authService.deleteLoggedUserAccount(
+        password: event.password,
+      );
+      emitCompleteStatus(emit, ProfileInfo.accountDeleted);
+    } on AuthException catch (authException) {
+      final ProfileError? error = _mapAuthExceptionToBlocError(
+        authException,
+      );
+      if (error != null) {
+        emitErrorStatus(emit, error);
       } else {
         emitUnknownErrorStatus(emit);
         rethrow;

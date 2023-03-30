@@ -44,6 +44,7 @@ class ProfileState extends BlocState {
 
 enum ProfileInfo {
   savedData,
+  accountDeleted,
 }
 
 enum ProfileError {

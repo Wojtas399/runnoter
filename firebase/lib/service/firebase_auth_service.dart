@@ -123,7 +123,7 @@ class FirebaseAuthService {
     }
   }
 
-  Future<void> deleteCurrentlyLoggedUser({
+  Future<void> deleteLoggedUserAccount({
     required String password,
   }) async {
     try {

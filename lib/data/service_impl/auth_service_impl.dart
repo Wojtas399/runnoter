@@ -140,11 +140,11 @@ class AuthServiceImpl implements AuthService {
   }
 
   @override
-  Future<void> deleteCurrentlyLoggedUser({
+  Future<void> deleteLoggedUserAccount({
     required String password,
   }) async {
     try {
-      await _firebaseAuthService.deleteCurrentlyLoggedUser(
+      await _firebaseAuthService.deleteLoggedUserAccount(
         password: password,
       );
     } on FirebaseAuthExceptionCode catch (exception) {

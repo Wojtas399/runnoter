@@ -307,7 +307,7 @@ void main() {
 
   blocTest(
     'update email, '
-    'email already in use exception, '
+    'email already in use auth exception, '
     'should emit error status with email already in use error',
     build: () => createBloc(),
     setUp: () {
@@ -345,7 +345,7 @@ void main() {
 
   blocTest(
     'update email, '
-    'wrong password exception, '
+    'wrong password auth exception, '
     'should emit error status with wrong password error',
     build: () => createBloc(),
     setUp: () {
@@ -457,7 +457,7 @@ void main() {
 
   blocTest(
     'update password, '
-    'wrong password exception, '
+    'wrong password auth exception, '
     'should emit error status with wrong current password error',
     build: () => createBloc(),
     setUp: () {
@@ -527,6 +527,112 @@ void main() {
         () => authService.updatePassword(
           newPassword: 'newPassword',
           currentPassword: 'currentPassword',
+        ),
+      ).called(1);
+    },
+  );
+
+  blocTest(
+    'delete account, '
+    'should call method from auth service to delete account and should emit complete status with account deleted info',
+    build: () => createBloc(),
+    setUp: () {
+      authService.mockDeleteLoggedUserAccount();
+    },
+    act: (ProfileBloc bloc) {
+      bloc.add(
+        const ProfileEventDeleteAccount(
+          password: 'password1',
+        ),
+      );
+    },
+    expect: () => [
+      createState(
+        status: const BlocStatusLoading(),
+      ),
+      createState(
+        status: const BlocStatusComplete<ProfileInfo>(
+          info: ProfileInfo.accountDeleted,
+        ),
+      ),
+    ],
+    verify: (_) {
+      verify(
+        () => authService.deleteLoggedUserAccount(
+          password: 'password1',
+        ),
+      ).called(1);
+    },
+  );
+
+  blocTest(
+    'delete account, '
+    'wrong password auth exception, '
+    'should emit error status with wrong password error',
+    build: () => createBloc(),
+    setUp: () {
+      authService.mockDeleteLoggedUserAccount(
+        throwable: AuthException.wrongPassword,
+      );
+    },
+    act: (ProfileBloc bloc) {
+      bloc.add(
+        const ProfileEventDeleteAccount(
+          password: 'password1',
+        ),
+      );
+    },
+    expect: () => [
+      createState(
+        status: const BlocStatusLoading(),
+      ),
+      createState(
+        status: const BlocStatusError<ProfileError>(
+          error: ProfileError.wrongPassword,
+        ),
+      ),
+    ],
+    verify: (_) {
+      verify(
+        () => authService.deleteLoggedUserAccount(
+          password: 'password1',
+        ),
+      ).called(1);
+    },
+  );
+
+  blocTest(
+    'delete account, '
+    'unknown exception, '
+    'should emit unknown error status and should rethrow error',
+    build: () => createBloc(),
+    setUp: () {
+      authService.mockDeleteLoggedUserAccount(
+        throwable: 'Unknown exception...',
+      );
+    },
+    act: (ProfileBloc bloc) {
+      bloc.add(
+        const ProfileEventDeleteAccount(
+          password: 'password1',
+        ),
+      );
+    },
+    expect: () => [
+      createState(
+        status: const BlocStatusLoading(),
+      ),
+      createState(
+        status: const BlocStatusUnknownError(),
+      ),
+    ],
+    errors: () => [
+      'Unknown exception...',
+    ],
+    verify: (_) {
+      verify(
+        () => authService.deleteLoggedUserAccount(
+          password: 'password1',
         ),
       ).called(1);
     },

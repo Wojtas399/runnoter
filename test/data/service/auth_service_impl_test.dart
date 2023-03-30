@@ -649,18 +649,18 @@ void main() {
   );
 
   test(
-    'delete currently logged user, '
+    'delete logged user account, '
     'should call firebase method to delete currently logged user',
     () async {
       const String password = 'password1';
-      firebaseAuthService.mockDeleteCurrentlyLoggedUser();
+      firebaseAuthService.mockDeleteLoggedUserAccount();
 
-      await service.deleteCurrentlyLoggedUser(
+      await service.deleteLoggedUserAccount(
         password: password,
       );
 
       verify(
-        () => firebaseAuthService.deleteCurrentlyLoggedUser(
+        () => firebaseAuthService.deleteLoggedUserAccount(
           password: password,
         ),
       ).called(1);
@@ -668,19 +668,19 @@ void main() {
   );
 
   test(
-    'delete currently logged user, '
+    'delete logged user account, '
     'wrong password firebase exception, '
     'should throw wrong password auth exception',
     () async {
       const String password = 'password1';
       const AuthException expectedException = AuthException.wrongPassword;
-      firebaseAuthService.mockDeleteCurrentlyLoggedUser(
+      firebaseAuthService.mockDeleteLoggedUserAccount(
         throwable: FirebaseAuthExceptionCode.wrongPassword,
       );
 
       Object? exception;
       try {
-        await service.deleteCurrentlyLoggedUser(
+        await service.deleteLoggedUserAccount(
           password: password,
         );
       } catch (e) {
@@ -689,7 +689,7 @@ void main() {
 
       expect(exception, expectedException);
       verify(
-        () => firebaseAuthService.deleteCurrentlyLoggedUser(
+        () => firebaseAuthService.deleteLoggedUserAccount(
           password: password,
         ),
       ).called(1);
@@ -697,19 +697,19 @@ void main() {
   );
 
   test(
-    'delete currently logged user, '
+    'delete logged user account, '
     'unknown exception, '
     'should rethrow exception',
     () async {
       const String password = 'password1';
       const String expectedException = 'Exception...';
-      firebaseAuthService.mockDeleteCurrentlyLoggedUser(
+      firebaseAuthService.mockDeleteLoggedUserAccount(
         throwable: expectedException,
       );
 
       Object? exception;
       try {
-        await service.deleteCurrentlyLoggedUser(
+        await service.deleteLoggedUserAccount(
           password: password,
         );
       } catch (e) {
@@ -718,7 +718,7 @@ void main() {
 
       expect(exception, expectedException);
       verify(
-        () => firebaseAuthService.deleteCurrentlyLoggedUser(
+        () => firebaseAuthService.deleteLoggedUserAccount(
           password: password,
         ),
       ).called(1);
