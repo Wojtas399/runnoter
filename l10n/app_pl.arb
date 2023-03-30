@@ -195,6 +195,14 @@
   "@profile_screen_new_password_dialog_current_password_label": {
     "description": "Label of text field to enter current password"
   },
+  "profile_screen_delete_account_dialog_title": "Usuń konto",
+  "@profile_screen_delete_account_dialog_title": {
+    "description": "Title of the dialog to delete account"
+  },
+  "profile_screen_delete_account_dialog_message": "Usuwając konto utracisz wszystkie zapisane dane, bez możliwości ich odzyskania.",
+  "@profile_screen_delete_account_dialog_message": {
+    "description": "Message of the dialog to delete account"
+  },
   "profile_screen_successfully_saved_data_message": "Pomyślnie zapisano zmiany",
   "@profile_screen_successfully_saved_data_message": {
     "description": "Message to inform that data has been successfully saved"
@@ -282,6 +290,10 @@
   "save": "Zapisz",
   "@save": {
     "description": "Save"
+  },
+  "delete": "Usuń",
+  "@delete": {
+    "description": "Delete"
   },
 
 

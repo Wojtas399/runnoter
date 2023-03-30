@@ -37,12 +37,12 @@ class _State extends State<ValueDialogComponent> {
   void initState() {
     super.initState();
     _textController.text = widget.initialValue ?? '';
-    _textController.addListener(_checkValueChange);
+    _textController.addListener(_checkValueCorrectness);
   }
 
   @override
   void dispose() {
-    _textController.removeListener(_checkValueChange);
+    _textController.removeListener(_checkValueCorrectness);
     super.dispose();
   }
 
@@ -105,7 +105,7 @@ class _State extends State<ValueDialogComponent> {
     );
   }
 
-  void _checkValueChange() {
+  void _checkValueCorrectness() {
     final String value = _textController.text;
     String? validatorMessage;
     if (widget.validator != null) {

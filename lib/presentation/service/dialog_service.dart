@@ -88,6 +88,7 @@ Future<String?> askForValue({
   hideSnackbar(context: context);
   return await showDialog<String?>(
     context: context,
+    barrierColor: Colors.transparent,
     builder: (_) => ValueDialogComponent(
       title: title,
       label: label,

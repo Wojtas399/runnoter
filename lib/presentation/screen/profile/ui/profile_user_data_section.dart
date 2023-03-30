@@ -7,6 +7,7 @@ import '../../../service/dialog_service.dart';
 import '../../../service/validation_service.dart';
 import '../bloc/profile_bloc.dart';
 import '../bloc/profile_event.dart';
+import 'profile_delete_account_dialog.dart';
 import 'profile_update_email_dialog.dart';
 import 'profile_update_password_dialog.dart';
 
@@ -172,6 +173,7 @@ class _Email extends StatelessWidget {
   Future<void> _onPressed(BuildContext context) async {
     await showDialog(
       context: context,
+      barrierColor: Colors.transparent,
       builder: (_) => BlocProvider<ProfileBloc>.value(
         value: context.read<ProfileBloc>(),
         child: const ProfileUpdateEmailDialog(),
@@ -197,6 +199,7 @@ class _ChangePassword extends StatelessWidget {
   Future<void> _onPressed(BuildContext context) async {
     await showDialog(
       context: context,
+      barrierColor: Colors.transparent,
       builder: (_) => BlocProvider.value(
         value: context.read<ProfileBloc>(),
         child: const ProfileUpdatePasswordDialog(),
@@ -215,8 +218,19 @@ class _DeleteAccount extends StatelessWidget {
       value: AppLocalizations.of(context)!.profile_screen_delete_account_label,
       color: Theme.of(context).colorScheme.error,
       onPressed: () {
-        //TODO
+        _onPressed(context);
       },
+    );
+  }
+
+  Future<void> _onPressed(BuildContext context) async {
+    await showDialog(
+      context: context,
+      barrierColor: Colors.transparent,
+      builder: (_) => BlocProvider.value(
+        value: context.read<ProfileBloc>(),
+        child: const ProfileDeleteAccountDialog(),
+      ),
     );
   }
 }
