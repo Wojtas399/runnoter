@@ -8,8 +8,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'mapper/firebase_auth_exception_code_mapper.dart';
 
 part 'firebase_collections.dart';
-part 'model/dto/user_dto.dart';
-part 'model/exception/firebase_auth_exception_code.dart';
+part 'model/firebase_auth_exception_code.dart';
+part 'model/theme_mode.dart';
+part 'model/user_dto.dart';
 part 'service/firebase_auth_service.dart';
 part 'service/firebase_user_service.dart';
 
