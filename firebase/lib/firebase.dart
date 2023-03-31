@@ -20,6 +20,7 @@ part 'model/pace_unit.dart';
 part 'model/theme_mode.dart';
 part 'model/user_dto.dart';
 part 'model/workout_settings_dto.dart';
+part 'service/firebase_appearance_settings_service.dart';
 part 'service/firebase_auth_service.dart';
 part 'service/firebase_user_service.dart';
 
