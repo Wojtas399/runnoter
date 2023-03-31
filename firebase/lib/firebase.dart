@@ -9,6 +9,7 @@ import 'mapper/firebase_auth_exception_code_mapper.dart';
 
 part 'firebase_collections.dart';
 part 'model/firebase_auth_exception_code.dart';
+part 'model/language.dart';
 part 'model/theme_mode.dart';
 part 'model/user_dto.dart';
 part 'service/firebase_auth_service.dart';
