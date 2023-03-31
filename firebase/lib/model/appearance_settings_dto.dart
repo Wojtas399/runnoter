@@ -24,22 +24,22 @@ class AppearanceSettingsDto extends Equatable {
   ) : this(
           userId: userId,
           themeMode: mapThemeModeFromStringToEnum(
-            json?[_AppearanceSettingsFields.themeMode],
+            json?[_AppearanceSettingsFields.themeMode.name],
           ),
           language: mapLanguageFromStringToEnum(
-            json?[_AppearanceSettingsFields.language],
+            json?[_AppearanceSettingsFields.language.name],
           ),
         );
 
   Map<String, Object?> toJson() {
     return {
-      _AppearanceSettingsFields.themeMode: themeMode.name,
-      _AppearanceSettingsFields.language: language.name,
+      _AppearanceSettingsFields.themeMode.name: themeMode.name,
+      _AppearanceSettingsFields.language.name: language.name,
     };
   }
 }
 
-class _AppearanceSettingsFields {
-  static const String themeMode = 'themeMode';
-  static const String language = 'language';
+enum _AppearanceSettingsFields {
+  themeMode,
+  language,
 }

@@ -16,7 +16,7 @@ void main() {
   };
 
   test(
-    'from firestore, '
+    'from json, '
     'should map json to dto model',
     () {
       final UserDto dto = UserDto.fromJson(id, userJson);

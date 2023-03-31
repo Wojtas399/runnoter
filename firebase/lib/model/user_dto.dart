@@ -23,14 +23,14 @@ class UserDto extends Equatable {
     Map<String, dynamic>? json,
   ) : this(
           id: id,
-          name: json?[_UserFields.name],
-          surname: json?[_UserFields.surname],
+          name: json?[_UserFields.name.name],
+          surname: json?[_UserFields.surname.name],
         );
 
   Map<String, dynamic> toJson() {
     return {
-      _UserFields.name: name,
-      _UserFields.surname: surname,
+      _UserFields.name.name: name,
+      _UserFields.surname.name: surname,
     };
   }
 }
@@ -40,12 +40,12 @@ Map<String, dynamic> createUserDtoJsonToUpdate({
   String? surname,
 }) {
   return {
-    if (name != null) _UserFields.name: name,
-    if (surname != null) _UserFields.surname: surname,
+    if (name != null) _UserFields.name.name: name,
+    if (surname != null) _UserFields.surname.name: surname,
   };
 }
 
-class _UserFields {
-  static const String name = 'name';
-  static const String surname = 'surname';
+enum _UserFields {
+  name,
+  surname,
 }
