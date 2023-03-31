@@ -23,6 +23,7 @@ part 'model/workout_settings_dto.dart';
 part 'service/firebase_appearance_settings_service.dart';
 part 'service/firebase_auth_service.dart';
 part 'service/firebase_user_service.dart';
+part 'service/firebase_workout_settings_service.dart';
 
 Future<void> initializeFirebaseApp() async {
   await Firebase.initializeApp();
