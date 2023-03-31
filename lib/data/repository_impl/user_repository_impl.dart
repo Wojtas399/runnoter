@@ -50,7 +50,19 @@ class UserRepositoryImpl extends StateRepository<User>
       surname: surname,
     );
     if (userDto != null) {
-      final User user = mapUserFromDtoModel(userDto);
+      final User user = mapUserFromDtoModel(
+        userDto: userDto,
+        appearanceSettingsDto: const AppearanceSettingsDto(
+          userId: '',
+          themeMode: ThemeMode.light,
+          language: Language.polish,
+        ),
+        workoutSettingsDto: const WorkoutSettingsDto(
+          userId: '',
+          distanceUnit: DistanceUnit.kilometers,
+          paceUnit: PaceUnit.minutesPerKilometer,
+        ),
+      );
       if (doesEntityNotExistInState(user.id)) {
         addEntity(user);
       } else {
@@ -72,7 +84,19 @@ class UserRepositoryImpl extends StateRepository<User>
       userId: userId,
     );
     if (userDto != null) {
-      final User user = mapUserFromDtoModel(userDto);
+      final User user = mapUserFromDtoModel(
+        userDto: userDto,
+        appearanceSettingsDto: const AppearanceSettingsDto(
+          userId: '',
+          themeMode: ThemeMode.light,
+          language: Language.polish,
+        ),
+        workoutSettingsDto: const WorkoutSettingsDto(
+          userId: '',
+          distanceUnit: DistanceUnit.kilometers,
+          paceUnit: PaceUnit.minutesPerKilometer,
+        ),
+      );
       addEntity(user);
     }
   }

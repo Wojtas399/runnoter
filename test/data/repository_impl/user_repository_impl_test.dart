@@ -68,7 +68,7 @@ void main() {
         name: 'name',
         surname: 'surname',
       );
-      const User expectedUser = User(
+      final User expectedUser = createUser(
         id: userId,
         name: 'name',
         surname: 'surname',
@@ -102,12 +102,12 @@ void main() {
         name: name,
         surname: surname,
       );
-      const User existingUser = User(
+      final User existingUser = createUser(
         id: userId,
         name: 'username',
         surname: 'surname1',
       );
-      const User updatedUser = User(
+      final User updatedUser = createUser(
         id: userId,
         name: name,
         surname: surname,
@@ -136,7 +136,7 @@ void main() {
   test(
     'update user, '
     'user does not exist in repository'
-    'should call firebase method to update user and should add user to repository state',
+    'should call firebase method to update user, should load user settings and should add user to repository state',
     () async {
       const String userId = 'u1';
       const String name = 'name';
@@ -146,7 +146,7 @@ void main() {
         name: name,
         surname: surname,
       );
-      const User updatedUser = User(
+      final User updatedUser = createUser(
         id: userId,
         name: name,
         surname: surname,
