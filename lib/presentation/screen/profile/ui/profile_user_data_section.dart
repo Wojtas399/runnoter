@@ -171,10 +171,9 @@ class _Email extends StatelessWidget {
   }
 
   Future<void> _onPressed(BuildContext context) async {
-    await showDialog(
+    await showFullScreenDialog(
       context: context,
-      barrierColor: Colors.transparent,
-      builder: (_) => BlocProvider<ProfileBloc>.value(
+      dialog: BlocProvider<ProfileBloc>.value(
         value: context.read<ProfileBloc>(),
         child: const ProfileUpdateEmailDialog(),
       ),
@@ -197,10 +196,9 @@ class _ChangePassword extends StatelessWidget {
   }
 
   Future<void> _onPressed(BuildContext context) async {
-    await showDialog(
+    await showFullScreenDialog(
       context: context,
-      barrierColor: Colors.transparent,
-      builder: (_) => BlocProvider.value(
+      dialog: BlocProvider.value(
         value: context.read<ProfileBloc>(),
         child: const ProfileUpdatePasswordDialog(),
       ),
@@ -224,10 +222,9 @@ class _DeleteAccount extends StatelessWidget {
   }
 
   Future<void> _onPressed(BuildContext context) async {
-    await showDialog(
+    await showFullScreenDialog(
       context: context,
-      barrierColor: Colors.transparent,
-      builder: (_) => BlocProvider.value(
+      dialog: BlocProvider.value(
         value: context.read<ProfileBloc>(),
         child: const ProfileDeleteAccountDialog(),
       ),

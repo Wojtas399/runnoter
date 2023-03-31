@@ -32,9 +32,9 @@ Future<void> showMessageDialog({
   required String message,
   String? closeButtonLabel,
 }) async {
-  await showDialog(
+  await showAlertDialog(
     context: context,
-    builder: (_) => MessageDialogComponent(
+    dialog: MessageDialogComponent(
       title: title,
       message: message,
       closeButtonLabel: closeButtonLabel,
@@ -65,9 +65,9 @@ Future<bool> askForConfirmation({
   required String message,
   String? confirmButtonLabel,
 }) async {
-  return await showDialog(
+  return await showAlertDialog(
         context: context,
-        builder: (_) => ConfirmationDialogComponent(
+        dialog: ConfirmationDialogComponent(
           title: title,
           message: message,
           confirmButtonLabel: confirmButtonLabel,
@@ -86,10 +86,9 @@ Future<String?> askForValue({
   String? Function(String? value)? validator,
 }) async {
   hideSnackbar(context: context);
-  return await showDialog<String?>(
+  return await showFullScreenDialog<String?>(
     context: context,
-    barrierColor: Colors.transparent,
-    builder: (_) => ValueDialogComponent(
+    dialog: ValueDialogComponent(
       title: title,
       label: label,
       textFieldIcon: textFieldIcon,
@@ -97,5 +96,43 @@ Future<String?> askForValue({
       isValueRequired: isValueRequired,
       validator: validator,
     ),
+  );
+}
+
+Future<T?> showAlertDialog<T>({
+  required BuildContext context,
+  required Widget dialog,
+}) async {
+  return await showGeneralDialog<T>(
+    context: context,
+    pageBuilder: (_, anim1, anim2) => dialog,
+    transitionBuilder: (BuildContext context, anim1, anim2, child) {
+      var curve = Curves.easeInOutQuart.transform(anim1.value);
+      return Transform.scale(
+        scale: curve,
+        child: child,
+      );
+    },
+    transitionDuration: const Duration(milliseconds: 250),
+  );
+}
+
+Future<T?> showFullScreenDialog<T>({
+  required BuildContext context,
+  required Widget dialog,
+}) async {
+  return await showGeneralDialog<T?>(
+    context: context,
+    barrierColor: Colors.transparent,
+    pageBuilder: (_, a1, a2) => dialog,
+    transitionBuilder: (BuildContext context, anim1, anim2, child) {
+      final double windowHeight = MediaQuery.of(context).size.height;
+      var curve = Curves.easeInOutQuart.transform(anim1.value);
+      return Transform.translate(
+        offset: Offset(0, windowHeight - (curve * windowHeight)),
+        child: child,
+      );
+    },
+    transitionDuration: const Duration(milliseconds: 500),
   );
 }
