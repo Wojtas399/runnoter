@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import 'profile_settings_section.dart';
 import 'profile_user_data_section.dart';
 
 class ProfileContent extends StatelessWidget {
@@ -25,6 +26,8 @@ class ProfileContent extends StatelessWidget {
               children: const [
                 ProfileUserDataSection(),
                 Divider(),
+                SizedBox(height: 16),
+                ProfileSettingsSection(),
               ],
             ),
           ),
