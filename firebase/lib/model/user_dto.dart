@@ -18,36 +18,34 @@ class UserDto extends Equatable {
         surname,
       ];
 
-  factory UserDto.fromJson(
+  UserDto.fromJson(
     String id,
     Map<String, dynamic>? json,
-  ) {
-    return UserDto(
-      id: id,
-      name: json?[_FireUserFields.name],
-      surname: json?[_FireUserFields.surname],
-    );
-  }
+  ) : this(
+          id: id,
+          name: json?[_UserFields.name],
+          surname: json?[_UserFields.surname],
+        );
 
-  Map<String, Object?> toJson() {
+  Map<String, dynamic> toJson() {
     return {
-      _FireUserFields.name: name,
-      _FireUserFields.surname: surname,
+      _UserFields.name: name,
+      _UserFields.surname: surname,
     };
   }
 }
 
-Map<String, Object> createUserDtoJsonToUpdate({
+Map<String, dynamic> createUserDtoJsonToUpdate({
   String? name,
   String? surname,
 }) {
   return {
-    if (name != null) _FireUserFields.name: name,
-    if (surname != null) _FireUserFields.surname: surname,
+    if (name != null) _UserFields.name: name,
+    if (surname != null) _UserFields.surname: surname,
   };
 }
 
-class _FireUserFields {
+class _UserFields {
   static const String name = 'name';
   static const String surname = 'surname';
 }
