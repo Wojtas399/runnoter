@@ -8,9 +8,7 @@ abstract class AuthService {
     required String password,
   });
 
-  Future<void> signUp({
-    required String name,
-    required String surname,
+  Future<String?> signUp({
     required String email,
     required String password,
   });

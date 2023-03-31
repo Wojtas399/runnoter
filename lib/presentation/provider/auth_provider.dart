@@ -18,7 +18,6 @@ class AuthProvider extends StatelessWidget {
     return Provider<AuthService>(
       create: (_) => AuthServiceImpl(
         firebaseAuthService: FirebaseAuthService(),
-        firebaseUserService: FirebaseUserService(),
       ),
       child: child,
     );

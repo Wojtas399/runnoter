@@ -115,8 +115,6 @@ class SignUpBloc
 
   Future<void> _tryToSignUp() async {
     await _authService.signUp(
-      name: state.name,
-      surname: state.surname,
       email: state.email,
       password: state.password,
     );

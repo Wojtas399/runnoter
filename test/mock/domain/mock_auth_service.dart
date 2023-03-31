@@ -29,12 +29,13 @@ class MockAuthService extends Mock implements AuthService {
   }
 
   void mockSignUp({
+    String? userId,
     Object? throwable,
   }) {
     if (throwable != null) {
       when(_signUpCall).thenThrow(throwable);
     } else {
-      when(_signUpCall).thenAnswer((invocation) => Future.value());
+      when(_signUpCall).thenAnswer((invocation) => Future.value(userId));
     }
   }
 
@@ -105,10 +106,8 @@ class MockAuthService extends Mock implements AuthService {
     );
   }
 
-  Future<void> _signUpCall() {
+  Future<String?> _signUpCall() {
     return signUp(
-      name: any(named: 'name'),
-      surname: any(named: 'surname'),
       email: any(named: 'email'),
       password: any(named: 'password'),
     );

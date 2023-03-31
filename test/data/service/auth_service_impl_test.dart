@@ -5,13 +5,11 @@ import 'package:runnoter/data/service_impl/auth_service_impl.dart';
 import 'package:runnoter/domain/model/auth_exception.dart';
 
 import '../../mock/firebase/mock_firebase_auth_service.dart';
-import '../../mock/firebase/mock_firebase_user_service.dart';
 
 class FakeUserDto extends Fake implements UserDto {}
 
 void main() {
   final firebaseAuthService = MockFirebaseAuthService();
-  final firebaseUserService = MockFirebaseUserService();
   late AuthServiceImpl service;
 
   setUpAll(() {
@@ -21,13 +19,11 @@ void main() {
   setUp(() {
     service = AuthServiceImpl(
       firebaseAuthService: firebaseAuthService,
-      firebaseUserService: firebaseUserService,
     );
   });
 
   tearDown(() {
     reset(firebaseAuthService);
-    reset(firebaseUserService);
   });
 
   test(
@@ -197,40 +193,25 @@ void main() {
 
   test(
     'sign up, '
-    'should call firebase method to sign up user and to add personal data of user',
+    'should call firebase method to sign up user and should return user id',
     () async {
-      const String userId = 'u1';
-      const String name = 'Jack';
-      const String surname = 'Gadovsky';
+      const String expectedUserId = 'u1';
       const String email = 'email@example.com';
       const String password = 'password123';
       firebaseAuthService.mockSignUp(
-        userId: userId,
+        userId: expectedUserId,
       );
-      firebaseUserService.mockAddUserPersonalData();
 
-      await service.signUp(
-        name: name,
-        surname: surname,
+      final String? userId = await service.signUp(
         email: email,
         password: password,
       );
 
+      expect(userId, expectedUserId);
       verify(
         () => firebaseAuthService.signUp(
-          name: name,
-          surname: surname,
           email: email,
           password: password,
-        ),
-      ).called(1);
-      verify(
-        () => firebaseUserService.addUserPersonalData(
-          userDto: const UserDto(
-            id: userId,
-            name: name,
-            surname: surname,
-          ),
         ),
       ).called(1);
     },
@@ -238,24 +219,19 @@ void main() {
 
   test(
     'sign up, '
-    'email already in user firebase exception, '
+    'email already in use firebase exception, '
     'should throw email already in use auth exception',
     () async {
-      const String name = 'Jack';
-      const String surname = 'Gadovsky';
       const String email = 'email@example.com';
       const String password = 'password123';
       const AuthException expectedException = AuthException.emailAlreadyInUse;
       firebaseAuthService.mockSignUp(
         throwable: FirebaseAuthExceptionCode.emailAlreadyInUse,
       );
-      firebaseUserService.mockAddUserPersonalData();
 
       Object? exception;
       try {
         await service.signUp(
-          name: name,
-          surname: surname,
           email: email,
           password: password,
         );
@@ -266,17 +242,10 @@ void main() {
       expect(exception, expectedException);
       verify(
         () => firebaseAuthService.signUp(
-          name: name,
-          surname: surname,
           email: email,
           password: password,
         ),
       ).called(1);
-      verifyNever(
-        () => firebaseUserService.addUserPersonalData(
-          userDto: any(named: 'userDto'),
-        ),
-      );
     },
   );
 
@@ -285,21 +254,16 @@ void main() {
     'unknown exception, '
     'should rethrow exception',
     () async {
-      const String name = 'Jack';
-      const String surname = 'Gadovsky';
       const String email = 'email@example.com';
       const String password = 'password123';
       const String expectedException = 'Unknown exception..';
       firebaseAuthService.mockSignUp(
         throwable: expectedException,
       );
-      firebaseUserService.mockAddUserPersonalData();
 
       Object? exception;
       try {
         await service.signUp(
-          name: name,
-          surname: surname,
           email: email,
           password: password,
         );
@@ -310,17 +274,10 @@ void main() {
       expect(exception, expectedException);
       verify(
         () => firebaseAuthService.signUp(
-          name: name,
-          surname: surname,
           email: email,
           password: password,
         ),
       ).called(1);
-      verifyNever(
-        () => firebaseUserService.addUserPersonalData(
-          userDto: any(named: 'userDto'),
-        ),
-      );
     },
   );
 

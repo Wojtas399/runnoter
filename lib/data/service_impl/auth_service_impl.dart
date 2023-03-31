@@ -6,13 +6,10 @@ import '../mapper/auth_exception_mapper.dart';
 
 class AuthServiceImpl implements AuthService {
   final FirebaseAuthService _firebaseAuthService;
-  final FirebaseUserService _firebaseUserService;
 
   AuthServiceImpl({
     required FirebaseAuthService firebaseAuthService,
-    required FirebaseUserService firebaseUserService,
-  })  : _firebaseAuthService = firebaseAuthService,
-        _firebaseUserService = firebaseUserService;
+  }) : _firebaseAuthService = firebaseAuthService;
 
   @override
   Stream<String?> get loggedUserId$ => _firebaseAuthService.loggedUserId$;
@@ -42,28 +39,15 @@ class AuthServiceImpl implements AuthService {
   }
 
   @override
-  Future<void> signUp({
-    required String name,
-    required String surname,
+  Future<String?> signUp({
     required String email,
     required String password,
   }) async {
     try {
-      final String? userId = await _firebaseAuthService.signUp(
-        name: name,
-        surname: surname,
+      return await _firebaseAuthService.signUp(
         email: email,
         password: password,
       );
-      if (userId != null) {
-        await _firebaseUserService.addUserPersonalData(
-          userDto: UserDto(
-            id: userId,
-            name: name,
-            surname: surname,
-          ),
-        );
-      }
     } on FirebaseAuthExceptionCode catch (exception) {
       final AuthException? authException =
           mapFromFirebaseAuthExceptionCodeToAuthException(exception);

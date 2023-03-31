@@ -106,8 +106,6 @@ class MockFirebaseAuthService extends Mock implements FirebaseAuthService {
 
   Future<String?> _signUpCall() {
     return signUp(
-      name: any(named: 'name'),
-      surname: any(named: 'surname'),
       email: any(named: 'email'),
       password: any(named: 'password'),
     );

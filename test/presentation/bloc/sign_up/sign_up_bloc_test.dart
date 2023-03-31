@@ -196,8 +196,6 @@ void main() {
       ).called(1);
       verify(
         () => authService.signUp(
-          name: name,
-          surname: surname,
           email: email,
           password: password,
         ),
@@ -247,8 +245,6 @@ void main() {
       ).called(1);
       verifyNever(
         () => authService.signUp(
-          name: any(named: 'name'),
-          surname: any(named: 'surname'),
           email: any(named: 'email'),
           password: any(named: 'password'),
         ),
@@ -303,8 +299,6 @@ void main() {
       ).called(1);
       verify(
         () => authService.signUp(
-          name: name,
-          surname: surname,
           email: email,
           password: password,
         ),
@@ -358,8 +352,6 @@ void main() {
       ).called(1);
       verify(
         () => authService.signUp(
-          name: name,
-          surname: surname,
           email: email,
           password: password,
         ),
