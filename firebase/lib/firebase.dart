@@ -8,6 +8,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'mapper/firebase_auth_exception_code_mapper.dart';
 
 part 'firebase_collections.dart';
+part 'model/distance_unit.dart';
 part 'model/firebase_auth_exception_code.dart';
 part 'model/language.dart';
 part 'model/theme_mode.dart';
