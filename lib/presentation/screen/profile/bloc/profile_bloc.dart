@@ -170,22 +170,26 @@ class ProfileBloc extends BlocWithStatus<ProfileEvent, ProfileState,
     ProfileEventDeleteAccount event,
     Emitter<ProfileState> emit,
   ) async {
+    final String? userId = state.userId;
+    if (userId == null) {
+      return;
+    }
     emitLoadingStatus(emit);
     try {
+      final bool isPasswordCorrect = await _authService.isPasswordCorrect(
+        password: event.password,
+      );
+      if (!isPasswordCorrect) {
+        emitErrorStatus(emit, ProfileError.wrongPassword);
+        return;
+      }
+      await _userRepository.deleteUser(
+        userId: userId,
+      );
       await _authService.deleteAccount(
         password: event.password,
       );
       emitCompleteStatus(emit, ProfileInfo.accountDeleted);
-    } on AuthException catch (authException) {
-      final ProfileError? error = _mapAuthExceptionToBlocError(
-        authException,
-      );
-      if (error != null) {
-        emitErrorStatus(emit, error);
-      } else {
-        emitUnknownErrorStatus(emit);
-        rethrow;
-      }
     } catch (_) {
       emitUnknownErrorStatus(emit);
       rethrow;

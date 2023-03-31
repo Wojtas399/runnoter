@@ -76,7 +76,17 @@ class MockAuthService extends Mock implements AuthService {
     }
   }
 
-  void mockdeleteAccount({
+  void mockIsPasswordCorrect({
+    bool isCorrect = true,
+  }) {
+    when(
+      () => isPasswordCorrect(
+        password: any(named: 'password'),
+      ),
+    ).thenAnswer((invocation) => Future.value(isCorrect));
+  }
+
+  void mockDeleteAccount({
     Object? throwable,
   }) {
     if (throwable != null) {

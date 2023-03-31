@@ -534,10 +534,32 @@ void main() {
 
   blocTest(
     'delete account, '
-    'should call method from auth service to delete account and should emit complete status with account deleted info',
+    'userId is null, '
+    'should do nothing',
     build: () => createBloc(),
+    act: (ProfileBloc bloc) {
+      bloc.add(
+        const ProfileEventDeleteAccount(
+          password: 'password1',
+        ),
+      );
+    },
+    expect: () => [],
+  );
+
+  blocTest(
+    'delete account, '
+    'password is correct, '
+    'should call methods to delete user data and account and should emit complete status with account deleted info',
+    build: () => createBloc(
+      userId: 'u1',
+    ),
     setUp: () {
-      authService.mockdeleteAccount();
+      authService.mockIsPasswordCorrect(
+        isCorrect: true,
+      );
+      userRepository.mockDeleteUser();
+      authService.mockDeleteAccount();
     },
     act: (ProfileBloc bloc) {
       bloc.add(
@@ -549,14 +571,26 @@ void main() {
     expect: () => [
       createState(
         status: const BlocStatusLoading(),
+        userId: 'u1',
       ),
       createState(
         status: const BlocStatusComplete<ProfileInfo>(
           info: ProfileInfo.accountDeleted,
         ),
+        userId: 'u1',
       ),
     ],
     verify: (_) {
+      verify(
+        () => authService.isPasswordCorrect(
+          password: 'password1',
+        ),
+      ).called(1);
+      verify(
+        () => userRepository.deleteUser(
+          userId: 'u1',
+        ),
+      ).called(1);
       verify(
         () => authService.deleteAccount(
           password: 'password1',
@@ -567,12 +601,14 @@ void main() {
 
   blocTest(
     'delete account, '
-    'wrong password auth exception, '
+    'password is incorrect, '
     'should emit error status with wrong password error',
-    build: () => createBloc(),
+    build: () => createBloc(
+      userId: 'u1',
+    ),
     setUp: () {
-      authService.mockdeleteAccount(
-        throwable: AuthException.wrongPassword,
+      authService.mockIsPasswordCorrect(
+        isCorrect: false,
       );
     },
     act: (ProfileBloc bloc) {
@@ -585,19 +621,31 @@ void main() {
     expect: () => [
       createState(
         status: const BlocStatusLoading(),
+        userId: 'u1',
       ),
       createState(
         status: const BlocStatusError<ProfileError>(
           error: ProfileError.wrongPassword,
         ),
+        userId: 'u1',
       ),
     ],
     verify: (_) {
       verify(
-        () => authService.deleteAccount(
+        () => authService.isPasswordCorrect(
           password: 'password1',
         ),
       ).called(1);
+      verifyNever(
+        () => userRepository.deleteUser(
+          userId: 'u1',
+        ),
+      );
+      verifyNever(
+        () => authService.deleteAccount(
+          password: 'password1',
+        ),
+      );
     },
   );
 
@@ -605,9 +653,15 @@ void main() {
     'delete account, '
     'unknown exception, '
     'should emit unknown error status and should rethrow error',
-    build: () => createBloc(),
+    build: () => createBloc(
+      userId: 'u1',
+    ),
     setUp: () {
-      authService.mockdeleteAccount(
+      authService.mockIsPasswordCorrect(
+        isCorrect: true,
+      );
+      userRepository.mockDeleteUser();
+      authService.mockDeleteAccount(
         throwable: 'Unknown exception...',
       );
     },
@@ -621,15 +675,27 @@ void main() {
     expect: () => [
       createState(
         status: const BlocStatusLoading(),
+        userId: 'u1',
       ),
       createState(
         status: const BlocStatusUnknownError(),
+        userId: 'u1',
       ),
     ],
     errors: () => [
       'Unknown exception...',
     ],
     verify: (_) {
+      verify(
+        () => authService.isPasswordCorrect(
+          password: 'password1',
+        ),
+      ).called(1);
+      verify(
+        () => userRepository.deleteUser(
+          userId: 'u1',
+        ),
+      ).called(1);
       verify(
         () => authService.deleteAccount(
           password: 'password1',

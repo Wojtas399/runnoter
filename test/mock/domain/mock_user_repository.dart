@@ -22,4 +22,12 @@ class MockUserRepository extends Mock implements UserRepository {
       ),
     ).thenAnswer((invocation) => Future.value());
   }
+
+  void mockDeleteUser() {
+    when(
+      () => deleteUser(
+        userId: any(named: 'userId'),
+      ),
+    ).thenAnswer((invocation) => Future.value());
+  }
 }
