@@ -11,6 +11,7 @@ part 'firebase_collections.dart';
 part 'model/distance_unit.dart';
 part 'model/firebase_auth_exception_code.dart';
 part 'model/language.dart';
+part 'model/pace_unit.dart';
 part 'model/theme_mode.dart';
 part 'model/user_dto.dart';
 part 'service/firebase_auth_service.dart';
