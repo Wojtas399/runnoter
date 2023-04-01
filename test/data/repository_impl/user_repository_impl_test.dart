@@ -1,4 +1,4 @@
-import 'package:firebase/firebase.dart' as firebase;
+import 'package:firebase/firebase.dart' as db;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/data/repository_impl/user_repository_impl.dart';
@@ -12,10 +12,9 @@ import '../../util/settings_creator.dart';
 import '../../util/user_creator.dart';
 
 void main() {
-  final firebaseUserService = MockFirebaseUserService();
-  final firebaseAppearanceSettingsService =
-      MockFirebaseAppearanceSettingsService();
-  final firebaseWorkoutSettingsService = MockFirebaseWorkoutSettingsService();
+  final dbUserService = MockFirebaseUserService();
+  final dbAppearanceSettingsService = MockFirebaseAppearanceSettingsService();
+  final dbWorkoutSettingsService = MockFirebaseWorkoutSettingsService();
   late UserRepositoryImpl repository;
   const String userId = 'u1';
 
@@ -23,9 +22,9 @@ void main() {
     List<User>? initialState,
   }) {
     return UserRepositoryImpl(
-      firebaseUserService: firebaseUserService,
-      firebaseAppearanceSettingsService: firebaseAppearanceSettingsService,
-      firebaseWorkoutSettingsService: firebaseWorkoutSettingsService,
+      firebaseUserService: dbUserService,
+      firebaseAppearanceSettingsService: dbAppearanceSettingsService,
+      firebaseWorkoutSettingsService: dbWorkoutSettingsService,
       initialState: initialState,
     );
   }
@@ -35,15 +34,15 @@ void main() {
   });
 
   tearDown(() {
-    reset(firebaseUserService);
-    reset(firebaseAppearanceSettingsService);
-    reset(firebaseWorkoutSettingsService);
+    reset(dbUserService);
+    reset(dbAppearanceSettingsService);
+    reset(dbWorkoutSettingsService);
   });
 
   test(
     'get user by id, '
     'user exists in state, '
-    'should emit user from state and should not call firebase method to load user',
+    'should emit user from state and should not call db method to load user',
     () {
       final User expectedUser = createUser(id: userId);
       repository = createRepository(
@@ -62,17 +61,17 @@ void main() {
         ),
       );
       verifyNever(
-        () => firebaseUserService.loadUserById(
+        () => dbUserService.loadUserById(
           userId: userId,
         ),
       );
       verifyNever(
-        () => firebaseAppearanceSettingsService.loadSettingsByUserId(
+        () => dbAppearanceSettingsService.loadSettingsByUserId(
           userId: userId,
         ),
       );
       verifyNever(
-        () => firebaseWorkoutSettingsService.loadSettingsByUserId(
+        () => dbWorkoutSettingsService.loadSettingsByUserId(
           userId: userId,
         ),
       );
@@ -84,20 +83,20 @@ void main() {
     'user does not exist in state, '
     'should call firebase method to load user, should add loaded user to repository state and should emit loaded user',
     () {
-      const userDto = firebase.UserDto(
+      const userDto = db.UserDto(
         id: userId,
         name: 'name',
         surname: 'surname',
       );
-      const appearanceSettingsDto = firebase.AppearanceSettingsDto(
+      const appearanceSettingsDto = db.AppearanceSettingsDto(
         userId: userId,
-        themeMode: firebase.ThemeMode.light,
-        language: firebase.Language.polish,
+        themeMode: db.ThemeMode.light,
+        language: db.Language.polish,
       );
-      const workoutSettingsDto = firebase.WorkoutSettingsDto(
+      const workoutSettingsDto = db.WorkoutSettingsDto(
         userId: userId,
-        distanceUnit: firebase.DistanceUnit.kilometers,
-        paceUnit: firebase.PaceUnit.minutesPerKilometer,
+        distanceUnit: db.DistanceUnit.kilometers,
+        paceUnit: db.PaceUnit.minutesPerKilometer,
       );
       final User expectedUser = createUser(
         id: userId,
@@ -110,13 +109,13 @@ void main() {
           paceUnit: PaceUnit.minutesPerKilometer,
         ),
       );
-      firebaseUserService.mockLoadUserById(
+      dbUserService.mockLoadUserById(
         userDto: userDto,
       );
-      firebaseAppearanceSettingsService.mockLoadSettingsByUserId(
+      dbAppearanceSettingsService.mockLoadSettingsByUserId(
         appearanceSettingsDto: appearanceSettingsDto,
       );
-      firebaseWorkoutSettingsService.mockLoadSettingsByUserId(
+      dbWorkoutSettingsService.mockLoadSettingsByUserId(
         workoutSettingsDto: workoutSettingsDto,
       );
 
@@ -130,17 +129,17 @@ void main() {
         ),
       ).then((_) {
         verify(
-          () => firebaseUserService.loadUserById(
+          () => dbUserService.loadUserById(
             userId: userId,
           ),
         ).called(1);
         verify(
-          () => firebaseAppearanceSettingsService.loadSettingsByUserId(
+          () => dbAppearanceSettingsService.loadSettingsByUserId(
             userId: userId,
           ),
         ).called(1);
         verify(
-          () => firebaseWorkoutSettingsService.loadSettingsByUserId(
+          () => dbWorkoutSettingsService.loadSettingsByUserId(
             userId: userId,
           ),
         ).called(1);
@@ -150,7 +149,7 @@ void main() {
 
   test(
     'add user, '
-    'should call firebase methods to add user personal data, appearance settings, workout settings and should add user to repository state',
+    'should call db methods to add user personal data, appearance settings, workout settings and should add user to repository state',
     () async {
       const String userId = 'u1';
       final User userToAdd = createUser(
@@ -162,9 +161,9 @@ void main() {
           language: Language.english,
         ),
       );
-      firebaseUserService.mockAddUserPersonalData();
-      firebaseAppearanceSettingsService.mockAddSettings();
-      firebaseWorkoutSettingsService.mockAddSettings();
+      dbUserService.mockAddUserPersonalData();
+      dbAppearanceSettingsService.mockAddSettings();
+      dbWorkoutSettingsService.mockAddSettings();
 
       await repository.addUser(user: userToAdd);
       final Stream<User?> user$ = repository.getUserById(
@@ -173,8 +172,8 @@ void main() {
 
       expect(await user$.first, userToAdd);
       verify(
-        () => firebaseUserService.addUserPersonalData(
-          userDto: const firebase.UserDto(
+        () => dbUserService.addUserPersonalData(
+          userDto: const db.UserDto(
             id: userId,
             name: 'username',
             surname: 'surname',
@@ -182,20 +181,20 @@ void main() {
         ),
       ).called(1);
       verify(
-        () => firebaseAppearanceSettingsService.addSettings(
-          appearanceSettingsDto: const firebase.AppearanceSettingsDto(
+        () => dbAppearanceSettingsService.addSettings(
+          appearanceSettingsDto: const db.AppearanceSettingsDto(
             userId: userId,
-            themeMode: firebase.ThemeMode.light,
-            language: firebase.Language.english,
+            themeMode: db.ThemeMode.light,
+            language: db.Language.english,
           ),
         ),
       ).called(1);
       verify(
-        () => firebaseWorkoutSettingsService.addSettings(
-          workoutSettingsDto: const firebase.WorkoutSettingsDto(
+        () => dbWorkoutSettingsService.addSettings(
+          workoutSettingsDto: const db.WorkoutSettingsDto(
             userId: userId,
-            distanceUnit: firebase.DistanceUnit.kilometers,
-            paceUnit: firebase.PaceUnit.minutesPerKilometer,
+            distanceUnit: db.DistanceUnit.kilometers,
+            paceUnit: db.PaceUnit.minutesPerKilometer,
           ),
         ),
       ).called(1);
@@ -205,12 +204,11 @@ void main() {
   test(
     'update user, '
     'user exists in repository'
-    'should call firebase method to update user and should update user in repository state',
+    'should call db method to update user and should update user in repository state',
     () async {
-      const String userId = 'u1';
       const String name = 'name';
       const String surname = 'surname';
-      const firebase.UserDto userDto = firebase.UserDto(
+      const updatedUserDto = db.UserDto(
         id: userId,
         name: name,
         surname: surname,
@@ -225,7 +223,7 @@ void main() {
         name: name,
         surname: surname,
       );
-      firebaseUserService.mockUpdateUserData(userDto: userDto);
+      dbUserService.mockUpdateUserData(userDto: updatedUserDto);
       repository = createRepository(initialState: [existingUser]);
 
       await repository.updateUser(
@@ -237,7 +235,7 @@ void main() {
 
       expect(await user$.first, updatedUser);
       verify(
-        () => firebaseUserService.updateUserData(
+        () => dbUserService.updateUserData(
           userId: userId,
           name: name,
           surname: surname,
@@ -249,12 +247,12 @@ void main() {
   test(
     'update user, '
     'user does not exist in repository'
-    'should call firebase method to update user, should load user settings and should add user to repository state',
+    'should call db method to update user, should load user settings and should add user to repository state',
     () async {
       const String userId = 'u1';
       const String name = 'name';
       const String surname = 'surname';
-      const firebase.UserDto userDto = firebase.UserDto(
+      const db.UserDto userDto = db.UserDto(
         id: userId,
         name: name,
         surname: surname,
@@ -264,7 +262,7 @@ void main() {
         name: name,
         surname: surname,
       );
-      firebaseUserService.mockUpdateUserData(userDto: userDto);
+      dbUserService.mockUpdateUserData(userDto: userDto);
 
       await repository.updateUser(
         userId: userId,
@@ -275,7 +273,7 @@ void main() {
 
       expect(await user$.first, updatedUser);
       verify(
-        () => firebaseUserService.updateUserData(
+        () => dbUserService.updateUserData(
           userId: userId,
           name: name,
           surname: surname,
@@ -286,10 +284,10 @@ void main() {
 
   test(
     'delete user, '
-    'should call firebase method to delete user data and should delete user from repository state',
+    'should call db method to delete user data and should delete user from repository state',
     () {
       final User user = createUser(id: 'u1');
-      firebaseUserService.mockDeleteUserData();
+      dbUserService.mockDeleteUserData();
       repository = createRepository(
         initialState: [user],
       );
@@ -304,7 +302,7 @@ void main() {
         ),
       );
       verify(
-        () => firebaseUserService.deleteUserData(
+        () => dbUserService.deleteUserData(
           userId: user.id,
         ),
       ).called(1);
