@@ -111,6 +111,8 @@ class UserRepositoryImpl extends StateRepository<User>
   Future<void> deleteUser({
     required String userId,
   }) async {
+    await _dbAppearanceSettingsService.deleteSettingsForUser(userId: userId);
+    await _dbWorkoutSettingsService.deleteSettingsForUser(userId: userId);
     await _dbUserService.deleteUserData(userId: userId);
     removeEntity(userId);
   }

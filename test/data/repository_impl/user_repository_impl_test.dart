@@ -151,7 +151,6 @@ void main() {
     'add user, '
     'should call db methods to add user personal data, appearance settings, workout settings and should add user to repository state',
     () async {
-      const String userId = 'u1';
       final User userToAdd = createUser(
         id: userId,
         name: 'username',
@@ -249,7 +248,6 @@ void main() {
     'user does not exist in repository'
     'should call db method to update user, should load user settings and should add user to repository state',
     () async {
-      const String userId = 'u1';
       const String name = 'name';
       const String surname = 'surname';
       const db.UserDto userDto = db.UserDto(
@@ -284,10 +282,12 @@ void main() {
 
   test(
     'delete user, '
-    'should call db method to delete user data and should delete user from repository state',
+    'should call db methods to delete user data, appearance settings and workout settings and then should delete user from repository state',
     () {
-      final User user = createUser(id: 'u1');
+      final User user = createUser(id: userId);
       dbUserService.mockDeleteUserData();
+      dbAppearanceSettingsService.mockDeleteSettingsForUser();
+      dbWorkoutSettingsService.mockDeleteSettingsForUser();
       repository = createRepository(
         initialState: [user],
       );
@@ -295,17 +295,30 @@ void main() {
       final Stream<User?> user$ = repository.getUserById(userId: user.id);
       repository.deleteUser(userId: user.id);
 
-      expect(
+      expectLater(
         user$,
         emitsInOrder(
           [user, null],
         ),
+      ).then(
+        (_) {
+          verify(
+            () => dbUserService.deleteUserData(
+              userId: user.id,
+            ),
+          ).called(1);
+          verify(
+            () => dbAppearanceSettingsService.deleteSettingsForUser(
+              userId: user.id,
+            ),
+          ).called(1);
+          verify(
+            () => dbWorkoutSettingsService.deleteSettingsForUser(
+              userId: user.id,
+            ),
+          ).called(1);
+        },
       );
-      verify(
-        () => dbUserService.deleteUserData(
-          userId: user.id,
-        ),
-      ).called(1);
     },
   );
 }

@@ -26,6 +26,14 @@ class MockFirebaseWorkoutSettingsService extends Mock
     ).thenAnswer((invocation) => Future.value(workoutSettingsDto));
   }
 
+  void mockDeleteSettingsForUser() {
+    when(
+      () => deleteSettingsForUser(
+        userId: any(named: 'userId'),
+      ),
+    ).thenAnswer((invocation) => Future.value());
+  }
+
   void _mockWorkoutSettingsDto() {
     registerFallbackValue(FakeWorkoutSettingsDto());
   }
