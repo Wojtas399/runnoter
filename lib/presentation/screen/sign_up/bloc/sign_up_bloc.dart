@@ -1,6 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../domain/model/auth_exception.dart';
+import '../../../../domain/model/settings.dart';
+import '../../../../domain/model/user.dart';
+import '../../../../domain/repository/user_repository.dart';
 import '../../../../domain/service/auth_service.dart';
 import '../../../model/bloc_status.dart';
 import '../../../model/bloc_with_status.dart';
@@ -11,10 +14,12 @@ import 'sign_up_state.dart';
 class SignUpBloc
     extends BlocWithStatus<SignUpEvent, SignUpState, SignUpInfo, SignUpError> {
   final AuthService _authService;
+  final UserRepository _userRepository;
   final ConnectivityService _connectivityService;
 
   SignUpBloc({
     required AuthService authService,
+    required UserRepository userRepository,
     required ConnectivityService connectivityService,
     BlocStatus status = const BlocStatusInitial(),
     String name = '',
@@ -23,6 +28,7 @@ class SignUpBloc
     String password = '',
     String passwordConfirmation = '',
   })  : _authService = authService,
+        _userRepository = userRepository,
         _connectivityService = connectivityService,
         super(
           SignUpState(
@@ -114,9 +120,25 @@ class SignUpBloc
   }
 
   Future<void> _tryToSignUp() async {
-    await _authService.signUp(
+    final String? userId = await _authService.signUp(
       email: state.email,
       password: state.password,
+    );
+    if (userId == null) {
+      return;
+    }
+    await _userRepository.addUser(
+      user: User(
+        id: userId,
+        name: state.name,
+        surname: state.surname,
+        settings: const Settings(
+          themeMode: ThemeMode.light,
+          language: Language.polish,
+          distanceUnit: DistanceUnit.kilometers,
+          paceUnit: PaceUnit.minutesPerKilometer,
+        ),
+      ),
     );
   }
 

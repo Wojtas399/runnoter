@@ -2,16 +2,21 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/model/auth_exception.dart';
+import 'package:runnoter/domain/model/settings.dart';
 import 'package:runnoter/presentation/model/bloc_status.dart';
 import 'package:runnoter/presentation/screen/sign_up/bloc/sign_up_bloc.dart';
 import 'package:runnoter/presentation/screen/sign_up/bloc/sign_up_event.dart';
 import 'package:runnoter/presentation/screen/sign_up/bloc/sign_up_state.dart';
 
 import '../../../mock/domain/mock_auth_service.dart';
+import '../../../mock/domain/mock_user_repository.dart';
 import '../../../mock/presentation/service/mock_connectivity_service.dart';
+import '../../../util/settings_creator.dart';
+import '../../../util/user_creator.dart';
 
 void main() {
   final authService = MockAuthService();
+  final userRepository = MockUserRepository();
   final connectivityService = MockConnectivityService();
   const String name = 'Jack';
   const String surname = 'Gadovsky';
@@ -26,6 +31,7 @@ void main() {
   }) {
     return SignUpBloc(
       authService: authService,
+      userRepository: userRepository,
       connectivityService: connectivityService,
       name: name,
       surname: surname,
@@ -54,6 +60,7 @@ void main() {
 
   tearDown(() {
     reset(authService);
+    reset(userRepository);
     reset(connectivityService);
   });
 
@@ -154,7 +161,7 @@ void main() {
 
   blocTest(
     'submit, '
-    'should call auth service method to sign up and should emit complete status with signed up info',
+    'should call auth service method to sign up and user repository method to add user with default settings, and should emit complete status with signed up info',
     build: () => createBloc(
       name: name,
       surname: surname,
@@ -165,7 +172,10 @@ void main() {
       connectivityService.mockHasDeviceInternetConnection(
         hasConnection: true,
       );
-      authService.mockSignUp();
+      authService.mockSignUp(
+        userId: 'u1',
+      );
+      userRepository.mockAddUser();
     },
     act: (SignUpBloc bloc) {
       bloc.add(
@@ -198,6 +208,21 @@ void main() {
         () => authService.signUp(
           email: email,
           password: password,
+        ),
+      ).called(1);
+      verify(
+        () => userRepository.addUser(
+          user: createUser(
+            id: 'u1',
+            name: name,
+            surname: surname,
+            settings: createSettings(
+              themeMode: ThemeMode.light,
+              language: Language.polish,
+              distanceUnit: DistanceUnit.kilometers,
+              paceUnit: PaceUnit.minutesPerKilometer,
+            ),
+          ),
         ),
       ).called(1);
     },
