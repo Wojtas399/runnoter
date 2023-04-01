@@ -4,16 +4,24 @@ import 'package:rxdart/rxdart.dart';
 import '../../domain/model/state_repository.dart';
 import '../../domain/model/user.dart';
 import '../../domain/repository/user_repository.dart';
+import '../mapper/settings_mapper.dart';
 import '../mapper/user_mapper.dart';
 
 class UserRepositoryImpl extends StateRepository<User>
     implements UserRepository {
   final FirebaseUserService _firebaseUserService;
+  final FirebaseAppearanceSettingsService _firebaseAppearanceSettingsService;
+  final FirebaseWorkoutSettingsService _firebaseWorkoutSettingsService;
 
   UserRepositoryImpl({
     required FirebaseUserService firebaseUserService,
+    required FirebaseAppearanceSettingsService
+        firebaseAppearanceSettingsService,
+    required FirebaseWorkoutSettingsService firebaseWorkoutSettingsService,
     List<User>? initialState,
   })  : _firebaseUserService = firebaseUserService,
+        _firebaseAppearanceSettingsService = firebaseAppearanceSettingsService,
+        _firebaseWorkoutSettingsService = firebaseWorkoutSettingsService,
         super(
           initialData: initialState,
         );
@@ -36,6 +44,34 @@ class UserRepositoryImpl extends StateRepository<User>
         }
       },
     );
+  }
+
+  @override
+  Future<void> addUser({
+    required User user,
+  }) async {
+    await _firebaseUserService.addUserPersonalData(
+      userDto: UserDto(
+        id: user.id,
+        name: user.name,
+        surname: user.surname,
+      ),
+    );
+    await _firebaseAppearanceSettingsService.addSettings(
+      appearanceSettingsDto: AppearanceSettingsDto(
+        userId: user.id,
+        themeMode: mapThemeModeToDb(user.settings.themeMode),
+        language: mapLanguageToDb(user.settings.language),
+      ),
+    );
+    await _firebaseWorkoutSettingsService.addSettings(
+      workoutSettingsDto: WorkoutSettingsDto(
+        userId: user.id,
+        distanceUnit: mapDistanceUnitToDb(user.settings.distanceUnit),
+        paceUnit: mapPaceUnitToDb(user.settings.paceUnit),
+      ),
+    );
+    addEntity(user);
   }
 
   @override

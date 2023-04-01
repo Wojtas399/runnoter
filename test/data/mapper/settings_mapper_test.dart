@@ -1,4 +1,4 @@
-import 'package:firebase/firebase.dart' as firebase;
+import 'package:firebase/firebase.dart' as db;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/data/mapper/settings_mapper.dart';
 import 'package:runnoter/domain/model/settings.dart';
@@ -8,12 +8,12 @@ void main() {
     'map theme mode from db, '
     'light mode from db should be mapped to light mode from domain',
     () {
-      const dbThemeMode = firebase.ThemeMode.light;
-      const expectedDomainThemeMode = ThemeMode.light;
+      const dbThemeMode = db.ThemeMode.light;
+      const expectedThemeMode = ThemeMode.light;
 
-      final domainThemeMode = mapThemeModeFromDb(dbThemeMode);
+      final themeMode = mapThemeModeFromDb(dbThemeMode);
 
-      expect(domainThemeMode, expectedDomainThemeMode);
+      expect(themeMode, expectedThemeMode);
     },
   );
 
@@ -21,12 +21,12 @@ void main() {
     'map theme mode from db, '
     'dark mode from db should be mapped to dark mode from domain',
     () {
-      const dbThemeMode = firebase.ThemeMode.dark;
-      const expectedDomainThemeMode = ThemeMode.dark;
+      const dbThemeMode = db.ThemeMode.dark;
+      const expectedThemeMode = ThemeMode.dark;
 
-      final domainThemeMode = mapThemeModeFromDb(dbThemeMode);
+      final themeMode = mapThemeModeFromDb(dbThemeMode);
 
-      expect(domainThemeMode, expectedDomainThemeMode);
+      expect(themeMode, expectedThemeMode);
     },
   );
 
@@ -34,12 +34,51 @@ void main() {
     'map theme mode from db, '
     'system mode from db should be mapped to system mode from domain',
     () {
-      const dbThemeMode = firebase.ThemeMode.system;
-      const expectedDomainThemeMode = ThemeMode.system;
+      const dbThemeMode = db.ThemeMode.system;
+      const expectedThemeMode = ThemeMode.system;
 
-      final domainThemeMode = mapThemeModeFromDb(dbThemeMode);
+      final themeMode = mapThemeModeFromDb(dbThemeMode);
 
-      expect(domainThemeMode, expectedDomainThemeMode);
+      expect(themeMode, expectedThemeMode);
+    },
+  );
+
+  test(
+    'map theme mode to db, '
+    'light mode from domain should be mapped to light mode from db',
+    () {
+      const themeMode = ThemeMode.light;
+      const expectedDbThemeMode = db.ThemeMode.light;
+
+      final dbThemeMode = mapThemeModeToDb(themeMode);
+
+      expect(dbThemeMode, expectedDbThemeMode);
+    },
+  );
+
+  test(
+    'map theme mode to db, '
+    'dark mode from domain should be mapped to dark mode from db',
+    () {
+      const themeMode = ThemeMode.dark;
+      const expectedDbThemeMode = db.ThemeMode.dark;
+
+      final dbThemeMode = mapThemeModeToDb(themeMode);
+
+      expect(dbThemeMode, expectedDbThemeMode);
+    },
+  );
+
+  test(
+    'map theme mode to db, '
+    'system mode from domain should be mapped to system mode from db',
+    () {
+      const themeMode = ThemeMode.system;
+      const expectedDbThemeMode = db.ThemeMode.system;
+
+      final dbThemeMode = mapThemeModeToDb(themeMode);
+
+      expect(dbThemeMode, expectedDbThemeMode);
     },
   );
 
@@ -47,7 +86,7 @@ void main() {
     'map language from db, '
     'polish type from db should be mapped to polish type from domain',
     () {
-      const dbLanguage = firebase.Language.polish;
+      const dbLanguage = db.Language.polish;
       const expectedDomainLanguage = Language.polish;
 
       final domainLanguage = mapLanguageFromDb(dbLanguage);
@@ -60,7 +99,7 @@ void main() {
     'map language from db, '
     'english type from db should be mapped to english type from domain',
     () {
-      const dbLanguage = firebase.Language.english;
+      const dbLanguage = db.Language.english;
       const expectedDomainLanguage = Language.english;
 
       final domainLanguage = mapLanguageFromDb(dbLanguage);
@@ -70,10 +109,36 @@ void main() {
   );
 
   test(
+    'map language to db, '
+    'polish type from domain should be mapped to polish type from db',
+    () {
+      const language = Language.polish;
+      const expectedDbLanguage = db.Language.polish;
+
+      final dbLanguage = mapLanguageToDb(language);
+
+      expect(dbLanguage, expectedDbLanguage);
+    },
+  );
+
+  test(
+    'map language to db, '
+    'english type from domain should be mapped to english type from db',
+    () {
+      const language = Language.english;
+      const expectedDbLanguage = db.Language.english;
+
+      final dbLanguage = mapLanguageToDb(language);
+
+      expect(dbLanguage, expectedDbLanguage);
+    },
+  );
+
+  test(
     'map distance unit from db, '
     'kilometers type from db should be mapped to kilometers type from domain',
     () {
-      const dbDistanceUnit = firebase.DistanceUnit.kilometers;
+      const dbDistanceUnit = db.DistanceUnit.kilometers;
       const expectedDomainDistanceUnit = DistanceUnit.kilometers;
 
       final domainDistanceUnit = mapDistanceUnitFromDb(dbDistanceUnit);
@@ -86,7 +151,7 @@ void main() {
     'map distance unit from db, '
     'miles type from db should be mapped to miles type from domain',
     () {
-      const dbDistanceUnit = firebase.DistanceUnit.miles;
+      const dbDistanceUnit = db.DistanceUnit.miles;
       const expectedDomainDistanceUnit = DistanceUnit.miles;
 
       final domainDistanceUnit = mapDistanceUnitFromDb(dbDistanceUnit);
@@ -96,10 +161,36 @@ void main() {
   );
 
   test(
+    'map distance unit to db, '
+    'kilometers type from domain should be mapped to kilometers type from db',
+    () {
+      const distanceUnit = DistanceUnit.kilometers;
+      const expectedDbDistanceUnit = db.DistanceUnit.kilometers;
+
+      final dbDistanceUnit = mapDistanceUnitToDb(distanceUnit);
+
+      expect(dbDistanceUnit, expectedDbDistanceUnit);
+    },
+  );
+
+  test(
+    'map distance unit to db, '
+    'miles type from domain should be mapped to miles type from db',
+    () {
+      const distanceUnit = DistanceUnit.kilometers;
+      const expectedDbDistanceUnit = db.DistanceUnit.kilometers;
+
+      final dbDistanceUnit = mapDistanceUnitToDb(distanceUnit);
+
+      expect(dbDistanceUnit, expectedDbDistanceUnit);
+    },
+  );
+
+  test(
     'map pace unit from db, '
     'minutes per kilometer type from db should be mapped to minutes per kilometer type from domain',
     () {
-      const dbPaceUnit = firebase.PaceUnit.minutesPerKilometer;
+      const dbPaceUnit = db.PaceUnit.minutesPerKilometer;
       const expectedDomainPaceUnit = PaceUnit.minutesPerKilometer;
 
       final domainPaceUnit = mapPaceUnitFromDb(dbPaceUnit);
@@ -112,7 +203,7 @@ void main() {
     'map pace unit from db, '
     'minutes per mile type from db should be mapped to minutes per mile type from domain',
     () {
-      const dbPaceUnit = firebase.PaceUnit.minutesPerMile;
+      const dbPaceUnit = db.PaceUnit.minutesPerMile;
       const expectedDomainPaceUnit = PaceUnit.minutesPerMile;
 
       final domainPaceUnit = mapPaceUnitFromDb(dbPaceUnit);
@@ -125,7 +216,7 @@ void main() {
     'map pace unit from db, '
     'kilometers per hour type from db should be mapped to kilometers per hour type from domain',
     () {
-      const dbPaceUnit = firebase.PaceUnit.kilometersPerHour;
+      const dbPaceUnit = db.PaceUnit.kilometersPerHour;
       const expectedDomainPaceUnit = PaceUnit.kilometersPerHour;
 
       final domainPaceUnit = mapPaceUnitFromDb(dbPaceUnit);
@@ -138,12 +229,64 @@ void main() {
     'map pace unit from db, '
     'miles per hour type from db should be mapped to miles per hour type from domain',
     () {
-      const dbPaceUnit = firebase.PaceUnit.milesPerHour;
+      const dbPaceUnit = db.PaceUnit.milesPerHour;
       const expectedDomainPaceUnit = PaceUnit.milesPerHour;
 
       final domainPaceUnit = mapPaceUnitFromDb(dbPaceUnit);
 
       expect(domainPaceUnit, expectedDomainPaceUnit);
+    },
+  );
+
+  test(
+    'map pace unit to db, '
+    'minutes per kilometer type from domain should be mapped to minutes per kilometer type from db',
+    () {
+      const paceUnit = PaceUnit.minutesPerKilometer;
+      const expectedDbPaceUnit = db.PaceUnit.minutesPerKilometer;
+
+      final dbPaceUnit = mapPaceUnitToDb(paceUnit);
+
+      expect(dbPaceUnit, expectedDbPaceUnit);
+    },
+  );
+
+  test(
+    'map pace unit to db, '
+    'minutes per mile type from domain should be mapped to minutes per mile type from db',
+    () {
+      const paceUnit = PaceUnit.minutesPerMile;
+      const expectedDbPaceUnit = db.PaceUnit.minutesPerMile;
+
+      final dbPaceUnit = mapPaceUnitToDb(paceUnit);
+
+      expect(dbPaceUnit, expectedDbPaceUnit);
+    },
+  );
+
+  test(
+    'map pace unit to db, '
+    'kilometers per hour type from domain should be mapped to kilometers per hour type from db',
+    () {
+      const paceUnit = PaceUnit.kilometersPerHour;
+      const expectedDbPaceUnit = db.PaceUnit.kilometersPerHour;
+
+      final dbPaceUnit = mapPaceUnitToDb(paceUnit);
+
+      expect(dbPaceUnit, expectedDbPaceUnit);
+    },
+  );
+
+  test(
+    'map pace unit to db, '
+    'miles per hour type from domain should be mapped to miles per hour type from db',
+    () {
+      const paceUnit = PaceUnit.milesPerHour;
+      const expectedDbPaceUnit = db.PaceUnit.milesPerHour;
+
+      final dbPaceUnit = mapPaceUnitToDb(paceUnit);
+
+      expect(dbPaceUnit, expectedDbPaceUnit);
     },
   );
 }

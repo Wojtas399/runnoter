@@ -5,6 +5,10 @@ abstract class UserRepository {
     required String userId,
   });
 
+  Future<void> addUser({
+    required User user,
+  });
+
   Future<void> updateUser({
     required String userId,
     String? name,

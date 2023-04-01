@@ -25,6 +25,17 @@ ThemeMode mapThemeModeFromDb(db.ThemeMode dbThemeMode) {
   }
 }
 
+db.ThemeMode mapThemeModeToDb(ThemeMode themeMode) {
+  switch (themeMode) {
+    case ThemeMode.dark:
+      return db.ThemeMode.dark;
+    case ThemeMode.light:
+      return db.ThemeMode.light;
+    case ThemeMode.system:
+      return db.ThemeMode.system;
+  }
+}
+
 Language mapLanguageFromDb(db.Language dbLanguage) {
   switch (dbLanguage) {
     case db.Language.polish:
@@ -34,12 +45,30 @@ Language mapLanguageFromDb(db.Language dbLanguage) {
   }
 }
 
+db.Language mapLanguageToDb(Language language) {
+  switch (language) {
+    case Language.polish:
+      return db.Language.polish;
+    case Language.english:
+      return db.Language.english;
+  }
+}
+
 DistanceUnit mapDistanceUnitFromDb(db.DistanceUnit dbDistanceUnit) {
   switch (dbDistanceUnit) {
     case db.DistanceUnit.kilometers:
       return DistanceUnit.kilometers;
     case db.DistanceUnit.miles:
       return DistanceUnit.miles;
+  }
+}
+
+db.DistanceUnit mapDistanceUnitToDb(DistanceUnit distanceUnit) {
+  switch (distanceUnit) {
+    case DistanceUnit.kilometers:
+      return db.DistanceUnit.kilometers;
+    case DistanceUnit.miles:
+      return db.DistanceUnit.miles;
   }
 }
 
@@ -53,5 +82,18 @@ PaceUnit mapPaceUnitFromDb(db.PaceUnit dbPaceUnit) {
       return PaceUnit.kilometersPerHour;
     case db.PaceUnit.milesPerHour:
       return PaceUnit.milesPerHour;
+  }
+}
+
+db.PaceUnit mapPaceUnitToDb(PaceUnit paceUnit) {
+  switch (paceUnit) {
+    case PaceUnit.minutesPerKilometer:
+      return db.PaceUnit.minutesPerKilometer;
+    case PaceUnit.minutesPerMile:
+      return db.PaceUnit.minutesPerMile;
+    case PaceUnit.kilometersPerHour:
+      return db.PaceUnit.kilometersPerHour;
+    case PaceUnit.milesPerHour:
+      return db.PaceUnit.milesPerHour;
   }
 }

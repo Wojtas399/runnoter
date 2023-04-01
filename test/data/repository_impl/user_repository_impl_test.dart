@@ -1,14 +1,21 @@
-import 'package:firebase/firebase.dart';
+import 'package:firebase/firebase.dart' as firebase;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/data/repository_impl/user_repository_impl.dart';
+import 'package:runnoter/domain/model/settings.dart';
 import 'package:runnoter/domain/model/user.dart';
 
+import '../../mock/firebase/mock_firebase_appearance_settings_service.dart';
 import '../../mock/firebase/mock_firebase_user_service.dart';
+import '../../mock/firebase/mock_firebase_workout_settings_service.dart';
+import '../../util/settings_creator.dart';
 import '../../util/user_creator.dart';
 
 void main() {
   final firebaseUserService = MockFirebaseUserService();
+  final firebaseAppearanceSettingsService =
+      MockFirebaseAppearanceSettingsService();
+  final firebaseWorkoutSettingsService = MockFirebaseWorkoutSettingsService();
   late UserRepositoryImpl repository;
 
   UserRepositoryImpl createRepository({
@@ -16,6 +23,8 @@ void main() {
   }) {
     return UserRepositoryImpl(
       firebaseUserService: firebaseUserService,
+      firebaseAppearanceSettingsService: firebaseAppearanceSettingsService,
+      firebaseWorkoutSettingsService: firebaseWorkoutSettingsService,
       initialState: initialState,
     );
   }
@@ -26,6 +35,8 @@ void main() {
 
   tearDown(() {
     reset(firebaseUserService);
+    reset(firebaseAppearanceSettingsService);
+    reset(firebaseWorkoutSettingsService);
   });
 
   test(
@@ -63,7 +74,7 @@ void main() {
     'should call firebase method to load user and should emit loaded user',
     () {
       const String userId = 'u1';
-      const UserDto userDto = UserDto(
+      const firebase.UserDto userDto = firebase.UserDto(
         id: userId,
         name: 'name',
         surname: 'surname',
@@ -90,6 +101,60 @@ void main() {
   );
 
   test(
+    'add user, '
+    'should call firebase methods to add user personal data, appearance settings, workout settings and should add user to repository state',
+    () async {
+      const String userId = 'u1';
+      final User userToAdd = createUser(
+        id: userId,
+        name: 'username',
+        surname: 'surname',
+        settings: createSettings(
+          themeMode: ThemeMode.light,
+          language: Language.english,
+        ),
+      );
+      firebaseUserService.mockAddUserPersonalData();
+      firebaseAppearanceSettingsService.mockAddSettings();
+      firebaseWorkoutSettingsService.mockAddSettings();
+
+      await repository.addUser(user: userToAdd);
+      final Stream<User?> user$ = repository.getUserById(
+        userId: userToAdd.id,
+      );
+
+      expect(await user$.first, userToAdd);
+      verify(
+        () => firebaseUserService.addUserPersonalData(
+          userDto: const firebase.UserDto(
+            id: userId,
+            name: 'username',
+            surname: 'surname',
+          ),
+        ),
+      ).called(1);
+      verify(
+        () => firebaseAppearanceSettingsService.addSettings(
+          appearanceSettingsDto: const firebase.AppearanceSettingsDto(
+            userId: userId,
+            themeMode: firebase.ThemeMode.light,
+            language: firebase.Language.english,
+          ),
+        ),
+      ).called(1);
+      verify(
+        () => firebaseWorkoutSettingsService.addSettings(
+          workoutSettingsDto: const firebase.WorkoutSettingsDto(
+            userId: userId,
+            distanceUnit: firebase.DistanceUnit.kilometers,
+            paceUnit: firebase.PaceUnit.minutesPerKilometer,
+          ),
+        ),
+      ).called(1);
+    },
+  );
+
+  test(
     'update user, '
     'user exists in repository'
     'should call firebase method to update user and should update user in repository state',
@@ -97,7 +162,7 @@ void main() {
       const String userId = 'u1';
       const String name = 'name';
       const String surname = 'surname';
-      const UserDto userDto = UserDto(
+      const firebase.UserDto userDto = firebase.UserDto(
         id: userId,
         name: name,
         surname: surname,
@@ -141,7 +206,7 @@ void main() {
       const String userId = 'u1';
       const String name = 'name';
       const String surname = 'surname';
-      const UserDto userDto = UserDto(
+      const firebase.UserDto userDto = firebase.UserDto(
         id: userId,
         name: name,
         surname: surname,
