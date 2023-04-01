@@ -16,4 +16,10 @@ class FirebaseWorkoutSettingsService {
     final snapshot = await settingsRef.get();
     return snapshot.data();
   }
+
+  Future<void> deleteSettingsForUser({
+    required String userId,
+  }) async {
+    await getWorkoutSettingsRef(userId).delete();
+  }
 }
