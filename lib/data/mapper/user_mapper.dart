@@ -3,7 +3,7 @@ import 'package:firebase/firebase.dart';
 import '../../domain/model/user.dart';
 import 'settings_mapper.dart';
 
-User mapUserFromDtoModel({
+User mapUserFromDto({
   required UserDto userDto,
   required AppearanceSettingsDto appearanceSettingsDto,
   required WorkoutSettingsDto workoutSettingsDto,
@@ -12,7 +12,7 @@ User mapUserFromDtoModel({
     id: userDto.id,
     name: userDto.name,
     surname: userDto.surname,
-    settings: mapSettingsFromDb(
+    settings: mapSettingsFromDto(
       appearanceSettingsDto: appearanceSettingsDto,
       workoutSettingsDto: workoutSettingsDto,
     ),

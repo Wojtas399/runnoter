@@ -86,7 +86,7 @@ class UserRepositoryImpl extends StateRepository<User>
       surname: surname,
     );
     if (userDto != null) {
-      final User user = mapUserFromDtoModel(
+      final User user = mapUserFromDto(
         userDto: userDto,
         appearanceSettingsDto: const AppearanceSettingsDto(
           userId: '',
@@ -119,19 +119,21 @@ class UserRepositoryImpl extends StateRepository<User>
     final UserDto? userDto = await _firebaseUserService.loadUserById(
       userId: userId,
     );
-    if (userDto != null) {
-      final User user = mapUserFromDtoModel(
+    final AppearanceSettingsDto? appearanceSettingsDto =
+        await _firebaseAppearanceSettingsService.loadSettingsByUserId(
+      userId: userId,
+    );
+    final WorkoutSettingsDto? workoutSettingsDto =
+        await _firebaseWorkoutSettingsService.loadSettingsByUserId(
+      userId: userId,
+    );
+    if (userDto != null &&
+        appearanceSettingsDto != null &&
+        workoutSettingsDto != null) {
+      final User user = mapUserFromDto(
         userDto: userDto,
-        appearanceSettingsDto: const AppearanceSettingsDto(
-          userId: '',
-          themeMode: ThemeMode.light,
-          language: Language.polish,
-        ),
-        workoutSettingsDto: const WorkoutSettingsDto(
-          userId: '',
-          distanceUnit: DistanceUnit.kilometers,
-          paceUnit: PaceUnit.minutesPerKilometer,
-        ),
+        appearanceSettingsDto: appearanceSettingsDto,
+        workoutSettingsDto: workoutSettingsDto,
       );
       addEntity(user);
     }

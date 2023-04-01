@@ -6,7 +6,7 @@ import 'package:runnoter/domain/model/user.dart';
 
 void main() {
   test(
-    'map user from db',
+    'map user from dto',
     () {
       const userDto = firebase.UserDto(
         id: 'u1',
@@ -35,7 +35,7 @@ void main() {
         ),
       );
 
-      final User user = mapUserFromDtoModel(
+      final User user = mapUserFromDto(
         userDto: userDto,
         appearanceSettingsDto: appearanceSettingsDto,
         workoutSettingsDto: workoutSettingsDto,

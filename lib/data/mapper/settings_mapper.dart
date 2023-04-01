@@ -2,7 +2,7 @@ import 'package:firebase/firebase.dart' as db;
 
 import '../../domain/model/settings.dart';
 
-Settings mapSettingsFromDb({
+Settings mapSettingsFromDto({
   required db.AppearanceSettingsDto appearanceSettingsDto,
   required db.WorkoutSettingsDto workoutSettingsDto,
 }) {

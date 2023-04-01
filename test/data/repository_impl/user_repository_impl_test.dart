@@ -17,6 +17,7 @@ void main() {
       MockFirebaseAppearanceSettingsService();
   final firebaseWorkoutSettingsService = MockFirebaseWorkoutSettingsService();
   late UserRepositoryImpl repository;
+  const String userId = 'u1';
 
   UserRepositoryImpl createRepository({
     List<User>? initialState,
@@ -44,13 +45,13 @@ void main() {
     'user exists in state, '
     'should emit user from state and should not call firebase method to load user',
     () {
-      final User expectedUser = createUser(id: 'u1');
+      final User expectedUser = createUser(id: userId);
       repository = createRepository(
         initialState: [expectedUser],
       );
 
       final Stream<User?> user$ = repository.getUserById(
-        userId: expectedUser.id,
+        userId: userId,
       );
       user$.listen((_) {});
 
@@ -62,7 +63,17 @@ void main() {
       );
       verifyNever(
         () => firebaseUserService.loadUserById(
-          userId: expectedUser.id,
+          userId: userId,
+        ),
+      );
+      verifyNever(
+        () => firebaseAppearanceSettingsService.loadSettingsByUserId(
+          userId: userId,
+        ),
+      );
+      verifyNever(
+        () => firebaseWorkoutSettingsService.loadSettingsByUserId(
+          userId: userId,
         ),
       );
     },
@@ -71,32 +82,69 @@ void main() {
   test(
     'get user by id, '
     'user does not exist in state, '
-    'should call firebase method to load user and should emit loaded user',
+    'should call firebase method to load user, should add loaded user to repository state and should emit loaded user',
     () {
-      const String userId = 'u1';
-      const firebase.UserDto userDto = firebase.UserDto(
+      const userDto = firebase.UserDto(
         id: userId,
         name: 'name',
         surname: 'surname',
+      );
+      const appearanceSettingsDto = firebase.AppearanceSettingsDto(
+        userId: userId,
+        themeMode: firebase.ThemeMode.light,
+        language: firebase.Language.polish,
+      );
+      const workoutSettingsDto = firebase.WorkoutSettingsDto(
+        userId: userId,
+        distanceUnit: firebase.DistanceUnit.kilometers,
+        paceUnit: firebase.PaceUnit.minutesPerKilometer,
       );
       final User expectedUser = createUser(
         id: userId,
         name: 'name',
         surname: 'surname',
+        settings: createSettings(
+          themeMode: ThemeMode.light,
+          language: Language.polish,
+          distanceUnit: DistanceUnit.kilometers,
+          paceUnit: PaceUnit.minutesPerKilometer,
+        ),
       );
       firebaseUserService.mockLoadUserById(
         userDto: userDto,
+      );
+      firebaseAppearanceSettingsService.mockLoadSettingsByUserId(
+        appearanceSettingsDto: appearanceSettingsDto,
+      );
+      firebaseWorkoutSettingsService.mockLoadSettingsByUserId(
+        workoutSettingsDto: workoutSettingsDto,
       );
 
       final Stream<User?> user$ = repository.getUserById(userId: userId);
       user$.listen((event) {});
 
-      expect(
+      expectLater(
         user$,
         emitsInOrder(
           [null, expectedUser],
         ),
-      );
+      ).then((_) {
+        verify(
+          () => firebaseUserService.loadUserById(
+            userId: userId,
+          ),
+        ).called(1);
+        verify(
+          () => firebaseAppearanceSettingsService.loadSettingsByUserId(
+            userId: userId,
+          ),
+        ).called(1);
+        verify(
+          () => firebaseWorkoutSettingsService.loadSettingsByUserId(
+            userId: userId,
+          ),
+        ).called(1);
+      });
     },
   );
 
