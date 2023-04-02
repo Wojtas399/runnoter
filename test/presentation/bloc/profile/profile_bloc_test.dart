@@ -3,9 +3,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/model/auth_exception.dart';
 import 'package:runnoter/presentation/model/bloc_status.dart';
-import 'package:runnoter/presentation/screen/profile/bloc/profile_bloc.dart';
-import 'package:runnoter/presentation/screen/profile/bloc/profile_event.dart';
-import 'package:runnoter/presentation/screen/profile/bloc/profile_state.dart';
+import 'package:runnoter/presentation/screen/profile/bloc/profile_identities_bloc.dart';
+import 'package:runnoter/presentation/screen/profile/bloc/profile_identities_event.dart';
+import 'package:runnoter/presentation/screen/profile/bloc/profile_identities_state.dart';
 
 import '../../../mock/domain/mock_auth_service.dart';
 import '../../../mock/domain/mock_user_repository.dart';
@@ -15,24 +15,24 @@ void main() {
   final authService = MockAuthService();
   final userRepository = MockUserRepository();
 
-  ProfileBloc createBloc({
+  ProfileIdentitiesBloc createBloc({
     String? userId,
   }) {
-    return ProfileBloc(
+    return ProfileIdentitiesBloc(
       authService: authService,
       userRepository: userRepository,
       userId: userId,
     );
   }
 
-  ProfileState createState({
+  ProfileIdentitiesState createState({
     BlocStatus status = const BlocStatusInitial(),
     String? userId,
     String? username,
     String? surname,
     String? email,
   }) {
-    return ProfileState(
+    return ProfileIdentitiesState(
       status: status,
       userId: userId,
       username: username,
@@ -65,9 +65,9 @@ void main() {
         ),
       );
     },
-    act: (ProfileBloc bloc) {
+    act: (ProfileIdentitiesBloc bloc) {
       bloc.add(
-        const ProfileEventInitialize(),
+        const ProfileIdentitiesEventInitialize(),
       );
     },
     expect: () => [
@@ -102,9 +102,9 @@ void main() {
     'email updated, '
     'should update email in state',
     build: () => createBloc(),
-    act: (ProfileBloc bloc) {
+    act: (ProfileIdentitiesBloc bloc) {
       bloc.add(
-        const ProfileEventEmailUpdated(
+        const ProfileIdentitiesEventEmailUpdated(
           email: 'email@example.com',
         ),
       );
@@ -121,9 +121,9 @@ void main() {
     'user updated, '
     'should update user id, username and surname in state',
     build: () => createBloc(),
-    act: (ProfileBloc bloc) {
+    act: (ProfileIdentitiesBloc bloc) {
       bloc.add(
-        ProfileEventUserUpdated(
+        ProfileIdentitiesEventUserUpdated(
           user: createUser(
             id: 'u1',
             name: 'name',
@@ -151,9 +151,9 @@ void main() {
     setUp: () {
       userRepository.mockUpdateUser();
     },
-    act: (ProfileBloc bloc) {
+    act: (ProfileIdentitiesBloc bloc) {
       bloc.add(
-        const ProfileEventUpdateUsername(
+        const ProfileIdentitiesEventUpdateUsername(
           username: 'new username',
         ),
       );
@@ -188,9 +188,9 @@ void main() {
     setUp: () {
       userRepository.mockUpdateUser();
     },
-    act: (ProfileBloc bloc) {
+    act: (ProfileIdentitiesBloc bloc) {
       bloc.add(
-        const ProfileEventUpdateUsername(
+        const ProfileIdentitiesEventUpdateUsername(
           username: 'new username',
         ),
       );
@@ -215,9 +215,9 @@ void main() {
     setUp: () {
       userRepository.mockUpdateUser();
     },
-    act: (ProfileBloc bloc) {
+    act: (ProfileIdentitiesBloc bloc) {
       bloc.add(
-        const ProfileEventUpdateSurname(
+        const ProfileIdentitiesEventUpdateSurname(
           surname: 'new surname',
         ),
       );
@@ -252,9 +252,9 @@ void main() {
     setUp: () {
       userRepository.mockUpdateUser();
     },
-    act: (ProfileBloc bloc) {
+    act: (ProfileIdentitiesBloc bloc) {
       bloc.add(
-        const ProfileEventUpdateSurname(
+        const ProfileIdentitiesEventUpdateSurname(
           surname: 'new surname',
         ),
       );
@@ -277,9 +277,9 @@ void main() {
     setUp: () {
       authService.mockUpdateEmail();
     },
-    act: (ProfileBloc bloc) {
+    act: (ProfileIdentitiesBloc bloc) {
       bloc.add(
-        const ProfileEventUpdateEmail(
+        const ProfileIdentitiesEventUpdateEmail(
           newEmail: 'email@example.com',
           password: 'Password1!',
         ),
@@ -315,9 +315,9 @@ void main() {
         throwable: AuthException.emailAlreadyInUse,
       );
     },
-    act: (ProfileBloc bloc) {
+    act: (ProfileIdentitiesBloc bloc) {
       bloc.add(
-        const ProfileEventUpdateEmail(
+        const ProfileIdentitiesEventUpdateEmail(
           newEmail: 'email@example.com',
           password: 'Password1!',
         ),
@@ -353,9 +353,9 @@ void main() {
         throwable: AuthException.wrongPassword,
       );
     },
-    act: (ProfileBloc bloc) {
+    act: (ProfileIdentitiesBloc bloc) {
       bloc.add(
-        const ProfileEventUpdateEmail(
+        const ProfileIdentitiesEventUpdateEmail(
           newEmail: 'email@example.com',
           password: 'Password1!',
         ),
@@ -391,9 +391,9 @@ void main() {
         throwable: 'Unknown exception',
       );
     },
-    act: (ProfileBloc bloc) {
+    act: (ProfileIdentitiesBloc bloc) {
       bloc.add(
-        const ProfileEventUpdateEmail(
+        const ProfileIdentitiesEventUpdateEmail(
           newEmail: 'email@example.com',
           password: 'Password1!',
         ),
@@ -427,9 +427,9 @@ void main() {
     setUp: () {
       authService.mockUpdatePassword();
     },
-    act: (ProfileBloc bloc) {
+    act: (ProfileIdentitiesBloc bloc) {
       bloc.add(
-        const ProfileEventUpdatePassword(
+        const ProfileIdentitiesEventUpdatePassword(
           newPassword: 'newPassword',
           currentPassword: 'currentPassword',
         ),
@@ -465,9 +465,9 @@ void main() {
         throwable: AuthException.wrongPassword,
       );
     },
-    act: (ProfileBloc bloc) {
+    act: (ProfileIdentitiesBloc bloc) {
       bloc.add(
-        const ProfileEventUpdatePassword(
+        const ProfileIdentitiesEventUpdatePassword(
           newPassword: 'newPassword',
           currentPassword: 'currentPassword',
         ),
@@ -503,9 +503,9 @@ void main() {
         throwable: 'Unknown exception',
       );
     },
-    act: (ProfileBloc bloc) {
+    act: (ProfileIdentitiesBloc bloc) {
       bloc.add(
-        const ProfileEventUpdatePassword(
+        const ProfileIdentitiesEventUpdatePassword(
           newPassword: 'newPassword',
           currentPassword: 'currentPassword',
         ),
@@ -537,9 +537,9 @@ void main() {
     'userId is null, '
     'should do nothing',
     build: () => createBloc(),
-    act: (ProfileBloc bloc) {
+    act: (ProfileIdentitiesBloc bloc) {
       bloc.add(
-        const ProfileEventDeleteAccount(
+        const ProfileIdentitiesEventDeleteAccount(
           password: 'password1',
         ),
       );
@@ -561,9 +561,9 @@ void main() {
       userRepository.mockDeleteUser();
       authService.mockDeleteAccount();
     },
-    act: (ProfileBloc bloc) {
+    act: (ProfileIdentitiesBloc bloc) {
       bloc.add(
-        const ProfileEventDeleteAccount(
+        const ProfileIdentitiesEventDeleteAccount(
           password: 'password1',
         ),
       );
@@ -611,9 +611,9 @@ void main() {
         isCorrect: false,
       );
     },
-    act: (ProfileBloc bloc) {
+    act: (ProfileIdentitiesBloc bloc) {
       bloc.add(
-        const ProfileEventDeleteAccount(
+        const ProfileIdentitiesEventDeleteAccount(
           password: 'password1',
         ),
       );
@@ -665,9 +665,9 @@ void main() {
         throwable: 'Unknown exception...',
       );
     },
-    act: (ProfileBloc bloc) {
+    act: (ProfileIdentitiesBloc bloc) {
       bloc.add(
-        const ProfileEventDeleteAccount(
+        const ProfileIdentitiesEventDeleteAccount(
           password: 'password1',
         ),
       );

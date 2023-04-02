@@ -8,9 +8,9 @@ import '../../../component/bloc_with_status_listener_component.dart';
 import '../../../config/navigation/routes.dart';
 import '../../../service/dialog_service.dart';
 import '../../../service/navigator_service.dart';
-import '../bloc/profile_bloc.dart';
-import '../bloc/profile_event.dart';
-import '../bloc/profile_state.dart';
+import '../bloc/profile_identities_bloc.dart';
+import '../bloc/profile_identities_event.dart';
+import '../bloc/profile_identities_state.dart';
 import 'profile_content.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -20,46 +20,46 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const _BlocProvider(
-      child: _BlocListener(
+    return const _IdentitiesBlocProvider(
+      child: _IdentitiesBlocListener(
         child: ProfileContent(),
       ),
     );
   }
 }
 
-class _BlocProvider extends StatelessWidget {
+class _IdentitiesBlocProvider extends StatelessWidget {
   final Widget child;
 
-  const _BlocProvider({
+  const _IdentitiesBlocProvider({
     required this.child,
   });
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (BuildContext context) => ProfileBloc(
+      create: (BuildContext context) => ProfileIdentitiesBloc(
         authService: context.read<AuthService>(),
         userRepository: context.read<UserRepository>(),
       )..add(
-          const ProfileEventInitialize(),
+          const ProfileIdentitiesEventInitialize(),
         ),
       child: child,
     );
   }
 }
 
-class _BlocListener extends StatelessWidget {
+class _IdentitiesBlocListener extends StatelessWidget {
   final Widget child;
 
-  const _BlocListener({
+  const _IdentitiesBlocListener({
     required this.child,
   });
 
   @override
   Widget build(BuildContext context) {
-    return BlocWithStatusListener<ProfileBloc, ProfileState, ProfileInfo,
-        ProfileError>(
+    return BlocWithStatusListener<ProfileIdentitiesBloc, ProfileIdentitiesState,
+        ProfileInfo, ProfileError>(
       child: child,
       onInfo: (ProfileInfo info) {
         _manageInfo(context, info);

@@ -1,12 +1,12 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/presentation/model/bloc_status.dart';
-import 'package:runnoter/presentation/screen/profile/bloc/profile_state.dart';
+import 'package:runnoter/presentation/screen/profile/bloc/profile_identities_state.dart';
 
 void main() {
-  late ProfileState state;
+  late ProfileIdentitiesState state;
 
   setUp(() {
-    state = const ProfileState(
+    state = const ProfileIdentitiesState(
       status: BlocStatusInitial(),
       userId: null,
       username: null,

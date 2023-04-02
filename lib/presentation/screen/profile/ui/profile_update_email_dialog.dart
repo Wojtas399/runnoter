@@ -8,9 +8,9 @@ import '../../../model/bloc_status.dart';
 import '../../../service/navigator_service.dart';
 import '../../../service/utils.dart';
 import '../../../service/validation_service.dart';
-import '../bloc/profile_bloc.dart';
-import '../bloc/profile_event.dart';
-import '../bloc/profile_state.dart';
+import '../bloc/profile_identities_bloc.dart';
+import '../bloc/profile_identities_event.dart';
+import '../bloc/profile_identities_state.dart';
 
 class ProfileUpdateEmailDialog extends StatefulWidget {
   const ProfileUpdateEmailDialog({
@@ -31,7 +31,7 @@ class _State extends State<ProfileUpdateEmailDialog> {
 
   @override
   void initState() {
-    _originalEmail = context.read<ProfileBloc>().state.email ?? '';
+    _originalEmail = context.read<ProfileIdentitiesBloc>().state.email ?? '';
     _emailController.text = _originalEmail ?? '';
     _emailController.addListener(_checkValuesCorrectness);
     _passwordController.addListener(_checkValuesCorrectness);
@@ -47,8 +47,8 @@ class _State extends State<ProfileUpdateEmailDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<ProfileBloc, ProfileState>(
-      listener: (BuildContext context, ProfileState state) {
+    return BlocListener<ProfileIdentitiesBloc, ProfileIdentitiesState>(
+      listener: (BuildContext context, ProfileIdentitiesState state) {
         final BlocStatus blocStatus = state.status;
         if (blocStatus is BlocStatusComplete &&
             blocStatus.info == ProfileInfo.savedData) {
@@ -135,8 +135,8 @@ class _State extends State<ProfileUpdateEmailDialog> {
 
   void _onSaveButtonPressed(BuildContext context) {
     unfocusInputs();
-    context.read<ProfileBloc>().add(
-          ProfileEventUpdateEmail(
+    context.read<ProfileIdentitiesBloc>().add(
+          ProfileIdentitiesEventUpdateEmail(
             newEmail: _emailController.text,
             password: _passwordController.text,
           ),

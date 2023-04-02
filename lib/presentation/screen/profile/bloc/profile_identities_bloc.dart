@@ -9,17 +9,17 @@ import '../../../../domain/repository/user_repository.dart';
 import '../../../../domain/service/auth_service.dart';
 import '../../../model/bloc_status.dart';
 import '../../../model/bloc_with_status.dart';
-import 'profile_event.dart';
-import 'profile_state.dart';
+import 'profile_identities_event.dart';
+import 'profile_identities_state.dart';
 
-class ProfileBloc extends BlocWithStatus<ProfileEvent, ProfileState,
-    ProfileInfo, ProfileError> {
+class ProfileIdentitiesBloc extends BlocWithStatus<ProfileIdentitiesEvent,
+    ProfileIdentitiesState, ProfileInfo, ProfileError> {
   final AuthService _authService;
   final UserRepository _userRepository;
   StreamSubscription<String?>? _emailListener;
   StreamSubscription<User?>? _userDataListener;
 
-  ProfileBloc({
+  ProfileIdentitiesBloc({
     required AuthService authService,
     required UserRepository userRepository,
     BlocStatus status = const BlocStatusInitial(),
@@ -30,7 +30,7 @@ class ProfileBloc extends BlocWithStatus<ProfileEvent, ProfileState,
   })  : _authService = authService,
         _userRepository = userRepository,
         super(
-          ProfileState(
+          ProfileIdentitiesState(
             status: status,
             userId: userId,
             username: username,
@@ -38,14 +38,14 @@ class ProfileBloc extends BlocWithStatus<ProfileEvent, ProfileState,
             email: email,
           ),
         ) {
-    on<ProfileEventInitialize>(_initialize);
-    on<ProfileEventEmailUpdated>(_emailUpdated);
-    on<ProfileEventUserUpdated>(_userUpdated);
-    on<ProfileEventUpdateUsername>(_updateUsername);
-    on<ProfileEventUpdateSurname>(_updateSurname);
-    on<ProfileEventUpdateEmail>(_updateEmail);
-    on<ProfileEventUpdatePassword>(_updatePassword);
-    on<ProfileEventDeleteAccount>(_deleteAccount);
+    on<ProfileIdentitiesEventInitialize>(_initialize);
+    on<ProfileIdentitiesEventEmailUpdated>(_emailUpdated);
+    on<ProfileIdentitiesEventUserUpdated>(_userUpdated);
+    on<ProfileIdentitiesEventUpdateUsername>(_updateUsername);
+    on<ProfileIdentitiesEventUpdateSurname>(_updateSurname);
+    on<ProfileIdentitiesEventUpdateEmail>(_updateEmail);
+    on<ProfileIdentitiesEventUpdatePassword>(_updatePassword);
+    on<ProfileIdentitiesEventDeleteAccount>(_deleteAccount);
   }
 
   @override
@@ -58,16 +58,16 @@ class ProfileBloc extends BlocWithStatus<ProfileEvent, ProfileState,
   }
 
   void _initialize(
-    ProfileEventInitialize event,
-    Emitter<ProfileState> emit,
+    ProfileIdentitiesEventInitialize event,
+    Emitter<ProfileIdentitiesState> emit,
   ) {
     _setEmailListener();
     _setUserDataListener();
   }
 
   void _emailUpdated(
-    ProfileEventEmailUpdated event,
-    Emitter<ProfileState> emit,
+    ProfileIdentitiesEventEmailUpdated event,
+    Emitter<ProfileIdentitiesState> emit,
   ) {
     emit(state.copyWith(
       email: event.email,
@@ -75,8 +75,8 @@ class ProfileBloc extends BlocWithStatus<ProfileEvent, ProfileState,
   }
 
   void _userUpdated(
-    ProfileEventUserUpdated event,
-    Emitter<ProfileState> emit,
+    ProfileIdentitiesEventUserUpdated event,
+    Emitter<ProfileIdentitiesState> emit,
   ) {
     emit(state.copyWith(
       userId: event.user?.id,
@@ -86,8 +86,8 @@ class ProfileBloc extends BlocWithStatus<ProfileEvent, ProfileState,
   }
 
   Future<void> _updateUsername(
-    ProfileEventUpdateUsername event,
-    Emitter<ProfileState> emit,
+    ProfileIdentitiesEventUpdateUsername event,
+    Emitter<ProfileIdentitiesState> emit,
   ) async {
     final String? userId = state.userId;
     if (userId == null) {
@@ -102,8 +102,8 @@ class ProfileBloc extends BlocWithStatus<ProfileEvent, ProfileState,
   }
 
   Future<void> _updateSurname(
-    ProfileEventUpdateSurname event,
-    Emitter<ProfileState> emit,
+    ProfileIdentitiesEventUpdateSurname event,
+    Emitter<ProfileIdentitiesState> emit,
   ) async {
     final String? userId = state.userId;
     if (userId == null) {
@@ -118,8 +118,8 @@ class ProfileBloc extends BlocWithStatus<ProfileEvent, ProfileState,
   }
 
   Future<void> _updateEmail(
-    ProfileEventUpdateEmail event,
-    Emitter<ProfileState> emit,
+    ProfileIdentitiesEventUpdateEmail event,
+    Emitter<ProfileIdentitiesState> emit,
   ) async {
     emitLoadingStatus(emit);
     try {
@@ -143,8 +143,8 @@ class ProfileBloc extends BlocWithStatus<ProfileEvent, ProfileState,
   }
 
   Future<void> _updatePassword(
-    ProfileEventUpdatePassword event,
-    Emitter<ProfileState> emit,
+    ProfileIdentitiesEventUpdatePassword event,
+    Emitter<ProfileIdentitiesState> emit,
   ) async {
     emitLoadingStatus(emit);
     try {
@@ -167,8 +167,8 @@ class ProfileBloc extends BlocWithStatus<ProfileEvent, ProfileState,
   }
 
   Future<void> _deleteAccount(
-    ProfileEventDeleteAccount event,
-    Emitter<ProfileState> emit,
+    ProfileIdentitiesEventDeleteAccount event,
+    Emitter<ProfileIdentitiesState> emit,
   ) async {
     final String? userId = state.userId;
     if (userId == null) {
@@ -200,7 +200,7 @@ class ProfileBloc extends BlocWithStatus<ProfileEvent, ProfileState,
     _emailListener ??= _authService.loggedUserEmail$.listen(
       (String? email) {
         add(
-          ProfileEventEmailUpdated(
+          ProfileIdentitiesEventEmailUpdated(
             email: email,
           ),
         );
@@ -219,7 +219,7 @@ class ProfileBloc extends BlocWithStatus<ProfileEvent, ProfileState,
         .listen(
       (User? user) {
         add(
-          ProfileEventUserUpdated(
+          ProfileIdentitiesEventUserUpdated(
             user: user,
           ),
         );

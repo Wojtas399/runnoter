@@ -45,7 +45,7 @@ class _Theme extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ValueWithLabelAndIconComponent(
+    return const ValueWithLabelAndIconComponent(
       label: 'Motyw',
       iconData: Icons.brightness_6_outlined,
       value: 'Ciemny',
@@ -58,7 +58,7 @@ class _Language extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ValueWithLabelAndIconComponent(
+    return const ValueWithLabelAndIconComponent(
       label: 'Język',
       iconData: Icons.translate_outlined,
       value: 'Polski',
@@ -71,7 +71,7 @@ class _DistanceUnit extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ValueWithLabelAndIconComponent(
+    return const ValueWithLabelAndIconComponent(
       label: 'Jednostka dystansu',
       iconData: Icons.route_outlined,
       value: 'km',
@@ -84,7 +84,7 @@ class _PaceUnit extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ValueWithLabelAndIconComponent(
+    return const ValueWithLabelAndIconComponent(
       label: 'Jednostka prędkości',
       iconData: Icons.speed_outlined,
       value: 'min/km',

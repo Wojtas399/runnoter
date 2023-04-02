@@ -5,8 +5,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../component/value_with_label_and_icon_component.dart';
 import '../../../service/dialog_service.dart';
 import '../../../service/validation_service.dart';
-import '../bloc/profile_bloc.dart';
-import '../bloc/profile_event.dart';
+import '../bloc/profile_identities_bloc.dart';
+import '../bloc/profile_identities_event.dart';
 import 'profile_delete_account_dialog.dart';
 import 'profile_update_email_dialog.dart';
 import 'profile_update_password_dialog.dart';
@@ -57,7 +57,7 @@ class _Username extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final String? username = context.select(
-      (ProfileBloc bloc) => bloc.state.username,
+      (ProfileIdentitiesBloc bloc) => bloc.state.username,
     );
 
     return ValueWithLabelAndIconComponent(
@@ -71,11 +71,11 @@ class _Username extends StatelessWidget {
   }
 
   Future<void> _onPressed(BuildContext context) async {
-    final ProfileBloc bloc = context.read<ProfileBloc>();
+    final ProfileIdentitiesBloc bloc = context.read<ProfileIdentitiesBloc>();
     final String? newName = await _askForNewUsername(context);
     if (newName != null) {
       bloc.add(
-        ProfileEventUpdateUsername(
+        ProfileIdentitiesEventUpdateUsername(
           username: newName,
         ),
       );
@@ -89,7 +89,7 @@ class _Username extends StatelessWidget {
           .profile_screen_new_username_dialog_title,
       label: AppLocalizations.of(context)!.profile_screen_username_label,
       textFieldIcon: Icons.person_rounded,
-      value: context.read<ProfileBloc>().state.username,
+      value: context.read<ProfileIdentitiesBloc>().state.username,
       isValueRequired: true,
       validator: (String? value) {
         if (value != null && !isNameOrSurnameValid(value)) {
@@ -107,7 +107,7 @@ class _Surname extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final String? surname = context.select(
-      (ProfileBloc bloc) => bloc.state.surname,
+      (ProfileIdentitiesBloc bloc) => bloc.state.surname,
     );
 
     return ValueWithLabelAndIconComponent(
@@ -121,11 +121,11 @@ class _Surname extends StatelessWidget {
   }
 
   Future<void> _onPressed(BuildContext context) async {
-    final ProfileBloc bloc = context.read<ProfileBloc>();
+    final ProfileIdentitiesBloc bloc = context.read<ProfileIdentitiesBloc>();
     final String? newSurname = await _askForNewSurname(context);
     if (newSurname != null) {
       bloc.add(
-        ProfileEventUpdateSurname(
+        ProfileIdentitiesEventUpdateSurname(
           surname: newSurname,
         ),
       );
@@ -139,7 +139,7 @@ class _Surname extends StatelessWidget {
           AppLocalizations.of(context)!.profile_screen_new_surname_dialog_title,
       label: AppLocalizations.of(context)!.profile_screen_surname_label,
       textFieldIcon: Icons.person_rounded,
-      value: context.read<ProfileBloc>().state.surname,
+      value: context.read<ProfileIdentitiesBloc>().state.surname,
       isValueRequired: true,
       validator: (String? value) {
         if (value != null && !isNameOrSurnameValid(value)) {
@@ -157,7 +157,7 @@ class _Email extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final String? email = context.select(
-      (ProfileBloc bloc) => bloc.state.email,
+      (ProfileIdentitiesBloc bloc) => bloc.state.email,
     );
 
     return ValueWithLabelAndIconComponent(
@@ -173,8 +173,8 @@ class _Email extends StatelessWidget {
   Future<void> _onPressed(BuildContext context) async {
     await showFullScreenDialog(
       context: context,
-      dialog: BlocProvider<ProfileBloc>.value(
-        value: context.read<ProfileBloc>(),
+      dialog: BlocProvider<ProfileIdentitiesBloc>.value(
+        value: context.read<ProfileIdentitiesBloc>(),
         child: const ProfileUpdateEmailDialog(),
       ),
     );
@@ -199,7 +199,7 @@ class _ChangePassword extends StatelessWidget {
     await showFullScreenDialog(
       context: context,
       dialog: BlocProvider.value(
-        value: context.read<ProfileBloc>(),
+        value: context.read<ProfileIdentitiesBloc>(),
         child: const ProfileUpdatePasswordDialog(),
       ),
     );
@@ -225,7 +225,7 @@ class _DeleteAccount extends StatelessWidget {
     await showFullScreenDialog(
       context: context,
       dialog: BlocProvider.value(
-        value: context.read<ProfileBloc>(),
+        value: context.read<ProfileIdentitiesBloc>(),
         child: const ProfileDeleteAccountDialog(),
       ),
     );

@@ -1,13 +1,13 @@
 import '../../../model/bloc_state.dart';
 import '../../../model/bloc_status.dart';
 
-class ProfileState extends BlocState {
+class ProfileIdentitiesState extends BlocState {
   final String? userId;
   final String? username;
   final String? surname;
   final String? email;
 
-  const ProfileState({
+  const ProfileIdentitiesState({
     required super.status,
     required this.userId,
     required this.username,
@@ -25,14 +25,14 @@ class ProfileState extends BlocState {
       ];
 
   @override
-  ProfileState copyWith({
+  ProfileIdentitiesState copyWith({
     BlocStatus? status,
     String? userId,
     String? username,
     String? surname,
     String? email,
   }) {
-    return ProfileState(
+    return ProfileIdentitiesState(
       status: status ?? const BlocStatusComplete(),
       userId: userId ?? this.userId,
       username: username ?? this.username,

@@ -7,9 +7,9 @@ import '../../../model/bloc_status.dart';
 import '../../../service/navigator_service.dart';
 import '../../../service/utils.dart';
 import '../../../service/validation_service.dart';
-import '../bloc/profile_bloc.dart';
-import '../bloc/profile_event.dart';
-import '../bloc/profile_state.dart';
+import '../bloc/profile_identities_bloc.dart';
+import '../bloc/profile_identities_event.dart';
+import '../bloc/profile_identities_state.dart';
 
 class ProfileUpdatePasswordDialog extends StatefulWidget {
   const ProfileUpdatePasswordDialog({
@@ -44,8 +44,8 @@ class _State extends State<ProfileUpdatePasswordDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<ProfileBloc, ProfileState>(
-      listener: (BuildContext context, ProfileState state) {
+    return BlocListener<ProfileIdentitiesBloc, ProfileIdentitiesState>(
+      listener: (BuildContext context, ProfileIdentitiesState state) {
         final BlocStatus blocStatus = state.status;
         if (blocStatus is BlocStatusComplete &&
             blocStatus.info == ProfileInfo.savedData) {
@@ -132,8 +132,8 @@ class _State extends State<ProfileUpdatePasswordDialog> {
 
   void _onSaveButtonPressed(BuildContext context) {
     unfocusInputs();
-    context.read<ProfileBloc>().add(
-          ProfileEventUpdatePassword(
+    context.read<ProfileIdentitiesBloc>().add(
+          ProfileIdentitiesEventUpdatePassword(
             newPassword: _newPasswordController.text,
             currentPassword: _currentPasswordController.text,
           ),

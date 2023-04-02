@@ -2,21 +2,21 @@ import 'package:equatable/equatable.dart';
 
 import '../../../../domain/model/user.dart';
 
-abstract class ProfileEvent extends Equatable {
-  const ProfileEvent();
+abstract class ProfileIdentitiesEvent extends Equatable {
+  const ProfileIdentitiesEvent();
 
   @override
   List<Object?> get props => [];
 }
 
-class ProfileEventInitialize extends ProfileEvent {
-  const ProfileEventInitialize();
+class ProfileIdentitiesEventInitialize extends ProfileIdentitiesEvent {
+  const ProfileIdentitiesEventInitialize();
 }
 
-class ProfileEventEmailUpdated extends ProfileEvent {
+class ProfileIdentitiesEventEmailUpdated extends ProfileIdentitiesEvent {
   final String? email;
 
-  const ProfileEventEmailUpdated({
+  const ProfileIdentitiesEventEmailUpdated({
     required this.email,
   });
 
@@ -26,10 +26,10 @@ class ProfileEventEmailUpdated extends ProfileEvent {
       ];
 }
 
-class ProfileEventUserUpdated extends ProfileEvent {
+class ProfileIdentitiesEventUserUpdated extends ProfileIdentitiesEvent {
   final User? user;
 
-  const ProfileEventUserUpdated({
+  const ProfileIdentitiesEventUserUpdated({
     required this.user,
   });
 
@@ -39,10 +39,10 @@ class ProfileEventUserUpdated extends ProfileEvent {
       ];
 }
 
-class ProfileEventUpdateUsername extends ProfileEvent {
+class ProfileIdentitiesEventUpdateUsername extends ProfileIdentitiesEvent {
   final String username;
 
-  const ProfileEventUpdateUsername({
+  const ProfileIdentitiesEventUpdateUsername({
     required this.username,
   });
 
@@ -52,10 +52,10 @@ class ProfileEventUpdateUsername extends ProfileEvent {
       ];
 }
 
-class ProfileEventUpdateSurname extends ProfileEvent {
+class ProfileIdentitiesEventUpdateSurname extends ProfileIdentitiesEvent {
   final String surname;
 
-  const ProfileEventUpdateSurname({
+  const ProfileIdentitiesEventUpdateSurname({
     required this.surname,
   });
 
@@ -65,11 +65,11 @@ class ProfileEventUpdateSurname extends ProfileEvent {
       ];
 }
 
-class ProfileEventUpdateEmail extends ProfileEvent {
+class ProfileIdentitiesEventUpdateEmail extends ProfileIdentitiesEvent {
   final String newEmail;
   final String password;
 
-  const ProfileEventUpdateEmail({
+  const ProfileIdentitiesEventUpdateEmail({
     required this.newEmail,
     required this.password,
   });
@@ -81,11 +81,11 @@ class ProfileEventUpdateEmail extends ProfileEvent {
       ];
 }
 
-class ProfileEventUpdatePassword extends ProfileEvent {
+class ProfileIdentitiesEventUpdatePassword extends ProfileIdentitiesEvent {
   final String newPassword;
   final String currentPassword;
 
-  const ProfileEventUpdatePassword({
+  const ProfileIdentitiesEventUpdatePassword({
     required this.newPassword,
     required this.currentPassword,
   });
@@ -97,10 +97,10 @@ class ProfileEventUpdatePassword extends ProfileEvent {
       ];
 }
 
-class ProfileEventDeleteAccount extends ProfileEvent {
+class ProfileIdentitiesEventDeleteAccount extends ProfileIdentitiesEvent {
   final String password;
 
-  const ProfileEventDeleteAccount({
+  const ProfileIdentitiesEventDeleteAccount({
     required this.password,
   });
 
