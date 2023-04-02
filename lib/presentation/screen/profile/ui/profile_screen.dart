@@ -11,6 +11,8 @@ import '../../../service/navigator_service.dart';
 import '../bloc/profile_identities_bloc.dart';
 import '../bloc/profile_identities_event.dart';
 import '../bloc/profile_identities_state.dart';
+import '../bloc/profile_settings_bloc.dart';
+import '../bloc/profile_settings_event.dart';
 import 'profile_content.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -21,8 +23,10 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const _IdentitiesBlocProvider(
-      child: _IdentitiesBlocListener(
-        child: ProfileContent(),
+      child: _SettingsBlocProvider(
+        child: _IdentitiesBlocListener(
+          child: ProfileContent(),
+        ),
       ),
     );
   }
@@ -37,12 +41,33 @@ class _IdentitiesBlocProvider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
+    return BlocProvider<ProfileIdentitiesBloc>(
       create: (BuildContext context) => ProfileIdentitiesBloc(
         authService: context.read<AuthService>(),
         userRepository: context.read<UserRepository>(),
       )..add(
           const ProfileIdentitiesEventInitialize(),
+        ),
+      child: child,
+    );
+  }
+}
+
+class _SettingsBlocProvider extends StatelessWidget {
+  final Widget child;
+
+  const _SettingsBlocProvider({
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider<ProfileSettingsBloc>(
+      create: (BuildContext context) => ProfileSettingsBloc(
+        authService: context.read<AuthService>(),
+        userRepository: context.read<UserRepository>(),
+      )..add(
+          const ProfileSettingsEventInitialize(),
         ),
       child: child,
     );
