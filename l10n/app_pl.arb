@@ -271,6 +271,20 @@
   },
 
 
+  "theme_mode_light": "Jasny",
+  "@theme_mode_light": {
+    "description": "Label of the light theme mode"
+  },
+  "theme_mode_dark": "Ciemny",
+  "@theme_mode_dark": {
+    "description": "Label of the dark theme mode"
+  },
+  "theme_mode_system": "Systemowy",
+  "@theme_mode_system": {
+    "description": "Label of the system theme mode"
+  },
+
+
   "name": "Imię",
   "@name": {
     "description": "Name"
