@@ -251,6 +251,26 @@
   "@profile_screen_wrong_current_password_message": {
     "description": "Message of the dialog to inform that given current password is wrong"
   },
+  "settings_theme_mode_light": "Jasny",
+  "@settings_theme_mode_light": {
+    "description": "Light theme mode"
+  },
+  "settings_theme_mode_dark": "Ciemny",
+  "@settings_theme_mode_dark": {
+    "description": "Dark theme mode"
+  },
+  "settings_theme_mode_system": "Systemowy",
+  "@settings_theme_mode_system": {
+    "description": "System theme mode"
+  },
+  "settings_language_polish": "Polski",
+  "@settings_language_polish": {
+    "description": "Polish language"
+  },
+  "settings_language_english": "Angielski",
+  "@settings_language_english": {
+    "description": "English language"
+  },
 
 
   "no_internet_connection_dialog_title": "Brak połączenia internetowego",
@@ -268,20 +288,6 @@
   "unknown_error_dialog_message": "Wystąpił nieznany błąd w działaniu aplikacji",
   "@unknown_error_dialog_message": {
     "description": "Message of the dialog about unknown exception"
-  },
-
-
-  "theme_mode_light": "Jasny",
-  "@theme_mode_light": {
-    "description": "Label of the light theme mode"
-  },
-  "theme_mode_dark": "Ciemny",
-  "@theme_mode_dark": {
-    "description": "Label of the dark theme mode"
-  },
-  "theme_mode_system": "Systemowy",
-  "@theme_mode_system": {
-    "description": "Label of the system theme mode"
   },
 
 
