@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../component/value_with_label_and_icon_component.dart';
 
@@ -34,7 +35,7 @@ class _Header extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      'Ustawienia',
+      AppLocalizations.of(context)!.profile_screen_settings_section_title,
       style: Theme.of(context).textTheme.titleLarge,
     );
   }
@@ -45,8 +46,8 @@ class _Theme extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const ValueWithLabelAndIconComponent(
-      label: 'Motyw',
+    return ValueWithLabelAndIconComponent(
+      label: AppLocalizations.of(context)!.profile_screen_theme_mode_label,
       iconData: Icons.brightness_6_outlined,
       value: 'Ciemny',
     );
@@ -58,8 +59,8 @@ class _Language extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const ValueWithLabelAndIconComponent(
-      label: 'Język',
+    return ValueWithLabelAndIconComponent(
+      label: AppLocalizations.of(context)!.profile_screen_language_label,
       iconData: Icons.translate_outlined,
       value: 'Polski',
     );
@@ -71,8 +72,8 @@ class _DistanceUnit extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const ValueWithLabelAndIconComponent(
-      label: 'Jednostka dystansu',
+    return ValueWithLabelAndIconComponent(
+      label: AppLocalizations.of(context)!.profile_screen_distance_unit_label,
       iconData: Icons.route_outlined,
       value: 'km',
     );
@@ -84,8 +85,8 @@ class _PaceUnit extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const ValueWithLabelAndIconComponent(
-      label: 'Jednostka prędkości',
+    return ValueWithLabelAndIconComponent(
+      label: AppLocalizations.of(context)!.profile_screen_pace_unit_label,
       iconData: Icons.speed_outlined,
       value: 'min/km',
     );

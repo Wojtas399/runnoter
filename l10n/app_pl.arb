@@ -151,6 +151,10 @@
   "@profile_screen_user_data_section_title": {
     "description": "Title of the user data section"
   },
+  "profile_screen_settings_section_title": "Ustawienia",
+  "@profile_screen_settings_section_title": {
+    "description": "Title of settings section"
+  },
   "profile_screen_username_label": "Imię",
   "@profile_screen_username_label": {
     "description": "Label of username"
@@ -170,6 +174,22 @@
   "profile_screen_delete_account_label": "Usuń konto",
   "@profile_screen_delete_account_label": {
     "description": "Label of delete account option"
+  },
+  "profile_screen_theme_mode_label": "Motyw",
+  "@profile_screen_theme_mode_label": {
+    "description": "Label of theme mode option"
+  },
+  "profile_screen_language_label": "Język",
+  "@profile_screen_language_label": {
+    "description": "Label of language option"
+  },
+  "profile_screen_distance_unit_label": "Jednostka dystansu",
+  "@profile_screen_distance_unit_label": {
+    "description": "Label of distance unit option"
+  },
+  "profile_screen_pace_unit_label": "Jednostka prędkości",
+  "@profile_screen_pace_unit_label": {
+    "description": "Label of pace unit option"
   },
   "profile_screen_new_username_dialog_title": "Zmień imię",
   "@profile_screen_new_username_dialog_title": {
