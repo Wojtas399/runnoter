@@ -37,3 +37,21 @@ extension DistanceUnitFormatter on DistanceUnit {
     }
   }
 }
+
+extension PaceUnitFormatter on PaceUnit {
+  String toUIFormat(BuildContext context) {
+    switch (this) {
+      case PaceUnit.minutesPerKilometer:
+        return AppLocalizations.of(context)!
+            .settings_pace_unit_minutes_per_kilometer;
+      case PaceUnit.minutesPerMile:
+        return AppLocalizations.of(context)!
+            .settings_pace_unit_minutes_per_miles;
+      case PaceUnit.kilometersPerHour:
+        return AppLocalizations.of(context)!
+            .settings_pace_unit_kilometers_per_hour;
+      case PaceUnit.milesPerHour:
+        return AppLocalizations.of(context)!.settings_pace_unit_miles_per_hour;
+    }
+  }
+}

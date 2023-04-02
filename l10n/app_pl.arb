@@ -279,6 +279,22 @@
   "@settings_distance_unit_miles": {
     "description": "Miles distance unit"
   },
+  "settings_pace_unit_minutes_per_kilometer": "min/km",
+  "@settings_pace_unit_minutes_per_kilometer": {
+    "description": "Minutes per kilometer pace unit"
+  },
+  "settings_pace_unit_minutes_per_miles": "min/mi",
+  "@settings_pace_unit_minutes_per_miles": {
+    "description": "Minutes per mile pace unit"
+  },
+  "settings_pace_unit_kilometers_per_hour": "km/h",
+  "@settings_pace_unit_kilometers_per_hour": {
+    "description": "Kilometers per hour pace unit"
+  },
+  "settings_pace_unit_miles_per_hour": "mi/h",
+  "@settings_pace_unit_miles_per_hour": {
+    "description": "Miles per hour pace unit"
+  },
 
 
   "no_internet_connection_dialog_title": "Brak połączenia internetowego",
