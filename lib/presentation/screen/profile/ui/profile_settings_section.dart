@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../../../domain/model/settings.dart' as settings;
 import '../../../component/value_with_label_and_icon_component.dart';
+import '../../../formatter/settings_formatter.dart';
+import '../bloc/profile_settings_bloc.dart';
 
 class ProfileSettingsSection extends StatelessWidget {
   const ProfileSettingsSection({
@@ -46,10 +50,14 @@ class _Theme extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final settings.ThemeMode? themeMode = context.select(
+      (ProfileSettingsBloc bloc) => bloc.state.themeMode,
+    );
+
     return ValueWithLabelAndIconComponent(
       label: AppLocalizations.of(context)!.profile_screen_theme_mode_label,
       iconData: Icons.brightness_6_outlined,
-      value: 'Ciemny',
+      value: themeMode?.toUIFormat(context) ?? '',
     );
   }
 }
@@ -59,10 +67,14 @@ class _Language extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final settings.Language? language = context.select(
+      (ProfileSettingsBloc bloc) => bloc.state.language,
+    );
+
     return ValueWithLabelAndIconComponent(
       label: AppLocalizations.of(context)!.profile_screen_language_label,
       iconData: Icons.translate_outlined,
-      value: 'Polski',
+      value: language?.toUIFormat(context) ?? '',
     );
   }
 }
@@ -72,10 +84,14 @@ class _DistanceUnit extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final settings.DistanceUnit? distanceUnit = context.select(
+      (ProfileSettingsBloc bloc) => bloc.state.distanceUnit,
+    );
+
     return ValueWithLabelAndIconComponent(
       label: AppLocalizations.of(context)!.profile_screen_distance_unit_label,
       iconData: Icons.route_outlined,
-      value: 'km',
+      value: distanceUnit?.toUIFormat(context) ?? '',
     );
   }
 }
@@ -85,10 +101,14 @@ class _PaceUnit extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final settings.PaceUnit? paceUnit = context.select(
+      (ProfileSettingsBloc bloc) => bloc.state.paceUnit,
+    );
+
     return ValueWithLabelAndIconComponent(
       label: AppLocalizations.of(context)!.profile_screen_pace_unit_label,
       iconData: Icons.speed_outlined,
-      value: 'min/km',
+      value: paceUnit?.toUIFormat(context) ?? '',
     );
   }
 }
