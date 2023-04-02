@@ -271,6 +271,14 @@
   "@settings_language_english": {
     "description": "English language"
   },
+  "settings_distance_unit_kilometers": "Kilometry",
+  "@settings_distance_unit_kilometers": {
+    "description": "Kilometers distance unit"
+  },
+  "settings_distance_unit_miles": "Mile",
+  "@settings_distance_unit_miles": {
+    "description": "Miles distance unit"
+  },
 
 
   "no_internet_connection_dialog_title": "Brak połączenia internetowego",
