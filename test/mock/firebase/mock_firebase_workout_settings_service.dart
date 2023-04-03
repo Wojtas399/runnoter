@@ -26,6 +26,18 @@ class MockFirebaseWorkoutSettingsService extends Mock
     ).thenAnswer((invocation) => Future.value(workoutSettingsDto));
   }
 
+  void mockUpdateSettings({
+    WorkoutSettingsDto? updateWorkoutSettingsDto,
+  }) {
+    when(
+      () => updateSettings(
+        userId: any(named: 'userId'),
+        distanceUnit: any(named: 'distanceUnit'),
+        paceUnit: any(named: 'paceUnit'),
+      ),
+    ).thenAnswer((invocation) => Future.value(updateWorkoutSettingsDto));
+  }
+
   void mockDeleteSettingsForUser() {
     when(
       () => deleteSettingsForUser(

@@ -23,7 +23,7 @@ class FirebaseAppearanceSettingsService {
     Language? language,
   }) async {
     final settingsRef = getAppearanceSettingsRef(userId);
-    final jsonToUpdate = createAppearanceSettingsDtoToUpdate(
+    final jsonToUpdate = createAppearanceSettingsJsonToUpdate(
       themeMode: themeMode,
       language: language,
     );

@@ -50,7 +50,7 @@ enum Language {
   english;
 }
 
-Map<String, dynamic> createAppearanceSettingsDtoToUpdate({
+Map<String, dynamic> createAppearanceSettingsJsonToUpdate({
   ThemeMode? themeMode,
   Language? language,
 }) {

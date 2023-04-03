@@ -35,7 +35,7 @@ class UserDto extends Equatable {
   }
 }
 
-Map<String, dynamic> createUserDtoJsonToUpdate({
+Map<String, dynamic> createUserJsonToUpdate({
   String? name,
   String? surname,
 }) {

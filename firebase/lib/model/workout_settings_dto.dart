@@ -39,6 +39,29 @@ class WorkoutSettingsDto extends Equatable {
   }
 }
 
+enum PaceUnit {
+  minutesPerKilometer,
+  minutesPerMile,
+  kilometersPerHour,
+  milesPerHour
+}
+
+enum DistanceUnit {
+  kilometers,
+  miles,
+}
+
+Map<String, dynamic> createWorkoutSettingsJsonToUpdate({
+  DistanceUnit? distanceUnit,
+  PaceUnit? paceUnit,
+}) {
+  return {
+    if (distanceUnit != null)
+      _WorkoutSettingsField.distanceUnit.name: distanceUnit,
+    if (paceUnit != null) _WorkoutSettingsField.paceUnit.name: paceUnit,
+  };
+}
+
 enum _WorkoutSettingsField {
   distanceUnit,
   paceUnit;

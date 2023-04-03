@@ -21,7 +21,7 @@ class FirebaseUserService {
   }) async {
     final userRef = getUserRef(userId);
     await userRef.update(
-      createUserDtoJsonToUpdate(
+      createUserJsonToUpdate(
         name: name,
         surname: surname,
       ),

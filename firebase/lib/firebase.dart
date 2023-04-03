@@ -13,9 +13,7 @@ import 'mapper/theme_mode_mapper.dart';
 
 part 'firebase_collections.dart';
 part 'model/appearance_settings_dto.dart';
-part 'model/distance_unit.dart';
 part 'model/firebase_auth_exception_code.dart';
-part 'model/pace_unit.dart';
 part 'model/user_dto.dart';
 part 'model/workout_settings_dto.dart';
 part 'service/firebase_appearance_settings_service.dart';
