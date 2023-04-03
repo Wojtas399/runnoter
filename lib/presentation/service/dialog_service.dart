@@ -4,6 +4,7 @@ import '../component/dialog/confirmation_dialog_component.dart';
 import '../component/dialog/loading_dialog_component.dart';
 import '../component/dialog/message_dialog_component.dart';
 import '../component/dialog/value_dialog_component.dart';
+import '../config/animation/slide_to_top_anim.dart';
 
 bool _isLoadingDialogOpened = false;
 
@@ -114,6 +115,8 @@ Future<T?> showAlertDialog<T>({
       );
     },
     transitionDuration: const Duration(milliseconds: 250),
+    barrierDismissible: true,
+    barrierLabel: '',
   );
 }
 
@@ -126,10 +129,8 @@ Future<T?> showFullScreenDialog<T>({
     barrierColor: Colors.transparent,
     pageBuilder: (_, a1, a2) => dialog,
     transitionBuilder: (BuildContext context, anim1, anim2, child) {
-      final double windowHeight = MediaQuery.of(context).size.height;
-      var curve = Curves.easeInOutQuart.transform(anim1.value);
-      return Transform.translate(
-        offset: Offset(0, windowHeight - (curve * windowHeight)),
+      return SlideToTopAnim(
+        animation: anim1,
         child: child,
       );
     },
