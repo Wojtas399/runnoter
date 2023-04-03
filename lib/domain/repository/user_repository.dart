@@ -9,7 +9,7 @@ abstract class UserRepository {
     required User user,
   });
 
-  Future<void> updateUser({
+  Future<void> updateUserIdentities({
     required String userId,
     String? name,
     String? surname,

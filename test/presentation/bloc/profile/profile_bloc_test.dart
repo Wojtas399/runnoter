@@ -149,7 +149,7 @@ void main() {
       userId: 'u1',
     ),
     setUp: () {
-      userRepository.mockUpdateUser();
+      userRepository.mockUpdateUserIdentities();
     },
     act: (ProfileIdentitiesBloc bloc) {
       bloc.add(
@@ -172,7 +172,7 @@ void main() {
     ],
     verify: (_) {
       verify(
-        () => userRepository.updateUser(
+        () => userRepository.updateUserIdentities(
           userId: 'u1',
           name: 'new username',
         ),
@@ -186,7 +186,7 @@ void main() {
     'should do nothing',
     build: () => createBloc(),
     setUp: () {
-      userRepository.mockUpdateUser();
+      userRepository.mockUpdateUserIdentities();
     },
     act: (ProfileIdentitiesBloc bloc) {
       bloc.add(
@@ -198,7 +198,7 @@ void main() {
     expect: () => [],
     verify: (_) {
       verifyNever(
-        () => userRepository.updateUser(
+        () => userRepository.updateUserIdentities(
           userId: 'u1',
           name: 'new username',
         ),
@@ -213,7 +213,7 @@ void main() {
       userId: 'u1',
     ),
     setUp: () {
-      userRepository.mockUpdateUser();
+      userRepository.mockUpdateUserIdentities();
     },
     act: (ProfileIdentitiesBloc bloc) {
       bloc.add(
@@ -236,7 +236,7 @@ void main() {
     ],
     verify: (_) {
       verify(
-        () => userRepository.updateUser(
+        () => userRepository.updateUserIdentities(
           userId: 'u1',
           surname: 'new surname',
         ),
@@ -250,7 +250,7 @@ void main() {
     'should do nothing',
     build: () => createBloc(),
     setUp: () {
-      userRepository.mockUpdateUser();
+      userRepository.mockUpdateUserIdentities();
     },
     act: (ProfileIdentitiesBloc bloc) {
       bloc.add(
@@ -262,7 +262,7 @@ void main() {
     expect: () => [],
     verify: (_) {
       verifyNever(
-        () => userRepository.updateUser(
+        () => userRepository.updateUserIdentities(
           userId: 'u1',
           surname: 'new surname',
         ),

@@ -24,9 +24,9 @@ class MockUserRepository extends Mock implements UserRepository {
     ).thenAnswer((invocation) => Future.value());
   }
 
-  void mockUpdateUser() {
+  void mockUpdateUserIdentities() {
     when(
-      () => updateUser(
+      () => updateUserIdentities(
         userId: any(named: 'userId'),
         name: any(named: 'name'),
         surname: any(named: 'surname'),

@@ -94,7 +94,7 @@ class ProfileIdentitiesBloc extends BlocWithStatus<ProfileIdentitiesEvent,
       return;
     }
     emitLoadingStatus(emit);
-    await _userRepository.updateUser(
+    await _userRepository.updateUserIdentities(
       userId: userId,
       name: event.username,
     );
@@ -110,7 +110,7 @@ class ProfileIdentitiesBloc extends BlocWithStatus<ProfileIdentitiesEvent,
       return;
     }
     emitLoadingStatus(emit);
-    await _userRepository.updateUser(
+    await _userRepository.updateUserIdentities(
       userId: userId,
       surname: event.surname,
     );

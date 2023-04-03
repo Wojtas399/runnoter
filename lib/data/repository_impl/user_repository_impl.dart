@@ -75,7 +75,7 @@ class UserRepositoryImpl extends StateRepository<User>
   }
 
   @override
-  Future<void> updateUser({
+  Future<void> updateUserIdentities({
     required String userId,
     String? name,
     String? surname,

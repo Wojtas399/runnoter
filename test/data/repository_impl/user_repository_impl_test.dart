@@ -148,7 +148,7 @@ void main() {
   );
 
   test(
-    'add user, '
+    'add user identities, '
     'should call db methods to add user personal data, appearance settings, workout settings and should add user to repository state',
     () async {
       final User userToAdd = createUser(
@@ -201,7 +201,7 @@ void main() {
   );
 
   test(
-    'update user, '
+    'update user identities, '
     'user exists in repository'
     'should call db method to update user and should update user in repository state',
     () async {
@@ -225,7 +225,7 @@ void main() {
       dbUserService.mockUpdateUserData(userDto: updatedUserDto);
       repository = createRepository(initialState: [existingUser]);
 
-      await repository.updateUser(
+      await repository.updateUserIdentities(
         userId: userId,
         name: name,
         surname: surname,
@@ -244,7 +244,7 @@ void main() {
   );
 
   test(
-    'update user, '
+    'update user identities, '
     'user does not exist in repository'
     'should call db method to update user, should load user settings and should add user to repository state',
     () async {
@@ -262,7 +262,7 @@ void main() {
       );
       dbUserService.mockUpdateUserData(userDto: userDto);
 
-      await repository.updateUser(
+      await repository.updateUserIdentities(
         userId: userId,
         name: name,
         surname: surname,
