@@ -39,6 +39,27 @@ class AppearanceSettingsDto extends Equatable {
   }
 }
 
+enum ThemeMode {
+  dark,
+  light,
+  system;
+}
+
+enum Language {
+  polish,
+  english;
+}
+
+Map<String, dynamic> createAppearanceSettingsDtoToUpdate({
+  ThemeMode? themeMode,
+  Language? language,
+}) {
+  return {
+    if (themeMode != null) _AppearanceSettingsFields.themeMode.name: themeMode,
+    if (language != null) _AppearanceSettingsFields.language.name: language,
+  };
+}
+
 enum _AppearanceSettingsFields {
   themeMode,
   language,

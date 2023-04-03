@@ -17,6 +17,21 @@ class FirebaseAppearanceSettingsService {
     return snapshot.data();
   }
 
+  Future<AppearanceSettingsDto?> updateSettings({
+    required String userId,
+    ThemeMode? themeMode,
+    Language? language,
+  }) async {
+    final settingsRef = getAppearanceSettingsRef(userId);
+    final jsonToUpdate = createAppearanceSettingsDtoToUpdate(
+      themeMode: themeMode,
+      language: language,
+    );
+    await settingsRef.update(jsonToUpdate);
+    final snapshot = await settingsRef.get();
+    return snapshot.data();
+  }
+
   Future<void> deleteSettingsForUser({
     required String userId,
   }) async {

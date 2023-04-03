@@ -26,6 +26,18 @@ class MockFirebaseAppearanceSettingsService extends Mock
     ).thenAnswer((invocation) => Future.value(appearanceSettingsDto));
   }
 
+  void mockUpdateSettings({
+    AppearanceSettingsDto? updatedAppearanceSettingsDto,
+  }) {
+    when(
+      () => updateSettings(
+        userId: any(named: 'userId'),
+        themeMode: any(named: 'themeMode'),
+        language: any(named: 'language'),
+      ),
+    ).thenAnswer((invocation) => Future.value(updatedAppearanceSettingsDto));
+  }
+
   void mockDeleteSettingsForUser() {
     when(
       () => deleteSettingsForUser(
