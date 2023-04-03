@@ -1,6 +1,7 @@
 import 'package:firebase/firebase.dart';
 import 'package:rxdart/rxdart.dart';
 
+import '../../domain/model/settings.dart' as settings;
 import '../../domain/model/state_repository.dart';
 import '../../domain/model/user.dart';
 import '../../domain/repository/user_repository.dart';
@@ -80,31 +81,68 @@ class UserRepositoryImpl extends StateRepository<User>
     String? name,
     String? surname,
   }) async {
-    final UserDto? userDto = await _dbUserService.updateUserData(
+    final User? user = await getUserById(userId: userId).first;
+    if (user == null) {
+      return;
+    }
+    final UserDto? updatedUserDto = await _dbUserService.updateUserData(
       userId: userId,
       name: name,
       surname: surname,
     );
-    if (userDto != null) {
-      final User user = mapUserFromDto(
-        userDto: userDto,
-        appearanceSettingsDto: const AppearanceSettingsDto(
-          userId: '',
-          themeMode: ThemeMode.light,
-          language: Language.polish,
-        ),
-        workoutSettingsDto: const WorkoutSettingsDto(
-          userId: '',
-          distanceUnit: DistanceUnit.kilometers,
-          paceUnit: PaceUnit.minutesPerKilometer,
-        ),
-      );
-      if (doesEntityNotExistInState(user.id)) {
-        addEntity(user);
-      } else {
-        updateEntity(user);
-      }
+    if (updatedUserDto == null) {
+      return;
     }
+    final User updatedUser = User(
+      id: userId,
+      name: updatedUserDto.name,
+      surname: updatedUserDto.surname,
+      settings: user.settings,
+    );
+    updateEntity(updatedUser);
+  }
+
+  @override
+  Future<void> updateUserSettings({
+    required String userId,
+    settings.ThemeMode? themeMode,
+    settings.Language? language,
+    settings.DistanceUnit? distanceUnit,
+    settings.PaceUnit? paceUnit,
+  }) async {
+    final User? user = await getUserById(userId: userId).first;
+    if (user == null) {
+      return;
+    }
+    final updatedAppearanceSettingsDto =
+        await _updateAppearanceSettings(userId, themeMode, language);
+    final updatedWorkoutSettingsDto =
+        await _updateWorkoutSettings(userId, distanceUnit, paceUnit);
+    if (updatedAppearanceSettingsDto == null &&
+        updatedWorkoutSettingsDto == null) {
+      return;
+    }
+    final settings.Settings updatedSettings = settings.Settings(
+      themeMode: updatedAppearanceSettingsDto != null
+          ? mapThemeModeFromDb(updatedAppearanceSettingsDto.themeMode)
+          : user.settings.themeMode,
+      language: updatedAppearanceSettingsDto != null
+          ? mapLanguageFromDb(updatedAppearanceSettingsDto.language)
+          : user.settings.language,
+      distanceUnit: updatedWorkoutSettingsDto != null
+          ? mapDistanceUnitFromDb(updatedWorkoutSettingsDto.distanceUnit)
+          : user.settings.distanceUnit,
+      paceUnit: updatedWorkoutSettingsDto != null
+          ? mapPaceUnitFromDb(updatedWorkoutSettingsDto.paceUnit)
+          : user.settings.paceUnit,
+    );
+    final User updatedUser = User(
+      id: user.id,
+      name: user.name,
+      surname: user.surname,
+      settings: updatedSettings,
+    );
+    updateEntity(updatedUser);
   }
 
   @override
@@ -121,6 +159,9 @@ class UserRepositoryImpl extends StateRepository<User>
     final UserDto? userDto = await _dbUserService.loadUserById(
       userId: userId,
     );
+    if (userDto == null) {
+      return;
+    }
     final AppearanceSettingsDto? appearanceSettingsDto =
         await _dbAppearanceSettingsService.loadSettingsByUserId(
       userId: userId,
@@ -129,9 +170,7 @@ class UserRepositoryImpl extends StateRepository<User>
         await _dbWorkoutSettingsService.loadSettingsByUserId(
       userId: userId,
     );
-    if (userDto != null &&
-        appearanceSettingsDto != null &&
-        workoutSettingsDto != null) {
+    if (appearanceSettingsDto != null && workoutSettingsDto != null) {
       final User user = mapUserFromDto(
         userDto: userDto,
         appearanceSettingsDto: appearanceSettingsDto,
@@ -139,5 +178,30 @@ class UserRepositoryImpl extends StateRepository<User>
       );
       addEntity(user);
     }
+  }
+
+  Future<AppearanceSettingsDto?> _updateAppearanceSettings(
+    String userId,
+    settings.ThemeMode? newThemeMode,
+    settings.Language? newLanguage,
+  ) async {
+    return await _dbAppearanceSettingsService.updateSettings(
+      userId: userId,
+      themeMode: newThemeMode != null ? mapThemeModeToDb(newThemeMode) : null,
+      language: newLanguage != null ? mapLanguageToDb(newLanguage) : null,
+    );
+  }
+
+  Future<WorkoutSettingsDto?> _updateWorkoutSettings(
+    String userId,
+    settings.DistanceUnit? newDistanceUnit,
+    settings.PaceUnit? newPaceUnit,
+  ) async {
+    return await _dbWorkoutSettingsService.updateSettings(
+      userId: userId,
+      distanceUnit:
+          newDistanceUnit != null ? mapDistanceUnitToDb(newDistanceUnit) : null,
+      paceUnit: newPaceUnit != null ? mapPaceUnitToDb(newPaceUnit) : null,
+    );
   }
 }

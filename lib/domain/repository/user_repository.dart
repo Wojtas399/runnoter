@@ -1,3 +1,4 @@
+import '../model/settings.dart';
 import '../model/user.dart';
 
 abstract class UserRepository {
@@ -13,6 +14,14 @@ abstract class UserRepository {
     required String userId,
     String? name,
     String? surname,
+  });
+
+  Future<void> updateUserSettings({
+    required String userId,
+    ThemeMode? themeMode,
+    Language? language,
+    DistanceUnit? distanceUnit,
+    PaceUnit? paceUnit,
   });
 
   Future<void> deleteUser({

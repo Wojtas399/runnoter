@@ -42,7 +42,7 @@ void main() {
   test(
     'get user by id, '
     'user exists in state, '
-    'should emit user from state and should not call db method to load user',
+    'should emit user from repository and should not call db method to load user',
     () {
       final User expectedUser = createUser(id: userId);
       repository = createRepository(
@@ -81,7 +81,7 @@ void main() {
   test(
     'get user by id, '
     'user does not exist in state, '
-    'should call firebase method to load user, should add loaded user to repository state and should emit loaded user',
+    'should call db method to load user, should add loaded user to repository and should emit loaded user',
     () {
       const userDto = db.UserDto(
         id: userId,
@@ -149,7 +149,7 @@ void main() {
 
   test(
     'add user identities, '
-    'should call db methods to add user personal data, appearance settings, workout settings and should add user to repository state',
+    'should call db methods to add user personal data, appearance settings, workout settings and should add user to repository',
     () async {
       final User userToAdd = createUser(
         id: userId,
@@ -202,42 +202,76 @@ void main() {
 
   test(
     'update user identities, '
-    'user exists in repository'
-    'should call db method to update user and should update user in repository state',
+    'user does not exist in repository, '
+    'should do nothing',
     () async {
-      const String name = 'name';
-      const String surname = 'surname';
-      const updatedUserDto = db.UserDto(
-        id: userId,
-        name: name,
-        surname: surname,
+      final List<User> existingUsers = [
+        createUser(id: 'u2'),
+        createUser(id: 'u3'),
+      ];
+      const String newName = 'name';
+      const String newSurname = 'surname';
+      repository = createRepository(
+        initialState: existingUsers,
+      );
+      dbUserService.mockLoadUserById();
+
+      await repository.updateUserIdentities(
+        userId: userId,
+        name: newName,
+        surname: newSurname,
+      );
+      final Stream<User?> user$ = repository.getUserById(userId: userId);
+
+      expect(await user$.first, null);
+      verifyNever(
+        () => dbUserService.updateUserData(
+          userId: userId,
+          name: any(named: 'name'),
+          surname: any(named: 'surname'),
+        ),
+      );
+    },
+  );
+
+  test(
+    'update user identities, '
+    'user exists in repository, '
+    'db method does not return updated user dto, '
+    'should not update user in repository',
+    () async {
+      const String newName = 'name';
+      const String newSurname = 'surname';
+      final Settings userSettings = createSettings(
+        themeMode: ThemeMode.dark,
+        language: Language.english,
+        distanceUnit: DistanceUnit.miles,
+        paceUnit: PaceUnit.milesPerHour,
       );
       final User existingUser = createUser(
         id: userId,
         name: 'username',
         surname: 'surname1',
+        settings: userSettings,
       );
-      final User updatedUser = createUser(
-        id: userId,
-        name: name,
-        surname: surname,
+      repository = createRepository(
+        initialState: [existingUser],
       );
-      dbUserService.mockUpdateUserData(userDto: updatedUserDto);
-      repository = createRepository(initialState: [existingUser]);
+      dbUserService.mockUpdateUserData();
 
       await repository.updateUserIdentities(
         userId: userId,
-        name: name,
-        surname: surname,
+        name: newName,
+        surname: newSurname,
       );
       final Stream<User?> user$ = repository.getUserById(userId: userId);
 
-      expect(await user$.first, updatedUser);
+      expect(await user$.first, existingUser);
       verify(
         () => dbUserService.updateUserData(
           userId: userId,
-          name: name,
-          surname: surname,
+          name: newName,
+          surname: newSurname,
         ),
       ).called(1);
     },
@@ -245,36 +279,215 @@ void main() {
 
   test(
     'update user identities, '
-    'user does not exist in repository'
-    'should call db method to update user, should load user settings and should add user to repository state',
+    'user exists in repository, '
+    "should call db method to update user's identities and should update user in repository",
     () async {
-      const String name = 'name';
-      const String surname = 'surname';
-      const db.UserDto userDto = db.UserDto(
-        id: userId,
-        name: name,
-        surname: surname,
+      const String newName = 'name';
+      const String newSurname = 'surname';
+      final Settings userSettings = createSettings(
+        themeMode: ThemeMode.dark,
+        language: Language.english,
+        distanceUnit: DistanceUnit.miles,
+        paceUnit: PaceUnit.milesPerHour,
       );
-      final User updatedUser = createUser(
+      final User existingUser = createUser(
         id: userId,
-        name: name,
-        surname: surname,
+        name: 'username',
+        surname: 'surname1',
+        settings: userSettings,
       );
-      dbUserService.mockUpdateUserData(userDto: userDto);
+      const updatedUserDto = db.UserDto(
+        id: userId,
+        name: newName,
+        surname: newSurname,
+      );
+      final User expectedUpdatedUser = createUser(
+        id: userId,
+        name: newName,
+        surname: newSurname,
+        settings: userSettings,
+      );
+      repository = createRepository(
+        initialState: [existingUser],
+      );
+      dbUserService.mockUpdateUserData(userDto: updatedUserDto);
 
       await repository.updateUserIdentities(
         userId: userId,
-        name: name,
-        surname: surname,
+        name: newName,
+        surname: newSurname,
       );
       final Stream<User?> user$ = repository.getUserById(userId: userId);
 
-      expect(await user$.first, updatedUser);
+      expect(await user$.first, expectedUpdatedUser);
       verify(
         () => dbUserService.updateUserData(
           userId: userId,
-          name: name,
-          surname: surname,
+          name: newName,
+          surname: newSurname,
+        ),
+      ).called(1);
+    },
+  );
+
+  test(
+    'update user settings, '
+    'user does not exist in repository, '
+    'should do nothing',
+    () async {
+      final List<User> existingUsers = [
+        createUser(id: 'u2'),
+        createUser(id: 'u3'),
+      ];
+      const ThemeMode newThemeMode = ThemeMode.dark;
+      const Language newLanguage = Language.english;
+      const DistanceUnit newDistanceUnit = DistanceUnit.miles;
+      const PaceUnit newPaceUnit = PaceUnit.minutesPerMile;
+      repository = createRepository(
+        initialState: existingUsers,
+      );
+      dbUserService.mockLoadUserById();
+
+      await repository.updateUserSettings(
+        userId: userId,
+        themeMode: newThemeMode,
+        language: newLanguage,
+        distanceUnit: newDistanceUnit,
+        paceUnit: newPaceUnit,
+      );
+      final Stream<User?> user$ = repository.getUserById(userId: userId);
+
+      expect(await user$.first, null);
+      verifyNever(
+        () => dbAppearanceSettingsService.updateSettings(
+          userId: userId,
+          themeMode: any(named: 'themeMode'),
+          language: any(named: 'language'),
+        ),
+      );
+      verifyNever(
+        () => dbWorkoutSettingsService.updateSettings(
+          userId: userId,
+          distanceUnit: any(named: 'distanceUnit'),
+          paceUnit: any(named: 'paceUnit'),
+        ),
+      );
+    },
+  );
+
+  test(
+    'update user settings, '
+    'user exists in state, '
+    'db methods do not return updated appearance and workout settings, '
+    'should not update user in repository',
+    () async {
+      final User existingUser = createUser(id: userId);
+      const ThemeMode newThemeMode = ThemeMode.dark;
+      const Language newLanguage = Language.english;
+      const DistanceUnit newDistanceUnit = DistanceUnit.miles;
+      const PaceUnit newPaceUnit = PaceUnit.minutesPerMile;
+      const db.ThemeMode newDbThemeMode = db.ThemeMode.dark;
+      const db.Language newDbLanguage = db.Language.english;
+      const db.DistanceUnit newDbDistanceUnit = db.DistanceUnit.miles;
+      const db.PaceUnit newDbPaceUnit = db.PaceUnit.minutesPerMile;
+      dbAppearanceSettingsService.mockUpdateSettings();
+      dbWorkoutSettingsService.mockUpdateSettings();
+      repository = createRepository(
+        initialState: [existingUser],
+      );
+
+      await repository.updateUserSettings(
+        userId: userId,
+        themeMode: newThemeMode,
+        language: newLanguage,
+        distanceUnit: newDistanceUnit,
+        paceUnit: newPaceUnit,
+      );
+      final Stream<User?> user$ = repository.getUserById(userId: userId);
+
+      expect(await user$.first, existingUser);
+      verify(
+        () => dbAppearanceSettingsService.updateSettings(
+          userId: userId,
+          themeMode: newDbThemeMode,
+          language: newDbLanguage,
+        ),
+      ).called(1);
+      verify(
+        () => dbWorkoutSettingsService.updateSettings(
+          userId: userId,
+          distanceUnit: newDbDistanceUnit,
+          paceUnit: newDbPaceUnit,
+        ),
+      ).called(1);
+    },
+  );
+
+  test(
+    'update user settings, '
+    'user exists in state, '
+    'should call db method to update appearance and workout settings and should update user in repository',
+    () async {
+      final User existingUser = createUser(id: userId);
+      const ThemeMode newThemeMode = ThemeMode.dark;
+      const Language newLanguage = Language.english;
+      const DistanceUnit newDistanceUnit = DistanceUnit.miles;
+      const PaceUnit newPaceUnit = PaceUnit.minutesPerMile;
+      const db.ThemeMode newDbThemeMode = db.ThemeMode.dark;
+      const db.Language newDbLanguage = db.Language.english;
+      const db.DistanceUnit newDbDistanceUnit = db.DistanceUnit.miles;
+      const db.PaceUnit newDbPaceUnit = db.PaceUnit.minutesPerMile;
+      final User expectedUpdatedUser = createUser(
+        id: userId,
+        settings: createSettings(
+          themeMode: newThemeMode,
+          language: newLanguage,
+          distanceUnit: newDistanceUnit,
+          paceUnit: newPaceUnit,
+        ),
+      );
+      const updatedAppearanceSettingsDto = db.AppearanceSettingsDto(
+        userId: userId,
+        themeMode: newDbThemeMode,
+        language: newDbLanguage,
+      );
+      const updatedWorkoutSettingsDto = db.WorkoutSettingsDto(
+        userId: userId,
+        distanceUnit: newDbDistanceUnit,
+        paceUnit: newDbPaceUnit,
+      );
+      dbAppearanceSettingsService.mockUpdateSettings(
+        updatedAppearanceSettingsDto: updatedAppearanceSettingsDto,
+      );
+      dbWorkoutSettingsService.mockUpdateSettings(
+        updatedWorkoutSettingsDto: updatedWorkoutSettingsDto,
+      );
+      repository = createRepository(
+        initialState: [existingUser],
+      );
+
+      await repository.updateUserSettings(
+        userId: userId,
+        themeMode: newThemeMode,
+        language: newLanguage,
+        distanceUnit: newDistanceUnit,
+        paceUnit: newPaceUnit,
+      );
+      final Stream<User?> user$ = repository.getUserById(userId: userId);
+
+      expect(await user$.first, expectedUpdatedUser);
+      verify(
+        () => dbAppearanceSettingsService.updateSettings(
+          userId: userId,
+          themeMode: newDbThemeMode,
+          language: newDbLanguage,
+        ),
+      ).called(1);
+      verify(
+        () => dbWorkoutSettingsService.updateSettings(
+          userId: userId,
+          distanceUnit: newDbDistanceUnit,
+          paceUnit: newDbPaceUnit,
         ),
       ).called(1);
     },
@@ -282,7 +495,7 @@ void main() {
 
   test(
     'delete user, '
-    'should call db methods to delete user data, appearance settings and workout settings and then should delete user from repository state',
+    'should call db methods to delete user data, appearance settings and workout settings and then should delete user from repository',
     () {
       final User user = createUser(id: userId);
       dbUserService.mockDeleteUserData();
