@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../screen/forgot_password/ui/forgot_password_screen.dart';
 import '../../screen/home/ui/home_screen.dart';
+import '../../screen/language/language_screen.dart';
 import '../../screen/profile/ui/profile_screen.dart';
 import '../../screen/sign_in/ui/sign_in_screen.dart';
 import '../../screen/sign_up/ui/sign_up_screen.dart';
@@ -38,6 +39,17 @@ class AppNavigator extends StatelessWidget {
     } else if (routePath == Routes.themeMode.path) {
       return PageRouteBuilder(
         pageBuilder: (_, anim1, anim2) => const ThemeModeScreen(),
+        transitionsBuilder: (context, anim1, anim2, child) {
+          return SlideToTopAnim(
+            animation: anim1,
+            child: child,
+          );
+        },
+        transitionDuration: const Duration(milliseconds: 500),
+      );
+    } else if (routePath == Routes.language.path) {
+      return PageRouteBuilder(
+        pageBuilder: (_, anim1, anim2) => const LanguageScreen(),
         transitionsBuilder: (context, anim1, anim2, child) {
           return SlideToTopAnim(
             animation: anim1,

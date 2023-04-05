@@ -84,7 +84,14 @@ class _Language extends StatelessWidget {
       label: AppLocalizations.of(context)!.profile_screen_language_label,
       iconData: Icons.translate_outlined,
       value: language?.toUIFormat(context) ?? '',
+      onPressed: () {
+        _onPressed(context);
+      },
     );
+  }
+
+  void _onPressed(BuildContext context) {
+    navigateTo(context: context, route: Routes.language);
   }
 }
 
