@@ -104,6 +104,10 @@ class _OptionsToSelect extends StatelessWidget {
     BuildContext context,
     settings.ThemeMode? themeMode,
   ) {
-    //TODO
+    if (themeMode != null) {
+      context.read<ThemeModeCubit>().updateThemeMode(
+            themeMode: themeMode,
+          );
+    }
   }
 }

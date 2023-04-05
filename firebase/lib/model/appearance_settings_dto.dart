@@ -55,8 +55,10 @@ Map<String, dynamic> createAppearanceSettingsJsonToUpdate({
   Language? language,
 }) {
   return {
-    if (themeMode != null) _AppearanceSettingsFields.themeMode.name: themeMode,
-    if (language != null) _AppearanceSettingsFields.language.name: language,
+    if (themeMode != null)
+      _AppearanceSettingsFields.themeMode.name: themeMode.name,
+    if (language != null)
+      _AppearanceSettingsFields.language.name: language.name,
   };
 }
 

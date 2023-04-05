@@ -34,6 +34,16 @@ class MockUserRepository extends Mock implements UserRepository {
     ).thenAnswer((invocation) => Future.value());
   }
 
+  void mockUpdateUserSettings({
+    Object? throwable,
+  }) {
+    if (throwable != null) {
+      when(_updateUserSettingsCall).thenThrow(throwable);
+    } else {
+      when(_updateUserSettingsCall).thenAnswer((invocation) => Future.value());
+    }
+  }
+
   void mockDeleteUser() {
     when(
       () => deleteUser(
@@ -44,5 +54,15 @@ class MockUserRepository extends Mock implements UserRepository {
 
   void _mockUser() {
     registerFallbackValue(_FakeUser());
+  }
+
+  Future<void> _updateUserSettingsCall() {
+    return updateUserSettings(
+      userId: any(named: 'userId'),
+      themeMode: any(named: 'themeMode'),
+      language: any(named: 'language'),
+      distanceUnit: any(named: 'distanceUnit'),
+      paceUnit: any(named: 'paceUnit'),
+    );
   }
 }

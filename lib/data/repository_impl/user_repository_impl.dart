@@ -114,10 +114,16 @@ class UserRepositoryImpl extends StateRepository<User>
     if (user == null) {
       return;
     }
-    final updatedAppearanceSettingsDto =
-        await _updateAppearanceSettings(userId, themeMode, language);
-    final updatedWorkoutSettingsDto =
-        await _updateWorkoutSettings(userId, distanceUnit, paceUnit);
+    AppearanceSettingsDto? updatedAppearanceSettingsDto;
+    WorkoutSettingsDto? updatedWorkoutSettingsDto;
+    if (themeMode != null || language != null) {
+      updatedAppearanceSettingsDto =
+          await _updateAppearanceSettings(userId, themeMode, language);
+    }
+    if (distanceUnit != null || paceUnit != null) {
+      updatedWorkoutSettingsDto =
+          await _updateWorkoutSettings(userId, distanceUnit, paceUnit);
+    }
     if (updatedAppearanceSettingsDto == null &&
         updatedWorkoutSettingsDto == null) {
       return;

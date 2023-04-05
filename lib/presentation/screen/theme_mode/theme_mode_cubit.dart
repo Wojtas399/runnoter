@@ -12,9 +12,10 @@ class ThemeModeCubit extends Cubit<ThemeMode?> {
   ThemeModeCubit({
     required AuthService authService,
     required UserRepository userRepository,
+    ThemeMode? themeMode,
   })  : _authService = authService,
         _userRepository = userRepository,
-        super(null);
+        super(themeMode);
 
   Future<void> initialize() async {
     final String? loggedUserId = await _authService.loggedUserId$.first;
@@ -24,5 +25,24 @@ class ThemeModeCubit extends Cubit<ThemeMode?> {
     final User? user =
         await _userRepository.getUserById(userId: loggedUserId).first;
     emit(user?.settings.themeMode);
+  }
+
+  Future<void> updateThemeMode({
+    required ThemeMode themeMode,
+  }) async {
+    final String? loggedUserId = await _authService.loggedUserId$.first;
+    if (loggedUserId == null) {
+      return;
+    }
+    final ThemeMode? previousThemeMode = state;
+    emit(themeMode);
+    try {
+      await _userRepository.updateUserSettings(
+        userId: loggedUserId,
+        themeMode: themeMode,
+      );
+    } catch (exception) {
+      emit(previousThemeMode);
+    }
   }
 }
