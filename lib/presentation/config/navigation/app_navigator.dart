@@ -5,6 +5,8 @@ import '../../screen/home/ui/home_screen.dart';
 import '../../screen/profile/ui/profile_screen.dart';
 import '../../screen/sign_in/ui/sign_in_screen.dart';
 import '../../screen/sign_up/ui/sign_up_screen.dart';
+import '../../screen/theme_mode/theme_mode_screen.dart';
+import '../animation/slide_to_top_anim.dart';
 import 'routes.dart';
 
 class AppNavigator extends StatelessWidget {
@@ -33,6 +35,17 @@ class AppNavigator extends StatelessWidget {
       screen = const HomeScreen();
     } else if (routePath == Routes.profile.path) {
       screen = const ProfileScreen();
+    } else if (routePath == Routes.themeMode.path) {
+      return PageRouteBuilder(
+        pageBuilder: (_, anim1, anim2) => const ThemeModeScreen(),
+        transitionsBuilder: (context, anim1, anim2, child) {
+          return SlideToTopAnim(
+            animation: anim1,
+            child: child,
+          );
+        },
+        transitionDuration: const Duration(milliseconds: 500),
+      );
     }
     return MaterialPageRoute(
       builder: (_) => screen,

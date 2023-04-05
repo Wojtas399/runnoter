@@ -4,10 +4,10 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../../domain/model/settings.dart' as settings;
 import '../../../component/value_with_label_and_icon_component.dart';
-import '../../../config/animation/slide_to_top_anim.dart';
+import '../../../config/navigation/routes.dart';
 import '../../../formatter/settings_formatter.dart';
+import '../../../service/navigator_service.dart';
 import '../bloc/profile_settings_bloc.dart';
-import 'profile_update_theme.dart';
 
 class ProfileSettingsSection extends StatelessWidget {
   const ProfileSettingsSection({
@@ -66,19 +66,8 @@ class _Theme extends StatelessWidget {
     );
   }
 
-  Future<void> _onPressed(BuildContext context) async {
-    Navigator.of(context).push(
-      PageRouteBuilder(
-        pageBuilder: (_, anim1, anim2) => const ProfileUpdateTheme(),
-        transitionsBuilder: (context, anim1, anim2, child) {
-          return SlideToTopAnim(
-            animation: anim1,
-            child: child,
-          );
-        },
-        transitionDuration: const Duration(milliseconds: 500),
-      ),
-    );
+  void _onPressed(BuildContext context) {
+    navigateTo(context: context, route: Routes.themeMode);
   }
 }
 
