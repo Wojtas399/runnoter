@@ -57,7 +57,7 @@ class _Theme extends StatelessWidget {
     );
 
     return ValueWithLabelAndIconComponent(
-      label: AppLocalizations.of(context)!.profile_screen_theme_mode_label,
+      label: AppLocalizations.of(context)!.theme_mode_label,
       iconData: Icons.brightness_6_outlined,
       value: themeMode?.toUIFormat(context) ?? '',
       onPressed: () {

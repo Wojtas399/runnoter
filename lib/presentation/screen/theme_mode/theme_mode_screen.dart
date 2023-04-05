@@ -89,7 +89,7 @@ class _Content extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          AppLocalizations.of(context)!.profile_screen_theme_mode_label,
+          AppLocalizations.of(context)!.theme_mode_label,
         ),
         leading: IconButton(
           onPressed: () {
@@ -122,7 +122,7 @@ class _Header extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
       child: Text(
-        'Wybierz motyw aplikacji',
+        AppLocalizations.of(context)!.theme_mode_selection_text,
         style: Theme.of(context).textTheme.bodyLarge,
       ),
     );
@@ -137,7 +137,7 @@ class _SystemThemeDescription extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
       child: Text(
-        'Gdy wybierzesz motyw systemowy, aplikacja będzie używała motywu, który jest obecnie ustawiony na Twoim urządzeniu.',
+        AppLocalizations.of(context)!.system_theme_mode_description,
         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
               color: Theme.of(context).colorScheme.outline,
             ),
@@ -159,7 +159,7 @@ class _OptionsToSelect extends StatelessWidget {
       children: [
         RadioListTile<settings.ThemeMode>(
           title: Text(
-            AppLocalizations.of(context)!.settings_theme_mode_light,
+            AppLocalizations.of(context)!.theme_mode_light,
           ),
           value: settings.ThemeMode.light,
           groupValue: selectedThemeMode,
@@ -169,7 +169,7 @@ class _OptionsToSelect extends StatelessWidget {
         ),
         RadioListTile<settings.ThemeMode>(
           title: Text(
-            AppLocalizations.of(context)!.settings_theme_mode_dark,
+            AppLocalizations.of(context)!.theme_mode_dark,
           ),
           value: settings.ThemeMode.dark,
           groupValue: selectedThemeMode,
@@ -179,7 +179,7 @@ class _OptionsToSelect extends StatelessWidget {
         ),
         RadioListTile<settings.ThemeMode>(
           title: Text(
-            AppLocalizations.of(context)!.settings_theme_mode_system,
+            AppLocalizations.of(context)!.theme_mode_system,
           ),
           value: settings.ThemeMode.system,
           groupValue: selectedThemeMode,

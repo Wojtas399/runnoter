@@ -7,11 +7,11 @@ extension ThemeModeFormatter on ThemeMode {
   String toUIFormat(BuildContext context) {
     switch (this) {
       case ThemeMode.system:
-        return AppLocalizations.of(context)!.settings_theme_mode_system;
+        return AppLocalizations.of(context)!.theme_mode_system;
       case ThemeMode.light:
-        return AppLocalizations.of(context)!.settings_theme_mode_light;
+        return AppLocalizations.of(context)!.theme_mode_light;
       case ThemeMode.dark:
-        return AppLocalizations.of(context)!.settings_theme_mode_dark;
+        return AppLocalizations.of(context)!.theme_mode_dark;
     }
   }
 }

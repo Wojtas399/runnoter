@@ -175,10 +175,6 @@
   "@profile_screen_delete_account_label": {
     "description": "Label of delete account option"
   },
-  "profile_screen_theme_mode_label": "Motyw",
-  "@profile_screen_theme_mode_label": {
-    "description": "Label of theme mode option"
-  },
   "profile_screen_language_label": "Język",
   "@profile_screen_language_label": {
     "description": "Label of language option"
@@ -251,18 +247,34 @@
   "@profile_screen_wrong_current_password_message": {
     "description": "Message of the dialog to inform that given current password is wrong"
   },
-  "settings_theme_mode_light": "Jasny",
-  "@settings_theme_mode_light": {
+
+
+  "theme_mode_label": "Motyw",
+  "@theme_mode_label": {
+    "description": "Label of theme mode"
+  },
+  "theme_mode_light": "Jasny",
+  "@theme_mode_light": {
     "description": "Light theme mode"
   },
-  "settings_theme_mode_dark": "Ciemny",
-  "@settings_theme_mode_dark": {
+  "theme_mode_dark": "Ciemny",
+  "@theme_mode_dark": {
     "description": "Dark theme mode"
   },
-  "settings_theme_mode_system": "Systemowy",
-  "@settings_theme_mode_system": {
+  "theme_mode_system": "Systemowy",
+  "@theme_mode_system": {
     "description": "System theme mode"
   },
+  "theme_mode_selection_text": "Wybierz motyw aplikacji",
+  "@theme_mode_selection_text": {
+    "description": "Text about theme mode selection"
+  },
+  "system_theme_mode_description": "Gdy wybierzesz motyw systemowy, aplikacja będzie używała motywu, który jest obecnie ustawiony na Twoim urządzeniu.",
+  "@system_theme_mode_description": {
+    "description": "Description about system theme mode"
+  },
+
+
   "settings_language_polish": "Polski",
   "@settings_language_polish": {
     "description": "Polish language"
