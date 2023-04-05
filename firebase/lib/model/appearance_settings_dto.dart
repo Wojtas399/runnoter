@@ -47,7 +47,8 @@ enum ThemeMode {
 
 enum Language {
   polish,
-  english;
+  english,
+  system,
 }
 
 Map<String, dynamic> createAppearanceSettingsJsonToUpdate({

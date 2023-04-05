@@ -109,6 +109,19 @@ void main() {
   );
 
   test(
+    'map language from db, '
+    'system type from db should be mapped to system type from domain',
+    () {
+      const dbLanguage = db.Language.system;
+      const expectedDomainLanguage = Language.system;
+
+      final domainLanguage = mapLanguageFromDb(dbLanguage);
+
+      expect(domainLanguage, expectedDomainLanguage);
+    },
+  );
+
+  test(
     'map language to db, '
     'polish type from domain should be mapped to polish type from db',
     () {
@@ -127,6 +140,19 @@ void main() {
     () {
       const language = Language.english;
       const expectedDbLanguage = db.Language.english;
+
+      final dbLanguage = mapLanguageToDb(language);
+
+      expect(dbLanguage, expectedDbLanguage);
+    },
+  );
+
+  test(
+    'map language to db, '
+    'system type from domain should be mapped to system type from db',
+    () {
+      const language = Language.system;
+      const expectedDbLanguage = db.Language.system;
 
       final dbLanguage = mapLanguageToDb(language);
 

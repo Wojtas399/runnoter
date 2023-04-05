@@ -23,6 +23,8 @@ extension LanguageFormatter on Language {
         return AppLocalizations.of(context)!.language_polish;
       case Language.english:
         return AppLocalizations.of(context)!.language_english;
+      case Language.system:
+        return AppLocalizations.of(context)!.language_system;
     }
   }
 }

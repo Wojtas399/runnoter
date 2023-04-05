@@ -7,15 +7,16 @@ enum AppLanguage {
   ),
   english(
     Locale('en'),
-  );
+  ),
+  system(null);
 
-  final Locale locale;
+  final Locale? locale;
 
   const AppLanguage(this.locale);
 }
 
-class LanguageService extends Cubit<Locale> {
-  LanguageService() : super(const Locale('pl'));
+class LanguageService extends Cubit<Locale?> {
+  LanguageService() : super(null);
 
   void changeLanguage(AppLanguage newLanguage) {
     emit(newLanguage.locale);

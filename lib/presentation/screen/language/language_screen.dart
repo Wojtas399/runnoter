@@ -72,6 +72,8 @@ class _CubitListener extends StatelessWidget {
       case Language.english:
         languageService.changeLanguage(AppLanguage.english);
         break;
+      case Language.system:
+        languageService.changeLanguage(AppLanguage.system);
     }
   }
 }

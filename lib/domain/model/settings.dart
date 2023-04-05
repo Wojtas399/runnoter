@@ -31,6 +31,7 @@ enum ThemeMode {
 enum Language {
   polish,
   english,
+  system,
 }
 
 enum DistanceUnit {

@@ -42,6 +42,8 @@ Language mapLanguageFromDb(db.Language dbLanguage) {
       return Language.polish;
     case db.Language.english:
       return Language.english;
+    case db.Language.system:
+      return Language.system;
   }
 }
 
@@ -51,6 +53,8 @@ db.Language mapLanguageToDb(Language language) {
       return db.Language.polish;
     case Language.english:
       return db.Language.english;
+    case Language.system:
+      return db.Language.system;
   }
 }
 

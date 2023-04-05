@@ -271,6 +271,10 @@
   "@language_english": {
     "description": "English language"
   },
+  "language_system": "Systemowy",
+  "@language_system": {
+    "description": "System language"
+  },
   "language_selection_text": "Wybierz język aplikacji",
   "@language_selection_text": {
     "description": "Text about language selection"

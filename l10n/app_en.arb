@@ -31,7 +31,7 @@
   "home_current_week_page_title": "Current week",
   "home_calendar_page_title": "Calendar",
   "home_pulse_and_weight_page_title": "Puls & Waga",
-  "home_drawer_profile_label": "Profil",
+  "home_drawer_profile_label": "Profile",
   "home_drawer_mileage_label": "Mileage",
   "home_drawer_blood_label": "Blood",
   "home_drawer_competitions_label": "Competitions",
@@ -75,6 +75,7 @@
   "language_label": "Language",
   "language_polish": "Polish",
   "language_english": "English",
+  "language_system": "System",
   "language_selection_text": "Select app language",
 
 
