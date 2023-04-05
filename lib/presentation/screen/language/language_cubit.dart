@@ -30,6 +30,9 @@ class LanguageCubit extends Cubit<Language?> {
   Future<void> updateLanguage({
     required Language language,
   }) async {
+    if (language == state) {
+      return;
+    }
     final String? loggedUserId = await _authService.loggedUserId$.first;
     if (loggedUserId == null) {
       return;

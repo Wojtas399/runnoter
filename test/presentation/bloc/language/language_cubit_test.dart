@@ -1,4 +1,5 @@
 import 'package:bloc_test/bloc_test.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/model/settings.dart';
 import 'package:runnoter/presentation/screen/language/language_cubit.dart';
@@ -22,6 +23,11 @@ void main() {
       language: language,
     );
   }
+
+  tearDown(() {
+    reset(authService);
+    reset(userRepository);
+  });
 
   blocTest(
     'initialize, '
@@ -175,5 +181,20 @@ void main() {
         ),
       );
     },
+  );
+
+  blocTest(
+    'update language, '
+    'new language is the same as current language, '
+    'should do nothing',
+    build: () => createCubit(
+      language: Language.english,
+    ),
+    act: (LanguageCubit cubit) {
+      cubit.updateLanguage(
+        language: Language.english,
+      );
+    },
+    expect: () => [],
   );
 }
