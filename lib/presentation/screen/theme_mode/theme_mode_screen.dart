@@ -69,13 +69,13 @@ class _CubitListener extends StatelessWidget {
     final themeService = context.read<ThemeService>();
     switch (themeMode) {
       case settings.ThemeMode.dark:
-        themeService.turnOnDarkTheme();
+        themeService.changeTheme(ThemeMode.dark);
         break;
       case settings.ThemeMode.light:
-        themeService.turnOnLightTheme();
+        themeService.changeTheme(ThemeMode.light);
         break;
       case settings.ThemeMode.system:
-        themeService.turnOnSystemTheme();
+        themeService.changeTheme(ThemeMode.system);
         break;
     }
   }

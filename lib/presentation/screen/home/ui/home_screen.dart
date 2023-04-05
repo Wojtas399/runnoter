@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../domain/model/settings.dart' as settings;
 import '../../../../domain/repository/user_repository.dart';
 import '../../../../domain/service/auth_service.dart';
 import '../../../component/bloc_with_status_listener_component.dart';
 import '../../../config/navigation/routes.dart';
 import '../../../service/navigator_service.dart';
+import '../../../service/theme_service.dart';
 import '../bloc/home_bloc.dart';
 import '../bloc/home_event.dart';
 import '../bloc/home_state.dart';
@@ -61,6 +63,12 @@ class _BlocListener extends StatelessWidget {
       onInfo: (HomeInfo info) {
         _manageInfo(context, info);
       },
+      onStateChanged: (HomeState state) {
+        final settings.ThemeMode? themeMode = state.themeMode;
+        if (themeMode != null) {
+          _manageThemeMode(context, themeMode);
+        }
+      },
     );
   }
 
@@ -71,6 +79,24 @@ class _BlocListener extends StatelessWidget {
           context: context,
           route: Routes.signIn,
         );
+        break;
+    }
+  }
+
+  void _manageThemeMode(
+    BuildContext context,
+    settings.ThemeMode themeMode,
+  ) {
+    final ThemeService themeService = context.read<ThemeService>();
+    switch (themeMode) {
+      case settings.ThemeMode.dark:
+        themeService.changeTheme(ThemeMode.dark);
+        break;
+      case settings.ThemeMode.light:
+        themeService.changeTheme(ThemeMode.light);
+        break;
+      case settings.ThemeMode.system:
+        themeService.changeTheme(ThemeMode.system);
         break;
     }
   }
