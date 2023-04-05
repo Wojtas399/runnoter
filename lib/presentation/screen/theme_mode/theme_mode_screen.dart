@@ -6,6 +6,7 @@ import '../../../../domain/model/settings.dart' as settings;
 import '../../../domain/repository/user_repository.dart';
 import '../../../domain/service/auth_service.dart';
 import '../../service/navigator_service.dart';
+import '../../service/theme_service.dart';
 import 'theme_mode_cubit.dart';
 
 class ThemeModeScreen extends StatelessWidget {
@@ -15,22 +16,9 @@ class ThemeModeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _CubitProvider(
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            AppLocalizations.of(context)!.profile_screen_theme_mode_label,
-          ),
-          leading: IconButton(
-            onPressed: () {
-              navigateBack(context: context);
-            },
-            icon: const Icon(Icons.close),
-          ),
-        ),
-        body: const SafeArea(
-          child: _OptionsToSelect(),
-        ),
+    return const _CubitProvider(
+      child: _CubitListener(
+        child: _Content(),
       ),
     );
   }
@@ -45,12 +33,74 @@ class _CubitProvider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
+    return BlocProvider<ThemeModeCubit>(
       create: (BuildContext context) => ThemeModeCubit(
         authService: context.read<AuthService>(),
         userRepository: context.read<UserRepository>(),
       )..initialize(),
       child: child,
+    );
+  }
+}
+
+class _CubitListener extends StatelessWidget {
+  final Widget child;
+
+  const _CubitListener({
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocListener<ThemeModeCubit, settings.ThemeMode?>(
+      listener: (BuildContext context, settings.ThemeMode? themeMode) {
+        if (themeMode != null) {
+          _manageThemeMode(context, themeMode);
+        }
+      },
+      child: child,
+    );
+  }
+
+  void _manageThemeMode(
+    BuildContext context,
+    settings.ThemeMode themeMode,
+  ) {
+    final themeService = context.read<ThemeService>();
+    switch (themeMode) {
+      case settings.ThemeMode.dark:
+        themeService.turnOnDarkTheme();
+        break;
+      case settings.ThemeMode.light:
+        themeService.turnOnLightTheme();
+        break;
+      case settings.ThemeMode.system:
+        themeService.turnOnSystemTheme();
+        break;
+    }
+  }
+}
+
+class _Content extends StatelessWidget {
+  const _Content();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          AppLocalizations.of(context)!.profile_screen_theme_mode_label,
+        ),
+        leading: IconButton(
+          onPressed: () {
+            navigateBack(context: context);
+          },
+          icon: const Icon(Icons.close),
+        ),
+      ),
+      body: const SafeArea(
+        child: _OptionsToSelect(),
+      ),
     );
   }
 }
