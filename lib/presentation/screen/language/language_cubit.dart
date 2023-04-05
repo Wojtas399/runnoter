@@ -26,4 +26,23 @@ class LanguageCubit extends Cubit<Language?> {
         await _userRepository.getUserById(userId: loggedUserId).first;
     emit(user?.settings.language);
   }
+
+  Future<void> updateLanguage({
+    required Language language,
+  }) async {
+    final String? loggedUserId = await _authService.loggedUserId$.first;
+    if (loggedUserId == null) {
+      return;
+    }
+    final Language? previousLanguage = state;
+    emit(language);
+    try {
+      await _userRepository.updateUserSettings(
+        userId: loggedUserId,
+        language: language,
+      );
+    } catch (exception) {
+      emit(previousLanguage);
+    }
+  }
 }

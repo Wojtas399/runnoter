@@ -147,7 +147,7 @@ class _OptionsToSelect extends StatelessWidget {
           value: settings.ThemeMode.light,
           groupValue: selectedThemeMode,
           onChanged: (settings.ThemeMode? themeMode) {
-            _onThemeModeSelected(context, themeMode);
+            _onThemeModeChanged(context, themeMode);
           },
         ),
         RadioListTile<settings.ThemeMode>(
@@ -157,7 +157,7 @@ class _OptionsToSelect extends StatelessWidget {
           value: settings.ThemeMode.dark,
           groupValue: selectedThemeMode,
           onChanged: (settings.ThemeMode? themeMode) {
-            _onThemeModeSelected(context, themeMode);
+            _onThemeModeChanged(context, themeMode);
           },
         ),
         RadioListTile<settings.ThemeMode>(
@@ -167,14 +167,14 @@ class _OptionsToSelect extends StatelessWidget {
           value: settings.ThemeMode.system,
           groupValue: selectedThemeMode,
           onChanged: (settings.ThemeMode? themeMode) {
-            _onThemeModeSelected(context, themeMode);
+            _onThemeModeChanged(context, themeMode);
           },
         ),
       ],
     );
   }
 
-  void _onThemeModeSelected(
+  void _onThemeModeChanged(
     BuildContext context,
     settings.ThemeMode? themeMode,
   ) {

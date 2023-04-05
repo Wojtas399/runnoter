@@ -11,11 +11,15 @@ import '../../../util/user_creator.dart';
 void main() {
   final authService = MockAuthService();
   final userRepository = MockUserRepository();
+  const String userId = 'u1';
 
-  LanguageCubit createCubit() {
+  LanguageCubit createCubit({
+    Language? language,
+  }) {
     return LanguageCubit(
       authService: authService,
       userRepository: userRepository,
+      language: language,
     );
   }
 
@@ -25,11 +29,11 @@ void main() {
     build: () => createCubit(),
     setUp: () {
       authService.mockGetLoggedUserId(
-        userId: 'u1',
+        userId: userId,
       );
       userRepository.mockGetUserById(
         user: createUser(
-          id: 'u1',
+          id: userId,
           settings: createSettings(
             language: Language.english,
           ),
@@ -48,7 +52,7 @@ void main() {
       ).called(1);
       verify(
         () => userRepository.getUserById(
-          userId: 'u1',
+          userId: userId,
         ),
       ).called(1);
     },
@@ -73,6 +77,101 @@ void main() {
       verifyNever(
         () => userRepository.getUserById(
           userId: any(named: 'userId'),
+        ),
+      );
+    },
+  );
+
+  blocTest(
+    'update language, '
+    "should update language mode in state and should call method from user repository to update user's settings",
+    build: () => createCubit(),
+    setUp: () {
+      authService.mockGetLoggedUserId(
+        userId: userId,
+      );
+      userRepository.mockUpdateUserSettings();
+    },
+    act: (LanguageCubit cubit) {
+      cubit.updateLanguage(
+        language: Language.english,
+      );
+    },
+    expect: () => [
+      Language.english,
+    ],
+    verify: (_) {
+      verify(
+        () => authService.loggedUserId$,
+      ).called(1);
+      verify(
+        () => userRepository.updateUserSettings(
+          userId: userId,
+          language: Language.english,
+        ),
+      ).called(1);
+    },
+  );
+
+  blocTest(
+    'update language, '
+    "method from user repository to update user's settings throws exception, "
+    'should set previous language',
+    build: () => createCubit(
+      language: Language.polish,
+    ),
+    setUp: () {
+      authService.mockGetLoggedUserId(
+        userId: userId,
+      );
+      userRepository.mockUpdateUserSettings(
+        throwable: 'Exception...',
+      );
+    },
+    act: (LanguageCubit cubit) {
+      cubit.updateLanguage(
+        language: Language.english,
+      );
+    },
+    expect: () => [
+      Language.english,
+      Language.polish,
+    ],
+    verify: (_) {
+      verify(
+        () => authService.loggedUserId$,
+      ).called(1);
+      verify(
+        () => userRepository.updateUserSettings(
+          userId: userId,
+          language: Language.english,
+        ),
+      ).called(1);
+    },
+  );
+
+  blocTest(
+    'update language, '
+    'logged user does not exist, '
+    'should finish method call without changing anything',
+    build: () => createCubit(),
+    setUp: () {
+      authService.mockGetLoggedUserId();
+    },
+    act: (LanguageCubit cubit) {
+      cubit.updateLanguage(
+        language: Language.english,
+      );
+    },
+    expect: () => [],
+    verify: (_) {
+      verify(
+        () => authService.loggedUserId$,
+      ).called(1);
+      verifyNever(
+        () => userRepository.updateUserSettings(
+          userId: userId,
+          language: any(named: 'language'),
         ),
       );
     },

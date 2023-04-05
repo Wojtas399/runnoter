@@ -106,11 +106,22 @@ class _OptionsToSelect extends StatelessWidget {
               value: language,
               groupValue: selectedLanguage,
               onChanged: (Language? language) {
-                //TODO
+                _onLanguageChanged(context, language);
               },
             ),
           )
           .toList(),
     );
+  }
+
+  void _onLanguageChanged(
+    BuildContext context,
+    Language? language,
+  ) {
+    if (language != null) {
+      context.read<LanguageCubit>().updateLanguage(
+            language: language,
+          );
+    }
   }
 }
