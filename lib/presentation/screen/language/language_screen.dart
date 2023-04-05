@@ -6,6 +6,7 @@ import '../../../domain/model/settings.dart';
 import '../../../domain/repository/user_repository.dart';
 import '../../../domain/service/auth_service.dart';
 import '../../formatter/settings_formatter.dart';
+import '../../service/language_service.dart';
 import '../../service/navigator_service.dart';
 import 'language_cubit.dart';
 
@@ -17,7 +18,9 @@ class LanguageScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const _CubitProvider(
-      child: _Content(),
+      child: _CubitListener(
+        child: _Content(),
+      ),
     );
   }
 }
@@ -38,6 +41,38 @@ class _CubitProvider extends StatelessWidget {
       )..initialize(),
       child: child,
     );
+  }
+}
+
+class _CubitListener extends StatelessWidget {
+  final Widget child;
+
+  const _CubitListener({
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocListener<LanguageCubit, Language?>(
+      listener: (BuildContext context, Language? language) {
+        if (language != null) {
+          _manageLanguage(context, language);
+        }
+      },
+      child: child,
+    );
+  }
+
+  void _manageLanguage(BuildContext context, Language language) {
+    final LanguageService languageService = context.read<LanguageService>();
+    switch (language) {
+      case Language.polish:
+        languageService.changeLanguage(AppLanguage.polish);
+        break;
+      case Language.english:
+        languageService.changeLanguage(AppLanguage.english);
+        break;
+    }
   }
 }
 
