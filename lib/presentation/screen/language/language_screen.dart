@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/model/settings.dart';
+import '../../../domain/repository/user_repository.dart';
+import '../../../domain/service/auth_service.dart';
 import '../../formatter/settings_formatter.dart';
 import '../../service/navigator_service.dart';
+import 'language_cubit.dart';
 
 class LanguageScreen extends StatelessWidget {
   const LanguageScreen({
@@ -12,7 +16,28 @@ class LanguageScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const _Content();
+    return const _CubitProvider(
+      child: _Content(),
+    );
+  }
+}
+
+class _CubitProvider extends StatelessWidget {
+  final Widget child;
+
+  const _CubitProvider({
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (BuildContext context) => LanguageCubit(
+        authService: context.read<AuthService>(),
+        userRepository: context.read<UserRepository>(),
+      )..initialize(),
+      child: child,
+    );
   }
 }
 
@@ -67,7 +92,9 @@ class _OptionsToSelect extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const Language selectedLanguage = Language.polish;
+    final Language? selectedLanguage = context.select(
+      (LanguageCubit cubit) => cubit.state,
+    );
 
     return Column(
       children: Language.values
