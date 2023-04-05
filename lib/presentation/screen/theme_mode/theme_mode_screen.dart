@@ -98,8 +98,49 @@ class _Content extends StatelessWidget {
           icon: const Icon(Icons.close),
         ),
       ),
-      body: const SafeArea(
-        child: _OptionsToSelect(),
+      body: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: const [
+            _Header(),
+            SizedBox(height: 16),
+            _OptionsToSelect(),
+            SizedBox(height: 16),
+            _SystemThemeDescription(),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _Header extends StatelessWidget {
+  const _Header();
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
+      child: Text(
+        'Wybierz motyw aplikacji',
+        style: Theme.of(context).textTheme.bodyLarge,
+      ),
+    );
+  }
+}
+
+class _SystemThemeDescription extends StatelessWidget {
+  const _SystemThemeDescription();
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+      child: Text(
+        'Gdy wybierzesz motyw systemowy, aplikacja będzie używała motywu, który jest obecnie ustawiony na Twoim urządzeniu.',
+        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: Theme.of(context).colorScheme.outline,
+            ),
       ),
     );
   }
