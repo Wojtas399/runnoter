@@ -25,7 +25,7 @@ class ProfileUserDataSection extends StatelessWidget {
       children: const [
         _Header(),
         SizedBox(height: 16),
-        _Username(),
+        _Name(),
         gap,
         _Surname(),
         gap,
@@ -51,8 +51,8 @@ class _Header extends StatelessWidget {
   }
 }
 
-class _Username extends StatelessWidget {
-  const _Username();
+class _Name extends StatelessWidget {
+  const _Name();
 
   @override
   Widget build(BuildContext context) {
@@ -62,7 +62,7 @@ class _Username extends StatelessWidget {
 
     return ValueWithLabelAndIconComponent(
       iconData: Icons.person_outline_rounded,
-      label: AppLocalizations.of(context)!.profile_screen_username_label,
+      label: AppLocalizations.of(context)!.name,
       value: username ?? '',
       onPressed: () {
         _onPressed(context);
@@ -87,7 +87,7 @@ class _Username extends StatelessWidget {
       context: context,
       title: AppLocalizations.of(context)!
           .profile_screen_new_username_dialog_title,
-      label: AppLocalizations.of(context)!.profile_screen_username_label,
+      label: AppLocalizations.of(context)!.name,
       textFieldIcon: Icons.person_rounded,
       value: context.read<ProfileIdentitiesBloc>().state.username,
       isValueRequired: true,
@@ -112,7 +112,7 @@ class _Surname extends StatelessWidget {
 
     return ValueWithLabelAndIconComponent(
       iconData: Icons.person_outline_rounded,
-      label: AppLocalizations.of(context)!.profile_screen_surname_label,
+      label: AppLocalizations.of(context)!.surname,
       value: surname ?? '',
       onPressed: () {
         _onPressed(context);
@@ -137,7 +137,7 @@ class _Surname extends StatelessWidget {
       context: context,
       title:
           AppLocalizations.of(context)!.profile_screen_new_surname_dialog_title,
-      label: AppLocalizations.of(context)!.profile_screen_surname_label,
+      label: AppLocalizations.of(context)!.surname,
       textFieldIcon: Icons.person_rounded,
       value: context.read<ProfileIdentitiesBloc>().state.surname,
       isValueRequired: true,
@@ -162,7 +162,7 @@ class _Email extends StatelessWidget {
 
     return ValueWithLabelAndIconComponent(
       iconData: Icons.email_outlined,
-      label: AppLocalizations.of(context)!.profile_screen_email_label,
+      label: AppLocalizations.of(context)!.email,
       value: email ?? '',
       onPressed: () {
         _onPressed(context);

@@ -63,23 +63,23 @@
   },
 
 
-  "forgot_password_message_title": "Zapomniałeś hasła?",
-  "@forgot_password_message_title": {
+  "forgot_password_screen_title": "Zapomniałeś hasła?",
+  "@forgot_password_screen_title": {
     "description": "Title of the message displaying on forgot password screen"
   },
-  "forgot_password_message_text": "Podaj adres email, na który wyślecimy Ci link z możliwością zmiany hasła.",
-  "@forgot_password_message_text": {
+  "forgot_password_screen_message": "Podaj adres email, na który wyślecimy Ci link z możliwością zmiany hasła.",
+  "@forgot_password_screen_message": {
     "description": "Text of the message displaying on forgot password screen"
   },
-  "forgot_password_submit_button_label": "Wyślij",
-  "@forgot_password_submit_button_label": {
+  "forgot_password_screen_submit_button_label": "Wyślij",
+  "@forgot_password_screen_submit_button_label": {
     "description": "Label of the button to send link to change password"
   },
   "forgot_password_screen_sent_email_dialog_title": "Wiadomość email została wysłana",
   "@forgot_password_screen_sent_email_dialog_title": {
     "description": "Title of the dialog to inform that email with link to reset password has been sent"
   },
-  "forgot_password_screen_sent_email_dialog_message": "Pomyślnie wysłano wiadomość na podany adres email. Sprawdź skrzynkę pocztową i postępuj zgodnie z instrukcjami zamieszczonymi w wysłanej wiadomości.",
+  "forgot_password_screen_sent_email_dialog_message": "Pomyślnie wysłano wiadomość na twój adres email. Sprawdź skrzynkę pocztową i postępuj zgodnie z instrukcjami zamieszczonymi w wysłanej wiadomości.",
   "@forgot_password_screen_sent_email_dialog_message": {
     "description": "Message of the dialog to inform that email with link to reset password has been sent"
   },
@@ -155,18 +155,6 @@
   "@profile_screen_settings_section_title": {
     "description": "Title of settings section"
   },
-  "profile_screen_username_label": "Imię",
-  "@profile_screen_username_label": {
-    "description": "Label of username"
-  },
-  "profile_screen_surname_label": "Nazwisko",
-  "@profile_screen_surname_label": {
-    "description": "Label of surname"
-  },
-  "profile_screen_email_label": "Adres email",
-  "@profile_screen_email_label": {
-    "description": "Label of email"
-  },
   "profile_screen_change_password_label": "Zmień hasło",
   "@profile_screen_change_password_label": {
     "description": "Label of change password option"
@@ -235,7 +223,7 @@
   "@profile_screen_wrong_password_message": {
     "description": "Message of the dialog to inform that given password is wrong"
   },
-  "profile_screen_wrong_current_password_title": "Błędne hasło",
+  "profile_screen_wrong_current_password_title": "Błędne obecne hasło",
   "@profile_screen_wrong_current_password_title": {
     "description": "Title of the dialog to inform that given current password is wrong"
   },
@@ -265,7 +253,7 @@
   "@theme_mode_selection_text": {
     "description": "Text about theme mode selection"
   },
-  "system_theme_mode_description": "Gdy wybierzesz motyw systemowy, aplikacja będzie używała motywu, który jest obecnie ustawiony na Twoim urządzeniu.",
+  "system_theme_mode_description": "Jeśli wybierzesz motyw systemowy, aplikacja będzie używała motywu, który jest obecnie ustawiony na Twoim urządzeniu.",
   "@system_theme_mode_description": {
     "description": "Description about system theme mode"
   },
