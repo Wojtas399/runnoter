@@ -1,3 +1,4 @@
+import '../../../../domain/model/settings.dart';
 import '../../../model/bloc_state.dart';
 import '../../../model/bloc_status.dart';
 
@@ -6,6 +7,7 @@ class HomeState extends BlocState<HomeState> {
   final String? loggedUserEmail;
   final String? loggedUserName;
   final String? loggedUserSurname;
+  final ThemeMode? themeMode;
 
   const HomeState({
     required super.status,
@@ -13,6 +15,7 @@ class HomeState extends BlocState<HomeState> {
     this.loggedUserEmail,
     this.loggedUserName,
     this.loggedUserSurname,
+    this.themeMode,
   });
 
   @override
@@ -22,6 +25,7 @@ class HomeState extends BlocState<HomeState> {
         loggedUserEmail,
         loggedUserName,
         loggedUserSurname,
+        themeMode,
       ];
 
   @override
@@ -31,6 +35,7 @@ class HomeState extends BlocState<HomeState> {
     String? loggedUserEmail,
     String? loggedUserName,
     String? loggedUserSurname,
+    ThemeMode? themeMode,
   }) {
     return HomeState(
       status: status ?? const BlocStatusComplete(),
@@ -38,6 +43,7 @@ class HomeState extends BlocState<HomeState> {
       loggedUserEmail: loggedUserEmail ?? this.loggedUserEmail,
       loggedUserName: loggedUserName ?? this.loggedUserName,
       loggedUserSurname: loggedUserSurname ?? this.loggedUserSurname,
+      themeMode: themeMode ?? this.themeMode,
     );
   }
 }

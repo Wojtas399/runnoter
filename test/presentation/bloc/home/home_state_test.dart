@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:runnoter/domain/model/settings.dart';
 import 'package:runnoter/presentation/model/bloc_status.dart';
 import 'package:runnoter/presentation/screen/home/bloc/home_state.dart';
 
@@ -74,6 +75,19 @@ void main() {
 
       expect(state.loggedUserSurname, expectedSurname);
       expect(state2.loggedUserSurname, expectedSurname);
+    },
+  );
+
+  test(
+    'copy with theme mode',
+    () {
+      const ThemeMode expectedThemeMode = ThemeMode.system;
+
+      state = state.copyWith(themeMode: expectedThemeMode);
+      final state2 = state.copyWith();
+
+      expect(state.themeMode, expectedThemeMode);
+      expect(state2.themeMode, expectedThemeMode);
     },
   );
 }
