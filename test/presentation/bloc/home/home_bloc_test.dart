@@ -1,5 +1,6 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:runnoter/domain/model/settings.dart';
 import 'package:runnoter/presentation/model/bloc_status.dart';
 import 'package:runnoter/presentation/screen/home/bloc/home_bloc.dart';
 import 'package:runnoter/presentation/screen/home/bloc/home_event.dart';
@@ -7,6 +8,7 @@ import 'package:runnoter/presentation/screen/home/bloc/home_state.dart';
 
 import '../../../mock/domain/mock_auth_service.dart';
 import '../../../mock/domain/mock_user_repository.dart';
+import '../../../util/settings_creator.dart';
 import '../../../util/user_creator.dart';
 
 void main() {
@@ -26,6 +28,7 @@ void main() {
     String? loggedUserEmail,
     String? loggedUserName,
     String? loggedUserSurname,
+    ThemeMode? themeMode,
   }) {
     return HomeState(
       status: status,
@@ -33,6 +36,7 @@ void main() {
       loggedUserEmail: loggedUserEmail,
       loggedUserName: loggedUserName,
       loggedUserSurname: loggedUserSurname,
+      themeMode: themeMode,
     );
   }
 
@@ -52,6 +56,9 @@ void main() {
           id: 'u1',
           name: 'name',
           surname: 'surname',
+          settings: createSettings(
+            themeMode: ThemeMode.dark,
+          ),
         ),
       );
     },
@@ -70,6 +77,7 @@ void main() {
         loggedUserEmail: 'user@example.com',
         loggedUserName: 'name',
         loggedUserSurname: 'surname',
+        themeMode: ThemeMode.dark,
       ),
     ],
     verify: (_) {
@@ -108,7 +116,7 @@ void main() {
 
   blocTest(
     'logged user data changed, '
-    'should update logged user name and surname in state',
+    'should update logged user name, surname and theme mode in state',
     build: () => createBloc(),
     act: (HomeBloc bloc) {
       bloc.add(
@@ -117,6 +125,9 @@ void main() {
             id: 'u1',
             name: 'name',
             surname: 'surname',
+            settings: createSettings(
+              themeMode: ThemeMode.system,
+            ),
           ),
         ),
       );
@@ -126,6 +137,7 @@ void main() {
         status: const BlocStatusComplete(),
         loggedUserName: 'name',
         loggedUserSurname: 'surname',
+        themeMode: ThemeMode.system,
       ),
     ],
   );

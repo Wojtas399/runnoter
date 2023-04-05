@@ -70,6 +70,7 @@ class HomeBloc extends BlocWithStatus<HomeEvent, HomeState, HomeInfo, dynamic> {
     emit(state.copyWith(
       loggedUserName: event.loggedUserData?.name,
       loggedUserSurname: event.loggedUserData?.surname,
+      themeMode: event.loggedUserData?.settings.themeMode,
     ));
   }
 
