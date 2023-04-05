@@ -129,23 +129,6 @@ class _Header extends StatelessWidget {
   }
 }
 
-class _SystemThemeDescription extends StatelessWidget {
-  const _SystemThemeDescription();
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
-      child: Text(
-        AppLocalizations.of(context)!.system_theme_mode_description,
-        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Theme.of(context).colorScheme.outline,
-            ),
-      ),
-    );
-  }
-}
-
 class _OptionsToSelect extends StatelessWidget {
   const _OptionsToSelect();
 
@@ -200,5 +183,22 @@ class _OptionsToSelect extends StatelessWidget {
             themeMode: themeMode,
           );
     }
+  }
+}
+
+class _SystemThemeDescription extends StatelessWidget {
+  const _SystemThemeDescription();
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+      child: Text(
+        AppLocalizations.of(context)!.system_theme_mode_description,
+        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: Theme.of(context).colorScheme.outline,
+            ),
+      ),
+    );
   }
 }
