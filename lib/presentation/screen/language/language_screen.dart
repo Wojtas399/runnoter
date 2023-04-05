@@ -102,6 +102,8 @@ class _Content extends StatelessWidget {
             _Header(),
             SizedBox(height: 16),
             _OptionsToSelect(),
+            SizedBox(height: 16),
+            _SystemLanguageDescription(),
           ],
         ),
       ),
@@ -160,5 +162,22 @@ class _OptionsToSelect extends StatelessWidget {
             language: language,
           );
     }
+  }
+}
+
+class _SystemLanguageDescription extends StatelessWidget {
+  const _SystemLanguageDescription();
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+      child: Text(
+        AppLocalizations.of(context)!.system_language_description,
+        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: Theme.of(context).colorScheme.outline,
+            ),
+      ),
+    );
   }
 }

@@ -69,7 +69,7 @@
   "theme_mode_dark": "Dark",
   "theme_mode_system": "System",
   "theme_mode_selection_text": "Select app theme",
-  "system_theme_mode_description": "If you select system theme mode, the app will use the theme which is currently set on your device.",
+  "system_theme_mode_description": "If you choose system theme mode, the app will use the theme that's currently set on your device.",
 
 
   "language_label": "Language",
@@ -77,6 +77,7 @@
   "language_english": "English",
   "language_system": "System",
   "language_selection_text": "Select app language",
+  "system_language_description": "If you select system language, the app will use the language that's currently set on your device.",
 
 
   "settings_distance_unit_kilometers": "Kilometers",

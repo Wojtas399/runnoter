@@ -253,7 +253,7 @@
   "@theme_mode_selection_text": {
     "description": "Text about theme mode selection"
   },
-  "system_theme_mode_description": "Jeśli wybierzesz motyw systemowy, aplikacja będzie używała motywu, który jest obecnie ustawiony na Twoim urządzeniu.",
+  "system_theme_mode_description": "Jeśli wybierzesz motyw systemowy, aplikacja będzie używała motywu obecnie ustawionego na Twoim urządzeniu.",
   "@system_theme_mode_description": {
     "description": "Description about system theme mode"
   },
@@ -278,6 +278,10 @@
   "language_selection_text": "Wybierz język aplikacji",
   "@language_selection_text": {
     "description": "Text about language selection"
+  },
+  "system_language_description": "Jeśli wybierzesz język systemowy, aplikacja będzie używała języka obecnie ustawionego na Twoim urządzeniu.",
+  "@system_language_description": {
+    "description": "Description about system language"
   },
 
 
