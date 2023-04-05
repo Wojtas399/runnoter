@@ -175,10 +175,6 @@
   "@profile_screen_delete_account_label": {
     "description": "Label of delete account option"
   },
-  "profile_screen_language_label": "Język",
-  "@profile_screen_language_label": {
-    "description": "Label of language option"
-  },
   "profile_screen_distance_unit_label": "Jednostka dystansu",
   "@profile_screen_distance_unit_label": {
     "description": "Label of distance unit option"
@@ -275,14 +271,24 @@
   },
 
 
-  "settings_language_polish": "Polski",
-  "@settings_language_polish": {
+  "language_label": "Język",
+  "@language_label": {
+    "description": "Label of language option"
+  },
+  "language_polish": "Polski",
+  "@language_polish": {
     "description": "Polish language"
   },
-  "settings_language_english": "Angielski",
-  "@settings_language_english": {
+  "language_english": "Angielski",
+  "@language_english": {
     "description": "English language"
   },
+  "language_selection_text": "Wybierz język aplikacji",
+  "@language_selection_text": {
+    "description": "Text about language selection"
+  },
+
+
   "settings_distance_unit_kilometers": "Kilometry",
   "@settings_distance_unit_kilometers": {
     "description": "Kilometers distance unit"

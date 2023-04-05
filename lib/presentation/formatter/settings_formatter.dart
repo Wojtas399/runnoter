@@ -20,9 +20,9 @@ extension LanguageFormatter on Language {
   String toUIFormat(BuildContext context) {
     switch (this) {
       case Language.polish:
-        return AppLocalizations.of(context)!.settings_language_polish;
+        return AppLocalizations.of(context)!.language_polish;
       case Language.english:
-        return AppLocalizations.of(context)!.settings_language_english;
+        return AppLocalizations.of(context)!.language_english;
     }
   }
 }

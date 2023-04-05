@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/model/settings.dart';
+import '../../formatter/settings_formatter.dart';
 import '../../service/navigator_service.dart';
 
 class LanguageScreen extends StatelessWidget {
@@ -22,7 +24,7 @@ class _Content extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Język',
+          AppLocalizations.of(context)!.language_label,
         ),
         leading: IconButton(
           onPressed: () {
@@ -53,7 +55,7 @@ class _Header extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
       child: Text(
-        'Wybierz język aplikacji',
+        AppLocalizations.of(context)!.language_selection_text,
         style: Theme.of(context).textTheme.bodyLarge,
       ),
     );
@@ -68,28 +70,20 @@ class _OptionsToSelect extends StatelessWidget {
     const Language selectedLanguage = Language.polish;
 
     return Column(
-      children: [
-        RadioListTile<Language>(
-          title: Text(
-            'Polski',
-          ),
-          value: Language.polish,
-          groupValue: selectedLanguage,
-          onChanged: (Language? language) {
-            //TODO
-          },
-        ),
-        RadioListTile<Language>(
-          title: Text(
-            'Angielski',
-          ),
-          value: Language.english,
-          groupValue: selectedLanguage,
-          onChanged: (Language? language) {
-            //TODO
-          },
-        ),
-      ],
+      children: Language.values
+          .map(
+            (Language language) => RadioListTile<Language>(
+              title: Text(
+                language.toUIFormat(context),
+              ),
+              value: language,
+              groupValue: selectedLanguage,
+              onChanged: (Language? language) {
+                //TODO
+              },
+            ),
+          )
+          .toList(),
     );
   }
 }

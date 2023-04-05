@@ -81,7 +81,7 @@ class _Language extends StatelessWidget {
     );
 
     return ValueWithLabelAndIconComponent(
-      label: AppLocalizations.of(context)!.profile_screen_language_label,
+      label: AppLocalizations.of(context)!.language_label,
       iconData: Icons.translate_outlined,
       value: language?.toUIFormat(context) ?? '',
       onPressed: () {
