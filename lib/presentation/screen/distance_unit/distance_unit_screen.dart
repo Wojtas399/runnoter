@@ -117,11 +117,11 @@ class _OptionsToSelect extends StatelessWidget {
 
   void _onDistanceUnitChanged(
     BuildContext context,
-    DistanceUnit? distanceUnit,
+    DistanceUnit? newDistanceUnit,
   ) {
-    if (distanceUnit != null) {
+    if (newDistanceUnit != null) {
       context.read<DistanceUnitCubit>().updateDistanceUnit(
-            distanceUnit: distanceUnit,
+            newDistanceUnit: newDistanceUnit,
           );
     }
   }

@@ -28,18 +28,24 @@ class ThemeModeCubit extends Cubit<ThemeMode?> {
   }
 
   Future<void> updateThemeMode({
-    required ThemeMode themeMode,
+    required ThemeMode newThemeMode,
   }) async {
+    ThemeMode? currentThemeMode, previousThemeMode;
+    currentThemeMode = state;
+    if (newThemeMode == currentThemeMode) {
+      return;
+    }
     final String? loggedUserId = await _authService.loggedUserId$.first;
     if (loggedUserId == null) {
       return;
     }
-    final ThemeMode? previousThemeMode = state;
-    emit(themeMode);
+    emit(newThemeMode);
+    previousThemeMode = currentThemeMode;
+    currentThemeMode = newThemeMode;
     try {
       await _userRepository.updateUserSettings(
         userId: loggedUserId,
-        themeMode: themeMode,
+        themeMode: currentThemeMode,
       );
     } catch (_) {
       emit(previousThemeMode);

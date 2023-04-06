@@ -100,7 +100,7 @@ void main() {
     },
     act: (ThemeModeCubit cubit) {
       cubit.updateThemeMode(
-        themeMode: ThemeMode.system,
+        newThemeMode: ThemeMode.system,
       );
     },
     expect: () => [
@@ -136,7 +136,7 @@ void main() {
     },
     act: (ThemeModeCubit cubit) {
       cubit.updateThemeMode(
-        themeMode: ThemeMode.system,
+        newThemeMode: ThemeMode.system,
       );
     },
     expect: () => [
@@ -166,7 +166,7 @@ void main() {
     },
     act: (ThemeModeCubit cubit) {
       cubit.updateThemeMode(
-        themeMode: ThemeMode.system,
+        newThemeMode: ThemeMode.system,
       );
     },
     expect: () => [],
@@ -177,6 +177,32 @@ void main() {
       verifyNever(
         () => userRepository.updateUserSettings(
           userId: userId,
+          themeMode: any(named: 'themeMode'),
+        ),
+      );
+    },
+  );
+
+  blocTest(
+    'update theme mode, '
+    'new theme mode is the same as current theme mode, '
+    'should do nothing',
+    build: () => createCubit(
+      themeMode: ThemeMode.system,
+    ),
+    act: (ThemeModeCubit cubit) {
+      cubit.updateThemeMode(
+        newThemeMode: ThemeMode.system,
+      );
+    },
+    expect: () => [],
+    verify: (_) {
+      verifyNever(
+        () => authService.loggedUserId$,
+      );
+      verifyNever(
+        () => userRepository.updateUserSettings(
+          userId: any(named: 'userId'),
           themeMode: any(named: 'themeMode'),
         ),
       );

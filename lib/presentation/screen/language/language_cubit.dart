@@ -28,21 +28,24 @@ class LanguageCubit extends Cubit<Language?> {
   }
 
   Future<void> updateLanguage({
-    required Language language,
+    required Language newLanguage,
   }) async {
-    if (language == state) {
+    Language? currentLanguage, previousLanguage;
+    currentLanguage = state;
+    if (newLanguage == currentLanguage) {
       return;
     }
     final String? loggedUserId = await _authService.loggedUserId$.first;
     if (loggedUserId == null) {
       return;
     }
-    final Language? previousLanguage = state;
-    emit(language);
+    emit(newLanguage);
+    previousLanguage = currentLanguage;
+    currentLanguage = newLanguage;
     try {
       await _userRepository.updateUserSettings(
         userId: loggedUserId,
-        language: language,
+        language: currentLanguage,
       );
     } catch (exception) {
       emit(previousLanguage);

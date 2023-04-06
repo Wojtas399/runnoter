@@ -155,11 +155,11 @@ class _OptionsToSelect extends StatelessWidget {
 
   void _onLanguageChanged(
     BuildContext context,
-    Language? language,
+    Language? newLanguage,
   ) {
-    if (language != null) {
+    if (newLanguage != null) {
       context.read<LanguageCubit>().updateLanguage(
-            language: language,
+            newLanguage: newLanguage,
           );
     }
   }

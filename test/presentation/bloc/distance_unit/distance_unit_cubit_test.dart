@@ -99,7 +99,7 @@ void main() {
     },
     act: (DistanceUnitCubit cubit) {
       cubit.updateDistanceUnit(
-        distanceUnit: DistanceUnit.miles,
+        newDistanceUnit: DistanceUnit.miles,
       );
     },
     expect: () => [
@@ -135,7 +135,7 @@ void main() {
     },
     act: (DistanceUnitCubit cubit) {
       cubit.updateDistanceUnit(
-        distanceUnit: DistanceUnit.miles,
+        newDistanceUnit: DistanceUnit.miles,
       );
     },
     expect: () => [
@@ -165,7 +165,7 @@ void main() {
     },
     act: (DistanceUnitCubit cubit) {
       cubit.updateDistanceUnit(
-        distanceUnit: DistanceUnit.miles,
+        newDistanceUnit: DistanceUnit.miles,
       );
     },
     expect: () => [],
@@ -176,6 +176,32 @@ void main() {
       verifyNever(
         () => userRepository.updateUserSettings(
           userId: userId,
+          distanceUnit: any(named: 'distanceUnit'),
+        ),
+      );
+    },
+  );
+
+  blocTest(
+    'update distance unit, '
+    'new distance unit is the same as current distance unit, '
+    'should do nothing',
+    build: () => createCubit(
+      distanceUnit: DistanceUnit.miles,
+    ),
+    act: (DistanceUnitCubit cubit) {
+      cubit.updateDistanceUnit(
+        newDistanceUnit: DistanceUnit.miles,
+      );
+    },
+    expect: () => [],
+    verify: (_) {
+      verifyNever(
+        () => authService.loggedUserId$,
+      );
+      verifyNever(
+        () => userRepository.updateUserSettings(
+          userId: any(named: 'userId'),
           distanceUnit: any(named: 'distanceUnit'),
         ),
       );

@@ -100,7 +100,7 @@ void main() {
     },
     act: (LanguageCubit cubit) {
       cubit.updateLanguage(
-        language: Language.english,
+        newLanguage: Language.english,
       );
     },
     expect: () => [
@@ -136,7 +136,7 @@ void main() {
     },
     act: (LanguageCubit cubit) {
       cubit.updateLanguage(
-        language: Language.english,
+        newLanguage: Language.english,
       );
     },
     expect: () => [
@@ -166,7 +166,7 @@ void main() {
     },
     act: (LanguageCubit cubit) {
       cubit.updateLanguage(
-        language: Language.english,
+        newLanguage: Language.english,
       );
     },
     expect: () => [],
@@ -192,9 +192,20 @@ void main() {
     ),
     act: (LanguageCubit cubit) {
       cubit.updateLanguage(
-        language: Language.english,
+        newLanguage: Language.english,
       );
     },
     expect: () => [],
+    verify: (_) {
+      verifyNever(
+        () => authService.loggedUserId$,
+      );
+      verifyNever(
+        () => userRepository.updateUserSettings(
+          userId: any(named: 'userId'),
+          language: any(named: 'language'),
+        ),
+      );
+    },
   );
 }

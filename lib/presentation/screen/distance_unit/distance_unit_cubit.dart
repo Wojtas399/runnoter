@@ -28,18 +28,24 @@ class DistanceUnitCubit extends Cubit<DistanceUnit?> {
   }
 
   Future<void> updateDistanceUnit({
-    required DistanceUnit distanceUnit,
+    required DistanceUnit newDistanceUnit,
   }) async {
+    DistanceUnit? currentDistanceUnit, previousDistanceUnit;
+    currentDistanceUnit = state;
+    if (newDistanceUnit == currentDistanceUnit) {
+      return;
+    }
     final String? loggedUserId = await _authService.loggedUserId$.first;
     if (loggedUserId == null) {
       return;
     }
-    final DistanceUnit? previousDistanceUnit = state;
-    emit(distanceUnit);
+    emit(newDistanceUnit);
+    previousDistanceUnit = currentDistanceUnit;
+    currentDistanceUnit = newDistanceUnit;
     try {
       await _userRepository.updateUserSettings(
         userId: loggedUserId,
-        distanceUnit: distanceUnit,
+        distanceUnit: currentDistanceUnit,
       );
     } catch (_) {
       emit(previousDistanceUnit);
