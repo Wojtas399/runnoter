@@ -23,7 +23,7 @@ class ValueWithLabelAndIconComponent extends StatelessWidget {
       borderRadius: BorderRadius.circular(4),
       child: Padding(
         padding: EdgeInsets.symmetric(
-          horizontal: 8,
+          horizontal: 16,
           vertical: label != null ? 8 : 20,
         ),
         child: Row(

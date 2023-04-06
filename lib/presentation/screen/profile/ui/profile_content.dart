@@ -25,7 +25,7 @@ class ProfileContent extends StatelessWidget {
           children: [
             SingleChildScrollView(
               child: Padding(
-                padding: const EdgeInsets.all(24),
+                padding: const EdgeInsets.all(16),
                 child: Column(
                   children: const [
                     ProfileUserDataSection(),

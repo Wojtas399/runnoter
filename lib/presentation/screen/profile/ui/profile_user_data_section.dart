@@ -44,9 +44,12 @@ class _Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      AppLocalizations.of(context)!.profile_screen_user_data_section_title,
-      style: Theme.of(context).textTheme.titleLarge,
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
+      child: Text(
+        AppLocalizations.of(context)!.profile_screen_user_data_section_title,
+        style: Theme.of(context).textTheme.titleLarge,
+      ),
     );
   }
 }
