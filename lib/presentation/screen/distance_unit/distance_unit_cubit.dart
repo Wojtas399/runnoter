@@ -12,9 +12,10 @@ class DistanceUnitCubit extends Cubit<DistanceUnit?> {
   DistanceUnitCubit({
     required AuthService authService,
     required UserRepository userRepository,
+    DistanceUnit? distanceUnit,
   })  : _authService = authService,
         _userRepository = userRepository,
-        super(null);
+        super(distanceUnit);
 
   Future<void> initialize() async {
     final String? loggedUserId = await _authService.loggedUserId$.first;
@@ -24,5 +25,24 @@ class DistanceUnitCubit extends Cubit<DistanceUnit?> {
     final User? user =
         await _userRepository.getUserById(userId: loggedUserId).first;
     emit(user?.settings.distanceUnit);
+  }
+
+  Future<void> updateDistanceUnit({
+    required DistanceUnit distanceUnit,
+  }) async {
+    final String? loggedUserId = await _authService.loggedUserId$.first;
+    if (loggedUserId == null) {
+      return;
+    }
+    final DistanceUnit? previousDistanceUnit = state;
+    emit(distanceUnit);
+    try {
+      await _userRepository.updateUserSettings(
+        userId: loggedUserId,
+        distanceUnit: distanceUnit,
+      );
+    } catch (_) {
+      emit(previousDistanceUnit);
+    }
   }
 }

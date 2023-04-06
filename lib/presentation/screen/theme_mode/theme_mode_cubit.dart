@@ -41,7 +41,7 @@ class ThemeModeCubit extends Cubit<ThemeMode?> {
         userId: loggedUserId,
         themeMode: themeMode,
       );
-    } catch (exception) {
+    } catch (_) {
       emit(previousThemeMode);
     }
   }
