@@ -24,8 +24,8 @@ class App extends StatelessWidget {
         child: LanguageProvider(
           child: BlocBuilder<ThemeService, ThemeMode>(
             builder: (_, ThemeMode themeMode) {
-              return BlocBuilder<LanguageService, Locale?>(
-                builder: (BuildContext context, Locale? currentLocale) {
+              return BlocBuilder<LanguageService, AppLanguage?>(
+                builder: (BuildContext context, AppLanguage? language) {
                   return MaterialApp(
                     title: 'Runnoter',
                     localizationsDelegates: const [
@@ -38,7 +38,7 @@ class App extends StatelessWidget {
                       AppLanguage.polish.locale!,
                       AppLanguage.english.locale!,
                     ],
-                    locale: currentLocale,
+                    locale: language?.locale,
                     themeMode: themeMode,
                     theme: GlobalTheme.lightTheme,
                     darkTheme: GlobalTheme.darkTheme,

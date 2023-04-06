@@ -15,10 +15,10 @@ enum AppLanguage {
   const AppLanguage(this.locale);
 }
 
-class LanguageService extends Cubit<Locale?> {
+class LanguageService extends Cubit<AppLanguage?> {
   LanguageService() : super(null);
 
   void changeLanguage(AppLanguage newLanguage) {
-    emit(newLanguage.locale);
+    emit(newLanguage);
   }
 }
