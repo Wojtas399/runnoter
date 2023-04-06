@@ -4,6 +4,7 @@ import '../../screen/distance_unit/distance_unit_screen.dart';
 import '../../screen/forgot_password/ui/forgot_password_screen.dart';
 import '../../screen/home/ui/home_screen.dart';
 import '../../screen/language/language_screen.dart';
+import '../../screen/pace_unit/pace_unit_screen.dart';
 import '../../screen/profile/ui/profile_screen.dart';
 import '../../screen/sign_in/ui/sign_in_screen.dart';
 import '../../screen/sign_up/ui/sign_up_screen.dart';
@@ -46,6 +47,9 @@ class AppNavigator extends StatelessWidget {
       isSlideToTopAnim = true;
     } else if (routePath == Routes.distanceUnit.path) {
       screen = const DistanceUnitScreen();
+      isSlideToTopAnim = true;
+    } else if (routePath == Routes.paceUnit.path) {
+      screen = const PaceUnitScreen();
       isSlideToTopAnim = true;
     }
     if (isSlideToTopAnim) {
