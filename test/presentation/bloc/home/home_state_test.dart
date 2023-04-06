@@ -90,4 +90,17 @@ void main() {
       expect(state2.themeMode, expectedThemeMode);
     },
   );
+
+  test(
+    'copy with language',
+    () {
+      const Language expectedLanguage = Language.english;
+
+      state = state.copyWith(language: expectedLanguage);
+      final state2 = state.copyWith();
+
+      expect(state.language, expectedLanguage);
+      expect(state2.language, expectedLanguage);
+    },
+  );
 }

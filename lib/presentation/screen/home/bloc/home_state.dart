@@ -8,6 +8,7 @@ class HomeState extends BlocState<HomeState> {
   final String? loggedUserName;
   final String? loggedUserSurname;
   final ThemeMode? themeMode;
+  final Language? language;
 
   const HomeState({
     required super.status,
@@ -16,6 +17,7 @@ class HomeState extends BlocState<HomeState> {
     this.loggedUserName,
     this.loggedUserSurname,
     this.themeMode,
+    this.language,
   });
 
   @override
@@ -26,6 +28,7 @@ class HomeState extends BlocState<HomeState> {
         loggedUserName,
         loggedUserSurname,
         themeMode,
+        language,
       ];
 
   @override
@@ -36,6 +39,7 @@ class HomeState extends BlocState<HomeState> {
     String? loggedUserName,
     String? loggedUserSurname,
     ThemeMode? themeMode,
+    Language? language,
   }) {
     return HomeState(
       status: status ?? const BlocStatusComplete(),
@@ -44,6 +48,7 @@ class HomeState extends BlocState<HomeState> {
       loggedUserName: loggedUserName ?? this.loggedUserName,
       loggedUserSurname: loggedUserSurname ?? this.loggedUserSurname,
       themeMode: themeMode ?? this.themeMode,
+      language: language ?? this.language,
     );
   }
 }
