@@ -6,6 +6,7 @@ import '../../../../domain/repository/user_repository.dart';
 import '../../../../domain/service/auth_service.dart';
 import '../../../component/bloc_with_status_listener_component.dart';
 import '../../../config/navigation/routes.dart';
+import '../../../service/language_service.dart';
 import '../../../service/navigator_service.dart';
 import '../../../service/theme_service.dart';
 import '../bloc/home_bloc.dart';
@@ -64,10 +65,7 @@ class _BlocListener extends StatelessWidget {
         _manageInfo(context, info);
       },
       onStateChanged: (HomeState state) {
-        final settings.ThemeMode? themeMode = state.themeMode;
-        if (themeMode != null) {
-          _manageThemeMode(context, themeMode);
-        }
+        _manageStateChanges(context, state);
       },
     );
   }
@@ -80,6 +78,20 @@ class _BlocListener extends StatelessWidget {
           route: Routes.signIn,
         );
         break;
+    }
+  }
+
+  void _manageStateChanges(
+    BuildContext context,
+    HomeState state,
+  ) {
+    final settings.ThemeMode? themeMode = state.themeMode;
+    if (themeMode != null) {
+      _manageThemeMode(context, themeMode);
+    }
+    final settings.Language? language = state.language;
+    if (language != null) {
+      _manageLanguage(context, language);
     }
   }
 
@@ -97,6 +109,24 @@ class _BlocListener extends StatelessWidget {
         break;
       case settings.ThemeMode.system:
         themeService.changeTheme(ThemeMode.system);
+        break;
+    }
+  }
+
+  void _manageLanguage(
+    BuildContext context,
+    settings.Language language,
+  ) {
+    final LanguageService languageService = context.read<LanguageService>();
+    switch (language) {
+      case settings.Language.polish:
+        languageService.changeLanguage(AppLanguage.polish);
+        break;
+      case settings.Language.english:
+        languageService.changeLanguage(AppLanguage.english);
+        break;
+      case settings.Language.system:
+        languageService.changeLanguage(AppLanguage.system);
         break;
     }
   }
