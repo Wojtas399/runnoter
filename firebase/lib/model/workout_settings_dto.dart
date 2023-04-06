@@ -57,8 +57,8 @@ Map<String, dynamic> createWorkoutSettingsJsonToUpdate({
 }) {
   return {
     if (distanceUnit != null)
-      _WorkoutSettingsField.distanceUnit.name: distanceUnit,
-    if (paceUnit != null) _WorkoutSettingsField.paceUnit.name: paceUnit,
+      _WorkoutSettingsField.distanceUnit.name: distanceUnit.name,
+    if (paceUnit != null) _WorkoutSettingsField.paceUnit.name: paceUnit.name,
   };
 }
 

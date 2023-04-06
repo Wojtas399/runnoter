@@ -108,7 +108,7 @@ class _DistanceUnit extends StatelessWidget {
     );
 
     return ValueWithLabelAndIconComponent(
-      label: AppLocalizations.of(context)!.profile_screen_distance_unit_label,
+      label: AppLocalizations.of(context)!.distance_unit_label,
       iconData: Icons.route_outlined,
       value: distanceUnit?.toUIFormat(context) ?? '',
       onPressed: () {

@@ -163,10 +163,6 @@
   "@profile_screen_delete_account_label": {
     "description": "Label of delete account option"
   },
-  "profile_screen_distance_unit_label": "Jednostka dystansu",
-  "@profile_screen_distance_unit_label": {
-    "description": "Label of distance unit option"
-  },
   "profile_screen_pace_unit_label": "Jednostka prędkości",
   "@profile_screen_pace_unit_label": {
     "description": "Label of pace unit option"
@@ -261,7 +257,7 @@
 
   "language_label": "Język",
   "@language_label": {
-    "description": "Label of language option"
+    "description": "Label of language"
   },
   "language_polish": "Polski",
   "@language_polish": {
@@ -285,14 +281,24 @@
   },
 
 
-  "settings_distance_unit_kilometers": "Kilometry",
-  "@settings_distance_unit_kilometers": {
+  "distance_unit_label": "Jednostka dystansu",
+  "@distance_unit_label": {
+    "description": "Label of distance unit"
+  },
+  "distance_unit_kilometers": "Kilometry",
+  "@distance_unit_kilometers": {
     "description": "Kilometers distance unit"
   },
-  "settings_distance_unit_miles": "Mile",
-  "@settings_distance_unit_miles": {
+  "distance_unit_miles": "Mile",
+  "@distance_unit_miles": {
     "description": "Miles distance unit"
   },
+  "distance_unit_selection_text": "Wybierz jednostkę dystansu",
+  "@distance_unit_selection_text": {
+    "description": "Text about distance unit selection"
+  },
+
+
   "settings_pace_unit_minutes_per_kilometer": "min/km",
   "@settings_pace_unit_minutes_per_kilometer": {
     "description": "Minutes per kilometer pace unit"

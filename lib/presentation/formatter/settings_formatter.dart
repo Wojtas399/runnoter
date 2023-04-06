@@ -33,9 +33,9 @@ extension DistanceUnitFormatter on DistanceUnit {
   String toUIFormat(BuildContext context) {
     switch (this) {
       case DistanceUnit.kilometers:
-        return AppLocalizations.of(context)!.settings_distance_unit_kilometers;
+        return AppLocalizations.of(context)!.distance_unit_kilometers;
       case DistanceUnit.miles:
-        return AppLocalizations.of(context)!.settings_distance_unit_miles;
+        return AppLocalizations.of(context)!.distance_unit_miles;
     }
   }
 }
