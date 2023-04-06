@@ -67,10 +67,12 @@ class HomeBloc extends BlocWithStatus<HomeEvent, HomeState, HomeInfo, dynamic> {
     HomeEventLoggedUserDataChanged event,
     Emitter<HomeState> emit,
   ) {
+    final User? userData = event.loggedUserData;
     emit(state.copyWith(
-      loggedUserName: event.loggedUserData?.name,
-      loggedUserSurname: event.loggedUserData?.surname,
-      themeMode: event.loggedUserData?.settings.themeMode,
+      loggedUserName: userData?.name,
+      loggedUserSurname: userData?.surname,
+      themeMode: userData?.settings.themeMode,
+      language: userData?.settings.language,
     ));
   }
 

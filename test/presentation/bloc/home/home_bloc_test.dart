@@ -29,6 +29,7 @@ void main() {
     String? loggedUserName,
     String? loggedUserSurname,
     ThemeMode? themeMode,
+    Language? language,
   }) {
     return HomeState(
       status: status,
@@ -37,6 +38,7 @@ void main() {
       loggedUserName: loggedUserName,
       loggedUserSurname: loggedUserSurname,
       themeMode: themeMode,
+      language: language,
     );
   }
 
@@ -58,6 +60,7 @@ void main() {
           surname: 'surname',
           settings: createSettings(
             themeMode: ThemeMode.dark,
+            language: Language.polish,
           ),
         ),
       );
@@ -78,6 +81,7 @@ void main() {
         loggedUserName: 'name',
         loggedUserSurname: 'surname',
         themeMode: ThemeMode.dark,
+        language: Language.polish,
       ),
     ],
     verify: (_) {
@@ -116,7 +120,7 @@ void main() {
 
   blocTest(
     'logged user data changed, '
-    'should update logged user name, surname and theme mode in state',
+    'should update logged user name, surname, theme mode and language in state',
     build: () => createBloc(),
     act: (HomeBloc bloc) {
       bloc.add(
@@ -127,6 +131,7 @@ void main() {
             surname: 'surname',
             settings: createSettings(
               themeMode: ThemeMode.system,
+              language: Language.english,
             ),
           ),
         ),
@@ -138,6 +143,7 @@ void main() {
         loggedUserName: 'name',
         loggedUserSurname: 'surname',
         themeMode: ThemeMode.system,
+        language: Language.english,
       ),
     ],
   );
