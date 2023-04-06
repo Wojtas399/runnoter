@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../screen/distance_unit/distance_unit_screen.dart';
 import '../../screen/forgot_password/ui/forgot_password_screen.dart';
 import '../../screen/home/ui/home_screen.dart';
 import '../../screen/language/language_screen.dart';
@@ -25,6 +26,7 @@ class AppNavigator extends StatelessWidget {
 
   Route<dynamic> _onGenerateRoute(RouteSettings settings) {
     final String? routePath = settings.name;
+    bool isSlideToTopAnim = false;
     Widget screen = const SignInScreen();
     if (routePath == Routes.signIn.path) {
       screen = const SignInScreen();
@@ -37,31 +39,29 @@ class AppNavigator extends StatelessWidget {
     } else if (routePath == Routes.profile.path) {
       screen = const ProfileScreen();
     } else if (routePath == Routes.themeMode.path) {
+      screen = const ThemeModeScreen();
+      isSlideToTopAnim = true;
+    } else if (routePath == Routes.language.path) {
+      screen = const LanguageScreen();
+      isSlideToTopAnim = true;
+    } else if (routePath == Routes.distanceUnit.path) {
+      screen = const DistanceUnitScreen();
+      isSlideToTopAnim = true;
+    }
+    if (isSlideToTopAnim) {
       return PageRouteBuilder(
-        pageBuilder: (_, anim1, anim2) => const ThemeModeScreen(),
-        transitionsBuilder: (context, anim1, anim2, child) {
-          return SlideToTopAnim(
-            animation: anim1,
-            child: child,
-          );
-        },
+        pageBuilder: (_, anim1, anim2) => screen,
+        transitionsBuilder: (context, anim1, anim2, child) => SlideToTopAnim(
+          animation: anim1,
+          child: child,
+        ),
         transitionDuration: const Duration(milliseconds: 500),
       );
-    } else if (routePath == Routes.language.path) {
-      return PageRouteBuilder(
-        pageBuilder: (_, anim1, anim2) => const LanguageScreen(),
-        transitionsBuilder: (context, anim1, anim2, child) {
-          return SlideToTopAnim(
-            animation: anim1,
-            child: child,
-          );
-        },
-        transitionDuration: const Duration(milliseconds: 500),
+    } else {
+      return MaterialPageRoute(
+        builder: (_) => screen,
+        settings: settings,
       );
     }
-    return MaterialPageRoute(
-      builder: (_) => screen,
-      settings: settings,
-    );
   }
 }
