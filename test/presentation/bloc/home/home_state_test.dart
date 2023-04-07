@@ -14,6 +14,103 @@ void main() {
   });
 
   test(
+    'are all data loaded, '
+    "logged user's name, surname and email aren't null and theme mode and language also aren't null, "
+    'should be true',
+    () {
+      state = state.copyWith(
+        loggedUserName: 'name',
+        loggedUserSurname: 'surname',
+        loggedUserEmail: 'email',
+        themeMode: ThemeMode.dark,
+        language: Language.english,
+      );
+
+      expect(state.areAllDataLoaded, true);
+    },
+  );
+
+  test(
+    'are all data loaded, '
+    "logged user's name is null, "
+    'should be true',
+    () {
+      state = state.copyWith(
+        loggedUserSurname: 'surname',
+        loggedUserEmail: 'email',
+        themeMode: ThemeMode.dark,
+        language: Language.english,
+      );
+
+      expect(state.areAllDataLoaded, false);
+    },
+  );
+
+  test(
+    'are all data loaded, '
+    "logged user's surname is null, "
+    'should be true',
+    () {
+      state = state.copyWith(
+        loggedUserName: 'name',
+        loggedUserEmail: 'email',
+        themeMode: ThemeMode.dark,
+        language: Language.english,
+      );
+
+      expect(state.areAllDataLoaded, false);
+    },
+  );
+
+  test(
+    'are all data loaded, '
+    "logged user's email is null, "
+    'should be true',
+    () {
+      state = state.copyWith(
+        loggedUserName: 'name',
+        loggedUserSurname: 'surname',
+        themeMode: ThemeMode.dark,
+        language: Language.english,
+      );
+
+      expect(state.areAllDataLoaded, false);
+    },
+  );
+
+  test(
+    'are all data loaded, '
+    'theme mode is null, '
+    'should be true',
+    () {
+      state = state.copyWith(
+        loggedUserName: 'name',
+        loggedUserSurname: 'surname',
+        loggedUserEmail: 'email',
+        language: Language.english,
+      );
+
+      expect(state.areAllDataLoaded, false);
+    },
+  );
+
+  test(
+    'are all data loaded, '
+    'language is null, '
+    'should be true',
+    () {
+      state = state.copyWith(
+        loggedUserName: 'name',
+        loggedUserSurname: 'surname',
+        loggedUserEmail: 'email',
+        themeMode: ThemeMode.dark,
+      );
+
+      expect(state.areAllDataLoaded, false);
+    },
+  );
+
+  test(
     'copy with status',
     () {
       const BlocStatus expectedStatus = BlocStatusLoading();

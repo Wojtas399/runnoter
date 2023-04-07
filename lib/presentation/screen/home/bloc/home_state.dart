@@ -31,6 +31,13 @@ class HomeState extends BlocState<HomeState> {
         language,
       ];
 
+  bool get areAllDataLoaded =>
+      loggedUserName != null &&
+      loggedUserSurname != null &&
+      loggedUserEmail != null &&
+      themeMode != null &&
+      language != null;
+
   @override
   HomeState copyWith({
     BlocStatus? status,
