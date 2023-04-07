@@ -95,7 +95,6 @@ class _OptionsToSelect extends StatelessWidget {
     final DistanceUnit? selectedDistanceUnit = context.select(
       (DistanceUnitCubit cubit) => cubit.state,
     );
-    print(selectedDistanceUnit);
 
     return Column(
       children: DistanceUnit.values
