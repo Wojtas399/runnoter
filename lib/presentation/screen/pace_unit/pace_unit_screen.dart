@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/model/settings.dart';
 import '../../formatter/settings_formatter.dart';
@@ -22,8 +23,8 @@ class _Content extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Pace unit',
+        title: Text(
+          AppLocalizations.of(context)!.pace_unit_label,
         ),
         leading: IconButton(
           onPressed: () {
@@ -54,7 +55,7 @@ class _Header extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
       child: Text(
-        'Select pace unit',
+        AppLocalizations.of(context)!.pace_unit_selection_text,
         style: Theme.of(context).textTheme.bodyLarge,
       ),
     );

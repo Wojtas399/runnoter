@@ -45,7 +45,6 @@
   "profile_screen_settings_section_title": "Settings",
   "profile_screen_change_password_label": "Change password",
   "profile_screen_delete_account_label": "Delete account",
-  "profile_screen_pace_unit_label": "Pace unit",
   "profile_screen_new_username_dialog_title": "Change name",
   "profile_screen_new_surname_dialog_title": "Change surname",
   "profile_screen_new_email_dialog_title": "Change email",
@@ -85,10 +84,12 @@
   "distance_unit_selection_text": "Select distance unit",
 
 
-  "settings_pace_unit_minutes_per_kilometer": "min/km",
-  "settings_pace_unit_minutes_per_miles": "min/mi",
-  "settings_pace_unit_kilometers_per_hour": "km/h",
-  "settings_pace_unit_miles_per_hour": "mi/h",
+  "pace_unit_label": "Pace unit",
+  "pace_unit_minutes_per_kilometer": "min/km (minutes per kilometer)",
+  "pace_unit_minutes_per_miles": "min/mi (minutes per mile)",
+  "pace_unit_kilometers_per_hour": "km/h (kilometers per hour)",
+  "pace_unit_miles_per_hour": "mi/h (miles per hour)",
+  "pace_unit_selection_text": "Select pace unit",
 
 
   "no_internet_connection_dialog_title": "No internet connection",
