@@ -72,8 +72,7 @@ void main() {
     },
     expect: () => [
       createState(
-        status: const BlocStatusComplete(),
-        loggedUserEmail: 'user@example.com',
+        status: const BlocStatusLoading(),
       ),
       createState(
         status: const BlocStatusComplete(),
@@ -100,39 +99,18 @@ void main() {
   );
 
   blocTest(
-    'logged user email changed, '
-    'should update logged user email in state',
+    'listened params changed, '
+    "should update logged user's email, name, surname, theme mode and language in state",
     build: () => createBloc(),
     act: (HomeBloc bloc) {
       bloc.add(
-        const HomeEventLoggedUserEmailChanged(
-          loggedUserEmail: 'user@example.com',
-        ),
-      );
-    },
-    expect: () => [
-      createState(
-        status: const BlocStatusComplete(),
-        loggedUserEmail: 'user@example.com',
-      ),
-    ],
-  );
-
-  blocTest(
-    'logged user data changed, '
-    'should update logged user name, surname, theme mode and language in state',
-    build: () => createBloc(),
-    act: (HomeBloc bloc) {
-      bloc.add(
-        HomeEventLoggedUserDataChanged(
-          loggedUserData: createUser(
-            id: 'u1',
-            name: 'name',
-            surname: 'surname',
-            settings: createSettings(
-              themeMode: ThemeMode.system,
-              language: Language.english,
-            ),
+        const HomeEventListenedParamsChanged(
+          listenedParams: HomeStateListenedParams(
+            loggedUserEmail: 'email@example.com',
+            loggedUserName: 'name',
+            loggedUserSurname: 'surname',
+            themeMode: ThemeMode.dark,
+            language: Language.english,
           ),
         ),
       );
@@ -140,9 +118,10 @@ void main() {
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
+        loggedUserEmail: 'email@example.com',
         loggedUserName: 'name',
         loggedUserSurname: 'surname',
-        themeMode: ThemeMode.system,
+        themeMode: ThemeMode.dark,
         language: Language.english,
       ),
     ],

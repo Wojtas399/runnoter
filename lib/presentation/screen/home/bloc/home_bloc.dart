@@ -14,8 +14,7 @@ import 'home_state.dart';
 class HomeBloc extends BlocWithStatus<HomeEvent, HomeState, HomeInfo, dynamic> {
   final AuthService _authService;
   final UserRepository _userRepository;
-  StreamSubscription<String?>? _loggedUserEmailListener;
-  StreamSubscription<User?>? _loggedUserDataListener;
+  StreamSubscription<HomeStateListenedParams?>? _listenedParamsListener;
 
   HomeBloc({
     required AuthService authService,
@@ -31,48 +30,36 @@ class HomeBloc extends BlocWithStatus<HomeEvent, HomeState, HomeInfo, dynamic> {
           ),
         ) {
     on<HomeEventInitialize>(_initialize);
-    on<HomeEventLoggedUserEmailChanged>(_loggedUserEmailChanged);
-    on<HomeEventLoggedUserDataChanged>(_loggedUserDataChanged);
+    on<HomeEventListenedParamsChanged>(_listenedParamsChanged);
     on<HomeEventCurrentPageChanged>(_currentPageChanged);
     on<HomeEventSignOut>(_signOut);
   }
 
   @override
   Future<void> close() {
-    _loggedUserEmailListener?.cancel();
-    _loggedUserEmailListener = null;
-    _loggedUserDataListener?.cancel();
-    _loggedUserDataListener = null;
+    _listenedParamsListener?.cancel();
+    _listenedParamsListener = null;
     return super.close();
   }
 
-  void _initialize(
+  _initialize(
     HomeEventInitialize event,
     Emitter<HomeState> emit,
   ) {
-    _setLoggedUserEmailListener();
-    _setLoggedUserDataListener();
+    emitLoadingStatus(emit);
+    _setListenedParamsListener();
   }
 
-  void _loggedUserEmailChanged(
-    HomeEventLoggedUserEmailChanged event,
+  void _listenedParamsChanged(
+    HomeEventListenedParamsChanged event,
     Emitter<HomeState> emit,
   ) {
     emit(state.copyWith(
-      loggedUserEmail: event.loggedUserEmail,
-    ));
-  }
-
-  void _loggedUserDataChanged(
-    HomeEventLoggedUserDataChanged event,
-    Emitter<HomeState> emit,
-  ) {
-    final User? userData = event.loggedUserData;
-    emit(state.copyWith(
-      loggedUserName: userData?.name,
-      loggedUserSurname: userData?.surname,
-      themeMode: userData?.settings.themeMode,
-      language: userData?.settings.language,
+      loggedUserEmail: event.listenedParams?.loggedUserEmail,
+      loggedUserName: event.listenedParams?.loggedUserName,
+      loggedUserSurname: event.listenedParams?.loggedUserSurname,
+      themeMode: event.listenedParams?.themeMode,
+      language: event.listenedParams?.language,
     ));
   }
 
@@ -94,34 +81,32 @@ class HomeBloc extends BlocWithStatus<HomeEvent, HomeState, HomeInfo, dynamic> {
     emitCompleteStatus(emit, HomeInfo.userSignedOut);
   }
 
-  void _setLoggedUserEmailListener() {
-    _loggedUserEmailListener ??= _authService.loggedUserEmail$.listen(
-      (String? loggedUserEmail) {
-        add(
-          HomeEventLoggedUserEmailChanged(
-            loggedUserEmail: loggedUserEmail,
-          ),
-        );
-      },
-    );
+  void _setListenedParamsListener() {
+    _listenedParamsListener ??= Rx.combineLatest2(
+      _authService.loggedUserEmail$,
+      _getLoggedUserData(),
+      (String? loggedUserEmail, User? loggedUserData) =>
+          HomeStateListenedParams(
+        loggedUserEmail: loggedUserEmail,
+        loggedUserName: loggedUserData?.name,
+        loggedUserSurname: loggedUserData?.surname,
+        themeMode: loggedUserData?.settings.themeMode,
+        language: loggedUserData?.settings.language,
+      ),
+    ).listen((HomeStateListenedParams listenedParams) {
+      add(
+        HomeEventListenedParamsChanged(
+          listenedParams: listenedParams,
+        ),
+      );
+    });
   }
 
-  void _setLoggedUserDataListener() {
-    _loggedUserDataListener ??= _authService.loggedUserId$
-        .whereType<String>()
-        .switchMap(
+  Stream<User?> _getLoggedUserData() {
+    return _authService.loggedUserId$.whereType<String>().switchMap(
           (String loggedUserId) => _userRepository.getUserById(
             userId: loggedUserId,
           ),
-        )
-        .listen(
-      (User? loggedUserData) {
-        add(
-          HomeEventLoggedUserDataChanged(
-            loggedUserData: loggedUserData,
-          ),
         );
-      },
-    );
   }
 }

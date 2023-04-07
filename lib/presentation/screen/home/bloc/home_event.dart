@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
 
-import '../../../../domain/model/user.dart';
 import 'home_state.dart';
 
 abstract class HomeEvent extends Equatable {
@@ -14,29 +13,16 @@ class HomeEventInitialize extends HomeEvent {
   const HomeEventInitialize();
 }
 
-class HomeEventLoggedUserEmailChanged extends HomeEvent {
-  final String? loggedUserEmail;
+class HomeEventListenedParamsChanged extends HomeEvent {
+  final HomeStateListenedParams? listenedParams;
 
-  const HomeEventLoggedUserEmailChanged({
-    required this.loggedUserEmail,
+  const HomeEventListenedParamsChanged({
+    required this.listenedParams,
   });
 
   @override
   List<Object?> get props => [
-        loggedUserEmail,
-      ];
-}
-
-class HomeEventLoggedUserDataChanged extends HomeEvent {
-  final User? loggedUserData;
-
-  const HomeEventLoggedUserDataChanged({
-    required this.loggedUserData,
-  });
-
-  @override
-  List<Object?> get props => [
-        loggedUserData,
+        listenedParams,
       ];
 }
 

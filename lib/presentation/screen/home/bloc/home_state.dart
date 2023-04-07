@@ -1,3 +1,5 @@
+import 'package:equatable/equatable.dart';
+
 import '../../../../domain/model/settings.dart';
 import '../../../model/bloc_state.dart';
 import '../../../model/bloc_status.dart';
@@ -72,4 +74,29 @@ enum HomePage {
 
 enum HomeInfo {
   userSignedOut,
+}
+
+class HomeStateListenedParams extends Equatable {
+  final String? loggedUserEmail;
+  final String? loggedUserName;
+  final String? loggedUserSurname;
+  final ThemeMode? themeMode;
+  final Language? language;
+
+  const HomeStateListenedParams({
+    required this.loggedUserEmail,
+    required this.loggedUserName,
+    required this.loggedUserSurname,
+    required this.themeMode,
+    required this.language,
+  });
+
+  @override
+  List<Object?> get props => [
+        loggedUserEmail,
+        loggedUserName,
+        loggedUserSurname,
+        themeMode,
+        language,
+      ];
 }

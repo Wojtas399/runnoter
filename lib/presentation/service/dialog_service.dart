@@ -15,6 +15,7 @@ void showLoadingDialog({
   showDialog(
     context: context,
     builder: (_) => const LoadingDialog(),
+    barrierDismissible: false,
   );
 }
 
