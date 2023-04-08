@@ -6,9 +6,4 @@ abstract class Entity extends Equatable {
   const Entity({
     required this.id,
   });
-
-  @override
-  List<Object> get props => [
-        id,
-      ];
 }
