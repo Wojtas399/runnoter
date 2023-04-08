@@ -9,4 +9,12 @@ class MockDateService extends Mock implements DateService {
       () => getNow(),
     ).thenReturn(now);
   }
+
+  void mockGetDatesFromWeekMatchingToDate({
+    required List<DateTime> dates,
+  }) {
+    when(
+      () => getDatesFromWeekMatchingToDate(any()),
+    ).thenReturn(dates);
+  }
 }

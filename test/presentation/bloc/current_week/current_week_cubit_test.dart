@@ -22,11 +22,22 @@ void main() {
 
   blocTest(
     'initialize, '
-    "should set listener of logged user's workouts from week",
+    "should set listener of logged user's workouts from week and should set days from current week in state",
     build: () => createCubit(),
     setUp: () {
       dateService.mockGetNow(
-        now: DateTime(2023, 1, 1),
+        now: DateTime(2023, 4, 6),
+      );
+      dateService.mockGetDatesFromWeekMatchingToDate(
+        dates: [
+          DateTime(2023, 4, 3),
+          DateTime(2023, 4, 4),
+          DateTime(2023, 4, 5),
+          DateTime(2023, 4, 6),
+          DateTime(2023, 4, 7),
+          DateTime(2023, 4, 8),
+          DateTime(2023, 4, 9),
+        ],
       );
       authService.mockGetLoggedUserId(
         userId: 'u1',
@@ -35,12 +46,12 @@ void main() {
         workouts: [
           createWorkout(
             id: 'w1',
-            date: DateTime(2023, 1, 2),
+            date: DateTime(2023, 4, 5),
             name: 'first workout name',
           ),
           createWorkout(
             id: 'w2',
-            date: DateTime(2023, 1, 3),
+            date: DateTime(2023, 4, 7),
             name: 'second workout name',
           ),
         ],
@@ -51,16 +62,27 @@ void main() {
     },
     expect: () => [
       [
-        createWorkout(
-          id: 'w1',
-          date: DateTime(2023, 1, 2),
-          name: 'first workout name',
+        Day(date: DateTime(2023, 4, 3), workout: null),
+        Day(date: DateTime(2023, 4, 4), workout: null),
+        Day(
+          date: DateTime(2023, 4, 5),
+          workout: createWorkout(
+            id: 'w1',
+            date: DateTime(2023, 4, 5),
+            name: 'first workout name',
+          ),
         ),
-        createWorkout(
-          id: 'w2',
-          date: DateTime(2023, 1, 3),
-          name: 'second workout name',
+        Day(date: DateTime(2023, 4, 6), workout: null),
+        Day(
+          date: DateTime(2023, 4, 7),
+          workout: createWorkout(
+            id: 'w2',
+            date: DateTime(2023, 4, 7),
+            name: 'second workout name',
+          ),
         ),
+        Day(date: DateTime(2023, 4, 8), workout: null),
+        Day(date: DateTime(2023, 4, 9), workout: null),
       ]
     ],
     verify: (_) {
@@ -70,7 +92,7 @@ void main() {
       verify(
         () => workoutRepository.getWorkoutsFromWeek(
           userId: 'u1',
-          dateFromWeek: DateTime(2023, 1, 1),
+          dateFromWeek: DateTime(2023, 4, 6),
         ),
       ).called(1);
     },

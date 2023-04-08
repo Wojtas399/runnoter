@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -8,7 +9,7 @@ import '../../../domain/repository/workout_repository.dart';
 import '../../../domain/service/auth_service.dart';
 import '../../service/date_service.dart';
 
-class CurrentWeekCubit extends Cubit<List<Workout>?> {
+class CurrentWeekCubit extends Cubit<List<Day>?> {
   final DateService _dateService;
   final AuthService _authService;
   final WorkoutRepository _workoutRepository;
@@ -39,10 +40,41 @@ class CurrentWeekCubit extends Cubit<List<Workout>?> {
             dateFromWeek: _dateService.getNow(),
           ),
         )
-        .listen(
-      (List<Workout>? workoutsFromWeek) {
-        emit(workoutsFromWeek);
-      },
-    );
+        .listen(_manageWorkoutsFromWeek);
   }
+
+  void _manageWorkoutsFromWeek(List<Workout>? workouts) {
+    final List<Workout?> workoutsFromWeek = [...?workouts];
+    final DateTime today = _dateService.getNow();
+    final List<DateTime> datesFromWeek =
+        _dateService.getDatesFromWeekMatchingToDate(today);
+    final List<Day> days = datesFromWeek
+        .map(
+          (DateTime date) => Day(
+            date: date,
+            workout: workoutsFromWeek.firstWhere(
+              (Workout? workout) => workout?.date == date,
+              orElse: () => null,
+            ),
+          ),
+        )
+        .toList();
+    emit(days);
+  }
+}
+
+class Day extends Equatable {
+  final DateTime date;
+  final Workout? workout;
+
+  const Day({
+    required this.date,
+    required this.workout,
+  });
+
+  @override
+  List<Object?> get props => [
+        date,
+        workout,
+      ];
 }

@@ -1,6 +1,7 @@
 class DateService {
   DateTime getNow() {
-    return DateTime.now();
+    final now = DateTime.now();
+    return DateTime(now.year, now.month, now.day);
   }
 
   List<DateTime> getDatesFromWeekMatchingToDate(DateTime date) {
