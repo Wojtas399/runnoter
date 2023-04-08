@@ -1,11 +1,20 @@
-import 'package:firebase/model/dto/user_dto.dart';
+import 'package:firebase/firebase.dart';
 
 import '../../domain/model/user.dart';
+import 'settings_mapper.dart';
 
-User mapUserFromDtoModel(UserDto dto) {
+User mapUserFromDto({
+  required UserDto userDto,
+  required AppearanceSettingsDto appearanceSettingsDto,
+  required WorkoutSettingsDto workoutSettingsDto,
+}) {
   return User(
-    id: dto.id,
-    name: dto.name,
-    surname: dto.surname,
+    id: userDto.id,
+    name: userDto.name,
+    surname: userDto.surname,
+    settings: mapSettingsFromDto(
+      appearanceSettingsDto: appearanceSettingsDto,
+      workoutSettingsDto: workoutSettingsDto,
+    ),
   );
 }

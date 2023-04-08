@@ -1,6 +1,7 @@
 import 'package:firebase/firebase.dart';
-import 'package:firebase/model/dto/user_dto.dart';
 import 'package:mocktail/mocktail.dart';
+
+class FakeUserDto extends Fake implements UserDto {}
 
 class MockFirebaseUserService extends Mock implements FirebaseUserService {
   void mockLoadUserById({
@@ -14,12 +15,35 @@ class MockFirebaseUserService extends Mock implements FirebaseUserService {
   }
 
   void mockAddUserPersonalData() {
+    _mockUserDto();
     when(
       () => addUserPersonalData(
+        userDto: any(named: 'userDto'),
+      ),
+    ).thenAnswer((_) async => '');
+  }
+
+  void mockUpdateUserData({
+    UserDto? userDto,
+  }) {
+    when(
+      () => updateUserData(
         userId: any(named: 'userId'),
         name: any(named: 'name'),
         surname: any(named: 'surname'),
       ),
-    ).thenAnswer((_) async => '');
+    ).thenAnswer((invocation) => Future.value(userDto));
+  }
+
+  void mockDeleteUserData() {
+    when(
+      () => deleteUserData(
+        userId: any(named: 'userId'),
+      ),
+    ).thenAnswer((invocation) => Future.value());
+  }
+
+  void _mockUserDto() {
+    registerFallbackValue(FakeUserDto());
   }
 }

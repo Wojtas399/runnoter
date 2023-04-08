@@ -1,5 +1,6 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:runnoter/domain/model/settings.dart';
 import 'package:runnoter/presentation/model/bloc_status.dart';
 import 'package:runnoter/presentation/screen/home/bloc/home_bloc.dart';
 import 'package:runnoter/presentation/screen/home/bloc/home_event.dart';
@@ -7,6 +8,7 @@ import 'package:runnoter/presentation/screen/home/bloc/home_state.dart';
 
 import '../../../mock/domain/mock_auth_service.dart';
 import '../../../mock/domain/mock_user_repository.dart';
+import '../../../util/settings_creator.dart';
 import '../../../util/user_creator.dart';
 
 void main() {
@@ -26,6 +28,8 @@ void main() {
     String? loggedUserEmail,
     String? loggedUserName,
     String? loggedUserSurname,
+    ThemeMode? themeMode,
+    Language? language,
   }) {
     return HomeState(
       status: status,
@@ -33,6 +37,8 @@ void main() {
       loggedUserEmail: loggedUserEmail,
       loggedUserName: loggedUserName,
       loggedUserSurname: loggedUserSurname,
+      themeMode: themeMode,
+      language: language,
     );
   }
 
@@ -52,6 +58,10 @@ void main() {
           id: 'u1',
           name: 'name',
           surname: 'surname',
+          settings: createSettings(
+            themeMode: ThemeMode.dark,
+            language: Language.polish,
+          ),
         ),
       );
     },
@@ -62,14 +72,15 @@ void main() {
     },
     expect: () => [
       createState(
-        status: const BlocStatusComplete(),
-        loggedUserEmail: 'user@example.com',
+        status: const BlocStatusLoading(),
       ),
       createState(
         status: const BlocStatusComplete(),
         loggedUserEmail: 'user@example.com',
         loggedUserName: 'name',
         loggedUserSurname: 'surname',
+        themeMode: ThemeMode.dark,
+        language: Language.polish,
       ),
     ],
     verify: (_) {
@@ -88,35 +99,18 @@ void main() {
   );
 
   blocTest(
-    'logged user email changed, '
-    'should update logged user email in state',
+    'listened params changed, '
+    "should update logged user's email, name, surname, theme mode and language in state",
     build: () => createBloc(),
     act: (HomeBloc bloc) {
       bloc.add(
-        const HomeEventLoggedUserEmailChanged(
-          loggedUserEmail: 'user@example.com',
-        ),
-      );
-    },
-    expect: () => [
-      createState(
-        status: const BlocStatusComplete(),
-        loggedUserEmail: 'user@example.com',
-      ),
-    ],
-  );
-
-  blocTest(
-    'logged user data changed, '
-    'should update logged user name and surname in state',
-    build: () => createBloc(),
-    act: (HomeBloc bloc) {
-      bloc.add(
-        HomeEventLoggedUserDataChanged(
-          loggedUserData: createUser(
-            id: 'u1',
-            name: 'name',
-            surname: 'surname',
+        const HomeEventListenedParamsChanged(
+          listenedParams: HomeStateListenedParams(
+            loggedUserEmail: 'email@example.com',
+            loggedUserName: 'name',
+            loggedUserSurname: 'surname',
+            themeMode: ThemeMode.dark,
+            language: Language.english,
           ),
         ),
       );
@@ -124,8 +118,11 @@ void main() {
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
+        loggedUserEmail: 'email@example.com',
         loggedUserName: 'name',
         loggedUserSurname: 'surname',
+        themeMode: ThemeMode.dark,
+        language: Language.english,
       ),
     ],
   );

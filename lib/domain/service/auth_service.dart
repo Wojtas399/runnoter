@@ -8,9 +8,7 @@ abstract class AuthService {
     required String password,
   });
 
-  Future<void> signUp({
-    required String name,
-    required String surname,
+  Future<String?> signUp({
     required String email,
     required String password,
   });
@@ -20,4 +18,22 @@ abstract class AuthService {
   });
 
   Future<void> signOut();
+
+  Future<void> updateEmail({
+    required String newEmail,
+    required String password,
+  });
+
+  Future<void> updatePassword({
+    required String newPassword,
+    required String currentPassword,
+  });
+
+  Future<bool> isPasswordCorrect({
+    required String password,
+  });
+
+  Future<void> deleteAccount({
+    required String password,
+  });
 }

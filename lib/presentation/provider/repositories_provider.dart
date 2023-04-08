@@ -21,6 +21,9 @@ class RepositoriesProvider extends StatelessWidget {
         Provider<UserRepository>(
           create: (_) => UserRepositoryImpl(
             firebaseUserService: FirebaseUserService(),
+            firebaseAppearanceSettingsService:
+                FirebaseAppearanceSettingsService(),
+            firebaseWorkoutSettingsService: FirebaseWorkoutSettingsService(),
           ),
         ),
       ],

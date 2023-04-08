@@ -38,9 +38,9 @@ class SignInAppBar extends StatelessWidget implements PreferredSizeWidget {
   void _onSwitched(BuildContext context, bool isSwitched) {
     final ThemeService service = context.read<ThemeService>();
     if (isSwitched) {
-      service.turnOnDarkTheme();
+      service.changeTheme(ThemeMode.dark);
     } else {
-      service.turnOnLightTheme();
+      service.changeTheme(ThemeMode.light);
     }
   }
 }

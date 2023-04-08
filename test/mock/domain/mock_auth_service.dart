@@ -29,12 +29,13 @@ class MockAuthService extends Mock implements AuthService {
   }
 
   void mockSignUp({
+    String? userId,
     Object? throwable,
   }) {
     if (throwable != null) {
       when(_signUpCall).thenThrow(throwable);
     } else {
-      when(_signUpCall).thenAnswer((invocation) => Future.value());
+      when(_signUpCall).thenAnswer((invocation) => Future.value(userId));
     }
   }
 
@@ -56,6 +57,48 @@ class MockAuthService extends Mock implements AuthService {
     ).thenAnswer((invocation) => Future.value());
   }
 
+  void mockUpdateEmail({
+    Object? throwable,
+  }) {
+    if (throwable != null) {
+      when(_updateEmailCall).thenThrow(throwable);
+    } else {
+      when(_updateEmailCall).thenAnswer((invocation) => Future.value());
+    }
+  }
+
+  void mockUpdatePassword({
+    Object? throwable,
+  }) {
+    if (throwable != null) {
+      when(_updatePasswordCall).thenThrow(throwable);
+    } else {
+      when(_updatePasswordCall).thenAnswer((invocation) => Future.value());
+    }
+  }
+
+  void mockIsPasswordCorrect({
+    bool isCorrect = true,
+  }) {
+    when(
+      () => isPasswordCorrect(
+        password: any(named: 'password'),
+      ),
+    ).thenAnswer((invocation) => Future.value(isCorrect));
+  }
+
+  void mockDeleteAccount({
+    Object? throwable,
+  }) {
+    if (throwable != null) {
+      when(_deleteAccountCall).thenThrow(throwable);
+    } else {
+      when(
+        _deleteAccountCall,
+      ).thenAnswer((invocation) => Future.value());
+    }
+  }
+
   Future<void> _signInCall() {
     return signIn(
       email: any(named: 'email'),
@@ -63,10 +106,8 @@ class MockAuthService extends Mock implements AuthService {
     );
   }
 
-  Future<void> _signUpCall() {
+  Future<String?> _signUpCall() {
     return signUp(
-      name: any(named: 'name'),
-      surname: any(named: 'surname'),
       email: any(named: 'email'),
       password: any(named: 'password'),
     );
@@ -75,6 +116,26 @@ class MockAuthService extends Mock implements AuthService {
   Future<void> _sendPasswordResetEmailCall() {
     return sendPasswordResetEmail(
       email: any(named: 'email'),
+    );
+  }
+
+  Future<void> _updateEmailCall() {
+    return updateEmail(
+      newEmail: any(named: 'newEmail'),
+      password: any(named: 'password'),
+    );
+  }
+
+  Future<void> _updatePasswordCall() {
+    return updatePassword(
+      newPassword: any(named: 'newPassword'),
+      currentPassword: any(named: 'currentPassword'),
+    );
+  }
+
+  Future<void> _deleteAccountCall() {
+    return deleteAccount(
+      password: any(named: 'password'),
     );
   }
 }

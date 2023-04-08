@@ -6,13 +6,10 @@ import '../mapper/auth_exception_mapper.dart';
 
 class AuthServiceImpl implements AuthService {
   final FirebaseAuthService _firebaseAuthService;
-  final FirebaseUserService _firebaseUserService;
 
   AuthServiceImpl({
     required FirebaseAuthService firebaseAuthService,
-    required FirebaseUserService firebaseUserService,
-  })  : _firebaseAuthService = firebaseAuthService,
-        _firebaseUserService = firebaseUserService;
+  }) : _firebaseAuthService = firebaseAuthService;
 
   @override
   Stream<String?> get loggedUserId$ => _firebaseAuthService.loggedUserId$;
@@ -42,26 +39,15 @@ class AuthServiceImpl implements AuthService {
   }
 
   @override
-  Future<void> signUp({
-    required String name,
-    required String surname,
+  Future<String?> signUp({
     required String email,
     required String password,
   }) async {
     try {
-      final String? userId = await _firebaseAuthService.signUp(
-        name: name,
-        surname: surname,
+      return await _firebaseAuthService.signUp(
         email: email,
         password: password,
       );
-      if (userId != null) {
-        await _firebaseUserService.addUserPersonalData(
-          userId: userId,
-          name: name,
-          surname: surname,
-        );
-      }
     } on FirebaseAuthExceptionCode catch (exception) {
       final AuthException? authException =
           mapFromFirebaseAuthExceptionCodeToAuthException(exception);
@@ -93,5 +79,75 @@ class AuthServiceImpl implements AuthService {
   @override
   Future<void> signOut() async {
     await _firebaseAuthService.signOut();
+  }
+
+  @override
+  Future<void> updateEmail({
+    required String newEmail,
+    required String password,
+  }) async {
+    try {
+      await _firebaseAuthService.updateEmail(
+        newEmail: newEmail,
+        password: password,
+      );
+    } on FirebaseAuthExceptionCode catch (exception) {
+      final AuthException? authException =
+          mapFromFirebaseAuthExceptionCodeToAuthException(exception);
+      if (authException != null) {
+        throw authException;
+      } else {
+        rethrow;
+      }
+    }
+  }
+
+  @override
+  Future<void> updatePassword({
+    required String newPassword,
+    required String currentPassword,
+  }) async {
+    try {
+      await _firebaseAuthService.updatePassword(
+        currentPassword: currentPassword,
+        newPassword: newPassword,
+      );
+    } on FirebaseAuthExceptionCode catch (exception) {
+      final AuthException? authException =
+          mapFromFirebaseAuthExceptionCodeToAuthException(exception);
+      if (authException != null) {
+        throw authException;
+      } else {
+        rethrow;
+      }
+    }
+  }
+
+  @override
+  Future<bool> isPasswordCorrect({
+    required String password,
+  }) async {
+    return await _firebaseAuthService.isPasswordCorrect(
+      password: password,
+    );
+  }
+
+  @override
+  Future<void> deleteAccount({
+    required String password,
+  }) async {
+    try {
+      await _firebaseAuthService.deleteAccount(
+        password: password,
+      );
+    } on FirebaseAuthExceptionCode catch (exception) {
+      final AuthException? authException =
+          mapFromFirebaseAuthExceptionCodeToAuthException(exception);
+      if (authException != null) {
+        throw authException;
+      } else {
+        rethrow;
+      }
+    }
   }
 }

@@ -1,3 +1,6 @@
+import 'package:equatable/equatable.dart';
+
+import '../../../../domain/model/settings.dart';
 import '../../../model/bloc_state.dart';
 import '../../../model/bloc_status.dart';
 
@@ -6,6 +9,8 @@ class HomeState extends BlocState<HomeState> {
   final String? loggedUserEmail;
   final String? loggedUserName;
   final String? loggedUserSurname;
+  final ThemeMode? themeMode;
+  final Language? language;
 
   const HomeState({
     required super.status,
@@ -13,6 +18,8 @@ class HomeState extends BlocState<HomeState> {
     this.loggedUserEmail,
     this.loggedUserName,
     this.loggedUserSurname,
+    this.themeMode,
+    this.language,
   });
 
   @override
@@ -22,7 +29,16 @@ class HomeState extends BlocState<HomeState> {
         loggedUserEmail,
         loggedUserName,
         loggedUserSurname,
+        themeMode,
+        language,
       ];
+
+  bool get areAllDataLoaded =>
+      loggedUserName != null &&
+      loggedUserSurname != null &&
+      loggedUserEmail != null &&
+      themeMode != null &&
+      language != null;
 
   @override
   HomeState copyWith({
@@ -31,6 +47,8 @@ class HomeState extends BlocState<HomeState> {
     String? loggedUserEmail,
     String? loggedUserName,
     String? loggedUserSurname,
+    ThemeMode? themeMode,
+    Language? language,
   }) {
     return HomeState(
       status: status ?? const BlocStatusComplete(),
@@ -38,6 +56,8 @@ class HomeState extends BlocState<HomeState> {
       loggedUserEmail: loggedUserEmail ?? this.loggedUserEmail,
       loggedUserName: loggedUserName ?? this.loggedUserName,
       loggedUserSurname: loggedUserSurname ?? this.loggedUserSurname,
+      themeMode: themeMode ?? this.themeMode,
+      language: language ?? this.language,
     );
   }
 }
@@ -54,4 +74,29 @@ enum HomePage {
 
 enum HomeInfo {
   userSignedOut,
+}
+
+class HomeStateListenedParams extends Equatable {
+  final String? loggedUserEmail;
+  final String? loggedUserName;
+  final String? loggedUserSurname;
+  final ThemeMode? themeMode;
+  final Language? language;
+
+  const HomeStateListenedParams({
+    required this.loggedUserEmail,
+    required this.loggedUserName,
+    required this.loggedUserSurname,
+    required this.themeMode,
+    required this.language,
+  });
+
+  @override
+  List<Object?> get props => [
+        loggedUserEmail,
+        loggedUserName,
+        loggedUserSurname,
+        themeMode,
+        language,
+      ];
 }

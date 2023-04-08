@@ -27,17 +27,25 @@ class StateRepository<T extends Entity> {
 
   void addEntity(T entity) {
     final List<T> updatedData = [...?_dataStream.value];
-    final int entityIndex = updatedData.indexWhere(
+    updatedData.add(entity);
+    _dataStream.add(updatedData);
+  }
+
+  void updateEntity(T entity) {
+    final List<T> updatedData = [...?_dataStream.value];
+    final entityIndex = updatedData.indexWhere(
       (T existingEntity) => existingEntity.id == entity.id,
     );
-    if (entityIndex >= 0) {
-      final int entityIndex = updatedData.indexWhere(
-        (T existingEntity) => existingEntity.id == entity.id,
-      );
-      updatedData[entityIndex] = entity;
-    } else {
-      updatedData.add(entity);
+    if (entityIndex < 0) {
+      return;
     }
+    updatedData[entityIndex] = entity;
+    _dataStream.add(updatedData);
+  }
+
+  void removeEntity(String entityId) {
+    final List<T> updatedData = [...?_dataStream.value];
+    updatedData.removeWhere((entity) => entity.id == entityId);
     _dataStream.add(updatedData);
   }
 }

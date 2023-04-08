@@ -63,23 +63,23 @@
   },
 
 
-  "forgot_password_message_title": "Zapomniałeś hasła?",
-  "@forgot_password_message_title": {
+  "forgot_password_screen_title": "Zapomniałeś hasła?",
+  "@forgot_password_screen_title": {
     "description": "Title of the message displaying on forgot password screen"
   },
-  "forgot_password_message_text": "Podaj adres email, na który wyślecimy Ci link z możliwością zmiany hasła.",
-  "@forgot_password_message_text": {
+  "forgot_password_screen_message": "Podaj adres email, na który wyślecimy Ci link z możliwością zmiany hasła.",
+  "@forgot_password_screen_message": {
     "description": "Text of the message displaying on forgot password screen"
   },
-  "forgot_password_submit_button_label": "Wyślij",
-  "@forgot_password_submit_button_label": {
+  "forgot_password_screen_submit_button_label": "Wyślij",
+  "@forgot_password_screen_submit_button_label": {
     "description": "Label of the button to send link to change password"
   },
   "forgot_password_screen_sent_email_dialog_title": "Wiadomość email została wysłana",
   "@forgot_password_screen_sent_email_dialog_title": {
     "description": "Title of the dialog to inform that email with link to reset password has been sent"
   },
-  "forgot_password_screen_sent_email_dialog_message": "Pomyślnie wysłano wiadomość na podany adres email. Sprawdź skrzynkę pocztową i postępuj zgodnie z instrukcjami zamieszczonymi w wysłanej wiadomości.",
+  "forgot_password_screen_sent_email_dialog_message": "Pomyślnie wysłano wiadomość na twój adres email. Sprawdź skrzynkę pocztową i postępuj zgodnie z instrukcjami zamieszczonymi w wysłanej wiadomości.",
   "@forgot_password_screen_sent_email_dialog_message": {
     "description": "Message of the dialog to inform that email with link to reset password has been sent"
   },
@@ -143,6 +143,185 @@
   },
 
 
+  "profile_screen_title": "Profil",
+  "@profile_screen_title": {
+    "description": "Title of the profile screen"
+  },
+  "profile_screen_user_data_section_title": "Dane użytkownika",
+  "@profile_screen_user_data_section_title": {
+    "description": "Title of the user data section"
+  },
+  "profile_screen_settings_section_title": "Ustawienia",
+  "@profile_screen_settings_section_title": {
+    "description": "Title of settings section"
+  },
+  "profile_screen_change_password_label": "Zmień hasło",
+  "@profile_screen_change_password_label": {
+    "description": "Label of change password option"
+  },
+  "profile_screen_delete_account_label": "Usuń konto",
+  "@profile_screen_delete_account_label": {
+    "description": "Label of delete account option"
+  },
+  "profile_screen_new_username_dialog_title": "Zmień imię",
+  "@profile_screen_new_username_dialog_title": {
+    "description": "Title of the dialog to change username"
+  },
+  "profile_screen_new_surname_dialog_title": "Zmień nazwisko",
+  "@profile_screen_new_surname_dialog_title": {
+    "description": "Title of the dialog to change surname"
+  },
+  "profile_screen_new_email_dialog_title": "Zmień email",
+  "@profile_screen_new_email_dialog_title": {
+    "description": "Title of the dialog to change email"
+  },
+  "profile_screen_new_password_dialog_title": "Zmień hasło",
+  "@profile_screen_new_password_dialog_title": {
+    "description": "Title of the dialog to update password"
+  },
+  "profile_screen_new_password_dialog_new_password_label": "Nowe hasło",
+  "@profile_screen_new_password_dialog_new_password_label": {
+    "description": "Label of text field to enter new password"
+  },
+  "profile_screen_new_password_dialog_current_password_label": "Obecne hasło",
+  "@profile_screen_new_password_dialog_current_password_label": {
+    "description": "Label of text field to enter current password"
+  },
+  "profile_screen_delete_account_dialog_title": "Usuń konto",
+  "@profile_screen_delete_account_dialog_title": {
+    "description": "Title of the dialog to delete account"
+  },
+  "profile_screen_delete_account_dialog_message": "Usuwając konto utracisz wszystkie zapisane dane, bez możliwości ich odzyskania.",
+  "@profile_screen_delete_account_dialog_message": {
+    "description": "Message of the dialog to delete account"
+  },
+  "profile_screen_successfully_saved_data_message": "Pomyślnie zapisano zmiany",
+  "@profile_screen_successfully_saved_data_message": {
+    "description": "Message to inform that data has been successfully saved"
+  },
+  "profile_screen_email_already_taken_title": "Zajęty adres email",
+  "@profile_screen_email_already_taken_title": {
+    "description": "Title of the dialog to inform that new email is already taken"
+  },
+  "profile_screen_email_already_taken_message": "Niestety, nowo podany adres email jest już zajęty przez innego użytkownika...",
+  "@profile_screen_email_already_taken_message": {
+    "description": "Message of the dialog to inform that new email is already taken"
+  },
+  "profile_screen_wrong_password_title": "Błędne hasło",
+  "@profile_screen_wrong_password_title": {
+    "description": "Title of the dialog to inform that given password is wrong"
+  },
+  "profile_screen_wrong_password_message": "Podane hasło jest błędne...",
+  "@profile_screen_wrong_password_message": {
+    "description": "Message of the dialog to inform that given password is wrong"
+  },
+  "profile_screen_wrong_current_password_title": "Błędne obecne hasło",
+  "@profile_screen_wrong_current_password_title": {
+    "description": "Title of the dialog to inform that given current password is wrong"
+  },
+  "profile_screen_wrong_current_password_message": "Podane obecne hasło jest błędne...",
+  "@profile_screen_wrong_current_password_message": {
+    "description": "Message of the dialog to inform that given current password is wrong"
+  },
+
+
+  "theme_mode_label": "Motyw",
+  "@theme_mode_label": {
+    "description": "Label of theme mode"
+  },
+  "theme_mode_light": "Jasny",
+  "@theme_mode_light": {
+    "description": "Light theme mode"
+  },
+  "theme_mode_dark": "Ciemny",
+  "@theme_mode_dark": {
+    "description": "Dark theme mode"
+  },
+  "theme_mode_system": "Systemowy",
+  "@theme_mode_system": {
+    "description": "System theme mode"
+  },
+  "theme_mode_selection_text": "Wybierz motyw aplikacji",
+  "@theme_mode_selection_text": {
+    "description": "Text about theme mode selection"
+  },
+  "system_theme_mode_description": "Jeśli wybierzesz motyw systemowy, aplikacja będzie używała motywu obecnie ustawionego na Twoim urządzeniu.",
+  "@system_theme_mode_description": {
+    "description": "Description about system theme mode"
+  },
+
+
+  "language_label": "Język",
+  "@language_label": {
+    "description": "Label of language"
+  },
+  "language_polish": "Polski",
+  "@language_polish": {
+    "description": "Polish language"
+  },
+  "language_english": "Angielski",
+  "@language_english": {
+    "description": "English language"
+  },
+  "language_system": "Systemowy",
+  "@language_system": {
+    "description": "System language"
+  },
+  "language_selection_text": "Wybierz język aplikacji",
+  "@language_selection_text": {
+    "description": "Text about language selection"
+  },
+  "system_language_description": "Jeśli wybierzesz język systemowy, aplikacja będzie używała języka obecnie ustawionego na Twoim urządzeniu.",
+  "@system_language_description": {
+    "description": "Description about system language"
+  },
+
+
+  "distance_unit_label": "Jednostka dystansu",
+  "@distance_unit_label": {
+    "description": "Label of distance unit"
+  },
+  "distance_unit_kilometers": "Kilometry",
+  "@distance_unit_kilometers": {
+    "description": "Kilometers distance unit"
+  },
+  "distance_unit_miles": "Mile",
+  "@distance_unit_miles": {
+    "description": "Miles distance unit"
+  },
+  "distance_unit_selection_text": "Wybierz jednostkę dystansu",
+  "@distance_unit_selection_text": {
+    "description": "Text about distance unit selection"
+  },
+
+
+  "pace_unit_label": "Jednostka tempa",
+  "@pace_unit_label": {
+    "description": "Label of pace unit"
+  },
+  "pace_unit_minutes_per_kilometer": "min/km (minuty na kilometr)",
+  "@pace_unit_minutes_per_kilometer": {
+    "description": "Minutes per kilometer pace unit"
+  },
+  "pace_unit_minutes_per_miles": "min/mi (minuty na milę)",
+  "@pace_unit_minutes_per_miles": {
+    "description": "Minutes per mile pace unit"
+  },
+  "pace_unit_kilometers_per_hour": "km/h (kilometry na godzinę)",
+  "@pace_unit_kilometers_per_hour": {
+    "description": "Kilometers per hour pace unit"
+  },
+  "pace_unit_miles_per_hour": "mi/h (mile na godzinę)",
+  "@pace_unit_miles_per_hour": {
+    "description": "Miles per hour pace unit"
+  },
+  "pace_unit_selection_text": "Wybierz jednostkę tempa",
+  "@pace_unit_selection_text": {
+    "description": "Text about pace unit selection"
+  },
+
+
+
   "no_internet_connection_dialog_title": "Brak połączenia internetowego",
   "@no_internet_connection_dialog_title": {
     "description": "Title of the dialog about no internet connection"
@@ -196,6 +375,18 @@
   "confirm": "Zatwierdź",
   "@confirm": {
     "description": "Confirm"
+  },
+  "save": "Zapisz",
+  "@save": {
+    "description": "Save"
+  },
+  "delete": "Usuń",
+  "@delete": {
+    "description": "Delete"
+  },
+  "back": "Wróć",
+  "@back": {
+    "description": "Back"
   },
 
 

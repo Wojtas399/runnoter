@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../../../domain/repository/user_repository.dart';
 import '../../../../domain/service/auth_service.dart';
 import '../../../component/bloc_with_status_listener_component.dart';
 import '../../../config/navigation/routes.dart';
@@ -39,6 +40,7 @@ class _BlocProvider extends StatelessWidget {
     return BlocProvider(
       create: (_) => SignUpBloc(
         authService: context.read<AuthService>(),
+        userRepository: context.read<UserRepository>(),
         connectivityService: ConnectivityService(),
       ),
       child: child,

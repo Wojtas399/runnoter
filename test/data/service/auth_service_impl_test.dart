@@ -5,23 +5,25 @@ import 'package:runnoter/data/service_impl/auth_service_impl.dart';
 import 'package:runnoter/domain/model/auth_exception.dart';
 
 import '../../mock/firebase/mock_firebase_auth_service.dart';
-import '../../mock/firebase/mock_firebase_user_service.dart';
+
+class FakeUserDto extends Fake implements UserDto {}
 
 void main() {
   final firebaseAuthService = MockFirebaseAuthService();
-  final firebaseUserService = MockFirebaseUserService();
   late AuthServiceImpl service;
+
+  setUpAll(() {
+    registerFallbackValue(FakeUserDto());
+  });
 
   setUp(() {
     service = AuthServiceImpl(
       firebaseAuthService: firebaseAuthService,
-      firebaseUserService: firebaseUserService,
     );
   });
 
   tearDown(() {
     reset(firebaseAuthService);
-    reset(firebaseUserService);
   });
 
   test(
@@ -191,38 +193,25 @@ void main() {
 
   test(
     'sign up, '
-    'should call firebase method to sign up user and to add personal data of user',
+    'should call firebase method to sign up user and should return user id',
     () async {
-      const String userId = 'u1';
-      const String name = 'Jack';
-      const String surname = 'Gadovsky';
+      const String expectedUserId = 'u1';
       const String email = 'email@example.com';
       const String password = 'password123';
       firebaseAuthService.mockSignUp(
-        userId: userId,
+        userId: expectedUserId,
       );
-      firebaseUserService.mockAddUserPersonalData();
 
-      await service.signUp(
-        name: name,
-        surname: surname,
+      final String? userId = await service.signUp(
         email: email,
         password: password,
       );
 
+      expect(userId, expectedUserId);
       verify(
         () => firebaseAuthService.signUp(
-          name: name,
-          surname: surname,
           email: email,
           password: password,
-        ),
-      ).called(1);
-      verify(
-        () => firebaseUserService.addUserPersonalData(
-          userId: userId,
-          name: name,
-          surname: surname,
         ),
       ).called(1);
     },
@@ -230,24 +219,19 @@ void main() {
 
   test(
     'sign up, '
-    'email already in user firebase exception, '
+    'email already in use firebase exception, '
     'should throw email already in use auth exception',
     () async {
-      const String name = 'Jack';
-      const String surname = 'Gadovsky';
       const String email = 'email@example.com';
       const String password = 'password123';
       const AuthException expectedException = AuthException.emailAlreadyInUse;
       firebaseAuthService.mockSignUp(
         throwable: FirebaseAuthExceptionCode.emailAlreadyInUse,
       );
-      firebaseUserService.mockAddUserPersonalData();
 
       Object? exception;
       try {
         await service.signUp(
-          name: name,
-          surname: surname,
           email: email,
           password: password,
         );
@@ -258,19 +242,10 @@ void main() {
       expect(exception, expectedException);
       verify(
         () => firebaseAuthService.signUp(
-          name: name,
-          surname: surname,
           email: email,
           password: password,
         ),
       ).called(1);
-      verifyNever(
-        () => firebaseUserService.addUserPersonalData(
-          userId: any(named: 'userId'),
-          name: any(named: 'name'),
-          surname: any(named: 'surname'),
-        ),
-      );
     },
   );
 
@@ -279,21 +254,16 @@ void main() {
     'unknown exception, '
     'should rethrow exception',
     () async {
-      const String name = 'Jack';
-      const String surname = 'Gadovsky';
       const String email = 'email@example.com';
       const String password = 'password123';
       const String expectedException = 'Unknown exception..';
       firebaseAuthService.mockSignUp(
         throwable: expectedException,
       );
-      firebaseUserService.mockAddUserPersonalData();
 
       Object? exception;
       try {
         await service.signUp(
-          name: name,
-          surname: surname,
           email: email,
           password: password,
         );
@@ -304,19 +274,10 @@ void main() {
       expect(exception, expectedException);
       verify(
         () => firebaseAuthService.signUp(
-          name: name,
-          surname: surname,
           email: email,
           password: password,
         ),
       ).called(1);
-      verifyNever(
-        () => firebaseUserService.addUserPersonalData(
-          userId: any(named: 'userId'),
-          name: any(named: 'name'),
-          surname: any(named: 'surname'),
-        ),
-      );
     },
   );
 
@@ -436,6 +397,308 @@ void main() {
 
       verify(
         () => firebaseAuthService.signOut(),
+      ).called(1);
+    },
+  );
+
+  test(
+    'update email, '
+    'should call firebase method to update email',
+    () async {
+      const String newEmail = 'email@example.com';
+      const String password = 'password1';
+      firebaseAuthService.mockUpdateEmail();
+
+      await service.updateEmail(
+        newEmail: newEmail,
+        password: password,
+      );
+
+      verify(
+        () => firebaseAuthService.updateEmail(
+          newEmail: newEmail,
+          password: password,
+        ),
+      ).called(1);
+    },
+  );
+
+  test(
+    'update email, '
+    'wrong password firebase exception, '
+    'should throw wrong password auth exception',
+    () async {
+      const String newEmail = 'email@example.com';
+      const String password = 'password1';
+      const AuthException expectedException = AuthException.wrongPassword;
+      firebaseAuthService.mockUpdateEmail(
+        throwable: FirebaseAuthExceptionCode.wrongPassword,
+      );
+
+      Object? exception;
+      try {
+        await service.updateEmail(
+          newEmail: newEmail,
+          password: password,
+        );
+      } catch (e) {
+        exception = e;
+      }
+
+      expect(exception, expectedException);
+      verify(
+        () => firebaseAuthService.updateEmail(
+          newEmail: newEmail,
+          password: password,
+        ),
+      ).called(1);
+    },
+  );
+
+  test(
+    'update email, '
+    'email already in use firebase exception, '
+    'should throw email already in use auth exception',
+    () async {
+      const String newEmail = 'email@example.com';
+      const String password = 'password1';
+      const AuthException expectedException = AuthException.emailAlreadyInUse;
+      firebaseAuthService.mockUpdateEmail(
+        throwable: FirebaseAuthExceptionCode.emailAlreadyInUse,
+      );
+
+      Object? exception;
+      try {
+        await service.updateEmail(
+          newEmail: newEmail,
+          password: password,
+        );
+      } catch (e) {
+        exception = e;
+      }
+
+      expect(exception, expectedException);
+      verify(
+        () => firebaseAuthService.updateEmail(
+          newEmail: newEmail,
+          password: password,
+        ),
+      ).called(1);
+    },
+  );
+
+  test(
+    'update email, '
+    'unknown exception, '
+    'should rethrow exception',
+    () async {
+      const String newEmail = 'email@example.com';
+      const String password = 'password1';
+      const String expectedException = 'Unknown exception...';
+      firebaseAuthService.mockUpdateEmail(
+        throwable: expectedException,
+      );
+
+      Object? exception;
+      try {
+        await service.updateEmail(
+          newEmail: newEmail,
+          password: password,
+        );
+      } catch (e) {
+        exception = e;
+      }
+
+      expect(exception, expectedException);
+      verify(
+        () => firebaseAuthService.updateEmail(
+          newEmail: newEmail,
+          password: password,
+        ),
+      ).called(1);
+    },
+  );
+
+  test(
+    'update password, '
+    'should call firebase method to update password',
+    () async {
+      const String newPassword = 'password1';
+      const String currentPassword = 'password2';
+      firebaseAuthService.mockUpdatePassword();
+
+      await service.updatePassword(
+        newPassword: newPassword,
+        currentPassword: currentPassword,
+      );
+
+      verify(
+        () => firebaseAuthService.updatePassword(
+          currentPassword: currentPassword,
+          newPassword: newPassword,
+        ),
+      ).called(1);
+    },
+  );
+
+  test(
+    'update password, '
+    'wrong password firebase exception, '
+    'should throw wrong password auth exception',
+    () async {
+      const String newPassword = 'password1';
+      const String currentPassword = 'password2';
+      const AuthException expectedException = AuthException.wrongPassword;
+      firebaseAuthService.mockUpdatePassword(
+        throwable: FirebaseAuthExceptionCode.wrongPassword,
+      );
+
+      Object? exception;
+      try {
+        await service.updatePassword(
+          newPassword: newPassword,
+          currentPassword: currentPassword,
+        );
+      } catch (e) {
+        exception = e;
+      }
+
+      expect(exception, expectedException);
+      verify(
+        () => firebaseAuthService.updatePassword(
+          currentPassword: currentPassword,
+          newPassword: newPassword,
+        ),
+      ).called(1);
+    },
+  );
+
+  test(
+    'update password, '
+    'unknown exception, '
+    'should rethrow exception',
+    () async {
+      const String newPassword = 'password1';
+      const String currentPassword = 'password2';
+      const String expectedException = 'Exception...';
+      firebaseAuthService.mockUpdatePassword(
+        throwable: expectedException,
+      );
+
+      Object? exception;
+      try {
+        await service.updatePassword(
+          newPassword: newPassword,
+          currentPassword: currentPassword,
+        );
+      } catch (e) {
+        exception = e;
+      }
+
+      expect(exception, expectedException);
+      verify(
+        () => firebaseAuthService.updatePassword(
+          currentPassword: currentPassword,
+          newPassword: newPassword,
+        ),
+      ).called(1);
+    },
+  );
+
+  test(
+    'is password correct, '
+    'should return result of firebase auth service method to check password correctness',
+    () async {
+      const String password = 'password1';
+      const bool expectedResult = true;
+      firebaseAuthService.mockIsPasswordCorrect(isCorrect: expectedResult);
+
+      final bool result = await service.isPasswordCorrect(
+        password: password,
+      );
+
+      expect(result, expectedResult);
+      verify(
+        () => firebaseAuthService.isPasswordCorrect(
+          password: password,
+        ),
+      ).called(1);
+    },
+  );
+
+  test(
+    'delete account, '
+    'should call firebase method to delete currently logged user',
+    () async {
+      const String password = 'password1';
+      firebaseAuthService.mockDeleteAccount();
+
+      await service.deleteAccount(
+        password: password,
+      );
+
+      verify(
+        () => firebaseAuthService.deleteAccount(
+          password: password,
+        ),
+      ).called(1);
+    },
+  );
+
+  test(
+    'delete logged user account, '
+    'wrong password firebase exception, '
+    'should throw wrong password auth exception',
+    () async {
+      const String password = 'password1';
+      const AuthException expectedException = AuthException.wrongPassword;
+      firebaseAuthService.mockDeleteAccount(
+        throwable: FirebaseAuthExceptionCode.wrongPassword,
+      );
+
+      Object? exception;
+      try {
+        await service.deleteAccount(
+          password: password,
+        );
+      } catch (e) {
+        exception = e;
+      }
+
+      expect(exception, expectedException);
+      verify(
+        () => firebaseAuthService.deleteAccount(
+          password: password,
+        ),
+      ).called(1);
+    },
+  );
+
+  test(
+    'delete logged user account, '
+    'unknown exception, '
+    'should rethrow exception',
+    () async {
+      const String password = 'password1';
+      const String expectedException = 'Exception...';
+      firebaseAuthService.mockDeleteAccount(
+        throwable: expectedException,
+      );
+
+      Object? exception;
+      try {
+        await service.deleteAccount(
+          password: password,
+        );
+      } catch (e) {
+        exception = e;
+      }
+
+      expect(exception, expectedException);
+      verify(
+        () => firebaseAuthService.deleteAccount(
+          password: password,
+        ),
       ).called(1);
     },
   );

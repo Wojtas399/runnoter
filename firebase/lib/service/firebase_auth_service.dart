@@ -28,14 +28,13 @@ class FirebaseAuthService {
       );
       if (code != FirebaseAuthExceptionCode.unknown) {
         throw code;
+      } else {
+        rethrow;
       }
-      rethrow;
     }
   }
 
   Future<String?> signUp({
-    required String name,
-    required String surname,
     required String email,
     required String password,
   }) async {
@@ -55,8 +54,9 @@ class FirebaseAuthService {
       );
       if (code != FirebaseAuthExceptionCode.unknown) {
         throw code;
+      } else {
+        rethrow;
       }
-      rethrow;
     }
   }
 
@@ -73,12 +73,101 @@ class FirebaseAuthService {
       );
       if (code != FirebaseAuthExceptionCode.unknown) {
         throw code;
+      } else {
+        rethrow;
       }
-      rethrow;
     }
   }
 
   Future<void> signOut() async {
     await FirebaseAuth.instance.signOut();
+  }
+
+  Future<void> updateEmail({
+    required String newEmail,
+    required String password,
+  }) async {
+    try {
+      await _reauthenticate(password);
+      await FirebaseAuth.instance.currentUser?.updateEmail(newEmail);
+    } on FirebaseAuthException catch (exception) {
+      final FirebaseAuthExceptionCode code = mapFirebaseAuthExceptionCodeToEnum(
+        exception.code,
+      );
+      if (code != FirebaseAuthExceptionCode.unknown) {
+        throw code;
+      } else {
+        rethrow;
+      }
+    }
+  }
+
+  Future<void> updatePassword({
+    required String currentPassword,
+    required String newPassword,
+  }) async {
+    try {
+      await _reauthenticate(currentPassword);
+      await FirebaseAuth.instance.currentUser?.updatePassword(newPassword);
+    } on FirebaseAuthException catch (exception) {
+      final FirebaseAuthExceptionCode code = mapFirebaseAuthExceptionCodeToEnum(
+        exception.code,
+      );
+      if (code != FirebaseAuthExceptionCode.unknown) {
+        throw code;
+      } else {
+        rethrow;
+      }
+    }
+  }
+
+  Future<void> deleteAccount({
+    required String password,
+  }) async {
+    try {
+      await _reauthenticate(password);
+      await FirebaseAuth.instance.currentUser?.delete();
+    } on FirebaseAuthException catch (exception) {
+      final FirebaseAuthExceptionCode code = mapFirebaseAuthExceptionCodeToEnum(
+        exception.code,
+      );
+      if (code != FirebaseAuthExceptionCode.unknown) {
+        throw code;
+      } else {
+        rethrow;
+      }
+    }
+  }
+
+  Future<bool> isPasswordCorrect({
+    required String password,
+  }) async {
+    try {
+      await _reauthenticate(password);
+      return true;
+    } on FirebaseAuthException catch (exception) {
+      final FirebaseAuthExceptionCode code = mapFirebaseAuthExceptionCodeToEnum(
+        exception.code,
+      );
+      if (code == FirebaseAuthExceptionCode.wrongPassword) {
+        return false;
+      } else {
+        rethrow;
+      }
+    }
+  }
+
+  Future<void> _reauthenticate(String password) async {
+    final String? email = await loggedUserEmail$.first;
+    if (email == null) {
+      return;
+    }
+    final AuthCredential credential = EmailAuthProvider.credential(
+      email: email,
+      password: password,
+    );
+    await FirebaseAuth.instance.currentUser?.reauthenticateWithCredential(
+      credential,
+    );
   }
 }

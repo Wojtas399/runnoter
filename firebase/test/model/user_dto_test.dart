@@ -1,47 +1,37 @@
-import 'package:firebase/model/dto/user_dto.dart';
+import 'package:firebase/firebase.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
+  const String id = 'u1';
   const String name = 'Jack';
   const String surname = 'Gadovsky';
+  const UserDto userDto = UserDto(
+    id: id,
+    name: name,
+    surname: surname,
+  );
+  final Map<String, dynamic> userJson = {
+    'name': name,
+    'surname': surname,
+  };
 
   test(
-    'from firestore, should map json to dto model',
+    'from json, '
+    'should map json to dto model',
     () {
-      const String id = 'u1';
-      final Map<String, dynamic> json = {
-        'name': name,
-        'surname': surname,
-      };
-      const UserDto expectedUserDto = UserDto(
-        id: id,
-        name: name,
-        surname: surname,
-      );
+      final UserDto dto = UserDto.fromJson(id, userJson);
 
-      final UserDto userDto = UserDto.fromJson(id, json);
-
-      expect(userDto.name, expectedUserDto.name);
-      expect(userDto.surname, expectedUserDto.surname);
+      expect(dto, userDto);
     },
   );
 
   test(
-    'to json, should map dto model to json',
+    'to json, '
+    'should map dto model to json',
     () {
-      const UserDto userDto = UserDto(
-        id: 'u1',
-        name: name,
-        surname: surname,
-      );
-      final Map<String, dynamic> expectedJson = {
-        'name': name,
-        'surname': surname,
-      };
-
       final Map<String, dynamic> json = userDto.toJson();
 
-      expect(json, expectedJson);
+      expect(json, userJson);
     },
   );
 }

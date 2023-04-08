@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:runnoter/domain/model/settings.dart';
 import 'package:runnoter/presentation/model/bloc_status.dart';
 import 'package:runnoter/presentation/screen/home/bloc/home_state.dart';
 
@@ -11,6 +12,103 @@ void main() {
       currentPage: HomePage.currentWeek,
     );
   });
+
+  test(
+    'are all data loaded, '
+    "logged user's name, surname and email aren't null and theme mode and language also aren't null, "
+    'should be true',
+    () {
+      state = state.copyWith(
+        loggedUserName: 'name',
+        loggedUserSurname: 'surname',
+        loggedUserEmail: 'email',
+        themeMode: ThemeMode.dark,
+        language: Language.english,
+      );
+
+      expect(state.areAllDataLoaded, true);
+    },
+  );
+
+  test(
+    'are all data loaded, '
+    "logged user's name is null, "
+    'should be true',
+    () {
+      state = state.copyWith(
+        loggedUserSurname: 'surname',
+        loggedUserEmail: 'email',
+        themeMode: ThemeMode.dark,
+        language: Language.english,
+      );
+
+      expect(state.areAllDataLoaded, false);
+    },
+  );
+
+  test(
+    'are all data loaded, '
+    "logged user's surname is null, "
+    'should be true',
+    () {
+      state = state.copyWith(
+        loggedUserName: 'name',
+        loggedUserEmail: 'email',
+        themeMode: ThemeMode.dark,
+        language: Language.english,
+      );
+
+      expect(state.areAllDataLoaded, false);
+    },
+  );
+
+  test(
+    'are all data loaded, '
+    "logged user's email is null, "
+    'should be true',
+    () {
+      state = state.copyWith(
+        loggedUserName: 'name',
+        loggedUserSurname: 'surname',
+        themeMode: ThemeMode.dark,
+        language: Language.english,
+      );
+
+      expect(state.areAllDataLoaded, false);
+    },
+  );
+
+  test(
+    'are all data loaded, '
+    'theme mode is null, '
+    'should be true',
+    () {
+      state = state.copyWith(
+        loggedUserName: 'name',
+        loggedUserSurname: 'surname',
+        loggedUserEmail: 'email',
+        language: Language.english,
+      );
+
+      expect(state.areAllDataLoaded, false);
+    },
+  );
+
+  test(
+    'are all data loaded, '
+    'language is null, '
+    'should be true',
+    () {
+      state = state.copyWith(
+        loggedUserName: 'name',
+        loggedUserSurname: 'surname',
+        loggedUserEmail: 'email',
+        themeMode: ThemeMode.dark,
+      );
+
+      expect(state.areAllDataLoaded, false);
+    },
+  );
 
   test(
     'copy with status',
@@ -74,6 +172,32 @@ void main() {
 
       expect(state.loggedUserSurname, expectedSurname);
       expect(state2.loggedUserSurname, expectedSurname);
+    },
+  );
+
+  test(
+    'copy with theme mode',
+    () {
+      const ThemeMode expectedThemeMode = ThemeMode.system;
+
+      state = state.copyWith(themeMode: expectedThemeMode);
+      final state2 = state.copyWith();
+
+      expect(state.themeMode, expectedThemeMode);
+      expect(state2.themeMode, expectedThemeMode);
+    },
+  );
+
+  test(
+    'copy with language',
+    () {
+      const Language expectedLanguage = Language.english;
+
+      state = state.copyWith(language: expectedLanguage);
+      final state2 = state.copyWith();
+
+      expect(state.language, expectedLanguage);
+      expect(state2.language, expectedLanguage);
     },
   );
 }

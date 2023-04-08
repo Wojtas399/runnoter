@@ -50,14 +50,14 @@ class _Header extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          AppLocalizations.of(context)!.forgot_password_message_title,
+          AppLocalizations.of(context)!.forgot_password_screen_title,
           style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
         ),
         const SizedBox(height: 8),
         Text(
-          AppLocalizations.of(context)!.forgot_password_message_text,
+          AppLocalizations.of(context)!.forgot_password_screen_message,
         )
       ],
     );
@@ -96,7 +96,8 @@ class _SubmitButton extends StatelessWidget {
     );
 
     return BigButton(
-      label: AppLocalizations.of(context)!.forgot_password_submit_button_label,
+      label: AppLocalizations.of(context)!
+          .forgot_password_screen_submit_button_label,
       isDisabled: isDisabled,
       onPressed: () {
         _onPressed(context);

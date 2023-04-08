@@ -2,17 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class TextFieldComponent extends StatelessWidget {
-  final String label;
+  final String? label;
   final IconData? icon;
   final bool isRequired;
+  final TextEditingController? controller;
   final Function(String? value)? onChanged;
   final String? Function(String? value)? validator;
 
   const TextFieldComponent({
     super.key,
-    required this.label,
+    this.label,
     this.icon,
     this.isRequired = false,
+    this.controller,
     this.onChanged,
     this.validator,
   });
@@ -21,9 +23,10 @@ class TextFieldComponent extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextFormField(
       decoration: InputDecoration(
-        label: Text(label),
+        label: label != null ? Text(label!) : null,
         prefixIcon: icon != null ? Icon(icon) : null,
       ),
+      controller: controller,
       onChanged: onChanged,
       validator: (String? value) {
         return _validate(value, context);
