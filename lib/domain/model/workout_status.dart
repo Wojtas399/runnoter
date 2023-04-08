@@ -12,14 +12,14 @@ class WorkoutStatusPending extends WorkoutStatus {
 }
 
 class WorkoutStatusDone extends WorkoutStatus {
-  final double coveredDistance;
-  final String avgPace;
+  final double coveredDistanceInKm;
+  final Pace avgPace;
   final int avgHeartRate;
   final MoodRate moodRate;
   final String? comment;
 
   const WorkoutStatusDone({
-    required this.coveredDistance,
+    required this.coveredDistanceInKm,
     required this.avgPace,
     required this.avgHeartRate,
     required this.moodRate,
@@ -28,7 +28,7 @@ class WorkoutStatusDone extends WorkoutStatus {
 
   @override
   List<Object?> get props => [
-        coveredDistance,
+        coveredDistanceInKm,
         avgPace,
         avgHeartRate,
         moodRate,
@@ -37,14 +37,14 @@ class WorkoutStatusDone extends WorkoutStatus {
 }
 
 class WorkoutStatusFailed extends WorkoutStatus {
-  final double coveredDistance;
-  final String avgPace;
+  final double coveredDistanceInKm;
+  final Pace avgPace;
   final int avgHeartRate;
   final MoodRate moodRate;
   final String? comment;
 
   const WorkoutStatusFailed({
-    required this.coveredDistance,
+    required this.coveredDistanceInKm,
     required this.avgPace,
     required this.avgHeartRate,
     required this.moodRate,
@@ -53,11 +53,27 @@ class WorkoutStatusFailed extends WorkoutStatus {
 
   @override
   List<Object?> get props => [
-        coveredDistance,
+        coveredDistanceInKm,
         avgPace,
         avgHeartRate,
         moodRate,
         comment,
+      ];
+}
+
+class Pace extends Equatable {
+  final int minutes;
+  final int seconds;
+
+  const Pace({
+    required this.minutes,
+    required this.seconds,
+  });
+
+  @override
+  List<Object> get props => [
+        minutes,
+        seconds,
       ];
 }
 

@@ -8,62 +8,50 @@ abstract class WorkoutStage extends Equatable {
 }
 
 class WorkoutStageOWB extends WorkoutStage {
-  final double distance;
+  final double distanceInKm;
   final int maxHeartRate;
 
   const WorkoutStageOWB({
-    required this.distance,
+    required this.distanceInKm,
     required this.maxHeartRate,
   });
 
   @override
   List<Object> get props => [
-        distance,
+        distanceInKm,
         maxHeartRate,
       ];
 }
 
 class WorkoutStageBC2 extends WorkoutStage {
-  final double distance;
+  final double distanceInKm;
   final int maxHeartRate;
-  final WorkoutStageOWB warmUp;
-  final WorkoutStageOWB coolDown;
 
   const WorkoutStageBC2({
-    required this.distance,
+    required this.distanceInKm,
     required this.maxHeartRate,
-    required this.warmUp,
-    required this.coolDown,
   });
 
   @override
   List<Object> get props => [
-        distance,
+        distanceInKm,
         maxHeartRate,
-        warmUp,
-        coolDown,
       ];
 }
 
 class WorkoutStageBC3 extends WorkoutStage {
-  final double distance;
+  final double distanceInKm;
   final int maxHeartRate;
-  final WorkoutStageOWB warmUp;
-  final WorkoutStageOWB coolDown;
 
   const WorkoutStageBC3({
-    required this.distance,
+    required this.distanceInKm,
     required this.maxHeartRate,
-    required this.warmUp,
-    required this.coolDown,
   });
 
   @override
   List<Object> get props => [
-        distance,
+        distanceInKm,
         maxHeartRate,
-        warmUp,
-        coolDown,
       ];
 }
 
@@ -72,16 +60,12 @@ class WorkoutStageStrength extends WorkoutStage {
   final int ascentDistanceInMeters;
   final int descentMarchDistanceInMeters;
   final int descentJogDistanceInMeters;
-  final WorkoutStageOWB warmUp;
-  final WorkoutStageOWB coolDown;
 
   const WorkoutStageStrength({
     required this.amountOfSeries,
     required this.ascentDistanceInMeters,
     required this.descentMarchDistanceInMeters,
     required this.descentJogDistanceInMeters,
-    required this.warmUp,
-    required this.coolDown,
   });
 
   @override
@@ -90,26 +74,20 @@ class WorkoutStageStrength extends WorkoutStage {
         ascentDistanceInMeters,
         descentMarchDistanceInMeters,
         descentJogDistanceInMeters,
-        warmUp,
-        coolDown,
       ];
 }
 
 class WorkoutStageRhythm extends WorkoutStage {
   final int amountOfSeries;
-  final int rhythmDistanceInKilometers;
-  final int marchDistanceInKilometers;
-  final int jogDistanceInKilometers;
-  final WorkoutStageOWB warmUp;
-  final WorkoutStageOWB coolDown;
+  final double rhythmDistanceInKilometers;
+  final double marchDistanceInKilometers;
+  final double jogDistanceInKilometers;
 
   const WorkoutStageRhythm({
     required this.amountOfSeries,
     required this.rhythmDistanceInKilometers,
     required this.marchDistanceInKilometers,
     required this.jogDistanceInKilometers,
-    required this.warmUp,
-    required this.coolDown,
   });
 
   @override
@@ -118,7 +96,5 @@ class WorkoutStageRhythm extends WorkoutStage {
         rhythmDistanceInKilometers,
         marchDistanceInKilometers,
         jogDistanceInKilometers,
-        warmUp,
-        coolDown,
       ];
 }
