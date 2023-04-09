@@ -52,6 +52,7 @@ class CurrentWeekCubit extends Cubit<List<Day>?> {
         .map(
           (DateTime date) => Day(
             date: date,
+            isToday: date == today,
             workout: workoutsFromWeek.firstWhere(
               (Workout? workout) => workout?.date == date,
               orElse: () => null,
@@ -65,16 +66,19 @@ class CurrentWeekCubit extends Cubit<List<Day>?> {
 
 class Day extends Equatable {
   final DateTime date;
+  final bool isToday;
   final Workout? workout;
 
   const Day({
     required this.date,
+    required this.isToday,
     required this.workout,
   });
 
   @override
   List<Object?> get props => [
         date,
+        isToday,
         workout,
       ];
 }

@@ -26,7 +26,7 @@ void main() {
     build: () => createCubit(),
     setUp: () {
       dateService.mockGetNow(
-        now: DateTime(2023, 4, 6),
+        now: DateTime(2023, 4, 5),
       );
       dateService.mockGetDatesFromWeekMatchingToDate(
         dates: [
@@ -62,27 +62,49 @@ void main() {
     },
     expect: () => [
       [
-        Day(date: DateTime(2023, 4, 3), workout: null),
-        Day(date: DateTime(2023, 4, 4), workout: null),
+        Day(
+          date: DateTime(2023, 4, 3),
+          isToday: false,
+          workout: null,
+        ),
+        Day(
+          date: DateTime(2023, 4, 4),
+          isToday: false,
+          workout: null,
+        ),
         Day(
           date: DateTime(2023, 4, 5),
+          isToday: true,
           workout: createWorkout(
             id: 'w1',
             date: DateTime(2023, 4, 5),
             name: 'first workout name',
           ),
         ),
-        Day(date: DateTime(2023, 4, 6), workout: null),
+        Day(
+          date: DateTime(2023, 4, 6),
+          isToday: false,
+          workout: null,
+        ),
         Day(
           date: DateTime(2023, 4, 7),
+          isToday: false,
           workout: createWorkout(
             id: 'w2',
             date: DateTime(2023, 4, 7),
             name: 'second workout name',
           ),
         ),
-        Day(date: DateTime(2023, 4, 8), workout: null),
-        Day(date: DateTime(2023, 4, 9), workout: null),
+        Day(
+          date: DateTime(2023, 4, 8),
+          isToday: false,
+          workout: null,
+        ),
+        Day(
+          date: DateTime(2023, 4, 9),
+          isToday: false,
+          workout: null,
+        ),
       ]
     ],
     verify: (_) {
@@ -92,7 +114,7 @@ void main() {
       verify(
         () => workoutRepository.getWorkoutsFromWeek(
           userId: 'u1',
-          dateFromWeek: DateTime(2023, 4, 6),
+          dateFromWeek: DateTime(2023, 4, 5),
         ),
       ).called(1);
     },
