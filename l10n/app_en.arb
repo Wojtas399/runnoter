@@ -95,8 +95,8 @@
   "workout_rhythms": "Rhythms",
   "workout_strength": "Strength",
   "workout_break": "break",
-  "workout_march": "{marchDistanceInMeters}m march",
-  "workout_jog": "{jogDistanceInMeters}m jog",
+  "workout_march": "{marchDistanceInMeters}m marching",
+  "workout_jog": "{jogDistanceInMeters}m jogging",
 
 
   "additional_workout_stretching": "Stretching",

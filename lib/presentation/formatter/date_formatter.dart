@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 extension DateFormatter on DateTime {
@@ -18,6 +18,6 @@ extension DateFormatter on DateTime {
       AppLocalizations.of(context)!.december,
     ];
 
-    return '$day ${months[month]} $year';
+    return '$day ${months[month - 1]} $year';
   }
 }

@@ -455,51 +455,51 @@
   },
 
 
-  "january": "Styczeń",
+  "january": "styczeń",
   "@january": {
     "description": "January"
   },
-  "february": "Luty",
+  "february": "luty",
   "@february": {
     "description": "February"
   },
-  "march": "Marzec",
+  "march": "marzec",
   "@march": {
     "description": "March"
   },
-  "april": "Kwiecień",
+  "april": "kwiecień",
   "@april": {
     "description": "April"
   },
-  "may": "Maj",
+  "may": "maj",
   "@may": {
     "description": "May"
   },
-  "june": "Czerwiec",
+  "june": "czerwiec",
   "@june": {
     "description": "June"
   },
-  "july": "Lipiec",
+  "july": "lipiec",
   "@july": {
     "description": "July"
   },
-  "august": "Sierpień",
+  "august": "sierpień",
   "@august": {
     "description": "August"
   },
-  "september": "Wrzesień",
+  "september": "wrzesień",
   "@september": {
     "description": "September"
   },
-  "october": "Październik",
+  "october": "październik",
   "@october": {
     "description": "October"
   },
-  "november": "Listopad",
+  "november": "listopad",
   "@november": {
     "description": "November"
   },
-  "december": "Grudzień",
+  "december": "grudzień",
   "@december": {
     "description": "December"
   }

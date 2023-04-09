@@ -11,7 +11,10 @@ class CurrentWeekContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const _Workouts();
+    return const Padding(
+      padding: EdgeInsets.all(16),
+      child: _Workouts(),
+    );
   }
 }
 
@@ -28,11 +31,12 @@ class _Workouts extends StatelessWidget {
       return const CircularProgressIndicator();
     }
 
-    return ListView.builder(
+    return ListView.separated(
       itemCount: days.length,
       itemBuilder: (_, int itemIndex) => DayItem(
         day: days[itemIndex],
       ),
+      separatorBuilder: (_, int itemIndex) => const Divider(),
     );
   }
 }

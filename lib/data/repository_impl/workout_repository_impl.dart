@@ -29,11 +29,11 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
               distanceInKm: 7,
               maxHeartRate: 150,
             ),
-            WorkoutStageRhythm(
+            WorkoutStageRhythms(
               amountOfSeries: 10,
-              rhythmDistanceInKilometers: 0.1,
-              marchDistanceInKilometers: 0,
-              jogDistanceInKilometers: 0.2,
+              rhythmDistanceInMeters: 100,
+              marchDistanceInMeters: 0,
+              jogDistanceInMeters: 200,
             ),
           ],
           additionalWorkout: AdditionalWorkout.strengthening,
@@ -57,6 +57,7 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
               maxHeartRate: 150,
             ),
           ],
+          additionalWorkout: AdditionalWorkout.stretching,
         ),
       ],
     );

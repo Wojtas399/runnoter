@@ -77,24 +77,24 @@ class WorkoutStageStrength extends WorkoutStage {
       ];
 }
 
-class WorkoutStageRhythm extends WorkoutStage {
+class WorkoutStageRhythms extends WorkoutStage {
   final int amountOfSeries;
-  final double rhythmDistanceInKilometers;
-  final double marchDistanceInKilometers;
-  final double jogDistanceInKilometers;
+  final int rhythmDistanceInMeters;
+  final int marchDistanceInMeters;
+  final int jogDistanceInMeters;
 
-  const WorkoutStageRhythm({
+  const WorkoutStageRhythms({
     required this.amountOfSeries,
-    required this.rhythmDistanceInKilometers,
-    required this.marchDistanceInKilometers,
-    required this.jogDistanceInKilometers,
+    required this.rhythmDistanceInMeters,
+    required this.marchDistanceInMeters,
+    required this.jogDistanceInMeters,
   });
 
   @override
   List<Object> get props => [
         amountOfSeries,
-        rhythmDistanceInKilometers,
-        marchDistanceInKilometers,
-        jogDistanceInKilometers,
+        rhythmDistanceInMeters,
+        marchDistanceInMeters,
+        jogDistanceInMeters,
       ];
 }
