@@ -321,6 +321,49 @@
   },
 
 
+  "workout_rhythms": "Rytmy",
+  "@workout_rhythms": {
+    "description": "Type of training stage called rhythms"
+  },
+  "workout_strength": "Siła",
+  "@workout_strength": {
+    "description": "Type of training stage called strength"
+  },
+  "workout_break": "przerwa",
+  "@workout_break": {
+    "description": "Break"
+  },
+  "workout_march": "{marchDistanceInMeters}m marsz",
+  "@workout_march": {
+    "description": "Distance of march",
+    "placeholders": {
+      "marchDistanceInMeters": {
+        "type": "int",
+        "example": "100"
+      }
+    }
+  },
+  "workout_jog": "{jogDistanceInMeters}m trucht",
+  "@workout_jog": {
+    "description": "Distance of jog",
+    "placeholders": {
+      "jogDistanceInMeters": {
+        "type": "int",
+        "example": "500"
+      }
+    }
+  },
+
+
+  "additional_workout_stretching": "Rozciąganie",
+  "@additional_workout_stretching": {
+    "description": "Stretching"
+  },
+  "additional_workout_strengthening": "Ćwiczenia wzmacniające",
+  "@additional_workout_strengthening": {
+    "description": "Strengthening"
+  },
+
 
   "no_internet_connection_dialog_title": "Brak połączenia internetowego",
   "@no_internet_connection_dialog_title": {
@@ -409,5 +452,55 @@
   "invalid_password_confirmation_message": "Hasła nie są jednakowe",
   "@invalid_password_confirmation_message": {
     "description": "Message about invalid password confirmation"
+  },
+
+
+  "january": "Styczeń",
+  "@january": {
+    "description": "January"
+  },
+  "february": "Luty",
+  "@february": {
+    "description": "February"
+  },
+  "march": "Marzec",
+  "@march": {
+    "description": "March"
+  },
+  "april": "Kwiecień",
+  "@april": {
+    "description": "April"
+  },
+  "may": "Maj",
+  "@may": {
+    "description": "May"
+  },
+  "june": "Czerwiec",
+  "@june": {
+    "description": "June"
+  },
+  "july": "Lipiec",
+  "@july": {
+    "description": "July"
+  },
+  "august": "Sierpień",
+  "@august": {
+    "description": "August"
+  },
+  "september": "Wrzesień",
+  "@september": {
+    "description": "September"
+  },
+  "october": "Październik",
+  "@october": {
+    "description": "October"
+  },
+  "november": "Listopad",
+  "@november": {
+    "description": "November"
+  },
+  "december": "Grudzień",
+  "@december": {
+    "description": "December"
   }
 }
