@@ -3,8 +3,25 @@ import 'package:equatable/equatable.dart';
 import '../mapper/mood_rate_mapper.dart';
 import 'pace_dto.dart';
 
-abstract class WorkoutStatusDto extends Equatable {
+class WorkoutStatusDto extends Equatable {
   const WorkoutStatusDto();
+
+  factory WorkoutStatusDto.fromJson(Map<String, dynamic> json) {
+    final String status = json[_nameField];
+    if (status == 'pending') {
+      return const WorkoutStatusPendingDto();
+    } else if (status == 'done') {
+      return WorkoutStatusDoneDto.fromJson(json);
+    } else if (status == 'failed') {
+      return WorkoutStatusFailedDto.fromJson(json);
+    }
+    throw '[WorkoutStatusDto] Unknown workout status';
+  }
+
+  @override
+  List<Object?> get props => [];
+
+  Map<String, dynamic> toJson() => {};
 }
 
 class WorkoutStatusPendingDto extends WorkoutStatusDto {
@@ -13,6 +30,7 @@ class WorkoutStatusPendingDto extends WorkoutStatusDto {
   @override
   List<Object> get props => [];
 
+  @override
   Map<String, dynamic> toJson() {
     return {
       _nameField: 'pending',
@@ -53,6 +71,7 @@ class WorkoutStatusDoneDto extends WorkoutStatusDto {
         comment,
       ];
 
+  @override
   Map<String, dynamic> toJson() => {
         _nameField: 'done',
         _coveredDistanceInKmField: coveredDistanceInKm,
@@ -96,6 +115,7 @@ class WorkoutStatusFailedDto extends WorkoutStatusDto {
         comment,
       ];
 
+  @override
   Map<String, dynamic> toJson() => {
         _nameField: 'failed',
         _coveredDistanceInKmField: coveredDistanceInKm,
