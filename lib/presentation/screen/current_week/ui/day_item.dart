@@ -19,31 +19,41 @@ class DayItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        vertical: 4,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              _Date(
-                date: day.date,
-                isToday: day.isToday,
-              ),
-              if (day.workout?.status != null)
-                _WorkoutStatus(
-                  status: day.workout!.status,
+    return InkWell(
+      onTap: () {
+        _onPressed(context);
+      },
+      borderRadius: BorderRadius.circular(6),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          vertical: 4,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                _Date(
+                  date: day.date,
+                  isToday: day.isToday,
                 ),
-            ],
-          ),
-          if (day.workout != null) _Workout(workout: day.workout!),
-        ],
+                if (day.workout?.status != null)
+                  _WorkoutStatus(
+                    status: day.workout!.status,
+                  ),
+              ],
+            ),
+            if (day.workout != null) _Workout(workout: day.workout!),
+          ],
+        ),
       ),
     );
+  }
+
+  void _onPressed(BuildContext context) {
+    //TODO
   }
 }
 
@@ -64,7 +74,7 @@ class _Date extends StatelessWidget {
         color: isToday
             ? Theme.of(context).colorScheme.primary
             : Colors.transparent,
-        borderRadius: BorderRadius.circular(4),
+        borderRadius: BorderRadius.circular(6),
       ),
       child: Text(
         date.toUIFormat(context),
@@ -106,9 +116,7 @@ class _Workout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 16,
-      ),
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
