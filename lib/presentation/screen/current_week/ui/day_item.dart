@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 
 import '../../../../domain/model/workout.dart';
 import '../../../../domain/model/workout_stage.dart';
+import '../../../../domain/model/workout_status.dart';
 import '../../../formatter/additional_workout_formatter.dart';
 import '../../../formatter/date_formatter.dart';
 import '../../../formatter/workout_stage_formatter.dart';
+import '../../../formatter/workout_status_formatter.dart';
 import '../current_week_cubit.dart';
 
 class DayItem extends StatelessWidget {
@@ -24,9 +26,19 @@ class DayItem extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _Date(
-            date: day.date,
-            isToday: day.isToday,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              _Date(
+                date: day.date,
+                isToday: day.isToday,
+              ),
+              if (day.workout?.status != null)
+                _WorkoutStatus(
+                  status: day.workout!.status,
+                ),
+            ],
           ),
           if (day.workout != null) _Workout(workout: day.workout!),
         ],
@@ -62,6 +74,24 @@ class _Date extends StatelessWidget {
                   : Theme.of(context).textTheme.titleMedium?.color,
             ),
       ),
+    );
+  }
+}
+
+class _WorkoutStatus extends StatelessWidget {
+  final WorkoutStatus status;
+
+  const _WorkoutStatus({
+    required this.status,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(
+        right: 8,
+      ),
+      child: status.toIcon(),
     );
   }
 }
