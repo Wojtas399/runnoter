@@ -6,6 +6,7 @@ import 'workout_stage_dto.dart';
 import 'workout_status_dto.dart';
 
 class WorkoutDto extends Equatable {
+  final String id;
   final String userId;
   final DateTime date;
   final WorkoutStatusDto status;
@@ -14,6 +15,7 @@ class WorkoutDto extends Equatable {
   final AdditionalWorkout? additionalWorkout;
 
   const WorkoutDto({
+    required this.id,
     required this.userId,
     required this.date,
     required this.status,
@@ -22,8 +24,12 @@ class WorkoutDto extends Equatable {
     required this.additionalWorkout,
   });
 
-  WorkoutDto.fromJson(String userId, Map<String, dynamic>? json)
-      : this(
+  WorkoutDto.fromJson({
+    required String docId,
+    required String userId,
+    required Map<String, dynamic>? json,
+  }) : this(
+          id: docId,
           userId: userId,
           date: mapDateTimeFromString(json?[_dateField]),
           status: WorkoutStatusDto.fromJson(json?[_statusField]),

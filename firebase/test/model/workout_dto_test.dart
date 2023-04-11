@@ -5,6 +5,7 @@ import 'package:firebase/model/workout_status_dto.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
+  const String id = 'w1';
   const String userId = 'u1';
   final DateTime date = DateTime(2023, 4, 10);
   const WorkoutStatusDto status = WorkoutStatusDoneDto(
@@ -31,6 +32,7 @@ void main() {
   ];
   const AdditionalWorkout additionalWorkout = AdditionalWorkout.strengthening;
   final WorkoutDto workoutDtoModel = WorkoutDto(
+    id: id,
     userId: userId,
     date: date,
     status: status,
@@ -54,7 +56,11 @@ void main() {
     'from json, '
     'should map json to dto model',
     () {
-      final WorkoutDto dto = WorkoutDto.fromJson(userId, workoutJson);
+      final WorkoutDto dto = WorkoutDto.fromJson(
+        docId: id,
+        userId: userId,
+        json: workoutJson,
+      );
 
       expect(dto, workoutDtoModel);
     },

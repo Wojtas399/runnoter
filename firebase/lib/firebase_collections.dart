@@ -17,8 +17,9 @@ DocumentReference<UserDto> getUserRef(String userId) {
 CollectionReference<WorkoutDto> getWorkoutsRef(String userId) {
   return getUserRef(userId).collection('Workouts').withConverter<WorkoutDto>(
         fromFirestore: (snapshot, _) => WorkoutDto.fromJson(
-          userId,
-          snapshot.data(),
+          docId: snapshot.id,
+          userId: userId,
+          json: snapshot.data(),
         ),
         toFirestore: (workoutDto, _) => workoutDto.toJson(),
       );
