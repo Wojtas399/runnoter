@@ -22,19 +22,19 @@ class WorkoutDto extends Equatable {
     required this.additionalWorkout,
   });
 
-  WorkoutDto.fromJson(String userId, Map<String, dynamic> json)
+  WorkoutDto.fromJson(String userId, Map<String, dynamic>? json)
       : this(
           userId: userId,
-          date: mapDateTimeFromString(json[_dateField]),
-          status: WorkoutStatusDto.fromJson(json[_statusField]),
-          name: json[_nameField],
-          stages: (json[_stagesField] as List)
+          date: mapDateTimeFromString(json?[_dateField]),
+          status: WorkoutStatusDto.fromJson(json?[_statusField]),
+          name: json?[_nameField],
+          stages: (json?[_stagesField] as List)
               .map(
                 (json) => WorkoutStageDto.fromJson(json),
               )
               .toList(),
           additionalWorkout: mapAdditionalWorkoutFromString(
-            json[_additionalWorkoutField],
+            json?[_additionalWorkoutField],
           ),
         );
 

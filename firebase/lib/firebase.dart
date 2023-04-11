@@ -10,6 +10,7 @@ import 'mapper/firebase_auth_exception_code_mapper.dart';
 import 'mapper/language_mapper.dart';
 import 'mapper/pace_unit_mapper.dart';
 import 'mapper/theme_mode_mapper.dart';
+import 'model/workout_dto.dart';
 
 part 'firebase_collections.dart';
 part 'model/appearance_settings_dto.dart';

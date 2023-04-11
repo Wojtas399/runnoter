@@ -6,12 +6,22 @@ CollectionReference<UserDto> getUsersRef() {
           snapshot.id,
           snapshot.data(),
         ),
-        toFirestore: (UserDto fireUser, _) => fireUser.toJson(),
+        toFirestore: (UserDto userDto, _) => userDto.toJson(),
       );
 }
 
 DocumentReference<UserDto> getUserRef(String userId) {
   return getUsersRef().doc(userId);
+}
+
+CollectionReference<WorkoutDto> getWorkoutsRef(String userId) {
+  return getUserRef(userId).collection('Workouts').withConverter<WorkoutDto>(
+        fromFirestore: (snapshot, _) => WorkoutDto.fromJson(
+          userId,
+          snapshot.data(),
+        ),
+        toFirestore: (workoutDto, _) => workoutDto.toJson(),
+      );
 }
 
 DocumentReference<AppearanceSettingsDto> getAppearanceSettingsRef(
@@ -25,7 +35,8 @@ DocumentReference<AppearanceSettingsDto> getAppearanceSettingsRef(
           userId,
           snapshot.data(),
         ),
-        toFirestore: (appearanceSettings, _) => appearanceSettings.toJson(),
+        toFirestore: (appearanceSettingsDto, _) =>
+            appearanceSettingsDto.toJson(),
       );
 }
 
