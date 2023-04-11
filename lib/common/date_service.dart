@@ -24,5 +24,25 @@ class DateService {
     return datesFromWeek;
   }
 
+  bool isDateFromRange({
+    required DateTime date,
+    required DateTime startDate,
+    required DateTime endDate,
+  }) {
+    final DateTime correctedStartDate = DateTime(
+      startDate.year,
+      startDate.month,
+      startDate.day,
+    );
+    final DateTime correctedEndDate = DateTime(
+      endDate.year,
+      endDate.month,
+      endDate.day,
+      23,
+      59,
+    );
+    return date.isAfter(correctedStartDate) && date.isBefore(correctedEndDate);
+  }
+
   DateTime _getDate(DateTime d) => DateTime(d.year, d.month, d.day);
 }

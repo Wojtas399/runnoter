@@ -1,5 +1,5 @@
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/presentation/service/date_service.dart';
+import 'package:runnoter/common/date_service.dart';
 
 class MockDateService extends Mock implements DateService {
   void mockGetNow({
