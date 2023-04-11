@@ -15,6 +15,7 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
       [
         Workout(
           id: 'w1',
+          userId: 'u1',
           date: DateTime(2023, 4, 11),
           status: const WorkoutStatusDone(
             coveredDistanceInKm: 10,
@@ -40,6 +41,7 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
         ),
         Workout(
           id: 'w2',
+          userId: 'u1',
           date: DateTime(2023, 4, 14),
           status: const WorkoutStatusPending(),
           name: 'BC2',

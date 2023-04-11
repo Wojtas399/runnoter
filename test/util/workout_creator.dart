@@ -3,7 +3,8 @@ import 'package:runnoter/domain/model/workout_stage.dart';
 import 'package:runnoter/domain/model/workout_status.dart';
 
 Workout createWorkout({
-  String id = 'u1',
+  String id = 'w1',
+  String userId = 'u1',
   DateTime? date,
   WorkoutStatus status = const WorkoutStatusPending(),
   String name = '',
@@ -12,6 +13,7 @@ Workout createWorkout({
 }) {
   return Workout(
     id: id,
+    userId: userId,
     date: date ?? DateTime(2023, 1, 1),
     status: status,
     name: name,

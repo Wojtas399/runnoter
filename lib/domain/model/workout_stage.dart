@@ -2,9 +2,6 @@ import 'package:equatable/equatable.dart';
 
 abstract class WorkoutStage extends Equatable {
   const WorkoutStage();
-
-  @override
-  List<Object> get props => [];
 }
 
 class WorkoutStageOWB extends WorkoutStage {

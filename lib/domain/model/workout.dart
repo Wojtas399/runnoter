@@ -3,6 +3,7 @@ import 'workout_stage.dart';
 import 'workout_status.dart';
 
 class Workout extends Entity {
+  final String userId;
   final DateTime date;
   final WorkoutStatus status;
   final String name;
@@ -11,6 +12,7 @@ class Workout extends Entity {
 
   const Workout({
     required super.id,
+    required this.userId,
     required this.date,
     required this.status,
     required this.name,
@@ -20,6 +22,8 @@ class Workout extends Entity {
 
   @override
   List<Object?> get props => [
+        id,
+        userId,
         date,
         status,
         name,
