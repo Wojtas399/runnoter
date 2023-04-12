@@ -1,4 +1,4 @@
-import 'package:equatable/equatable.dart';
+part of firebase;
 
 class WorkoutStageDto extends Equatable {
   const WorkoutStageDto();

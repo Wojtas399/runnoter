@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../firebase.dart';
 import '../mapper/date_mapper.dart';
-import '../model/workout_dto.dart';
 
 class FirebaseWorkoutService {
   Future<List<WorkoutDto>?> loadWorkoutsByUserIdAndDateRange({

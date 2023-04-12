@@ -1,4 +1,4 @@
-import 'package:equatable/equatable.dart';
+part of firebase;
 
 class PaceDto extends Equatable {
   final int minutes;

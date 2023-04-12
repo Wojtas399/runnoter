@@ -1,9 +1,4 @@
-import 'package:equatable/equatable.dart';
-
-import '../mapper/additional_workout_mapper.dart';
-import '../mapper/date_mapper.dart';
-import 'workout_stage_dto.dart';
-import 'workout_status_dto.dart';
+part of firebase;
 
 class WorkoutDto extends Equatable {
   final String id;

@@ -9,7 +9,7 @@ DateTime mapDateTimeFromString(String date) {
 }
 
 String mapDateTimeToString(DateTime date) {
-  final String year = twoDigits(date.year);
+  final String year = '${date.year}';
   final String month = twoDigits(date.month);
   final String day = twoDigits(date.day);
   return '$day-$month-$year';

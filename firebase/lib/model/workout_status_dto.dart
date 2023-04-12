@@ -1,7 +1,4 @@
-import 'package:equatable/equatable.dart';
-
-import '../mapper/mood_rate_mapper.dart';
-import 'pace_dto.dart';
+part of firebase;
 
 class WorkoutStatusDto extends Equatable {
   const WorkoutStatusDto();
@@ -117,7 +114,7 @@ class WorkoutStatusFailedDto extends WorkoutStatusDto {
 
   @override
   Map<String, dynamic> toJson() => {
-        _nameField: 'failed',
+        _statusTypeField: 'failed',
         _coveredDistanceInKmField: coveredDistanceInKm,
         _avgPaceField: avgPace.toJson(),
         _avgHeartRateField: avgHeartRate,
@@ -143,7 +140,7 @@ enum MoodRate {
   const MoodRate(this.number);
 }
 
-const String _nameField = 'name';
+const String _statusTypeField = 'type';
 const String _coveredDistanceInKmField = 'coveredDistanceInKm';
 const String _avgPaceField = 'avgPace';
 const String _avgHeartRateField = 'avgHeartRate';

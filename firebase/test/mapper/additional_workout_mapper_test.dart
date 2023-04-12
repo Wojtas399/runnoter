@@ -1,5 +1,5 @@
+import 'package:firebase/firebase.dart';
 import 'package:firebase/mapper/additional_workout_mapper.dart';
-import 'package:firebase/model/workout_dto.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
