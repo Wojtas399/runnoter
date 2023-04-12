@@ -5,8 +5,8 @@ import 'package:runnoter/domain/model/workout_status.dart';
 
 void main() {
   test(
-    'map pace from dto, '
-    'should map pace dto model to domain model',
+    'map pace from firebase, '
+    'should map pace firebase dto model to domain model',
     () {
       const int minutes = 5;
       const int seconds = 30;
@@ -19,7 +19,7 @@ void main() {
         seconds: seconds,
       );
 
-      final Pace pace = mapPaceFromDto(dto);
+      final Pace pace = mapPaceFromFirebase(dto);
 
       expect(pace, expectedPace);
     },
