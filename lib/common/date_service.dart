@@ -1,16 +1,26 @@
 class DateService {
-  DateTime getNow() {
+  DateTime getTodayDate() {
     final now = DateTime.now();
     return DateTime(now.year, now.month, now.day);
   }
 
-  List<DateTime> getDatesFromWeekMatchingToDate(DateTime date) {
+  DateTime getFirstDateFromWeekMatchingToDate(DateTime date) {
     final int daysToFirstDayOfTheWeek = date.weekday - 1;
-    final DateTime firstDateOfTheWeek = _getDate(
-      date.subtract(Duration(
-        days: daysToFirstDayOfTheWeek,
-      )),
-    );
+    return _getDate(date.subtract(
+      Duration(days: daysToFirstDayOfTheWeek),
+    ));
+  }
+
+  DateTime getLastDateFromWeekMatchingToDate(DateTime date) {
+    final int daysToLastDayOfTheWeek = 7 - date.weekday;
+    return _getDate(date.add(
+      Duration(days: daysToLastDayOfTheWeek),
+    ));
+  }
+
+  List<DateTime> getDatesFromWeekMatchingToDate(DateTime date) {
+    final DateTime firstDateOfTheWeek =
+        getFirstDateFromWeekMatchingToDate(date);
     final List<DateTime> datesFromWeek = [firstDateOfTheWeek];
     DateTime currentDate = firstDateOfTheWeek;
     for (int i = 0; i < 6; i++) {

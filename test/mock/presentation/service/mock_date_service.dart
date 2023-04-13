@@ -2,12 +2,28 @@ import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/common/date_service.dart';
 
 class MockDateService extends Mock implements DateService {
-  void mockGetNow({
-    required DateTime now,
+  void mockGetTodayDate({
+    required DateTime todayDate,
   }) {
     when(
-      () => getNow(),
-    ).thenReturn(now);
+      () => getTodayDate(),
+    ).thenReturn(todayDate);
+  }
+
+  void mockGetFirstDateFromWeekMatchingToDate({
+    required DateTime date,
+  }) {
+    when(
+      () => getFirstDateFromWeekMatchingToDate(any()),
+    ).thenReturn(date);
+  }
+
+  void mockGetLastDateFromWeekMatchingToDate({
+    required DateTime date,
+  }) {
+    when(
+      () => getLastDateFromWeekMatchingToDate(any()),
+    ).thenReturn(date);
   }
 
   void mockGetDatesFromWeekMatchingToDate({

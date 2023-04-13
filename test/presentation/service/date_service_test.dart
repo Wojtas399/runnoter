@@ -5,6 +5,34 @@ void main() {
   final DateService service = DateService();
 
   test(
+    'get first date from week matching to date, '
+    'should return first date from week which includes given date',
+    () {
+      final DateTime date = DateTime(2023, 4, 6);
+      final DateTime expectedDate = DateTime(2023, 4, 3);
+
+      final DateTime firstDateOfTheWeek =
+          service.getFirstDateFromWeekMatchingToDate(date);
+
+      expect(firstDateOfTheWeek, expectedDate);
+    },
+  );
+
+  test(
+    'get last date from week matching to date, '
+    'should return last date from week which includes given date',
+    () {
+      final DateTime date = DateTime(2023, 4, 6);
+      final DateTime expectedDate = DateTime(2023, 4, 9);
+
+      final DateTime lastDateOfTheWeek =
+          service.getLastDateFromWeekMatchingToDate(date);
+
+      expect(lastDateOfTheWeek, expectedDate);
+    },
+  );
+
+  test(
     'get dates from week matching to date, '
     'should return all dates from week which includes given date',
     () {
