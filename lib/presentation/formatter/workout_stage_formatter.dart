@@ -24,17 +24,20 @@ extension WorkoutStageFormatter on WorkoutStage {
 
   String _createOWBDescription(WorkoutStageOWB stage) {
     const String stageName = 'OWB1';
-    return '$stageName ${stage.distanceInKm.toDistanceFormat()}km HR<${stage.maxHeartRate}';
+    final String distance = stage.distanceInKilometers.toKilometersFormat();
+    return '$stageName $distance HR<${stage.maxHeartRate}';
   }
 
   String _createBC2Description(WorkoutStageBC2 stage) {
     const String stageName = 'BC2';
-    return '$stageName ${stage.distanceInKm.toDistanceFormat()}km HR<${stage.maxHeartRate}';
+    final String distance = stage.distanceInKilometers.toKilometersFormat();
+    return '$stageName $distance HR<${stage.maxHeartRate}';
   }
 
   String _createBC3Description(WorkoutStageBC3 stage) {
     const String stageName = 'BC3';
-    return '$stageName ${stage.distanceInKm.toDistanceFormat()}km HR<${stage.maxHeartRate}';
+    final String distance = stage.distanceInKilometers.toKilometersFormat();
+    return '$stageName $distance HR<${stage.maxHeartRate}';
   }
 
   String _createRhythmsDescription(
@@ -42,18 +45,18 @@ extension WorkoutStageFormatter on WorkoutStage {
     WorkoutStageRhythms stage,
   ) {
     final String stageName = AppLocalizations.of(context)!.workout_rhythms;
-    final String rhythmsDescription =
-        '${stage.amountOfSeries}x${stage.rhythmDistanceInMeters}m';
+    final String seriesDescription =
+        '${stage.amountOfSeries}x${stage.seriesDistanceInMeters}m';
     String breakDescription = '${AppLocalizations.of(context)!.workout_break} ';
-    if (stage.marchDistanceInMeters > 0) {
+    if (stage.breakMarchDistanceInMeters > 0) {
       breakDescription += ' ${AppLocalizations.of(context)!.workout_march(
-        stage.marchDistanceInMeters,
+        stage.breakMarchDistanceInMeters,
       )}, ';
     }
     breakDescription += AppLocalizations.of(context)!.workout_jog(
-      stage.jogDistanceInMeters,
+      stage.breakJogDistanceInMeters,
     );
-    return '$stageName $rhythmsDescription, $breakDescription';
+    return '$stageName $seriesDescription, $breakDescription';
   }
 
   String _createStrengthDescription(
@@ -61,17 +64,17 @@ extension WorkoutStageFormatter on WorkoutStage {
     WorkoutStageStrength stage,
   ) {
     final String stageName = AppLocalizations.of(context)!.workout_strength;
-    final String ascentDescription =
-        '${stage.amountOfSeries}x${stage.ascentDistanceInMeters}m';
+    final String seriesDescription =
+        '${stage.amountOfSeries}x${stage.seriesDistanceInMeters}m';
     String breakDescription = '${AppLocalizations.of(context)!.workout_break} ';
-    if (stage.descentMarchDistanceInMeters > 0) {
+    if (stage.breakMarchDistanceInMeters > 0) {
       breakDescription += ' ${AppLocalizations.of(context)!.workout_march(
-        stage.descentMarchDistanceInMeters,
+        stage.breakMarchDistanceInMeters,
       )}, ';
     }
     breakDescription += AppLocalizations.of(context)!.workout_jog(
-      stage.descentJogDistanceInMeters,
+      stage.breakJogDistanceInMeters,
     );
-    return '$stageName $ascentDescription, $breakDescription';
+    return '$stageName $seriesDescription, $breakDescription';
   }
 }

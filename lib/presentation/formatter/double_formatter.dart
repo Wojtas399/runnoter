@@ -1,7 +1,7 @@
 extension DoubleFormatter on double {
-  String toDistanceFormat() {
+  String toKilometersFormat() {
     RegExp regex = RegExp(r'([.]*0)(?!.*\d)');
-
-    return toString().replaceAll(regex, '');
+    final distance = toString().replaceAll(regex, '');
+    return '${distance}km';
   }
 }
