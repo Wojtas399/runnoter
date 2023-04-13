@@ -31,6 +31,12 @@ class StateRepository<T extends Entity> {
     _dataStream.add(updatedData);
   }
 
+  void addEntities(List<T> entities) {
+    final List<T> updatedData = [...?_dataStream.value];
+    updatedData.addAll(entities);
+    _dataStream.add(updatedData);
+  }
+
   void updateEntity(T entity) {
     final List<T> updatedData = [...?_dataStream.value];
     final entityIndex = updatedData.indexWhere(
