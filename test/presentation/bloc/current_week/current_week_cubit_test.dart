@@ -25,8 +25,14 @@ void main() {
     "should set listener of logged user's workouts from week and should set days from current week in state",
     build: () => createCubit(),
     setUp: () {
-      dateService.mockGetNow(
-        now: DateTime(2023, 4, 5),
+      dateService.mockGetTodayDate(
+        todayDate: DateTime(2023, 4, 5),
+      );
+      dateService.mockGetFirstDateFromWeekMatchingToDate(
+        date: DateTime(2023, 4, 3),
+      );
+      dateService.mockGetLastDateFromWeekMatchingToDate(
+        date: DateTime(2023, 4, 9),
       );
       dateService.mockGetDatesFromWeekMatchingToDate(
         dates: [
@@ -42,7 +48,7 @@ void main() {
       authService.mockGetLoggedUserId(
         userId: 'u1',
       );
-      workoutRepository.mockGetWorkoutsFromWeek(
+      workoutRepository.mockGetWorkoutsByUserIdAndDateRange(
         workouts: [
           createWorkout(
             id: 'w1',
@@ -112,9 +118,10 @@ void main() {
         () => authService.loggedUserId$,
       ).called(1);
       verify(
-        () => workoutRepository.getWorkoutsFromWeek(
+        () => workoutRepository.getWorkoutsByUserIdAndDateRange(
           userId: 'u1',
-          dateFromWeek: DateTime(2023, 4, 5),
+          startDate: DateTime(2023, 4, 3),
+          endDate: DateTime(2023, 4, 9),
         ),
       ).called(1);
     },

@@ -4,10 +4,10 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
+import '../../../common/date_service.dart';
 import '../../../domain/model/workout.dart';
 import '../../../domain/repository/workout_repository.dart';
 import '../../../domain/service/auth_service.dart';
-import '../../service/date_service.dart';
 
 class CurrentWeekCubit extends Cubit<List<Day>?> {
   final DateService _dateService;
@@ -32,12 +32,15 @@ class CurrentWeekCubit extends Cubit<List<Day>?> {
   }
 
   void initialize() {
+    final DateTime today = _dateService.getTodayDate();
     _workoutsListener ??= _authService.loggedUserId$
         .whereType<String>()
         .switchMap(
-          (String loggedUserId) => _workoutRepository.getWorkoutsFromWeek(
+          (String loggedUserId) =>
+              _workoutRepository.getWorkoutsByUserIdAndDateRange(
             userId: loggedUserId,
-            dateFromWeek: _dateService.getNow(),
+            startDate: _dateService.getFirstDateFromWeekMatchingToDate(today),
+            endDate: _dateService.getLastDateFromWeekMatchingToDate(today),
           ),
         )
         .listen(_manageWorkoutsFromWeek);
@@ -45,7 +48,7 @@ class CurrentWeekCubit extends Cubit<List<Day>?> {
 
   void _manageWorkoutsFromWeek(List<Workout>? workouts) {
     final List<Workout?> workoutsFromWeek = [...?workouts];
-    final DateTime today = _dateService.getNow();
+    final DateTime today = _dateService.getTodayDate();
     final List<DateTime> datesFromWeek =
         _dateService.getDatesFromWeekMatchingToDate(today);
     final List<Day> days = datesFromWeek
