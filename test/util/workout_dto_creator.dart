@@ -1,6 +1,4 @@
-import 'package:firebase/model/workout_dto.dart';
-import 'package:firebase/model/workout_stage_dto.dart';
-import 'package:firebase/model/workout_status_dto.dart';
+import 'package:firebase/firebase.dart';
 
 WorkoutDto createWorkoutDto({
   String id = 'w1',

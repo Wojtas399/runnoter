@@ -3,13 +3,14 @@ import 'package:runnoter/domain/model/workout.dart';
 import 'package:runnoter/domain/repository/workout_repository.dart';
 
 class MockWorkoutRepository extends Mock implements WorkoutRepository {
-  void mockGetWorkoutsFromWeek({
+  void mockGetWorkoutsByUserIdAndDateRange({
     List<Workout>? workouts,
   }) {
     when(
-      () => getWorkoutsFromWeek(
+      () => getWorkoutsByUserIdAndDateRange(
         userId: any(named: 'userId'),
-        dateFromWeek: any(named: 'dateFromWeek'),
+        startDate: any(named: 'startDate'),
+        endDate: any(named: 'endDate'),
       ),
     ).thenAnswer((invocation) => Stream.value(workouts));
   }

@@ -1,8 +1,9 @@
 import '../model/workout.dart';
 
 abstract class WorkoutRepository {
-  Stream<List<Workout>?> getWorkoutsFromWeek({
+  Stream<List<Workout>?> getWorkoutsByUserIdAndDateRange({
     required String userId,
-    required DateTime dateFromWeek,
+    required DateTime startDate,
+    required DateTime endDate,
   });
 }

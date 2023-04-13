@@ -17,4 +17,16 @@ class MockDateService extends Mock implements DateService {
       () => getDatesFromWeekMatchingToDate(any()),
     ).thenReturn(dates);
   }
+
+  void mockIsDateFromRange({
+    required bool expected,
+  }) {
+    when(
+      () => isDateFromRange(
+        date: any(named: 'date'),
+        startDate: any(named: 'startDate'),
+        endDate: any(named: 'endDate'),
+      ),
+    ).thenReturn(expected);
+  }
 }
