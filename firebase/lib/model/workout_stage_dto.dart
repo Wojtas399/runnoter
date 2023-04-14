@@ -38,7 +38,8 @@ class WorkoutStageOWBDto extends WorkoutStageDto with _DistanceWorkout {
 
   WorkoutStageOWBDto.fromJson(Map<String, dynamic> json)
       : this(
-          distanceInKilometers: json[_distanceInKilometersField],
+          distanceInKilometers:
+              (json[_distanceInKilometersField] as num).toDouble(),
           maxHeartRate: json[_maxHeartRateField],
         );
 
@@ -62,7 +63,8 @@ class WorkoutStageBC2Dto extends WorkoutStageDto with _DistanceWorkout {
 
   WorkoutStageBC2Dto.fromJson(Map<String, dynamic> json)
       : this(
-          distanceInKilometers: json[_distanceInKilometersField],
+          distanceInKilometers:
+              (json[_distanceInKilometersField] as num).toDouble(),
           maxHeartRate: json[_maxHeartRateField],
         );
 
@@ -86,7 +88,8 @@ class WorkoutStageBC3Dto extends WorkoutStageDto with _DistanceWorkout {
 
   WorkoutStageBC3Dto.fromJson(Map<String, dynamic> json)
       : this(
-          distanceInKilometers: json[_distanceInKilometersField],
+          distanceInKilometers:
+              (json[_distanceInKilometersField] as num).toDouble(),
           maxHeartRate: json[_maxHeartRateField],
         );
 

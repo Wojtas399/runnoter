@@ -55,7 +55,8 @@ class WorkoutStatusDoneDto extends WorkoutStatusDto {
 
   WorkoutStatusDoneDto.fromJson(Map<String, dynamic> json)
       : this(
-          coveredDistanceInKilometers: json[_coveredDistanceInKilometersField],
+          coveredDistanceInKilometers:
+              (json[_coveredDistanceInKilometersField] as num).toDouble(),
           avgPace: PaceDto.fromJson(json[_avgPaceField]),
           avgHeartRate: json[_avgHeartRateField],
           moodRate: mapMoodRateFromNumber(json[_moodRateField]),
