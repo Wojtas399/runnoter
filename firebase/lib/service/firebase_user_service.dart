@@ -1,4 +1,4 @@
-part of firebase;
+import '../firebase.dart';
 
 class FirebaseUserService {
   Future<UserDto?> loadUserById({
