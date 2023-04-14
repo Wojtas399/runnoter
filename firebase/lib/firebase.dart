@@ -1,5 +1,3 @@
-library firebase;
-
 import 'package:firebase_core/firebase_core.dart';
 
 export 'model/appearance_settings_dto.dart';
