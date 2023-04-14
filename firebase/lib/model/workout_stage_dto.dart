@@ -30,7 +30,7 @@ class WorkoutStageOWBDto extends WorkoutStageDto with _DistanceWorkout {
   WorkoutStageOWBDto({
     required double distanceInKilometers,
     required int maxHeartRate,
-  }) {
+  }) : assert(distanceInKilometers > 0 && maxHeartRate > 0) {
     stageName = 'owb';
     this.distanceInKilometers = distanceInKilometers;
     this.maxHeartRate = maxHeartRate;
@@ -54,7 +54,7 @@ class WorkoutStageBC2Dto extends WorkoutStageDto with _DistanceWorkout {
   WorkoutStageBC2Dto({
     required double distanceInKilometers,
     required int maxHeartRate,
-  }) {
+  }) : assert(distanceInKilometers > 0 && maxHeartRate > 0) {
     stageName = 'bc2';
     this.distanceInKilometers = distanceInKilometers;
     this.maxHeartRate = maxHeartRate;
@@ -78,7 +78,7 @@ class WorkoutStageBC3Dto extends WorkoutStageDto with _DistanceWorkout {
   WorkoutStageBC3Dto({
     required double distanceInKilometers,
     required int maxHeartRate,
-  }) {
+  }) : assert(distanceInKilometers > 0 && maxHeartRate > 0) {
     stageName = 'bc3';
     this.distanceInKilometers = distanceInKilometers;
     this.maxHeartRate = maxHeartRate;
@@ -104,7 +104,9 @@ class WorkoutStageStrengthDto extends WorkoutStageDto with _SeriesWorkout {
     required int seriesDistanceInMeters,
     required int breakMarchDistanceInMeters,
     required int breakJogDistanceInMeters,
-  }) {
+  })  : assert(amountOfSeries > 0),
+        assert(seriesDistanceInMeters > 0),
+        assert(breakMarchDistanceInMeters > 0 || breakJogDistanceInMeters > 0) {
     stageName = 'strength';
     this.amountOfSeries = amountOfSeries;
     this.seriesDistanceInMeters = seriesDistanceInMeters;
@@ -136,7 +138,9 @@ class WorkoutStageRhythmsDto extends WorkoutStageDto with _SeriesWorkout {
     required int seriesDistanceInMeters,
     required int breakMarchDistanceInMeters,
     required int breakJogDistanceInMeters,
-  }) {
+  })  : assert(amountOfSeries > 0),
+        assert(seriesDistanceInMeters > 0),
+        assert(breakMarchDistanceInMeters > 0 || breakJogDistanceInMeters > 0) {
     stageName = 'rhythms';
     this.amountOfSeries = amountOfSeries;
     this.seriesDistanceInMeters = seriesDistanceInMeters;
