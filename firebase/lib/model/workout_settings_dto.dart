@@ -1,4 +1,7 @@
-part of firebase;
+import 'package:equatable/equatable.dart';
+
+import '../mapper/distance_unit_mapper.dart';
+import '../mapper/pace_unit_mapper.dart';
 
 class WorkoutSettingsDto extends Equatable {
   final String userId;
