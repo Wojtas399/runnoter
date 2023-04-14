@@ -1,4 +1,4 @@
-part of firebase;
+import 'package:equatable/equatable.dart';
 
 class UserDto extends Equatable {
   final String id;
