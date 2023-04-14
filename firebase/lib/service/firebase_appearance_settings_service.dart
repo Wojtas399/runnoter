@@ -1,4 +1,4 @@
-part of firebase;
+import '../firebase.dart';
 
 class FirebaseAppearanceSettingsService {
   Future<AppearanceSettingsDto?> loadSettingsByUserId({
