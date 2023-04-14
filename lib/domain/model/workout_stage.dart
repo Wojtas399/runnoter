@@ -8,7 +8,8 @@ class WorkoutStageOWB extends WorkoutStage with DistanceWorkout {
   WorkoutStageOWB({
     required double distanceInKilometers,
     required int maxHeartRate,
-  }) {
+  })  : assert(distanceInKilometers > 0),
+        assert(maxHeartRate > 0) {
     this.distanceInKilometers = distanceInKilometers;
     this.maxHeartRate = maxHeartRate;
   }
@@ -24,7 +25,8 @@ class WorkoutStageBC2 extends WorkoutStage with DistanceWorkout {
   WorkoutStageBC2({
     required double distanceInKilometers,
     required int maxHeartRate,
-  }) {
+  })  : assert(distanceInKilometers > 0),
+        assert(maxHeartRate > 0) {
     this.distanceInKilometers = distanceInKilometers;
     this.maxHeartRate = maxHeartRate;
   }
@@ -40,7 +42,8 @@ class WorkoutStageBC3 extends WorkoutStage with DistanceWorkout {
   WorkoutStageBC3({
     required double distanceInKilometers,
     required int maxHeartRate,
-  }) {
+  })  : assert(distanceInKilometers > 0),
+        assert(maxHeartRate > 0) {
     this.distanceInKilometers = distanceInKilometers;
     this.maxHeartRate = maxHeartRate;
   }
@@ -58,7 +61,9 @@ class WorkoutStageStrength extends WorkoutStage with SeriesWorkout {
     required int seriesDistanceInMeters,
     required int breakMarchDistanceInMeters,
     required int breakJogDistanceInMeters,
-  }) : assert(breakMarchDistanceInMeters > 0 || breakJogDistanceInMeters > 0) {
+  })  : assert(amountOfSeries > 0),
+        assert(seriesDistanceInMeters > 0),
+        assert(breakMarchDistanceInMeters > 0 || breakJogDistanceInMeters > 0) {
     this.amountOfSeries = amountOfSeries;
     this.seriesDistanceInMeters = seriesDistanceInMeters;
     this.breakMarchDistanceInMeters = breakMarchDistanceInMeters;
@@ -80,7 +85,9 @@ class WorkoutStageRhythms extends WorkoutStage with SeriesWorkout {
     required int seriesDistanceInMeters,
     required int breakMarchDistanceInMeters,
     required int breakJogDistanceInMeters,
-  }) : assert(breakMarchDistanceInMeters > 0 || breakJogDistanceInMeters > 0) {
+  })  : assert(amountOfSeries > 0),
+        assert(seriesDistanceInMeters > 0),
+        assert(breakMarchDistanceInMeters > 0 || breakJogDistanceInMeters > 0) {
     this.amountOfSeries = amountOfSeries;
     this.seriesDistanceInMeters = seriesDistanceInMeters;
     this.breakMarchDistanceInMeters = breakMarchDistanceInMeters;
