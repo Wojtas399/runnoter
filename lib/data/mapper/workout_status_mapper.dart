@@ -9,7 +9,7 @@ WorkoutStatus mapWorkoutStatusFromFirebase(WorkoutStatusDto workoutStatusDto) {
     return const WorkoutStatusPending();
   } else if (workoutStatusDto is WorkoutStatusDoneDto) {
     return WorkoutStatusDone(
-      coveredDistanceInKm: workoutStatusDto.coveredDistanceInKm,
+      coveredDistanceInKm: workoutStatusDto.coveredDistanceInKilometers,
       avgPace: mapPaceFromFirebase(workoutStatusDto.avgPace),
       avgHeartRate: workoutStatusDto.avgHeartRate,
       moodRate: mapMoodRateFromFirebase(workoutStatusDto.moodRate),
@@ -17,7 +17,7 @@ WorkoutStatus mapWorkoutStatusFromFirebase(WorkoutStatusDto workoutStatusDto) {
     );
   } else if (workoutStatusDto is WorkoutStatusFailedDto) {
     return WorkoutStatusFailed(
-      coveredDistanceInKm: workoutStatusDto.coveredDistanceInKm,
+      coveredDistanceInKm: workoutStatusDto.coveredDistanceInKilometers,
       avgPace: mapPaceFromFirebase(workoutStatusDto.avgPace),
       avgHeartRate: workoutStatusDto.avgHeartRate,
       moodRate: mapMoodRateFromFirebase(workoutStatusDto.moodRate),

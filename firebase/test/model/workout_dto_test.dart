@@ -1,4 +1,5 @@
 import 'package:firebase/firebase.dart';
+import 'package:firebase/model/workout_status_dto.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -6,24 +7,24 @@ void main() {
   const String userId = 'u1';
   final DateTime date = DateTime(2023, 4, 10);
   const WorkoutStatusDto status = WorkoutStatusDoneDto(
-    coveredDistanceInKm: 10.0,
+    coveredDistanceInKilometers: 10.0,
     avgPace: PaceDto(minutes: 5, seconds: 30),
     avgHeartRate: 145,
     moodRate: MoodRate.mr8,
     comment: 'comment',
   );
   const String name = 'workout name';
-  const List<WorkoutStageDto> stages = [
+  final List<WorkoutStageDto> stages = [
     WorkoutStageOWBDto(
-      distanceInKm: 3,
+      distanceInKilometers: 3,
       maxHeartRate: 150,
     ),
     WorkoutStageBC2Dto(
-      distanceInKm: 5,
+      distanceInKilometers: 5,
       maxHeartRate: 165,
     ),
     WorkoutStageOWBDto(
-      distanceInKm: 2,
+      distanceInKilometers: 2,
       maxHeartRate: 150,
     ),
   ];

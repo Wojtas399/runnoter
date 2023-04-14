@@ -8,12 +8,12 @@ void main() {
     'should map json with type key set as owb to owb workout stage',
     () {
       final Map<String, dynamic> json = {
-        'type': 'owb',
-        'distanceInKm': 10.0,
+        'name': 'owb',
+        'distanceInKilometers': 10.0,
         'maxHeartRate': 150,
       };
-      const WorkoutStageDto expectedWorkoutStageDto = WorkoutStageOWBDto(
-        distanceInKm: 10,
+      final WorkoutStageDto expectedWorkoutStageDto = WorkoutStageOWBDto(
+        distanceInKilometers: 10,
         maxHeartRate: 150,
       );
 
@@ -29,12 +29,12 @@ void main() {
     'should map json with type key set as bc2 to bc2 workout stage',
     () {
       final Map<String, dynamic> json = {
-        'type': 'bc2',
-        'distanceInKm': 5.0,
+        'name': 'bc2',
+        'distanceInKilometers': 5.0,
         'maxHeartRate': 165,
       };
-      const WorkoutStageDto expectedWorkoutStageDto = WorkoutStageBC2Dto(
-        distanceInKm: 5.0,
+      final WorkoutStageDto expectedWorkoutStageDto = WorkoutStageBC2Dto(
+        distanceInKilometers: 5.0,
         maxHeartRate: 165,
       );
 
@@ -50,12 +50,12 @@ void main() {
     'should map json with type key set as bc3 to bc3 workout stage',
     () {
       final Map<String, dynamic> json = {
-        'type': 'bc3',
-        'distanceInKm': 5.0,
+        'name': 'bc3',
+        'distanceInKilometers': 5.0,
         'maxHeartRate': 165,
       };
-      const WorkoutStageDto expectedWorkoutStageDto = WorkoutStageBC3Dto(
-        distanceInKm: 5.0,
+      final WorkoutStageDto expectedWorkoutStageDto = WorkoutStageBC3Dto(
+        distanceInKilometers: 5.0,
         maxHeartRate: 165,
       );
 
@@ -71,13 +71,13 @@ void main() {
     'should map json with type key set as strength to strength workout stage',
     () {
       final Map<String, dynamic> json = {
-        'type': 'strength',
+        'name': 'strength',
         'amountOfSeries': 10,
         'seriesDistanceInMeters': 100,
         'breakMarchDistanceInMeters': 20,
         'breakJogDistanceInMeters': 80,
       };
-      const WorkoutStageDto expectedWorkoutStageDto = WorkoutStageStrengthDto(
+      final WorkoutStageDto expectedWorkoutStageDto = WorkoutStageStrengthDto(
         amountOfSeries: 10,
         seriesDistanceInMeters: 100,
         breakMarchDistanceInMeters: 20,
@@ -96,13 +96,13 @@ void main() {
     'should map json with type key set as rhythms to rhythms workout stage',
     () {
       final Map<String, dynamic> json = {
-        'type': 'rhythms',
+        'name': 'rhythms',
         'amountOfSeries': 10,
         'seriesDistanceInMeters': 100,
         'breakMarchDistanceInMeters': 0,
         'breakJogDistanceInMeters': 200,
       };
-      const WorkoutStageDto expectedWorkoutStageDto = WorkoutStageRhythmsDto(
+      final WorkoutStageDto expectedWorkoutStageDto = WorkoutStageRhythmsDto(
         amountOfSeries: 10,
         seriesDistanceInMeters: 100,
         breakMarchDistanceInMeters: 0,
@@ -120,13 +120,13 @@ void main() {
     'owb, '
     'should map owb workout dto to json with type key set as owb',
     () {
-      const WorkoutStageDto dto = WorkoutStageOWBDto(
-        distanceInKm: 10,
+      final WorkoutStageDto dto = WorkoutStageOWBDto(
+        distanceInKilometers: 10,
         maxHeartRate: 150,
       );
       final Map<String, dynamic> expectedJson = {
-        'type': 'owb',
-        'distanceInKm': 10.0,
+        'name': 'owb',
+        'distanceInKilometers': 10.0,
         'maxHeartRate': 150,
       };
 
@@ -141,13 +141,13 @@ void main() {
     'bc2, '
     'should map bc2 workout dto to json with type key set as bc2',
     () {
-      const WorkoutStageDto dto = WorkoutStageBC2Dto(
-        distanceInKm: 5.0,
+      final WorkoutStageDto dto = WorkoutStageBC2Dto(
+        distanceInKilometers: 5.0,
         maxHeartRate: 165,
       );
       final Map<String, dynamic> expectedJson = {
-        'type': 'bc2',
-        'distanceInKm': 5.0,
+        'name': 'bc2',
+        'distanceInKilometers': 5.0,
         'maxHeartRate': 165,
       };
 
@@ -162,13 +162,13 @@ void main() {
     'bc3, '
     'should map bc3 workout dto to json with type key set as bc3',
     () {
-      const WorkoutStageDto dto = WorkoutStageBC3Dto(
-        distanceInKm: 5.0,
+      final WorkoutStageDto dto = WorkoutStageBC3Dto(
+        distanceInKilometers: 5.0,
         maxHeartRate: 165,
       );
       final Map<String, dynamic> expectedJson = {
-        'type': 'bc3',
-        'distanceInKm': 5.0,
+        'name': 'bc3',
+        'distanceInKilometers': 5.0,
         'maxHeartRate': 165,
       };
 
@@ -183,14 +183,14 @@ void main() {
     'strength, '
     'should map strength workout dto to json with type key set as strength',
     () {
-      const WorkoutStageDto dto = WorkoutStageStrengthDto(
+      final WorkoutStageDto dto = WorkoutStageStrengthDto(
         amountOfSeries: 10,
         seriesDistanceInMeters: 100,
         breakMarchDistanceInMeters: 20,
         breakJogDistanceInMeters: 80,
       );
       final Map<String, dynamic> expectedJson = {
-        'type': 'strength',
+        'name': 'strength',
         'amountOfSeries': 10,
         'seriesDistanceInMeters': 100,
         'breakMarchDistanceInMeters': 20,
@@ -208,14 +208,14 @@ void main() {
     'rhythms, '
     'should map rhythms workout dto to json with type key set as rhythms',
     () {
-      const WorkoutStageDto dto = WorkoutStageRhythmsDto(
+      final WorkoutStageDto dto = WorkoutStageRhythmsDto(
         amountOfSeries: 10,
         seriesDistanceInMeters: 100,
         breakMarchDistanceInMeters: 0,
         breakJogDistanceInMeters: 200,
       );
       final Map<String, dynamic> expectedJson = {
-        'type': 'rhythms',
+        'name': 'rhythms',
         'amountOfSeries': 10,
         'seriesDistanceInMeters': 100,
         'breakMarchDistanceInMeters': 0,

@@ -5,17 +5,17 @@ import '../../domain/model/workout_stage.dart';
 WorkoutStage mapWorkoutStageFromFirebase(WorkoutStageDto workoutStageDto) {
   if (workoutStageDto is WorkoutStageOWBDto) {
     return WorkoutStageOWB(
-      distanceInKilometers: workoutStageDto.distanceInKm,
+      distanceInKilometers: workoutStageDto.distanceInKilometers,
       maxHeartRate: workoutStageDto.maxHeartRate,
     );
   } else if (workoutStageDto is WorkoutStageBC2Dto) {
     return WorkoutStageBC2(
-      distanceInKilometers: workoutStageDto.distanceInKm,
+      distanceInKilometers: workoutStageDto.distanceInKilometers,
       maxHeartRate: workoutStageDto.maxHeartRate,
     );
   } else if (workoutStageDto is WorkoutStageBC3Dto) {
     return WorkoutStageBC3(
-      distanceInKilometers: workoutStageDto.distanceInKm,
+      distanceInKilometers: workoutStageDto.distanceInKilometers,
       maxHeartRate: workoutStageDto.maxHeartRate,
     );
   } else if (workoutStageDto is WorkoutStageStrengthDto) {

@@ -25,7 +25,7 @@ void main() {
         userId: userId,
         date: date,
         status: const firebase.WorkoutStatusDoneDto(
-          coveredDistanceInKm: coveredDistanceInKm,
+          coveredDistanceInKilometers: coveredDistanceInKm,
           avgPace: firebase.PaceDto(
             minutes: avgPaceMin,
             seconds: avgPaceSeconds,
@@ -35,17 +35,17 @@ void main() {
           comment: 'comment',
         ),
         name: name,
-        stages: const [
+        stages: [
           firebase.WorkoutStageOWBDto(
-            distanceInKm: 2,
+            distanceInKilometers: 2,
             maxHeartRate: 150,
           ),
           firebase.WorkoutStageBC2Dto(
-            distanceInKm: 5,
+            distanceInKilometers: 5,
             maxHeartRate: 165,
           ),
           firebase.WorkoutStageOWBDto(
-            distanceInKm: 2,
+            distanceInKilometers: 2,
             maxHeartRate: 150,
           ),
         ],

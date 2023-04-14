@@ -23,7 +23,7 @@ void main() {
     'done status dto model should be mapped to domain done status model',
     () {
       const firebase.WorkoutStatusDto statusDto = firebase.WorkoutStatusDoneDto(
-        coveredDistanceInKm: 10.0,
+        coveredDistanceInKilometers: 10.0,
         avgPace: firebase.PaceDto(minutes: 5, seconds: 50),
         avgHeartRate: 146,
         moodRate: firebase.MoodRate.mr8,
@@ -49,7 +49,7 @@ void main() {
     () {
       const firebase.WorkoutStatusDto statusDto =
           firebase.WorkoutStatusFailedDto(
-        coveredDistanceInKm: 10.0,
+        coveredDistanceInKilometers: 10.0,
         avgPace: firebase.PaceDto(minutes: 5, seconds: 50),
         avgHeartRate: 146,
         moodRate: firebase.MoodRate.mr8,

@@ -1,4 +1,5 @@
 import 'package:firebase/firebase.dart';
+import 'package:firebase/model/workout_status_dto.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -24,14 +25,14 @@ void main() {
       const PaceDto avgPace = PaceDto(minutes: 5, seconds: 30);
       final Map<String, dynamic> json = {
         'name': 'done',
-        'coveredDistanceInKm': 8.5,
+        'coveredDistanceInKilometers': 8.5,
         'avgPace': avgPace.toJson(),
         'avgHeartRate': 145,
         'moodRate': MoodRate.mr8.number,
         'comment': 'comment',
       };
       const WorkoutStatusDoneDto expectedDto = WorkoutStatusDoneDto(
-        coveredDistanceInKm: 8.5,
+        coveredDistanceInKilometers: 8.5,
         avgPace: avgPace,
         avgHeartRate: 145,
         moodRate: MoodRate.mr8,
@@ -51,14 +52,14 @@ void main() {
       const PaceDto avgPace = PaceDto(minutes: 5, seconds: 30);
       final Map<String, dynamic> json = {
         'name': 'failed',
-        'coveredDistanceInKm': 8.5,
+        'coveredDistanceInKilometers': 8.5,
         'avgPace': avgPace.toJson(),
         'avgHeartRate': 145,
         'moodRate': MoodRate.mr8.number,
         'comment': 'comment',
       };
       const WorkoutStatusFailedDto expectedDto = WorkoutStatusFailedDto(
-        coveredDistanceInKm: 8.5,
+        coveredDistanceInKilometers: 8.5,
         avgPace: avgPace,
         avgHeartRate: 145,
         moodRate: MoodRate.mr8,
@@ -92,7 +93,7 @@ void main() {
     () {
       const PaceDto avgPace = PaceDto(minutes: 5, seconds: 30);
       const WorkoutStatusDoneDto dto = WorkoutStatusDoneDto(
-        coveredDistanceInKm: 8.5,
+        coveredDistanceInKilometers: 8.5,
         avgPace: avgPace,
         avgHeartRate: 145,
         moodRate: MoodRate.mr8,
@@ -100,7 +101,7 @@ void main() {
       );
       final Map<String, dynamic> expectedJson = {
         'name': 'done',
-        'coveredDistanceInKm': 8.5,
+        'coveredDistanceInKilometers': 8.5,
         'avgPace': avgPace.toJson(),
         'avgHeartRate': 145,
         'moodRate': MoodRate.mr8.number,
@@ -119,7 +120,7 @@ void main() {
     () {
       const PaceDto avgPace = PaceDto(minutes: 5, seconds: 30);
       const WorkoutStatusFailedDto dto = WorkoutStatusFailedDto(
-        coveredDistanceInKm: 8.5,
+        coveredDistanceInKilometers: 8.5,
         avgPace: avgPace,
         avgHeartRate: 145,
         moodRate: MoodRate.mr8,
@@ -127,7 +128,7 @@ void main() {
       );
       final Map<String, dynamic> expectedJson = {
         'name': 'failed',
-        'coveredDistanceInKm': 8.5,
+        'coveredDistanceInKilometers': 8.5,
         'avgPace': avgPace.toJson(),
         'avgHeartRate': 145,
         'moodRate': MoodRate.mr8.number,

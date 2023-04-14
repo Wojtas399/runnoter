@@ -1,4 +1,7 @@
-part of firebase;
+import 'package:equatable/equatable.dart';
+
+import '../firebase.dart';
+import '../mapper/mood_rate_mapper.dart';
 
 class WorkoutStatusDto extends Equatable {
   const WorkoutStatusDto();
@@ -36,14 +39,14 @@ class WorkoutStatusPendingDto extends WorkoutStatusDto {
 }
 
 class WorkoutStatusDoneDto extends WorkoutStatusDto {
-  final double coveredDistanceInKm;
+  final double coveredDistanceInKilometers;
   final PaceDto avgPace;
   final int avgHeartRate;
   final MoodRate moodRate;
   final String? comment;
 
   const WorkoutStatusDoneDto({
-    required this.coveredDistanceInKm,
+    required this.coveredDistanceInKilometers,
     required this.avgPace,
     required this.avgHeartRate,
     required this.moodRate,
@@ -52,7 +55,7 @@ class WorkoutStatusDoneDto extends WorkoutStatusDto {
 
   WorkoutStatusDoneDto.fromJson(Map<String, dynamic> json)
       : this(
-          coveredDistanceInKm: json[_coveredDistanceInKmField],
+          coveredDistanceInKilometers: json[_coveredDistanceInKilometersField],
           avgPace: PaceDto.fromJson(json[_avgPaceField]),
           avgHeartRate: json[_avgHeartRateField],
           moodRate: mapMoodRateFromNumber(json[_moodRateField]),
@@ -61,7 +64,7 @@ class WorkoutStatusDoneDto extends WorkoutStatusDto {
 
   @override
   List<Object?> get props => [
-        coveredDistanceInKm,
+        coveredDistanceInKilometers,
         avgPace,
         avgHeartRate,
         moodRate,
@@ -71,7 +74,7 @@ class WorkoutStatusDoneDto extends WorkoutStatusDto {
   @override
   Map<String, dynamic> toJson() => {
         _nameField: 'done',
-        _coveredDistanceInKmField: coveredDistanceInKm,
+        _coveredDistanceInKilometersField: coveredDistanceInKilometers,
         _avgPaceField: avgPace.toJson(),
         _avgHeartRateField: avgHeartRate,
         _moodRateField: moodRate.number,
@@ -80,14 +83,14 @@ class WorkoutStatusDoneDto extends WorkoutStatusDto {
 }
 
 class WorkoutStatusFailedDto extends WorkoutStatusDto {
-  final double coveredDistanceInKm;
+  final double coveredDistanceInKilometers;
   final PaceDto avgPace;
   final int avgHeartRate;
   final MoodRate moodRate;
   final String? comment;
 
   const WorkoutStatusFailedDto({
-    required this.coveredDistanceInKm,
+    required this.coveredDistanceInKilometers,
     required this.avgPace,
     required this.avgHeartRate,
     required this.moodRate,
@@ -96,7 +99,7 @@ class WorkoutStatusFailedDto extends WorkoutStatusDto {
 
   WorkoutStatusFailedDto.fromJson(Map<String, dynamic> json)
       : this(
-          coveredDistanceInKm: json[_coveredDistanceInKmField],
+          coveredDistanceInKilometers: json[_coveredDistanceInKilometersField],
           avgPace: PaceDto.fromJson(json[_avgPaceField]),
           avgHeartRate: json[_avgHeartRateField],
           moodRate: mapMoodRateFromNumber(json[_moodRateField]),
@@ -105,7 +108,7 @@ class WorkoutStatusFailedDto extends WorkoutStatusDto {
 
   @override
   List<Object?> get props => [
-        coveredDistanceInKm,
+        coveredDistanceInKilometers,
         avgPace,
         avgHeartRate,
         moodRate,
@@ -114,8 +117,8 @@ class WorkoutStatusFailedDto extends WorkoutStatusDto {
 
   @override
   Map<String, dynamic> toJson() => {
-        _statusTypeField: 'failed',
-        _coveredDistanceInKmField: coveredDistanceInKm,
+        _nameField: 'failed',
+        _coveredDistanceInKilometersField: coveredDistanceInKilometers,
         _avgPaceField: avgPace.toJson(),
         _avgHeartRateField: avgHeartRate,
         _moodRateField: moodRate.number,
@@ -140,8 +143,8 @@ enum MoodRate {
   const MoodRate(this.number);
 }
 
-const String _statusTypeField = 'type';
-const String _coveredDistanceInKmField = 'coveredDistanceInKm';
+const String _nameField = 'name';
+const String _coveredDistanceInKilometersField = 'coveredDistanceInKilometers';
 const String _avgPaceField = 'avgPace';
 const String _avgHeartRateField = 'avgHeartRate';
 const String _moodRateField = 'moodRate';

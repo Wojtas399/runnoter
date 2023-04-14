@@ -10,8 +10,8 @@ void main() {
     () {
       const double distanceInKm = 14.0;
       const int maxHeartRate = 150;
-      const firebase.WorkoutStageOWBDto stageDto = firebase.WorkoutStageOWBDto(
-        distanceInKm: distanceInKm,
+      final firebase.WorkoutStageOWBDto stageDto = firebase.WorkoutStageOWBDto(
+        distanceInKilometers: distanceInKm,
         maxHeartRate: maxHeartRate,
       );
       final WorkoutStageOWB expectedStage = WorkoutStageOWB(
@@ -31,8 +31,8 @@ void main() {
     () {
       const double distanceInKm = 14.0;
       const int maxHeartRate = 150;
-      const firebase.WorkoutStageBC2Dto stageDto = firebase.WorkoutStageBC2Dto(
-        distanceInKm: distanceInKm,
+      final firebase.WorkoutStageBC2Dto stageDto = firebase.WorkoutStageBC2Dto(
+        distanceInKilometers: distanceInKm,
         maxHeartRate: maxHeartRate,
       );
       final WorkoutStageBC2 expectedStage = WorkoutStageBC2(
@@ -52,8 +52,8 @@ void main() {
     () {
       const double distanceInKm = 14.0;
       const int maxHeartRate = 150;
-      const firebase.WorkoutStageBC3Dto stageDto = firebase.WorkoutStageBC3Dto(
-        distanceInKm: distanceInKm,
+      final firebase.WorkoutStageBC3Dto stageDto = firebase.WorkoutStageBC3Dto(
+        distanceInKilometers: distanceInKm,
         maxHeartRate: maxHeartRate,
       );
       final WorkoutStageBC3 expectedStage = WorkoutStageBC3(
@@ -75,7 +75,7 @@ void main() {
       const int seriesDistanceInMeters = 100;
       const int breakMarchDistanceInMeters = 0;
       const int breakJogDistanceInMeters = 200;
-      const firebase.WorkoutStageStrengthDto stageDto =
+      final firebase.WorkoutStageStrengthDto stageDto =
           firebase.WorkoutStageStrengthDto(
         amountOfSeries: amountOfSeries,
         seriesDistanceInMeters: seriesDistanceInMeters,
@@ -103,7 +103,7 @@ void main() {
       const int seriesDistanceInMeters = 100;
       const int breakMarchDistanceInMeters = 0;
       const int breakJogDistanceInMeters = 200;
-      const firebase.WorkoutStageRhythmsDto stageDto =
+      final firebase.WorkoutStageRhythmsDto stageDto =
           firebase.WorkoutStageRhythmsDto(
         amountOfSeries: amountOfSeries,
         seriesDistanceInMeters: seriesDistanceInMeters,
