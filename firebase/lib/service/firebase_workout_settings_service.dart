@@ -1,4 +1,4 @@
-part of firebase;
+import '../firebase.dart';
 
 class FirebaseWorkoutSettingsService {
   Future<WorkoutSettingsDto?> loadSettingsByUserId({
