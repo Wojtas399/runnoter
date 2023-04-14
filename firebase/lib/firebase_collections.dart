@@ -1,4 +1,9 @@
-part of firebase;
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+import 'model/appearance_settings_dto.dart';
+import 'model/user_dto.dart';
+import 'model/workout_dto.dart';
+import 'model/workout_settings_dto.dart';
 
 CollectionReference<UserDto> getUsersRef() {
   return FirebaseFirestore.instance.collection('Users').withConverter<UserDto>(

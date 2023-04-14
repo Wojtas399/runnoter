@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../firebase.dart';
+import '../firebase_collections.dart';
 import '../mapper/date_mapper.dart';
 
 class FirebaseWorkoutService {
