@@ -1,4 +1,7 @@
-part of firebase;
+import 'package:firebase_auth/firebase_auth.dart';
+
+import '../mapper/firebase_auth_exception_code_mapper.dart';
+import '../model/firebase_auth_exception_code.dart';
 
 class FirebaseAuthService {
   Stream<String?> get loggedUserId$ {

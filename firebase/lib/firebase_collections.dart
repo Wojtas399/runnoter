@@ -1,4 +1,9 @@
-part of firebase;
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+import 'model/appearance_settings_dto.dart';
+import 'model/user_dto.dart';
+import 'model/workout_dto.dart';
+import 'model/workout_settings_dto.dart';
 
 CollectionReference<UserDto> getUsersRef() {
   return FirebaseFirestore.instance.collection('Users').withConverter<UserDto>(
@@ -6,12 +11,23 @@ CollectionReference<UserDto> getUsersRef() {
           snapshot.id,
           snapshot.data(),
         ),
-        toFirestore: (UserDto fireUser, _) => fireUser.toJson(),
+        toFirestore: (UserDto userDto, _) => userDto.toJson(),
       );
 }
 
 DocumentReference<UserDto> getUserRef(String userId) {
   return getUsersRef().doc(userId);
+}
+
+CollectionReference<WorkoutDto> getWorkoutsRef(String userId) {
+  return getUserRef(userId).collection('Workouts').withConverter<WorkoutDto>(
+        fromFirestore: (snapshot, _) => WorkoutDto.fromJson(
+          docId: snapshot.id,
+          userId: userId,
+          json: snapshot.data(),
+        ),
+        toFirestore: (workoutDto, _) => workoutDto.toJson(),
+      );
 }
 
 DocumentReference<AppearanceSettingsDto> getAppearanceSettingsRef(
@@ -25,7 +41,8 @@ DocumentReference<AppearanceSettingsDto> getAppearanceSettingsRef(
           userId,
           snapshot.data(),
         ),
-        toFirestore: (appearanceSettings, _) => appearanceSettings.toJson(),
+        toFirestore: (appearanceSettingsDto, _) =>
+            appearanceSettingsDto.toJson(),
       );
 }
 

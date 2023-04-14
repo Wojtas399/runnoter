@@ -92,6 +92,17 @@
   "pace_unit_selection_text": "Select pace unit",
 
 
+  "workout_rhythms": "Rhythms",
+  "workout_strength": "Strength",
+  "workout_break": "break",
+  "workout_march": "{marchDistanceInMeters}m marching",
+  "workout_jog": "{jogDistanceInMeters}m jogging",
+
+
+  "additional_workout_stretching": "Stretching",
+  "additional_workout_strengthening": "Strengthening",
+
+
   "no_internet_connection_dialog_title": "No internet connection",
   "no_internet_connection_dialog_message": "It seems that you lost internet connection. Resolve this problem and try again",
   "unknown_error_dialog_title": "Unknown error",
@@ -116,5 +127,18 @@
   "invalid_name_or_surname_message": "Requirements: \n - Min. 2 characters length \n - Only letters",
   "invalid_email_message": "Invalid email address",
   "invalid_password_message": "Requirements: \n - Min. 6 characters length \n - At least one upper letter, \n - At least one lower letter, \n - At least one digit, \n - At least one special character",
-  "invalid_password_confirmation_message": "Passwords are not the same"
+  "invalid_password_confirmation_message": "Passwords are not the same",
+
+  "january": "January",
+  "february": "February",
+  "march": "March",
+  "april": "April",
+  "may": "May",
+  "june": "June",
+  "july": "July",
+  "august": "August",
+  "september": "September",
+  "october": "October",
+  "november": "November",
+  "december": "December"
 }
