@@ -1,7 +1,6 @@
 library firebase;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -18,10 +17,10 @@ export 'model/pace_dto.dart';
 export 'model/user_dto.dart';
 export 'model/workout_dto.dart';
 export 'model/workout_settings_dto.dart';
+export 'model/workout_stage_dto.dart';
 export 'model/workout_status_dto.dart';
 
 part 'firebase_collections.dart';
-part 'model/workout_stage_dto.dart';
 part 'service/firebase_appearance_settings_service.dart';
 part 'service/firebase_auth_service.dart';
 part 'service/firebase_user_service.dart';

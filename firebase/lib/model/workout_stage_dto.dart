@@ -1,10 +1,10 @@
-part of firebase;
+import 'package:equatable/equatable.dart';
 
 class WorkoutStageDto extends Equatable {
   const WorkoutStageDto();
 
   factory WorkoutStageDto.fromJson(Map<String, dynamic> json) {
-    final String stageName = json[_workoutStageNameField];
+    final String stageName = json[_nameField];
     if (stageName == 'owb') {
       return WorkoutStageOWBDto.fromJson(json);
     } else if (stageName == 'bc2') {
@@ -169,7 +169,7 @@ mixin _DistanceWorkout on WorkoutStageDto {
 
   @override
   Map<String, dynamic> toJson() => {
-        _workoutStageNameField: stageName,
+        _nameField: stageName,
         _distanceInKilometersField: distanceInKilometers,
         _maxHeartRateField: maxHeartRate,
       };
@@ -184,7 +184,7 @@ mixin _SeriesWorkout on WorkoutStageDto {
 
   @override
   Map<String, dynamic> toJson() => {
-        _workoutStageNameField: stageName,
+        _nameField: stageName,
         _amountOfSeriesField: amountOfSeries,
         _seriesDistanceInMetersField: seriesDistanceInMeters,
         _breakMarchDistanceInMetersField: breakMarchDistanceInMeters,
@@ -192,7 +192,7 @@ mixin _SeriesWorkout on WorkoutStageDto {
       };
 }
 
-const String _workoutStageNameField = 'name';
+const String _nameField = 'name';
 const String _distanceInKilometersField = 'distanceInKilometers';
 const String _maxHeartRateField = 'maxHeartRate';
 const String _amountOfSeriesField = 'amountOfSeries';
