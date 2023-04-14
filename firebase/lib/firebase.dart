@@ -7,16 +7,15 @@ import 'package:firebase_core/firebase_core.dart';
 
 import 'mapper/distance_unit_mapper.dart';
 import 'mapper/firebase_auth_exception_code_mapper.dart';
-import 'mapper/language_mapper.dart';
 import 'mapper/pace_unit_mapper.dart';
-import 'mapper/theme_mode_mapper.dart';
+import 'model/appearance_settings_dto.dart';
 import 'model/workout_dto.dart';
 
+export 'model/appearance_settings_dto.dart';
 export 'model/workout_dto.dart';
 export 'model/workout_status_dto.dart';
 
 part 'firebase_collections.dart';
-part 'model/appearance_settings_dto.dart';
 part 'model/firebase_auth_exception_code.dart';
 part 'model/pace_dto.dart';
 part 'model/user_dto.dart';

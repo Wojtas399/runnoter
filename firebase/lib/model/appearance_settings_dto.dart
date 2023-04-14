@@ -1,4 +1,7 @@
-part of firebase;
+import 'package:equatable/equatable.dart';
+
+import '../mapper/language_mapper.dart';
+import '../mapper/theme_mode_mapper.dart';
 
 class AppearanceSettingsDto extends Equatable {
   final String userId;
