@@ -1,5 +1,4 @@
 import 'package:firebase/firebase.dart';
-import 'package:firebase/model/workout_status_dto.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
