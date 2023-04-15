@@ -8,5 +8,14 @@ abstract class DayPreviewEvent extends Equatable {
 }
 
 class DayPreviewEventInitialize extends DayPreviewEvent {
-  const DayPreviewEventInitialize();
+  final DateTime date;
+
+  const DayPreviewEventInitialize({
+    required this.date,
+  });
+
+  @override
+  List<Object> get props => [
+        date,
+      ];
 }
