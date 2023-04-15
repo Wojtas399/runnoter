@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../screen/day_preview/day_preview_screen.dart';
 import '../../screen/distance_unit/distance_unit_screen.dart';
 import '../../screen/forgot_password/ui/forgot_password_screen.dart';
 import '../../screen/home/ui/home_screen.dart';
@@ -37,6 +38,8 @@ class AppNavigator extends StatelessWidget {
       screen = const ForgotPasswordScreen();
     } else if (routePath == Routes.home.path) {
       screen = const HomeScreen();
+    } else if (routePath == Routes.dayPreview.path) {
+      screen = const DayPreviewScreen();
     } else if (routePath == Routes.profile.path) {
       screen = const ProfileScreen();
     } else if (routePath == Routes.themeMode.path) {

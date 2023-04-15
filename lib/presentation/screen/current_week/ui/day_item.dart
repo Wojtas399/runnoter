@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import '../../../../domain/model/workout.dart';
 import '../../../../domain/model/workout_stage.dart';
 import '../../../../domain/model/workout_status.dart';
+import '../../../config/navigation/routes.dart';
 import '../../../formatter/additional_workout_formatter.dart';
 import '../../../formatter/date_formatter.dart';
 import '../../../formatter/workout_stage_formatter.dart';
 import '../../../formatter/workout_status_formatter.dart';
+import '../../../service/navigator_service.dart';
 import '../current_week_cubit.dart';
 
 class DayItem extends StatelessWidget {
@@ -53,7 +55,10 @@ class DayItem extends StatelessWidget {
   }
 
   void _onPressed(BuildContext context) {
-    //TODO
+    navigateTo(
+      context: context,
+      route: Routes.dayPreview,
+    );
   }
 }
 

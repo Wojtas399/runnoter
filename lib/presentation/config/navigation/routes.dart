@@ -3,6 +3,7 @@ enum Routes {
   signUp('/sign-up'),
   forgotPassword('/forgot-password'),
   home('/home'),
+  dayPreview('/home/day-preview'),
   profile('/home/profile'),
   themeMode('/home/profile/theme-mode'),
   language('/home/profile/language'),
