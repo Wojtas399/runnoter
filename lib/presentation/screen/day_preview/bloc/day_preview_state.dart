@@ -2,7 +2,7 @@ import '../../../model/bloc_state.dart';
 import '../../../model/bloc_status.dart';
 
 class DayPreviewState extends BlocState<DayPreviewState> {
-  final DateTime date;
+  final DateTime? date;
 
   const DayPreviewState({
     required super.status,
@@ -10,7 +10,7 @@ class DayPreviewState extends BlocState<DayPreviewState> {
   });
 
   @override
-  List<Object> get props => [
+  List<Object?> get props => [
         status,
         date,
       ];

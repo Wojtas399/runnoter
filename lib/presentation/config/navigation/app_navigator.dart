@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../screen/day_preview/day_preview_screen.dart';
+import '../../screen/day_preview/ui/day_preview_screen.dart';
 import '../../screen/distance_unit/distance_unit_screen.dart';
 import '../../screen/forgot_password/ui/forgot_password_screen.dart';
 import '../../screen/home/ui/home_screen.dart';
