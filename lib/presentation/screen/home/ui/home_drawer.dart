@@ -104,7 +104,7 @@ class _Profile extends StatelessWidget {
   void _onPressed(BuildContext context) {
     navigateTo(
       context: context,
-      route: Routes.profile,
+      route: const ProfileRoute(),
     );
   }
 }

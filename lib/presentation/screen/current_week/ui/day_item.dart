@@ -57,8 +57,9 @@ class DayItem extends StatelessWidget {
   void _onPressed(BuildContext context) {
     navigateTo(
       context: context,
-      route: Routes.dayPreview,
-      arguments: day.date,
+      route: DayPreviewRoute(
+        arguments: day.date,
+      ),
     );
   }
 }

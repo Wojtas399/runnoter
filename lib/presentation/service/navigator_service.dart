@@ -1,31 +1,30 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' as material;
 
 import '../config/navigation/routes.dart';
 
 void navigateTo({
-  required BuildContext context,
-  required Routes route,
-  Object? arguments,
+  required material.BuildContext context,
+  required CustomRoute route,
 }) {
-  Navigator.of(context).pushNamed(
-    route.path,
-    arguments: arguments,
+  material.Navigator.of(context).pushNamed(
+    route.path.path,
+    arguments: route.arguments,
   );
 }
 
 void navigateAndRemoveUntil({
-  required BuildContext context,
-  required Routes route,
+  required material.BuildContext context,
+  required CustomRoute route,
 }) {
-  Navigator.of(context).pushNamedAndRemoveUntil(
-    route.path,
-    ModalRoute.withName(route.path),
+  material.Navigator.of(context).pushNamedAndRemoveUntil(
+    route.path.path,
+    material.ModalRoute.withName(route.path.path),
   );
 }
 
 void navigateBack<T>({
-  required BuildContext context,
+  required material.BuildContext context,
   T? result,
 }) {
-  Navigator.of(context).pop(result);
+  material.Navigator.of(context).pop(result);
 }

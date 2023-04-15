@@ -107,7 +107,7 @@ class _IdentitiesBlocListener extends StatelessWidget {
       case ProfileInfo.accountDeleted:
         navigateAndRemoveUntil(
           context: context,
-          route: Routes.signIn,
+          route: const SignInRoute(),
         );
         break;
     }
