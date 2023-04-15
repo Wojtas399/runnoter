@@ -40,6 +40,12 @@
   "home_sign_out_confirmation_dialog_message": "Are you sure you want to sign out?",
 
 
+  "day_preview_screen_title": "Day preview",
+  "day_preview_screen_no_workout_title": "No workout",
+  "day_preview_screen_no_workout_message": "You don't have planned workout this day",
+  "day_preview_screen_add_workout_button_label": "Add workout",
+
+
   "profile_screen_title": "Profile",
   "profile_screen_user_data_section_title": "User identities",
   "profile_screen_settings_section_title": "Settings",
