@@ -5,8 +5,12 @@ import '../config/navigation/routes.dart';
 void navigateTo({
   required BuildContext context,
   required Routes route,
+  Object? arguments,
 }) {
-  Navigator.of(context).pushNamed(route.path);
+  Navigator.of(context).pushNamed(
+    route.path,
+    arguments: arguments,
+  );
 }
 
 void navigateAndRemoveUntil({

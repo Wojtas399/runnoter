@@ -39,7 +39,9 @@ class AppNavigator extends StatelessWidget {
     } else if (routePath == Routes.home.path) {
       screen = const HomeScreen();
     } else if (routePath == Routes.dayPreview.path) {
-      screen = const DayPreviewScreen();
+      screen = DayPreviewScreen(
+        date: settings.arguments as DateTime,
+      );
     } else if (routePath == Routes.profile.path) {
       screen = const ProfileScreen();
     } else if (routePath == Routes.themeMode.path) {

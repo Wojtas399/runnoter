@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 
 class DayPreviewScreen extends StatelessWidget {
+  final DateTime date;
+
   const DayPreviewScreen({
     super.key,
+    required this.date,
   });
 
   @override
