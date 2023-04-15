@@ -3,7 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../component/big_button_component.dart';
+import '../../../config/navigation/routes.dart';
 import '../../../formatter/date_formatter.dart';
+import '../../../service/navigator_service.dart';
 import '../bloc/day_preview_bloc.dart';
 
 class DayPreviewContent extends StatelessWidget {
@@ -80,9 +82,18 @@ class _NoWorkoutInfo extends StatelessWidget {
         BigButton(
           label: AppLocalizations.of(context)!
               .day_preview_screen_add_workout_button_label,
-          onPressed: () {},
+          onPressed: () {
+            _onButtonPressed(context);
+          },
         ),
       ],
+    );
+  }
+
+  void _onButtonPressed(BuildContext context) {
+    navigateTo(
+      context: context,
+      route: const WorkoutCreatorRoute(),
     );
   }
 }

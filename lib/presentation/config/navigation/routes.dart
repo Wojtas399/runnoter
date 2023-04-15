@@ -30,6 +30,10 @@ class DayPreviewRoute extends CustomRoute<DateTime> {
   }) : super(path: RoutePath.dayPreview);
 }
 
+class WorkoutCreatorRoute extends CustomRoute {
+  const WorkoutCreatorRoute() : super(path: RoutePath.workoutCreator);
+}
+
 class ProfileRoute extends CustomRoute {
   const ProfileRoute() : super(path: RoutePath.profile);
 }
@@ -56,6 +60,7 @@ enum RoutePath {
   forgotPassword('/forgot-password'),
   home('/home'),
   dayPreview('/home/day-preview'),
+  workoutCreator('/home/day-preview/workout-creator'),
   profile('/home/profile'),
   themeMode('/home/profile/theme-mode'),
   language('/home/profile/language'),
