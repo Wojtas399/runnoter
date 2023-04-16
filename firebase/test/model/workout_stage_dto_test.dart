@@ -4,15 +4,15 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   test(
     'from json, '
-    'owb, '
-    'should map json with type key set as owb to owb workout stage',
+    'cardio, '
+    'should map json with type key set as cardio to cardio workout stage',
     () {
       final Map<String, dynamic> json = {
-        'name': 'owb',
+        'name': 'cardio',
         'distanceInKilometers': 10.0,
         'maxHeartRate': 150,
       };
-      final WorkoutStageDto expectedWorkoutStageDto = WorkoutStageOWBDto(
+      final WorkoutStageDto expectedWorkoutStageDto = WorkoutStageCardioDto(
         distanceInKilometers: 10,
         maxHeartRate: 150,
       );
@@ -25,15 +25,15 @@ void main() {
 
   test(
     'from json, '
-    'bc2, '
-    'should map json with type key set as bc2 to bc2 workout stage',
+    'zone2, '
+    'should map json with type key set as zone2 to zone2 workout stage',
     () {
       final Map<String, dynamic> json = {
-        'name': 'bc2',
+        'name': 'zone2',
         'distanceInKilometers': 5.0,
         'maxHeartRate': 165,
       };
-      final WorkoutStageDto expectedWorkoutStageDto = WorkoutStageBC2Dto(
+      final WorkoutStageDto expectedWorkoutStageDto = WorkoutStageZone2Dto(
         distanceInKilometers: 5.0,
         maxHeartRate: 165,
       );
@@ -46,15 +46,15 @@ void main() {
 
   test(
     'from json, '
-    'bc3, '
-    'should map json with type key set as bc3 to bc3 workout stage',
+    'zone3, '
+    'should map json with type key set as zone3 to zone3 workout stage',
     () {
       final Map<String, dynamic> json = {
-        'name': 'bc3',
+        'name': 'zone3',
         'distanceInKilometers': 5.0,
         'maxHeartRate': 165,
       };
-      final WorkoutStageDto expectedWorkoutStageDto = WorkoutStageBC3Dto(
+      final WorkoutStageDto expectedWorkoutStageDto = WorkoutStageZone3Dto(
         distanceInKilometers: 5.0,
         maxHeartRate: 165,
       );
@@ -168,15 +168,15 @@ void main() {
 
   test(
     'to json, '
-    'owb, '
-    'should map owb workout dto to json with type key set as owb',
+    'cardio, '
+    'should map cardio workout dto to json with type key set as cardio',
     () {
-      final WorkoutStageDto dto = WorkoutStageOWBDto(
+      final WorkoutStageDto dto = WorkoutStageCardioDto(
         distanceInKilometers: 10,
         maxHeartRate: 150,
       );
       final Map<String, dynamic> expectedJson = {
-        'name': 'owb',
+        'name': 'cardio',
         'distanceInKilometers': 10.0,
         'maxHeartRate': 150,
       };
@@ -189,15 +189,15 @@ void main() {
 
   test(
     'to json, '
-    'bc2, '
-    'should map bc2 workout dto to json with type key set as bc2',
+    'zone2, '
+    'should map zone2 workout dto to json with type key set as zone2',
     () {
-      final WorkoutStageDto dto = WorkoutStageBC2Dto(
+      final WorkoutStageDto dto = WorkoutStageZone2Dto(
         distanceInKilometers: 5.0,
         maxHeartRate: 165,
       );
       final Map<String, dynamic> expectedJson = {
-        'name': 'bc2',
+        'name': 'zone2',
         'distanceInKilometers': 5.0,
         'maxHeartRate': 165,
       };
@@ -210,15 +210,15 @@ void main() {
 
   test(
     'to json, '
-    'bc3, '
-    'should map bc3 workout dto to json with type key set as bc3',
+    'zone3, '
+    'should map zone3 workout dto to json with type key set as zone3',
     () {
-      final WorkoutStageDto dto = WorkoutStageBC3Dto(
+      final WorkoutStageDto dto = WorkoutStageZone3Dto(
         distanceInKilometers: 5.0,
         maxHeartRate: 165,
       );
       final Map<String, dynamic> expectedJson = {
-        'name': 'bc3',
+        'name': 'zone3',
         'distanceInKilometers': 5.0,
         'maxHeartRate': 165,
       };

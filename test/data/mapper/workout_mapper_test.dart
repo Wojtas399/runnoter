@@ -36,15 +36,15 @@ void main() {
         ),
         name: name,
         stages: [
-          firebase.WorkoutStageOWBDto(
+          firebase.WorkoutStageCardioDto(
             distanceInKilometers: 2,
             maxHeartRate: 150,
           ),
-          firebase.WorkoutStageBC2Dto(
+          firebase.WorkoutStageZone2Dto(
             distanceInKilometers: 5,
             maxHeartRate: 165,
           ),
-          firebase.WorkoutStageOWBDto(
+          firebase.WorkoutStageCardioDto(
             distanceInKilometers: 2,
             maxHeartRate: 150,
           ),
@@ -63,15 +63,15 @@ void main() {
         ),
         name: name,
         stages: [
-          WorkoutStageOWB(
+          WorkoutStageCardio(
             distanceInKilometers: 2,
             maxHeartRate: 150,
           ),
-          WorkoutStageBC2(
+          WorkoutStageZone2(
             distanceInKilometers: 5,
             maxHeartRate: 165,
           ),
-          WorkoutStageOWB(
+          WorkoutStageCardio(
             distanceInKilometers: 2,
             maxHeartRate: 150,
           ),

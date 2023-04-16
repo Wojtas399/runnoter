@@ -3,18 +3,18 @@ import 'package:firebase/firebase.dart';
 import '../../domain/model/workout_stage.dart';
 
 WorkoutStage mapWorkoutStageFromFirebase(WorkoutStageDto workoutStageDto) {
-  if (workoutStageDto is WorkoutStageOWBDto) {
-    return WorkoutStageOWB(
+  if (workoutStageDto is WorkoutStageCardioDto) {
+    return WorkoutStageCardio(
       distanceInKilometers: workoutStageDto.distanceInKilometers,
       maxHeartRate: workoutStageDto.maxHeartRate,
     );
-  } else if (workoutStageDto is WorkoutStageBC2Dto) {
-    return WorkoutStageBC2(
+  } else if (workoutStageDto is WorkoutStageZone2Dto) {
+    return WorkoutStageZone2(
       distanceInKilometers: workoutStageDto.distanceInKilometers,
       maxHeartRate: workoutStageDto.maxHeartRate,
     );
-  } else if (workoutStageDto is WorkoutStageBC3Dto) {
-    return WorkoutStageBC3(
+  } else if (workoutStageDto is WorkoutStageZone3Dto) {
+    return WorkoutStageZone3(
       distanceInKilometers: workoutStageDto.distanceInKilometers,
       maxHeartRate: workoutStageDto.maxHeartRate,
     );

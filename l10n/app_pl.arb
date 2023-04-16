@@ -339,13 +339,37 @@
   },
 
 
+  "workout_cardio": "OWB1",
+  "@workout_cardio": {
+    "description": "Type of workout stage called owb1"
+  },
+  "workout_zone2": "BC2",
+  "@workout_zone2": {
+    "description": "Type of workout stage called bc2"
+  },
+  "workout_zone3": "BC3",
+  "@workout_zone3": {
+    "description": "Type of workout stage called bc3"
+  },
   "workout_rhythms": "Rytmy",
   "@workout_rhythms": {
-    "description": "Type of training stage called rhythms"
+    "description": "Type of workout stage called rhythms"
   },
   "workout_strength": "Siła",
   "@workout_strength": {
-    "description": "Type of training stage called strength"
+    "description": "Type of workout stage called strength"
+  },
+  "workout_stretching": "Rozciąganie",
+  "@workout_stretching": {
+    "description": "Type of workout stage called stretching"
+  },
+  "workout_strengthening": "Ćwiczenia wzmacniające",
+  "@workout_strengthening": {
+    "description": "Type of workout stage called strengthening"
+  },
+  "workout_foamRolling": "Rolowanie",
+  "@workout_foamRolling": {
+    "description": "Type of workout stage called foam rolling"
   },
   "workout_break": "przerwa",
   "@workout_break": {
@@ -370,16 +394,6 @@
         "example": "500"
       }
     }
-  },
-
-
-  "additional_workout_stretching": "Rozciąganie",
-  "@additional_workout_stretching": {
-    "description": "Stretching"
-  },
-  "additional_workout_strengthening": "Ćwiczenia wzmacniające",
-  "@additional_workout_strengthening": {
-    "description": "Strengthening"
   },
 
 

@@ -6,15 +6,16 @@ import 'package:runnoter/domain/model/workout_stage.dart';
 void main() {
   test(
     'map workout stage from firebase, '
-    'workout stage owb dto should be mapped to domain workout stage owb model',
+    'workout stage cardio dto should be mapped to domain workout stage cardio model',
     () {
       const double distanceInKm = 14.0;
       const int maxHeartRate = 150;
-      final firebase.WorkoutStageOWBDto stageDto = firebase.WorkoutStageOWBDto(
+      final firebase.WorkoutStageCardioDto stageDto =
+          firebase.WorkoutStageCardioDto(
         distanceInKilometers: distanceInKm,
         maxHeartRate: maxHeartRate,
       );
-      final WorkoutStageOWB expectedStage = WorkoutStageOWB(
+      final WorkoutStageCardio expectedStage = WorkoutStageCardio(
         distanceInKilometers: distanceInKm,
         maxHeartRate: maxHeartRate,
       );
@@ -27,15 +28,16 @@ void main() {
 
   test(
     'map workout stage from firebase, '
-    'workout stage bc2 dto should be mapped to domain workout stage bc2 model',
+    'workout stage zone2 dto should be mapped to domain workout stage zone2 model',
     () {
       const double distanceInKm = 14.0;
       const int maxHeartRate = 150;
-      final firebase.WorkoutStageBC2Dto stageDto = firebase.WorkoutStageBC2Dto(
+      final firebase.WorkoutStageZone2Dto stageDto =
+          firebase.WorkoutStageZone2Dto(
         distanceInKilometers: distanceInKm,
         maxHeartRate: maxHeartRate,
       );
-      final WorkoutStageBC2 expectedStage = WorkoutStageBC2(
+      final WorkoutStageZone2 expectedStage = WorkoutStageZone2(
         distanceInKilometers: distanceInKm,
         maxHeartRate: maxHeartRate,
       );
@@ -48,15 +50,16 @@ void main() {
 
   test(
     'map workout stage from firebase, '
-    'workout stage bc3 dto should be mapped to domain workout stage bc3 model',
+    'workout stage zone3 dto should be mapped to domain workout stage zone3 model',
     () {
       const double distanceInKm = 14.0;
       const int maxHeartRate = 150;
-      final firebase.WorkoutStageBC3Dto stageDto = firebase.WorkoutStageBC3Dto(
+      final firebase.WorkoutStageZone3Dto stageDto =
+          firebase.WorkoutStageZone3Dto(
         distanceInKilometers: distanceInKm,
         maxHeartRate: maxHeartRate,
       );
-      final WorkoutStageBC3 expectedStage = WorkoutStageBC3(
+      final WorkoutStageZone3 expectedStage = WorkoutStageZone3(
         distanceInKilometers: distanceInKm,
         maxHeartRate: maxHeartRate,
       );

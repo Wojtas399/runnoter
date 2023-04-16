@@ -8,34 +8,49 @@ extension WorkoutStageFormatter on WorkoutStage {
   String toUIFormat(BuildContext context) {
     String description = '';
     final WorkoutStage stage = this;
-    if (stage is WorkoutStageOWB) {
-      description = _createOWBDescription(stage);
-    } else if (stage is WorkoutStageBC2) {
-      description = _createBC2Description(stage);
-    } else if (stage is WorkoutStageBC3) {
-      description = _createBC3Description(stage);
+    if (stage is WorkoutStageCardio) {
+      description = _createCardioDescription(context, stage);
+    } else if (stage is WorkoutStageZone2) {
+      description = _createZone2Description(context, stage);
+    } else if (stage is WorkoutStageZone3) {
+      description = _createZone3Description(context, stage);
     } else if (stage is WorkoutStageRhythms) {
       description = _createRhythmsDescription(context, stage);
     } else if (stage is WorkoutStageStrength) {
       description = _createStrengthDescription(context, stage);
+    } else if (stage is WorkoutStageStretching) {
+      description = _createStretchingDescription(context);
+    } else if (stage is WorkoutStageStrengthening) {
+      description = _createStrengtheningDescription(context);
+    } else if (stage is WorkoutStageFoamRolling) {
+      description = _createFoamRollingDescription(context);
     }
     return description;
   }
 
-  String _createOWBDescription(WorkoutStageOWB stage) {
-    const String stageName = 'OWB1';
+  String _createCardioDescription(
+    BuildContext context,
+    WorkoutStageCardio stage,
+  ) {
+    final String stageName = AppLocalizations.of(context)!.workout_cardio;
     final String distance = stage.distanceInKilometers.toKilometersFormat();
     return '$stageName $distance HR<${stage.maxHeartRate}';
   }
 
-  String _createBC2Description(WorkoutStageBC2 stage) {
-    const String stageName = 'BC2';
+  String _createZone2Description(
+    BuildContext context,
+    WorkoutStageZone2 stage,
+  ) {
+    final String stageName = AppLocalizations.of(context)!.workout_zone2;
     final String distance = stage.distanceInKilometers.toKilometersFormat();
     return '$stageName $distance HR<${stage.maxHeartRate}';
   }
 
-  String _createBC3Description(WorkoutStageBC3 stage) {
-    const String stageName = 'BC3';
+  String _createZone3Description(
+    BuildContext context,
+    WorkoutStageZone3 stage,
+  ) {
+    final String stageName = AppLocalizations.of(context)!.workout_zone3;
     final String distance = stage.distanceInKilometers.toKilometersFormat();
     return '$stageName $distance HR<${stage.maxHeartRate}';
   }
@@ -76,5 +91,17 @@ extension WorkoutStageFormatter on WorkoutStage {
       stage.breakJogDistanceInMeters,
     );
     return '$stageName $seriesDescription, $breakDescription';
+  }
+
+  String _createStretchingDescription(BuildContext context) {
+    return AppLocalizations.of(context)!.workout_stretching;
+  }
+
+  String _createStrengtheningDescription(BuildContext context) {
+    return AppLocalizations.of(context)!.workout_strengthening;
+  }
+
+  String _createFoamRollingDescription(BuildContext context) {
+    return AppLocalizations.of(context)!.workout_foamRolling;
   }
 }
