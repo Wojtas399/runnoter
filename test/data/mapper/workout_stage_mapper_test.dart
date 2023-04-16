@@ -122,4 +122,47 @@ void main() {
       expect(stage, expectedStage);
     },
   );
+
+  test(
+    'map workout stage from firebase, '
+    'workout stage stretching dto should be mapped to domain workout stage stretching model',
+    () {
+      const firebase.WorkoutStageStretchingDto stageDto =
+          firebase.WorkoutStageStretchingDto();
+      const WorkoutStageStretching expectedStage = WorkoutStageStretching();
+
+      final WorkoutStage stage = mapWorkoutStageFromFirebase(stageDto);
+
+      expect(stage, expectedStage);
+    },
+  );
+
+  test(
+    'map workout stage from firebase, '
+    'workout stage strengthening dto should be mapped to domain workout stage strengthening model',
+    () {
+      const firebase.WorkoutStageStrengtheningDto stageDto =
+          firebase.WorkoutStageStrengtheningDto();
+      const WorkoutStageStrengthening expectedStage =
+          WorkoutStageStrengthening();
+
+      final WorkoutStage stage = mapWorkoutStageFromFirebase(stageDto);
+
+      expect(stage, expectedStage);
+    },
+  );
+
+  test(
+    'map workout stage from firebase, '
+    'workout stage foam rolling dto should be mapped to domain workout stage foam rolling model',
+    () {
+      const firebase.WorkoutStageFoamRollingDto stageDto =
+          firebase.WorkoutStageFoamRollingDto();
+      const WorkoutStageFoamRolling expectedStage = WorkoutStageFoamRolling();
+
+      final WorkoutStage stage = mapWorkoutStageFromFirebase(stageDto);
+
+      expect(stage, expectedStage);
+    },
+  );
 }

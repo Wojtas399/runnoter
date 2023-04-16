@@ -103,6 +103,27 @@ class WorkoutStageRhythms extends WorkoutStage with SeriesWorkout {
       ];
 }
 
+class WorkoutStageStretching extends WorkoutStage {
+  const WorkoutStageStretching();
+
+  @override
+  List<Object> get props => [];
+}
+
+class WorkoutStageStrengthening extends WorkoutStage {
+  const WorkoutStageStrengthening();
+
+  @override
+  List<Object> get props => [];
+}
+
+class WorkoutStageFoamRolling extends WorkoutStage {
+  const WorkoutStageFoamRolling();
+
+  @override
+  List<Object> get props => [];
+}
+
 mixin DistanceWorkout on WorkoutStage {
   late final double distanceInKilometers;
   late final int maxHeartRate;

@@ -27,7 +27,6 @@ void main() {
       maxHeartRate: 150,
     ),
   ];
-  const AdditionalWorkout additionalWorkout = AdditionalWorkout.strengthening;
   final WorkoutDto workoutDtoModel = WorkoutDto(
     id: id,
     userId: userId,
@@ -35,7 +34,6 @@ void main() {
     status: status,
     name: name,
     stages: stages,
-    additionalWorkout: additionalWorkout,
   );
   final Map<String, dynamic> workoutJson = {
     'date': '10-04-2023',
@@ -46,7 +44,6 @@ void main() {
       stages[1].toJson(),
       stages[2].toJson(),
     ],
-    'additionalWorkout': additionalWorkout.name,
   };
 
   test(

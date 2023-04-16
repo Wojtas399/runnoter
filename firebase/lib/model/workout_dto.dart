@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 
 import '../firebase.dart';
-import '../mapper/additional_workout_mapper.dart';
 import '../mapper/date_mapper.dart';
 
 class WorkoutDto extends Equatable {
@@ -11,7 +10,6 @@ class WorkoutDto extends Equatable {
   final WorkoutStatusDto status;
   final String name;
   final List<WorkoutStageDto> stages;
-  final AdditionalWorkout? additionalWorkout;
 
   const WorkoutDto({
     required this.id,
@@ -20,7 +18,6 @@ class WorkoutDto extends Equatable {
     required this.status,
     required this.name,
     required this.stages,
-    required this.additionalWorkout,
   });
 
   WorkoutDto.fromJson({
@@ -38,9 +35,6 @@ class WorkoutDto extends Equatable {
                 (json) => WorkoutStageDto.fromJson(json),
               )
               .toList(),
-          additionalWorkout: mapAdditionalWorkoutFromString(
-            json?[_additionalWorkoutField],
-          ),
         );
 
   @override
@@ -50,7 +44,6 @@ class WorkoutDto extends Equatable {
         status,
         name,
         stages,
-        additionalWorkout,
       ];
 
   Map<String, dynamic> toJson() => {
@@ -60,17 +53,10 @@ class WorkoutDto extends Equatable {
         _stagesField: stages.map(
           (WorkoutStageDto stage) => stage.toJson(),
         ),
-        _additionalWorkoutField: additionalWorkout?.name,
       };
-}
-
-enum AdditionalWorkout {
-  stretching,
-  strengthening,
 }
 
 const String _dateField = 'date';
 const String _statusField = 'status';
 const String _nameField = 'name';
 const String _stagesField = 'stages';
-const String _additionalWorkoutField = 'additionalWorkout';

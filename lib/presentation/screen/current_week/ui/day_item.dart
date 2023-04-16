@@ -4,7 +4,6 @@ import '../../../../domain/model/workout.dart';
 import '../../../../domain/model/workout_stage.dart';
 import '../../../../domain/model/workout_status.dart';
 import '../../../config/navigation/routes.dart';
-import '../../../formatter/additional_workout_formatter.dart';
 import '../../../formatter/date_formatter.dart';
 import '../../../formatter/workout_stage_formatter.dart';
 import '../../../formatter/workout_status_formatter.dart';
@@ -132,10 +131,6 @@ class _Workout extends StatelessWidget {
                   '${entry.key + 1}. ${entry.value.toUIFormat(context)}',
                 ),
               ),
-          if (workout.additionalWorkout != null)
-            Text(
-              '${workout.stages.length + 1}. ${workout.additionalWorkout!.toUIFormat(context)}',
-            ),
         ],
       ),
     );

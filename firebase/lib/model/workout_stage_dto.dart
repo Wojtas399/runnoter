@@ -15,6 +15,12 @@ class WorkoutStageDto extends Equatable {
       return WorkoutStageStrengthDto.fromJson(json);
     } else if (stageName == 'rhythms') {
       return WorkoutStageRhythmsDto.fromJson(json);
+    } else if (stageName == 'stretching') {
+      return const WorkoutStageStretchingDto();
+    } else if (stageName == 'strengthening') {
+      return const WorkoutStageStrengtheningDto();
+    } else if (stageName == 'foamRolling') {
+      return const WorkoutStageFoamRollingDto();
     } else {
       throw '[WorkoutStageDto] Unknown stage type';
     }
@@ -167,6 +173,33 @@ class WorkoutStageRhythmsDto extends WorkoutStageDto with _SeriesWorkout {
         breakMarchDistanceInMeters,
         breakJogDistanceInMeters,
       ];
+}
+
+class WorkoutStageStretchingDto extends WorkoutStageDto {
+  const WorkoutStageStretchingDto();
+
+  @override
+  Map<String, dynamic> toJson() => {
+        _nameField: 'stretching',
+      };
+}
+
+class WorkoutStageStrengtheningDto extends WorkoutStageDto {
+  const WorkoutStageStrengtheningDto();
+
+  @override
+  Map<String, dynamic> toJson() => {
+        _nameField: 'strengthening',
+      };
+}
+
+class WorkoutStageFoamRollingDto extends WorkoutStageDto {
+  const WorkoutStageFoamRollingDto();
+
+  @override
+  Map<String, dynamic> toJson() => {
+        _nameField: 'foamRolling',
+      };
 }
 
 mixin _DistanceWorkout on WorkoutStageDto {

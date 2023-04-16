@@ -49,7 +49,6 @@ void main() {
             maxHeartRate: 150,
           ),
         ],
-        additionalWorkout: firebase.AdditionalWorkout.stretching,
       );
       final Workout expectedEntity = createWorkout(
         id: id,
@@ -77,7 +76,6 @@ void main() {
             maxHeartRate: 150,
           ),
         ],
-        additionalWorkout: AdditionalWorkout.stretching,
       );
 
       final Workout entity = mapWorkoutFromFirebase(dto);

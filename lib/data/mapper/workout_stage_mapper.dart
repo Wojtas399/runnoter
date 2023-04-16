@@ -32,6 +32,12 @@ WorkoutStage mapWorkoutStageFromFirebase(WorkoutStageDto workoutStageDto) {
       breakMarchDistanceInMeters: workoutStageDto.breakMarchDistanceInMeters,
       breakJogDistanceInMeters: workoutStageDto.breakJogDistanceInMeters,
     );
+  } else if (workoutStageDto is WorkoutStageStretchingDto) {
+    return const WorkoutStageStretching();
+  } else if (workoutStageDto is WorkoutStageStrengtheningDto) {
+    return const WorkoutStageStrengthening();
+  } else if (workoutStageDto is WorkoutStageFoamRollingDto) {
+    return const WorkoutStageFoamRolling();
   } else {
     throw '[WorkoutStageMapper] Unknown workout stage';
   }

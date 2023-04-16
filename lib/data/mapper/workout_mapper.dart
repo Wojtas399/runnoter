@@ -1,7 +1,6 @@
 import 'package:firebase/firebase.dart';
 
 import '../../domain/model/workout.dart';
-import 'additional_workout_mapper.dart';
 import 'workout_stage_mapper.dart';
 import 'workout_status_mapper.dart';
 
@@ -19,8 +18,5 @@ Workout mapWorkoutFromFirebase(WorkoutDto workoutDto) {
           ),
         )
         .toList(),
-    additionalWorkout: workoutDto.additionalWorkout != null
-        ? mapAdditionalWorkoutFromFirebase(workoutDto.additionalWorkout!)
-        : null,
   );
 }

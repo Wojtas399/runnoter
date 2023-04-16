@@ -8,7 +8,6 @@ class Workout extends Entity {
   final WorkoutStatus status;
   final String name;
   final List<WorkoutStage> stages;
-  final AdditionalWorkout? additionalWorkout;
 
   const Workout({
     required super.id,
@@ -17,7 +16,6 @@ class Workout extends Entity {
     required this.status,
     required this.name,
     required this.stages,
-    this.additionalWorkout,
   });
 
   @override
@@ -28,11 +26,5 @@ class Workout extends Entity {
         status,
         name,
         stages,
-        additionalWorkout,
       ];
-}
-
-enum AdditionalWorkout {
-  stretching,
-  strengthening,
 }
