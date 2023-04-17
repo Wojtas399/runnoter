@@ -17,10 +17,10 @@ class WorkoutCreatorEventInitialize extends WorkoutCreatorEvent {
   List<Object> get props => [date];
 }
 
-class WorkoutCreatorWorkoutNameChanged extends WorkoutCreatorEvent {
+class WorkoutCreatorEventWorkoutNameChanged extends WorkoutCreatorEvent {
   final String? workoutName;
 
-  const WorkoutCreatorWorkoutNameChanged({
+  const WorkoutCreatorEventWorkoutNameChanged({
     required this.workoutName,
   });
 
@@ -30,10 +30,10 @@ class WorkoutCreatorWorkoutNameChanged extends WorkoutCreatorEvent {
       ];
 }
 
-class WorkoutCreatorWorkoutStageAdded extends WorkoutCreatorEvent {
+class WorkoutCreatorEventWorkoutStageAdded extends WorkoutCreatorEvent {
   final WorkoutStage workoutStage;
 
-  const WorkoutCreatorWorkoutStageAdded({
+  const WorkoutCreatorEventWorkoutStageAdded({
     required this.workoutStage,
   });
 
