@@ -91,9 +91,14 @@ class _NoWorkoutInfo extends StatelessWidget {
   }
 
   void _onButtonPressed(BuildContext context) {
-    navigateTo(
-      context: context,
-      route: const WorkoutCreatorRoute(),
-    );
+    final DateTime? date = context.read<DayPreviewBloc>().state.date;
+    if (date != null) {
+      navigateTo(
+        context: context,
+        route: WorkoutCreatorRoute(
+          arguments: date,
+        ),
+      );
+    }
   }
 }

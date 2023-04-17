@@ -10,7 +10,7 @@ import '../../screen/profile/ui/profile_screen.dart';
 import '../../screen/sign_in/ui/sign_in_screen.dart';
 import '../../screen/sign_up/ui/sign_up_screen.dart';
 import '../../screen/theme_mode/theme_mode_screen.dart';
-import '../../screen/workout_creator/workout_creator_screen.dart';
+import '../../screen/workout_creator/ui/workout_creator_screen.dart';
 import '../animation/slide_to_top_anim.dart';
 import 'routes.dart';
 
@@ -44,7 +44,9 @@ class AppNavigator extends StatelessWidget {
         date: settings.arguments as DateTime,
       );
     } else if (routePath == RoutePath.workoutCreator.path) {
-      screen = const WorkoutCreatorScreen();
+      screen = WorkoutCreatorScreen(
+        date: settings.arguments as DateTime,
+      );
     } else if (routePath == RoutePath.profile.path) {
       screen = const ProfileScreen();
     } else if (routePath == RoutePath.themeMode.path) {

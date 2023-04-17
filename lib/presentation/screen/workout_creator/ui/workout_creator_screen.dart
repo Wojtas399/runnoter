@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 
 class WorkoutCreatorScreen extends StatelessWidget {
+  final DateTime date;
+
   const WorkoutCreatorScreen({
     super.key,
+    required this.date,
   });
 
   @override

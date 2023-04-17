@@ -30,8 +30,10 @@ class DayPreviewRoute extends CustomRoute<DateTime> {
   }) : super(path: RoutePath.dayPreview);
 }
 
-class WorkoutCreatorRoute extends CustomRoute {
-  const WorkoutCreatorRoute() : super(path: RoutePath.workoutCreator);
+class WorkoutCreatorRoute extends CustomRoute<DateTime> {
+  const WorkoutCreatorRoute({
+    required super.arguments,
+  }) : super(path: RoutePath.workoutCreator);
 }
 
 class ProfileRoute extends CustomRoute {
