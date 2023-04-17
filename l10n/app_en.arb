@@ -46,6 +46,10 @@
   "day_preview_screen_add_workout_button_label": "Add workout",
 
 
+  "workout_creator_screen_title": "New workout",
+  "workout_creator_screen_workout_name": "Workout name",
+
+
   "profile_screen_title": "Profile",
   "profile_screen_user_data_section_title": "User identities",
   "profile_screen_settings_section_title": "Settings",
