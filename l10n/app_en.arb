@@ -48,6 +48,10 @@
 
   "workout_creator_screen_title": "New workout",
   "workout_creator_screen_workout_name": "Workout name",
+  "workout_creator_screen_workout_stages": "Workout stages",
+  "workout_creator_screen_add_stage_button_label": "Add stage",
+  "workout_creator_screen_no_stages_info": "No workout stages",
+  "workout_creator_screen_add_stage_instruction": "Tap below button to add new stage",
 
 
   "profile_screen_title": "Profile",

@@ -7,6 +7,7 @@ import '../../../component/text_field_component.dart';
 import '../../../service/utils.dart';
 import '../bloc/workout_creator_bloc.dart';
 import '../bloc/workout_creator_event.dart';
+import 'workout_creator_workout_stages.dart';
 
 class WorkoutCreatorContent extends StatelessWidget {
   const WorkoutCreatorContent({
@@ -33,6 +34,8 @@ class WorkoutCreatorContent extends StatelessWidget {
               child: Column(
                 children: const [
                   _WorkoutName(),
+                  SizedBox(height: 24),
+                  WorkoutCreatorWorkoutStages(),
                 ],
               ),
             ),

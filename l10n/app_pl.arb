@@ -169,6 +169,22 @@
   "@workout_creator_screen_workout_name": {
     "description": "Workout name"
   },
+  "workout_creator_screen_workout_stages": "Etapy treningu",
+  "@workout_creator_screen_workout_stages": {
+    "description": "Label of the workout stages section"
+  },
+  "workout_creator_screen_add_stage_button_label": "Dodaj etap",
+  "@workout_creator_screen_add_stage_button_label": {
+    "description": "Label of the button to add workout stage"
+  },
+  "workout_creator_screen_no_stages_info": "Brak etapów treningu",
+  "@workout_creator_screen_no_stages_info": {
+    "description": "Info about no workout stages"
+  },
+  "workout_creator_screen_add_stage_instruction": "Naciśnij poniższy przycisk, aby dodać nowy etap",
+  "@workout_creator_screen_add_stage_instructions": {
+    "description": "Instruction on how to add new workout stage"
+  },
 
 
   "profile_screen_title": "Profil",
