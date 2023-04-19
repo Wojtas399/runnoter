@@ -16,11 +16,11 @@ class WorkoutStageCreatorDistanceStageState extends WorkoutStageCreatorState {
       ];
 
   @override
-  bool get areDataCorrect =>
-      distanceInKm != null &&
-      distanceInKm! > 0 &&
-      maxHeartRate != null &&
-      maxHeartRate! > 0;
+  bool get areDataCorrect => _isDistanceInKmCorrect && _isMaxHeartRateCorrect;
+
+  bool get _isDistanceInKmCorrect => distanceInKm != null && distanceInKm! > 0;
+
+  bool get _isMaxHeartRateCorrect => maxHeartRate != null && maxHeartRate! > 0;
 
   @override
   WorkoutStageCreatorDistanceStageState copyWith({
