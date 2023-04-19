@@ -1,16 +1,19 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:runnoter/presentation/model/bloc_status.dart';
 import 'package:runnoter/presentation/screen/workout_stage_creator/bloc/workout_stage_creator_series_stage_state.dart';
 
 void main() {
   late WorkoutStageCreatorSeriesStageState state;
 
   WorkoutStageCreatorSeriesStageState createState({
+    BlocStatus status = const BlocStatusInitial(),
     int? amountOfSeries,
     int? seriesDistanceInMeters,
     int? breakWalkingDistanceInMeters,
     int? breakJoggingDistanceInMeters,
   }) =>
       WorkoutStageCreatorSeriesStageState(
+        status: status,
         amountOfSeries: amountOfSeries,
         seriesDistanceInMeters: seriesDistanceInMeters,
         breakWalkingDistanceInMeters: breakWalkingDistanceInMeters,
@@ -149,6 +152,19 @@ void main() {
       );
 
       expect(state.areDataCorrect, false);
+    },
+  );
+
+  test(
+    'copy with status',
+    () {
+      const BlocStatus expectedStatus = BlocStatusLoading();
+
+      state = state.copyWith(status: expectedStatus);
+      final state2 = state.copyWith();
+
+      expect(state.status, expectedStatus);
+      expect(state2.status, const BlocStatusComplete());
     },
   );
 

@@ -1,11 +1,12 @@
-import 'package:equatable/equatable.dart';
+import '../../../model/bloc_state.dart';
 
-abstract class WorkoutStageCreatorState extends Equatable {
-  const WorkoutStageCreatorState();
+abstract class WorkoutStageCreatorState
+    extends BlocState<WorkoutStageCreatorState> {
+  const WorkoutStageCreatorState({
+    required super.status,
+  });
 
   bool get areDataCorrect;
-
-  WorkoutStageCreatorState copyWith();
 }
 
 enum WorkoutStage {
