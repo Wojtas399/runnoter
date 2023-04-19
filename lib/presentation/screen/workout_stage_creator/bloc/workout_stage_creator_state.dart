@@ -7,3 +7,12 @@ abstract class WorkoutStageCreatorState extends Equatable {
 
   WorkoutStageCreatorState copyWith();
 }
+
+enum WorkoutStage {
+  cardio,
+  zone2,
+  zone3,
+  stretching,
+  strengthening,
+  foamRolling,
+}
