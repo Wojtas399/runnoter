@@ -54,6 +54,10 @@
   "workout_creator_screen_add_stage_instruction": "Tap below button to add new stage",
 
 
+  "workout_stage_creator_screen_title": "New workout stage",
+  "workout_stage_creator_screen_stage_type": "Stage type",
+
+
   "profile_screen_title": "Profile",
   "profile_screen_user_data_section_title": "User identities",
   "profile_screen_settings_section_title": "Settings",

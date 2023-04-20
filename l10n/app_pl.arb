@@ -187,6 +187,16 @@
   },
 
 
+  "workout_stage_creator_screen_title": "Nowy etap treningu",
+  "@workout_stage_creator_screen_title": {
+    "description": "Title of the workout stage creator screen"
+  },
+  "workout_stage_creator_screen_stage_type": "Rodzaj etapu",
+  "@workout_stage_creator_screen_stage_type": {
+    "description": "Workout stage type"
+  },
+
+
   "profile_screen_title": "Profil",
   "@profile_screen_title": {
     "description": "Title of the profile screen"
