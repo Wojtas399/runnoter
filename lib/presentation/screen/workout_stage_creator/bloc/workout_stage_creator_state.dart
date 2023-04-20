@@ -13,6 +13,8 @@ enum WorkoutStage {
   cardio,
   zone2,
   zone3,
+  strength,
+  rhythms,
   stretching,
   strengthening,
   foamRolling,
