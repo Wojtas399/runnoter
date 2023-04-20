@@ -41,56 +41,54 @@ class _State extends State<ProfileDeleteAccountDialog> {
           navigateBack(context: context);
         }
       },
-      child: Dialog.fullscreen(
-        child: Scaffold(
-          appBar: AppBar(
-            title: Text(
-              AppLocalizations.of(context)!
-                  .profile_screen_delete_account_dialog_title,
-            ),
-            leading: IconButton(
-              onPressed: () {
-                navigateBack(context: context);
-              },
-              icon: const Icon(Icons.close),
-            ),
-            actions: [
-              TextButton(
-                onPressed: _isSaveButtonDisabled
-                    ? null
-                    : () {
-                        _onSaveButtonPressed(context);
-                      },
-                child: Text(
-                  AppLocalizations.of(context)!.delete,
-                ),
-              ),
-              const SizedBox(width: 16),
-            ],
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            AppLocalizations.of(context)!
+                .profile_screen_delete_account_dialog_title,
           ),
-          body: SafeArea(
-            child: GestureDetector(
-              onTap: () {
-                unfocusInputs();
-              },
-              child: Container(
-                padding: const EdgeInsets.all(24),
-                color: Colors.transparent,
-                child: Column(
-                  children: [
-                    Text(
-                      AppLocalizations.of(context)!
-                          .profile_screen_delete_account_dialog_message,
-                      style: Theme.of(context).textTheme.bodyLarge,
-                    ),
-                    const SizedBox(height: 24),
-                    PasswordTextFieldComponent(
-                      label: AppLocalizations.of(context)!.password,
-                      controller: _passwordController,
-                      isRequired: true,
-                    ),
-                  ],
-                ),
+          leading: IconButton(
+            onPressed: () {
+              navigateBack(context: context);
+            },
+            icon: const Icon(Icons.close),
+          ),
+          actions: [
+            TextButton(
+              onPressed: _isSaveButtonDisabled
+                  ? null
+                  : () {
+                      _onSaveButtonPressed(context);
+                    },
+              child: Text(
+                AppLocalizations.of(context)!.delete,
+              ),
+            ),
+            const SizedBox(width: 16),
+          ],
+        ),
+        body: SafeArea(
+          child: GestureDetector(
+            onTap: () {
+              unfocusInputs();
+            },
+            child: Container(
+              padding: const EdgeInsets.all(24),
+              color: Colors.transparent,
+              child: Column(
+                children: [
+                  Text(
+                    AppLocalizations.of(context)!
+                        .profile_screen_delete_account_dialog_message,
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
+                  const SizedBox(height: 24),
+                  PasswordTextFieldComponent(
+                    label: AppLocalizations.of(context)!.password,
+                    controller: _passwordController,
+                    isRequired: true,
+                  ),
+                ],
               ),
             ),
           ),

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../../service/dialog_service.dart';
+import '../../workout_stage_creator/ui/workout_stage_creator_screen.dart';
+
 class WorkoutCreatorWorkoutStages extends StatelessWidget {
   const WorkoutCreatorWorkoutStages({
     super.key,
@@ -72,7 +75,9 @@ class _AddStageButton extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         OutlinedButton.icon(
-          onPressed: () {},
+          onPressed: () {
+            _onPressed(context);
+          },
           icon: const Icon(Icons.add),
           label: Text(
             AppLocalizations.of(context)!
@@ -80,6 +85,13 @@ class _AddStageButton extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+
+  void _onPressed(BuildContext context) {
+    showFullScreenDialog(
+      context: context,
+      dialog: const WorkoutStageCreatorScreen(),
     );
   }
 }
