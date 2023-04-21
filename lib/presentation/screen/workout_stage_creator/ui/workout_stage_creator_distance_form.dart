@@ -30,6 +30,7 @@ class _Distance extends StatelessWidget {
     return TextFieldComponent(
       label:
           '${AppLocalizations.of(context)!.workout_stage_creator_screen_distance} [km]',
+      maxLength: 4,
       keyboardType: TextInputType.number,
       inputFormatters: [
         DecimalTextInputFormatter(

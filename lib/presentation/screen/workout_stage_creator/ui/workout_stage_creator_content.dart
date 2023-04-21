@@ -7,7 +7,7 @@ import '../../../service/utils.dart';
 import '../bloc/workout_stage_creator_bloc.dart';
 import '../bloc/workout_stage_creator_event.dart';
 import '../bloc/workout_stage_creator_state.dart';
-import 'workout_stage_creator_distance_form.dart';
+import 'workout_stage_creator_series_form.dart';
 
 class WorkoutStageCreatorContent extends StatelessWidget {
   const WorkoutStageCreatorContent({
@@ -30,7 +30,7 @@ class WorkoutStageCreatorContent extends StatelessWidget {
               children: const [
                 _WorkoutStageType(),
                 SizedBox(height: 40),
-                WorkoutStageCreatorDistanceForm(),
+                WorkoutStageCreatorSeriesForm(),
               ],
             ),
           ),
@@ -59,7 +59,7 @@ class _AppBar extends StatelessWidget with PreferredSizeWidget {
         TextButton(
           onPressed: () {},
           child: Text(
-            AppLocalizations.of(context)!.save,
+            AppLocalizations.of(context)!.add,
           ),
         ),
         const SizedBox(width: 16),

@@ -203,6 +203,22 @@
   "@workout_stage_creator_screen_max_heart_rate": {
     "description": "Max heart rate"
   },
+  "workout_stage_creator_screen_amount_of_series": "Ilość serii",
+  "@workout_stage_creator_screen_amount_of_series": {
+    "description": "Amount of series"
+  },
+  "workout_stage_creator_screen_single_series_distance": "Dystans pojedynczej serii",
+  "@workout_stage_creator_screen_single_series_distance": {
+    "description": "Single series distance"
+  },
+  "workout_stage_creator_screen_walking_distance": "Dystans marszu",
+  "@workout_stage_creator_screen_walking_distance": {
+    "description": "Walking distance"
+  },
+  "workout_stage_creator_screen_jogging_distance": "Dystans truchtu",
+  "@workout_stage_creator_screen_jogging_distance": {
+    "description": "Jogging distance"
+  },
 
 
   "profile_screen_title": "Profil",
@@ -506,6 +522,10 @@
   "back": "Wróć",
   "@back": {
     "description": "Back"
+  },
+  "add": "Dodaj",
+  "@add": {
+    "description": "Add"
   },
 
 
