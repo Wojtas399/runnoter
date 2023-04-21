@@ -12,13 +12,13 @@ void main() {
 
   blocTest(
     'stage type changed, '
-    'cardio stage, '
+    'base run stage, '
     'should set state as distance state',
     build: () => createBloc(),
     act: (WorkoutStageCreatorBloc bloc) {
       bloc.add(
         const WorkoutStageCreatorEventStageTypeChanged(
-          stage: WorkoutStage.cardio,
+          stage: WorkoutStage.baseRun,
         ),
       );
     },
@@ -75,13 +75,13 @@ void main() {
 
   blocTest(
     'stage type changed, '
-    'strength stage, '
+    'hill repeats stage, '
     'should set state as series state',
     build: () => createBloc(),
     act: (WorkoutStageCreatorBloc bloc) {
       bloc.add(
         const WorkoutStageCreatorEventStageTypeChanged(
-          stage: WorkoutStage.strength,
+          stage: WorkoutStage.hillRepeats,
         ),
       );
     },

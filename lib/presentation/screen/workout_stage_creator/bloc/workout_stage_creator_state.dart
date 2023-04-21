@@ -10,10 +10,10 @@ abstract class WorkoutStageCreatorState
 }
 
 enum WorkoutStage {
-  cardio,
+  baseRun,
   zone2,
   zone3,
-  strength,
+  hillRepeats,
   rhythms,
   stretching,
   strengthening,

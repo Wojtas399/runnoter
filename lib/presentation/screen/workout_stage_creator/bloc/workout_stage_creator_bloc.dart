@@ -53,12 +53,12 @@ class WorkoutStageCreatorBloc extends BlocWithStatus<WorkoutStageCreatorEvent,
   }
 
   bool _isDistanceStage(WorkoutStage stage) {
-    return stage == WorkoutStage.cardio ||
+    return stage == WorkoutStage.baseRun ||
         stage == WorkoutStage.zone2 ||
         stage == WorkoutStage.zone3;
   }
 
   bool _isSeriesStage(WorkoutStage stage) {
-    return stage == WorkoutStage.strength || stage == WorkoutStage.rhythms;
+    return stage == WorkoutStage.hillRepeats || stage == WorkoutStage.rhythms;
   }
 }

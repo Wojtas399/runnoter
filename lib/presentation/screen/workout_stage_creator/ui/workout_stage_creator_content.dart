@@ -5,8 +5,11 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../service/navigator_service.dart';
 import '../../../service/utils.dart';
 import '../bloc/workout_stage_creator_bloc.dart';
+import '../bloc/workout_stage_creator_distance_stage_state.dart';
 import '../bloc/workout_stage_creator_event.dart';
+import '../bloc/workout_stage_creator_series_stage_state.dart';
 import '../bloc/workout_stage_creator_state.dart';
+import 'workout_stage_creator_distance_form.dart';
 import 'workout_stage_creator_series_form.dart';
 
 class WorkoutStageCreatorContent extends StatelessWidget {
@@ -30,7 +33,7 @@ class WorkoutStageCreatorContent extends StatelessWidget {
               children: const [
                 _WorkoutStageType(),
                 SizedBox(height: 40),
-                WorkoutStageCreatorSeriesForm(),
+                _Form(),
               ],
             ),
           ),
@@ -101,13 +104,13 @@ class _WorkoutStageType extends StatelessWidget {
   String _getWorkoutStageName(BuildContext context, WorkoutStage stage) {
     final appLocalizations = AppLocalizations.of(context);
     switch (stage) {
-      case WorkoutStage.cardio:
+      case WorkoutStage.baseRun:
         return appLocalizations!.workout_cardio;
       case WorkoutStage.zone2:
         return appLocalizations!.workout_zone2;
       case WorkoutStage.zone3:
         return appLocalizations!.workout_zone3;
-      case WorkoutStage.strength:
+      case WorkoutStage.hillRepeats:
         return appLocalizations!.workout_strength;
       case WorkoutStage.rhythms:
         return appLocalizations!.workout_rhythms;
@@ -126,5 +129,23 @@ class _WorkoutStageType extends StatelessWidget {
             WorkoutStageCreatorEventStageTypeChanged(stage: stage),
           );
     }
+  }
+}
+
+class _Form extends StatelessWidget {
+  const _Form();
+
+  @override
+  Widget build(BuildContext context) {
+    final WorkoutStageCreatorState state = context.select(
+      (WorkoutStageCreatorBloc bloc) => bloc.state,
+    );
+
+    if (state is WorkoutStageCreatorDistanceStageState) {
+      return const WorkoutStageCreatorDistanceForm();
+    } else if (state is WorkoutStageCreatorSeriesStageState) {
+      return const WorkoutStageCreatorSeriesForm();
+    }
+    return const SizedBox();
   }
 }
