@@ -1,14 +1,7 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+part of 'workout_stage_creator_screen.dart';
 
-import '../../../component/text_field_component.dart';
-import '../../../formatter/decimal_text_input_formatter.dart';
-
-class WorkoutStageCreatorDistanceForm extends StatelessWidget {
-  const WorkoutStageCreatorDistanceForm({
-    super.key,
-  });
+class _DistanceStageForm extends StatelessWidget {
+  const _DistanceStageForm();
 
   @override
   Widget build(BuildContext context) {

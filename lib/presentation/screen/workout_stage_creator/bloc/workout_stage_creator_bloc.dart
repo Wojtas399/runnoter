@@ -1,20 +1,24 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../model/bloc_state.dart';
 import '../../../model/bloc_status.dart';
 import '../../../model/bloc_with_status.dart';
-import 'workout_stage_creator_distance_stage_state.dart';
-import 'workout_stage_creator_empty_state.dart';
-import 'workout_stage_creator_event.dart';
-import 'workout_stage_creator_series_stage_state.dart';
-import 'workout_stage_creator_state.dart';
+
+part 'workout_stage_creator_distance_stage_form.dart';
+part 'workout_stage_creator_event.dart';
+part 'workout_stage_creator_series_stage_form.dart';
+part 'workout_stage_creator_state.dart';
 
 class WorkoutStageCreatorBloc extends BlocWithStatus<WorkoutStageCreatorEvent,
     WorkoutStageCreatorState, dynamic, dynamic> {
   WorkoutStageCreatorBloc({
     BlocStatus status = const BlocStatusInitial(),
+    WorkoutStageCreatorForm? form,
   }) : super(
-          WorkoutStageCreatorEmptyState(
+          WorkoutStageCreatorState(
             status: status,
+            form: form,
           ),
         ) {
     on<WorkoutStageCreatorEventStageTypeChanged>(_stageTypeChanged);
@@ -26,29 +30,25 @@ class WorkoutStageCreatorBloc extends BlocWithStatus<WorkoutStageCreatorEvent,
   ) {
     final WorkoutStage stage = event.stage;
     if (_isDistanceStage(stage)) {
-      emit(
-        const WorkoutStageCreatorDistanceStageState(
-          status: BlocStatusComplete(),
+      emit(state.copyWith(
+        form: const WorkoutStageCreatorDistanceStageForm(
           distanceInKm: null,
           maxHeartRate: null,
         ),
-      );
+      ));
     } else if (_isSeriesStage(stage)) {
-      emit(
-        const WorkoutStageCreatorSeriesStageState(
-          status: BlocStatusComplete(),
+      emit(state.copyWith(
+        form: const WorkoutStageCreatorSeriesStageForm(
           amountOfSeries: null,
           seriesDistanceInMeters: null,
           breakWalkingDistanceInMeters: null,
           breakJoggingDistanceInMeters: null,
         ),
-      );
+      ));
     } else {
-      emit(
-        const WorkoutStageCreatorEmptyState(
-          status: BlocStatusComplete(),
-        ),
-      );
+      emit(state.copyWith(
+        form: null,
+      ));
     }
   }
 

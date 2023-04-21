@@ -1,14 +1,12 @@
-import '../../../model/bloc_status.dart';
-import 'workout_stage_creator_state.dart';
+part of 'workout_stage_creator_bloc.dart';
 
-class WorkoutStageCreatorSeriesStageState extends WorkoutStageCreatorState {
+class WorkoutStageCreatorSeriesStageForm extends WorkoutStageCreatorForm {
   final int? amountOfSeries;
   final int? seriesDistanceInMeters;
   final int? breakWalkingDistanceInMeters;
   final int? breakJoggingDistanceInMeters;
 
-  const WorkoutStageCreatorSeriesStageState({
-    required super.status,
+  const WorkoutStageCreatorSeriesStageForm({
     required this.amountOfSeries,
     required this.seriesDistanceInMeters,
     required this.breakWalkingDistanceInMeters,
@@ -43,15 +41,13 @@ class WorkoutStageCreatorSeriesStageState extends WorkoutStageCreatorState {
       breakJoggingDistanceInMeters != null && breakJoggingDistanceInMeters! > 0;
 
   @override
-  WorkoutStageCreatorSeriesStageState copyWith({
-    BlocStatus? status,
+  WorkoutStageCreatorSeriesStageForm copyWith({
     int? amountOfSeries,
     int? seriesDistanceInMeters,
     int? breakWalkingDistanceInMeters,
     int? breakJoggingDistanceInMeters,
   }) =>
-      WorkoutStageCreatorSeriesStageState(
-        status: status ?? const BlocStatusComplete(),
+      WorkoutStageCreatorSeriesStageForm(
         amountOfSeries: amountOfSeries ?? this.amountOfSeries,
         seriesDistanceInMeters:
             seriesDistanceInMeters ?? this.seriesDistanceInMeters,

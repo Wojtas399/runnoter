@@ -1,19 +1,16 @@
-import '../../../model/bloc_status.dart';
-import 'workout_stage_creator_state.dart';
+part of 'workout_stage_creator_bloc.dart';
 
-class WorkoutStageCreatorDistanceStageState extends WorkoutStageCreatorState {
+class WorkoutStageCreatorDistanceStageForm extends WorkoutStageCreatorForm {
   final double? distanceInKm;
   final int? maxHeartRate;
 
-  const WorkoutStageCreatorDistanceStageState({
-    required super.status,
+  const WorkoutStageCreatorDistanceStageForm({
     required this.distanceInKm,
     required this.maxHeartRate,
   });
 
   @override
   List<Object?> get props => [
-        status,
         distanceInKm,
         maxHeartRate,
       ];
@@ -26,13 +23,11 @@ class WorkoutStageCreatorDistanceStageState extends WorkoutStageCreatorState {
   bool get _isMaxHeartRateCorrect => maxHeartRate != null && maxHeartRate! > 0;
 
   @override
-  WorkoutStageCreatorDistanceStageState copyWith({
-    BlocStatus? status,
+  WorkoutStageCreatorDistanceStageForm copyWith({
     double? distanceInKm,
     int? maxHeartRate,
   }) =>
-      WorkoutStageCreatorDistanceStageState(
-        status: status ?? const BlocStatusComplete(),
+      WorkoutStageCreatorDistanceStageForm(
         distanceInKm: distanceInKm ?? this.distanceInKm,
         maxHeartRate: maxHeartRate ?? this.maxHeartRate,
       );

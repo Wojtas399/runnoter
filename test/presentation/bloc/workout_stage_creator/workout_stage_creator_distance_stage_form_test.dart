@@ -1,23 +1,20 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:runnoter/presentation/model/bloc_status.dart';
-import 'package:runnoter/presentation/screen/workout_stage_creator/bloc/workout_stage_creator_distance_stage_state.dart';
+import 'package:runnoter/presentation/screen/workout_stage_creator/bloc/workout_stage_creator_bloc.dart';
 
 void main() {
-  late WorkoutStageCreatorDistanceStageState state;
+  late WorkoutStageCreatorDistanceStageForm form;
 
-  WorkoutStageCreatorDistanceStageState createState({
-    BlocStatus status = const BlocStatusInitial(),
+  WorkoutStageCreatorDistanceStageForm createForm({
     double? distanceInKm,
     int? maxHeartRate,
   }) =>
-      WorkoutStageCreatorDistanceStageState(
-        status: status,
+      WorkoutStageCreatorDistanceStageForm(
         distanceInKm: distanceInKm,
         maxHeartRate: maxHeartRate,
       );
 
   setUp(() {
-    state = createState();
+    form = createForm();
   });
 
   test(
@@ -28,12 +25,12 @@ void main() {
       const double distanceInKm = 9.5;
       const int maxHeartRate = 150;
 
-      state = createState(
+      form = createForm(
         distanceInKm: distanceInKm,
         maxHeartRate: maxHeartRate,
       );
 
-      expect(state.areDataCorrect, true);
+      expect(form.areDataCorrect, true);
     },
   );
 
@@ -44,11 +41,11 @@ void main() {
     () {
       const int maxHeartRate = 150;
 
-      state = createState(
+      form = createForm(
         maxHeartRate: maxHeartRate,
       );
 
-      expect(state.areDataCorrect, false);
+      expect(form.areDataCorrect, false);
     },
   );
 
@@ -60,12 +57,12 @@ void main() {
       const double distanceInKm = 0;
       const int maxHeartRate = 150;
 
-      state = createState(
+      form = createForm(
         distanceInKm: distanceInKm,
         maxHeartRate: maxHeartRate,
       );
 
-      expect(state.areDataCorrect, false);
+      expect(form.areDataCorrect, false);
     },
   );
 
@@ -76,11 +73,11 @@ void main() {
     () {
       const double distanceInKm = 10.0;
 
-      state = createState(
+      form = createForm(
         distanceInKm: distanceInKm,
       );
 
-      expect(state.areDataCorrect, false);
+      expect(form.areDataCorrect, false);
     },
   );
 
@@ -92,25 +89,12 @@ void main() {
       const double distanceInKm = 10.0;
       const int maxHeartRate = 0;
 
-      state = createState(
+      form = createForm(
         distanceInKm: distanceInKm,
         maxHeartRate: maxHeartRate,
       );
 
-      expect(state.areDataCorrect, false);
-    },
-  );
-
-  test(
-    'copy with status',
-    () {
-      const BlocStatus expectedStatus = BlocStatusLoading();
-
-      state = state.copyWith(status: expectedStatus);
-      final state2 = state.copyWith();
-
-      expect(state.status, expectedStatus);
-      expect(state2.status, const BlocStatusComplete());
+      expect(form.areDataCorrect, false);
     },
   );
 
@@ -119,11 +103,11 @@ void main() {
     () {
       const double expectedDistanceInKm = 10.0;
 
-      state = state.copyWith(distanceInKm: expectedDistanceInKm);
-      final state2 = state.copyWith();
+      form = form.copyWith(distanceInKm: expectedDistanceInKm);
+      final form2 = form.copyWith();
 
-      expect(state.distanceInKm, expectedDistanceInKm);
-      expect(state2.distanceInKm, expectedDistanceInKm);
+      expect(form.distanceInKm, expectedDistanceInKm);
+      expect(form2.distanceInKm, expectedDistanceInKm);
     },
   );
 
@@ -132,11 +116,11 @@ void main() {
     () {
       const int expectedMaxHeartRate = 150;
 
-      state = state.copyWith(maxHeartRate: expectedMaxHeartRate);
-      final state2 = state.copyWith();
+      form = form.copyWith(maxHeartRate: expectedMaxHeartRate);
+      final form2 = form.copyWith();
 
-      expect(state.maxHeartRate, expectedMaxHeartRate);
-      expect(state2.maxHeartRate, expectedMaxHeartRate);
+      expect(form.maxHeartRate, expectedMaxHeartRate);
+      expect(form2.maxHeartRate, expectedMaxHeartRate);
     },
   );
 }

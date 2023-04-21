@@ -1,19 +1,16 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:runnoter/presentation/model/bloc_status.dart';
-import 'package:runnoter/presentation/screen/workout_stage_creator/bloc/workout_stage_creator_series_stage_state.dart';
+import 'package:runnoter/presentation/screen/workout_stage_creator/bloc/workout_stage_creator_bloc.dart';
 
 void main() {
-  late WorkoutStageCreatorSeriesStageState state;
+  late WorkoutStageCreatorSeriesStageForm form;
 
-  WorkoutStageCreatorSeriesStageState createState({
-    BlocStatus status = const BlocStatusInitial(),
+  WorkoutStageCreatorSeriesStageForm createForm({
     int? amountOfSeries,
     int? seriesDistanceInMeters,
     int? breakWalkingDistanceInMeters,
     int? breakJoggingDistanceInMeters,
   }) =>
-      WorkoutStageCreatorSeriesStageState(
-        status: status,
+      WorkoutStageCreatorSeriesStageForm(
         amountOfSeries: amountOfSeries,
         seriesDistanceInMeters: seriesDistanceInMeters,
         breakWalkingDistanceInMeters: breakWalkingDistanceInMeters,
@@ -31,13 +28,13 @@ void main() {
       const int seriesDistanceInMeters = 100;
       const int breakWalkingDistanceInMeters = 100;
 
-      state = createState(
+      form = createForm(
         amountOfSeries: amountOfSeries,
         seriesDistanceInMeters: seriesDistanceInMeters,
         breakWalkingDistanceInMeters: breakWalkingDistanceInMeters,
       );
 
-      expect(state.areDataCorrect, true);
+      expect(form.areDataCorrect, true);
     },
   );
 
@@ -52,13 +49,13 @@ void main() {
       const int seriesDistanceInMeters = 100;
       const int breakJoggingDistanceInMeters = 100;
 
-      state = createState(
+      form = createForm(
         amountOfSeries: amountOfSeries,
         seriesDistanceInMeters: seriesDistanceInMeters,
         breakJoggingDistanceInMeters: breakJoggingDistanceInMeters,
       );
 
-      expect(state.areDataCorrect, true);
+      expect(form.areDataCorrect, true);
     },
   );
 
@@ -70,12 +67,12 @@ void main() {
       const int seriesDistanceInMeters = 100;
       const int breakJoggingDistanceInMeters = 100;
 
-      state = createState(
+      form = createForm(
         seriesDistanceInMeters: seriesDistanceInMeters,
         breakJoggingDistanceInMeters: breakJoggingDistanceInMeters,
       );
 
-      expect(state.areDataCorrect, false);
+      expect(form.areDataCorrect, false);
     },
   );
 
@@ -88,13 +85,13 @@ void main() {
       const int seriesDistanceInMeters = 100;
       const int breakJoggingDistanceInMeters = 100;
 
-      state = createState(
+      form = createForm(
         amountOfSeries: amountOfSeries,
         seriesDistanceInMeters: seriesDistanceInMeters,
         breakJoggingDistanceInMeters: breakJoggingDistanceInMeters,
       );
 
-      expect(state.areDataCorrect, false);
+      expect(form.areDataCorrect, false);
     },
   );
 
@@ -106,12 +103,12 @@ void main() {
       const int amountOfSeries = 10;
       const int breakJoggingDistanceInMeters = 100;
 
-      state = createState(
+      form = createForm(
         amountOfSeries: amountOfSeries,
         breakJoggingDistanceInMeters: breakJoggingDistanceInMeters,
       );
 
-      expect(state.areDataCorrect, false);
+      expect(form.areDataCorrect, false);
     },
   );
 
@@ -124,13 +121,13 @@ void main() {
       const seriesDistanceInMeters = 0;
       const int breakJoggingDistanceInMeters = 100;
 
-      state = createState(
+      form = createForm(
         amountOfSeries: amountOfSeries,
         seriesDistanceInMeters: seriesDistanceInMeters,
         breakJoggingDistanceInMeters: breakJoggingDistanceInMeters,
       );
 
-      expect(state.areDataCorrect, false);
+      expect(form.areDataCorrect, false);
     },
   );
 
@@ -144,27 +141,14 @@ void main() {
       const int breakWalkingDistanceInMeters = 0;
       const int breakJoggingDistanceInMeters = 0;
 
-      state = createState(
+      form = createForm(
         amountOfSeries: amountOfSeries,
         seriesDistanceInMeters: seriesDistanceInMeters,
         breakWalkingDistanceInMeters: breakWalkingDistanceInMeters,
         breakJoggingDistanceInMeters: breakJoggingDistanceInMeters,
       );
 
-      expect(state.areDataCorrect, false);
-    },
-  );
-
-  test(
-    'copy with status',
-    () {
-      const BlocStatus expectedStatus = BlocStatusLoading();
-
-      state = state.copyWith(status: expectedStatus);
-      final state2 = state.copyWith();
-
-      expect(state.status, expectedStatus);
-      expect(state2.status, const BlocStatusComplete());
+      expect(form.areDataCorrect, false);
     },
   );
 
@@ -173,11 +157,11 @@ void main() {
     () {
       const int expectedAmountOfSeries = 10;
 
-      state = state.copyWith(amountOfSeries: expectedAmountOfSeries);
-      final state2 = state.copyWith();
+      form = form.copyWith(amountOfSeries: expectedAmountOfSeries);
+      final form2 = form.copyWith();
 
-      expect(state.amountOfSeries, expectedAmountOfSeries);
-      expect(state2.amountOfSeries, expectedAmountOfSeries);
+      expect(form.amountOfSeries, expectedAmountOfSeries);
+      expect(form2.amountOfSeries, expectedAmountOfSeries);
     },
   );
 
@@ -186,13 +170,13 @@ void main() {
     () {
       const int expectedSeriesDistanceInMeters = 100;
 
-      state = state.copyWith(
+      form = form.copyWith(
         seriesDistanceInMeters: expectedSeriesDistanceInMeters,
       );
-      final state2 = state.copyWith();
+      final form2 = form.copyWith();
 
-      expect(state.seriesDistanceInMeters, expectedSeriesDistanceInMeters);
-      expect(state2.seriesDistanceInMeters, expectedSeriesDistanceInMeters);
+      expect(form.seriesDistanceInMeters, expectedSeriesDistanceInMeters);
+      expect(form2.seriesDistanceInMeters, expectedSeriesDistanceInMeters);
     },
   );
 
@@ -201,17 +185,17 @@ void main() {
     () {
       const int expectedBreakWalkingDistanceInMeters = 20;
 
-      state = state.copyWith(
+      form = form.copyWith(
         breakWalkingDistanceInMeters: expectedBreakWalkingDistanceInMeters,
       );
-      final state2 = state.copyWith();
+      final form2 = form.copyWith();
 
       expect(
-        state.breakWalkingDistanceInMeters,
+        form.breakWalkingDistanceInMeters,
         expectedBreakWalkingDistanceInMeters,
       );
       expect(
-        state2.breakWalkingDistanceInMeters,
+        form2.breakWalkingDistanceInMeters,
         expectedBreakWalkingDistanceInMeters,
       );
     },
@@ -222,17 +206,17 @@ void main() {
     () {
       const int expectedBreakJoggingDistanceInMeters = 80;
 
-      state = state.copyWith(
+      form = form.copyWith(
         breakJoggingDistanceInMeters: expectedBreakJoggingDistanceInMeters,
       );
-      final state2 = state.copyWith();
+      final form2 = form.copyWith();
 
       expect(
-        state.breakJoggingDistanceInMeters,
+        form.breakJoggingDistanceInMeters,
         expectedBreakJoggingDistanceInMeters,
       );
       expect(
-        state2.breakJoggingDistanceInMeters,
+        form2.breakJoggingDistanceInMeters,
         expectedBreakJoggingDistanceInMeters,
       );
     },

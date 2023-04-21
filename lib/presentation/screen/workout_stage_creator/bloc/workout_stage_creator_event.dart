@@ -1,4 +1,4 @@
-import 'workout_stage_creator_state.dart';
+part of 'workout_stage_creator_bloc.dart';
 
 abstract class WorkoutStageCreatorEvent {
   const WorkoutStageCreatorEvent();
