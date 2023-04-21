@@ -24,6 +24,10 @@ class WorkoutStageCreatorBloc extends BlocWithStatus<WorkoutStageCreatorEvent,
     on<WorkoutStageCreatorEventStageTypeChanged>(_stageTypeChanged);
     on<WorkoutStageCreatorEventDistanceChanged>(_distanceChanged);
     on<WorkoutStageCreatorEventMaxHeartRateChanged>(_maxHeartRateChanged);
+    on<WorkoutStageCreatorEventAmountOfSeriesChanged>(_amountOfSeriesChanged);
+    on<WorkoutStageCreatorEventSeriesDistanceChanged>(_seriesDistanceChanged);
+    on<WorkoutStageCreatorEventWalkingDistanceChanged>(_walkingDistanceChanged);
+    on<WorkoutStageCreatorEventJoggingDistanceChanged>(_joggingDistanceChanged);
   }
 
   void _stageTypeChanged(
@@ -77,6 +81,62 @@ class WorkoutStageCreatorBloc extends BlocWithStatus<WorkoutStageCreatorEvent,
       emit(state.copyWith(
         form: form.copyWith(
           maxHeartRate: event.maxHeartRate,
+        ),
+      ));
+    }
+  }
+
+  void _amountOfSeriesChanged(
+    WorkoutStageCreatorEventAmountOfSeriesChanged event,
+    Emitter<WorkoutStageCreatorState> emit,
+  ) {
+    final WorkoutStageCreatorForm? form = state.form;
+    if (form is WorkoutStageCreatorSeriesStageForm) {
+      emit(state.copyWith(
+        form: form.copyWith(
+          amountOfSeries: event.amountOfSeries,
+        ),
+      ));
+    }
+  }
+
+  void _seriesDistanceChanged(
+    WorkoutStageCreatorEventSeriesDistanceChanged event,
+    Emitter<WorkoutStageCreatorState> emit,
+  ) {
+    final WorkoutStageCreatorForm? form = state.form;
+    if (form is WorkoutStageCreatorSeriesStageForm) {
+      emit(state.copyWith(
+        form: form.copyWith(
+          seriesDistanceInMeters: event.seriesDistanceInMeters,
+        ),
+      ));
+    }
+  }
+
+  void _walkingDistanceChanged(
+    WorkoutStageCreatorEventWalkingDistanceChanged event,
+    Emitter<WorkoutStageCreatorState> emit,
+  ) {
+    final WorkoutStageCreatorForm? form = state.form;
+    if (form is WorkoutStageCreatorSeriesStageForm) {
+      emit(state.copyWith(
+        form: form.copyWith(
+          breakWalkingDistanceInMeters: event.walkingDistanceInMeters,
+        ),
+      ));
+    }
+  }
+
+  void _joggingDistanceChanged(
+    WorkoutStageCreatorEventJoggingDistanceChanged event,
+    Emitter<WorkoutStageCreatorState> emit,
+  ) {
+    final WorkoutStageCreatorForm? form = state.form;
+    if (form is WorkoutStageCreatorSeriesStageForm) {
+      emit(state.copyWith(
+        form: form.copyWith(
+          breakJoggingDistanceInMeters: event.joggingDistanceInMeters,
         ),
       ));
     }
