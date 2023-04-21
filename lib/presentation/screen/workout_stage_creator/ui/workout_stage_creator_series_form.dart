@@ -33,7 +33,24 @@ class _AmountOfSeries extends StatelessWidget {
       inputFormatters: [
         FilteringTextInputFormatter.digitsOnly,
       ],
+      onChanged: (String? value) {
+        _onChanged(context, value);
+      },
     );
+  }
+
+  void _onChanged(BuildContext context, String? value) {
+    if (value == null) {
+      return;
+    }
+    final int? amountOfSeries = int.tryParse(value);
+    if (amountOfSeries != null) {
+      context.read<WorkoutStageCreatorBloc>().add(
+            WorkoutStageCreatorEventAmountOfSeriesChanged(
+              amountOfSeries: amountOfSeries,
+            ),
+          );
+    }
   }
 }
 
@@ -50,7 +67,24 @@ class _SeriesDistance extends StatelessWidget {
       inputFormatters: [
         FilteringTextInputFormatter.digitsOnly,
       ],
+      onChanged: (String? value) {
+        _onChanged(context, value);
+      },
     );
+  }
+
+  void _onChanged(BuildContext context, String? value) {
+    if (value == null) {
+      return;
+    }
+    final int? seriesDistance = int.tryParse(value);
+    if (seriesDistance != null) {
+      context.read<WorkoutStageCreatorBloc>().add(
+            WorkoutStageCreatorEventSeriesDistanceChanged(
+              seriesDistanceInMeters: seriesDistance,
+            ),
+          );
+    }
   }
 }
 
@@ -67,7 +101,24 @@ class _WalkingDistance extends StatelessWidget {
       inputFormatters: [
         FilteringTextInputFormatter.digitsOnly,
       ],
+      onChanged: (String? value) {
+        _onChanged(context, value);
+      },
     );
+  }
+
+  void _onChanged(BuildContext context, String? value) {
+    if (value == null) {
+      return;
+    }
+    final int? walkingDistance = int.tryParse(value);
+    if (walkingDistance != null) {
+      context.read<WorkoutStageCreatorBloc>().add(
+            WorkoutStageCreatorEventWalkingDistanceChanged(
+              walkingDistanceInMeters: walkingDistance,
+            ),
+          );
+    }
   }
 }
 
@@ -84,6 +135,23 @@ class _JoggingDistance extends StatelessWidget {
       inputFormatters: [
         FilteringTextInputFormatter.digitsOnly,
       ],
+      onChanged: (String? value) {
+        _onChanged(context, value);
+      },
     );
+  }
+
+  void _onChanged(BuildContext context, String? value) {
+    if (value == null) {
+      return;
+    }
+    final int? joggingDistance = int.tryParse(value);
+    if (joggingDistance != null) {
+      context.read<WorkoutStageCreatorBloc>().add(
+            WorkoutStageCreatorEventJoggingDistanceChanged(
+              joggingDistanceInMeters: joggingDistance,
+            ),
+          );
+    }
   }
 }
