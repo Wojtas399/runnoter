@@ -7,6 +7,7 @@ import '../../../service/dialog_service.dart';
 import '../../workout_stage_creator/ui/workout_stage_creator_screen.dart';
 import '../bloc/workout_creator_bloc.dart';
 import '../bloc/workout_creator_event.dart';
+import 'workout_creator_workout_stage_item.dart';
 
 class WorkoutCreatorWorkoutStages extends StatelessWidget {
   const WorkoutCreatorWorkoutStages({
@@ -22,7 +23,7 @@ class WorkoutCreatorWorkoutStages extends StatelessWidget {
         children: const [
           _Title(),
           SizedBox(height: 8),
-          _NoWorkoutStagesInfo(),
+          _WorkoutStagesList(),
           SizedBox(height: 16),
           _AddStageButton()
         ],
@@ -43,29 +44,26 @@ class _Title extends StatelessWidget {
   }
 }
 
-class _NoWorkoutStagesInfo extends StatelessWidget {
-  const _NoWorkoutStagesInfo();
+class _WorkoutStagesList extends StatelessWidget {
+  const _WorkoutStagesList();
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.only(top: 32),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Text(
-            AppLocalizations.of(context)!.workout_creator_screen_no_stages_info,
-            style: Theme.of(context).textTheme.bodyLarge,
-          ),
-          const SizedBox(height: 4),
-          Text(
-            AppLocalizations.of(context)!
-                .workout_creator_screen_add_stage_instruction,
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
-        ],
-      ),
+    final List<WorkoutStage> stages = context.select(
+      (WorkoutCreatorBloc bloc) => bloc.state.stages,
+    );
+
+    if (stages.isEmpty) {
+      return const _NoWorkoutStagesInfo();
+    }
+    return Column(
+      children: stages
+          .map(
+            (WorkoutStage stage) => WorkoutCreatorWorkoutStageItem(
+              workoutStage: stage,
+            ),
+          )
+          .toList(),
     );
   }
 }
@@ -105,5 +103,32 @@ class _AddStageButton extends StatelessWidget {
         ),
       );
     }
+  }
+}
+
+class _NoWorkoutStagesInfo extends StatelessWidget {
+  const _NoWorkoutStagesInfo();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.only(top: 32),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(
+            AppLocalizations.of(context)!.workout_creator_screen_no_stages_info,
+            style: Theme.of(context).textTheme.bodyLarge,
+          ),
+          const SizedBox(height: 4),
+          Text(
+            AppLocalizations.of(context)!
+                .workout_creator_screen_add_stage_instruction,
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
+        ],
+      ),
+    );
   }
 }
