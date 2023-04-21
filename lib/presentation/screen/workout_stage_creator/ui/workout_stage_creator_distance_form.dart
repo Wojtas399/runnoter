@@ -30,7 +30,24 @@ class _Distance extends StatelessWidget {
           decimalRange: 2,
         ),
       ],
+      onChanged: (String? value) {
+        _onChanged(context, value);
+      },
     );
+  }
+
+  void _onChanged(BuildContext context, String? value) {
+    if (value == null) {
+      return;
+    }
+    final double? distance = double.tryParse(value);
+    if (distance != null) {
+      context.read<WorkoutStageCreatorBloc>().add(
+            WorkoutStageCreatorEventDistanceChanged(
+              distanceInKm: distance,
+            ),
+          );
+    }
   }
 }
 
@@ -49,6 +66,23 @@ class _MaxHeartRate extends StatelessWidget {
       inputFormatters: [
         FilteringTextInputFormatter.digitsOnly,
       ],
+      onChanged: (String? value) {
+        _onChanged(context, value);
+      },
     );
+  }
+
+  void _onChanged(BuildContext context, String? value) {
+    if (value == null) {
+      return;
+    }
+    final int? maxHeartRate = int.tryParse(value);
+    if (maxHeartRate != null) {
+      context.read<WorkoutStageCreatorBloc>().add(
+            WorkoutStageCreatorEventMaxHeartRateChanged(
+              maxHeartRate: maxHeartRate,
+            ),
+          );
+    }
   }
 }
