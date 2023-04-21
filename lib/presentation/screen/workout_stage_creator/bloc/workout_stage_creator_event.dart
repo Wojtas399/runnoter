@@ -65,3 +65,7 @@ class WorkoutStageCreatorEventJoggingDistanceChanged
     required this.joggingDistanceInMeters,
   });
 }
+
+class WorkoutStageCreatorEventSubmit extends WorkoutStageCreatorEvent {
+  const WorkoutStageCreatorEventSubmit();
+}

@@ -1,11 +1,14 @@
 import 'package:bloc_test/bloc_test.dart';
+import 'package:runnoter/domain/model/workout_stage.dart';
 import 'package:runnoter/presentation/screen/workout_stage_creator/bloc/workout_stage_creator_bloc.dart';
 
 void main() {
   WorkoutStageCreatorBloc createBloc({
+    WorkoutStageType? stageType,
     WorkoutStageCreatorForm? form,
   }) =>
       WorkoutStageCreatorBloc(
+        stageType: stageType,
         form: form,
       );
 
@@ -16,6 +19,13 @@ void main() {
       WorkoutStageCreatorStateInProgress(
         stageType: stageType,
         form: form,
+      );
+
+  WorkoutStageCreatorState createStateSubmitted({
+    required WorkoutStage workoutStage,
+  }) =>
+      WorkoutStageCreatorStateSubmitted(
+        workoutStage: workoutStage,
       );
 
   WorkoutStageCreatorDistanceStageForm createDistanceStageForm({
@@ -574,5 +584,293 @@ void main() {
       );
     },
     expect: () => [],
+  );
+
+  blocTest(
+    'submit, '
+    'stage type is null, '
+    'should finish event call',
+    build: () => createBloc(),
+    act: (WorkoutStageCreatorBloc bloc) {
+      bloc.add(
+        const WorkoutStageCreatorEventSubmit(),
+      );
+    },
+    expect: () => [],
+  );
+
+  blocTest(
+    'submit, '
+    'base run, '
+    'should emit submitted state with base run workout model',
+    build: () => createBloc(
+      stageType: WorkoutStageType.baseRun,
+      form: const WorkoutStageCreatorDistanceStageForm(
+        distanceInKm: 10.5,
+        maxHeartRate: 150,
+      ),
+    ),
+    act: (WorkoutStageCreatorBloc bloc) {
+      bloc.add(
+        const WorkoutStageCreatorEventSubmit(),
+      );
+    },
+    expect: () => [
+      createStateSubmitted(
+        workoutStage: WorkoutStageBaseRun(
+          distanceInKilometers: 10.5,
+          maxHeartRate: 150,
+        ),
+      ),
+    ],
+  );
+
+  blocTest(
+    'submit, '
+    'base run, '
+    'form is null, '
+    'should not emit anything',
+    build: () => createBloc(
+      stageType: WorkoutStageType.baseRun,
+    ),
+    act: (WorkoutStageCreatorBloc bloc) {
+      bloc.add(
+        const WorkoutStageCreatorEventSubmit(),
+      );
+    },
+    expect: () => [],
+  );
+
+  blocTest(
+    'submit, '
+    'zone 2, '
+    'should emit submitted state with zone2 workout model',
+    build: () => createBloc(
+      stageType: WorkoutStageType.zone2,
+      form: const WorkoutStageCreatorDistanceStageForm(
+        distanceInKm: 10.5,
+        maxHeartRate: 150,
+      ),
+    ),
+    act: (WorkoutStageCreatorBloc bloc) {
+      bloc.add(
+        const WorkoutStageCreatorEventSubmit(),
+      );
+    },
+    expect: () => [
+      createStateSubmitted(
+        workoutStage: WorkoutStageZone2(
+          distanceInKilometers: 10.5,
+          maxHeartRate: 150,
+        ),
+      ),
+    ],
+  );
+
+  blocTest(
+    'submit, '
+    'zone 2, '
+    'form is null, '
+    'should not emit anything',
+    build: () => createBloc(
+      stageType: WorkoutStageType.zone2,
+    ),
+    act: (WorkoutStageCreatorBloc bloc) {
+      bloc.add(
+        const WorkoutStageCreatorEventSubmit(),
+      );
+    },
+    expect: () => [],
+  );
+
+  blocTest(
+    'submit, '
+    'zone 3, '
+    'should emit submitted state with zone 3 workout model',
+    build: () => createBloc(
+      stageType: WorkoutStageType.zone3,
+      form: const WorkoutStageCreatorDistanceStageForm(
+        distanceInKm: 10.5,
+        maxHeartRate: 150,
+      ),
+    ),
+    act: (WorkoutStageCreatorBloc bloc) {
+      bloc.add(
+        const WorkoutStageCreatorEventSubmit(),
+      );
+    },
+    expect: () => [
+      createStateSubmitted(
+        workoutStage: WorkoutStageZone3(
+          distanceInKilometers: 10.5,
+          maxHeartRate: 150,
+        ),
+      ),
+    ],
+  );
+
+  blocTest(
+    'submit, '
+    'zone 3, '
+    'form is null, '
+    'should not emit anything',
+    build: () => createBloc(
+      stageType: WorkoutStageType.zone3,
+    ),
+    act: (WorkoutStageCreatorBloc bloc) {
+      bloc.add(
+        const WorkoutStageCreatorEventSubmit(),
+      );
+    },
+    expect: () => [],
+  );
+
+  blocTest(
+    'submit, '
+    'hill repeats, '
+    'should emit submitted state with hill repeats workout model',
+    build: () => createBloc(
+      stageType: WorkoutStageType.hillRepeats,
+      form: const WorkoutStageCreatorSeriesStageForm(
+        amountOfSeries: 10,
+        seriesDistanceInMeters: 100,
+        breakWalkingDistanceInMeters: 20,
+        breakJoggingDistanceInMeters: 80,
+      ),
+    ),
+    act: (WorkoutStageCreatorBloc bloc) {
+      bloc.add(
+        const WorkoutStageCreatorEventSubmit(),
+      );
+    },
+    expect: () => [
+      createStateSubmitted(
+        workoutStage: WorkoutStageHillRepeats(
+          amountOfSeries: 10,
+          seriesDistanceInMeters: 100,
+          breakMarchDistanceInMeters: 20,
+          breakJogDistanceInMeters: 80,
+        ),
+      ),
+    ],
+  );
+
+  blocTest(
+    'submit, '
+    'hill repeats, '
+    'form is null, '
+    'should not emit anything',
+    build: () => createBloc(
+      stageType: WorkoutStageType.hillRepeats,
+    ),
+    act: (WorkoutStageCreatorBloc bloc) {
+      bloc.add(
+        const WorkoutStageCreatorEventSubmit(),
+      );
+    },
+    expect: () => [],
+  );
+
+  blocTest(
+    'submit, '
+    'rhythms, '
+    'should emit submitted state with rhythms workout model',
+    build: () => createBloc(
+      stageType: WorkoutStageType.rhythms,
+      form: const WorkoutStageCreatorSeriesStageForm(
+        amountOfSeries: 10,
+        seriesDistanceInMeters: 100,
+        breakWalkingDistanceInMeters: 20,
+        breakJoggingDistanceInMeters: 80,
+      ),
+    ),
+    act: (WorkoutStageCreatorBloc bloc) {
+      bloc.add(
+        const WorkoutStageCreatorEventSubmit(),
+      );
+    },
+    expect: () => [
+      createStateSubmitted(
+        workoutStage: WorkoutStageRhythms(
+          amountOfSeries: 10,
+          seriesDistanceInMeters: 100,
+          breakMarchDistanceInMeters: 20,
+          breakJogDistanceInMeters: 80,
+        ),
+      ),
+    ],
+  );
+
+  blocTest(
+    'submit, '
+    'rhythms, '
+    'form is null, '
+    'should not emit anything',
+    build: () => createBloc(
+      stageType: WorkoutStageType.rhythms,
+    ),
+    act: (WorkoutStageCreatorBloc bloc) {
+      bloc.add(
+        const WorkoutStageCreatorEventSubmit(),
+      );
+    },
+    expect: () => [],
+  );
+
+  blocTest(
+    'submit, '
+    'stretching, '
+    'should emit submitted state with stretching workout model',
+    build: () => createBloc(
+      stageType: WorkoutStageType.stretching,
+    ),
+    act: (WorkoutStageCreatorBloc bloc) {
+      bloc.add(
+        const WorkoutStageCreatorEventSubmit(),
+      );
+    },
+    expect: () => [
+      createStateSubmitted(
+        workoutStage: const WorkoutStageStretching(),
+      ),
+    ],
+  );
+
+  blocTest(
+    'submit, '
+    'strengthening, '
+    'should emit submitted state with strengthening workout model',
+    build: () => createBloc(
+      stageType: WorkoutStageType.strengthening,
+    ),
+    act: (WorkoutStageCreatorBloc bloc) {
+      bloc.add(
+        const WorkoutStageCreatorEventSubmit(),
+      );
+    },
+    expect: () => [
+      createStateSubmitted(
+        workoutStage: const WorkoutStageStrengthening(),
+      ),
+    ],
+  );
+
+  blocTest(
+    'submit, '
+    'foam rolling, '
+    'should emit submitted state with foam rolling workout model',
+    build: () => createBloc(
+      stageType: WorkoutStageType.foamRolling,
+    ),
+    act: (WorkoutStageCreatorBloc bloc) {
+      bloc.add(
+        const WorkoutStageCreatorEventSubmit(),
+      );
+    },
+    expect: () => [
+      createStateSubmitted(
+        workoutStage: const WorkoutStageFoamRolling(),
+      ),
+    ],
   );
 }
