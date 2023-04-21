@@ -10,7 +10,7 @@ void main() {
       );
 
   WorkoutStageCreatorState createStateInProgress({
-    WorkoutStage? stageType,
+    WorkoutStageType? stageType,
     WorkoutStageCreatorForm? form,
   }) =>
       WorkoutStageCreatorStateInProgress(
@@ -48,13 +48,13 @@ void main() {
     act: (WorkoutStageCreatorBloc bloc) {
       bloc.add(
         const WorkoutStageCreatorEventStageTypeChanged(
-          stageType: WorkoutStage.baseRun,
+          stageType: WorkoutStageType.baseRun,
         ),
       );
     },
     expect: () => [
       createStateInProgress(
-        stageType: WorkoutStage.baseRun,
+        stageType: WorkoutStageType.baseRun,
         form: createDistanceStageForm(),
       ),
     ],
@@ -68,13 +68,13 @@ void main() {
     act: (WorkoutStageCreatorBloc bloc) {
       bloc.add(
         const WorkoutStageCreatorEventStageTypeChanged(
-          stageType: WorkoutStage.zone2,
+          stageType: WorkoutStageType.zone2,
         ),
       );
     },
     expect: () => [
       createStateInProgress(
-        stageType: WorkoutStage.zone2,
+        stageType: WorkoutStageType.zone2,
         form: createDistanceStageForm(),
       ),
     ],
@@ -88,13 +88,13 @@ void main() {
     act: (WorkoutStageCreatorBloc bloc) {
       bloc.add(
         const WorkoutStageCreatorEventStageTypeChanged(
-          stageType: WorkoutStage.zone3,
+          stageType: WorkoutStageType.zone3,
         ),
       );
     },
     expect: () => [
       createStateInProgress(
-        stageType: WorkoutStage.zone3,
+        stageType: WorkoutStageType.zone3,
         form: createDistanceStageForm(),
       ),
     ],
@@ -108,13 +108,13 @@ void main() {
     act: (WorkoutStageCreatorBloc bloc) {
       bloc.add(
         const WorkoutStageCreatorEventStageTypeChanged(
-          stageType: WorkoutStage.hillRepeats,
+          stageType: WorkoutStageType.hillRepeats,
         ),
       );
     },
     expect: () => [
       createStateInProgress(
-        stageType: WorkoutStage.hillRepeats,
+        stageType: WorkoutStageType.hillRepeats,
         form: createSeriesStageForm(),
       ),
     ],
@@ -128,13 +128,13 @@ void main() {
     act: (WorkoutStageCreatorBloc bloc) {
       bloc.add(
         const WorkoutStageCreatorEventStageTypeChanged(
-          stageType: WorkoutStage.rhythms,
+          stageType: WorkoutStageType.rhythms,
         ),
       );
     },
     expect: () => [
       createStateInProgress(
-        stageType: WorkoutStage.rhythms,
+        stageType: WorkoutStageType.rhythms,
         form: createSeriesStageForm(),
       ),
     ],
@@ -150,13 +150,13 @@ void main() {
     act: (WorkoutStageCreatorBloc bloc) {
       bloc.add(
         const WorkoutStageCreatorEventStageTypeChanged(
-          stageType: WorkoutStage.stretching,
+          stageType: WorkoutStageType.stretching,
         ),
       );
     },
     expect: () => [
       createStateInProgress(
-        stageType: WorkoutStage.stretching,
+        stageType: WorkoutStageType.stretching,
         form: null,
       ),
     ],
@@ -172,13 +172,13 @@ void main() {
     act: (WorkoutStageCreatorBloc bloc) {
       bloc.add(
         const WorkoutStageCreatorEventStageTypeChanged(
-          stageType: WorkoutStage.strengthening,
+          stageType: WorkoutStageType.strengthening,
         ),
       );
     },
     expect: () => [
       createStateInProgress(
-        stageType: WorkoutStage.strengthening,
+        stageType: WorkoutStageType.strengthening,
         form: null,
       ),
     ],
@@ -194,13 +194,13 @@ void main() {
     act: (WorkoutStageCreatorBloc bloc) {
       bloc.add(
         const WorkoutStageCreatorEventStageTypeChanged(
-          stageType: WorkoutStage.foamRolling,
+          stageType: WorkoutStageType.foamRolling,
         ),
       );
     },
     expect: () => [
       createStateInProgress(
-        stageType: WorkoutStage.foamRolling,
+        stageType: WorkoutStageType.foamRolling,
         form: null,
       ),
     ],

@@ -42,9 +42,9 @@ class _WorkoutStageType extends StatelessWidget {
         hintText: AppLocalizations.of(context)!
             .workout_stage_creator_screen_stage_type,
       ),
-      items: <DropdownMenuItem<WorkoutStage>>[
-        ...WorkoutStage.values.map(
-          (WorkoutStage stage) => DropdownMenuItem(
+      items: <DropdownMenuItem<WorkoutStageType>>[
+        ...WorkoutStageType.values.map(
+          (WorkoutStageType stage) => DropdownMenuItem(
             value: stage,
             child: Text(
               _getWorkoutStageName(context, stage),
@@ -52,35 +52,39 @@ class _WorkoutStageType extends StatelessWidget {
           ),
         ),
       ],
-      onChanged: (WorkoutStage? stage) {
+      onChanged: (WorkoutStageType? stage) {
         _onWorkoutStageChanged(context, stage);
       },
     );
   }
 
-  String _getWorkoutStageName(BuildContext context, WorkoutStage stage) {
+  String _getWorkoutStageName(
+    BuildContext context,
+    WorkoutStageType stage,
+  ) {
     final appLocalizations = AppLocalizations.of(context);
     switch (stage) {
-      case WorkoutStage.baseRun:
+      case WorkoutStageType.baseRun:
         return appLocalizations!.workout_base_run;
-      case WorkoutStage.zone2:
+      case WorkoutStageType.zone2:
         return appLocalizations!.workout_zone2;
-      case WorkoutStage.zone3:
+      case WorkoutStageType.zone3:
         return appLocalizations!.workout_zone3;
-      case WorkoutStage.hillRepeats:
+      case WorkoutStageType.hillRepeats:
         return appLocalizations!.workout_hill_repeats;
-      case WorkoutStage.rhythms:
+      case WorkoutStageType.rhythms:
         return appLocalizations!.workout_rhythms;
-      case WorkoutStage.stretching:
+      case WorkoutStageType.stretching:
         return appLocalizations!.workout_stretching;
-      case WorkoutStage.strengthening:
+      case WorkoutStageType.strengthening:
         return appLocalizations!.workout_strengthening;
-      case WorkoutStage.foamRolling:
+      case WorkoutStageType.foamRolling:
         return appLocalizations!.workout_foamRolling;
     }
   }
 
-  void _onWorkoutStageChanged(BuildContext context, WorkoutStage? stageType) {
+  void _onWorkoutStageChanged(
+      BuildContext context, WorkoutStageType? stageType) {
     if (stageType != null) {
       context.read<WorkoutStageCreatorBloc>().add(
             WorkoutStageCreatorEventStageTypeChanged(

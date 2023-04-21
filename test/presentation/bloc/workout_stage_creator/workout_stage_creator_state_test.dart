@@ -3,7 +3,7 @@ import 'package:runnoter/presentation/screen/workout_stage_creator/bloc/workout_
 
 void main() {
   WorkoutStageCreatorStateInProgress createStateInProgress({
-    WorkoutStage? stageType,
+    WorkoutStageType? stageType,
     WorkoutStageCreatorForm? form,
   }) =>
       WorkoutStageCreatorStateInProgress(
@@ -29,7 +29,7 @@ void main() {
     'stage type is not null and distance stage form data are invalid, '
     'should be true',
     () {
-      const WorkoutStage stageType = WorkoutStage.baseRun;
+      const WorkoutStageType stageType = WorkoutStageType.baseRun;
       const distanceForm = WorkoutStageCreatorDistanceStageForm(
         distanceInKm: 0,
         maxHeartRate: 140,
@@ -50,7 +50,7 @@ void main() {
     'stage type is not null and distance stage form data are valid, '
     'should be false',
     () {
-      const WorkoutStage stageType = WorkoutStage.baseRun;
+      const WorkoutStageType stageType = WorkoutStageType.baseRun;
       const distanceForm = WorkoutStageCreatorDistanceStageForm(
         distanceInKm: 10.5,
         maxHeartRate: 140,
@@ -71,7 +71,7 @@ void main() {
     'stage type is not null and series stage form data are invalid, '
     'should be true',
     () {
-      const WorkoutStage stageType = WorkoutStage.hillRepeats;
+      const WorkoutStageType stageType = WorkoutStageType.hillRepeats;
       const distanceForm = WorkoutStageCreatorSeriesStageForm(
         amountOfSeries: 0,
         seriesDistanceInMeters: 100,
@@ -94,7 +94,7 @@ void main() {
     'stage type is not null and series stage form data are valid, '
     'should be false',
     () {
-      const WorkoutStage stageType = WorkoutStage.hillRepeats;
+      const WorkoutStageType stageType = WorkoutStageType.hillRepeats;
       const distanceForm = WorkoutStageCreatorSeriesStageForm(
         amountOfSeries: 10,
         seriesDistanceInMeters: 100,
@@ -117,7 +117,7 @@ void main() {
     'stage type is not null and form is null, '
     'should be false',
     () {
-      const WorkoutStage stageType = WorkoutStage.stretching;
+      const WorkoutStageType stageType = WorkoutStageType.stretching;
 
       final state = createStateInProgress(
         stageType: stageType,
@@ -130,7 +130,7 @@ void main() {
   test(
     'copy with stage type',
     () {
-      const WorkoutStage expectedStageType = WorkoutStage.hillRepeats;
+      const WorkoutStageType expectedStageType = WorkoutStageType.hillRepeats;
 
       final state = createStateInProgress(stageType: expectedStageType);
       final state2 = state.copyWith();

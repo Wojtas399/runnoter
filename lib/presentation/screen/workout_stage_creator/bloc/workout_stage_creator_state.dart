@@ -5,7 +5,7 @@ abstract class WorkoutStageCreatorState extends Equatable {
 }
 
 class WorkoutStageCreatorStateInProgress extends WorkoutStageCreatorState {
-  final WorkoutStage? stageType;
+  final WorkoutStageType? stageType;
   final WorkoutStageCreatorForm? form;
 
   const WorkoutStageCreatorStateInProgress({
@@ -23,13 +23,26 @@ class WorkoutStageCreatorStateInProgress extends WorkoutStageCreatorState {
       stageType == null || (form != null ? !form!.areDataCorrect : false);
 
   WorkoutStageCreatorStateInProgress copyWith({
-    WorkoutStage? stageType,
+    WorkoutStageType? stageType,
     WorkoutStageCreatorForm? form,
   }) =>
       WorkoutStageCreatorStateInProgress(
         stageType: stageType ?? this.stageType,
         form: form,
       );
+}
+
+class WorkoutStageCreatorStateSubmitted extends WorkoutStageCreatorState {
+  final WorkoutStage workoutStage;
+
+  const WorkoutStageCreatorStateSubmitted({
+    required this.workoutStage,
+  });
+
+  @override
+  List<Object> get props => [
+        workoutStage,
+      ];
 }
 
 abstract class WorkoutStageCreatorForm extends Equatable {
@@ -40,7 +53,7 @@ abstract class WorkoutStageCreatorForm extends Equatable {
   WorkoutStageCreatorForm copyWith();
 }
 
-enum WorkoutStage {
+enum WorkoutStageType {
   baseRun,
   zone2,
   zone3,

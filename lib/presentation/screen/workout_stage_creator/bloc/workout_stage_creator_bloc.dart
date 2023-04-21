@@ -1,6 +1,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../domain/model/workout_stage.dart';
+
 part 'workout_stage_creator_distance_stage_form.dart';
 part 'workout_stage_creator_event.dart';
 part 'workout_stage_creator_series_stage_form.dart';
@@ -9,7 +11,7 @@ part 'workout_stage_creator_state.dart';
 class WorkoutStageCreatorBloc
     extends Bloc<WorkoutStageCreatorEvent, WorkoutStageCreatorState> {
   WorkoutStageCreatorBloc({
-    WorkoutStage? stageType,
+    WorkoutStageType? stageType,
     WorkoutStageCreatorForm? form,
   }) : super(
           WorkoutStageCreatorStateInProgress(
@@ -30,7 +32,7 @@ class WorkoutStageCreatorBloc
     WorkoutStageCreatorEventStageTypeChanged event,
     Emitter<WorkoutStageCreatorState> emit,
   ) {
-    final WorkoutStage stageType = event.stageType;
+    final WorkoutStageType stageType = event.stageType;
     WorkoutStageCreatorForm? form;
     if (_isDistanceStage(stageType)) {
       form = const WorkoutStageCreatorDistanceStageForm(
@@ -153,13 +155,14 @@ class WorkoutStageCreatorBloc
     }
   }
 
-  bool _isDistanceStage(WorkoutStage stage) {
-    return stage == WorkoutStage.baseRun ||
-        stage == WorkoutStage.zone2 ||
-        stage == WorkoutStage.zone3;
+  bool _isDistanceStage(WorkoutStageType stage) {
+    return stage == WorkoutStageType.baseRun ||
+        stage == WorkoutStageType.zone2 ||
+        stage == WorkoutStageType.zone3;
   }
 
-  bool _isSeriesStage(WorkoutStage stage) {
-    return stage == WorkoutStage.hillRepeats || stage == WorkoutStage.rhythms;
+  bool _isSeriesStage(WorkoutStageType stage) {
+    return stage == WorkoutStageType.hillRepeats ||
+        stage == WorkoutStageType.rhythms;
   }
 }
