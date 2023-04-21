@@ -22,6 +22,8 @@ class WorkoutStageCreatorBloc extends BlocWithStatus<WorkoutStageCreatorEvent,
           ),
         ) {
     on<WorkoutStageCreatorEventStageTypeChanged>(_stageTypeChanged);
+    on<WorkoutStageCreatorEventDistanceChanged>(_distanceChanged);
+    on<WorkoutStageCreatorEventMaxHeartRateChanged>(_maxHeartRateChanged);
   }
 
   void _stageTypeChanged(
@@ -48,6 +50,34 @@ class WorkoutStageCreatorBloc extends BlocWithStatus<WorkoutStageCreatorEvent,
     } else {
       emit(state.copyWith(
         form: null,
+      ));
+    }
+  }
+
+  void _distanceChanged(
+    WorkoutStageCreatorEventDistanceChanged event,
+    Emitter<WorkoutStageCreatorState> emit,
+  ) {
+    final WorkoutStageCreatorForm? form = state.form;
+    if (form is WorkoutStageCreatorDistanceStageForm) {
+      emit(state.copyWith(
+        form: form.copyWith(
+          distanceInKm: event.distanceInKm,
+        ),
+      ));
+    }
+  }
+
+  void _maxHeartRateChanged(
+    WorkoutStageCreatorEventMaxHeartRateChanged event,
+    Emitter<WorkoutStageCreatorState> emit,
+  ) {
+    final WorkoutStageCreatorForm? form = state.form;
+    if (form is WorkoutStageCreatorDistanceStageForm) {
+      emit(state.copyWith(
+        form: form.copyWith(
+          maxHeartRate: event.maxHeartRate,
+        ),
       ));
     }
   }
