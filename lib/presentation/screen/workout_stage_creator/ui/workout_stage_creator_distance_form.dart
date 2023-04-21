@@ -59,9 +59,7 @@ class _MaxHeartRate extends StatelessWidget {
     return TextFieldComponent(
       label: AppLocalizations.of(context)!
           .workout_stage_creator_screen_max_heart_rate,
-      keyboardType: const TextInputType.numberWithOptions(
-        decimal: false,
-      ),
+      keyboardType: TextInputType.number,
       maxLength: 3,
       inputFormatters: [
         FilteringTextInputFormatter.digitsOnly,

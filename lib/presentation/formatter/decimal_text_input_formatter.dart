@@ -17,18 +17,17 @@ class DecimalTextInputFormatter extends TextInputFormatter {
     String newText = newValue.text;
     TextSelection newSelection = newValue.selection;
     if (newText.contains('.') && _doesValHaveTooMuchDecimals(newText)) {
-      newText = _removeSpecialCharacters(oldValue.text);
-      newSelection = oldValue.selection;
+      newText = oldValue.text;
     } else if (newText == '.') {
       newText = '0.';
-      newSelection = newSelection.copyWith(
-        baseOffset: math.min(newText.length, newText.length + 1),
-        extentOffset: math.min(newText.length, newText.length + 1),
-      );
     }
+    newText = _removeSpecialCharacters(newText);
     return TextEditingValue(
       text: newText,
-      selection: newSelection,
+      selection: newSelection.copyWith(
+        baseOffset: math.min(newText.length, newText.length + 1),
+        extentOffset: math.min(newText.length, newText.length + 1),
+      ),
       composing: TextRange.empty,
     );
   }
