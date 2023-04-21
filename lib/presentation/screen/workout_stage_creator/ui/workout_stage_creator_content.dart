@@ -97,7 +97,13 @@ class _Form extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final WorkoutStageCreatorForm? form = context.select(
-      (WorkoutStageCreatorBloc bloc) => bloc.state.form,
+      (WorkoutStageCreatorBloc bloc) {
+        final WorkoutStageCreatorState state = bloc.state;
+        if (state is WorkoutStageCreatorStateInProgress) {
+          return state.form;
+        }
+        return null;
+      },
     );
 
     if (form is WorkoutStageCreatorDistanceStageForm) {

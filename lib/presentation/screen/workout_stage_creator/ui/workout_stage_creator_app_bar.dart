@@ -32,7 +32,13 @@ class _SaveButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool isButtonDisabled = context.select(
-      (WorkoutStageCreatorBloc bloc) => bloc.state.isAddButtonDisabled,
+      (WorkoutStageCreatorBloc bloc) {
+        final WorkoutStageCreatorState state = bloc.state;
+        if (state is WorkoutStageCreatorStateInProgress) {
+          return state.isAddButtonDisabled;
+        }
+        return false;
+      },
     );
 
     return TextButton(

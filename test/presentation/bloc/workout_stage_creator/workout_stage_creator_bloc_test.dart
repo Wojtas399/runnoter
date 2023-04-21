@@ -9,11 +9,11 @@ void main() {
         form: form,
       );
 
-  WorkoutStageCreatorState createState({
+  WorkoutStageCreatorState createStateInProgress({
     WorkoutStage? stageType,
     WorkoutStageCreatorForm? form,
   }) =>
-      WorkoutStageCreatorState(
+      WorkoutStageCreatorStateInProgress(
         stageType: stageType,
         form: form,
       );
@@ -43,7 +43,7 @@ void main() {
   blocTest(
     'stage type changed, '
     'base run stage, '
-    'should set form as distance stage form and should update stage type',
+    'should emit in progress state with form set as distance stage and stage type set as base run',
     build: () => createBloc(),
     act: (WorkoutStageCreatorBloc bloc) {
       bloc.add(
@@ -53,7 +53,7 @@ void main() {
       );
     },
     expect: () => [
-      createState(
+      createStateInProgress(
         stageType: WorkoutStage.baseRun,
         form: createDistanceStageForm(),
       ),
@@ -63,7 +63,7 @@ void main() {
   blocTest(
     'stage type changed, '
     'zone2 stage, '
-    'should set form as distance stage form and should update stage type',
+    'should emit in progress state with form set as distance stage and stage type set as zone 1',
     build: () => createBloc(),
     act: (WorkoutStageCreatorBloc bloc) {
       bloc.add(
@@ -73,7 +73,7 @@ void main() {
       );
     },
     expect: () => [
-      createState(
+      createStateInProgress(
         stageType: WorkoutStage.zone2,
         form: createDistanceStageForm(),
       ),
@@ -83,7 +83,7 @@ void main() {
   blocTest(
     'stage type changed, '
     'zone3 stage, '
-    'should set form as distance stage form and should update stage type',
+    'should emit in progress state witch form set as distance stage and stage type set as zone 3',
     build: () => createBloc(),
     act: (WorkoutStageCreatorBloc bloc) {
       bloc.add(
@@ -93,7 +93,7 @@ void main() {
       );
     },
     expect: () => [
-      createState(
+      createStateInProgress(
         stageType: WorkoutStage.zone3,
         form: createDistanceStageForm(),
       ),
@@ -103,7 +103,7 @@ void main() {
   blocTest(
     'stage type changed, '
     'hill repeats stage, '
-    'should set form as series stage form and should update stage type',
+    'should emit in progress state with form set as series stage and stage type set as hill repeats',
     build: () => createBloc(),
     act: (WorkoutStageCreatorBloc bloc) {
       bloc.add(
@@ -113,7 +113,7 @@ void main() {
       );
     },
     expect: () => [
-      createState(
+      createStateInProgress(
         stageType: WorkoutStage.hillRepeats,
         form: createSeriesStageForm(),
       ),
@@ -123,7 +123,7 @@ void main() {
   blocTest(
     'stage type changed, '
     'rhythms stage, '
-    'should set form as series stage form and should update stage type',
+    'should emit in progress state with form set as series stage and stage type set as rhythms',
     build: () => createBloc(),
     act: (WorkoutStageCreatorBloc bloc) {
       bloc.add(
@@ -133,7 +133,7 @@ void main() {
       );
     },
     expect: () => [
-      createState(
+      createStateInProgress(
         stageType: WorkoutStage.rhythms,
         form: createSeriesStageForm(),
       ),
@@ -143,7 +143,7 @@ void main() {
   blocTest(
     'stage type changed, '
     'stretching stage, '
-    'should set form as null and should update stage type',
+    'should emit in progress state with form set as null and stage type set as stretching',
     build: () => createBloc(
       form: createDistanceStageForm(),
     ),
@@ -155,7 +155,7 @@ void main() {
       );
     },
     expect: () => [
-      createState(
+      createStateInProgress(
         stageType: WorkoutStage.stretching,
         form: null,
       ),
@@ -165,7 +165,7 @@ void main() {
   blocTest(
     'stage type changed, '
     'strengthening stage, '
-    'should set form as null and should update stage type',
+    'should emit in progress state with form set as null and stage type set as strengthening',
     build: () => createBloc(
       form: createDistanceStageForm(),
     ),
@@ -177,7 +177,7 @@ void main() {
       );
     },
     expect: () => [
-      createState(
+      createStateInProgress(
         stageType: WorkoutStage.strengthening,
         form: null,
       ),
@@ -187,7 +187,7 @@ void main() {
   blocTest(
     'stage type changed, '
     'foam rolling stage, '
-    'should set form as null and should update stage type',
+    'should emit in progress state with form set as null and stage type set as foam rolling',
     build: () => createBloc(
       form: createDistanceStageForm(),
     ),
@@ -199,7 +199,7 @@ void main() {
       );
     },
     expect: () => [
-      createState(
+      createStateInProgress(
         stageType: WorkoutStage.foamRolling,
         form: null,
       ),
@@ -224,7 +224,7 @@ void main() {
       );
     },
     expect: () => [
-      createState(
+      createStateInProgress(
         form: createDistanceStageForm(
           distanceInKm: 10.5,
           maxHeartRate: 150,
@@ -283,7 +283,7 @@ void main() {
       );
     },
     expect: () => [
-      createState(
+      createStateInProgress(
         form: createDistanceStageForm(
           distanceInKm: 5,
           maxHeartRate: 140,
@@ -344,7 +344,7 @@ void main() {
       );
     },
     expect: () => [
-      createState(
+      createStateInProgress(
         form: createSeriesStageForm(
           amountOfSeries: 10,
           seriesDistanceInMeters: 100,
@@ -407,7 +407,7 @@ void main() {
       );
     },
     expect: () => [
-      createState(
+      createStateInProgress(
         form: createSeriesStageForm(
           amountOfSeries: 5,
           seriesDistanceInMeters: 100,
@@ -470,7 +470,7 @@ void main() {
       );
     },
     expect: () => [
-      createState(
+      createStateInProgress(
         form: createSeriesStageForm(
           amountOfSeries: 5,
           seriesDistanceInMeters: 100,
@@ -533,7 +533,7 @@ void main() {
       );
     },
     expect: () => [
-      createState(
+      createStateInProgress(
         form: createSeriesStageForm(
           amountOfSeries: 5,
           seriesDistanceInMeters: 100,

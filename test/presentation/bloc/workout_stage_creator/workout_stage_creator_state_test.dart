@@ -2,31 +2,29 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/presentation/screen/workout_stage_creator/bloc/workout_stage_creator_bloc.dart';
 
 void main() {
-  late WorkoutStageCreatorState state;
-
-  WorkoutStageCreatorState createState({
+  WorkoutStageCreatorStateInProgress createStateInProgress({
     WorkoutStage? stageType,
     WorkoutStageCreatorForm? form,
   }) =>
-      WorkoutStageCreatorState(
+      WorkoutStageCreatorStateInProgress(
         stageType: stageType,
         form: form,
       );
 
-  setUp(() {
-    state = createState();
-  });
-
   test(
+    'state in progress, '
     'is add button disabled, '
     'stage type is null, '
     'should be true',
     () {
+      final state = createStateInProgress();
+
       expect(state.isAddButtonDisabled, true);
     },
   );
 
   test(
+    'state in progress, '
     'is add button disabled, '
     'stage type is not null and distance stage form data are invalid, '
     'should be true',
@@ -37,7 +35,7 @@ void main() {
         maxHeartRate: 140,
       );
 
-      state = createState(
+      final state = createStateInProgress(
         stageType: stageType,
         form: distanceForm,
       );
@@ -47,6 +45,7 @@ void main() {
   );
 
   test(
+    'state in progress, '
     'is add button disabled, '
     'stage type is not null and distance stage form data are valid, '
     'should be false',
@@ -57,7 +56,7 @@ void main() {
         maxHeartRate: 140,
       );
 
-      state = createState(
+      final state = createStateInProgress(
         stageType: stageType,
         form: distanceForm,
       );
@@ -67,6 +66,7 @@ void main() {
   );
 
   test(
+    'state in progress, '
     'is add button disabled, '
     'stage type is not null and series stage form data are invalid, '
     'should be true',
@@ -79,7 +79,7 @@ void main() {
         breakJoggingDistanceInMeters: 80,
       );
 
-      state = createState(
+      final state = createStateInProgress(
         stageType: stageType,
         form: distanceForm,
       );
@@ -89,6 +89,7 @@ void main() {
   );
 
   test(
+    'state in progress, '
     'is add button disabled, '
     'stage type is not null and series stage form data are valid, '
     'should be false',
@@ -101,7 +102,7 @@ void main() {
         breakJoggingDistanceInMeters: 80,
       );
 
-      state = createState(
+      final state = createStateInProgress(
         stageType: stageType,
         form: distanceForm,
       );
@@ -111,13 +112,14 @@ void main() {
   );
 
   test(
+    'state in progress, '
     'is add button disabled, '
     'stage type is not null and form is null, '
     'should be false',
     () {
       const WorkoutStage stageType = WorkoutStage.stretching;
 
-      state = createState(
+      final state = createStateInProgress(
         stageType: stageType,
       );
 
@@ -130,7 +132,7 @@ void main() {
     () {
       const WorkoutStage expectedStageType = WorkoutStage.hillRepeats;
 
-      state = state.copyWith(stageType: expectedStageType);
+      final state = createStateInProgress(stageType: expectedStageType);
       final state2 = state.copyWith();
 
       expect(state.stageType, expectedStageType);
@@ -147,7 +149,7 @@ void main() {
         maxHeartRate: 150,
       );
 
-      state = state.copyWith(form: expectedForm);
+      final state = createStateInProgress(form: expectedForm);
       final state2 = state.copyWith();
 
       expect(state.form, expectedForm);

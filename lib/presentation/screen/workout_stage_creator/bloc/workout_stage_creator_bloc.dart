@@ -12,7 +12,7 @@ class WorkoutStageCreatorBloc
     WorkoutStage? stageType,
     WorkoutStageCreatorForm? form,
   }) : super(
-          WorkoutStageCreatorState(
+          WorkoutStageCreatorStateInProgress(
             stageType: stageType,
             form: form,
           ),
@@ -45,7 +45,7 @@ class WorkoutStageCreatorBloc
         breakJoggingDistanceInMeters: null,
       );
     }
-    emit(state.copyWith(
+    emit(WorkoutStageCreatorStateInProgress(
       stageType: stageType,
       form: form,
     ));
@@ -55,13 +55,16 @@ class WorkoutStageCreatorBloc
     WorkoutStageCreatorEventDistanceChanged event,
     Emitter<WorkoutStageCreatorState> emit,
   ) {
-    final WorkoutStageCreatorForm? form = state.form;
-    if (form is WorkoutStageCreatorDistanceStageForm) {
-      emit(state.copyWith(
-        form: form.copyWith(
-          distanceInKm: event.distanceInKm,
-        ),
-      ));
+    final WorkoutStageCreatorState state = this.state;
+    if (state is WorkoutStageCreatorStateInProgress) {
+      final WorkoutStageCreatorForm? form = state.form;
+      if (form is WorkoutStageCreatorDistanceStageForm) {
+        emit(state.copyWith(
+          form: form.copyWith(
+            distanceInKm: event.distanceInKm,
+          ),
+        ));
+      }
     }
   }
 
@@ -69,13 +72,16 @@ class WorkoutStageCreatorBloc
     WorkoutStageCreatorEventMaxHeartRateChanged event,
     Emitter<WorkoutStageCreatorState> emit,
   ) {
-    final WorkoutStageCreatorForm? form = state.form;
-    if (form is WorkoutStageCreatorDistanceStageForm) {
-      emit(state.copyWith(
-        form: form.copyWith(
-          maxHeartRate: event.maxHeartRate,
-        ),
-      ));
+    final WorkoutStageCreatorState state = this.state;
+    if (state is WorkoutStageCreatorStateInProgress) {
+      final WorkoutStageCreatorForm? form = state.form;
+      if (form is WorkoutStageCreatorDistanceStageForm) {
+        emit(state.copyWith(
+          form: form.copyWith(
+            maxHeartRate: event.maxHeartRate,
+          ),
+        ));
+      }
     }
   }
 
@@ -83,13 +89,16 @@ class WorkoutStageCreatorBloc
     WorkoutStageCreatorEventAmountOfSeriesChanged event,
     Emitter<WorkoutStageCreatorState> emit,
   ) {
-    final WorkoutStageCreatorForm? form = state.form;
-    if (form is WorkoutStageCreatorSeriesStageForm) {
-      emit(state.copyWith(
-        form: form.copyWith(
-          amountOfSeries: event.amountOfSeries,
-        ),
-      ));
+    final WorkoutStageCreatorState state = this.state;
+    if (state is WorkoutStageCreatorStateInProgress) {
+      final WorkoutStageCreatorForm? form = state.form;
+      if (form is WorkoutStageCreatorSeriesStageForm) {
+        emit(state.copyWith(
+          form: form.copyWith(
+            amountOfSeries: event.amountOfSeries,
+          ),
+        ));
+      }
     }
   }
 
@@ -97,13 +106,16 @@ class WorkoutStageCreatorBloc
     WorkoutStageCreatorEventSeriesDistanceChanged event,
     Emitter<WorkoutStageCreatorState> emit,
   ) {
-    final WorkoutStageCreatorForm? form = state.form;
-    if (form is WorkoutStageCreatorSeriesStageForm) {
-      emit(state.copyWith(
-        form: form.copyWith(
-          seriesDistanceInMeters: event.seriesDistanceInMeters,
-        ),
-      ));
+    final WorkoutStageCreatorState state = this.state;
+    if (state is WorkoutStageCreatorStateInProgress) {
+      final WorkoutStageCreatorForm? form = state.form;
+      if (form is WorkoutStageCreatorSeriesStageForm) {
+        emit(state.copyWith(
+          form: form.copyWith(
+            seriesDistanceInMeters: event.seriesDistanceInMeters,
+          ),
+        ));
+      }
     }
   }
 
@@ -111,13 +123,16 @@ class WorkoutStageCreatorBloc
     WorkoutStageCreatorEventWalkingDistanceChanged event,
     Emitter<WorkoutStageCreatorState> emit,
   ) {
-    final WorkoutStageCreatorForm? form = state.form;
-    if (form is WorkoutStageCreatorSeriesStageForm) {
-      emit(state.copyWith(
-        form: form.copyWith(
-          breakWalkingDistanceInMeters: event.walkingDistanceInMeters,
-        ),
-      ));
+    final WorkoutStageCreatorState state = this.state;
+    if (state is WorkoutStageCreatorStateInProgress) {
+      final WorkoutStageCreatorForm? form = state.form;
+      if (form is WorkoutStageCreatorSeriesStageForm) {
+        emit(state.copyWith(
+          form: form.copyWith(
+            breakWalkingDistanceInMeters: event.walkingDistanceInMeters,
+          ),
+        ));
+      }
     }
   }
 
@@ -125,13 +140,16 @@ class WorkoutStageCreatorBloc
     WorkoutStageCreatorEventJoggingDistanceChanged event,
     Emitter<WorkoutStageCreatorState> emit,
   ) {
-    final WorkoutStageCreatorForm? form = state.form;
-    if (form is WorkoutStageCreatorSeriesStageForm) {
-      emit(state.copyWith(
-        form: form.copyWith(
-          breakJoggingDistanceInMeters: event.joggingDistanceInMeters,
-        ),
-      ));
+    final WorkoutStageCreatorState state = this.state;
+    if (state is WorkoutStageCreatorStateInProgress) {
+      final WorkoutStageCreatorForm? form = state.form;
+      if (form is WorkoutStageCreatorSeriesStageForm) {
+        emit(state.copyWith(
+          form: form.copyWith(
+            breakJoggingDistanceInMeters: event.joggingDistanceInMeters,
+          ),
+        ));
+      }
     }
   }
 

@@ -1,10 +1,14 @@
 part of 'workout_stage_creator_bloc.dart';
 
-class WorkoutStageCreatorState extends Equatable {
+abstract class WorkoutStageCreatorState extends Equatable {
+  const WorkoutStageCreatorState();
+}
+
+class WorkoutStageCreatorStateInProgress extends WorkoutStageCreatorState {
   final WorkoutStage? stageType;
   final WorkoutStageCreatorForm? form;
 
-  const WorkoutStageCreatorState({
+  const WorkoutStageCreatorStateInProgress({
     required this.stageType,
     required this.form,
   });
@@ -15,16 +19,14 @@ class WorkoutStageCreatorState extends Equatable {
         form,
       ];
 
-  bool get isAddButtonDisabled {
-    print(form?.areDataCorrect);
-    return stageType == null || (form != null ? !form!.areDataCorrect : false);
-  }
+  bool get isAddButtonDisabled =>
+      stageType == null || (form != null ? !form!.areDataCorrect : false);
 
-  WorkoutStageCreatorState copyWith({
+  WorkoutStageCreatorStateInProgress copyWith({
     WorkoutStage? stageType,
     WorkoutStageCreatorForm? form,
   }) =>
-      WorkoutStageCreatorState(
+      WorkoutStageCreatorStateInProgress(
         stageType: stageType ?? this.stageType,
         form: form,
       );
