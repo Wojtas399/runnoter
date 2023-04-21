@@ -23,8 +23,8 @@ class _Distance extends StatelessWidget {
     return TextFieldComponent(
       label:
           '${AppLocalizations.of(context)!.workout_stage_creator_screen_distance} [km]',
-      maxLength: 4,
       keyboardType: TextInputType.number,
+      maxLength: 8,
       inputFormatters: [
         DecimalTextInputFormatter(
           decimalRange: 2,
@@ -40,7 +40,12 @@ class _Distance extends StatelessWidget {
     if (value == null) {
       return;
     }
-    final double? distance = double.tryParse(value);
+    double? distance;
+    if (value.isEmpty) {
+      distance = 0;
+    } else {
+      distance = double.tryParse(value);
+    }
     if (distance != null) {
       context.read<WorkoutStageCreatorBloc>().add(
             WorkoutStageCreatorEventDistanceChanged(
@@ -74,7 +79,12 @@ class _MaxHeartRate extends StatelessWidget {
     if (value == null) {
       return;
     }
-    final int? maxHeartRate = int.tryParse(value);
+    int? maxHeartRate;
+    if (value.isEmpty) {
+      maxHeartRate = 0;
+    } else {
+      maxHeartRate = int.tryParse(value);
+    }
     if (maxHeartRate != null) {
       context.read<WorkoutStageCreatorBloc>().add(
             WorkoutStageCreatorEventMaxHeartRateChanged(

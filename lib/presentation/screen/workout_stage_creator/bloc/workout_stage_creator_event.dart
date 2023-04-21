@@ -6,10 +6,10 @@ abstract class WorkoutStageCreatorEvent {
 
 class WorkoutStageCreatorEventStageTypeChanged
     extends WorkoutStageCreatorEvent {
-  final WorkoutStage stage;
+  final WorkoutStage stageType;
 
   const WorkoutStageCreatorEventStageTypeChanged({
-    required this.stage,
+    required this.stageType,
   });
 }
 

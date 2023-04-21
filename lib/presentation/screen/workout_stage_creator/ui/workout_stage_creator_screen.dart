@@ -9,6 +9,7 @@ import '../../../service/navigator_service.dart';
 import '../../../service/utils.dart';
 import '../bloc/workout_stage_creator_bloc.dart';
 
+part 'workout_stage_creator_app_bar.dart';
 part 'workout_stage_creator_content.dart';
 part 'workout_stage_creator_distance_form.dart';
 part 'workout_stage_creator_series_form.dart';

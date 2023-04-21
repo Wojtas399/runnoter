@@ -14,10 +14,12 @@ class WorkoutStageCreatorBloc extends BlocWithStatus<WorkoutStageCreatorEvent,
     WorkoutStageCreatorState, dynamic, dynamic> {
   WorkoutStageCreatorBloc({
     BlocStatus status = const BlocStatusInitial(),
+    WorkoutStage? stageType,
     WorkoutStageCreatorForm? form,
   }) : super(
           WorkoutStageCreatorState(
             status: status,
+            stageType: stageType,
             form: form,
           ),
         ) {
@@ -34,28 +36,25 @@ class WorkoutStageCreatorBloc extends BlocWithStatus<WorkoutStageCreatorEvent,
     WorkoutStageCreatorEventStageTypeChanged event,
     Emitter<WorkoutStageCreatorState> emit,
   ) {
-    final WorkoutStage stage = event.stage;
-    if (_isDistanceStage(stage)) {
-      emit(state.copyWith(
-        form: const WorkoutStageCreatorDistanceStageForm(
-          distanceInKm: null,
-          maxHeartRate: null,
-        ),
-      ));
-    } else if (_isSeriesStage(stage)) {
-      emit(state.copyWith(
-        form: const WorkoutStageCreatorSeriesStageForm(
-          amountOfSeries: null,
-          seriesDistanceInMeters: null,
-          breakWalkingDistanceInMeters: null,
-          breakJoggingDistanceInMeters: null,
-        ),
-      ));
-    } else {
-      emit(state.copyWith(
-        form: null,
-      ));
+    final WorkoutStage stageType = event.stageType;
+    WorkoutStageCreatorForm? form;
+    if (_isDistanceStage(stageType)) {
+      form = const WorkoutStageCreatorDistanceStageForm(
+        distanceInKm: null,
+        maxHeartRate: null,
+      );
+    } else if (_isSeriesStage(stageType)) {
+      form = const WorkoutStageCreatorSeriesStageForm(
+        amountOfSeries: null,
+        seriesDistanceInMeters: null,
+        breakWalkingDistanceInMeters: null,
+        breakJoggingDistanceInMeters: null,
+      );
     }
+    emit(state.copyWith(
+      stageType: stageType,
+      form: form,
+    ));
   }
 
   void _distanceChanged(

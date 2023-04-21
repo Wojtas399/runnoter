@@ -12,10 +12,12 @@ void main() {
 
   WorkoutStageCreatorState createState({
     BlocStatus status = const BlocStatusInitial(),
+    WorkoutStage? stageType,
     WorkoutStageCreatorForm? form,
   }) =>
       WorkoutStageCreatorState(
         status: status,
+        stageType: stageType,
         form: form,
       );
 
@@ -44,18 +46,19 @@ void main() {
   blocTest(
     'stage type changed, '
     'base run stage, '
-    'should set form as distance stage form',
+    'should set form as distance stage form and should update stage type',
     build: () => createBloc(),
     act: (WorkoutStageCreatorBloc bloc) {
       bloc.add(
         const WorkoutStageCreatorEventStageTypeChanged(
-          stage: WorkoutStage.baseRun,
+          stageType: WorkoutStage.baseRun,
         ),
       );
     },
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
+        stageType: WorkoutStage.baseRun,
         form: createDistanceStageForm(),
       ),
     ],
@@ -64,18 +67,19 @@ void main() {
   blocTest(
     'stage type changed, '
     'zone2 stage, '
-    'should set form as distance stage form',
+    'should set form as distance stage form and should update stage type',
     build: () => createBloc(),
     act: (WorkoutStageCreatorBloc bloc) {
       bloc.add(
         const WorkoutStageCreatorEventStageTypeChanged(
-          stage: WorkoutStage.zone2,
+          stageType: WorkoutStage.zone2,
         ),
       );
     },
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
+        stageType: WorkoutStage.zone2,
         form: createDistanceStageForm(),
       ),
     ],
@@ -84,18 +88,19 @@ void main() {
   blocTest(
     'stage type changed, '
     'zone3 stage, '
-    'should set form as distance stage form',
+    'should set form as distance stage form and should update stage type',
     build: () => createBloc(),
     act: (WorkoutStageCreatorBloc bloc) {
       bloc.add(
         const WorkoutStageCreatorEventStageTypeChanged(
-          stage: WorkoutStage.zone3,
+          stageType: WorkoutStage.zone3,
         ),
       );
     },
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
+        stageType: WorkoutStage.zone3,
         form: createDistanceStageForm(),
       ),
     ],
@@ -104,18 +109,19 @@ void main() {
   blocTest(
     'stage type changed, '
     'hill repeats stage, '
-    'should set form as series stage form',
+    'should set form as series stage form and should update stage type',
     build: () => createBloc(),
     act: (WorkoutStageCreatorBloc bloc) {
       bloc.add(
         const WorkoutStageCreatorEventStageTypeChanged(
-          stage: WorkoutStage.hillRepeats,
+          stageType: WorkoutStage.hillRepeats,
         ),
       );
     },
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
+        stageType: WorkoutStage.hillRepeats,
         form: createSeriesStageForm(),
       ),
     ],
@@ -124,18 +130,19 @@ void main() {
   blocTest(
     'stage type changed, '
     'rhythms stage, '
-    'should set form as series stage form',
+    'should set form as series stage form and should update stage type',
     build: () => createBloc(),
     act: (WorkoutStageCreatorBloc bloc) {
       bloc.add(
         const WorkoutStageCreatorEventStageTypeChanged(
-          stage: WorkoutStage.rhythms,
+          stageType: WorkoutStage.rhythms,
         ),
       );
     },
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
+        stageType: WorkoutStage.rhythms,
         form: createSeriesStageForm(),
       ),
     ],
@@ -144,20 +151,21 @@ void main() {
   blocTest(
     'stage type changed, '
     'stretching stage, '
-    'should set form as null',
+    'should set form as null and should update stage type',
     build: () => createBloc(
       form: createDistanceStageForm(),
     ),
     act: (WorkoutStageCreatorBloc bloc) {
       bloc.add(
         const WorkoutStageCreatorEventStageTypeChanged(
-          stage: WorkoutStage.stretching,
+          stageType: WorkoutStage.stretching,
         ),
       );
     },
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
+        stageType: WorkoutStage.stretching,
         form: null,
       ),
     ],
@@ -166,20 +174,21 @@ void main() {
   blocTest(
     'stage type changed, '
     'strengthening stage, '
-    'should set form as null',
+    'should set form as null and should update stage type',
     build: () => createBloc(
       form: createDistanceStageForm(),
     ),
     act: (WorkoutStageCreatorBloc bloc) {
       bloc.add(
         const WorkoutStageCreatorEventStageTypeChanged(
-          stage: WorkoutStage.strengthening,
+          stageType: WorkoutStage.strengthening,
         ),
       );
     },
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
+        stageType: WorkoutStage.strengthening,
         form: null,
       ),
     ],
@@ -188,20 +197,21 @@ void main() {
   blocTest(
     'stage type changed, '
     'foam rolling stage, '
-    'should set form as null',
+    'should set form as null and should update stage type',
     build: () => createBloc(
       form: createDistanceStageForm(),
     ),
     act: (WorkoutStageCreatorBloc bloc) {
       bloc.add(
         const WorkoutStageCreatorEventStageTypeChanged(
-          stage: WorkoutStage.foamRolling,
+          stageType: WorkoutStage.foamRolling,
         ),
       );
     },
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
+        stageType: WorkoutStage.foamRolling,
         form: null,
       ),
     ],

@@ -43,7 +43,12 @@ class _AmountOfSeries extends StatelessWidget {
     if (value == null) {
       return;
     }
-    final int? amountOfSeries = int.tryParse(value);
+    int? amountOfSeries;
+    if (value == '') {
+      amountOfSeries = 0;
+    } else {
+      amountOfSeries = int.tryParse(value);
+    }
     if (amountOfSeries != null) {
       context.read<WorkoutStageCreatorBloc>().add(
             WorkoutStageCreatorEventAmountOfSeriesChanged(
@@ -77,7 +82,12 @@ class _SeriesDistance extends StatelessWidget {
     if (value == null) {
       return;
     }
-    final int? seriesDistance = int.tryParse(value);
+    int? seriesDistance;
+    if (value == '') {
+      seriesDistance = 0;
+    } else {
+      seriesDistance = int.tryParse(value);
+    }
     if (seriesDistance != null) {
       context.read<WorkoutStageCreatorBloc>().add(
             WorkoutStageCreatorEventSeriesDistanceChanged(
@@ -111,7 +121,12 @@ class _WalkingDistance extends StatelessWidget {
     if (value == null) {
       return;
     }
-    final int? walkingDistance = int.tryParse(value);
+    int? walkingDistance;
+    if (value == '') {
+      walkingDistance = 0;
+    } else {
+      walkingDistance = int.tryParse(value);
+    }
     if (walkingDistance != null) {
       context.read<WorkoutStageCreatorBloc>().add(
             WorkoutStageCreatorEventWalkingDistanceChanged(
@@ -145,7 +160,12 @@ class _JoggingDistance extends StatelessWidget {
     if (value == null) {
       return;
     }
-    final int? joggingDistance = int.tryParse(value);
+    int? joggingDistance;
+    if (value == '') {
+      joggingDistance = 0;
+    } else {
+      joggingDistance = int.tryParse(value);
+    }
     if (joggingDistance != null) {
       context.read<WorkoutStageCreatorBloc>().add(
             WorkoutStageCreatorEventJoggingDistanceChanged(

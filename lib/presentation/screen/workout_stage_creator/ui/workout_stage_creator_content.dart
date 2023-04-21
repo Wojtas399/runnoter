@@ -31,37 +31,6 @@ class WorkoutStageCreatorContent extends StatelessWidget {
   }
 }
 
-class _AppBar extends StatelessWidget with PreferredSizeWidget {
-  const _AppBar();
-
-  @override
-  Widget build(BuildContext context) {
-    return AppBar(
-      title: Text(
-        AppLocalizations.of(context)!.workout_stage_creator_screen_title,
-      ),
-      leading: IconButton(
-        onPressed: () {
-          navigateBack(context: context);
-        },
-        icon: const Icon(Icons.close),
-      ),
-      actions: [
-        TextButton(
-          onPressed: () {},
-          child: Text(
-            AppLocalizations.of(context)!.add,
-          ),
-        ),
-        const SizedBox(width: 16),
-      ],
-    );
-  }
-
-  @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
-}
-
 class _WorkoutStageType extends StatelessWidget {
   const _WorkoutStageType();
 
@@ -111,10 +80,12 @@ class _WorkoutStageType extends StatelessWidget {
     }
   }
 
-  void _onWorkoutStageChanged(BuildContext context, WorkoutStage? stage) {
-    if (stage != null) {
+  void _onWorkoutStageChanged(BuildContext context, WorkoutStage? stageType) {
+    if (stageType != null) {
       context.read<WorkoutStageCreatorBloc>().add(
-            WorkoutStageCreatorEventStageTypeChanged(stage: stage),
+            WorkoutStageCreatorEventStageTypeChanged(
+              stageType: stageType,
+            ),
           );
     }
   }
