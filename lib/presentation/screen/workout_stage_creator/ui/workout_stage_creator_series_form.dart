@@ -30,6 +30,7 @@ class _AmountOfSeries extends StatelessWidget {
           .workout_stage_creator_screen_amount_of_series,
       keyboardType: TextInputType.number,
       maxLength: 2,
+      isRequired: true,
       inputFormatters: [
         FilteringTextInputFormatter.digitsOnly,
       ],
@@ -69,6 +70,7 @@ class _SeriesDistance extends StatelessWidget {
           '${AppLocalizations.of(context)!.workout_stage_creator_screen_single_series_distance} [m]',
       keyboardType: TextInputType.number,
       maxLength: 6,
+      isRequired: true,
       inputFormatters: [
         FilteringTextInputFormatter.digitsOnly,
       ],
