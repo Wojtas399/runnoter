@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class TextFieldComponent extends StatelessWidget {
   final String? label;
   final IconData? icon;
   final bool isRequired;
+  final int? maxLength;
+  final TextInputType? keyboardType;
+  final List<TextInputFormatter>? inputFormatters;
   final TextEditingController? controller;
   final Function(String? value)? onChanged;
   final String? Function(String? value)? validator;
@@ -14,6 +18,9 @@ class TextFieldComponent extends StatelessWidget {
     this.label,
     this.icon,
     this.isRequired = false,
+    this.maxLength,
+    this.keyboardType,
+    this.inputFormatters,
     this.controller,
     this.onChanged,
     this.validator,
@@ -25,12 +32,16 @@ class TextFieldComponent extends StatelessWidget {
       decoration: InputDecoration(
         label: label != null ? Text(label!) : null,
         prefixIcon: icon != null ? Icon(icon) : null,
+        counterText: '',
       ),
+      maxLength: maxLength,
       controller: controller,
       onChanged: onChanged,
       validator: (String? value) {
         return _validate(value, context);
       },
+      inputFormatters: inputFormatters,
+      keyboardType: keyboardType,
       autovalidateMode: AutovalidateMode.onUserInteraction,
     );
   }

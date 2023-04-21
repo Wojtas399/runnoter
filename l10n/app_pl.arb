@@ -195,6 +195,14 @@
   "@workout_stage_creator_screen_stage_type": {
     "description": "Workout stage type"
   },
+  "workout_stage_creator_screen_distance": "Dystans",
+  "@workout_stage_creator_screen_distance": {
+    "description": "Distance"
+  },
+  "workout_stage_creator_screen_max_heart_rate": "Tętno maksymalne",
+  "@workout_stage_creator_screen_max_heart_rate": {
+    "description": "Max heart rate"
+  },
 
 
   "profile_screen_title": "Profil",

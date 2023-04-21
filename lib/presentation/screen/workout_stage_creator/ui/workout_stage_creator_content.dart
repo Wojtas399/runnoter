@@ -7,6 +7,7 @@ import '../../../service/utils.dart';
 import '../bloc/workout_stage_creator_bloc.dart';
 import '../bloc/workout_stage_creator_event.dart';
 import '../bloc/workout_stage_creator_state.dart';
+import 'workout_stage_creator_distance_form.dart';
 
 class WorkoutStageCreatorContent extends StatelessWidget {
   const WorkoutStageCreatorContent({
@@ -28,6 +29,8 @@ class WorkoutStageCreatorContent extends StatelessWidget {
             child: Column(
               children: const [
                 _WorkoutStageType(),
+                SizedBox(height: 40),
+                WorkoutStageCreatorDistanceForm(),
               ],
             ),
           ),
