@@ -5,14 +5,14 @@ class WorkoutStageDto extends Equatable {
 
   factory WorkoutStageDto.fromJson(Map<String, dynamic> json) {
     final String stageName = json[_nameField];
-    if (stageName == 'cardio') {
-      return WorkoutStageCardioDto.fromJson(json);
+    if (stageName == 'baseRun') {
+      return WorkoutStageBaseRunDto.fromJson(json);
     } else if (stageName == 'zone2') {
       return WorkoutStageZone2Dto.fromJson(json);
     } else if (stageName == 'zone3') {
       return WorkoutStageZone3Dto.fromJson(json);
-    } else if (stageName == 'strength') {
-      return WorkoutStageStrengthDto.fromJson(json);
+    } else if (stageName == 'hillRepeats') {
+      return WorkoutStageHillRepeatsDto.fromJson(json);
     } else if (stageName == 'rhythms') {
       return WorkoutStageRhythmsDto.fromJson(json);
     } else if (stageName == 'stretching') {
@@ -32,17 +32,17 @@ class WorkoutStageDto extends Equatable {
   Map<String, dynamic> toJson() => {};
 }
 
-class WorkoutStageCardioDto extends WorkoutStageDto with _DistanceWorkout {
-  WorkoutStageCardioDto({
+class WorkoutStageBaseRunDto extends WorkoutStageDto with _DistanceWorkout {
+  WorkoutStageBaseRunDto({
     required double distanceInKilometers,
     required int maxHeartRate,
   }) : assert(distanceInKilometers > 0 && maxHeartRate > 0) {
-    stageName = 'cardio';
+    stageName = 'baseRun';
     this.distanceInKilometers = distanceInKilometers;
     this.maxHeartRate = maxHeartRate;
   }
 
-  WorkoutStageCardioDto.fromJson(Map<String, dynamic> json)
+  WorkoutStageBaseRunDto.fromJson(Map<String, dynamic> json)
       : this(
           distanceInKilometers:
               (json[_distanceInKilometersField] as num).toDouble(),
@@ -107,8 +107,8 @@ class WorkoutStageZone3Dto extends WorkoutStageDto with _DistanceWorkout {
       ];
 }
 
-class WorkoutStageStrengthDto extends WorkoutStageDto with _SeriesWorkout {
-  WorkoutStageStrengthDto({
+class WorkoutStageHillRepeatsDto extends WorkoutStageDto with _SeriesWorkout {
+  WorkoutStageHillRepeatsDto({
     required int amountOfSeries,
     required int seriesDistanceInMeters,
     required int breakMarchDistanceInMeters,
@@ -116,14 +116,14 @@ class WorkoutStageStrengthDto extends WorkoutStageDto with _SeriesWorkout {
   })  : assert(amountOfSeries > 0),
         assert(seriesDistanceInMeters > 0),
         assert(breakMarchDistanceInMeters > 0 || breakJogDistanceInMeters > 0) {
-    stageName = 'strength';
+    stageName = 'hillRepeats';
     this.amountOfSeries = amountOfSeries;
     this.seriesDistanceInMeters = seriesDistanceInMeters;
     this.breakMarchDistanceInMeters = breakMarchDistanceInMeters;
     this.breakJogDistanceInMeters = breakJogDistanceInMeters;
   }
 
-  WorkoutStageStrengthDto.fromJson(Map<String, dynamic> json)
+  WorkoutStageHillRepeatsDto.fromJson(Map<String, dynamic> json)
       : this(
           amountOfSeries: json[_amountOfSeriesField],
           seriesDistanceInMeters: json[_seriesDistanceInMetersField],

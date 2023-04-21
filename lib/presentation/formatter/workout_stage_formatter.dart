@@ -8,16 +8,16 @@ extension WorkoutStageFormatter on WorkoutStage {
   String toUIFormat(BuildContext context) {
     String description = '';
     final WorkoutStage stage = this;
-    if (stage is WorkoutStageCardio) {
-      description = _createCardioDescription(context, stage);
+    if (stage is WorkoutStageBaseRun) {
+      description = _createBaseRunDescription(context, stage);
     } else if (stage is WorkoutStageZone2) {
       description = _createZone2Description(context, stage);
     } else if (stage is WorkoutStageZone3) {
       description = _createZone3Description(context, stage);
     } else if (stage is WorkoutStageRhythms) {
       description = _createRhythmsDescription(context, stage);
-    } else if (stage is WorkoutStageStrength) {
-      description = _createStrengthDescription(context, stage);
+    } else if (stage is WorkoutStageHillRepeats) {
+      description = _createHillRepeatsDescription(context, stage);
     } else if (stage is WorkoutStageStretching) {
       description = _createStretchingDescription(context);
     } else if (stage is WorkoutStageStrengthening) {
@@ -28,11 +28,11 @@ extension WorkoutStageFormatter on WorkoutStage {
     return description;
   }
 
-  String _createCardioDescription(
+  String _createBaseRunDescription(
     BuildContext context,
-    WorkoutStageCardio stage,
+    WorkoutStageBaseRun stage,
   ) {
-    final String stageName = AppLocalizations.of(context)!.workout_cardio;
+    final String stageName = AppLocalizations.of(context)!.workout_base_run;
     final String distance = stage.distanceInKilometers.toKilometersFormat();
     return '$stageName $distance HR<${stage.maxHeartRate}';
   }
@@ -74,11 +74,11 @@ extension WorkoutStageFormatter on WorkoutStage {
     return '$stageName $seriesDescription, $breakDescription';
   }
 
-  String _createStrengthDescription(
+  String _createHillRepeatsDescription(
     BuildContext context,
-    WorkoutStageStrength stage,
+    WorkoutStageHillRepeats stage,
   ) {
-    final String stageName = AppLocalizations.of(context)!.workout_strength;
+    final String stageName = AppLocalizations.of(context)!.workout_hill_repeats;
     final String seriesDescription =
         '${stage.amountOfSeries}x${stage.seriesDistanceInMeters}m';
     String breakDescription = '${AppLocalizations.of(context)!.workout_break} ';

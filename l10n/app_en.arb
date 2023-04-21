@@ -116,11 +116,11 @@
   "pace_unit_selection_text": "Select pace unit",
 
 
-  "workout_cardio": "Cardio",
+  "workout_base_run": "Cardio",
   "workout_zone2": "Zone2",
   "workout_zone3": "Zone3",
   "workout_rhythms": "Rhythms",
-  "workout_strength": "Strength",
+  "workout_hill_repeats": "Hill repeats",
   "workout_stretching": "Stretching",
   "workout_strengthening": "Strengthening",
   "workout_foamRolling": "Foam rolling",

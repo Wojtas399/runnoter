@@ -4,15 +4,15 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   test(
     'from json, '
-    'cardio, '
-    'should map json with type key set as cardio to cardio workout stage',
+    'base run, '
+    'should map json with type key set as base run to base run workout stage',
     () {
       final Map<String, dynamic> json = {
-        'name': 'cardio',
+        'name': 'baseRun',
         'distanceInKilometers': 10.0,
         'maxHeartRate': 150,
       };
-      final WorkoutStageDto expectedWorkoutStageDto = WorkoutStageCardioDto(
+      final WorkoutStageDto expectedWorkoutStageDto = WorkoutStageBaseRunDto(
         distanceInKilometers: 10,
         maxHeartRate: 150,
       );
@@ -67,17 +67,18 @@ void main() {
 
   test(
     'from json, '
-    'strength, '
-    'should map json with type key set as strength to strength workout stage',
+    'hill repeats, '
+    'should map json with type key set as hill repeats to hill repeats workout stage',
     () {
       final Map<String, dynamic> json = {
-        'name': 'strength',
+        'name': 'hill repeats',
         'amountOfSeries': 10,
         'seriesDistanceInMeters': 100,
         'breakMarchDistanceInMeters': 20,
         'breakJogDistanceInMeters': 80,
       };
-      final WorkoutStageDto expectedWorkoutStageDto = WorkoutStageStrengthDto(
+      final WorkoutStageDto expectedWorkoutStageDto =
+          WorkoutStageHillRepeatsDto(
         amountOfSeries: 10,
         seriesDistanceInMeters: 100,
         breakMarchDistanceInMeters: 20,
@@ -168,15 +169,15 @@ void main() {
 
   test(
     'to json, '
-    'cardio, '
-    'should map cardio workout dto to json with type key set as cardio',
+    'base run, '
+    'should map base run workout dto to json with type key set as base run',
     () {
-      final WorkoutStageDto dto = WorkoutStageCardioDto(
+      final WorkoutStageDto dto = WorkoutStageBaseRunDto(
         distanceInKilometers: 10,
         maxHeartRate: 150,
       );
       final Map<String, dynamic> expectedJson = {
-        'name': 'cardio',
+        'name': 'baseRun',
         'distanceInKilometers': 10.0,
         'maxHeartRate': 150,
       };
@@ -231,17 +232,17 @@ void main() {
 
   test(
     'to json, '
-    'strength, '
-    'should map strength workout dto to json with type key set as strength',
+    'hill repeats, '
+    'should map hill repeats workout dto to json with type key set as hill repeats',
     () {
-      final WorkoutStageDto dto = WorkoutStageStrengthDto(
+      final WorkoutStageDto dto = WorkoutStageHillRepeatsDto(
         amountOfSeries: 10,
         seriesDistanceInMeters: 100,
         breakMarchDistanceInMeters: 20,
         breakJogDistanceInMeters: 80,
       );
       final Map<String, dynamic> expectedJson = {
-        'name': 'strength',
+        'name': 'hillRepeats',
         'amountOfSeries': 10,
         'seriesDistanceInMeters': 100,
         'breakMarchDistanceInMeters': 20,

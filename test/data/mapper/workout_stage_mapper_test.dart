@@ -6,16 +6,16 @@ import 'package:runnoter/domain/model/workout_stage.dart';
 void main() {
   test(
     'map workout stage from firebase, '
-    'workout stage cardio dto should be mapped to domain workout stage cardio model',
+    'workout stage base run dto should be mapped to domain workout stage base run model',
     () {
       const double distanceInKm = 14.0;
       const int maxHeartRate = 150;
-      final firebase.WorkoutStageCardioDto stageDto =
-          firebase.WorkoutStageCardioDto(
+      final firebase.WorkoutStageBaseRunDto stageDto =
+          firebase.WorkoutStageBaseRunDto(
         distanceInKilometers: distanceInKm,
         maxHeartRate: maxHeartRate,
       );
-      final WorkoutStageCardio expectedStage = WorkoutStageCardio(
+      final WorkoutStageBaseRun expectedStage = WorkoutStageBaseRun(
         distanceInKilometers: distanceInKm,
         maxHeartRate: maxHeartRate,
       );
@@ -72,20 +72,20 @@ void main() {
 
   test(
     'map workout stage from firebase, '
-    'workout stage strength dto should be mapped to domain workout stage strength model',
+    'workout stage hill repeats dto should be mapped to domain workout stage hill repeats model',
     () {
       const int amountOfSeries = 10;
       const int seriesDistanceInMeters = 100;
       const int breakMarchDistanceInMeters = 0;
       const int breakJogDistanceInMeters = 200;
-      final firebase.WorkoutStageStrengthDto stageDto =
-          firebase.WorkoutStageStrengthDto(
+      final firebase.WorkoutStageHillRepeatsDto stageDto =
+          firebase.WorkoutStageHillRepeatsDto(
         amountOfSeries: amountOfSeries,
         seriesDistanceInMeters: seriesDistanceInMeters,
         breakMarchDistanceInMeters: breakMarchDistanceInMeters,
         breakJogDistanceInMeters: breakJogDistanceInMeters,
       );
-      final WorkoutStageStrength expectedStage = WorkoutStageStrength(
+      final WorkoutStageHillRepeats expectedStage = WorkoutStageHillRepeats(
         amountOfSeries: amountOfSeries,
         seriesDistanceInMeters: seriesDistanceInMeters,
         breakMarchDistanceInMeters: breakMarchDistanceInMeters,

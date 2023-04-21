@@ -58,7 +58,7 @@ void main() {
     'copy with stages',
     () {
       final List<WorkoutStage> expectedStages = [
-        WorkoutStageCardio(
+        WorkoutStageBaseRun(
           distanceInKilometers: 10.0,
           maxHeartRate: 150,
         ),

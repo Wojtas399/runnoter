@@ -69,7 +69,7 @@ void main() {
     'should add workout stage to existing stages',
     build: () => createBloc(
       stages: [
-        WorkoutStageCardio(
+        WorkoutStageBaseRun(
           distanceInKilometers: 2,
           maxHeartRate: 150,
         ),
@@ -89,7 +89,7 @@ void main() {
       createState(
         status: const BlocStatusComplete(),
         stages: [
-          WorkoutStageCardio(
+          WorkoutStageBaseRun(
             distanceInKilometers: 2,
             maxHeartRate: 150,
           ),

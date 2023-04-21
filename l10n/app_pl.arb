@@ -399,25 +399,25 @@
   },
 
 
-  "workout_cardio": "OWB1",
-  "@workout_cardio": {
-    "description": "Type of workout stage called owb1"
+  "workout_base_run": "OWB1",
+  "@workout_base_run": {
+    "description": "Type of workout stage called base run"
   },
   "workout_zone2": "BC2",
   "@workout_zone2": {
-    "description": "Type of workout stage called bc2"
+    "description": "Type of workout stage called zone 2"
   },
   "workout_zone3": "BC3",
   "@workout_zone3": {
-    "description": "Type of workout stage called bc3"
+    "description": "Type of workout stage called zone 3"
   },
   "workout_rhythms": "Rytmy",
   "@workout_rhythms": {
     "description": "Type of workout stage called rhythms"
   },
-  "workout_strength": "Siła",
-  "@workout_strength": {
-    "description": "Type of workout stage called strength"
+  "workout_hill_repeats": "Podbiegi",
+  "@workout_hill_repeats": {
+    "description": "Type of workout stage called hill repeats"
   },
   "workout_stretching": "Rozciąganie",
   "@workout_stretching": {

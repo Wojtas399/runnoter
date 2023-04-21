@@ -4,8 +4,8 @@ abstract class WorkoutStage extends Equatable {
   const WorkoutStage();
 }
 
-class WorkoutStageCardio extends WorkoutStage with DistanceWorkout {
-  WorkoutStageCardio({
+class WorkoutStageBaseRun extends WorkoutStage with DistanceWorkout {
+  WorkoutStageBaseRun({
     required double distanceInKilometers,
     required int maxHeartRate,
   })  : assert(distanceInKilometers > 0),
@@ -55,8 +55,8 @@ class WorkoutStageZone3 extends WorkoutStage with DistanceWorkout {
       ];
 }
 
-class WorkoutStageStrength extends WorkoutStage with SeriesWorkout {
-  WorkoutStageStrength({
+class WorkoutStageHillRepeats extends WorkoutStage with SeriesWorkout {
+  WorkoutStageHillRepeats({
     required int amountOfSeries,
     required int seriesDistanceInMeters,
     required int breakMarchDistanceInMeters,
