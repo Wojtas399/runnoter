@@ -22,7 +22,9 @@ class WorkoutStageCreatorScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const _BlocProvider(
-      child: WorkoutStageCreatorContent(),
+      child: _BlocListener(
+        child: WorkoutStageCreatorContent(),
+      ),
     );
   }
 }
@@ -38,6 +40,26 @@ class _BlocProvider extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => WorkoutStageCreatorBloc(),
+      child: child,
+    );
+  }
+}
+
+class _BlocListener extends StatelessWidget {
+  final Widget child;
+
+  const _BlocListener({
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocListener<WorkoutStageCreatorBloc, WorkoutStageCreatorState>(
+      listener: (BuildContext context, WorkoutStageCreatorState state) {
+        if (state is WorkoutStageCreatorStateSubmitted) {
+          navigateBack(context: context, result: state.workoutStage);
+        }
+      },
       child: child,
     );
   }

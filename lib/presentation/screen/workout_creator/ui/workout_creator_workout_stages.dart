@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../../../domain/model/workout_stage.dart';
 import '../../../service/dialog_service.dart';
 import '../../workout_stage_creator/ui/workout_stage_creator_screen.dart';
+import '../bloc/workout_creator_bloc.dart';
+import '../bloc/workout_creator_event.dart';
 
 class WorkoutCreatorWorkoutStages extends StatelessWidget {
   const WorkoutCreatorWorkoutStages({
@@ -88,10 +92,18 @@ class _AddStageButton extends StatelessWidget {
     );
   }
 
-  void _onPressed(BuildContext context) {
-    showFullScreenDialog(
+  Future<void> _onPressed(BuildContext context) async {
+    final WorkoutCreatorBloc bloc = context.read<WorkoutCreatorBloc>();
+    final WorkoutStage? workoutStage = await showFullScreenDialog(
       context: context,
       dialog: const WorkoutStageCreatorScreen(),
     );
+    if (workoutStage != null) {
+      bloc.add(
+        WorkoutCreatorEventWorkoutStageAdded(
+          workoutStage: workoutStage,
+        ),
+      );
+    }
   }
 }

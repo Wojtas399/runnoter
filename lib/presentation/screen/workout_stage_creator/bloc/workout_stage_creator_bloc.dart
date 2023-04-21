@@ -243,23 +243,23 @@ class WorkoutStageCreatorBloc
         seriesStageForm.breakJoggingDistanceInMeters;
     if (amountOfSeries == null ||
         seriesDistanceInMeters == null ||
-        breakWalkingDistanceInMeters == null ||
-        breakJoggingDistanceInMeters == null) {
+        (breakWalkingDistanceInMeters == null &&
+            breakJoggingDistanceInMeters == null)) {
       return null;
     }
     if (stageType == WorkoutStageType.hillRepeats) {
       return WorkoutStageHillRepeats(
         amountOfSeries: amountOfSeries,
         seriesDistanceInMeters: seriesDistanceInMeters,
-        breakMarchDistanceInMeters: breakWalkingDistanceInMeters,
-        breakJogDistanceInMeters: breakJoggingDistanceInMeters,
+        breakMarchDistanceInMeters: breakWalkingDistanceInMeters ?? 0,
+        breakJogDistanceInMeters: breakJoggingDistanceInMeters ?? 0,
       );
     } else if (stageType == WorkoutStageType.rhythms) {
       return WorkoutStageRhythms(
         amountOfSeries: amountOfSeries,
         seriesDistanceInMeters: seriesDistanceInMeters,
-        breakMarchDistanceInMeters: breakWalkingDistanceInMeters,
-        breakJogDistanceInMeters: breakJoggingDistanceInMeters,
+        breakMarchDistanceInMeters: breakWalkingDistanceInMeters ?? 0,
+        breakJogDistanceInMeters: breakJoggingDistanceInMeters ?? 0,
       );
     }
     return null;

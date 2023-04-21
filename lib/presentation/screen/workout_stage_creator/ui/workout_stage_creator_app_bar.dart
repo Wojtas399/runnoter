@@ -42,10 +42,20 @@ class _SaveButton extends StatelessWidget {
     );
 
     return TextButton(
-      onPressed: isButtonDisabled ? null : () {},
+      onPressed: isButtonDisabled
+          ? null
+          : () {
+              _onPressed(context);
+            },
       child: Text(
         AppLocalizations.of(context)!.add,
       ),
     );
+  }
+
+  void _onPressed(BuildContext context) {
+    context.read<WorkoutStageCreatorBloc>().add(
+          const WorkoutStageCreatorEventSubmit(),
+        );
   }
 }
