@@ -1,5 +1,4 @@
 import 'package:bloc_test/bloc_test.dart';
-import 'package:runnoter/presentation/model/bloc_status.dart';
 import 'package:runnoter/presentation/screen/workout_stage_creator/bloc/workout_stage_creator_bloc.dart';
 
 void main() {
@@ -11,12 +10,10 @@ void main() {
       );
 
   WorkoutStageCreatorState createState({
-    BlocStatus status = const BlocStatusInitial(),
     WorkoutStage? stageType,
     WorkoutStageCreatorForm? form,
   }) =>
       WorkoutStageCreatorState(
-        status: status,
         stageType: stageType,
         form: form,
       );
@@ -57,7 +54,6 @@ void main() {
     },
     expect: () => [
       createState(
-        status: const BlocStatusComplete(),
         stageType: WorkoutStage.baseRun,
         form: createDistanceStageForm(),
       ),
@@ -78,7 +74,6 @@ void main() {
     },
     expect: () => [
       createState(
-        status: const BlocStatusComplete(),
         stageType: WorkoutStage.zone2,
         form: createDistanceStageForm(),
       ),
@@ -99,7 +94,6 @@ void main() {
     },
     expect: () => [
       createState(
-        status: const BlocStatusComplete(),
         stageType: WorkoutStage.zone3,
         form: createDistanceStageForm(),
       ),
@@ -120,7 +114,6 @@ void main() {
     },
     expect: () => [
       createState(
-        status: const BlocStatusComplete(),
         stageType: WorkoutStage.hillRepeats,
         form: createSeriesStageForm(),
       ),
@@ -141,7 +134,6 @@ void main() {
     },
     expect: () => [
       createState(
-        status: const BlocStatusComplete(),
         stageType: WorkoutStage.rhythms,
         form: createSeriesStageForm(),
       ),
@@ -164,7 +156,6 @@ void main() {
     },
     expect: () => [
       createState(
-        status: const BlocStatusComplete(),
         stageType: WorkoutStage.stretching,
         form: null,
       ),
@@ -187,7 +178,6 @@ void main() {
     },
     expect: () => [
       createState(
-        status: const BlocStatusComplete(),
         stageType: WorkoutStage.strengthening,
         form: null,
       ),
@@ -210,7 +200,6 @@ void main() {
     },
     expect: () => [
       createState(
-        status: const BlocStatusComplete(),
         stageType: WorkoutStage.foamRolling,
         form: null,
       ),
@@ -236,7 +225,6 @@ void main() {
     },
     expect: () => [
       createState(
-        status: const BlocStatusComplete(),
         form: createDistanceStageForm(
           distanceInKm: 10.5,
           maxHeartRate: 150,
@@ -296,7 +284,6 @@ void main() {
     },
     expect: () => [
       createState(
-        status: const BlocStatusComplete(),
         form: createDistanceStageForm(
           distanceInKm: 5,
           maxHeartRate: 140,
@@ -358,7 +345,6 @@ void main() {
     },
     expect: () => [
       createState(
-        status: const BlocStatusComplete(),
         form: createSeriesStageForm(
           amountOfSeries: 10,
           seriesDistanceInMeters: 100,
@@ -422,7 +408,6 @@ void main() {
     },
     expect: () => [
       createState(
-        status: const BlocStatusComplete(),
         form: createSeriesStageForm(
           amountOfSeries: 5,
           seriesDistanceInMeters: 100,
@@ -486,7 +471,6 @@ void main() {
     },
     expect: () => [
       createState(
-        status: const BlocStatusComplete(),
         form: createSeriesStageForm(
           amountOfSeries: 5,
           seriesDistanceInMeters: 100,
@@ -550,7 +534,6 @@ void main() {
     },
     expect: () => [
       createState(
-        status: const BlocStatusComplete(),
         form: createSeriesStageForm(
           amountOfSeries: 5,
           seriesDistanceInMeters: 100,

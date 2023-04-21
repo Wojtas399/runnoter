@@ -1,18 +1,16 @@
 part of 'workout_stage_creator_bloc.dart';
 
-class WorkoutStageCreatorState extends BlocState<WorkoutStageCreatorState> {
+class WorkoutStageCreatorState extends Equatable {
   final WorkoutStage? stageType;
   final WorkoutStageCreatorForm? form;
 
   const WorkoutStageCreatorState({
-    required super.status,
     required this.stageType,
     required this.form,
   });
 
   @override
   List<Object?> get props => [
-        status,
         stageType,
         form,
       ];
@@ -22,14 +20,11 @@ class WorkoutStageCreatorState extends BlocState<WorkoutStageCreatorState> {
     return stageType == null || (form != null ? !form!.areDataCorrect : false);
   }
 
-  @override
   WorkoutStageCreatorState copyWith({
-    BlocStatus? status,
     WorkoutStage? stageType,
     WorkoutStageCreatorForm? form,
   }) =>
       WorkoutStageCreatorState(
-        status: status ?? const BlocStatusComplete(),
         stageType: stageType ?? this.stageType,
         form: form,
       );

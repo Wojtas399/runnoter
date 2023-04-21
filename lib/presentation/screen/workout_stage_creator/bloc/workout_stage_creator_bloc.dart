@@ -1,24 +1,18 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../model/bloc_state.dart';
-import '../../../model/bloc_status.dart';
-import '../../../model/bloc_with_status.dart';
-
 part 'workout_stage_creator_distance_stage_form.dart';
 part 'workout_stage_creator_event.dart';
 part 'workout_stage_creator_series_stage_form.dart';
 part 'workout_stage_creator_state.dart';
 
-class WorkoutStageCreatorBloc extends BlocWithStatus<WorkoutStageCreatorEvent,
-    WorkoutStageCreatorState, dynamic, dynamic> {
+class WorkoutStageCreatorBloc
+    extends Bloc<WorkoutStageCreatorEvent, WorkoutStageCreatorState> {
   WorkoutStageCreatorBloc({
-    BlocStatus status = const BlocStatusInitial(),
     WorkoutStage? stageType,
     WorkoutStageCreatorForm? form,
   }) : super(
           WorkoutStageCreatorState(
-            status: status,
             stageType: stageType,
             form: form,
           ),
