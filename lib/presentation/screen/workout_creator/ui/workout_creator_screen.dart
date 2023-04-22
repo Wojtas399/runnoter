@@ -13,7 +13,8 @@ import '../bloc/workout_creator_bloc.dart';
 
 part 'workout_creator_content.dart';
 part 'workout_creator_workout_stage_item.dart';
-part 'workout_creator_workout_stages.dart';
+part 'workout_creator_workout_stages_list.dart';
+part 'workout_creator_workout_stages_section.dart';
 
 class WorkoutCreatorScreen extends StatelessWidget {
   final DateTime date;
