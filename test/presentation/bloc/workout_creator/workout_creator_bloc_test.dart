@@ -171,4 +171,37 @@ void main() {
       )
     ],
   );
+
+  blocTest(
+    'delete workout stage, '
+    'should delete workout stage by its index',
+    build: () => createBloc(
+      stages: [
+        WorkoutStageZone2(
+          distanceInKilometers: 5,
+          maxHeartRate: 165,
+        ),
+        WorkoutStageBaseRun(
+          distanceInKilometers: 15,
+          maxHeartRate: 150,
+        ),
+      ],
+    ),
+    act: (WorkoutCreatorBloc bloc) {
+      bloc.add(
+        const WorkoutCreatorEventDeleteWorkoutStage(index: 0),
+      );
+    },
+    expect: () => [
+      createState(
+        status: const BlocStatusComplete(),
+        stages: [
+          WorkoutStageBaseRun(
+            distanceInKilometers: 15,
+            maxHeartRate: 150,
+          ),
+        ],
+      ),
+    ],
+  );
 }

@@ -29,6 +29,7 @@ class WorkoutCreatorBloc extends BlocWithStatus<WorkoutCreatorEvent,
     on<WorkoutCreatorEventWorkoutStagesOrderChanged>(
       _workoutStagesOrderChanged,
     );
+    on<WorkoutCreatorEventDeleteWorkoutStage>(_deleteWorkoutStage);
   }
 
   void _initialize(
@@ -67,6 +68,19 @@ class WorkoutCreatorBloc extends BlocWithStatus<WorkoutCreatorEvent,
   ) {
     emit(state.copyWith(
       stages: event.workoutStages,
+    ));
+  }
+
+  void _deleteWorkoutStage(
+    WorkoutCreatorEventDeleteWorkoutStage event,
+    Emitter<WorkoutCreatorState> emit,
+  ) {
+    final List<WorkoutStage> updatedStages = [
+      ...state.stages,
+    ];
+    updatedStages.removeAt(event.index);
+    emit(state.copyWith(
+      stages: updatedStages,
     ));
   }
 }

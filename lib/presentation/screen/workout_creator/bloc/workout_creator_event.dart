@@ -35,3 +35,11 @@ class WorkoutCreatorEventWorkoutStagesOrderChanged extends WorkoutCreatorEvent {
     required this.workoutStages,
   });
 }
+
+class WorkoutCreatorEventDeleteWorkoutStage extends WorkoutCreatorEvent {
+  final int index;
+
+  const WorkoutCreatorEventDeleteWorkoutStage({
+    required this.index,
+  });
+}

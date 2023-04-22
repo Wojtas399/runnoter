@@ -16,12 +16,16 @@ class _WorkoutStageItem extends StatelessWidget {
       width: double.infinity,
       child: Card(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(16, 8, 4, 8),
-          child: Row(
-            children: [
-              _Description(workoutStage: workoutStage),
-              const _MoreButton(),
-            ],
+          padding: const EdgeInsets.fromLTRB(16, 8, 8, 8),
+          child: IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _Description(workoutStage: workoutStage),
+                const SizedBox(width: 8),
+                _DeleteButton(workoutIndex: index),
+              ],
+            ),
           ),
         ),
       ),
@@ -39,30 +43,47 @@ class _Description extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 4),
-        child: Text(
-          workoutStage.toUIFormat(context),
-        ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            workoutStage.toUIFormat(context),
+          ),
+        ],
       ),
     );
   }
 }
 
-class _MoreButton extends StatelessWidget {
-  const _MoreButton();
+class _DeleteButton extends StatelessWidget {
+  final int workoutIndex;
+
+  const _DeleteButton({
+    required this.workoutIndex,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return IconButton(
-      onPressed: () {
-        _onMoreButtonPressed();
-      },
-      icon: const Icon(Icons.more_vert),
+    return SizedBox(
+      width: 32,
+      height: 32,
+      child: IconButton(
+        onPressed: () {
+          _onPressed(context, workoutIndex);
+        },
+        icon: const Icon(
+          Icons.close,
+        ),
+        iconSize: 20,
+        padding: EdgeInsets.zero,
+      ),
     );
   }
 
-  void _onMoreButtonPressed() {
-    //TODO
+  void _onPressed(BuildContext context, int workoutIndex) {
+    context.read<WorkoutCreatorBloc>().add(
+          WorkoutCreatorEventDeleteWorkoutStage(index: workoutIndex),
+        );
   }
 }
