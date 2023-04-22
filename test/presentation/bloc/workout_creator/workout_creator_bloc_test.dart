@@ -99,4 +99,76 @@ void main() {
       ),
     ],
   );
+
+  blocTest(
+    'workout stages order changed, '
+    'should update list of workout stages in state',
+    build: () => createBloc(
+      stages: [
+        WorkoutStageBaseRun(
+          distanceInKilometers: 1,
+          maxHeartRate: 150,
+        ),
+        WorkoutStageZone2(
+          distanceInKilometers: 3,
+          maxHeartRate: 165,
+        ),
+        WorkoutStageBaseRun(
+          distanceInKilometers: 3,
+          maxHeartRate: 150,
+        ),
+        WorkoutStageZone3(
+          distanceInKilometers: 2,
+          maxHeartRate: 180,
+        ),
+      ],
+    ),
+    act: (WorkoutCreatorBloc bloc) {
+      bloc.add(
+        WorkoutCreatorEventWorkoutStagesOrderChanged(
+          workoutStages: [
+            WorkoutStageBaseRun(
+              distanceInKilometers: 3,
+              maxHeartRate: 150,
+            ),
+            WorkoutStageZone3(
+              distanceInKilometers: 2,
+              maxHeartRate: 180,
+            ),
+            WorkoutStageBaseRun(
+              distanceInKilometers: 1,
+              maxHeartRate: 150,
+            ),
+            WorkoutStageZone2(
+              distanceInKilometers: 3,
+              maxHeartRate: 165,
+            ),
+          ],
+        ),
+      );
+    },
+    expect: () => [
+      createState(
+        status: const BlocStatusComplete(),
+        stages: [
+          WorkoutStageBaseRun(
+            distanceInKilometers: 3,
+            maxHeartRate: 150,
+          ),
+          WorkoutStageZone3(
+            distanceInKilometers: 2,
+            maxHeartRate: 180,
+          ),
+          WorkoutStageBaseRun(
+            distanceInKilometers: 1,
+            maxHeartRate: 150,
+          ),
+          WorkoutStageZone2(
+            distanceInKilometers: 3,
+            maxHeartRate: 165,
+          ),
+        ],
+      )
+    ],
+  );
 }

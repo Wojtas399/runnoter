@@ -27,3 +27,11 @@ class WorkoutCreatorEventWorkoutStageAdded extends WorkoutCreatorEvent {
     required this.workoutStage,
   });
 }
+
+class WorkoutCreatorEventWorkoutStagesOrderChanged extends WorkoutCreatorEvent {
+  final List<WorkoutStage> workoutStages;
+
+  const WorkoutCreatorEventWorkoutStagesOrderChanged({
+    required this.workoutStages,
+  });
+}

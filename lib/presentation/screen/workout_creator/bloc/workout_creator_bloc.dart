@@ -26,6 +26,9 @@ class WorkoutCreatorBloc extends BlocWithStatus<WorkoutCreatorEvent,
     on<WorkoutCreatorEventInitialize>(_initialize);
     on<WorkoutCreatorEventWorkoutNameChanged>(_workoutNameChanged);
     on<WorkoutCreatorEventWorkoutStageAdded>(_workoutStageAdded);
+    on<WorkoutCreatorEventWorkoutStagesOrderChanged>(
+      _workoutStagesOrderChanged,
+    );
   }
 
   void _initialize(
@@ -55,6 +58,15 @@ class WorkoutCreatorBloc extends BlocWithStatus<WorkoutCreatorEvent,
         ...state.stages,
         event.workoutStage,
       ],
+    ));
+  }
+
+  void _workoutStagesOrderChanged(
+    WorkoutCreatorEventWorkoutStagesOrderChanged event,
+    Emitter<WorkoutCreatorState> emit,
+  ) {
+    emit(state.copyWith(
+      stages: event.workoutStages,
     ));
   }
 }

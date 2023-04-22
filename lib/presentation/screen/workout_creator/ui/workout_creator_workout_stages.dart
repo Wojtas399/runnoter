@@ -51,7 +51,7 @@ class _WorkoutStages extends StatelessWidget {
         workoutStage: stages.first,
       );
     }
-    return _ListOfWorkoutStages(
+    return _ReorderableListOfWorkoutStages(
       workoutStages: stages,
     );
   }
@@ -122,12 +122,32 @@ class _NoWorkoutStagesInfo extends StatelessWidget {
   }
 }
 
-class _ListOfWorkoutStages extends StatelessWidget {
+class _ReorderableListOfWorkoutStages extends StatefulWidget {
   final List<WorkoutStage> workoutStages;
 
-  const _ListOfWorkoutStages({
+  const _ReorderableListOfWorkoutStages({
     required this.workoutStages,
   });
+
+  @override
+  State<StatefulWidget> createState() => _ReorderableListOfWorkoutStagesState();
+}
+
+class _ReorderableListOfWorkoutStagesState
+    extends State<_ReorderableListOfWorkoutStages> {
+  List<WorkoutStage> _stages = [];
+
+  @override
+  void initState() {
+    _stages = widget.workoutStages;
+    super.initState();
+  }
+
+  @override
+  void didUpdateWidget(covariant _ReorderableListOfWorkoutStages oldWidget) {
+    _stages = widget.workoutStages;
+    super.didUpdateWidget(oldWidget);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -147,16 +167,31 @@ class _ListOfWorkoutStages extends StatelessWidget {
         );
       },
       onReorder: (int oldIndex, int newIndex) {
-        //TODO
+        _onReorder(oldIndex, newIndex);
       },
       children: [
-        for (int i = 0; i < workoutStages.length; i++)
+        for (int i = 0; i < _stages.length; i++)
           _WorkoutStageItem(
             key: Key('$i'),
             index: i,
-            workoutStage: workoutStages[i],
+            workoutStage: _stages[i],
           ),
       ],
     );
+  }
+
+  void _onReorder(int oldIndex, int newIndex) {
+    setState(() {
+      if (oldIndex < newIndex) {
+        newIndex -= 1;
+      }
+      final WorkoutStage stage = _stages.removeAt(oldIndex);
+      _stages.insert(newIndex, stage);
+    });
+    context.read<WorkoutCreatorBloc>().add(
+          WorkoutCreatorEventWorkoutStagesOrderChanged(
+            workoutStages: _stages,
+          ),
+        );
   }
 }
