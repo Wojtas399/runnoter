@@ -56,14 +56,38 @@ class _WorkoutStagesList extends StatelessWidget {
     if (stages.isEmpty) {
       return const _NoWorkoutStagesInfo();
     }
-    return Column(
-      children: stages
-          .map(
-            (WorkoutStage stage) => WorkoutCreatorWorkoutStageItem(
-              workoutStage: stage,
-            ),
-          )
-          .toList(),
+    if (stages.length == 1) {
+      return WorkoutCreatorWorkoutStageItem(
+        index: 0,
+        workoutStage: stages.first,
+      );
+    }
+    return ReorderableListView(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      proxyDecorator: (Widget child, _, Animation<double> animation) {
+        return AnimatedBuilder(
+          animation: animation,
+          builder: (BuildContext context, Widget? child) => Material(
+            elevation: 10,
+            color: Colors.transparent,
+            borderRadius: BorderRadius.circular(12),
+            child: child,
+          ),
+          child: child,
+        );
+      },
+      onReorder: (int oldIndex, int newIndex) {
+        //TODO
+      },
+      children: [
+        for (int i = 0; i < stages.length; i++)
+          WorkoutCreatorWorkoutStageItem(
+            key: Key('$i'),
+            index: i,
+            workoutStage: stages[i],
+          ),
+      ],
     );
   }
 }

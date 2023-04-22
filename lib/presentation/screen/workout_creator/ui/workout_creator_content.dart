@@ -28,10 +28,10 @@ class WorkoutCreatorContent extends StatelessWidget {
             onTap: () {
               unfocusInputs();
             },
-            child: Container(
-              color: Colors.transparent,
+            child: Padding(
               padding: const EdgeInsets.all(24),
               child: Column(
+                mainAxisSize: MainAxisSize.max,
                 children: const [
                   _WorkoutName(),
                   SizedBox(height: 24),
