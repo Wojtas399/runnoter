@@ -27,4 +27,25 @@ class FirebaseWorkoutService {
         )
         .toList();
   }
+
+  Future<WorkoutDto?> addWorkout({
+    required String userId,
+    required String workoutName,
+    required DateTime date,
+    required WorkoutStatusDto status,
+    required List<WorkoutStageDto> stages,
+  }) async {
+    final workoutRef = await getWorkoutsRef(userId).add(
+      WorkoutDto(
+        id: '',
+        userId: userId,
+        date: date,
+        status: status,
+        name: workoutName,
+        stages: stages,
+      ),
+    );
+    final snapshot = await workoutRef.get();
+    return snapshot.data();
+  }
 }
