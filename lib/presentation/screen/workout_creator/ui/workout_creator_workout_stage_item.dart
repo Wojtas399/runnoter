@@ -1,13 +1,10 @@
-import 'package:flutter/material.dart';
+part of 'workout_creator_screen.dart';
 
-import '../../../../domain/model/workout_stage.dart';
-import '../../../formatter/workout_stage_formatter.dart';
-
-class WorkoutCreatorWorkoutStageItem extends StatelessWidget {
+class _WorkoutStageItem extends StatelessWidget {
   final int index;
   final WorkoutStage workoutStage;
 
-  const WorkoutCreatorWorkoutStageItem({
+  const _WorkoutStageItem({
     super.key,
     required this.index,
     required this.workoutStage,

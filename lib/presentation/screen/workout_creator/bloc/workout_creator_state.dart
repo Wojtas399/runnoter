@@ -1,6 +1,4 @@
-import '../../../../domain/model/workout_stage.dart';
-import '../../../model/bloc_state.dart';
-import '../../../model/bloc_status.dart';
+part of 'workout_creator_bloc.dart';
 
 class WorkoutCreatorState extends BlocState<WorkoutCreatorState> {
   final DateTime? date;

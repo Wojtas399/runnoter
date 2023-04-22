@@ -1,10 +1,12 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../domain/model/workout_stage.dart';
+import '../../../model/bloc_state.dart';
 import '../../../model/bloc_status.dart';
 import '../../../model/bloc_with_status.dart';
-import 'workout_creator_event.dart';
-import 'workout_creator_state.dart';
+
+part 'workout_creator_event.dart';
+part 'workout_creator_state.dart';
 
 class WorkoutCreatorBloc extends BlocWithStatus<WorkoutCreatorEvent,
     WorkoutCreatorState, dynamic, dynamic> {

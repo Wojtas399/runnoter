@@ -1,18 +1,7 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+part of 'workout_creator_screen.dart';
 
-import '../../../../domain/model/workout_stage.dart';
-import '../../../service/dialog_service.dart';
-import '../../workout_stage_creator/ui/workout_stage_creator_screen.dart';
-import '../bloc/workout_creator_bloc.dart';
-import '../bloc/workout_creator_event.dart';
-import 'workout_creator_workout_stage_item.dart';
-
-class WorkoutCreatorWorkoutStages extends StatelessWidget {
-  const WorkoutCreatorWorkoutStages({
-    super.key,
-  });
+class _WorkoutStagesSection extends StatelessWidget {
+  const _WorkoutStagesSection();
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +12,7 @@ class WorkoutCreatorWorkoutStages extends StatelessWidget {
         children: const [
           _Title(),
           SizedBox(height: 8),
-          _WorkoutStagesList(),
+          _WorkoutStages(),
           SizedBox(height: 16),
           _AddStageButton()
         ],
@@ -44,8 +33,8 @@ class _Title extends StatelessWidget {
   }
 }
 
-class _WorkoutStagesList extends StatelessWidget {
-  const _WorkoutStagesList();
+class _WorkoutStages extends StatelessWidget {
+  const _WorkoutStages();
 
   @override
   Widget build(BuildContext context) {
@@ -57,37 +46,13 @@ class _WorkoutStagesList extends StatelessWidget {
       return const _NoWorkoutStagesInfo();
     }
     if (stages.length == 1) {
-      return WorkoutCreatorWorkoutStageItem(
+      return _WorkoutStageItem(
         index: 0,
         workoutStage: stages.first,
       );
     }
-    return ReorderableListView(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      proxyDecorator: (Widget child, _, Animation<double> animation) {
-        return AnimatedBuilder(
-          animation: animation,
-          builder: (BuildContext context, Widget? child) => Material(
-            elevation: 10,
-            color: Colors.transparent,
-            borderRadius: BorderRadius.circular(12),
-            child: child,
-          ),
-          child: child,
-        );
-      },
-      onReorder: (int oldIndex, int newIndex) {
-        //TODO
-      },
-      children: [
-        for (int i = 0; i < stages.length; i++)
-          WorkoutCreatorWorkoutStageItem(
-            key: Key('$i'),
-            index: i,
-            workoutStage: stages[i],
-          ),
-      ],
+    return _ListOfWorkoutStages(
+      workoutStages: stages,
     );
   }
 }
@@ -153,6 +118,45 @@ class _NoWorkoutStagesInfo extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _ListOfWorkoutStages extends StatelessWidget {
+  final List<WorkoutStage> workoutStages;
+
+  const _ListOfWorkoutStages({
+    required this.workoutStages,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ReorderableListView(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      proxyDecorator: (Widget child, _, Animation<double> animation) {
+        return AnimatedBuilder(
+          animation: animation,
+          builder: (BuildContext context, Widget? child) => Material(
+            elevation: 10,
+            color: Colors.transparent,
+            borderRadius: BorderRadius.circular(12),
+            child: child,
+          ),
+          child: child,
+        );
+      },
+      onReorder: (int oldIndex, int newIndex) {
+        //TODO
+      },
+      children: [
+        for (int i = 0; i < workoutStages.length; i++)
+          _WorkoutStageItem(
+            key: Key('$i'),
+            index: i,
+            workoutStage: workoutStages[i],
+          ),
+      ],
     );
   }
 }

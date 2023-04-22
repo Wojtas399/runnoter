@@ -1,18 +1,7 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+part of 'workout_creator_screen.dart';
 
-import '../../../component/scrollable_content_component.dart';
-import '../../../component/text_field_component.dart';
-import '../../../service/utils.dart';
-import '../bloc/workout_creator_bloc.dart';
-import '../bloc/workout_creator_event.dart';
-import 'workout_creator_workout_stages.dart';
-
-class WorkoutCreatorContent extends StatelessWidget {
-  const WorkoutCreatorContent({
-    super.key,
-  });
+class _Content extends StatelessWidget {
+  const _Content();
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +24,7 @@ class WorkoutCreatorContent extends StatelessWidget {
                 children: const [
                   _WorkoutName(),
                   SizedBox(height: 24),
-                  WorkoutCreatorWorkoutStages(),
+                  _WorkoutStagesSection(),
                 ],
               ),
             ),

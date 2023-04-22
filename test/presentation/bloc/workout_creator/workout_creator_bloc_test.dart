@@ -2,8 +2,6 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:runnoter/domain/model/workout_stage.dart';
 import 'package:runnoter/presentation/model/bloc_status.dart';
 import 'package:runnoter/presentation/screen/workout_creator/bloc/workout_creator_bloc.dart';
-import 'package:runnoter/presentation/screen/workout_creator/bloc/workout_creator_event.dart';
-import 'package:runnoter/presentation/screen/workout_creator/bloc/workout_creator_state.dart';
 
 void main() {
   WorkoutCreatorBloc createBloc({
