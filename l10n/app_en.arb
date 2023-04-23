@@ -53,6 +53,7 @@
   "workout_creator_screen_no_stages_info": "No workout stages",
   "workout_creator_screen_add_stage_instruction": "Tap below button to add new stage",
   "workout_creator_screen_add_workout_button_label": "Add workout",
+  "workout_creator_screen_added_workout_message": "Successfully added workout",
 
 
   "workout_stage_creator_screen_title": "New workout stage",

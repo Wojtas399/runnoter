@@ -6,10 +6,12 @@ import '../../../../domain/model/workout_stage.dart';
 import '../../../../domain/repository/workout_repository.dart';
 import '../../../../domain/service/auth_service.dart';
 import '../../../component/big_button_component.dart';
+import '../../../component/bloc_with_status_listener_component.dart';
 import '../../../component/scrollable_content_component.dart';
 import '../../../component/text_field_component.dart';
 import '../../../formatter/workout_stage_formatter.dart';
 import '../../../service/dialog_service.dart';
+import '../../../service/navigator_service.dart';
 import '../../../service/utils.dart';
 import '../../workout_stage_creator/ui/workout_stage_creator_screen.dart';
 import '../bloc/workout_creator_bloc.dart';
@@ -32,7 +34,9 @@ class WorkoutCreatorScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return _BlocProvider(
       date: date,
-      child: const _Content(),
+      child: const _BlocListener(
+        child: _Content(),
+      ),
     );
   }
 }
@@ -57,5 +61,37 @@ class _BlocProvider extends StatelessWidget {
         ),
       child: child,
     );
+  }
+}
+
+class _BlocListener extends StatelessWidget {
+  final Widget child;
+
+  const _BlocListener({
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocWithStatusListener<WorkoutCreatorBloc, WorkoutCreatorState,
+        WorkoutCreatorInfo, dynamic>(
+      onInfo: (WorkoutCreatorInfo info) {
+        _manageInfo(context, info);
+      },
+      child: child,
+    );
+  }
+
+  void _manageInfo(BuildContext context, WorkoutCreatorInfo info) {
+    switch (info) {
+      case WorkoutCreatorInfo.workoutHasBeenAdded:
+        navigateBack(context: context);
+        showSnackbarMessage(
+          context: context,
+          message: AppLocalizations.of(context)!
+              .workout_creator_screen_added_workout_message,
+        );
+        break;
+    }
   }
 }
