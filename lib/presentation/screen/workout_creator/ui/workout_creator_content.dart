@@ -17,7 +17,8 @@ class _Content extends StatelessWidget {
             onTap: () {
               unfocusInputs();
             },
-            child: Padding(
+            child: Container(
+              color: Colors.transparent,
               padding: const EdgeInsets.all(24),
               child: Column(
                 mainAxisSize: MainAxisSize.max,
@@ -25,6 +26,8 @@ class _Content extends StatelessWidget {
                   _WorkoutName(),
                   SizedBox(height: 24),
                   _WorkoutStagesSection(),
+                  SizedBox(height: 40),
+                  _SubmitButton(),
                 ],
               ),
             ),

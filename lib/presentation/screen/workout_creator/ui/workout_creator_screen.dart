@@ -5,6 +5,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../../domain/model/workout_stage.dart';
 import '../../../../domain/repository/workout_repository.dart';
 import '../../../../domain/service/auth_service.dart';
+import '../../../component/big_button_component.dart';
 import '../../../component/scrollable_content_component.dart';
 import '../../../component/text_field_component.dart';
 import '../../../formatter/workout_stage_formatter.dart';
@@ -14,6 +15,7 @@ import '../../workout_stage_creator/ui/workout_stage_creator_screen.dart';
 import '../bloc/workout_creator_bloc.dart';
 
 part 'workout_creator_content.dart';
+part 'workout_creator_submit_button.dart';
 part 'workout_creator_workout_stage_item.dart';
 part 'workout_creator_workout_stages_list.dart';
 part 'workout_creator_workout_stages_section.dart';

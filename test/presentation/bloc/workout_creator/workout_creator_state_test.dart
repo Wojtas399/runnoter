@@ -16,6 +16,78 @@ void main() {
   });
 
   test(
+    'is submit button disabled, '
+    'date is null, '
+    'should be true',
+    () {
+      state = state.copyWith(
+        workoutName: 'workout name',
+        stages: [
+          WorkoutStageBaseRun(
+            distanceInKilometers: 10,
+            maxHeartRate: 150,
+          ),
+        ],
+      );
+
+      expect(state.isSubmitButtonDisabled, true);
+    },
+  );
+
+  test(
+    'is submit button disabled, '
+    'workout name is null, '
+    'should be true',
+    () {
+      state = state.copyWith(
+        date: DateTime(2023, 2, 2),
+        stages: [
+          WorkoutStageBaseRun(
+            distanceInKilometers: 10,
+            maxHeartRate: 150,
+          ),
+        ],
+      );
+
+      expect(state.isSubmitButtonDisabled, true);
+    },
+  );
+
+  test(
+    'is submit button disabled, '
+    'workout stages list is empty, '
+    'should be true',
+    () {
+      state = state.copyWith(
+        date: DateTime(2023, 2, 2),
+        workoutName: 'workout name',
+      );
+
+      expect(state.isSubmitButtonDisabled, true);
+    },
+  );
+
+  test(
+    'is button disabled, '
+    'date and workout name are not null and workout stages list is not empty, '
+    'should be false',
+    () {
+      state = state.copyWith(
+        date: DateTime(2023, 2, 2),
+        workoutName: 'workout name',
+        stages: [
+          WorkoutStageBaseRun(
+            distanceInKilometers: 10,
+            maxHeartRate: 150,
+          ),
+        ],
+      );
+
+      expect(state.isSubmitButtonDisabled, false);
+    },
+  );
+
+  test(
     'copy with status',
     () {
       const BlocStatus expectedStatus = BlocStatusInitial();

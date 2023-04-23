@@ -185,6 +185,10 @@
   "@workout_creator_screen_add_stage_instructions": {
     "description": "Instruction on how to add new workout stage"
   },
+  "workout_creator_screen_add_workout_button_label": "Dodaj trening",
+  "@workout_creator_screen_add_workout_button_label": {
+    "description": "Label of the button to add workout"
+  },
 
 
   "workout_stage_creator_screen_title": "Nowy etap treningu",
