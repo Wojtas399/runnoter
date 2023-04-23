@@ -24,6 +24,30 @@ WorkoutStatus mapWorkoutStatusFromFirebase(WorkoutStatusDto workoutStatusDto) {
       comment: workoutStatusDto.comment,
     );
   } else {
+    throw '[WorkoutStatusMapper] Unknown workout status dto';
+  }
+}
+
+WorkoutStatusDto mapWorkoutStatusToFirebase(WorkoutStatus workoutStatus) {
+  if (workoutStatus is WorkoutStatusPending) {
+    return const WorkoutStatusPendingDto();
+  } else if (workoutStatus is WorkoutStatusDone) {
+    return WorkoutStatusDoneDto(
+      coveredDistanceInKilometers: workoutStatus.coveredDistanceInKm,
+      avgPace: mapPaceToFirebase(workoutStatus.avgPace),
+      avgHeartRate: workoutStatus.avgHeartRate,
+      moodRate: mapMoodRateToFirebase(workoutStatus.moodRate),
+      comment: workoutStatus.comment,
+    );
+  } else if (workoutStatus is WorkoutStatusFailed) {
+    return WorkoutStatusFailedDto(
+      coveredDistanceInKilometers: workoutStatus.coveredDistanceInKm,
+      avgPace: mapPaceToFirebase(workoutStatus.avgPace),
+      avgHeartRate: workoutStatus.avgHeartRate,
+      moodRate: mapMoodRateToFirebase(workoutStatus.moodRate),
+      comment: workoutStatus.comment,
+    );
+  } else {
     throw '[WorkoutStatusMapper] Unknown workout status';
   }
 }
