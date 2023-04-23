@@ -21,7 +21,10 @@ class WorkoutCreatorState extends BlocState<WorkoutCreatorState> {
       ];
 
   bool get isSubmitButtonDisabled =>
-      date == null || workoutName == null || stages.isEmpty;
+      date == null ||
+      workoutName == null ||
+      workoutName == '' ||
+      stages.isEmpty;
 
   @override
   WorkoutCreatorState copyWith({

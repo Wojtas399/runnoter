@@ -55,6 +55,26 @@ void main() {
 
   test(
     'is submit button disabled, '
+    'workout name is empty, '
+    'should be true',
+    () {
+      state = state.copyWith(
+        date: DateTime(2023, 2, 2),
+        workoutName: '',
+        stages: [
+          WorkoutStageBaseRun(
+            distanceInKilometers: 10,
+            maxHeartRate: 150,
+          ),
+        ],
+      );
+
+      expect(state.isSubmitButtonDisabled, true);
+    },
+  );
+
+  test(
+    'is submit button disabled, '
     'workout stages list is empty, '
     'should be true',
     () {
