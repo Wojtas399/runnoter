@@ -24,4 +24,25 @@ void main() {
       expect(pace, expectedPace);
     },
   );
+
+  test(
+    'map pace to firebase, '
+    'should map pace to dto model',
+    () {
+      const int minutes = 5;
+      const int seconds = 30;
+      const Pace pace = Pace(
+        minutes: minutes,
+        seconds: seconds,
+      );
+      const PaceDto expectedDto = PaceDto(
+        minutes: minutes,
+        seconds: seconds,
+      );
+
+      final PaceDto dto = mapPaceToFirebase(pace);
+
+      expect(dto, expectedDto);
+    },
+  );
 }

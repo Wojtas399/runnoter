@@ -8,3 +8,10 @@ Pace mapPaceFromFirebase(PaceDto paceDto) {
     seconds: paceDto.seconds,
   );
 }
+
+PaceDto mapPaceToFirebase(Pace pace) {
+  return PaceDto(
+    minutes: pace.minutes,
+    seconds: pace.seconds,
+  );
+}
