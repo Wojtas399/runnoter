@@ -39,6 +39,47 @@ WorkoutStage mapWorkoutStageFromFirebase(WorkoutStageDto workoutStageDto) {
   } else if (workoutStageDto is WorkoutStageFoamRollingDto) {
     return const WorkoutStageFoamRolling();
   } else {
+    throw '[WorkoutStageMapper] Unknown workout stage dto';
+  }
+}
+
+WorkoutStageDto mapWorkoutStageToFirebase(WorkoutStage workoutStage) {
+  if (workoutStage is WorkoutStageBaseRun) {
+    return WorkoutStageBaseRunDto(
+      distanceInKilometers: workoutStage.distanceInKilometers,
+      maxHeartRate: workoutStage.maxHeartRate,
+    );
+  } else if (workoutStage is WorkoutStageZone2) {
+    return WorkoutStageZone2Dto(
+      distanceInKilometers: workoutStage.distanceInKilometers,
+      maxHeartRate: workoutStage.maxHeartRate,
+    );
+  } else if (workoutStage is WorkoutStageZone3) {
+    return WorkoutStageZone3Dto(
+      distanceInKilometers: workoutStage.distanceInKilometers,
+      maxHeartRate: workoutStage.maxHeartRate,
+    );
+  } else if (workoutStage is WorkoutStageHillRepeats) {
+    return WorkoutStageHillRepeatsDto(
+      amountOfSeries: workoutStage.amountOfSeries,
+      seriesDistanceInMeters: workoutStage.seriesDistanceInMeters,
+      breakMarchDistanceInMeters: workoutStage.breakMarchDistanceInMeters,
+      breakJogDistanceInMeters: workoutStage.breakJogDistanceInMeters,
+    );
+  } else if (workoutStage is WorkoutStageRhythms) {
+    return WorkoutStageRhythmsDto(
+      amountOfSeries: workoutStage.amountOfSeries,
+      seriesDistanceInMeters: workoutStage.seriesDistanceInMeters,
+      breakMarchDistanceInMeters: workoutStage.breakMarchDistanceInMeters,
+      breakJogDistanceInMeters: workoutStage.breakJogDistanceInMeters,
+    );
+  } else if (workoutStage is WorkoutStageStretching) {
+    return const WorkoutStageStretchingDto();
+  } else if (workoutStage is WorkoutStageStrengthening) {
+    return const WorkoutStageStrengtheningDto();
+  } else if (workoutStage is WorkoutStageFoamRolling) {
+    return const WorkoutStageFoamRollingDto();
+  } else {
     throw '[WorkoutStageMapper] Unknown workout stage';
   }
 }
