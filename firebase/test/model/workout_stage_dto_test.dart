@@ -71,7 +71,7 @@ void main() {
     'should map json with type key set as hill repeats to hill repeats workout stage',
     () {
       final Map<String, dynamic> json = {
-        'name': 'hill repeats',
+        'name': 'hillRepeats',
         'amountOfSeries': 10,
         'seriesDistanceInMeters': 100,
         'breakMarchDistanceInMeters': 20,
