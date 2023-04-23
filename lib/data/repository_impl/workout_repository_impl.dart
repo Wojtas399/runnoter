@@ -5,8 +5,12 @@ import 'package:rxdart/rxdart.dart';
 import '../../common/date_service.dart';
 import '../../domain/model/state_repository.dart';
 import '../../domain/model/workout.dart';
+import '../../domain/model/workout_stage.dart';
+import '../../domain/model/workout_status.dart';
 import '../../domain/repository/workout_repository.dart';
 import '../mapper/workout_mapper.dart';
+import '../mapper/workout_stage_mapper.dart';
+import '../mapper/workout_status_mapper.dart';
 
 class WorkoutRepositoryImpl extends StateRepository<Workout>
     implements WorkoutRepository {
@@ -50,6 +54,27 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
         );
       },
     );
+  }
+
+  @override
+  Future<void> addWorkout({
+    required String userId,
+    required String workoutName,
+    required DateTime date,
+    required WorkoutStatus status,
+    required List<WorkoutStage> stages,
+  }) async {
+    final WorkoutDto? workoutDto = await _firebaseWorkoutService.addWorkout(
+      userId: userId,
+      workoutName: workoutName,
+      date: date,
+      status: mapWorkoutStatusToFirebase(status),
+      stages: stages.map(mapWorkoutStageToFirebase).toList(),
+    );
+    if (workoutDto != null) {
+      final Workout addedWorkout = mapWorkoutFromFirebase(workoutDto);
+      addEntity(addedWorkout);
+    }
   }
 
   Future<void> _loadWorkoutsByUserIdAndDateRangeFromRemoteDb(

@@ -2,6 +2,8 @@ import 'package:firebase/firebase.dart';
 import 'package:firebase/service/firebase_workout_service.dart';
 import 'package:mocktail/mocktail.dart';
 
+class _FakeWorkoutStatusDto extends Fake implements WorkoutStatusDto {}
+
 class MockFirebaseWorkoutService extends Mock
     implements FirebaseWorkoutService {
   void mockLoadWorkoutsByUserIdAndDateRange({
@@ -19,6 +21,7 @@ class MockFirebaseWorkoutService extends Mock
   void mockAddWorkout({
     WorkoutDto? addedWorkoutDto,
   }) {
+    _mockWorkoutStatusDto();
     when(
       () => addWorkout(
         userId: any(named: 'userId'),
@@ -28,5 +31,9 @@ class MockFirebaseWorkoutService extends Mock
         stages: any(named: 'stages'),
       ),
     ).thenAnswer((invocation) => Future.value(addedWorkoutDto));
+  }
+
+  void _mockWorkoutStatusDto() {
+    registerFallbackValue(_FakeWorkoutStatusDto());
   }
 }
