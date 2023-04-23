@@ -43,3 +43,7 @@ class WorkoutCreatorEventDeleteWorkoutStage extends WorkoutCreatorEvent {
     required this.index,
   });
 }
+
+class WorkoutCreatorEventSubmit extends WorkoutCreatorEvent {
+  const WorkoutCreatorEventSubmit();
+}

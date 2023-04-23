@@ -35,3 +35,7 @@ class WorkoutCreatorState extends BlocState<WorkoutCreatorState> {
     );
   }
 }
+
+enum WorkoutCreatorInfo {
+  workoutHasBeenAdded,
+}

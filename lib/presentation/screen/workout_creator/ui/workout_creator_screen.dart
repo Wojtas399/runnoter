@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../../domain/model/workout_stage.dart';
+import '../../../../domain/repository/workout_repository.dart';
+import '../../../../domain/service/auth_service.dart';
 import '../../../component/scrollable_content_component.dart';
 import '../../../component/text_field_component.dart';
 import '../../../formatter/workout_stage_formatter.dart';
@@ -45,8 +47,10 @@ class _BlocProvider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => WorkoutCreatorBloc()
-        ..add(
+      create: (BuildContext context) => WorkoutCreatorBloc(
+        authService: context.read<AuthService>(),
+        workoutRepository: context.read<WorkoutRepository>(),
+      )..add(
           WorkoutCreatorEventInitialize(date: date),
         ),
       child: child,
