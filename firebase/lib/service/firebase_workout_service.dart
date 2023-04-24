@@ -11,13 +11,12 @@ class FirebaseWorkoutService {
     required DateTime endDate,
   }) async {
     final snapshot = await getWorkoutsRef(userId)
-        .where('field')
         .where(
-          'date',
+          workoutDtoDateField,
           isGreaterThanOrEqualTo: mapDateTimeToString(startDate),
         )
         .where(
-          'date',
+          workoutDtoDateField,
           isLessThanOrEqualTo: mapDateTimeToString(endDate),
         )
         .get();
@@ -26,6 +25,23 @@ class FirebaseWorkoutService {
           (QueryDocumentSnapshot<WorkoutDto> docSnapshot) => docSnapshot.data(),
         )
         .toList();
+  }
+
+  Future<WorkoutDto?> loadWorkoutByUserIdAndDate({
+    required String userId,
+    required DateTime date,
+  }) async {
+    final snapshot = await getWorkoutsRef(userId)
+        .where(
+          workoutDtoDateField,
+          isEqualTo: mapDateTimeToString(date),
+        )
+        .limit(1)
+        .get();
+    if (snapshot.docs.isEmpty) {
+      return null;
+    }
+    return snapshot.docs.first.data();
   }
 
   Future<WorkoutDto?> addWorkout({
