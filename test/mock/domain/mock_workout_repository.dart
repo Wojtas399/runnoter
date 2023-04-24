@@ -18,6 +18,17 @@ class MockWorkoutRepository extends Mock implements WorkoutRepository {
     ).thenAnswer((invocation) => Stream.value(workouts));
   }
 
+  void mockGetWorkoutByUserIdAndDate({
+    Workout? workout,
+  }) {
+    when(
+      () => getWorkoutByUserIdAndDate(
+        userId: any(named: 'userId'),
+        date: any(named: 'date'),
+      ),
+    ).thenAnswer((invocation) => Stream.value(workout));
+  }
+
   void mockAddWorkout() {
     _mockWorkoutStatus();
     when(

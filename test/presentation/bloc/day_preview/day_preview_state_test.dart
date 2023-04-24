@@ -1,14 +1,18 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:runnoter/domain/model/workout.dart';
 import 'package:runnoter/presentation/model/bloc_status.dart';
 import 'package:runnoter/presentation/screen/day_preview/bloc/day_preview_state.dart';
+
+import '../../../util/workout_creator.dart';
 
 void main() {
   late DayPreviewState state;
 
   setUp(() {
-    state = DayPreviewState(
-      status: const BlocStatusInitial(),
-      date: DateTime(2023),
+    state = const DayPreviewState(
+      status: BlocStatusInitial(),
+      date: null,
+      workout: null,
     );
   });
 
@@ -35,6 +39,23 @@ void main() {
 
       expect(state.date, expectedDate);
       expect(state2.date, expectedDate);
+    },
+  );
+
+  test(
+    'copy with workout',
+    () {
+      final Workout expectedWorkout = createWorkout(
+        id: 'w1',
+        userId: 'u1',
+        name: 'workout name',
+      );
+
+      state = state.copyWith(workout: expectedWorkout);
+      final state2 = state.copyWith();
+
+      expect(state.workout, expectedWorkout);
+      expect(state2.workout, expectedWorkout);
     },
   );
 }
