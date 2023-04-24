@@ -4,22 +4,13 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../domain/model/workout_status.dart';
 
 extension WorkoutStatusFormatter on WorkoutStatus {
-  Icon toIcon() {
+  IconData toIcon() {
     if (this is WorkoutStatusPending) {
-      return const Icon(
-        Icons.schedule,
-        color: Colors.orange,
-      );
+      return Icons.schedule;
     } else if (this is WorkoutStatusDone) {
-      return const Icon(
-        Icons.check_circle_outline,
-        color: Colors.green,
-      );
+      return Icons.check_circle_outline;
     } else if (this is WorkoutStatusFailed) {
-      return const Icon(
-        Icons.cancel_outlined,
-        color: Colors.red,
-      );
+      return Icons.cancel_outlined;
     } else {
       throw '[WorkoutStatusFormatter - toIcon()]: Unknown status type';
     }
@@ -34,6 +25,18 @@ extension WorkoutStatusFormatter on WorkoutStatus {
       return AppLocalizations.of(context)!.workout_status_failed;
     } else {
       throw '[WorkoutStatusFormatter - toLabel()]: Unknown status type';
+    }
+  }
+
+  Color toColor() {
+    if (this is WorkoutStatusPending) {
+      return Colors.deepOrangeAccent;
+    } else if (this is WorkoutStatusDone) {
+      return Colors.green;
+    } else if (this is WorkoutStatusFailed) {
+      return Colors.red;
+    } else {
+      throw '[WorkoutStatusFormatter - toColor()]: Unknown status type';
     }
   }
 }
