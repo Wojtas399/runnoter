@@ -45,4 +45,15 @@ class MockDateService extends Mock implements DateService {
       ),
     ).thenReturn(expected);
   }
+
+  void mockAreDatesTheSame({
+    required bool expected,
+  }) {
+    when(
+      () => areDatesTheSame(
+        any(),
+        any(),
+      ),
+    ).thenReturn(expected);
+  }
 }
