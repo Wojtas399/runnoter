@@ -55,58 +55,55 @@ class _State extends State<ProfileUpdateEmailDialog> {
           navigateBack(context: context);
         }
       },
-      child: Dialog.fullscreen(
-        child: Scaffold(
-          appBar: AppBar(
-            title: Text(
-              AppLocalizations.of(context)!
-                  .profile_screen_new_email_dialog_title,
-            ),
-            leading: IconButton(
-              onPressed: () {
-                navigateBack(context: context);
-              },
-              icon: const Icon(Icons.close),
-            ),
-            actions: [
-              TextButton(
-                onPressed: _isSaveButtonDisabled
-                    ? null
-                    : () {
-                        _onSaveButtonPressed(context);
-                      },
-                child: Text(
-                  AppLocalizations.of(context)!.save,
-                ),
-              ),
-              const SizedBox(width: 16),
-            ],
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            AppLocalizations.of(context)!.profile_screen_new_email_dialog_title,
           ),
-          body: SafeArea(
-            child: GestureDetector(
-              onTap: () {
-                unfocusInputs();
-              },
-              child: Container(
-                padding: const EdgeInsets.all(24),
-                color: Colors.transparent,
-                child: Column(
-                  children: [
-                    TextFieldComponent(
-                      label: AppLocalizations.of(context)!.email,
-                      isRequired: true,
-                      controller: _emailController,
-                      validator: _validateEmail,
-                      icon: Icons.email,
-                    ),
-                    const SizedBox(height: 32),
-                    PasswordTextFieldComponent(
-                      label: AppLocalizations.of(context)!.password,
-                      controller: _passwordController,
-                      isRequired: true,
-                    ),
-                  ],
-                ),
+          leading: IconButton(
+            onPressed: () {
+              navigateBack(context: context);
+            },
+            icon: const Icon(Icons.close),
+          ),
+          actions: [
+            TextButton(
+              onPressed: _isSaveButtonDisabled
+                  ? null
+                  : () {
+                      _onSaveButtonPressed(context);
+                    },
+              child: Text(
+                AppLocalizations.of(context)!.save,
+              ),
+            ),
+            const SizedBox(width: 16),
+          ],
+        ),
+        body: SafeArea(
+          child: GestureDetector(
+            onTap: () {
+              unfocusInputs();
+            },
+            child: Container(
+              padding: const EdgeInsets.all(24),
+              color: Colors.transparent,
+              child: Column(
+                children: [
+                  TextFieldComponent(
+                    label: AppLocalizations.of(context)!.email,
+                    isRequired: true,
+                    controller: _emailController,
+                    validator: _validateEmail,
+                    icon: Icons.email,
+                  ),
+                  const SizedBox(height: 32),
+                  PasswordTextFieldComponent(
+                    label: AppLocalizations.of(context)!.password,
+                    controller: _passwordController,
+                    isRequired: true,
+                  ),
+                ],
               ),
             ),
           ),

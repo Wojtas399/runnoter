@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 import '../../../../domain/model/workout.dart';
 import '../../../../domain/model/workout_stage.dart';
 import '../../../../domain/model/workout_status.dart';
-import '../../../formatter/additional_workout_formatter.dart';
+import '../../../config/navigation/routes.dart';
 import '../../../formatter/date_formatter.dart';
 import '../../../formatter/workout_stage_formatter.dart';
 import '../../../formatter/workout_status_formatter.dart';
+import '../../../service/navigator_service.dart';
 import '../current_week_cubit.dart';
 
 class DayItem extends StatelessWidget {
@@ -53,7 +54,12 @@ class DayItem extends StatelessWidget {
   }
 
   void _onPressed(BuildContext context) {
-    //TODO
+    navigateTo(
+      context: context,
+      route: DayPreviewRoute(
+        arguments: day.date,
+      ),
+    );
   }
 }
 
@@ -69,7 +75,7 @@ class _Date extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(8),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
         color: isToday
             ? Theme.of(context).colorScheme.primary
@@ -116,7 +122,7 @@ class _Workout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -125,10 +131,6 @@ class _Workout extends StatelessWidget {
                   '${entry.key + 1}. ${entry.value.toUIFormat(context)}',
                 ),
               ),
-          if (workout.additionalWorkout != null)
-            Text(
-              '${workout.stages.length + 1}. ${workout.additionalWorkout!.toUIFormat(context)}',
-            ),
         ],
       ),
     );

@@ -24,7 +24,7 @@ class SignUpAlternativeOption extends StatelessWidget {
   void _onPressed(BuildContext context) {
     navigateTo(
       context: context,
-      route: Routes.signIn,
+      route: const SignInRoute(),
     );
   }
 }

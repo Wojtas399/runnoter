@@ -40,6 +40,32 @@
   "home_sign_out_confirmation_dialog_message": "Are you sure you want to sign out?",
 
 
+  "day_preview_screen_title": "Day preview",
+  "day_preview_screen_no_workout_title": "No workout",
+  "day_preview_screen_no_workout_message": "You don't have planned workout this day",
+  "day_preview_screen_add_workout_button_label": "Add workout",
+
+
+  "workout_creator_screen_title": "New workout",
+  "workout_creator_screen_workout_name": "Workout name",
+  "workout_creator_screen_workout_stages": "Workout stages",
+  "workout_creator_screen_add_stage_button_label": "Add stage",
+  "workout_creator_screen_no_stages_info": "No workout stages",
+  "workout_creator_screen_add_stage_instruction": "Tap below button to add new stage",
+  "workout_creator_screen_add_workout_button_label": "Add workout",
+  "workout_creator_screen_added_workout_message": "Successfully added workout",
+
+
+  "workout_stage_creator_screen_title": "New workout stage",
+  "workout_stage_creator_screen_stage_type": "Stage type",
+  "workout_stage_creator_screen_distance": "Distance",
+  "workout_stage_creator_screen_max_heart_rate": "Max heart rate",
+  "workout_stage_creator_screen_amount_of_series": "Amount of series",
+  "workout_stage_creator_screen_single_series_distance": "Single series distance",
+  "workout_stage_creator_screen_walking_distance": "Walking distance",
+  "workout_stage_creator_screen_jogging_distance": "Jogging distance",
+
+
   "profile_screen_title": "Profile",
   "profile_screen_user_data_section_title": "User identities",
   "profile_screen_settings_section_title": "Settings",
@@ -92,15 +118,17 @@
   "pace_unit_selection_text": "Select pace unit",
 
 
+  "workout_base_run": "Cardio",
+  "workout_zone2": "Zone2",
+  "workout_zone3": "Zone3",
   "workout_rhythms": "Rhythms",
-  "workout_strength": "Strength",
+  "workout_hill_repeats": "Hill repeats",
+  "workout_stretching": "Stretching",
+  "workout_strengthening": "Strengthening",
+  "workout_foamRolling": "Foam rolling",
   "workout_break": "break",
   "workout_march": "{marchDistanceInMeters}m marching",
   "workout_jog": "{jogDistanceInMeters}m jogging",
-
-
-  "additional_workout_stretching": "Stretching",
-  "additional_workout_strengthening": "Strengthening",
 
 
   "no_internet_connection_dialog_title": "No internet connection",
@@ -121,6 +149,7 @@
   "save": "Save",
   "delete": "Delete",
   "back": "Back",
+  "add": "Add",
 
 
   "required_field_message": "This field is required",

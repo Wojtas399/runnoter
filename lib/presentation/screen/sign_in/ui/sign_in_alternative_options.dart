@@ -37,14 +37,14 @@ class SignInAlternativeOptions extends StatelessWidget {
   void _onSignUpOptionSelected(BuildContext context) {
     navigateTo(
       context: context,
-      route: Routes.signUp,
+      route: const SignUpRoute(),
     );
   }
 
   void _onForgotPasswordSelected(BuildContext context) {
     navigateTo(
       context: context,
-      route: Routes.forgotPassword,
+      route: const ForgotPasswordRoute(),
     );
   }
 }

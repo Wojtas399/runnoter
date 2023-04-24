@@ -36,20 +36,19 @@ void main() {
         ),
         name: name,
         stages: [
-          firebase.WorkoutStageOWBDto(
+          firebase.WorkoutStageBaseRunDto(
             distanceInKilometers: 2,
             maxHeartRate: 150,
           ),
-          firebase.WorkoutStageBC2Dto(
+          firebase.WorkoutStageZone2Dto(
             distanceInKilometers: 5,
             maxHeartRate: 165,
           ),
-          firebase.WorkoutStageOWBDto(
+          firebase.WorkoutStageBaseRunDto(
             distanceInKilometers: 2,
             maxHeartRate: 150,
           ),
         ],
-        additionalWorkout: firebase.AdditionalWorkout.stretching,
       );
       final Workout expectedEntity = createWorkout(
         id: id,
@@ -64,20 +63,19 @@ void main() {
         ),
         name: name,
         stages: [
-          WorkoutStageOWB(
+          WorkoutStageBaseRun(
             distanceInKilometers: 2,
             maxHeartRate: 150,
           ),
-          WorkoutStageBC2(
+          WorkoutStageZone2(
             distanceInKilometers: 5,
             maxHeartRate: 165,
           ),
-          WorkoutStageOWB(
+          WorkoutStageBaseRun(
             distanceInKilometers: 2,
             maxHeartRate: 150,
           ),
         ],
-        additionalWorkout: AdditionalWorkout.stretching,
       );
 
       final Workout entity = mapWorkoutFromFirebase(dto);

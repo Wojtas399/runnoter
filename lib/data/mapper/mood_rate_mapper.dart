@@ -26,3 +26,28 @@ MoodRate mapMoodRateFromFirebase(firebase.MoodRate firebaseMoodRate) {
       return MoodRate.mr10;
   }
 }
+
+firebase.MoodRate mapMoodRateToFirebase(MoodRate moodRate) {
+  switch (moodRate) {
+    case MoodRate.mr1:
+      return firebase.MoodRate.mr1;
+    case MoodRate.mr2:
+      return firebase.MoodRate.mr2;
+    case MoodRate.mr3:
+      return firebase.MoodRate.mr3;
+    case MoodRate.mr4:
+      return firebase.MoodRate.mr4;
+    case MoodRate.mr5:
+      return firebase.MoodRate.mr5;
+    case MoodRate.mr6:
+      return firebase.MoodRate.mr6;
+    case MoodRate.mr7:
+      return firebase.MoodRate.mr7;
+    case MoodRate.mr8:
+      return firebase.MoodRate.mr8;
+    case MoodRate.mr9:
+      return firebase.MoodRate.mr9;
+    case MoodRate.mr10:
+      return firebase.MoodRate.mr10;
+  }
+}

@@ -4,15 +4,15 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   test(
     'from json, '
-    'owb, '
-    'should map json with type key set as owb to owb workout stage',
+    'base run, '
+    'should map json with type key set as base run to base run workout stage',
     () {
       final Map<String, dynamic> json = {
-        'name': 'owb',
+        'name': 'baseRun',
         'distanceInKilometers': 10.0,
         'maxHeartRate': 150,
       };
-      final WorkoutStageDto expectedWorkoutStageDto = WorkoutStageOWBDto(
+      final WorkoutStageDto expectedWorkoutStageDto = WorkoutStageBaseRunDto(
         distanceInKilometers: 10,
         maxHeartRate: 150,
       );
@@ -25,15 +25,15 @@ void main() {
 
   test(
     'from json, '
-    'bc2, '
-    'should map json with type key set as bc2 to bc2 workout stage',
+    'zone2, '
+    'should map json with type key set as zone2 to zone2 workout stage',
     () {
       final Map<String, dynamic> json = {
-        'name': 'bc2',
+        'name': 'zone2',
         'distanceInKilometers': 5.0,
         'maxHeartRate': 165,
       };
-      final WorkoutStageDto expectedWorkoutStageDto = WorkoutStageBC2Dto(
+      final WorkoutStageDto expectedWorkoutStageDto = WorkoutStageZone2Dto(
         distanceInKilometers: 5.0,
         maxHeartRate: 165,
       );
@@ -46,15 +46,15 @@ void main() {
 
   test(
     'from json, '
-    'bc3, '
-    'should map json with type key set as bc3 to bc3 workout stage',
+    'zone3, '
+    'should map json with type key set as zone3 to zone3 workout stage',
     () {
       final Map<String, dynamic> json = {
-        'name': 'bc3',
+        'name': 'zone3',
         'distanceInKilometers': 5.0,
         'maxHeartRate': 165,
       };
-      final WorkoutStageDto expectedWorkoutStageDto = WorkoutStageBC3Dto(
+      final WorkoutStageDto expectedWorkoutStageDto = WorkoutStageZone3Dto(
         distanceInKilometers: 5.0,
         maxHeartRate: 165,
       );
@@ -67,17 +67,18 @@ void main() {
 
   test(
     'from json, '
-    'strength, '
-    'should map json with type key set as strength to strength workout stage',
+    'hill repeats, '
+    'should map json with type key set as hill repeats to hill repeats workout stage',
     () {
       final Map<String, dynamic> json = {
-        'name': 'strength',
+        'name': 'hillRepeats',
         'amountOfSeries': 10,
         'seriesDistanceInMeters': 100,
         'breakMarchDistanceInMeters': 20,
         'breakJogDistanceInMeters': 80,
       };
-      final WorkoutStageDto expectedWorkoutStageDto = WorkoutStageStrengthDto(
+      final WorkoutStageDto expectedWorkoutStageDto =
+          WorkoutStageHillRepeatsDto(
         amountOfSeries: 10,
         seriesDistanceInMeters: 100,
         breakMarchDistanceInMeters: 20,
@@ -116,16 +117,67 @@ void main() {
   );
 
   test(
-    'to json, '
-    'owb, '
-    'should map owb workout dto to json with type key set as owb',
+    'from json, '
+    'stretching, '
+    'should map json with type key set as stretching to stretching workout stage',
     () {
-      final WorkoutStageDto dto = WorkoutStageOWBDto(
+      final Map<String, dynamic> json = {
+        'name': 'stretching',
+      };
+      const WorkoutStageDto expectedWorkoutStageDto =
+          WorkoutStageStretchingDto();
+
+      final WorkoutStageDto dto = WorkoutStageDto.fromJson(json);
+
+      expect(dto, expectedWorkoutStageDto);
+    },
+  );
+
+  test(
+    'from json, '
+    'strengthening, '
+    'should map json with type key set as strengthening to strengthening workout stage',
+    () {
+      final Map<String, dynamic> json = {
+        'name': 'strengthening',
+      };
+      const WorkoutStageDto expectedWorkoutStageDto =
+          WorkoutStageStrengtheningDto();
+
+      final WorkoutStageDto dto = WorkoutStageDto.fromJson(json);
+
+      expect(dto, expectedWorkoutStageDto);
+    },
+  );
+
+  test(
+    'from json, '
+    'foam rolling, '
+    'should map json with type key set as foam rolling to foam rolling workout stage',
+    () {
+      final Map<String, dynamic> json = {
+        'name': 'foamRolling',
+      };
+      const WorkoutStageDto expectedWorkoutStageDto =
+          WorkoutStageFoamRollingDto();
+
+      final WorkoutStageDto dto = WorkoutStageDto.fromJson(json);
+
+      expect(dto, expectedWorkoutStageDto);
+    },
+  );
+
+  test(
+    'to json, '
+    'base run, '
+    'should map base run workout dto to json with type key set as base run',
+    () {
+      final WorkoutStageDto dto = WorkoutStageBaseRunDto(
         distanceInKilometers: 10,
         maxHeartRate: 150,
       );
       final Map<String, dynamic> expectedJson = {
-        'name': 'owb',
+        'name': 'baseRun',
         'distanceInKilometers': 10.0,
         'maxHeartRate': 150,
       };
@@ -138,15 +190,15 @@ void main() {
 
   test(
     'to json, '
-    'bc2, '
-    'should map bc2 workout dto to json with type key set as bc2',
+    'zone2, '
+    'should map zone2 workout dto to json with type key set as zone2',
     () {
-      final WorkoutStageDto dto = WorkoutStageBC2Dto(
+      final WorkoutStageDto dto = WorkoutStageZone2Dto(
         distanceInKilometers: 5.0,
         maxHeartRate: 165,
       );
       final Map<String, dynamic> expectedJson = {
-        'name': 'bc2',
+        'name': 'zone2',
         'distanceInKilometers': 5.0,
         'maxHeartRate': 165,
       };
@@ -159,15 +211,15 @@ void main() {
 
   test(
     'to json, '
-    'bc3, '
-    'should map bc3 workout dto to json with type key set as bc3',
+    'zone3, '
+    'should map zone3 workout dto to json with type key set as zone3',
     () {
-      final WorkoutStageDto dto = WorkoutStageBC3Dto(
+      final WorkoutStageDto dto = WorkoutStageZone3Dto(
         distanceInKilometers: 5.0,
         maxHeartRate: 165,
       );
       final Map<String, dynamic> expectedJson = {
-        'name': 'bc3',
+        'name': 'zone3',
         'distanceInKilometers': 5.0,
         'maxHeartRate': 165,
       };
@@ -180,17 +232,17 @@ void main() {
 
   test(
     'to json, '
-    'strength, '
-    'should map strength workout dto to json with type key set as strength',
+    'hill repeats, '
+    'should map hill repeats workout dto to json with type key set as hill repeats',
     () {
-      final WorkoutStageDto dto = WorkoutStageStrengthDto(
+      final WorkoutStageDto dto = WorkoutStageHillRepeatsDto(
         amountOfSeries: 10,
         seriesDistanceInMeters: 100,
         breakMarchDistanceInMeters: 20,
         breakJogDistanceInMeters: 80,
       );
       final Map<String, dynamic> expectedJson = {
-        'name': 'strength',
+        'name': 'hillRepeats',
         'amountOfSeries': 10,
         'seriesDistanceInMeters': 100,
         'breakMarchDistanceInMeters': 20,
@@ -220,6 +272,54 @@ void main() {
         'seriesDistanceInMeters': 100,
         'breakMarchDistanceInMeters': 0,
         'breakJogDistanceInMeters': 200,
+      };
+
+      final Map<String, dynamic> json = dto.toJson();
+
+      expect(json, expectedJson);
+    },
+  );
+
+  test(
+    'to json, '
+    'stretching, '
+    'should map stretching workout dto to json with type key set as stretching',
+    () {
+      const WorkoutStageDto dto = WorkoutStageStretchingDto();
+      final Map<String, dynamic> expectedJson = {
+        'name': 'stretching',
+      };
+
+      final Map<String, dynamic> json = dto.toJson();
+
+      expect(json, expectedJson);
+    },
+  );
+
+  test(
+    'to json, '
+    'strengthening, '
+    'should map strengthening workout dto to json with type key set as strengthening',
+    () {
+      const WorkoutStageDto dto = WorkoutStageStrengtheningDto();
+      final Map<String, dynamic> expectedJson = {
+        'name': 'strengthening',
+      };
+
+      final Map<String, dynamic> json = dto.toJson();
+
+      expect(json, expectedJson);
+    },
+  );
+
+  test(
+    'to json, '
+    'foam rolling, '
+    'should map foam rolling workout dto to json with type key set as foam rolling',
+    () {
+      const WorkoutStageDto dto = WorkoutStageFoamRollingDto();
+      final Map<String, dynamic> expectedJson = {
+        'name': 'foamRolling',
       };
 
       final Map<String, dynamic> json = dto.toJson();

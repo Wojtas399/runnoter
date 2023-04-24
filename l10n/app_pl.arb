@@ -143,6 +143,92 @@
   },
 
 
+  "day_preview_screen_title": "Podgląd dnia",
+  "@day_preview_screen_title": {
+    "description": "Title of the day preview screen"
+  },
+  "day_preview_screen_no_workout_title": "Brak treningu",
+  "@day_preview_screen_no_workout_title": {
+    "description": "Title of the information about no workout"
+  },
+  "day_preview_screen_no_workout_message": "Tego dnia nie masz zaplanowanego treningu",
+  "@day_preview_screen_no_workout_message": {
+    "description": "Message of the information about no workout"
+  },
+  "day_preview_screen_add_workout_button_label": "Dodaj trening",
+  "@day_preview_screen_add_workout_button_label": {
+    "description": "Label of the button to add workout"
+  },
+
+
+  "workout_creator_screen_title": "Nowy trening",
+  "@workout_creator_screen_title": {
+    "description": "Title of the workout creator screen"
+  },
+  "workout_creator_screen_workout_name": "Nazwa treningu",
+  "@workout_creator_screen_workout_name": {
+    "description": "Workout name"
+  },
+  "workout_creator_screen_workout_stages": "Etapy treningu",
+  "@workout_creator_screen_workout_stages": {
+    "description": "Label of the workout stages section"
+  },
+  "workout_creator_screen_add_stage_button_label": "Dodaj etap",
+  "@workout_creator_screen_add_stage_button_label": {
+    "description": "Label of the button to add workout stage"
+  },
+  "workout_creator_screen_no_stages_info": "Brak etapów treningu",
+  "@workout_creator_screen_no_stages_info": {
+    "description": "Info about no workout stages"
+  },
+  "workout_creator_screen_add_stage_instruction": "Naciśnij poniższy przycisk, aby dodać nowy etap",
+  "@workout_creator_screen_add_stage_instructions": {
+    "description": "Instruction on how to add new workout stage"
+  },
+  "workout_creator_screen_add_workout_button_label": "Dodaj trening",
+  "@workout_creator_screen_add_workout_button_label": {
+    "description": "Label of the button to add workout"
+  },
+  "workout_creator_screen_added_workout_message": "Pomyślnie dodano trening",
+  "@workout_creator_screen_added_workout_message": {
+    "description": "Message to inform that workout has been added"
+  },
+
+
+  "workout_stage_creator_screen_title": "Nowy etap treningu",
+  "@workout_stage_creator_screen_title": {
+    "description": "Title of the workout stage creator screen"
+  },
+  "workout_stage_creator_screen_stage_type": "Rodzaj etapu",
+  "@workout_stage_creator_screen_stage_type": {
+    "description": "Workout stage type"
+  },
+  "workout_stage_creator_screen_distance": "Dystans",
+  "@workout_stage_creator_screen_distance": {
+    "description": "Distance"
+  },
+  "workout_stage_creator_screen_max_heart_rate": "Tętno maksymalne",
+  "@workout_stage_creator_screen_max_heart_rate": {
+    "description": "Max heart rate"
+  },
+  "workout_stage_creator_screen_amount_of_series": "Ilość serii",
+  "@workout_stage_creator_screen_amount_of_series": {
+    "description": "Amount of series"
+  },
+  "workout_stage_creator_screen_single_series_distance": "Dystans pojedynczej serii",
+  "@workout_stage_creator_screen_single_series_distance": {
+    "description": "Single series distance"
+  },
+  "workout_stage_creator_screen_walking_distance": "Dystans marszu",
+  "@workout_stage_creator_screen_walking_distance": {
+    "description": "Walking distance"
+  },
+  "workout_stage_creator_screen_jogging_distance": "Dystans truchtu",
+  "@workout_stage_creator_screen_jogging_distance": {
+    "description": "Jogging distance"
+  },
+
+
   "profile_screen_title": "Profil",
   "@profile_screen_title": {
     "description": "Title of the profile screen"
@@ -321,13 +407,37 @@
   },
 
 
+  "workout_base_run": "OWB1",
+  "@workout_base_run": {
+    "description": "Type of workout stage called base run"
+  },
+  "workout_zone2": "BC2",
+  "@workout_zone2": {
+    "description": "Type of workout stage called zone 2"
+  },
+  "workout_zone3": "BC3",
+  "@workout_zone3": {
+    "description": "Type of workout stage called zone 3"
+  },
   "workout_rhythms": "Rytmy",
   "@workout_rhythms": {
-    "description": "Type of training stage called rhythms"
+    "description": "Type of workout stage called rhythms"
   },
-  "workout_strength": "Siła",
-  "@workout_strength": {
-    "description": "Type of training stage called strength"
+  "workout_hill_repeats": "Podbiegi",
+  "@workout_hill_repeats": {
+    "description": "Type of workout stage called hill repeats"
+  },
+  "workout_stretching": "Rozciąganie",
+  "@workout_stretching": {
+    "description": "Type of workout stage called stretching"
+  },
+  "workout_strengthening": "Ćwiczenia wzmacniające",
+  "@workout_strengthening": {
+    "description": "Type of workout stage called strengthening"
+  },
+  "workout_foamRolling": "Rolowanie",
+  "@workout_foamRolling": {
+    "description": "Type of workout stage called foam rolling"
   },
   "workout_break": "przerwa",
   "@workout_break": {
@@ -352,16 +462,6 @@
         "example": "500"
       }
     }
-  },
-
-
-  "additional_workout_stretching": "Rozciąganie",
-  "@additional_workout_stretching": {
-    "description": "Stretching"
-  },
-  "additional_workout_strengthening": "Ćwiczenia wzmacniające",
-  "@additional_workout_strengthening": {
-    "description": "Strengthening"
   },
 
 
@@ -430,6 +530,10 @@
   "back": "Wróć",
   "@back": {
     "description": "Back"
+  },
+  "add": "Dodaj",
+  "@add": {
+    "description": "Add"
   },
 
 

@@ -70,7 +70,10 @@ class _Theme extends StatelessWidget {
   }
 
   void _onPressed(BuildContext context) {
-    navigateTo(context: context, route: Routes.themeMode);
+    navigateTo(
+      context: context,
+      route: const ThemeModeRoute(),
+    );
   }
 }
 
@@ -94,7 +97,10 @@ class _Language extends StatelessWidget {
   }
 
   void _onPressed(BuildContext context) {
-    navigateTo(context: context, route: Routes.language);
+    navigateTo(
+      context: context,
+      route: const LanguageRoute(),
+    );
   }
 }
 
@@ -118,7 +124,10 @@ class _DistanceUnit extends StatelessWidget {
   }
 
   void _onPressed(BuildContext context) {
-    navigateTo(context: context, route: Routes.distanceUnit);
+    navigateTo(
+      context: context,
+      route: const DistanceUnitRoute(),
+    );
   }
 }
 
@@ -142,6 +151,9 @@ class _PaceUnit extends StatelessWidget {
   }
 
   void _onPressed(BuildContext context) {
-    navigateTo(context: context, route: Routes.paceUnit);
+    navigateTo(
+      context: context,
+      route: const PaceUnitRoute(),
+    );
   }
 }

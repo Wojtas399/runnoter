@@ -7,7 +7,6 @@ WorkoutDto createWorkoutDto({
   WorkoutStatusDto status = const WorkoutStatusPendingDto(),
   String name = '',
   List<WorkoutStageDto> stages = const [],
-  AdditionalWorkout? additionalWorkout,
 }) {
   return WorkoutDto(
     id: id,
@@ -16,6 +15,5 @@ WorkoutDto createWorkoutDto({
     status: status,
     name: name,
     stages: stages,
-    additionalWorkout: additionalWorkout,
   );
 }

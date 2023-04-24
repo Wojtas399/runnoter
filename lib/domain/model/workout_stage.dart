@@ -4,8 +4,8 @@ abstract class WorkoutStage extends Equatable {
   const WorkoutStage();
 }
 
-class WorkoutStageOWB extends WorkoutStage with DistanceWorkout {
-  WorkoutStageOWB({
+class WorkoutStageBaseRun extends WorkoutStage with DistanceWorkout {
+  WorkoutStageBaseRun({
     required double distanceInKilometers,
     required int maxHeartRate,
   })  : assert(distanceInKilometers > 0),
@@ -21,8 +21,8 @@ class WorkoutStageOWB extends WorkoutStage with DistanceWorkout {
       ];
 }
 
-class WorkoutStageBC2 extends WorkoutStage with DistanceWorkout {
-  WorkoutStageBC2({
+class WorkoutStageZone2 extends WorkoutStage with DistanceWorkout {
+  WorkoutStageZone2({
     required double distanceInKilometers,
     required int maxHeartRate,
   })  : assert(distanceInKilometers > 0),
@@ -38,8 +38,8 @@ class WorkoutStageBC2 extends WorkoutStage with DistanceWorkout {
       ];
 }
 
-class WorkoutStageBC3 extends WorkoutStage with DistanceWorkout {
-  WorkoutStageBC3({
+class WorkoutStageZone3 extends WorkoutStage with DistanceWorkout {
+  WorkoutStageZone3({
     required double distanceInKilometers,
     required int maxHeartRate,
   })  : assert(distanceInKilometers > 0),
@@ -55,8 +55,8 @@ class WorkoutStageBC3 extends WorkoutStage with DistanceWorkout {
       ];
 }
 
-class WorkoutStageStrength extends WorkoutStage with SeriesWorkout {
-  WorkoutStageStrength({
+class WorkoutStageHillRepeats extends WorkoutStage with SeriesWorkout {
+  WorkoutStageHillRepeats({
     required int amountOfSeries,
     required int seriesDistanceInMeters,
     required int breakMarchDistanceInMeters,
@@ -101,6 +101,27 @@ class WorkoutStageRhythms extends WorkoutStage with SeriesWorkout {
         breakMarchDistanceInMeters,
         breakJogDistanceInMeters,
       ];
+}
+
+class WorkoutStageStretching extends WorkoutStage {
+  const WorkoutStageStretching();
+
+  @override
+  List<Object> get props => [];
+}
+
+class WorkoutStageStrengthening extends WorkoutStage {
+  const WorkoutStageStrengthening();
+
+  @override
+  List<Object> get props => [];
+}
+
+class WorkoutStageFoamRolling extends WorkoutStage {
+  const WorkoutStageFoamRolling();
+
+  @override
+  List<Object> get props => [];
 }
 
 mixin DistanceWorkout on WorkoutStage {

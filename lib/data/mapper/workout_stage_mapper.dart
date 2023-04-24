@@ -3,23 +3,23 @@ import 'package:firebase/firebase.dart';
 import '../../domain/model/workout_stage.dart';
 
 WorkoutStage mapWorkoutStageFromFirebase(WorkoutStageDto workoutStageDto) {
-  if (workoutStageDto is WorkoutStageOWBDto) {
-    return WorkoutStageOWB(
+  if (workoutStageDto is WorkoutStageBaseRunDto) {
+    return WorkoutStageBaseRun(
       distanceInKilometers: workoutStageDto.distanceInKilometers,
       maxHeartRate: workoutStageDto.maxHeartRate,
     );
-  } else if (workoutStageDto is WorkoutStageBC2Dto) {
-    return WorkoutStageBC2(
+  } else if (workoutStageDto is WorkoutStageZone2Dto) {
+    return WorkoutStageZone2(
       distanceInKilometers: workoutStageDto.distanceInKilometers,
       maxHeartRate: workoutStageDto.maxHeartRate,
     );
-  } else if (workoutStageDto is WorkoutStageBC3Dto) {
-    return WorkoutStageBC3(
+  } else if (workoutStageDto is WorkoutStageZone3Dto) {
+    return WorkoutStageZone3(
       distanceInKilometers: workoutStageDto.distanceInKilometers,
       maxHeartRate: workoutStageDto.maxHeartRate,
     );
-  } else if (workoutStageDto is WorkoutStageStrengthDto) {
-    return WorkoutStageStrength(
+  } else if (workoutStageDto is WorkoutStageHillRepeatsDto) {
+    return WorkoutStageHillRepeats(
       amountOfSeries: workoutStageDto.amountOfSeries,
       seriesDistanceInMeters: workoutStageDto.seriesDistanceInMeters,
       breakMarchDistanceInMeters: workoutStageDto.breakMarchDistanceInMeters,
@@ -32,6 +32,53 @@ WorkoutStage mapWorkoutStageFromFirebase(WorkoutStageDto workoutStageDto) {
       breakMarchDistanceInMeters: workoutStageDto.breakMarchDistanceInMeters,
       breakJogDistanceInMeters: workoutStageDto.breakJogDistanceInMeters,
     );
+  } else if (workoutStageDto is WorkoutStageStretchingDto) {
+    return const WorkoutStageStretching();
+  } else if (workoutStageDto is WorkoutStageStrengtheningDto) {
+    return const WorkoutStageStrengthening();
+  } else if (workoutStageDto is WorkoutStageFoamRollingDto) {
+    return const WorkoutStageFoamRolling();
+  } else {
+    throw '[WorkoutStageMapper] Unknown workout stage dto';
+  }
+}
+
+WorkoutStageDto mapWorkoutStageToFirebase(WorkoutStage workoutStage) {
+  if (workoutStage is WorkoutStageBaseRun) {
+    return WorkoutStageBaseRunDto(
+      distanceInKilometers: workoutStage.distanceInKilometers,
+      maxHeartRate: workoutStage.maxHeartRate,
+    );
+  } else if (workoutStage is WorkoutStageZone2) {
+    return WorkoutStageZone2Dto(
+      distanceInKilometers: workoutStage.distanceInKilometers,
+      maxHeartRate: workoutStage.maxHeartRate,
+    );
+  } else if (workoutStage is WorkoutStageZone3) {
+    return WorkoutStageZone3Dto(
+      distanceInKilometers: workoutStage.distanceInKilometers,
+      maxHeartRate: workoutStage.maxHeartRate,
+    );
+  } else if (workoutStage is WorkoutStageHillRepeats) {
+    return WorkoutStageHillRepeatsDto(
+      amountOfSeries: workoutStage.amountOfSeries,
+      seriesDistanceInMeters: workoutStage.seriesDistanceInMeters,
+      breakMarchDistanceInMeters: workoutStage.breakMarchDistanceInMeters,
+      breakJogDistanceInMeters: workoutStage.breakJogDistanceInMeters,
+    );
+  } else if (workoutStage is WorkoutStageRhythms) {
+    return WorkoutStageRhythmsDto(
+      amountOfSeries: workoutStage.amountOfSeries,
+      seriesDistanceInMeters: workoutStage.seriesDistanceInMeters,
+      breakMarchDistanceInMeters: workoutStage.breakMarchDistanceInMeters,
+      breakJogDistanceInMeters: workoutStage.breakJogDistanceInMeters,
+    );
+  } else if (workoutStage is WorkoutStageStretching) {
+    return const WorkoutStageStretchingDto();
+  } else if (workoutStage is WorkoutStageStrengthening) {
+    return const WorkoutStageStrengtheningDto();
+  } else if (workoutStage is WorkoutStageFoamRolling) {
+    return const WorkoutStageFoamRollingDto();
   } else {
     throw '[WorkoutStageMapper] Unknown workout stage';
   }

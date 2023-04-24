@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../screen/day_preview/ui/day_preview_screen.dart';
 import '../../screen/distance_unit/distance_unit_screen.dart';
 import '../../screen/forgot_password/ui/forgot_password_screen.dart';
 import '../../screen/home/ui/home_screen.dart';
@@ -9,6 +10,7 @@ import '../../screen/profile/ui/profile_screen.dart';
 import '../../screen/sign_in/ui/sign_in_screen.dart';
 import '../../screen/sign_up/ui/sign_up_screen.dart';
 import '../../screen/theme_mode/theme_mode_screen.dart';
+import '../../screen/workout_creator/ui/workout_creator_screen.dart';
 import '../animation/slide_to_top_anim.dart';
 import 'routes.dart';
 
@@ -20,7 +22,7 @@ class AppNavigator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Navigator(
-      initialRoute: Routes.signIn.path,
+      initialRoute: RoutePath.signIn.path,
       onGenerateRoute: _onGenerateRoute,
     );
   }
@@ -29,26 +31,34 @@ class AppNavigator extends StatelessWidget {
     final String? routePath = settings.name;
     bool isSlideToTopAnim = false;
     Widget screen = const SignInScreen();
-    if (routePath == Routes.signIn.path) {
+    if (routePath == RoutePath.signIn.path) {
       screen = const SignInScreen();
-    } else if (routePath == Routes.signUp.path) {
+    } else if (routePath == RoutePath.signUp.path) {
       screen = const SignUpScreen();
-    } else if (routePath == Routes.forgotPassword.path) {
+    } else if (routePath == RoutePath.forgotPassword.path) {
       screen = const ForgotPasswordScreen();
-    } else if (routePath == Routes.home.path) {
+    } else if (routePath == RoutePath.home.path) {
       screen = const HomeScreen();
-    } else if (routePath == Routes.profile.path) {
+    } else if (routePath == RoutePath.dayPreview.path) {
+      screen = DayPreviewScreen(
+        date: settings.arguments as DateTime,
+      );
+    } else if (routePath == RoutePath.workoutCreator.path) {
+      screen = WorkoutCreatorScreen(
+        date: settings.arguments as DateTime,
+      );
+    } else if (routePath == RoutePath.profile.path) {
       screen = const ProfileScreen();
-    } else if (routePath == Routes.themeMode.path) {
+    } else if (routePath == RoutePath.themeMode.path) {
       screen = const ThemeModeScreen();
       isSlideToTopAnim = true;
-    } else if (routePath == Routes.language.path) {
+    } else if (routePath == RoutePath.language.path) {
       screen = const LanguageScreen();
       isSlideToTopAnim = true;
-    } else if (routePath == Routes.distanceUnit.path) {
+    } else if (routePath == RoutePath.distanceUnit.path) {
       screen = const DistanceUnitScreen();
       isSlideToTopAnim = true;
-    } else if (routePath == Routes.paceUnit.path) {
+    } else if (routePath == RoutePath.paceUnit.path) {
       screen = const PaceUnitScreen();
       isSlideToTopAnim = true;
     }

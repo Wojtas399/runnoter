@@ -52,59 +52,57 @@ class _State extends State<ProfileUpdatePasswordDialog> {
           navigateBack(context: context);
         }
       },
-      child: Dialog.fullscreen(
-        child: Scaffold(
-          appBar: AppBar(
-            title: Text(
-              AppLocalizations.of(context)!
-                  .profile_screen_new_password_dialog_title,
-            ),
-            leading: IconButton(
-              onPressed: () {
-                navigateBack(context: context);
-              },
-              icon: const Icon(Icons.close),
-            ),
-            actions: [
-              TextButton(
-                onPressed: _isSaveButtonDisabled
-                    ? null
-                    : () {
-                        _onSaveButtonPressed(context);
-                      },
-                child: Text(
-                  AppLocalizations.of(context)!.save,
-                ),
-              ),
-              const SizedBox(width: 16),
-            ],
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            AppLocalizations.of(context)!
+                .profile_screen_new_password_dialog_title,
           ),
-          body: SafeArea(
-            child: GestureDetector(
-              onTap: () {
-                unfocusInputs();
-              },
-              child: Container(
-                padding: const EdgeInsets.all(24),
-                color: Colors.transparent,
-                child: Column(
-                  children: [
-                    PasswordTextFieldComponent(
-                      label: AppLocalizations.of(context)!
-                          .profile_screen_new_password_dialog_new_password_label,
-                      isRequired: true,
-                      controller: _newPasswordController,
-                      validator: _validatePassword,
-                    ),
-                    const SizedBox(height: 32),
-                    PasswordTextFieldComponent(
-                      label: AppLocalizations.of(context)!
-                          .profile_screen_new_password_dialog_current_password_label,
-                      isRequired: true,
-                      controller: _currentPasswordController,
-                    ),
-                  ],
-                ),
+          leading: IconButton(
+            onPressed: () {
+              navigateBack(context: context);
+            },
+            icon: const Icon(Icons.close),
+          ),
+          actions: [
+            TextButton(
+              onPressed: _isSaveButtonDisabled
+                  ? null
+                  : () {
+                      _onSaveButtonPressed(context);
+                    },
+              child: Text(
+                AppLocalizations.of(context)!.save,
+              ),
+            ),
+            const SizedBox(width: 16),
+          ],
+        ),
+        body: SafeArea(
+          child: GestureDetector(
+            onTap: () {
+              unfocusInputs();
+            },
+            child: Container(
+              padding: const EdgeInsets.all(24),
+              color: Colors.transparent,
+              child: Column(
+                children: [
+                  PasswordTextFieldComponent(
+                    label: AppLocalizations.of(context)!
+                        .profile_screen_new_password_dialog_new_password_label,
+                    isRequired: true,
+                    controller: _newPasswordController,
+                    validator: _validatePassword,
+                  ),
+                  const SizedBox(height: 32),
+                  PasswordTextFieldComponent(
+                    label: AppLocalizations.of(context)!
+                        .profile_screen_new_password_dialog_current_password_label,
+                    isRequired: true,
+                    controller: _currentPasswordController,
+                  ),
+                ],
               ),
             ),
           ),

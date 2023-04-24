@@ -9,7 +9,6 @@ Workout createWorkout({
   WorkoutStatus status = const WorkoutStatusPending(),
   String name = '',
   List<WorkoutStage> stages = const [],
-  AdditionalWorkout? additionalWorkout,
 }) {
   return Workout(
     id: id,
@@ -18,6 +17,5 @@ Workout createWorkout({
     status: status,
     name: name,
     stages: stages,
-    additionalWorkout: additionalWorkout,
   );
 }

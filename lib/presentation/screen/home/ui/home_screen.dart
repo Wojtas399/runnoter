@@ -75,7 +75,7 @@ class _BlocListener extends StatelessWidget {
       case HomeInfo.userSignedOut:
         navigateAndRemoveUntil(
           context: context,
-          route: Routes.signIn,
+          route: const SignInRoute(),
         );
         break;
     }

@@ -22,9 +22,7 @@ class BigButton extends StatelessWidget {
           height: 52,
           child: FilledButton(
             onPressed: isDisabled ? null : onPressed,
-            child: Text(
-              label.toUpperCase(),
-            ),
+            child: Text(label),
           ),
         ),
       ],
