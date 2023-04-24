@@ -9,6 +9,11 @@ abstract class WorkoutRepository {
     required DateTime endDate,
   });
 
+  Stream<Workout?> getWorkoutByUserIdAndDate({
+    required String userId,
+    required DateTime date,
+  });
+
   Future<void> addWorkout({
     required String userId,
     required String workoutName,

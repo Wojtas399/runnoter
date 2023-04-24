@@ -27,7 +27,7 @@ class WorkoutDto extends Equatable {
   }) : this(
           id: docId,
           userId: userId,
-          date: mapDateTimeFromString(json?[_dateField]),
+          date: mapDateTimeFromString(json?[workoutDtoDateField]),
           status: WorkoutStatusDto.fromJson(json?[_statusField]),
           name: json?[_nameField],
           stages: (json?[_stagesField] as List)
@@ -47,7 +47,7 @@ class WorkoutDto extends Equatable {
       ];
 
   Map<String, dynamic> toJson() => {
-        _dateField: mapDateTimeToString(date),
+        workoutDtoDateField: mapDateTimeToString(date),
         _statusField: status.toJson(),
         _nameField: name,
         _stagesField: stages.map(
@@ -56,7 +56,7 @@ class WorkoutDto extends Equatable {
       };
 }
 
-const String _dateField = 'date';
+const String workoutDtoDateField = 'date';
 const String _statusField = 'status';
 const String _nameField = 'name';
 const String _stagesField = 'stages';

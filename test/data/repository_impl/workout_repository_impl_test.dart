@@ -65,10 +65,16 @@ void main() {
       ];
       final List<firebase.WorkoutDto> newlyLoadedWorkoutDtos = [
         createWorkoutDto(
-          id: 'w5',
+          id: 'w1',
           userId: userId,
           date: DateTime(2023, 4, 6),
           name: 'workout name 1.2',
+        ),
+        createWorkoutDto(
+          id: 'w5',
+          userId: userId,
+          date: DateTime(2023, 4, 6),
+          name: 'workout name 5',
         ),
       ];
       when(
@@ -115,12 +121,17 @@ void main() {
               existingWorkouts[0],
             ],
             [
-              existingWorkouts[0],
+              createWorkout(
+                id: existingWorkouts.first.id,
+                userId: userId,
+                date: existingWorkouts.first.date,
+                name: 'workout name 1.2',
+              ),
               createWorkout(
                 id: 'w5',
                 userId: userId,
                 date: DateTime(2023, 4, 6),
-                name: 'workout name 1.2',
+                name: 'workout name 5',
               ),
             ],
           ],
@@ -131,6 +142,61 @@ void main() {
           userId: userId,
           startDate: startDate,
           endDate: endDate,
+        ),
+      ).called(1);
+    },
+  );
+
+  test(
+    'get workout by user id and date, '
+    'should emit workout if it exists in repository and should call firebase method to load workout',
+    () {
+      final DateTime date = DateTime(2023, 2, 1);
+      final Workout expectedWorkoutFromRepo = createWorkout(
+        id: 'w1',
+        userId: userId,
+        date: date,
+        name: 'workout name',
+      );
+      final Workout expectedWorkoutFromFirebase = createWorkout(
+        id: 'w1',
+        userId: userId,
+        date: date,
+        name: 'firebase workout name',
+      );
+      final WorkoutDto expectedWorkoutDto = createWorkoutDto(
+        id: expectedWorkoutFromFirebase.id,
+        userId: userId,
+        date: date,
+        name: expectedWorkoutFromFirebase.name,
+      );
+      dateService.mockAreDatesTheSame(expected: true);
+      firebaseWorkoutService.mockLoadWorkoutByUserIdAndDate(
+        workoutDto: expectedWorkoutDto,
+      );
+      repository = createRepository(
+        initialState: [expectedWorkoutFromRepo],
+      );
+
+      final Stream<Workout?> workout$ = repository.getWorkoutByUserIdAndDate(
+        userId: userId,
+        date: date,
+      );
+      workout$.listen((_) {});
+
+      expect(
+        workout$,
+        emitsInOrder(
+          [
+            expectedWorkoutFromRepo,
+            expectedWorkoutFromFirebase,
+          ],
+        ),
+      );
+      verify(
+        () => firebaseWorkoutService.loadWorkoutByUserIdAndDate(
+          userId: userId,
+          date: date,
         ),
       ).called(1);
     },

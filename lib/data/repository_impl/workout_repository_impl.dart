@@ -33,27 +33,39 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
   }) {
     return dataStream$
         .map(
-      (List<Workout>? workouts) => workouts
-          ?.where(
-            (Workout workout) =>
-                workout.userId == userId &&
-                _dateService.isDateFromRange(
-                  date: workout.date,
-                  startDate: startDate,
-                  endDate: endDate,
-                ),
-          )
-          .toList(),
-    )
+          (List<Workout>? workouts) =>
+              _findWorkoutsMatchingToUserIdAndDateRange(
+            workouts,
+            userId,
+            startDate,
+            endDate,
+          ),
+        )
         .doOnListen(
-      () {
-        _loadWorkoutsByUserIdAndDateRangeFromRemoteDb(
-          userId,
-          startDate,
-          endDate,
+          () => _loadWorkoutsByUserIdAndDateRangeFromRemoteDb(
+            userId,
+            startDate,
+            endDate,
+          ),
         );
-      },
-    );
+  }
+
+  @override
+  Stream<Workout?> getWorkoutByUserIdAndDate({
+    required String userId,
+    required DateTime date,
+  }) {
+    return dataStream$
+        .map(
+          (workouts) => _findWorkoutMatchingToUserIdAndDate(
+            workouts,
+            userId,
+            date,
+          ),
+        )
+        .doOnListen(
+          () => _loadWorkoutByUserIdAndDate(userId, date),
+        );
   }
 
   @override
@@ -77,6 +89,37 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
     }
   }
 
+  List<Workout>? _findWorkoutsMatchingToUserIdAndDateRange(
+    List<Workout>? workouts,
+    String userId,
+    DateTime startDate,
+    DateTime endDate,
+  ) =>
+      workouts
+          ?.where(
+            (Workout workout) =>
+                workout.userId == userId &&
+                _dateService.isDateFromRange(
+                  date: workout.date,
+                  startDate: startDate,
+                  endDate: endDate,
+                ),
+          )
+          .toList();
+
+  Workout? _findWorkoutMatchingToUserIdAndDate(
+    List<Workout>? workouts,
+    String userId,
+    DateTime date,
+  ) =>
+      <Workout?>[...?workouts].firstWhere(
+        (Workout? workout) =>
+            workout != null &&
+            workout.userId == userId &&
+            _dateService.areDatesTheSame(workout.date, date),
+        orElse: () => null,
+      );
+
   Future<void> _loadWorkoutsByUserIdAndDateRangeFromRemoteDb(
     String userId,
     DateTime startDate,
@@ -97,5 +140,21 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
         )
         .toList();
     addEntities(workouts);
+  }
+
+  Future<void> _loadWorkoutByUserIdAndDate(
+    String userId,
+    DateTime date,
+  ) async {
+    final WorkoutDto? workoutDto =
+        await _firebaseWorkoutService.loadWorkoutByUserIdAndDate(
+      userId: userId,
+      date: date,
+    );
+    if (workoutDto == null) {
+      return;
+    }
+    final Workout workout = mapWorkoutFromFirebase(workoutDto);
+    addEntity(workout);
   }
 }

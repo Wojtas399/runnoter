@@ -27,13 +27,31 @@ class StateRepository<T extends Entity> {
 
   void addEntity(T entity) {
     final List<T> updatedData = [...?_dataStream.value];
-    updatedData.add(entity);
+    final List<String> idsOfExistingEntities = _getIdsOfExistingEntities();
+    if (idsOfExistingEntities.contains(entity.id)) {
+      final int entityIndex = updatedData.indexWhere(
+        (element) => element.id == entity.id,
+      );
+      updatedData[entityIndex] = entity;
+    } else {
+      updatedData.add(entity);
+    }
     _dataStream.add(updatedData);
   }
 
   void addEntities(List<T> entities) {
     final List<T> updatedData = [...?_dataStream.value];
-    updatedData.addAll(entities);
+    final List<String> existingEntityIds = _getIdsOfExistingEntities();
+    for (final T entity in entities) {
+      if (existingEntityIds.contains(entity.id)) {
+        final int entityIndex = updatedData.indexWhere(
+          (element) => element.id == entity.id,
+        );
+        updatedData[entityIndex] = entity;
+      } else {
+        updatedData.add(entity);
+      }
+    }
     _dataStream.add(updatedData);
   }
 
@@ -54,4 +72,7 @@ class StateRepository<T extends Entity> {
     updatedData.removeWhere((entity) => entity.id == entityId);
     _dataStream.add(updatedData);
   }
+
+  List<String> _getIdsOfExistingEntities() =>
+      [...?_dataStream.value].map((T entity) => entity.id).toList();
 }
