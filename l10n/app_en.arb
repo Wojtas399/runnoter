@@ -131,6 +131,11 @@
   "workout_jog": "{jogDistanceInMeters}m jogging",
 
 
+  "workout_status_pending": "Pending",
+  "workout_status_done": "Done",
+  "workout_status_failed": "Failed",
+
+
   "no_internet_connection_dialog_title": "No internet connection",
   "no_internet_connection_dialog_message": "It seems that you lost internet connection. Resolve this problem and try again",
   "unknown_error_dialog_title": "Unknown error",
