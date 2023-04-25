@@ -118,17 +118,17 @@
   "pace_unit_selection_text": "Select pace unit",
 
 
-  "workout_base_run": "Cardio",
-  "workout_zone2": "Zone2",
-  "workout_zone3": "Zone3",
-  "workout_rhythms": "Rhythms",
-  "workout_hill_repeats": "Hill repeats",
-  "workout_stretching": "Stretching",
-  "workout_strengthening": "Strengthening",
-  "workout_foamRolling": "Foam rolling",
-  "workout_break": "break",
-  "workout_march": "{marchDistanceInMeters}m marching",
-  "workout_jog": "{jogDistanceInMeters}m jogging",
+  "workout_stage_base_run": "Cardio",
+  "workout_stage_zone2": "Zone2",
+  "workout_stage_zone3": "Zone3",
+  "workout_stage_rhythms": "Rhythms",
+  "workout_stage_hill_repeats": "Hill repeats",
+  "workout_stage_stretching": "Stretching",
+  "workout_stage_strengthening": "Strengthening",
+  "workout_stage_foamRolling": "Foam rolling",
+  "workout_stage_break": "break",
+  "workout_stage_march": "{marchDistanceInMeters}m marching",
+  "workout_stage_jog": "{jogDistanceInMeters}m jogging",
 
 
   "workout_status_pending": "Pending",

@@ -13,9 +13,9 @@ void main() {
         breakMarchDistanceInMeters: 20,
         breakJogDistanceInMeters: 80,
       );
-      const int expectedTotalDistance = 10 * (100 + 20 + 80);
+      const double expectedTotalDistance = (10 * (100 + 20 + 80)) / 1000;
 
-      final int totalDistance = calculateTotalDistanceOfSeriesWorkout(
+      final double totalDistance = calculateTotalDistanceInKmOfSeriesWorkout(
         seriesWorkoutStage,
       );
 

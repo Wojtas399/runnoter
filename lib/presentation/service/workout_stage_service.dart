@@ -1,8 +1,11 @@
 import '../../domain/model/workout_stage.dart';
 
-int calculateTotalDistanceOfSeriesWorkout(SeriesWorkout seriesWorkout) {
-  return seriesWorkout.amountOfSeries *
-      (seriesWorkout.seriesDistanceInMeters +
-          seriesWorkout.breakMarchDistanceInMeters +
-          seriesWorkout.breakJogDistanceInMeters);
+double calculateTotalDistanceInKmOfSeriesWorkout(
+  SeriesWorkoutStage stage,
+) {
+  final int distanceInMeters = stage.amountOfSeries *
+      (stage.seriesDistanceInMeters +
+          stage.breakMarchDistanceInMeters +
+          stage.breakJogDistanceInMeters);
+  return distanceInMeters / 1000;
 }

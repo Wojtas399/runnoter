@@ -4,7 +4,7 @@ abstract class WorkoutStage extends Equatable {
   const WorkoutStage();
 }
 
-class WorkoutStageBaseRun extends WorkoutStage with DistanceWorkout {
+class WorkoutStageBaseRun extends WorkoutStage with DistanceWorkoutStage {
   WorkoutStageBaseRun({
     required double distanceInKilometers,
     required int maxHeartRate,
@@ -21,7 +21,7 @@ class WorkoutStageBaseRun extends WorkoutStage with DistanceWorkout {
       ];
 }
 
-class WorkoutStageZone2 extends WorkoutStage with DistanceWorkout {
+class WorkoutStageZone2 extends WorkoutStage with DistanceWorkoutStage {
   WorkoutStageZone2({
     required double distanceInKilometers,
     required int maxHeartRate,
@@ -38,7 +38,7 @@ class WorkoutStageZone2 extends WorkoutStage with DistanceWorkout {
       ];
 }
 
-class WorkoutStageZone3 extends WorkoutStage with DistanceWorkout {
+class WorkoutStageZone3 extends WorkoutStage with DistanceWorkoutStage {
   WorkoutStageZone3({
     required double distanceInKilometers,
     required int maxHeartRate,
@@ -55,7 +55,7 @@ class WorkoutStageZone3 extends WorkoutStage with DistanceWorkout {
       ];
 }
 
-class WorkoutStageHillRepeats extends WorkoutStage with SeriesWorkout {
+class WorkoutStageHillRepeats extends WorkoutStage with SeriesWorkoutStage {
   WorkoutStageHillRepeats({
     required int amountOfSeries,
     required int seriesDistanceInMeters,
@@ -79,7 +79,7 @@ class WorkoutStageHillRepeats extends WorkoutStage with SeriesWorkout {
       ];
 }
 
-class WorkoutStageRhythms extends WorkoutStage with SeriesWorkout {
+class WorkoutStageRhythms extends WorkoutStage with SeriesWorkoutStage {
   WorkoutStageRhythms({
     required int amountOfSeries,
     required int seriesDistanceInMeters,
@@ -124,12 +124,12 @@ class WorkoutStageFoamRolling extends WorkoutStage {
   List<Object> get props => [];
 }
 
-mixin DistanceWorkout on WorkoutStage {
+mixin DistanceWorkoutStage on WorkoutStage {
   late final double distanceInKilometers;
   late final int maxHeartRate;
 }
 
-mixin SeriesWorkout on WorkoutStage {
+mixin SeriesWorkoutStage on WorkoutStage {
   late final int amountOfSeries;
   late final int seriesDistanceInMeters;
   late final int breakMarchDistanceInMeters;

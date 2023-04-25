@@ -407,44 +407,44 @@
   },
 
 
-  "workout_base_run": "OWB1",
-  "@workout_base_run": {
+  "workout_stage_base_run": "OWB1",
+  "@workout_stage_base_run": {
     "description": "Type of workout stage called base run"
   },
-  "workout_zone2": "BC2",
-  "@workout_zone2": {
+  "workout_stage_zone2": "BC2",
+  "@workout_stage_zone2": {
     "description": "Type of workout stage called zone 2"
   },
-  "workout_zone3": "BC3",
-  "@workout_zone3": {
+  "workout_stage_zone3": "BC3",
+  "@workout_stage_zone3": {
     "description": "Type of workout stage called zone 3"
   },
-  "workout_rhythms": "Rytmy",
-  "@workout_rhythms": {
+  "workout_stage_rhythms": "Rytmy",
+  "@workout_stage_rhythms": {
     "description": "Type of workout stage called rhythms"
   },
-  "workout_hill_repeats": "Podbiegi",
-  "@workout_hill_repeats": {
+  "workout_stage_hill_repeats": "Podbiegi",
+  "@workout_stage_hill_repeats": {
     "description": "Type of workout stage called hill repeats"
   },
-  "workout_stretching": "Rozciąganie",
-  "@workout_stretching": {
+  "workout_stage_stretching": "Rozciąganie",
+  "@workout_stage_stretching": {
     "description": "Type of workout stage called stretching"
   },
-  "workout_strengthening": "Ćwiczenia wzmacniające",
-  "@workout_strengthening": {
+  "workout_stage_strengthening": "Ćwiczenia wzmacniające",
+  "@workout_stage_strengthening": {
     "description": "Type of workout stage called strengthening"
   },
-  "workout_foamRolling": "Rolowanie",
-  "@workout_foamRolling": {
+  "workout_stage_foamRolling": "Rolowanie",
+  "@workout_stage_foamRolling": {
     "description": "Type of workout stage called foam rolling"
   },
-  "workout_break": "przerwa",
-  "@workout_break": {
+  "workout_stage_break": "przerwa",
+  "@workout_stage_break": {
     "description": "Break"
   },
-  "workout_march": "{marchDistanceInMeters}m marsz",
-  "@workout_march": {
+  "workout_stage_march": "{marchDistanceInMeters}m marsz",
+  "@workout_stage_march": {
     "description": "Distance of march",
     "placeholders": {
       "marchDistanceInMeters": {
@@ -453,8 +453,8 @@
       }
     }
   },
-  "workout_jog": "{jogDistanceInMeters}m trucht",
-  "@workout_jog": {
+  "workout_stage_jog": "{jogDistanceInMeters}m trucht",
+  "@workout_stage_jog": {
     "description": "Distance of jog",
     "placeholders": {
       "jogDistanceInMeters": {
