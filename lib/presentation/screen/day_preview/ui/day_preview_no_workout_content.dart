@@ -32,7 +32,7 @@ class _NoWorkoutInfo extends StatelessWidget {
           style: Theme.of(context).textTheme.bodyLarge,
         ),
         const SizedBox(height: 24),
-        CustomFilledButton(
+        BigButton(
           label: AppLocalizations.of(context)!
               .day_preview_screen_add_workout_button_label,
           onPressed: () {

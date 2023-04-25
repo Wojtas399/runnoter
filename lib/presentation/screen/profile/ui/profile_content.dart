@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../component/custom_filled_button_component.dart';
+import '../../../component/big_button_component.dart';
 import '../../../service/navigator_service.dart';
 import 'profile_settings_section.dart';
 import 'profile_user_data_section.dart';
@@ -41,7 +41,7 @@ class ProfileContent extends StatelessWidget {
               bottom: 24,
               left: 0,
               right: 0,
-              child: CustomFilledButton(
+              child: BigButton(
                 label: AppLocalizations.of(context)!.back,
                 onPressed: () {
                   navigateBack(context: context);

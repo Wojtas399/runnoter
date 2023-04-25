@@ -44,7 +44,8 @@ class _WorkoutName extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Nazwa',
+          AppLocalizations.of(context)!
+              .day_preview_screen_workout_name_section_label,
           style: Theme.of(context).textTheme.titleMedium,
         ),
         const SizedBox(height: 4),
@@ -71,7 +72,8 @@ class _WorkoutStages extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Etapy',
+          AppLocalizations.of(context)!
+              .day_preview_screen_workout_stages_section_label,
           style: Theme.of(context).textTheme.titleMedium,
         ),
         const SizedBox(height: 4),
@@ -107,7 +109,8 @@ class _WorkoutDistance extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Dystans',
+          AppLocalizations.of(context)!
+              .day_preview_screen_total_distance_section_label,
           style: Theme.of(context).textTheme.titleMedium,
         ),
         const SizedBox(height: 4),
@@ -135,7 +138,8 @@ class _WorkoutStatus extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Status',
+          AppLocalizations.of(context)!
+              .day_preview_screen_workout_status_section_label,
           style: Theme.of(context).textTheme.titleMedium,
         ),
         const SizedBox(height: 4),

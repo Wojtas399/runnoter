@@ -1,28 +1,14 @@
 import 'package:flutter/material.dart';
 
-enum ButtonSize {
-  medium(150, 52),
-  big(300, 52);
-
-  final double width;
-  final double height;
-
-  const ButtonSize(this.width, this.height);
-}
-
-class CustomFilledButton extends StatelessWidget {
-  final ButtonSize size;
+class BigButton extends StatelessWidget {
   final String label;
   final bool isDisabled;
-  final Color? color;
   final VoidCallback onPressed;
 
-  const CustomFilledButton({
+  const BigButton({
     super.key,
-    this.size = ButtonSize.big,
     required this.label,
     this.isDisabled = false,
-    this.color,
     required this.onPressed,
   });
 
@@ -32,13 +18,10 @@ class CustomFilledButton extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         SizedBox(
-          width: size.width,
-          height: size.height,
+          width: 300,
+          height: 52,
           child: FilledButton(
             onPressed: isDisabled ? null : onPressed,
-            style: FilledButton.styleFrom(
-              backgroundColor: color,
-            ),
             child: Text(label),
           ),
         ),

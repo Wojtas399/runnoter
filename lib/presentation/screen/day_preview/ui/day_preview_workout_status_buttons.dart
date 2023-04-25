@@ -8,17 +8,9 @@ class _WorkoutStatusButtons extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        CustomFilledButton(
-          size: ButtonSize.medium,
-          label: 'Nieukończony',
-          color: Colors.red,
-          onPressed: () {},
-        ),
-        const SizedBox(width: 32),
-        CustomFilledButton(
-          size: ButtonSize.medium,
-          label: 'Ukończony',
-          color: Colors.green,
+        BigButton(
+          label: AppLocalizations.of(context)!
+              .day_preview_screen_finish_workout_button_label,
           onPressed: () {},
         ),
       ],

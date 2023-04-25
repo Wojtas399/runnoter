@@ -159,6 +159,26 @@
   "@day_preview_screen_add_workout_button_label": {
     "description": "Label of the button to add workout"
   },
+  "day_preview_screen_workout_name_section_label": "Nazwa",
+  "@day_preview_screen_workout_name": {
+    "description": "Label of the section to display workout name"
+  },
+  "day_preview_screen_workout_stages_section_label": "Etapy",
+  "@day_preview_screen_workout_stages_section_label": {
+    "description": "Label of the section to display stages"
+  },
+  "day_preview_screen_total_distance_section_label": "Całkowity dystans",
+  "@day_preview_screen_total_distance_section_label": {
+    "description": "Label of the section to display total distance of the workout"
+  },
+  "day_preview_screen_workout_status_section_label": "Status",
+  "@day_preview_screen_workout_status_section_label": {
+    "description": "Label of the section to display workout status"
+  },
+  "day_preview_screen_finish_workout_button_label": "Zakończ",
+  "@day_preview_screen_finish_workout_button_label": {
+    "description": "Label of the button to finish workout"
+  },
 
 
   "workout_creator_screen_title": "Nowy trening",
