@@ -1,11 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../../../domain/model/workout.dart';
+import '../../../../domain/model/workout_stage.dart';
+import '../../../../domain/model/workout_status.dart';
 import '../../../../domain/repository/workout_repository.dart';
 import '../../../../domain/service/auth_service.dart';
+import '../../../component/custom_filled_button_component.dart';
+import '../../../config/navigation/routes.dart';
+import '../../../formatter/date_formatter.dart';
+import '../../../formatter/list_of_workout_stages_formatter.dart';
+import '../../../formatter/workout_stage_formatter.dart';
+import '../../../formatter/workout_status_formatter.dart';
+import '../../../service/navigator_service.dart';
 import '../bloc/day_preview_bloc.dart';
 import '../bloc/day_preview_event.dart';
-import 'day_preview_content.dart';
+
+part 'day_preview_content.dart';
+part 'day_preview_no_workout_content.dart';
+part 'day_preview_workout_content.dart';
+part 'day_preview_workout_status_buttons.dart';
 
 class DayPreviewScreen extends StatelessWidget {
   final DateTime date;
