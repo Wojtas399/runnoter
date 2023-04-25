@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../component/app_bar_with_logo.dart';
-import '../../../component/big_button_component.dart';
+import '../../../component/custom_filled_button_component.dart';
 import '../../../component/text_field_component.dart';
 import '../../../service/utils.dart';
 import '../bloc/forgot_password_bloc.dart';
@@ -95,7 +95,7 @@ class _SubmitButton extends StatelessWidget {
       (ForgotPasswordBloc bloc) => bloc.state.isSubmitButtonDisabled,
     );
 
-    return BigButton(
+    return CustomFilledButton(
       label: AppLocalizations.of(context)!
           .forgot_password_screen_submit_button_label,
       isDisabled: isDisabled,

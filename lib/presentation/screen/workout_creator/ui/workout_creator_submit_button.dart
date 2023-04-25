@@ -9,7 +9,7 @@ class _SubmitButton extends StatelessWidget {
       (WorkoutCreatorBloc bloc) => bloc.state.isSubmitButtonDisabled,
     );
 
-    return BigButton(
+    return CustomFilledButton(
       label: AppLocalizations.of(context)!
           .workout_creator_screen_add_workout_button_label,
       isDisabled: isDisabled,
