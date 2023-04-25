@@ -20,7 +20,6 @@ import '../bloc/day_preview_event.dart';
 part 'day_preview_content.dart';
 part 'day_preview_no_workout_content.dart';
 part 'day_preview_workout_content.dart';
-part 'day_preview_workout_status_buttons.dart';
 
 class DayPreviewScreen extends StatelessWidget {
   final DateTime date;
