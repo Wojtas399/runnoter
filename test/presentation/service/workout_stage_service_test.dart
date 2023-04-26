@@ -10,8 +10,8 @@ void main() {
       final seriesWorkoutStage = WorkoutStageHillRepeats(
         amountOfSeries: 10,
         seriesDistanceInMeters: 100,
-        breakMarchDistanceInMeters: 20,
-        breakJogDistanceInMeters: 80,
+        walkingDistanceInMeters: 20,
+        joggingDistanceInMeters: 80,
       );
       const double expectedTotalDistance = (10 * (100 + 20 + 80)) / 1000;
 

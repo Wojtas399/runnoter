@@ -22,15 +22,15 @@ WorkoutStage mapWorkoutStageFromFirebase(WorkoutStageDto workoutStageDto) {
     return WorkoutStageHillRepeats(
       amountOfSeries: workoutStageDto.amountOfSeries,
       seriesDistanceInMeters: workoutStageDto.seriesDistanceInMeters,
-      breakMarchDistanceInMeters: workoutStageDto.breakMarchDistanceInMeters,
-      breakJogDistanceInMeters: workoutStageDto.breakJogDistanceInMeters,
+      walkingDistanceInMeters: workoutStageDto.walkingDistanceInMeters,
+      joggingDistanceInMeters: workoutStageDto.joggingDistanceInMeters,
     );
   } else if (workoutStageDto is WorkoutStageRhythmsDto) {
     return WorkoutStageRhythms(
       amountOfSeries: workoutStageDto.amountOfSeries,
       seriesDistanceInMeters: workoutStageDto.seriesDistanceInMeters,
-      breakMarchDistanceInMeters: workoutStageDto.breakMarchDistanceInMeters,
-      breakJogDistanceInMeters: workoutStageDto.breakJogDistanceInMeters,
+      walkingDistanceInMeters: workoutStageDto.walkingDistanceInMeters,
+      joggingDistanceInMeters: workoutStageDto.joggingDistanceInMeters,
     );
   } else if (workoutStageDto is WorkoutStageStretchingDto) {
     return const WorkoutStageStretching();
@@ -63,15 +63,15 @@ WorkoutStageDto mapWorkoutStageToFirebase(WorkoutStage workoutStage) {
     return WorkoutStageHillRepeatsDto(
       amountOfSeries: workoutStage.amountOfSeries,
       seriesDistanceInMeters: workoutStage.seriesDistanceInMeters,
-      breakMarchDistanceInMeters: workoutStage.breakMarchDistanceInMeters,
-      breakJogDistanceInMeters: workoutStage.breakJogDistanceInMeters,
+      walkingDistanceInMeters: workoutStage.walkingDistanceInMeters,
+      joggingDistanceInMeters: workoutStage.joggingDistanceInMeters,
     );
   } else if (workoutStage is WorkoutStageRhythms) {
     return WorkoutStageRhythmsDto(
       amountOfSeries: workoutStage.amountOfSeries,
       seriesDistanceInMeters: workoutStage.seriesDistanceInMeters,
-      breakMarchDistanceInMeters: workoutStage.breakMarchDistanceInMeters,
-      breakJogDistanceInMeters: workoutStage.breakJogDistanceInMeters,
+      walkingDistanceInMeters: workoutStage.walkingDistanceInMeters,
+      joggingDistanceInMeters: workoutStage.joggingDistanceInMeters,
     );
   } else if (workoutStage is WorkoutStageStretching) {
     return const WorkoutStageStretchingDto();

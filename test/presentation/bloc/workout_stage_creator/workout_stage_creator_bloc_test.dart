@@ -748,8 +748,8 @@ void main() {
         workoutStage: WorkoutStageHillRepeats(
           amountOfSeries: 10,
           seriesDistanceInMeters: 100,
-          breakMarchDistanceInMeters: 20,
-          breakJogDistanceInMeters: 80,
+          walkingDistanceInMeters: 20,
+          joggingDistanceInMeters: 80,
         ),
       ),
     ],
@@ -794,8 +794,8 @@ void main() {
         workoutStage: WorkoutStageRhythms(
           amountOfSeries: 10,
           seriesDistanceInMeters: 100,
-          breakMarchDistanceInMeters: 20,
-          breakJogDistanceInMeters: 80,
+          walkingDistanceInMeters: 20,
+          joggingDistanceInMeters: 80,
         ),
       ),
     ],

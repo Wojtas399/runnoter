@@ -66,14 +66,14 @@ extension WorkoutStageFormatter on WorkoutStage {
         '${stage.amountOfSeries}x${stage.seriesDistanceInMeters}m';
     String breakDescription =
         '${AppLocalizations.of(context)!.workout_stage_break} ';
-    if (stage.breakMarchDistanceInMeters > 0) {
+    if (stage.walkingDistanceInMeters > 0) {
       breakDescription += ' ${AppLocalizations.of(context)!.workout_stage_march(
-        stage.breakMarchDistanceInMeters,
+        stage.walkingDistanceInMeters,
       )}, ';
     }
-    if (stage.breakMarchDistanceInMeters > 0) {
+    if (stage.walkingDistanceInMeters > 0) {
       breakDescription += AppLocalizations.of(context)!.workout_stage_jog(
-        stage.breakJogDistanceInMeters,
+        stage.joggingDistanceInMeters,
       );
     }
     return '${stage.toTypeName(context)} $seriesDescription, $breakDescription';

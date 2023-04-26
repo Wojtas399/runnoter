@@ -5,7 +5,7 @@ double calculateTotalDistanceInKmOfSeriesWorkout(
 ) {
   final int distanceInMeters = stage.amountOfSeries *
       (stage.seriesDistanceInMeters +
-          stage.breakMarchDistanceInMeters +
-          stage.breakJogDistanceInMeters);
+          stage.walkingDistanceInMeters +
+          stage.joggingDistanceInMeters);
   return distanceInMeters / 1000;
 }

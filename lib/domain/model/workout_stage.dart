@@ -59,23 +59,23 @@ class WorkoutStageHillRepeats extends WorkoutStage with SeriesWorkoutStage {
   WorkoutStageHillRepeats({
     required int amountOfSeries,
     required int seriesDistanceInMeters,
-    required int breakMarchDistanceInMeters,
-    required int breakJogDistanceInMeters,
+    required int walkingDistanceInMeters,
+    required int joggingDistanceInMeters,
   })  : assert(amountOfSeries > 0),
         assert(seriesDistanceInMeters > 0),
-        assert(breakMarchDistanceInMeters > 0 || breakJogDistanceInMeters > 0) {
+        assert(walkingDistanceInMeters > 0 || joggingDistanceInMeters > 0) {
     this.amountOfSeries = amountOfSeries;
     this.seriesDistanceInMeters = seriesDistanceInMeters;
-    this.breakMarchDistanceInMeters = breakMarchDistanceInMeters;
-    this.breakJogDistanceInMeters = breakJogDistanceInMeters;
+    this.walkingDistanceInMeters = walkingDistanceInMeters;
+    this.joggingDistanceInMeters = joggingDistanceInMeters;
   }
 
   @override
   List<Object> get props => [
         amountOfSeries,
         seriesDistanceInMeters,
-        breakMarchDistanceInMeters,
-        breakJogDistanceInMeters,
+        walkingDistanceInMeters,
+        joggingDistanceInMeters,
       ];
 }
 
@@ -83,23 +83,23 @@ class WorkoutStageRhythms extends WorkoutStage with SeriesWorkoutStage {
   WorkoutStageRhythms({
     required int amountOfSeries,
     required int seriesDistanceInMeters,
-    required int breakMarchDistanceInMeters,
-    required int breakJogDistanceInMeters,
+    required int walkingDistanceInMeters,
+    required int joggingDistanceInMeters,
   })  : assert(amountOfSeries > 0),
         assert(seriesDistanceInMeters > 0),
-        assert(breakMarchDistanceInMeters > 0 || breakJogDistanceInMeters > 0) {
+        assert(walkingDistanceInMeters > 0 || joggingDistanceInMeters > 0) {
     this.amountOfSeries = amountOfSeries;
     this.seriesDistanceInMeters = seriesDistanceInMeters;
-    this.breakMarchDistanceInMeters = breakMarchDistanceInMeters;
-    this.breakJogDistanceInMeters = breakJogDistanceInMeters;
+    this.walkingDistanceInMeters = walkingDistanceInMeters;
+    this.joggingDistanceInMeters = joggingDistanceInMeters;
   }
 
   @override
   List<Object> get props => [
         amountOfSeries,
         seriesDistanceInMeters,
-        breakMarchDistanceInMeters,
-        breakJogDistanceInMeters,
+        walkingDistanceInMeters,
+        joggingDistanceInMeters,
       ];
 }
 
@@ -132,6 +132,6 @@ mixin DistanceWorkoutStage on WorkoutStage {
 mixin SeriesWorkoutStage on WorkoutStage {
   late final int amountOfSeries;
   late final int seriesDistanceInMeters;
-  late final int breakMarchDistanceInMeters;
-  late final int breakJogDistanceInMeters;
+  late final int walkingDistanceInMeters;
+  late final int joggingDistanceInMeters;
 }

@@ -74,15 +74,15 @@ void main() {
         'name': 'hillRepeats',
         'amountOfSeries': 10,
         'seriesDistanceInMeters': 100,
-        'breakMarchDistanceInMeters': 20,
-        'breakJogDistanceInMeters': 80,
+        'walkingDistanceInMeters': 20,
+        'joggingDistanceInMeters': 80,
       };
       final WorkoutStageDto expectedWorkoutStageDto =
           WorkoutStageHillRepeatsDto(
         amountOfSeries: 10,
         seriesDistanceInMeters: 100,
-        breakMarchDistanceInMeters: 20,
-        breakJogDistanceInMeters: 80,
+        walkingDistanceInMeters: 20,
+        joggingDistanceInMeters: 80,
       );
 
       final WorkoutStageDto dto = WorkoutStageDto.fromJson(json);
@@ -100,14 +100,14 @@ void main() {
         'name': 'rhythms',
         'amountOfSeries': 10,
         'seriesDistanceInMeters': 100,
-        'breakMarchDistanceInMeters': 0,
-        'breakJogDistanceInMeters': 200,
+        'walkingDistanceInMeters': 0,
+        'joggingDistanceInMeters': 200,
       };
       final WorkoutStageDto expectedWorkoutStageDto = WorkoutStageRhythmsDto(
         amountOfSeries: 10,
         seriesDistanceInMeters: 100,
-        breakMarchDistanceInMeters: 0,
-        breakJogDistanceInMeters: 200,
+        walkingDistanceInMeters: 0,
+        joggingDistanceInMeters: 200,
       );
 
       final WorkoutStageDto dto = WorkoutStageDto.fromJson(json);
@@ -238,15 +238,15 @@ void main() {
       final WorkoutStageDto dto = WorkoutStageHillRepeatsDto(
         amountOfSeries: 10,
         seriesDistanceInMeters: 100,
-        breakMarchDistanceInMeters: 20,
-        breakJogDistanceInMeters: 80,
+        walkingDistanceInMeters: 20,
+        joggingDistanceInMeters: 80,
       );
       final Map<String, dynamic> expectedJson = {
         'name': 'hillRepeats',
         'amountOfSeries': 10,
         'seriesDistanceInMeters': 100,
-        'breakMarchDistanceInMeters': 20,
-        'breakJogDistanceInMeters': 80,
+        'walkingDistanceInMeters': 20,
+        'joggingDistanceInMeters': 80,
       };
 
       final Map<String, dynamic> json = dto.toJson();
@@ -263,15 +263,15 @@ void main() {
       final WorkoutStageDto dto = WorkoutStageRhythmsDto(
         amountOfSeries: 10,
         seriesDistanceInMeters: 100,
-        breakMarchDistanceInMeters: 0,
-        breakJogDistanceInMeters: 200,
+        walkingDistanceInMeters: 0,
+        joggingDistanceInMeters: 200,
       );
       final Map<String, dynamic> expectedJson = {
         'name': 'rhythms',
         'amountOfSeries': 10,
         'seriesDistanceInMeters': 100,
-        'breakMarchDistanceInMeters': 0,
-        'breakJogDistanceInMeters': 200,
+        'walkingDistanceInMeters': 0,
+        'joggingDistanceInMeters': 200,
       };
 
       final Map<String, dynamic> json = dto.toJson();
