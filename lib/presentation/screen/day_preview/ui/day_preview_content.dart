@@ -7,13 +7,9 @@ class DayPreviewContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          AppLocalizations.of(context)!.day_preview_screen_title,
-        ),
-      ),
-      body: const SafeArea(
+    return const Scaffold(
+      appBar: _AppBar(),
+      body: SafeArea(
         child: Padding(
           padding: EdgeInsets.all(24),
           child: _Workout(),

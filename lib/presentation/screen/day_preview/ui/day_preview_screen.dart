@@ -19,6 +19,7 @@ import '../../../service/navigator_service.dart';
 import '../bloc/day_preview_bloc.dart';
 import '../bloc/day_preview_event.dart';
 
+part 'day_preview_app_bar.dart';
 part 'day_preview_content.dart';
 part 'day_preview_no_workout_content.dart';
 part 'day_preview_workout_content.dart';
