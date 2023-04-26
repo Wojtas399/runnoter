@@ -1,6 +1,7 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/domain/model/workout.dart';
+import 'package:runnoter/domain/model/workout_stage.dart';
+import 'package:runnoter/domain/model/workout_status.dart';
 import 'package:runnoter/presentation/model/bloc_status.dart';
 import 'package:runnoter/presentation/screen/day_preview/bloc/day_preview_bloc.dart';
 import 'package:runnoter/presentation/screen/day_preview/bloc/day_preview_event.dart';
@@ -25,12 +26,16 @@ void main() {
   DayPreviewState createState({
     BlocStatus status = const BlocStatusInitial(),
     DateTime? date,
-    Workout? workout,
+    String? workoutName,
+    List<WorkoutStage>? stages,
+    WorkoutStatus? workoutStatus,
   }) {
     return DayPreviewState(
       status: status,
       date: date,
-      workout: workout,
+      workoutName: workoutName,
+      stages: stages,
+      workoutStatus: workoutStatus,
     );
   }
 
@@ -55,14 +60,7 @@ void main() {
     build: () => createBloc(),
     setUp: () {
       authService.mockGetLoggedUserId(userId: 'u1');
-      workoutRepository.mockGetWorkoutByUserIdAndDate(
-        workout: createWorkout(
-          id: 'w1',
-          userId: 'u1',
-          name: 'workout name',
-          date: date,
-        ),
-      );
+      workoutRepository.mockGetWorkoutByUserIdAndDate();
     },
     act: (DayPreviewBloc bloc) => bloc.add(
       DayPreviewEventInitialize(
@@ -73,16 +71,6 @@ void main() {
       createState(
         status: const BlocStatusComplete(),
         date: date,
-      ),
-      createState(
-        status: const BlocStatusComplete(),
-        date: date,
-        workout: createWorkout(
-          id: 'w1',
-          userId: 'u1',
-          name: 'workout name',
-          date: date,
-        ),
       ),
     ],
     verify: (_) {
@@ -100,7 +88,8 @@ void main() {
 
   blocTest(
     'workout updated, '
-    'should update workout in state',
+    'pending workout, '
+    'should update workout name, stages and status in state',
     build: () => createBloc(),
     act: (DayPreviewBloc bloc) => bloc.add(
       DayPreviewEventWorkoutUpdated(
@@ -108,16 +97,122 @@ void main() {
           id: 'w1',
           userId: 'u1',
           name: 'workout name',
+          stages: [
+            WorkoutStageBaseRun(
+              distanceInKilometers: 10,
+              maxHeartRate: 150,
+            ),
+          ],
+          status: const WorkoutStatusPending(),
         ),
       ),
     ),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
+        workoutName: 'workout name',
+        stages: [
+          WorkoutStageBaseRun(
+            distanceInKilometers: 10,
+            maxHeartRate: 150,
+          ),
+        ],
+        workoutStatus: const WorkoutStatusPending(),
+      ),
+    ],
+  );
+
+  blocTest(
+    'workout updated, '
+    'completed workout, '
+    'should update workout name, stages, and status in state',
+    build: () => createBloc(),
+    act: (DayPreviewBloc bloc) => bloc.add(
+      DayPreviewEventWorkoutUpdated(
         workout: createWorkout(
           id: 'w1',
           userId: 'u1',
           name: 'workout name',
+          stages: [
+            WorkoutStageBaseRun(
+              distanceInKilometers: 10,
+              maxHeartRate: 150,
+            ),
+          ],
+          status: WorkoutStatusCompleted(
+            coveredDistanceInKm: 10,
+            avgPace: const Pace(minutes: 6, seconds: 5),
+            avgHeartRate: 144,
+            moodRate: MoodRate.mr9,
+            comment: 'comment',
+          ),
+        ),
+      ),
+    ),
+    expect: () => [
+      createState(
+        status: const BlocStatusComplete(),
+        workoutName: 'workout name',
+        stages: [
+          WorkoutStageBaseRun(
+            distanceInKilometers: 10,
+            maxHeartRate: 150,
+          ),
+        ],
+        workoutStatus: WorkoutStatusCompleted(
+          coveredDistanceInKm: 10,
+          avgPace: const Pace(minutes: 6, seconds: 5),
+          avgHeartRate: 144,
+          moodRate: MoodRate.mr9,
+          comment: 'comment',
+        ),
+      ),
+    ],
+  );
+
+  blocTest(
+    'workout updated, '
+    'uncompleted workout, '
+    'should update workout name, stages and status in state',
+    build: () => createBloc(),
+    act: (DayPreviewBloc bloc) => bloc.add(
+      DayPreviewEventWorkoutUpdated(
+        workout: createWorkout(
+          id: 'w1',
+          userId: 'u1',
+          name: 'workout name',
+          stages: [
+            WorkoutStageBaseRun(
+              distanceInKilometers: 10,
+              maxHeartRate: 150,
+            ),
+          ],
+          status: WorkoutStatusUncompleted(
+            coveredDistanceInKm: 10,
+            avgPace: const Pace(minutes: 6, seconds: 5),
+            avgHeartRate: 144,
+            moodRate: MoodRate.mr9,
+            comment: 'comment',
+          ),
+        ),
+      ),
+    ),
+    expect: () => [
+      createState(
+        status: const BlocStatusComplete(),
+        workoutName: 'workout name',
+        stages: [
+          WorkoutStageBaseRun(
+            distanceInKilometers: 10,
+            maxHeartRate: 150,
+          ),
+        ],
+        workoutStatus: WorkoutStatusUncompleted(
+          coveredDistanceInKm: 10,
+          avgPace: const Pace(minutes: 6, seconds: 5),
+          avgHeartRate: 144,
+          moodRate: MoodRate.mr9,
+          comment: 'comment',
         ),
       ),
     ],

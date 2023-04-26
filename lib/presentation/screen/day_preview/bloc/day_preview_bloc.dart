@@ -20,15 +20,11 @@ class DayPreviewBloc
     required AuthService authService,
     required WorkoutRepository workoutRepository,
     BlocStatus status = const BlocStatusInitial(),
-    DateTime? date,
-    Workout? workout,
   })  : _authService = authService,
         _workoutRepository = workoutRepository,
         super(
           DayPreviewState(
             status: status,
-            date: date,
-            workout: workout,
           ),
         ) {
     on<DayPreviewEventInitialize>(_initialize);
@@ -61,7 +57,9 @@ class DayPreviewBloc
     Emitter<DayPreviewState> emit,
   ) {
     emit(state.copyWith(
-      workout: event.workout,
+      workoutName: event.workout?.name,
+      stages: event.workout?.stages,
+      workoutStatus: event.workout?.status,
     ));
   }
 

@@ -1,34 +1,48 @@
-import '../../../../domain/model/workout.dart';
+import '../../../../domain/model/workout_stage.dart';
+import '../../../../domain/model/workout_status.dart';
 import '../../../model/bloc_state.dart';
 import '../../../model/bloc_status.dart';
 
 class DayPreviewState extends BlocState<DayPreviewState> {
   final DateTime? date;
-  final Workout? workout;
+  final String? workoutName;
+  final List<WorkoutStage>? stages;
+  final WorkoutStatus? workoutStatus;
 
   const DayPreviewState({
     required super.status,
-    required this.date,
-    required this.workout,
+    this.date,
+    this.workoutName,
+    this.stages,
+    this.workoutStatus,
   });
 
   @override
   List<Object?> get props => [
         status,
         date,
-        workout,
+        workoutName,
+        stages,
+        workoutStatus,
       ];
+
+  bool get doesWorkoutExist =>
+      workoutName != null && stages != null && workoutStatus != null;
 
   @override
   DayPreviewState copyWith({
     BlocStatus? status,
     DateTime? date,
-    Workout? workout,
+    String? workoutName,
+    List<WorkoutStage>? stages,
+    WorkoutStatus? workoutStatus,
   }) {
     return DayPreviewState(
       status: status ?? const BlocStatusComplete(),
       date: date ?? this.date,
-      workout: workout ?? this.workout,
+      workoutName: workoutName ?? this.workoutName,
+      stages: stages ?? this.stages,
+      workoutStatus: workoutStatus ?? this.workoutStatus,
     );
   }
 }

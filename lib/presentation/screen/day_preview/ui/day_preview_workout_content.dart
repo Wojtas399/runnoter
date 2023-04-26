@@ -10,19 +10,35 @@ class _WorkoutContent extends StatelessWidget {
       children: [
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
-            _Date(),
-            SizedBox(height: 24),
-            _WorkoutName(),
-            SizedBox(height: 16),
-            _WorkoutStages(),
-            SizedBox(height: 16),
-            _WorkoutDistance(),
-            SizedBox(height: 16),
-            _WorkoutStatus(),
+          children: [
+            const _Date(),
+            const SizedBox(height: 24),
+            _WorkoutParam(
+              label: AppLocalizations.of(context)!
+                  .day_preview_screen_workout_name_section_label,
+              child: const _WorkoutName(),
+            ),
+            const SizedBox(height: 16),
+            _WorkoutParam(
+              label: AppLocalizations.of(context)!
+                  .day_preview_screen_workout_stages_section_label,
+              child: const _WorkoutStages(),
+            ),
+            const SizedBox(height: 16),
+            _WorkoutParam(
+              label: AppLocalizations.of(context)!
+                  .day_preview_screen_total_distance_section_label,
+              child: const _WorkoutDistance(),
+            ),
+            const SizedBox(height: 16),
+            _WorkoutParam(
+              label: AppLocalizations.of(context)!
+                  .day_preview_screen_workout_status_section_label,
+              child: const _WorkoutStatus(),
+            ),
           ],
         ),
-        const _WorkoutStatusButtons(),
+        const _WorkoutFinishButton(),
       ],
     );
   }
@@ -34,24 +50,10 @@ class _WorkoutName extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final String? workoutName = context.select(
-      (DayPreviewBloc bloc) => bloc.state.workout?.name,
+      (DayPreviewBloc bloc) => bloc.state.workoutName,
     );
 
-    if (workoutName == null) {
-      return const SizedBox();
-    }
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          AppLocalizations.of(context)!
-              .day_preview_screen_workout_name_section_label,
-          style: Theme.of(context).textTheme.titleMedium,
-        ),
-        const SizedBox(height: 4),
-        Text(workoutName),
-      ],
-    );
+    return Text(workoutName ?? '--');
   }
 }
 
@@ -61,33 +63,22 @@ class _WorkoutStages extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<WorkoutStage>? stages = context.select(
-      (DayPreviewBloc bloc) => bloc.state.workout?.stages,
+      (DayPreviewBloc bloc) => bloc.state.stages,
     );
 
     if (stages == null) {
-      return const SizedBox();
+      return const Text('--');
     }
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Wrap(
+      direction: Axis.vertical,
+      spacing: 8,
       children: [
-        Text(
-          AppLocalizations.of(context)!
-              .day_preview_screen_workout_stages_section_label,
-          style: Theme.of(context).textTheme.titleMedium,
-        ),
-        const SizedBox(height: 4),
-        Wrap(
-          direction: Axis.vertical,
-          spacing: 8,
-          children: [
-            ...stages.asMap().entries.map(
-                  (MapEntry<int, WorkoutStage> entry) => Text(
-                    '${entry.key + 1}. ${entry.value.toUIFormat(context)}',
-                  ),
-                ),
-          ],
-        ),
+        ...stages.asMap().entries.map(
+              (MapEntry<int, WorkoutStage> entry) => Text(
+                '${entry.key + 1}. ${entry.value.toUIFormat(context)}',
+              ),
+            ),
       ],
     );
   }
@@ -99,84 +90,48 @@ class _WorkoutDistance extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<WorkoutStage>? stages = context.select(
-      (DayPreviewBloc bloc) => bloc.state.workout?.stages,
+      (DayPreviewBloc bloc) => bloc.state.stages,
     );
 
-    if (stages == null) {
-      return const SizedBox();
-    }
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          AppLocalizations.of(context)!
-              .day_preview_screen_total_distance_section_label,
-          style: Theme.of(context).textTheme.titleMedium,
-        ),
-        const SizedBox(height: 4),
-        Text(
-          stages.toTotalDistanceDescription(context),
-        ),
-      ],
+    return Text(
+      stages?.toTotalDistanceDescription(context) ?? '--',
     );
   }
 }
 
-class _WorkoutStatus extends StatelessWidget {
-  const _WorkoutStatus();
+class _WorkoutFinishButton extends StatelessWidget {
+  const _WorkoutFinishButton();
 
   @override
   Widget build(BuildContext context) {
-    final WorkoutStatus? status = context.select(
-      (DayPreviewBloc bloc) => bloc.state.workout?.status,
-    );
-
-    if (status == null) {
-      return const SizedBox();
-    }
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          AppLocalizations.of(context)!
-              .day_preview_screen_workout_status_section_label,
-          style: Theme.of(context).textTheme.titleMedium,
-        ),
-        const SizedBox(height: 4),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Icon(
-              status.toIcon(),
-              color: status.toColor(),
-            ),
-            const SizedBox(width: 16),
-            Text(
-              status.toLabel(context),
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: status.toColor(),
-                  ),
-            ),
-          ],
-        ),
-      ],
+    return BigButton(
+      label: AppLocalizations.of(context)!
+          .day_preview_screen_finish_workout_button_label,
+      onPressed: () {},
     );
   }
 }
 
-class _WorkoutStatusButtons extends StatelessWidget {
-  const _WorkoutStatusButtons();
+class _WorkoutParam extends StatelessWidget {
+  final String label;
+  final Widget child;
+
+  const _WorkoutParam({
+    required this.label,
+    required this.child,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        BigButton(
-          label: AppLocalizations.of(context)!
-              .day_preview_screen_finish_workout_button_label,
-          onPressed: () {},
+        Text(
+          label,
+          style: Theme.of(context).textTheme.titleMedium,
         ),
+        const SizedBox(height: 4),
+        child,
       ],
     );
   }
