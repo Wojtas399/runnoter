@@ -10,10 +10,10 @@ class WorkoutStatusDto extends Equatable {
     final String status = json[_nameField];
     if (status == 'pending') {
       return const WorkoutStatusPendingDto();
-    } else if (status == 'done') {
-      return WorkoutStatusDoneDto.fromJson(json);
-    } else if (status == 'failed') {
-      return WorkoutStatusFailedDto.fromJson(json);
+    } else if (status == _completedStatusName) {
+      return WorkoutStatusCompletedDto.fromJson(json);
+    } else if (status == _uncompletedStatusName) {
+      return WorkoutStatusUncompletedDto.fromJson(json);
     }
     throw '[WorkoutStatusDto] Unknown workout status';
   }
@@ -33,19 +33,19 @@ class WorkoutStatusPendingDto extends WorkoutStatusDto {
   @override
   Map<String, dynamic> toJson() {
     return {
-      _nameField: 'pending',
+      _nameField: _pendingStatusName,
     };
   }
 }
 
-class WorkoutStatusDoneDto extends WorkoutStatusDto {
+class WorkoutStatusCompletedDto extends WorkoutStatusDto {
   final double coveredDistanceInKilometers;
   final PaceDto avgPace;
   final int avgHeartRate;
   final MoodRate moodRate;
   final String? comment;
 
-  const WorkoutStatusDoneDto({
+  const WorkoutStatusCompletedDto({
     required this.coveredDistanceInKilometers,
     required this.avgPace,
     required this.avgHeartRate,
@@ -53,7 +53,7 @@ class WorkoutStatusDoneDto extends WorkoutStatusDto {
     required this.comment,
   });
 
-  WorkoutStatusDoneDto.fromJson(Map<String, dynamic> json)
+  WorkoutStatusCompletedDto.fromJson(Map<String, dynamic> json)
       : this(
           coveredDistanceInKilometers:
               (json[_coveredDistanceInKilometersField] as num).toDouble(),
@@ -74,7 +74,7 @@ class WorkoutStatusDoneDto extends WorkoutStatusDto {
 
   @override
   Map<String, dynamic> toJson() => {
-        _nameField: 'done',
+        _nameField: _completedStatusName,
         _coveredDistanceInKilometersField: coveredDistanceInKilometers,
         _avgPaceField: avgPace.toJson(),
         _avgHeartRateField: avgHeartRate,
@@ -83,14 +83,14 @@ class WorkoutStatusDoneDto extends WorkoutStatusDto {
       };
 }
 
-class WorkoutStatusFailedDto extends WorkoutStatusDto {
+class WorkoutStatusUncompletedDto extends WorkoutStatusDto {
   final double coveredDistanceInKilometers;
   final PaceDto avgPace;
   final int avgHeartRate;
   final MoodRate moodRate;
   final String? comment;
 
-  const WorkoutStatusFailedDto({
+  const WorkoutStatusUncompletedDto({
     required this.coveredDistanceInKilometers,
     required this.avgPace,
     required this.avgHeartRate,
@@ -98,7 +98,7 @@ class WorkoutStatusFailedDto extends WorkoutStatusDto {
     required this.comment,
   });
 
-  WorkoutStatusFailedDto.fromJson(Map<String, dynamic> json)
+  WorkoutStatusUncompletedDto.fromJson(Map<String, dynamic> json)
       : this(
           coveredDistanceInKilometers: json[_coveredDistanceInKilometersField],
           avgPace: PaceDto.fromJson(json[_avgPaceField]),
@@ -118,7 +118,7 @@ class WorkoutStatusFailedDto extends WorkoutStatusDto {
 
   @override
   Map<String, dynamic> toJson() => {
-        _nameField: 'failed',
+        _nameField: _uncompletedStatusName,
         _coveredDistanceInKilometersField: coveredDistanceInKilometers,
         _avgPaceField: avgPace.toJson(),
         _avgHeartRateField: avgHeartRate,
@@ -143,6 +143,10 @@ enum MoodRate {
 
   const MoodRate(this.number);
 }
+
+const String _pendingStatusName = 'pending';
+const String _completedStatusName = 'completed';
+const String _uncompletedStatusName = 'uncompleted';
 
 const String _nameField = 'name';
 const String _coveredDistanceInKilometersField = 'coveredDistanceInKilometers';

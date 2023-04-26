@@ -24,7 +24,7 @@ void main() {
         id: id,
         userId: userId,
         date: date,
-        status: const firebase.WorkoutStatusDoneDto(
+        status: const firebase.WorkoutStatusCompletedDto(
           coveredDistanceInKilometers: coveredDistanceInKm,
           avgPace: firebase.PaceDto(
             minutes: avgPaceMin,
@@ -54,9 +54,9 @@ void main() {
         id: id,
         userId: userId,
         date: date,
-        status: const WorkoutStatusDone(
+        status: WorkoutStatusCompleted(
           coveredDistanceInKm: coveredDistanceInKm,
-          avgPace: Pace(minutes: avgPaceMin, seconds: avgPaceSeconds),
+          avgPace: const Pace(minutes: avgPaceMin, seconds: avgPaceSeconds),
           avgHeartRate: avgHeartRate,
           moodRate: MoodRate.mr8,
           comment: 'comment',

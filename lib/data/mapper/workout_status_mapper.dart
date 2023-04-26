@@ -7,16 +7,16 @@ import 'pace_mapper.dart';
 WorkoutStatus mapWorkoutStatusFromFirebase(WorkoutStatusDto workoutStatusDto) {
   if (workoutStatusDto is WorkoutStatusPendingDto) {
     return const WorkoutStatusPending();
-  } else if (workoutStatusDto is WorkoutStatusDoneDto) {
-    return WorkoutStatusDone(
+  } else if (workoutStatusDto is WorkoutStatusCompletedDto) {
+    return WorkoutStatusCompleted(
       coveredDistanceInKm: workoutStatusDto.coveredDistanceInKilometers,
       avgPace: mapPaceFromFirebase(workoutStatusDto.avgPace),
       avgHeartRate: workoutStatusDto.avgHeartRate,
       moodRate: mapMoodRateFromFirebase(workoutStatusDto.moodRate),
       comment: workoutStatusDto.comment,
     );
-  } else if (workoutStatusDto is WorkoutStatusFailedDto) {
-    return WorkoutStatusFailed(
+  } else if (workoutStatusDto is WorkoutStatusUncompletedDto) {
+    return WorkoutStatusUncompleted(
       coveredDistanceInKm: workoutStatusDto.coveredDistanceInKilometers,
       avgPace: mapPaceFromFirebase(workoutStatusDto.avgPace),
       avgHeartRate: workoutStatusDto.avgHeartRate,
@@ -31,16 +31,16 @@ WorkoutStatus mapWorkoutStatusFromFirebase(WorkoutStatusDto workoutStatusDto) {
 WorkoutStatusDto mapWorkoutStatusToFirebase(WorkoutStatus workoutStatus) {
   if (workoutStatus is WorkoutStatusPending) {
     return const WorkoutStatusPendingDto();
-  } else if (workoutStatus is WorkoutStatusDone) {
-    return WorkoutStatusDoneDto(
+  } else if (workoutStatus is WorkoutStatusCompleted) {
+    return WorkoutStatusCompletedDto(
       coveredDistanceInKilometers: workoutStatus.coveredDistanceInKm,
       avgPace: mapPaceToFirebase(workoutStatus.avgPace),
       avgHeartRate: workoutStatus.avgHeartRate,
       moodRate: mapMoodRateToFirebase(workoutStatus.moodRate),
       comment: workoutStatus.comment,
     );
-  } else if (workoutStatus is WorkoutStatusFailed) {
-    return WorkoutStatusFailedDto(
+  } else if (workoutStatus is WorkoutStatusUncompleted) {
+    return WorkoutStatusUncompletedDto(
       coveredDistanceInKilometers: workoutStatus.coveredDistanceInKm,
       avgPace: mapPaceToFirebase(workoutStatus.avgPace),
       avgHeartRate: workoutStatus.avgHeartRate,
