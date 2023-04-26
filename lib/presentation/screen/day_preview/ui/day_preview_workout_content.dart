@@ -149,7 +149,7 @@ class _WorkoutParam extends StatelessWidget {
       children: [
         Text(
           label,
-          style: Theme.of(context).textTheme.titleMedium,
+          style: Theme.of(context).textTheme.labelLarge,
         ),
         const SizedBox(height: 4),
         child,

@@ -5,6 +5,6 @@ extension PaceFormatter on Pace {
   String toUIFormat() {
     final String minutesStr = twoDigits(minutes);
     final String secondsStr = twoDigits(seconds);
-    return '$minutesStr:$secondsStr ud/min';
+    return '$minutesStr:$secondsStr min/km';
   }
 }

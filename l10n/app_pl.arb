@@ -175,6 +175,22 @@
   "@day_preview_screen_workout_status_section_label": {
     "description": "Label of the section to display workout status"
   },
+  "day_preview_screen_workout_status_covered_distance": "Pokonany dystans",
+  "@day_preview_screen_workout_status_covered_distance": {
+    "description": "Label of the covered distance"
+  },
+  "day_preview_screen_workout_status_mood_rate": "Samopoczucie",
+  "@day_preview_screen_workout_status_mood_rate": {
+    "description": "Label of the mood rate"
+  },
+  "day_preview_screen_workout_status_avg_pace": "Średnie tempo",
+  "@day_preview_screen_workout_status_avg_pace": {
+    "description": "Label of the average pace"
+  },
+  "day_preview_screen_workout_status_avg_heart_rate": "Średnie tętno",
+  "@day_preview_screen_workout_status_avg_heart_rate": {
+    "description": "Label of the average heart rate"
+  },
   "day_preview_screen_comment_section_label": "Uwagi",
   "@day_preview_screen_comment_section_label": {
     "description": "Label of the comment section"

@@ -69,14 +69,16 @@ class _WorkoutStats extends StatelessWidget {
             children: [
               Expanded(
                 child: _WorkoutStatParam(
-                  label: 'Pokonany dystans',
+                  label: AppLocalizations.of(context)!
+                      .day_preview_screen_workout_status_covered_distance,
                   value: '${status.coveredDistanceInKm} km',
                 ),
               ),
               const VerticalDivider(),
               Expanded(
                 child: _WorkoutStatParam(
-                  label: 'Samopoczucie',
+                  label: AppLocalizations.of(context)!
+                      .day_preview_screen_workout_status_mood_rate,
                   value: status.moodRate.toUIFormat(),
                 ),
               ),
@@ -89,14 +91,16 @@ class _WorkoutStats extends StatelessWidget {
             children: [
               Expanded(
                 child: _WorkoutStatParam(
-                  label: 'Średnie tempo',
+                  label: AppLocalizations.of(context)!
+                      .day_preview_screen_workout_status_avg_pace,
                   value: status.avgPace.toUIFormat(),
                 ),
               ),
               const VerticalDivider(),
               Expanded(
                 child: _WorkoutStatParam(
-                  label: 'Średnie tętno',
+                  label: AppLocalizations.of(context)!
+                      .day_preview_screen_workout_status_avg_heart_rate,
                   value: '${status.avgHeartRate} ud/min',
                 ),
               ),
