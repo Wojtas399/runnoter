@@ -36,6 +36,12 @@ class _WorkoutContent extends StatelessWidget {
                   .day_preview_screen_workout_status_section_label,
               child: const _WorkoutStatus(),
             ),
+            const SizedBox(height: 16),
+            _WorkoutParam(
+              label: AppLocalizations.of(context)!
+                  .day_preview_screen_comment_section_label,
+              child: const _WorkoutComment(),
+            ),
           ],
         ),
         const _WorkoutFinishButton(),
@@ -53,7 +59,7 @@ class _WorkoutName extends StatelessWidget {
       (DayPreviewBloc bloc) => bloc.state.workoutName,
     );
 
-    return Text(workoutName ?? '--');
+    return NullableText(workoutName);
   }
 }
 
@@ -67,7 +73,7 @@ class _WorkoutStages extends StatelessWidget {
     );
 
     if (stages == null) {
-      return const Text('--');
+      return const NullableText(null);
     }
 
     return Wrap(
@@ -93,9 +99,24 @@ class _WorkoutDistance extends StatelessWidget {
       (DayPreviewBloc bloc) => bloc.state.stages,
     );
 
-    return Text(
-      stages?.toTotalDistanceDescription(context) ?? '--',
+    return NullableText(stages?.toTotalDistanceDescription(context));
+  }
+}
+
+class _WorkoutComment extends StatelessWidget {
+  const _WorkoutComment();
+
+  @override
+  Widget build(BuildContext context) {
+    final WorkoutStatus? workoutStatus = context.select(
+      (DayPreviewBloc bloc) => bloc.state.workoutStatus,
     );
+    String? comment;
+    if (workoutStatus is FinishedWorkout) {
+      comment = workoutStatus.comment;
+    }
+
+    return NullableText(comment);
   }
 }
 

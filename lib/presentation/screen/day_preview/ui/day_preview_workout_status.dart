@@ -10,7 +10,7 @@ class _WorkoutStatus extends StatelessWidget {
     );
 
     if (status == null) {
-      return const Text('--');
+      return const NullableText(null);
     }
     return Column(
       children: [
@@ -90,7 +90,7 @@ class _WorkoutStats extends StatelessWidget {
               Expanded(
                 child: _WorkoutStatParam(
                   label: 'Średnie tempo',
-                  value: '${status.avgPace.toUIFormat()}',
+                  value: status.avgPace.toUIFormat(),
                 ),
               ),
               const VerticalDivider(),

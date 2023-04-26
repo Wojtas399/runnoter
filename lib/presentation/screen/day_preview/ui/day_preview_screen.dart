@@ -7,6 +7,7 @@ import '../../../../domain/model/workout_status.dart';
 import '../../../../domain/repository/workout_repository.dart';
 import '../../../../domain/service/auth_service.dart';
 import '../../../component/big_button_component.dart';
+import '../../../component/nullable_text_component.dart';
 import '../../../config/navigation/routes.dart';
 import '../../../formatter/date_formatter.dart';
 import '../../../formatter/list_of_workout_stages_formatter.dart';

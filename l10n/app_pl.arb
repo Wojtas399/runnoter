@@ -175,6 +175,10 @@
   "@day_preview_screen_workout_status_section_label": {
     "description": "Label of the section to display workout status"
   },
+  "day_preview_screen_comment_section_label": "Uwagi",
+  "@day_preview_screen_comment_section_label": {
+    "description": "Label of the comment section"
+  },
   "day_preview_screen_finish_workout_button_label": "Zakończ",
   "@day_preview_screen_finish_workout_button_label": {
     "description": "Label of the button to finish workout"
