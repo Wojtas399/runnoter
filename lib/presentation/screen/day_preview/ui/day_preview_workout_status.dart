@@ -18,7 +18,18 @@ class _WorkoutStatus extends StatelessWidget {
         if (status is FinishedWorkout)
           Padding(
             padding: const EdgeInsets.only(top: 24),
-            child: _WorkoutStats(status: status),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _WorkoutStats(status: status),
+                const SizedBox(height: 16),
+                _WorkoutParam(
+                  label: AppLocalizations.of(context)!
+                      .day_preview_screen_comment_section_label,
+                  child: const _WorkoutComment(),
+                ),
+              ],
+            ),
           ),
       ],
     );
@@ -109,6 +120,23 @@ class _WorkoutStats extends StatelessWidget {
         ),
       ],
     );
+  }
+}
+
+class _WorkoutComment extends StatelessWidget {
+  const _WorkoutComment();
+
+  @override
+  Widget build(BuildContext context) {
+    final WorkoutStatus? workoutStatus = context.select(
+      (DayPreviewBloc bloc) => bloc.state.workoutStatus,
+    );
+    String? comment;
+    if (workoutStatus is FinishedWorkout) {
+      comment = workoutStatus.comment;
+    }
+
+    return NullableText(comment);
   }
 }
 
