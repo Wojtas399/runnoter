@@ -56,6 +56,7 @@ class _AddStageButton extends StatelessWidget {
   }
 
   Future<void> _onPressed(BuildContext context) async {
+    unfocusInputs();
     final WorkoutCreatorBloc bloc = context.read<WorkoutCreatorBloc>();
     final WorkoutStage? workoutStage = await showFullScreenDialog(
       context: context,
