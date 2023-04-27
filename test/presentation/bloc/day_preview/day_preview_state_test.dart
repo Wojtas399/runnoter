@@ -53,6 +53,19 @@ void main() {
   );
 
   test(
+    'copy with workout id as null',
+    () {
+      const String workoutId = 'w1';
+
+      state = state.copyWith(workoutId: workoutId);
+      final state2 = state.copyWith(workoutIdAsNull: true);
+
+      expect(state.workoutId, workoutId);
+      expect(state2.workoutId, null);
+    },
+  );
+
+  test(
     'copy with workout name',
     () {
       const String expectedWorkoutName = 'workout name';

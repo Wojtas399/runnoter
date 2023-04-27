@@ -34,6 +34,7 @@ class DayPreviewState extends BlocState<DayPreviewState> {
     BlocStatus? status,
     DateTime? date,
     String? workoutId,
+    bool workoutIdAsNull = false,
     String? workoutName,
     List<WorkoutStage>? stages,
     WorkoutStatus? workoutStatus,
@@ -41,7 +42,7 @@ class DayPreviewState extends BlocState<DayPreviewState> {
     return DayPreviewState(
       status: status ?? const BlocStatusComplete(),
       date: date ?? this.date,
-      workoutId: workoutId ?? this.workoutId,
+      workoutId: workoutIdAsNull ? null : workoutId ?? this.workoutId,
       workoutName: workoutName ?? this.workoutName,
       stages: stages ?? this.stages,
       workoutStatus: workoutStatus ?? this.workoutStatus,

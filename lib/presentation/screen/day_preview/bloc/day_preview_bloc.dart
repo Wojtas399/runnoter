@@ -62,6 +62,7 @@ class DayPreviewBloc extends BlocWithStatus<DayPreviewEvent, DayPreviewState,
     final Workout? workout = event.workout;
     emit(state.copyWith(
       workoutId: workout?.id,
+      workoutIdAsNull: workout == null,
       workoutName: workout?.name,
       stages: workout?.stages,
       workoutStatus: workout?.status,

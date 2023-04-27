@@ -31,6 +31,9 @@ class _AppBar extends StatelessWidget with PreferredSizeWidget {
             ),
             PopupMenuItem<int>(
               value: 1,
+              onTap: () {
+                _onDeleteButtonPressed(context);
+              },
               child: Row(
                 children: [
                   const Icon(Icons.delete_outline),
@@ -46,5 +49,11 @@ class _AppBar extends StatelessWidget with PreferredSizeWidget {
         ),
       ],
     );
+  }
+
+  void _onDeleteButtonPressed(BuildContext context) {
+    context.read<DayPreviewBloc>().add(
+          const DayPreviewEventDeleteWorkout(),
+        );
   }
 }

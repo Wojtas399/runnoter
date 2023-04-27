@@ -93,6 +93,24 @@ void main() {
 
   blocTest(
     'workout updated, '
+    'new workout is null, '
+    'should set workout id as null in state',
+    build: () => createBloc(
+      workoutId: 'w1',
+    ),
+    act: (DayPreviewBloc bloc) => bloc.add(
+      const DayPreviewEventWorkoutUpdated(workout: null),
+    ),
+    expect: () => [
+      createState(
+        status: const BlocStatusComplete(),
+        workoutId: null,
+      ),
+    ],
+  );
+
+  blocTest(
+    'workout updated, '
     'pending workout, '
     'should update workout id, name, stages and status in state',
     build: () => createBloc(),
