@@ -64,4 +64,11 @@ class FirebaseWorkoutService {
     final snapshot = await workoutRef.get();
     return snapshot.data();
   }
+
+  Future<void> deleteWorkout({
+    required String userId,
+    required String workoutId,
+  }) async {
+    await getWorkoutsRef(userId).doc(workoutId).delete();
+  }
 }
