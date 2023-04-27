@@ -275,4 +275,43 @@ void main() {
       ).called(1);
     },
   );
+
+  test(
+    'delete workout, '
+    'should call method from firebase service to delete workout and should delete workout from the state of repository',
+    () {
+      const String workoutId = 'w1';
+      final List<Workout> existingWorkouts = [
+        createWorkout(id: 'w2', userId: userId),
+        createWorkout(id: workoutId, userId: userId),
+      ];
+      repository = createRepository(initialState: existingWorkouts);
+      firebaseWorkoutService.mockDeleteWorkout();
+
+      final Stream<List<Workout>?> repositoryState$ = repository.dataStream$;
+      repositoryState$.listen((_) {});
+      repository.deleteWorkout(
+        userId: userId,
+        workoutId: workoutId,
+      );
+
+      expect(
+        repositoryState$,
+        emitsInOrder(
+          [
+            existingWorkouts,
+            [
+              existingWorkouts.first,
+            ],
+          ],
+        ),
+      );
+      verify(
+        () => firebaseWorkoutService.deleteWorkout(
+          userId: userId,
+          workoutId: workoutId,
+        ),
+      ).called(1);
+    },
+  );
 }

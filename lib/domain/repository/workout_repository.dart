@@ -21,4 +21,9 @@ abstract class WorkoutRepository {
     required WorkoutStatus status,
     required List<WorkoutStage> stages,
   });
+
+  Future<void> deleteWorkout({
+    required String userId,
+    required String workoutId,
+  });
 }

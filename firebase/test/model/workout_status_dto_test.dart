@@ -50,7 +50,7 @@ void main() {
     () {
       const PaceDto avgPace = PaceDto(minutes: 5, seconds: 30);
       final Map<String, dynamic> json = {
-        'name': 'failed',
+        'name': 'uncompleted',
         'coveredDistanceInKilometers': 8.5,
         'avgPace': avgPace.toJson(),
         'avgHeartRate': 145,

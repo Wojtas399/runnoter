@@ -42,6 +42,15 @@ class MockWorkoutRepository extends Mock implements WorkoutRepository {
     ).thenAnswer((invocation) => Future.value());
   }
 
+  void mockDeleteWorkout() {
+    when(
+      () => deleteWorkout(
+        userId: any(named: 'userId'),
+        workoutId: any(named: 'workoutId'),
+      ),
+    ).thenAnswer((invocation) => Future.value());
+  }
+
   void _mockWorkoutStatus() {
     registerFallbackValue(_FakeWorkoutStatus());
   }

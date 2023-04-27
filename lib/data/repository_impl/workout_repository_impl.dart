@@ -89,6 +89,18 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
     }
   }
 
+  @override
+  Future<void> deleteWorkout({
+    required String userId,
+    required String workoutId,
+  }) async {
+    await _firebaseWorkoutService.deleteWorkout(
+      userId: userId,
+      workoutId: workoutId,
+    );
+    removeEntity(workoutId);
+  }
+
   List<Workout>? _findWorkoutsMatchingToUserIdAndDateRange(
     List<Workout>? workouts,
     String userId,
