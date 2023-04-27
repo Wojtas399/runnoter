@@ -7,6 +7,7 @@ import '../../../../domain/model/workout_status.dart';
 import '../../../../domain/repository/workout_repository.dart';
 import '../../../../domain/service/auth_service.dart';
 import '../../../component/big_button_component.dart';
+import '../../../component/bloc_with_status_listener_component.dart';
 import '../../../component/nullable_text_component.dart';
 import '../../../config/navigation/routes.dart';
 import '../../../formatter/date_formatter.dart';
@@ -15,9 +16,11 @@ import '../../../formatter/mood_rate_formatter.dart';
 import '../../../formatter/pace_formatter.dart';
 import '../../../formatter/workout_stage_formatter.dart';
 import '../../../formatter/workout_status_formatter.dart';
+import '../../../service/dialog_service.dart';
 import '../../../service/navigator_service.dart';
 import '../bloc/day_preview_bloc.dart';
 import '../bloc/day_preview_event.dart';
+import '../bloc/day_preview_state.dart';
 
 part 'day_preview_app_bar.dart';
 part 'day_preview_content.dart';
@@ -37,7 +40,9 @@ class DayPreviewScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return _BlocProvider(
       date: date,
-      child: const DayPreviewContent(),
+      child: const _BlocListener(
+        child: DayPreviewContent(),
+      ),
     );
   }
 }
@@ -64,5 +69,36 @@ class _BlocProvider extends StatelessWidget {
         ),
       child: child,
     );
+  }
+}
+
+class _BlocListener extends StatelessWidget {
+  final Widget child;
+
+  const _BlocListener({
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocWithStatusListener<DayPreviewBloc, DayPreviewState,
+        DayPreviewInfo, dynamic>(
+      onInfo: (DayPreviewInfo info) {
+        _manageInfo(context, info);
+      },
+      child: child,
+    );
+  }
+
+  void _manageInfo(BuildContext context, DayPreviewInfo info) {
+    switch (info) {
+      case DayPreviewInfo.workoutDeleted:
+        showSnackbarMessage(
+          context: context,
+          message: AppLocalizations.of(context)!
+              .day_preview_screen_deleted_workout_message,
+        );
+        break;
+    }
   }
 }
