@@ -24,11 +24,11 @@ class _Workout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool doesWorkoutExist = context.select(
-      (DayPreviewBloc bloc) => bloc.state.doesWorkoutExist,
+    final String? workoutId = context.select(
+      (DayPreviewBloc bloc) => bloc.state.workoutId,
     );
 
-    if (doesWorkoutExist) {
+    if (workoutId != null) {
       return const _WorkoutContent();
     }
     return const _NoWorkoutContent();

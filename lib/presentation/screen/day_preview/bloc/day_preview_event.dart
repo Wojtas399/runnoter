@@ -19,3 +19,7 @@ class DayPreviewEventWorkoutUpdated extends DayPreviewEvent {
     required this.workout,
   });
 }
+
+class DayPreviewEventDeleteWorkout extends DayPreviewEvent {
+  const DayPreviewEventDeleteWorkout();
+}

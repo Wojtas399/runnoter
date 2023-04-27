@@ -14,78 +14,6 @@ void main() {
   });
 
   test(
-    'does workout exist, '
-    'workout name, stages and status arent null, '
-    'should be true',
-    () {
-      state = state.copyWith(
-        workoutName: 'workout name',
-        stages: [
-          WorkoutStageBaseRun(
-            distanceInKilometers: 10,
-            maxHeartRate: 150,
-          ),
-        ],
-        workoutStatus: const WorkoutStatusPending(),
-      );
-
-      expect(state.doesWorkoutExist, true);
-    },
-  );
-
-  test(
-    'does workout exist, '
-    'workout name is null, '
-    'should be false',
-    () {
-      state = state.copyWith(
-        stages: [
-          WorkoutStageBaseRun(
-            distanceInKilometers: 10,
-            maxHeartRate: 150,
-          ),
-        ],
-        workoutStatus: const WorkoutStatusPending(),
-      );
-
-      expect(state.doesWorkoutExist, false);
-    },
-  );
-
-  test(
-    'does workout exist, '
-    'list of stages is null, '
-    'should be true',
-    () {
-      state = state.copyWith(
-        workoutName: 'workout name',
-        workoutStatus: const WorkoutStatusPending(),
-      );
-
-      expect(state.doesWorkoutExist, false);
-    },
-  );
-
-  test(
-    'does workout exist, '
-    'workout status is null, '
-    'should be true',
-    () {
-      state = state.copyWith(
-        workoutName: 'workout name',
-        stages: [
-          WorkoutStageBaseRun(
-            distanceInKilometers: 10,
-            maxHeartRate: 150,
-          ),
-        ],
-      );
-
-      expect(state.doesWorkoutExist, false);
-    },
-  );
-
-  test(
     'copy with status',
     () {
       const BlocStatus expectedBlocStatus = BlocStatusLoading();
@@ -108,6 +36,19 @@ void main() {
 
       expect(state.date, expectedDate);
       expect(state2.date, expectedDate);
+    },
+  );
+
+  test(
+    'copy with workout id',
+    () {
+      const String expectedWorkoutId = 'w1';
+
+      state = state.copyWith(workoutId: expectedWorkoutId);
+      final state2 = state.copyWith();
+
+      expect(state.workoutId, expectedWorkoutId);
+      expect(state2.workoutId, expectedWorkoutId);
     },
   );
 

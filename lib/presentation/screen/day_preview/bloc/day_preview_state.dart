@@ -5,6 +5,7 @@ import '../../../model/bloc_status.dart';
 
 class DayPreviewState extends BlocState<DayPreviewState> {
   final DateTime? date;
+  final String? workoutId;
   final String? workoutName;
   final List<WorkoutStage>? stages;
   final WorkoutStatus? workoutStatus;
@@ -12,6 +13,7 @@ class DayPreviewState extends BlocState<DayPreviewState> {
   const DayPreviewState({
     required super.status,
     this.date,
+    this.workoutId,
     this.workoutName,
     this.stages,
     this.workoutStatus,
@@ -21,18 +23,17 @@ class DayPreviewState extends BlocState<DayPreviewState> {
   List<Object?> get props => [
         status,
         date,
+        workoutId,
         workoutName,
         stages,
         workoutStatus,
       ];
 
-  bool get doesWorkoutExist =>
-      workoutName != null && stages != null && workoutStatus != null;
-
   @override
   DayPreviewState copyWith({
     BlocStatus? status,
     DateTime? date,
+    String? workoutId,
     String? workoutName,
     List<WorkoutStage>? stages,
     WorkoutStatus? workoutStatus,
@@ -40,9 +41,14 @@ class DayPreviewState extends BlocState<DayPreviewState> {
     return DayPreviewState(
       status: status ?? const BlocStatusComplete(),
       date: date ?? this.date,
+      workoutId: workoutId ?? this.workoutId,
       workoutName: workoutName ?? this.workoutName,
       stages: stages ?? this.stages,
       workoutStatus: workoutStatus ?? this.workoutStatus,
     );
   }
+}
+
+enum DayPreviewInfo {
+  workoutDeleted,
 }

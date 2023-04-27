@@ -16,16 +16,20 @@ void main() {
   final workoutRepository = MockWorkoutRepository();
   final DateTime date = DateTime(2023, 1, 1);
 
-  DayPreviewBloc createBloc() {
+  DayPreviewBloc createBloc({
+    String? workoutId,
+  }) {
     return DayPreviewBloc(
       authService: authService,
       workoutRepository: workoutRepository,
+      workoutId: workoutId,
     );
   }
 
   DayPreviewState createState({
     BlocStatus status = const BlocStatusInitial(),
     DateTime? date,
+    String? workoutId,
     String? workoutName,
     List<WorkoutStage>? stages,
     WorkoutStatus? workoutStatus,
@@ -33,6 +37,7 @@ void main() {
     return DayPreviewState(
       status: status,
       date: date,
+      workoutId: workoutId,
       workoutName: workoutName,
       stages: stages,
       workoutStatus: workoutStatus,
@@ -89,7 +94,7 @@ void main() {
   blocTest(
     'workout updated, '
     'pending workout, '
-    'should update workout name, stages and status in state',
+    'should update workout id, name, stages and status in state',
     build: () => createBloc(),
     act: (DayPreviewBloc bloc) => bloc.add(
       DayPreviewEventWorkoutUpdated(
@@ -110,6 +115,7 @@ void main() {
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
+        workoutId: 'w1',
         workoutName: 'workout name',
         stages: [
           WorkoutStageBaseRun(
@@ -152,6 +158,7 @@ void main() {
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
+        workoutId: 'w1',
         workoutName: 'workout name',
         stages: [
           WorkoutStageBaseRun(
@@ -200,6 +207,7 @@ void main() {
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
+        workoutId: 'w1',
         workoutName: 'workout name',
         stages: [
           WorkoutStageBaseRun(
@@ -216,5 +224,71 @@ void main() {
         ),
       ),
     ],
+  );
+
+  blocTest(
+    'delete workout, '
+    'workout id is null, '
+    'should finish event call',
+    build: () => createBloc(),
+    act: (DayPreviewBloc bloc) => bloc.add(
+      const DayPreviewEventDeleteWorkout(),
+    ),
+    expect: () => [],
+  );
+
+  blocTest(
+    'delete workout, '
+    'logged user does not exist, '
+    'should finish event call',
+    build: () => createBloc(
+      workoutId: 'w1',
+    ),
+    setUp: () => authService.mockGetLoggedUserId(),
+    act: (DayPreviewBloc bloc) => bloc.add(
+      const DayPreviewEventDeleteWorkout(),
+    ),
+    expect: () => [],
+    verify: (_) => verify(
+      () => authService.loggedUserId$,
+    ).called(1),
+  );
+
+  blocTest(
+    'delete workout, '
+    'should call method from workout repository to delete workout and should emit info that workout has been deleted',
+    build: () => createBloc(
+      workoutId: 'w1',
+    ),
+    setUp: () {
+      authService.mockGetLoggedUserId(userId: 'u1');
+      workoutRepository.mockDeleteWorkout();
+    },
+    act: (DayPreviewBloc bloc) => bloc.add(
+      const DayPreviewEventDeleteWorkout(),
+    ),
+    expect: () => [
+      createState(
+        status: const BlocStatusLoading(),
+        workoutId: 'w1',
+      ),
+      createState(
+        status: const BlocStatusComplete<DayPreviewInfo>(
+          info: DayPreviewInfo.workoutDeleted,
+        ),
+        workoutId: 'w1',
+      ),
+    ],
+    verify: (_) {
+      verify(
+        () => authService.loggedUserId$,
+      ).called(1);
+      verify(
+        () => workoutRepository.deleteWorkout(
+          userId: 'u1',
+          workoutId: 'w1',
+        ),
+      ).called(1);
+    },
   );
 }
