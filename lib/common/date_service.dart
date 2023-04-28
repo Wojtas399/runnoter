@@ -60,5 +60,13 @@ class DateService {
         date1.day == date2.day;
   }
 
+  bool isDate1BeforeDate2(DateTime date1, DateTime date2) {
+    return date1.year < date2.year ||
+        (date1.year == date2.year && date1.month < date2.month) ||
+        (date1.year == date2.year &&
+            date1.month == date2.month &&
+            date1.day < date2.day);
+  }
+
   DateTime _getDate(DateTime d) => DateTime(d.year, d.month, d.day);
 }
