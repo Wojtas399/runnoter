@@ -35,6 +35,7 @@ class DayPreviewBloc extends BlocWithStatus<DayPreviewEvent, DayPreviewState,
         ) {
     on<DayPreviewEventInitialize>(_initialize);
     on<DayPreviewEventWorkoutUpdated>(_workoutUpdated);
+    on<DayPreviewEventEditWorkout>(_editWorkout);
     on<DayPreviewEventDeleteWorkout>(_deleteWorkout);
   }
 
@@ -75,6 +76,13 @@ class DayPreviewBloc extends BlocWithStatus<DayPreviewEvent, DayPreviewState,
       stages: workout?.stages,
       workoutStatus: workout?.status,
     ));
+  }
+
+  void _editWorkout(
+    DayPreviewEventEditWorkout event,
+    Emitter<DayPreviewState> emit,
+  ) {
+    emitCompleteStatus(emit, DayPreviewInfo.editWorkout);
   }
 
   void _deleteWorkout(
