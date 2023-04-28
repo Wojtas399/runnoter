@@ -7,9 +7,7 @@ class _Content extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          AppLocalizations.of(context)!.workout_creator_screen_title,
-        ),
+        title: const _AppBarTitle(),
       ),
       body: SafeArea(
         child: ScrollableContent(
@@ -35,6 +33,24 @@ class _Content extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class _AppBarTitle extends StatelessWidget {
+  const _AppBarTitle();
+
+  @override
+  Widget build(BuildContext context) {
+    final String? workoutId = context.select(
+      (WorkoutCreatorBloc bloc) => bloc.state.workoutId,
+    );
+    final appLocalizations = AppLocalizations.of(context);
+
+    String title = appLocalizations!.workout_creator_screen_title_add_mode;
+    if (workoutId != null) {
+      title = appLocalizations.workout_creator_screen_title_edit_mode;
+    }
+    return Text(title);
   }
 }
 
