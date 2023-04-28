@@ -38,7 +38,7 @@ void main() {
   });
 
   test(
-    'get workouts from week, '
+    'get workouts by date range, '
     'should emit workouts existing in state and should load workouts from firebase and add them to repository',
     () {
       final DateTime startDate = DateTime(2023, 4, 3);
@@ -106,7 +106,7 @@ void main() {
       );
 
       final Stream<List<Workout>?> workouts$ =
-          repository.getWorkoutsByUserIdAndDateRange(
+          repository.getWorkoutsByDateRange(
         userId: userId,
         startDate: startDate,
         endDate: endDate,
@@ -148,7 +148,94 @@ void main() {
   );
 
   test(
-    'get workout by user id and date, '
+    'get workout by id, '
+    'workout exists in repository, '
+    'should emit workout from repository',
+    () {
+      const String workoutId = 'w1';
+      final Workout expectedWorkout = createWorkout(
+        id: workoutId,
+        userId: userId,
+        name: 'workout 1',
+      );
+      final List<Workout> existingWorkouts = [
+        expectedWorkout,
+        createWorkout(
+          id: 'w2',
+          userId: userId,
+          name: 'workout 2',
+        ),
+      ];
+      repository = createRepository(initialState: existingWorkouts);
+
+      final Stream<Workout?> workout$ = repository.getWorkoutById(
+        workoutId: workoutId,
+        userId: userId,
+      );
+      workout$.listen((_) {});
+
+      expect(
+        workout$,
+        emitsInOrder(
+          [
+            expectedWorkout,
+          ],
+        ),
+      );
+    },
+  );
+
+  test(
+    'get workout by id, '
+    'workout does not exist in repository, '
+    'should load workout from firebase, add it to repository and emit it',
+    () {
+      const String workoutId = 'w1';
+      final Workout expectedWorkout = createWorkout(
+        id: workoutId,
+        userId: userId,
+        name: 'workout 1',
+      );
+      final firebase.WorkoutDto expectedWorkoutDto =
+          createWorkoutDto(id: workoutId, userId: userId, name: 'workout 1');
+      final List<Workout> existingWorkouts = [
+        createWorkout(
+          id: 'w2',
+          userId: userId,
+          name: 'workout 2',
+        ),
+      ];
+      repository = createRepository(initialState: existingWorkouts);
+      firebaseWorkoutService.mockLoadWorkoutById(
+        workoutDto: expectedWorkoutDto,
+      );
+
+      final Stream<Workout?> workout$ = repository.getWorkoutById(
+        workoutId: workoutId,
+        userId: userId,
+      );
+      workout$.listen((_) {});
+
+      expect(
+        workout$,
+        emitsInOrder(
+          [
+            null,
+            expectedWorkout,
+          ],
+        ),
+      );
+      verify(
+        () => firebaseWorkoutService.loadWorkoutById(
+          workoutId: workoutId,
+          userId: userId,
+        ),
+      ).called(1);
+    },
+  );
+
+  test(
+    'get workout by date, '
     'should emit workout if it exists in repository and should call firebase method to load workout',
     () {
       final DateTime date = DateTime(2023, 2, 1);
@@ -178,7 +265,7 @@ void main() {
         initialState: [expectedWorkoutFromRepo],
       );
 
-      final Stream<Workout?> workout$ = repository.getWorkoutByUserIdAndDate(
+      final Stream<Workout?> workout$ = repository.getWorkoutByDate(
         userId: userId,
         date: date,
       );

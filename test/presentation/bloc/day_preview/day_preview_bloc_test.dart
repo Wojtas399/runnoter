@@ -81,7 +81,7 @@ void main() {
       );
       dateService.mockIsDate1BeforeDate2(expected: true);
       authService.mockGetLoggedUserId(userId: 'u1');
-      workoutRepository.mockGetWorkoutByUserIdAndDate();
+      workoutRepository.mockGetWorkoutByDate();
     },
     act: (DayPreviewBloc bloc) => bloc.add(
       DayPreviewEventInitialize(
@@ -100,7 +100,7 @@ void main() {
         () => authService.loggedUserId$,
       ).called(1);
       verify(
-        () => workoutRepository.getWorkoutByUserIdAndDate(
+        () => workoutRepository.getWorkoutByDate(
           userId: 'u1',
           date: date,
         ),

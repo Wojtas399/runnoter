@@ -6,11 +6,11 @@ import 'package:runnoter/domain/repository/workout_repository.dart';
 class _FakeWorkoutStatus extends Fake implements WorkoutStatus {}
 
 class MockWorkoutRepository extends Mock implements WorkoutRepository {
-  void mockGetWorkoutsByUserIdAndDateRange({
+  void mockGetWorkoutsByDateRange({
     List<Workout>? workouts,
   }) {
     when(
-      () => getWorkoutsByUserIdAndDateRange(
+      () => getWorkoutsByDateRange(
         userId: any(named: 'userId'),
         startDate: any(named: 'startDate'),
         endDate: any(named: 'endDate'),
@@ -18,11 +18,11 @@ class MockWorkoutRepository extends Mock implements WorkoutRepository {
     ).thenAnswer((invocation) => Stream.value(workouts));
   }
 
-  void mockGetWorkoutByUserIdAndDate({
+  void mockGetWorkoutByDate({
     Workout? workout,
   }) {
     when(
-      () => getWorkoutByUserIdAndDate(
+      () => getWorkoutByDate(
         userId: any(named: 'userId'),
         date: any(named: 'date'),
       ),

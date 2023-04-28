@@ -26,45 +26,53 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
         super(initialData: initialState);
 
   @override
-  Stream<List<Workout>?> getWorkoutsByUserIdAndDateRange({
-    required String userId,
+  Stream<List<Workout>?> getWorkoutsByDateRange({
     required DateTime startDate,
     required DateTime endDate,
+    required String userId,
   }) {
     return dataStream$
         .map(
           (List<Workout>? workouts) =>
-              _findWorkoutsMatchingToUserIdAndDateRange(
-            workouts,
-            userId,
-            startDate,
-            endDate,
-          ),
+              _findWorkoutsByDateRange(workouts, userId, startDate, endDate),
         )
         .doOnListen(
-          () => _loadWorkoutsByUserIdAndDateRangeFromRemoteDb(
-            userId,
-            startDate,
-            endDate,
-          ),
+          () =>
+              _loadWorkoutsByDateRangeFromRemoteDb(startDate, endDate, userId),
         );
   }
 
   @override
-  Stream<Workout?> getWorkoutByUserIdAndDate({
+  Stream<Workout?> getWorkoutById({
+    required String workoutId,
     required String userId,
-    required DateTime date,
   }) {
     return dataStream$
         .map(
-          (workouts) => _findWorkoutMatchingToUserIdAndDate(
-            workouts,
-            userId,
-            date,
-          ),
+      (List<Workout>? workouts) =>
+          _findWorkoutById(workouts, workoutId, userId),
+    )
+        .doOnListen(
+      () {
+        if (doesEntityNotExistInState(workoutId)) {
+          _loadWorkoutByIdFromRemoteDb(workoutId, userId);
+        }
+      },
+    );
+  }
+
+  @override
+  Stream<Workout?> getWorkoutByDate({
+    required DateTime date,
+    required String userId,
+  }) {
+    return dataStream$
+        .map(
+          (List<Workout>? workouts) =>
+              _findWorkoutByDate(workouts, date, userId),
         )
         .doOnListen(
-          () => _loadWorkoutByUserIdAndDate(userId, date),
+          () => _loadWorkoutByDateFromRemoteDb(date, userId),
         );
   }
 
@@ -101,7 +109,7 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
     removeEntity(workoutId);
   }
 
-  List<Workout>? _findWorkoutsMatchingToUserIdAndDateRange(
+  List<Workout>? _findWorkoutsByDateRange(
     List<Workout>? workouts,
     String userId,
     DateTime startDate,
@@ -119,10 +127,21 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
           )
           .toList();
 
-  Workout? _findWorkoutMatchingToUserIdAndDate(
+  Workout? _findWorkoutById(
     List<Workout>? workouts,
+    String workoutId,
     String userId,
+  ) =>
+      <Workout?>[...?workouts].firstWhere(
+        (Workout? workout) =>
+            workout?.id == workoutId && workout?.userId == userId,
+        orElse: () => null,
+      );
+
+  Workout? _findWorkoutByDate(
+    List<Workout>? workouts,
     DateTime date,
+    String userId,
   ) =>
       <Workout?>[...?workouts].firstWhere(
         (Workout? workout) =>
@@ -132,10 +151,10 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
         orElse: () => null,
       );
 
-  Future<void> _loadWorkoutsByUserIdAndDateRangeFromRemoteDb(
-    String userId,
+  Future<void> _loadWorkoutsByDateRangeFromRemoteDb(
     DateTime startDate,
     DateTime endDate,
+    String userId,
   ) async {
     final List<WorkoutDto>? workoutDtos =
         await _firebaseWorkoutService.loadWorkoutsByDateRange(
@@ -154,9 +173,25 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
     addEntities(workouts);
   }
 
-  Future<void> _loadWorkoutByUserIdAndDate(
+  Future<void> _loadWorkoutByIdFromRemoteDb(
+    String workoutId,
     String userId,
+  ) async {
+    final WorkoutDto? workoutDto =
+        await _firebaseWorkoutService.loadWorkoutById(
+      workoutId: workoutId,
+      userId: userId,
+    );
+    if (workoutDto == null) {
+      return;
+    }
+    final Workout workout = mapWorkoutFromFirebase(workoutDto);
+    addEntity(workout);
+  }
+
+  Future<void> _loadWorkoutByDateFromRemoteDb(
     DateTime date,
+    String userId,
   ) async {
     final WorkoutDto? workoutDto =
         await _firebaseWorkoutService.loadWorkoutByDate(

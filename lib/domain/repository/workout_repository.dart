@@ -3,15 +3,20 @@ import '../model/workout_stage.dart';
 import '../model/workout_status.dart';
 
 abstract class WorkoutRepository {
-  Stream<List<Workout>?> getWorkoutsByUserIdAndDateRange({
-    required String userId,
+  Stream<List<Workout>?> getWorkoutsByDateRange({
     required DateTime startDate,
     required DateTime endDate,
+    required String userId,
   });
 
-  Stream<Workout?> getWorkoutByUserIdAndDate({
+  Stream<Workout?> getWorkoutById({
+    required String workoutId,
     required String userId,
+  });
+
+  Stream<Workout?> getWorkoutByDate({
     required DateTime date,
+    required String userId,
   });
 
   Future<void> addWorkout({

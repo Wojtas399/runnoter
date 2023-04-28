@@ -99,7 +99,7 @@ class DayPreviewBloc extends BlocWithStatus<DayPreviewEvent, DayPreviewState,
 
   void _setWorkoutListener(String loggedUserId, DateTime date) {
     _workoutListener ??= _workoutRepository
-        .getWorkoutByUserIdAndDate(
+        .getWorkoutByDate(
           userId: loggedUserId,
           date: date,
         )

@@ -36,8 +36,7 @@ class CurrentWeekCubit extends Cubit<List<Day>?> {
     _workoutsListener ??= _authService.loggedUserId$
         .whereType<String>()
         .switchMap(
-          (String loggedUserId) =>
-              _workoutRepository.getWorkoutsByUserIdAndDateRange(
+          (String loggedUserId) => _workoutRepository.getWorkoutsByDateRange(
             userId: loggedUserId,
             startDate: _dateService.getFirstDateFromWeekMatchingToDate(today),
             endDate: _dateService.getLastDateFromWeekMatchingToDate(today),
