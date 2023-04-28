@@ -10,6 +10,7 @@ import '../../../component/bloc_with_status_listener_component.dart';
 import '../../../component/scrollable_content_component.dart';
 import '../../../component/text_field_component.dart';
 import '../../../formatter/workout_stage_formatter.dart';
+import '../../../model/bloc_status.dart';
 import '../../../service/dialog_service.dart';
 import '../../../service/navigator_service.dart';
 import '../../../service/utils.dart';
@@ -125,6 +126,8 @@ class _BlocListener extends StatelessWidget {
           message: AppLocalizations.of(context)!
               .workout_creator_screen_added_workout_message,
         );
+        break;
+      case WorkoutCreatorInfo.editModeInitialized:
         break;
     }
   }
