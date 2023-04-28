@@ -27,12 +27,14 @@ void main() {
 
   WorkoutCreatorState createState({
     BlocStatus status = const BlocStatusInitial(),
+    WorkoutCreatorMode creatorMode = WorkoutCreatorMode.add,
     DateTime? date,
     String? workoutName,
     List<WorkoutStage> stages = const [],
   }) =>
       WorkoutCreatorState(
         status: status,
+        creatorMode: creatorMode,
         date: date,
         workoutName: workoutName,
         stages: stages,

@@ -9,6 +9,7 @@ void main() {
   setUp(() {
     state = const WorkoutCreatorState(
       status: BlocStatusInitial(),
+      creatorMode: WorkoutCreatorMode.add,
       date: null,
       workoutName: null,
       stages: [],
@@ -117,6 +118,19 @@ void main() {
 
       expect(state.status, expectedStatus);
       expect(state2.status, const BlocStatusComplete());
+    },
+  );
+
+  test(
+    'copy with creator mode',
+    () {
+      const WorkoutCreatorMode expectedCreatorMode = WorkoutCreatorMode.add;
+
+      state = state.copyWith(creatorMode: expectedCreatorMode);
+      final state2 = state.copyWith();
+
+      expect(state.creatorMode, expectedCreatorMode);
+      expect(state2.creatorMode, expectedCreatorMode);
     },
   );
 
