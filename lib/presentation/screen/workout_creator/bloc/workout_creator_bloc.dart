@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../domain/model/workout.dart';
 import '../../../../domain/model/workout_stage.dart';
 import '../../../../domain/model/workout_status.dart';
 import '../../../../domain/repository/workout_repository.dart';
@@ -15,6 +18,7 @@ class WorkoutCreatorBloc extends BlocWithStatus<WorkoutCreatorEvent,
     WorkoutCreatorState, WorkoutCreatorInfo, dynamic> {
   final AuthService _authService;
   final WorkoutRepository _workoutRepository;
+  StreamSubscription<Workout?>? _workoutListener;
 
   WorkoutCreatorBloc({
     required AuthService authService,
@@ -36,6 +40,7 @@ class WorkoutCreatorBloc extends BlocWithStatus<WorkoutCreatorEvent,
           ),
         ) {
     on<WorkoutCreatorEventInitialize>(_initialize);
+    on<WorkoutCreatorEventWorkoutUpdated>(_workoutUpdated);
     on<WorkoutCreatorEventWorkoutNameChanged>(_workoutNameChanged);
     on<WorkoutCreatorEventWorkoutStageAdded>(_workoutStageAdded);
     on<WorkoutCreatorEventWorkoutStagesOrderChanged>(
@@ -45,12 +50,37 @@ class WorkoutCreatorBloc extends BlocWithStatus<WorkoutCreatorEvent,
     on<WorkoutCreatorEventSubmit>(_submit);
   }
 
-  void _initialize(
+  @override
+  Future<void> close() {
+    _workoutListener?.cancel();
+    _workoutListener = null;
+    return super.close();
+  }
+
+  Future<void> _initialize(
     WorkoutCreatorEventInitialize event,
+    Emitter<WorkoutCreatorState> emit,
+  ) async {
+    emit(state.copyWith(
+      date: event.date,
+    ));
+    final String? workoutId = event.workoutId;
+    if (workoutId == null) {
+      return;
+    }
+    final String? loggedUserId = await _authService.loggedUserId$.first;
+    if (loggedUserId != null) {
+      _setWorkoutListener(workoutId, loggedUserId);
+    }
+  }
+
+  void _workoutUpdated(
+    WorkoutCreatorEventWorkoutUpdated event,
     Emitter<WorkoutCreatorState> emit,
   ) {
     emit(state.copyWith(
-      date: event.date,
+      workoutName: event.workout?.name,
+      stages: event.workout?.stages,
     ));
   }
 
@@ -121,5 +151,14 @@ class WorkoutCreatorBloc extends BlocWithStatus<WorkoutCreatorEvent,
       );
       emitCompleteStatus(emit, WorkoutCreatorInfo.workoutHasBeenAdded);
     }
+  }
+
+  void _setWorkoutListener(String workoutId, String userId) {
+    _workoutListener ??= _workoutRepository
+        .getWorkoutById(
+          workoutId: workoutId,
+          userId: userId,
+        )
+        .listen((Workout? workout) {});
   }
 }

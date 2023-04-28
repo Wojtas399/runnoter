@@ -1,4 +1,5 @@
 import 'package:bloc_test/bloc_test.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/model/workout_stage.dart';
 import 'package:runnoter/domain/model/workout_status.dart';
@@ -7,6 +8,7 @@ import 'package:runnoter/presentation/screen/workout_creator/bloc/workout_creato
 
 import '../../../mock/domain/mock_auth_service.dart';
 import '../../../mock/domain/mock_workout_repository.dart';
+import '../../../util/workout_creator.dart';
 
 void main() {
   final authService = MockAuthService();
@@ -40,9 +42,15 @@ void main() {
         stages: stages,
       );
 
+  tearDown(() {
+    reset(authService);
+    reset(workoutRepository);
+  });
+
   blocTest(
     'initialize, '
-    'should update date in state',
+    'workout id is null, '
+    'should only update date in state',
     build: () => createBloc(),
     act: (WorkoutCreatorBloc bloc) => bloc.add(
       WorkoutCreatorEventInitialize(
@@ -53,6 +61,96 @@ void main() {
       createState(
         status: const BlocStatusComplete(),
         date: DateTime(2023, 1, 1),
+      ),
+    ],
+  );
+
+  blocTest(
+    'initialize, '
+    'workout id is not null, '
+    'logged user does not exist, '
+    'should update date in state and should finish event call',
+    build: () => createBloc(),
+    setUp: () => authService.mockGetLoggedUserId(),
+    act: (WorkoutCreatorBloc bloc) => bloc.add(
+      WorkoutCreatorEventInitialize(
+        date: DateTime(2023, 1, 1),
+        workoutId: 'w1',
+      ),
+    ),
+    expect: () => [
+      createState(
+        status: const BlocStatusComplete(),
+        date: DateTime(2023, 1, 1),
+      ),
+    ],
+    verify: (_) => verify(
+      () => authService.loggedUserId$,
+    ).called(1),
+  );
+
+  blocTest(
+    'initialize, '
+    'workout id is not null, '
+    'logged user exists, '
+    'should update date in state and should set listener on workout matching to given id',
+    build: () => createBloc(),
+    setUp: () {
+      authService.mockGetLoggedUserId(userId: 'u1');
+      workoutRepository.mockGetWorkoutById();
+    },
+    act: (WorkoutCreatorBloc bloc) => bloc.add(
+      WorkoutCreatorEventInitialize(
+        date: DateTime(2023, 1, 1),
+        workoutId: 'w1',
+      ),
+    ),
+    expect: () => [
+      createState(
+        status: const BlocStatusComplete(),
+        date: DateTime(2023, 1, 1),
+      ),
+    ],
+    verify: (_) {
+      verify(
+        () => authService.loggedUserId$,
+      ).called(1);
+      verify(
+        () => workoutRepository.getWorkoutById(
+          workoutId: 'w1',
+          userId: 'u1',
+        ),
+      ).called(1);
+    },
+  );
+
+  blocTest(
+    'workout updated, '
+    'should update workout name and stages in state',
+    build: () => createBloc(),
+    act: (WorkoutCreatorBloc bloc) => bloc.add(
+      WorkoutCreatorEventWorkoutUpdated(
+        workout: createWorkout(
+          name: 'workout name',
+          stages: [
+            WorkoutStageBaseRun(
+              distanceInKilometers: 10,
+              maxHeartRate: 150,
+            ),
+          ],
+        ),
+      ),
+    ),
+    expect: () => [
+      createState(
+        status: const BlocStatusComplete(),
+        workoutName: 'workout name',
+        stages: [
+          WorkoutStageBaseRun(
+            distanceInKilometers: 10,
+            maxHeartRate: 150,
+          ),
+        ],
       ),
     ],
   );
