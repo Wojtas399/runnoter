@@ -93,11 +93,21 @@ void main() {
     'initialize, '
     'workout id is not null, '
     'logged user exists, '
-    'should update date in state and should set listener on workout matching to given id',
+    'should load workout matching to given id and should emit updated date, workout name, stages and mode set as edit mode',
     build: () => createBloc(),
     setUp: () {
       authService.mockGetLoggedUserId(userId: 'u1');
-      workoutRepository.mockGetWorkoutById();
+      workoutRepository.mockGetWorkoutById(
+        workout: createWorkout(
+          name: 'workout name',
+          stages: [
+            WorkoutStageBaseRun(
+              distanceInKilometers: 10,
+              maxHeartRate: 150,
+            ),
+          ],
+        ),
+      );
     },
     act: (WorkoutCreatorBloc bloc) => bloc.add(
       WorkoutCreatorEventInitialize(
@@ -107,8 +117,17 @@ void main() {
     ),
     expect: () => [
       createState(
-        status: const BlocStatusComplete(),
+        status: const BlocStatusComplete<WorkoutCreatorInfo>(
+          info: WorkoutCreatorInfo.editModeInitialized,
+        ),
         date: DateTime(2023, 1, 1),
+        workoutName: 'workout name',
+        stages: [
+          WorkoutStageBaseRun(
+            distanceInKilometers: 10,
+            maxHeartRate: 150,
+          ),
+        ],
       ),
     ],
     verify: (_) {
@@ -122,37 +141,6 @@ void main() {
         ),
       ).called(1);
     },
-  );
-
-  blocTest(
-    'workout updated, '
-    'should update workout name and stages in state',
-    build: () => createBloc(),
-    act: (WorkoutCreatorBloc bloc) => bloc.add(
-      WorkoutCreatorEventWorkoutUpdated(
-        workout: createWorkout(
-          name: 'workout name',
-          stages: [
-            WorkoutStageBaseRun(
-              distanceInKilometers: 10,
-              maxHeartRate: 150,
-            ),
-          ],
-        ),
-      ),
-    ),
-    expect: () => [
-      createState(
-        status: const BlocStatusComplete(),
-        workoutName: 'workout name',
-        stages: [
-          WorkoutStageBaseRun(
-            distanceInKilometers: 10,
-            maxHeartRate: 150,
-          ),
-        ],
-      ),
-    ],
   );
 
   blocTest(

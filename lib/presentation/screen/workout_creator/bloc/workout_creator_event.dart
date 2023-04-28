@@ -14,14 +14,6 @@ class WorkoutCreatorEventInitialize extends WorkoutCreatorEvent {
   });
 }
 
-class WorkoutCreatorEventWorkoutUpdated extends WorkoutCreatorEvent {
-  final Workout? workout;
-
-  const WorkoutCreatorEventWorkoutUpdated({
-    required this.workout,
-  });
-}
-
 class WorkoutCreatorEventWorkoutNameChanged extends WorkoutCreatorEvent {
   final String? workoutName;
 

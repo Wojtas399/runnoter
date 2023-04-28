@@ -53,5 +53,6 @@ enum WorkoutCreatorMode {
 }
 
 enum WorkoutCreatorInfo {
+  editModeInitialized,
   workoutHasBeenAdded,
 }
