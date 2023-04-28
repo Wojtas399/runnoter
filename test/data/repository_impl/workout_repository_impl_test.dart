@@ -98,7 +98,7 @@ void main() {
           endDate: endDate,
         ),
       ).thenReturn(true);
-      firebaseWorkoutService.mockLoadWorkoutsByUserIdAndDateRange(
+      firebaseWorkoutService.mockLoadWorkoutsByDateRange(
         workoutDtos: newlyLoadedWorkoutDtos,
       );
       repository = createRepository(
@@ -138,7 +138,7 @@ void main() {
         ),
       );
       verify(
-        () => firebaseWorkoutService.loadWorkoutsByUserIdAndDateRange(
+        () => firebaseWorkoutService.loadWorkoutsByDateRange(
           userId: userId,
           startDate: startDate,
           endDate: endDate,
@@ -171,7 +171,7 @@ void main() {
         name: expectedWorkoutFromFirebase.name,
       );
       dateService.mockAreDatesTheSame(expected: true);
-      firebaseWorkoutService.mockLoadWorkoutByUserIdAndDate(
+      firebaseWorkoutService.mockLoadWorkoutByDate(
         workoutDto: expectedWorkoutDto,
       );
       repository = createRepository(
@@ -194,7 +194,7 @@ void main() {
         ),
       );
       verify(
-        () => firebaseWorkoutService.loadWorkoutByUserIdAndDate(
+        () => firebaseWorkoutService.loadWorkoutByDate(
           userId: userId,
           date: date,
         ),

@@ -5,10 +5,10 @@ import '../firebase_collections.dart';
 import '../mapper/date_mapper.dart';
 
 class FirebaseWorkoutService {
-  Future<List<WorkoutDto>?> loadWorkoutsByUserIdAndDateRange({
-    required String userId,
+  Future<List<WorkoutDto>?> loadWorkoutsByDateRange({
     required DateTime startDate,
     required DateTime endDate,
+    required String userId,
   }) async {
     final snapshot = await getWorkoutsRef(userId)
         .where(
@@ -27,9 +27,17 @@ class FirebaseWorkoutService {
         .toList();
   }
 
-  Future<WorkoutDto?> loadWorkoutByUserIdAndDate({
+  Future<WorkoutDto?> loadWorkoutById({
+    required String workoutId,
     required String userId,
+  }) async {
+    final snapshot = await getWorkoutsRef(userId).doc(workoutId).get();
+    return snapshot.data();
+  }
+
+  Future<WorkoutDto?> loadWorkoutByDate({
     required DateTime date,
+    required String userId,
   }) async {
     final snapshot = await getWorkoutsRef(userId)
         .where(

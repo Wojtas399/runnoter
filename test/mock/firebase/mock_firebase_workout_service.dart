@@ -6,11 +6,11 @@ class _FakeWorkoutStatusDto extends Fake implements WorkoutStatusDto {}
 
 class MockFirebaseWorkoutService extends Mock
     implements FirebaseWorkoutService {
-  void mockLoadWorkoutsByUserIdAndDateRange({
+  void mockLoadWorkoutsByDateRange({
     List<WorkoutDto>? workoutDtos,
   }) {
     when(
-      () => loadWorkoutsByUserIdAndDateRange(
+      () => loadWorkoutsByDateRange(
         userId: any(named: 'userId'),
         startDate: any(named: 'startDate'),
         endDate: any(named: 'endDate'),
@@ -18,11 +18,22 @@ class MockFirebaseWorkoutService extends Mock
     ).thenAnswer((invocation) => Future.value(workoutDtos));
   }
 
-  void mockLoadWorkoutByUserIdAndDate({
+  void mockLoadWorkoutById({
     WorkoutDto? workoutDto,
   }) {
     when(
-      () => loadWorkoutByUserIdAndDate(
+      () => loadWorkoutById(
+        workoutId: any(named: 'workoutId'),
+        userId: any(named: 'userId'),
+      ),
+    ).thenAnswer((invocation) => Future.value(workoutDto));
+  }
+
+  void mockLoadWorkoutByDate({
+    WorkoutDto? workoutDto,
+  }) {
+    when(
+      () => loadWorkoutByDate(
         userId: any(named: 'userId'),
         date: any(named: 'date'),
       ),

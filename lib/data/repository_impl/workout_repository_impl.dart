@@ -138,7 +138,7 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
     DateTime endDate,
   ) async {
     final List<WorkoutDto>? workoutDtos =
-        await _firebaseWorkoutService.loadWorkoutsByUserIdAndDateRange(
+        await _firebaseWorkoutService.loadWorkoutsByDateRange(
       userId: userId,
       startDate: startDate,
       endDate: endDate,
@@ -159,7 +159,7 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
     DateTime date,
   ) async {
     final WorkoutDto? workoutDto =
-        await _firebaseWorkoutService.loadWorkoutByUserIdAndDate(
+        await _firebaseWorkoutService.loadWorkoutByDate(
       userId: userId,
       date: date,
     );
