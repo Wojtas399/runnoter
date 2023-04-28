@@ -151,9 +151,13 @@
   "@day_preview_screen_no_workout_title": {
     "description": "Title of the information about no workout"
   },
-  "day_preview_screen_no_workout_message": "Tego dnia nie masz zaplanowanego treningu",
-  "@day_preview_screen_no_workout_message": {
-    "description": "Message of the information about no workout"
+  "day_preview_screen_no_workout_message_past_day": "Tego dnia nie było zaplanowanego treningu",
+  "@day_preview_screen_no_workout_message_past_day": {
+    "description": "Message of the information about no workout on a day from the past"
+  },
+  "day_preview_screen_no_workout_message_future_day": "Tego dnia nie masz zaplanowanego treningu",
+  "@day_preview_screen_no_workout_message_future_day": {
+    "description": "Message of the information about no workout on a day from the future"
   },
   "day_preview_screen_add_workout_button_label": "Dodaj trening",
   "@day_preview_screen_add_workout_button_label": {

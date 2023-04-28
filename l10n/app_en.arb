@@ -42,7 +42,8 @@
 
   "day_preview_screen_title": "Day preview",
   "day_preview_screen_no_workout_title": "No workout",
-  "day_preview_screen_no_workout_message": "You don't have scheduled workout this day",
+  "day_preview_screen_no_workout_message_past_day": "You didn't have scheduled workout that day",
+  "day_preview_screen_no_workout_message_future_day": "You don't have scheduled workout this day",
   "day_preview_screen_add_workout_button_label": "Add workout",
   "day_preview_screen_workout_name_section_label": "Name",
   "day_preview_screen_workout_stages_section_label": "Stages",

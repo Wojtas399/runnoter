@@ -27,10 +27,7 @@ class _NoWorkoutInfo extends StatelessWidget {
           style: Theme.of(context).textTheme.titleLarge,
         ),
         const SizedBox(height: 8),
-        Text(
-          AppLocalizations.of(context)!.day_preview_screen_no_workout_message,
-          style: Theme.of(context).textTheme.bodyLarge,
-        ),
+        const _NoWorkoutMessage(),
         const SizedBox(height: 24),
         BigButton(
           label: AppLocalizations.of(context)!
@@ -53,5 +50,30 @@ class _NoWorkoutInfo extends StatelessWidget {
         ),
       );
     }
+  }
+}
+
+class _NoWorkoutMessage extends StatelessWidget {
+  const _NoWorkoutMessage();
+
+  @override
+  Widget build(BuildContext context) {
+    final bool? isPastDay = context.select(
+      (DayPreviewBloc bloc) => bloc.state.isPastDay,
+    );
+
+    if (isPastDay == null) {
+      return const SizedBox();
+    }
+    String message = AppLocalizations.of(context)!
+        .day_preview_screen_no_workout_message_future_day;
+    if (isPastDay) {
+      message = AppLocalizations.of(context)!
+          .day_preview_screen_no_workout_message_past_day;
+    }
+    return Text(
+      message,
+      style: Theme.of(context).textTheme.bodyLarge,
+    );
   }
 }
