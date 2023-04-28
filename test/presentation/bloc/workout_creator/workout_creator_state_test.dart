@@ -9,8 +9,8 @@ void main() {
   setUp(() {
     state = const WorkoutCreatorState(
       status: BlocStatusInitial(),
-      creatorMode: WorkoutCreatorMode.add,
       date: null,
+      workoutId: null,
       workoutName: null,
       stages: [],
     );
@@ -122,19 +122,6 @@ void main() {
   );
 
   test(
-    'copy with creator mode',
-    () {
-      const WorkoutCreatorMode expectedCreatorMode = WorkoutCreatorMode.add;
-
-      state = state.copyWith(creatorMode: expectedCreatorMode);
-      final state2 = state.copyWith();
-
-      expect(state.creatorMode, expectedCreatorMode);
-      expect(state2.creatorMode, expectedCreatorMode);
-    },
-  );
-
-  test(
     'copy with date',
     () {
       final DateTime expectedDate = DateTime(2023, 2, 1);
@@ -144,6 +131,19 @@ void main() {
 
       expect(state.date, expectedDate);
       expect(state2.date, expectedDate);
+    },
+  );
+
+  test(
+    'copy with workout id',
+    () {
+      const String expectedWorkoutId = 'w1';
+
+      state = state.copyWith(workoutId: expectedWorkoutId);
+      final state2 = state.copyWith();
+
+      expect(state.workoutId, expectedWorkoutId);
+      expect(state2.workoutId, expectedWorkoutId);
     },
   );
 

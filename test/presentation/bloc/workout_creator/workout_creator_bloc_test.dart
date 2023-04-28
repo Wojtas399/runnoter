@@ -29,15 +29,15 @@ void main() {
 
   WorkoutCreatorState createState({
     BlocStatus status = const BlocStatusInitial(),
-    WorkoutCreatorMode creatorMode = WorkoutCreatorMode.add,
     DateTime? date,
+    String? workoutId,
     String? workoutName,
     List<WorkoutStage> stages = const [],
   }) =>
       WorkoutCreatorState(
         status: status,
-        creatorMode: creatorMode,
         date: date,
+        workoutId: workoutId,
         workoutName: workoutName,
         stages: stages,
       );
@@ -69,7 +69,7 @@ void main() {
     'initialize, '
     'workout id is not null, '
     'logged user does not exist, '
-    'should update date in state and should finish event call',
+    'should only update date in state',
     build: () => createBloc(),
     setUp: () => authService.mockGetLoggedUserId(),
     act: (WorkoutCreatorBloc bloc) => bloc.add(
@@ -93,12 +93,13 @@ void main() {
     'initialize, '
     'workout id is not null, '
     'logged user exists, '
-    'should load workout matching to given id and should emit updated date, workout name, stages and mode set as edit mode',
+    'should load workout matching to given id and should emit updated date, workout id, name and stages',
     build: () => createBloc(),
     setUp: () {
       authService.mockGetLoggedUserId(userId: 'u1');
       workoutRepository.mockGetWorkoutById(
         workout: createWorkout(
+          id: 'w1',
           name: 'workout name',
           stages: [
             WorkoutStageBaseRun(
@@ -121,6 +122,7 @@ void main() {
           info: WorkoutCreatorInfo.editModeInitialized,
         ),
         date: DateTime(2023, 1, 1),
+        workoutId: 'w1',
         workoutName: 'workout name',
         stages: [
           WorkoutStageBaseRun(
