@@ -1,4 +1,5 @@
 import 'package:bloc_test/bloc_test.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/model/workout_stage.dart';
 import 'package:runnoter/domain/model/workout_status.dart';
@@ -9,11 +10,13 @@ import 'package:runnoter/presentation/screen/day_preview/bloc/day_preview_state.
 
 import '../../../mock/domain/mock_auth_service.dart';
 import '../../../mock/domain/mock_workout_repository.dart';
+import '../../../mock/presentation/service/mock_date_service.dart';
 import '../../../util/workout_creator.dart';
 
 void main() {
   final authService = MockAuthService();
   final workoutRepository = MockWorkoutRepository();
+  final dateService = MockDateService();
   final DateTime date = DateTime(2023, 1, 1);
 
   DayPreviewBloc createBloc({
@@ -22,6 +25,7 @@ void main() {
     return DayPreviewBloc(
       authService: authService,
       workoutRepository: workoutRepository,
+      dateService: dateService,
       workoutId: workoutId,
     );
   }
@@ -29,6 +33,7 @@ void main() {
   DayPreviewState createState({
     BlocStatus status = const BlocStatusInitial(),
     DateTime? date,
+    bool? isPastDate,
     String? workoutId,
     String? workoutName,
     List<WorkoutStage>? stages,
@@ -37,12 +42,19 @@ void main() {
     return DayPreviewState(
       status: status,
       date: date,
+      isPastDay: isPastDate,
       workoutId: workoutId,
       workoutName: workoutName,
       stages: stages,
       workoutStatus: workoutStatus,
     );
   }
+
+  tearDown(() {
+    reset(authService);
+    reset(workoutRepository);
+    reset(dateService);
+  });
 
   blocTest(
     'initialize, '
@@ -61,9 +73,13 @@ void main() {
 
   blocTest(
     'initialize, '
-    'should update date in state and should set listener on workout matching to date and user id',
+    'should update date and isPastDay param in state and should set listener on workout matching to date and user id',
     build: () => createBloc(),
     setUp: () {
+      dateService.mockGetTodayDate(
+        todayDate: DateTime(2023, 1, 1),
+      );
+      dateService.mockIsDate1BeforeDate2(expected: true);
       authService.mockGetLoggedUserId(userId: 'u1');
       workoutRepository.mockGetWorkoutByUserIdAndDate();
     },
@@ -76,6 +92,7 @@ void main() {
       createState(
         status: const BlocStatusComplete(),
         date: date,
+        isPastDate: true,
       ),
     ],
     verify: (_) {

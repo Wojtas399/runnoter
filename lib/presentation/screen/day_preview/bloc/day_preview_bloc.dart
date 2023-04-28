@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../common/date_service.dart';
 import '../../../../domain/model/workout.dart';
 import '../../../../domain/repository/workout_repository.dart';
 import '../../../../domain/service/auth_service.dart';
@@ -14,15 +15,18 @@ class DayPreviewBloc extends BlocWithStatus<DayPreviewEvent, DayPreviewState,
     DayPreviewInfo, dynamic> {
   final AuthService _authService;
   final WorkoutRepository _workoutRepository;
+  final DateService _dateService;
   StreamSubscription<Workout?>? _workoutListener;
 
   DayPreviewBloc({
     required AuthService authService,
     required WorkoutRepository workoutRepository,
+    required DateService dateService,
     BlocStatus status = const BlocStatusInitial(),
     String? workoutId,
   })  : _authService = authService,
         _workoutRepository = workoutRepository,
+        _dateService = dateService,
         super(
           DayPreviewState(
             status: status,
@@ -51,6 +55,10 @@ class DayPreviewBloc extends BlocWithStatus<DayPreviewEvent, DayPreviewState,
     }
     emit(state.copyWith(
       date: event.date,
+      isPastDay: _dateService.isDate1BeforeDate2(
+        event.date,
+        _dateService.getTodayDate(),
+      ),
     ));
     _setWorkoutListener(loggedUserId, event.date);
   }

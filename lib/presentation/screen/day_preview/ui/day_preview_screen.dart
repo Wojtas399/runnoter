@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../../../common/date_service.dart';
 import '../../../../domain/model/workout_stage.dart';
 import '../../../../domain/model/workout_status.dart';
 import '../../../../domain/repository/workout_repository.dart';
@@ -62,6 +63,7 @@ class _BlocProvider extends StatelessWidget {
       create: (BuildContext context) => DayPreviewBloc(
         authService: context.read<AuthService>(),
         workoutRepository: context.read<WorkoutRepository>(),
+        dateService: DateService(),
       )..add(
           DayPreviewEventInitialize(
             date: date,
