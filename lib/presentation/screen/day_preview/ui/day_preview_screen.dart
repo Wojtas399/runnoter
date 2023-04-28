@@ -19,6 +19,7 @@ import '../../../formatter/workout_stage_formatter.dart';
 import '../../../formatter/workout_status_formatter.dart';
 import '../../../service/dialog_service.dart';
 import '../../../service/navigator_service.dart';
+import '../../workout_creator/ui/workout_creator_screen.dart';
 import '../bloc/day_preview_bloc.dart';
 import '../bloc/day_preview_event.dart';
 import '../bloc/day_preview_state.dart';
@@ -94,13 +95,37 @@ class _BlocListener extends StatelessWidget {
 
   void _manageInfo(BuildContext context, DayPreviewInfo info) {
     switch (info) {
+      case DayPreviewInfo.editWorkout:
+        _navigateToWorkoutEditor(context);
+        break;
       case DayPreviewInfo.workoutDeleted:
-        showSnackbarMessage(
-          context: context,
-          message: AppLocalizations.of(context)!
-              .day_preview_screen_deleted_workout_message,
-        );
+        _showInfoAboutDeleteWorkout(context);
         break;
     }
+  }
+
+  void _navigateToWorkoutEditor(BuildContext context) {
+    final DayPreviewBloc dayPreviewBloc = context.read<DayPreviewBloc>();
+    final DateTime? date = dayPreviewBloc.state.date;
+    final String? workoutId = dayPreviewBloc.state.workoutId;
+    if (date != null && workoutId != null) {
+      navigateTo(
+        context: context,
+        route: WorkoutCreatorRoute(
+          arguments: WorkoutCreatorEditModeArguments(
+            date: date,
+            workoutId: workoutId,
+          ),
+        ),
+      );
+    }
+  }
+
+  void _showInfoAboutDeleteWorkout(BuildContext context) {
+    showSnackbarMessage(
+      context: context,
+      message: AppLocalizations.of(context)!
+          .day_preview_screen_deleted_workout_message,
+    );
   }
 }

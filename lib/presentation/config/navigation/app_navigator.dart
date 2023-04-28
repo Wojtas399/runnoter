@@ -45,7 +45,7 @@ class AppNavigator extends StatelessWidget {
       );
     } else if (routePath == RoutePath.workoutCreator.path) {
       screen = WorkoutCreatorScreen(
-        date: settings.arguments as DateTime,
+        arguments: settings.arguments as WorkoutCreatorArguments,
       );
     } else if (routePath == RoutePath.profile.path) {
       screen = const ProfileScreen();

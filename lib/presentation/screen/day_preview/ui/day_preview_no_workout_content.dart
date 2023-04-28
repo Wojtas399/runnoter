@@ -46,7 +46,9 @@ class _NoWorkoutInfo extends StatelessWidget {
       navigateTo(
         context: context,
         route: WorkoutCreatorRoute(
-          arguments: date,
+          arguments: WorkoutCreatorAddModeArguments(
+            date: date,
+          ),
         ),
       );
     }

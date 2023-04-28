@@ -56,5 +56,6 @@ class DayPreviewState extends BlocState<DayPreviewState> {
 }
 
 enum DayPreviewInfo {
+  editWorkout,
   workoutDeleted,
 }

@@ -42,9 +42,12 @@ class _WorkoutActions extends StatelessWidget {
   Widget build(BuildContext context) {
     return PopupMenuButton(
       icon: const Icon(Icons.more_vert),
-      itemBuilder: (_) => [
+      itemBuilder: (BuildContext context) => [
         PopupMenuItem<int>(
           value: 0,
+          onTap: () {
+            _onEditButtonPressed(context);
+          },
           child: Row(
             children: [
               const Icon(Icons.edit_outlined),
@@ -74,6 +77,12 @@ class _WorkoutActions extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  void _onEditButtonPressed(BuildContext context) {
+    context.read<DayPreviewBloc>().add(
+          const DayPreviewEventEditWorkout(),
+        );
   }
 
   void _onDeleteButtonPressed(BuildContext context) {

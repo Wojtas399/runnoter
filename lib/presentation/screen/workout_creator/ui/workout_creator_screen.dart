@@ -22,18 +22,47 @@ part 'workout_creator_workout_stage_item.dart';
 part 'workout_creator_workout_stages_list.dart';
 part 'workout_creator_workout_stages_section.dart';
 
-class WorkoutCreatorScreen extends StatelessWidget {
+abstract class WorkoutCreatorArguments {
   final DateTime date;
+
+  const WorkoutCreatorArguments({
+    required this.date,
+  });
+}
+
+class WorkoutCreatorAddModeArguments extends WorkoutCreatorArguments {
+  const WorkoutCreatorAddModeArguments({
+    required super.date,
+  });
+}
+
+class WorkoutCreatorEditModeArguments extends WorkoutCreatorArguments {
+  final String workoutId;
+
+  const WorkoutCreatorEditModeArguments({
+    required super.date,
+    required this.workoutId,
+  });
+}
+
+class WorkoutCreatorScreen extends StatelessWidget {
+  final WorkoutCreatorArguments arguments;
 
   const WorkoutCreatorScreen({
     super.key,
-    required this.date,
+    required this.arguments,
   });
 
   @override
   Widget build(BuildContext context) {
+    final WorkoutCreatorArguments arguments = this.arguments;
+    String? workoutId;
+    if (arguments is WorkoutCreatorEditModeArguments) {
+      workoutId = arguments.workoutId;
+    }
     return _BlocProvider(
-      date: date,
+      date: arguments.date,
+      workoutId: workoutId,
       child: const _BlocListener(
         child: _Content(),
       ),
@@ -43,10 +72,12 @@ class WorkoutCreatorScreen extends StatelessWidget {
 
 class _BlocProvider extends StatelessWidget {
   final DateTime date;
+  final String? workoutId;
   final Widget child;
 
   const _BlocProvider({
     required this.date,
+    required this.workoutId,
     required this.child,
   });
 
@@ -57,7 +88,10 @@ class _BlocProvider extends StatelessWidget {
         authService: context.read<AuthService>(),
         workoutRepository: context.read<WorkoutRepository>(),
       )..add(
-          WorkoutCreatorEventInitialize(date: date),
+          WorkoutCreatorEventInitialize(
+            date: date,
+            workoutId: workoutId,
+          ),
         ),
       child: child,
     );

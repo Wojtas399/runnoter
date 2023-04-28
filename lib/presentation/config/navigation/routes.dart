@@ -1,3 +1,5 @@
+import '../../screen/workout_creator/ui/workout_creator_screen.dart';
+
 abstract class CustomRoute<T> {
   final RoutePath path;
   final T? arguments;
@@ -30,7 +32,7 @@ class DayPreviewRoute extends CustomRoute<DateTime> {
   }) : super(path: RoutePath.dayPreview);
 }
 
-class WorkoutCreatorRoute extends CustomRoute<DateTime> {
+class WorkoutCreatorRoute extends CustomRoute<WorkoutCreatorArguments> {
   const WorkoutCreatorRoute({
     required super.arguments,
   }) : super(path: RoutePath.workoutCreator);

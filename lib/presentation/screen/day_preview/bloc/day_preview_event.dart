@@ -20,6 +20,10 @@ class DayPreviewEventWorkoutUpdated extends DayPreviewEvent {
   });
 }
 
+class DayPreviewEventEditWorkout extends DayPreviewEvent {
+  const DayPreviewEventEditWorkout();
+}
+
 class DayPreviewEventDeleteWorkout extends DayPreviewEvent {
   const DayPreviewEventDeleteWorkout();
 }
