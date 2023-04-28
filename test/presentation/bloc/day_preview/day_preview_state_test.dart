@@ -40,6 +40,19 @@ void main() {
   );
 
   test(
+    'copy with is past day',
+    () {
+      const bool expectedValue = true;
+
+      state = state.copyWith(isPastDay: expectedValue);
+      final state2 = state.copyWith();
+
+      expect(state.isPastDay, expectedValue);
+      expect(state2.isPastDay, expectedValue);
+    },
+  );
+
+  test(
     'copy with workout id',
     () {
       const String expectedWorkoutId = 'w1';
