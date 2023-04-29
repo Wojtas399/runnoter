@@ -92,7 +92,46 @@ void main() {
   );
 
   test(
+    'is submit button disabled, '
+    'workout name is the same as original workout name and '
+    'stages are the same as original stages, '
+    'should be true',
+    () {
+      state = state.copyWith(
+        date: DateTime(2023, 2, 2),
+        workout: createWorkout(
+          name: 'workout name',
+          stages: [
+            WorkoutStageBaseRun(
+              distanceInKilometers: 10,
+              maxHeartRate: 150,
+            ),
+            WorkoutStageZone2(
+              distanceInKilometers: 3,
+              maxHeartRate: 165,
+            ),
+          ],
+        ),
+        workoutName: 'workout name',
+        stages: [
+          WorkoutStageBaseRun(
+            distanceInKilometers: 10,
+            maxHeartRate: 150,
+          ),
+          WorkoutStageZone2(
+            distanceInKilometers: 3,
+            maxHeartRate: 165,
+          ),
+        ],
+      );
+
+      expect(state.isSubmitButtonDisabled, true);
+    },
+  );
+
+  test(
     'is button disabled, '
+    'workout is null, '
     'date and workout name are not null and workout stages list is not empty, '
     'should be false',
     () {
@@ -100,6 +139,74 @@ void main() {
         date: DateTime(2023, 2, 2),
         workoutName: 'workout name',
         stages: [
+          WorkoutStageBaseRun(
+            distanceInKilometers: 10,
+            maxHeartRate: 150,
+          ),
+        ],
+      );
+
+      expect(state.isSubmitButtonDisabled, false);
+    },
+  );
+
+  test(
+    'is button disabled, '
+    'workout is not null, '
+    'workout name is different than the original workout name, '
+    'should be false',
+    () {
+      state = state.copyWith(
+        date: DateTime(2023, 2, 2),
+        workout: createWorkout(
+          name: 'workout 1',
+          stages: [
+            WorkoutStageBaseRun(
+              distanceInKilometers: 10,
+              maxHeartRate: 150,
+            ),
+          ],
+        ),
+        workoutName: 'workout name',
+        stages: [
+          WorkoutStageBaseRun(
+            distanceInKilometers: 10,
+            maxHeartRate: 150,
+          ),
+        ],
+      );
+
+      expect(state.isSubmitButtonDisabled, false);
+    },
+  );
+
+  test(
+    'is button disabled, '
+    'workout is not null, '
+    'workout stages are different than the original workout stages, '
+    'should be false',
+    () {
+      state = state.copyWith(
+        date: DateTime(2023, 2, 2),
+        workout: createWorkout(
+          name: 'workout 1',
+          stages: [
+            WorkoutStageBaseRun(
+              distanceInKilometers: 10,
+              maxHeartRate: 150,
+            ),
+            WorkoutStageZone2(
+              distanceInKilometers: 2,
+              maxHeartRate: 165,
+            ),
+          ],
+        ),
+        workoutName: 'workout 1',
+        stages: [
+          WorkoutStageZone2(
+            distanceInKilometers: 2,
+            maxHeartRate: 165,
+          ),
           WorkoutStageBaseRun(
             distanceInKilometers: 10,
             maxHeartRate: 150,

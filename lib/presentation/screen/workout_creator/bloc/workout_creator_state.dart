@@ -25,9 +25,11 @@ class WorkoutCreatorState extends BlocState<WorkoutCreatorState> {
 
   bool get isSubmitButtonDisabled =>
       date == null ||
-      workoutName == null ||
-      workoutName == '' ||
-      stages.isEmpty;
+      _isWorkoutNameInvalid() ||
+      stages.isEmpty ||
+      (workout != null &&
+          _isWorkoutNameSameAsOriginal() &&
+          _areStagesSameAsOriginal());
 
   @override
   WorkoutCreatorState copyWith({
@@ -44,6 +46,23 @@ class WorkoutCreatorState extends BlocState<WorkoutCreatorState> {
       workoutName: workoutName ?? this.workoutName,
       stages: stages ?? this.stages,
     );
+  }
+
+  bool _isWorkoutNameInvalid() => workoutName == null || workoutName == '';
+
+  bool _isWorkoutNameSameAsOriginal() => workoutName == workout?.name;
+
+  bool _areStagesSameAsOriginal() {
+    final originalStages = [...?workout?.stages];
+    if (originalStages.length != stages.length) {
+      return false;
+    }
+    for (int i = 0; i < stages.length; i++) {
+      if (stages[i] != originalStages[i]) {
+        return false;
+      }
+    }
+    return true;
   }
 }
 
