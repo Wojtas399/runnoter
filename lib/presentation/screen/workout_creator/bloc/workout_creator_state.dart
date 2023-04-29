@@ -54,15 +54,7 @@ class WorkoutCreatorState extends BlocState<WorkoutCreatorState> {
 
   bool _areStagesSameAsOriginal() {
     final originalStages = [...?workout?.stages];
-    if (originalStages.length != stages.length) {
-      return false;
-    }
-    for (int i = 0; i < stages.length; i++) {
-      if (stages[i] != originalStages[i]) {
-        return false;
-      }
-    }
-    return true;
+    return areListsEqual(stages, originalStages);
   }
 }
 
