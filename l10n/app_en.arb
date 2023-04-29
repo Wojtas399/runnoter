@@ -70,6 +70,7 @@
   "workout_creator_screen_add_workout_button_label": "Add",
   "workout_creator_screen_edit_workout_button_label": "Update",
   "workout_creator_screen_added_workout_message": "Successfully added workout",
+  "workout_creator_screen_updated_workout_message": "Successfully updated workout",
 
 
   "workout_stage_creator_screen_title": "New workout stage",

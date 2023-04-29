@@ -119,16 +119,32 @@ class _BlocListener extends StatelessWidget {
 
   void _manageInfo(BuildContext context, WorkoutCreatorInfo info) {
     switch (info) {
-      case WorkoutCreatorInfo.workoutHasBeenAdded:
-        navigateBack(context: context);
-        showSnackbarMessage(
-          context: context,
-          message: AppLocalizations.of(context)!
-              .workout_creator_screen_added_workout_message,
-        );
-        break;
       case WorkoutCreatorInfo.editModeInitialized:
         break;
+      case WorkoutCreatorInfo.workoutAdded:
+        _onWorkoutAddedInfo(context);
+        break;
+      case WorkoutCreatorInfo.workoutUpdated:
+        _onWorkoutUpdatedInfo(context);
+        break;
     }
+  }
+
+  void _onWorkoutAddedInfo(BuildContext context) {
+    navigateBack(context: context);
+    showSnackbarMessage(
+      context: context,
+      message: AppLocalizations.of(context)!
+          .workout_creator_screen_added_workout_message,
+    );
+  }
+
+  void _onWorkoutUpdatedInfo(BuildContext context) {
+    navigateBack(context: context);
+    showSnackbarMessage(
+      context: context,
+      message: AppLocalizations.of(context)!
+          .workout_creator_screen_updated_workout_message,
+    );
   }
 }

@@ -49,5 +49,6 @@ class WorkoutCreatorState extends BlocState<WorkoutCreatorState> {
 
 enum WorkoutCreatorInfo {
   editModeInitialized,
-  workoutHasBeenAdded,
+  workoutAdded,
+  workoutUpdated,
 }

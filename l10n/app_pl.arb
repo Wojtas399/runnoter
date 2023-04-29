@@ -257,6 +257,10 @@
   "@workout_creator_screen_added_workout_message": {
     "description": "Message to inform that workout has been added"
   },
+  "workout_creator_screen_updated_workout_message": "Pomyślnie zaktualizowano trening",
+  "@workout_creator_screen_updated_workout_message": {
+    "description": "Message to inform that workout has been updated"
+  },
 
 
   "workout_stage_creator_screen_title": "Nowy etap treningu",
