@@ -2,7 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/domain/model/workout_stage.dart';
 import 'package:runnoter/domain/model/workout_status.dart';
 import 'package:runnoter/presentation/model/bloc_status.dart';
-import 'package:runnoter/presentation/screen/day_preview/bloc/day_preview_state.dart';
+import 'package:runnoter/presentation/screen/day_preview/bloc/day_preview_bloc.dart';
 
 void main() {
   late DayPreviewState state;

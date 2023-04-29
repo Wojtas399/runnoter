@@ -1,7 +1,4 @@
-import '../../../../domain/model/workout_stage.dart';
-import '../../../../domain/model/workout_status.dart';
-import '../../../model/bloc_state.dart';
-import '../../../model/bloc_status.dart';
+part of 'day_preview_bloc.dart';
 
 class DayPreviewState extends BlocState<DayPreviewState> {
   final DateTime? date;

@@ -5,8 +5,6 @@ import 'package:runnoter/domain/model/workout_stage.dart';
 import 'package:runnoter/domain/model/workout_status.dart';
 import 'package:runnoter/presentation/model/bloc_status.dart';
 import 'package:runnoter/presentation/screen/day_preview/bloc/day_preview_bloc.dart';
-import 'package:runnoter/presentation/screen/day_preview/bloc/day_preview_event.dart';
-import 'package:runnoter/presentation/screen/day_preview/bloc/day_preview_state.dart';
 
 import '../../../mock/domain/mock_auth_service.dart';
 import '../../../mock/domain/mock_workout_repository.dart';

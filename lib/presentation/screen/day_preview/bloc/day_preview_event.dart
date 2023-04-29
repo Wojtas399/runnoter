@@ -1,4 +1,4 @@
-import '../../../../domain/model/workout.dart';
+part of 'day_preview_bloc.dart';
 
 abstract class DayPreviewEvent {
   const DayPreviewEvent();
