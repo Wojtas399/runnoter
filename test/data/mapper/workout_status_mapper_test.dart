@@ -22,10 +22,10 @@ void main() {
     'map workout status from firebase, '
     'completed status dto model should be mapped to domain completed status model',
     () {
-      const firebase.WorkoutStatusDto statusDto =
+      final firebase.WorkoutStatusDto statusDto =
           firebase.WorkoutStatusCompletedDto(
-        coveredDistanceInKilometers: 10.0,
-        avgPace: firebase.PaceDto(minutes: 5, seconds: 50),
+        coveredDistanceInKm: 10.0,
+        avgPaceDto: const firebase.PaceDto(minutes: 5, seconds: 50),
         avgHeartRate: 146,
         moodRate: firebase.MoodRate.mr8,
         comment: 'comment',
@@ -48,10 +48,10 @@ void main() {
     'map workout status from firebase, '
     'uncompleted status dto model should be mapped to domain uncompleted status model',
     () {
-      const firebase.WorkoutStatusDto statusDto =
+      final firebase.WorkoutStatusDto statusDto =
           firebase.WorkoutStatusUncompletedDto(
-        coveredDistanceInKilometers: 10.0,
-        avgPace: firebase.PaceDto(minutes: 5, seconds: 50),
+        coveredDistanceInKm: 10.0,
+        avgPaceDto: const firebase.PaceDto(minutes: 5, seconds: 50),
         avgHeartRate: 146,
         moodRate: firebase.MoodRate.mr8,
         comment: 'comment',
@@ -95,10 +95,10 @@ void main() {
         moodRate: MoodRate.mr8,
         comment: 'comment',
       );
-      const firebase.WorkoutStatusDto expectedDto =
+      final firebase.WorkoutStatusDto expectedDto =
           firebase.WorkoutStatusCompletedDto(
-        coveredDistanceInKilometers: 10.0,
-        avgPace: firebase.PaceDto(minutes: 5, seconds: 50),
+        coveredDistanceInKm: 10.0,
+        avgPaceDto: const firebase.PaceDto(minutes: 5, seconds: 50),
         avgHeartRate: 146,
         moodRate: firebase.MoodRate.mr8,
         comment: 'comment',
@@ -121,10 +121,10 @@ void main() {
         moodRate: MoodRate.mr8,
         comment: 'comment',
       );
-      const firebase.WorkoutStatusDto expectedDto =
+      final firebase.WorkoutStatusDto expectedDto =
           firebase.WorkoutStatusUncompletedDto(
-        coveredDistanceInKilometers: 10.0,
-        avgPace: firebase.PaceDto(minutes: 5, seconds: 50),
+        coveredDistanceInKm: 10.0,
+        avgPaceDto: const firebase.PaceDto(minutes: 5, seconds: 50),
         avgHeartRate: 146,
         moodRate: firebase.MoodRate.mr8,
         comment: 'comment',

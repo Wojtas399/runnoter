@@ -30,9 +30,9 @@ void main() {
         'moodRate': MoodRate.mr8.number,
         'comment': 'comment',
       };
-      const WorkoutStatusCompletedDto expectedDto = WorkoutStatusCompletedDto(
-        coveredDistanceInKilometers: 8.5,
-        avgPace: avgPace,
+      final WorkoutStatusCompletedDto expectedDto = WorkoutStatusCompletedDto(
+        coveredDistanceInKm: 8.5,
+        avgPaceDto: avgPace,
         avgHeartRate: 145,
         moodRate: MoodRate.mr8,
         comment: 'comment',
@@ -57,10 +57,10 @@ void main() {
         'moodRate': MoodRate.mr8.number,
         'comment': 'comment',
       };
-      const WorkoutStatusUncompletedDto expectedDto =
+      final WorkoutStatusUncompletedDto expectedDto =
           WorkoutStatusUncompletedDto(
-        coveredDistanceInKilometers: 8.5,
-        avgPace: avgPace,
+        coveredDistanceInKm: 8.5,
+        avgPaceDto: avgPace,
         avgHeartRate: 145,
         moodRate: MoodRate.mr8,
         comment: 'comment',
@@ -92,9 +92,9 @@ void main() {
     'completed status',
     () {
       const PaceDto avgPace = PaceDto(minutes: 5, seconds: 30);
-      const WorkoutStatusCompletedDto dto = WorkoutStatusCompletedDto(
-        coveredDistanceInKilometers: 8.5,
-        avgPace: avgPace,
+      final WorkoutStatusCompletedDto dto = WorkoutStatusCompletedDto(
+        coveredDistanceInKm: 8.5,
+        avgPaceDto: avgPace,
         avgHeartRate: 145,
         moodRate: MoodRate.mr8,
         comment: 'comment',
@@ -119,9 +119,9 @@ void main() {
     'uncompleted status',
     () {
       const PaceDto avgPace = PaceDto(minutes: 5, seconds: 30);
-      const WorkoutStatusUncompletedDto dto = WorkoutStatusUncompletedDto(
-        coveredDistanceInKilometers: 8.5,
-        avgPace: avgPace,
+      final WorkoutStatusUncompletedDto dto = WorkoutStatusUncompletedDto(
+        coveredDistanceInKm: 8.5,
+        avgPaceDto: avgPace,
         avgHeartRate: 145,
         moodRate: MoodRate.mr8,
         comment: 'comment',

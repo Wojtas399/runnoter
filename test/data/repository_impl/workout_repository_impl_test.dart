@@ -377,9 +377,9 @@ void main() {
         moodRate: MoodRate.mr8,
         comment: 'Nice workout!',
       );
-      const newStatusDto = firebase.WorkoutStatusCompletedDto(
-        coveredDistanceInKilometers: 10,
-        avgPace: PaceDto(minutes: 6, seconds: 2),
+      final newStatusDto = firebase.WorkoutStatusCompletedDto(
+        coveredDistanceInKm: 10,
+        avgPaceDto: const PaceDto(minutes: 6, seconds: 2),
         avgHeartRate: 150,
         moodRate: firebase.MoodRate.mr8,
         comment: 'Nice workout!',

@@ -38,26 +38,26 @@ class WorkoutStatusPendingDto extends WorkoutStatusDto {
   }
 }
 
-class WorkoutStatusCompletedDto extends WorkoutStatusDto {
-  final double coveredDistanceInKilometers;
-  final PaceDto avgPace;
-  final int avgHeartRate;
-  final MoodRate moodRate;
-  final String? comment;
-
-  const WorkoutStatusCompletedDto({
-    required this.coveredDistanceInKilometers,
-    required this.avgPace,
-    required this.avgHeartRate,
-    required this.moodRate,
-    required this.comment,
-  });
+class WorkoutStatusCompletedDto extends WorkoutStatusDto with _FinishedWorkout {
+  WorkoutStatusCompletedDto({
+    required double coveredDistanceInKm,
+    required PaceDto avgPaceDto,
+    required int avgHeartRate,
+    required MoodRate moodRate,
+    required String? comment,
+  }) {
+    this.coveredDistanceInKm = coveredDistanceInKm;
+    this.avgPaceDto = avgPaceDto;
+    this.avgHeartRate = avgHeartRate;
+    this.moodRate = moodRate;
+    this.comment = comment;
+  }
 
   WorkoutStatusCompletedDto.fromJson(Map<String, dynamic> json)
       : this(
-          coveredDistanceInKilometers:
-              (json[_coveredDistanceInKilometersField] as num).toDouble(),
-          avgPace: PaceDto.fromJson(json[_avgPaceField]),
+          coveredDistanceInKm:
+              (json[_coveredDistanceInKmField] as num).toDouble(),
+          avgPaceDto: PaceDto.fromJson(json[_avgPaceField]),
           avgHeartRate: json[_avgHeartRateField],
           moodRate: mapMoodRateFromNumber(json[_moodRateField]),
           comment: json[_commentField],
@@ -65,8 +65,8 @@ class WorkoutStatusCompletedDto extends WorkoutStatusDto {
 
   @override
   List<Object?> get props => [
-        coveredDistanceInKilometers,
-        avgPace,
+        coveredDistanceInKm,
+        avgPaceDto,
         avgHeartRate,
         moodRate,
         comment,
@@ -75,33 +75,34 @@ class WorkoutStatusCompletedDto extends WorkoutStatusDto {
   @override
   Map<String, dynamic> toJson() => {
         _nameField: _completedStatusName,
-        _coveredDistanceInKilometersField: coveredDistanceInKilometers,
-        _avgPaceField: avgPace.toJson(),
+        _coveredDistanceInKmField: coveredDistanceInKm,
+        _avgPaceField: avgPaceDto.toJson(),
         _avgHeartRateField: avgHeartRate,
         _moodRateField: moodRate.number,
         _commentField: comment,
       };
 }
 
-class WorkoutStatusUncompletedDto extends WorkoutStatusDto {
-  final double coveredDistanceInKilometers;
-  final PaceDto avgPace;
-  final int avgHeartRate;
-  final MoodRate moodRate;
-  final String? comment;
-
-  const WorkoutStatusUncompletedDto({
-    required this.coveredDistanceInKilometers,
-    required this.avgPace,
-    required this.avgHeartRate,
-    required this.moodRate,
-    required this.comment,
-  });
+class WorkoutStatusUncompletedDto extends WorkoutStatusDto
+    with _FinishedWorkout {
+  WorkoutStatusUncompletedDto({
+    required double coveredDistanceInKm,
+    required PaceDto avgPaceDto,
+    required int avgHeartRate,
+    required MoodRate moodRate,
+    required String? comment,
+  }) {
+    this.coveredDistanceInKm = coveredDistanceInKm;
+    this.avgPaceDto = avgPaceDto;
+    this.avgHeartRate = avgHeartRate;
+    this.moodRate = moodRate;
+    this.comment = comment;
+  }
 
   WorkoutStatusUncompletedDto.fromJson(Map<String, dynamic> json)
       : this(
-          coveredDistanceInKilometers: json[_coveredDistanceInKilometersField],
-          avgPace: PaceDto.fromJson(json[_avgPaceField]),
+          coveredDistanceInKm: json[_coveredDistanceInKmField],
+          avgPaceDto: PaceDto.fromJson(json[_avgPaceField]),
           avgHeartRate: json[_avgHeartRateField],
           moodRate: mapMoodRateFromNumber(json[_moodRateField]),
           comment: json[_commentField],
@@ -109,8 +110,8 @@ class WorkoutStatusUncompletedDto extends WorkoutStatusDto {
 
   @override
   List<Object?> get props => [
-        coveredDistanceInKilometers,
-        avgPace,
+        coveredDistanceInKm,
+        avgPaceDto,
         avgHeartRate,
         moodRate,
         comment,
@@ -119,12 +120,20 @@ class WorkoutStatusUncompletedDto extends WorkoutStatusDto {
   @override
   Map<String, dynamic> toJson() => {
         _nameField: _uncompletedStatusName,
-        _coveredDistanceInKilometersField: coveredDistanceInKilometers,
-        _avgPaceField: avgPace.toJson(),
+        _coveredDistanceInKmField: coveredDistanceInKm,
+        _avgPaceField: avgPaceDto.toJson(),
         _avgHeartRateField: avgHeartRate,
         _moodRateField: moodRate.number,
         _commentField: comment,
       };
+}
+
+mixin _FinishedWorkout on WorkoutStatusDto {
+  late final double coveredDistanceInKm;
+  late final PaceDto avgPaceDto;
+  late final int avgHeartRate;
+  late final MoodRate moodRate;
+  late final String? comment;
 }
 
 enum MoodRate {
@@ -149,7 +158,7 @@ const String _completedStatusName = 'completed';
 const String _uncompletedStatusName = 'uncompleted';
 
 const String _nameField = 'name';
-const String _coveredDistanceInKilometersField = 'coveredDistanceInKilometers';
+const String _coveredDistanceInKmField = 'coveredDistanceInKilometers';
 const String _avgPaceField = 'avgPace';
 const String _avgHeartRateField = 'avgHeartRate';
 const String _moodRateField = 'moodRate';
