@@ -32,6 +32,7 @@ void main() {
 
   test(
     'add entity, '
+    'new entity does not exist in state, '
     'should add new entity to state',
     () async {
       final List<TestModel> existingEntities = [
@@ -57,15 +58,42 @@ void main() {
   );
 
   test(
+    'add entity, '
+    'new entity already exists in state, '
+    'should update new entity in state',
+    () async {
+      final List<TestModel> existingEntities = [
+        const TestModel(id: 'e1', name: 'first entity'),
+        const TestModel(id: 'e2', name: 'second entity'),
+      ];
+      const TestModel entityToAdd = TestModel(
+        id: 'e1',
+        name: 'model name',
+      );
+      repository = createRepository(initialData: existingEntities);
+
+      repository.addEntity(entityToAdd);
+
+      expect(
+        await repository.dataStream$.first,
+        [
+          entityToAdd,
+          existingEntities[1],
+        ],
+      );
+    },
+  );
+
+  test(
     'add entities, '
-    'should add new entities to state',
+    'should add new entities and update existing entities',
     () async {
       final List<TestModel> existingEntities = [
         const TestModel(id: 'e1', name: 'first entity'),
         const TestModel(id: 'e2', name: 'second entity'),
       ];
       final List<TestModel> entitiesToAdd = [
-        const TestModel(id: 'e3', name: 'third entity'),
+        const TestModel(id: 'e2', name: 'entity 2'),
         const TestModel(id: 'e4', name: 'fourth entity'),
         const TestModel(id: 'e5', name: 'fifth entity'),
       ];
@@ -76,7 +104,7 @@ void main() {
       expect(
         await repository.dataStream$.first,
         [
-          ...existingEntities,
+          existingEntities.first,
           ...entitiesToAdd,
         ],
       );

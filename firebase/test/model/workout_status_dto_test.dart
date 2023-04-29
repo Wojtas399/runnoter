@@ -19,20 +19,20 @@ void main() {
 
   test(
     'from json, '
-    'done status',
+    'completed status',
     () {
       const PaceDto avgPace = PaceDto(minutes: 5, seconds: 30);
       final Map<String, dynamic> json = {
-        'name': 'done',
+        'name': 'completed',
         'coveredDistanceInKilometers': 8.5,
         'avgPace': avgPace.toJson(),
         'avgHeartRate': 145,
         'moodRate': MoodRate.mr8.number,
         'comment': 'comment',
       };
-      const WorkoutStatusDoneDto expectedDto = WorkoutStatusDoneDto(
-        coveredDistanceInKilometers: 8.5,
-        avgPace: avgPace,
+      final WorkoutStatusCompletedDto expectedDto = WorkoutStatusCompletedDto(
+        coveredDistanceInKm: 8.5,
+        avgPaceDto: avgPace,
         avgHeartRate: 145,
         moodRate: MoodRate.mr8,
         comment: 'comment',
@@ -46,20 +46,21 @@ void main() {
 
   test(
     'from json, '
-    'failed status',
+    'uncompleted status',
     () {
       const PaceDto avgPace = PaceDto(minutes: 5, seconds: 30);
       final Map<String, dynamic> json = {
-        'name': 'failed',
+        'name': 'uncompleted',
         'coveredDistanceInKilometers': 8.5,
         'avgPace': avgPace.toJson(),
         'avgHeartRate': 145,
         'moodRate': MoodRate.mr8.number,
         'comment': 'comment',
       };
-      const WorkoutStatusFailedDto expectedDto = WorkoutStatusFailedDto(
-        coveredDistanceInKilometers: 8.5,
-        avgPace: avgPace,
+      final WorkoutStatusUncompletedDto expectedDto =
+          WorkoutStatusUncompletedDto(
+        coveredDistanceInKm: 8.5,
+        avgPaceDto: avgPace,
         avgHeartRate: 145,
         moodRate: MoodRate.mr8,
         comment: 'comment',
@@ -88,18 +89,18 @@ void main() {
 
   test(
     'to json, '
-    'done status',
+    'completed status',
     () {
       const PaceDto avgPace = PaceDto(minutes: 5, seconds: 30);
-      const WorkoutStatusDoneDto dto = WorkoutStatusDoneDto(
-        coveredDistanceInKilometers: 8.5,
-        avgPace: avgPace,
+      final WorkoutStatusCompletedDto dto = WorkoutStatusCompletedDto(
+        coveredDistanceInKm: 8.5,
+        avgPaceDto: avgPace,
         avgHeartRate: 145,
         moodRate: MoodRate.mr8,
         comment: 'comment',
       );
       final Map<String, dynamic> expectedJson = {
-        'name': 'done',
+        'name': 'completed',
         'coveredDistanceInKilometers': 8.5,
         'avgPace': avgPace.toJson(),
         'avgHeartRate': 145,
@@ -115,18 +116,18 @@ void main() {
 
   test(
     'to json, '
-    'failed status',
+    'uncompleted status',
     () {
       const PaceDto avgPace = PaceDto(minutes: 5, seconds: 30);
-      const WorkoutStatusFailedDto dto = WorkoutStatusFailedDto(
-        coveredDistanceInKilometers: 8.5,
-        avgPace: avgPace,
+      final WorkoutStatusUncompletedDto dto = WorkoutStatusUncompletedDto(
+        coveredDistanceInKm: 8.5,
+        avgPaceDto: avgPace,
         avgHeartRate: 145,
         moodRate: MoodRate.mr8,
         comment: 'comment',
       );
       final Map<String, dynamic> expectedJson = {
-        'name': 'failed',
+        'name': 'uncompleted',
         'coveredDistanceInKilometers': 8.5,
         'avgPace': avgPace.toJson(),
         'avgHeartRate': 145,

@@ -32,7 +32,7 @@ class ProfileContent extends StatelessWidget {
                     Divider(),
                     SizedBox(height: 16),
                     ProfileSettingsSection(),
-                    SizedBox(height: 80),
+                    SizedBox(height: 160),
                   ],
                 ),
               ),

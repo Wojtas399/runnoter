@@ -7,18 +7,18 @@ import 'pace_mapper.dart';
 WorkoutStatus mapWorkoutStatusFromFirebase(WorkoutStatusDto workoutStatusDto) {
   if (workoutStatusDto is WorkoutStatusPendingDto) {
     return const WorkoutStatusPending();
-  } else if (workoutStatusDto is WorkoutStatusDoneDto) {
-    return WorkoutStatusDone(
-      coveredDistanceInKm: workoutStatusDto.coveredDistanceInKilometers,
-      avgPace: mapPaceFromFirebase(workoutStatusDto.avgPace),
+  } else if (workoutStatusDto is WorkoutStatusCompletedDto) {
+    return WorkoutStatusCompleted(
+      coveredDistanceInKm: workoutStatusDto.coveredDistanceInKm,
+      avgPace: mapPaceFromFirebase(workoutStatusDto.avgPaceDto),
       avgHeartRate: workoutStatusDto.avgHeartRate,
       moodRate: mapMoodRateFromFirebase(workoutStatusDto.moodRate),
       comment: workoutStatusDto.comment,
     );
-  } else if (workoutStatusDto is WorkoutStatusFailedDto) {
-    return WorkoutStatusFailed(
-      coveredDistanceInKm: workoutStatusDto.coveredDistanceInKilometers,
-      avgPace: mapPaceFromFirebase(workoutStatusDto.avgPace),
+  } else if (workoutStatusDto is WorkoutStatusUncompletedDto) {
+    return WorkoutStatusUncompleted(
+      coveredDistanceInKm: workoutStatusDto.coveredDistanceInKm,
+      avgPace: mapPaceFromFirebase(workoutStatusDto.avgPaceDto),
       avgHeartRate: workoutStatusDto.avgHeartRate,
       moodRate: mapMoodRateFromFirebase(workoutStatusDto.moodRate),
       comment: workoutStatusDto.comment,
@@ -31,18 +31,18 @@ WorkoutStatus mapWorkoutStatusFromFirebase(WorkoutStatusDto workoutStatusDto) {
 WorkoutStatusDto mapWorkoutStatusToFirebase(WorkoutStatus workoutStatus) {
   if (workoutStatus is WorkoutStatusPending) {
     return const WorkoutStatusPendingDto();
-  } else if (workoutStatus is WorkoutStatusDone) {
-    return WorkoutStatusDoneDto(
-      coveredDistanceInKilometers: workoutStatus.coveredDistanceInKm,
-      avgPace: mapPaceToFirebase(workoutStatus.avgPace),
+  } else if (workoutStatus is WorkoutStatusCompleted) {
+    return WorkoutStatusCompletedDto(
+      coveredDistanceInKm: workoutStatus.coveredDistanceInKm,
+      avgPaceDto: mapPaceToFirebase(workoutStatus.avgPace),
       avgHeartRate: workoutStatus.avgHeartRate,
       moodRate: mapMoodRateToFirebase(workoutStatus.moodRate),
       comment: workoutStatus.comment,
     );
-  } else if (workoutStatus is WorkoutStatusFailed) {
-    return WorkoutStatusFailedDto(
-      coveredDistanceInKilometers: workoutStatus.coveredDistanceInKm,
-      avgPace: mapPaceToFirebase(workoutStatus.avgPace),
+  } else if (workoutStatus is WorkoutStatusUncompleted) {
+    return WorkoutStatusUncompletedDto(
+      coveredDistanceInKm: workoutStatus.coveredDistanceInKm,
+      avgPaceDto: mapPaceToFirebase(workoutStatus.avgPace),
       avgHeartRate: workoutStatus.avgHeartRate,
       moodRate: mapMoodRateToFirebase(workoutStatus.moodRate),
       comment: workoutStatus.comment,

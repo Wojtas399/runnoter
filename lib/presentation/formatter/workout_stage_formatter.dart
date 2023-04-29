@@ -9,15 +9,15 @@ extension WorkoutStageFormatter on WorkoutStage {
     String description = '';
     final WorkoutStage stage = this;
     if (stage is WorkoutStageBaseRun) {
-      description = _createBaseRunDescription(context, stage);
+      description = _createDistanceStageDescription(context, stage);
     } else if (stage is WorkoutStageZone2) {
-      description = _createZone2Description(context, stage);
+      description = _createDistanceStageDescription(context, stage);
     } else if (stage is WorkoutStageZone3) {
-      description = _createZone3Description(context, stage);
+      description = _createDistanceStageDescription(context, stage);
     } else if (stage is WorkoutStageRhythms) {
-      description = _createRhythmsDescription(context, stage);
+      description = _createSeriesStageDescription(context, stage);
     } else if (stage is WorkoutStageHillRepeats) {
-      description = _createHillRepeatsDescription(context, stage);
+      description = _createSeriesStageDescription(context, stage);
     } else if (stage is WorkoutStageStretching) {
       description = _createStretchingDescription(context);
     } else if (stage is WorkoutStageStrengthening) {
@@ -28,80 +28,66 @@ extension WorkoutStageFormatter on WorkoutStage {
     return description;
   }
 
-  String _createBaseRunDescription(
-    BuildContext context,
-    WorkoutStageBaseRun stage,
-  ) {
-    final String stageName = AppLocalizations.of(context)!.workout_base_run;
-    final String distance = stage.distanceInKilometers.toKilometersFormat();
-    return '$stageName $distance HR<${stage.maxHeartRate}';
+  String toTypeName(BuildContext context) {
+    final appLocalizations = AppLocalizations.of(context)!;
+    if (this is WorkoutStageBaseRun) {
+      return appLocalizations.workout_stage_base_run;
+    } else if (this is WorkoutStageZone2) {
+      return appLocalizations.workout_stage_zone2;
+    } else if (this is WorkoutStageZone3) {
+      return appLocalizations.workout_stage_zone3;
+    } else if (this is WorkoutStageRhythms) {
+      return appLocalizations.workout_stage_rhythms;
+    } else if (this is WorkoutStageHillRepeats) {
+      return appLocalizations.workout_stage_hill_repeats;
+    } else if (this is WorkoutStageStretching) {
+      return appLocalizations.workout_stage_stretching;
+    } else if (this is WorkoutStageStrengthening) {
+      return appLocalizations.workout_stage_strengthening;
+    } else if (this is WorkoutStageFoamRolling) {
+      return appLocalizations.workout_stage_foamRolling;
+    }
+    return '';
   }
 
-  String _createZone2Description(
+  String _createDistanceStageDescription(
     BuildContext context,
-    WorkoutStageZone2 stage,
+    DistanceWorkoutStage stage,
   ) {
-    final String stageName = AppLocalizations.of(context)!.workout_zone2;
     final String distance = stage.distanceInKilometers.toKilometersFormat();
-    return '$stageName $distance HR<${stage.maxHeartRate}';
+    return '${stage.toTypeName(context)} $distance HR<${stage.maxHeartRate}';
   }
 
-  String _createZone3Description(
+  String _createSeriesStageDescription(
     BuildContext context,
-    WorkoutStageZone3 stage,
+    SeriesWorkoutStage stage,
   ) {
-    final String stageName = AppLocalizations.of(context)!.workout_zone3;
-    final String distance = stage.distanceInKilometers.toKilometersFormat();
-    return '$stageName $distance HR<${stage.maxHeartRate}';
-  }
-
-  String _createRhythmsDescription(
-    BuildContext context,
-    WorkoutStageRhythms stage,
-  ) {
-    final String stageName = AppLocalizations.of(context)!.workout_rhythms;
     final String seriesDescription =
         '${stage.amountOfSeries}x${stage.seriesDistanceInMeters}m';
-    String breakDescription = '${AppLocalizations.of(context)!.workout_break} ';
-    if (stage.breakMarchDistanceInMeters > 0) {
-      breakDescription += ' ${AppLocalizations.of(context)!.workout_march(
-        stage.breakMarchDistanceInMeters,
+    String breakDescription =
+        '${AppLocalizations.of(context)!.workout_stage_break} ';
+    if (stage.walkingDistanceInMeters > 0) {
+      breakDescription += ' ${AppLocalizations.of(context)!.workout_stage_march(
+        stage.walkingDistanceInMeters,
       )}, ';
     }
-    breakDescription += AppLocalizations.of(context)!.workout_jog(
-      stage.breakJogDistanceInMeters,
-    );
-    return '$stageName $seriesDescription, $breakDescription';
-  }
-
-  String _createHillRepeatsDescription(
-    BuildContext context,
-    WorkoutStageHillRepeats stage,
-  ) {
-    final String stageName = AppLocalizations.of(context)!.workout_hill_repeats;
-    final String seriesDescription =
-        '${stage.amountOfSeries}x${stage.seriesDistanceInMeters}m';
-    String breakDescription = '${AppLocalizations.of(context)!.workout_break} ';
-    if (stage.breakMarchDistanceInMeters > 0) {
-      breakDescription += ' ${AppLocalizations.of(context)!.workout_march(
-        stage.breakMarchDistanceInMeters,
-      )}, ';
+    if (stage.walkingDistanceInMeters > 0) {
+      breakDescription += AppLocalizations.of(context)!.workout_stage_jog(
+        stage.joggingDistanceInMeters,
+      );
     }
-    breakDescription += AppLocalizations.of(context)!.workout_jog(
-      stage.breakJogDistanceInMeters,
-    );
-    return '$stageName $seriesDescription, $breakDescription';
+    return '${stage.toTypeName(context)} $seriesDescription, $breakDescription';
   }
 
   String _createStretchingDescription(BuildContext context) {
-    return AppLocalizations.of(context)!.workout_stretching;
+    return AppLocalizations.of(context)!.workout_stage_stretching;
   }
 
   String _createStrengtheningDescription(BuildContext context) {
-    return AppLocalizations.of(context)!.workout_strengthening;
+    return AppLocalizations.of(context)!.workout_stage_strengthening;
   }
 
   String _createFoamRollingDescription(BuildContext context) {
-    return AppLocalizations.of(context)!.workout_foamRolling;
+    return AppLocalizations.of(context)!.workout_stage_foamRolling;
   }
 }

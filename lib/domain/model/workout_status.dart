@@ -11,20 +11,21 @@ class WorkoutStatusPending extends WorkoutStatus {
   List<Object> get props => [];
 }
 
-class WorkoutStatusDone extends WorkoutStatus {
-  final double coveredDistanceInKm;
-  final Pace avgPace;
-  final int avgHeartRate;
-  final MoodRate moodRate;
-  final String? comment;
-
-  const WorkoutStatusDone({
-    required this.coveredDistanceInKm,
-    required this.avgPace,
-    required this.avgHeartRate,
-    required this.moodRate,
-    required this.comment,
-  });
+class WorkoutStatusCompleted extends WorkoutStatus with FinishedWorkout {
+  WorkoutStatusCompleted({
+    required double coveredDistanceInKm,
+    required Pace avgPace,
+    required int avgHeartRate,
+    required MoodRate moodRate,
+    required String? comment,
+  })  : assert(coveredDistanceInKm >= 0),
+        assert(avgHeartRate >= 0 && avgHeartRate <= 400) {
+    this.coveredDistanceInKm = coveredDistanceInKm;
+    this.avgPace = avgPace;
+    this.avgHeartRate = avgHeartRate;
+    this.moodRate = moodRate;
+    this.comment = comment;
+  }
 
   @override
   List<Object?> get props => [
@@ -36,20 +37,21 @@ class WorkoutStatusDone extends WorkoutStatus {
       ];
 }
 
-class WorkoutStatusFailed extends WorkoutStatus {
-  final double coveredDistanceInKm;
-  final Pace avgPace;
-  final int avgHeartRate;
-  final MoodRate moodRate;
-  final String? comment;
-
-  const WorkoutStatusFailed({
-    required this.coveredDistanceInKm,
-    required this.avgPace,
-    required this.avgHeartRate,
-    required this.moodRate,
-    required this.comment,
-  });
+class WorkoutStatusUncompleted extends WorkoutStatus with FinishedWorkout {
+  WorkoutStatusUncompleted({
+    required double coveredDistanceInKm,
+    required Pace avgPace,
+    required int avgHeartRate,
+    required MoodRate moodRate,
+    required String? comment,
+  })  : assert(coveredDistanceInKm >= 0),
+        assert(avgHeartRate >= 0 && avgHeartRate <= 400) {
+    this.coveredDistanceInKm = coveredDistanceInKm;
+    this.avgPace = avgPace;
+    this.avgHeartRate = avgHeartRate;
+    this.moodRate = moodRate;
+    this.comment = comment;
+  }
 
   @override
   List<Object?> get props => [
@@ -59,6 +61,14 @@ class WorkoutStatusFailed extends WorkoutStatus {
         moodRate,
         comment,
       ];
+}
+
+mixin FinishedWorkout on WorkoutStatus {
+  late final double coveredDistanceInKm;
+  late final Pace avgPace;
+  late final int avgHeartRate;
+  late final MoodRate moodRate;
+  late final String? comment;
 }
 
 class Pace extends Equatable {
@@ -68,7 +78,8 @@ class Pace extends Equatable {
   const Pace({
     required this.minutes,
     required this.seconds,
-  });
+  })  : assert(minutes >= 0 && minutes <= 59),
+        assert(seconds >= 0 && seconds <= 59);
 
   @override
   List<Object> get props => [

@@ -77,20 +77,20 @@ void main() {
     () {
       const int amountOfSeries = 10;
       const int seriesDistanceInMeters = 100;
-      const int breakMarchDistanceInMeters = 0;
-      const int breakJogDistanceInMeters = 200;
+      const int walkingDistanceInMeters = 0;
+      const int joggingDistanceInMeters = 200;
       final firebase.WorkoutStageHillRepeatsDto stageDto =
           firebase.WorkoutStageHillRepeatsDto(
         amountOfSeries: amountOfSeries,
         seriesDistanceInMeters: seriesDistanceInMeters,
-        breakMarchDistanceInMeters: breakMarchDistanceInMeters,
-        breakJogDistanceInMeters: breakJogDistanceInMeters,
+        walkingDistanceInMeters: walkingDistanceInMeters,
+        joggingDistanceInMeters: joggingDistanceInMeters,
       );
       final WorkoutStageHillRepeats expectedStage = WorkoutStageHillRepeats(
         amountOfSeries: amountOfSeries,
         seriesDistanceInMeters: seriesDistanceInMeters,
-        breakMarchDistanceInMeters: breakMarchDistanceInMeters,
-        breakJogDistanceInMeters: breakJogDistanceInMeters,
+        walkingDistanceInMeters: walkingDistanceInMeters,
+        joggingDistanceInMeters: joggingDistanceInMeters,
       );
 
       final WorkoutStage stage = mapWorkoutStageFromFirebase(stageDto);
@@ -105,20 +105,20 @@ void main() {
     () {
       const int amountOfSeries = 10;
       const int seriesDistanceInMeters = 100;
-      const int breakMarchDistanceInMeters = 0;
-      const int breakJogDistanceInMeters = 200;
+      const int walkingDistanceInMeters = 0;
+      const int joggingDistanceInMeters = 200;
       final firebase.WorkoutStageRhythmsDto stageDto =
           firebase.WorkoutStageRhythmsDto(
         amountOfSeries: amountOfSeries,
         seriesDistanceInMeters: seriesDistanceInMeters,
-        breakMarchDistanceInMeters: breakMarchDistanceInMeters,
-        breakJogDistanceInMeters: breakJogDistanceInMeters,
+        walkingDistanceInMeters: walkingDistanceInMeters,
+        joggingDistanceInMeters: joggingDistanceInMeters,
       );
       final WorkoutStageRhythms expectedStage = WorkoutStageRhythms(
         amountOfSeries: amountOfSeries,
         seriesDistanceInMeters: seriesDistanceInMeters,
-        breakMarchDistanceInMeters: breakMarchDistanceInMeters,
-        breakJogDistanceInMeters: breakJogDistanceInMeters,
+        walkingDistanceInMeters: walkingDistanceInMeters,
+        joggingDistanceInMeters: joggingDistanceInMeters,
       );
 
       final WorkoutStage stage = mapWorkoutStageFromFirebase(stageDto);
@@ -242,20 +242,20 @@ void main() {
     () {
       const int amountOfSeries = 10;
       const int seriesDistanceInMeters = 100;
-      const int breakMarchDistanceInMeters = 0;
-      const int breakJogDistanceInMeters = 200;
+      const int walkingDistanceInMeters = 0;
+      const int joggingDistanceInMeters = 200;
       final WorkoutStageHillRepeats stage = WorkoutStageHillRepeats(
         amountOfSeries: amountOfSeries,
         seriesDistanceInMeters: seriesDistanceInMeters,
-        breakMarchDistanceInMeters: breakMarchDistanceInMeters,
-        breakJogDistanceInMeters: breakJogDistanceInMeters,
+        walkingDistanceInMeters: walkingDistanceInMeters,
+        joggingDistanceInMeters: joggingDistanceInMeters,
       );
       final firebase.WorkoutStageHillRepeatsDto expectedDto =
           firebase.WorkoutStageHillRepeatsDto(
         amountOfSeries: amountOfSeries,
         seriesDistanceInMeters: seriesDistanceInMeters,
-        breakMarchDistanceInMeters: breakMarchDistanceInMeters,
-        breakJogDistanceInMeters: breakJogDistanceInMeters,
+        walkingDistanceInMeters: walkingDistanceInMeters,
+        joggingDistanceInMeters: joggingDistanceInMeters,
       );
 
       final WorkoutStageDto dto = mapWorkoutStageToFirebase(stage);
@@ -270,20 +270,20 @@ void main() {
     () {
       const int amountOfSeries = 10;
       const int seriesDistanceInMeters = 100;
-      const int breakMarchDistanceInMeters = 0;
-      const int breakJogDistanceInMeters = 200;
+      const int walkingDistanceInMeters = 0;
+      const int joggingDistanceInMeters = 200;
       final WorkoutStageRhythms stage = WorkoutStageRhythms(
         amountOfSeries: amountOfSeries,
         seriesDistanceInMeters: seriesDistanceInMeters,
-        breakMarchDistanceInMeters: breakMarchDistanceInMeters,
-        breakJogDistanceInMeters: breakJogDistanceInMeters,
+        walkingDistanceInMeters: walkingDistanceInMeters,
+        joggingDistanceInMeters: joggingDistanceInMeters,
       );
       final firebase.WorkoutStageRhythmsDto expectedDto =
           firebase.WorkoutStageRhythmsDto(
         amountOfSeries: amountOfSeries,
         seriesDistanceInMeters: seriesDistanceInMeters,
-        breakMarchDistanceInMeters: breakMarchDistanceInMeters,
-        breakJogDistanceInMeters: breakJogDistanceInMeters,
+        walkingDistanceInMeters: walkingDistanceInMeters,
+        joggingDistanceInMeters: joggingDistanceInMeters,
       );
 
       final WorkoutStageDto dto = mapWorkoutStageToFirebase(stage);

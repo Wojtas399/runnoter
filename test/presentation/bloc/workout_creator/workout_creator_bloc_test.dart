@@ -1,5 +1,7 @@
 import 'package:bloc_test/bloc_test.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:runnoter/domain/model/workout.dart';
 import 'package:runnoter/domain/model/workout_stage.dart';
 import 'package:runnoter/domain/model/workout_status.dart';
 import 'package:runnoter/presentation/model/bloc_status.dart';
@@ -7,6 +9,7 @@ import 'package:runnoter/presentation/screen/workout_creator/bloc/workout_creato
 
 import '../../../mock/domain/mock_auth_service.dart';
 import '../../../mock/domain/mock_workout_repository.dart';
+import '../../../util/workout_creator.dart';
 
 void main() {
   final authService = MockAuthService();
@@ -14,6 +17,7 @@ void main() {
 
   WorkoutCreatorBloc createBloc({
     DateTime? date,
+    Workout? workout,
     String? workoutName,
     List<WorkoutStage> stages = const [],
   }) =>
@@ -21,6 +25,7 @@ void main() {
         authService: authService,
         workoutRepository: workoutRepository,
         date: date,
+        workout: workout,
         workoutName: workoutName,
         stages: stages,
       );
@@ -28,19 +33,27 @@ void main() {
   WorkoutCreatorState createState({
     BlocStatus status = const BlocStatusInitial(),
     DateTime? date,
+    Workout? workout,
     String? workoutName,
     List<WorkoutStage> stages = const [],
   }) =>
       WorkoutCreatorState(
         status: status,
         date: date,
+        workout: workout,
         workoutName: workoutName,
         stages: stages,
       );
 
+  tearDown(() {
+    reset(authService);
+    reset(workoutRepository);
+  });
+
   blocTest(
     'initialize, '
-    'should update date in state',
+    'workout id is null, '
+    'should only update date in state',
     build: () => createBloc(),
     act: (WorkoutCreatorBloc bloc) => bloc.add(
       WorkoutCreatorEventInitialize(
@@ -53,6 +66,95 @@ void main() {
         date: DateTime(2023, 1, 1),
       ),
     ],
+  );
+
+  blocTest(
+    'initialize, '
+    'workout id is not null, '
+    'logged user does not exist, '
+    'should only update date in state',
+    build: () => createBloc(),
+    setUp: () => authService.mockGetLoggedUserId(),
+    act: (WorkoutCreatorBloc bloc) => bloc.add(
+      WorkoutCreatorEventInitialize(
+        date: DateTime(2023, 1, 1),
+        workoutId: 'w1',
+      ),
+    ),
+    expect: () => [
+      createState(
+        status: const BlocStatusComplete(),
+        date: DateTime(2023, 1, 1),
+      ),
+    ],
+    verify: (_) => verify(
+      () => authService.loggedUserId$,
+    ).called(1),
+  );
+
+  blocTest(
+    'initialize, '
+    'workout id is not null, '
+    'logged user exists, '
+    'should load workout matching to given id and should emit updated date, workout, workout name and stages',
+    build: () => createBloc(),
+    setUp: () {
+      authService.mockGetLoggedUserId(userId: 'u1');
+      workoutRepository.mockGetWorkoutById(
+        workout: createWorkout(
+          id: 'w1',
+          name: 'workout name',
+          stages: [
+            WorkoutStageBaseRun(
+              distanceInKilometers: 10,
+              maxHeartRate: 150,
+            ),
+          ],
+        ),
+      );
+    },
+    act: (WorkoutCreatorBloc bloc) => bloc.add(
+      WorkoutCreatorEventInitialize(
+        date: DateTime(2023, 1, 1),
+        workoutId: 'w1',
+      ),
+    ),
+    expect: () => [
+      createState(
+        status: const BlocStatusComplete<WorkoutCreatorInfo>(
+          info: WorkoutCreatorInfo.editModeInitialized,
+        ),
+        date: DateTime(2023, 1, 1),
+        workout: createWorkout(
+          id: 'w1',
+          name: 'workout name',
+          stages: [
+            WorkoutStageBaseRun(
+              distanceInKilometers: 10,
+              maxHeartRate: 150,
+            ),
+          ],
+        ),
+        workoutName: 'workout name',
+        stages: [
+          WorkoutStageBaseRun(
+            distanceInKilometers: 10,
+            maxHeartRate: 150,
+          ),
+        ],
+      ),
+    ],
+    verify: (_) {
+      verify(
+        () => authService.loggedUserId$,
+      ).called(1);
+      verify(
+        () => workoutRepository.getWorkoutById(
+          workoutId: 'w1',
+          userId: 'u1',
+        ),
+      ).called(1);
+    },
   );
 
   blocTest(
@@ -298,6 +400,7 @@ void main() {
 
   blocTest(
     'submit, '
+    'workout is null, '
     "should call workout repository's method to add workout with pending status and should emit info that workout has been added",
     build: () => createBloc(
       date: DateTime(2023, 2, 2),
@@ -338,7 +441,7 @@ void main() {
       ),
       createState(
         status: const BlocStatusComplete<WorkoutCreatorInfo>(
-          info: WorkoutCreatorInfo.workoutHasBeenAdded,
+          info: WorkoutCreatorInfo.workoutAdded,
         ),
         date: DateTime(2023, 2, 2),
         workoutName: 'workout 1',
@@ -364,6 +467,119 @@ void main() {
           workoutName: 'workout 1',
           date: DateTime(2023, 2, 2),
           status: const WorkoutStatusPending(),
+          stages: [
+            WorkoutStageBaseRun(
+              distanceInKilometers: 4,
+              maxHeartRate: 150,
+            ),
+            WorkoutStageZone3(
+              distanceInKilometers: 2,
+              maxHeartRate: 180,
+            ),
+          ],
+        ),
+      ).called(1);
+    },
+  );
+
+  blocTest(
+    'submit, '
+    'workout is not null, '
+    "should call workout repository's method to update workout and should emit info that workout has been updated",
+    build: () => createBloc(
+      date: DateTime(2023, 2, 2),
+      workout: createWorkout(
+        id: 'w1',
+        name: 'workout name',
+        stages: [
+          WorkoutStageBaseRun(
+            distanceInKilometers: 10,
+            maxHeartRate: 150,
+          ),
+        ],
+      ),
+      workoutName: 'workout 1',
+      stages: [
+        WorkoutStageBaseRun(
+          distanceInKilometers: 4,
+          maxHeartRate: 150,
+        ),
+        WorkoutStageZone3(
+          distanceInKilometers: 2,
+          maxHeartRate: 180,
+        ),
+      ],
+    ),
+    setUp: () {
+      authService.mockGetLoggedUserId(userId: 'u1');
+      workoutRepository.mockUpdateWorkout();
+    },
+    act: (WorkoutCreatorBloc bloc) => bloc.add(
+      const WorkoutCreatorEventSubmit(),
+    ),
+    expect: () => [
+      createState(
+        status: const BlocStatusLoading(),
+        date: DateTime(2023, 2, 2),
+        workout: createWorkout(
+          id: 'w1',
+          name: 'workout name',
+          stages: [
+            WorkoutStageBaseRun(
+              distanceInKilometers: 10,
+              maxHeartRate: 150,
+            ),
+          ],
+        ),
+        workoutName: 'workout 1',
+        stages: [
+          WorkoutStageBaseRun(
+            distanceInKilometers: 4,
+            maxHeartRate: 150,
+          ),
+          WorkoutStageZone3(
+            distanceInKilometers: 2,
+            maxHeartRate: 180,
+          ),
+        ],
+      ),
+      createState(
+        status: const BlocStatusComplete<WorkoutCreatorInfo>(
+          info: WorkoutCreatorInfo.workoutUpdated,
+        ),
+        date: DateTime(2023, 2, 2),
+        workout: createWorkout(
+          id: 'w1',
+          name: 'workout name',
+          stages: [
+            WorkoutStageBaseRun(
+              distanceInKilometers: 10,
+              maxHeartRate: 150,
+            ),
+          ],
+        ),
+        workoutName: 'workout 1',
+        stages: [
+          WorkoutStageBaseRun(
+            distanceInKilometers: 4,
+            maxHeartRate: 150,
+          ),
+          WorkoutStageZone3(
+            distanceInKilometers: 2,
+            maxHeartRate: 180,
+          ),
+        ],
+      ),
+    ],
+    verify: (_) {
+      verify(
+        () => authService.loggedUserId$,
+      ).called(1);
+      verify(
+        () => workoutRepository.updateWorkout(
+          workoutId: 'w1',
+          userId: 'u1',
+          workoutName: 'workout 1',
           stages: [
             WorkoutStageBaseRun(
               distanceInKilometers: 4,

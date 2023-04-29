@@ -48,7 +48,7 @@ void main() {
       authService.mockGetLoggedUserId(
         userId: 'u1',
       );
-      workoutRepository.mockGetWorkoutsByUserIdAndDateRange(
+      workoutRepository.mockGetWorkoutsByDateRange(
         workouts: [
           createWorkout(
             id: 'w1',
@@ -118,7 +118,7 @@ void main() {
         () => authService.loggedUserId$,
       ).called(1);
       verify(
-        () => workoutRepository.getWorkoutsByUserIdAndDateRange(
+        () => workoutRepository.getWorkoutsByDateRange(
           userId: 'u1',
           startDate: DateTime(2023, 4, 3),
           endDate: DateTime(2023, 4, 9),

@@ -10,10 +10,10 @@ class WorkoutStatusDto extends Equatable {
     final String status = json[_nameField];
     if (status == 'pending') {
       return const WorkoutStatusPendingDto();
-    } else if (status == 'done') {
-      return WorkoutStatusDoneDto.fromJson(json);
-    } else if (status == 'failed') {
-      return WorkoutStatusFailedDto.fromJson(json);
+    } else if (status == _completedStatusName) {
+      return WorkoutStatusCompletedDto.fromJson(json);
+    } else if (status == _uncompletedStatusName) {
+      return WorkoutStatusUncompletedDto.fromJson(json);
     }
     throw '[WorkoutStatusDto] Unknown workout status';
   }
@@ -33,31 +33,31 @@ class WorkoutStatusPendingDto extends WorkoutStatusDto {
   @override
   Map<String, dynamic> toJson() {
     return {
-      _nameField: 'pending',
+      _nameField: _pendingStatusName,
     };
   }
 }
 
-class WorkoutStatusDoneDto extends WorkoutStatusDto {
-  final double coveredDistanceInKilometers;
-  final PaceDto avgPace;
-  final int avgHeartRate;
-  final MoodRate moodRate;
-  final String? comment;
+class WorkoutStatusCompletedDto extends WorkoutStatusDto with _FinishedWorkout {
+  WorkoutStatusCompletedDto({
+    required double coveredDistanceInKm,
+    required PaceDto avgPaceDto,
+    required int avgHeartRate,
+    required MoodRate moodRate,
+    required String? comment,
+  }) {
+    this.coveredDistanceInKm = coveredDistanceInKm;
+    this.avgPaceDto = avgPaceDto;
+    this.avgHeartRate = avgHeartRate;
+    this.moodRate = moodRate;
+    this.comment = comment;
+  }
 
-  const WorkoutStatusDoneDto({
-    required this.coveredDistanceInKilometers,
-    required this.avgPace,
-    required this.avgHeartRate,
-    required this.moodRate,
-    required this.comment,
-  });
-
-  WorkoutStatusDoneDto.fromJson(Map<String, dynamic> json)
+  WorkoutStatusCompletedDto.fromJson(Map<String, dynamic> json)
       : this(
-          coveredDistanceInKilometers:
-              (json[_coveredDistanceInKilometersField] as num).toDouble(),
-          avgPace: PaceDto.fromJson(json[_avgPaceField]),
+          coveredDistanceInKm:
+              (json[_coveredDistanceInKmField] as num).toDouble(),
+          avgPaceDto: PaceDto.fromJson(json[_avgPaceField]),
           avgHeartRate: json[_avgHeartRateField],
           moodRate: mapMoodRateFromNumber(json[_moodRateField]),
           comment: json[_commentField],
@@ -65,8 +65,8 @@ class WorkoutStatusDoneDto extends WorkoutStatusDto {
 
   @override
   List<Object?> get props => [
-        coveredDistanceInKilometers,
-        avgPace,
+        coveredDistanceInKm,
+        avgPaceDto,
         avgHeartRate,
         moodRate,
         comment,
@@ -74,34 +74,35 @@ class WorkoutStatusDoneDto extends WorkoutStatusDto {
 
   @override
   Map<String, dynamic> toJson() => {
-        _nameField: 'done',
-        _coveredDistanceInKilometersField: coveredDistanceInKilometers,
-        _avgPaceField: avgPace.toJson(),
+        _nameField: _completedStatusName,
+        _coveredDistanceInKmField: coveredDistanceInKm,
+        _avgPaceField: avgPaceDto.toJson(),
         _avgHeartRateField: avgHeartRate,
         _moodRateField: moodRate.number,
         _commentField: comment,
       };
 }
 
-class WorkoutStatusFailedDto extends WorkoutStatusDto {
-  final double coveredDistanceInKilometers;
-  final PaceDto avgPace;
-  final int avgHeartRate;
-  final MoodRate moodRate;
-  final String? comment;
+class WorkoutStatusUncompletedDto extends WorkoutStatusDto
+    with _FinishedWorkout {
+  WorkoutStatusUncompletedDto({
+    required double coveredDistanceInKm,
+    required PaceDto avgPaceDto,
+    required int avgHeartRate,
+    required MoodRate moodRate,
+    required String? comment,
+  }) {
+    this.coveredDistanceInKm = coveredDistanceInKm;
+    this.avgPaceDto = avgPaceDto;
+    this.avgHeartRate = avgHeartRate;
+    this.moodRate = moodRate;
+    this.comment = comment;
+  }
 
-  const WorkoutStatusFailedDto({
-    required this.coveredDistanceInKilometers,
-    required this.avgPace,
-    required this.avgHeartRate,
-    required this.moodRate,
-    required this.comment,
-  });
-
-  WorkoutStatusFailedDto.fromJson(Map<String, dynamic> json)
+  WorkoutStatusUncompletedDto.fromJson(Map<String, dynamic> json)
       : this(
-          coveredDistanceInKilometers: json[_coveredDistanceInKilometersField],
-          avgPace: PaceDto.fromJson(json[_avgPaceField]),
+          coveredDistanceInKm: json[_coveredDistanceInKmField],
+          avgPaceDto: PaceDto.fromJson(json[_avgPaceField]),
           avgHeartRate: json[_avgHeartRateField],
           moodRate: mapMoodRateFromNumber(json[_moodRateField]),
           comment: json[_commentField],
@@ -109,8 +110,8 @@ class WorkoutStatusFailedDto extends WorkoutStatusDto {
 
   @override
   List<Object?> get props => [
-        coveredDistanceInKilometers,
-        avgPace,
+        coveredDistanceInKm,
+        avgPaceDto,
         avgHeartRate,
         moodRate,
         comment,
@@ -118,13 +119,21 @@ class WorkoutStatusFailedDto extends WorkoutStatusDto {
 
   @override
   Map<String, dynamic> toJson() => {
-        _nameField: 'failed',
-        _coveredDistanceInKilometersField: coveredDistanceInKilometers,
-        _avgPaceField: avgPace.toJson(),
+        _nameField: _uncompletedStatusName,
+        _coveredDistanceInKmField: coveredDistanceInKm,
+        _avgPaceField: avgPaceDto.toJson(),
         _avgHeartRateField: avgHeartRate,
         _moodRateField: moodRate.number,
         _commentField: comment,
       };
+}
+
+mixin _FinishedWorkout on WorkoutStatusDto {
+  late final double coveredDistanceInKm;
+  late final PaceDto avgPaceDto;
+  late final int avgHeartRate;
+  late final MoodRate moodRate;
+  late final String? comment;
 }
 
 enum MoodRate {
@@ -144,8 +153,12 @@ enum MoodRate {
   const MoodRate(this.number);
 }
 
+const String _pendingStatusName = 'pending';
+const String _completedStatusName = 'completed';
+const String _uncompletedStatusName = 'uncompleted';
+
 const String _nameField = 'name';
-const String _coveredDistanceInKilometersField = 'coveredDistanceInKilometers';
+const String _coveredDistanceInKmField = 'coveredDistanceInKilometers';
 const String _avgPaceField = 'avgPace';
 const String _avgHeartRateField = 'avgHeartRate';
 const String _moodRateField = 'moodRate';

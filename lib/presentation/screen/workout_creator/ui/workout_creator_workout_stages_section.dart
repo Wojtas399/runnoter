@@ -28,7 +28,7 @@ class _Title extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       AppLocalizations.of(context)!.workout_creator_screen_workout_stages,
-      style: Theme.of(context).textTheme.titleMedium,
+      style: Theme.of(context).textTheme.labelLarge,
     );
   }
 }
@@ -56,6 +56,7 @@ class _AddStageButton extends StatelessWidget {
   }
 
   Future<void> _onPressed(BuildContext context) async {
+    unfocusInputs();
     final WorkoutCreatorBloc bloc = context.read<WorkoutCreatorBloc>();
     final WorkoutStage? workoutStage = await showFullScreenDialog(
       context: context,

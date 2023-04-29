@@ -4,7 +4,7 @@ abstract class WorkoutStage extends Equatable {
   const WorkoutStage();
 }
 
-class WorkoutStageBaseRun extends WorkoutStage with DistanceWorkout {
+class WorkoutStageBaseRun extends WorkoutStage with DistanceWorkoutStage {
   WorkoutStageBaseRun({
     required double distanceInKilometers,
     required int maxHeartRate,
@@ -21,7 +21,7 @@ class WorkoutStageBaseRun extends WorkoutStage with DistanceWorkout {
       ];
 }
 
-class WorkoutStageZone2 extends WorkoutStage with DistanceWorkout {
+class WorkoutStageZone2 extends WorkoutStage with DistanceWorkoutStage {
   WorkoutStageZone2({
     required double distanceInKilometers,
     required int maxHeartRate,
@@ -38,7 +38,7 @@ class WorkoutStageZone2 extends WorkoutStage with DistanceWorkout {
       ];
 }
 
-class WorkoutStageZone3 extends WorkoutStage with DistanceWorkout {
+class WorkoutStageZone3 extends WorkoutStage with DistanceWorkoutStage {
   WorkoutStageZone3({
     required double distanceInKilometers,
     required int maxHeartRate,
@@ -55,51 +55,51 @@ class WorkoutStageZone3 extends WorkoutStage with DistanceWorkout {
       ];
 }
 
-class WorkoutStageHillRepeats extends WorkoutStage with SeriesWorkout {
+class WorkoutStageHillRepeats extends WorkoutStage with SeriesWorkoutStage {
   WorkoutStageHillRepeats({
     required int amountOfSeries,
     required int seriesDistanceInMeters,
-    required int breakMarchDistanceInMeters,
-    required int breakJogDistanceInMeters,
+    required int walkingDistanceInMeters,
+    required int joggingDistanceInMeters,
   })  : assert(amountOfSeries > 0),
         assert(seriesDistanceInMeters > 0),
-        assert(breakMarchDistanceInMeters > 0 || breakJogDistanceInMeters > 0) {
+        assert(walkingDistanceInMeters > 0 || joggingDistanceInMeters > 0) {
     this.amountOfSeries = amountOfSeries;
     this.seriesDistanceInMeters = seriesDistanceInMeters;
-    this.breakMarchDistanceInMeters = breakMarchDistanceInMeters;
-    this.breakJogDistanceInMeters = breakJogDistanceInMeters;
+    this.walkingDistanceInMeters = walkingDistanceInMeters;
+    this.joggingDistanceInMeters = joggingDistanceInMeters;
   }
 
   @override
   List<Object> get props => [
         amountOfSeries,
         seriesDistanceInMeters,
-        breakMarchDistanceInMeters,
-        breakJogDistanceInMeters,
+        walkingDistanceInMeters,
+        joggingDistanceInMeters,
       ];
 }
 
-class WorkoutStageRhythms extends WorkoutStage with SeriesWorkout {
+class WorkoutStageRhythms extends WorkoutStage with SeriesWorkoutStage {
   WorkoutStageRhythms({
     required int amountOfSeries,
     required int seriesDistanceInMeters,
-    required int breakMarchDistanceInMeters,
-    required int breakJogDistanceInMeters,
+    required int walkingDistanceInMeters,
+    required int joggingDistanceInMeters,
   })  : assert(amountOfSeries > 0),
         assert(seriesDistanceInMeters > 0),
-        assert(breakMarchDistanceInMeters > 0 || breakJogDistanceInMeters > 0) {
+        assert(walkingDistanceInMeters > 0 || joggingDistanceInMeters > 0) {
     this.amountOfSeries = amountOfSeries;
     this.seriesDistanceInMeters = seriesDistanceInMeters;
-    this.breakMarchDistanceInMeters = breakMarchDistanceInMeters;
-    this.breakJogDistanceInMeters = breakJogDistanceInMeters;
+    this.walkingDistanceInMeters = walkingDistanceInMeters;
+    this.joggingDistanceInMeters = joggingDistanceInMeters;
   }
 
   @override
   List<Object> get props => [
         amountOfSeries,
         seriesDistanceInMeters,
-        breakMarchDistanceInMeters,
-        breakJogDistanceInMeters,
+        walkingDistanceInMeters,
+        joggingDistanceInMeters,
       ];
 }
 
@@ -124,14 +124,14 @@ class WorkoutStageFoamRolling extends WorkoutStage {
   List<Object> get props => [];
 }
 
-mixin DistanceWorkout on WorkoutStage {
+mixin DistanceWorkoutStage on WorkoutStage {
   late final double distanceInKilometers;
   late final int maxHeartRate;
 }
 
-mixin SeriesWorkout on WorkoutStage {
+mixin SeriesWorkoutStage on WorkoutStage {
   late final int amountOfSeries;
   late final int seriesDistanceInMeters;
-  late final int breakMarchDistanceInMeters;
-  late final int breakJogDistanceInMeters;
+  late final int walkingDistanceInMeters;
+  late final int joggingDistanceInMeters;
 }

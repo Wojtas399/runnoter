@@ -1,10 +1,7 @@
-import 'package:equatable/equatable.dart';
+part of 'day_preview_bloc.dart';
 
-abstract class DayPreviewEvent extends Equatable {
+abstract class DayPreviewEvent {
   const DayPreviewEvent();
-
-  @override
-  List<Object> get props => [];
 }
 
 class DayPreviewEventInitialize extends DayPreviewEvent {
@@ -13,9 +10,20 @@ class DayPreviewEventInitialize extends DayPreviewEvent {
   const DayPreviewEventInitialize({
     required this.date,
   });
+}
 
-  @override
-  List<Object> get props => [
-        date,
-      ];
+class DayPreviewEventWorkoutUpdated extends DayPreviewEvent {
+  final Workout? workout;
+
+  const DayPreviewEventWorkoutUpdated({
+    required this.workout,
+  });
+}
+
+class DayPreviewEventEditWorkout extends DayPreviewEvent {
+  const DayPreviewEventEditWorkout();
+}
+
+class DayPreviewEventDeleteWorkout extends DayPreviewEvent {
+  const DayPreviewEventDeleteWorkout();
 }

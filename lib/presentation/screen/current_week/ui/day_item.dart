@@ -107,7 +107,10 @@ class _WorkoutStatus extends StatelessWidget {
       padding: const EdgeInsets.only(
         right: 8,
       ),
-      child: status.toIcon(),
+      child: Icon(
+        status.toIcon(),
+        color: status.toColor(),
+      ),
     );
   }
 }

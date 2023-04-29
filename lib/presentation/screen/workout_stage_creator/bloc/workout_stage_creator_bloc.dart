@@ -251,15 +251,15 @@ class WorkoutStageCreatorBloc
       return WorkoutStageHillRepeats(
         amountOfSeries: amountOfSeries,
         seriesDistanceInMeters: seriesDistanceInMeters,
-        breakMarchDistanceInMeters: breakWalkingDistanceInMeters ?? 0,
-        breakJogDistanceInMeters: breakJoggingDistanceInMeters ?? 0,
+        walkingDistanceInMeters: breakWalkingDistanceInMeters ?? 0,
+        joggingDistanceInMeters: breakJoggingDistanceInMeters ?? 0,
       );
     } else if (stageType == WorkoutStageType.rhythms) {
       return WorkoutStageRhythms(
         amountOfSeries: amountOfSeries,
         seriesDistanceInMeters: seriesDistanceInMeters,
-        breakMarchDistanceInMeters: breakWalkingDistanceInMeters ?? 0,
-        breakJogDistanceInMeters: breakJoggingDistanceInMeters ?? 0,
+        walkingDistanceInMeters: breakWalkingDistanceInMeters ?? 0,
+        joggingDistanceInMeters: breakJoggingDistanceInMeters ?? 0,
       );
     }
     return null;

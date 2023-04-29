@@ -111,24 +111,24 @@ class WorkoutStageHillRepeatsDto extends WorkoutStageDto with _SeriesWorkout {
   WorkoutStageHillRepeatsDto({
     required int amountOfSeries,
     required int seriesDistanceInMeters,
-    required int breakMarchDistanceInMeters,
-    required int breakJogDistanceInMeters,
+    required int walkingDistanceInMeters,
+    required int joggingDistanceInMeters,
   })  : assert(amountOfSeries > 0),
         assert(seriesDistanceInMeters > 0),
-        assert(breakMarchDistanceInMeters > 0 || breakJogDistanceInMeters > 0) {
+        assert(walkingDistanceInMeters > 0 || joggingDistanceInMeters > 0) {
     stageName = 'hillRepeats';
     this.amountOfSeries = amountOfSeries;
     this.seriesDistanceInMeters = seriesDistanceInMeters;
-    this.breakMarchDistanceInMeters = breakMarchDistanceInMeters;
-    this.breakJogDistanceInMeters = breakJogDistanceInMeters;
+    this.walkingDistanceInMeters = walkingDistanceInMeters;
+    this.joggingDistanceInMeters = joggingDistanceInMeters;
   }
 
   WorkoutStageHillRepeatsDto.fromJson(Map<String, dynamic> json)
       : this(
           amountOfSeries: json[_amountOfSeriesField],
           seriesDistanceInMeters: json[_seriesDistanceInMetersField],
-          breakMarchDistanceInMeters: json[_breakMarchDistanceInMetersField],
-          breakJogDistanceInMeters: json[_breakJogDistanceInMetersField],
+          walkingDistanceInMeters: json[_walkingDistanceInMetersField],
+          joggingDistanceInMeters: json[_joggingDistanceInMetersField],
         );
 
   @override
@@ -136,8 +136,8 @@ class WorkoutStageHillRepeatsDto extends WorkoutStageDto with _SeriesWorkout {
         stageName,
         amountOfSeries,
         seriesDistanceInMeters,
-        breakMarchDistanceInMeters,
-        breakJogDistanceInMeters,
+        walkingDistanceInMeters,
+        joggingDistanceInMeters,
       ];
 }
 
@@ -145,24 +145,24 @@ class WorkoutStageRhythmsDto extends WorkoutStageDto with _SeriesWorkout {
   WorkoutStageRhythmsDto({
     required int amountOfSeries,
     required int seriesDistanceInMeters,
-    required int breakMarchDistanceInMeters,
-    required int breakJogDistanceInMeters,
+    required int walkingDistanceInMeters,
+    required int joggingDistanceInMeters,
   })  : assert(amountOfSeries > 0),
         assert(seriesDistanceInMeters > 0),
-        assert(breakMarchDistanceInMeters > 0 || breakJogDistanceInMeters > 0) {
+        assert(walkingDistanceInMeters > 0 || joggingDistanceInMeters > 0) {
     stageName = 'rhythms';
     this.amountOfSeries = amountOfSeries;
     this.seriesDistanceInMeters = seriesDistanceInMeters;
-    this.breakMarchDistanceInMeters = breakMarchDistanceInMeters;
-    this.breakJogDistanceInMeters = breakJogDistanceInMeters;
+    this.walkingDistanceInMeters = walkingDistanceInMeters;
+    this.joggingDistanceInMeters = joggingDistanceInMeters;
   }
 
   WorkoutStageRhythmsDto.fromJson(Map<String, dynamic> json)
       : this(
           amountOfSeries: json[_amountOfSeriesField],
           seriesDistanceInMeters: json[_seriesDistanceInMetersField],
-          breakMarchDistanceInMeters: json[_breakMarchDistanceInMetersField],
-          breakJogDistanceInMeters: json[_breakJogDistanceInMetersField],
+          walkingDistanceInMeters: json[_walkingDistanceInMetersField],
+          joggingDistanceInMeters: json[_joggingDistanceInMetersField],
         );
 
   @override
@@ -170,8 +170,8 @@ class WorkoutStageRhythmsDto extends WorkoutStageDto with _SeriesWorkout {
         stageName,
         amountOfSeries,
         seriesDistanceInMeters,
-        breakMarchDistanceInMeters,
-        breakJogDistanceInMeters,
+        walkingDistanceInMeters,
+        joggingDistanceInMeters,
       ];
 }
 
@@ -219,16 +219,16 @@ mixin _SeriesWorkout on WorkoutStageDto {
   late final String stageName;
   late final int amountOfSeries;
   late final int seriesDistanceInMeters;
-  late final int breakMarchDistanceInMeters;
-  late final int breakJogDistanceInMeters;
+  late final int walkingDistanceInMeters;
+  late final int joggingDistanceInMeters;
 
   @override
   Map<String, dynamic> toJson() => {
         _nameField: stageName,
         _amountOfSeriesField: amountOfSeries,
         _seriesDistanceInMetersField: seriesDistanceInMeters,
-        _breakMarchDistanceInMetersField: breakMarchDistanceInMeters,
-        _breakJogDistanceInMetersField: breakJogDistanceInMeters,
+        _walkingDistanceInMetersField: walkingDistanceInMeters,
+        _joggingDistanceInMetersField: joggingDistanceInMeters,
       };
 }
 
@@ -237,5 +237,5 @@ const String _distanceInKilometersField = 'distanceInKilometers';
 const String _maxHeartRateField = 'maxHeartRate';
 const String _amountOfSeriesField = 'amountOfSeries';
 const String _seriesDistanceInMetersField = 'seriesDistanceInMeters';
-const String _breakMarchDistanceInMetersField = 'breakMarchDistanceInMeters';
-const String _breakJogDistanceInMetersField = 'breakJogDistanceInMeters';
+const String _walkingDistanceInMetersField = 'walkingDistanceInMeters';
+const String _joggingDistanceInMetersField = 'joggingDistanceInMeters';

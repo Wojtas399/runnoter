@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../../../domain/model/workout.dart';
 import '../../../../domain/model/workout_stage.dart';
 import '../../../../domain/repository/workout_repository.dart';
 import '../../../../domain/service/auth_service.dart';
@@ -10,6 +11,7 @@ import '../../../component/bloc_with_status_listener_component.dart';
 import '../../../component/scrollable_content_component.dart';
 import '../../../component/text_field_component.dart';
 import '../../../formatter/workout_stage_formatter.dart';
+import '../../../model/bloc_status.dart';
 import '../../../service/dialog_service.dart';
 import '../../../service/navigator_service.dart';
 import '../../../service/utils.dart';
@@ -22,18 +24,47 @@ part 'workout_creator_workout_stage_item.dart';
 part 'workout_creator_workout_stages_list.dart';
 part 'workout_creator_workout_stages_section.dart';
 
-class WorkoutCreatorScreen extends StatelessWidget {
+abstract class WorkoutCreatorArguments {
   final DateTime date;
+
+  const WorkoutCreatorArguments({
+    required this.date,
+  });
+}
+
+class WorkoutCreatorAddModeArguments extends WorkoutCreatorArguments {
+  const WorkoutCreatorAddModeArguments({
+    required super.date,
+  });
+}
+
+class WorkoutCreatorEditModeArguments extends WorkoutCreatorArguments {
+  final String workoutId;
+
+  const WorkoutCreatorEditModeArguments({
+    required super.date,
+    required this.workoutId,
+  });
+}
+
+class WorkoutCreatorScreen extends StatelessWidget {
+  final WorkoutCreatorArguments arguments;
 
   const WorkoutCreatorScreen({
     super.key,
-    required this.date,
+    required this.arguments,
   });
 
   @override
   Widget build(BuildContext context) {
+    final WorkoutCreatorArguments arguments = this.arguments;
+    String? workoutId;
+    if (arguments is WorkoutCreatorEditModeArguments) {
+      workoutId = arguments.workoutId;
+    }
     return _BlocProvider(
-      date: date,
+      date: arguments.date,
+      workoutId: workoutId,
       child: const _BlocListener(
         child: _Content(),
       ),
@@ -43,10 +74,12 @@ class WorkoutCreatorScreen extends StatelessWidget {
 
 class _BlocProvider extends StatelessWidget {
   final DateTime date;
+  final String? workoutId;
   final Widget child;
 
   const _BlocProvider({
     required this.date,
+    required this.workoutId,
     required this.child,
   });
 
@@ -57,7 +90,10 @@ class _BlocProvider extends StatelessWidget {
         authService: context.read<AuthService>(),
         workoutRepository: context.read<WorkoutRepository>(),
       )..add(
-          WorkoutCreatorEventInitialize(date: date),
+          WorkoutCreatorEventInitialize(
+            date: date,
+            workoutId: workoutId,
+          ),
         ),
       child: child,
     );
@@ -84,14 +120,32 @@ class _BlocListener extends StatelessWidget {
 
   void _manageInfo(BuildContext context, WorkoutCreatorInfo info) {
     switch (info) {
-      case WorkoutCreatorInfo.workoutHasBeenAdded:
-        navigateBack(context: context);
-        showSnackbarMessage(
-          context: context,
-          message: AppLocalizations.of(context)!
-              .workout_creator_screen_added_workout_message,
-        );
+      case WorkoutCreatorInfo.editModeInitialized:
+        break;
+      case WorkoutCreatorInfo.workoutAdded:
+        _onWorkoutAddedInfo(context);
+        break;
+      case WorkoutCreatorInfo.workoutUpdated:
+        _onWorkoutUpdatedInfo(context);
         break;
     }
+  }
+
+  void _onWorkoutAddedInfo(BuildContext context) {
+    navigateBack(context: context);
+    showSnackbarMessage(
+      context: context,
+      message: AppLocalizations.of(context)!
+          .workout_creator_screen_added_workout_message,
+    );
+  }
+
+  void _onWorkoutUpdatedInfo(BuildContext context) {
+    navigateBack(context: context);
+    showSnackbarMessage(
+      context: context,
+      message: AppLocalizations.of(context)!
+          .workout_creator_screen_updated_workout_message,
+    );
   }
 }

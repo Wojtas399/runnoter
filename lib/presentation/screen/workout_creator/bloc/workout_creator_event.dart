@@ -6,9 +6,11 @@ abstract class WorkoutCreatorEvent {
 
 class WorkoutCreatorEventInitialize extends WorkoutCreatorEvent {
   final DateTime date;
+  final String? workoutId;
 
   const WorkoutCreatorEventInitialize({
     required this.date,
+    this.workoutId,
   });
 }
 

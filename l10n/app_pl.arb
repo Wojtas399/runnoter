@@ -151,19 +151,79 @@
   "@day_preview_screen_no_workout_title": {
     "description": "Title of the information about no workout"
   },
-  "day_preview_screen_no_workout_message": "Tego dnia nie masz zaplanowanego treningu",
-  "@day_preview_screen_no_workout_message": {
-    "description": "Message of the information about no workout"
+  "day_preview_screen_no_workout_message_past_day": "Tego dnia nie było zaplanowanego treningu",
+  "@day_preview_screen_no_workout_message_past_day": {
+    "description": "Message of the information about no workout on a day from the past"
+  },
+  "day_preview_screen_no_workout_message_future_day": "Tego dnia nie masz zaplanowanego treningu",
+  "@day_preview_screen_no_workout_message_future_day": {
+    "description": "Message of the information about no workout on a day from the future"
   },
   "day_preview_screen_add_workout_button_label": "Dodaj trening",
   "@day_preview_screen_add_workout_button_label": {
     "description": "Label of the button to add workout"
   },
+  "day_preview_screen_workout_name_section_label": "Nazwa",
+  "@day_preview_screen_workout_name": {
+    "description": "Label of the section to display workout name"
+  },
+  "day_preview_screen_workout_stages_section_label": "Etapy",
+  "@day_preview_screen_workout_stages_section_label": {
+    "description": "Label of the section to display stages"
+  },
+  "day_preview_screen_total_distance_section_label": "Całkowity dystans",
+  "@day_preview_screen_total_distance_section_label": {
+    "description": "Label of the section to display total distance of the workout"
+  },
+  "day_preview_screen_workout_status_section_label": "Status",
+  "@day_preview_screen_workout_status_section_label": {
+    "description": "Label of the section to display workout status"
+  },
+  "day_preview_screen_workout_status_covered_distance": "Pokonany dystans",
+  "@day_preview_screen_workout_status_covered_distance": {
+    "description": "Label of the covered distance"
+  },
+  "day_preview_screen_workout_status_mood_rate": "Samopoczucie",
+  "@day_preview_screen_workout_status_mood_rate": {
+    "description": "Label of the mood rate"
+  },
+  "day_preview_screen_workout_status_avg_pace": "Średnie tempo",
+  "@day_preview_screen_workout_status_avg_pace": {
+    "description": "Label of the average pace"
+  },
+  "day_preview_screen_workout_status_avg_heart_rate": "Średnie tętno",
+  "@day_preview_screen_workout_status_avg_heart_rate": {
+    "description": "Label of the average heart rate"
+  },
+  "day_preview_screen_comment_section_label": "Uwagi",
+  "@day_preview_screen_comment_section_label": {
+    "description": "Label of the comment section"
+  },
+  "day_preview_screen_finish_workout_button_label": "Zakończ",
+  "@day_preview_screen_finish_workout_button_label": {
+    "description": "Label of the button to finish workout"
+  },
+  "day_preview_screen_edit_workout_label": "Edytuj trening",
+  "@day_preview_screen_edit_workout_label": {
+    "description": "Label of the option to edit workout"
+  },
+  "day_preview_screen_delete_workout_label": "Usuń trening",
+  "@day_preview_screen_delete_workout_label": {
+    "description": "Label of the option to delete workout"
+  },
+  "day_preview_screen_deleted_workout_message": "Pomyślnie usunięto trening",
+  "@day_preview_screen_deleted_workout_message": {
+    "description": "Message to inform that workout has been deleted"
+  },
 
 
-  "workout_creator_screen_title": "Nowy trening",
-  "@workout_creator_screen_title": {
-    "description": "Title of the workout creator screen"
+  "workout_creator_screen_title_add_mode": "Nowy trening",
+  "@workout_creator_screen_title_add_mode": {
+    "description": "Title of the workout creator screen in add mode"
+  },
+  "workout_creator_screen_title_edit_mode": "Edytuj trening",
+  "@workout_creator_screen_title_edit_mode": {
+    "description": "Title of the workout creator screen in edit mode"
   },
   "workout_creator_screen_workout_name": "Nazwa treningu",
   "@workout_creator_screen_workout_name": {
@@ -185,13 +245,21 @@
   "@workout_creator_screen_add_stage_instructions": {
     "description": "Instruction on how to add new workout stage"
   },
-  "workout_creator_screen_add_workout_button_label": "Dodaj trening",
+  "workout_creator_screen_add_workout_button_label": "Dodaj",
   "@workout_creator_screen_add_workout_button_label": {
     "description": "Label of the button to add workout"
+  },
+  "workout_creator_screen_edit_workout_button_label": "Zaktualizuj",
+  "@workout_creator_screen_edit_workout_button_label": {
+    "description": "Label of the button to edit workout"
   },
   "workout_creator_screen_added_workout_message": "Pomyślnie dodano trening",
   "@workout_creator_screen_added_workout_message": {
     "description": "Message to inform that workout has been added"
+  },
+  "workout_creator_screen_updated_workout_message": "Pomyślnie zaktualizowano trening",
+  "@workout_creator_screen_updated_workout_message": {
+    "description": "Message to inform that workout has been updated"
   },
 
 
@@ -407,44 +475,44 @@
   },
 
 
-  "workout_base_run": "OWB1",
-  "@workout_base_run": {
+  "workout_stage_base_run": "OWB1",
+  "@workout_stage_base_run": {
     "description": "Type of workout stage called base run"
   },
-  "workout_zone2": "BC2",
-  "@workout_zone2": {
+  "workout_stage_zone2": "BC2",
+  "@workout_stage_zone2": {
     "description": "Type of workout stage called zone 2"
   },
-  "workout_zone3": "BC3",
-  "@workout_zone3": {
+  "workout_stage_zone3": "BC3",
+  "@workout_stage_zone3": {
     "description": "Type of workout stage called zone 3"
   },
-  "workout_rhythms": "Rytmy",
-  "@workout_rhythms": {
+  "workout_stage_rhythms": "Rytmy",
+  "@workout_stage_rhythms": {
     "description": "Type of workout stage called rhythms"
   },
-  "workout_hill_repeats": "Podbiegi",
-  "@workout_hill_repeats": {
+  "workout_stage_hill_repeats": "Podbiegi",
+  "@workout_stage_hill_repeats": {
     "description": "Type of workout stage called hill repeats"
   },
-  "workout_stretching": "Rozciąganie",
-  "@workout_stretching": {
+  "workout_stage_stretching": "Rozciąganie",
+  "@workout_stage_stretching": {
     "description": "Type of workout stage called stretching"
   },
-  "workout_strengthening": "Ćwiczenia wzmacniające",
-  "@workout_strengthening": {
+  "workout_stage_strengthening": "Ćwiczenia wzmacniające",
+  "@workout_stage_strengthening": {
     "description": "Type of workout stage called strengthening"
   },
-  "workout_foamRolling": "Rolowanie",
-  "@workout_foamRolling": {
+  "workout_stage_foamRolling": "Rolowanie",
+  "@workout_stage_foamRolling": {
     "description": "Type of workout stage called foam rolling"
   },
-  "workout_break": "przerwa",
-  "@workout_break": {
+  "workout_stage_break": "przerwa",
+  "@workout_stage_break": {
     "description": "Break"
   },
-  "workout_march": "{marchDistanceInMeters}m marsz",
-  "@workout_march": {
+  "workout_stage_march": "{marchDistanceInMeters}m marsz",
+  "@workout_stage_march": {
     "description": "Distance of march",
     "placeholders": {
       "marchDistanceInMeters": {
@@ -453,8 +521,8 @@
       }
     }
   },
-  "workout_jog": "{jogDistanceInMeters}m trucht",
-  "@workout_jog": {
+  "workout_stage_jog": "{jogDistanceInMeters}m trucht",
+  "@workout_stage_jog": {
     "description": "Distance of jog",
     "placeholders": {
       "jogDistanceInMeters": {
@@ -462,6 +530,20 @@
         "example": "500"
       }
     }
+  },
+
+
+  "workout_status_pending": "Oczekujący",
+  "@workout_status_pending": {
+    "description": "Type of workout status called pending"
+  },
+  "workout_status_done": "Wykonany",
+  "@workout_status_done": {
+    "description": "Type of workout status called done"
+  },
+  "workout_status_failed": "Nieudany",
+  "@workout_status_failed": {
+    "description": "Type of workout status called failed"
   },
 
 

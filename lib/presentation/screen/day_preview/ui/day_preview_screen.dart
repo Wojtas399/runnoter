@@ -1,9 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../../../common/date_service.dart';
+import '../../../../domain/model/workout_stage.dart';
+import '../../../../domain/model/workout_status.dart';
+import '../../../../domain/repository/workout_repository.dart';
+import '../../../../domain/service/auth_service.dart';
+import '../../../component/big_button_component.dart';
+import '../../../component/bloc_with_status_listener_component.dart';
+import '../../../component/nullable_text_component.dart';
+import '../../../config/navigation/routes.dart';
+import '../../../formatter/date_formatter.dart';
+import '../../../formatter/list_of_workout_stages_formatter.dart';
+import '../../../formatter/mood_rate_formatter.dart';
+import '../../../formatter/pace_formatter.dart';
+import '../../../formatter/workout_stage_formatter.dart';
+import '../../../formatter/workout_status_formatter.dart';
+import '../../../service/dialog_service.dart';
+import '../../../service/navigator_service.dart';
+import '../../workout_creator/ui/workout_creator_screen.dart';
 import '../bloc/day_preview_bloc.dart';
-import '../bloc/day_preview_event.dart';
-import 'day_preview_content.dart';
+
+part 'day_preview_app_bar.dart';
+part 'day_preview_content.dart';
+part 'day_preview_no_workout_content.dart';
+part 'day_preview_workout_content.dart';
+part 'day_preview_workout_status.dart';
 
 class DayPreviewScreen extends StatelessWidget {
   final DateTime date;
@@ -17,7 +40,9 @@ class DayPreviewScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return _BlocProvider(
       date: date,
-      child: const DayPreviewContent(),
+      child: const _BlocListener(
+        child: DayPreviewContent(),
+      ),
     );
   }
 }
@@ -34,13 +59,71 @@ class _BlocProvider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => DayPreviewBloc()
-        ..add(
+      create: (BuildContext context) => DayPreviewBloc(
+        authService: context.read<AuthService>(),
+        workoutRepository: context.read<WorkoutRepository>(),
+        dateService: DateService(),
+      )..add(
           DayPreviewEventInitialize(
             date: date,
           ),
         ),
       child: child,
+    );
+  }
+}
+
+class _BlocListener extends StatelessWidget {
+  final Widget child;
+
+  const _BlocListener({
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocWithStatusListener<DayPreviewBloc, DayPreviewState,
+        DayPreviewInfo, dynamic>(
+      onInfo: (DayPreviewInfo info) {
+        _manageInfo(context, info);
+      },
+      child: child,
+    );
+  }
+
+  void _manageInfo(BuildContext context, DayPreviewInfo info) {
+    switch (info) {
+      case DayPreviewInfo.editWorkout:
+        _navigateToWorkoutEditor(context);
+        break;
+      case DayPreviewInfo.workoutDeleted:
+        _showInfoAboutDeleteWorkout(context);
+        break;
+    }
+  }
+
+  void _navigateToWorkoutEditor(BuildContext context) {
+    final DayPreviewBloc dayPreviewBloc = context.read<DayPreviewBloc>();
+    final DateTime? date = dayPreviewBloc.state.date;
+    final String? workoutId = dayPreviewBloc.state.workoutId;
+    if (date != null && workoutId != null) {
+      navigateTo(
+        context: context,
+        route: WorkoutCreatorRoute(
+          arguments: WorkoutCreatorEditModeArguments(
+            date: date,
+            workoutId: workoutId,
+          ),
+        ),
+      );
+    }
+  }
+
+  void _showInfoAboutDeleteWorkout(BuildContext context) {
+    showSnackbarMessage(
+      context: context,
+      message: AppLocalizations.of(context)!
+          .day_preview_screen_deleted_workout_message,
     );
   }
 }

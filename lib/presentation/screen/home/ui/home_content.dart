@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../calendar/ui/calendar_screen.dart';
-import '../../current_week/ui/current_week_screen.dart';
 import '../../pulse_and_weight/ui/pulse_and_weight_screen.dart';
+import '../../screens.dart';
 import '../bloc/home_bloc.dart';
 import '../bloc/home_state.dart';
 import 'home_app_bar.dart';

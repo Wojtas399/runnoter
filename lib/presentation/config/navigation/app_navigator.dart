@@ -1,16 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../screen/day_preview/ui/day_preview_screen.dart';
-import '../../screen/distance_unit/distance_unit_screen.dart';
-import '../../screen/forgot_password/ui/forgot_password_screen.dart';
-import '../../screen/home/ui/home_screen.dart';
-import '../../screen/language/language_screen.dart';
-import '../../screen/pace_unit/pace_unit_screen.dart';
-import '../../screen/profile/ui/profile_screen.dart';
-import '../../screen/sign_in/ui/sign_in_screen.dart';
-import '../../screen/sign_up/ui/sign_up_screen.dart';
-import '../../screen/theme_mode/theme_mode_screen.dart';
-import '../../screen/workout_creator/ui/workout_creator_screen.dart';
+import '../../screen/screens.dart';
 import '../animation/slide_to_top_anim.dart';
 import 'routes.dart';
 
@@ -45,7 +35,7 @@ class AppNavigator extends StatelessWidget {
       );
     } else if (routePath == RoutePath.workoutCreator.path) {
       screen = WorkoutCreatorScreen(
-        date: settings.arguments as DateTime,
+        arguments: settings.arguments as WorkoutCreatorArguments,
       );
     } else if (routePath == RoutePath.profile.path) {
       screen = const ProfileScreen();

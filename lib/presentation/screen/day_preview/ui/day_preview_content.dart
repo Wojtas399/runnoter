@@ -1,12 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
-import '../../../component/big_button_component.dart';
-import '../../../config/navigation/routes.dart';
-import '../../../formatter/date_formatter.dart';
-import '../../../service/navigator_service.dart';
-import '../bloc/day_preview_bloc.dart';
+part of 'day_preview_screen.dart';
 
 class DayPreviewContent extends StatelessWidget {
   const DayPreviewContent({
@@ -15,33 +7,31 @@ class DayPreviewContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          AppLocalizations.of(context)!.day_preview_screen_title,
-        ),
-      ),
-      body: const SafeArea(
+    return const Scaffold(
+      appBar: _AppBar(),
+      body: SafeArea(
         child: Padding(
           padding: EdgeInsets.all(24),
-          child: _NoWorkoutContent(),
+          child: _Workout(),
         ),
       ),
     );
   }
 }
 
-class _NoWorkoutContent extends StatelessWidget {
-  const _NoWorkoutContent();
+class _Workout extends StatelessWidget {
+  const _Workout();
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: const [
-        _NoWorkoutInfo(),
-        _Date(),
-      ],
+    final String? workoutId = context.select(
+      (DayPreviewBloc bloc) => bloc.state.workoutId,
     );
+
+    if (workoutId != null) {
+      return const _WorkoutContent();
+    }
+    return const _NoWorkoutContent();
   }
 }
 
@@ -58,47 +48,5 @@ class _Date extends StatelessWidget {
       date?.toUIFormat(context) ?? '',
       style: Theme.of(context).textTheme.titleLarge,
     );
-  }
-}
-
-class _NoWorkoutInfo extends StatelessWidget {
-  const _NoWorkoutInfo();
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          AppLocalizations.of(context)!.day_preview_screen_no_workout_title,
-          style: Theme.of(context).textTheme.titleLarge,
-        ),
-        const SizedBox(height: 8),
-        Text(
-          AppLocalizations.of(context)!.day_preview_screen_no_workout_message,
-          style: Theme.of(context).textTheme.bodyLarge,
-        ),
-        const SizedBox(height: 24),
-        BigButton(
-          label: AppLocalizations.of(context)!
-              .day_preview_screen_add_workout_button_label,
-          onPressed: () {
-            _onButtonPressed(context);
-          },
-        ),
-      ],
-    );
-  }
-
-  void _onButtonPressed(BuildContext context) {
-    final DateTime? date = context.read<DayPreviewBloc>().state.date;
-    if (date != null) {
-      navigateTo(
-        context: context,
-        route: WorkoutCreatorRoute(
-          arguments: date,
-        ),
-      );
-    }
   }
 }
