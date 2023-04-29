@@ -98,6 +98,28 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
   }
 
   @override
+  Future<void> updateWorkout({
+    required String workoutId,
+    required String userId,
+    String? workoutName,
+    WorkoutStatus? status,
+    List<WorkoutStage>? stages,
+  }) async {
+    final WorkoutDto? updatedWorkoutDto =
+        await _firebaseWorkoutService.updateWorkout(
+      workoutId: workoutId,
+      userId: userId,
+      workoutName: workoutName,
+      status: status != null ? mapWorkoutStatusToFirebase(status) : null,
+      stages: [...?stages].map(mapWorkoutStageToFirebase).toList(),
+    );
+    if (updatedWorkoutDto != null) {
+      final Workout updatedWorkout = mapWorkoutFromFirebase(updatedWorkoutDto);
+      updateEntity(updatedWorkout);
+    }
+  }
+
+  @override
   Future<void> deleteWorkout({
     required String userId,
     required String workoutId,

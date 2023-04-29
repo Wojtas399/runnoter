@@ -1,4 +1,5 @@
 import 'package:firebase/firebase.dart' as firebase;
+import 'package:firebase/model/pace_dto.dart';
 import 'package:firebase/model/workout_dto.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -358,6 +359,105 @@ void main() {
           date: date,
           status: addedWorkoutDto.status,
           stages: addedWorkoutDto.stages,
+        ),
+      ).called(1);
+    },
+  );
+
+  test(
+    'update workout, '
+    'should call method from firebase service to update workout and should update workout in repository',
+    () {
+      const String workoutId = 'w1';
+      const String newWorkoutName = 'new workout name';
+      final WorkoutStatus newStatus = WorkoutStatusCompleted(
+        coveredDistanceInKm: 10,
+        avgPace: const Pace(minutes: 6, seconds: 2),
+        avgHeartRate: 150,
+        moodRate: MoodRate.mr8,
+        comment: 'Nice workout!',
+      );
+      const newStatusDto = firebase.WorkoutStatusCompletedDto(
+        coveredDistanceInKilometers: 10,
+        avgPace: PaceDto(minutes: 6, seconds: 2),
+        avgHeartRate: 150,
+        moodRate: firebase.MoodRate.mr8,
+        comment: 'Nice workout!',
+      );
+      final List<WorkoutStage> newStages = [
+        WorkoutStageBaseRun(
+          distanceInKilometers: 10,
+          maxHeartRate: 150,
+        ),
+      ];
+      final List<firebase.WorkoutStageDto> newStageDtos = [
+        firebase.WorkoutStageBaseRunDto(
+          distanceInKilometers: 10,
+          maxHeartRate: 150,
+        ),
+      ];
+      final WorkoutDto updatedWorkoutDto = createWorkoutDto(
+        id: workoutId,
+        userId: userId,
+        name: newWorkoutName,
+        status: newStatusDto,
+        stages: newStageDtos,
+      );
+      final Workout existingWorkout = createWorkout(
+        id: workoutId,
+        userId: userId,
+        name: 'workout name',
+        status: const WorkoutStatusPending(),
+        stages: [
+          WorkoutStageBaseRun(
+            distanceInKilometers: 8,
+            maxHeartRate: 150,
+          ),
+        ],
+      );
+      final Workout expectedUpdatedWorkout = createWorkout(
+        id: workoutId,
+        userId: userId,
+        name: newWorkoutName,
+        status: newStatus,
+        stages: newStages,
+      );
+      firebaseWorkoutService.mockUpdateWorkout(
+        updatedWorkoutDto: updatedWorkoutDto,
+      );
+      repository = createRepository(
+        initialState: [existingWorkout],
+      );
+
+      final Stream<Workout?> workout$ = repository.getWorkoutById(
+        workoutId: workoutId,
+        userId: userId,
+      );
+      workout$.listen((_) {});
+      repository.updateWorkout(
+        workoutId: workoutId,
+        userId: userId,
+        workoutName: newWorkoutName,
+        status: newStatus,
+        stages: newStages,
+      );
+
+      expect(
+        workout$,
+        emitsInOrder(
+          [
+            existingWorkout,
+            expectedUpdatedWorkout,
+          ],
+        ),
+      );
+      verify(
+        () => firebaseWorkoutService.updateWorkout(
+          workoutId: workoutId,
+          userId: userId,
+          workoutName: newWorkoutName,
+          status: newStatusDto,
+          stages: newStageDtos,
         ),
       ).called(1);
     },
