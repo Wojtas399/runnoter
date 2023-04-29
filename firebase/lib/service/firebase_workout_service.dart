@@ -73,6 +73,24 @@ class FirebaseWorkoutService {
     return snapshot.data();
   }
 
+  Future<WorkoutDto?> updateWorkout({
+    required String workoutId,
+    required String userId,
+    String? workoutName,
+    WorkoutStatusDto? status,
+    List<WorkoutStageDto>? stages,
+  }) async {
+    final workoutRef = getWorkoutsRef(userId).doc(workoutId);
+    final workoutJsonToUpdate = createWorkoutJsonToUpdate(
+      workoutName: workoutName,
+      status: status,
+      stages: stages,
+    );
+    await workoutRef.update(workoutJsonToUpdate);
+    final snapshot = await workoutRef.get();
+    return snapshot.data();
+  }
+
   Future<void> deleteWorkout({
     required String userId,
     required String workoutId,

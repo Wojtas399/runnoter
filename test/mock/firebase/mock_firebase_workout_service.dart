@@ -55,6 +55,21 @@ class MockFirebaseWorkoutService extends Mock
     ).thenAnswer((invocation) => Future.value(addedWorkoutDto));
   }
 
+  void mockUpdateWorkout({
+    WorkoutDto? updatedWorkoutDto,
+  }) {
+    _mockWorkoutStatusDto();
+    when(
+      () => updateWorkout(
+        workoutId: any(named: 'workoutId'),
+        userId: any(named: 'userId'),
+        workoutName: any(named: 'workoutName'),
+        status: any(named: 'status'),
+        stages: any(named: 'stages'),
+      ),
+    ).thenAnswer((invocation) => Future.value(updatedWorkoutDto));
+  }
+
   void mockDeleteWorkout() {
     when(
       () => deleteWorkout(
