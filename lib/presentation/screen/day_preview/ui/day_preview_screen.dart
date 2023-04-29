@@ -110,7 +110,7 @@ class _BlocListener extends StatelessWidget {
       navigateTo(
         context: context,
         route: WorkoutCreatorRoute(
-          arguments: WorkoutCreatorEditModeArguments(
+          creatorArguments: WorkoutCreatorEditModeArguments(
             date: date,
             workoutId: workoutId,
           ),

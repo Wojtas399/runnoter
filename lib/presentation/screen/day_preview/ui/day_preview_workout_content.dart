@@ -105,8 +105,22 @@ class _WorkoutFinishButton extends StatelessWidget {
     return BigButton(
       label: AppLocalizations.of(context)!
           .day_preview_screen_finish_workout_button_label,
-      onPressed: () {},
+      onPressed: () {
+        _onPressed(context);
+      },
     );
+  }
+
+  void _onPressed(BuildContext context) {
+    final String? workoutId = context.read<DayPreviewBloc>().state.workoutId;
+    if (workoutId != null) {
+      navigateTo(
+        context: context,
+        route: WorkoutStatusCreatorRoute(
+          workoutId: workoutId,
+        ),
+      );
+    }
   }
 }
 

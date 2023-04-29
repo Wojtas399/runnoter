@@ -28,14 +28,29 @@ class HomeRoute extends CustomRoute {
 
 class DayPreviewRoute extends CustomRoute<DateTime> {
   const DayPreviewRoute({
-    required super.arguments,
-  }) : super(path: RoutePath.dayPreview);
+    required DateTime date,
+  }) : super(
+          arguments: date,
+          path: RoutePath.dayPreview,
+        );
 }
 
 class WorkoutCreatorRoute extends CustomRoute<WorkoutCreatorArguments> {
   const WorkoutCreatorRoute({
-    required super.arguments,
-  }) : super(path: RoutePath.workoutCreator);
+    required WorkoutCreatorArguments creatorArguments,
+  }) : super(
+          arguments: creatorArguments,
+          path: RoutePath.workoutCreator,
+        );
+}
+
+class WorkoutStatusCreatorRoute extends CustomRoute<String> {
+  const WorkoutStatusCreatorRoute({
+    required String workoutId,
+  }) : super(
+          arguments: workoutId,
+          path: RoutePath.workoutStatusCreator,
+        );
 }
 
 class ProfileRoute extends CustomRoute {
@@ -65,6 +80,7 @@ enum RoutePath {
   home('/home'),
   dayPreview('/home/day-preview'),
   workoutCreator('/home/day-preview/workout-creator'),
+  workoutStatusCreator('/home/day-preview/workout-status-creator'),
   profile('/home/profile'),
   themeMode('/home/profile/theme-mode'),
   language('/home/profile/language'),
