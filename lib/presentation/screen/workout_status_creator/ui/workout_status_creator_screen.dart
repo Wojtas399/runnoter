@@ -1,4 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import '../../../../domain/model/workout_status.dart';
+import '../../../formatter/workout_status_formatter.dart';
+
+part 'workout_status_creator_content.dart';
+part 'workout_status_creator_status_type.dart';
 
 class WorkoutStatusCreatorScreen extends StatelessWidget {
   final String workoutId;
@@ -10,10 +17,6 @@ class WorkoutStatusCreatorScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Workout status creator'),
-      ),
-    );
+    return const _Content();
   }
 }

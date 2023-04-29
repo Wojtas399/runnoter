@@ -83,6 +83,9 @@
   "workout_stage_creator_screen_jogging_distance": "Jogging distance",
 
 
+  "workout_status_creator_screen_title": "Workout status",
+
+
   "profile_screen_title": "Profile",
   "profile_screen_user_data_section_title": "User identities",
   "profile_screen_settings_section_title": "Settings",
@@ -149,8 +152,8 @@
 
 
   "workout_status_pending": "Pending",
-  "workout_status_done": "Done",
-  "workout_status_failed": "Failed",
+  "workout_status_completed": "Completed",
+  "workout_status_uncompleted": "Uncompleted",
 
 
   "no_internet_connection_dialog_title": "No internet connection",

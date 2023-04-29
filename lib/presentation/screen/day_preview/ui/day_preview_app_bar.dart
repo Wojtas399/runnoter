@@ -12,6 +12,7 @@ class _AppBar extends StatelessWidget with PreferredSizeWidget {
       title: Text(
         AppLocalizations.of(context)!.day_preview_screen_title,
       ),
+      centerTitle: true,
       actions: const [
         _AppBarActions(),
       ],

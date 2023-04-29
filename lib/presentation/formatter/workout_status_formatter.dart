@@ -20,9 +20,9 @@ extension WorkoutStatusFormatter on WorkoutStatus {
     if (this is WorkoutStatusPending) {
       return AppLocalizations.of(context)!.workout_status_pending;
     } else if (this is WorkoutStatusCompleted) {
-      return AppLocalizations.of(context)!.workout_status_done;
+      return AppLocalizations.of(context)!.workout_status_completed;
     } else if (this is WorkoutStatusUncompleted) {
-      return AppLocalizations.of(context)!.workout_status_failed;
+      return AppLocalizations.of(context)!.workout_status_uncompleted;
     } else {
       throw '[WorkoutStatusFormatter - toLabel()]: Unknown status type';
     }
