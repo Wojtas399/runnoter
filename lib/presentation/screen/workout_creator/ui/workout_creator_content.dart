@@ -76,6 +76,7 @@ class _WorkoutName extends StatelessWidget {
       label: AppLocalizations.of(context)!.workout_creator_screen_workout_name,
       isRequired: true,
       controller: _controller,
+      maxLength: 100,
       onChanged: (String? workoutName) {
         _onChanged(context, workoutName);
       },
