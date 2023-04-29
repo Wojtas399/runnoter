@@ -1,7 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:runnoter/domain/model/workout.dart';
 import 'package:runnoter/domain/model/workout_stage.dart';
 import 'package:runnoter/presentation/model/bloc_status.dart';
 import 'package:runnoter/presentation/screen/workout_creator/bloc/workout_creator_bloc.dart';
+
+import '../../../util/workout_creator.dart';
 
 void main() {
   late WorkoutCreatorState state;
@@ -10,7 +13,7 @@ void main() {
     state = const WorkoutCreatorState(
       status: BlocStatusInitial(),
       date: null,
-      workoutId: null,
+      workout: null,
       workoutName: null,
       stages: [],
     );
@@ -135,15 +138,15 @@ void main() {
   );
 
   test(
-    'copy with workout id',
+    'copy with workout',
     () {
-      const String expectedWorkoutId = 'w1';
+      final Workout expectedWorkout = createWorkout(id: 'w1');
 
-      state = state.copyWith(workoutId: expectedWorkoutId);
+      state = state.copyWith(workout: expectedWorkout);
       final state2 = state.copyWith();
 
-      expect(state.workoutId, expectedWorkoutId);
-      expect(state2.workoutId, expectedWorkoutId);
+      expect(state.workout, expectedWorkout);
+      expect(state2.workout, expectedWorkout);
     },
   );
 

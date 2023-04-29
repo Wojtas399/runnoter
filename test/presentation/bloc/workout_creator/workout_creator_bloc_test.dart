@@ -1,6 +1,7 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:runnoter/domain/model/workout.dart';
 import 'package:runnoter/domain/model/workout_stage.dart';
 import 'package:runnoter/domain/model/workout_status.dart';
 import 'package:runnoter/presentation/model/bloc_status.dart';
@@ -16,7 +17,7 @@ void main() {
 
   WorkoutCreatorBloc createBloc({
     DateTime? date,
-    String? workoutId,
+    Workout? workout,
     String? workoutName,
     List<WorkoutStage> stages = const [],
   }) =>
@@ -24,7 +25,7 @@ void main() {
         authService: authService,
         workoutRepository: workoutRepository,
         date: date,
-        workoutId: workoutId,
+        workout: workout,
         workoutName: workoutName,
         stages: stages,
       );
@@ -32,14 +33,14 @@ void main() {
   WorkoutCreatorState createState({
     BlocStatus status = const BlocStatusInitial(),
     DateTime? date,
-    String? workoutId,
+    Workout? workout,
     String? workoutName,
     List<WorkoutStage> stages = const [],
   }) =>
       WorkoutCreatorState(
         status: status,
         date: date,
-        workoutId: workoutId,
+        workout: workout,
         workoutName: workoutName,
         stages: stages,
       );
@@ -95,7 +96,7 @@ void main() {
     'initialize, '
     'workout id is not null, '
     'logged user exists, '
-    'should load workout matching to given id and should emit updated date, workout id, name and stages',
+    'should load workout matching to given id and should emit updated date, workout, workout name and stages',
     build: () => createBloc(),
     setUp: () {
       authService.mockGetLoggedUserId(userId: 'u1');
@@ -124,7 +125,16 @@ void main() {
           info: WorkoutCreatorInfo.editModeInitialized,
         ),
         date: DateTime(2023, 1, 1),
-        workoutId: 'w1',
+        workout: createWorkout(
+          id: 'w1',
+          name: 'workout name',
+          stages: [
+            WorkoutStageBaseRun(
+              distanceInKilometers: 10,
+              maxHeartRate: 150,
+            ),
+          ],
+        ),
         workoutName: 'workout name',
         stages: [
           WorkoutStageBaseRun(
@@ -390,7 +400,7 @@ void main() {
 
   blocTest(
     'submit, '
-    'workout id is null, '
+    'workout is null, '
     "should call workout repository's method to add workout with pending status and should emit info that workout has been added",
     build: () => createBloc(
       date: DateTime(2023, 2, 2),
@@ -474,11 +484,20 @@ void main() {
 
   blocTest(
     'submit, '
-    'workout id is not null, '
+    'workout is not null, '
     "should call workout repository's method to update workout and should emit info that workout has been updated",
     build: () => createBloc(
       date: DateTime(2023, 2, 2),
-      workoutId: 'w1',
+      workout: createWorkout(
+        id: 'w1',
+        name: 'workout name',
+        stages: [
+          WorkoutStageBaseRun(
+            distanceInKilometers: 10,
+            maxHeartRate: 150,
+          ),
+        ],
+      ),
       workoutName: 'workout 1',
       stages: [
         WorkoutStageBaseRun(
@@ -502,7 +521,16 @@ void main() {
       createState(
         status: const BlocStatusLoading(),
         date: DateTime(2023, 2, 2),
-        workoutId: 'w1',
+        workout: createWorkout(
+          id: 'w1',
+          name: 'workout name',
+          stages: [
+            WorkoutStageBaseRun(
+              distanceInKilometers: 10,
+              maxHeartRate: 150,
+            ),
+          ],
+        ),
         workoutName: 'workout 1',
         stages: [
           WorkoutStageBaseRun(
@@ -520,7 +548,16 @@ void main() {
           info: WorkoutCreatorInfo.workoutUpdated,
         ),
         date: DateTime(2023, 2, 2),
-        workoutId: 'w1',
+        workout: createWorkout(
+          id: 'w1',
+          name: 'workout name',
+          stages: [
+            WorkoutStageBaseRun(
+              distanceInKilometers: 10,
+              maxHeartRate: 150,
+            ),
+          ],
+        ),
         workoutName: 'workout 1',
         stages: [
           WorkoutStageBaseRun(

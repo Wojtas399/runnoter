@@ -41,13 +41,13 @@ class _AppBarTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String? workoutId = context.select(
-      (WorkoutCreatorBloc bloc) => bloc.state.workoutId,
+    final Workout? workout = context.select(
+      (WorkoutCreatorBloc bloc) => bloc.state.workout,
     );
     final appLocalizations = AppLocalizations.of(context);
 
     String title = appLocalizations!.workout_creator_screen_title_add_mode;
-    if (workoutId != null) {
+    if (workout != null) {
       title = appLocalizations.workout_creator_screen_title_edit_mode;
     }
     return Text(title);

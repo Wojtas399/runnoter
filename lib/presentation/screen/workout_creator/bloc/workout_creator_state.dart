@@ -2,14 +2,14 @@ part of 'workout_creator_bloc.dart';
 
 class WorkoutCreatorState extends BlocState<WorkoutCreatorState> {
   final DateTime? date;
-  final String? workoutId;
+  final Workout? workout;
   final String? workoutName;
   final List<WorkoutStage> stages;
 
   const WorkoutCreatorState({
     required super.status,
     required this.date,
-    required this.workoutId,
+    required this.workout,
     required this.workoutName,
     required this.stages,
   });
@@ -18,7 +18,7 @@ class WorkoutCreatorState extends BlocState<WorkoutCreatorState> {
   List<Object?> get props => [
         status,
         date,
-        workoutId,
+        workout,
         workoutName,
         stages,
       ];
@@ -33,14 +33,14 @@ class WorkoutCreatorState extends BlocState<WorkoutCreatorState> {
   WorkoutCreatorState copyWith({
     BlocStatus? status,
     DateTime? date,
-    String? workoutId,
+    Workout? workout,
     String? workoutName,
     List<WorkoutStage>? stages,
   }) {
     return WorkoutCreatorState(
       status: status ?? const BlocStatusComplete(),
       date: date ?? this.date,
-      workoutId: workoutId ?? this.workoutId,
+      workout: workout ?? this.workout,
       workoutName: workoutName ?? this.workoutName,
       stages: stages ?? this.stages,
     );

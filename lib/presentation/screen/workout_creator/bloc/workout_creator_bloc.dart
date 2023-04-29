@@ -25,7 +25,7 @@ class WorkoutCreatorBloc extends BlocWithStatus<WorkoutCreatorEvent,
     required WorkoutRepository workoutRepository,
     BlocStatus status = const BlocStatusComplete(),
     DateTime? date,
-    String? workoutId,
+    Workout? workout,
     String? workoutName,
     List<WorkoutStage> stages = const [],
   })  : _authService = authService,
@@ -34,7 +34,7 @@ class WorkoutCreatorBloc extends BlocWithStatus<WorkoutCreatorEvent,
           WorkoutCreatorState(
             status: status,
             date: date,
-            workoutId: workoutId,
+            workout: workout,
             workoutName: workoutName,
             stages: stages,
           ),
@@ -73,7 +73,7 @@ class WorkoutCreatorBloc extends BlocWithStatus<WorkoutCreatorEvent,
             info: WorkoutCreatorInfo.editModeInitialized,
           ),
           date: event.date,
-          workoutId: workoutId,
+          workout: workout,
           workoutName: workout?.name,
           stages: workout?.stages,
         ));
@@ -144,7 +144,7 @@ class WorkoutCreatorBloc extends BlocWithStatus<WorkoutCreatorEvent,
       return;
     }
     emitLoadingStatus(emit);
-    if (state.workoutId != null) {
+    if (state.workout != null) {
       await _updateWorkout(loggedUserId);
       emitCompleteStatus(emit, WorkoutCreatorInfo.workoutUpdated);
     } else {
@@ -174,7 +174,7 @@ class WorkoutCreatorBloc extends BlocWithStatus<WorkoutCreatorEvent,
 
   Future<void> _updateWorkout(String userId) async {
     await _workoutRepository.updateWorkout(
-      workoutId: state.workoutId!,
+      workoutId: state.workout!.id,
       userId: userId,
       workoutName: state.workoutName,
       stages: state.stages,
