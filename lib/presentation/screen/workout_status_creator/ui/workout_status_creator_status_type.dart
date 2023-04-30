@@ -14,7 +14,7 @@ class _StatusType extends StatelessWidget {
     return DropdownButtonFormField(
       decoration: InputDecoration(
         filled: true,
-        hintText:
+        labelText:
             AppLocalizations.of(context)!.workout_status_creator_screen_title,
       ),
       items: <DropdownMenuItem<_WorkoutStatusType>>[
@@ -73,9 +73,10 @@ class _WorkoutStatusDescription extends StatelessWidget {
       children: [
         Icon(
           status.toIcon(),
+          size: 20,
           color: status.toColor(),
         ),
-        const SizedBox(width: 16),
+        const SizedBox(width: 8),
         Text(
           status.toLabel(context),
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(

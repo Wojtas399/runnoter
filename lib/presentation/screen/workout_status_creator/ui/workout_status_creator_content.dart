@@ -18,10 +18,24 @@ class _Content extends StatelessWidget {
           child: Column(
             children: const [
               _StatusType(),
+              SizedBox(height: 24),
+              _CoveredDistance(),
             ],
           ),
         ),
       ),
+    );
+  }
+}
+
+class _CoveredDistance extends StatelessWidget {
+  const _CoveredDistance();
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFieldComponent(
+      label: AppLocalizations.of(context)!
+          .workout_status_creator_covered_distance_label,
     );
   }
 }
