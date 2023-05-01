@@ -5,6 +5,8 @@ class _Content extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const Widget gap = SizedBox(height: 24);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -24,16 +26,18 @@ class _Content extends StatelessWidget {
               child: Column(
                 children: const [
                   _StatusType(),
-                  SizedBox(height: 24),
+                  gap,
                   _CoveredDistance(),
-                  SizedBox(height: 24),
+                  gap,
                   _MoodRate(),
-                  SizedBox(height: 24),
+                  gap,
                   _AveragePace(),
-                  SizedBox(height: 24),
+                  gap,
                   _AverageHeartRate(),
-                  SizedBox(height: 24),
+                  gap,
                   _Comment(),
+                  gap,
+                  _SubmitButton(),
                 ],
               ),
             ),
@@ -129,6 +133,20 @@ class _Comment extends StatelessWidget {
       maxLines: null,
       keyboardType: TextInputType.multiline,
       displayCounterText: true,
+    );
+  }
+}
+
+class _SubmitButton extends StatelessWidget {
+  const _SubmitButton();
+
+  @override
+  Widget build(BuildContext context) {
+    return BigButton(
+      label: AppLocalizations.of(context)!.save,
+      onPressed: () {
+        //TODO
+      },
     );
   }
 }
