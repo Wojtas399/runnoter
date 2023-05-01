@@ -1,4 +1,5 @@
 import 'package:bloc_test/bloc_test.dart';
+import 'package:runnoter/domain/model/workout_status.dart';
 import 'package:runnoter/presentation/model/bloc_status.dart';
 import 'package:runnoter/presentation/screen/workout_status_creator/bloc/workout_status_creator_bloc.dart';
 
@@ -9,11 +10,13 @@ void main() {
     BlocStatus status = const BlocStatusInitial(),
     WorkoutStatusType? workoutStatusType,
     double? coveredDistanceInKm,
+    MoodRate? moodRate,
   }) =>
       WorkoutStatusCreatorState(
         status: status,
         workoutStatusType: workoutStatusType,
         coveredDistanceInKm: coveredDistanceInKm,
+        moodRate: moodRate,
       );
 
   blocTest(
@@ -46,6 +49,23 @@ void main() {
       createState(
         status: const BlocStatusComplete(),
         coveredDistanceInKm: 10,
+      ),
+    ],
+  );
+
+  blocTest(
+    'mood rate changed, '
+    'should update mood rate in state',
+    build: () => createBloc(),
+    act: (WorkoutStatusCreatorBloc bloc) => bloc.add(
+      const WorkoutStatusCreatorEventMoodRateChanged(
+        moodRate: MoodRate.mr8,
+      ),
+    ),
+    expect: () => [
+      createState(
+        status: const BlocStatusComplete(),
+        moodRate: MoodRate.mr8,
       ),
     ],
   );

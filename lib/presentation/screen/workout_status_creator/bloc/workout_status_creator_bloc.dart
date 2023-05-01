@@ -23,6 +23,7 @@ class WorkoutStatusCreatorBloc extends BlocWithStatus<WorkoutStatusCreatorEvent,
     on<WorkoutStatusCreatorEventCoveredDistanceInKmChanged>(
       _coveredDistanceInKmChanged,
     );
+    on<WorkoutStatusCreatorEventMoodRateChanged>(_moodRateChanged);
   }
 
   void _workoutStatusTypeChanged(
@@ -40,6 +41,15 @@ class WorkoutStatusCreatorBloc extends BlocWithStatus<WorkoutStatusCreatorEvent,
   ) {
     emit(state.copyWith(
       coveredDistanceInKm: event.coveredDistanceInKm,
+    ));
+  }
+
+  void _moodRateChanged(
+    WorkoutStatusCreatorEventMoodRateChanged event,
+    Emitter<WorkoutStatusCreatorState> emit,
+  ) {
+    emit(state.copyWith(
+      moodRate: event.moodRate,
     ));
   }
 }

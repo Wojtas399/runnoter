@@ -21,3 +21,12 @@ class WorkoutStatusCreatorEventCoveredDistanceInKmChanged
     required this.coveredDistanceInKm,
   });
 }
+
+class WorkoutStatusCreatorEventMoodRateChanged
+    extends WorkoutStatusCreatorEvent {
+  final MoodRate moodRate;
+
+  const WorkoutStatusCreatorEventMoodRateChanged({
+    required this.moodRate,
+  });
+}
