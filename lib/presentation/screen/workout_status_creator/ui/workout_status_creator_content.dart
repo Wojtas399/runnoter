@@ -13,25 +13,29 @@ class _Content extends StatelessWidget {
         centerTitle: true,
       ),
       body: SafeArea(
-        child: GestureDetector(
-          onTap: () {
-            unfocusInputs();
-          },
-          child: Container(
-            color: Colors.transparent,
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              children: const [
-                _StatusType(),
-                SizedBox(height: 24),
-                _CoveredDistance(),
-                SizedBox(height: 24),
-                _MoodRate(),
-                SizedBox(height: 24),
-                _AveragePace(),
-                SizedBox(height: 24),
-                _AverageHeartRate(),
-              ],
+        child: ScrollableContent(
+          child: GestureDetector(
+            onTap: () {
+              unfocusInputs();
+            },
+            child: Container(
+              color: Colors.transparent,
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                children: const [
+                  _StatusType(),
+                  SizedBox(height: 24),
+                  _CoveredDistance(),
+                  SizedBox(height: 24),
+                  _MoodRate(),
+                  SizedBox(height: 24),
+                  _AveragePace(),
+                  SizedBox(height: 24),
+                  _AverageHeartRate(),
+                  SizedBox(height: 24),
+                  _Comment(),
+                ],
+              ),
             ),
           ),
         ),
@@ -110,6 +114,21 @@ class _AverageHeartRate extends StatelessWidget {
       inputFormatters: [
         FilteringTextInputFormatter.digitsOnly,
       ],
+    );
+  }
+}
+
+class _Comment extends StatelessWidget {
+  const _Comment();
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFieldComponent(
+      label: AppLocalizations.of(context)!.workout_status_creator_comment_label,
+      maxLength: 100,
+      maxLines: null,
+      keyboardType: TextInputType.multiline,
+      displayCounterText: true,
     );
   }
 }

@@ -325,6 +325,10 @@
   "@workout_status_creator_average_heart_rate": {
     "description": "Label of average heart rate"
   },
+  "workout_status_creator_comment_label": "Uwagi",
+  "@workout_status_creator_comment_label": {
+    "description": "Label of comment"
+  },
 
 
   "profile_screen_title": "Profil",

@@ -90,6 +90,7 @@
   "workout_status_creator_minutes_label": "Minutes",
   "workout_status_creator_seconds_label": "Seconds",
   "workout_status_creator_average_heart_rate": "Average heart rate",
+  "workout_status_creator_comment_label": "Comment",
 
 
   "profile_screen_title": "Profile",

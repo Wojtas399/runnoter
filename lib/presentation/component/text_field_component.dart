@@ -8,6 +8,8 @@ class TextFieldComponent extends StatelessWidget {
   final bool isLabelCentered;
   final bool isRequired;
   final int? maxLength;
+  final bool displayCounterText;
+  final int? maxLines;
   final TextInputType? keyboardType;
   final TextAlign textAlign;
   final List<TextInputFormatter>? inputFormatters;
@@ -22,6 +24,8 @@ class TextFieldComponent extends StatelessWidget {
     this.isLabelCentered = false,
     this.isRequired = false,
     this.maxLength,
+    this.displayCounterText = false,
+    this.maxLines,
     this.keyboardType,
     this.textAlign = TextAlign.start,
     this.inputFormatters,
@@ -42,9 +46,10 @@ class TextFieldComponent extends StatelessWidget {
                 : Text(label!)
             : null,
         prefixIcon: icon != null ? Icon(icon) : null,
-        counterText: '',
+        counterText: displayCounterText ? null : '',
       ),
       maxLength: maxLength,
+      maxLines: maxLines,
       textAlign: textAlign,
       controller: controller,
       onChanged: onChanged,
