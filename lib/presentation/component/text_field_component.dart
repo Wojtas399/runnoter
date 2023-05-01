@@ -5,9 +5,11 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 class TextFieldComponent extends StatelessWidget {
   final String? label;
   final IconData? icon;
+  final bool isLabelCentered;
   final bool isRequired;
   final int? maxLength;
   final TextInputType? keyboardType;
+  final TextAlign textAlign;
   final List<TextInputFormatter>? inputFormatters;
   final TextEditingController? controller;
   final Function(String? value)? onChanged;
@@ -17,9 +19,11 @@ class TextFieldComponent extends StatelessWidget {
     super.key,
     this.label,
     this.icon,
+    this.isLabelCentered = false,
     this.isRequired = false,
     this.maxLength,
     this.keyboardType,
+    this.textAlign = TextAlign.start,
     this.inputFormatters,
     this.controller,
     this.onChanged,
@@ -30,11 +34,18 @@ class TextFieldComponent extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextFormField(
       decoration: InputDecoration(
-        label: label != null ? Text(label!) : null,
+        label: label != null
+            ? isLabelCentered
+                ? Center(
+                    child: Text(label!),
+                  )
+                : Text(label!)
+            : null,
         prefixIcon: icon != null ? Icon(icon) : null,
         counterText: '',
       ),
       maxLength: maxLength,
+      textAlign: textAlign,
       controller: controller,
       onChanged: onChanged,
       validator: (String? value) {

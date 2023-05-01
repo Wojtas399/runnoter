@@ -27,6 +27,8 @@ class _Content extends StatelessWidget {
                 _CoveredDistance(),
                 SizedBox(height: 24),
                 _MoodRate(),
+                SizedBox(height: 24),
+                _AveragePace(),
               ],
             ),
           ),
@@ -42,8 +44,13 @@ class _CoveredDistance extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFieldComponent(
-      label: AppLocalizations.of(context)!
-          .workout_status_creator_covered_distance_label,
+      label:
+          '${AppLocalizations.of(context)!.workout_status_creator_covered_distance_label} [km]',
+      maxLength: 8,
+      keyboardType: TextInputType.number,
+      inputFormatters: [
+        DecimalTextInputFormatter(decimalRange: 2),
+      ],
     );
   }
 }

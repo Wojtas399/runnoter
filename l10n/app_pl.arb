@@ -309,6 +309,18 @@
   "@workout_status_creator_mood_label": {
     "description": "Label of mood"
   },
+  "workout_status_creator_average_pace_label": "Średnia prędkość",
+  "@workout_status_creator_average_pace_label": {
+    "description": "Label of average pace"
+  },
+  "workout_status_creator_minutes_label": "Minuty",
+  "@workout_status_creator_minutes_label": {
+    "description": "Label of minutes"
+  },
+  "workout_status_creator_seconds_label": "Sekundy",
+  "@workout_status_creator_seconds_label": {
+    "description": "Label of seconds"
+  },
 
 
   "profile_screen_title": "Profil",

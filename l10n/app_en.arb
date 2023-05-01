@@ -86,6 +86,9 @@
   "workout_status_creator_screen_title": "Workout status",
   "workout_status_creator_covered_distance_label": "Covered distance",
   "workout_status_creator_mood_label": "Mood",
+  "workout_status_creator_average_pace_label": "Average pace",
+  "workout_status_creator_minutes_label": "Minutes",
+  "workout_status_creator_seconds_label": "Seconds",
 
 
   "profile_screen_title": "Profile",
