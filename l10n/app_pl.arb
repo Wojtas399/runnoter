@@ -321,6 +321,10 @@
   "@workout_status_creator_seconds_label": {
     "description": "Label of seconds"
   },
+  "workout_status_creator_average_heart_rate": "Średnie tętno",
+  "@workout_status_creator_average_heart_rate": {
+    "description": "Label of average heart rate"
+  },
 
 
   "profile_screen_title": "Profil",

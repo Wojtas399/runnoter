@@ -29,6 +29,8 @@ class _Content extends StatelessWidget {
                 _MoodRate(),
                 SizedBox(height: 24),
                 _AveragePace(),
+                SizedBox(height: 24),
+                _AverageHeartRate(),
               ],
             ),
           ),
@@ -91,6 +93,23 @@ class _MoodRate extends StatelessWidget {
       onChanged: (MoodRate? moodRate) {
         //TODO
       },
+    );
+  }
+}
+
+class _AverageHeartRate extends StatelessWidget {
+  const _AverageHeartRate();
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFieldComponent(
+      label: AppLocalizations.of(context)!
+          .workout_status_creator_average_heart_rate,
+      maxLength: 3,
+      keyboardType: TextInputType.number,
+      inputFormatters: [
+        FilteringTextInputFormatter.digitsOnly,
+      ],
     );
   }
 }
