@@ -12,3 +12,12 @@ class WorkoutStatusCreatorEventWorkoutStatusTypeChanged
     required this.workoutStatusType,
   });
 }
+
+class WorkoutStatusCreatorEventCoveredDistanceInKmChanged
+    extends WorkoutStatusCreatorEvent {
+  final double? coveredDistanceInKm;
+
+  const WorkoutStatusCreatorEventCoveredDistanceInKmChanged({
+    required this.coveredDistanceInKm,
+  });
+}

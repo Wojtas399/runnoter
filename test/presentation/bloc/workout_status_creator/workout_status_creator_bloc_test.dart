@@ -8,10 +8,12 @@ void main() {
   WorkoutStatusCreatorState createState({
     BlocStatus status = const BlocStatusInitial(),
     WorkoutStatusType? workoutStatusType,
+    double? coveredDistanceInKm,
   }) =>
       WorkoutStatusCreatorState(
         status: status,
         workoutStatusType: workoutStatusType,
+        coveredDistanceInKm: coveredDistanceInKm,
       );
 
   blocTest(
@@ -27,6 +29,23 @@ void main() {
       createState(
         status: const BlocStatusComplete(),
         workoutStatusType: WorkoutStatusType.completed,
+      ),
+    ],
+  );
+
+  blocTest(
+    'covered distance in km changed, '
+    'should update covered distance in km in state',
+    build: () => createBloc(),
+    act: (WorkoutStatusCreatorBloc bloc) => bloc.add(
+      const WorkoutStatusCreatorEventCoveredDistanceInKmChanged(
+        coveredDistanceInKm: 10,
+      ),
+    ),
+    expect: () => [
+      createState(
+        status: const BlocStatusComplete(),
+        coveredDistanceInKm: 10,
       ),
     ],
   );

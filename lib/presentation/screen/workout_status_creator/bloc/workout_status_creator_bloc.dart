@@ -20,6 +20,9 @@ class WorkoutStatusCreatorBloc extends BlocWithStatus<WorkoutStatusCreatorEvent,
     on<WorkoutStatusCreatorEventWorkoutStatusTypeChanged>(
       _workoutStatusTypeChanged,
     );
+    on<WorkoutStatusCreatorEventCoveredDistanceInKmChanged>(
+      _coveredDistanceInKmChanged,
+    );
   }
 
   void _workoutStatusTypeChanged(
@@ -28,6 +31,15 @@ class WorkoutStatusCreatorBloc extends BlocWithStatus<WorkoutStatusCreatorEvent,
   ) {
     emit(state.copyWith(
       workoutStatusType: event.workoutStatusType,
+    ));
+  }
+
+  void _coveredDistanceInKmChanged(
+    WorkoutStatusCreatorEventCoveredDistanceInKmChanged event,
+    Emitter<WorkoutStatusCreatorState> emit,
+  ) {
+    emit(state.copyWith(
+      coveredDistanceInKm: event.coveredDistanceInKm,
     ));
   }
 }
