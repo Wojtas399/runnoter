@@ -66,15 +66,28 @@ void main() {
   );
 
   test(
-    'copy with average pace',
+    'copy with average pace minutes',
     () {
-      const Pace expectedAveragePace = Pace(minutes: 6, seconds: 30);
+      const int expectedAveragePaceMinutes = 6;
 
-      state = state.copyWith(averagePace: expectedAveragePace);
+      state = state.copyWith(averagePaceMinutes: expectedAveragePaceMinutes);
       final state2 = state.copyWith();
 
-      expect(state.averagePace, expectedAveragePace);
-      expect(state2.averagePace, expectedAveragePace);
+      expect(state.averagePaceMinutes, expectedAveragePaceMinutes);
+      expect(state2.averagePaceMinutes, expectedAveragePaceMinutes);
+    },
+  );
+
+  test(
+    'copy with average pace seconds',
+    () {
+      const int expectedAveragePaceSeconds = 10;
+
+      state = state.copyWith(averagePaceSeconds: expectedAveragePaceSeconds);
+      final state2 = state.copyWith();
+
+      expect(state.averagePaceSeconds, expectedAveragePaceSeconds);
+      expect(state2.averagePaceSeconds, expectedAveragePaceSeconds);
     },
   );
 

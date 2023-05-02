@@ -4,19 +4,15 @@ import 'package:runnoter/presentation/model/bloc_status.dart';
 import 'package:runnoter/presentation/screen/workout_status_creator/bloc/workout_status_creator_bloc.dart';
 
 void main() {
-  WorkoutStatusCreatorBloc createBloc({
-    Pace? averagePace,
-  }) =>
-      WorkoutStatusCreatorBloc(
-        averagePace: averagePace,
-      );
+  WorkoutStatusCreatorBloc createBloc() => WorkoutStatusCreatorBloc();
 
   WorkoutStatusCreatorState createState({
     BlocStatus status = const BlocStatusInitial(),
     WorkoutStatusType? workoutStatusType,
     double? coveredDistanceInKm,
     MoodRate? moodRate,
-    Pace? averagePace,
+    int? averagePaceMinutes,
+    int? averagePaceSeconds,
     int? averageHeartRate,
     String? comment,
   }) =>
@@ -25,7 +21,8 @@ void main() {
         workoutStatusType: workoutStatusType,
         coveredDistanceInKm: coveredDistanceInKm,
         moodRate: moodRate,
-        averagePace: averagePace,
+        averagePaceMinutes: averagePaceMinutes,
+        averagePaceSeconds: averagePaceSeconds,
         averageHeartRate: averageHeartRate,
         comment: comment,
       );
@@ -83,8 +80,7 @@ void main() {
 
   blocTest(
     'avg pace minutes changed, '
-    'average pace is null, '
-    'should set average pace with given minutes and seconds set as 0',
+    'should update average pace minutes in state',
     build: () => createBloc(),
     act: (WorkoutStatusCreatorBloc bloc) => bloc.add(
       const WorkoutStatusCreatorEventAvgPaceMinutesChanged(
@@ -94,56 +90,15 @@ void main() {
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
-        averagePace: const Pace(minutes: 6, seconds: 0),
-      ),
-    ],
-  );
-
-  blocTest(
-    'avg pace minutes changed, '
-    'average pace is not null, '
-    'should update minutes of average pace',
-    build: () => createBloc(
-      averagePace: const Pace(minutes: 7, seconds: 10),
-    ),
-    act: (WorkoutStatusCreatorBloc bloc) => bloc.add(
-      const WorkoutStatusCreatorEventAvgPaceMinutesChanged(
-        minutes: 6,
-      ),
-    ),
-    expect: () => [
-      createState(
-        status: const BlocStatusComplete(),
-        averagePace: const Pace(minutes: 6, seconds: 10),
+        averagePaceMinutes: 6,
       ),
     ],
   );
 
   blocTest(
     'avg pace seconds changed, '
-    'average pace is null, '
-    'should set average pace with given seconds and minutes set as 0',
+    'should update average pace seconds in state',
     build: () => createBloc(),
-    act: (WorkoutStatusCreatorBloc bloc) => bloc.add(
-      const WorkoutStatusCreatorEventAvgPaceSecondsChanged(
-        seconds: 50,
-      ),
-    ),
-    expect: () => [
-      createState(
-        status: const BlocStatusComplete(),
-        averagePace: const Pace(minutes: 0, seconds: 50),
-      ),
-    ],
-  );
-
-  blocTest(
-    'avg pace seconds changed, '
-    'average pace is not null, '
-    'should update seconds of average pace',
-    build: () => createBloc(
-      averagePace: const Pace(minutes: 7, seconds: 10),
-    ),
     act: (WorkoutStatusCreatorBloc bloc) => bloc.add(
       const WorkoutStatusCreatorEventAvgPaceSecondsChanged(
         seconds: 2,
@@ -152,7 +107,7 @@ void main() {
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
-        averagePace: const Pace(minutes: 7, seconds: 2),
+        averagePaceSeconds: 2,
       ),
     ],
   );

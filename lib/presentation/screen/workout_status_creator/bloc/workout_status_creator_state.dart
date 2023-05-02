@@ -4,7 +4,8 @@ class WorkoutStatusCreatorState extends BlocState<WorkoutStatusCreatorState> {
   final WorkoutStatusType? workoutStatusType;
   final double? coveredDistanceInKm;
   final MoodRate? moodRate;
-  final Pace? averagePace;
+  final int? averagePaceMinutes;
+  final int? averagePaceSeconds;
   final int? averageHeartRate;
   final String? comment;
 
@@ -13,7 +14,8 @@ class WorkoutStatusCreatorState extends BlocState<WorkoutStatusCreatorState> {
     this.workoutStatusType,
     this.coveredDistanceInKm,
     this.moodRate,
-    this.averagePace,
+    this.averagePaceMinutes,
+    this.averagePaceSeconds,
     this.averageHeartRate,
     this.comment,
   });
@@ -24,7 +26,8 @@ class WorkoutStatusCreatorState extends BlocState<WorkoutStatusCreatorState> {
         workoutStatusType,
         coveredDistanceInKm,
         moodRate,
-        averagePace,
+        averagePaceMinutes,
+        averagePaceSeconds,
         averageHeartRate,
         comment,
       ];
@@ -35,7 +38,8 @@ class WorkoutStatusCreatorState extends BlocState<WorkoutStatusCreatorState> {
     WorkoutStatusType? workoutStatusType,
     double? coveredDistanceInKm,
     MoodRate? moodRate,
-    Pace? averagePace,
+    int? averagePaceMinutes,
+    int? averagePaceSeconds,
     int? averageHeartRate,
     String? comment,
   }) =>
@@ -44,7 +48,8 @@ class WorkoutStatusCreatorState extends BlocState<WorkoutStatusCreatorState> {
         workoutStatusType: workoutStatusType ?? this.workoutStatusType,
         coveredDistanceInKm: coveredDistanceInKm ?? this.coveredDistanceInKm,
         moodRate: moodRate ?? this.moodRate,
-        averagePace: averagePace ?? this.averagePace,
+        averagePaceMinutes: averagePaceMinutes ?? this.averagePaceMinutes,
+        averagePaceSeconds: averagePaceSeconds ?? this.averagePaceSeconds,
         averageHeartRate: averageHeartRate ?? this.averageHeartRate,
         comment: comment ?? this.comment,
       );
