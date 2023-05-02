@@ -48,3 +48,12 @@ class WorkoutStatusCreatorEventAvgPaceSecondsChanged
     required this.seconds,
   });
 }
+
+class WorkoutStatusCreatorEventAvgHeartRateChanged
+    extends WorkoutStatusCreatorEvent {
+  final int averageHeartRate;
+
+  const WorkoutStatusCreatorEventAvgHeartRateChanged({
+    required this.averageHeartRate,
+  });
+}

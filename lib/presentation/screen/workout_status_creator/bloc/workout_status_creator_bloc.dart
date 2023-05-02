@@ -28,6 +28,7 @@ class WorkoutStatusCreatorBloc extends BlocWithStatus<WorkoutStatusCreatorEvent,
     on<WorkoutStatusCreatorEventMoodRateChanged>(_moodRateChanged);
     on<WorkoutStatusCreatorEventAvgPaceMinutesChanged>(_avgPaceMinutesChanged);
     on<WorkoutStatusCreatorEventAvgPaceSecondsChanged>(_avgPaceSecondsChanged);
+    on<WorkoutStatusCreatorEventAvgHeartRateChanged>(_avgHeartRateChanged);
   }
 
   void _workoutStatusTypeChanged(
@@ -78,6 +79,15 @@ class WorkoutStatusCreatorBloc extends BlocWithStatus<WorkoutStatusCreatorEvent,
         minutes: state.averagePace?.minutes ?? 0,
         seconds: event.seconds,
       ),
+    ));
+  }
+
+  void _avgHeartRateChanged(
+    WorkoutStatusCreatorEventAvgHeartRateChanged event,
+    Emitter<WorkoutStatusCreatorState> emit,
+  ) {
+    emit(state.copyWith(
+      averageHeartRate: event.averageHeartRate,
     ));
   }
 }

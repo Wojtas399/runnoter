@@ -17,6 +17,7 @@ void main() {
     double? coveredDistanceInKm,
     MoodRate? moodRate,
     Pace? averagePace,
+    int? averageHeartRate,
   }) =>
       WorkoutStatusCreatorState(
         status: status,
@@ -24,6 +25,7 @@ void main() {
         coveredDistanceInKm: coveredDistanceInKm,
         moodRate: moodRate,
         averagePace: averagePace,
+        averageHeartRate: averageHeartRate,
       );
 
   blocTest(
@@ -149,6 +151,23 @@ void main() {
       createState(
         status: const BlocStatusComplete(),
         averagePace: const Pace(minutes: 7, seconds: 2),
+      ),
+    ],
+  );
+
+  blocTest(
+    'avg heart rate changed, '
+    'should update average heart rate in state',
+    build: () => createBloc(),
+    act: (WorkoutStatusCreatorBloc bloc) => bloc.add(
+      const WorkoutStatusCreatorEventAvgHeartRateChanged(
+        averageHeartRate: 150,
+      ),
+    ),
+    expect: () => [
+      createState(
+        status: const BlocStatusComplete(),
+        averageHeartRate: 150,
       ),
     ],
   );
