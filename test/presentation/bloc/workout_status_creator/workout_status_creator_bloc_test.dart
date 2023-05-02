@@ -28,6 +28,23 @@ void main() {
       );
 
   blocTest(
+    'initialize, '
+    'should update workout status type in state',
+    build: () => createBloc(),
+    act: (WorkoutStatusCreatorBloc bloc) => bloc.add(
+      WorkoutStatusCreatorEventInitialize(
+        workoutStatusType: WorkoutStatusType.completed,
+      ),
+    ),
+    expect: () => [
+      createState(
+        status: const BlocStatusComplete(),
+        workoutStatusType: WorkoutStatusType.completed,
+      ),
+    ],
+  );
+
+  blocTest(
     'workout status type changed, '
     'should update workout status type in state',
     build: () => createBloc(),

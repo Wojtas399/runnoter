@@ -4,6 +4,14 @@ abstract class WorkoutStatusCreatorEvent {
   const WorkoutStatusCreatorEvent();
 }
 
+class WorkoutStatusCreatorEventInitialize extends WorkoutStatusCreatorEvent {
+  final WorkoutStatusType? workoutStatusType;
+
+  WorkoutStatusCreatorEventInitialize({
+    this.workoutStatusType,
+  });
+}
+
 class WorkoutStatusCreatorEventWorkoutStatusTypeChanged
     extends WorkoutStatusCreatorEvent {
   final WorkoutStatusType? workoutStatusType;

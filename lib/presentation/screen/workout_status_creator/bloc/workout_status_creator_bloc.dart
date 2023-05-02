@@ -17,6 +17,7 @@ class WorkoutStatusCreatorBloc extends BlocWithStatus<WorkoutStatusCreatorEvent,
             status: status,
           ),
         ) {
+    on<WorkoutStatusCreatorEventInitialize>(_initialize);
     on<WorkoutStatusCreatorEventWorkoutStatusTypeChanged>(
       _workoutStatusTypeChanged,
     );
@@ -28,6 +29,15 @@ class WorkoutStatusCreatorBloc extends BlocWithStatus<WorkoutStatusCreatorEvent,
     on<WorkoutStatusCreatorEventAvgPaceSecondsChanged>(_avgPaceSecondsChanged);
     on<WorkoutStatusCreatorEventAvgHeartRateChanged>(_avgHeartRateChanged);
     on<WorkoutStatusCreatorEventCommentChanged>(_commentChanged);
+  }
+
+  void _initialize(
+    WorkoutStatusCreatorEventInitialize event,
+    Emitter<WorkoutStatusCreatorState> emit,
+  ) {
+    emit(state.copyWith(
+      workoutStatusType: event.workoutStatusType,
+    ));
   }
 
   void _workoutStatusTypeChanged(
