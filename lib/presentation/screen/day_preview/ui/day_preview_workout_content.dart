@@ -117,7 +117,9 @@ class _WorkoutFinishButton extends StatelessWidget {
       navigateTo(
         context: context,
         route: WorkoutStatusCreatorRoute(
-          workoutId: workoutId,
+          creatorArguments: WorkoutStatusCreatorFinishWorkoutArguments(
+            workoutId: workoutId,
+          ),
         ),
       );
     }

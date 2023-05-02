@@ -19,7 +19,7 @@ import '../../../formatter/workout_stage_formatter.dart';
 import '../../../formatter/workout_status_formatter.dart';
 import '../../../service/dialog_service.dart';
 import '../../../service/navigator_service.dart';
-import '../../workout_creator/ui/workout_creator_screen.dart';
+import '../../screens.dart';
 import '../bloc/day_preview_bloc.dart';
 
 part 'day_preview_app_bar.dart';

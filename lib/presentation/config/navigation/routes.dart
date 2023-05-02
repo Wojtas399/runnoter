@@ -1,4 +1,4 @@
-import '../../screen/workout_creator/ui/workout_creator_screen.dart';
+import '../../screen/screens.dart';
 
 abstract class CustomRoute<T> {
   final RoutePath path;
@@ -44,11 +44,12 @@ class WorkoutCreatorRoute extends CustomRoute<WorkoutCreatorArguments> {
         );
 }
 
-class WorkoutStatusCreatorRoute extends CustomRoute<String> {
+class WorkoutStatusCreatorRoute
+    extends CustomRoute<WorkoutStatusCreatorArguments> {
   const WorkoutStatusCreatorRoute({
-    required String workoutId,
+    required WorkoutStatusCreatorArguments creatorArguments,
   }) : super(
-          arguments: workoutId,
+          arguments: creatorArguments,
           path: RoutePath.workoutStatusCreator,
         );
 }

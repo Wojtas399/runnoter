@@ -18,12 +18,27 @@ part 'workout_status_creator_average_pace.dart';
 part 'workout_status_creator_content.dart';
 part 'workout_status_creator_status_type.dart';
 
+abstract class WorkoutStatusCreatorArguments {
+  final String? workoutId;
+
+  const WorkoutStatusCreatorArguments({
+    required this.workoutId,
+  });
+}
+
+class WorkoutStatusCreatorFinishWorkoutArguments
+    extends WorkoutStatusCreatorArguments {
+  WorkoutStatusCreatorFinishWorkoutArguments({
+    required super.workoutId,
+  });
+}
+
 class WorkoutStatusCreatorScreen extends StatelessWidget {
-  final String workoutId;
+  final WorkoutStatusCreatorArguments arguments;
 
   const WorkoutStatusCreatorScreen({
     super.key,
-    required this.workoutId,
+    required this.arguments,
   });
 
   @override
