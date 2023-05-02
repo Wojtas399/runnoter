@@ -18,6 +18,7 @@ void main() {
     MoodRate? moodRate,
     Pace? averagePace,
     int? averageHeartRate,
+    String? comment,
   }) =>
       WorkoutStatusCreatorState(
         status: status,
@@ -26,6 +27,7 @@ void main() {
         moodRate: moodRate,
         averagePace: averagePace,
         averageHeartRate: averageHeartRate,
+        comment: comment,
       );
 
   blocTest(
@@ -168,6 +170,22 @@ void main() {
       createState(
         status: const BlocStatusComplete(),
         averageHeartRate: 150,
+      ),
+    ],
+  );
+
+  blocTest(
+    'comment changed, ',
+    build: () => createBloc(),
+    act: (WorkoutStatusCreatorBloc bloc) => bloc.add(
+      const WorkoutStatusCreatorEventCommentChanged(
+        comment: 'comment',
+      ),
+    ),
+    expect: () => [
+      createState(
+        status: const BlocStatusComplete(),
+        comment: 'comment',
       ),
     ],
   );

@@ -57,3 +57,12 @@ class WorkoutStatusCreatorEventAvgHeartRateChanged
     required this.averageHeartRate,
   });
 }
+
+class WorkoutStatusCreatorEventCommentChanged
+    extends WorkoutStatusCreatorEvent {
+  final String comment;
+
+  const WorkoutStatusCreatorEventCommentChanged({
+    required this.comment,
+  });
+}
