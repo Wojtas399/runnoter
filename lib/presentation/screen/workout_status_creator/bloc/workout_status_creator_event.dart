@@ -39,3 +39,12 @@ class WorkoutStatusCreatorEventAvgPaceMinutesChanged
     required this.minutes,
   });
 }
+
+class WorkoutStatusCreatorEventAvgPaceSecondsChanged
+    extends WorkoutStatusCreatorEvent {
+  final int seconds;
+
+  const WorkoutStatusCreatorEventAvgPaceSecondsChanged({
+    required this.seconds,
+  });
+}

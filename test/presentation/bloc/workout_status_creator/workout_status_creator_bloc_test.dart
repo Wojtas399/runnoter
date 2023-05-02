@@ -114,4 +114,42 @@ void main() {
       ),
     ],
   );
+
+  blocTest(
+    'avg pace seconds changed, '
+    'average pace is null, '
+    'should set average pace with given seconds and minutes set as 0',
+    build: () => createBloc(),
+    act: (WorkoutStatusCreatorBloc bloc) => bloc.add(
+      const WorkoutStatusCreatorEventAvgPaceSecondsChanged(
+        seconds: 50,
+      ),
+    ),
+    expect: () => [
+      createState(
+        status: const BlocStatusComplete(),
+        averagePace: const Pace(minutes: 0, seconds: 50),
+      ),
+    ],
+  );
+
+  blocTest(
+    'avg pace seconds changed, '
+    'average pace is not null, '
+    'should update seconds of average pace',
+    build: () => createBloc(
+      averagePace: const Pace(minutes: 7, seconds: 10),
+    ),
+    act: (WorkoutStatusCreatorBloc bloc) => bloc.add(
+      const WorkoutStatusCreatorEventAvgPaceSecondsChanged(
+        seconds: 2,
+      ),
+    ),
+    expect: () => [
+      createState(
+        status: const BlocStatusComplete(),
+        averagePace: const Pace(minutes: 7, seconds: 2),
+      ),
+    ],
+  );
 }
