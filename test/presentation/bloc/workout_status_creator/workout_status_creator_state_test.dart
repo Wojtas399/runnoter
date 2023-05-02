@@ -13,6 +13,121 @@ void main() {
   });
 
   test(
+    'is submit button disabled, '
+    'workout status type is null, '
+    'should be true',
+    () {
+      state = state.copyWith(
+        coveredDistanceInKm: 10,
+        moodRate: MoodRate.mr8,
+        averagePaceMinutes: 5,
+        averagePaceSeconds: 30,
+        averageHeartRate: 150,
+      );
+
+      expect(state.isSubmitButtonDisabled, true);
+    },
+  );
+
+  test(
+    'is submit button disabled, '
+    'workout status type is set as pending, '
+    'should be false',
+    () {
+      state = state.copyWith(
+        workoutStatusType: WorkoutStatusType.pending,
+      );
+
+      expect(state.isSubmitButtonDisabled, false);
+    },
+  );
+
+  test(
+    'is submit button disabled, '
+    'covered distance in km is null, '
+    'should be true',
+    () {
+      state = state.copyWith(
+        workoutStatusType: WorkoutStatusType.completed,
+        moodRate: MoodRate.mr8,
+        averagePaceMinutes: 5,
+        averagePaceSeconds: 30,
+        averageHeartRate: 150,
+      );
+
+      expect(state.isSubmitButtonDisabled, true);
+    },
+  );
+
+  test(
+    'is submit button disabled, '
+    'mood rate is null, '
+    'should be true',
+    () {
+      state = state.copyWith(
+        workoutStatusType: WorkoutStatusType.completed,
+        coveredDistanceInKm: 10,
+        averagePaceMinutes: 5,
+        averagePaceSeconds: 30,
+        averageHeartRate: 150,
+      );
+
+      expect(state.isSubmitButtonDisabled, true);
+    },
+  );
+
+  test(
+    'is submit button disabled, '
+    'average pace minutes is null, '
+    'should be true',
+    () {
+      state = state.copyWith(
+        workoutStatusType: WorkoutStatusType.completed,
+        coveredDistanceInKm: 10,
+        moodRate: MoodRate.mr8,
+        averagePaceSeconds: 30,
+        averageHeartRate: 150,
+      );
+
+      expect(state.isSubmitButtonDisabled, true);
+    },
+  );
+
+  test(
+    'is submit button disabled, '
+    'average pace seconds is null, '
+    'should be true',
+    () {
+      state = state.copyWith(
+        workoutStatusType: WorkoutStatusType.completed,
+        coveredDistanceInKm: 10,
+        moodRate: MoodRate.mr8,
+        averagePaceMinutes: 5,
+        averageHeartRate: 150,
+      );
+
+      expect(state.isSubmitButtonDisabled, true);
+    },
+  );
+
+  test(
+    'is submit button disabled, '
+    'average heart rate is null, '
+    'should be true',
+    () {
+      state = state.copyWith(
+        workoutStatusType: WorkoutStatusType.completed,
+        coveredDistanceInKm: 10,
+        moodRate: MoodRate.mr8,
+        averagePaceMinutes: 5,
+        averagePaceSeconds: 30,
+      );
+
+      expect(state.isSubmitButtonDisabled, true);
+    },
+  );
+
+  test(
     'copy with status',
     () {
       const BlocStatus expectedStatus = BlocStatusLoading();

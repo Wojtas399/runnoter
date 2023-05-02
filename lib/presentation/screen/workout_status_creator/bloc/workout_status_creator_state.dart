@@ -32,6 +32,15 @@ class WorkoutStatusCreatorState extends BlocState<WorkoutStatusCreatorState> {
         comment,
       ];
 
+  bool get isSubmitButtonDisabled =>
+      workoutStatusType != WorkoutStatusType.pending &&
+      (workoutStatusType == null ||
+          coveredDistanceInKm == null ||
+          moodRate == null ||
+          averagePaceMinutes == null ||
+          averagePaceSeconds == null ||
+          averageHeartRate == null);
+
   @override
   WorkoutStatusCreatorState copyWith({
     BlocStatus? status,
