@@ -1,6 +1,7 @@
 part of 'workout_status_creator_bloc.dart';
 
 class WorkoutStatusCreatorState extends BlocState<WorkoutStatusCreatorState> {
+  final String? workoutId;
   final WorkoutStatusType? workoutStatusType;
   final double? coveredDistanceInKm;
   final MoodRate? moodRate;
@@ -11,6 +12,7 @@ class WorkoutStatusCreatorState extends BlocState<WorkoutStatusCreatorState> {
 
   const WorkoutStatusCreatorState({
     required super.status,
+    this.workoutId,
     this.workoutStatusType,
     this.coveredDistanceInKm,
     this.moodRate,
@@ -23,6 +25,7 @@ class WorkoutStatusCreatorState extends BlocState<WorkoutStatusCreatorState> {
   @override
   List<Object?> get props => [
         status,
+        workoutId,
         workoutStatusType,
         coveredDistanceInKm,
         moodRate,
@@ -44,6 +47,7 @@ class WorkoutStatusCreatorState extends BlocState<WorkoutStatusCreatorState> {
   @override
   WorkoutStatusCreatorState copyWith({
     BlocStatus? status,
+    String? workoutId,
     WorkoutStatusType? workoutStatusType,
     double? coveredDistanceInKm,
     MoodRate? moodRate,
@@ -54,6 +58,7 @@ class WorkoutStatusCreatorState extends BlocState<WorkoutStatusCreatorState> {
   }) =>
       WorkoutStatusCreatorState(
         status: status ?? const BlocStatusComplete(),
+        workoutId: workoutId ?? this.workoutId,
         workoutStatusType: workoutStatusType ?? this.workoutStatusType,
         coveredDistanceInKm: coveredDistanceInKm ?? this.coveredDistanceInKm,
         moodRate: moodRate ?? this.moodRate,

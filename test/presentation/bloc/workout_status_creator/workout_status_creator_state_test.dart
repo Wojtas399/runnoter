@@ -141,6 +141,19 @@ void main() {
   );
 
   test(
+    'copy with workout id',
+    () {
+      const String expectedWorkoutId = 'w1';
+
+      state = state.copyWith(workoutId: expectedWorkoutId);
+      final state2 = state.copyWith();
+
+      expect(state.workoutId, expectedWorkoutId);
+      expect(state2.workoutId, expectedWorkoutId);
+    },
+  );
+
+  test(
     'copy with workout status type',
     () {
       const WorkoutStatusType expectedWorkoutStatusType =
