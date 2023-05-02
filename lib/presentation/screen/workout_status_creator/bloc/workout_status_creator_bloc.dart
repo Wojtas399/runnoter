@@ -12,9 +12,11 @@ class WorkoutStatusCreatorBloc extends BlocWithStatus<WorkoutStatusCreatorEvent,
     WorkoutStatusCreatorState, dynamic, dynamic> {
   WorkoutStatusCreatorBloc({
     BlocStatus status = const BlocStatusInitial(),
+    Pace? averagePace,
   }) : super(
           WorkoutStatusCreatorState(
             status: status,
+            averagePace: averagePace,
           ),
         ) {
     on<WorkoutStatusCreatorEventWorkoutStatusTypeChanged>(
@@ -24,6 +26,7 @@ class WorkoutStatusCreatorBloc extends BlocWithStatus<WorkoutStatusCreatorEvent,
       _coveredDistanceInKmChanged,
     );
     on<WorkoutStatusCreatorEventMoodRateChanged>(_moodRateChanged);
+    on<WorkoutStatusCreatorEventAvgPaceMinutesChanged>(_avgPaceMinutesChanged);
   }
 
   void _workoutStatusTypeChanged(
@@ -50,6 +53,18 @@ class WorkoutStatusCreatorBloc extends BlocWithStatus<WorkoutStatusCreatorEvent,
   ) {
     emit(state.copyWith(
       moodRate: event.moodRate,
+    ));
+  }
+
+  void _avgPaceMinutesChanged(
+    WorkoutStatusCreatorEventAvgPaceMinutesChanged event,
+    Emitter<WorkoutStatusCreatorState> emit,
+  ) {
+    emit(state.copyWith(
+      averagePace: Pace(
+        minutes: event.minutes,
+        seconds: state.averagePace?.seconds ?? 0,
+      ),
     ));
   }
 }

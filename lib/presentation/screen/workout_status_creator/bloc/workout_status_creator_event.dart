@@ -30,3 +30,12 @@ class WorkoutStatusCreatorEventMoodRateChanged
     required this.moodRate,
   });
 }
+
+class WorkoutStatusCreatorEventAvgPaceMinutesChanged
+    extends WorkoutStatusCreatorEvent {
+  final int minutes;
+
+  const WorkoutStatusCreatorEventAvgPaceMinutesChanged({
+    required this.minutes,
+  });
+}
