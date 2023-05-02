@@ -16,26 +16,20 @@ class _AveragePace extends StatelessWidget {
         const SizedBox(height: 16),
         Row(
           children: [
-            Expanded(
+            const Expanded(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: _AveragePaceField(
-                  label: AppLocalizations.of(context)!
-                      .workout_status_creator_minutes_label,
-                ),
+                padding: EdgeInsets.symmetric(horizontal: 24),
+                child: _AveragePaceMinutes(),
               ),
             ),
             Text(
               ':',
               style: Theme.of(context).textTheme.titleLarge,
             ),
-            Expanded(
+            const Expanded(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: _AveragePaceField(
-                  label: AppLocalizations.of(context)!
-                      .workout_status_creator_seconds_label,
-                ),
+                padding: EdgeInsets.symmetric(horizontal: 24),
+                child: _AveragePaceSeconds(),
               ),
             ),
           ],
@@ -45,11 +39,57 @@ class _AveragePace extends StatelessWidget {
   }
 }
 
+class _AveragePaceMinutes extends StatelessWidget {
+  const _AveragePaceMinutes();
+
+  @override
+  Widget build(BuildContext context) {
+    return _AveragePaceField(
+      label: AppLocalizations.of(context)!.workout_status_creator_minutes_label,
+      onChanged: (int? minutes) {
+        _onChanged(context, minutes);
+      },
+    );
+  }
+
+  void _onChanged(BuildContext context, int? minutes) {
+    context.read<WorkoutStatusCreatorBloc>().add(
+          WorkoutStatusCreatorEventAvgPaceMinutesChanged(
+            minutes: minutes,
+          ),
+        );
+  }
+}
+
+class _AveragePaceSeconds extends StatelessWidget {
+  const _AveragePaceSeconds();
+
+  @override
+  Widget build(BuildContext context) {
+    return _AveragePaceField(
+      label: AppLocalizations.of(context)!.workout_status_creator_seconds_label,
+      onChanged: (int? seconds) {
+        _onChanged(context, seconds);
+      },
+    );
+  }
+
+  void _onChanged(BuildContext context, int? seconds) {
+    context.read<WorkoutStatusCreatorBloc>().add(
+          WorkoutStatusCreatorEventAvgPaceSecondsChanged(
+            seconds: seconds,
+          ),
+        );
+  }
+}
+
 class _AveragePaceField extends StatelessWidget {
   final String label;
+  final Function(int? value) onChanged;
 
   const _AveragePaceField({
     required this.label,
+    required this.onChanged,
   });
 
   @override
@@ -63,6 +103,15 @@ class _AveragePaceField extends StatelessWidget {
       inputFormatters: [
         FilteringTextInputFormatter.digitsOnly,
       ],
+      onChanged: _onChanged,
     );
+  }
+
+  void _onChanged(String? value) {
+    if (value != null) {
+      onChanged(
+        int.tryParse(value),
+      );
+    }
   }
 }

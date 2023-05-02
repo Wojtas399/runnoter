@@ -6,7 +6,7 @@ abstract class WorkoutStatusCreatorEvent {
 
 class WorkoutStatusCreatorEventWorkoutStatusTypeChanged
     extends WorkoutStatusCreatorEvent {
-  final WorkoutStatusType workoutStatusType;
+  final WorkoutStatusType? workoutStatusType;
 
   const WorkoutStatusCreatorEventWorkoutStatusTypeChanged({
     required this.workoutStatusType,
@@ -24,7 +24,7 @@ class WorkoutStatusCreatorEventCoveredDistanceInKmChanged
 
 class WorkoutStatusCreatorEventMoodRateChanged
     extends WorkoutStatusCreatorEvent {
-  final MoodRate moodRate;
+  final MoodRate? moodRate;
 
   const WorkoutStatusCreatorEventMoodRateChanged({
     required this.moodRate,
@@ -33,7 +33,7 @@ class WorkoutStatusCreatorEventMoodRateChanged
 
 class WorkoutStatusCreatorEventAvgPaceMinutesChanged
     extends WorkoutStatusCreatorEvent {
-  final int minutes;
+  final int? minutes;
 
   const WorkoutStatusCreatorEventAvgPaceMinutesChanged({
     required this.minutes,
@@ -42,7 +42,7 @@ class WorkoutStatusCreatorEventAvgPaceMinutesChanged
 
 class WorkoutStatusCreatorEventAvgPaceSecondsChanged
     extends WorkoutStatusCreatorEvent {
-  final int seconds;
+  final int? seconds;
 
   const WorkoutStatusCreatorEventAvgPaceSecondsChanged({
     required this.seconds,
@@ -51,7 +51,7 @@ class WorkoutStatusCreatorEventAvgPaceSecondsChanged
 
 class WorkoutStatusCreatorEventAvgHeartRateChanged
     extends WorkoutStatusCreatorEvent {
-  final int averageHeartRate;
+  final int? averageHeartRate;
 
   const WorkoutStatusCreatorEventAvgHeartRateChanged({
     required this.averageHeartRate,
@@ -60,7 +60,7 @@ class WorkoutStatusCreatorEventAvgHeartRateChanged
 
 class WorkoutStatusCreatorEventCommentChanged
     extends WorkoutStatusCreatorEvent {
-  final String comment;
+  final String? comment;
 
   const WorkoutStatusCreatorEventCommentChanged({
     required this.comment,

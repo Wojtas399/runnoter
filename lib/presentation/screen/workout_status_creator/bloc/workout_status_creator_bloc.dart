@@ -65,7 +65,7 @@ class WorkoutStatusCreatorBloc extends BlocWithStatus<WorkoutStatusCreatorEvent,
   ) {
     emit(state.copyWith(
       averagePace: Pace(
-        minutes: event.minutes,
+        minutes: event.minutes ?? state.averagePace?.minutes ?? 0,
         seconds: state.averagePace?.seconds ?? 0,
       ),
     ));
@@ -78,7 +78,7 @@ class WorkoutStatusCreatorBloc extends BlocWithStatus<WorkoutStatusCreatorEvent,
     emit(state.copyWith(
       averagePace: Pace(
         minutes: state.averagePace?.minutes ?? 0,
-        seconds: event.seconds,
+        seconds: event.seconds ?? state.averagePace?.seconds ?? 0,
       ),
     ));
   }

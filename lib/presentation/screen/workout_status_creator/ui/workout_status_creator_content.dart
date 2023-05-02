@@ -61,7 +61,22 @@ class _CoveredDistance extends StatelessWidget {
       inputFormatters: [
         DecimalTextInputFormatter(decimalRange: 2),
       ],
+      onChanged: (String? coveredDistanceInKmStr) {
+        _onChanged(context, coveredDistanceInKmStr);
+      },
     );
+  }
+
+  void _onChanged(BuildContext context, String? coveredDistanceInKmStr) {
+    if (coveredDistanceInKmStr == null) {
+      return;
+    }
+    final double? coveredDistanceInKm = double.tryParse(coveredDistanceInKmStr);
+    context.read<WorkoutStatusCreatorBloc>().add(
+          WorkoutStatusCreatorEventCoveredDistanceInKmChanged(
+            coveredDistanceInKm: coveredDistanceInKm,
+          ),
+        );
   }
 }
 
@@ -94,14 +109,22 @@ class _MoodRate extends StatelessWidget {
         return MoodRate.values.map((MoodRate moodRate) {
           return Text(
             moodRate.toUIFormat(),
-            overflow: TextOverflow.ellipsis,
+            overflow: TextOverflow.visible,
           );
         }).toList();
       },
       onChanged: (MoodRate? moodRate) {
-        //TODO
+        _onChanged(context, moodRate);
       },
     );
+  }
+
+  void _onChanged(BuildContext context, MoodRate? moodRate) {
+    context.read<WorkoutStatusCreatorBloc>().add(
+          WorkoutStatusCreatorEventMoodRateChanged(
+            moodRate: moodRate,
+          ),
+        );
   }
 }
 
@@ -118,7 +141,22 @@ class _AverageHeartRate extends StatelessWidget {
       inputFormatters: [
         FilteringTextInputFormatter.digitsOnly,
       ],
+      onChanged: (String? averageHeartRateStr) {
+        _onChanged(context, averageHeartRateStr);
+      },
     );
+  }
+
+  void _onChanged(BuildContext context, String? averageHeartRateStr) {
+    if (averageHeartRateStr == null) {
+      return;
+    }
+    final int? averageHeartRate = int.tryParse(averageHeartRateStr);
+    context.read<WorkoutStatusCreatorBloc>().add(
+          WorkoutStatusCreatorEventAvgHeartRateChanged(
+            averageHeartRate: averageHeartRate,
+          ),
+        );
   }
 }
 
@@ -133,7 +171,18 @@ class _Comment extends StatelessWidget {
       maxLines: null,
       keyboardType: TextInputType.multiline,
       displayCounterText: true,
+      onChanged: (String? comment) {
+        _onChanged(context, comment);
+      },
     );
+  }
+
+  void _onChanged(BuildContext context, String? comment) {
+    context.read<WorkoutStatusCreatorBloc>().add(
+          WorkoutStatusCreatorEventCommentChanged(
+            comment: comment,
+          ),
+        );
   }
 }
 

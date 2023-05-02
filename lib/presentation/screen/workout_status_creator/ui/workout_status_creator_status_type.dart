@@ -1,11 +1,5 @@
 part of 'workout_status_creator_screen.dart';
 
-enum _WorkoutStatusType {
-  pending,
-  completed,
-  uncompleted,
-}
-
 class _StatusType extends StatelessWidget {
   const _StatusType();
 
@@ -17,9 +11,9 @@ class _StatusType extends StatelessWidget {
         labelText:
             AppLocalizations.of(context)!.workout_status_creator_screen_title,
       ),
-      items: <DropdownMenuItem<_WorkoutStatusType>>[
-        ..._WorkoutStatusType.values.map(
-          (_WorkoutStatusType statusType) => DropdownMenuItem(
+      items: <DropdownMenuItem<WorkoutStatusType>>[
+        ...WorkoutStatusType.values.map(
+          (WorkoutStatusType statusType) => DropdownMenuItem(
             value: statusType,
             child: _WorkoutStatusDescription(
               statusType: statusType,
@@ -27,15 +21,26 @@ class _StatusType extends StatelessWidget {
           ),
         ),
       ],
-      onChanged: (_WorkoutStatusType? statusType) {
-        //TODO
+      onChanged: (WorkoutStatusType? statusType) {
+        _onChanged(context, statusType);
       },
     );
+  }
+
+  void _onChanged(
+    BuildContext context,
+    WorkoutStatusType? workoutStatusType,
+  ) {
+    context.read<WorkoutStatusCreatorBloc>().add(
+          WorkoutStatusCreatorEventWorkoutStatusTypeChanged(
+            workoutStatusType: workoutStatusType,
+          ),
+        );
   }
 }
 
 class _WorkoutStatusDescription extends StatelessWidget {
-  final _WorkoutStatusType statusType;
+  final WorkoutStatusType statusType;
 
   const _WorkoutStatusDescription({
     required this.statusType,
@@ -45,10 +50,10 @@ class _WorkoutStatusDescription extends StatelessWidget {
   Widget build(BuildContext context) {
     WorkoutStatus? status;
     switch (statusType) {
-      case _WorkoutStatusType.pending:
+      case WorkoutStatusType.pending:
         status = const WorkoutStatusPending();
         break;
-      case _WorkoutStatusType.completed:
+      case WorkoutStatusType.completed:
         status = WorkoutStatusCompleted(
           coveredDistanceInKm: 0,
           avgPace: const Pace(minutes: 0, seconds: 0),
@@ -57,7 +62,7 @@ class _WorkoutStatusDescription extends StatelessWidget {
           comment: '',
         );
         break;
-      case _WorkoutStatusType.uncompleted:
+      case WorkoutStatusType.uncompleted:
         status = WorkoutStatusUncompleted(
           coveredDistanceInKm: 0,
           avgPace: const Pace(minutes: 0, seconds: 0),
