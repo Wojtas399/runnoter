@@ -5,8 +5,6 @@ class _Content extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const Widget gap = SizedBox(height: 24);
-
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -26,17 +24,9 @@ class _Content extends StatelessWidget {
               child: Column(
                 children: const [
                   _StatusType(),
-                  gap,
-                  _CoveredDistance(),
-                  gap,
-                  _MoodRate(),
-                  gap,
-                  _AveragePace(),
-                  gap,
-                  _AverageHeartRate(),
-                  gap,
-                  _Comment(),
-                  gap,
+                  SizedBox(height: 24),
+                  _Form(),
+                  SizedBox(height: 24),
                   _SubmitButton(),
                 ],
               ),
@@ -44,6 +34,46 @@ class _Content extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _Form extends StatelessWidget {
+  const _Form();
+
+  @override
+  Widget build(BuildContext context) {
+    final WorkoutStatusType? workoutStatusType = context.select(
+      (WorkoutStatusCreatorBloc bloc) => bloc.state.workoutStatusType,
+    );
+
+    if (workoutStatusType == WorkoutStatusType.completed ||
+        workoutStatusType == WorkoutStatusType.uncompleted) {
+      return const _FinishedWorkoutForm();
+    }
+    return const SizedBox();
+  }
+}
+
+class _FinishedWorkoutForm extends StatelessWidget {
+  const _FinishedWorkoutForm();
+
+  @override
+  Widget build(BuildContext context) {
+    const Widget gap = SizedBox(height: 24);
+
+    return Column(
+      children: const [
+        _CoveredDistance(),
+        gap,
+        _MoodRate(),
+        gap,
+        _AveragePace(),
+        gap,
+        _AverageHeartRate(),
+        gap,
+        _Comment(),
+      ],
     );
   }
 }
@@ -58,6 +88,7 @@ class _CoveredDistance extends StatelessWidget {
           '${AppLocalizations.of(context)!.workout_status_creator_covered_distance_label} [km]',
       maxLength: 8,
       keyboardType: TextInputType.number,
+      isRequired: true,
       inputFormatters: [
         DecimalTextInputFormatter(decimalRange: 2),
       ],
@@ -109,7 +140,7 @@ class _MoodRate extends StatelessWidget {
         return MoodRate.values.map((MoodRate moodRate) {
           return Text(
             moodRate.toUIFormat(),
-            overflow: TextOverflow.visible,
+            overflow: TextOverflow.ellipsis,
           );
         }).toList();
       },
@@ -138,6 +169,7 @@ class _AverageHeartRate extends StatelessWidget {
           .workout_status_creator_average_heart_rate,
       maxLength: 3,
       keyboardType: TextInputType.number,
+      isRequired: true,
       inputFormatters: [
         FilteringTextInputFormatter.digitsOnly,
       ],
@@ -191,8 +223,13 @@ class _SubmitButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isDisabled = context.select(
+      (WorkoutStatusCreatorBloc bloc) => bloc.state.isSubmitButtonDisabled,
+    );
+
     return BigButton(
       label: AppLocalizations.of(context)!.save,
+      isDisabled: isDisabled,
       onPressed: () {
         //TODO
       },
