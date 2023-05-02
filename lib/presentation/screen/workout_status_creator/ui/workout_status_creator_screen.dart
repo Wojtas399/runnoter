@@ -8,6 +8,7 @@ import '../../../component/big_button_component.dart';
 import '../../../component/scrollable_content_component.dart';
 import '../../../component/text_field_component.dart';
 import '../../../formatter/decimal_text_input_formatter.dart';
+import '../../../formatter/minutes_or_seconds_input_formatter.dart';
 import '../../../formatter/mood_rate_formatter.dart';
 import '../../../formatter/workout_status_formatter.dart';
 import '../../../service/utils.dart';

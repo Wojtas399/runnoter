@@ -102,6 +102,7 @@ class _AveragePaceField extends StatelessWidget {
       keyboardType: TextInputType.number,
       inputFormatters: [
         FilteringTextInputFormatter.digitsOnly,
+        MinutesOrSecondsInputFormatter(),
       ],
       onChanged: _onChanged,
     );
