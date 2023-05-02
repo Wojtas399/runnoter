@@ -43,23 +43,36 @@ class WorkoutStatusCreatorScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const _BlocProvider(
-      child: _Content(),
+    return _BlocProvider(
+      arguments: arguments,
+      child: const _Content(),
     );
   }
 }
 
 class _BlocProvider extends StatelessWidget {
+  final WorkoutStatusCreatorArguments arguments;
   final Widget child;
 
   const _BlocProvider({
+    required this.arguments,
     required this.child,
   });
 
   @override
   Widget build(BuildContext context) {
+    WorkoutStatusType? workoutStatusType;
+    if (arguments is WorkoutStatusCreatorFinishWorkoutArguments) {
+      workoutStatusType = WorkoutStatusType.completed;
+    }
+
     return BlocProvider(
-      create: (_) => WorkoutStatusCreatorBloc(),
+      create: (_) => WorkoutStatusCreatorBloc()
+        ..add(
+          WorkoutStatusCreatorEventInitialize(
+            workoutStatusType: workoutStatusType,
+          ),
+        ),
       child: child,
     );
   }

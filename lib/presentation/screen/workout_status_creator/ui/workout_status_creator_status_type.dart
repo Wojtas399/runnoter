@@ -5,7 +5,12 @@ class _StatusType extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DropdownButtonFormField(
+    final WorkoutStatusType? workoutStatusType = context.select(
+      (WorkoutStatusCreatorBloc bloc) => bloc.state.workoutStatusType,
+    );
+
+    return DropdownButtonFormField<WorkoutStatusType>(
+      value: workoutStatusType,
       decoration: InputDecoration(
         filled: true,
         labelText:
