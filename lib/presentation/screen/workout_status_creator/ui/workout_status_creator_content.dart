@@ -55,29 +55,6 @@ class _Form extends StatelessWidget {
   }
 }
 
-class _FinishedWorkoutForm extends StatelessWidget {
-  const _FinishedWorkoutForm();
-
-  @override
-  Widget build(BuildContext context) {
-    const Widget gap = SizedBox(height: 24);
-
-    return Column(
-      children: [
-        _CoveredDistance(),
-        gap,
-        const _MoodRate(),
-        gap,
-        const _AveragePace(),
-        gap,
-        _AverageHeartRate(),
-        gap,
-        _Comment(),
-      ],
-    );
-  }
-}
-
 class _SubmitButton extends StatelessWidget {
   const _SubmitButton();
 
