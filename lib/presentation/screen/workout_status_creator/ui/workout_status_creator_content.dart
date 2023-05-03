@@ -72,35 +72,9 @@ class _FinishedWorkoutForm extends StatelessWidget {
         gap,
         _AverageHeartRate(),
         gap,
-        const _Comment(),
+        _Comment(),
       ],
     );
-  }
-}
-
-class _Comment extends StatelessWidget {
-  const _Comment();
-
-  @override
-  Widget build(BuildContext context) {
-    return TextFieldComponent(
-      label: AppLocalizations.of(context)!.workout_status_creator_comment_label,
-      maxLength: 100,
-      maxLines: null,
-      keyboardType: TextInputType.multiline,
-      displayCounterText: true,
-      onChanged: (String? comment) {
-        _onChanged(context, comment);
-      },
-    );
-  }
-
-  void _onChanged(BuildContext context, String? comment) {
-    context.read<WorkoutStatusCreatorBloc>().add(
-          WorkoutStatusCreatorEventCommentChanged(
-            comment: comment,
-          ),
-        );
   }
 }
 
