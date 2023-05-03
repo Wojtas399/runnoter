@@ -122,8 +122,8 @@ class _BlocListener extends StatelessWidget {
   void _showInfoAboutDeleteWorkout(BuildContext context) {
     showSnackbarMessage(
       context: context,
-      message: AppLocalizations.of(context)!
-          .day_preview_screen_deleted_workout_message,
+      message:
+          AppLocalizations.of(context)!.day_preview_deleted_workout_message,
     );
   }
 }

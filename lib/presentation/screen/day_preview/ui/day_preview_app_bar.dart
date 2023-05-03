@@ -54,8 +54,7 @@ class _WorkoutActions extends StatelessWidget {
               const Icon(Icons.edit_outlined),
               const SizedBox(width: 8),
               Text(
-                AppLocalizations.of(context)!
-                    .day_preview_screen_edit_workout_label,
+                AppLocalizations.of(context)!.day_preview_edit_workout_label,
               ),
             ],
           ),
@@ -70,8 +69,7 @@ class _WorkoutActions extends StatelessWidget {
               const Icon(Icons.delete_outline),
               const SizedBox(width: 8),
               Text(
-                AppLocalizations.of(context)!
-                    .day_preview_screen_delete_workout_label,
+                AppLocalizations.of(context)!.day_preview_delete_workout_label,
               ),
             ],
           ),

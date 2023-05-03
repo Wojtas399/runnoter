@@ -25,7 +25,7 @@ class _WorkoutStatus extends StatelessWidget {
                 const SizedBox(height: 16),
                 _WorkoutParam(
                   label: AppLocalizations.of(context)!
-                      .day_preview_screen_comment_section_label,
+                      .day_preview_comment_section_label,
                   child: const _WorkoutComment(),
                 ),
               ],
@@ -81,7 +81,7 @@ class _WorkoutStats extends StatelessWidget {
               Expanded(
                 child: _WorkoutStatParam(
                   label: AppLocalizations.of(context)!
-                      .day_preview_screen_workout_status_covered_distance,
+                      .day_preview_workout_status_covered_distance,
                   value: '${status.coveredDistanceInKm} km',
                 ),
               ),
@@ -89,7 +89,7 @@ class _WorkoutStats extends StatelessWidget {
               Expanded(
                 child: _WorkoutStatParam(
                   label: AppLocalizations.of(context)!
-                      .day_preview_screen_workout_status_mood_rate,
+                      .day_preview_workout_status_mood_rate,
                   value: status.moodRate.toUIFormat(),
                 ),
               ),
@@ -103,7 +103,7 @@ class _WorkoutStats extends StatelessWidget {
               Expanded(
                 child: _WorkoutStatParam(
                   label: AppLocalizations.of(context)!
-                      .day_preview_screen_workout_status_avg_pace,
+                      .day_preview_workout_status_avg_pace,
                   value: status.avgPace.toUIFormat(),
                 ),
               ),
@@ -111,7 +111,7 @@ class _WorkoutStats extends StatelessWidget {
               Expanded(
                 child: _WorkoutStatParam(
                   label: AppLocalizations.of(context)!
-                      .day_preview_screen_workout_status_avg_heart_rate,
+                      .day_preview_workout_status_avg_heart_rate,
                   value: '${status.avgHeartRate} ud/min',
                 ),
               ),
