@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../domain/model/workout.dart';
 import '../../../../domain/model/workout_status.dart';
 import '../../../../domain/repository/workout_repository.dart';
 import '../../../../domain/service/auth_service.dart';
@@ -57,14 +58,41 @@ class WorkoutStatusCreatorBloc extends BlocWithStatus<WorkoutStatusCreatorEvent,
     on<WorkoutStatusCreatorEventSubmit>(_submit);
   }
 
-  void _initialize(
+  Future<void> _initialize(
     WorkoutStatusCreatorEventInitialize event,
     Emitter<WorkoutStatusCreatorState> emit,
-  ) {
-    emit(state.copyWith(
-      workoutId: event.workoutId,
-      workoutStatusType: event.workoutStatusType,
-    ));
+  ) async {
+    if (event.workoutStatusType != null) {
+      emit(state.copyWith(
+        workoutId: event.workoutId,
+        workoutStatusType: event.workoutStatusType,
+      ));
+      return;
+    }
+    const BlocStatus blocStatus = BlocStatusComplete<WorkoutStatusCreatorInfo>(
+      info: WorkoutStatusCreatorInfo.workoutStatusInitialized,
+    );
+    final Workout? workout = await _loadWorkoutById(event.workoutId, emit);
+    final WorkoutStatus? workoutStatus = workout?.status;
+    if (workoutStatus is FinishedWorkout) {
+      emit(state.copyWith(
+        status: blocStatus,
+        workoutId: event.workoutId,
+        workoutStatusType: _getWorkoutStatusType(workoutStatus),
+        coveredDistanceInKm: workoutStatus.coveredDistanceInKm,
+        moodRate: workoutStatus.moodRate,
+        averagePaceMinutes: workoutStatus.avgPace.minutes,
+        averagePaceSeconds: workoutStatus.avgPace.seconds,
+        averageHeartRate: workoutStatus.avgHeartRate,
+        comment: workoutStatus.comment,
+      ));
+    } else if (workoutStatus is WorkoutStatusPending) {
+      emit(state.copyWith(
+        status: blocStatus,
+        workoutId: event.workoutId,
+        workoutStatusType: WorkoutStatusType.pending,
+      ));
+    }
   }
 
   void _workoutStatusTypeChanged(
@@ -150,6 +178,35 @@ class WorkoutStatusCreatorBloc extends BlocWithStatus<WorkoutStatusCreatorEvent,
         status: newStatus,
       );
       emitCompleteStatus(emit, WorkoutStatusCreatorInfo.workoutStatusSaved);
+    }
+  }
+
+  Future<Workout?> _loadWorkoutById(
+    String workoutId,
+    Emitter<WorkoutStatusCreatorState> emit,
+  ) async {
+    final String? loggedUserId = await _authService.loggedUserId$.first;
+    if (loggedUserId == null) {
+      emitNoLoggedUserStatus(emit);
+      return null;
+    }
+    return await _workoutRepository
+        .getWorkoutById(
+          workoutId: workoutId,
+          userId: loggedUserId,
+        )
+        .first;
+  }
+
+  WorkoutStatusType _getWorkoutStatusType(WorkoutStatus workoutStatus) {
+    if (workoutStatus is WorkoutStatusPending) {
+      return WorkoutStatusType.pending;
+    } else if (workoutStatus is WorkoutStatusCompleted) {
+      return WorkoutStatusType.completed;
+    } else if (workoutStatus is WorkoutStatusUncompleted) {
+      return WorkoutStatusType.uncompleted;
+    } else {
+      throw '[WorkoutStatusCreatorBloc]: Unknown workout status';
     }
   }
 

@@ -1,4 +1,5 @@
 import 'package:bloc_test/bloc_test.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/model/workout_status.dart';
 import 'package:runnoter/presentation/model/bloc_status.dart';
@@ -6,6 +7,7 @@ import 'package:runnoter/presentation/screen/workout_status_creator/bloc/workout
 
 import '../../../mock/domain/mock_auth_service.dart';
 import '../../../mock/domain/mock_workout_repository.dart';
+import '../../../util/workout_creator.dart';
 
 void main() {
   final authService = MockAuthService();
@@ -57,8 +59,14 @@ void main() {
         comment: comment,
       );
 
+  tearDown(() {
+    reset(authService);
+    reset(workoutRepository);
+  });
+
   blocTest(
     'initialize, '
+    'workout status type is not null, '
     'should update workout id and status type in state',
     build: () => createBloc(),
     act: (WorkoutStatusCreatorBloc bloc) => bloc.add(
@@ -74,6 +82,126 @@ void main() {
         workoutStatusType: WorkoutStatusType.completed,
       ),
     ],
+  );
+
+  blocTest(
+    'initialize, '
+    'workout status type is null, '
+    'logged user does not exist, '
+    'should emit no logged user status and should end event call',
+    build: () => createBloc(),
+    setUp: () => authService.mockGetLoggedUserId(),
+    act: (WorkoutStatusCreatorBloc bloc) => bloc.add(
+      WorkoutStatusCreatorEventInitialize(
+        workoutId: 'w1',
+      ),
+    ),
+    expect: () => [
+      createState(
+        status: const BlocStatusNoLoggedUser(),
+      ),
+    ],
+    verify: (_) {
+      verify(
+        () => authService.loggedUserId$,
+      ).called(1);
+    },
+  );
+
+  blocTest(
+    'initialize, '
+    'workout status type is null, '
+    'logged user exists, '
+    'finished workout status, '
+    'should load workout from workout repository and should emit complete status with WorkoutStatusCreatorInfo.workoutStatusInitialized and updated all params relevant to workout status',
+    build: () => createBloc(),
+    setUp: () {
+      authService.mockGetLoggedUserId(userId: 'u1');
+      workoutRepository.mockGetWorkoutById(
+        workout: createWorkout(
+          status: WorkoutStatusCompleted(
+            coveredDistanceInKm: 10,
+            avgPace: const Pace(minutes: 6, seconds: 10),
+            avgHeartRate: 150,
+            moodRate: MoodRate.mr8,
+            comment: 'comment',
+          ),
+        ),
+      );
+    },
+    act: (WorkoutStatusCreatorBloc bloc) => bloc.add(
+      WorkoutStatusCreatorEventInitialize(
+        workoutId: 'w1',
+      ),
+    ),
+    expect: () => [
+      createState(
+        status: const BlocStatusComplete<WorkoutStatusCreatorInfo>(
+          info: WorkoutStatusCreatorInfo.workoutStatusInitialized,
+        ),
+        workoutId: 'w1',
+        workoutStatusType: WorkoutStatusType.completed,
+        coveredDistanceInKm: 10,
+        moodRate: MoodRate.mr8,
+        averagePaceMinutes: 6,
+        averagePaceSeconds: 10,
+        averageHeartRate: 150,
+        comment: 'comment',
+      ),
+    ],
+    verify: (_) {
+      verify(
+        () => authService.loggedUserId$,
+      ).called(1);
+      verify(
+        () => workoutRepository.getWorkoutById(
+          workoutId: 'w1',
+          userId: 'u1',
+        ),
+      ).called(1);
+    },
+  );
+
+  blocTest(
+    'initialize, '
+    'workout status type is null, '
+    'logged user exists, '
+    'pending workout status, '
+    'should load workout from workout repository and should emit complete status with WorkoutStatusCreatorInfo.workoutStatusInitialized, updated workout id and workout status type',
+    build: () => createBloc(),
+    setUp: () {
+      authService.mockGetLoggedUserId(userId: 'u1');
+      workoutRepository.mockGetWorkoutById(
+        workout: createWorkout(
+          status: const WorkoutStatusPending(),
+        ),
+      );
+    },
+    act: (WorkoutStatusCreatorBloc bloc) => bloc.add(
+      WorkoutStatusCreatorEventInitialize(
+        workoutId: 'w1',
+      ),
+    ),
+    expect: () => [
+      createState(
+        status: const BlocStatusComplete<WorkoutStatusCreatorInfo>(
+          info: WorkoutStatusCreatorInfo.workoutStatusInitialized,
+        ),
+        workoutId: 'w1',
+        workoutStatusType: WorkoutStatusType.pending,
+      ),
+    ],
+    verify: (_) {
+      verify(
+        () => authService.loggedUserId$,
+      ).called(1);
+      verify(
+        () => workoutRepository.getWorkoutById(
+          workoutId: 'w1',
+          userId: 'u1',
+        ),
+      ).called(1);
+    },
   );
 
   blocTest(

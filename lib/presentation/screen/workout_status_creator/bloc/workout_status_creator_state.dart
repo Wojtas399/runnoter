@@ -76,5 +76,6 @@ enum WorkoutStatusType {
 }
 
 enum WorkoutStatusCreatorInfo {
+  workoutStatusInitialized,
   workoutStatusSaved,
 }

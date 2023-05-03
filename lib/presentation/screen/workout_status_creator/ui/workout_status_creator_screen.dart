@@ -31,6 +31,13 @@ abstract class WorkoutStatusCreatorArguments {
   });
 }
 
+class WorkoutStatusCreatorUpdateStatusArguments
+    extends WorkoutStatusCreatorArguments {
+  const WorkoutStatusCreatorUpdateStatusArguments({
+    required super.workoutId,
+  });
+}
+
 class WorkoutStatusCreatorFinishWorkoutArguments
     extends WorkoutStatusCreatorArguments {
   WorkoutStatusCreatorFinishWorkoutArguments({
@@ -115,6 +122,8 @@ class _BlocListener extends StatelessWidget {
           message: AppLocalizations.of(context)!
               .workout_status_creator_saved_status_info,
         );
+        break;
+      case WorkoutStatusCreatorInfo.workoutStatusInitialized:
         break;
     }
   }
