@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../config/navigation/routes.dart';
 import '../model/bloc_state.dart';
 import '../model/bloc_status.dart';
 import '../service/dialog_service.dart';
+import '../service/navigator_service.dart';
 
 class BlocWithStatusListener<Bloc extends StateStreamable<State>,
     State extends BlocState, Info, Error> extends StatelessWidget {
@@ -54,6 +56,13 @@ class BlocWithStatusListener<Bloc extends StateStreamable<State>,
     } else if (blocStatus is BlocStatusNoInternetConnection) {
       closeLoadingDialog(context: context);
       _showNoInternetConnectionMessage(context);
+    } else if (blocStatus is BlocStatusNoLoggedUser) {
+      closeLoadingDialog(context: context);
+      _showNoLoggedUserMessage(context);
+      navigateAndRemoveUntil(
+        context: context,
+        route: const SignInRoute(),
+      );
     }
   }
 
@@ -93,6 +102,14 @@ class BlocWithStatusListener<Bloc extends StateStreamable<State>,
       title: AppLocalizations.of(context)!.no_internet_connection_dialog_title,
       message:
           AppLocalizations.of(context)!.no_internet_connection_dialog_message,
+    );
+  }
+
+  void _showNoLoggedUserMessage(BuildContext context) {
+    showMessageDialog(
+      context: context,
+      title: AppLocalizations.of(context)!.no_logged_user_dialog_title,
+      message: AppLocalizations.of(context)!.no_logged_user_dialog_message,
     );
   }
 

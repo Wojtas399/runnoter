@@ -167,6 +167,8 @@
 
   "no_internet_connection_dialog_title": "No internet connection",
   "no_internet_connection_dialog_message": "It seems that you lost internet connection. Resolve this problem and try again",
+  "no_logged_user_dialog_title": "Session error",
+  "no_logged_user_dialog_message": "We've lost connection with your session. Sign in again to use the app properly.",
   "unknown_error_dialog_title": "Unknown error",
   "unknown_error_dialog_message": "An unknown error occurred",
 

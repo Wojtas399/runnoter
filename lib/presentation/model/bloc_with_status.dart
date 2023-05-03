@@ -36,4 +36,10 @@ abstract class BlocWithStatus<Event, State extends BlocState, Info, Error>
       status: const BlocStatusNoInternetConnection(),
     ));
   }
+
+  void emitNoLoggedUserStatus(Emitter<State> emit) {
+    emit(state.copyWith(
+      status: const BlocStatusNoLoggedUser(),
+    ));
+  }
 }
