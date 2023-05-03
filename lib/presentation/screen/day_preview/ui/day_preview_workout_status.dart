@@ -25,6 +25,12 @@ class _WorkoutStatus extends StatelessWidget {
                 const SizedBox(height: 16),
                 _WorkoutParam(
                   label: AppLocalizations.of(context)!
+                      .day_preview_workout_status_mood_rate,
+                  child: const _MoodRate(),
+                ),
+                const SizedBox(height: 16),
+                _WorkoutParam(
+                  label: AppLocalizations.of(context)!
                       .day_preview_comment_section_label,
                   child: const _WorkoutComment(),
                 ),
@@ -85,14 +91,6 @@ class _WorkoutStats extends StatelessWidget {
                   value: '${status.coveredDistanceInKm} km',
                 ),
               ),
-              const VerticalDivider(),
-              Expanded(
-                child: _WorkoutStatParam(
-                  label: AppLocalizations.of(context)!
-                      .day_preview_workout_status_mood_rate,
-                  value: status.moodRate.toUIFormat(),
-                ),
-              ),
             ],
           ),
         ),
@@ -120,6 +118,24 @@ class _WorkoutStats extends StatelessWidget {
         ),
       ],
     );
+  }
+}
+
+class _MoodRate extends StatelessWidget {
+  const _MoodRate();
+
+  @override
+  Widget build(BuildContext context) {
+    final WorkoutStatus? workoutStatus = context.select(
+      (DayPreviewBloc bloc) => bloc.state.workoutStatus,
+    );
+
+    String? moodRateStr;
+    if (workoutStatus is FinishedWorkout) {
+      moodRateStr = workoutStatus.moodRate.toUIFormat();
+    }
+
+    return NullableText(moodRateStr);
   }
 }
 
