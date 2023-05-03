@@ -329,6 +329,10 @@
   "@workout_status_creator_comment_label": {
     "description": "Label of comment"
   },
+  "workout_status_creator_saved_status_info": "Pomyślnie zaktualizowano status treningu",
+  "@workout_status_creator_saved_status_info": {
+    "description": "Info about successfully saved status"
+  },
 
 
   "profile_screen_title": "Profil",

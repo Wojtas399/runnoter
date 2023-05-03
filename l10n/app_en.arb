@@ -91,6 +91,7 @@
   "workout_status_creator_seconds_label": "Seconds",
   "workout_status_creator_average_heart_rate": "Average heart rate",
   "workout_status_creator_comment_label": "Comment",
+  "workout_status_creator_saved_status_info": "Successfully updated workout status",
 
 
   "profile_screen_title": "Profile",
