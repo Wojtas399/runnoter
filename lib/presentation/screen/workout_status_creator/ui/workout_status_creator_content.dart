@@ -60,13 +60,16 @@ class _SubmitButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool isDisabled = context.select(
-      (WorkoutStatusCreatorBloc bloc) => !bloc.state.isFormValid,
+    final bool isFormValid = context.select(
+      (WorkoutStatusCreatorBloc bloc) => bloc.state.isFormValid,
+    );
+    final bool areDataSameAsOriginal = context.select(
+      (WorkoutStatusCreatorBloc bloc) => bloc.state.areDataSameAsOriginal,
     );
 
     return BigButton(
       label: AppLocalizations.of(context)!.save,
-      isDisabled: isDisabled,
+      isDisabled: !isFormValid || areDataSameAsOriginal,
       onPressed: () {
         _onPressed(context);
       },

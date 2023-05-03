@@ -47,6 +47,21 @@ class WorkoutStatusCreatorState extends BlocState<WorkoutStatusCreatorState> {
           averagePaceSeconds != null &&
           averageHeartRate != null);
 
+  bool get areDataSameAsOriginal {
+    final WorkoutStatus? workoutStatus = this.workoutStatus;
+    if (workoutStatus is FinishedWorkout &&
+        (workoutStatusType == WorkoutStatusType.completed ||
+            workoutStatusType == WorkoutStatusType.uncompleted)) {
+      return coveredDistanceInKm == workoutStatus.coveredDistanceInKm &&
+          moodRate == workoutStatus.moodRate &&
+          averagePaceMinutes == workoutStatus.avgPace.minutes &&
+          averagePaceSeconds == workoutStatus.avgPace.seconds &&
+          averageHeartRate == workoutStatus.avgHeartRate &&
+          (comment ?? '') == (workoutStatus.comment ?? '');
+    }
+    return false;
+  }
+
   @override
   WorkoutStatusCreatorState copyWith({
     BlocStatus? status,

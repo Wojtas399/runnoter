@@ -146,6 +146,202 @@ void main() {
   );
 
   test(
+    'are data same as original, '
+    'workout status is set as pending, '
+    'should be false',
+    () {
+      state = state.copyWith(
+        workoutStatus: const WorkoutStatusPending(),
+      );
+
+      expect(state.areDataSameAsOriginal, false);
+    },
+  );
+
+  test(
+    'are data same as original, '
+    'workout status is set as finished workout, '
+    'all params are the same as params set in workout status, '
+    'should be true',
+    () {
+      state = state.copyWith(
+        workoutStatus: WorkoutStatusCompleted(
+          coveredDistanceInKm: 10,
+          avgPace: const Pace(minutes: 6, seconds: 10),
+          avgHeartRate: 150,
+          moodRate: MoodRate.mr8,
+          comment: 'comment',
+        ),
+        workoutStatusType: WorkoutStatusType.completed,
+        coveredDistanceInKm: 10,
+        averagePaceMinutes: 6,
+        averagePaceSeconds: 10,
+        averageHeartRate: 150,
+        moodRate: MoodRate.mr8,
+        comment: 'comment',
+      );
+
+      expect(state.areDataSameAsOriginal, true);
+    },
+  );
+
+  test(
+    'are data same as original, '
+    'workout status is set as finished workout, '
+    'covered distance is different than original value, '
+    'should be false',
+    () {
+      state = state.copyWith(
+        workoutStatus: WorkoutStatusCompleted(
+          coveredDistanceInKm: 10,
+          avgPace: const Pace(minutes: 6, seconds: 10),
+          avgHeartRate: 150,
+          moodRate: MoodRate.mr8,
+          comment: 'comment',
+        ),
+        coveredDistanceInKm: 12,
+        averagePaceMinutes: 6,
+        averagePaceSeconds: 10,
+        averageHeartRate: 150,
+        moodRate: MoodRate.mr8,
+        comment: 'comment',
+      );
+
+      expect(state.areDataSameAsOriginal, false);
+    },
+  );
+
+  test(
+    'are data same as original, '
+    'workout status is set as finished workout, '
+    'minutes of average pace are different than original value, '
+    'should be false',
+    () {
+      state = state.copyWith(
+        workoutStatus: WorkoutStatusCompleted(
+          coveredDistanceInKm: 10,
+          avgPace: const Pace(minutes: 6, seconds: 10),
+          avgHeartRate: 150,
+          moodRate: MoodRate.mr8,
+          comment: 'comment',
+        ),
+        coveredDistanceInKm: 10,
+        averagePaceMinutes: 5,
+        averagePaceSeconds: 10,
+        averageHeartRate: 150,
+        moodRate: MoodRate.mr8,
+        comment: 'comment',
+      );
+
+      expect(state.areDataSameAsOriginal, false);
+    },
+  );
+
+  test(
+    'are data same as original, '
+    'workout status is set as finished workout, '
+    'seconds of average pace are different than original value, '
+    'should be false',
+    () {
+      state = state.copyWith(
+        workoutStatus: WorkoutStatusCompleted(
+          coveredDistanceInKm: 10,
+          avgPace: const Pace(minutes: 6, seconds: 10),
+          avgHeartRate: 150,
+          moodRate: MoodRate.mr8,
+          comment: 'comment',
+        ),
+        coveredDistanceInKm: 10,
+        averagePaceMinutes: 6,
+        averagePaceSeconds: 5,
+        averageHeartRate: 150,
+        moodRate: MoodRate.mr8,
+        comment: 'comment',
+      );
+
+      expect(state.areDataSameAsOriginal, false);
+    },
+  );
+
+  test(
+    'are data same as original, '
+    'workout status is set as finished workout, '
+    'average heart rate is different than original value, '
+    'should be false',
+    () {
+      state = state.copyWith(
+        workoutStatus: WorkoutStatusCompleted(
+          coveredDistanceInKm: 10,
+          avgPace: const Pace(minutes: 6, seconds: 10),
+          avgHeartRate: 150,
+          moodRate: MoodRate.mr8,
+          comment: 'comment',
+        ),
+        coveredDistanceInKm: 10,
+        averagePaceMinutes: 6,
+        averagePaceSeconds: 10,
+        averageHeartRate: 145,
+        moodRate: MoodRate.mr8,
+        comment: 'comment',
+      );
+
+      expect(state.areDataSameAsOriginal, false);
+    },
+  );
+
+  test(
+    'are data same as original, '
+    'workout status is set as finished workout, '
+    'mood rate is different than original value, '
+    'should be false',
+    () {
+      state = state.copyWith(
+        workoutStatus: WorkoutStatusCompleted(
+          coveredDistanceInKm: 10,
+          avgPace: const Pace(minutes: 6, seconds: 10),
+          avgHeartRate: 150,
+          moodRate: MoodRate.mr8,
+          comment: 'comment',
+        ),
+        coveredDistanceInKm: 10,
+        averagePaceMinutes: 6,
+        averagePaceSeconds: 10,
+        averageHeartRate: 150,
+        moodRate: MoodRate.mr5,
+        comment: 'comment',
+      );
+
+      expect(state.areDataSameAsOriginal, false);
+    },
+  );
+
+  test(
+    'are data same as original, '
+    'workout status is set as finished workout, '
+    'comment is different than original value, '
+    'should be false',
+    () {
+      state = state.copyWith(
+        workoutStatus: WorkoutStatusCompleted(
+          coveredDistanceInKm: 10,
+          avgPace: const Pace(minutes: 6, seconds: 10),
+          avgHeartRate: 150,
+          moodRate: MoodRate.mr8,
+          comment: 'comment',
+        ),
+        coveredDistanceInKm: 10,
+        averagePaceMinutes: 6,
+        averagePaceSeconds: 10,
+        averageHeartRate: 150,
+        moodRate: MoodRate.mr8,
+        comment: 'new comment',
+      );
+
+      expect(state.areDataSameAsOriginal, false);
+    },
+  );
+
+  test(
     'copy with status',
     () {
       const BlocStatus expectedStatus = BlocStatusLoading();

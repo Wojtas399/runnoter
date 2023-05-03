@@ -169,9 +169,10 @@ class WorkoutStatusCreatorBloc extends BlocWithStatus<WorkoutStatusCreatorEvent,
     }
     final String? loggedUserId = await _authService.loggedUserId$.first;
     if (loggedUserId == null) {
+      emitNoLoggedUserStatus(emit);
       return;
     }
-    if (state.isFormValid) {
+    if (state.isFormValid && !state.areDataSameAsOriginal) {
       emitLoadingStatus(emit);
       final WorkoutStatus newStatus = _createStatus();
       await _workoutRepository.updateWorkout(

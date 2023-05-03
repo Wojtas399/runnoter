@@ -346,7 +346,7 @@ void main() {
   blocTest(
     'submit, '
     'logged user does not exist, '
-    'should finish event call',
+    'should emit no logged user info and should end event call',
     build: () => createBloc(
       workoutId: 'w1',
     ),
@@ -356,7 +356,12 @@ void main() {
     act: (WorkoutStatusCreatorBloc bloc) => bloc.add(
       const WorkoutStatusCreatorEventSubmit(),
     ),
-    expect: () => [],
+    expect: () => [
+      createState(
+        status: const BlocStatusNoLoggedUser(),
+        workoutId: 'w1',
+      ),
+    ],
     verify: (_) => verify(
       () => authService.loggedUserId$,
     ).called(1),
