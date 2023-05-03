@@ -78,6 +78,7 @@ class WorkoutStatusCreatorBloc extends BlocWithStatus<WorkoutStatusCreatorEvent,
       emit(state.copyWith(
         status: blocStatus,
         workoutId: event.workoutId,
+        workoutStatus: workoutStatus,
         workoutStatusType: _getWorkoutStatusType(workoutStatus),
         coveredDistanceInKm: workoutStatus.coveredDistanceInKm,
         moodRate: workoutStatus.moodRate,
@@ -90,6 +91,7 @@ class WorkoutStatusCreatorBloc extends BlocWithStatus<WorkoutStatusCreatorEvent,
       emit(state.copyWith(
         status: blocStatus,
         workoutId: event.workoutId,
+        workoutStatus: workoutStatus,
         workoutStatusType: WorkoutStatusType.pending,
       ));
     }

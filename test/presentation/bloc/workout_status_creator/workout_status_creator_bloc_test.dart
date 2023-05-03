@@ -39,6 +39,7 @@ void main() {
   WorkoutStatusCreatorState createState({
     BlocStatus status = const BlocStatusInitial(),
     String? workoutId,
+    WorkoutStatus? workoutStatus,
     WorkoutStatusType? workoutStatusType,
     double? coveredDistanceInKm,
     MoodRate? moodRate,
@@ -50,6 +51,7 @@ void main() {
       WorkoutStatusCreatorState(
         status: status,
         workoutId: workoutId,
+        workoutStatus: workoutStatus,
         workoutStatusType: workoutStatusType,
         coveredDistanceInKm: coveredDistanceInKm,
         moodRate: moodRate,
@@ -113,7 +115,7 @@ void main() {
     'workout status type is null, '
     'logged user exists, '
     'finished workout status, '
-    'should load workout from workout repository and should emit complete status with WorkoutStatusCreatorInfo.workoutStatusInitialized and updated all params relevant to workout status',
+    'should load workout from workout repository and should emit completed status with WorkoutStatusCreatorInfo.workoutStatusInitialized and updated all params relevant to workout status',
     build: () => createBloc(),
     setUp: () {
       authService.mockGetLoggedUserId(userId: 'u1');
@@ -140,6 +142,13 @@ void main() {
           info: WorkoutStatusCreatorInfo.workoutStatusInitialized,
         ),
         workoutId: 'w1',
+        workoutStatus: WorkoutStatusCompleted(
+          coveredDistanceInKm: 10,
+          avgPace: const Pace(minutes: 6, seconds: 10),
+          avgHeartRate: 150,
+          moodRate: MoodRate.mr8,
+          comment: 'comment',
+        ),
         workoutStatusType: WorkoutStatusType.completed,
         coveredDistanceInKm: 10,
         moodRate: MoodRate.mr8,
@@ -188,6 +197,7 @@ void main() {
           info: WorkoutStatusCreatorInfo.workoutStatusInitialized,
         ),
         workoutId: 'w1',
+        workoutStatus: const WorkoutStatusPending(),
         workoutStatusType: WorkoutStatusType.pending,
       ),
     ],
