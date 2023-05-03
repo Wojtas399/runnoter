@@ -42,8 +42,6 @@ class _AveragePace extends StatelessWidget {
 class _AveragePaceMinutes extends StatelessWidget {
   final TextEditingController _controller = TextEditingController();
 
-  _AveragePaceMinutes();
-
   @override
   Widget build(BuildContext context) {
     final BlocStatus blocStatus = context.select(
@@ -79,8 +77,6 @@ class _AveragePaceMinutes extends StatelessWidget {
 
 class _AveragePaceSeconds extends StatelessWidget {
   final TextEditingController _controller = TextEditingController();
-
-  _AveragePaceSeconds();
 
   @override
   Widget build(BuildContext context) {

@@ -20,6 +20,7 @@ import '../../../service/navigator_service.dart';
 import '../../../service/utils.dart';
 import '../bloc/workout_status_creator_bloc.dart';
 
+part 'workout_status_creator_average_heart_rate.dart';
 part 'workout_status_creator_average_pace.dart';
 part 'workout_status_creator_content.dart';
 part 'workout_status_creator_covered_distance.dart';

@@ -70,44 +70,11 @@ class _FinishedWorkoutForm extends StatelessWidget {
         gap,
         const _AveragePace(),
         gap,
-        const _AverageHeartRate(),
+        _AverageHeartRate(),
         gap,
         const _Comment(),
       ],
     );
-  }
-}
-
-class _AverageHeartRate extends StatelessWidget {
-  const _AverageHeartRate();
-
-  @override
-  Widget build(BuildContext context) {
-    return TextFieldComponent(
-      label: AppLocalizations.of(context)!
-          .workout_status_creator_average_heart_rate,
-      maxLength: 3,
-      keyboardType: TextInputType.number,
-      isRequired: true,
-      inputFormatters: [
-        FilteringTextInputFormatter.digitsOnly,
-      ],
-      onChanged: (String? averageHeartRateStr) {
-        _onChanged(context, averageHeartRateStr);
-      },
-    );
-  }
-
-  void _onChanged(BuildContext context, String? averageHeartRateStr) {
-    if (averageHeartRateStr == null) {
-      return;
-    }
-    final int? averageHeartRate = int.tryParse(averageHeartRateStr);
-    context.read<WorkoutStatusCreatorBloc>().add(
-          WorkoutStatusCreatorEventAvgHeartRateChanged(
-            averageHeartRate: averageHeartRate,
-          ),
-        );
   }
 }
 

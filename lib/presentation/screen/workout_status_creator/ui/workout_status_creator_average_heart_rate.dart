@@ -1,6 +1,6 @@
 part of 'workout_status_creator_screen.dart';
 
-class _CoveredDistance extends StatelessWidget {
+class _AverageHeartRate extends StatelessWidget {
   final TextEditingController _controller = TextEditingController();
 
   @override
@@ -13,35 +13,35 @@ class _CoveredDistance extends StatelessWidget {
       _controller.text = context
               .read<WorkoutStatusCreatorBloc>()
               .state
-              .coveredDistanceInKm
+              .averageHeartRate
               ?.toString() ??
           '';
     }
 
     return TextFieldComponent(
-      label:
-          '${AppLocalizations.of(context)!.workout_status_creator_covered_distance_label} [km]',
-      maxLength: 8,
+      label: AppLocalizations.of(context)!
+          .workout_status_creator_average_heart_rate,
+      maxLength: 3,
       keyboardType: TextInputType.number,
       isRequired: true,
       inputFormatters: [
-        DecimalTextInputFormatter(decimalRange: 2),
+        FilteringTextInputFormatter.digitsOnly,
       ],
       controller: _controller,
-      onChanged: (String? coveredDistanceInKmStr) {
-        _onChanged(context, coveredDistanceInKmStr);
+      onChanged: (String? averageHeartRateStr) {
+        _onChanged(context, averageHeartRateStr);
       },
     );
   }
 
-  void _onChanged(BuildContext context, String? coveredDistanceInKmStr) {
-    if (coveredDistanceInKmStr == null) {
+  void _onChanged(BuildContext context, String? averageHeartRateStr) {
+    if (averageHeartRateStr == null) {
       return;
     }
-    final double? coveredDistanceInKm = double.tryParse(coveredDistanceInKmStr);
+    final int? averageHeartRate = int.tryParse(averageHeartRateStr);
     context.read<WorkoutStatusCreatorBloc>().add(
-          WorkoutStatusCreatorEventCoveredDistanceInKmChanged(
-            coveredDistanceInKm: coveredDistanceInKm,
+          WorkoutStatusCreatorEventAvgHeartRateChanged(
+            averageHeartRate: averageHeartRate,
           ),
         );
   }
