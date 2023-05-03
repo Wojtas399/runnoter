@@ -464,6 +464,87 @@ void main() {
   );
 
   test(
+    'update workout, '
+    'workout name is null, '
+    'should call firebase method to update workout with workout name set as null',
+    () async {
+      const String workoutId = 'w1';
+      firebaseWorkoutService.mockUpdateWorkout();
+
+      await repository.updateWorkout(
+        workoutId: workoutId,
+        userId: userId,
+        workoutName: null,
+        status: const WorkoutStatusPending(),
+        stages: [],
+      );
+
+      verify(
+        () => firebaseWorkoutService.updateWorkout(
+          workoutId: workoutId,
+          userId: userId,
+          status: const firebase.WorkoutStatusPendingDto(),
+          stages: [],
+        ),
+      ).called(1);
+    },
+  );
+
+  test(
+    'update workout, '
+    'workout status is null, '
+    'should call firebase method to update workout with workout status set as null',
+    () async {
+      const String workoutId = 'w1';
+      firebaseWorkoutService.mockUpdateWorkout();
+
+      await repository.updateWorkout(
+        workoutId: workoutId,
+        userId: userId,
+        workoutName: 'workout name',
+        stages: [],
+      );
+
+      verify(
+        () => firebaseWorkoutService.updateWorkout(
+          workoutId: workoutId,
+          userId: userId,
+          workoutName: 'workout name',
+          status: null,
+          stages: [],
+        ),
+      ).called(1);
+    },
+  );
+
+  test(
+    'update workout, '
+    'list of stages is null, '
+    'should call firebase method to update workout with stages set as null',
+    () async {
+      const String workoutId = 'w1';
+      firebaseWorkoutService.mockUpdateWorkout();
+
+      await repository.updateWorkout(
+        workoutId: workoutId,
+        userId: userId,
+        workoutName: 'new workout name',
+        status: const WorkoutStatusPending(),
+      );
+
+      verify(
+        () => firebaseWorkoutService.updateWorkout(
+          workoutId: workoutId,
+          userId: userId,
+          workoutName: 'new workout name',
+          status: const firebase.WorkoutStatusPendingDto(),
+          stages: null,
+        ),
+      ).called(1);
+    },
+  );
+
+  test(
     'delete workout, '
     'should call method from firebase service to delete workout and should delete workout from the state of repository',
     () {

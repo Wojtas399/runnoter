@@ -111,7 +111,7 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
       userId: userId,
       workoutName: workoutName,
       status: status != null ? mapWorkoutStatusToFirebase(status) : null,
-      stages: [...?stages].map(mapWorkoutStageToFirebase).toList(),
+      stages: stages?.map(mapWorkoutStageToFirebase).toList(),
     );
     if (updatedWorkoutDto != null) {
       final Workout updatedWorkout = mapWorkoutFromFirebase(updatedWorkoutDto);
