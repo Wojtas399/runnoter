@@ -5,9 +5,11 @@ abstract class WorkoutStatusCreatorEvent {
 }
 
 class WorkoutStatusCreatorEventInitialize extends WorkoutStatusCreatorEvent {
+  final String workoutId;
   final WorkoutStatusType? workoutStatusType;
 
   WorkoutStatusCreatorEventInitialize({
+    required this.workoutId,
     this.workoutStatusType,
   });
 }
@@ -73,4 +75,8 @@ class WorkoutStatusCreatorEventCommentChanged
   const WorkoutStatusCreatorEventCommentChanged({
     required this.comment,
   });
+}
+
+class WorkoutStatusCreatorEventSubmit extends WorkoutStatusCreatorEvent {
+  const WorkoutStatusCreatorEventSubmit();
 }

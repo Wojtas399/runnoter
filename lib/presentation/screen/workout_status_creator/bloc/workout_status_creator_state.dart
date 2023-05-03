@@ -35,14 +35,14 @@ class WorkoutStatusCreatorState extends BlocState<WorkoutStatusCreatorState> {
         comment,
       ];
 
-  bool get isSubmitButtonDisabled =>
-      workoutStatusType != WorkoutStatusType.pending &&
-      (workoutStatusType == null ||
-          coveredDistanceInKm == null ||
-          moodRate == null ||
-          averagePaceMinutes == null ||
-          averagePaceSeconds == null ||
-          averageHeartRate == null);
+  bool get isFormValid =>
+      workoutStatusType == WorkoutStatusType.pending ||
+      (workoutStatusType != null &&
+          coveredDistanceInKm != null &&
+          moodRate != null &&
+          averagePaceMinutes != null &&
+          averagePaceSeconds != null &&
+          averageHeartRate != null);
 
   @override
   WorkoutStatusCreatorState copyWith({
@@ -73,4 +73,8 @@ enum WorkoutStatusType {
   pending,
   completed,
   uncompleted,
+}
+
+enum WorkoutStatusCreatorInfo {
+  workoutStatusSaved,
 }

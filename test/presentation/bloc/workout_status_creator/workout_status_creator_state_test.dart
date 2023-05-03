@@ -13,9 +13,9 @@ void main() {
   });
 
   test(
-    'is submit button disabled, '
+    'is form valid, '
     'workout status type is null, '
-    'should be true',
+    'should be false',
     () {
       state = state.copyWith(
         coveredDistanceInKm: 10,
@@ -25,27 +25,27 @@ void main() {
         averageHeartRate: 150,
       );
 
-      expect(state.isSubmitButtonDisabled, true);
+      expect(state.isFormValid, false);
     },
   );
 
   test(
-    'is submit button disabled, '
+    'is form valid, '
     'workout status type is set as pending, '
-    'should be false',
+    'should be true',
     () {
       state = state.copyWith(
         workoutStatusType: WorkoutStatusType.pending,
       );
 
-      expect(state.isSubmitButtonDisabled, false);
+      expect(state.isFormValid, true);
     },
   );
 
   test(
-    'is submit button disabled, '
+    'is form valid, '
     'covered distance in km is null, '
-    'should be true',
+    'should be false',
     () {
       state = state.copyWith(
         workoutStatusType: WorkoutStatusType.completed,
@@ -55,12 +55,12 @@ void main() {
         averageHeartRate: 150,
       );
 
-      expect(state.isSubmitButtonDisabled, true);
+      expect(state.isFormValid, false);
     },
   );
 
   test(
-    'is submit button disabled, '
+    'is form valid, '
     'mood rate is null, '
     'should be true',
     () {
@@ -72,12 +72,12 @@ void main() {
         averageHeartRate: 150,
       );
 
-      expect(state.isSubmitButtonDisabled, true);
+      expect(state.isFormValid, false);
     },
   );
 
   test(
-    'is submit button disabled, '
+    'is form valid, '
     'average pace minutes is null, '
     'should be true',
     () {
@@ -89,14 +89,14 @@ void main() {
         averageHeartRate: 150,
       );
 
-      expect(state.isSubmitButtonDisabled, true);
+      expect(state.isFormValid, false);
     },
   );
 
   test(
-    'is submit button disabled, '
+    'is form valid, '
     'average pace seconds is null, '
-    'should be true',
+    'should be false',
     () {
       state = state.copyWith(
         workoutStatusType: WorkoutStatusType.completed,
@@ -106,14 +106,14 @@ void main() {
         averageHeartRate: 150,
       );
 
-      expect(state.isSubmitButtonDisabled, true);
+      expect(state.isFormValid, false);
     },
   );
 
   test(
-    'is submit button disabled, '
+    'is form valid, '
     'average heart rate is null, '
-    'should be true',
+    'should be false',
     () {
       state = state.copyWith(
         workoutStatusType: WorkoutStatusType.completed,
@@ -123,7 +123,25 @@ void main() {
         averagePaceSeconds: 30,
       );
 
-      expect(state.isSubmitButtonDisabled, true);
+      expect(state.isFormValid, false);
+    },
+  );
+
+  test(
+    'is form valid, '
+    'all required params arent null, '
+    'should be true',
+    () {
+      state = state.copyWith(
+        workoutStatusType: WorkoutStatusType.completed,
+        coveredDistanceInKm: 10,
+        moodRate: MoodRate.mr8,
+        averagePaceMinutes: 5,
+        averagePaceSeconds: 30,
+        averageHeartRate: 150,
+      );
+
+      expect(state.isFormValid, true);
     },
   );
 

@@ -1,13 +1,42 @@
 import 'package:bloc_test/bloc_test.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/model/workout_status.dart';
 import 'package:runnoter/presentation/model/bloc_status.dart';
 import 'package:runnoter/presentation/screen/workout_status_creator/bloc/workout_status_creator_bloc.dart';
 
+import '../../../mock/domain/mock_auth_service.dart';
+import '../../../mock/domain/mock_workout_repository.dart';
+
 void main() {
-  WorkoutStatusCreatorBloc createBloc() => WorkoutStatusCreatorBloc();
+  final authService = MockAuthService();
+  final workoutRepository = MockWorkoutRepository();
+
+  WorkoutStatusCreatorBloc createBloc({
+    String? workoutId,
+    WorkoutStatusType? workoutStatusType,
+    double? coveredDistanceInKm,
+    MoodRate? moodRate,
+    int? averagePaceMinutes,
+    int? averagePaceSeconds,
+    int? averageHeartRate,
+    String? comment,
+  }) =>
+      WorkoutStatusCreatorBloc(
+        authService: authService,
+        workoutRepository: workoutRepository,
+        workoutId: workoutId,
+        workoutStatusType: workoutStatusType,
+        coveredDistanceInKm: coveredDistanceInKm,
+        moodRate: moodRate,
+        averagePaceMinutes: averagePaceMinutes,
+        averagePaceSeconds: averagePaceSeconds,
+        averageHeartRate: averageHeartRate,
+        comment: comment,
+      );
 
   WorkoutStatusCreatorState createState({
     BlocStatus status = const BlocStatusInitial(),
+    String? workoutId,
     WorkoutStatusType? workoutStatusType,
     double? coveredDistanceInKm,
     MoodRate? moodRate,
@@ -18,6 +47,7 @@ void main() {
   }) =>
       WorkoutStatusCreatorState(
         status: status,
+        workoutId: workoutId,
         workoutStatusType: workoutStatusType,
         coveredDistanceInKm: coveredDistanceInKm,
         moodRate: moodRate,
@@ -29,16 +59,18 @@ void main() {
 
   blocTest(
     'initialize, '
-    'should update workout status type in state',
+    'should update workout id and status type in state',
     build: () => createBloc(),
     act: (WorkoutStatusCreatorBloc bloc) => bloc.add(
       WorkoutStatusCreatorEventInitialize(
+        workoutId: 'w1',
         workoutStatusType: WorkoutStatusType.completed,
       ),
     ),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
+        workoutId: 'w1',
         workoutStatusType: WorkoutStatusType.completed,
       ),
     ],
@@ -160,5 +192,212 @@ void main() {
         comment: 'comment',
       ),
     ],
+  );
+
+  blocTest(
+    'submit, '
+    'workout id is null, '
+    'should finish event call',
+    build: () => createBloc(),
+    act: (WorkoutStatusCreatorBloc bloc) => bloc.add(
+      const WorkoutStatusCreatorEventSubmit(),
+    ),
+    expect: () => [],
+  );
+
+  blocTest(
+    'submit, '
+    'logged user does not exist, '
+    'should finish event call',
+    build: () => createBloc(
+      workoutId: 'w1',
+    ),
+    setUp: () {
+      authService.mockGetLoggedUserId();
+    },
+    act: (WorkoutStatusCreatorBloc bloc) => bloc.add(
+      const WorkoutStatusCreatorEventSubmit(),
+    ),
+    expect: () => [],
+    verify: (_) => verify(
+      () => authService.loggedUserId$,
+    ).called(1),
+  );
+
+  blocTest(
+    'submit, '
+    'pending workout status, '
+    'should call method from workout repository to update workout and should emit info that workout has been saved',
+    build: () => createBloc(
+      workoutId: 'w1',
+      workoutStatusType: WorkoutStatusType.pending,
+    ),
+    setUp: () {
+      authService.mockGetLoggedUserId(userId: 'u1');
+      workoutRepository.mockUpdateWorkout();
+    },
+    act: (WorkoutStatusCreatorBloc bloc) => bloc.add(
+      const WorkoutStatusCreatorEventSubmit(),
+    ),
+    expect: () => [
+      createState(
+        status: const BlocStatusLoading(),
+        workoutId: 'w1',
+        workoutStatusType: WorkoutStatusType.pending,
+      ),
+      createState(
+        status: const BlocStatusComplete<WorkoutStatusCreatorInfo>(
+          info: WorkoutStatusCreatorInfo.workoutStatusSaved,
+        ),
+        workoutId: 'w1',
+        workoutStatusType: WorkoutStatusType.pending,
+      ),
+    ],
+    verify: (_) {
+      verify(
+        () => authService.loggedUserId$,
+      ).called(1);
+      verify(
+        () => workoutRepository.updateWorkout(
+          workoutId: 'w1',
+          userId: 'u1',
+          status: const WorkoutStatusPending(),
+        ),
+      ).called(1);
+    },
+  );
+
+  blocTest(
+    'submit, '
+    'completed workout status, '
+    'should call method from workout repository to update workout and should emit info that workout has been saved',
+    build: () => createBloc(
+      workoutId: 'w1',
+      workoutStatusType: WorkoutStatusType.completed,
+      coveredDistanceInKm: 10,
+      moodRate: MoodRate.mr8,
+      averagePaceMinutes: 5,
+      averagePaceSeconds: 50,
+      averageHeartRate: 150,
+      comment: 'comment',
+    ),
+    setUp: () {
+      authService.mockGetLoggedUserId(userId: 'u1');
+      workoutRepository.mockUpdateWorkout();
+    },
+    act: (WorkoutStatusCreatorBloc bloc) => bloc.add(
+      const WorkoutStatusCreatorEventSubmit(),
+    ),
+    expect: () => [
+      createState(
+        status: const BlocStatusLoading(),
+        workoutId: 'w1',
+        workoutStatusType: WorkoutStatusType.completed,
+        coveredDistanceInKm: 10,
+        moodRate: MoodRate.mr8,
+        averagePaceMinutes: 5,
+        averagePaceSeconds: 50,
+        averageHeartRate: 150,
+        comment: 'comment',
+      ),
+      createState(
+        status: const BlocStatusComplete<WorkoutStatusCreatorInfo>(
+          info: WorkoutStatusCreatorInfo.workoutStatusSaved,
+        ),
+        workoutId: 'w1',
+        workoutStatusType: WorkoutStatusType.completed,
+        coveredDistanceInKm: 10,
+        moodRate: MoodRate.mr8,
+        averagePaceMinutes: 5,
+        averagePaceSeconds: 50,
+        averageHeartRate: 150,
+        comment: 'comment',
+      ),
+    ],
+    verify: (_) {
+      verify(
+        () => authService.loggedUserId$,
+      ).called(1);
+      verify(
+        () => workoutRepository.updateWorkout(
+          workoutId: 'w1',
+          userId: 'u1',
+          status: WorkoutStatusCompleted(
+            coveredDistanceInKm: 10,
+            avgPace: const Pace(minutes: 5, seconds: 50),
+            avgHeartRate: 150,
+            moodRate: MoodRate.mr8,
+            comment: 'comment',
+          ),
+        ),
+      ).called(1);
+    },
+  );
+
+  blocTest(
+    'submit, '
+    'uncompleted workout status, '
+    'should call method from workout repository to update workout and should emit info that workout has been saved',
+    build: () => createBloc(
+      workoutId: 'w1',
+      workoutStatusType: WorkoutStatusType.uncompleted,
+      coveredDistanceInKm: 10,
+      moodRate: MoodRate.mr8,
+      averagePaceMinutes: 5,
+      averagePaceSeconds: 50,
+      averageHeartRate: 150,
+      comment: 'comment',
+    ),
+    setUp: () {
+      authService.mockGetLoggedUserId(userId: 'u1');
+      workoutRepository.mockUpdateWorkout();
+    },
+    act: (WorkoutStatusCreatorBloc bloc) => bloc.add(
+      const WorkoutStatusCreatorEventSubmit(),
+    ),
+    expect: () => [
+      createState(
+        status: const BlocStatusLoading(),
+        workoutId: 'w1',
+        workoutStatusType: WorkoutStatusType.uncompleted,
+        coveredDistanceInKm: 10,
+        moodRate: MoodRate.mr8,
+        averagePaceMinutes: 5,
+        averagePaceSeconds: 50,
+        averageHeartRate: 150,
+        comment: 'comment',
+      ),
+      createState(
+        status: const BlocStatusComplete<WorkoutStatusCreatorInfo>(
+          info: WorkoutStatusCreatorInfo.workoutStatusSaved,
+        ),
+        workoutId: 'w1',
+        workoutStatusType: WorkoutStatusType.uncompleted,
+        coveredDistanceInKm: 10,
+        moodRate: MoodRate.mr8,
+        averagePaceMinutes: 5,
+        averagePaceSeconds: 50,
+        averageHeartRate: 150,
+        comment: 'comment',
+      ),
+    ],
+    verify: (_) {
+      verify(
+        () => authService.loggedUserId$,
+      ).called(1);
+      verify(
+        () => workoutRepository.updateWorkout(
+          workoutId: 'w1',
+          userId: 'u1',
+          status: WorkoutStatusUncompleted(
+            coveredDistanceInKm: 10,
+            avgPace: const Pace(minutes: 5, seconds: 50),
+            avgHeartRate: 150,
+            moodRate: MoodRate.mr8,
+            comment: 'comment',
+          ),
+        ),
+      ).called(1);
+    },
   );
 }
