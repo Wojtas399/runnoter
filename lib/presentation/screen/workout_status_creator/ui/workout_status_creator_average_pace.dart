@@ -26,9 +26,9 @@ class _AveragePace extends StatelessWidget {
               ':',
               style: Theme.of(context).textTheme.titleLarge,
             ),
-            const Expanded(
+            Expanded(
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 24),
+                padding: const EdgeInsets.symmetric(horizontal: 24),
                 child: _AveragePaceSeconds(),
               ),
             ),
@@ -78,12 +78,28 @@ class _AveragePaceMinutes extends StatelessWidget {
 }
 
 class _AveragePaceSeconds extends StatelessWidget {
-  const _AveragePaceSeconds();
+  final TextEditingController _controller = TextEditingController();
+
+  _AveragePaceSeconds();
 
   @override
   Widget build(BuildContext context) {
+    final BlocStatus blocStatus = context.select(
+      (WorkoutStatusCreatorBloc bloc) => bloc.state.status,
+    );
+    if (blocStatus is BlocStatusComplete &&
+        blocStatus.info == WorkoutStatusCreatorInfo.workoutStatusInitialized) {
+      _controller.text = context
+              .read<WorkoutStatusCreatorBloc>()
+              .state
+              .averagePaceSeconds
+              ?.toString() ??
+          '';
+    }
+
     return _AveragePaceField(
       label: AppLocalizations.of(context)!.workout_status_creator_seconds_label,
+      controller: _controller,
       onChanged: (int? seconds) {
         _onChanged(context, seconds);
       },
