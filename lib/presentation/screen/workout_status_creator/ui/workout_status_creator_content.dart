@@ -63,51 +63,18 @@ class _FinishedWorkoutForm extends StatelessWidget {
     const Widget gap = SizedBox(height: 24);
 
     return Column(
-      children: const [
+      children: [
         _CoveredDistance(),
         gap,
-        _MoodRate(),
+        const _MoodRate(),
         gap,
-        _AveragePace(),
+        const _AveragePace(),
         gap,
-        _AverageHeartRate(),
+        const _AverageHeartRate(),
         gap,
-        _Comment(),
+        const _Comment(),
       ],
     );
-  }
-}
-
-class _CoveredDistance extends StatelessWidget {
-  const _CoveredDistance();
-
-  @override
-  Widget build(BuildContext context) {
-    return TextFieldComponent(
-      label:
-          '${AppLocalizations.of(context)!.workout_status_creator_covered_distance_label} [km]',
-      maxLength: 8,
-      keyboardType: TextInputType.number,
-      isRequired: true,
-      inputFormatters: [
-        DecimalTextInputFormatter(decimalRange: 2),
-      ],
-      onChanged: (String? coveredDistanceInKmStr) {
-        _onChanged(context, coveredDistanceInKmStr);
-      },
-    );
-  }
-
-  void _onChanged(BuildContext context, String? coveredDistanceInKmStr) {
-    if (coveredDistanceInKmStr == null) {
-      return;
-    }
-    final double? coveredDistanceInKm = double.tryParse(coveredDistanceInKmStr);
-    context.read<WorkoutStatusCreatorBloc>().add(
-          WorkoutStatusCreatorEventCoveredDistanceInKmChanged(
-            coveredDistanceInKm: coveredDistanceInKm,
-          ),
-        );
   }
 }
 

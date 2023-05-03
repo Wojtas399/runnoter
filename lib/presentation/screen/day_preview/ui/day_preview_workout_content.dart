@@ -121,17 +121,25 @@ class _WorkoutStatusButton extends StatelessWidget {
   }
 
   void _onPressed(BuildContext context) {
-    final String? workoutId = context.read<DayPreviewBloc>().state.workoutId;
-    if (workoutId != null) {
-      navigateTo(
-        context: context,
-        route: WorkoutStatusCreatorRoute(
-          creatorArguments: WorkoutStatusCreatorFinishWorkoutArguments(
-            workoutId: workoutId,
-          ),
-        ),
+    final DayPreviewBloc bloc = context.read<DayPreviewBloc>();
+    final String? workoutId = bloc.state.workoutId;
+    if (workoutId == null) {
+      return;
+    }
+    final WorkoutStatus? workoutStatus = bloc.state.workoutStatus;
+    WorkoutStatusCreatorArguments creatorArguments =
+        WorkoutStatusCreatorUpdateStatusArguments(workoutId: workoutId);
+    if (workoutStatus is WorkoutStatusPending) {
+      creatorArguments = WorkoutStatusCreatorFinishWorkoutArguments(
+        workoutId: workoutId,
       );
     }
+    navigateTo(
+      context: context,
+      route: WorkoutStatusCreatorRoute(
+        creatorArguments: creatorArguments,
+      ),
+    );
   }
 }
 

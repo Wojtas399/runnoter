@@ -14,6 +14,7 @@ import '../../../formatter/decimal_text_input_formatter.dart';
 import '../../../formatter/minutes_or_seconds_input_formatter.dart';
 import '../../../formatter/mood_rate_formatter.dart';
 import '../../../formatter/workout_status_formatter.dart';
+import '../../../model/bloc_status.dart';
 import '../../../service/dialog_service.dart';
 import '../../../service/navigator_service.dart';
 import '../../../service/utils.dart';
@@ -21,6 +22,7 @@ import '../bloc/workout_status_creator_bloc.dart';
 
 part 'workout_status_creator_average_pace.dart';
 part 'workout_status_creator_content.dart';
+part 'workout_status_creator_covered_distance.dart';
 part 'workout_status_creator_status_type.dart';
 
 abstract class WorkoutStatusCreatorArguments {
