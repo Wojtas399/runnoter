@@ -172,6 +172,25 @@ void main() {
   );
 
   test(
+    'copy with workout status',
+    () {
+      final WorkoutStatus expectedWorkoutStatus = WorkoutStatusCompleted(
+        coveredDistanceInKm: 10,
+        avgPace: const Pace(minutes: 6, seconds: 10),
+        avgHeartRate: 150,
+        moodRate: MoodRate.mr8,
+        comment: 'comment',
+      );
+
+      state = state.copyWith(workoutStatus: expectedWorkoutStatus);
+      final state2 = state.copyWith();
+
+      expect(state.workoutStatus, expectedWorkoutStatus);
+      expect(state2.workoutStatus, expectedWorkoutStatus);
+    },
+  );
+
+  test(
     'copy with workout status type',
     () {
       const WorkoutStatusType expectedWorkoutStatusType =
