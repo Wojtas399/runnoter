@@ -7,13 +7,13 @@ class _DayLabels extends StatelessWidget {
   Widget build(BuildContext context) {
     final str = Str.of(context);
     final List<String> dayShortLabels = [
-      str.monday_short,
-      str.tuesday_short,
-      str.wednesday_short,
-      str.thursday_short,
-      str.friday_short,
-      str.saturday_short,
-      str.sunday_short,
+      str.mondayShort,
+      str.tuesdayShort,
+      str.wednesdayShort,
+      str.thursdayShort,
+      str.fridayShort,
+      str.saturdayShort,
+      str.sundayShort,
     ];
 
     return Column(

@@ -740,32 +740,32 @@
     "description": "December"
   },
 
-  "monday_short": "Pon.",
-  "@monday_short": {
+  "mondayShort": "Pon.",
+  "@mondayShort": {
     "description": "Abbreviation of monday"
   },
-  "tuesday_short": "Wt.",
-  "@tuesday_short": {
+  "tuesdayShort": "Wt.",
+  "@tuesdayShort": {
     "description": "Abbreviation of tuesday"
   },
-  "wednesday_short": "Śr.",
-  "@wednesday_short": {
+  "wednesdayShort": "Śr.",
+  "@wednesdayShort": {
     "description": "Abbreviation of wednesday"
   },
-  "thursday_short": "Czw.",
-  "@thursday_short": {
+  "thursdayShort": "Czw.",
+  "@thursdayShort": {
     "description": "Abbreviation of thursday"
   },
-  "friday_short": "Pt.",
-  "@friday_short": {
+  "fridayShort": "Pt.",
+  "@fridayShort": {
     "description": "Abbreviation of friday"
   },
-  "saturday_short": "Sob.",
-  "@saturday_short": {
+  "saturdayShort": "Sob.",
+  "@saturdayShort": {
     "description": "Abbreviation of saturday"
   },
-  "sunday_short": "Niedz.",
-  "@sunday_short": {
+  "sundayShort": "Niedz.",
+  "@sundayShort": {
     "description": "Abbreviation of sunday"
   }
 }
