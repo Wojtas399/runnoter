@@ -63,40 +63,40 @@
   },
 
 
-  "forgot_password_screen_title": "Zapomniałeś hasła?",
-  "@forgot_password_screen_title": {
+  "forgotPasswordScreenTitle": "Zapomniałeś hasła?",
+  "@forgotPasswordScreenTitle": {
     "description": "Title of the message displaying on forgot password screen"
   },
-  "forgot_password_screen_message": "Podaj adres email, na który wyślecimy Ci link z możliwością zmiany hasła.",
-  "@forgot_password_screen_message": {
+  "forgotPasswordMessage": "Podaj adres email, na który wyślecimy Ci link z możliwością zmiany hasła.",
+  "@forgotPasswordMessage": {
     "description": "Text of the message displaying on forgot password screen"
   },
-  "forgot_password_screen_submit_button_label": "Wyślij",
-  "@forgot_password_screen_submit_button_label": {
+  "forgotPasswordSubmitButtonLabel": "Wyślij",
+  "@forgotPasswordSubmitButtonLabel": {
     "description": "Label of the button to send link to change password"
   },
-  "forgot_password_screen_sent_email_dialog_title": "Wiadomość email została wysłana",
-  "@forgot_password_screen_sent_email_dialog_title": {
+  "forgotPasswordSentEmailDialogTitle": "Wiadomość email została wysłana",
+  "@forgotPasswordSentEmailDialogTitle": {
     "description": "Title of the dialog to inform that email with link to reset password has been sent"
   },
-  "forgot_password_screen_sent_email_dialog_message": "Pomyślnie wysłano wiadomość na twój adres email. Sprawdź skrzynkę pocztową i postępuj zgodnie z instrukcjami zamieszczonymi w wysłanej wiadomości.",
-  "@forgot_password_screen_sent_email_dialog_message": {
+  "forgotPasswordSentEmailDialogMessage": "Pomyślnie wysłano wiadomość na twój adres email. Sprawdź skrzynkę pocztową i postępuj zgodnie z instrukcjami zamieszczonymi w wysłanej wiadomości.",
+  "@forgotPasswordSentEmailDialogMessage": {
     "description": "Message of the dialog to inform that email with link to reset password has been sent"
   },
-  "forgot_password_screen_invalid_email_dialog_title": "Niepoprawny adres email",
-  "@forgot_password_screen_invalid_email_dialog_title": {
+  "forgotPasswordInvalidEmailDialogTitle": "Niepoprawny adres email",
+  "@forgotPasswordInvalidEmailDialogTitle": {
     "description": "Title of the dialog to inform that given email address is invalid"
   },
-  "forgot_password_screen_invalid_email_dialog_message": "Podany adres email jest nieprawidłowy",
-  "@forgot_password_screen_invalid_email_dialog_message": {
+  "forgotPasswordInvalidEmailDialogMessage": "Podany adres email jest nieprawidłowy",
+  "@forgotPasswordInvalidEmailDialogMessage": {
     "description": "Message of the dialog to inform that given email address is invalid"
   },
-  "forgot_password_screen_user_not_found_dialog_title": "Brak użytkownika",
-  "@forgot_password_screen_user_not_found_dialog_title": {
+  "forgotPasswordUserNotFoundDialogTitle": "Brak użytkownika",
+  "@forgotPasswordUserNotFoundDialogTitle": {
     "description": "Title of the dialog to inform that user does not exist"
   },
-  "forgot_password_screen_user_not_found_dialog_message": "Nie możemy wysłać wiadomości, ponieważ użytkownik o podanym adresie email nie istnieje.",
-  "@forgot_password_screen_user_not_found_dialog_message": {
+  "forgotPasswordUserNotFoundDialogMessage": "Nie możemy wysłać wiadomości, ponieważ użytkownik o podanym adresie email nie istnieje.",
+  "@forgotPasswordUserNotFoundDialogMessage": {
     "description": "Message of the dialog to inform that user does not exist"
   },
 
