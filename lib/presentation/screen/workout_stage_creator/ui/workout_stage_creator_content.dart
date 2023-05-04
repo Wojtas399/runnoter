@@ -64,21 +64,21 @@ class _WorkoutStageType extends StatelessWidget {
     final str = Str.of(context);
     switch (stage) {
       case WorkoutStageType.baseRun:
-        return str.workout_stage_base_run;
+        return str.workoutStageBaseRun;
       case WorkoutStageType.zone2:
-        return str.workout_stage_zone2;
+        return str.workoutStageZone2;
       case WorkoutStageType.zone3:
-        return str.workout_stage_zone3;
+        return str.workoutStageZone3;
       case WorkoutStageType.hillRepeats:
-        return str.workout_stage_hill_repeats;
+        return str.workoutStageHillRepeats;
       case WorkoutStageType.rhythms:
-        return str.workout_stage_rhythms;
+        return str.workoutStageRhythms;
       case WorkoutStageType.stretching:
-        return str.workout_stage_stretching;
+        return str.workoutStageStretching;
       case WorkoutStageType.strengthening:
-        return str.workout_stage_strengthening;
+        return str.workoutStageStrengthening;
       case WorkoutStageType.foamRolling:
-        return str.workout_stage_foamRolling;
+        return str.workoutStageFoamRolling;
     }
   }
 
