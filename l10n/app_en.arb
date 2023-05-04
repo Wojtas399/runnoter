@@ -74,14 +74,14 @@
   "workoutCreatorUpdatedWorkoutMessage": "Successfully updated workout",
 
 
-  "workout_stage_creator_screen_title": "New workout stage",
-  "workout_stage_creator_screen_stage_type": "Stage type",
-  "workout_stage_creator_screen_distance": "Distance",
-  "workout_stage_creator_screen_max_heart_rate": "Max heart rate",
-  "workout_stage_creator_screen_amount_of_series": "Amount of series",
-  "workout_stage_creator_screen_single_series_distance": "Single series distance",
-  "workout_stage_creator_screen_walking_distance": "Walking distance",
-  "workout_stage_creator_screen_jogging_distance": "Jogging distance",
+  "workoutStageCreatorScreenTitle": "New workout stage",
+  "workoutStageCreatorStageType": "Stage type",
+  "workoutStageCreatorDistance": "Distance",
+  "workoutStageCreatorMaxHeartRate": "Max heart rate",
+  "workoutStageCreatorAmountOfSeries": "Amount of series",
+  "workoutStageCreatorSeriesDistance": "Single series distance",
+  "workoutStageCreatorWalkingDistance": "Walking distance",
+  "workoutStageCreatorJoggingDistance": "Jogging distance",
 
 
   "workout_status_creator_screen_title": "Workout status",

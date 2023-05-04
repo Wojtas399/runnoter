@@ -267,36 +267,36 @@
   },
 
 
-  "workout_stage_creator_screen_title": "Nowy etap treningu",
-  "@workout_stage_creator_screen_title": {
+  "workoutStageCreatorScreenTitle": "Nowy etap treningu",
+  "@workoutStageCreatorScreenTitle": {
     "description": "Title of the workout stage creator screen"
   },
-  "workout_stage_creator_screen_stage_type": "Rodzaj etapu",
-  "@workout_stage_creator_screen_stage_type": {
+  "workoutStageCreatorStageType": "Rodzaj etapu",
+  "@workoutStageCreatorStageType": {
     "description": "Workout stage type"
   },
-  "workout_stage_creator_screen_distance": "Dystans",
-  "@workout_stage_creator_screen_distance": {
+  "workoutStageCreatorDistance": "Dystans",
+  "@workoutStageCreatorDistance": {
     "description": "Distance"
   },
-  "workout_stage_creator_screen_max_heart_rate": "Tętno maksymalne",
-  "@workout_stage_creator_screen_max_heart_rate": {
+  "workoutStageCreatorMaxHeartRate": "Tętno maksymalne",
+  "@workoutStageCreatorMaxHeartRate": {
     "description": "Max heart rate"
   },
-  "workout_stage_creator_screen_amount_of_series": "Ilość serii",
-  "@workout_stage_creator_screen_amount_of_series": {
+  "workoutStageCreatorAmountOfSeries": "Ilość serii",
+  "@workoutStageCreatorAmountOfSeries": {
     "description": "Amount of series"
   },
-  "workout_stage_creator_screen_single_series_distance": "Dystans pojedynczej serii",
-  "@workout_stage_creator_screen_single_series_distance": {
+  "workoutStageCreatorSeriesDistance": "Dystans pojedynczej serii",
+  "@workoutStageCreatorSeriesDistance": {
     "description": "Single series distance"
   },
-  "workout_stage_creator_screen_walking_distance": "Dystans marszu",
-  "@workout_stage_creator_screen_walking_distance": {
+  "workoutStageCreatorWalkingDistance": "Dystans marszu",
+  "@workoutStageCreatorWalkingDistance": {
     "description": "Walking distance"
   },
-  "workout_stage_creator_screen_jogging_distance": "Dystans truchtu",
-  "@workout_stage_creator_screen_jogging_distance": {
+  "workoutStageCreatorJoggingDistance": "Dystans truchtu",
+  "@workoutStageCreatorJoggingDistance": {
     "description": "Jogging distance"
   },
 

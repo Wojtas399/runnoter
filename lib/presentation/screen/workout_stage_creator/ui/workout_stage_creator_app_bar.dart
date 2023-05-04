@@ -7,7 +7,7 @@ class _AppBar extends StatelessWidget with PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       title: Text(
-        Str.of(context).workout_stage_creator_screen_title,
+        Str.of(context).workoutStageCreatorScreenTitle,
       ),
       leading: IconButton(
         onPressed: () {

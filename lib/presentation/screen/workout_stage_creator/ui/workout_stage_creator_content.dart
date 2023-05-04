@@ -39,7 +39,7 @@ class _WorkoutStageType extends StatelessWidget {
     return DropdownButtonFormField(
       decoration: InputDecoration(
         filled: true,
-        hintText: Str.of(context).workout_stage_creator_screen_stage_type,
+        hintText: Str.of(context).workoutStageCreatorStageType,
       ),
       items: <DropdownMenuItem<WorkoutStageType>>[
         ...WorkoutStageType.values.map(
