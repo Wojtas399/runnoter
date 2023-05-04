@@ -35,9 +35,9 @@ extension DistanceUnitFormatter on DistanceUnit {
   String toUIFormat(BuildContext context) {
     switch (this) {
       case DistanceUnit.kilometers:
-        return Str.of(context).distance_unit_kilometers;
+        return Str.of(context).distanceUnitKilometers;
       case DistanceUnit.miles:
-        return Str.of(context).distance_unit_miles;
+        return Str.of(context).distanceUnitMiles;
     }
   }
 }

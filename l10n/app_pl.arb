@@ -473,20 +473,20 @@
   },
 
 
-  "distance_unit_label": "Jednostka dystansu",
-  "@distance_unit_label": {
+  "distanceUnit": "Jednostka dystansu",
+  "@distanceUnit": {
     "description": "Label of distance unit"
   },
-  "distance_unit_kilometers": "Kilometry",
-  "@distance_unit_kilometers": {
+  "distanceUnitKilometers": "Kilometry",
+  "@distanceUnitKilometers": {
     "description": "Kilometers distance unit"
   },
-  "distance_unit_miles": "Mile",
-  "@distance_unit_miles": {
+  "distanceUnitMiles": "Mile",
+  "@distanceUnitMiles": {
     "description": "Miles distance unit"
   },
-  "distance_unit_selection_text": "Wybierz jednostkę dystansu",
-  "@distance_unit_selection_text": {
+  "distanceUnitSelect": "Wybierz jednostkę dystansu",
+  "@distanceUnitSelect": {
     "description": "Text about distance unit selection"
   },
 
