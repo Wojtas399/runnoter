@@ -5,13 +5,14 @@ import '../../domain/model/settings.dart';
 
 extension ThemeModeFormatter on ThemeMode {
   String toUIFormat(BuildContext context) {
+    final str = Str.of(context);
     switch (this) {
       case ThemeMode.system:
-        return Str.of(context).theme_mode_system;
+        return str.themeModeSystem;
       case ThemeMode.light:
-        return Str.of(context).theme_mode_light;
+        return str.themeModeLight;
       case ThemeMode.dark:
-        return Str.of(context).theme_mode_dark;
+        return str.themeModeDark;
     }
   }
 }

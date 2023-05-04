@@ -421,28 +421,28 @@
   },
 
 
-  "theme_mode_label": "Motyw",
-  "@theme_mode_label": {
+  "themeMode": "Motyw",
+  "@themeMode": {
     "description": "Label of theme mode"
   },
-  "theme_mode_light": "Jasny",
-  "@theme_mode_light": {
+  "themeModeLight": "Jasny",
+  "@themeModeLight": {
     "description": "Light theme mode"
   },
-  "theme_mode_dark": "Ciemny",
-  "@theme_mode_dark": {
+  "themeModeDark": "Ciemny",
+  "@themeModeDark": {
     "description": "Dark theme mode"
   },
-  "theme_mode_system": "Systemowy",
-  "@theme_mode_system": {
+  "themeModeSystem": "Systemowy",
+  "@themeModeSystem": {
     "description": "System theme mode"
   },
-  "theme_mode_selection_text": "Wybierz motyw aplikacji",
-  "@theme_mode_selection_text": {
+  "themeModeSelect": "Wybierz motyw aplikacji",
+  "@themeModeSelect": {
     "description": "Text about theme mode selection"
   },
-  "system_theme_mode_description": "Jeśli wybierzesz motyw systemowy, aplikacja będzie używała motywu obecnie ustawionego na Twoim urządzeniu.",
-  "@system_theme_mode_description": {
+  "systemThemeModeDescription": "Jeśli wybierzesz motyw systemowy, aplikacja będzie używała motywu obecnie ustawionego na Twoim urządzeniu.",
+  "@systemThemeModeDescription": {
     "description": "Description about system theme mode"
   },
 

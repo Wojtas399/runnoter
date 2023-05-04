@@ -117,12 +117,12 @@
   "profileWrongCurrentPasswordDialogMessage": "Given current password is wrong...",
 
 
-  "theme_mode_label": "Theme",
-  "theme_mode_light": "Light",
-  "theme_mode_dark": "Dark",
-  "theme_mode_system": "System",
-  "theme_mode_selection_text": "Select app theme",
-  "system_theme_mode_description": "If you choose system theme mode, the app will use the theme that's currently set on your device.",
+  "themeMode": "Theme",
+  "themeModeLight": "Light",
+  "themeModeDark": "Dark",
+  "themeModeSystem": "System",
+  "themeModeSelect": "Select app theme",
+  "systemThemeModeDescription": "If you choose system theme mode, the app will use the theme that's currently set on your device.",
 
 
   "language_label": "Language",

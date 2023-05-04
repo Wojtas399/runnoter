@@ -60,7 +60,7 @@ class _Theme extends StatelessWidget {
     );
 
     return ValueWithLabelAndIconComponent(
-      label: Str.of(context).theme_mode_label,
+      label: Str.of(context).themeMode,
       iconData: Icons.brightness_6_outlined,
       value: themeMode?.toUIFormat(context) ?? '',
       onPressed: () {
