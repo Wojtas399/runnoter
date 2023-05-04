@@ -91,24 +91,24 @@ class BlocWithStatusListener<Bloc extends StateStreamable<State>,
   void _showUnknownErrorMessage(BuildContext context) {
     showMessageDialog(
       context: context,
-      title: Str.of(context).unknown_error_dialog_title,
-      message: Str.of(context).unknown_error_dialog_message,
+      title: Str.of(context).unknownErrorDialogTitle,
+      message: Str.of(context).unknownErrorDialogMessage,
     );
   }
 
   void _showNoInternetConnectionMessage(BuildContext context) {
     showMessageDialog(
       context: context,
-      title: Str.of(context).no_internet_connection_dialog_title,
-      message: Str.of(context).no_internet_connection_dialog_message,
+      title: Str.of(context).noInternetConnectionDialogTitle,
+      message: Str.of(context).noInternetConnectionDialogMessage,
     );
   }
 
   void _showNoLoggedUserMessage(BuildContext context) {
     showMessageDialog(
       context: context,
-      title: Str.of(context).no_logged_user_dialog_title,
-      message: Str.of(context).no_logged_user_dialog_message,
+      title: Str.of(context).noLoggedUserDialogTitle,
+      message: Str.of(context).noLoggedUserDialogMessage,
     );
   }
 

@@ -589,25 +589,28 @@
   },
 
 
-  "no_internet_connection_dialog_title": "Brak połączenia internetowego",
-  "@no_internet_connection_dialog_title": {
+  "noInternetConnectionDialogTitle": "Brak połączenia internetowego",
+  "@noInternetConnectionDialogTitle": {
     "description": "Title of the dialog about no internet connection"
   },
-  "no_internet_connection_dialog_message": "Wygląda na to, że utraciłeś połączenie internetowe. Napraw ten problem i spróbuj ponownie.",
-  "@no_internet_connection_dialog_message": {
+  "noInternetConnectionDialogMessage": "Wygląda na to, że utraciłeś połączenie internetowe. Napraw ten problem i spróbuj ponownie.",
+  "@noInternetConnectionDialogMessage": {
     "description": "Message of the dialog about no internet connection"
   },
-  "no_logged_user_dialog_title": "Błąd sesji",
-  "@no_logged_user_dialog_title": {
+  "noLoggedUserDialogTitle": "Błąd sesji",
+  "@noLoggedUserDialogTitle": {
     "description": "Title of the dialog about no logged user"
   },
-  "no_logged_user_dialog_message": "Utraciliśmy połączenie z twoją sesją. Zaloguj się ponownie, aby moć poprawnie korzystać z aplikacji.",
-  "unknown_error_dialog_title": "Nieznany błąd",
-  "@unknown_error_dialog_title": {
+  "noLoggedUserDialogMessage": "Utraciliśmy połączenie z twoją sesją. Zaloguj się ponownie, aby moć poprawnie korzystać z aplikacji.",
+  "@noLoggedUserDialogMessage": {
+    "description": "Message of the dialog about no logged user"
+  },
+  "unknownErrorDialogTitle": "Nieznany błąd",
+  "@unknownErrorDialogTitle": {
     "description": "Title of the dialog about unknown exception"
   },
-  "unknown_error_dialog_message": "Wystąpił nieznany błąd w działaniu aplikacji",
-  "@unknown_error_dialog_message": {
+  "unknownErrorDialogMessage": "Wystąpił nieznany błąd w działaniu aplikacji",
+  "@unknownErrorDialogMessage": {
     "description": "Message of the dialog about unknown exception"
   },
 
