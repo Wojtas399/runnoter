@@ -221,48 +221,48 @@
   },
 
 
-  "workout_creator_screen_title_add_mode": "Nowy trening",
-  "@workout_creator_screen_title_add_mode": {
+  "workoutCreatorScreenNewWorkoutTitle": "Nowy trening",
+  "@workoutCreatorScreenNewWorkoutTitle": {
     "description": "Title of the workout creator screen in add mode"
   },
-  "workout_creator_screen_title_edit_mode": "Edytuj trening",
-  "@workout_creator_screen_title_edit_mode": {
+  "workoutCreatorScreeEditWorkoutTitle": "Edytuj trening",
+  "@workoutCreatorScreeEditWorkoutTitle": {
     "description": "Title of the workout creator screen in edit mode"
   },
-  "workout_creator_screen_workout_name": "Nazwa treningu",
-  "@workout_creator_screen_workout_name": {
+  "workoutCreatorWorkoutName": "Nazwa treningu",
+  "@workoutCreatorWorkoutName": {
     "description": "Workout name"
   },
-  "workout_creator_screen_workout_stages": "Etapy treningu",
-  "@workout_creator_screen_workout_stages": {
+  "workoutCreatorWorkoutStages": "Etapy treningu",
+  "@workoutCreatorWorkoutStages": {
     "description": "Label of the workout stages section"
   },
-  "workout_creator_screen_add_stage_button_label": "Dodaj etap",
-  "@workout_creator_screen_add_stage_button_label": {
+  "workoutCreatorAddStageButton": "Dodaj etap",
+  "@workoutCreatorAddStageButton": {
     "description": "Label of the button to add workout stage"
   },
-  "workout_creator_screen_no_stages_info": "Brak etapów treningu",
-  "@workout_creator_screen_no_stages_info": {
+  "workoutCreatorNoStagesInfo": "Brak etapów treningu",
+  "@workoutCreatorNoStagesInfo": {
     "description": "Info about no workout stages"
   },
-  "workout_creator_screen_add_stage_instruction": "Naciśnij poniższy przycisk, aby dodać nowy etap",
-  "@workout_creator_screen_add_stage_instructions": {
+  "workoutCreatorAddStageInstructions": "Naciśnij poniższy przycisk, aby dodać nowy etap",
+  "@workoutCreatorAddStageInstructions": {
     "description": "Instruction on how to add new workout stage"
   },
-  "workout_creator_screen_add_workout_button_label": "Dodaj",
-  "@workout_creator_screen_add_workout_button_label": {
+  "workoutCreatorAddWorkoutButton": "Dodaj",
+  "@workoutCreatorAddWorkoutButton": {
     "description": "Label of the button to add workout"
   },
-  "workout_creator_screen_edit_workout_button_label": "Zaktualizuj",
-  "@workout_creator_screen_edit_workout_button_label": {
+  "workoutCreatorEditWorkoutButton": "Zaktualizuj",
+  "@workoutCreatorEditWorkoutButton": {
     "description": "Label of the button to edit workout"
   },
-  "workout_creator_screen_added_workout_message": "Pomyślnie dodano trening",
-  "@workout_creator_screen_added_workout_message": {
+  "workoutCreatorAddedWorkoutMessage": "Pomyślnie dodano trening",
+  "@workoutCreatorAddedWorkoutMessage": {
     "description": "Message to inform that workout has been added"
   },
-  "workout_creator_screen_updated_workout_message": "Pomyślnie zaktualizowano trening",
-  "@workout_creator_screen_updated_workout_message": {
+  "workoutCreatorUpdatedWorkoutMessage": "Pomyślnie zaktualizowano trening",
+  "@workoutCreatorUpdatedWorkoutMessage": {
     "description": "Message to inform that workout has been updated"
   },
 

@@ -61,17 +61,17 @@
   "dayPreviewDeletedWorkoutMessage": "Successfully deleted workout",
 
 
-  "workout_creator_screen_title_add_mode": "New workout",
-  "workout_creator_screen_title_edit_mode": "Edit workout",
-  "workout_creator_screen_workout_name": "Workout name",
-  "workout_creator_screen_workout_stages": "Workout stages",
-  "workout_creator_screen_add_stage_button_label": "Add stage",
-  "workout_creator_screen_no_stages_info": "No workout stages",
-  "workout_creator_screen_add_stage_instruction": "Tap below button to add new stage",
-  "workout_creator_screen_add_workout_button_label": "Add",
-  "workout_creator_screen_edit_workout_button_label": "Update",
-  "workout_creator_screen_added_workout_message": "Successfully added workout",
-  "workout_creator_screen_updated_workout_message": "Successfully updated workout",
+  "workoutCreatorScreenNewWorkoutTitle": "New workout",
+  "workoutCreatorScreeEditWorkoutTitle": "Edit workout",
+  "workoutCreatorWorkoutName": "Workout name",
+  "workoutCreatorWorkoutStages": "Workout stages",
+  "workoutCreatorAddStageButton": "Add stage",
+  "workoutCreatorNoStagesInfo": "No workout stages",
+  "workoutCreatorAddStageInstructions": "Tap below button to add new stage",
+  "workoutCreatorAddWorkoutButton": "Add",
+  "workoutCreatorEditWorkoutButton": "Update",
+  "workoutCreatorAddedWorkoutMessage": "Successfully added workout",
+  "workoutCreatorUpdatedWorkoutMessage": "Successfully updated workout",
 
 
   "workout_stage_creator_screen_title": "New workout stage",

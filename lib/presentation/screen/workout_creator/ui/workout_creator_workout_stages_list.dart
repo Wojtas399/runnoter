@@ -36,12 +36,12 @@ class _NoWorkoutStagesInfo extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
-            Str.of(context).workout_creator_screen_no_stages_info,
+            Str.of(context).workoutCreatorNoStagesInfo,
             style: Theme.of(context).textTheme.bodyLarge,
           ),
           const SizedBox(height: 4),
           Text(
-            Str.of(context).workout_creator_screen_add_stage_instruction,
+            Str.of(context).workoutCreatorAddStageInstructions,
             style: Theme.of(context).textTheme.bodyMedium,
           ),
         ],
