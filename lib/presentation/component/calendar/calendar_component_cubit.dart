@@ -4,11 +4,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../common/date_service.dart';
 
-class CalendarCubit extends Cubit<CalendarState> {
+class CalendarComponentCubit extends Cubit<CalendarState> {
   final DateService _dateService;
   List<WorkoutDay> _workoutDays = [];
 
-  CalendarCubit({
+  CalendarComponentCubit({
     required DateService dateService,
   })  : _dateService = dateService,
         super(

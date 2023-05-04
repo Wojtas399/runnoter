@@ -6,7 +6,7 @@ class _Days extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<CalendarWeek>? weeks = context.select(
-      (CalendarCubit cubit) => cubit.state.weeks,
+      (CalendarComponentCubit cubit) => cubit.state.weeks,
     );
 
     if (weeks == null) {

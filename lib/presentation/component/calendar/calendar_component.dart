@@ -51,7 +51,7 @@ class _CubitProvider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => CalendarCubit(
+      create: (_) => CalendarComponentCubit(
         dateService: DateService(),
       )..initialize(
           initialDate: initialDate,

@@ -25,10 +25,10 @@ class _Month extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final int? displayingMonth = context.select(
-      (CalendarCubit cubit) => cubit.state.displayingMonth,
+      (CalendarComponentCubit cubit) => cubit.state.displayingMonth,
     );
     final int? displayingYear = context.select(
-      (CalendarCubit cubit) => cubit.state.displayingYear,
+      (CalendarComponentCubit cubit) => cubit.state.displayingYear,
     );
 
     if (displayingMonth == null) {
@@ -74,7 +74,7 @@ class _PreviousMonthButton extends StatelessWidget {
   }
 
   void _onPressed(BuildContext context) {
-    context.read<CalendarCubit>().previousMonth();
+    context.read<CalendarComponentCubit>().previousMonth();
   }
 }
 
@@ -92,6 +92,6 @@ class _NextMonthButton extends StatelessWidget {
   }
 
   void _onPressed(BuildContext context) {
-    context.read<CalendarCubit>().nextMonth();
+    context.read<CalendarComponentCubit>().nextMonth();
   }
 }
