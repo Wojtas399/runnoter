@@ -147,6 +147,20 @@ void main() {
 
   test(
     'are data same as original, '
+    'workout status type does not match to workout status, '
+    'should be false',
+    () {
+      state = state.copyWith(
+        workoutStatus: const WorkoutStatusPending(),
+        workoutStatusType: WorkoutStatusType.completed,
+      );
+
+      expect(state.areDataSameAsOriginal, false);
+    },
+  );
+
+  test(
+    'are data same as original, '
     'workout status is set as pending, '
     'should be false',
     () {
