@@ -61,7 +61,7 @@ class _FormHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      Str.of(context)!.sign_in_screen_title,
+      Str.of(context).signInScreenTitle,
       style: Theme.of(context).textTheme.headlineMedium?.copyWith(
             fontWeight: FontWeight.bold,
           ),

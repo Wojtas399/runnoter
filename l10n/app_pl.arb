@@ -1,42 +1,42 @@
 {
-  "sign_in_screen_title": "Logowanie",
-  "@sign_in_screen_title": {
+  "signInScreenTitle": "Logowanie",
+  "@signInScreenTitle": {
     "description": "Title of sign in screen"
   },
-  "sign_in_screen_button_label": "Zaloguj",
-  "@sign_in_screen_button_label": {
+  "signInButtonLabel": "Zaloguj",
+  "@signInButtonLabel": {
     "description": "Label of the button to submit sign in form"
   },
-  "sign_in_screen_sign_up_option": "Nie masz konta? Zarejestruj się!",
-  "@sign_in_screen_sign_up_option": {
+  "signInSignUpOption": "Nie masz konta? Zarejestruj się!",
+  "@signInSignUpOption": {
     "description": "Option to navigate to sign up form"
   },
-  "sign_in_screen_forgot_password_option": "Zapomniałeś hasła?",
-  "@sign_in_screen_forgot_password_option": {
+  "signInForgotPasswordOption": "Zapomniałeś hasła?",
+  "@signInForgotPasswordOption": {
     "description": "Option to navigate to forgot password screen"
   },
-  "sign_in_screen_invalid_email_dialog_title": "Niepoprawny adres email",
-  "@sign_in_screen_invalid_email_dialog_title": {
+  "signInInvalidEmailDialogTitle": "Niepoprawny adres email",
+  "@signInInvalidEmailDialogTitle": {
     "description": "Title of the dialog to inform that given email address is invalid"
   },
-  "sign_in_screen_invalid_email_dialog_message": "Podany adres email jest nieprawidłowy",
-  "@sign_in_screen_invalid_email_dialog_message": {
+  "signInInvalidEmailDialogMessage": "Podany adres email jest nieprawidłowy",
+  "@signInInvalidEmailDialogMessage": {
     "description": "Message of the dialog to inform that given email address is invalid"
   },
-  "sign_in_screen_user_not_found_dialog_title": "Brak użytkownika",
-  "@sign_in_screen_user_not_found_dialog_title": {
+  "signInUserNotFoundDialogTitle": "Brak użytkownika",
+  "@signInUserNotFoundDialogTitle": {
     "description": "Title of the dialog to inform that user does not exist"
   },
-  "sign_in_screen_user_not_found_dialog_message": "Użytkownik o podanym adresie email nie istnieje",
-  "@sign_in_screen_user_not_found_dialog_message": {
+  "signInUserNotFoundDialogMessage": "Użytkownik o podanym adresie email nie istnieje",
+  "@signInUserNotFoundDialogMessage": {
     "description": "Message of the dialog to inform that user does not exist"
   },
-  "sign_in_screen_wrong_password_dialog_title": "Błędne hasło",
-  "@sign_in_screen_wrong_password_dialog_title": {
+  "signInWrongPasswordDialogTitle": "Błędne hasło",
+  "@signInWrongPasswordDialogTitle": {
     "description": "Title of the dialog to inform that password is wrong"
   },
-  "sign_in_screen_wrong_password_dialog_message": "Podane hasło jest błędne. Spróbuj ponownie z prawidłowym hasłem.",
-  "@sign_in_screen_wrong_password_dialog_message": {
+  "signInWrongPasswordDialogMessage": "Podane hasło jest błędne. Spróbuj ponownie z prawidłowym hasłem.",
+  "@signInWrongPasswordDialogMessage": {
     "description": "Message of the dialog to inform that password is wrong"
   },
 
