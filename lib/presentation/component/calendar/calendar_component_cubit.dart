@@ -2,7 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../common/date_service.dart';
 
-class CalendarCubit extends Cubit<DisplayingDate?> {
+class CalendarCubit extends Cubit<DisplayingMonth?> {
   final DateService _dateService;
   List<DateTime> _markedDates = [];
 
@@ -11,13 +11,13 @@ class CalendarCubit extends Cubit<DisplayingDate?> {
   })  : _dateService = dateService,
         super(null);
 
-  void initialize(
-    DateTime initialDate,
-    List<DateTime> markedDays,
-  ) {
-    _markedDates = markedDays;
+  void initialize({
+    required DateTime initialDate,
+    required List<DateTime> markedDates,
+  }) {
+    _markedDates = markedDates;
     emit(
-      DisplayingDate(
+      DisplayingMonth(
         month: initialDate.month,
         year: initialDate.year,
       ),
@@ -33,7 +33,7 @@ class CalendarCubit extends Cubit<DisplayingDate?> {
       state!.month - 1,
     );
     emit(
-      DisplayingDate(
+      DisplayingMonth(
         month: dateOfFirstDayInPreviousMonth.month,
         year: dateOfFirstDayInPreviousMonth.year,
       ),
@@ -49,7 +49,7 @@ class CalendarCubit extends Cubit<DisplayingDate?> {
       state!.month + 1,
     );
     emit(
-      DisplayingDate(
+      DisplayingMonth(
         month: dateOfFirstDayInNextMonth.month,
         year: dateOfFirstDayInNextMonth.year,
       ),
@@ -93,11 +93,11 @@ class CalendarCubit extends Cubit<DisplayingDate?> {
   }
 }
 
-class DisplayingDate {
+class DisplayingMonth {
   final int month;
   final int year;
 
-  const DisplayingDate({
+  const DisplayingMonth({
     required this.month,
     required this.year,
   });

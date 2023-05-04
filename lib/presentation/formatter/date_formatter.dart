@@ -18,6 +18,6 @@ extension DateFormatter on DateTime {
       AppLocalizations.of(context)!.december,
     ];
 
-    return '$day ${months[month - 1]} $year';
+    return '$day ${months[month - 1].toLowerCase()} $year';
   }
 }
