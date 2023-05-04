@@ -8,6 +8,7 @@ class _Content extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const _AppBarTitle(),
+        centerTitle: true,
       ),
       body: SafeArea(
         child: ScrollableContent(

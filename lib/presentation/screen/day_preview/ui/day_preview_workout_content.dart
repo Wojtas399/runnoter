@@ -15,30 +15,30 @@ class _WorkoutContent extends StatelessWidget {
             const SizedBox(height: 24),
             _WorkoutParam(
               label: AppLocalizations.of(context)!
-                  .day_preview_screen_workout_name_section_label,
+                  .day_preview_workout_name_section_label,
               child: const _WorkoutName(),
             ),
             const SizedBox(height: 16),
             _WorkoutParam(
               label: AppLocalizations.of(context)!
-                  .day_preview_screen_workout_stages_section_label,
+                  .day_preview_workout_stages_section_label,
               child: const _WorkoutStages(),
             ),
             const SizedBox(height: 16),
             _WorkoutParam(
               label: AppLocalizations.of(context)!
-                  .day_preview_screen_total_distance_section_label,
+                  .day_preview_total_distance_section_label,
               child: const _WorkoutDistance(),
             ),
             const SizedBox(height: 16),
             _WorkoutParam(
               label: AppLocalizations.of(context)!
-                  .day_preview_screen_workout_status_section_label,
+                  .day_preview_workout_status_section_label,
               child: const _WorkoutStatus(),
             ),
           ],
         ),
-        const _WorkoutFinishButton(),
+        const _WorkoutStatusButton(),
       ],
     );
   }
@@ -97,15 +97,48 @@ class _WorkoutDistance extends StatelessWidget {
   }
 }
 
-class _WorkoutFinishButton extends StatelessWidget {
-  const _WorkoutFinishButton();
+class _WorkoutStatusButton extends StatelessWidget {
+  const _WorkoutStatusButton();
 
   @override
   Widget build(BuildContext context) {
+    final WorkoutStatus? workoutStatus = context.select(
+      (DayPreviewBloc bloc) => bloc.state.workoutStatus,
+    );
+    String label =
+        AppLocalizations.of(context)!.day_preview_change_status_button_label;
+    if (workoutStatus is WorkoutStatusPending) {
+      label =
+          AppLocalizations.of(context)!.day_preview_finish_workout_button_label;
+    }
+
     return BigButton(
-      label: AppLocalizations.of(context)!
-          .day_preview_screen_finish_workout_button_label,
-      onPressed: () {},
+      label: label,
+      onPressed: () {
+        _onPressed(context);
+      },
+    );
+  }
+
+  void _onPressed(BuildContext context) {
+    final DayPreviewBloc bloc = context.read<DayPreviewBloc>();
+    final String? workoutId = bloc.state.workoutId;
+    if (workoutId == null) {
+      return;
+    }
+    final WorkoutStatus? workoutStatus = bloc.state.workoutStatus;
+    WorkoutStatusCreatorArguments creatorArguments =
+        WorkoutStatusCreatorUpdateStatusArguments(workoutId: workoutId);
+    if (workoutStatus is WorkoutStatusPending) {
+      creatorArguments = WorkoutStatusCreatorFinishWorkoutArguments(
+        workoutId: workoutId,
+      );
+    }
+    navigateTo(
+      context: context,
+      route: WorkoutStatusCreatorRoute(
+        creatorArguments: creatorArguments,
+      ),
     );
   }
 }

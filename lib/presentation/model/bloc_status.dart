@@ -48,3 +48,7 @@ class BlocStatusUnknownError extends BlocStatus {
 class BlocStatusNoInternetConnection extends BlocStatus {
   const BlocStatusNoInternetConnection();
 }
+
+class BlocStatusNoLoggedUser extends BlocStatus {
+  const BlocStatusNoLoggedUser();
+}

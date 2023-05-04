@@ -19,7 +19,7 @@ import '../../../formatter/workout_stage_formatter.dart';
 import '../../../formatter/workout_status_formatter.dart';
 import '../../../service/dialog_service.dart';
 import '../../../service/navigator_service.dart';
-import '../../workout_creator/ui/workout_creator_screen.dart';
+import '../../screens.dart';
 import '../bloc/day_preview_bloc.dart';
 
 part 'day_preview_app_bar.dart';
@@ -110,7 +110,7 @@ class _BlocListener extends StatelessWidget {
       navigateTo(
         context: context,
         route: WorkoutCreatorRoute(
-          arguments: WorkoutCreatorEditModeArguments(
+          creatorArguments: WorkoutCreatorEditModeArguments(
             date: date,
             workoutId: workoutId,
           ),
@@ -122,8 +122,8 @@ class _BlocListener extends StatelessWidget {
   void _showInfoAboutDeleteWorkout(BuildContext context) {
     showSnackbarMessage(
       context: context,
-      message: AppLocalizations.of(context)!
-          .day_preview_screen_deleted_workout_message,
+      message:
+          AppLocalizations.of(context)!.day_preview_deleted_workout_message,
     );
   }
 }
