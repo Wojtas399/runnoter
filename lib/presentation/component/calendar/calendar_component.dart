@@ -6,29 +6,31 @@ import '../../../common/date_service.dart';
 import 'calendar_component_cubit.dart';
 
 part 'calendar_component_day_labels.dart';
+part 'calendar_component_days.dart';
 part 'calendar_component_header.dart';
 
 class Calendar extends StatelessWidget {
   final DateTime initialDate;
-  final List<DateTime> markedDates;
+  final List<WorkoutDay> workoutDays;
 
   const Calendar({
     super.key,
     required this.initialDate,
-    required this.markedDates,
+    required this.workoutDays,
   });
 
   @override
   Widget build(BuildContext context) {
     return _CubitProvider(
       initialDate: initialDate,
-      markedDates: markedDates,
+      workoutDays: workoutDays,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: const [
           _Header(),
-          SizedBox(height: 16),
+          SizedBox(height: 8),
           _DayLabels(),
+          _Days(),
         ],
       ),
     );
@@ -37,12 +39,12 @@ class Calendar extends StatelessWidget {
 
 class _CubitProvider extends StatelessWidget {
   final DateTime initialDate;
-  final List<DateTime> markedDates;
+  final List<WorkoutDay> workoutDays;
   final Widget child;
 
   const _CubitProvider({
     required this.initialDate,
-    required this.markedDates,
+    required this.workoutDays,
     required this.child,
   });
 
@@ -53,7 +55,7 @@ class _CubitProvider extends StatelessWidget {
         dateService: DateService(),
       )..initialize(
           initialDate: initialDate,
-          markedDates: markedDates,
+          workoutDays: workoutDays,
         ),
       child: child,
     );

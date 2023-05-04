@@ -1,88 +1,97 @@
+import 'package:equatable/equatable.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../common/date_service.dart';
 
-class CalendarCubit extends Cubit<DisplayingMonth?> {
+class CalendarCubit extends Cubit<CalendarState> {
   final DateService _dateService;
-  List<DateTime> _markedDates = [];
+  List<WorkoutDay> _workoutDays = [];
 
   CalendarCubit({
     required DateService dateService,
   })  : _dateService = dateService,
-        super(null);
+        super(
+          const CalendarState(
+            displayingMonth: null,
+            displayingYear: null,
+            weeks: null,
+          ),
+        );
 
   void initialize({
     required DateTime initialDate,
-    required List<DateTime> markedDates,
+    required List<WorkoutDay> workoutDays,
   }) {
-    _markedDates = markedDates;
-    emit(
-      DisplayingMonth(
-        month: initialDate.month,
-        year: initialDate.year,
-      ),
-    );
+    _workoutDays = workoutDays;
+    emit(state.copyWith(
+      displayingMonth: initialDate.month,
+      displayingYear: initialDate.year,
+      weeks: _createWeeks(initialDate.month, initialDate.year),
+    ));
   }
 
   void previousMonth() {
-    if (state == null) {
+    if (state.displayingMonth == null || state.displayingYear == null) {
       return;
     }
     final DateTime dateOfFirstDayInPreviousMonth = DateTime(
-      state!.year,
-      state!.month - 1,
+      state.displayingYear!,
+      state.displayingMonth! - 1,
     );
-    emit(
-      DisplayingMonth(
-        month: dateOfFirstDayInPreviousMonth.month,
-        year: dateOfFirstDayInPreviousMonth.year,
-      ),
-    );
+    final int newDisplayingMonth = dateOfFirstDayInPreviousMonth.month;
+    final int newDisplayingYear = dateOfFirstDayInPreviousMonth.year;
+    emit(state.copyWith(
+      displayingMonth: dateOfFirstDayInPreviousMonth.month,
+      displayingYear: dateOfFirstDayInPreviousMonth.year,
+      weeks: _createWeeks(newDisplayingMonth, newDisplayingYear),
+    ));
   }
 
   void nextMonth() {
-    if (state == null) {
+    if (state.displayingMonth == null || state.displayingYear == null) {
       return;
     }
     final DateTime dateOfFirstDayInNextMonth = DateTime(
-      state!.year,
-      state!.month + 1,
+      state.displayingYear!,
+      state.displayingMonth! + 1,
     );
-    emit(
-      DisplayingMonth(
-        month: dateOfFirstDayInNextMonth.month,
-        year: dateOfFirstDayInNextMonth.year,
-      ),
-    );
+    final int newDisplayingMonth = dateOfFirstDayInNextMonth.month;
+    final int newDisplayingYear = dateOfFirstDayInNextMonth.year;
+    emit(state.copyWith(
+      displayingMonth: newDisplayingMonth,
+      displayingYear: newDisplayingYear,
+      weeks: _createWeeks(newDisplayingMonth, newDisplayingYear),
+    ));
   }
 
-  List<List<CalendarComponentDay>> createWeeks() {
-    List<List<CalendarComponentDay>> weeks = [];
-    if (state == null) {
-      return weeks;
-    }
-    DateTime date = DateTime(state!.year, state!.month);
+  List<CalendarWeek> _createWeeks(int month, int year) {
+    List<CalendarWeek> weeks = [];
+    DateTime date = DateTime(year, month);
     date = _dateService.getFirstDateFromWeekMatchingToDate(date);
     for (int weekNumber = 1; weekNumber <= 6; weekNumber++) {
-      final List<CalendarComponentDay> newWeek = _createDaysFromWeek(date);
-      weeks.add(newWeek);
+      final List<CalendarDay> daysFromWeek = _createDaysFromWeek(date, month);
+      weeks.add(
+        CalendarWeek(days: daysFromWeek),
+      );
       date = DateTime(date.year, date.month, date.day + 7);
     }
     return weeks;
   }
 
-  List<CalendarComponentDay> _createDaysFromWeek(
+  List<CalendarDay> _createDaysFromWeek(
     DateTime dateOfFirstDayOfTheWeek,
+    int month,
   ) {
-    final List<CalendarComponentDay> daysFromWeek = [];
+    final List<CalendarDay> daysFromWeek = [];
     final DateTime todayDate = _dateService.getTodayDate();
     DateTime date = dateOfFirstDayOfTheWeek;
     for (int weekDayNumber = 1; weekDayNumber <= 7; weekDayNumber++) {
-      final CalendarComponentDay newCalendarDay = CalendarComponentDay(
+      final CalendarDay newCalendarDay = CalendarDay(
         date: date,
-        isDisabled: date.month != state!.month,
+        isDisabled: date.month != month,
         isTodayDay: _dateService.areDatesTheSame(date, todayDate),
-        isMarked: _markedDates.contains(date),
+        icon: _getWorkoutStatusIconForDay(date),
       );
       daysFromWeek.add(newCalendarDay);
       date = date.add(
@@ -91,28 +100,94 @@ class CalendarCubit extends Cubit<DisplayingMonth?> {
     }
     return daysFromWeek;
   }
+
+  Icon? _getWorkoutStatusIconForDay(DateTime date) {
+    return <WorkoutDay?>[..._workoutDays]
+        .firstWhere(
+          (WorkoutDay? day) => day?.date == date,
+          orElse: () => null,
+        )
+        ?.workoutStatusIcon;
+  }
 }
 
-class DisplayingMonth {
-  final int month;
-  final int year;
+class CalendarState extends Equatable {
+  final int? displayingMonth;
+  final int? displayingYear;
+  final List<CalendarWeek>? weeks;
 
-  const DisplayingMonth({
-    required this.month,
-    required this.year,
+  const CalendarState({
+    required this.displayingMonth,
+    required this.displayingYear,
+    required this.weeks,
   });
+
+  @override
+  List<Object?> get props => [
+        displayingMonth,
+        displayingYear,
+        weeks,
+      ];
+
+  CalendarState copyWith({
+    int? displayingMonth,
+    int? displayingYear,
+    List<CalendarWeek>? weeks,
+  }) =>
+      CalendarState(
+        displayingMonth: displayingMonth ?? this.displayingMonth,
+        displayingYear: displayingYear ?? this.displayingYear,
+        weeks: weeks ?? this.weeks,
+      );
 }
 
-class CalendarComponentDay {
+class WorkoutDay extends Equatable {
+  final DateTime date;
+  final Icon workoutStatusIcon;
+
+  const WorkoutDay({
+    required this.date,
+    required this.workoutStatusIcon,
+  });
+
+  @override
+  List<Object?> get props => [
+        date,
+        workoutStatusIcon,
+      ];
+}
+
+class CalendarWeek extends Equatable {
+  final List<CalendarDay> days;
+
+  const CalendarWeek({
+    required this.days,
+  });
+
+  @override
+  List<Object?> get props => [
+        days,
+      ];
+}
+
+class CalendarDay extends Equatable {
   final DateTime date;
   final bool isDisabled;
   final bool isTodayDay;
-  final bool isMarked;
+  final Icon? icon;
 
-  const CalendarComponentDay({
+  const CalendarDay({
     required this.date,
     required this.isDisabled,
     required this.isTodayDay,
-    this.isMarked = false,
+    this.icon,
   });
+
+  @override
+  List<Object?> get props => [
+        date,
+        isDisabled,
+        isTodayDay,
+        icon,
+      ];
 }

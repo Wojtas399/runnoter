@@ -9,12 +9,14 @@ class CalendarScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(24),
-      child: Center(
-        child: Calendar(
-          initialDate: DateTime.now(),
-          markedDates: const [],
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Center(
+          child: Calendar(
+            initialDate: DateTime.now(),
+            workoutDays: const [],
+          ),
         ),
       ),
     );

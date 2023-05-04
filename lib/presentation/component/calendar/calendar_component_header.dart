@@ -24,15 +24,18 @@ class _Month extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final DisplayingMonth? displayingMonth = context.select(
-      (CalendarCubit cubit) => cubit.state,
+    final int? displayingMonth = context.select(
+      (CalendarCubit cubit) => cubit.state.displayingMonth,
+    );
+    final int? displayingYear = context.select(
+      (CalendarCubit cubit) => cubit.state.displayingYear,
     );
 
     if (displayingMonth == null) {
       return const SizedBox();
     }
     return Text(
-      '${_getMonthName(context, displayingMonth.month)} ${displayingMonth.year}',
+      '${_getMonthName(context, displayingMonth)} $displayingYear',
       style: Theme.of(context).textTheme.titleMedium,
     );
   }
