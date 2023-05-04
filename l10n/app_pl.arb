@@ -447,28 +447,28 @@
   },
 
 
-  "language_label": "Język",
-  "@language_label": {
+  "language": "Język",
+  "@language": {
     "description": "Label of language"
   },
-  "language_polish": "Polski",
-  "@language_polish": {
+  "languagePolish": "Polski",
+  "@languagePolish": {
     "description": "Polish language"
   },
-  "language_english": "Angielski",
-  "@language_english": {
+  "languageEnglish": "Angielski",
+  "@languageEnglish": {
     "description": "English language"
   },
-  "language_system": "Systemowy",
-  "@language_system": {
+  "languageSystem": "Systemowy",
+  "@languageSystem": {
     "description": "System language"
   },
-  "language_selection_text": "Wybierz język aplikacji",
-  "@language_selection_text": {
+  "languageSelect": "Wybierz język aplikacji",
+  "@languageSelect": {
     "description": "Text about language selection"
   },
-  "system_language_description": "Jeśli wybierzesz język systemowy, aplikacja będzie używała języka obecnie ustawionego na Twoim urządzeniu.",
-  "@system_language_description": {
+  "systemLanguageDescription": "Jeśli wybierzesz język systemowy, aplikacja będzie używała języka obecnie ustawionego na Twoim urządzeniu.",
+  "@systemLanguageDescription": {
     "description": "Description about system language"
   },
 

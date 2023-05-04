@@ -19,13 +19,14 @@ extension ThemeModeFormatter on ThemeMode {
 
 extension LanguageFormatter on Language {
   String toUIFormat(BuildContext context) {
+    final str = Str.of(context);
     switch (this) {
       case Language.polish:
-        return Str.of(context).language_polish;
+        return str.languagePolish;
       case Language.english:
-        return Str.of(context).language_english;
+        return str.languageEnglish;
       case Language.system:
-        return Str.of(context).language_system;
+        return str.languageSystem;
     }
   }
 }

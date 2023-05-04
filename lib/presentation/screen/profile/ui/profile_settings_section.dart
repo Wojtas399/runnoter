@@ -87,7 +87,7 @@ class _Language extends StatelessWidget {
     );
 
     return ValueWithLabelAndIconComponent(
-      label: Str.of(context).language_label,
+      label: Str.of(context).language,
       iconData: Icons.translate_outlined,
       value: language?.toUIFormat(context) ?? '',
       onPressed: () {
