@@ -10,7 +10,7 @@ class _AppBar extends StatelessWidget with PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       title: Text(
-        Str.of(context).day_preview_screen_title,
+        Str.of(context).dayPreviewScreenTitle,
       ),
       centerTitle: true,
       actions: const [
@@ -54,7 +54,7 @@ class _WorkoutActions extends StatelessWidget {
               const Icon(Icons.edit_outlined),
               const SizedBox(width: 8),
               Text(
-                Str.of(context).day_preview_edit_workout_label,
+                Str.of(context).dayPreviewEditWorkout,
               ),
             ],
           ),
@@ -69,7 +69,7 @@ class _WorkoutActions extends StatelessWidget {
               const Icon(Icons.delete_outline),
               const SizedBox(width: 8),
               Text(
-                Str.of(context).day_preview_delete_workout_label,
+                Str.of(context).dayPreviewDeleteWorkout,
               ),
             ],
           ),
