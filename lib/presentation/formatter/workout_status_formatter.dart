@@ -17,12 +17,13 @@ extension WorkoutStatusFormatter on WorkoutStatus {
   }
 
   String toLabel(BuildContext context) {
+    final str = Str.of(context);
     if (this is WorkoutStatusPending) {
-      return Str.of(context).workout_status_pending;
+      return str.workoutStatusPending;
     } else if (this is WorkoutStatusCompleted) {
-      return Str.of(context).workout_status_completed;
+      return str.workoutStatusCompleted;
     } else if (this is WorkoutStatusUncompleted) {
-      return Str.of(context).workout_status_uncompleted;
+      return str.workoutStatusUncompleted;
     } else {
       throw '[WorkoutStatusFormatter - toLabel()]: Unknown status type';
     }

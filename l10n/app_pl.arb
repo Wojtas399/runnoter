@@ -575,16 +575,16 @@
   },
 
 
-  "workout_status_pending": "Oczekujący",
-  "@workout_status_pending": {
+  "workoutStatusPending": "Oczekujący",
+  "@workoutStatusPending": {
     "description": "Type of workout status called pending"
   },
-  "workout_status_completed": "Ukończony",
-  "@workout_status_completed": {
+  "workoutStatusCompleted": "Ukończony",
+  "@workoutStatusCompleted": {
     "description": "Type of workout status called completed"
   },
-  "workout_status_uncompleted": "Nieukończony",
-  "@workout_status_uncompleted": {
+  "workoutStatusUncompleted": "Nieukończony",
+  "@workoutStatusUncompleted": {
     "description": "Type of workout status called uncompleted"
   },
 

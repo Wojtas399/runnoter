@@ -160,9 +160,9 @@
   "workoutStageJogging": "{joggingDistanceInMeters}m jogging",
 
 
-  "workout_status_pending": "Pending",
-  "workout_status_completed": "Completed",
-  "workout_status_uncompleted": "Uncompleted",
+  "workoutStatusPending": "Pending",
+  "workoutStatusCompleted": "Completed",
+  "workoutStatusUncompleted": "Uncompleted",
 
 
   "no_internet_connection_dialog_title": "No internet connection",
