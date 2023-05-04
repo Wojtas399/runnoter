@@ -101,44 +101,44 @@
   },
 
 
-  "home_current_week_page_title": "Obecny tydzień",
-  "@home_current_week_page_title": {
+  "homeCurrentWeekPageTitle": "Obecny tydzień",
+  "@homeCurrentWeekPageTitle": {
     "description": "Title of current week page"
   },
-  "home_calendar_page_title": "Kalendarz",
-  "@home_calendar_page_title": {
+  "homeCalendarPageTitle": "Kalendarz",
+  "@homeCalendarPageTitle": {
     "description": "Title of calendar page"
   },
-  "home_pulse_and_weight_page_title": "Puls & Waga",
-  "@home_pulse_and_weight_page_title": {
+  "homePulseAndWeightPageTitle": "Puls & Waga",
+  "@homePulseAndWeightPageTitle": {
     "description": "Title of pulse and weight page"
   },
-  "home_drawer_profile_label": "Profil",
-  "@home_drawer_profile_label": {
+  "homeDrawerProfile": "Profil",
+  "@homeDrawerProfile": {
     "description": "Label of drawer's profile option"
   },
-  "home_drawer_mileage_label": "Kilometraż",
-  "@home_drawer_mileage_label": {
+  "homeDrawerMileage": "Kilometraż",
+  "@homeDrawerMileage": {
     "description": "Label of drawer's mileage option"
   },
-  "home_drawer_blood_label": "Krew",
-  "@home_drawer_blood_label": {
+  "homeDrawerBlood": "Krew",
+  "@homeDrawerBlood": {
     "description": "Label of drawer's blood option"
   },
-  "home_drawer_competitions_label": "Starty w zawodach",
-  "@home_drawer_competitions_label": {
+  "homeDrawerCompetitions": "Starty w zawodach",
+  "@homeDrawerCompetitions": {
     "description": "Label of drawer's competitions option"
   },
-  "home_drawer_sign_out_option": "Wyloguj",
-  "@home_drawer_sign_out_option": {
+  "homeDrawerSignOut": "Wyloguj",
+  "@homeDrawerSignOut": {
     "description": "Label of drawer's sign out option"
   },
-  "home_sign_out_confirmation_dialog_title": "Wylogowanie",
-  "@home_sign_out_confirmation_dialog_title": {
+  "homeSignOutConfirmationDialogTitle": "Wylogowanie",
+  "@homeSignOutConfirmationDialogTitle": {
     "description": "Title of the dialog to confirm sign out"
   },
-  "home_sign_out_confirmation_dialog_message": "Czy na pewno chcesz się wylogować?",
-  "@home_sign_out_confirmation_dialog_message": {
+  "homeSignOutConfirmationDialogMessage": "Czy na pewno chcesz się wylogować?",
+  "@homeSignOutConfirmationDialogMessage": {
     "description": "Message of the dialog to confirm sign out"
   },
 

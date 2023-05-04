@@ -28,16 +28,16 @@
   "forgotPasswordUserNotFoundDialogMessage": "We cannot sent the message because there is no user with given email address",
 
 
-  "home_current_week_page_title": "Current week",
-  "home_calendar_page_title": "Calendar",
-  "home_pulse_and_weight_page_title": "Puls & Waga",
-  "home_drawer_profile_label": "Profile",
-  "home_drawer_mileage_label": "Mileage",
-  "home_drawer_blood_label": "Blood",
-  "home_drawer_competitions_label": "Competitions",
-  "home_drawer_sign_out_option": "Sign out",
-  "home_sign_out_confirmation_dialog_title": "Sign out",
-  "home_sign_out_confirmation_dialog_message": "Are you sure you want to sign out?",
+  "homeCurrentWeekPageTitle": "Current week",
+  "homeCalendarPageTitle": "Calendar",
+  "homePulseAndWeightPageTitle": "Puls & Waga",
+  "homeDrawerProfile": "Profile",
+  "homeDrawerMileage": "Mileage",
+  "homeDrawerBlood": "Blood",
+  "homeDrawerCompetitions": "Competitions",
+  "homeDrawerSignOut": "Sign out",
+  "homeSignOutConfirmationDialogTitle": "Sign out",
+  "homeSignOutConfirmationDialogMessage": "Are you sure you want to sign out?",
 
 
   "day_preview_title": "Day preview",

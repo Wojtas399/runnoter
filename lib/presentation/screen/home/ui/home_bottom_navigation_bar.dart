@@ -16,6 +16,7 @@ class HomeBottomNavigationBar extends StatelessWidget {
     final HomePage currentPage = context.select(
       (HomeBloc bloc) => bloc.state.currentPage,
     );
+    final str = Str.of(context);
 
     return NavigationBar(
       onDestinationSelected: (int pageIndex) {
@@ -26,17 +27,17 @@ class HomeBottomNavigationBar extends StatelessWidget {
         NavigationDestination(
           selectedIcon: const Icon(Icons.date_range),
           icon: const Icon(Icons.date_range_outlined),
-          label: Str.of(context).home_current_week_page_title,
+          label: str.homeCurrentWeekPageTitle,
         ),
         NavigationDestination(
           selectedIcon: const Icon(Icons.calendar_month),
           icon: const Icon(Icons.calendar_month_outlined),
-          label: Str.of(context).home_calendar_page_title,
+          label: str.homeCalendarPageTitle,
         ),
         NavigationDestination(
           selectedIcon: const Icon(Icons.health_and_safety),
           icon: const Icon(Icons.health_and_safety_outlined),
-          label: Str.of(context).home_pulse_and_weight_page_title,
+          label: str.homePulseAndWeightPageTitle,
         ),
       ],
     );
