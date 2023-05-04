@@ -95,7 +95,7 @@ class _Name extends StatelessWidget {
       isValueRequired: true,
       validator: (String? value) {
         if (value != null && !isNameOrSurnameValid(value)) {
-          return Str.of(context).invalid_name_or_surname_message;
+          return Str.of(context).invalidNameOrSurnameMessage;
         }
         return null;
       },
@@ -144,7 +144,7 @@ class _Surname extends StatelessWidget {
       isValueRequired: true,
       validator: (String? value) {
         if (value != null && !isNameOrSurnameValid(value)) {
-          return Str.of(context).invalid_name_or_surname_message;
+          return Str.of(context).invalidNameOrSurnameMessage;
         }
         return null;
       },

@@ -50,7 +50,7 @@ class _Name extends StatelessWidget {
       },
       validator: (_) {
         if (!isValid) {
-          return Str.of(context).invalid_name_or_surname_message;
+          return Str.of(context).invalidNameOrSurnameMessage;
         }
         return null;
       },
@@ -82,7 +82,7 @@ class _Surname extends StatelessWidget {
       },
       validator: (_) {
         if (!isValid) {
-          return Str.of(context).invalid_name_or_surname_message;
+          return Str.of(context).invalidNameOrSurnameMessage;
         }
         return null;
       },
@@ -114,7 +114,7 @@ class _Email extends StatelessWidget {
       },
       validator: (_) {
         if (!isValid) {
-          return Str.of(context).invalid_email_message;
+          return Str.of(context).invalidEmailMessage;
         }
         return null;
       },
@@ -144,7 +144,7 @@ class _Password extends StatelessWidget {
       },
       validator: (_) {
         if (!isValid) {
-          return Str.of(context).invalid_password_message;
+          return Str.of(context).invalidPasswordMessage;
         }
         return null;
       },
@@ -175,7 +175,7 @@ class _PasswordConfirmation extends StatelessWidget {
       },
       validator: (_) {
         if (!isValid) {
-          return Str.of(context).invalid_password_confirmation_message;
+          return Str.of(context).invalidPasswordConfirmationMessage;
         }
         return null;
       },

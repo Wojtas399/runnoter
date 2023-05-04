@@ -669,24 +669,24 @@
   },
 
 
-  "required_field_message": "To pole jest wymagane",
-  "@required_field_message": {
+  "requiredFieldMessage": "To pole jest wymagane",
+  "@requiredFieldMessage": {
     "description": "Message to inform that field is required."
   },
-  "invalid_name_or_surname_message": "Wymogi: \n - Długość minimum 2 znaki \n - Wyłącznie litery",
-  "@invalid_name_or_surname_message": {
+  "invalidNameOrSurnameMessage": "Wymogi: \n - Długość minimum 2 znaki \n - Wyłącznie litery",
+  "@invalidNameOrSurnameMessage": {
     "description": "Message about invalid name"
   },
-  "invalid_email_message": "Niepoprawny adres email",
-  "@invalid_email_message": {
+  "invalidEmailMessage": "Niepoprawny adres email",
+  "@invalidEmailMessage": {
     "description": "Message about invalid email"
   },
-  "invalid_password_message": "Wymogi: \n - Długość minimum 6 znaków \n - Co najmniej jedna duża litera, \n - Co najmniej jedna mała litera, \n - Co najmniej jedna cyfra, \n - Co najmniej jeden znak specjalny",
-  "@invalid_password_message": {
+  "invalidPasswordMessage": "Wymogi: \n - Długość minimum 6 znaków \n - Co najmniej jedna duża litera, \n - Co najmniej jedna mała litera, \n - Co najmniej jedna cyfra, \n - Co najmniej jeden znak specjalny",
+  "@invalidPasswordMessage": {
     "description": "Message about invalid password"
   },
-  "invalid_password_confirmation_message": "Hasła nie są jednakowe",
-  "@invalid_password_confirmation_message": {
+  "invalidPasswordConfirmationMessage": "Hasła nie są jednakowe",
+  "@invalidPasswordConfirmationMessage": {
     "description": "Message about invalid password confirmation"
   },
 

@@ -125,7 +125,7 @@ class _State extends State<ProfileUpdateEmailDialog> {
 
   String? _validateEmail(String? value) {
     if (value != null && !isEmailValid(value)) {
-      return Str.of(context).invalid_email_message;
+      return Str.of(context).invalidEmailMessage;
     }
     return null;
   }

@@ -66,7 +66,7 @@ class _State extends State<PasswordTextFieldComponent> {
 
   String? _validate(String? value, BuildContext context) {
     if (widget.isRequired && value == '') {
-      return Str.of(context).required_field_message;
+      return Str.of(context).requiredFieldMessage;
     }
     final String? Function(String? value)? customValidator = widget.validator;
     if (customValidator != null) {

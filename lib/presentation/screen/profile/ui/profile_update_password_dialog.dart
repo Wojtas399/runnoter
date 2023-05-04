@@ -122,7 +122,7 @@ class _State extends State<ProfileUpdatePasswordDialog> {
 
   String? _validatePassword(String? value) {
     if (value != null && !isPasswordValid(value)) {
-      return Str.of(context).invalid_password_message;
+      return Str.of(context).invalidPasswordMessage;
     }
     return null;
   }

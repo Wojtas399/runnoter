@@ -188,11 +188,11 @@
   "add": "Add",
 
 
-  "required_field_message": "This field is required",
-  "invalid_name_or_surname_message": "Requirements: \n - Min. 2 characters length \n - Only letters",
-  "invalid_email_message": "Invalid email address",
-  "invalid_password_message": "Requirements: \n - Min. 6 characters length \n - At least one upper letter, \n - At least one lower letter, \n - At least one digit, \n - At least one special character",
-  "invalid_password_confirmation_message": "Passwords are not the same",
+  "requiredFieldMessage": "This field is required",
+  "invalidNameOrSurnameMessage": "Requirements: \n - Min. 2 characters length \n - Only letters",
+  "invalidEmailMessage": "Invalid email address",
+  "invalidPasswordMessage": "Requirements: \n - Min. 6 characters length \n - At least one upper letter, \n - At least one lower letter, \n - At least one digit, \n - At least one special character",
+  "invalidPasswordConfirmationMessage": "Passwords are not the same",
 
   "january": "January",
   "february": "February",
