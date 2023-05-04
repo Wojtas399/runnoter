@@ -92,28 +92,23 @@ class _BlocListener extends StatelessWidget {
       case SignInError.invalidEmail:
         await showMessageDialog(
           context: context,
-          title: AppLocalizations.of(context)!
-              .sign_in_screen_invalid_email_dialog_title,
-          message: AppLocalizations.of(context)!
-              .sign_in_screen_invalid_email_dialog_message,
+          title: Str.of(context).sign_in_screen_invalid_email_dialog_title,
+          message: Str.of(context).sign_in_screen_invalid_email_dialog_message,
         );
         break;
       case SignInError.userNotFound:
         await showMessageDialog(
           context: context,
-          title: AppLocalizations.of(context)!
-              .sign_in_screen_user_not_found_dialog_title,
+          title: Str.of(context).sign_in_screen_user_not_found_dialog_title,
           message:
-              '${AppLocalizations.of(context)!.sign_in_screen_user_not_found_dialog_message}...',
+              '${Str.of(context).sign_in_screen_user_not_found_dialog_message}...',
         );
         break;
       case SignInError.wrongPassword:
         await showMessageDialog(
           context: context,
-          title: AppLocalizations.of(context)!
-              .sign_in_screen_wrong_password_dialog_title,
-          message: AppLocalizations.of(context)!
-              .sign_in_screen_wrong_password_dialog_message,
+          title: Str.of(context).sign_in_screen_wrong_password_dialog_title,
+          message: Str.of(context).sign_in_screen_wrong_password_dialog_message,
         );
         break;
     }

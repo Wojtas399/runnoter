@@ -29,23 +29,23 @@ extension WorkoutStageFormatter on WorkoutStage {
   }
 
   String toTypeName(BuildContext context) {
-    final appLocalizations = AppLocalizations.of(context)!;
+    final str = Str.of(context)!;
     if (this is WorkoutStageBaseRun) {
-      return appLocalizations.workout_stage_base_run;
+      return str.workout_stage_base_run;
     } else if (this is WorkoutStageZone2) {
-      return appLocalizations.workout_stage_zone2;
+      return str.workout_stage_zone2;
     } else if (this is WorkoutStageZone3) {
-      return appLocalizations.workout_stage_zone3;
+      return str.workout_stage_zone3;
     } else if (this is WorkoutStageRhythms) {
-      return appLocalizations.workout_stage_rhythms;
+      return str.workout_stage_rhythms;
     } else if (this is WorkoutStageHillRepeats) {
-      return appLocalizations.workout_stage_hill_repeats;
+      return str.workout_stage_hill_repeats;
     } else if (this is WorkoutStageStretching) {
-      return appLocalizations.workout_stage_stretching;
+      return str.workout_stage_stretching;
     } else if (this is WorkoutStageStrengthening) {
-      return appLocalizations.workout_stage_strengthening;
+      return str.workout_stage_strengthening;
     } else if (this is WorkoutStageFoamRolling) {
-      return appLocalizations.workout_stage_foamRolling;
+      return str.workout_stage_foamRolling;
     }
     return '';
   }
@@ -64,15 +64,14 @@ extension WorkoutStageFormatter on WorkoutStage {
   ) {
     final String seriesDescription =
         '${stage.amountOfSeries}x${stage.seriesDistanceInMeters}m';
-    String breakDescription =
-        '${AppLocalizations.of(context)!.workout_stage_break} ';
+    String breakDescription = '${Str.of(context).workout_stage_break} ';
     if (stage.walkingDistanceInMeters > 0) {
-      breakDescription += ' ${AppLocalizations.of(context)!.workout_stage_march(
+      breakDescription += ' ${Str.of(context).workout_stage_march(
         stage.walkingDistanceInMeters,
       )}, ';
     }
     if (stage.walkingDistanceInMeters > 0) {
-      breakDescription += AppLocalizations.of(context)!.workout_stage_jog(
+      breakDescription += Str.of(context).workout_stage_jog(
         stage.joggingDistanceInMeters,
       );
     }
@@ -80,14 +79,14 @@ extension WorkoutStageFormatter on WorkoutStage {
   }
 
   String _createStretchingDescription(BuildContext context) {
-    return AppLocalizations.of(context)!.workout_stage_stretching;
+    return Str.of(context).workout_stage_stretching;
   }
 
   String _createStrengtheningDescription(BuildContext context) {
-    return AppLocalizations.of(context)!.workout_stage_strengthening;
+    return Str.of(context).workout_stage_strengthening;
   }
 
   String _createFoamRollingDescription(BuildContext context) {
-    return AppLocalizations.of(context)!.workout_stage_foamRolling;
+    return Str.of(context).workout_stage_foamRolling;
   }
 }

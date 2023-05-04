@@ -5,15 +5,15 @@ class _DayLabels extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final appLocalizations = AppLocalizations.of(context)!;
+    final str = Str.of(context);
     final List<String> dayShortLabels = [
-      appLocalizations.monday_short,
-      appLocalizations.tuesday_short,
-      appLocalizations.wednesday_short,
-      appLocalizations.thursday_short,
-      appLocalizations.friday_short,
-      appLocalizations.saturday_short,
-      appLocalizations.sunday_short,
+      str.monday_short,
+      str.tuesday_short,
+      str.wednesday_short,
+      str.thursday_short,
+      str.friday_short,
+      str.saturday_short,
+      str.sunday_short,
     ];
 
     return Column(

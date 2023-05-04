@@ -24,7 +24,7 @@ class MessageDialogComponent extends StatelessWidget {
             Navigator.of(context).pop();
           },
           child: Text(
-            closeButtonLabel ?? AppLocalizations.of(context)!.close,
+            closeButtonLabel ?? Str.of(context).close,
           ),
         ),
       ],

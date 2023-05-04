@@ -38,20 +38,20 @@ class _Month extends StatelessWidget {
   }
 
   String _getMonthName(BuildContext context, int month) {
-    final appLocalizations = AppLocalizations.of(context)!;
+    final str = Str.of(context);
     final List<String> monthLabels = [
-      appLocalizations.january,
-      appLocalizations.february,
-      appLocalizations.march,
-      appLocalizations.april,
-      appLocalizations.may,
-      appLocalizations.june,
-      appLocalizations.july,
-      appLocalizations.august,
-      appLocalizations.september,
-      appLocalizations.october,
-      appLocalizations.november,
-      appLocalizations.december,
+      str.january,
+      str.february,
+      str.march,
+      str.april,
+      str.may,
+      str.june,
+      str.july,
+      str.august,
+      str.september,
+      str.october,
+      str.november,
+      str.december,
     ];
     return monthLabels[month - 1];
   }

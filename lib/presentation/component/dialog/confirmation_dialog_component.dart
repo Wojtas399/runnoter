@@ -31,7 +31,7 @@ class ConfirmationDialogComponent extends StatelessWidget {
             );
           },
           child: Text(
-            cancelButtonLabel ?? AppLocalizations.of(context)!.cancel,
+            cancelButtonLabel ?? Str.of(context).cancel,
           ),
         ),
         TextButton(
@@ -42,7 +42,7 @@ class ConfirmationDialogComponent extends StatelessWidget {
             );
           },
           child: Text(
-            confirmButtonLabel ?? AppLocalizations.of(context)!.confirm,
+            confirmButtonLabel ?? Str.of(context).confirm,
           ),
         ),
       ],

@@ -44,8 +44,7 @@ class _State extends State<ProfileDeleteAccountDialog> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-            AppLocalizations.of(context)!
-                .profile_screen_delete_account_dialog_title,
+            Str.of(context)!.profile_screen_delete_account_dialog_title,
           ),
           leading: IconButton(
             onPressed: () {
@@ -61,7 +60,7 @@ class _State extends State<ProfileDeleteAccountDialog> {
                       _onSaveButtonPressed(context);
                     },
               child: Text(
-                AppLocalizations.of(context)!.delete,
+                Str.of(context)!.delete,
               ),
             ),
             const SizedBox(width: 16),
@@ -78,13 +77,13 @@ class _State extends State<ProfileDeleteAccountDialog> {
               child: Column(
                 children: [
                   Text(
-                    AppLocalizations.of(context)!
+                    Str.of(context)!
                         .profile_screen_delete_account_dialog_message,
                     style: Theme.of(context).textTheme.bodyLarge,
                   ),
                   const SizedBox(height: 24),
                   PasswordTextFieldComponent(
-                    label: AppLocalizations.of(context)!.password,
+                    label: Str.of(context)!.password,
                     controller: _passwordController,
                     isRequired: true,
                   ),

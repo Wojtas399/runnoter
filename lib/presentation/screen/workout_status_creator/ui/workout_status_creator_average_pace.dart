@@ -9,8 +9,7 @@ class _AveragePace extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          AppLocalizations.of(context)!
-              .workout_status_creator_average_pace_label,
+          Str.of(context).workout_status_creator_average_pace_label,
           style: Theme.of(context).textTheme.labelLarge,
         ),
         const SizedBox(height: 16),
@@ -58,7 +57,7 @@ class _AveragePaceMinutes extends StatelessWidget {
     }
 
     return _AveragePaceField(
-      label: AppLocalizations.of(context)!.workout_status_creator_minutes_label,
+      label: Str.of(context).workout_status_creator_minutes_label,
       controller: _controller,
       onChanged: (int? minutes) {
         _onChanged(context, minutes);
@@ -94,7 +93,7 @@ class _AveragePaceSeconds extends StatelessWidget {
     }
 
     return _AveragePaceField(
-      label: AppLocalizations.of(context)!.workout_status_creator_seconds_label,
+      label: Str.of(context).workout_status_creator_seconds_label,
       controller: _controller,
       onChanged: (int? seconds) {
         _onChanged(context, seconds);

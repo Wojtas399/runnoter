@@ -26,17 +26,17 @@ class HomeBottomNavigationBar extends StatelessWidget {
         NavigationDestination(
           selectedIcon: const Icon(Icons.date_range),
           icon: const Icon(Icons.date_range_outlined),
-          label: AppLocalizations.of(context)!.home_current_week_page_title,
+          label: Str.of(context).home_current_week_page_title,
         ),
         NavigationDestination(
           selectedIcon: const Icon(Icons.calendar_month),
           icon: const Icon(Icons.calendar_month_outlined),
-          label: AppLocalizations.of(context)!.home_calendar_page_title,
+          label: Str.of(context).home_calendar_page_title,
         ),
         NavigationDestination(
           selectedIcon: const Icon(Icons.health_and_safety),
           icon: const Icon(Icons.health_and_safety_outlined),
-          label: AppLocalizations.of(context)!.home_pulse_and_weight_page_title,
+          label: Str.of(context).home_pulse_and_weight_page_title,
         ),
       ],
     );

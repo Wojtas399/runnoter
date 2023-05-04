@@ -100,8 +100,8 @@ class _IdentitiesBlocListener extends StatelessWidget {
       case ProfileInfo.savedData:
         showSnackbarMessage(
           context: context,
-          message: AppLocalizations.of(context)!
-              .profile_screen_successfully_saved_data_message,
+          message:
+              Str.of(context)!.profile_screen_successfully_saved_data_message,
         );
         break;
       case ProfileInfo.accountDeleted:
@@ -118,28 +118,23 @@ class _IdentitiesBlocListener extends StatelessWidget {
       case ProfileError.emailAlreadyInUse:
         showMessageDialog(
           context: context,
-          title: AppLocalizations.of(context)!
-              .profile_screen_email_already_taken_title,
-          message: AppLocalizations.of(context)!
-              .profile_screen_email_already_taken_message,
+          title: Str.of(context)!.profile_screen_email_already_taken_title,
+          message: Str.of(context)!.profile_screen_email_already_taken_message,
         );
         break;
       case ProfileError.wrongPassword:
         showMessageDialog(
           context: context,
-          title:
-              AppLocalizations.of(context)!.profile_screen_wrong_password_title,
-          message: AppLocalizations.of(context)!
-              .profile_screen_wrong_password_message,
+          title: Str.of(context)!.profile_screen_wrong_password_title,
+          message: Str.of(context)!.profile_screen_wrong_password_message,
         );
         break;
       case ProfileError.wrongCurrentPassword:
         showMessageDialog(
           context: context,
-          title: AppLocalizations.of(context)!
-              .profile_screen_wrong_current_password_title,
-          message: AppLocalizations.of(context)!
-              .profile_screen_wrong_current_password_message,
+          title: Str.of(context)!.profile_screen_wrong_current_password_title,
+          message:
+              Str.of(context)!.profile_screen_wrong_current_password_message,
         );
     }
   }

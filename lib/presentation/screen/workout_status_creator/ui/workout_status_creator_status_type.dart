@@ -13,8 +13,7 @@ class _StatusType extends StatelessWidget {
       value: workoutStatusType,
       decoration: InputDecoration(
         filled: true,
-        labelText:
-            AppLocalizations.of(context)!.workout_status_creator_screen_title,
+        labelText: Str.of(context).workout_status_creator_screen_title,
       ),
       items: <DropdownMenuItem<WorkoutStatusType>>[
         ...WorkoutStatusType.values.map(

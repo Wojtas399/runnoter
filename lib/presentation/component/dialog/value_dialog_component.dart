@@ -66,7 +66,7 @@ class _State extends State<ValueDialogComponent> {
                       _onSaveButtonPressed(context);
                     },
               child: Text(
-                AppLocalizations.of(context)!.save,
+                Str.of(context)!.save,
               ),
             ),
             const SizedBox(width: 16),

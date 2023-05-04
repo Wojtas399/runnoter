@@ -14,26 +14,22 @@ class _WorkoutContent extends StatelessWidget {
             const _Date(),
             const SizedBox(height: 24),
             _WorkoutParam(
-              label: AppLocalizations.of(context)!
-                  .day_preview_workout_name_section_label,
+              label: Str.of(context).day_preview_workout_name_section_label,
               child: const _WorkoutName(),
             ),
             const SizedBox(height: 16),
             _WorkoutParam(
-              label: AppLocalizations.of(context)!
-                  .day_preview_workout_stages_section_label,
+              label: Str.of(context).day_preview_workout_stages_section_label,
               child: const _WorkoutStages(),
             ),
             const SizedBox(height: 16),
             _WorkoutParam(
-              label: AppLocalizations.of(context)!
-                  .day_preview_total_distance_section_label,
+              label: Str.of(context).day_preview_total_distance_section_label,
               child: const _WorkoutDistance(),
             ),
             const SizedBox(height: 16),
             _WorkoutParam(
-              label: AppLocalizations.of(context)!
-                  .day_preview_workout_status_section_label,
+              label: Str.of(context).day_preview_workout_status_section_label,
               child: const _WorkoutStatus(),
             ),
           ],
@@ -105,11 +101,9 @@ class _WorkoutStatusButton extends StatelessWidget {
     final WorkoutStatus? workoutStatus = context.select(
       (DayPreviewBloc bloc) => bloc.state.workoutStatus,
     );
-    String label =
-        AppLocalizations.of(context)!.day_preview_change_status_button_label;
+    String label = Str.of(context).day_preview_change_status_button_label;
     if (workoutStatus is WorkoutStatusPending) {
-      label =
-          AppLocalizations.of(context)!.day_preview_finish_workout_button_label;
+      label = Str.of(context).day_preview_finish_workout_button_label;
     }
 
     return BigButton(

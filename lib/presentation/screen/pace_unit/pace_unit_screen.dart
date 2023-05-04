@@ -49,7 +49,7 @@ class _Content extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          AppLocalizations.of(context)!.pace_unit_label,
+          Str.of(context).pace_unit_label,
         ),
         leading: IconButton(
           onPressed: () {
@@ -80,7 +80,7 @@ class _Header extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
       child: Text(
-        AppLocalizations.of(context)!.pace_unit_selection_text,
+        Str.of(context).pace_unit_selection_text,
         style: Theme.of(context).textTheme.bodyLarge,
       ),
     );

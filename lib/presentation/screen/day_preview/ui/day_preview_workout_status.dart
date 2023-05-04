@@ -24,14 +24,12 @@ class _WorkoutStatus extends StatelessWidget {
                 _WorkoutStats(status: status),
                 const SizedBox(height: 16),
                 _WorkoutParam(
-                  label: AppLocalizations.of(context)!
-                      .day_preview_workout_status_mood_rate,
+                  label: Str.of(context).day_preview_workout_status_mood_rate,
                   child: const _MoodRate(),
                 ),
                 const SizedBox(height: 16),
                 _WorkoutParam(
-                  label: AppLocalizations.of(context)!
-                      .day_preview_comment_section_label,
+                  label: Str.of(context).day_preview_comment_section_label,
                   child: const _WorkoutComment(),
                 ),
               ],
@@ -86,7 +84,7 @@ class _WorkoutStats extends StatelessWidget {
             children: [
               Expanded(
                 child: _WorkoutStatParam(
-                  label: AppLocalizations.of(context)!
+                  label: Str.of(context)
                       .day_preview_workout_status_covered_distance,
                   value: '${status.coveredDistanceInKm} km',
                 ),
@@ -100,16 +98,15 @@ class _WorkoutStats extends StatelessWidget {
             children: [
               Expanded(
                 child: _WorkoutStatParam(
-                  label: AppLocalizations.of(context)!
-                      .day_preview_workout_status_avg_pace,
+                  label: Str.of(context).day_preview_workout_status_avg_pace,
                   value: status.avgPace.toUIFormat(),
                 ),
               ),
               const VerticalDivider(),
               Expanded(
                 child: _WorkoutStatParam(
-                  label: AppLocalizations.of(context)!
-                      .day_preview_workout_status_avg_heart_rate,
+                  label:
+                      Str.of(context).day_preview_workout_status_avg_heart_rate,
                   value: '${status.avgHeartRate} ud/min',
                 ),
               ),

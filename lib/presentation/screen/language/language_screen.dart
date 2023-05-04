@@ -86,7 +86,7 @@ class _Content extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          AppLocalizations.of(context)!.language_label,
+          Str.of(context).language_label,
         ),
         leading: IconButton(
           onPressed: () {
@@ -119,7 +119,7 @@ class _Header extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
       child: Text(
-        AppLocalizations.of(context)!.language_selection_text,
+        Str.of(context).language_selection_text,
         style: Theme.of(context).textTheme.bodyLarge,
       ),
     );
@@ -173,7 +173,7 @@ class _SystemLanguageDescription extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
       child: Text(
-        AppLocalizations.of(context)!.system_language_description,
+        Str.of(context).system_language_description,
         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
               color: Theme.of(context).colorScheme.outline,
             ),

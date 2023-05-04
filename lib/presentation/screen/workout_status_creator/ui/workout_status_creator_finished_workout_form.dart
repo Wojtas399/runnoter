@@ -43,7 +43,7 @@ class _CoveredDistance extends StatelessWidget {
 
     return TextFieldComponent(
       label:
-          '${AppLocalizations.of(context)!.workout_status_creator_covered_distance_label} [km]',
+          '${Str.of(context).workout_status_creator_covered_distance_label} [km]',
       maxLength: 8,
       keyboardType: TextInputType.number,
       isRequired: true,
@@ -83,8 +83,7 @@ class _MoodRate extends StatelessWidget {
       value: moodRate,
       decoration: InputDecoration(
         filled: true,
-        labelText:
-            AppLocalizations.of(context)!.workout_status_creator_mood_label,
+        labelText: Str.of(context).workout_status_creator_mood_label,
       ),
       isExpanded: true,
       items: <DropdownMenuItem<MoodRate>>[
@@ -142,8 +141,7 @@ class _AverageHeartRate extends StatelessWidget {
     }
 
     return TextFieldComponent(
-      label: AppLocalizations.of(context)!
-          .workout_status_creator_average_heart_rate,
+      label: Str.of(context).workout_status_creator_average_heart_rate,
       maxLength: 3,
       keyboardType: TextInputType.number,
       isRequired: true,
@@ -185,7 +183,7 @@ class _Comment extends StatelessWidget {
     }
 
     return TextFieldComponent(
-      label: AppLocalizations.of(context)!.workout_status_creator_comment_label,
+      label: Str.of(context).workout_status_creator_comment_label,
       maxLength: 100,
       maxLines: null,
       keyboardType: TextInputType.multiline,

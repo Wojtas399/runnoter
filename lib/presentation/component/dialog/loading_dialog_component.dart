@@ -21,7 +21,7 @@ class LoadingDialog extends StatelessWidget {
           const CircularProgressIndicator(),
           const SizedBox(height: 16),
           Text(
-            '${AppLocalizations.of(context)!.loading}...',
+            '${Str.of(context).loading}...',
           ),
         ],
       ),

@@ -91,10 +91,10 @@ class _BlocListener extends StatelessWidget {
       case SignUpError.emailAlreadyInUse:
         await showMessageDialog(
           context: context,
-          title: AppLocalizations.of(context)!
-              .sign_up_screen_already_taken_email_dialog_title,
-          message: AppLocalizations.of(context)!
-              .sign_up_screen_already_taken_email_dialog_message,
+          title:
+              Str.of(context).sign_up_screen_already_taken_email_dialog_title,
+          message:
+              Str.of(context).sign_up_screen_already_taken_email_dialog_message,
         );
         break;
     }

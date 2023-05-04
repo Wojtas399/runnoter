@@ -39,8 +39,7 @@ class _WorkoutStageType extends StatelessWidget {
     return DropdownButtonFormField(
       decoration: InputDecoration(
         filled: true,
-        hintText: AppLocalizations.of(context)!
-            .workout_stage_creator_screen_stage_type,
+        hintText: Str.of(context).workout_stage_creator_screen_stage_type,
       ),
       items: <DropdownMenuItem<WorkoutStageType>>[
         ...WorkoutStageType.values.map(
@@ -62,24 +61,24 @@ class _WorkoutStageType extends StatelessWidget {
     BuildContext context,
     WorkoutStageType stage,
   ) {
-    final appLocalizations = AppLocalizations.of(context);
+    final str = Str.of(context);
     switch (stage) {
       case WorkoutStageType.baseRun:
-        return appLocalizations!.workout_stage_base_run;
+        return str.workout_stage_base_run;
       case WorkoutStageType.zone2:
-        return appLocalizations!.workout_stage_zone2;
+        return str.workout_stage_zone2;
       case WorkoutStageType.zone3:
-        return appLocalizations!.workout_stage_zone3;
+        return str.workout_stage_zone3;
       case WorkoutStageType.hillRepeats:
-        return appLocalizations!.workout_stage_hill_repeats;
+        return str.workout_stage_hill_repeats;
       case WorkoutStageType.rhythms:
-        return appLocalizations!.workout_stage_rhythms;
+        return str.workout_stage_rhythms;
       case WorkoutStageType.stretching:
-        return appLocalizations!.workout_stage_stretching;
+        return str.workout_stage_stretching;
       case WorkoutStageType.strengthening:
-        return appLocalizations!.workout_stage_strengthening;
+        return str.workout_stage_strengthening;
       case WorkoutStageType.foamRolling:
-        return appLocalizations!.workout_stage_foamRolling;
+        return str.workout_stage_foamRolling;
     }
   }
 

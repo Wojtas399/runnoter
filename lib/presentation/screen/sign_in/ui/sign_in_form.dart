@@ -30,7 +30,7 @@ class _Email extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFieldComponent(
-      label: AppLocalizations.of(context)!.email,
+      label: Str.of(context).email,
       icon: Icons.email,
       onChanged: (String? value) {
         _onChanged(value, context);

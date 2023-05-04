@@ -89,7 +89,7 @@ class _Content extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          AppLocalizations.of(context)!.theme_mode_label,
+          Str.of(context).theme_mode_label,
         ),
         leading: IconButton(
           onPressed: () {
@@ -122,7 +122,7 @@ class _Header extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
       child: Text(
-        AppLocalizations.of(context)!.theme_mode_selection_text,
+        Str.of(context).theme_mode_selection_text,
         style: Theme.of(context).textTheme.bodyLarge,
       ),
     );
@@ -142,7 +142,7 @@ class _OptionsToSelect extends StatelessWidget {
       children: [
         RadioListTile<settings.ThemeMode>(
           title: Text(
-            AppLocalizations.of(context)!.theme_mode_light,
+            Str.of(context).theme_mode_light,
           ),
           value: settings.ThemeMode.light,
           groupValue: selectedThemeMode,
@@ -152,7 +152,7 @@ class _OptionsToSelect extends StatelessWidget {
         ),
         RadioListTile<settings.ThemeMode>(
           title: Text(
-            AppLocalizations.of(context)!.theme_mode_dark,
+            Str.of(context).theme_mode_dark,
           ),
           value: settings.ThemeMode.dark,
           groupValue: selectedThemeMode,
@@ -162,7 +162,7 @@ class _OptionsToSelect extends StatelessWidget {
         ),
         RadioListTile<settings.ThemeMode>(
           title: Text(
-            AppLocalizations.of(context)!.theme_mode_system,
+            Str.of(context).theme_mode_system,
           ),
           value: settings.ThemeMode.system,
           groupValue: selectedThemeMode,
@@ -194,7 +194,7 @@ class _SystemThemeDescription extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
       child: Text(
-        AppLocalizations.of(context)!.system_theme_mode_description,
+        Str.of(context).system_theme_mode_description,
         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
               color: Theme.of(context).colorScheme.outline,
             ),
