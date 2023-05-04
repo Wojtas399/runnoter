@@ -8,7 +8,7 @@ class _Content extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          Str.of(context).workout_status_creator_screen_title,
+          Str.of(context).workoutStatusCreatorScreenTitle,
         ),
         centerTitle: true,
       ),

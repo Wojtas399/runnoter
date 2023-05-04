@@ -84,15 +84,15 @@
   "workoutStageCreatorJoggingDistance": "Jogging distance",
 
 
-  "workout_status_creator_screen_title": "Workout status",
-  "workout_status_creator_covered_distance_label": "Covered distance",
-  "workout_status_creator_mood_label": "Mood",
-  "workout_status_creator_average_pace_label": "Average pace",
-  "workout_status_creator_minutes_label": "Minutes",
-  "workout_status_creator_seconds_label": "Seconds",
-  "workout_status_creator_average_heart_rate": "Average heart rate",
-  "workout_status_creator_comment_label": "Comment",
-  "workout_status_creator_saved_status_info": "Successfully updated workout status",
+  "workoutStatusCreatorScreenTitle": "Workout status",
+  "workoutStatusCreatorCoveredDistance": "Covered distance",
+  "workoutStatusCreatorMood": "Mood",
+  "workoutStatusCreatorAveragePace": "Average pace",
+  "workoutStatusCreatorMinutes": "Minutes",
+  "workoutStatusCreatorSeconds": "Seconds",
+  "workoutStatusCreatorAverageHeartRate": "Average heart rate",
+  "workoutStatusCreatorComment": "Comment",
+  "workoutStatusCreatorSavedStatusMessage": "Successfully updated workout status",
 
 
   "profile_screen_title": "Profile",
