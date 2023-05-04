@@ -139,12 +139,12 @@
   "distanceUnitSelect": "Select distance unit",
 
 
-  "pace_unit_label": "Pace unit",
-  "pace_unit_minutes_per_kilometer": "min/km (minutes per kilometer)",
-  "pace_unit_minutes_per_miles": "min/mi (minutes per mile)",
-  "pace_unit_kilometers_per_hour": "km/h (kilometers per hour)",
-  "pace_unit_miles_per_hour": "mi/h (miles per hour)",
-  "pace_unit_selection_text": "Select pace unit",
+  "paceUnit": "Pace unit",
+  "paceUnitMinutesPerKilometer": "min/km (minutes per kilometer)",
+  "paceUnitMinutesPerMile": "min/mi (minutes per mile)",
+  "paceUnitKilometersPerHour": "km/h (kilometers per hour)",
+  "paceUnitMilesPerHour": "mi/h (miles per hour)",
+  "paceUnitSelect": "Select pace unit",
 
 
   "workout_stage_base_run": "Cardio",

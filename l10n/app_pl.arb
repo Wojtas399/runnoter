@@ -491,28 +491,28 @@
   },
 
 
-  "pace_unit_label": "Jednostka tempa",
-  "@pace_unit_label": {
+  "paceUnit": "Jednostka tempa",
+  "@paceUnit": {
     "description": "Label of pace unit"
   },
-  "pace_unit_minutes_per_kilometer": "min/km (minuty na kilometr)",
-  "@pace_unit_minutes_per_kilometer": {
+  "paceUnitMinutesPerKilometer": "min/km (minuty na kilometr)",
+  "@paceUnitMinutesPerKilometer": {
     "description": "Minutes per kilometer pace unit"
   },
-  "pace_unit_minutes_per_miles": "min/mi (minuty na milę)",
-  "@pace_unit_minutes_per_miles": {
+  "paceUnitMinutesPerMile": "min/mi (minuty na milę)",
+  "@paceUnitMinutesPerMile": {
     "description": "Minutes per mile pace unit"
   },
-  "pace_unit_kilometers_per_hour": "km/h (kilometry na godzinę)",
-  "@pace_unit_kilometers_per_hour": {
+  "paceUnitKilometersPerHour": "km/h (kilometry na godzinę)",
+  "@paceUnitKilometersPerHour": {
     "description": "Kilometers per hour pace unit"
   },
-  "pace_unit_miles_per_hour": "mi/h (mile na godzinę)",
-  "@pace_unit_miles_per_hour": {
+  "paceUnitMilesPerHour": "mi/h (mile na godzinę)",
+  "@paceUnitMilesPerHour": {
     "description": "Miles per hour pace unit"
   },
-  "pace_unit_selection_text": "Wybierz jednostkę tempa",
-  "@pace_unit_selection_text": {
+  "paceUnitSelect": "Wybierz jednostkę tempa",
+  "@paceUnitSelect": {
     "description": "Text about pace unit selection"
   },
 

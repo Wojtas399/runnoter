@@ -141,7 +141,7 @@ class _PaceUnit extends StatelessWidget {
     );
 
     return ValueWithLabelAndIconComponent(
-      label: Str.of(context).pace_unit_label,
+      label: Str.of(context).paceUnit,
       iconData: Icons.speed_outlined,
       value: paceUnit?.toUIFormat(context) ?? '',
       onPressed: () {
