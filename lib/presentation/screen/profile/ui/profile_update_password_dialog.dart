@@ -44,6 +44,8 @@ class _State extends State<ProfileUpdatePasswordDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final str = Str.of(context);
+
     return BlocListener<ProfileIdentitiesBloc, ProfileIdentitiesState>(
       listener: (BuildContext context, ProfileIdentitiesState state) {
         final BlocStatus blocStatus = state.status;
@@ -55,7 +57,7 @@ class _State extends State<ProfileUpdatePasswordDialog> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-            Str.of(context).profile_screen_new_password_dialog_title,
+            str.profileNewPasswordDialogTitle,
           ),
           leading: IconButton(
             onPressed: () {
@@ -88,16 +90,14 @@ class _State extends State<ProfileUpdatePasswordDialog> {
               child: Column(
                 children: [
                   PasswordTextFieldComponent(
-                    label: Str.of(context)
-                        .profile_screen_new_password_dialog_new_password_label,
+                    label: str.profileNewPasswordDialogNewPassword,
                     isRequired: true,
                     controller: _newPasswordController,
                     validator: _validatePassword,
                   ),
                   const SizedBox(height: 32),
                   PasswordTextFieldComponent(
-                    label: Str.of(context)
-                        .profile_screen_new_password_dialog_current_password_label,
+                    label: str.profileNewPasswordDialogCurrentPassword,
                     isRequired: true,
                     controller: _currentPasswordController,
                   ),

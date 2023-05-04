@@ -100,8 +100,7 @@ class _IdentitiesBlocListener extends StatelessWidget {
       case ProfileInfo.savedData:
         showSnackbarMessage(
           context: context,
-          message:
-              Str.of(context).profile_screen_successfully_saved_data_message,
+          message: Str.of(context).profileSuccessfullySavedDataMessage,
         );
         break;
       case ProfileInfo.accountDeleted:
@@ -114,27 +113,27 @@ class _IdentitiesBlocListener extends StatelessWidget {
   }
 
   void _manageError(BuildContext context, ProfileError error) {
+    final str = Str.of(context);
     switch (error) {
       case ProfileError.emailAlreadyInUse:
         showMessageDialog(
           context: context,
-          title: Str.of(context).profile_screen_email_already_taken_title,
-          message: Str.of(context).profile_screen_email_already_taken_message,
+          title: str.profileEmailAlreadyTakenDialogTitle,
+          message: str.profileEmailAlreadyTakenDialogMessage,
         );
         break;
       case ProfileError.wrongPassword:
         showMessageDialog(
           context: context,
-          title: Str.of(context).profile_screen_wrong_password_title,
-          message: Str.of(context).profile_screen_wrong_password_message,
+          title: str.profileWrongPasswordDialogTitle,
+          message: str.profileWrongPasswordDialogMessage,
         );
         break;
       case ProfileError.wrongCurrentPassword:
         showMessageDialog(
           context: context,
-          title: Str.of(context).profile_screen_wrong_current_password_title,
-          message:
-              Str.of(context).profile_screen_wrong_current_password_message,
+          title: str.profileWrongCurrentPasswordDialogTitle,
+          message: str.profileWrongCurrentPasswordDialogMessage,
         );
     }
   }

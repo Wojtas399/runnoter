@@ -43,7 +43,7 @@ class _Header extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8),
       child: Text(
-        Str.of(context).profile_screen_settings_section_title,
+        Str.of(context).profileSettings,
         style: Theme.of(context).textTheme.titleLarge,
       ),
     );

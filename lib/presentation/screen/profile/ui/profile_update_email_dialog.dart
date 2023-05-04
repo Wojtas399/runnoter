@@ -58,7 +58,7 @@ class _State extends State<ProfileUpdateEmailDialog> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-            Str.of(context).profile_screen_new_email_dialog_title,
+            Str.of(context).profileNewEmailDialogTitle,
           ),
           leading: IconButton(
             onPressed: () {

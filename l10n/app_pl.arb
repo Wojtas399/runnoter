@@ -339,84 +339,84 @@
   },
 
 
-  "profile_screen_title": "Profil",
-  "@profile_screen_title": {
+  "profileScreenTitle": "Profil",
+  "@profileScreenTitle": {
     "description": "Title of the profile screen"
   },
-  "profile_screen_user_data_section_title": "Dane użytkownika",
-  "@profile_screen_user_data_section_title": {
+  "profileUserData": "Dane użytkownika",
+  "@profileUserData": {
     "description": "Title of the user data section"
   },
-  "profile_screen_settings_section_title": "Ustawienia",
-  "@profile_screen_settings_section_title": {
+  "profileSettings": "Ustawienia",
+  "@profileSettings": {
     "description": "Title of settings section"
   },
-  "profile_screen_change_password_label": "Zmień hasło",
-  "@profile_screen_change_password_label": {
+  "profileChangePassword": "Zmień hasło",
+  "@profileChangePassword": {
     "description": "Label of change password option"
   },
-  "profile_screen_delete_account_label": "Usuń konto",
-  "@profile_screen_delete_account_label": {
+  "profileDeleteAccount": "Usuń konto",
+  "@profileDeleteAccount": {
     "description": "Label of delete account option"
   },
-  "profile_screen_new_username_dialog_title": "Zmień imię",
-  "@profile_screen_new_username_dialog_title": {
+  "profileNewUsernameDialogTitle": "Zmień imię",
+  "@profileNewUsernameDialogTitle": {
     "description": "Title of the dialog to change username"
   },
-  "profile_screen_new_surname_dialog_title": "Zmień nazwisko",
-  "@profile_screen_new_surname_dialog_title": {
+  "profileNewSurnameDialogTitle": "Zmień nazwisko",
+  "@profileNewSurnameDialogTitle": {
     "description": "Title of the dialog to change surname"
   },
-  "profile_screen_new_email_dialog_title": "Zmień email",
-  "@profile_screen_new_email_dialog_title": {
+  "profileNewEmailDialogTitle": "Zmień email",
+  "@profileNewEmailDialogTitle": {
     "description": "Title of the dialog to change email"
   },
-  "profile_screen_new_password_dialog_title": "Zmień hasło",
-  "@profile_screen_new_password_dialog_title": {
+  "profileNewPasswordDialogTitle": "Zmień hasło",
+  "@profileNewPasswordDialogTitle": {
     "description": "Title of the dialog to update password"
   },
-  "profile_screen_new_password_dialog_new_password_label": "Nowe hasło",
-  "@profile_screen_new_password_dialog_new_password_label": {
+  "profileNewPasswordDialogNewPassword": "Nowe hasło",
+  "@profileNewPasswordDialogNewPassword": {
     "description": "Label of text field to enter new password"
   },
-  "profile_screen_new_password_dialog_current_password_label": "Obecne hasło",
-  "@profile_screen_new_password_dialog_current_password_label": {
+  "profileNewPasswordDialogCurrentPassword": "Obecne hasło",
+  "@profileNewPasswordDialogCurrentPassword": {
     "description": "Label of text field to enter current password"
   },
-  "profile_screen_delete_account_dialog_title": "Usuń konto",
-  "@profile_screen_delete_account_dialog_title": {
+  "profileDeleteAccountDialogTitle": "Usuń konto",
+  "@profileDeleteAccountDialogTitle": {
     "description": "Title of the dialog to delete account"
   },
-  "profile_screen_delete_account_dialog_message": "Usuwając konto utracisz wszystkie zapisane dane, bez możliwości ich odzyskania.",
-  "@profile_screen_delete_account_dialog_message": {
+  "profileDeleteAccountDialogMessage": "Usuwając konto utracisz wszystkie zapisane dane, bez możliwości ich odzyskania.",
+  "@profileDeleteAccountDialogMessage": {
     "description": "Message of the dialog to delete account"
   },
-  "profile_screen_successfully_saved_data_message": "Pomyślnie zapisano zmiany",
-  "@profile_screen_successfully_saved_data_message": {
+  "profileSuccessfullySavedDataMessage": "Pomyślnie zapisano zmiany",
+  "@profileSuccessfullySavedDataMessage": {
     "description": "Message to inform that data has been successfully saved"
   },
-  "profile_screen_email_already_taken_title": "Zajęty adres email",
-  "@profile_screen_email_already_taken_title": {
+  "profileEmailAlreadyTakenDialogTitle": "Zajęty adres email",
+  "@profileEmailAlreadyTakenDialogTitle": {
     "description": "Title of the dialog to inform that new email is already taken"
   },
-  "profile_screen_email_already_taken_message": "Niestety, nowo podany adres email jest już zajęty przez innego użytkownika...",
-  "@profile_screen_email_already_taken_message": {
+  "profileEmailAlreadyTakenDialogMessage": "Niestety, nowo podany adres email jest już zajęty przez innego użytkownika...",
+  "@profileEmailAlreadyTakenDialogMessage": {
     "description": "Message of the dialog to inform that new email is already taken"
   },
-  "profile_screen_wrong_password_title": "Błędne hasło",
-  "@profile_screen_wrong_password_title": {
+  "profileWrongPasswordDialogTitle": "Błędne hasło",
+  "@profileWrongPasswordDialogTitle": {
     "description": "Title of the dialog to inform that given password is wrong"
   },
-  "profile_screen_wrong_password_message": "Podane hasło jest błędne...",
-  "@profile_screen_wrong_password_message": {
+  "profileWrongPasswordDialogMessage": "Podane hasło jest błędne...",
+  "@profileWrongPasswordDialogMessage": {
     "description": "Message of the dialog to inform that given password is wrong"
   },
-  "profile_screen_wrong_current_password_title": "Błędne obecne hasło",
-  "@profile_screen_wrong_current_password_title": {
+  "profileWrongCurrentPasswordDialogTitle": "Błędne obecne hasło",
+  "@profileWrongCurrentPasswordDialogTitle": {
     "description": "Title of the dialog to inform that given current password is wrong"
   },
-  "profile_screen_wrong_current_password_message": "Podane obecne hasło jest błędne...",
-  "@profile_screen_wrong_current_password_message": {
+  "profileWrongCurrentPasswordDialogMessage": "Podane obecne hasło jest błędne...",
+  "@profileWrongCurrentPasswordDialogMessage": {
     "description": "Message of the dialog to inform that given current password is wrong"
   },
 

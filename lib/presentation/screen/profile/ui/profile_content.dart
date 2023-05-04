@@ -16,7 +16,7 @@ class ProfileContent extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          Str.of(context).profile_screen_title,
+          Str.of(context).profileScreenTitle,
         ),
         centerTitle: true,
       ),

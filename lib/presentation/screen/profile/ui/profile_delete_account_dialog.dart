@@ -44,7 +44,7 @@ class _State extends State<ProfileDeleteAccountDialog> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-            Str.of(context).profile_screen_delete_account_dialog_title,
+            Str.of(context).profileDeleteAccountDialogTitle,
           ),
           leading: IconButton(
             onPressed: () {
@@ -77,8 +77,7 @@ class _State extends State<ProfileDeleteAccountDialog> {
               child: Column(
                 children: [
                   Text(
-                    Str.of(context)
-                        .profile_screen_delete_account_dialog_message,
+                    Str.of(context).profileDeleteAccountDialogMessage,
                     style: Theme.of(context).textTheme.bodyLarge,
                   ),
                   const SizedBox(height: 24),

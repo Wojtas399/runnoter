@@ -47,7 +47,7 @@ class _Header extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
       child: Text(
-        Str.of(context).profile_screen_user_data_section_title,
+        Str.of(context).profileUserData,
         style: Theme.of(context).textTheme.titleLarge,
       ),
     );
@@ -88,7 +88,7 @@ class _Name extends StatelessWidget {
   Future<String?> _askForNewUsername(BuildContext context) async {
     return await askForValue(
       context: context,
-      title: Str.of(context).profile_screen_new_username_dialog_title,
+      title: Str.of(context).profileNewUsernameDialogTitle,
       label: Str.of(context).name,
       textFieldIcon: Icons.person_rounded,
       value: context.read<ProfileIdentitiesBloc>().state.username,
@@ -137,7 +137,7 @@ class _Surname extends StatelessWidget {
   Future<String?> _askForNewSurname(BuildContext context) async {
     return await askForValue(
       context: context,
-      title: Str.of(context).profile_screen_new_surname_dialog_title,
+      title: Str.of(context).profileNewSurnameDialogTitle,
       label: Str.of(context).surname,
       textFieldIcon: Icons.person_rounded,
       value: context.read<ProfileIdentitiesBloc>().state.surname,
@@ -189,7 +189,7 @@ class _ChangePassword extends StatelessWidget {
   Widget build(BuildContext context) {
     return ValueWithLabelAndIconComponent(
       iconData: Icons.lock_outline,
-      value: Str.of(context).profile_screen_change_password_label,
+      value: Str.of(context).profileChangePassword,
       onPressed: () {
         _onPressed(context);
       },
@@ -214,7 +214,7 @@ class _DeleteAccount extends StatelessWidget {
   Widget build(BuildContext context) {
     return ValueWithLabelAndIconComponent(
       iconData: Icons.no_accounts_outlined,
-      value: Str.of(context).profile_screen_delete_account_label,
+      value: Str.of(context).profileDeleteAccount,
       color: Theme.of(context).colorScheme.error,
       onPressed: () {
         _onPressed(context);
