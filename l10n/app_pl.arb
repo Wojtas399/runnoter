@@ -41,24 +41,24 @@
   },
 
 
-  "sign_up_screen_title": "Rejestracja",
-  "@sign_up_screen_title": {
+  "signUpScreenTitle": "Rejestracja",
+  "@signUpScreenTitle": {
     "description": "Title of sign up screen"
   },
-  "sign_up_screen_button_label": "Zarejestruj",
-  "@sign_up_screen_button_label": {
+  "signUpButtonLabel": "Zarejestruj",
+  "@signUpButtonLabel": {
     "description": "Label of the button to submit sign up form"
   },
-  "sign_up_screen_sign_in_option": "Masz już konto? Zaloguj się!",
-  "@sign_up_screen_sign_in_option": {
+  "signUpSignInOption": "Masz już konto? Zaloguj się!",
+  "@signUpSignInOption": {
     "description": "Option to navigate to sign in screen,"
   },
-  "sign_up_screen_already_taken_email_dialog_title": "Zajęty adres email",
-  "@sign_up_screen_already_taken_email_dialog_title": {
+  "signUpAlreadyTakenEmailDialogTitle": "Zajęty adres email",
+  "@signUpAlreadyTakenEmailDialogTitle": {
     "description": "Title of the dialog to inform that email is already taken"
   },
-  "sign_up_screen_already_taken_email_dialog_message": "Podany adres email jest już zajęty przez innego użytkownika...",
-  "@sign_up_screen_already_taken_email_dialog_message": {
+  "signUpAlreadyTakenEmailDialogMessage": "Podany adres email jest już zajęty przez innego użytkownika...",
+  "@signUpAlreadyTakenEmailDialogMessage": {
     "description": "Message of the dialog to inform that email is already taken"
   },
 

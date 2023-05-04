@@ -16,7 +16,7 @@ class SignUpAlternativeOption extends StatelessWidget {
         _onPressed(context);
       },
       child: Text(
-        Str.of(context).sign_up_screen_sign_in_option,
+        Str.of(context).signUpSignInOption,
       ),
     );
   }

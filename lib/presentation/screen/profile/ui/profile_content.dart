@@ -16,7 +16,7 @@ class ProfileContent extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          Str.of(context)!.profile_screen_title,
+          Str.of(context).profile_screen_title,
         ),
         centerTitle: true,
       ),
@@ -42,7 +42,7 @@ class ProfileContent extends StatelessWidget {
               left: 0,
               right: 0,
               child: BigButton(
-                label: Str.of(context)!.back,
+                label: Str.of(context).back,
                 onPressed: () {
                   navigateBack(context: context);
                 },

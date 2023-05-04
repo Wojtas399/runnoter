@@ -11,11 +11,11 @@
   "signInWrongPasswordDialogMessage": "Given password is wrong. Try again with correct one.",
 
 
-  "sign_up_screen_title": "Sign up",
-  "sign_up_screen_button_label": "Sign up",
-  "sign_up_screen_sign_in_option": "Already have an account? Sign in!",
-  "sign_up_screen_already_taken_email_dialog_title": "Already taken email",
-  "sign_up_screen_already_taken_email_dialog_message": "Given email address is already taken by another user...",
+  "signUpScreenTitle": "Sign up",
+  "signUpButtonLabel": "Sign up",
+  "signUpSignInOption": "Already have an account? Sign in!",
+  "signUpAlreadyTakenEmailDialogTitle": "Already taken email",
+  "signUpAlreadyTakenEmailDialogMessage": "Given email address is already taken by another user...",
 
   "forgot_password_screen_title": "Forgot password?",
   "forgot_password_screen_message": "Enter your email address and we will send you a link to reset password",

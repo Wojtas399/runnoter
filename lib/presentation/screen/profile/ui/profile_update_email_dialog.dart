@@ -58,7 +58,7 @@ class _State extends State<ProfileUpdateEmailDialog> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-            Str.of(context)!.profile_screen_new_email_dialog_title,
+            Str.of(context).profile_screen_new_email_dialog_title,
           ),
           leading: IconButton(
             onPressed: () {
@@ -74,7 +74,7 @@ class _State extends State<ProfileUpdateEmailDialog> {
                       _onSaveButtonPressed(context);
                     },
               child: Text(
-                Str.of(context)!.save,
+                Str.of(context).save,
               ),
             ),
             const SizedBox(width: 16),
@@ -91,7 +91,7 @@ class _State extends State<ProfileUpdateEmailDialog> {
               child: Column(
                 children: [
                   TextFieldComponent(
-                    label: Str.of(context)!.email,
+                    label: Str.of(context).email,
                     isRequired: true,
                     controller: _emailController,
                     validator: _validateEmail,
@@ -99,7 +99,7 @@ class _State extends State<ProfileUpdateEmailDialog> {
                   ),
                   const SizedBox(height: 32),
                   PasswordTextFieldComponent(
-                    label: Str.of(context)!.password,
+                    label: Str.of(context).password,
                     controller: _passwordController,
                     isRequired: true,
                   ),
@@ -125,7 +125,7 @@ class _State extends State<ProfileUpdateEmailDialog> {
 
   String? _validateEmail(String? value) {
     if (value != null && !isEmailValid(value)) {
-      return Str.of(context)!.invalid_email_message;
+      return Str.of(context).invalid_email_message;
     }
     return null;
   }

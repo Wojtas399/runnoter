@@ -43,14 +43,14 @@ class _Name extends StatelessWidget {
 
     return TextFieldComponent(
       icon: Icons.person,
-      label: Str.of(context)!.name,
+      label: Str.of(context).name,
       isRequired: true,
       onChanged: (String? value) {
         _onChanged(value, context);
       },
       validator: (_) {
         if (!isValid) {
-          return Str.of(context)!.invalid_name_or_surname_message;
+          return Str.of(context).invalid_name_or_surname_message;
         }
         return null;
       },
@@ -75,14 +75,14 @@ class _Surname extends StatelessWidget {
 
     return TextFieldComponent(
       icon: Icons.person,
-      label: Str.of(context)!.surname,
+      label: Str.of(context).surname,
       isRequired: true,
       onChanged: (String? value) {
         _onChanged(value, context);
       },
       validator: (_) {
         if (!isValid) {
-          return Str.of(context)!.invalid_name_or_surname_message;
+          return Str.of(context).invalid_name_or_surname_message;
         }
         return null;
       },
@@ -107,14 +107,14 @@ class _Email extends StatelessWidget {
 
     return TextFieldComponent(
       icon: Icons.email,
-      label: Str.of(context)!.email,
+      label: Str.of(context).email,
       isRequired: true,
       onChanged: (String? value) {
         _onChanged(value, context);
       },
       validator: (_) {
         if (!isValid) {
-          return Str.of(context)!.invalid_email_message;
+          return Str.of(context).invalid_email_message;
         }
         return null;
       },
@@ -144,7 +144,7 @@ class _Password extends StatelessWidget {
       },
       validator: (_) {
         if (!isValid) {
-          return Str.of(context)!.invalid_password_message;
+          return Str.of(context).invalid_password_message;
         }
         return null;
       },
@@ -168,14 +168,14 @@ class _PasswordConfirmation extends StatelessWidget {
     );
 
     return PasswordTextFieldComponent(
-      label: Str.of(context)!.passwordConfirmation,
+      label: Str.of(context).passwordConfirmation,
       isRequired: true,
       onChanged: (String? value) {
         _onChanged(value, context);
       },
       validator: (_) {
         if (!isValid) {
-          return Str.of(context)!.invalid_password_confirmation_message;
+          return Str.of(context).invalid_password_confirmation_message;
         }
         return null;
       },

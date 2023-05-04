@@ -27,7 +27,7 @@ class _Title extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      Str.of(context)!.workout_creator_screen_workout_stages,
+      Str.of(context).workout_creator_screen_workout_stages,
       style: Theme.of(context).textTheme.labelLarge,
     );
   }
@@ -47,7 +47,7 @@ class _AddStageButton extends StatelessWidget {
           },
           icon: const Icon(Icons.add),
           label: Text(
-            Str.of(context)!.workout_creator_screen_add_stage_button_label,
+            Str.of(context).workout_creator_screen_add_stage_button_label,
           ),
         ),
       ],

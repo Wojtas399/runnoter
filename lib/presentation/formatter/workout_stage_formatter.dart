@@ -29,7 +29,7 @@ extension WorkoutStageFormatter on WorkoutStage {
   }
 
   String toTypeName(BuildContext context) {
-    final str = Str.of(context)!;
+    final str = Str.of(context);
     if (this is WorkoutStageBaseRun) {
       return str.workout_stage_base_run;
     } else if (this is WorkoutStageZone2) {
