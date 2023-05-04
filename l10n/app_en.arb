@@ -205,5 +205,13 @@
   "september": "September",
   "october": "October",
   "november": "November",
-  "december": "December"
+  "december": "December",
+
+  "monday_short": "Mon",
+  "tuesday_short": "Tue",
+  "wednesday_short": "Wed",
+  "thursday_short": "Thu",
+  "friday_short": "Fri",
+  "saturday_short": "Sat",
+  "sunday_short": "Sun"
 }

@@ -735,5 +735,34 @@
   "december": "Grudzień",
   "@december": {
     "description": "December"
+  },
+
+  "monday_short": "Pon.",
+  "@monday_short": {
+    "description": "Abbreviation of monday"
+  },
+  "tuesday_short": "Wt.",
+  "@tuesday_short": {
+    "description": "Abbreviation of tuesday"
+  },
+  "wednesday_short": "Śr.",
+  "@wednesday_short": {
+    "description": "Abbreviation of wednesday"
+  },
+  "thursday_short": "Czw.",
+  "@thursday_short": {
+    "description": "Abbreviation of thursday"
+  },
+  "friday_short": "Pt.",
+  "@friday_short": {
+    "description": "Abbreviation of friday"
+  },
+  "saturday_short": "Sob.",
+  "@saturday_short": {
+    "description": "Abbreviation of saturday"
+  },
+  "sunday_short": "Niedz.",
+  "@sunday_short": {
+    "description": "Abbreviation of sunday"
   }
 }

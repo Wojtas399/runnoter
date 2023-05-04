@@ -5,6 +5,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../common/date_service.dart';
 import 'calendar_component_cubit.dart';
 
+part 'calendar_component_day_labels.dart';
 part 'calendar_component_header.dart';
 
 class Calendar extends StatelessWidget {
@@ -26,6 +27,8 @@ class Calendar extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: const [
           _Header(),
+          SizedBox(height: 16),
+          _DayLabels(),
         ],
       ),
     );
