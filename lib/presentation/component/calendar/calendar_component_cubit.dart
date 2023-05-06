@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../common/date_service.dart';
 
-class CalendarComponentCubit extends Cubit<CalendarState> {
+class CalendarComponentCubit extends Cubit<CalendarComponentState> {
   final DateService _dateService;
   List<WorkoutDay> _workoutDays = [];
 
@@ -12,7 +12,7 @@ class CalendarComponentCubit extends Cubit<CalendarState> {
     required DateService dateService,
   })  : _dateService = dateService,
         super(
-          const CalendarState(
+          const CalendarComponentState(
             displayingMonth: null,
             displayingYear: null,
             weeks: null,
@@ -111,12 +111,12 @@ class CalendarComponentCubit extends Cubit<CalendarState> {
   }
 }
 
-class CalendarState extends Equatable {
+class CalendarComponentState extends Equatable {
   final int? displayingMonth;
   final int? displayingYear;
   final List<CalendarWeek>? weeks;
 
-  const CalendarState({
+  const CalendarComponentState({
     required this.displayingMonth,
     required this.displayingYear,
     required this.weeks,
@@ -129,12 +129,12 @@ class CalendarState extends Equatable {
         weeks,
       ];
 
-  CalendarState copyWith({
+  CalendarComponentState copyWith({
     int? displayingMonth,
     int? displayingYear,
     List<CalendarWeek>? weeks,
   }) =>
-      CalendarState(
+      CalendarComponentState(
         displayingMonth: displayingMonth ?? this.displayingMonth,
         displayingYear: displayingYear ?? this.displayingYear,
         weeks: weeks ?? this.weeks,
