@@ -1,6 +1,4 @@
-import '../../../../domain/model/workout.dart';
-import '../../../model/bloc_state.dart';
-import '../../../model/bloc_status.dart';
+part of 'calendar_bloc.dart';
 
 class CalendarState extends BlocState<CalendarState> {
   final List<Workout>? workouts;

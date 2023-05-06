@@ -26,6 +26,25 @@ class MockDateService extends Mock implements DateService {
     ).thenReturn(date);
   }
 
+  void mockGetFirstDateOfTheMonth({
+    required DateTime date,
+  }) {
+    when(
+      () => getFirstDateOfTheMonth(any(), any()),
+    ).thenReturn(date);
+  }
+
+  void mockGetLastDateOfTheMonth({
+    required DateTime date,
+  }) {
+    when(
+      () => getLastDateOfTheMonth(
+        any(),
+        any(),
+      ),
+    ).thenReturn(date);
+  }
+
   void mockGetDatesFromWeekMatchingToDate({
     required List<DateTime> dates,
   }) {

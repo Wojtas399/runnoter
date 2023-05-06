@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/domain/model/workout.dart';
 import 'package:runnoter/presentation/model/bloc_status.dart';
-import 'package:runnoter/presentation/screen/calendar/bloc/calendar_state.dart';
+import 'package:runnoter/presentation/screen/calendar/bloc/calendar_bloc.dart';
 
 import '../../../util/workout_creator.dart';
 

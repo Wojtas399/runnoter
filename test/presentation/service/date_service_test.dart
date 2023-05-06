@@ -33,28 +33,30 @@ void main() {
   );
 
   test(
-    'get first date of month matching to date, '
+    'get first date of the month, '
     'should return first date of month which includes given date',
     () {
-      final DateTime date = DateTime(2023, 4, 10);
+      const int month = 4;
+      const int year = 2023;
       final DateTime expectedDate = DateTime(2023, 4, 1);
 
       final DateTime firstDateOfMonth =
-          service.getFirstDateOfMonthMatchingToDate(date);
+          service.getFirstDateOfTheMonth(month, year);
 
       expect(firstDateOfMonth, expectedDate);
     },
   );
 
   test(
-    'get last date of month matching to date, '
+    'get last date of the month, '
     'should return last date of month which includes given date',
     () {
-      final DateTime date = DateTime(2023, 4, 10);
+      const int month = 4;
+      const int year = 2023;
       final DateTime expectedDate = DateTime(2023, 4, 30);
 
       final DateTime lastDateOfMonth =
-          service.getLastDateOfMonthMatchingToDate(date);
+          service.getLastDateOfTheMonth(month, year);
 
       expect(lastDateOfMonth, expectedDate);
     },
