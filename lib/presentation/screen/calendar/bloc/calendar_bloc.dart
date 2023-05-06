@@ -71,6 +71,8 @@ class CalendarBloc
     CalendarEventWorkoutsUpdated event,
     Emitter<CalendarState> emit,
   ) {
-    //TODO
+    emit(state.copyWith(
+      workouts: event.workouts,
+    ));
   }
 }
