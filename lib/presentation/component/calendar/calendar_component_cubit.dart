@@ -12,9 +12,9 @@ class CalendarComponentCubit extends Cubit<CalendarComponentState> {
     required DateService dateService,
   })  : _dateService = dateService,
         super(
-          const CalendarComponentState(
-            displayingMonth: null,
-            displayingYear: null,
+          CalendarComponentState(
+            displayingMonth: dateService.getTodayDate().month,
+            displayingYear: dateService.getTodayDate().year,
             weeks: null,
           ),
         );

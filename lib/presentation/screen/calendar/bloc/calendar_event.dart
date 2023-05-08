@@ -4,10 +4,6 @@ abstract class CalendarEvent {
   const CalendarEvent();
 }
 
-class CalendarEventInitialize extends CalendarEvent {
-  const CalendarEventInitialize();
-}
-
 class CalendarEventWorkoutsUpdated extends CalendarEvent {
   final List<Workout>? workouts;
 
@@ -17,11 +13,11 @@ class CalendarEventWorkoutsUpdated extends CalendarEvent {
 }
 
 class CalendarEventMonthChanged extends CalendarEvent {
-  final int month;
-  final int year;
+  final DateTime firstDisplayingDate;
+  final DateTime lastDisplayingDate;
 
   const CalendarEventMonthChanged({
-    required this.month,
-    required this.year,
+    required this.firstDisplayingDate,
+    required this.lastDisplayingDate,
   });
 }

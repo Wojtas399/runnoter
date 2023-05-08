@@ -32,11 +32,8 @@ class CalendarBloc
           const CalendarState(
             status: BlocStatusInitial(),
             workouts: null,
-            month: null,
-            year: null,
           ),
         ) {
-    on<CalendarEventInitialize>(_initialize);
     on<CalendarEventWorkoutsUpdated>(_workoutsUpdated);
     on<CalendarEventMonthChanged>(_monthChanged);
   }
@@ -45,20 +42,6 @@ class CalendarBloc
   Future<void> close() {
     _disposeWorkoutsListener();
     return super.close();
-  }
-
-  void _initialize(
-    CalendarEventInitialize event,
-    Emitter<CalendarState> emit,
-  ) {
-    final DateTime todayDate = _dateService.getTodayDate();
-    final int month = todayDate.month;
-    final int year = todayDate.year;
-    emit(state.copyWith(
-      month: month,
-      year: year,
-    ));
-    _setWorkoutsListener(month, year);
   }
 
   void _workoutsUpdated(
@@ -74,31 +57,27 @@ class CalendarBloc
     CalendarEventMonthChanged event,
     Emitter<CalendarState> emit,
   ) {
-    final newMonth = event.month;
-    final newYear = event.year;
-    emit(state.copyWith(
-      month: newMonth,
-      year: newYear,
-    ));
     _disposeWorkoutsListener();
-    _setWorkoutsListener(newMonth, newYear);
+    _setWorkoutsListener(event.firstDisplayingDate, event.lastDisplayingDate);
   }
 
-  void _setWorkoutsListener(int month, int year) {
+  void _setWorkoutsListener(DateTime startDate, DateTime endDate) {
     _workoutsListener ??= _authService.loggedUserId$
         .whereType<String>()
         .switchMap(
           (String loggedUserId) => _workoutRepository.getWorkoutsByDateRange(
-            startDate: _dateService.getFirstDateOfTheMonth(month, year),
-            endDate: _dateService.getLastDateOfTheMonth(month, year),
+            startDate: startDate,
+            endDate: endDate,
             userId: loggedUserId,
           ),
         )
         .listen(
-          (List<Workout>? workouts) => add(
-            CalendarEventWorkoutsUpdated(workouts: workouts),
-          ),
+      (List<Workout>? workouts) {
+        add(
+          CalendarEventWorkoutsUpdated(workouts: workouts),
         );
+      },
+    );
   }
 
   void _disposeWorkoutsListener() {

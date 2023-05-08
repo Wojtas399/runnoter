@@ -42,9 +42,7 @@ class _BlocProvider extends StatelessWidget {
         dateService: DateService(),
         authService: context.read<AuthService>(),
         workoutRepository: context.read<WorkoutRepository>(),
-      )..add(
-          const CalendarEventInitialize(),
-        ),
+      ),
       child: child,
     );
   }
@@ -60,7 +58,6 @@ class _Calendar extends StatelessWidget {
     );
 
     return Calendar(
-      initialDate: DateTime.now(),
       workoutDays: [...?workouts]
           .map(
             (Workout workout) => WorkoutDay(
@@ -76,9 +73,21 @@ class _Calendar extends StatelessWidget {
         DateTime firstDisplayingDate,
         DateTime lastDisplayingDate,
       ) {
-        print(firstDisplayingDate);
-        print(lastDisplayingDate);
+        _onMonthChanged(context, firstDisplayingDate, lastDisplayingDate);
       },
     );
+  }
+
+  void _onMonthChanged(
+    BuildContext context,
+    DateTime firstDisplayingDate,
+    DateTime lastDisplayingDate,
+  ) {
+    context.read<CalendarBloc>().add(
+          CalendarEventMonthChanged(
+            firstDisplayingDate: firstDisplayingDate,
+            lastDisplayingDate: lastDisplayingDate,
+          ),
+        );
   }
 }

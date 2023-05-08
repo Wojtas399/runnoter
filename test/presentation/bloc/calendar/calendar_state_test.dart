@@ -12,8 +12,6 @@ void main() {
     () => state = const CalendarState(
       status: BlocStatusInitial(),
       workouts: null,
-      month: null,
-      year: null,
     ),
   );
 
@@ -43,32 +41,6 @@ void main() {
 
       expect(state.workouts, expectedWorkouts);
       expect(state2.workouts, expectedWorkouts);
-    },
-  );
-
-  test(
-    'copy with month',
-    () {
-      const int expectedMonth = 2;
-
-      state = state.copyWith(month: expectedMonth);
-      final state2 = state.copyWith();
-
-      expect(state.month, expectedMonth);
-      expect(state2.month, expectedMonth);
-    },
-  );
-
-  test(
-    'copy with year',
-    () {
-      const int expectedYear = 2023;
-
-      state = state.copyWith(year: expectedYear);
-      final state2 = state.copyWith();
-
-      expect(state.year, expectedYear);
-      expect(state2.year, expectedYear);
     },
   );
 }
