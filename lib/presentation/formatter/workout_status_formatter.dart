@@ -35,11 +35,11 @@ extension WorkoutStatusFormatter on WorkoutStatus {
 
   Color toColor() {
     if (this is WorkoutStatusPending) {
-      return Colors.grey;
+      return Colors.deepOrangeAccent;
     } else if (this is WorkoutStatusDone) {
       return Colors.green;
     } else if (this is WorkoutStatusAborted) {
-      return Colors.deepOrangeAccent;
+      return Colors.grey;
     } else if (this is WorkoutStatusUndone) {
       return Colors.red;
     } else {
