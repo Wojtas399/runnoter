@@ -109,7 +109,7 @@
   "@homeCalendarPageTitle": {
     "description": "Title of calendar page"
   },
-  "homePulseAndWeightPageTitle": "Puls & Waga",
+  "homePulseAndWeightPageTitle": "Tętno & Waga",
   "@homePulseAndWeightPageTitle": {
     "description": "Title of pulse and weight page"
   },
