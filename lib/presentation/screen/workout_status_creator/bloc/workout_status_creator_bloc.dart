@@ -74,7 +74,7 @@ class WorkoutStatusCreatorBloc extends BlocWithStatus<WorkoutStatusCreatorEvent,
     );
     final Workout? workout = await _loadWorkoutById(event.workoutId, emit);
     final WorkoutStatus? workoutStatus = workout?.status;
-    if (workoutStatus is FinishedWorkout) {
+    if (workoutStatus is WorkoutStats) {
       emit(state.copyWith(
         status: blocStatus,
         workoutId: event.workoutId,
@@ -204,10 +204,12 @@ class WorkoutStatusCreatorBloc extends BlocWithStatus<WorkoutStatusCreatorEvent,
   WorkoutStatusType _getWorkoutStatusType(WorkoutStatus workoutStatus) {
     if (workoutStatus is WorkoutStatusPending) {
       return WorkoutStatusType.pending;
-    } else if (workoutStatus is WorkoutStatusCompleted) {
-      return WorkoutStatusType.completed;
-    } else if (workoutStatus is WorkoutStatusUncompleted) {
-      return WorkoutStatusType.uncompleted;
+    } else if (workoutStatus is WorkoutStatusDone) {
+      return WorkoutStatusType.done;
+    } else if (workoutStatus is WorkoutStatusAborted) {
+      return WorkoutStatusType.aborted;
+    } else if (workoutStatus is WorkoutStatusUndone) {
+      return WorkoutStatusType.undone;
     } else {
       throw '[WorkoutStatusCreatorBloc]: Unknown workout status';
     }
@@ -217,8 +219,8 @@ class WorkoutStatusCreatorBloc extends BlocWithStatus<WorkoutStatusCreatorEvent,
     switch (state.workoutStatusType!) {
       case WorkoutStatusType.pending:
         return const WorkoutStatusPending();
-      case WorkoutStatusType.completed:
-        return WorkoutStatusCompleted(
+      case WorkoutStatusType.done:
+        return WorkoutStatusDone(
           coveredDistanceInKm: state.coveredDistanceInKm!,
           avgPace: Pace(
             minutes: state.averagePaceMinutes!,
@@ -228,8 +230,8 @@ class WorkoutStatusCreatorBloc extends BlocWithStatus<WorkoutStatusCreatorEvent,
           moodRate: state.moodRate!,
           comment: state.comment,
         );
-      case WorkoutStatusType.uncompleted:
-        return WorkoutStatusUncompleted(
+      case WorkoutStatusType.aborted:
+        return WorkoutStatusAborted(
           coveredDistanceInKm: state.coveredDistanceInKm!,
           avgPace: Pace(
             minutes: state.averagePaceMinutes!,
@@ -239,6 +241,8 @@ class WorkoutStatusCreatorBloc extends BlocWithStatus<WorkoutStatusCreatorEvent,
           moodRate: state.moodRate!,
           comment: state.comment,
         );
+      case WorkoutStatusType.undone:
+        return const WorkoutStatusUndone();
     }
   }
 }

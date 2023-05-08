@@ -11,8 +11,8 @@ class WorkoutStatusPending extends WorkoutStatus {
   List<Object> get props => [];
 }
 
-class WorkoutStatusCompleted extends WorkoutStatus with FinishedWorkout {
-  WorkoutStatusCompleted({
+class WorkoutStatusDone extends WorkoutStatus with WorkoutStats {
+  WorkoutStatusDone({
     required double coveredDistanceInKm,
     required Pace avgPace,
     required int avgHeartRate,
@@ -37,8 +37,8 @@ class WorkoutStatusCompleted extends WorkoutStatus with FinishedWorkout {
       ];
 }
 
-class WorkoutStatusUncompleted extends WorkoutStatus with FinishedWorkout {
-  WorkoutStatusUncompleted({
+class WorkoutStatusAborted extends WorkoutStatus with WorkoutStats {
+  WorkoutStatusAborted({
     required double coveredDistanceInKm,
     required Pace avgPace,
     required int avgHeartRate,
@@ -63,7 +63,14 @@ class WorkoutStatusUncompleted extends WorkoutStatus with FinishedWorkout {
       ];
 }
 
-mixin FinishedWorkout on WorkoutStatus {
+class WorkoutStatusUndone extends WorkoutStatus {
+  const WorkoutStatusUndone();
+
+  @override
+  List<Object?> get props => [];
+}
+
+mixin WorkoutStats on WorkoutStatus {
   late final double coveredDistanceInKm;
   late final Pace avgPace;
   late final int avgHeartRate;

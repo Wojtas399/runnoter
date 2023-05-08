@@ -126,7 +126,7 @@ void main() {
 
   blocTest(
     'workout updated, '
-    'pending workout, '
+    'new workout is not null, '
     'should update workout id, name, stages and status in state',
     build: () => createBloc(),
     act: (DayPreviewBloc bloc) => bloc.add(
@@ -157,104 +157,6 @@ void main() {
           ),
         ],
         workoutStatus: const WorkoutStatusPending(),
-      ),
-    ],
-  );
-
-  blocTest(
-    'workout updated, '
-    'completed workout, '
-    'should update workout name, stages, and status in state',
-    build: () => createBloc(),
-    act: (DayPreviewBloc bloc) => bloc.add(
-      DayPreviewEventWorkoutUpdated(
-        workout: createWorkout(
-          id: 'w1',
-          userId: 'u1',
-          name: 'workout name',
-          stages: [
-            WorkoutStageBaseRun(
-              distanceInKilometers: 10,
-              maxHeartRate: 150,
-            ),
-          ],
-          status: WorkoutStatusCompleted(
-            coveredDistanceInKm: 10,
-            avgPace: const Pace(minutes: 6, seconds: 5),
-            avgHeartRate: 144,
-            moodRate: MoodRate.mr9,
-            comment: 'comment',
-          ),
-        ),
-      ),
-    ),
-    expect: () => [
-      createState(
-        status: const BlocStatusComplete(),
-        workoutId: 'w1',
-        workoutName: 'workout name',
-        stages: [
-          WorkoutStageBaseRun(
-            distanceInKilometers: 10,
-            maxHeartRate: 150,
-          ),
-        ],
-        workoutStatus: WorkoutStatusCompleted(
-          coveredDistanceInKm: 10,
-          avgPace: const Pace(minutes: 6, seconds: 5),
-          avgHeartRate: 144,
-          moodRate: MoodRate.mr9,
-          comment: 'comment',
-        ),
-      ),
-    ],
-  );
-
-  blocTest(
-    'workout updated, '
-    'uncompleted workout, '
-    'should update workout name, stages and status in state',
-    build: () => createBloc(),
-    act: (DayPreviewBloc bloc) => bloc.add(
-      DayPreviewEventWorkoutUpdated(
-        workout: createWorkout(
-          id: 'w1',
-          userId: 'u1',
-          name: 'workout name',
-          stages: [
-            WorkoutStageBaseRun(
-              distanceInKilometers: 10,
-              maxHeartRate: 150,
-            ),
-          ],
-          status: WorkoutStatusUncompleted(
-            coveredDistanceInKm: 10,
-            avgPace: const Pace(minutes: 6, seconds: 5),
-            avgHeartRate: 144,
-            moodRate: MoodRate.mr9,
-            comment: 'comment',
-          ),
-        ),
-      ),
-    ),
-    expect: () => [
-      createState(
-        status: const BlocStatusComplete(),
-        workoutId: 'w1',
-        workoutName: 'workout name',
-        stages: [
-          WorkoutStageBaseRun(
-            distanceInKilometers: 10,
-            maxHeartRate: 150,
-          ),
-        ],
-        workoutStatus: WorkoutStatusUncompleted(
-          coveredDistanceInKm: 10,
-          avgPace: const Pace(minutes: 6, seconds: 5),
-          avgHeartRate: 144,
-          moodRate: MoodRate.mr9,
-          comment: 'comment',
-        ),
       ),
     ],
   );

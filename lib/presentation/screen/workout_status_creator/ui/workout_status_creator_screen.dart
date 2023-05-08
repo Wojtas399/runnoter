@@ -79,7 +79,7 @@ class _BlocProvider extends StatelessWidget {
   Widget build(BuildContext context) {
     WorkoutStatusType? workoutStatusType;
     if (arguments is WorkoutStatusCreatorFinishWorkoutArguments) {
-      workoutStatusType = WorkoutStatusType.completed;
+      workoutStatusType = WorkoutStatusType.done;
     }
 
     return BlocProvider(

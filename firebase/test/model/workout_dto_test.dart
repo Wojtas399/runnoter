@@ -5,7 +5,7 @@ void main() {
   const String id = 'w1';
   const String userId = 'u1';
   final DateTime date = DateTime(2023, 4, 10);
-  final WorkoutStatusDto status = WorkoutStatusCompletedDto(
+  final WorkoutStatusDto status = WorkoutStatusDoneDto(
     coveredDistanceInKm: 10.0,
     avgPaceDto: const PaceDto(minutes: 5, seconds: 30),
     avgHeartRate: 145,

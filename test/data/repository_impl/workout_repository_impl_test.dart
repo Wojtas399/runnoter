@@ -370,14 +370,14 @@ void main() {
     () {
       const String workoutId = 'w1';
       const String newWorkoutName = 'new workout name';
-      final WorkoutStatus newStatus = WorkoutStatusCompleted(
+      final WorkoutStatus newStatus = WorkoutStatusDone(
         coveredDistanceInKm: 10,
         avgPace: const Pace(minutes: 6, seconds: 2),
         avgHeartRate: 150,
         moodRate: MoodRate.mr8,
         comment: 'Nice workout!',
       );
-      final newStatusDto = firebase.WorkoutStatusCompletedDto(
+      final newStatusDto = firebase.WorkoutStatusDoneDto(
         coveredDistanceInKm: 10,
         avgPaceDto: const PaceDto(minutes: 6, seconds: 2),
         avgHeartRate: 150,

@@ -7,9 +7,11 @@ extension WorkoutStatusFormatter on WorkoutStatus {
   IconData toIcon() {
     if (this is WorkoutStatusPending) {
       return Icons.schedule;
-    } else if (this is WorkoutStatusCompleted) {
+    } else if (this is WorkoutStatusDone) {
       return Icons.check_circle_outline;
-    } else if (this is WorkoutStatusUncompleted) {
+    } else if (this is WorkoutStatusAborted) {
+      return Icons.stop_circle_outlined;
+    } else if (this is WorkoutStatusUndone) {
       return Icons.cancel_outlined;
     } else {
       throw '[WorkoutStatusFormatter - toIcon()]: Unknown status type';
@@ -20,10 +22,12 @@ extension WorkoutStatusFormatter on WorkoutStatus {
     final str = Str.of(context);
     if (this is WorkoutStatusPending) {
       return str.workoutStatusPending;
-    } else if (this is WorkoutStatusCompleted) {
-      return str.workoutStatusCompleted;
-    } else if (this is WorkoutStatusUncompleted) {
-      return str.workoutStatusUncompleted;
+    } else if (this is WorkoutStatusDone) {
+      return str.workoutStatusDone;
+    } else if (this is WorkoutStatusAborted) {
+      return str.workoutStatusAborted;
+    } else if (this is WorkoutStatusUndone) {
+      return str.workoutStatusUndone;
     } else {
       throw '[WorkoutStatusFormatter - toLabel()]: Unknown status type';
     }
@@ -31,10 +35,12 @@ extension WorkoutStatusFormatter on WorkoutStatus {
 
   Color toColor() {
     if (this is WorkoutStatusPending) {
-      return Colors.deepOrangeAccent;
-    } else if (this is WorkoutStatusCompleted) {
+      return Colors.grey;
+    } else if (this is WorkoutStatusDone) {
       return Colors.green;
-    } else if (this is WorkoutStatusUncompleted) {
+    } else if (this is WorkoutStatusAborted) {
+      return Colors.deepOrangeAccent;
+    } else if (this is WorkoutStatusUndone) {
       return Colors.red;
     } else {
       throw '[WorkoutStatusFormatter - toColor()]: Unknown status type';

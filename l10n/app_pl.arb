@@ -579,13 +579,17 @@
   "@workoutStatusPending": {
     "description": "Type of workout status called pending"
   },
-  "workoutStatusCompleted": "Ukończony",
-  "@workoutStatusCompleted": {
-    "description": "Type of workout status called completed"
+  "workoutStatusDone": "Wykonany",
+  "@workoutStatusDone": {
+    "description": "Type of workout status called done"
   },
-  "workoutStatusUncompleted": "Nieukończony",
-  "@workoutStatusUncompleted": {
-    "description": "Type of workout status called uncompleted"
+  "workoutStatusAborted": "Przerwany",
+  "@workoutStatusAborted": {
+    "description": "Type of workout status called aborted"
+  },
+  "workoutStatusUndone": "Niewykonany",
+  "@workoutStatusUndone": {
+    "description": "Type of workout status called undone"
   },
 
 

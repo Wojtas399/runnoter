@@ -44,11 +44,24 @@ void main() {
 
   test(
     'is form valid, '
+    'workout status type is set as undone, '
+    'should be true',
+    () {
+      state = state.copyWith(
+        workoutStatusType: WorkoutStatusType.undone,
+      );
+
+      expect(state.isFormValid, true);
+    },
+  );
+
+  test(
+    'is form valid, '
     'covered distance in km is null, '
     'should be false',
     () {
       state = state.copyWith(
-        workoutStatusType: WorkoutStatusType.completed,
+        workoutStatusType: WorkoutStatusType.done,
         moodRate: MoodRate.mr8,
         averagePaceMinutes: 5,
         averagePaceSeconds: 30,
@@ -65,7 +78,7 @@ void main() {
     'should be true',
     () {
       state = state.copyWith(
-        workoutStatusType: WorkoutStatusType.completed,
+        workoutStatusType: WorkoutStatusType.done,
         coveredDistanceInKm: 10,
         averagePaceMinutes: 5,
         averagePaceSeconds: 30,
@@ -82,7 +95,7 @@ void main() {
     'should be true',
     () {
       state = state.copyWith(
-        workoutStatusType: WorkoutStatusType.completed,
+        workoutStatusType: WorkoutStatusType.done,
         coveredDistanceInKm: 10,
         moodRate: MoodRate.mr8,
         averagePaceSeconds: 30,
@@ -99,7 +112,7 @@ void main() {
     'should be false',
     () {
       state = state.copyWith(
-        workoutStatusType: WorkoutStatusType.completed,
+        workoutStatusType: WorkoutStatusType.done,
         coveredDistanceInKm: 10,
         moodRate: MoodRate.mr8,
         averagePaceMinutes: 5,
@@ -116,7 +129,7 @@ void main() {
     'should be false',
     () {
       state = state.copyWith(
-        workoutStatusType: WorkoutStatusType.completed,
+        workoutStatusType: WorkoutStatusType.done,
         coveredDistanceInKm: 10,
         moodRate: MoodRate.mr8,
         averagePaceMinutes: 5,
@@ -133,7 +146,7 @@ void main() {
     'should be true',
     () {
       state = state.copyWith(
-        workoutStatusType: WorkoutStatusType.completed,
+        workoutStatusType: WorkoutStatusType.done,
         coveredDistanceInKm: 10,
         moodRate: MoodRate.mr8,
         averagePaceMinutes: 5,
@@ -152,7 +165,7 @@ void main() {
     () {
       state = state.copyWith(
         workoutStatus: const WorkoutStatusPending(),
-        workoutStatusType: WorkoutStatusType.completed,
+        workoutStatusType: WorkoutStatusType.done,
       );
 
       expect(state.areDataSameAsOriginal, false);
@@ -174,19 +187,32 @@ void main() {
 
   test(
     'are data same as original, '
-    'workout status is set as finished workout, '
+    'workout status is set as undone, '
+    'should be false',
+    () {
+      state = state.copyWith(
+        workoutStatus: const WorkoutStatusUndone(),
+      );
+
+      expect(state.areDataSameAsOriginal, false);
+    },
+  );
+
+  test(
+    'are data same as original, '
+    'workout status contains workout stats, '
     'all params are the same as params set in workout status, '
     'should be true',
     () {
       state = state.copyWith(
-        workoutStatus: WorkoutStatusCompleted(
+        workoutStatus: WorkoutStatusDone(
           coveredDistanceInKm: 10,
           avgPace: const Pace(minutes: 6, seconds: 10),
           avgHeartRate: 150,
           moodRate: MoodRate.mr8,
           comment: 'comment',
         ),
-        workoutStatusType: WorkoutStatusType.completed,
+        workoutStatusType: WorkoutStatusType.done,
         coveredDistanceInKm: 10,
         averagePaceMinutes: 6,
         averagePaceSeconds: 10,
@@ -201,12 +227,12 @@ void main() {
 
   test(
     'are data same as original, '
-    'workout status is set as finished workout, '
+    'workout status contains workout stats, '
     'covered distance is different than original value, '
     'should be false',
     () {
       state = state.copyWith(
-        workoutStatus: WorkoutStatusCompleted(
+        workoutStatus: WorkoutStatusDone(
           coveredDistanceInKm: 10,
           avgPace: const Pace(minutes: 6, seconds: 10),
           avgHeartRate: 150,
@@ -227,12 +253,12 @@ void main() {
 
   test(
     'are data same as original, '
-    'workout status is set as finished workout, '
+    'workout status contains workout stats, '
     'minutes of average pace are different than original value, '
     'should be false',
     () {
       state = state.copyWith(
-        workoutStatus: WorkoutStatusCompleted(
+        workoutStatus: WorkoutStatusDone(
           coveredDistanceInKm: 10,
           avgPace: const Pace(minutes: 6, seconds: 10),
           avgHeartRate: 150,
@@ -253,12 +279,12 @@ void main() {
 
   test(
     'are data same as original, '
-    'workout status is set as finished workout, '
+    'workout status contains workout stats, '
     'seconds of average pace are different than original value, '
     'should be false',
     () {
       state = state.copyWith(
-        workoutStatus: WorkoutStatusCompleted(
+        workoutStatus: WorkoutStatusDone(
           coveredDistanceInKm: 10,
           avgPace: const Pace(minutes: 6, seconds: 10),
           avgHeartRate: 150,
@@ -279,12 +305,12 @@ void main() {
 
   test(
     'are data same as original, '
-    'workout status is set as finished workout, '
+    'workout status contains workout stats, '
     'average heart rate is different than original value, '
     'should be false',
     () {
       state = state.copyWith(
-        workoutStatus: WorkoutStatusCompleted(
+        workoutStatus: WorkoutStatusDone(
           coveredDistanceInKm: 10,
           avgPace: const Pace(minutes: 6, seconds: 10),
           avgHeartRate: 150,
@@ -305,12 +331,12 @@ void main() {
 
   test(
     'are data same as original, '
-    'workout status is set as finished workout, '
+    'workout status contains workout stats, '
     'mood rate is different than original value, '
     'should be false',
     () {
       state = state.copyWith(
-        workoutStatus: WorkoutStatusCompleted(
+        workoutStatus: WorkoutStatusDone(
           coveredDistanceInKm: 10,
           avgPace: const Pace(minutes: 6, seconds: 10),
           avgHeartRate: 150,
@@ -331,12 +357,12 @@ void main() {
 
   test(
     'are data same as original, '
-    'workout status is set as finished workout, '
+    'workout status contains workout stats, '
     'comment is different than original value, '
     'should be false',
     () {
       state = state.copyWith(
-        workoutStatus: WorkoutStatusCompleted(
+        workoutStatus: WorkoutStatusDone(
           coveredDistanceInKm: 10,
           avgPace: const Pace(minutes: 6, seconds: 10),
           avgHeartRate: 150,
@@ -384,7 +410,7 @@ void main() {
   test(
     'copy with workout status',
     () {
-      final WorkoutStatus expectedWorkoutStatus = WorkoutStatusCompleted(
+      final WorkoutStatus expectedWorkoutStatus = WorkoutStatusDone(
         coveredDistanceInKm: 10,
         avgPace: const Pace(minutes: 6, seconds: 10),
         avgHeartRate: 150,

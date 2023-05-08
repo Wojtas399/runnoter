@@ -7,22 +7,24 @@ import 'pace_mapper.dart';
 WorkoutStatus mapWorkoutStatusFromFirebase(WorkoutStatusDto workoutStatusDto) {
   if (workoutStatusDto is WorkoutStatusPendingDto) {
     return const WorkoutStatusPending();
-  } else if (workoutStatusDto is WorkoutStatusCompletedDto) {
-    return WorkoutStatusCompleted(
+  } else if (workoutStatusDto is WorkoutStatusDoneDto) {
+    return WorkoutStatusDone(
       coveredDistanceInKm: workoutStatusDto.coveredDistanceInKm,
       avgPace: mapPaceFromFirebase(workoutStatusDto.avgPaceDto),
       avgHeartRate: workoutStatusDto.avgHeartRate,
       moodRate: mapMoodRateFromFirebase(workoutStatusDto.moodRate),
       comment: workoutStatusDto.comment,
     );
-  } else if (workoutStatusDto is WorkoutStatusUncompletedDto) {
-    return WorkoutStatusUncompleted(
+  } else if (workoutStatusDto is WorkoutStatusAbortedDto) {
+    return WorkoutStatusAborted(
       coveredDistanceInKm: workoutStatusDto.coveredDistanceInKm,
       avgPace: mapPaceFromFirebase(workoutStatusDto.avgPaceDto),
       avgHeartRate: workoutStatusDto.avgHeartRate,
       moodRate: mapMoodRateFromFirebase(workoutStatusDto.moodRate),
       comment: workoutStatusDto.comment,
     );
+  } else if (workoutStatusDto is WorkoutStatusUndoneDto) {
+    return const WorkoutStatusUndone();
   } else {
     throw '[WorkoutStatusMapper] Unknown workout status dto';
   }
@@ -31,22 +33,24 @@ WorkoutStatus mapWorkoutStatusFromFirebase(WorkoutStatusDto workoutStatusDto) {
 WorkoutStatusDto mapWorkoutStatusToFirebase(WorkoutStatus workoutStatus) {
   if (workoutStatus is WorkoutStatusPending) {
     return const WorkoutStatusPendingDto();
-  } else if (workoutStatus is WorkoutStatusCompleted) {
-    return WorkoutStatusCompletedDto(
+  } else if (workoutStatus is WorkoutStatusDone) {
+    return WorkoutStatusDoneDto(
       coveredDistanceInKm: workoutStatus.coveredDistanceInKm,
       avgPaceDto: mapPaceToFirebase(workoutStatus.avgPace),
       avgHeartRate: workoutStatus.avgHeartRate,
       moodRate: mapMoodRateToFirebase(workoutStatus.moodRate),
       comment: workoutStatus.comment,
     );
-  } else if (workoutStatus is WorkoutStatusUncompleted) {
-    return WorkoutStatusUncompletedDto(
+  } else if (workoutStatus is WorkoutStatusAborted) {
+    return WorkoutStatusAbortedDto(
       coveredDistanceInKm: workoutStatus.coveredDistanceInKm,
       avgPaceDto: mapPaceToFirebase(workoutStatus.avgPace),
       avgHeartRate: workoutStatus.avgHeartRate,
       moodRate: mapMoodRateToFirebase(workoutStatus.moodRate),
       comment: workoutStatus.comment,
     );
+  } else if (workoutStatus is WorkoutStatusUndone) {
+    return const WorkoutStatusUndoneDto();
   } else {
     throw '[WorkoutStatusMapper] Unknown workout status';
   }

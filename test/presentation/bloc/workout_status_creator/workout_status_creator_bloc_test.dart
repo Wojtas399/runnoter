@@ -74,14 +74,14 @@ void main() {
     act: (WorkoutStatusCreatorBloc bloc) => bloc.add(
       WorkoutStatusCreatorEventInitialize(
         workoutId: 'w1',
-        workoutStatusType: WorkoutStatusType.completed,
+        workoutStatusType: WorkoutStatusType.done,
       ),
     ),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
         workoutId: 'w1',
-        workoutStatusType: WorkoutStatusType.completed,
+        workoutStatusType: WorkoutStatusType.done,
       ),
     ],
   );
@@ -114,14 +114,14 @@ void main() {
     'initialize, '
     'workout status type is null, '
     'logged user exists, '
-    'finished workout status, '
+    'workout status contains workout stats, '
     'should load workout from workout repository and should emit completed status with WorkoutStatusCreatorInfo.workoutStatusInitialized and updated all params relevant to workout status',
     build: () => createBloc(),
     setUp: () {
       authService.mockGetLoggedUserId(userId: 'u1');
       workoutRepository.mockGetWorkoutById(
         workout: createWorkout(
-          status: WorkoutStatusCompleted(
+          status: WorkoutStatusDone(
             coveredDistanceInKm: 10,
             avgPace: const Pace(minutes: 6, seconds: 10),
             avgHeartRate: 150,
@@ -142,14 +142,14 @@ void main() {
           info: WorkoutStatusCreatorInfo.workoutStatusInitialized,
         ),
         workoutId: 'w1',
-        workoutStatus: WorkoutStatusCompleted(
+        workoutStatus: WorkoutStatusDone(
           coveredDistanceInKm: 10,
           avgPace: const Pace(minutes: 6, seconds: 10),
           avgHeartRate: 150,
           moodRate: MoodRate.mr8,
           comment: 'comment',
         ),
-        workoutStatusType: WorkoutStatusType.completed,
+        workoutStatusType: WorkoutStatusType.done,
         coveredDistanceInKm: 10,
         moodRate: MoodRate.mr8,
         averagePaceMinutes: 6,
@@ -220,13 +220,13 @@ void main() {
     build: () => createBloc(),
     act: (WorkoutStatusCreatorBloc bloc) => bloc.add(
       const WorkoutStatusCreatorEventWorkoutStatusTypeChanged(
-        workoutStatusType: WorkoutStatusType.completed,
+        workoutStatusType: WorkoutStatusType.done,
       ),
     ),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
-        workoutStatusType: WorkoutStatusType.completed,
+        workoutStatusType: WorkoutStatusType.done,
       ),
     ],
   );
@@ -412,11 +412,11 @@ void main() {
 
   blocTest(
     'submit, '
-    'completed workout status, '
+    'done workout status, '
     'should call method from workout repository to update workout and should emit info that workout has been saved',
     build: () => createBloc(
       workoutId: 'w1',
-      workoutStatusType: WorkoutStatusType.completed,
+      workoutStatusType: WorkoutStatusType.done,
       coveredDistanceInKm: 10,
       moodRate: MoodRate.mr8,
       averagePaceMinutes: 5,
@@ -435,7 +435,7 @@ void main() {
       createState(
         status: const BlocStatusLoading(),
         workoutId: 'w1',
-        workoutStatusType: WorkoutStatusType.completed,
+        workoutStatusType: WorkoutStatusType.done,
         coveredDistanceInKm: 10,
         moodRate: MoodRate.mr8,
         averagePaceMinutes: 5,
@@ -448,7 +448,7 @@ void main() {
           info: WorkoutStatusCreatorInfo.workoutStatusSaved,
         ),
         workoutId: 'w1',
-        workoutStatusType: WorkoutStatusType.completed,
+        workoutStatusType: WorkoutStatusType.done,
         coveredDistanceInKm: 10,
         moodRate: MoodRate.mr8,
         averagePaceMinutes: 5,
@@ -465,7 +465,7 @@ void main() {
         () => workoutRepository.updateWorkout(
           workoutId: 'w1',
           userId: 'u1',
-          status: WorkoutStatusCompleted(
+          status: WorkoutStatusDone(
             coveredDistanceInKm: 10,
             avgPace: const Pace(minutes: 5, seconds: 50),
             avgHeartRate: 150,
@@ -479,11 +479,11 @@ void main() {
 
   blocTest(
     'submit, '
-    'uncompleted workout status, '
+    'aborted workout status, '
     'should call method from workout repository to update workout and should emit info that workout has been saved',
     build: () => createBloc(
       workoutId: 'w1',
-      workoutStatusType: WorkoutStatusType.uncompleted,
+      workoutStatusType: WorkoutStatusType.aborted,
       coveredDistanceInKm: 10,
       moodRate: MoodRate.mr8,
       averagePaceMinutes: 5,
@@ -502,7 +502,7 @@ void main() {
       createState(
         status: const BlocStatusLoading(),
         workoutId: 'w1',
-        workoutStatusType: WorkoutStatusType.uncompleted,
+        workoutStatusType: WorkoutStatusType.aborted,
         coveredDistanceInKm: 10,
         moodRate: MoodRate.mr8,
         averagePaceMinutes: 5,
@@ -515,7 +515,7 @@ void main() {
           info: WorkoutStatusCreatorInfo.workoutStatusSaved,
         ),
         workoutId: 'w1',
-        workoutStatusType: WorkoutStatusType.uncompleted,
+        workoutStatusType: WorkoutStatusType.aborted,
         coveredDistanceInKm: 10,
         moodRate: MoodRate.mr8,
         averagePaceMinutes: 5,
@@ -532,13 +532,56 @@ void main() {
         () => workoutRepository.updateWorkout(
           workoutId: 'w1',
           userId: 'u1',
-          status: WorkoutStatusUncompleted(
+          status: WorkoutStatusAborted(
             coveredDistanceInKm: 10,
             avgPace: const Pace(minutes: 5, seconds: 50),
             avgHeartRate: 150,
             moodRate: MoodRate.mr8,
             comment: 'comment',
           ),
+        ),
+      ).called(1);
+    },
+  );
+
+  blocTest(
+    'submit, '
+    'undone workout status, '
+    'should call method from workout repository to update workout and should emit info that workout has been saved',
+    build: () => createBloc(
+      workoutId: 'w1',
+      workoutStatusType: WorkoutStatusType.undone,
+    ),
+    setUp: () {
+      authService.mockGetLoggedUserId(userId: 'u1');
+      workoutRepository.mockUpdateWorkout();
+    },
+    act: (WorkoutStatusCreatorBloc bloc) => bloc.add(
+      const WorkoutStatusCreatorEventSubmit(),
+    ),
+    expect: () => [
+      createState(
+        status: const BlocStatusLoading(),
+        workoutId: 'w1',
+        workoutStatusType: WorkoutStatusType.undone,
+      ),
+      createState(
+        status: const BlocStatusComplete<WorkoutStatusCreatorInfo>(
+          info: WorkoutStatusCreatorInfo.workoutStatusSaved,
+        ),
+        workoutId: 'w1',
+        workoutStatusType: WorkoutStatusType.undone,
+      ),
+    ],
+    verify: (_) {
+      verify(
+        () => authService.loggedUserId$,
+      ).called(1);
+      verify(
+        () => workoutRepository.updateWorkout(
+          workoutId: 'w1',
+          userId: 'u1',
+          status: const WorkoutStatusUndone(),
         ),
       ).called(1);
     },

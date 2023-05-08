@@ -161,8 +161,9 @@
 
 
   "workoutStatusPending": "Pending",
-  "workoutStatusCompleted": "Completed",
-  "workoutStatusUncompleted": "Uncompleted",
+  "workoutStatusDone": "Done",
+  "workoutStatusAborted": "Aborted",
+  "workoutStatusUndone": "Undone",
 
 
   "noInternetConnectionDialogTitle": "No internet connection",
