@@ -19,15 +19,17 @@ class CalendarComponentCubit extends Cubit<CalendarComponentState> {
           ),
         );
 
-  void initialize({
-    required DateTime initialDate,
-    required List<WorkoutDay> workoutDays,
+  void updateState({
+    DateTime? date,
+    List<WorkoutDay>? workoutDays,
   }) {
-    _workoutDays = workoutDays;
+    _workoutDays = workoutDays ?? _workoutDays;
+    final int? month = date?.month ?? state.displayingMonth;
+    final int? year = date?.year ?? state.displayingYear;
     emit(state.copyWith(
-      displayingMonth: initialDate.month,
-      displayingYear: initialDate.year,
-      weeks: _createWeeks(initialDate.month, initialDate.year),
+      displayingMonth: month,
+      displayingYear: year,
+      weeks: month != null && year != null ? _createWeeks(month, year) : null,
     ));
   }
 
@@ -39,13 +41,7 @@ class CalendarComponentCubit extends Cubit<CalendarComponentState> {
       state.displayingYear!,
       state.displayingMonth! - 1,
     );
-    final int newDisplayingMonth = dateOfFirstDayInPreviousMonth.month;
-    final int newDisplayingYear = dateOfFirstDayInPreviousMonth.year;
-    emit(state.copyWith(
-      displayingMonth: dateOfFirstDayInPreviousMonth.month,
-      displayingYear: dateOfFirstDayInPreviousMonth.year,
-      weeks: _createWeeks(newDisplayingMonth, newDisplayingYear),
-    ));
+    updateState(date: dateOfFirstDayInPreviousMonth);
   }
 
   void nextMonth() {
@@ -56,13 +52,7 @@ class CalendarComponentCubit extends Cubit<CalendarComponentState> {
       state.displayingYear!,
       state.displayingMonth! + 1,
     );
-    final int newDisplayingMonth = dateOfFirstDayInNextMonth.month;
-    final int newDisplayingYear = dateOfFirstDayInNextMonth.year;
-    emit(state.copyWith(
-      displayingMonth: newDisplayingMonth,
-      displayingYear: newDisplayingYear,
-      weeks: _createWeeks(newDisplayingMonth, newDisplayingYear),
-    ));
+    updateState(date: dateOfFirstDayInNextMonth);
   }
 
   List<CalendarWeek> _createWeeks(int month, int year) {

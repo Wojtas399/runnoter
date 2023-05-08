@@ -71,7 +71,7 @@ extension WorkoutStageFormatter on WorkoutStage {
         stage.walkingDistanceInMeters,
       )}, ';
     }
-    if (stage.walkingDistanceInMeters > 0) {
+    if (stage.joggingDistanceInMeters > 0) {
       breakDescription += str.workoutStageJogging(
         stage.joggingDistanceInMeters,
       );

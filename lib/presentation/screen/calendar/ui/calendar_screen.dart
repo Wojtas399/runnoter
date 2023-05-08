@@ -1,6 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../common/date_service.dart';
+import '../../../../domain/model/workout.dart';
+import '../../../../domain/repository/workout_repository.dart';
+import '../../../../domain/service/auth_service.dart';
 import '../../../component/calendar/calendar_component.dart';
+import '../../../component/calendar/calendar_component_cubit.dart';
+import '../../../formatter/workout_status_formatter.dart';
+import '../bloc/calendar_bloc.dart';
 
 class CalendarScreen extends StatelessWidget {
   const CalendarScreen({
@@ -9,16 +17,61 @@ class CalendarScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Center(
-          child: Calendar(
-            initialDate: DateTime.now(),
-            workoutDays: const [],
-          ),
+    return const _BlocProvider(
+      child: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.all(24),
+          child: _Calendar(),
         ),
       ),
+    );
+  }
+}
+
+class _BlocProvider extends StatelessWidget {
+  final Widget child;
+
+  const _BlocProvider({
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (BuildContext context) => CalendarBloc(
+        dateService: DateService(),
+        authService: context.read<AuthService>(),
+        workoutRepository: context.read<WorkoutRepository>(),
+      )..add(
+          const CalendarEventInitialize(),
+        ),
+      child: child,
+    );
+  }
+}
+
+class _Calendar extends StatelessWidget {
+  const _Calendar();
+
+  @override
+  Widget build(BuildContext context) {
+    final List<Workout>? workouts = context.select(
+      (CalendarBloc bloc) => bloc.state.workouts,
+    );
+
+    return Calendar(
+      initialDate: DateTime.now(),
+      workoutDays: [...?workouts]
+          .map(
+            (Workout workout) => WorkoutDay(
+              date: workout.date,
+              workoutStatusIcon: Icon(
+                workout.status.toIcon(),
+                color: workout.status.toColor(),
+              ),
+            ),
+          )
+          .toList(),
     );
   }
 }

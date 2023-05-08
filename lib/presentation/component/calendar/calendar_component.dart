@@ -24,14 +24,8 @@ class Calendar extends StatelessWidget {
     return _CubitProvider(
       initialDate: initialDate,
       workoutDays: workoutDays,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: const [
-          _Header(),
-          SizedBox(height: 8),
-          _DayLabels(),
-          _Days(),
-        ],
+      child: _Content(
+        workoutDays: workoutDays,
       ),
     );
   }
@@ -53,11 +47,34 @@ class _CubitProvider extends StatelessWidget {
     return BlocProvider(
       create: (_) => CalendarComponentCubit(
         dateService: DateService(),
-      )..initialize(
-          initialDate: initialDate,
-          workoutDays: workoutDays,
+      )..updateState(
+          date: initialDate,
         ),
       child: child,
+    );
+  }
+}
+
+class _Content extends StatelessWidget {
+  final List<WorkoutDay>? workoutDays;
+
+  const _Content({
+    required this.workoutDays,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    context.read<CalendarComponentCubit>().updateState(
+          workoutDays: workoutDays,
+        );
+
+    return Column(
+      children: const [
+        _Header(),
+        SizedBox(height: 8),
+        _DayLabels(),
+        _Days(),
+      ],
     );
   }
 }
