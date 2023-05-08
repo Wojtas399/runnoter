@@ -11,15 +11,16 @@ class MorningMeasurementDto extends Equatable {
     required this.date,
     required this.restingHeartRate,
     required this.weight,
-  });
+  })  : assert(restingHeartRate >= 0),
+        assert(weight > 0);
 
   MorningMeasurementDto.fromJson(
     String dateStr,
-    Map<String, dynamic> json,
+    Map<String, dynamic>? json,
   ) : this(
           date: mapDateTimeFromString(dateStr),
-          restingHeartRate: json[_restingHeartRateField],
-          weight: json[_weightField],
+          restingHeartRate: json?[_restingHeartRateField],
+          weight: json?[_weightField],
         );
 
   @override
