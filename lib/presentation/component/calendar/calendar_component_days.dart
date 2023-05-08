@@ -45,26 +45,35 @@ class _DayItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Opacity(
       opacity: day.isDisabled ? 0.3 : 1,
-      child: SizedBox(
-        height: 70,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _DayNumber(
-              number: day.date.day,
-              isMarkedAsToday: day.isTodayDay,
-            ),
-            if (day.icon != null)
-              Expanded(
-                child: SizedBox(
-                  width: double.infinity,
-                  child: day.icon,
-                ),
+      child: InkWell(
+        onTap: () {
+          _onPressed(context);
+        },
+        child: SizedBox(
+          height: 70,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _DayNumber(
+                number: day.date.day,
+                isMarkedAsToday: day.isTodayDay,
               ),
-          ],
+              if (day.icon != null)
+                Expanded(
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: day.icon,
+                  ),
+                ),
+            ],
+          ),
         ),
       ),
     );
+  }
+
+  void _onPressed(BuildContext context) {
+    context.read<CalendarComponentCubit>().onDayPressed(day.date);
   }
 }
 

@@ -55,6 +55,12 @@ class CalendarComponentCubit extends Cubit<CalendarComponentState> {
     updateState(date: dateOfFirstDayInNextMonth);
   }
 
+  void onDayPressed(DateTime date) {
+    emit(state.copyWith(
+      pressedDate: date,
+    ));
+  }
+
   List<CalendarWeek> _createWeeks(int month, int year) {
     List<CalendarWeek> weeks = [];
     DateTime date = DateTime(year, month);
@@ -105,11 +111,13 @@ class CalendarComponentState extends Equatable {
   final int? displayingMonth;
   final int? displayingYear;
   final List<CalendarWeek>? weeks;
+  final DateTime? pressedDate;
 
   const CalendarComponentState({
     required this.displayingMonth,
     required this.displayingYear,
     required this.weeks,
+    this.pressedDate,
   });
 
   @override
@@ -117,17 +125,20 @@ class CalendarComponentState extends Equatable {
         displayingMonth,
         displayingYear,
         weeks,
+        pressedDate,
       ];
 
   CalendarComponentState copyWith({
     int? displayingMonth,
     int? displayingYear,
     List<CalendarWeek>? weeks,
+    DateTime? pressedDate,
   }) =>
       CalendarComponentState(
         displayingMonth: displayingMonth ?? this.displayingMonth,
         displayingYear: displayingYear ?? this.displayingYear,
         weeks: weeks ?? this.weeks,
+        pressedDate: pressedDate,
       );
 }
 

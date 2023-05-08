@@ -15,11 +15,13 @@ class Calendar extends StatelessWidget {
     DateTime firstDisplayingDate,
     DateTime lastDisplayingDate,
   )? onMonthChanged;
+  final Function(DateTime date)? onDayPressed;
 
   const Calendar({
     super.key,
     required this.workoutDays,
     this.onMonthChanged,
+    this.onDayPressed,
   });
 
   @override
@@ -27,6 +29,7 @@ class Calendar extends StatelessWidget {
     return _CubitProvider(
       child: _CubitListener(
         onMonthChanged: onMonthChanged,
+        onDayPressed: onDayPressed,
         child: _Content(
           workoutDays: workoutDays,
         ),
@@ -58,10 +61,12 @@ class _CubitListener extends StatelessWidget {
     DateTime firstDisplayingDate,
     DateTime lastDisplayingDate,
   )? onMonthChanged;
+  final Function(DateTime date)? onDayPressed;
   final Widget child;
 
   const _CubitListener({
     required this.onMonthChanged,
+    required this.onDayPressed,
     required this.child,
   });
 
@@ -69,11 +74,16 @@ class _CubitListener extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocListener<CalendarComponentCubit, CalendarComponentState>(
       listenWhen: (previousState, currentState) =>
+          currentState.pressedDate != null ||
           previousState.weeks == null ||
           previousState.displayingMonth != currentState.displayingMonth ||
           previousState.displayingYear != currentState.displayingYear,
       listener: (_, CalendarComponentState state) {
-        _emitNewMonth(state);
+        if (state.pressedDate != null) {
+          _emitPressedDay(state.pressedDate!);
+        } else {
+          _emitNewMonth(state);
+        }
       },
       child: child,
     );
@@ -84,6 +94,12 @@ class _CubitListener extends StatelessWidget {
       final DateTime firstDisplayingDate = state.weeks!.first.days.first.date;
       final DateTime lastDisplayingDate = state.weeks!.last.days.last.date;
       onMonthChanged!(firstDisplayingDate, lastDisplayingDate);
+    }
+  }
+
+  void _emitPressedDay(DateTime pressedDate) {
+    if (onDayPressed != null) {
+      onDayPressed!(pressedDate);
     }
   }
 }
