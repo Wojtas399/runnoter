@@ -121,8 +121,7 @@ class _BlocListener extends StatelessWidget {
         navigateBack(context: context);
         showSnackbarMessage(
           context: context,
-          message: AppLocalizations.of(context)!
-              .workout_status_creator_saved_status_info,
+          message: Str.of(context).workoutStatusCreatorSavedStatusMessage,
         );
         break;
       case WorkoutStatusCreatorInfo.workoutStatusInitialized:

@@ -21,8 +21,7 @@ class _Distance extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFieldComponent(
-      label:
-          '${AppLocalizations.of(context)!.workout_stage_creator_screen_distance} [km]',
+      label: '${Str.of(context).workoutStageCreatorDistance} [km]',
       keyboardType: TextInputType.number,
       maxLength: 8,
       isRequired: true,
@@ -63,8 +62,7 @@ class _MaxHeartRate extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFieldComponent(
-      label: AppLocalizations.of(context)!
-          .workout_stage_creator_screen_max_heart_rate,
+      label: Str.of(context).workoutStageCreatorMaxHeartRate,
       keyboardType: TextInputType.number,
       maxLength: 3,
       isRequired: true,

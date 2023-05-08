@@ -65,7 +65,7 @@ class TextFieldComponent extends StatelessWidget {
 
   String? _validate(String? value, BuildContext context) {
     if (isRequired && value == '') {
-      return AppLocalizations.of(context)!.required_field_message;
+      return Str.of(context).requiredFieldMessage;
     }
     final String? Function(String? value)? customValidator = validator;
     if (customValidator != null) {

@@ -5,26 +5,28 @@ import '../../domain/model/settings.dart';
 
 extension ThemeModeFormatter on ThemeMode {
   String toUIFormat(BuildContext context) {
+    final str = Str.of(context);
     switch (this) {
       case ThemeMode.system:
-        return AppLocalizations.of(context)!.theme_mode_system;
+        return str.themeModeSystem;
       case ThemeMode.light:
-        return AppLocalizations.of(context)!.theme_mode_light;
+        return str.themeModeLight;
       case ThemeMode.dark:
-        return AppLocalizations.of(context)!.theme_mode_dark;
+        return str.themeModeDark;
     }
   }
 }
 
 extension LanguageFormatter on Language {
   String toUIFormat(BuildContext context) {
+    final str = Str.of(context);
     switch (this) {
       case Language.polish:
-        return AppLocalizations.of(context)!.language_polish;
+        return str.languagePolish;
       case Language.english:
-        return AppLocalizations.of(context)!.language_english;
+        return str.languageEnglish;
       case Language.system:
-        return AppLocalizations.of(context)!.language_system;
+        return str.languageSystem;
     }
   }
 }
@@ -33,24 +35,25 @@ extension DistanceUnitFormatter on DistanceUnit {
   String toUIFormat(BuildContext context) {
     switch (this) {
       case DistanceUnit.kilometers:
-        return AppLocalizations.of(context)!.distance_unit_kilometers;
+        return Str.of(context).distanceUnitKilometers;
       case DistanceUnit.miles:
-        return AppLocalizations.of(context)!.distance_unit_miles;
+        return Str.of(context).distanceUnitMiles;
     }
   }
 }
 
 extension PaceUnitFormatter on PaceUnit {
   String toUIFormat(BuildContext context) {
+    final str = Str.of(context);
     switch (this) {
       case PaceUnit.minutesPerKilometer:
-        return AppLocalizations.of(context)!.pace_unit_minutes_per_kilometer;
+        return str.paceUnitMinutesPerKilometer;
       case PaceUnit.minutesPerMile:
-        return AppLocalizations.of(context)!.pace_unit_minutes_per_miles;
+        return str.paceUnitMinutesPerMile;
       case PaceUnit.kilometersPerHour:
-        return AppLocalizations.of(context)!.pace_unit_kilometers_per_hour;
+        return str.paceUnitKilometersPerHour;
       case PaceUnit.milesPerHour:
-        return AppLocalizations.of(context)!.pace_unit_miles_per_hour;
+        return str.paceUnitMilesPerHour;
     }
   }
 }

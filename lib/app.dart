@@ -29,7 +29,7 @@ class App extends StatelessWidget {
                   return MaterialApp(
                     title: 'Runnoter',
                     localizationsDelegates: const [
-                      AppLocalizations.delegate,
+                      Str.delegate,
                       GlobalMaterialLocalizations.delegate,
                       GlobalWidgetsLocalizations.delegate,
                       GlobalCupertinoLocalizations.delegate,

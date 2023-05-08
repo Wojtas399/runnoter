@@ -47,7 +47,7 @@ class _Header extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
       child: Text(
-        AppLocalizations.of(context)!.profile_screen_user_data_section_title,
+        Str.of(context).profileUserData,
         style: Theme.of(context).textTheme.titleLarge,
       ),
     );
@@ -65,7 +65,7 @@ class _Name extends StatelessWidget {
 
     return ValueWithLabelAndIconComponent(
       iconData: Icons.person_outline_rounded,
-      label: AppLocalizations.of(context)!.name,
+      label: Str.of(context).name,
       value: username ?? '',
       onPressed: () {
         _onPressed(context);
@@ -88,15 +88,14 @@ class _Name extends StatelessWidget {
   Future<String?> _askForNewUsername(BuildContext context) async {
     return await askForValue(
       context: context,
-      title: AppLocalizations.of(context)!
-          .profile_screen_new_username_dialog_title,
-      label: AppLocalizations.of(context)!.name,
+      title: Str.of(context).profileNewUsernameDialogTitle,
+      label: Str.of(context).name,
       textFieldIcon: Icons.person_rounded,
       value: context.read<ProfileIdentitiesBloc>().state.username,
       isValueRequired: true,
       validator: (String? value) {
         if (value != null && !isNameOrSurnameValid(value)) {
-          return AppLocalizations.of(context)!.invalid_name_or_surname_message;
+          return Str.of(context).invalidNameOrSurnameMessage;
         }
         return null;
       },
@@ -115,7 +114,7 @@ class _Surname extends StatelessWidget {
 
     return ValueWithLabelAndIconComponent(
       iconData: Icons.person_outline_rounded,
-      label: AppLocalizations.of(context)!.surname,
+      label: Str.of(context).surname,
       value: surname ?? '',
       onPressed: () {
         _onPressed(context);
@@ -138,15 +137,14 @@ class _Surname extends StatelessWidget {
   Future<String?> _askForNewSurname(BuildContext context) async {
     return await askForValue(
       context: context,
-      title:
-          AppLocalizations.of(context)!.profile_screen_new_surname_dialog_title,
-      label: AppLocalizations.of(context)!.surname,
+      title: Str.of(context).profileNewSurnameDialogTitle,
+      label: Str.of(context).surname,
       textFieldIcon: Icons.person_rounded,
       value: context.read<ProfileIdentitiesBloc>().state.surname,
       isValueRequired: true,
       validator: (String? value) {
         if (value != null && !isNameOrSurnameValid(value)) {
-          return AppLocalizations.of(context)!.invalid_name_or_surname_message;
+          return Str.of(context).invalidNameOrSurnameMessage;
         }
         return null;
       },
@@ -165,7 +163,7 @@ class _Email extends StatelessWidget {
 
     return ValueWithLabelAndIconComponent(
       iconData: Icons.email_outlined,
-      label: AppLocalizations.of(context)!.email,
+      label: Str.of(context).email,
       value: email ?? '',
       onPressed: () {
         _onPressed(context);
@@ -191,7 +189,7 @@ class _ChangePassword extends StatelessWidget {
   Widget build(BuildContext context) {
     return ValueWithLabelAndIconComponent(
       iconData: Icons.lock_outline,
-      value: AppLocalizations.of(context)!.profile_screen_change_password_label,
+      value: Str.of(context).profileChangePassword,
       onPressed: () {
         _onPressed(context);
       },
@@ -216,7 +214,7 @@ class _DeleteAccount extends StatelessWidget {
   Widget build(BuildContext context) {
     return ValueWithLabelAndIconComponent(
       iconData: Icons.no_accounts_outlined,
-      value: AppLocalizations.of(context)!.profile_screen_delete_account_label,
+      value: Str.of(context).profileDeleteAccount,
       color: Theme.of(context).colorScheme.error,
       onPressed: () {
         _onPressed(context);

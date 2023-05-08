@@ -1,573 +1,573 @@
 {
-  "sign_in_screen_title": "Logowanie",
-  "@sign_in_screen_title": {
+  "signInScreenTitle": "Logowanie",
+  "@signInScreenTitle": {
     "description": "Title of sign in screen"
   },
-  "sign_in_screen_button_label": "Zaloguj",
-  "@sign_in_screen_button_label": {
+  "signInButtonLabel": "Zaloguj",
+  "@signInButtonLabel": {
     "description": "Label of the button to submit sign in form"
   },
-  "sign_in_screen_sign_up_option": "Nie masz konta? Zarejestruj się!",
-  "@sign_in_screen_sign_up_option": {
+  "signInSignUpOption": "Nie masz konta? Zarejestruj się!",
+  "@signInSignUpOption": {
     "description": "Option to navigate to sign up form"
   },
-  "sign_in_screen_forgot_password_option": "Zapomniałeś hasła?",
-  "@sign_in_screen_forgot_password_option": {
+  "signInForgotPasswordOption": "Zapomniałeś hasła?",
+  "@signInForgotPasswordOption": {
     "description": "Option to navigate to forgot password screen"
   },
-  "sign_in_screen_invalid_email_dialog_title": "Niepoprawny adres email",
-  "@sign_in_screen_invalid_email_dialog_title": {
+  "signInInvalidEmailDialogTitle": "Niepoprawny adres email",
+  "@signInInvalidEmailDialogTitle": {
     "description": "Title of the dialog to inform that given email address is invalid"
   },
-  "sign_in_screen_invalid_email_dialog_message": "Podany adres email jest nieprawidłowy",
-  "@sign_in_screen_invalid_email_dialog_message": {
+  "signInInvalidEmailDialogMessage": "Podany adres email jest nieprawidłowy",
+  "@signInInvalidEmailDialogMessage": {
     "description": "Message of the dialog to inform that given email address is invalid"
   },
-  "sign_in_screen_user_not_found_dialog_title": "Brak użytkownika",
-  "@sign_in_screen_user_not_found_dialog_title": {
+  "signInUserNotFoundDialogTitle": "Brak użytkownika",
+  "@signInUserNotFoundDialogTitle": {
     "description": "Title of the dialog to inform that user does not exist"
   },
-  "sign_in_screen_user_not_found_dialog_message": "Użytkownik o podanym adresie email nie istnieje",
-  "@sign_in_screen_user_not_found_dialog_message": {
+  "signInUserNotFoundDialogMessage": "Użytkownik o podanym adresie email nie istnieje",
+  "@signInUserNotFoundDialogMessage": {
     "description": "Message of the dialog to inform that user does not exist"
   },
-  "sign_in_screen_wrong_password_dialog_title": "Błędne hasło",
-  "@sign_in_screen_wrong_password_dialog_title": {
+  "signInWrongPasswordDialogTitle": "Błędne hasło",
+  "@signInWrongPasswordDialogTitle": {
     "description": "Title of the dialog to inform that password is wrong"
   },
-  "sign_in_screen_wrong_password_dialog_message": "Podane hasło jest błędne. Spróbuj ponownie z prawidłowym hasłem.",
-  "@sign_in_screen_wrong_password_dialog_message": {
+  "signInWrongPasswordDialogMessage": "Podane hasło jest błędne. Spróbuj ponownie z prawidłowym hasłem.",
+  "@signInWrongPasswordDialogMessage": {
     "description": "Message of the dialog to inform that password is wrong"
   },
 
 
-  "sign_up_screen_title": "Rejestracja",
-  "@sign_up_screen_title": {
+  "signUpScreenTitle": "Rejestracja",
+  "@signUpScreenTitle": {
     "description": "Title of sign up screen"
   },
-  "sign_up_screen_button_label": "Zarejestruj",
-  "@sign_up_screen_button_label": {
+  "signUpButtonLabel": "Zarejestruj",
+  "@signUpButtonLabel": {
     "description": "Label of the button to submit sign up form"
   },
-  "sign_up_screen_sign_in_option": "Masz już konto? Zaloguj się!",
-  "@sign_up_screen_sign_in_option": {
+  "signUpSignInOption": "Masz już konto? Zaloguj się!",
+  "@signUpSignInOption": {
     "description": "Option to navigate to sign in screen,"
   },
-  "sign_up_screen_already_taken_email_dialog_title": "Zajęty adres email",
-  "@sign_up_screen_already_taken_email_dialog_title": {
+  "signUpAlreadyTakenEmailDialogTitle": "Zajęty adres email",
+  "@signUpAlreadyTakenEmailDialogTitle": {
     "description": "Title of the dialog to inform that email is already taken"
   },
-  "sign_up_screen_already_taken_email_dialog_message": "Podany adres email jest już zajęty przez innego użytkownika...",
-  "@sign_up_screen_already_taken_email_dialog_message": {
+  "signUpAlreadyTakenEmailDialogMessage": "Podany adres email jest już zajęty przez innego użytkownika...",
+  "@signUpAlreadyTakenEmailDialogMessage": {
     "description": "Message of the dialog to inform that email is already taken"
   },
 
 
-  "forgot_password_screen_title": "Zapomniałeś hasła?",
-  "@forgot_password_screen_title": {
+  "forgotPasswordScreenTitle": "Zapomniałeś hasła?",
+  "@forgotPasswordScreenTitle": {
     "description": "Title of the message displaying on forgot password screen"
   },
-  "forgot_password_screen_message": "Podaj adres email, na który wyślecimy Ci link z możliwością zmiany hasła.",
-  "@forgot_password_screen_message": {
+  "forgotPasswordMessage": "Podaj adres email, na który wyślecimy Ci link z możliwością zmiany hasła.",
+  "@forgotPasswordMessage": {
     "description": "Text of the message displaying on forgot password screen"
   },
-  "forgot_password_screen_submit_button_label": "Wyślij",
-  "@forgot_password_screen_submit_button_label": {
+  "forgotPasswordSubmitButtonLabel": "Wyślij",
+  "@forgotPasswordSubmitButtonLabel": {
     "description": "Label of the button to send link to change password"
   },
-  "forgot_password_screen_sent_email_dialog_title": "Wiadomość email została wysłana",
-  "@forgot_password_screen_sent_email_dialog_title": {
+  "forgotPasswordSentEmailDialogTitle": "Wiadomość email została wysłana",
+  "@forgotPasswordSentEmailDialogTitle": {
     "description": "Title of the dialog to inform that email with link to reset password has been sent"
   },
-  "forgot_password_screen_sent_email_dialog_message": "Pomyślnie wysłano wiadomość na twój adres email. Sprawdź skrzynkę pocztową i postępuj zgodnie z instrukcjami zamieszczonymi w wysłanej wiadomości.",
-  "@forgot_password_screen_sent_email_dialog_message": {
+  "forgotPasswordSentEmailDialogMessage": "Pomyślnie wysłano wiadomość na twój adres email. Sprawdź skrzynkę pocztową i postępuj zgodnie z instrukcjami zamieszczonymi w wysłanej wiadomości.",
+  "@forgotPasswordSentEmailDialogMessage": {
     "description": "Message of the dialog to inform that email with link to reset password has been sent"
   },
-  "forgot_password_screen_invalid_email_dialog_title": "Niepoprawny adres email",
-  "@forgot_password_screen_invalid_email_dialog_title": {
+  "forgotPasswordInvalidEmailDialogTitle": "Niepoprawny adres email",
+  "@forgotPasswordInvalidEmailDialogTitle": {
     "description": "Title of the dialog to inform that given email address is invalid"
   },
-  "forgot_password_screen_invalid_email_dialog_message": "Podany adres email jest nieprawidłowy",
-  "@forgot_password_screen_invalid_email_dialog_message": {
+  "forgotPasswordInvalidEmailDialogMessage": "Podany adres email jest nieprawidłowy",
+  "@forgotPasswordInvalidEmailDialogMessage": {
     "description": "Message of the dialog to inform that given email address is invalid"
   },
-  "forgot_password_screen_user_not_found_dialog_title": "Brak użytkownika",
-  "@forgot_password_screen_user_not_found_dialog_title": {
+  "forgotPasswordUserNotFoundDialogTitle": "Brak użytkownika",
+  "@forgotPasswordUserNotFoundDialogTitle": {
     "description": "Title of the dialog to inform that user does not exist"
   },
-  "forgot_password_screen_user_not_found_dialog_message": "Nie możemy wysłać wiadomości, ponieważ użytkownik o podanym adresie email nie istnieje.",
-  "@forgot_password_screen_user_not_found_dialog_message": {
+  "forgotPasswordUserNotFoundDialogMessage": "Nie możemy wysłać wiadomości, ponieważ użytkownik o podanym adresie email nie istnieje.",
+  "@forgotPasswordUserNotFoundDialogMessage": {
     "description": "Message of the dialog to inform that user does not exist"
   },
 
 
-  "home_current_week_page_title": "Obecny tydzień",
-  "@home_current_week_page_title": {
+  "homeCurrentWeekPageTitle": "Obecny tydzień",
+  "@homeCurrentWeekPageTitle": {
     "description": "Title of current week page"
   },
-  "home_calendar_page_title": "Kalendarz",
-  "@home_calendar_page_title": {
+  "homeCalendarPageTitle": "Kalendarz",
+  "@homeCalendarPageTitle": {
     "description": "Title of calendar page"
   },
-  "home_pulse_and_weight_page_title": "Puls & Waga",
-  "@home_pulse_and_weight_page_title": {
+  "homePulseAndWeightPageTitle": "Puls & Waga",
+  "@homePulseAndWeightPageTitle": {
     "description": "Title of pulse and weight page"
   },
-  "home_drawer_profile_label": "Profil",
-  "@home_drawer_profile_label": {
+  "homeDrawerProfile": "Profil",
+  "@homeDrawerProfile": {
     "description": "Label of drawer's profile option"
   },
-  "home_drawer_mileage_label": "Kilometraż",
-  "@home_drawer_mileage_label": {
+  "homeDrawerMileage": "Kilometraż",
+  "@homeDrawerMileage": {
     "description": "Label of drawer's mileage option"
   },
-  "home_drawer_blood_label": "Krew",
-  "@home_drawer_blood_label": {
+  "homeDrawerBlood": "Krew",
+  "@homeDrawerBlood": {
     "description": "Label of drawer's blood option"
   },
-  "home_drawer_competitions_label": "Starty w zawodach",
-  "@home_drawer_competitions_label": {
+  "homeDrawerCompetitions": "Starty w zawodach",
+  "@homeDrawerCompetitions": {
     "description": "Label of drawer's competitions option"
   },
-  "home_drawer_sign_out_option": "Wyloguj",
-  "@home_drawer_sign_out_option": {
+  "homeDrawerSignOut": "Wyloguj",
+  "@homeDrawerSignOut": {
     "description": "Label of drawer's sign out option"
   },
-  "home_sign_out_confirmation_dialog_title": "Wylogowanie",
-  "@home_sign_out_confirmation_dialog_title": {
+  "homeSignOutConfirmationDialogTitle": "Wylogowanie",
+  "@homeSignOutConfirmationDialogTitle": {
     "description": "Title of the dialog to confirm sign out"
   },
-  "home_sign_out_confirmation_dialog_message": "Czy na pewno chcesz się wylogować?",
-  "@home_sign_out_confirmation_dialog_message": {
+  "homeSignOutConfirmationDialogMessage": "Czy na pewno chcesz się wylogować?",
+  "@homeSignOutConfirmationDialogMessage": {
     "description": "Message of the dialog to confirm sign out"
   },
 
 
-  "day_preview_screen_title": "Podgląd dnia",
-  "@day_preview_screen_title": {
+  "dayPreviewScreenTitle": "Podgląd dnia",
+  "@dayPreviewScreenTitle": {
     "description": "Title of the day preview screen"
   },
-  "day_preview_no_workout_title": "Brak treningu",
-  "@day_preview_no_workout_title": {
+  "dayPreviewNoWorkoutTitle": "Brak treningu",
+  "@dayPreviewNoWorkoutTitle": {
     "description": "Title of the information about no workout"
   },
-  "day_preview_no_workout_message_past_day": "Tego dnia nie było zaplanowanego treningu",
-  "@day_preview_no_workout_message_past_day": {
+  "dayPreviewNoWorkoutMessagePastDay": "Tego dnia nie było zaplanowanego treningu",
+  "@dayPreviewNoWorkoutMessagePastDay": {
     "description": "Message of the information about no workout on a day from the past"
   },
-  "day_preview_no_workout_message_future_day": "Tego dnia nie masz zaplanowanego treningu",
-  "@day_preview_no_workout_message_future_day": {
+  "dayPreviewNoWorkoutMessageFutureDay": "Tego dnia nie masz zaplanowanego treningu",
+  "@dayPreviewNoWorkoutMessageFutureDay": {
     "description": "Message of the information about no workout on a day from the future"
   },
-  "day_preview_add_workout_button_label": "Dodaj trening",
-  "@day_preview_add_workout_button_label": {
+  "dayPreviewAddWorkoutButton": "Dodaj trening",
+  "@dayPreviewAddWorkoutButton": {
     "description": "Label of the button to add workout"
   },
-  "day_preview_workout_name_section_label": "Nazwa",
-  "@day_preview_workout_name": {
+  "dayPreviewWorkoutName": "Nazwa",
+  "@dayPreviewWorkoutName": {
     "description": "Label of the section to display workout name"
   },
-  "day_preview_workout_stages_section_label": "Etapy",
-  "@day_preview_workout_stages_section_label": {
+  "dayPreviewWorkoutStages": "Etapy",
+  "@dayPreviewWorkoutStages": {
     "description": "Label of the section to display stages"
   },
-  "day_preview_total_distance_section_label": "Całkowity dystans",
-  "@day_preview_total_distance_section_label": {
+  "dayPreviewTotalDistance": "Całkowity dystans",
+  "@dayPreviewTotalDistance": {
     "description": "Label of the section to display total distance of the workout"
   },
-  "day_preview_workout_status_section_label": "Status",
-  "@day_preview_workout_status_section_label": {
+  "dayPreviewWorkoutStatus": "Status",
+  "@dayPreviewWorkoutStatus": {
     "description": "Label of the section to display workout status"
   },
-  "day_preview_workout_status_covered_distance": "Pokonany dystans",
-  "@day_preview_workout_status_covered_distance": {
+  "dayPreviewCoveredDistance": "Pokonany dystans",
+  "@dayPreviewCoveredDistance": {
     "description": "Label of the covered distance"
   },
-  "day_preview_workout_status_mood_rate": "Samopoczucie",
-  "@day_preview_workout_status_mood_rate": {
+  "dayPreviewMoodRate": "Samopoczucie",
+  "@dayPreviewMoodRate": {
     "description": "Label of the mood rate"
   },
-  "day_preview_workout_status_avg_pace": "Średnie tempo",
-  "@day_preview_workout_status_avg_pace": {
+  "dayPreviewAveragePace": "Średnie tempo",
+  "@dayPreviewAveragePace": {
     "description": "Label of the average pace"
   },
-  "day_preview_workout_status_avg_heart_rate": "Średnie tętno",
-  "@day_preview_workout_status_avg_heart_rate": {
+  "dayPreviewAverageHeartRate": "Średnie tętno",
+  "@dayPreviewAverageHeartRate": {
     "description": "Label of the average heart rate"
   },
-  "day_preview_comment_section_label": "Uwagi",
-  "@day_preview_comment_section_label": {
+  "dayPreviewComment": "Uwagi",
+  "@dayPreviewComment": {
     "description": "Label of the comment section"
   },
-  "day_preview_change_status_button_label": "Zmień status",
-  "@day_preview_change_status_button_label": {
+  "dayPreviewChangeStatusButton": "Zmień status",
+  "@dayPreviewChangeStatusButton": {
     "description": "Label of the button to change status"
   },
-  "day_preview_finish_workout_button_label": "Zakończ",
-  "@day_preview_finish_workout_button_label": {
+  "dayPreviewFinishWorkoutButton": "Zakończ",
+  "@dayPreviewFinishWorkoutButton": {
     "description": "Label of the button to finish workout"
   },
-  "day_preview_edit_workout_label": "Edytuj trening",
-  "@day_preview_edit_workout_label": {
+  "dayPreviewEditWorkout": "Edytuj trening",
+  "@dayPreviewEditWorkout": {
     "description": "Label of the option to edit workout"
   },
-  "day_preview_delete_workout_label": "Usuń trening",
-  "@day_preview_delete_workout_label": {
+  "dayPreviewDeleteWorkout": "Usuń trening",
+  "@dayPreviewDeleteWorkout": {
     "description": "Label of the option to delete workout"
   },
-  "day_preview_deleted_workout_message": "Pomyślnie usunięto trening",
-  "@day_preview_deleted_workout_message": {
+  "dayPreviewDeletedWorkoutMessage": "Pomyślnie usunięto trening",
+  "@dayPreviewDeletedWorkoutMessage": {
     "description": "Message to inform that workout has been deleted"
   },
 
 
-  "workout_creator_screen_title_add_mode": "Nowy trening",
-  "@workout_creator_screen_title_add_mode": {
+  "workoutCreatorScreenNewWorkoutTitle": "Nowy trening",
+  "@workoutCreatorScreenNewWorkoutTitle": {
     "description": "Title of the workout creator screen in add mode"
   },
-  "workout_creator_screen_title_edit_mode": "Edytuj trening",
-  "@workout_creator_screen_title_edit_mode": {
+  "workoutCreatorScreeEditWorkoutTitle": "Edytuj trening",
+  "@workoutCreatorScreeEditWorkoutTitle": {
     "description": "Title of the workout creator screen in edit mode"
   },
-  "workout_creator_screen_workout_name": "Nazwa treningu",
-  "@workout_creator_screen_workout_name": {
+  "workoutCreatorWorkoutName": "Nazwa treningu",
+  "@workoutCreatorWorkoutName": {
     "description": "Workout name"
   },
-  "workout_creator_screen_workout_stages": "Etapy treningu",
-  "@workout_creator_screen_workout_stages": {
+  "workoutCreatorWorkoutStages": "Etapy treningu",
+  "@workoutCreatorWorkoutStages": {
     "description": "Label of the workout stages section"
   },
-  "workout_creator_screen_add_stage_button_label": "Dodaj etap",
-  "@workout_creator_screen_add_stage_button_label": {
+  "workoutCreatorAddStageButton": "Dodaj etap",
+  "@workoutCreatorAddStageButton": {
     "description": "Label of the button to add workout stage"
   },
-  "workout_creator_screen_no_stages_info": "Brak etapów treningu",
-  "@workout_creator_screen_no_stages_info": {
+  "workoutCreatorNoStagesInfo": "Brak etapów treningu",
+  "@workoutCreatorNoStagesInfo": {
     "description": "Info about no workout stages"
   },
-  "workout_creator_screen_add_stage_instruction": "Naciśnij poniższy przycisk, aby dodać nowy etap",
-  "@workout_creator_screen_add_stage_instructions": {
+  "workoutCreatorAddStageInstructions": "Naciśnij poniższy przycisk, aby dodać nowy etap",
+  "@workoutCreatorAddStageInstructions": {
     "description": "Instruction on how to add new workout stage"
   },
-  "workout_creator_screen_add_workout_button_label": "Dodaj",
-  "@workout_creator_screen_add_workout_button_label": {
+  "workoutCreatorAddWorkoutButton": "Dodaj",
+  "@workoutCreatorAddWorkoutButton": {
     "description": "Label of the button to add workout"
   },
-  "workout_creator_screen_edit_workout_button_label": "Zaktualizuj",
-  "@workout_creator_screen_edit_workout_button_label": {
+  "workoutCreatorEditWorkoutButton": "Zaktualizuj",
+  "@workoutCreatorEditWorkoutButton": {
     "description": "Label of the button to edit workout"
   },
-  "workout_creator_screen_added_workout_message": "Pomyślnie dodano trening",
-  "@workout_creator_screen_added_workout_message": {
+  "workoutCreatorAddedWorkoutMessage": "Pomyślnie dodano trening",
+  "@workoutCreatorAddedWorkoutMessage": {
     "description": "Message to inform that workout has been added"
   },
-  "workout_creator_screen_updated_workout_message": "Pomyślnie zaktualizowano trening",
-  "@workout_creator_screen_updated_workout_message": {
+  "workoutCreatorUpdatedWorkoutMessage": "Pomyślnie zaktualizowano trening",
+  "@workoutCreatorUpdatedWorkoutMessage": {
     "description": "Message to inform that workout has been updated"
   },
 
 
-  "workout_stage_creator_screen_title": "Nowy etap treningu",
-  "@workout_stage_creator_screen_title": {
+  "workoutStageCreatorScreenTitle": "Nowy etap treningu",
+  "@workoutStageCreatorScreenTitle": {
     "description": "Title of the workout stage creator screen"
   },
-  "workout_stage_creator_screen_stage_type": "Rodzaj etapu",
-  "@workout_stage_creator_screen_stage_type": {
+  "workoutStageCreatorStageType": "Rodzaj etapu",
+  "@workoutStageCreatorStageType": {
     "description": "Workout stage type"
   },
-  "workout_stage_creator_screen_distance": "Dystans",
-  "@workout_stage_creator_screen_distance": {
+  "workoutStageCreatorDistance": "Dystans",
+  "@workoutStageCreatorDistance": {
     "description": "Distance"
   },
-  "workout_stage_creator_screen_max_heart_rate": "Tętno maksymalne",
-  "@workout_stage_creator_screen_max_heart_rate": {
+  "workoutStageCreatorMaxHeartRate": "Tętno maksymalne",
+  "@workoutStageCreatorMaxHeartRate": {
     "description": "Max heart rate"
   },
-  "workout_stage_creator_screen_amount_of_series": "Ilość serii",
-  "@workout_stage_creator_screen_amount_of_series": {
+  "workoutStageCreatorAmountOfSeries": "Ilość serii",
+  "@workoutStageCreatorAmountOfSeries": {
     "description": "Amount of series"
   },
-  "workout_stage_creator_screen_single_series_distance": "Dystans pojedynczej serii",
-  "@workout_stage_creator_screen_single_series_distance": {
+  "workoutStageCreatorSeriesDistance": "Dystans pojedynczej serii",
+  "@workoutStageCreatorSeriesDistance": {
     "description": "Single series distance"
   },
-  "workout_stage_creator_screen_walking_distance": "Dystans marszu",
-  "@workout_stage_creator_screen_walking_distance": {
+  "workoutStageCreatorWalkingDistance": "Dystans marszu",
+  "@workoutStageCreatorWalkingDistance": {
     "description": "Walking distance"
   },
-  "workout_stage_creator_screen_jogging_distance": "Dystans truchtu",
-  "@workout_stage_creator_screen_jogging_distance": {
+  "workoutStageCreatorJoggingDistance": "Dystans truchtu",
+  "@workoutStageCreatorJoggingDistance": {
     "description": "Jogging distance"
   },
 
 
-  "workout_status_creator_screen_title": "Status treningu",
-  "@workout_status_creator_screen_title": {
+  "workoutStatusCreatorScreenTitle": "Status treningu",
+  "@workoutStatusCreatorScreenTitle": {
     "description": "Title of workout status creator screen"
   },
-  "workout_status_creator_covered_distance_label": "Pokonany dystans",
-  "@workout_status_creator_covered_distance_label": {
+  "workoutStatusCreatorCoveredDistance": "Pokonany dystans",
+  "@workoutStatusCreatorCoveredDistance": {
     "description": "Label of covered distance"
   },
-  "workout_status_creator_mood_label": "Samopoczucie",
-  "@workout_status_creator_mood_label": {
+  "workoutStatusCreatorMood": "Samopoczucie",
+  "@workoutStatusCreatorMood": {
     "description": "Label of mood"
   },
-  "workout_status_creator_average_pace_label": "Średnia prędkość",
-  "@workout_status_creator_average_pace_label": {
+  "workoutStatusCreatorAveragePace": "Średnia prędkość",
+  "@workoutStatusCreatorAveragePace": {
     "description": "Label of average pace"
   },
-  "workout_status_creator_minutes_label": "Minuty",
-  "@workout_status_creator_minutes_label": {
+  "workoutStatusCreatorMinutes": "Minuty",
+  "@workoutStatusCreatorMinutes": {
     "description": "Label of minutes"
   },
-  "workout_status_creator_seconds_label": "Sekundy",
-  "@workout_status_creator_seconds_label": {
+  "workoutStatusCreatorSeconds": "Sekundy",
+  "@workoutStatusCreatorSeconds": {
     "description": "Label of seconds"
   },
-  "workout_status_creator_average_heart_rate": "Średnie tętno",
-  "@workout_status_creator_average_heart_rate": {
+  "workoutStatusCreatorAverageHeartRate": "Średnie tętno",
+  "@workoutStatusCreatorAverageHeartRate": {
     "description": "Label of average heart rate"
   },
-  "workout_status_creator_comment_label": "Uwagi",
-  "@workout_status_creator_comment_label": {
+  "workoutStatusCreatorComment": "Uwagi",
+  "@workoutStatusCreatorComment": {
     "description": "Label of comment"
   },
-  "workout_status_creator_saved_status_info": "Pomyślnie zaktualizowano status treningu",
-  "@workout_status_creator_saved_status_info": {
+  "workoutStatusCreatorSavedStatusMessage": "Pomyślnie zaktualizowano status treningu",
+  "@workoutStatusCreatorSavedStatusMessage": {
     "description": "Info about successfully saved status"
   },
 
 
-  "profile_screen_title": "Profil",
-  "@profile_screen_title": {
+  "profileScreenTitle": "Profil",
+  "@profileScreenTitle": {
     "description": "Title of the profile screen"
   },
-  "profile_screen_user_data_section_title": "Dane użytkownika",
-  "@profile_screen_user_data_section_title": {
+  "profileUserData": "Dane użytkownika",
+  "@profileUserData": {
     "description": "Title of the user data section"
   },
-  "profile_screen_settings_section_title": "Ustawienia",
-  "@profile_screen_settings_section_title": {
+  "profileSettings": "Ustawienia",
+  "@profileSettings": {
     "description": "Title of settings section"
   },
-  "profile_screen_change_password_label": "Zmień hasło",
-  "@profile_screen_change_password_label": {
+  "profileChangePassword": "Zmień hasło",
+  "@profileChangePassword": {
     "description": "Label of change password option"
   },
-  "profile_screen_delete_account_label": "Usuń konto",
-  "@profile_screen_delete_account_label": {
+  "profileDeleteAccount": "Usuń konto",
+  "@profileDeleteAccount": {
     "description": "Label of delete account option"
   },
-  "profile_screen_new_username_dialog_title": "Zmień imię",
-  "@profile_screen_new_username_dialog_title": {
+  "profileNewUsernameDialogTitle": "Zmień imię",
+  "@profileNewUsernameDialogTitle": {
     "description": "Title of the dialog to change username"
   },
-  "profile_screen_new_surname_dialog_title": "Zmień nazwisko",
-  "@profile_screen_new_surname_dialog_title": {
+  "profileNewSurnameDialogTitle": "Zmień nazwisko",
+  "@profileNewSurnameDialogTitle": {
     "description": "Title of the dialog to change surname"
   },
-  "profile_screen_new_email_dialog_title": "Zmień email",
-  "@profile_screen_new_email_dialog_title": {
+  "profileNewEmailDialogTitle": "Zmień email",
+  "@profileNewEmailDialogTitle": {
     "description": "Title of the dialog to change email"
   },
-  "profile_screen_new_password_dialog_title": "Zmień hasło",
-  "@profile_screen_new_password_dialog_title": {
+  "profileNewPasswordDialogTitle": "Zmień hasło",
+  "@profileNewPasswordDialogTitle": {
     "description": "Title of the dialog to update password"
   },
-  "profile_screen_new_password_dialog_new_password_label": "Nowe hasło",
-  "@profile_screen_new_password_dialog_new_password_label": {
+  "profileNewPasswordDialogNewPassword": "Nowe hasło",
+  "@profileNewPasswordDialogNewPassword": {
     "description": "Label of text field to enter new password"
   },
-  "profile_screen_new_password_dialog_current_password_label": "Obecne hasło",
-  "@profile_screen_new_password_dialog_current_password_label": {
+  "profileNewPasswordDialogCurrentPassword": "Obecne hasło",
+  "@profileNewPasswordDialogCurrentPassword": {
     "description": "Label of text field to enter current password"
   },
-  "profile_screen_delete_account_dialog_title": "Usuń konto",
-  "@profile_screen_delete_account_dialog_title": {
+  "profileDeleteAccountDialogTitle": "Usuń konto",
+  "@profileDeleteAccountDialogTitle": {
     "description": "Title of the dialog to delete account"
   },
-  "profile_screen_delete_account_dialog_message": "Usuwając konto utracisz wszystkie zapisane dane, bez możliwości ich odzyskania.",
-  "@profile_screen_delete_account_dialog_message": {
+  "profileDeleteAccountDialogMessage": "Usuwając konto utracisz wszystkie zapisane dane, bez możliwości ich odzyskania.",
+  "@profileDeleteAccountDialogMessage": {
     "description": "Message of the dialog to delete account"
   },
-  "profile_screen_successfully_saved_data_message": "Pomyślnie zapisano zmiany",
-  "@profile_screen_successfully_saved_data_message": {
+  "profileSuccessfullySavedDataMessage": "Pomyślnie zapisano zmiany",
+  "@profileSuccessfullySavedDataMessage": {
     "description": "Message to inform that data has been successfully saved"
   },
-  "profile_screen_email_already_taken_title": "Zajęty adres email",
-  "@profile_screen_email_already_taken_title": {
+  "profileEmailAlreadyTakenDialogTitle": "Zajęty adres email",
+  "@profileEmailAlreadyTakenDialogTitle": {
     "description": "Title of the dialog to inform that new email is already taken"
   },
-  "profile_screen_email_already_taken_message": "Niestety, nowo podany adres email jest już zajęty przez innego użytkownika...",
-  "@profile_screen_email_already_taken_message": {
+  "profileEmailAlreadyTakenDialogMessage": "Niestety, nowo podany adres email jest już zajęty przez innego użytkownika...",
+  "@profileEmailAlreadyTakenDialogMessage": {
     "description": "Message of the dialog to inform that new email is already taken"
   },
-  "profile_screen_wrong_password_title": "Błędne hasło",
-  "@profile_screen_wrong_password_title": {
+  "profileWrongPasswordDialogTitle": "Błędne hasło",
+  "@profileWrongPasswordDialogTitle": {
     "description": "Title of the dialog to inform that given password is wrong"
   },
-  "profile_screen_wrong_password_message": "Podane hasło jest błędne...",
-  "@profile_screen_wrong_password_message": {
+  "profileWrongPasswordDialogMessage": "Podane hasło jest błędne...",
+  "@profileWrongPasswordDialogMessage": {
     "description": "Message of the dialog to inform that given password is wrong"
   },
-  "profile_screen_wrong_current_password_title": "Błędne obecne hasło",
-  "@profile_screen_wrong_current_password_title": {
+  "profileWrongCurrentPasswordDialogTitle": "Błędne obecne hasło",
+  "@profileWrongCurrentPasswordDialogTitle": {
     "description": "Title of the dialog to inform that given current password is wrong"
   },
-  "profile_screen_wrong_current_password_message": "Podane obecne hasło jest błędne...",
-  "@profile_screen_wrong_current_password_message": {
+  "profileWrongCurrentPasswordDialogMessage": "Podane obecne hasło jest błędne...",
+  "@profileWrongCurrentPasswordDialogMessage": {
     "description": "Message of the dialog to inform that given current password is wrong"
   },
 
 
-  "theme_mode_label": "Motyw",
-  "@theme_mode_label": {
+  "themeMode": "Motyw",
+  "@themeMode": {
     "description": "Label of theme mode"
   },
-  "theme_mode_light": "Jasny",
-  "@theme_mode_light": {
+  "themeModeLight": "Jasny",
+  "@themeModeLight": {
     "description": "Light theme mode"
   },
-  "theme_mode_dark": "Ciemny",
-  "@theme_mode_dark": {
+  "themeModeDark": "Ciemny",
+  "@themeModeDark": {
     "description": "Dark theme mode"
   },
-  "theme_mode_system": "Systemowy",
-  "@theme_mode_system": {
+  "themeModeSystem": "Systemowy",
+  "@themeModeSystem": {
     "description": "System theme mode"
   },
-  "theme_mode_selection_text": "Wybierz motyw aplikacji",
-  "@theme_mode_selection_text": {
+  "themeModeSelect": "Wybierz motyw aplikacji",
+  "@themeModeSelect": {
     "description": "Text about theme mode selection"
   },
-  "system_theme_mode_description": "Jeśli wybierzesz motyw systemowy, aplikacja będzie używała motywu obecnie ustawionego na Twoim urządzeniu.",
-  "@system_theme_mode_description": {
+  "systemThemeModeDescription": "Jeśli wybierzesz motyw systemowy, aplikacja będzie używała motywu obecnie ustawionego na Twoim urządzeniu.",
+  "@systemThemeModeDescription": {
     "description": "Description about system theme mode"
   },
 
 
-  "language_label": "Język",
-  "@language_label": {
+  "language": "Język",
+  "@language": {
     "description": "Label of language"
   },
-  "language_polish": "Polski",
-  "@language_polish": {
+  "languagePolish": "Polski",
+  "@languagePolish": {
     "description": "Polish language"
   },
-  "language_english": "Angielski",
-  "@language_english": {
+  "languageEnglish": "Angielski",
+  "@languageEnglish": {
     "description": "English language"
   },
-  "language_system": "Systemowy",
-  "@language_system": {
+  "languageSystem": "Systemowy",
+  "@languageSystem": {
     "description": "System language"
   },
-  "language_selection_text": "Wybierz język aplikacji",
-  "@language_selection_text": {
+  "languageSelect": "Wybierz język aplikacji",
+  "@languageSelect": {
     "description": "Text about language selection"
   },
-  "system_language_description": "Jeśli wybierzesz język systemowy, aplikacja będzie używała języka obecnie ustawionego na Twoim urządzeniu.",
-  "@system_language_description": {
+  "systemLanguageDescription": "Jeśli wybierzesz język systemowy, aplikacja będzie używała języka obecnie ustawionego na Twoim urządzeniu.",
+  "@systemLanguageDescription": {
     "description": "Description about system language"
   },
 
 
-  "distance_unit_label": "Jednostka dystansu",
-  "@distance_unit_label": {
+  "distanceUnit": "Jednostka dystansu",
+  "@distanceUnit": {
     "description": "Label of distance unit"
   },
-  "distance_unit_kilometers": "Kilometry",
-  "@distance_unit_kilometers": {
+  "distanceUnitKilometers": "Kilometry",
+  "@distanceUnitKilometers": {
     "description": "Kilometers distance unit"
   },
-  "distance_unit_miles": "Mile",
-  "@distance_unit_miles": {
+  "distanceUnitMiles": "Mile",
+  "@distanceUnitMiles": {
     "description": "Miles distance unit"
   },
-  "distance_unit_selection_text": "Wybierz jednostkę dystansu",
-  "@distance_unit_selection_text": {
+  "distanceUnitSelect": "Wybierz jednostkę dystansu",
+  "@distanceUnitSelect": {
     "description": "Text about distance unit selection"
   },
 
 
-  "pace_unit_label": "Jednostka tempa",
-  "@pace_unit_label": {
+  "paceUnit": "Jednostka tempa",
+  "@paceUnit": {
     "description": "Label of pace unit"
   },
-  "pace_unit_minutes_per_kilometer": "min/km (minuty na kilometr)",
-  "@pace_unit_minutes_per_kilometer": {
+  "paceUnitMinutesPerKilometer": "min/km (minuty na kilometr)",
+  "@paceUnitMinutesPerKilometer": {
     "description": "Minutes per kilometer pace unit"
   },
-  "pace_unit_minutes_per_miles": "min/mi (minuty na milę)",
-  "@pace_unit_minutes_per_miles": {
+  "paceUnitMinutesPerMile": "min/mi (minuty na milę)",
+  "@paceUnitMinutesPerMile": {
     "description": "Minutes per mile pace unit"
   },
-  "pace_unit_kilometers_per_hour": "km/h (kilometry na godzinę)",
-  "@pace_unit_kilometers_per_hour": {
+  "paceUnitKilometersPerHour": "km/h (kilometry na godzinę)",
+  "@paceUnitKilometersPerHour": {
     "description": "Kilometers per hour pace unit"
   },
-  "pace_unit_miles_per_hour": "mi/h (mile na godzinę)",
-  "@pace_unit_miles_per_hour": {
+  "paceUnitMilesPerHour": "mi/h (mile na godzinę)",
+  "@paceUnitMilesPerHour": {
     "description": "Miles per hour pace unit"
   },
-  "pace_unit_selection_text": "Wybierz jednostkę tempa",
-  "@pace_unit_selection_text": {
+  "paceUnitSelect": "Wybierz jednostkę tempa",
+  "@paceUnitSelect": {
     "description": "Text about pace unit selection"
   },
 
 
-  "workout_stage_base_run": "OWB1",
-  "@workout_stage_base_run": {
+  "workoutStageBaseRun": "OWB1",
+  "@workoutStageBaseRun": {
     "description": "Type of workout stage called base run"
   },
-  "workout_stage_zone2": "BC2",
-  "@workout_stage_zone2": {
+  "workoutStageZone2": "BC2",
+  "@workoutStageZone2": {
     "description": "Type of workout stage called zone 2"
   },
-  "workout_stage_zone3": "BC3",
-  "@workout_stage_zone3": {
+  "workoutStageZone3": "BC3",
+  "@workoutStageZone3": {
     "description": "Type of workout stage called zone 3"
   },
-  "workout_stage_rhythms": "Rytmy",
-  "@workout_stage_rhythms": {
+  "workoutStageRhythms": "Rytmy",
+  "@workoutStageRhythms": {
     "description": "Type of workout stage called rhythms"
   },
-  "workout_stage_hill_repeats": "Podbiegi",
-  "@workout_stage_hill_repeats": {
+  "workoutStageHillRepeats": "Podbiegi",
+  "@workoutStageHillRepeats": {
     "description": "Type of workout stage called hill repeats"
   },
-  "workout_stage_stretching": "Rozciąganie",
-  "@workout_stage_stretching": {
+  "workoutStageStretching": "Rozciąganie",
+  "@workoutStageStretching": {
     "description": "Type of workout stage called stretching"
   },
-  "workout_stage_strengthening": "Ćwiczenia wzmacniające",
-  "@workout_stage_strengthening": {
+  "workoutStageStrengthening": "Ćwiczenia wzmacniające",
+  "@workoutStageStrengthening": {
     "description": "Type of workout stage called strengthening"
   },
-  "workout_stage_foamRolling": "Rolowanie",
-  "@workout_stage_foamRolling": {
+  "workoutStageFoamRolling": "Rolowanie",
+  "@workoutStageFoamRolling": {
     "description": "Type of workout stage called foam rolling"
   },
-  "workout_stage_break": "przerwa",
-  "@workout_stage_break": {
+  "workoutStageBreak": "przerwa",
+  "@workoutStageBreak": {
     "description": "Break"
   },
-  "workout_stage_march": "{marchDistanceInMeters}m marsz",
-  "@workout_stage_march": {
-    "description": "Distance of march",
+  "workoutStageWalking": "{walkingDistanceInMeters}m marsz",
+  "@workoutStageWalking": {
+    "description": "Distance of walking",
     "placeholders": {
-      "marchDistanceInMeters": {
+      "walkingDistanceInMeters": {
         "type": "int",
         "example": "100"
       }
     }
   },
-  "workout_stage_jog": "{jogDistanceInMeters}m trucht",
-  "@workout_stage_jog": {
-    "description": "Distance of jog",
+  "workoutStageJogging": "{joggingDistanceInMeters}m trucht",
+  "@workoutStageJogging": {
+    "description": "Distance of jogging",
     "placeholders": {
-      "jogDistanceInMeters": {
+      "joggingDistanceInMeters": {
         "type": "int",
         "example": "500"
       }
@@ -575,39 +575,42 @@
   },
 
 
-  "workout_status_pending": "Oczekujący",
-  "@workout_status_pending": {
+  "workoutStatusPending": "Oczekujący",
+  "@workoutStatusPending": {
     "description": "Type of workout status called pending"
   },
-  "workout_status_completed": "Ukończony",
-  "@workout_status_completed": {
+  "workoutStatusCompleted": "Ukończony",
+  "@workoutStatusCompleted": {
     "description": "Type of workout status called completed"
   },
-  "workout_status_uncompleted": "Nieukończony",
-  "@workout_status_uncompleted": {
+  "workoutStatusUncompleted": "Nieukończony",
+  "@workoutStatusUncompleted": {
     "description": "Type of workout status called uncompleted"
   },
 
 
-  "no_internet_connection_dialog_title": "Brak połączenia internetowego",
-  "@no_internet_connection_dialog_title": {
+  "noInternetConnectionDialogTitle": "Brak połączenia internetowego",
+  "@noInternetConnectionDialogTitle": {
     "description": "Title of the dialog about no internet connection"
   },
-  "no_internet_connection_dialog_message": "Wygląda na to, że utraciłeś połączenie internetowe. Napraw ten problem i spróbuj ponownie.",
-  "@no_internet_connection_dialog_message": {
+  "noInternetConnectionDialogMessage": "Wygląda na to, że utraciłeś połączenie internetowe. Napraw ten problem i spróbuj ponownie.",
+  "@noInternetConnectionDialogMessage": {
     "description": "Message of the dialog about no internet connection"
   },
-  "no_logged_user_dialog_title": "Błąd sesji",
-  "@no_logged_user_dialog_title": {
+  "noLoggedUserDialogTitle": "Błąd sesji",
+  "@noLoggedUserDialogTitle": {
     "description": "Title of the dialog about no logged user"
   },
-  "no_logged_user_dialog_message": "Utraciliśmy połączenie z twoją sesją. Zaloguj się ponownie, aby moć poprawnie korzystać z aplikacji.",
-  "unknown_error_dialog_title": "Nieznany błąd",
-  "@unknown_error_dialog_title": {
+  "noLoggedUserDialogMessage": "Utraciliśmy połączenie z twoją sesją. Zaloguj się ponownie, aby moć poprawnie korzystać z aplikacji.",
+  "@noLoggedUserDialogMessage": {
+    "description": "Message of the dialog about no logged user"
+  },
+  "unknownErrorDialogTitle": "Nieznany błąd",
+  "@unknownErrorDialogTitle": {
     "description": "Title of the dialog about unknown exception"
   },
-  "unknown_error_dialog_message": "Wystąpił nieznany błąd w działaniu aplikacji",
-  "@unknown_error_dialog_message": {
+  "unknownErrorDialogMessage": "Wystąpił nieznany błąd w działaniu aplikacji",
+  "@unknownErrorDialogMessage": {
     "description": "Message of the dialog about unknown exception"
   },
 
@@ -666,74 +669,103 @@
   },
 
 
-  "required_field_message": "To pole jest wymagane",
-  "@required_field_message": {
+  "requiredFieldMessage": "To pole jest wymagane",
+  "@requiredFieldMessage": {
     "description": "Message to inform that field is required."
   },
-  "invalid_name_or_surname_message": "Wymogi: \n - Długość minimum 2 znaki \n - Wyłącznie litery",
-  "@invalid_name_or_surname_message": {
+  "invalidNameOrSurnameMessage": "Wymogi: \n - Długość minimum 2 znaki \n - Wyłącznie litery",
+  "@invalidNameOrSurnameMessage": {
     "description": "Message about invalid name"
   },
-  "invalid_email_message": "Niepoprawny adres email",
-  "@invalid_email_message": {
+  "invalidEmailMessage": "Niepoprawny adres email",
+  "@invalidEmailMessage": {
     "description": "Message about invalid email"
   },
-  "invalid_password_message": "Wymogi: \n - Długość minimum 6 znaków \n - Co najmniej jedna duża litera, \n - Co najmniej jedna mała litera, \n - Co najmniej jedna cyfra, \n - Co najmniej jeden znak specjalny",
-  "@invalid_password_message": {
+  "invalidPasswordMessage": "Wymogi: \n - Długość minimum 6 znaków \n - Co najmniej jedna duża litera, \n - Co najmniej jedna mała litera, \n - Co najmniej jedna cyfra, \n - Co najmniej jeden znak specjalny",
+  "@invalidPasswordMessage": {
     "description": "Message about invalid password"
   },
-  "invalid_password_confirmation_message": "Hasła nie są jednakowe",
-  "@invalid_password_confirmation_message": {
+  "invalidPasswordConfirmationMessage": "Hasła nie są jednakowe",
+  "@invalidPasswordConfirmationMessage": {
     "description": "Message about invalid password confirmation"
   },
 
 
-  "january": "styczeń",
+  "january": "Styczeń",
   "@january": {
     "description": "January"
   },
-  "february": "luty",
+  "february": "Luty",
   "@february": {
     "description": "February"
   },
-  "march": "marzec",
+  "march": "Marzec",
   "@march": {
     "description": "March"
   },
-  "april": "kwiecień",
+  "april": "Kwiecień",
   "@april": {
     "description": "April"
   },
-  "may": "maj",
+  "may": "Maj",
   "@may": {
     "description": "May"
   },
-  "june": "czerwiec",
+  "june": "Czerwiec",
   "@june": {
     "description": "June"
   },
-  "july": "lipiec",
+  "july": "Lipiec",
   "@july": {
     "description": "July"
   },
-  "august": "sierpień",
+  "august": "Sierpień",
   "@august": {
     "description": "August"
   },
-  "september": "wrzesień",
+  "september": "Wrzesień",
   "@september": {
     "description": "September"
   },
-  "october": "październik",
+  "october": "Październik",
   "@october": {
     "description": "October"
   },
-  "november": "listopad",
+  "november": "Listopad",
   "@november": {
     "description": "November"
   },
-  "december": "grudzień",
+  "december": "Grudzień",
   "@december": {
     "description": "December"
+  },
+
+  "mondayShort": "Pon.",
+  "@mondayShort": {
+    "description": "Abbreviation of monday"
+  },
+  "tuesdayShort": "Wt.",
+  "@tuesdayShort": {
+    "description": "Abbreviation of tuesday"
+  },
+  "wednesdayShort": "Śr.",
+  "@wednesdayShort": {
+    "description": "Abbreviation of wednesday"
+  },
+  "thursdayShort": "Czw.",
+  "@thursdayShort": {
+    "description": "Abbreviation of thursday"
+  },
+  "fridayShort": "Pt.",
+  "@fridayShort": {
+    "description": "Abbreviation of friday"
+  },
+  "saturdayShort": "Sob.",
+  "@saturdayShort": {
+    "description": "Abbreviation of saturday"
+  },
+  "sundayShort": "Niedz.",
+  "@sundayShort": {
+    "description": "Abbreviation of sunday"
   }
 }

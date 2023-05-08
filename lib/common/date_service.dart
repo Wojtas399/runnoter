@@ -18,6 +18,15 @@ class DateService {
     ));
   }
 
+  DateTime getFirstDateOfTheMonth(int month, int year) => DateTime(year, month);
+
+  DateTime getLastDateOfTheMonth(int month, int year) {
+    final DateTime nextMonth = DateTime(year, month + 1);
+    return nextMonth.subtract(
+      const Duration(days: 1),
+    );
+  }
+
   List<DateTime> getDatesFromWeekMatchingToDate(DateTime date) {
     final DateTime firstDateOfTheWeek =
         getFirstDateFromWeekMatchingToDate(date);

@@ -50,14 +50,14 @@ class _Header extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          AppLocalizations.of(context)!.forgot_password_screen_title,
+          Str.of(context).forgotPasswordScreenTitle,
           style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
         ),
         const SizedBox(height: 8),
         Text(
-          AppLocalizations.of(context)!.forgot_password_screen_message,
+          Str.of(context).forgotPasswordMessage,
         )
       ],
     );
@@ -71,7 +71,7 @@ class _Email extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextFieldComponent(
       isRequired: true,
-      label: AppLocalizations.of(context)!.email,
+      label: Str.of(context).email,
       icon: Icons.email,
       onChanged: (String? value) {
         _onChanged(value, context);
@@ -96,8 +96,7 @@ class _SubmitButton extends StatelessWidget {
     );
 
     return BigButton(
-      label: AppLocalizations.of(context)!
-          .forgot_password_screen_submit_button_label,
+      label: Str.of(context).forgotPasswordSubmitButtonLabel,
       isDisabled: isDisabled,
       onPressed: () {
         _onPressed(context);

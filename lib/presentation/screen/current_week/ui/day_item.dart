@@ -85,9 +85,7 @@ class _Date extends StatelessWidget {
       child: Text(
         date.toUIFormat(context),
         style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              color: isToday
-                  ? Theme.of(context).canvasColor
-                  : Theme.of(context).textTheme.titleMedium?.color,
+              color: isToday ? Theme.of(context).canvasColor : null,
             ),
       ),
     );

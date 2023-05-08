@@ -39,7 +39,7 @@ class _State extends State<PasswordTextFieldComponent> {
       obscureText: !_isVisible,
       decoration: InputDecoration(
         label: Text(
-          widget.label ?? AppLocalizations.of(context)!.password,
+          widget.label ?? Str.of(context).password,
         ),
         prefixIcon: const Icon(Icons.lock),
         suffixIcon: IconButton(
@@ -66,7 +66,7 @@ class _State extends State<PasswordTextFieldComponent> {
 
   String? _validate(String? value, BuildContext context) {
     if (widget.isRequired && value == '') {
-      return AppLocalizations.of(context)!.required_field_message;
+      return Str.of(context).requiredFieldMessage;
     }
     final String? Function(String? value)? customValidator = widget.validator;
     if (customValidator != null) {

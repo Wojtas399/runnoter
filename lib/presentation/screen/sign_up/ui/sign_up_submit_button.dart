@@ -19,7 +19,7 @@ class SignUpSubmitButton extends StatelessWidget {
     );
 
     return BigButton(
-      label: AppLocalizations.of(context)!.sign_up_screen_button_label,
+      label: Str.of(context).signUpButtonLabel,
       isDisabled: isDisabled,
       onPressed: () {
         _onPressed(context);

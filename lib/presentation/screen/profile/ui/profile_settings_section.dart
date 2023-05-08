@@ -43,7 +43,7 @@ class _Header extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8),
       child: Text(
-        AppLocalizations.of(context)!.profile_screen_settings_section_title,
+        Str.of(context).profileSettings,
         style: Theme.of(context).textTheme.titleLarge,
       ),
     );
@@ -60,7 +60,7 @@ class _Theme extends StatelessWidget {
     );
 
     return ValueWithLabelAndIconComponent(
-      label: AppLocalizations.of(context)!.theme_mode_label,
+      label: Str.of(context).themeMode,
       iconData: Icons.brightness_6_outlined,
       value: themeMode?.toUIFormat(context) ?? '',
       onPressed: () {
@@ -87,7 +87,7 @@ class _Language extends StatelessWidget {
     );
 
     return ValueWithLabelAndIconComponent(
-      label: AppLocalizations.of(context)!.language_label,
+      label: Str.of(context).language,
       iconData: Icons.translate_outlined,
       value: language?.toUIFormat(context) ?? '',
       onPressed: () {
@@ -114,7 +114,7 @@ class _DistanceUnit extends StatelessWidget {
     );
 
     return ValueWithLabelAndIconComponent(
-      label: AppLocalizations.of(context)!.distance_unit_label,
+      label: Str.of(context).distanceUnit,
       iconData: Icons.route_outlined,
       value: distanceUnit?.toUIFormat(context) ?? '',
       onPressed: () {
@@ -141,7 +141,7 @@ class _PaceUnit extends StatelessWidget {
     );
 
     return ValueWithLabelAndIconComponent(
-      label: AppLocalizations.of(context)!.pace_unit_label,
+      label: Str.of(context).paceUnit,
       iconData: Icons.speed_outlined,
       value: paceUnit?.toUIFormat(context) ?? '',
       onPressed: () {

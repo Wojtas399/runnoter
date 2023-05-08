@@ -26,8 +26,7 @@ class _AmountOfSeries extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFieldComponent(
-      label: AppLocalizations.of(context)!
-          .workout_stage_creator_screen_amount_of_series,
+      label: Str.of(context).workoutStageCreatorAmountOfSeries,
       keyboardType: TextInputType.number,
       maxLength: 2,
       isRequired: true,
@@ -66,8 +65,7 @@ class _SeriesDistance extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFieldComponent(
-      label:
-          '${AppLocalizations.of(context)!.workout_stage_creator_screen_single_series_distance} [m]',
+      label: '${Str.of(context).workoutStageCreatorSeriesDistance} [m]',
       keyboardType: TextInputType.number,
       maxLength: 6,
       isRequired: true,
@@ -106,8 +104,7 @@ class _WalkingDistance extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFieldComponent(
-      label:
-          '${AppLocalizations.of(context)!.workout_stage_creator_screen_walking_distance} [m]',
+      label: '${Str.of(context).workoutStageCreatorWalkingDistance} [m]',
       keyboardType: TextInputType.number,
       maxLength: 6,
       inputFormatters: [
@@ -145,8 +142,7 @@ class _JoggingDistance extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFieldComponent(
-      label:
-          '${AppLocalizations.of(context)!.workout_stage_creator_screen_jogging_distance} [m]',
+      label: '${Str.of(context).workoutStageCreatorJoggingDistance} [m]',
       keyboardType: TextInputType.number,
       maxLength: 6,
       inputFormatters: [

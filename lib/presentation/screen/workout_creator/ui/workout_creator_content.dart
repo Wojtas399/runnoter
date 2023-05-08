@@ -45,11 +45,9 @@ class _AppBarTitle extends StatelessWidget {
     final Workout? workout = context.select(
       (WorkoutCreatorBloc bloc) => bloc.state.workout,
     );
-    final appLocalizations = AppLocalizations.of(context);
-
-    String title = appLocalizations!.workout_creator_screen_title_add_mode;
+    String title = Str.of(context).workoutCreatorScreenNewWorkoutTitle;
     if (workout != null) {
-      title = appLocalizations.workout_creator_screen_title_edit_mode;
+      title = Str.of(context).workoutCreatorScreeEditWorkoutTitle;
     }
     return Text(title);
   }
@@ -74,7 +72,7 @@ class _WorkoutName extends StatelessWidget {
     }
 
     return TextFieldComponent(
-      label: AppLocalizations.of(context)!.workout_creator_screen_workout_name,
+      label: Str.of(context).workoutCreatorWorkoutName,
       isRequired: true,
       controller: _controller,
       maxLength: 100,

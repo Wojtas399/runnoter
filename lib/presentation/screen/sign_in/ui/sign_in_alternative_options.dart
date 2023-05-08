@@ -18,7 +18,7 @@ class SignInAlternativeOptions extends StatelessWidget {
             _onSignUpOptionSelected(context);
           },
           child: Text(
-            AppLocalizations.of(context)!.sign_in_screen_sign_up_option,
+            Str.of(context).signInSignUpOption,
           ),
         ),
         const SizedBox(height: 8),
@@ -27,7 +27,7 @@ class SignInAlternativeOptions extends StatelessWidget {
             _onForgotPasswordSelected(context);
           },
           child: Text(
-            AppLocalizations.of(context)!.sign_in_screen_forgot_password_option,
+            Str.of(context).signInForgotPasswordOption,
           ),
         ),
       ],

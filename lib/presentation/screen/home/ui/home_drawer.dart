@@ -93,7 +93,7 @@ class _Profile extends StatelessWidget {
     return ListTile(
       leading: const Icon(Icons.account_circle),
       title: Text(
-        AppLocalizations.of(context)!.home_drawer_profile_label,
+        Str.of(context).homeDrawerProfile,
       ),
       onTap: () {
         _onPressed(context);
@@ -117,7 +117,7 @@ class _Mileage extends StatelessWidget {
     return ListTile(
       leading: const Icon(Icons.insert_chart),
       title: Text(
-        AppLocalizations.of(context)!.home_drawer_mileage_label,
+        Str.of(context).homeDrawerMileage,
       ),
       onTap: () {},
     );
@@ -132,7 +132,7 @@ class _Blood extends StatelessWidget {
     return ListTile(
       leading: const Icon(Icons.water_drop),
       title: Text(
-        AppLocalizations.of(context)!.home_drawer_blood_label,
+        Str.of(context).homeDrawerBlood,
       ),
       onTap: () {},
     );
@@ -147,7 +147,7 @@ class _Competitions extends StatelessWidget {
     return ListTile(
       leading: const Icon(Icons.emoji_events),
       title: Text(
-        AppLocalizations.of(context)!.home_drawer_competitions_label,
+        Str.of(context).homeDrawerCompetitions,
       ),
       onTap: () {},
     );
@@ -161,7 +161,7 @@ class _SignOut extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       title: Text(
-        AppLocalizations.of(context)!.home_drawer_sign_out_option,
+        Str.of(context).homeDrawerSignOut,
       ),
       leading: const Icon(Icons.logout),
       onTap: () {
@@ -174,12 +174,9 @@ class _SignOut extends StatelessWidget {
     final HomeBloc bloc = context.read<HomeBloc>();
     final bool confirmed = await askForConfirmation(
       context: context,
-      title:
-          AppLocalizations.of(context)!.home_sign_out_confirmation_dialog_title,
-      message: AppLocalizations.of(context)!
-          .home_sign_out_confirmation_dialog_message,
-      confirmButtonLabel:
-          AppLocalizations.of(context)!.home_drawer_sign_out_option,
+      title: Str.of(context).homeSignOutConfirmationDialogTitle,
+      message: Str.of(context).homeSignOutConfirmationDialogMessage,
+      confirmButtonLabel: Str.of(context).homeDrawerSignOut,
     );
     if (confirmed == true) {
       bloc.add(

@@ -1,4 +1,4 @@
-export 'calendar/ui/calendar_screen.dart';
+export 'calendar/calendar_screen.dart';
 export 'current_week/ui/current_week_screen.dart';
 export 'day_preview/ui/day_preview_screen.dart';
 export 'distance_unit/distance_unit_screen.dart';

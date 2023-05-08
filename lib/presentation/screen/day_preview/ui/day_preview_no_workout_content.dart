@@ -23,15 +23,14 @@ class _NoWorkoutInfo extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          AppLocalizations.of(context)!.day_preview_no_workout_title,
+          Str.of(context).dayPreviewNoWorkoutTitle,
           style: Theme.of(context).textTheme.titleLarge,
         ),
         const SizedBox(height: 8),
         const _NoWorkoutMessage(),
         const SizedBox(height: 24),
         BigButton(
-          label: AppLocalizations.of(context)!
-              .day_preview_add_workout_button_label,
+          label: Str.of(context).dayPreviewAddWorkoutButton,
           onPressed: () {
             _onButtonPressed(context);
           },
@@ -67,11 +66,9 @@ class _NoWorkoutMessage extends StatelessWidget {
     if (isPastDay == null) {
       return const SizedBox();
     }
-    String message =
-        AppLocalizations.of(context)!.day_preview_no_workout_message_future_day;
+    String message = Str.of(context).dayPreviewNoWorkoutMessageFutureDay;
     if (isPastDay) {
-      message =
-          AppLocalizations.of(context)!.day_preview_no_workout_message_past_day;
+      message = Str.of(context).dayPreviewNoWorkoutMessagePastDay;
     }
     return Text(
       message,

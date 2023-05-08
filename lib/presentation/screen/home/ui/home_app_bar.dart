@@ -12,10 +12,11 @@ class HomeAppBar extends StatelessWidget with PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    final str = Str.of(context);
     final List<String> pageTitles = [
-      AppLocalizations.of(context)!.home_current_week_page_title,
-      AppLocalizations.of(context)!.home_calendar_page_title,
-      AppLocalizations.of(context)!.home_pulse_and_weight_page_title,
+      str.homeCurrentWeekPageTitle,
+      str.homeCalendarPageTitle,
+      str.homePulseAndWeightPageTitle,
     ];
     final HomePage currentPage = context.select(
       (HomeBloc bloc) => bloc.state.currentPage,

@@ -7,7 +7,7 @@ class _AppBar extends StatelessWidget with PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       title: Text(
-        AppLocalizations.of(context)!.workout_stage_creator_screen_title,
+        Str.of(context).workoutStageCreatorScreenTitle,
       ),
       leading: IconButton(
         onPressed: () {
@@ -48,7 +48,7 @@ class _SaveButton extends StatelessWidget {
               _onPressed(context);
             },
       child: Text(
-        AppLocalizations.of(context)!.add,
+        Str.of(context).add,
       ),
     );
   }

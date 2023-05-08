@@ -24,14 +24,12 @@ class _WorkoutStatus extends StatelessWidget {
                 _WorkoutStats(status: status),
                 const SizedBox(height: 16),
                 _WorkoutParam(
-                  label: AppLocalizations.of(context)!
-                      .day_preview_workout_status_mood_rate,
+                  label: Str.of(context).dayPreviewMoodRate,
                   child: const _MoodRate(),
                 ),
                 const SizedBox(height: 16),
                 _WorkoutParam(
-                  label: AppLocalizations.of(context)!
-                      .day_preview_comment_section_label,
+                  label: Str.of(context).dayPreviewComment,
                   child: const _WorkoutComment(),
                 ),
               ],
@@ -79,6 +77,8 @@ class _WorkoutStats extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final str = Str.of(context);
+
     return Column(
       children: [
         IntrinsicHeight(
@@ -86,8 +86,7 @@ class _WorkoutStats extends StatelessWidget {
             children: [
               Expanded(
                 child: _WorkoutStatParam(
-                  label: AppLocalizations.of(context)!
-                      .day_preview_workout_status_covered_distance,
+                  label: str.dayPreviewCoveredDistance,
                   value: '${status.coveredDistanceInKm} km',
                 ),
               ),
@@ -100,16 +99,14 @@ class _WorkoutStats extends StatelessWidget {
             children: [
               Expanded(
                 child: _WorkoutStatParam(
-                  label: AppLocalizations.of(context)!
-                      .day_preview_workout_status_avg_pace,
+                  label: str.dayPreviewAveragePace,
                   value: status.avgPace.toUIFormat(),
                 ),
               ),
               const VerticalDivider(),
               Expanded(
                 child: _WorkoutStatParam(
-                  label: AppLocalizations.of(context)!
-                      .day_preview_workout_status_avg_heart_rate,
+                  label: str.dayPreviewAverageHeartRate,
                   value: '${status.avgHeartRate} ud/min',
                 ),
               ),

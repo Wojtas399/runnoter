@@ -8,7 +8,7 @@ class _Content extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          AppLocalizations.of(context)!.workout_status_creator_screen_title,
+          Str.of(context).workoutStatusCreatorScreenTitle,
         ),
         centerTitle: true,
       ),
@@ -68,7 +68,7 @@ class _SubmitButton extends StatelessWidget {
     );
 
     return BigButton(
-      label: AppLocalizations.of(context)!.save,
+      label: Str.of(context).save,
       isDisabled: !isFormValid || areDataSameAsOriginal,
       onPressed: () {
         _onPressed(context);

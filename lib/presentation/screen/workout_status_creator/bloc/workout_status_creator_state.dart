@@ -48,16 +48,16 @@ class WorkoutStatusCreatorState extends BlocState<WorkoutStatusCreatorState> {
           averageHeartRate != null);
 
   bool get areDataSameAsOriginal {
-    final WorkoutStatus? workoutStatus = this.workoutStatus;
-    if (workoutStatus is FinishedWorkout &&
-        (workoutStatusType == WorkoutStatusType.completed ||
-            workoutStatusType == WorkoutStatusType.uncompleted)) {
-      return coveredDistanceInKm == workoutStatus.coveredDistanceInKm &&
-          moodRate == workoutStatus.moodRate &&
-          averagePaceMinutes == workoutStatus.avgPace.minutes &&
-          averagePaceSeconds == workoutStatus.avgPace.seconds &&
-          averageHeartRate == workoutStatus.avgHeartRate &&
-          (comment ?? '') == (workoutStatus.comment ?? '');
+    if (_doesWorkoutStatusTypeMatchToWorkoutStatus()) {
+      final WorkoutStatus? workoutStatus = this.workoutStatus;
+      if (workoutStatus is FinishedWorkout) {
+        return coveredDistanceInKm == workoutStatus.coveredDistanceInKm &&
+            moodRate == workoutStatus.moodRate &&
+            averagePaceMinutes == workoutStatus.avgPace.minutes &&
+            averagePaceSeconds == workoutStatus.avgPace.seconds &&
+            averageHeartRate == workoutStatus.avgHeartRate &&
+            (comment ?? '') == (workoutStatus.comment ?? '');
+      }
     }
     return false;
   }
@@ -87,6 +87,20 @@ class WorkoutStatusCreatorState extends BlocState<WorkoutStatusCreatorState> {
         averageHeartRate: averageHeartRate ?? this.averageHeartRate,
         comment: comment ?? this.comment,
       );
+
+  bool _doesWorkoutStatusTypeMatchToWorkoutStatus() {
+    final workoutStatusType = this.workoutStatusType;
+    final workoutStatus = this.workoutStatus;
+    if (workoutStatusType == null || workoutStatus == null) {
+      return false;
+    }
+    return (workoutStatusType == WorkoutStatusType.pending &&
+            workoutStatus is WorkoutStatusPending) ||
+        (workoutStatusType == WorkoutStatusType.completed &&
+            workoutStatus is WorkoutStatusCompleted) ||
+        (workoutStatusType == WorkoutStatusType.uncompleted &&
+            workoutStatus is WorkoutStatusUncompleted);
+  }
 }
 
 enum WorkoutStatusType {
