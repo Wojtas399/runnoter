@@ -7,7 +7,9 @@ import '../../../../domain/repository/workout_repository.dart';
 import '../../../../domain/service/auth_service.dart';
 import '../../../component/calendar/calendar_component.dart';
 import '../../../component/calendar/calendar_component_cubit.dart';
+import '../../../config/navigation/routes.dart';
 import '../../../formatter/workout_status_formatter.dart';
+import '../../../service/navigator_service.dart';
 import '../bloc/calendar_bloc.dart';
 
 class CalendarScreen extends StatelessWidget {
@@ -75,6 +77,9 @@ class _Calendar extends StatelessWidget {
       ) {
         _onMonthChanged(context, firstDisplayingDate, lastDisplayingDate);
       },
+      onDayPressed: (DateTime date) {
+        _onDayPressed(context, date);
+      },
     );
   }
 
@@ -89,5 +94,12 @@ class _Calendar extends StatelessWidget {
             lastDisplayingDate: lastDisplayingDate,
           ),
         );
+  }
+
+  void _onDayPressed(BuildContext context, DateTime date) {
+    navigateTo(
+      context: context,
+      route: DayPreviewRoute(date: date),
+    );
   }
 }
