@@ -12,11 +12,16 @@ part 'calendar_component_header.dart';
 class Calendar extends StatelessWidget {
   final DateTime initialDate;
   final List<WorkoutDay> workoutDays;
+  final Function(
+    DateTime firstDisplayingDate,
+    DateTime lastDisplayingDate,
+  )? onMonthChanged;
 
   const Calendar({
     super.key,
     required this.initialDate,
     required this.workoutDays,
+    this.onMonthChanged,
   });
 
   @override
@@ -24,8 +29,11 @@ class Calendar extends StatelessWidget {
     return _CubitProvider(
       initialDate: initialDate,
       workoutDays: workoutDays,
-      child: _Content(
-        workoutDays: workoutDays,
+      child: _CubitListener(
+        onMonthChanged: onMonthChanged,
+        child: _Content(
+          workoutDays: workoutDays,
+        ),
       ),
     );
   }
@@ -52,6 +60,40 @@ class _CubitProvider extends StatelessWidget {
         ),
       child: child,
     );
+  }
+}
+
+class _CubitListener extends StatelessWidget {
+  final Function(
+    DateTime firstDisplayingDate,
+    DateTime lastDisplayingDate,
+  )? onMonthChanged;
+  final Widget child;
+
+  const _CubitListener({
+    required this.onMonthChanged,
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocListener<CalendarComponentCubit, CalendarComponentState>(
+      listenWhen: (previousState, currentState) =>
+          previousState.displayingMonth != currentState.displayingMonth ||
+          previousState.displayingYear != currentState.displayingYear,
+      listener: (_, CalendarComponentState state) {
+        _emitNewMonth(state);
+      },
+      child: child,
+    );
+  }
+
+  void _emitNewMonth(CalendarComponentState state) {
+    if (onMonthChanged != null && state.weeks != null) {
+      final DateTime firstDisplayingDate = state.weeks!.first.days.first.date;
+      final DateTime lastDisplayingDate = state.weeks!.last.days.last.date;
+      onMonthChanged!(firstDisplayingDate, lastDisplayingDate);
+    }
   }
 }
 

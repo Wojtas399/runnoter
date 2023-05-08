@@ -72,6 +72,13 @@ class _Calendar extends StatelessWidget {
             ),
           )
           .toList(),
+      onMonthChanged: (
+        DateTime firstDisplayingDate,
+        DateTime lastDisplayingDate,
+      ) {
+        print(firstDisplayingDate);
+        print(lastDisplayingDate);
+      },
     );
   }
 }
