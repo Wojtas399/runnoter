@@ -6,7 +6,7 @@ void main() {
     'map datetime from string, '
     'should map date from string format to DateTime type',
     () {
-      const String dateStr = '10-04-2023';
+      const String dateStr = '2023-04-10';
       final DateTime expectedDateTime = DateTime(2023, 4, 10);
 
       final DateTime dateTime = mapDateTimeFromString(dateStr);
@@ -20,7 +20,7 @@ void main() {
     'should map date from DateTime type to string',
     () {
       final DateTime dateTime = DateTime(2023, 4, 10);
-      const String expectedDateStr = '10-04-2023';
+      const String expectedDateStr = '2023-04-10';
 
       final String dateStr = mapDateTimeToString(dateTime);
 

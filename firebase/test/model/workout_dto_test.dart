@@ -36,7 +36,7 @@ void main() {
     stages: stages,
   );
   final Map<String, dynamic> workoutJson = {
-    'date': '10-04-2023',
+    'date': '2023-04-10',
     'status': status.toJson(),
     'name': name,
     'stages': [
