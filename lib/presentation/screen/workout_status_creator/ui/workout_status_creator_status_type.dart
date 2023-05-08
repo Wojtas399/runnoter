@@ -57,8 +57,8 @@ class _WorkoutStatusDescription extends StatelessWidget {
       case WorkoutStatusType.pending:
         status = const WorkoutStatusPending();
         break;
-      case WorkoutStatusType.completed:
-        status = WorkoutStatusCompleted(
+      case WorkoutStatusType.done:
+        status = WorkoutStatusDone(
           coveredDistanceInKm: 0,
           avgPace: const Pace(minutes: 0, seconds: 0),
           avgHeartRate: 0,
@@ -66,14 +66,17 @@ class _WorkoutStatusDescription extends StatelessWidget {
           comment: '',
         );
         break;
-      case WorkoutStatusType.uncompleted:
-        status = WorkoutStatusUncompleted(
+      case WorkoutStatusType.aborted:
+        status = WorkoutStatusAborted(
           coveredDistanceInKm: 0,
           avgPace: const Pace(minutes: 0, seconds: 0),
           avgHeartRate: 0,
           moodRate: MoodRate.mr1,
           comment: '',
         );
+        break;
+      case WorkoutStatusType.undone:
+        status = const WorkoutStatusUndone();
         break;
     }
 

@@ -47,8 +47,8 @@ class _Form extends StatelessWidget {
       (WorkoutStatusCreatorBloc bloc) => bloc.state.workoutStatusType,
     );
 
-    if (workoutStatusType == WorkoutStatusType.completed ||
-        workoutStatusType == WorkoutStatusType.uncompleted) {
+    if (workoutStatusType == WorkoutStatusType.done ||
+        workoutStatusType == WorkoutStatusType.aborted) {
       return const _FinishedWorkoutForm();
     }
     return const SizedBox();

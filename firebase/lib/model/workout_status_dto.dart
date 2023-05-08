@@ -10,10 +10,12 @@ class WorkoutStatusDto extends Equatable {
     final String status = json[_nameField];
     if (status == 'pending') {
       return const WorkoutStatusPendingDto();
-    } else if (status == _completedStatusName) {
-      return WorkoutStatusCompletedDto.fromJson(json);
-    } else if (status == _uncompletedStatusName) {
-      return WorkoutStatusUncompletedDto.fromJson(json);
+    } else if (status == _doneStatusName) {
+      return WorkoutStatusDoneDto.fromJson(json);
+    } else if (status == _abortedStatusName) {
+      return WorkoutStatusAbortedDto.fromJson(json);
+    } else if (status == _undoneStatusName) {
+      return const WorkoutStatusUndoneDto();
     }
     throw '[WorkoutStatusDto] Unknown workout status';
   }
@@ -38,8 +40,8 @@ class WorkoutStatusPendingDto extends WorkoutStatusDto {
   }
 }
 
-class WorkoutStatusCompletedDto extends WorkoutStatusDto with _FinishedWorkout {
-  WorkoutStatusCompletedDto({
+class WorkoutStatusDoneDto extends WorkoutStatusDto with _WorkoutStats {
+  WorkoutStatusDoneDto({
     required double coveredDistanceInKm,
     required PaceDto avgPaceDto,
     required int avgHeartRate,
@@ -53,7 +55,7 @@ class WorkoutStatusCompletedDto extends WorkoutStatusDto with _FinishedWorkout {
     this.comment = comment;
   }
 
-  WorkoutStatusCompletedDto.fromJson(Map<String, dynamic> json)
+  WorkoutStatusDoneDto.fromJson(Map<String, dynamic> json)
       : this(
           coveredDistanceInKm:
               (json[_coveredDistanceInKmField] as num).toDouble(),
@@ -74,7 +76,7 @@ class WorkoutStatusCompletedDto extends WorkoutStatusDto with _FinishedWorkout {
 
   @override
   Map<String, dynamic> toJson() => {
-        _nameField: _completedStatusName,
+        _nameField: _doneStatusName,
         _coveredDistanceInKmField: coveredDistanceInKm,
         _avgPaceField: avgPaceDto.toJson(),
         _avgHeartRateField: avgHeartRate,
@@ -83,9 +85,8 @@ class WorkoutStatusCompletedDto extends WorkoutStatusDto with _FinishedWorkout {
       };
 }
 
-class WorkoutStatusUncompletedDto extends WorkoutStatusDto
-    with _FinishedWorkout {
-  WorkoutStatusUncompletedDto({
+class WorkoutStatusAbortedDto extends WorkoutStatusDto with _WorkoutStats {
+  WorkoutStatusAbortedDto({
     required double coveredDistanceInKm,
     required PaceDto avgPaceDto,
     required int avgHeartRate,
@@ -99,7 +100,7 @@ class WorkoutStatusUncompletedDto extends WorkoutStatusDto
     this.comment = comment;
   }
 
-  WorkoutStatusUncompletedDto.fromJson(Map<String, dynamic> json)
+  WorkoutStatusAbortedDto.fromJson(Map<String, dynamic> json)
       : this(
           coveredDistanceInKm: json[_coveredDistanceInKmField],
           avgPaceDto: PaceDto.fromJson(json[_avgPaceField]),
@@ -119,7 +120,7 @@ class WorkoutStatusUncompletedDto extends WorkoutStatusDto
 
   @override
   Map<String, dynamic> toJson() => {
-        _nameField: _uncompletedStatusName,
+        _nameField: _abortedStatusName,
         _coveredDistanceInKmField: coveredDistanceInKm,
         _avgPaceField: avgPaceDto.toJson(),
         _avgHeartRateField: avgHeartRate,
@@ -128,7 +129,21 @@ class WorkoutStatusUncompletedDto extends WorkoutStatusDto
       };
 }
 
-mixin _FinishedWorkout on WorkoutStatusDto {
+class WorkoutStatusUndoneDto extends WorkoutStatusDto {
+  const WorkoutStatusUndoneDto();
+
+  @override
+  List<Object> get props => [];
+
+  @override
+  Map<String, dynamic> toJson() {
+    return {
+      _nameField: _undoneStatusName,
+    };
+  }
+}
+
+mixin _WorkoutStats on WorkoutStatusDto {
   late final double coveredDistanceInKm;
   late final PaceDto avgPaceDto;
   late final int avgHeartRate;
@@ -154,8 +169,9 @@ enum MoodRate {
 }
 
 const String _pendingStatusName = 'pending';
-const String _completedStatusName = 'completed';
-const String _uncompletedStatusName = 'uncompleted';
+const String _doneStatusName = 'done';
+const String _abortedStatusName = 'aborted';
+const String _undoneStatusName = 'undone';
 
 const String _nameField = 'name';
 const String _coveredDistanceInKmField = 'coveredDistanceInKilometers';

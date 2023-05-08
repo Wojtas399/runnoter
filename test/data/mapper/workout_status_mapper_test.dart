@@ -20,17 +20,16 @@ void main() {
 
   test(
     'map workout status from firebase, '
-    'completed status dto model should be mapped to domain completed status model',
+    'done status dto model should be mapped to domain done status model',
     () {
-      final firebase.WorkoutStatusDto statusDto =
-          firebase.WorkoutStatusCompletedDto(
+      final firebase.WorkoutStatusDto statusDto = firebase.WorkoutStatusDoneDto(
         coveredDistanceInKm: 10.0,
         avgPaceDto: const firebase.PaceDto(minutes: 5, seconds: 50),
         avgHeartRate: 146,
         moodRate: firebase.MoodRate.mr8,
         comment: 'comment',
       );
-      WorkoutStatusCompleted expectedStatus = WorkoutStatusCompleted(
+      WorkoutStatusDone expectedStatus = WorkoutStatusDone(
         coveredDistanceInKm: 10.0,
         avgPace: const Pace(minutes: 5, seconds: 50),
         avgHeartRate: 146,
@@ -46,23 +45,37 @@ void main() {
 
   test(
     'map workout status from firebase, '
-    'uncompleted status dto model should be mapped to domain uncompleted status model',
+    'aborted status dto model should be mapped to domain aborted status model',
     () {
       final firebase.WorkoutStatusDto statusDto =
-          firebase.WorkoutStatusUncompletedDto(
+          firebase.WorkoutStatusAbortedDto(
         coveredDistanceInKm: 10.0,
         avgPaceDto: const firebase.PaceDto(minutes: 5, seconds: 50),
         avgHeartRate: 146,
         moodRate: firebase.MoodRate.mr8,
         comment: 'comment',
       );
-      final WorkoutStatusUncompleted expectedStatus = WorkoutStatusUncompleted(
+      final WorkoutStatusAborted expectedStatus = WorkoutStatusAborted(
         coveredDistanceInKm: 10.0,
         avgPace: const Pace(minutes: 5, seconds: 50),
         avgHeartRate: 146,
         moodRate: MoodRate.mr8,
         comment: 'comment',
       );
+
+      final WorkoutStatus status = mapWorkoutStatusFromFirebase(statusDto);
+
+      expect(status, expectedStatus);
+    },
+  );
+
+  test(
+    'map workout status from firebase, '
+    'undone status dto model should be mapped to domain undone status model',
+    () {
+      const firebase.WorkoutStatusDto statusDto =
+          firebase.WorkoutStatusUndoneDto();
+      const WorkoutStatusUndone expectedStatus = WorkoutStatusUndone();
 
       final WorkoutStatus status = mapWorkoutStatusFromFirebase(statusDto);
 
@@ -86,9 +99,9 @@ void main() {
 
   test(
     'map workout status to firebase, '
-    'completed status should be mapped to completed status dto',
+    'done status should be mapped to done status dto',
     () {
-      final WorkoutStatusCompleted status = WorkoutStatusCompleted(
+      final WorkoutStatusDone status = WorkoutStatusDone(
         coveredDistanceInKm: 10.0,
         avgPace: const Pace(minutes: 5, seconds: 50),
         avgHeartRate: 146,
@@ -96,7 +109,7 @@ void main() {
         comment: 'comment',
       );
       final firebase.WorkoutStatusDto expectedDto =
-          firebase.WorkoutStatusCompletedDto(
+          firebase.WorkoutStatusDoneDto(
         coveredDistanceInKm: 10.0,
         avgPaceDto: const firebase.PaceDto(minutes: 5, seconds: 50),
         avgHeartRate: 146,
@@ -112,9 +125,9 @@ void main() {
 
   test(
     'map workout status to firebase, '
-    'uncompleted status should be mapped to uncompleted status dto',
+    'aborted status should be mapped to aborted status dto',
     () {
-      final WorkoutStatusUncompleted status = WorkoutStatusUncompleted(
+      final WorkoutStatusAborted status = WorkoutStatusAborted(
         coveredDistanceInKm: 10.0,
         avgPace: const Pace(minutes: 5, seconds: 50),
         avgHeartRate: 146,
@@ -122,13 +135,27 @@ void main() {
         comment: 'comment',
       );
       final firebase.WorkoutStatusDto expectedDto =
-          firebase.WorkoutStatusUncompletedDto(
+          firebase.WorkoutStatusAbortedDto(
         coveredDistanceInKm: 10.0,
         avgPaceDto: const firebase.PaceDto(minutes: 5, seconds: 50),
         avgHeartRate: 146,
         moodRate: firebase.MoodRate.mr8,
         comment: 'comment',
       );
+
+      final dto = mapWorkoutStatusToFirebase(status);
+
+      expect(dto, expectedDto);
+    },
+  );
+
+  test(
+    'map workout status to firebase, '
+    'undone status should be mapped to undone status dto',
+    () {
+      const WorkoutStatusUndone status = WorkoutStatusUndone();
+      const firebase.WorkoutStatusDto expectedDto =
+          firebase.WorkoutStatusUndoneDto();
 
       final dto = mapWorkoutStatusToFirebase(status);
 

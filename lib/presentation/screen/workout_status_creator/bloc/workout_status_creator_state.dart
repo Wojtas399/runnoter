@@ -40,6 +40,7 @@ class WorkoutStatusCreatorState extends BlocState<WorkoutStatusCreatorState> {
 
   bool get isFormValid =>
       workoutStatusType == WorkoutStatusType.pending ||
+      workoutStatusType == WorkoutStatusType.undone ||
       (workoutStatusType != null &&
           coveredDistanceInKm != null &&
           moodRate != null &&
@@ -50,7 +51,7 @@ class WorkoutStatusCreatorState extends BlocState<WorkoutStatusCreatorState> {
   bool get areDataSameAsOriginal {
     if (_doesWorkoutStatusTypeMatchToWorkoutStatus()) {
       final WorkoutStatus? workoutStatus = this.workoutStatus;
-      if (workoutStatus is FinishedWorkout) {
+      if (workoutStatus is WorkoutStats) {
         return coveredDistanceInKm == workoutStatus.coveredDistanceInKm &&
             moodRate == workoutStatus.moodRate &&
             averagePaceMinutes == workoutStatus.avgPace.minutes &&
@@ -96,17 +97,20 @@ class WorkoutStatusCreatorState extends BlocState<WorkoutStatusCreatorState> {
     }
     return (workoutStatusType == WorkoutStatusType.pending &&
             workoutStatus is WorkoutStatusPending) ||
-        (workoutStatusType == WorkoutStatusType.completed &&
-            workoutStatus is WorkoutStatusCompleted) ||
-        (workoutStatusType == WorkoutStatusType.uncompleted &&
-            workoutStatus is WorkoutStatusUncompleted);
+        (workoutStatusType == WorkoutStatusType.done &&
+            workoutStatus is WorkoutStatusDone) ||
+        (workoutStatusType == WorkoutStatusType.aborted &&
+            workoutStatus is WorkoutStatusAborted) ||
+        (workoutStatusType == WorkoutStatusType.undone &&
+            workoutStatus is WorkoutStatusUndone);
   }
 }
 
 enum WorkoutStatusType {
   pending,
-  completed,
-  uncompleted,
+  done,
+  aborted,
+  undone,
 }
 
 enum WorkoutStatusCreatorInfo {
