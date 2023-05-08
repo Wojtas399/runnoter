@@ -1,12 +1,12 @@
 import 'entity.dart';
 
-class PulseAndWeight extends Entity {
-  final int pulse;
+class MorningMeasurement extends Entity {
+  final int restingHeartRate;
   final double weight;
 
-  PulseAndWeight({
+  MorningMeasurement({
     required DateTime date,
-    required this.pulse,
+    required this.restingHeartRate,
     required this.weight,
   }) : super(
           id: '${date.year}-${date.month}-${date.day}',
@@ -15,7 +15,7 @@ class PulseAndWeight extends Entity {
   @override
   List<Object?> get props => [
         id,
-        pulse,
+        restingHeartRate,
         weight,
       ];
 }
