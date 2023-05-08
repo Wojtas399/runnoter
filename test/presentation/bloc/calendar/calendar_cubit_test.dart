@@ -1,7 +1,7 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/presentation/screen/calendar/bloc/calendar_cubit.dart';
+import 'package:runnoter/presentation/screen/calendar/calendar_cubit.dart';
 
 import '../../../mock/domain/mock_auth_service.dart';
 import '../../../mock/domain/mock_workout_repository.dart';
@@ -22,7 +22,7 @@ void main() {
   });
 
   blocTest(
-    'on month changed, '
+    'month changed, '
     'should set new listener of workouts from new month',
     build: () => createCubit(),
     setUp: () {
@@ -34,7 +34,7 @@ void main() {
         ],
       );
     },
-    act: (CalendarCubit cubit) => cubit.onMonthChanged(
+    act: (CalendarCubit cubit) => cubit.monthChanged(
       firstDisplayingDate: DateTime(2023, 1, 1),
       lastDisplayingDate: DateTime(2023, 1, 31),
     ),

@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../common/date_service.dart';
-import '../../../../domain/model/workout.dart';
-import '../../../../domain/repository/workout_repository.dart';
-import '../../../../domain/service/auth_service.dart';
-import '../../../component/calendar/calendar_component.dart';
-import '../../../component/calendar/calendar_component_cubit.dart';
-import '../../../config/navigation/routes.dart';
-import '../../../formatter/workout_status_formatter.dart';
-import '../../../service/navigator_service.dart';
-import '../bloc/calendar_bloc.dart';
+import '../../../domain/model/workout.dart';
+import '../../../domain/repository/workout_repository.dart';
+import '../../../domain/service/auth_service.dart';
+import '../../component/calendar/calendar_component.dart';
+import '../../component/calendar/calendar_component_cubit.dart';
+import '../../config/navigation/routes.dart';
+import '../../formatter/workout_status_formatter.dart';
+import '../../service/navigator_service.dart';
+import 'calendar_cubit.dart';
 
 class CalendarScreen extends StatelessWidget {
   const CalendarScreen({
@@ -19,7 +18,7 @@ class CalendarScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const _BlocProvider(
+    return const _CubitProvider(
       child: SafeArea(
         child: Padding(
           padding: EdgeInsets.all(24),
@@ -30,18 +29,17 @@ class CalendarScreen extends StatelessWidget {
   }
 }
 
-class _BlocProvider extends StatelessWidget {
+class _CubitProvider extends StatelessWidget {
   final Widget child;
 
-  const _BlocProvider({
+  const _CubitProvider({
     required this.child,
   });
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (BuildContext context) => CalendarBloc(
-        dateService: DateService(),
+      create: (BuildContext context) => CalendarCubit(
         authService: context.read<AuthService>(),
         workoutRepository: context.read<WorkoutRepository>(),
       ),
@@ -56,7 +54,7 @@ class _Calendar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<Workout>? workouts = context.select(
-      (CalendarBloc bloc) => bloc.state.workouts,
+      (CalendarCubit cubit) => cubit.state,
     );
 
     return Calendar(
@@ -88,11 +86,9 @@ class _Calendar extends StatelessWidget {
     DateTime firstDisplayingDate,
     DateTime lastDisplayingDate,
   ) {
-    context.read<CalendarBloc>().add(
-          CalendarEventMonthChanged(
-            firstDisplayingDate: firstDisplayingDate,
-            lastDisplayingDate: lastDisplayingDate,
-          ),
+    context.read<CalendarCubit>().monthChanged(
+          firstDisplayingDate: firstDisplayingDate,
+          lastDisplayingDate: lastDisplayingDate,
         );
   }
 

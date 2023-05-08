@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
-import '../../../../domain/model/workout.dart';
-import '../../../../domain/repository/workout_repository.dart';
-import '../../../../domain/service/auth_service.dart';
+import '../../../domain/model/workout.dart';
+import '../../../domain/repository/workout_repository.dart';
+import '../../../domain/service/auth_service.dart';
 
 class CalendarCubit extends Cubit<List<Workout>?> {
   final AuthService _authService;
@@ -25,7 +25,7 @@ class CalendarCubit extends Cubit<List<Workout>?> {
     return super.close();
   }
 
-  void onMonthChanged({
+  void monthChanged({
     required DateTime firstDisplayingDate,
     required DateTime lastDisplayingDate,
   }) {
