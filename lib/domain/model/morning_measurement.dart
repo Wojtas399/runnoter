@@ -1,11 +1,12 @@
 import 'entity.dart';
 
 class MorningMeasurement extends Entity {
+  final DateTime date;
   final int restingHeartRate;
   final double weight;
 
   MorningMeasurement({
-    required DateTime date,
+    required this.date,
     required this.restingHeartRate,
     required this.weight,
   }) : super(
