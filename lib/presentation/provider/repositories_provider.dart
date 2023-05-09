@@ -5,8 +5,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
 import '../../common/date_service.dart';
+import '../../data/repository_impl/morning_measurement_repository_impl.dart';
 import '../../data/repository_impl/user_repository_impl.dart';
 import '../../data/repository_impl/workout_repository_impl.dart';
+import '../../domain/repository/morning_measurement_repository.dart';
 import '../../domain/repository/user_repository.dart';
 import '../../domain/repository/workout_repository.dart';
 
@@ -34,6 +36,12 @@ class RepositoriesProvider extends StatelessWidget {
           create: (_) => WorkoutRepositoryImpl(
             firebaseWorkoutService: FirebaseWorkoutService(),
             dateService: DateService(),
+          ),
+        ),
+        Provider<MorningMeasurementRepository>(
+          create: (_) => MorningMeasurementRepositoryImpl(
+            firebaseMorningMeasurementService:
+                FirebaseMorningMeasurementService(),
           ),
         ),
       ],
