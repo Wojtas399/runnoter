@@ -37,7 +37,7 @@ class HomeBottomNavigationBar extends StatelessWidget {
         NavigationDestination(
           selectedIcon: const Icon(Icons.health_and_safety),
           icon: const Icon(Icons.health_and_safety_outlined),
-          label: str.homePulseAndWeightPageTitle,
+          label: str.homeHealthPageTitle,
         ),
       ],
     );

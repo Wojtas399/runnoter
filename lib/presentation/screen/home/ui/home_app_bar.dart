@@ -16,7 +16,7 @@ class HomeAppBar extends StatelessWidget with PreferredSizeWidget {
     final List<String> pageTitles = [
       str.homeCurrentWeekPageTitle,
       str.homeCalendarPageTitle,
-      str.homePulseAndWeightPageTitle,
+      str.homeHealthPageTitle,
     ];
     final HomePage currentPage = context.select(
       (HomeBloc bloc) => bloc.state.currentPage,

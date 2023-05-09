@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../pulse_and_weight/ui/pulse_and_weight_screen.dart';
+import '../../health/ui/health_screen.dart';
 import '../../screens.dart';
 import '../bloc/home_bloc.dart';
 import '../bloc/home_state.dart';
@@ -29,7 +29,7 @@ class _Body extends StatelessWidget {
   final List<Widget> pages = const [
     CurrentWeekScreen(),
     CalendarScreen(),
-    PulseAndWeightScreen(),
+    HealthScreen(),
   ];
 
   @override

@@ -109,9 +109,9 @@
   "@homeCalendarPageTitle": {
     "description": "Title of calendar page"
   },
-  "homePulseAndWeightPageTitle": "Tętno & Waga",
-  "@homePulseAndWeightPageTitle": {
-    "description": "Title of pulse and weight page"
+  "homeHealthPageTitle": "Zdrowie",
+  "@homeHealthPageTitle": {
+    "description": "Title of morning measurement page"
   },
   "homeDrawerProfile": "Profil",
   "@homeDrawerProfile": {
