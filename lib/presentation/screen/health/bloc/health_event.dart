@@ -1,5 +1,4 @@
-import '../../../../domain/model/morning_measurement.dart';
-import 'health_state.dart';
+part of 'health_bloc.dart';
 
 abstract class HealthEvent {
   const HealthEvent();
@@ -18,7 +17,13 @@ class HealthEventMorningMeasurementUpdated extends HealthEvent {
 }
 
 class HealthEventAddMorningMeasurement extends HealthEvent {
-  const HealthEventAddMorningMeasurement();
+  final int restingHeartRate;
+  final double weight;
+
+  const HealthEventAddMorningMeasurement({
+    required this.restingHeartRate,
+    required this.weight,
+  });
 }
 
 class HealthEventChangeChartRange extends HealthEvent {

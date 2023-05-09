@@ -1,13 +1,12 @@
-import 'package:equatable/equatable.dart';
+part of 'health_bloc.dart';
 
-import '../../../../domain/model/morning_measurement.dart';
-
-class HealthState extends Equatable {
+class HealthState extends BlocState {
   final MorningMeasurement? todayMorningMeasurement;
   final ChartRange chartRange;
   final List<MorningMeasurement>? morningMeasurements;
 
   const HealthState({
+    required super.status,
     required this.todayMorningMeasurement,
     required this.chartRange,
     required this.morningMeasurements,
@@ -15,17 +14,21 @@ class HealthState extends Equatable {
 
   @override
   List<Object?> get props => [
+        status,
         todayMorningMeasurement,
         chartRange,
         morningMeasurements,
       ];
 
+  @override
   HealthState copyWith({
+    BlocStatus? status,
     MorningMeasurement? todayMorningMeasurement,
     ChartRange? chartRange,
     List<MorningMeasurement>? morningMeasurements,
   }) =>
       HealthState(
+        status: status ?? const BlocStatusComplete(),
         todayMorningMeasurement:
             todayMorningMeasurement ?? this.todayMorningMeasurement,
         chartRange: chartRange ?? this.chartRange,

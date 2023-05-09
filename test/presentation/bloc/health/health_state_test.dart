@@ -1,11 +1,13 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/domain/model/morning_measurement.dart';
-import 'package:runnoter/presentation/screen/health/bloc/health_state.dart';
+import 'package:runnoter/presentation/model/bloc_status.dart';
+import 'package:runnoter/presentation/screen/health/bloc/health_bloc.dart';
 
 void main() {
   late HealthState state;
 
   HealthState createState() => const HealthState(
+        status: BlocStatusInitial(),
         todayMorningMeasurement: null,
         chartRange: ChartRange.month,
         morningMeasurements: null,
@@ -14,6 +16,19 @@ void main() {
   setUp(() {
     state = createState();
   });
+
+  test(
+    'copy with status',
+    () {
+      const BlocStatus expectedStatus = BlocStatusLoading();
+
+      state = state.copyWith(status: expectedStatus);
+      final state2 = state.copyWith();
+
+      expect(state.status, expectedStatus);
+      expect(state2.status, const BlocStatusComplete());
+    },
+  );
 
   test(
     'copy with today morning measurement',
