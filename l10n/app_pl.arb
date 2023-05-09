@@ -339,6 +339,12 @@
   },
 
 
+  "healthMorningMeasurementButton": "Poranny pomiar",
+  "@healthMorningMeasurementButton": {
+    "description": "Label of the button to add morning measurement"
+  },
+
+
   "profileScreenTitle": "Profil",
   "@profileScreenTitle": {
     "description": "Title of the profile screen"

@@ -5,8 +5,15 @@ class _Content extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text('Health screen'),
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          children: const [
+            _TodayMorningMeasurement(),
+          ],
+        ),
+      ),
     );
   }
 }
