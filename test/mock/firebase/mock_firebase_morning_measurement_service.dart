@@ -7,6 +7,17 @@ class _FakeMorningMeasurementDto extends Fake
 
 class MockFirebaseMorningMeasurementService extends Mock
     implements FirebaseMorningMeasurementService {
+  void mockLoadMeasurementByDate({
+    MorningMeasurementDto? morningMeasurementDto,
+  }) {
+    when(
+      () => loadMeasurementByDate(
+        userId: any(named: 'userId'),
+        date: any(named: 'date'),
+      ),
+    ).thenAnswer((invocation) => Future.value(morningMeasurementDto));
+  }
+
   void mockAddMeasurement({
     MorningMeasurementDto? addedMeasurementDto,
   }) {

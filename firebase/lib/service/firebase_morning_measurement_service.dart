@@ -3,6 +3,16 @@ import '../mapper/date_mapper.dart';
 import '../model/morning_measurement_dto.dart';
 
 class FirebaseMorningMeasurementService {
+  Future<MorningMeasurementDto?> loadMeasurementByDate({
+    required String userId,
+    required DateTime date,
+  }) async {
+    final measurementId = mapDateTimeToString(date);
+    final snapshot =
+        await getMorningMeasurementsRef(userId).doc(measurementId).get();
+    return snapshot.data();
+  }
+
   Future<MorningMeasurementDto?> addMeasurement({
     required String userId,
     required MorningMeasurementDto measurementDto,
