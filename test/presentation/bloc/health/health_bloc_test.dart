@@ -164,4 +164,21 @@ void main() {
       ).called(1);
     },
   );
+
+  blocTest(
+    'change chart range, '
+    'should update chart range in state',
+    build: () => createBloc(),
+    act: (HealthBloc bloc) => bloc.add(
+      const HealthEventChangeChartRange(
+        newChartRange: ChartRange.month,
+      ),
+    ),
+    expect: () => [
+      createState(
+        status: const BlocStatusComplete(),
+        chartRange: ChartRange.month,
+      ),
+    ],
+  );
 }

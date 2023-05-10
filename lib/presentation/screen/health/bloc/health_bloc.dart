@@ -45,6 +45,7 @@ class HealthBloc
       _thisMorningMeasurementUpdated,
     );
     on<HealthEventAddMorningMeasurement>(_addMorningMeasurement);
+    on<HealthEventChangeChartRange>(_changeChartRange);
   }
 
   @override
@@ -102,5 +103,14 @@ class HealthBloc
       ),
     );
     emitCompleteStatus(emit, HealthBlocInfo.morningMeasurementAdded);
+  }
+
+  void _changeChartRange(
+    HealthEventChangeChartRange event,
+    Emitter<HealthState> emit,
+  ) {
+    emit(state.copyWith(
+      chartRange: event.newChartRange,
+    ));
   }
 }
