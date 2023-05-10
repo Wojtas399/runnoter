@@ -6,16 +6,16 @@ import 'package:runnoter/domain/model/morning_measurement.dart';
 void main() {
   final DateTime date = DateTime(2023, 1, 10);
   const int restingHeartRate = 50;
-  const double weight = 50.9;
+  const double fastingWeight = 50.9;
   final MorningMeasurement morningMeasurement = MorningMeasurement(
     date: date,
     restingHeartRate: restingHeartRate,
-    weight: weight,
+    fastingWeight: fastingWeight,
   );
   final MorningMeasurementDto morningMeasurementDto = MorningMeasurementDto(
     date: date,
     restingHeartRate: restingHeartRate,
-    weight: weight,
+    weight: fastingWeight,
   );
 
   test(

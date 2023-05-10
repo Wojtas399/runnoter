@@ -8,7 +8,7 @@ MorningMeasurementDto mapMorningMeasurementToFirebase(
     MorningMeasurementDto(
       date: morningMeasurement.date,
       restingHeartRate: morningMeasurement.restingHeartRate,
-      weight: morningMeasurement.weight,
+      weight: morningMeasurement.fastingWeight,
     );
 
 MorningMeasurement mapMorningMeasurementFromFirebase(
@@ -17,5 +17,5 @@ MorningMeasurement mapMorningMeasurementFromFirebase(
     MorningMeasurement(
       date: morningMeasurementDto.date,
       restingHeartRate: morningMeasurementDto.restingHeartRate,
-      weight: morningMeasurementDto.weight,
+      fastingWeight: morningMeasurementDto.weight,
     );

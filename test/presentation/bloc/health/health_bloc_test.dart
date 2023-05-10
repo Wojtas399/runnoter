@@ -111,7 +111,7 @@ void main() {
     act: (HealthBloc bloc) => bloc.add(
       const HealthEventAddMorningMeasurement(
         restingHeartRate: 50,
-        weight: 80.2,
+        fastingWeight: 80.2,
       ),
     ),
     expect: () => [],
@@ -135,7 +135,7 @@ void main() {
     act: (HealthBloc bloc) => bloc.add(
       const HealthEventAddMorningMeasurement(
         restingHeartRate: 50,
-        weight: 80.2,
+        fastingWeight: 80.2,
       ),
     ),
     expect: () => [
@@ -158,7 +158,7 @@ void main() {
           measurement: MorningMeasurement(
             date: DateTime(2023, 1, 10),
             restingHeartRate: 50,
-            weight: 80.2,
+            fastingWeight: 80.2,
           ),
         ),
       ).called(1);

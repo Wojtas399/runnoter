@@ -18,11 +18,11 @@ class HealthEventThisMorningMeasurementUpdated extends HealthEvent {
 
 class HealthEventAddMorningMeasurement extends HealthEvent {
   final int restingHeartRate;
-  final double weight;
+  final double fastingWeight;
 
   const HealthEventAddMorningMeasurement({
     required this.restingHeartRate,
-    required this.weight,
+    required this.fastingWeight,
   });
 }
 

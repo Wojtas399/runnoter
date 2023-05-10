@@ -36,7 +36,7 @@ void main() {
       final MorningMeasurement expectedMorningMeasurement = MorningMeasurement(
         date: DateTime(2023, 1, 10),
         restingHeartRate: 50,
-        weight: 80.2,
+        fastingWeight: 80.2,
       );
 
       state = state.copyWith(
@@ -69,12 +69,12 @@ void main() {
         MorningMeasurement(
           date: DateTime(2023, 1, 10),
           restingHeartRate: 50,
-          weight: 80.2,
+          fastingWeight: 80.2,
         ),
         MorningMeasurement(
           date: DateTime(2023, 1, 11),
           restingHeartRate: 49,
-          weight: 80.5,
+          fastingWeight: 80.5,
         ),
       ];
 

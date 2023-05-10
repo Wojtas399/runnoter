@@ -76,7 +76,7 @@ void main() {
       final MorningMeasurement expectedMorningMeasurement = MorningMeasurement(
         date: date,
         restingHeartRate: 50,
-        weight: 50.5,
+        fastingWeight: 50.5,
       );
       final MorningMeasurementDto morningMeasurementDto = MorningMeasurementDto(
         date: date,
@@ -124,16 +124,16 @@ void main() {
     "should call firebase service's method to add measurement and should add this new measurement to repo state",
     () {
       const int restingHeartRate = 55;
-      const double weight = 55.5;
+      const double fastingWeight = 55.5;
       final MorningMeasurement morningMeasurement = MorningMeasurement(
         date: date,
         restingHeartRate: restingHeartRate,
-        weight: weight,
+        fastingWeight: fastingWeight,
       );
       final MorningMeasurementDto morningMeasurementDto = MorningMeasurementDto(
         date: date,
         restingHeartRate: restingHeartRate,
-        weight: weight,
+        weight: fastingWeight,
       );
       firebaseMorningMeasurementService.mockAddMeasurement(
         addedMeasurementDto: morningMeasurementDto,

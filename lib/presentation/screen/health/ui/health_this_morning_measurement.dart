@@ -41,7 +41,7 @@ class _ThisMorningMeasurementPreview extends StatelessWidget {
           Expanded(
             child: _MorningMeasurementParam(
               label: Str.of(context).healthFastingWeight,
-              value: '${measurement.weight} kg',
+              value: '${measurement.fastingWeight} kg',
             ),
           ),
         ],

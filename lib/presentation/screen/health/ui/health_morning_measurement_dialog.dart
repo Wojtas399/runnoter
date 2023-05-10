@@ -92,12 +92,12 @@ class _MorningMeasurementDialogState extends State<_MorningMeasurementDialog> {
     final int? restingHeartRate = int.tryParse(
       _restingHeartRateController.text,
     );
-    final double? weight = double.tryParse(_weightController.text);
-    if (restingHeartRate != null && weight != null) {
+    final double? fastingWeight = double.tryParse(_weightController.text);
+    if (restingHeartRate != null && fastingWeight != null) {
       context.read<HealthBloc>().add(
             HealthEventAddMorningMeasurement(
               restingHeartRate: restingHeartRate,
-              weight: weight,
+              fastingWeight: fastingWeight,
             ),
           );
     }

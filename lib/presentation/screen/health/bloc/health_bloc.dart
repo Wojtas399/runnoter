@@ -98,7 +98,7 @@ class HealthBloc
       measurement: MorningMeasurement(
         date: _dateService.getTodayDate(),
         restingHeartRate: event.restingHeartRate,
-        weight: event.weight,
+        fastingWeight: event.fastingWeight,
       ),
     );
     emitCompleteStatus(emit, HealthBlocInfo.morningMeasurementAdded);
