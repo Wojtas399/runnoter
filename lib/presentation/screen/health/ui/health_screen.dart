@@ -51,7 +51,9 @@ class _BlocProvider extends StatelessWidget {
         authService: context.read<AuthService>(),
         morningMeasurementRepository:
             context.read<MorningMeasurementRepository>(),
-      ),
+      )..add(
+          const HealthEventInitialize(),
+        ),
       child: child,
     );
   }

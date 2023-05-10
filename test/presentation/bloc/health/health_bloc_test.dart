@@ -1,4 +1,5 @@
 import 'package:bloc_test/bloc_test.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/model/morning_measurement.dart';
 import 'package:runnoter/presentation/model/bloc_status.dart';
@@ -7,6 +8,7 @@ import 'package:runnoter/presentation/screen/health/bloc/health_bloc.dart';
 import '../../../mock/domain/mock_auth_service.dart';
 import '../../../mock/domain/mock_morning_measurement_repository.dart';
 import '../../../mock/presentation/service/mock_date_service.dart';
+import '../../../util/morning_measurement_creator.dart';
 
 void main() {
   final dateService = MockDateService();
@@ -21,16 +23,84 @@ void main() {
 
   HealthState createState({
     BlocStatus status = const BlocStatusInitial(),
-    MorningMeasurement? todayMorningMeasurement,
+    MorningMeasurement? thisMorningMeasurement,
     ChartRange chartRange = ChartRange.week,
     List<MorningMeasurement>? morningMeasurements,
   }) =>
       HealthState(
         status: status,
-        todayMorningMeasurement: todayMorningMeasurement,
+        thisMorningMeasurement: thisMorningMeasurement,
         chartRange: chartRange,
         morningMeasurements: morningMeasurements,
       );
+
+  tearDown(() {
+    reset(dateService);
+    reset(authService);
+    reset(morningMeasurementRepository);
+  });
+
+  blocTest(
+    'initialize, '
+    "should set listener of logged user's this morning measurement",
+    build: () => createBloc(),
+    setUp: () {
+      dateService.mockGetTodayDate(
+        todayDate: DateTime(2023, 1, 10),
+      );
+      authService.mockGetLoggedUserId(
+        userId: 'u1',
+      );
+      morningMeasurementRepository.mockGetMeasurementByDate(
+        measurement: createMorningMeasurement(
+          date: DateTime(2023, 1, 10),
+        ),
+      );
+    },
+    act: (HealthBloc bloc) => bloc.add(
+      const HealthEventInitialize(),
+    ),
+    expect: () => [
+      createState(
+        status: const BlocStatusComplete(),
+        thisMorningMeasurement: createMorningMeasurement(
+          date: DateTime(2023, 1, 10),
+        ),
+      ),
+    ],
+    verify: (_) {
+      verify(
+        () => authService.loggedUserId$,
+      ).called(1);
+      verify(
+        () => morningMeasurementRepository.getMeasurementByDate(
+          date: DateTime(2023, 1, 10),
+          userId: 'u1',
+        ),
+      ).called(1);
+    },
+  );
+
+  blocTest(
+    'this morning measurement updated, '
+    'should update today morning measurement in state',
+    build: () => createBloc(),
+    act: (HealthBloc bloc) => bloc.add(
+      HealthEventThisMorningMeasurementUpdated(
+        updatedThisMorningMeasurement: createMorningMeasurement(
+          date: DateTime(2023, 1, 10),
+        ),
+      ),
+    ),
+    expect: () => [
+      createState(
+        status: const BlocStatusComplete(),
+        thisMorningMeasurement: createMorningMeasurement(
+          date: DateTime(2023, 1, 10),
+        ),
+      ),
+    ],
+  );
 
   blocTest(
     'add morning measurement, '

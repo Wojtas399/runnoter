@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rxdart/rxdart.dart';
 
 import '../../../../common/date_service.dart';
 import '../../../../domain/model/morning_measurement.dart';
@@ -16,13 +19,14 @@ class HealthBloc
   final DateService _dateService;
   final AuthService _authService;
   final MorningMeasurementRepository _morningMeasurementRepository;
+  StreamSubscription<MorningMeasurement?>? _thisMorningMeasurementListener;
 
   HealthBloc({
     required DateService dateService,
     required AuthService authService,
     required MorningMeasurementRepository morningMeasurementRepository,
     BlocStatus status = const BlocStatusInitial(),
-    MorningMeasurement? todayMorningMeasurement,
+    MorningMeasurement? thisMorningMeasurement,
     ChartRange chartRange = ChartRange.week,
     List<MorningMeasurement>? morningMeasurements,
   })  : _dateService = dateService,
@@ -31,12 +35,53 @@ class HealthBloc
         super(
           HealthState(
             status: status,
-            todayMorningMeasurement: todayMorningMeasurement,
+            thisMorningMeasurement: thisMorningMeasurement,
             chartRange: chartRange,
             morningMeasurements: morningMeasurements,
           ),
         ) {
+    on<HealthEventInitialize>(_initialize);
+    on<HealthEventThisMorningMeasurementUpdated>(
+      _thisMorningMeasurementUpdated,
+    );
     on<HealthEventAddMorningMeasurement>(_addMorningMeasurement);
+  }
+
+  @override
+  Future<void> close() {
+    _thisMorningMeasurementListener?.cancel();
+    _thisMorningMeasurementListener = null;
+    return super.close();
+  }
+
+  void _initialize(
+    HealthEventInitialize event,
+    Emitter<HealthState> emit,
+  ) {
+    _thisMorningMeasurementListener ??= _authService.loggedUserId$
+        .whereType<String>()
+        .switchMap(
+          (loggedUserId) => _morningMeasurementRepository.getMeasurementByDate(
+            date: _dateService.getTodayDate(),
+            userId: loggedUserId,
+          ),
+        )
+        .listen(
+          (MorningMeasurement? thisMorningMeasurement) => add(
+            HealthEventThisMorningMeasurementUpdated(
+              updatedThisMorningMeasurement: thisMorningMeasurement,
+            ),
+          ),
+        );
+  }
+
+  void _thisMorningMeasurementUpdated(
+    HealthEventThisMorningMeasurementUpdated event,
+    Emitter<HealthState> emit,
+  ) {
+    emit(state.copyWith(
+      thisMorningMeasurement: event.updatedThisMorningMeasurement,
+    ));
   }
 
   Future<void> _addMorningMeasurement(

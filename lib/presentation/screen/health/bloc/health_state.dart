@@ -1,13 +1,13 @@
 part of 'health_bloc.dart';
 
 class HealthState extends BlocState {
-  final MorningMeasurement? todayMorningMeasurement;
+  final MorningMeasurement? thisMorningMeasurement;
   final ChartRange chartRange;
   final List<MorningMeasurement>? morningMeasurements;
 
   const HealthState({
     required super.status,
-    required this.todayMorningMeasurement,
+    required this.thisMorningMeasurement,
     required this.chartRange,
     required this.morningMeasurements,
   });
@@ -15,7 +15,7 @@ class HealthState extends BlocState {
   @override
   List<Object?> get props => [
         status,
-        todayMorningMeasurement,
+        thisMorningMeasurement,
         chartRange,
         morningMeasurements,
       ];
@@ -23,14 +23,14 @@ class HealthState extends BlocState {
   @override
   HealthState copyWith({
     BlocStatus? status,
-    MorningMeasurement? todayMorningMeasurement,
+    MorningMeasurement? thisMorningMeasurement,
     ChartRange? chartRange,
     List<MorningMeasurement>? morningMeasurements,
   }) =>
       HealthState(
         status: status ?? const BlocStatusComplete(),
-        todayMorningMeasurement:
-            todayMorningMeasurement ?? this.todayMorningMeasurement,
+        thisMorningMeasurement:
+            thisMorningMeasurement ?? this.thisMorningMeasurement,
         chartRange: chartRange ?? this.chartRange,
         morningMeasurements: morningMeasurements ?? this.morningMeasurements,
       );

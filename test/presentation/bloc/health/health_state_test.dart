@@ -8,7 +8,7 @@ void main() {
 
   HealthState createState() => const HealthState(
         status: BlocStatusInitial(),
-        todayMorningMeasurement: null,
+        thisMorningMeasurement: null,
         chartRange: ChartRange.month,
         morningMeasurements: null,
       );
@@ -31,7 +31,7 @@ void main() {
   );
 
   test(
-    'copy with today morning measurement',
+    'copy with this morning measurement',
     () {
       final MorningMeasurement expectedMorningMeasurement = MorningMeasurement(
         date: DateTime(2023, 1, 10),
@@ -40,12 +40,12 @@ void main() {
       );
 
       state = state.copyWith(
-        todayMorningMeasurement: expectedMorningMeasurement,
+        thisMorningMeasurement: expectedMorningMeasurement,
       );
       final state2 = state.copyWith();
 
-      expect(state.todayMorningMeasurement, expectedMorningMeasurement);
-      expect(state2.todayMorningMeasurement, expectedMorningMeasurement);
+      expect(state.thisMorningMeasurement, expectedMorningMeasurement);
+      expect(state2.thisMorningMeasurement, expectedMorningMeasurement);
     },
   );
 

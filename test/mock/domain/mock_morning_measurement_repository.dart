@@ -6,6 +6,17 @@ class _FakeMorningMeasurement extends Fake implements MorningMeasurement {}
 
 class MockMorningMeasurementRepository extends Mock
     implements MorningMeasurementRepository {
+  void mockGetMeasurementByDate({
+    MorningMeasurement? measurement,
+  }) {
+    when(
+      () => getMeasurementByDate(
+        date: any(named: 'date'),
+        userId: any(named: 'userId'),
+      ),
+    ).thenAnswer((invocation) => Stream.value(measurement));
+  }
+
   void mockAddMeasurement() {
     _mockMorningMeasurement();
     when(
