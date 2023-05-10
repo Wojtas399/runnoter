@@ -18,6 +18,18 @@ class MockFirebaseMorningMeasurementService extends Mock
     ).thenAnswer((invocation) => Future.value(morningMeasurementDto));
   }
 
+  void mockLoadMeasurementsByDateRange({
+    List<MorningMeasurementDto>? morningMeasurementDtos,
+  }) {
+    when(
+      () => loadMeasurementsByDateRange(
+        startDate: any(named: 'startDate'),
+        endDate: any(named: 'endDate'),
+        userId: any(named: 'userId'),
+      ),
+    ).thenAnswer((invocation) => Future.value(morningMeasurementDtos));
+  }
+
   void mockAddMeasurement({
     MorningMeasurementDto? addedMeasurementDto,
   }) {
