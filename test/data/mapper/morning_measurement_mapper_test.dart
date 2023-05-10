@@ -15,7 +15,7 @@ void main() {
   final MorningMeasurementDto morningMeasurementDto = MorningMeasurementDto(
     date: date,
     restingHeartRate: restingHeartRate,
-    weight: fastingWeight,
+    fastingWeight: fastingWeight,
   );
 
   test(

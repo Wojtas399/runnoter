@@ -5,15 +5,15 @@ void main() {
   const String dateStr = '2023-1-10';
   final DateTime date = DateTime(2023, 1, 10);
   const int restingHeartRate = 50;
-  const double weight = 50.6;
+  const double fastingWeight = 50.6;
   final MorningMeasurementDto morningMeasurementDto = MorningMeasurementDto(
     date: date,
     restingHeartRate: restingHeartRate,
-    weight: weight,
+    fastingWeight: fastingWeight,
   );
   final Map<String, dynamic> morningMeasurementJson = {
     'restingHeartRate': restingHeartRate,
-    'weight': weight,
+    'fastingWeight': fastingWeight,
   };
 
   test(

@@ -81,7 +81,7 @@ void main() {
       final MorningMeasurementDto morningMeasurementDto = MorningMeasurementDto(
         date: date,
         restingHeartRate: 50,
-        weight: 50.5,
+        fastingWeight: 50.5,
       );
       firebaseMorningMeasurementService.mockLoadMeasurementByDate(
         morningMeasurementDto: morningMeasurementDto,
@@ -133,7 +133,7 @@ void main() {
       final MorningMeasurementDto morningMeasurementDto = MorningMeasurementDto(
         date: date,
         restingHeartRate: restingHeartRate,
-        weight: fastingWeight,
+        fastingWeight: fastingWeight,
       );
       firebaseMorningMeasurementService.mockAddMeasurement(
         addedMeasurementDto: morningMeasurementDto,

@@ -5,14 +5,14 @@ import '../mapper/date_mapper.dart';
 class MorningMeasurementDto extends Equatable {
   final DateTime date;
   final int restingHeartRate;
-  final double weight;
+  final double fastingWeight;
 
   const MorningMeasurementDto({
     required this.date,
     required this.restingHeartRate,
-    required this.weight,
+    required this.fastingWeight,
   })  : assert(restingHeartRate >= 0),
-        assert(weight > 0);
+        assert(fastingWeight > 0);
 
   MorningMeasurementDto.fromJson(
     String dateStr,
@@ -20,21 +20,21 @@ class MorningMeasurementDto extends Equatable {
   ) : this(
           date: mapDateTimeFromString(dateStr),
           restingHeartRate: json?[_restingHeartRateField],
-          weight: json?[_weightField],
+          fastingWeight: json?[_fastingWeightField],
         );
 
   @override
   List<Object?> get props => [
         date,
         restingHeartRate,
-        weight,
+        fastingWeight,
       ];
 
   Map<String, dynamic> toJson() => {
         _restingHeartRateField: restingHeartRate,
-        _weightField: weight,
+        _fastingWeightField: fastingWeight,
       };
 }
 
 const String _restingHeartRateField = 'restingHeartRate';
-const String _weightField = 'weight';
+const String _fastingWeightField = 'fastingWeight';
