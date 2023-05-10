@@ -355,6 +355,10 @@
   "@healthFastingWeight": {
     "description": "Label of fasting weight"
   },
+  "healthSummaryOfMeasurements": "Zestawienie pomiarów",
+  "@healthSummaryOfMeasurements": {
+    "description": "Label of summary of measurements"
+  },
   "healthChartRangeWeek": "Tydzień",
   "@healthChartRangeWeek": {
     "description": "Label of weekly chart range"

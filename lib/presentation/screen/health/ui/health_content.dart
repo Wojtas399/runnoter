@@ -10,22 +10,43 @@ class _Content extends StatelessWidget {
         padding: const EdgeInsets.all(24),
         child: Column(
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  Str.of(context).healthMorningMeasurement,
-                  style: Theme.of(context).textTheme.labelLarge,
-                ),
-                const SizedBox(height: 16),
-                const _ThisMorningMeasurement(),
-              ],
+            _Section(
+              label: Str.of(context).healthMorningMeasurement,
+              child: const _ThisMorningMeasurement(),
             ),
             const SizedBox(height: 24),
-            const _ChartRangeSelection(),
+            _Section(
+              label: Str.of(context).healthSummaryOfMeasurements,
+              child: const _ChartRangeSelection(),
+            ),
           ],
         ),
       ),
+    );
+  }
+}
+
+class _Section extends StatelessWidget {
+  final String label;
+  final Widget child;
+
+  const _Section({
+    required this.label,
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: Theme.of(context).textTheme.labelLarge,
+        ),
+        const SizedBox(height: 16),
+        child,
+      ],
     );
   }
 }
