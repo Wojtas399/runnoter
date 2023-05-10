@@ -9,10 +9,20 @@ class _Content extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(24),
         child: Column(
-          children: const [
-            _ThisMorningMeasurement(),
-            SizedBox(height: 24),
-            _ChartRangeSelection(),
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  Str.of(context).healthMorningMeasurement,
+                  style: Theme.of(context).textTheme.labelLarge,
+                ),
+                const SizedBox(height: 16),
+                const _ThisMorningMeasurement(),
+              ],
+            ),
+            const SizedBox(height: 24),
+            const _ChartRangeSelection(),
           ],
         ),
       ),

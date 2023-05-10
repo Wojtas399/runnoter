@@ -81,7 +81,7 @@ class _ThisMorningMeasurementButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BigButton(
-      label: Str.of(context).healthMorningMeasurement,
+      label: Str.of(context).healthMorningMeasurementButton,
       onPressed: () {
         _onPressed(context);
       },

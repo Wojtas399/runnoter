@@ -96,6 +96,7 @@
 
 
   "healthMorningMeasurement": "Morning measurement",
+  "healthMorningMeasurementButton": "Add measurement",
   "healthRestingHeartRate": "Resting heart rate",
   "healthFastingWeight": "Fasting weight",
   "healthChartRangeWeek": "Week",

@@ -343,6 +343,10 @@
   "@healthMorningMeasurement": {
     "description": "Label of morning measurement"
   },
+  "healthMorningMeasurementButton": "Dodaj pomiar",
+  "@healthMorningMeasurementButton": {
+    "description": "Label of the button to add morning measurement"
+  },
   "healthRestingHeartRate": "Tętno spoczynkowe",
   "@healthRestingHeartRate": {
     "description": "Label of resting heart rate"
