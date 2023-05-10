@@ -40,6 +40,7 @@ class RepositoriesProvider extends StatelessWidget {
         ),
         Provider<MorningMeasurementRepository>(
           create: (_) => MorningMeasurementRepositoryImpl(
+            dateService: DateService(),
             firebaseMorningMeasurementService:
                 FirebaseMorningMeasurementService(),
           ),
