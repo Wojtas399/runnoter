@@ -17,6 +17,18 @@ class MockMorningMeasurementRepository extends Mock
     ).thenAnswer((invocation) => Stream.value(measurement));
   }
 
+  void mockGetMeasurementsByDateRange({
+    List<MorningMeasurement>? measurements,
+  }) {
+    when(
+      () => getMeasurementsByDateRange(
+        startDate: any(named: 'startDate'),
+        endDate: any(named: 'endDate'),
+        userId: any(named: 'userId'),
+      ),
+    ).thenAnswer((invocation) => Stream.value(measurements));
+  }
+
   void mockAddMeasurement() {
     _mockMorningMeasurement();
     when(

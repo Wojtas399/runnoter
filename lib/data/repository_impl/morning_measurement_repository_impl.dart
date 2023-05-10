@@ -29,20 +29,45 @@ class MorningMeasurementRepositoryImpl
   }) =>
       dataStream$
           .map(
-        (measurements) => <MorningMeasurement?>[...?measurements].firstWhere(
-          (MorningMeasurement? measurement) => measurement != null
-              ? _dateService.areDatesTheSame(measurement.date, date)
-              : false,
-          orElse: () => null,
-        ),
-      )
+            (List<MorningMeasurement>? measurements) =>
+                <MorningMeasurement?>[...?measurements].firstWhere(
+              (MorningMeasurement? measurement) => measurement != null
+                  ? _dateService.areDatesTheSame(measurement.date, date)
+                  : false,
+              orElse: () => null,
+            ),
+          )
           .doOnListen(
-        () async {
-          if (await _doesMeasurementWithGivenDateNotExist(date)) {
-            _loadMeasurementFromRemoteDb(date, userId);
-          }
-        },
-      );
+            () async => await _doesMeasurementWithGivenDateNotExist(date)
+                ? _loadMeasurementByDateFromRemoteDb(date, userId)
+                : null,
+          );
+
+  @override
+  Stream<List<MorningMeasurement>?> getMeasurementsByDateRange({
+    required DateTime startDate,
+    required DateTime endDate,
+    required String userId,
+  }) =>
+      dataStream$
+          .map(
+            (List<MorningMeasurement>? measurements) => measurements
+                ?.where(
+                  (measurement) => _dateService.isDateFromRange(
+                    date: measurement.date,
+                    startDate: startDate,
+                    endDate: endDate,
+                  ),
+                )
+                .toList(),
+          )
+          .doOnListen(
+            () => _loadMeasurementsByDateRangeFromRemoteDb(
+              startDate,
+              endDate,
+              userId,
+            ),
+          );
 
   @override
   Future<void> addMeasurement({
@@ -74,7 +99,7 @@ class MorningMeasurementRepositoryImpl
     return true;
   }
 
-  Future<void> _loadMeasurementFromRemoteDb(
+  Future<void> _loadMeasurementByDateFromRemoteDb(
     DateTime date,
     String userId,
   ) async {
@@ -88,6 +113,25 @@ class MorningMeasurementRepositoryImpl
         measurementDto,
       );
       addEntity(measurement);
+    }
+  }
+
+  Future<void> _loadMeasurementsByDateRangeFromRemoteDb(
+    DateTime startDate,
+    DateTime endDate,
+    String userId,
+  ) async {
+    final List<MorningMeasurementDto>? measurementDtos =
+        await _firebaseMorningMeasurementService.loadMeasurementsByDateRange(
+      startDate: startDate,
+      endDate: endDate,
+      userId: userId,
+    );
+    if (measurementDtos != null) {
+      final List<MorningMeasurement> measurements = measurementDtos
+          .map((dto) => mapMorningMeasurementFromFirebase(dto))
+          .toList();
+      addEntities(measurements);
     }
   }
 }
