@@ -14,52 +14,63 @@ class _MorningMeasurementDialogState extends State<_MorningMeasurementDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return FullScreenDialog(
-      title: Str.of(context).healthMorningMeasurement,
-      submitButtonLabel: Str.of(context).add,
-      isSubmitButtonDisabled: _isSubmitButtonDisabled,
-      onSubmitButtonPressed: () {
-        _onSubmitButtonPressed(context);
-      },
-      body: SafeArea(
-        child: GestureDetector(
-          onTap: () {
-            unfocusInputs();
-          },
-          child: Container(
-            color: Colors.transparent,
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              children: [
-                TextFieldComponent(
-                  label: Str.of(context).healthRestingHeartRate,
-                  keyboardType: TextInputType.number,
-                  maxLength: 3,
-                  isRequired: true,
-                  inputFormatters: [
-                    FilteringTextInputFormatter.digitsOnly,
-                  ],
-                  controller: _restingHeartRateController,
-                  onChanged: _onRestingHeartRateChanged,
-                ),
-                const SizedBox(height: 24),
-                TextFieldComponent(
-                  label: Str.of(context).healthWeight,
-                  keyboardType: TextInputType.number,
-                  maxLength: 6,
-                  isRequired: true,
-                  inputFormatters: [
-                    DecimalTextInputFormatter(decimalRange: 2),
-                  ],
-                  controller: _weightController,
-                  onChanged: _onWeightChanged,
-                ),
-              ],
+    return BlocListener<HealthBloc, HealthState>(
+      listener: _onHealthStateChanged,
+      child: FullScreenDialog(
+        title: Str.of(context).healthMorningMeasurement,
+        submitButtonLabel: Str.of(context).add,
+        isSubmitButtonDisabled: _isSubmitButtonDisabled,
+        onSubmitButtonPressed: () {
+          _onSubmitButtonPressed(context);
+        },
+        body: SafeArea(
+          child: GestureDetector(
+            onTap: () {
+              unfocusInputs();
+            },
+            child: Container(
+              color: Colors.transparent,
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                children: [
+                  TextFieldComponent(
+                    label: Str.of(context).healthRestingHeartRate,
+                    keyboardType: TextInputType.number,
+                    maxLength: 3,
+                    isRequired: true,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                    ],
+                    controller: _restingHeartRateController,
+                    onChanged: _onRestingHeartRateChanged,
+                  ),
+                  const SizedBox(height: 24),
+                  TextFieldComponent(
+                    label: Str.of(context).healthWeight,
+                    keyboardType: TextInputType.number,
+                    maxLength: 6,
+                    isRequired: true,
+                    inputFormatters: [
+                      DecimalTextInputFormatter(decimalRange: 2),
+                    ],
+                    controller: _weightController,
+                    onChanged: _onWeightChanged,
+                  ),
+                ],
+              ),
             ),
           ),
         ),
       ),
     );
+  }
+
+  void _onHealthStateChanged(BuildContext context, HealthState state) {
+    final BlocStatus blocStatus = state.status;
+    if (blocStatus is BlocStatusComplete &&
+        blocStatus.info == HealthBlocInfo.morningMeasurementAdded) {
+      navigateBack(context: context);
+    }
   }
 
   void _onRestingHeartRateChanged(String? restingHeartRateStr) {
@@ -77,6 +88,7 @@ class _MorningMeasurementDialogState extends State<_MorningMeasurementDialog> {
   }
 
   void _onSubmitButtonPressed(BuildContext context) {
+    unfocusInputs();
     final int? restingHeartRate = int.tryParse(
       _restingHeartRateController.text,
     );

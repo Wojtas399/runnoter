@@ -7,10 +7,13 @@ import '../../../../common/date_service.dart';
 import '../../../../domain/repository/morning_measurement_repository.dart';
 import '../../../../domain/service/auth_service.dart';
 import '../../../component/big_button_component.dart';
+import '../../../component/bloc_with_status_listener_component.dart';
 import '../../../component/full_screen_dialog_component.dart';
 import '../../../component/text_field_component.dart';
 import '../../../formatter/decimal_text_input_formatter.dart';
+import '../../../model/bloc_status.dart';
 import '../../../service/dialog_service.dart';
+import '../../../service/navigator_service.dart';
 import '../../../service/utils.dart';
 import '../bloc/health_bloc.dart';
 
@@ -26,7 +29,9 @@ class HealthScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const _BlocProvider(
-      child: _Content(),
+      child: _BlocListener(
+        child: _Content(),
+      ),
     );
   }
 }
@@ -47,6 +52,22 @@ class _BlocProvider extends StatelessWidget {
         morningMeasurementRepository:
             context.read<MorningMeasurementRepository>(),
       ),
+      child: child,
+    );
+  }
+}
+
+class _BlocListener extends StatelessWidget {
+  final Widget child;
+
+  const _BlocListener({
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocWithStatusListener<HealthBloc, HealthState, HealthBlocInfo,
+        dynamic>(
       child: child,
     );
   }
