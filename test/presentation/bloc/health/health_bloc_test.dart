@@ -53,7 +53,7 @@ void main() {
   blocTest(
     'add morning measurement, '
     'logged user exists, '
-    "should call morning measurement repository's method to add new morning measurement with today date",
+    "should call morning measurement repository's method to add new morning measurement with today date and should emit info that morning measurement has been added",
     build: () => createBloc(),
     setUp: () {
       authService.mockGetLoggedUserId(userId: 'u1');
@@ -73,7 +73,9 @@ void main() {
         status: const BlocStatusLoading(),
       ),
       createState(
-        status: const BlocStatusComplete(),
+        status: const BlocStatusComplete<HealthBlocInfo>(
+          info: HealthBlocInfo.morningMeasurementAdded,
+        ),
       ),
     ],
     verify: (_) {

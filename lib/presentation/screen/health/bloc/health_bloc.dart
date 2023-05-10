@@ -12,7 +12,7 @@ part 'health_event.dart';
 part 'health_state.dart';
 
 class HealthBloc
-    extends BlocWithStatus<HealthEvent, HealthState, dynamic, dynamic> {
+    extends BlocWithStatus<HealthEvent, HealthState, HealthBlocInfo, dynamic> {
   final DateService _dateService;
   final AuthService _authService;
   final MorningMeasurementRepository _morningMeasurementRepository;
@@ -56,6 +56,6 @@ class HealthBloc
         weight: event.weight,
       ),
     );
-    emitCompleteStatus(emit, null);
+    emitCompleteStatus(emit, HealthBlocInfo.morningMeasurementAdded);
   }
 }

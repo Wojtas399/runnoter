@@ -40,3 +40,7 @@ enum ChartRange {
   week,
   month,
 }
+
+enum HealthBlocInfo {
+  morningMeasurementAdded,
+}
