@@ -95,7 +95,9 @@
   "workoutStatusCreatorSavedStatusMessage": "Successfully updated workout status",
 
 
-  "healthMorningMeasurementButton": "Morning measurement",
+  "healthMorningMeasurement": "Morning measurement",
+  "healthRestingHeartRate": "Resting heart rate",
+  "healthWeight": "Weight",
 
 
   "profileScreenTitle": "Profile",

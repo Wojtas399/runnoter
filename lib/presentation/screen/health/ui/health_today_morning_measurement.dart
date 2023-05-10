@@ -6,10 +6,20 @@ class _TodayMorningMeasurement extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BigButton(
-      label: Str.of(context).healthMorningMeasurementButton,
+      label: Str.of(context).healthMorningMeasurement,
       onPressed: () {
-        //TODO
+        _onPressed(context);
       },
+    );
+  }
+
+  Future<void> _onPressed(BuildContext context) async {
+    await showFullScreenDialog(
+      context: context,
+      dialog: BlocProvider<HealthBloc>.value(
+        value: context.read<HealthBloc>(),
+        child: const _MorningMeasurementDialog(),
+      ),
     );
   }
 }
