@@ -18,7 +18,6 @@ class _MorningMeasurementDialogState extends State<_MorningMeasurementDialog> {
       listener: _onHealthStateChanged,
       child: FullScreenDialog(
         title: Str.of(context).healthMorningMeasurement,
-        submitButtonLabel: Str.of(context).add,
         isSubmitButtonDisabled: _isSubmitButtonDisabled,
         onSubmitButtonPressed: () {
           _onSubmitButtonPressed(context);
@@ -34,7 +33,8 @@ class _MorningMeasurementDialogState extends State<_MorningMeasurementDialog> {
               child: Column(
                 children: [
                   TextFieldComponent(
-                    label: Str.of(context).healthRestingHeartRate,
+                    label:
+                        '${Str.of(context).healthRestingHeartRate} [${Str.of(context).heartRateUnit}]',
                     keyboardType: TextInputType.number,
                     maxLength: 3,
                     isRequired: true,
@@ -46,7 +46,7 @@ class _MorningMeasurementDialogState extends State<_MorningMeasurementDialog> {
                   ),
                   const SizedBox(height: 24),
                   TextFieldComponent(
-                    label: Str.of(context).healthWeight,
+                    label: '${Str.of(context).healthFastingWeight} [kg]',
                     keyboardType: TextInputType.number,
                     maxLength: 6,
                     isRequired: true,

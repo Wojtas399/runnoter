@@ -10,7 +10,7 @@ class _Content extends StatelessWidget {
         padding: const EdgeInsets.all(24),
         child: Column(
           children: const [
-            _TodayMorningMeasurement(),
+            _ThisMorningMeasurement(),
           ],
         ),
       ),

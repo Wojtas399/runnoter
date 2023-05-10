@@ -347,9 +347,9 @@
   "@healthRestingHeartRate": {
     "description": "Label of resting heart rate"
   },
-  "healthWeight": "Waga",
-  "@healthWeight": {
-    "description": "Label of weight"
+  "healthFastingWeight": "Waga na czczo",
+  "@healthFastingWeight": {
+    "description": "Label of fasting weight"
   },
 
 
@@ -528,6 +528,12 @@
   "paceUnitSelect": "Wybierz jednostkę tempa",
   "@paceUnitSelect": {
     "description": "Text about pace unit selection"
+  },
+
+
+  "heartRateUnit": "ud/min",
+  "@heartRateUnit": {
+    "description": "Unit of heart rate"
   },
 
 

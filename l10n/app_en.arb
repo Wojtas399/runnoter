@@ -97,7 +97,7 @@
 
   "healthMorningMeasurement": "Morning measurement",
   "healthRestingHeartRate": "Resting heart rate",
-  "healthWeight": "Weight",
+  "healthFastingWeight": "Fasting weight",
 
 
   "profileScreenTitle": "Profile",
@@ -150,6 +150,9 @@
   "paceUnitKilometersPerHour": "km/h (kilometers per hour)",
   "paceUnitMilesPerHour": "mi/h (miles per hour)",
   "paceUnitSelect": "Select pace unit",
+
+
+  "heartRateUnit": "bpm",
 
 
   "workoutStageBaseRun": "Cardio",

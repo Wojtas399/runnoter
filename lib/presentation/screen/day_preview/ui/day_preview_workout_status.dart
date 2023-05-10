@@ -107,7 +107,7 @@ class _WorkoutStats extends StatelessWidget {
               Expanded(
                 child: _WorkoutStatParam(
                   label: str.dayPreviewAverageHeartRate,
-                  value: '${status.avgHeartRate} ud/min',
+                  value: '${status.avgHeartRate} ${str.heartRateUnit}',
                 ),
               ),
             ],

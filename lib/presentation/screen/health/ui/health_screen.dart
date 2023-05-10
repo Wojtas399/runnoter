@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../../common/date_service.dart';
+import '../../../../domain/model/morning_measurement.dart';
 import '../../../../domain/repository/morning_measurement_repository.dart';
 import '../../../../domain/service/auth_service.dart';
 import '../../../component/big_button_component.dart';
@@ -19,7 +20,7 @@ import '../bloc/health_bloc.dart';
 
 part 'health_content.dart';
 part 'health_morning_measurement_dialog.dart';
-part 'health_today_morning_measurement.dart';
+part 'health_this_morning_measurement.dart';
 
 class HealthScreen extends StatelessWidget {
   const HealthScreen({
