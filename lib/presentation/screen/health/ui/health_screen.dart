@@ -18,6 +18,7 @@ import '../../../service/navigator_service.dart';
 import '../../../service/utils.dart';
 import '../bloc/health_bloc.dart';
 
+part 'health_chart_range_selection.dart';
 part 'health_content.dart';
 part 'health_morning_measurement_dialog.dart';
 part 'health_this_morning_measurement.dart';

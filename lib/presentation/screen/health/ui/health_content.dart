@@ -11,6 +11,8 @@ class _Content extends StatelessWidget {
         child: Column(
           children: const [
             _ThisMorningMeasurement(),
+            SizedBox(height: 24),
+            _ChartRangeSelection(),
           ],
         ),
       ),

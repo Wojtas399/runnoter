@@ -98,6 +98,8 @@
   "healthMorningMeasurement": "Morning measurement",
   "healthRestingHeartRate": "Resting heart rate",
   "healthFastingWeight": "Fasting weight",
+  "healthChartRangeWeek": "Week",
+  "healthChartRangeMonth": "Month",
 
 
   "profileScreenTitle": "Profile",

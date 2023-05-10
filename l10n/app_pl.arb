@@ -351,6 +351,14 @@
   "@healthFastingWeight": {
     "description": "Label of fasting weight"
   },
+  "healthChartRangeWeek": "Tydzień",
+  "@healthChartRangeWeek": {
+    "description": "Label of weekly chart range"
+  },
+  "healthChartRangeMonth": "Miesiąc",
+  "@healthChartRangeMonth": {
+    "description": "Label of monthly chart range"
+  },
 
 
   "profileScreenTitle": "Profil",
