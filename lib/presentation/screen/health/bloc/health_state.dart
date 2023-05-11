@@ -70,6 +70,7 @@ class HealthChartPoint {
 enum ChartRange {
   week,
   month,
+  year,
 }
 
 enum HealthBlocInfo {

@@ -367,6 +367,10 @@
   "@healthChartRangeMonth": {
     "description": "Label of monthly chart range"
   },
+  "healthChartRangeYear": "Rok",
+  "@healthChartRangeYear": {
+    "description": "Label of annual chart range"
+  },
 
 
   "profileScreenTitle": "Profil",

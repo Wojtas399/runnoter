@@ -19,12 +19,20 @@ class _ChartRangeSelection extends StatelessWidget {
             _onButtonPressed(context, ChartRange.week);
           },
         ),
-        const SizedBox(width: 24),
+        const SizedBox(width: 16),
         _ChartRangeButton(
           label: Str.of(context).healthChartRangeMonth,
           isSelected: chartRange == ChartRange.month,
           onPressed: () {
             _onButtonPressed(context, ChartRange.month);
+          },
+        ),
+        const SizedBox(width: 16),
+        _ChartRangeButton(
+          label: Str.of(context).healthChartRangeYear,
+          isSelected: chartRange == ChartRange.year,
+          onPressed: () {
+            _onButtonPressed(context, ChartRange.year);
           },
         ),
       ],
@@ -51,8 +59,7 @@ class _ChartRangeButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 120,
+    return Expanded(
       child: isSelected
           ? FilledButton(
               onPressed: onPressed,
