@@ -1,6 +1,6 @@
 part of 'workout_stage_creator_screen.dart';
 
-class _AppBar extends StatelessWidget with PreferredSizeWidget {
+class _AppBar extends StatelessWidget implements PreferredSizeWidget {
   const _AppBar();
 
   @override

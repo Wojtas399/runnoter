@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class AppBarWithLogo extends StatelessWidget with PreferredSizeWidget {
+class AppBarWithLogo extends StatelessWidget implements PreferredSizeWidget {
   const AppBarWithLogo({
     super.key,
   });
