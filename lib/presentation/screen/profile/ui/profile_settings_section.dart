@@ -18,9 +18,9 @@ class ProfileSettingsSection extends StatelessWidget {
   Widget build(BuildContext context) {
     const Widget gap = SizedBox(height: 8);
 
-    return Column(
+    return const Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: const [
+      children: [
         _Header(),
         SizedBox(height: 16),
         _Theme(),

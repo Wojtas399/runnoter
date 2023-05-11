@@ -17,8 +17,8 @@ class WorkoutStageCreatorContent extends StatelessWidget {
           child: Container(
             color: Colors.transparent,
             padding: const EdgeInsets.all(24),
-            child: Column(
-              children: const [
+            child: const Column(
+              children: [
                 _WorkoutStageType(),
                 SizedBox(height: 40),
                 _Form(),

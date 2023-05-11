@@ -5,8 +5,8 @@ class _NoWorkoutContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: const [
+    return const Stack(
+      children: [
         _NoWorkoutInfo(),
         _Date(),
       ],

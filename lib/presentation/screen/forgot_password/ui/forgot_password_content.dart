@@ -25,8 +25,8 @@ class ForgotPasswordContent extends StatelessWidget {
             color: Colors.transparent,
             width: double.infinity,
             padding: const EdgeInsets.all(24),
-            child: Column(
-              children: const [
+            child: const Column(
+              children: [
                 _Header(),
                 SizedBox(height: 32),
                 _Email(),

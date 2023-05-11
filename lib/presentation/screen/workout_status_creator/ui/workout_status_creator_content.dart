@@ -21,8 +21,8 @@ class _Content extends StatelessWidget {
             child: Container(
               color: Colors.transparent,
               padding: const EdgeInsets.all(24),
-              child: Column(
-                children: const [
+              child: const Column(
+                children: [
                   _StatusType(),
                   SizedBox(height: 24),
                   _Form(),

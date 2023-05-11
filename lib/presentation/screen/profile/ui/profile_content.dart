@@ -23,11 +23,11 @@ class ProfileContent extends StatelessWidget {
       body: SafeArea(
         child: Stack(
           children: [
-            SingleChildScrollView(
+            const SingleChildScrollView(
               child: Padding(
-                padding: const EdgeInsets.all(16),
+                padding: EdgeInsets.all(16),
                 child: Column(
-                  children: const [
+                  children: [
                     ProfileUserDataSection(),
                     Divider(),
                     SizedBox(height: 16),

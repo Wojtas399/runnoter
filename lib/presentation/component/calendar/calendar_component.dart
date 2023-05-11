@@ -117,8 +117,8 @@ class _Content extends StatelessWidget {
           workoutDays: workoutDays,
         );
 
-    return Column(
-      children: const [
+    return const Column(
+      children: [
         _Header(),
         SizedBox(height: 8),
         _DayLabels(),

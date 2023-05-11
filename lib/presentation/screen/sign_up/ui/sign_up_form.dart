@@ -16,8 +16,8 @@ class SignUpForm extends StatelessWidget {
   Widget build(BuildContext context) {
     const gap = SizedBox(height: 24);
 
-    return Column(
-      children: const [
+    return const Column(
+      children: [
         _Name(),
         gap,
         _Surname(),
