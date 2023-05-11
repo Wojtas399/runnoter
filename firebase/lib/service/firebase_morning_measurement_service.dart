@@ -22,11 +22,11 @@ class FirebaseMorningMeasurementService {
   }) async {
     final snapshot = await getMorningMeasurementsRef(userId)
         .where(
-          'id',
+          FieldPath.documentId,
           isGreaterThanOrEqualTo: mapDateTimeToString(startDate),
         )
         .where(
-          'id',
+          FieldPath.documentId,
           isLessThanOrEqualTo: mapDateTimeToString(endDate),
         )
         .get();
