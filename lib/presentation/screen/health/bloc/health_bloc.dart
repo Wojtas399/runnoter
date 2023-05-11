@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -19,7 +20,7 @@ class HealthBloc
   final DateService _dateService;
   final AuthService _authService;
   final MorningMeasurementRepository _morningMeasurementRepository;
-  StreamSubscription<MorningMeasurement?>? _thisMorningMeasurementListener;
+  StreamSubscription<HealthStateListenedParams>? _listenedParamsListener;
 
   HealthBloc({
     required DateService dateService,
@@ -41,17 +42,15 @@ class HealthBloc
           ),
         ) {
     on<HealthEventInitialize>(_initialize);
-    on<HealthEventThisMorningMeasurementUpdated>(
-      _thisMorningMeasurementUpdated,
-    );
+    on<HealthEventListenedParamsUpdated>(_listenedParamsUpdated);
     on<HealthEventAddMorningMeasurement>(_addMorningMeasurement);
     on<HealthEventChangeChartRange>(_changeChartRange);
   }
 
   @override
   Future<void> close() {
-    _thisMorningMeasurementListener?.cancel();
-    _thisMorningMeasurementListener = null;
+    _listenedParamsListener?.cancel();
+    _listenedParamsListener = null;
     return super.close();
   }
 
@@ -59,29 +58,49 @@ class HealthBloc
     HealthEventInitialize event,
     Emitter<HealthState> emit,
   ) {
-    _thisMorningMeasurementListener ??= _authService.loggedUserId$
+    final DateTime todayDate = _dateService.getTodayDate();
+    _listenedParamsListener ??= _authService.loggedUserId$
         .whereType<String>()
         .switchMap(
-          (loggedUserId) => _morningMeasurementRepository.getMeasurementByDate(
-            date: _dateService.getTodayDate(),
-            userId: loggedUserId,
+          (String loggedUserId) => Rx.combineLatest2(
+            _morningMeasurementRepository.getMeasurementByDate(
+              date: todayDate,
+              userId: loggedUserId,
+            ),
+            _morningMeasurementRepository.getMeasurementsByDateRange(
+              startDate:
+                  _dateService.getFirstDateFromWeekMatchingToDate(todayDate),
+              endDate:
+                  _dateService.getLastDateFromWeekMatchingToDate(todayDate),
+              userId: loggedUserId,
+            ),
+            (
+              MorningMeasurement? thisMorningMeasurement,
+              List<MorningMeasurement>? morningMeasurements,
+            ) =>
+                HealthStateListenedParams(
+              thisMorningMeasurement: thisMorningMeasurement,
+              morningMeasurements: morningMeasurements,
+            ),
           ),
         )
         .listen(
-          (MorningMeasurement? thisMorningMeasurement) => add(
-            HealthEventThisMorningMeasurementUpdated(
-              updatedThisMorningMeasurement: thisMorningMeasurement,
+          (HealthStateListenedParams listenedParams) => add(
+            HealthEventListenedParamsUpdated(
+              updatedListenedParams: listenedParams,
             ),
           ),
         );
   }
 
-  void _thisMorningMeasurementUpdated(
-    HealthEventThisMorningMeasurementUpdated event,
+  void _listenedParamsUpdated(
+    HealthEventListenedParamsUpdated event,
     Emitter<HealthState> emit,
   ) {
     emit(state.copyWith(
-      thisMorningMeasurement: event.updatedThisMorningMeasurement,
+      thisMorningMeasurement:
+          event.updatedListenedParams.thisMorningMeasurement,
+      morningMeasurements: event.updatedListenedParams.morningMeasurements,
     ));
   }
 

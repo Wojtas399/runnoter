@@ -42,11 +42,17 @@ void main() {
 
   blocTest(
     'initialize, '
-    "should set listener of logged user's this morning measurement",
+    "should set listener of logged user's this morning measurement and measurements from current week",
     build: () => createBloc(),
     setUp: () {
       dateService.mockGetTodayDate(
         todayDate: DateTime(2023, 1, 10),
+      );
+      dateService.mockGetFirstDateFromWeekMatchingToDate(
+        date: DateTime(2023, 1, 8),
+      );
+      dateService.mockGetLastDateFromWeekMatchingToDate(
+        date: DateTime(2023, 1, 14),
       );
       authService.mockGetLoggedUserId(
         userId: 'u1',
@@ -55,6 +61,19 @@ void main() {
         measurement: createMorningMeasurement(
           date: DateTime(2023, 1, 10),
         ),
+      );
+      morningMeasurementRepository.mockGetMeasurementsByDateRange(
+        measurements: [
+          createMorningMeasurement(
+            date: DateTime(2023, 1, 10),
+          ),
+          createMorningMeasurement(
+            date: DateTime(2023, 1, 11),
+          ),
+          createMorningMeasurement(
+            date: DateTime(2023, 1, 8),
+          ),
+        ],
       );
     },
     act: (HealthBloc bloc) => bloc.add(
@@ -66,6 +85,17 @@ void main() {
         thisMorningMeasurement: createMorningMeasurement(
           date: DateTime(2023, 1, 10),
         ),
+        morningMeasurements: [
+          createMorningMeasurement(
+            date: DateTime(2023, 1, 10),
+          ),
+          createMorningMeasurement(
+            date: DateTime(2023, 1, 11),
+          ),
+          createMorningMeasurement(
+            date: DateTime(2023, 1, 8),
+          ),
+        ],
       ),
     ],
     verify: (_) {
@@ -78,17 +108,34 @@ void main() {
           userId: 'u1',
         ),
       ).called(1);
+      verify(
+        () => morningMeasurementRepository.getMeasurementsByDateRange(
+          startDate: DateTime(2023, 1, 8),
+          endDate: DateTime(2023, 1, 14),
+          userId: 'u1',
+        ),
+      ).called(1);
     },
   );
 
   blocTest(
-    'this morning measurement updated, '
-    'should update today morning measurement in state',
+    'listened params updated, '
+    'should update this morning measurement and morning measurements in state',
     build: () => createBloc(),
     act: (HealthBloc bloc) => bloc.add(
-      HealthEventThisMorningMeasurementUpdated(
-        updatedThisMorningMeasurement: createMorningMeasurement(
-          date: DateTime(2023, 1, 10),
+      HealthEventListenedParamsUpdated(
+        updatedListenedParams: HealthStateListenedParams(
+          thisMorningMeasurement: createMorningMeasurement(
+            date: DateTime(2023, 1, 10),
+          ),
+          morningMeasurements: [
+            createMorningMeasurement(
+              date: DateTime(2023, 1, 10),
+            ),
+            createMorningMeasurement(
+              date: DateTime(2023, 1, 11),
+            ),
+          ],
         ),
       ),
     ),
@@ -98,6 +145,14 @@ void main() {
         thisMorningMeasurement: createMorningMeasurement(
           date: DateTime(2023, 1, 10),
         ),
+        morningMeasurements: [
+          createMorningMeasurement(
+            date: DateTime(2023, 1, 10),
+          ),
+          createMorningMeasurement(
+            date: DateTime(2023, 1, 11),
+          ),
+        ],
       ),
     ],
   );

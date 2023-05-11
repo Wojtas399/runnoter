@@ -36,6 +36,22 @@ class HealthState extends BlocState {
       );
 }
 
+class HealthStateListenedParams extends Equatable {
+  final MorningMeasurement? thisMorningMeasurement;
+  final List<MorningMeasurement>? morningMeasurements;
+
+  const HealthStateListenedParams({
+    required this.thisMorningMeasurement,
+    required this.morningMeasurements,
+  });
+
+  @override
+  List<Object?> get props => [
+        thisMorningMeasurement,
+        morningMeasurements,
+      ];
+}
+
 enum ChartRange {
   week,
   month,

@@ -8,11 +8,11 @@ class HealthEventInitialize extends HealthEvent {
   const HealthEventInitialize();
 }
 
-class HealthEventThisMorningMeasurementUpdated extends HealthEvent {
-  final MorningMeasurement? updatedThisMorningMeasurement;
+class HealthEventListenedParamsUpdated extends HealthEvent {
+  final HealthStateListenedParams updatedListenedParams;
 
-  const HealthEventThisMorningMeasurementUpdated({
-    required this.updatedThisMorningMeasurement,
+  const HealthEventListenedParamsUpdated({
+    required this.updatedListenedParams,
   });
 }
 
