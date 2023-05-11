@@ -11,6 +11,7 @@ void main() {
         thisMorningMeasurement: null,
         chartRange: ChartRange.month,
         morningMeasurements: null,
+        chartPoints: null,
       );
 
   setUp(() {
@@ -85,6 +86,22 @@ void main() {
 
       expect(state.morningMeasurements, expectedMorningMeasurements);
       expect(state2.morningMeasurements, expectedMorningMeasurements);
+    },
+  );
+
+  test(
+    'copy with chart points',
+    () {
+      const List<HealthChartPoint> expectedPoints = [
+        HealthChartPoint(label: 'l1', value: 1),
+        HealthChartPoint(label: 'l2', value: 2),
+      ];
+
+      state = state.copyWith(chartPoints: expectedPoints);
+      final state2 = state.copyWith();
+
+      expect(state.chartPoints, expectedPoints);
+      expect(state2.chartPoints, expectedPoints);
     },
   );
 }

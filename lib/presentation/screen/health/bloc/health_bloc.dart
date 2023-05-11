@@ -30,6 +30,7 @@ class HealthBloc
     MorningMeasurement? thisMorningMeasurement,
     ChartRange chartRange = ChartRange.week,
     List<MorningMeasurement>? morningMeasurements,
+    List<HealthChartPoint>? chartPoints,
   })  : _dateService = dateService,
         _authService = authService,
         _morningMeasurementRepository = morningMeasurementRepository,
@@ -39,6 +40,7 @@ class HealthBloc
             thisMorningMeasurement: thisMorningMeasurement,
             chartRange: chartRange,
             morningMeasurements: morningMeasurements,
+            chartPoints: chartPoints,
           ),
         ) {
     on<HealthEventInitialize>(_initialize);

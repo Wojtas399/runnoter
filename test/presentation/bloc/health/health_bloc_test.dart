@@ -26,12 +26,14 @@ void main() {
     MorningMeasurement? thisMorningMeasurement,
     ChartRange chartRange = ChartRange.week,
     List<MorningMeasurement>? morningMeasurements,
+    List<HealthChartPoint>? chartPoints,
   }) =>
       HealthState(
         status: status,
         thisMorningMeasurement: thisMorningMeasurement,
         chartRange: chartRange,
         morningMeasurements: morningMeasurements,
+        chartPoints: chartPoints,
       );
 
   tearDown(() {

@@ -4,12 +4,14 @@ class HealthState extends BlocState {
   final MorningMeasurement? thisMorningMeasurement;
   final ChartRange chartRange;
   final List<MorningMeasurement>? morningMeasurements;
+  final List<HealthChartPoint>? chartPoints;
 
   const HealthState({
     required super.status,
     required this.thisMorningMeasurement,
     required this.chartRange,
     required this.morningMeasurements,
+    required this.chartPoints,
   });
 
   @override
@@ -18,6 +20,7 @@ class HealthState extends BlocState {
         thisMorningMeasurement,
         chartRange,
         morningMeasurements,
+        chartPoints,
       ];
 
   @override
@@ -26,6 +29,7 @@ class HealthState extends BlocState {
     MorningMeasurement? thisMorningMeasurement,
     ChartRange? chartRange,
     List<MorningMeasurement>? morningMeasurements,
+    List<HealthChartPoint>? chartPoints,
   }) =>
       HealthState(
         status: status ?? const BlocStatusComplete(),
@@ -33,6 +37,7 @@ class HealthState extends BlocState {
             thisMorningMeasurement ?? this.thisMorningMeasurement,
         chartRange: chartRange ?? this.chartRange,
         morningMeasurements: morningMeasurements ?? this.morningMeasurements,
+        chartPoints: chartPoints ?? this.chartPoints,
       );
 }
 
@@ -50,6 +55,16 @@ class HealthStateListenedParams extends Equatable {
         thisMorningMeasurement,
         morningMeasurements,
       ];
+}
+
+class HealthChartPoint {
+  final String label;
+  final num value;
+
+  const HealthChartPoint({
+    required this.label,
+    required this.value,
+  });
 }
 
 enum ChartRange {
