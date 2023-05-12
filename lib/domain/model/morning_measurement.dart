@@ -16,6 +16,7 @@ class MorningMeasurement extends Entity {
   @override
   List<Object?> get props => [
         id,
+        date,
         restingHeartRate,
         fastingWeight,
       ];

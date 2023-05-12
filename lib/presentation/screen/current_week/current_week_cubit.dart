@@ -32,14 +32,14 @@ class CurrentWeekCubit extends Cubit<List<Day>?> {
   }
 
   void initialize() {
-    final DateTime today = _dateService.getTodayDate();
+    final DateTime today = _dateService.getToday();
     _workoutsListener ??= _authService.loggedUserId$
         .whereType<String>()
         .switchMap(
           (String loggedUserId) => _workoutRepository.getWorkoutsByDateRange(
             userId: loggedUserId,
-            startDate: _dateService.getFirstDateFromWeekMatchingToDate(today),
-            endDate: _dateService.getLastDateFromWeekMatchingToDate(today),
+            startDate: _dateService.getFirstDayOfTheWeek(today),
+            endDate: _dateService.getLastDayOfTheWeek(today),
           ),
         )
         .listen(_manageWorkoutsFromWeek);
@@ -47,9 +47,8 @@ class CurrentWeekCubit extends Cubit<List<Day>?> {
 
   void _manageWorkoutsFromWeek(List<Workout>? workouts) {
     final List<Workout?> workoutsFromWeek = [...?workouts];
-    final DateTime today = _dateService.getTodayDate();
-    final List<DateTime> datesFromWeek =
-        _dateService.getDatesFromWeekMatchingToDate(today);
+    final DateTime today = _dateService.getToday();
+    final List<DateTime> datesFromWeek = _dateService.getDaysFromWeek(today);
     final List<Day> days = datesFromWeek
         .map(
           (DateTime date) => Day(

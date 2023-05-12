@@ -5,78 +5,75 @@ void main() {
   final DateService service = DateService();
 
   test(
-    'get first date from week matching to date, '
-    'should return first date from week which includes given date',
+    'get first day of the week, '
+    'should return first day of the week which includes given day',
     () {
-      final DateTime date = DateTime(2023, 4, 6);
-      final DateTime expectedDate = DateTime(2023, 4, 3);
+      final DateTime day = DateTime(2023, 4, 6);
+      final DateTime expectedDay = DateTime(2023, 4, 3);
 
-      final DateTime firstDateOfTheWeek =
-          service.getFirstDateFromWeekMatchingToDate(date);
+      final DateTime firstDayOfTheWeek = service.getFirstDayOfTheWeek(day);
 
-      expect(firstDateOfTheWeek, expectedDate);
+      expect(firstDayOfTheWeek, expectedDay);
     },
   );
 
   test(
-    'get last date from week matching to date, '
-    'should return last date from week which includes given date',
+    'get last day of the week, '
+    'should return last day of the week which includes given day',
     () {
-      final DateTime date = DateTime(2023, 4, 6);
-      final DateTime expectedDate = DateTime(2023, 4, 9);
+      final DateTime day = DateTime(2023, 4, 6);
+      final DateTime expectedDay = DateTime(2023, 4, 9);
 
-      final DateTime lastDateOfTheWeek =
-          service.getLastDateFromWeekMatchingToDate(date);
+      final DateTime lastDayOfTheWeek = service.getLastDayOfTheWeek(day);
 
-      expect(lastDateOfTheWeek, expectedDate);
+      expect(lastDayOfTheWeek, expectedDay);
     },
   );
 
   test(
-    'get first date of the month, '
-    'should return first date of month which includes given date',
+    'get first day of the month, '
+    'should return first day of the month which includes given day',
     () {
       const int month = 4;
       const int year = 2023;
-      final DateTime expectedDate = DateTime(2023, 4, 1);
+      final DateTime expectedDay = DateTime(2023, 4, 1);
 
-      final DateTime firstDateOfMonth =
-          service.getFirstDateOfTheMonth(month, year);
+      final DateTime firstDayOfMonth =
+          service.getFirstDayOfTheMonth(month, year);
 
-      expect(firstDateOfMonth, expectedDate);
+      expect(firstDayOfMonth, expectedDay);
     },
   );
 
   test(
-    'get last date of the month, '
-    'should return last date of month which includes given date',
+    'get last day of the month, '
+    'should return last day of the month which includes given date',
     () {
       const int month = 4;
       const int year = 2023;
-      final DateTime expectedDate = DateTime(2023, 4, 30);
+      final DateTime expectedDay = DateTime(2023, 4, 30);
 
-      final DateTime lastDateOfMonth =
-          service.getLastDateOfTheMonth(month, year);
+      final DateTime lastDayOfMonth = service.getLastDayOfTheMonth(month, year);
 
-      expect(lastDateOfMonth, expectedDate);
+      expect(lastDayOfMonth, expectedDay);
     },
   );
 
   test(
-    'get dates from week matching to date, '
-    'should return all dates from week which includes given date',
+    'get days from week, '
+    'should return all days from week which includes given day',
     () {
-      final DateTime date = DateTime(2023, 4, 6);
-      final List<DateTime> expectedDates = [];
+      final DateTime day = DateTime(2023, 4, 6);
+      final List<DateTime> expectedDays = [];
       for (int i = 3; i <= 9; i++) {
-        expectedDates.add(
+        expectedDays.add(
           DateTime(2023, 4, i),
         );
       }
 
-      final List<DateTime> dates = service.getDatesFromWeekMatchingToDate(date);
+      final List<DateTime> days = service.getDaysFromWeek(day);
 
-      expect(dates, expectedDates);
+      expect(days, expectedDays);
     },
   );
 

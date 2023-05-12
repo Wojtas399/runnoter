@@ -2,54 +2,54 @@ import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/common/date_service.dart';
 
 class MockDateService extends Mock implements DateService {
-  void mockGetTodayDate({
+  void mockGetToday({
     required DateTime todayDate,
   }) {
     when(
-      () => getTodayDate(),
+      () => getToday(),
     ).thenReturn(todayDate);
   }
 
-  void mockGetFirstDateFromWeekMatchingToDate({
+  void mockGetFirstDayOfTheWeek({
     required DateTime date,
   }) {
     when(
-      () => getFirstDateFromWeekMatchingToDate(any()),
+      () => getFirstDayOfTheWeek(any()),
     ).thenReturn(date);
   }
 
-  void mockGetLastDateFromWeekMatchingToDate({
+  void mockGetLastDayOfTheWeek({
     required DateTime date,
   }) {
     when(
-      () => getLastDateFromWeekMatchingToDate(any()),
+      () => getLastDayOfTheWeek(any()),
     ).thenReturn(date);
   }
 
-  void mockGetFirstDateOfTheMonth({
+  void mockGetFirstDayOfTheMonth({
     required DateTime date,
   }) {
     when(
-      () => getFirstDateOfTheMonth(any(), any()),
+      () => getFirstDayOfTheMonth(any(), any()),
     ).thenReturn(date);
   }
 
-  void mockGetLastDateOfTheMonth({
+  void mockGetLastDayOfTheMonth({
     required DateTime date,
   }) {
     when(
-      () => getLastDateOfTheMonth(
+      () => getLastDayOfTheMonth(
         any(),
         any(),
       ),
     ).thenReturn(date);
   }
 
-  void mockGetDatesFromWeekMatchingToDate({
+  void mockGetDaysFromWeek({
     required List<DateTime> dates,
   }) {
     when(
-      () => getDatesFromWeekMatchingToDate(any()),
+      () => getDaysFromWeek(any()),
     ).thenReturn(dates);
   }
 
