@@ -92,9 +92,9 @@ void main() {
   test(
     'copy with chart points',
     () {
-      const List<HealthChartPoint> expectedPoints = [
-        HealthChartPoint(label: 'l1', value: 1),
-        HealthChartPoint(label: 'l2', value: 2),
+      final List<HealthChartPoint> expectedPoints = [
+        HealthChartPoint(date: DateTime(2023, 1, 10), value: 1),
+        HealthChartPoint(date: DateTime(2023, 1, 11), value: 2),
       ];
 
       state = state.copyWith(chartPoints: expectedPoints);

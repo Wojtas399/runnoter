@@ -41,28 +41,12 @@ class HealthState extends BlocState {
       );
 }
 
-class HealthStateListenedParams extends Equatable {
-  final MorningMeasurement? thisMorningMeasurement;
-  final List<MorningMeasurement>? morningMeasurements;
-
-  const HealthStateListenedParams({
-    required this.thisMorningMeasurement,
-    required this.morningMeasurements,
-  });
-
-  @override
-  List<Object?> get props => [
-        thisMorningMeasurement,
-        morningMeasurements,
-      ];
-}
-
 class HealthChartPoint {
-  final String label;
-  final num value;
+  final DateTime date;
+  final num? value;
 
   const HealthChartPoint({
-    required this.label,
+    required this.date,
     required this.value,
   });
 }
