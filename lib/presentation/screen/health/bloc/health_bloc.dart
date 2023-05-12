@@ -153,7 +153,7 @@ class HealthBloc
     final List<HealthChartPoint> chartPoints = [];
     while (!_dateService.areDatesTheSame(counterDate, endDate)) {
       chartPoints.add(
-        HealthChartPoint(date: currentDate, value: null),
+        HealthChartPoint(date: counterDate, value: null),
       );
       counterDate = counterDate.add(const Duration(days: 1));
     }

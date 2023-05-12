@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 
 import '../../../../common/date_service.dart';
 import '../../../../domain/model/morning_measurement.dart';
@@ -11,6 +12,7 @@ import '../../../component/big_button_component.dart';
 import '../../../component/bloc_with_status_listener_component.dart';
 import '../../../component/full_screen_dialog_component.dart';
 import '../../../component/text_field_component.dart';
+import '../../../formatter/date_formatter.dart';
 import '../../../formatter/decimal_text_input_formatter.dart';
 import '../../../model/bloc_status.dart';
 import '../../../service/dialog_service.dart';
@@ -19,6 +21,7 @@ import '../../../service/utils.dart';
 import '../bloc/health_bloc.dart';
 
 part 'health_chart_range_selection.dart';
+part 'health_charts.dart';
 part 'health_content.dart';
 part 'health_morning_measurement_dialog.dart';
 part 'health_this_morning_measurement.dart';

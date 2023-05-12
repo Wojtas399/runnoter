@@ -6,7 +6,7 @@ publish_to: 'none'
 version: 1.0.0+1
 
 environment:
-  sdk: '>=2.18.6 <3.10.0'
+  sdk: '>=3.0.0 <4.0.0'
 
 scripts: derry.yaml
 
@@ -27,6 +27,7 @@ dependencies:
   flutter_lints: ^2.0.1
   connectivity_plus: ^3.0.3
   rxdart: ^0.27.7
+  syncfusion_flutter_charts: ^21.2.4
 
 dependency_overrides:
   intl: ^0.17.0-nullsafety.2

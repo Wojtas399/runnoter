@@ -45,7 +45,7 @@ class _Date extends StatelessWidget {
     );
 
     return Text(
-      date?.toUIFormat(context) ?? '',
+      date?.toFullDate(context) ?? '',
       style: Theme.of(context).textTheme.titleLarge,
     );
   }

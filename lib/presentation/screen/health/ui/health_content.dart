@@ -19,6 +19,8 @@ class _Content extends StatelessWidget {
               label: Str.of(context).healthSummaryOfMeasurements,
               child: const _ChartRangeSelection(),
             ),
+            const SizedBox(height: 24),
+            const _Charts(),
           ],
         ),
       ),
@@ -42,7 +44,7 @@ class _Section extends StatelessWidget {
       children: [
         Text(
           label,
-          style: Theme.of(context).textTheme.labelLarge,
+          style: Theme.of(context).textTheme.titleMedium,
         ),
         const SizedBox(height: 16),
         child,
