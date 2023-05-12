@@ -19,7 +19,7 @@ class _Content extends StatelessWidget {
               label: Str.of(context).healthSummaryOfMeasurements,
               child: const _ChartRangeSelection(),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 8),
             const _Charts(),
           ],
         ),

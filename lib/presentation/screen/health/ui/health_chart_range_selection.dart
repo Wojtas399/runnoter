@@ -5,6 +5,21 @@ class _ChartRangeSelection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return const Column(
+      children: [
+        _ChartRangeType(),
+        SizedBox(height: 16),
+        _ChartRange(),
+      ],
+    );
+  }
+}
+
+class _ChartRangeType extends StatelessWidget {
+  const _ChartRangeType();
+
+  @override
+  Widget build(BuildContext context) {
     final ChartRange chartRange = context.select(
       (HealthBloc bloc) => bloc.state.chartRange,
     );
@@ -12,7 +27,7 @@ class _ChartRangeSelection extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        _ChartRangeButton(
+        _ChartRangeTypeButton(
           label: Str.of(context).healthChartRangeWeek,
           isSelected: chartRange == ChartRange.week,
           onPressed: () {
@@ -20,7 +35,7 @@ class _ChartRangeSelection extends StatelessWidget {
           },
         ),
         const SizedBox(width: 16),
-        _ChartRangeButton(
+        _ChartRangeTypeButton(
           label: Str.of(context).healthChartRangeMonth,
           isSelected: chartRange == ChartRange.month,
           onPressed: () {
@@ -28,7 +43,7 @@ class _ChartRangeSelection extends StatelessWidget {
           },
         ),
         const SizedBox(width: 16),
-        _ChartRangeButton(
+        _ChartRangeTypeButton(
           label: Str.of(context).healthChartRangeYear,
           isSelected: chartRange == ChartRange.year,
           onPressed: () {
@@ -46,12 +61,31 @@ class _ChartRangeSelection extends StatelessWidget {
   }
 }
 
-class _ChartRangeButton extends StatelessWidget {
+class _ChartRange extends StatelessWidget {
+  const _ChartRange();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Padding(
+      padding: EdgeInsets.symmetric(horizontal: 24),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          _PreviousRangeButton(),
+          _CurrentRangeLabel(),
+          _NextRangeButton(),
+        ],
+      ),
+    );
+  }
+}
+
+class _ChartRangeTypeButton extends StatelessWidget {
   final String label;
   final bool isSelected;
   final VoidCallback onPressed;
 
-  const _ChartRangeButton({
+  const _ChartRangeTypeButton({
     required this.label,
     required this.isSelected,
     required this.onPressed,
@@ -69,6 +103,46 @@ class _ChartRangeButton extends StatelessWidget {
               onPressed: onPressed,
               child: Text(label),
             ),
+    );
+  }
+}
+
+class _PreviousRangeButton extends StatelessWidget {
+  const _PreviousRangeButton();
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      onPressed: () {
+        //TODO
+      },
+      icon: const Icon(Icons.chevron_left),
+    );
+  }
+}
+
+class _CurrentRangeLabel extends StatelessWidget {
+  const _CurrentRangeLabel();
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      'Obecny tydzień',
+      style: Theme.of(context).textTheme.titleMedium,
+    );
+  }
+}
+
+class _NextRangeButton extends StatelessWidget {
+  const _NextRangeButton();
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      onPressed: () {
+        //TODO
+      },
+      icon: const Icon(Icons.chevron_right),
     );
   }
 }
