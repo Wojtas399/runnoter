@@ -27,11 +27,10 @@ class _Charts extends StatelessWidget {
           dataLabelSettings: const DataLabelSettings(
             isVisible: true,
           ),
-          color: Colors.transparent,
+          color: Theme.of(context).colorScheme.primary,
           markerSettings: MarkerSettings(
             isVisible: true,
             color: Theme.of(context).colorScheme.primary,
-            borderColor: Theme.of(context).colorScheme.primary,
           ),
         ),
       ],
