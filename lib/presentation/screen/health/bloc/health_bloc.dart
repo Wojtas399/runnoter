@@ -10,6 +10,7 @@ import '../../../../domain/service/auth_service.dart';
 import '../../../model/bloc_state.dart';
 import '../../../model/bloc_status.dart';
 import '../../../model/bloc_with_status.dart';
+import 'health_chart_service.dart';
 
 part 'health_event.dart';
 part 'health_state.dart';
@@ -19,6 +20,7 @@ class HealthBloc
   final DateService _dateService;
   final AuthService _authService;
   final MorningMeasurementRepository _morningMeasurementRepository;
+  final HealthChartService _chartService;
   StreamSubscription<MorningMeasurement?>? _thisMorningMeasurementListener;
   StreamSubscription<List<MorningMeasurement>?>?
       _morningMeasurementsFromDateRangeListener;
@@ -27,6 +29,7 @@ class HealthBloc
     required DateService dateService,
     required AuthService authService,
     required MorningMeasurementRepository morningMeasurementRepository,
+    required HealthChartService chartService,
     BlocStatus status = const BlocStatusInitial(),
     MorningMeasurement? thisMorningMeasurement,
     ChartRange chartRange = ChartRange.week,
@@ -35,6 +38,7 @@ class HealthBloc
   })  : _dateService = dateService,
         _authService = authService,
         _morningMeasurementRepository = morningMeasurementRepository,
+        _chartService = chartService,
         super(
           HealthState(
             status: status,
@@ -52,15 +56,16 @@ class HealthBloc
       _morningMeasurementsFromDateRangeUpdated,
     );
     on<HealthEventAddMorningMeasurement>(_addMorningMeasurement);
-    on<HealthEventChangeChartRange>(_changeChartRange);
+    on<HealthEventChangeChartRangeType>(_changeChartRangeType);
+    on<HealthEventPreviousChartRange>(_previousChartRange);
+    on<HealthEventNextChartRange>(_nextChartRange);
   }
 
   @override
   Future<void> close() {
     _thisMorningMeasurementListener?.cancel();
     _thisMorningMeasurementListener = null;
-    _morningMeasurementsFromDateRangeListener?.cancel();
-    _morningMeasurementsFromDateRangeListener = null;
+    _removeListenerOfMorningMeasurementsFromDateRange();
     return super.close();
   }
 
@@ -68,9 +73,17 @@ class HealthBloc
     HealthEventInitialize event,
     Emitter<HealthState> emit,
   ) {
-    _emitInitialChartPoints(emit);
+    final DateTime today = _dateService.getToday();
+    final firstWeekDay = _dateService.getFirstDayOfTheWeek(today);
+    final lastWeekDay = _dateService.getLastDayOfTheWeek(today);
+    emit(state.copyWith(
+      chartPoints: _chartService.createInitialChartPoints(
+        firstWeekDay,
+        lastWeekDay,
+      ),
+    ));
     _setThisMorningMeasurementListener();
-    _setMorningMeasurementsFromDateRangeListener();
+    _setMorningMeasurementsFromDateRangeListener(firstWeekDay, lastWeekDay);
   }
 
   void _thisMorningMeasurementUpdated(
@@ -86,31 +99,17 @@ class HealthBloc
     HealthEventMorningMeasurementsFromDateRangeUpdated event,
     Emitter<HealthState> emit,
   ) {
-    final List<MorningMeasurement>? morningMeasurements =
-        event.morningMeasurementsFromDateRange;
-    List<HealthChartPoint>? updatedChartPoints;
-    if (state.chartPoints != null && morningMeasurements != null) {
-      updatedChartPoints = [...?state.chartPoints];
-      final List<DateTime> pointDates =
-          updatedChartPoints.map((point) => point.date).toList();
-      for (final measurement in morningMeasurements) {
-        if (pointDates.contains(measurement.date)) {
-          final pointIndex = updatedChartPoints.indexWhere(
-            (point) => _dateService.areDatesTheSame(
-              point.date,
-              measurement.date,
-            ),
-          );
-          updatedChartPoints[pointIndex] = HealthChartPoint(
-            date: measurement.date,
-            value: measurement.restingHeartRate,
-          );
-        }
-      }
+    final List<MorningMeasurement>? measurements = event.measurements;
+    if (measurements == null) {
+      return;
     }
     emit(state.copyWith(
-      morningMeasurements: event.morningMeasurementsFromDateRange,
-      chartPoints: updatedChartPoints,
+      morningMeasurements: measurements,
+      chartPoints:
+          _chartService.updateChartPointsWithRestingHeartRateMeasurements(
+        state.chartPoints,
+        measurements,
+      ),
     ));
   }
 
@@ -126,7 +125,7 @@ class HealthBloc
     await _morningMeasurementRepository.addMeasurement(
       userId: loggedUserId,
       measurement: MorningMeasurement(
-        date: _dateService.getTodayDate(),
+        date: _dateService.getToday(),
         restingHeartRate: event.restingHeartRate,
         fastingWeight: event.fastingWeight,
       ),
@@ -134,32 +133,51 @@ class HealthBloc
     emitCompleteStatus(emit, HealthBlocInfo.morningMeasurementAdded);
   }
 
-  void _changeChartRange(
-    HealthEventChangeChartRange event,
+  void _changeChartRangeType(
+    HealthEventChangeChartRangeType event,
     Emitter<HealthState> emit,
   ) {
+    final (startDate, endDate) = _chartService.computeNewRange(
+      event.chartRangeType,
+    );
     emit(state.copyWith(
-      chartRange: event.newChartRange,
+      chartPoints: _chartService.createInitialChartPoints(startDate, endDate),
+      chartRange: event.chartRangeType,
     ));
+    _removeListenerOfMorningMeasurementsFromDateRange();
+    _setMorningMeasurementsFromDateRangeListener(startDate, endDate);
   }
 
-  void _emitInitialChartPoints(Emitter<HealthState> emit) {
-    final DateTime currentDate = _dateService.getTodayDate();
-    DateTime counterDate =
-        _dateService.getFirstDateFromWeekMatchingToDate(currentDate);
-    final DateTime endDate = _dateService
-        .getLastDateFromWeekMatchingToDate(currentDate)
-        .add(const Duration(days: 1));
-    final List<HealthChartPoint> chartPoints = [];
-    while (!_dateService.areDatesTheSame(counterDate, endDate)) {
-      chartPoints.add(
-        HealthChartPoint(date: counterDate, value: null),
+  void _previousChartRange(
+    HealthEventPreviousChartRange event,
+    Emitter<HealthState> emit,
+  ) {
+    DateTime? startDate = state.chartPoints?.first.date;
+    DateTime? endDate = state.chartPoints?.last.date;
+    if (startDate != null && endDate != null) {
+      (startDate, endDate) = _chartService.computePreviousRange(
+        startDate,
+        endDate,
+        state.chartRange,
       );
-      counterDate = counterDate.add(const Duration(days: 1));
+      _setNewDateRange(startDate, endDate, emit);
     }
-    emit(state.copyWith(
-      chartPoints: chartPoints,
-    ));
+  }
+
+  void _nextChartRange(
+    HealthEventNextChartRange event,
+    Emitter<HealthState> emit,
+  ) {
+    DateTime? startDate = state.chartPoints?.first.date;
+    DateTime? endDate = state.chartPoints?.last.date;
+    if (startDate != null && endDate != null) {
+      (startDate, endDate) = _chartService.computeNextRange(
+        startDate,
+        endDate,
+        state.chartRange,
+      );
+      _setNewDateRange(startDate, endDate, emit);
+    }
   }
 
   void _setThisMorningMeasurementListener() {
@@ -167,12 +185,12 @@ class HealthBloc
         .whereType<String>()
         .switchMap(
           (loggedUserId) => _morningMeasurementRepository.getMeasurementByDate(
-            date: _dateService.getTodayDate(),
+            date: _dateService.getToday(),
             userId: loggedUserId,
           ),
         )
         .listen(
-          (thisMorningMeasurement) => add(
+          (MorningMeasurement? thisMorningMeasurement) => add(
             HealthEventThisMorningMeasurementUpdated(
               thisMorningMeasurement: thisMorningMeasurement,
             ),
@@ -180,26 +198,43 @@ class HealthBloc
         );
   }
 
-  void _setMorningMeasurementsFromDateRangeListener() {
-    final DateTime todayDate = _dateService.getTodayDate();
+  void _setMorningMeasurementsFromDateRangeListener(
+    DateTime startDate,
+    DateTime endDate,
+  ) {
     _morningMeasurementsFromDateRangeListener ??= _authService.loggedUserId$
         .whereType<String>()
         .switchMap(
           (loggedUserId) =>
               _morningMeasurementRepository.getMeasurementsByDateRange(
-            startDate: _dateService.getFirstDateFromWeekMatchingToDate(
-              todayDate,
-            ),
-            endDate: _dateService.getLastDateFromWeekMatchingToDate(todayDate),
+            startDate: startDate,
+            endDate: endDate,
             userId: loggedUserId,
           ),
         )
         .listen(
-          (morningMeasurements) => add(
+          (List<MorningMeasurement>? morningMeasurements) => add(
             HealthEventMorningMeasurementsFromDateRangeUpdated(
-              morningMeasurementsFromDateRange: morningMeasurements,
+              measurements: morningMeasurements,
             ),
           ),
         );
+  }
+
+  void _removeListenerOfMorningMeasurementsFromDateRange() {
+    _morningMeasurementsFromDateRangeListener?.cancel();
+    _morningMeasurementsFromDateRangeListener = null;
+  }
+
+  void _setNewDateRange(
+    DateTime startDate,
+    DateTime endDate,
+    Emitter<HealthState> emit,
+  ) {
+    emit(state.copyWith(
+      chartPoints: _chartService.createInitialChartPoints(startDate, endDate),
+    ));
+    _removeListenerOfMorningMeasurementsFromDateRange();
+    _setMorningMeasurementsFromDateRangeListener(startDate, endDate);
   }
 }

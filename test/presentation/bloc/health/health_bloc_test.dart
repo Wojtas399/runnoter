@@ -35,7 +35,7 @@ void main() {
   //   "should set listener of logged user's this morning measurement and measurements from current week",
   //   build: () => createBloc(),
   //   setUp: () {
-  //     dateService.mockGetTodayDate(
+  //     dateService.mockGetToday(
   //       todayDate: DateTime(2023, 1, 10),
   //     );
   //     dateService.mockGetFirstDateFromWeekMatchingToDate(
@@ -172,7 +172,7 @@ void main() {
   //   build: () => createBloc(),
   //   setUp: () {
   //     authService.mockGetLoggedUserId(userId: 'u1');
-  //     dateService.mockGetTodayDate(
+  //     dateService.mockGetToday(
   //       todayDate: DateTime(2023, 1, 10),
   //     );
   //     morningMeasurementRepository.mockAddMeasurement();

@@ -17,10 +17,10 @@ class HealthEventThisMorningMeasurementUpdated extends HealthEvent {
 }
 
 class HealthEventMorningMeasurementsFromDateRangeUpdated extends HealthEvent {
-  final List<MorningMeasurement>? morningMeasurementsFromDateRange;
+  final List<MorningMeasurement>? measurements;
 
   const HealthEventMorningMeasurementsFromDateRangeUpdated({
-    required this.morningMeasurementsFromDateRange,
+    required this.measurements,
   });
 }
 
@@ -34,11 +34,11 @@ class HealthEventAddMorningMeasurement extends HealthEvent {
   });
 }
 
-class HealthEventChangeChartRange extends HealthEvent {
-  final ChartRange newChartRange;
+class HealthEventChangeChartRangeType extends HealthEvent {
+  final ChartRange chartRangeType;
 
-  const HealthEventChangeChartRange({
-    required this.newChartRange,
+  const HealthEventChangeChartRangeType({
+    required this.chartRangeType,
   });
 }
 

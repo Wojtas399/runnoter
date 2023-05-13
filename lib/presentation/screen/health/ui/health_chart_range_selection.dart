@@ -56,7 +56,7 @@ class _ChartRangeType extends StatelessWidget {
 
   void _onButtonPressed(BuildContext context, ChartRange chartRange) {
     context.read<HealthBloc>().add(
-          HealthEventChangeChartRange(newChartRange: chartRange),
+          HealthEventChangeChartRangeType(chartRangeType: chartRange),
         );
   }
 }
@@ -114,10 +114,16 @@ class _PreviousRangeButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return IconButton(
       onPressed: () {
-        //TODO
+        _onPressed(context);
       },
       icon: const Icon(Icons.chevron_left),
     );
+  }
+
+  void _onPressed(BuildContext context) {
+    context.read<HealthBloc>().add(
+          const HealthEventPreviousChartRange(),
+        );
   }
 }
 
@@ -140,9 +146,15 @@ class _NextRangeButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return IconButton(
       onPressed: () {
-        //TODO
+        _onPressed(context);
       },
       icon: const Icon(Icons.chevron_right),
     );
+  }
+
+  void _onPressed(BuildContext context) {
+    context.read<HealthBloc>().add(
+          const HealthEventNextChartRange(),
+        );
   }
 }

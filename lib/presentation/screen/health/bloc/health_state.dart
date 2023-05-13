@@ -41,22 +41,6 @@ class HealthState extends BlocState {
       );
 }
 
-class HealthChartPoint {
-  final DateTime date;
-  final num? value;
-
-  const HealthChartPoint({
-    required this.date,
-    required this.value,
-  });
-}
-
-enum ChartRange {
-  week,
-  month,
-  year,
-}
-
 enum HealthBlocInfo {
   morningMeasurementAdded,
 }

@@ -19,6 +19,7 @@ import '../../../service/dialog_service.dart';
 import '../../../service/navigator_service.dart';
 import '../../../service/utils.dart';
 import '../bloc/health_bloc.dart';
+import '../bloc/health_chart_service.dart';
 
 part 'health_chart_range_selection.dart';
 part 'health_charts.dart';
@@ -56,6 +57,9 @@ class _BlocProvider extends StatelessWidget {
         authService: context.read<AuthService>(),
         morningMeasurementRepository:
             context.read<MorningMeasurementRepository>(),
+        chartService: HealthChartService(
+          dateService: DateService(),
+        ),
       )..add(
           const HealthEventInitialize(),
         ),
