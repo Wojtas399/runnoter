@@ -13,6 +13,13 @@ class _Charts extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         const _RestingHeartRateChart(),
+        const SizedBox(height: 16),
+        Text(
+          Str.of(context).healthFastingWeight,
+          style: Theme.of(context).textTheme.labelLarge,
+        ),
+        const SizedBox(height: 8),
+        const _FastingWeightChart(),
       ],
     );
   }
@@ -28,6 +35,28 @@ class _RestingHeartRateChart extends StatelessWidget {
     );
     final List<HealthChartPoint>? points = context.select(
       (HealthBloc bloc) => bloc.state.restingHeartRatePoints,
+    );
+
+    if (points != null) {
+      return _LineChart(
+        points: points,
+        chartRange: chartRange,
+      );
+    }
+    return const SizedBox();
+  }
+}
+
+class _FastingWeightChart extends StatelessWidget {
+  const _FastingWeightChart();
+
+  @override
+  Widget build(BuildContext context) {
+    final ChartRange chartRange = context.select(
+      (HealthBloc bloc) => bloc.state.chartRange,
+    );
+    final List<HealthChartPoint>? points = context.select(
+      (HealthBloc bloc) => bloc.state.fastingWeightPoints,
     );
 
     if (points != null) {
@@ -59,9 +88,6 @@ class _LineChart extends StatelessWidget {
           xValueMapper: (HealthChartPoint point, _) =>
               _mapDateToLabel(context, point.date, chartRange),
           yValueMapper: (HealthChartPoint point, _) => point.value,
-          dataLabelSettings: const DataLabelSettings(
-            isVisible: true,
-          ),
           color: Theme.of(context).colorScheme.primary,
           markerSettings: MarkerSettings(
             isVisible: true,

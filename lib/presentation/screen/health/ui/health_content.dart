@@ -6,22 +6,24 @@ class _Content extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          children: [
-            _Section(
-              label: Str.of(context).healthMorningMeasurement,
-              child: const _ThisMorningMeasurement(),
-            ),
-            const SizedBox(height: 24),
-            _Section(
-              label: Str.of(context).healthSummaryOfMeasurements,
-              child: const _ChartRangeSelection(),
-            ),
-            const SizedBox(height: 8),
-            const _Charts(),
-          ],
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            children: [
+              _Section(
+                label: Str.of(context).healthMorningMeasurement,
+                child: const _ThisMorningMeasurement(),
+              ),
+              const SizedBox(height: 24),
+              _Section(
+                label: Str.of(context).healthSummaryOfMeasurements,
+                child: const _ChartRangeSelection(),
+              ),
+              const SizedBox(height: 8),
+              const _Charts(),
+            ],
+          ),
         ),
       ),
     );
