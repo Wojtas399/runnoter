@@ -148,6 +148,70 @@ void main() {
   );
 
   test(
+    'update chart points with fasting weight measurements, '
+    'should set fasting weight values to points which dates match to measurement dates',
+    () {
+      final DateTime startDate = DateTime(2023, 5, 8);
+      final DateTime endDate = DateTime(2023, 5, 12);
+      final List<HealthChartPoint> chartPoints = [
+        HealthChartPoint(date: startDate, value: null),
+        HealthChartPoint(date: DateTime(2023, 5, 9), value: null),
+        HealthChartPoint(date: DateTime(2023, 5, 10), value: null),
+        HealthChartPoint(date: DateTime(2023, 5, 11), value: null),
+        HealthChartPoint(date: endDate, value: null),
+      ];
+      final List<MorningMeasurement> measurements = [
+        createMorningMeasurement(
+          date: DateTime(2023, 5, 9),
+          fastingWeight: 51.0,
+        ),
+        createMorningMeasurement(
+          date: DateTime(2023, 5, 10),
+          fastingWeight: 53.0,
+        ),
+        createMorningMeasurement(
+          date: endDate,
+          fastingWeight: 52.0,
+        ),
+      ];
+      final List<HealthChartPoint> expectedChartPoints = [
+        HealthChartPoint(date: startDate, value: null),
+        HealthChartPoint(date: DateTime(2023, 5, 9), value: 51.0),
+        HealthChartPoint(date: DateTime(2023, 5, 10), value: 53.0),
+        HealthChartPoint(date: DateTime(2023, 5, 11), value: null),
+        HealthChartPoint(date: endDate, value: 52.0),
+      ];
+      dateService.mockAreDatesTheSame(expected: false);
+      when(
+        () => dateService.areDatesTheSame(
+          DateTime(2023, 5, 9),
+          DateTime(2023, 5, 9),
+        ),
+      ).thenReturn(true);
+      when(
+        () => dateService.areDatesTheSame(
+          DateTime(2023, 5, 10),
+          DateTime(2023, 5, 10),
+        ),
+      ).thenReturn(true);
+      when(
+        () => dateService.areDatesTheSame(
+          DateTime(2023, 5, 12),
+          DateTime(2023, 5, 12),
+        ),
+      ).thenReturn(true);
+
+      final List<HealthChartPoint> updatedChartPoints =
+          service.updateChartPointsWithFastingWeightMeasurements(
+        chartPoints,
+        measurements,
+      );
+
+      expect(updatedChartPoints, expectedChartPoints);
+    },
+  );
+
+  test(
     'compute new range, '
     'week range, '
     'should return first and last days of current week',
