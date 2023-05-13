@@ -62,6 +62,32 @@ void main() {
   );
 
   test(
+    'copy with chart start date',
+    () {
+      final DateTime expectedDate = DateTime(2023, 1, 10);
+
+      state = state.copyWith(chartStartDate: expectedDate);
+      final state2 = state.copyWith();
+
+      expect(state.chartStartDate, expectedDate);
+      expect(state2.chartStartDate, expectedDate);
+    },
+  );
+
+  test(
+    'copy with chart end date',
+    () {
+      final DateTime expectedDate = DateTime(2023, 1, 10);
+
+      state = state.copyWith(chartEndDate: expectedDate);
+      final state2 = state.copyWith();
+
+      expect(state.chartEndDate, expectedDate);
+      expect(state2.chartEndDate, expectedDate);
+    },
+  );
+
+  test(
     'copy with morning measurements',
     () {
       final List<MorningMeasurement> expectedMorningMeasurements = [

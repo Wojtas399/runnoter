@@ -10,60 +10,37 @@ class HealthChartService {
     required DateService dateService,
   }) : _dateService = dateService;
 
-  List<HealthChartPoint> createInitialChartPoints(
+  (List<HealthChartPoint>, List<HealthChartPoint>) createPointsOfCharts(
     DateTime startDate,
     DateTime endDate,
+    List<MorningMeasurement> measurements,
   ) {
     DateTime counterDate = startDate;
-    final List<HealthChartPoint> chartPoints = [];
-    while (!_dateService.areDatesTheSame(counterDate, endDate)) {
-      chartPoints.add(
-        HealthChartPoint(date: counterDate, value: null),
+    final DateTime dayAfterEndDay = endDate.add(const Duration(days: 1));
+    final List<HealthChartPoint> restingHeartRatePoints = [];
+    final List<HealthChartPoint> fastingWeightPoints = [];
+    while (!_dateService.areDatesTheSame(counterDate, dayAfterEndDay)) {
+      final measurementIndex = measurements.indexWhere(
+        (measurement) => _dateService.areDatesTheSame(
+          measurement.date,
+          counterDate,
+        ),
+      );
+      int? restingHeartRate = measurementIndex >= 0
+          ? measurements[measurementIndex].restingHeartRate
+          : null;
+      double? fastingWeight = measurementIndex >= 0
+          ? measurements[measurementIndex].fastingWeight
+          : null;
+      restingHeartRatePoints.add(
+        HealthChartPoint(date: counterDate, value: restingHeartRate),
+      );
+      fastingWeightPoints.add(
+        HealthChartPoint(date: counterDate, value: fastingWeight),
       );
       counterDate = counterDate.add(const Duration(days: 1));
     }
-    chartPoints.add(
-      HealthChartPoint(date: endDate, value: null),
-    );
-    return chartPoints;
-  }
-
-  List<HealthChartPoint> updateChartPointsWithRestingHeartRateMeasurements(
-    List<HealthChartPoint>? chartPoints,
-    List<MorningMeasurement> measurements,
-  ) {
-    final List<HealthChartPoint> updatedChartPoints = [...?chartPoints];
-    for (final measurement in measurements) {
-      final pointIndex = updatedChartPoints.indexWhere(
-        (point) => _dateService.areDatesTheSame(point.date, measurement.date),
-      );
-      if (pointIndex >= 0) {
-        updatedChartPoints[pointIndex] = HealthChartPoint(
-          date: measurement.date,
-          value: measurement.restingHeartRate,
-        );
-      }
-    }
-    return updatedChartPoints;
-  }
-
-  List<HealthChartPoint> updateChartPointsWithFastingWeightMeasurements(
-    List<HealthChartPoint>? chartPoints,
-    List<MorningMeasurement> measurements,
-  ) {
-    final List<HealthChartPoint> updatedChartPoints = [...?chartPoints];
-    for (final measurement in measurements) {
-      final pointIndex = updatedChartPoints.indexWhere(
-        (point) => _dateService.areDatesTheSame(point.date, measurement.date),
-      );
-      if (pointIndex >= 0) {
-        updatedChartPoints[pointIndex] = HealthChartPoint(
-          date: measurement.date,
-          value: measurement.fastingWeight,
-        );
-      }
-    }
-    return updatedChartPoints;
+    return (restingHeartRatePoints, fastingWeightPoints);
   }
 
   (DateTime, DateTime) computeNewRange(ChartRange chartRange) {

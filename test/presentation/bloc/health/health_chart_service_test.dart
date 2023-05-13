@@ -19,167 +19,41 @@ void main() {
   });
 
   test(
-    'create initial chart points, '
-    'should create chart points with dates from startDate to endDate',
-    () {
-      final DateTime startDate = DateTime(2023, 5, 8);
-      final DateTime endDate = DateTime(2023, 5, 19);
-      final List<HealthChartPoint> expectedPoints = [];
-      for (int i = 8; i <= 19; i++) {
-        expectedPoints.add(
-          HealthChartPoint(
-            date: DateTime(2023, 5, i),
-            value: null,
-          ),
-        );
-      }
-      dateService.mockAreDatesTheSame(expected: false);
-      when(
-        () => dateService.areDatesTheSame(endDate, endDate),
-      ).thenReturn(true);
-
-      final List<HealthChartPoint> points = service.createInitialChartPoints(
-        startDate,
-        endDate,
-      );
-
-      expect(points, expectedPoints);
-    },
-  );
-
-  test(
-    'update chart points with resting heart rate measurements, '
-    'variable of chart points is null, '
-    'should return empty array',
-    () {
-      const List<HealthChartPoint>? chartPoints = null;
-      final List<MorningMeasurement> measurements = [];
-
-      final List<HealthChartPoint> updatedChartPoints =
-          service.updateChartPointsWithRestingHeartRateMeasurements(
-        chartPoints,
-        measurements,
-      );
-
-      expect(updatedChartPoints, []);
-    },
-  );
-
-  test(
-    'update chart points with resting heart rate measurements, '
-    'variable of chart points is empty array, '
-    'should return empty array',
-    () {
-      const List<HealthChartPoint> chartPoints = [];
-      final List<MorningMeasurement> measurements = [];
-
-      final List<HealthChartPoint> updatedChartPoints =
-          service.updateChartPointsWithRestingHeartRateMeasurements(
-        chartPoints,
-        measurements,
-      );
-
-      expect(updatedChartPoints, []);
-    },
-  );
-
-  test(
-    'update chart points with resting heart rate measurements, '
-    'should set resting heart rate values to points which dates match to measurement dates',
+    'create points of charts, '
+    'should create points of resting heart rate chart and fasting weight chart',
     () {
       final DateTime startDate = DateTime(2023, 5, 8);
       final DateTime endDate = DateTime(2023, 5, 12);
-      final List<HealthChartPoint> chartPoints = [
-        HealthChartPoint(date: startDate, value: null),
-        HealthChartPoint(date: DateTime(2023, 5, 9), value: null),
-        HealthChartPoint(date: DateTime(2023, 5, 10), value: null),
-        HealthChartPoint(date: DateTime(2023, 5, 11), value: null),
-        HealthChartPoint(date: endDate, value: null),
-      ];
       final List<MorningMeasurement> measurements = [
         createMorningMeasurement(
           date: DateTime(2023, 5, 9),
           restingHeartRate: 51,
+          fastingWeight: 60.5,
         ),
         createMorningMeasurement(
           date: DateTime(2023, 5, 10),
           restingHeartRate: 53,
+          fastingWeight: 64,
         ),
         createMorningMeasurement(
           date: endDate,
           restingHeartRate: 52,
+          fastingWeight: 62.5,
         ),
       ];
-      final List<HealthChartPoint> expectedChartPoints = [
+      final List<HealthChartPoint> expectedRestingHeartRatePoints = [
         HealthChartPoint(date: startDate, value: null),
         HealthChartPoint(date: DateTime(2023, 5, 9), value: 51),
         HealthChartPoint(date: DateTime(2023, 5, 10), value: 53),
         HealthChartPoint(date: DateTime(2023, 5, 11), value: null),
         HealthChartPoint(date: endDate, value: 52),
       ];
-      dateService.mockAreDatesTheSame(expected: false);
-      when(
-        () => dateService.areDatesTheSame(
-          DateTime(2023, 5, 9),
-          DateTime(2023, 5, 9),
-        ),
-      ).thenReturn(true);
-      when(
-        () => dateService.areDatesTheSame(
-          DateTime(2023, 5, 10),
-          DateTime(2023, 5, 10),
-        ),
-      ).thenReturn(true);
-      when(
-        () => dateService.areDatesTheSame(
-          DateTime(2023, 5, 12),
-          DateTime(2023, 5, 12),
-        ),
-      ).thenReturn(true);
-
-      final List<HealthChartPoint> updatedChartPoints =
-          service.updateChartPointsWithRestingHeartRateMeasurements(
-        chartPoints,
-        measurements,
-      );
-
-      expect(updatedChartPoints, expectedChartPoints);
-    },
-  );
-
-  test(
-    'update chart points with fasting weight measurements, '
-    'should set fasting weight values to points which dates match to measurement dates',
-    () {
-      final DateTime startDate = DateTime(2023, 5, 8);
-      final DateTime endDate = DateTime(2023, 5, 12);
-      final List<HealthChartPoint> chartPoints = [
+      final List<HealthChartPoint> expectedFastingWeightPoints = [
         HealthChartPoint(date: startDate, value: null),
-        HealthChartPoint(date: DateTime(2023, 5, 9), value: null),
-        HealthChartPoint(date: DateTime(2023, 5, 10), value: null),
+        HealthChartPoint(date: DateTime(2023, 5, 9), value: 60.5),
+        HealthChartPoint(date: DateTime(2023, 5, 10), value: 64.0),
         HealthChartPoint(date: DateTime(2023, 5, 11), value: null),
-        HealthChartPoint(date: endDate, value: null),
-      ];
-      final List<MorningMeasurement> measurements = [
-        createMorningMeasurement(
-          date: DateTime(2023, 5, 9),
-          fastingWeight: 51.0,
-        ),
-        createMorningMeasurement(
-          date: DateTime(2023, 5, 10),
-          fastingWeight: 53.0,
-        ),
-        createMorningMeasurement(
-          date: endDate,
-          fastingWeight: 52.0,
-        ),
-      ];
-      final List<HealthChartPoint> expectedChartPoints = [
-        HealthChartPoint(date: startDate, value: null),
-        HealthChartPoint(date: DateTime(2023, 5, 9), value: 51.0),
-        HealthChartPoint(date: DateTime(2023, 5, 10), value: 53.0),
-        HealthChartPoint(date: DateTime(2023, 5, 11), value: null),
-        HealthChartPoint(date: endDate, value: 52.0),
+        HealthChartPoint(date: endDate, value: 62.5),
       ];
       dateService.mockAreDatesTheSame(expected: false);
       when(
@@ -200,14 +74,18 @@ void main() {
           DateTime(2023, 5, 12),
         ),
       ).thenReturn(true);
+      when(
+        () => dateService.areDatesTheSame(
+          DateTime(2023, 5, 13),
+          DateTime(2023, 5, 13),
+        ),
+      ).thenReturn(true);
 
-      final List<HealthChartPoint> updatedChartPoints =
-          service.updateChartPointsWithFastingWeightMeasurements(
-        chartPoints,
-        measurements,
-      );
+      final (restingHeartRatePoints, fastingWeightPoints) =
+          service.createPointsOfCharts(startDate, endDate, measurements);
 
-      expect(updatedChartPoints, expectedChartPoints);
+      expect(restingHeartRatePoints, expectedRestingHeartRatePoints);
+      expect(fastingWeightPoints, expectedFastingWeightPoints);
     },
   );
 

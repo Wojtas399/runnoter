@@ -3,6 +3,8 @@ part of 'health_bloc.dart';
 class HealthState extends BlocState {
   final MorningMeasurement? thisMorningMeasurement;
   final ChartRange chartRange;
+  final DateTime? chartStartDate;
+  final DateTime? chartEndDate;
   final List<MorningMeasurement>? morningMeasurements;
   final List<HealthChartPoint>? restingHeartRatePoints;
   final List<HealthChartPoint>? fastingWeightPoints;
@@ -11,6 +13,8 @@ class HealthState extends BlocState {
     required super.status,
     this.thisMorningMeasurement,
     required this.chartRange,
+    this.chartStartDate,
+    this.chartEndDate,
     this.morningMeasurements,
     this.restingHeartRatePoints,
     this.fastingWeightPoints,
@@ -21,6 +25,8 @@ class HealthState extends BlocState {
         status,
         thisMorningMeasurement,
         chartRange,
+        chartStartDate,
+        chartEndDate,
         morningMeasurements,
         restingHeartRatePoints,
         fastingWeightPoints,
@@ -31,6 +37,8 @@ class HealthState extends BlocState {
     BlocStatus? status,
     MorningMeasurement? thisMorningMeasurement,
     ChartRange? chartRange,
+    DateTime? chartStartDate,
+    DateTime? chartEndDate,
     List<MorningMeasurement>? morningMeasurements,
     List<HealthChartPoint>? restingHeartRatePoints,
     List<HealthChartPoint>? fastingWeightPoints,
@@ -40,6 +48,8 @@ class HealthState extends BlocState {
         thisMorningMeasurement:
             thisMorningMeasurement ?? this.thisMorningMeasurement,
         chartRange: chartRange ?? this.chartRange,
+        chartStartDate: chartStartDate ?? this.chartStartDate,
+        chartEndDate: chartEndDate ?? this.chartEndDate,
         morningMeasurements: morningMeasurements ?? this.morningMeasurements,
         restingHeartRatePoints:
             restingHeartRatePoints ?? this.restingHeartRatePoints,

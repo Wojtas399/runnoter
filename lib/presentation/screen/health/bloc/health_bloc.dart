@@ -31,10 +31,7 @@ class HealthBloc
     required MorningMeasurementRepository morningMeasurementRepository,
     required HealthChartService chartService,
     BlocStatus status = const BlocStatusInitial(),
-    MorningMeasurement? thisMorningMeasurement,
     ChartRange chartRange = ChartRange.week,
-    List<MorningMeasurement>? morningMeasurements,
-    List<HealthChartPoint>? restingHeartRatePoints,
   })  : _dateService = dateService,
         _authService = authService,
         _morningMeasurementRepository = morningMeasurementRepository,
@@ -42,10 +39,7 @@ class HealthBloc
         super(
           HealthState(
             status: status,
-            thisMorningMeasurement: thisMorningMeasurement,
             chartRange: chartRange,
-            morningMeasurements: morningMeasurements,
-            restingHeartRatePoints: restingHeartRatePoints,
           ),
         ) {
     on<HealthEventInitialize>(_initialize);
@@ -73,17 +67,14 @@ class HealthBloc
     HealthEventInitialize event,
     Emitter<HealthState> emit,
   ) {
-    final DateTime today = _dateService.getToday();
-    final firstWeekDay = _dateService.getFirstDayOfTheWeek(today);
-    final lastWeekDay = _dateService.getLastDayOfTheWeek(today);
-    emit(state.copyWith(
-      restingHeartRatePoints: _chartService.createInitialChartPoints(
-        firstWeekDay,
-        lastWeekDay,
-      ),
-    ));
     _setThisMorningMeasurementListener();
-    _setMorningMeasurementsFromDateRangeListener(firstWeekDay, lastWeekDay);
+    final DateTime today = _dateService.getToday();
+    _setNewDateRange(
+      _dateService.getFirstDayOfTheWeek(today),
+      _dateService.getLastDayOfTheWeek(today),
+      ChartRange.week,
+      emit,
+    );
   }
 
   void _thisMorningMeasurementUpdated(
@@ -100,16 +91,17 @@ class HealthBloc
     Emitter<HealthState> emit,
   ) {
     final List<MorningMeasurement>? measurements = event.measurements;
-    if (measurements == null) {
+    final DateTime? startDate = state.chartStartDate;
+    final DateTime? endDate = state.chartEndDate;
+    if (measurements == null || startDate == null || endDate == null) {
       return;
     }
+    final (restingHeartRatePoints, fastingWeightPoints) =
+        _chartService.createPointsOfCharts(startDate, endDate, measurements);
     emit(state.copyWith(
       morningMeasurements: measurements,
-      restingHeartRatePoints:
-          _chartService.updateChartPointsWithRestingHeartRateMeasurements(
-        state.restingHeartRatePoints,
-        measurements,
-      ),
+      restingHeartRatePoints: restingHeartRatePoints,
+      fastingWeightPoints: fastingWeightPoints,
     ));
   }
 
@@ -140,13 +132,7 @@ class HealthBloc
     final (startDate, endDate) = _chartService.computeNewRange(
       event.chartRangeType,
     );
-    emit(state.copyWith(
-      restingHeartRatePoints:
-          _chartService.createInitialChartPoints(startDate, endDate),
-      chartRange: event.chartRangeType,
-    ));
-    _removeListenerOfMorningMeasurementsFromDateRange();
-    _setMorningMeasurementsFromDateRangeListener(startDate, endDate);
+    _setNewDateRange(startDate, endDate, event.chartRangeType, emit);
   }
 
   void _previousChartRange(
@@ -161,7 +147,7 @@ class HealthBloc
         endDate,
         state.chartRange,
       );
-      _setNewDateRange(startDate, endDate, emit);
+      _setNewDateRange(startDate, endDate, state.chartRange, emit);
     }
   }
 
@@ -177,7 +163,7 @@ class HealthBloc
         endDate,
         state.chartRange,
       );
-      _setNewDateRange(startDate, endDate, emit);
+      _setNewDateRange(startDate, endDate, state.chartRange, emit);
     }
   }
 
@@ -230,13 +216,13 @@ class HealthBloc
   void _setNewDateRange(
     DateTime startDate,
     DateTime endDate,
+    ChartRange chartRange,
     Emitter<HealthState> emit,
   ) {
     emit(state.copyWith(
-      restingHeartRatePoints: _chartService.createInitialChartPoints(
-        startDate,
-        endDate,
-      ),
+      chartRange: chartRange,
+      chartStartDate: startDate,
+      chartEndDate: endDate,
     ));
     _removeListenerOfMorningMeasurementsFromDateRange();
     _setMorningMeasurementsFromDateRangeListener(startDate, endDate);
