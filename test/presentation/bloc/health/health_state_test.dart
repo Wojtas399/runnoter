@@ -9,10 +9,7 @@ void main() {
 
   HealthState createState() => const HealthState(
         status: BlocStatusInitial(),
-        thisMorningMeasurement: null,
         chartRange: ChartRange.month,
-        morningMeasurements: null,
-        restingHeartRatePoints: null,
       );
 
   setUp(() {
@@ -103,6 +100,22 @@ void main() {
 
       expect(state.restingHeartRatePoints, expectedPoints);
       expect(state2.restingHeartRatePoints, expectedPoints);
+    },
+  );
+
+  test(
+    'copy with chart fasting weight points',
+    () {
+      final List<HealthChartPoint> expectedPoints = [
+        HealthChartPoint(date: DateTime(2023, 1, 10), value: 1),
+        HealthChartPoint(date: DateTime(2023, 1, 11), value: 2),
+      ];
+
+      state = state.copyWith(fastingWeightPoints: expectedPoints);
+      final state2 = state.copyWith();
+
+      expect(state.fastingWeightPoints, expectedPoints);
+      expect(state2.fastingWeightPoints, expectedPoints);
     },
   );
 }
