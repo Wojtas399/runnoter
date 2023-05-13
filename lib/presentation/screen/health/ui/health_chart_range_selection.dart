@@ -132,11 +132,39 @@ class _CurrentRangeLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final List<HealthChartPoint>? chartPoints = context.select(
+      (HealthBloc bloc) => bloc.state.chartPoints,
+    );
+
+    if (chartPoints == null) {
+      return const SizedBox();
+    }
+
+    final DateTime startDate = chartPoints.first.date;
+    final DateTime endDate = chartPoints.last.date;
+    final ChartRange chartRange = context.select(
+      (HealthBloc bloc) => bloc.state.chartRange,
+    );
+
     return Text(
-      'Obecny tydzień',
+      _createLabel(context, startDate, endDate, chartRange),
       style: Theme.of(context).textTheme.titleMedium,
     );
   }
+
+  String _createLabel(
+    BuildContext context,
+    DateTime startDate,
+    DateTime endDate,
+    ChartRange chartRange,
+  ) =>
+      switch (chartRange) {
+        ChartRange.week =>
+          '${startDate.toDateWithDots()} - ${endDate.toDateWithDots()}',
+        ChartRange.month =>
+          '${startDate.toMonthName(context)} ${startDate.year}',
+        ChartRange.year => '${startDate.year}',
+      };
 }
 
 class _NextRangeButton extends StatelessWidget {

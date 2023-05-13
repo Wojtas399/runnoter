@@ -45,7 +45,7 @@ class _Charts extends StatelessWidget {
   ) =>
       switch (chartRange) {
         ChartRange.week => date.toDayAbbreviation(context),
-        ChartRange.month => '${date.day}.${date.month}.${date.year}',
+        ChartRange.month => '${twoDigits(date.day)}.${twoDigits(date.month)}',
         ChartRange.year => '${date.year}',
       };
 }
