@@ -27,7 +27,7 @@ class _RestingHeartRateChart extends StatelessWidget {
       (HealthBloc bloc) => bloc.state.chartRange,
     );
     final List<HealthChartPoint>? points = context.select(
-      (HealthBloc bloc) => bloc.state.chartPoints,
+      (HealthBloc bloc) => bloc.state.restingHeartRatePoints,
     );
 
     if (points != null) {

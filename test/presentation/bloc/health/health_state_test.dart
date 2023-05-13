@@ -12,7 +12,7 @@ void main() {
         thisMorningMeasurement: null,
         chartRange: ChartRange.month,
         morningMeasurements: null,
-        chartPoints: null,
+        restingHeartRatePoints: null,
       );
 
   setUp(() {
@@ -91,18 +91,18 @@ void main() {
   );
 
   test(
-    'copy with chart points',
+    'copy with chart resting heart rate points',
     () {
       final List<HealthChartPoint> expectedPoints = [
         HealthChartPoint(date: DateTime(2023, 1, 10), value: 1),
         HealthChartPoint(date: DateTime(2023, 1, 11), value: 2),
       ];
 
-      state = state.copyWith(chartPoints: expectedPoints);
+      state = state.copyWith(restingHeartRatePoints: expectedPoints);
       final state2 = state.copyWith();
 
-      expect(state.chartPoints, expectedPoints);
-      expect(state2.chartPoints, expectedPoints);
+      expect(state.restingHeartRatePoints, expectedPoints);
+      expect(state2.restingHeartRatePoints, expectedPoints);
     },
   );
 }

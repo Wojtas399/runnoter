@@ -34,7 +34,7 @@ class HealthBloc
     MorningMeasurement? thisMorningMeasurement,
     ChartRange chartRange = ChartRange.week,
     List<MorningMeasurement>? morningMeasurements,
-    List<HealthChartPoint>? chartPoints,
+    List<HealthChartPoint>? restingHeartRatePoints,
   })  : _dateService = dateService,
         _authService = authService,
         _morningMeasurementRepository = morningMeasurementRepository,
@@ -45,7 +45,7 @@ class HealthBloc
             thisMorningMeasurement: thisMorningMeasurement,
             chartRange: chartRange,
             morningMeasurements: morningMeasurements,
-            chartPoints: chartPoints,
+            restingHeartRatePoints: restingHeartRatePoints,
           ),
         ) {
     on<HealthEventInitialize>(_initialize);
@@ -77,7 +77,7 @@ class HealthBloc
     final firstWeekDay = _dateService.getFirstDayOfTheWeek(today);
     final lastWeekDay = _dateService.getLastDayOfTheWeek(today);
     emit(state.copyWith(
-      chartPoints: _chartService.createInitialChartPoints(
+      restingHeartRatePoints: _chartService.createInitialChartPoints(
         firstWeekDay,
         lastWeekDay,
       ),
@@ -105,9 +105,9 @@ class HealthBloc
     }
     emit(state.copyWith(
       morningMeasurements: measurements,
-      chartPoints:
+      restingHeartRatePoints:
           _chartService.updateChartPointsWithRestingHeartRateMeasurements(
-        state.chartPoints,
+        state.restingHeartRatePoints,
         measurements,
       ),
     ));
@@ -141,7 +141,8 @@ class HealthBloc
       event.chartRangeType,
     );
     emit(state.copyWith(
-      chartPoints: _chartService.createInitialChartPoints(startDate, endDate),
+      restingHeartRatePoints:
+          _chartService.createInitialChartPoints(startDate, endDate),
       chartRange: event.chartRangeType,
     ));
     _removeListenerOfMorningMeasurementsFromDateRange();
@@ -152,8 +153,8 @@ class HealthBloc
     HealthEventPreviousChartRange event,
     Emitter<HealthState> emit,
   ) {
-    DateTime? startDate = state.chartPoints?.first.date;
-    DateTime? endDate = state.chartPoints?.last.date;
+    DateTime? startDate = state.restingHeartRatePoints?.first.date;
+    DateTime? endDate = state.restingHeartRatePoints?.last.date;
     if (startDate != null && endDate != null) {
       (startDate, endDate) = _chartService.computePreviousRange(
         startDate,
@@ -168,8 +169,8 @@ class HealthBloc
     HealthEventNextChartRange event,
     Emitter<HealthState> emit,
   ) {
-    DateTime? startDate = state.chartPoints?.first.date;
-    DateTime? endDate = state.chartPoints?.last.date;
+    DateTime? startDate = state.restingHeartRatePoints?.first.date;
+    DateTime? endDate = state.restingHeartRatePoints?.last.date;
     if (startDate != null && endDate != null) {
       (startDate, endDate) = _chartService.computeNextRange(
         startDate,
@@ -232,7 +233,10 @@ class HealthBloc
     Emitter<HealthState> emit,
   ) {
     emit(state.copyWith(
-      chartPoints: _chartService.createInitialChartPoints(startDate, endDate),
+      restingHeartRatePoints: _chartService.createInitialChartPoints(
+        startDate,
+        endDate,
+      ),
     ));
     _removeListenerOfMorningMeasurementsFromDateRange();
     _setMorningMeasurementsFromDateRangeListener(startDate, endDate);

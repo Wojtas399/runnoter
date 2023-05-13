@@ -4,14 +4,14 @@ class HealthState extends BlocState {
   final MorningMeasurement? thisMorningMeasurement;
   final ChartRange chartRange;
   final List<MorningMeasurement>? morningMeasurements;
-  final List<HealthChartPoint>? chartPoints;
+  final List<HealthChartPoint>? restingHeartRatePoints;
 
   const HealthState({
     required super.status,
     required this.thisMorningMeasurement,
     required this.chartRange,
     required this.morningMeasurements,
-    required this.chartPoints,
+    required this.restingHeartRatePoints,
   });
 
   @override
@@ -20,7 +20,7 @@ class HealthState extends BlocState {
         thisMorningMeasurement,
         chartRange,
         morningMeasurements,
-        chartPoints,
+        restingHeartRatePoints,
       ];
 
   @override
@@ -29,7 +29,7 @@ class HealthState extends BlocState {
     MorningMeasurement? thisMorningMeasurement,
     ChartRange? chartRange,
     List<MorningMeasurement>? morningMeasurements,
-    List<HealthChartPoint>? chartPoints,
+    List<HealthChartPoint>? restingHeartRatePoints,
   }) =>
       HealthState(
         status: status ?? const BlocStatusComplete(),
@@ -37,7 +37,8 @@ class HealthState extends BlocState {
             thisMorningMeasurement ?? this.thisMorningMeasurement,
         chartRange: chartRange ?? this.chartRange,
         morningMeasurements: morningMeasurements ?? this.morningMeasurements,
-        chartPoints: chartPoints ?? this.chartPoints,
+        restingHeartRatePoints:
+            restingHeartRatePoints ?? this.restingHeartRatePoints,
       );
 }
 

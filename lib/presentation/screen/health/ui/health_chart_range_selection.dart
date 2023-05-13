@@ -133,7 +133,7 @@ class _CurrentRangeLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<HealthChartPoint>? chartPoints = context.select(
-      (HealthBloc bloc) => bloc.state.chartPoints,
+      (HealthBloc bloc) => bloc.state.restingHeartRatePoints,
     );
 
     if (chartPoints == null) {
