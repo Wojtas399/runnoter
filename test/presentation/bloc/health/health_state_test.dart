@@ -88,32 +88,6 @@ void main() {
   );
 
   test(
-    'copy with morning measurements',
-    () {
-      final List<MorningMeasurement> expectedMorningMeasurements = [
-        MorningMeasurement(
-          date: DateTime(2023, 1, 10),
-          restingHeartRate: 50,
-          fastingWeight: 80.2,
-        ),
-        MorningMeasurement(
-          date: DateTime(2023, 1, 11),
-          restingHeartRate: 49,
-          fastingWeight: 80.5,
-        ),
-      ];
-
-      state = state.copyWith(
-        morningMeasurements: expectedMorningMeasurements,
-      );
-      final state2 = state.copyWith();
-
-      expect(state.morningMeasurements, expectedMorningMeasurements);
-      expect(state2.morningMeasurements, expectedMorningMeasurements);
-    },
-  );
-
-  test(
     'copy with chart resting heart rate points',
     () {
       final List<HealthChartPoint> expectedPoints = [

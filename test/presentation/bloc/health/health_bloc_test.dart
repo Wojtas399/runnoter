@@ -1,229 +1,409 @@
+import 'package:bloc_test/bloc_test.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:mocktail/mocktail.dart';
+import 'package:runnoter/domain/model/morning_measurement.dart';
+import 'package:runnoter/presentation/model/bloc_status.dart';
+import 'package:runnoter/presentation/screen/health/bloc/health_bloc.dart';
+import 'package:runnoter/presentation/screen/health/bloc/health_chart_service.dart';
+
+import '../../../mock/domain/mock_auth_service.dart';
+import '../../../mock/domain/mock_morning_measurement_repository.dart';
+import '../../../mock/presentation/service/mock_date_service.dart';
+import '../../../util/morning_measurement_creator.dart';
+import 'mock_chart_service.dart';
+
 void main() {
-  // final dateService = MockDateService();
-  // final authService = MockAuthService();
-  // final morningMeasurementRepository = MockMorningMeasurementRepository();
-  //
-  // HealthBloc createBloc() => HealthBloc(
-  //       dateService: dateService,
-  //       authService: authService,
-  //       morningMeasurementRepository: morningMeasurementRepository,
-  //     );
-  //
-  // HealthState createState({
-  //   BlocStatus status = const BlocStatusInitial(),
-  //   MorningMeasurement? thisMorningMeasurement,
-  //   ChartRange chartRange = ChartRange.week,
-  //   List<MorningMeasurement>? morningMeasurements,
-  //   List<HealthChartPoint>? chartPoints,
-  // }) =>
-  //     HealthState(
-  //       status: status,
-  //       thisMorningMeasurement: thisMorningMeasurement,
-  //       chartRange: chartRange,
-  //       morningMeasurements: morningMeasurements,
-  //       chartPoints: chartPoints,
-  //     );
-  //
-  // tearDown(() {
-  //   reset(dateService);
-  //   reset(authService);
-  //   reset(morningMeasurementRepository);
-  // });
-  //
-  // blocTest(
-  //   'initialize, '
-  //   "should set listener of logged user's this morning measurement and measurements from current week",
-  //   build: () => createBloc(),
-  //   setUp: () {
-  //     dateService.mockGetToday(
-  //       todayDate: DateTime(2023, 1, 10),
-  //     );
-  //     dateService.mockGetFirstDateFromWeekMatchingToDate(
-  //       date: DateTime(2023, 1, 8),
-  //     );
-  //     dateService.mockGetLastDateFromWeekMatchingToDate(
-  //       date: DateTime(2023, 1, 14),
-  //     );
-  //     authService.mockGetLoggedUserId(
-  //       userId: 'u1',
-  //     );
-  //     morningMeasurementRepository.mockGetMeasurementByDate(
-  //       measurement: createMorningMeasurement(
-  //         date: DateTime(2023, 1, 10),
-  //       ),
-  //     );
-  //     morningMeasurementRepository.mockGetMeasurementsByDateRange(
-  //       measurements: [
-  //         createMorningMeasurement(
-  //           date: DateTime(2023, 1, 10),
-  //         ),
-  //         createMorningMeasurement(
-  //           date: DateTime(2023, 1, 11),
-  //         ),
-  //         createMorningMeasurement(
-  //           date: DateTime(2023, 1, 8),
-  //         ),
-  //       ],
-  //     );
-  //   },
-  //   act: (HealthBloc bloc) => bloc.add(
-  //     const HealthEventInitialize(),
-  //   ),
-  //   expect: () => [
-  //     createState(
-  //       status: const BlocStatusComplete(),
-  //       thisMorningMeasurement: createMorningMeasurement(
-  //         date: DateTime(2023, 1, 10),
-  //       ),
-  //       morningMeasurements: [
-  //         createMorningMeasurement(
-  //           date: DateTime(2023, 1, 10),
-  //         ),
-  //         createMorningMeasurement(
-  //           date: DateTime(2023, 1, 11),
-  //         ),
-  //         createMorningMeasurement(
-  //           date: DateTime(2023, 1, 8),
-  //         ),
-  //       ],
-  //     ),
-  //   ],
-  //   verify: (_) {
-  //     verify(
-  //       () => authService.loggedUserId$,
-  //     ).called(1);
-  //     verify(
-  //       () => morningMeasurementRepository.getMeasurementByDate(
-  //         date: DateTime(2023, 1, 10),
-  //         userId: 'u1',
-  //       ),
-  //     ).called(1);
-  //     verify(
-  //       () => morningMeasurementRepository.getMeasurementsByDateRange(
-  //         startDate: DateTime(2023, 1, 8),
-  //         endDate: DateTime(2023, 1, 14),
-  //         userId: 'u1',
-  //       ),
-  //     ).called(1);
-  //   },
-  // );
-  //
-  // blocTest(
-  //   'listened params updated, '
-  //   'should update this morning measurement and morning measurements in state',
-  //   build: () => createBloc(),
-  //   act: (HealthBloc bloc) => bloc.add(
-  //     HealthEventListenedParamsUpdated(
-  //       updatedListenedParams: HealthStateListenedParams(
-  //         thisMorningMeasurement: createMorningMeasurement(
-  //           date: DateTime(2023, 1, 10),
-  //         ),
-  //         morningMeasurements: [
-  //           createMorningMeasurement(
-  //             date: DateTime(2023, 1, 10),
-  //           ),
-  //           createMorningMeasurement(
-  //             date: DateTime(2023, 1, 11),
-  //           ),
-  //         ],
-  //       ),
-  //     ),
-  //   ),
-  //   expect: () => [
-  //     createState(
-  //       status: const BlocStatusComplete(),
-  //       thisMorningMeasurement: createMorningMeasurement(
-  //         date: DateTime(2023, 1, 10),
-  //       ),
-  //       morningMeasurements: [
-  //         createMorningMeasurement(
-  //           date: DateTime(2023, 1, 10),
-  //         ),
-  //         createMorningMeasurement(
-  //           date: DateTime(2023, 1, 11),
-  //         ),
-  //       ],
-  //     ),
-  //   ],
-  // );
-  //
-  // blocTest(
-  //   'add morning measurement, '
-  //   'logged user does not exist, '
-  //   'should do nothing',
-  //   build: () => createBloc(),
-  //   setUp: () => authService.mockGetLoggedUserId(),
-  //   act: (HealthBloc bloc) => bloc.add(
-  //     const HealthEventAddMorningMeasurement(
-  //       restingHeartRate: 50,
-  //       fastingWeight: 80.2,
-  //     ),
-  //   ),
-  //   expect: () => [],
-  //   verify: (_) => verify(
-  //     () => authService.loggedUserId$,
-  //   ).called(1),
-  // );
-  //
-  // blocTest(
-  //   'add morning measurement, '
-  //   'logged user exists, '
-  //   "should call morning measurement repository's method to add new morning measurement with today date and should emit info that morning measurement has been added",
-  //   build: () => createBloc(),
-  //   setUp: () {
-  //     authService.mockGetLoggedUserId(userId: 'u1');
-  //     dateService.mockGetToday(
-  //       todayDate: DateTime(2023, 1, 10),
-  //     );
-  //     morningMeasurementRepository.mockAddMeasurement();
-  //   },
-  //   act: (HealthBloc bloc) => bloc.add(
-  //     const HealthEventAddMorningMeasurement(
-  //       restingHeartRate: 50,
-  //       fastingWeight: 80.2,
-  //     ),
-  //   ),
-  //   expect: () => [
-  //     createState(
-  //       status: const BlocStatusLoading(),
-  //     ),
-  //     createState(
-  //       status: const BlocStatusComplete<HealthBlocInfo>(
-  //         info: HealthBlocInfo.morningMeasurementAdded,
-  //       ),
-  //     ),
-  //   ],
-  //   verify: (_) {
-  //     verify(
-  //       () => authService.loggedUserId$,
-  //     ).called(1);
-  //     verify(
-  //       () => morningMeasurementRepository.addMeasurement(
-  //         userId: 'u1',
-  //         measurement: MorningMeasurement(
-  //           date: DateTime(2023, 1, 10),
-  //           restingHeartRate: 50,
-  //           fastingWeight: 80.2,
-  //         ),
-  //       ),
-  //     ).called(1);
-  //   },
-  // );
-  //
-  // blocTest(
-  //   'change chart range, '
-  //   'should update chart range in state',
-  //   build: () => createBloc(),
-  //   act: (HealthBloc bloc) => bloc.add(
-  //     const HealthEventChangeChartRange(
-  //       newChartRange: ChartRange.month,
-  //     ),
-  //   ),
-  //   expect: () => [
-  //     createState(
-  //       status: const BlocStatusComplete(),
-  //       chartRange: ChartRange.month,
-  //     ),
-  //   ],
-  // );
+  final dateService = MockDateService();
+  final authService = MockAuthService();
+  final morningMeasurementRepository = MockMorningMeasurementRepository();
+  final chartService = MockHealthChartService();
+  const String userId = 'u1';
+
+  HealthBloc createBloc({
+    ChartRange chartRange = ChartRange.week,
+    DateTime? chartStartDate,
+    DateTime? chartEndDate,
+  }) =>
+      HealthBloc(
+        dateService: dateService,
+        authService: authService,
+        morningMeasurementRepository: morningMeasurementRepository,
+        chartService: chartService,
+        chartRange: chartRange,
+        chartStartDate: chartStartDate,
+        chartEndDate: chartEndDate,
+      );
+
+  HealthState createState({
+    BlocStatus status = const BlocStatusInitial(),
+    ChartRange chartRange = ChartRange.week,
+    MorningMeasurement? thisMorningMeasurement,
+    DateTime? chartStartDate,
+    DateTime? chartEndDate,
+    List<HealthChartPoint>? restingHeartRatePoints,
+    List<HealthChartPoint>? fastingWeightPoints,
+  }) =>
+      HealthState(
+        status: status,
+        chartRange: chartRange,
+        thisMorningMeasurement: thisMorningMeasurement,
+        chartStartDate: chartStartDate,
+        chartEndDate: chartEndDate,
+        restingHeartRatePoints: restingHeartRatePoints,
+        fastingWeightPoints: fastingWeightPoints,
+      );
+
+  tearDown(() {
+    reset(dateService);
+    reset(authService);
+    reset(morningMeasurementRepository);
+    reset(chartService);
+  });
+
+  blocTest(
+    'initialize, '
+    'should set listeners of this morning measurement and morning measurements from this week',
+    build: () => createBloc(),
+    setUp: () {
+      authService.mockGetLoggedUserId(userId: userId);
+      morningMeasurementRepository.mockGetMeasurementByDate(
+        measurement: createMorningMeasurement(
+          date: DateTime(2023, 5, 12),
+          restingHeartRate: 49,
+          fastingWeight: 60.5,
+        ),
+      );
+      dateService.mockGetToday(
+        todayDate: DateTime(2023, 5, 12),
+      );
+      dateService.mockGetFirstDayOfTheWeek(
+        date: DateTime(2023, 5, 8),
+      );
+      dateService.mockGetLastDayOfTheWeek(
+        date: DateTime(2023, 5, 14),
+      );
+      morningMeasurementRepository.mockGetMeasurementsByDateRange(
+        measurements: [
+          createMorningMeasurement(
+            date: DateTime(2023, 5, 9),
+            restingHeartRate: 50,
+            fastingWeight: 60.2,
+          ),
+          createMorningMeasurement(
+            date: DateTime(2023, 5, 11),
+            restingHeartRate: 53,
+            fastingWeight: 64,
+          ),
+        ],
+      );
+      chartService.mockCreatePointsOfCharts(
+        points: ([], []),
+      );
+    },
+    act: (HealthBloc bloc) => bloc.add(
+      const HealthEventInitialize(),
+    ),
+    expect: () => [
+      createState(
+        status: const BlocStatusComplete(),
+        chartRange: ChartRange.week,
+        chartStartDate: DateTime(2023, 5, 8),
+        chartEndDate: DateTime(2023, 5, 14),
+      ),
+      createState(
+        status: const BlocStatusComplete(),
+        chartRange: ChartRange.week,
+        chartStartDate: DateTime(2023, 5, 8),
+        chartEndDate: DateTime(2023, 5, 14),
+        restingHeartRatePoints: [],
+        fastingWeightPoints: [],
+      ),
+      createState(
+        status: const BlocStatusComplete(),
+        chartRange: ChartRange.week,
+        thisMorningMeasurement: createMorningMeasurement(
+          date: DateTime(2023, 5, 12),
+          restingHeartRate: 49,
+          fastingWeight: 60.5,
+        ),
+        chartStartDate: DateTime(2023, 5, 8),
+        chartEndDate: DateTime(2023, 5, 14),
+        restingHeartRatePoints: [],
+        fastingWeightPoints: [],
+      ),
+    ],
+    verify: (_) {
+      verify(
+        () => authService.loggedUserId$,
+      ).called(2);
+      verify(
+        () => morningMeasurementRepository.getMeasurementByDate(
+          date: DateTime(2023, 5, 12),
+          userId: userId,
+        ),
+      ).called(1);
+      verify(
+        () => morningMeasurementRepository.getMeasurementsByDateRange(
+          startDate: DateTime(2023, 5, 8),
+          endDate: DateTime(2023, 5, 14),
+          userId: userId,
+        ),
+      ).called(1);
+    },
+  );
+
+  blocTest(
+    'this morning measurement updated, '
+    'should update this morning measurement in state',
+    build: () => createBloc(),
+    act: (HealthBloc bloc) => bloc.add(
+      HealthEventThisMorningMeasurementUpdated(
+        thisMorningMeasurement: createMorningMeasurement(
+          date: DateTime(2023, 5, 12),
+          restingHeartRate: 50,
+          fastingWeight: 60.5,
+        ),
+      ),
+    ),
+    expect: () => [
+      createState(
+        status: const BlocStatusComplete(),
+        thisMorningMeasurement: createMorningMeasurement(
+          date: DateTime(2023, 5, 12),
+          restingHeartRate: 50,
+          fastingWeight: 60.5,
+        ),
+      ),
+    ],
+  );
+
+  blocTest(
+    'morning measurements from date range updated, '
+    'should update in state created resting heart rate points and fasting weight points',
+    build: () => createBloc(
+      chartStartDate: DateTime(2023, 5, 8),
+      chartEndDate: DateTime(2023, 5, 10),
+    ),
+    setUp: () {
+      chartService.mockCreatePointsOfCharts(
+        points: (
+          [
+            HealthChartPoint(date: DateTime(2023, 5, 8), value: 50),
+            HealthChartPoint(date: DateTime(2023, 5, 9), value: 51),
+            HealthChartPoint(date: DateTime(2023, 5, 10), value: 52),
+          ],
+          [
+            HealthChartPoint(date: DateTime(2023, 5, 8), value: 60.5),
+            HealthChartPoint(date: DateTime(2023, 5, 9), value: 62),
+            HealthChartPoint(date: DateTime(2023, 5, 10), value: 61.3),
+          ],
+        ),
+      );
+    },
+    act: (HealthBloc bloc) => bloc.add(
+      HealthEventMorningMeasurementsFromDateRangeUpdated(
+        measurements: [
+          createMorningMeasurement(date: DateTime(2023, 5, 8)),
+          createMorningMeasurement(date: DateTime(2023, 5, 10)),
+        ],
+      ),
+    ),
+    expect: () => [
+      createState(
+        status: const BlocStatusComplete(),
+        chartStartDate: DateTime(2023, 5, 8),
+        chartEndDate: DateTime(2023, 5, 10),
+        restingHeartRatePoints: [
+          HealthChartPoint(date: DateTime(2023, 5, 8), value: 50),
+          HealthChartPoint(date: DateTime(2023, 5, 9), value: 51),
+          HealthChartPoint(date: DateTime(2023, 5, 10), value: 52),
+        ],
+        fastingWeightPoints: [
+          HealthChartPoint(date: DateTime(2023, 5, 8), value: 60.5),
+          HealthChartPoint(date: DateTime(2023, 5, 9), value: 62),
+          HealthChartPoint(date: DateTime(2023, 5, 10), value: 61.3),
+        ],
+      ),
+    ],
+    verify: (_) => verify(
+      () => chartService.createPointsOfCharts(
+        startDate: DateTime(2023, 5, 8),
+        endDate: DateTime(2023, 5, 10),
+        measurements: [
+          createMorningMeasurement(date: DateTime(2023, 5, 8)),
+          createMorningMeasurement(date: DateTime(2023, 5, 10)),
+        ],
+      ),
+    ).called(1),
+  );
+
+  blocTest(
+    'add morning measurement, '
+    'should call method from morning measurement repository responsible for adding measurement with today date',
+    build: () => createBloc(),
+    setUp: () {
+      authService.mockGetLoggedUserId(userId: userId);
+      morningMeasurementRepository.mockAddMeasurement();
+      dateService.mockGetToday(todayDate: DateTime(2023, 5, 12));
+    },
+    act: (HealthBloc bloc) => bloc.add(
+      const HealthEventAddMorningMeasurement(
+        restingHeartRate: 50,
+        fastingWeight: 60.5,
+      ),
+    ),
+    expect: () => [
+      createState(
+        status: const BlocStatusLoading(),
+      ),
+      createState(
+        status: const BlocStatusComplete<HealthBlocInfo>(
+          info: HealthBlocInfo.morningMeasurementAdded,
+        ),
+      ),
+    ],
+    verify: (_) {
+      verify(
+        () => authService.loggedUserId$,
+      ).called(1);
+      verify(
+        () => morningMeasurementRepository.addMeasurement(
+          userId: userId,
+          measurement: MorningMeasurement(
+            date: DateTime(2023, 5, 12),
+            restingHeartRate: 50,
+            fastingWeight: 60.5,
+          ),
+        ),
+      ).called(1);
+    },
+  );
+
+  blocTest(
+    'change chart range type, '
+    'should update new computed range in state and should set new listener of morning measurements from new date range',
+    build: () => createBloc(),
+    setUp: () {
+      chartService.mockComputeNewRange(
+        range: (DateTime(2023, 5, 8), DateTime(2023, 5, 14)),
+      );
+      authService.mockGetLoggedUserId(userId: userId);
+      morningMeasurementRepository.mockGetMeasurementsByDateRange();
+    },
+    act: (HealthBloc bloc) => bloc.add(
+      const HealthEventChangeChartRangeType(
+        chartRangeType: ChartRange.week,
+      ),
+    ),
+    expect: () => [
+      createState(
+        status: const BlocStatusComplete(),
+        chartRange: ChartRange.week,
+        chartStartDate: DateTime(2023, 5, 8),
+        chartEndDate: DateTime(2023, 5, 14),
+      ),
+    ],
+    verify: (_) {
+      verify(
+        () => chartService.computeNewRange(
+          chartRange: ChartRange.week,
+        ),
+      ).called(1);
+      verify(
+        () => morningMeasurementRepository.getMeasurementsByDateRange(
+          startDate: DateTime(2023, 5, 8),
+          endDate: DateTime(2023, 5, 14),
+          userId: userId,
+        ),
+      ).called(1);
+    },
+  );
+
+  blocTest(
+    'previous chart range, '
+    'should update new computed range in state and should set new listener of morning measurements from new date range',
+    build: () => createBloc(
+      chartRange: ChartRange.week,
+      chartStartDate: DateTime(2023, 5, 8),
+      chartEndDate: DateTime(2023, 5, 14),
+    ),
+    setUp: () {
+      chartService.mockComputePreviousRange(
+        previousRange: (DateTime(2023, 5, 1), DateTime(2023, 5, 7)),
+      );
+      authService.mockGetLoggedUserId(userId: userId);
+      morningMeasurementRepository.mockGetMeasurementsByDateRange();
+    },
+    act: (HealthBloc bloc) => bloc.add(
+      const HealthEventPreviousChartRange(),
+    ),
+    expect: () => [
+      createState(
+        status: const BlocStatusComplete(),
+        chartRange: ChartRange.week,
+        chartStartDate: DateTime(2023, 5, 1),
+        chartEndDate: DateTime(2023, 5, 7),
+      ),
+    ],
+    verify: (_) {
+      verify(
+        () => chartService.computePreviousRange(
+          startDate: DateTime(2023, 5, 8),
+          endDate: DateTime(2023, 5, 14),
+          chartRange: ChartRange.week,
+        ),
+      ).called(1);
+      verify(
+        () => morningMeasurementRepository.getMeasurementsByDateRange(
+          startDate: DateTime(2023, 5, 1),
+          endDate: DateTime(2023, 5, 7),
+          userId: userId,
+        ),
+      ).called(1);
+    },
+  );
+
+  blocTest(
+    'next chart range, '
+    'should update new computed range in state and should set new listener of morning measurements from new date range',
+    build: () => createBloc(
+      chartRange: ChartRange.week,
+      chartStartDate: DateTime(2023, 5, 8),
+      chartEndDate: DateTime(2023, 5, 14),
+    ),
+    setUp: () {
+      chartService.mockComputeNextRange(
+        nextRange: (DateTime(2023, 5, 15), DateTime(2023, 5, 21)),
+      );
+      authService.mockGetLoggedUserId(userId: userId);
+      morningMeasurementRepository.mockGetMeasurementsByDateRange();
+    },
+    act: (HealthBloc bloc) => bloc.add(
+      const HealthEventNextChartRange(),
+    ),
+    expect: () => [
+      createState(
+        status: const BlocStatusComplete(),
+        chartRange: ChartRange.week,
+        chartStartDate: DateTime(2023, 5, 15),
+        chartEndDate: DateTime(2023, 5, 21),
+      ),
+    ],
+    verify: (_) {
+      verify(
+        () => chartService.computeNextRange(
+          startDate: DateTime(2023, 5, 8),
+          endDate: DateTime(2023, 5, 14),
+          chartRange: ChartRange.week,
+        ),
+      ).called(1);
+      verify(
+        () => morningMeasurementRepository.getMeasurementsByDateRange(
+          startDate: DateTime(2023, 5, 15),
+          endDate: DateTime(2023, 5, 21),
+          userId: userId,
+        ),
+      ).called(1);
+    },
+  );
 }

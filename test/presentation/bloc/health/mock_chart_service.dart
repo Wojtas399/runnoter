@@ -18,6 +18,7 @@ class MockHealthChartService extends Mock implements HealthChartService {
   void mockComputeNewRange({
     required (DateTime, DateTime) range,
   }) {
+    _mockChartRange();
     when(
       () => computeNewRange(
         chartRange: any(named: 'chartRange'),
@@ -39,7 +40,7 @@ class MockHealthChartService extends Mock implements HealthChartService {
     );
   }
 
-  void mockNextRange({
+  void mockComputeNextRange({
     required (DateTime, DateTime) nextRange,
   }) {
     when(
@@ -49,5 +50,9 @@ class MockHealthChartService extends Mock implements HealthChartService {
         chartRange: any(named: 'chartRange'),
       ),
     ).thenReturn(nextRange);
+  }
+
+  void _mockChartRange() {
+    registerFallbackValue(ChartRange.week);
   }
 }

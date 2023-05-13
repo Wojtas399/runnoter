@@ -32,6 +32,8 @@ class HealthBloc
     required HealthChartService chartService,
     BlocStatus status = const BlocStatusInitial(),
     ChartRange chartRange = ChartRange.week,
+    DateTime? chartStartDate,
+    DateTime? chartEndDate,
   })  : _dateService = dateService,
         _authService = authService,
         _morningMeasurementRepository = morningMeasurementRepository,
@@ -40,6 +42,8 @@ class HealthBloc
           HealthState(
             status: status,
             chartRange: chartRange,
+            chartStartDate: chartStartDate,
+            chartEndDate: chartEndDate,
           ),
         ) {
     on<HealthEventInitialize>(_initialize);
@@ -67,7 +71,6 @@ class HealthBloc
     HealthEventInitialize event,
     Emitter<HealthState> emit,
   ) {
-    _setThisMorningMeasurementListener();
     final DateTime today = _dateService.getToday();
     _setNewDateRange(
       _dateService.getFirstDayOfTheWeek(today),
@@ -75,6 +78,7 @@ class HealthBloc
       ChartRange.week,
       emit,
     );
+    _setThisMorningMeasurementListener();
   }
 
   void _thisMorningMeasurementUpdated(
@@ -103,7 +107,6 @@ class HealthBloc
       measurements: measurements,
     );
     emit(state.copyWith(
-      morningMeasurements: measurements,
       restingHeartRatePoints: restingHeartRatePoints,
       fastingWeightPoints: fastingWeightPoints,
     ));
@@ -143,12 +146,10 @@ class HealthBloc
     HealthEventPreviousChartRange event,
     Emitter<HealthState> emit,
   ) {
-    DateTime? startDate = state.restingHeartRatePoints?.first.date;
-    DateTime? endDate = state.restingHeartRatePoints?.last.date;
-    if (startDate != null && endDate != null) {
-      (startDate, endDate) = _chartService.computePreviousRange(
-        startDate: startDate,
-        endDate: endDate,
+    if (state.chartStartDate != null && state.chartEndDate != null) {
+      final (startDate, endDate) = _chartService.computePreviousRange(
+        startDate: state.chartStartDate!,
+        endDate: state.chartEndDate!,
         chartRange: state.chartRange,
       );
       _setNewDateRange(startDate, endDate, state.chartRange, emit);
@@ -159,12 +160,10 @@ class HealthBloc
     HealthEventNextChartRange event,
     Emitter<HealthState> emit,
   ) {
-    DateTime? startDate = state.restingHeartRatePoints?.first.date;
-    DateTime? endDate = state.restingHeartRatePoints?.last.date;
-    if (startDate != null && endDate != null) {
-      (startDate, endDate) = _chartService.computeNextRange(
-        startDate: startDate,
-        endDate: endDate,
+    if (state.chartStartDate != null && state.chartEndDate != null) {
+      final (startDate, endDate) = _chartService.computeNextRange(
+        startDate: state.chartStartDate!,
+        endDate: state.chartEndDate!,
         chartRange: state.chartRange,
       );
       _setNewDateRange(startDate, endDate, state.chartRange, emit);
