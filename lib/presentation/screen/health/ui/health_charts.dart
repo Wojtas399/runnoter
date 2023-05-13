@@ -5,22 +5,57 @@ class _Charts extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text(
+          Str.of(context).healthRestingHeartRate,
+          style: Theme.of(context).textTheme.labelLarge,
+        ),
+        const SizedBox(height: 8),
+        const _RestingHeartRateChart(),
+      ],
+    );
+  }
+}
+
+class _RestingHeartRateChart extends StatelessWidget {
+  const _RestingHeartRateChart();
+
+  @override
+  Widget build(BuildContext context) {
     final ChartRange chartRange = context.select(
       (HealthBloc bloc) => bloc.state.chartRange,
     );
-    final List<HealthChartPoint>? chartPoints = context.select(
+    final List<HealthChartPoint>? points = context.select(
       (HealthBloc bloc) => bloc.state.chartPoints,
     );
 
-    if (chartPoints == null) {
-      return const SizedBox();
+    if (points != null) {
+      return _LineChart(
+        points: points,
+        chartRange: chartRange,
+      );
     }
+    return const SizedBox();
+  }
+}
 
+class _LineChart extends StatelessWidget {
+  final List<HealthChartPoint> points;
+  final ChartRange chartRange;
+
+  const _LineChart({
+    required this.points,
+    required this.chartRange,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return SfCartesianChart(
       primaryXAxis: CategoryAxis(),
       series: <LineSeries<HealthChartPoint, String>>[
         LineSeries<HealthChartPoint, String>(
-          dataSource: chartPoints,
+          dataSource: points,
           xValueMapper: (HealthChartPoint point, _) =>
               _mapDateToLabel(context, point.date, chartRange),
           yValueMapper: (HealthChartPoint point, _) => point.value,
