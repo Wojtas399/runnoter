@@ -10,11 +10,11 @@ class HealthChartService {
     required DateService dateService,
   }) : _dateService = dateService;
 
-  (List<HealthChartPoint>, List<HealthChartPoint>) createPointsOfCharts(
-    DateTime startDate,
-    DateTime endDate,
-    List<MorningMeasurement> measurements,
-  ) {
+  (List<HealthChartPoint>, List<HealthChartPoint>) createPointsOfCharts({
+    required DateTime startDate,
+    required DateTime endDate,
+    required List<MorningMeasurement> measurements,
+  }) {
     DateTime counterDate = startDate;
     final DateTime dayAfterEndDay = endDate.add(const Duration(days: 1));
     final List<HealthChartPoint> restingHeartRatePoints = [];
@@ -43,7 +43,9 @@ class HealthChartService {
     return (restingHeartRatePoints, fastingWeightPoints);
   }
 
-  (DateTime, DateTime) computeNewRange(ChartRange chartRange) {
+  (DateTime, DateTime) computeNewRange({
+    required ChartRange chartRange,
+  }) {
     final DateTime today = _dateService.getToday();
     return switch (chartRange) {
       ChartRange.week => (
@@ -61,11 +63,11 @@ class HealthChartService {
     };
   }
 
-  (DateTime, DateTime) computePreviousRange(
-    DateTime startDate,
-    DateTime endDate,
-    ChartRange chartRange,
-  ) =>
+  (DateTime, DateTime) computePreviousRange({
+    required DateTime startDate,
+    required DateTime endDate,
+    required ChartRange chartRange,
+  }) =>
       switch (chartRange) {
         ChartRange.week => (
             startDate.subtract(const Duration(days: 7)),
@@ -83,11 +85,11 @@ class HealthChartService {
           ),
       };
 
-  (DateTime, DateTime) computeNextRange(
-    DateTime startDate,
-    DateTime endDate,
-    ChartRange chartRange,
-  ) =>
+  (DateTime, DateTime) computeNextRange({
+    required DateTime startDate,
+    required DateTime endDate,
+    required ChartRange chartRange,
+  }) =>
       switch (chartRange) {
         ChartRange.week => (
             startDate.add(const Duration(days: 7)),

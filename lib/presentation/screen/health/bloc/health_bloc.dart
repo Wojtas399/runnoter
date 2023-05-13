@@ -97,7 +97,11 @@ class HealthBloc
       return;
     }
     final (restingHeartRatePoints, fastingWeightPoints) =
-        _chartService.createPointsOfCharts(startDate, endDate, measurements);
+        _chartService.createPointsOfCharts(
+      startDate: startDate,
+      endDate: endDate,
+      measurements: measurements,
+    );
     emit(state.copyWith(
       morningMeasurements: measurements,
       restingHeartRatePoints: restingHeartRatePoints,
@@ -130,7 +134,7 @@ class HealthBloc
     Emitter<HealthState> emit,
   ) {
     final (startDate, endDate) = _chartService.computeNewRange(
-      event.chartRangeType,
+      chartRange: event.chartRangeType,
     );
     _setNewDateRange(startDate, endDate, event.chartRangeType, emit);
   }
@@ -143,9 +147,9 @@ class HealthBloc
     DateTime? endDate = state.restingHeartRatePoints?.last.date;
     if (startDate != null && endDate != null) {
       (startDate, endDate) = _chartService.computePreviousRange(
-        startDate,
-        endDate,
-        state.chartRange,
+        startDate: startDate,
+        endDate: endDate,
+        chartRange: state.chartRange,
       );
       _setNewDateRange(startDate, endDate, state.chartRange, emit);
     }
@@ -159,17 +163,21 @@ class HealthBloc
     DateTime? endDate = state.restingHeartRatePoints?.last.date;
     if (startDate != null && endDate != null) {
       (startDate, endDate) = _chartService.computeNextRange(
-        startDate,
-        endDate,
-        state.chartRange,
+        startDate: startDate,
+        endDate: endDate,
+        chartRange: state.chartRange,
       );
       _setNewDateRange(startDate, endDate, state.chartRange, emit);
     }
   }
 
+  void _removeListenerOfMorningMeasurementsFromDateRange() {
+    _morningMeasurementsFromDateRangeListener?.cancel();
+    _morningMeasurementsFromDateRangeListener = null;
+  }
+
   void _setThisMorningMeasurementListener() {
-    _thisMorningMeasurementListener ??= _authService.loggedUserId$
-        .whereType<String>()
+    _thisMorningMeasurementListener ??= _loggedUserId$
         .switchMap(
           (loggedUserId) => _morningMeasurementRepository.getMeasurementByDate(
             date: _dateService.getToday(),
@@ -189,8 +197,7 @@ class HealthBloc
     DateTime startDate,
     DateTime endDate,
   ) {
-    _morningMeasurementsFromDateRangeListener ??= _authService.loggedUserId$
-        .whereType<String>()
+    _morningMeasurementsFromDateRangeListener ??= _loggedUserId$
         .switchMap(
           (loggedUserId) =>
               _morningMeasurementRepository.getMeasurementsByDateRange(
@@ -208,11 +215,6 @@ class HealthBloc
         );
   }
 
-  void _removeListenerOfMorningMeasurementsFromDateRange() {
-    _morningMeasurementsFromDateRangeListener?.cancel();
-    _morningMeasurementsFromDateRangeListener = null;
-  }
-
   void _setNewDateRange(
     DateTime startDate,
     DateTime endDate,
@@ -227,4 +229,7 @@ class HealthBloc
     _removeListenerOfMorningMeasurementsFromDateRange();
     _setMorningMeasurementsFromDateRangeListener(startDate, endDate);
   }
+
+  Stream<String> get _loggedUserId$ =>
+      _authService.loggedUserId$.whereType<String>();
 }

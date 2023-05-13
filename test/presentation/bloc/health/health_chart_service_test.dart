@@ -82,7 +82,11 @@ void main() {
       ).thenReturn(true);
 
       final (restingHeartRatePoints, fastingWeightPoints) =
-          service.createPointsOfCharts(startDate, endDate, measurements);
+          service.createPointsOfCharts(
+        startDate: startDate,
+        endDate: endDate,
+        measurements: measurements,
+      );
 
       expect(restingHeartRatePoints, expectedRestingHeartRatePoints);
       expect(fastingWeightPoints, expectedFastingWeightPoints);
@@ -102,7 +106,9 @@ void main() {
       dateService.mockGetFirstDayOfTheWeek(date: firstDayOfTheWeek);
       dateService.mockGetLastDayOfTheWeek(date: lastDayOfTheWeek);
 
-      final (startDate, endDate) = service.computeNewRange(chartRange);
+      final (startDate, endDate) = service.computeNewRange(
+        chartRange: chartRange,
+      );
 
       expect(startDate, firstDayOfTheWeek);
       expect(endDate, lastDayOfTheWeek);
@@ -122,7 +128,9 @@ void main() {
       dateService.mockGetFirstDayOfTheMonth(date: firstDayOfTheMonth);
       dateService.mockGetLastDayOfTheMonth(date: lastDayOfTheMonth);
 
-      final (startDate, endDate) = service.computeNewRange(chartRange);
+      final (startDate, endDate) = service.computeNewRange(
+        chartRange: chartRange,
+      );
 
       expect(startDate, firstDayOfTheMonth);
       expect(endDate, lastDayOfTheMonth);
@@ -140,7 +148,9 @@ void main() {
       final DateTime lastDayOfTheYear = DateTime(2023, 12, 31);
       dateService.mockGetToday(todayDate: today);
 
-      final (startDate, endDate) = service.computeNewRange(chartRange);
+      final (startDate, endDate) = service.computeNewRange(
+        chartRange: chartRange,
+      );
 
       expect(startDate, firstDayOfTheYear);
       expect(endDate, lastDayOfTheYear);
@@ -159,9 +169,9 @@ void main() {
       final DateTime lastDayOfPreviousWeek = DateTime(2023, 5, 7);
 
       final (startDate, endDate) = service.computePreviousRange(
-        firstDayOfCurrentWeek,
-        lastDayOfCurrentWeek,
-        chartRange,
+        startDate: firstDayOfCurrentWeek,
+        endDate: lastDayOfCurrentWeek,
+        chartRange: chartRange,
       );
 
       expect(startDate, firstDayOfPreviousWeek);
@@ -181,9 +191,9 @@ void main() {
       final DateTime lastDayOfPreviousMonth = DateTime(2023, 4, 30);
 
       final (startDate, endDate) = service.computePreviousRange(
-        firstDayOfCurrentMonth,
-        lastDayOfCurrentMonth,
-        chartRange,
+        startDate: firstDayOfCurrentMonth,
+        endDate: lastDayOfCurrentMonth,
+        chartRange: chartRange,
       );
 
       expect(startDate, firstDayOfPreviousMonth);
@@ -203,9 +213,9 @@ void main() {
       final DateTime lastDayOfPreviousYear = DateTime(2022, 12, 31);
 
       final (startDate, endDate) = service.computePreviousRange(
-        firstDayOfCurrentYear,
-        lastDayOfCurrentYear,
-        chartRange,
+        startDate: firstDayOfCurrentYear,
+        endDate: lastDayOfCurrentYear,
+        chartRange: chartRange,
       );
 
       expect(startDate, firstDayOfPreviousYear);
@@ -225,9 +235,9 @@ void main() {
       final DateTime lastDayOfNextWeek = DateTime(2023, 5, 21);
 
       final (startDate, endDate) = service.computeNextRange(
-        firstDayOfCurrentWeek,
-        lastDayOfCurrentWeek,
-        chartRange,
+        startDate: firstDayOfCurrentWeek,
+        endDate: lastDayOfCurrentWeek,
+        chartRange: chartRange,
       );
 
       expect(startDate, firstDayOfNextWeek);
@@ -247,9 +257,9 @@ void main() {
       final DateTime lastDayOfNextMonth = DateTime(2023, 6, 30);
 
       final (startDate, endDate) = service.computeNextRange(
-        firstDayOfCurrentMonth,
-        lastDayOfCurrentMonth,
-        chartRange,
+        startDate: firstDayOfCurrentMonth,
+        endDate: lastDayOfCurrentMonth,
+        chartRange: chartRange,
       );
 
       expect(startDate, firstDayOfNextMonth);
@@ -269,9 +279,9 @@ void main() {
       final DateTime lastDayOfNextYear = DateTime(2024, 12, 31);
 
       final (startDate, endDate) = service.computeNextRange(
-        firstDayOfCurrentYear,
-        lastDayOfCurrentYear,
-        chartRange,
+        startDate: firstDayOfCurrentYear,
+        endDate: lastDayOfCurrentYear,
+        chartRange: chartRange,
       );
 
       expect(startDate, firstDayOfNextYear);
