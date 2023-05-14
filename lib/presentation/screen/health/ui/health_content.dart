@@ -22,6 +22,8 @@ class _Content extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               const _Charts(),
+              const SizedBox(height: 24),
+              const _ShowAllMeasurementsButton(),
             ],
           ),
         ),
@@ -51,6 +53,20 @@ class _Section extends StatelessWidget {
         const SizedBox(height: 16),
         child,
       ],
+    );
+  }
+}
+
+class _ShowAllMeasurementsButton extends StatelessWidget {
+  const _ShowAllMeasurementsButton();
+
+  @override
+  Widget build(BuildContext context) {
+    return BigButton(
+      label: Str.of(context).healthShowAllMeasurementsButton,
+      onPressed: () {
+        //TODO
+      },
     );
   }
 }

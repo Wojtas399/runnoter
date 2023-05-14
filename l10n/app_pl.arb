@@ -371,6 +371,10 @@
   "@healthChartRangeYear": {
     "description": "Label of annual chart range"
   },
+  "healthShowAllMeasurementsButton": "Pokaż wszystkie pomiary",
+  "@healthShowAllMeasurementsButton": {
+    "description": "Label of the button to show all measurements"
+  },
 
 
   "profileScreenTitle": "Profil",
