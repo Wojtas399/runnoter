@@ -29,6 +29,16 @@ class MockFirebaseHealthMeasurementService extends Mock
     ).thenAnswer((invocation) => Future.value(healthMeasurementDtos));
   }
 
+  void mockLoadAllMeasurements({
+    List<HealthMeasurementDto>? healthMeasurementDtos,
+  }) {
+    when(
+      () => loadAllMeasurements(
+        userId: any(named: 'userId'),
+      ),
+    ).thenAnswer((invocation) => Future.value(healthMeasurementDtos));
+  }
+
   void mockAddMeasurement({
     HealthMeasurementDto? addedMeasurementDto,
   }) {

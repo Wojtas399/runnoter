@@ -38,6 +38,18 @@ class FirebaseHealthMeasurementService {
         .toList();
   }
 
+  Future<List<HealthMeasurementDto>?> loadAllMeasurements({
+    required String userId,
+  }) async {
+    final snapshot = await getHealthMeasurementsRef(userId).get();
+    return snapshot.docs
+        .map(
+          (QueryDocumentSnapshot<HealthMeasurementDto> docSnapshot) =>
+              docSnapshot.data(),
+        )
+        .toList();
+  }
+
   Future<HealthMeasurementDto?> addMeasurement({
     required String userId,
     required HealthMeasurementDto measurementDto,
