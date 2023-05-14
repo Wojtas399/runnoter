@@ -72,6 +72,20 @@ class HealthMeasurementRepositoryImpl extends StateRepository<HealthMeasurement>
           );
 
   @override
+  Stream<List<HealthMeasurement>?> getAllMeasurements({
+    required String userId,
+  }) =>
+      dataStream$
+          .map(
+            (List<HealthMeasurement>? measurements) => measurements
+                ?.where((measurement) => measurement.userId == userId)
+                .toList(),
+          )
+          .doOnListen(
+            () => _loadAllMeasurementsFromRemoteDb(userId),
+          );
+
+  @override
   Future<void> addMeasurement({
     required HealthMeasurement measurement,
   }) async {
@@ -133,10 +147,23 @@ class HealthMeasurementRepositoryImpl extends StateRepository<HealthMeasurement>
       userId: userId,
     );
     if (measurementDtos != null) {
-      final List<HealthMeasurement> measurements = measurementDtos
-          .map((dto) => mapHealthMeasurementFromFirebase(dto))
-          .toList();
-      addEntities(measurements);
+      _addDtos(measurementDtos);
     }
+  }
+
+  Future<void> _loadAllMeasurementsFromRemoteDb(String userId) async {
+    final List<HealthMeasurementDto>? measurementDtos =
+        await _firebaseHealthMeasurementService.loadAllMeasurements(
+      userId: userId,
+    );
+    if (measurementDtos != null) {
+      _addDtos(measurementDtos);
+    }
+  }
+
+  void _addDtos(List<HealthMeasurementDto> dtos) {
+    final List<HealthMeasurement> measurements =
+        dtos.map(mapHealthMeasurementFromFirebase).toList();
+    addEntities(measurements);
   }
 }

@@ -243,6 +243,89 @@ void main() {
   );
 
   test(
+    'get all measurements, '
+    'should emit existing and matching measurements, should load new measurements from firebase and should also emit newly loaded measurements',
+    () {
+      final List<HealthMeasurement> existingMeasurements = [
+        HealthMeasurement(
+          userId: 'u2',
+          date: DateTime(2023, 1, 2),
+          restingHeartRate: 50,
+          fastingWeight: 50.5,
+        ),
+        HealthMeasurement(
+          userId: userId,
+          date: DateTime(2023, 1, 3),
+          restingHeartRate: 53,
+          fastingWeight: 51.5,
+        ),
+        HealthMeasurement(
+          userId: 'u2',
+          date: DateTime(2023, 1, 8),
+          restingHeartRate: 50,
+          fastingWeight: 50.8,
+        ),
+      ];
+      final List<HealthMeasurementDto> loadedMeasurementDtos = [
+        HealthMeasurementDto(
+          userId: userId,
+          date: DateTime(2023, 1, 5),
+          restingHeartRate: 49,
+          fastingWeight: 52.4,
+        ),
+        HealthMeasurementDto(
+          userId: userId,
+          date: DateTime(2023, 1, 6),
+          restingHeartRate: 49,
+          fastingWeight: 52.8,
+        ),
+      ];
+      final List<HealthMeasurement> loadedMeasurements = [
+        HealthMeasurement(
+          userId: userId,
+          date: DateTime(2023, 1, 5),
+          restingHeartRate: 49,
+          fastingWeight: 52.4,
+        ),
+        HealthMeasurement(
+          userId: userId,
+          date: DateTime(2023, 1, 6),
+          restingHeartRate: 49,
+          fastingWeight: 52.8,
+        ),
+      ];
+      firebaseHealthMeasurementService.mockLoadAllMeasurements(
+        healthMeasurementDtos: loadedMeasurementDtos,
+      );
+      repository = createRepository(initialState: existingMeasurements);
+
+      Stream<List<HealthMeasurement>?> measurements$ =
+          repository.getAllMeasurements(userId: userId);
+      measurements$.listen((_) {});
+
+      expect(
+        measurements$,
+        emitsInOrder(
+          [
+            [
+              existingMeasurements[1],
+            ],
+            [
+              existingMeasurements[1],
+              ...loadedMeasurements,
+            ],
+          ],
+        ),
+      );
+      verify(
+        () => firebaseHealthMeasurementService.loadAllMeasurements(
+          userId: userId,
+        ),
+      ).called(1);
+    },
+  );
+
+  test(
     'add measurement, '
     "should call firebase service's method to add measurement and should add this new measurement to repo state",
     () {

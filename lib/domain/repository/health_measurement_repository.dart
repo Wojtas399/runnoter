@@ -12,6 +12,10 @@ abstract class HealthMeasurementRepository {
     required String userId,
   });
 
+  Stream<List<HealthMeasurement>?> getAllMeasurements({
+    required String userId,
+  });
+
   Future<void> addMeasurement({
     required HealthMeasurement measurement,
   });
