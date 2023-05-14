@@ -24,9 +24,9 @@ class SignUpContent extends StatelessWidget {
               color: Colors.transparent,
               width: double.infinity,
               padding: const EdgeInsets.all(24),
-              child: Column(
+              child: const Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
-                children: const [
+                children: [
                   _FormHeader(),
                   SizedBox(height: 32),
                   SignUpForm(),

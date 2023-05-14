@@ -5,7 +5,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../bloc/home_bloc.dart';
 import '../bloc/home_state.dart';
 
-class HomeAppBar extends StatelessWidget with PreferredSizeWidget {
+class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   const HomeAppBar({
     super.key,
   });
@@ -16,7 +16,7 @@ class HomeAppBar extends StatelessWidget with PreferredSizeWidget {
     final List<String> pageTitles = [
       str.homeCurrentWeekPageTitle,
       str.homeCalendarPageTitle,
-      str.homePulseAndWeightPageTitle,
+      str.homeHealthPageTitle,
     ];
     final HomePage currentPage = context.select(
       (HomeBloc bloc) => bloc.state.currentPage,

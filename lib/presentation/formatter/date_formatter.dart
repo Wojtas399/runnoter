@@ -1,8 +1,9 @@
+import 'package:firebase/utils/utils.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 extension DateFormatter on DateTime {
-  String toUIFormat(BuildContext context) {
+  String toMonthName(BuildContext context) {
     final str = Str.of(context);
     final List<String> months = [
       str.january,
@@ -18,7 +19,25 @@ extension DateFormatter on DateTime {
       str.november,
       str.december,
     ];
+    return months[month - 1];
+  }
 
-    return '$day ${months[month - 1].toLowerCase()} $year';
+  String toFullDate(BuildContext context) =>
+      '$day ${toMonthName(context).toLowerCase()} $year';
+
+  String toDateWithDots() => '${twoDigits(day)}.${twoDigits(month)}.$year';
+
+  String toDayAbbreviation(BuildContext context) {
+    final str = Str.of(context);
+    final List<String> dayNameAbbreviations = [
+      str.mondayShort,
+      str.tuesdayShort,
+      str.wednesdayShort,
+      str.thursdayShort,
+      str.fridayShort,
+      str.saturdayShort,
+      str.sundayShort,
+    ];
+    return dayNameAbbreviations[weekday - 1];
   }
 }

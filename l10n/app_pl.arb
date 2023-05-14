@@ -109,9 +109,9 @@
   "@homeCalendarPageTitle": {
     "description": "Title of calendar page"
   },
-  "homePulseAndWeightPageTitle": "Puls & Waga",
-  "@homePulseAndWeightPageTitle": {
-    "description": "Title of pulse and weight page"
+  "homeHealthPageTitle": "Zdrowie",
+  "@homeHealthPageTitle": {
+    "description": "Title of morning measurement page"
   },
   "homeDrawerProfile": "Profil",
   "@homeDrawerProfile": {
@@ -339,6 +339,44 @@
   },
 
 
+  "healthTodayMeasurement": "Dzisiejszy pomiar",
+  "@healthTodayMeasurement": {
+    "description": "Label of today measurement"
+  },
+  "healthAddTodayMeasurementButton": "Dodaj pomiar",
+  "@healthAddTodayMeasurementButton": {
+    "description": "Label of the button to add today measurement"
+  },
+  "healthRestingHeartRate": "Tętno spoczynkowe",
+  "@healthRestingHeartRate": {
+    "description": "Label of resting heart rate"
+  },
+  "healthFastingWeight": "Waga na czczo",
+  "@healthFastingWeight": {
+    "description": "Label of fasting weight"
+  },
+  "healthSummaryOfMeasurements": "Zestawienie pomiarów",
+  "@healthSummaryOfMeasurements": {
+    "description": "Label of summary of measurements"
+  },
+  "healthChartRangeWeek": "Tydzień",
+  "@healthChartRangeWeek": {
+    "description": "Label of weekly chart range"
+  },
+  "healthChartRangeMonth": "Miesiąc",
+  "@healthChartRangeMonth": {
+    "description": "Label of monthly chart range"
+  },
+  "healthChartRangeYear": "Rok",
+  "@healthChartRangeYear": {
+    "description": "Label of annual chart range"
+  },
+  "healthShowAllMeasurementsButton": "Pokaż wszystkie pomiary",
+  "@healthShowAllMeasurementsButton": {
+    "description": "Label of the button to show all measurements"
+  },
+
+
   "profileScreenTitle": "Profil",
   "@profileScreenTitle": {
     "description": "Title of the profile screen"
@@ -514,6 +552,12 @@
   "paceUnitSelect": "Wybierz jednostkę tempa",
   "@paceUnitSelect": {
     "description": "Text about pace unit selection"
+  },
+
+
+  "heartRateUnit": "ud/min",
+  "@heartRateUnit": {
+    "description": "Unit of heart rate"
   },
 
 

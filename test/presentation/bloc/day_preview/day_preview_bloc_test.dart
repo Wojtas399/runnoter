@@ -74,7 +74,7 @@ void main() {
     'should update date and isPastDay param in state and should set listener on workout matching to date and user id',
     build: () => createBloc(),
     setUp: () {
-      dateService.mockGetTodayDate(
+      dateService.mockGetToday(
         todayDate: DateTime(2023, 1, 1),
       );
       dateService.mockIsDate1BeforeDate2(expected: true);

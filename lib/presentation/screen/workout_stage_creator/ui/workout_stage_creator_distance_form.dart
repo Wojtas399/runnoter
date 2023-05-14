@@ -5,8 +5,8 @@ class _DistanceStageForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: const [
+    return const Column(
+      children: [
         _Distance(),
         SizedBox(height: 16),
         _MaxHeartRate(),

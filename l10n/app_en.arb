@@ -30,7 +30,7 @@
 
   "homeCurrentWeekPageTitle": "Current week",
   "homeCalendarPageTitle": "Calendar",
-  "homePulseAndWeightPageTitle": "Puls & Waga",
+  "homeHealthPageTitle": "Health",
   "homeDrawerProfile": "Profile",
   "homeDrawerMileage": "Mileage",
   "homeDrawerBlood": "Blood",
@@ -95,6 +95,17 @@
   "workoutStatusCreatorSavedStatusMessage": "Successfully updated workout status",
 
 
+  "healthTodayMeasurement": "Today's measurement",
+  "healthAddTodayMeasurementButton": "Add measurement",
+  "healthRestingHeartRate": "Resting heart rate",
+  "healthFastingWeight": "Fasting weight",
+  "healthSummaryOfMeasurements": "Summary of measurements",
+  "healthChartRangeWeek": "Week",
+  "healthChartRangeMonth": "Month",
+  "healthChartRangeYear": "Year",
+  "healthShowAllMeasurementsButton": "Show all measurements",
+
+
   "profileScreenTitle": "Profile",
   "profileUserData": "User identities",
   "profileSettings": "Settings",
@@ -145,6 +156,9 @@
   "paceUnitKilometersPerHour": "km/h (kilometers per hour)",
   "paceUnitMilesPerHour": "mi/h (miles per hour)",
   "paceUnitSelect": "Select pace unit",
+
+
+  "heartRateUnit": "bpm",
 
 
   "workoutStageBaseRun": "Cardio",

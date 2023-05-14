@@ -6,7 +6,7 @@ publish_to: 'none'
 version: 1.0.0+1
 
 environment:
-  sdk: '>=2.18.6 <3.0.0'
+  sdk: '>=3.0.0 <4.0.0'
 
 scripts: derry.yaml
 
@@ -17,18 +17,20 @@ dependencies:
   firebase:
     path: firebase
 
-  cupertino_icons: ^1.0.2
   flutter_bloc: ^8.1.2
   equatable: ^2.0.5
   bloc_test: ^9.1.1
   flutter_localizations:
     sdk: flutter
-  intl: any
   mocktail: ^0.3.0
   provider: ^6.0.5
   flutter_lints: ^2.0.1
   connectivity_plus: ^3.0.3
   rxdart: ^0.27.7
+  syncfusion_flutter_charts: ^21.2.4
+
+dependency_overrides:
+  intl: ^0.17.0-nullsafety.2
 
 dev_dependencies:
   flutter_test:

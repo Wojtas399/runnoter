@@ -83,7 +83,7 @@ class _Date extends StatelessWidget {
         borderRadius: BorderRadius.circular(6),
       ),
       child: Text(
-        date.toUIFormat(context),
+        date.toFullDate(context),
         style: Theme.of(context).textTheme.titleMedium?.copyWith(
               color: isToday ? Theme.of(context).canvasColor : null,
             ),

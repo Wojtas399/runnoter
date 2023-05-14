@@ -25,8 +25,8 @@ class SignInContent extends StatelessWidget {
             child: Container(
               color: Colors.transparent,
               padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
-              child: Column(
-                children: const [
+              child: const Column(
+                children: [
                   _Logo(),
                   SizedBox(height: 24),
                   _FormHeader(),

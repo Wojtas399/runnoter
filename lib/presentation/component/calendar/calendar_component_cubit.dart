@@ -13,8 +13,8 @@ class CalendarComponentCubit extends Cubit<CalendarComponentState> {
   })  : _dateService = dateService,
         super(
           CalendarComponentState(
-            displayingMonth: dateService.getTodayDate().month,
-            displayingYear: dateService.getTodayDate().year,
+            displayingMonth: dateService.getToday().month,
+            displayingYear: dateService.getToday().year,
             weeks: null,
           ),
         );
@@ -64,7 +64,7 @@ class CalendarComponentCubit extends Cubit<CalendarComponentState> {
   List<CalendarWeek> _createWeeks(int month, int year) {
     List<CalendarWeek> weeks = [];
     DateTime date = DateTime(year, month);
-    date = _dateService.getFirstDateFromWeekMatchingToDate(date);
+    date = _dateService.getFirstDayOfTheWeek(date);
     for (int weekNumber = 1; weekNumber <= 6; weekNumber++) {
       final List<CalendarDay> daysFromWeek = _createDaysFromWeek(date, month);
       weeks.add(
@@ -80,7 +80,7 @@ class CalendarComponentCubit extends Cubit<CalendarComponentState> {
     int month,
   ) {
     final List<CalendarDay> daysFromWeek = [];
-    final DateTime todayDate = _dateService.getTodayDate();
+    final DateTime todayDate = _dateService.getToday();
     DateTime date = dateOfFirstDayOfTheWeek;
     for (int weekDayNumber = 1; weekDayNumber <= 7; weekDayNumber++) {
       final CalendarDay newCalendarDay = CalendarDay(

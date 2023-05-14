@@ -5,11 +5,11 @@ class _WorkoutStagesSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return const SizedBox(
       width: double.infinity,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
+        children: [
           _Title(),
           SizedBox(height: 8),
           _WorkoutStagesList(),

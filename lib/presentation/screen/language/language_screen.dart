@@ -95,10 +95,10 @@ class _Content extends StatelessWidget {
           icon: const Icon(Icons.close),
         ),
       ),
-      body: SafeArea(
+      body: const SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
+          children: [
             _Header(),
             SizedBox(height: 16),
             _OptionsToSelect(),
