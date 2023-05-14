@@ -33,6 +33,7 @@ void main() {
     'copy with today measurement',
     () {
       final HealthMeasurement expectedMeasurement = HealthMeasurement(
+        userId: 'u1',
         date: DateTime(2023, 1, 10),
         restingHeartRate: 50,
         fastingWeight: 80.2,

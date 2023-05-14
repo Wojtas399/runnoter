@@ -33,7 +33,6 @@ class MockHealthMeasurementRepository extends Mock
     _mockHealthMeasurement();
     when(
       () => addMeasurement(
-        userId: any(named: 'userId'),
         measurement: any(named: 'measurement'),
       ),
     ).thenAnswer((invocation) => Future.value());

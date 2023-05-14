@@ -14,7 +14,6 @@ void main() {
       MockFirebaseHealthMeasurementService();
   late HealthMeasurementRepositoryImpl repository;
   const String userId = 'u1';
-  final DateTime date = DateTime(2023, 1, 1);
 
   HealthMeasurementRepositoryImpl createRepository({
     List<HealthMeasurement>? initialState,
@@ -35,12 +34,21 @@ void main() {
     'measurement exists in repository, '
     'should emit matching measurement',
     () {
+      final DateTime date = DateTime(2023, 2, 9);
       final HealthMeasurement expectedHealthMeasurement =
-          createHealthMeasurement(date: date);
+          createHealthMeasurement(
+        date: date,
+        userId: userId,
+      );
       repository = createRepository(
         initialState: [
           createHealthMeasurement(
             date: DateTime(2023, 2, 10),
+            userId: userId,
+          ),
+          createHealthMeasurement(
+            date: date,
+            userId: 'u2',
           ),
           expectedHealthMeasurement,
         ],
@@ -73,12 +81,15 @@ void main() {
     'measurement does not exist in repository, '
     'should load measurement from firebase and should emit loaded measurement',
     () {
+      final DateTime date = DateTime(2023, 2, 9);
       final HealthMeasurement expectedHealthMeasurement = HealthMeasurement(
+        userId: userId,
         date: date,
         restingHeartRate: 50,
         fastingWeight: 50.5,
       );
       final HealthMeasurementDto healthMeasurementDto = HealthMeasurementDto(
+        userId: userId,
         date: date,
         restingHeartRate: 50,
         fastingWeight: 50.5,
@@ -90,6 +101,11 @@ void main() {
         initialState: [
           createHealthMeasurement(
             date: DateTime(2023, 2, 10),
+            userId: userId,
+          ),
+          createHealthMeasurement(
+            date: date,
+            userId: 'u2',
           ),
         ],
       );
@@ -138,16 +154,19 @@ void main() {
 
       final List<HealthMeasurement> existingMeasurements = [
         HealthMeasurement(
+          userId: userId,
           date: DateTime(2023, 1, 2),
           restingHeartRate: 50,
           fastingWeight: 50.5,
         ),
         HealthMeasurement(
+          userId: 'u2',
           date: DateTime(2023, 1, 3),
           restingHeartRate: 53,
           fastingWeight: 51.5,
         ),
         HealthMeasurement(
+          userId: userId,
           date: DateTime(2023, 1, 8),
           restingHeartRate: 50,
           fastingWeight: 50.8,
@@ -155,11 +174,13 @@ void main() {
       ];
       final List<HealthMeasurementDto> loadedMeasurementDtos = [
         HealthMeasurementDto(
+          userId: userId,
           date: DateTime(2023, 1, 5),
           restingHeartRate: 49,
           fastingWeight: 52.4,
         ),
         HealthMeasurementDto(
+          userId: userId,
           date: DateTime(2023, 1, 6),
           restingHeartRate: 49,
           fastingWeight: 52.8,
@@ -167,11 +188,13 @@ void main() {
       ];
       final List<HealthMeasurement> loadedMeasurements = [
         HealthMeasurement(
+          userId: userId,
           date: DateTime(2023, 1, 5),
           restingHeartRate: 49,
           fastingWeight: 52.4,
         ),
         HealthMeasurement(
+          userId: userId,
           date: DateTime(2023, 1, 6),
           restingHeartRate: 49,
           fastingWeight: 52.8,
@@ -201,11 +224,9 @@ void main() {
           [
             [
               existingMeasurements[0],
-              existingMeasurements[1],
             ],
             [
               existingMeasurements[0],
-              existingMeasurements[1],
               ...loadedMeasurements,
             ],
           ],
@@ -225,14 +246,17 @@ void main() {
     'add measurement, '
     "should call firebase service's method to add measurement and should add this new measurement to repo state",
     () {
+      final DateTime date = DateTime(2023, 2, 9);
       const int restingHeartRate = 55;
       const double fastingWeight = 55.5;
       final HealthMeasurement healthMeasurement = HealthMeasurement(
+        userId: userId,
         date: date,
         restingHeartRate: restingHeartRate,
         fastingWeight: fastingWeight,
       );
       final HealthMeasurementDto healthMeasurementDto = HealthMeasurementDto(
+        userId: userId,
         date: date,
         restingHeartRate: restingHeartRate,
         fastingWeight: fastingWeight,
@@ -243,10 +267,7 @@ void main() {
       repository = createRepository();
 
       final Stream<List<HealthMeasurement>?> state$ = repository.dataStream$;
-      repository.addMeasurement(
-        userId: userId,
-        measurement: healthMeasurement,
-      );
+      repository.addMeasurement(measurement: healthMeasurement);
 
       expect(
         state$,

@@ -39,8 +39,9 @@ CollectionReference<HealthMeasurementDto> getHealthMeasurementsRef(
         .collection('HealthMeasurements')
         .withConverter<HealthMeasurementDto>(
           fromFirestore: (snapshot, _) => HealthMeasurementDto.fromJson(
-            snapshot.id,
-            snapshot.data(),
+            userId: userId,
+            dateStr: snapshot.id,
+            json: snapshot.data(),
           ),
           toFirestore: (healthMeasurementDto, _) =>
               healthMeasurementDto.toJson(),

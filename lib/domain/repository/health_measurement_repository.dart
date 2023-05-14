@@ -13,7 +13,6 @@ abstract class HealthMeasurementRepository {
   });
 
   Future<void> addMeasurement({
-    required String userId,
     required HealthMeasurement measurement,
   });
 }

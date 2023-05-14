@@ -120,8 +120,8 @@ class HealthBloc
     }
     emitLoadingStatus(emit);
     await _healthMeasurementRepository.addMeasurement(
-      userId: loggedUserId,
       measurement: HealthMeasurement(
+        userId: loggedUserId,
         date: _dateService.getToday(),
         restingHeartRate: event.restingHeartRate,
         fastingWeight: event.fastingWeight,
