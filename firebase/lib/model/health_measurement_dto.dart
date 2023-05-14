@@ -2,25 +2,25 @@ import 'package:equatable/equatable.dart';
 
 import '../mapper/date_mapper.dart';
 
-class MorningMeasurementDto extends Equatable {
+class HealthMeasurementDto extends Equatable {
   final DateTime date;
   final int restingHeartRate;
   final double fastingWeight;
 
-  const MorningMeasurementDto({
+  const HealthMeasurementDto({
     required this.date,
     required this.restingHeartRate,
     required this.fastingWeight,
   })  : assert(restingHeartRate >= 0),
         assert(fastingWeight > 0);
 
-  MorningMeasurementDto.fromJson(
+  HealthMeasurementDto.fromJson(
     String dateStr,
     Map<String, dynamic>? json,
   ) : this(
           date: mapDateTimeFromString(dateStr),
           restingHeartRate: json?[_restingHeartRateField],
-          fastingWeight: json?[_fastingWeightField],
+          fastingWeight: (json?[_fastingWeightField] as num).toDouble(),
         );
 
   @override

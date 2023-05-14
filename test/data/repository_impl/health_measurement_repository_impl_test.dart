@@ -1,33 +1,33 @@
 import 'package:firebase/firebase.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/data/repository_impl/morning_measurement_repository_impl.dart';
-import 'package:runnoter/domain/model/morning_measurement.dart';
+import 'package:runnoter/data/repository_impl/health_measurement_repository_impl.dart';
+import 'package:runnoter/domain/model/health_measurement.dart';
 
-import '../../mock/firebase/mock_firebase_morning_measurement_service.dart';
+import '../../mock/firebase/mock_firebase_health_measurement_service.dart';
 import '../../mock/presentation/service/mock_date_service.dart';
-import '../../util/morning_measurement_creator.dart';
+import '../../util/health_measurement_creator.dart';
 
 void main() {
   final dateService = MockDateService();
-  final firebaseMorningMeasurementService =
-      MockFirebaseMorningMeasurementService();
-  late MorningMeasurementRepositoryImpl repository;
+  final firebaseHealthMeasurementService =
+      MockFirebaseHealthMeasurementService();
+  late HealthMeasurementRepositoryImpl repository;
   const String userId = 'u1';
   final DateTime date = DateTime(2023, 1, 1);
 
-  MorningMeasurementRepositoryImpl createRepository({
-    List<MorningMeasurement>? initialState,
+  HealthMeasurementRepositoryImpl createRepository({
+    List<HealthMeasurement>? initialState,
   }) =>
-      MorningMeasurementRepositoryImpl(
+      HealthMeasurementRepositoryImpl(
         dateService: dateService,
-        firebaseMorningMeasurementService: firebaseMorningMeasurementService,
+        firebaseHealthMeasurementService: firebaseHealthMeasurementService,
         initialState: initialState,
       );
 
   tearDown(() {
     reset(dateService);
-    reset(firebaseMorningMeasurementService);
+    reset(firebaseHealthMeasurementService);
   });
 
   test(
@@ -35,14 +35,14 @@ void main() {
     'measurement exists in repository, '
     'should emit matching measurement',
     () {
-      final MorningMeasurement expectedMorningMeasurement =
-          createMorningMeasurement(date: date);
+      final HealthMeasurement expectedHealthMeasurement =
+          createHealthMeasurement(date: date);
       repository = createRepository(
         initialState: [
-          createMorningMeasurement(
+          createHealthMeasurement(
             date: DateTime(2023, 2, 10),
           ),
-          expectedMorningMeasurement,
+          expectedHealthMeasurement,
         ],
       );
       when(
@@ -52,7 +52,7 @@ void main() {
         () => dateService.areDatesTheSame(date, date),
       ).thenReturn(true);
 
-      final Stream<MorningMeasurement?> measurement$ =
+      final Stream<HealthMeasurement?> measurement$ =
           repository.getMeasurementByDate(
         date: date,
         userId: userId,
@@ -62,7 +62,7 @@ void main() {
       expect(
         measurement$,
         emitsInOrder(
-          [expectedMorningMeasurement],
+          [expectedHealthMeasurement],
         ),
       );
     },
@@ -73,22 +73,22 @@ void main() {
     'measurement does not exist in repository, '
     'should load measurement from firebase and should emit loaded measurement',
     () {
-      final MorningMeasurement expectedMorningMeasurement = MorningMeasurement(
+      final HealthMeasurement expectedHealthMeasurement = HealthMeasurement(
         date: date,
         restingHeartRate: 50,
         fastingWeight: 50.5,
       );
-      final MorningMeasurementDto morningMeasurementDto = MorningMeasurementDto(
+      final HealthMeasurementDto healthMeasurementDto = HealthMeasurementDto(
         date: date,
         restingHeartRate: 50,
         fastingWeight: 50.5,
       );
-      firebaseMorningMeasurementService.mockLoadMeasurementByDate(
-        morningMeasurementDto: morningMeasurementDto,
+      firebaseHealthMeasurementService.mockLoadMeasurementByDate(
+        healthMeasurementDto: healthMeasurementDto,
       );
       repository = createRepository(
         initialState: [
-          createMorningMeasurement(
+          createHealthMeasurement(
             date: DateTime(2023, 2, 10),
           ),
         ],
@@ -100,7 +100,7 @@ void main() {
         () => dateService.areDatesTheSame(date, date),
       ).thenReturn(true);
 
-      final Stream<MorningMeasurement?> measurement$ =
+      final Stream<HealthMeasurement?> measurement$ =
           repository.getMeasurementByDate(
         date: date,
         userId: userId,
@@ -112,7 +112,7 @@ void main() {
         emitsInOrder(
           [
             null,
-            expectedMorningMeasurement,
+            expectedHealthMeasurement,
           ],
         ),
       );
@@ -136,42 +136,42 @@ void main() {
         ).thenReturn(expected);
       }
 
-      final List<MorningMeasurement> existingMeasurements = [
-        MorningMeasurement(
+      final List<HealthMeasurement> existingMeasurements = [
+        HealthMeasurement(
           date: DateTime(2023, 1, 2),
           restingHeartRate: 50,
           fastingWeight: 50.5,
         ),
-        MorningMeasurement(
+        HealthMeasurement(
           date: DateTime(2023, 1, 3),
           restingHeartRate: 53,
           fastingWeight: 51.5,
         ),
-        MorningMeasurement(
+        HealthMeasurement(
           date: DateTime(2023, 1, 8),
           restingHeartRate: 50,
           fastingWeight: 50.8,
         ),
       ];
-      final List<MorningMeasurementDto> loadedMeasurementDtos = [
-        MorningMeasurementDto(
+      final List<HealthMeasurementDto> loadedMeasurementDtos = [
+        HealthMeasurementDto(
           date: DateTime(2023, 1, 5),
           restingHeartRate: 49,
           fastingWeight: 52.4,
         ),
-        MorningMeasurementDto(
+        HealthMeasurementDto(
           date: DateTime(2023, 1, 6),
           restingHeartRate: 49,
           fastingWeight: 52.8,
         ),
       ];
-      final List<MorningMeasurement> loadedMeasurements = [
-        MorningMeasurement(
+      final List<HealthMeasurement> loadedMeasurements = [
+        HealthMeasurement(
           date: DateTime(2023, 1, 5),
           restingHeartRate: 49,
           fastingWeight: 52.4,
         ),
-        MorningMeasurement(
+        HealthMeasurement(
           date: DateTime(2023, 1, 6),
           restingHeartRate: 49,
           fastingWeight: 52.8,
@@ -182,12 +182,12 @@ void main() {
       mockIsDateFromRange(DateTime(2023, 1, 8), false);
       mockIsDateFromRange(DateTime(2023, 1, 5), true);
       mockIsDateFromRange(DateTime(2023, 1, 6), true);
-      firebaseMorningMeasurementService.mockLoadMeasurementsByDateRange(
-        morningMeasurementDtos: loadedMeasurementDtos,
+      firebaseHealthMeasurementService.mockLoadMeasurementsByDateRange(
+        healthMeasurementDtos: loadedMeasurementDtos,
       );
       repository = createRepository(initialState: existingMeasurements);
 
-      Stream<List<MorningMeasurement>?> measurements$ =
+      Stream<List<HealthMeasurement>?> measurements$ =
           repository.getMeasurementsByDateRange(
         startDate: startDate,
         endDate: endDate,
@@ -212,7 +212,7 @@ void main() {
         ),
       );
       verify(
-        () => firebaseMorningMeasurementService.loadMeasurementsByDateRange(
+        () => firebaseHealthMeasurementService.loadMeasurementsByDateRange(
           startDate: startDate,
           endDate: endDate,
           userId: userId,
@@ -227,25 +227,25 @@ void main() {
     () {
       const int restingHeartRate = 55;
       const double fastingWeight = 55.5;
-      final MorningMeasurement morningMeasurement = MorningMeasurement(
+      final HealthMeasurement healthMeasurement = HealthMeasurement(
         date: date,
         restingHeartRate: restingHeartRate,
         fastingWeight: fastingWeight,
       );
-      final MorningMeasurementDto morningMeasurementDto = MorningMeasurementDto(
+      final HealthMeasurementDto healthMeasurementDto = HealthMeasurementDto(
         date: date,
         restingHeartRate: restingHeartRate,
         fastingWeight: fastingWeight,
       );
-      firebaseMorningMeasurementService.mockAddMeasurement(
-        addedMeasurementDto: morningMeasurementDto,
+      firebaseHealthMeasurementService.mockAddMeasurement(
+        addedMeasurementDto: healthMeasurementDto,
       );
       repository = createRepository();
 
-      final Stream<List<MorningMeasurement>?> state$ = repository.dataStream$;
+      final Stream<List<HealthMeasurement>?> state$ = repository.dataStream$;
       repository.addMeasurement(
         userId: userId,
-        measurement: morningMeasurement,
+        measurement: healthMeasurement,
       );
 
       expect(
@@ -253,14 +253,14 @@ void main() {
         emitsInOrder(
           [
             null,
-            [morningMeasurement]
+            [healthMeasurement]
           ],
         ),
       );
       verify(
-        () => firebaseMorningMeasurementService.addMeasurement(
+        () => firebaseHealthMeasurementService.addMeasurement(
           userId: userId,
-          measurementDto: morningMeasurementDto,
+          measurementDto: healthMeasurementDto,
         ),
       ).called(1);
     },

@@ -1,11 +1,11 @@
 import 'entity.dart';
 
-class MorningMeasurement extends Entity {
+class HealthMeasurement extends Entity {
   final DateTime date;
   final int restingHeartRate;
   final double fastingWeight;
 
-  MorningMeasurement({
+  HealthMeasurement({
     required this.date,
     required this.restingHeartRate,
     required this.fastingWeight,

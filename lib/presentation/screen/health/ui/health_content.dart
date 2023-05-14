@@ -12,8 +12,8 @@ class _Content extends StatelessWidget {
           child: Column(
             children: [
               _Section(
-                label: Str.of(context).healthMorningMeasurement,
-                child: const _ThisMorningMeasurement(),
+                label: Str.of(context).healthTodayMeasurement,
+                child: const _TodayMeasurement(),
               ),
               const SizedBox(height: 24),
               _Section(

@@ -1,27 +1,27 @@
 part of 'health_screen.dart';
 
-class _ThisMorningMeasurement extends StatelessWidget {
-  const _ThisMorningMeasurement();
+class _TodayMeasurement extends StatelessWidget {
+  const _TodayMeasurement();
 
   @override
   Widget build(BuildContext context) {
-    final MorningMeasurement? thisMorningMeasurement = context.select(
-      (HealthBloc bloc) => bloc.state.thisMorningMeasurement,
+    final HealthMeasurement? thisHealthMeasurement = context.select(
+      (HealthBloc bloc) => bloc.state.todayMeasurement,
     );
 
-    if (thisMorningMeasurement == null) {
-      return const _ThisMorningMeasurementButton();
+    if (thisHealthMeasurement == null) {
+      return const _TodayMeasurementButton();
     }
-    return _ThisMorningMeasurementPreview(
-      measurement: thisMorningMeasurement,
+    return _TodayMeasurementPreview(
+      measurement: thisHealthMeasurement,
     );
   }
 }
 
-class _ThisMorningMeasurementPreview extends StatelessWidget {
-  final MorningMeasurement measurement;
+class _TodayMeasurementPreview extends StatelessWidget {
+  final HealthMeasurement measurement;
 
-  const _ThisMorningMeasurementPreview({
+  const _TodayMeasurementPreview({
     required this.measurement,
   });
 
@@ -31,7 +31,7 @@ class _ThisMorningMeasurementPreview extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
-            child: _MorningMeasurementParam(
+            child: _HealthMeasurementParam(
               label: Str.of(context).healthRestingHeartRate,
               value:
                   '${measurement.restingHeartRate} ${Str.of(context).heartRateUnit}',
@@ -39,7 +39,7 @@ class _ThisMorningMeasurementPreview extends StatelessWidget {
           ),
           const VerticalDivider(),
           Expanded(
-            child: _MorningMeasurementParam(
+            child: _HealthMeasurementParam(
               label: Str.of(context).healthFastingWeight,
               value: '${measurement.fastingWeight} kg',
             ),
@@ -50,11 +50,11 @@ class _ThisMorningMeasurementPreview extends StatelessWidget {
   }
 }
 
-class _MorningMeasurementParam extends StatelessWidget {
+class _HealthMeasurementParam extends StatelessWidget {
   final String label;
   final String value;
 
-  const _MorningMeasurementParam({
+  const _HealthMeasurementParam({
     required this.label,
     required this.value,
   });
@@ -75,13 +75,13 @@ class _MorningMeasurementParam extends StatelessWidget {
   }
 }
 
-class _ThisMorningMeasurementButton extends StatelessWidget {
-  const _ThisMorningMeasurementButton();
+class _TodayMeasurementButton extends StatelessWidget {
+  const _TodayMeasurementButton();
 
   @override
   Widget build(BuildContext context) {
     return BigButton(
-      label: Str.of(context).healthMorningMeasurementButton,
+      label: Str.of(context).healthAddTodayMeasurementButton,
       onPressed: () {
         _onPressed(context);
       },
@@ -93,7 +93,7 @@ class _ThisMorningMeasurementButton extends StatelessWidget {
       context: context,
       dialog: BlocProvider<HealthBloc>.value(
         value: context.read<HealthBloc>(),
-        child: const _MorningMeasurementDialog(),
+        child: const _TodayMeasurementDialog(),
       ),
     );
   }

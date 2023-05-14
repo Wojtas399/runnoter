@@ -2,25 +2,25 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../firebase_collections.dart';
 import '../mapper/date_mapper.dart';
-import '../model/morning_measurement_dto.dart';
+import '../model/health_measurement_dto.dart';
 
-class FirebaseMorningMeasurementService {
-  Future<MorningMeasurementDto?> loadMeasurementByDate({
+class FirebaseHealthMeasurementService {
+  Future<HealthMeasurementDto?> loadMeasurementByDate({
     required String userId,
     required DateTime date,
   }) async {
     final measurementId = mapDateTimeToString(date);
     final snapshot =
-        await getMorningMeasurementsRef(userId).doc(measurementId).get();
+        await getHealthMeasurementsRef(userId).doc(measurementId).get();
     return snapshot.data();
   }
 
-  Future<List<MorningMeasurementDto>?> loadMeasurementsByDateRange({
+  Future<List<HealthMeasurementDto>?> loadMeasurementsByDateRange({
     required DateTime startDate,
     required DateTime endDate,
     required String userId,
   }) async {
-    final snapshot = await getMorningMeasurementsRef(userId)
+    final snapshot = await getHealthMeasurementsRef(userId)
         .where(
           FieldPath.documentId,
           isGreaterThanOrEqualTo: mapDateTimeToString(startDate),
@@ -32,18 +32,18 @@ class FirebaseMorningMeasurementService {
         .get();
     return snapshot.docs
         .map(
-          (QueryDocumentSnapshot<MorningMeasurementDto> docSnapshot) =>
+          (QueryDocumentSnapshot<HealthMeasurementDto> docSnapshot) =>
               docSnapshot.data(),
         )
         .toList();
   }
 
-  Future<MorningMeasurementDto?> addMeasurement({
+  Future<HealthMeasurementDto?> addMeasurement({
     required String userId,
-    required MorningMeasurementDto measurementDto,
+    required HealthMeasurementDto measurementDto,
   }) async {
     final String measurementId = mapDateTimeToString(measurementDto.date);
-    final measurementRef = getMorningMeasurementsRef(userId).doc(measurementId);
+    final measurementRef = getHealthMeasurementsRef(userId).doc(measurementId);
     await measurementRef.set(measurementDto);
     final snapshot = await measurementRef.get();
     return snapshot.data();

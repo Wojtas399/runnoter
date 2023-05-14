@@ -1,7 +1,7 @@
 part of 'health_bloc.dart';
 
 class HealthState extends BlocState {
-  final MorningMeasurement? thisMorningMeasurement;
+  final HealthMeasurement? todayMeasurement;
   final ChartRange chartRange;
   final DateTime? chartStartDate;
   final DateTime? chartEndDate;
@@ -10,7 +10,7 @@ class HealthState extends BlocState {
 
   const HealthState({
     required super.status,
-    this.thisMorningMeasurement,
+    this.todayMeasurement,
     required this.chartRange,
     this.chartStartDate,
     this.chartEndDate,
@@ -21,7 +21,7 @@ class HealthState extends BlocState {
   @override
   List<Object?> get props => [
         status,
-        thisMorningMeasurement,
+        todayMeasurement,
         chartRange,
         chartStartDate,
         chartEndDate,
@@ -32,7 +32,7 @@ class HealthState extends BlocState {
   @override
   HealthState copyWith({
     BlocStatus? status,
-    MorningMeasurement? thisMorningMeasurement,
+    HealthMeasurement? todayMeasurement,
     ChartRange? chartRange,
     DateTime? chartStartDate,
     DateTime? chartEndDate,
@@ -41,8 +41,7 @@ class HealthState extends BlocState {
   }) =>
       HealthState(
         status: status ?? const BlocStatusComplete(),
-        thisMorningMeasurement:
-            thisMorningMeasurement ?? this.thisMorningMeasurement,
+        todayMeasurement: todayMeasurement ?? this.todayMeasurement,
         chartRange: chartRange ?? this.chartRange,
         chartStartDate: chartStartDate ?? this.chartStartDate,
         chartEndDate: chartEndDate ?? this.chartEndDate,
@@ -53,5 +52,5 @@ class HealthState extends BlocState {
 }
 
 enum HealthBlocInfo {
-  morningMeasurementAdded,
+  healthMeasurementAdded,
 }

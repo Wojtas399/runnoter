@@ -1,4 +1,4 @@
-import 'package:firebase/model/morning_measurement_dto.dart';
+import 'package:firebase/model/health_measurement_dto.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -6,12 +6,12 @@ void main() {
   final DateTime date = DateTime(2023, 1, 10);
   const int restingHeartRate = 50;
   const double fastingWeight = 50.6;
-  final MorningMeasurementDto morningMeasurementDto = MorningMeasurementDto(
+  final HealthMeasurementDto healthMeasurementDto = HealthMeasurementDto(
     date: date,
     restingHeartRate: restingHeartRate,
     fastingWeight: fastingWeight,
   );
-  final Map<String, dynamic> morningMeasurementJson = {
+  final Map<String, dynamic> healthMeasurementJson = {
     'restingHeartRate': restingHeartRate,
     'fastingWeight': fastingWeight,
   };
@@ -20,12 +20,12 @@ void main() {
     'from json, '
     'should map json to dto model',
     () {
-      final MorningMeasurementDto dto = MorningMeasurementDto.fromJson(
+      final HealthMeasurementDto dto = HealthMeasurementDto.fromJson(
         dateStr,
-        morningMeasurementJson,
+        healthMeasurementJson,
       );
 
-      expect(dto, morningMeasurementDto);
+      expect(dto, healthMeasurementDto);
     },
   );
 
@@ -33,9 +33,9 @@ void main() {
     'to json, '
     'should map dto model to json',
     () {
-      final Map<String, dynamic> json = morningMeasurementDto.toJson();
+      final Map<String, dynamic> json = healthMeasurementDto.toJson();
 
-      expect(json, morningMeasurementJson);
+      expect(json, healthMeasurementJson);
     },
   );
 }

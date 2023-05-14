@@ -8,27 +8,27 @@ class HealthEventInitialize extends HealthEvent {
   const HealthEventInitialize();
 }
 
-class HealthEventThisMorningMeasurementUpdated extends HealthEvent {
-  final MorningMeasurement? thisMorningMeasurement;
+class HealthEventTodayMeasurementUpdated extends HealthEvent {
+  final HealthMeasurement? todayMeasurement;
 
-  const HealthEventThisMorningMeasurementUpdated({
-    required this.thisMorningMeasurement,
+  const HealthEventTodayMeasurementUpdated({
+    required this.todayMeasurement,
   });
 }
 
-class HealthEventMorningMeasurementsFromDateRangeUpdated extends HealthEvent {
-  final List<MorningMeasurement>? measurements;
+class HealthEventMeasurementsFromDateRangeUpdated extends HealthEvent {
+  final List<HealthMeasurement>? measurements;
 
-  const HealthEventMorningMeasurementsFromDateRangeUpdated({
+  const HealthEventMeasurementsFromDateRangeUpdated({
     required this.measurements,
   });
 }
 
-class HealthEventAddMorningMeasurement extends HealthEvent {
+class HealthEventAddTodayMeasurement extends HealthEvent {
   final int restingHeartRate;
   final double fastingWeight;
 
-  const HealthEventAddMorningMeasurement({
+  const HealthEventAddTodayMeasurement({
     required this.restingHeartRate,
     required this.fastingWeight,
   });

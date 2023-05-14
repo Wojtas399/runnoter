@@ -95,8 +95,8 @@
   "workoutStatusCreatorSavedStatusMessage": "Successfully updated workout status",
 
 
-  "healthMorningMeasurement": "Morning measurement",
-  "healthMorningMeasurementButton": "Add measurement",
+  "healthTodayMeasurement": "Today's measurement",
+  "healthAddTodayMeasurementButton": "Add measurement",
   "healthRestingHeartRate": "Resting heart rate",
   "healthFastingWeight": "Fasting weight",
   "healthSummaryOfMeasurements": "Summary of measurements",

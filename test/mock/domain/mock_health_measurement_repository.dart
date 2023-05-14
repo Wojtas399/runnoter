@@ -1,13 +1,13 @@
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/domain/model/morning_measurement.dart';
-import 'package:runnoter/domain/repository/morning_measurement_repository.dart';
+import 'package:runnoter/domain/model/health_measurement.dart';
+import 'package:runnoter/domain/repository/health_measurement_repository.dart';
 
-class _FakeMorningMeasurement extends Fake implements MorningMeasurement {}
+class _FakeHealthMeasurement extends Fake implements HealthMeasurement {}
 
-class MockMorningMeasurementRepository extends Mock
-    implements MorningMeasurementRepository {
+class MockHealthMeasurementRepository extends Mock
+    implements HealthMeasurementRepository {
   void mockGetMeasurementByDate({
-    MorningMeasurement? measurement,
+    HealthMeasurement? measurement,
   }) {
     when(
       () => getMeasurementByDate(
@@ -18,7 +18,7 @@ class MockMorningMeasurementRepository extends Mock
   }
 
   void mockGetMeasurementsByDateRange({
-    List<MorningMeasurement>? measurements,
+    List<HealthMeasurement>? measurements,
   }) {
     when(
       () => getMeasurementsByDateRange(
@@ -30,7 +30,7 @@ class MockMorningMeasurementRepository extends Mock
   }
 
   void mockAddMeasurement() {
-    _mockMorningMeasurement();
+    _mockHealthMeasurement();
     when(
       () => addMeasurement(
         userId: any(named: 'userId'),
@@ -39,7 +39,7 @@ class MockMorningMeasurementRepository extends Mock
     ).thenAnswer((invocation) => Future.value());
   }
 
-  void _mockMorningMeasurement() {
-    registerFallbackValue(_FakeMorningMeasurement());
+  void _mockHealthMeasurement() {
+    registerFallbackValue(_FakeHealthMeasurement());
   }
 }

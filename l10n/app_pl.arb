@@ -339,13 +339,13 @@
   },
 
 
-  "healthMorningMeasurement": "Poranny pomiar",
-  "@healthMorningMeasurement": {
-    "description": "Label of morning measurement"
+  "healthTodayMeasurement": "Dzisiejszy pomiar",
+  "@healthTodayMeasurement": {
+    "description": "Label of today measurement"
   },
-  "healthMorningMeasurementButton": "Dodaj pomiar",
-  "@healthMorningMeasurementButton": {
-    "description": "Label of the button to add morning measurement"
+  "healthAddTodayMeasurementButton": "Dodaj pomiar",
+  "@healthAddTodayMeasurementButton": {
+    "description": "Label of the button to add today measurement"
   },
   "healthRestingHeartRate": "Tętno spoczynkowe",
   "@healthRestingHeartRate": {

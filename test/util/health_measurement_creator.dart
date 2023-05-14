@@ -1,11 +1,11 @@
-import 'package:runnoter/domain/model/morning_measurement.dart';
+import 'package:runnoter/domain/model/health_measurement.dart';
 
-MorningMeasurement createMorningMeasurement({
+HealthMeasurement createHealthMeasurement({
   DateTime? date,
   int restingHeartRate = 50,
   double fastingWeight = 50.0,
 }) =>
-    MorningMeasurement(
+    HealthMeasurement(
       date: date ?? DateTime(2023),
       restingHeartRate: restingHeartRate,
       fastingWeight: fastingWeight,

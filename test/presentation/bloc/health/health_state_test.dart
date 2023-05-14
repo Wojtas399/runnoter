@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:runnoter/domain/model/morning_measurement.dart';
+import 'package:runnoter/domain/model/health_measurement.dart';
 import 'package:runnoter/presentation/model/bloc_status.dart';
 import 'package:runnoter/presentation/screen/health/bloc/health_bloc.dart';
 import 'package:runnoter/presentation/screen/health/bloc/health_chart_service.dart';
@@ -30,21 +30,19 @@ void main() {
   );
 
   test(
-    'copy with this morning measurement',
+    'copy with today measurement',
     () {
-      final MorningMeasurement expectedMorningMeasurement = MorningMeasurement(
+      final HealthMeasurement expectedMeasurement = HealthMeasurement(
         date: DateTime(2023, 1, 10),
         restingHeartRate: 50,
         fastingWeight: 80.2,
       );
 
-      state = state.copyWith(
-        thisMorningMeasurement: expectedMorningMeasurement,
-      );
+      state = state.copyWith(todayMeasurement: expectedMeasurement);
       final state2 = state.copyWith();
 
-      expect(state.thisMorningMeasurement, expectedMorningMeasurement);
-      expect(state2.thisMorningMeasurement, expectedMorningMeasurement);
+      expect(state.todayMeasurement, expectedMeasurement);
+      expect(state2.todayMeasurement, expectedMeasurement);
     },
   );
 

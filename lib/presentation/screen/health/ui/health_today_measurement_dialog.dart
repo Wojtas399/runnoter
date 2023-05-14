@@ -1,13 +1,13 @@
 part of 'health_screen.dart';
 
-class _MorningMeasurementDialog extends StatefulWidget {
-  const _MorningMeasurementDialog();
+class _TodayMeasurementDialog extends StatefulWidget {
+  const _TodayMeasurementDialog();
 
   @override
-  State<StatefulWidget> createState() => _MorningMeasurementDialogState();
+  State<StatefulWidget> createState() => _TodayMeasurementDialogState();
 }
 
-class _MorningMeasurementDialogState extends State<_MorningMeasurementDialog> {
+class _TodayMeasurementDialogState extends State<_TodayMeasurementDialog> {
   final _restingHeartRateController = TextEditingController();
   final _weightController = TextEditingController();
   bool _isSubmitButtonDisabled = true;
@@ -17,7 +17,7 @@ class _MorningMeasurementDialogState extends State<_MorningMeasurementDialog> {
     return BlocListener<HealthBloc, HealthState>(
       listener: _onHealthStateChanged,
       child: FullScreenDialog(
-        title: Str.of(context).healthMorningMeasurement,
+        title: Str.of(context).healthTodayMeasurement,
         isSubmitButtonDisabled: _isSubmitButtonDisabled,
         onSubmitButtonPressed: () {
           _onSubmitButtonPressed(context);
@@ -68,7 +68,7 @@ class _MorningMeasurementDialogState extends State<_MorningMeasurementDialog> {
   void _onHealthStateChanged(BuildContext context, HealthState state) {
     final BlocStatus blocStatus = state.status;
     if (blocStatus is BlocStatusComplete &&
-        blocStatus.info == HealthBlocInfo.morningMeasurementAdded) {
+        blocStatus.info == HealthBlocInfo.healthMeasurementAdded) {
       navigateBack(context: context);
     }
   }
@@ -95,7 +95,7 @@ class _MorningMeasurementDialogState extends State<_MorningMeasurementDialog> {
     final double? fastingWeight = double.tryParse(_weightController.text);
     if (restingHeartRate != null && fastingWeight != null) {
       context.read<HealthBloc>().add(
-            HealthEventAddMorningMeasurement(
+            HealthEventAddTodayMeasurement(
               restingHeartRate: restingHeartRate,
               fastingWeight: fastingWeight,
             ),

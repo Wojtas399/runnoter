@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 import '../../../../common/date_service.dart';
-import '../../../../domain/model/morning_measurement.dart';
+import '../../../../domain/model/health_measurement.dart';
 
 class HealthChartService {
   final DateService _dateService;
@@ -13,7 +13,7 @@ class HealthChartService {
   (List<HealthChartPoint>, List<HealthChartPoint>) createPointsOfCharts({
     required DateTime startDate,
     required DateTime endDate,
-    required List<MorningMeasurement> measurements,
+    required List<HealthMeasurement> measurements,
   }) {
     DateTime counterDate = startDate;
     final DateTime dayAfterEndDay = endDate.add(const Duration(days: 1));

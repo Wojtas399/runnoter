@@ -5,8 +5,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 import '../../../../common/date_service.dart';
-import '../../../../domain/model/morning_measurement.dart';
-import '../../../../domain/repository/morning_measurement_repository.dart';
+import '../../../../domain/model/health_measurement.dart';
+import '../../../../domain/repository/health_measurement_repository.dart';
 import '../../../../domain/service/auth_service.dart';
 import '../../../component/big_button_component.dart';
 import '../../../component/bloc_with_status_listener_component.dart';
@@ -24,8 +24,8 @@ import '../bloc/health_chart_service.dart';
 part 'health_chart_range_selection.dart';
 part 'health_charts.dart';
 part 'health_content.dart';
-part 'health_morning_measurement_dialog.dart';
-part 'health_this_morning_measurement.dart';
+part 'health_today_measurement.dart';
+part 'health_today_measurement_dialog.dart';
 
 class HealthScreen extends StatelessWidget {
   const HealthScreen({
@@ -55,8 +55,8 @@ class _BlocProvider extends StatelessWidget {
       create: (BuildContext context) => HealthBloc(
         dateService: DateService(),
         authService: context.read<AuthService>(),
-        morningMeasurementRepository:
-            context.read<MorningMeasurementRepository>(),
+        healthMeasurementRepository:
+            context.read<HealthMeasurementRepository>(),
         chartService: HealthChartService(
           dateService: DateService(),
         ),

@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'model/appearance_settings_dto.dart';
-import 'model/morning_measurement_dto.dart';
+import 'model/health_measurement_dto.dart';
 import 'model/user_dto.dart';
 import 'model/workout_dto.dart';
 import 'model/workout_settings_dto.dart';
@@ -32,18 +32,18 @@ CollectionReference<WorkoutDto> getWorkoutsRef(
           toFirestore: (workoutDto, _) => workoutDto.toJson(),
         );
 
-CollectionReference<MorningMeasurementDto> getMorningMeasurementsRef(
+CollectionReference<HealthMeasurementDto> getHealthMeasurementsRef(
   String userId,
 ) =>
     getUserRef(userId)
-        .collection('MorningMeasurements')
-        .withConverter<MorningMeasurementDto>(
-          fromFirestore: (snapshot, _) => MorningMeasurementDto.fromJson(
+        .collection('HealthMeasurements')
+        .withConverter<HealthMeasurementDto>(
+          fromFirestore: (snapshot, _) => HealthMeasurementDto.fromJson(
             snapshot.id,
             snapshot.data(),
           ),
-          toFirestore: (morningMeasurementDto, _) =>
-              morningMeasurementDto.toJson(),
+          toFirestore: (healthMeasurementDto, _) =>
+              healthMeasurementDto.toJson(),
         );
 
 DocumentReference<AppearanceSettingsDto> getAppearanceSettingsRef(

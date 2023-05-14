@@ -1,10 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/domain/model/morning_measurement.dart';
+import 'package:runnoter/domain/model/health_measurement.dart';
 import 'package:runnoter/presentation/screen/health/bloc/health_chart_service.dart';
 
 import '../../../mock/presentation/service/mock_date_service.dart';
-import '../../../util/morning_measurement_creator.dart';
+import '../../../util/health_measurement_creator.dart';
 
 void main() {
   final dateService = MockDateService();
@@ -24,18 +24,18 @@ void main() {
     () {
       final DateTime startDate = DateTime(2023, 5, 8);
       final DateTime endDate = DateTime(2023, 5, 12);
-      final List<MorningMeasurement> measurements = [
-        createMorningMeasurement(
+      final List<HealthMeasurement> measurements = [
+        createHealthMeasurement(
           date: DateTime(2023, 5, 9),
           restingHeartRate: 51,
           fastingWeight: 60.5,
         ),
-        createMorningMeasurement(
+        createHealthMeasurement(
           date: DateTime(2023, 5, 10),
           restingHeartRate: 53,
           fastingWeight: 64,
         ),
-        createMorningMeasurement(
+        createHealthMeasurement(
           date: endDate,
           restingHeartRate: 52,
           fastingWeight: 62.5,
