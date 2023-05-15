@@ -82,9 +82,9 @@ void main() {
     'date is from range, '
     'should return true',
     () {
-      final DateTime date = DateTime(2023, 4, 6, 12, 30);
-      final DateTime startDate = DateTime(2023, 4, 3, 19, 00);
-      final DateTime endDate = DateTime(2023, 4, 9, 10, 15);
+      final DateTime date = DateTime(2023, 4, 22);
+      final DateTime startDate = DateTime(2023, 2, 6);
+      final DateTime endDate = DateTime(2023, 5, 9);
 
       final bool result = service.isDateFromRange(
         date: date,
@@ -101,7 +101,7 @@ void main() {
     'date is equal to start date, '
     'should return true',
     () {
-      final DateTime date = DateTime(2023, 4, 3, 12, 30);
+      final DateTime date = DateTime(2023, 4, 3);
       final DateTime startDate = DateTime(2023, 4, 3, 19, 00);
       final DateTime endDate = DateTime(2023, 4, 9, 10, 15);
 
@@ -204,48 +204,6 @@ void main() {
       final DateTime date2 = DateTime(2023, 2, 2, 11, 25);
 
       final bool result = service.areDatesTheSame(date1, date2);
-
-      expect(result, false);
-    },
-  );
-
-  test(
-    'is date1 before date2, '
-    'date1 is before date2, '
-    'should return true',
-    () {
-      final DateTime date1 = DateTime(2023, 2, 1);
-      final DateTime date2 = DateTime(2023, 2, 10);
-
-      final bool result = service.isDate1BeforeDate2(date1, date2);
-
-      expect(result, true);
-    },
-  );
-
-  test(
-    'is date1 before date2, '
-    'date1 is equal to date2, '
-    'should return false',
-    () {
-      final DateTime date1 = DateTime(2023, 2, 10, 12, 30);
-      final DateTime date2 = DateTime(2023, 2, 10, 10, 30);
-
-      final bool result = service.isDate1BeforeDate2(date1, date2);
-
-      expect(result, false);
-    },
-  );
-
-  test(
-    'is date1 before date2, '
-    'date1 is after date2, '
-    'should return false',
-    () {
-      final DateTime date1 = DateTime(2023, 2, 15);
-      final DateTime date2 = DateTime(2023, 2, 10);
-
-      final bool result = service.isDate1BeforeDate2(date1, date2);
 
       expect(result, false);
     },

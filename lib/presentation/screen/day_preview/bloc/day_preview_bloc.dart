@@ -60,10 +60,7 @@ class DayPreviewBloc extends BlocWithStatus<DayPreviewEvent, DayPreviewState,
     }
     emit(state.copyWith(
       date: event.date,
-      isPastDay: _dateService.isDate1BeforeDate2(
-        event.date,
-        _dateService.getToday(),
-      ),
+      isPastDay: event.date.isBefore(_dateService.getToday()),
     ));
     _setWorkoutListener(loggedUserId, event.date);
   }

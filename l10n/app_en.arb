@@ -106,6 +106,10 @@
   "healthShowAllMeasurementsButton": "Show all measurements",
 
 
+  "healthMeasurementsScreenTitle": "All measurements",
+  "healthMeasurementsNoMeasurementsInfo": "No measurements",
+
+
   "profileScreenTitle": "Profile",
   "profileUserData": "User identities",
   "profileSettings": "Settings",

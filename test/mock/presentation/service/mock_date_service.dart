@@ -75,15 +75,4 @@ class MockDateService extends Mock implements DateService {
       ),
     ).thenReturn(expected);
   }
-
-  void mockIsDate1BeforeDate2({
-    required bool expected,
-  }) {
-    when(
-      () => isDate1BeforeDate2(
-        any(),
-        any(),
-      ),
-    ).thenReturn(expected);
-  }
 }

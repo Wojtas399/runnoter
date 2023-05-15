@@ -30,15 +30,17 @@ class HealthMeasurementRepositoryImpl extends StateRepository<HealthMeasurement>
             (List<HealthMeasurement>? measurements) =>
                 <HealthMeasurement?>[...?measurements].firstWhere(
               (HealthMeasurement? measurement) => measurement != null
-                  ? _dateService.areDatesTheSame(measurement.date, date)
+                  ? measurement.userId == userId &&
+                      _dateService.areDatesTheSame(measurement.date, date)
                   : false,
               orElse: () => null,
             ),
           )
           .doOnListen(
-            () async => await _doesMeasurementWithGivenDateNotExist(date)
-                ? _loadMeasurementByDateFromRemoteDb(date, userId)
-                : null,
+            () async =>
+                await _doesMeasurementWithGivenDateNotExist(date, userId)
+                    ? _loadMeasurementByDateFromRemoteDb(date, userId)
+                    : null,
           );
 
   @override
@@ -51,11 +53,13 @@ class HealthMeasurementRepositoryImpl extends StateRepository<HealthMeasurement>
           .map(
             (List<HealthMeasurement>? measurements) => measurements
                 ?.where(
-                  (measurement) => _dateService.isDateFromRange(
-                    date: measurement.date,
-                    startDate: startDate,
-                    endDate: endDate,
-                  ),
+                  (measurement) =>
+                      measurement.userId == userId &&
+                      _dateService.isDateFromRange(
+                        date: measurement.date,
+                        startDate: startDate,
+                        endDate: endDate,
+                      ),
                 )
                 .toList(),
           )
@@ -68,13 +72,26 @@ class HealthMeasurementRepositoryImpl extends StateRepository<HealthMeasurement>
           );
 
   @override
-  Future<void> addMeasurement({
+  Stream<List<HealthMeasurement>?> getAllMeasurements({
     required String userId,
+  }) =>
+      dataStream$
+          .map(
+            (List<HealthMeasurement>? measurements) => measurements
+                ?.where((measurement) => measurement.userId == userId)
+                .toList(),
+          )
+          .doOnListen(
+            () => _loadAllMeasurementsFromRemoteDb(userId),
+          );
+
+  @override
+  Future<void> addMeasurement({
     required HealthMeasurement measurement,
   }) async {
     final HealthMeasurementDto? healthMeasurementDto =
         await _firebaseHealthMeasurementService.addMeasurement(
-      userId: userId,
+      userId: measurement.userId,
       measurementDto: mapHealthMeasurementToFirebase(measurement),
     );
     if (healthMeasurementDto != null) {
@@ -84,13 +101,17 @@ class HealthMeasurementRepositoryImpl extends StateRepository<HealthMeasurement>
     }
   }
 
-  Future<bool> _doesMeasurementWithGivenDateNotExist(DateTime date) async {
+  Future<bool> _doesMeasurementWithGivenDateNotExist(
+    DateTime date,
+    String userId,
+  ) async {
     final List<HealthMeasurement>? measurements = await dataStream$.first;
     if (measurements == null) {
       return true;
     }
     for (final measurement in measurements) {
-      if (_dateService.areDatesTheSame(measurement.date, date)) {
+      if (_dateService.areDatesTheSame(measurement.date, date) &&
+          measurement.userId == userId) {
         return false;
       }
     }
@@ -126,10 +147,23 @@ class HealthMeasurementRepositoryImpl extends StateRepository<HealthMeasurement>
       userId: userId,
     );
     if (measurementDtos != null) {
-      final List<HealthMeasurement> measurements = measurementDtos
-          .map((dto) => mapHealthMeasurementFromFirebase(dto))
-          .toList();
-      addEntities(measurements);
+      _addDtos(measurementDtos);
     }
+  }
+
+  Future<void> _loadAllMeasurementsFromRemoteDb(String userId) async {
+    final List<HealthMeasurementDto>? measurementDtos =
+        await _firebaseHealthMeasurementService.loadAllMeasurements(
+      userId: userId,
+    );
+    if (measurementDtos != null) {
+      _addDtos(measurementDtos);
+    }
+  }
+
+  void _addDtos(List<HealthMeasurementDto> dtos) {
+    final List<HealthMeasurement> measurements =
+        dtos.map(mapHealthMeasurementFromFirebase).toList();
+    addEntities(measurements);
   }
 }

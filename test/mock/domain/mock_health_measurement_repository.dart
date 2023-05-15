@@ -29,11 +29,20 @@ class MockHealthMeasurementRepository extends Mock
     ).thenAnswer((invocation) => Stream.value(measurements));
   }
 
+  void mockGetAllMeasurements({
+    List<HealthMeasurement>? measurements,
+  }) {
+    when(
+      () => getAllMeasurements(
+        userId: any(named: 'userId'),
+      ),
+    ).thenAnswer((invocation) => Stream.value(measurements));
+  }
+
   void mockAddMeasurement() {
     _mockHealthMeasurement();
     when(
       () => addMeasurement(
-        userId: any(named: 'userId'),
         measurement: any(named: 'measurement'),
       ),
     ).thenAnswer((invocation) => Future.value());

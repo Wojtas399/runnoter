@@ -2,11 +2,13 @@ import 'package:firebase/model/health_measurement_dto.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
+  const String userId = 'u1';
   const String dateStr = '2023-1-10';
   final DateTime date = DateTime(2023, 1, 10);
   const int restingHeartRate = 50;
   const double fastingWeight = 50.6;
   final HealthMeasurementDto healthMeasurementDto = HealthMeasurementDto(
+    userId: userId,
     date: date,
     restingHeartRate: restingHeartRate,
     fastingWeight: fastingWeight,
@@ -21,8 +23,9 @@ void main() {
     'should map json to dto model',
     () {
       final HealthMeasurementDto dto = HealthMeasurementDto.fromJson(
-        dateStr,
-        healthMeasurementJson,
+        userId: userId,
+        dateStr: dateStr,
+        json: healthMeasurementJson,
       );
 
       expect(dto, healthMeasurementDto);

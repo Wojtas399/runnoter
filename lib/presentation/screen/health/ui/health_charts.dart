@@ -92,6 +92,7 @@ class _LineChart extends StatelessWidget {
           markerSettings: MarkerSettings(
             isVisible: true,
             color: Theme.of(context).colorScheme.primary,
+            borderColor: Theme.of(context).colorScheme.primary,
           ),
         ),
       ],

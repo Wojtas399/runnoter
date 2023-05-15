@@ -11,18 +11,6 @@ class CurrentWeekContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.all(16),
-      child: _Workouts(),
-    );
-  }
-}
-
-class _Workouts extends StatelessWidget {
-  const _Workouts();
-
-  @override
-  Widget build(BuildContext context) {
     final List<Day>? days = context.select(
       (CurrentWeekCubit cubit) => cubit.state,
     );
@@ -33,6 +21,7 @@ class _Workouts extends StatelessWidget {
 
     return ListView.separated(
       itemCount: days.length,
+      padding: const EdgeInsets.fromLTRB(12, 12, 12, 80),
       itemBuilder: (_, int itemIndex) => DayItem(
         day: days[itemIndex],
       ),

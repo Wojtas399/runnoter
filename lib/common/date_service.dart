@@ -46,34 +46,15 @@ class DateService {
     required DateTime date,
     required DateTime startDate,
     required DateTime endDate,
-  }) {
-    final DateTime correctedStartDate = DateTime(
-      startDate.year,
-      startDate.month,
-      startDate.day,
-    );
-    final DateTime correctedEndDate = DateTime(
-      endDate.year,
-      endDate.month,
-      endDate.day,
-      23,
-      59,
-    );
-    return date.isAfter(correctedStartDate) && date.isBefore(correctedEndDate);
-  }
+  }) =>
+      areDatesTheSame(date, startDate) ||
+      areDatesTheSame(date, endDate) ||
+      (date.isAfter(startDate) && date.isBefore(endDate));
 
   bool areDatesTheSame(DateTime date1, DateTime date2) {
     return date1.year == date2.year &&
         date1.month == date2.month &&
         date1.day == date2.day;
-  }
-
-  bool isDate1BeforeDate2(DateTime date1, DateTime date2) {
-    return date1.year < date2.year ||
-        (date1.year == date2.year && date1.month < date2.month) ||
-        (date1.year == date2.year &&
-            date1.month == date2.month &&
-            date1.day < date2.day);
   }
 
   DateTime _getDate(DateTime d) => DateTime(d.year, d.month, d.day);

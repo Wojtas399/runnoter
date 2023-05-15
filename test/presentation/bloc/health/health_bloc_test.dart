@@ -268,8 +268,8 @@ void main() {
       ).called(1);
       verify(
         () => healthMeasurementRepository.addMeasurement(
-          userId: userId,
           measurement: HealthMeasurement(
+            userId: userId,
             date: DateTime(2023, 5, 12),
             restingHeartRate: 50,
             fastingWeight: 60.5,
