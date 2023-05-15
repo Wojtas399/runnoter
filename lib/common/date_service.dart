@@ -47,12 +47,9 @@ class DateService {
     required DateTime startDate,
     required DateTime endDate,
   }) =>
-      date.year >= startDate.year &&
-      date.year <= endDate.year &&
-      date.month >= startDate.month &&
-      date.month <= endDate.month &&
-      date.day >= startDate.day &&
-      date.day <= endDate.day;
+      areDatesTheSame(date, startDate) ||
+      areDatesTheSame(date, endDate) ||
+      (date.isAfter(startDate) && date.isBefore(endDate));
 
   bool areDatesTheSame(DateTime date1, DateTime date2) {
     return date1.year == date2.year &&
