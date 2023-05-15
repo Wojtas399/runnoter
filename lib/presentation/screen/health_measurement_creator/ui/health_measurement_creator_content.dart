@@ -127,8 +127,17 @@ class _SubmitButton extends StatelessWidget {
 
     return BigButton(
       label: Str.of(context).save,
-      onPressed: () {},
+      onPressed: () {
+        _onPressed(context);
+      },
       isDisabled: isDisabled,
     );
+  }
+
+  void _onPressed(BuildContext context) {
+    unfocusInputs();
+    context.read<HealthMeasurementCreatorBloc>().add(
+          const HealthMeasurementCreatorEventSubmit(),
+        );
   }
 }

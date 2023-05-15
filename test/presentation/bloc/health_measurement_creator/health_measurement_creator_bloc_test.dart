@@ -1,6 +1,7 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:runnoter/domain/model/health_measurement.dart';
 import 'package:runnoter/presentation/model/bloc_status.dart';
 import 'package:runnoter/presentation/screen/health_measurement_creator/bloc/health_measurement_creator_bloc.dart';
 
@@ -48,20 +49,12 @@ void main() {
   blocTest(
     'initialize, '
     'given date is null, '
-    'should get today date and should emit it',
+    'should do nothing',
     build: () => createBloc(),
-    setUp: () => dateService.mockGetToday(
-      todayDate: DateTime(2023, 5, 10),
-    ),
     act: (HealthMeasurementCreatorBloc bloc) => bloc.add(
       const HealthMeasurementCreatorEventInitialize(),
     ),
-    expect: () => [
-      createState(
-        status: const BlocStatusComplete(),
-        date: DateTime(2023, 5, 10),
-      ),
-    ],
+    expect: () => [],
   );
 
   blocTest(
@@ -138,5 +131,106 @@ void main() {
         fastingWeightStr: '61.5',
       ),
     ],
+  );
+
+  blocTest(
+    'submit, '
+    'resting heart rate is not int number, '
+    'should do nothing',
+    build: () => createBloc(
+      restingHeartRateStr: '50sw',
+      fastingWeightStr: '65.2',
+    ),
+    act: (HealthMeasurementCreatorBloc bloc) => bloc.add(
+      const HealthMeasurementCreatorEventSubmit(),
+    ),
+    expect: () => [],
+  );
+
+  blocTest(
+    'submit, '
+    'fasting weight is not double number, '
+    'should do nothing',
+    build: () => createBloc(
+      restingHeartRateStr: '50',
+      fastingWeightStr: '65.2sad',
+    ),
+    act: (HealthMeasurementCreatorBloc bloc) => bloc.add(
+      const HealthMeasurementCreatorEventSubmit(),
+    ),
+    expect: () => [],
+  );
+
+  blocTest(
+    'submit, '
+    'logged user does not exist, '
+    'should emit no logged user bloc status',
+    build: () => createBloc(
+      restingHeartRateStr: '50',
+      fastingWeightStr: '65.2',
+    ),
+    setUp: () => authService.mockGetLoggedUserId(),
+    act: (HealthMeasurementCreatorBloc bloc) => bloc.add(
+      const HealthMeasurementCreatorEventSubmit(),
+    ),
+    expect: () => [
+      createState(
+        status: const BlocStatusNoLoggedUser(),
+        restingHeartRateStr: '50',
+        fastingWeightStr: '65.2',
+      ),
+    ],
+    verify: (_) => verify(
+      () => authService.loggedUserId$,
+    ).called(1),
+  );
+
+  blocTest(
+    'submit, '
+    'date is null, '
+    'should get today date, should call method from health measurement repository to add new measurement with today date and should emit info about saved measurement',
+    build: () => createBloc(
+      restingHeartRateStr: '50',
+      fastingWeightStr: '65.2',
+    ),
+    setUp: () {
+      dateService.mockGetToday(
+        todayDate: DateTime(2023, 5, 12),
+      );
+      authService.mockGetLoggedUserId(userId: 'u1');
+      healthMeasurementRepository.mockAddMeasurement();
+    },
+    act: (HealthMeasurementCreatorBloc bloc) => bloc.add(
+      const HealthMeasurementCreatorEventSubmit(),
+    ),
+    expect: () => [
+      createState(
+        status: const BlocStatusLoading(),
+        restingHeartRateStr: '50',
+        fastingWeightStr: '65.2',
+      ),
+      createState(
+        status: const BlocStatusComplete<HealthMeasurementCreatorBlocInfo>(
+          info: HealthMeasurementCreatorBlocInfo.measurementSaved,
+        ),
+        restingHeartRateStr: '50',
+        fastingWeightStr: '65.2',
+      ),
+    ],
+    verify: (_) {
+      verify(
+        () => authService.loggedUserId$,
+      ).called(1);
+      verify(
+        () => healthMeasurementRepository.addMeasurement(
+          measurement: HealthMeasurement(
+            userId: 'u1',
+            date: DateTime(2023, 5, 12),
+            restingHeartRate: 50,
+            fastingWeight: 65.2,
+          ),
+        ),
+      ).called(1);
+    },
   );
 }
