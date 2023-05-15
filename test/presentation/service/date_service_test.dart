@@ -101,7 +101,7 @@ void main() {
     'date is equal to start date, '
     'should return true',
     () {
-      final DateTime date = DateTime(2023, 4, 3, 12, 30);
+      final DateTime date = DateTime(2023, 4, 3);
       final DateTime startDate = DateTime(2023, 4, 3, 19, 00);
       final DateTime endDate = DateTime(2023, 4, 9, 10, 15);
 
