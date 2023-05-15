@@ -51,6 +51,19 @@ class MockFirebaseHealthMeasurementService extends Mock
     ).thenAnswer((invocation) => Future.value(addedMeasurementDto));
   }
 
+  void mockUpdateMeasurement({
+    HealthMeasurementDto? updatedMeasurementDto,
+  }) {
+    when(
+      () => updateMeasurement(
+        userId: any(named: 'userId'),
+        date: any(named: 'date'),
+        restingHeartRate: any(named: 'restingHeartRate'),
+        fastingWeight: any(named: 'fastingWeight'),
+      ),
+    ).thenAnswer((invocation) => Future.value(updatedMeasurementDto));
+  }
+
   void _mockHealthMeasurementDto() {
     registerFallbackValue(_FakeHealthMeasurementDto());
   }

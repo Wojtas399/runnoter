@@ -41,5 +41,14 @@ class HealthMeasurementDto extends Equatable {
       };
 }
 
+Map<String, dynamic> createHealthMeasurementJsonToUpdate({
+  int? restingHeartRate,
+  double? fastingWeight,
+}) =>
+    {
+      if (restingHeartRate != null) _restingHeartRateField: restingHeartRate,
+      if (fastingWeight != null) _fastingWeightField: fastingWeight,
+    };
+
 const String _restingHeartRateField = 'restingHeartRate';
 const String _fastingWeightField = 'fastingWeight';
