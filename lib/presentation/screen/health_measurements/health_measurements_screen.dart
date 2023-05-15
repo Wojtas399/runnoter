@@ -5,6 +5,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../domain/model/health_measurement.dart';
 import '../../../domain/repository/health_measurement_repository.dart';
 import '../../../domain/service/auth_service.dart';
+import '../../component/empty_content_info_component.dart';
 import '../../formatter/date_formatter.dart';
 import 'health_measurements_cubit.dart';
 
@@ -20,7 +21,8 @@ class HealthMeasurementsScreen extends StatelessWidget {
     return _CubitProvider(
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Health measurements screen'),
+          centerTitle: true,
+          title: Text(Str.of(context).healthMeasurementsScreenTitle),
         ),
         body: const SafeArea(
           child: _Measurements(),
@@ -61,7 +63,11 @@ class _Measurements extends StatelessWidget {
 
     if (measurements == null) {
       return const Center(
-        child: Text('Brak pomiarów'),
+        child: CircularProgressIndicator(),
+      );
+    } else if (measurements.isEmpty) {
+      return EmptyContentInfo(
+        title: Str.of(context).healthMeasurementsNoMeasurementsInfo,
       );
     }
     return ListView.separated(

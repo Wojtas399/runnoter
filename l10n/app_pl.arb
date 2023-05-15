@@ -377,6 +377,16 @@
   },
 
 
+  "healthMeasurementsScreenTitle": "Wszystkie pomiary",
+  "@healthMeasurementsScreenTitle": {
+    "description": "Title of the screen displaying all health measurements"
+  },
+  "healthMeasurementsNoMeasurementsInfo": "Brak pomiarów",
+  "@healthMeasurementsNoMeasurementsInfo": {
+    "description": "Text to inform that there is no health measurements"
+  },
+
+
   "profileScreenTitle": "Profil",
   "@profileScreenTitle": {
     "description": "Title of the profile screen"
