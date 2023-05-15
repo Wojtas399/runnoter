@@ -122,4 +122,20 @@ void main() {
       ),
     ],
   );
+
+  blocTest(
+    'fasting weight changed, ',
+    build: () => createBloc(),
+    act: (HealthMeasurementCreatorBloc bloc) => bloc.add(
+      const HealthMeasurementCreatorEventFastingWeightChanged(
+        fastingWeight: 61.5,
+      ),
+    ),
+    expect: () => [
+      createState(
+        status: const BlocStatusComplete(),
+        fastingWeight: 61.5,
+      ),
+    ],
+  );
 }
