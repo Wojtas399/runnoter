@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/presentation/model/bloc_status.dart';
-import 'package:runnoter/presentation/screen/health_measurement_creator/bloc/health_measurement_creator_state.dart';
+import 'package:runnoter/presentation/screen/health_measurement_creator/bloc/health_measurement_creator_bloc.dart';
 
 void main() {
   late HealthMeasurementCreatorState state;

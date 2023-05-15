@@ -1,3 +1,5 @@
+part of 'health_measurement_creator_bloc.dart';
+
 abstract class HealthMeasurementCreatorEvent {
   const HealthMeasurementCreatorEvent();
 }
@@ -7,7 +9,7 @@ class HealthMeasurementCreatorEventInitialize
   final DateTime? date;
 
   const HealthMeasurementCreatorEventInitialize({
-    required this.date,
+    this.date,
   });
 }
 

@@ -1,5 +1,4 @@
-import '../../../model/bloc_state.dart';
-import '../../../model/bloc_status.dart';
+part of 'health_measurement_creator_bloc.dart';
 
 class HealthMeasurementCreatorState
     extends BlocState<HealthMeasurementCreatorState> {
