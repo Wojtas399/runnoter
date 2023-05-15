@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../screen/health_measurement_creator/health_measurement_creator_screen.dart';
 import '../../screen/health_measurements/health_measurements_screen.dart';
 import '../../screen/screens.dart';
 import '../animation/slide_to_top_anim.dart';
@@ -41,6 +42,10 @@ class AppNavigator extends StatelessWidget {
     } else if (routePath == RoutePath.workoutStatusCreator.path) {
       screen = WorkoutStatusCreatorScreen(
         arguments: settings.arguments as WorkoutStatusCreatorArguments,
+      );
+    } else if (routePath == RoutePath.healthMeasurementCreator.path) {
+      screen = HealthMeasurementCreatorScreen(
+        date: settings.arguments as DateTime?,
       );
     } else if (routePath == RoutePath.healthMeasurements.path) {
       screen = const HealthMeasurementsScreen();
