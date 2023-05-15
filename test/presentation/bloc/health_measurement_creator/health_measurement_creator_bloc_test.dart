@@ -16,6 +16,7 @@ void main() {
   final healthMeasurementRepository = MockHealthMeasurementRepository();
 
   HealthMeasurementCreatorBloc createBloc({
+    DateTime? date,
     String? restingHeartRateStr,
     String? fastingWeightStr,
   }) =>
@@ -23,6 +24,7 @@ void main() {
         dateService: dateService,
         authService: authService,
         healthMeasurementRepository: healthMeasurementRepository,
+        date: date,
         restingHeartRateStr: restingHeartRateStr,
         fastingWeightStr: fastingWeightStr,
       );
@@ -229,6 +231,53 @@ void main() {
             restingHeartRate: 50,
             fastingWeight: 65.2,
           ),
+        ),
+      ).called(1);
+    },
+  );
+
+  blocTest(
+    'submit, '
+    'date is not null, '
+    'should call method from health measurement repository to update measurement and should emit info about saved measurement',
+    build: () => createBloc(
+      date: DateTime(2023, 5, 10),
+      restingHeartRateStr: '50',
+      fastingWeightStr: '65.2',
+    ),
+    setUp: () {
+      authService.mockGetLoggedUserId(userId: 'u1');
+      healthMeasurementRepository.mockUpdateMeasurement();
+    },
+    act: (HealthMeasurementCreatorBloc bloc) => bloc.add(
+      const HealthMeasurementCreatorEventSubmit(),
+    ),
+    expect: () => [
+      createState(
+        status: const BlocStatusLoading(),
+        date: DateTime(2023, 5, 10),
+        restingHeartRateStr: '50',
+        fastingWeightStr: '65.2',
+      ),
+      createState(
+        status: const BlocStatusComplete<HealthMeasurementCreatorBlocInfo>(
+          info: HealthMeasurementCreatorBlocInfo.measurementSaved,
+        ),
+        date: DateTime(2023, 5, 10),
+        restingHeartRateStr: '50',
+        fastingWeightStr: '65.2',
+      ),
+    ],
+    verify: (_) {
+      verify(
+        () => authService.loggedUserId$,
+      ).called(1);
+      verify(
+        () => healthMeasurementRepository.updateMeasurement(
+          userId: 'u1',
+          date: DateTime(2023, 5, 10),
+          restingHeartRate: 50,
+          fastingWeight: 65.2,
         ),
       ).called(1);
     },
