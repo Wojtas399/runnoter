@@ -78,4 +78,12 @@ class FirebaseHealthMeasurementService {
     final snapshot = await measurementRef.get();
     return snapshot.data();
   }
+
+  Future<void> deleteMeasurement({
+    required String userId,
+    required DateTime date,
+  }) async {
+    final String measurementId = mapDateTimeToString(date);
+    await getHealthMeasurementsRef(userId).doc(measurementId).delete();
+  }
 }
