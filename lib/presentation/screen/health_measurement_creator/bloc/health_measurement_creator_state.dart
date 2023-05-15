@@ -2,13 +2,13 @@ part of 'health_measurement_creator_bloc.dart';
 
 class HealthMeasurementCreatorState
     extends BlocState<HealthMeasurementCreatorState> {
-  final DateTime? date;
+  final HealthMeasurement? measurement;
   final String? restingHeartRateStr;
   final String? fastingWeightStr;
 
   const HealthMeasurementCreatorState({
     required super.status,
-    this.date,
+    this.measurement,
     this.restingHeartRateStr,
     this.fastingWeightStr,
   });
@@ -16,7 +16,7 @@ class HealthMeasurementCreatorState
   @override
   List<Object?> get props => [
         status,
-        date,
+        measurement,
         restingHeartRateStr,
         fastingWeightStr,
       ];
@@ -25,19 +25,32 @@ class HealthMeasurementCreatorState
       restingHeartRateStr == null ||
       restingHeartRateStr!.isEmpty ||
       fastingWeightStr == null ||
-      fastingWeightStr!.isEmpty;
+      fastingWeightStr!.isEmpty ||
+      _areDataSameAsOriginal;
 
   @override
   copyWith({
     BlocStatus? status,
-    DateTime? date,
+    HealthMeasurement? measurement,
     String? restingHeartRateStr,
     String? fastingWeightStr,
   }) =>
       HealthMeasurementCreatorState(
         status: status ?? const BlocStatusComplete(),
-        date: date ?? this.date,
+        measurement: measurement ?? this.measurement,
         restingHeartRateStr: restingHeartRateStr ?? this.restingHeartRateStr,
         fastingWeightStr: fastingWeightStr ?? this.fastingWeightStr,
       );
+
+  bool get _areDataSameAsOriginal {
+    final int? restingHeartRate = int.tryParse(restingHeartRateStr ?? '');
+    final double? fastingWeight = double.tryParse(fastingWeightStr ?? '');
+    if (measurement == null ||
+        restingHeartRate == null ||
+        fastingWeight == null) {
+      return false;
+    }
+    return restingHeartRate == measurement!.restingHeartRate &&
+        fastingWeight == measurement!.fastingWeight;
+  }
 }

@@ -16,7 +16,7 @@ void main() {
   final healthMeasurementRepository = MockHealthMeasurementRepository();
 
   HealthMeasurementCreatorBloc createBloc({
-    DateTime? date,
+    HealthMeasurement? measurement,
     String? restingHeartRateStr,
     String? fastingWeightStr,
   }) =>
@@ -24,20 +24,20 @@ void main() {
         dateService: dateService,
         authService: authService,
         healthMeasurementRepository: healthMeasurementRepository,
-        date: date,
+        measurement: measurement,
         restingHeartRateStr: restingHeartRateStr,
         fastingWeightStr: fastingWeightStr,
       );
 
   HealthMeasurementCreatorState createState({
     BlocStatus status = const BlocStatusInitial(),
-    DateTime? date,
+    HealthMeasurement? measurement,
     String? restingHeartRateStr,
     String? fastingWeightStr,
   }) =>
       HealthMeasurementCreatorState(
         status: status,
-        date: date,
+        measurement: measurement,
         restingHeartRateStr: restingHeartRateStr,
         fastingWeightStr: fastingWeightStr,
       );
@@ -62,12 +62,13 @@ void main() {
   blocTest(
     'initialize, '
     'given date is not null, '
-    'should load health measurement from repository and should emit date, resting heart rate, fasting wright and bloc info that measurement has been loaded',
+    'should load health measurement from repository and should emit loaded measurement, resting heart rate, fasting weight and bloc info that measurement has been loaded',
     build: () => createBloc(),
     setUp: () {
       authService.mockGetLoggedUserId(userId: 'u1');
       healthMeasurementRepository.mockGetMeasurementByDate(
         measurement: createHealthMeasurement(
+          date: DateTime(2023, 5, 10),
           restingHeartRate: 50,
           fastingWeight: 61.5,
         ),
@@ -83,7 +84,11 @@ void main() {
         status: const BlocStatusComplete<HealthMeasurementCreatorBlocInfo>(
           info: HealthMeasurementCreatorBlocInfo.measurementLoaded,
         ),
-        date: DateTime(2023, 5, 10),
+        measurement: createHealthMeasurement(
+          date: DateTime(2023, 5, 10),
+          restingHeartRate: 50,
+          fastingWeight: 61.5,
+        ),
         restingHeartRateStr: '50',
         fastingWeightStr: '61.5',
       ),
@@ -189,7 +194,7 @@ void main() {
 
   blocTest(
     'submit, '
-    'date is null, '
+    'measurement is null, '
     'should get today date, should call method from health measurement repository to add new measurement with today date and should emit info about saved measurement',
     build: () => createBloc(
       restingHeartRateStr: '50',
@@ -238,10 +243,14 @@ void main() {
 
   blocTest(
     'submit, '
-    'date is not null, '
+    'measurement is not null, '
     'should call method from health measurement repository to update measurement and should emit info about saved measurement',
     build: () => createBloc(
-      date: DateTime(2023, 5, 10),
+      measurement: createHealthMeasurement(
+        date: DateTime(2023, 5, 10),
+        restingHeartRate: 50,
+        fastingWeight: 61.5,
+      ),
       restingHeartRateStr: '50',
       fastingWeightStr: '65.2',
     ),
@@ -255,7 +264,11 @@ void main() {
     expect: () => [
       createState(
         status: const BlocStatusLoading(),
-        date: DateTime(2023, 5, 10),
+        measurement: createHealthMeasurement(
+          date: DateTime(2023, 5, 10),
+          restingHeartRate: 50,
+          fastingWeight: 61.5,
+        ),
         restingHeartRateStr: '50',
         fastingWeightStr: '65.2',
       ),
@@ -263,7 +276,11 @@ void main() {
         status: const BlocStatusComplete<HealthMeasurementCreatorBlocInfo>(
           info: HealthMeasurementCreatorBlocInfo.measurementSaved,
         ),
-        date: DateTime(2023, 5, 10),
+        measurement: createHealthMeasurement(
+          date: DateTime(2023, 5, 10),
+          restingHeartRate: 50,
+          fastingWeight: 61.5,
+        ),
         restingHeartRateStr: '50',
         fastingWeightStr: '65.2',
       ),

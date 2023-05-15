@@ -1,6 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:runnoter/domain/model/health_measurement.dart';
 import 'package:runnoter/presentation/model/bloc_status.dart';
 import 'package:runnoter/presentation/screen/health_measurement_creator/bloc/health_measurement_creator_bloc.dart';
+
+import '../../../util/health_measurement_creator.dart';
 
 void main() {
   late HealthMeasurementCreatorState state;
@@ -76,6 +79,24 @@ void main() {
 
   test(
     'is submit button disabled, '
+    'resting heart rate and fasting weight are same as original, '
+    'should be true',
+    () {
+      state = state.copyWith(
+        measurement: createHealthMeasurement(
+          restingHeartRate: 51,
+          fastingWeight: 61.5,
+        ),
+        restingHeartRateStr: '51',
+        fastingWeightStr: '61.5',
+      );
+
+      expect(state.isSubmitButtonDisabled, true);
+    },
+  );
+
+  test(
+    'is submit button disabled, '
     'resting heart rate and fasting weight are not null and not empty, '
     'should be false',
     () {
@@ -102,15 +123,18 @@ void main() {
   );
 
   test(
-    'copy with date',
+    'copy with measurement',
     () {
-      final DateTime expectedDate = DateTime(2023, 2, 10);
+      final HealthMeasurement expectedMeasurement = createHealthMeasurement(
+        userId: 'u1',
+        date: DateTime(2023, 2, 10),
+      );
 
-      state = state.copyWith(date: expectedDate);
+      state = state.copyWith(measurement: expectedMeasurement);
       final state2 = state.copyWith();
 
-      expect(state.date, expectedDate);
-      expect(state2.date, expectedDate);
+      expect(state.measurement, expectedMeasurement);
+      expect(state2.measurement, expectedMeasurement);
     },
   );
 

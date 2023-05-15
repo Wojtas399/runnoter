@@ -26,7 +26,7 @@ class HealthMeasurementCreatorBloc extends BlocWithStatus<
     required AuthService authService,
     required HealthMeasurementRepository healthMeasurementRepository,
     BlocStatus status = const BlocStatusInitial(),
-    DateTime? date,
+    HealthMeasurement? measurement,
     String? restingHeartRateStr,
     String? fastingWeightStr,
   })  : _dateService = dateService,
@@ -35,7 +35,7 @@ class HealthMeasurementCreatorBloc extends BlocWithStatus<
         super(
           HealthMeasurementCreatorState(
             status: status,
-            date: date,
+            measurement: measurement,
             restingHeartRateStr: restingHeartRateStr,
             fastingWeightStr: fastingWeightStr,
           ),
@@ -62,7 +62,7 @@ class HealthMeasurementCreatorBloc extends BlocWithStatus<
         status: const BlocStatusComplete<HealthMeasurementCreatorBlocInfo>(
           info: HealthMeasurementCreatorBlocInfo.measurementLoaded,
         ),
-        date: event.date,
+        measurement: measurement,
         restingHeartRateStr: measurement?.restingHeartRate.toString(),
         fastingWeightStr: measurement?.fastingWeight.toString(),
       ));
@@ -102,7 +102,7 @@ class HealthMeasurementCreatorBloc extends BlocWithStatus<
       return;
     }
     emitLoadingStatus(emit);
-    if (state.date == null) {
+    if (state.measurement == null) {
       final HealthMeasurement measurement = HealthMeasurement(
         userId: loggedUserId,
         date: _dateService.getToday(),
@@ -115,7 +115,7 @@ class HealthMeasurementCreatorBloc extends BlocWithStatus<
     } else {
       await _healthMeasurementRepository.updateMeasurement(
         userId: loggedUserId,
-        date: state.date!,
+        date: state.measurement!.date,
         restingHeartRate: restingHeartRate,
         fastingWeight: fastingWeight,
       );
