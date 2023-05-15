@@ -21,6 +21,58 @@ void main() {
   });
 
   test(
+    'is resting heart rate negative, '
+    'resting heart rate is negative, '
+    'should be true',
+    () {
+      state = state.copyWith(
+        restingHeartRate: -10,
+      );
+
+      expect(state.isRestingHeartRateNegative, true);
+    },
+  );
+
+  test(
+    'is resting heart rate negative, '
+    'resting heart rate is positive, '
+    'should be false',
+    () {
+      state = state.copyWith(
+        restingHeartRate: 10,
+      );
+
+      expect(state.isRestingHeartRateNegative, false);
+    },
+  );
+
+  test(
+    'is fasting weight negative, '
+    'fasting weight is negative, '
+    'should be true',
+    () {
+      state = state.copyWith(
+        fastingWeight: -10,
+      );
+
+      expect(state.isFastingWeightNegative, true);
+    },
+  );
+
+  test(
+    'is fasting weight negative, '
+    'fasting weight is positive, '
+    'should be false',
+    () {
+      state = state.copyWith(
+        fastingWeight: 10,
+      );
+
+      expect(state.isFastingWeightNegative, false);
+    },
+  );
+
+  test(
     'is submit button disabled, '
     'resting heart rate is null, '
     'should be true',
@@ -35,11 +87,39 @@ void main() {
 
   test(
     'is submit button disabled, '
+    'resting heart rate is negative, '
+    'should be true',
+    () {
+      state = state.copyWith(
+        restingHeartRate: -10,
+        fastingWeight: 61.5,
+      );
+
+      expect(state.isSubmitButtonDisabled, true);
+    },
+  );
+
+  test(
+    'is submit button disabled, '
     'fasting weight is null, '
     'should be true',
     () {
       state = state.copyWith(
         restingHeartRate: 50,
+      );
+
+      expect(state.isSubmitButtonDisabled, true);
+    },
+  );
+
+  test(
+    'is submit button disabled, '
+    'fasting weight is negative, '
+    'should be true',
+    () {
+      state = state.copyWith(
+        restingHeartRate: 50,
+        fastingWeight: -10,
       );
 
       expect(state.isSubmitButtonDisabled, true);

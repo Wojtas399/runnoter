@@ -21,8 +21,17 @@ class HealthMeasurementCreatorState
         fastingWeight,
       ];
 
+  bool get isRestingHeartRateNegative =>
+      restingHeartRate != null && restingHeartRate! < 0;
+
+  bool get isFastingWeightNegative =>
+      fastingWeight != null && fastingWeight! < 0;
+
   bool get isSubmitButtonDisabled =>
-      restingHeartRate == null || fastingWeight == null;
+      restingHeartRate == null ||
+      isRestingHeartRateNegative ||
+      fastingWeight == null ||
+      isFastingWeightNegative;
 
   @override
   copyWith({
