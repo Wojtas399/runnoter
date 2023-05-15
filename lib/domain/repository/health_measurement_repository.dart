@@ -26,4 +26,9 @@ abstract class HealthMeasurementRepository {
     int? restingHeartRate,
     double? fastingWeight,
   });
+
+  Future<void> deleteMeasurement({
+    required String userId,
+    required DateTime date,
+  });
 }

@@ -377,12 +377,18 @@ void main() {
       final DateTime date = DateTime(2023, 2, 9);
       const int newRestingHeartRate = 55;
       const double newFastingWeight = 64.2;
-      final HealthMeasurement existingHealthMeasurement = HealthMeasurement(
-        userId: userId,
-        date: date,
-        restingHeartRate: 51,
-        fastingWeight: 62.5,
-      );
+      final List<HealthMeasurement> existingMeasurements = [
+        createHealthMeasurement(
+          userId: 'u2',
+          date: DateTime(2023, 2, 9),
+        ),
+        HealthMeasurement(
+          userId: userId,
+          date: date,
+          restingHeartRate: 51,
+          fastingWeight: 62.5,
+        ),
+      ];
       final HealthMeasurementDto updatedHealthMeasurementDto =
           HealthMeasurementDto(
         userId: userId,
@@ -400,13 +406,7 @@ void main() {
         updatedMeasurementDto: updatedHealthMeasurementDto,
       );
       repository = createRepository(
-        initialState: [
-          existingHealthMeasurement,
-          createHealthMeasurement(
-            userId: 'u2',
-            date: DateTime(2023, 2, 14),
-          ),
-        ],
+        initialState: existingMeasurements,
       );
 
       final Stream<List<HealthMeasurement>?> state$ = repository.dataStream$;
@@ -421,19 +421,13 @@ void main() {
         state$,
         emitsInOrder(
           [
+            existingMeasurements,
             [
-              existingHealthMeasurement,
               createHealthMeasurement(
                 userId: 'u2',
-                date: DateTime(2023, 2, 14),
+                date: DateTime(2023, 2, 9),
               ),
-            ],
-            [
               updatedHealthMeasurement,
-              createHealthMeasurement(
-                userId: 'u2',
-                date: DateTime(2023, 2, 14),
-              ),
             ]
           ],
         ),
@@ -444,6 +438,59 @@ void main() {
           date: date,
           restingHeartRate: newRestingHeartRate,
           fastingWeight: newFastingWeight,
+        ),
+      ).called(1);
+    },
+  );
+
+  test(
+    'delete measurement, '
+    "should call firebase service's method to delete measurement and should delete this measurement from repo state",
+    () {
+      final DateTime date = DateTime(2023, 2, 9);
+      final List<HealthMeasurement> existingMeasurements = [
+        createHealthMeasurement(
+          userId: 'u2',
+          date: DateTime(2023, 2, 9),
+        ),
+        createHealthMeasurement(
+          userId: userId,
+          date: date,
+        ),
+      ];
+      dateService.mockAreDatesTheSame(expected: false);
+      when(
+        () => dateService.areDatesTheSame(date, date),
+      ).thenReturn(true);
+      firebaseHealthMeasurementService.mockDeleteMeasurement();
+      repository = createRepository(
+        initialState: existingMeasurements,
+      );
+
+      final Stream<List<HealthMeasurement>?> state$ = repository.dataStream$;
+      repository.deleteMeasurement(
+        userId: userId,
+        date: date,
+      );
+
+      expect(
+        state$,
+        emitsInOrder(
+          [
+            existingMeasurements,
+            [
+              createHealthMeasurement(
+                userId: 'u2',
+                date: DateTime(2023, 2, 9),
+              ),
+            ]
+          ],
+        ),
+      );
+      verify(
+        () => firebaseHealthMeasurementService.deleteMeasurement(
+          userId: userId,
+          date: date,
         ),
       ).called(1);
     },

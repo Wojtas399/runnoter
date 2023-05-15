@@ -14,7 +14,7 @@ class HealthMeasurement extends Entity {
   })  : assert(restingHeartRate >= 0),
         assert(fastingWeight > 0),
         super(
-          id: '${date.year}-${date.month}-${date.day}',
+          id: '${date.year}-${date.month}-${date.day}-$userId',
         );
 
   @override
