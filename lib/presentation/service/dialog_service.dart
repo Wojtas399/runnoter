@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../component/action_sheet_component.dart';
 import '../component/dialog/confirmation_dialog_component.dart';
 import '../component/dialog/loading_dialog_component.dart';
 import '../component/dialog/message_dialog_component.dart';
@@ -97,6 +98,19 @@ Future<String?> askForValue({
       initialValue: value,
       isValueRequired: isValueRequired,
       validator: validator,
+    ),
+  );
+}
+
+Future<T?> askForAction<T>({
+  required BuildContext context,
+  required List<ActionSheetItem<T>> actions,
+}) async {
+  return await showModalBottomSheet(
+    context: context,
+    showDragHandle: true,
+    builder: (_) => ActionSheetComponent(
+      actions: actions,
     ),
   );
 }
