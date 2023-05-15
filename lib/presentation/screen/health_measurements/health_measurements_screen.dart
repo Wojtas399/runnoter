@@ -6,6 +6,7 @@ import '../../../domain/model/health_measurement.dart';
 import '../../../domain/repository/health_measurement_repository.dart';
 import '../../../domain/service/auth_service.dart';
 import '../../component/empty_content_info_component.dart';
+import '../../component/text/label_text_components.dart';
 import '../../config/navigation/routes.dart';
 import '../../formatter/date_formatter.dart';
 import '../../service/navigator_service.dart';

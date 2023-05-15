@@ -21,7 +21,7 @@ class _MeasurementItem extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _MeasurementItemHeader(date: measurement.date),
+            LabelLarge(measurement.date.toDateWithDots()),
             const SizedBox(height: 8),
             _MeasurementParams(
               restingHeartRate: measurement.restingHeartRate,
@@ -39,22 +39,6 @@ class _MeasurementItem extends StatelessWidget {
       route: HealthMeasurementCreatorRoute(
         date: measurement.date,
       ),
-    );
-  }
-}
-
-class _MeasurementItemHeader extends StatelessWidget {
-  final DateTime date;
-
-  const _MeasurementItemHeader({
-    required this.date,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      date.toDateWithDots(),
-      style: Theme.of(context).textTheme.labelLarge,
     );
   }
 }
@@ -106,10 +90,7 @@ class _MeasurementParamWithLabel extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text(
-          label,
-          style: Theme.of(context).textTheme.labelMedium,
-        ),
+        LabelMedium(label),
         const SizedBox(height: 4),
         Text(value),
       ],
