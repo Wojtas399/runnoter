@@ -26,16 +26,16 @@ class HealthMeasurementCreatorBloc extends BlocWithStatus<
     required AuthService authService,
     required HealthMeasurementRepository healthMeasurementRepository,
     BlocStatus status = const BlocStatusInitial(),
-    int? restingHeartRate,
-    double? fastingWeight,
+    String? restingHeartRateStr,
+    String? fastingWeightStr,
   })  : _dateService = dateService,
         _authService = authService,
         _healthMeasurementRepository = healthMeasurementRepository,
         super(
           HealthMeasurementCreatorState(
             status: status,
-            restingHeartRate: restingHeartRate,
-            fastingWeight: fastingWeight,
+            restingHeartRateStr: restingHeartRateStr,
+            fastingWeightStr: fastingWeightStr,
           ),
         ) {
     on<HealthMeasurementCreatorEventInitialize>(_initialize);
@@ -64,8 +64,8 @@ class HealthMeasurementCreatorBloc extends BlocWithStatus<
           info: HealthMeasurementCreatorBlocInfo.measurementLoaded,
         ),
         date: event.date,
-        restingHeartRate: measurement?.restingHeartRate,
-        fastingWeight: measurement?.fastingWeight,
+        restingHeartRateStr: measurement?.restingHeartRate.toString(),
+        fastingWeightStr: measurement?.fastingWeight.toString(),
       ));
     }
   }
@@ -75,7 +75,7 @@ class HealthMeasurementCreatorBloc extends BlocWithStatus<
     Emitter<HealthMeasurementCreatorState> emit,
   ) {
     emit(state.copyWith(
-      restingHeartRate: event.restingHeartRate,
+      restingHeartRateStr: event.restingHeartRateStr,
     ));
   }
 
@@ -84,7 +84,7 @@ class HealthMeasurementCreatorBloc extends BlocWithStatus<
     Emitter<HealthMeasurementCreatorState> emit,
   ) {
     emit(state.copyWith(
-      fastingWeight: event.fastingWeight,
+      fastingWeightStr: event.fastingWeightStr,
     ));
   }
 

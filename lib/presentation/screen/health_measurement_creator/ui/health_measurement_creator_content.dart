@@ -22,6 +22,8 @@ class _Content extends StatelessWidget {
                 _RestingHeartRate(),
                 const SizedBox(height: 24),
                 _FastingWeight(),
+                const SizedBox(height: 24),
+                const _SubmitButton(),
               ],
             ),
           ),
@@ -42,9 +44,11 @@ class _RestingHeartRate extends StatelessWidget {
 
     if (blocStatus is BlocStatusComplete &&
         blocStatus.info == HealthMeasurementCreatorBlocInfo.measurementLoaded) {
-      final int? restingHeartRate =
-          context.read<HealthMeasurementCreatorBloc>().state.restingHeartRate;
-      _controller.text = restingHeartRate?.toString() ?? '';
+      _controller.text = context
+              .read<HealthMeasurementCreatorBloc>()
+              .state
+              .restingHeartRateStr ??
+          '';
     }
 
     return TextFieldComponent(
@@ -63,15 +67,12 @@ class _RestingHeartRate extends StatelessWidget {
     );
   }
 
-  void _onChanged(BuildContext context, String? value) {
-    if (value != null) {
-      final int? restingHeartRate = int.tryParse(value);
-      context.read<HealthMeasurementCreatorBloc>().add(
-            HealthMeasurementCreatorEventRestingHeartRateChanged(
-              restingHeartRate: restingHeartRate,
-            ),
-          );
-    }
+  void _onChanged(BuildContext context, String? restingHeartRateStr) {
+    context.read<HealthMeasurementCreatorBloc>().add(
+          HealthMeasurementCreatorEventRestingHeartRateChanged(
+            restingHeartRateStr: restingHeartRateStr,
+          ),
+        );
   }
 }
 
@@ -86,9 +87,9 @@ class _FastingWeight extends StatelessWidget {
 
     if (blocStatus is BlocStatusComplete &&
         blocStatus.info == HealthMeasurementCreatorBlocInfo.measurementLoaded) {
-      final double? fastingWeight =
-          context.read<HealthMeasurementCreatorBloc>().state.fastingWeight;
-      _controller.text = fastingWeight?.toString() ?? '';
+      _controller.text =
+          context.read<HealthMeasurementCreatorBloc>().state.fastingWeightStr ??
+              '';
     }
 
     return TextFieldComponent(
@@ -106,14 +107,28 @@ class _FastingWeight extends StatelessWidget {
     );
   }
 
-  void _onChanged(BuildContext context, String? value) {
-    if (value != null) {
-      final double? fastingWeight = double.tryParse(value);
-      context.read<HealthMeasurementCreatorBloc>().add(
-            HealthMeasurementCreatorEventFastingWeightChanged(
-              fastingWeight: fastingWeight,
-            ),
-          );
-    }
+  void _onChanged(BuildContext context, String? fastingWeightStr) {
+    context.read<HealthMeasurementCreatorBloc>().add(
+          HealthMeasurementCreatorEventFastingWeightChanged(
+            fastingWeightStr: fastingWeightStr,
+          ),
+        );
+  }
+}
+
+class _SubmitButton extends StatelessWidget {
+  const _SubmitButton();
+
+  @override
+  Widget build(BuildContext context) {
+    final bool isDisabled = context.select(
+      (HealthMeasurementCreatorBloc bloc) => bloc.state.isSubmitButtonDisabled,
+    );
+
+    return BigButton(
+      label: Str.of(context).save,
+      onPressed: () {},
+      isDisabled: isDisabled,
+    );
   }
 }

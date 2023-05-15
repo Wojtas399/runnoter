@@ -15,28 +15,28 @@ void main() {
   final healthMeasurementRepository = MockHealthMeasurementRepository();
 
   HealthMeasurementCreatorBloc createBloc({
-    int? restingHeartRate,
-    double? fastingWeight,
+    String? restingHeartRateStr,
+    String? fastingWeightStr,
   }) =>
       HealthMeasurementCreatorBloc(
         dateService: dateService,
         authService: authService,
         healthMeasurementRepository: healthMeasurementRepository,
-        restingHeartRate: restingHeartRate,
-        fastingWeight: fastingWeight,
+        restingHeartRateStr: restingHeartRateStr,
+        fastingWeightStr: fastingWeightStr,
       );
 
   HealthMeasurementCreatorState createState({
     BlocStatus status = const BlocStatusInitial(),
     DateTime? date,
-    int? restingHeartRate,
-    double? fastingWeight,
+    String? restingHeartRateStr,
+    String? fastingWeightStr,
   }) =>
       HealthMeasurementCreatorState(
         status: status,
         date: date,
-        restingHeartRate: restingHeartRate,
-        fastingWeight: fastingWeight,
+        restingHeartRateStr: restingHeartRateStr,
+        fastingWeightStr: fastingWeightStr,
       );
 
   tearDown(() {
@@ -89,8 +89,8 @@ void main() {
           info: HealthMeasurementCreatorBlocInfo.measurementLoaded,
         ),
         date: DateTime(2023, 5, 10),
-        restingHeartRate: 50,
-        fastingWeight: 61.5,
+        restingHeartRateStr: '50',
+        fastingWeightStr: '61.5',
       ),
     ],
     verify: (_) {
@@ -112,29 +112,30 @@ void main() {
     build: () => createBloc(),
     act: (HealthMeasurementCreatorBloc bloc) => bloc.add(
       const HealthMeasurementCreatorEventRestingHeartRateChanged(
-        restingHeartRate: 50,
+        restingHeartRateStr: '50',
       ),
     ),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
-        restingHeartRate: 50,
+        restingHeartRateStr: '50',
       ),
     ],
   );
 
   blocTest(
-    'fasting weight changed, ',
+    'fasting weight changed, '
+    'should update fasting weight in state',
     build: () => createBloc(),
     act: (HealthMeasurementCreatorBloc bloc) => bloc.add(
       const HealthMeasurementCreatorEventFastingWeightChanged(
-        fastingWeight: 61.5,
+        fastingWeightStr: '61.5',
       ),
     ),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
-        fastingWeight: 61.5,
+        fastingWeightStr: '61.5',
       ),
     ],
   );

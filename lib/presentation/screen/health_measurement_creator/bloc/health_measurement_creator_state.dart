@@ -3,38 +3,41 @@ part of 'health_measurement_creator_bloc.dart';
 class HealthMeasurementCreatorState
     extends BlocState<HealthMeasurementCreatorState> {
   final DateTime? date;
-  final int? restingHeartRate;
-  final double? fastingWeight;
+  final String? restingHeartRateStr;
+  final String? fastingWeightStr;
 
   const HealthMeasurementCreatorState({
     required super.status,
     this.date,
-    this.restingHeartRate,
-    this.fastingWeight,
+    this.restingHeartRateStr,
+    this.fastingWeightStr,
   });
 
   @override
   List<Object?> get props => [
         status,
         date,
-        restingHeartRate,
-        fastingWeight,
+        restingHeartRateStr,
+        fastingWeightStr,
       ];
 
   bool get isSubmitButtonDisabled =>
-      restingHeartRate == null || fastingWeight == null;
+      restingHeartRateStr == null ||
+      restingHeartRateStr!.isEmpty ||
+      fastingWeightStr == null ||
+      fastingWeightStr!.isEmpty;
 
   @override
   copyWith({
     BlocStatus? status,
     DateTime? date,
-    int? restingHeartRate,
-    double? fastingWeight,
+    String? restingHeartRateStr,
+    String? fastingWeightStr,
   }) =>
       HealthMeasurementCreatorState(
         status: status ?? const BlocStatusComplete(),
         date: date ?? this.date,
-        restingHeartRate: restingHeartRate ?? this.restingHeartRate,
-        fastingWeight: fastingWeight ?? this.fastingWeight,
+        restingHeartRateStr: restingHeartRateStr ?? this.restingHeartRateStr,
+        fastingWeightStr: fastingWeightStr ?? this.fastingWeightStr,
       );
 }
