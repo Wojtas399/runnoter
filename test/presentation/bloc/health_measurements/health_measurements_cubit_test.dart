@@ -23,12 +23,14 @@ void main() {
 
   blocTest(
     'initialize, '
-    'should set listener of all measurements',
+    'should set listener of all measurements and should sort measurements in descending order by date',
     build: () => createCubit(),
     setUp: () {
       authService.mockGetLoggedUserId(userId: 'u1');
       healthMeasurementRepository.mockGetAllMeasurements(
         measurements: [
+          createHealthMeasurement(date: DateTime(2023, 2, 14)),
+          createHealthMeasurement(date: DateTime(2023, 2, 8)),
           createHealthMeasurement(date: DateTime(2023, 2, 10)),
           createHealthMeasurement(date: DateTime(2023, 2, 11)),
         ],
@@ -37,8 +39,10 @@ void main() {
     act: (HealthMeasurementsCubit cubit) => cubit.initialize(),
     expect: () => [
       [
-        createHealthMeasurement(date: DateTime(2023, 2, 10)),
+        createHealthMeasurement(date: DateTime(2023, 2, 14)),
         createHealthMeasurement(date: DateTime(2023, 2, 11)),
+        createHealthMeasurement(date: DateTime(2023, 2, 10)),
+        createHealthMeasurement(date: DateTime(2023, 2, 8)),
       ],
     ],
     verify: (_) {

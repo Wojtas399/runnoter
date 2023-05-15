@@ -75,11 +75,18 @@ void main() {
     build: () => createBloc(),
     setUp: () {
       dateService.mockGetToday(
-        todayDate: DateTime(2023, 1, 1),
+        todayDate: DateTime(2023, 1, 10),
       );
-      dateService.mockIsDate1BeforeDate2(expected: true);
       authService.mockGetLoggedUserId(userId: 'u1');
-      workoutRepository.mockGetWorkoutByDate();
+      workoutRepository.mockGetWorkoutByDate(
+        workout: createWorkout(
+          id: 'w1',
+          date: date,
+          stages: [],
+          status: const WorkoutStatusPending(),
+          name: 'workout name',
+        ),
+      );
     },
     act: (DayPreviewBloc bloc) => bloc.add(
       DayPreviewEventInitialize(
@@ -91,6 +98,15 @@ void main() {
         status: const BlocStatusComplete(),
         date: date,
         isPastDate: true,
+      ),
+      createState(
+        status: const BlocStatusComplete(),
+        date: date,
+        isPastDate: true,
+        workoutId: 'w1',
+        stages: [],
+        workoutStatus: const WorkoutStatusPending(),
+        workoutName: 'workout name',
       ),
     ],
     verify: (_) {
