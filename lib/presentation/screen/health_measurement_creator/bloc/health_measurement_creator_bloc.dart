@@ -39,6 +39,9 @@ class HealthMeasurementCreatorBloc extends BlocWithStatus<
           ),
         ) {
     on<HealthMeasurementCreatorEventInitialize>(_initialize);
+    on<HealthMeasurementCreatorEventRestingHeartRateChanged>(
+      _restingHeartRateChanged,
+    );
   }
 
   Future<void> _initialize(
@@ -62,6 +65,15 @@ class HealthMeasurementCreatorBloc extends BlocWithStatus<
         fastingWeight: measurement?.fastingWeight,
       ));
     }
+  }
+
+  void _restingHeartRateChanged(
+    HealthMeasurementCreatorEventRestingHeartRateChanged event,
+    Emitter<HealthMeasurementCreatorState> emit,
+  ) {
+    emit(state.copyWith(
+      restingHeartRate: event.restingHeartRate,
+    ));
   }
 
   Future<HealthMeasurement?> _loadMeasurementFromRemoteDb(

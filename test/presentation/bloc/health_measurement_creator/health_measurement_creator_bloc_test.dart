@@ -105,4 +105,21 @@ void main() {
       ).called(1);
     },
   );
+
+  blocTest(
+    'resting heart rate changed, '
+    'should update resting heart rate in state',
+    build: () => createBloc(),
+    act: (HealthMeasurementCreatorBloc bloc) => bloc.add(
+      const HealthMeasurementCreatorEventRestingHeartRateChanged(
+        restingHeartRate: 50,
+      ),
+    ),
+    expect: () => [
+      createState(
+        status: const BlocStatusComplete(),
+        restingHeartRate: 50,
+      ),
+    ],
+  );
 }
