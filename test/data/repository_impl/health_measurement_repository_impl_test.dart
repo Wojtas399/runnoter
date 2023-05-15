@@ -369,4 +369,83 @@ void main() {
       ).called(1);
     },
   );
+
+  test(
+    'update measurement, '
+    "should call firebase service's method to update measurement and should update this measurement in repo state",
+    () {
+      final DateTime date = DateTime(2023, 2, 9);
+      const int newRestingHeartRate = 55;
+      const double newFastingWeight = 64.2;
+      final HealthMeasurement existingHealthMeasurement = HealthMeasurement(
+        userId: userId,
+        date: date,
+        restingHeartRate: 51,
+        fastingWeight: 62.5,
+      );
+      final HealthMeasurementDto updatedHealthMeasurementDto =
+          HealthMeasurementDto(
+        userId: userId,
+        date: date,
+        restingHeartRate: newRestingHeartRate,
+        fastingWeight: newFastingWeight,
+      );
+      final HealthMeasurement updatedHealthMeasurement = HealthMeasurement(
+        userId: userId,
+        date: date,
+        restingHeartRate: newRestingHeartRate,
+        fastingWeight: newFastingWeight,
+      );
+      firebaseHealthMeasurementService.mockUpdateMeasurement(
+        updatedMeasurementDto: updatedHealthMeasurementDto,
+      );
+      repository = createRepository(
+        initialState: [
+          existingHealthMeasurement,
+          createHealthMeasurement(
+            userId: 'u2',
+            date: DateTime(2023, 2, 14),
+          ),
+        ],
+      );
+
+      final Stream<List<HealthMeasurement>?> state$ = repository.dataStream$;
+      repository.updateMeasurement(
+        userId: userId,
+        date: date,
+        restingHeartRate: newRestingHeartRate,
+        fastingWeight: newFastingWeight,
+      );
+
+      expect(
+        state$,
+        emitsInOrder(
+          [
+            [
+              existingHealthMeasurement,
+              createHealthMeasurement(
+                userId: 'u2',
+                date: DateTime(2023, 2, 14),
+              ),
+            ],
+            [
+              updatedHealthMeasurement,
+              createHealthMeasurement(
+                userId: 'u2',
+                date: DateTime(2023, 2, 14),
+              ),
+            ]
+          ],
+        ),
+      );
+      verify(
+        () => firebaseHealthMeasurementService.updateMeasurement(
+          userId: userId,
+          date: date,
+          restingHeartRate: newRestingHeartRate,
+          fastingWeight: newFastingWeight,
+        ),
+      ).called(1);
+    },
+  );
 }

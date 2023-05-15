@@ -101,6 +101,27 @@ class HealthMeasurementRepositoryImpl extends StateRepository<HealthMeasurement>
     }
   }
 
+  @override
+  Future<void> updateMeasurement({
+    required String userId,
+    required DateTime date,
+    int? restingHeartRate,
+    double? fastingWeight,
+  }) async {
+    final HealthMeasurementDto? updatedHealthMeasurementDto =
+        await _firebaseHealthMeasurementService.updateMeasurement(
+      userId: userId,
+      date: date,
+      restingHeartRate: restingHeartRate,
+      fastingWeight: fastingWeight,
+    );
+    if (updatedHealthMeasurementDto != null) {
+      final HealthMeasurement updatedMeasurement =
+          mapHealthMeasurementFromFirebase(updatedHealthMeasurementDto);
+      updateEntity(updatedMeasurement);
+    }
+  }
+
   Future<bool> _doesMeasurementWithGivenDateNotExist(
     DateTime date,
     String userId,
