@@ -6,7 +6,9 @@ import '../../../domain/model/health_measurement.dart';
 import '../../../domain/repository/health_measurement_repository.dart';
 import '../../../domain/service/auth_service.dart';
 import '../../component/empty_content_info_component.dart';
+import '../../config/navigation/routes.dart';
 import '../../formatter/date_formatter.dart';
+import '../../service/navigator_service.dart';
 import 'health_measurements_cubit.dart';
 
 part 'health_measurements_item.dart';

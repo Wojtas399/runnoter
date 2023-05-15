@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../screen/health_measurement_creator/health_measurement_creator_screen.dart';
+import '../../screen/health_measurement_creator/ui/health_measurement_creator_screen.dart';
 import '../../screen/health_measurements/health_measurements_screen.dart';
 import '../../screen/screens.dart';
 import '../animation/slide_to_top_anim.dart';

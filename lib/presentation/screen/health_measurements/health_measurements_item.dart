@@ -13,7 +13,7 @@ class _MeasurementItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        //TODO
+        _onPressed(context);
       },
       borderRadius: BorderRadius.circular(32),
       child: Padding(
@@ -29,6 +29,15 @@ class _MeasurementItem extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  void _onPressed(BuildContext context) {
+    navigateTo(
+      context: context,
+      route: HealthMeasurementCreatorRoute(
+        date: measurement.date,
       ),
     );
   }
