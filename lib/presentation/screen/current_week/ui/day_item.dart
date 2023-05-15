@@ -24,10 +24,11 @@ class DayItem extends StatelessWidget {
       onTap: () {
         _onPressed(context);
       },
-      borderRadius: BorderRadius.circular(6),
+      borderRadius: BorderRadius.circular(24),
       child: Padding(
         padding: const EdgeInsets.symmetric(
           vertical: 4,
+          horizontal: 4,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -80,7 +81,7 @@ class _Date extends StatelessWidget {
         color: isToday
             ? Theme.of(context).colorScheme.primary
             : Colors.transparent,
-        borderRadius: BorderRadius.circular(6),
+        borderRadius: BorderRadius.circular(100),
       ),
       child: Text(
         date.toFullDate(context),

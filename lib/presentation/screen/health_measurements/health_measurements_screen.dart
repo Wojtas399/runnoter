@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/model/health_measurement.dart';
 import '../../../domain/repository/health_measurement_repository.dart';
 import '../../../domain/service/auth_service.dart';
+import '../../formatter/date_formatter.dart';
 import 'health_measurements_cubit.dart';
+
+part 'health_measurements_item.dart';
 
 class HealthMeasurementsScreen extends StatelessWidget {
   const HealthMeasurementsScreen({
@@ -60,25 +64,14 @@ class _Measurements extends StatelessWidget {
         child: Text('Brak pomiarów'),
       );
     }
-    return ListView.builder(
+    return ListView.separated(
       itemCount: measurements.length,
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.fromLTRB(12, 12, 12, 80),
       itemBuilder: (_, int measurementIndex) => _MeasurementItem(
         measurement: measurements[measurementIndex],
+        isFirstItem: measurementIndex == 0,
       ),
+      separatorBuilder: (_, int index) => const Divider(),
     );
-  }
-}
-
-class _MeasurementItem extends StatelessWidget {
-  final HealthMeasurement measurement;
-
-  const _MeasurementItem({
-    required this.measurement,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(measurement.date.toString());
   }
 }
