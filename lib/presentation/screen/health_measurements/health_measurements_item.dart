@@ -5,7 +5,7 @@ enum _MeasurementAction {
   delete,
 }
 
-class _MeasurementItem extends StatelessWidget {
+class _MeasurementItem extends StatefulWidget {
   final HealthMeasurement measurement;
   final bool isFirstItem;
 
@@ -15,22 +15,25 @@ class _MeasurementItem extends StatelessWidget {
   });
 
   @override
+  State<StatefulWidget> createState() => _MeasurementItemState();
+}
+
+class _MeasurementItemState extends State<_MeasurementItem> {
+  @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-        _onPressed(context);
-      },
+      onTap: _onPressed,
       borderRadius: BorderRadius.circular(32),
       child: Padding(
         padding: const EdgeInsets.all(12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            LabelLarge(measurement.date.toDateWithDots()),
+            LabelLarge(widget.measurement.date.toDateWithDots()),
             const SizedBox(height: 8),
             _MeasurementParams(
-              restingHeartRate: measurement.restingHeartRate,
-              fastingWeight: measurement.fastingWeight,
+              restingHeartRate: widget.measurement.restingHeartRate,
+              fastingWeight: widget.measurement.fastingWeight,
             ),
           ],
         ),
@@ -38,16 +41,7 @@ class _MeasurementItem extends StatelessWidget {
     );
   }
 
-  Future<void> _onPressed(BuildContext context) async {
-    void navigateToCreator() {
-      navigateTo(
-        context: context,
-        route: HealthMeasurementCreatorRoute(
-          date: measurement.date,
-        ),
-      );
-    }
-
+  Future<void> _onPressed() async {
     final _MeasurementAction? action = await askForAction<_MeasurementAction>(
       context: context,
       actions: [
@@ -64,10 +58,19 @@ class _MeasurementItem extends StatelessWidget {
       ],
     );
     if (action == _MeasurementAction.edit) {
-      navigateToCreator();
+      _navigateToHealthMeasurementCreator();
     } else if (action == _MeasurementAction.delete) {
       //TODO:
     }
+  }
+
+  void _navigateToHealthMeasurementCreator() {
+    navigateTo(
+      context: context,
+      route: HealthMeasurementCreatorRoute(
+        date: widget.measurement.date,
+      ),
+    );
   }
 }
 
