@@ -28,6 +28,7 @@ dependencies:
   connectivity_plus: ^3.0.3
   rxdart: ^0.27.7
   syncfusion_flutter_charts: ^21.2.4
+  collection: ^1.17.1
 
 dependency_overrides:
   intl: ^0.17.0-nullsafety.2

@@ -227,6 +227,7 @@ void main() {
     ],
     verify: (_) => verify(
       () => chartService.createPointsOfCharts(
+        chartRange: ChartRange.week,
         startDate: DateTime(2023, 5, 8),
         endDate: DateTime(2023, 5, 10),
         measurements: [

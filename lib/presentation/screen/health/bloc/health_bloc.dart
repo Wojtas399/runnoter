@@ -100,6 +100,7 @@ class HealthBloc
     }
     final (restingHeartRatePoints, fastingWeightPoints) =
         _chartService.createPointsOfCharts(
+      chartRange: state.chartRange,
       startDate: startDate,
       endDate: endDate,
       measurements: measurements,
