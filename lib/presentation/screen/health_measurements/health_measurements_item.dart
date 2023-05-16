@@ -1,5 +1,10 @@
 part of 'health_measurements_screen.dart';
 
+enum _MeasurementAction {
+  edit,
+  delete,
+}
+
 class _MeasurementItem extends StatelessWidget {
   final HealthMeasurement measurement;
   final bool isFirstItem;
@@ -33,13 +38,36 @@ class _MeasurementItem extends StatelessWidget {
     );
   }
 
-  void _onPressed(BuildContext context) {
-    navigateTo(
+  Future<void> _onPressed(BuildContext context) async {
+    void navigateToCreator() {
+      navigateTo(
+        context: context,
+        route: HealthMeasurementCreatorRoute(
+          date: measurement.date,
+        ),
+      );
+    }
+
+    final _MeasurementAction? action = await askForAction<_MeasurementAction>(
       context: context,
-      route: HealthMeasurementCreatorRoute(
-        date: measurement.date,
-      ),
+      actions: [
+        ActionSheetItem(
+          id: _MeasurementAction.edit,
+          label: Str.of(context).edit,
+          iconData: Icons.edit_outlined,
+        ),
+        ActionSheetItem(
+          id: _MeasurementAction.delete,
+          label: Str.of(context).delete,
+          iconData: Icons.delete_outline,
+        ),
+      ],
     );
+    if (action == _MeasurementAction.edit) {
+      navigateToCreator();
+    } else if (action == _MeasurementAction.delete) {
+      //TODO:
+    }
   }
 }
 
