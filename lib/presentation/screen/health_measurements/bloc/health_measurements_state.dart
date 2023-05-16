@@ -1,6 +1,4 @@
-import '../../../../domain/model/health_measurement.dart';
-import '../../../model/bloc_state.dart';
-import '../../../model/bloc_status.dart';
+part of 'health_measurements_bloc.dart';
 
 class HealthMeasurementsState extends BlocState<HealthMeasurementsState> {
   final List<HealthMeasurement>? measurements;
