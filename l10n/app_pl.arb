@@ -385,6 +385,24 @@
   "@healthMeasurementsNoMeasurementsInfo": {
     "description": "Text to inform that there is no health measurements"
   },
+  "healthMeasurementsDeleteMeasurementConfirmationDialogTitle": "Usuń pomiar",
+  "@healthMeasurementsDeleteMeasurementConfirmationDialogTitle": {
+    "description": "Title of the dialog to confirm measurement deletion"
+  },
+  "healthMeasurementsDeleteMeasurementConfirmationDialogMessage": "Czy na pewno chcesz usunąć pomiar z dnia {date}?",
+  "@healthMeasurementsDeleteMeasurementConfirmationDialogMessage": {
+    "description": "Message of the dialog to confirm measurement deletion",
+    "placeholders": {
+      "date": {
+        "type": "String",
+        "example": "13.05.2023"
+      }
+    }
+  },
+  "healthMeasurementsDeletedMeasurementMessage": "Pomyślnie usunięto pomiar",
+  "@healthMeasurementsDeletedMeasurementMessage": {
+    "description": "Message about deleted measurement"
+  },
 
 
   "profileScreenTitle": "Profil",

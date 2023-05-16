@@ -60,7 +60,7 @@ class _MeasurementItemState extends State<_MeasurementItem> {
     if (action == _MeasurementAction.edit) {
       _navigateToHealthMeasurementCreator();
     } else if (action == _MeasurementAction.delete) {
-      //TODO: delete measurement
+      await _deleteMeasurement();
     }
   }
 
@@ -71,6 +71,25 @@ class _MeasurementItemState extends State<_MeasurementItem> {
         date: widget.measurement.date,
       ),
     );
+  }
+
+  Future<void> _deleteMeasurement() async {
+    final DateTime date = widget.measurement.date;
+    final bool confirmation = await askForConfirmation(
+      context: context,
+      title: Str.of(context)
+          .healthMeasurementsDeleteMeasurementConfirmationDialogTitle,
+      message: Str.of(context)
+          .healthMeasurementsDeleteMeasurementConfirmationDialogMessage(
+        date.toDateWithDots(),
+      ),
+      confirmButtonLabel: Str.of(context).delete,
+    );
+    if (confirmation == true && mounted) {
+      context.read<HealthMeasurementsBloc>().add(
+            HealthMeasurementsEventDeleteMeasurement(date: date),
+          );
+    }
   }
 }
 

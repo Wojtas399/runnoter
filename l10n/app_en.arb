@@ -108,6 +108,9 @@
 
   "healthMeasurementsScreenTitle": "All measurements",
   "healthMeasurementsNoMeasurementsInfo": "No measurements",
+  "healthMeasurementsDeleteMeasurementConfirmationDialogTitle": "Delete measurement",
+  "healthMeasurementsDeleteMeasurementConfirmationDialogMessage": "Are you sure you want to delete measurement from day {date}?",
+  "healthMeasurementsDeletedMeasurementMessage": "Measurement successfully deleted",
 
 
   "profileScreenTitle": "Profile",
