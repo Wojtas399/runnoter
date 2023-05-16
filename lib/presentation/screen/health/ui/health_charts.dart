@@ -107,6 +107,6 @@ class _LineChart extends StatelessWidget {
       switch (chartRange) {
         ChartRange.week => date.toDayAbbreviation(context),
         ChartRange.month => '${twoDigits(date.day)}.${twoDigits(date.month)}',
-        ChartRange.year => '${date.year}',
+        ChartRange.year => date.toMonthName(context),
       };
 }

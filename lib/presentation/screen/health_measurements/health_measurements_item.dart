@@ -60,7 +60,7 @@ class _MeasurementItemState extends State<_MeasurementItem> {
     if (action == _MeasurementAction.edit) {
       _navigateToHealthMeasurementCreator();
     } else if (action == _MeasurementAction.delete) {
-      //TODO:
+      //TODO: delete measurement
     }
   }
 

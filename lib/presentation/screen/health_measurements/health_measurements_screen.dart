@@ -12,7 +12,7 @@ import '../../config/navigation/routes.dart';
 import '../../formatter/date_formatter.dart';
 import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
-import 'health_measurements_cubit.dart';
+import 'bloc/health_measurements_bloc.dart';
 
 part 'health_measurements_item.dart';
 
@@ -23,7 +23,7 @@ class HealthMeasurementsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _CubitProvider(
+    return _BlocProvider(
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,
@@ -37,21 +37,23 @@ class HealthMeasurementsScreen extends StatelessWidget {
   }
 }
 
-class _CubitProvider extends StatelessWidget {
+class _BlocProvider extends StatelessWidget {
   final Widget child;
 
-  const _CubitProvider({
+  const _BlocProvider({
     required this.child,
   });
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (BuildContext context) => HealthMeasurementsCubit(
+      create: (BuildContext context) => HealthMeasurementsBloc(
         authService: context.read<AuthService>(),
         healthMeasurementRepository:
             context.read<HealthMeasurementRepository>(),
-      )..initialize(),
+      )..add(
+          const HealthMeasurementsEventInitialize(),
+        ),
       child: child,
     );
   }
@@ -63,7 +65,7 @@ class _Measurements extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<HealthMeasurement>? measurements = context.select(
-      (HealthMeasurementsCubit cubit) => cubit.state,
+      (HealthMeasurementsBloc bloc) => bloc.state.measurements,
     );
 
     if (measurements == null) {
