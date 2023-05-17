@@ -377,6 +377,26 @@
   },
 
 
+  "healthMeasurementCreatorScreenTitle": "Pomiar zdrowia",
+  "@healthMeasurementCreatorScreenTitle": {
+    "description": "Title of the health measurement creator screen"
+  },
+  "healthMeasurementCreatorMessage": "Dzisiejszy pomiar",
+  "@healthMeasurementCreatorMessage": {
+    "description": "Message about today measurement"
+  },
+  "healthMeasurementCreatorMessageWithDate": "Pomiar z dnia {date}",
+  "@healthMeasurementCreatorMessageWithDate": {
+    "description": "Message about the date of measurement",
+    "placeholders": {
+      "date": {
+        "type": "String",
+        "example": "13.05.2023"
+      }
+    }
+  },
+
+
   "healthMeasurementsScreenTitle": "Wszystkie pomiary",
   "@healthMeasurementsScreenTitle": {
     "description": "Title of the screen displaying all health measurements"

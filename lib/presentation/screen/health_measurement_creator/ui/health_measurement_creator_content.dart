@@ -7,7 +7,10 @@ class _Content extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Health measurement creator'),
+        centerTitle: true,
+        title: Text(
+          Str.of(context).healthMeasurementCreatorScreenTitle,
+        ),
       ),
       body: SafeArea(
         child: GestureDetector(
@@ -18,7 +21,10 @@ class _Content extends StatelessWidget {
             color: Colors.transparent,
             padding: const EdgeInsets.all(24),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                const _Title(),
+                const SizedBox(height: 24),
                 _RestingHeartRate(),
                 const SizedBox(height: 24),
                 _FastingWeight(),
@@ -29,6 +35,27 @@ class _Content extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _Title extends StatelessWidget {
+  const _Title();
+
+  @override
+  Widget build(BuildContext context) {
+    final DateTime? date = context.select(
+      (HealthMeasurementCreatorBloc bloc) => bloc.state.measurement?.date,
+    );
+    String title = Str.of(context).healthMeasurementCreatorMessage;
+    if (date != null) {
+      title = Str.of(context).healthMeasurementCreatorMessageWithDate(
+        date.toDateWithDots(),
+      );
+    }
+    return Text(
+      title,
+      style: Theme.of(context).textTheme.titleLarge,
     );
   }
 }
