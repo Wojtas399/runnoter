@@ -820,6 +820,57 @@
     "description": "December"
   },
 
+
+  "januaryShort": "Sty",
+  "@januaryShort": {
+    "description": "Abbreviation of January"
+  },
+  "februaryShort": "Lut",
+  "@februaryShor": {
+    "description": "Abbreviation of February"
+  },
+  "marchShort": "Mar",
+  "@marchShort": {
+    "description": "Abbreviation of March"
+  },
+  "aprilShort": "Kwi",
+  "@aprilShort": {
+    "description": "Abbreviation of April"
+  },
+  "mayShort": "Maj",
+  "@mayShort": {
+    "description": "Abbreviation of May"
+  },
+  "juneShort": "Cze",
+  "@juneShort": {
+    "description": "Abbreviation of June"
+  },
+  "julyShort": "Lip",
+  "@julyShort": {
+    "description": "Abbreviation of July"
+  },
+  "augustShort": "Sie",
+  "@augustShort": {
+    "description": "Abbreviation of August"
+  },
+  "septemberShort": "Wrz",
+  "@septemberShort": {
+    "description": "Abbreviation of September"
+  },
+  "octoberShort": "Paź",
+  "@octoberShort": {
+    "description": "Abbreviation of October"
+  },
+  "novemberShort": "Lis",
+  "@novemberShort": {
+    "description": "Abbreviation of November"
+  },
+  "decemberShort": "Gru",
+  "@decemberShort": {
+    "description": "Abbreviation of December"
+  },
+
+
   "mondayShort": "Pon.",
   "@mondayShort": {
     "description": "Abbreviation of monday"

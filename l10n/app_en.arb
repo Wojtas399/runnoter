@@ -230,6 +230,21 @@
   "november": "November",
   "december": "December",
 
+
+  "januaryShort": "Jan",
+  "februaryShort": "Feb",
+  "marchShort": "Mar",
+  "aprilShort": "Apr",
+  "mayShort": "May",
+  "juneShort": "Jun",
+  "julyShort": "Jul",
+  "augustShort": "Aug",
+  "septemberShort": "Sep",
+  "octoberShort": "Oct",
+  "novemberShort": "Nov",
+  "decemberShort": "Dec",
+
+
   "mondayShort": "Mon",
   "tuesdayShort": "Tue",
   "wednesdayShort": "Wed",

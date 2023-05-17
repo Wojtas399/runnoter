@@ -16,7 +16,6 @@ import '../../../config/navigation/routes.dart';
 import '../../../formatter/date_formatter.dart';
 import '../../../formatter/decimal_text_input_formatter.dart';
 import '../../../model/bloc_status.dart';
-import '../../../service/dialog_service.dart';
 import '../../../service/navigator_service.dart';
 import '../../../service/utils.dart';
 import '../bloc/health_bloc.dart';

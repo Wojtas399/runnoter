@@ -81,7 +81,13 @@ class _LineChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SfCartesianChart(
-      primaryXAxis: CategoryAxis(),
+      primaryXAxis: CategoryAxis(
+        interval: switch (chartRange) {
+          ChartRange.week => 1,
+          ChartRange.month => 7,
+          ChartRange.year => 1,
+        },
+      ),
       series: <LineSeries<HealthChartPoint, String>>[
         LineSeries<HealthChartPoint, String>(
           dataSource: points,
@@ -107,6 +113,6 @@ class _LineChart extends StatelessWidget {
       switch (chartRange) {
         ChartRange.week => date.toDayAbbreviation(context),
         ChartRange.month => '${twoDigits(date.day)}.${twoDigits(date.month)}',
-        ChartRange.year => date.toMonthName(context),
+        ChartRange.year => date.toMonthAbbreviation(context),
       };
 }
