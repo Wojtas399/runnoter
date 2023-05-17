@@ -64,10 +64,7 @@ class _HealthMeasurementParam extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text(
-          label,
-          style: Theme.of(context).textTheme.labelMedium,
-        ),
+        LabelMedium(label),
         const SizedBox(height: 4),
         Text(value),
       ],
@@ -88,13 +85,10 @@ class _TodayMeasurementButton extends StatelessWidget {
     );
   }
 
-  Future<void> _onPressed(BuildContext context) async {
-    await showFullScreenDialog(
+  void _onPressed(BuildContext context) {
+    navigateTo(
       context: context,
-      dialog: BlocProvider<HealthBloc>.value(
-        value: context.read<HealthBloc>(),
-        child: const _TodayMeasurementDialog(),
-      ),
+      route: const HealthMeasurementCreatorRoute(),
     );
   }
 }

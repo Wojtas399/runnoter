@@ -19,4 +19,16 @@ abstract class HealthMeasurementRepository {
   Future<void> addMeasurement({
     required HealthMeasurement measurement,
   });
+
+  Future<void> updateMeasurement({
+    required String userId,
+    required DateTime date,
+    int? restingHeartRate,
+    double? fastingWeight,
+  });
+
+  Future<void> deleteMeasurement({
+    required String userId,
+    required DateTime date,
+  });
 }

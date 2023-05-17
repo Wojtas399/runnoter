@@ -377,6 +377,26 @@
   },
 
 
+  "healthMeasurementCreatorScreenTitle": "Pomiar zdrowia",
+  "@healthMeasurementCreatorScreenTitle": {
+    "description": "Title of the health measurement creator screen"
+  },
+  "healthMeasurementCreatorMessage": "Dzisiejszy pomiar",
+  "@healthMeasurementCreatorMessage": {
+    "description": "Message about today measurement"
+  },
+  "healthMeasurementCreatorMessageWithDate": "Pomiar z dnia {date}",
+  "@healthMeasurementCreatorMessageWithDate": {
+    "description": "Message about the date of measurement",
+    "placeholders": {
+      "date": {
+        "type": "String",
+        "example": "13.05.2023"
+      }
+    }
+  },
+
+
   "healthMeasurementsScreenTitle": "Wszystkie pomiary",
   "@healthMeasurementsScreenTitle": {
     "description": "Title of the screen displaying all health measurements"
@@ -384,6 +404,24 @@
   "healthMeasurementsNoMeasurementsInfo": "Brak pomiarów",
   "@healthMeasurementsNoMeasurementsInfo": {
     "description": "Text to inform that there is no health measurements"
+  },
+  "healthMeasurementsDeleteMeasurementConfirmationDialogTitle": "Usuń pomiar",
+  "@healthMeasurementsDeleteMeasurementConfirmationDialogTitle": {
+    "description": "Title of the dialog to confirm measurement deletion"
+  },
+  "healthMeasurementsDeleteMeasurementConfirmationDialogMessage": "Czy na pewno chcesz usunąć pomiar z dnia {date}?",
+  "@healthMeasurementsDeleteMeasurementConfirmationDialogMessage": {
+    "description": "Message of the dialog to confirm measurement deletion",
+    "placeholders": {
+      "date": {
+        "type": "String",
+        "example": "13.05.2023"
+      }
+    }
+  },
+  "healthMeasurementsDeletedMeasurementMessage": "Pomyślnie usunięto pomiar",
+  "@healthMeasurementsDeletedMeasurementMessage": {
+    "description": "Message about deleted measurement"
   },
 
 
@@ -717,6 +755,10 @@
   "@delete": {
     "description": "Delete"
   },
+  "edit": "Edytuj",
+  "@edit": {
+    "description": "Edit"
+  },
   "back": "Wróć",
   "@back": {
     "description": "Back"
@@ -797,6 +839,57 @@
   "@december": {
     "description": "December"
   },
+
+
+  "januaryShort": "Sty",
+  "@januaryShort": {
+    "description": "Abbreviation of January"
+  },
+  "februaryShort": "Lut",
+  "@februaryShor": {
+    "description": "Abbreviation of February"
+  },
+  "marchShort": "Mar",
+  "@marchShort": {
+    "description": "Abbreviation of March"
+  },
+  "aprilShort": "Kwi",
+  "@aprilShort": {
+    "description": "Abbreviation of April"
+  },
+  "mayShort": "Maj",
+  "@mayShort": {
+    "description": "Abbreviation of May"
+  },
+  "juneShort": "Cze",
+  "@juneShort": {
+    "description": "Abbreviation of June"
+  },
+  "julyShort": "Lip",
+  "@julyShort": {
+    "description": "Abbreviation of July"
+  },
+  "augustShort": "Sie",
+  "@augustShort": {
+    "description": "Abbreviation of August"
+  },
+  "septemberShort": "Wrz",
+  "@septemberShort": {
+    "description": "Abbreviation of September"
+  },
+  "octoberShort": "Paź",
+  "@octoberShort": {
+    "description": "Abbreviation of October"
+  },
+  "novemberShort": "Lis",
+  "@novemberShort": {
+    "description": "Abbreviation of November"
+  },
+  "decemberShort": "Gru",
+  "@decemberShort": {
+    "description": "Abbreviation of December"
+  },
+
 
   "mondayShort": "Pon.",
   "@mondayShort": {

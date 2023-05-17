@@ -101,6 +101,52 @@ class HealthMeasurementRepositoryImpl extends StateRepository<HealthMeasurement>
     }
   }
 
+  @override
+  Future<void> updateMeasurement({
+    required String userId,
+    required DateTime date,
+    int? restingHeartRate,
+    double? fastingWeight,
+  }) async {
+    final HealthMeasurementDto? updatedHealthMeasurementDto =
+        await _firebaseHealthMeasurementService.updateMeasurement(
+      userId: userId,
+      date: date,
+      restingHeartRate: restingHeartRate,
+      fastingWeight: fastingWeight,
+    );
+    if (updatedHealthMeasurementDto != null) {
+      final HealthMeasurement updatedMeasurement =
+          mapHealthMeasurementFromFirebase(updatedHealthMeasurementDto);
+      updateEntity(updatedMeasurement);
+    }
+  }
+
+  @override
+  Future<void> deleteMeasurement({
+    required String userId,
+    required DateTime date,
+  }) async {
+    await _firebaseHealthMeasurementService.deleteMeasurement(
+      userId: userId,
+      date: date,
+    );
+    final measurementToDelete = await dataStream$
+        .map(
+          (measurements) => <HealthMeasurement?>[...?measurements].firstWhere(
+            (HealthMeasurement? measurement) =>
+                measurement != null &&
+                measurement.userId == userId &&
+                _dateService.areDatesTheSame(measurement.date, date),
+            orElse: () => null,
+          ),
+        )
+        .first;
+    if (measurementToDelete != null) {
+      removeEntity(measurementToDelete.id);
+    }
+  }
+
   Future<bool> _doesMeasurementWithGivenDateNotExist(
     DateTime date,
     String userId,

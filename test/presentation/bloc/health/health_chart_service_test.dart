@@ -20,8 +20,10 @@ void main() {
 
   test(
     'create points of charts, '
-    'should create points of resting heart rate chart and fasting weight chart',
+    'week range, '
+    'should create points of all days from start date to end date',
     () {
+      const ChartRange chartRange = ChartRange.week;
       final DateTime startDate = DateTime(2023, 5, 8);
       final DateTime endDate = DateTime(2023, 5, 12);
       final List<HealthMeasurement> measurements = [
@@ -83,6 +85,157 @@ void main() {
 
       final (restingHeartRatePoints, fastingWeightPoints) =
           service.createPointsOfCharts(
+        chartRange: chartRange,
+        startDate: startDate,
+        endDate: endDate,
+        measurements: measurements,
+      );
+
+      expect(restingHeartRatePoints, expectedRestingHeartRatePoints);
+      expect(fastingWeightPoints, expectedFastingWeightPoints);
+    },
+  );
+
+  test(
+    'create points of charts, '
+    'month range, '
+    'should create points of all days from start date to end date',
+    () {
+      const ChartRange chartRange = ChartRange.month;
+      final DateTime startDate = DateTime(2023, 5, 8);
+      final DateTime endDate = DateTime(2023, 5, 12);
+      final List<HealthMeasurement> measurements = [
+        createHealthMeasurement(
+          date: DateTime(2023, 5, 9),
+          restingHeartRate: 51,
+          fastingWeight: 60.5,
+        ),
+        createHealthMeasurement(
+          date: DateTime(2023, 5, 10),
+          restingHeartRate: 53,
+          fastingWeight: 64,
+        ),
+        createHealthMeasurement(
+          date: endDate,
+          restingHeartRate: 52,
+          fastingWeight: 62.5,
+        ),
+      ];
+      final List<HealthChartPoint> expectedRestingHeartRatePoints = [
+        HealthChartPoint(date: startDate, value: null),
+        HealthChartPoint(date: DateTime(2023, 5, 9), value: 51),
+        HealthChartPoint(date: DateTime(2023, 5, 10), value: 53),
+        HealthChartPoint(date: DateTime(2023, 5, 11), value: null),
+        HealthChartPoint(date: endDate, value: 52),
+      ];
+      final List<HealthChartPoint> expectedFastingWeightPoints = [
+        HealthChartPoint(date: startDate, value: null),
+        HealthChartPoint(date: DateTime(2023, 5, 9), value: 60.5),
+        HealthChartPoint(date: DateTime(2023, 5, 10), value: 64.0),
+        HealthChartPoint(date: DateTime(2023, 5, 11), value: null),
+        HealthChartPoint(date: endDate, value: 62.5),
+      ];
+      dateService.mockAreDatesTheSame(expected: false);
+      when(
+        () => dateService.areDatesTheSame(
+          DateTime(2023, 5, 9),
+          DateTime(2023, 5, 9),
+        ),
+      ).thenReturn(true);
+      when(
+        () => dateService.areDatesTheSame(
+          DateTime(2023, 5, 10),
+          DateTime(2023, 5, 10),
+        ),
+      ).thenReturn(true);
+      when(
+        () => dateService.areDatesTheSame(
+          DateTime(2023, 5, 12),
+          DateTime(2023, 5, 12),
+        ),
+      ).thenReturn(true);
+      when(
+        () => dateService.areDatesTheSame(
+          DateTime(2023, 5, 13),
+          DateTime(2023, 5, 13),
+        ),
+      ).thenReturn(true);
+
+      final (restingHeartRatePoints, fastingWeightPoints) =
+          service.createPointsOfCharts(
+        chartRange: chartRange,
+        startDate: startDate,
+        endDate: endDate,
+        measurements: measurements,
+      );
+
+      expect(restingHeartRatePoints, expectedRestingHeartRatePoints);
+      expect(fastingWeightPoints, expectedFastingWeightPoints);
+    },
+  );
+
+  test(
+    'create points of charts, '
+    'year range, '
+    'should create points for each month from start date to end date with calculated average values',
+    () {
+      const ChartRange chartRange = ChartRange.year;
+      final DateTime startDate = DateTime(2023, 3, 8);
+      final DateTime endDate = DateTime(2023, 6, 12);
+      final List<HealthMeasurement> measurements = [
+        createHealthMeasurement(
+          date: DateTime(2023, 5, 9),
+          restingHeartRate: 51,
+          fastingWeight: 60.5,
+        ),
+        createHealthMeasurement(
+          date: DateTime(2023, 5, 10),
+          restingHeartRate: 53,
+          fastingWeight: 64,
+        ),
+        createHealthMeasurement(
+          date: DateTime(2023, 5, 11),
+          restingHeartRate: 52,
+          fastingWeight: 62.5,
+        ),
+        createHealthMeasurement(
+          date: DateTime(2023, 4, 9),
+          restingHeartRate: 49,
+          fastingWeight: 58.5,
+        ),
+        createHealthMeasurement(
+          date: DateTime(2023, 4, 10),
+          restingHeartRate: 51,
+          fastingWeight: 62,
+        ),
+        createHealthMeasurement(
+          date: DateTime(2023, 4, 11),
+          restingHeartRate: 50,
+          fastingWeight: 60.5,
+        ),
+      ];
+      final List<HealthChartPoint> expectedRestingHeartRatePoints = [
+        HealthChartPoint(date: DateTime(2023, 3), value: null),
+        HealthChartPoint(date: DateTime(2023, 4), value: (49 + 51 + 50) / 3),
+        HealthChartPoint(date: DateTime(2023, 5), value: (51 + 53 + 52) / 3),
+        HealthChartPoint(date: DateTime(2023, 6), value: null),
+      ];
+      final List<HealthChartPoint> expectedFastingWeightPoints = [
+        HealthChartPoint(date: DateTime(2023, 3), value: null),
+        HealthChartPoint(
+          date: DateTime(2023, 4),
+          value: (58.5 + 62 + 60.5) / 3,
+        ),
+        HealthChartPoint(
+          date: DateTime(2023, 5),
+          value: (60.5 + 64 + 62.5) / 3,
+        ),
+        HealthChartPoint(date: DateTime(2023, 6), value: null),
+      ];
+
+      final (restingHeartRatePoints, fastingWeightPoints) =
+          service.createPointsOfCharts(
+        chartRange: chartRange,
         startDate: startDate,
         endDate: endDate,
         measurements: measurements,

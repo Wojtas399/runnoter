@@ -5,8 +5,10 @@ class MockHealthChartService extends Mock implements HealthChartService {
   void mockCreatePointsOfCharts({
     required (List<HealthChartPoint>, List<HealthChartPoint>) points,
   }) {
+    _mockChartRange();
     when(
       () => createPointsOfCharts(
+          chartRange: any(named: 'chartRange'),
           startDate: any(named: 'startDate'),
           endDate: any(named: 'endDate'),
           measurements: any(

@@ -48,6 +48,26 @@ class MockHealthMeasurementRepository extends Mock
     ).thenAnswer((invocation) => Future.value());
   }
 
+  void mockUpdateMeasurement() {
+    when(
+      () => updateMeasurement(
+        userId: any(named: 'userId'),
+        date: any(named: 'date'),
+        restingHeartRate: any(named: 'restingHeartRate'),
+        fastingWeight: any(named: 'fastingWeight'),
+      ),
+    ).thenAnswer((invocation) => Future.value());
+  }
+
+  void mockDeleteMeasurement() {
+    when(
+      () => deleteMeasurement(
+        userId: any(named: 'userId'),
+        date: any(named: 'date'),
+      ),
+    ).thenAnswer((invocation) => Future.value());
+  }
+
   void _mockHealthMeasurement() {
     registerFallbackValue(_FakeHealthMeasurement());
   }

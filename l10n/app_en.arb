@@ -106,8 +106,16 @@
   "healthShowAllMeasurementsButton": "Show all measurements",
 
 
+  "healthMeasurementCreatorScreenTitle": "Health measurement",
+  "healthMeasurementCreatorMessage": "Today's measurement",
+  "healthMeasurementCreatorMessageWithDate": "Measurement of the day {date}",
+
+
   "healthMeasurementsScreenTitle": "All measurements",
   "healthMeasurementsNoMeasurementsInfo": "No measurements",
+  "healthMeasurementsDeleteMeasurementConfirmationDialogTitle": "Delete measurement",
+  "healthMeasurementsDeleteMeasurementConfirmationDialogMessage": "Are you sure you want to delete measurement of the day {date}?",
+  "healthMeasurementsDeletedMeasurementMessage": "Measurement successfully deleted",
 
 
   "profileScreenTitle": "Profile",
@@ -203,6 +211,7 @@
   "confirm": "Confirm",
   "save": "Save",
   "delete": "Delete",
+  "edit": "Edit",
   "back": "Back",
   "add": "Add",
 
@@ -225,6 +234,21 @@
   "october": "October",
   "november": "November",
   "december": "December",
+
+
+  "januaryShort": "Jan",
+  "februaryShort": "Feb",
+  "marchShort": "Mar",
+  "aprilShort": "Apr",
+  "mayShort": "May",
+  "juneShort": "Jun",
+  "julyShort": "Jul",
+  "augustShort": "Aug",
+  "septemberShort": "Sep",
+  "octoberShort": "Oct",
+  "novemberShort": "Nov",
+  "decemberShort": "Dec",
+
 
   "mondayShort": "Mon",
   "tuesdayShort": "Tue",

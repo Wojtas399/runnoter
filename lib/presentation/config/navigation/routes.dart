@@ -54,6 +54,15 @@ class WorkoutStatusCreatorRoute
         );
 }
 
+class HealthMeasurementCreatorRoute extends CustomRoute<DateTime?> {
+  const HealthMeasurementCreatorRoute({
+    DateTime? date,
+  }) : super(
+          arguments: date,
+          path: RoutePath.healthMeasurementCreator,
+        );
+}
+
 class HealthMeasurementsRoute extends CustomRoute {
   const HealthMeasurementsRoute() : super(path: RoutePath.healthMeasurements);
 }
@@ -86,6 +95,7 @@ enum RoutePath {
   dayPreview('/home/day-preview'),
   workoutCreator('/home/day-preview/workout-creator'),
   workoutStatusCreator('/home/day-preview/workout-status-creator'),
+  healthMeasurementCreator('/home/health_measurement-creator'),
   healthMeasurements('/home/health-measurements'),
   profile('/home/profile'),
   themeMode('/home/profile/theme-mode'),

@@ -40,4 +40,23 @@ extension DateFormatter on DateTime {
     ];
     return dayNameAbbreviations[weekday - 1];
   }
+
+  String toMonthAbbreviation(BuildContext context) {
+    final str = Str.of(context);
+    final List<String> monthAbbreviations = [
+      str.januaryShort,
+      str.februaryShort,
+      str.marchShort,
+      str.aprilShort,
+      str.mayShort,
+      str.juneShort,
+      str.julyShort,
+      str.augustShort,
+      str.septemberShort,
+      str.octoberShort,
+      str.novemberShort,
+      str.decemberShort,
+    ];
+    return monthAbbreviations[month - 1];
+  }
 }

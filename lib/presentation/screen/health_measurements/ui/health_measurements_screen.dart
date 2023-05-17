@@ -1,30 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
 
-import '../../../../common/date_service.dart';
 import '../../../../domain/model/health_measurement.dart';
 import '../../../../domain/repository/health_measurement_repository.dart';
 import '../../../../domain/service/auth_service.dart';
-import '../../../component/big_button_component.dart';
+import '../../../component/action_sheet_component.dart';
 import '../../../component/bloc_with_status_listener_component.dart';
+import '../../../component/empty_content_info_component.dart';
 import '../../../component/text/label_text_components.dart';
-import '../../../component/text/title_text_components.dart';
 import '../../../config/navigation/routes.dart';
 import '../../../formatter/date_formatter.dart';
+import '../../../service/dialog_service.dart';
 import '../../../service/navigator_service.dart';
-import '../../../service/utils.dart';
-import '../bloc/health_bloc.dart';
-import '../bloc/health_chart_service.dart';
+import '../bloc/health_measurements_bloc.dart';
 
-part 'health_chart_range_selection.dart';
-part 'health_charts.dart';
-part 'health_content.dart';
-part 'health_today_measurement.dart';
+part 'health_measurements_content.dart';
+part 'health_measurements_item.dart';
 
-class HealthScreen extends StatelessWidget {
-  const HealthScreen({
+class HealthMeasurementsScreen extends StatelessWidget {
+  const HealthMeasurementsScreen({
     super.key,
   });
 
@@ -48,16 +43,12 @@ class _BlocProvider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (BuildContext context) => HealthBloc(
-        dateService: DateService(),
+      create: (BuildContext context) => HealthMeasurementsBloc(
         authService: context.read<AuthService>(),
         healthMeasurementRepository:
             context.read<HealthMeasurementRepository>(),
-        chartService: HealthChartService(
-          dateService: DateService(),
-        ),
       )..add(
-          const HealthEventInitialize(),
+          const HealthMeasurementsEventInitialize(),
         ),
       child: child,
     );
@@ -73,9 +64,26 @@ class _BlocListener extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocWithStatusListener<HealthBloc, HealthState, HealthBlocInfo,
-        dynamic>(
+    return BlocWithStatusListener<HealthMeasurementsBloc,
+        HealthMeasurementsState, HealthMeasurementsBlocInfo, dynamic>(
+      onInfo: (HealthMeasurementsBlocInfo info) {
+        _manageBlocInfo(context, info);
+      },
       child: child,
     );
+  }
+
+  void _manageBlocInfo(
+    BuildContext context,
+    HealthMeasurementsBlocInfo info,
+  ) {
+    switch (info) {
+      case HealthMeasurementsBlocInfo.measurementDeleted:
+        showSnackbarMessage(
+          context: context,
+          message: Str.of(context).healthMeasurementsDeletedMeasurementMessage,
+        );
+        break;
+    }
   }
 }

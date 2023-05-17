@@ -7,17 +7,11 @@ class _Charts extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text(
-          Str.of(context).healthRestingHeartRate,
-          style: Theme.of(context).textTheme.labelLarge,
-        ),
+        LabelLarge(Str.of(context).healthRestingHeartRate),
         const SizedBox(height: 8),
         const _RestingHeartRateChart(),
         const SizedBox(height: 16),
-        Text(
-          Str.of(context).healthFastingWeight,
-          style: Theme.of(context).textTheme.labelLarge,
-        ),
+        LabelLarge(Str.of(context).healthFastingWeight),
         const SizedBox(height: 8),
         const _FastingWeightChart(),
       ],
@@ -81,7 +75,13 @@ class _LineChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SfCartesianChart(
-      primaryXAxis: CategoryAxis(),
+      primaryXAxis: CategoryAxis(
+        interval: switch (chartRange) {
+          ChartRange.week => 1,
+          ChartRange.month => 7,
+          ChartRange.year => 1,
+        },
+      ),
       series: <LineSeries<HealthChartPoint, String>>[
         LineSeries<HealthChartPoint, String>(
           dataSource: points,
@@ -107,6 +107,6 @@ class _LineChart extends StatelessWidget {
       switch (chartRange) {
         ChartRange.week => date.toDayAbbreviation(context),
         ChartRange.month => '${twoDigits(date.day)}.${twoDigits(date.month)}',
-        ChartRange.year => '${date.year}',
+        ChartRange.year => date.toMonthAbbreviation(context),
       };
 }
