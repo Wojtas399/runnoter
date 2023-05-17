@@ -113,6 +113,10 @@
   "@homeHealthPageTitle": {
     "description": "Title of morning measurement page"
   },
+  "homeDrawerHome": "Strona główna",
+  "@homeDrawerHome": {
+    "description": "Label of drawer's home option"
+  },
   "homeDrawerProfile": "Profil",
   "@homeDrawerProfile": {
     "description": "Label of drawer's profile option"
@@ -425,10 +429,6 @@
   },
 
 
-  "profileScreenTitle": "Profil",
-  "@profileScreenTitle": {
-    "description": "Title of the profile screen"
-  },
   "profileUserData": "Dane użytkownika",
   "@profileUserData": {
     "description": "Title of the user data section"

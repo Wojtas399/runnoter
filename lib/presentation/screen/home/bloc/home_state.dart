@@ -5,7 +5,8 @@ import '../../../model/bloc_state.dart';
 import '../../../model/bloc_status.dart';
 
 class HomeState extends BlocState<HomeState> {
-  final HomePage currentPage;
+  final DrawerPage drawerPage;
+  final BottomNavPage bottomNavPage;
   final String? loggedUserEmail;
   final String? loggedUserName;
   final String? loggedUserSurname;
@@ -14,7 +15,8 @@ class HomeState extends BlocState<HomeState> {
 
   const HomeState({
     required super.status,
-    required this.currentPage,
+    required this.drawerPage,
+    required this.bottomNavPage,
     this.loggedUserEmail,
     this.loggedUserName,
     this.loggedUserSurname,
@@ -25,7 +27,8 @@ class HomeState extends BlocState<HomeState> {
   @override
   List<Object?> get props => [
         status,
-        currentPage,
+        drawerPage,
+        bottomNavPage,
         loggedUserEmail,
         loggedUserName,
         loggedUserSurname,
@@ -43,7 +46,8 @@ class HomeState extends BlocState<HomeState> {
   @override
   HomeState copyWith({
     BlocStatus? status,
-    HomePage? currentPage,
+    DrawerPage? drawerPage,
+    BottomNavPage? bottomNavPage,
     String? loggedUserEmail,
     String? loggedUserName,
     String? loggedUserSurname,
@@ -52,7 +56,8 @@ class HomeState extends BlocState<HomeState> {
   }) {
     return HomeState(
       status: status ?? const BlocStatusComplete(),
-      currentPage: currentPage ?? this.currentPage,
+      drawerPage: drawerPage ?? this.drawerPage,
+      bottomNavPage: bottomNavPage ?? this.bottomNavPage,
       loggedUserEmail: loggedUserEmail ?? this.loggedUserEmail,
       loggedUserName: loggedUserName ?? this.loggedUserName,
       loggedUserSurname: loggedUserSurname ?? this.loggedUserSurname,
@@ -62,14 +67,27 @@ class HomeState extends BlocState<HomeState> {
   }
 }
 
-enum HomePage {
+enum DrawerPage {
+  home(0),
+  profile(1),
+  mileage(2),
+  blood(3),
+  tournaments(4),
+  signOut(5);
+
+  final int pageIndex;
+
+  const DrawerPage(this.pageIndex);
+}
+
+enum BottomNavPage {
   currentWeek(0),
   calendar(1),
   pulseAndWeight(2);
 
   final int pageIndex;
 
-  const HomePage(this.pageIndex);
+  const BottomNavPage(this.pageIndex);
 }
 
 enum HomeInfo {

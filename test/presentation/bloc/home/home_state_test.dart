@@ -9,7 +9,8 @@ void main() {
   setUp(() {
     state = const HomeState(
       status: BlocStatusInitial(),
-      currentPage: HomePage.currentWeek,
+      drawerPage: DrawerPage.home,
+      bottomNavPage: BottomNavPage.currentWeek,
     );
   });
 
@@ -124,15 +125,28 @@ void main() {
   );
 
   test(
-    'copy with current page',
+    'copy with drawer page',
     () {
-      const HomePage expectedCurrentPage = HomePage.pulseAndWeight;
+      const DrawerPage expectedDrawerPage = DrawerPage.home;
 
-      state = state.copyWith(currentPage: expectedCurrentPage);
+      state = state.copyWith(drawerPage: expectedDrawerPage);
       final state2 = state.copyWith();
 
-      expect(state.currentPage, expectedCurrentPage);
-      expect(state2.currentPage, expectedCurrentPage);
+      expect(state.drawerPage, expectedDrawerPage);
+      expect(state2.drawerPage, expectedDrawerPage);
+    },
+  );
+
+  test(
+    'copy with bottom nav page',
+    () {
+      const BottomNavPage expectedBottomNavPage = BottomNavPage.pulseAndWeight;
+
+      state = state.copyWith(bottomNavPage: expectedBottomNavPage);
+      final state2 = state.copyWith();
+
+      expect(state.bottomNavPage, expectedBottomNavPage);
+      expect(state2.bottomNavPage, expectedBottomNavPage);
     },
   );
 

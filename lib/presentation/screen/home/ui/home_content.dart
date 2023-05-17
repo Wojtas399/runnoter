@@ -10,22 +10,38 @@ import 'home_bottom_navigation_bar.dart';
 import 'home_drawer.dart';
 
 class HomeContent extends StatelessWidget {
-  const HomeContent({
+  final List<Widget> pages = [
+    _BottomNavPage(),
+    const ProfileScreen(),
+    const MileageScreen(),
+    const SizedBox(),
+    const SizedBox(),
+  ];
+
+  HomeContent({
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
+    final DrawerPage drawerPage = context.select(
+      (HomeBloc bloc) => bloc.state.drawerPage,
+    );
+
     return Scaffold(
-      appBar: const HomeAppBar(),
-      drawer: const HomeDrawer(),
-      bottomNavigationBar: const HomeBottomNavigationBar(),
-      body: _Body(),
+      appBar: HomeAppBar(drawerPage: drawerPage),
+      drawer: HomeDrawer(drawerPage: drawerPage),
+      bottomNavigationBar: drawerPage == DrawerPage.home
+          ? const HomeBottomNavigationBar()
+          : null,
+      body: SafeArea(
+        child: pages[drawerPage.index],
+      ),
     );
   }
 }
 
-class _Body extends StatelessWidget {
+class _BottomNavPage extends StatelessWidget {
   final List<Widget> pages = const [
     CurrentWeekScreen(),
     CalendarScreen(),
@@ -34,10 +50,10 @@ class _Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final HomePage currentPage = context.select(
-      (HomeBloc bloc) => bloc.state.currentPage,
+    final BottomNavPage page = context.select(
+      (HomeBloc bloc) => bloc.state.bottomNavPage,
     );
 
-    return pages[currentPage.index];
+    return pages[page.index];
   }
 }

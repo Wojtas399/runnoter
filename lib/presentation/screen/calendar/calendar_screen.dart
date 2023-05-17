@@ -19,11 +19,9 @@ class CalendarScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const _CubitProvider(
-      child: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.all(24),
-          child: _Calendar(),
-        ),
+      child: Padding(
+        padding: EdgeInsets.all(24),
+        child: _Calendar(),
       ),
     );
   }
