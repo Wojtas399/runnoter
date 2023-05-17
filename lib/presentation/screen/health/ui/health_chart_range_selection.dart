@@ -146,9 +146,8 @@ class _CurrentRangeLabel extends StatelessWidget {
       (HealthBloc bloc) => bloc.state.chartRange,
     );
 
-    return Text(
+    return TitleMedium(
       _createLabel(context, startDate, endDate, chartRange),
-      style: Theme.of(context).textTheme.titleMedium,
     );
   }
 

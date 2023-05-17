@@ -53,10 +53,7 @@ class _Title extends StatelessWidget {
         date.toDateWithDots(),
       );
     }
-    return Text(
-      title,
-      style: Theme.of(context).textTheme.titleLarge,
-    );
+    return TitleLarge(title);
   }
 }
 

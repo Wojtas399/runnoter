@@ -64,10 +64,7 @@ class _HealthMeasurementParam extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text(
-          label,
-          style: Theme.of(context).textTheme.labelMedium,
-        ),
+        LabelMedium(label),
         const SizedBox(height: 4),
         Text(value),
       ],

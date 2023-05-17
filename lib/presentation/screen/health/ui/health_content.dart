@@ -46,10 +46,7 @@ class _Section extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          label,
-          style: Theme.of(context).textTheme.titleMedium,
-        ),
+        TitleMedium(label),
         const SizedBox(height: 16),
         child,
       ],

@@ -7,17 +7,11 @@ class _Charts extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text(
-          Str.of(context).healthRestingHeartRate,
-          style: Theme.of(context).textTheme.labelLarge,
-        ),
+        LabelLarge(Str.of(context).healthRestingHeartRate),
         const SizedBox(height: 8),
         const _RestingHeartRateChart(),
         const SizedBox(height: 16),
-        Text(
-          Str.of(context).healthFastingWeight,
-          style: Theme.of(context).textTheme.labelLarge,
-        ),
+        LabelLarge(Str.of(context).healthFastingWeight),
         const SizedBox(height: 8),
         const _FastingWeightChart(),
       ],
