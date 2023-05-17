@@ -67,6 +67,10 @@ class HealthMeasurementsRoute extends CustomRoute {
   const HealthMeasurementsRoute() : super(path: RoutePath.healthMeasurements);
 }
 
+class MileageRoute extends CustomRoute {
+  const MileageRoute() : super(path: RoutePath.mileage);
+}
+
 class ProfileRoute extends CustomRoute {
   const ProfileRoute() : super(path: RoutePath.profile);
 }
@@ -97,6 +101,7 @@ enum RoutePath {
   workoutStatusCreator('/home/day-preview/workout-status-creator'),
   healthMeasurementCreator('/home/health_measurement-creator'),
   healthMeasurements('/home/health-measurements'),
+  mileage('/home/mileage'),
   profile('/home/profile'),
   themeMode('/home/profile/theme-mode'),
   language('/home/profile/language'),

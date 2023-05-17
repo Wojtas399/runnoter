@@ -119,7 +119,16 @@ class _Mileage extends StatelessWidget {
       title: Text(
         Str.of(context).homeDrawerMileage,
       ),
-      onTap: () {},
+      onTap: () {
+        _onPressed(context);
+      },
+    );
+  }
+
+  void _onPressed(BuildContext context) {
+    navigateTo(
+      context: context,
+      route: const MileageRoute(),
     );
   }
 }

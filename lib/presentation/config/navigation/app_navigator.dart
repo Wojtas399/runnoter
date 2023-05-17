@@ -47,6 +47,8 @@ class AppNavigator extends StatelessWidget {
       );
     } else if (routePath == RoutePath.healthMeasurements.path) {
       screen = const HealthMeasurementsScreen();
+    } else if (routePath == RoutePath.mileage.path) {
+      screen = const MileageScreen();
     } else if (routePath == RoutePath.profile.path) {
       screen = const ProfileScreen();
     } else if (routePath == RoutePath.themeMode.path) {
