@@ -5,9 +5,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../../domain/model/workout.dart';
+import '../../../domain/model/workout_status.dart';
 import '../../../domain/repository/workout_repository.dart';
 import '../../../domain/service/auth_service.dart';
-import '../../service/workout_stage_service.dart';
 
 class MileageCubit extends Cubit<List<ChartYear>?> {
   final AuthService _authService;
@@ -88,10 +88,13 @@ class MileageCubit extends Cubit<List<ChartYear>?> {
     return months;
   }
 
-  double _calculateWorkoutDistance(Workout workout) =>
-      workout.stages.map(calculateDistanceOfWorkoutStage).reduce(
-            (totalDistance, stageDistance) => totalDistance + stageDistance,
-          );
+  double _calculateWorkoutDistance(Workout workout) {
+    final WorkoutStatus status = workout.status;
+    if (status is WorkoutStats) {
+      return status.coveredDistanceInKm;
+    }
+    return 0.0;
+  }
 }
 
 class ChartYear extends Equatable {

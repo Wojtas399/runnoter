@@ -59,7 +59,7 @@ class _YearChart extends StatelessWidget {
           dataSource: yearData.months,
           xValueMapper: (ChartMonth point, _) => DateTime(
             yearData.year,
-            point.month.monthNumber - 1,
+            point.month.monthNumber,
           ).toMonthAbbreviation(context),
           yValueMapper: (ChartMonth point, _) => point.mileage,
         ),
