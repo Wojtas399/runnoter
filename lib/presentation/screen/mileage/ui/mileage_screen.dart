@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../../../domain/repository/workout_repository.dart';
+import '../../../../domain/service/auth_service.dart';
+import '../mileage_cubit.dart';
 
 class MileageScreen extends StatelessWidget {
   const MileageScreen({
@@ -7,9 +12,30 @@ class MileageScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.all(24),
-      child: Text('Mileage screen'),
+    return const _CubitProvider(
+      child: Padding(
+        padding: EdgeInsets.all(24),
+        child: Text('Mileage screen'),
+      ),
+    );
+  }
+}
+
+class _CubitProvider extends StatelessWidget {
+  final Widget child;
+
+  const _CubitProvider({
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (BuildContext context) => MileageCubit(
+        authService: context.read<AuthService>(),
+        workoutRepository: context.read<WorkoutRepository>(),
+      ),
+      child: child,
     );
   }
 }
