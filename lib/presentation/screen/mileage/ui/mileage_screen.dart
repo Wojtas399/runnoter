@@ -7,10 +7,9 @@ class MileageScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Mileage screen'),
-      ),
+    return const Padding(
+      padding: EdgeInsets.all(24),
+      child: Text('Mileage screen'),
     );
   }
 }
