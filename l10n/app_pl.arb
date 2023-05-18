@@ -507,6 +507,16 @@
   },
 
 
+  "mileageNoDataTitle": "Brak danych",
+  "@mileageNoDataTitle": {
+    "description": "Title of the information about not data to display mileage charts"
+  },
+  "mileageNoDataMessage": "Aby móc wyświetlić wykresy przedstawiające kilometraż, ukończ choć jeden trening",
+  "@mileageNoDataMessage": {
+    "description": "Message of the information about no data to display mileage"
+  },
+
+
   "themeMode": "Motyw",
   "@themeMode": {
     "description": "Label of theme mode"
