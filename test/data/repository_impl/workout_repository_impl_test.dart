@@ -66,12 +66,26 @@ void main() {
       ];
       final List<firebase.WorkoutDto> newlyLoadedWorkoutDtos = [
         createWorkoutDto(
-          id: 'w1',
+          id: 'w6',
           userId: userId,
           date: DateTime(2023, 4, 6),
           name: 'workout name 1.2',
         ),
         createWorkoutDto(
+          id: 'w5',
+          userId: userId,
+          date: DateTime(2023, 4, 6),
+          name: 'workout name 5',
+        ),
+      ];
+      final List<Workout> newlyLoadedWorkouts = [
+        createWorkout(
+          id: 'w6',
+          userId: userId,
+          date: DateTime(2023, 4, 6),
+          name: 'workout name 1.2',
+        ),
+        createWorkout(
           id: 'w5',
           userId: userId,
           date: DateTime(2023, 4, 6),
@@ -122,18 +136,8 @@ void main() {
               existingWorkouts[0],
             ],
             [
-              createWorkout(
-                id: existingWorkouts.first.id,
-                userId: userId,
-                date: existingWorkouts.first.date,
-                name: 'workout name 1.2',
-              ),
-              createWorkout(
-                id: 'w5',
-                userId: userId,
-                date: DateTime(2023, 4, 6),
-                name: 'workout name 5',
-              ),
+              existingWorkouts[0],
+              ...newlyLoadedWorkouts,
             ],
           ],
         ),
@@ -153,9 +157,9 @@ void main() {
     'workout exists in repository, '
     'should emit workout from repository',
     () {
-      const String workoutId = 'w1';
+      const String id = 'w1';
       final Workout expectedWorkout = createWorkout(
-        id: workoutId,
+        id: id,
         userId: userId,
         name: 'workout 1',
       );
@@ -170,7 +174,7 @@ void main() {
       repository = createRepository(initialState: existingWorkouts);
 
       final Stream<Workout?> workout$ = repository.getWorkoutById(
-        workoutId: workoutId,
+        workoutId: id,
         userId: userId,
       );
       workout$.listen((_) {});
@@ -191,14 +195,14 @@ void main() {
     'workout does not exist in repository, '
     'should load workout from firebase, add it to repository and emit it',
     () {
-      const String workoutId = 'w1';
+      const String id = 'w1';
       final Workout expectedWorkout = createWorkout(
-        id: workoutId,
+        id: id,
         userId: userId,
         name: 'workout 1',
       );
       final firebase.WorkoutDto expectedWorkoutDto =
-          createWorkoutDto(id: workoutId, userId: userId, name: 'workout 1');
+          createWorkoutDto(id: id, userId: userId, name: 'workout 1');
       final List<Workout> existingWorkouts = [
         createWorkout(
           id: 'w2',
@@ -212,7 +216,7 @@ void main() {
       );
 
       final Stream<Workout?> workout$ = repository.getWorkoutById(
-        workoutId: workoutId,
+        workoutId: id,
         userId: userId,
       );
       workout$.listen((_) {});
@@ -228,7 +232,7 @@ void main() {
       );
       verify(
         () => firebaseWorkoutService.loadWorkoutById(
-          workoutId: workoutId,
+          workoutId: id,
           userId: userId,
         ),
       ).called(1);
@@ -285,6 +289,91 @@ void main() {
         () => firebaseWorkoutService.loadWorkoutByDate(
           userId: userId,
           date: date,
+        ),
+      ).called(1);
+    },
+  );
+
+  test(
+    'get all workouts, '
+    'should emit workouts existing in state and should load workouts from firebase and add them to repository',
+    () {
+      final List<Workout> existingWorkouts = [
+        createWorkout(
+          id: 'w1',
+          userId: 'u2',
+          date: DateTime(2023, 4, 6),
+          name: 'workout name 1',
+        ),
+        createWorkout(
+          id: 'w2',
+          userId: userId,
+          date: DateTime(2023, 4, 10),
+          name: 'workout name 2',
+        ),
+        createWorkout(
+          id: 'w4',
+          userId: 'u2',
+          date: DateTime(2023, 4, 5),
+          name: 'workout name 1',
+        ),
+      ];
+      final List<firebase.WorkoutDto> newlyLoadedWorkoutDtos = [
+        createWorkoutDto(
+          id: 'w6',
+          userId: userId,
+          date: DateTime(2023, 4, 6),
+          name: 'workout name 1.2',
+        ),
+        createWorkoutDto(
+          id: 'w5',
+          userId: userId,
+          date: DateTime(2023, 4, 6),
+          name: 'workout name 5',
+        ),
+      ];
+      final List<Workout> newlyLoadedWorkouts = [
+        createWorkout(
+          id: 'w6',
+          userId: userId,
+          date: DateTime(2023, 4, 6),
+          name: 'workout name 1.2',
+        ),
+        createWorkout(
+          id: 'w5',
+          userId: userId,
+          date: DateTime(2023, 4, 6),
+          name: 'workout name 5',
+        ),
+      ];
+      firebaseWorkoutService.mockLoadAllWorkouts(
+        workoutDtos: newlyLoadedWorkoutDtos,
+      );
+      repository = createRepository(
+        initialState: existingWorkouts,
+      );
+
+      final Stream<List<Workout>?> workouts$ =
+          repository.getAllWorkouts(userId: userId);
+      workouts$.listen((event) {});
+
+      expect(
+        workouts$,
+        emitsInOrder(
+          [
+            [
+              existingWorkouts[1],
+            ],
+            [
+              existingWorkouts[1],
+              ...newlyLoadedWorkouts,
+            ],
+          ],
+        ),
+      );
+      verify(
+        () => firebaseWorkoutService.loadAllWorkouts(
+          userId: userId,
         ),
       ).called(1);
     },
@@ -368,7 +457,7 @@ void main() {
     'update workout, '
     'should call method from firebase service to update workout and should update workout in repository',
     () {
-      const String workoutId = 'w1';
+      const String id = 'w1';
       const String newWorkoutName = 'new workout name';
       final WorkoutStatus newStatus = WorkoutStatusDone(
         coveredDistanceInKm: 10,
@@ -397,14 +486,14 @@ void main() {
         ),
       ];
       final WorkoutDto updatedWorkoutDto = createWorkoutDto(
-        id: workoutId,
+        id: id,
         userId: userId,
         name: newWorkoutName,
         status: newStatusDto,
         stages: newStageDtos,
       );
       final Workout existingWorkout = createWorkout(
-        id: workoutId,
+        id: id,
         userId: userId,
         name: 'workout name',
         status: const WorkoutStatusPending(),
@@ -416,7 +505,7 @@ void main() {
         ],
       );
       final Workout expectedUpdatedWorkout = createWorkout(
-        id: workoutId,
+        id: id,
         userId: userId,
         name: newWorkoutName,
         status: newStatus,
@@ -430,12 +519,12 @@ void main() {
       );
 
       final Stream<Workout?> workout$ = repository.getWorkoutById(
-        workoutId: workoutId,
+        workoutId: id,
         userId: userId,
       );
       workout$.listen((_) {});
       repository.updateWorkout(
-        workoutId: workoutId,
+        workoutId: id,
         userId: userId,
         workoutName: newWorkoutName,
         status: newStatus,
@@ -453,7 +542,7 @@ void main() {
       );
       verify(
         () => firebaseWorkoutService.updateWorkout(
-          workoutId: workoutId,
+          workoutId: id,
           userId: userId,
           workoutName: newWorkoutName,
           status: newStatusDto,
@@ -468,11 +557,11 @@ void main() {
     'workout name is null, '
     'should call firebase method to update workout with workout name set as null',
     () async {
-      const String workoutId = 'w1';
+      const String id = 'w1';
       firebaseWorkoutService.mockUpdateWorkout();
 
       await repository.updateWorkout(
-        workoutId: workoutId,
+        workoutId: id,
         userId: userId,
         workoutName: null,
         status: const WorkoutStatusPending(),
@@ -481,7 +570,7 @@ void main() {
 
       verify(
         () => firebaseWorkoutService.updateWorkout(
-          workoutId: workoutId,
+          workoutId: id,
           userId: userId,
           status: const firebase.WorkoutStatusPendingDto(),
           stages: [],
@@ -495,11 +584,11 @@ void main() {
     'workout status is null, '
     'should call firebase method to update workout with workout status set as null',
     () async {
-      const String workoutId = 'w1';
+      const String id = 'w1';
       firebaseWorkoutService.mockUpdateWorkout();
 
       await repository.updateWorkout(
-        workoutId: workoutId,
+        workoutId: id,
         userId: userId,
         workoutName: 'workout name',
         stages: [],
@@ -507,7 +596,7 @@ void main() {
 
       verify(
         () => firebaseWorkoutService.updateWorkout(
-          workoutId: workoutId,
+          workoutId: id,
           userId: userId,
           workoutName: 'workout name',
           status: null,
@@ -522,11 +611,11 @@ void main() {
     'list of stages is null, '
     'should call firebase method to update workout with stages set as null',
     () async {
-      const String workoutId = 'w1';
+      const String id = 'w1';
       firebaseWorkoutService.mockUpdateWorkout();
 
       await repository.updateWorkout(
-        workoutId: workoutId,
+        workoutId: id,
         userId: userId,
         workoutName: 'new workout name',
         status: const WorkoutStatusPending(),
@@ -534,7 +623,7 @@ void main() {
 
       verify(
         () => firebaseWorkoutService.updateWorkout(
-          workoutId: workoutId,
+          workoutId: id,
           userId: userId,
           workoutName: 'new workout name',
           status: const firebase.WorkoutStatusPendingDto(),
@@ -548,10 +637,10 @@ void main() {
     'delete workout, '
     'should call method from firebase service to delete workout and should delete workout from the state of repository',
     () {
-      const String workoutId = 'w1';
+      const String id = 'w1';
       final List<Workout> existingWorkouts = [
         createWorkout(id: 'w2', userId: userId),
-        createWorkout(id: workoutId, userId: userId),
+        createWorkout(id: id, userId: userId),
       ];
       repository = createRepository(initialState: existingWorkouts);
       firebaseWorkoutService.mockDeleteWorkout();
@@ -560,7 +649,7 @@ void main() {
       repositoryState$.listen((_) {});
       repository.deleteWorkout(
         userId: userId,
-        workoutId: workoutId,
+        workoutId: id,
       );
 
       expect(
@@ -577,7 +666,7 @@ void main() {
       verify(
         () => firebaseWorkoutService.deleteWorkout(
           userId: userId,
-          workoutId: workoutId,
+          workoutId: id,
         ),
       ).called(1);
     },

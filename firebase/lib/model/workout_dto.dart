@@ -39,6 +39,7 @@ class WorkoutDto extends Equatable {
 
   @override
   List<Object?> get props => [
+        id,
         userId,
         date,
         status,
