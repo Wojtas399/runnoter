@@ -1,4 +1,4 @@
-import 'package:firebase/model/blood_test_parameter_norm_dto.dart';
+import 'package:firebase/firebase.dart';
 
 import '../../domain/model/blood_test_parameter.dart';
 

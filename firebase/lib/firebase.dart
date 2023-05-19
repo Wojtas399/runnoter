@@ -1,6 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 
 export 'model/appearance_settings_dto.dart';
+export 'model/blood_test_parameter_dto.dart';
+export 'model/blood_test_parameter_norm_dto.dart';
 export 'model/firebase_auth_exception_code.dart';
 export 'model/health_measurement_dto.dart';
 export 'model/pace_dto.dart';
