@@ -1,11 +1,12 @@
 import 'package:equatable/equatable.dart';
 
+import '../mapper/blood_test_parameter_type_mapper.dart';
 import '../mapper/blood_test_parameter_unit_mapper.dart';
 import 'blood_test_parameter_norm_dto.dart';
 
 class BloodTestParameterDto extends Equatable {
   final String id;
-  final String userId;
+  final BloodTestParameterType type;
   final String name;
   final BloodTestParameterUnit unit;
   final BloodTestParameterNormDto norm;
@@ -13,7 +14,7 @@ class BloodTestParameterDto extends Equatable {
 
   const BloodTestParameterDto({
     required this.id,
-    required this.userId,
+    required this.type,
     required this.name,
     required this.unit,
     required this.norm,
@@ -22,11 +23,10 @@ class BloodTestParameterDto extends Equatable {
 
   BloodTestParameterDto.fromJson({
     required String parameterId,
-    required String userId,
     required Map<String, dynamic>? json,
   }) : this(
           id: parameterId,
-          userId: userId,
+          type: mapBloodTestParameterTypeFromString(json?[_typeField]),
           name: json?[_nameField],
           unit: mapBloodTestParameterUnitFromString(json?[_unitField]),
           norm: BloodTestParameterNormDto.fromJson(json?[_normField]),
@@ -36,7 +36,7 @@ class BloodTestParameterDto extends Equatable {
   @override
   List<Object?> get props => [
         id,
-        userId,
+        type,
         name,
         unit,
         norm,
@@ -44,11 +44,17 @@ class BloodTestParameterDto extends Equatable {
       ];
 
   Map<String, dynamic> toJson() => {
+        _typeField: mapBloodTestParameterTypeToString(type),
         _nameField: name,
         _unitField: mapBloodTestParameterUnitToString(unit),
         _normField: norm.toJson(),
         _descriptionField: description,
       };
+}
+
+enum BloodTestParameterType {
+  basic,
+  additional,
 }
 
 enum BloodTestParameterUnit {
@@ -65,6 +71,7 @@ enum BloodTestParameterUnit {
   millimolesPerLitre,
 }
 
+const String _typeField = 'type';
 const String _nameField = 'name';
 const String _unitField = 'unit';
 const String _normField = 'norm';

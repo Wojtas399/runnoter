@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'entity.dart';
 
 class BloodTestParameter extends Entity {
+  final BloodTestParameterType type;
   final String name;
   final BloodTestParameterUnit unit;
   final BloodTestParameterNorm norm;
@@ -10,6 +11,7 @@ class BloodTestParameter extends Entity {
 
   const BloodTestParameter({
     required super.id,
+    required this.type,
     required this.name,
     required this.unit,
     required this.norm,
@@ -24,6 +26,11 @@ class BloodTestParameter extends Entity {
         norm,
         description,
       ];
+}
+
+enum BloodTestParameterType {
+  basic,
+  additional,
 }
 
 enum BloodTestParameterUnit {

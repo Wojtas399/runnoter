@@ -77,15 +77,12 @@ DocumentReference<WorkoutSettingsDto> getWorkoutSettingsRef(
           toFirestore: (workoutSettingsDto, _) => workoutSettingsDto.toJson(),
         );
 
-CollectionReference<BloodTestParameterDto> getBloodTestParametersRef(
-  String userId,
-) =>
-    getUserRef(userId)
+CollectionReference<BloodTestParameterDto> getBloodTestParametersRef() =>
+    FirebaseFirestore.instance
         .collection('BloodTestParameters')
         .withConverter<BloodTestParameterDto>(
           fromFirestore: (snapshot, _) => BloodTestParameterDto.fromJson(
             parameterId: snapshot.id,
-            userId: userId,
             json: snapshot.data(),
           ),
           toFirestore: (bloodTestParameterDto, _) =>

@@ -4,10 +4,8 @@ import '../firebase_collections.dart';
 import '../model/blood_test_parameter_dto.dart';
 
 class FirebaseBloodTestParameterService {
-  Future<List<BloodTestParameterDto>?> loadAllParameters({
-    required String userId,
-  }) async {
-    final snapshot = await getBloodTestParametersRef(userId).get();
+  Future<List<BloodTestParameterDto>?> loadAllParameters() async {
+    final snapshot = await getBloodTestParametersRef().get();
     return snapshot.docs
         .map(
           (QueryDocumentSnapshot<BloodTestParameterDto> docSnapshot) =>
