@@ -113,6 +113,10 @@
   "@homeHealthPageTitle": {
     "description": "Title of morning measurement page"
   },
+  "homeDrawerHome": "Strona główna",
+  "@homeDrawerHome": {
+    "description": "Label of drawer's home option"
+  },
   "homeDrawerProfile": "Profil",
   "@homeDrawerProfile": {
     "description": "Label of drawer's profile option"
@@ -425,10 +429,6 @@
   },
 
 
-  "profileScreenTitle": "Profil",
-  "@profileScreenTitle": {
-    "description": "Title of the profile screen"
-  },
   "profileUserData": "Dane użytkownika",
   "@profileUserData": {
     "description": "Title of the user data section"
@@ -504,6 +504,16 @@
   "profileWrongCurrentPasswordDialogMessage": "Podane obecne hasło jest błędne...",
   "@profileWrongCurrentPasswordDialogMessage": {
     "description": "Message of the dialog to inform that given current password is wrong"
+  },
+
+
+  "mileageNoDataTitle": "Brak danych",
+  "@mileageNoDataTitle": {
+    "description": "Title of the information about not data to display mileage charts"
+  },
+  "mileageNoDataMessage": "Aby móc wyświetlić wykresy przedstawiające kilometraż, ukończ choć jeden trening",
+  "@mileageNoDataMessage": {
+    "description": "Message of the information about no data to display mileage"
   },
 
 

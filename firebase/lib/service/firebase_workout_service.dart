@@ -52,6 +52,17 @@ class FirebaseWorkoutService {
     return snapshot.docs.first.data();
   }
 
+  Future<List<WorkoutDto>?> loadAllWorkouts({
+    required String userId,
+  }) async {
+    final snapshot = await getWorkoutsRef(userId).get();
+    return snapshot.docs
+        .map(
+          (QueryDocumentSnapshot<WorkoutDto> docSnapshot) => docSnapshot.data(),
+        )
+        .toList();
+  }
+
   Future<WorkoutDto?> addWorkout({
     required String userId,
     required String workoutName,

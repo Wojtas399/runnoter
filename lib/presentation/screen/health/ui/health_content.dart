@@ -5,27 +5,25 @@ class _Content extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            children: [
-              _Section(
-                label: Str.of(context).healthTodayMeasurement,
-                child: const _TodayMeasurement(),
-              ),
-              const SizedBox(height: 24),
-              _Section(
-                label: Str.of(context).healthSummaryOfMeasurements,
-                child: const _ChartRangeSelection(),
-              ),
-              const SizedBox(height: 8),
-              const _Charts(),
-              const SizedBox(height: 24),
-              const _ShowAllMeasurementsButton(),
-            ],
-          ),
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          children: [
+            _Section(
+              label: Str.of(context).healthTodayMeasurement,
+              child: const _TodayMeasurement(),
+            ),
+            const SizedBox(height: 24),
+            _Section(
+              label: Str.of(context).healthSummaryOfMeasurements,
+              child: const _ChartRangeSelection(),
+            ),
+            const SizedBox(height: 8),
+            const _Charts(),
+            const SizedBox(height: 24),
+            const _ShowAllMeasurementsButton(),
+          ],
         ),
       ),
     );

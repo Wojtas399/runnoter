@@ -1,12 +1,7 @@
-import 'package:equatable/equatable.dart';
-
 import 'home_state.dart';
 
-abstract class HomeEvent extends Equatable {
+abstract class HomeEvent {
   const HomeEvent();
-
-  @override
-  List<Object?> get props => [];
 }
 
 class HomeEventInitialize extends HomeEvent {
@@ -19,24 +14,22 @@ class HomeEventListenedParamsChanged extends HomeEvent {
   const HomeEventListenedParamsChanged({
     required this.listenedParams,
   });
-
-  @override
-  List<Object?> get props => [
-        listenedParams,
-      ];
 }
 
-class HomeEventCurrentPageChanged extends HomeEvent {
-  final HomePage currentPage;
+class HomeEventDrawerPageChanged extends HomeEvent {
+  final DrawerPage drawerPage;
 
-  const HomeEventCurrentPageChanged({
-    required this.currentPage,
+  const HomeEventDrawerPageChanged({
+    required this.drawerPage,
   });
+}
 
-  @override
-  List<Object> get props => [
-        currentPage,
-      ];
+class HomeEventBottomNavPageChanged extends HomeEvent {
+  final BottomNavPage bottomNavPage;
+
+  const HomeEventBottomNavPageChanged({
+    required this.bottomNavPage,
+  });
 }
 
 class HomeEventSignOut extends HomeEvent {

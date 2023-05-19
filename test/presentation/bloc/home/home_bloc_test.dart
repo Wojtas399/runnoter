@@ -24,7 +24,8 @@ void main() {
 
   HomeState createState({
     BlocStatus status = const BlocStatusInitial(),
-    HomePage currentPage = HomePage.currentWeek,
+    DrawerPage drawerPage = DrawerPage.home,
+    BottomNavPage bottomNavPage = BottomNavPage.currentWeek,
     String? loggedUserEmail,
     String? loggedUserName,
     String? loggedUserSurname,
@@ -33,7 +34,8 @@ void main() {
   }) {
     return HomeState(
       status: status,
-      currentPage: currentPage,
+      drawerPage: drawerPage,
+      bottomNavPage: bottomNavPage,
       loggedUserEmail: loggedUserEmail,
       loggedUserName: loggedUserName,
       loggedUserSurname: loggedUserSurname,
@@ -128,20 +130,37 @@ void main() {
   );
 
   blocTest(
-    'current page changed, '
-    'should update current page in state',
+    'drawer page changed, '
+    'should update drawer page in state',
+    build: () => createBloc(),
+    act: (HomeBloc bloc) => bloc.add(
+      const HomeEventDrawerPageChanged(
+        drawerPage: DrawerPage.profile,
+      ),
+    ),
+    expect: () => [
+      createState(
+        status: const BlocStatusComplete(),
+        drawerPage: DrawerPage.profile,
+      ),
+    ],
+  );
+
+  blocTest(
+    'bottom nav page changed, '
+    'should update bottom nav page in state',
     build: () => createBloc(),
     act: (HomeBloc bloc) {
       bloc.add(
-        const HomeEventCurrentPageChanged(
-          currentPage: HomePage.calendar,
+        const HomeEventBottomNavPageChanged(
+          bottomNavPage: BottomNavPage.calendar,
         ),
       );
     },
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
-        currentPage: HomePage.calendar,
+        bottomNavPage: BottomNavPage.calendar,
       ),
     ],
   );

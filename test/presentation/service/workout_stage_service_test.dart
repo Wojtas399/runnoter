@@ -4,22 +4,38 @@ import 'package:runnoter/presentation/service/workout_stage_service.dart';
 
 void main() {
   test(
-    'calculate total distance of series workout, '
-    'should sum series, marching and jogging distances and multiply result by amount of series',
+    'calculate distance of workout stage, '
+    'distance stage, '
+    'should simply return distance',
     () {
-      final seriesWorkoutStage = WorkoutStageHillRepeats(
+      const double expectedDistance = 10.0;
+      final stage = WorkoutStageBaseRun(
+        distanceInKilometers: expectedDistance,
+        maxHeartRate: 150,
+      );
+
+      final double distance = calculateDistanceOfWorkoutStage(stage);
+
+      expect(distance, expectedDistance);
+    },
+  );
+
+  test(
+    'calculate distance of workout stage, '
+    'series stage, '
+    'should sum series, walking and jogging distances and multiply by number of series',
+    () {
+      final stage = WorkoutStageHillRepeats(
         amountOfSeries: 10,
         seriesDistanceInMeters: 100,
         walkingDistanceInMeters: 20,
         joggingDistanceInMeters: 80,
       );
-      const double expectedTotalDistance = (10 * (100 + 20 + 80)) / 1000;
+      const double expectedDistance = (10 * (100 + 20 + 80)) / 1000;
 
-      final double totalDistance = calculateTotalDistanceInKmOfSeriesWorkout(
-        seriesWorkoutStage,
-      );
+      final double distance = calculateDistanceOfWorkoutStage(stage);
 
-      expect(totalDistance, expectedTotalDistance);
+      expect(distance, expectedDistance);
     },
   );
 }

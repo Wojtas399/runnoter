@@ -30,51 +30,61 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
     required DateTime startDate,
     required DateTime endDate,
     required String userId,
-  }) {
-    return dataStream$
-        .map(
-          (List<Workout>? workouts) =>
-              _findWorkoutsByDateRange(workouts, userId, startDate, endDate),
-        )
-        .doOnListen(
-          () =>
-              _loadWorkoutsByDateRangeFromRemoteDb(startDate, endDate, userId),
-        );
-  }
+  }) =>
+      dataStream$
+          .map(
+            (List<Workout>? workouts) =>
+                _findWorkoutsByDateRange(workouts, userId, startDate, endDate),
+          )
+          .doOnListen(
+            () => _loadWorkoutsByDateRangeFromRemoteDb(
+                startDate, endDate, userId),
+          );
 
   @override
   Stream<Workout?> getWorkoutById({
     required String workoutId,
     required String userId,
-  }) {
-    return dataStream$
-        .map(
-      (List<Workout>? workouts) =>
-          _findWorkoutById(workouts, workoutId, userId),
-    )
-        .doOnListen(
-      () {
-        if (doesEntityNotExistInState(workoutId)) {
-          _loadWorkoutByIdFromRemoteDb(workoutId, userId);
-        }
-      },
-    );
-  }
+  }) =>
+      dataStream$
+          .map(
+        (List<Workout>? workouts) =>
+            _findWorkoutById(workouts, workoutId, userId),
+      )
+          .doOnListen(
+        () {
+          if (doesEntityNotExistInState(workoutId)) {
+            _loadWorkoutByIdFromRemoteDb(workoutId, userId);
+          }
+        },
+      );
 
   @override
   Stream<Workout?> getWorkoutByDate({
     required DateTime date,
     required String userId,
-  }) {
-    return dataStream$
-        .map(
-          (List<Workout>? workouts) =>
-              _findWorkoutByDate(workouts, date, userId),
-        )
-        .doOnListen(
-          () => _loadWorkoutByDateFromRemoteDb(date, userId),
-        );
-  }
+  }) =>
+      dataStream$
+          .map(
+            (List<Workout>? workouts) =>
+                _findWorkoutByDate(workouts, date, userId),
+          )
+          .doOnListen(
+            () => _loadWorkoutByDateFromRemoteDb(date, userId),
+          );
+
+  @override
+  Stream<List<Workout>?> getAllWorkouts({
+    required String userId,
+  }) =>
+      dataStream$
+          .map(
+            (List<Workout>? workouts) =>
+                _findWorkoutsByUserId(workouts, userId),
+          )
+          .doOnListen(
+            () => _loadWorkoutsByUserId(userId),
+          );
 
   @override
   Future<void> addWorkout({
@@ -173,6 +183,12 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
         orElse: () => null,
       );
 
+  List<Workout>? _findWorkoutsByUserId(
+    List<Workout>? workouts,
+    String userId,
+  ) =>
+      workouts?.where((workout) => workout.userId == userId).toList();
+
   Future<void> _loadWorkoutsByDateRangeFromRemoteDb(
     DateTime startDate,
     DateTime endDate,
@@ -184,15 +200,14 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
       startDate: startDate,
       endDate: endDate,
     );
-    if (workoutDtos == null) {
-      return;
+    if (workoutDtos != null) {
+      final List<Workout> workouts = workoutDtos
+          .map(
+            (WorkoutDto workoutDto) => mapWorkoutFromFirebase(workoutDto),
+          )
+          .toList();
+      addEntities(workouts);
     }
-    final List<Workout> workouts = workoutDtos
-        .map(
-          (WorkoutDto workoutDto) => mapWorkoutFromFirebase(workoutDto),
-        )
-        .toList();
-    addEntities(workouts);
   }
 
   Future<void> _loadWorkoutByIdFromRemoteDb(
@@ -204,11 +219,10 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
       workoutId: workoutId,
       userId: userId,
     );
-    if (workoutDto == null) {
-      return;
+    if (workoutDto != null) {
+      final Workout workout = mapWorkoutFromFirebase(workoutDto);
+      addEntity(workout);
     }
-    final Workout workout = mapWorkoutFromFirebase(workoutDto);
-    addEntity(workout);
   }
 
   Future<void> _loadWorkoutByDateFromRemoteDb(
@@ -220,10 +234,22 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
       userId: userId,
       date: date,
     );
-    if (workoutDto == null) {
-      return;
+    if (workoutDto != null) {
+      final Workout workout = mapWorkoutFromFirebase(workoutDto);
+      addEntity(workout);
     }
-    final Workout workout = mapWorkoutFromFirebase(workoutDto);
-    addEntity(workout);
+  }
+
+  Future<void> _loadWorkoutsByUserId(String userId) async {
+    final List<WorkoutDto>? workoutDtos =
+        await _firebaseWorkoutService.loadAllWorkouts(userId: userId);
+    if (workoutDtos != null) {
+      final List<Workout> workouts = workoutDtos
+          .map(
+            (dto) => mapWorkoutFromFirebase(dto),
+          )
+          .toList();
+      addEntities(workouts);
+    }
   }
 }

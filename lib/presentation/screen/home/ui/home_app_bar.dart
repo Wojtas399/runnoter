@@ -6,25 +6,37 @@ import '../bloc/home_bloc.dart';
 import '../bloc/home_state.dart';
 
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
+  final DrawerPage drawerPage;
+
   const HomeAppBar({
     super.key,
+    required this.drawerPage,
   });
 
   @override
   Widget build(BuildContext context) {
     final str = Str.of(context);
-    final List<String> pageTitles = [
+    final List<String> drawerPageTitles = [
+      str.homeDrawerHome,
+      str.homeDrawerProfile,
+      str.homeDrawerMileage,
+      str.homeDrawerBlood,
+      str.homeDrawerCompetitions,
+    ];
+    final List<String> bottomNavPageTitles = [
       str.homeCurrentWeekPageTitle,
       str.homeCalendarPageTitle,
       str.homeHealthPageTitle,
     ];
-    final HomePage currentPage = context.select(
-      (HomeBloc bloc) => bloc.state.currentPage,
+    final BottomNavPage bottomNavPage = context.select(
+      (HomeBloc bloc) => bloc.state.bottomNavPage,
     );
 
     return AppBar(
       title: Text(
-        pageTitles[currentPage.index],
+        drawerPage == DrawerPage.home
+            ? bottomNavPageTitles[bottomNavPage.index]
+            : drawerPageTitles[drawerPage.index],
       ),
       centerTitle: true,
     );

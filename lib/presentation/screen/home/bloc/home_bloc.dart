@@ -20,18 +20,21 @@ class HomeBloc extends BlocWithStatus<HomeEvent, HomeState, HomeInfo, dynamic> {
     required AuthService authService,
     required UserRepository userRepository,
     BlocStatus status = const BlocStatusInitial(),
-    HomePage currentPage = HomePage.currentWeek,
+    DrawerPage drawerPage = DrawerPage.home,
+    BottomNavPage bottomNavPage = BottomNavPage.currentWeek,
   })  : _authService = authService,
         _userRepository = userRepository,
         super(
           HomeState(
             status: status,
-            currentPage: currentPage,
+            drawerPage: drawerPage,
+            bottomNavPage: bottomNavPage,
           ),
         ) {
     on<HomeEventInitialize>(_initialize);
     on<HomeEventListenedParamsChanged>(_listenedParamsChanged);
-    on<HomeEventCurrentPageChanged>(_currentPageChanged);
+    on<HomeEventDrawerPageChanged>(_drawerPageChanged);
+    on<HomeEventBottomNavPageChanged>(_bottomNavPageChanged);
     on<HomeEventSignOut>(_signOut);
   }
 
@@ -63,12 +66,21 @@ class HomeBloc extends BlocWithStatus<HomeEvent, HomeState, HomeInfo, dynamic> {
     ));
   }
 
-  void _currentPageChanged(
-    HomeEventCurrentPageChanged event,
+  void _drawerPageChanged(
+    HomeEventDrawerPageChanged event,
     Emitter<HomeState> emit,
   ) {
     emit(state.copyWith(
-      currentPage: event.currentPage,
+      drawerPage: event.drawerPage,
+    ));
+  }
+
+  void _bottomNavPageChanged(
+    HomeEventBottomNavPageChanged event,
+    Emitter<HomeState> emit,
+  ) {
+    emit(state.copyWith(
+      bottomNavPage: event.bottomNavPage,
     ));
   }
 

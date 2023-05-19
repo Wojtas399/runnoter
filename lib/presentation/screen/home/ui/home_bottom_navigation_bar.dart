@@ -13,8 +13,8 @@ class HomeBottomNavigationBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final HomePage currentPage = context.select(
-      (HomeBloc bloc) => bloc.state.currentPage,
+    final BottomNavPage page = context.select(
+      (HomeBloc bloc) => bloc.state.bottomNavPage,
     );
     final str = Str.of(context);
 
@@ -22,7 +22,7 @@ class HomeBottomNavigationBar extends StatelessWidget {
       onDestinationSelected: (int pageIndex) {
         _onCurrentPageChanged(context, pageIndex);
       },
-      selectedIndex: currentPage.pageIndex,
+      selectedIndex: page.pageIndex,
       destinations: <NavigationDestination>[
         NavigationDestination(
           selectedIcon: const Icon(Icons.date_range),
@@ -43,10 +43,10 @@ class HomeBottomNavigationBar extends StatelessWidget {
     );
   }
 
-  void _onCurrentPageChanged(BuildContext context, int pageIndex) {
+  void _onCurrentPageChanged(BuildContext context, int homePageIndex) {
     context.read<HomeBloc>().add(
-          HomeEventCurrentPageChanged(
-            currentPage: HomePage.values[pageIndex],
+          HomeEventBottomNavPageChanged(
+            bottomNavPage: BottomNavPage.values[homePageIndex],
           ),
         );
   }

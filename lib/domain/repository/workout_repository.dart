@@ -19,6 +19,10 @@ abstract class WorkoutRepository {
     required String userId,
   });
 
+  Stream<List<Workout>?> getAllWorkouts({
+    required String userId,
+  });
+
   Future<void> addWorkout({
     required String userId,
     required String workoutName,

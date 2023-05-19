@@ -31,6 +31,7 @@
   "homeCurrentWeekPageTitle": "Current week",
   "homeCalendarPageTitle": "Calendar",
   "homeHealthPageTitle": "Health",
+  "homeDrawerHome": "Home",
   "homeDrawerProfile": "Profile",
   "homeDrawerMileage": "Mileage",
   "homeDrawerBlood": "Blood",
@@ -138,6 +139,10 @@
   "profileWrongPasswordDialogMessage": "Given password is wrong",
   "profileWrongCurrentPasswordDialogTitle": "Wrong current password",
   "profileWrongCurrentPasswordDialogMessage": "Given current password is wrong...",
+
+
+  "mileageNoDataTitle": "No data",
+  "mileageNoDataMessage": "Finish at least one workout to be able to display mileage charts",
 
 
   "themeMode": "Theme",

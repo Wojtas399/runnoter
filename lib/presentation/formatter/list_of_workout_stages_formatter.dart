@@ -9,17 +9,15 @@ extension ListOfWorkoutStagesFormatter on List<WorkoutStage> {
     double totalDistance = 0;
     List<String> stageDistanceDescriptions = [];
     for (final stage in this) {
+      final double stageDistance = calculateDistanceOfWorkoutStage(stage);
+      totalDistance += stageDistance;
       if (stage is DistanceWorkoutStage) {
-        totalDistance += stage.distanceInKilometers;
         stageDistanceDescriptions.add(
           '${stage.toTypeName(context)} ${stage.distanceInKilometers} km',
         );
       } else if (stage is SeriesWorkoutStage) {
-        final stageTotalDistance =
-            calculateTotalDistanceInKmOfSeriesWorkout(stage);
-        totalDistance += stageTotalDistance;
         stageDistanceDescriptions.add(
-          '${stage.toTypeName(context)} $stageTotalDistance km',
+          '${stage.toTypeName(context)} $stageDistance km',
         );
       }
     }
