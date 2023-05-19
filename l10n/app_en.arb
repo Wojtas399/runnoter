@@ -145,6 +145,9 @@
   "mileageNoDataMessage": "Finish at least one workout to be able to display mileage charts",
 
 
+  "bloodAddBloodTest": "Add blood test",
+
+
   "themeMode": "Theme",
   "themeModeLight": "Light",
   "themeModeDark": "Dark",

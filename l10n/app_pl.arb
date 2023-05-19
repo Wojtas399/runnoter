@@ -517,6 +517,12 @@
   },
 
 
+  "bloodAddBloodTest": "Dodaj badanie krwi",
+  "@bloodAddBloodTest": {
+    "description": "Label of the button to add blood test"
+  },
+
+
   "themeMode": "Motyw",
   "@themeMode": {
     "description": "Label of theme mode"
