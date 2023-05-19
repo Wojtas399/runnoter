@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../component/big_button_component.dart';
+import '../../../config/navigation/routes.dart';
+import '../../../service/navigator_service.dart';
 
 class BloodScreen extends StatelessWidget {
   const BloodScreen({
@@ -17,11 +19,18 @@ class BloodScreen extends StatelessWidget {
           BigButton(
             label: Str.of(context).bloodAddBloodTest,
             onPressed: () {
-              //TODO
+              _onPressed(context);
             },
           ),
         ],
       ),
+    );
+  }
+
+  void _onPressed(BuildContext context) {
+    navigateTo(
+      context: context,
+      route: const BloodTestCreatorRoute(),
     );
   }
 }

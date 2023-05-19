@@ -67,6 +67,10 @@ class HealthMeasurementsRoute extends CustomRoute {
   const HealthMeasurementsRoute() : super(path: RoutePath.healthMeasurements);
 }
 
+class BloodTestCreatorRoute extends CustomRoute {
+  const BloodTestCreatorRoute() : super(path: RoutePath.bloodTestCreator);
+}
+
 class ThemeModeRoute extends CustomRoute {
   const ThemeModeRoute() : super(path: RoutePath.themeMode);
 }
@@ -93,6 +97,7 @@ enum RoutePath {
   workoutStatusCreator('/home/day-preview/workout-status-creator'),
   healthMeasurementCreator('/home/health_measurement-creator'),
   healthMeasurements('/home/health-measurements'),
+  bloodTestCreator('/home/blood-test-creator'),
   themeMode('/home/profile/theme-mode'),
   language('/home/profile/language'),
   distanceUnit('/home/profile/distance-unit'),
