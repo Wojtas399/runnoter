@@ -1,8 +1,7 @@
 import 'package:equatable/equatable.dart';
 
-import 'entity.dart';
-
-class BloodTestParameter extends Entity {
+class BloodTestParameter extends Equatable {
+  final String id;
   final BloodTestParameterType type;
   final String name;
   final BloodTestParameterUnit unit;
@@ -10,7 +9,7 @@ class BloodTestParameter extends Entity {
   final String? description;
 
   const BloodTestParameter({
-    required super.id,
+    required this.id,
     required this.type,
     required this.name,
     required this.unit,
@@ -21,6 +20,7 @@ class BloodTestParameter extends Entity {
   @override
   List<Object?> get props => [
         id,
+        type,
         name,
         unit,
         norm,
