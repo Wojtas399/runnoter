@@ -1,6 +1,4 @@
-import '../../../../domain/model/blood_test_parameter.dart';
-import '../../../model/bloc_state.dart';
-import '../../../model/bloc_status.dart';
+part of 'blood_test_creator_bloc.dart';
 
 class BloodTestCreatorState extends BlocState<BloodTestCreatorState> {
   final List<BloodTestParameter>? parameters;

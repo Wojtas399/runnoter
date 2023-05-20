@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/domain/model/blood_test_parameter.dart';
 import 'package:runnoter/presentation/model/bloc_status.dart';
-import 'package:runnoter/presentation/screen/blood_test_creator/bloc/blood_test_creator_state.dart';
+import 'package:runnoter/presentation/screen/blood_test_creator/bloc/blood_test_creator_bloc.dart';
 
 import '../../../util/blood_test_parameter_creator.dart';
 
