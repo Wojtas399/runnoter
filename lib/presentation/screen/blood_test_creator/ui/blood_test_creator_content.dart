@@ -1,9 +1,7 @@
-import 'package:flutter/material.dart';
+part of 'blood_test_creator_screen.dart';
 
-class BloodTestCreatorScreen extends StatelessWidget {
-  const BloodTestCreatorScreen({
-    super.key,
-  });
+class _Content extends StatelessWidget {
+  const _Content();
 
   @override
   Widget build(BuildContext context) {
