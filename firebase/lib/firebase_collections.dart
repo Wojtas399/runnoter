@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'model/appearance_settings_dto.dart';
-import 'model/blood_test_parameter_dto.dart';
 import 'model/health_measurement_dto.dart';
 import 'model/user_dto.dart';
 import 'model/workout_dto.dart';
@@ -75,16 +74,4 @@ DocumentReference<WorkoutSettingsDto> getWorkoutSettingsRef(
             snapshot.data(),
           ),
           toFirestore: (workoutSettingsDto, _) => workoutSettingsDto.toJson(),
-        );
-
-CollectionReference<BloodTestParameterDto> getBloodTestParametersRef() =>
-    FirebaseFirestore.instance
-        .collection('BloodTestParameters')
-        .withConverter<BloodTestParameterDto>(
-          fromFirestore: (snapshot, _) => BloodTestParameterDto.fromJson(
-            parameterId: snapshot.id,
-            json: snapshot.data(),
-          ),
-          toFirestore: (bloodTestParameterDto, _) =>
-              bloodTestParameterDto.toJson(),
         );
