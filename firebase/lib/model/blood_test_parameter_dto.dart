@@ -10,7 +10,6 @@ class BloodTestParameterDto extends Equatable {
   final String name;
   final BloodTestParameterUnit unit;
   final BloodTestParameterNormDto norm;
-  final String? description;
 
   const BloodTestParameterDto({
     required this.id,
@@ -18,7 +17,6 @@ class BloodTestParameterDto extends Equatable {
     required this.name,
     required this.unit,
     required this.norm,
-    this.description,
   });
 
   BloodTestParameterDto.fromJson({
@@ -30,7 +28,6 @@ class BloodTestParameterDto extends Equatable {
           name: json?[_nameField],
           unit: mapBloodTestParameterUnitFromString(json?[_unitField]),
           norm: BloodTestParameterNormDto.fromJson(json?[_normField]),
-          description: json?[_descriptionField],
         );
 
   @override
@@ -40,7 +37,6 @@ class BloodTestParameterDto extends Equatable {
         name,
         unit,
         norm,
-        description,
       ];
 
   Map<String, dynamic> toJson() => {
@@ -48,7 +44,6 @@ class BloodTestParameterDto extends Equatable {
         _nameField: name,
         _unitField: mapBloodTestParameterUnitToString(unit),
         _normField: norm.toJson(),
-        _descriptionField: description,
       };
 }
 
@@ -75,4 +70,3 @@ const String _typeField = 'type';
 const String _nameField = 'name';
 const String _unitField = 'unit';
 const String _normField = 'norm';
-const String _descriptionField = 'description';

@@ -5,14 +5,12 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   const String id = 'bt1';
   const String name = 'blood test 1';
-  const String description = 'description';
   const BloodTestParameterDto bloodTestParameterDto = BloodTestParameterDto(
     id: id,
     type: BloodTestParameterType.additional,
     name: name,
     unit: BloodTestParameterUnit.femtolitre,
     norm: BloodTestParameterNormDto(min: 10.0, max: 25.0),
-    description: description,
   );
   final Map<String, dynamic> bloodTestParameterJson = {
     'type': 'additional',
@@ -22,7 +20,6 @@ void main() {
       'min': 10.0,
       'max': 25.0,
     },
-    'description': description,
   };
 
   test(

@@ -6,14 +6,12 @@ import 'package:runnoter/domain/model/blood_test_parameter.dart';
 void main() {
   const String id = 'p1';
   const String name = 'parameter 1';
-  const String description = 'description';
   const dto = firebase.BloodTestParameterDto(
     id: id,
     type: firebase.BloodTestParameterType.basic,
     name: name,
     unit: firebase.BloodTestParameterUnit.femtolitre,
     norm: firebase.BloodTestParameterNormDto(min: 2, max: 5.0),
-    description: description,
   );
   const entity = BloodTestParameter(
     id: id,
@@ -21,7 +19,6 @@ void main() {
     name: name,
     unit: BloodTestParameterUnit.femtolitre,
     norm: BloodTestParameterNorm(min: 2, max: 5.0),
-    description: description,
   );
 
   test(

@@ -6,7 +6,6 @@ BloodTestParameter createBloodTestParameter({
   String name = '',
   BloodTestParameterUnit unit = BloodTestParameterUnit.femtolitre,
   BloodTestParameterNorm norm = const BloodTestParameterNorm(min: 0, max: 1),
-  String? description,
 }) =>
     BloodTestParameter(
       id: id,
@@ -14,5 +13,4 @@ BloodTestParameter createBloodTestParameter({
       name: name,
       unit: unit,
       norm: norm,
-      description: description,
     );

@@ -14,5 +14,4 @@ BloodTestParameter mapBloodTestParameterFromDto(
       name: dto.name,
       unit: mapBloodTestParameterUnitFromDto(dto.unit),
       norm: mapBloodTestParameterNormFromDto(dto.norm),
-      description: dto.description,
     );

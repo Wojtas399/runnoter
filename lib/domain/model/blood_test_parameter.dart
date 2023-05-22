@@ -6,7 +6,6 @@ class BloodTestParameter extends Equatable {
   final String name;
   final BloodTestParameterUnit unit;
   final BloodTestParameterNorm norm;
-  final String? description;
 
   const BloodTestParameter({
     required this.id,
@@ -14,7 +13,6 @@ class BloodTestParameter extends Equatable {
     required this.name,
     required this.unit,
     required this.norm,
-    this.description,
   });
 
   @override
@@ -24,7 +22,6 @@ class BloodTestParameter extends Equatable {
         name,
         unit,
         norm,
-        description,
       ];
 }
 

@@ -9,7 +9,6 @@ BloodTestParameterDto createBloodTestParameterDto({
     min: 0,
     max: 1,
   ),
-  String? description,
 }) =>
     BloodTestParameterDto(
       id: id,
@@ -17,5 +16,4 @@ BloodTestParameterDto createBloodTestParameterDto({
       name: name,
       unit: unit,
       norm: normDto,
-      description: description,
     );

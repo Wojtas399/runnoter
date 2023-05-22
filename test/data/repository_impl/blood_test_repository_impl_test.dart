@@ -30,7 +30,6 @@ void main() {
           name: 'parameter 1',
           unit: firebase.BloodTestParameterUnit.femtolitre,
           normDto: const firebase.BloodTestParameterNormDto(min: 70, max: 100),
-          description: 'this is parameter 1',
         ),
         createBloodTestParameterDto(
           id: 'p2',
@@ -38,7 +37,6 @@ void main() {
           name: 'parameter 2',
           unit: firebase.BloodTestParameterUnit.milligramsPerDecilitre,
           normDto: const firebase.BloodTestParameterNormDto(min: 80, max: 110),
-          description: 'this is parameter 2',
         ),
       ];
       final List<BloodTestParameter> expectedParameters = [
@@ -48,7 +46,6 @@ void main() {
           name: 'parameter 1',
           unit: BloodTestParameterUnit.femtolitre,
           norm: const BloodTestParameterNorm(min: 70, max: 100),
-          description: 'this is parameter 1',
         ),
         createBloodTestParameter(
           id: 'p2',
@@ -56,7 +53,6 @@ void main() {
           name: 'parameter 2',
           unit: BloodTestParameterUnit.milligramsPerDecilitre,
           norm: const BloodTestParameterNorm(min: 80, max: 110),
-          description: 'this is parameter 2',
         ),
       ];
       firebaseBloodTestParameterService.mockLoadAllParameters(
