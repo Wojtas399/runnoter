@@ -78,7 +78,7 @@ enum BloodTestParameter {
   ),
   iron(
     type: BloodTestParameterType.basic,
-    unit: BloodTestParameterUnit.microgramsPerMilliliter,
+    unit: BloodTestParameterUnit.microgramsPerDeciliter,
     norm: BloodTestParameterNorm(min: 65, max: 175),
   ),
   ferritin(
@@ -93,7 +93,7 @@ enum BloodTestParameter {
   ),
   folicAcid(
     type: BloodTestParameterType.basic,
-    unit: BloodTestParameterUnit.microgramsPerMilliliter,
+    unit: BloodTestParameterUnit.microgramsPerDeciliter,
     norm: BloodTestParameterNorm(min: 250, max: 410),
   ),
   cpk(
@@ -108,7 +108,7 @@ enum BloodTestParameter {
   ),
   cortisol(
     type: BloodTestParameterType.basic,
-    unit: BloodTestParameterUnit.microgramsPerMilliliter,
+    unit: BloodTestParameterUnit.microgramsPerDeciliter,
     norm: BloodTestParameterNorm(min: 6.2, max: 19.4),
   ),
   d3_25(
@@ -116,9 +116,9 @@ enum BloodTestParameter {
     unit: BloodTestParameterUnit.nanogramsPerMilliliter,
     norm: BloodTestParameterNorm(min: 30, max: 50),
   ),
-  transferring(
+  transferrin(
     type: BloodTestParameterType.additional,
-    unit: BloodTestParameterUnit.microgramsPerMilliliter,
+    unit: BloodTestParameterUnit.microgramsPerDeciliter,
     norm: BloodTestParameterNorm(min: 69, max: 240),
   ),
   uibc(
@@ -201,7 +201,7 @@ enum BloodTestParameter {
     unit: BloodTestParameterUnit.millimolesPerLiter,
     norm: BloodTestParameterNorm(min: 99, max: 109),
   ),
-  creatineKinaseMB(
+  creatinineKinaseMB(
     type: BloodTestParameterType.additional,
     unit: BloodTestParameterUnit.nanogramsPerMilliliter,
     norm: BloodTestParameterNorm(max: 7.2),
@@ -269,7 +269,7 @@ enum BloodTestParameterUnit {
   percentage,
   femtolitre,
   picogramsPerMilliliter,
-  microgramsPerMilliliter,
+  microgramsPerDeciliter,
   nanogramsPerMilliliter,
   gramsPerDeciliter,
   milligramsPerDeciliter,

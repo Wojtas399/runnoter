@@ -9,14 +9,11 @@
   "signInUserNotFoundDialogMessage": "There is no user with given email address",
   "signInWrongPasswordDialogTitle": "Wrong password",
   "signInWrongPasswordDialogMessage": "Given password is wrong. Try again with correct one.",
-
-
   "signUpScreenTitle": "Sign up",
   "signUpButtonLabel": "Sign up",
   "signUpSignInOption": "Already have an account? Sign in!",
   "signUpAlreadyTakenEmailDialogTitle": "Already taken email",
   "signUpAlreadyTakenEmailDialogMessage": "Given email address is already taken by another user...",
-
   "forgotPasswordScreenTitle": "Forgot password?",
   "forgotPasswordMessage": "Enter your email address and we will send you a link to reset password",
   "forgotPasswordSubmitButtonLabel": "Submit",
@@ -26,8 +23,6 @@
   "forgotPasswordInvalidEmailDialogMessage": "Given email address is invalid",
   "forgotPasswordUserNotFoundDialogTitle": "No user",
   "forgotPasswordUserNotFoundDialogMessage": "We cannot sent the message because there is no user with given email address",
-
-
   "homeCurrentWeekPageTitle": "Current week",
   "homeCalendarPageTitle": "Calendar",
   "homeHealthPageTitle": "Health",
@@ -39,8 +34,6 @@
   "homeDrawerSignOut": "Sign out",
   "homeSignOutConfirmationDialogTitle": "Sign out",
   "homeSignOutConfirmationDialogMessage": "Are you sure you want to sign out?",
-
-
   "dayPreviewScreenTitle": "Day preview",
   "dayPreviewNoWorkoutTitle": "No workout",
   "dayPreviewNoWorkoutMessagePastDay": "You didn't have scheduled workout that day",
@@ -60,8 +53,6 @@
   "dayPreviewEditWorkout": "Edit workout",
   "dayPreviewDeleteWorkout": "Delete workout",
   "dayPreviewDeletedWorkoutMessage": "Successfully deleted workout",
-
-
   "workoutCreatorScreenNewWorkoutTitle": "New workout",
   "workoutCreatorScreeEditWorkoutTitle": "Edit workout",
   "workoutCreatorWorkoutName": "Workout name",
@@ -73,8 +64,6 @@
   "workoutCreatorEditWorkoutButton": "Update",
   "workoutCreatorAddedWorkoutMessage": "Successfully added workout",
   "workoutCreatorUpdatedWorkoutMessage": "Successfully updated workout",
-
-
   "workoutStageCreatorScreenTitle": "New workout stage",
   "workoutStageCreatorStageType": "Stage type",
   "workoutStageCreatorDistance": "Distance",
@@ -83,8 +72,6 @@
   "workoutStageCreatorSeriesDistance": "Single series distance",
   "workoutStageCreatorWalkingDistance": "Walking distance",
   "workoutStageCreatorJoggingDistance": "Jogging distance",
-
-
   "workoutStatusCreatorScreenTitle": "Workout status",
   "workoutStatusCreatorCoveredDistance": "Covered distance",
   "workoutStatusCreatorMood": "Mood",
@@ -94,8 +81,6 @@
   "workoutStatusCreatorAverageHeartRate": "Average heart rate",
   "workoutStatusCreatorComment": "Comment",
   "workoutStatusCreatorSavedStatusMessage": "Successfully updated workout status",
-
-
   "healthTodayMeasurement": "Today's measurement",
   "healthAddTodayMeasurementButton": "Add measurement",
   "healthRestingHeartRate": "Resting heart rate",
@@ -105,20 +90,14 @@
   "healthChartRangeMonth": "Month",
   "healthChartRangeYear": "Year",
   "healthShowAllMeasurementsButton": "Show all measurements",
-
-
   "healthMeasurementCreatorScreenTitle": "Health measurement",
   "healthMeasurementCreatorMessage": "Today's measurement",
   "healthMeasurementCreatorMessageWithDate": "Measurement of the day {date}",
-
-
   "healthMeasurementsScreenTitle": "All measurements",
   "healthMeasurementsNoMeasurementsInfo": "No measurements",
   "healthMeasurementsDeleteMeasurementConfirmationDialogTitle": "Delete measurement",
   "healthMeasurementsDeleteMeasurementConfirmationDialogMessage": "Are you sure you want to delete measurement of the day {date}?",
   "healthMeasurementsDeletedMeasurementMessage": "Measurement successfully deleted",
-
-
   "profileScreenTitle": "Profile",
   "profileUserData": "User identities",
   "profileSettings": "Settings",
@@ -139,48 +118,32 @@
   "profileWrongPasswordDialogMessage": "Given password is wrong",
   "profileWrongCurrentPasswordDialogTitle": "Wrong current password",
   "profileWrongCurrentPasswordDialogMessage": "Given current password is wrong...",
-
-
   "mileageNoDataTitle": "No data",
   "mileageNoDataMessage": "Finish at least one workout to be able to display mileage charts",
-
-
   "bloodAddBloodTest": "Add blood test",
-
-
   "themeMode": "Theme",
   "themeModeLight": "Light",
   "themeModeDark": "Dark",
   "themeModeSystem": "System",
   "themeModeSelect": "Select app theme",
   "systemThemeModeDescription": "If you choose system theme mode, the app will use the theme that's currently set on your device.",
-
-
   "language": "Language",
   "languagePolish": "Polish",
   "languageEnglish": "English",
   "languageSystem": "System",
   "languageSelect": "Select app language",
   "systemLanguageDescription": "If you select system language, the app will use the language that's currently set on your device.",
-
-
   "distanceUnit": "Distance unit",
   "distanceUnitKilometers": "Kilometers",
   "distanceUnitMiles": "Miles",
   "distanceUnitSelect": "Select distance unit",
-
-
   "paceUnit": "Pace unit",
   "paceUnitMinutesPerKilometer": "min/km (minutes per kilometer)",
   "paceUnitMinutesPerMile": "min/mi (minutes per mile)",
   "paceUnitKilometersPerHour": "km/h (kilometers per hour)",
   "paceUnitMilesPerHour": "mi/h (miles per hour)",
   "paceUnitSelect": "Select pace unit",
-
-
   "heartRateUnit": "bpm",
-
-
   "workoutStageBaseRun": "Cardio",
   "workoutStageZone2": "Zone2",
   "workoutStageZone3": "Zone3",
@@ -192,22 +155,16 @@
   "workoutStageBreak": "break",
   "workoutStageWalking": "{walkingDistanceInMeters}m marching",
   "workoutStageJogging": "{joggingDistanceInMeters}m jogging",
-
-
   "workoutStatusPending": "Pending",
   "workoutStatusDone": "Done",
   "workoutStatusAborted": "Aborted",
   "workoutStatusUndone": "Undone",
-
-
   "noInternetConnectionDialogTitle": "No internet connection",
   "noInternetConnectionDialogMessage": "It seems that you lost internet connection. Resolve this problem and try again",
   "noLoggedUserDialogTitle": "Session error",
   "noLoggedUserDialogMessage": "We've lost connection with your session. Sign in again to use the app properly.",
   "unknownErrorDialogTitle": "Unknown error",
   "unknownErrorDialogMessage": "An unknown error occurred",
-
-
   "name": "Name",
   "surname": "Surname",
   "email": "Email",
@@ -222,14 +179,11 @@
   "edit": "Edit",
   "back": "Back",
   "add": "Add",
-
-
   "requiredFieldMessage": "This field is required",
   "invalidNameOrSurnameMessage": "Requirements: \n - Min. 2 characters length \n - Only letters",
   "invalidEmailMessage": "Invalid email address",
   "invalidPasswordMessage": "Requirements: \n - Min. 6 characters length \n - At least one upper letter, \n - At least one lower letter, \n - At least one digit, \n - At least one special character",
   "invalidPasswordConfirmationMessage": "Passwords are not the same",
-
   "january": "January",
   "february": "February",
   "march": "March",
@@ -242,8 +196,6 @@
   "october": "October",
   "november": "November",
   "december": "December",
-
-
   "januaryShort": "Jan",
   "februaryShort": "Feb",
   "marchShort": "Mar",
@@ -256,13 +208,60 @@
   "octoberShort": "Oct",
   "novemberShort": "Nov",
   "decemberShort": "Dec",
-
-
   "mondayShort": "Mon",
   "tuesdayShort": "Tue",
   "wednesdayShort": "Wed",
   "thursdayShort": "Thu",
   "fridayShort": "Fri",
   "saturdayShort": "Sat",
-  "sundayShort": "Sun"
+  "sundayShort": "Sun",
+  "bloodParamWBC": "WBC",
+  "bloodParamRBC": "RBC",
+  "bloodParamHGB": "HGB",
+  "bloodParamHCT": "HCT",
+  "bloodParamMVC": "MVC",
+  "bloodParamMCH": "MCH",
+  "bloodParamMCHC": "MCHC",
+  "bloodParamPLT": "Platelet count",
+  "bloodParamTotalBilirubin": "Total bilirubin",
+  "bloodParamALT": "ALT",
+  "bloodParamAST": "AST",
+  "bloodParamTotalCholesterol": "Total cholesterol",
+  "bloodParamHDL": "HDL",
+  "bloodParamLDL": "LDL",
+  "bloodParamTG": "Triglycerides (TG)",
+  "bloodParamIron": "Iron",
+  "bloodParamFerritin": "Ferriting",
+  "bloodParamB12": "B12",
+  "bloodParamFolicAcid": "Folic acid",
+  "bloodParamCPK": "Creatine phosphokinase",
+  "bloodParamTestosterone": "Testosterone",
+  "bloodParamCortisol": "Cortisol",
+  "bloodParamD3_25": "25(OH)D",
+  "bloodParamTransferrin": "Transferrin",
+  "bloodParamUIBC": "UIBC",
+  "bloodParamTIBC": "TIBC",
+  "bloodParamGGTP": "GGTP",
+  "bloodParamLDH": "LDH",
+  "bloodParamCRP": "C-Reactive Protein (CRP)",
+  "bloodParamTP": "Total Protein (TP)",
+  "bloodParamAlbumin": "Albumin",
+  "bloodParamUricAcid": "Uric acid",
+  "bloodParamDirectBilirubin": "Direct bilirubin",
+  "bloodParamGlucose": "Glucose",
+  "bloodParamMagnesium": "Magnesium",
+  "bloodParamTotalCalcium": "Total calcium",
+  "bloodParamSodium": "Sodium",
+  "bloodParamPotassium": "Potassium",
+  "bloodParamZinc": "Zinc",
+  "bloodParamChloride": "Chloride",
+  "bloodParamCreatinineKinaseMB": "CK-MB",
+  "bloodParamMyoglobin": "Myoglobin",
+  "bloodParamTSH": "TSH",
+  "bloodParamUrineUreaNitrogen": "Urine urea nitrogen",
+  "bloodParamCreatinineInUrine": "Creatinine in urine",
+  "bloodParamMyoglobinInUrine": "Myoglobin in urine",
+  "bloodParamPLTInCitratePlasma": "PLT in citrate plasma",
+  "bloodParamCreatinine": "Creatinine",
+  "bloodParamBloodUreaNitrogen": "Blood urea nitrogen"
 }
