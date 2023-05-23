@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 
 class LabelLarge extends StatelessWidget {
   final String data;
+  final TextAlign? textAlign;
 
   const LabelLarge(
     this.data, {
     super.key,
+    this.textAlign,
   });
 
   @override
@@ -13,6 +15,7 @@ class LabelLarge extends StatelessWidget {
     return Text(
       data,
       style: Theme.of(context).textTheme.labelLarge,
+      textAlign: textAlign,
     );
   }
 }
