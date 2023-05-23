@@ -219,7 +219,7 @@
   "bloodParamRBC": "RBC",
   "bloodParamHGB": "HGB",
   "bloodParamHCT": "HCT",
-  "bloodParamMVC": "MVC",
+  "bloodParamMCV": "MCV",
   "bloodParamMCH": "MCH",
   "bloodParamMCHC": "MCHC",
   "bloodParamPLT": "Platelet count",

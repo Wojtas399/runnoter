@@ -23,7 +23,7 @@ enum BloodTestParameter {
   ),
   mcv(
     type: BloodTestParameterType.basic,
-    unit: BloodTestParameterUnit.femtolitre,
+    unit: BloodTestParameterUnit.femtoliter,
     norm: BloodTestParameterNorm(min: 80, max: 97),
   ),
   mch(
@@ -267,7 +267,7 @@ enum BloodTestParameterUnit {
   thousandsPerCubicMilliliter,
   millionsPerCubicMillimeter,
   percentage,
-  femtolitre,
+  femtoliter,
   picogramsPerMilliliter,
   microgramsPerDeciliter,
   nanogramsPerMilliliter,

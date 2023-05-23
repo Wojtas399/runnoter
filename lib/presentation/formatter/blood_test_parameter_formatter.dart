@@ -47,7 +47,7 @@ extension BloodTestParameterFormatter on BloodTestParameter {
       BloodTestParameter.potassium => str.bloodParamPotassium,
       BloodTestParameter.zinc => str.bloodParamZinc,
       BloodTestParameter.chloride => str.bloodParamChloride,
-      BloodTestParameter.creatinineKinaseMB => str.bloodParamCreatineKinaseMB,
+      BloodTestParameter.creatinineKinaseMB => str.bloodParamCreatinineKinaseMB,
       BloodTestParameter.myoglobin => str.bloodParamMyoglobin,
       BloodTestParameter.tsh => str.bloodParamTSH,
       BloodTestParameter.urineUreaNitrogen => str.bloodParamUrineUreaNitrogen,

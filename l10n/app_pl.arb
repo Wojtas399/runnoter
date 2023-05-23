@@ -899,7 +899,7 @@
   "@bloodParamHCT": {
     "description": "Blood test parameter called HCT"
   },
-  "bloodParamMCV": "MVC",
+  "bloodParamMCV": "MCV",
   "@bloodParamMCV": {
     "description": "Blood test parameter called MCV"
   },
@@ -1043,7 +1043,7 @@
   "@bloodParamChloride": {
     "description": "Blood test parameter called chloride"
   },
-  "bloodParamCreatineKinaseMB": "CK-MB",
+  "bloodParamCreatinineKinaseMB": "CK-MB",
   "@bloodParamCreatineKinaseMB": {
     "description": "Blood test parameter called creatine kinase mb"
   },
