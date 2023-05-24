@@ -4,18 +4,24 @@ import '../mapper/date_mapper.dart';
 import 'blood_parameter_reading_dto.dart';
 
 class BloodReadingsDto extends Equatable {
+  final String id;
   final String userId;
   final DateTime date;
   final List<BloodParameterReadingDto> readingDtos;
 
   const BloodReadingsDto({
+    required this.id,
     required this.userId,
     required this.date,
     required this.readingDtos,
   });
 
-  BloodReadingsDto.fromJson(String userId, Map<String, dynamic>? json)
-      : this(
+  BloodReadingsDto.fromJson({
+    required String id,
+    required String userId,
+    required Map<String, dynamic>? json,
+  }) : this(
+          id: id,
           userId: userId,
           date: mapDateTimeFromString(json?[_dateField]),
           readingDtos: (json?[_readingsField] as List<Map<String, dynamic>>)
@@ -25,6 +31,7 @@ class BloodReadingsDto extends Equatable {
 
   @override
   List<Object?> get props => [
+        id,
         userId,
         date,
         readingDtos,

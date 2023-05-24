@@ -2,8 +2,11 @@ import 'package:firebase/firebase.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
+  const String id = 'br1';
+  const String userId = 'u1';
   final BloodReadingsDto readingsDto = BloodReadingsDto(
-    userId: 'u1',
+    id: id,
+    userId: userId,
     date: DateTime(2023, 5, 2),
     readingDtos: const [
       BloodParameterReadingDto(
@@ -35,8 +38,9 @@ void main() {
     'should map json to dto',
     () {
       final BloodReadingsDto dto = BloodReadingsDto.fromJson(
-        'u1',
-        readingsJson,
+        id: id,
+        userId: userId,
+        json: readingsJson,
       );
 
       expect(dto, readingsDto);

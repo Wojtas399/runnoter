@@ -13,7 +13,7 @@ class BloodReadings extends Entity {
     required this.userId,
     required this.date,
     required this.readings,
-  });
+  }) : assert(readings.length > 0);
 
   @override
   List<Object?> get props => [
