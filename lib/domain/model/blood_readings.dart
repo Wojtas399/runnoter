@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import 'blood_test_parameter.dart';
+import 'blood_parameter.dart';
 import 'entity.dart';
 
 class BloodReadings extends Entity {
@@ -25,7 +25,7 @@ class BloodReadings extends Entity {
 }
 
 class BloodParameterReading extends Equatable {
-  final BloodTestParameter parameter;
+  final BloodParameter parameter;
   final double reading;
 
   const BloodParameterReading({

@@ -1,22 +1,21 @@
-import '../../domain/model/blood_test_parameter.dart';
+import '../../domain/model/blood_parameter.dart';
 
-extension BloodTestParameterUnitFormatter on BloodTestParameterUnit {
+extension BloodParameterUnitFormatter on BloodParameterUnit {
   String toUIFormat() => switch (this) {
-        BloodTestParameterUnit.thousandsPerCubicMilliliter => 'K/ul',
-        BloodTestParameterUnit.millionsPerCubicMillimeter => 'M/ul',
-        BloodTestParameterUnit.percentage => '%',
-        BloodTestParameterUnit.femtoliter => 'fL',
-        BloodTestParameterUnit.picogramsPerMilliliter => 'pg/mL',
-        BloodTestParameterUnit.nanogramsPerMilliliter => 'ng/mL',
-        BloodTestParameterUnit.microgramsPerDeciliter => 'ug/dL',
-        BloodTestParameterUnit.gramsPerDeciliter => 'g/dL',
-        BloodTestParameterUnit.milligramsPerDeciliter => 'mg/dL',
-        BloodTestParameterUnit.milligramsPerLiter => 'mg/L',
-        BloodTestParameterUnit.unitsPerLiter => 'U/L',
-        BloodTestParameterUnit.internationalUnitsPerLiter => 'IU/L',
-        BloodTestParameterUnit.microInternationUnitsPerMilliliter => 'uIU/mL',
-        BloodTestParameterUnit.millimolesPerLiter => 'mmol/L',
-        BloodTestParameterUnit.microgramsPerGramOfCreatinine =>
-          'ug/1g creatinine',
+        BloodParameterUnit.thousandsPerCubicMilliliter => 'K/ul',
+        BloodParameterUnit.millionsPerCubicMillimeter => 'M/ul',
+        BloodParameterUnit.percentage => '%',
+        BloodParameterUnit.femtoliter => 'fL',
+        BloodParameterUnit.picogramsPerMilliliter => 'pg/mL',
+        BloodParameterUnit.nanogramsPerMilliliter => 'ng/mL',
+        BloodParameterUnit.microgramsPerDeciliter => 'ug/dL',
+        BloodParameterUnit.gramsPerDeciliter => 'g/dL',
+        BloodParameterUnit.milligramsPerDeciliter => 'mg/dL',
+        BloodParameterUnit.milligramsPerLiter => 'mg/L',
+        BloodParameterUnit.unitsPerLiter => 'U/L',
+        BloodParameterUnit.internationalUnitsPerLiter => 'IU/L',
+        BloodParameterUnit.microInternationUnitsPerMilliliter => 'uIU/mL',
+        BloodParameterUnit.millimolesPerLiter => 'mmol/L',
+        BloodParameterUnit.microgramsPerGramOfCreatinine => 'ug/1g creatinine',
       };
 }

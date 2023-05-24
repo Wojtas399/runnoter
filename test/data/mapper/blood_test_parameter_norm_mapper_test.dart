@@ -1,14 +1,14 @@
 import 'package:firebase/firebase.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/data/mapper/blood_test_parameter_norm_mapper.dart';
-import 'package:runnoter/domain/model/blood_test_parameter.dart';
+import 'package:runnoter/domain/model/blood_parameter.dart';
 
 void main() {
-  const BloodTestParameterNorm domainModel = BloodTestParameterNorm(
+  const BloodParameterNorm domainModel = BloodParameterNorm(
     min: 0,
     max: 1,
   );
-  const BloodTestParameterNormDto dto = BloodTestParameterNormDto(
+  const BloodParameterNormDto dto = BloodParameterNormDto(
     min: 0,
     max: 1,
   );
@@ -17,8 +17,7 @@ void main() {
     'map blood test parameter norm from dto, '
     'should map dto model to domain model',
     () {
-      final BloodTestParameterNorm model =
-          mapBloodTestParameterNormFromDto(dto);
+      final BloodParameterNorm model = mapBloodParameterNormFromDto(dto);
 
       expect(model, domainModel);
     },

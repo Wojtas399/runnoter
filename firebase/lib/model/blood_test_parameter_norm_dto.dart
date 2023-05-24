@@ -1,10 +1,10 @@
 import 'package:equatable/equatable.dart';
 
-class BloodTestParameterNormDto extends Equatable {
+class BloodParameterNormDto extends Equatable {
   final double? min;
   final double? max;
 
-  const BloodTestParameterNormDto({
+  const BloodParameterNormDto({
     required this.min,
     required this.max,
   });
@@ -15,7 +15,7 @@ class BloodTestParameterNormDto extends Equatable {
         max,
       ];
 
-  BloodTestParameterNormDto.fromJson(Map<String, dynamic> json)
+  BloodParameterNormDto.fromJson(Map<String, dynamic> json)
       : this(
           min: (json[_minField] as num).toDouble(),
           max: (json[_maxField] as num).toDouble(),

@@ -12,13 +12,12 @@ void main() {
         'min': min,
         'max': max,
       };
-      const BloodTestParameterNormDto expectedDto = BloodTestParameterNormDto(
+      const BloodParameterNormDto expectedDto = BloodParameterNormDto(
         min: min,
         max: max,
       );
 
-      final BloodTestParameterNormDto dto =
-          BloodTestParameterNormDto.fromJson(json);
+      final BloodParameterNormDto dto = BloodParameterNormDto.fromJson(json);
 
       expect(dto, expectedDto);
     },
@@ -34,13 +33,12 @@ void main() {
         'min': min,
         'max': max,
       };
-      const BloodTestParameterNormDto expectedDto = BloodTestParameterNormDto(
+      const BloodParameterNormDto expectedDto = BloodParameterNormDto(
         min: min,
         max: max,
       );
 
-      final BloodTestParameterNormDto dto =
-          BloodTestParameterNormDto.fromJson(json);
+      final BloodParameterNormDto dto = BloodParameterNormDto.fromJson(json);
 
       expect(dto, expectedDto);
     },
@@ -56,13 +54,12 @@ void main() {
         'min': min,
         'max': max,
       };
-      const BloodTestParameterNormDto expectedDto = BloodTestParameterNormDto(
+      const BloodParameterNormDto expectedDto = BloodParameterNormDto(
         min: min,
         max: max,
       );
 
-      final BloodTestParameterNormDto dto =
-          BloodTestParameterNormDto.fromJson(json);
+      final BloodParameterNormDto dto = BloodParameterNormDto.fromJson(json);
 
       expect(dto, expectedDto);
     },
@@ -74,7 +71,7 @@ void main() {
     () {
       const double min = 10.0;
       const double max = 25.0;
-      const BloodTestParameterNormDto dto = BloodTestParameterNormDto(
+      const BloodParameterNormDto dto = BloodParameterNormDto(
         min: min,
         max: max,
       );
@@ -95,7 +92,7 @@ void main() {
     () {
       const double? min = null;
       const double max = 25.0;
-      const BloodTestParameterNormDto dto = BloodTestParameterNormDto(
+      const BloodParameterNormDto dto = BloodParameterNormDto(
         min: min,
         max: max,
       );
@@ -116,7 +113,7 @@ void main() {
     () {
       const double min = 10.0;
       const double? max = null;
-      const BloodTestParameterNormDto dto = BloodTestParameterNormDto(
+      const BloodParameterNormDto dto = BloodParameterNormDto(
         min: min,
         max: max,
       );

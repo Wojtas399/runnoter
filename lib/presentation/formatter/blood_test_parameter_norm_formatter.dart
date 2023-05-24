@@ -1,6 +1,6 @@
-import '../../domain/model/blood_test_parameter.dart';
+import '../../domain/model/blood_parameter.dart';
 
-extension BloodTestParameterNormFormatter on BloodTestParameterNorm {
+extension BloodParameterNormFormatter on BloodParameterNorm {
   String toUIFormat() {
     if (min != null && max != null) {
       return '$min - $max';

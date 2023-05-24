@@ -1,11 +1,11 @@
 import 'package:firebase/firebase.dart';
 
-import '../../domain/model/blood_test_parameter.dart';
+import '../../domain/model/blood_parameter.dart';
 
-BloodTestParameterNorm mapBloodTestParameterNormFromDto(
-  BloodTestParameterNormDto dto,
+BloodParameterNorm mapBloodParameterNormFromDto(
+  BloodParameterNormDto dto,
 ) =>
-    BloodTestParameterNorm(
+    BloodParameterNorm(
       min: dto.min,
       max: dto.max,
     );

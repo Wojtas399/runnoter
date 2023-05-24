@@ -1,4 +1,4 @@
-part of 'blood_test_creator_screen.dart';
+part of 'blood_readings_creator_screen.dart';
 
 class _AllParameters extends StatelessWidget {
   const _AllParameters();
@@ -12,9 +12,9 @@ class _AllParameters extends StatelessWidget {
           sliver: _Parameters.build(
             context: context,
             label: 'Badania podstawowe',
-            parameters: BloodTestParameter.values
+            parameters: BloodParameter.values
                 .where(
-                  (param) => param.type == BloodTestParameterType.basic,
+                  (param) => param.type == BloodParameterType.basic,
                 )
                 .toList(),
           ),
@@ -24,9 +24,9 @@ class _AllParameters extends StatelessWidget {
           sliver: _Parameters.build(
             context: context,
             label: 'Badania dodatkowe',
-            parameters: BloodTestParameter.values
+            parameters: BloodParameter.values
                 .where(
-                  (param) => param.type == BloodTestParameterType.additional,
+                  (param) => param.type == BloodParameterType.additional,
                 )
                 .toList(),
           ),
@@ -45,7 +45,7 @@ class _Parameters extends SliverStickyHeader {
   factory _Parameters.build({
     required BuildContext context,
     required String label,
-    required List<BloodTestParameter> parameters,
+    required List<BloodParameter> parameters,
   }) {
     return _Parameters(
       header: Container(
@@ -132,7 +132,7 @@ class _Parameter extends TableRow {
   });
 
   factory _Parameter.build(
-    BloodTestParameter parameter,
+    BloodParameter parameter,
     BuildContext context,
   ) {
     return _Parameter(
