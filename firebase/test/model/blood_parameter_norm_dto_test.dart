@@ -1,4 +1,4 @@
-import 'package:firebase/model/blood_test_parameter_norm_dto.dart';
+import 'package:firebase/model/blood_parameter_norm_dto.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

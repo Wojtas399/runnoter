@@ -17,8 +17,8 @@ class BloodParameterNormDto extends Equatable {
 
   BloodParameterNormDto.fromJson(Map<String, dynamic> json)
       : this(
-          min: (json[_minField] as num).toDouble(),
-          max: (json[_maxField] as num).toDouble(),
+          min: (json[_minField] as num?)?.toDouble(),
+          max: (json[_maxField] as num?)?.toDouble(),
         );
 
   Map<String, dynamic> toJson() => {
