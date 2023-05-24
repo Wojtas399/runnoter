@@ -4,6 +4,7 @@ export 'model/appearance_settings_dto.dart';
 export 'model/blood_parameter.dart';
 export 'model/blood_parameter_norm_dto.dart';
 export 'model/blood_parameter_reading_dto.dart';
+export 'model/blood_readings_dto.dart';
 export 'model/firebase_auth_exception_code.dart';
 export 'model/health_measurement_dto.dart';
 export 'model/pace_dto.dart';
