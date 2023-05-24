@@ -17,7 +17,6 @@ void main() {
     ],
   );
   Map<String, dynamic> readingsJson = {
-    'userId': 'u1',
     'date': '2023-05-02',
     'readings': [
       {
@@ -35,7 +34,10 @@ void main() {
     'from json, '
     'should map json to dto',
     () {
-      final BloodReadingsDto dto = BloodReadingsDto.fromJson(readingsJson);
+      final BloodReadingsDto dto = BloodReadingsDto.fromJson(
+        'u1',
+        readingsJson,
+      );
 
       expect(dto, readingsDto);
     },

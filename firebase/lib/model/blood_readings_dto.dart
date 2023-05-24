@@ -14,9 +14,9 @@ class BloodReadingsDto extends Equatable {
     required this.readingDtos,
   });
 
-  BloodReadingsDto.fromJson(Map<String, dynamic>? json)
+  BloodReadingsDto.fromJson(String userId, Map<String, dynamic>? json)
       : this(
-          userId: json?[_userIdField],
+          userId: userId,
           date: mapDateTimeFromString(json?[_dateField]),
           readingDtos: (json?[_readingsField] as List<Map<String, dynamic>>)
               .map(BloodParameterReadingDto.fromJson)
@@ -31,12 +31,10 @@ class BloodReadingsDto extends Equatable {
       ];
 
   Map<String, dynamic> toJson() => {
-        _userIdField: userId,
         _dateField: mapDateTimeToString(date),
         _readingsField: readingDtos.map((dto) => dto.toJson()),
       };
 }
 
-const String _userIdField = 'userId';
 const String _dateField = 'date';
 const String _readingsField = 'readings';
