@@ -15,6 +15,7 @@ export 'model/workout_stage_dto.dart';
 export 'model/workout_status_dto.dart';
 export 'service/firebase_appearance_settings_service.dart';
 export 'service/firebase_auth_service.dart';
+export 'service/firebase_blood_readings_service.dart';
 export 'service/firebase_health_measurement_service.dart';
 export 'service/firebase_user_service.dart';
 export 'service/firebase_workout_settings_service.dart';
