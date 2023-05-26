@@ -63,3 +63,65 @@ BloodParameter mapBloodParameterFromDtoType(
       firebase.BloodParameter.bloodUreaNitrogen =>
         BloodParameter.bloodUreaNitrogen,
     };
+
+firebase.BloodParameter mapBloodParameterToDtoType(
+  BloodParameter parameter,
+) =>
+    switch (parameter) {
+      BloodParameter.wbc => firebase.BloodParameter.wbc,
+      BloodParameter.rbc => firebase.BloodParameter.rbc,
+      BloodParameter.hgb => firebase.BloodParameter.hgb,
+      BloodParameter.hct => firebase.BloodParameter.hct,
+      BloodParameter.mcv => firebase.BloodParameter.mcv,
+      BloodParameter.mch => firebase.BloodParameter.mch,
+      BloodParameter.mchc => firebase.BloodParameter.mchc,
+      BloodParameter.plt => firebase.BloodParameter.plt,
+      BloodParameter.totalBilirubin => firebase.BloodParameter.totalBilirubin,
+      BloodParameter.alt => firebase.BloodParameter.alt,
+      BloodParameter.ast => firebase.BloodParameter.ast,
+      BloodParameter.totalCholesterol =>
+        firebase.BloodParameter.totalCholesterol,
+      BloodParameter.hdl => firebase.BloodParameter.hdl,
+      BloodParameter.ldl => firebase.BloodParameter.ldl,
+      BloodParameter.tg => firebase.BloodParameter.tg,
+      BloodParameter.iron => firebase.BloodParameter.iron,
+      BloodParameter.ferritin => firebase.BloodParameter.ferritin,
+      BloodParameter.b12 => firebase.BloodParameter.b12,
+      BloodParameter.folicAcid => firebase.BloodParameter.folicAcid,
+      BloodParameter.cpk => firebase.BloodParameter.cpk,
+      BloodParameter.testosterone => firebase.BloodParameter.testosterone,
+      BloodParameter.cortisol => firebase.BloodParameter.cortisol,
+      BloodParameter.d3_25 => firebase.BloodParameter.d3_25,
+      BloodParameter.transferrin => firebase.BloodParameter.transferrin,
+      BloodParameter.uibc => firebase.BloodParameter.uibc,
+      BloodParameter.tibc => firebase.BloodParameter.tibc,
+      BloodParameter.ggtp => firebase.BloodParameter.ggtp,
+      BloodParameter.ldh => firebase.BloodParameter.ldh,
+      BloodParameter.crp => firebase.BloodParameter.crp,
+      BloodParameter.tp => firebase.BloodParameter.tp,
+      BloodParameter.albumin => firebase.BloodParameter.albumin,
+      BloodParameter.uricAcid => firebase.BloodParameter.uricAcid,
+      BloodParameter.directBilirubin => firebase.BloodParameter.directBilirubin,
+      BloodParameter.glucose => firebase.BloodParameter.glucose,
+      BloodParameter.magnesium => firebase.BloodParameter.magnesium,
+      BloodParameter.totalCalcium => firebase.BloodParameter.totalCalcium,
+      BloodParameter.sodium => firebase.BloodParameter.sodium,
+      BloodParameter.potassium => firebase.BloodParameter.potassium,
+      BloodParameter.zinc => firebase.BloodParameter.zinc,
+      BloodParameter.chloride => firebase.BloodParameter.chloride,
+      BloodParameter.creatinineKinaseMB =>
+        firebase.BloodParameter.creatinineKinaseMB,
+      BloodParameter.myoglobin => firebase.BloodParameter.myoglobin,
+      BloodParameter.tsh => firebase.BloodParameter.tsh,
+      BloodParameter.urineUreaNitrogen =>
+        firebase.BloodParameter.urineUreaNitrogen,
+      BloodParameter.creatinineInUrine =>
+        firebase.BloodParameter.creatinineInUrine,
+      BloodParameter.myoglobinInUrine =>
+        firebase.BloodParameter.myoglobinInUrine,
+      BloodParameter.pltInCitratePlasma =>
+        firebase.BloodParameter.pltInCitratePlasma,
+      BloodParameter.creatinine => firebase.BloodParameter.creatinine,
+      BloodParameter.bloodUreaNitrogen =>
+        firebase.BloodParameter.bloodUreaNitrogen,
+    };
