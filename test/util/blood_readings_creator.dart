@@ -8,7 +8,7 @@ BloodReadings createBloodReadings({
   List<BloodParameterReading> readings = const [
     BloodParameterReading(
       parameter: BloodParameter.wbc,
-      reading: 4.45,
+      readingValue: 4.45,
     ),
   ],
 }) =>

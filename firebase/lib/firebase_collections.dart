@@ -84,8 +84,9 @@ CollectionReference<BloodReadingsDto> getBloodReadingsRef(
         .collection('BloodReadings')
         .withConverter<BloodReadingsDto>(
           fromFirestore: (snapshot, _) => BloodReadingsDto.fromJson(
-            userId,
-            snapshot.data(),
+            id: snapshot.id,
+            userId: userId,
+            json: snapshot.data(),
           ),
           toFirestore: (bloodReadingsDto, _) => bloodReadingsDto.toJson(),
         );

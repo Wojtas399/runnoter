@@ -26,16 +26,16 @@ class BloodReadings extends Entity {
 
 class BloodParameterReading extends Equatable {
   final BloodParameter parameter;
-  final double reading;
+  final double readingValue;
 
   const BloodParameterReading({
     required this.parameter,
-    required this.reading,
+    required this.readingValue,
   });
 
   @override
   List<Object?> get props => [
         parameter,
-        reading,
+        readingValue,
       ];
 }
