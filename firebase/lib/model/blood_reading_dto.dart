@@ -1,22 +1,22 @@
 import 'package:equatable/equatable.dart';
 
 import '../mapper/date_mapper.dart';
-import 'blood_parameter_reading_dto.dart';
+import 'blood_reading_parameter_dto.dart';
 
-class BloodReadingsDto extends Equatable {
+class BloodReadingDto extends Equatable {
   final String id;
   final String userId;
   final DateTime date;
-  final List<BloodParameterReadingDto> readingDtos;
+  final List<BloodReadingParameterDto> parameterDtos;
 
-  const BloodReadingsDto({
+  const BloodReadingDto({
     required this.id,
     required this.userId,
     required this.date,
-    required this.readingDtos,
+    required this.parameterDtos,
   });
 
-  BloodReadingsDto.fromJson({
+  BloodReadingDto.fromJson({
     required String id,
     required String userId,
     required Map<String, dynamic>? json,
@@ -24,8 +24,8 @@ class BloodReadingsDto extends Equatable {
           id: id,
           userId: userId,
           date: mapDateTimeFromString(json?[_dateField]),
-          readingDtos: (json?[_readingsField] as List<Map<String, dynamic>>)
-              .map(BloodParameterReadingDto.fromJson)
+          parameterDtos: (json?[_parametersField] as List<Map<String, dynamic>>)
+              .map(BloodReadingParameterDto.fromJson)
               .toList(),
         );
 
@@ -34,14 +34,14 @@ class BloodReadingsDto extends Equatable {
         id,
         userId,
         date,
-        readingDtos,
+        parameterDtos,
       ];
 
   Map<String, dynamic> toJson() => {
         _dateField: mapDateTimeToString(date),
-        _readingsField: readingDtos.map((dto) => dto.toJson()),
+        _parametersField: parameterDtos.map((dto) => dto.toJson()),
       };
 }
 
 const String _dateField = 'date';
-const String _readingsField = 'readings';
+const String _parametersField = 'parameters';

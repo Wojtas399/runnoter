@@ -3,32 +3,32 @@ import 'package:equatable/equatable.dart';
 import 'blood_parameter.dart';
 import 'entity.dart';
 
-class BloodReadings extends Entity {
+class BloodReading extends Entity {
   final String userId;
   final DateTime date;
-  final List<BloodParameterReading> readings;
+  final List<BloodReadingParameter> parameters;
 
-  const BloodReadings({
+  const BloodReading({
     required super.id,
     required this.userId,
     required this.date,
-    required this.readings,
-  }) : assert(readings.length > 0);
+    required this.parameters,
+  }) : assert(parameters.length > 0);
 
   @override
   List<Object?> get props => [
         id,
         userId,
         date,
-        readings,
+        parameters,
       ];
 }
 
-class BloodParameterReading extends Equatable {
+class BloodReadingParameter extends Equatable {
   final BloodParameter parameter;
   final double readingValue;
 
-  const BloodParameterReading({
+  const BloodReadingParameter({
     required this.parameter,
     required this.readingValue,
   });

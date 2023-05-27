@@ -3,29 +3,30 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../firebase.dart';
 import '../firebase_collections.dart';
 
-class FirebaseBloodReadingsService {
-  Future<List<BloodReadingsDto>?> loadAllReadings({
+class FirebaseBloodReadingService {
+  Future<List<BloodReadingDto>?> loadAllReadings({
     required String userId,
   }) async {
     final snapshot = await getBloodReadingsRef(userId).get();
     return snapshot.docs
         .map(
-          (QueryDocumentSnapshot<BloodReadingsDto> docSnapshot) =>
+          (QueryDocumentSnapshot<BloodReadingDto> docSnapshot) =>
               docSnapshot.data(),
         )
         .toList();
   }
 
-  Future<BloodReadingsDto?> addNewReadings({
+  Future<BloodReadingDto?> addNewReading({
     required String userId,
     required DateTime date,
-    required List<BloodParameterReadingDto> readings,
+    required List<BloodReadingParameterDto> parameters,
   }) async {
     final bloodReadingsRef = await getBloodReadingsRef(userId).add(
-      BloodReadingsDto(
+      BloodReadingDto(
+        id: '',
         userId: userId,
         date: date,
-        readingDtos: readings,
+        parameterDtos: parameters,
       ),
     );
     final snapshot = await bloodReadingsRef.get();

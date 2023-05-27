@@ -4,22 +4,22 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   const String id = 'br1';
   const String userId = 'u1';
-  final BloodReadingsDto readingsDto = BloodReadingsDto(
+  final BloodReadingDto readingDto = BloodReadingDto(
     id: id,
     userId: userId,
     date: DateTime(2023, 5, 2),
-    readingDtos: const [
-      BloodParameterReadingDto(
+    parameterDtos: const [
+      BloodReadingParameterDto(
         parameter: BloodParameter.wbc,
         readingValue: 4.45,
       ),
-      BloodParameterReadingDto(
+      BloodReadingParameterDto(
         parameter: BloodParameter.ferritin,
         readingValue: 54.1,
       ),
     ],
   );
-  Map<String, dynamic> readingsJson = {
+  Map<String, dynamic> readingJson = {
     'date': '2023-05-02',
     'readings': [
       {
@@ -37,13 +37,13 @@ void main() {
     'from json, '
     'should map json to dto',
     () {
-      final BloodReadingsDto dto = BloodReadingsDto.fromJson(
+      final BloodReadingDto dto = BloodReadingDto.fromJson(
         id: id,
         userId: userId,
-        json: readingsJson,
+        json: readingJson,
       );
 
-      expect(dto, readingsDto);
+      expect(dto, readingDto);
     },
   );
 
@@ -51,9 +51,9 @@ void main() {
     'to json, '
     'should map dto to json',
     () {
-      final Map<String, dynamic> json = readingsDto.toJson();
+      final Map<String, dynamic> json = readingDto.toJson();
 
-      expect(json, readingsJson);
+      expect(json, readingJson);
     },
   );
 }

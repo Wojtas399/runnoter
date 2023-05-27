@@ -3,16 +3,16 @@ import 'package:equatable/equatable.dart';
 import '../mapper/blood_parameter_mapper.dart';
 import 'blood_parameter.dart';
 
-class BloodParameterReadingDto extends Equatable {
+class BloodReadingParameterDto extends Equatable {
   final BloodParameter parameter;
   final double readingValue;
 
-  const BloodParameterReadingDto({
+  const BloodReadingParameterDto({
     required this.parameter,
     required this.readingValue,
   });
 
-  BloodParameterReadingDto.fromJson(Map<String, dynamic>? json)
+  BloodReadingParameterDto.fromJson(Map<String, dynamic>? json)
       : this(
           parameter: mapBloodParameterFromString(json?[_parameterField]),
           readingValue: json?[_readingValueField],

@@ -1,20 +1,20 @@
 import 'package:runnoter/domain/model/blood_parameter.dart';
-import 'package:runnoter/domain/model/blood_readings.dart';
+import 'package:runnoter/domain/model/blood_reading.dart';
 
-BloodReadings createBloodReadings({
+BloodReading createBloodReading({
   String id = '',
   String userId = '',
   DateTime? date,
-  List<BloodParameterReading> readings = const [
-    BloodParameterReading(
+  List<BloodReadingParameter> parameters = const [
+    BloodReadingParameter(
       parameter: BloodParameter.wbc,
       readingValue: 4.45,
     ),
   ],
 }) =>
-    BloodReadings(
+    BloodReading(
       id: id,
       userId: userId,
       date: date ?? DateTime(2023),
-      readings: readings,
+      parameters: parameters,
     );

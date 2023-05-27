@@ -1,19 +1,19 @@
 import 'package:firebase/firebase.dart';
 
-BloodReadingsDto createBloodReadingsDto({
+BloodReadingDto createBloodReadingDto({
   String id = '',
   String userId = '',
   DateTime? date,
-  List<BloodParameterReadingDto> readingDtos = const [
-    BloodParameterReadingDto(
+  List<BloodReadingParameterDto> parameterDtos = const [
+    BloodReadingParameterDto(
       parameter: BloodParameter.wbc,
       readingValue: 4.45,
     ),
   ],
 }) =>
-    BloodReadingsDto(
+    BloodReadingDto(
       id: id,
       userId: userId,
       date: date ?? DateTime(2023),
-      readingDtos: readingDtos,
+      parameterDtos: parameterDtos,
     );
