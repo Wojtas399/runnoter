@@ -2,7 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/domain/model/blood_parameter.dart';
 import 'package:runnoter/domain/model/blood_reading.dart';
 import 'package:runnoter/presentation/model/bloc_status.dart';
-import 'package:runnoter/presentation/screen/blood_readings_creator/bloc/blood_reading_creator_state.dart';
+import 'package:runnoter/presentation/screen/blood_readings_creator/bloc/blood_reading_creator_bloc.dart';
 
 void main() {
   late BloodReadingCreatorState state;
@@ -14,13 +14,13 @@ void main() {
   );
 
   test(
-    'is submit button disabled, '
+    'are date valid, '
     'date is null, '
-    'should be true',
+    'should be false',
     () {
       state = state.copyWith(
         date: null,
-        parameters: const [
+        bloodReadingParameters: const [
           BloodReadingParameter(
             parameter: BloodParameter.wbc,
             readingValue: 4.45,
@@ -28,46 +28,46 @@ void main() {
         ],
       );
 
-      expect(state.isSubmitButtonDisabled, true);
+      expect(state.areDataValid, false);
     },
   );
 
   test(
-    'is submit button disabled, '
-    'parameters are null, '
-    'should be true',
+    'are data valid, '
+    'blood reading parameters are null, '
+    'should be false',
     () {
       state = state.copyWith(
         date: DateTime(2023, 5, 12),
-        parameters: null,
+        bloodReadingParameters: null,
       );
 
-      expect(state.isSubmitButtonDisabled, true);
+      expect(state.areDataValid, false);
     },
   );
 
   test(
-    'is submit button disabled, '
-    'list of parameters is empty, '
-    'should be true',
-    () {
-      state = state.copyWith(
-        date: DateTime(2023, 5, 20),
-        parameters: const [],
-      );
-
-      expect(state.isSubmitButtonDisabled, true);
-    },
-  );
-
-  test(
-    'is submit button disabled, '
-    'date and parameters are valid, '
+    'are data valid, '
+    'list of blood reading parameters is empty, '
     'should be false',
     () {
       state = state.copyWith(
         date: DateTime(2023, 5, 20),
-        parameters: const [
+        bloodReadingParameters: const [],
+      );
+
+      expect(state.areDataValid, false);
+    },
+  );
+
+  test(
+    'are data valid, '
+    'date and blood reading parameters are valid, '
+    'should be true',
+    () {
+      state = state.copyWith(
+        date: DateTime(2023, 5, 20),
+        bloodReadingParameters: const [
           BloodReadingParameter(
             parameter: BloodParameter.wbc,
             readingValue: 4.45,
@@ -75,7 +75,7 @@ void main() {
         ],
       );
 
-      expect(state.isSubmitButtonDisabled, false);
+      expect(state.areDataValid, true);
     },
   );
 
@@ -106,7 +106,7 @@ void main() {
   );
 
   test(
-    'copy with parameters',
+    'copy with blood reading parameters',
     () {
       const List<BloodReadingParameter> expectedParameters = [
         BloodReadingParameter(
@@ -115,11 +115,11 @@ void main() {
         ),
       ];
 
-      state = state.copyWith(parameters: expectedParameters);
+      state = state.copyWith(bloodReadingParameters: expectedParameters);
       final state2 = state.copyWith();
 
-      expect(state.parameters, expectedParameters);
-      expect(state2.parameters, expectedParameters);
+      expect(state.bloodReadingParameters, expectedParameters);
+      expect(state2.bloodReadingParameters, expectedParameters);
     },
   );
 }

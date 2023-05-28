@@ -1,4 +1,4 @@
-import 'package:firebase/model/blood_parameter.dart';
+part of 'blood_reading_creator_bloc.dart';
 
 abstract class BloodReadingCreatorEvent {
   const BloodReadingCreatorEvent();
@@ -12,12 +12,12 @@ class BloodReadingCreatorEventDateChanged extends BloodReadingCreatorEvent {
   });
 }
 
-class BloodReadingCreatorEventBloodParameterChanged
+class BloodReadingCreatorEventBloodReadingParameterChanged
     extends BloodReadingCreatorEvent {
   final BloodParameter bloodParameter;
   final double parameterValue;
 
-  const BloodReadingCreatorEventBloodParameterChanged({
+  const BloodReadingCreatorEventBloodReadingParameterChanged({
     required this.bloodParameter,
     required this.parameterValue,
   });

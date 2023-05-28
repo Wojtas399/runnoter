@@ -1,36 +1,37 @@
-import '../../../../domain/model/blood_reading.dart';
-import '../../../model/bloc_state.dart';
-import '../../../model/bloc_status.dart';
+part of 'blood_reading_creator_bloc.dart';
 
 class BloodReadingCreatorState extends BlocState<BloodReadingCreatorState> {
   final DateTime? date;
-  final List<BloodReadingParameter>? parameters;
+  final List<BloodReadingParameter>? bloodReadingParameters;
 
   const BloodReadingCreatorState({
     required super.status,
     this.date,
-    this.parameters,
+    this.bloodReadingParameters,
   });
 
   @override
   List<Object?> get props => [
         status,
         date,
-        parameters,
+        bloodReadingParameters,
       ];
 
-  bool get isSubmitButtonDisabled =>
-      date == null || parameters == null || parameters?.isEmpty == true;
+  bool get areDataValid =>
+      date != null &&
+      bloodReadingParameters != null &&
+      bloodReadingParameters?.isEmpty == false;
 
   @override
   BloodReadingCreatorState copyWith({
     BlocStatus? status,
     DateTime? date,
-    List<BloodReadingParameter>? parameters,
+    List<BloodReadingParameter>? bloodReadingParameters,
   }) =>
       BloodReadingCreatorState(
         status: status ?? const BlocStatusComplete(),
         date: date ?? this.date,
-        parameters: parameters ?? this.parameters,
+        bloodReadingParameters:
+            bloodReadingParameters ?? this.bloodReadingParameters,
       );
 }
