@@ -10,9 +10,11 @@ import '../../../component/text/title_text_components.dart';
 import '../../../formatter/blood_test_parameter_formatter.dart';
 import '../../../formatter/blood_test_parameter_norm_formatter.dart';
 import '../../../formatter/blood_test_parameter_unit_formatter.dart';
+import '../../../formatter/date_formatter.dart';
 import '../bloc/blood_reading_creator_bloc.dart';
 
 part 'blood_reading_creator_content.dart';
+part 'blood_reading_creator_date.dart';
 part 'blood_reading_creator_parameters.dart';
 
 class BloodReadingCreatorScreen extends StatelessWidget {

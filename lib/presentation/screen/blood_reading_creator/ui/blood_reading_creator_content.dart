@@ -9,13 +9,10 @@ class _Content extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Blood test creator'),
       ),
-      body: Column(
+      body: const Column(
         children: [
-          Container(
-            padding: const EdgeInsets.all(24),
-            child: TextFormField(),
-          ),
-          const Expanded(
+          _ReadingDate(),
+          Expanded(
             child: _AllParameters(),
           ),
         ],
