@@ -5,8 +5,8 @@ import '../../../component/big_button_component.dart';
 import '../../../config/navigation/routes.dart';
 import '../../../service/navigator_service.dart';
 
-class BloodScreen extends StatelessWidget {
-  const BloodScreen({
+class BloodReadingsScreen extends StatelessWidget {
+  const BloodReadingsScreen({
     super.key,
   });
 

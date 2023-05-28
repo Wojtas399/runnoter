@@ -14,7 +14,7 @@ class HomeContent extends StatelessWidget {
     _BottomNavPage(),
     const ProfileScreen(),
     const MileageScreen(),
-    const BloodScreen(),
+    const BloodReadingsScreen(),
     const SizedBox(),
   ];
 
