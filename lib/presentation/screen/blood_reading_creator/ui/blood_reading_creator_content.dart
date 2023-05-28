@@ -1,4 +1,4 @@
-part of 'blood_readings_creator_screen.dart';
+part of 'blood_reading_creator_screen.dart';
 
 class _Content extends StatelessWidget {
   const _Content();
