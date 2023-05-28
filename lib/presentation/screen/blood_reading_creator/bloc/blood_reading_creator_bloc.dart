@@ -55,13 +55,20 @@ class BloodReadingCreatorBloc extends BlocWithStatus<BloodReadingCreatorEvent,
       (el) => el.parameter == event.bloodParameter,
     );
     final updatedBloodReadingParameters = [...?state.bloodReadingParameters];
-    final BloodReadingParameter parameter = BloodReadingParameter(
-      parameter: event.bloodParameter,
-      readingValue: event.parameterValue,
-    );
+    BloodReadingParameter? parameter;
+    if (event.parameterValue != null) {
+      parameter = BloodReadingParameter(
+        parameter: event.bloodParameter,
+        readingValue: event.parameterValue!,
+      );
+    }
     if (parameterIndex != null && parameterIndex >= 0) {
-      updatedBloodReadingParameters[parameterIndex] = parameter;
-    } else {
+      if (parameter != null) {
+        updatedBloodReadingParameters[parameterIndex] = parameter;
+      } else {
+        updatedBloodReadingParameters.removeAt(parameterIndex);
+      }
+    } else if (parameter != null) {
       updatedBloodReadingParameters.add(parameter);
     }
     emit(state.copyWith(

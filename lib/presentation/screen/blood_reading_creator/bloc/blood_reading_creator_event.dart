@@ -15,7 +15,7 @@ class BloodReadingCreatorEventDateChanged extends BloodReadingCreatorEvent {
 class BloodReadingCreatorEventBloodReadingParameterChanged
     extends BloodReadingCreatorEvent {
   final BloodParameter bloodParameter;
-  final double parameterValue;
+  final double? parameterValue;
 
   const BloodReadingCreatorEventBloodReadingParameterChanged({
     required this.bloodParameter,

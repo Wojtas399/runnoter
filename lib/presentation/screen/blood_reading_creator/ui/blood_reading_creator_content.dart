@@ -9,13 +9,18 @@ class _Content extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Blood test creator'),
       ),
-      body: const Column(
-        children: [
-          _ReadingDate(),
-          Expanded(
-            child: _AllParameters(),
-          ),
-        ],
+      body: GestureDetector(
+        onTap: () {
+          unfocusInputs();
+        },
+        child: const Column(
+          children: [
+            _ReadingDate(),
+            Expanded(
+              child: _AllParameters(),
+            ),
+          ],
+        ),
       ),
     );
   }

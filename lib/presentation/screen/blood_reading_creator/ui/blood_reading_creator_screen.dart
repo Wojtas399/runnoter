@@ -7,10 +7,13 @@ import '../../../../domain/repository/blood_reading_repository.dart';
 import '../../../../domain/service/auth_service.dart';
 import '../../../component/text/label_text_components.dart';
 import '../../../component/text/title_text_components.dart';
+import '../../../component/text_field_component.dart';
 import '../../../formatter/blood_test_parameter_formatter.dart';
 import '../../../formatter/blood_test_parameter_norm_formatter.dart';
 import '../../../formatter/blood_test_parameter_unit_formatter.dart';
 import '../../../formatter/date_formatter.dart';
+import '../../../formatter/decimal_text_input_formatter.dart';
+import '../../../service/utils.dart';
 import '../bloc/blood_reading_creator_bloc.dart';
 
 part 'blood_reading_creator_content.dart';

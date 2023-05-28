@@ -98,6 +98,41 @@ void main() {
 
   blocTest(
     'blood reading parameter changed, '
+    'parameter exists in state and its new value is null, '
+    'should remove parameter from list',
+    build: () => createBloc(
+      bloodReadingParameters: const [
+        BloodReadingParameter(
+          parameter: BloodParameter.wbc,
+          readingValue: 4.50,
+        ),
+        BloodReadingParameter(
+          parameter: BloodParameter.sodium,
+          readingValue: 140,
+        ),
+      ],
+    ),
+    act: (BloodReadingCreatorBloc bloc) => bloc.add(
+      const BloodReadingCreatorEventBloodReadingParameterChanged(
+        bloodParameter: BloodParameter.wbc,
+        parameterValue: null,
+      ),
+    ),
+    expect: () => [
+      createState(
+        status: const BlocStatusComplete(),
+        bloodReadingParameters: const [
+          BloodReadingParameter(
+            parameter: BloodParameter.sodium,
+            readingValue: 140,
+          ),
+        ],
+      ),
+    ],
+  );
+
+  blocTest(
+    'blood reading parameter changed, '
     'parameter does not exist in state, '
     'should add parameter to list',
     build: () => createBloc(
