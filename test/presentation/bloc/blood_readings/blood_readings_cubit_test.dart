@@ -36,22 +36,73 @@ void main() {
 
   blocTest(
     'initialize, '
-    'should set listener of blood readings belonging to logged user',
+    'should set listener of blood readings belonging to logged user grouped by year',
     build: () => createCubit(),
     setUp: () {
       authService.mockGetLoggedUserId(userId: 'u1');
       bloodReadingRepository.mockGetAllReadings(
         readings: [
-          createBloodReading(id: 'br1', userId: 'u1'),
-          createBloodReading(id: 'br2', userId: 'u1'),
+          createBloodReading(
+            id: 'br1',
+            userId: 'u1',
+            date: DateTime(2023, 5, 20),
+          ),
+          createBloodReading(
+            id: 'br2',
+            userId: 'u1',
+            date: DateTime(2023, 2, 10),
+          ),
+          createBloodReading(
+            id: 'br3',
+            userId: 'u1',
+            date: DateTime(2022, 4, 10),
+          ),
+          createBloodReading(
+            id: 'br4',
+            userId: 'u1',
+            date: DateTime(2021, 7, 10),
+          ),
         ],
       );
     },
     act: (BloodReadingsCubit cubit) => cubit.initialize(),
     expect: () => [
       [
-        createBloodReading(id: 'br1', userId: 'u1'),
-        createBloodReading(id: 'br2', userId: 'u1'),
+        BloodReadingsFromYear(
+          year: 2023,
+          bloodReadings: [
+            createBloodReading(
+              id: 'br1',
+              userId: 'u1',
+              date: DateTime(2023, 5, 20),
+            ),
+            createBloodReading(
+              id: 'br2',
+              userId: 'u1',
+              date: DateTime(2023, 2, 10),
+            ),
+          ],
+        ),
+        BloodReadingsFromYear(
+          year: 2022,
+          bloodReadings: [
+            createBloodReading(
+              id: 'br3',
+              userId: 'u1',
+              date: DateTime(2022, 4, 10),
+            ),
+          ],
+        ),
+        BloodReadingsFromYear(
+          year: 2021,
+          bloodReadings: [
+            createBloodReading(
+              id: 'br4',
+              userId: 'u1',
+              date: DateTime(2021, 7, 10),
+            ),
+          ],
+        ),
       ],
     ],
     verify: (_) {
