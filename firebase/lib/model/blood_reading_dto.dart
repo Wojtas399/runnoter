@@ -24,8 +24,8 @@ class BloodReadingDto extends Equatable {
           id: id,
           userId: userId,
           date: mapDateTimeFromString(json?[_dateField]),
-          parameterDtos: (json?[_parametersField] as List<Map<String, dynamic>>)
-              .map(BloodReadingParameterDto.fromJson)
+          parameterDtos: (json?[_parametersField] as List)
+              .map((json) => BloodReadingParameterDto.fromJson(json))
               .toList(),
         );
 
