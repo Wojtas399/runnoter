@@ -7,9 +7,14 @@ import '../../../../domain/repository/blood_reading_repository.dart';
 import '../../../../domain/service/auth_service.dart';
 import '../../../component/big_button_component.dart';
 import '../../../component/empty_content_info_component.dart';
+import '../../../component/text/title_text_components.dart';
 import '../../../config/navigation/routes.dart';
+import '../../../formatter/date_formatter.dart';
 import '../../../service/navigator_service.dart';
 import '../blood_readings_cubit.dart';
+
+part 'blood_readings_content.dart';
+part 'blood_readings_list.dart';
 
 class BloodReadingsScreen extends StatelessWidget {
   const BloodReadingsScreen({
@@ -19,17 +24,7 @@ class BloodReadingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const _CubitProvider(
-      child: Padding(
-        padding: EdgeInsets.all(24),
-        child: Column(
-          children: [
-            _AddNewReadingButton(),
-            Expanded(
-              child: _BloodReadingsList(),
-            ),
-          ],
-        ),
-      ),
+      child: _Content(),
     );
   }
 }
@@ -50,54 +45,5 @@ class _CubitProvider extends StatelessWidget {
       )..initialize(),
       child: child,
     );
-  }
-}
-
-class _AddNewReadingButton extends StatelessWidget {
-  const _AddNewReadingButton();
-
-  @override
-  Widget build(BuildContext context) {
-    return BigButton(
-      label: Str.of(context).bloodAddBloodTest,
-      onPressed: () {
-        _onPressed(context);
-      },
-    );
-  }
-
-  void _onPressed(BuildContext context) {
-    navigateTo(
-      context: context,
-      route: const BloodTestCreatorRoute(),
-    );
-  }
-}
-
-class _BloodReadingsList extends StatelessWidget {
-  const _BloodReadingsList();
-
-  @override
-  Widget build(BuildContext context) {
-    final List<BloodReading>? bloodReadings = context.select(
-      (BloodReadingsCubit cubit) => cubit.state,
-    );
-
-    if (bloodReadings == null) {
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
-    } else if (bloodReadings.isEmpty) {
-      return EmptyContentInfo(
-        title: 'Brak badań krwi',
-      );
-    } else {
-      return ListView.builder(
-        itemCount: bloodReadings.length,
-        itemBuilder: (_, int itemIndex) {
-          return Text(bloodReadings[itemIndex].id);
-        },
-      );
-    }
   }
 }
