@@ -4,6 +4,17 @@ import 'package:runnoter/domain/repository/blood_reading_repository.dart';
 
 class MockBloodReadingRepository extends Mock
     implements BloodReadingRepository {
+  void mockGetReadingById({
+    BloodReading? bloodReading,
+  }) {
+    when(
+      () => getReadingById(
+        bloodReadingId: any(named: 'bloodReadingId'),
+        userId: any(named: 'userId'),
+      ),
+    ).thenAnswer((invocation) => Stream.value(bloodReading));
+  }
+
   void mockGetAllReadings({
     List<BloodReading>? readings,
   }) {

@@ -1,6 +1,11 @@
 import '../model/blood_reading.dart';
 
 abstract interface class BloodReadingRepository {
+  Stream<BloodReading?> getReadingById({
+    required String bloodReadingId,
+    required String userId,
+  });
+
   Stream<List<BloodReading>?> getAllReadings({
     required String userId,
   });

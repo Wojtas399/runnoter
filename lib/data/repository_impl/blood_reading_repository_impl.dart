@@ -16,6 +16,14 @@ class BloodReadingRepositoryImpl extends StateRepository<BloodReading>
   }) : _firebaseBloodReadingService = firebaseBloodReadingsService;
 
   @override
+  Stream<BloodReading?> getReadingById({
+    required String bloodReadingId,
+    required String userId,
+  }) {
+    throw UnimplementedError();
+  }
+
+  @override
   Stream<List<BloodReading>?> getAllReadings({
     required String userId,
   }) async* {
