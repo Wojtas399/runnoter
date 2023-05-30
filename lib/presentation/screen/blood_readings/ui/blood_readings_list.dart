@@ -18,7 +18,7 @@ class _BloodReadingsList extends StatelessWidget {
         itemCount: bloodReadingsByYear.length,
         itemBuilder: (_, int itemIndex) {
           return Padding(
-            padding: const EdgeInsets.only(bottom: 16),
+            padding: const EdgeInsets.only(bottom: 24),
             child: _ReadingsFromYear(
               readingsFromYear: bloodReadingsByYear[itemIndex],
             ),

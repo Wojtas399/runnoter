@@ -1,5 +1,4 @@
 import 'package:firebase/firebase.dart';
-import 'package:rxdart/rxdart.dart';
 
 import '../../domain/model/blood_reading.dart';
 import '../../domain/model/state_repository.dart';
@@ -19,18 +18,14 @@ class BloodReadingRepositoryImpl extends StateRepository<BloodReading>
   @override
   Stream<List<BloodReading>?> getAllReadings({
     required String userId,
-  }) =>
-      dataStream$
-          .map(
-            (List<BloodReading>? readings) => readings
-                ?.where(
-                  (singleBloodReadings) => singleBloodReadings.userId == userId,
-                )
-                .toList(),
-          )
-          .doOnListen(
-            () => _loadReadingsFromRemoteDb(userId),
-          );
+  }) async* {
+    await _loadReadingsFromRemoteDb(userId);
+    await for (final readings in dataStream$) {
+      yield readings
+          ?.where((bloodReading) => bloodReading.userId == userId)
+          .toList();
+    }
+  }
 
   @override
   Future<void> addNewReading({

@@ -29,7 +29,7 @@ void main() {
   test(
     'get all readings, '
     'should emit readings existing in repository and should load and emit new readings from remote db',
-    () {
+    () async {
       final List<BloodReading> existingReadings = [
         createBloodReading(id: 'br1', userId: userId),
         createBloodReading(id: 'br2', userId: 'u2'),
@@ -100,23 +100,14 @@ void main() {
       final Stream<List<BloodReading>?> readings$ = repository.getAllReadings(
         userId: userId,
       );
-      readings$.listen((_) {});
 
       expect(
-        readings$,
-        emitsInOrder(
-          [
-            [
-              existingReadings[0],
-              existingReadings[2],
-            ],
-            [
-              existingReadings[0],
-              existingReadings[2],
-              ...loadedReadings,
-            ],
-          ],
-        ),
+        await readings$.first,
+        [
+          existingReadings[0],
+          existingReadings[2],
+          ...loadedReadings,
+        ],
       );
       verify(
         () => firebaseBloodReadingsService.loadAllReadings(
