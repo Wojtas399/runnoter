@@ -14,16 +14,21 @@ class _BloodReadingsList extends StatelessWidget {
     } else if (bloodReadingsByYear.isEmpty) {
       return const _EmptyListContent();
     } else {
-      return ListView.builder(
-        itemCount: bloodReadingsByYear.length,
-        itemBuilder: (_, int itemIndex) {
-          return Padding(
-            padding: const EdgeInsets.only(bottom: 24),
-            child: _ReadingsFromYear(
-              readingsFromYear: bloodReadingsByYear[itemIndex],
-            ),
-          );
-        },
+      return Column(
+        children: bloodReadingsByYear
+            .asMap()
+            .entries
+            .map(
+              (entry) => entry.key == bloodReadingsByYear.length - 1
+                  ? _ReadingsFromYear(readingsFromYear: entry.value)
+                  : Column(
+                      children: [
+                        _ReadingsFromYear(readingsFromYear: entry.value),
+                        const Divider(),
+                      ],
+                    ),
+            )
+            .toList(),
       );
     }
   }
@@ -48,7 +53,8 @@ class _EmptyListContent extends StatelessWidget {
     return const EmptyContentInfo(
       icon: Icons.water_drop_outlined,
       title: 'Brak badań krwi',
-      subtitle: 'Dodaj badanie krwi, aby móc przeglądać listę',
+      subtitle:
+          'Dodaj wyniki badań krwi, aby mieć możliwość przeglądania tej listy',
     );
   }
 }
@@ -62,19 +68,22 @@ class _ReadingsFromYear extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        TitleLarge(
-          readingsFromYear.year.toString(),
-        ),
-        const SizedBox(height: 16),
-        ...readingsFromYear.bloodReadings.map(
-          (BloodReading reading) => _ReadingItem(
-            bloodReading: reading,
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          TitleLarge(
+            readingsFromYear.year.toString(),
           ),
-        ),
-      ],
+          const SizedBox(height: 16),
+          ...readingsFromYear.bloodReadings.map(
+            (BloodReading reading) => _ReadingItem(
+              bloodReading: reading,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -88,8 +97,9 @@ class _ReadingItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return Container(
       width: double.infinity,
+      padding: const EdgeInsets.only(bottom: 16),
       child: ElevatedButton(
         onPressed: () {
           _onPressed(context);

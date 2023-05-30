@@ -5,16 +5,16 @@ class _Content extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.all(24),
-      child: Column(
-        children: [
-          _AddNewReadingButton(),
-          SizedBox(height: 24),
-          Expanded(
-            child: _BloodReadingsList(),
-          ),
-        ],
+    return const SingleChildScrollView(
+      child: Padding(
+        padding: EdgeInsets.all(24),
+        child: Column(
+          children: [
+            _AddNewReadingButton(),
+            SizedBox(height: 16),
+            _BloodReadingsList(),
+          ],
+        ),
       ),
     );
   }
@@ -25,11 +25,19 @@ class _AddNewReadingButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BigButton(
-      label: Str.of(context).bloodAddBloodTest,
+    return OutlinedButton(
       onPressed: () {
         _onPressed(context);
       },
+      child: const Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.add),
+          SizedBox(width: 8),
+          Text('Dodaj nowe wyniki'),
+        ],
+      ),
     );
   }
 

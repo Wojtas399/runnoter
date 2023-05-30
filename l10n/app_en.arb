@@ -29,7 +29,7 @@
   "homeDrawerHome": "Home",
   "homeDrawerProfile": "Profile",
   "homeDrawerMileage": "Mileage",
-  "homeDrawerBlood": "Blood",
+  "homeDrawerBloodReadings": "Blood readings",
   "homeDrawerCompetitions": "Competitions",
   "homeDrawerSignOut": "Sign out",
   "homeSignOutConfirmationDialogTitle": "Sign out",

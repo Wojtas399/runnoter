@@ -119,9 +119,9 @@
   "@homeDrawerMileage": {
     "description": "Label of drawer's mileage option"
   },
-  "homeDrawerBlood": "Krew",
-  "@homeDrawerBlood": {
-    "description": "Label of drawer's blood option"
+  "homeDrawerBloodReadings": "Badania krwi",
+  "@homeDrawerBloodReadings": {
+    "description": "Label of drawer's blood readings option"
   },
   "homeDrawerCompetitions": "Starty w zawodach",
   "@homeDrawerCompetitions": {
