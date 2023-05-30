@@ -50,11 +50,10 @@ class _EmptyListContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const EmptyContentInfo(
+    return EmptyContentInfo(
       icon: Icons.water_drop_outlined,
-      title: 'Brak badań krwi',
-      subtitle:
-          'Dodaj wyniki badań krwi, aby mieć możliwość przeglądania tej listy',
+      title: Str.of(context).bloodReadingsNoReadingsTitle,
+      subtitle: Str.of(context).bloodReadingsNoReadingsMessage,
     );
   }
 }

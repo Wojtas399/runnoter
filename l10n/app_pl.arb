@@ -491,9 +491,17 @@
   "@mileageNoDataMessage": {
     "description": "Message of the information about no data to display mileage"
   },
-  "bloodAddBloodTest": "Dodaj badanie krwi",
-  "@bloodAddBloodTest": {
-    "description": "Label of the button to add blood test"
+  "bloodReadingsAddNewResults": "Dodaj nowe wyniki",
+  "@bloodReadingAddNewResults": {
+    "description": "Label of the button to add new results"
+  },
+  "bloodReadingsNoReadingsTitle": "Brak badań krwi",
+  "@bloodReadingsNoReadingsTitle": {
+    "description": "Title of the info about the lack of blood readings"
+  },
+  "bloodReadingsNoReadingsMessage": "Dodaj wyniki badań krwi, aby mieć możliwość przeglądania tej listy",
+  "@bloodReadingsNoReadingsMessage": {
+    "description": "Message of the info about the lack of blood readings"
   },
   "themeMode": "Motyw",
   "@themeMode": {

@@ -5,7 +5,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../../domain/model/blood_reading.dart';
 import '../../../../domain/repository/blood_reading_repository.dart';
 import '../../../../domain/service/auth_service.dart';
-import '../../../component/big_button_component.dart';
 import '../../../component/empty_content_info_component.dart';
 import '../../../component/text/title_text_components.dart';
 import '../../../config/navigation/routes.dart';

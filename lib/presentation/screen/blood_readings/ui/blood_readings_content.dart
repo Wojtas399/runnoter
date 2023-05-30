@@ -29,13 +29,15 @@ class _AddNewReadingButton extends StatelessWidget {
       onPressed: () {
         _onPressed(context);
       },
-      child: const Row(
+      child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.add),
-          SizedBox(width: 8),
-          Text('Dodaj nowe wyniki'),
+          const Icon(Icons.add),
+          const SizedBox(width: 8),
+          Text(
+            Str.of(context).bloodReadingsAddNewResults,
+          ),
         ],
       ),
     );
