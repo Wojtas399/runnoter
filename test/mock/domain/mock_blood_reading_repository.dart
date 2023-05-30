@@ -34,4 +34,13 @@ class MockBloodReadingRepository extends Mock
       ),
     ).thenAnswer((invocation) => Future.value());
   }
+
+  void mockDeleteReading() {
+    when(
+      () => deleteReading(
+        bloodReadingId: any(named: 'bloodReadingId'),
+        userId: any(named: 'userId'),
+      ),
+    ).thenAnswer((invocation) => Future.value());
+  }
 }

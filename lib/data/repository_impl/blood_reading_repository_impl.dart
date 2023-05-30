@@ -55,6 +55,14 @@ class BloodReadingRepositoryImpl extends StateRepository<BloodReading>
     }
   }
 
+  @override
+  Future<void> deleteReading({
+    required String bloodReadingId,
+    required String userId,
+  }) async {
+    throw UnimplementedError();
+  }
+
   Future<void> _loadReadingsFromRemoteDb(String userId) async {
     final readingsDtos = await _firebaseBloodReadingService.loadAllReadings(
       userId: userId,

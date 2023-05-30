@@ -15,4 +15,9 @@ abstract interface class BloodReadingRepository {
     required DateTime date,
     required List<BloodReadingParameter> parameters,
   });
+
+  Future<void> deleteReading({
+    required String bloodReadingId,
+    required String userId,
+  });
 }
