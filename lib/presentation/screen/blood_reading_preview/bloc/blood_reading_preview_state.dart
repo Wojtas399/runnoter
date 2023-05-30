@@ -1,13 +1,13 @@
-import '../../../../domain/model/blood_reading.dart';
-import '../../../model/bloc_state.dart';
-import '../../../model/bloc_status.dart';
+part of 'blood_reading_preview_bloc.dart';
 
 class BloodReadingPreviewState extends BlocState<BloodReadingPreviewState> {
+  final String? bloodReadingId;
   final DateTime? date;
   final List<BloodReadingParameter>? readParameters;
 
   const BloodReadingPreviewState({
     required super.status,
+    this.bloodReadingId,
     this.date,
     this.readParameters,
   });
@@ -15,6 +15,7 @@ class BloodReadingPreviewState extends BlocState<BloodReadingPreviewState> {
   @override
   List<Object?> get props => [
         status,
+        bloodReadingId,
         date,
         readParameters,
       ];
@@ -22,11 +23,13 @@ class BloodReadingPreviewState extends BlocState<BloodReadingPreviewState> {
   @override
   BloodReadingPreviewState copyWith({
     BlocStatus? status,
+    String? bloodReadingId,
     DateTime? date,
     List<BloodReadingParameter>? readParameters,
   }) =>
       BloodReadingPreviewState(
         status: status ?? const BlocStatusComplete(),
+        bloodReadingId: bloodReadingId ?? this.bloodReadingId,
         date: date ?? this.date,
         readParameters: readParameters ?? this.readParameters,
       );

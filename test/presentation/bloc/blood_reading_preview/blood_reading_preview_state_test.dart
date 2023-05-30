@@ -2,7 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/domain/model/blood_parameter.dart';
 import 'package:runnoter/domain/model/blood_reading.dart';
 import 'package:runnoter/presentation/model/bloc_status.dart';
-import 'package:runnoter/presentation/screen/blood_reading_preview/bloc/blood_reading_preview_state.dart';
+import 'package:runnoter/presentation/screen/blood_reading_preview/bloc/blood_reading_preview_bloc.dart';
 
 void main() {
   late BloodReadingPreviewState state;
@@ -23,6 +23,19 @@ void main() {
 
       expect(state.status, expectedStatus);
       expect(state2.status, const BlocStatusComplete());
+    },
+  );
+
+  test(
+    'copy with blood reading id',
+    () {
+      const String expectedId = 'br1';
+
+      state = state.copyWith(bloodReadingId: expectedId);
+      final state2 = state.copyWith();
+
+      expect(state.bloodReadingId, expectedId);
+      expect(state2.bloodReadingId, expectedId);
     },
   );
 
