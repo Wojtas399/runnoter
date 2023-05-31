@@ -1,59 +1,34 @@
 part of 'blood_tests_screen.dart';
 
 class _BloodTestsList extends StatelessWidget {
-  const _BloodTestsList();
+  final List<BloodTestsFromYear> bloodTestsSortedByYear;
+
+  const _BloodTestsList({
+    required this.bloodTestsSortedByYear,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final List<BloodTestsFromYear>? bloodTestsByYear = context.select(
-      (BloodTestsCubit cubit) => cubit.state,
-    );
-
-    if (bloodTestsByYear == null) {
-      return const _LoadingContent();
-    } else if (bloodTestsByYear.isEmpty) {
-      return const _EmptyListContent();
-    } else {
-      return Column(
-        children: bloodTestsByYear
-            .asMap()
-            .entries
-            .map(
-              (entry) => entry.key == bloodTestsByYear.length - 1
-                  ? _ReadingsFromYear(readingsFromYear: entry.value)
-                  : Column(
-                      children: [
-                        _ReadingsFromYear(readingsFromYear: entry.value),
-                        const Divider(),
-                      ],
-                    ),
-            )
-            .toList(),
-      );
-    }
-  }
-}
-
-class _LoadingContent extends StatelessWidget {
-  const _LoadingContent();
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(
-      child: CircularProgressIndicator(),
-    );
-  }
-}
-
-class _EmptyListContent extends StatelessWidget {
-  const _EmptyListContent();
-
-  @override
-  Widget build(BuildContext context) {
-    return EmptyContentInfo(
-      icon: Icons.water_drop_outlined,
-      title: Str.of(context).bloodTestsNoReadingsTitle,
-      subtitle: Str.of(context).bloodTestsNoReadingsMessage,
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          children: [
+            const _AddNewTestButton(),
+            const SizedBox(height: 24),
+            ...bloodTestsSortedByYear.asMap().entries.map(
+                  (entry) => entry.key == bloodTestsSortedByYear.length - 1
+                      ? _ReadingsFromYear(readingsFromYear: entry.value)
+                      : Column(
+                          children: [
+                            _ReadingsFromYear(readingsFromYear: entry.value),
+                            const Divider(),
+                          ],
+                        ),
+                ),
+          ],
+        ),
+      ),
     );
   }
 }

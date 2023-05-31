@@ -7,6 +7,7 @@ class _Content extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        forceMaterialTransparency: true,
         centerTitle: true,
         title: Text(
           Str.of(context).bloodTestPreviewScreenTitle,

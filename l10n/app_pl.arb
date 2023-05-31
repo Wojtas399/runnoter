@@ -491,15 +491,15 @@
   "@mileageNoDataMessage": {
     "description": "Message of the information about no data to display mileage"
   },
-  "bloodTestsAddNewResults": "Dodaj nowe wyniki",
-  "@bloodTestAddNewResults": {
+  "bloodTestsAddNewBloodTest": "Dodaj nowe badanie",
+  "@bloodTestAddNewBloodTest": {
     "description": "Label of the button to add new results"
   },
   "bloodTestsNoReadingsTitle": "Brak badań krwi",
   "@bloodTestsNoReadingsTitle": {
     "description": "Title of the info about the lack of blood readings"
   },
-  "bloodTestsNoReadingsMessage": "Dodaj wyniki badań krwi, aby mieć możliwość przeglądania tej listy",
+  "bloodTestsNoReadingsMessage": "Dodaj wyniki badania krwi, aby mieć możliwość przeglądania tej listy",
   "@bloodTestsNoReadingsMessage": {
     "description": "Message of the info about the lack of blood readings"
   },
@@ -515,9 +515,9 @@
   "@bloodTestParameterNorm": {
     "description": "Label of the parameter's norm"
   },
-  "bloodTestParameterValue": "Wartość",
-  "@bloodTestParameterValue": {
-    "description": "Label of the parameter's value"
+  "bloodTestParameterResult": "Wynik",
+  "@bloodTestParameterResult": {
+    "description": "Label of the parameter's result"
   },
   "bloodTestBasicParams": "Badania podstawowe",
   "@bloodTestsBasicParams": {
@@ -999,7 +999,7 @@
   "@bloodParamTestosterone": {
     "description": "Blood test parameter called testosterone"
   },
-  "bloodParamCortisol": "Koryzol",
+  "bloodParamCortisol": "Kortyzol",
   "@bloodParamCortisol": {
     "description": "Blood test parameter called cortisol"
   },

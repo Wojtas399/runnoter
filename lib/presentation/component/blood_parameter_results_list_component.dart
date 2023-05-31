@@ -166,7 +166,7 @@ class _HeaderRow extends StatelessWidget {
         ),
         Expanded(
           child: LabelLarge(
-            Str.of(context).bloodTestParameterValue,
+            Str.of(context).bloodTestParameterResult,
             textAlign: TextAlign.center,
           ),
         ),
