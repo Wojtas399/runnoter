@@ -503,6 +503,26 @@
   "@bloodReadingsNoReadingsMessage": {
     "description": "Message of the info about the lack of blood readings"
   },
+  "bloodReadingParameterName": "Nazwa",
+  "@bloodReadingParameterName": {
+    "description": "Label of the parameter's name"
+  },
+  "bloodReadingParameterNorm": "Norma",
+  "@bloodReadingParameterNorm": {
+    "description": "Label of the parameter's norm"
+  },
+  "bloodReadingParameterReading": "Odczyt",
+  "@bloodReadingParameterReading": {
+    "description": "Label of the parameter's reading"
+  },
+  "bloodReadingBasicParams": "Badania podstawowe",
+  "@bloodReadingsBasicParams": {
+    "description": "Label of the basic blood parameters"
+  },
+  "bloodReadingAdditionalParams": "Badania dodatkowe",
+  "@bloodReadingAdditionalParams": {
+    "description": "Label of the additional blood params"
+  },
   "themeMode": "Motyw",
   "@themeMode": {
     "description": "Label of theme mode"
