@@ -6,9 +6,13 @@ void navigateTo({
   required material.BuildContext context,
   required CustomRoute route,
 }) {
+  Object? arguments;
+  if (route is CustomRouteWithArguments) {
+    arguments = route.arguments;
+  }
   material.Navigator.of(context).pushNamed(
     route.path.path,
-    arguments: route.arguments,
+    arguments: arguments,
   );
 }
 

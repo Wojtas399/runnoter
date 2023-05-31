@@ -79,9 +79,21 @@ class _ReadingsFromYear extends StatelessWidget {
           ...readingsFromYear.bloodReadings.map(
             (BloodReading reading) => _ReadingItem(
               bloodReading: reading,
+              onPressed: () {
+                _onPressed(context, reading.id);
+              },
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  void _onPressed(BuildContext context, String bloodReadingId) {
+    navigateTo(
+      context: context,
+      route: BloodReadingPreviewRoute(
+        bloodReadingId: bloodReadingId,
       ),
     );
   }
@@ -89,9 +101,11 @@ class _ReadingsFromYear extends StatelessWidget {
 
 class _ReadingItem extends StatelessWidget {
   final BloodReading bloodReading;
+  final VoidCallback? onPressed;
 
   const _ReadingItem({
     required this.bloodReading,
+    this.onPressed,
   });
 
   @override
@@ -100,9 +114,7 @@ class _ReadingItem extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.only(bottom: 16),
       child: ElevatedButton(
-        onPressed: () {
-          _onPressed(context);
-        },
+        onPressed: onPressed,
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Text(
@@ -111,9 +123,5 @@ class _ReadingItem extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  void _onPressed(BuildContext context) {
-    //TODO
   }
 }

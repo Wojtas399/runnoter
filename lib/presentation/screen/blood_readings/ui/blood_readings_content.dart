@@ -46,7 +46,7 @@ class _AddNewReadingButton extends StatelessWidget {
   void _onPressed(BuildContext context) {
     navigateTo(
       context: context,
-      route: const BloodTestCreatorRoute(),
+      route: const BloodReadingCreatorRoute(),
     );
   }
 }
