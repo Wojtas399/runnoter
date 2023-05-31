@@ -1,3 +1,5 @@
+part of 'blood_reading_preview_bloc.dart';
+
 abstract class BloodReadingPreviewEvent {
   const BloodReadingPreviewEvent();
 }
@@ -7,6 +9,15 @@ class BloodReadingPreviewEventInitialize extends BloodReadingPreviewEvent {
 
   const BloodReadingPreviewEventInitialize({
     required this.bloodReadingId,
+  });
+}
+
+class BloodReadingPreviewEventBloodReadingUpdated
+    extends BloodReadingPreviewEvent {
+  final BloodReading? bloodReading;
+
+  const BloodReadingPreviewEventBloodReadingUpdated({
+    required this.bloodReading,
   });
 }
 
