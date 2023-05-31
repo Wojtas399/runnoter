@@ -1,5 +1,6 @@
-import 'package:firebase/firebase.dart';
+import 'package:firebase/firebase.dart' as firebase;
 
+import '../../domain/model/blood_parameter.dart';
 import '../../domain/model/blood_reading.dart';
 import '../../domain/model/state_repository.dart';
 import '../../domain/repository/blood_reading_repository.dart';
@@ -8,10 +9,10 @@ import '../mapper/blood_reading_parameter_mapper.dart';
 
 class BloodReadingRepositoryImpl extends StateRepository<BloodReading>
     implements BloodReadingRepository {
-  final FirebaseBloodReadingService _firebaseBloodReadingService;
+  final firebase.FirebaseBloodReadingService _firebaseBloodReadingService;
 
   BloodReadingRepositoryImpl({
-    required FirebaseBloodReadingService firebaseBloodReadingsService,
+    required firebase.FirebaseBloodReadingService firebaseBloodReadingsService,
     super.initialData,
   }) : _firebaseBloodReadingService = firebaseBloodReadingsService;
 
@@ -20,7 +21,23 @@ class BloodReadingRepositoryImpl extends StateRepository<BloodReading>
     required String bloodReadingId,
     required String userId,
   }) {
-    throw UnimplementedError();
+    return Stream.value(
+      BloodReading(
+        id: bloodReadingId,
+        userId: userId,
+        date: DateTime(2023, 5, 10),
+        parameters: [
+          BloodReadingParameter(
+            parameter: BloodParameter.wbc,
+            readingValue: 4.45,
+          ),
+          BloodReadingParameter(
+            parameter: BloodParameter.cpk,
+            readingValue: 300,
+          ),
+        ],
+      ),
+    );
   }
 
   @override

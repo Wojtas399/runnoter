@@ -123,6 +123,7 @@
   "bloodReadingsAddNewResults": "Add new results",
   "bloodReadingsNoReadingsTitle": "No blood readings",
   "bloodReadingsNoReadingsMessage": "Add blood results to be able to review this list",
+  "bloodReadingPreviewScreenTitle": "Blood test",
   "bloodReadingParameterName": "Name",
   "bloodReadingParameterNorm": "Norm",
   "bloodReadingParameterReading": "Reading",

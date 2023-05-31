@@ -2,7 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/domain/model/blood_parameter.dart';
 import 'package:runnoter/domain/model/blood_reading.dart';
 import 'package:runnoter/presentation/model/bloc_status.dart';
-import 'package:runnoter/presentation/screen/blood_reading_preview/bloc/blood_reading_preview_bloc.dart';
+import 'package:runnoter/presentation/screen/blood_test_preview/bloc/blood_reading_preview_bloc.dart';
 
 void main() {
   late BloodReadingPreviewState state;

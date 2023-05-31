@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../screen/blood_reading_preview/ui/blood_reading_preview_screen.dart';
 import '../../screen/screens.dart';
 import '../animation/slide_to_top_anim.dart';
 import 'routes.dart';
@@ -51,7 +50,7 @@ class AppNavigator extends StatelessWidget {
     } else if (routePath == RoutePath.bloodReadingCreator.path) {
       screen = const BloodReadingCreatorScreen();
     } else if (routePath == RoutePath.bloodReadingPreview.path) {
-      screen = BloodReadingPreviewScreen(
+      screen = BloodTestPreviewScreen(
         bloodReadingId: settings.arguments as String,
       );
     } else if (routePath == RoutePath.themeMode.path) {

@@ -503,6 +503,10 @@
   "@bloodReadingsNoReadingsMessage": {
     "description": "Message of the info about the lack of blood readings"
   },
+  "bloodReadingPreviewScreenTitle": "Badanie krwi",
+  "@bloodReadingPreviewScreenTitle": {
+    "description": "Title of the blood reading preview screen"
+  },
   "bloodReadingParameterName": "Nazwa",
   "@bloodReadingParameterName": {
     "description": "Label of the parameter's name"
