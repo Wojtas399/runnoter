@@ -47,11 +47,11 @@ class AppNavigator extends StatelessWidget {
       );
     } else if (routePath == RoutePath.healthMeasurements.path) {
       screen = const HealthMeasurementsScreen();
-    } else if (routePath == RoutePath.bloodReadingCreator.path) {
-      screen = const BloodReadingCreatorScreen();
-    } else if (routePath == RoutePath.bloodReadingPreview.path) {
+    } else if (routePath == RoutePath.bloodTestCreator.path) {
+      screen = const BloodTestCreatorScreen();
+    } else if (routePath == RoutePath.bloodTestPreview.path) {
       screen = BloodTestPreviewScreen(
-        bloodReadingId: settings.arguments as String,
+        bloodTestId: settings.arguments as String,
       );
     } else if (routePath == RoutePath.themeMode.path) {
       screen = const ThemeModeScreen();

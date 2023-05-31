@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'model/appearance_settings_dto.dart';
-import 'model/blood_reading_dto.dart';
+import 'model/blood_test_dto.dart';
 import 'model/health_measurement_dto.dart';
 import 'model/user_dto.dart';
 import 'model/workout_dto.dart';
@@ -77,16 +77,14 @@ DocumentReference<WorkoutSettingsDto> getWorkoutSettingsRef(
           toFirestore: (workoutSettingsDto, _) => workoutSettingsDto.toJson(),
         );
 
-CollectionReference<BloodReadingDto> getBloodReadingsRef(
+CollectionReference<BloodTestDto> getBloodTestsRef(
   String userId,
 ) =>
-    getUserRef(userId)
-        .collection('BloodReadings')
-        .withConverter<BloodReadingDto>(
-          fromFirestore: (snapshot, _) => BloodReadingDto.fromJson(
+    getUserRef(userId).collection('BloodTests').withConverter<BloodTestDto>(
+          fromFirestore: (snapshot, _) => BloodTestDto.fromJson(
             id: snapshot.id,
             userId: userId,
             json: snapshot.data(),
           ),
-          toFirestore: (bloodReadingsDto, _) => bloodReadingsDto.toJson(),
+          toFirestore: (bloodTestsDto, _) => bloodTestsDto.toJson(),
         );

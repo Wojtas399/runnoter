@@ -53,7 +53,7 @@ class HomeDrawer extends StatelessWidget {
         NavigationDrawerDestination(
           icon: const Icon(Icons.water_drop_outlined),
           selectedIcon: const Icon(Icons.water_drop),
-          label: Text(Str.of(context).homeDrawerBloodReadings),
+          label: Text(Str.of(context).homeDrawerBloodTests),
         ),
         NavigationDrawerDestination(
           icon: const Icon(Icons.emoji_events_outlined),

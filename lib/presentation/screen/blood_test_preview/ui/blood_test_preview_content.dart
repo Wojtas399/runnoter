@@ -9,7 +9,7 @@ class _Content extends StatelessWidget {
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          Str.of(context).bloodReadingPreviewScreenTitle,
+          Str.of(context).bloodTestPreviewScreenTitle,
         ),
       ),
       body: const Column(
@@ -43,7 +43,7 @@ class _Date extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final DateTime? date = context.select(
-      (BloodReadingPreviewBloc bloc) => bloc.state.date,
+      (BloodTestPreviewBloc bloc) => bloc.state.date,
     );
 
     return TitleLarge(

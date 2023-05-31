@@ -5,12 +5,12 @@ class _Results extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<BloodReadingParameter>? readParameters = context.select(
-      (BloodReadingPreviewBloc bloc) => bloc.state.readParameters,
+    final List<BloodParameterResult>? parameterResults = context.select(
+      (BloodTestPreviewBloc bloc) => bloc.state.parameterResults,
     );
 
-    return BloodReadingParametersComponent(
-      readParameters: readParameters,
+    return BloodParameterResultsList(
+      parameterResults: parameterResults,
     );
   }
 }

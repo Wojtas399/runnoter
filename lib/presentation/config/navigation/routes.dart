@@ -76,16 +76,16 @@ class HealthMeasurementsRoute extends CustomRoute {
   const HealthMeasurementsRoute() : super(path: RoutePath.healthMeasurements);
 }
 
-class BloodReadingCreatorRoute extends CustomRoute {
-  const BloodReadingCreatorRoute() : super(path: RoutePath.bloodReadingCreator);
+class BloodTestCreatorRoute extends CustomRoute {
+  const BloodTestCreatorRoute() : super(path: RoutePath.bloodTestCreator);
 }
 
-class BloodReadingPreviewRoute extends CustomRouteWithArguments<String> {
-  const BloodReadingPreviewRoute({
-    required String bloodReadingId,
+class BloodTestPreviewRoute extends CustomRouteWithArguments<String> {
+  const BloodTestPreviewRoute({
+    required String bloodTestId,
   }) : super(
-          arguments: bloodReadingId,
-          path: RoutePath.bloodReadingPreview,
+          arguments: bloodTestId,
+          path: RoutePath.bloodTestPreview,
         );
 }
 
@@ -115,8 +115,8 @@ enum RoutePath {
   workoutStatusCreator('/home/day-preview/workout-status-creator'),
   healthMeasurementCreator('/home/health_measurement-creator'),
   healthMeasurements('/home/health-measurements'),
-  bloodReadingCreator('/home/blood-reading-creator'),
-  bloodReadingPreview('/home/blood-reading-preview'),
+  bloodTestCreator('/home/blood-test-creator'),
+  bloodTestPreview('/home/blood-test-preview'),
   themeMode('/home/profile/theme-mode'),
   language('/home/profile/language'),
   distanceUnit('/home/profile/distance-unit'),

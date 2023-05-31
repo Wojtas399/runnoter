@@ -1,5 +1,21 @@
 import 'package:equatable/equatable.dart';
 
+class BloodParameterResult extends Equatable {
+  final BloodParameter parameter;
+  final double value;
+
+  const BloodParameterResult({
+    required this.parameter,
+    required this.value,
+  });
+
+  @override
+  List<Object?> get props => [
+        parameter,
+        value,
+      ];
+}
+
 enum BloodParameter {
   wbc(
     type: BloodParameterType.basic,

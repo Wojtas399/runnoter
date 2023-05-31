@@ -20,7 +20,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
       str.homeDrawerHome,
       str.homeDrawerProfile,
       str.homeDrawerMileage,
-      str.homeDrawerBloodReadings,
+      str.homeDrawerBloodTests,
       str.homeDrawerCompetitions,
     ];
     final List<String> bottomNavPageTitles = [

@@ -119,8 +119,8 @@
   "@homeDrawerMileage": {
     "description": "Label of drawer's mileage option"
   },
-  "homeDrawerBloodReadings": "Badania krwi",
-  "@homeDrawerBloodReadings": {
+  "homeDrawerBloodTests": "Badania krwi",
+  "@homeDrawerBloodTests": {
     "description": "Label of drawer's blood readings option"
   },
   "homeDrawerCompetitions": "Starty w zawodach",
@@ -491,40 +491,40 @@
   "@mileageNoDataMessage": {
     "description": "Message of the information about no data to display mileage"
   },
-  "bloodReadingsAddNewResults": "Dodaj nowe wyniki",
-  "@bloodReadingAddNewResults": {
+  "bloodTestsAddNewResults": "Dodaj nowe wyniki",
+  "@bloodTestAddNewResults": {
     "description": "Label of the button to add new results"
   },
-  "bloodReadingsNoReadingsTitle": "Brak badań krwi",
-  "@bloodReadingsNoReadingsTitle": {
+  "bloodTestsNoReadingsTitle": "Brak badań krwi",
+  "@bloodTestsNoReadingsTitle": {
     "description": "Title of the info about the lack of blood readings"
   },
-  "bloodReadingsNoReadingsMessage": "Dodaj wyniki badań krwi, aby mieć możliwość przeglądania tej listy",
-  "@bloodReadingsNoReadingsMessage": {
+  "bloodTestsNoReadingsMessage": "Dodaj wyniki badań krwi, aby mieć możliwość przeglądania tej listy",
+  "@bloodTestsNoReadingsMessage": {
     "description": "Message of the info about the lack of blood readings"
   },
-  "bloodReadingPreviewScreenTitle": "Badanie krwi",
-  "@bloodReadingPreviewScreenTitle": {
+  "bloodTestPreviewScreenTitle": "Badanie krwi",
+  "@bloodTestPreviewScreenTitle": {
     "description": "Title of the blood reading preview screen"
   },
-  "bloodReadingParameterName": "Nazwa",
-  "@bloodReadingParameterName": {
+  "bloodTestParameterName": "Nazwa",
+  "@bloodTestParameterName": {
     "description": "Label of the parameter's name"
   },
-  "bloodReadingParameterNorm": "Norma",
-  "@bloodReadingParameterNorm": {
+  "bloodTestParameterNorm": "Norma",
+  "@bloodTestParameterNorm": {
     "description": "Label of the parameter's norm"
   },
-  "bloodReadingParameterReading": "Odczyt",
-  "@bloodReadingParameterReading": {
-    "description": "Label of the parameter's reading"
+  "bloodTestParameterValue": "Wartość",
+  "@bloodTestParameterValue": {
+    "description": "Label of the parameter's value"
   },
-  "bloodReadingBasicParams": "Badania podstawowe",
-  "@bloodReadingsBasicParams": {
+  "bloodTestBasicParams": "Badania podstawowe",
+  "@bloodTestsBasicParams": {
     "description": "Label of the basic blood parameters"
   },
-  "bloodReadingAdditionalParams": "Badania dodatkowe",
-  "@bloodReadingAdditionalParams": {
+  "bloodTestAdditionalParams": "Badania dodatkowe",
+  "@bloodTestAdditionalParams": {
     "description": "Label of the additional blood params"
   },
   "themeMode": "Motyw",
