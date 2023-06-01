@@ -42,8 +42,8 @@ class _NoTestsInfo extends StatelessWidget {
       children: [
         EmptyContentInfo(
           icon: Icons.water_drop_outlined,
-          title: Str.of(context).bloodTestsNoReadingsTitle,
-          subtitle: Str.of(context).bloodTestsNoReadingsMessage,
+          title: Str.of(context).bloodTestsNoTestsTitle,
+          subtitle: Str.of(context).bloodTestsNoTestsMessage,
         ),
         const SizedBox(height: 32),
         const _AddNewTestButton(

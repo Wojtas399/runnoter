@@ -495,12 +495,12 @@
   "@bloodTestAddNewBloodTest": {
     "description": "Label of the button to add new results"
   },
-  "bloodTestsNoReadingsTitle": "Brak badań krwi",
-  "@bloodTestsNoReadingsTitle": {
+  "bloodTestsNoTestsTitle": "Brak badań krwi",
+  "@bloodTestsNoTestsTitle": {
     "description": "Title of the info about the lack of blood readings"
   },
-  "bloodTestsNoReadingsMessage": "Dodaj wyniki badania krwi, aby mieć możliwość przeglądania tej listy",
-  "@bloodTestsNoReadingsMessage": {
+  "bloodTestsNoTestsMessage": "Dodaj wyniki badania krwi, aby mieć możliwość przeglądania tej listy",
+  "@bloodTestsNoTestsMessage": {
     "description": "Message of the info about the lack of blood readings"
   },
   "bloodTestPreviewScreenTitle": "Badanie krwi",
