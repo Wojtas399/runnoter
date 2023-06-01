@@ -61,14 +61,14 @@ class _ReadingDateButton extends StatelessWidget {
         onPressed: () {
           _onPressed(context);
         },
-        child: Text('Wybierz datę'),
+        child: const Text('Wybierz datę'),
       );
     }
     return OutlinedButton(
       onPressed: () {
         _onPressed(context);
       },
-      child: Text('Edytuj datę'),
+      child: const Text('Edytuj datę'),
     );
   }
 

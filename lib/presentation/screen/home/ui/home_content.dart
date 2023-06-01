@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../blood_tests/ui/blood_tests_screen.dart';
-import '../../health/ui/health_screen.dart';
 import '../../screens.dart';
 import '../bloc/home_bloc.dart';
 import '../bloc/home_state.dart';
