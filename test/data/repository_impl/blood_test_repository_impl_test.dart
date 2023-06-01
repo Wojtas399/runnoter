@@ -270,4 +270,42 @@ void main() {
       );
     },
   );
+
+  test(
+    'delete test, '
+    'should call method from firebase service to delete delete test and should delete test from repository',
+    () {
+      const String bloodTestId = 'bt1';
+      final List<BloodTest> existingTests = [
+        createBloodTest(id: 'bt1', userId: userId),
+        createBloodTest(id: 'bt2', userId: 'u2'),
+      ];
+      firebaseBloodTestService.mockDeleteTest();
+      repository = createRepository(initialState: existingTests);
+
+      final Stream<List<BloodTest>?> repositoryState$ = repository.dataStream$;
+      repository.deleteTest(
+        bloodTestId: bloodTestId,
+        userId: userId,
+      );
+
+      expect(
+        repositoryState$,
+        emitsInOrder(
+          [
+            existingTests,
+            [
+              existingTests[1],
+            ],
+          ],
+        ),
+      );
+      verify(
+        () => firebaseBloodTestService.deleteTest(
+          bloodTestId: bloodTestId,
+          userId: userId,
+        ),
+      ).called(1);
+    },
+  );
 }

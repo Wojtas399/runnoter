@@ -71,7 +71,11 @@ class BloodTestRepositoryImpl extends StateRepository<BloodTest>
     required String bloodTestId,
     required String userId,
   }) async {
-    throw UnimplementedError();
+    await _firebaseBloodTestService.deleteTest(
+      bloodTestId: bloodTestId,
+      userId: userId,
+    );
+    removeEntity(bloodTestId);
   }
 
   Future<void> _loadTestByIdFromRemoteDb(
