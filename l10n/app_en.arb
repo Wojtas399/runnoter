@@ -126,6 +126,7 @@
   "bloodTestPreviewScreenTitle": "Blood test",
   "bloodTestPreviewDeleteTestTitle": "Blood test deletion",
   "bloodTestPreviewDeleteTestMessage": "This operation cannot be undone. Are you sure you want to delete this blood test?",
+  "bloodTestPreviewDeletedTestMessage": "Successfully deleted blood test",
   "bloodTestParameterName": "Name",
   "bloodTestParameterNorm": "Norm",
   "bloodTestParameterResult": "Result",

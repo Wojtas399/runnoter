@@ -515,6 +515,10 @@
   "@bloodTestPreviewDeleteTestMessage": {
     "description": "Message of the confirmation dialog to delete blood test"
   },
+  "bloodTestPreviewDeletedTestMessage": "Pomyślnie usunięto badanie krwi",
+  "@bloodTestPreviewDeletedTestMessage": {
+    "description": "Message to inform that blood test has been deleted"
+  },
   "bloodTestParameterName": "Nazwa",
   "@bloodTestParameterName": {
     "description": "Label of the parameter's name"
