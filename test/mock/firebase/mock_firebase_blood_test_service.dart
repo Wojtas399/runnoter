@@ -3,6 +3,17 @@ import 'package:mocktail/mocktail.dart';
 
 class MockFirebaseBloodTestService extends Mock
     implements FirebaseBloodTestService {
+  void mockLoadTestById({
+    BloodTestDto? bloodTestDto,
+  }) {
+    when(
+      () => loadTestById(
+        bloodTestId: any(named: 'bloodTestId'),
+        userId: any(named: 'userId'),
+      ),
+    ).thenAnswer((invocation) => Future.value(bloodTestDto));
+  }
+
   void mockLoadAllTests({
     List<BloodTestDto>? bloodTestDtos,
   }) {

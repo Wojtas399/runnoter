@@ -4,6 +4,14 @@ import '../firebase.dart';
 import '../firebase_collections.dart';
 
 class FirebaseBloodTestService {
+  Future<BloodTestDto?> loadTestById({
+    required String bloodTestId,
+    required String userId,
+  }) async {
+    final snapshot = await getBloodTestsRef(userId).doc(bloodTestId).get();
+    return snapshot.data();
+  }
+
   Future<List<BloodTestDto>?> loadAllTests({
     required String userId,
   }) async {
