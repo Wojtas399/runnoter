@@ -75,7 +75,9 @@ class _BloodTestActions extends StatelessWidget {
       confirmButtonLabel: Str.of(context).delete,
     );
     if (confirmed == true) {
-      //TODO
+      bloc.add(
+        const BloodTestPreviewEventDeleteTest(),
+      );
     }
   }
 }
