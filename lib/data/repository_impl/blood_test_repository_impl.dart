@@ -1,4 +1,6 @@
+import 'package:collection/collection.dart';
 import 'package:firebase/firebase.dart' as firebase;
+import 'package:rxdart/rxdart.dart';
 
 import '../../domain/model/blood_parameter.dart';
 import '../../domain/model/blood_test.dart';
@@ -21,23 +23,17 @@ class BloodTestRepositoryImpl extends StateRepository<BloodTest>
     required String bloodTestId,
     required String userId,
   }) {
-    return Stream.value(
-      BloodTest(
-        id: bloodTestId,
-        userId: userId,
-        date: DateTime(2023, 5, 10),
-        parameterResults: const [
-          BloodParameterResult(
-            parameter: BloodParameter.wbc,
-            value: 4.45,
+    return dataStream$
+        .map(
+          (List<BloodTest>? bloodTests) => bloodTests?.firstWhereOrNull(
+            (BloodTest test) => test.id == bloodTestId && test.userId == userId,
           ),
-          BloodParameterResult(
-            parameter: BloodParameter.cpk,
-            value: 300,
-          ),
-        ],
-      ),
-    );
+        )
+        .doOnListen(
+          () => doesEntityNotExistInState(bloodTestId)
+              ? _loadTestByIdFromRemoteDb(bloodTestId, userId)
+              : null,
+        );
   }
 
   @override
@@ -76,6 +72,20 @@ class BloodTestRepositoryImpl extends StateRepository<BloodTest>
     required String userId,
   }) async {
     throw UnimplementedError();
+  }
+
+  Future<void> _loadTestByIdFromRemoteDb(
+    String bloodTestId,
+    String userId,
+  ) async {
+    final bloodTestDto = await _firebaseBloodTestService.loadTestById(
+      bloodTestId: bloodTestId,
+      userId: userId,
+    );
+    if (bloodTestDto != null) {
+      final BloodTest bloodTest = mapBloodTestFromDto(bloodTestDto);
+      addEntity(bloodTest);
+    }
   }
 
   Future<void> _loadTestsFromRemoteDb(String userId) async {

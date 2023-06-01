@@ -22,23 +22,108 @@ void main() {
         initialData: initialState,
       );
 
+  setUp(
+    () => repository = createRepository(),
+  );
+
   tearDown(() {
     reset(firebaseBloodTestService);
   });
+
+  test(
+    'get test by id, '
+    'blood test exists in repository, '
+    'should emit existing blood test',
+    () {
+      final BloodTest expectedTest = createBloodTest(
+        id: 'bt1',
+        userId: userId,
+        date: DateTime(2023, 5, 21),
+      );
+      final List<BloodTest> existingTests = [
+        expectedTest,
+        createBloodTest(id: 'bt2', userId: userId),
+        createBloodTest(id: 'bt3', userId: 'u2'),
+      ];
+      repository = createRepository(initialState: existingTests);
+
+      final Stream<BloodTest?> test$ = repository.getTestById(
+        bloodTestId: 'bt1',
+        userId: userId,
+      );
+
+      expect(
+        test$,
+        emitsInOrder(
+          [
+            expectedTest,
+          ],
+        ),
+      );
+    },
+  );
+
+  test(
+    'get test by id, '
+    'blood test does not exist in repository, '
+    'should load blood test from remote db and emit it',
+    () {
+      const String bloodTestId = 'bt1';
+      final firebase.BloodTestDto expectedTestDto = createBloodTestDto(
+        id: bloodTestId,
+        userId: userId,
+        date: DateTime(2023, 5, 21),
+      );
+      final BloodTest expectedTest = createBloodTest(
+        id: bloodTestId,
+        userId: userId,
+        date: DateTime(2023, 5, 21),
+      );
+      final List<BloodTest> existingTests = [
+        createBloodTest(id: 'bt2', userId: userId),
+        createBloodTest(id: 'bt3', userId: 'u2'),
+      ];
+      firebaseBloodTestService.mockLoadTestById(
+        bloodTestDto: expectedTestDto,
+      );
+      repository = createRepository(initialState: existingTests);
+
+      final Stream<BloodTest?> test$ = repository.getTestById(
+        bloodTestId: bloodTestId,
+        userId: userId,
+      );
+
+      expect(
+        test$,
+        emitsInOrder(
+          [
+            null,
+            expectedTest,
+          ],
+        ),
+      );
+      verify(
+        () => firebaseBloodTestService.loadTestById(
+          bloodTestId: bloodTestId,
+          userId: userId,
+        ),
+      ).called(1);
+    },
+  );
 
   test(
     'get all tests, '
     'should emit tests existing in repository and should load and emit new tests from remote db',
     () async {
       final List<BloodTest> existingTests = [
-        createBloodTest(id: 'br1', userId: userId),
-        createBloodTest(id: 'br2', userId: 'u2'),
-        createBloodTest(id: 'br3', userId: userId),
-        createBloodTest(id: 'br4', userId: 'u3'),
+        createBloodTest(id: 'bt1', userId: userId),
+        createBloodTest(id: 'bt2', userId: 'u2'),
+        createBloodTest(id: 'bt3', userId: userId),
+        createBloodTest(id: 'bt4', userId: 'u3'),
       ];
       final List<firebase.BloodTestDto> loadedTestsDtos = [
         createBloodTestDto(
-          id: 'br5',
+          id: 'bt5',
           userId: userId,
           date: DateTime(2023, 5, 12),
           parameterResultDtos: const [
@@ -53,7 +138,7 @@ void main() {
           ],
         ),
         createBloodTestDto(
-          id: 'br6',
+          id: 'bt6',
           userId: userId,
           date: DateTime(2023, 6, 1),
           parameterResultDtos: const [
@@ -66,7 +151,7 @@ void main() {
       ];
       final List<BloodTest> loadedTests = [
         createBloodTest(
-          id: 'br5',
+          id: 'bt5',
           userId: userId,
           date: DateTime(2023, 5, 12),
           parameterResults: const [
@@ -81,7 +166,7 @@ void main() {
           ],
         ),
         createBloodTest(
-          id: 'br6',
+          id: 'bt6',
           userId: userId,
           date: DateTime(2023, 6, 1),
           parameterResults: const [
@@ -121,7 +206,7 @@ void main() {
     'add new test, '
     'should call method from firebase service to add new test and should add this test to repository',
     () {
-      const String newTestId = 'br3';
+      const String newTestId = 'bt3';
       final DateTime newTestDate = DateTime(2023, 5, 20);
       const List<BloodParameterResult> parameterResults = [
         BloodParameterResult(
@@ -134,8 +219,8 @@ void main() {
         ),
       ];
       final List<BloodTest> existingTests = [
-        createBloodTest(id: 'br1', userId: userId),
-        createBloodTest(id: 'br2', userId: 'u2'),
+        createBloodTest(id: 'bt1', userId: userId),
+        createBloodTest(id: 'bt2', userId: 'u2'),
       ];
       final firebase.BloodTestDto addedBloodTestDto = createBloodTestDto(
         id: newTestId,
