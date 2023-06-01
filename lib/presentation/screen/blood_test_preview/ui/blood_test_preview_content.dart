@@ -5,15 +5,9 @@ class _Content extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        forceMaterialTransparency: true,
-        centerTitle: true,
-        title: Text(
-          Str.of(context).bloodTestPreviewScreenTitle,
-        ),
-      ),
-      body: const Column(
+    return const Scaffold(
+      appBar: _AppBar(),
+      body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _DateSection(),

@@ -10,6 +10,7 @@ import '../../../component/text/title_text_components.dart';
 import '../../../formatter/date_formatter.dart';
 import '../bloc/blood_test_preview_bloc.dart';
 
+part 'blood_test_preview_app_bar.dart';
 part 'blood_test_preview_content.dart';
 part 'blood_test_preview_readings.dart';
 
