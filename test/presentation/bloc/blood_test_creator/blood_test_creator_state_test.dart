@@ -92,6 +92,19 @@ void main() {
   );
 
   test(
+    'copy with blood test id',
+    () {
+      const String expectedBloodTestId = 'bt1';
+
+      state = state.copyWith(bloodTestId: expectedBloodTestId);
+      final state2 = state.copyWith();
+
+      expect(state.bloodTestId, expectedBloodTestId);
+      expect(state2.bloodTestId, expectedBloodTestId);
+    },
+  );
+
+  test(
     'copy with date',
     () {
       final DateTime expectedDate = DateTime(2023, 5, 20);
