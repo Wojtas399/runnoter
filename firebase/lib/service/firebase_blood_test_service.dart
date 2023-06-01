@@ -40,4 +40,11 @@ class FirebaseBloodTestService {
     final snapshot = await bloodTestRef.get();
     return snapshot.data();
   }
+
+  Future<void> deleteTest({
+    required String bloodTestId,
+    required String userId,
+  }) async {
+    await getBloodTestsRef(userId).doc(bloodTestId).delete();
+  }
 }
