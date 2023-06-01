@@ -66,7 +66,16 @@ class _BloodTestActions extends StatelessWidget {
     //TODO
   }
 
-  void _onDeleteActionPressed(BuildContext context) {
-    //TODO
+  Future<void> _onDeleteActionPressed(BuildContext context) async {
+    final BloodTestPreviewBloc bloc = context.read<BloodTestPreviewBloc>();
+    final bool confirmed = await askForConfirmation(
+      context: context,
+      title: Str.of(context).bloodTestPreviewDeleteTestTitle,
+      message: Str.of(context).bloodTestPreviewDeleteTestMessage,
+      confirmButtonLabel: Str.of(context).delete,
+    );
+    if (confirmed == true) {
+      //TODO
+    }
   }
 }

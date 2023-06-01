@@ -507,6 +507,14 @@
   "@bloodTestPreviewScreenTitle": {
     "description": "Title of the blood reading preview screen"
   },
+  "bloodTestPreviewDeleteTestTitle": "Usunięcie badania krwi",
+  "@bloodTestPreviewDeleteTestTitle": {
+    "description": "Title of the confirmation dialog to delete blood test"
+  },
+  "bloodTestPreviewDeleteTestMessage": "Tej operacji nie można cofnąć. Czy na pewno chcesz usunąć to badanie krwi?",
+  "@bloodTestPreviewDeleteTestMessage": {
+    "description": "Message of the confirmation dialog to delete blood test"
+  },
   "bloodTestParameterName": "Nazwa",
   "@bloodTestParameterName": {
     "description": "Label of the parameter's name"
