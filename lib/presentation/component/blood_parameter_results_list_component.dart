@@ -8,6 +8,8 @@ import '../formatter/blood_test_parameter_formatter.dart';
 import '../formatter/blood_test_parameter_norm_formatter.dart';
 import '../formatter/blood_test_parameter_unit_formatter.dart';
 import '../formatter/decimal_text_input_formatter.dart';
+import '../service/blood_parameter_service.dart';
+import 'nullable_text_component.dart';
 import 'text/label_text_components.dart';
 import 'text/title_text_components.dart';
 import 'text_field_component.dart';
@@ -68,11 +70,10 @@ class BloodParameterResultsList extends StatelessWidget {
           (param) => _BloodParameterWithValue(
             bloodParameter: param,
             value: parameterResults
-                    ?.firstWhereOrNull(
-                      (readParam) => readParam.parameter == param,
-                    )
-                    ?.value ??
-                0,
+                ?.firstWhereOrNull(
+                  (readParam) => readParam.parameter == param,
+                )
+                ?.value,
           ),
         )
         .toList();
@@ -231,6 +232,7 @@ class _ParameterRow extends TableRow {
     required Function(double? value) onValueChanged,
   }) {
     final BloodParameter parameter = parameterWithValue.bloodParameter;
+    final double? value = parameterWithValue.value;
     return _ParameterRow(
       children: [
         _ParameterNameCell.buildForParameterName(
@@ -241,7 +243,13 @@ class _ParameterRow extends TableRow {
           unit: parameter.unit,
         ),
         _ResultCell.buildForValue(
-          parameterValue: parameterWithValue.value,
+          parameterValue: value,
+          isValueWithinNorm: value != null
+              ? isParameterValueWithinNorm(
+                  parameter: parameter,
+                  result: value,
+                )
+              : true,
           isEditMode: isEditMode,
           onValueChanged: onValueChanged,
         ),
@@ -299,7 +307,8 @@ class _ResultCell extends TableCell {
         );
 
   _ResultCell.buildForValue({
-    required double parameterValue,
+    required double? parameterValue,
+    required bool isValueWithinNorm,
     required bool isEditMode,
     double padding = 8,
     Function(double? value)? onValueChanged,
@@ -323,9 +332,12 @@ class _ResultCell extends TableCell {
                       }
                     },
                   )
-                : Text(
-                    parameterValue.toString(),
+                : NullableText(
+                    parameterValue?.toString(),
                     textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: isValueWithinNorm ? null : Colors.red,
+                    ),
                   ),
           ),
         );
@@ -333,7 +345,7 @@ class _ResultCell extends TableCell {
 
 class _BloodParameterWithValue {
   final BloodParameter bloodParameter;
-  final double value;
+  final double? value;
 
   const _BloodParameterWithValue({
     required this.bloodParameter,

@@ -299,13 +299,12 @@ enum BloodParameterUnit {
 
 class BloodParameterNorm extends Equatable {
   final double? min;
-  final double? max;
+  final double max;
 
   const BloodParameterNorm({
     this.min,
-    this.max,
-  }) : assert((min != null || max != null) ||
-            (min != null && max != null && min < max));
+    required this.max,
+  }) : assert((min == null) || (min < max));
 
   @override
   List<Object?> get props => [
