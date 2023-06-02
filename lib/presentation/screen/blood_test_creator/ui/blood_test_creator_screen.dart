@@ -14,6 +14,7 @@ import '../../../service/navigator_service.dart';
 import '../../../service/utils.dart';
 import '../bloc/blood_test_creator_bloc.dart';
 
+part 'blood_test_creator_app_bar.dart';
 part 'blood_test_creator_content.dart';
 part 'blood_test_creator_date.dart';
 part 'blood_test_creator_parameters.dart';

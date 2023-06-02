@@ -1,7 +1,7 @@
 part of 'blood_test_creator_screen.dart';
 
-class _ReadingDate extends StatelessWidget {
-  const _ReadingDate();
+class _DateSection extends StatelessWidget {
+  const _DateSection();
 
   @override
   Widget build(BuildContext context) {
@@ -12,15 +12,15 @@ class _ReadingDate extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Data',
+            Str.of(context).bloodTestCreatorDate,
             style: Theme.of(context).textTheme.titleMedium,
           ),
           const SizedBox(height: 8),
           const Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              _ReadingDateText(),
-              _ReadingDateButton(),
+              _Date(),
+              _DateButton(),
             ],
           ),
         ],
@@ -29,8 +29,8 @@ class _ReadingDate extends StatelessWidget {
   }
 }
 
-class _ReadingDateText extends StatelessWidget {
-  const _ReadingDateText();
+class _Date extends StatelessWidget {
+  const _Date();
 
   @override
   Widget build(BuildContext context) {
@@ -47,8 +47,8 @@ class _ReadingDateText extends StatelessWidget {
   }
 }
 
-class _ReadingDateButton extends StatelessWidget {
-  const _ReadingDateButton();
+class _DateButton extends StatelessWidget {
+  const _DateButton();
 
   @override
   Widget build(BuildContext context) {
@@ -61,14 +61,18 @@ class _ReadingDateButton extends StatelessWidget {
         onPressed: () {
           _onPressed(context);
         },
-        child: const Text('Wybierz datę'),
+        child: Text(
+          Str.of(context).bloodTestCreatorSelectDate,
+        ),
       );
     }
     return OutlinedButton(
       onPressed: () {
         _onPressed(context);
       },
-      child: const Text('Edytuj datę'),
+      child: Text(
+        Str.of(context).bloodTestCreatorEditDate,
+      ),
     );
   }
 

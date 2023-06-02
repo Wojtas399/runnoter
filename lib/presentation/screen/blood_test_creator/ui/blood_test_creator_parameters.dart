@@ -1,7 +1,7 @@
 part of 'blood_test_creator_screen.dart';
 
-class _AllParameters extends StatelessWidget {
-  const _AllParameters();
+class _ParametersSection extends StatelessWidget {
+  const _ParametersSection();
 
   @override
   Widget build(BuildContext context) {

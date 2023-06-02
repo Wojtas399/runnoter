@@ -503,6 +503,26 @@
   "@bloodTestsNoTestsMessage": {
     "description": "Message of the info about the lack of blood readings"
   },
+  "bloodTestCreatorScreenTitleAddMode": "Nowe badanie krwi",
+  "@bloodTestCreatorScreenTitleAddMode": {
+    "description": "Title of the blood test creator screen in add mode"
+  },
+  "bloodTestCreatorScreenTitleEditMode": "Edytuj badanie krwi",
+  "@bloodTestCreatorScreenTitleEditMode": {
+    "description": "Title of the blood test creator screen in edit mode"
+  },
+  "bloodTestCreatorDate": "Data",
+  "@bloodTestCreatorDate": {
+    "description": "Label of the date"
+  },
+  "bloodTestCreatorSelectDate": "Wybierz datę",
+  "@bloodTestCreatorSelectDate": {
+    "description": "Label of the button to select date"
+  },
+  "bloodTestCreatorEditDate": "Edytuj datę",
+  "@bloodTestCreatorEditDate": {
+    "description": "Label of the button to edit date"
+  },
   "bloodTestPreviewScreenTitle": "Badanie krwi",
   "@bloodTestPreviewScreenTitle": {
     "description": "Title of the blood reading preview screen"

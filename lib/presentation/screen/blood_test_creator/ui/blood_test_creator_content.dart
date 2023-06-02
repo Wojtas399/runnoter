@@ -6,23 +6,16 @@ class _Content extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        forceMaterialTransparency: true,
-        title: const Text('Blood test creator'),
-        actions: const [
-          _SubmitButton(),
-          SizedBox(width: 16),
-        ],
-      ),
+      appBar: const _AppBar(),
       body: GestureDetector(
         onTap: () {
           unfocusInputs();
         },
         child: const Column(
           children: [
-            _ReadingDate(),
+            _DateSection(),
             Expanded(
-              child: _AllParameters(),
+              child: _ParametersSection(),
             ),
           ],
         ),
