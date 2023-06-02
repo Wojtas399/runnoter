@@ -1,7 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/domain/model/blood_parameter.dart';
+import 'package:runnoter/domain/model/blood_test.dart';
 import 'package:runnoter/presentation/model/bloc_status.dart';
 import 'package:runnoter/presentation/screen/blood_test_creator/bloc/blood_test_creator_bloc.dart';
+
+import '../../../util/blood_test_creator.dart';
 
 void main() {
   late BloodTestCreatorState state;
@@ -92,15 +95,18 @@ void main() {
   );
 
   test(
-    'copy with blood test id',
+    'copy with blood test',
     () {
-      const String expectedBloodTestId = 'bt1';
+      final BloodTest expectedBloodTest = createBloodTest(
+        id: 'bt1',
+        userId: 'u1',
+      );
 
-      state = state.copyWith(bloodTestId: expectedBloodTestId);
+      state = state.copyWith(bloodTest: expectedBloodTest);
       final state2 = state.copyWith();
 
-      expect(state.bloodTestId, expectedBloodTestId);
-      expect(state2.bloodTestId, expectedBloodTestId);
+      expect(state.bloodTest, expectedBloodTest);
+      expect(state2.bloodTest, expectedBloodTest);
     },
   );
 

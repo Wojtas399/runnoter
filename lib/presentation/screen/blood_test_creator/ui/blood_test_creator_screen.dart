@@ -73,10 +73,8 @@ class _BlocListener extends StatelessWidget {
     BuildContext context,
     BloodTestCreatorBlocInfo info,
   ) {
-    switch (info) {
-      case BloodTestCreatorBlocInfo.bloodTestAdded:
-        navigateBack(context: context);
-        break;
+    if (info == BloodTestCreatorBlocInfo.bloodTestAdded) {
+      navigateBack(context: context);
     }
   }
 }

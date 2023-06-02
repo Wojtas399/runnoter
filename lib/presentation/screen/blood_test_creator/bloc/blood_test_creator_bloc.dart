@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../domain/model/blood_parameter.dart';
+import '../../../../domain/model/blood_test.dart';
 import '../../../../domain/repository/blood_test_repository.dart';
 import '../../../../domain/service/auth_service.dart';
 import '../../../model/bloc_state.dart';
@@ -24,9 +25,40 @@ class BloodTestCreatorBloc extends BlocWithStatus<BloodTestCreatorEvent,
   })  : _authService = authService,
         _bloodTestRepository = bloodTestRepository,
         super(state) {
+    on<BloodTestCreatorEventInitialize>(_initialize);
     on<BloodTestCreatorEventDateChanged>(_dateChanged);
     on<BloodTestCreatorEventParameterResultChanged>(_parameterValueChanged);
     on<BloodTestCreatorEventSubmit>(_submit);
+  }
+
+  Future<void> _initialize(
+    BloodTestCreatorEventInitialize event,
+    Emitter<BloodTestCreatorState> emit,
+  ) async {
+    if (event.bloodTestId == null) {
+      return;
+    }
+    final String? loggedUserId = await _authService.loggedUserId$.first;
+    if (loggedUserId == null) {
+      emitNoLoggedUserStatus(emit);
+      return;
+    }
+    final BloodTest? bloodTest = await _bloodTestRepository
+        .getTestById(
+          bloodTestId: event.bloodTestId!,
+          userId: loggedUserId,
+        )
+        .first;
+    if (bloodTest != null) {
+      emit(state.copyWith(
+        status: const BlocStatusComplete<BloodTestCreatorBlocInfo>(
+          info: BloodTestCreatorBlocInfo.bloodTestDataInitialized,
+        ),
+        bloodTest: bloodTest,
+        date: bloodTest.date,
+        parameterResults: bloodTest.parameterResults,
+      ));
+    }
   }
 
   void _dateChanged(
@@ -93,5 +125,6 @@ class BloodTestCreatorBloc extends BlocWithStatus<BloodTestCreatorEvent,
 }
 
 enum BloodTestCreatorBlocInfo {
+  bloodTestDataInitialized,
   bloodTestAdded,
 }

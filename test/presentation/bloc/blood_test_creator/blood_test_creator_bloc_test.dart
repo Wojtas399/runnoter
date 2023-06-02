@@ -2,11 +2,13 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/model/blood_parameter.dart';
+import 'package:runnoter/domain/model/blood_test.dart';
 import 'package:runnoter/presentation/model/bloc_status.dart';
 import 'package:runnoter/presentation/screen/blood_test_creator/bloc/blood_test_creator_bloc.dart';
 
 import '../../../mock/domain/mock_auth_service.dart';
 import '../../../mock/domain/mock_blood_test_repository.dart';
+import '../../../util/blood_test_creator.dart';
 
 void main() {
   final authService = MockAuthService();
@@ -28,11 +30,13 @@ void main() {
 
   BloodTestCreatorState createState({
     BlocStatus status = const BlocStatusInitial(),
+    BloodTest? bloodTest,
     DateTime? date,
     List<BloodParameterResult>? parameterResults,
   }) =>
       BloodTestCreatorState(
         status: status,
+        bloodTest: bloodTest,
         date: date,
         parameterResults: parameterResults,
       );
@@ -41,6 +45,103 @@ void main() {
     reset(authService);
     reset(bloodTestRepository);
   });
+
+  blocTest(
+    'initialize, '
+    'blood test id is not null, '
+    'should load blood test from repository and should update all params in state',
+    build: () => createBloc(),
+    setUp: () {
+      authService.mockGetLoggedUserId(userId: 'u1');
+      bloodTestRepository.mockGetTestById(
+        bloodTest: createBloodTest(
+          id: 'bt1',
+          userId: 'u1',
+          date: DateTime(2023, 5, 10),
+          parameterResults: const [
+            BloodParameterResult(
+              parameter: BloodParameter.wbc,
+              value: 4.45,
+            ),
+          ],
+        ),
+      );
+    },
+    act: (BloodTestCreatorBloc bloc) => bloc.add(
+      const BloodTestCreatorEventInitialize(
+        bloodTestId: 'bt1',
+      ),
+    ),
+    expect: () => [
+      createState(
+        status: const BlocStatusComplete<BloodTestCreatorBlocInfo>(
+          info: BloodTestCreatorBlocInfo.bloodTestDataInitialized,
+        ),
+        bloodTest: createBloodTest(
+          id: 'bt1',
+          userId: 'u1',
+          date: DateTime(2023, 5, 10),
+          parameterResults: const [
+            BloodParameterResult(
+              parameter: BloodParameter.wbc,
+              value: 4.45,
+            ),
+          ],
+        ),
+        date: DateTime(2023, 5, 10),
+        parameterResults: const [
+          BloodParameterResult(
+            parameter: BloodParameter.wbc,
+            value: 4.45,
+          ),
+        ],
+      ),
+    ],
+    verify: (_) {
+      verify(
+        () => authService.loggedUserId$,
+      ).called(1);
+      verify(
+        () => bloodTestRepository.getTestById(
+          bloodTestId: 'bt1',
+          userId: 'u1',
+        ),
+      ).called(1);
+    },
+  );
+
+  blocTest(
+    'initialize, '
+    'blood test id is not null, '
+    'logged user does not exist, '
+    'should emit no logged user info',
+    build: () => createBloc(),
+    setUp: () => authService.mockGetLoggedUserId(),
+    act: (BloodTestCreatorBloc bloc) => bloc.add(
+      const BloodTestCreatorEventInitialize(
+        bloodTestId: 'bt1',
+      ),
+    ),
+    expect: () => [
+      createState(
+        status: const BlocStatusNoLoggedUser(),
+      ),
+    ],
+    verify: (_) => verify(
+      () => authService.loggedUserId$,
+    ).called(1),
+  );
+
+  blocTest(
+    'initialize, '
+    'blood test id is null, '
+    'should do nothing',
+    build: () => createBloc(),
+    act: (BloodTestCreatorBloc bloc) => bloc.add(
+      const BloodTestCreatorEventInitialize(),
+    ),
+    expect: () => [],
+  );
 
   blocTest(
     'date changed, '

@@ -1,13 +1,13 @@
 part of 'blood_test_creator_bloc.dart';
 
 class BloodTestCreatorState extends BlocState<BloodTestCreatorState> {
-  final String? bloodTestId;
+  final BloodTest? bloodTest;
   final DateTime? date;
   final List<BloodParameterResult>? parameterResults;
 
   const BloodTestCreatorState({
     required super.status,
-    this.bloodTestId,
+    this.bloodTest,
     this.date,
     this.parameterResults,
   });
@@ -15,7 +15,7 @@ class BloodTestCreatorState extends BlocState<BloodTestCreatorState> {
   @override
   List<Object?> get props => [
         status,
-        bloodTestId,
+        bloodTest,
         date,
         parameterResults,
       ];
@@ -28,13 +28,13 @@ class BloodTestCreatorState extends BlocState<BloodTestCreatorState> {
   @override
   BloodTestCreatorState copyWith({
     BlocStatus? status,
-    String? bloodTestId,
+    BloodTest? bloodTest,
     DateTime? date,
     List<BloodParameterResult>? parameterResults,
   }) =>
       BloodTestCreatorState(
         status: status ?? const BlocStatusComplete(),
-        bloodTestId: bloodTestId ?? this.bloodTestId,
+        bloodTest: bloodTest ?? this.bloodTest,
         date: date ?? this.date,
         parameterResults: parameterResults ?? this.parameterResults,
       );
