@@ -17,6 +17,13 @@ abstract interface class BloodTestRepository {
     required List<BloodParameterResult> parameterResults,
   });
 
+  Future<void> updateTest({
+    required String bloodTestId,
+    required String userId,
+    DateTime? date,
+    List<BloodParameterResult>? parameterResults,
+  });
+
   Future<void> deleteTest({
     required String bloodTestId,
     required String userId,

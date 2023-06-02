@@ -67,6 +67,16 @@ class BloodTestRepositoryImpl extends StateRepository<BloodTest>
   }
 
   @override
+  Future<void> updateTest({
+    required String bloodTestId,
+    required String userId,
+    DateTime? date,
+    List<BloodParameterResult>? parameterResults,
+  }) async {
+    throw UnimplementedError();
+  }
+
+  @override
   Future<void> deleteTest({
     required String bloodTestId,
     required String userId,
