@@ -59,9 +59,7 @@ class BloodTestRepositoryImpl extends StateRepository<BloodTest>
           parameterResults.map(mapBloodParameterResultToDto).toList(),
     );
     if (addedBloodTestDto != null) {
-      final BloodTest bloodTest = mapBloodTestFromDto(
-        addedBloodTestDto,
-      );
+      final BloodTest bloodTest = mapBloodTestFromDto(addedBloodTestDto);
       addEntity(bloodTest);
     }
   }
@@ -73,7 +71,17 @@ class BloodTestRepositoryImpl extends StateRepository<BloodTest>
     DateTime? date,
     List<BloodParameterResult>? parameterResults,
   }) async {
-    throw UnimplementedError();
+    final updatedTestDto = await _firebaseBloodTestService.updateTest(
+      bloodTestId: bloodTestId,
+      userId: userId,
+      date: date,
+      parameterResultDtos:
+          parameterResults?.map(mapBloodParameterResultToDto).toList(),
+    );
+    if (updatedTestDto != null) {
+      final BloodTest updatedTest = mapBloodTestFromDto(updatedTestDto);
+      updateEntity(updatedTest);
+    }
   }
 
   @override

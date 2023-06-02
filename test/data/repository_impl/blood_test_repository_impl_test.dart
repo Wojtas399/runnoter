@@ -207,7 +207,7 @@ void main() {
     'should call method from firebase service to add new test and should add this test to repository',
     () {
       const String newTestId = 'bt3';
-      final DateTime newTestDate = DateTime(2023, 5, 20);
+      final DateTime date = DateTime(2023, 5, 20);
       const List<BloodParameterResult> parameterResults = [
         BloodParameterResult(
           parameter: BloodParameter.wbc,
@@ -218,29 +218,30 @@ void main() {
           value: 139,
         ),
       ];
+      const List<firebase.BloodParameterResultDto> parameterResultDtos = [
+        firebase.BloodParameterResultDto(
+          parameter: firebase.BloodParameter.wbc,
+          value: 4.45,
+        ),
+        firebase.BloodParameterResultDto(
+          parameter: firebase.BloodParameter.sodium,
+          value: 139,
+        ),
+      ];
       final List<BloodTest> existingTests = [
         createBloodTest(id: 'bt1', userId: userId),
         createBloodTest(id: 'bt2', userId: 'u2'),
       ];
       final firebase.BloodTestDto addedBloodTestDto = createBloodTestDto(
         id: newTestId,
-        date: newTestDate,
+        date: date,
         userId: userId,
-        parameterResultDtos: const [
-          firebase.BloodParameterResultDto(
-            parameter: firebase.BloodParameter.wbc,
-            value: 4.45,
-          ),
-          firebase.BloodParameterResultDto(
-            parameter: firebase.BloodParameter.sodium,
-            value: 139,
-          ),
-        ],
+        parameterResultDtos: parameterResultDtos,
       );
       final BloodTest addedBloodTest = createBloodTest(
         id: newTestId,
         userId: userId,
-        date: newTestDate,
+        date: date,
         parameterResults: parameterResults,
       );
       firebaseBloodTestService.mockAddNewTest(
@@ -252,7 +253,7 @@ void main() {
       bloodTests$.listen((_) {});
       repository.addNewTest(
         userId: userId,
-        date: newTestDate,
+        date: date,
         parameterResults: parameterResults,
       );
 
@@ -268,6 +269,103 @@ void main() {
           ],
         ),
       );
+      verify(
+        () => firebaseBloodTestService.addNewTest(
+          userId: userId,
+          date: date,
+          parameterResultDtos: parameterResultDtos,
+        ),
+      ).called(1);
+    },
+  );
+
+  test(
+    'update test, '
+    'should call method from firebase service to update test and should update this test in repository',
+    () {
+      const String testId = 'bt1';
+      final DateTime updatedDate = DateTime(2023, 5, 20);
+      const List<BloodParameterResult> updatedParameterResults = [
+        BloodParameterResult(
+          parameter: BloodParameter.wbc,
+          value: 4.45,
+        ),
+        BloodParameterResult(
+          parameter: BloodParameter.sodium,
+          value: 139,
+        ),
+      ];
+      const List<firebase.BloodParameterResultDto> updatedParameterResultDtos =
+          [
+        firebase.BloodParameterResultDto(
+          parameter: firebase.BloodParameter.wbc,
+          value: 4.45,
+        ),
+        firebase.BloodParameterResultDto(
+          parameter: firebase.BloodParameter.sodium,
+          value: 139,
+        ),
+      ];
+      final List<BloodTest> existingTests = [
+        createBloodTest(
+          id: 'bt1',
+          userId: userId,
+          date: DateTime(2023, 5, 12),
+          parameterResults: const [
+            BloodParameterResult(
+              parameter: BloodParameter.cpk,
+              value: 300,
+            ),
+          ],
+        ),
+        createBloodTest(id: 'bt2', userId: 'u2'),
+      ];
+      final firebase.BloodTestDto updatedBloodTestDto = createBloodTestDto(
+        id: testId,
+        date: updatedDate,
+        userId: userId,
+        parameterResultDtos: updatedParameterResultDtos,
+      );
+      final BloodTest updatedBloodTest = createBloodTest(
+        id: testId,
+        userId: userId,
+        date: updatedDate,
+        parameterResults: updatedParameterResults,
+      );
+      firebaseBloodTestService.mockUpdateTest(
+        updatedBloodTestDto: updatedBloodTestDto,
+      );
+      repository = createRepository(initialState: existingTests);
+
+      final Stream<List<BloodTest>?> bloodTests$ = repository.dataStream$;
+      bloodTests$.listen((_) {});
+      repository.updateTest(
+        bloodTestId: testId,
+        userId: userId,
+        date: updatedDate,
+        parameterResults: updatedParameterResults,
+      );
+
+      expect(
+        bloodTests$,
+        emitsInOrder(
+          [
+            existingTests,
+            [
+              updatedBloodTest,
+              existingTests[1],
+            ]
+          ],
+        ),
+      );
+      verify(
+        () => firebaseBloodTestService.updateTest(
+          bloodTestId: testId,
+          userId: userId,
+          date: updatedDate,
+          parameterResultDtos: updatedParameterResultDtos,
+        ),
+      ).called(1);
     },
   );
 
