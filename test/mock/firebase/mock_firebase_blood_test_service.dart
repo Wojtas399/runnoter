@@ -36,6 +36,21 @@ class MockFirebaseBloodTestService extends Mock
     ).thenAnswer((invocation) => Future.value(addedBloodTestDto));
   }
 
+  void mockUpdateTest({
+    BloodTestDto? updatedBloodTestDto,
+  }) {
+    when(
+      () => updateTest(
+        bloodTestId: any(named: 'bloodTestId'),
+        userId: any(named: 'userId'),
+        date: any(named: 'date'),
+        parameterResultDtos: any(named: 'parameterResultDtos'),
+      ),
+    ).thenAnswer(
+      (invocation) => Future.value(updatedBloodTestDto),
+    );
+  }
+
   void mockDeleteTest() {
     when(
       () => deleteTest(

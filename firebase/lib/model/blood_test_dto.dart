@@ -43,5 +43,17 @@ class BloodTestDto extends Equatable {
       };
 }
 
+Map<String, dynamic> createBloodTestJsonToUpdate({
+  DateTime? date,
+  List<BloodParameterResultDto>? parameterResultDtos,
+}) =>
+    {
+      if (date != null) _dateField: date,
+      if (parameterResultDtos != null)
+        _parameterResultsField: parameterResultDtos.map(
+          (dto) => dto.toJson(),
+        ),
+    };
+
 const String _dateField = 'date';
 const String _parameterResultsField = 'parameterResults';

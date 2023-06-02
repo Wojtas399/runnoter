@@ -41,6 +41,22 @@ class FirebaseBloodTestService {
     return snapshot.data();
   }
 
+  Future<BloodTestDto?> updateTest({
+    required String bloodTestId,
+    required String userId,
+    DateTime? date,
+    List<BloodParameterResultDto>? parameterResultDtos,
+  }) async {
+    final bloodTestRef = getBloodTestsRef(userId).doc(bloodTestId);
+    final Map<String, dynamic> jsonToUpdate = createBloodTestJsonToUpdate(
+      date: date,
+      parameterResultDtos: parameterResultDtos,
+    );
+    await bloodTestRef.update(jsonToUpdate);
+    final snapshot = await bloodTestRef.get();
+    return snapshot.data();
+  }
+
   Future<void> deleteTest({
     required String bloodTestId,
     required String userId,
