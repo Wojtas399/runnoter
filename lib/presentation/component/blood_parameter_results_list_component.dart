@@ -316,21 +316,9 @@ class _ResultCell extends TableCell {
           child: Padding(
             padding: EdgeInsets.all(padding),
             child: isEditMode
-                ? TextFieldComponent(
-                    maxLines: 1,
-                    keyboardType: TextInputType.number,
-                    maxLength: 10,
-                    inputFormatters: [
-                      DecimalTextInputFormatter(decimalRange: 2),
-                    ],
-                    textAlign: TextAlign.center,
-                    onChanged: (String? valueStr) {
-                      if (valueStr != null && onValueChanged != null) {
-                        onValueChanged(
-                          double.tryParse(valueStr),
-                        );
-                      }
-                    },
+                ? _EditableParameterValue(
+                    initialValue: parameterValue,
+                    onValueChanged: onValueChanged,
                   )
                 : NullableText(
                     parameterValue?.toString(),
@@ -341,6 +329,51 @@ class _ResultCell extends TableCell {
                   ),
           ),
         );
+}
+
+class _EditableParameterValue extends StatefulWidget {
+  final double? initialValue;
+  final Function(double? value)? onValueChanged;
+
+  const _EditableParameterValue({
+    this.initialValue,
+    this.onValueChanged,
+  });
+
+  @override
+  State<StatefulWidget> createState() => _EditableParameterValueState();
+}
+
+class _EditableParameterValueState extends State<_EditableParameterValue> {
+  TextEditingController? _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController();
+    _controller?.text = widget.initialValue?.toString() ?? '';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFieldComponent(
+      maxLines: 1,
+      keyboardType: TextInputType.number,
+      maxLength: 10,
+      inputFormatters: [
+        DecimalTextInputFormatter(decimalRange: 2),
+      ],
+      textAlign: TextAlign.center,
+      controller: _controller,
+      onChanged: (String? valueStr) {
+        if (valueStr != null && widget.onValueChanged != null) {
+          widget.onValueChanged!(
+            double.tryParse(valueStr),
+          );
+        }
+      },
+    );
+  }
 }
 
 class _BloodParameterWithValue {

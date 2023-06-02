@@ -5,8 +5,16 @@ class _AllParameters extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final List<BloodParameterResult>? parameterResults = context.select(
+      (BloodTestCreatorBloc bloc) => bloc.state.parameterResults,
+    );
+
+    if (parameterResults == null) {
+      return const SizedBox();
+    }
     return BloodParameterResultsList(
       isEditMode: true,
+      parameterResults: parameterResults,
       onParameterValueChanged: (
         BloodParameter parameter,
         double? value,

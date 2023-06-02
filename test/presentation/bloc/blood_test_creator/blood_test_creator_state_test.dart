@@ -8,6 +8,19 @@ import '../../../util/blood_test_creator.dart';
 
 void main() {
   late BloodTestCreatorState state;
+  final BloodTest bloodTest = createBloodTest(
+    date: DateTime(2023, 5, 20),
+    parameterResults: const [
+      BloodParameterResult(
+        parameter: BloodParameter.wbc,
+        value: 4.45,
+      ),
+      BloodParameterResult(
+        parameter: BloodParameter.cpk,
+        value: 300,
+      ),
+    ],
+  );
 
   setUp(
     () => state = const BloodTestCreatorState(
@@ -21,6 +34,7 @@ void main() {
     'should be false',
     () {
       state = state.copyWith(
+        bloodTest: bloodTest,
         date: null,
         parameterResults: const [
           BloodParameterResult(
@@ -40,16 +54,9 @@ void main() {
     'should be false',
     () {
       state = state.copyWith(
-        bloodTest: createBloodTest(
-          date: DateTime(2023, 5, 10),
-        ),
-        date: DateTime(2023, 5, 10),
-        parameterResults: const [
-          BloodParameterResult(
-            parameter: BloodParameter.wbc,
-            value: 4.45,
-          ),
-        ],
+        bloodTest: bloodTest,
+        date: bloodTest.date,
+        parameterResults: bloodTest.parameterResults,
       );
 
       expect(state.canSubmit, false);
@@ -62,6 +69,7 @@ void main() {
     'should be false',
     () {
       state = state.copyWith(
+        bloodTest: bloodTest,
         date: DateTime(2023, 5, 12),
         parameterResults: null,
       );
@@ -76,6 +84,7 @@ void main() {
     'should be false',
     () {
       state = state.copyWith(
+        bloodTest: bloodTest,
         date: DateTime(2023, 5, 20),
         parameterResults: const [],
       );
@@ -90,30 +99,9 @@ void main() {
     'should be false',
     () {
       state = state.copyWith(
-        bloodTest: createBloodTest(
-          date: DateTime(2023, 5, 1),
-          parameterResults: const [
-            BloodParameterResult(
-              parameter: BloodParameter.wbc,
-              value: 4.45,
-            ),
-            BloodParameterResult(
-              parameter: BloodParameter.cpk,
-              value: 300,
-            ),
-          ],
-        ),
+        bloodTest: bloodTest,
         date: DateTime(2023, 5, 20),
-        parameterResults: const [
-          BloodParameterResult(
-            parameter: BloodParameter.wbc,
-            value: 4.45,
-          ),
-          BloodParameterResult(
-            parameter: BloodParameter.cpk,
-            value: 300,
-          ),
-        ],
+        parameterResults: bloodTest.parameterResults,
       );
 
       expect(state.canSubmit, false);
@@ -122,28 +110,35 @@ void main() {
 
   test(
     'can submit, '
-    'date and parameter results are valid and are different than original, '
+    'date and parameter results are valid and date is different than original, '
     'should be true',
     () {
       state = state.copyWith(
-        bloodTest: createBloodTest(
-          date: DateTime(2023, 5, 1),
-          parameterResults: const [
-            BloodParameterResult(
-              parameter: BloodParameter.wbc,
-              value: 4.45,
-            ),
-            BloodParameterResult(
-              parameter: BloodParameter.cpk,
-              value: 300,
-            ),
-          ],
-        ),
-        date: DateTime(2023, 5, 20),
+        bloodTest: bloodTest,
+        date: DateTime(2023, 5, 12),
+        parameterResults: bloodTest.parameterResults,
+      );
+
+      expect(state.canSubmit, true);
+    },
+  );
+
+  test(
+    'can submit, '
+    'date and parameter results are valid and parameterResults are different than original, '
+    'should be true',
+    () {
+      state = state.copyWith(
+        bloodTest: bloodTest,
+        date: bloodTest.date,
         parameterResults: const [
           BloodParameterResult(
             parameter: BloodParameter.wbc,
-            value: 4.42,
+            value: 4.40,
+          ),
+          BloodParameterResult(
+            parameter: BloodParameter.cpk,
+            value: 300,
           ),
         ],
       );
