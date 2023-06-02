@@ -76,8 +76,15 @@ class HealthMeasurementsRoute extends CustomRoute {
   const HealthMeasurementsRoute() : super(path: RoutePath.healthMeasurements);
 }
 
-class BloodTestCreatorRoute extends CustomRoute {
-  const BloodTestCreatorRoute() : super(path: RoutePath.bloodTestCreator);
+class BloodTestCreatorRoute extends CustomRouteWithArguments<String?> {
+  final String? bloodTestId;
+
+  const BloodTestCreatorRoute({
+    this.bloodTestId,
+  }) : super(
+          path: RoutePath.bloodTestCreator,
+          arguments: bloodTestId,
+        );
 }
 
 class BloodTestPreviewRoute extends CustomRouteWithArguments<String> {

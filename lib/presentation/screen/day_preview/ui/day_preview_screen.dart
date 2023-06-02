@@ -97,7 +97,7 @@ class _BlocListener extends StatelessWidget {
         _navigateToWorkoutEditor(context);
         break;
       case DayPreviewInfo.workoutDeleted:
-        _showInfoAboutDeleteWorkout(context);
+        _showInfoAboutDeletedWorkout(context);
         break;
     }
   }
@@ -119,7 +119,7 @@ class _BlocListener extends StatelessWidget {
     }
   }
 
-  void _showInfoAboutDeleteWorkout(BuildContext context) {
+  void _showInfoAboutDeletedWorkout(BuildContext context) {
     showSnackbarMessage(
       context: context,
       message: Str.of(context).dayPreviewDeletedWorkoutMessage,

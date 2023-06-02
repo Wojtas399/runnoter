@@ -18,14 +18,18 @@ part 'blood_test_creator_date.dart';
 part 'blood_test_creator_parameters.dart';
 
 class BloodTestCreatorScreen extends StatelessWidget {
+  final String? bloodTestId;
+
   const BloodTestCreatorScreen({
     super.key,
+    this.bloodTestId,
   });
 
   @override
   Widget build(BuildContext context) {
-    return const _BlocProvider(
-      child: _BlocListener(
+    return _BlocProvider(
+      bloodTestId: bloodTestId,
+      child: const _BlocListener(
         child: _Content(),
       ),
     );
@@ -33,9 +37,11 @@ class BloodTestCreatorScreen extends StatelessWidget {
 }
 
 class _BlocProvider extends StatelessWidget {
+  final String? bloodTestId;
   final Widget child;
 
   const _BlocProvider({
+    this.bloodTestId,
     required this.child,
   });
 
@@ -45,7 +51,9 @@ class _BlocProvider extends StatelessWidget {
       create: (BuildContext context) => BloodTestCreatorBloc(
         authService: context.read<AuthService>(),
         bloodTestRepository: context.read<BloodTestRepository>(),
-      ),
+      )..add(
+          BloodTestCreatorEventInitialize(bloodTestId: bloodTestId),
+        ),
       child: child,
     );
   }

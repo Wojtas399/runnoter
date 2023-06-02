@@ -15,24 +15,26 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
         Str.of(context).bloodTestPreviewScreenTitle,
       ),
       actions: const [
-        _BloodTestActions(),
+        _BloodTestActionsMenu(),
       ],
     );
   }
 }
 
-class _BloodTestActions extends StatelessWidget {
-  const _BloodTestActions();
+enum _BloodTestAction { edit, delete }
+
+class _BloodTestActionsMenu extends StatelessWidget {
+  const _BloodTestActionsMenu();
 
   @override
   Widget build(BuildContext context) {
-    return PopupMenuButton(
+    return PopupMenuButton<_BloodTestAction>(
+      onSelected: (_BloodTestAction action) {
+        _manageActions(context, action);
+      },
       itemBuilder: (BuildContext context) => [
-        PopupMenuItem<int>(
-          value: 0,
-          onTap: () {
-            _onEditActionPressed(context);
-          },
+        PopupMenuItem<_BloodTestAction>(
+          value: _BloodTestAction.edit,
           child: Row(
             children: [
               const Icon(Icons.edit_outlined),
@@ -43,11 +45,8 @@ class _BloodTestActions extends StatelessWidget {
             ],
           ),
         ),
-        PopupMenuItem<int>(
-          value: 1,
-          onTap: () {
-            _onDeleteActionPressed(context);
-          },
+        PopupMenuItem<_BloodTestAction>(
+          value: _BloodTestAction.delete,
           child: Row(
             children: [
               const Icon(Icons.delete_outline),
@@ -62,11 +61,31 @@ class _BloodTestActions extends StatelessWidget {
     );
   }
 
-  void _onEditActionPressed(BuildContext context) {
-    //TODO
+  void _manageActions(BuildContext context, _BloodTestAction action) {
+    switch (action) {
+      case _BloodTestAction.edit:
+        _editTest(context);
+        break;
+      case _BloodTestAction.delete:
+        _deleteTest(context);
+        break;
+    }
   }
 
-  Future<void> _onDeleteActionPressed(BuildContext context) async {
+  void _editTest(BuildContext context) {
+    final String? bloodTestId =
+        context.read<BloodTestPreviewBloc>().state.bloodTestId;
+    if (bloodTestId != null) {
+      navigateTo(
+        context: context,
+        route: BloodTestCreatorRoute(
+          bloodTestId: bloodTestId,
+        ),
+      );
+    }
+  }
+
+  Future<void> _deleteTest(BuildContext context) async {
     final BloodTestPreviewBloc bloc = context.read<BloodTestPreviewBloc>();
     final bool confirmed = await askForConfirmation(
       context: context,

@@ -48,7 +48,9 @@ class AppNavigator extends StatelessWidget {
     } else if (routePath == RoutePath.healthMeasurements.path) {
       screen = const HealthMeasurementsScreen();
     } else if (routePath == RoutePath.bloodTestCreator.path) {
-      screen = const BloodTestCreatorScreen();
+      screen = BloodTestCreatorScreen(
+        bloodTestId: settings.arguments as String?,
+      );
     } else if (routePath == RoutePath.bloodTestPreview.path) {
       screen = BloodTestPreviewScreen(
         bloodTestId: settings.arguments as String,
