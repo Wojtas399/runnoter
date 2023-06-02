@@ -16,7 +16,7 @@ void main() {
   );
 
   test(
-    'are date valid, '
+    'can submit, '
     'date is null, '
     'should be false',
     () {
@@ -30,45 +30,20 @@ void main() {
         ],
       );
 
-      expect(state.areDataValid, false);
+      expect(state.canSubmit, false);
     },
   );
 
   test(
-    'are data valid, '
-    'parameter results are null, '
+    'can submit, '
+    'date is same as original, '
     'should be false',
     () {
       state = state.copyWith(
-        date: DateTime(2023, 5, 12),
-        parameterResults: null,
-      );
-
-      expect(state.areDataValid, false);
-    },
-  );
-
-  test(
-    'are data valid, '
-    'list of parameter results is empty, '
-    'should be false',
-    () {
-      state = state.copyWith(
-        date: DateTime(2023, 5, 20),
-        parameterResults: const [],
-      );
-
-      expect(state.areDataValid, false);
-    },
-  );
-
-  test(
-    'are data valid, '
-    'date and parameter results are valid, '
-    'should be true',
-    () {
-      state = state.copyWith(
-        date: DateTime(2023, 5, 20),
+        bloodTest: createBloodTest(
+          date: DateTime(2023, 5, 10),
+        ),
+        date: DateTime(2023, 5, 10),
         parameterResults: const [
           BloodParameterResult(
             parameter: BloodParameter.wbc,
@@ -77,7 +52,103 @@ void main() {
         ],
       );
 
-      expect(state.areDataValid, true);
+      expect(state.canSubmit, false);
+    },
+  );
+
+  test(
+    'can submit, '
+    'parameter results are null, '
+    'should be false',
+    () {
+      state = state.copyWith(
+        date: DateTime(2023, 5, 12),
+        parameterResults: null,
+      );
+
+      expect(state.canSubmit, false);
+    },
+  );
+
+  test(
+    'can submit, '
+    'list of parameter results is empty, '
+    'should be false',
+    () {
+      state = state.copyWith(
+        date: DateTime(2023, 5, 20),
+        parameterResults: const [],
+      );
+
+      expect(state.canSubmit, false);
+    },
+  );
+
+  test(
+    'can submit, '
+    'parameter results are same as original, '
+    'should be false',
+    () {
+      state = state.copyWith(
+        bloodTest: createBloodTest(
+          date: DateTime(2023, 5, 1),
+          parameterResults: const [
+            BloodParameterResult(
+              parameter: BloodParameter.wbc,
+              value: 4.45,
+            ),
+            BloodParameterResult(
+              parameter: BloodParameter.cpk,
+              value: 300,
+            ),
+          ],
+        ),
+        date: DateTime(2023, 5, 20),
+        parameterResults: const [
+          BloodParameterResult(
+            parameter: BloodParameter.wbc,
+            value: 4.45,
+          ),
+          BloodParameterResult(
+            parameter: BloodParameter.cpk,
+            value: 300,
+          ),
+        ],
+      );
+
+      expect(state.canSubmit, false);
+    },
+  );
+
+  test(
+    'can submit, '
+    'date and parameter results are valid and are different than original, '
+    'should be true',
+    () {
+      state = state.copyWith(
+        bloodTest: createBloodTest(
+          date: DateTime(2023, 5, 1),
+          parameterResults: const [
+            BloodParameterResult(
+              parameter: BloodParameter.wbc,
+              value: 4.45,
+            ),
+            BloodParameterResult(
+              parameter: BloodParameter.cpk,
+              value: 300,
+            ),
+          ],
+        ),
+        date: DateTime(2023, 5, 20),
+        parameterResults: const [
+          BloodParameterResult(
+            parameter: BloodParameter.wbc,
+            value: 4.42,
+          ),
+        ],
+      );
+
+      expect(state.canSubmit, true);
     },
   );
 

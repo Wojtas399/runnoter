@@ -20,10 +20,30 @@ class BloodTestCreatorState extends BlocState<BloodTestCreatorState> {
         parameterResults,
       ];
 
-  bool get areDataValid =>
+  bool get canSubmit =>
       date != null &&
+      date != bloodTest?.date &&
       parameterResults != null &&
-      parameterResults?.isEmpty == false;
+      parameterResults?.isEmpty == false &&
+      _areParameterResultsNotSameAsOriginal;
+
+  bool get _areParameterResultsNotSameAsOriginal {
+    if (parameterResults == null || bloodTest?.parameterResults == null) {
+      return true;
+    }
+    for (final newParameterResult in parameterResults!) {
+      bool isNew = true;
+      for (final existingParameterResult in bloodTest!.parameterResults) {
+        if (newParameterResult == existingParameterResult) {
+          isNew = false;
+        }
+      }
+      if (isNew == true) {
+        return true;
+      }
+    }
+    return false;
+  }
 
   @override
   BloodTestCreatorState copyWith({

@@ -103,7 +103,7 @@ class BloodTestCreatorBloc extends BlocWithStatus<BloodTestCreatorEvent,
     BloodTestCreatorEventSubmit event,
     Emitter<BloodTestCreatorState> emit,
   ) async {
-    if (!state.areDataValid) {
+    if (!state.canSubmit) {
       return;
     }
     final String? loggedUserId = await _authService.loggedUserId$.first;

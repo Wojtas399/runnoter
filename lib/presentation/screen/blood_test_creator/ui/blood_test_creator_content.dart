@@ -37,7 +37,7 @@ class _SubmitButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool isDisabled = context.select(
-      (BloodTestCreatorBloc bloc) => !bloc.state.areDataValid,
+      (BloodTestCreatorBloc bloc) => !bloc.state.canSubmit,
     );
 
     return FilledButton(
