@@ -53,6 +53,7 @@ class _SubmitButton extends StatelessWidget {
   }
 
   void _onPressed(BuildContext context) {
+    unfocusInputs();
     context.read<BloodTestCreatorBloc>().add(
           const BloodTestCreatorEventSubmit(),
         );

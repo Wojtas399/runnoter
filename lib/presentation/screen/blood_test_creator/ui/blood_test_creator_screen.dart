@@ -9,6 +9,7 @@ import '../../../component/bloc_with_status_listener_component.dart';
 import '../../../component/blood_parameter_results_list_component.dart';
 import '../../../component/text/title_text_components.dart';
 import '../../../formatter/date_formatter.dart';
+import '../../../service/dialog_service.dart';
 import '../../../service/navigator_service.dart';
 import '../../../service/utils.dart';
 import '../bloc/blood_test_creator_bloc.dart';
@@ -83,6 +84,16 @@ class _BlocListener extends StatelessWidget {
   ) {
     if (info == BloodTestCreatorBlocInfo.bloodTestAdded) {
       navigateBack(context: context);
+      showSnackbarMessage(
+        context: context,
+        message: 'Pomyślnie dodano badanie krwi',
+      );
+    } else if (info == BloodTestCreatorBlocInfo.bloodTestUpdated) {
+      navigateBack(context: context);
+      showSnackbarMessage(
+        context: context,
+        message: 'Pomyślnie zaktualizowano badanie krwi',
+      );
     }
   }
 }

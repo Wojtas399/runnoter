@@ -15,6 +15,7 @@ void main() {
   final bloodTestRepository = MockBloodTestRepository();
 
   BloodTestCreatorBloc createBloc({
+    BloodTest? bloodTest,
     DateTime? date,
     List<BloodParameterResult>? parameterResults,
   }) =>
@@ -23,6 +24,7 @@ void main() {
         bloodTestRepository: bloodTestRepository,
         state: BloodTestCreatorState(
           status: const BlocStatusInitial(),
+          bloodTest: bloodTest,
           date: date,
           parameterResults: parameterResults,
         ),
@@ -74,9 +76,7 @@ void main() {
     ),
     expect: () => [
       createState(
-        status: const BlocStatusComplete<BloodTestCreatorBlocInfo>(
-          info: BloodTestCreatorBlocInfo.bloodTestDataInitialized,
-        ),
+        status: const BlocStatusComplete(),
         bloodTest: createBloodTest(
           id: 'bt1',
           userId: 'u1',
@@ -135,12 +135,17 @@ void main() {
   blocTest(
     'initialize, '
     'blood test id is null, '
-    'should do nothing',
+    'should set list of parameter results as empty in state',
     build: () => createBloc(),
     act: (BloodTestCreatorBloc bloc) => bloc.add(
       const BloodTestCreatorEventInitialize(),
     ),
-    expect: () => [],
+    expect: () => [
+      createState(
+        status: const BlocStatusComplete(),
+        parameterResults: [],
+      ),
+    ],
   );
 
   blocTest(
@@ -316,6 +321,7 @@ void main() {
 
   blocTest(
     'submit, '
+    'blood test in state is null, '
     'should call method from blood test repository to add new blood test and should emit info that new test has been added',
     build: () => createBloc(
       date: DateTime(2023, 5, 20),
@@ -375,6 +381,116 @@ void main() {
       ).called(1);
       verify(
         () => bloodTestRepository.addNewTest(
+          userId: 'u1',
+          date: DateTime(2023, 5, 20),
+          parameterResults: const [
+            BloodParameterResult(
+              parameter: BloodParameter.wbc,
+              value: 4.45,
+            ),
+            BloodParameterResult(
+              parameter: BloodParameter.sodium,
+              value: 139,
+            ),
+          ],
+        ),
+      ).called(1);
+    },
+  );
+
+  blocTest(
+    'submit, '
+    'blood test in state is not null, '
+    'should call method from blood test repository to update blood test and should emit info that new test has been updated',
+    build: () => createBloc(
+      bloodTest: createBloodTest(
+        id: 'bt1',
+        date: DateTime(2023, 5, 12),
+        parameterResults: const [
+          BloodParameterResult(
+            parameter: BloodParameter.cpk,
+            value: 300,
+          ),
+        ],
+      ),
+      date: DateTime(2023, 5, 20),
+      parameterResults: const [
+        BloodParameterResult(
+          parameter: BloodParameter.wbc,
+          value: 4.45,
+        ),
+        BloodParameterResult(
+          parameter: BloodParameter.sodium,
+          value: 139,
+        ),
+      ],
+    ),
+    setUp: () {
+      authService.mockGetLoggedUserId(userId: 'u1');
+      bloodTestRepository.mockUpdateTest();
+    },
+    act: (BloodTestCreatorBloc bloc) => bloc.add(
+      const BloodTestCreatorEventSubmit(),
+    ),
+    expect: () => [
+      createState(
+        status: const BlocStatusLoading(),
+        bloodTest: createBloodTest(
+          id: 'bt1',
+          date: DateTime(2023, 5, 12),
+          parameterResults: const [
+            BloodParameterResult(
+              parameter: BloodParameter.cpk,
+              value: 300,
+            ),
+          ],
+        ),
+        date: DateTime(2023, 5, 20),
+        parameterResults: const [
+          BloodParameterResult(
+            parameter: BloodParameter.wbc,
+            value: 4.45,
+          ),
+          BloodParameterResult(
+            parameter: BloodParameter.sodium,
+            value: 139,
+          ),
+        ],
+      ),
+      createState(
+        status: const BlocStatusComplete<BloodTestCreatorBlocInfo>(
+          info: BloodTestCreatorBlocInfo.bloodTestUpdated,
+        ),
+        bloodTest: createBloodTest(
+          id: 'bt1',
+          date: DateTime(2023, 5, 12),
+          parameterResults: const [
+            BloodParameterResult(
+              parameter: BloodParameter.cpk,
+              value: 300,
+            ),
+          ],
+        ),
+        date: DateTime(2023, 5, 20),
+        parameterResults: const [
+          BloodParameterResult(
+            parameter: BloodParameter.wbc,
+            value: 4.45,
+          ),
+          BloodParameterResult(
+            parameter: BloodParameter.sodium,
+            value: 139,
+          ),
+        ],
+      ),
+    ],
+    verify: (_) {
+      verify(
+        () => authService.loggedUserId$,
+      ).called(1);
+      verify(
+        () => bloodTestRepository.updateTest(
+          bloodTestId: 'bt1',
           userId: 'u1',
           date: DateTime(2023, 5, 20),
           parameterResults: const [

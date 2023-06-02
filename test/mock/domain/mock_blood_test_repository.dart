@@ -39,6 +39,8 @@ class MockBloodTestRepository extends Mock implements BloodTestRepository {
       () => updateTest(
         bloodTestId: any(named: 'bloodTestId'),
         userId: any(named: 'userId'),
+        date: any(named: 'date'),
+        parameterResults: any(named: 'parameterResults'),
       ),
     ).thenAnswer((invocation) => Future.value());
   }
