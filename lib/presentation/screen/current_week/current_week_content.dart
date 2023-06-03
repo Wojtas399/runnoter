@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../current_week_cubit.dart';
+import '../../../domain/bloc/current_week/current_week_cubit.dart';
 import 'day_item.dart';
 
 class CurrentWeekContent extends StatelessWidget {

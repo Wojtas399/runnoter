@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
-import '../../../../domain/entity/workout.dart';
-import '../../../../domain/entity/workout_stage.dart';
-import '../../../../domain/entity/workout_status.dart';
-import '../../../config/navigation/routes.dart';
-import '../../../formatter/date_formatter.dart';
-import '../../../formatter/workout_stage_formatter.dart';
-import '../../../formatter/workout_status_formatter.dart';
-import '../../../service/navigator_service.dart';
-import '../current_week_cubit.dart';
+import '../../../domain/bloc/current_week/current_week_cubit.dart';
+import '../../../domain/entity/workout.dart';
+import '../../../domain/entity/workout_stage.dart';
+import '../../../domain/entity/workout_status.dart';
+import '../../config/navigation/routes.dart';
+import '../../formatter/date_formatter.dart';
+import '../../formatter/workout_stage_formatter.dart';
+import '../../formatter/workout_status_formatter.dart';
+import '../../service/navigator_service.dart';
 
 class DayItem extends StatelessWidget {
   final Day day;
