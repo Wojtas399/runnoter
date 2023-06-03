@@ -1,9 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/entity/settings.dart';
-import '../../../domain/entity/user.dart';
-import '../../../domain/repository/user_repository.dart';
-import '../../../domain/service/auth_service.dart';
+import '../../entity/settings.dart';
+import '../../entity/user.dart';
+import '../../repository/user_repository.dart';
+import '../../service/auth_service.dart';
 
 class DistanceUnitCubit extends Cubit<DistanceUnit?> {
   final AuthService _authService;
