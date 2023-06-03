@@ -7,9 +7,9 @@ import '../../../../domain/model/blood_parameter.dart';
 import '../../../../domain/model/blood_test.dart';
 import '../../../../domain/repository/blood_test_repository.dart';
 import '../../../../domain/service/auth_service.dart';
-import '../../../model/bloc_state.dart';
-import '../../../model/bloc_status.dart';
-import '../../../model/bloc_with_status.dart';
+import '../../../presentation/model/bloc_state.dart';
+import '../../../presentation/model/bloc_status.dart';
+import '../../../presentation/model/bloc_with_status.dart';
 
 part 'blood_test_preview_event.dart';
 part 'blood_test_preview_state.dart';
