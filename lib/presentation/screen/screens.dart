@@ -1,4 +1,4 @@
-export 'blood_test_creator/ui/blood_test_creator_screen.dart';
+export 'blood_test_creator/blood_test_creator_screen.dart';
 export 'blood_test_preview/ui/blood_test_preview_screen.dart';
 export 'blood_tests/ui/blood_tests_screen.dart';
 export 'calendar/calendar_screen.dart';
