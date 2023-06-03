@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../../domain/entity/blood_test.dart';
-import '../../../../domain/repository/blood_test_repository.dart';
-import '../../../../domain/service/auth_service.dart';
-import '../../../component/empty_content_info_component.dart';
-import '../../../component/text/title_text_components.dart';
-import '../../../config/navigation/routes.dart';
-import '../../../formatter/date_formatter.dart';
-import '../../../service/navigator_service.dart';
-import '../blood_tests_cubit.dart';
+import '../../../domain/bloc/blood_tests/blood_tests_cubit.dart';
+import '../../../domain/entity/blood_test.dart';
+import '../../../domain/repository/blood_test_repository.dart';
+import '../../../domain/service/auth_service.dart';
+import '../../component/empty_content_info_component.dart';
+import '../../component/text/title_text_components.dart';
+import '../../config/navigation/routes.dart';
+import '../../formatter/date_formatter.dart';
+import '../../service/navigator_service.dart';
 
 part 'blood_tests_content.dart';
 part 'blood_tests_list.dart';

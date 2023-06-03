@@ -1,7 +1,7 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/presentation/screen/blood_tests/blood_tests_cubit.dart';
+import 'package:runnoter/domain/bloc/blood_tests/blood_tests_cubit.dart';
 
 import '../../../mock/domain/mock_auth_service.dart';
 import '../../../mock/domain/mock_blood_test_repository.dart';

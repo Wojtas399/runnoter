@@ -4,9 +4,9 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
-import '../../../domain/entity/blood_test.dart';
-import '../../../domain/repository/blood_test_repository.dart';
-import '../../../domain/service/auth_service.dart';
+import '../../entity/blood_test.dart';
+import '../../repository/blood_test_repository.dart';
+import '../../service/auth_service.dart';
 
 class BloodTestsCubit extends Cubit<List<BloodTestsFromYear>?> {
   final AuthService _authService;
