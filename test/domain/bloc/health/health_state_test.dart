@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
+import 'package:runnoter/domain/bloc/health/health_bloc.dart';
 import 'package:runnoter/domain/entity/health_measurement.dart';
-import 'package:runnoter/presentation/screen/health/bloc/health_bloc.dart';
-import 'package:runnoter/presentation/screen/health/bloc/health_chart_service.dart';
+import 'package:runnoter/domain/service/health_chart_service.dart';
 
 void main() {
   late HealthState state;

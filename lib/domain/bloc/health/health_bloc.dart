@@ -10,7 +10,7 @@ import '../../../../domain/additional_model/bloc_with_status.dart';
 import '../../../../domain/entity/health_measurement.dart';
 import '../../../../domain/repository/health_measurement_repository.dart';
 import '../../../../domain/service/auth_service.dart';
-import 'health_chart_service.dart';
+import '../../service/health_chart_service.dart';
 
 part 'health_event.dart';
 part 'health_state.dart';

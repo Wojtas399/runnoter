@@ -1,8 +1,8 @@
 import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
 
-import '../../../../common/date_service.dart';
-import '../../../../domain/entity/health_measurement.dart';
+import '../../../common/date_service.dart';
+import '../../../domain/entity/health_measurement.dart';
 
 class HealthChartService {
   final DateService _dateService;

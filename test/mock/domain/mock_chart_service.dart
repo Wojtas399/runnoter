@@ -1,5 +1,5 @@
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/presentation/screen/health/bloc/health_chart_service.dart';
+import 'package:runnoter/domain/service/health_chart_service.dart';
 
 class MockHealthChartService extends Mock implements HealthChartService {
   void mockCreatePointsOfCharts({
