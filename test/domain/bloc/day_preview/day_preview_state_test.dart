@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
+import 'package:runnoter/domain/bloc/day_preview/day_preview_bloc.dart';
 import 'package:runnoter/domain/entity/workout_stage.dart';
 import 'package:runnoter/domain/entity/workout_status.dart';
-import 'package:runnoter/presentation/screen/day_preview/bloc/day_preview_bloc.dart';
 
 void main() {
   late DayPreviewState state;
