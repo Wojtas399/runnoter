@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../health/ui/health_screen.dart';
 import '../../screens.dart';
 import '../bloc/home_bloc.dart';
 import '../bloc/home_state.dart';
@@ -14,7 +13,7 @@ class HomeContent extends StatelessWidget {
     _BottomNavPage(),
     const ProfileScreen(),
     const MileageScreen(),
-    const SizedBox(),
+    const BloodTestsScreen(),
     const SizedBox(),
   ];
 

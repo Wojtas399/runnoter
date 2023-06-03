@@ -3,3 +3,4 @@ template-arb-file: app_pl.arb
 output-localization_file: app_localizations.dart
 output-class: Str
 nullable-getter: false
+untranslated-messages-file: untranslated_messages.txt

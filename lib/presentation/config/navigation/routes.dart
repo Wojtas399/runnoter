@@ -1,12 +1,19 @@
 import '../../screen/screens.dart';
 
-abstract class CustomRoute<T> {
+abstract class CustomRoute {
   final RoutePath path;
-  final T? arguments;
 
   const CustomRoute({
     required this.path,
-    this.arguments,
+  });
+}
+
+abstract class CustomRouteWithArguments<T> extends CustomRoute {
+  final T arguments;
+
+  const CustomRouteWithArguments({
+    required super.path,
+    required this.arguments,
   });
 }
 
@@ -26,7 +33,7 @@ class HomeRoute extends CustomRoute {
   const HomeRoute() : super(path: RoutePath.home);
 }
 
-class DayPreviewRoute extends CustomRoute<DateTime> {
+class DayPreviewRoute extends CustomRouteWithArguments<DateTime> {
   const DayPreviewRoute({
     required DateTime date,
   }) : super(
@@ -35,7 +42,8 @@ class DayPreviewRoute extends CustomRoute<DateTime> {
         );
 }
 
-class WorkoutCreatorRoute extends CustomRoute<WorkoutCreatorArguments> {
+class WorkoutCreatorRoute
+    extends CustomRouteWithArguments<WorkoutCreatorArguments> {
   const WorkoutCreatorRoute({
     required WorkoutCreatorArguments creatorArguments,
   }) : super(
@@ -45,7 +53,7 @@ class WorkoutCreatorRoute extends CustomRoute<WorkoutCreatorArguments> {
 }
 
 class WorkoutStatusCreatorRoute
-    extends CustomRoute<WorkoutStatusCreatorArguments> {
+    extends CustomRouteWithArguments<WorkoutStatusCreatorArguments> {
   const WorkoutStatusCreatorRoute({
     required WorkoutStatusCreatorArguments creatorArguments,
   }) : super(
@@ -54,7 +62,8 @@ class WorkoutStatusCreatorRoute
         );
 }
 
-class HealthMeasurementCreatorRoute extends CustomRoute<DateTime?> {
+class HealthMeasurementCreatorRoute
+    extends CustomRouteWithArguments<DateTime?> {
   const HealthMeasurementCreatorRoute({
     DateTime? date,
   }) : super(
@@ -65,6 +74,26 @@ class HealthMeasurementCreatorRoute extends CustomRoute<DateTime?> {
 
 class HealthMeasurementsRoute extends CustomRoute {
   const HealthMeasurementsRoute() : super(path: RoutePath.healthMeasurements);
+}
+
+class BloodTestCreatorRoute extends CustomRouteWithArguments<String?> {
+  final String? bloodTestId;
+
+  const BloodTestCreatorRoute({
+    this.bloodTestId,
+  }) : super(
+          path: RoutePath.bloodTestCreator,
+          arguments: bloodTestId,
+        );
+}
+
+class BloodTestPreviewRoute extends CustomRouteWithArguments<String> {
+  const BloodTestPreviewRoute({
+    required String bloodTestId,
+  }) : super(
+          arguments: bloodTestId,
+          path: RoutePath.bloodTestPreview,
+        );
 }
 
 class ThemeModeRoute extends CustomRoute {
@@ -93,6 +122,8 @@ enum RoutePath {
   workoutStatusCreator('/home/day-preview/workout-status-creator'),
   healthMeasurementCreator('/home/health_measurement-creator'),
   healthMeasurements('/home/health-measurements'),
+  bloodTestCreator('/home/blood-test-creator'),
+  bloodTestPreview('/home/blood-test-preview'),
   themeMode('/home/profile/theme-mode'),
   language('/home/profile/language'),
   distanceUnit('/home/profile/distance-unit'),

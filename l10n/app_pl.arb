@@ -39,8 +39,6 @@
   "@signInWrongPasswordDialogMessage": {
     "description": "Message of the dialog to inform that password is wrong"
   },
-
-
   "signUpScreenTitle": "Rejestracja",
   "@signUpScreenTitle": {
     "description": "Title of sign up screen"
@@ -61,8 +59,6 @@
   "@signUpAlreadyTakenEmailDialogMessage": {
     "description": "Message of the dialog to inform that email is already taken"
   },
-
-
   "forgotPasswordScreenTitle": "Zapomniałeś hasła?",
   "@forgotPasswordScreenTitle": {
     "description": "Title of the message displaying on forgot password screen"
@@ -99,8 +95,6 @@
   "@forgotPasswordUserNotFoundDialogMessage": {
     "description": "Message of the dialog to inform that user does not exist"
   },
-
-
   "homeCurrentWeekPageTitle": "Obecny tydzień",
   "@homeCurrentWeekPageTitle": {
     "description": "Title of current week page"
@@ -125,9 +119,9 @@
   "@homeDrawerMileage": {
     "description": "Label of drawer's mileage option"
   },
-  "homeDrawerBlood": "Krew",
-  "@homeDrawerBlood": {
-    "description": "Label of drawer's blood option"
+  "homeDrawerBloodTests": "Badania krwi",
+  "@homeDrawerBloodTests": {
+    "description": "Label of drawer's blood readings option"
   },
   "homeDrawerCompetitions": "Starty w zawodach",
   "@homeDrawerCompetitions": {
@@ -145,8 +139,6 @@
   "@homeSignOutConfirmationDialogMessage": {
     "description": "Message of the dialog to confirm sign out"
   },
-
-
   "dayPreviewScreenTitle": "Podgląd dnia",
   "@dayPreviewScreenTitle": {
     "description": "Title of the day preview screen"
@@ -223,8 +215,6 @@
   "@dayPreviewDeletedWorkoutMessage": {
     "description": "Message to inform that workout has been deleted"
   },
-
-
   "workoutCreatorScreenNewWorkoutTitle": "Nowy trening",
   "@workoutCreatorScreenNewWorkoutTitle": {
     "description": "Title of the workout creator screen in add mode"
@@ -269,8 +259,6 @@
   "@workoutCreatorUpdatedWorkoutMessage": {
     "description": "Message to inform that workout has been updated"
   },
-
-
   "workoutStageCreatorScreenTitle": "Nowy etap treningu",
   "@workoutStageCreatorScreenTitle": {
     "description": "Title of the workout stage creator screen"
@@ -303,8 +291,6 @@
   "@workoutStageCreatorJoggingDistance": {
     "description": "Jogging distance"
   },
-
-
   "workoutStatusCreatorScreenTitle": "Status treningu",
   "@workoutStatusCreatorScreenTitle": {
     "description": "Title of workout status creator screen"
@@ -341,8 +327,6 @@
   "@workoutStatusCreatorSavedStatusMessage": {
     "description": "Info about successfully saved status"
   },
-
-
   "healthTodayMeasurement": "Dzisiejszy pomiar",
   "@healthTodayMeasurement": {
     "description": "Label of today measurement"
@@ -379,8 +363,6 @@
   "@healthShowAllMeasurementsButton": {
     "description": "Label of the button to show all measurements"
   },
-
-
   "healthMeasurementCreatorScreenTitle": "Pomiar zdrowia",
   "@healthMeasurementCreatorScreenTitle": {
     "description": "Title of the health measurement creator screen"
@@ -399,8 +381,6 @@
       }
     }
   },
-
-
   "healthMeasurementsScreenTitle": "Wszystkie pomiary",
   "@healthMeasurementsScreenTitle": {
     "description": "Title of the screen displaying all health measurements"
@@ -427,8 +407,6 @@
   "@healthMeasurementsDeletedMeasurementMessage": {
     "description": "Message about deleted measurement"
   },
-
-
   "profileUserData": "Dane użytkownika",
   "@profileUserData": {
     "description": "Title of the user data section"
@@ -505,8 +483,6 @@
   "@profileWrongCurrentPasswordDialogMessage": {
     "description": "Message of the dialog to inform that given current password is wrong"
   },
-
-
   "mileageNoDataTitle": "Brak danych",
   "@mileageNoDataTitle": {
     "description": "Title of the information about not data to display mileage charts"
@@ -515,8 +491,82 @@
   "@mileageNoDataMessage": {
     "description": "Message of the information about no data to display mileage"
   },
-
-
+  "bloodTestsAddNewBloodTest": "Dodaj nowe badanie",
+  "@bloodTestAddNewBloodTest": {
+    "description": "Label of the button to add new results"
+  },
+  "bloodTestsNoTestsTitle": "Brak badań krwi",
+  "@bloodTestsNoTestsTitle": {
+    "description": "Title of the info about the lack of blood readings"
+  },
+  "bloodTestsNoTestsMessage": "Dodaj wyniki badania krwi, aby mieć możliwość przeglądania tej listy",
+  "@bloodTestsNoTestsMessage": {
+    "description": "Message of the info about the lack of blood readings"
+  },
+  "bloodTestCreatorScreenTitleAddMode": "Nowe badanie krwi",
+  "@bloodTestCreatorScreenTitleAddMode": {
+    "description": "Title of the blood test creator screen in add mode"
+  },
+  "bloodTestCreatorScreenTitleEditMode": "Edytuj badanie krwi",
+  "@bloodTestCreatorScreenTitleEditMode": {
+    "description": "Title of the blood test creator screen in edit mode"
+  },
+  "bloodTestCreatorDate": "Data",
+  "@bloodTestCreatorDate": {
+    "description": "Label of the date"
+  },
+  "bloodTestCreatorSelectDate": "Wybierz datę",
+  "@bloodTestCreatorSelectDate": {
+    "description": "Label of the button to select date"
+  },
+  "bloodTestCreatorEditDate": "Edytuj datę",
+  "@bloodTestCreatorEditDate": {
+    "description": "Label of the button to edit date"
+  },
+  "bloodTestCreatorSuccessfullyAddedTest": "Pomyślnie dodano badanie krwi",
+  "@bloodTestCreatorSuccessfullyAddedTest": {
+    "description": "Message to inform that blood test has been added"
+  },
+  "bloodTestCreatorSuccessfullyEditedTest": "Pomyślnie zaktualizowano badanie krwi",
+  "@bloodTestCreatorSuccessfullyEditedTest": {
+    "description": "Message to inform that blood test has been edited"
+  },
+  "bloodTestPreviewScreenTitle": "Badanie krwi",
+  "@bloodTestPreviewScreenTitle": {
+    "description": "Title of the blood reading preview screen"
+  },
+  "bloodTestPreviewDeleteTestTitle": "Usunięcie badania krwi",
+  "@bloodTestPreviewDeleteTestTitle": {
+    "description": "Title of the confirmation dialog to delete blood test"
+  },
+  "bloodTestPreviewDeleteTestMessage": "Tej operacji nie można cofnąć. Czy na pewno chcesz usunąć to badanie krwi?",
+  "@bloodTestPreviewDeleteTestMessage": {
+    "description": "Message of the confirmation dialog to delete blood test"
+  },
+  "bloodTestPreviewDeletedTestMessage": "Pomyślnie usunięto badanie krwi",
+  "@bloodTestPreviewDeletedTestMessage": {
+    "description": "Message to inform that blood test has been deleted"
+  },
+  "bloodTestParameterName": "Nazwa",
+  "@bloodTestParameterName": {
+    "description": "Label of the parameter's name"
+  },
+  "bloodTestParameterNorm": "Norma",
+  "@bloodTestParameterNorm": {
+    "description": "Label of the parameter's norm"
+  },
+  "bloodTestParameterResult": "Wynik",
+  "@bloodTestParameterResult": {
+    "description": "Label of the parameter's result"
+  },
+  "bloodTestBasicParams": "Badania podstawowe",
+  "@bloodTestsBasicParams": {
+    "description": "Label of the basic blood parameters"
+  },
+  "bloodTestAdditionalParams": "Badania dodatkowe",
+  "@bloodTestAdditionalParams": {
+    "description": "Label of the additional blood params"
+  },
   "themeMode": "Motyw",
   "@themeMode": {
     "description": "Label of theme mode"
@@ -541,8 +591,6 @@
   "@systemThemeModeDescription": {
     "description": "Description about system theme mode"
   },
-
-
   "language": "Język",
   "@language": {
     "description": "Label of language"
@@ -567,8 +615,6 @@
   "@systemLanguageDescription": {
     "description": "Description about system language"
   },
-
-
   "distanceUnit": "Jednostka dystansu",
   "@distanceUnit": {
     "description": "Label of distance unit"
@@ -585,8 +631,6 @@
   "@distanceUnitSelect": {
     "description": "Text about distance unit selection"
   },
-
-
   "paceUnit": "Jednostka tempa",
   "@paceUnit": {
     "description": "Label of pace unit"
@@ -611,14 +655,10 @@
   "@paceUnitSelect": {
     "description": "Text about pace unit selection"
   },
-
-
   "heartRateUnit": "ud/min",
   "@heartRateUnit": {
     "description": "Unit of heart rate"
   },
-
-
   "workoutStageBaseRun": "OWB1",
   "@workoutStageBaseRun": {
     "description": "Type of workout stage called base run"
@@ -675,8 +715,6 @@
       }
     }
   },
-
-
   "workoutStatusPending": "Oczekujący",
   "@workoutStatusPending": {
     "description": "Type of workout status called pending"
@@ -693,8 +731,6 @@
   "@workoutStatusUndone": {
     "description": "Type of workout status called undone"
   },
-
-
   "noInternetConnectionDialogTitle": "Brak połączenia internetowego",
   "@noInternetConnectionDialogTitle": {
     "description": "Title of the dialog about no internet connection"
@@ -719,8 +755,6 @@
   "@unknownErrorDialogMessage": {
     "description": "Message of the dialog about unknown exception"
   },
-
-
   "name": "Imię",
   "@name": {
     "description": "Name"
@@ -777,8 +811,6 @@
   "@add": {
     "description": "Add"
   },
-
-
   "requiredFieldMessage": "To pole jest wymagane",
   "@requiredFieldMessage": {
     "description": "Message to inform that field is required."
@@ -799,8 +831,6 @@
   "@invalidPasswordConfirmationMessage": {
     "description": "Message about invalid password confirmation"
   },
-
-
   "january": "Styczeń",
   "@january": {
     "description": "January"
@@ -849,8 +879,6 @@
   "@december": {
     "description": "December"
   },
-
-
   "januaryShort": "Sty",
   "@januaryShort": {
     "description": "Abbreviation of January"
@@ -899,8 +927,6 @@
   "@decemberShort": {
     "description": "Abbreviation of December"
   },
-
-
   "mondayShort": "Pon.",
   "@mondayShort": {
     "description": "Abbreviation of monday"
@@ -928,5 +954,201 @@
   "sundayShort": "Niedz.",
   "@sundayShort": {
     "description": "Abbreviation of sunday"
+  },
+  "bloodParamWBC": "WBC",
+  "@bloodParamWBC": {
+    "description": "Blood test parameter called WBC"
+  },
+  "bloodParamRBC": "RBC",
+  "@bloodParamRBC": {
+    "description": "Blood test parameter called RBC"
+  },
+  "bloodParamHGB": "HGB",
+  "@bloodParamHGB": {
+    "description": "Blood test parameter called HGB"
+  },
+  "bloodParamHCT": "HCT",
+  "@bloodParamHCT": {
+    "description": "Blood test parameter called HCT"
+  },
+  "bloodParamMCV": "MCV",
+  "@bloodParamMCV": {
+    "description": "Blood test parameter called MCV"
+  },
+  "bloodParamMCH": "MCH",
+  "@bloodParamMCH": {
+    "description": "Blood test parameter called MCH"
+  },
+  "bloodParamMCHC": "MCHC",
+  "@bloodParamMCHC": {
+    "description": "Blood test parameter called MCHC"
+  },
+  "bloodParamPLT": "Płytki krwi",
+  "@bloodParamPLT": {
+    "description": "Blood test parameter called PLT"
+  },
+  "bloodParamTotalBilirubin": "Bilirubina całkowita",
+  "@bloodParamTotalBilirubin": {
+    "description": "Blood test parameter called total bilirubin"
+  },
+  "bloodParamALT": "ALT",
+  "@bloodParamALT": {
+    "description": "Blood test parameter called ALT"
+  },
+  "bloodParamAST": "AST",
+  "@bloodParamAST": {
+    "description": "Blood test parameter called AST"
+  },
+  "bloodParamTotalCholesterol": "Cholesterol całkowity",
+  "@bloodParamTotalCholesterol": {
+    "description": "Blood test parameter called total cholesterol"
+  },
+  "bloodParamHDL": "HDL",
+  "@bloodParamHDL": {
+    "description": "Blood test parameter called HDL"
+  },
+  "bloodParamLDL": "LDL",
+  "@bloodParamLDL": {
+    "description": "Blood test parameter called LDL"
+  },
+  "bloodParamTG": "Trójglicerydy (TG)",
+  "@bloodParamTG": {
+    "description": "Blood test parameter called TG"
+  },
+  "bloodParamIron": "Żelazo",
+  "@bloodParamIron": {
+    "description": "Blood test parameter called iron"
+  },
+  "bloodParamFerritin": "Ferrytyna",
+  "@bloodParamFerritin": {
+    "description": "Blood test parameter called ferritin"
+  },
+  "bloodParamB12": "B12",
+  "@bloodParamB12": {
+    "description": "Blood test parameter called B12"
+  },
+  "bloodParamFolicAcid": "Kwas foliowy",
+  "@bloodParamFolicAcid": {
+    "description": "Blood test parameter called folic acid"
+  },
+  "bloodParamCPK": "Kinaza fosfokreatynowa",
+  "@bloodParamCPK": {
+    "description": "Blood test parameter called CPK"
+  },
+  "bloodParamTestosterone": "Testosteron",
+  "@bloodParamTestosterone": {
+    "description": "Blood test parameter called testosterone"
+  },
+  "bloodParamCortisol": "Kortyzol",
+  "@bloodParamCortisol": {
+    "description": "Blood test parameter called cortisol"
+  },
+  "bloodParamD3_25": "25(OH)D",
+  "@bloodParamD3_25": {
+    "description": "Blood test parameter called 25(OH)D"
+  },
+  "bloodParamTransferrin": "Transferyna",
+  "@bloodParamTransferrin": {
+    "description": "Blood test parameter called transferrin"
+  },
+  "bloodParamUIBC": "UIBC",
+  "@bloodParamUIBC": {
+    "description": "Blood test parameter called UIBC"
+  },
+  "bloodParamTIBC": "TIBC",
+  "@bloodParamTIBC": {
+    "description": "Blood test parameter called TIBC"
+  },
+  "bloodParamGGTP": "GGTP",
+  "@bloodParamGGTP": {
+    "description": "Blood test parameter called GGTP"
+  },
+  "bloodParamLDH": "LDH",
+  "@bloodParamLDH": {
+    "description": "Blood test parameter called LDH"
+  },
+  "bloodParamCRP": "Białko c-reaktywne (CRP)",
+  "@bloodParamCRP": {
+    "description": "Blood test parameter called CRP"
+  },
+  "bloodParamTP": "Białko całkowite (TP)",
+  "@bloodParamTP": {
+    "description": "Blood test parameter called TP"
+  },
+  "bloodParamAlbumin": "Albumina",
+  "@bloodParamAlbumin": {
+    "description": "Blood test parameter called albumin"
+  },
+  "bloodParamUricAcid": "Kwas moczowy",
+  "@bloodParamUricAcid": {
+    "description": "Blood test parameter called uric acid"
+  },
+  "bloodParamDirectBilirubin": "Bilirubina związana",
+  "@bloodParamDirectBilirubin": {
+    "description": "Blood test parameter called direct bilirubin"
+  },
+  "bloodParamGlucose": "Glukoza",
+  "@bloodParamGlucose": {
+    "description": "Blood test parameter called glucose"
+  },
+  "bloodParamMagnesium": "Magnez",
+  "@bloodParamMagnesium": {
+    "description": "Blood test parameter called magnesium"
+  },
+  "bloodParamTotalCalcium": "Wapń całkowity",
+  "@bloodParamTotalCalcium": {
+    "description": "Blood test parameter called total calcium"
+  },
+  "bloodParamSodium": "Sód",
+  "@bloodParamSodium": {
+    "description": "Blood test parameter called sodium"
+  },
+  "bloodParamPotassium": "Potas",
+  "@bloodParamPotassium": {
+    "description": "Blood test parameter called potassium"
+  },
+  "bloodParamZinc": "Cynk",
+  "@bloodParamZinc": {
+    "description": "Blood test parameter called zinc"
+  },
+  "bloodParamChloride": "Chlorki",
+  "@bloodParamChloride": {
+    "description": "Blood test parameter called chloride"
+  },
+  "bloodParamCreatinineKinaseMB": "CK-MB",
+  "@bloodParamCreatineKinaseMB": {
+    "description": "Blood test parameter called creatine kinase mb"
+  },
+  "bloodParamMyoglobin": "Mioglobina",
+  "@bloodParamMyoglobin": {
+    "description": "Blood test parameter called mioglobina"
+  },
+  "bloodParamTSH": "TSH",
+  "@bloodParamTSH": {
+    "description": "Blood test parameter called TSH"
+  },
+  "bloodParamUrineUreaNitrogen": "Mocznik w moczu",
+  "@bloodParamUrineUreaNitrogen": {
+    "description": "Blood test parameter called urine urea nitrogen"
+  },
+  "bloodParamCreatinineInUrine": "Kreatynina w moczu",
+  "@bloodParamCreatinineInUrine": {
+    "description": "Blood test parameter called creatinine in urine"
+  },
+  "bloodParamMyoglobinInUrine": "Mioglobina w moczu",
+  "@bloodParamMyoglobinInUrine": {
+    "description": "Blood test parameter called myoglobin in urine"
+  },
+  "bloodParamPLTInCitratePlasma": "Płytki krwi w osoczu cytranianowym",
+  "@bloodParamPLTInCitratePlasma": {
+    "description": "Blood test parameter called PLT in citrate plasma"
+  },
+  "bloodParamCreatinine": "Kreatynina",
+  "@bloodParamCreatinine": {
+    "description": "Blood test parameter called creatinine"
+  },
+  "bloodParamBloodUreaNitrogen": "Mocznik w surowicy",
+  "@bloodParamBloodUreaNitrogen": {
+    "description": "Blood test parameter called blood urea nitrogen"
   }
 }
