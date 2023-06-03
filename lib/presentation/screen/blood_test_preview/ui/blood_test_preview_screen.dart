@@ -16,7 +16,6 @@ import '../bloc/blood_test_preview_bloc.dart';
 
 part 'blood_test_preview_app_bar.dart';
 part 'blood_test_preview_content.dart';
-part 'blood_test_preview_readings.dart';
 
 class BloodTestPreviewScreen extends StatelessWidget {
   final String bloodTestId;

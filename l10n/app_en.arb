@@ -128,6 +128,8 @@
   "bloodTestCreatorDate": "Date",
   "bloodTestCreatorSelectDate": "Select date",
   "bloodTestCreatorEditDate": "Edit date",
+  "bloodTestCreatorSuccessfullyAddedTest": "Successfully added blood test",
+  "bloodTestCreatorSuccessfullyEditedTest": "Successfully updated blood test",
   "bloodTestPreviewScreenTitle": "Blood test",
   "bloodTestPreviewDeleteTestTitle": "Blood test deletion",
   "bloodTestPreviewDeleteTestMessage": "This operation cannot be undone. Are you sure you want to delete this blood test?",

@@ -523,6 +523,14 @@
   "@bloodTestCreatorEditDate": {
     "description": "Label of the button to edit date"
   },
+  "bloodTestCreatorSuccessfullyAddedTest": "Pomyślnie dodano badanie krwi",
+  "@bloodTestCreatorSuccessfullyAddedTest": {
+    "description": "Message to inform that blood test has been added"
+  },
+  "bloodTestCreatorSuccessfullyEditedTest": "Pomyślnie zaktualizowano badanie krwi",
+  "@bloodTestCreatorSuccessfullyEditedTest": {
+    "description": "Message to inform that blood test has been edited"
+  },
   "bloodTestPreviewScreenTitle": "Badanie krwi",
   "@bloodTestPreviewScreenTitle": {
     "description": "Title of the blood reading preview screen"

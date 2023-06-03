@@ -87,13 +87,13 @@ class _BlocListener extends StatelessWidget {
       navigateBack(context: context);
       showSnackbarMessage(
         context: context,
-        message: 'Pomyślnie dodano badanie krwi',
+        message: Str.of(context).bloodTestCreatorSuccessfullyAddedTest,
       );
     } else if (info == BloodTestCreatorBlocInfo.bloodTestUpdated) {
       navigateBack(context: context);
       showSnackbarMessage(
         context: context,
-        message: 'Pomyślnie zaktualizowano badanie krwi',
+        message: Str.of(context).bloodTestCreatorSuccessfullyEditedTest,
       );
     }
   }

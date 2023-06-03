@@ -48,7 +48,7 @@ Map<String, dynamic> createBloodTestJsonToUpdate({
   List<BloodParameterResultDto>? parameterResultDtos,
 }) =>
     {
-      if (date != null) _dateField: date,
+      if (date != null) _dateField: mapDateTimeToString(date),
       if (parameterResultDtos != null)
         _parameterResultsField: parameterResultDtos.map(
           (dto) => dto.toJson(),
