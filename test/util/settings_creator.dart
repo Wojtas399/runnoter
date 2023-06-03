@@ -1,4 +1,4 @@
-import 'package:runnoter/domain/model/settings.dart';
+import 'package:runnoter/domain/entity/settings.dart';
 
 Settings createSettings({
   ThemeMode themeMode = ThemeMode.light,

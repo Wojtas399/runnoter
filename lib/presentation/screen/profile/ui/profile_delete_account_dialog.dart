@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../../../domain/additional_model/bloc_status.dart';
 import '../../../component/password_text_field_component.dart';
-import '../../../model/bloc_status.dart';
 import '../../../service/navigator_service.dart';
 import '../../../service/utils.dart';
 import '../bloc/profile_identities_bloc.dart';

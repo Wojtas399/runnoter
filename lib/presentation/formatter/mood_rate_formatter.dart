@@ -1,4 +1,4 @@
-import '../../domain/model/workout_status.dart';
+import '../../domain/entity/workout_status.dart';
 
 extension MoodRateFormatter on MoodRate {
   String toUIFormat() {

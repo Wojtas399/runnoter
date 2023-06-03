@@ -1,5 +1,5 @@
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/domain/model/health_measurement.dart';
+import 'package:runnoter/domain/entity/health_measurement.dart';
 import 'package:runnoter/domain/repository/health_measurement_repository.dart';
 
 class _FakeHealthMeasurement extends Fake implements HealthMeasurement {}

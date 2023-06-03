@@ -3,7 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../../domain/model/workout_status.dart';
+import '../../../../domain/additional_model/bloc_status.dart';
+import '../../../../domain/entity/workout_status.dart';
 import '../../../../domain/repository/workout_repository.dart';
 import '../../../../domain/service/auth_service.dart';
 import '../../../component/big_button_component.dart';
@@ -14,7 +15,6 @@ import '../../../formatter/decimal_text_input_formatter.dart';
 import '../../../formatter/minutes_or_seconds_input_formatter.dart';
 import '../../../formatter/mood_rate_formatter.dart';
 import '../../../formatter/workout_status_formatter.dart';
-import '../../../model/bloc_status.dart';
 import '../../../service/dialog_service.dart';
 import '../../../service/navigator_service.dart';
 import '../../../service/utils.dart';

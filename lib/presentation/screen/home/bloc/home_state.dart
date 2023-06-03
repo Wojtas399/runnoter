@@ -1,8 +1,8 @@
 import 'package:equatable/equatable.dart';
 
-import '../../../../domain/model/settings.dart';
-import '../../../model/bloc_state.dart';
-import '../../../model/bloc_status.dart';
+import '../../../../domain/additional_model/bloc_state.dart';
+import '../../../../domain/additional_model/bloc_status.dart';
+import '../../../../domain/entity/settings.dart';
 
 class HomeState extends BlocState<HomeState> {
   final DrawerPage drawerPage;

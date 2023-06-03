@@ -1,13 +1,13 @@
 import 'package:collection/collection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../domain/model/blood_parameter.dart';
-import '../../../../domain/model/blood_test.dart';
+import '../../../../domain/entity/blood_parameter.dart';
+import '../../../../domain/entity/blood_test.dart';
 import '../../../../domain/repository/blood_test_repository.dart';
 import '../../../../domain/service/auth_service.dart';
-import '../../../presentation/model/bloc_state.dart';
-import '../../../presentation/model/bloc_status.dart';
-import '../../../presentation/model/bloc_with_status.dart';
+import '../../additional_model/bloc_state.dart';
+import '../../additional_model/bloc_status.dart';
+import '../../additional_model/bloc_with_status.dart';
 
 part 'blood_test_creator_event.dart';
 part 'blood_test_creator_state.dart';

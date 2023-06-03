@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../../../domain/model/workout.dart';
-import '../../../../domain/model/workout_stage.dart';
-import '../../../../domain/model/workout_status.dart';
+import '../../../../domain/entity/workout.dart';
+import '../../../../domain/entity/workout_stage.dart';
+import '../../../../domain/entity/workout_status.dart';
 import '../../../config/navigation/routes.dart';
 import '../../../formatter/date_formatter.dart';
 import '../../../formatter/workout_stage_formatter.dart';

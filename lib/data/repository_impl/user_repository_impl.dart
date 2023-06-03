@@ -1,9 +1,9 @@
 import 'package:firebase/firebase.dart';
 import 'package:rxdart/rxdart.dart';
 
-import '../../domain/model/settings.dart' as settings;
-import '../../domain/model/state_repository.dart';
-import '../../domain/model/user.dart';
+import '../../domain/additional_model/state_repository.dart';
+import '../../domain/entity/settings.dart' as settings;
+import '../../domain/entity/user.dart';
 import '../../domain/repository/user_repository.dart';
 import '../mapper/settings_mapper.dart';
 import '../mapper/user_mapper.dart';

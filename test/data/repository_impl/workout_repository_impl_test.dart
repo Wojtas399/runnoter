@@ -4,9 +4,9 @@ import 'package:firebase/model/workout_dto.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/data/repository_impl/workout_repository_impl.dart';
-import 'package:runnoter/domain/model/workout.dart';
-import 'package:runnoter/domain/model/workout_stage.dart';
-import 'package:runnoter/domain/model/workout_status.dart';
+import 'package:runnoter/domain/entity/workout.dart';
+import 'package:runnoter/domain/entity/workout_stage.dart';
+import 'package:runnoter/domain/entity/workout_status.dart';
 
 import '../../mock/firebase/mock_firebase_workout_service.dart';
 import '../../mock/presentation/service/mock_date_service.dart';

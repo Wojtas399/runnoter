@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../../common/date_service.dart';
-import '../../../../domain/model/workout_stage.dart';
-import '../../../../domain/model/workout_status.dart';
+import '../../../../domain/entity/workout_stage.dart';
+import '../../../../domain/entity/workout_status.dart';
 import '../../../../domain/repository/workout_repository.dart';
 import '../../../../domain/service/auth_service.dart';
 import '../../../component/big_button_component.dart';

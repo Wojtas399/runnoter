@@ -1,6 +1,6 @@
 import 'package:rxdart/rxdart.dart';
 
-import 'entity.dart';
+import '../entity/entity.dart';
 
 class StateRepository<T extends Entity> {
   final BehaviorSubject<List<T>?> _dataStream =

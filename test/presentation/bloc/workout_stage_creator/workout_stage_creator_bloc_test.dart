@@ -1,5 +1,5 @@
 import 'package:bloc_test/bloc_test.dart';
-import 'package:runnoter/domain/model/workout_stage.dart';
+import 'package:runnoter/domain/entity/workout_stage.dart';
 import 'package:runnoter/presentation/screen/workout_stage_creator/bloc/workout_stage_creator_bloc.dart';
 
 void main() {

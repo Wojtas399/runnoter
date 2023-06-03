@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:runnoter/presentation/model/bloc_status.dart';
+import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/presentation/screen/profile/bloc/profile_identities_state.dart';
 
 void main() {

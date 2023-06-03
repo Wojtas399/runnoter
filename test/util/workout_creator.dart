@@ -1,6 +1,6 @@
-import 'package:runnoter/domain/model/workout.dart';
-import 'package:runnoter/domain/model/workout_stage.dart';
-import 'package:runnoter/domain/model/workout_status.dart';
+import 'package:runnoter/domain/entity/workout.dart';
+import 'package:runnoter/domain/entity/workout_stage.dart';
+import 'package:runnoter/domain/entity/workout_status.dart';
 
 Workout createWorkout({
   String id = '',

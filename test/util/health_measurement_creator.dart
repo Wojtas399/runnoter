@@ -1,4 +1,4 @@
-import 'package:runnoter/domain/model/health_measurement.dart';
+import 'package:runnoter/domain/entity/health_measurement.dart';
 
 HealthMeasurement createHealthMeasurement({
   String userId = '',

@@ -1,6 +1,6 @@
 import 'package:firebase/firebase.dart' as db;
 
-import '../../domain/model/settings.dart';
+import '../../domain/entity/settings.dart';
 
 Settings mapSettingsFromDto({
   required db.AppearanceSettingsDto appearanceSettingsDto,

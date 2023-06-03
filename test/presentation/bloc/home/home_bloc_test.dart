@@ -1,7 +1,7 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/domain/model/settings.dart';
-import 'package:runnoter/presentation/model/bloc_status.dart';
+import 'package:runnoter/domain/additional_model/bloc_status.dart';
+import 'package:runnoter/domain/entity/settings.dart';
 import 'package:runnoter/presentation/screen/home/bloc/home_bloc.dart';
 import 'package:runnoter/presentation/screen/home/bloc/home_event.dart';
 import 'package:runnoter/presentation/screen/home/bloc/home_state.dart';

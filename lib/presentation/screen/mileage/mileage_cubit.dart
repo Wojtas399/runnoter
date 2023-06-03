@@ -4,8 +4,8 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
-import '../../../domain/model/workout.dart';
-import '../../../domain/model/workout_status.dart';
+import '../../../domain/entity/workout.dart';
+import '../../../domain/entity/workout_status.dart';
 import '../../../domain/repository/workout_repository.dart';
 import '../../../domain/service/auth_service.dart';
 

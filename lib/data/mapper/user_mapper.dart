@@ -1,6 +1,6 @@
 import 'package:firebase/firebase.dart';
 
-import '../../domain/model/user.dart';
+import '../../domain/entity/user.dart';
 import 'settings_mapper.dart';
 
 User mapUserFromDto({

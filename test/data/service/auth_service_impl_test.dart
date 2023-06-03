@@ -2,7 +2,7 @@ import 'package:firebase/firebase.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/data/service_impl/auth_service_impl.dart';
-import 'package:runnoter/domain/model/auth_exception.dart';
+import 'package:runnoter/domain/additional_model/auth_exception.dart';
 
 import '../../mock/firebase/mock_firebase_auth_service.dart';
 

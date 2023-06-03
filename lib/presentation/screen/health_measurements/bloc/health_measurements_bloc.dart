@@ -3,12 +3,12 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
-import '../../../../domain/model/health_measurement.dart';
+import '../../../../domain/additional_model/bloc_state.dart';
+import '../../../../domain/additional_model/bloc_status.dart';
+import '../../../../domain/additional_model/bloc_with_status.dart';
+import '../../../../domain/entity/health_measurement.dart';
 import '../../../../domain/repository/health_measurement_repository.dart';
 import '../../../../domain/service/auth_service.dart';
-import '../../../model/bloc_state.dart';
-import '../../../model/bloc_status.dart';
-import '../../../model/bloc_with_status.dart';
 
 part 'health_measurements_event.dart';
 part 'health_measurements_state.dart';

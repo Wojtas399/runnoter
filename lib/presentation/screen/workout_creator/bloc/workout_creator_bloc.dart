@@ -2,14 +2,14 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../domain/model/workout.dart';
-import '../../../../domain/model/workout_stage.dart';
-import '../../../../domain/model/workout_status.dart';
+import '../../../../domain/additional_model/bloc_state.dart';
+import '../../../../domain/additional_model/bloc_status.dart';
+import '../../../../domain/additional_model/bloc_with_status.dart';
+import '../../../../domain/entity/workout.dart';
+import '../../../../domain/entity/workout_stage.dart';
+import '../../../../domain/entity/workout_status.dart';
 import '../../../../domain/repository/workout_repository.dart';
 import '../../../../domain/service/auth_service.dart';
-import '../../../model/bloc_state.dart';
-import '../../../model/bloc_status.dart';
-import '../../../model/bloc_with_status.dart';
 import '../../../service/utils.dart';
 
 part 'workout_creator_event.dart';

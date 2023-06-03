@@ -2,9 +2,9 @@ import 'package:collection/collection.dart';
 import 'package:firebase/firebase.dart' as firebase;
 import 'package:rxdart/rxdart.dart';
 
-import '../../domain/model/blood_parameter.dart';
-import '../../domain/model/blood_test.dart';
-import '../../domain/model/state_repository.dart';
+import '../../domain/additional_model/state_repository.dart';
+import '../../domain/entity/blood_parameter.dart';
+import '../../domain/entity/blood_test.dart';
 import '../../domain/repository/blood_test_repository.dart';
 import '../mapper/blood_parameter_result_mapper.dart';
 import '../mapper/blood_test_mapper.dart';

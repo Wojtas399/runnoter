@@ -3,10 +3,10 @@ import 'package:firebase/service/firebase_workout_service.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../common/date_service.dart';
-import '../../domain/model/state_repository.dart';
-import '../../domain/model/workout.dart';
-import '../../domain/model/workout_stage.dart';
-import '../../domain/model/workout_status.dart';
+import '../../domain/additional_model/state_repository.dart';
+import '../../domain/entity/workout.dart';
+import '../../domain/entity/workout_stage.dart';
+import '../../domain/entity/workout_status.dart';
 import '../../domain/repository/workout_repository.dart';
 import '../mapper/workout_mapper.dart';
 import '../mapper/workout_stage_mapper.dart';

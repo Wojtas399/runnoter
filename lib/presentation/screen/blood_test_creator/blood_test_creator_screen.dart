@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/bloc/blood_test_creator/blood_test_creator_bloc.dart';
-import '../../../domain/model/blood_parameter.dart';
+import '../../../domain/entity/blood_parameter.dart';
 import '../../../domain/repository/blood_test_repository.dart';
 import '../../../domain/service/auth_service.dart';
 import '../../component/bloc_with_status_listener_component.dart';

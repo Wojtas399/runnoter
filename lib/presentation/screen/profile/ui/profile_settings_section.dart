@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../../domain/model/settings.dart' as settings;
+import '../../../../domain/entity/settings.dart' as settings;
 import '../../../component/value_with_label_and_icon_component.dart';
 import '../../../config/navigation/routes.dart';
 import '../../../formatter/settings_formatter.dart';

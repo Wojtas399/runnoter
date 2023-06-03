@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:runnoter/domain/model/blood_parameter.dart';
+import 'package:runnoter/domain/entity/blood_parameter.dart';
 import 'package:runnoter/presentation/service/blood_parameter_service.dart';
 
 void main() {

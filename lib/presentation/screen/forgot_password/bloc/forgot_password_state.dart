@@ -1,5 +1,5 @@
-import '../../../model/bloc_state.dart';
-import '../../../model/bloc_status.dart';
+import '../../../../domain/additional_model/bloc_state.dart';
+import '../../../../domain/additional_model/bloc_status.dart';
 
 enum ForgotPasswordInfo {
   emailSubmitted,

@@ -2,7 +2,7 @@ import 'package:firebase/firebase.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/data/repository_impl/health_measurement_repository_impl.dart';
-import 'package:runnoter/domain/model/health_measurement.dart';
+import 'package:runnoter/domain/entity/health_measurement.dart';
 
 import '../../mock/firebase/mock_firebase_health_measurement_service.dart';
 import '../../mock/presentation/service/mock_date_service.dart';

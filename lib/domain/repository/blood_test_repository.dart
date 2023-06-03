@@ -1,5 +1,5 @@
-import '../model/blood_parameter.dart';
-import '../model/blood_test.dart';
+import '../entity/blood_parameter.dart';
+import '../entity/blood_test.dart';
 
 abstract interface class BloodTestRepository {
   Stream<BloodTest?> getTestById({

@@ -1,5 +1,5 @@
-import 'package:runnoter/domain/model/blood_parameter.dart';
-import 'package:runnoter/domain/model/blood_test.dart';
+import 'package:runnoter/domain/entity/blood_parameter.dart';
+import 'package:runnoter/domain/entity/blood_test.dart';
 
 BloodTest createBloodTest({
   String id = '',

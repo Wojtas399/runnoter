@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/model/settings.dart';
-import '../../../domain/model/user.dart';
+import '../../../domain/entity/settings.dart';
+import '../../../domain/entity/user.dart';
 import '../../../domain/repository/user_repository.dart';
 import '../../../domain/service/auth_service.dart';
 

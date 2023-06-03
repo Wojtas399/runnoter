@@ -1,9 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../domain/model/auth_exception.dart';
+import '../../../../domain/additional_model/auth_exception.dart';
+import '../../../../domain/additional_model/bloc_status.dart';
+import '../../../../domain/additional_model/bloc_with_status.dart';
 import '../../../../domain/service/auth_service.dart';
-import '../../../model/bloc_status.dart';
-import '../../../model/bloc_with_status.dart';
 import '../../../service/connectivity_service.dart';
 import 'sign_in_event.dart';
 import 'sign_in_state.dart';

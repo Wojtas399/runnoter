@@ -1,8 +1,8 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/domain/model/health_measurement.dart';
-import 'package:runnoter/presentation/model/bloc_status.dart';
+import 'package:runnoter/domain/additional_model/bloc_status.dart';
+import 'package:runnoter/domain/entity/health_measurement.dart';
 import 'package:runnoter/presentation/screen/health/bloc/health_bloc.dart';
 import 'package:runnoter/presentation/screen/health/bloc/health_chart_service.dart';
 

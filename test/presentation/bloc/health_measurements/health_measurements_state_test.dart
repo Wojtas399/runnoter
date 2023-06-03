@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:runnoter/domain/model/health_measurement.dart';
-import 'package:runnoter/presentation/model/bloc_status.dart';
+import 'package:runnoter/domain/additional_model/bloc_status.dart';
+import 'package:runnoter/domain/entity/health_measurement.dart';
 import 'package:runnoter/presentation/screen/health_measurements/bloc/health_measurements_bloc.dart';
 
 import '../../../util/health_measurement_creator.dart';

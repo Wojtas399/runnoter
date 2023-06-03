@@ -1,10 +1,10 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/bloc/blood_test_creator/blood_test_creator_bloc.dart';
-import 'package:runnoter/domain/model/blood_parameter.dart';
-import 'package:runnoter/domain/model/blood_test.dart';
-import 'package:runnoter/presentation/model/bloc_status.dart';
+import 'package:runnoter/domain/entity/blood_parameter.dart';
+import 'package:runnoter/domain/entity/blood_test.dart';
 
 import '../../../mock/domain/mock_auth_service.dart';
 import '../../../mock/domain/mock_blood_test_repository.dart';

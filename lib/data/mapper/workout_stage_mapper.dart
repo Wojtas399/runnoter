@@ -1,6 +1,6 @@
 import 'package:firebase/firebase.dart';
 
-import '../../domain/model/workout_stage.dart';
+import '../../domain/entity/workout_stage.dart';
 
 WorkoutStage mapWorkoutStageFromFirebase(WorkoutStageDto workoutStageDto) {
   if (workoutStageDto is WorkoutStageBaseRunDto) {

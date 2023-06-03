@@ -1,10 +1,10 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/domain/model/workout.dart';
-import 'package:runnoter/domain/model/workout_stage.dart';
-import 'package:runnoter/domain/model/workout_status.dart';
-import 'package:runnoter/presentation/model/bloc_status.dart';
+import 'package:runnoter/domain/additional_model/bloc_status.dart';
+import 'package:runnoter/domain/entity/workout.dart';
+import 'package:runnoter/domain/entity/workout_stage.dart';
+import 'package:runnoter/domain/entity/workout_status.dart';
 import 'package:runnoter/presentation/screen/workout_creator/bloc/workout_creator_bloc.dart';
 
 import '../../../mock/domain/mock_auth_service.dart';
