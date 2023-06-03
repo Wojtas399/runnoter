@@ -1,13 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
-import '../../../component/app_bar_with_logo.dart';
-import '../../../component/big_button_component.dart';
-import '../../../component/text_field_component.dart';
-import '../../../service/utils.dart';
-import '../bloc/forgot_password_bloc.dart';
-import '../bloc/forgot_password_event.dart';
+part of 'forgot_password_screen.dart';
 
 class ForgotPasswordContent extends StatelessWidget {
   const ForgotPasswordContent({

@@ -1,14 +1,4 @@
-import '../../../../domain/additional_model/bloc_state.dart';
-import '../../../../domain/additional_model/bloc_status.dart';
-
-enum ForgotPasswordInfo {
-  emailSubmitted,
-}
-
-enum ForgotPasswordError {
-  invalidEmail,
-  userNotFound,
-}
+part of 'forgot_password_bloc.dart';
 
 class ForgotPasswordState extends BlocState {
   final String email;

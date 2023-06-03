@@ -7,7 +7,7 @@ import '../../../../domain/entity/settings.dart';
 import '../../../../domain/entity/user.dart';
 import '../../../../domain/repository/user_repository.dart';
 import '../../../../domain/service/auth_service.dart';
-import '../../../service/connectivity_service.dart';
+import '../../../../domain/service/connectivity_service.dart';
 import 'sign_up_event.dart';
 import 'sign_up_state.dart';
 

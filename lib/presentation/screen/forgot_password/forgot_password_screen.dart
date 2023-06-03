@@ -2,14 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../../domain/service/auth_service.dart';
-import '../../../component/bloc_with_status_listener_component.dart';
-import '../../../service/connectivity_service.dart';
-import '../../../service/dialog_service.dart';
-import '../../../service/navigator_service.dart';
-import '../bloc/forgot_password_bloc.dart';
-import '../bloc/forgot_password_state.dart';
-import 'forgot_password_content.dart';
+import '../../../domain/bloc/forgot_password/forgot_password_bloc.dart';
+import '../../../domain/service/auth_service.dart';
+import '../../../domain/service/connectivity_service.dart';
+import '../../component/app_bar_with_logo.dart';
+import '../../component/big_button_component.dart';
+import '../../component/bloc_with_status_listener_component.dart';
+import '../../component/text_field_component.dart';
+import '../../service/dialog_service.dart';
+import '../../service/navigator_service.dart';
+import '../../service/utils.dart';
+
+part 'forgot_password_content.dart';
 
 class ForgotPasswordScreen extends StatelessWidget {
   const ForgotPasswordScreen({
@@ -62,23 +66,23 @@ class _BlocListenerState extends State<_BlocListener> {
   @override
   Widget build(BuildContext context) {
     return BlocWithStatusListener<ForgotPasswordBloc, ForgotPasswordState,
-        ForgotPasswordInfo, ForgotPasswordError>(
-      onInfo: (ForgotPasswordInfo info) {
+        ForgotPasswordBlocInfo, ForgotPasswordBlocError>(
+      onInfo: (ForgotPasswordBlocInfo info) {
         _manageCompleteStatus(info, context);
       },
       child: widget.child,
-      onError: (ForgotPasswordError error) {
+      onError: (ForgotPasswordBlocError error) {
         _manageErrorStatus(error, context);
       },
     );
   }
 
   Future<void> _manageCompleteStatus(
-    ForgotPasswordInfo info,
+    ForgotPasswordBlocInfo info,
     BuildContext context,
   ) async {
     switch (info) {
-      case ForgotPasswordInfo.emailSubmitted:
+      case ForgotPasswordBlocInfo.emailSubmitted:
         await _showMessageAboutSubmittedEmail(context);
         if (mounted) {
           navigateBack(context: context);
@@ -88,14 +92,14 @@ class _BlocListenerState extends State<_BlocListener> {
   }
 
   void _manageErrorStatus(
-    ForgotPasswordError error,
+    ForgotPasswordBlocError error,
     BuildContext context,
   ) {
     switch (error) {
-      case ForgotPasswordError.invalidEmail:
+      case ForgotPasswordBlocError.invalidEmail:
         _showMessageAboutInvalidEmail(context);
         break;
-      case ForgotPasswordError.userNotFound:
+      case ForgotPasswordBlocError.userNotFound:
         _showMessageAboutNotFoundedUser(context);
         break;
     }

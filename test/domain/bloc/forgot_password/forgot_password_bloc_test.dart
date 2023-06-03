@@ -2,9 +2,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/additional_model/auth_exception.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
-import 'package:runnoter/presentation/screen/forgot_password/bloc/forgot_password_bloc.dart';
-import 'package:runnoter/presentation/screen/forgot_password/bloc/forgot_password_event.dart';
-import 'package:runnoter/presentation/screen/forgot_password/bloc/forgot_password_state.dart';
+import 'package:runnoter/domain/bloc/forgot_password/forgot_password_bloc.dart';
 
 import '../../../mock/domain/mock_auth_service.dart';
 import '../../../mock/presentation/service/mock_connectivity_service.dart';
@@ -76,8 +74,8 @@ void main() {
         email: email,
       ),
       createState(
-        status: const BlocStatusComplete<ForgotPasswordInfo>(
-          info: ForgotPasswordInfo.emailSubmitted,
+        status: const BlocStatusComplete<ForgotPasswordBlocInfo>(
+          info: ForgotPasswordBlocInfo.emailSubmitted,
         ),
         email: email,
       ),
@@ -159,8 +157,8 @@ void main() {
         email: email,
       ),
       createState(
-        status: const BlocStatusError<ForgotPasswordError>(
-          error: ForgotPasswordError.invalidEmail,
+        status: const BlocStatusError<ForgotPasswordBlocError>(
+          error: ForgotPasswordBlocError.invalidEmail,
         ),
         email: email,
       ),
@@ -203,8 +201,8 @@ void main() {
         email: email,
       ),
       createState(
-        status: const BlocStatusError<ForgotPasswordError>(
-          error: ForgotPasswordError.userNotFound,
+        status: const BlocStatusError<ForgotPasswordBlocError>(
+          error: ForgotPasswordBlocError.userNotFound,
         ),
         email: email,
       ),

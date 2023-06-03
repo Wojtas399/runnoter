@@ -4,12 +4,14 @@ import '../../../../domain/additional_model/auth_exception.dart';
 import '../../../../domain/additional_model/bloc_status.dart';
 import '../../../../domain/additional_model/bloc_with_status.dart';
 import '../../../../domain/service/auth_service.dart';
-import '../../../service/connectivity_service.dart';
-import 'forgot_password_event.dart';
-import 'forgot_password_state.dart';
+import '../../additional_model/bloc_state.dart';
+import '../../service/connectivity_service.dart';
+
+part 'forgot_password_event.dart';
+part 'forgot_password_state.dart';
 
 class ForgotPasswordBloc extends BlocWithStatus<ForgotPasswordEvent,
-    ForgotPasswordState, ForgotPasswordInfo, ForgotPasswordError> {
+    ForgotPasswordState, ForgotPasswordBlocInfo, ForgotPasswordBlocError> {
   final AuthService _authService;
   final ConnectivityService _connectivityService;
 
@@ -50,9 +52,9 @@ class ForgotPasswordBloc extends BlocWithStatus<ForgotPasswordEvent,
     }
     try {
       await _tryToSendPasswordResetEmail();
-      emitCompleteStatus(emit, ForgotPasswordInfo.emailSubmitted);
+      emitCompleteStatus(emit, ForgotPasswordBlocInfo.emailSubmitted);
     } on AuthException catch (authException) {
-      final ForgotPasswordError? error = _mapAuthExceptionToBlocError(
+      final ForgotPasswordBlocError? error = _mapAuthExceptionToBlocError(
         authException,
       );
       if (error != null) {
@@ -73,14 +75,23 @@ class ForgotPasswordBloc extends BlocWithStatus<ForgotPasswordEvent,
     );
   }
 
-  ForgotPasswordError? _mapAuthExceptionToBlocError(
+  ForgotPasswordBlocError? _mapAuthExceptionToBlocError(
     AuthException exception,
   ) {
     if (exception == AuthException.invalidEmail) {
-      return ForgotPasswordError.invalidEmail;
+      return ForgotPasswordBlocError.invalidEmail;
     } else if (exception == AuthException.userNotFound) {
-      return ForgotPasswordError.userNotFound;
+      return ForgotPasswordBlocError.userNotFound;
     }
     return null;
   }
+}
+
+enum ForgotPasswordBlocInfo {
+  emailSubmitted,
+}
+
+enum ForgotPasswordBlocError {
+  invalidEmail,
+  userNotFound,
 }

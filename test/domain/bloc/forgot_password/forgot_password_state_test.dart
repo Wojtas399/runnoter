@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
-import 'package:runnoter/presentation/screen/forgot_password/bloc/forgot_password_state.dart';
+import 'package:runnoter/domain/bloc/forgot_password/forgot_password_bloc.dart';
 
 void main() {
   late ForgotPasswordState state;

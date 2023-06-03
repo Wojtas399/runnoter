@@ -4,7 +4,7 @@ import '../../../../domain/additional_model/auth_exception.dart';
 import '../../../../domain/additional_model/bloc_status.dart';
 import '../../../../domain/additional_model/bloc_with_status.dart';
 import '../../../../domain/service/auth_service.dart';
-import '../../../service/connectivity_service.dart';
+import '../../../../domain/service/connectivity_service.dart';
 import 'sign_in_event.dart';
 import 'sign_in_state.dart';
 

@@ -4,9 +4,9 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../../domain/repository/user_repository.dart';
 import '../../../../domain/service/auth_service.dart';
+import '../../../../domain/service/connectivity_service.dart';
 import '../../../component/bloc_with_status_listener_component.dart';
 import '../../../config/navigation/routes.dart';
-import '../../../service/connectivity_service.dart';
 import '../../../service/dialog_service.dart';
 import '../../../service/navigator_service.dart';
 import '../bloc/sign_up_bloc.dart';
