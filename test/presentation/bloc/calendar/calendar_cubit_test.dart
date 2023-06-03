@@ -1,7 +1,7 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/presentation/screen/calendar/calendar_cubit.dart';
+import 'package:runnoter/domain/bloc/calendar/calendar_cubit.dart';
 
 import '../../../mock/domain/mock_auth_service.dart';
 import '../../../mock/domain/mock_workout_repository.dart';
