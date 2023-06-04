@@ -2,10 +2,8 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
+import 'package:runnoter/domain/bloc/profile/settings/profile_settings_bloc.dart';
 import 'package:runnoter/domain/entity/settings.dart';
-import 'package:runnoter/presentation/screen/profile/bloc/profile_settings_bloc.dart';
-import 'package:runnoter/presentation/screen/profile/bloc/profile_settings_event.dart';
-import 'package:runnoter/presentation/screen/profile/bloc/profile_settings_state.dart';
 
 import '../../../mock/domain/mock_auth_service.dart';
 import '../../../mock/domain/mock_user_repository.dart';

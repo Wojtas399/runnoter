@@ -1,6 +1,4 @@
-import '../../../../domain/additional_model/bloc_state.dart';
-import '../../../../domain/additional_model/bloc_status.dart';
-import '../../../../domain/entity/settings.dart';
+part of 'profile_settings_bloc.dart';
 
 class ProfileSettingsState extends BlocState {
   final ThemeMode? themeMode;

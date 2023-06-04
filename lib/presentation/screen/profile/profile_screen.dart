@@ -2,18 +2,29 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../../domain/repository/user_repository.dart';
-import '../../../../domain/service/auth_service.dart';
-import '../../../component/bloc_with_status_listener_component.dart';
-import '../../../config/navigation/routes.dart';
-import '../../../service/dialog_service.dart';
-import '../../../service/navigator_service.dart';
-import '../bloc/profile_identities_bloc.dart';
-import '../bloc/profile_identities_event.dart';
-import '../bloc/profile_identities_state.dart';
-import '../bloc/profile_settings_bloc.dart';
-import '../bloc/profile_settings_event.dart';
-import 'profile_content.dart';
+import '../../../domain/additional_model/bloc_status.dart';
+import '../../../domain/bloc/profile/identities/profile_identities_bloc.dart';
+import '../../../domain/bloc/profile/settings/profile_settings_bloc.dart';
+import '../../../domain/entity/settings.dart' as settings;
+import '../../../domain/repository/user_repository.dart';
+import '../../../domain/service/auth_service.dart';
+import '../../component/bloc_with_status_listener_component.dart';
+import '../../component/password_text_field_component.dart';
+import '../../component/text_field_component.dart';
+import '../../component/value_with_label_and_icon_component.dart';
+import '../../config/navigation/routes.dart';
+import '../../formatter/settings_formatter.dart';
+import '../../service/dialog_service.dart';
+import '../../service/navigator_service.dart';
+import '../../service/utils.dart';
+import '../../service/validation_service.dart';
+
+part 'profile_content.dart';
+part 'profile_delete_account_dialog.dart';
+part 'profile_settings_section.dart';
+part 'profile_update_email_dialog.dart';
+part 'profile_update_password_dialog.dart';
+part 'profile_user_data_section.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({
@@ -25,7 +36,7 @@ class ProfileScreen extends StatelessWidget {
     return const _IdentitiesBlocProvider(
       child: _SettingsBlocProvider(
         child: _IdentitiesBlocListener(
-          child: ProfileContent(),
+          child: _Content(),
         ),
       ),
     );

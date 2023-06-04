@@ -1,5 +1,4 @@
-import '../../../../domain/additional_model/bloc_state.dart';
-import '../../../../domain/additional_model/bloc_status.dart';
+part of 'profile_identities_bloc.dart';
 
 class ProfileIdentitiesState extends BlocState {
   final String? userId;

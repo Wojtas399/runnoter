@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
-import 'package:runnoter/presentation/screen/profile/bloc/profile_identities_state.dart';
+import 'package:runnoter/domain/bloc/profile/identities/profile_identities_bloc.dart';
 
 void main() {
   late ProfileIdentitiesState state;

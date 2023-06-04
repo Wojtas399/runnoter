@@ -1,8 +1,8 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:runnoter/domain/bloc/pace_unit/pace_unit_cubit.dart';
 import 'package:runnoter/domain/entity/settings.dart';
-import 'package:runnoter/presentation/screen/pace_unit/pace_unit_cubit.dart';
 
 import '../../../mock/domain/mock_auth_service.dart';
 import '../../../mock/domain/mock_user_repository.dart';

@@ -3,9 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/additional_model/auth_exception.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
-import 'package:runnoter/presentation/screen/profile/bloc/profile_identities_bloc.dart';
-import 'package:runnoter/presentation/screen/profile/bloc/profile_identities_event.dart';
-import 'package:runnoter/presentation/screen/profile/bloc/profile_identities_state.dart';
+import 'package:runnoter/domain/bloc/profile/identities/profile_identities_bloc.dart';
 
 import '../../../mock/domain/mock_auth_service.dart';
 import '../../../mock/domain/mock_user_repository.dart';

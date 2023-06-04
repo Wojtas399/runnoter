@@ -13,7 +13,7 @@ export 'home/home_screen.dart';
 export 'language/language_screen.dart';
 export 'mileage/mileage_screen.dart';
 export 'pace_unit/pace_unit_screen.dart';
-export 'profile/ui/profile_screen.dart';
+export 'profile/profile_screen.dart';
 export 'sign_in/ui/sign_in_screen.dart';
 export 'sign_up/ui/sign_up_screen.dart';
 export 'theme_mode/theme_mode_screen.dart';

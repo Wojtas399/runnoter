@@ -1,51 +1,27 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+part of 'profile_screen.dart';
 
-import '../../../../domain/entity/settings.dart' as settings;
-import '../../../component/value_with_label_and_icon_component.dart';
-import '../../../config/navigation/routes.dart';
-import '../../../formatter/settings_formatter.dart';
-import '../../../service/navigator_service.dart';
-import '../bloc/profile_settings_bloc.dart';
-
-class ProfileSettingsSection extends StatelessWidget {
-  const ProfileSettingsSection({
-    super.key,
-  });
+class _SettingsSection extends StatelessWidget {
+  const _SettingsSection();
 
   @override
   Widget build(BuildContext context) {
     const Widget gap = SizedBox(height: 8);
 
-    return const Column(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _Header(),
-        SizedBox(height: 16),
-        _Theme(),
+        _SectionHeader(
+          title: Str.of(context).profileSettings,
+        ),
+        const SizedBox(height: 16),
+        const _Theme(),
         gap,
-        _Language(),
+        const _Language(),
         gap,
-        _DistanceUnit(),
+        const _DistanceUnit(),
         gap,
-        _PaceUnit(),
+        const _PaceUnit(),
       ],
-    );
-  }
-}
-
-class _Header extends StatelessWidget {
-  const _Header();
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8),
-      child: Text(
-        Str.of(context).profileSettings,
-        style: Theme.of(context).textTheme.titleLarge,
-      ),
     );
   }
 }
@@ -59,7 +35,7 @@ class _Theme extends StatelessWidget {
       (ProfileSettingsBloc bloc) => bloc.state.themeMode,
     );
 
-    return ValueWithLabelAndIconComponent(
+    return ValueWithLabelAndIcon(
       label: Str.of(context).themeMode,
       iconData: Icons.brightness_6_outlined,
       value: themeMode?.toUIFormat(context) ?? '',
@@ -86,7 +62,7 @@ class _Language extends StatelessWidget {
       (ProfileSettingsBloc bloc) => bloc.state.language,
     );
 
-    return ValueWithLabelAndIconComponent(
+    return ValueWithLabelAndIcon(
       label: Str.of(context).language,
       iconData: Icons.translate_outlined,
       value: language?.toUIFormat(context) ?? '',
@@ -113,7 +89,7 @@ class _DistanceUnit extends StatelessWidget {
       (ProfileSettingsBloc bloc) => bloc.state.distanceUnit,
     );
 
-    return ValueWithLabelAndIconComponent(
+    return ValueWithLabelAndIcon(
       label: Str.of(context).distanceUnit,
       iconData: Icons.route_outlined,
       value: distanceUnit?.toUIFormat(context) ?? '',
@@ -140,7 +116,7 @@ class _PaceUnit extends StatelessWidget {
       (ProfileSettingsBloc bloc) => bloc.state.paceUnit,
     );
 
-    return ValueWithLabelAndIconComponent(
+    return ValueWithLabelAndIcon(
       label: Str.of(context).paceUnit,
       iconData: Icons.speed_outlined,
       value: paceUnit?.toUIFormat(context) ?? '',

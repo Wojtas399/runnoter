@@ -1,27 +1,15 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+part of 'profile_screen.dart';
 
-import '../../../../domain/additional_model/bloc_status.dart';
-import '../../../component/password_text_field_component.dart';
-import '../../../service/navigator_service.dart';
-import '../../../service/utils.dart';
-import '../bloc/profile_identities_bloc.dart';
-import '../bloc/profile_identities_event.dart';
-import '../bloc/profile_identities_state.dart';
-
-class ProfileDeleteAccountDialog extends StatefulWidget {
-  const ProfileDeleteAccountDialog({
-    super.key,
-  });
+class _DeleteAccountDialog extends StatefulWidget {
+  const _DeleteAccountDialog();
 
   @override
   State<StatefulWidget> createState() {
-    return _State();
+    return _DeleteAccountDialogState();
   }
 }
 
-class _State extends State<ProfileDeleteAccountDialog> {
+class _DeleteAccountDialogState extends State<_DeleteAccountDialog> {
   final TextEditingController _passwordController = TextEditingController();
   bool _isSaveButtonDisabled = true;
 

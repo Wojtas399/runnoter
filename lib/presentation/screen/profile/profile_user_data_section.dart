@@ -1,55 +1,29 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+part of 'profile_screen.dart';
 
-import '../../../component/value_with_label_and_icon_component.dart';
-import '../../../service/dialog_service.dart';
-import '../../../service/validation_service.dart';
-import '../bloc/profile_identities_bloc.dart';
-import '../bloc/profile_identities_event.dart';
-import 'profile_delete_account_dialog.dart';
-import 'profile_update_email_dialog.dart';
-import 'profile_update_password_dialog.dart';
-
-class ProfileUserDataSection extends StatelessWidget {
-  const ProfileUserDataSection({
-    super.key,
-  });
+class _UserDataSection extends StatelessWidget {
+  const _UserDataSection();
 
   @override
   Widget build(BuildContext context) {
     const gap = SizedBox(height: 8);
 
-    return const Column(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _Header(),
-        SizedBox(height: 16),
-        _Name(),
+        _SectionHeader(
+          title: Str.of(context).profileUserData,
+        ),
+        const SizedBox(height: 16),
+        const _Name(),
         gap,
-        _Surname(),
+        const _Surname(),
         gap,
-        _Email(),
+        const _Email(),
         gap,
-        _ChangePassword(),
+        const _ChangePassword(),
         gap,
-        _DeleteAccount(),
+        const _DeleteAccount(),
       ],
-    );
-  }
-}
-
-class _Header extends StatelessWidget {
-  const _Header();
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
-      child: Text(
-        Str.of(context).profileUserData,
-        style: Theme.of(context).textTheme.titleLarge,
-      ),
     );
   }
 }
@@ -63,7 +37,7 @@ class _Name extends StatelessWidget {
       (ProfileIdentitiesBloc bloc) => bloc.state.username,
     );
 
-    return ValueWithLabelAndIconComponent(
+    return ValueWithLabelAndIcon(
       iconData: Icons.person_outline_rounded,
       label: Str.of(context).name,
       value: username ?? '',
@@ -112,7 +86,7 @@ class _Surname extends StatelessWidget {
       (ProfileIdentitiesBloc bloc) => bloc.state.surname,
     );
 
-    return ValueWithLabelAndIconComponent(
+    return ValueWithLabelAndIcon(
       iconData: Icons.person_outline_rounded,
       label: Str.of(context).surname,
       value: surname ?? '',
@@ -161,7 +135,7 @@ class _Email extends StatelessWidget {
       (ProfileIdentitiesBloc bloc) => bloc.state.email,
     );
 
-    return ValueWithLabelAndIconComponent(
+    return ValueWithLabelAndIcon(
       iconData: Icons.email_outlined,
       label: Str.of(context).email,
       value: email ?? '',
@@ -176,7 +150,7 @@ class _Email extends StatelessWidget {
       context: context,
       dialog: BlocProvider<ProfileIdentitiesBloc>.value(
         value: context.read<ProfileIdentitiesBloc>(),
-        child: const ProfileUpdateEmailDialog(),
+        child: const _UpdateEmailDialog(),
       ),
     );
   }
@@ -187,7 +161,7 @@ class _ChangePassword extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ValueWithLabelAndIconComponent(
+    return ValueWithLabelAndIcon(
       iconData: Icons.lock_outline,
       value: Str.of(context).profileChangePassword,
       onPressed: () {
@@ -201,7 +175,7 @@ class _ChangePassword extends StatelessWidget {
       context: context,
       dialog: BlocProvider.value(
         value: context.read<ProfileIdentitiesBloc>(),
-        child: const ProfileUpdatePasswordDialog(),
+        child: const _UpdatePasswordDialog(),
       ),
     );
   }
@@ -212,7 +186,7 @@ class _DeleteAccount extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ValueWithLabelAndIconComponent(
+    return ValueWithLabelAndIcon(
       iconData: Icons.no_accounts_outlined,
       value: Str.of(context).profileDeleteAccount,
       color: Theme.of(context).colorScheme.error,
@@ -227,7 +201,7 @@ class _DeleteAccount extends StatelessWidget {
       context: context,
       dialog: BlocProvider.value(
         value: context.read<ProfileIdentitiesBloc>(),
-        child: const ProfileDeleteAccountDialog(),
+        child: const _DeleteAccountDialog(),
       ),
     );
   }

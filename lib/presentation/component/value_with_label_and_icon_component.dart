@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class ValueWithLabelAndIconComponent extends StatelessWidget {
+class ValueWithLabelAndIcon extends StatelessWidget {
   final String value;
   final String? label;
   final IconData? iconData;
   final VoidCallback? onPressed;
   final Color? color;
 
-  const ValueWithLabelAndIconComponent({
+  const ValueWithLabelAndIcon({
     super.key,
     required this.value,
     this.label,

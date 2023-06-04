@@ -1,6 +1,4 @@
-import 'package:equatable/equatable.dart';
-
-import '../../../../domain/entity/user.dart';
+part of 'profile_settings_bloc.dart';
 
 abstract class ProfileSettingsEvent extends Equatable {
   const ProfileSettingsEvent();

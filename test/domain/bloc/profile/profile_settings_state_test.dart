@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
+import 'package:runnoter/domain/bloc/profile/settings/profile_settings_bloc.dart';
 import 'package:runnoter/domain/entity/settings.dart';
-import 'package:runnoter/presentation/screen/profile/bloc/profile_settings_state.dart';
 
 void main() {
   late ProfileSettingsState state;

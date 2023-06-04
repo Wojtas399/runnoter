@@ -1,28 +1,15 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+part of 'profile_screen.dart';
 
-import '../../../../domain/additional_model/bloc_status.dart';
-import '../../../component/password_text_field_component.dart';
-import '../../../service/navigator_service.dart';
-import '../../../service/utils.dart';
-import '../../../service/validation_service.dart';
-import '../bloc/profile_identities_bloc.dart';
-import '../bloc/profile_identities_event.dart';
-import '../bloc/profile_identities_state.dart';
-
-class ProfileUpdatePasswordDialog extends StatefulWidget {
-  const ProfileUpdatePasswordDialog({
-    super.key,
-  });
+class _UpdatePasswordDialog extends StatefulWidget {
+  const _UpdatePasswordDialog();
 
   @override
   State<StatefulWidget> createState() {
-    return _State();
+    return _UpdatePasswordDialogState();
   }
 }
 
-class _State extends State<ProfileUpdatePasswordDialog> {
+class _UpdatePasswordDialogState extends State<_UpdatePasswordDialog> {
   final TextEditingController _newPasswordController = TextEditingController();
   final TextEditingController _currentPasswordController =
       TextEditingController();
