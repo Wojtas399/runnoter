@@ -2,16 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../../domain/service/auth_service.dart';
-import '../../../../domain/service/connectivity_service.dart';
-import '../../../component/bloc_with_status_listener_component.dart';
-import '../../../config/navigation/routes.dart';
-import '../../../service/dialog_service.dart';
-import '../../../service/navigator_service.dart';
-import '../bloc/sign_in_bloc.dart';
-import '../bloc/sign_in_event.dart';
-import '../bloc/sign_in_state.dart';
-import 'sign_in_screen_content.dart';
+import '../../../domain/bloc/sign_in/sign_in_bloc.dart';
+import '../../../domain/service/auth_service.dart';
+import '../../../domain/service/connectivity_service.dart';
+import '../../component/big_button_component.dart';
+import '../../component/bloc_with_status_listener_component.dart';
+import '../../component/password_text_field_component.dart';
+import '../../component/text_field_component.dart';
+import '../../config/navigation/routes.dart';
+import '../../service/dialog_service.dart';
+import '../../service/navigator_service.dart';
+import '../../service/theme_service.dart';
+import '../../service/utils.dart';
+
+part 'sign_in_alternative_options.dart';
+part 'sign_in_app_bar.dart';
+part 'sign_in_form.dart';
+part 'sign_in_screen_content.dart';
+part 'sign_in_submit_button.dart';
 
 class SignInScreen extends StatelessWidget {
   const SignInScreen({
@@ -22,7 +30,7 @@ class SignInScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return const _BlocProvider(
       child: _BlocListener(
-        child: SignInContent(),
+        child: _Content(),
       ),
     );
   }

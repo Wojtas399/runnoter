@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../domain/additional_model/auth_exception.dart';
@@ -5,8 +6,10 @@ import '../../../../domain/additional_model/bloc_status.dart';
 import '../../../../domain/additional_model/bloc_with_status.dart';
 import '../../../../domain/service/auth_service.dart';
 import '../../../../domain/service/connectivity_service.dart';
-import 'sign_in_event.dart';
-import 'sign_in_state.dart';
+import '../../additional_model/bloc_state.dart';
+
+part 'sign_in_event.dart';
+part 'sign_in_state.dart';
 
 class SignInBloc
     extends BlocWithStatus<SignInEvent, SignInState, SignInInfo, SignInError> {

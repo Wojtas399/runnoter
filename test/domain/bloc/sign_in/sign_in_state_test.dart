@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
-import 'package:runnoter/presentation/screen/sign_in/bloc/sign_in_state.dart';
+import 'package:runnoter/domain/bloc/sign_in/sign_in_bloc.dart';
 
 void main() {
   late SignInState state;

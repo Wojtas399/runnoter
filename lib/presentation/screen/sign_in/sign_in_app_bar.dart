@@ -1,12 +1,7 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+part of 'sign_in_screen.dart';
 
-import '../../../service/theme_service.dart';
-
-class SignInAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const SignInAppBar({
-    super.key,
-  });
+class _AppBar extends StatelessWidget implements PreferredSizeWidget {
+  const _AppBar();
 
   @override
   Widget build(BuildContext context) {

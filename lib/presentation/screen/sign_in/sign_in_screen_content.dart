@@ -1,21 +1,12 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+part of 'sign_in_screen.dart';
 
-import '../../../service/utils.dart';
-import 'sign_in_alternative_options.dart';
-import 'sign_in_app_bar.dart';
-import 'sign_in_form.dart';
-import 'sign_in_submit_button.dart';
-
-class SignInContent extends StatelessWidget {
-  const SignInContent({
-    super.key,
-  });
+class _Content extends StatelessWidget {
+  const _Content();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const SignInAppBar(),
+      appBar: const _AppBar(),
       body: SafeArea(
         child: SingleChildScrollView(
           child: GestureDetector(
@@ -31,11 +22,11 @@ class SignInContent extends StatelessWidget {
                   SizedBox(height: 24),
                   _FormHeader(),
                   SizedBox(height: 32),
-                  SignInForm(),
+                  _Form(),
                   SizedBox(height: 32),
-                  SignInSubmitButton(),
+                  _SubmitButton(),
                   SizedBox(height: 16),
-                  SignInAlternativeOptions(),
+                  _AlternativeOptions(),
                 ],
               ),
             ),
