@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:runnoter/presentation/screen/workout_stage_creator/bloc/workout_stage_creator_bloc.dart';
+import 'package:runnoter/domain/bloc/workout_stage_creator/workout_stage_creator_bloc.dart';
 
 void main() {
   late WorkoutStageCreatorSeriesStageForm form;

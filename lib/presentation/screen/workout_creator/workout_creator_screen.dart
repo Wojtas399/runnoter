@@ -16,7 +16,7 @@ import '../../formatter/workout_stage_formatter.dart';
 import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
 import '../../service/utils.dart';
-import '../workout_stage_creator/ui/workout_stage_creator_screen.dart';
+import '../workout_stage_creator/workout_stage_creator_screen.dart';
 
 part 'workout_creator_content.dart';
 part 'workout_creator_submit_button.dart';
