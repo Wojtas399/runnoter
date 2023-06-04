@@ -32,7 +32,8 @@ class _CoveredDistance extends StatelessWidget {
       (WorkoutStatusCreatorBloc bloc) => bloc.state.status,
     );
     if (blocStatus is BlocStatusComplete &&
-        blocStatus.info == WorkoutStatusCreatorInfo.workoutStatusInitialized) {
+        blocStatus.info ==
+            WorkoutStatusCreatorBlocInfo.workoutStatusInitialized) {
       _controller.text = context
               .read<WorkoutStatusCreatorBloc>()
               .state
@@ -130,7 +131,8 @@ class _AverageHeartRate extends StatelessWidget {
       (WorkoutStatusCreatorBloc bloc) => bloc.state.status,
     );
     if (blocStatus is BlocStatusComplete &&
-        blocStatus.info == WorkoutStatusCreatorInfo.workoutStatusInitialized) {
+        blocStatus.info ==
+            WorkoutStatusCreatorBlocInfo.workoutStatusInitialized) {
       _controller.text = context
               .read<WorkoutStatusCreatorBloc>()
               .state
@@ -176,7 +178,8 @@ class _Comment extends StatelessWidget {
       (WorkoutStatusCreatorBloc bloc) => bloc.state.status,
     );
     if (blocStatus is BlocStatusComplete &&
-        blocStatus.info == WorkoutStatusCreatorInfo.workoutStatusInitialized) {
+        blocStatus.info ==
+            WorkoutStatusCreatorBlocInfo.workoutStatusInitialized) {
       _controller.text =
           context.read<WorkoutStatusCreatorBloc>().state.comment ?? '';
     }

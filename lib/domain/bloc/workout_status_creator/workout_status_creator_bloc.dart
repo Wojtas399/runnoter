@@ -12,7 +12,7 @@ part 'workout_status_creator_event.dart';
 part 'workout_status_creator_state.dart';
 
 class WorkoutStatusCreatorBloc extends BlocWithStatus<WorkoutStatusCreatorEvent,
-    WorkoutStatusCreatorState, WorkoutStatusCreatorInfo, dynamic> {
+    WorkoutStatusCreatorState, WorkoutStatusCreatorBlocInfo, dynamic> {
   final AuthService _authService;
   final WorkoutRepository _workoutRepository;
 
@@ -69,8 +69,9 @@ class WorkoutStatusCreatorBloc extends BlocWithStatus<WorkoutStatusCreatorEvent,
       ));
       return;
     }
-    const BlocStatus blocStatus = BlocStatusComplete<WorkoutStatusCreatorInfo>(
-      info: WorkoutStatusCreatorInfo.workoutStatusInitialized,
+    const BlocStatus blocStatus =
+        BlocStatusComplete<WorkoutStatusCreatorBlocInfo>(
+      info: WorkoutStatusCreatorBlocInfo.workoutStatusInitialized,
     );
     final Workout? workout = await _loadWorkoutById(event.workoutId, emit);
     final WorkoutStatus? workoutStatus = workout?.status;
@@ -180,7 +181,7 @@ class WorkoutStatusCreatorBloc extends BlocWithStatus<WorkoutStatusCreatorEvent,
         userId: loggedUserId,
         status: newStatus,
       );
-      emitCompleteStatus(emit, WorkoutStatusCreatorInfo.workoutStatusSaved);
+      emitCompleteStatus(emit, WorkoutStatusCreatorBlocInfo.workoutStatusSaved);
     }
   }
 
@@ -245,4 +246,9 @@ class WorkoutStatusCreatorBloc extends BlocWithStatus<WorkoutStatusCreatorEvent,
         return const WorkoutStatusUndone();
     }
   }
+}
+
+enum WorkoutStatusCreatorBlocInfo {
+  workoutStatusInitialized,
+  workoutStatusSaved,
 }

@@ -47,7 +47,8 @@ class _AveragePaceMinutes extends StatelessWidget {
       (WorkoutStatusCreatorBloc bloc) => bloc.state.status,
     );
     if (blocStatus is BlocStatusComplete &&
-        blocStatus.info == WorkoutStatusCreatorInfo.workoutStatusInitialized) {
+        blocStatus.info ==
+            WorkoutStatusCreatorBlocInfo.workoutStatusInitialized) {
       _controller.text = context
               .read<WorkoutStatusCreatorBloc>()
               .state
@@ -83,7 +84,8 @@ class _AveragePaceSeconds extends StatelessWidget {
       (WorkoutStatusCreatorBloc bloc) => bloc.state.status,
     );
     if (blocStatus is BlocStatusComplete &&
-        blocStatus.info == WorkoutStatusCreatorInfo.workoutStatusInitialized) {
+        blocStatus.info ==
+            WorkoutStatusCreatorBlocInfo.workoutStatusInitialized) {
       _controller.text = context
               .read<WorkoutStatusCreatorBloc>()
               .state

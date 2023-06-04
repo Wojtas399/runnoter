@@ -2,8 +2,8 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
+import 'package:runnoter/domain/bloc/workout_status_creator/workout_status_creator_bloc.dart';
 import 'package:runnoter/domain/entity/workout_status.dart';
-import 'package:runnoter/presentation/screen/workout_status_creator/bloc/workout_status_creator_bloc.dart';
 
 import '../../../mock/domain/mock_auth_service.dart';
 import '../../../mock/domain/mock_workout_repository.dart';
@@ -115,7 +115,7 @@ void main() {
     'workout status type is null, '
     'logged user exists, '
     'workout status contains workout stats, '
-    'should load workout from workout repository and should emit completed status with WorkoutStatusCreatorInfo.workoutStatusInitialized and updated all params relevant to workout status',
+    'should load workout from workout repository and should emit completed status with WorkoutStatusCreatorBlocInfo.workoutStatusInitialized and updated all params relevant to workout status',
     build: () => createBloc(),
     setUp: () {
       authService.mockGetLoggedUserId(userId: 'u1');
@@ -138,8 +138,8 @@ void main() {
     ),
     expect: () => [
       createState(
-        status: const BlocStatusComplete<WorkoutStatusCreatorInfo>(
-          info: WorkoutStatusCreatorInfo.workoutStatusInitialized,
+        status: const BlocStatusComplete<WorkoutStatusCreatorBlocInfo>(
+          info: WorkoutStatusCreatorBlocInfo.workoutStatusInitialized,
         ),
         workoutId: 'w1',
         workoutStatus: WorkoutStatusDone(
@@ -176,7 +176,7 @@ void main() {
     'workout status type is null, '
     'logged user exists, '
     'pending workout status, '
-    'should load workout from workout repository and should emit complete status with WorkoutStatusCreatorInfo.workoutStatusInitialized, updated workout id and workout status type',
+    'should load workout from workout repository and should emit complete status with WorkoutStatusCreatorBlocInfo.workoutStatusInitialized, updated workout id and workout status type',
     build: () => createBloc(),
     setUp: () {
       authService.mockGetLoggedUserId(userId: 'u1');
@@ -193,8 +193,8 @@ void main() {
     ),
     expect: () => [
       createState(
-        status: const BlocStatusComplete<WorkoutStatusCreatorInfo>(
-          info: WorkoutStatusCreatorInfo.workoutStatusInitialized,
+        status: const BlocStatusComplete<WorkoutStatusCreatorBlocInfo>(
+          info: WorkoutStatusCreatorBlocInfo.workoutStatusInitialized,
         ),
         workoutId: 'w1',
         workoutStatus: const WorkoutStatusPending(),
@@ -389,8 +389,8 @@ void main() {
         workoutStatusType: WorkoutStatusType.pending,
       ),
       createState(
-        status: const BlocStatusComplete<WorkoutStatusCreatorInfo>(
-          info: WorkoutStatusCreatorInfo.workoutStatusSaved,
+        status: const BlocStatusComplete<WorkoutStatusCreatorBlocInfo>(
+          info: WorkoutStatusCreatorBlocInfo.workoutStatusSaved,
         ),
         workoutId: 'w1',
         workoutStatusType: WorkoutStatusType.pending,
@@ -444,8 +444,8 @@ void main() {
         comment: 'comment',
       ),
       createState(
-        status: const BlocStatusComplete<WorkoutStatusCreatorInfo>(
-          info: WorkoutStatusCreatorInfo.workoutStatusSaved,
+        status: const BlocStatusComplete<WorkoutStatusCreatorBlocInfo>(
+          info: WorkoutStatusCreatorBlocInfo.workoutStatusSaved,
         ),
         workoutId: 'w1',
         workoutStatusType: WorkoutStatusType.done,
@@ -511,8 +511,8 @@ void main() {
         comment: 'comment',
       ),
       createState(
-        status: const BlocStatusComplete<WorkoutStatusCreatorInfo>(
-          info: WorkoutStatusCreatorInfo.workoutStatusSaved,
+        status: const BlocStatusComplete<WorkoutStatusCreatorBlocInfo>(
+          info: WorkoutStatusCreatorBlocInfo.workoutStatusSaved,
         ),
         workoutId: 'w1',
         workoutStatusType: WorkoutStatusType.aborted,
@@ -566,8 +566,8 @@ void main() {
         workoutStatusType: WorkoutStatusType.undone,
       ),
       createState(
-        status: const BlocStatusComplete<WorkoutStatusCreatorInfo>(
-          info: WorkoutStatusCreatorInfo.workoutStatusSaved,
+        status: const BlocStatusComplete<WorkoutStatusCreatorBlocInfo>(
+          info: WorkoutStatusCreatorBlocInfo.workoutStatusSaved,
         ),
         workoutId: 'w1',
         workoutStatusType: WorkoutStatusType.undone,

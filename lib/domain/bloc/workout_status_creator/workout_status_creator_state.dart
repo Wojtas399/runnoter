@@ -112,8 +112,3 @@ enum WorkoutStatusType {
   aborted,
   undone,
 }
-
-enum WorkoutStatusCreatorInfo {
-  workoutStatusInitialized,
-  workoutStatusSaved,
-}

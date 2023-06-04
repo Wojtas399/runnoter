@@ -123,17 +123,18 @@ class _WorkoutStatusButton extends StatelessWidget {
       return;
     }
     final WorkoutStatus? workoutStatus = bloc.state.workoutStatus;
-    WorkoutStatusCreatorArguments creatorArguments =
-        WorkoutStatusCreatorUpdateStatusArguments(workoutId: workoutId);
+    WorkoutStatusCreatorType workoutStatusCreatorType =
+        WorkoutStatusCreatorType.updateStatus;
     if (workoutStatus is WorkoutStatusPending) {
-      creatorArguments = WorkoutStatusCreatorFinishWorkoutArguments(
-        workoutId: workoutId,
-      );
+      workoutStatusCreatorType = WorkoutStatusCreatorType.finishWorkout;
     }
     navigateTo(
       context: context,
       route: WorkoutStatusCreatorRoute(
-        creatorArguments: creatorArguments,
+        creatorArguments: WorkoutStatusCreatorArguments(
+          workoutId: workoutId,
+          creatorType: workoutStatusCreatorType,
+        ),
       ),
     );
   }
