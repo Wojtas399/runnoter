@@ -30,7 +30,7 @@ class BloodTestCreatorState extends BlocState<BloodTestCreatorState> {
     if (parameterResults == null || bloodTest?.parameterResults == null) {
       return true;
     }
-    final bool areParamsTheSame = const ListEquality().equals(
+    final bool areParamsTheSame = areListsEqual(
       parameterResults!,
       bloodTest!.parameterResults,
     );

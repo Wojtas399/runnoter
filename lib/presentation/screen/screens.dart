@@ -17,5 +17,5 @@ export 'profile/profile_screen.dart';
 export 'sign_in/sign_in_screen.dart';
 export 'sign_up/sign_up_screen.dart';
 export 'theme_mode/theme_mode_screen.dart';
-export 'workout_creator/ui/workout_creator_screen.dart';
+export 'workout_creator/workout_creator_screen.dart';
 export 'workout_status_creator/ui/workout_status_creator_screen.dart';

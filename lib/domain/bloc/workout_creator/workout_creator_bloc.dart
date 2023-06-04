@@ -10,13 +10,13 @@ import '../../../../domain/entity/workout_stage.dart';
 import '../../../../domain/entity/workout_status.dart';
 import '../../../../domain/repository/workout_repository.dart';
 import '../../../../domain/service/auth_service.dart';
-import '../../../service/utils.dart';
+import '../../service/list_service.dart';
 
 part 'workout_creator_event.dart';
 part 'workout_creator_state.dart';
 
 class WorkoutCreatorBloc extends BlocWithStatus<WorkoutCreatorEvent,
-    WorkoutCreatorState, WorkoutCreatorInfo, dynamic> {
+    WorkoutCreatorState, WorkoutCreatorBlocInfo, dynamic> {
   final AuthService _authService;
   final WorkoutRepository _workoutRepository;
   StreamSubscription<Workout?>? _workoutListener;
@@ -70,8 +70,8 @@ class WorkoutCreatorBloc extends BlocWithStatus<WorkoutCreatorEvent,
           loggedUserId,
         );
         emit(state.copyWith(
-          status: const BlocStatusComplete<WorkoutCreatorInfo>(
-            info: WorkoutCreatorInfo.editModeInitialized,
+          status: const BlocStatusComplete<WorkoutCreatorBlocInfo>(
+            info: WorkoutCreatorBlocInfo.editModeInitialized,
           ),
           date: event.date,
           workout: workout,
@@ -147,10 +147,10 @@ class WorkoutCreatorBloc extends BlocWithStatus<WorkoutCreatorEvent,
     emitLoadingStatus(emit);
     if (state.workout != null) {
       await _updateWorkout(loggedUserId);
-      emitCompleteStatus(emit, WorkoutCreatorInfo.workoutUpdated);
+      emitCompleteStatus(emit, WorkoutCreatorBlocInfo.workoutUpdated);
     } else {
       await _addWorkout(loggedUserId);
-      emitCompleteStatus(emit, WorkoutCreatorInfo.workoutAdded);
+      emitCompleteStatus(emit, WorkoutCreatorBlocInfo.workoutAdded);
     }
   }
 
@@ -181,4 +181,10 @@ class WorkoutCreatorBloc extends BlocWithStatus<WorkoutCreatorEvent,
       stages: state.stages,
     );
   }
+}
+
+enum WorkoutCreatorBlocInfo {
+  editModeInitialized,
+  workoutAdded,
+  workoutUpdated,
 }

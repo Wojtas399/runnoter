@@ -57,9 +57,3 @@ class WorkoutCreatorState extends BlocState<WorkoutCreatorState> {
     return areListsEqual(stages, originalStages);
   }
 }
-
-enum WorkoutCreatorInfo {
-  editModeInitialized,
-  workoutAdded,
-  workoutUpdated,
-}

@@ -2,10 +2,10 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
+import 'package:runnoter/domain/bloc/workout_creator/workout_creator_bloc.dart';
 import 'package:runnoter/domain/entity/workout.dart';
 import 'package:runnoter/domain/entity/workout_stage.dart';
 import 'package:runnoter/domain/entity/workout_status.dart';
-import 'package:runnoter/presentation/screen/workout_creator/bloc/workout_creator_bloc.dart';
 
 import '../../../mock/domain/mock_auth_service.dart';
 import '../../../mock/domain/mock_workout_repository.dart';
@@ -121,8 +121,8 @@ void main() {
     ),
     expect: () => [
       createState(
-        status: const BlocStatusComplete<WorkoutCreatorInfo>(
-          info: WorkoutCreatorInfo.editModeInitialized,
+        status: const BlocStatusComplete<WorkoutCreatorBlocInfo>(
+          info: WorkoutCreatorBlocInfo.editModeInitialized,
         ),
         date: DateTime(2023, 1, 1),
         workout: createWorkout(
@@ -440,8 +440,8 @@ void main() {
         ],
       ),
       createState(
-        status: const BlocStatusComplete<WorkoutCreatorInfo>(
-          info: WorkoutCreatorInfo.workoutAdded,
+        status: const BlocStatusComplete<WorkoutCreatorBlocInfo>(
+          info: WorkoutCreatorBlocInfo.workoutAdded,
         ),
         date: DateTime(2023, 2, 2),
         workoutName: 'workout 1',
@@ -544,8 +544,8 @@ void main() {
         ],
       ),
       createState(
-        status: const BlocStatusComplete<WorkoutCreatorInfo>(
-          info: WorkoutCreatorInfo.workoutUpdated,
+        status: const BlocStatusComplete<WorkoutCreatorBlocInfo>(
+          info: WorkoutCreatorBlocInfo.workoutUpdated,
         ),
         date: DateTime(2023, 2, 2),
         workout: createWorkout(

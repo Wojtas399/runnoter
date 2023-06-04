@@ -2,21 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../../domain/additional_model/bloc_status.dart';
-import '../../../../domain/entity/workout.dart';
-import '../../../../domain/entity/workout_stage.dart';
-import '../../../../domain/repository/workout_repository.dart';
-import '../../../../domain/service/auth_service.dart';
-import '../../../component/big_button_component.dart';
-import '../../../component/bloc_with_status_listener_component.dart';
-import '../../../component/scrollable_content_component.dart';
-import '../../../component/text_field_component.dart';
-import '../../../formatter/workout_stage_formatter.dart';
-import '../../../service/dialog_service.dart';
-import '../../../service/navigator_service.dart';
-import '../../../service/utils.dart';
-import '../../workout_stage_creator/ui/workout_stage_creator_screen.dart';
-import '../bloc/workout_creator_bloc.dart';
+import '../../../domain/additional_model/bloc_status.dart';
+import '../../../domain/bloc/workout_creator/workout_creator_bloc.dart';
+import '../../../domain/entity/workout.dart';
+import '../../../domain/entity/workout_stage.dart';
+import '../../../domain/repository/workout_repository.dart';
+import '../../../domain/service/auth_service.dart';
+import '../../component/big_button_component.dart';
+import '../../component/bloc_with_status_listener_component.dart';
+import '../../component/scrollable_content_component.dart';
+import '../../component/text_field_component.dart';
+import '../../formatter/workout_stage_formatter.dart';
+import '../../service/dialog_service.dart';
+import '../../service/navigator_service.dart';
+import '../../service/utils.dart';
+import '../workout_stage_creator/ui/workout_stage_creator_screen.dart';
 
 part 'workout_creator_content.dart';
 part 'workout_creator_submit_button.dart';
@@ -110,22 +110,22 @@ class _BlocListener extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocWithStatusListener<WorkoutCreatorBloc, WorkoutCreatorState,
-        WorkoutCreatorInfo, dynamic>(
-      onInfo: (WorkoutCreatorInfo info) {
+        WorkoutCreatorBlocInfo, dynamic>(
+      onInfo: (WorkoutCreatorBlocInfo info) {
         _manageInfo(context, info);
       },
       child: child,
     );
   }
 
-  void _manageInfo(BuildContext context, WorkoutCreatorInfo info) {
+  void _manageInfo(BuildContext context, WorkoutCreatorBlocInfo info) {
     switch (info) {
-      case WorkoutCreatorInfo.editModeInitialized:
+      case WorkoutCreatorBlocInfo.editModeInitialized:
         break;
-      case WorkoutCreatorInfo.workoutAdded:
+      case WorkoutCreatorBlocInfo.workoutAdded:
         _onWorkoutAddedInfo(context);
         break;
-      case WorkoutCreatorInfo.workoutUpdated:
+      case WorkoutCreatorBlocInfo.workoutUpdated:
         _onWorkoutUpdatedInfo(context);
         break;
     }

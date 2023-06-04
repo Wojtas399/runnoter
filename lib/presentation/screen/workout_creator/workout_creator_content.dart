@@ -67,7 +67,7 @@ class _WorkoutName extends StatelessWidget {
       (WorkoutCreatorBloc bloc) => bloc.state.workoutName,
     );
     if (blocStatus is BlocStatusComplete &&
-        blocStatus.info == WorkoutCreatorInfo.editModeInitialized) {
+        blocStatus.info == WorkoutCreatorBlocInfo.editModeInitialized) {
       _controller.text = workoutName ?? '';
     }
 
