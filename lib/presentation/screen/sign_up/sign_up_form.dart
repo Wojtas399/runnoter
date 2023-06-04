@@ -1,16 +1,7 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+part of 'sign_up_screen.dart';
 
-import '../../../component/password_text_field_component.dart';
-import '../../../component/text_field_component.dart';
-import '../bloc/sign_up_bloc.dart';
-import '../bloc/sign_up_event.dart';
-
-class SignUpForm extends StatelessWidget {
-  const SignUpForm({
-    super.key,
-  });
+class _Form extends StatelessWidget {
+  const _Form();
 
   @override
   Widget build(BuildContext context) {

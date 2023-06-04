@@ -1,14 +1,4 @@
-import '../../../../domain/additional_model/bloc_state.dart';
-import '../../../../domain/additional_model/bloc_status.dart';
-import '../../../service/validation_service.dart' as validator;
-
-enum SignUpInfo {
-  signedUp,
-}
-
-enum SignUpError {
-  emailAlreadyInUse,
-}
+part of 'sign_up_bloc.dart';
 
 class SignUpState extends BlocState {
   final String name;

@@ -1,16 +1,7 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+part of 'sign_up_screen.dart';
 
-import '../../../component/big_button_component.dart';
-import '../../../service/utils.dart';
-import '../bloc/sign_up_bloc.dart';
-import '../bloc/sign_up_event.dart';
-
-class SignUpSubmitButton extends StatelessWidget {
-  const SignUpSubmitButton({
-    super.key,
-  });
+class _SubmitButton extends StatelessWidget {
+  const _SubmitButton();
 
   @override
   Widget build(BuildContext context) {

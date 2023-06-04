@@ -1,13 +1,7 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+part of 'sign_up_screen.dart';
 
-import '../../../config/navigation/routes.dart';
-import '../../../service/navigator_service.dart';
-
-class SignUpAlternativeOption extends StatelessWidget {
-  const SignUpAlternativeOption({
-    super.key,
-  });
+class _AlternativeOptions extends StatelessWidget {
+  const _AlternativeOptions();
 
   @override
   Widget build(BuildContext context) {

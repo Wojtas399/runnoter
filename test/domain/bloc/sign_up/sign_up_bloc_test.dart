@@ -3,10 +3,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/additional_model/auth_exception.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
+import 'package:runnoter/domain/bloc/sign_up/sign_up_bloc.dart';
 import 'package:runnoter/domain/entity/settings.dart';
-import 'package:runnoter/presentation/screen/sign_up/bloc/sign_up_bloc.dart';
-import 'package:runnoter/presentation/screen/sign_up/bloc/sign_up_event.dart';
-import 'package:runnoter/presentation/screen/sign_up/bloc/sign_up_state.dart';
 
 import '../../../mock/domain/mock_auth_service.dart';
 import '../../../mock/domain/mock_user_repository.dart';
@@ -191,8 +189,8 @@ void main() {
         password: password,
       ),
       createState(
-        status: const BlocStatusComplete<SignUpInfo>(
-          info: SignUpInfo.signedUp,
+        status: const BlocStatusComplete<SignUpBlocInfo>(
+          info: SignUpBlocInfo.signedUp,
         ),
         name: name,
         surname: surname,
@@ -309,8 +307,8 @@ void main() {
         password: password,
       ),
       createState(
-        status: const BlocStatusError<SignUpError>(
-          error: SignUpError.emailAlreadyInUse,
+        status: const BlocStatusError<SignUpBlocError>(
+          error: SignUpBlocError.emailAlreadyInUse,
         ),
         name: name,
         surname: surname,

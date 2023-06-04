@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../domain/additional_model/auth_exception.dart';
@@ -8,11 +9,14 @@ import '../../../../domain/entity/user.dart';
 import '../../../../domain/repository/user_repository.dart';
 import '../../../../domain/service/auth_service.dart';
 import '../../../../domain/service/connectivity_service.dart';
-import 'sign_up_event.dart';
-import 'sign_up_state.dart';
+import '../../../presentation/service/validation_service.dart' as validator;
+import '../../additional_model/bloc_state.dart';
 
-class SignUpBloc
-    extends BlocWithStatus<SignUpEvent, SignUpState, SignUpInfo, SignUpError> {
+part 'sign_up_event.dart';
+part 'sign_up_state.dart';
+
+class SignUpBloc extends BlocWithStatus<SignUpEvent, SignUpState,
+    SignUpBlocInfo, SignUpBlocError> {
   final AuthService _authService;
   final UserRepository _userRepository;
   final ConnectivityService _connectivityService;
@@ -104,9 +108,10 @@ class SignUpBloc
     }
     try {
       await _tryToSignUp();
-      emitCompleteStatus(emit, SignUpInfo.signedUp);
+      emitCompleteStatus(emit, SignUpBlocInfo.signedUp);
     } on AuthException catch (authException) {
-      final SignUpError? error = _mapAuthExceptionToBlocError(authException);
+      final SignUpBlocError? error =
+          _mapAuthExceptionToBlocError(authException);
       if (error != null) {
         emitErrorStatus(emit, error);
       } else {
@@ -142,10 +147,18 @@ class SignUpBloc
     );
   }
 
-  SignUpError? _mapAuthExceptionToBlocError(AuthException exception) {
+  SignUpBlocError? _mapAuthExceptionToBlocError(AuthException exception) {
     if (exception == AuthException.emailAlreadyInUse) {
-      return SignUpError.emailAlreadyInUse;
+      return SignUpBlocError.emailAlreadyInUse;
     }
     return null;
   }
+}
+
+enum SignUpBlocInfo {
+  signedUp,
+}
+
+enum SignUpBlocError {
+  emailAlreadyInUse,
 }

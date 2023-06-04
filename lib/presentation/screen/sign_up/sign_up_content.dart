@@ -1,16 +1,7 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+part of 'sign_up_screen.dart';
 
-import '../../../component/app_bar_with_logo.dart';
-import '../../../service/utils.dart';
-import 'sign_up_alternative_option.dart';
-import 'sign_up_form.dart';
-import 'sign_up_submit_button.dart';
-
-class SignUpContent extends StatelessWidget {
-  const SignUpContent({
-    super.key,
-  });
+class _Content extends StatelessWidget {
+  const _Content();
 
   @override
   Widget build(BuildContext context) {
@@ -29,11 +20,11 @@ class SignUpContent extends StatelessWidget {
                 children: [
                   _FormHeader(),
                   SizedBox(height: 32),
-                  SignUpForm(),
+                  _Form(),
                   SizedBox(height: 32),
-                  SignUpSubmitButton(),
+                  _SubmitButton(),
                   SizedBox(height: 16),
-                  SignUpAlternativeOption(),
+                  _AlternativeOptions(),
                 ],
               ),
             ),
