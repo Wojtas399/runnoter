@@ -3,11 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../../domain/entity/settings.dart' as settings;
+import '../../../domain/bloc/theme_mode/theme_mode_cubit.dart';
 import '../../../domain/repository/user_repository.dart';
 import '../../../domain/service/auth_service.dart';
 import '../../service/navigator_service.dart';
 import '../../service/theme_service.dart';
-import 'theme_mode_cubit.dart';
 
 class ThemeModeScreen extends StatelessWidget {
   const ThemeModeScreen({
