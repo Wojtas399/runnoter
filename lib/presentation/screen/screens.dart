@@ -7,7 +7,7 @@ export 'day_preview/day_preview_screen.dart';
 export 'distance_unit/distance_unit_screen.dart';
 export 'forgot_password/forgot_password_screen.dart';
 export 'health/health_screen.dart';
-export 'health_measurement_creator/ui/health_measurement_creator_screen.dart';
+export 'health_measurement_creator/health_measurement_creator_screen.dart';
 export 'health_measurements/ui/health_measurements_screen.dart';
 export 'home/ui/home_screen.dart';
 export 'language/language_screen.dart';
