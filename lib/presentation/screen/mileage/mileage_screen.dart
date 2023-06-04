@@ -3,12 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
-import '../../../../domain/repository/workout_repository.dart';
-import '../../../../domain/service/auth_service.dart';
-import '../../../component/empty_content_info_component.dart';
-import '../../../component/text/title_text_components.dart';
-import '../../../formatter/date_formatter.dart';
-import '../mileage_cubit.dart';
+import '../../../domain/bloc/mileage/mileage_cubit.dart';
+import '../../../domain/repository/workout_repository.dart';
+import '../../../domain/service/auth_service.dart';
+import '../../component/empty_content_info_component.dart';
+import '../../component/text/title_text_components.dart';
+import '../../formatter/date_formatter.dart';
 
 part 'mileage_charts.dart';
 
