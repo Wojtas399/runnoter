@@ -1,17 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+part of 'home_screen.dart';
 
-import '../../../service/dialog_service.dart';
-import '../bloc/home_bloc.dart';
-import '../bloc/home_event.dart';
-import '../bloc/home_state.dart';
-
-class HomeDrawer extends StatelessWidget {
+class _Drawer extends StatelessWidget {
   final DrawerPage drawerPage;
 
-  const HomeDrawer({
-    super.key,
+  const _Drawer({
     required this.drawerPage,
   });
 

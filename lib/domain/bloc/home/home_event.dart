@@ -1,4 +1,4 @@
-import 'home_state.dart';
+part of 'home_bloc.dart';
 
 abstract class HomeEvent {
   const HomeEvent();

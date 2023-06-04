@@ -1,10 +1,8 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
+import 'package:runnoter/domain/bloc/home/home_bloc.dart';
 import 'package:runnoter/domain/entity/settings.dart';
-import 'package:runnoter/presentation/screen/home/bloc/home_bloc.dart';
-import 'package:runnoter/presentation/screen/home/bloc/home_event.dart';
-import 'package:runnoter/presentation/screen/home/bloc/home_state.dart';
 
 import '../../../mock/domain/mock_auth_service.dart';
 import '../../../mock/domain/mock_user_repository.dart';

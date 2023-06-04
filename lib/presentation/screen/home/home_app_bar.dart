@@ -1,15 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+part of 'home_screen.dart';
 
-import '../bloc/home_bloc.dart';
-import '../bloc/home_state.dart';
-
-class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
+class _AppBar extends StatelessWidget implements PreferredSizeWidget {
   final DrawerPage drawerPage;
 
-  const HomeAppBar({
-    super.key,
+  const _AppBar({
     required this.drawerPage,
   });
 

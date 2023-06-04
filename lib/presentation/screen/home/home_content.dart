@@ -1,14 +1,6 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+part of 'home_screen.dart';
 
-import '../../screens.dart';
-import '../bloc/home_bloc.dart';
-import '../bloc/home_state.dart';
-import 'home_app_bar.dart';
-import 'home_bottom_navigation_bar.dart';
-import 'home_drawer.dart';
-
-class HomeContent extends StatelessWidget {
+class _Content extends StatelessWidget {
   final List<Widget> pages = [
     _BottomNavPage(),
     const ProfileScreen(),
@@ -17,10 +9,6 @@ class HomeContent extends StatelessWidget {
     const SizedBox(),
   ];
 
-  HomeContent({
-    super.key,
-  });
-
   @override
   Widget build(BuildContext context) {
     final DrawerPage drawerPage = context.select(
@@ -28,11 +16,10 @@ class HomeContent extends StatelessWidget {
     );
 
     return Scaffold(
-      appBar: HomeAppBar(drawerPage: drawerPage),
-      drawer: HomeDrawer(drawerPage: drawerPage),
-      bottomNavigationBar: drawerPage == DrawerPage.home
-          ? const HomeBottomNavigationBar()
-          : null,
+      appBar: _AppBar(drawerPage: drawerPage),
+      drawer: _Drawer(drawerPage: drawerPage),
+      bottomNavigationBar:
+          drawerPage == DrawerPage.home ? const _BottomNavigationBar() : null,
       body: SafeArea(
         child: pages[drawerPage.index],
       ),

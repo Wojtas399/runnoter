@@ -9,7 +9,7 @@ export 'forgot_password/forgot_password_screen.dart';
 export 'health/health_screen.dart';
 export 'health_measurement_creator/health_measurement_creator_screen.dart';
 export 'health_measurements/health_measurements_screen.dart';
-export 'home/ui/home_screen.dart';
+export 'home/home_screen.dart';
 export 'language/language_screen.dart';
 export 'mileage/ui/mileage_screen.dart';
 export 'pace_unit/pace_unit_screen.dart';

@@ -1,18 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../../domain/entity/settings.dart' as settings;
-import '../../../../domain/repository/user_repository.dart';
-import '../../../../domain/service/auth_service.dart';
-import '../../../component/bloc_with_status_listener_component.dart';
-import '../../../config/navigation/routes.dart';
-import '../../../service/language_service.dart';
-import '../../../service/navigator_service.dart';
-import '../../../service/theme_service.dart';
-import '../bloc/home_bloc.dart';
-import '../bloc/home_event.dart';
-import '../bloc/home_state.dart';
-import 'home_content.dart';
+import '../../../domain/bloc/home/home_bloc.dart';
+import '../../../domain/entity/settings.dart' as settings;
+import '../../../domain/repository/user_repository.dart';
+import '../../../domain/service/auth_service.dart';
+import '../../component/bloc_with_status_listener_component.dart';
+import '../../config/navigation/routes.dart';
+import '../../service/dialog_service.dart';
+import '../../service/language_service.dart';
+import '../../service/navigator_service.dart';
+import '../../service/theme_service.dart';
+import '../screens.dart';
+
+part 'home_app_bar.dart';
+part 'home_bottom_navigation_bar.dart';
+part 'home_content.dart';
+part 'home_drawer.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({
@@ -23,7 +28,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return _BlocProvider(
       child: _BlocListener(
-        child: HomeContent(),
+        child: _Content(),
       ),
     );
   }

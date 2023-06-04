@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -8,8 +9,11 @@ import '../../../../domain/additional_model/bloc_with_status.dart';
 import '../../../../domain/entity/user.dart';
 import '../../../../domain/repository/user_repository.dart';
 import '../../../../domain/service/auth_service.dart';
-import 'home_event.dart';
-import 'home_state.dart';
+import '../../additional_model/bloc_state.dart';
+import '../../entity/settings.dart';
+
+part 'home_event.dart';
+part 'home_state.dart';
 
 class HomeBloc extends BlocWithStatus<HomeEvent, HomeState, HomeInfo, dynamic> {
   final AuthService _authService;

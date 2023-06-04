@@ -1,15 +1,7 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+part of 'home_screen.dart';
 
-import '../bloc/home_bloc.dart';
-import '../bloc/home_event.dart';
-import '../bloc/home_state.dart';
-
-class HomeBottomNavigationBar extends StatelessWidget {
-  const HomeBottomNavigationBar({
-    super.key,
-  });
+class _BottomNavigationBar extends StatelessWidget {
+  const _BottomNavigationBar();
 
   @override
   Widget build(BuildContext context) {
