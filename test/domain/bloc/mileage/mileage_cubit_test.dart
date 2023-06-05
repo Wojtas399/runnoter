@@ -4,11 +4,11 @@ import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/bloc/mileage/mileage_cubit.dart';
 import 'package:runnoter/domain/entity/run_status.dart';
 
-import '../../../mock/domain/mock_auth_service.dart';
-import '../../../mock/domain/mock_workout_repository.dart';
 import '../../../creators/chart_month_creator.dart';
 import '../../../creators/run_status_creator.dart';
 import '../../../creators/workout_creator.dart';
+import '../../../mock/domain/mock_auth_service.dart';
+import '../../../mock/domain/mock_workout_repository.dart';
 
 void main() {
   final authService = MockAuthService();

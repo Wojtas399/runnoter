@@ -4,10 +4,10 @@ import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/bloc/distance_unit/distance_unit_cubit.dart';
 import 'package:runnoter/domain/entity/settings.dart';
 
-import '../../../mock/domain/mock_auth_service.dart';
-import '../../../mock/domain/mock_user_repository.dart';
 import '../../../creators/settings_creator.dart';
 import '../../../creators/user_creator.dart';
+import '../../../mock/domain/mock_auth_service.dart';
+import '../../../mock/domain/mock_user_repository.dart';
 
 void main() {
   final authService = MockAuthService();

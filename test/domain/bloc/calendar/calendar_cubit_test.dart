@@ -3,9 +3,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/bloc/calendar/calendar_cubit.dart';
 
+import '../../../creators/workout_creator.dart';
 import '../../../mock/domain/mock_auth_service.dart';
 import '../../../mock/domain/mock_workout_repository.dart';
-import '../../../creators/workout_creator.dart';
 
 void main() {
   final authService = MockAuthService();

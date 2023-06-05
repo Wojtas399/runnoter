@@ -5,9 +5,9 @@ import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/bloc/run_status_creator/run_status_creator_bloc.dart';
 import 'package:runnoter/domain/entity/run_status.dart';
 
+import '../../../creators/workout_creator.dart';
 import '../../../mock/domain/mock_auth_service.dart';
 import '../../../mock/domain/mock_workout_repository.dart';
-import '../../../creators/workout_creator.dart';
 
 void main() {
   final authService = MockAuthService();

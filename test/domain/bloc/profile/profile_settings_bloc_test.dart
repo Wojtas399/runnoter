@@ -5,10 +5,10 @@ import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/bloc/profile/settings/profile_settings_bloc.dart';
 import 'package:runnoter/domain/entity/settings.dart';
 
-import '../../../mock/domain/mock_auth_service.dart';
-import '../../../mock/domain/mock_user_repository.dart';
 import '../../../creators/settings_creator.dart';
 import '../../../creators/user_creator.dart';
+import '../../../mock/domain/mock_auth_service.dart';
+import '../../../mock/domain/mock_user_repository.dart';
 
 void main() {
   final authService = MockAuthService();
