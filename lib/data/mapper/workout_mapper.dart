@@ -9,7 +9,7 @@ Workout mapWorkoutFromFirebase(WorkoutDto workoutDto) {
     id: workoutDto.id,
     userId: workoutDto.userId,
     date: workoutDto.date,
-    status: mapRunStatusFromFirebase(workoutDto.status),
+    status: mapRunStatusFromDto(workoutDto.status),
     name: workoutDto.name,
     stages: workoutDto.stages
         .map(

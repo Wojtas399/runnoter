@@ -4,7 +4,7 @@ import '../../domain/entity/run_status.dart';
 import 'mood_rate_mapper.dart';
 import 'pace_mapper.dart';
 
-RunStatus mapRunStatusFromFirebase(RunStatusDto runStatusDto) {
+RunStatus mapRunStatusFromDto(RunStatusDto runStatusDto) {
   if (runStatusDto is RunStatusPendingDto) {
     return const RunStatusPending();
   } else if (runStatusDto is RunStatusDoneDto) {
@@ -30,7 +30,7 @@ RunStatus mapRunStatusFromFirebase(RunStatusDto runStatusDto) {
   }
 }
 
-RunStatusDto mapRunStatusToFirebase(RunStatus runStatus) {
+RunStatusDto mapRunStatusToDto(RunStatus runStatus) {
   if (runStatus is RunStatusPending) {
     return const RunStatusPendingDto();
   } else if (runStatus is RunStatusDone) {
