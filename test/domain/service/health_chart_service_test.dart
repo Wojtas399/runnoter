@@ -4,7 +4,7 @@ import 'package:runnoter/domain/entity/health_measurement.dart';
 import 'package:runnoter/domain/service/health_chart_service.dart';
 
 import '../../mock/presentation/service/mock_date_service.dart';
-import '../../util/health_measurement_creator.dart';
+import '../../creators/health_measurement_creator.dart';
 
 void main() {
   final dateService = MockDateService();

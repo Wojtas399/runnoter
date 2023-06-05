@@ -5,7 +5,7 @@ import 'package:runnoter/domain/bloc/current_week/current_week_cubit.dart';
 import '../../../mock/domain/mock_auth_service.dart';
 import '../../../mock/domain/mock_workout_repository.dart';
 import '../../../mock/presentation/service/mock_date_service.dart';
-import '../../../util/workout_creator.dart';
+import '../../../creators/workout_creator.dart';
 
 void main() {
   final dateService = MockDateService();

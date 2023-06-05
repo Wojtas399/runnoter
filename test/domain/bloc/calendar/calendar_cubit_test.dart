@@ -5,7 +5,7 @@ import 'package:runnoter/domain/bloc/calendar/calendar_cubit.dart';
 
 import '../../../mock/domain/mock_auth_service.dart';
 import '../../../mock/domain/mock_workout_repository.dart';
-import '../../../util/workout_creator.dart';
+import '../../../creators/workout_creator.dart';
 
 void main() {
   final authService = MockAuthService();

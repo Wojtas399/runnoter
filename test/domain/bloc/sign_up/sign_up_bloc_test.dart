@@ -9,8 +9,8 @@ import 'package:runnoter/domain/entity/settings.dart';
 import '../../../mock/domain/mock_auth_service.dart';
 import '../../../mock/domain/mock_user_repository.dart';
 import '../../../mock/presentation/service/mock_connectivity_service.dart';
-import '../../../util/settings_creator.dart';
-import '../../../util/user_creator.dart';
+import '../../../creators/settings_creator.dart';
+import '../../../creators/user_creator.dart';
 
 void main() {
   final authService = MockAuthService();

@@ -3,7 +3,7 @@ import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/bloc/health_measurements/health_measurements_bloc.dart';
 import 'package:runnoter/domain/entity/health_measurement.dart';
 
-import '../../../util/health_measurement_creator.dart';
+import '../../../creators/health_measurement_creator.dart';
 
 void main() {
   late HealthMeasurementsState state;

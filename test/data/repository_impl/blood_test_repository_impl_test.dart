@@ -6,8 +6,8 @@ import 'package:runnoter/domain/entity/blood_parameter.dart';
 import 'package:runnoter/domain/entity/blood_test.dart';
 
 import '../../mock/firebase/mock_firebase_blood_test_service.dart';
-import '../../util/blood_test_creator.dart';
-import '../../util/blood_test_dto_creator.dart';
+import '../../creators/blood_test_creator.dart';
+import '../../creators/blood_test_dto_creator.dart';
 
 void main() {
   final firebaseBloodTestService = MockFirebaseBloodTestService();

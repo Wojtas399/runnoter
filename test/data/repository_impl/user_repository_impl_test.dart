@@ -8,8 +8,8 @@ import 'package:runnoter/domain/entity/user.dart';
 import '../../mock/firebase/mock_firebase_appearance_settings_service.dart';
 import '../../mock/firebase/mock_firebase_user_service.dart';
 import '../../mock/firebase/mock_firebase_workout_settings_service.dart';
-import '../../util/settings_creator.dart';
-import '../../util/user_creator.dart';
+import '../../creators/settings_creator.dart';
+import '../../creators/user_creator.dart';
 
 void main() {
   final dbUserService = MockFirebaseUserService();

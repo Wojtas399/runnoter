@@ -5,7 +5,7 @@ import 'package:runnoter/domain/entity/run_status.dart';
 import 'package:runnoter/domain/entity/workout.dart';
 import 'package:runnoter/domain/entity/workout_stage.dart';
 
-import '../../util/workout_creator.dart';
+import '../../creators/workout_creator.dart';
 
 void main() {
   test(

@@ -7,7 +7,7 @@ import 'package:runnoter/domain/bloc/profile/identities/profile_identities_bloc.
 
 import '../../../mock/domain/mock_auth_service.dart';
 import '../../../mock/domain/mock_user_repository.dart';
-import '../../../util/user_creator.dart';
+import '../../../creators/user_creator.dart';
 
 void main() {
   final authService = MockAuthService();

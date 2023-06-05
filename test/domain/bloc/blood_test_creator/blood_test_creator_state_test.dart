@@ -4,7 +4,7 @@ import 'package:runnoter/domain/bloc/blood_test_creator/blood_test_creator_bloc.
 import 'package:runnoter/domain/entity/blood_parameter.dart';
 import 'package:runnoter/domain/entity/blood_test.dart';
 
-import '../../../util/blood_test_creator.dart';
+import '../../../creators/blood_test_creator.dart';
 
 void main() {
   late BloodTestCreatorState state;
