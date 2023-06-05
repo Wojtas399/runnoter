@@ -10,7 +10,8 @@ void main() {
   const String timeStr = '02:45:30';
 
   test(
-    'from string',
+    'from string, '
+    'should map string to dto model',
     () {
       final dto = TimeDto.fromString(timeStr);
 
@@ -19,7 +20,8 @@ void main() {
   );
 
   test(
-    'to string',
+    'to string, '
+    'should map dto model to string',
     () {
       final str = timeDto.toString();
 
