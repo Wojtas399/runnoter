@@ -98,7 +98,7 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
       userId: userId,
       workoutName: workoutName,
       date: date,
-      status: mapRunStatusToFirebase(status),
+      status: mapRunStatusToDto(status),
       stages: stages.map(mapWorkoutStageToFirebase).toList(),
     );
     if (workoutDto != null) {
@@ -120,7 +120,7 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
       workoutId: workoutId,
       userId: userId,
       workoutName: workoutName,
-      status: status != null ? mapRunStatusToFirebase(status) : null,
+      status: status != null ? mapRunStatusToDto(status) : null,
       stages: stages?.map(mapWorkoutStageToFirebase).toList(),
     );
     if (updatedWorkoutDto != null) {

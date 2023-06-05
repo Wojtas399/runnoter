@@ -11,6 +11,7 @@ class MockCompetitionRepository extends Mock implements CompetitionRepository {
         place: any(named: 'place'),
         distance: any(named: 'distance'),
         expectedTime: any(named: 'expectedTime'),
+        status: any(named: 'status'),
       ),
     ).thenAnswer((invocation) => Future.value());
   }

@@ -1,4 +1,5 @@
 import '../entity/competition.dart';
+import '../entity/run_status.dart';
 
 abstract interface class CompetitionRepository {
   Future<void> addNewCompetition({
@@ -8,5 +9,6 @@ abstract interface class CompetitionRepository {
     required String place,
     required double distance,
     required Time expectedTime,
+    required RunStatus status,
   });
 }
