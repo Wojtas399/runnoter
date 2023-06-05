@@ -87,7 +87,7 @@ class CalendarComponentCubit extends Cubit<CalendarComponentState> {
         date: date,
         isDisabled: date.month != month,
         isTodayDay: _dateService.areDatesTheSame(date, todayDate),
-        icon: _getWorkoutStatusIconForDay(date),
+        icon: _getRunStatusIconForDay(date),
       );
       daysFromWeek.add(newCalendarDay);
       date = date.add(
@@ -97,13 +97,13 @@ class CalendarComponentCubit extends Cubit<CalendarComponentState> {
     return daysFromWeek;
   }
 
-  Icon? _getWorkoutStatusIconForDay(DateTime date) {
+  Icon? _getRunStatusIconForDay(DateTime date) {
     return <WorkoutDay?>[..._workoutDays]
         .firstWhere(
           (WorkoutDay? day) => day?.date == date,
           orElse: () => null,
         )
-        ?.workoutStatusIcon;
+        ?.runStatusIcon;
   }
 }
 
@@ -144,17 +144,17 @@ class CalendarComponentState extends Equatable {
 
 class WorkoutDay extends Equatable {
   final DateTime date;
-  final Icon workoutStatusIcon;
+  final Icon runStatusIcon;
 
   const WorkoutDay({
     required this.date,
-    required this.workoutStatusIcon,
+    required this.runStatusIcon,
   });
 
   @override
   List<Object?> get props => [
         date,
-        workoutStatusIcon,
+        runStatusIcon,
       ];
 }
 

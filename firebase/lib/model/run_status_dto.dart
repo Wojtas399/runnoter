@@ -3,21 +3,21 @@ import 'package:equatable/equatable.dart';
 import '../firebase.dart';
 import '../mapper/mood_rate_mapper.dart';
 
-class WorkoutStatusDto extends Equatable {
-  const WorkoutStatusDto();
+class RunStatusDto extends Equatable {
+  const RunStatusDto();
 
-  factory WorkoutStatusDto.fromJson(Map<String, dynamic> json) {
+  factory RunStatusDto.fromJson(Map<String, dynamic> json) {
     final String status = json[_nameField];
     if (status == 'pending') {
-      return const WorkoutStatusPendingDto();
+      return const RunStatusPendingDto();
     } else if (status == _doneStatusName) {
-      return WorkoutStatusDoneDto.fromJson(json);
+      return RunStatusDoneDto.fromJson(json);
     } else if (status == _abortedStatusName) {
-      return WorkoutStatusAbortedDto.fromJson(json);
+      return RunStatusAbortedDto.fromJson(json);
     } else if (status == _undoneStatusName) {
-      return const WorkoutStatusUndoneDto();
+      return const RunStatusUndoneDto();
     }
-    throw '[WorkoutStatusDto] Unknown workout status';
+    throw '[RunStatusDto] Unknown run status';
   }
 
   @override
@@ -26,8 +26,8 @@ class WorkoutStatusDto extends Equatable {
   Map<String, dynamic> toJson() => {};
 }
 
-class WorkoutStatusPendingDto extends WorkoutStatusDto {
-  const WorkoutStatusPendingDto();
+class RunStatusPendingDto extends RunStatusDto {
+  const RunStatusPendingDto();
 
   @override
   List<Object> get props => [];
@@ -40,8 +40,8 @@ class WorkoutStatusPendingDto extends WorkoutStatusDto {
   }
 }
 
-class WorkoutStatusDoneDto extends WorkoutStatusDto with _WorkoutStats {
-  WorkoutStatusDoneDto({
+class RunStatusDoneDto extends RunStatusDto with _WorkoutStats {
+  RunStatusDoneDto({
     required double coveredDistanceInKm,
     required PaceDto avgPaceDto,
     required int avgHeartRate,
@@ -55,7 +55,7 @@ class WorkoutStatusDoneDto extends WorkoutStatusDto with _WorkoutStats {
     this.comment = comment;
   }
 
-  WorkoutStatusDoneDto.fromJson(Map<String, dynamic> json)
+  RunStatusDoneDto.fromJson(Map<String, dynamic> json)
       : this(
           coveredDistanceInKm:
               (json[_coveredDistanceInKmField] as num).toDouble(),
@@ -85,8 +85,8 @@ class WorkoutStatusDoneDto extends WorkoutStatusDto with _WorkoutStats {
       };
 }
 
-class WorkoutStatusAbortedDto extends WorkoutStatusDto with _WorkoutStats {
-  WorkoutStatusAbortedDto({
+class RunStatusAbortedDto extends RunStatusDto with _WorkoutStats {
+  RunStatusAbortedDto({
     required double coveredDistanceInKm,
     required PaceDto avgPaceDto,
     required int avgHeartRate,
@@ -100,7 +100,7 @@ class WorkoutStatusAbortedDto extends WorkoutStatusDto with _WorkoutStats {
     this.comment = comment;
   }
 
-  WorkoutStatusAbortedDto.fromJson(Map<String, dynamic> json)
+  RunStatusAbortedDto.fromJson(Map<String, dynamic> json)
       : this(
           coveredDistanceInKm: json[_coveredDistanceInKmField],
           avgPaceDto: PaceDto.fromJson(json[_avgPaceField]),
@@ -129,8 +129,8 @@ class WorkoutStatusAbortedDto extends WorkoutStatusDto with _WorkoutStats {
       };
 }
 
-class WorkoutStatusUndoneDto extends WorkoutStatusDto {
-  const WorkoutStatusUndoneDto();
+class RunStatusUndoneDto extends RunStatusDto {
+  const RunStatusUndoneDto();
 
   @override
   List<Object> get props => [];
@@ -143,7 +143,7 @@ class WorkoutStatusUndoneDto extends WorkoutStatusDto {
   }
 }
 
-mixin _WorkoutStats on WorkoutStatusDto {
+mixin _WorkoutStats on RunStatusDto {
   late final double coveredDistanceInKm;
   late final PaceDto avgPaceDto;
   late final int avgHeartRate;

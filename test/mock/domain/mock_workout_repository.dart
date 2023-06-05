@@ -1,9 +1,9 @@
 import 'package:mocktail/mocktail.dart';
+import 'package:runnoter/domain/entity/run_status.dart';
 import 'package:runnoter/domain/entity/workout.dart';
-import 'package:runnoter/domain/entity/workout_status.dart';
 import 'package:runnoter/domain/repository/workout_repository.dart';
 
-class _FakeWorkoutStatus extends Fake implements WorkoutStatus {}
+class _FakeRunStatus extends Fake implements RunStatus {}
 
 class MockWorkoutRepository extends Mock implements WorkoutRepository {
   void mockGetWorkoutsByDateRange({
@@ -51,7 +51,7 @@ class MockWorkoutRepository extends Mock implements WorkoutRepository {
   }
 
   void mockAddWorkout() {
-    _mockWorkoutStatus();
+    _mockRunStatus();
     when(
       () => addWorkout(
         userId: any(named: 'userId'),
@@ -64,7 +64,7 @@ class MockWorkoutRepository extends Mock implements WorkoutRepository {
   }
 
   void mockUpdateWorkout() {
-    _mockWorkoutStatus();
+    _mockRunStatus();
     when(
       () => updateWorkout(
         workoutId: any(named: 'workoutId'),
@@ -85,7 +85,7 @@ class MockWorkoutRepository extends Mock implements WorkoutRepository {
     ).thenAnswer((invocation) => Future.value());
   }
 
-  void _mockWorkoutStatus() {
-    registerFallbackValue(_FakeWorkoutStatus());
+  void _mockRunStatus() {
+    registerFallbackValue(_FakeRunStatus());
   }
 }

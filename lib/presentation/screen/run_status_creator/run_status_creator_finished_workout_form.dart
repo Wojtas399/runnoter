@@ -1,4 +1,4 @@
-part of 'workout_status_creator_screen.dart';
+part of 'run_status_creator_screen.dart';
 
 class _FinishedWorkoutForm extends StatelessWidget {
   const _FinishedWorkoutForm();
@@ -29,13 +29,12 @@ class _CoveredDistance extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final BlocStatus blocStatus = context.select(
-      (WorkoutStatusCreatorBloc bloc) => bloc.state.status,
+      (RunStatusCreatorBloc bloc) => bloc.state.status,
     );
     if (blocStatus is BlocStatusComplete &&
-        blocStatus.info ==
-            WorkoutStatusCreatorBlocInfo.workoutStatusInitialized) {
+        blocStatus.info == RunStatusCreatorBlocInfo.runStatusInitialized) {
       _controller.text = context
-              .read<WorkoutStatusCreatorBloc>()
+              .read<RunStatusCreatorBloc>()
               .state
               .coveredDistanceInKm
               ?.toString() ??
@@ -43,7 +42,7 @@ class _CoveredDistance extends StatelessWidget {
     }
 
     return TextFieldComponent(
-      label: '${Str.of(context).workoutStatusCreatorCoveredDistance} [km]',
+      label: '${Str.of(context).runStatusCreatorCoveredDistance} [km]',
       maxLength: 8,
       keyboardType: TextInputType.number,
       isRequired: true,
@@ -62,8 +61,8 @@ class _CoveredDistance extends StatelessWidget {
       return;
     }
     final double? coveredDistanceInKm = double.tryParse(coveredDistanceInKmStr);
-    context.read<WorkoutStatusCreatorBloc>().add(
-          WorkoutStatusCreatorEventCoveredDistanceInKmChanged(
+    context.read<RunStatusCreatorBloc>().add(
+          RunStatusCreatorEventCoveredDistanceInKmChanged(
             coveredDistanceInKm: coveredDistanceInKm,
           ),
         );
@@ -76,14 +75,14 @@ class _MoodRate extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final MoodRate? moodRate = context.select(
-      (WorkoutStatusCreatorBloc bloc) => bloc.state.moodRate,
+      (RunStatusCreatorBloc bloc) => bloc.state.moodRate,
     );
 
     return DropdownButtonFormField(
       value: moodRate,
       decoration: InputDecoration(
         filled: true,
-        labelText: Str.of(context).workoutStatusCreatorMood,
+        labelText: Str.of(context).runStatusCreatorMood,
       ),
       isExpanded: true,
       items: <DropdownMenuItem<MoodRate>>[
@@ -114,8 +113,8 @@ class _MoodRate extends StatelessWidget {
   }
 
   void _onChanged(BuildContext context, MoodRate? moodRate) {
-    context.read<WorkoutStatusCreatorBloc>().add(
-          WorkoutStatusCreatorEventMoodRateChanged(
+    context.read<RunStatusCreatorBloc>().add(
+          RunStatusCreatorEventMoodRateChanged(
             moodRate: moodRate,
           ),
         );
@@ -128,13 +127,12 @@ class _AverageHeartRate extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final BlocStatus blocStatus = context.select(
-      (WorkoutStatusCreatorBloc bloc) => bloc.state.status,
+      (RunStatusCreatorBloc bloc) => bloc.state.status,
     );
     if (blocStatus is BlocStatusComplete &&
-        blocStatus.info ==
-            WorkoutStatusCreatorBlocInfo.workoutStatusInitialized) {
+        blocStatus.info == RunStatusCreatorBlocInfo.runStatusInitialized) {
       _controller.text = context
-              .read<WorkoutStatusCreatorBloc>()
+              .read<RunStatusCreatorBloc>()
               .state
               .averageHeartRate
               ?.toString() ??
@@ -142,7 +140,7 @@ class _AverageHeartRate extends StatelessWidget {
     }
 
     return TextFieldComponent(
-      label: Str.of(context).workoutStatusCreatorAverageHeartRate,
+      label: Str.of(context).runStatusCreatorAverageHeartRate,
       maxLength: 3,
       keyboardType: TextInputType.number,
       isRequired: true,
@@ -161,8 +159,8 @@ class _AverageHeartRate extends StatelessWidget {
       return;
     }
     final int? averageHeartRate = int.tryParse(averageHeartRateStr);
-    context.read<WorkoutStatusCreatorBloc>().add(
-          WorkoutStatusCreatorEventAvgHeartRateChanged(
+    context.read<RunStatusCreatorBloc>().add(
+          RunStatusCreatorEventAvgHeartRateChanged(
             averageHeartRate: averageHeartRate,
           ),
         );
@@ -175,17 +173,16 @@ class _Comment extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final BlocStatus blocStatus = context.select(
-      (WorkoutStatusCreatorBloc bloc) => bloc.state.status,
+      (RunStatusCreatorBloc bloc) => bloc.state.status,
     );
     if (blocStatus is BlocStatusComplete &&
-        blocStatus.info ==
-            WorkoutStatusCreatorBlocInfo.workoutStatusInitialized) {
+        blocStatus.info == RunStatusCreatorBlocInfo.runStatusInitialized) {
       _controller.text =
-          context.read<WorkoutStatusCreatorBloc>().state.comment ?? '';
+          context.read<RunStatusCreatorBloc>().state.comment ?? '';
     }
 
     return TextFieldComponent(
-      label: Str.of(context).workoutStatusCreatorComment,
+      label: Str.of(context).runStatusCreatorComment,
       maxLength: 100,
       maxLines: null,
       keyboardType: TextInputType.multiline,
@@ -198,8 +195,8 @@ class _Comment extends StatelessWidget {
   }
 
   void _onChanged(BuildContext context, String? comment) {
-    context.read<WorkoutStatusCreatorBloc>().add(
-          WorkoutStatusCreatorEventCommentChanged(
+    context.read<RunStatusCreatorBloc>().add(
+          RunStatusCreatorEventCommentChanged(
             comment: comment,
           ),
         );

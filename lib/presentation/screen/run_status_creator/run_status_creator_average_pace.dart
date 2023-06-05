@@ -1,4 +1,4 @@
-part of 'workout_status_creator_screen.dart';
+part of 'run_status_creator_screen.dart';
 
 class _AveragePace extends StatelessWidget {
   const _AveragePace();
@@ -9,7 +9,7 @@ class _AveragePace extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          Str.of(context).workoutStatusCreatorAveragePace,
+          Str.of(context).runStatusCreatorAveragePace,
           style: Theme.of(context).textTheme.labelLarge,
         ),
         const SizedBox(height: 16),
@@ -44,13 +44,12 @@ class _AveragePaceMinutes extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final BlocStatus blocStatus = context.select(
-      (WorkoutStatusCreatorBloc bloc) => bloc.state.status,
+      (RunStatusCreatorBloc bloc) => bloc.state.status,
     );
     if (blocStatus is BlocStatusComplete &&
-        blocStatus.info ==
-            WorkoutStatusCreatorBlocInfo.workoutStatusInitialized) {
+        blocStatus.info == RunStatusCreatorBlocInfo.runStatusInitialized) {
       _controller.text = context
-              .read<WorkoutStatusCreatorBloc>()
+              .read<RunStatusCreatorBloc>()
               .state
               .averagePaceMinutes
               ?.toString() ??
@@ -58,7 +57,7 @@ class _AveragePaceMinutes extends StatelessWidget {
     }
 
     return _AveragePaceField(
-      label: Str.of(context).workoutStatusCreatorMinutes,
+      label: Str.of(context).runStatusCreatorMinutes,
       controller: _controller,
       onChanged: (int? minutes) {
         _onChanged(context, minutes);
@@ -67,8 +66,8 @@ class _AveragePaceMinutes extends StatelessWidget {
   }
 
   void _onChanged(BuildContext context, int? minutes) {
-    context.read<WorkoutStatusCreatorBloc>().add(
-          WorkoutStatusCreatorEventAvgPaceMinutesChanged(
+    context.read<RunStatusCreatorBloc>().add(
+          RunStatusCreatorEventAvgPaceMinutesChanged(
             minutes: minutes,
           ),
         );
@@ -81,13 +80,12 @@ class _AveragePaceSeconds extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final BlocStatus blocStatus = context.select(
-      (WorkoutStatusCreatorBloc bloc) => bloc.state.status,
+      (RunStatusCreatorBloc bloc) => bloc.state.status,
     );
     if (blocStatus is BlocStatusComplete &&
-        blocStatus.info ==
-            WorkoutStatusCreatorBlocInfo.workoutStatusInitialized) {
+        blocStatus.info == RunStatusCreatorBlocInfo.runStatusInitialized) {
       _controller.text = context
-              .read<WorkoutStatusCreatorBloc>()
+              .read<RunStatusCreatorBloc>()
               .state
               .averagePaceSeconds
               ?.toString() ??
@@ -95,7 +93,7 @@ class _AveragePaceSeconds extends StatelessWidget {
     }
 
     return _AveragePaceField(
-      label: Str.of(context).workoutStatusCreatorSeconds,
+      label: Str.of(context).runStatusCreatorSeconds,
       controller: _controller,
       onChanged: (int? seconds) {
         _onChanged(context, seconds);
@@ -104,8 +102,8 @@ class _AveragePaceSeconds extends StatelessWidget {
   }
 
   void _onChanged(BuildContext context, int? seconds) {
-    context.read<WorkoutStatusCreatorBloc>().add(
-          WorkoutStatusCreatorEventAvgPaceSecondsChanged(
+    context.read<RunStatusCreatorBloc>().add(
+          RunStatusCreatorEventAvgPaceSecondsChanged(
             seconds: seconds,
           ),
         );

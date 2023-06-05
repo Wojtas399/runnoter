@@ -1,11 +1,11 @@
 import 'entity.dart';
+import 'run_status.dart';
 import 'workout_stage.dart';
-import 'workout_status.dart';
 
 class Workout extends Entity {
   final String userId;
   final DateTime date;
-  final WorkoutStatus status;
+  final RunStatus status;
   final String name;
   final List<WorkoutStage> stages;
 

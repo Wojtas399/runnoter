@@ -8,7 +8,7 @@ import '../../../domain/service/auth_service.dart';
 import '../../component/calendar/calendar_component.dart';
 import '../../component/calendar/calendar_component_cubit.dart';
 import '../../config/navigation/routes.dart';
-import '../../formatter/workout_status_formatter.dart';
+import '../../formatter/run_status_formatter.dart';
 import '../../service/navigator_service.dart';
 
 class CalendarScreen extends StatelessWidget {
@@ -60,7 +60,7 @@ class _Calendar extends StatelessWidget {
           .map(
             (Workout workout) => WorkoutDay(
               date: workout.date,
-              workoutStatusIcon: Icon(
+              runStatusIcon: Icon(
                 workout.status.toIcon(),
                 color: workout.status.toColor(),
               ),

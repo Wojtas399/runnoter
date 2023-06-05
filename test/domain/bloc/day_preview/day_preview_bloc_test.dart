@@ -3,8 +3,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/bloc/day_preview/day_preview_bloc.dart';
+import 'package:runnoter/domain/entity/run_status.dart';
 import 'package:runnoter/domain/entity/workout_stage.dart';
-import 'package:runnoter/domain/entity/workout_status.dart';
 
 import '../../../mock/domain/mock_auth_service.dart';
 import '../../../mock/domain/mock_workout_repository.dart';
@@ -35,7 +35,7 @@ void main() {
     String? workoutId,
     String? workoutName,
     List<WorkoutStage>? stages,
-    WorkoutStatus? workoutStatus,
+    RunStatus? runStatus,
   }) {
     return DayPreviewState(
       status: status,
@@ -44,7 +44,7 @@ void main() {
       workoutId: workoutId,
       workoutName: workoutName,
       stages: stages,
-      workoutStatus: workoutStatus,
+      runStatus: runStatus,
     );
   }
 
@@ -83,7 +83,7 @@ void main() {
           id: 'w1',
           date: date,
           stages: [],
-          status: const WorkoutStatusPending(),
+          status: const RunStatusPending(),
           name: 'workout name',
         ),
       );
@@ -105,7 +105,7 @@ void main() {
         isPastDate: true,
         workoutId: 'w1',
         stages: [],
-        workoutStatus: const WorkoutStatusPending(),
+        runStatus: const RunStatusPending(),
         workoutName: 'workout name',
       ),
     ],
@@ -157,7 +157,7 @@ void main() {
               maxHeartRate: 150,
             ),
           ],
-          status: const WorkoutStatusPending(),
+          status: const RunStatusPending(),
         ),
       ),
     ),
@@ -172,7 +172,7 @@ void main() {
             maxHeartRate: 150,
           ),
         ],
-        workoutStatus: const WorkoutStatusPending(),
+        runStatus: const RunStatusPending(),
       ),
     ],
   );

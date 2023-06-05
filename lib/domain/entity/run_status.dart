@@ -1,18 +1,18 @@
 import 'package:equatable/equatable.dart';
 
-abstract class WorkoutStatus extends Equatable {
-  const WorkoutStatus();
+abstract class RunStatus extends Equatable {
+  const RunStatus();
 }
 
-class WorkoutStatusPending extends WorkoutStatus {
-  const WorkoutStatusPending();
+class RunStatusPending extends RunStatus {
+  const RunStatusPending();
 
   @override
   List<Object> get props => [];
 }
 
-class WorkoutStatusDone extends WorkoutStatus with WorkoutStats {
-  WorkoutStatusDone({
+class RunStatusDone extends RunStatus with RunStats {
+  RunStatusDone({
     required double coveredDistanceInKm,
     required Pace avgPace,
     required int avgHeartRate,
@@ -37,8 +37,8 @@ class WorkoutStatusDone extends WorkoutStatus with WorkoutStats {
       ];
 }
 
-class WorkoutStatusAborted extends WorkoutStatus with WorkoutStats {
-  WorkoutStatusAborted({
+class RunStatusAborted extends RunStatus with RunStats {
+  RunStatusAborted({
     required double coveredDistanceInKm,
     required Pace avgPace,
     required int avgHeartRate,
@@ -63,14 +63,14 @@ class WorkoutStatusAborted extends WorkoutStatus with WorkoutStats {
       ];
 }
 
-class WorkoutStatusUndone extends WorkoutStatus {
-  const WorkoutStatusUndone();
+class RunStatusUndone extends RunStatus {
+  const RunStatusUndone();
 
   @override
   List<Object?> get props => [];
 }
 
-mixin WorkoutStats on WorkoutStatus {
+mixin RunStats on RunStatus {
   late final double coveredDistanceInKm;
   late final Pace avgPace;
   late final int avgHeartRate;

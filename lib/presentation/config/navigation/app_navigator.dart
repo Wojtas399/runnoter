@@ -37,9 +37,9 @@ class AppNavigator extends StatelessWidget {
       screen = WorkoutCreatorScreen(
         arguments: settings.arguments as WorkoutCreatorArguments,
       );
-    } else if (routePath == RoutePath.workoutStatusCreator.path) {
-      screen = WorkoutStatusCreatorScreen(
-        arguments: settings.arguments as WorkoutStatusCreatorArguments,
+    } else if (routePath == RoutePath.runStatusCreator.path) {
+      screen = RunStatusCreatorScreen(
+        arguments: settings.arguments as RunStatusCreatorArguments,
       );
     } else if (routePath == RoutePath.healthMeasurementCreator.path) {
       screen = HealthMeasurementCreatorScreen(

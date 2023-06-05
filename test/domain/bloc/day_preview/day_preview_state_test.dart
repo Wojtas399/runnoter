@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/bloc/day_preview/day_preview_bloc.dart';
+import 'package:runnoter/domain/entity/run_status.dart';
 import 'package:runnoter/domain/entity/workout_stage.dart';
-import 'package:runnoter/domain/entity/workout_status.dart';
 
 void main() {
   late DayPreviewState state;
@@ -114,15 +114,15 @@ void main() {
   );
 
   test(
-    'copy with workout status',
+    'copy with run status',
     () {
-      const WorkoutStatus expectedWorkoutStatus = WorkoutStatusPending();
+      const RunStatus expectedRunStatus = RunStatusPending();
 
-      state = state.copyWith(workoutStatus: expectedWorkoutStatus);
+      state = state.copyWith(runStatus: expectedRunStatus);
       final state2 = state.copyWith();
 
-      expect(state.workoutStatus, expectedWorkoutStatus);
-      expect(state2.workoutStatus, expectedWorkoutStatus);
+      expect(state.runStatus, expectedRunStatus);
+      expect(state2.runStatus, expectedRunStatus);
     },
   );
 }

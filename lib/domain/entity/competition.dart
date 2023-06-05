@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 import 'entity.dart';
-import 'workout_status.dart';
+import 'run_status.dart';
 
 class Competition extends Entity {
   final String userId;
@@ -10,7 +10,7 @@ class Competition extends Entity {
   final String city;
   final double distance;
   final Time expectedTime;
-  final WorkoutStatus status;
+  final RunStatus status;
 
   const Competition({
     required super.id,

@@ -1,13 +1,13 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
-import 'package:runnoter/domain/bloc/workout_status_creator/workout_status_creator_bloc.dart';
-import 'package:runnoter/domain/entity/workout_status.dart';
+import 'package:runnoter/domain/bloc/run_status_creator/run_status_creator_bloc.dart';
+import 'package:runnoter/domain/entity/run_status.dart';
 
 void main() {
-  late WorkoutStatusCreatorState state;
+  late RunStatusCreatorState state;
 
   setUp(() {
-    state = const WorkoutStatusCreatorState(
+    state = const RunStatusCreatorState(
       status: BlocStatusInitial(),
     );
   });
@@ -35,7 +35,7 @@ void main() {
     'should be true',
     () {
       state = state.copyWith(
-        workoutStatusType: WorkoutStatusType.pending,
+        runStatusType: RunStatusType.pending,
       );
 
       expect(state.isFormValid, true);
@@ -48,7 +48,7 @@ void main() {
     'should be true',
     () {
       state = state.copyWith(
-        workoutStatusType: WorkoutStatusType.undone,
+        runStatusType: RunStatusType.undone,
       );
 
       expect(state.isFormValid, true);
@@ -61,7 +61,7 @@ void main() {
     'should be false',
     () {
       state = state.copyWith(
-        workoutStatusType: WorkoutStatusType.done,
+        runStatusType: RunStatusType.done,
         moodRate: MoodRate.mr8,
         averagePaceMinutes: 5,
         averagePaceSeconds: 30,
@@ -78,7 +78,7 @@ void main() {
     'should be true',
     () {
       state = state.copyWith(
-        workoutStatusType: WorkoutStatusType.done,
+        runStatusType: RunStatusType.done,
         coveredDistanceInKm: 10,
         averagePaceMinutes: 5,
         averagePaceSeconds: 30,
@@ -95,7 +95,7 @@ void main() {
     'should be true',
     () {
       state = state.copyWith(
-        workoutStatusType: WorkoutStatusType.done,
+        runStatusType: RunStatusType.done,
         coveredDistanceInKm: 10,
         moodRate: MoodRate.mr8,
         averagePaceSeconds: 30,
@@ -112,7 +112,7 @@ void main() {
     'should be false',
     () {
       state = state.copyWith(
-        workoutStatusType: WorkoutStatusType.done,
+        runStatusType: RunStatusType.done,
         coveredDistanceInKm: 10,
         moodRate: MoodRate.mr8,
         averagePaceMinutes: 5,
@@ -129,7 +129,7 @@ void main() {
     'should be false',
     () {
       state = state.copyWith(
-        workoutStatusType: WorkoutStatusType.done,
+        runStatusType: RunStatusType.done,
         coveredDistanceInKm: 10,
         moodRate: MoodRate.mr8,
         averagePaceMinutes: 5,
@@ -146,7 +146,7 @@ void main() {
     'should be true',
     () {
       state = state.copyWith(
-        workoutStatusType: WorkoutStatusType.done,
+        runStatusType: RunStatusType.done,
         coveredDistanceInKm: 10,
         moodRate: MoodRate.mr8,
         averagePaceMinutes: 5,
@@ -160,12 +160,12 @@ void main() {
 
   test(
     'are data same as original, '
-    'workout status type does not match to workout status, '
+    'run status type does not match to workout status, '
     'should be false',
     () {
       state = state.copyWith(
-        workoutStatus: const WorkoutStatusPending(),
-        workoutStatusType: WorkoutStatusType.done,
+        runStatus: const RunStatusPending(),
+        runStatusType: RunStatusType.done,
       );
 
       expect(state.areDataSameAsOriginal, false);
@@ -174,11 +174,11 @@ void main() {
 
   test(
     'are data same as original, '
-    'workout status is set as pending, '
+    'run status is set as pending, '
     'should be false',
     () {
       state = state.copyWith(
-        workoutStatus: const WorkoutStatusPending(),
+        runStatus: const RunStatusPending(),
       );
 
       expect(state.areDataSameAsOriginal, false);
@@ -187,11 +187,11 @@ void main() {
 
   test(
     'are data same as original, '
-    'workout status is set as undone, '
+    'run status is set as undone, '
     'should be false',
     () {
       state = state.copyWith(
-        workoutStatus: const WorkoutStatusUndone(),
+        runStatus: const RunStatusUndone(),
       );
 
       expect(state.areDataSameAsOriginal, false);
@@ -200,19 +200,19 @@ void main() {
 
   test(
     'are data same as original, '
-    'workout status contains workout stats, '
-    'all params are the same as params set in workout status, '
+    'run status contains run stats, '
+    'all params are the same as params set in run status, '
     'should be true',
     () {
       state = state.copyWith(
-        workoutStatus: WorkoutStatusDone(
+        runStatus: RunStatusDone(
           coveredDistanceInKm: 10,
           avgPace: const Pace(minutes: 6, seconds: 10),
           avgHeartRate: 150,
           moodRate: MoodRate.mr8,
           comment: 'comment',
         ),
-        workoutStatusType: WorkoutStatusType.done,
+        runStatusType: RunStatusType.done,
         coveredDistanceInKm: 10,
         averagePaceMinutes: 6,
         averagePaceSeconds: 10,
@@ -227,12 +227,12 @@ void main() {
 
   test(
     'are data same as original, '
-    'workout status contains workout stats, '
+    'run status contains run stats, '
     'covered distance is different than original value, '
     'should be false',
     () {
       state = state.copyWith(
-        workoutStatus: WorkoutStatusDone(
+        runStatus: RunStatusDone(
           coveredDistanceInKm: 10,
           avgPace: const Pace(minutes: 6, seconds: 10),
           avgHeartRate: 150,
@@ -253,12 +253,12 @@ void main() {
 
   test(
     'are data same as original, '
-    'workout status contains workout stats, '
+    'run status contains run stats, '
     'minutes of average pace are different than original value, '
     'should be false',
     () {
       state = state.copyWith(
-        workoutStatus: WorkoutStatusDone(
+        runStatus: RunStatusDone(
           coveredDistanceInKm: 10,
           avgPace: const Pace(minutes: 6, seconds: 10),
           avgHeartRate: 150,
@@ -279,12 +279,12 @@ void main() {
 
   test(
     'are data same as original, '
-    'workout status contains workout stats, '
+    'run status contains run stats, '
     'seconds of average pace are different than original value, '
     'should be false',
     () {
       state = state.copyWith(
-        workoutStatus: WorkoutStatusDone(
+        runStatus: RunStatusDone(
           coveredDistanceInKm: 10,
           avgPace: const Pace(minutes: 6, seconds: 10),
           avgHeartRate: 150,
@@ -305,12 +305,12 @@ void main() {
 
   test(
     'are data same as original, '
-    'workout status contains workout stats, '
+    'run status contains run stats, '
     'average heart rate is different than original value, '
     'should be false',
     () {
       state = state.copyWith(
-        workoutStatus: WorkoutStatusDone(
+        runStatus: RunStatusDone(
           coveredDistanceInKm: 10,
           avgPace: const Pace(minutes: 6, seconds: 10),
           avgHeartRate: 150,
@@ -331,12 +331,12 @@ void main() {
 
   test(
     'are data same as original, '
-    'workout status contains workout stats, '
+    'run status contains run stats, '
     'mood rate is different than original value, '
     'should be false',
     () {
       state = state.copyWith(
-        workoutStatus: WorkoutStatusDone(
+        runStatus: RunStatusDone(
           coveredDistanceInKm: 10,
           avgPace: const Pace(minutes: 6, seconds: 10),
           avgHeartRate: 150,
@@ -357,12 +357,12 @@ void main() {
 
   test(
     'are data same as original, '
-    'workout status contains workout stats, '
+    'run status contains run stats, '
     'comment is different than original value, '
     'should be false',
     () {
       state = state.copyWith(
-        workoutStatus: WorkoutStatusDone(
+        runStatus: RunStatusDone(
           coveredDistanceInKm: 10,
           avgPace: const Pace(minutes: 6, seconds: 10),
           avgHeartRate: 150,
@@ -408,9 +408,9 @@ void main() {
   );
 
   test(
-    'copy with workout status',
+    'copy with run status',
     () {
-      final WorkoutStatus expectedWorkoutStatus = WorkoutStatusDone(
+      final RunStatus expectedRunStatus = RunStatusDone(
         coveredDistanceInKm: 10,
         avgPace: const Pace(minutes: 6, seconds: 10),
         avgHeartRate: 150,
@@ -418,25 +418,24 @@ void main() {
         comment: 'comment',
       );
 
-      state = state.copyWith(workoutStatus: expectedWorkoutStatus);
+      state = state.copyWith(runStatus: expectedRunStatus);
       final state2 = state.copyWith();
 
-      expect(state.workoutStatus, expectedWorkoutStatus);
-      expect(state2.workoutStatus, expectedWorkoutStatus);
+      expect(state.runStatus, expectedRunStatus);
+      expect(state2.runStatus, expectedRunStatus);
     },
   );
 
   test(
-    'copy with workout status type',
+    'copy with run status type',
     () {
-      const WorkoutStatusType expectedWorkoutStatusType =
-          WorkoutStatusType.pending;
+      const RunStatusType expectedRunStatusType = RunStatusType.pending;
 
-      state = state.copyWith(workoutStatusType: expectedWorkoutStatusType);
+      state = state.copyWith(runStatusType: expectedRunStatusType);
       final state2 = state.copyWith();
 
-      expect(state.workoutStatusType, expectedWorkoutStatusType);
-      expect(state2.workoutStatusType, expectedWorkoutStatusType);
+      expect(state.runStatusType, expectedRunStatusType);
+      expect(state2.runStatusType, expectedRunStatusType);
     },
   );
 

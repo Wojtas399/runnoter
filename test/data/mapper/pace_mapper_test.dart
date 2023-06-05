@@ -1,7 +1,7 @@
 import 'package:firebase/firebase.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/data/mapper/pace_mapper.dart';
-import 'package:runnoter/domain/entity/workout_status.dart';
+import 'package:runnoter/domain/entity/run_status.dart';
 
 void main() {
   test(

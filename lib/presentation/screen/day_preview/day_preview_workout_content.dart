@@ -31,12 +31,12 @@ class _WorkoutContent extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             _WorkoutParam(
-              label: str.dayPreviewWorkoutStatus,
-              child: const _WorkoutStatus(),
+              label: str.dayPreviewRunStatus,
+              child: const _RunStatus(),
             ),
           ],
         ),
-        const _WorkoutStatusButton(),
+        const _RunStatusButton(),
       ],
     );
   }
@@ -95,16 +95,16 @@ class _WorkoutDistance extends StatelessWidget {
   }
 }
 
-class _WorkoutStatusButton extends StatelessWidget {
-  const _WorkoutStatusButton();
+class _RunStatusButton extends StatelessWidget {
+  const _RunStatusButton();
 
   @override
   Widget build(BuildContext context) {
-    final WorkoutStatus? workoutStatus = context.select(
-      (DayPreviewBloc bloc) => bloc.state.workoutStatus,
+    final RunStatus? runStatus = context.select(
+      (DayPreviewBloc bloc) => bloc.state.runStatus,
     );
     String label = Str.of(context).dayPreviewChangeStatusButton;
-    if (workoutStatus is WorkoutStatusPending) {
+    if (runStatus is RunStatusPending) {
       label = Str.of(context).dayPreviewFinishWorkoutButton;
     }
 
@@ -122,18 +122,18 @@ class _WorkoutStatusButton extends StatelessWidget {
     if (workoutId == null) {
       return;
     }
-    final WorkoutStatus? workoutStatus = bloc.state.workoutStatus;
-    WorkoutStatusCreatorType workoutStatusCreatorType =
-        WorkoutStatusCreatorType.updateStatus;
-    if (workoutStatus is WorkoutStatusPending) {
-      workoutStatusCreatorType = WorkoutStatusCreatorType.finishWorkout;
+    final RunStatus? runStatus = bloc.state.runStatus;
+    RunStatusCreatorType runStatusCreatorType =
+        RunStatusCreatorType.updateStatus;
+    if (runStatus is RunStatusPending) {
+      runStatusCreatorType = RunStatusCreatorType.finishWorkout;
     }
     navigateTo(
       context: context,
-      route: WorkoutStatusCreatorRoute(
-        creatorArguments: WorkoutStatusCreatorArguments(
+      route: RunStatusCreatorRoute(
+        creatorArguments: RunStatusCreatorArguments(
           workoutId: workoutId,
-          creatorType: workoutStatusCreatorType,
+          creatorType: runStatusCreatorType,
         ),
       ),
     );

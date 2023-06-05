@@ -1,4 +1,4 @@
-part of 'workout_status_creator_screen.dart';
+part of 'run_status_creator_screen.dart';
 
 class _Content extends StatelessWidget {
   const _Content();
@@ -8,7 +8,7 @@ class _Content extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          Str.of(context).workoutStatusCreatorScreenTitle,
+          Str.of(context).runStatusCreatorScreenTitle,
         ),
         centerTitle: true,
       ),
@@ -43,12 +43,12 @@ class _Form extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final WorkoutStatusType? workoutStatusType = context.select(
-      (WorkoutStatusCreatorBloc bloc) => bloc.state.workoutStatusType,
+    final RunStatusType? runStatusType = context.select(
+      (RunStatusCreatorBloc bloc) => bloc.state.runStatusType,
     );
 
-    if (workoutStatusType == WorkoutStatusType.done ||
-        workoutStatusType == WorkoutStatusType.aborted) {
+    if (runStatusType == RunStatusType.done ||
+        runStatusType == RunStatusType.aborted) {
       return const _FinishedWorkoutForm();
     }
     return const SizedBox();
@@ -61,10 +61,10 @@ class _SubmitButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool isFormValid = context.select(
-      (WorkoutStatusCreatorBloc bloc) => bloc.state.isFormValid,
+      (RunStatusCreatorBloc bloc) => bloc.state.isFormValid,
     );
     final bool areDataSameAsOriginal = context.select(
-      (WorkoutStatusCreatorBloc bloc) => bloc.state.areDataSameAsOriginal,
+      (RunStatusCreatorBloc bloc) => bloc.state.areDataSameAsOriginal,
     );
 
     return BigButton(
@@ -77,8 +77,8 @@ class _SubmitButton extends StatelessWidget {
   }
 
   void _onPressed(BuildContext context) {
-    context.read<WorkoutStatusCreatorBloc>().add(
-          const WorkoutStatusCreatorEventSubmit(),
+    context.read<RunStatusCreatorBloc>().add(
+          const RunStatusCreatorEventSubmit(),
         );
   }
 }

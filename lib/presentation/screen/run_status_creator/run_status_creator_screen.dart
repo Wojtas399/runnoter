@@ -4,8 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/additional_model/bloc_status.dart';
-import '../../../domain/bloc/workout_status_creator/workout_status_creator_bloc.dart';
-import '../../../domain/entity/workout_status.dart';
+import '../../../domain/bloc/run_status_creator/run_status_creator_bloc.dart';
+import '../../../domain/entity/run_status.dart';
 import '../../../domain/repository/workout_repository.dart';
 import '../../../domain/service/auth_service.dart';
 import '../../component/big_button_component.dart';
@@ -15,35 +15,35 @@ import '../../component/text_field_component.dart';
 import '../../formatter/decimal_text_input_formatter.dart';
 import '../../formatter/minutes_or_seconds_input_formatter.dart';
 import '../../formatter/mood_rate_formatter.dart';
-import '../../formatter/workout_status_formatter.dart';
+import '../../formatter/run_status_formatter.dart';
 import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
 import '../../service/utils.dart';
 
-part 'workout_status_creator_average_pace.dart';
-part 'workout_status_creator_content.dart';
-part 'workout_status_creator_finished_workout_form.dart';
-part 'workout_status_creator_status_type.dart';
+part 'run_status_creator_average_pace.dart';
+part 'run_status_creator_content.dart';
+part 'run_status_creator_finished_workout_form.dart';
+part 'run_status_creator_status_type.dart';
 
-enum WorkoutStatusCreatorType {
+enum RunStatusCreatorType {
   updateStatus,
   finishWorkout,
 }
 
-class WorkoutStatusCreatorArguments {
+class RunStatusCreatorArguments {
   final String workoutId;
-  final WorkoutStatusCreatorType creatorType;
+  final RunStatusCreatorType creatorType;
 
-  const WorkoutStatusCreatorArguments({
+  const RunStatusCreatorArguments({
     required this.workoutId,
     required this.creatorType,
   });
 }
 
-class WorkoutStatusCreatorScreen extends StatelessWidget {
-  final WorkoutStatusCreatorArguments arguments;
+class RunStatusCreatorScreen extends StatelessWidget {
+  final RunStatusCreatorArguments arguments;
 
-  const WorkoutStatusCreatorScreen({
+  const RunStatusCreatorScreen({
     super.key,
     required this.arguments,
   });
@@ -60,7 +60,7 @@ class WorkoutStatusCreatorScreen extends StatelessWidget {
 }
 
 class _BlocProvider extends StatelessWidget {
-  final WorkoutStatusCreatorArguments arguments;
+  final RunStatusCreatorArguments arguments;
   final Widget child;
 
   const _BlocProvider({
@@ -70,19 +70,19 @@ class _BlocProvider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    WorkoutStatusType? workoutStatusType;
-    if (arguments.creatorType == WorkoutStatusCreatorType.finishWorkout) {
-      workoutStatusType = WorkoutStatusType.done;
+    RunStatusType? runStatusType;
+    if (arguments.creatorType == RunStatusCreatorType.finishWorkout) {
+      runStatusType = RunStatusType.done;
     }
 
     return BlocProvider(
-      create: (BuildContext context) => WorkoutStatusCreatorBloc(
+      create: (BuildContext context) => RunStatusCreatorBloc(
         authService: context.read<AuthService>(),
         workoutRepository: context.read<WorkoutRepository>(),
       )..add(
-          WorkoutStatusCreatorEventInitialize(
+          RunStatusCreatorEventInitialize(
             workoutId: arguments.workoutId,
-            workoutStatusType: workoutStatusType,
+            runStatusType: runStatusType,
           ),
         ),
       child: child,
@@ -99,25 +99,25 @@ class _BlocListener extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocWithStatusListener<WorkoutStatusCreatorBloc,
-        WorkoutStatusCreatorState, WorkoutStatusCreatorBlocInfo, dynamic>(
-      onInfo: (WorkoutStatusCreatorBlocInfo info) {
+    return BlocWithStatusListener<RunStatusCreatorBloc, RunStatusCreatorState,
+        RunStatusCreatorBlocInfo, dynamic>(
+      onInfo: (RunStatusCreatorBlocInfo info) {
         _manageInfo(context, info);
       },
       child: child,
     );
   }
 
-  void _manageInfo(BuildContext context, WorkoutStatusCreatorBlocInfo info) {
+  void _manageInfo(BuildContext context, RunStatusCreatorBlocInfo info) {
     switch (info) {
-      case WorkoutStatusCreatorBlocInfo.workoutStatusSaved:
+      case RunStatusCreatorBlocInfo.runStatusSaved:
         navigateBack(context: context);
         showSnackbarMessage(
           context: context,
-          message: Str.of(context).workoutStatusCreatorSavedStatusMessage,
+          message: Str.of(context).runStatusCreatorSavedStatusMessage,
         );
         break;
-      case WorkoutStatusCreatorBlocInfo.workoutStatusInitialized:
+      case RunStatusCreatorBlocInfo.runStatusInitialized:
         break;
     }
   }

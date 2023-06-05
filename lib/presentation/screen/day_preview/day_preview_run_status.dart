@@ -1,12 +1,12 @@
 part of 'day_preview_screen.dart';
 
-class _WorkoutStatus extends StatelessWidget {
-  const _WorkoutStatus();
+class _RunStatus extends StatelessWidget {
+  const _RunStatus();
 
   @override
   Widget build(BuildContext context) {
-    final WorkoutStatus? status = context.select(
-      (DayPreviewBloc bloc) => bloc.state.workoutStatus,
+    final RunStatus? status = context.select(
+      (DayPreviewBloc bloc) => bloc.state.runStatus,
     );
 
     if (status == null) {
@@ -14,8 +14,8 @@ class _WorkoutStatus extends StatelessWidget {
     }
     return Column(
       children: [
-        _WorkoutStatusName(status: status),
-        if (status is WorkoutStats)
+        _RunStatusName(status: status),
+        if (status is RunStats)
           Padding(
             padding: const EdgeInsets.only(top: 24),
             child: Column(
@@ -40,10 +40,10 @@ class _WorkoutStatus extends StatelessWidget {
   }
 }
 
-class _WorkoutStatusName extends StatelessWidget {
-  final WorkoutStatus status;
+class _RunStatusName extends StatelessWidget {
+  final RunStatus status;
 
-  const _WorkoutStatusName({
+  const _RunStatusName({
     required this.status,
   });
 
@@ -69,7 +69,7 @@ class _WorkoutStatusName extends StatelessWidget {
 }
 
 class _WorkoutStats extends StatelessWidget {
-  final WorkoutStats status;
+  final RunStats status;
 
   const _WorkoutStats({
     required this.status,
@@ -123,13 +123,13 @@ class _MoodRate extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final WorkoutStatus? workoutStatus = context.select(
-      (DayPreviewBloc bloc) => bloc.state.workoutStatus,
+    final RunStatus? runStatus = context.select(
+      (DayPreviewBloc bloc) => bloc.state.runStatus,
     );
 
     String? moodRateStr;
-    if (workoutStatus is WorkoutStats) {
-      moodRateStr = workoutStatus.moodRate.toUIFormat();
+    if (runStatus is RunStats) {
+      moodRateStr = runStatus.moodRate.toUIFormat();
     }
 
     return NullableText(moodRateStr);
@@ -141,12 +141,12 @@ class _WorkoutComment extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final WorkoutStatus? workoutStatus = context.select(
-      (DayPreviewBloc bloc) => bloc.state.workoutStatus,
+    final RunStatus? runStatus = context.select(
+      (DayPreviewBloc bloc) => bloc.state.runStatus,
     );
     String? comment;
-    if (workoutStatus is WorkoutStats) {
-      comment = workoutStatus.comment;
+    if (runStatus is RunStats) {
+      comment = runStatus.comment;
     }
 
     return NullableText(comment);

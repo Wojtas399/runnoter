@@ -4,7 +4,7 @@ WorkoutDto createWorkoutDto({
   String id = 'w1',
   String userId = 'u1',
   DateTime? date,
-  WorkoutStatusDto status = const WorkoutStatusPendingDto(),
+  RunStatusDto status = const RunStatusPendingDto(),
   String name = '',
   List<WorkoutStageDto> stages = const [],
 }) {

@@ -6,9 +6,9 @@ import '../../../../common/date_service.dart';
 import '../../../../domain/additional_model/bloc_state.dart';
 import '../../../../domain/additional_model/bloc_status.dart';
 import '../../../../domain/additional_model/bloc_with_status.dart';
+import '../../../../domain/entity/run_status.dart';
 import '../../../../domain/entity/workout.dart';
 import '../../../../domain/entity/workout_stage.dart';
-import '../../../../domain/entity/workout_status.dart';
 import '../../../../domain/repository/workout_repository.dart';
 import '../../../../domain/service/auth_service.dart';
 
@@ -75,7 +75,7 @@ class DayPreviewBloc extends BlocWithStatus<DayPreviewEvent, DayPreviewState,
       workoutIdAsNull: workout == null,
       workoutName: workout?.name,
       stages: workout?.stages,
-      workoutStatus: workout?.status,
+      runStatus: workout?.status,
     ));
   }
 

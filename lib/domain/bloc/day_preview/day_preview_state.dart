@@ -6,7 +6,7 @@ class DayPreviewState extends BlocState<DayPreviewState> {
   final String? workoutId;
   final String? workoutName;
   final List<WorkoutStage>? stages;
-  final WorkoutStatus? workoutStatus;
+  final RunStatus? runStatus;
 
   const DayPreviewState({
     required super.status,
@@ -15,7 +15,7 @@ class DayPreviewState extends BlocState<DayPreviewState> {
     this.workoutId,
     this.workoutName,
     this.stages,
-    this.workoutStatus,
+    this.runStatus,
   });
 
   @override
@@ -26,7 +26,7 @@ class DayPreviewState extends BlocState<DayPreviewState> {
         workoutId,
         workoutName,
         stages,
-        workoutStatus,
+        runStatus,
       ];
 
   @override
@@ -38,7 +38,7 @@ class DayPreviewState extends BlocState<DayPreviewState> {
     bool workoutIdAsNull = false,
     String? workoutName,
     List<WorkoutStage>? stages,
-    WorkoutStatus? workoutStatus,
+    RunStatus? runStatus,
   }) {
     return DayPreviewState(
       status: status ?? const BlocStatusComplete(),
@@ -47,7 +47,7 @@ class DayPreviewState extends BlocState<DayPreviewState> {
       workoutId: workoutIdAsNull ? null : workoutId ?? this.workoutId,
       workoutName: workoutName ?? this.workoutName,
       stages: stages ?? this.stages,
-      workoutStatus: workoutStatus ?? this.workoutStatus,
+      runStatus: runStatus ?? this.runStatus,
     );
   }
 }

@@ -171,8 +171,8 @@
   "@dayPreviewTotalDistance": {
     "description": "Label of the section to display total distance of the workout"
   },
-  "dayPreviewWorkoutStatus": "Status",
-  "@dayPreviewWorkoutStatus": {
+  "dayPreviewRunStatus": "Status",
+  "@dayPreviewRunStatus": {
     "description": "Label of the section to display workout status"
   },
   "dayPreviewCoveredDistance": "Pokonany dystans",
@@ -291,40 +291,40 @@
   "@workoutStageCreatorJoggingDistance": {
     "description": "Jogging distance"
   },
-  "workoutStatusCreatorScreenTitle": "Status treningu",
-  "@workoutStatusCreatorScreenTitle": {
+  "runStatusCreatorScreenTitle": "Status treningu",
+  "@runStatusCreatorScreenTitle": {
     "description": "Title of workout status creator screen"
   },
-  "workoutStatusCreatorCoveredDistance": "Pokonany dystans",
-  "@workoutStatusCreatorCoveredDistance": {
+  "runStatusCreatorCoveredDistance": "Pokonany dystans",
+  "@runStatusCreatorCoveredDistance": {
     "description": "Label of covered distance"
   },
-  "workoutStatusCreatorMood": "Samopoczucie",
-  "@workoutStatusCreatorMood": {
+  "runStatusCreatorMood": "Samopoczucie",
+  "@runStatusCreatorMood": {
     "description": "Label of mood"
   },
-  "workoutStatusCreatorAveragePace": "Średnia prędkość",
-  "@workoutStatusCreatorAveragePace": {
+  "runStatusCreatorAveragePace": "Średnia prędkość",
+  "@runStatusCreatorAveragePace": {
     "description": "Label of average pace"
   },
-  "workoutStatusCreatorMinutes": "Minuty",
-  "@workoutStatusCreatorMinutes": {
+  "runStatusCreatorMinutes": "Minuty",
+  "@runStatusCreatorMinutes": {
     "description": "Label of minutes"
   },
-  "workoutStatusCreatorSeconds": "Sekundy",
-  "@workoutStatusCreatorSeconds": {
+  "runStatusCreatorSeconds": "Sekundy",
+  "@runStatusCreatorSeconds": {
     "description": "Label of seconds"
   },
-  "workoutStatusCreatorAverageHeartRate": "Średnie tętno",
-  "@workoutStatusCreatorAverageHeartRate": {
+  "runStatusCreatorAverageHeartRate": "Średnie tętno",
+  "@runStatusCreatorAverageHeartRate": {
     "description": "Label of average heart rate"
   },
-  "workoutStatusCreatorComment": "Uwagi",
-  "@workoutStatusCreatorComment": {
+  "runStatusCreatorComment": "Uwagi",
+  "@runStatusCreatorComment": {
     "description": "Label of comment"
   },
-  "workoutStatusCreatorSavedStatusMessage": "Pomyślnie zaktualizowano status treningu",
-  "@workoutStatusCreatorSavedStatusMessage": {
+  "runStatusCreatorSavedStatusMessage": "Pomyślnie zaktualizowano status treningu",
+  "@runStatusCreatorSavedStatusMessage": {
     "description": "Info about successfully saved status"
   },
   "healthTodayMeasurement": "Dzisiejszy pomiar",
@@ -715,20 +715,20 @@
       }
     }
   },
-  "workoutStatusPending": "Oczekujący",
-  "@workoutStatusPending": {
+  "runStatusPending": "Oczekujący",
+  "@runStatusPending": {
     "description": "Type of workout status called pending"
   },
-  "workoutStatusDone": "Wykonany",
-  "@workoutStatusDone": {
+  "runStatusDone": "Wykonany",
+  "@runStatusDone": {
     "description": "Type of workout status called done"
   },
-  "workoutStatusAborted": "Przerwany",
-  "@workoutStatusAborted": {
+  "runStatusAborted": "Przerwany",
+  "@runStatusAborted": {
     "description": "Type of workout status called aborted"
   },
-  "workoutStatusUndone": "Niewykonany",
-  "@workoutStatusUndone": {
+  "runStatusUndone": "Niewykonany",
+  "@runStatusUndone": {
     "description": "Type of workout status called undone"
   },
   "noInternetConnectionDialogTitle": "Brak połączenia internetowego",

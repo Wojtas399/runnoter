@@ -1,7 +1,7 @@
 import 'package:firebase/firebase.dart' as firebase;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/data/mapper/mood_rate_mapper.dart';
-import 'package:runnoter/domain/entity/workout_status.dart';
+import 'package:runnoter/domain/entity/run_status.dart';
 
 void main() {
   void verifyMappingFromFirebase(

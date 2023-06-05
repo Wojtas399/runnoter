@@ -4,9 +4,9 @@ import 'package:firebase/model/workout_dto.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/data/repository_impl/workout_repository_impl.dart';
+import 'package:runnoter/domain/entity/run_status.dart';
 import 'package:runnoter/domain/entity/workout.dart';
 import 'package:runnoter/domain/entity/workout_stage.dart';
-import 'package:runnoter/domain/entity/workout_status.dart';
 
 import '../../mock/firebase/mock_firebase_workout_service.dart';
 import '../../mock/presentation/service/mock_date_service.dart';
@@ -386,7 +386,7 @@ void main() {
       const String id = 'w3';
       const String workoutName = 'workout 3';
       final DateTime date = DateTime(2023, 2, 2);
-      const WorkoutStatus status = WorkoutStatusPending();
+      const RunStatus status = RunStatusPending();
       final List<WorkoutStage> stages = [
         WorkoutStageBaseRun(
           distanceInKilometers: 2,
@@ -406,7 +406,7 @@ void main() {
         userId: userId,
         name: workoutName,
         date: date,
-        status: const firebase.WorkoutStatusPendingDto(),
+        status: const firebase.RunStatusPendingDto(),
         stages: [
           firebase.WorkoutStageBaseRunDto(
             distanceInKilometers: 2,
@@ -459,14 +459,14 @@ void main() {
     () {
       const String id = 'w1';
       const String newWorkoutName = 'new workout name';
-      final WorkoutStatus newStatus = WorkoutStatusDone(
+      final RunStatus newStatus = RunStatusDone(
         coveredDistanceInKm: 10,
         avgPace: const Pace(minutes: 6, seconds: 2),
         avgHeartRate: 150,
         moodRate: MoodRate.mr8,
         comment: 'Nice workout!',
       );
-      final newStatusDto = firebase.WorkoutStatusDoneDto(
+      final newStatusDto = firebase.RunStatusDoneDto(
         coveredDistanceInKm: 10,
         avgPaceDto: const PaceDto(minutes: 6, seconds: 2),
         avgHeartRate: 150,
@@ -496,7 +496,7 @@ void main() {
         id: id,
         userId: userId,
         name: 'workout name',
-        status: const WorkoutStatusPending(),
+        status: const RunStatusPending(),
         stages: [
           WorkoutStageBaseRun(
             distanceInKilometers: 8,
@@ -564,7 +564,7 @@ void main() {
         workoutId: id,
         userId: userId,
         workoutName: null,
-        status: const WorkoutStatusPending(),
+        status: const RunStatusPending(),
         stages: [],
       );
 
@@ -572,7 +572,7 @@ void main() {
         () => firebaseWorkoutService.updateWorkout(
           workoutId: id,
           userId: userId,
-          status: const firebase.WorkoutStatusPendingDto(),
+          status: const firebase.RunStatusPendingDto(),
           stages: [],
         ),
       ).called(1);
@@ -618,7 +618,7 @@ void main() {
         workoutId: id,
         userId: userId,
         workoutName: 'new workout name',
-        status: const WorkoutStatusPending(),
+        status: const RunStatusPending(),
       );
 
       verify(
@@ -626,7 +626,7 @@ void main() {
           workoutId: id,
           userId: userId,
           workoutName: 'new workout name',
-          status: const firebase.WorkoutStatusPendingDto(),
+          status: const firebase.RunStatusPendingDto(),
           stages: null,
         ),
       ).called(1);

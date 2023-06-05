@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 import '../../../domain/bloc/current_week/current_week_cubit.dart';
+import '../../../domain/entity/run_status.dart';
 import '../../../domain/entity/workout.dart';
 import '../../../domain/entity/workout_stage.dart';
-import '../../../domain/entity/workout_status.dart';
 import '../../config/navigation/routes.dart';
 import '../../formatter/date_formatter.dart';
+import '../../formatter/run_status_formatter.dart';
 import '../../formatter/workout_stage_formatter.dart';
-import '../../formatter/workout_status_formatter.dart';
 import '../../service/navigator_service.dart';
 
 class DayItem extends StatelessWidget {
@@ -42,7 +42,7 @@ class DayItem extends StatelessWidget {
                   isToday: day.isToday,
                 ),
                 if (day.workout?.status != null)
-                  _WorkoutStatus(
+                  _RunStatus(
                     status: day.workout!.status,
                   ),
               ],
@@ -93,10 +93,10 @@ class _Date extends StatelessWidget {
   }
 }
 
-class _WorkoutStatus extends StatelessWidget {
-  final WorkoutStatus status;
+class _RunStatus extends StatelessWidget {
+  final RunStatus status;
 
-  const _WorkoutStatus({
+  const _RunStatus({
     required this.status,
   });
 

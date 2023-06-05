@@ -3,9 +3,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/bloc/workout_creator/workout_creator_bloc.dart';
+import 'package:runnoter/domain/entity/run_status.dart';
 import 'package:runnoter/domain/entity/workout.dart';
 import 'package:runnoter/domain/entity/workout_stage.dart';
-import 'package:runnoter/domain/entity/workout_status.dart';
 
 import '../../../mock/domain/mock_auth_service.dart';
 import '../../../mock/domain/mock_workout_repository.dart';
@@ -466,7 +466,7 @@ void main() {
           userId: 'u1',
           workoutName: 'workout 1',
           date: DateTime(2023, 2, 2),
-          status: const WorkoutStatusPending(),
+          status: const RunStatusPending(),
           stages: [
             WorkoutStageBaseRun(
               distanceInKilometers: 4,

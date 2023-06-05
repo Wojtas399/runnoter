@@ -52,13 +52,13 @@ class WorkoutCreatorRoute
         );
 }
 
-class WorkoutStatusCreatorRoute
-    extends CustomRouteWithArguments<WorkoutStatusCreatorArguments> {
-  const WorkoutStatusCreatorRoute({
-    required WorkoutStatusCreatorArguments creatorArguments,
+class RunStatusCreatorRoute
+    extends CustomRouteWithArguments<RunStatusCreatorArguments> {
+  const RunStatusCreatorRoute({
+    required RunStatusCreatorArguments creatorArguments,
   }) : super(
           arguments: creatorArguments,
-          path: RoutePath.workoutStatusCreator,
+          path: RoutePath.runStatusCreator,
         );
 }
 
@@ -119,7 +119,7 @@ enum RoutePath {
   home('/home'),
   dayPreview('/home/day-preview'),
   workoutCreator('/home/day-preview/workout-creator'),
-  workoutStatusCreator('/home/day-preview/workout-status-creator'),
+  runStatusCreator('/home/day-preview/workout-status-creator'),
   healthMeasurementCreator('/home/health_measurement-creator'),
   healthMeasurements('/home/health-measurements'),
   bloodTestCreator('/home/blood-test-creator'),

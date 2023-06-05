@@ -1,6 +1,6 @@
+import '../entity/run_status.dart';
 import '../entity/workout.dart';
 import '../entity/workout_stage.dart';
-import '../entity/workout_status.dart';
 
 abstract class WorkoutRepository {
   Stream<List<Workout>?> getWorkoutsByDateRange({
@@ -27,7 +27,7 @@ abstract class WorkoutRepository {
     required String userId,
     required String workoutName,
     required DateTime date,
-    required WorkoutStatus status,
+    required RunStatus status,
     required List<WorkoutStage> stages,
   });
 
@@ -35,7 +35,7 @@ abstract class WorkoutRepository {
     required String workoutId,
     required String userId,
     String? workoutName,
-    WorkoutStatus? status,
+    RunStatus? status,
     List<WorkoutStage>? stages,
   });
 

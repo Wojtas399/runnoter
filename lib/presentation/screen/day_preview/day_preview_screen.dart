@@ -4,8 +4,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../common/date_service.dart';
 import '../../../domain/bloc/day_preview/day_preview_bloc.dart';
+import '../../../domain/entity/run_status.dart';
 import '../../../domain/entity/workout_stage.dart';
-import '../../../domain/entity/workout_status.dart';
 import '../../../domain/repository/workout_repository.dart';
 import '../../../domain/service/auth_service.dart';
 import '../../component/big_button_component.dart';
@@ -16,8 +16,8 @@ import '../../formatter/date_formatter.dart';
 import '../../formatter/list_of_workout_stages_formatter.dart';
 import '../../formatter/mood_rate_formatter.dart';
 import '../../formatter/pace_formatter.dart';
+import '../../formatter/run_status_formatter.dart';
 import '../../formatter/workout_stage_formatter.dart';
-import '../../formatter/workout_status_formatter.dart';
 import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
 import '../screens.dart';
@@ -25,8 +25,8 @@ import '../screens.dart';
 part 'day_preview_app_bar.dart';
 part 'day_preview_content.dart';
 part 'day_preview_no_workout_content.dart';
+part 'day_preview_run_status.dart';
 part 'day_preview_workout_content.dart';
-part 'day_preview_workout_status.dart';
 
 class DayPreviewScreen extends StatelessWidget {
   final DateTime date;

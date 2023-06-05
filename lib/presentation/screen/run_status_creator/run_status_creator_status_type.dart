@@ -1,31 +1,31 @@
-part of 'workout_status_creator_screen.dart';
+part of 'run_status_creator_screen.dart';
 
 class _StatusType extends StatelessWidget {
   const _StatusType();
 
   @override
   Widget build(BuildContext context) {
-    final WorkoutStatusType? workoutStatusType = context.select(
-      (WorkoutStatusCreatorBloc bloc) => bloc.state.workoutStatusType,
+    final RunStatusType? runStatusType = context.select(
+      (RunStatusCreatorBloc bloc) => bloc.state.runStatusType,
     );
 
-    return DropdownButtonFormField<WorkoutStatusType>(
-      value: workoutStatusType,
+    return DropdownButtonFormField<RunStatusType>(
+      value: runStatusType,
       decoration: InputDecoration(
         filled: true,
-        labelText: Str.of(context).workoutStatusCreatorScreenTitle,
+        labelText: Str.of(context).runStatusCreatorScreenTitle,
       ),
-      items: <DropdownMenuItem<WorkoutStatusType>>[
-        ...WorkoutStatusType.values.map(
-          (WorkoutStatusType statusType) => DropdownMenuItem(
+      items: <DropdownMenuItem<RunStatusType>>[
+        ...RunStatusType.values.map(
+          (RunStatusType statusType) => DropdownMenuItem(
             value: statusType,
-            child: _WorkoutStatusDescription(
+            child: _RunStatusDescription(
               statusType: statusType,
             ),
           ),
         ),
       ],
-      onChanged: (WorkoutStatusType? statusType) {
+      onChanged: (RunStatusType? statusType) {
         _onChanged(context, statusType);
       },
     );
@@ -33,32 +33,32 @@ class _StatusType extends StatelessWidget {
 
   void _onChanged(
     BuildContext context,
-    WorkoutStatusType? workoutStatusType,
+    RunStatusType? runStatusType,
   ) {
-    context.read<WorkoutStatusCreatorBloc>().add(
-          WorkoutStatusCreatorEventWorkoutStatusTypeChanged(
-            workoutStatusType: workoutStatusType,
+    context.read<RunStatusCreatorBloc>().add(
+          RunStatusCreatorEventRunStatusTypeChanged(
+            runStatusType: runStatusType,
           ),
         );
   }
 }
 
-class _WorkoutStatusDescription extends StatelessWidget {
-  final WorkoutStatusType statusType;
+class _RunStatusDescription extends StatelessWidget {
+  final RunStatusType statusType;
 
-  const _WorkoutStatusDescription({
+  const _RunStatusDescription({
     required this.statusType,
   });
 
   @override
   Widget build(BuildContext context) {
-    WorkoutStatus? status;
+    RunStatus? status;
     switch (statusType) {
-      case WorkoutStatusType.pending:
-        status = const WorkoutStatusPending();
+      case RunStatusType.pending:
+        status = const RunStatusPending();
         break;
-      case WorkoutStatusType.done:
-        status = WorkoutStatusDone(
+      case RunStatusType.done:
+        status = RunStatusDone(
           coveredDistanceInKm: 0,
           avgPace: const Pace(minutes: 0, seconds: 0),
           avgHeartRate: 0,
@@ -66,8 +66,8 @@ class _WorkoutStatusDescription extends StatelessWidget {
           comment: '',
         );
         break;
-      case WorkoutStatusType.aborted:
-        status = WorkoutStatusAborted(
+      case RunStatusType.aborted:
+        status = RunStatusAborted(
           coveredDistanceInKm: 0,
           avgPace: const Pace(minutes: 0, seconds: 0),
           avgHeartRate: 0,
@@ -75,8 +75,8 @@ class _WorkoutStatusDescription extends StatelessWidget {
           comment: '',
         );
         break;
-      case WorkoutStatusType.undone:
-        status = const WorkoutStatusUndone();
+      case RunStatusType.undone:
+        status = const RunStatusUndone();
         break;
     }
 

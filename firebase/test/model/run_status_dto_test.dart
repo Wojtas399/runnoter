@@ -9,9 +9,9 @@ void main() {
       final Map<String, dynamic> json = {
         'name': 'pending',
       };
-      const WorkoutStatusPendingDto expectedDto = WorkoutStatusPendingDto();
+      const RunStatusPendingDto expectedDto = RunStatusPendingDto();
 
-      final WorkoutStatusDto dto = WorkoutStatusDto.fromJson(json);
+      final RunStatusDto dto = RunStatusDto.fromJson(json);
 
       expect(dto, expectedDto);
     },
@@ -30,7 +30,7 @@ void main() {
         'moodRate': MoodRate.mr8.number,
         'comment': 'comment',
       };
-      final WorkoutStatusDoneDto expectedDto = WorkoutStatusDoneDto(
+      final RunStatusDoneDto expectedDto = RunStatusDoneDto(
         coveredDistanceInKm: 8.5,
         avgPaceDto: avgPace,
         avgHeartRate: 145,
@@ -38,7 +38,7 @@ void main() {
         comment: 'comment',
       );
 
-      final WorkoutStatusDto dto = WorkoutStatusDto.fromJson(json);
+      final RunStatusDto dto = RunStatusDto.fromJson(json);
 
       expect(dto, expectedDto);
     },
@@ -57,7 +57,7 @@ void main() {
         'moodRate': MoodRate.mr8.number,
         'comment': 'comment',
       };
-      final WorkoutStatusAbortedDto expectedDto = WorkoutStatusAbortedDto(
+      final RunStatusAbortedDto expectedDto = RunStatusAbortedDto(
         coveredDistanceInKm: 8.5,
         avgPaceDto: avgPace,
         avgHeartRate: 145,
@@ -65,7 +65,7 @@ void main() {
         comment: 'comment',
       );
 
-      final WorkoutStatusDto dto = WorkoutStatusDto.fromJson(json);
+      final RunStatusDto dto = RunStatusDto.fromJson(json);
 
       expect(dto, expectedDto);
     },
@@ -78,9 +78,9 @@ void main() {
       final Map<String, dynamic> json = {
         'name': 'undone',
       };
-      const WorkoutStatusUndoneDto expectedDto = WorkoutStatusUndoneDto();
+      const RunStatusUndoneDto expectedDto = RunStatusUndoneDto();
 
-      final WorkoutStatusDto dto = WorkoutStatusDto.fromJson(json);
+      final RunStatusDto dto = RunStatusDto.fromJson(json);
 
       expect(dto, expectedDto);
     },
@@ -90,7 +90,7 @@ void main() {
     'to json, '
     'pending status',
     () {
-      const WorkoutStatusPendingDto dto = WorkoutStatusPendingDto();
+      const RunStatusPendingDto dto = RunStatusPendingDto();
       final Map<String, dynamic> expectedJson = {
         'name': 'pending',
       };
@@ -106,7 +106,7 @@ void main() {
     'done status',
     () {
       const PaceDto avgPace = PaceDto(minutes: 5, seconds: 30);
-      final WorkoutStatusDoneDto dto = WorkoutStatusDoneDto(
+      final RunStatusDoneDto dto = RunStatusDoneDto(
         coveredDistanceInKm: 8.5,
         avgPaceDto: avgPace,
         avgHeartRate: 145,
@@ -133,7 +133,7 @@ void main() {
     'aborted status',
     () {
       const PaceDto avgPace = PaceDto(minutes: 5, seconds: 30);
-      final WorkoutStatusAbortedDto dto = WorkoutStatusAbortedDto(
+      final RunStatusAbortedDto dto = RunStatusAbortedDto(
         coveredDistanceInKm: 8.5,
         avgPaceDto: avgPace,
         avgHeartRate: 145,
@@ -159,7 +159,7 @@ void main() {
     'to json, '
     'undone status',
     () {
-      const WorkoutStatusUndoneDto dto = WorkoutStatusUndoneDto();
+      const RunStatusUndoneDto dto = RunStatusUndoneDto();
       final Map<String, dynamic> expectedJson = {
         'name': 'undone',
       };
