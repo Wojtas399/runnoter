@@ -1,11 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import 'model/appearance_settings_dto.dart';
-import 'model/blood_test_dto.dart';
-import 'model/health_measurement_dto.dart';
-import 'model/user_dto.dart';
-import 'model/workout_dto.dart';
-import 'model/workout_settings_dto.dart';
+import 'firebase.dart';
 
 CollectionReference<UserDto> getUsersRef() =>
     FirebaseFirestore.instance.collection('Users').withConverter<UserDto>(
@@ -87,4 +82,16 @@ CollectionReference<BloodTestDto> getBloodTestsRef(
             json: snapshot.data(),
           ),
           toFirestore: (bloodTestsDto, _) => bloodTestsDto.toJson(),
+        );
+
+CollectionReference<CompetitionDto> getCompetitionsRef(
+  String userId,
+) =>
+    getUserRef(userId).collection('Competitions').withConverter<CompetitionDto>(
+          fromFirestore: (snapshot, _) => CompetitionDto.fromJson(
+            competitionId: snapshot.id,
+            userId: userId,
+            json: snapshot.data(),
+          ),
+          toFirestore: (competitionDto, _) => competitionDto.toJson(),
         );
