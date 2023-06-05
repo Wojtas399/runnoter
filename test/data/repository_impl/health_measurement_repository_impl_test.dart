@@ -5,8 +5,8 @@ import 'package:runnoter/data/repository_impl/health_measurement_repository_impl
 import 'package:runnoter/domain/entity/health_measurement.dart';
 
 import '../../creators/health_measurement_creator.dart';
+import '../../mock/common/mock_date_service.dart';
 import '../../mock/firebase/mock_firebase_health_measurement_service.dart';
-import '../../mock/presentation/service/mock_date_service.dart';
 
 void main() {
   final dateService = MockDateService();

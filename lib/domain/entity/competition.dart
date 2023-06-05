@@ -7,7 +7,7 @@ class Competition extends Entity {
   final String userId;
   final String name;
   final DateTime date;
-  final String city;
+  final String place;
   final double distance;
   final Time expectedTime;
   final RunStatus status;
@@ -17,7 +17,7 @@ class Competition extends Entity {
     required this.userId,
     required this.name,
     required this.date,
-    required this.city,
+    required this.place,
     required this.distance,
     required this.expectedTime,
     required this.status,
@@ -29,7 +29,7 @@ class Competition extends Entity {
         userId,
         name,
         date,
-        city,
+        place,
         distance,
         expectedTime,
         status,

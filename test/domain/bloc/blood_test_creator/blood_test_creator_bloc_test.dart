@@ -7,8 +7,8 @@ import 'package:runnoter/domain/entity/blood_parameter.dart';
 import 'package:runnoter/domain/entity/blood_test.dart';
 
 import '../../../creators/blood_test_creator.dart';
-import '../../../mock/domain/mock_auth_service.dart';
-import '../../../mock/domain/mock_blood_test_repository.dart';
+import '../../../mock/domain/repository/mock_blood_test_repository.dart';
+import '../../../mock/domain/service/mock_auth_service.dart';
 
 void main() {
   final authService = MockAuthService();

@@ -10,8 +10,8 @@ import 'package:runnoter/domain/entity/workout_stage.dart';
 
 import '../../creators/workout_creator.dart';
 import '../../creators/workout_dto_creator.dart';
+import '../../mock/common/mock_date_service.dart';
 import '../../mock/firebase/mock_firebase_workout_service.dart';
-import '../../mock/presentation/service/mock_date_service.dart';
 
 void main() {
   final firebaseWorkoutService = MockFirebaseWorkoutService();
