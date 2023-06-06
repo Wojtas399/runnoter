@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../component/big_button_component.dart';
+import '../../config/navigation/routes.dart';
+import '../../service/navigator_service.dart';
 
 class CompetitionsScreen extends StatelessWidget {
   const CompetitionsScreen({
@@ -16,7 +18,10 @@ class CompetitionsScreen extends StatelessWidget {
           BigButton(
             label: 'Nowe zawody',
             onPressed: () {
-              //TODO
+              navigateTo(
+                context: context,
+                route: const CompetitionCreatorRoute(),
+              );
             },
           ),
         ],

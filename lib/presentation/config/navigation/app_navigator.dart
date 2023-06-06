@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../screen/competition_creator/competition_creator_screen.dart';
 import '../../screen/screens.dart';
 import '../animation/slide_to_top_anim.dart';
 import 'routes.dart';
@@ -55,6 +56,8 @@ class AppNavigator extends StatelessWidget {
       screen = BloodTestPreviewScreen(
         bloodTestId: settings.arguments as String,
       );
+    } else if (routePath == RoutePath.competitionCreator.path) {
+      screen = const CompetitionCreatorScreen();
     } else if (routePath == RoutePath.themeMode.path) {
       screen = const ThemeModeScreen();
       isSlideToTopAnim = true;
