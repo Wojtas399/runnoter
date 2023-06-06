@@ -45,7 +45,9 @@ class Time extends Equatable {
     required this.hour,
     required this.minute,
     required this.second,
-  });
+  })  : assert(hour >= 0),
+        assert(minute >= 0),
+        assert(second >= 0);
 
   @override
   List<Object?> get props => [
