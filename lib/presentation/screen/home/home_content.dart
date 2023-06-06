@@ -6,7 +6,7 @@ class _Content extends StatelessWidget {
     const ProfileScreen(),
     const MileageScreen(),
     const BloodTestsScreen(),
-    const SizedBox(),
+    const CompetitionsScreen(),
   ];
 
   @override
