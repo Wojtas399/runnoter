@@ -18,6 +18,13 @@ class CompetitionRepositoryImpl extends StateRepository<Competition>
   }) : _firebaseCompetitionService = firebaseCompetitionService;
 
   @override
+  Stream<List<Competition>?> getAllCompetitions({
+    required String userId,
+  }) {
+    throw UnimplementedError();
+  }
+
+  @override
   Future<void> addNewCompetition({
     required String userId,
     required String name,

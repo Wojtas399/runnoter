@@ -1,4 +1,5 @@
 import 'package:mocktail/mocktail.dart';
+import 'package:runnoter/domain/entity/competition.dart';
 import 'package:runnoter/domain/entity/run_status.dart';
 import 'package:runnoter/domain/repository/competition_repository.dart';
 
@@ -10,6 +11,16 @@ class MockCompetitionRepository extends Mock implements CompetitionRepository {
   MockCompetitionRepository() {
     registerFallbackValue(_FakeDuration());
     registerFallbackValue(_FakeRunStatus());
+  }
+
+  void mockGetAllCompetitions({
+    List<Competition>? competitions,
+  }) {
+    when(
+      () => getAllCompetitions(
+        userId: any(named: 'userId'),
+      ),
+    ).thenAnswer((invocation) => Stream.value(competitions));
   }
 
   void mockAddNewCompetition() {

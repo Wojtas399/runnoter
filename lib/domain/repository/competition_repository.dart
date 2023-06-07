@@ -1,6 +1,11 @@
+import '../entity/competition.dart';
 import '../entity/run_status.dart';
 
 abstract interface class CompetitionRepository {
+  Stream<List<Competition>?> getAllCompetitions({
+    required String userId,
+  });
+
   Future<void> addNewCompetition({
     required String userId,
     required String name,
