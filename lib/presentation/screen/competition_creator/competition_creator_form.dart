@@ -74,7 +74,7 @@ class _CompetitionDistance extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFieldComponent(
-      label: Str.of(context).competitionCreatorDistance,
+      label: '${Str.of(context).competitionCreatorDistance} [km]',
       isRequired: true,
       maxLength: 7,
       inputFormatters: [

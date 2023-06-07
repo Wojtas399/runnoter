@@ -591,6 +591,10 @@
   "@competitionCreatorExpectedDuration": {
     "description": "Label of expected duration"
   },
+  "competitionCreatorAddedCompetitionMessage": "Pomyślnie dodano nowe zawody",
+  "@competitionCreatorAddedCompetitionMessage": {
+    "description": "Message to infor that new competition has been added"
+  },
   "themeMode": "Motyw",
   "@themeMode": {
     "description": "Label of theme mode"
