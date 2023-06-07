@@ -1,7 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
-import 'package:runnoter/domain/bloc/competition_creator/competition_creator_state.dart';
-import 'package:runnoter/domain/entity/competition.dart';
+import 'package:runnoter/domain/bloc/competition_creator/competition_creator_bloc.dart';
 
 void main() {
   late CompetitionCreatorState state;
@@ -22,7 +21,7 @@ void main() {
         date: DateTime(2023, 5, 10),
         place: 'place',
         distance: 21,
-        expectedTime: const Time(hour: 1, minute: 45, second: 20),
+        expectedDuration: const Duration(hours: 1, minutes: 45, seconds: 20),
       );
 
       expect(state.areDataValid, false);
@@ -39,7 +38,7 @@ void main() {
         date: DateTime(2023, 5, 10),
         place: 'place',
         distance: 21,
-        expectedTime: const Time(hour: 1, minute: 45, second: 20),
+        expectedDuration: const Duration(hours: 1, minutes: 45, seconds: 20),
       );
 
       expect(state.areDataValid, false);
@@ -56,7 +55,7 @@ void main() {
         date: null,
         place: 'place',
         distance: 21,
-        expectedTime: const Time(hour: 1, minute: 45, second: 20),
+        expectedDuration: const Duration(hours: 1, minutes: 45, seconds: 20),
       );
 
       expect(state.areDataValid, false);
@@ -73,7 +72,7 @@ void main() {
         date: DateTime(2023, 5, 10),
         place: null,
         distance: 21,
-        expectedTime: const Time(hour: 1, minute: 45, second: 20),
+        expectedDuration: const Duration(hours: 1, minutes: 45, seconds: 20),
       );
 
       expect(state.areDataValid, false);
@@ -90,7 +89,7 @@ void main() {
         date: DateTime(2023, 5, 10),
         place: '',
         distance: 21,
-        expectedTime: const Time(hour: 1, minute: 45, second: 20),
+        expectedDuration: const Duration(hours: 1, minutes: 45, seconds: 20),
       );
 
       expect(state.areDataValid, false);
@@ -107,7 +106,7 @@ void main() {
         date: DateTime(2023, 5, 10),
         place: 'place',
         distance: null,
-        expectedTime: const Time(hour: 1, minute: 45, second: 20),
+        expectedDuration: const Duration(hours: 1, minutes: 45, seconds: 20),
       );
 
       expect(state.areDataValid, false);
@@ -124,7 +123,7 @@ void main() {
         date: DateTime(2023, 5, 10),
         place: 'place',
         distance: -10,
-        expectedTime: const Time(hour: 1, minute: 45, second: 20),
+        expectedDuration: const Duration(hours: 1, minutes: 45, seconds: 20),
       );
 
       expect(state.areDataValid, false);
@@ -141,7 +140,7 @@ void main() {
         date: DateTime(2023, 5, 10),
         place: 'place',
         distance: 0,
-        expectedTime: const Time(hour: 1, minute: 45, second: 20),
+        expectedDuration: const Duration(hours: 1, minutes: 45, seconds: 20),
       );
 
       expect(state.areDataValid, false);
@@ -150,7 +149,7 @@ void main() {
 
   test(
     'are data valid, '
-    'expected time is null, '
+    'expected duration is null, '
     'should be false',
     () {
       state = state.copyWith(
@@ -158,7 +157,7 @@ void main() {
         date: DateTime(2023, 5, 10),
         place: 'place',
         distance: 21,
-        expectedTime: null,
+        expectedDuration: null,
       );
 
       expect(state.areDataValid, false);
@@ -175,7 +174,7 @@ void main() {
         date: DateTime(2023, 5, 10),
         place: 'place',
         distance: 21,
-        expectedTime: const Time(hour: 1, minute: 45, second: 20),
+        expectedDuration: const Duration(hours: 1, minutes: 45, seconds: 20),
       );
 
       expect(state.areDataValid, true);
@@ -248,15 +247,19 @@ void main() {
   );
 
   test(
-    'copy with expected time',
+    'copy with expected duration',
     () {
-      const Time expectedTime = Time(hour: 1, minute: 10, second: 30);
+      const Duration expectedDuration = Duration(
+        hours: 1,
+        minutes: 45,
+        seconds: 20,
+      );
 
-      state = state.copyWith(expectedTime: expectedTime);
+      state = state.copyWith(expectedDuration: expectedDuration);
       final state2 = state.copyWith();
 
-      expect(state.expectedTime, expectedTime);
-      expect(state2.expectedTime, expectedTime);
+      expect(state.expectedDuration, expectedDuration);
+      expect(state2.expectedDuration, expectedDuration);
     },
   );
 }

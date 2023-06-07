@@ -1,13 +1,11 @@
-import '../../additional_model/bloc_state.dart';
-import '../../additional_model/bloc_status.dart';
-import '../../entity/competition.dart';
+part of 'competition_creator_bloc.dart';
 
 class CompetitionCreatorState extends BlocState<CompetitionCreatorState> {
   final String? name;
   final DateTime? date;
   final String? place;
   final double? distance;
-  final Time? expectedTime;
+  final Duration? expectedDuration;
 
   const CompetitionCreatorState({
     required super.status,
@@ -15,7 +13,7 @@ class CompetitionCreatorState extends BlocState<CompetitionCreatorState> {
     this.date,
     this.place,
     this.distance,
-    this.expectedTime,
+    this.expectedDuration,
   });
 
   @override
@@ -25,7 +23,7 @@ class CompetitionCreatorState extends BlocState<CompetitionCreatorState> {
         date,
         place,
         distance,
-        expectedTime,
+        expectedDuration,
       ];
 
   bool get areDataValid =>
@@ -36,7 +34,7 @@ class CompetitionCreatorState extends BlocState<CompetitionCreatorState> {
       place!.isNotEmpty &&
       distance != null &&
       distance! > 0 &&
-      expectedTime != null;
+      expectedDuration != null;
 
   @override
   CompetitionCreatorState copyWith({
@@ -45,7 +43,7 @@ class CompetitionCreatorState extends BlocState<CompetitionCreatorState> {
     DateTime? date,
     String? place,
     double? distance,
-    Time? expectedTime,
+    Duration? expectedDuration,
   }) =>
       CompetitionCreatorState(
         status: status ?? const BlocStatusComplete(),
@@ -53,6 +51,6 @@ class CompetitionCreatorState extends BlocState<CompetitionCreatorState> {
         date: date ?? this.date,
         place: place ?? this.place,
         distance: distance ?? this.distance,
-        expectedTime: expectedTime ?? this.expectedTime,
+        expectedDuration: expectedDuration ?? this.expectedDuration,
       );
 }

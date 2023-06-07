@@ -1,3 +1,5 @@
+part of 'competition_creator_bloc.dart';
+
 abstract class CompetitionCreatorEvent {
   const CompetitionCreatorEvent();
 }
@@ -34,15 +36,15 @@ class CompetitionCreatorEventDistanceChanged extends CompetitionCreatorEvent {
   });
 }
 
-class CompetitionCreatorEventExpectedTimeChanged
+class CompetitionCreatorEventExpectedDurationChanged
     extends CompetitionCreatorEvent {
-  final int hour;
-  final int minute;
-  final int second;
+  final Duration? expectedDuration;
 
-  const CompetitionCreatorEventExpectedTimeChanged({
-    required this.hour,
-    required this.minute,
-    required this.second,
+  const CompetitionCreatorEventExpectedDurationChanged({
+    required this.expectedDuration,
   });
+}
+
+class CompetitionCreatorEventSubmit extends CompetitionCreatorEvent {
+  const CompetitionCreatorEventSubmit();
 }
