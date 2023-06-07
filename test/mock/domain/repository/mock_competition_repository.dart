@@ -13,6 +13,17 @@ class MockCompetitionRepository extends Mock implements CompetitionRepository {
     registerFallbackValue(_FakeRunStatus());
   }
 
+  void mockGetCompetitionById({
+    Competition? competition,
+  }) {
+    when(
+      () => getCompetitionById(
+        competitionId: any(named: 'competitionId'),
+        userId: any(named: 'userId'),
+      ),
+    ).thenAnswer((invocation) => Stream.value(competition));
+  }
+
   void mockGetAllCompetitions({
     List<Competition>? competitions,
   }) {
@@ -33,6 +44,15 @@ class MockCompetitionRepository extends Mock implements CompetitionRepository {
         distance: any(named: 'distance'),
         expectedDuration: any(named: 'expectedDuration'),
         status: any(named: 'status'),
+      ),
+    ).thenAnswer((invocation) => Future.value());
+  }
+
+  void mockDeleteCompetition() {
+    when(
+      () => deleteCompetition(
+        competitionId: any(named: 'competitionId'),
+        userId: any(named: 'userId'),
       ),
     ).thenAnswer((invocation) => Future.value());
   }

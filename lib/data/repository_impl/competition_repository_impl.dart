@@ -18,6 +18,14 @@ class CompetitionRepositoryImpl extends StateRepository<Competition>
   }) : _firebaseCompetitionService = firebaseCompetitionService;
 
   @override
+  Stream<Competition?> getCompetitionById({
+    required String competitionId,
+    required String userId,
+  }) {
+    throw UnimplementedError();
+  }
+
+  @override
   Stream<List<Competition>?> getAllCompetitions({
     required String userId,
   }) async* {
@@ -56,6 +64,14 @@ class CompetitionRepositoryImpl extends StateRepository<Competition>
       );
       addEntity(competition);
     }
+  }
+
+  @override
+  Future<void> deleteCompetition({
+    required String competitionId,
+    required String userId,
+  }) async {
+    throw UnimplementedError();
   }
 
   Future<void> _loadAllCompetitionsFromRemoteDb(String userId) async {

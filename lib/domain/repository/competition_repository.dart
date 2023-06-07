@@ -2,6 +2,11 @@ import '../entity/competition.dart';
 import '../entity/run_status.dart';
 
 abstract interface class CompetitionRepository {
+  Stream<Competition?> getCompetitionById({
+    required String competitionId,
+    required String userId,
+  });
+
   Stream<List<Competition>?> getAllCompetitions({
     required String userId,
   });
@@ -14,5 +19,10 @@ abstract interface class CompetitionRepository {
     required double distance,
     required Duration? expectedDuration,
     required RunStatus status,
+  });
+
+  Future<void> deleteCompetition({
+    required String competitionId,
+    required String userId,
   });
 }
