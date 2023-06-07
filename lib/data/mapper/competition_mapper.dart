@@ -11,7 +11,7 @@ Competition mapCompetitionFromDto(CompetitionDto competitionDto) => Competition(
       place: competitionDto.place,
       distance: competitionDto.distance,
       expectedDuration: competitionDto.expectedDuration,
-      status: mapRunStatusFromDto(competitionDto.runStatusDto),
+      status: mapRunStatusFromDto(competitionDto.statusDto),
     );
 
 CompetitionDto mapCompetitionToDto(Competition competition) => CompetitionDto(
@@ -22,5 +22,5 @@ CompetitionDto mapCompetitionToDto(Competition competition) => CompetitionDto(
       place: competition.place,
       distance: competition.distance,
       expectedDuration: competition.expectedDuration,
-      runStatusDto: mapRunStatusToDto(competition.status),
+      statusDto: mapRunStatusToDto(competition.status),
     );

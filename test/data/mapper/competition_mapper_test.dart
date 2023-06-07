@@ -40,7 +40,7 @@ void main() {
     place: place,
     distance: distance,
     expectedDuration: expectedDuration,
-    runStatusDto: firebase.RunStatusDoneDto(
+    statusDto: firebase.RunStatusDoneDto(
       coveredDistanceInKm: 5.0,
       avgPaceDto: const firebase.PaceDto(minutes: 5, seconds: 45),
       avgHeartRate: 145,

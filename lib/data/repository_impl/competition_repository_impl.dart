@@ -20,8 +20,14 @@ class CompetitionRepositoryImpl extends StateRepository<Competition>
   @override
   Stream<List<Competition>?> getAllCompetitions({
     required String userId,
-  }) {
-    throw UnimplementedError();
+  }) async* {
+    await _loadAllCompetitionsFromRemoteDb(userId);
+
+    await for (final competitions in dataStream$) {
+      yield competitions
+          ?.where((competition) => competition.userId == userId)
+          .toList();
+    }
   }
 
   @override
@@ -42,13 +48,23 @@ class CompetitionRepositoryImpl extends StateRepository<Competition>
       place: place,
       distance: distance,
       expectedDuration: expectedDuration,
-      runStatusDto: mapRunStatusToDto(status),
+      statusDto: mapRunStatusToDto(status),
     );
     if (addedCompetitionDto != null) {
       final Competition competition = mapCompetitionFromDto(
         addedCompetitionDto,
       );
       addEntity(competition);
+    }
+  }
+
+  Future<void> _loadAllCompetitionsFromRemoteDb(String userId) async {
+    final List<CompetitionDto>? competitionDtos =
+        await _firebaseCompetitionService.loadAllCompetitions(userId: userId);
+    if (competitionDtos != null) {
+      final List<Competition> competitions =
+          competitionDtos.map(mapCompetitionFromDto).toList();
+      addEntities(competitions);
     }
   }
 }

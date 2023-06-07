@@ -13,7 +13,7 @@ void main() {
     minutes: 45,
     seconds: 30,
   );
-  final RunStatusDto runStatusDto = RunStatusDoneDto(
+  final RunStatusDto statusDto = RunStatusDoneDto(
     coveredDistanceInKm: 42,
     avgPaceDto: const PaceDto(
       minutes: 4,
@@ -31,7 +31,7 @@ void main() {
     place: place,
     distance: distance,
     expectedDuration: expectedDuration,
-    runStatusDto: runStatusDto,
+    statusDto: statusDto,
   );
   final Map<String, dynamic> competitionJson = {
     'name': name,
@@ -39,7 +39,7 @@ void main() {
     'place': place,
     'distance': distance,
     'expectedDuration': '2:45:30',
-    'status': runStatusDto.toJson(),
+    'status': statusDto.toJson(),
   };
 
   test(

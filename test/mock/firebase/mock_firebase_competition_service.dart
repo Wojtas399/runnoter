@@ -34,7 +34,7 @@ class MockFirebaseCompetitionService extends Mock
         place: any(named: 'place'),
         distance: any(named: 'distance'),
         expectedDuration: any(named: 'expectedDuration'),
-        runStatusDto: any(named: 'runStatusDto'),
+        statusDto: any(named: 'statusDto'),
       ),
     ).thenAnswer((invocation) => Future.value(addedCompetitionDto));
   }

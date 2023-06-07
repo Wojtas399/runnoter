@@ -12,7 +12,7 @@ class CompetitionDto extends Equatable {
   final String place;
   final double distance;
   final Duration? expectedDuration;
-  final RunStatusDto runStatusDto;
+  final RunStatusDto statusDto;
 
   const CompetitionDto({
     required this.id,
@@ -22,7 +22,7 @@ class CompetitionDto extends Equatable {
     required this.place,
     required this.distance,
     required this.expectedDuration,
-    required this.runStatusDto,
+    required this.statusDto,
   });
 
   CompetitionDto.fromJson({
@@ -39,7 +39,7 @@ class CompetitionDto extends Equatable {
           expectedDuration: json?[_expectedDurationField] != null
               ? mapDurationFromString(json?[_expectedDurationField])
               : null,
-          runStatusDto: RunStatusDto.fromJson(json?[_statusField]),
+          statusDto: RunStatusDto.fromJson(json?[_statusField]),
         );
 
   @override
@@ -51,7 +51,7 @@ class CompetitionDto extends Equatable {
         place,
         distance,
         expectedDuration,
-        runStatusDto,
+        statusDto,
       ];
 
   Map<String, dynamic> toJson() => {
@@ -62,7 +62,7 @@ class CompetitionDto extends Equatable {
         _expectedDurationField: expectedDuration != null
             ? mapDurationToString(expectedDuration!)
             : null,
-        _statusField: runStatusDto.toJson(),
+        _statusField: statusDto.toJson(),
       };
 }
 

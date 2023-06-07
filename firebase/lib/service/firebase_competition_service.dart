@@ -17,7 +17,7 @@ class FirebaseCompetitionService {
     required String place,
     required double distance,
     required Duration? expectedDuration,
-    required RunStatusDto runStatusDto,
+    required RunStatusDto statusDto,
   }) async {
     final CompetitionDto competitionDto = CompetitionDto(
       id: '',
@@ -27,7 +27,7 @@ class FirebaseCompetitionService {
       place: place,
       distance: distance,
       expectedDuration: expectedDuration,
-      runStatusDto: runStatusDto,
+      statusDto: statusDto,
     );
     final docRef = await getCompetitionsRef(userId).add(competitionDto);
     final snapshot = await docRef.get();
