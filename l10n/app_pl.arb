@@ -571,6 +571,10 @@
   "@competitionCreatorScreenTitle": {
     "description": "Title of the competition creator screen"
   },
+  "competitionCreatorDate": "Data",
+  "@competitionCreatorDate": {
+    "description": "Label of competition date"
+  },
   "competitionCreatorCompetitionName": "Nazwa zawodów",
   "@competitionCreatorCompetitionName": {
     "description": "Label of competition name"
@@ -583,13 +587,21 @@
   "@competitionCreatorDistance": {
     "description": "Label of distance"
   },
-  "competitionCreatorDate": "Data",
-  "@competitionCreatorDate": {
-    "description": "Label of competition date"
-  },
   "competitionCreatorExpectedDuration": "Oczekiwany czas",
   "@competitionCreatorExpectedDuration": {
     "description": "Label of expected duration"
+  },
+  "competitionCreatorExpectedDurationHoursShort": "godz.",
+  "@competitionCreatorExpectedDurationHoursShort": {
+    "description": "Short label of duration hours"
+  },
+  "competitionCreatorExpectedDurationMinutesShort": "min.",
+  "@competitionCreatorExpectedDurationMinutesShort": {
+    "description": "Short label of duration minutes"
+  },
+  "competitionCreatorExpectedDurationSecondsShort": "sek.",
+  "@competitionCreatorExpectedDurationSecondsShort": {
+    "description": "Short label of duration seconds"
   },
   "competitionCreatorAddedCompetitionMessage": "Pomyślnie dodano nowe zawody",
   "@competitionCreatorAddedCompetitionMessage": {

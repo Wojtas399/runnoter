@@ -1,7 +1,22 @@
 part of 'competition_creator_screen.dart';
 
-class _ExpectedDuration extends StatelessWidget {
+class _ExpectedDuration extends StatefulWidget {
   const _ExpectedDuration();
+
+  @override
+  State<StatefulWidget> createState() => _ExpectedDurationState();
+}
+
+class _ExpectedDurationState extends State<_ExpectedDuration> {
+  late int _hours, _minutes, _seconds;
+
+  @override
+  void initState() {
+    super.initState();
+    _hours = 0;
+    _minutes = 0;
+    _seconds = 0;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -12,76 +27,120 @@ class _ExpectedDuration extends StatelessWidget {
           Str.of(context).competitionCreatorExpectedDuration,
         ),
         const SizedBox(height: 8),
-        const Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+        Row(
           children: [
-            _ExpectedDurationValue(),
-            _ExpectedDurationButton(),
+            _DurationField(
+              label:
+                  Str.of(context).competitionCreatorExpectedDurationHoursShort,
+              onChanged: _onHoursChanged,
+            ),
+            const _TimeSeparator(),
+            _DurationField(
+              label: Str.of(context)
+                  .competitionCreatorExpectedDurationMinutesShort,
+              onChanged: _onMinutesChanged,
+            ),
+            const _TimeSeparator(),
+            _DurationField(
+              label: Str.of(context)
+                  .competitionCreatorExpectedDurationSecondsShort,
+              onChanged: _onSecondsChanged,
+            ),
           ],
         ),
       ],
     );
   }
+
+  void _onHoursChanged(int? hours) {
+    final Duration duration = Duration(
+      hours: hours ?? 0,
+      minutes: _minutes,
+      seconds: _seconds,
+    );
+    context.read<CompetitionCreatorBloc>().add(
+          CompetitionCreatorEventExpectedDurationChanged(
+            expectedDuration: duration,
+          ),
+        );
+    setState(() {
+      _hours = hours ?? 0;
+    });
+  }
+
+  void _onMinutesChanged(int? minutes) {
+    final Duration duration = Duration(
+      hours: _hours,
+      minutes: minutes ?? 0,
+      seconds: _seconds,
+    );
+    context.read<CompetitionCreatorBloc>().add(
+          CompetitionCreatorEventExpectedDurationChanged(
+            expectedDuration: duration,
+          ),
+        );
+    setState(() {
+      _minutes = minutes ?? 0;
+    });
+  }
+
+  void _onSecondsChanged(int? seconds) {
+    final Duration duration = Duration(
+      hours: _hours,
+      minutes: _minutes,
+      seconds: seconds ?? 0,
+    );
+    context.read<CompetitionCreatorBloc>().add(
+          CompetitionCreatorEventExpectedDurationChanged(
+            expectedDuration: duration,
+          ),
+        );
+    setState(() {
+      _seconds = seconds ?? 0;
+    });
+  }
 }
 
-class _ExpectedDurationValue extends StatelessWidget {
-  const _ExpectedDurationValue();
+class _TimeSeparator extends StatelessWidget {
+  const _TimeSeparator();
 
   @override
   Widget build(BuildContext context) {
-    final Duration? duration = context.select(
-      (CompetitionCreatorBloc bloc) => bloc.state.expectedDuration,
-    );
-
-    if (duration == null) {
-      return const SizedBox();
-    }
-    return Expanded(
-      child: TitleLarge(duration.toString()),
+    return const Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16),
+      child: TitleLarge(':'),
     );
   }
 }
 
-class _ExpectedDurationButton extends StatelessWidget {
-  const _ExpectedDurationButton();
+class _DurationField extends StatelessWidget {
+  final String label;
+  final Function(int? value) onChanged;
+
+  const _DurationField({
+    required this.label,
+    required this.onChanged,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final Duration? duration = context.select(
-      (CompetitionCreatorBloc bloc) => bloc.state.expectedDuration,
-    );
-
-    if (duration == null) {
-      return FilledButton(
-        onPressed: () {
-          _onPressed(context);
-        },
-        child: Text(
-          Str.of(context).select,
-        ),
-      );
-    }
-    return OutlinedButton(
-      onPressed: () {
-        _onPressed(context);
-      },
-      child: Text(
-        Str.of(context).change,
+    return Expanded(
+      child: TextFieldComponent(
+        label: label,
+        isLabelCentered: true,
+        textAlign: TextAlign.center,
+        maxLength: 2,
+        keyboardType: TextInputType.number,
+        isRequired: true,
+        onChanged: _onChanged,
       ),
     );
   }
 
-  Future<void> _onPressed(BuildContext context) async {
-    final CompetitionCreatorBloc bloc = context.read<CompetitionCreatorBloc>();
-    final Duration? duration = await showDurationPicker(
-      context: context,
-      initialTime: bloc.state.expectedDuration ?? const Duration(seconds: 0),
-    );
-    if (duration != null) {
-      bloc.add(
-        CompetitionCreatorEventExpectedDurationChanged(
-          expectedDuration: duration,
-        ),
+  void _onChanged(String? value) {
+    if (value != null) {
+      onChanged(
+        int.tryParse(value),
       );
     }
   }

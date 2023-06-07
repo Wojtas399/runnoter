@@ -10,13 +10,13 @@ class _Form extends StatelessWidget {
     return const Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        _CompetitionDate(),
+        gap,
         _CompetitionName(),
         gap,
         _CompetitionPlace(),
         gap,
         _CompetitionDistance(),
-        gap,
-        _CompetitionDate(),
         gap,
         _ExpectedDuration(),
       ],
