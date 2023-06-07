@@ -3,6 +3,13 @@ import '../model/competition_dto.dart';
 import '../model/run_status_dto.dart';
 
 class FirebaseCompetitionService {
+  Future<List<CompetitionDto>?> loadAllCompetitions({
+    required String userId,
+  }) async {
+    final snapshot = await getCompetitionsRef(userId).get();
+    return snapshot.docs.map((docSnapshot) => docSnapshot.data()).toList();
+  }
+
   Future<CompetitionDto?> addNewCompetition({
     required String userId,
     required String name,

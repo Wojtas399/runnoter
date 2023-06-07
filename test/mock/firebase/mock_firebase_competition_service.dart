@@ -13,6 +13,16 @@ class MockFirebaseCompetitionService extends Mock
     registerFallbackValue(_FakeRunStatusDto());
   }
 
+  void mockLoadAllCompetitions({
+    List<CompetitionDto>? competitionDtos,
+  }) {
+    when(
+      () => loadAllCompetitions(
+        userId: any(named: 'userId'),
+      ),
+    ).thenAnswer((invocation) => Future.value(competitionDtos));
+  }
+
   void mockAddNewCompetition({
     CompetitionDto? addedCompetitionDto,
   }) {
