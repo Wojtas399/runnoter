@@ -3,6 +3,14 @@ import '../model/competition_dto.dart';
 import '../model/run_status_dto.dart';
 
 class FirebaseCompetitionService {
+  Future<CompetitionDto?> loadCompetitionById({
+    required String competitionId,
+    required String userId,
+  }) async {
+    final snapshot = await getCompetitionsRef(userId).doc(competitionId).get();
+    return snapshot.data();
+  }
+
   Future<List<CompetitionDto>?> loadAllCompetitions({
     required String userId,
   }) async {
@@ -32,5 +40,13 @@ class FirebaseCompetitionService {
     final docRef = await getCompetitionsRef(userId).add(competitionDto);
     final snapshot = await docRef.get();
     return snapshot.data();
+  }
+
+  Future<void> deleteCompetition({
+    required String competitionId,
+    required String userId,
+  }) async {
+    final docRef = getCompetitionsRef(userId).doc(competitionId);
+    await docRef.delete();
   }
 }

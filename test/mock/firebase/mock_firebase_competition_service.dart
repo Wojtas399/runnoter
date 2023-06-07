@@ -13,6 +13,17 @@ class MockFirebaseCompetitionService extends Mock
     registerFallbackValue(_FakeRunStatusDto());
   }
 
+  void mockLoadCompetitionById({
+    CompetitionDto? competitionDto,
+  }) {
+    when(
+      () => loadCompetitionById(
+        competitionId: any(named: 'competitionId'),
+        userId: any(named: 'userId'),
+      ),
+    ).thenAnswer((invocation) => Future.value(competitionDto));
+  }
+
   void mockLoadAllCompetitions({
     List<CompetitionDto>? competitionDtos,
   }) {
@@ -37,5 +48,14 @@ class MockFirebaseCompetitionService extends Mock
         statusDto: any(named: 'statusDto'),
       ),
     ).thenAnswer((invocation) => Future.value(addedCompetitionDto));
+  }
+
+  void mockDeleteCompetition() {
+    when(
+      () => deleteCompetition(
+        competitionId: any(named: 'competitionId'),
+        userId: any(named: 'userId'),
+      ),
+    ).thenAnswer((invocation) => Future.value());
   }
 }
