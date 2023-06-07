@@ -30,24 +30,48 @@ void main() {
 
   blocTest(
     'initialize, '
-    'should set listener of competitions belonging to logged user',
+    'should set listener of competitions belonging to logged user, should sort competitions by descending by date and emit them',
     build: () => createCubit(),
     setUp: () {
       authService.mockGetLoggedUserId(userId: 'u1');
       competitionRepository.mockGetAllCompetitions(
         competitions: [
-          createCompetition(id: 'c1', userId: 'u1'),
-          createCompetition(id: 'c2', userId: 'u1'),
-          createCompetition(id: 'c3', userId: 'u1'),
+          createCompetition(
+            id: 'c1',
+            userId: 'u1',
+            date: DateTime(2023, 6, 10),
+          ),
+          createCompetition(
+            id: 'c2',
+            userId: 'u1',
+            date: DateTime(2023, 4, 20),
+          ),
+          createCompetition(
+            id: 'c3',
+            userId: 'u1',
+            date: DateTime(2023, 5, 30),
+          ),
         ],
       );
     },
     act: (CompetitionsCubit cubit) => cubit.initialize(),
     expect: () => [
       [
-        createCompetition(id: 'c1', userId: 'u1'),
-        createCompetition(id: 'c2', userId: 'u1'),
-        createCompetition(id: 'c3', userId: 'u1'),
+        createCompetition(
+          id: 'c1',
+          userId: 'u1',
+          date: DateTime(2023, 6, 10),
+        ),
+        createCompetition(
+          id: 'c3',
+          userId: 'u1',
+          date: DateTime(2023, 5, 30),
+        ),
+        createCompetition(
+          id: 'c2',
+          userId: 'u1',
+          date: DateTime(2023, 4, 20),
+        ),
       ],
     ],
     verify: (_) {

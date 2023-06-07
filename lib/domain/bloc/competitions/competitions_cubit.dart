@@ -34,8 +34,26 @@ class CompetitionsCubit extends Cubit<List<Competition>?> {
             userId: loggedUserId,
           ),
         )
-        .listen(
-          (List<Competition>? competitions) => emit(competitions),
-        );
+        .listen(_emitSortedCompetitions);
   }
+
+  void _emitSortedCompetitions(List<Competition>? competitions) {
+    if (competitions == null) {
+      emit(null);
+      return;
+    }
+    final List<Competition> sortedCompetitions = [...competitions];
+    sortedCompetitions.sort(_compareDatesOfCompetitions);
+    emit(sortedCompetitions);
+  }
+
+  int _compareDatesOfCompetitions(
+    Competition competition1,
+    Competition competition2,
+  ) =>
+      competition1.date.isBefore(competition2.date)
+          ? 1
+          : competition1.date.isAfter(competition2.date)
+              ? -1
+              : 0;
 }
