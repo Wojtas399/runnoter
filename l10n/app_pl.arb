@@ -519,9 +519,9 @@
   "@bloodTestCreatorSelectDate": {
     "description": "Label of the button to select date"
   },
-  "bloodTestCreatorEditDate": "Edytuj datę",
-  "@bloodTestCreatorEditDate": {
-    "description": "Label of the button to edit date"
+  "bloodTestCreatorChangeDate": "Zmień datę",
+  "@bloodTestCreatorChangeDate": {
+    "description": "Label of the button to change date"
   },
   "bloodTestCreatorSuccessfullyAddedTest": "Pomyślnie dodano badanie krwi",
   "@bloodTestCreatorSuccessfullyAddedTest": {
@@ -566,6 +566,30 @@
   "bloodTestAdditionalParams": "Badania dodatkowe",
   "@bloodTestAdditionalParams": {
     "description": "Label of the additional blood params"
+  },
+  "competitionCreatorScreenTitle": "Nowe zawody",
+  "@competitionCreatorScreenTitle": {
+    "description": "Title of the competition creator screen"
+  },
+  "competitionCreatorCompetitionName": "Nazwa zawodów",
+  "@competitionCreatorCompetitionName": {
+    "description": "Label of competition name"
+  },
+  "competitionCreatorPlace": "Miejsce",
+  "@competitionCreatorPlace": {
+    "description": "Label of place"
+  },
+  "competitionCreatorDistance": "Dystans",
+  "@competitionCreatorDistance": {
+    "description": "Label of distance"
+  },
+  "competitionCreatorDate": "Data",
+  "@competitionCreatorDate": {
+    "description": "Label of competition date"
+  },
+  "competitionCreatorExpectedDuration": "Oczekiwany czas",
+  "@competitionCreatorExpectedDuration": {
+    "description": "Label of expected duration"
   },
   "themeMode": "Motyw",
   "@themeMode": {
@@ -776,41 +800,16 @@
     "description": "Password confirmation"
   },
   "loading": "Ładowanie",
-  "@loading": {
-    "description": "Loading"
-  },
   "close": "Zamknij",
-  "@close": {
-    "description": "Close"
-  },
   "cancel": "Anuluj",
-  "@cancel": {
-    "description": "Cancel"
-  },
   "confirm": "Zatwierdź",
-  "@confirm": {
-    "description": "Confirm"
-  },
   "save": "Zapisz",
-  "@save": {
-    "description": "Save"
-  },
   "delete": "Usuń",
-  "@delete": {
-    "description": "Delete"
-  },
   "edit": "Edytuj",
-  "@edit": {
-    "description": "Edit"
-  },
+  "select": "Wybierz",
+  "change": "Zmień",
   "back": "Wróć",
-  "@back": {
-    "description": "Back"
-  },
   "add": "Dodaj",
-  "@add": {
-    "description": "Add"
-  },
   "requiredFieldMessage": "To pole jest wymagane",
   "@requiredFieldMessage": {
     "description": "Message to inform that field is required."

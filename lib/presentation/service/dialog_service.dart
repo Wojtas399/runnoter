@@ -115,6 +115,18 @@ Future<T?> askForAction<T>({
   );
 }
 
+Future<DateTime?> askForDate({
+  required BuildContext context,
+  DateTime? initialDate,
+}) async {
+  return await showDatePicker(
+    context: context,
+    initialDate: initialDate ?? DateTime.now(),
+    firstDate: DateTime(1900),
+    lastDate: DateTime(2099, 12, 31),
+  );
+}
+
 Future<T?> showAlertDialog<T>({
   required BuildContext context,
   required Widget dialog,

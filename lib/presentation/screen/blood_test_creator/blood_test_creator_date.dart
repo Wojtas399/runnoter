@@ -42,7 +42,7 @@ class _Date extends StatelessWidget {
       return const SizedBox();
     }
     return Expanded(
-      child: TitleLarge(date.toFullDate(context)),
+      child: TitleLarge(date.toDateWithDots()),
     );
   }
 }
@@ -71,18 +71,16 @@ class _DateButton extends StatelessWidget {
         _onPressed(context);
       },
       child: Text(
-        Str.of(context).bloodTestCreatorEditDate,
+        Str.of(context).bloodTestCreatorChangeDate,
       ),
     );
   }
 
   Future<void> _onPressed(BuildContext context) async {
     final bloc = context.read<BloodTestCreatorBloc>();
-    final DateTime? date = await showDatePicker(
+    final DateTime? date = await askForDate(
       context: context,
-      initialDate: bloc.state.date ?? DateTime.now(),
-      firstDate: DateTime(1900),
-      lastDate: DateTime(2100),
+      initialDate: bloc.state.date,
     );
     if (date != null) {
       bloc.add(
