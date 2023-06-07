@@ -234,4 +234,60 @@ void main() {
       ).called(1);
     },
   );
+
+  blocTest(
+    'submit, '
+    'duration is 0'
+    'should call method from competition repository to add new competition with duration set as null and pending status and should emit info that competition has been added',
+    build: () => createBloc(
+      name: 'competition name',
+      date: DateTime(2023, 6, 2),
+      place: 'New York',
+      distance: 21,
+      expectedDuration: const Duration(),
+    ),
+    setUp: () {
+      authService.mockGetLoggedUserId(userId: 'u1');
+      competitionRepository.mockAddNewCompetition();
+    },
+    act: (CompetitionCreatorBloc bloc) => bloc.add(
+      const CompetitionCreatorEventSubmit(),
+    ),
+    expect: () => [
+      createState(
+        status: const BlocStatusLoading(),
+        name: 'competition name',
+        date: DateTime(2023, 6, 2),
+        place: 'New York',
+        distance: 21,
+        expectedDuration: const Duration(),
+      ),
+      createState(
+        status: const BlocStatusComplete<CompetitionCreatorBlocInfo>(
+          info: CompetitionCreatorBlocInfo.competitionAdded,
+        ),
+        name: 'competition name',
+        date: DateTime(2023, 6, 2),
+        place: 'New York',
+        distance: 21,
+        expectedDuration: const Duration(),
+      ),
+    ],
+    verify: (_) {
+      verify(
+        () => authService.loggedUserId$,
+      ).called(1);
+      verify(
+        () => competitionRepository.addNewCompetition(
+          userId: 'u1',
+          name: 'competition name',
+          date: DateTime(2023, 6, 2),
+          place: 'New York',
+          distance: 21,
+          expectedDuration: null,
+          status: const RunStatusPending(),
+        ),
+      ).called(1);
+    },
+  );
 }

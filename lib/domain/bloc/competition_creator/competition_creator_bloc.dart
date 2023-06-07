@@ -92,13 +92,17 @@ class CompetitionCreatorBloc extends BlocWithStatus<CompetitionCreatorEvent,
       return;
     }
     emitLoadingStatus(emit);
+    Duration? expectedDuration = state.expectedDuration;
+    if (expectedDuration != null && expectedDuration.inSeconds == 0) {
+      expectedDuration = null;
+    }
     await _competitionRepository.addNewCompetition(
       userId: loggedUserId,
       name: state.name!,
       date: state.date!,
       place: state.place!,
       distance: state.distance!,
-      expectedDuration: state.expectedDuration!,
+      expectedDuration: expectedDuration,
       status: const RunStatusPending(),
     );
     emitCompleteStatus(emit, CompetitionCreatorBlocInfo.competitionAdded);

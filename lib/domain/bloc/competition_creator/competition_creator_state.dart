@@ -33,8 +33,7 @@ class CompetitionCreatorState extends BlocState<CompetitionCreatorState> {
       place != null &&
       place!.isNotEmpty &&
       distance != null &&
-      distance! > 0 &&
-      expectedDuration != null;
+      distance! > 0;
 
   @override
   CompetitionCreatorState copyWith({

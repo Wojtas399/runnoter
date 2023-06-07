@@ -24,7 +24,7 @@ class CompetitionRepositoryImpl extends StateRepository<Competition>
     required DateTime date,
     required String place,
     required double distance,
-    required Duration expectedDuration,
+    required Duration? expectedDuration,
     required RunStatus status,
   }) async {
     final CompetitionDto? addedCompetitionDto =

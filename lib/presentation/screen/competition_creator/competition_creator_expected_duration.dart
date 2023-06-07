@@ -131,7 +131,6 @@ class _DurationField extends StatelessWidget {
         textAlign: TextAlign.center,
         maxLength: 2,
         keyboardType: TextInputType.number,
-        isRequired: true,
         onChanged: _onChanged,
       ),
     );

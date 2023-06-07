@@ -9,7 +9,7 @@ class FirebaseCompetitionService {
     required DateTime date,
     required String place,
     required double distance,
-    required Duration expectedDuration,
+    required Duration? expectedDuration,
     required RunStatusDto runStatusDto,
   }) async {
     final CompetitionDto competitionDto = CompetitionDto(

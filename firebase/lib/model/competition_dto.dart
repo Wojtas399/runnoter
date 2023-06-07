@@ -11,7 +11,7 @@ class CompetitionDto extends Equatable {
   final DateTime date;
   final String place;
   final double distance;
-  final Duration expectedDuration;
+  final Duration? expectedDuration;
   final RunStatusDto runStatusDto;
 
   const CompetitionDto({
@@ -36,9 +36,9 @@ class CompetitionDto extends Equatable {
           date: mapDateTimeFromString(json?[_dateField]),
           place: json?[_placeField],
           distance: (json?[_distanceField] as num).toDouble(),
-          expectedDuration: mapDurationFromString(
-            json?[_expectedDurationField],
-          ),
+          expectedDuration: json?[_expectedDurationField] != null
+              ? mapDurationFromString(json?[_expectedDurationField])
+              : null,
           runStatusDto: RunStatusDto.fromJson(json?[_statusField]),
         );
 
@@ -59,7 +59,9 @@ class CompetitionDto extends Equatable {
         _dateField: mapDateTimeToString(date),
         _placeField: place,
         _distanceField: distance,
-        _expectedDurationField: mapDurationToString(expectedDuration),
+        _expectedDurationField: expectedDuration != null
+            ? mapDurationToString(expectedDuration!)
+            : null,
         _statusField: runStatusDto.toJson(),
       };
 }

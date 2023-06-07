@@ -7,7 +7,7 @@ class Competition extends Entity {
   final DateTime date;
   final String place;
   final double distance;
-  final Duration expectedDuration;
+  final Duration? expectedDuration;
   final RunStatus status;
 
   const Competition({

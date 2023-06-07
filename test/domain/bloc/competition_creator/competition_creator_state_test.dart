@@ -149,23 +149,6 @@ void main() {
 
   test(
     'are data valid, '
-    'expected duration is null, '
-    'should be false',
-    () {
-      state = state.copyWith(
-        name: 'name',
-        date: DateTime(2023, 5, 10),
-        place: 'place',
-        distance: 21,
-        expectedDuration: null,
-      );
-
-      expect(state.areDataValid, false);
-    },
-  );
-
-  test(
-    'are data valid, '
     'all data are valid, '
     'should be true',
     () {

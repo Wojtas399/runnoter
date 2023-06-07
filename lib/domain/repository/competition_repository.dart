@@ -7,7 +7,7 @@ abstract interface class CompetitionRepository {
     required DateTime date,
     required String place,
     required double distance,
-    required Duration expectedDuration,
+    required Duration? expectedDuration,
     required RunStatus status,
   });
 }
