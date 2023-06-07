@@ -20,9 +20,24 @@ class _Content extends StatelessWidget {
       drawer: _Drawer(drawerPage: drawerPage),
       bottomNavigationBar:
           drawerPage == DrawerPage.home ? const _BottomNavigationBar() : null,
+      floatingActionButton: drawerPage == DrawerPage.tournaments
+          ? FloatingActionButton(
+              child: const Icon(Icons.add),
+              onPressed: () {
+                _onFloatingActionButtonPressed(context);
+              },
+            )
+          : null,
       body: SafeArea(
         child: pages[drawerPage.index],
       ),
+    );
+  }
+
+  void _onFloatingActionButtonPressed(BuildContext context) {
+    navigateTo(
+      context: context,
+      route: const CompetitionCreatorRoute(),
     );
   }
 }
