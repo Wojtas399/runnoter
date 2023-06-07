@@ -8,7 +8,7 @@ Competition createCompetition({
   DateTime? date,
   String place = '',
   double distance = 0.0,
-  Time expectedTime = const Time(hour: 0, minute: 0, second: 0),
+  Duration expectedDuration = const Duration(),
   RunStatus status = const RunStatusPending(),
 }) =>
     Competition(
@@ -18,6 +18,6 @@ Competition createCompetition({
       date: date ?? DateTime(2023),
       place: place,
       distance: distance,
-      expectedTime: expectedTime,
+      expectedDuration: expectedDuration,
       status: status,
     );

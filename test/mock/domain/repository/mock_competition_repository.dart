@@ -1,16 +1,18 @@
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/domain/entity/competition.dart';
 import 'package:runnoter/domain/entity/run_status.dart';
 import 'package:runnoter/domain/repository/competition_repository.dart';
 
-class _FakeTime extends Fake implements Time {}
+class _FakeDuration extends Fake implements Duration {}
 
 class _FakeRunStatus extends Fake implements RunStatus {}
 
 class MockCompetitionRepository extends Mock implements CompetitionRepository {
+  MockCompetitionRepository() {
+    registerFallbackValue(_FakeDuration());
+    registerFallbackValue(_FakeRunStatus());
+  }
+
   void mockAddNewCompetition() {
-    _mockTime();
-    _mockRunStatus();
     when(
       () => addNewCompetition(
         userId: any(named: 'userId'),
@@ -18,17 +20,9 @@ class MockCompetitionRepository extends Mock implements CompetitionRepository {
         date: any(named: 'date'),
         place: any(named: 'place'),
         distance: any(named: 'distance'),
-        expectedTime: any(named: 'expectedTime'),
+        expectedDuration: any(named: 'expectedDuration'),
         status: any(named: 'status'),
       ),
     ).thenAnswer((invocation) => Future.value());
-  }
-
-  void _mockTime() {
-    registerFallbackValue(_FakeTime());
-  }
-
-  void _mockRunStatus() {
-    registerFallbackValue(_FakeRunStatus());
   }
 }

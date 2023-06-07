@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../additional_model/bloc_state.dart';
 import '../../additional_model/bloc_status.dart';
 import '../../additional_model/bloc_with_status.dart';
-import '../../entity/competition.dart';
 import '../../entity/run_status.dart';
 import '../../repository/competition_repository.dart';
 import '../../service/auth_service.dart';
@@ -99,11 +98,7 @@ class CompetitionCreatorBloc extends BlocWithStatus<CompetitionCreatorEvent,
       date: state.date!,
       place: state.place!,
       distance: state.distance!,
-      expectedTime: Time(
-        hour: state.expectedDuration!.inHours,
-        minute: state.expectedDuration!.inMinutes.remainder(60),
-        second: state.expectedDuration!.inSeconds.remainder(60),
-      ),
+      expectedDuration: state.expectedDuration!,
       status: const RunStatusPending(),
     );
     emitCompleteStatus(emit, CompetitionCreatorBlocInfo.competitionAdded);

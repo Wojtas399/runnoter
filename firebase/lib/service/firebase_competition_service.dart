@@ -1,7 +1,6 @@
 import '../firebase_collections.dart';
 import '../model/competition_dto.dart';
 import '../model/run_status_dto.dart';
-import '../model/time_dto.dart';
 
 class FirebaseCompetitionService {
   Future<CompetitionDto?> addNewCompetition({
@@ -10,7 +9,7 @@ class FirebaseCompetitionService {
     required DateTime date,
     required String place,
     required double distance,
-    required TimeDto expectedTimeDto,
+    required Duration expectedDuration,
     required RunStatusDto runStatusDto,
   }) async {
     final CompetitionDto competitionDto = CompetitionDto(
@@ -20,7 +19,7 @@ class FirebaseCompetitionService {
       date: date,
       place: place,
       distance: distance,
-      expectedTimeDto: expectedTimeDto,
+      expectedDuration: expectedDuration,
       runStatusDto: runStatusDto,
     );
     final docRef = await getCompetitionsRef(userId).add(competitionDto);

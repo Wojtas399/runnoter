@@ -10,7 +10,6 @@ export 'model/firebase_auth_exception_code.dart';
 export 'model/health_measurement_dto.dart';
 export 'model/pace_dto.dart';
 export 'model/run_status_dto.dart';
-export 'model/time_dto.dart';
 export 'model/user_dto.dart';
 export 'model/workout_dto.dart';
 export 'model/workout_settings_dto.dart';

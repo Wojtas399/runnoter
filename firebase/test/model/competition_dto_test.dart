@@ -1,6 +1,4 @@
 import 'package:firebase/firebase.dart';
-import 'package:firebase/model/competition_dto.dart';
-import 'package:firebase/model/time_dto.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -10,7 +8,11 @@ void main() {
   final DateTime date = DateTime(2023, 5, 10);
   const String place = 'New York';
   const double distance = 42;
-  const TimeDto timeDto = TimeDto(hour: 2, minute: 45, second: 30);
+  const Duration expectedDuration = Duration(
+    hours: 2,
+    minutes: 45,
+    seconds: 30,
+  );
   final RunStatusDto runStatusDto = RunStatusDoneDto(
     coveredDistanceInKm: 42,
     avgPaceDto: const PaceDto(
@@ -28,18 +30,16 @@ void main() {
     date: date,
     place: place,
     distance: distance,
-    expectedTimeDto: timeDto,
+    expectedDuration: expectedDuration,
     runStatusDto: runStatusDto,
   );
   final Map<String, dynamic> competitionJson = {
-    'id': id,
-    'userId': userId,
     'name': name,
     'date': '2023-05-10',
     'place': place,
     'distance': distance,
-    'expectedTimeDto': '02:45:40',
-    'runStatusDto': runStatusDto.toJson(),
+    'expectedDuration': '2:45:30',
+    'status': runStatusDto.toJson(),
   };
 
   test(

@@ -30,8 +30,11 @@ void main() {
       final DateTime date = DateTime(2023, 5, 10);
       const String place = 'New York';
       const double distance = 21.100;
-      const Time expectedTime = Time(hour: 1, minute: 30, second: 21);
-      const TimeDto expectedTimeDto = TimeDto(hour: 1, minute: 30, second: 21);
+      const Duration expectedDuration = Duration(
+        hours: 1,
+        minutes: 30,
+        seconds: 21,
+      );
       const RunStatus status = RunStatusPending();
       const RunStatusDto statusDto = RunStatusPendingDto();
       final Competition addedCompetition = Competition(
@@ -41,7 +44,7 @@ void main() {
         date: date,
         place: place,
         distance: distance,
-        expectedTime: expectedTime,
+        expectedDuration: expectedDuration,
         status: status,
       );
       final CompetitionDto addedCompetitionDto = CompetitionDto(
@@ -51,7 +54,7 @@ void main() {
         date: date,
         place: place,
         distance: distance,
-        expectedTimeDto: expectedTimeDto,
+        expectedDuration: expectedDuration,
         runStatusDto: statusDto,
       );
       final List<Competition> existingCompetitions = [
@@ -71,7 +74,7 @@ void main() {
         date: date,
         place: place,
         distance: distance,
-        expectedTime: expectedTime,
+        expectedDuration: expectedDuration,
         status: status,
       );
 
@@ -94,7 +97,7 @@ void main() {
           date: date,
           place: place,
           distance: distance,
-          expectedTimeDto: expectedTimeDto,
+          expectedDuration: expectedDuration,
           runStatusDto: statusDto,
         ),
       ).called(1);

@@ -1,4 +1,3 @@
-import '../entity/competition.dart';
 import '../entity/run_status.dart';
 
 abstract interface class CompetitionRepository {
@@ -8,7 +7,7 @@ abstract interface class CompetitionRepository {
     required DateTime date,
     required String place,
     required double distance,
-    required Time expectedTime,
+    required Duration expectedDuration,
     required RunStatus status,
   });
 }

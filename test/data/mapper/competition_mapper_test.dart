@@ -11,6 +11,11 @@ void main() {
   final DateTime date = DateTime(2023, 5, 20);
   const String place = 'place123';
   const double distance = 5.0;
+  const Duration expectedDuration = Duration(
+    hours: 0,
+    minutes: 28,
+    seconds: 40,
+  );
   final Competition competition = Competition(
     id: id,
     userId: userId,
@@ -18,7 +23,7 @@ void main() {
     date: date,
     place: place,
     distance: distance,
-    expectedTime: const Time(hour: 0, minute: 28, second: 40),
+    expectedDuration: expectedDuration,
     status: RunStatusDone(
       coveredDistanceInKm: 5.0,
       avgPace: const Pace(minutes: 5, seconds: 45),
@@ -34,7 +39,7 @@ void main() {
     date: date,
     place: place,
     distance: distance,
-    expectedTimeDto: const firebase.TimeDto(hour: 0, minute: 28, second: 40),
+    expectedDuration: expectedDuration,
     runStatusDto: firebase.RunStatusDoneDto(
       coveredDistanceInKm: 5.0,
       avgPaceDto: const firebase.PaceDto(minutes: 5, seconds: 45),

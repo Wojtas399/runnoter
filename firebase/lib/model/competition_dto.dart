@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 
 import '../firebase.dart';
 import '../mapper/date_mapper.dart';
-import 'time_dto.dart';
+import '../mapper/duration_mapper.dart';
 
 class CompetitionDto extends Equatable {
   final String id;
@@ -11,7 +11,7 @@ class CompetitionDto extends Equatable {
   final DateTime date;
   final String place;
   final double distance;
-  final TimeDto expectedTimeDto;
+  final Duration expectedDuration;
   final RunStatusDto runStatusDto;
 
   const CompetitionDto({
@@ -21,7 +21,7 @@ class CompetitionDto extends Equatable {
     required this.date,
     required this.place,
     required this.distance,
-    required this.expectedTimeDto,
+    required this.expectedDuration,
     required this.runStatusDto,
   });
 
@@ -36,7 +36,9 @@ class CompetitionDto extends Equatable {
           date: mapDateTimeFromString(json?[_dateField]),
           place: json?[_placeField],
           distance: (json?[_distanceField] as num).toDouble(),
-          expectedTimeDto: TimeDto.fromString(json?[_expectedTimeField]),
+          expectedDuration: mapDurationFromString(
+            json?[_expectedDurationField],
+          ),
           runStatusDto: RunStatusDto.fromJson(json?[_statusField]),
         );
 
@@ -48,7 +50,7 @@ class CompetitionDto extends Equatable {
         date,
         place,
         distance,
-        expectedTimeDto,
+        expectedDuration,
         runStatusDto,
       ];
 
@@ -57,7 +59,7 @@ class CompetitionDto extends Equatable {
         _dateField: mapDateTimeToString(date),
         _placeField: place,
         _distanceField: distance,
-        _expectedTimeField: expectedTimeDto.toString(),
+        _expectedDurationField: mapDurationToString(expectedDuration),
         _statusField: runStatusDto.toJson(),
       };
 }
@@ -66,5 +68,5 @@ const String _nameField = 'name';
 const String _dateField = 'date';
 const String _placeField = 'place';
 const String _distanceField = 'distance';
-const String _expectedTimeField = 'expectedTime';
+const String _expectedDurationField = 'expectedDuration';
 const String _statusField = 'status';

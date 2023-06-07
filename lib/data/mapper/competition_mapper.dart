@@ -2,7 +2,6 @@ import 'package:firebase/firebase.dart';
 
 import '../../domain/entity/competition.dart';
 import 'run_status_mapper.dart';
-import 'time_mapper.dart';
 
 Competition mapCompetitionFromDto(CompetitionDto competitionDto) => Competition(
       id: competitionDto.id,
@@ -11,7 +10,7 @@ Competition mapCompetitionFromDto(CompetitionDto competitionDto) => Competition(
       date: competitionDto.date,
       place: competitionDto.place,
       distance: competitionDto.distance,
-      expectedTime: mapTimeFromDto(competitionDto.expectedTimeDto),
+      expectedDuration: competitionDto.expectedDuration,
       status: mapRunStatusFromDto(competitionDto.runStatusDto),
     );
 
@@ -22,6 +21,6 @@ CompetitionDto mapCompetitionToDto(Competition competition) => CompetitionDto(
       date: competition.date,
       place: competition.place,
       distance: competition.distance,
-      expectedTimeDto: mapTimeToDto(competition.expectedTime),
+      expectedDuration: competition.expectedDuration,
       runStatusDto: mapRunStatusToDto(competition.status),
     );

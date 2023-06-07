@@ -1,5 +1,3 @@
-import 'package:equatable/equatable.dart';
-
 import 'entity.dart';
 import 'run_status.dart';
 
@@ -9,7 +7,7 @@ class Competition extends Entity {
   final DateTime date;
   final String place;
   final double distance;
-  final Time expectedTime;
+  final Duration expectedDuration;
   final RunStatus status;
 
   const Competition({
@@ -19,7 +17,7 @@ class Competition extends Entity {
     required this.date,
     required this.place,
     required this.distance,
-    required this.expectedTime,
+    required this.expectedDuration,
     required this.status,
   });
 
@@ -31,28 +29,7 @@ class Competition extends Entity {
         date,
         place,
         distance,
-        expectedTime,
+        expectedDuration,
         status,
-      ];
-}
-
-class Time extends Equatable {
-  final int hour;
-  final int minute;
-  final int second;
-
-  const Time({
-    required this.hour,
-    required this.minute,
-    required this.second,
-  })  : assert(hour >= 0),
-        assert(minute >= 0),
-        assert(second >= 0);
-
-  @override
-  List<Object?> get props => [
-        hour,
-        minute,
-        second,
       ];
 }

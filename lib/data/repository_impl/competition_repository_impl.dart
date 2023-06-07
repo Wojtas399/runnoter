@@ -7,7 +7,6 @@ import '../../domain/entity/run_status.dart';
 import '../../domain/repository/competition_repository.dart';
 import '../mapper/competition_mapper.dart';
 import '../mapper/run_status_mapper.dart';
-import '../mapper/time_mapper.dart';
 
 class CompetitionRepositoryImpl extends StateRepository<Competition>
     implements CompetitionRepository {
@@ -25,7 +24,7 @@ class CompetitionRepositoryImpl extends StateRepository<Competition>
     required DateTime date,
     required String place,
     required double distance,
-    required Time expectedTime,
+    required Duration expectedDuration,
     required RunStatus status,
   }) async {
     final CompetitionDto? addedCompetitionDto =
@@ -35,7 +34,7 @@ class CompetitionRepositoryImpl extends StateRepository<Competition>
       date: date,
       place: place,
       distance: distance,
-      expectedTimeDto: mapTimeToDto(expectedTime),
+      expectedDuration: expectedDuration,
       runStatusDto: mapRunStatusToDto(status),
     );
     if (addedCompetitionDto != null) {

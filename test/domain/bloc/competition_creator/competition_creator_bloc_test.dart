@@ -3,7 +3,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/bloc/competition_creator/competition_creator_bloc.dart';
-import 'package:runnoter/domain/entity/competition.dart';
 import 'package:runnoter/domain/entity/run_status.dart';
 
 import '../../../mock/domain/repository/mock_competition_repository.dart';
@@ -229,7 +228,7 @@ void main() {
           date: DateTime(2023, 6, 2),
           place: 'New York',
           distance: 21,
-          expectedTime: const Time(hour: 1, minute: 45, second: 20),
+          expectedDuration: const Duration(hours: 1, minutes: 45, seconds: 20),
           status: const RunStatusPending(),
         ),
       ).called(1);
