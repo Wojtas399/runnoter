@@ -137,26 +137,34 @@ class _Status extends StatelessWidget {
       (CompetitionPreviewBloc bloc) => bloc.state.competition?.status,
     );
 
-    return ContentWithLabel(
-      label: 'Status',
-      content: switch (status) {
-        null => const Text('--'),
-        RunStatus() => Row(
-            children: [
-              Icon(
-                status.toIcon(),
-                color: status.toColor(),
+    return Column(
+      children: [
+        ContentWithLabel(
+          label: 'Status',
+          content: switch (status) {
+            null => const Text('--'),
+            RunStatus() => Row(
+                children: [
+                  Icon(
+                    status.toIcon(),
+                    color: status.toColor(),
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    status.toLabel(context),
+                    style: TextStyle(
+                      color: status.toColor(),
+                    ),
+                  )
+                ],
               ),
-              const SizedBox(width: 8),
-              Text(
-                status.toLabel(context),
-                style: TextStyle(
-                  color: status.toColor(),
-                ),
-              )
-            ],
+          },
+        ),
+        if (status is RunStatusWithParams)
+          RunStats(
+            runStatusWithParams: status,
           ),
-      },
+      ],
     );
   }
 }

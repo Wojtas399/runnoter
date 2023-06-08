@@ -171,30 +171,6 @@
   "@dayPreviewTotalDistance": {
     "description": "Label of the section to display total distance of the workout"
   },
-  "dayPreviewRunStatus": "Status",
-  "@dayPreviewRunStatus": {
-    "description": "Label of the section to display workout status"
-  },
-  "dayPreviewCoveredDistance": "Pokonany dystans",
-  "@dayPreviewCoveredDistance": {
-    "description": "Label of the covered distance"
-  },
-  "dayPreviewMoodRate": "Samopoczucie",
-  "@dayPreviewMoodRate": {
-    "description": "Label of the mood rate"
-  },
-  "dayPreviewAveragePace": "Średnie tempo",
-  "@dayPreviewAveragePace": {
-    "description": "Label of the average pace"
-  },
-  "dayPreviewAverageHeartRate": "Średnie tętno",
-  "@dayPreviewAverageHeartRate": {
-    "description": "Label of the average heart rate"
-  },
-  "dayPreviewComment": "Uwagi",
-  "@dayPreviewComment": {
-    "description": "Label of the comment section"
-  },
   "dayPreviewChangeStatusButton": "Zmień status",
   "@dayPreviewChangeStatusButton": {
     "description": "Label of the button to change status"
@@ -606,6 +582,30 @@
   "competitionCreatorAddedCompetitionMessage": "Pomyślnie dodano nowe zawody",
   "@competitionCreatorAddedCompetitionMessage": {
     "description": "Message to infor that new competition has been added"
+  },
+  "runStatus": "Status",
+  "@runStatus": {
+    "description": "Label of run status"
+  },
+  "runStatusCoveredDistance": "Pokonany dystans",
+  "@runStatusCoveredDistance": {
+    "description": "Label of the covered distance of run status"
+  },
+  "runStatusMoodRate": "Samopoczucie",
+  "@runStatusMoodRate": {
+    "description": "Label of the mood rate of run status"
+  },
+  "runStatusAvgPace": "Średnie tempo",
+  "@runStatusAvgPace": {
+    "description": "Label of the average pace of run status"
+  },
+  "runStatusAvgHeartRate": "Średnie tętno",
+  "@runStatusAvgHeartRate": {
+    "description": "Label of the average heart rate of run status"
+  },
+  "runStatusComment": "Uwagi",
+  "@runStatusComment": {
+    "description": "Label of the comment of run status"
   },
   "themeMode": "Motyw",
   "@themeMode": {

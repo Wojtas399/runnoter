@@ -15,24 +15,24 @@ class _WorkoutContent extends StatelessWidget {
           children: [
             const _Date(),
             const SizedBox(height: 24),
-            _WorkoutParam(
+            ContentWithLabel(
               label: str.dayPreviewWorkoutName,
-              child: const _WorkoutName(),
+              content: const _WorkoutName(),
             ),
             const SizedBox(height: 16),
-            _WorkoutParam(
+            ContentWithLabel(
               label: str.dayPreviewWorkoutStages,
-              child: const _WorkoutStages(),
+              content: const _WorkoutStages(),
             ),
             const SizedBox(height: 16),
-            _WorkoutParam(
+            ContentWithLabel(
               label: str.dayPreviewTotalDistance,
-              child: const _WorkoutDistance(),
+              content: const _WorkoutDistance(),
             ),
             const SizedBox(height: 16),
-            _WorkoutParam(
-              label: str.dayPreviewRunStatus,
-              child: const _RunStatus(),
+            ContentWithLabel(
+              label: str.runStatus,
+              content: const _RunStatus(),
             ),
           ],
         ),
@@ -129,31 +129,6 @@ class _RunStatusButton extends StatelessWidget {
           entityId: workoutId,
         ),
       ),
-    );
-  }
-}
-
-class _WorkoutParam extends StatelessWidget {
-  final String label;
-  final Widget child;
-
-  const _WorkoutParam({
-    required this.label,
-    required this.child,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: Theme.of(context).textTheme.labelLarge,
-        ),
-        const SizedBox(height: 4),
-        child,
-      ],
     );
   }
 }
