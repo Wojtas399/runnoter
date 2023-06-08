@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../domain/entity/run_status.dart';
+import '../formatter/duration_formatter.dart';
 import '../formatter/mood_rate_formatter.dart';
 import '../formatter/pace_formatter.dart';
 import 'content_with_label_component.dart';
@@ -24,6 +25,7 @@ class RunStats extends StatelessWidget {
         children: [
           _Stats(
             coveredDistanceInKm: runStatusWithParams.coveredDistanceInKm,
+            duration: runStatusWithParams.duration,
             avgPace: runStatusWithParams.avgPace,
             avgHeartRate: runStatusWithParams.avgHeartRate,
           ),
@@ -49,11 +51,13 @@ class RunStats extends StatelessWidget {
 
 class _Stats extends StatelessWidget {
   final double coveredDistanceInKm;
+  final Duration? duration;
   final Pace avgPace;
   final int avgHeartRate;
 
   const _Stats({
     required this.coveredDistanceInKm,
+    required this.duration,
     required this.avgPace,
     required this.avgHeartRate,
   });
@@ -73,6 +77,14 @@ class _Stats extends StatelessWidget {
                   value: '$coveredDistanceInKm km',
                 ),
               ),
+              if (duration != null) const VerticalDivider(),
+              if (duration != null)
+                Expanded(
+                  child: _StatParam(
+                    label: 'Czas',
+                    value: duration!.toUIFormat(),
+                  ),
+                ),
             ],
           ),
         ),
