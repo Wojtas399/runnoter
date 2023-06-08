@@ -24,9 +24,9 @@ void main() {
     place: place,
     distance: distance,
     expectedDuration: expectedDuration,
-    status: RunStatusDone(
+    status: const RunStatusDone(
       coveredDistanceInKm: 5.0,
-      avgPace: const Pace(minutes: 5, seconds: 45),
+      avgPace: Pace(minutes: 5, seconds: 45),
       avgHeartRate: 145,
       moodRate: MoodRate.mr7,
       comment: null,

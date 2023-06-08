@@ -5,13 +5,7 @@ abstract class RunStatusCreatorEvent {
 }
 
 class RunStatusCreatorEventInitialize extends RunStatusCreatorEvent {
-  final String workoutId;
-  final RunStatusType? runStatusType;
-
-  RunStatusCreatorEventInitialize({
-    required this.workoutId,
-    this.runStatusType,
-  });
+  const RunStatusCreatorEventInitialize();
 }
 
 class RunStatusCreatorEventRunStatusTypeChanged extends RunStatusCreatorEvent {

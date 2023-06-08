@@ -15,7 +15,7 @@ class _RunStatus extends StatelessWidget {
     return Column(
       children: [
         _RunStatusName(status: status),
-        if (status is RunStats)
+        if (status is RunStatusWithParams)
           Padding(
             padding: const EdgeInsets.only(top: 24),
             child: Column(
@@ -69,7 +69,7 @@ class _RunStatusName extends StatelessWidget {
 }
 
 class _WorkoutStats extends StatelessWidget {
-  final RunStats status;
+  final RunStatusWithParams status;
 
   const _WorkoutStats({
     required this.status,
@@ -128,7 +128,7 @@ class _MoodRate extends StatelessWidget {
     );
 
     String? moodRateStr;
-    if (runStatus is RunStats) {
+    if (runStatus is RunStatusWithParams) {
       moodRateStr = runStatus.moodRate.toUIFormat();
     }
 
@@ -145,7 +145,7 @@ class _WorkoutComment extends StatelessWidget {
       (DayPreviewBloc bloc) => bloc.state.runStatus,
     );
     String? comment;
-    if (runStatus is RunStats) {
+    if (runStatus is RunStatusWithParams) {
       comment = runStatus.comment;
     }
 

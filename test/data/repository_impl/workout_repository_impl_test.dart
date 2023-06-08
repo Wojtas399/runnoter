@@ -459,9 +459,9 @@ void main() {
     () {
       const String id = 'w1';
       const String newWorkoutName = 'new workout name';
-      final RunStatus newStatus = RunStatusDone(
+      const RunStatus newStatus = RunStatusDone(
         coveredDistanceInKm: 10,
-        avgPace: const Pace(minutes: 6, seconds: 2),
+        avgPace: Pace(minutes: 6, seconds: 2),
         avgHeartRate: 150,
         moodRate: MoodRate.mr8,
         comment: 'Nice workout!',

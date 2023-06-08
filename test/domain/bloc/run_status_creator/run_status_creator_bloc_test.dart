@@ -5,16 +5,21 @@ import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/bloc/run_status_creator/run_status_creator_bloc.dart';
 import 'package:runnoter/domain/entity/run_status.dart';
 
+import '../../../creators/competition_creator.dart';
 import '../../../creators/workout_creator.dart';
+import '../../../mock/domain/repository/mock_competition_repository.dart';
 import '../../../mock/domain/repository/mock_workout_repository.dart';
 import '../../../mock/domain/service/mock_auth_service.dart';
 
 void main() {
+  const String entityId = 'e1';
   final authService = MockAuthService();
   final workoutRepository = MockWorkoutRepository();
+  final competitionRepository = MockCompetitionRepository();
+  const String userId = 'u1';
 
   RunStatusCreatorBloc createBloc({
-    String? workoutId,
+    EntityType entityType = EntityType.workout,
     RunStatusType? runStatusType,
     double? coveredDistanceInKm,
     MoodRate? moodRate,
@@ -24,22 +29,26 @@ void main() {
     String? comment,
   }) =>
       RunStatusCreatorBloc(
+        entityType: entityType,
+        entityId: entityId,
         authService: authService,
         workoutRepository: workoutRepository,
-        workoutId: workoutId,
-        runStatusType: runStatusType,
-        coveredDistanceInKm: coveredDistanceInKm,
-        moodRate: moodRate,
-        averagePaceMinutes: averagePaceMinutes,
-        averagePaceSeconds: averagePaceSeconds,
-        averageHeartRate: averageHeartRate,
-        comment: comment,
+        competitionRepository: competitionRepository,
+        state: RunStatusCreatorState(
+          status: const BlocStatusInitial(),
+          runStatusType: runStatusType,
+          coveredDistanceInKm: coveredDistanceInKm,
+          moodRate: moodRate,
+          averagePaceMinutes: averagePaceMinutes,
+          averagePaceSeconds: averagePaceSeconds,
+          averageHeartRate: averageHeartRate,
+          comment: comment,
+        ),
       );
 
   RunStatusCreatorState createState({
     BlocStatus status = const BlocStatusInitial(),
-    String? workoutId,
-    RunStatus? runStatus,
+    RunStatus? originalRunStatus,
     RunStatusType? runStatusType,
     double? coveredDistanceInKm,
     MoodRate? moodRate,
@@ -50,8 +59,7 @@ void main() {
   }) =>
       RunStatusCreatorState(
         status: status,
-        workoutId: workoutId,
-        runStatus: runStatus,
+        originalRunStatus: originalRunStatus,
         runStatusType: runStatusType,
         coveredDistanceInKm: coveredDistanceInKm,
         moodRate: moodRate,
@@ -61,69 +69,52 @@ void main() {
         comment: comment,
       );
 
+  setUpAll(() {
+    registerFallbackValue(
+      const RunStatusPending(),
+    );
+  });
+
   tearDown(() {
     reset(authService);
     reset(workoutRepository);
+    reset(competitionRepository);
   });
 
   blocTest(
     'initialize, '
-    'workout status type is not null, '
-    'should update workout id and status type in state',
-    build: () => createBloc(),
-    act: (RunStatusCreatorBloc bloc) => bloc.add(
-      RunStatusCreatorEventInitialize(
-        workoutId: 'w1',
-        runStatusType: RunStatusType.done,
-      ),
-    ),
-    expect: () => [
-      createState(
-        status: const BlocStatusComplete(),
-        workoutId: 'w1',
-        runStatusType: RunStatusType.done,
-      ),
-    ],
-  );
-
-  blocTest(
-    'initialize, '
-    'workout status type is null, '
     'logged user does not exist, '
-    'should emit no logged user status and should end event call',
+    'should emit no logged user status',
     build: () => createBloc(),
     setUp: () => authService.mockGetLoggedUserId(),
     act: (RunStatusCreatorBloc bloc) => bloc.add(
-      RunStatusCreatorEventInitialize(
-        workoutId: 'w1',
-      ),
+      const RunStatusCreatorEventInitialize(),
     ),
     expect: () => [
       createState(
         status: const BlocStatusNoLoggedUser(),
       ),
     ],
-    verify: (_) {
-      verify(
-        () => authService.loggedUserId$,
-      ).called(1);
-    },
+    verify: (_) => verify(
+      () => authService.loggedUserId$,
+    ).called(1),
   );
 
   blocTest(
     'initialize, '
-    'workout status type is null, '
-    'logged user exists, '
-    'workout status contains workout stats, '
-    'should load workout from workout repository and should emit completed status with RunStatusCreatorBlocInfo.runStatusInitialized and updated all params relevant to workout status',
+    'workout entity, '
+    'run status contains params, '
+    'should load workout from repository and should update all params relevant to run status',
     build: () => createBloc(),
     setUp: () {
-      authService.mockGetLoggedUserId(userId: 'u1');
+      authService.mockGetLoggedUserId(userId: userId);
       workoutRepository.mockGetWorkoutById(
         workout: createWorkout(
-          status: RunStatusDone(
+          id: entityId,
+          userId: userId,
+          status: const RunStatusDone(
             coveredDistanceInKm: 10,
-            avgPace: const Pace(minutes: 6, seconds: 10),
+            avgPace: Pace(minutes: 6, seconds: 10),
             avgHeartRate: 150,
             moodRate: MoodRate.mr8,
             comment: 'comment',
@@ -132,19 +123,16 @@ void main() {
       );
     },
     act: (RunStatusCreatorBloc bloc) => bloc.add(
-      RunStatusCreatorEventInitialize(
-        workoutId: 'w1',
-      ),
+      const RunStatusCreatorEventInitialize(),
     ),
     expect: () => [
       createState(
         status: const BlocStatusComplete<RunStatusCreatorBlocInfo>(
           info: RunStatusCreatorBlocInfo.runStatusInitialized,
         ),
-        workoutId: 'w1',
-        runStatus: RunStatusDone(
+        originalRunStatus: const RunStatusDone(
           coveredDistanceInKm: 10,
-          avgPace: const Pace(minutes: 6, seconds: 10),
+          avgPace: Pace(minutes: 6, seconds: 10),
           avgHeartRate: 150,
           moodRate: MoodRate.mr8,
           comment: 'comment',
@@ -164,8 +152,8 @@ void main() {
       ).called(1);
       verify(
         () => workoutRepository.getWorkoutById(
-          workoutId: 'w1',
-          userId: 'u1',
+          workoutId: entityId,
+          userId: userId,
         ),
       ).called(1);
     },
@@ -173,32 +161,30 @@ void main() {
 
   blocTest(
     'initialize, '
-    'workout status type is null, '
-    'logged user exists, '
-    'pending workout status, '
-    'should load workout from workout repository and should emit complete status with RunStatusCreatorBlocInfo.runStatusInitialized, updated workout id and workout status type',
+    'workout entity, '
+    'run status pending, '
+    'should load workout from repository and should set run status type as done',
     build: () => createBloc(),
     setUp: () {
-      authService.mockGetLoggedUserId(userId: 'u1');
+      authService.mockGetLoggedUserId(userId: userId);
       workoutRepository.mockGetWorkoutById(
         workout: createWorkout(
+          id: entityId,
+          userId: userId,
           status: const RunStatusPending(),
         ),
       );
     },
     act: (RunStatusCreatorBloc bloc) => bloc.add(
-      RunStatusCreatorEventInitialize(
-        workoutId: 'w1',
-      ),
+      const RunStatusCreatorEventInitialize(),
     ),
     expect: () => [
       createState(
         status: const BlocStatusComplete<RunStatusCreatorBlocInfo>(
           info: RunStatusCreatorBlocInfo.runStatusInitialized,
         ),
-        workoutId: 'w1',
-        runStatus: const RunStatusPending(),
-        runStatusType: RunStatusType.pending,
+        originalRunStatus: const RunStatusPending(),
+        runStatusType: RunStatusType.done,
       ),
     ],
     verify: (_) {
@@ -207,16 +193,204 @@ void main() {
       ).called(1);
       verify(
         () => workoutRepository.getWorkoutById(
-          workoutId: 'w1',
-          userId: 'u1',
+          workoutId: entityId,
+          userId: userId,
         ),
       ).called(1);
     },
   );
 
   blocTest(
-    'workout status type changed, '
-    'should update workout status type in state',
+    'initialize, '
+    'workout entity, '
+    'run status undone, '
+    'should load workout from repository and should set run status type as undone',
+    build: () => createBloc(),
+    setUp: () {
+      authService.mockGetLoggedUserId(userId: userId);
+      workoutRepository.mockGetWorkoutById(
+        workout: createWorkout(
+          id: entityId,
+          userId: userId,
+          status: const RunStatusUndone(),
+        ),
+      );
+    },
+    act: (RunStatusCreatorBloc bloc) => bloc.add(
+      const RunStatusCreatorEventInitialize(),
+    ),
+    expect: () => [
+      createState(
+        status: const BlocStatusComplete<RunStatusCreatorBlocInfo>(
+          info: RunStatusCreatorBlocInfo.runStatusInitialized,
+        ),
+        originalRunStatus: const RunStatusUndone(),
+        runStatusType: RunStatusType.undone,
+      ),
+    ],
+    verify: (_) {
+      verify(
+        () => authService.loggedUserId$,
+      ).called(1);
+      verify(
+        () => workoutRepository.getWorkoutById(
+          workoutId: entityId,
+          userId: userId,
+        ),
+      ).called(1);
+    },
+  );
+
+  blocTest(
+    'initialize, '
+    'competition entity, '
+    'run status contains params, '
+    'should load competition from repository and should update all params relevant to run status',
+    build: () => createBloc(
+      entityType: EntityType.competition,
+    ),
+    setUp: () {
+      authService.mockGetLoggedUserId(userId: userId);
+      competitionRepository.mockGetCompetitionById(
+        competition: createCompetition(
+          id: entityId,
+          userId: userId,
+          status: const RunStatusDone(
+            coveredDistanceInKm: 10,
+            avgPace: Pace(minutes: 6, seconds: 10),
+            avgHeartRate: 150,
+            moodRate: MoodRate.mr8,
+            comment: 'comment',
+          ),
+        ),
+      );
+    },
+    act: (RunStatusCreatorBloc bloc) => bloc.add(
+      const RunStatusCreatorEventInitialize(),
+    ),
+    expect: () => [
+      createState(
+        status: const BlocStatusComplete<RunStatusCreatorBlocInfo>(
+          info: RunStatusCreatorBlocInfo.runStatusInitialized,
+        ),
+        originalRunStatus: const RunStatusDone(
+          coveredDistanceInKm: 10,
+          avgPace: Pace(minutes: 6, seconds: 10),
+          avgHeartRate: 150,
+          moodRate: MoodRate.mr8,
+          comment: 'comment',
+        ),
+        runStatusType: RunStatusType.done,
+        coveredDistanceInKm: 10,
+        moodRate: MoodRate.mr8,
+        averagePaceMinutes: 6,
+        averagePaceSeconds: 10,
+        averageHeartRate: 150,
+        comment: 'comment',
+      ),
+    ],
+    verify: (_) {
+      verify(
+        () => authService.loggedUserId$,
+      ).called(1);
+      verify(
+        () => competitionRepository.getCompetitionById(
+          competitionId: entityId,
+          userId: userId,
+        ),
+      ).called(1);
+    },
+  );
+
+  blocTest(
+    'initialize, '
+    'competition entity, '
+    'run status pending, '
+    'should load competition from repository and should set run status type as done',
+    build: () => createBloc(
+      entityType: EntityType.competition,
+    ),
+    setUp: () {
+      authService.mockGetLoggedUserId(userId: userId);
+      competitionRepository.mockGetCompetitionById(
+        competition: createCompetition(
+          id: entityId,
+          userId: userId,
+          status: const RunStatusPending(),
+        ),
+      );
+    },
+    act: (RunStatusCreatorBloc bloc) => bloc.add(
+      const RunStatusCreatorEventInitialize(),
+    ),
+    expect: () => [
+      createState(
+        status: const BlocStatusComplete<RunStatusCreatorBlocInfo>(
+          info: RunStatusCreatorBlocInfo.runStatusInitialized,
+        ),
+        originalRunStatus: const RunStatusPending(),
+        runStatusType: RunStatusType.done,
+      ),
+    ],
+    verify: (_) {
+      verify(
+        () => authService.loggedUserId$,
+      ).called(1);
+      verify(
+        () => competitionRepository.getCompetitionById(
+          competitionId: entityId,
+          userId: userId,
+        ),
+      ).called(1);
+    },
+  );
+
+  blocTest(
+    'initialize, '
+    'competition entity, '
+    'run status undone, '
+    'should load competition from repository and should set run status type as undone',
+    build: () => createBloc(
+      entityType: EntityType.competition,
+    ),
+    setUp: () {
+      authService.mockGetLoggedUserId(userId: userId);
+      competitionRepository.mockGetCompetitionById(
+        competition: createCompetition(
+          id: entityId,
+          userId: userId,
+          status: const RunStatusUndone(),
+        ),
+      );
+    },
+    act: (RunStatusCreatorBloc bloc) => bloc.add(
+      const RunStatusCreatorEventInitialize(),
+    ),
+    expect: () => [
+      createState(
+        status: const BlocStatusComplete<RunStatusCreatorBlocInfo>(
+          info: RunStatusCreatorBlocInfo.runStatusInitialized,
+        ),
+        originalRunStatus: const RunStatusUndone(),
+        runStatusType: RunStatusType.undone,
+      ),
+    ],
+    verify: (_) {
+      verify(
+        () => authService.loggedUserId$,
+      ).called(1);
+      verify(
+        () => competitionRepository.getCompetitionById(
+          competitionId: entityId,
+          userId: userId,
+        ),
+      ).called(1);
+    },
+  );
+
+  blocTest(
+    'run status type changed, '
+    'should update run status type in state',
     build: () => createBloc(),
     act: (RunStatusCreatorBloc bloc) => bloc.add(
       const RunStatusCreatorEventRunStatusTypeChanged(
@@ -334,32 +508,19 @@ void main() {
 
   blocTest(
     'submit, '
-    'workout id is null, '
-    'should finish event call',
-    build: () => createBloc(),
-    act: (RunStatusCreatorBloc bloc) => bloc.add(
-      const RunStatusCreatorEventSubmit(),
-    ),
-    expect: () => [],
-  );
-
-  blocTest(
-    'submit, '
     'logged user does not exist, '
-    'should emit no logged user info and should end event call',
+    'should emit no logged user status',
     build: () => createBloc(
-      workoutId: 'w1',
+      runStatusType: RunStatusType.pending,
     ),
-    setUp: () {
-      authService.mockGetLoggedUserId();
-    },
+    setUp: () => authService.mockGetLoggedUserId(),
     act: (RunStatusCreatorBloc bloc) => bloc.add(
       const RunStatusCreatorEventSubmit(),
     ),
     expect: () => [
       createState(
         status: const BlocStatusNoLoggedUser(),
-        workoutId: 'w1',
+        runStatusType: RunStatusType.pending,
       ),
     ],
     verify: (_) => verify(
@@ -369,14 +530,14 @@ void main() {
 
   blocTest(
     'submit, '
-    'pending workout status, '
-    'should call method from workout repository to update workout and should emit info that workout has been saved',
+    'run status pending, '
+    'workout, '
+    'should call method from workout repository to update workout and should emit info that run status has been saved',
     build: () => createBloc(
-      workoutId: 'w1',
       runStatusType: RunStatusType.pending,
     ),
     setUp: () {
-      authService.mockGetLoggedUserId(userId: 'u1');
+      authService.mockGetLoggedUserId(userId: userId);
       workoutRepository.mockUpdateWorkout();
     },
     act: (RunStatusCreatorBloc bloc) => bloc.add(
@@ -385,14 +546,12 @@ void main() {
     expect: () => [
       createState(
         status: const BlocStatusLoading(),
-        workoutId: 'w1',
         runStatusType: RunStatusType.pending,
       ),
       createState(
         status: const BlocStatusComplete<RunStatusCreatorBlocInfo>(
           info: RunStatusCreatorBlocInfo.runStatusSaved,
         ),
-        workoutId: 'w1',
         runStatusType: RunStatusType.pending,
       ),
     ],
@@ -402,8 +561,8 @@ void main() {
       ).called(1);
       verify(
         () => workoutRepository.updateWorkout(
-          workoutId: 'w1',
-          userId: 'u1',
+          workoutId: entityId,
+          userId: userId,
           status: const RunStatusPending(),
         ),
       ).called(1);
@@ -412,10 +571,52 @@ void main() {
 
   blocTest(
     'submit, '
-    'done workout status, '
-    'should call method from workout repository to update workout and should emit info that workout has been saved',
+    'run status pending, '
+    'competition, '
+    'should call method from competition repository to update competition and should emit info that run status has been saved',
     build: () => createBloc(
-      workoutId: 'w1',
+      entityType: EntityType.competition,
+      runStatusType: RunStatusType.pending,
+    ),
+    setUp: () {
+      authService.mockGetLoggedUserId(userId: userId);
+      competitionRepository.mockUpdateCompetition();
+    },
+    act: (RunStatusCreatorBloc bloc) => bloc.add(
+      const RunStatusCreatorEventSubmit(),
+    ),
+    expect: () => [
+      createState(
+        status: const BlocStatusLoading(),
+        runStatusType: RunStatusType.pending,
+      ),
+      createState(
+        status: const BlocStatusComplete<RunStatusCreatorBlocInfo>(
+          info: RunStatusCreatorBlocInfo.runStatusSaved,
+        ),
+        runStatusType: RunStatusType.pending,
+      ),
+    ],
+    verify: (_) {
+      verify(
+        () => authService.loggedUserId$,
+      ).called(1);
+      verify(
+        () => competitionRepository.updateCompetition(
+          competitionId: entityId,
+          userId: userId,
+          status: const RunStatusPending(),
+        ),
+      ).called(1);
+    },
+  );
+
+  blocTest(
+    'submit, '
+    'run status done, '
+    'workout, '
+    'should call method from workout repository to update workout and should emit info that run status has been saved',
+    build: () => createBloc(
       runStatusType: RunStatusType.done,
       coveredDistanceInKm: 10,
       moodRate: MoodRate.mr8,
@@ -425,7 +626,7 @@ void main() {
       comment: 'comment',
     ),
     setUp: () {
-      authService.mockGetLoggedUserId(userId: 'u1');
+      authService.mockGetLoggedUserId(userId: userId);
       workoutRepository.mockUpdateWorkout();
     },
     act: (RunStatusCreatorBloc bloc) => bloc.add(
@@ -434,7 +635,6 @@ void main() {
     expect: () => [
       createState(
         status: const BlocStatusLoading(),
-        workoutId: 'w1',
         runStatusType: RunStatusType.done,
         coveredDistanceInKm: 10,
         moodRate: MoodRate.mr8,
@@ -447,7 +647,6 @@ void main() {
         status: const BlocStatusComplete<RunStatusCreatorBlocInfo>(
           info: RunStatusCreatorBlocInfo.runStatusSaved,
         ),
-        workoutId: 'w1',
         runStatusType: RunStatusType.done,
         coveredDistanceInKm: 10,
         moodRate: MoodRate.mr8,
@@ -463,13 +662,13 @@ void main() {
       ).called(1);
       verify(
         () => workoutRepository.updateWorkout(
-          workoutId: 'w1',
-          userId: 'u1',
-          status: RunStatusDone(
+          workoutId: entityId,
+          userId: userId,
+          status: const RunStatusDone(
             coveredDistanceInKm: 10,
-            avgPace: const Pace(minutes: 5, seconds: 50),
-            avgHeartRate: 150,
             moodRate: MoodRate.mr8,
+            avgPace: Pace(minutes: 5, seconds: 50),
+            avgHeartRate: 150,
             comment: 'comment',
           ),
         ),
@@ -479,10 +678,76 @@ void main() {
 
   blocTest(
     'submit, '
-    'aborted workout status, '
-    'should call method from workout repository to update workout and should emit info that workout has been saved',
+    'run status done, '
+    'competition, '
+    'should call method from competition repository to update competition and should emit info that run status has been saved',
     build: () => createBloc(
-      workoutId: 'w1',
+      entityType: EntityType.competition,
+      runStatusType: RunStatusType.done,
+      coveredDistanceInKm: 10,
+      moodRate: MoodRate.mr8,
+      averagePaceMinutes: 5,
+      averagePaceSeconds: 50,
+      averageHeartRate: 150,
+      comment: 'comment',
+    ),
+    setUp: () {
+      authService.mockGetLoggedUserId(userId: userId);
+      competitionRepository.mockUpdateCompetition();
+    },
+    act: (RunStatusCreatorBloc bloc) => bloc.add(
+      const RunStatusCreatorEventSubmit(),
+    ),
+    expect: () => [
+      createState(
+        status: const BlocStatusLoading(),
+        runStatusType: RunStatusType.done,
+        coveredDistanceInKm: 10,
+        moodRate: MoodRate.mr8,
+        averagePaceMinutes: 5,
+        averagePaceSeconds: 50,
+        averageHeartRate: 150,
+        comment: 'comment',
+      ),
+      createState(
+        status: const BlocStatusComplete<RunStatusCreatorBlocInfo>(
+          info: RunStatusCreatorBlocInfo.runStatusSaved,
+        ),
+        runStatusType: RunStatusType.done,
+        coveredDistanceInKm: 10,
+        moodRate: MoodRate.mr8,
+        averagePaceMinutes: 5,
+        averagePaceSeconds: 50,
+        averageHeartRate: 150,
+        comment: 'comment',
+      ),
+    ],
+    verify: (_) {
+      verify(
+        () => authService.loggedUserId$,
+      ).called(1);
+      verify(
+        () => competitionRepository.updateCompetition(
+          competitionId: entityId,
+          userId: userId,
+          status: const RunStatusDone(
+            coveredDistanceInKm: 10,
+            moodRate: MoodRate.mr8,
+            avgPace: Pace(minutes: 5, seconds: 50),
+            avgHeartRate: 150,
+            comment: 'comment',
+          ),
+        ),
+      ).called(1);
+    },
+  );
+
+  blocTest(
+    'submit, '
+    'run status aborted, '
+    'workout, '
+    'should call method from workout repository to update workout and should emit info that run status has been saved',
+    build: () => createBloc(
       runStatusType: RunStatusType.aborted,
       coveredDistanceInKm: 10,
       moodRate: MoodRate.mr8,
@@ -492,7 +757,7 @@ void main() {
       comment: 'comment',
     ),
     setUp: () {
-      authService.mockGetLoggedUserId(userId: 'u1');
+      authService.mockGetLoggedUserId(userId: userId);
       workoutRepository.mockUpdateWorkout();
     },
     act: (RunStatusCreatorBloc bloc) => bloc.add(
@@ -501,7 +766,6 @@ void main() {
     expect: () => [
       createState(
         status: const BlocStatusLoading(),
-        workoutId: 'w1',
         runStatusType: RunStatusType.aborted,
         coveredDistanceInKm: 10,
         moodRate: MoodRate.mr8,
@@ -514,7 +778,6 @@ void main() {
         status: const BlocStatusComplete<RunStatusCreatorBlocInfo>(
           info: RunStatusCreatorBlocInfo.runStatusSaved,
         ),
-        workoutId: 'w1',
         runStatusType: RunStatusType.aborted,
         coveredDistanceInKm: 10,
         moodRate: MoodRate.mr8,
@@ -530,13 +793,13 @@ void main() {
       ).called(1);
       verify(
         () => workoutRepository.updateWorkout(
-          workoutId: 'w1',
-          userId: 'u1',
-          status: RunStatusAborted(
+          workoutId: entityId,
+          userId: userId,
+          status: const RunStatusAborted(
             coveredDistanceInKm: 10,
-            avgPace: const Pace(minutes: 5, seconds: 50),
-            avgHeartRate: 150,
             moodRate: MoodRate.mr8,
+            avgPace: Pace(minutes: 5, seconds: 50),
+            avgHeartRate: 150,
             comment: 'comment',
           ),
         ),
@@ -546,14 +809,80 @@ void main() {
 
   blocTest(
     'submit, '
-    'undone workout status, '
-    'should call method from workout repository to update workout and should emit info that workout has been saved',
+    'run status aborted, '
+    'competition, '
+    'should call method from competition repository to update competition and should emit info that run status has been saved',
     build: () => createBloc(
-      workoutId: 'w1',
+      entityType: EntityType.competition,
+      runStatusType: RunStatusType.aborted,
+      coveredDistanceInKm: 10,
+      moodRate: MoodRate.mr8,
+      averagePaceMinutes: 5,
+      averagePaceSeconds: 50,
+      averageHeartRate: 150,
+      comment: 'comment',
+    ),
+    setUp: () {
+      authService.mockGetLoggedUserId(userId: userId);
+      competitionRepository.mockUpdateCompetition();
+    },
+    act: (RunStatusCreatorBloc bloc) => bloc.add(
+      const RunStatusCreatorEventSubmit(),
+    ),
+    expect: () => [
+      createState(
+        status: const BlocStatusLoading(),
+        runStatusType: RunStatusType.aborted,
+        coveredDistanceInKm: 10,
+        moodRate: MoodRate.mr8,
+        averagePaceMinutes: 5,
+        averagePaceSeconds: 50,
+        averageHeartRate: 150,
+        comment: 'comment',
+      ),
+      createState(
+        status: const BlocStatusComplete<RunStatusCreatorBlocInfo>(
+          info: RunStatusCreatorBlocInfo.runStatusSaved,
+        ),
+        runStatusType: RunStatusType.aborted,
+        coveredDistanceInKm: 10,
+        moodRate: MoodRate.mr8,
+        averagePaceMinutes: 5,
+        averagePaceSeconds: 50,
+        averageHeartRate: 150,
+        comment: 'comment',
+      ),
+    ],
+    verify: (_) {
+      verify(
+        () => authService.loggedUserId$,
+      ).called(1);
+      verify(
+        () => competitionRepository.updateCompetition(
+          competitionId: entityId,
+          userId: userId,
+          status: const RunStatusAborted(
+            coveredDistanceInKm: 10,
+            moodRate: MoodRate.mr8,
+            avgPace: Pace(minutes: 5, seconds: 50),
+            avgHeartRate: 150,
+            comment: 'comment',
+          ),
+        ),
+      ).called(1);
+    },
+  );
+
+  blocTest(
+    'submit, '
+    'run status undone, '
+    'workout, '
+    'should call method from workout repository to update workout and should emit info that run status has been saved',
+    build: () => createBloc(
       runStatusType: RunStatusType.undone,
     ),
     setUp: () {
-      authService.mockGetLoggedUserId(userId: 'u1');
+      authService.mockGetLoggedUserId(userId: userId);
       workoutRepository.mockUpdateWorkout();
     },
     act: (RunStatusCreatorBloc bloc) => bloc.add(
@@ -562,14 +891,12 @@ void main() {
     expect: () => [
       createState(
         status: const BlocStatusLoading(),
-        workoutId: 'w1',
         runStatusType: RunStatusType.undone,
       ),
       createState(
         status: const BlocStatusComplete<RunStatusCreatorBlocInfo>(
           info: RunStatusCreatorBlocInfo.runStatusSaved,
         ),
-        workoutId: 'w1',
         runStatusType: RunStatusType.undone,
       ),
     ],
@@ -579,8 +906,50 @@ void main() {
       ).called(1);
       verify(
         () => workoutRepository.updateWorkout(
-          workoutId: 'w1',
-          userId: 'u1',
+          workoutId: entityId,
+          userId: userId,
+          status: const RunStatusUndone(),
+        ),
+      ).called(1);
+    },
+  );
+
+  blocTest(
+    'submit, '
+    'run status undone, '
+    'competition, '
+    'should call method from competition repository to update competition and should emit info that run status has been saved',
+    build: () => createBloc(
+      entityType: EntityType.competition,
+      runStatusType: RunStatusType.undone,
+    ),
+    setUp: () {
+      authService.mockGetLoggedUserId(userId: userId);
+      competitionRepository.mockUpdateCompetition();
+    },
+    act: (RunStatusCreatorBloc bloc) => bloc.add(
+      const RunStatusCreatorEventSubmit(),
+    ),
+    expect: () => [
+      createState(
+        status: const BlocStatusLoading(),
+        runStatusType: RunStatusType.undone,
+      ),
+      createState(
+        status: const BlocStatusComplete<RunStatusCreatorBlocInfo>(
+          info: RunStatusCreatorBlocInfo.runStatusSaved,
+        ),
+        runStatusType: RunStatusType.undone,
+      ),
+    ],
+    verify: (_) {
+      verify(
+        () => authService.loggedUserId$,
+      ).called(1);
+      verify(
+        () => competitionRepository.updateCompetition(
+          competitionId: entityId,
+          userId: userId,
           status: const RunStatusUndone(),
         ),
       ).called(1);

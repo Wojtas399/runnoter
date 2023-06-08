@@ -28,9 +28,9 @@ void main() {
         moodRate: firebase.MoodRate.mr8,
         comment: 'comment',
       );
-      RunStatusDone expectedStatus = RunStatusDone(
+      const RunStatusDone expectedStatus = RunStatusDone(
         coveredDistanceInKm: 10.0,
-        avgPace: const Pace(minutes: 5, seconds: 50),
+        avgPace: Pace(minutes: 5, seconds: 50),
         avgHeartRate: 146,
         moodRate: MoodRate.mr8,
         comment: 'comment',
@@ -53,9 +53,9 @@ void main() {
         moodRate: firebase.MoodRate.mr8,
         comment: 'comment',
       );
-      final RunStatusAborted expectedStatus = RunStatusAborted(
+      const RunStatusAborted expectedStatus = RunStatusAborted(
         coveredDistanceInKm: 10.0,
-        avgPace: const Pace(minutes: 5, seconds: 50),
+        avgPace: Pace(minutes: 5, seconds: 50),
         avgHeartRate: 146,
         moodRate: MoodRate.mr8,
         comment: 'comment',
@@ -97,9 +97,9 @@ void main() {
     'map run status to dto, '
     'done status should be mapped to done status dto',
     () {
-      final RunStatusDone status = RunStatusDone(
+      const RunStatusDone status = RunStatusDone(
         coveredDistanceInKm: 10.0,
-        avgPace: const Pace(minutes: 5, seconds: 50),
+        avgPace: Pace(minutes: 5, seconds: 50),
         avgHeartRate: 146,
         moodRate: MoodRate.mr8,
         comment: 'comment',
@@ -122,9 +122,9 @@ void main() {
     'map run status to dto, '
     'aborted status should be mapped to aborted status dto',
     () {
-      final RunStatusAborted status = RunStatusAborted(
+      const RunStatusAborted status = RunStatusAborted(
         coveredDistanceInKm: 10.0,
-        avgPace: const Pace(minutes: 5, seconds: 50),
+        avgPace: Pace(minutes: 5, seconds: 50),
         avgHeartRate: 146,
         moodRate: MoodRate.mr8,
         comment: 'comment',

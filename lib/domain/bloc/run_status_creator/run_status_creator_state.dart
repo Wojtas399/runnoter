@@ -1,8 +1,7 @@
 part of 'run_status_creator_bloc.dart';
 
 class RunStatusCreatorState extends BlocState<RunStatusCreatorState> {
-  final String? workoutId;
-  final RunStatus? runStatus;
+  final RunStatus? originalRunStatus;
   final RunStatusType? runStatusType;
   final double? coveredDistanceInKm;
   final MoodRate? moodRate;
@@ -13,8 +12,7 @@ class RunStatusCreatorState extends BlocState<RunStatusCreatorState> {
 
   const RunStatusCreatorState({
     required super.status,
-    this.workoutId,
-    this.runStatus,
+    this.originalRunStatus,
     this.runStatusType,
     this.coveredDistanceInKm,
     this.moodRate,
@@ -27,8 +25,7 @@ class RunStatusCreatorState extends BlocState<RunStatusCreatorState> {
   @override
   List<Object?> get props => [
         status,
-        workoutId,
-        runStatus,
+        originalRunStatus,
         runStatusType,
         coveredDistanceInKm,
         moodRate,
@@ -49,15 +46,15 @@ class RunStatusCreatorState extends BlocState<RunStatusCreatorState> {
           averageHeartRate != null);
 
   bool get areDataSameAsOriginal {
-    if (_doesRunStatusTypeMatchToRunStatus()) {
-      final RunStatus? runStatus = this.runStatus;
-      if (runStatus is RunStats) {
-        return coveredDistanceInKm == runStatus.coveredDistanceInKm &&
-            moodRate == runStatus.moodRate &&
-            averagePaceMinutes == runStatus.avgPace.minutes &&
-            averagePaceSeconds == runStatus.avgPace.seconds &&
-            averageHeartRate == runStatus.avgHeartRate &&
-            (comment ?? '') == (runStatus.comment ?? '');
+    if (_doesRunStatusTypeMatchToOriginalRunStatus()) {
+      final RunStatus? originalRunStatus = this.originalRunStatus;
+      if (originalRunStatus is RunStatusWithParams) {
+        return coveredDistanceInKm == originalRunStatus.coveredDistanceInKm &&
+            moodRate == originalRunStatus.moodRate &&
+            averagePaceMinutes == originalRunStatus.avgPace.minutes &&
+            averagePaceSeconds == originalRunStatus.avgPace.seconds &&
+            averageHeartRate == originalRunStatus.avgHeartRate &&
+            (comment ?? '') == (originalRunStatus.comment ?? '');
       }
     }
     return false;
@@ -66,8 +63,7 @@ class RunStatusCreatorState extends BlocState<RunStatusCreatorState> {
   @override
   RunStatusCreatorState copyWith({
     BlocStatus? status,
-    String? workoutId,
-    RunStatus? runStatus,
+    RunStatus? originalRunStatus,
     RunStatusType? runStatusType,
     double? coveredDistanceInKm,
     MoodRate? moodRate,
@@ -78,8 +74,7 @@ class RunStatusCreatorState extends BlocState<RunStatusCreatorState> {
   }) =>
       RunStatusCreatorState(
         status: status ?? const BlocStatusComplete(),
-        workoutId: workoutId ?? this.workoutId,
-        runStatus: runStatus ?? this.runStatus,
+        originalRunStatus: originalRunStatus ?? this.originalRunStatus,
         runStatusType: runStatusType ?? this.runStatusType,
         coveredDistanceInKm: coveredDistanceInKm ?? this.coveredDistanceInKm,
         moodRate: moodRate ?? this.moodRate,
@@ -89,18 +84,20 @@ class RunStatusCreatorState extends BlocState<RunStatusCreatorState> {
         comment: comment ?? this.comment,
       );
 
-  bool _doesRunStatusTypeMatchToRunStatus() {
+  bool _doesRunStatusTypeMatchToOriginalRunStatus() {
     final runStatusType = this.runStatusType;
-    final runStatus = this.runStatus;
-    if (runStatusType == null || runStatus == null) {
+    final originalRunStatus = this.originalRunStatus;
+    if (runStatusType == null || originalRunStatus == null) {
       return false;
     }
     return (runStatusType == RunStatusType.pending &&
-            runStatus is RunStatusPending) ||
-        (runStatusType == RunStatusType.done && runStatus is RunStatusDone) ||
+            originalRunStatus is RunStatusPending) ||
+        (runStatusType == RunStatusType.done &&
+            originalRunStatus is RunStatusDone) ||
         (runStatusType == RunStatusType.aborted &&
-            runStatus is RunStatusAborted) ||
-        (runStatusType == RunStatusType.undone && runStatus is RunStatusUndone);
+            originalRunStatus is RunStatusAborted) ||
+        (runStatusType == RunStatusType.undone &&
+            originalRunStatus is RunStatusUndone);
   }
 }
 

@@ -291,9 +291,9 @@
   "@workoutStageCreatorJoggingDistance": {
     "description": "Jogging distance"
   },
-  "runStatusCreatorScreenTitle": "Status treningu",
+  "runStatusCreatorScreenTitle": "Status",
   "@runStatusCreatorScreenTitle": {
-    "description": "Title of workout status creator screen"
+    "description": "Title of status creator screen"
   },
   "runStatusCreatorCoveredDistance": "Pokonany dystans",
   "@runStatusCreatorCoveredDistance": {
@@ -323,7 +323,7 @@
   "@runStatusCreatorComment": {
     "description": "Label of comment"
   },
-  "runStatusCreatorSavedStatusMessage": "Pomyślnie zaktualizowano status treningu",
+  "runStatusCreatorSavedStatusMessage": "Pomyślnie zaktualizowano status",
   "@runStatusCreatorSavedStatusMessage": {
     "description": "Info about successfully saved status"
   },

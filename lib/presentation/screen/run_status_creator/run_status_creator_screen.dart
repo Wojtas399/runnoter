@@ -6,6 +6,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../domain/additional_model/bloc_status.dart';
 import '../../../domain/bloc/run_status_creator/run_status_creator_bloc.dart';
 import '../../../domain/entity/run_status.dart';
+import '../../../domain/repository/competition_repository.dart';
 import '../../../domain/repository/workout_repository.dart';
 import '../../../domain/service/auth_service.dart';
 import '../../component/big_button_component.dart';
@@ -25,18 +26,23 @@ part 'run_status_creator_content.dart';
 part 'run_status_creator_finished_workout_form.dart';
 part 'run_status_creator_status_type.dart';
 
-enum RunStatusCreatorType {
-  updateStatus,
-  finishWorkout,
-}
-
-class RunStatusCreatorArguments {
-  final String workoutId;
-  final RunStatusCreatorType creatorType;
+sealed class RunStatusCreatorArguments {
+  final String entityId;
 
   const RunStatusCreatorArguments({
-    required this.workoutId,
-    required this.creatorType,
+    required this.entityId,
+  });
+}
+
+class WorkoutRunStatusCreatorArguments extends RunStatusCreatorArguments {
+  const WorkoutRunStatusCreatorArguments({
+    required super.entityId,
+  });
+}
+
+class CompetitionRunStatusCreatorArguments extends RunStatusCreatorArguments {
+  const CompetitionRunStatusCreatorArguments({
+    required super.entityId,
   });
 }
 
@@ -70,20 +76,18 @@ class _BlocProvider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    RunStatusType? runStatusType;
-    if (arguments.creatorType == RunStatusCreatorType.finishWorkout) {
-      runStatusType = RunStatusType.done;
-    }
-
     return BlocProvider(
       create: (BuildContext context) => RunStatusCreatorBloc(
+        entityType: switch (arguments) {
+          WorkoutRunStatusCreatorArguments() => EntityType.workout,
+          CompetitionRunStatusCreatorArguments() => EntityType.competition,
+        },
+        entityId: arguments.entityId,
         authService: context.read<AuthService>(),
         workoutRepository: context.read<WorkoutRepository>(),
+        competitionRepository: context.read<CompetitionRepository>(),
       )..add(
-          RunStatusCreatorEventInitialize(
-            workoutId: arguments.workoutId,
-            runStatusType: runStatusType,
-          ),
+          const RunStatusCreatorEventInitialize(),
         ),
       child: child,
     );

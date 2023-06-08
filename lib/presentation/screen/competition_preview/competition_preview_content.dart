@@ -189,9 +189,8 @@ class _FinishCompetitionButton extends StatelessWidget {
     navigateTo(
       context: context,
       route: RunStatusCreatorRoute(
-        creatorArguments: RunStatusCreatorArguments(
-          workoutId: competitionId,
-          creatorType: RunStatusCreatorType.finishWorkout,
+        creatorArguments: CompetitionRunStatusCreatorArguments(
+          entityId: competitionId,
         ),
       ),
     );

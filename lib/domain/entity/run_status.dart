@@ -1,7 +1,33 @@
 import 'package:equatable/equatable.dart';
 
-abstract class RunStatus extends Equatable {
+sealed class RunStatus extends Equatable {
   const RunStatus();
+}
+
+sealed class RunStatusWithParams extends RunStatus {
+  final double coveredDistanceInKm;
+  final Pace avgPace;
+  final int avgHeartRate;
+  final MoodRate moodRate;
+  final String? comment;
+
+  const RunStatusWithParams({
+    required this.coveredDistanceInKm,
+    required this.avgPace,
+    required this.avgHeartRate,
+    required this.moodRate,
+    required this.comment,
+  })  : assert(coveredDistanceInKm >= 0),
+        assert(avgHeartRate >= 0 && avgHeartRate <= 400);
+
+  @override
+  List<Object?> get props => [
+        coveredDistanceInKm,
+        avgPace,
+        avgHeartRate,
+        moodRate,
+        comment,
+      ];
 }
 
 class RunStatusPending extends RunStatus {
@@ -11,56 +37,24 @@ class RunStatusPending extends RunStatus {
   List<Object> get props => [];
 }
 
-class RunStatusDone extends RunStatus with RunStats {
-  RunStatusDone({
-    required double coveredDistanceInKm,
-    required Pace avgPace,
-    required int avgHeartRate,
-    required MoodRate moodRate,
-    required String? comment,
-  })  : assert(coveredDistanceInKm >= 0),
-        assert(avgHeartRate >= 0 && avgHeartRate <= 400) {
-    this.coveredDistanceInKm = coveredDistanceInKm;
-    this.avgPace = avgPace;
-    this.avgHeartRate = avgHeartRate;
-    this.moodRate = moodRate;
-    this.comment = comment;
-  }
-
-  @override
-  List<Object?> get props => [
-        coveredDistanceInKm,
-        avgPace,
-        avgHeartRate,
-        moodRate,
-        comment,
-      ];
+class RunStatusDone extends RunStatusWithParams {
+  const RunStatusDone({
+    required super.coveredDistanceInKm,
+    required super.avgPace,
+    required super.avgHeartRate,
+    required super.moodRate,
+    required super.comment,
+  });
 }
 
-class RunStatusAborted extends RunStatus with RunStats {
-  RunStatusAborted({
-    required double coveredDistanceInKm,
-    required Pace avgPace,
-    required int avgHeartRate,
-    required MoodRate moodRate,
-    required String? comment,
-  })  : assert(coveredDistanceInKm >= 0),
-        assert(avgHeartRate >= 0 && avgHeartRate <= 400) {
-    this.coveredDistanceInKm = coveredDistanceInKm;
-    this.avgPace = avgPace;
-    this.avgHeartRate = avgHeartRate;
-    this.moodRate = moodRate;
-    this.comment = comment;
-  }
-
-  @override
-  List<Object?> get props => [
-        coveredDistanceInKm,
-        avgPace,
-        avgHeartRate,
-        moodRate,
-        comment,
-      ];
+class RunStatusAborted extends RunStatusWithParams {
+  const RunStatusAborted({
+    required super.coveredDistanceInKm,
+    required super.avgPace,
+    required super.avgHeartRate,
+    required super.moodRate,
+    required super.comment,
+  });
 }
 
 class RunStatusUndone extends RunStatus {
@@ -68,14 +62,6 @@ class RunStatusUndone extends RunStatus {
 
   @override
   List<Object?> get props => [];
-}
-
-mixin RunStats on RunStatus {
-  late final double coveredDistanceInKm;
-  late final Pace avgPace;
-  late final int avgHeartRate;
-  late final MoodRate moodRate;
-  late final String? comment;
 }
 
 class Pace extends Equatable {

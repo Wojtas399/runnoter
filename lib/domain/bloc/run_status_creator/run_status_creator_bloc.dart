@@ -4,49 +4,43 @@ import '../../../../domain/additional_model/bloc_state.dart';
 import '../../../../domain/additional_model/bloc_status.dart';
 import '../../../../domain/additional_model/bloc_with_status.dart';
 import '../../../../domain/entity/run_status.dart';
-import '../../../../domain/entity/workout.dart';
-import '../../../../domain/repository/workout_repository.dart';
-import '../../../../domain/service/auth_service.dart';
+import '../../repository/competition_repository.dart';
+import '../../repository/workout_repository.dart';
+import '../../service/auth_service.dart';
 
 part 'run_status_creator_event.dart';
 part 'run_status_creator_state.dart';
 
+enum EntityType {
+  workout,
+  competition,
+}
+
 class RunStatusCreatorBloc extends BlocWithStatus<RunStatusCreatorEvent,
     RunStatusCreatorState, RunStatusCreatorBlocInfo, dynamic> {
+  final EntityType _entityType;
+  final String _entityId;
   final AuthService _authService;
   final WorkoutRepository _workoutRepository;
+  final CompetitionRepository _competitionRepository;
 
   RunStatusCreatorBloc({
+    required EntityType entityType,
+    required String entityId,
     required AuthService authService,
     required WorkoutRepository workoutRepository,
-    BlocStatus status = const BlocStatusInitial(),
-    String? workoutId,
-    RunStatusType? runStatusType,
-    double? coveredDistanceInKm,
-    MoodRate? moodRate,
-    int? averagePaceMinutes,
-    int? averagePaceSeconds,
-    int? averageHeartRate,
-    String? comment,
-  })  : _authService = authService,
+    required CompetitionRepository competitionRepository,
+    RunStatusCreatorState state = const RunStatusCreatorState(
+      status: BlocStatusInitial(),
+    ),
+  })  : _entityType = entityType,
+        _entityId = entityId,
+        _authService = authService,
         _workoutRepository = workoutRepository,
-        super(
-          RunStatusCreatorState(
-            status: status,
-            workoutId: workoutId,
-            runStatusType: runStatusType,
-            coveredDistanceInKm: coveredDistanceInKm,
-            moodRate: moodRate,
-            averagePaceMinutes: averagePaceMinutes,
-            averagePaceSeconds: averagePaceSeconds,
-            averageHeartRate: averageHeartRate,
-            comment: comment,
-          ),
-        ) {
+        _competitionRepository = competitionRepository,
+        super(state) {
     on<RunStatusCreatorEventInitialize>(_initialize);
-    on<RunStatusCreatorEventRunStatusTypeChanged>(
-      _runStatusTypeChanged,
-    );
+    on<RunStatusCreatorEventRunStatusTypeChanged>(_runStatusTypeChanged);
     on<RunStatusCreatorEventCoveredDistanceInKmChanged>(
       _coveredDistanceInKmChanged,
     );
@@ -62,39 +56,36 @@ class RunStatusCreatorBloc extends BlocWithStatus<RunStatusCreatorEvent,
     RunStatusCreatorEventInitialize event,
     Emitter<RunStatusCreatorState> emit,
   ) async {
-    if (event.runStatusType != null) {
-      emit(state.copyWith(
-        workoutId: event.workoutId,
-        runStatusType: event.runStatusType,
-      ));
+    final String? loggedUserId = await _authService.loggedUserId$.first;
+    if (loggedUserId == null) {
+      emitNoLoggedUserStatus(emit);
       return;
     }
-    const BlocStatus blocStatus = BlocStatusComplete<RunStatusCreatorBlocInfo>(
-      info: RunStatusCreatorBlocInfo.runStatusInitialized,
+    final RunStatus? runStatus = await _loadRunStatus(loggedUserId);
+    if (runStatus == null) {
+      return;
+    }
+    RunStatusCreatorState updatedState = state.copyWith(
+      originalRunStatus: runStatus,
+      runStatusType: runStatus is RunStatusPending
+          ? RunStatusType.done
+          : _getRunStatusType(runStatus),
     );
-    final Workout? workout = await _loadWorkoutById(event.workoutId, emit);
-    final RunStatus? runStatus = workout?.status;
-    if (runStatus is RunStats) {
-      emit(state.copyWith(
-        status: blocStatus,
-        workoutId: event.workoutId,
-        runStatus: runStatus,
-        runStatusType: _getRunStatusType(runStatus),
+    if (runStatus is RunStatusWithParams) {
+      updatedState = updatedState.copyWith(
         coveredDistanceInKm: runStatus.coveredDistanceInKm,
         moodRate: runStatus.moodRate,
         averagePaceMinutes: runStatus.avgPace.minutes,
         averagePaceSeconds: runStatus.avgPace.seconds,
         averageHeartRate: runStatus.avgHeartRate,
         comment: runStatus.comment,
-      ));
-    } else if (runStatus is RunStatusPending) {
-      emit(state.copyWith(
-        status: blocStatus,
-        workoutId: event.workoutId,
-        runStatus: runStatus,
-        runStatusType: RunStatusType.pending,
-      ));
+      );
     }
+    emit(updatedState.copyWith(
+      status: const BlocStatusComplete<RunStatusCreatorBlocInfo>(
+        info: RunStatusCreatorBlocInfo.runStatusInitialized,
+      ),
+    ));
   }
 
   void _runStatusTypeChanged(
@@ -164,7 +155,7 @@ class RunStatusCreatorBloc extends BlocWithStatus<RunStatusCreatorEvent,
     RunStatusCreatorEventSubmit event,
     Emitter<RunStatusCreatorState> emit,
   ) async {
-    if (state.workoutId == null) {
+    if (!state.isFormValid || state.areDataSameAsOriginal) {
       return;
     }
     final String? loggedUserId = await _authService.loggedUserId$.first;
@@ -172,79 +163,74 @@ class RunStatusCreatorBloc extends BlocWithStatus<RunStatusCreatorEvent,
       emitNoLoggedUserStatus(emit);
       return;
     }
-    if (state.isFormValid && !state.areDataSameAsOriginal) {
-      emitLoadingStatus(emit);
-      final RunStatus newStatus = _createStatus();
-      await _workoutRepository.updateWorkout(
-        workoutId: state.workoutId!,
-        userId: loggedUserId,
-        status: newStatus,
-      );
-      emitCompleteStatus(emit, RunStatusCreatorBlocInfo.runStatusSaved);
-    }
-  }
-
-  Future<Workout?> _loadWorkoutById(
-    String workoutId,
-    Emitter<RunStatusCreatorState> emit,
-  ) async {
-    final String? loggedUserId = await _authService.loggedUserId$.first;
-    if (loggedUserId == null) {
-      emitNoLoggedUserStatus(emit);
-      return null;
-    }
-    return await _workoutRepository
-        .getWorkoutById(
-          workoutId: workoutId,
+    final RunStatus status = _createStatus();
+    emitLoadingStatus(emit);
+    await switch (_entityType) {
+      EntityType.workout => _workoutRepository.updateWorkout(
+          workoutId: _entityId,
           userId: loggedUserId,
-        )
-        .first;
+          status: status,
+        ),
+      EntityType.competition => _competitionRepository.updateCompetition(
+          competitionId: _entityId,
+          userId: loggedUserId,
+          status: status,
+        ),
+    };
+    emitCompleteStatus(emit, RunStatusCreatorBlocInfo.runStatusSaved);
   }
 
-  RunStatusType _getRunStatusType(RunStatus runStatus) {
-    if (runStatus is RunStatusPending) {
-      return RunStatusType.pending;
-    } else if (runStatus is RunStatusDone) {
-      return RunStatusType.done;
-    } else if (runStatus is RunStatusAborted) {
-      return RunStatusType.aborted;
-    } else if (runStatus is RunStatusUndone) {
-      return RunStatusType.undone;
-    } else {
-      throw '[RunStatusCreatorBloc]: Unknown workout status';
-    }
-  }
+  Future<RunStatus?> _loadRunStatus(
+    String loggedUserId,
+  ) async =>
+      switch (_entityType) {
+        EntityType.workout => (await _workoutRepository
+                .getWorkoutById(
+                  workoutId: _entityId,
+                  userId: loggedUserId,
+                )
+                .first)
+            ?.status,
+        EntityType.competition => (await _competitionRepository
+                .getCompetitionById(
+                  competitionId: _entityId,
+                  userId: loggedUserId,
+                )
+                .first)
+            ?.status,
+      };
 
-  RunStatus _createStatus() {
-    switch (state.runStatusType!) {
-      case RunStatusType.pending:
-        return const RunStatusPending();
-      case RunStatusType.done:
-        return RunStatusDone(
-          coveredDistanceInKm: state.coveredDistanceInKm!,
-          avgPace: Pace(
-            minutes: state.averagePaceMinutes!,
-            seconds: state.averagePaceSeconds!,
+  RunStatusType _getRunStatusType(RunStatus runStatus) => switch (runStatus) {
+        RunStatusPending() => RunStatusType.pending,
+        RunStatusDone() => RunStatusType.done,
+        RunStatusAborted() => RunStatusType.aborted,
+        RunStatusUndone() => RunStatusType.undone,
+      };
+
+  RunStatus _createStatus() => switch (state.runStatusType!) {
+        RunStatusType.pending => const RunStatusPending(),
+        RunStatusType.done => RunStatusDone(
+            coveredDistanceInKm: state.coveredDistanceInKm!,
+            avgPace: Pace(
+              minutes: state.averagePaceMinutes!,
+              seconds: state.averagePaceSeconds!,
+            ),
+            avgHeartRate: state.averageHeartRate!,
+            moodRate: state.moodRate!,
+            comment: state.comment,
           ),
-          avgHeartRate: state.averageHeartRate!,
-          moodRate: state.moodRate!,
-          comment: state.comment,
-        );
-      case RunStatusType.aborted:
-        return RunStatusAborted(
-          coveredDistanceInKm: state.coveredDistanceInKm!,
-          avgPace: Pace(
-            minutes: state.averagePaceMinutes!,
-            seconds: state.averagePaceSeconds!,
+        RunStatusType.aborted => RunStatusAborted(
+            coveredDistanceInKm: state.coveredDistanceInKm!,
+            avgPace: Pace(
+              minutes: state.averagePaceMinutes!,
+              seconds: state.averagePaceSeconds!,
+            ),
+            avgHeartRate: state.averageHeartRate!,
+            moodRate: state.moodRate!,
+            comment: state.comment,
           ),
-          avgHeartRate: state.averageHeartRate!,
-          moodRate: state.moodRate!,
-          comment: state.comment,
-        );
-      case RunStatusType.undone:
-        return const RunStatusUndone();
-    }
-  }
+        RunStatusType.undone => const RunStatusUndone(),
+      };
 }
 
 enum RunStatusCreatorBlocInfo {

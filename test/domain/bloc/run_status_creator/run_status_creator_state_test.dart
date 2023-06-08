@@ -14,10 +14,11 @@ void main() {
 
   test(
     'is form valid, '
-    'workout status type is null, '
+    'run status type is null, '
     'should be false',
     () {
       state = state.copyWith(
+        runStatusType: null,
         coveredDistanceInKm: 10,
         moodRate: MoodRate.mr8,
         averagePaceMinutes: 5,
@@ -31,7 +32,7 @@ void main() {
 
   test(
     'is form valid, '
-    'workout status type is set as pending, '
+    'run status type is set as pending, '
     'should be true',
     () {
       state = state.copyWith(
@@ -44,7 +45,7 @@ void main() {
 
   test(
     'is form valid, '
-    'workout status type is set as undone, '
+    'run status type is set as undone, '
     'should be true',
     () {
       state = state.copyWith(
@@ -160,11 +161,11 @@ void main() {
 
   test(
     'are data same as original, '
-    'run status type does not match to workout status, '
+    'run status type does not match to original run status, '
     'should be false',
     () {
       state = state.copyWith(
-        runStatus: const RunStatusPending(),
+        originalRunStatus: const RunStatusPending(),
         runStatusType: RunStatusType.done,
       );
 
@@ -174,40 +175,14 @@ void main() {
 
   test(
     'are data same as original, '
-    'run status is set as pending, '
-    'should be false',
-    () {
-      state = state.copyWith(
-        runStatus: const RunStatusPending(),
-      );
-
-      expect(state.areDataSameAsOriginal, false);
-    },
-  );
-
-  test(
-    'are data same as original, '
-    'run status is set as undone, '
-    'should be false',
-    () {
-      state = state.copyWith(
-        runStatus: const RunStatusUndone(),
-      );
-
-      expect(state.areDataSameAsOriginal, false);
-    },
-  );
-
-  test(
-    'are data same as original, '
-    'run status contains run stats, '
+    'original run status contains run stats, '
     'all params are the same as params set in run status, '
     'should be true',
     () {
       state = state.copyWith(
-        runStatus: RunStatusDone(
+        originalRunStatus: const RunStatusDone(
           coveredDistanceInKm: 10,
-          avgPace: const Pace(minutes: 6, seconds: 10),
+          avgPace: Pace(minutes: 6, seconds: 10),
           avgHeartRate: 150,
           moodRate: MoodRate.mr8,
           comment: 'comment',
@@ -227,18 +202,19 @@ void main() {
 
   test(
     'are data same as original, '
-    'run status contains run stats, '
+    'original run status contains run stats, '
     'covered distance is different than original value, '
     'should be false',
     () {
       state = state.copyWith(
-        runStatus: RunStatusDone(
+        originalRunStatus: const RunStatusDone(
           coveredDistanceInKm: 10,
-          avgPace: const Pace(minutes: 6, seconds: 10),
+          avgPace: Pace(minutes: 6, seconds: 10),
           avgHeartRate: 150,
           moodRate: MoodRate.mr8,
           comment: 'comment',
         ),
+        runStatusType: RunStatusType.done,
         coveredDistanceInKm: 12,
         averagePaceMinutes: 6,
         averagePaceSeconds: 10,
@@ -253,18 +229,19 @@ void main() {
 
   test(
     'are data same as original, '
-    'run status contains run stats, '
+    'original run status contains run stats, '
     'minutes of average pace are different than original value, '
     'should be false',
     () {
       state = state.copyWith(
-        runStatus: RunStatusDone(
+        originalRunStatus: const RunStatusDone(
           coveredDistanceInKm: 10,
-          avgPace: const Pace(minutes: 6, seconds: 10),
+          avgPace: Pace(minutes: 6, seconds: 10),
           avgHeartRate: 150,
           moodRate: MoodRate.mr8,
           comment: 'comment',
         ),
+        runStatusType: RunStatusType.done,
         coveredDistanceInKm: 10,
         averagePaceMinutes: 5,
         averagePaceSeconds: 10,
@@ -279,18 +256,19 @@ void main() {
 
   test(
     'are data same as original, '
-    'run status contains run stats, '
+    'original run status contains run stats, '
     'seconds of average pace are different than original value, '
     'should be false',
     () {
       state = state.copyWith(
-        runStatus: RunStatusDone(
+        originalRunStatus: const RunStatusDone(
           coveredDistanceInKm: 10,
-          avgPace: const Pace(minutes: 6, seconds: 10),
+          avgPace: Pace(minutes: 6, seconds: 10),
           avgHeartRate: 150,
           moodRate: MoodRate.mr8,
           comment: 'comment',
         ),
+        runStatusType: RunStatusType.done,
         coveredDistanceInKm: 10,
         averagePaceMinutes: 6,
         averagePaceSeconds: 5,
@@ -305,18 +283,19 @@ void main() {
 
   test(
     'are data same as original, '
-    'run status contains run stats, '
+    'original run status contains run stats, '
     'average heart rate is different than original value, '
     'should be false',
     () {
       state = state.copyWith(
-        runStatus: RunStatusDone(
+        originalRunStatus: const RunStatusDone(
           coveredDistanceInKm: 10,
-          avgPace: const Pace(minutes: 6, seconds: 10),
+          avgPace: Pace(minutes: 6, seconds: 10),
           avgHeartRate: 150,
           moodRate: MoodRate.mr8,
           comment: 'comment',
         ),
+        runStatusType: RunStatusType.done,
         coveredDistanceInKm: 10,
         averagePaceMinutes: 6,
         averagePaceSeconds: 10,
@@ -331,18 +310,19 @@ void main() {
 
   test(
     'are data same as original, '
-    'run status contains run stats, '
+    'original run status contains run stats, '
     'mood rate is different than original value, '
     'should be false',
     () {
       state = state.copyWith(
-        runStatus: RunStatusDone(
+        originalRunStatus: const RunStatusDone(
           coveredDistanceInKm: 10,
-          avgPace: const Pace(minutes: 6, seconds: 10),
+          avgPace: Pace(minutes: 6, seconds: 10),
           avgHeartRate: 150,
           moodRate: MoodRate.mr8,
           comment: 'comment',
         ),
+        runStatusType: RunStatusType.done,
         coveredDistanceInKm: 10,
         averagePaceMinutes: 6,
         averagePaceSeconds: 10,
@@ -357,18 +337,19 @@ void main() {
 
   test(
     'are data same as original, '
-    'run status contains run stats, '
+    'original run status contains run stats, '
     'comment is different than original value, '
     'should be false',
     () {
       state = state.copyWith(
-        runStatus: RunStatusDone(
+        originalRunStatus: const RunStatusDone(
           coveredDistanceInKm: 10,
-          avgPace: const Pace(minutes: 6, seconds: 10),
+          avgPace: Pace(minutes: 6, seconds: 10),
           avgHeartRate: 150,
           moodRate: MoodRate.mr8,
           comment: 'comment',
         ),
+        runStatusType: RunStatusType.done,
         coveredDistanceInKm: 10,
         averagePaceMinutes: 6,
         averagePaceSeconds: 10,
@@ -395,34 +376,21 @@ void main() {
   );
 
   test(
-    'copy with workout id',
+    'copy with original run status',
     () {
-      const String expectedWorkoutId = 'w1';
-
-      state = state.copyWith(workoutId: expectedWorkoutId);
-      final state2 = state.copyWith();
-
-      expect(state.workoutId, expectedWorkoutId);
-      expect(state2.workoutId, expectedWorkoutId);
-    },
-  );
-
-  test(
-    'copy with run status',
-    () {
-      final RunStatus expectedRunStatus = RunStatusDone(
+      const RunStatus expectedOriginalRunStatus = RunStatusDone(
         coveredDistanceInKm: 10,
-        avgPace: const Pace(minutes: 6, seconds: 10),
+        avgPace: Pace(minutes: 6, seconds: 10),
         avgHeartRate: 150,
         moodRate: MoodRate.mr8,
         comment: 'comment',
       );
 
-      state = state.copyWith(runStatus: expectedRunStatus);
+      state = state.copyWith(originalRunStatus: expectedOriginalRunStatus);
       final state2 = state.copyWith();
 
-      expect(state.runStatus, expectedRunStatus);
-      expect(state2.runStatus, expectedRunStatus);
+      expect(state.originalRunStatus, expectedOriginalRunStatus);
+      expect(state2.originalRunStatus, expectedOriginalRunStatus);
     },
   );
 

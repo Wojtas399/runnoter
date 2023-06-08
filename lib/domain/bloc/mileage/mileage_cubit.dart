@@ -90,7 +90,7 @@ class MileageCubit extends Cubit<List<ChartYear>?> {
 
   double _calculateWorkoutDistance(Workout workout) {
     final RunStatus status = workout.status;
-    if (status is RunStats) {
+    if (status is RunStatusWithParams) {
       return status.coveredDistanceInKm;
     }
     return 0.0;

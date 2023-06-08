@@ -54,9 +54,9 @@ void main() {
         id: id,
         userId: userId,
         date: date,
-        status: RunStatusDone(
+        status: const RunStatusDone(
           coveredDistanceInKm: coveredDistanceInKm,
-          avgPace: const Pace(minutes: avgPaceMin, seconds: avgPaceSeconds),
+          avgPace: Pace(minutes: avgPaceMin, seconds: avgPaceSeconds),
           avgHeartRate: avgHeartRate,
           moodRate: MoodRate.mr8,
           comment: 'comment',

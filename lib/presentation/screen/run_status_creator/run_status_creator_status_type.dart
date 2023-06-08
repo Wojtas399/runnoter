@@ -58,18 +58,18 @@ class _RunStatusDescription extends StatelessWidget {
         status = const RunStatusPending();
         break;
       case RunStatusType.done:
-        status = RunStatusDone(
+        status = const RunStatusDone(
           coveredDistanceInKm: 0,
-          avgPace: const Pace(minutes: 0, seconds: 0),
+          avgPace: Pace(minutes: 0, seconds: 0),
           avgHeartRate: 0,
           moodRate: MoodRate.mr1,
           comment: '',
         );
         break;
       case RunStatusType.aborted:
-        status = RunStatusAborted(
+        status = const RunStatusAborted(
           coveredDistanceInKm: 0,
-          avgPace: const Pace(minutes: 0, seconds: 0),
+          avgPace: Pace(minutes: 0, seconds: 0),
           avgHeartRate: 0,
           moodRate: MoodRate.mr1,
           comment: '',

@@ -122,18 +122,11 @@ class _RunStatusButton extends StatelessWidget {
     if (workoutId == null) {
       return;
     }
-    final RunStatus? runStatus = bloc.state.runStatus;
-    RunStatusCreatorType runStatusCreatorType =
-        RunStatusCreatorType.updateStatus;
-    if (runStatus is RunStatusPending) {
-      runStatusCreatorType = RunStatusCreatorType.finishWorkout;
-    }
     navigateTo(
       context: context,
       route: RunStatusCreatorRoute(
-        creatorArguments: RunStatusCreatorArguments(
-          workoutId: workoutId,
-          creatorType: runStatusCreatorType,
+        creatorArguments: WorkoutRunStatusCreatorArguments(
+          entityId: workoutId,
         ),
       ),
     );
