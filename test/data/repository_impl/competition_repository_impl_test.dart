@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:firebase/firebase.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -21,6 +22,94 @@ void main() {
         firebaseCompetitionService: firebaseCompetitionService,
         initialData: initialData,
       );
+
+  test(
+    'get competition by id, '
+    'competition exists in repository, '
+    'should emit matching competition',
+    () {
+      const String competitionId = 'c1';
+      final Competition expectedCompetition = createCompetition(
+        id: competitionId,
+        userId: userId,
+      );
+      final List<Competition> existingCompetitions = [
+        expectedCompetition,
+        createCompetition(id: 'c2', userId: 'u2'),
+        createCompetition(id: 'c3', userId: 'u3'),
+        createCompetition(id: 'c4', userId: userId),
+      ];
+      repository = createRepository(initialData: existingCompetitions);
+
+      final Stream<Competition?> competition$ = repository.getCompetitionById(
+        competitionId: competitionId,
+        userId: userId,
+      );
+
+      expect(
+        competition$,
+        emitsInOrder(
+          [
+            expectedCompetition,
+          ],
+        ),
+      );
+    },
+  );
+
+  test(
+    'get competition by id, '
+    'competition does not exist in repository, '
+    'should load competition from remote db, add it to repository and emit it',
+    () {
+      const String competitionId = 'c1';
+      final CompetitionDto expectedCompetitionDto = createCompetitionDto(
+        id: competitionId,
+        userId: userId,
+      );
+      final Competition expectedCompetition = createCompetition(
+        id: competitionId,
+        userId: userId,
+      );
+      final List<Competition> existingCompetitions = [
+        createCompetition(id: 'c2', userId: 'u2'),
+        createCompetition(id: 'c3', userId: 'u3'),
+        createCompetition(id: 'c4', userId: userId),
+      ];
+      firebaseCompetitionService.mockLoadCompetitionById(
+        competitionDto: expectedCompetitionDto,
+      );
+      repository = createRepository(initialData: existingCompetitions);
+
+      final Stream<List<Competition>?> repositoryState$ =
+          repository.dataStream$;
+      final Stream<Competition?> competition$ = repository.getCompetitionById(
+        competitionId: competitionId,
+        userId: userId,
+      );
+
+      expect(
+        repositoryState$,
+        emitsInOrder(
+          [
+            existingCompetitions,
+            [
+              ...existingCompetitions,
+              expectedCompetition,
+            ]
+          ],
+        ),
+      );
+      expect(
+        competition$,
+        emitsInOrder(
+          [
+            expectedCompetition,
+          ],
+        ),
+      );
+    },
+  );
 
   test(
     'get all competitions, '
@@ -141,6 +230,44 @@ void main() {
           distance: distance,
           expectedDuration: expectedDuration,
           statusDto: statusDto,
+        ),
+      ).called(1);
+    },
+  );
+
+  test(
+    'delete competition, '
+    'should call method from firebase competition service to delete competition and should delete this competition from repository',
+    () async {
+      const String competitionId = 'c1';
+      final List<Competition> existingCompetitions = [
+        createCompetition(id: competitionId, userId: userId),
+        createCompetition(id: 'c2', userId: 'u2'),
+        createCompetition(id: 'c3', userId: 'u3'),
+        createCompetition(id: 'c4', userId: userId),
+      ];
+      firebaseCompetitionService.mockDeleteCompetition();
+      repository = createRepository(initialData: existingCompetitions);
+
+      final Stream<List<Competition>?> repositoryState$ =
+          repository.dataStream$;
+      await repository.deleteCompetition(
+        competitionId: competitionId,
+        userId: userId,
+      );
+
+      expect(
+        repositoryState$,
+        emitsInOrder(
+          [
+            existingCompetitions.slice(1),
+          ],
+        ),
+      );
+      verify(
+        () => firebaseCompetitionService.deleteCompetition(
+          competitionId: competitionId,
+          userId: userId,
         ),
       ).called(1);
     },

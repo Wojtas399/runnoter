@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:firebase/firebase.dart';
 import 'package:firebase/service/firebase_competition_service.dart';
 
@@ -21,8 +22,14 @@ class CompetitionRepositoryImpl extends StateRepository<Competition>
   Stream<Competition?> getCompetitionById({
     required String competitionId,
     required String userId,
-  }) {
-    throw UnimplementedError();
+  }) async* {
+    await for (final competitions in dataStream$) {
+      Competition? competition = competitions?.firstWhereOrNull(
+        (elem) => elem.id == competitionId && elem.userId == userId,
+      );
+      competition ??= await _loadCompetitionFromRemoteDb(competitionId, userId);
+      yield competition;
+    }
   }
 
   @override
@@ -71,7 +78,11 @@ class CompetitionRepositoryImpl extends StateRepository<Competition>
     required String competitionId,
     required String userId,
   }) async {
-    throw UnimplementedError();
+    await _firebaseCompetitionService.deleteCompetition(
+      competitionId: competitionId,
+      userId: userId,
+    );
+    removeEntity(competitionId);
   }
 
   Future<void> _loadAllCompetitionsFromRemoteDb(String userId) async {
@@ -82,5 +93,22 @@ class CompetitionRepositoryImpl extends StateRepository<Competition>
           competitionDtos.map(mapCompetitionFromDto).toList();
       addEntities(competitions);
     }
+  }
+
+  Future<Competition?> _loadCompetitionFromRemoteDb(
+    String competitionId,
+    String userId,
+  ) async {
+    final CompetitionDto? competitionDto =
+        await _firebaseCompetitionService.loadCompetitionById(
+      competitionId: competitionId,
+      userId: userId,
+    );
+    if (competitionDto != null) {
+      final Competition competition = mapCompetitionFromDto(competitionDto);
+      addEntity(competition);
+      return competition;
+    }
+    return null;
   }
 }
