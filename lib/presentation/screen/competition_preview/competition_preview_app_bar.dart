@@ -1,0 +1,97 @@
+part of 'competition_preview_screen.dart';
+
+class _AppBar extends StatelessWidget implements PreferredSizeWidget {
+  const _AppBar();
+
+  @override
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+
+  @override
+  Widget build(BuildContext context) {
+    return AppBar(
+      centerTitle: true,
+      title: const Text('Competition preview'),
+      actions: const [
+        _ActionsMenu(),
+      ],
+    );
+  }
+}
+
+enum _Action { edit, delete }
+
+class _ActionsMenu extends StatelessWidget {
+  const _ActionsMenu();
+
+  @override
+  Widget build(BuildContext context) {
+    return PopupMenuButton<_Action>(
+      onSelected: (_Action action) {
+        _manageActions(context, action);
+      },
+      itemBuilder: (BuildContext context) => [
+        PopupMenuItem<_Action>(
+          value: _Action.edit,
+          child: Row(
+            children: [
+              const Icon(Icons.edit_outlined),
+              const SizedBox(width: 8),
+              Text(
+                Str.of(context).edit,
+              )
+            ],
+          ),
+        ),
+        PopupMenuItem<_Action>(
+          value: _Action.delete,
+          child: Row(
+            children: [
+              const Icon(Icons.delete_outline),
+              const SizedBox(width: 8),
+              Text(
+                Str.of(context).delete,
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  void _manageActions(BuildContext context, _Action action) {
+    switch (action) {
+      case _Action.edit:
+        _editTest(context);
+        break;
+      case _Action.delete:
+        _deleteTest(context);
+        break;
+    }
+  }
+
+  void _editTest(BuildContext context) {
+    final String? competitionId =
+        context.read<CompetitionPreviewBloc>().state.competition?.id;
+    if (competitionId != null) {
+      navigateTo(
+        context: context,
+        route: const CompetitionCreatorRoute(),
+      );
+    }
+  }
+
+  Future<void> _deleteTest(BuildContext context) async {
+    final CompetitionPreviewBloc bloc = context.read<CompetitionPreviewBloc>();
+    final bool confirmed = await askForConfirmation(
+      context: context,
+      title: 'Usuwanie zawodów',
+      message: 'Czy na pewno chcesz usunąć te zawody',
+      confirmButtonLabel: Str.of(context).delete,
+    );
+    if (confirmed == true) {
+      bloc.add(
+        const CompetitionPreviewEventDeleteCompetition(),
+      );
+    }
+  }
+}

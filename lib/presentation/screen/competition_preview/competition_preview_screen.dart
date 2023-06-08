@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/bloc/competition_preview/competition_preview_bloc.dart';
 import '../../../domain/entity/run_status.dart';
@@ -14,9 +15,11 @@ import '../../config/navigation/routes.dart';
 import '../../formatter/date_formatter.dart';
 import '../../formatter/duration_formatter.dart';
 import '../../formatter/run_status_formatter.dart';
+import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
 import '../run_status_creator/run_status_creator_screen.dart';
 
+part 'competition_preview_app_bar.dart';
 part 'competition_preview_content.dart';
 
 class CompetitionPreviewScreen extends StatelessWidget {

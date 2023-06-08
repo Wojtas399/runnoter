@@ -7,12 +7,9 @@ class _Content extends StatelessWidget {
   Widget build(BuildContext context) {
     const Widget gap = SizedBox(height: 16);
 
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: const Text('Competition preview'),
-      ),
-      body: const SafeArea(
+    return const Scaffold(
+      appBar: _AppBar(),
+      body: SafeArea(
         child: Padding(
           padding: EdgeInsets.all(24),
           child: Column(
