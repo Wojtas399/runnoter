@@ -174,15 +174,12 @@ class _FinishCompetitionButton extends StatelessWidget {
     final RunStatus? runStatus = context.select(
       (CompetitionPreviewBloc bloc) => bloc.state.competition?.status,
     );
-    if (runStatus is RunStatusPending) {
-      return BigButton(
-        label: 'Zakończ',
-        onPressed: () {
-          _onPressed(context);
-        },
-      );
-    }
-    return const SizedBox();
+    return BigButton(
+      label: runStatus is RunStatusPending ? 'Zakończ' : 'Edytuj status',
+      onPressed: () {
+        _onPressed(context);
+      },
+    );
   }
 
   void _onPressed(BuildContext context) {
