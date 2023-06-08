@@ -22,6 +22,7 @@ void main() {
     EntityType entityType = EntityType.workout,
     RunStatusType? runStatusType,
     double? coveredDistanceInKm,
+    Duration? duration,
     MoodRate? moodRate,
     int? averagePaceMinutes,
     int? averagePaceSeconds,
@@ -36,8 +37,10 @@ void main() {
         competitionRepository: competitionRepository,
         state: RunStatusCreatorState(
           status: const BlocStatusInitial(),
+          entityType: entityType,
           runStatusType: runStatusType,
           coveredDistanceInKm: coveredDistanceInKm,
+          duration: duration,
           moodRate: moodRate,
           averagePaceMinutes: averagePaceMinutes,
           averagePaceSeconds: averagePaceSeconds,
@@ -48,9 +51,11 @@ void main() {
 
   RunStatusCreatorState createState({
     BlocStatus status = const BlocStatusInitial(),
+    EntityType entityType = EntityType.workout,
     RunStatus? originalRunStatus,
     RunStatusType? runStatusType,
     double? coveredDistanceInKm,
+    Duration? duration,
     MoodRate? moodRate,
     int? averagePaceMinutes,
     int? averagePaceSeconds,
@@ -59,9 +64,11 @@ void main() {
   }) =>
       RunStatusCreatorState(
         status: status,
+        entityType: entityType,
         originalRunStatus: originalRunStatus,
         runStatusType: runStatusType,
         coveredDistanceInKm: coveredDistanceInKm,
+        duration: duration,
         moodRate: moodRate,
         averagePaceMinutes: averagePaceMinutes,
         averagePaceSeconds: averagePaceSeconds,
@@ -273,6 +280,7 @@ void main() {
         status: const BlocStatusComplete<RunStatusCreatorBlocInfo>(
           info: RunStatusCreatorBlocInfo.runStatusInitialized,
         ),
+        entityType: EntityType.competition,
         originalRunStatus: const RunStatusDone(
           coveredDistanceInKm: 10,
           avgPace: Pace(minutes: 6, seconds: 10),
@@ -328,6 +336,7 @@ void main() {
         status: const BlocStatusComplete<RunStatusCreatorBlocInfo>(
           info: RunStatusCreatorBlocInfo.runStatusInitialized,
         ),
+        entityType: EntityType.competition,
         originalRunStatus: const RunStatusPending(),
         runStatusType: RunStatusType.done,
       ),
@@ -371,6 +380,7 @@ void main() {
         status: const BlocStatusComplete<RunStatusCreatorBlocInfo>(
           info: RunStatusCreatorBlocInfo.runStatusInitialized,
         ),
+        entityType: EntityType.competition,
         originalRunStatus: const RunStatusUndone(),
         runStatusType: RunStatusType.undone,
       ),
@@ -418,6 +428,23 @@ void main() {
       createState(
         status: const BlocStatusComplete(),
         coveredDistanceInKm: 10,
+      ),
+    ],
+  );
+
+  blocTest(
+    'duration changed, '
+    'should update duration in state',
+    build: () => createBloc(),
+    act: (RunStatusCreatorBloc bloc) => bloc.add(
+      const RunStatusCreatorEventDurationChanged(
+        duration: Duration(seconds: 3),
+      ),
+    ),
+    expect: () => [
+      createState(
+        status: const BlocStatusComplete(),
+        duration: const Duration(seconds: 3),
       ),
     ],
   );
@@ -588,12 +615,14 @@ void main() {
     expect: () => [
       createState(
         status: const BlocStatusLoading(),
+        entityType: EntityType.competition,
         runStatusType: RunStatusType.pending,
       ),
       createState(
         status: const BlocStatusComplete<RunStatusCreatorBlocInfo>(
           info: RunStatusCreatorBlocInfo.runStatusSaved,
         ),
+        entityType: EntityType.competition,
         runStatusType: RunStatusType.pending,
       ),
     ],
@@ -619,6 +648,7 @@ void main() {
     build: () => createBloc(
       runStatusType: RunStatusType.done,
       coveredDistanceInKm: 10,
+      duration: const Duration(seconds: 3),
       moodRate: MoodRate.mr8,
       averagePaceMinutes: 5,
       averagePaceSeconds: 50,
@@ -637,6 +667,7 @@ void main() {
         status: const BlocStatusLoading(),
         runStatusType: RunStatusType.done,
         coveredDistanceInKm: 10,
+        duration: const Duration(seconds: 3),
         moodRate: MoodRate.mr8,
         averagePaceMinutes: 5,
         averagePaceSeconds: 50,
@@ -649,6 +680,7 @@ void main() {
         ),
         runStatusType: RunStatusType.done,
         coveredDistanceInKm: 10,
+        duration: const Duration(seconds: 3),
         moodRate: MoodRate.mr8,
         averagePaceMinutes: 5,
         averagePaceSeconds: 50,
@@ -666,6 +698,7 @@ void main() {
           userId: userId,
           status: const RunStatusDone(
             coveredDistanceInKm: 10,
+            duration: Duration(seconds: 3),
             moodRate: MoodRate.mr8,
             avgPace: Pace(minutes: 5, seconds: 50),
             avgHeartRate: 150,
@@ -685,6 +718,7 @@ void main() {
       entityType: EntityType.competition,
       runStatusType: RunStatusType.done,
       coveredDistanceInKm: 10,
+      duration: const Duration(seconds: 3),
       moodRate: MoodRate.mr8,
       averagePaceMinutes: 5,
       averagePaceSeconds: 50,
@@ -701,8 +735,10 @@ void main() {
     expect: () => [
       createState(
         status: const BlocStatusLoading(),
+        entityType: EntityType.competition,
         runStatusType: RunStatusType.done,
         coveredDistanceInKm: 10,
+        duration: const Duration(seconds: 3),
         moodRate: MoodRate.mr8,
         averagePaceMinutes: 5,
         averagePaceSeconds: 50,
@@ -713,8 +749,10 @@ void main() {
         status: const BlocStatusComplete<RunStatusCreatorBlocInfo>(
           info: RunStatusCreatorBlocInfo.runStatusSaved,
         ),
+        entityType: EntityType.competition,
         runStatusType: RunStatusType.done,
         coveredDistanceInKm: 10,
+        duration: const Duration(seconds: 3),
         moodRate: MoodRate.mr8,
         averagePaceMinutes: 5,
         averagePaceSeconds: 50,
@@ -732,6 +770,7 @@ void main() {
           userId: userId,
           status: const RunStatusDone(
             coveredDistanceInKm: 10,
+            duration: Duration(seconds: 3),
             moodRate: MoodRate.mr8,
             avgPace: Pace(minutes: 5, seconds: 50),
             avgHeartRate: 150,
@@ -750,6 +789,7 @@ void main() {
     build: () => createBloc(
       runStatusType: RunStatusType.aborted,
       coveredDistanceInKm: 10,
+      duration: const Duration(seconds: 3),
       moodRate: MoodRate.mr8,
       averagePaceMinutes: 5,
       averagePaceSeconds: 50,
@@ -768,6 +808,7 @@ void main() {
         status: const BlocStatusLoading(),
         runStatusType: RunStatusType.aborted,
         coveredDistanceInKm: 10,
+        duration: const Duration(seconds: 3),
         moodRate: MoodRate.mr8,
         averagePaceMinutes: 5,
         averagePaceSeconds: 50,
@@ -780,6 +821,7 @@ void main() {
         ),
         runStatusType: RunStatusType.aborted,
         coveredDistanceInKm: 10,
+        duration: const Duration(seconds: 3),
         moodRate: MoodRate.mr8,
         averagePaceMinutes: 5,
         averagePaceSeconds: 50,
@@ -797,6 +839,7 @@ void main() {
           userId: userId,
           status: const RunStatusAborted(
             coveredDistanceInKm: 10,
+            duration: Duration(seconds: 3),
             moodRate: MoodRate.mr8,
             avgPace: Pace(minutes: 5, seconds: 50),
             avgHeartRate: 150,
@@ -816,6 +859,7 @@ void main() {
       entityType: EntityType.competition,
       runStatusType: RunStatusType.aborted,
       coveredDistanceInKm: 10,
+      duration: const Duration(seconds: 3),
       moodRate: MoodRate.mr8,
       averagePaceMinutes: 5,
       averagePaceSeconds: 50,
@@ -832,8 +876,10 @@ void main() {
     expect: () => [
       createState(
         status: const BlocStatusLoading(),
+        entityType: EntityType.competition,
         runStatusType: RunStatusType.aborted,
         coveredDistanceInKm: 10,
+        duration: const Duration(seconds: 3),
         moodRate: MoodRate.mr8,
         averagePaceMinutes: 5,
         averagePaceSeconds: 50,
@@ -844,8 +890,10 @@ void main() {
         status: const BlocStatusComplete<RunStatusCreatorBlocInfo>(
           info: RunStatusCreatorBlocInfo.runStatusSaved,
         ),
+        entityType: EntityType.competition,
         runStatusType: RunStatusType.aborted,
         coveredDistanceInKm: 10,
+        duration: const Duration(seconds: 3),
         moodRate: MoodRate.mr8,
         averagePaceMinutes: 5,
         averagePaceSeconds: 50,
@@ -863,6 +911,7 @@ void main() {
           userId: userId,
           status: const RunStatusAborted(
             coveredDistanceInKm: 10,
+            duration: Duration(seconds: 3),
             moodRate: MoodRate.mr8,
             avgPace: Pace(minutes: 5, seconds: 50),
             avgHeartRate: 150,
@@ -933,12 +982,14 @@ void main() {
     expect: () => [
       createState(
         status: const BlocStatusLoading(),
+        entityType: EntityType.competition,
         runStatusType: RunStatusType.undone,
       ),
       createState(
         status: const BlocStatusComplete<RunStatusCreatorBlocInfo>(
           info: RunStatusCreatorBlocInfo.runStatusSaved,
         ),
+        entityType: EntityType.competition,
         runStatusType: RunStatusType.undone,
       ),
     ],

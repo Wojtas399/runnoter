@@ -9,6 +9,7 @@ void main() {
   setUp(() {
     state = const RunStatusCreatorState(
       status: BlocStatusInitial(),
+      entityType: EntityType.workout,
     );
   });
 
@@ -63,6 +64,25 @@ void main() {
     () {
       state = state.copyWith(
         runStatusType: RunStatusType.done,
+        moodRate: MoodRate.mr8,
+        averagePaceMinutes: 5,
+        averagePaceSeconds: 30,
+        averageHeartRate: 150,
+      );
+
+      expect(state.isFormValid, false);
+    },
+  );
+
+  test(
+    'is form valid, '
+    'duration is 0, '
+    'should be false',
+    () {
+      state = state.copyWith(
+        runStatusType: RunStatusType.done,
+        coveredDistanceInKm: 10.0,
+        duration: const Duration(),
         moodRate: MoodRate.mr8,
         averagePaceMinutes: 5,
         averagePaceSeconds: 30,
@@ -182,6 +202,7 @@ void main() {
       state = state.copyWith(
         originalRunStatus: const RunStatusDone(
           coveredDistanceInKm: 10,
+          duration: Duration(seconds: 10),
           avgPace: Pace(minutes: 6, seconds: 10),
           avgHeartRate: 150,
           moodRate: MoodRate.mr8,
@@ -189,6 +210,7 @@ void main() {
         ),
         runStatusType: RunStatusType.done,
         coveredDistanceInKm: 10,
+        duration: const Duration(seconds: 10),
         averagePaceMinutes: 6,
         averagePaceSeconds: 10,
         averageHeartRate: 150,
@@ -209,6 +231,7 @@ void main() {
       state = state.copyWith(
         originalRunStatus: const RunStatusDone(
           coveredDistanceInKm: 10,
+          duration: Duration(seconds: 10),
           avgPace: Pace(minutes: 6, seconds: 10),
           avgHeartRate: 150,
           moodRate: MoodRate.mr8,
@@ -216,6 +239,36 @@ void main() {
         ),
         runStatusType: RunStatusType.done,
         coveredDistanceInKm: 12,
+        duration: const Duration(seconds: 10),
+        averagePaceMinutes: 6,
+        averagePaceSeconds: 10,
+        averageHeartRate: 150,
+        moodRate: MoodRate.mr8,
+        comment: 'comment',
+      );
+
+      expect(state.areDataSameAsOriginal, false);
+    },
+  );
+
+  test(
+    'are data same as original, '
+    'original run status contains run stats, '
+    'duration is different than original value, '
+    'should be false',
+    () {
+      state = state.copyWith(
+        originalRunStatus: const RunStatusDone(
+          coveredDistanceInKm: 10,
+          duration: Duration(seconds: 10),
+          avgPace: Pace(minutes: 6, seconds: 10),
+          avgHeartRate: 150,
+          moodRate: MoodRate.mr8,
+          comment: 'comment',
+        ),
+        runStatusType: RunStatusType.done,
+        coveredDistanceInKm: 12,
+        duration: const Duration(seconds: 15),
         averagePaceMinutes: 6,
         averagePaceSeconds: 10,
         averageHeartRate: 150,
@@ -236,6 +289,7 @@ void main() {
       state = state.copyWith(
         originalRunStatus: const RunStatusDone(
           coveredDistanceInKm: 10,
+          duration: Duration(seconds: 10),
           avgPace: Pace(minutes: 6, seconds: 10),
           avgHeartRate: 150,
           moodRate: MoodRate.mr8,
@@ -243,6 +297,7 @@ void main() {
         ),
         runStatusType: RunStatusType.done,
         coveredDistanceInKm: 10,
+        duration: const Duration(seconds: 10),
         averagePaceMinutes: 5,
         averagePaceSeconds: 10,
         averageHeartRate: 150,
@@ -263,6 +318,7 @@ void main() {
       state = state.copyWith(
         originalRunStatus: const RunStatusDone(
           coveredDistanceInKm: 10,
+          duration: Duration(seconds: 10),
           avgPace: Pace(minutes: 6, seconds: 10),
           avgHeartRate: 150,
           moodRate: MoodRate.mr8,
@@ -270,6 +326,7 @@ void main() {
         ),
         runStatusType: RunStatusType.done,
         coveredDistanceInKm: 10,
+        duration: const Duration(seconds: 10),
         averagePaceMinutes: 6,
         averagePaceSeconds: 5,
         averageHeartRate: 150,
@@ -290,6 +347,7 @@ void main() {
       state = state.copyWith(
         originalRunStatus: const RunStatusDone(
           coveredDistanceInKm: 10,
+          duration: Duration(seconds: 10),
           avgPace: Pace(minutes: 6, seconds: 10),
           avgHeartRate: 150,
           moodRate: MoodRate.mr8,
@@ -297,6 +355,7 @@ void main() {
         ),
         runStatusType: RunStatusType.done,
         coveredDistanceInKm: 10,
+        duration: const Duration(seconds: 10),
         averagePaceMinutes: 6,
         averagePaceSeconds: 10,
         averageHeartRate: 145,
@@ -317,6 +376,7 @@ void main() {
       state = state.copyWith(
         originalRunStatus: const RunStatusDone(
           coveredDistanceInKm: 10,
+          duration: Duration(seconds: 10),
           avgPace: Pace(minutes: 6, seconds: 10),
           avgHeartRate: 150,
           moodRate: MoodRate.mr8,
@@ -324,6 +384,7 @@ void main() {
         ),
         runStatusType: RunStatusType.done,
         coveredDistanceInKm: 10,
+        duration: const Duration(seconds: 10),
         averagePaceMinutes: 6,
         averagePaceSeconds: 10,
         averageHeartRate: 150,
@@ -344,6 +405,7 @@ void main() {
       state = state.copyWith(
         originalRunStatus: const RunStatusDone(
           coveredDistanceInKm: 10,
+          duration: Duration(seconds: 10),
           avgPace: Pace(minutes: 6, seconds: 10),
           avgHeartRate: 150,
           moodRate: MoodRate.mr8,
@@ -351,6 +413,7 @@ void main() {
         ),
         runStatusType: RunStatusType.done,
         coveredDistanceInKm: 10,
+        duration: const Duration(seconds: 10),
         averagePaceMinutes: 6,
         averagePaceSeconds: 10,
         averageHeartRate: 150,
@@ -417,6 +480,19 @@ void main() {
 
       expect(state.coveredDistanceInKm, expectedCoveredDistanceInKm);
       expect(state2.coveredDistanceInKm, expectedCoveredDistanceInKm);
+    },
+  );
+
+  test(
+    'copy with duration',
+    () {
+      const Duration expectedDuration = Duration(seconds: 10);
+
+      state = state.copyWith(duration: expectedDuration);
+      final state2 = state.copyWith();
+
+      expect(state.duration, expectedDuration);
+      expect(state2.duration, expectedDuration);
     },
   );
 

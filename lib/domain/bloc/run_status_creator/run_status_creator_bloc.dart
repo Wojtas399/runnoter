@@ -30,20 +30,25 @@ class RunStatusCreatorBloc extends BlocWithStatus<RunStatusCreatorEvent,
     required AuthService authService,
     required WorkoutRepository workoutRepository,
     required CompetitionRepository competitionRepository,
-    RunStatusCreatorState state = const RunStatusCreatorState(
-      status: BlocStatusInitial(),
-    ),
+    RunStatusCreatorState? state,
   })  : _entityType = entityType,
         _entityId = entityId,
         _authService = authService,
         _workoutRepository = workoutRepository,
         _competitionRepository = competitionRepository,
-        super(state) {
+        super(
+          state ??
+              RunStatusCreatorState(
+                status: const BlocStatusInitial(),
+                entityType: entityType,
+              ),
+        ) {
     on<RunStatusCreatorEventInitialize>(_initialize);
     on<RunStatusCreatorEventRunStatusTypeChanged>(_runStatusTypeChanged);
     on<RunStatusCreatorEventCoveredDistanceInKmChanged>(
       _coveredDistanceInKmChanged,
     );
+    on<RunStatusCreatorEventDurationChanged>(_durationChanged);
     on<RunStatusCreatorEventMoodRateChanged>(_moodRateChanged);
     on<RunStatusCreatorEventAvgPaceMinutesChanged>(_avgPaceMinutesChanged);
     on<RunStatusCreatorEventAvgPaceSecondsChanged>(_avgPaceSecondsChanged);
@@ -103,6 +108,15 @@ class RunStatusCreatorBloc extends BlocWithStatus<RunStatusCreatorEvent,
   ) {
     emit(state.copyWith(
       coveredDistanceInKm: event.coveredDistanceInKm,
+    ));
+  }
+
+  void _durationChanged(
+    RunStatusCreatorEventDurationChanged event,
+    Emitter<RunStatusCreatorState> emit,
+  ) {
+    emit(state.copyWith(
+      duration: event.duration,
     ));
   }
 
@@ -211,6 +225,7 @@ class RunStatusCreatorBloc extends BlocWithStatus<RunStatusCreatorEvent,
         RunStatusType.pending => const RunStatusPending(),
         RunStatusType.done => RunStatusDone(
             coveredDistanceInKm: state.coveredDistanceInKm!,
+            duration: state.duration!,
             avgPace: Pace(
               minutes: state.averagePaceMinutes!,
               seconds: state.averagePaceSeconds!,
@@ -221,6 +236,7 @@ class RunStatusCreatorBloc extends BlocWithStatus<RunStatusCreatorEvent,
           ),
         RunStatusType.aborted => RunStatusAborted(
             coveredDistanceInKm: state.coveredDistanceInKm!,
+            duration: state.duration!,
             avgPace: Pace(
               minutes: state.averagePaceMinutes!,
               seconds: state.averagePaceSeconds!,

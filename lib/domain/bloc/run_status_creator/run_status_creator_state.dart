@@ -1,9 +1,11 @@
 part of 'run_status_creator_bloc.dart';
 
 class RunStatusCreatorState extends BlocState<RunStatusCreatorState> {
+  final EntityType entityType;
   final RunStatus? originalRunStatus;
   final RunStatusType? runStatusType;
   final double? coveredDistanceInKm;
+  final Duration? duration;
   final MoodRate? moodRate;
   final int? averagePaceMinutes;
   final int? averagePaceSeconds;
@@ -12,9 +14,11 @@ class RunStatusCreatorState extends BlocState<RunStatusCreatorState> {
 
   const RunStatusCreatorState({
     required super.status,
+    required this.entityType,
     this.originalRunStatus,
     this.runStatusType,
     this.coveredDistanceInKm,
+    this.duration,
     this.moodRate,
     this.averagePaceMinutes,
     this.averagePaceSeconds,
@@ -25,9 +29,11 @@ class RunStatusCreatorState extends BlocState<RunStatusCreatorState> {
   @override
   List<Object?> get props => [
         status,
+        entityType,
         originalRunStatus,
         runStatusType,
         coveredDistanceInKm,
+        duration,
         moodRate,
         averagePaceMinutes,
         averagePaceSeconds,
@@ -40,6 +46,7 @@ class RunStatusCreatorState extends BlocState<RunStatusCreatorState> {
       runStatusType == RunStatusType.undone ||
       (runStatusType != null &&
           coveredDistanceInKm != null &&
+          (duration == null || duration!.inSeconds > 0) &&
           moodRate != null &&
           averagePaceMinutes != null &&
           averagePaceSeconds != null &&
@@ -50,6 +57,7 @@ class RunStatusCreatorState extends BlocState<RunStatusCreatorState> {
       final RunStatus? originalRunStatus = this.originalRunStatus;
       if (originalRunStatus is RunStatusWithParams) {
         return coveredDistanceInKm == originalRunStatus.coveredDistanceInKm &&
+            duration == originalRunStatus.duration &&
             moodRate == originalRunStatus.moodRate &&
             averagePaceMinutes == originalRunStatus.avgPace.minutes &&
             averagePaceSeconds == originalRunStatus.avgPace.seconds &&
@@ -66,6 +74,7 @@ class RunStatusCreatorState extends BlocState<RunStatusCreatorState> {
     RunStatus? originalRunStatus,
     RunStatusType? runStatusType,
     double? coveredDistanceInKm,
+    Duration? duration,
     MoodRate? moodRate,
     int? averagePaceMinutes,
     int? averagePaceSeconds,
@@ -74,9 +83,11 @@ class RunStatusCreatorState extends BlocState<RunStatusCreatorState> {
   }) =>
       RunStatusCreatorState(
         status: status ?? const BlocStatusComplete(),
+        entityType: entityType,
         originalRunStatus: originalRunStatus ?? this.originalRunStatus,
         runStatusType: runStatusType ?? this.runStatusType,
         coveredDistanceInKm: coveredDistanceInKm ?? this.coveredDistanceInKm,
+        duration: duration ?? this.duration,
         moodRate: moodRate ?? this.moodRate,
         averagePaceMinutes: averagePaceMinutes ?? this.averagePaceMinutes,
         averagePaceSeconds: averagePaceSeconds ?? this.averagePaceSeconds,

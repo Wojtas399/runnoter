@@ -25,6 +25,14 @@ class RunStatusCreatorEventCoveredDistanceInKmChanged
   });
 }
 
+class RunStatusCreatorEventDurationChanged extends RunStatusCreatorEvent {
+  final Duration? duration;
+
+  const RunStatusCreatorEventDurationChanged({
+    required this.duration,
+  });
+}
+
 class RunStatusCreatorEventMoodRateChanged extends RunStatusCreatorEvent {
   final MoodRate? moodRate;
 
