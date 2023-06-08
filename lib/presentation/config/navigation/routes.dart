@@ -103,6 +103,15 @@ class CompetitionCreatorRoute extends CustomRoute {
         );
 }
 
+class CompetitionPreviewRoute extends CustomRouteWithArguments<String> {
+  const CompetitionPreviewRoute({
+    required String competitionId,
+  }) : super(
+          arguments: competitionId,
+          path: RoutePath.competitionPreview,
+        );
+}
+
 class ThemeModeRoute extends CustomRoute {
   const ThemeModeRoute() : super(path: RoutePath.themeMode);
 }
@@ -132,6 +141,7 @@ enum RoutePath {
   bloodTestCreator('/home/blood-test-creator'),
   bloodTestPreview('/home/blood-test-preview'),
   competitionCreator('/home/competition-creator'),
+  competitionPreview('/home/competition-preview'),
   themeMode('/home/profile/theme-mode'),
   language('/home/profile/language'),
   distanceUnit('/home/profile/distance-unit'),

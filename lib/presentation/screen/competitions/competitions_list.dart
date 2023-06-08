@@ -41,7 +41,7 @@ class _CompetitionItem extends StatelessWidget {
         ),
       ),
       onPressed: () {
-        //TODO
+        _onPressed(context);
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -60,6 +60,15 @@ class _CompetitionItem extends StatelessWidget {
           ),
           TitleMedium(competition.name),
         ],
+      ),
+    );
+  }
+
+  void _onPressed(BuildContext context) {
+    navigateTo(
+      context: context,
+      route: CompetitionPreviewRoute(
+        competitionId: competition.id,
       ),
     );
   }
