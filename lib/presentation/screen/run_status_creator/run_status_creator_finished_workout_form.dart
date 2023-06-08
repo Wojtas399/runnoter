@@ -5,11 +5,20 @@ class _FinishedWorkoutForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final EntityType entityType =
+        context.read<RunStatusCreatorBloc>().state.entityType;
     const Widget gap = SizedBox(height: 24);
 
     return Column(
       children: [
         _CoveredDistance(),
+        if (entityType == EntityType.competition)
+          const Column(
+            children: [
+              gap,
+              _Duration(),
+            ],
+          ),
         gap,
         const _MoodRate(),
         gap,
@@ -65,6 +74,31 @@ class _CoveredDistance extends StatelessWidget {
           RunStatusCreatorEventCoveredDistanceInKmChanged(
             coveredDistanceInKm: coveredDistanceInKm,
           ),
+        );
+  }
+}
+
+class _Duration extends StatelessWidget {
+  const _Duration();
+
+  @override
+  Widget build(BuildContext context) {
+    final Duration? duration = context.select(
+      (RunStatusCreatorBloc bloc) => bloc.state.duration,
+    );
+
+    return DurationInput(
+      label: Str.of(context).runStatusCreatorDuration,
+      initialDuration: duration,
+      onDurationChanged: (Duration? duration) {
+        _onChanged(context, duration);
+      },
+    );
+  }
+
+  void _onChanged(BuildContext context, Duration? duration) {
+    context.read<RunStatusCreatorBloc>().add(
+          RunStatusCreatorEventDurationChanged(duration: duration),
         );
   }
 }

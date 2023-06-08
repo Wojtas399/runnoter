@@ -275,6 +275,10 @@
   "@runStatusCreatorCoveredDistance": {
     "description": "Label of covered distance"
   },
+  "runStatusCreatorDuration": "Czas",
+  "@runStatusCreatorDuration": {
+    "description": "Label of duration"
+  },
   "runStatusCreatorMood": "Samopoczucie",
   "@runStatusCreatorMood": {
     "description": "Label of mood"

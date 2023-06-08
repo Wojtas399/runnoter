@@ -68,6 +68,7 @@
   "workoutStageCreatorJoggingDistance": "Jogging distance",
   "runStatusCreatorScreenTitle": "Status",
   "runStatusCreatorCoveredDistance": "Covered distance",
+  "runStatusCreatorDuration": "Duration",
   "runStatusCreatorMood": "Mood",
   "runStatusCreatorAveragePace": "Average pace",
   "runStatusCreatorMinutes": "Minutes",

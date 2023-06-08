@@ -6,6 +6,7 @@ class _ExpectedDuration extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DurationInput(
+      label: Str.of(context).competitionCreatorExpectedDuration,
       onDurationChanged: (Duration duration) {
         _onChanged(context, duration);
       },

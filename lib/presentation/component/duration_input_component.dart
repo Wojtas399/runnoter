@@ -6,11 +6,13 @@ import 'text/title_text_components.dart';
 import 'text_field_component.dart';
 
 class DurationInput extends StatefulWidget {
+  final String label;
   final Duration? initialDuration;
   final Function(Duration duration)? onDurationChanged;
 
   const DurationInput({
     super.key,
+    required this.label,
     this.initialDuration,
     this.onDurationChanged,
   });
@@ -35,9 +37,7 @@ class _State extends State<DurationInput> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        TitleMedium(
-          Str.of(context).competitionCreatorExpectedDuration,
-        ),
+        TitleMedium(widget.label),
         const SizedBox(height: 8),
         Row(
           children: [

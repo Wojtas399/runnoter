@@ -11,6 +11,7 @@ import '../../../domain/repository/workout_repository.dart';
 import '../../../domain/service/auth_service.dart';
 import '../../component/big_button_component.dart';
 import '../../component/bloc_with_status_listener_component.dart';
+import '../../component/duration_input_component.dart';
 import '../../component/scrollable_content_component.dart';
 import '../../component/text_field_component.dart';
 import '../../formatter/decimal_text_input_formatter.dart';
