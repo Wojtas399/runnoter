@@ -74,6 +74,20 @@ class CompetitionRepositoryImpl extends StateRepository<Competition>
   }
 
   @override
+  Future<void> updateCompetition({
+    required String competitionId,
+    required String userId,
+    String? name,
+    DateTime? date,
+    String? place,
+    double? distance,
+    Duration? expectedDuration,
+    RunStatus? status,
+  }) async {
+    throw UnimplementedError();
+  }
+
+  @override
   Future<void> deleteCompetition({
     required String competitionId,
     required String userId,
