@@ -13,6 +13,7 @@ RunStatus mapRunStatusFromDto(RunStatusDto runStatusDto) {
       avgPace: mapPaceFromFirebase(runStatusDto.avgPaceDto),
       avgHeartRate: runStatusDto.avgHeartRate,
       moodRate: mapMoodRateFromFirebase(runStatusDto.moodRate),
+      duration: runStatusDto.duration,
       comment: runStatusDto.comment,
     );
   } else if (runStatusDto is RunStatusAbortedDto) {
@@ -21,6 +22,7 @@ RunStatus mapRunStatusFromDto(RunStatusDto runStatusDto) {
       avgPace: mapPaceFromFirebase(runStatusDto.avgPaceDto),
       avgHeartRate: runStatusDto.avgHeartRate,
       moodRate: mapMoodRateFromFirebase(runStatusDto.moodRate),
+      duration: runStatusDto.duration,
       comment: runStatusDto.comment,
     );
   } else if (runStatusDto is RunStatusUndoneDto) {
@@ -39,6 +41,7 @@ RunStatusDto mapRunStatusToDto(RunStatus runStatus) {
       avgPaceDto: mapPaceToFirebase(runStatus.avgPace),
       avgHeartRate: runStatus.avgHeartRate,
       moodRate: mapMoodRateToFirebase(runStatus.moodRate),
+      duration: runStatus.duration,
       comment: runStatus.comment,
     );
   } else if (runStatus is RunStatusAborted) {
@@ -47,6 +50,7 @@ RunStatusDto mapRunStatusToDto(RunStatus runStatus) {
       avgPaceDto: mapPaceToFirebase(runStatus.avgPace),
       avgHeartRate: runStatus.avgHeartRate,
       moodRate: mapMoodRateToFirebase(runStatus.moodRate),
+      duration: runStatus.duration,
       comment: runStatus.comment,
     );
   } else if (runStatus is RunStatusUndone) {

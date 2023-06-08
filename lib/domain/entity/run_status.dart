@@ -9,6 +9,7 @@ sealed class RunStatusWithParams extends RunStatus {
   final Pace avgPace;
   final int avgHeartRate;
   final MoodRate moodRate;
+  final Duration? duration;
   final String? comment;
 
   const RunStatusWithParams({
@@ -16,6 +17,7 @@ sealed class RunStatusWithParams extends RunStatus {
     required this.avgPace,
     required this.avgHeartRate,
     required this.moodRate,
+    required this.duration,
     required this.comment,
   })  : assert(coveredDistanceInKm >= 0),
         assert(avgHeartRate >= 0 && avgHeartRate <= 400);
@@ -26,6 +28,7 @@ sealed class RunStatusWithParams extends RunStatus {
         avgPace,
         avgHeartRate,
         moodRate,
+        duration,
         comment,
       ];
 }
@@ -43,7 +46,8 @@ class RunStatusDone extends RunStatusWithParams {
     required super.avgPace,
     required super.avgHeartRate,
     required super.moodRate,
-    required super.comment,
+    super.duration,
+    super.comment,
   });
 }
 
@@ -53,7 +57,8 @@ class RunStatusAborted extends RunStatusWithParams {
     required super.avgPace,
     required super.avgHeartRate,
     required super.moodRate,
-    required super.comment,
+    super.duration,
+    super.comment,
   });
 }
 

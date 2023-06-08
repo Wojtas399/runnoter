@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 import '../firebase.dart';
+import '../mapper/duration_mapper.dart';
 import '../mapper/mood_rate_mapper.dart';
 
 abstract class RunStatusDto extends Equatable {
@@ -40,18 +41,20 @@ class RunStatusPendingDto extends RunStatusDto {
   }
 }
 
-class RunStatusDoneDto extends RunStatusDto with _WorkoutStats {
+class RunStatusDoneDto extends RunStatusDto with _RunStats {
   RunStatusDoneDto({
     required double coveredDistanceInKm,
     required PaceDto avgPaceDto,
     required int avgHeartRate,
     required MoodRate moodRate,
-    required String? comment,
+    Duration? duration,
+    String? comment,
   }) {
     this.coveredDistanceInKm = coveredDistanceInKm;
     this.avgPaceDto = avgPaceDto;
     this.avgHeartRate = avgHeartRate;
     this.moodRate = moodRate;
+    this.duration = duration;
     this.comment = comment;
   }
 
@@ -62,6 +65,9 @@ class RunStatusDoneDto extends RunStatusDto with _WorkoutStats {
           avgPaceDto: PaceDto.fromJson(json[_avgPaceField]),
           avgHeartRate: json[_avgHeartRateField],
           moodRate: mapMoodRateFromNumber(json[_moodRateField]),
+          duration: json[_durationField] != null
+              ? mapDurationFromString(json[_durationField])
+              : null,
           comment: json[_commentField],
         );
 
@@ -71,6 +77,7 @@ class RunStatusDoneDto extends RunStatusDto with _WorkoutStats {
         avgPaceDto,
         avgHeartRate,
         moodRate,
+        duration,
         comment,
       ];
 
@@ -81,22 +88,26 @@ class RunStatusDoneDto extends RunStatusDto with _WorkoutStats {
         _avgPaceField: avgPaceDto.toJson(),
         _avgHeartRateField: avgHeartRate,
         _moodRateField: moodRate.number,
+        _durationField:
+            duration != null ? mapDurationToString(duration!) : null,
         _commentField: comment,
       };
 }
 
-class RunStatusAbortedDto extends RunStatusDto with _WorkoutStats {
+class RunStatusAbortedDto extends RunStatusDto with _RunStats {
   RunStatusAbortedDto({
     required double coveredDistanceInKm,
     required PaceDto avgPaceDto,
     required int avgHeartRate,
     required MoodRate moodRate,
-    required String? comment,
+    Duration? duration,
+    String? comment,
   }) {
     this.coveredDistanceInKm = coveredDistanceInKm;
     this.avgPaceDto = avgPaceDto;
     this.avgHeartRate = avgHeartRate;
     this.moodRate = moodRate;
+    this.duration = duration;
     this.comment = comment;
   }
 
@@ -106,6 +117,9 @@ class RunStatusAbortedDto extends RunStatusDto with _WorkoutStats {
           avgPaceDto: PaceDto.fromJson(json[_avgPaceField]),
           avgHeartRate: json[_avgHeartRateField],
           moodRate: mapMoodRateFromNumber(json[_moodRateField]),
+          duration: json[_durationField] != null
+              ? mapDurationFromString(json[_durationField])
+              : null,
           comment: json[_commentField],
         );
 
@@ -115,6 +129,7 @@ class RunStatusAbortedDto extends RunStatusDto with _WorkoutStats {
         avgPaceDto,
         avgHeartRate,
         moodRate,
+        duration,
         comment,
       ];
 
@@ -125,6 +140,8 @@ class RunStatusAbortedDto extends RunStatusDto with _WorkoutStats {
         _avgPaceField: avgPaceDto.toJson(),
         _avgHeartRateField: avgHeartRate,
         _moodRateField: moodRate.number,
+        _durationField:
+            duration != null ? mapDurationToString(duration!) : null,
         _commentField: comment,
       };
 }
@@ -143,11 +160,12 @@ class RunStatusUndoneDto extends RunStatusDto {
   }
 }
 
-mixin _WorkoutStats on RunStatusDto {
+mixin _RunStats on RunStatusDto {
   late final double coveredDistanceInKm;
   late final PaceDto avgPaceDto;
   late final int avgHeartRate;
   late final MoodRate moodRate;
+  late final Duration? duration;
   late final String? comment;
 }
 
@@ -178,4 +196,5 @@ const String _coveredDistanceInKmField = 'coveredDistanceInKilometers';
 const String _avgPaceField = 'avgPace';
 const String _avgHeartRateField = 'avgHeartRate';
 const String _moodRateField = 'moodRate';
+const String _durationField = 'duration';
 const String _commentField = 'comment';

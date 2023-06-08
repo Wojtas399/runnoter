@@ -26,6 +26,7 @@ void main() {
         avgPaceDto: const firebase.PaceDto(minutes: 5, seconds: 50),
         avgHeartRate: 146,
         moodRate: firebase.MoodRate.mr8,
+        duration: const Duration(seconds: 3),
         comment: 'comment',
       );
       const RunStatusDone expectedStatus = RunStatusDone(
@@ -33,6 +34,7 @@ void main() {
         avgPace: Pace(minutes: 5, seconds: 50),
         avgHeartRate: 146,
         moodRate: MoodRate.mr8,
+        duration: Duration(seconds: 3),
         comment: 'comment',
       );
 
@@ -51,6 +53,7 @@ void main() {
         avgPaceDto: const firebase.PaceDto(minutes: 5, seconds: 50),
         avgHeartRate: 146,
         moodRate: firebase.MoodRate.mr8,
+        duration: const Duration(seconds: 3),
         comment: 'comment',
       );
       const RunStatusAborted expectedStatus = RunStatusAborted(
@@ -58,6 +61,7 @@ void main() {
         avgPace: Pace(minutes: 5, seconds: 50),
         avgHeartRate: 146,
         moodRate: MoodRate.mr8,
+        duration: Duration(seconds: 3),
         comment: 'comment',
       );
 
@@ -102,6 +106,7 @@ void main() {
         avgPace: Pace(minutes: 5, seconds: 50),
         avgHeartRate: 146,
         moodRate: MoodRate.mr8,
+        duration: Duration(seconds: 3),
         comment: 'comment',
       );
       final firebase.RunStatusDto expectedDto = firebase.RunStatusDoneDto(
@@ -109,6 +114,7 @@ void main() {
         avgPaceDto: const firebase.PaceDto(minutes: 5, seconds: 50),
         avgHeartRate: 146,
         moodRate: firebase.MoodRate.mr8,
+        duration: const Duration(seconds: 3),
         comment: 'comment',
       );
 
@@ -127,6 +133,7 @@ void main() {
         avgPace: Pace(minutes: 5, seconds: 50),
         avgHeartRate: 146,
         moodRate: MoodRate.mr8,
+        duration: Duration(seconds: 3),
         comment: 'comment',
       );
       final firebase.RunStatusDto expectedDto = firebase.RunStatusAbortedDto(
@@ -134,6 +141,7 @@ void main() {
         avgPaceDto: const firebase.PaceDto(minutes: 5, seconds: 50),
         avgHeartRate: 146,
         moodRate: firebase.MoodRate.mr8,
+        duration: const Duration(seconds: 3),
         comment: 'comment',
       );
 

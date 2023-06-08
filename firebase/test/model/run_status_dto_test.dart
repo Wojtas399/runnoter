@@ -28,6 +28,7 @@ void main() {
         'avgPace': avgPace.toJson(),
         'avgHeartRate': 145,
         'moodRate': MoodRate.mr8.number,
+        'duration': '0:45:30',
         'comment': 'comment',
       };
       final RunStatusDoneDto expectedDto = RunStatusDoneDto(
@@ -35,6 +36,7 @@ void main() {
         avgPaceDto: avgPace,
         avgHeartRate: 145,
         moodRate: MoodRate.mr8,
+        duration: const Duration(hours: 0, minutes: 45, seconds: 30),
         comment: 'comment',
       );
 
@@ -55,6 +57,7 @@ void main() {
         'avgPace': avgPace.toJson(),
         'avgHeartRate': 145,
         'moodRate': MoodRate.mr8.number,
+        'duration': '0:45:30',
         'comment': 'comment',
       };
       final RunStatusAbortedDto expectedDto = RunStatusAbortedDto(
@@ -62,6 +65,7 @@ void main() {
         avgPaceDto: avgPace,
         avgHeartRate: 145,
         moodRate: MoodRate.mr8,
+        duration: const Duration(hours: 0, minutes: 45, seconds: 30),
         comment: 'comment',
       );
 
@@ -111,6 +115,7 @@ void main() {
         avgPaceDto: avgPace,
         avgHeartRate: 145,
         moodRate: MoodRate.mr8,
+        duration: const Duration(hours: 0, minutes: 45, seconds: 30),
         comment: 'comment',
       );
       final Map<String, dynamic> expectedJson = {
@@ -119,6 +124,7 @@ void main() {
         'avgPace': avgPace.toJson(),
         'avgHeartRate': 145,
         'moodRate': MoodRate.mr8.number,
+        'duration': '0:45:30',
         'comment': 'comment',
       };
 
@@ -138,6 +144,7 @@ void main() {
         avgPaceDto: avgPace,
         avgHeartRate: 145,
         moodRate: MoodRate.mr8,
+        duration: const Duration(hours: 0, minutes: 45, seconds: 30),
         comment: 'comment',
       );
       final Map<String, dynamic> expectedJson = {
@@ -146,6 +153,7 @@ void main() {
         'avgPace': avgPace.toJson(),
         'avgHeartRate': 145,
         'moodRate': MoodRate.mr8.number,
+        'duration': '0:45:30',
         'comment': 'comment',
       };
 

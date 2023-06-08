@@ -21,6 +21,7 @@ void main() {
     ),
     avgHeartRate: 145,
     moodRate: MoodRate.mr7,
+    duration: const Duration(hours: 2, minutes: 40, seconds: 20),
     comment: null,
   );
   final CompetitionDto competitionDto = CompetitionDto(
