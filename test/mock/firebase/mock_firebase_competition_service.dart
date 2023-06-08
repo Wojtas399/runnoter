@@ -50,6 +50,23 @@ class MockFirebaseCompetitionService extends Mock
     ).thenAnswer((invocation) => Future.value(addedCompetitionDto));
   }
 
+  void mockUpdateCompetition({
+    CompetitionDto? updatedCompetitionDto,
+  }) {
+    when(
+      () => updateCompetition(
+        competitionId: any(named: 'competitionId'),
+        userId: any(named: 'userId'),
+        name: any(named: 'name'),
+        date: any(named: 'date'),
+        place: any(named: 'place'),
+        distance: any(named: 'distance'),
+        expectedDuration: any(named: 'expectedDuration'),
+        statusDto: any(named: 'statusDto'),
+      ),
+    ).thenAnswer((invocation) => Future.value(updatedCompetitionDto));
+  }
+
   void mockDeleteCompetition() {
     when(
       () => deleteCompetition(

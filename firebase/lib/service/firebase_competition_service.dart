@@ -42,6 +42,29 @@ class FirebaseCompetitionService {
     return snapshot.data();
   }
 
+  Future<CompetitionDto?> updateCompetition({
+    required String competitionId,
+    required String userId,
+    String? name,
+    DateTime? date,
+    String? place,
+    double? distance,
+    Duration? expectedDuration,
+    RunStatusDto? statusDto,
+  }) async {
+    final docRef = getCompetitionsRef(userId).doc(competitionId);
+    final Map<String, dynamic> jsonToUpdate = createCompetitionJsonToUpdate(
+      name: name,
+      date: date,
+      distance: distance,
+      expectedDuration: expectedDuration,
+      statusDto: statusDto,
+    );
+    await docRef.update(jsonToUpdate);
+    final snapshot = await docRef.get();
+    return snapshot.data();
+  }
+
   Future<void> deleteCompetition({
     required String competitionId,
     required String userId,

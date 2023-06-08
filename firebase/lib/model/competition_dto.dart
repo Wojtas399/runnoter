@@ -66,6 +66,24 @@ class CompetitionDto extends Equatable {
       };
 }
 
+Map<String, dynamic> createCompetitionJsonToUpdate({
+  String? name,
+  DateTime? date,
+  String? place,
+  double? distance,
+  Duration? expectedDuration,
+  RunStatusDto? statusDto,
+}) =>
+    {
+      if (name != null) _nameField: name,
+      if (date != null) _dateField: mapDateTimeToString(date),
+      if (place != null) _placeField: place,
+      if (distance != null) _distanceField: distance,
+      if (expectedDuration != null)
+        _expectedDurationField: mapDurationToString(expectedDuration),
+      if (statusDto != null) _statusField: statusDto.toJson(),
+    };
+
 const String _nameField = 'name';
 const String _dateField = 'date';
 const String _placeField = 'place';
