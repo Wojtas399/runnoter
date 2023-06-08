@@ -16,19 +16,25 @@ class _Content extends StatelessWidget {
         child: Padding(
           padding: EdgeInsets.all(24),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _CompetitionName(),
-              gap,
-              _CompetitionDate(),
-              gap,
-              _Place(),
-              gap,
-              _Distance(),
-              gap,
-              _ExpectedDuration(),
-              gap,
-              _Status(),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _CompetitionName(),
+                  gap,
+                  _CompetitionDate(),
+                  gap,
+                  _Place(),
+                  gap,
+                  _Distance(),
+                  gap,
+                  _ExpectedDuration(),
+                  gap,
+                  _Status(),
+                ],
+              ),
+              _FinishCompetitionButton(),
             ],
           ),
         ),
@@ -151,6 +157,43 @@ class _Status extends StatelessWidget {
             ],
           ),
       },
+    );
+  }
+}
+
+class _FinishCompetitionButton extends StatelessWidget {
+  const _FinishCompetitionButton();
+
+  @override
+  Widget build(BuildContext context) {
+    final RunStatus? runStatus = context.select(
+      (CompetitionPreviewBloc bloc) => bloc.state.competition?.status,
+    );
+    if (runStatus is RunStatusPending) {
+      return BigButton(
+        label: 'Zakończ',
+        onPressed: () {
+          _onPressed(context);
+        },
+      );
+    }
+    return const SizedBox();
+  }
+
+  void _onPressed(BuildContext context) {
+    final CompetitionPreviewBloc bloc = context.read<CompetitionPreviewBloc>();
+    final String? competitionId = bloc.state.competition?.id;
+    if (competitionId == null) {
+      return;
+    }
+    navigateTo(
+      context: context,
+      route: RunStatusCreatorRoute(
+        creatorArguments: RunStatusCreatorArguments(
+          workoutId: competitionId,
+          creatorType: RunStatusCreatorType.finishWorkout,
+        ),
+      ),
     );
   }
 }

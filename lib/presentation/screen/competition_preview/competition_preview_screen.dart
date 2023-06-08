@@ -5,12 +5,16 @@ import '../../../domain/bloc/competition_preview/competition_preview_bloc.dart';
 import '../../../domain/entity/run_status.dart';
 import '../../../domain/repository/competition_repository.dart';
 import '../../../domain/service/auth_service.dart';
+import '../../component/big_button_component.dart';
 import '../../component/content_with_label_component.dart';
 import '../../component/nullable_text_component.dart';
 import '../../component/text/title_text_components.dart';
+import '../../config/navigation/routes.dart';
 import '../../formatter/date_formatter.dart';
 import '../../formatter/duration_formatter.dart';
 import '../../formatter/run_status_formatter.dart';
+import '../../service/navigator_service.dart';
+import '../run_status_creator/run_status_creator_screen.dart';
 
 part 'competition_preview_content.dart';
 
