@@ -3,7 +3,7 @@ import 'package:equatable/equatable.dart';
 import '../firebase.dart';
 import '../mapper/mood_rate_mapper.dart';
 
-class RunStatusDto extends Equatable {
+abstract class RunStatusDto extends Equatable {
   const RunStatusDto();
 
   factory RunStatusDto.fromJson(Map<String, dynamic> json) {

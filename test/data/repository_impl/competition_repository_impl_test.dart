@@ -236,6 +236,92 @@ void main() {
   );
 
   test(
+    'update competition, '
+    'should call method from firebase competition service to update competition and should update this competition in repository',
+    () async {
+      const String competitionId = 'c1';
+      const String newName = 'new competition name';
+      final DateTime newDate = DateTime(2023, 5, 20);
+      const String newPlace = 'new competition place';
+      const double newDistance = 15.0;
+      const Duration newExpectedDuration = Duration(
+        hours: 1,
+        minutes: 30,
+        seconds: 20,
+      );
+      const RunStatus newStatus = RunStatusPending();
+      const RunStatusDto newStatusDto = RunStatusPendingDto();
+      final List<Competition> existingCompetitions = [
+        createCompetition(id: competitionId, userId: userId),
+        createCompetition(id: 'c2', userId: 'u2'),
+        createCompetition(id: 'c3', userId: 'u3'),
+        createCompetition(id: 'c4', userId: userId),
+      ];
+      final CompetitionDto updatedCompetitionDto = createCompetitionDto(
+        id: competitionId,
+        userId: userId,
+        name: newName,
+        date: newDate,
+        place: newPlace,
+        distance: newDistance,
+        expectedDuration: newExpectedDuration,
+        status: newStatusDto,
+      );
+      final Competition updatedCompetition = createCompetition(
+        id: competitionId,
+        userId: userId,
+        name: newName,
+        date: newDate,
+        place: newPlace,
+        distance: newDistance,
+        expectedDuration: newExpectedDuration,
+        status: newStatus,
+      );
+      firebaseCompetitionService.mockUpdateCompetition(
+        updatedCompetitionDto: updatedCompetitionDto,
+      );
+      repository = createRepository(initialData: existingCompetitions);
+
+      final Stream<List<Competition>?> repositoryState$ =
+          repository.dataStream$;
+      await repository.updateCompetition(
+        competitionId: competitionId,
+        userId: userId,
+        name: newName,
+        date: newDate,
+        place: newPlace,
+        distance: newDistance,
+        expectedDuration: newExpectedDuration,
+        status: newStatus,
+      );
+
+      expect(
+        repositoryState$,
+        emitsInOrder(
+          [
+            [
+              updatedCompetition,
+              ...existingCompetitions.slice(1),
+            ]
+          ],
+        ),
+      );
+      verify(
+        () => firebaseCompetitionService.updateCompetition(
+          competitionId: competitionId,
+          userId: userId,
+          name: newName,
+          date: newDate,
+          place: newPlace,
+          distance: newDistance,
+          expectedDuration: newExpectedDuration,
+          statusDto: newStatusDto,
+        ),
+      ).called(1);
+    },
+  );
+
+  test(
     'delete competition, '
     'should call method from firebase competition service to delete competition and should delete this competition from repository',
     () async {

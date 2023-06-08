@@ -84,7 +84,23 @@ class CompetitionRepositoryImpl extends StateRepository<Competition>
     Duration? expectedDuration,
     RunStatus? status,
   }) async {
-    throw UnimplementedError();
+    final CompetitionDto? updatedCompetitionDto =
+        await _firebaseCompetitionService.updateCompetition(
+      competitionId: competitionId,
+      userId: userId,
+      name: name,
+      date: date,
+      place: place,
+      distance: distance,
+      expectedDuration: expectedDuration,
+      statusDto: status != null ? mapRunStatusToDto(status) : null,
+    );
+    if (updatedCompetitionDto != null) {
+      final Competition competition = mapCompetitionFromDto(
+        updatedCompetitionDto,
+      );
+      updateEntity(competition);
+    }
   }
 
   @override
