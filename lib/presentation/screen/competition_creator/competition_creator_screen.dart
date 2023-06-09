@@ -75,14 +75,18 @@ class _BlocListener extends StatelessWidget {
   }
 
   void _manageInfo(BuildContext context, CompetitionCreatorBlocInfo info) {
-    switch (info) {
-      case CompetitionCreatorBlocInfo.competitionAdded:
-        navigateBack(context: context);
-        showSnackbarMessage(
-          context: context,
-          message: Str.of(context).competitionCreatorAddedCompetitionMessage,
-        );
-        break;
+    if (info == CompetitionCreatorBlocInfo.competitionAdded) {
+      navigateBack(context: context);
+      showSnackbarMessage(
+        context: context,
+        message: Str.of(context).competitionCreatorAddedCompetitionMessage,
+      );
+    } else if (info == CompetitionCreatorBlocInfo.competitionUpdated) {
+      navigateBack(context: context);
+      showSnackbarMessage(
+        context: context,
+        message: 'Pomyślnie zaktualizowano zawody',
+      );
     }
   }
 }

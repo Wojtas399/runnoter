@@ -50,6 +50,7 @@ class FirebaseCompetitionService {
     String? place,
     double? distance,
     Duration? expectedDuration,
+    bool setDurationAsNull = false,
     RunStatusDto? statusDto,
   }) async {
     final docRef = getCompetitionsRef(userId).doc(competitionId);
@@ -58,6 +59,7 @@ class FirebaseCompetitionService {
       date: date,
       distance: distance,
       expectedDuration: expectedDuration,
+      setDurationAsNull: setDurationAsNull,
       statusDto: statusDto,
     );
     await docRef.update(jsonToUpdate);

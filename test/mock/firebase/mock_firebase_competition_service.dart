@@ -62,6 +62,7 @@ class MockFirebaseCompetitionService extends Mock
         place: any(named: 'place'),
         distance: any(named: 'distance'),
         expectedDuration: any(named: 'expectedDuration'),
+        setDurationAsNull: any(named: 'setDurationAsNull'),
         statusDto: any(named: 'statusDto'),
       ),
     ).thenAnswer((invocation) => Future.value(updatedCompetitionDto));

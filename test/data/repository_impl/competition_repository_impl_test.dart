@@ -292,6 +292,7 @@ void main() {
         place: newPlace,
         distance: newDistance,
         expectedDuration: newExpectedDuration,
+        setDurationAsNull: true,
         status: newStatus,
       );
 
@@ -315,6 +316,7 @@ void main() {
           place: newPlace,
           distance: newDistance,
           expectedDuration: newExpectedDuration,
+          setDurationAsNull: true,
           statusDto: newStatusDto,
         ),
       ).called(1);

@@ -45,7 +45,9 @@ class CompetitionCreatorState extends BlocState<CompetitionCreatorState> {
           date!.isAtSameMomentAs(competition!.date)) &&
       place == competition?.place &&
       distance == competition?.distance &&
-      expectedDuration == competition?.expectedDuration;
+      (expectedDuration == competition?.expectedDuration ||
+          (expectedDuration?.inSeconds == 0 &&
+              competition?.expectedDuration == null));
 
   @override
   CompetitionCreatorState copyWith({

@@ -29,6 +29,7 @@ abstract interface class CompetitionRepository {
     String? place,
     double? distance,
     Duration? expectedDuration,
+    bool setDurationAsNull = false,
     RunStatus? status,
   });
 

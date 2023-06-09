@@ -4,6 +4,14 @@ abstract class CompetitionCreatorEvent {
   const CompetitionCreatorEvent();
 }
 
+class CompetitionCreatorEventInitialize extends CompetitionCreatorEvent {
+  final String? competitionId;
+
+  const CompetitionCreatorEventInitialize({
+    required this.competitionId,
+  });
+}
+
 class CompetitionCreatorEventNameChanged extends CompetitionCreatorEvent {
   final String? name;
 

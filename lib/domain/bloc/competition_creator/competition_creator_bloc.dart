@@ -25,6 +25,7 @@ class CompetitionCreatorBloc extends BlocWithStatus<CompetitionCreatorEvent,
   })  : _authService = authService,
         _competitionRepository = competitionRepository,
         super(state) {
+    on<CompetitionCreatorEventInitialize>(_initialize);
     on<CompetitionCreatorEventNameChanged>(_nameChanged);
     on<CompetitionCreatorEventDateChanged>(_dateChanged);
     on<CompetitionCreatorEventPlaceChanged>(_placeChanged);
@@ -33,6 +34,37 @@ class CompetitionCreatorBloc extends BlocWithStatus<CompetitionCreatorEvent,
       _expectedDurationChanged,
     );
     on<CompetitionCreatorEventSubmit>(_submit);
+  }
+
+  Future<void> _initialize(
+    CompetitionCreatorEventInitialize event,
+    Emitter<CompetitionCreatorState> emit,
+  ) async {
+    if (event.competitionId == null) {
+      return;
+    }
+    final String? loggedUserId = await _authService.loggedUserId$.first;
+    if (loggedUserId == null) {
+      emitNoLoggedUserStatus(emit);
+      return;
+    }
+    final Competition? competition = await _competitionRepository
+        .getCompetitionById(
+          competitionId: event.competitionId!,
+          userId: loggedUserId,
+        )
+        .first;
+    emit(state.copyWith(
+      status: const BlocStatusComplete<CompetitionCreatorBlocInfo>(
+        info: CompetitionCreatorBlocInfo.editModeInitialized,
+      ),
+      competition: competition,
+      name: competition?.name,
+      date: competition?.date,
+      place: competition?.place,
+      distance: competition?.distance,
+      expectedDuration: competition?.expectedDuration,
+    ));
   }
 
   void _nameChanged(
@@ -84,7 +116,7 @@ class CompetitionCreatorBloc extends BlocWithStatus<CompetitionCreatorEvent,
     CompetitionCreatorEventSubmit event,
     Emitter<CompetitionCreatorState> emit,
   ) async {
-    if (!state.areDataValid) {
+    if (!state.areDataValid || state.areDataSameAsOriginal) {
       return;
     }
     final String? loggedUserId = await _authService.loggedUserId$.first;
@@ -97,6 +129,18 @@ class CompetitionCreatorBloc extends BlocWithStatus<CompetitionCreatorEvent,
     if (expectedDuration != null && expectedDuration.inSeconds == 0) {
       expectedDuration = null;
     }
+    if (state.competition == null) {
+      await _addNewCompetition(emit, loggedUserId, expectedDuration);
+    } else {
+      await _updateCompetition(emit, loggedUserId, expectedDuration);
+    }
+  }
+
+  Future<void> _addNewCompetition(
+    Emitter<CompetitionCreatorState> emit,
+    String loggedUserId,
+    Duration? expectedDuration,
+  ) async {
     await _competitionRepository.addNewCompetition(
       userId: loggedUserId,
       name: state.name!,
@@ -108,8 +152,29 @@ class CompetitionCreatorBloc extends BlocWithStatus<CompetitionCreatorEvent,
     );
     emitCompleteStatus(emit, CompetitionCreatorBlocInfo.competitionAdded);
   }
+
+  Future<void> _updateCompetition(
+    Emitter<CompetitionCreatorState> emit,
+    String loggedUserId,
+    Duration? expectedDuration,
+  ) async {
+    await _competitionRepository.updateCompetition(
+      competitionId: state.competition!.id,
+      userId: loggedUserId,
+      name: state.name!,
+      date: state.date!,
+      place: state.place!,
+      distance: state.distance!,
+      expectedDuration: expectedDuration,
+      setDurationAsNull: expectedDuration == null,
+      status: const RunStatusPending(),
+    );
+    emitCompleteStatus(emit, CompetitionCreatorBlocInfo.competitionUpdated);
+  }
 }
 
 enum CompetitionCreatorBlocInfo {
+  editModeInitialized,
   competitionAdded,
+  competitionUpdated,
 }

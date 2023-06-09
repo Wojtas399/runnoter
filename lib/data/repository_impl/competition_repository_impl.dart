@@ -82,6 +82,7 @@ class CompetitionRepositoryImpl extends StateRepository<Competition>
     String? place,
     double? distance,
     Duration? expectedDuration,
+    bool setDurationAsNull = false,
     RunStatus? status,
   }) async {
     final CompetitionDto? updatedCompetitionDto =
@@ -93,6 +94,7 @@ class CompetitionRepositoryImpl extends StateRepository<Competition>
       place: place,
       distance: distance,
       expectedDuration: expectedDuration,
+      setDurationAsNull: setDurationAsNull,
       statusDto: status != null ? mapRunStatusToDto(status) : null,
     );
     if (updatedCompetitionDto != null) {

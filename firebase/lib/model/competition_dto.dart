@@ -72,6 +72,7 @@ Map<String, dynamic> createCompetitionJsonToUpdate({
   String? place,
   double? distance,
   Duration? expectedDuration,
+  bool setDurationAsNull = false,
   RunStatusDto? statusDto,
 }) =>
     {
@@ -79,7 +80,9 @@ Map<String, dynamic> createCompetitionJsonToUpdate({
       if (date != null) _dateField: mapDateTimeToString(date),
       if (place != null) _placeField: place,
       if (distance != null) _distanceField: distance,
-      if (expectedDuration != null)
+      if (setDurationAsNull)
+        _expectedDurationField: null
+      else if (expectedDuration != null)
         _expectedDurationField: mapDurationToString(expectedDuration),
       if (statusDto != null) _statusField: statusDto.toJson(),
     };
