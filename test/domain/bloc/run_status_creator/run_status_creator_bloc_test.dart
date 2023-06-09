@@ -121,6 +121,7 @@ void main() {
           userId: userId,
           status: const RunStatusDone(
             coveredDistanceInKm: 10,
+            duration: Duration(seconds: 2),
             avgPace: Pace(minutes: 6, seconds: 10),
             avgHeartRate: 150,
             moodRate: MoodRate.mr8,
@@ -139,6 +140,7 @@ void main() {
         ),
         originalRunStatus: const RunStatusDone(
           coveredDistanceInKm: 10,
+          duration: Duration(seconds: 2),
           avgPace: Pace(minutes: 6, seconds: 10),
           avgHeartRate: 150,
           moodRate: MoodRate.mr8,
@@ -146,6 +148,7 @@ void main() {
         ),
         runStatusType: RunStatusType.done,
         coveredDistanceInKm: 10,
+        duration: const Duration(seconds: 2),
         moodRate: MoodRate.mr8,
         averagePaceMinutes: 6,
         averagePaceSeconds: 10,
@@ -264,6 +267,7 @@ void main() {
           userId: userId,
           status: const RunStatusDone(
             coveredDistanceInKm: 10,
+            duration: Duration(seconds: 2),
             avgPace: Pace(minutes: 6, seconds: 10),
             avgHeartRate: 150,
             moodRate: MoodRate.mr8,
@@ -283,6 +287,7 @@ void main() {
         entityType: EntityType.competition,
         originalRunStatus: const RunStatusDone(
           coveredDistanceInKm: 10,
+          duration: Duration(seconds: 2),
           avgPace: Pace(minutes: 6, seconds: 10),
           avgHeartRate: 150,
           moodRate: MoodRate.mr8,
@@ -290,6 +295,7 @@ void main() {
         ),
         runStatusType: RunStatusType.done,
         coveredDistanceInKm: 10,
+        duration: Duration(seconds: 2),
         moodRate: MoodRate.mr8,
         averagePaceMinutes: 6,
         averagePaceSeconds: 10,

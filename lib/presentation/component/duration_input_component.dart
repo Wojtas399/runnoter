@@ -22,14 +22,28 @@ class DurationInput extends StatefulWidget {
 }
 
 class _State extends State<DurationInput> {
-  late int _hours, _minutes, _seconds;
+  final TextEditingController _hoursController = TextEditingController();
+  final TextEditingController _minutesController = TextEditingController();
+  final TextEditingController _secondsController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    _hours = widget.initialDuration?.inHours ?? 0;
-    _minutes = (widget.initialDuration?.inMinutes ?? 0) % 60;
-    _seconds = (widget.initialDuration?.inSeconds ?? 0) % 60;
+    final int? hours = widget.initialDuration?.inHours;
+    final int minutes = (widget.initialDuration?.inMinutes ?? 0) % 60;
+    final int seconds = (widget.initialDuration?.inSeconds ?? 0) % 60;
+    if (hours != null && hours > 0) {
+      _hoursController.text = '$hours';
+    }
+    if (minutes > 0) {
+      _minutesController.text = '$minutes';
+    }
+    if (seconds > 0) {
+      _secondsController.text = '$seconds';
+    }
+    _hoursController.addListener(_onDurationChanged);
+    _minutesController.addListener(_onDurationChanged);
+    _secondsController.addListener(_onDurationChanged);
   }
 
   @override
@@ -44,19 +58,19 @@ class _State extends State<DurationInput> {
             _DurationField(
               label:
                   Str.of(context).competitionCreatorExpectedDurationHoursShort,
-              onChanged: _onHoursChanged,
+              controller: _hoursController,
             ),
             const _TimeSeparator(),
             _DurationField(
               label: Str.of(context)
                   .competitionCreatorExpectedDurationMinutesShort,
-              onChanged: _onMinutesChanged,
+              controller: _minutesController,
             ),
             const _TimeSeparator(),
             _DurationField(
               label: Str.of(context)
                   .competitionCreatorExpectedDurationSecondsShort,
-              onChanged: _onSecondsChanged,
+              controller: _secondsController,
             ),
           ],
         ),
@@ -64,43 +78,12 @@ class _State extends State<DurationInput> {
     );
   }
 
-  void _onHoursChanged(int? hours) {
+  void _onDurationChanged() {
     final Duration duration = Duration(
-      hours: hours ?? 0,
-      minutes: _minutes,
-      seconds: _seconds,
+      hours: int.tryParse(_hoursController.text) ?? 0,
+      minutes: int.tryParse(_minutesController.text) ?? 0,
+      seconds: int.tryParse(_secondsController.text) ?? 0,
     );
-    _emitUpdatedDuration(duration);
-    setState(() {
-      _hours = hours ?? 0;
-    });
-  }
-
-  void _onMinutesChanged(int? minutes) {
-    final Duration duration = Duration(
-      hours: _hours,
-      minutes: minutes ?? 0,
-      seconds: _seconds,
-    );
-    _emitUpdatedDuration(duration);
-    setState(() {
-      _minutes = minutes ?? 0;
-    });
-  }
-
-  void _onSecondsChanged(int? seconds) {
-    final Duration duration = Duration(
-      hours: _hours,
-      minutes: _minutes,
-      seconds: seconds ?? 0,
-    );
-    _emitUpdatedDuration(duration);
-    setState(() {
-      _seconds = seconds ?? 0;
-    });
-  }
-
-  void _emitUpdatedDuration(Duration duration) {
     if (widget.onDurationChanged != null) {
       widget.onDurationChanged!(duration);
     }
@@ -121,11 +104,11 @@ class _TimeSeparator extends StatelessWidget {
 
 class _DurationField extends StatelessWidget {
   final String label;
-  final Function(int? value) onChanged;
+  final TextEditingController controller;
 
   const _DurationField({
     required this.label,
-    required this.onChanged,
+    required this.controller,
   });
 
   @override
@@ -140,16 +123,8 @@ class _DurationField extends StatelessWidget {
         inputFormatters: [
           FilteringTextInputFormatter.digitsOnly,
         ],
-        onChanged: _onChanged,
+        controller: controller,
       ),
     );
-  }
-
-  void _onChanged(String? value) {
-    if (value != null) {
-      onChanged(
-        int.tryParse(value),
-      );
-    }
   }
 }

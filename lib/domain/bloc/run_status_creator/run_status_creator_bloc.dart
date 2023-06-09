@@ -79,6 +79,7 @@ class RunStatusCreatorBloc extends BlocWithStatus<RunStatusCreatorEvent,
     if (runStatus is RunStatusWithParams) {
       updatedState = updatedState.copyWith(
         coveredDistanceInKm: runStatus.coveredDistanceInKm,
+        duration: runStatus.duration,
         moodRate: runStatus.moodRate,
         averagePaceMinutes: runStatus.avgPace.minutes,
         averagePaceSeconds: runStatus.avgPace.seconds,
