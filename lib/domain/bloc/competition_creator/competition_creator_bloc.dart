@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../additional_model/bloc_state.dart';
 import '../../additional_model/bloc_status.dart';
 import '../../additional_model/bloc_with_status.dart';
+import '../../entity/competition.dart';
 import '../../entity/run_status.dart';
 import '../../repository/competition_repository.dart';
 import '../../service/auth_service.dart';

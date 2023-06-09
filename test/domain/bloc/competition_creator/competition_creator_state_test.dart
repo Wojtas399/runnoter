@@ -1,6 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/bloc/competition_creator/competition_creator_bloc.dart';
+import 'package:runnoter/domain/entity/competition.dart';
+
+import '../../../creators/competition_creator.dart';
 
 void main() {
   late CompetitionCreatorState state;
@@ -165,6 +168,126 @@ void main() {
   );
 
   test(
+    'are data same as original, '
+    'name is different than original, '
+    'should be false',
+    () {
+      state = state.copyWith(
+        competition: createCompetition(
+          name: 'name',
+          date: DateTime(2023, 5, 20),
+          place: 'place',
+          distance: 21,
+          expectedDuration: const Duration(seconds: 5),
+        ),
+        name: 'new name',
+        date: DateTime(2023, 5, 20),
+        place: 'place',
+        distance: 21,
+        expectedDuration: const Duration(seconds: 5),
+      );
+
+      expect(state.areDataSameAsOriginal, false);
+    },
+  );
+
+  test(
+    'are data same as original, '
+    'date is different than original, '
+    'should be false',
+    () {
+      state = state.copyWith(
+        competition: createCompetition(
+          name: 'name',
+          date: DateTime(2023, 5, 20),
+          place: 'place',
+          distance: 21,
+          expectedDuration: const Duration(seconds: 5),
+        ),
+        name: 'name',
+        date: DateTime(2023, 5, 21),
+        place: 'place',
+        distance: 21,
+        expectedDuration: const Duration(seconds: 5),
+      );
+
+      expect(state.areDataSameAsOriginal, false);
+    },
+  );
+
+  test(
+    'are data same as original, '
+    'place is different than original, '
+    'should be false',
+    () {
+      state = state.copyWith(
+        competition: createCompetition(
+          name: 'name',
+          date: DateTime(2023, 5, 20),
+          place: 'place',
+          distance: 21,
+          expectedDuration: const Duration(seconds: 5),
+        ),
+        name: 'name',
+        date: DateTime(2023, 5, 20),
+        place: 'new place',
+        distance: 21,
+        expectedDuration: const Duration(seconds: 5),
+      );
+
+      expect(state.areDataSameAsOriginal, false);
+    },
+  );
+
+  test(
+    'are data same as original, '
+    'distance is different than original, '
+    'should be false',
+    () {
+      state = state.copyWith(
+        competition: createCompetition(
+          name: 'name',
+          date: DateTime(2023, 5, 20),
+          place: 'place',
+          distance: 21,
+          expectedDuration: const Duration(seconds: 5),
+        ),
+        name: 'name',
+        date: DateTime(2023, 5, 20),
+        place: 'place',
+        distance: 20,
+        expectedDuration: const Duration(seconds: 5),
+      );
+
+      expect(state.areDataSameAsOriginal, false);
+    },
+  );
+
+  test(
+    'are data same as original, '
+    'expected duration is different than original, '
+    'should be false',
+    () {
+      state = state.copyWith(
+        competition: createCompetition(
+          name: 'name',
+          date: DateTime(2023, 5, 20),
+          place: 'place',
+          distance: 21,
+          expectedDuration: const Duration(seconds: 5),
+        ),
+        name: 'name',
+        date: DateTime(2023, 5, 20),
+        place: 'place',
+        distance: 21,
+        expectedDuration: const Duration(seconds: 50),
+      );
+
+      expect(state.areDataSameAsOriginal, false);
+    },
+  );
+
+  test(
     'copy with status',
     () {
       const BlocStatus expectedStatus = BlocStatusLoading();
@@ -174,6 +297,19 @@ void main() {
 
       expect(state.status, expectedStatus);
       expect(state2.status, const BlocStatusComplete());
+    },
+  );
+
+  test(
+    'copy with competition',
+    () {
+      final Competition expectedCompetition = createCompetition(id: 'c1');
+
+      state = state.copyWith(competition: expectedCompetition);
+      final state2 = state.copyWith();
+
+      expect(state.competition, expectedCompetition);
+      expect(state2.competition, expectedCompetition);
     },
   );
 
