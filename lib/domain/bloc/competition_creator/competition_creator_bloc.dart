@@ -167,7 +167,6 @@ class CompetitionCreatorBloc extends BlocWithStatus<CompetitionCreatorEvent,
       distance: state.distance!,
       expectedDuration: expectedDuration,
       setDurationAsNull: expectedDuration == null,
-      status: const RunStatusPending(),
     );
     emitCompleteStatus(emit, CompetitionCreatorBlocInfo.competitionUpdated);
   }

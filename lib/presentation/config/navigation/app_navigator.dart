@@ -58,7 +58,9 @@ class AppNavigator extends StatelessWidget {
         bloodTestId: settings.arguments as String,
       );
     } else if (routePath == RoutePath.competitionCreator.path) {
-      screen = const CompetitionCreatorScreen();
+      screen = CompetitionCreatorScreen(
+        competitionId: settings.arguments as String?,
+      );
     } else if (routePath == RoutePath.competitionPreview.path) {
       screen = CompetitionPreviewScreen(
         competitionId: settings.arguments as String,

@@ -75,7 +75,9 @@ class _ActionsMenu extends StatelessWidget {
     if (competitionId != null) {
       navigateTo(
         context: context,
-        route: const CompetitionCreatorRoute(),
+        route: CompetitionCreatorRoute(
+          competitionId: competitionId,
+        ),
       );
     }
   }

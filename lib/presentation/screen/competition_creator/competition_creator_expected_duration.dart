@@ -5,12 +5,23 @@ class _ExpectedDuration extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DurationInput(
-      label: Str.of(context).competitionCreatorExpectedDuration,
-      onDurationChanged: (Duration duration) {
-        _onChanged(context, duration);
-      },
+    final Duration? duration = context.select(
+      (CompetitionCreatorBloc bloc) => bloc.state.expectedDuration,
     );
+    final BlocStatus? blocStatus = context.select(
+      (CompetitionCreatorBloc bloc) => bloc.state.status,
+    );
+
+    if (blocStatus is! BlocStatusInitial) {
+      return DurationInput(
+        label: Str.of(context).competitionCreatorExpectedDuration,
+        initialDuration: duration,
+        onDurationChanged: (Duration duration) {
+          _onChanged(context, duration);
+        },
+      );
+    }
+    return const SizedBox();
   }
 
   void _onChanged(BuildContext context, Duration duration) {

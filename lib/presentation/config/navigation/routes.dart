@@ -77,10 +77,8 @@ class HealthMeasurementsRoute extends CustomRoute {
 }
 
 class BloodTestCreatorRoute extends CustomRouteWithArguments<String?> {
-  final String? bloodTestId;
-
   const BloodTestCreatorRoute({
-    this.bloodTestId,
+    String? bloodTestId,
   }) : super(
           path: RoutePath.bloodTestCreator,
           arguments: bloodTestId,
@@ -96,9 +94,11 @@ class BloodTestPreviewRoute extends CustomRouteWithArguments<String> {
         );
 }
 
-class CompetitionCreatorRoute extends CustomRoute {
-  const CompetitionCreatorRoute()
-      : super(
+class CompetitionCreatorRoute extends CustomRouteWithArguments<String?> {
+  const CompetitionCreatorRoute({
+    String? competitionId,
+  }) : super(
+          arguments: competitionId,
           path: RoutePath.competitionCreator,
         );
 }

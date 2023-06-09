@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../../domain/additional_model/bloc_status.dart';
 import '../../../domain/bloc/competition_creator/competition_creator_bloc.dart';
 import '../../../domain/repository/competition_repository.dart';
 import '../../../domain/service/auth_service.dart';
@@ -23,14 +24,18 @@ part 'competition_creator_expected_duration.dart';
 part 'competition_creator_form.dart';
 
 class CompetitionCreatorScreen extends StatelessWidget {
+  final String? competitionId;
+
   const CompetitionCreatorScreen({
     super.key,
+    this.competitionId,
   });
 
   @override
   Widget build(BuildContext context) {
-    return const _BlocProvider(
-      child: _BlocListener(
+    return _BlocProvider(
+      competitionId: competitionId,
+      child: const _BlocListener(
         child: _Content(),
       ),
     );
@@ -38,9 +43,11 @@ class CompetitionCreatorScreen extends StatelessWidget {
 }
 
 class _BlocProvider extends StatelessWidget {
+  final String? competitionId;
   final Widget child;
 
   const _BlocProvider({
+    required this.competitionId,
     required this.child,
   });
 
@@ -50,7 +57,9 @@ class _BlocProvider extends StatelessWidget {
       create: (BuildContext context) => CompetitionCreatorBloc(
         authService: context.read<AuthService>(),
         competitionRepository: context.read<CompetitionRepository>(),
-      ),
+      )..add(
+          CompetitionCreatorEventInitialize(competitionId: competitionId),
+        ),
       child: child,
     );
   }

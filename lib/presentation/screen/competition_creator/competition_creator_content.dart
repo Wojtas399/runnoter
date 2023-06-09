@@ -36,13 +36,19 @@ class _SubmitButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isEditMode = context.select(
+      (CompetitionCreatorBloc bloc) => bloc.state.competition != null,
+    );
     final bool isDisabled = context.select(
       (CompetitionCreatorBloc bloc) => !bloc.state.areDataValid,
     );
+    final bool areDataSameAsOriginal = context.select(
+      (CompetitionCreatorBloc bloc) => bloc.state.areDataSameAsOriginal,
+    );
 
     return BigButton(
-      label: Str.of(context).add,
-      isDisabled: isDisabled,
+      label: isEditMode ? Str.of(context).save : Str.of(context).add,
+      isDisabled: isDisabled || areDataSameAsOriginal,
       onPressed: () {
         _onPressed(context);
       },
