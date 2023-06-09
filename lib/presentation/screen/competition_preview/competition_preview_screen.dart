@@ -7,6 +7,7 @@ import '../../../domain/entity/run_status.dart';
 import '../../../domain/repository/competition_repository.dart';
 import '../../../domain/service/auth_service.dart';
 import '../../component/big_button_component.dart';
+import '../../component/bloc_with_status_listener_component.dart';
 import '../../component/content_with_label_component.dart';
 import '../../component/nullable_text_component.dart';
 import '../../component/run_stats_component.dart';
@@ -34,7 +35,9 @@ class CompetitionPreviewScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return _BlocProvider(
       competitionId: competitionId,
-      child: const _Content(),
+      child: const _BlocListener(
+        child: _Content(),
+      ),
     );
   }
 }
@@ -61,5 +64,35 @@ class _BlocProvider extends StatelessWidget {
         ),
       child: child,
     );
+  }
+}
+
+class _BlocListener extends StatelessWidget {
+  final Widget child;
+
+  const _BlocListener({
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocWithStatusListener<CompetitionPreviewBloc,
+        CompetitionPreviewState, CompetitionPreviewBlocInfo, dynamic>(
+      onInfo: (CompetitionPreviewBlocInfo info) {
+        _manageInfo(context, info);
+      },
+      child: child,
+    );
+  }
+
+  void _manageInfo(BuildContext context, CompetitionPreviewBlocInfo info) {
+    switch (info) {
+      case CompetitionPreviewBlocInfo.competitionDeleted:
+        navigateBack(context: context);
+        showSnackbarMessage(
+          context: context,
+          message: 'Pomyślnie usunięto zawody',
+        );
+    }
   }
 }
