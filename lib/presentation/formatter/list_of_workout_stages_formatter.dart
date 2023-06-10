@@ -15,8 +15,10 @@ extension ListOfWorkoutStagesFormatter on List<WorkoutStage> {
     List<String> stageDescriptions = [];
     for (final stage in this) {
       final double stageDistanceInKm = calculateDistanceOfWorkoutStage(stage);
-      final double convertedStageDistance = distanceUnitService.convertDistance(
-        stageDistanceInKm,
+      final double convertedStageDistance = double.parse(
+        distanceUnitService
+            .convertFromDefault(stageDistanceInKm)
+            .toStringAsFixed(2),
       );
       totalDistance += convertedStageDistance;
       stageDescriptions.add(

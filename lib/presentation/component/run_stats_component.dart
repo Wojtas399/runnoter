@@ -68,7 +68,6 @@ class _Stats extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final str = Str.of(context);
-    final distanceUnitService = context.read<DistanceUnitService>();
 
     return Column(
       children: [
@@ -76,10 +75,8 @@ class _Stats extends StatelessWidget {
           child: Row(
             children: [
               Expanded(
-                child: _StatParam(
-                  label: str.runStatusCoveredDistance,
-                  value:
-                      '${distanceUnitService.convertDistance(coveredDistanceInKm)}${distanceUnitService.state.toUIShortFormat()}',
+                child: _CoveredDistance(
+                  coveredDistanceInKm: coveredDistanceInKm,
                 ),
               ),
               if (duration != null) const VerticalDivider(),
@@ -114,6 +111,28 @@ class _Stats extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class _CoveredDistance extends StatelessWidget {
+  final double coveredDistanceInKm;
+
+  const _CoveredDistance({
+    required this.coveredDistanceInKm,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final distanceUnitService = context.read<DistanceUnitService>();
+    final String coveredDistanceStr = distanceUnitService
+        .convertFromDefault(coveredDistanceInKm)
+        .toStringAsFixed(2);
+
+    return _StatParam(
+      label: Str.of(context).runStatusCoveredDistance,
+      value:
+          '$coveredDistanceStr${distanceUnitService.state.toUIShortFormat()}',
     );
   }
 }

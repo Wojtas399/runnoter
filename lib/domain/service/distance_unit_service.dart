@@ -11,10 +11,13 @@ class DistanceUnitService extends Cubit<DistanceUnit> {
     emit(unit);
   }
 
-  double convertDistance(double distanceInKm) => switch (state) {
-        DistanceUnit.kilometers => distanceInKm,
-        DistanceUnit.miles => double.parse(
-            (distanceInKm * 0.621371192).toStringAsFixed(2),
-          ),
+  double convertFromDefault(double distance) => switch (state) {
+        DistanceUnit.kilometers => distance,
+        DistanceUnit.miles => distance * 0.621371192,
+      };
+
+  double convertToDefault(double distance) => switch (state) {
+        DistanceUnit.kilometers => distance,
+        DistanceUnit.miles => distance * 1.609344,
       };
 }

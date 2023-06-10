@@ -24,33 +24,62 @@ void main() {
   );
 
   test(
-    'convert distance, '
+    'convert from default, '
     'kilometers, '
     'should not change passed value',
     () {
       const double distanceInKm = 21.4;
       final service = createService();
 
-      final double convertedDistance = service.convertDistance(distanceInKm);
+      final double convertedDistance = service.convertFromDefault(distanceInKm);
 
       expect(convertedDistance, distanceInKm);
     },
   );
 
   test(
-    'convert distance, '
+    'convert from default, '
     'miles, '
     'should convert passed value to miles and round it to 2 decimal places',
     () {
       const double distanceInKm = 21.4;
-      final double expectedDistanceInMiles = double.parse(
-        (distanceInKm * 0.621371192).toStringAsFixed(2),
-      );
+      const double expectedDistanceInMiles = distanceInKm * 0.621371192;
       final service = createService(
         distanceUnit: DistanceUnit.miles,
       );
 
-      final double convertedDistance = service.convertDistance(distanceInKm);
+      final double convertedDistance = service.convertFromDefault(distanceInKm);
+
+      expect(convertedDistance, expectedDistanceInMiles);
+    },
+  );
+
+  test(
+    'convert to default, '
+    'kilometers, '
+    'should not change passed value',
+    () {
+      const double distanceInKm = 21.4;
+      final service = createService();
+
+      final double convertedDistance = service.convertToDefault(distanceInKm);
+
+      expect(convertedDistance, distanceInKm);
+    },
+  );
+
+  test(
+    'convert to default, '
+    'miles, '
+    'should not change passed value',
+    () {
+      const double distanceInKm = 21.4;
+      const double expectedDistanceInMiles = distanceInKm * 1.609344;
+      final service = createService(
+        distanceUnit: DistanceUnit.miles,
+      );
+
+      final double convertedDistance = service.convertToDefault(distanceInKm);
 
       expect(convertedDistance, expectedDistanceInMiles);
     },

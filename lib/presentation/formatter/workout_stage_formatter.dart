@@ -57,11 +57,12 @@ extension WorkoutStageFormatter on WorkoutStage {
     DistanceWorkoutStage stage,
   ) {
     final distanceUnitService = context.read<DistanceUnitService>();
-    final double convertedDistance = distanceUnitService.convertDistance(
+    final double convertedDistance = distanceUnitService.convertFromDefault(
       stage.distanceInKilometers,
     );
     final String distanceUnit = distanceUnitService.state.toUIShortFormat();
-    final String distance = '$convertedDistance$distanceUnit';
+    final String distance =
+        '${convertedDistance.toStringAsFixed(2)}$distanceUnit';
     return '${stage.toTypeName(context)} $distance HR<${stage.maxHeartRate}';
   }
 
