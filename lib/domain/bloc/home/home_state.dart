@@ -8,6 +8,7 @@ class HomeState extends BlocState<HomeState> {
   final String? loggedUserSurname;
   final ThemeMode? themeMode;
   final Language? language;
+  final DistanceUnit? distanceUnit;
 
   const HomeState({
     required super.status,
@@ -18,6 +19,7 @@ class HomeState extends BlocState<HomeState> {
     this.loggedUserSurname,
     this.themeMode,
     this.language,
+    this.distanceUnit,
   });
 
   @override
@@ -30,6 +32,7 @@ class HomeState extends BlocState<HomeState> {
         loggedUserSurname,
         themeMode,
         language,
+        distanceUnit,
       ];
 
   bool get areAllDataLoaded =>
@@ -37,7 +40,8 @@ class HomeState extends BlocState<HomeState> {
       loggedUserSurname != null &&
       loggedUserEmail != null &&
       themeMode != null &&
-      language != null;
+      language != null &&
+      distanceUnit != null;
 
   @override
   HomeState copyWith({
@@ -49,6 +53,7 @@ class HomeState extends BlocState<HomeState> {
     String? loggedUserSurname,
     ThemeMode? themeMode,
     Language? language,
+    DistanceUnit? distanceUnit,
   }) {
     return HomeState(
       status: status ?? const BlocStatusComplete(),
@@ -59,6 +64,7 @@ class HomeState extends BlocState<HomeState> {
       loggedUserSurname: loggedUserSurname ?? this.loggedUserSurname,
       themeMode: themeMode ?? this.themeMode,
       language: language ?? this.language,
+      distanceUnit: distanceUnit ?? this.distanceUnit,
     );
   }
 }
