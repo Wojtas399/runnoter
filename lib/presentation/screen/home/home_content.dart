@@ -20,11 +20,12 @@ class _Content extends StatelessWidget {
       drawer: _Drawer(drawerPage: drawerPage),
       bottomNavigationBar:
           drawerPage == DrawerPage.home ? const _BottomNavigationBar() : null,
-      floatingActionButton: drawerPage == DrawerPage.tournaments
+      floatingActionButton: drawerPage == DrawerPage.blood ||
+              drawerPage == DrawerPage.competitions
           ? FloatingActionButton(
               child: const Icon(Icons.add),
               onPressed: () {
-                _onFloatingActionButtonPressed(context);
+                _onFloatingActionButtonPressed(context, drawerPage);
               },
             )
           : null,
@@ -34,11 +35,21 @@ class _Content extends StatelessWidget {
     );
   }
 
-  void _onFloatingActionButtonPressed(BuildContext context) {
-    navigateTo(
-      context: context,
-      route: const CompetitionCreatorRoute(),
-    );
+  void _onFloatingActionButtonPressed(
+    BuildContext context,
+    DrawerPage drawerPage,
+  ) {
+    if (drawerPage == DrawerPage.blood) {
+      navigateTo(
+        context: context,
+        route: const BloodTestCreatorRoute(),
+      );
+    } else if (drawerPage == DrawerPage.competitions) {
+      navigateTo(
+        context: context,
+        route: const CompetitionCreatorRoute(),
+      );
+    }
   }
 }
 

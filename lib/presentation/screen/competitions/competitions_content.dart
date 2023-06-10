@@ -33,7 +33,7 @@ class _NoCompetitionsInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultPaddings(
+    return Paddings24(
       child: EmptyContentInfo(
         icon: Icons.emoji_events_outlined,
         title: Str.of(context).competitionsNoCompetitionsTitle,

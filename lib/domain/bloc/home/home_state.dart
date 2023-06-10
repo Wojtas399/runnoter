@@ -68,7 +68,7 @@ enum DrawerPage {
   profile(1),
   mileage(2),
   blood(3),
-  tournaments(4),
+  competitions(4),
   signOut(5);
 
   final int pageIndex;

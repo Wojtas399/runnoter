@@ -37,80 +37,12 @@ class _NoTestsInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        EmptyContentInfo(
-          icon: Icons.water_drop_outlined,
-          title: Str.of(context).bloodTestsNoTestsTitle,
-          subtitle: Str.of(context).bloodTestsNoTestsMessage,
-        ),
-        const SizedBox(height: 32),
-        const _AddNewTestButton(
-          buttonType: _AddNewTestButtonType.filled,
-        ),
-      ],
+    return Paddings24(
+      child: EmptyContentInfo(
+        icon: Icons.water_drop_outlined,
+        title: Str.of(context).bloodTestsNoTestsTitle,
+        subtitle: Str.of(context).bloodTestsNoTestsMessage,
+      ),
     );
   }
-}
-
-class _AddNewTestButton extends StatelessWidget {
-  final _AddNewTestButtonType buttonType;
-
-  const _AddNewTestButton({
-    this.buttonType = _AddNewTestButtonType.outlined,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return _createAppropriateButton(
-      label: Str.of(context).bloodTestsAddNewBloodTest,
-      onPressed: () {
-        _onPressed(context);
-      },
-    );
-  }
-
-  Widget _createAppropriateButton({
-    required String label,
-    required VoidCallback onPressed,
-  }) =>
-      switch (buttonType) {
-        _AddNewTestButtonType.outlined => OutlinedButton(
-            onPressed: onPressed,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(Icons.add),
-                const SizedBox(width: 8),
-                Text(label),
-              ],
-            ),
-          ),
-        _AddNewTestButtonType.filled => FilledButton(
-            onPressed: onPressed,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(Icons.add),
-                const SizedBox(width: 8),
-                Text(label),
-              ],
-            ),
-          ),
-      };
-
-  void _onPressed(BuildContext context) {
-    navigateTo(
-      context: context,
-      route: const BloodTestCreatorRoute(),
-    );
-  }
-}
-
-enum _AddNewTestButtonType {
-  outlined,
-  filled,
 }
