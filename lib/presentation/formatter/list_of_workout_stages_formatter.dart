@@ -1,7 +1,9 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 import '../../domain/entity/workout_stage.dart';
 import '../extension/context_extensions.dart';
+import '../extension/double_extensions.dart';
+import '../extension/string_extensions.dart';
 import '../service/workout_stage_service.dart';
 import 'distance_unit_formatter.dart';
 import 'workout_stage_formatter.dart';
@@ -13,16 +15,15 @@ extension ListOfWorkoutStagesFormatter on List<WorkoutStage> {
     List<String> stageDescriptions = [];
     for (final stage in this) {
       final double stageDistanceInKm = calculateDistanceOfWorkoutStage(stage);
-      final double convertedStageDistance = double.parse(
-        context
-            .convertDistanceFromDefaultUnit(stageDistanceInKm)
-            .toStringAsFixed(2),
-      );
+      final double convertedStageDistance =
+          context.convertDistanceFromDefaultUnit(stageDistanceInKm).decimal(2);
+      final stageDistanceStr = convertedStageDistance.toString().trimZeros();
       totalDistance += convertedStageDistance;
       stageDescriptions.add(
-        '${stage.toTypeName(context)} $convertedStageDistance$distanceUnit',
+        '${stage.toTypeName(context)} $stageDistanceStr$distanceUnit',
       );
     }
-    return '$totalDistance$distanceUnit (${stageDescriptions.join(' + ')})';
+    final totalDistanceStr = totalDistance.toString().trimZeros();
+    return '$totalDistanceStr$distanceUnit (${stageDescriptions.join(' + ')})';
   }
 }

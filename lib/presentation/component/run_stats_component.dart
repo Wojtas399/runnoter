@@ -3,6 +3,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../domain/entity/run_status.dart';
 import '../extension/context_extensions.dart';
+import '../extension/double_extensions.dart';
+import '../extension/string_extensions.dart';
 import '../formatter/distance_unit_formatter.dart';
 import '../formatter/duration_formatter.dart';
 import '../formatter/mood_rate_formatter.dart';
@@ -125,7 +127,9 @@ class _CoveredDistance extends StatelessWidget {
   Widget build(BuildContext context) {
     final String coveredDistanceStr = context
         .convertDistanceFromDefaultUnit(coveredDistanceInKm)
-        .toStringAsFixed(2);
+        .decimal(2)
+        .toString()
+        .trimZeros();
 
     return _StatParam(
       label: Str.of(context).runStatusCoveredDistance,

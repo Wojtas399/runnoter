@@ -3,6 +3,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../domain/entity/workout_stage.dart';
 import '../extension/context_extensions.dart';
+import '../extension/double_extensions.dart';
+import '../extension/string_extensions.dart';
 import 'distance_unit_formatter.dart';
 
 extension WorkoutStageFormatter on WorkoutStage {
@@ -60,7 +62,7 @@ extension WorkoutStageFormatter on WorkoutStage {
     );
     final String distanceUnit = context.distanceUnit.toUIShortFormat();
     final String distance =
-        '${convertedDistance.toStringAsFixed(2)}$distanceUnit';
+        '${convertedDistance.decimal(2).toString().trimZeros()}$distanceUnit';
     return '${stage.toTypeName(context)} $distance HR<${stage.maxHeartRate}';
   }
 
