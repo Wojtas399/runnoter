@@ -3,7 +3,6 @@ import 'package:firebase/service/firebase_competition_service.dart';
 import 'package:firebase/service/firebase_workout_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:provider/provider.dart';
 
 import '../../common/date_service.dart';
 import '../../data/repository_impl/blood_test_repository_impl.dart';
@@ -29,7 +28,7 @@ class RepositoriesProvider extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
       providers: [
-        Provider<UserRepository>(
+        RepositoryProvider<UserRepository>(
           create: (_) => UserRepositoryImpl(
             firebaseUserService: FirebaseUserService(),
             firebaseAppearanceSettingsService:
@@ -37,25 +36,25 @@ class RepositoriesProvider extends StatelessWidget {
             firebaseWorkoutSettingsService: FirebaseWorkoutSettingsService(),
           ),
         ),
-        Provider<WorkoutRepository>(
+        RepositoryProvider<WorkoutRepository>(
           create: (_) => WorkoutRepositoryImpl(
             firebaseWorkoutService: FirebaseWorkoutService(),
             dateService: DateService(),
           ),
         ),
-        Provider<HealthMeasurementRepository>(
+        RepositoryProvider<HealthMeasurementRepository>(
           create: (_) => HealthMeasurementRepositoryImpl(
             dateService: DateService(),
             firebaseHealthMeasurementService:
                 FirebaseHealthMeasurementService(),
           ),
         ),
-        Provider<BloodTestRepository>(
+        RepositoryProvider<BloodTestRepository>(
           create: (_) => BloodTestRepositoryImpl(
             firebaseBloodTestService: FirebaseBloodTestService(),
           ),
         ),
-        Provider<CompetitionRepository>(
+        RepositoryProvider<CompetitionRepository>(
           create: (_) => CompetitionRepositoryImpl(
             firebaseCompetitionService: FirebaseCompetitionService(),
           ),

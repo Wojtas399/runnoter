@@ -6,10 +6,8 @@ import 'package:syncfusion_localizations/syncfusion_localizations.dart';
 
 import 'presentation/config/navigation/app_navigator.dart';
 import 'presentation/config/theme.dart';
-import 'presentation/provider/auth_provider.dart';
-import 'presentation/provider/language_provider.dart';
 import 'presentation/provider/repositories_provider.dart';
-import 'presentation/provider/theme_provider.dart';
+import 'presentation/provider/services_provider.dart';
 import 'presentation/service/language_service.dart';
 import 'presentation/service/theme_service.dart';
 
@@ -20,39 +18,35 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AuthProvider(
-      child: ThemeProvider(
-        child: LanguageProvider(
-          child: BlocBuilder<ThemeService, ThemeMode>(
-            builder: (_, ThemeMode themeMode) {
-              return BlocBuilder<LanguageService, AppLanguage?>(
-                builder: (BuildContext context, AppLanguage? language) {
-                  return MaterialApp(
-                    title: 'Runnoter',
-                    localizationsDelegates: const [
-                      Str.delegate,
-                      GlobalMaterialLocalizations.delegate,
-                      GlobalWidgetsLocalizations.delegate,
-                      GlobalCupertinoLocalizations.delegate,
-                      SfGlobalLocalizations.delegate,
-                    ],
-                    supportedLocales: [
-                      AppLanguage.polish.locale!,
-                      AppLanguage.english.locale!,
-                    ],
-                    locale: language?.locale,
-                    themeMode: themeMode,
-                    theme: GlobalTheme.lightTheme,
-                    darkTheme: GlobalTheme.darkTheme,
-                    home: const RepositoriesProvider(
-                      child: AppNavigator(),
-                    ),
-                  );
-                },
+    return ServicesProvider(
+      child: BlocBuilder<ThemeService, ThemeMode>(
+        builder: (_, ThemeMode themeMode) {
+          return BlocBuilder<LanguageService, AppLanguage?>(
+            builder: (BuildContext context, AppLanguage? language) {
+              return MaterialApp(
+                title: 'Runnoter',
+                localizationsDelegates: const [
+                  Str.delegate,
+                  GlobalMaterialLocalizations.delegate,
+                  GlobalWidgetsLocalizations.delegate,
+                  GlobalCupertinoLocalizations.delegate,
+                  SfGlobalLocalizations.delegate,
+                ],
+                supportedLocales: [
+                  AppLanguage.polish.locale!,
+                  AppLanguage.english.locale!,
+                ],
+                locale: language?.locale,
+                themeMode: themeMode,
+                theme: GlobalTheme.lightTheme,
+                darkTheme: GlobalTheme.darkTheme,
+                home: const RepositoriesProvider(
+                  child: AppNavigator(),
+                ),
               );
             },
-          ),
-        ),
+          );
+        },
       ),
     );
   }
