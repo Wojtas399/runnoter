@@ -295,7 +295,7 @@ void main() {
         ),
         runStatusType: RunStatusType.done,
         coveredDistanceInKm: 10,
-        duration: Duration(seconds: 2),
+        duration: const Duration(seconds: 2),
         moodRate: MoodRate.mr8,
         averagePaceMinutes: 6,
         averagePaceSeconds: 10,
