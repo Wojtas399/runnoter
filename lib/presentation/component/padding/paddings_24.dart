@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-class DefaultPaddings extends StatelessWidget {
+class Paddings24 extends StatelessWidget {
   final Widget child;
 
-  const DefaultPaddings({
+  const Paddings24({
     super.key,
     required this.child,
   });

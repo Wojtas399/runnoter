@@ -15,7 +15,7 @@ class _Content extends StatelessWidget {
       body: GestureDetector(
         onTap: unfocusInputs,
         child: const ScrollableContent(
-          child: DefaultPaddings(
+          child: Paddings24(
             child: Column(
               children: [
                 _Form(),

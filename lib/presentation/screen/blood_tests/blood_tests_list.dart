@@ -9,25 +9,12 @@ class _BloodTestsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          children: [
-            const _AddNewTestButton(),
-            const SizedBox(height: 24),
-            ...bloodTestsSortedByYear.asMap().entries.map(
-                  (entry) => entry.key == bloodTestsSortedByYear.length - 1
-                      ? _ReadingsFromYear(readingsFromYear: entry.value)
-                      : Column(
-                          children: [
-                            _ReadingsFromYear(readingsFromYear: entry.value),
-                            const Divider(),
-                          ],
-                        ),
-                ),
-          ],
-        ),
+    return ListView.separated(
+      separatorBuilder: (_, int itemIndex) => const Divider(),
+      padding: const EdgeInsets.all(24),
+      itemCount: bloodTestsSortedByYear.length,
+      itemBuilder: (_, int itemIndex) => _ReadingsFromYear(
+        readingsFromYear: bloodTestsSortedByYear[itemIndex],
       ),
     );
   }

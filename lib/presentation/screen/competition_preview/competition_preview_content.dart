@@ -10,7 +10,7 @@ class _Content extends StatelessWidget {
     return const Scaffold(
       appBar: _AppBar(),
       body: SafeArea(
-        child: DefaultPaddings(
+        child: Paddings24(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
