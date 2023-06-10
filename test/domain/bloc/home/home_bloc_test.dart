@@ -29,6 +29,7 @@ void main() {
     String? loggedUserSurname,
     ThemeMode? themeMode,
     Language? language,
+    DistanceUnit? distanceUnit,
   }) {
     return HomeState(
       status: status,
@@ -39,12 +40,13 @@ void main() {
       loggedUserSurname: loggedUserSurname,
       themeMode: themeMode,
       language: language,
+      distanceUnit: distanceUnit,
     );
   }
 
   blocTest(
     'initialize, '
-    'should set listener on logged user email and logged user data',
+    'should set listener of logged user email and logged user data',
     build: () => createBloc(),
     setUp: () {
       authService.mockGetLoggedUserEmail(
@@ -61,6 +63,7 @@ void main() {
           settings: createSettings(
             themeMode: ThemeMode.dark,
             language: Language.polish,
+            distanceUnit: DistanceUnit.miles,
           ),
         ),
       );
@@ -81,6 +84,7 @@ void main() {
         loggedUserSurname: 'surname',
         themeMode: ThemeMode.dark,
         language: Language.polish,
+        distanceUnit: DistanceUnit.miles,
       ),
     ],
     verify: (_) {
@@ -111,6 +115,7 @@ void main() {
             loggedUserSurname: 'surname',
             themeMode: ThemeMode.dark,
             language: Language.english,
+            distanceUnit: DistanceUnit.miles,
           ),
         ),
       );
@@ -123,6 +128,7 @@ void main() {
         loggedUserSurname: 'surname',
         themeMode: ThemeMode.dark,
         language: Language.english,
+        distanceUnit: DistanceUnit.miles,
       ),
     ],
   );

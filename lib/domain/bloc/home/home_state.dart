@@ -102,6 +102,7 @@ class HomeStateListenedParams extends Equatable {
   final String? loggedUserSurname;
   final ThemeMode? themeMode;
   final Language? language;
+  final DistanceUnit? distanceUnit;
 
   const HomeStateListenedParams({
     required this.loggedUserEmail,
@@ -109,6 +110,7 @@ class HomeStateListenedParams extends Equatable {
     required this.loggedUserSurname,
     required this.themeMode,
     required this.language,
+    required this.distanceUnit,
   });
 
   @override
@@ -118,5 +120,6 @@ class HomeStateListenedParams extends Equatable {
         loggedUserSurname,
         themeMode,
         language,
+        distanceUnit,
       ];
 }

@@ -6,6 +6,7 @@ import '../../../domain/bloc/home/home_bloc.dart';
 import '../../../domain/entity/settings.dart' as settings;
 import '../../../domain/repository/user_repository.dart';
 import '../../../domain/service/auth_service.dart';
+import '../../../domain/service/distance_unit_service.dart';
 import '../../component/bloc_with_status_listener_component.dart';
 import '../../config/navigation/routes.dart';
 import '../../service/dialog_service.dart';
@@ -90,13 +91,14 @@ class _BlocListener extends StatelessWidget {
     BuildContext context,
     HomeState state,
   ) {
-    final settings.ThemeMode? themeMode = state.themeMode;
-    if (themeMode != null) {
-      _manageThemeMode(context, themeMode);
+    if (state.themeMode != null) {
+      _manageThemeMode(context, state.themeMode!);
     }
-    final settings.Language? language = state.language;
-    if (language != null) {
-      _manageLanguage(context, language);
+    if (state.language != null) {
+      _manageLanguage(context, state.language!);
+    }
+    if (state.distanceUnit != null) {
+      context.read<DistanceUnitService>().changeUnit(state.distanceUnit!);
     }
   }
 
