@@ -92,7 +92,7 @@ class _DistanceUnit extends StatelessWidget {
     return ValueWithLabelAndIcon(
       label: Str.of(context).distanceUnit,
       iconData: Icons.route_outlined,
-      value: distanceUnit?.toUIFormat(context) ?? '',
+      value: distanceUnit?.toUIFullFormat(context) ?? '',
       onPressed: () {
         _onPressed(context);
       },

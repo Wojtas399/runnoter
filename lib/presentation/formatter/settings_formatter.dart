@@ -31,17 +31,6 @@ extension LanguageFormatter on Language {
   }
 }
 
-extension DistanceUnitFormatter on DistanceUnit {
-  String toUIFormat(BuildContext context) {
-    switch (this) {
-      case DistanceUnit.kilometers:
-        return Str.of(context).distanceUnitKilometers;
-      case DistanceUnit.miles:
-        return Str.of(context).distanceUnitMiles;
-    }
-  }
-}
-
 extension PaceUnitFormatter on PaceUnit {
   String toUIFormat(BuildContext context) {
     final str = Str.of(context);

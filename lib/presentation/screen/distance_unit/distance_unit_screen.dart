@@ -6,7 +6,7 @@ import '../../../domain/bloc/distance_unit/distance_unit_cubit.dart';
 import '../../../domain/entity/settings.dart';
 import '../../../domain/repository/user_repository.dart';
 import '../../../domain/service/auth_service.dart';
-import '../../formatter/settings_formatter.dart';
+import '../../formatter/distance_unit_formatter.dart';
 import '../../service/navigator_service.dart';
 
 class DistanceUnitScreen extends StatelessWidget {
@@ -101,7 +101,7 @@ class _OptionsToSelect extends StatelessWidget {
           .map(
             (DistanceUnit distanceUnit) => RadioListTile<DistanceUnit>(
               title: Text(
-                distanceUnit.toUIFormat(context),
+                distanceUnit.toUIFullFormat(context),
               ),
               value: distanceUnit,
               groupValue: selectedDistanceUnit,
