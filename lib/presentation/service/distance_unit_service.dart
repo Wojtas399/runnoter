@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../entity/settings.dart';
+import '../../domain/entity/settings.dart';
 
 class DistanceUnitService extends Cubit<DistanceUnit> {
   DistanceUnitService({

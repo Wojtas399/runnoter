@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 
 import '../../data/service_impl/auth_service_impl.dart';
 import '../../domain/service/auth_service.dart';
-import '../../domain/service/distance_unit_service.dart';
+import '../service/distance_unit_service.dart';
 import '../service/language_service.dart';
 import '../service/theme_service.dart';
 

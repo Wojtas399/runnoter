@@ -1,7 +1,7 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/domain/entity/settings.dart';
-import 'package:runnoter/domain/service/distance_unit_service.dart';
+import 'package:runnoter/presentation/service/distance_unit_service.dart';
 
 void main() {
   DistanceUnitService createService({
