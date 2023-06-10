@@ -1,7 +1,7 @@
 import 'package:firebase/firebase.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/data/mapper/auth_exception_mapper.dart';
-import 'package:runnoter/domain/model/auth_exception.dart';
+import 'package:runnoter/domain/additional_model/auth_exception.dart';
 
 void main() {
   group(

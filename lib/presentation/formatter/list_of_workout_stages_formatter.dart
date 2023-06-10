@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 
-import '../../domain/model/workout_stage.dart';
+import '../../domain/entity/workout_stage.dart';
 import '../service/workout_stage_service.dart';
 import 'workout_stage_formatter.dart';
 

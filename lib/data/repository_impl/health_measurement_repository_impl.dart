@@ -2,8 +2,8 @@ import 'package:firebase/firebase.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../common/date_service.dart';
-import '../../domain/model/health_measurement.dart';
-import '../../domain/model/state_repository.dart';
+import '../../domain/additional_model/state_repository.dart';
+import '../../domain/entity/health_measurement.dart';
 import '../../domain/repository/health_measurement_repository.dart';
 import '../mapper/health_measurement_mapper.dart';
 

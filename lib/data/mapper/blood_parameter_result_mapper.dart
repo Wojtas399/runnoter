@@ -1,6 +1,6 @@
 import 'package:firebase/model/blood_parameter_result_dto.dart';
 
-import '../../domain/model/blood_parameter.dart';
+import '../../domain/entity/blood_parameter.dart';
 import 'blood_parameter_mapper.dart';
 
 BloodParameterResult mapBloodParameterResultFromDto(

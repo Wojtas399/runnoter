@@ -1,4 +1,4 @@
-import '../../domain/model/workout_status.dart';
+import '../../domain/entity/run_status.dart';
 import '../service/utils.dart';
 
 extension PaceFormatter on Pace {

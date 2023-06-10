@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/model/workout.dart';
+import '../../../domain/bloc/calendar/calendar_cubit.dart';
+import '../../../domain/entity/workout.dart';
 import '../../../domain/repository/workout_repository.dart';
 import '../../../domain/service/auth_service.dart';
 import '../../component/calendar/calendar_component.dart';
 import '../../component/calendar/calendar_component_cubit.dart';
 import '../../config/navigation/routes.dart';
-import '../../formatter/workout_status_formatter.dart';
+import '../../formatter/run_status_formatter.dart';
 import '../../service/navigator_service.dart';
-import 'calendar_cubit.dart';
 
 class CalendarScreen extends StatelessWidget {
   const CalendarScreen({
@@ -60,7 +60,7 @@ class _Calendar extends StatelessWidget {
           .map(
             (Workout workout) => WorkoutDay(
               date: workout.date,
-              workoutStatusIcon: Icon(
+              runStatusIcon: Icon(
                 workout.status.toIcon(),
                 color: workout.status.toColor(),
               ),

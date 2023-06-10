@@ -52,13 +52,13 @@ class WorkoutCreatorRoute
         );
 }
 
-class WorkoutStatusCreatorRoute
-    extends CustomRouteWithArguments<WorkoutStatusCreatorArguments> {
-  const WorkoutStatusCreatorRoute({
-    required WorkoutStatusCreatorArguments creatorArguments,
+class RunStatusCreatorRoute
+    extends CustomRouteWithArguments<RunStatusCreatorArguments> {
+  const RunStatusCreatorRoute({
+    required RunStatusCreatorArguments creatorArguments,
   }) : super(
           arguments: creatorArguments,
-          path: RoutePath.workoutStatusCreator,
+          path: RoutePath.runStatusCreator,
         );
 }
 
@@ -77,10 +77,8 @@ class HealthMeasurementsRoute extends CustomRoute {
 }
 
 class BloodTestCreatorRoute extends CustomRouteWithArguments<String?> {
-  final String? bloodTestId;
-
   const BloodTestCreatorRoute({
-    this.bloodTestId,
+    String? bloodTestId,
   }) : super(
           path: RoutePath.bloodTestCreator,
           arguments: bloodTestId,
@@ -93,6 +91,24 @@ class BloodTestPreviewRoute extends CustomRouteWithArguments<String> {
   }) : super(
           arguments: bloodTestId,
           path: RoutePath.bloodTestPreview,
+        );
+}
+
+class CompetitionCreatorRoute extends CustomRouteWithArguments<String?> {
+  const CompetitionCreatorRoute({
+    String? competitionId,
+  }) : super(
+          arguments: competitionId,
+          path: RoutePath.competitionCreator,
+        );
+}
+
+class CompetitionPreviewRoute extends CustomRouteWithArguments<String> {
+  const CompetitionPreviewRoute({
+    required String competitionId,
+  }) : super(
+          arguments: competitionId,
+          path: RoutePath.competitionPreview,
         );
 }
 
@@ -119,11 +135,13 @@ enum RoutePath {
   home('/home'),
   dayPreview('/home/day-preview'),
   workoutCreator('/home/day-preview/workout-creator'),
-  workoutStatusCreator('/home/day-preview/workout-status-creator'),
+  runStatusCreator('/home/day-preview/workout-status-creator'),
   healthMeasurementCreator('/home/health_measurement-creator'),
   healthMeasurements('/home/health-measurements'),
   bloodTestCreator('/home/blood-test-creator'),
   bloodTestPreview('/home/blood-test-preview'),
+  competitionCreator('/home/competition-creator'),
+  competitionPreview('/home/competition-preview'),
   themeMode('/home/profile/theme-mode'),
   language('/home/profile/language'),
   distanceUnit('/home/profile/distance-unit'),

@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/model/settings.dart';
+import '../../../domain/bloc/language/language_cubit.dart';
+import '../../../domain/entity/settings.dart';
 import '../../../domain/repository/user_repository.dart';
 import '../../../domain/service/auth_service.dart';
 import '../../formatter/settings_formatter.dart';
 import '../../service/language_service.dart';
 import '../../service/navigator_service.dart';
-import 'language_cubit.dart';
 
 class LanguageScreen extends StatelessWidget {
   const LanguageScreen({

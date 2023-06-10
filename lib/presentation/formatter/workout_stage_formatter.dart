@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../domain/model/workout_stage.dart';
+import '../../domain/entity/workout_stage.dart';
 import 'double_formatter.dart';
 
 extension WorkoutStageFormatter on WorkoutStage {

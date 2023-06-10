@@ -3,14 +3,14 @@ import 'package:firebase/service/firebase_workout_service.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../common/date_service.dart';
-import '../../domain/model/state_repository.dart';
-import '../../domain/model/workout.dart';
-import '../../domain/model/workout_stage.dart';
-import '../../domain/model/workout_status.dart';
+import '../../domain/additional_model/state_repository.dart';
+import '../../domain/entity/run_status.dart';
+import '../../domain/entity/workout.dart';
+import '../../domain/entity/workout_stage.dart';
 import '../../domain/repository/workout_repository.dart';
+import '../mapper/run_status_mapper.dart';
 import '../mapper/workout_mapper.dart';
 import '../mapper/workout_stage_mapper.dart';
-import '../mapper/workout_status_mapper.dart';
 
 class WorkoutRepositoryImpl extends StateRepository<Workout>
     implements WorkoutRepository {
@@ -91,14 +91,14 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
     required String userId,
     required String workoutName,
     required DateTime date,
-    required WorkoutStatus status,
+    required RunStatus status,
     required List<WorkoutStage> stages,
   }) async {
     final WorkoutDto? workoutDto = await _firebaseWorkoutService.addWorkout(
       userId: userId,
       workoutName: workoutName,
       date: date,
-      status: mapWorkoutStatusToFirebase(status),
+      status: mapRunStatusToDto(status),
       stages: stages.map(mapWorkoutStageToFirebase).toList(),
     );
     if (workoutDto != null) {
@@ -112,7 +112,7 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
     required String workoutId,
     required String userId,
     String? workoutName,
-    WorkoutStatus? status,
+    RunStatus? status,
     List<WorkoutStage>? stages,
   }) async {
     final WorkoutDto? updatedWorkoutDto =
@@ -120,7 +120,7 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
       workoutId: workoutId,
       userId: userId,
       workoutName: workoutName,
-      status: status != null ? mapWorkoutStatusToFirebase(status) : null,
+      status: status != null ? mapRunStatusToDto(status) : null,
       stages: stages?.map(mapWorkoutStageToFirebase).toList(),
     );
     if (updatedWorkoutDto != null) {

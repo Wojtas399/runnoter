@@ -1,4 +1,4 @@
-import '../model/health_measurement.dart';
+import '../entity/health_measurement.dart';
 
 abstract class HealthMeasurementRepository {
   Stream<HealthMeasurement?> getMeasurementByDate({

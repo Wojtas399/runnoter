@@ -2,14 +2,14 @@ import 'package:firebase/firebase.dart' as db;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/data/repository_impl/user_repository_impl.dart';
-import 'package:runnoter/domain/model/settings.dart';
-import 'package:runnoter/domain/model/user.dart';
+import 'package:runnoter/domain/entity/settings.dart';
+import 'package:runnoter/domain/entity/user.dart';
 
+import '../../creators/settings_creator.dart';
+import '../../creators/user_creator.dart';
 import '../../mock/firebase/mock_firebase_appearance_settings_service.dart';
 import '../../mock/firebase/mock_firebase_user_service.dart';
 import '../../mock/firebase/mock_firebase_workout_settings_service.dart';
-import '../../util/settings_creator.dart';
-import '../../util/user_creator.dart';
 
 void main() {
   final dbUserService = MockFirebaseUserService();

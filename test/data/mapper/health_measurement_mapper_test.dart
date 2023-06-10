@@ -1,7 +1,7 @@
 import 'package:firebase/firebase.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/data/mapper/health_measurement_mapper.dart';
-import 'package:runnoter/domain/model/health_measurement.dart';
+import 'package:runnoter/domain/entity/health_measurement.dart';
 
 void main() {
   const String userId = 'u1';

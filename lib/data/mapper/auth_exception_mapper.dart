@@ -1,6 +1,6 @@
 import 'package:firebase/firebase.dart';
 
-import '../../domain/model/auth_exception.dart';
+import '../../domain/additional_model/auth_exception.dart';
 
 AuthException? mapFromFirebaseAuthExceptionCodeToAuthException(
   FirebaseAuthExceptionCode firebaseAuthExceptionCode,
