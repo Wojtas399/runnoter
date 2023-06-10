@@ -10,8 +10,7 @@ class _Content extends StatelessWidget {
     return const Scaffold(
       appBar: _AppBar(),
       body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.all(24),
+        child: DefaultPaddings(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -65,7 +64,7 @@ class _CompetitionDate extends StatelessWidget {
     );
 
     return ContentWithLabel(
-      label: 'Data',
+      label: Str.of(context).competitionDate,
       content: NullableText(
         date?.toFullDate(context),
       ),
@@ -83,7 +82,7 @@ class _Place extends StatelessWidget {
     );
 
     return ContentWithLabel(
-      label: 'Miejsce',
+      label: Str.of(context).competitionPlace,
       content: NullableText(place),
     );
   }
@@ -99,7 +98,7 @@ class _Distance extends StatelessWidget {
     );
 
     return ContentWithLabel(
-      label: 'Dystans',
+      label: Str.of(context).competitionDistance,
       content: NullableText(
         distance != null ? '$distance km' : null,
       ),
@@ -117,7 +116,7 @@ class _ExpectedDuration extends StatelessWidget {
     );
 
     return ContentWithLabel(
-      label: 'Oczekiwany czas',
+      label: Str.of(context).competitionExpectedDuration,
       content: NullableText(
         expectedDuration?.toUIFormat(),
       ),
@@ -137,7 +136,7 @@ class _Status extends StatelessWidget {
     return Column(
       children: [
         ContentWithLabel(
-          label: 'Status',
+          label: Str.of(context).runStatus,
           content: switch (status) {
             null => const Text('--'),
             RunStatus() => Row(
@@ -175,7 +174,9 @@ class _FinishCompetitionButton extends StatelessWidget {
       (CompetitionPreviewBloc bloc) => bloc.state.competition?.status,
     );
     return BigButton(
-      label: runStatus is RunStatusPending ? 'Zakończ' : 'Edytuj status',
+      label: runStatus is RunStatusPending
+          ? Str.of(context).runStatusFinish
+          : Str.of(context).runStatusChangeStatus,
       onPressed: () {
         _onPressed(context);
       },

@@ -171,14 +171,6 @@
   "@dayPreviewTotalDistance": {
     "description": "Label of the section to display total distance of the workout"
   },
-  "dayPreviewChangeStatusButton": "Zmień status",
-  "@dayPreviewChangeStatusButton": {
-    "description": "Label of the button to change status"
-  },
-  "dayPreviewFinishWorkoutButton": "Zakończ",
-  "@dayPreviewFinishWorkoutButton": {
-    "description": "Label of the button to finish workout"
-  },
   "dayPreviewEditWorkout": "Edytuj trening",
   "@dayPreviewEditWorkout": {
     "description": "Label of the option to edit workout"
@@ -551,25 +543,13 @@
   "@competitionCreatorScreenTitle": {
     "description": "Title of the competition creator screen"
   },
-  "competitionCreatorDate": "Data",
-  "@competitionCreatorDate": {
-    "description": "Label of competition date"
+  "competitionCreatorAddedCompetitionMessage": "Pomyślnie dodano nowe zawody",
+  "@competitionCreatorAddedCompetitionMessage": {
+    "description": "Message to inform that new competition has been added"
   },
-  "competitionCreatorCompetitionName": "Nazwa zawodów",
-  "@competitionCreatorCompetitionName": {
-    "description": "Label of competition name"
-  },
-  "competitionCreatorPlace": "Miejsce",
-  "@competitionCreatorPlace": {
-    "description": "Label of place"
-  },
-  "competitionCreatorDistance": "Dystans",
-  "@competitionCreatorDistance": {
-    "description": "Label of distance"
-  },
-  "competitionCreatorExpectedDuration": "Oczekiwany czas",
-  "@competitionCreatorExpectedDuration": {
-    "description": "Label of expected duration"
+  "competitionCreatorUpdatedCompetitionMessage": "Pomyślnie zaktualizowano zawody",
+  "@competitionCreatorUpdatedCompetitionMessage": {
+    "description": "Message to inform that competition has been updated"
   },
   "competitionCreatorExpectedDurationHoursShort": "godz.",
   "@competitionCreatorExpectedDurationHoursShort": {
@@ -583,9 +563,49 @@
   "@competitionCreatorExpectedDurationSecondsShort": {
     "description": "Short label of duration seconds"
   },
-  "competitionCreatorAddedCompetitionMessage": "Pomyślnie dodano nowe zawody",
-  "@competitionCreatorAddedCompetitionMessage": {
-    "description": "Message to infor that new competition has been added"
+  "competitionsNoCompetitionsTitle": "Brak zawodów",
+  "@competitionsNoCompetitionsTitle": {
+    "description": "Title of the info about the lack of competitions"
+  },
+  "competitionsNoCompetitionsMessage": "Dodaj zawody, aby mieć możliwość przeglądania tej listy",
+  "@competitionsNoCompetitionsMessage": {
+    "description": "Message of the info about the lack of competitions"
+  },
+  "competitionPreviewScreenTitle": "Zawody",
+  "@competitionPreviewScreenTitle": {
+    "description": "Title of the competition preview screen"
+  },
+  "competitionPreviewDeleteCompetitionTitle": "Usunięcie zawodów",
+  "@competitionPreviewDeleteCompetitionTitle": {
+    "description": "Title of the confirmation dialog to delete competition"
+  },
+  "competitionPreviewDeleteCompetitionMessage": "Tej operacji nie można cofnąć. Czy na pewno chcesz usunąć te zawody?",
+  "@competitionPreviewDeleteCompetitionMessage": {
+    "description": "Message of the confirmation dialog to delete competition"
+  },
+  "competitionPreviewDeletedCompetitionMessage": "Pomyślnie usunięto zawody",
+  "@competitionPreviewDeletedCompetitionMessage": {
+    "description": "Message to inform that competition has been deleted"
+  },
+  "competitionDate": "Data",
+  "@competitionDate": {
+    "description": "Label of competition date"
+  },
+  "competitionName": "Nazwa zawodów",
+  "@competitionName": {
+    "description": "Label of competition name"
+  },
+  "competitionPlace": "Miejsce",
+  "@competitionPlace": {
+    "description": "Label of competition place"
+  },
+  "competitionDistance": "Dystans",
+  "@competitionDistance": {
+    "description": "Label of competition distance"
+  },
+  "competitionExpectedDuration": "Oczekiwany czas",
+  "@competitionExpectedDuration": {
+    "description": "Label of competition expected duration"
   },
   "runStatus": "Status",
   "@runStatus": {
@@ -610,6 +630,30 @@
   "runStatusComment": "Uwagi",
   "@runStatusComment": {
     "description": "Label of the comment of run status"
+  },
+  "runStatusChangeStatus": "Zmień status",
+  "@runStatusChangeStatus": {
+    "description": "Label of the button to change status"
+  },
+  "runStatusFinish": "Zakończ",
+  "@runStatusFinish": {
+    "description": "Label of the button to finish run"
+  },
+  "runStatusPending": "Oczekujący",
+  "@runStatusPending": {
+    "description": "Type of workout status called pending"
+  },
+  "runStatusDone": "Wykonany",
+  "@runStatusDone": {
+    "description": "Type of workout status called done"
+  },
+  "runStatusAborted": "Przerwany",
+  "@runStatusAborted": {
+    "description": "Type of workout status called aborted"
+  },
+  "runStatusUndone": "Niewykonany",
+  "@runStatusUndone": {
+    "description": "Type of workout status called undone"
   },
   "themeMode": "Motyw",
   "@themeMode": {
@@ -758,22 +802,6 @@
         "example": "500"
       }
     }
-  },
-  "runStatusPending": "Oczekujący",
-  "@runStatusPending": {
-    "description": "Type of workout status called pending"
-  },
-  "runStatusDone": "Wykonany",
-  "@runStatusDone": {
-    "description": "Type of workout status called done"
-  },
-  "runStatusAborted": "Przerwany",
-  "@runStatusAborted": {
-    "description": "Type of workout status called aborted"
-  },
-  "runStatusUndone": "Niewykonany",
-  "@runStatusUndone": {
-    "description": "Type of workout status called undone"
   },
   "noInternetConnectionDialogTitle": "Brak połączenia internetowego",
   "@noInternetConnectionDialogTitle": {

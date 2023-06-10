@@ -6,7 +6,7 @@ import '../../../domain/bloc/competitions/competitions_cubit.dart';
 import '../../../domain/entity/competition.dart';
 import '../../../domain/repository/competition_repository.dart';
 import '../../../domain/service/auth_service.dart';
-import '../../component/big_button_component.dart';
+import '../../component/default_paddings_component.dart';
 import '../../component/empty_content_info_component.dart';
 import '../../component/text/label_text_components.dart';
 import '../../component/text/title_text_components.dart';

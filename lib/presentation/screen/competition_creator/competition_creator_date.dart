@@ -9,7 +9,7 @@ class _CompetitionDate extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         TitleMedium(
-          Str.of(context).competitionCreatorDate,
+          Str.of(context).competitionDate,
         ),
         const SizedBox(height: 8),
         const Row(

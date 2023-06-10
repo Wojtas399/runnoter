@@ -10,7 +10,9 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       centerTitle: true,
-      title: const Text('Competition preview'),
+      title: Text(
+        Str.of(context).competitionPreviewScreenTitle,
+      ),
       actions: const [
         _ActionsMenu(),
       ],
@@ -86,8 +88,8 @@ class _ActionsMenu extends StatelessWidget {
     final CompetitionPreviewBloc bloc = context.read<CompetitionPreviewBloc>();
     final bool confirmed = await askForConfirmation(
       context: context,
-      title: 'Usuwanie zawodów',
-      message: 'Czy na pewno chcesz usunąć te zawody',
+      title: Str.of(context).competitionPreviewDeleteCompetitionTitle,
+      message: Str.of(context).competitionPreviewDeleteCompetitionMessage,
       confirmButtonLabel: Str.of(context).delete,
     );
     if (confirmed == true) {

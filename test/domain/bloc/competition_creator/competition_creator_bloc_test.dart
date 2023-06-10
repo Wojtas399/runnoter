@@ -466,7 +466,6 @@ void main() {
           place: 'New York',
           distance: 21,
           expectedDuration: const Duration(hours: 1, minutes: 45, seconds: 20),
-          status: const RunStatusPending(),
         ),
       ).called(1);
     },
@@ -528,7 +527,6 @@ void main() {
           distance: 21,
           expectedDuration: null,
           setDurationAsNull: true,
-          status: const RunStatusPending(),
         ),
       ).called(1);
     },

@@ -14,7 +14,7 @@ class _ExpectedDuration extends StatelessWidget {
 
     if (blocStatus is! BlocStatusInitial) {
       return DurationInput(
-        label: Str.of(context).competitionCreatorExpectedDuration,
+        label: Str.of(context).competitionExpectedDuration,
         initialDuration: duration,
         onDurationChanged: (Duration duration) {
           _onChanged(context, duration);

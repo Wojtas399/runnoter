@@ -42,7 +42,7 @@ class _CompetitionName extends StatelessWidget {
     }
 
     return TextFieldComponent(
-      label: Str.of(context).competitionCreatorCompetitionName,
+      label: Str.of(context).competitionName,
       controller: _controller,
       isRequired: true,
       maxLength: 100,
@@ -77,7 +77,7 @@ class _CompetitionPlace extends StatelessWidget {
     }
 
     return TextFieldComponent(
-      label: Str.of(context).competitionCreatorPlace,
+      label: Str.of(context).competitionPlace,
       isRequired: true,
       maxLength: 100,
       controller: _controller,
@@ -112,7 +112,7 @@ class _CompetitionDistance extends StatelessWidget {
     }
 
     return TextFieldComponent(
-      label: '${Str.of(context).competitionCreatorDistance} [km]',
+      label: '${Str.of(context).competitionDistance} [km]',
       controller: _controller,
       isRequired: true,
       maxLength: 7,

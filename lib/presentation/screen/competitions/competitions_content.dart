@@ -33,35 +33,12 @@ class _NoCompetitionsInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        EmptyContentInfo(
-          icon: Icons.emoji_events_outlined,
-          title: Str.of(context).bloodTestsNoTestsTitle,
-          subtitle: Str.of(context).bloodTestsNoTestsMessage,
-        ),
-        const SizedBox(height: 32),
-        const _AddNewCompetitionButton(),
-      ],
+    return DefaultPaddings(
+      child: EmptyContentInfo(
+        icon: Icons.emoji_events_outlined,
+        title: Str.of(context).competitionsNoCompetitionsTitle,
+        subtitle: Str.of(context).competitionsNoCompetitionsMessage,
+      ),
     );
-  }
-}
-
-class _AddNewCompetitionButton extends StatelessWidget {
-  const _AddNewCompetitionButton();
-
-  @override
-  Widget build(BuildContext context) {
-    return BigButton(
-      label: 'Dodaj nowe zawody',
-      onPressed: () {
-        _onPressed(context);
-      },
-    );
-  }
-
-  void _onPressed(BuildContext context) {
-    //TODO
   }
 }

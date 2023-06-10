@@ -8,6 +8,7 @@ import '../../../domain/repository/competition_repository.dart';
 import '../../../domain/service/auth_service.dart';
 import '../../component/big_button_component.dart';
 import '../../component/bloc_with_status_listener_component.dart';
+import '../../component/default_paddings_component.dart';
 import '../../component/duration_input_component.dart';
 import '../../component/scrollable_content_component.dart';
 import '../../component/text/title_text_components.dart';
@@ -94,7 +95,7 @@ class _BlocListener extends StatelessWidget {
       navigateBack(context: context);
       showSnackbarMessage(
         context: context,
-        message: 'Pomyślnie zaktualizowano zawody',
+        message: Str.of(context).competitionCreatorUpdatedCompetitionMessage,
       );
     }
   }
