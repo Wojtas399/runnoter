@@ -7,8 +7,11 @@ import '../../../domain/bloc/mileage/mileage_cubit.dart';
 import '../../../domain/repository/workout_repository.dart';
 import '../../../domain/service/auth_service.dart';
 import '../../component/empty_content_info_component.dart';
+import '../../component/padding/paddings_24.dart';
 import '../../component/text/title_text_components.dart';
+import '../../extension/context_extensions.dart';
 import '../../formatter/date_formatter.dart';
+import '../../formatter/distance_unit_formatter.dart';
 
 part 'mileage_charts.dart';
 

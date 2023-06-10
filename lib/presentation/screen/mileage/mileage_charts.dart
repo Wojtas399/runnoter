@@ -14,8 +14,7 @@ class _Charts extends StatelessWidget {
         child: CircularProgressIndicator(),
       );
     } else if (years.isEmpty) {
-      return Padding(
-        padding: const EdgeInsets.all(24),
+      return Paddings24(
         child: EmptyContentInfo(
           icon: Icons.insert_chart_outlined,
           title: Str.of(context).mileageNoDataTitle,
@@ -25,7 +24,7 @@ class _Charts extends StatelessWidget {
     }
     return ListView.separated(
       itemCount: years.length,
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.fromLTRB(8, 24, 24, 24),
       itemBuilder: (_, int itemIndex) {
         final ChartYear yearData = years[itemIndex];
         return Column(
@@ -54,6 +53,13 @@ class _YearChart extends StatelessWidget {
       primaryXAxis: CategoryAxis(
         interval: 1,
       ),
+      primaryYAxis: NumericAxis(
+        title: AxisTitle(
+          text:
+              '${Str.of(context).mileageChartMileage} [${context.distanceUnit.toUIShortFormat()}]',
+          textStyle: Theme.of(context).textTheme.labelSmall,
+        ),
+      ),
       series: <ColumnSeries<ChartMonth, String>>[
         ColumnSeries(
           dataSource: yearData.months,
@@ -61,7 +67,8 @@ class _YearChart extends StatelessWidget {
             yearData.year,
             point.month.monthNumber,
           ).toMonthAbbreviation(context),
-          yValueMapper: (ChartMonth point, _) => point.mileage,
+          yValueMapper: (ChartMonth point, _) =>
+              context.convertDistanceFromDefaultUnit(point.mileage),
         ),
       ],
     );

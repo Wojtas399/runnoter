@@ -455,6 +455,10 @@
   "@profileWrongCurrentPasswordDialogMessage": {
     "description": "Message of the dialog to inform that given current password is wrong"
   },
+  "mileageChartMileage": "Kilometraż",
+  "@mileageChartMileage": {
+    "description": "Label of chart's mileage axis"
+  },
   "mileageNoDataTitle": "Brak danych",
   "@mileageNoDataTitle": {
     "description": "Title of the information about not data to display mileage charts"

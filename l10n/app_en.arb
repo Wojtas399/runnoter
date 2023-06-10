@@ -113,6 +113,7 @@
   "profileWrongPasswordDialogMessage": "Given password is wrong",
   "profileWrongCurrentPasswordDialogTitle": "Wrong current password",
   "profileWrongCurrentPasswordDialogMessage": "Given current password is wrong...",
+  "mileageChartMileage": "Mileage",
   "mileageNoDataTitle": "No data",
   "mileageNoDataMessage": "Finish at least one workout to be able to display mileage charts",
   "bloodTestsAddNewBloodTest": "Add new test",
