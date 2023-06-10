@@ -1,9 +1,8 @@
 import 'package:flutter/widgets.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../domain/entity/workout_stage.dart';
-import '../../domain/service/distance_unit_service.dart';
+import '../extension/context_extensions.dart';
 import 'distance_unit_formatter.dart';
 
 extension WorkoutStageFormatter on WorkoutStage {
@@ -56,11 +55,10 @@ extension WorkoutStageFormatter on WorkoutStage {
     BuildContext context,
     DistanceWorkoutStage stage,
   ) {
-    final distanceUnitService = context.read<DistanceUnitService>();
-    final double convertedDistance = distanceUnitService.convertFromDefault(
+    final double convertedDistance = context.convertDistanceFromDefaultUnit(
       stage.distanceInKilometers,
     );
-    final String distanceUnit = distanceUnitService.state.toUIShortFormat();
+    final String distanceUnit = context.distanceUnit.toUIShortFormat();
     final String distance =
         '${convertedDistance.toStringAsFixed(2)}$distanceUnit';
     return '${stage.toTypeName(context)} $distance HR<${stage.maxHeartRate}';
