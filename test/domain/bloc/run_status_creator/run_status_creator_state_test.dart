@@ -76,6 +76,24 @@ void main() {
 
   test(
     'is form valid, '
+    'covered distance in km is 0, '
+    'should be false',
+    () {
+      state = state.copyWith(
+        runStatusType: RunStatusType.done,
+        coveredDistanceInKm: 0,
+        moodRate: MoodRate.mr8,
+        averagePaceMinutes: 5,
+        averagePaceSeconds: 30,
+        averageHeartRate: 150,
+      );
+
+      expect(state.isFormValid, false);
+    },
+  );
+
+  test(
+    'is form valid, '
     'duration is 0, '
     'should be false',
     () {

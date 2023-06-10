@@ -12,9 +12,12 @@ import '../../../domain/service/auth_service.dart';
 import '../../component/big_button_component.dart';
 import '../../component/bloc_with_status_listener_component.dart';
 import '../../component/duration_input_component.dart';
+import '../../component/padding/paddings_24.dart';
 import '../../component/scrollable_content_component.dart';
 import '../../component/text_field_component.dart';
+import '../../extension/context_extensions.dart';
 import '../../formatter/decimal_text_input_formatter.dart';
+import '../../formatter/distance_unit_formatter.dart';
 import '../../formatter/minutes_or_seconds_input_formatter.dart';
 import '../../formatter/mood_rate_formatter.dart';
 import '../../formatter/run_status_formatter.dart';
@@ -24,7 +27,7 @@ import '../../service/utils.dart';
 
 part 'run_status_creator_average_pace.dart';
 part 'run_status_creator_content.dart';
-part 'run_status_creator_finished_workout_form.dart';
+part 'run_status_creator_params_form.dart';
 part 'run_status_creator_status_type.dart';
 
 sealed class RunStatusCreatorArguments {

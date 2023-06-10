@@ -1,7 +1,7 @@
 part of 'run_status_creator_screen.dart';
 
-class _FinishedWorkoutForm extends StatelessWidget {
-  const _FinishedWorkoutForm();
+class _ParamsForm extends StatelessWidget {
+  const _ParamsForm();
 
   @override
   Widget build(BuildContext context) {
@@ -42,16 +42,18 @@ class _CoveredDistance extends StatelessWidget {
     );
     if (blocStatus is BlocStatusComplete &&
         blocStatus.info == RunStatusCreatorBlocInfo.runStatusInitialized) {
-      _controller.text = context
-              .read<RunStatusCreatorBloc>()
-              .state
-              .coveredDistanceInKm
-              ?.toString() ??
-          '';
+      double? coveredDistance =
+          context.read<RunStatusCreatorBloc>().state.coveredDistanceInKm;
+      _controller.text = coveredDistance != null
+          ? context
+              .convertDistanceFromDefaultUnit(coveredDistance)
+              .toStringAsFixed(2)
+          : '';
     }
 
     return TextFieldComponent(
-      label: '${Str.of(context).runStatusCreatorCoveredDistance} [km]',
+      label:
+          '${Str.of(context).runStatusCreatorCoveredDistance} [${context.distanceUnit.toUIShortFormat()}]',
       maxLength: 8,
       keyboardType: TextInputType.number,
       isRequired: true,
@@ -69,10 +71,13 @@ class _CoveredDistance extends StatelessWidget {
     if (coveredDistanceInKmStr == null) {
       return;
     }
-    final double? coveredDistanceInKm = double.tryParse(coveredDistanceInKmStr);
+    final double coveredDistanceInKm =
+        double.tryParse(coveredDistanceInKmStr) ?? 0;
+    final double convertedCoveredDistance =
+        context.convertDistanceFromDefaultUnit(coveredDistanceInKm);
     context.read<RunStatusCreatorBloc>().add(
           RunStatusCreatorEventCoveredDistanceInKmChanged(
-            coveredDistanceInKm: coveredDistanceInKm,
+            coveredDistanceInKm: convertedCoveredDistance,
           ),
         );
   }

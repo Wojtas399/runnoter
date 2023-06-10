@@ -46,6 +46,7 @@ class RunStatusCreatorState extends BlocState<RunStatusCreatorState> {
       runStatusType == RunStatusType.undone ||
       (runStatusType != null &&
           coveredDistanceInKm != null &&
+          coveredDistanceInKm! > 0 &&
           (duration == null || duration!.inSeconds > 0) &&
           moodRate != null &&
           averagePaceMinutes != null &&

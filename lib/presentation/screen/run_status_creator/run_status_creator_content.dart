@@ -13,15 +13,11 @@ class _Content extends StatelessWidget {
         centerTitle: true,
       ),
       body: SafeArea(
-        child: ScrollableContent(
-          child: GestureDetector(
-            onTap: () {
-              unfocusInputs();
-            },
-            child: Container(
-              color: Colors.transparent,
-              padding: const EdgeInsets.all(24),
-              child: const Column(
+        child: GestureDetector(
+          onTap: unfocusInputs,
+          child: const ScrollableContent(
+            child: Paddings24(
+              child: Column(
                 children: [
                   _StatusType(),
                   SizedBox(height: 24),
@@ -49,7 +45,7 @@ class _Form extends StatelessWidget {
 
     if (runStatusType == RunStatusType.done ||
         runStatusType == RunStatusType.aborted) {
-      return const _FinishedWorkoutForm();
+      return const _ParamsForm();
     }
     return const SizedBox();
   }
