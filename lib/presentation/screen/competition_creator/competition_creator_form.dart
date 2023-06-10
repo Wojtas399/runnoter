@@ -108,11 +108,20 @@ class _CompetitionDistance extends StatelessWidget {
 
     if (blocStatus is BlocStatusComplete &&
         blocStatus.info == CompetitionCreatorBlocInfo.editModeInitialized) {
-      _controller.text = distance?.toString() ?? '';
+      String? distanceStr;
+      if (distance != null) {
+        distanceStr = context
+            .convertDistanceFromDefaultUnit(distance)
+            .decimal(2)
+            .toString()
+            .trimZeros();
+      }
+      _controller.text = distanceStr ?? '';
     }
 
     return TextFieldComponent(
-      label: '${Str.of(context).competitionDistance} [km]',
+      label:
+          '${Str.of(context).competitionDistance} [${context.distanceUnit.toUIShortFormat()}]',
       controller: _controller,
       isRequired: true,
       maxLength: 7,

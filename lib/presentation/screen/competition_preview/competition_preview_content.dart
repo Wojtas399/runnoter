@@ -96,12 +96,19 @@ class _Distance extends StatelessWidget {
     final double? distance = context.select(
       (CompetitionPreviewBloc bloc) => bloc.state.competition?.distance,
     );
+    String? distanceStr;
+    if (distance != null) {
+      distanceStr = context
+          .convertDistanceFromDefaultUnit(distance)
+          .decimal(2)
+          .toString()
+          .trimZeros();
+      distanceStr += context.distanceUnit.toUIShortFormat();
+    }
 
     return ContentWithLabel(
       label: Str.of(context).competitionDistance,
-      content: NullableText(
-        distance != null ? '$distance km' : null,
-      ),
+      content: NullableText(distanceStr),
     );
   }
 }
