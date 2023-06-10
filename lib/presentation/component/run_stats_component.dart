@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../domain/entity/run_status.dart';
+import '../../domain/service/distance_unit_service.dart';
+import '../formatter/distance_unit_formatter.dart';
 import '../formatter/duration_formatter.dart';
 import '../formatter/mood_rate_formatter.dart';
 import '../formatter/pace_formatter.dart';
@@ -65,6 +68,7 @@ class _Stats extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final str = Str.of(context);
+    final distanceUnitService = context.read<DistanceUnitService>();
 
     return Column(
       children: [
@@ -74,14 +78,15 @@ class _Stats extends StatelessWidget {
               Expanded(
                 child: _StatParam(
                   label: str.runStatusCoveredDistance,
-                  value: '$coveredDistanceInKm km',
+                  value:
+                      '${distanceUnitService.convertDistance(coveredDistanceInKm)}${distanceUnitService.state.toUIShortFormat()}',
                 ),
               ),
               if (duration != null) const VerticalDivider(),
               if (duration != null)
                 Expanded(
                   child: _StatParam(
-                    label: 'Czas',
+                    label: str.runStatusDuration,
                     value: duration!.toUIFormat(),
                   ),
                 ),

@@ -153,6 +153,7 @@
   "competitionExpectedDuration": "Expected duration",
   "runStatus": "Status",
   "runStatusCoveredDistance": "Covered distance",
+  "runStatusDuration": "Duration",
   "runStatusMoodRate": "Mood rate",
   "runStatusAvgPace": "Average pace",
   "runStatusAvgHeartRate": "Average heart rate",

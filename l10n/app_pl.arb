@@ -615,6 +615,10 @@
   "@runStatusCoveredDistance": {
     "description": "Label of the covered distance of run status"
   },
+  "runStatusDuration": "Czas",
+  "@runStatusDuration": {
+    "description": "Label of the duration of run status"
+  },
   "runStatusMoodRate": "Samopoczucie",
   "@runStatusMoodRate": {
     "description": "Label of the mood rate of run status"
