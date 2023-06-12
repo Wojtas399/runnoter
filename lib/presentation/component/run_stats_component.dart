@@ -98,7 +98,7 @@ class _Stats extends StatelessWidget {
               Expanded(
                 child: _StatParam(
                   label: str.runStatusAvgPace,
-                  value: avgPace.toUIFormat(),
+                  value: avgPace.toUIFormat(context),
                 ),
               ),
               const VerticalDivider(),

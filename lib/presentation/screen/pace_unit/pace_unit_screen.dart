@@ -6,7 +6,7 @@ import '../../../domain/bloc/pace_unit/pace_unit_cubit.dart';
 import '../../../domain/entity/settings.dart';
 import '../../../domain/repository/user_repository.dart';
 import '../../../domain/service/auth_service.dart';
-import '../../formatter/settings_formatter.dart';
+import '../../formatter/pace_unit_formatter.dart';
 import '../../service/navigator_service.dart';
 
 class PaceUnitScreen extends StatelessWidget {
@@ -101,7 +101,7 @@ class _OptionsToSelect extends StatelessWidget {
           .map(
             (PaceUnit paceUnit) => RadioListTile<PaceUnit>(
               title: Text(
-                paceUnit.toUIFormat(context),
+                paceUnit.toUIFormat(),
               ),
               value: paceUnit,
               groupValue: selectedDistanceUnit,

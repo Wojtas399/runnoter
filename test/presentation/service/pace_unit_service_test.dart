@@ -48,7 +48,7 @@ void main() {
     () {
       const Pace pace = Pace(minutes: 5, seconds: 45);
       const ConvertedPace expectedConvertedPace =
-          ConvertedPaceKilometersPerHour(distance: 10.4348);
+          ConvertedPaceKilometersPerHour(distance: 10.43);
       final service = PaceUnitService(paceUnit: PaceUnit.kilometersPerHour);
 
       final ConvertedPace convertedPace = service.convertFromDefault(pace);
@@ -64,7 +64,7 @@ void main() {
     () {
       const Pace pace = Pace(minutes: 5, seconds: 45);
       const ConvertedPace expectedConvertedPace = ConvertedPaceMilesPerHour(
-        distance: 6.4839,
+        distance: 6.48,
       );
       final service = PaceUnitService(paceUnit: PaceUnit.milesPerHour);
 

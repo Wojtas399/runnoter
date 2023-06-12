@@ -14,6 +14,7 @@ import '../../component/text_field_component.dart';
 import '../../component/value_with_label_and_icon_component.dart';
 import '../../config/navigation/routes.dart';
 import '../../formatter/distance_unit_formatter.dart';
+import '../../formatter/pace_unit_formatter.dart';
 import '../../formatter/settings_formatter.dart';
 import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';

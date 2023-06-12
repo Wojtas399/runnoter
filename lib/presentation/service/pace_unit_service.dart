@@ -21,10 +21,10 @@ class PaceUnitService extends Cubit<PaceUnit> {
           ),
         PaceUnit.minutesPerMile => _convertToMinutesPerMile(pace),
         PaceUnit.kilometersPerHour => ConvertedPaceKilometersPerHour(
-            distance: (60 / pace.toDouble()).decimal(4),
+            distance: (60 / pace.toDouble()).decimal(2),
           ),
         PaceUnit.milesPerHour => ConvertedPaceMilesPerHour(
-            distance: (37.2822715 / pace.toDouble()).decimal(4),
+            distance: (37.2822715 / pace.toDouble()).decimal(2),
           ),
       };
 

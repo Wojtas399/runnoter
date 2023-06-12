@@ -731,22 +731,6 @@
   "@paceUnit": {
     "description": "Label of pace unit"
   },
-  "paceUnitMinutesPerKilometer": "min/km (minuty na kilometr)",
-  "@paceUnitMinutesPerKilometer": {
-    "description": "Minutes per kilometer pace unit"
-  },
-  "paceUnitMinutesPerMile": "min/mi (minuty na milę)",
-  "@paceUnitMinutesPerMile": {
-    "description": "Minutes per mile pace unit"
-  },
-  "paceUnitKilometersPerHour": "km/h (kilometry na godzinę)",
-  "@paceUnitKilometersPerHour": {
-    "description": "Kilometers per hour pace unit"
-  },
-  "paceUnitMilesPerHour": "mi/h (mile na godzinę)",
-  "@paceUnitMilesPerHour": {
-    "description": "Miles per hour pace unit"
-  },
   "paceUnitSelect": "Wybierz jednostkę tempa",
   "@paceUnitSelect": {
     "description": "Text about pace unit selection"
