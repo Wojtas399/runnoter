@@ -41,19 +41,11 @@ class RunStatusCreatorEventMoodRateChanged extends RunStatusCreatorEvent {
   });
 }
 
-class RunStatusCreatorEventAvgPaceMinutesChanged extends RunStatusCreatorEvent {
-  final int? minutes;
+class RunStatusCreatorEventAvgPaceChanged extends RunStatusCreatorEvent {
+  final Pace avgPace;
 
-  const RunStatusCreatorEventAvgPaceMinutesChanged({
-    required this.minutes,
-  });
-}
-
-class RunStatusCreatorEventAvgPaceSecondsChanged extends RunStatusCreatorEvent {
-  final int? seconds;
-
-  const RunStatusCreatorEventAvgPaceSecondsChanged({
-    required this.seconds,
+  const RunStatusCreatorEventAvgPaceChanged({
+    required this.avgPace,
   });
 }
 

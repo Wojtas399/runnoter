@@ -61,9 +61,15 @@ class PaceUnitService extends Cubit<PaceUnit> {
     return _createPaceFromMinutesPerKilometer(minutesPerKilometer);
   }
 
-  double _getDecimalPart(double number) => double.parse(
-        '0.${number.toString().split('.')[1]}',
-      );
+  double _getDecimalPart(double number) {
+    final List<String> numberParts = number.toString().split('.');
+    if (numberParts.length == 1) {
+      return 0;
+    }
+    return double.parse(
+      '0.${number.toString().split('.')[1]}',
+    );
+  }
 
   Pace _createPaceFromMinutesPerKilometer(double minutesPerKilometer) {
     final double decimalPart = _getDecimalPart(minutesPerKilometer);

@@ -50,8 +50,7 @@ class RunStatusCreatorBloc extends BlocWithStatus<RunStatusCreatorEvent,
     );
     on<RunStatusCreatorEventDurationChanged>(_durationChanged);
     on<RunStatusCreatorEventMoodRateChanged>(_moodRateChanged);
-    on<RunStatusCreatorEventAvgPaceMinutesChanged>(_avgPaceMinutesChanged);
-    on<RunStatusCreatorEventAvgPaceSecondsChanged>(_avgPaceSecondsChanged);
+    on<RunStatusCreatorEventAvgPaceChanged>(_avgPaceChanged);
     on<RunStatusCreatorEventAvgHeartRateChanged>(_avgHeartRateChanged);
     on<RunStatusCreatorEventCommentChanged>(_commentChanged);
     on<RunStatusCreatorEventSubmit>(_submit);
@@ -81,9 +80,8 @@ class RunStatusCreatorBloc extends BlocWithStatus<RunStatusCreatorEvent,
         coveredDistanceInKm: runStatus.coveredDistanceInKm,
         duration: runStatus.duration,
         moodRate: runStatus.moodRate,
-        averagePaceMinutes: runStatus.avgPace.minutes,
-        averagePaceSeconds: runStatus.avgPace.seconds,
-        averageHeartRate: runStatus.avgHeartRate,
+        avgPace: runStatus.avgPace,
+        avgHeartRate: runStatus.avgHeartRate,
         comment: runStatus.comment,
       );
     }
@@ -130,21 +128,12 @@ class RunStatusCreatorBloc extends BlocWithStatus<RunStatusCreatorEvent,
     ));
   }
 
-  void _avgPaceMinutesChanged(
-    RunStatusCreatorEventAvgPaceMinutesChanged event,
+  void _avgPaceChanged(
+    RunStatusCreatorEventAvgPaceChanged event,
     Emitter<RunStatusCreatorState> emit,
   ) {
     emit(state.copyWith(
-      averagePaceMinutes: event.minutes,
-    ));
-  }
-
-  void _avgPaceSecondsChanged(
-    RunStatusCreatorEventAvgPaceSecondsChanged event,
-    Emitter<RunStatusCreatorState> emit,
-  ) {
-    emit(state.copyWith(
-      averagePaceSeconds: event.seconds,
+      avgPace: event.avgPace,
     ));
   }
 
@@ -153,7 +142,7 @@ class RunStatusCreatorBloc extends BlocWithStatus<RunStatusCreatorEvent,
     Emitter<RunStatusCreatorState> emit,
   ) {
     emit(state.copyWith(
-      averageHeartRate: event.averageHeartRate,
+      avgHeartRate: event.averageHeartRate,
     ));
   }
 
@@ -226,23 +215,17 @@ class RunStatusCreatorBloc extends BlocWithStatus<RunStatusCreatorEvent,
         RunStatusType.pending => const RunStatusPending(),
         RunStatusType.done => RunStatusDone(
             coveredDistanceInKm: state.coveredDistanceInKm!,
-            duration: state.duration!,
-            avgPace: Pace(
-              minutes: state.averagePaceMinutes!,
-              seconds: state.averagePaceSeconds!,
-            ),
-            avgHeartRate: state.averageHeartRate!,
+            duration: state.duration,
+            avgPace: state.avgPace!,
+            avgHeartRate: state.avgHeartRate!,
             moodRate: state.moodRate!,
             comment: state.comment,
           ),
         RunStatusType.aborted => RunStatusAborted(
             coveredDistanceInKm: state.coveredDistanceInKm!,
-            duration: state.duration!,
-            avgPace: Pace(
-              minutes: state.averagePaceMinutes!,
-              seconds: state.averagePaceSeconds!,
-            ),
-            avgHeartRate: state.averageHeartRate!,
+            duration: state.duration,
+            avgPace: state.avgPace!,
+            avgHeartRate: state.avgHeartRate!,
             moodRate: state.moodRate!,
             comment: state.comment,
           ),

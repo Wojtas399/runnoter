@@ -24,9 +24,8 @@ void main() {
     double? coveredDistanceInKm,
     Duration? duration,
     MoodRate? moodRate,
-    int? averagePaceMinutes,
-    int? averagePaceSeconds,
-    int? averageHeartRate,
+    Pace? avgPace,
+    int? avgHeartRate,
     String? comment,
   }) =>
       RunStatusCreatorBloc(
@@ -42,9 +41,8 @@ void main() {
           coveredDistanceInKm: coveredDistanceInKm,
           duration: duration,
           moodRate: moodRate,
-          averagePaceMinutes: averagePaceMinutes,
-          averagePaceSeconds: averagePaceSeconds,
-          averageHeartRate: averageHeartRate,
+          avgPace: avgPace,
+          avgHeartRate: avgHeartRate,
           comment: comment,
         ),
       );
@@ -57,9 +55,8 @@ void main() {
     double? coveredDistanceInKm,
     Duration? duration,
     MoodRate? moodRate,
-    int? averagePaceMinutes,
-    int? averagePaceSeconds,
-    int? averageHeartRate,
+    Pace? avgPace,
+    int? avgHeartRate,
     String? comment,
   }) =>
       RunStatusCreatorState(
@@ -70,9 +67,8 @@ void main() {
         coveredDistanceInKm: coveredDistanceInKm,
         duration: duration,
         moodRate: moodRate,
-        averagePaceMinutes: averagePaceMinutes,
-        averagePaceSeconds: averagePaceSeconds,
-        averageHeartRate: averageHeartRate,
+        avgPace: avgPace,
+        avgHeartRate: avgHeartRate,
         comment: comment,
       );
 
@@ -150,9 +146,8 @@ void main() {
         coveredDistanceInKm: 10,
         duration: const Duration(seconds: 2),
         moodRate: MoodRate.mr8,
-        averagePaceMinutes: 6,
-        averagePaceSeconds: 10,
-        averageHeartRate: 150,
+        avgPace: const Pace(minutes: 6, seconds: 10),
+        avgHeartRate: 150,
         comment: 'comment',
       ),
     ],
@@ -297,9 +292,8 @@ void main() {
         coveredDistanceInKm: 10,
         duration: const Duration(seconds: 2),
         moodRate: MoodRate.mr8,
-        averagePaceMinutes: 6,
-        averagePaceSeconds: 10,
-        averageHeartRate: 150,
+        avgPace: const Pace(minutes: 6, seconds: 10),
+        avgHeartRate: 150,
         comment: 'comment',
       ),
     ],
@@ -473,35 +467,18 @@ void main() {
   );
 
   blocTest(
-    'avg pace minutes changed, '
-    'should update average pace minutes in state',
+    'avg pace changed, '
+    'should update average pace in state',
     build: () => createBloc(),
     act: (RunStatusCreatorBloc bloc) => bloc.add(
-      const RunStatusCreatorEventAvgPaceMinutesChanged(
-        minutes: 6,
+      const RunStatusCreatorEventAvgPaceChanged(
+        avgPace: Pace(minutes: 6, seconds: 10),
       ),
     ),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
-        averagePaceMinutes: 6,
-      ),
-    ],
-  );
-
-  blocTest(
-    'avg pace seconds changed, '
-    'should update average pace seconds in state',
-    build: () => createBloc(),
-    act: (RunStatusCreatorBloc bloc) => bloc.add(
-      const RunStatusCreatorEventAvgPaceSecondsChanged(
-        seconds: 2,
-      ),
-    ),
-    expect: () => [
-      createState(
-        status: const BlocStatusComplete(),
-        averagePaceSeconds: 2,
+        avgPace: const Pace(minutes: 6, seconds: 10),
       ),
     ],
   );
@@ -518,7 +495,7 @@ void main() {
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
-        averageHeartRate: 150,
+        avgHeartRate: 150,
       ),
     ],
   );
@@ -656,9 +633,8 @@ void main() {
       coveredDistanceInKm: 10,
       duration: const Duration(seconds: 3),
       moodRate: MoodRate.mr8,
-      averagePaceMinutes: 5,
-      averagePaceSeconds: 50,
-      averageHeartRate: 150,
+      avgPace: const Pace(minutes: 5, seconds: 50),
+      avgHeartRate: 150,
       comment: 'comment',
     ),
     setUp: () {
@@ -675,9 +651,8 @@ void main() {
         coveredDistanceInKm: 10,
         duration: const Duration(seconds: 3),
         moodRate: MoodRate.mr8,
-        averagePaceMinutes: 5,
-        averagePaceSeconds: 50,
-        averageHeartRate: 150,
+        avgPace: const Pace(minutes: 5, seconds: 50),
+        avgHeartRate: 150,
         comment: 'comment',
       ),
       createState(
@@ -688,9 +663,8 @@ void main() {
         coveredDistanceInKm: 10,
         duration: const Duration(seconds: 3),
         moodRate: MoodRate.mr8,
-        averagePaceMinutes: 5,
-        averagePaceSeconds: 50,
-        averageHeartRate: 150,
+        avgPace: const Pace(minutes: 5, seconds: 50),
+        avgHeartRate: 150,
         comment: 'comment',
       ),
     ],
@@ -726,9 +700,8 @@ void main() {
       coveredDistanceInKm: 10,
       duration: const Duration(seconds: 3),
       moodRate: MoodRate.mr8,
-      averagePaceMinutes: 5,
-      averagePaceSeconds: 50,
-      averageHeartRate: 150,
+      avgPace: const Pace(minutes: 5, seconds: 50),
+      avgHeartRate: 150,
       comment: 'comment',
     ),
     setUp: () {
@@ -746,9 +719,8 @@ void main() {
         coveredDistanceInKm: 10,
         duration: const Duration(seconds: 3),
         moodRate: MoodRate.mr8,
-        averagePaceMinutes: 5,
-        averagePaceSeconds: 50,
-        averageHeartRate: 150,
+        avgPace: const Pace(minutes: 5, seconds: 50),
+        avgHeartRate: 150,
         comment: 'comment',
       ),
       createState(
@@ -760,9 +732,8 @@ void main() {
         coveredDistanceInKm: 10,
         duration: const Duration(seconds: 3),
         moodRate: MoodRate.mr8,
-        averagePaceMinutes: 5,
-        averagePaceSeconds: 50,
-        averageHeartRate: 150,
+        avgPace: const Pace(minutes: 5, seconds: 50),
+        avgHeartRate: 150,
         comment: 'comment',
       ),
     ],
@@ -797,9 +768,8 @@ void main() {
       coveredDistanceInKm: 10,
       duration: const Duration(seconds: 3),
       moodRate: MoodRate.mr8,
-      averagePaceMinutes: 5,
-      averagePaceSeconds: 50,
-      averageHeartRate: 150,
+      avgPace: const Pace(minutes: 5, seconds: 50),
+      avgHeartRate: 150,
       comment: 'comment',
     ),
     setUp: () {
@@ -816,9 +786,8 @@ void main() {
         coveredDistanceInKm: 10,
         duration: const Duration(seconds: 3),
         moodRate: MoodRate.mr8,
-        averagePaceMinutes: 5,
-        averagePaceSeconds: 50,
-        averageHeartRate: 150,
+        avgPace: const Pace(minutes: 5, seconds: 50),
+        avgHeartRate: 150,
         comment: 'comment',
       ),
       createState(
@@ -829,9 +798,8 @@ void main() {
         coveredDistanceInKm: 10,
         duration: const Duration(seconds: 3),
         moodRate: MoodRate.mr8,
-        averagePaceMinutes: 5,
-        averagePaceSeconds: 50,
-        averageHeartRate: 150,
+        avgPace: const Pace(minutes: 5, seconds: 50),
+        avgHeartRate: 150,
         comment: 'comment',
       ),
     ],
@@ -867,9 +835,8 @@ void main() {
       coveredDistanceInKm: 10,
       duration: const Duration(seconds: 3),
       moodRate: MoodRate.mr8,
-      averagePaceMinutes: 5,
-      averagePaceSeconds: 50,
-      averageHeartRate: 150,
+      avgPace: const Pace(minutes: 5, seconds: 50),
+      avgHeartRate: 150,
       comment: 'comment',
     ),
     setUp: () {
@@ -887,9 +854,8 @@ void main() {
         coveredDistanceInKm: 10,
         duration: const Duration(seconds: 3),
         moodRate: MoodRate.mr8,
-        averagePaceMinutes: 5,
-        averagePaceSeconds: 50,
-        averageHeartRate: 150,
+        avgPace: const Pace(minutes: 5, seconds: 50),
+        avgHeartRate: 150,
         comment: 'comment',
       ),
       createState(
@@ -901,9 +867,8 @@ void main() {
         coveredDistanceInKm: 10,
         duration: const Duration(seconds: 3),
         moodRate: MoodRate.mr8,
-        averagePaceMinutes: 5,
-        averagePaceSeconds: 50,
-        averageHeartRate: 150,
+        avgPace: const Pace(minutes: 5, seconds: 50),
+        avgHeartRate: 150,
         comment: 'comment',
       ),
     ],

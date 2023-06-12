@@ -170,12 +170,9 @@ class _AverageHeartRate extends StatelessWidget {
     );
     if (blocStatus is BlocStatusComplete &&
         blocStatus.info == RunStatusCreatorBlocInfo.runStatusInitialized) {
-      _controller.text = context
-              .read<RunStatusCreatorBloc>()
-              .state
-              .averageHeartRate
-              ?.toString() ??
-          '';
+      _controller.text =
+          context.read<RunStatusCreatorBloc>().state.avgHeartRate?.toString() ??
+              '';
     }
 
     return TextFieldComponent(
