@@ -30,6 +30,7 @@ void main() {
     ThemeMode? themeMode,
     Language? language,
     DistanceUnit? distanceUnit,
+    PaceUnit? paceUnit,
   }) {
     return HomeState(
       status: status,
@@ -41,6 +42,7 @@ void main() {
       themeMode: themeMode,
       language: language,
       distanceUnit: distanceUnit,
+      paceUnit: paceUnit,
     );
   }
 
@@ -64,6 +66,7 @@ void main() {
             themeMode: ThemeMode.dark,
             language: Language.polish,
             distanceUnit: DistanceUnit.miles,
+            paceUnit: PaceUnit.milesPerHour,
           ),
         ),
       );
@@ -85,6 +88,7 @@ void main() {
         themeMode: ThemeMode.dark,
         language: Language.polish,
         distanceUnit: DistanceUnit.miles,
+        paceUnit: PaceUnit.milesPerHour,
       ),
     ],
     verify: (_) {
@@ -104,7 +108,7 @@ void main() {
 
   blocTest(
     'listened params changed, '
-    "should update logged user's email, name, surname, theme mode and language in state",
+    "should update logged user's email, name, surname, theme mode, language, distance unit and pace unit in state",
     build: () => createBloc(),
     act: (HomeBloc bloc) {
       bloc.add(
@@ -116,6 +120,7 @@ void main() {
             themeMode: ThemeMode.dark,
             language: Language.english,
             distanceUnit: DistanceUnit.miles,
+            paceUnit: PaceUnit.milesPerHour,
           ),
         ),
       );
@@ -129,6 +134,7 @@ void main() {
         themeMode: ThemeMode.dark,
         language: Language.english,
         distanceUnit: DistanceUnit.miles,
+        paceUnit: PaceUnit.milesPerHour,
       ),
     ],
   );

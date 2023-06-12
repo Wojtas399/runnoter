@@ -9,6 +9,7 @@ class HomeState extends BlocState<HomeState> {
   final ThemeMode? themeMode;
   final Language? language;
   final DistanceUnit? distanceUnit;
+  final PaceUnit? paceUnit;
 
   const HomeState({
     required super.status,
@@ -20,6 +21,7 @@ class HomeState extends BlocState<HomeState> {
     this.themeMode,
     this.language,
     this.distanceUnit,
+    this.paceUnit,
   });
 
   @override
@@ -33,6 +35,7 @@ class HomeState extends BlocState<HomeState> {
         themeMode,
         language,
         distanceUnit,
+        paceUnit,
       ];
 
   bool get areAllDataLoaded =>
@@ -41,7 +44,8 @@ class HomeState extends BlocState<HomeState> {
       loggedUserEmail != null &&
       themeMode != null &&
       language != null &&
-      distanceUnit != null;
+      distanceUnit != null &&
+      paceUnit != null;
 
   @override
   HomeState copyWith({
@@ -54,6 +58,7 @@ class HomeState extends BlocState<HomeState> {
     ThemeMode? themeMode,
     Language? language,
     DistanceUnit? distanceUnit,
+    PaceUnit? paceUnit,
   }) {
     return HomeState(
       status: status ?? const BlocStatusComplete(),
@@ -65,6 +70,7 @@ class HomeState extends BlocState<HomeState> {
       themeMode: themeMode ?? this.themeMode,
       language: language ?? this.language,
       distanceUnit: distanceUnit ?? this.distanceUnit,
+      paceUnit: paceUnit ?? this.paceUnit,
     );
   }
 }
@@ -103,6 +109,7 @@ class HomeStateListenedParams extends Equatable {
   final ThemeMode? themeMode;
   final Language? language;
   final DistanceUnit? distanceUnit;
+  final PaceUnit? paceUnit;
 
   const HomeStateListenedParams({
     required this.loggedUserEmail,
@@ -111,6 +118,7 @@ class HomeStateListenedParams extends Equatable {
     required this.themeMode,
     required this.language,
     required this.distanceUnit,
+    required this.paceUnit,
   });
 
   @override
@@ -121,5 +129,6 @@ class HomeStateListenedParams extends Equatable {
         themeMode,
         language,
         distanceUnit,
+        paceUnit,
       ];
 }
