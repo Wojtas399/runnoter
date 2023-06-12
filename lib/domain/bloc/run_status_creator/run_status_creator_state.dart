@@ -61,6 +61,7 @@ class RunStatusCreatorState extends BlocState<RunStatusCreatorState> {
             avgHeartRate == originalRunStatus.avgHeartRate &&
             (comment ?? '') == (originalRunStatus.comment ?? '');
       }
+      return true;
     }
     return false;
   }
