@@ -12,6 +12,7 @@ import '../../service/dialog_service.dart';
 import '../../service/distance_unit_service.dart';
 import '../../service/language_service.dart';
 import '../../service/navigator_service.dart';
+import '../../service/pace_unit_service.dart';
 import '../../service/theme_service.dart';
 import '../screens.dart';
 
@@ -99,6 +100,9 @@ class _BlocListener extends StatelessWidget {
     }
     if (state.distanceUnit != null) {
       context.read<DistanceUnitService>().changeUnit(state.distanceUnit!);
+    }
+    if (state.paceUnit != null) {
+      context.read<PaceUnitService>().changeUnit(state.paceUnit!);
     }
   }
 
