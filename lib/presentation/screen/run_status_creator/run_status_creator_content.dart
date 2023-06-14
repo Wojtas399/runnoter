@@ -5,26 +5,33 @@ class _Content extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          Str.of(context).runStatusCreatorScreenTitle,
-        ),
-        centerTitle: true,
+    return WillPopScope(
+      onWillPop: () async => askForConfirmationToLeave(
+        context: context,
+        areUnsavedChanges:
+            !context.read<RunStatusCreatorBloc>().state.isSubmitButtonDisabled,
       ),
-      body: SafeArea(
-        child: GestureDetector(
-          onTap: unfocusInputs,
-          child: const ScrollableContent(
-            child: Paddings24(
-              child: Column(
-                children: [
-                  _StatusType(),
-                  SizedBox(height: 24),
-                  _Form(),
-                  SizedBox(height: 24),
-                  _SubmitButton(),
-                ],
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            Str.of(context).runStatusCreatorScreenTitle,
+          ),
+          centerTitle: true,
+        ),
+        body: SafeArea(
+          child: GestureDetector(
+            onTap: unfocusInputs,
+            child: const ScrollableContent(
+              child: Paddings24(
+                child: Column(
+                  children: [
+                    _StatusType(),
+                    SizedBox(height: 24),
+                    _Form(),
+                    SizedBox(height: 24),
+                    _SubmitButton(),
+                  ],
+                ),
               ),
             ),
           ),
@@ -56,16 +63,13 @@ class _SubmitButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool isFormValid = context.select(
-      (RunStatusCreatorBloc bloc) => bloc.state.isFormValid,
-    );
-    final bool areDataSameAsOriginal = context.select(
-      (RunStatusCreatorBloc bloc) => bloc.state.areDataSameAsOriginal,
+    final bool isDisabled = context.select(
+      (RunStatusCreatorBloc bloc) => bloc.state.isSubmitButtonDisabled,
     );
 
     return BigButton(
       label: Str.of(context).save,
-      isDisabled: !isFormValid || areDataSameAsOriginal,
+      isDisabled: isDisabled,
       onPressed: () {
         _onPressed(context);
       },
