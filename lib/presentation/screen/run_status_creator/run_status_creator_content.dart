@@ -8,8 +8,7 @@ class _Content extends StatelessWidget {
     return WillPopScope(
       onWillPop: () async => askForConfirmationToLeave(
         context: context,
-        areUnsavedChanges:
-            !context.read<RunStatusCreatorBloc>().state.isSubmitButtonDisabled,
+        areUnsavedChanges: context.read<RunStatusCreatorBloc>().state.canSubmit,
       ),
       child: Scaffold(
         appBar: AppBar(
@@ -64,7 +63,7 @@ class _SubmitButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool isDisabled = context.select(
-      (RunStatusCreatorBloc bloc) => bloc.state.isSubmitButtonDisabled,
+      (RunStatusCreatorBloc bloc) => !bloc.state.canSubmit,
     );
 
     return BigButton(

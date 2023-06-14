@@ -38,33 +38,36 @@ class RunStatusCreatorState extends BlocState<RunStatusCreatorState> {
         comment,
       ];
 
-  bool get isSubmitButtonDisabled => _isFormInvalid || _areDataSameAsOriginal;
+  bool get canSubmit => _isFormValid && _areDataDifferentThanOriginal;
 
-  bool get _isFormInvalid =>
-      (runStatusType != RunStatusType.pending &&
-          runStatusType != RunStatusType.undone) &&
-      (runStatusType == null ||
-          (coveredDistanceInKm == null || coveredDistanceInKm == 0) ||
-          duration?.inSeconds == 0 ||
-          moodRate == null ||
-          (avgPace == null ||
-              (avgPace?.minutes == 0 && avgPace?.seconds == 0)) ||
-          (avgHeartRate == null || avgHeartRate == 0));
+  bool get _isFormValid =>
+      runStatusType == RunStatusType.pending ||
+      runStatusType == RunStatusType.undone ||
+      (runStatusType != null &&
+          coveredDistanceInKm != null &&
+          coveredDistanceInKm! > 0 &&
+          (duration == null || duration!.inSeconds > 0) &&
+          moodRate != null &&
+          avgPace != null &&
+          avgPace!.minutes > 0 &&
+          avgPace!.seconds > 0 &&
+          avgHeartRate != null &&
+          avgHeartRate! > 0);
 
-  bool get _areDataSameAsOriginal {
+  bool get _areDataDifferentThanOriginal {
     if (_doesRunStatusTypeMatchToOriginalRunStatus()) {
       final RunStatus? originalRunStatus = this.originalRunStatus;
       if (originalRunStatus is RunStatusWithParams) {
-        return coveredDistanceInKm == originalRunStatus.coveredDistanceInKm &&
-            duration == originalRunStatus.duration &&
-            moodRate == originalRunStatus.moodRate &&
-            avgPace == originalRunStatus.avgPace &&
-            avgHeartRate == originalRunStatus.avgHeartRate &&
-            (comment ?? '') == (originalRunStatus.comment ?? '');
+        return coveredDistanceInKm != originalRunStatus.coveredDistanceInKm ||
+            duration != originalRunStatus.duration ||
+            moodRate != originalRunStatus.moodRate ||
+            avgPace != originalRunStatus.avgPace ||
+            avgHeartRate != originalRunStatus.avgHeartRate ||
+            comment != originalRunStatus.comment;
       }
-      return true;
+      return false;
     }
-    return false;
+    return true;
   }
 
   @override

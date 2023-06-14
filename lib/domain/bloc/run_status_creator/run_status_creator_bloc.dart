@@ -155,7 +155,7 @@ class RunStatusCreatorBloc extends BlocWithStatus<RunStatusCreatorEvent,
     RunStatusCreatorEventSubmit event,
     Emitter<RunStatusCreatorState> emit,
   ) async {
-    if (state.isSubmitButtonDisabled) {
+    if (!state.canSubmit) {
       return;
     }
     final String? loggedUserId = await _authService.loggedUserId$.first;

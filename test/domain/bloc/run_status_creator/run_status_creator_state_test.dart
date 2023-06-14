@@ -14,9 +14,9 @@ void main() {
   });
 
   test(
-    'is submit button disabled, '
+    'can submit, '
     'run status type is null, '
-    'should be true',
+    'should be false',
     () {
       state = state.copyWith(
         runStatusType: null,
@@ -26,40 +26,40 @@ void main() {
         avgHeartRate: 150,
       );
 
-      expect(state.isSubmitButtonDisabled, true);
+      expect(state.canSubmit, false);
     },
   );
 
   test(
-    'is submit button disabled, '
+    'can submit, '
     'run status type is set as pending, '
-    'should be false',
+    'should be true',
     () {
       state = state.copyWith(
         runStatusType: RunStatusType.pending,
       );
 
-      expect(state.isSubmitButtonDisabled, false);
+      expect(state.canSubmit, true);
     },
   );
 
   test(
-    'is submit button disabled, '
+    'can submit, '
     'run status type is set as undone, '
-    'should be false',
+    'should be true',
     () {
       state = state.copyWith(
         runStatusType: RunStatusType.undone,
       );
 
-      expect(state.isSubmitButtonDisabled, false);
+      expect(state.canSubmit, true);
     },
   );
 
   test(
-    'is submit button disabled, '
+    'can submit, '
     'covered distance in km is null, '
-    'should be true',
+    'should be false',
     () {
       state = state.copyWith(
         runStatusType: RunStatusType.done,
@@ -68,14 +68,14 @@ void main() {
         avgHeartRate: 150,
       );
 
-      expect(state.isSubmitButtonDisabled, true);
+      expect(state.canSubmit, false);
     },
   );
 
   test(
-    'is submit button disabled, '
+    'can submit, '
     'covered distance in km is 0, '
-    'should be true',
+    'should be false',
     () {
       state = state.copyWith(
         runStatusType: RunStatusType.done,
@@ -85,14 +85,14 @@ void main() {
         avgHeartRate: 150,
       );
 
-      expect(state.isSubmitButtonDisabled, true);
+      expect(state.canSubmit, false);
     },
   );
 
   test(
-    'is submit button disabled, '
+    'can submit, '
     'duration is 0, '
-    'should be true',
+    'should be false',
     () {
       state = state.copyWith(
         runStatusType: RunStatusType.done,
@@ -103,14 +103,14 @@ void main() {
         avgHeartRate: 150,
       );
 
-      expect(state.isSubmitButtonDisabled, true);
+      expect(state.canSubmit, false);
     },
   );
 
   test(
-    'is submit button disabled, '
+    'can submit, '
     'mood rate is null, '
-    'should be true',
+    'should be false',
     () {
       state = state.copyWith(
         runStatusType: RunStatusType.done,
@@ -119,14 +119,14 @@ void main() {
         avgHeartRate: 150,
       );
 
-      expect(state.isSubmitButtonDisabled, true);
+      expect(state.canSubmit, false);
     },
   );
 
   test(
-    'is submit button disabled, '
+    'can submit, '
     'average pace is null, '
-    'should be true',
+    'should be false',
     () {
       state = state.copyWith(
         runStatusType: RunStatusType.done,
@@ -135,14 +135,14 @@ void main() {
         avgHeartRate: 150,
       );
 
-      expect(state.isSubmitButtonDisabled, true);
+      expect(state.canSubmit, false);
     },
   );
 
   test(
-    'is submit button disabled, '
+    'can submit, '
     'average pace minutes and seconds is 0, '
-    'should be true',
+    'should be false',
     () {
       state = state.copyWith(
         runStatusType: RunStatusType.done,
@@ -152,14 +152,14 @@ void main() {
         avgHeartRate: 150,
       );
 
-      expect(state.isSubmitButtonDisabled, true);
+      expect(state.canSubmit, false);
     },
   );
 
   test(
-    'is submit button disabled, '
+    'can submit, '
     'average heart rate is null, '
-    'should be true',
+    'should be false',
     () {
       state = state.copyWith(
         runStatusType: RunStatusType.done,
@@ -168,14 +168,14 @@ void main() {
         avgPace: const Pace(minutes: 5, seconds: 30),
       );
 
-      expect(state.isSubmitButtonDisabled, true);
+      expect(state.canSubmit, false);
     },
   );
 
   test(
-    'is submit button disabled, '
+    'can submit, '
     'average heart rate is 0, '
-    'should be true',
+    'should be false',
     () {
       state = state.copyWith(
         runStatusType: RunStatusType.done,
@@ -185,14 +185,14 @@ void main() {
         avgHeartRate: 0,
       );
 
-      expect(state.isSubmitButtonDisabled, true);
+      expect(state.canSubmit, false);
     },
   );
 
   test(
-    'is submit button disabled, '
+    'can submit, '
     'all required params are valid, '
-    'should be false',
+    'should be true',
     () {
       state = state.copyWith(
         runStatusType: RunStatusType.done,
@@ -202,14 +202,14 @@ void main() {
         avgHeartRate: 150,
       );
 
-      expect(state.isSubmitButtonDisabled, false);
+      expect(state.canSubmit, true);
     },
   );
 
   test(
-    'is submit button disabled, '
+    'can submit, '
     'run status type does not match to original run status, '
-    'should be false',
+    'should be true',
     () {
       state = state.copyWith(
         originalRunStatus: const RunStatusPending(),
@@ -222,15 +222,15 @@ void main() {
         comment: 'comment',
       );
 
-      expect(state.isSubmitButtonDisabled, false);
+      expect(state.canSubmit, true);
     },
   );
 
   test(
-    'is submit button disabled, '
+    'can submit, '
     'original run status contains run stats, '
-    'all params are the same as params set in run status, '
-    'should be true',
+    'all params are the same as params set in original run status, '
+    'should be false',
     () {
       state = state.copyWith(
         originalRunStatus: const RunStatusDone(
@@ -250,15 +250,15 @@ void main() {
         comment: 'comment',
       );
 
-      expect(state.isSubmitButtonDisabled, true);
+      expect(state.canSubmit, false);
     },
   );
 
   test(
-    'is submit button disabled, '
+    'can submit, '
     'original run status contains run stats, '
     'covered distance is different than original, '
-    'should be false',
+    'should be true',
     () {
       state = state.copyWith(
         originalRunStatus: const RunStatusDone(
@@ -278,15 +278,15 @@ void main() {
         comment: 'comment',
       );
 
-      expect(state.isSubmitButtonDisabled, false);
+      expect(state.canSubmit, true);
     },
   );
 
   test(
-    'is submit button disabled, '
+    'can submit, '
     'original run status contains run stats, '
     'duration is different than original, '
-    'should be false',
+    'should be true',
     () {
       state = state.copyWith(
         originalRunStatus: const RunStatusDone(
@@ -306,15 +306,15 @@ void main() {
         comment: 'comment',
       );
 
-      expect(state.isSubmitButtonDisabled, false);
+      expect(state.canSubmit, true);
     },
   );
 
   test(
-    'is submit button disabled, '
+    'can submit, '
     'original run status contains run stats, '
     'average pace is different than original, '
-    'should be false',
+    'should be true',
     () {
       state = state.copyWith(
         originalRunStatus: const RunStatusDone(
@@ -334,15 +334,15 @@ void main() {
         comment: 'comment',
       );
 
-      expect(state.isSubmitButtonDisabled, false);
+      expect(state.canSubmit, true);
     },
   );
 
   test(
-    'is submit button disabled, '
+    'can submit, '
     'original run status contains run stats, '
     'average heart rate is different than original, '
-    'should be false',
+    'should be true',
     () {
       state = state.copyWith(
         originalRunStatus: const RunStatusDone(
@@ -362,15 +362,15 @@ void main() {
         comment: 'comment',
       );
 
-      expect(state.isSubmitButtonDisabled, false);
+      expect(state.canSubmit, true);
     },
   );
 
   test(
-    'is submit button disabled, '
+    'can submit, '
     'original run status contains run stats, '
     'mood rate is different than original, '
-    'should be false',
+    'should be true',
     () {
       state = state.copyWith(
         originalRunStatus: const RunStatusDone(
@@ -390,15 +390,15 @@ void main() {
         comment: 'comment',
       );
 
-      expect(state.isSubmitButtonDisabled, false);
+      expect(state.canSubmit, true);
     },
   );
 
   test(
-    'is submit button disabled, '
+    'can submit, '
     'original run status contains run stats, '
     'comment is different than original, '
-    'should be false',
+    'should be true',
     () {
       state = state.copyWith(
         originalRunStatus: const RunStatusDone(
@@ -418,7 +418,7 @@ void main() {
         comment: 'new comment',
       );
 
-      expect(state.isSubmitButtonDisabled, false);
+      expect(state.canSubmit, true);
     },
   );
 

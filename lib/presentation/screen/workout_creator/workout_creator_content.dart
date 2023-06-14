@@ -8,8 +8,7 @@ class _Content extends StatelessWidget {
     return WillPopScope(
       onWillPop: () async => askForConfirmationToLeave(
         context: context,
-        areUnsavedChanges:
-            !context.read<WorkoutCreatorBloc>().state.isSubmitButtonDisabled,
+        areUnsavedChanges: context.read<WorkoutCreatorBloc>().state.canSubmit,
       ),
       child: Scaffold(
         appBar: AppBar(

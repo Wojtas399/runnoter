@@ -5,19 +5,25 @@ class _Content extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const _AppBar(),
-      body: GestureDetector(
-        onTap: () {
-          unfocusInputs();
-        },
-        child: const Column(
-          children: [
-            _DateSection(),
-            Expanded(
-              child: _ParametersSection(),
-            ),
-          ],
+    return WillPopScope(
+      onWillPop: () async => askForConfirmationToLeave(
+        context: context,
+        areUnsavedChanges: context.read<BloodTestCreatorBloc>().state.canSubmit,
+      ),
+      child: Scaffold(
+        appBar: const _AppBar(),
+        body: GestureDetector(
+          onTap: () {
+            unfocusInputs();
+          },
+          child: const Column(
+            children: [
+              _DateSection(),
+              Expanded(
+                child: _ParametersSection(),
+              ),
+            ],
+          ),
         ),
       ),
     );
