@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../component/action_sheet_component.dart';
 import '../component/dialog/confirmation_dialog_component.dart';
@@ -67,16 +68,31 @@ Future<bool> askForConfirmation({
   required String title,
   required String message,
   String? confirmButtonLabel,
+}) async =>
+    await showAlertDialog(
+      context: context,
+      dialog: ConfirmationDialogComponent(
+        title: title,
+        message: message,
+        confirmButtonLabel: confirmButtonLabel,
+      ),
+    ) ==
+    true;
+
+Future<bool> askForConfirmationToLeave({
+  required BuildContext context,
+  bool areUnsavedChanges = false,
 }) async {
-  return await showAlertDialog(
-        context: context,
-        dialog: ConfirmationDialogComponent(
-          title: title,
-          message: message,
-          confirmButtonLabel: confirmButtonLabel,
-        ),
-      ) ==
-      true;
+  final str = Str.of(context);
+  return await askForConfirmation(
+    context: context,
+    title: str.leavePageConfirmationDialogTitle,
+    message: switch (areUnsavedChanges) {
+      true => str.leavePageWithUnsavedChangesConfirmationDialogMessage,
+      false => str.leavePageConfirmationDialogMessage,
+    },
+    confirmButtonLabel: str.leave,
+  );
 }
 
 Future<String?> askForValue({
@@ -106,6 +122,7 @@ Future<T?> askForAction<T>({
   required BuildContext context,
   required List<ActionSheetItem<T>> actions,
 }) async {
+  hideSnackbar(context: context);
   return await showModalBottomSheet(
     context: context,
     showDragHandle: true,

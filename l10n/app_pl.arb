@@ -819,6 +819,18 @@
   "@unknownErrorDialogMessage": {
     "description": "Message of the dialog about unknown exception"
   },
+  "leavePageConfirmationDialogTitle": "Opuść stronę",
+  "@leavePageConfirmationDialogTitle": {
+    "description": "Title of the dialog to confirm leaving page"
+  },
+  "leavePageConfirmationDialogMessage": "Czy na pewno chcesz opuścić tę stronę?",
+  "@leavePageConfirmationDialogMessage": {
+    "description": "Message of the dialog to confirm leaving page"
+  },
+  "leavePageWithUnsavedChangesConfirmationDialogMessage": "Masz niezapisane zmiany, które zostaną odrzucone. Czy na pewno chcesz opuścić tę stronę?",
+  "@leavePageWithUnsavedChangesConfirmationDialogMessage": {
+    "description": "Message of the dialog to confirm leaving page without saving changes"
+  },
   "name": "Imię",
   "@name": {
     "description": "Name"
@@ -850,6 +862,7 @@
   "change": "Zmień",
   "back": "Wróć",
   "add": "Dodaj",
+  "leave": "Opuść",
   "requiredFieldMessage": "To pole jest wymagane",
   "@requiredFieldMessage": {
     "description": "Message to inform that field is required."
