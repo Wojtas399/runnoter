@@ -142,7 +142,9 @@ class _CompetitionDistance extends StatelessWidget {
     }
     context.read<CompetitionCreatorBloc>().add(
           CompetitionCreatorEventDistanceChanged(
-            distance: distance ?? 0,
+            distance: distance != null
+                ? context.convertDistanceToDefaultUnit(distance)
+                : 0,
           ),
         );
   }

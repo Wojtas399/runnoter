@@ -159,7 +159,7 @@
   "runStatusAvgPace": "Average pace",
   "runStatusAvgHeartRate": "Average heart rate",
   "runStatusComment": "Comment",
-  "runStatusChangeStatus": "Change status",
+  "runStatusEditStatus": "Edit status",
   "runStatusFinish": "Finish",
   "runStatusPending": "Pending",
   "runStatusDone": "Done",

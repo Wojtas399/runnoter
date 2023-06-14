@@ -64,12 +64,16 @@ void main() {
   blocTest(
     'initialize, '
     'competition id is null, '
-    'should do nothing',
+    'should emit complete status',
     build: () => createBloc(),
     act: (CompetitionCreatorBloc bloc) => bloc.add(
       const CompetitionCreatorEventInitialize(competitionId: null),
     ),
-    expect: () => [],
+    expect: () => [
+      createState(
+        status: const BlocStatusComplete<CompetitionCreatorBlocInfo>(),
+      ),
+    ],
   );
 
   blocTest(

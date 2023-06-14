@@ -183,7 +183,7 @@ class _FinishCompetitionButton extends StatelessWidget {
     return BigButton(
       label: runStatus is RunStatusPending
           ? Str.of(context).runStatusFinish
-          : Str.of(context).runStatusChangeStatus,
+          : Str.of(context).runStatusEditStatus,
       onPressed: () {
         _onPressed(context);
       },

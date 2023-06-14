@@ -639,9 +639,9 @@
   "@runStatusComment": {
     "description": "Label of the comment of run status"
   },
-  "runStatusChangeStatus": "Zmień status",
-  "@runStatusChangeStatus": {
-    "description": "Label of the button to change status"
+  "runStatusEditStatus": "Edytuj status",
+  "@runStatusEditStatus": {
+    "description": "Label of the button to edit status"
   },
   "runStatusFinish": "Zakończ",
   "@runStatusFinish": {

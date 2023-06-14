@@ -44,6 +44,10 @@ class MileageCubit extends Cubit<List<ChartYear>?> {
       return;
     }
     final List<Workout> sortedWorkouts = _sortWorkoutsByDate(workouts);
+    if (sortedWorkouts.isEmpty) {
+      emit([]);
+      return;
+    }
     final int lastYear = sortedWorkouts.last.date.year;
     int yearCounter = sortedWorkouts.first.date.year;
     final List<ChartYear> years = [];

@@ -41,6 +41,7 @@ class CompetitionCreatorBloc extends BlocWithStatus<CompetitionCreatorEvent,
     Emitter<CompetitionCreatorState> emit,
   ) async {
     if (event.competitionId == null) {
+      emitCompleteStatus(emit, null);
       return;
     }
     final String? loggedUserId = await _authService.loggedUserId$.first;
