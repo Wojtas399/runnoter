@@ -38,20 +38,20 @@ class RunStatusCreatorState extends BlocState<RunStatusCreatorState> {
         comment,
       ];
 
-  bool get isFormValid =>
-      runStatusType == RunStatusType.pending ||
-      runStatusType == RunStatusType.undone ||
-      (runStatusType != null &&
-          coveredDistanceInKm != null &&
-          coveredDistanceInKm! > 0 &&
-          (duration == null || duration!.inSeconds > 0) &&
-          moodRate != null &&
-          avgPace != null &&
-          (avgPace!.minutes > 0 || avgPace!.seconds > 0) &&
-          avgHeartRate != null &&
-          avgHeartRate! > 0);
+  bool get isSubmitButtonDisabled => _isFormInvalid || _areDataSameAsOriginal;
 
-  bool get areDataSameAsOriginal {
+  bool get _isFormInvalid =>
+      (runStatusType != RunStatusType.pending &&
+          runStatusType != RunStatusType.undone) &&
+      (runStatusType == null ||
+          (coveredDistanceInKm == null || coveredDistanceInKm == 0) ||
+          duration?.inSeconds == 0 ||
+          moodRate == null ||
+          (avgPace == null ||
+              (avgPace?.minutes == 0 && avgPace?.seconds == 0)) ||
+          (avgHeartRate == null || avgHeartRate == 0));
+
+  bool get _areDataSameAsOriginal {
     if (_doesRunStatusTypeMatchToOriginalRunStatus()) {
       final RunStatus? originalRunStatus = this.originalRunStatus;
       if (originalRunStatus is RunStatusWithParams) {

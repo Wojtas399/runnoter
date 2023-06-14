@@ -85,7 +85,7 @@ class RunStatusCreatorBloc extends BlocWithStatus<RunStatusCreatorEvent,
         comment: runStatus.comment,
       );
     }
-    emitCompleteStatus(emit, null);
+    emit(updatedState);
   }
 
   void _runStatusTypeChanged(
@@ -155,7 +155,7 @@ class RunStatusCreatorBloc extends BlocWithStatus<RunStatusCreatorEvent,
     RunStatusCreatorEventSubmit event,
     Emitter<RunStatusCreatorState> emit,
   ) async {
-    if (!state.isFormValid || state.areDataSameAsOriginal) {
+    if (state.isSubmitButtonDisabled) {
       return;
     }
     final String? loggedUserId = await _authService.loggedUserId$.first;

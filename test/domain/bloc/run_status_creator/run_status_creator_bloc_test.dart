@@ -131,7 +131,7 @@ void main() {
     ),
     expect: () => [
       createState(
-        status: const BlocStatusComplete<RunStatusCreatorBlocInfo>(),
+        status: const BlocStatusComplete(),
         originalRunStatus: const RunStatusDone(
           coveredDistanceInKm: 10,
           duration: Duration(seconds: 2),
@@ -183,7 +183,7 @@ void main() {
     ),
     expect: () => [
       createState(
-        status: const BlocStatusComplete<RunStatusCreatorBlocInfo>(),
+        status: const BlocStatusComplete(),
         originalRunStatus: const RunStatusPending(),
         runStatusType: RunStatusType.done,
       ),
@@ -222,7 +222,7 @@ void main() {
     ),
     expect: () => [
       createState(
-        status: const BlocStatusComplete<RunStatusCreatorBlocInfo>(),
+        status: const BlocStatusComplete(),
         originalRunStatus: const RunStatusUndone(),
         runStatusType: RunStatusType.undone,
       ),
@@ -270,7 +270,7 @@ void main() {
     ),
     expect: () => [
       createState(
-        status: const BlocStatusComplete<RunStatusCreatorBlocInfo>(),
+        status: const BlocStatusComplete(),
         entityType: EntityType.competition,
         originalRunStatus: const RunStatusDone(
           coveredDistanceInKm: 10,
@@ -325,7 +325,7 @@ void main() {
     ),
     expect: () => [
       createState(
-        status: const BlocStatusComplete<RunStatusCreatorBlocInfo>(),
+        status: const BlocStatusComplete(),
         entityType: EntityType.competition,
         originalRunStatus: const RunStatusPending(),
         runStatusType: RunStatusType.done,
@@ -367,7 +367,7 @@ void main() {
     ),
     expect: () => [
       createState(
-        status: const BlocStatusComplete<RunStatusCreatorBlocInfo>(),
+        status: const BlocStatusComplete(),
         entityType: EntityType.competition,
         originalRunStatus: const RunStatusUndone(),
         runStatusType: RunStatusType.undone,

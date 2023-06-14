@@ -14,9 +14,9 @@ void main() {
   });
 
   test(
-    'is form valid, '
+    'is submit button disabled, '
     'run status type is null, '
-    'should be false',
+    'should be true',
     () {
       state = state.copyWith(
         runStatusType: null,
@@ -26,40 +26,40 @@ void main() {
         avgHeartRate: 150,
       );
 
-      expect(state.isFormValid, false);
+      expect(state.isSubmitButtonDisabled, true);
     },
   );
 
   test(
-    'is form valid, '
+    'is submit button disabled, '
     'run status type is set as pending, '
-    'should be true',
+    'should be false',
     () {
       state = state.copyWith(
         runStatusType: RunStatusType.pending,
       );
 
-      expect(state.isFormValid, true);
+      expect(state.isSubmitButtonDisabled, false);
     },
   );
 
   test(
-    'is form valid, '
+    'is submit button disabled, '
     'run status type is set as undone, '
-    'should be true',
+    'should be false',
     () {
       state = state.copyWith(
         runStatusType: RunStatusType.undone,
       );
 
-      expect(state.isFormValid, true);
+      expect(state.isSubmitButtonDisabled, false);
     },
   );
 
   test(
-    'is form valid, '
+    'is submit button disabled, '
     'covered distance in km is null, '
-    'should be false',
+    'should be true',
     () {
       state = state.copyWith(
         runStatusType: RunStatusType.done,
@@ -68,14 +68,14 @@ void main() {
         avgHeartRate: 150,
       );
 
-      expect(state.isFormValid, false);
+      expect(state.isSubmitButtonDisabled, true);
     },
   );
 
   test(
-    'is form valid, '
+    'is submit button disabled, '
     'covered distance in km is 0, '
-    'should be false',
+    'should be true',
     () {
       state = state.copyWith(
         runStatusType: RunStatusType.done,
@@ -85,14 +85,14 @@ void main() {
         avgHeartRate: 150,
       );
 
-      expect(state.isFormValid, false);
+      expect(state.isSubmitButtonDisabled, true);
     },
   );
 
   test(
-    'is form valid, '
+    'is submit button disabled, '
     'duration is 0, '
-    'should be false',
+    'should be true',
     () {
       state = state.copyWith(
         runStatusType: RunStatusType.done,
@@ -103,12 +103,12 @@ void main() {
         avgHeartRate: 150,
       );
 
-      expect(state.isFormValid, false);
+      expect(state.isSubmitButtonDisabled, true);
     },
   );
 
   test(
-    'is form valid, '
+    'is submit button disabled, '
     'mood rate is null, '
     'should be true',
     () {
@@ -119,12 +119,12 @@ void main() {
         avgHeartRate: 150,
       );
 
-      expect(state.isFormValid, false);
+      expect(state.isSubmitButtonDisabled, true);
     },
   );
 
   test(
-    'is form valid, '
+    'is submit button disabled, '
     'average pace is null, '
     'should be true',
     () {
@@ -135,14 +135,14 @@ void main() {
         avgHeartRate: 150,
       );
 
-      expect(state.isFormValid, false);
+      expect(state.isSubmitButtonDisabled, true);
     },
   );
 
   test(
-    'is form valid, '
+    'is submit button disabled, '
     'average pace minutes and seconds is 0, '
-    'should be false',
+    'should be true',
     () {
       state = state.copyWith(
         runStatusType: RunStatusType.done,
@@ -152,14 +152,14 @@ void main() {
         avgHeartRate: 150,
       );
 
-      expect(state.isFormValid, false);
+      expect(state.isSubmitButtonDisabled, true);
     },
   );
 
   test(
-    'is form valid, '
+    'is submit button disabled, '
     'average heart rate is null, '
-    'should be false',
+    'should be true',
     () {
       state = state.copyWith(
         runStatusType: RunStatusType.done,
@@ -168,14 +168,14 @@ void main() {
         avgPace: const Pace(minutes: 5, seconds: 30),
       );
 
-      expect(state.isFormValid, false);
+      expect(state.isSubmitButtonDisabled, true);
     },
   );
 
   test(
-    'is form valid, '
+    'is submit button disabled, '
     'average heart rate is 0, '
-    'should be false',
+    'should be true',
     () {
       state = state.copyWith(
         runStatusType: RunStatusType.done,
@@ -185,14 +185,14 @@ void main() {
         avgHeartRate: 0,
       );
 
-      expect(state.isFormValid, false);
+      expect(state.isSubmitButtonDisabled, true);
     },
   );
 
   test(
-    'is form valid, '
+    'is submit button disabled, '
     'all required params are valid, '
-    'should be true',
+    'should be false',
     () {
       state = state.copyWith(
         runStatusType: RunStatusType.done,
@@ -202,26 +202,32 @@ void main() {
         avgHeartRate: 150,
       );
 
-      expect(state.isFormValid, true);
+      expect(state.isSubmitButtonDisabled, false);
     },
   );
 
   test(
-    'are data same as original, '
+    'is submit button disabled, '
     'run status type does not match to original run status, '
     'should be false',
     () {
       state = state.copyWith(
         originalRunStatus: const RunStatusPending(),
         runStatusType: RunStatusType.done,
+        coveredDistanceInKm: 10,
+        duration: const Duration(seconds: 10),
+        avgPace: const Pace(minutes: 6, seconds: 10),
+        avgHeartRate: 150,
+        moodRate: MoodRate.mr8,
+        comment: 'comment',
       );
 
-      expect(state.areDataSameAsOriginal, false);
+      expect(state.isSubmitButtonDisabled, false);
     },
   );
 
   test(
-    'are data same as original, '
+    'is submit button disabled, '
     'original run status contains run stats, '
     'all params are the same as params set in run status, '
     'should be true',
@@ -244,12 +250,12 @@ void main() {
         comment: 'comment',
       );
 
-      expect(state.areDataSameAsOriginal, true);
+      expect(state.isSubmitButtonDisabled, true);
     },
   );
 
   test(
-    'are data same as original, '
+    'is submit button disabled, '
     'original run status contains run stats, '
     'covered distance is different than original, '
     'should be false',
@@ -272,12 +278,12 @@ void main() {
         comment: 'comment',
       );
 
-      expect(state.areDataSameAsOriginal, false);
+      expect(state.isSubmitButtonDisabled, false);
     },
   );
 
   test(
-    'are data same as original, '
+    'is submit button disabled, '
     'original run status contains run stats, '
     'duration is different than original, '
     'should be false',
@@ -300,12 +306,12 @@ void main() {
         comment: 'comment',
       );
 
-      expect(state.areDataSameAsOriginal, false);
+      expect(state.isSubmitButtonDisabled, false);
     },
   );
 
   test(
-    'are data same as original, '
+    'is submit button disabled, '
     'original run status contains run stats, '
     'average pace is different than original, '
     'should be false',
@@ -328,12 +334,12 @@ void main() {
         comment: 'comment',
       );
 
-      expect(state.areDataSameAsOriginal, false);
+      expect(state.isSubmitButtonDisabled, false);
     },
   );
 
   test(
-    'are data same as original, '
+    'is submit button disabled, '
     'original run status contains run stats, '
     'average heart rate is different than original, '
     'should be false',
@@ -356,12 +362,12 @@ void main() {
         comment: 'comment',
       );
 
-      expect(state.areDataSameAsOriginal, false);
+      expect(state.isSubmitButtonDisabled, false);
     },
   );
 
   test(
-    'are data same as original, '
+    'is submit button disabled, '
     'original run status contains run stats, '
     'mood rate is different than original, '
     'should be false',
@@ -384,12 +390,12 @@ void main() {
         comment: 'comment',
       );
 
-      expect(state.areDataSameAsOriginal, false);
+      expect(state.isSubmitButtonDisabled, false);
     },
   );
 
   test(
-    'are data same as original, '
+    'is submit button disabled, '
     'original run status contains run stats, '
     'comment is different than original, '
     'should be false',
@@ -412,7 +418,7 @@ void main() {
         comment: 'new comment',
       );
 
-      expect(state.areDataSameAsOriginal, false);
+      expect(state.isSubmitButtonDisabled, false);
     },
   );
 
