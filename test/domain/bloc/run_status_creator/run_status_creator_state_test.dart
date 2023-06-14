@@ -174,6 +174,23 @@ void main() {
 
   test(
     'is form valid, '
+    'average heart rate is 0, '
+    'should be false',
+    () {
+      state = state.copyWith(
+        runStatusType: RunStatusType.done,
+        coveredDistanceInKm: 10,
+        moodRate: MoodRate.mr8,
+        avgPace: const Pace(minutes: 5, seconds: 30),
+        avgHeartRate: 0,
+      );
+
+      expect(state.isFormValid, false);
+    },
+  );
+
+  test(
+    'is form valid, '
     'all required params are valid, '
     'should be true',
     () {

@@ -11,7 +11,7 @@ class _ParamsForm extends StatelessWidget {
 
     return Column(
       children: [
-        _CoveredDistance(),
+        const _CoveredDistance(),
         if (entityType == EntityType.competition)
           const Column(
             children: [
@@ -22,64 +22,13 @@ class _ParamsForm extends StatelessWidget {
         gap,
         const _MoodRate(),
         gap,
-        const _AveragePace(),
+        const _AvgPace(),
         gap,
-        _AverageHeartRate(),
+        const _AvgHeartRate(),
         gap,
-        _Comment(),
+        const _Comment(),
       ],
     );
-  }
-}
-
-class _CoveredDistance extends StatelessWidget {
-  final TextEditingController _controller = TextEditingController();
-
-  @override
-  Widget build(BuildContext context) {
-    final BlocStatus blocStatus = context.select(
-      (RunStatusCreatorBloc bloc) => bloc.state.status,
-    );
-    if (blocStatus is BlocStatusComplete &&
-        blocStatus.info == RunStatusCreatorBlocInfo.runStatusInitialized) {
-      double? coveredDistance =
-          context.read<RunStatusCreatorBloc>().state.coveredDistanceInKm;
-      _controller.text = coveredDistance != null
-          ? context
-              .convertDistanceFromDefaultUnit(coveredDistance)
-              .toStringAsFixed(2)
-          : '';
-    }
-
-    return TextFieldComponent(
-      label:
-          '${Str.of(context).runStatusCreatorCoveredDistance} [${context.distanceUnit.toUIShortFormat()}]',
-      maxLength: 8,
-      keyboardType: TextInputType.number,
-      isRequired: true,
-      inputFormatters: [
-        DecimalTextInputFormatter(decimalRange: 2),
-      ],
-      controller: _controller,
-      onChanged: (String? coveredDistanceInKmStr) {
-        _onChanged(context, coveredDistanceInKmStr);
-      },
-    );
-  }
-
-  void _onChanged(BuildContext context, String? coveredDistanceInKmStr) {
-    if (coveredDistanceInKmStr == null) {
-      return;
-    }
-    final double coveredDistanceInKm =
-        double.tryParse(coveredDistanceInKmStr) ?? 0;
-    final double convertedCoveredDistance =
-        context.convertDistanceFromDefaultUnit(coveredDistanceInKm);
-    context.read<RunStatusCreatorBloc>().add(
-          RunStatusCreatorEventCoveredDistanceInKmChanged(
-            coveredDistanceInKm: convertedCoveredDistance,
-          ),
-        );
   }
 }
 
@@ -155,85 +104,6 @@ class _MoodRate extends StatelessWidget {
     context.read<RunStatusCreatorBloc>().add(
           RunStatusCreatorEventMoodRateChanged(
             moodRate: moodRate,
-          ),
-        );
-  }
-}
-
-class _AverageHeartRate extends StatelessWidget {
-  final TextEditingController _controller = TextEditingController();
-
-  @override
-  Widget build(BuildContext context) {
-    final BlocStatus blocStatus = context.select(
-      (RunStatusCreatorBloc bloc) => bloc.state.status,
-    );
-    if (blocStatus is BlocStatusComplete &&
-        blocStatus.info == RunStatusCreatorBlocInfo.runStatusInitialized) {
-      _controller.text =
-          context.read<RunStatusCreatorBloc>().state.avgHeartRate?.toString() ??
-              '';
-    }
-
-    return TextFieldComponent(
-      label: Str.of(context).runStatusCreatorAverageHeartRate,
-      maxLength: 3,
-      keyboardType: TextInputType.number,
-      isRequired: true,
-      inputFormatters: [
-        FilteringTextInputFormatter.digitsOnly,
-      ],
-      controller: _controller,
-      onChanged: (String? averageHeartRateStr) {
-        _onChanged(context, averageHeartRateStr);
-      },
-    );
-  }
-
-  void _onChanged(BuildContext context, String? averageHeartRateStr) {
-    if (averageHeartRateStr == null) {
-      return;
-    }
-    final int? averageHeartRate = int.tryParse(averageHeartRateStr);
-    context.read<RunStatusCreatorBloc>().add(
-          RunStatusCreatorEventAvgHeartRateChanged(
-            averageHeartRate: averageHeartRate,
-          ),
-        );
-  }
-}
-
-class _Comment extends StatelessWidget {
-  final TextEditingController _controller = TextEditingController();
-
-  @override
-  Widget build(BuildContext context) {
-    final BlocStatus blocStatus = context.select(
-      (RunStatusCreatorBloc bloc) => bloc.state.status,
-    );
-    if (blocStatus is BlocStatusComplete &&
-        blocStatus.info == RunStatusCreatorBlocInfo.runStatusInitialized) {
-      _controller.text =
-          context.read<RunStatusCreatorBloc>().state.comment ?? '';
-    }
-
-    return TextFieldComponent(
-      label: Str.of(context).runStatusCreatorComment,
-      maxLength: 100,
-      maxLines: null,
-      keyboardType: TextInputType.multiline,
-      displayCounterText: true,
-      controller: _controller,
-      onChanged: (String? comment) {
-        _onChanged(context, comment);
-      },
-    );
-  }
-
-  void _onChanged(BuildContext context, String? comment) {
-    context.read<RunStatusCreatorBloc>().add(
-          RunStatusCreatorEventCommentChanged(
-            comment: comment,
           ),
         );
   }

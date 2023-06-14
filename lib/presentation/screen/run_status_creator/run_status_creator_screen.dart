@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/additional_model/bloc_status.dart';
 import '../../../domain/bloc/run_status_creator/run_status_creator_bloc.dart';
 import '../../../domain/entity/run_status.dart';
 import '../../../domain/entity/settings.dart';
@@ -30,10 +29,11 @@ import '../../service/navigator_service.dart';
 import '../../service/pace_unit_service.dart';
 import '../../service/utils.dart';
 
-part 'run_status_creator_average_pace.dart';
-part 'run_status_creator_average_pace_distance.dart';
-part 'run_status_creator_average_pace_time.dart';
+part 'run_status_creator_avg_heart_rate.dart';
+part 'run_status_creator_avg_pace.dart';
+part 'run_status_creator_comment.dart';
 part 'run_status_creator_content.dart';
+part 'run_status_creator_covered_distance.dart';
 part 'run_status_creator_params_form.dart';
 part 'run_status_creator_status_type.dart';
 
@@ -131,8 +131,6 @@ class _BlocListener extends StatelessWidget {
           context: context,
           message: Str.of(context).runStatusCreatorSavedStatusMessage,
         );
-        break;
-      case RunStatusCreatorBlocInfo.runStatusInitialized:
         break;
     }
   }

@@ -131,9 +131,7 @@ void main() {
     ),
     expect: () => [
       createState(
-        status: const BlocStatusComplete<RunStatusCreatorBlocInfo>(
-          info: RunStatusCreatorBlocInfo.runStatusInitialized,
-        ),
+        status: const BlocStatusComplete<RunStatusCreatorBlocInfo>(),
         originalRunStatus: const RunStatusDone(
           coveredDistanceInKm: 10,
           duration: Duration(seconds: 2),
@@ -185,9 +183,7 @@ void main() {
     ),
     expect: () => [
       createState(
-        status: const BlocStatusComplete<RunStatusCreatorBlocInfo>(
-          info: RunStatusCreatorBlocInfo.runStatusInitialized,
-        ),
+        status: const BlocStatusComplete<RunStatusCreatorBlocInfo>(),
         originalRunStatus: const RunStatusPending(),
         runStatusType: RunStatusType.done,
       ),
@@ -226,9 +222,7 @@ void main() {
     ),
     expect: () => [
       createState(
-        status: const BlocStatusComplete<RunStatusCreatorBlocInfo>(
-          info: RunStatusCreatorBlocInfo.runStatusInitialized,
-        ),
+        status: const BlocStatusComplete<RunStatusCreatorBlocInfo>(),
         originalRunStatus: const RunStatusUndone(),
         runStatusType: RunStatusType.undone,
       ),
@@ -276,9 +270,7 @@ void main() {
     ),
     expect: () => [
       createState(
-        status: const BlocStatusComplete<RunStatusCreatorBlocInfo>(
-          info: RunStatusCreatorBlocInfo.runStatusInitialized,
-        ),
+        status: const BlocStatusComplete<RunStatusCreatorBlocInfo>(),
         entityType: EntityType.competition,
         originalRunStatus: const RunStatusDone(
           coveredDistanceInKm: 10,
@@ -333,9 +325,7 @@ void main() {
     ),
     expect: () => [
       createState(
-        status: const BlocStatusComplete<RunStatusCreatorBlocInfo>(
-          info: RunStatusCreatorBlocInfo.runStatusInitialized,
-        ),
+        status: const BlocStatusComplete<RunStatusCreatorBlocInfo>(),
         entityType: EntityType.competition,
         originalRunStatus: const RunStatusPending(),
         runStatusType: RunStatusType.done,
@@ -377,9 +367,7 @@ void main() {
     ),
     expect: () => [
       createState(
-        status: const BlocStatusComplete<RunStatusCreatorBlocInfo>(
-          info: RunStatusCreatorBlocInfo.runStatusInitialized,
-        ),
+        status: const BlocStatusComplete<RunStatusCreatorBlocInfo>(),
         entityType: EntityType.competition,
         originalRunStatus: const RunStatusUndone(),
         runStatusType: RunStatusType.undone,

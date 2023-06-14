@@ -48,7 +48,8 @@ class RunStatusCreatorState extends BlocState<RunStatusCreatorState> {
           moodRate != null &&
           avgPace != null &&
           (avgPace!.minutes > 0 || avgPace!.seconds > 0) &&
-          avgHeartRate != null);
+          avgHeartRate != null &&
+          avgHeartRate! > 0);
 
   bool get areDataSameAsOriginal {
     if (_doesRunStatusTypeMatchToOriginalRunStatus()) {

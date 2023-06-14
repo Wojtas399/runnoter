@@ -85,11 +85,7 @@ class RunStatusCreatorBloc extends BlocWithStatus<RunStatusCreatorEvent,
         comment: runStatus.comment,
       );
     }
-    emit(updatedState.copyWith(
-      status: const BlocStatusComplete<RunStatusCreatorBlocInfo>(
-        info: RunStatusCreatorBlocInfo.runStatusInitialized,
-      ),
-    ));
+    emitCompleteStatus(emit, null);
   }
 
   void _runStatusTypeChanged(
@@ -234,6 +230,5 @@ class RunStatusCreatorBloc extends BlocWithStatus<RunStatusCreatorEvent,
 }
 
 enum RunStatusCreatorBlocInfo {
-  runStatusInitialized,
   runStatusSaved,
 }
