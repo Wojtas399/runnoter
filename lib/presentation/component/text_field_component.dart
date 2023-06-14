@@ -7,6 +7,7 @@ class TextFieldComponent extends StatelessWidget {
   final IconData? icon;
   final bool isLabelCentered;
   final bool isRequired;
+  final bool requireHigherThan0;
   final int? maxLength;
   final bool displayCounterText;
   final int? maxLines;
@@ -23,6 +24,7 @@ class TextFieldComponent extends StatelessWidget {
     this.icon,
     this.isLabelCentered = false,
     this.isRequired = false,
+    this.requireHigherThan0 = false,
     this.maxLength,
     this.displayCounterText = false,
     this.maxLines,
@@ -66,6 +68,12 @@ class TextFieldComponent extends StatelessWidget {
   String? _validate(String? value, BuildContext context) {
     if (isRequired && value == '') {
       return Str.of(context).requiredFieldMessage;
+    }
+    if (requireHigherThan0) {
+      final double? valAsNum = double.tryParse(value ?? '');
+      if (valAsNum != null && valAsNum == 0) {
+        return Str.of(context).requireValueHigherThan0Message;
+      }
     }
     final String? Function(String? value)? customValidator = validator;
     if (customValidator != null) {

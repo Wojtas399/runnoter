@@ -854,6 +854,10 @@
   "@requiredFieldMessage": {
     "description": "Message to inform that field is required."
   },
+  "requireValueHigherThan0Message": "Wartość w tym polu musi być większa od 0",
+  "@requireValueHigherThan0Message": {
+    "description": "Message to inform that value must be higher than 0"
+  },
   "invalidNameOrSurnameMessage": "Wymogi: \n - Długość minimum 2 znaki \n - Wyłącznie litery",
   "@invalidNameOrSurnameMessage": {
     "description": "Message about invalid name"

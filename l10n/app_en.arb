@@ -218,6 +218,7 @@
   "back": "Back",
   "add": "Add",
   "requiredFieldMessage": "This field is required",
+  "requireValueHigherThan0Message": "Value in this field must be higher than 0",
   "invalidNameOrSurnameMessage": "Requirements: \n - Min. 2 characters length \n - Only letters",
   "invalidEmailMessage": "Invalid email address",
   "invalidPasswordMessage": "Requirements: \n - Min. 6 characters length \n - At least one upper letter, \n - At least one lower letter, \n - At least one digit, \n - At least one special character",
