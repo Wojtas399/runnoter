@@ -145,7 +145,9 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
   Future<void> deleteAllUserWorkouts({
     required String userId,
   }) async {
-    throw UnimplementedError();
+    final List<String> idsOfDeletedWorkouts =
+        await _firebaseWorkoutService.deleteAllUserWorkouts(userId: userId);
+    removeEntities(idsOfDeletedWorkouts);
   }
 
   List<Workout>? _findWorkoutsByDateRange(

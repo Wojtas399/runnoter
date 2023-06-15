@@ -91,11 +91,13 @@ class MockFirebaseWorkoutService extends Mock
     ).thenAnswer((invocation) => Future.value());
   }
 
-  void mockDeleteAllUserWorkouts() {
+  void mockDeleteAllUserWorkouts({
+    required List<String> idsOfDeletedWorkouts,
+  }) {
     when(
       () => deleteAllUserWorkouts(
         userId: any(named: 'userId'),
       ),
-    ).thenAnswer((invocation) => Future.value());
+    ).thenAnswer((invocation) => Future.value(idsOfDeletedWorkouts));
   }
 }
