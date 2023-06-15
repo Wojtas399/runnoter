@@ -147,6 +147,13 @@ class HealthMeasurementRepositoryImpl extends StateRepository<HealthMeasurement>
     }
   }
 
+  @override
+  Future<void> deleteAllUserMeasurements({
+    required String userId,
+  }) async {
+    throw UnimplementedError();
+  }
+
   Future<bool> _doesMeasurementWithGivenDateNotExist(
     DateTime date,
     String userId,

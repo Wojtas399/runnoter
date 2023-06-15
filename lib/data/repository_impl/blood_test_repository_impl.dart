@@ -96,6 +96,13 @@ class BloodTestRepositoryImpl extends StateRepository<BloodTest>
     removeEntity(bloodTestId);
   }
 
+  @override
+  Future<void> deleteAllUserTests({
+    required String userId,
+  }) async {
+    throw UnimplementedError();
+  }
+
   Future<void> _loadTestByIdFromRemoteDb(
     String bloodTestId,
     String userId,

@@ -70,4 +70,12 @@ class MockCompetitionRepository extends Mock implements CompetitionRepository {
       ),
     ).thenAnswer((invocation) => Future.value());
   }
+
+  void mockDeleteAllUserCompetitions() {
+    when(
+      () => deleteAllUserCompetitions(
+        userId: any(named: 'userId'),
+      ),
+    ).thenAnswer((invocation) => Future.value());
+  }
 }

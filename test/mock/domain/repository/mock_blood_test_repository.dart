@@ -53,4 +53,12 @@ class MockBloodTestRepository extends Mock implements BloodTestRepository {
       ),
     ).thenAnswer((invocation) => Future.value());
   }
+
+  void mockDeleteAllUserTests() {
+    when(
+      () => deleteAllUserTests(
+        userId: any(named: 'userId'),
+      ),
+    ).thenAnswer((invocation) => Future.value());
+  }
 }

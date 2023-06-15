@@ -141,6 +141,13 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
     removeEntity(workoutId);
   }
 
+  @override
+  Future<void> deleteAllUserWorkouts({
+    required String userId,
+  }) async {
+    throw UnimplementedError();
+  }
+
   List<Workout>? _findWorkoutsByDateRange(
     List<Workout>? workouts,
     String userId,

@@ -5,6 +5,10 @@ import 'package:runnoter/domain/repository/user_repository.dart';
 class _FakeUser extends Fake implements User {}
 
 class MockUserRepository extends Mock implements UserRepository {
+  MockUserRepository() {
+    registerFallbackValue(_FakeUser());
+  }
+
   void mockGetUserById({
     User? user,
   }) {
@@ -16,7 +20,6 @@ class MockUserRepository extends Mock implements UserRepository {
   }
 
   void mockAddUser() {
-    _mockUser();
     when(
       () => addUser(
         user: any(named: 'user'),
@@ -50,10 +53,6 @@ class MockUserRepository extends Mock implements UserRepository {
         userId: any(named: 'userId'),
       ),
     ).thenAnswer((invocation) => Future.value());
-  }
-
-  void _mockUser() {
-    registerFallbackValue(_FakeUser());
   }
 
   Future<void> _updateUserSettingsCall() {

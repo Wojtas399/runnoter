@@ -117,6 +117,13 @@ class CompetitionRepositoryImpl extends StateRepository<Competition>
     removeEntity(competitionId);
   }
 
+  @override
+  Future<void> deleteAllUserCompetitions({
+    required String userId,
+  }) async {
+    throw UnimplementedError();
+  }
+
   Future<void> _loadAllCompetitionsFromRemoteDb(String userId) async {
     final List<CompetitionDto>? competitionDtos =
         await _firebaseCompetitionService.loadAllCompetitions(userId: userId);
