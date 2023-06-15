@@ -406,4 +406,42 @@ void main() {
       ).called(1);
     },
   );
+
+  test(
+    'delete all user tests, '
+    'should call method from firebase service to delete all user tests and should delete these tests from repository',
+    () {
+      final List<BloodTest> existingTests = [
+        createBloodTest(id: 'bt1', userId: userId),
+        createBloodTest(id: 'bt2', userId: 'u2'),
+        createBloodTest(id: 'bt3', userId: userId),
+        createBloodTest(id: 'bt4', userId: 'u2'),
+      ];
+      firebaseBloodTestService.mockDeleteAllUserTests(
+        idsOfDeletedTests: ['bt1', 'bt3'],
+      );
+      repository = createRepository(initialState: existingTests);
+
+      final Stream<List<BloodTest>?> repositoryState$ = repository.dataStream$;
+      repository.deleteAllUserTests(userId: userId);
+
+      expect(
+        repositoryState$,
+        emitsInOrder(
+          [
+            existingTests,
+            [
+              existingTests[1],
+              existingTests.last,
+            ],
+          ],
+        ),
+      );
+      verify(
+        () => firebaseBloodTestService.deleteAllUserTests(
+          userId: userId,
+        ),
+      ).called(1);
+    },
+  );
 }
