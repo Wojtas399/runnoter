@@ -108,4 +108,16 @@ class FirebaseWorkoutService {
   }) async {
     await getWorkoutsRef(userId).doc(workoutId).delete();
   }
+
+  Future<void> deleteAllUserWorkouts({
+    required String userId,
+  }) async {
+    final CollectionReference<WorkoutDto> workoutsRef = getWorkoutsRef(userId);
+    final WriteBatch batch = FirebaseFirestore.instance.batch();
+    final snapshot = await workoutsRef.get();
+    for (final docSnapshot in snapshot.docs) {
+      batch.delete(docSnapshot.reference);
+    }
+    await batch.commit();
+  }
 }

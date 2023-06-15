@@ -6,6 +6,10 @@ class _FakeRunStatusDto extends Fake implements RunStatusDto {}
 
 class MockFirebaseWorkoutService extends Mock
     implements FirebaseWorkoutService {
+  MockFirebaseWorkoutService() {
+    registerFallbackValue(_FakeRunStatusDto());
+  }
+
   void mockLoadWorkoutsByDateRange({
     List<WorkoutDto>? workoutDtos,
   }) {
@@ -53,7 +57,6 @@ class MockFirebaseWorkoutService extends Mock
   void mockAddWorkout({
     WorkoutDto? addedWorkoutDto,
   }) {
-    _mockRunStatusDto();
     when(
       () => addWorkout(
         userId: any(named: 'userId'),
@@ -68,7 +71,6 @@ class MockFirebaseWorkoutService extends Mock
   void mockUpdateWorkout({
     WorkoutDto? updatedWorkoutDto,
   }) {
-    _mockRunStatusDto();
     when(
       () => updateWorkout(
         workoutId: any(named: 'workoutId'),
@@ -89,7 +91,11 @@ class MockFirebaseWorkoutService extends Mock
     ).thenAnswer((invocation) => Future.value());
   }
 
-  void _mockRunStatusDto() {
-    registerFallbackValue(_FakeRunStatusDto());
+  void mockDeleteAllUserWorkouts() {
+    when(
+      () => deleteAllUserWorkouts(
+        userId: any(named: 'userId'),
+      ),
+    ).thenAnswer((invocation) => Future.value());
   }
 }
