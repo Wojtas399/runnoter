@@ -14,7 +14,7 @@ void main() {
   });
 
   test(
-    'is form valid, '
+    'can submit, '
     'run status type is null, '
     'should be false',
     () {
@@ -22,17 +22,16 @@ void main() {
         runStatusType: null,
         coveredDistanceInKm: 10,
         moodRate: MoodRate.mr8,
-        averagePaceMinutes: 5,
-        averagePaceSeconds: 30,
-        averageHeartRate: 150,
+        avgPace: const Pace(minutes: 5, seconds: 30),
+        avgHeartRate: 150,
       );
 
-      expect(state.isFormValid, false);
+      expect(state.canSubmit, false);
     },
   );
 
   test(
-    'is form valid, '
+    'can submit, '
     'run status type is set as pending, '
     'should be true',
     () {
@@ -40,12 +39,12 @@ void main() {
         runStatusType: RunStatusType.pending,
       );
 
-      expect(state.isFormValid, true);
+      expect(state.canSubmit, true);
     },
   );
 
   test(
-    'is form valid, '
+    'can submit, '
     'run status type is set as undone, '
     'should be true',
     () {
@@ -53,29 +52,45 @@ void main() {
         runStatusType: RunStatusType.undone,
       );
 
-      expect(state.isFormValid, true);
+      expect(state.canSubmit, true);
     },
   );
 
   test(
-    'is form valid, '
+    'can submit, '
     'covered distance in km is null, '
     'should be false',
     () {
       state = state.copyWith(
         runStatusType: RunStatusType.done,
         moodRate: MoodRate.mr8,
-        averagePaceMinutes: 5,
-        averagePaceSeconds: 30,
-        averageHeartRate: 150,
+        avgPace: const Pace(minutes: 5, seconds: 30),
+        avgHeartRate: 150,
       );
 
-      expect(state.isFormValid, false);
+      expect(state.canSubmit, false);
     },
   );
 
   test(
-    'is form valid, '
+    'can submit, '
+    'covered distance in km is 0, '
+    'should be false',
+    () {
+      state = state.copyWith(
+        runStatusType: RunStatusType.done,
+        coveredDistanceInKm: 0,
+        moodRate: MoodRate.mr8,
+        avgPace: const Pace(minutes: 5, seconds: 30),
+        avgHeartRate: 150,
+      );
+
+      expect(state.canSubmit, false);
+    },
+  );
+
+  test(
+    'can submit, '
     'duration is 0, '
     'should be false',
     () {
@@ -84,68 +99,65 @@ void main() {
         coveredDistanceInKm: 10.0,
         duration: const Duration(),
         moodRate: MoodRate.mr8,
-        averagePaceMinutes: 5,
-        averagePaceSeconds: 30,
-        averageHeartRate: 150,
+        avgPace: const Pace(minutes: 5, seconds: 30),
+        avgHeartRate: 150,
       );
 
-      expect(state.isFormValid, false);
+      expect(state.canSubmit, false);
     },
   );
 
   test(
-    'is form valid, '
+    'can submit, '
     'mood rate is null, '
-    'should be true',
+    'should be false',
     () {
       state = state.copyWith(
         runStatusType: RunStatusType.done,
         coveredDistanceInKm: 10,
-        averagePaceMinutes: 5,
-        averagePaceSeconds: 30,
-        averageHeartRate: 150,
+        avgPace: const Pace(minutes: 5, seconds: 30),
+        avgHeartRate: 150,
       );
 
-      expect(state.isFormValid, false);
+      expect(state.canSubmit, false);
     },
   );
 
   test(
-    'is form valid, '
-    'average pace minutes is null, '
-    'should be true',
-    () {
-      state = state.copyWith(
-        runStatusType: RunStatusType.done,
-        coveredDistanceInKm: 10,
-        moodRate: MoodRate.mr8,
-        averagePaceSeconds: 30,
-        averageHeartRate: 150,
-      );
-
-      expect(state.isFormValid, false);
-    },
-  );
-
-  test(
-    'is form valid, '
-    'average pace seconds is null, '
+    'can submit, '
+    'average pace is null, '
     'should be false',
     () {
       state = state.copyWith(
         runStatusType: RunStatusType.done,
         coveredDistanceInKm: 10,
         moodRate: MoodRate.mr8,
-        averagePaceMinutes: 5,
-        averageHeartRate: 150,
+        avgHeartRate: 150,
       );
 
-      expect(state.isFormValid, false);
+      expect(state.canSubmit, false);
     },
   );
 
   test(
-    'is form valid, '
+    'can submit, '
+    'average pace minutes and seconds is 0, '
+    'should be false',
+    () {
+      state = state.copyWith(
+        runStatusType: RunStatusType.done,
+        coveredDistanceInKm: 10,
+        moodRate: MoodRate.mr8,
+        avgPace: const Pace(minutes: 0, seconds: 0),
+        avgHeartRate: 150,
+      );
+
+      expect(state.canSubmit, false);
+    },
+  );
+
+  test(
+    'can submit, '
     'average heart rate is null, '
     'should be false',
     () {
@@ -153,51 +165,72 @@ void main() {
         runStatusType: RunStatusType.done,
         coveredDistanceInKm: 10,
         moodRate: MoodRate.mr8,
-        averagePaceMinutes: 5,
-        averagePaceSeconds: 30,
+        avgPace: const Pace(minutes: 5, seconds: 30),
       );
 
-      expect(state.isFormValid, false);
+      expect(state.canSubmit, false);
     },
   );
 
   test(
-    'is form valid, '
-    'all required params arent null, '
+    'can submit, '
+    'average heart rate is 0, '
+    'should be false',
+    () {
+      state = state.copyWith(
+        runStatusType: RunStatusType.done,
+        coveredDistanceInKm: 10,
+        moodRate: MoodRate.mr8,
+        avgPace: const Pace(minutes: 5, seconds: 30),
+        avgHeartRate: 0,
+      );
+
+      expect(state.canSubmit, false);
+    },
+  );
+
+  test(
+    'can submit, '
+    'all required params are valid, '
     'should be true',
     () {
       state = state.copyWith(
         runStatusType: RunStatusType.done,
         coveredDistanceInKm: 10,
         moodRate: MoodRate.mr8,
-        averagePaceMinutes: 5,
-        averagePaceSeconds: 30,
-        averageHeartRate: 150,
+        avgPace: const Pace(minutes: 5, seconds: 30),
+        avgHeartRate: 150,
       );
 
-      expect(state.isFormValid, true);
+      expect(state.canSubmit, true);
     },
   );
 
   test(
-    'are data same as original, '
+    'can submit, '
     'run status type does not match to original run status, '
-    'should be false',
+    'should be true',
     () {
       state = state.copyWith(
         originalRunStatus: const RunStatusPending(),
         runStatusType: RunStatusType.done,
+        coveredDistanceInKm: 10,
+        duration: const Duration(seconds: 10),
+        avgPace: const Pace(minutes: 6, seconds: 10),
+        avgHeartRate: 150,
+        moodRate: MoodRate.mr8,
+        comment: 'comment',
       );
 
-      expect(state.areDataSameAsOriginal, false);
+      expect(state.canSubmit, true);
     },
   );
 
   test(
-    'are data same as original, '
+    'can submit, '
     'original run status contains run stats, '
-    'all params are the same as params set in run status, '
-    'should be true',
+    'all params are the same as params set in original run status, '
+    'should be false',
     () {
       state = state.copyWith(
         originalRunStatus: const RunStatusDone(
@@ -211,22 +244,21 @@ void main() {
         runStatusType: RunStatusType.done,
         coveredDistanceInKm: 10,
         duration: const Duration(seconds: 10),
-        averagePaceMinutes: 6,
-        averagePaceSeconds: 10,
-        averageHeartRate: 150,
+        avgPace: const Pace(minutes: 6, seconds: 10),
+        avgHeartRate: 150,
         moodRate: MoodRate.mr8,
         comment: 'comment',
       );
 
-      expect(state.areDataSameAsOriginal, true);
+      expect(state.canSubmit, false);
     },
   );
 
   test(
-    'are data same as original, '
+    'can submit, '
     'original run status contains run stats, '
-    'covered distance is different than original value, '
-    'should be false',
+    'covered distance is different than original, '
+    'should be true',
     () {
       state = state.copyWith(
         originalRunStatus: const RunStatusDone(
@@ -240,22 +272,21 @@ void main() {
         runStatusType: RunStatusType.done,
         coveredDistanceInKm: 12,
         duration: const Duration(seconds: 10),
-        averagePaceMinutes: 6,
-        averagePaceSeconds: 10,
-        averageHeartRate: 150,
+        avgPace: const Pace(minutes: 6, seconds: 10),
+        avgHeartRate: 150,
         moodRate: MoodRate.mr8,
         comment: 'comment',
       );
 
-      expect(state.areDataSameAsOriginal, false);
+      expect(state.canSubmit, true);
     },
   );
 
   test(
-    'are data same as original, '
+    'can submit, '
     'original run status contains run stats, '
-    'duration is different than original value, '
-    'should be false',
+    'duration is different than original, '
+    'should be true',
     () {
       state = state.copyWith(
         originalRunStatus: const RunStatusDone(
@@ -269,22 +300,21 @@ void main() {
         runStatusType: RunStatusType.done,
         coveredDistanceInKm: 12,
         duration: const Duration(seconds: 15),
-        averagePaceMinutes: 6,
-        averagePaceSeconds: 10,
-        averageHeartRate: 150,
+        avgPace: const Pace(minutes: 6, seconds: 10),
+        avgHeartRate: 150,
         moodRate: MoodRate.mr8,
         comment: 'comment',
       );
 
-      expect(state.areDataSameAsOriginal, false);
+      expect(state.canSubmit, true);
     },
   );
 
   test(
-    'are data same as original, '
+    'can submit, '
     'original run status contains run stats, '
-    'minutes of average pace are different than original value, '
-    'should be false',
+    'average pace is different than original, '
+    'should be true',
     () {
       state = state.copyWith(
         originalRunStatus: const RunStatusDone(
@@ -298,22 +328,21 @@ void main() {
         runStatusType: RunStatusType.done,
         coveredDistanceInKm: 10,
         duration: const Duration(seconds: 10),
-        averagePaceMinutes: 5,
-        averagePaceSeconds: 10,
-        averageHeartRate: 150,
+        avgPace: const Pace(minutes: 5, seconds: 10),
+        avgHeartRate: 150,
         moodRate: MoodRate.mr8,
         comment: 'comment',
       );
 
-      expect(state.areDataSameAsOriginal, false);
+      expect(state.canSubmit, true);
     },
   );
 
   test(
-    'are data same as original, '
+    'can submit, '
     'original run status contains run stats, '
-    'seconds of average pace are different than original value, '
-    'should be false',
+    'average heart rate is different than original, '
+    'should be true',
     () {
       state = state.copyWith(
         originalRunStatus: const RunStatusDone(
@@ -327,22 +356,21 @@ void main() {
         runStatusType: RunStatusType.done,
         coveredDistanceInKm: 10,
         duration: const Duration(seconds: 10),
-        averagePaceMinutes: 6,
-        averagePaceSeconds: 5,
-        averageHeartRate: 150,
+        avgPace: const Pace(minutes: 6, seconds: 10),
+        avgHeartRate: 145,
         moodRate: MoodRate.mr8,
         comment: 'comment',
       );
 
-      expect(state.areDataSameAsOriginal, false);
+      expect(state.canSubmit, true);
     },
   );
 
   test(
-    'are data same as original, '
+    'can submit, '
     'original run status contains run stats, '
-    'average heart rate is different than original value, '
-    'should be false',
+    'mood rate is different than original, '
+    'should be true',
     () {
       state = state.copyWith(
         originalRunStatus: const RunStatusDone(
@@ -356,51 +384,21 @@ void main() {
         runStatusType: RunStatusType.done,
         coveredDistanceInKm: 10,
         duration: const Duration(seconds: 10),
-        averagePaceMinutes: 6,
-        averagePaceSeconds: 10,
-        averageHeartRate: 145,
-        moodRate: MoodRate.mr8,
-        comment: 'comment',
-      );
-
-      expect(state.areDataSameAsOriginal, false);
-    },
-  );
-
-  test(
-    'are data same as original, '
-    'original run status contains run stats, '
-    'mood rate is different than original value, '
-    'should be false',
-    () {
-      state = state.copyWith(
-        originalRunStatus: const RunStatusDone(
-          coveredDistanceInKm: 10,
-          duration: Duration(seconds: 10),
-          avgPace: Pace(minutes: 6, seconds: 10),
-          avgHeartRate: 150,
-          moodRate: MoodRate.mr8,
-          comment: 'comment',
-        ),
-        runStatusType: RunStatusType.done,
-        coveredDistanceInKm: 10,
-        duration: const Duration(seconds: 10),
-        averagePaceMinutes: 6,
-        averagePaceSeconds: 10,
-        averageHeartRate: 150,
+        avgPace: const Pace(minutes: 6, seconds: 10),
+        avgHeartRate: 150,
         moodRate: MoodRate.mr5,
         comment: 'comment',
       );
 
-      expect(state.areDataSameAsOriginal, false);
+      expect(state.canSubmit, true);
     },
   );
 
   test(
-    'are data same as original, '
+    'can submit, '
     'original run status contains run stats, '
-    'comment is different than original value, '
-    'should be false',
+    'comment is different than original, '
+    'should be true',
     () {
       state = state.copyWith(
         originalRunStatus: const RunStatusDone(
@@ -414,14 +412,13 @@ void main() {
         runStatusType: RunStatusType.done,
         coveredDistanceInKm: 10,
         duration: const Duration(seconds: 10),
-        averagePaceMinutes: 6,
-        averagePaceSeconds: 10,
-        averageHeartRate: 150,
+        avgPace: const Pace(minutes: 6, seconds: 10),
+        avgHeartRate: 150,
         moodRate: MoodRate.mr8,
         comment: 'new comment',
       );
 
-      expect(state.areDataSameAsOriginal, false);
+      expect(state.canSubmit, true);
     },
   );
 
@@ -510,28 +507,15 @@ void main() {
   );
 
   test(
-    'copy with average pace minutes',
+    'copy with average pace',
     () {
-      const int expectedAveragePaceMinutes = 6;
+      const Pace expectedAvgPace = Pace(minutes: 5, seconds: 45);
 
-      state = state.copyWith(averagePaceMinutes: expectedAveragePaceMinutes);
+      state = state.copyWith(avgPace: expectedAvgPace);
       final state2 = state.copyWith();
 
-      expect(state.averagePaceMinutes, expectedAveragePaceMinutes);
-      expect(state2.averagePaceMinutes, expectedAveragePaceMinutes);
-    },
-  );
-
-  test(
-    'copy with average pace seconds',
-    () {
-      const int expectedAveragePaceSeconds = 10;
-
-      state = state.copyWith(averagePaceSeconds: expectedAveragePaceSeconds);
-      final state2 = state.copyWith();
-
-      expect(state.averagePaceSeconds, expectedAveragePaceSeconds);
-      expect(state2.averagePaceSeconds, expectedAveragePaceSeconds);
+      expect(state.avgPace, expectedAvgPace);
+      expect(state2.avgPace, expectedAvgPace);
     },
   );
 
@@ -540,11 +524,11 @@ void main() {
     () {
       const int expectedAverageHeartRate = 150;
 
-      state = state.copyWith(averageHeartRate: expectedAverageHeartRate);
+      state = state.copyWith(avgHeartRate: expectedAverageHeartRate);
       final state2 = state.copyWith();
 
-      expect(state.averageHeartRate, expectedAverageHeartRate);
-      expect(state2.averageHeartRate, expectedAverageHeartRate);
+      expect(state.avgHeartRate, expectedAverageHeartRate);
+      expect(state2.avgHeartRate, expectedAverageHeartRate);
     },
   );
 

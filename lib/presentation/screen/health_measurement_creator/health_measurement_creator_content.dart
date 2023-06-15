@@ -5,163 +5,63 @@ class _Content extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text(
-          Str.of(context).healthMeasurementCreatorScreenTitle,
-        ),
-      ),
-      body: SafeArea(
-        child: GestureDetector(
-          onTap: () {
-            unfocusInputs();
-          },
-          child: Container(
-            color: Colors.transparent,
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const _Title(),
-                const SizedBox(height: 24),
-                _RestingHeartRate(),
-                const SizedBox(height: 24),
-                _FastingWeight(),
-                const SizedBox(height: 24),
-                const _SubmitButton(),
-              ],
-            ),
+    return WillPopScope(
+      onWillPop: () async {
+        final bool confirmationToLeave = await askForConfirmationToLeave(
+          context: context,
+          areUnsavedChanges:
+              context.read<HealthMeasurementCreatorBloc>().state.canSubmit,
+        );
+        if (confirmationToLeave) unfocusInputs();
+        return confirmationToLeave;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text(
+            Str.of(context).healthMeasurementCreatorScreenTitle,
           ),
         ),
+        body: SafeArea(
+          child: BlocSelector<HealthMeasurementCreatorBloc,
+              HealthMeasurementCreatorState, BlocStatus>(
+            selector: (state) => state.status,
+            builder: (_, BlocStatus blocStatus) {
+              if (blocStatus is BlocStatusInitial) {
+                return const _LoadingContent();
+              }
+              return const _FormContent();
+            },
+          ),
+        ),
       ),
     );
   }
 }
 
-class _Title extends StatelessWidget {
-  const _Title();
+class _LoadingContent extends StatelessWidget {
+  const _LoadingContent();
 
   @override
   Widget build(BuildContext context) {
-    final DateTime? date = context.select(
-      (HealthMeasurementCreatorBloc bloc) => bloc.state.measurement?.date,
+    return const Center(
+      child: CircularProgressIndicator(),
     );
-    String title = Str.of(context).healthMeasurementCreatorMessage;
-    if (date != null) {
-      title = Str.of(context).healthMeasurementCreatorMessageWithDate(
-        date.toDateWithDots(),
-      );
-    }
-    return TitleLarge(title);
   }
 }
 
-class _RestingHeartRate extends StatelessWidget {
-  final TextEditingController _controller = TextEditingController();
+class _FormContent extends StatelessWidget {
+  const _FormContent();
 
   @override
   Widget build(BuildContext context) {
-    final BlocStatus blocStatus = context.select(
-      (HealthMeasurementCreatorBloc bloc) => bloc.state.status,
+    return GestureDetector(
+      onTap: unfocusInputs,
+      child: Container(
+        color: Colors.transparent,
+        padding: const EdgeInsets.all(24),
+        child: _Form(),
+      ),
     );
-
-    if (blocStatus is BlocStatusComplete &&
-        blocStatus.info == HealthMeasurementCreatorBlocInfo.measurementLoaded) {
-      _controller.text = context
-              .read<HealthMeasurementCreatorBloc>()
-              .state
-              .restingHeartRateStr ??
-          '';
-    }
-
-    return TextFieldComponent(
-      label:
-          '${Str.of(context).healthRestingHeartRate} [${Str.of(context).heartRateUnit}]',
-      keyboardType: TextInputType.number,
-      maxLength: 3,
-      isRequired: true,
-      inputFormatters: [
-        FilteringTextInputFormatter.digitsOnly,
-      ],
-      controller: _controller,
-      onChanged: (String? value) {
-        _onChanged(context, value);
-      },
-    );
-  }
-
-  void _onChanged(BuildContext context, String? restingHeartRateStr) {
-    context.read<HealthMeasurementCreatorBloc>().add(
-          HealthMeasurementCreatorEventRestingHeartRateChanged(
-            restingHeartRateStr: restingHeartRateStr,
-          ),
-        );
-  }
-}
-
-class _FastingWeight extends StatelessWidget {
-  final TextEditingController _controller = TextEditingController();
-
-  @override
-  Widget build(BuildContext context) {
-    final BlocStatus blocStatus = context.select(
-      (HealthMeasurementCreatorBloc bloc) => bloc.state.status,
-    );
-
-    if (blocStatus is BlocStatusComplete &&
-        blocStatus.info == HealthMeasurementCreatorBlocInfo.measurementLoaded) {
-      _controller.text =
-          context.read<HealthMeasurementCreatorBloc>().state.fastingWeightStr ??
-              '';
-    }
-
-    return TextFieldComponent(
-      label: '${Str.of(context).healthFastingWeight} [kg]',
-      keyboardType: TextInputType.number,
-      maxLength: 6,
-      isRequired: true,
-      inputFormatters: [
-        DecimalTextInputFormatter(decimalRange: 2),
-      ],
-      controller: _controller,
-      onChanged: (String? value) {
-        _onChanged(context, value);
-      },
-    );
-  }
-
-  void _onChanged(BuildContext context, String? fastingWeightStr) {
-    context.read<HealthMeasurementCreatorBloc>().add(
-          HealthMeasurementCreatorEventFastingWeightChanged(
-            fastingWeightStr: fastingWeightStr,
-          ),
-        );
-  }
-}
-
-class _SubmitButton extends StatelessWidget {
-  const _SubmitButton();
-
-  @override
-  Widget build(BuildContext context) {
-    final bool isDisabled = context.select(
-      (HealthMeasurementCreatorBloc bloc) => bloc.state.isSubmitButtonDisabled,
-    );
-
-    return BigButton(
-      label: Str.of(context).save,
-      onPressed: () {
-        _onPressed(context);
-      },
-      isDisabled: isDisabled,
-    );
-  }
-
-  void _onPressed(BuildContext context) {
-    unfocusInputs();
-    context.read<HealthMeasurementCreatorBloc>().add(
-          const HealthMeasurementCreatorEventSubmit(),
-        );
   }
 }

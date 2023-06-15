@@ -21,7 +21,8 @@ class _Distance extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFieldComponent(
-      label: '${Str.of(context).workoutStageCreatorDistance} [km]',
+      label:
+          '${Str.of(context).workoutStageCreatorDistance} [${context.distanceUnit.toUIShortFormat()}]',
       keyboardType: TextInputType.number,
       maxLength: 8,
       isRequired: true,
@@ -47,9 +48,10 @@ class _Distance extends StatelessWidget {
       distance = double.tryParse(value);
     }
     if (distance != null) {
+      final convertedDistance = context.convertDistanceToDefaultUnit(distance);
       context.read<WorkoutStageCreatorBloc>().add(
             WorkoutStageCreatorEventDistanceChanged(
-              distanceInKm: distance,
+              distanceInKm: convertedDistance,
             ),
           );
     }

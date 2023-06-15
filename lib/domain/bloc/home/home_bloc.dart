@@ -67,6 +67,8 @@ class HomeBloc extends BlocWithStatus<HomeEvent, HomeState, HomeInfo, dynamic> {
       loggedUserSurname: event.listenedParams?.loggedUserSurname,
       themeMode: event.listenedParams?.themeMode,
       language: event.listenedParams?.language,
+      distanceUnit: event.listenedParams?.distanceUnit,
+      paceUnit: event.listenedParams?.paceUnit,
     ));
   }
 
@@ -108,6 +110,8 @@ class HomeBloc extends BlocWithStatus<HomeEvent, HomeState, HomeInfo, dynamic> {
         loggedUserSurname: loggedUserData?.surname,
         themeMode: loggedUserData?.settings.themeMode,
         language: loggedUserData?.settings.language,
+        distanceUnit: loggedUserData?.settings.distanceUnit,
+        paceUnit: loggedUserData?.settings.paceUnit,
       ),
     ).listen((HomeStateListenedParams listenedParams) {
       add(

@@ -10,13 +10,15 @@ void main() {
 
   HealthMeasurementCreatorState createState({
     BlocStatus status = const BlocStatusInitial(),
-    String? restingHeartRateStr,
-    String? fastingWeightStr,
+    HealthMeasurement? measurement,
+    int? restingHeartRate,
+    double? fastingWeight,
   }) =>
       HealthMeasurementCreatorState(
         status: status,
-        restingHeartRateStr: restingHeartRateStr,
-        fastingWeightStr: fastingWeightStr,
+        measurement: measurement,
+        restingHeartRate: restingHeartRate,
+        fastingWeight: fastingWeight,
       );
 
   setUp(() {
@@ -24,88 +26,88 @@ void main() {
   });
 
   test(
-    'is submit button disabled, '
-    'resting heart rate str is null, '
-    'should be true',
+    'can submit, '
+    'resting heart rate is null, '
+    'should be false',
     () {
-      state = state.copyWith(
-        fastingWeightStr: '61.5',
+      state = createState(
+        fastingWeight: 61.5,
       );
 
-      expect(state.isSubmitButtonDisabled, true);
+      expect(state.canSubmit, false);
     },
   );
 
   test(
-    'is submit button disabled, '
-    'resting heart rate str is empty, '
-    'should be true',
+    'can submit, '
+    'resting heart rate is 0, '
+    'should be false',
     () {
-      state = state.copyWith(
-        restingHeartRateStr: '',
-        fastingWeightStr: '61.5',
+      state = createState(
+        restingHeartRate: 0,
+        fastingWeight: 61.5,
       );
 
-      expect(state.isSubmitButtonDisabled, true);
+      expect(state.canSubmit, false);
     },
   );
 
   test(
-    'is submit button disabled, '
-    'fasting weight str is null, '
-    'should be true',
+    'can submit, '
+    'fasting weight is null, '
+    'should be false',
     () {
-      state = state.copyWith(
-        restingHeartRateStr: '50',
+      state = createState(
+        restingHeartRate: 50,
       );
 
-      expect(state.isSubmitButtonDisabled, true);
+      expect(state.canSubmit, false);
     },
   );
 
   test(
-    'is submit button disabled, '
-    'fasting weight str is empty, '
-    'should be true',
+    'can submit, '
+    'fasting weight is 0, '
+    'should be false',
     () {
-      state = state.copyWith(
-        restingHeartRateStr: '50',
-        fastingWeightStr: '',
+      state = createState(
+        restingHeartRate: 50,
+        fastingWeight: 0,
       );
 
-      expect(state.isSubmitButtonDisabled, true);
+      expect(state.canSubmit, false);
     },
   );
 
   test(
-    'is submit button disabled, '
+    'can submit, '
     'resting heart rate and fasting weight are same as original, '
-    'should be true',
+    'should be false',
     () {
-      state = state.copyWith(
+      state = createState(
         measurement: createHealthMeasurement(
           restingHeartRate: 51,
           fastingWeight: 61.5,
         ),
-        restingHeartRateStr: '51',
-        fastingWeightStr: '61.5',
+        restingHeartRate: 51,
+        fastingWeight: 61.5,
       );
 
-      expect(state.isSubmitButtonDisabled, true);
+      expect(state.canSubmit, false);
     },
   );
 
   test(
-    'is submit button disabled, '
-    'resting heart rate and fasting weight are not null and not empty, '
-    'should be false',
+    'can submit, '
+    'resting heart rate and fasting weight are not null and higher than 0, '
+    'should be true',
     () {
-      state = state.copyWith(
-        restingHeartRateStr: '50',
-        fastingWeightStr: '61.6',
+      state = createState(
+        restingHeartRate: 51,
+        fastingWeight: 61.5,
       );
 
-      expect(state.isSubmitButtonDisabled, false);
+      expect(state.canSubmit, true);
     },
   );
 
@@ -139,28 +141,28 @@ void main() {
   );
 
   test(
-    'copy with resting heart rate str',
+    'copy with resting heart rate',
     () {
-      const String expectedValue = '50';
+      const int expectedRestingHeartRate = 50;
 
-      state = state.copyWith(restingHeartRateStr: expectedValue);
+      state = state.copyWith(restingHeartRate: expectedRestingHeartRate);
       final state2 = state.copyWith();
 
-      expect(state.restingHeartRateStr, expectedValue);
-      expect(state2.restingHeartRateStr, expectedValue);
+      expect(state.restingHeartRate, expectedRestingHeartRate);
+      expect(state2.restingHeartRate, expectedRestingHeartRate);
     },
   );
 
   test(
-    'copy with fasting weight str',
+    'copy with fasting weight',
     () {
-      const String expectedValue = '61.5';
+      const double expectedFastingWeight = 61.5;
 
-      state = state.copyWith(fastingWeightStr: expectedValue);
+      state = state.copyWith(fastingWeight: expectedFastingWeight);
       final state2 = state.copyWith();
 
-      expect(state.fastingWeightStr, expectedValue);
-      expect(state2.fastingWeightStr, expectedValue);
+      expect(state.fastingWeight, expectedFastingWeight);
+      expect(state2.fastingWeight, expectedFastingWeight);
     },
   );
 }

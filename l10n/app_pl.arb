@@ -455,6 +455,10 @@
   "@profileWrongCurrentPasswordDialogMessage": {
     "description": "Message of the dialog to inform that given current password is wrong"
   },
+  "mileageChartMileage": "Kilometraż",
+  "@mileageChartMileage": {
+    "description": "Label of chart's mileage axis"
+  },
   "mileageNoDataTitle": "Brak danych",
   "@mileageNoDataTitle": {
     "description": "Title of the information about not data to display mileage charts"
@@ -615,6 +619,10 @@
   "@runStatusCoveredDistance": {
     "description": "Label of the covered distance of run status"
   },
+  "runStatusDuration": "Czas",
+  "@runStatusDuration": {
+    "description": "Label of the duration of run status"
+  },
   "runStatusMoodRate": "Samopoczucie",
   "@runStatusMoodRate": {
     "description": "Label of the mood rate of run status"
@@ -631,9 +639,9 @@
   "@runStatusComment": {
     "description": "Label of the comment of run status"
   },
-  "runStatusChangeStatus": "Zmień status",
-  "@runStatusChangeStatus": {
-    "description": "Label of the button to change status"
+  "runStatusEditStatus": "Edytuj status",
+  "@runStatusEditStatus": {
+    "description": "Label of the button to edit status"
   },
   "runStatusFinish": "Zakończ",
   "@runStatusFinish": {
@@ -654,6 +662,46 @@
   "runStatusUndone": "Niewykonany",
   "@runStatusUndone": {
     "description": "Type of workout status called undone"
+  },
+  "moodRate1": "Maksymalne wyczerpanie",
+  "@moodRate1": {
+    "description": "Description of mood rate 1"
+  },
+  "moodRate2": "Bardzo ciężko w trakcie, bardzo duże zmęczenie po",
+  "@moodRate2": {
+    "description": "Description of mood rate 2"
+  },
+  "moodRate3": "Ciężko w trakcie, bardzo duże zmęczenie po",
+  "@moodRate3": {
+    "description": "Description of mood rate 3"
+  },
+  "moodRate4": "Umiarkowanie w trakcie, bardzo duże zmęczenie po",
+  "@moodRate4": {
+    "description": "Description of mood rate 4"
+  },
+  "moodRate5": "Umiarkowanie w trakcie, większe niż zwykle zmęczenie po",
+  "@moodRate5": {
+    "description": "Description of mood rate 5"
+  },
+  "moodRate6": "Umiarkowanie w trakcie, normalne zmęczenie po",
+  "@moodRate6": {
+    "description": "Description of mood rate 6"
+  },
+  "moodRate7": "Normalnie w trakcie, normalne zmęczenie po",
+  "@moodRate7": {
+    "description": "Description of mood rate 7"
+  },
+  "moodRate8": "Normalnie w trakcie, lekkie zmęczenie po",
+  "@moodRate8": {
+    "description": "Description of mood rate 8"
+  },
+  "moodRate9": "Normalnie w trakcie, prawie brak zmęczenia po",
+  "@moodRate9": {
+    "description": "Description of mood rate 9"
+  },
+  "moodRate10": "Normalnie w trakcie, brak zmęczenia po",
+  "@moodRate10": {
+    "description": "Description of mood rate 10"
   },
   "themeMode": "Motyw",
   "@themeMode": {
@@ -722,22 +770,6 @@
   "paceUnit": "Jednostka tempa",
   "@paceUnit": {
     "description": "Label of pace unit"
-  },
-  "paceUnitMinutesPerKilometer": "min/km (minuty na kilometr)",
-  "@paceUnitMinutesPerKilometer": {
-    "description": "Minutes per kilometer pace unit"
-  },
-  "paceUnitMinutesPerMile": "min/mi (minuty na milę)",
-  "@paceUnitMinutesPerMile": {
-    "description": "Minutes per mile pace unit"
-  },
-  "paceUnitKilometersPerHour": "km/h (kilometry na godzinę)",
-  "@paceUnitKilometersPerHour": {
-    "description": "Kilometers per hour pace unit"
-  },
-  "paceUnitMilesPerHour": "mi/h (mile na godzinę)",
-  "@paceUnitMilesPerHour": {
-    "description": "Miles per hour pace unit"
   },
   "paceUnitSelect": "Wybierz jednostkę tempa",
   "@paceUnitSelect": {
@@ -827,6 +859,18 @@
   "@unknownErrorDialogMessage": {
     "description": "Message of the dialog about unknown exception"
   },
+  "leavePageConfirmationDialogTitle": "Opuść stronę",
+  "@leavePageConfirmationDialogTitle": {
+    "description": "Title of the dialog to confirm leaving page"
+  },
+  "leavePageConfirmationDialogMessage": "Czy na pewno chcesz opuścić tę stronę?",
+  "@leavePageConfirmationDialogMessage": {
+    "description": "Message of the dialog to confirm leaving page"
+  },
+  "leavePageWithUnsavedChangesConfirmationDialogMessage": "Masz niezapisane zmiany, które zostaną odrzucone. Czy na pewno chcesz opuścić tę stronę?",
+  "@leavePageWithUnsavedChangesConfirmationDialogMessage": {
+    "description": "Message of the dialog to confirm leaving page without saving changes"
+  },
   "name": "Imię",
   "@name": {
     "description": "Name"
@@ -858,9 +902,14 @@
   "change": "Zmień",
   "back": "Wróć",
   "add": "Dodaj",
+  "leave": "Opuść",
   "requiredFieldMessage": "To pole jest wymagane",
   "@requiredFieldMessage": {
     "description": "Message to inform that field is required."
+  },
+  "requireValueHigherThan0Message": "Wartość w tym polu musi być większa od 0",
+  "@requireValueHigherThan0Message": {
+    "description": "Message to inform that value must be higher than 0"
   },
   "invalidNameOrSurnameMessage": "Wymogi: \n - Długość minimum 2 znaki \n - Wyłącznie litery",
   "@invalidNameOrSurnameMessage": {

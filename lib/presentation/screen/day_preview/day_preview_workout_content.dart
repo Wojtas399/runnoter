@@ -103,7 +103,7 @@ class _RunStatusButton extends StatelessWidget {
     final RunStatus? runStatus = context.select(
       (DayPreviewBloc bloc) => bloc.state.runStatus,
     );
-    String label = Str.of(context).runStatusChangeStatus;
+    String label = Str.of(context).runStatusEditStatus;
     if (runStatus is RunStatusPending) {
       label = Str.of(context).runStatusFinish;
     }

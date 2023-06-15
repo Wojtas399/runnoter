@@ -27,8 +27,8 @@ class HealthMeasurementCreatorBloc extends BlocWithStatus<
     required HealthMeasurementRepository healthMeasurementRepository,
     BlocStatus status = const BlocStatusInitial(),
     HealthMeasurement? measurement,
-    String? restingHeartRateStr,
-    String? fastingWeightStr,
+    int? restingHeartRate,
+    double? fastingWeight,
   })  : _dateService = dateService,
         _authService = authService,
         _healthMeasurementRepository = healthMeasurementRepository,
@@ -36,8 +36,8 @@ class HealthMeasurementCreatorBloc extends BlocWithStatus<
           HealthMeasurementCreatorState(
             status: status,
             measurement: measurement,
-            restingHeartRateStr: restingHeartRateStr,
-            fastingWeightStr: fastingWeightStr,
+            restingHeartRate: restingHeartRate,
+            fastingWeight: fastingWeight,
           ),
         ) {
     on<HealthMeasurementCreatorEventInitialize>(_initialize);
@@ -59,12 +59,9 @@ class HealthMeasurementCreatorBloc extends BlocWithStatus<
         event.date!,
       );
       emit(state.copyWith(
-        status: const BlocStatusComplete<HealthMeasurementCreatorBlocInfo>(
-          info: HealthMeasurementCreatorBlocInfo.measurementLoaded,
-        ),
         measurement: measurement,
-        restingHeartRateStr: measurement?.restingHeartRate.toString(),
-        fastingWeightStr: measurement?.fastingWeight.toString(),
+        restingHeartRate: measurement?.restingHeartRate,
+        fastingWeight: measurement?.fastingWeight,
       ));
     }
   }
@@ -74,7 +71,7 @@ class HealthMeasurementCreatorBloc extends BlocWithStatus<
     Emitter<HealthMeasurementCreatorState> emit,
   ) {
     emit(state.copyWith(
-      restingHeartRateStr: event.restingHeartRateStr,
+      restingHeartRate: event.restingHeartRate,
     ));
   }
 
@@ -83,7 +80,7 @@ class HealthMeasurementCreatorBloc extends BlocWithStatus<
     Emitter<HealthMeasurementCreatorState> emit,
   ) {
     emit(state.copyWith(
-      fastingWeightStr: event.fastingWeightStr,
+      fastingWeight: event.fastingWeight,
     ));
   }
 
@@ -91,9 +88,7 @@ class HealthMeasurementCreatorBloc extends BlocWithStatus<
     HealthMeasurementCreatorEventSubmit event,
     Emitter<HealthMeasurementCreatorState> emit,
   ) async {
-    final int? restingHeartRate = int.tryParse(state.restingHeartRateStr ?? '');
-    final double? fastingWeight = double.tryParse(state.fastingWeightStr ?? '');
-    if (restingHeartRate == null || fastingWeight == null) {
+    if (state.restingHeartRate == null || state.fastingWeight == null) {
       return;
     }
     final String? loggedUserId = await _authService.loggedUserId$.first;
@@ -106,8 +101,8 @@ class HealthMeasurementCreatorBloc extends BlocWithStatus<
       final HealthMeasurement measurement = HealthMeasurement(
         userId: loggedUserId,
         date: _dateService.getToday(),
-        restingHeartRate: restingHeartRate,
-        fastingWeight: fastingWeight,
+        restingHeartRate: state.restingHeartRate!,
+        fastingWeight: state.fastingWeight!,
       );
       await _healthMeasurementRepository.addMeasurement(
         measurement: measurement,
@@ -116,8 +111,8 @@ class HealthMeasurementCreatorBloc extends BlocWithStatus<
       await _healthMeasurementRepository.updateMeasurement(
         userId: loggedUserId,
         date: state.measurement!.date,
-        restingHeartRate: restingHeartRate,
-        fastingWeight: fastingWeight,
+        restingHeartRate: state.restingHeartRate!,
+        fastingWeight: state.fastingWeight!,
       );
     }
     emitCompleteStatus(emit, HealthMeasurementCreatorBlocInfo.measurementSaved);
@@ -138,6 +133,5 @@ class HealthMeasurementCreatorBloc extends BlocWithStatus<
 }
 
 enum HealthMeasurementCreatorBlocInfo {
-  measurementLoaded,
   measurementSaved,
 }

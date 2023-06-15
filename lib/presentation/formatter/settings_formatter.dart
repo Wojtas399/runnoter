@@ -30,30 +30,3 @@ extension LanguageFormatter on Language {
     }
   }
 }
-
-extension DistanceUnitFormatter on DistanceUnit {
-  String toUIFormat(BuildContext context) {
-    switch (this) {
-      case DistanceUnit.kilometers:
-        return Str.of(context).distanceUnitKilometers;
-      case DistanceUnit.miles:
-        return Str.of(context).distanceUnitMiles;
-    }
-  }
-}
-
-extension PaceUnitFormatter on PaceUnit {
-  String toUIFormat(BuildContext context) {
-    final str = Str.of(context);
-    switch (this) {
-      case PaceUnit.minutesPerKilometer:
-        return str.paceUnitMinutesPerKilometer;
-      case PaceUnit.minutesPerMile:
-        return str.paceUnitMinutesPerMile;
-      case PaceUnit.kilometersPerHour:
-        return str.paceUnitKilometersPerHour;
-      case PaceUnit.milesPerHour:
-        return str.paceUnitMilesPerHour;
-    }
-  }
-}

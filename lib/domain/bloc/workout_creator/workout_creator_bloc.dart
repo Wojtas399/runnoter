@@ -76,7 +76,7 @@ class WorkoutCreatorBloc extends BlocWithStatus<WorkoutCreatorEvent,
           date: event.date,
           workout: workout,
           workoutName: workout?.name,
-          stages: workout?.stages,
+          stages: [...?workout?.stages],
         ));
         return;
       }

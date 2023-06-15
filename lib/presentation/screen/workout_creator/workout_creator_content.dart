@@ -5,29 +5,39 @@ class _Content extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const _AppBarTitle(),
-        centerTitle: true,
-      ),
-      body: SafeArea(
-        child: ScrollableContent(
-          child: GestureDetector(
-            onTap: () {
-              unfocusInputs();
-            },
-            child: Container(
-              color: Colors.transparent,
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  _WorkoutName(),
-                  const SizedBox(height: 24),
-                  const _WorkoutStagesSection(),
-                  const SizedBox(height: 40),
-                  const _SubmitButton(),
-                ],
+    return WillPopScope(
+      onWillPop: () async {
+        final bool confirmationToLeave = await askForConfirmationToLeave(
+          context: context,
+          areUnsavedChanges: context.read<WorkoutCreatorBloc>().state.canSubmit,
+        );
+        if (confirmationToLeave) unfocusInputs();
+        return confirmationToLeave;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: const _AppBarTitle(),
+          centerTitle: true,
+        ),
+        body: SafeArea(
+          child: ScrollableContent(
+            child: GestureDetector(
+              onTap: () {
+                unfocusInputs();
+              },
+              child: Container(
+                color: Colors.transparent,
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    _WorkoutName(),
+                    const SizedBox(height: 24),
+                    const _WorkoutStagesSection(),
+                    const SizedBox(height: 40),
+                    const _SubmitButton(),
+                  ],
+                ),
               ),
             ),
           ),

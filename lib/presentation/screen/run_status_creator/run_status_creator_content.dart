@@ -5,30 +5,37 @@ class _Content extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          Str.of(context).runStatusCreatorScreenTitle,
+    return WillPopScope(
+      onWillPop: () async {
+        final bool confirmationToLeave = await askForConfirmationToLeave(
+          context: context,
+          areUnsavedChanges:
+              context.read<RunStatusCreatorBloc>().state.canSubmit,
+        );
+        if (confirmationToLeave) unfocusInputs();
+        return confirmationToLeave;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            Str.of(context).runStatusCreatorScreenTitle,
+          ),
+          centerTitle: true,
         ),
-        centerTitle: true,
-      ),
-      body: SafeArea(
-        child: ScrollableContent(
+        body: SafeArea(
           child: GestureDetector(
-            onTap: () {
-              unfocusInputs();
-            },
-            child: Container(
-              color: Colors.transparent,
-              padding: const EdgeInsets.all(24),
-              child: const Column(
-                children: [
-                  _StatusType(),
-                  SizedBox(height: 24),
-                  _Form(),
-                  SizedBox(height: 24),
-                  _SubmitButton(),
-                ],
+            onTap: unfocusInputs,
+            child: const ScrollableContent(
+              child: Paddings24(
+                child: Column(
+                  children: [
+                    _StatusType(),
+                    SizedBox(height: 24),
+                    _Form(),
+                    SizedBox(height: 24),
+                    _SubmitButton(),
+                  ],
+                ),
               ),
             ),
           ),
@@ -49,7 +56,7 @@ class _Form extends StatelessWidget {
 
     if (runStatusType == RunStatusType.done ||
         runStatusType == RunStatusType.aborted) {
-      return const _FinishedWorkoutForm();
+      return const _ParamsForm();
     }
     return const SizedBox();
   }
@@ -60,16 +67,13 @@ class _SubmitButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool isFormValid = context.select(
-      (RunStatusCreatorBloc bloc) => bloc.state.isFormValid,
-    );
-    final bool areDataSameAsOriginal = context.select(
-      (RunStatusCreatorBloc bloc) => bloc.state.areDataSameAsOriginal,
+    final bool isDisabled = context.select(
+      (RunStatusCreatorBloc bloc) => !bloc.state.canSubmit,
     );
 
     return BigButton(
       label: Str.of(context).save,
-      isDisabled: !isFormValid || areDataSameAsOriginal,
+      isDisabled: isDisabled,
       onPressed: () {
         _onPressed(context);
       },

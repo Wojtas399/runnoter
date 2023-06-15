@@ -57,6 +57,7 @@ class FirebaseCompetitionService {
     final Map<String, dynamic> jsonToUpdate = createCompetitionJsonToUpdate(
       name: name,
       date: date,
+      place: place,
       distance: distance,
       expectedDuration: expectedDuration,
       setDurationAsNull: setDurationAsNull,

@@ -16,7 +16,7 @@ void main() {
 
   test(
     'are all data loaded, '
-    "logged user's name, surname and email aren't null and theme mode and language also aren't null, "
+    "logged user's name, surname and email aren't null and theme mode, language distance unit and pace unit also aren't null, "
     'should be true',
     () {
       state = state.copyWith(
@@ -25,6 +25,8 @@ void main() {
         loggedUserEmail: 'email',
         themeMode: ThemeMode.dark,
         language: Language.english,
+        distanceUnit: DistanceUnit.kilometers,
+        paceUnit: PaceUnit.minutesPerKilometer,
       );
 
       expect(state.areAllDataLoaded, true);
@@ -34,13 +36,15 @@ void main() {
   test(
     'are all data loaded, '
     "logged user's name is null, "
-    'should be true',
+    'should be false',
     () {
       state = state.copyWith(
         loggedUserSurname: 'surname',
         loggedUserEmail: 'email',
         themeMode: ThemeMode.dark,
         language: Language.english,
+        distanceUnit: DistanceUnit.kilometers,
+        paceUnit: PaceUnit.minutesPerKilometer,
       );
 
       expect(state.areAllDataLoaded, false);
@@ -50,13 +54,15 @@ void main() {
   test(
     'are all data loaded, '
     "logged user's surname is null, "
-    'should be true',
+    'should be false',
     () {
       state = state.copyWith(
         loggedUserName: 'name',
         loggedUserEmail: 'email',
         themeMode: ThemeMode.dark,
         language: Language.english,
+        distanceUnit: DistanceUnit.kilometers,
+        paceUnit: PaceUnit.minutesPerKilometer,
       );
 
       expect(state.areAllDataLoaded, false);
@@ -66,13 +72,15 @@ void main() {
   test(
     'are all data loaded, '
     "logged user's email is null, "
-    'should be true',
+    'should be false',
     () {
       state = state.copyWith(
         loggedUserName: 'name',
         loggedUserSurname: 'surname',
         themeMode: ThemeMode.dark,
         language: Language.english,
+        distanceUnit: DistanceUnit.kilometers,
+        paceUnit: PaceUnit.minutesPerKilometer,
       );
 
       expect(state.areAllDataLoaded, false);
@@ -82,13 +90,15 @@ void main() {
   test(
     'are all data loaded, '
     'theme mode is null, '
-    'should be true',
+    'should be false',
     () {
       state = state.copyWith(
         loggedUserName: 'name',
         loggedUserSurname: 'surname',
         loggedUserEmail: 'email',
         language: Language.english,
+        distanceUnit: DistanceUnit.kilometers,
+        paceUnit: PaceUnit.minutesPerKilometer,
       );
 
       expect(state.areAllDataLoaded, false);
@@ -98,13 +108,49 @@ void main() {
   test(
     'are all data loaded, '
     'language is null, '
-    'should be true',
+    'should be false',
     () {
       state = state.copyWith(
         loggedUserName: 'name',
         loggedUserSurname: 'surname',
         loggedUserEmail: 'email',
         themeMode: ThemeMode.dark,
+        distanceUnit: DistanceUnit.kilometers,
+        paceUnit: PaceUnit.minutesPerKilometer,
+      );
+
+      expect(state.areAllDataLoaded, false);
+    },
+  );
+
+  test(
+    'are all data loaded, '
+    'distance unit is null, '
+    'should be false',
+    () {
+      state = state.copyWith(
+        loggedUserName: 'name',
+        loggedUserSurname: 'surname',
+        loggedUserEmail: 'email',
+        themeMode: ThemeMode.dark,
+        paceUnit: PaceUnit.minutesPerKilometer,
+      );
+
+      expect(state.areAllDataLoaded, false);
+    },
+  );
+
+  test(
+    'are all data loaded, '
+    'pace unit is null, '
+    'should be false',
+    () {
+      state = state.copyWith(
+        loggedUserName: 'name',
+        loggedUserSurname: 'surname',
+        loggedUserEmail: 'email',
+        themeMode: ThemeMode.dark,
+        distanceUnit: DistanceUnit.kilometers,
       );
 
       expect(state.areAllDataLoaded, false);
@@ -212,6 +258,32 @@ void main() {
 
       expect(state.language, expectedLanguage);
       expect(state2.language, expectedLanguage);
+    },
+  );
+
+  test(
+    'copy with distance unit',
+    () {
+      const DistanceUnit expectedDistanceUnit = DistanceUnit.miles;
+
+      state = state.copyWith(distanceUnit: expectedDistanceUnit);
+      final state2 = state.copyWith();
+
+      expect(state.distanceUnit, expectedDistanceUnit);
+      expect(state2.distanceUnit, expectedDistanceUnit);
+    },
+  );
+
+  test(
+    'copy with pace unit',
+    () {
+      const PaceUnit expectedPaceUnit = PaceUnit.milesPerHour;
+
+      state = state.copyWith(paceUnit: expectedPaceUnit);
+      final state2 = state.copyWith();
+
+      expect(state.paceUnit, expectedPaceUnit);
+      expect(state2.paceUnit, expectedPaceUnit);
     },
   );
 }

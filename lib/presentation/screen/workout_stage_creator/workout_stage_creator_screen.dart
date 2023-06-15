@@ -5,7 +5,9 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/bloc/workout_stage_creator/workout_stage_creator_bloc.dart';
 import '../../component/text_field_component.dart';
+import '../../extension/context_extensions.dart';
 import '../../formatter/decimal_text_input_formatter.dart';
+import '../../formatter/distance_unit_formatter.dart';
 import '../../service/navigator_service.dart';
 import '../../service/utils.dart';
 

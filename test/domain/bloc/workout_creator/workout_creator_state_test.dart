@@ -20,9 +20,9 @@ void main() {
   });
 
   test(
-    'is submit button disabled, '
+    'can submit, '
     'date is null, '
-    'should be true',
+    'should be false',
     () {
       state = state.copyWith(
         workoutName: 'workout name',
@@ -34,14 +34,14 @@ void main() {
         ],
       );
 
-      expect(state.isSubmitButtonDisabled, true);
+      expect(state.canSubmit, false);
     },
   );
 
   test(
-    'is submit button disabled, '
+    'can submit, '
     'workout name is null, '
-    'should be true',
+    'should be false',
     () {
       state = state.copyWith(
         date: DateTime(2023, 2, 2),
@@ -53,14 +53,14 @@ void main() {
         ],
       );
 
-      expect(state.isSubmitButtonDisabled, true);
+      expect(state.canSubmit, false);
     },
   );
 
   test(
-    'is submit button disabled, '
+    'can submit, '
     'workout name is empty, '
-    'should be true',
+    'should be false',
     () {
       state = state.copyWith(
         date: DateTime(2023, 2, 2),
@@ -73,29 +73,29 @@ void main() {
         ],
       );
 
-      expect(state.isSubmitButtonDisabled, true);
+      expect(state.canSubmit, false);
     },
   );
 
   test(
-    'is submit button disabled, '
+    'can submit, '
     'workout stages list is empty, '
-    'should be true',
+    'should be false',
     () {
       state = state.copyWith(
         date: DateTime(2023, 2, 2),
         workoutName: 'workout name',
       );
 
-      expect(state.isSubmitButtonDisabled, true);
+      expect(state.canSubmit, false);
     },
   );
 
   test(
-    'is submit button disabled, '
+    'can submit, '
     'workout name is the same as original workout name and '
     'stages are the same as original stages, '
-    'should be true',
+    'should be false',
     () {
       state = state.copyWith(
         date: DateTime(2023, 2, 2),
@@ -125,15 +125,15 @@ void main() {
         ],
       );
 
-      expect(state.isSubmitButtonDisabled, true);
+      expect(state.canSubmit, false);
     },
   );
 
   test(
-    'is button disabled, '
+    'can submit, '
     'workout is null, '
     'date and workout name are not null and workout stages list is not empty, '
-    'should be false',
+    'should be true',
     () {
       state = state.copyWith(
         date: DateTime(2023, 2, 2),
@@ -146,15 +146,15 @@ void main() {
         ],
       );
 
-      expect(state.isSubmitButtonDisabled, false);
+      expect(state.canSubmit, true);
     },
   );
 
   test(
-    'is button disabled, '
+    'can submit, '
     'workout is not null, '
     'workout name is different than the original workout name, '
-    'should be false',
+    'should be true',
     () {
       state = state.copyWith(
         date: DateTime(2023, 2, 2),
@@ -176,15 +176,15 @@ void main() {
         ],
       );
 
-      expect(state.isSubmitButtonDisabled, false);
+      expect(state.canSubmit, true);
     },
   );
 
   test(
-    'is button disabled, '
+    'can submit, '
     'workout is not null, '
     'workout stages are different than the original workout stages, '
-    'should be false',
+    'should be true',
     () {
       state = state.copyWith(
         date: DateTime(2023, 2, 2),
@@ -214,7 +214,7 @@ void main() {
         ],
       );
 
-      expect(state.isSubmitButtonDisabled, false);
+      expect(state.canSubmit, true);
     },
   );
 

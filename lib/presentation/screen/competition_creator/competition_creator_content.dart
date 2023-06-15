@@ -5,23 +5,34 @@ class _Content extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text(
-          Str.of(context).competitionCreatorScreenTitle,
+    return WillPopScope(
+      onWillPop: () async {
+        final bool confirmationToLeave = await askForConfirmationToLeave(
+          context: context,
+          areUnsavedChanges:
+              context.read<CompetitionCreatorBloc>().state.canSubmit,
+        );
+        if (confirmationToLeave) unfocusInputs();
+        return confirmationToLeave;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text(
+            Str.of(context).competitionCreatorScreenTitle,
+          ),
         ),
-      ),
-      body: GestureDetector(
-        onTap: unfocusInputs,
-        child: const ScrollableContent(
-          child: Paddings24(
-            child: Column(
-              children: [
-                _Form(),
-                SizedBox(height: 40),
-                _SubmitButton(),
-              ],
+        body: GestureDetector(
+          onTap: unfocusInputs,
+          child: const ScrollableContent(
+            child: Paddings24(
+              child: Column(
+                children: [
+                  _Form(),
+                  SizedBox(height: 40),
+                  _SubmitButton(),
+                ],
+              ),
             ),
           ),
         ),
@@ -39,15 +50,12 @@ class _SubmitButton extends StatelessWidget {
       (CompetitionCreatorBloc bloc) => bloc.state.competition != null,
     );
     final bool isDisabled = context.select(
-      (CompetitionCreatorBloc bloc) => !bloc.state.areDataValid,
-    );
-    final bool areDataSameAsOriginal = context.select(
-      (CompetitionCreatorBloc bloc) => bloc.state.areDataSameAsOriginal,
+      (CompetitionCreatorBloc bloc) => !bloc.state.canSubmit,
     );
 
     return BigButton(
       label: isEditMode ? Str.of(context).save : Str.of(context).add,
-      isDisabled: isDisabled || areDataSameAsOriginal,
+      isDisabled: isDisabled,
       onPressed: () {
         _onPressed(context);
       },

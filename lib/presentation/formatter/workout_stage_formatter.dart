@@ -2,7 +2,10 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../domain/entity/workout_stage.dart';
-import 'double_formatter.dart';
+import '../extension/context_extensions.dart';
+import '../extension/double_extensions.dart';
+import '../extension/string_extensions.dart';
+import 'distance_unit_formatter.dart';
 
 extension WorkoutStageFormatter on WorkoutStage {
   String toUIFormat(BuildContext context) {
@@ -54,7 +57,12 @@ extension WorkoutStageFormatter on WorkoutStage {
     BuildContext context,
     DistanceWorkoutStage stage,
   ) {
-    final String distance = stage.distanceInKilometers.toKilometersFormat();
+    final double convertedDistance = context.convertDistanceFromDefaultUnit(
+      stage.distanceInKilometers,
+    );
+    final String distanceUnit = context.distanceUnit.toUIShortFormat();
+    final String distance =
+        '${convertedDistance.decimal(2).toString().trimZeros()}$distanceUnit';
     return '${stage.toTypeName(context)} $distance HR<${stage.maxHeartRate}';
   }
 

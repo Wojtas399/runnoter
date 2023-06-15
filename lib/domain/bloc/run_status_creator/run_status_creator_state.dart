@@ -7,9 +7,8 @@ class RunStatusCreatorState extends BlocState<RunStatusCreatorState> {
   final double? coveredDistanceInKm;
   final Duration? duration;
   final MoodRate? moodRate;
-  final int? averagePaceMinutes;
-  final int? averagePaceSeconds;
-  final int? averageHeartRate;
+  final Pace? avgPace;
+  final int? avgHeartRate;
   final String? comment;
 
   const RunStatusCreatorState({
@@ -20,9 +19,8 @@ class RunStatusCreatorState extends BlocState<RunStatusCreatorState> {
     this.coveredDistanceInKm,
     this.duration,
     this.moodRate,
-    this.averagePaceMinutes,
-    this.averagePaceSeconds,
-    this.averageHeartRate,
+    this.avgPace,
+    this.avgHeartRate,
     this.comment,
   });
 
@@ -35,37 +33,41 @@ class RunStatusCreatorState extends BlocState<RunStatusCreatorState> {
         coveredDistanceInKm,
         duration,
         moodRate,
-        averagePaceMinutes,
-        averagePaceSeconds,
-        averageHeartRate,
+        avgPace,
+        avgHeartRate,
         comment,
       ];
 
-  bool get isFormValid =>
+  bool get canSubmit => _isFormValid && _areDataDifferentThanOriginal;
+
+  bool get _isFormValid =>
       runStatusType == RunStatusType.pending ||
       runStatusType == RunStatusType.undone ||
       (runStatusType != null &&
           coveredDistanceInKm != null &&
+          coveredDistanceInKm! > 0 &&
           (duration == null || duration!.inSeconds > 0) &&
           moodRate != null &&
-          averagePaceMinutes != null &&
-          averagePaceSeconds != null &&
-          averageHeartRate != null);
+          avgPace != null &&
+          avgPace!.minutes > 0 &&
+          avgPace!.seconds > 0 &&
+          avgHeartRate != null &&
+          avgHeartRate! > 0);
 
-  bool get areDataSameAsOriginal {
+  bool get _areDataDifferentThanOriginal {
     if (_doesRunStatusTypeMatchToOriginalRunStatus()) {
       final RunStatus? originalRunStatus = this.originalRunStatus;
       if (originalRunStatus is RunStatusWithParams) {
-        return coveredDistanceInKm == originalRunStatus.coveredDistanceInKm &&
-            duration == originalRunStatus.duration &&
-            moodRate == originalRunStatus.moodRate &&
-            averagePaceMinutes == originalRunStatus.avgPace.minutes &&
-            averagePaceSeconds == originalRunStatus.avgPace.seconds &&
-            averageHeartRate == originalRunStatus.avgHeartRate &&
-            (comment ?? '') == (originalRunStatus.comment ?? '');
+        return coveredDistanceInKm != originalRunStatus.coveredDistanceInKm ||
+            duration != originalRunStatus.duration ||
+            moodRate != originalRunStatus.moodRate ||
+            avgPace != originalRunStatus.avgPace ||
+            avgHeartRate != originalRunStatus.avgHeartRate ||
+            comment != originalRunStatus.comment;
       }
+      return false;
     }
-    return false;
+    return true;
   }
 
   @override
@@ -76,9 +78,8 @@ class RunStatusCreatorState extends BlocState<RunStatusCreatorState> {
     double? coveredDistanceInKm,
     Duration? duration,
     MoodRate? moodRate,
-    int? averagePaceMinutes,
-    int? averagePaceSeconds,
-    int? averageHeartRate,
+    Pace? avgPace,
+    int? avgHeartRate,
     String? comment,
   }) =>
       RunStatusCreatorState(
@@ -89,9 +90,8 @@ class RunStatusCreatorState extends BlocState<RunStatusCreatorState> {
         coveredDistanceInKm: coveredDistanceInKm ?? this.coveredDistanceInKm,
         duration: duration ?? this.duration,
         moodRate: moodRate ?? this.moodRate,
-        averagePaceMinutes: averagePaceMinutes ?? this.averagePaceMinutes,
-        averagePaceSeconds: averagePaceSeconds ?? this.averagePaceSeconds,
-        averageHeartRate: averageHeartRate ?? this.averageHeartRate,
+        avgPace: avgPace ?? this.avgPace,
+        avgHeartRate: avgHeartRate ?? this.avgHeartRate,
         comment: comment ?? this.comment,
       );
 

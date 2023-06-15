@@ -1,28 +1,22 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 import '../../domain/entity/run_status.dart';
 
 extension MoodRateFormatter on MoodRate {
-  String toUIFormat() {
-    switch (this) {
-      case MoodRate.mr1:
-        return '1 - Maksymalne wyczerpanie';
-      case MoodRate.mr2:
-        return '2 - Bardzo ciężko w trakcie, bardzo duże zmęczenie po';
-      case MoodRate.mr3:
-        return '3 - Ciężko w trakcie, bardzo duże zmęczenie po';
-      case MoodRate.mr4:
-        return '4 - Umiarkowanie w trakcie, bardzo duże zmęczenie';
-      case MoodRate.mr5:
-        return '5 - Umiarkowanie w trakcie, większe niż zwykle zmęczenie po';
-      case MoodRate.mr6:
-        return '6 - Umiarkowanie w trakcie, normalne zmęczenie po';
-      case MoodRate.mr7:
-        return '7 - Normalnie w trakcie, normalne zmęczenie po';
-      case MoodRate.mr8:
-        return '8 - Normalnie w trakcie, lekkie zmęczenie po';
-      case MoodRate.mr9:
-        return '9 - Normalnie w trakcie, prawie brak zmęczenia po';
-      case MoodRate.mr10:
-        return '10 - Normalnie w trakcie, brak zmęczenia po';
-    }
+  String toUIFormat(BuildContext context) {
+    final str = Str.of(context);
+    return switch (this) {
+      MoodRate.mr1 => '1 - ${str.moodRate1}',
+      MoodRate.mr2 => '2 - ${str.moodRate2}',
+      MoodRate.mr3 => '3 - ${str.moodRate3}',
+      MoodRate.mr4 => '4 - ${str.moodRate4}',
+      MoodRate.mr5 => '5 - ${str.moodRate5}',
+      MoodRate.mr6 => '6 - ${str.moodRate6}',
+      MoodRate.mr7 => '7 - ${str.moodRate7}',
+      MoodRate.mr8 => '8 - ${str.moodRate8}',
+      MoodRate.mr9 => '9 - ${str.moodRate9}',
+      MoodRate.mr10 => '10 - ${str.moodRate10}',
+    };
   }
 }

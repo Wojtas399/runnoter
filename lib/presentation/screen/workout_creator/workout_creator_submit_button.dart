@@ -9,7 +9,7 @@ class _SubmitButton extends StatelessWidget {
       (WorkoutCreatorBloc bloc) => bloc.state.workout,
     );
     final bool isDisabled = context.select(
-      (WorkoutCreatorBloc bloc) => bloc.state.isSubmitButtonDisabled,
+      (WorkoutCreatorBloc bloc) => !bloc.state.canSubmit,
     );
 
     return BigButton(

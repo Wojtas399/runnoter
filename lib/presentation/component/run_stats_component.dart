@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../domain/entity/run_status.dart';
+import '../extension/context_extensions.dart';
+import '../extension/double_extensions.dart';
+import '../extension/string_extensions.dart';
+import '../formatter/distance_unit_formatter.dart';
 import '../formatter/duration_formatter.dart';
 import '../formatter/mood_rate_formatter.dart';
 import '../formatter/pace_formatter.dart';
@@ -33,7 +37,7 @@ class RunStats extends StatelessWidget {
           ContentWithLabel(
             label: Str.of(context).runStatusMoodRate,
             content: NullableText(
-              runStatusWithParams.moodRate.toUIFormat(),
+              runStatusWithParams.moodRate.toUIFormat(context),
             ),
           ),
           const SizedBox(height: 16),
@@ -72,16 +76,15 @@ class _Stats extends StatelessWidget {
           child: Row(
             children: [
               Expanded(
-                child: _StatParam(
-                  label: str.runStatusCoveredDistance,
-                  value: '$coveredDistanceInKm km',
+                child: _CoveredDistance(
+                  coveredDistanceInKm: coveredDistanceInKm,
                 ),
               ),
               if (duration != null) const VerticalDivider(),
               if (duration != null)
                 Expanded(
                   child: _StatParam(
-                    label: 'Czas',
+                    label: str.runStatusDuration,
                     value: duration!.toUIFormat(),
                   ),
                 ),
@@ -95,7 +98,7 @@ class _Stats extends StatelessWidget {
               Expanded(
                 child: _StatParam(
                   label: str.runStatusAvgPace,
-                  value: avgPace.toUIFormat(),
+                  value: avgPace.toUIFormat(context),
                 ),
               ),
               const VerticalDivider(),
@@ -109,6 +112,28 @@ class _Stats extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class _CoveredDistance extends StatelessWidget {
+  final double coveredDistanceInKm;
+
+  const _CoveredDistance({
+    required this.coveredDistanceInKm,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final String coveredDistanceStr = context
+        .convertDistanceFromDefaultUnit(coveredDistanceInKm)
+        .decimal(2)
+        .toString()
+        .trimZeros();
+
+    return _StatParam(
+      label: Str.of(context).runStatusCoveredDistance,
+      value: '$coveredDistanceStr${context.distanceUnit.toUIShortFormat()}',
     );
   }
 }

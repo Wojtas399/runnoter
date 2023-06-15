@@ -15,19 +15,19 @@ class HealthMeasurementCreatorEventInitialize
 
 class HealthMeasurementCreatorEventRestingHeartRateChanged
     extends HealthMeasurementCreatorEvent {
-  final String? restingHeartRateStr;
+  final int? restingHeartRate;
 
   const HealthMeasurementCreatorEventRestingHeartRateChanged({
-    required this.restingHeartRateStr,
+    required this.restingHeartRate,
   });
 }
 
 class HealthMeasurementCreatorEventFastingWeightChanged
     extends HealthMeasurementCreatorEvent {
-  final String? fastingWeightStr;
+  final double? fastingWeight;
 
   const HealthMeasurementCreatorEventFastingWeightChanged({
-    required this.fastingWeightStr,
+    required this.fastingWeight,
   });
 }
 

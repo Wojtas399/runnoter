@@ -17,29 +17,29 @@ void main() {
 
   HealthMeasurementCreatorBloc createBloc({
     HealthMeasurement? measurement,
-    String? restingHeartRateStr,
-    String? fastingWeightStr,
+    int? restingHeartRate,
+    double? fastingWeight,
   }) =>
       HealthMeasurementCreatorBloc(
         dateService: dateService,
         authService: authService,
         healthMeasurementRepository: healthMeasurementRepository,
         measurement: measurement,
-        restingHeartRateStr: restingHeartRateStr,
-        fastingWeightStr: fastingWeightStr,
+        restingHeartRate: restingHeartRate,
+        fastingWeight: fastingWeight,
       );
 
   HealthMeasurementCreatorState createState({
     BlocStatus status = const BlocStatusInitial(),
     HealthMeasurement? measurement,
-    String? restingHeartRateStr,
-    String? fastingWeightStr,
+    int? restingHeartRate,
+    double? fastingWeight,
   }) =>
       HealthMeasurementCreatorState(
         status: status,
         measurement: measurement,
-        restingHeartRateStr: restingHeartRateStr,
-        fastingWeightStr: fastingWeightStr,
+        restingHeartRate: restingHeartRate,
+        fastingWeight: fastingWeight,
       );
 
   tearDown(() {
@@ -62,7 +62,7 @@ void main() {
   blocTest(
     'initialize, '
     'given date is not null, '
-    'should load health measurement from repository and should emit loaded measurement, resting heart rate, fasting weight and bloc info that measurement has been loaded',
+    'should load health measurement from repository and should emit loaded measurement, resting heart rate and fasting weight',
     build: () => createBloc(),
     setUp: () {
       authService.mockGetLoggedUserId(userId: 'u1');
@@ -81,16 +81,14 @@ void main() {
     ),
     expect: () => [
       createState(
-        status: const BlocStatusComplete<HealthMeasurementCreatorBlocInfo>(
-          info: HealthMeasurementCreatorBlocInfo.measurementLoaded,
-        ),
+        status: const BlocStatusComplete(),
         measurement: createHealthMeasurement(
           date: DateTime(2023, 5, 10),
           restingHeartRate: 50,
           fastingWeight: 61.5,
         ),
-        restingHeartRateStr: '50',
-        fastingWeightStr: '61.5',
+        restingHeartRate: 50,
+        fastingWeight: 61.5,
       ),
     ],
     verify: (_) {
@@ -112,13 +110,13 @@ void main() {
     build: () => createBloc(),
     act: (HealthMeasurementCreatorBloc bloc) => bloc.add(
       const HealthMeasurementCreatorEventRestingHeartRateChanged(
-        restingHeartRateStr: '50',
+        restingHeartRate: 50,
       ),
     ),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
-        restingHeartRateStr: '50',
+        restingHeartRate: 50,
       ),
     ],
   );
@@ -129,38 +127,24 @@ void main() {
     build: () => createBloc(),
     act: (HealthMeasurementCreatorBloc bloc) => bloc.add(
       const HealthMeasurementCreatorEventFastingWeightChanged(
-        fastingWeightStr: '61.5',
+        fastingWeight: 61.5,
       ),
     ),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
-        fastingWeightStr: '61.5',
+        fastingWeight: 61.5,
       ),
     ],
   );
 
   blocTest(
     'submit, '
-    'resting heart rate is not int number, '
+    'params are invalid, '
     'should do nothing',
     build: () => createBloc(
-      restingHeartRateStr: '50sw',
-      fastingWeightStr: '65.2',
-    ),
-    act: (HealthMeasurementCreatorBloc bloc) => bloc.add(
-      const HealthMeasurementCreatorEventSubmit(),
-    ),
-    expect: () => [],
-  );
-
-  blocTest(
-    'submit, '
-    'fasting weight is not double number, '
-    'should do nothing',
-    build: () => createBloc(
-      restingHeartRateStr: '50',
-      fastingWeightStr: '65.2sad',
+      restingHeartRate: null,
+      fastingWeight: 0,
     ),
     act: (HealthMeasurementCreatorBloc bloc) => bloc.add(
       const HealthMeasurementCreatorEventSubmit(),
@@ -173,8 +157,8 @@ void main() {
     'logged user does not exist, '
     'should emit no logged user bloc status',
     build: () => createBloc(
-      restingHeartRateStr: '50',
-      fastingWeightStr: '65.2',
+      restingHeartRate: 50,
+      fastingWeight: 65.2,
     ),
     setUp: () => authService.mockGetLoggedUserId(),
     act: (HealthMeasurementCreatorBloc bloc) => bloc.add(
@@ -183,8 +167,8 @@ void main() {
     expect: () => [
       createState(
         status: const BlocStatusNoLoggedUser(),
-        restingHeartRateStr: '50',
-        fastingWeightStr: '65.2',
+        restingHeartRate: 50,
+        fastingWeight: 65.2,
       ),
     ],
     verify: (_) => verify(
@@ -197,8 +181,8 @@ void main() {
     'measurement is null, '
     'should get today date, should call method from health measurement repository to add new measurement with today date and should emit info about saved measurement',
     build: () => createBloc(
-      restingHeartRateStr: '50',
-      fastingWeightStr: '65.2',
+      restingHeartRate: 50,
+      fastingWeight: 65.2,
     ),
     setUp: () {
       dateService.mockGetToday(
@@ -213,15 +197,15 @@ void main() {
     expect: () => [
       createState(
         status: const BlocStatusLoading(),
-        restingHeartRateStr: '50',
-        fastingWeightStr: '65.2',
+        restingHeartRate: 50,
+        fastingWeight: 65.2,
       ),
       createState(
         status: const BlocStatusComplete<HealthMeasurementCreatorBlocInfo>(
           info: HealthMeasurementCreatorBlocInfo.measurementSaved,
         ),
-        restingHeartRateStr: '50',
-        fastingWeightStr: '65.2',
+        restingHeartRate: 50,
+        fastingWeight: 65.2,
       ),
     ],
     verify: (_) {
@@ -251,8 +235,8 @@ void main() {
         restingHeartRate: 50,
         fastingWeight: 61.5,
       ),
-      restingHeartRateStr: '50',
-      fastingWeightStr: '65.2',
+      restingHeartRate: 50,
+      fastingWeight: 65.2,
     ),
     setUp: () {
       authService.mockGetLoggedUserId(userId: 'u1');
@@ -269,8 +253,8 @@ void main() {
           restingHeartRate: 50,
           fastingWeight: 61.5,
         ),
-        restingHeartRateStr: '50',
-        fastingWeightStr: '65.2',
+        restingHeartRate: 50,
+        fastingWeight: 65.2,
       ),
       createState(
         status: const BlocStatusComplete<HealthMeasurementCreatorBlocInfo>(
@@ -281,8 +265,8 @@ void main() {
           restingHeartRate: 50,
           fastingWeight: 61.5,
         ),
-        restingHeartRateStr: '50',
-        fastingWeightStr: '65.2',
+        restingHeartRate: 50,
+        fastingWeight: 65.2,
       ),
     ],
     verify: (_) {

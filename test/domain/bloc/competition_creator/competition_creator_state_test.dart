@@ -15,7 +15,7 @@ void main() {
   );
 
   test(
-    'are data valid, '
+    'can submit, '
     'name is null, '
     'should be false',
     () {
@@ -27,12 +27,12 @@ void main() {
         expectedDuration: const Duration(hours: 1, minutes: 45, seconds: 20),
       );
 
-      expect(state.areDataValid, false);
+      expect(state.canSubmit, false);
     },
   );
 
   test(
-    'are data valid, '
+    'can submit, '
     'name is empty, '
     'should be false',
     () {
@@ -44,12 +44,12 @@ void main() {
         expectedDuration: const Duration(hours: 1, minutes: 45, seconds: 20),
       );
 
-      expect(state.areDataValid, false);
+      expect(state.canSubmit, false);
     },
   );
 
   test(
-    'are data valid, '
+    'can submit, '
     'date is null, '
     'should be false',
     () {
@@ -61,12 +61,12 @@ void main() {
         expectedDuration: const Duration(hours: 1, minutes: 45, seconds: 20),
       );
 
-      expect(state.areDataValid, false);
+      expect(state.canSubmit, false);
     },
   );
 
   test(
-    'are data valid, '
+    'can submit, '
     'place is null, '
     'should be false',
     () {
@@ -78,12 +78,12 @@ void main() {
         expectedDuration: const Duration(hours: 1, minutes: 45, seconds: 20),
       );
 
-      expect(state.areDataValid, false);
+      expect(state.canSubmit, false);
     },
   );
 
   test(
-    'are data valid, '
+    'can submit, '
     'place is empty, '
     'should be false',
     () {
@@ -95,12 +95,12 @@ void main() {
         expectedDuration: const Duration(hours: 1, minutes: 45, seconds: 20),
       );
 
-      expect(state.areDataValid, false);
+      expect(state.canSubmit, false);
     },
   );
 
   test(
-    'are data valid, '
+    'can submit, '
     'distance is null, '
     'should be false',
     () {
@@ -112,12 +112,12 @@ void main() {
         expectedDuration: const Duration(hours: 1, minutes: 45, seconds: 20),
       );
 
-      expect(state.areDataValid, false);
+      expect(state.canSubmit, false);
     },
   );
 
   test(
-    'are data valid, '
+    'can submit, '
     'distance is lower than 0, '
     'should be false',
     () {
@@ -129,12 +129,12 @@ void main() {
         expectedDuration: const Duration(hours: 1, minutes: 45, seconds: 20),
       );
 
-      expect(state.areDataValid, false);
+      expect(state.canSubmit, false);
     },
   );
 
   test(
-    'are data valid, '
+    'can submit, '
     'distance is equal to 0, '
     'should be false',
     () {
@@ -146,12 +146,12 @@ void main() {
         expectedDuration: const Duration(hours: 1, minutes: 45, seconds: 20),
       );
 
-      expect(state.areDataValid, false);
+      expect(state.canSubmit, false);
     },
   );
 
   test(
-    'are data valid, '
+    'can submit, '
     'all data are valid, '
     'should be true',
     () {
@@ -163,14 +163,14 @@ void main() {
         expectedDuration: const Duration(hours: 1, minutes: 45, seconds: 20),
       );
 
-      expect(state.areDataValid, true);
+      expect(state.canSubmit, true);
     },
   );
 
   test(
-    'are data same as original, '
+    'can submit, '
     'name is different than original, '
-    'should be false',
+    'should be true',
     () {
       state = state.copyWith(
         competition: createCompetition(
@@ -187,14 +187,14 @@ void main() {
         expectedDuration: const Duration(seconds: 5),
       );
 
-      expect(state.areDataSameAsOriginal, false);
+      expect(state.canSubmit, true);
     },
   );
 
   test(
-    'are data same as original, '
+    'can submit, '
     'date is different than original, '
-    'should be false',
+    'should be true',
     () {
       state = state.copyWith(
         competition: createCompetition(
@@ -211,14 +211,14 @@ void main() {
         expectedDuration: const Duration(seconds: 5),
       );
 
-      expect(state.areDataSameAsOriginal, false);
+      expect(state.canSubmit, true);
     },
   );
 
   test(
-    'are data same as original, '
+    'can submit, '
     'place is different than original, '
-    'should be false',
+    'should be true',
     () {
       state = state.copyWith(
         competition: createCompetition(
@@ -235,14 +235,14 @@ void main() {
         expectedDuration: const Duration(seconds: 5),
       );
 
-      expect(state.areDataSameAsOriginal, false);
+      expect(state.canSubmit, true);
     },
   );
 
   test(
-    'are data same as original, '
+    'can submit, '
     'distance is different than original, '
-    'should be false',
+    'should be true',
     () {
       state = state.copyWith(
         competition: createCompetition(
@@ -259,14 +259,14 @@ void main() {
         expectedDuration: const Duration(seconds: 5),
       );
 
-      expect(state.areDataSameAsOriginal, false);
+      expect(state.canSubmit, true);
     },
   );
 
   test(
-    'are data same as original, '
+    'can submit, '
     'expected duration is different than original, '
-    'should be false',
+    'should be true',
     () {
       state = state.copyWith(
         competition: createCompetition(
@@ -283,7 +283,7 @@ void main() {
         expectedDuration: const Duration(seconds: 50),
       );
 
-      expect(state.areDataSameAsOriginal, false);
+      expect(state.canSubmit, true);
     },
   );
 

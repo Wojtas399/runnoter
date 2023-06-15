@@ -41,7 +41,7 @@ class _SaveButton extends StatelessWidget {
       },
     );
 
-    return TextButton(
+    return FilledButton(
       onPressed: isButtonDisabled
           ? null
           : () {
