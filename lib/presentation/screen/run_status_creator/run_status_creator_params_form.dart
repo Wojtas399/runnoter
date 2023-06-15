@@ -80,7 +80,7 @@ class _MoodRate extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(8),
               child: Text(
-                moodRate.toUIFormat(),
+                moodRate.toUIFormat(context),
               ),
             ),
           ),
@@ -89,7 +89,7 @@ class _MoodRate extends StatelessWidget {
       selectedItemBuilder: (BuildContext context) {
         return MoodRate.values.map((MoodRate moodRate) {
           return Text(
-            moodRate.toUIFormat(),
+            moodRate.toUIFormat(context),
             overflow: TextOverflow.ellipsis,
           );
         }).toList();

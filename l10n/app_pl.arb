@@ -663,6 +663,46 @@
   "@runStatusUndone": {
     "description": "Type of workout status called undone"
   },
+  "moodRate1": "Maksymalne wyczerpanie",
+  "@moodRate1": {
+    "description": "Description of mood rate 1"
+  },
+  "moodRate2": "Bardzo ciężko w trakcie, bardzo duże zmęczenie po",
+  "@moodRate2": {
+    "description": "Description of mood rate 2"
+  },
+  "moodRate3": "Ciężko w trakcie, bardzo duże zmęczenie po",
+  "@moodRate3": {
+    "description": "Description of mood rate 3"
+  },
+  "moodRate4": "Umiarkowanie w trakcie, bardzo duże zmęczenie po",
+  "@moodRate4": {
+    "description": "Description of mood rate 4"
+  },
+  "moodRate5": "Umiarkowanie w trakcie, większe niż zwykle zmęczenie po",
+  "@moodRate5": {
+    "description": "Description of mood rate 5"
+  },
+  "moodRate6": "Umiarkowanie w trakcie, normalne zmęczenie po",
+  "@moodRate6": {
+    "description": "Description of mood rate 6"
+  },
+  "moodRate7": "Normalnie w trakcie, normalne zmęczenie po",
+  "@moodRate7": {
+    "description": "Description of mood rate 7"
+  },
+  "moodRate8": "Normalnie w trakcie, lekkie zmęczenie po",
+  "@moodRate8": {
+    "description": "Description of mood rate 8"
+  },
+  "moodRate9": "Normalnie w trakcie, prawie brak zmęczenia po",
+  "@moodRate9": {
+    "description": "Description of mood rate 9"
+  },
+  "moodRate10": "Normalnie w trakcie, brak zmęczenia po",
+  "@moodRate10": {
+    "description": "Description of mood rate 10"
+  },
   "themeMode": "Motyw",
   "@themeMode": {
     "description": "Label of theme mode"

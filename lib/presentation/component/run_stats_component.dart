@@ -37,7 +37,7 @@ class RunStats extends StatelessWidget {
           ContentWithLabel(
             label: Str.of(context).runStatusMoodRate,
             content: NullableText(
-              runStatusWithParams.moodRate.toUIFormat(),
+              runStatusWithParams.moodRate.toUIFormat(context),
             ),
           ),
           const SizedBox(height: 16),
