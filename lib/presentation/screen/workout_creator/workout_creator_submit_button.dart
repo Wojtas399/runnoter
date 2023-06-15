@@ -16,7 +16,7 @@ class _SubmitButton extends StatelessWidget {
       label: workout != null
           ? Str.of(context).workoutCreatorEditWorkoutButton
           : Str.of(context).workoutCreatorAddWorkoutButton,
-      isDisabled: !isDisabled,
+      isDisabled: isDisabled,
       onPressed: () {
         _onPressed(context);
       },

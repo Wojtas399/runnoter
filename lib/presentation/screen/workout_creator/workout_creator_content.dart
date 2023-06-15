@@ -6,10 +6,14 @@ class _Content extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () async => askForConfirmationToLeave(
-        context: context,
-        areUnsavedChanges: context.read<WorkoutCreatorBloc>().state.canSubmit,
-      ),
+      onWillPop: () async {
+        final bool confirmationToLeave = await askForConfirmationToLeave(
+          context: context,
+          areUnsavedChanges: context.read<WorkoutCreatorBloc>().state.canSubmit,
+        );
+        if (confirmationToLeave) unfocusInputs();
+        return confirmationToLeave;
+      },
       child: Scaffold(
         appBar: AppBar(
           title: const _AppBarTitle(),

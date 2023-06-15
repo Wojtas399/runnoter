@@ -3,54 +3,52 @@ part of 'health_measurement_creator_bloc.dart';
 class HealthMeasurementCreatorState
     extends BlocState<HealthMeasurementCreatorState> {
   final HealthMeasurement? measurement;
-  final String? restingHeartRateStr;
-  final String? fastingWeightStr;
+  final int? restingHeartRate;
+  final double? fastingWeight;
 
   const HealthMeasurementCreatorState({
     required super.status,
     this.measurement,
-    this.restingHeartRateStr,
-    this.fastingWeightStr,
+    this.restingHeartRate,
+    this.fastingWeight,
   });
 
   @override
   List<Object?> get props => [
         status,
         measurement,
-        restingHeartRateStr,
-        fastingWeightStr,
+        restingHeartRate,
+        fastingWeight,
       ];
 
-  bool get isSubmitButtonDisabled =>
-      restingHeartRateStr == null ||
-      restingHeartRateStr!.isEmpty ||
-      fastingWeightStr == null ||
-      fastingWeightStr!.isEmpty ||
-      _areDataSameAsOriginal;
+  bool get canSubmit =>
+      restingHeartRate != null &&
+      restingHeartRate! > 0 &&
+      fastingWeight != null &&
+      fastingWeight! > 0 &&
+      _areDataDifferentThanOriginal;
 
   @override
   copyWith({
     BlocStatus? status,
     HealthMeasurement? measurement,
-    String? restingHeartRateStr,
-    String? fastingWeightStr,
+    int? restingHeartRate,
+    double? fastingWeight,
   }) =>
       HealthMeasurementCreatorState(
         status: status ?? const BlocStatusComplete(),
         measurement: measurement ?? this.measurement,
-        restingHeartRateStr: restingHeartRateStr ?? this.restingHeartRateStr,
-        fastingWeightStr: fastingWeightStr ?? this.fastingWeightStr,
+        restingHeartRate: restingHeartRate ?? this.restingHeartRate,
+        fastingWeight: fastingWeight ?? this.fastingWeight,
       );
 
-  bool get _areDataSameAsOriginal {
-    final int? restingHeartRate = int.tryParse(restingHeartRateStr ?? '');
-    final double? fastingWeight = double.tryParse(fastingWeightStr ?? '');
-    if (measurement == null ||
-        restingHeartRate == null ||
-        fastingWeight == null) {
-      return false;
+  bool get _areDataDifferentThanOriginal {
+    if (measurement != null &&
+        restingHeartRate != null &&
+        fastingWeight != null) {
+      return restingHeartRate != measurement!.restingHeartRate ||
+          fastingWeight != measurement!.fastingWeight;
     }
-    return restingHeartRate == measurement!.restingHeartRate &&
-        fastingWeight == measurement!.fastingWeight;
+    return true;
   }
 }
