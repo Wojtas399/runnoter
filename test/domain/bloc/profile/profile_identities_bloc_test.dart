@@ -6,42 +6,61 @@ import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/bloc/profile/identities/profile_identities_bloc.dart';
 
 import '../../../creators/user_creator.dart';
+import '../../../mock/domain/repository/mock_blood_test_repository.dart';
+import '../../../mock/domain/repository/mock_competition_repository.dart';
+import '../../../mock/domain/repository/mock_health_measurement_repository.dart';
 import '../../../mock/domain/repository/mock_user_repository.dart';
+import '../../../mock/domain/repository/mock_workout_repository.dart';
 import '../../../mock/domain/service/mock_auth_service.dart';
 
 void main() {
   final authService = MockAuthService();
   final userRepository = MockUserRepository();
-
-  ProfileIdentitiesBloc createBloc({
-    String? userId,
-  }) {
-    return ProfileIdentitiesBloc(
-      authService: authService,
-      userRepository: userRepository,
-      userId: userId,
-    );
-  }
+  final workoutRepository = MockWorkoutRepository();
+  final healthMeasurementRepository = MockHealthMeasurementRepository();
+  final bloodTestRepository = MockBloodTestRepository();
+  final competitionRepository = MockCompetitionRepository();
+  const String loggedUserId = 'u1';
 
   ProfileIdentitiesState createState({
     BlocStatus status = const BlocStatusInitial(),
-    String? userId,
+    String? loggedUserId,
     String? username,
     String? surname,
     String? email,
   }) {
     return ProfileIdentitiesState(
       status: status,
-      userId: userId,
+      loggedUserId: loggedUserId,
       username: username,
       surname: surname,
       email: email,
     );
   }
 
+  ProfileIdentitiesBloc createBloc({
+    String? loggedUserId,
+  }) {
+    return ProfileIdentitiesBloc(
+      authService: authService,
+      userRepository: userRepository,
+      workoutRepository: workoutRepository,
+      healthMeasurementRepository: healthMeasurementRepository,
+      bloodTestRepository: bloodTestRepository,
+      competitionRepository: competitionRepository,
+      state: createState(
+        loggedUserId: loggedUserId,
+      ),
+    );
+  }
+
   tearDown(() {
     reset(authService);
     reset(userRepository);
+    reset(workoutRepository);
+    reset(healthMeasurementRepository);
+    reset(bloodTestRepository);
+    reset(competitionRepository);
   });
 
   blocTest(
@@ -50,14 +69,14 @@ void main() {
     build: () => createBloc(),
     setUp: () {
       authService.mockGetLoggedUserId(
-        userId: 'u1',
+        userId: loggedUserId,
       );
       authService.mockGetLoggedUserEmail(
         userEmail: 'email@example.com',
       );
       userRepository.mockGetUserById(
         user: createUser(
-          id: 'u1',
+          id: loggedUserId,
           name: 'name',
           surname: 'surname',
         ),
@@ -71,11 +90,7 @@ void main() {
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
-        email: 'email@example.com',
-      ),
-      createState(
-        status: const BlocStatusComplete(),
-        userId: 'u1',
+        loggedUserId: loggedUserId,
         username: 'name',
         surname: 'surname',
         email: 'email@example.com',
@@ -90,40 +105,22 @@ void main() {
       ).called(1);
       verify(
         () => userRepository.getUserById(
-          userId: 'u1',
+          userId: loggedUserId,
         ),
       ).called(1);
     },
   );
 
   blocTest(
-    'email updated, '
-    'should update email in state',
+    'identities updated, '
+    'should update logged user id, email, username and surname in state',
     build: () => createBloc(),
     act: (ProfileIdentitiesBloc bloc) {
       bloc.add(
-        const ProfileIdentitiesEventEmailUpdated(
+        ProfileIdentitiesEventIdentitiesUpdated(
           email: 'email@example.com',
-        ),
-      );
-    },
-    expect: () => [
-      createState(
-        status: const BlocStatusComplete(),
-        email: 'email@example.com',
-      ),
-    ],
-  );
-
-  blocTest(
-    'user updated, '
-    'should update user id, username and surname in state',
-    build: () => createBloc(),
-    act: (ProfileIdentitiesBloc bloc) {
-      bloc.add(
-        ProfileIdentitiesEventUserUpdated(
           user: createUser(
-            id: 'u1',
+            id: loggedUserId,
             name: 'name',
             surname: 'surname',
           ),
@@ -133,7 +130,8 @@ void main() {
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
-        userId: 'u1',
+        loggedUserId: loggedUserId,
+        email: 'email@example.com',
         username: 'name',
         surname: 'surname',
       ),
@@ -142,9 +140,9 @@ void main() {
 
   blocTest(
     'update username, '
-    'should call method from user repository to update user and should emit complete status with saved data info',
+    'should call method from user repository to update user and should emit info that data have been saved',
     build: () => createBloc(
-      userId: 'u1',
+      loggedUserId: loggedUserId,
     ),
     setUp: () {
       userRepository.mockUpdateUserIdentities();
@@ -159,19 +157,19 @@ void main() {
     expect: () => [
       createState(
         status: const BlocStatusLoading(),
-        userId: 'u1',
+        loggedUserId: loggedUserId,
       ),
       createState(
         status: const BlocStatusComplete<ProfileInfo>(
           info: ProfileInfo.savedData,
         ),
-        userId: 'u1',
+        loggedUserId: loggedUserId,
       ),
     ],
     verify: (_) {
       verify(
         () => userRepository.updateUserIdentities(
-          userId: 'u1',
+          userId: loggedUserId,
           name: 'new username',
         ),
       ).called(1);
@@ -197,7 +195,7 @@ void main() {
     verify: (_) {
       verifyNever(
         () => userRepository.updateUserIdentities(
-          userId: 'u1',
+          userId: loggedUserId,
           name: 'new username',
         ),
       );
@@ -206,9 +204,9 @@ void main() {
 
   blocTest(
     'update surname, '
-    'should call method from user repository to update user and should emit complete status with saved data info',
+    'should call method from user repository to update user and should emit info that data have been saved',
     build: () => createBloc(
-      userId: 'u1',
+      loggedUserId: loggedUserId,
     ),
     setUp: () {
       userRepository.mockUpdateUserIdentities();
@@ -223,19 +221,19 @@ void main() {
     expect: () => [
       createState(
         status: const BlocStatusLoading(),
-        userId: 'u1',
+        loggedUserId: loggedUserId,
       ),
       createState(
         status: const BlocStatusComplete<ProfileInfo>(
           info: ProfileInfo.savedData,
         ),
-        userId: 'u1',
+        loggedUserId: loggedUserId,
       ),
     ],
     verify: (_) {
       verify(
         () => userRepository.updateUserIdentities(
-          userId: 'u1',
+          userId: loggedUserId,
           surname: 'new surname',
         ),
       ).called(1);
@@ -261,7 +259,7 @@ void main() {
     verify: (_) {
       verifyNever(
         () => userRepository.updateUserIdentities(
-          userId: 'u1',
+          userId: loggedUserId,
           surname: 'new surname',
         ),
       );
@@ -270,7 +268,7 @@ void main() {
 
   blocTest(
     'update email, '
-    'should call method from auth service to update email and should emit complete status with saved data info',
+    'should call method from auth service to update email and should emit info that data have been saved',
     build: () => createBloc(),
     setUp: () {
       authService.mockUpdateEmail();
@@ -420,7 +418,7 @@ void main() {
 
   blocTest(
     'update password, '
-    'should call method from auth service to update password and should emit complete status with saved data info',
+    'should call method from auth service to update password and should emit info that data have been saved',
     build: () => createBloc(),
     setUp: () {
       authService.mockUpdatePassword();
@@ -548,16 +546,20 @@ void main() {
   blocTest(
     'delete account, '
     'password is correct, '
-    'should call methods to delete user data and account and should emit complete status with account deleted info',
+    'should call methods to delete user data and account and should emit info that account has been deleted',
     build: () => createBloc(
-      userId: 'u1',
+      loggedUserId: loggedUserId,
     ),
     setUp: () {
       authService.mockIsPasswordCorrect(
         isCorrect: true,
       );
-      userRepository.mockDeleteUser();
       authService.mockDeleteAccount();
+      userRepository.mockDeleteUser();
+      workoutRepository.mockDeleteAllUserWorkouts();
+      healthMeasurementRepository.mockDeleteAllUserMeasurements();
+      bloodTestRepository.mockDeleteAllUserTests();
+      competitionRepository.mockDeleteAllUserCompetitions();
     },
     act: (ProfileIdentitiesBloc bloc) {
       bloc.add(
@@ -569,13 +571,13 @@ void main() {
     expect: () => [
       createState(
         status: const BlocStatusLoading(),
-        userId: 'u1',
+        loggedUserId: loggedUserId,
       ),
       createState(
         status: const BlocStatusComplete<ProfileInfo>(
           info: ProfileInfo.accountDeleted,
         ),
-        userId: 'u1',
+        loggedUserId: loggedUserId,
       ),
     ],
     verify: (_) {
@@ -585,8 +587,28 @@ void main() {
         ),
       ).called(1);
       verify(
+        () => workoutRepository.deleteAllUserWorkouts(
+          userId: loggedUserId,
+        ),
+      ).called(1);
+      verify(
+        () => healthMeasurementRepository.deleteAllUserMeasurements(
+          userId: loggedUserId,
+        ),
+      ).called(1);
+      verify(
+        () => bloodTestRepository.deleteAllUserTests(
+          userId: loggedUserId,
+        ),
+      ).called(1);
+      verify(
+        () => competitionRepository.deleteAllUserCompetitions(
+          userId: loggedUserId,
+        ),
+      ).called(1);
+      verify(
         () => userRepository.deleteUser(
-          userId: 'u1',
+          userId: loggedUserId,
         ),
       ).called(1);
       verify(
@@ -602,7 +624,7 @@ void main() {
     'password is incorrect, '
     'should emit error status with wrong password error',
     build: () => createBloc(
-      userId: 'u1',
+      loggedUserId: loggedUserId,
     ),
     setUp: () {
       authService.mockIsPasswordCorrect(
@@ -619,13 +641,13 @@ void main() {
     expect: () => [
       createState(
         status: const BlocStatusLoading(),
-        userId: 'u1',
+        loggedUserId: loggedUserId,
       ),
       createState(
         status: const BlocStatusError<ProfileError>(
           error: ProfileError.wrongPassword,
         ),
-        userId: 'u1',
+        loggedUserId: loggedUserId,
       ),
     ],
     verify: (_) {
@@ -636,7 +658,7 @@ void main() {
       ).called(1);
       verifyNever(
         () => userRepository.deleteUser(
-          userId: 'u1',
+          userId: loggedUserId,
         ),
       );
       verifyNever(
@@ -652,12 +674,16 @@ void main() {
     'unknown exception, '
     'should emit unknown error status and should rethrow error',
     build: () => createBloc(
-      userId: 'u1',
+      loggedUserId: loggedUserId,
     ),
     setUp: () {
       authService.mockIsPasswordCorrect(
         isCorrect: true,
       );
+      workoutRepository.mockDeleteAllUserWorkouts();
+      bloodTestRepository.mockDeleteAllUserTests();
+      healthMeasurementRepository.mockDeleteAllUserMeasurements();
+      competitionRepository.mockDeleteAllUserCompetitions();
       userRepository.mockDeleteUser();
       authService.mockDeleteAccount(
         throwable: 'Unknown exception...',
@@ -673,11 +699,11 @@ void main() {
     expect: () => [
       createState(
         status: const BlocStatusLoading(),
-        userId: 'u1',
+        loggedUserId: loggedUserId,
       ),
       createState(
         status: const BlocStatusUnknownError(),
-        userId: 'u1',
+        loggedUserId: loggedUserId,
       ),
     ],
     errors: () => [
@@ -691,7 +717,7 @@ void main() {
       ).called(1);
       verify(
         () => userRepository.deleteUser(
-          userId: 'u1',
+          userId: loggedUserId,
         ),
       ).called(1);
       verify(

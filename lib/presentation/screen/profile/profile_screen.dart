@@ -6,7 +6,11 @@ import '../../../domain/additional_model/bloc_status.dart';
 import '../../../domain/bloc/profile/identities/profile_identities_bloc.dart';
 import '../../../domain/bloc/profile/settings/profile_settings_bloc.dart';
 import '../../../domain/entity/settings.dart' as settings;
+import '../../../domain/repository/blood_test_repository.dart';
+import '../../../domain/repository/competition_repository.dart';
+import '../../../domain/repository/health_measurement_repository.dart';
 import '../../../domain/repository/user_repository.dart';
+import '../../../domain/repository/workout_repository.dart';
 import '../../../domain/service/auth_service.dart';
 import '../../component/bloc_with_status_listener_component.dart';
 import '../../component/password_text_field_component.dart';
@@ -58,6 +62,11 @@ class _IdentitiesBlocProvider extends StatelessWidget {
       create: (BuildContext context) => ProfileIdentitiesBloc(
         authService: context.read<AuthService>(),
         userRepository: context.read<UserRepository>(),
+        workoutRepository: context.read<WorkoutRepository>(),
+        healthMeasurementRepository:
+            context.read<HealthMeasurementRepository>(),
+        bloodTestRepository: context.read<BloodTestRepository>(),
+        competitionRepository: context.read<CompetitionRepository>(),
       )..add(
           const ProfileIdentitiesEventInitialize(),
         ),

@@ -51,12 +51,16 @@ void main() {
   blocTest(
     'initialize, '
     'given date is null, '
-    'should do nothing',
+    'should emit complete status',
     build: () => createBloc(),
     act: (HealthMeasurementCreatorBloc bloc) => bloc.add(
       const HealthMeasurementCreatorEventInitialize(),
     ),
-    expect: () => [],
+    expect: () => [
+      createState(
+        status: const BlocStatusComplete(),
+      ),
+    ],
   );
 
   blocTest(

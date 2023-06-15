@@ -1,23 +1,23 @@
 part of 'profile_identities_bloc.dart';
 
 class ProfileIdentitiesState extends BlocState {
-  final String? userId;
+  final String? loggedUserId;
   final String? username;
   final String? surname;
   final String? email;
 
   const ProfileIdentitiesState({
     required super.status,
-    required this.userId,
-    required this.username,
-    required this.surname,
-    required this.email,
+    this.loggedUserId,
+    this.username,
+    this.surname,
+    this.email,
   });
 
   @override
   List<Object?> get props => [
         status,
-        userId,
+        loggedUserId,
         username,
         surname,
         email,
@@ -26,14 +26,14 @@ class ProfileIdentitiesState extends BlocState {
   @override
   ProfileIdentitiesState copyWith({
     BlocStatus? status,
-    String? userId,
+    String? loggedUserId,
     String? username,
     String? surname,
     String? email,
   }) {
     return ProfileIdentitiesState(
       status: status ?? const BlocStatusComplete(),
-      userId: userId ?? this.userId,
+      loggedUserId: loggedUserId ?? this.loggedUserId,
       username: username ?? this.username,
       surname: surname ?? this.surname,
       email: email ?? this.email,
