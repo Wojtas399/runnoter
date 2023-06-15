@@ -1,3 +1,4 @@
+import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -40,8 +41,14 @@ class App extends StatelessWidget {
                 themeMode: themeMode,
                 theme: GlobalTheme.lightTheme,
                 darkTheme: GlobalTheme.darkTheme,
-                home: const RepositoriesProvider(
-                  child: AppNavigator(),
+                home: AnimatedSplashScreen(
+                  duration: 2000,
+                  splash: 'assets/logo.png',
+                  nextScreen: const RepositoriesProvider(
+                    child: AppNavigator(),
+                  ),
+                  splashTransition: SplashTransition.fadeTransition,
+                  backgroundColor: Theme.of(context).colorScheme.background,
                 ),
               );
             },
