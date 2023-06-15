@@ -363,7 +363,7 @@ void main() {
 
   test(
     'delete all user competitions, '
-    'should call method from firebase competition service to delete all user competitions and should delete this competitions from repository',
+    'should call method from firebase competition service to delete all user competitions and should delete these competitions from repository',
     () {
       final List<Competition> existingCompetitions = [
         createCompetition(id: 'c1', userId: userId),

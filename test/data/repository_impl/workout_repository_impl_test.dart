@@ -674,7 +674,7 @@ void main() {
 
   test(
     'delete all user workouts, '
-    'should call method from firebase service to delete all user workouts and should delete workouts from the state of repository',
+    'should call method from firebase service to delete all user workouts and should delete these workouts from the state of repository',
     () {
       final List<Workout> existingWorkouts = [
         createWorkout(id: 'w5', userId: 'u3'),

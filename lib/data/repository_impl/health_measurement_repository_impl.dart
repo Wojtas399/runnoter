@@ -151,7 +151,17 @@ class HealthMeasurementRepositoryImpl extends StateRepository<HealthMeasurement>
   Future<void> deleteAllUserMeasurements({
     required String userId,
   }) async {
-    throw UnimplementedError();
+    await _firebaseHealthMeasurementService.deleteAllUserMeasurements(
+      userId: userId,
+    );
+    final repositoryState = await dataStream$.first;
+    final List<String> idsOfUserMeasurements = [
+      ...?repositoryState
+          ?.where((measurement) => measurement.userId == userId)
+          .map((measurement) => measurement.id)
+          .toList(),
+    ];
+    removeEntities(idsOfUserMeasurements);
   }
 
   Future<bool> _doesMeasurementWithGivenDateNotExist(

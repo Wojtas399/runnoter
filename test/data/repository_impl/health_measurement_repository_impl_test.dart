@@ -495,4 +495,56 @@ void main() {
       ).called(1);
     },
   );
+
+  test(
+    'delete all user measurements, '
+    "should call firebase service's method to delete all user measurements and should delete these measurements from repo state",
+    () {
+      final List<HealthMeasurement> existingMeasurements = [
+        createHealthMeasurement(
+          userId: 'u2',
+          date: DateTime(2023, 2, 9),
+        ),
+        createHealthMeasurement(
+          userId: userId,
+          date: DateTime(2023, 2, 10),
+        ),
+        createHealthMeasurement(
+          userId: 'u2',
+          date: DateTime(2023, 2, 11),
+        ),
+        createHealthMeasurement(
+          userId: userId,
+          date: DateTime(2023, 2, 12),
+        ),
+      ];
+      firebaseHealthMeasurementService.mockDeleteAllUserMeasurements(
+        idsOfDeletedMeasurements: ['2023-02-10', '2023-02,12'],
+      );
+      repository = createRepository(
+        initialState: existingMeasurements,
+      );
+
+      final Stream<List<HealthMeasurement>?> state$ = repository.dataStream$;
+      repository.deleteAllUserMeasurements(userId: userId);
+
+      expect(
+        state$,
+        emitsInOrder(
+          [
+            existingMeasurements,
+            [
+              existingMeasurements.first,
+              existingMeasurements[2],
+            ]
+          ],
+        ),
+      );
+      verify(
+        () => firebaseHealthMeasurementService.deleteAllUserMeasurements(
+          userId: userId,
+        ),
+      ).called(1);
+    },
+  );
 }
