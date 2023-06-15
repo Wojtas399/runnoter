@@ -6,6 +6,10 @@ class _FakeHealthMeasurementDto extends Fake implements HealthMeasurementDto {}
 
 class MockFirebaseHealthMeasurementService extends Mock
     implements FirebaseHealthMeasurementService {
+  MockFirebaseHealthMeasurementService() {
+    registerFallbackValue(_FakeHealthMeasurementDto());
+  }
+
   void mockLoadMeasurementByDate({
     HealthMeasurementDto? healthMeasurementDto,
   }) {
@@ -42,7 +46,6 @@ class MockFirebaseHealthMeasurementService extends Mock
   void mockAddMeasurement({
     HealthMeasurementDto? addedMeasurementDto,
   }) {
-    _mockHealthMeasurementDto();
     when(
       () => addMeasurement(
         userId: any(named: 'userId'),
@@ -73,7 +76,13 @@ class MockFirebaseHealthMeasurementService extends Mock
     ).thenAnswer((invocation) => Future.value());
   }
 
-  void _mockHealthMeasurementDto() {
-    registerFallbackValue(_FakeHealthMeasurementDto());
+  void mockDeleteAllUserMeasurements({
+    required List<String> idsOfDeletedMeasurements,
+  }) {
+    when(
+      () => deleteAllUserMeasurements(
+        userId: any(named: 'userId'),
+      ),
+    ).thenAnswer((invocation) => Future.value(idsOfDeletedMeasurements));
   }
 }

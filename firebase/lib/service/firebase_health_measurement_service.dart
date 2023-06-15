@@ -86,4 +86,19 @@ class FirebaseHealthMeasurementService {
     final String measurementId = mapDateTimeToString(date);
     await getHealthMeasurementsRef(userId).doc(measurementId).delete();
   }
+
+  Future<List<String>> deleteAllUserMeasurements({
+    required String userId,
+  }) async {
+    final measurementsRef = getHealthMeasurementsRef(userId);
+    final snapshot = await measurementsRef.get();
+    final List<String> idsOfDeletedMeasurements = [];
+    final WriteBatch batch = FirebaseFirestore.instance.batch();
+    for (final docSnapshot in snapshot.docs) {
+      batch.delete(docSnapshot.reference);
+      idsOfDeletedMeasurements.add(docSnapshot.id);
+    }
+    await batch.commit();
+    return idsOfDeletedMeasurements;
+  }
 }
