@@ -63,4 +63,19 @@ class FirebaseBloodTestService {
   }) async {
     await getBloodTestsRef(userId).doc(bloodTestId).delete();
   }
+
+  Future<List<String>> deleteAllUserTests({
+    required String userId,
+  }) async {
+    final bloodTestsRef = getBloodTestsRef(userId);
+    final snapshot = await bloodTestsRef.get();
+    final List<String> idsOfDeletedTests = [];
+    final WriteBatch batch = FirebaseFirestore.instance.batch();
+    for (final docSnapshot in snapshot.docs) {
+      batch.delete(docSnapshot.reference);
+      idsOfDeletedTests.add(docSnapshot.id);
+    }
+    await batch.commit();
+    return idsOfDeletedTests;
+  }
 }
