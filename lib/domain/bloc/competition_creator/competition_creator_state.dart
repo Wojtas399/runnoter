@@ -29,7 +29,9 @@ class CompetitionCreatorState extends BlocState<CompetitionCreatorState> {
         expectedDuration,
       ];
 
-  bool get areDataValid =>
+  bool get canSubmit => _areDataValid && _areDataDifferentThanOriginal;
+
+  bool get _areDataValid =>
       name != null &&
       name!.isNotEmpty &&
       date != null &&
@@ -38,16 +40,14 @@ class CompetitionCreatorState extends BlocState<CompetitionCreatorState> {
       distance != null &&
       distance! > 0;
 
-  bool get areDataSameAsOriginal =>
-      name == competition?.name &&
+  bool get _areDataDifferentThanOriginal =>
+      name != competition?.name ||
       (date != null &&
           competition?.date != null &&
-          date!.isAtSameMomentAs(competition!.date)) &&
-      place == competition?.place &&
-      distance == competition?.distance &&
-      (expectedDuration == competition?.expectedDuration ||
-          (expectedDuration?.inSeconds == 0 &&
-              competition?.expectedDuration == null));
+          !date!.isAtSameMomentAs(competition!.date)) ||
+      place != competition?.place ||
+      distance != competition?.distance ||
+      expectedDuration != competition?.expectedDuration;
 
   @override
   CompetitionCreatorState copyWith({
