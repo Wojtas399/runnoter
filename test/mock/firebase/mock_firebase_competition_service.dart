@@ -76,4 +76,14 @@ class MockFirebaseCompetitionService extends Mock
       ),
     ).thenAnswer((invocation) => Future.value());
   }
+
+  void mockDeleteAllUserCompetitions({
+    required List<String> idsOfDeletedCompetitions,
+  }) {
+    when(
+      () => deleteAllUserCompetitions(
+        userId: any(named: 'userId'),
+      ),
+    ).thenAnswer((invocation) => Future.value(idsOfDeletedCompetitions));
+  }
 }

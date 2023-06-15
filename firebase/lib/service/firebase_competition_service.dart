@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 import '../firebase_collections.dart';
 import '../model/competition_dto.dart';
 import '../model/run_status_dto.dart';
@@ -74,5 +76,20 @@ class FirebaseCompetitionService {
   }) async {
     final docRef = getCompetitionsRef(userId).doc(competitionId);
     await docRef.delete();
+  }
+
+  Future<List<String>> deleteAllUserCompetitions({
+    required String userId,
+  }) async {
+    final competitionsRef = getCompetitionsRef(userId);
+    final WriteBatch batch = FirebaseFirestore.instance.batch();
+    final snapshot = await competitionsRef.get();
+    final List<String> idsOfDeletedCompetitions = [];
+    for (final docSnapshot in snapshot.docs) {
+      batch.delete(docSnapshot.reference);
+      idsOfDeletedCompetitions.add(docSnapshot.id);
+    }
+    await batch.commit();
+    return idsOfDeletedCompetitions;
   }
 }

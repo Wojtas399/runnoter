@@ -112,7 +112,7 @@ class FirebaseWorkoutService {
   Future<List<String>> deleteAllUserWorkouts({
     required String userId,
   }) async {
-    final CollectionReference<WorkoutDto> workoutsRef = getWorkoutsRef(userId);
+    final workoutsRef = getWorkoutsRef(userId);
     final WriteBatch batch = FirebaseFirestore.instance.batch();
     final snapshot = await workoutsRef.get();
     final List<String> idsOfDeletedWorkouts = [];
