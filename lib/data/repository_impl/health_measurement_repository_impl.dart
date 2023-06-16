@@ -74,16 +74,15 @@ class HealthMeasurementRepositoryImpl extends StateRepository<HealthMeasurement>
   @override
   Stream<List<HealthMeasurement>?> getAllMeasurements({
     required String userId,
-  }) =>
-      dataStream$
-          .map(
-            (List<HealthMeasurement>? measurements) => measurements
-                ?.where((measurement) => measurement.userId == userId)
-                .toList(),
-          )
-          .doOnListen(
-            () => _loadAllMeasurementsFromRemoteDb(userId),
-          );
+  }) async* {
+    await _loadAllMeasurementsFromRemoteDb(userId);
+
+    await for (final measurements in dataStream$) {
+      yield measurements
+          ?.where((measurement) => measurement.userId == userId)
+          .toList();
+    }
+  }
 
   @override
   Future<void> addMeasurement({

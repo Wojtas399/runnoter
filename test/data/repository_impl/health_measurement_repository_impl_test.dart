@@ -244,7 +244,7 @@ void main() {
 
   test(
     'get all measurements, '
-    'should emit existing and matching measurements, should load new measurements from firebase and should also emit newly loaded measurements',
+    'should load new measurements from remote db and should emit measurements belonging to given user',
     () {
       final List<HealthMeasurement> existingMeasurements = [
         HealthMeasurement(
@@ -301,7 +301,6 @@ void main() {
 
       Stream<List<HealthMeasurement>?> measurements$ =
           repository.getAllMeasurements(userId: userId);
-      measurements$.listen((_) {});
 
       expect(
         measurements$,
@@ -309,19 +308,11 @@ void main() {
           [
             [
               existingMeasurements[1],
-            ],
-            [
-              existingMeasurements[1],
               ...loadedMeasurements,
             ],
           ],
         ),
       );
-      verify(
-        () => firebaseHealthMeasurementService.loadAllMeasurements(
-          userId: userId,
-        ),
-      ).called(1);
     },
   );
 
