@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../firebase.dart';
 import '../firebase_collections.dart';
+import '../utils/utils.dart';
 
 class FirebaseBloodTestService {
   Future<BloodTestDto?> loadTestById({
@@ -29,13 +30,15 @@ class FirebaseBloodTestService {
     required DateTime date,
     required List<BloodParameterResultDto> parameterResultDtos,
   }) async {
-    final bloodTestRef = await getBloodTestsRef(userId).add(
-      BloodTestDto(
-        id: '',
-        userId: userId,
-        date: date,
-        parameterResultDtos: parameterResultDtos,
-      ),
+    final bloodTestRef = getBloodTestsRef(userId).doc();
+    final BloodTestDto bloodTestDto = BloodTestDto(
+      id: '',
+      userId: userId,
+      date: date,
+      parameterResultDtos: parameterResultDtos,
+    );
+    await asyncCall(
+      () => bloodTestRef.set(bloodTestDto),
     );
     final snapshot = await bloodTestRef.get();
     return snapshot.data();
@@ -52,7 +55,9 @@ class FirebaseBloodTestService {
       date: date,
       parameterResultDtos: parameterResultDtos,
     );
-    await bloodTestRef.update(jsonToUpdate);
+    await asyncCall(
+      () => bloodTestRef.update(jsonToUpdate),
+    );
     final snapshot = await bloodTestRef.get();
     return snapshot.data();
   }
@@ -61,7 +66,9 @@ class FirebaseBloodTestService {
     required String bloodTestId,
     required String userId,
   }) async {
-    await getBloodTestsRef(userId).doc(bloodTestId).delete();
+    await asyncCall(
+      () => getBloodTestsRef(userId).doc(bloodTestId).delete(),
+    );
   }
 
   Future<List<String>> deleteAllUserTests({
@@ -75,7 +82,9 @@ class FirebaseBloodTestService {
       batch.delete(docSnapshot.reference);
       idsOfDeletedTests.add(docSnapshot.id);
     }
-    await batch.commit();
+    await asyncCall(
+      () => batch.commit(),
+    );
     return idsOfDeletedTests;
   }
 }
