@@ -296,7 +296,7 @@ void main() {
 
   test(
     'get all workouts, '
-    'should emit workouts existing in state and should load workouts from firebase and add them to repository',
+    'should load workouts from remote db and should emit workouts belonging to given user',
     () {
       final List<Workout> existingWorkouts = [
         createWorkout(
@@ -346,6 +346,10 @@ void main() {
           name: 'workout name 5',
         ),
       ];
+      final List<Workout> expectedWorkouts = [
+        existingWorkouts[1],
+        ...newlyLoadedWorkouts,
+      ];
       firebaseWorkoutService.mockLoadAllWorkouts(
         workoutDtos: newlyLoadedWorkoutDtos,
       );
@@ -355,27 +359,13 @@ void main() {
 
       final Stream<List<Workout>?> workouts$ =
           repository.getAllWorkouts(userId: userId);
-      workouts$.listen((event) {});
 
       expect(
         workouts$,
         emitsInOrder(
-          [
-            [
-              existingWorkouts[1],
-            ],
-            [
-              existingWorkouts[1],
-              ...newlyLoadedWorkouts,
-            ],
-          ],
+          [expectedWorkouts],
         ),
       );
-      verify(
-        () => firebaseWorkoutService.loadAllWorkouts(
-          userId: userId,
-        ),
-      ).called(1);
     },
   );
 

@@ -37,7 +37,6 @@ class CompetitionRepositoryImpl extends StateRepository<Competition>
     required String userId,
   }) async* {
     await _loadAllCompetitionsFromRemoteDb(userId);
-
     await for (final competitions in dataStream$) {
       yield competitions
           ?.where((competition) => competition.userId == userId)

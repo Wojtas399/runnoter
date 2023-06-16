@@ -76,7 +76,6 @@ class HealthMeasurementRepositoryImpl extends StateRepository<HealthMeasurement>
     required String userId,
   }) async* {
     await _loadAllMeasurementsFromRemoteDb(userId);
-
     await for (final measurements in dataStream$) {
       yield measurements
           ?.where((measurement) => measurement.userId == userId)

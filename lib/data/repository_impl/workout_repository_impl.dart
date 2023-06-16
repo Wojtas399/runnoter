@@ -76,15 +76,12 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
   @override
   Stream<List<Workout>?> getAllWorkouts({
     required String userId,
-  }) =>
-      dataStream$
-          .map(
-            (List<Workout>? workouts) =>
-                _findWorkoutsByUserId(workouts, userId),
-          )
-          .doOnListen(
-            () => _loadWorkoutsByUserId(userId),
-          );
+  }) async* {
+    await _loadWorkoutsFromRemoteDb(userId);
+    await for (final workouts in dataStream$) {
+      yield workouts?.where((workout) => workout.userId == userId).toList();
+    }
+  }
 
   @override
   Future<void> addWorkout({
@@ -192,12 +189,6 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
         orElse: () => null,
       );
 
-  List<Workout>? _findWorkoutsByUserId(
-    List<Workout>? workouts,
-    String userId,
-  ) =>
-      workouts?.where((workout) => workout.userId == userId).toList();
-
   Future<void> _loadWorkoutsByDateRangeFromRemoteDb(
     DateTime startDate,
     DateTime endDate,
@@ -249,7 +240,7 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
     }
   }
 
-  Future<void> _loadWorkoutsByUserId(String userId) async {
+  Future<void> _loadWorkoutsFromRemoteDb(String userId) async {
     final List<WorkoutDto>? workoutDtos =
         await _firebaseWorkoutService.loadAllWorkouts(userId: userId);
     if (workoutDtos != null) {
