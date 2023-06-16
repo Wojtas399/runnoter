@@ -3,5 +3,6 @@ enum FirebaseAuthExceptionCode {
   userNotFound,
   wrongPassword,
   emailAlreadyInUse,
+  networkRequestFailed,
   unknown;
 }

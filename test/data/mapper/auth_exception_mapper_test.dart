@@ -4,68 +4,56 @@ import 'package:runnoter/data/mapper/auth_exception_mapper.dart';
 import 'package:runnoter/domain/additional_model/auth_exception.dart';
 
 void main() {
-  group(
-    'map from firebase auth exception code to auth exception',
+  test(
+    'map from firebase auth exception'
+    'FirebaseAuthException.invalidEmail code should be mapped to AuthException.invalidEmail',
     () {
-      test(
-        'firebase auth exception invalid email code should be mapped to auth exception with invalidEmail type',
-        () {
-          const firebaseAuthExceptionCode =
-              FirebaseAuthExceptionCode.invalidEmail;
-          const expectedAuthException = AuthException.invalidEmail;
+      const firebaseAuthExceptionCode = FirebaseAuthExceptionCode.invalidEmail;
+      const expectedAuthException = AuthException.invalidEmail;
 
-          final exception = mapFromFirebaseAuthExceptionCodeToAuthException(
-            firebaseAuthExceptionCode,
-          );
+      final exception = mapFromFirebaseAuthException(firebaseAuthExceptionCode);
 
-          expect(exception, expectedAuthException);
-        },
-      );
+      expect(exception, expectedAuthException);
+    },
+  );
 
-      test(
-        'firebase auth exception wrong password code should be mapped to auth exception with wrongPassword type',
-        () {
-          const firebaseAuthExceptionCode =
-              FirebaseAuthExceptionCode.wrongPassword;
-          const expectedAuthException = AuthException.wrongPassword;
+  test(
+    'map from firebase auth exception'
+    'FirebaseAuthException.wrongPassword should be mapped to AuthException.wrongPassword',
+    () {
+      const firebaseAuthExceptionCode = FirebaseAuthExceptionCode.wrongPassword;
+      const expectedAuthException = AuthException.wrongPassword;
 
-          final exception = mapFromFirebaseAuthExceptionCodeToAuthException(
-            firebaseAuthExceptionCode,
-          );
+      final exception = mapFromFirebaseAuthException(firebaseAuthExceptionCode);
 
-          expect(exception, expectedAuthException);
-        },
-      );
+      expect(exception, expectedAuthException);
+    },
+  );
 
-      test(
-        'firebase auth exception user not found code should be mapped to auth exception with userNotFound type',
-        () {
-          const firebaseAuthExceptionCode =
-              FirebaseAuthExceptionCode.userNotFound;
-          const expectedAuthException = AuthException.userNotFound;
+  test(
+    'map from firebase auth exception'
+    'FirebaseAuthException.userNotFound should be mapped to AuthException.userNotFound',
+    () {
+      const firebaseAuthExceptionCode = FirebaseAuthExceptionCode.userNotFound;
+      const expectedAuthException = AuthException.userNotFound;
 
-          final exception = mapFromFirebaseAuthExceptionCodeToAuthException(
-            firebaseAuthExceptionCode,
-          );
+      final exception = mapFromFirebaseAuthException(firebaseAuthExceptionCode);
 
-          expect(exception, expectedAuthException);
-        },
-      );
+      expect(exception, expectedAuthException);
+    },
+  );
 
-      test(
-        'firebase auth exception email already in use code should be mapped to auth exception with emailAlreadyInUse type',
-        () {
-          const firebaseAuthExceptionCode =
-              FirebaseAuthExceptionCode.emailAlreadyInUse;
-          const expectedAuthException = AuthException.emailAlreadyInUse;
+  test(
+    'map from firebase auth exception'
+    'FirebaseAuthException.emailAlreadyInUse should be mapped to AuthException.emailAlreadyInUse',
+    () {
+      const firebaseAuthExceptionCode =
+          FirebaseAuthExceptionCode.emailAlreadyInUse;
+      const expectedAuthException = AuthException.emailAlreadyInUse;
 
-          final exception = mapFromFirebaseAuthExceptionCodeToAuthException(
-            firebaseAuthExceptionCode,
-          );
+      final exception = mapFromFirebaseAuthException(firebaseAuthExceptionCode);
 
-          expect(exception, expectedAuthException);
-        },
-      );
+      expect(exception, expectedAuthException);
     },
   );
 }

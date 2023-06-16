@@ -3,4 +3,5 @@ enum AuthException {
   wrongPassword,
   userNotFound,
   emailAlreadyInUse,
+  networkRequestFailed,
 }

@@ -29,7 +29,7 @@ class AuthServiceImpl implements AuthService {
       );
     } on FirebaseAuthExceptionCode catch (exception) {
       final AuthException? authException =
-          mapFromFirebaseAuthExceptionCodeToAuthException(exception);
+          mapFromFirebaseAuthException(exception);
       if (authException != null) {
         throw authException;
       } else {
@@ -50,7 +50,7 @@ class AuthServiceImpl implements AuthService {
       );
     } on FirebaseAuthExceptionCode catch (exception) {
       final AuthException? authException =
-          mapFromFirebaseAuthExceptionCodeToAuthException(exception);
+          mapFromFirebaseAuthException(exception);
       if (authException != null) {
         throw authException;
       } else {
@@ -67,7 +67,7 @@ class AuthServiceImpl implements AuthService {
       await _firebaseAuthService.sendPasswordResetEmail(email: email);
     } on FirebaseAuthExceptionCode catch (exception) {
       final AuthException? authException =
-          mapFromFirebaseAuthExceptionCodeToAuthException(exception);
+          mapFromFirebaseAuthException(exception);
       if (authException != null) {
         throw authException;
       } else {
@@ -93,7 +93,7 @@ class AuthServiceImpl implements AuthService {
       );
     } on FirebaseAuthExceptionCode catch (exception) {
       final AuthException? authException =
-          mapFromFirebaseAuthExceptionCodeToAuthException(exception);
+          mapFromFirebaseAuthException(exception);
       if (authException != null) {
         throw authException;
       } else {
@@ -114,7 +114,7 @@ class AuthServiceImpl implements AuthService {
       );
     } on FirebaseAuthExceptionCode catch (exception) {
       final AuthException? authException =
-          mapFromFirebaseAuthExceptionCodeToAuthException(exception);
+          mapFromFirebaseAuthException(exception);
       if (authException != null) {
         throw authException;
       } else {
@@ -142,7 +142,7 @@ class AuthServiceImpl implements AuthService {
       );
     } on FirebaseAuthExceptionCode catch (exception) {
       final AuthException? authException =
-          mapFromFirebaseAuthExceptionCodeToAuthException(exception);
+          mapFromFirebaseAuthException(exception);
       if (authException != null) {
         throw authException;
       } else {
