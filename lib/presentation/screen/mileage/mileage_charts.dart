@@ -1,27 +1,14 @@
 part of 'mileage_screen.dart';
 
 class _Charts extends StatelessWidget {
-  const _Charts();
+  final List<ChartYear> years;
+
+  const _Charts({
+    required this.years,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final List<ChartYear>? years = context.select(
-      (MileageCubit cubit) => cubit.state,
-    );
-
-    if (years == null) {
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
-    } else if (years.isEmpty) {
-      return Paddings24(
-        child: EmptyContentInfo(
-          icon: Icons.insert_chart_outlined,
-          title: Str.of(context).mileageNoDataTitle,
-          subtitle: Str.of(context).mileageNoDataMessage,
-        ),
-      );
-    }
     return ListView.separated(
       itemCount: years.length,
       padding: const EdgeInsets.fromLTRB(8, 24, 24, 24),
