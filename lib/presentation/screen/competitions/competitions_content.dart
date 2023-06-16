@@ -10,21 +10,10 @@ class _Content extends StatelessWidget {
     );
 
     return switch (competitions) {
-      null => const _LoadingContent(),
+      null => const LoadingInfo(),
       [] => const _NoCompetitionsInfo(),
       [...] => _CompetitionsList(competitions: competitions),
     };
-  }
-}
-
-class _LoadingContent extends StatelessWidget {
-  const _LoadingContent();
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(
-      child: CircularProgressIndicator(),
-    );
   }
 }
 

@@ -11,23 +11,12 @@ class _Content extends StatelessWidget {
 
     return SafeArea(
       child: switch (bloodTestsSortedByYear) {
-        null => const _LoadingContent(),
+        null => const LoadingInfo(),
         [] => const _NoTestsInfo(),
         [...] => _BloodTestsList(
             bloodTestsSortedByYear: bloodTestsSortedByYear,
           )
       },
-    );
-  }
-}
-
-class _LoadingContent extends StatelessWidget {
-  const _LoadingContent();
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(
-      child: CircularProgressIndicator(),
     );
   }
 }
