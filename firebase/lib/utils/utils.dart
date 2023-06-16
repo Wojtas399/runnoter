@@ -5,14 +5,14 @@ String twoDigits(int number) {
 }
 
 Future<void> asyncOrSyncCall(Future<void> Function() func) async {
-  if (await hasDeviceInternetConnection()) {
+  if (await _isInternetConnection()) {
     await func();
   } else {
     func();
   }
 }
 
-Future<bool> hasDeviceInternetConnection() async {
+Future<bool> _isInternetConnection() async {
   final connectivityResult = await Connectivity().checkConnectivity();
   return connectivityResult == ConnectivityResult.wifi ||
       connectivityResult == ConnectivityResult.mobile ||
