@@ -80,7 +80,7 @@ class FirebaseWorkoutService {
       name: workoutName,
       stages: stages,
     );
-    await asyncCall(
+    await asyncOrSyncCall(
       () => workoutRef.set(workoutDto),
     );
     final snapshot = await workoutRef.get();
@@ -100,7 +100,7 @@ class FirebaseWorkoutService {
       status: status,
       stages: stages,
     );
-    await asyncCall(
+    await asyncOrSyncCall(
       () => workoutRef.update(workoutJsonToUpdate),
     );
     final snapshot = await workoutRef.get();
@@ -111,7 +111,7 @@ class FirebaseWorkoutService {
     required String userId,
     required String workoutId,
   }) async {
-    await asyncCall(
+    await asyncOrSyncCall(
       () => getWorkoutsRef(userId).doc(workoutId).delete(),
     );
   }
@@ -127,7 +127,7 @@ class FirebaseWorkoutService {
       batch.delete(docSnapshot.reference);
       idsOfDeletedWorkouts.add(docSnapshot.id);
     }
-    await asyncCall(
+    await asyncOrSyncCall(
       () => batch.commit(),
     );
     return idsOfDeletedWorkouts;

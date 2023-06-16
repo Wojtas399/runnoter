@@ -37,7 +37,7 @@ class FirebaseBloodTestService {
       date: date,
       parameterResultDtos: parameterResultDtos,
     );
-    await asyncCall(
+    await asyncOrSyncCall(
       () => bloodTestRef.set(bloodTestDto),
     );
     final snapshot = await bloodTestRef.get();
@@ -55,7 +55,7 @@ class FirebaseBloodTestService {
       date: date,
       parameterResultDtos: parameterResultDtos,
     );
-    await asyncCall(
+    await asyncOrSyncCall(
       () => bloodTestRef.update(jsonToUpdate),
     );
     final snapshot = await bloodTestRef.get();
@@ -66,7 +66,7 @@ class FirebaseBloodTestService {
     required String bloodTestId,
     required String userId,
   }) async {
-    await asyncCall(
+    await asyncOrSyncCall(
       () => getBloodTestsRef(userId).doc(bloodTestId).delete(),
     );
   }
@@ -82,7 +82,7 @@ class FirebaseBloodTestService {
       batch.delete(docSnapshot.reference);
       idsOfDeletedTests.add(docSnapshot.id);
     }
-    await asyncCall(
+    await asyncOrSyncCall(
       () => batch.commit(),
     );
     return idsOfDeletedTests;

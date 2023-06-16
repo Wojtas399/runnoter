@@ -4,7 +4,7 @@ String twoDigits(int number) {
   return number.toString().padLeft(2, '0');
 }
 
-Future<void> asyncCall(Future<void> Function() func) async {
+Future<void> asyncOrSyncCall(Future<void> Function() func) async {
   if (await hasDeviceInternetConnection()) {
     await func();
   } else {

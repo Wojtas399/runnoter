@@ -14,7 +14,7 @@ class FirebaseAppearanceSettingsService {
     required AppearanceSettingsDto appearanceSettingsDto,
   }) async {
     final settingsRef = getAppearanceSettingsRef(appearanceSettingsDto.userId);
-    await asyncCall(
+    await asyncOrSyncCall(
       () => settingsRef.set(appearanceSettingsDto),
     );
     final snapshot = await settingsRef.get();
@@ -31,7 +31,7 @@ class FirebaseAppearanceSettingsService {
       themeMode: themeMode,
       language: language,
     );
-    await asyncCall(
+    await asyncOrSyncCall(
       () => settingsRef.update(jsonToUpdate),
     );
     final snapshot = await settingsRef.get();
@@ -41,7 +41,7 @@ class FirebaseAppearanceSettingsService {
   Future<void> deleteSettingsForUser({
     required String userId,
   }) async {
-    await asyncCall(
+    await asyncOrSyncCall(
       () => getAppearanceSettingsRef(userId).delete(),
     );
   }

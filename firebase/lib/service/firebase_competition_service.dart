@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../firebase_collections.dart';
 import '../model/competition_dto.dart';
 import '../model/run_status_dto.dart';
+import '../utils/utils.dart';
 
 class FirebaseCompetitionService {
   Future<CompetitionDto?> loadCompetitionById({
@@ -29,6 +30,7 @@ class FirebaseCompetitionService {
     required Duration? expectedDuration,
     required RunStatusDto statusDto,
   }) async {
+    final competitionRef = getCompetitionsRef(userId).doc();
     final CompetitionDto competitionDto = CompetitionDto(
       id: '',
       userId: userId,
@@ -39,8 +41,10 @@ class FirebaseCompetitionService {
       expectedDuration: expectedDuration,
       statusDto: statusDto,
     );
-    final docRef = await getCompetitionsRef(userId).add(competitionDto);
-    final snapshot = await docRef.get();
+    await asyncOrSyncCall(
+      () => competitionRef.set(competitionDto),
+    );
+    final snapshot = await competitionRef.get();
     return snapshot.data();
   }
 
@@ -65,7 +69,9 @@ class FirebaseCompetitionService {
       setDurationAsNull: setDurationAsNull,
       statusDto: statusDto,
     );
-    await docRef.update(jsonToUpdate);
+    await asyncOrSyncCall(
+      () => docRef.update(jsonToUpdate),
+    );
     final snapshot = await docRef.get();
     return snapshot.data();
   }
@@ -75,7 +81,9 @@ class FirebaseCompetitionService {
     required String userId,
   }) async {
     final docRef = getCompetitionsRef(userId).doc(competitionId);
-    await docRef.delete();
+    await asyncOrSyncCall(
+      () => docRef.delete(),
+    );
   }
 
   Future<List<String>> deleteAllUserCompetitions({
@@ -89,7 +97,9 @@ class FirebaseCompetitionService {
       batch.delete(docSnapshot.reference);
       idsOfDeletedCompetitions.add(docSnapshot.id);
     }
-    await batch.commit();
+    await asyncOrSyncCall(
+      () => batch.commit(),
+    );
     return idsOfDeletedCompetitions;
   }
 }
