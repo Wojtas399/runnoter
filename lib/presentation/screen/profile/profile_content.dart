@@ -37,10 +37,7 @@ class _SectionHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8),
-      child: Text(
-        title,
-        style: Theme.of(context).textTheme.titleLarge,
-      ),
+      child: TitleLarge(title),
     );
   }
 }

@@ -22,9 +22,7 @@ class _Content extends StatelessWidget {
         body: SafeArea(
           child: ScrollableContent(
             child: GestureDetector(
-              onTap: () {
-                unfocusInputs();
-              },
+              onTap: unfocusInputs,
               child: Container(
                 color: Colors.transparent,
                 padding: const EdgeInsets.all(24),

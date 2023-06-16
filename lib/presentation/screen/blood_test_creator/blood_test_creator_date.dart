@@ -11,9 +11,8 @@ class _DateSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
+          TitleMedium(
             Str.of(context).bloodTestCreatorDate,
-            style: Theme.of(context).textTheme.titleMedium,
           ),
           const SizedBox(height: 8),
           const Row(

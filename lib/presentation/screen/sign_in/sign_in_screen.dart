@@ -8,6 +8,7 @@ import '../../../domain/service/connectivity_service.dart';
 import '../../component/big_button_component.dart';
 import '../../component/bloc_with_status_listener_component.dart';
 import '../../component/password_text_field_component.dart';
+import '../../component/text/headline_text_components.dart';
 import '../../component/text_field_component.dart';
 import '../../config/navigation/routes.dart';
 import '../../service/dialog_service.dart';

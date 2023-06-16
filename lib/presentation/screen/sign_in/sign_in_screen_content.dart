@@ -10,9 +10,7 @@ class _Content extends StatelessWidget {
       body: SafeArea(
         child: SingleChildScrollView(
           child: GestureDetector(
-            onTap: () {
-              unfocusInputs();
-            },
+            onTap: unfocusInputs,
             child: Container(
               color: Colors.transparent,
               padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
@@ -51,11 +49,9 @@ class _FormHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
+    return HeadlineMedium(
       Str.of(context).signInScreenTitle,
-      style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+      fontWeight: FontWeight.bold,
     );
   }
 }

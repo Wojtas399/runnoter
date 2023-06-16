@@ -11,6 +11,8 @@ import '../../../domain/service/auth_service.dart';
 import '../../component/big_button_component.dart';
 import '../../component/bloc_with_status_listener_component.dart';
 import '../../component/scrollable_content_component.dart';
+import '../../component/text/body_text_components.dart';
+import '../../component/text/label_text_components.dart';
 import '../../component/text_field_component.dart';
 import '../../formatter/workout_stage_formatter.dart';
 import '../../service/dialog_service.dart';

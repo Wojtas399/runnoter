@@ -12,7 +12,10 @@ import '../../component/big_button_component.dart';
 import '../../component/bloc_with_status_listener_component.dart';
 import '../../component/content_with_label_component.dart';
 import '../../component/nullable_text_component.dart';
+import '../../component/padding/paddings_24.dart';
 import '../../component/run_stats_component.dart';
+import '../../component/text/body_text_components.dart';
+import '../../component/text/title_text_components.dart';
 import '../../config/navigation/routes.dart';
 import '../../formatter/date_formatter.dart';
 import '../../formatter/list_of_workout_stages_formatter.dart';
@@ -24,9 +27,9 @@ import '../screens.dart';
 
 part 'day_preview_app_bar.dart';
 part 'day_preview_content.dart';
-part 'day_preview_no_workout_content.dart';
+part 'day_preview_no_workout_info.dart';
 part 'day_preview_run_status.dart';
-part 'day_preview_workout_content.dart';
+part 'day_preview_workout.dart';
 
 class DayPreviewScreen extends StatelessWidget {
   final DateTime date;

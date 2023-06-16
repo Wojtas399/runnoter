@@ -1,19 +1,5 @@
 part of 'day_preview_screen.dart';
 
-class _NoWorkoutContent extends StatelessWidget {
-  const _NoWorkoutContent();
-
-  @override
-  Widget build(BuildContext context) {
-    return const Stack(
-      children: [
-        _NoWorkoutInfo(),
-        _Date(),
-      ],
-    );
-  }
-}
-
 class _NoWorkoutInfo extends StatelessWidget {
   const _NoWorkoutInfo();
 
@@ -22,9 +8,8 @@ class _NoWorkoutInfo extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text(
+        TitleLarge(
           Str.of(context).dayPreviewNoWorkoutTitle,
-          style: Theme.of(context).textTheme.titleLarge,
         ),
         const SizedBox(height: 8),
         const _NoWorkoutMessage(),
@@ -70,9 +55,6 @@ class _NoWorkoutMessage extends StatelessWidget {
     if (isPastDay) {
       message = Str.of(context).dayPreviewNoWorkoutMessagePastDay;
     }
-    return Text(
-      message,
-      style: Theme.of(context).textTheme.bodyLarge,
-    );
+    return BodyLarge(message);
   }
 }

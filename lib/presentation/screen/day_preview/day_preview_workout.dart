@@ -1,43 +1,44 @@
 part of 'day_preview_screen.dart';
 
-class _WorkoutContent extends StatelessWidget {
-  const _WorkoutContent();
+class _Workout extends StatelessWidget {
+  const _Workout();
 
   @override
   Widget build(BuildContext context) {
     final str = Str.of(context);
 
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const _Date(),
-            const SizedBox(height: 24),
-            ContentWithLabel(
-              label: str.dayPreviewWorkoutName,
-              content: const _WorkoutName(),
-            ),
-            const SizedBox(height: 16),
-            ContentWithLabel(
-              label: str.dayPreviewWorkoutStages,
-              content: const _WorkoutStages(),
-            ),
-            const SizedBox(height: 16),
-            ContentWithLabel(
-              label: str.dayPreviewTotalDistance,
-              content: const _WorkoutDistance(),
-            ),
-            const SizedBox(height: 16),
-            ContentWithLabel(
-              label: str.runStatus,
-              content: const _RunStatus(),
-            ),
-          ],
-        ),
-        const _RunStatusButton(),
-      ],
+    return Padding(
+      padding: const EdgeInsets.only(top: 24),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ContentWithLabel(
+                label: str.dayPreviewWorkoutName,
+                content: const _WorkoutName(),
+              ),
+              const SizedBox(height: 16),
+              ContentWithLabel(
+                label: str.dayPreviewWorkoutStages,
+                content: const _WorkoutStages(),
+              ),
+              const SizedBox(height: 16),
+              ContentWithLabel(
+                label: str.dayPreviewTotalDistance,
+                content: const _WorkoutDistance(),
+              ),
+              const SizedBox(height: 16),
+              ContentWithLabel(
+                label: str.runStatus,
+                content: const _RunStatus(),
+              ),
+            ],
+          ),
+          const _RunStatusButton(),
+        ],
+      ),
     );
   }
 }

@@ -6,6 +6,7 @@ import '../../../domain/bloc/distance_unit/distance_unit_cubit.dart';
 import '../../../domain/entity/settings.dart';
 import '../../../domain/repository/user_repository.dart';
 import '../../../domain/service/auth_service.dart';
+import '../../component/text/body_text_components.dart';
 import '../../formatter/distance_unit_formatter.dart';
 import '../../service/navigator_service.dart';
 
@@ -79,9 +80,8 @@ class _Header extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
-      child: Text(
+      child: BodyLarge(
         Str.of(context).distanceUnitSelect,
-        style: Theme.of(context).textTheme.bodyLarge,
       ),
     );
   }

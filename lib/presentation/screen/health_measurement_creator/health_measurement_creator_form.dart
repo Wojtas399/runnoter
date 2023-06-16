@@ -1,21 +1,30 @@
 part of 'health_measurement_creator_screen.dart';
 
 class _Form extends StatelessWidget {
+  const _Form();
+
   @override
   Widget build(BuildContext context) {
     const Widget gap = SizedBox(height: 24);
 
-    return const Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _Title(),
-        gap,
-        _RestingHeartRate(),
-        gap,
-        _FastingWeight(),
-        gap,
-        _SubmitButton(),
-      ],
+    return GestureDetector(
+      onTap: unfocusInputs,
+      child: Container(
+        color: Colors.transparent,
+        padding: const EdgeInsets.all(24),
+        child: const Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _Title(),
+            gap,
+            _RestingHeartRate(),
+            gap,
+            _FastingWeight(),
+            gap,
+            _SubmitButton(),
+          ],
+        ),
+      ),
     );
   }
 }

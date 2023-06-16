@@ -14,6 +14,8 @@ import '../../../domain/repository/workout_repository.dart';
 import '../../../domain/service/auth_service.dart';
 import '../../component/bloc_with_status_listener_component.dart';
 import '../../component/password_text_field_component.dart';
+import '../../component/text/body_text_components.dart';
+import '../../component/text/title_text_components.dart';
 import '../../component/text_field_component.dart';
 import '../../component/value_with_label_and_icon_component.dart';
 import '../../config/navigation/routes.dart';

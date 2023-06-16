@@ -68,9 +68,7 @@ class _UpdateEmailDialogState extends State<_UpdateEmailDialog> {
         ),
         body: SafeArea(
           child: GestureDetector(
-            onTap: () {
-              unfocusInputs();
-            },
+            onTap: unfocusInputs,
             child: Container(
               padding: const EdgeInsets.all(24),
               color: Colors.transparent,

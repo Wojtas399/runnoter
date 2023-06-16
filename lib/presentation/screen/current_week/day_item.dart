@@ -4,6 +4,7 @@ import '../../../domain/bloc/current_week/current_week_cubit.dart';
 import '../../../domain/entity/run_status.dart';
 import '../../../domain/entity/workout.dart';
 import '../../../domain/entity/workout_stage.dart';
+import '../../component/text/title_text_components.dart';
 import '../../config/navigation/routes.dart';
 import '../../formatter/date_formatter.dart';
 import '../../formatter/run_status_formatter.dart';
@@ -83,11 +84,9 @@ class _Date extends StatelessWidget {
             : Colors.transparent,
         borderRadius: BorderRadius.circular(100),
       ),
-      child: Text(
+      child: TitleMedium(
         date.toFullDate(context),
-        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              color: isToday ? Theme.of(context).canvasColor : null,
-            ),
+        color: isToday ? Theme.of(context).canvasColor : null,
       ),
     );
   }

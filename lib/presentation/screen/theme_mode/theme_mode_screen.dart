@@ -6,6 +6,7 @@ import '../../../../domain/entity/settings.dart' as settings;
 import '../../../domain/bloc/theme_mode/theme_mode_cubit.dart';
 import '../../../domain/repository/user_repository.dart';
 import '../../../domain/service/auth_service.dart';
+import '../../component/text/body_text_components.dart';
 import '../../service/navigator_service.dart';
 import '../../service/theme_service.dart';
 
@@ -121,9 +122,8 @@ class _Header extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
-      child: Text(
+      child: BodyLarge(
         Str.of(context).themeModeSelect,
-        style: Theme.of(context).textTheme.bodyLarge,
       ),
     );
   }
@@ -194,11 +194,9 @@ class _SystemThemeDescription extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
-      child: Text(
+      child: BodyMedium(
         Str.of(context).systemThemeModeDescription,
-        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Theme.of(context).colorScheme.outline,
-            ),
+        color: Theme.of(context).colorScheme.outline,
       ),
     );
   }
