@@ -1,5 +1,6 @@
 import '../firebase.dart';
 import '../firebase_collections.dart';
+import '../utils/utils.dart';
 
 class FirebaseUserService {
   Future<UserDto?> loadUserById({
@@ -12,7 +13,9 @@ class FirebaseUserService {
   Future<void> addUserPersonalData({
     required UserDto userDto,
   }) async {
-    await getUserRef(userDto.id).set(userDto);
+    await asyncOrSyncCall(
+      () => getUserRef(userDto.id).set(userDto),
+    );
   }
 
   Future<UserDto?> updateUserData({
@@ -21,11 +24,12 @@ class FirebaseUserService {
     String? surname,
   }) async {
     final userRef = getUserRef(userId);
-    await userRef.update(
-      createUserJsonToUpdate(
-        name: name,
-        surname: surname,
-      ),
+    final userJsonToUpdate = createUserJsonToUpdate(
+      name: name,
+      surname: surname,
+    );
+    await asyncOrSyncCall(
+      () => userRef.update(userJsonToUpdate),
     );
     final user = await userRef.get();
     return user.data();
@@ -34,6 +38,8 @@ class FirebaseUserService {
   Future<void> deleteUserData({
     required String userId,
   }) async {
-    await getUserRef(userId).delete();
+    await asyncOrSyncCall(
+      () => getUserRef(userId).delete(),
+    );
   }
 }
