@@ -1,5 +1,6 @@
 import '../firebase.dart';
 import '../firebase_collections.dart';
+import '../utils/utils.dart';
 
 class FirebaseAppearanceSettingsService {
   Future<AppearanceSettingsDto?> loadSettingsByUserId({
@@ -13,7 +14,9 @@ class FirebaseAppearanceSettingsService {
     required AppearanceSettingsDto appearanceSettingsDto,
   }) async {
     final settingsRef = getAppearanceSettingsRef(appearanceSettingsDto.userId);
-    await settingsRef.set(appearanceSettingsDto);
+    await asyncCall(
+      () => settingsRef.set(appearanceSettingsDto),
+    );
     final snapshot = await settingsRef.get();
     return snapshot.data();
   }
@@ -28,7 +31,9 @@ class FirebaseAppearanceSettingsService {
       themeMode: themeMode,
       language: language,
     );
-    await settingsRef.update(jsonToUpdate);
+    await asyncCall(
+      () => settingsRef.update(jsonToUpdate),
+    );
     final snapshot = await settingsRef.get();
     return snapshot.data();
   }
@@ -36,6 +41,8 @@ class FirebaseAppearanceSettingsService {
   Future<void> deleteSettingsForUser({
     required String userId,
   }) async {
-    await getAppearanceSettingsRef(userId).delete();
+    await asyncCall(
+      () => getAppearanceSettingsRef(userId).delete(),
+    );
   }
 }
