@@ -5,11 +5,9 @@ import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/bloc/forgot_password/forgot_password_bloc.dart';
 
 import '../../../mock/domain/service/mock_auth_service.dart';
-import '../../../mock/domain/service/mock_connectivity_service.dart';
 
 void main() {
   final authService = MockAuthService();
-  final connectivityService = MockConnectivityService();
   const String email = 'email@example.com';
 
   ForgotPasswordBloc createBloc({
@@ -17,7 +15,6 @@ void main() {
   }) {
     return ForgotPasswordBloc(
       authService: authService,
-      connectivityService: connectivityService,
       email: email,
     );
   }
@@ -58,9 +55,6 @@ void main() {
       email: email,
     ),
     setUp: () {
-      connectivityService.mockHasDeviceInternetConnection(
-        hasConnection: true,
-      );
       authService.mockSendPasswordResetEmail();
     },
     act: (ForgotPasswordBloc bloc) {
@@ -82,52 +76,10 @@ void main() {
     ],
     verify: (_) {
       verify(
-        () => connectivityService.hasDeviceInternetConnection(),
-      ).called(1);
-      verify(
         () => authService.sendPasswordResetEmail(
           email: email,
         ),
       ).called(1);
-    },
-  );
-
-  blocTest(
-    'submit, '
-    'device does not have internet connection, '
-    'should emit no internet connection status',
-    build: () => createBloc(
-      email: email,
-    ),
-    setUp: () {
-      connectivityService.mockHasDeviceInternetConnection(
-        hasConnection: false,
-      );
-    },
-    act: (ForgotPasswordBloc bloc) {
-      bloc.add(
-        const ForgotPasswordEventSubmit(),
-      );
-    },
-    expect: () => [
-      createState(
-        status: const BlocStatusLoading(),
-        email: email,
-      ),
-      createState(
-        status: const BlocStatusNoInternetConnection(),
-        email: email,
-      ),
-    ],
-    verify: (_) {
-      verify(
-        () => connectivityService.hasDeviceInternetConnection(),
-      ).called(1);
-      verifyNever(
-        () => authService.sendPasswordResetEmail(
-          email: any(named: 'email'),
-        ),
-      );
     },
   );
 
@@ -139,9 +91,6 @@ void main() {
       email: email,
     ),
     setUp: () {
-      connectivityService.mockHasDeviceInternetConnection(
-        hasConnection: true,
-      );
       authService.mockSendPasswordResetEmail(
         throwable: AuthException.invalidEmail,
       );
@@ -165,9 +114,6 @@ void main() {
     ],
     verify: (_) {
       verify(
-        () => connectivityService.hasDeviceInternetConnection(),
-      ).called(1);
-      verify(
         () => authService.sendPasswordResetEmail(
           email: email,
         ),
@@ -183,9 +129,6 @@ void main() {
       email: email,
     ),
     setUp: () {
-      connectivityService.mockHasDeviceInternetConnection(
-        hasConnection: true,
-      );
       authService.mockSendPasswordResetEmail(
         throwable: AuthException.userNotFound,
       );
@@ -209,8 +152,41 @@ void main() {
     ],
     verify: (_) {
       verify(
-        () => connectivityService.hasDeviceInternetConnection(),
+        () => authService.sendPasswordResetEmail(
+          email: email,
+        ),
       ).called(1);
+    },
+  );
+
+  blocTest(
+    'submit, '
+    'network request failed auth exception, '
+    'should emit network request failed status',
+    build: () => createBloc(
+      email: email,
+    ),
+    setUp: () {
+      authService.mockSendPasswordResetEmail(
+        throwable: AuthException.networkRequestFailed,
+      );
+    },
+    act: (ForgotPasswordBloc bloc) {
+      bloc.add(
+        const ForgotPasswordEventSubmit(),
+      );
+    },
+    expect: () => [
+      createState(
+        status: const BlocStatusLoading(),
+        email: email,
+      ),
+      createState(
+        status: const BlocStatusNetworkRequestFailed(),
+        email: email,
+      ),
+    ],
+    verify: (_) {
       verify(
         () => authService.sendPasswordResetEmail(
           email: email,
@@ -227,9 +203,6 @@ void main() {
       email: email,
     ),
     setUp: () {
-      connectivityService.mockHasDeviceInternetConnection(
-        hasConnection: true,
-      );
       authService.mockSendPasswordResetEmail(
         throwable: 'Unknown exception...',
       );
@@ -253,9 +226,6 @@ void main() {
       'Unknown exception...',
     ],
     verify: (_) {
-      verify(
-        () => connectivityService.hasDeviceInternetConnection(),
-      ).called(1);
       verify(
         () => authService.sendPasswordResetEmail(
           email: email,

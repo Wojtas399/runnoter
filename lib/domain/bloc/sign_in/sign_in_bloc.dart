@@ -5,7 +5,6 @@ import '../../../../domain/additional_model/auth_exception.dart';
 import '../../../../domain/additional_model/bloc_status.dart';
 import '../../../../domain/additional_model/bloc_with_status.dart';
 import '../../../../domain/service/auth_service.dart';
-import '../../../../domain/service/connectivity_service.dart';
 import '../../additional_model/bloc_state.dart';
 
 part 'sign_in_event.dart';
@@ -14,16 +13,13 @@ part 'sign_in_state.dart';
 class SignInBloc
     extends BlocWithStatus<SignInEvent, SignInState, SignInInfo, SignInError> {
   final AuthService _authService;
-  final ConnectivityService _connectivityService;
 
   SignInBloc({
     required AuthService authService,
-    required ConnectivityService connectivityService,
     BlocStatus status = const BlocStatusInitial(),
     String email = '',
     String password = '',
   })  : _authService = authService,
-        _connectivityService = connectivityService,
         super(
           SignInState(
             status: status,
@@ -76,14 +72,14 @@ class SignInBloc
       return;
     }
     emitLoadingStatus(emit);
-    if (await _connectivityService.hasDeviceInternetConnection() == false) {
-      emitNoInternetConnectionStatus(emit);
-      return;
-    }
     try {
       await _tryToSignIn();
       emitCompleteStatus(emit, SignInInfo.signedIn);
     } on AuthException catch (authException) {
+      if (authException == AuthException.networkRequestFailed) {
+        emitNetworkRequestFailed(emit);
+        return;
+      }
       final SignInError? error = _mapAuthExceptionToBlocError(authException);
       if (error != null) {
         emitErrorStatus(emit, error);

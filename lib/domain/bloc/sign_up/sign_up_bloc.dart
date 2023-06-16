@@ -8,7 +8,6 @@ import '../../../../domain/entity/settings.dart';
 import '../../../../domain/entity/user.dart';
 import '../../../../domain/repository/user_repository.dart';
 import '../../../../domain/service/auth_service.dart';
-import '../../../../domain/service/connectivity_service.dart';
 import '../../../presentation/service/validation_service.dart' as validator;
 import '../../additional_model/bloc_state.dart';
 
@@ -19,12 +18,10 @@ class SignUpBloc extends BlocWithStatus<SignUpEvent, SignUpState,
     SignUpBlocInfo, SignUpBlocError> {
   final AuthService _authService;
   final UserRepository _userRepository;
-  final ConnectivityService _connectivityService;
 
   SignUpBloc({
     required AuthService authService,
     required UserRepository userRepository,
-    required ConnectivityService connectivityService,
     BlocStatus status = const BlocStatusInitial(),
     String name = '',
     String surname = '',
@@ -33,7 +30,6 @@ class SignUpBloc extends BlocWithStatus<SignUpEvent, SignUpState,
     String passwordConfirmation = '',
   })  : _authService = authService,
         _userRepository = userRepository,
-        _connectivityService = connectivityService,
         super(
           SignUpState(
             status: status,
@@ -102,14 +98,14 @@ class SignUpBloc extends BlocWithStatus<SignUpEvent, SignUpState,
     Emitter<SignUpState> emit,
   ) async {
     emitLoadingStatus(emit);
-    if (await _connectivityService.hasDeviceInternetConnection() == false) {
-      emitNoInternetConnectionStatus(emit);
-      return;
-    }
     try {
       await _tryToSignUp();
       emitCompleteStatus(emit, SignUpBlocInfo.signedUp);
     } on AuthException catch (authException) {
+      if (authException == AuthException.networkRequestFailed) {
+        emitNetworkRequestFailed(emit);
+        return;
+      }
       final SignUpBlocError? error =
           _mapAuthExceptionToBlocError(authException);
       if (error != null) {

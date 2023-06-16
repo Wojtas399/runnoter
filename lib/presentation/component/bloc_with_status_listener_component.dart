@@ -53,7 +53,7 @@ class BlocWithStatusListener<Bloc extends StateStreamable<State>,
     } else if (blocStatus is BlocStatusUnknownError) {
       closeLoadingDialog(context: context);
       _showUnknownErrorMessage(context);
-    } else if (blocStatus is BlocStatusNoInternetConnection) {
+    } else if (blocStatus is BlocStatusNetworkRequestFailed) {
       closeLoadingDialog(context: context);
       _showNoInternetConnectionMessage(context);
     } else if (blocStatus is BlocStatusNoLoggedUser) {
