@@ -1,8 +1,8 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/domain/additional_model/auth_exception.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
+import 'package:runnoter/domain/additional_model/custom_exception.dart';
 import 'package:runnoter/domain/bloc/profile/identities/profile_identities_bloc.dart';
 
 import '../../../creators/user_creator.dart';
@@ -303,12 +303,14 @@ void main() {
 
   blocTest(
     'update email, '
-    'email already in use auth exception, '
+    'auth exception with email already in use code, '
     'should emit error status with email already in use error',
     build: () => createBloc(),
     setUp: () {
       authService.mockUpdateEmail(
-        throwable: AuthException.emailAlreadyInUse,
+        throwable: const AuthException(
+          code: AuthExceptionCode.emailAlreadyInUse,
+        ),
       );
     },
     act: (ProfileIdentitiesBloc bloc) {
@@ -341,12 +343,14 @@ void main() {
 
   blocTest(
     'update email, '
-    'wrong password auth exception, '
+    'auth exception with wrong password code, '
     'should emit error status with wrong password error',
     build: () => createBloc(),
     setUp: () {
       authService.mockUpdateEmail(
-        throwable: AuthException.wrongPassword,
+        throwable: const AuthException(
+          code: AuthExceptionCode.wrongPassword,
+        ),
       );
     },
     act: (ProfileIdentitiesBloc bloc) {
@@ -379,12 +383,52 @@ void main() {
 
   blocTest(
     'update email, '
+    'network exception with request failed code, '
+    'should emit network request failed status',
+    build: () => createBloc(),
+    setUp: () {
+      authService.mockUpdateEmail(
+        throwable: const NetworkException(
+          code: NetworkExceptionCode.requestFailed,
+        ),
+      );
+    },
+    act: (ProfileIdentitiesBloc bloc) {
+      bloc.add(
+        const ProfileIdentitiesEventUpdateEmail(
+          newEmail: 'email@example.com',
+          password: 'Password1!',
+        ),
+      );
+    },
+    expect: () => [
+      createState(
+        status: const BlocStatusLoading(),
+      ),
+      createState(
+        status: const BlocStatusNetworkRequestFailed(),
+      ),
+    ],
+    verify: (_) {
+      verify(
+        () => authService.updateEmail(
+          newEmail: 'email@example.com',
+          password: 'Password1!',
+        ),
+      ).called(1);
+    },
+  );
+
+  blocTest(
+    'update email, '
     'unknown exception, '
     'should emit unknown error status and should rethrow exception',
     build: () => createBloc(),
     setUp: () {
       authService.mockUpdateEmail(
-        throwable: 'Unknown exception',
+        throwable: const UnknownException(
+          message: 'unknown exception message',
+        ),
       );
     },
     act: (ProfileIdentitiesBloc bloc) {
@@ -404,7 +448,7 @@ void main() {
       ),
     ],
     errors: () => [
-      'Unknown exception',
+      'unknown exception message',
     ],
     verify: (_) {
       verify(
@@ -453,12 +497,14 @@ void main() {
 
   blocTest(
     'update password, '
-    'wrong password auth exception, '
+    'auth exception with wrong password code, '
     'should emit error status with wrong current password error',
     build: () => createBloc(),
     setUp: () {
       authService.mockUpdatePassword(
-        throwable: AuthException.wrongPassword,
+        throwable: const AuthException(
+          code: AuthExceptionCode.wrongPassword,
+        ),
       );
     },
     act: (ProfileIdentitiesBloc bloc) {
@@ -491,12 +537,52 @@ void main() {
 
   blocTest(
     'update password, '
-    'unknown exception, '
-    'should emit unknown error status and should rethrow exception',
+    'network exception with request failed code, '
+    'should emit network request failed status',
     build: () => createBloc(),
     setUp: () {
       authService.mockUpdatePassword(
-        throwable: 'Unknown exception',
+        throwable: const NetworkException(
+          code: NetworkExceptionCode.requestFailed,
+        ),
+      );
+    },
+    act: (ProfileIdentitiesBloc bloc) {
+      bloc.add(
+        const ProfileIdentitiesEventUpdatePassword(
+          newPassword: 'newPassword',
+          currentPassword: 'currentPassword',
+        ),
+      );
+    },
+    expect: () => [
+      createState(
+        status: const BlocStatusLoading(),
+      ),
+      createState(
+        status: const BlocStatusNetworkRequestFailed(),
+      ),
+    ],
+    verify: (_) {
+      verify(
+        () => authService.updatePassword(
+          newPassword: 'newPassword',
+          currentPassword: 'currentPassword',
+        ),
+      ).called(1);
+    },
+  );
+
+  blocTest(
+    'update password, '
+    'unknown exception, '
+    'should emit unknown error status',
+    build: () => createBloc(),
+    setUp: () {
+      authService.mockUpdatePassword(
+        throwable: const UnknownException(
+          message: 'unknown exception message',
+        ),
       );
     },
     act: (ProfileIdentitiesBloc bloc) {
@@ -516,7 +602,7 @@ void main() {
       ),
     ],
     errors: () => [
-      'Unknown exception',
+      'unknown exception message',
     ],
     verify: (_) {
       verify(
@@ -656,23 +742,53 @@ void main() {
           password: 'password1',
         ),
       ).called(1);
-      verifyNever(
-        () => userRepository.deleteUser(
-          userId: loggedUserId,
+    },
+  );
+
+  blocTest(
+    'delete account, '
+    'network exception with request failed code, '
+    'should emit network request failed code',
+    build: () => createBloc(
+      loggedUserId: loggedUserId,
+    ),
+    setUp: () {
+      authService.mockIsPasswordCorrect(
+        throwable: const NetworkException(
+          code: NetworkExceptionCode.requestFailed,
         ),
       );
-      verifyNever(
-        () => authService.deleteAccount(
+    },
+    act: (ProfileIdentitiesBloc bloc) {
+      bloc.add(
+        const ProfileIdentitiesEventDeleteAccount(
           password: 'password1',
         ),
       );
+    },
+    expect: () => [
+      createState(
+        status: const BlocStatusLoading(),
+        loggedUserId: loggedUserId,
+      ),
+      createState(
+        status: const BlocStatusNetworkRequestFailed(),
+        loggedUserId: loggedUserId,
+      ),
+    ],
+    verify: (_) {
+      verify(
+        () => authService.isPasswordCorrect(
+          password: 'password1',
+        ),
+      ).called(1);
     },
   );
 
   blocTest(
     'delete account, '
     'unknown exception, '
-    'should emit unknown error status and should rethrow error',
+    'should emit unknown error status and throw exception message',
     build: () => createBloc(
       loggedUserId: loggedUserId,
     ),
@@ -686,7 +802,9 @@ void main() {
       competitionRepository.mockDeleteAllUserCompetitions();
       userRepository.mockDeleteUser();
       authService.mockDeleteAccount(
-        throwable: 'Unknown exception...',
+        throwable: const UnknownException(
+          message: 'unknown exception message',
+        ),
       );
     },
     act: (ProfileIdentitiesBloc bloc) {
@@ -707,7 +825,7 @@ void main() {
       ),
     ],
     errors: () => [
-      'Unknown exception...',
+      'unknown exception message',
     ],
     verify: (_) {
       verify(

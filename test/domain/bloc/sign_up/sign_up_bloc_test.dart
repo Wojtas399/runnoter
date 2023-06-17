@@ -1,8 +1,8 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/domain/additional_model/auth_exception.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
+import 'package:runnoter/domain/additional_model/custom_exception.dart';
 import 'package:runnoter/domain/bloc/sign_up/sign_up_bloc.dart';
 import 'package:runnoter/domain/entity/settings.dart';
 
@@ -206,7 +206,7 @@ void main() {
 
   blocTest(
     'submit, '
-    'auth service method throws email already in use auth exception, '
+    'auth exception with email already in use code, '
     'should emit error status with email already in use error',
     build: () => createBloc(
       name: name,
@@ -216,7 +216,9 @@ void main() {
     ),
     setUp: () {
       authService.mockSignUp(
-        throwable: AuthException.emailAlreadyInUse,
+        throwable: const AuthException(
+          code: AuthExceptionCode.emailAlreadyInUse,
+        ),
       );
     },
     act: (SignUpBloc bloc) => bloc.add(
@@ -252,7 +254,7 @@ void main() {
 
   blocTest(
     'submit, '
-    'auth service method throws network request failed auth exception, '
+    'network exception with request failed code, '
     'should emit network request failed status',
     build: () => createBloc(
       name: name,
@@ -261,7 +263,9 @@ void main() {
       password: password,
     ),
     setUp: () => authService.mockSignUp(
-      throwable: AuthException.networkRequestFailed,
+      throwable: const NetworkException(
+        code: NetworkExceptionCode.requestFailed,
+      ),
     ),
     act: (SignUpBloc bloc) => bloc.add(
       const SignUpEventSubmit(),
@@ -292,8 +296,8 @@ void main() {
 
   blocTest(
     'submit, '
-    'auth service method throws unknown error, '
-    'should emit error status with unknown error and should rethrow error',
+    'unknown exception, '
+    'should emit error status with unknown error',
     build: () => createBloc(
       name: name,
       surname: surname,
@@ -302,7 +306,9 @@ void main() {
     ),
     setUp: () {
       authService.mockSignUp(
-        throwable: 'Unknown error...',
+        throwable: const UnknownException(
+          message: 'unknown exception message',
+        ),
       );
     },
     act: (SignUpBloc bloc) => bloc.add(
@@ -324,7 +330,9 @@ void main() {
         password: password,
       ),
     ],
-    errors: () => ['Unknown error...'],
+    errors: () => [
+      'unknown exception message',
+    ],
     verify: (_) {
       verify(
         () => authService.signUp(

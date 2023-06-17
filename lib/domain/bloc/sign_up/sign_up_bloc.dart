@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../domain/additional_model/auth_exception.dart';
 import '../../../../domain/additional_model/bloc_status.dart';
 import '../../../../domain/additional_model/bloc_with_status.dart';
 import '../../../../domain/entity/settings.dart';
@@ -10,6 +9,7 @@ import '../../../../domain/repository/user_repository.dart';
 import '../../../../domain/service/auth_service.dart';
 import '../../../presentation/service/validation_service.dart' as validator;
 import '../../additional_model/bloc_state.dart';
+import '../../additional_model/custom_exception.dart';
 
 part 'sign_up_event.dart';
 part 'sign_up_state.dart';
@@ -102,21 +102,22 @@ class SignUpBloc extends BlocWithStatus<SignUpEvent, SignUpState,
       await _tryToSignUp();
       emitCompleteStatus(emit, SignUpBlocInfo.signedUp);
     } on AuthException catch (authException) {
-      if (authException == AuthException.networkRequestFailed) {
-        emitNetworkRequestFailed(emit);
-        return;
-      }
-      final SignUpBlocError? error =
-          _mapAuthExceptionToBlocError(authException);
+      final SignUpBlocError? error = _mapAuthExceptionCodeToBlocError(
+        authException.code,
+      );
       if (error != null) {
         emitErrorStatus(emit, error);
       } else {
         emitUnknownErrorStatus(emit);
         rethrow;
       }
-    } catch (_) {
+    } on NetworkException catch (networkException) {
+      if (networkException.code == NetworkExceptionCode.requestFailed) {
+        emitNetworkRequestFailed(emit);
+      }
+    } on UnknownException catch (unknownException) {
       emitUnknownErrorStatus(emit);
-      rethrow;
+      throw unknownException.message;
     }
   }
 
@@ -143,8 +144,10 @@ class SignUpBloc extends BlocWithStatus<SignUpEvent, SignUpState,
     );
   }
 
-  SignUpBlocError? _mapAuthExceptionToBlocError(AuthException exception) {
-    if (exception == AuthException.emailAlreadyInUse) {
+  SignUpBlocError? _mapAuthExceptionCodeToBlocError(
+    AuthExceptionCode authExceptionCode,
+  ) {
+    if (authExceptionCode == AuthExceptionCode.emailAlreadyInUse) {
       return SignUpBlocError.emailAlreadyInUse;
     }
     return null;

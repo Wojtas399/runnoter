@@ -6,7 +6,7 @@ export 'model/blood_parameter_norm_dto.dart';
 export 'model/blood_parameter_result_dto.dart';
 export 'model/blood_test_dto.dart';
 export 'model/competition_dto.dart';
-export 'model/firebase_auth_exception_code.dart';
+export 'model/firebase_exception.dart';
 export 'model/health_measurement_dto.dart';
 export 'model/pace_dto.dart';
 export 'model/run_status_dto.dart';

@@ -3,13 +3,13 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
-import '../../../../../domain/additional_model/auth_exception.dart';
 import '../../../../../domain/additional_model/bloc_status.dart';
 import '../../../../../domain/additional_model/bloc_with_status.dart';
 import '../../../../../domain/entity/user.dart';
 import '../../../../../domain/repository/user_repository.dart';
 import '../../../../../domain/service/auth_service.dart';
 import '../../../additional_model/bloc_state.dart';
+import '../../../additional_model/custom_exception.dart';
 import '../../../repository/blood_test_repository.dart';
 import '../../../repository/competition_repository.dart';
 import '../../../repository/health_measurement_repository.dart';
@@ -124,16 +124,22 @@ class ProfileIdentitiesBloc extends BlocWithStatus<ProfileIdentitiesEvent,
       );
       emitCompleteStatus(emit, ProfileInfo.savedData);
     } on AuthException catch (authException) {
-      final ProfileError? error = _mapAuthExceptionToBlocError(authException);
+      final ProfileError? error = _mapAuthExceptionCodeToBlocError(
+        authException.code,
+      );
       if (error != null) {
         emitErrorStatus(emit, error);
       } else {
         emitUnknownErrorStatus(emit);
         rethrow;
       }
-    } catch (_) {
+    } on NetworkException catch (networkException) {
+      if (networkException.code == NetworkExceptionCode.requestFailed) {
+        emitNetworkRequestFailed(emit);
+      }
+    } on UnknownException catch (unknownException) {
       emitUnknownErrorStatus(emit);
-      rethrow;
+      throw unknownException.message;
     }
   }
 
@@ -149,15 +155,19 @@ class ProfileIdentitiesBloc extends BlocWithStatus<ProfileIdentitiesEvent,
       );
       emitCompleteStatus(emit, ProfileInfo.savedData);
     } on AuthException catch (authException) {
-      if (authException == AuthException.wrongPassword) {
+      if (authException.code == AuthExceptionCode.wrongPassword) {
         emitErrorStatus(emit, ProfileError.wrongCurrentPassword);
       } else {
         emitUnknownErrorStatus(emit);
         rethrow;
       }
-    } catch (_) {
+    } on NetworkException catch (networkException) {
+      if (networkException.code == NetworkExceptionCode.requestFailed) {
+        emitNetworkRequestFailed(emit);
+      }
+    } on UnknownException catch (unknownException) {
       emitUnknownErrorStatus(emit);
-      rethrow;
+      throw unknownException.message;
     }
   }
 
@@ -182,9 +192,13 @@ class ProfileIdentitiesBloc extends BlocWithStatus<ProfileIdentitiesEvent,
         password: event.password,
       );
       emitCompleteStatus(emit, ProfileInfo.accountDeleted);
-    } catch (_) {
+    } on NetworkException catch (networkException) {
+      if (networkException.code == NetworkExceptionCode.requestFailed) {
+        emitNetworkRequestFailed(emit);
+      }
+    } on UnknownException catch (unknownException) {
       emitUnknownErrorStatus(emit);
-      rethrow;
+      throw unknownException.message;
     }
   }
 
@@ -215,10 +229,12 @@ class ProfileIdentitiesBloc extends BlocWithStatus<ProfileIdentitiesEvent,
         );
   }
 
-  ProfileError? _mapAuthExceptionToBlocError(AuthException exception) {
-    if (exception == AuthException.wrongPassword) {
+  ProfileError? _mapAuthExceptionCodeToBlocError(
+    AuthExceptionCode authExceptionCode,
+  ) {
+    if (authExceptionCode == AuthExceptionCode.wrongPassword) {
       return ProfileError.wrongPassword;
-    } else if (exception == AuthException.emailAlreadyInUse) {
+    } else if (authExceptionCode == AuthExceptionCode.emailAlreadyInUse) {
       return ProfileError.emailAlreadyInUse;
     }
     return null;

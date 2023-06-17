@@ -1,7 +1,7 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/domain/additional_model/auth_exception.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
+import 'package:runnoter/domain/additional_model/custom_exception.dart';
 import 'package:runnoter/domain/bloc/forgot_password/forgot_password_bloc.dart';
 
 import '../../../mock/domain/service/mock_auth_service.dart';
@@ -85,14 +85,16 @@ void main() {
 
   blocTest(
     'submit, '
-    'invalid email auth exception, '
+    'auth exception with invalid email code, '
     'should emit error status with invalid email error',
     build: () => createBloc(
       email: email,
     ),
     setUp: () {
       authService.mockSendPasswordResetEmail(
-        throwable: AuthException.invalidEmail,
+        throwable: const AuthException(
+          code: AuthExceptionCode.invalidEmail,
+        ),
       );
     },
     act: (ForgotPasswordBloc bloc) {
@@ -123,14 +125,16 @@ void main() {
 
   blocTest(
     'submit, '
-    'user not found auth exception, '
+    'auth exception with user not found code, '
     'should emit error status with user not found error',
     build: () => createBloc(
       email: email,
     ),
     setUp: () {
       authService.mockSendPasswordResetEmail(
-        throwable: AuthException.userNotFound,
+        throwable: const AuthException(
+          code: AuthExceptionCode.userNotFound,
+        ),
       );
     },
     act: (ForgotPasswordBloc bloc) {
@@ -161,14 +165,16 @@ void main() {
 
   blocTest(
     'submit, '
-    'network request failed auth exception, '
+    'network exception with request failed code, '
     'should emit network request failed status',
     build: () => createBloc(
       email: email,
     ),
     setUp: () {
       authService.mockSendPasswordResetEmail(
-        throwable: AuthException.networkRequestFailed,
+        throwable: const NetworkException(
+          code: NetworkExceptionCode.requestFailed,
+        ),
       );
     },
     act: (ForgotPasswordBloc bloc) {
@@ -198,13 +204,15 @@ void main() {
   blocTest(
     'submit, '
     'unknown exception, '
-    'should emit unknown error status and should rethrow error',
+    'should emit unknown error status and throw exception message',
     build: () => createBloc(
       email: email,
     ),
     setUp: () {
       authService.mockSendPasswordResetEmail(
-        throwable: 'Unknown exception...',
+        throwable: const UnknownException(
+          message: 'unknown exception message',
+        ),
       );
     },
     act: (ForgotPasswordBloc bloc) {
@@ -223,7 +231,7 @@ void main() {
       ),
     ],
     errors: () => [
-      'Unknown exception...',
+      'unknown exception message',
     ],
     verify: (_) {
       verify(

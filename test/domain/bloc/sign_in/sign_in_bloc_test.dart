@@ -1,8 +1,8 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/domain/additional_model/auth_exception.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
+import 'package:runnoter/domain/additional_model/custom_exception.dart';
 import 'package:runnoter/domain/bloc/sign_in/sign_in_bloc.dart';
 
 import '../../../mock/domain/service/mock_auth_service.dart';
@@ -157,14 +157,16 @@ void main() {
 
   blocTest(
     'submit, '
-    'auth service method throws invalid email auth exception, '
+    'auth exception with invalid email code, '
     'should emit error status with invalid email error',
     build: () => createBloc(
       email: email,
       password: password,
     ),
     setUp: () => authService.mockSignIn(
-      throwable: AuthException.invalidEmail,
+      throwable: const AuthException(
+        code: AuthExceptionCode.invalidEmail,
+      ),
     ),
     act: (SignInBloc bloc) => bloc.add(
       const SignInEventSubmit(),
@@ -193,14 +195,16 @@ void main() {
 
   blocTest(
     'submit, '
-    'auth service method throws user not found auth exception, '
+    'auth exception with user not found code, '
     'should emit error status with user not found error',
     build: () => createBloc(
       email: email,
       password: password,
     ),
     setUp: () => authService.mockSignIn(
-      throwable: AuthException.userNotFound,
+      throwable: const AuthException(
+        code: AuthExceptionCode.userNotFound,
+      ),
     ),
     act: (SignInBloc bloc) => bloc.add(
       const SignInEventSubmit(),
@@ -229,14 +233,16 @@ void main() {
 
   blocTest(
     'submit, '
-    'auth service method throws wrong password auth exception, '
+    'auth exception with wrong password code, '
     'should emit error status with wrong password error',
     build: () => createBloc(
       email: email,
       password: password,
     ),
     setUp: () => authService.mockSignIn(
-      throwable: AuthException.wrongPassword,
+      throwable: const AuthException(
+        code: AuthExceptionCode.wrongPassword,
+      ),
     ),
     act: (SignInBloc bloc) => bloc.add(
       const SignInEventSubmit(),
@@ -265,14 +271,16 @@ void main() {
 
   blocTest(
     'submit, '
-    'auth service method throws network request failed auth exception, '
+    'network exception with request failed code, '
     'should emit network request failed status',
     build: () => createBloc(
       email: email,
       password: password,
     ),
     setUp: () => authService.mockSignIn(
-      throwable: AuthException.networkRequestFailed,
+      throwable: const NetworkException(
+        code: NetworkExceptionCode.requestFailed,
+      ),
     ),
     act: (SignInBloc bloc) => bloc.add(
       const SignInEventSubmit(),
@@ -299,14 +307,16 @@ void main() {
 
   blocTest(
     'submit, '
-    'auth service method throws unknown error, '
+    'unknown exception, '
     'should emit unknown error status',
     build: () => createBloc(
       email: email,
       password: password,
     ),
     setUp: () => authService.mockSignIn(
-      throwable: 'Unknown error...',
+      throwable: const UnknownException(
+        message: 'unknown exception message',
+      ),
     ),
     act: (SignInBloc bloc) {
       bloc.add(
@@ -326,7 +336,7 @@ void main() {
       ),
     ],
     errors: () => [
-      'Unknown error...',
+      'unknown exception message',
     ],
     verify: (_) => verify(
       () => authService.signIn(

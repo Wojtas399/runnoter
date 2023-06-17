@@ -1,11 +1,11 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../domain/additional_model/auth_exception.dart';
 import '../../../../domain/additional_model/bloc_status.dart';
 import '../../../../domain/additional_model/bloc_with_status.dart';
 import '../../../../domain/service/auth_service.dart';
 import '../../additional_model/bloc_state.dart';
+import '../../additional_model/custom_exception.dart';
 
 part 'sign_in_event.dart';
 part 'sign_in_state.dart';
@@ -76,20 +76,22 @@ class SignInBloc
       await _tryToSignIn();
       emitCompleteStatus(emit, SignInInfo.signedIn);
     } on AuthException catch (authException) {
-      if (authException == AuthException.networkRequestFailed) {
-        emitNetworkRequestFailed(emit);
-        return;
-      }
-      final SignInError? error = _mapAuthExceptionToBlocError(authException);
+      final SignInError? error = _mapAuthExceptionCodeToBlocError(
+        authException.code,
+      );
       if (error != null) {
         emitErrorStatus(emit, error);
       } else {
         emitUnknownErrorStatus(emit);
         rethrow;
       }
-    } catch (_) {
+    } on NetworkException catch (networkException) {
+      if (networkException.code == NetworkExceptionCode.requestFailed) {
+        emitNetworkRequestFailed(emit);
+      }
+    } on UnknownException catch (unknownException) {
       emitUnknownErrorStatus(emit);
-      rethrow;
+      throw unknownException.message;
     }
   }
 
@@ -104,12 +106,14 @@ class SignInBloc
     );
   }
 
-  SignInError? _mapAuthExceptionToBlocError(AuthException exception) {
-    if (exception == AuthException.invalidEmail) {
+  SignInError? _mapAuthExceptionCodeToBlocError(
+    AuthExceptionCode authExceptionCode,
+  ) {
+    if (authExceptionCode == AuthExceptionCode.invalidEmail) {
       return SignInError.invalidEmail;
-    } else if (exception == AuthException.userNotFound) {
+    } else if (authExceptionCode == AuthExceptionCode.userNotFound) {
       return SignInError.userNotFound;
-    } else if (exception == AuthException.wrongPassword) {
+    } else if (authExceptionCode == AuthExceptionCode.wrongPassword) {
       return SignInError.wrongPassword;
     }
     return null;
