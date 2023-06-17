@@ -206,7 +206,7 @@
   "workoutStageWalking": "{walkingDistanceInMeters}m marching",
   "workoutStageJogging": "{joggingDistanceInMeters}m jogging",
   "noInternetConnectionDialogTitle": "No internet connection",
-  "noInternetConnectionDialogMessage": "It seems that you lost internet connection. Resolve this problem and try again",
+  "noInternetConnectionDialogMessage": "It seems that you lost internet connection which is required to do this operation. Resolve this problem and try again",
   "noLoggedUserDialogTitle": "Session error",
   "noLoggedUserDialogMessage": "We've lost connection with your session. Sign in again to use the app properly.",
   "unknownErrorDialogTitle": "Unknown error",
