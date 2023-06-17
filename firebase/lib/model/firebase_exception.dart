@@ -1,4 +1,6 @@
-sealed class FirebaseException {
+import 'package:equatable/equatable.dart';
+
+sealed class FirebaseException extends Equatable {
   const FirebaseException();
 }
 
@@ -15,6 +17,11 @@ class FirebaseAuthException extends FirebaseException {
   const FirebaseAuthException({
     required this.code,
   });
+
+  @override
+  List<Object?> get props => [
+        code,
+      ];
 }
 
 enum FirebaseNetworkExceptionCode {
@@ -27,6 +34,11 @@ class FirebaseNetworkException extends FirebaseException {
   const FirebaseNetworkException({
     required this.code,
   });
+
+  @override
+  List<Object?> get props => [
+        code,
+      ];
 }
 
 class FirebaseUnknownException extends FirebaseException {
@@ -35,4 +47,9 @@ class FirebaseUnknownException extends FirebaseException {
   const FirebaseUnknownException({
     required this.message,
   });
+
+  @override
+  List<Object?> get props => [
+        message,
+      ];
 }
