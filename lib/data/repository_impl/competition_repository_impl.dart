@@ -37,7 +37,6 @@ class CompetitionRepositoryImpl extends StateRepository<Competition>
     required String userId,
   }) async* {
     await _loadAllCompetitionsFromRemoteDb(userId);
-
     await for (final competitions in dataStream$) {
       yield competitions
           ?.where((competition) => competition.userId == userId)
@@ -115,6 +114,17 @@ class CompetitionRepositoryImpl extends StateRepository<Competition>
       userId: userId,
     );
     removeEntity(competitionId);
+  }
+
+  @override
+  Future<void> deleteAllUserCompetitions({
+    required String userId,
+  }) async {
+    final List<String> idsOfDeletedCompetitions =
+        await _firebaseCompetitionService.deleteAllUserCompetitions(
+      userId: userId,
+    );
+    removeEntities(idsOfDeletedCompetitions);
   }
 
   Future<void> _loadAllCompetitionsFromRemoteDb(String userId) async {

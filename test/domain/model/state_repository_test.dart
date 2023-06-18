@@ -160,4 +160,32 @@ void main() {
       );
     },
   );
+
+  test(
+    'remove entities, '
+    'should remove entities from state',
+    () async {
+      const List<String> idsOfEntitiesToRemove = ['e1', 'e3', 'e4'];
+      const List<TestModel> entities = [
+        TestModel(id: 'e1', name: 'name1'),
+        TestModel(id: 'e2', name: 'name2'),
+        TestModel(id: 'e3', name: 'name3'),
+        TestModel(id: 'e4', name: 'name4'),
+        TestModel(id: 'e5', name: 'name5'),
+      ];
+      repository = createRepository(
+        initialData: entities,
+      );
+
+      repository.removeEntities(idsOfEntitiesToRemove);
+
+      expect(
+        await repository.dataStream$.first,
+        [
+          entities[1],
+          entities.last,
+        ],
+      );
+    },
+  );
 }

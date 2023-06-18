@@ -11,9 +11,7 @@ class WorkoutStageCreatorContent extends StatelessWidget {
       appBar: const _AppBar(),
       body: SafeArea(
         child: GestureDetector(
-          onTap: () {
-            unfocusInputs();
-          },
+          onTap: unfocusInputs,
           child: Container(
             color: Colors.transparent,
             padding: const EdgeInsets.all(24),

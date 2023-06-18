@@ -1,11 +1,10 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../domain/additional_model/auth_exception.dart';
 import '../../../../domain/additional_model/bloc_status.dart';
 import '../../../../domain/additional_model/bloc_with_status.dart';
 import '../../../../domain/service/auth_service.dart';
 import '../../additional_model/bloc_state.dart';
-import '../../service/connectivity_service.dart';
+import '../../additional_model/custom_exception.dart';
 
 part 'forgot_password_event.dart';
 part 'forgot_password_state.dart';
@@ -13,15 +12,12 @@ part 'forgot_password_state.dart';
 class ForgotPasswordBloc extends BlocWithStatus<ForgotPasswordEvent,
     ForgotPasswordState, ForgotPasswordBlocInfo, ForgotPasswordBlocError> {
   final AuthService _authService;
-  final ConnectivityService _connectivityService;
 
   ForgotPasswordBloc({
     required AuthService authService,
-    required ConnectivityService connectivityService,
     BlocStatus status = const BlocStatusInitial(),
     String email = '',
   })  : _authService = authService,
-        _connectivityService = connectivityService,
         super(
           ForgotPasswordState(
             status: status,
@@ -46,26 +42,25 @@ class ForgotPasswordBloc extends BlocWithStatus<ForgotPasswordEvent,
     Emitter<ForgotPasswordState> emit,
   ) async {
     emitLoadingStatus(emit);
-    if (await _connectivityService.hasDeviceInternetConnection() == false) {
-      emitNoInternetConnectionStatus(emit);
-      return;
-    }
     try {
       await _tryToSendPasswordResetEmail();
       emitCompleteStatus(emit, ForgotPasswordBlocInfo.emailSubmitted);
     } on AuthException catch (authException) {
-      final ForgotPasswordBlocError? error = _mapAuthExceptionToBlocError(
-        authException,
+      final ForgotPasswordBlocError? error = _mapAuthExceptionCodeToBlocError(
+        authException.code,
       );
       if (error != null) {
         emitErrorStatus(emit, error);
       } else {
         emitUnknownErrorStatus(emit);
-        rethrow;
       }
-    } catch (_) {
+    } on NetworkException catch (networkException) {
+      if (networkException.code == NetworkExceptionCode.requestFailed) {
+        emitNetworkRequestFailed(emit);
+      }
+    } on UnknownException catch (unknownException) {
       emitUnknownErrorStatus(emit);
-      rethrow;
+      throw unknownException.message;
     }
   }
 
@@ -75,12 +70,12 @@ class ForgotPasswordBloc extends BlocWithStatus<ForgotPasswordEvent,
     );
   }
 
-  ForgotPasswordBlocError? _mapAuthExceptionToBlocError(
-    AuthException exception,
+  ForgotPasswordBlocError? _mapAuthExceptionCodeToBlocError(
+    AuthExceptionCode authExceptionCode,
   ) {
-    if (exception == AuthException.invalidEmail) {
+    if (authExceptionCode == AuthExceptionCode.invalidEmail) {
       return ForgotPasswordBlocError.invalidEmail;
-    } else if (exception == AuthException.userNotFound) {
+    } else if (authExceptionCode == AuthExceptionCode.userNotFound) {
       return ForgotPasswordBlocError.userNotFound;
     }
     return null;

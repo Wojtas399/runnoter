@@ -16,3 +16,24 @@ class BodyLarge extends StatelessWidget {
     );
   }
 }
+
+class BodyMedium extends StatelessWidget {
+  final String data;
+  final Color? color;
+
+  const BodyMedium(
+    this.data, {
+    super.key,
+    this.color,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      data,
+      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+            color: color,
+          ),
+    );
+  }
+}

@@ -1,15 +1,13 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/domain/additional_model/auth_exception.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
+import 'package:runnoter/domain/additional_model/custom_exception.dart';
 import 'package:runnoter/domain/bloc/forgot_password/forgot_password_bloc.dart';
 
 import '../../../mock/domain/service/mock_auth_service.dart';
-import '../../../mock/domain/service/mock_connectivity_service.dart';
 
 void main() {
   final authService = MockAuthService();
-  final connectivityService = MockConnectivityService();
   const String email = 'email@example.com';
 
   ForgotPasswordBloc createBloc({
@@ -17,7 +15,6 @@ void main() {
   }) {
     return ForgotPasswordBloc(
       authService: authService,
-      connectivityService: connectivityService,
       email: email,
     );
   }
@@ -58,9 +55,6 @@ void main() {
       email: email,
     ),
     setUp: () {
-      connectivityService.mockHasDeviceInternetConnection(
-        hasConnection: true,
-      );
       authService.mockSendPasswordResetEmail();
     },
     act: (ForgotPasswordBloc bloc) {
@@ -82,9 +76,6 @@ void main() {
     ],
     verify: (_) {
       verify(
-        () => connectivityService.hasDeviceInternetConnection(),
-      ).called(1);
-      verify(
         () => authService.sendPasswordResetEmail(
           email: email,
         ),
@@ -94,56 +85,16 @@ void main() {
 
   blocTest(
     'submit, '
-    'device does not have internet connection, '
-    'should emit no internet connection status',
-    build: () => createBloc(
-      email: email,
-    ),
-    setUp: () {
-      connectivityService.mockHasDeviceInternetConnection(
-        hasConnection: false,
-      );
-    },
-    act: (ForgotPasswordBloc bloc) {
-      bloc.add(
-        const ForgotPasswordEventSubmit(),
-      );
-    },
-    expect: () => [
-      createState(
-        status: const BlocStatusLoading(),
-        email: email,
-      ),
-      createState(
-        status: const BlocStatusNoInternetConnection(),
-        email: email,
-      ),
-    ],
-    verify: (_) {
-      verify(
-        () => connectivityService.hasDeviceInternetConnection(),
-      ).called(1);
-      verifyNever(
-        () => authService.sendPasswordResetEmail(
-          email: any(named: 'email'),
-        ),
-      );
-    },
-  );
-
-  blocTest(
-    'submit, '
-    'invalid email auth exception, '
+    'auth exception with invalid email code, '
     'should emit error status with invalid email error',
     build: () => createBloc(
       email: email,
     ),
     setUp: () {
-      connectivityService.mockHasDeviceInternetConnection(
-        hasConnection: true,
-      );
       authService.mockSendPasswordResetEmail(
-        throwable: AuthException.invalidEmail,
+        throwable: const AuthException(
+          code: AuthExceptionCode.invalidEmail,
+        ),
       );
     },
     act: (ForgotPasswordBloc bloc) {
@@ -165,9 +116,6 @@ void main() {
     ],
     verify: (_) {
       verify(
-        () => connectivityService.hasDeviceInternetConnection(),
-      ).called(1);
-      verify(
         () => authService.sendPasswordResetEmail(
           email: email,
         ),
@@ -177,17 +125,16 @@ void main() {
 
   blocTest(
     'submit, '
-    'user not found auth exception, '
+    'auth exception with user not found code, '
     'should emit error status with user not found error',
     build: () => createBloc(
       email: email,
     ),
     setUp: () {
-      connectivityService.mockHasDeviceInternetConnection(
-        hasConnection: true,
-      );
       authService.mockSendPasswordResetEmail(
-        throwable: AuthException.userNotFound,
+        throwable: const AuthException(
+          code: AuthExceptionCode.userNotFound,
+        ),
       );
     },
     act: (ForgotPasswordBloc bloc) {
@@ -209,8 +156,43 @@ void main() {
     ],
     verify: (_) {
       verify(
-        () => connectivityService.hasDeviceInternetConnection(),
+        () => authService.sendPasswordResetEmail(
+          email: email,
+        ),
       ).called(1);
+    },
+  );
+
+  blocTest(
+    'submit, '
+    'network exception with request failed code, '
+    'should emit network request failed status',
+    build: () => createBloc(
+      email: email,
+    ),
+    setUp: () {
+      authService.mockSendPasswordResetEmail(
+        throwable: const NetworkException(
+          code: NetworkExceptionCode.requestFailed,
+        ),
+      );
+    },
+    act: (ForgotPasswordBloc bloc) {
+      bloc.add(
+        const ForgotPasswordEventSubmit(),
+      );
+    },
+    expect: () => [
+      createState(
+        status: const BlocStatusLoading(),
+        email: email,
+      ),
+      createState(
+        status: const BlocStatusNetworkRequestFailed(),
+        email: email,
+      ),
+    ],
+    verify: (_) {
       verify(
         () => authService.sendPasswordResetEmail(
           email: email,
@@ -222,16 +204,15 @@ void main() {
   blocTest(
     'submit, '
     'unknown exception, '
-    'should emit unknown error status and should rethrow error',
+    'should emit unknown error status and throw exception message',
     build: () => createBloc(
       email: email,
     ),
     setUp: () {
-      connectivityService.mockHasDeviceInternetConnection(
-        hasConnection: true,
-      );
       authService.mockSendPasswordResetEmail(
-        throwable: 'Unknown exception...',
+        throwable: const UnknownException(
+          message: 'unknown exception message',
+        ),
       );
     },
     act: (ForgotPasswordBloc bloc) {
@@ -250,12 +231,9 @@ void main() {
       ),
     ],
     errors: () => [
-      'Unknown exception...',
+      'unknown exception message',
     ],
     verify: (_) {
-      verify(
-        () => connectivityService.hasDeviceInternetConnection(),
-      ).called(1);
       verify(
         () => authService.sendPasswordResetEmail(
           email: email,

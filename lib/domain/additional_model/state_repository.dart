@@ -73,6 +73,14 @@ class StateRepository<T extends Entity> {
     _dataStream.add(updatedData);
   }
 
+  void removeEntities(List<String> idsOfEntities) {
+    final List<T> updatedData = [...?_dataStream.value];
+    for (final String entityId in idsOfEntities) {
+      updatedData.removeWhere((entity) => entity.id == entityId);
+    }
+    _dataStream.add(updatedData);
+  }
+
   List<String> _getIdsOfExistingEntities() =>
       [...?_dataStream.value].map((T entity) => entity.id).toList();
 }

@@ -28,4 +28,8 @@ abstract interface class BloodTestRepository {
     required String bloodTestId,
     required String userId,
   });
+
+  Future<void> deleteAllUserTests({
+    required String userId,
+  });
 }

@@ -7,6 +7,7 @@ import '../../../domain/entity/blood_test.dart';
 import '../../../domain/repository/blood_test_repository.dart';
 import '../../../domain/service/auth_service.dart';
 import '../../component/empty_content_info_component.dart';
+import '../../component/loading_info_component.dart';
 import '../../component/padding/paddings_24.dart';
 import '../../component/text/title_text_components.dart';
 import '../../config/navigation/routes.dart';

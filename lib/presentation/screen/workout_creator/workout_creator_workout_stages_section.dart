@@ -26,9 +26,8 @@ class _Title extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
+    return LabelLarge(
       Str.of(context).workoutCreatorWorkoutStages,
-      style: Theme.of(context).textTheme.labelLarge,
     );
   }
 }

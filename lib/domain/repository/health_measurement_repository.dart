@@ -31,4 +31,8 @@ abstract class HealthMeasurementRepository {
     required String userId,
     required DateTime date,
   });
+
+  Future<void> deleteAllUserMeasurements({
+    required String userId,
+  });
 }

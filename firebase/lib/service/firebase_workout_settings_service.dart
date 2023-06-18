@@ -1,5 +1,6 @@
 import '../firebase.dart';
 import '../firebase_collections.dart';
+import '../utils/utils.dart';
 
 class FirebaseWorkoutSettingsService {
   Future<WorkoutSettingsDto?> loadSettingsByUserId({
@@ -13,7 +14,9 @@ class FirebaseWorkoutSettingsService {
     required WorkoutSettingsDto workoutSettingsDto,
   }) async {
     final settingsRef = getWorkoutSettingsRef(workoutSettingsDto.userId);
-    await settingsRef.set(workoutSettingsDto);
+    await asyncOrSyncCall(
+      () => settingsRef.set(workoutSettingsDto),
+    );
     final snapshot = await settingsRef.get();
     return snapshot.data();
   }
@@ -28,7 +31,9 @@ class FirebaseWorkoutSettingsService {
       distanceUnit: distanceUnit,
       paceUnit: paceUnit,
     );
-    await settingsRef.update(jsonToUpdate);
+    await asyncOrSyncCall(
+      () => settingsRef.update(jsonToUpdate),
+    );
     final snapshot = await settingsRef.get();
     return snapshot.data();
   }
@@ -36,6 +41,8 @@ class FirebaseWorkoutSettingsService {
   Future<void> deleteSettingsForUser({
     required String userId,
   }) async {
-    await getWorkoutSettingsRef(userId).delete();
+    await asyncOrSyncCall(
+      () => getWorkoutSettingsRef(userId).delete(),
+    );
   }
 }

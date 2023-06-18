@@ -360,4 +360,43 @@ void main() {
       ).called(1);
     },
   );
+
+  test(
+    'delete all user competitions, '
+    'should call method from firebase competition service to delete all user competitions and should delete these competitions from repository',
+    () {
+      final List<Competition> existingCompetitions = [
+        createCompetition(id: 'c1', userId: userId),
+        createCompetition(id: 'c2', userId: 'u2'),
+        createCompetition(id: 'c3', userId: 'u3'),
+        createCompetition(id: 'c4', userId: userId),
+      ];
+      firebaseCompetitionService.mockDeleteAllUserCompetitions(
+        idsOfDeletedCompetitions: ['c1', 'c4'],
+      );
+      repository = createRepository(initialData: existingCompetitions);
+
+      final Stream<List<Competition>?> repositoryState$ =
+          repository.dataStream$;
+      repository.deleteAllUserCompetitions(userId: userId);
+
+      expect(
+        repositoryState$,
+        emitsInOrder(
+          [
+            existingCompetitions,
+            [
+              existingCompetitions[1],
+              existingCompetitions[2],
+            ]
+          ],
+        ),
+      );
+      verify(
+        () => firebaseCompetitionService.deleteAllUserCompetitions(
+          userId: userId,
+        ),
+      ).called(1);
+    },
+  );
 }

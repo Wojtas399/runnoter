@@ -1,8 +1,7 @@
 import 'package:firebase/firebase.dart';
 
-import '../../domain/additional_model/auth_exception.dart';
 import '../../domain/service/auth_service.dart';
-import '../mapper/auth_exception_mapper.dart';
+import '../mapper/custom_exception_mapper.dart';
 
 class AuthServiceImpl implements AuthService {
   final FirebaseAuthService _firebaseAuthService;
@@ -27,14 +26,8 @@ class AuthServiceImpl implements AuthService {
         email: email,
         password: password,
       );
-    } on FirebaseAuthExceptionCode catch (exception) {
-      final AuthException? authException =
-          mapFromFirebaseAuthExceptionCodeToAuthException(exception);
-      if (authException != null) {
-        throw authException;
-      } else {
-        rethrow;
-      }
+    } on FirebaseException catch (exception) {
+      throw mapExceptionFromFirebase(exception);
     }
   }
 
@@ -48,14 +41,8 @@ class AuthServiceImpl implements AuthService {
         email: email,
         password: password,
       );
-    } on FirebaseAuthExceptionCode catch (exception) {
-      final AuthException? authException =
-          mapFromFirebaseAuthExceptionCodeToAuthException(exception);
-      if (authException != null) {
-        throw authException;
-      } else {
-        rethrow;
-      }
+    } on FirebaseException catch (exception) {
+      throw mapExceptionFromFirebase(exception);
     }
   }
 
@@ -65,14 +52,8 @@ class AuthServiceImpl implements AuthService {
   }) async {
     try {
       await _firebaseAuthService.sendPasswordResetEmail(email: email);
-    } on FirebaseAuthExceptionCode catch (exception) {
-      final AuthException? authException =
-          mapFromFirebaseAuthExceptionCodeToAuthException(exception);
-      if (authException != null) {
-        throw authException;
-      } else {
-        rethrow;
-      }
+    } on FirebaseException catch (exception) {
+      throw mapExceptionFromFirebase(exception);
     }
   }
 
@@ -91,14 +72,8 @@ class AuthServiceImpl implements AuthService {
         newEmail: newEmail,
         password: password,
       );
-    } on FirebaseAuthExceptionCode catch (exception) {
-      final AuthException? authException =
-          mapFromFirebaseAuthExceptionCodeToAuthException(exception);
-      if (authException != null) {
-        throw authException;
-      } else {
-        rethrow;
-      }
+    } on FirebaseException catch (exception) {
+      throw mapExceptionFromFirebase(exception);
     }
   }
 
@@ -112,14 +87,8 @@ class AuthServiceImpl implements AuthService {
         currentPassword: currentPassword,
         newPassword: newPassword,
       );
-    } on FirebaseAuthExceptionCode catch (exception) {
-      final AuthException? authException =
-          mapFromFirebaseAuthExceptionCodeToAuthException(exception);
-      if (authException != null) {
-        throw authException;
-      } else {
-        rethrow;
-      }
+    } on FirebaseException catch (exception) {
+      throw mapExceptionFromFirebase(exception);
     }
   }
 
@@ -140,14 +109,8 @@ class AuthServiceImpl implements AuthService {
       await _firebaseAuthService.deleteAccount(
         password: password,
       );
-    } on FirebaseAuthExceptionCode catch (exception) {
-      final AuthException? authException =
-          mapFromFirebaseAuthExceptionCodeToAuthException(exception);
-      if (authException != null) {
-        throw authException;
-      } else {
-        rethrow;
-      }
+    } on FirebaseException catch (exception) {
+      throw mapExceptionFromFirebase(exception);
     }
   }
 }

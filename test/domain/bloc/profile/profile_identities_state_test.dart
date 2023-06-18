@@ -8,7 +8,7 @@ void main() {
   setUp(() {
     state = const ProfileIdentitiesState(
       status: BlocStatusInitial(),
-      userId: null,
+      loggedUserId: null,
       username: null,
       surname: null,
       email: null,
@@ -29,15 +29,15 @@ void main() {
   );
 
   test(
-    'copy with user id',
+    'copy with logged user id',
     () {
       const String expectedUserId = 'u1';
 
-      state = state.copyWith(userId: expectedUserId);
+      state = state.copyWith(loggedUserId: expectedUserId);
       final state2 = state.copyWith();
 
-      expect(state.userId, expectedUserId);
-      expect(state2.userId, expectedUserId);
+      expect(state.loggedUserId, expectedUserId);
+      expect(state2.loggedUserId, expectedUserId);
     },
   );
 

@@ -39,11 +39,9 @@ class _RunStatusName extends StatelessWidget {
           color: status.toColor(),
         ),
         const SizedBox(width: 16),
-        Text(
+        BodyMedium(
           status.toLabel(context),
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: status.toColor(),
-              ),
+          color: status.toColor(),
         ),
       ],
     );

@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../firebase_collections.dart';
 import '../mapper/date_mapper.dart';
 import '../model/health_measurement_dto.dart';
+import '../utils/utils.dart';
 
 class FirebaseHealthMeasurementService {
   Future<HealthMeasurementDto?> loadMeasurementByDate({
@@ -56,7 +57,9 @@ class FirebaseHealthMeasurementService {
   }) async {
     final String measurementId = mapDateTimeToString(measurementDto.date);
     final measurementRef = getHealthMeasurementsRef(userId).doc(measurementId);
-    await measurementRef.set(measurementDto);
+    await asyncOrSyncCall(
+      () => measurementRef.set(measurementDto),
+    );
     final snapshot = await measurementRef.get();
     return snapshot.data();
   }
@@ -74,7 +77,9 @@ class FirebaseHealthMeasurementService {
       restingHeartRate: restingHeartRate,
       fastingWeight: fastingWeight,
     );
-    await measurementRef.update(jsonToUpdate);
+    await asyncOrSyncCall(
+      () => measurementRef.update(jsonToUpdate),
+    );
     final snapshot = await measurementRef.get();
     return snapshot.data();
   }
@@ -84,6 +89,25 @@ class FirebaseHealthMeasurementService {
     required DateTime date,
   }) async {
     final String measurementId = mapDateTimeToString(date);
-    await getHealthMeasurementsRef(userId).doc(measurementId).delete();
+    await asyncOrSyncCall(
+      () => getHealthMeasurementsRef(userId).doc(measurementId).delete(),
+    );
+  }
+
+  Future<List<String>> deleteAllUserMeasurements({
+    required String userId,
+  }) async {
+    final measurementsRef = getHealthMeasurementsRef(userId);
+    final snapshot = await measurementsRef.get();
+    final List<String> idsOfDeletedMeasurements = [];
+    final WriteBatch batch = FirebaseFirestore.instance.batch();
+    for (final docSnapshot in snapshot.docs) {
+      batch.delete(docSnapshot.reference);
+      idsOfDeletedMeasurements.add(docSnapshot.id);
+    }
+    await asyncOrSyncCall(
+      () => batch.commit(),
+    );
+    return idsOfDeletedMeasurements;
   }
 }

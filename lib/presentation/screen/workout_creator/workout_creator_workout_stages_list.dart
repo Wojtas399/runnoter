@@ -35,14 +35,12 @@ class _NoWorkoutStagesInfo extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text(
+          BodyLarge(
             Str.of(context).workoutCreatorNoStagesInfo,
-            style: Theme.of(context).textTheme.bodyLarge,
           ),
           const SizedBox(height: 4),
-          Text(
+          BodyMedium(
             Str.of(context).workoutCreatorAddStageInstructions,
-            style: Theme.of(context).textTheme.bodyMedium,
           ),
         ],
       ),

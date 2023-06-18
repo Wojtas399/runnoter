@@ -11,14 +11,14 @@ class _Content extends StatelessWidget {
         title: Text(Str.of(context).healthMeasurementsScreenTitle),
       ),
       body: const SafeArea(
-        child: _Measurements(),
+        child: _Body(),
       ),
     );
   }
 }
 
-class _Measurements extends StatelessWidget {
-  const _Measurements();
+class _Body extends StatelessWidget {
+  const _Body();
 
   @override
   Widget build(BuildContext context) {
@@ -26,15 +26,25 @@ class _Measurements extends StatelessWidget {
       (HealthMeasurementsBloc bloc) => bloc.state.measurements,
     );
 
-    if (measurements == null) {
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
-    } else if (measurements.isEmpty) {
-      return EmptyContentInfo(
-        title: Str.of(context).healthMeasurementsNoMeasurementsInfo,
-      );
-    }
+    return switch (measurements) {
+      null => const LoadingInfo(),
+      [] => EmptyContentInfo(
+          title: Str.of(context).healthMeasurementsNoMeasurementsInfo,
+        ),
+      [...] => _Measurements(measurements: measurements),
+    };
+  }
+}
+
+class _Measurements extends StatelessWidget {
+  final List<HealthMeasurement> measurements;
+
+  const _Measurements({
+    required this.measurements,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return ListView.separated(
       itemCount: measurements.length,
       padding: const EdgeInsets.fromLTRB(12, 12, 12, 80),

@@ -244,7 +244,7 @@ void main() {
 
   test(
     'get all measurements, '
-    'should emit existing and matching measurements, should load new measurements from firebase and should also emit newly loaded measurements',
+    'should load new measurements from remote db and should emit measurements belonging to given user',
     () {
       final List<HealthMeasurement> existingMeasurements = [
         HealthMeasurement(
@@ -301,7 +301,6 @@ void main() {
 
       Stream<List<HealthMeasurement>?> measurements$ =
           repository.getAllMeasurements(userId: userId);
-      measurements$.listen((_) {});
 
       expect(
         measurements$,
@@ -309,19 +308,11 @@ void main() {
           [
             [
               existingMeasurements[1],
-            ],
-            [
-              existingMeasurements[1],
               ...loadedMeasurements,
             ],
           ],
         ),
       );
-      verify(
-        () => firebaseHealthMeasurementService.loadAllMeasurements(
-          userId: userId,
-        ),
-      ).called(1);
     },
   );
 
@@ -491,6 +482,58 @@ void main() {
         () => firebaseHealthMeasurementService.deleteMeasurement(
           userId: userId,
           date: date,
+        ),
+      ).called(1);
+    },
+  );
+
+  test(
+    'delete all user measurements, '
+    "should call firebase service's method to delete all user measurements and should delete these measurements from repo state",
+    () {
+      final List<HealthMeasurement> existingMeasurements = [
+        createHealthMeasurement(
+          userId: 'u2',
+          date: DateTime(2023, 2, 9),
+        ),
+        createHealthMeasurement(
+          userId: userId,
+          date: DateTime(2023, 2, 10),
+        ),
+        createHealthMeasurement(
+          userId: 'u2',
+          date: DateTime(2023, 2, 11),
+        ),
+        createHealthMeasurement(
+          userId: userId,
+          date: DateTime(2023, 2, 12),
+        ),
+      ];
+      firebaseHealthMeasurementService.mockDeleteAllUserMeasurements(
+        idsOfDeletedMeasurements: ['2023-02-10', '2023-02,12'],
+      );
+      repository = createRepository(
+        initialState: existingMeasurements,
+      );
+
+      final Stream<List<HealthMeasurement>?> state$ = repository.dataStream$;
+      repository.deleteAllUserMeasurements(userId: userId);
+
+      expect(
+        state$,
+        emitsInOrder(
+          [
+            existingMeasurements,
+            [
+              existingMeasurements.first,
+              existingMeasurements[2],
+            ]
+          ],
+        ),
+      );
+      verify(
+        () => firebaseHealthMeasurementService.deleteAllUserMeasurements(
+          userId: userId,
         ),
       ).called(1);
     },

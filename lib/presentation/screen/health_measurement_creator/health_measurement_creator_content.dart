@@ -22,46 +22,26 @@ class _Content extends StatelessWidget {
             Str.of(context).healthMeasurementCreatorScreenTitle,
           ),
         ),
-        body: SafeArea(
-          child: BlocSelector<HealthMeasurementCreatorBloc,
-              HealthMeasurementCreatorState, BlocStatus>(
-            selector: (state) => state.status,
-            builder: (_, BlocStatus blocStatus) {
-              if (blocStatus is BlocStatusInitial) {
-                return const _LoadingContent();
-              }
-              return const _FormContent();
-            },
-          ),
+        body: const SafeArea(
+          child: _Body(),
         ),
       ),
     );
   }
 }
 
-class _LoadingContent extends StatelessWidget {
-  const _LoadingContent();
+class _Body extends StatelessWidget {
+  const _Body();
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: CircularProgressIndicator(),
+    final BlocStatus blocStatus = context.select(
+      (HealthMeasurementCreatorBloc bloc) => bloc.state.status,
     );
-  }
-}
 
-class _FormContent extends StatelessWidget {
-  const _FormContent();
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: unfocusInputs,
-      child: Container(
-        color: Colors.transparent,
-        padding: const EdgeInsets.all(24),
-        child: _Form(),
-      ),
-    );
+    if (blocStatus is BlocStatusInitial) {
+      return const LoadingInfo();
+    }
+    return const _Form();
   }
 }

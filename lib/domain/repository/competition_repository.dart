@@ -37,4 +37,8 @@ abstract interface class CompetitionRepository {
     required String competitionId,
     required String userId,
   });
+
+  Future<void> deleteAllUserCompetitions({
+    required String userId,
+  });
 }

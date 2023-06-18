@@ -31,9 +31,9 @@ abstract class BlocWithStatus<Event, State extends BlocState, Info, Error>
     ));
   }
 
-  void emitNoInternetConnectionStatus(Emitter<State> emit) {
+  void emitNetworkRequestFailed(Emitter<State> emit) {
     emit(state.copyWith(
-      status: const BlocStatusNoInternetConnection(),
+      status: const BlocStatusNetworkRequestFailed(),
     ));
   }
 

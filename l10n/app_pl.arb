@@ -839,7 +839,7 @@
   "@noInternetConnectionDialogTitle": {
     "description": "Title of the dialog about no internet connection"
   },
-  "noInternetConnectionDialogMessage": "Wygląda na to, że utraciłeś połączenie internetowe. Napraw ten problem i spróbuj ponownie.",
+  "noInternetConnectionDialogMessage": "Wygląda na to, że utraciłeś połączenie internetowe, które jest wymagane do przeprowadzenia tej operacji. Napraw ten problem i spróbuj ponownie.",
   "@noInternetConnectionDialogMessage": {
     "description": "Message of the dialog about no internet connection"
   },

@@ -43,4 +43,8 @@ abstract class WorkoutRepository {
     required String userId,
     required String workoutId,
   });
+
+  Future<void> deleteAllUserWorkouts({
+    required String userId,
+  });
 }

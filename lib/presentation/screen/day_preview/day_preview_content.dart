@@ -9,29 +9,36 @@ class DayPreviewContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Scaffold(
       appBar: _AppBar(),
-      body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.all(24),
-          child: _Workout(),
-        ),
-      ),
+      body: _Body(),
     );
   }
 }
 
-class _Workout extends StatelessWidget {
-  const _Workout();
+class _Body extends StatelessWidget {
+  const _Body();
 
   @override
   Widget build(BuildContext context) {
-    final String? workoutId = context.select(
-      (DayPreviewBloc bloc) => bloc.state.workoutId,
+    return SafeArea(
+      child: Paddings24(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const _Date(),
+            Expanded(
+              child: BlocSelector<DayPreviewBloc, DayPreviewState, String?>(
+                selector: (state) => state.workoutId,
+                builder: (_, String? workoutId) => switch (workoutId) {
+                  null => const _NoWorkoutInfo(),
+                  String() => const _Workout(),
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
     );
-
-    if (workoutId != null) {
-      return const _WorkoutContent();
-    }
-    return const _NoWorkoutContent();
   }
 }
 
@@ -44,9 +51,8 @@ class _Date extends StatelessWidget {
       (DayPreviewBloc bloc) => bloc.state.date,
     );
 
-    return Text(
+    return TitleLarge(
       date?.toFullDate(context) ?? '',
-      style: Theme.of(context).textTheme.titleLarge,
     );
   }
 }

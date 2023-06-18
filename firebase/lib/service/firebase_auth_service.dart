@@ -1,18 +1,17 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' as firebase;
 
-import '../mapper/firebase_auth_exception_code_mapper.dart';
-import '../model/firebase_auth_exception_code.dart';
+import '../mapper/firebase_exception_mapper.dart';
 
 class FirebaseAuthService {
   Stream<String?> get loggedUserId$ {
-    return FirebaseAuth.instance.authStateChanges().map(
-          (User? user) => user?.uid,
+    return firebase.FirebaseAuth.instance.authStateChanges().map(
+          (firebase.User? user) => user?.uid,
         );
   }
 
   Stream<String?> get loggedUserEmail$ {
-    return FirebaseAuth.instance.authStateChanges().map(
-          (User? user) => user?.email,
+    return firebase.FirebaseAuth.instance.authStateChanges().map(
+          (firebase.User? user) => user?.email,
         );
   }
 
@@ -21,19 +20,12 @@ class FirebaseAuthService {
     required String password,
   }) async {
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
+      await firebase.FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
-    } on FirebaseAuthException catch (exception) {
-      final FirebaseAuthExceptionCode code = mapFirebaseAuthExceptionCodeToEnum(
-        exception.code,
-      );
-      if (code != FirebaseAuthExceptionCode.unknown) {
-        throw code;
-      } else {
-        rethrow;
-      }
+    } on firebase.FirebaseAuthException catch (exception) {
+      throw mapFirebaseExceptionFromCodeStr(exception.code);
     }
   }
 
@@ -43,7 +35,7 @@ class FirebaseAuthService {
   }) async {
     try {
       final credential =
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          await firebase.FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -51,15 +43,8 @@ class FirebaseAuthService {
         return null;
       }
       return credential.user!.uid;
-    } on FirebaseAuthException catch (exception) {
-      final FirebaseAuthExceptionCode code = mapFirebaseAuthExceptionCodeToEnum(
-        exception.code,
-      );
-      if (code != FirebaseAuthExceptionCode.unknown) {
-        throw code;
-      } else {
-        rethrow;
-      }
+    } on firebase.FirebaseAuthException catch (exception) {
+      throw mapFirebaseExceptionFromCodeStr(exception.code);
     }
   }
 
@@ -67,23 +52,16 @@ class FirebaseAuthService {
     required String email,
   }) async {
     try {
-      await FirebaseAuth.instance.sendPasswordResetEmail(
+      await firebase.FirebaseAuth.instance.sendPasswordResetEmail(
         email: email,
       );
-    } on FirebaseAuthException catch (exception) {
-      final FirebaseAuthExceptionCode code = mapFirebaseAuthExceptionCodeToEnum(
-        exception.code,
-      );
-      if (code != FirebaseAuthExceptionCode.unknown) {
-        throw code;
-      } else {
-        rethrow;
-      }
+    } on firebase.FirebaseAuthException catch (exception) {
+      throw mapFirebaseExceptionFromCodeStr(exception.code);
     }
   }
 
   Future<void> signOut() async {
-    await FirebaseAuth.instance.signOut();
+    await firebase.FirebaseAuth.instance.signOut();
   }
 
   Future<void> updateEmail({
@@ -92,16 +70,9 @@ class FirebaseAuthService {
   }) async {
     try {
       await _reauthenticate(password);
-      await FirebaseAuth.instance.currentUser?.updateEmail(newEmail);
-    } on FirebaseAuthException catch (exception) {
-      final FirebaseAuthExceptionCode code = mapFirebaseAuthExceptionCodeToEnum(
-        exception.code,
-      );
-      if (code != FirebaseAuthExceptionCode.unknown) {
-        throw code;
-      } else {
-        rethrow;
-      }
+      await firebase.FirebaseAuth.instance.currentUser?.updateEmail(newEmail);
+    } on firebase.FirebaseAuthException catch (exception) {
+      throw mapFirebaseExceptionFromCodeStr(exception.code);
     }
   }
 
@@ -111,16 +82,10 @@ class FirebaseAuthService {
   }) async {
     try {
       await _reauthenticate(currentPassword);
-      await FirebaseAuth.instance.currentUser?.updatePassword(newPassword);
-    } on FirebaseAuthException catch (exception) {
-      final FirebaseAuthExceptionCode code = mapFirebaseAuthExceptionCodeToEnum(
-        exception.code,
-      );
-      if (code != FirebaseAuthExceptionCode.unknown) {
-        throw code;
-      } else {
-        rethrow;
-      }
+      await firebase.FirebaseAuth.instance.currentUser
+          ?.updatePassword(newPassword);
+    } on firebase.FirebaseAuthException catch (exception) {
+      throw mapFirebaseExceptionFromCodeStr(exception.code);
     }
   }
 
@@ -129,16 +94,9 @@ class FirebaseAuthService {
   }) async {
     try {
       await _reauthenticate(password);
-      await FirebaseAuth.instance.currentUser?.delete();
-    } on FirebaseAuthException catch (exception) {
-      final FirebaseAuthExceptionCode code = mapFirebaseAuthExceptionCodeToEnum(
-        exception.code,
-      );
-      if (code != FirebaseAuthExceptionCode.unknown) {
-        throw code;
-      } else {
-        rethrow;
-      }
+      await firebase.FirebaseAuth.instance.currentUser?.delete();
+    } on firebase.FirebaseAuthException catch (exception) {
+      throw mapFirebaseExceptionFromCodeStr(exception.code);
     }
   }
 
@@ -148,15 +106,8 @@ class FirebaseAuthService {
     try {
       await _reauthenticate(password);
       return true;
-    } on FirebaseAuthException catch (exception) {
-      final FirebaseAuthExceptionCode code = mapFirebaseAuthExceptionCodeToEnum(
-        exception.code,
-      );
-      if (code == FirebaseAuthExceptionCode.wrongPassword) {
-        return false;
-      } else {
-        rethrow;
-      }
+    } on firebase.FirebaseAuthException catch (exception) {
+      throw mapFirebaseExceptionFromCodeStr(exception.code);
     }
   }
 
@@ -165,12 +116,12 @@ class FirebaseAuthService {
     if (email == null) {
       return;
     }
-    final AuthCredential credential = EmailAuthProvider.credential(
+    final firebase.AuthCredential credential =
+        firebase.EmailAuthProvider.credential(
       email: email,
       password: password,
     );
-    await FirebaseAuth.instance.currentUser?.reauthenticateWithCredential(
-      credential,
-    );
+    await firebase.FirebaseAuth.instance.currentUser
+        ?.reauthenticateWithCredential(credential);
   }
 }

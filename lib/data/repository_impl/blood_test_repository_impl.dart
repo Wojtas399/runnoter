@@ -96,6 +96,15 @@ class BloodTestRepositoryImpl extends StateRepository<BloodTest>
     removeEntity(bloodTestId);
   }
 
+  @override
+  Future<void> deleteAllUserTests({
+    required String userId,
+  }) async {
+    final List<String> idsOfDeletedTests =
+        await _firebaseBloodTestService.deleteAllUserTests(userId: userId);
+    removeEntities(idsOfDeletedTests);
+  }
+
   Future<void> _loadTestByIdFromRemoteDb(
     String bloodTestId,
     String userId,

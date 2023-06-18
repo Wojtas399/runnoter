@@ -79,12 +79,15 @@ class MockAuthService extends Mock implements AuthService {
 
   void mockIsPasswordCorrect({
     bool isCorrect = true,
+    Object? throwable,
   }) {
-    when(
-      () => isPasswordCorrect(
-        password: any(named: 'password'),
-      ),
-    ).thenAnswer((invocation) => Future.value(isCorrect));
+    if (throwable != null) {
+      when(_isPasswordCorrectCall).thenThrow(throwable);
+    } else {
+      when(
+        _isPasswordCorrectCall,
+      ).thenAnswer((invocation) => Future.value(isCorrect));
+    }
   }
 
   void mockDeleteAccount({
@@ -138,4 +141,8 @@ class MockAuthService extends Mock implements AuthService {
       password: any(named: 'password'),
     );
   }
+
+  Future<bool> _isPasswordCorrectCall() => isPasswordCorrect(
+        password: any(named: 'password'),
+      );
 }

@@ -7,6 +7,7 @@ import '../../../domain/entity/competition.dart';
 import '../../../domain/repository/competition_repository.dart';
 import '../../../domain/service/auth_service.dart';
 import '../../component/empty_content_info_component.dart';
+import '../../component/loading_info_component.dart';
 import '../../component/padding/paddings_24.dart';
 import '../../component/text/label_text_components.dart';
 import '../../component/text/title_text_components.dart';

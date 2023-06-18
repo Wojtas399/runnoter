@@ -6,6 +6,10 @@ class _FakeHealthMeasurement extends Fake implements HealthMeasurement {}
 
 class MockHealthMeasurementRepository extends Mock
     implements HealthMeasurementRepository {
+  MockHealthMeasurementRepository() {
+    registerFallbackValue(_FakeHealthMeasurement());
+  }
+
   void mockGetMeasurementByDate({
     HealthMeasurement? measurement,
   }) {
@@ -40,7 +44,6 @@ class MockHealthMeasurementRepository extends Mock
   }
 
   void mockAddMeasurement() {
-    _mockHealthMeasurement();
     when(
       () => addMeasurement(
         measurement: any(named: 'measurement'),
@@ -68,7 +71,11 @@ class MockHealthMeasurementRepository extends Mock
     ).thenAnswer((invocation) => Future.value());
   }
 
-  void _mockHealthMeasurement() {
-    registerFallbackValue(_FakeHealthMeasurement());
+  void mockDeleteAllUserMeasurements() {
+    when(
+      () => deleteAllUserMeasurements(
+        userId: any(named: 'userId'),
+      ),
+    ).thenAnswer((invocation) => Future.value());
   }
 }

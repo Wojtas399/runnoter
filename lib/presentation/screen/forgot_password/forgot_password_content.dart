@@ -40,11 +40,9 @@ class _Header extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
+        HeadlineMedium(
           Str.of(context).forgotPasswordScreenTitle,
-          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+          fontWeight: FontWeight.bold,
         ),
         const SizedBox(height: 8),
         Text(

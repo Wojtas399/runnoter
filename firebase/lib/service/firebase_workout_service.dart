@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../firebase.dart';
 import '../firebase_collections.dart';
 import '../mapper/date_mapper.dart';
+import '../utils/utils.dart';
 
 class FirebaseWorkoutService {
   Future<List<WorkoutDto>?> loadWorkoutsByDateRange({
@@ -70,15 +71,17 @@ class FirebaseWorkoutService {
     required RunStatusDto status,
     required List<WorkoutStageDto> stages,
   }) async {
-    final workoutRef = await getWorkoutsRef(userId).add(
-      WorkoutDto(
-        id: '',
-        userId: userId,
-        date: date,
-        status: status,
-        name: workoutName,
-        stages: stages,
-      ),
+    final workoutRef = getWorkoutsRef(userId).doc();
+    final WorkoutDto workoutDto = WorkoutDto(
+      id: '',
+      userId: userId,
+      date: date,
+      status: status,
+      name: workoutName,
+      stages: stages,
+    );
+    await asyncOrSyncCall(
+      () => workoutRef.set(workoutDto),
     );
     final snapshot = await workoutRef.get();
     return snapshot.data();
@@ -97,7 +100,9 @@ class FirebaseWorkoutService {
       status: status,
       stages: stages,
     );
-    await workoutRef.update(workoutJsonToUpdate);
+    await asyncOrSyncCall(
+      () => workoutRef.update(workoutJsonToUpdate),
+    );
     final snapshot = await workoutRef.get();
     return snapshot.data();
   }
@@ -106,6 +111,25 @@ class FirebaseWorkoutService {
     required String userId,
     required String workoutId,
   }) async {
-    await getWorkoutsRef(userId).doc(workoutId).delete();
+    await asyncOrSyncCall(
+      () => getWorkoutsRef(userId).doc(workoutId).delete(),
+    );
+  }
+
+  Future<List<String>> deleteAllUserWorkouts({
+    required String userId,
+  }) async {
+    final workoutsRef = getWorkoutsRef(userId);
+    final WriteBatch batch = FirebaseFirestore.instance.batch();
+    final snapshot = await workoutsRef.get();
+    final List<String> idsOfDeletedWorkouts = [];
+    for (final docSnapshot in snapshot.docs) {
+      batch.delete(docSnapshot.reference);
+      idsOfDeletedWorkouts.add(docSnapshot.id);
+    }
+    await asyncOrSyncCall(
+      () => batch.commit(),
+    );
+    return idsOfDeletedWorkouts;
   }
 }

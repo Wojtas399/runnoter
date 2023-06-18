@@ -63,6 +63,10 @@ class HealthMeasurementCreatorBloc extends BlocWithStatus<
         restingHeartRate: measurement?.restingHeartRate,
         fastingWeight: measurement?.fastingWeight,
       ));
+    } else {
+      emit(state.copyWith(
+        status: const BlocStatusComplete(),
+      ));
     }
   }
 

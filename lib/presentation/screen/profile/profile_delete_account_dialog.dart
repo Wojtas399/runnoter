@@ -56,17 +56,14 @@ class _DeleteAccountDialogState extends State<_DeleteAccountDialog> {
         ),
         body: SafeArea(
           child: GestureDetector(
-            onTap: () {
-              unfocusInputs();
-            },
+            onTap: unfocusInputs,
             child: Container(
               padding: const EdgeInsets.all(24),
               color: Colors.transparent,
               child: Column(
                 children: [
-                  Text(
+                  BodyLarge(
                     Str.of(context).profileDeleteAccountDialogMessage,
-                    style: Theme.of(context).textTheme.bodyLarge,
                   ),
                   const SizedBox(height: 24),
                   PasswordTextFieldComponent(

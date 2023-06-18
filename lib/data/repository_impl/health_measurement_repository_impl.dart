@@ -74,16 +74,14 @@ class HealthMeasurementRepositoryImpl extends StateRepository<HealthMeasurement>
   @override
   Stream<List<HealthMeasurement>?> getAllMeasurements({
     required String userId,
-  }) =>
-      dataStream$
-          .map(
-            (List<HealthMeasurement>? measurements) => measurements
-                ?.where((measurement) => measurement.userId == userId)
-                .toList(),
-          )
-          .doOnListen(
-            () => _loadAllMeasurementsFromRemoteDb(userId),
-          );
+  }) async* {
+    await _loadAllMeasurementsFromRemoteDb(userId);
+    await for (final measurements in dataStream$) {
+      yield measurements
+          ?.where((measurement) => measurement.userId == userId)
+          .toList();
+    }
+  }
 
   @override
   Future<void> addMeasurement({
@@ -145,6 +143,23 @@ class HealthMeasurementRepositoryImpl extends StateRepository<HealthMeasurement>
     if (measurementToDelete != null) {
       removeEntity(measurementToDelete.id);
     }
+  }
+
+  @override
+  Future<void> deleteAllUserMeasurements({
+    required String userId,
+  }) async {
+    await _firebaseHealthMeasurementService.deleteAllUserMeasurements(
+      userId: userId,
+    );
+    final repositoryState = await dataStream$.first;
+    final List<String> idsOfUserMeasurements = [
+      ...?repositoryState
+          ?.where((measurement) => measurement.userId == userId)
+          .map((measurement) => measurement.id)
+          .toList(),
+    ];
+    removeEntities(idsOfUserMeasurements);
   }
 
   Future<bool> _doesMeasurementWithGivenDateNotExist(

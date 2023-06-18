@@ -1,16 +1,14 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/domain/additional_model/auth_exception.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
+import 'package:runnoter/domain/additional_model/custom_exception.dart';
 import 'package:runnoter/domain/bloc/sign_in/sign_in_bloc.dart';
 
 import '../../../mock/domain/service/mock_auth_service.dart';
-import '../../../mock/domain/service/mock_connectivity_service.dart';
 
 void main() {
   final authService = MockAuthService();
-  final connectivityService = MockConnectivityService();
   const String email = 'email@example.com';
   const String password = 'Password1!';
 
@@ -20,7 +18,6 @@ void main() {
   }) {
     return SignInBloc(
       authService: authService,
-      connectivityService: connectivityService,
       email: email ?? '',
       password: password ?? '',
     );
@@ -41,7 +38,6 @@ void main() {
 
   tearDown(() {
     reset(authService);
-    reset(connectivityService);
   });
 
   blocTest(
@@ -49,16 +45,12 @@ void main() {
     'logged user id is not null, '
     'should emit complete status with signed in info',
     build: () => createBloc(),
-    setUp: () {
-      authService.mockGetLoggedUserId(
-        userId: 'u1',
-      );
-    },
-    act: (SignInBloc bloc) {
-      bloc.add(
-        const SignInEventInitialize(),
-      );
-    },
+    setUp: () => authService.mockGetLoggedUserId(
+      userId: 'u1',
+    ),
+    act: (SignInBloc bloc) => bloc.add(
+      const SignInEventInitialize(),
+    ),
     expect: () => [
       createState(
         status: const BlocStatusLoading(),
@@ -69,11 +61,9 @@ void main() {
         ),
       ),
     ],
-    verify: (_) {
-      verify(
-        () => authService.loggedUserId$,
-      ).called(1);
-    },
+    verify: (_) => verify(
+      () => authService.loggedUserId$,
+    ).called(1),
   );
 
   blocTest(
@@ -81,14 +71,10 @@ void main() {
     'logged user id is null, '
     'should emit complete status without any info',
     build: () => createBloc(),
-    setUp: () {
-      authService.mockGetLoggedUserId();
-    },
-    act: (SignInBloc bloc) {
-      bloc.add(
-        const SignInEventInitialize(),
-      );
-    },
+    setUp: () => authService.mockGetLoggedUserId(),
+    act: (SignInBloc bloc) => bloc.add(
+      const SignInEventInitialize(),
+    ),
     expect: () => [
       createState(
         status: const BlocStatusLoading(),
@@ -97,24 +83,20 @@ void main() {
         status: const BlocStatusComplete<SignInInfo>(),
       ),
     ],
-    verify: (_) {
-      verify(
-        () => authService.loggedUserId$,
-      ).called(1);
-    },
+    verify: (_) => verify(
+      () => authService.loggedUserId$,
+    ).called(1),
   );
 
   blocTest(
     'email changed, '
     'should update email in state',
     build: () => createBloc(),
-    act: (SignInBloc bloc) {
-      bloc.add(
-        const SignInEventEmailChanged(
-          email: email,
-        ),
-      );
-    },
+    act: (SignInBloc bloc) => bloc.add(
+      const SignInEventEmailChanged(
+        email: email,
+      ),
+    ),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
@@ -127,13 +109,11 @@ void main() {
     'password changed, '
     'should update password in state',
     build: () => createBloc(),
-    act: (SignInBloc bloc) {
-      bloc.add(
-        const SignInEventPasswordChanged(
-          password: password,
-        ),
-      );
-    },
+    act: (SignInBloc bloc) => bloc.add(
+      const SignInEventPasswordChanged(
+        password: password,
+      ),
+    ),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
@@ -144,62 +124,15 @@ void main() {
 
   blocTest(
     'submit, '
-    "device doesn't have internet connection, "
-    'should emit no internet connection status',
-    build: () => createBloc(
-      email: email,
-      password: password,
-    ),
-    setUp: () {
-      connectivityService.mockHasDeviceInternetConnection(
-        hasConnection: false,
-      );
-    },
-    act: (SignInBloc bloc) {
-      bloc.add(
-        const SignInEventSubmit(),
-      );
-    },
-    expect: () => [
-      createState(
-        status: const BlocStatusLoading(),
-        email: email,
-        password: password,
-      ),
-      createState(
-        status: const BlocStatusNoInternetConnection(),
-        email: email,
-        password: password,
-      ),
-    ],
-    verify: (_) {
-      verifyNever(
-        () => authService.signIn(
-          email: any(named: 'email'),
-          password: any(named: 'password'),
-        ),
-      );
-    },
-  );
-
-  blocTest(
-    'submit, '
     'should call method responsible for signing in user and should emit complete status with signed in info',
     build: () => createBloc(
       email: email,
       password: password,
     ),
-    setUp: () {
-      connectivityService.mockHasDeviceInternetConnection(
-        hasConnection: true,
-      );
-      authService.mockSignIn();
-    },
-    act: (SignInBloc bloc) {
-      bloc.add(
-        const SignInEventSubmit(),
-      );
-    },
+    setUp: () => authService.mockSignIn(),
+    act: (SignInBloc bloc) => bloc.add(
+      const SignInEventSubmit(),
+    ),
     expect: () => [
       createState(
         status: const BlocStatusLoading(),
@@ -214,40 +147,30 @@ void main() {
         password: password,
       ),
     ],
-    verify: (_) {
-      verify(
-        () => connectivityService.hasDeviceInternetConnection(),
-      ).called(1);
-      verify(
-        () => authService.signIn(
-          email: email,
-          password: password,
-        ),
-      ).called(1);
-    },
+    verify: (_) => verify(
+      () => authService.signIn(
+        email: email,
+        password: password,
+      ),
+    ).called(1),
   );
 
   blocTest(
     'submit, '
-    'auth service method throws invalid email auth exception, '
+    'auth exception with invalid email code, '
     'should emit error status with invalid email error',
     build: () => createBloc(
       email: email,
       password: password,
     ),
-    setUp: () {
-      connectivityService.mockHasDeviceInternetConnection(
-        hasConnection: true,
-      );
-      authService.mockSignIn(
-        throwable: AuthException.invalidEmail,
-      );
-    },
-    act: (SignInBloc bloc) {
-      bloc.add(
-        const SignInEventSubmit(),
-      );
-    },
+    setUp: () => authService.mockSignIn(
+      throwable: const AuthException(
+        code: AuthExceptionCode.invalidEmail,
+      ),
+    ),
+    act: (SignInBloc bloc) => bloc.add(
+      const SignInEventSubmit(),
+    ),
     expect: () => [
       createState(
         status: const BlocStatusLoading(),
@@ -262,40 +185,30 @@ void main() {
         password: password,
       ),
     ],
-    verify: (_) {
-      verify(
-        () => connectivityService.hasDeviceInternetConnection(),
-      ).called(1);
-      verify(
-        () => authService.signIn(
-          email: email,
-          password: password,
-        ),
-      ).called(1);
-    },
+    verify: (_) => verify(
+      () => authService.signIn(
+        email: email,
+        password: password,
+      ),
+    ).called(1),
   );
 
   blocTest(
     'submit, '
-    'auth service method throws user not found auth exception, '
+    'auth exception with user not found code, '
     'should emit error status with user not found error',
     build: () => createBloc(
       email: email,
       password: password,
     ),
-    setUp: () {
-      connectivityService.mockHasDeviceInternetConnection(
-        hasConnection: true,
-      );
-      authService.mockSignIn(
-        throwable: AuthException.userNotFound,
-      );
-    },
-    act: (SignInBloc bloc) {
-      bloc.add(
-        const SignInEventSubmit(),
-      );
-    },
+    setUp: () => authService.mockSignIn(
+      throwable: const AuthException(
+        code: AuthExceptionCode.userNotFound,
+      ),
+    ),
+    act: (SignInBloc bloc) => bloc.add(
+      const SignInEventSubmit(),
+    ),
     expect: () => [
       createState(
         status: const BlocStatusLoading(),
@@ -310,40 +223,30 @@ void main() {
         password: password,
       ),
     ],
-    verify: (_) {
-      verify(
-        () => connectivityService.hasDeviceInternetConnection(),
-      ).called(1);
-      verify(
-        () => authService.signIn(
-          email: email,
-          password: password,
-        ),
-      ).called(1);
-    },
+    verify: (_) => verify(
+      () => authService.signIn(
+        email: email,
+        password: password,
+      ),
+    ).called(1),
   );
 
   blocTest(
     'submit, '
-    'auth service method throws wrong password auth exception, '
+    'auth exception with wrong password code, '
     'should emit error status with wrong password error',
     build: () => createBloc(
       email: email,
       password: password,
     ),
-    setUp: () {
-      connectivityService.mockHasDeviceInternetConnection(
-        hasConnection: true,
-      );
-      authService.mockSignIn(
-        throwable: AuthException.wrongPassword,
-      );
-    },
-    act: (SignInBloc bloc) {
-      bloc.add(
-        const SignInEventSubmit(),
-      );
-    },
+    setUp: () => authService.mockSignIn(
+      throwable: const AuthException(
+        code: AuthExceptionCode.wrongPassword,
+      ),
+    ),
+    act: (SignInBloc bloc) => bloc.add(
+      const SignInEventSubmit(),
+    ),
     expect: () => [
       createState(
         status: const BlocStatusLoading(),
@@ -358,35 +261,63 @@ void main() {
         password: password,
       ),
     ],
-    verify: (_) {
-      verify(
-        () => connectivityService.hasDeviceInternetConnection(),
-      ).called(1);
-      verify(
-        () => authService.signIn(
-          email: email,
-          password: password,
-        ),
-      ).called(1);
-    },
+    verify: (_) => verify(
+      () => authService.signIn(
+        email: email,
+        password: password,
+      ),
+    ).called(1),
   );
 
   blocTest(
     'submit, '
-    'auth service method throws unknown error, '
+    'network exception with request failed code, '
+    'should emit network request failed status',
+    build: () => createBloc(
+      email: email,
+      password: password,
+    ),
+    setUp: () => authService.mockSignIn(
+      throwable: const NetworkException(
+        code: NetworkExceptionCode.requestFailed,
+      ),
+    ),
+    act: (SignInBloc bloc) => bloc.add(
+      const SignInEventSubmit(),
+    ),
+    expect: () => [
+      createState(
+        status: const BlocStatusLoading(),
+        email: email,
+        password: password,
+      ),
+      createState(
+        status: const BlocStatusNetworkRequestFailed(),
+        email: email,
+        password: password,
+      ),
+    ],
+    verify: (_) => verify(
+      () => authService.signIn(
+        email: email,
+        password: password,
+      ),
+    ).called(1),
+  );
+
+  blocTest(
+    'submit, '
+    'unknown exception, '
     'should emit unknown error status',
     build: () => createBloc(
       email: email,
       password: password,
     ),
-    setUp: () {
-      connectivityService.mockHasDeviceInternetConnection(
-        hasConnection: true,
-      );
-      authService.mockSignIn(
-        throwable: 'Unknown error...',
-      );
-    },
+    setUp: () => authService.mockSignIn(
+      throwable: const UnknownException(
+        message: 'unknown exception message',
+      ),
+    ),
     act: (SignInBloc bloc) {
       bloc.add(
         const SignInEventSubmit(),
@@ -405,19 +336,14 @@ void main() {
       ),
     ],
     errors: () => [
-      'Unknown error...',
+      'unknown exception message',
     ],
-    verify: (_) {
-      verify(
-        () => connectivityService.hasDeviceInternetConnection(),
-      ).called(1);
-      verify(
-        () => authService.signIn(
-          email: email,
-          password: password,
-        ),
-      ).called(1);
-    },
+    verify: (_) => verify(
+      () => authService.signIn(
+        email: email,
+        password: password,
+      ),
+    ).called(1),
   );
 
   blocTest(
@@ -428,23 +354,16 @@ void main() {
       email: '',
       password: password,
     ),
-    act: (SignInBloc bloc) {
-      bloc.add(
-        const SignInEventSubmit(),
-      );
-    },
+    act: (SignInBloc bloc) => bloc.add(
+      const SignInEventSubmit(),
+    ),
     expect: () => [],
-    verify: (_) {
-      verifyNever(
-        () => connectivityService.hasDeviceInternetConnection(),
-      );
-      verifyNever(
-        () => authService.signIn(
-          email: any(named: 'email'),
-          password: any(named: 'password'),
-        ),
-      );
-    },
+    verify: (_) => verifyNever(
+      () => authService.signIn(
+        email: any(named: 'email'),
+        password: any(named: 'password'),
+      ),
+    ),
   );
 
   blocTest(
@@ -455,22 +374,15 @@ void main() {
       email: email,
       password: '',
     ),
-    act: (SignInBloc bloc) {
-      bloc.add(
-        const SignInEventSubmit(),
-      );
-    },
+    act: (SignInBloc bloc) => bloc.add(
+      const SignInEventSubmit(),
+    ),
     expect: () => [],
-    verify: (_) {
-      verifyNever(
-        () => connectivityService.hasDeviceInternetConnection(),
-      );
-      verifyNever(
-        () => authService.signIn(
-          email: any(named: 'email'),
-          password: any(named: 'password'),
-        ),
-      );
-    },
+    verify: (_) => verifyNever(
+      () => authService.signIn(
+        email: any(named: 'email'),
+        password: any(named: 'password'),
+      ),
+    ),
   );
 }

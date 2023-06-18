@@ -1,16 +1,19 @@
 import 'dart:async';
 
-import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
-import '../../../../../domain/additional_model/auth_exception.dart';
 import '../../../../../domain/additional_model/bloc_status.dart';
 import '../../../../../domain/additional_model/bloc_with_status.dart';
 import '../../../../../domain/entity/user.dart';
 import '../../../../../domain/repository/user_repository.dart';
 import '../../../../../domain/service/auth_service.dart';
 import '../../../additional_model/bloc_state.dart';
+import '../../../additional_model/custom_exception.dart';
+import '../../../repository/blood_test_repository.dart';
+import '../../../repository/competition_repository.dart';
+import '../../../repository/health_measurement_repository.dart';
+import '../../../repository/workout_repository.dart';
 
 part 'profile_identities_event.dart';
 part 'profile_identities_state.dart';
@@ -19,31 +22,31 @@ class ProfileIdentitiesBloc extends BlocWithStatus<ProfileIdentitiesEvent,
     ProfileIdentitiesState, ProfileInfo, ProfileError> {
   final AuthService _authService;
   final UserRepository _userRepository;
-  StreamSubscription<String?>? _emailListener;
-  StreamSubscription<User?>? _userDataListener;
+  final WorkoutRepository _workoutRepository;
+  final HealthMeasurementRepository _healthMeasurementRepository;
+  final BloodTestRepository _bloodTestRepository;
+  final CompetitionRepository _competitionRepository;
+  StreamSubscription<(String?, User?)>? _userIdentitiesListener;
 
   ProfileIdentitiesBloc({
     required AuthService authService,
     required UserRepository userRepository,
-    BlocStatus status = const BlocStatusInitial(),
-    String? userId,
-    String? username,
-    String? surname,
-    String? email,
+    required WorkoutRepository workoutRepository,
+    required HealthMeasurementRepository healthMeasurementRepository,
+    required BloodTestRepository bloodTestRepository,
+    required CompetitionRepository competitionRepository,
+    ProfileIdentitiesState state = const ProfileIdentitiesState(
+      status: BlocStatusInitial(),
+    ),
   })  : _authService = authService,
         _userRepository = userRepository,
-        super(
-          ProfileIdentitiesState(
-            status: status,
-            userId: userId,
-            username: username,
-            surname: surname,
-            email: email,
-          ),
-        ) {
+        _workoutRepository = workoutRepository,
+        _healthMeasurementRepository = healthMeasurementRepository,
+        _bloodTestRepository = bloodTestRepository,
+        _competitionRepository = competitionRepository,
+        super(state) {
     on<ProfileIdentitiesEventInitialize>(_initialize);
-    on<ProfileIdentitiesEventEmailUpdated>(_emailUpdated);
-    on<ProfileIdentitiesEventUserUpdated>(_userUpdated);
+    on<ProfileIdentitiesEventIdentitiesUpdated>(_identitiesUpdated);
     on<ProfileIdentitiesEventUpdateUsername>(_updateUsername);
     on<ProfileIdentitiesEventUpdateSurname>(_updateSurname);
     on<ProfileIdentitiesEventUpdateEmail>(_updateEmail);
@@ -53,10 +56,8 @@ class ProfileIdentitiesBloc extends BlocWithStatus<ProfileIdentitiesEvent,
 
   @override
   Future<void> close() {
-    _emailListener?.cancel();
-    _emailListener = null;
-    _userDataListener?.cancel();
-    _userDataListener = null;
+    _userIdentitiesListener?.cancel();
+    _userIdentitiesListener = null;
     return super.close();
   }
 
@@ -64,25 +65,16 @@ class ProfileIdentitiesBloc extends BlocWithStatus<ProfileIdentitiesEvent,
     ProfileIdentitiesEventInitialize event,
     Emitter<ProfileIdentitiesState> emit,
   ) {
-    _setEmailListener();
-    _setUserDataListener();
+    _setLoggedUserIdentitiesListener();
   }
 
-  void _emailUpdated(
-    ProfileIdentitiesEventEmailUpdated event,
+  void _identitiesUpdated(
+    ProfileIdentitiesEventIdentitiesUpdated event,
     Emitter<ProfileIdentitiesState> emit,
   ) {
     emit(state.copyWith(
+      loggedUserId: event.user?.id,
       email: event.email,
-    ));
-  }
-
-  void _userUpdated(
-    ProfileIdentitiesEventUserUpdated event,
-    Emitter<ProfileIdentitiesState> emit,
-  ) {
-    emit(state.copyWith(
-      userId: event.user?.id,
       username: event.user?.name,
       surname: event.user?.surname,
     ));
@@ -92,7 +84,7 @@ class ProfileIdentitiesBloc extends BlocWithStatus<ProfileIdentitiesEvent,
     ProfileIdentitiesEventUpdateUsername event,
     Emitter<ProfileIdentitiesState> emit,
   ) async {
-    final String? userId = state.userId;
+    final String? userId = state.loggedUserId;
     if (userId == null) {
       return;
     }
@@ -108,7 +100,7 @@ class ProfileIdentitiesBloc extends BlocWithStatus<ProfileIdentitiesEvent,
     ProfileIdentitiesEventUpdateSurname event,
     Emitter<ProfileIdentitiesState> emit,
   ) async {
-    final String? userId = state.userId;
+    final String? userId = state.loggedUserId;
     if (userId == null) {
       return;
     }
@@ -132,16 +124,22 @@ class ProfileIdentitiesBloc extends BlocWithStatus<ProfileIdentitiesEvent,
       );
       emitCompleteStatus(emit, ProfileInfo.savedData);
     } on AuthException catch (authException) {
-      final ProfileError? error = _mapAuthExceptionToBlocError(authException);
+      final ProfileError? error = _mapAuthExceptionCodeToBlocError(
+        authException.code,
+      );
       if (error != null) {
         emitErrorStatus(emit, error);
       } else {
         emitUnknownErrorStatus(emit);
         rethrow;
       }
-    } catch (_) {
+    } on NetworkException catch (networkException) {
+      if (networkException.code == NetworkExceptionCode.requestFailed) {
+        emitNetworkRequestFailed(emit);
+      }
+    } on UnknownException catch (unknownException) {
       emitUnknownErrorStatus(emit);
-      rethrow;
+      throw unknownException.message;
     }
   }
 
@@ -157,15 +155,19 @@ class ProfileIdentitiesBloc extends BlocWithStatus<ProfileIdentitiesEvent,
       );
       emitCompleteStatus(emit, ProfileInfo.savedData);
     } on AuthException catch (authException) {
-      if (authException == AuthException.wrongPassword) {
+      if (authException.code == AuthExceptionCode.wrongPassword) {
         emitErrorStatus(emit, ProfileError.wrongCurrentPassword);
       } else {
         emitUnknownErrorStatus(emit);
         rethrow;
       }
-    } catch (_) {
+    } on NetworkException catch (networkException) {
+      if (networkException.code == NetworkExceptionCode.requestFailed) {
+        emitNetworkRequestFailed(emit);
+      }
+    } on UnknownException catch (unknownException) {
       emitUnknownErrorStatus(emit);
-      rethrow;
+      throw unknownException.message;
     }
   }
 
@@ -173,8 +175,7 @@ class ProfileIdentitiesBloc extends BlocWithStatus<ProfileIdentitiesEvent,
     ProfileIdentitiesEventDeleteAccount event,
     Emitter<ProfileIdentitiesState> emit,
   ) async {
-    final String? userId = state.userId;
-    if (userId == null) {
+    if (state.loggedUserId == null) {
       return;
     }
     emitLoadingStatus(emit);
@@ -186,56 +187,68 @@ class ProfileIdentitiesBloc extends BlocWithStatus<ProfileIdentitiesEvent,
         emitErrorStatus(emit, ProfileError.wrongPassword);
         return;
       }
-      await _userRepository.deleteUser(
-        userId: userId,
-      );
+      await _deleteAllLoggedUserData();
       await _authService.deleteAccount(
         password: event.password,
       );
       emitCompleteStatus(emit, ProfileInfo.accountDeleted);
-    } catch (_) {
+    } on NetworkException catch (networkException) {
+      if (networkException.code == NetworkExceptionCode.requestFailed) {
+        emitNetworkRequestFailed(emit);
+      }
+    } on UnknownException catch (unknownException) {
       emitUnknownErrorStatus(emit);
-      rethrow;
+      throw unknownException.message;
     }
   }
 
-  void _setEmailListener() {
-    _emailListener ??= _authService.loggedUserEmail$.listen(
-      (String? email) {
-        add(
-          ProfileIdentitiesEventEmailUpdated(
-            email: email,
-          ),
-        );
-      },
+  void _setLoggedUserIdentitiesListener() {
+    _userIdentitiesListener ??= Rx.combineLatest2(
+      _authService.loggedUserEmail$,
+      _loggedUserData$,
+      (
+        String? loggedUserEmail,
+        User? loggedUserData,
+      ) =>
+          (loggedUserEmail, loggedUserData),
+    ).listen(
+      ((String?, User?) listenedParams) => add(
+        ProfileIdentitiesEventIdentitiesUpdated(
+          email: listenedParams.$1,
+          user: listenedParams.$2,
+        ),
+      ),
     );
   }
 
-  void _setUserDataListener() {
-    _userDataListener ??= _authService.loggedUserId$
-        .whereType<String>()
-        .switchMap(
+  Stream<User?> get _loggedUserData$ {
+    return _authService.loggedUserId$.whereType<String>().switchMap(
           (String userId) => _userRepository.getUserById(
             userId: userId,
           ),
-        )
-        .listen(
-      (User? user) {
-        add(
-          ProfileIdentitiesEventUserUpdated(
-            user: user,
-          ),
         );
-      },
-    );
   }
 
-  ProfileError? _mapAuthExceptionToBlocError(AuthException exception) {
-    if (exception == AuthException.wrongPassword) {
+  ProfileError? _mapAuthExceptionCodeToBlocError(
+    AuthExceptionCode authExceptionCode,
+  ) {
+    if (authExceptionCode == AuthExceptionCode.wrongPassword) {
       return ProfileError.wrongPassword;
-    } else if (exception == AuthException.emailAlreadyInUse) {
+    } else if (authExceptionCode == AuthExceptionCode.emailAlreadyInUse) {
       return ProfileError.emailAlreadyInUse;
     }
     return null;
+  }
+
+  Future<void> _deleteAllLoggedUserData() async {
+    await _workoutRepository.deleteAllUserWorkouts(userId: state.loggedUserId!);
+    await _healthMeasurementRepository.deleteAllUserMeasurements(
+      userId: state.loggedUserId!,
+    );
+    await _bloodTestRepository.deleteAllUserTests(userId: state.loggedUserId!);
+    await _competitionRepository.deleteAllUserCompetitions(
+      userId: state.loggedUserId!,
+    );
+    await _userRepository.deleteUser(userId: state.loggedUserId!);
   }
 }

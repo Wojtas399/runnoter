@@ -4,10 +4,10 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/bloc/sign_in/sign_in_bloc.dart';
 import '../../../domain/service/auth_service.dart';
-import '../../../domain/service/connectivity_service.dart';
 import '../../component/big_button_component.dart';
 import '../../component/bloc_with_status_listener_component.dart';
 import '../../component/password_text_field_component.dart';
+import '../../component/text/headline_text_components.dart';
 import '../../component/text_field_component.dart';
 import '../../config/navigation/routes.dart';
 import '../../service/dialog_service.dart';
@@ -48,7 +48,6 @@ class _BlocProvider extends StatelessWidget {
     return BlocProvider(
       create: (BuildContext context) => SignInBloc(
         authService: context.read<AuthService>(),
-        connectivityService: ConnectivityService(),
       )..add(
           const SignInEventInitialize(),
         ),

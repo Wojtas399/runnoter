@@ -296,7 +296,7 @@ void main() {
 
   test(
     'get all workouts, '
-    'should emit workouts existing in state and should load workouts from firebase and add them to repository',
+    'should load workouts from remote db and should emit workouts belonging to given user',
     () {
       final List<Workout> existingWorkouts = [
         createWorkout(
@@ -346,6 +346,10 @@ void main() {
           name: 'workout name 5',
         ),
       ];
+      final List<Workout> expectedWorkouts = [
+        existingWorkouts[1],
+        ...newlyLoadedWorkouts,
+      ];
       firebaseWorkoutService.mockLoadAllWorkouts(
         workoutDtos: newlyLoadedWorkoutDtos,
       );
@@ -355,27 +359,13 @@ void main() {
 
       final Stream<List<Workout>?> workouts$ =
           repository.getAllWorkouts(userId: userId);
-      workouts$.listen((event) {});
 
       expect(
         workouts$,
         emitsInOrder(
-          [
-            [
-              existingWorkouts[1],
-            ],
-            [
-              existingWorkouts[1],
-              ...newlyLoadedWorkouts,
-            ],
-          ],
+          [expectedWorkouts],
         ),
       );
-      verify(
-        () => firebaseWorkoutService.loadAllWorkouts(
-          userId: userId,
-        ),
-      ).called(1);
     },
   );
 
@@ -667,6 +657,48 @@ void main() {
         () => firebaseWorkoutService.deleteWorkout(
           userId: userId,
           workoutId: id,
+        ),
+      ).called(1);
+    },
+  );
+
+  test(
+    'delete all user workouts, '
+    'should call method from firebase service to delete all user workouts and should delete these workouts from the state of repository',
+    () {
+      final List<Workout> existingWorkouts = [
+        createWorkout(id: 'w5', userId: 'u3'),
+        createWorkout(id: 'w2', userId: userId),
+        createWorkout(id: 'w1', userId: userId),
+        createWorkout(id: 'w3', userId: 'u2'),
+        createWorkout(id: 'w4', userId: userId),
+      ];
+      repository = createRepository(initialState: existingWorkouts);
+      firebaseWorkoutService.mockDeleteAllUserWorkouts(
+        idsOfDeletedWorkouts: ['w2', 'w1', 'w4'],
+      );
+
+      final Stream<List<Workout>?> repositoryState$ = repository.dataStream$;
+      repositoryState$.listen((_) {});
+      repository.deleteAllUserWorkouts(
+        userId: userId,
+      );
+
+      expect(
+        repositoryState$,
+        emitsInOrder(
+          [
+            existingWorkouts,
+            [
+              existingWorkouts.first,
+              existingWorkouts[3],
+            ],
+          ],
+        ),
+      );
+      verify(
+        () => firebaseWorkoutService.deleteAllUserWorkouts(
+          userId: userId,
         ),
       ).called(1);
     },

@@ -59,4 +59,14 @@ class MockFirebaseBloodTestService extends Mock
       ),
     ).thenAnswer((invocation) => Future.value());
   }
+
+  void mockDeleteAllUserTests({
+    required List<String> idsOfDeletedTests,
+  }) {
+    when(
+      () => deleteAllUserTests(
+        userId: any(named: 'userId'),
+      ),
+    ).thenAnswer((invocation) => Future.value(idsOfDeletedTests));
+  }
 }
