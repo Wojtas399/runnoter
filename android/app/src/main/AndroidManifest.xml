@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.runnoter">
    <application
-        android:label="runnoter"
+        android:label="Runnoter"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
