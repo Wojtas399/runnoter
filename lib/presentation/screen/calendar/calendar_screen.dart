@@ -62,7 +62,7 @@ class _Calendar extends StatelessWidget {
               date: workout.date,
               runStatusIcon: Icon(
                 workout.status.toIcon(),
-                color: workout.status.toColor(),
+                color: workout.status.toColor(context),
               ),
             ),
           )

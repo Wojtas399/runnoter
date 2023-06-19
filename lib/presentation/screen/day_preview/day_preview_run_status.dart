@@ -36,12 +36,12 @@ class _RunStatusName extends StatelessWidget {
       children: [
         Icon(
           status.toIcon(),
-          color: status.toColor(),
+          color: status.toColor(context),
         ),
         const SizedBox(width: 16),
         BodyMedium(
           status.toLabel(context),
-          color: status.toColor(),
+          color: status.toColor(context),
         ),
       ],
     );

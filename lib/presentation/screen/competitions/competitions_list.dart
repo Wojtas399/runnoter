@@ -54,7 +54,7 @@ class _CompetitionItem extends StatelessWidget {
               ),
               Icon(
                 competition.status.toIcon(),
-                color: competition.status.toColor(),
+                color: competition.status.toColor(context),
               )
             ],
           ),

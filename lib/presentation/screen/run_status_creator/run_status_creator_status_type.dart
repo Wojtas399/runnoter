@@ -86,13 +86,13 @@ class _RunStatusDescription extends StatelessWidget {
         Icon(
           status.toIcon(),
           size: 20,
-          color: status.toColor(),
+          color: status.toColor(context),
         ),
         const SizedBox(width: 8),
         Text(
           status.toLabel(context),
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: status.toColor(),
+                color: status.toColor(context),
               ),
         ),
       ],

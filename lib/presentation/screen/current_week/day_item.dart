@@ -107,7 +107,7 @@ class _RunStatus extends StatelessWidget {
       ),
       child: Icon(
         status.toIcon(),
-        color: status.toColor(),
+        color: status.toColor(context),
       ),
     );
   }

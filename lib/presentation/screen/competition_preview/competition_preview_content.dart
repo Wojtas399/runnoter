@@ -150,13 +150,13 @@ class _Status extends StatelessWidget {
                 children: [
                   Icon(
                     status.toIcon(),
-                    color: status.toColor(),
+                    color: status.toColor(context),
                   ),
                   const SizedBox(width: 8),
                   Text(
                     status.toLabel(context),
                     style: TextStyle(
-                      color: status.toColor(),
+                      color: status.toColor(context),
                     ),
                   )
                 ],
