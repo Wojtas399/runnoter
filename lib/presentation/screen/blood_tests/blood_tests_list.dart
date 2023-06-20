@@ -79,7 +79,7 @@ class _TestItem extends StatelessWidget {
         onPressed: onPressed,
         child: Padding(
           padding: const EdgeInsets.all(16),
-          child: Text(
+          child: TitleMedium(
             bloodTest.date.toDateWithDots(),
           ),
         ),

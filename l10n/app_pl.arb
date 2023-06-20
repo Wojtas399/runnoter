@@ -211,9 +211,9 @@
   "@workoutCreatorAddStageInstructions": {
     "description": "Instruction on how to add new workout stage"
   },
-  "workoutCreatorAddWorkoutButton": "Dodaj",
-  "@workoutCreatorAddWorkoutButton": {
-    "description": "Label of the button to add workout"
+  "workoutCreatorCreateWorkoutButton": "Utwórz",
+  "@workoutCreatorCreateWorkoutButton": {
+    "description": "Label of the button to create workout"
   },
   "workoutCreatorEditWorkoutButton": "Zaktualizuj",
   "@workoutCreatorEditWorkoutButton": {

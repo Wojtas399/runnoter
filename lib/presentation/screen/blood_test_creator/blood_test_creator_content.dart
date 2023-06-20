@@ -43,6 +43,9 @@ class _SubmitButton extends StatelessWidget {
     final bool isDisabled = context.select(
       (BloodTestCreatorBloc bloc) => !bloc.state.canSubmit,
     );
+    final bool isEditMode = context.select(
+      (BloodTestCreatorBloc bloc) => bloc.state.bloodTest != null,
+    );
 
     return FilledButton(
       onPressed: isDisabled
@@ -51,7 +54,7 @@ class _SubmitButton extends StatelessWidget {
               _onPressed(context);
             },
       child: Text(
-        Str.of(context).save,
+        isEditMode ? Str.of(context).save : Str.of(context).add,
       ),
     );
   }

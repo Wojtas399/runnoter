@@ -54,7 +54,7 @@
   "workoutCreatorAddStageButton": "Add stage",
   "workoutCreatorNoStagesInfo": "No workout stages",
   "workoutCreatorAddStageInstructions": "Tap below button to add new stage",
-  "workoutCreatorAddWorkoutButton": "Add",
+  "workoutCreatorCreateWorkoutButton": "Create",
   "workoutCreatorEditWorkoutButton": "Update",
   "workoutCreatorAddedWorkoutMessage": "Successfully added workout",
   "workoutCreatorUpdatedWorkoutMessage": "Successfully updated workout",
