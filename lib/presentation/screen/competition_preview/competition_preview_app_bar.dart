@@ -28,6 +28,7 @@ class _ActionsMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton<_Action>(
+      icon: const Icon(Icons.more_vert),
       onSelected: (_Action action) {
         _manageActions(context, action);
       },

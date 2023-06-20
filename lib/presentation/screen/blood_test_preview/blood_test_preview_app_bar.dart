@@ -29,6 +29,7 @@ class _BloodTestActionsMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton<_BloodTestAction>(
+      icon: const Icon(Icons.more_vert),
       onSelected: (_BloodTestAction action) {
         _manageActions(context, action);
       },
