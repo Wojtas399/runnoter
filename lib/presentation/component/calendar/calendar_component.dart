@@ -80,7 +80,7 @@ class _CubitListener extends StatelessWidget {
           previousState.displayingYear != currentState.displayingYear,
       listener: (_, CalendarComponentState state) {
         if (state.pressedDate != null) {
-          _emitPressedDay(state.pressedDate!);
+          _emitPressedDay(context, state.pressedDate!);
         } else {
           _emitNewMonth(state);
         }
@@ -97,9 +97,10 @@ class _CubitListener extends StatelessWidget {
     }
   }
 
-  void _emitPressedDay(DateTime pressedDate) {
+  void _emitPressedDay(BuildContext context, DateTime pressedDate) {
     if (onDayPressed != null) {
       onDayPressed!(pressedDate);
+      context.read<CalendarComponentCubit>().cleanPressedDay();
     }
   }
 }

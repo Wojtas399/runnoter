@@ -61,6 +61,12 @@ class CalendarComponentCubit extends Cubit<CalendarComponentState> {
     ));
   }
 
+  void cleanPressedDay() {
+    emit(state.copyWith(
+      pressedDate: null,
+    ));
+  }
+
   List<CalendarWeek> _createWeeks(int month, int year) {
     List<CalendarWeek> weeks = [];
     DateTime date = DateTime(year, month);
