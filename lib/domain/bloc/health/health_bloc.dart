@@ -30,22 +30,15 @@ class HealthBloc
     required AuthService authService,
     required HealthMeasurementRepository healthMeasurementRepository,
     required HealthChartService chartService,
-    BlocStatus status = const BlocStatusInitial(),
-    ChartRange chartRange = ChartRange.week,
-    DateTime? chartStartDate,
-    DateTime? chartEndDate,
+    HealthState state = const HealthState(
+      status: BlocStatusInitial(),
+      chartRange: ChartRange.week,
+    ),
   })  : _dateService = dateService,
         _authService = authService,
         _healthMeasurementRepository = healthMeasurementRepository,
         _chartService = chartService,
-        super(
-          HealthState(
-            status: status,
-            chartRange: chartRange,
-            chartStartDate: chartStartDate,
-            chartEndDate: chartEndDate,
-          ),
-        ) {
+        super(state) {
     on<HealthEventInitialize>(_initialize);
     on<HealthEventTodayMeasurementUpdated>(_todayMeasurementUpdated);
     on<HealthEventMeasurementsFromDateRangeUpdated>(
@@ -85,6 +78,7 @@ class HealthBloc
   ) {
     emit(state.copyWith(
       todayMeasurement: event.todayMeasurement,
+      removedTodayMeasurement: event.todayMeasurement == null,
     ));
   }
 
