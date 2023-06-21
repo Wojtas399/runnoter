@@ -60,18 +60,21 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
       );
 
   @override
-  Stream<Workout?> getWorkoutByDate({
+  Stream<List<Workout>?> getWorkoutsByDate({
     required DateTime date,
     required String userId,
-  }) =>
-      dataStream$
-          .map(
-            (List<Workout>? workouts) =>
-                _findWorkoutByDate(workouts, date, userId),
+  }) async* {
+    await _loadWorkoutsByDateFromRemoteDb(userId, date);
+    await for (final workouts in dataStream$) {
+      yield workouts
+          ?.where(
+            (workout) =>
+                workout.userId == userId &&
+                _dateService.areDatesTheSame(workout.date, date),
           )
-          .doOnListen(
-            () => _loadWorkoutByDateFromRemoteDb(date, userId),
-          );
+          .toList();
+    }
+  }
 
   @override
   Stream<List<Workout>?> getAllWorkouts({
@@ -176,19 +179,6 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
         orElse: () => null,
       );
 
-  Workout? _findWorkoutByDate(
-    List<Workout>? workouts,
-    DateTime date,
-    String userId,
-  ) =>
-      <Workout?>[...?workouts].firstWhere(
-        (Workout? workout) =>
-            workout != null &&
-            workout.userId == userId &&
-            _dateService.areDatesTheSame(workout.date, date),
-        orElse: () => null,
-      );
-
   Future<void> _loadWorkoutsByDateRangeFromRemoteDb(
     DateTime startDate,
     DateTime endDate,
@@ -225,30 +215,25 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
     }
   }
 
-  Future<void> _loadWorkoutByDateFromRemoteDb(
-    DateTime date,
-    String userId,
-  ) async {
-    final WorkoutDto? workoutDto =
-        await _firebaseWorkoutService.loadWorkoutByDate(
-      userId: userId,
-      date: date,
-    );
-    if (workoutDto != null) {
-      final Workout workout = mapWorkoutFromFirebase(workoutDto);
-      addEntity(workout);
-    }
-  }
-
   Future<void> _loadWorkoutsFromRemoteDb(String userId) async {
     final List<WorkoutDto>? workoutDtos =
         await _firebaseWorkoutService.loadAllWorkouts(userId: userId);
     if (workoutDtos != null) {
-      final List<Workout> workouts = workoutDtos
-          .map(
-            (dto) => mapWorkoutFromFirebase(dto),
-          )
-          .toList();
+      final List<Workout> workouts =
+          workoutDtos.map(mapWorkoutFromFirebase).toList();
+      addEntities(workouts);
+    }
+  }
+
+  Future<void> _loadWorkoutsByDateFromRemoteDb(
+    String userId,
+    DateTime date,
+  ) async {
+    final List<WorkoutDto>? workoutDtos = await _firebaseWorkoutService
+        .loadWorkoutsByDate(date: date, userId: userId);
+    if (workoutDtos != null) {
+      final List<Workout> workouts =
+          workoutDtos.map(mapWorkoutFromFirebase).toList();
       addEntities(workouts);
     }
   }

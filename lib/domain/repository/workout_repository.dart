@@ -14,7 +14,7 @@ abstract class WorkoutRepository {
     required String userId,
   });
 
-  Stream<Workout?> getWorkoutByDate({
+  Stream<List<Workout>?> getWorkoutsByDate({
     required DateTime date,
     required String userId,
   });
