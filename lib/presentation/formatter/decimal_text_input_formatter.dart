@@ -14,14 +14,14 @@ class DecimalTextInputFormatter extends TextInputFormatter {
     TextEditingValue oldValue,
     TextEditingValue newValue,
   ) {
-    String newText = newValue.text;
+    String newText = newValue.text.replaceAll(',', '.');
     TextSelection newSelection = newValue.selection;
-    if (newText.contains('.') && _doesValHaveTooMuchDecimals(newText)) {
+    if (newText.contains('.') && _isThereTooMuchDecimalDigits(newText)) {
       newText = oldValue.text;
     } else if (newText == '.') {
       newText = '0.';
     }
-    newText = _removeSpecialCharacters(newText);
+    newText = _removeUnwantedCharacters(newText);
     return TextEditingValue(
       text: newText,
       selection: newSelection.copyWith(
@@ -32,11 +32,11 @@ class DecimalTextInputFormatter extends TextInputFormatter {
     );
   }
 
-  String _removeSpecialCharacters(String value) => value.replaceAll(
+  String _removeUnwantedCharacters(String value) => value.replaceAll(
         RegExp('[^0-9.]'),
         '',
       );
 
-  bool _doesValHaveTooMuchDecimals(String val) =>
+  bool _isThereTooMuchDecimalDigits(String val) =>
       val.substring(val.indexOf('.') + 1).length > decimalRange;
 }
