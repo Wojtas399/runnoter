@@ -1,14 +1,14 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
-import 'package:runnoter/domain/bloc/day_preview/day_preview_bloc.dart';
+import 'package:runnoter/domain/bloc/workout_preview/workout_preview_bloc.dart';
 import 'package:runnoter/domain/entity/run_status.dart';
 import 'package:runnoter/domain/entity/workout_stage.dart';
 
 void main() {
-  late DayPreviewState state;
+  late WorkoutPreviewState state;
 
   setUp(() {
-    state = const DayPreviewState(
+    state = const WorkoutPreviewState(
       status: BlocStatusInitial(),
     );
   });

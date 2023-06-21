@@ -4,15 +4,11 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 enum _Action { edit, delete }
 
 class EditDeletePopupMenu extends StatelessWidget {
-  final String? editLabel;
-  final String? deleteLabel;
   final VoidCallback? onEditSelected;
   final VoidCallback? onDeleteSelected;
 
   const EditDeletePopupMenu({
     super.key,
-    this.editLabel,
-    this.deleteLabel,
     this.onEditSelected,
     this.onDeleteSelected,
   });
@@ -31,9 +27,7 @@ class EditDeletePopupMenu extends StatelessWidget {
             children: [
               const Icon(Icons.edit_outlined),
               const SizedBox(width: 8),
-              Text(
-                editLabel ?? Str.of(context).edit,
-              )
+              Text(Str.of(context).edit)
             ],
           ),
         ),
@@ -43,9 +37,7 @@ class EditDeletePopupMenu extends StatelessWidget {
             children: [
               const Icon(Icons.delete_outline),
               const SizedBox(width: 8),
-              Text(
-                deleteLabel ?? Str.of(context).delete,
-              ),
+              Text(Str.of(context).delete),
             ],
           ),
         ),

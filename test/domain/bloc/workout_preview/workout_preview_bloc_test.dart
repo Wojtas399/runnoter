@@ -2,7 +2,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
-import 'package:runnoter/domain/bloc/day_preview/day_preview_bloc.dart';
+import 'package:runnoter/domain/bloc/workout_preview/workout_preview_bloc.dart';
 import 'package:runnoter/domain/entity/run_status.dart';
 import 'package:runnoter/domain/entity/workout_stage.dart';
 
@@ -17,10 +17,10 @@ void main() {
   final dateService = MockDateService();
   final DateTime date = DateTime(2023, 1, 1);
 
-  DayPreviewBloc createBloc({
+  WorkoutPreviewBloc createBloc({
     String? workoutId,
   }) {
-    return DayPreviewBloc(
+    return WorkoutPreviewBloc(
       authService: authService,
       workoutRepository: workoutRepository,
       dateService: dateService,
@@ -28,7 +28,7 @@ void main() {
     );
   }
 
-  DayPreviewState createState({
+  WorkoutPreviewState createState({
     BlocStatus status = const BlocStatusInitial(),
     DateTime? date,
     bool? isPastDate,
@@ -37,7 +37,7 @@ void main() {
     List<WorkoutStage>? stages,
     RunStatus? runStatus,
   }) {
-    return DayPreviewState(
+    return WorkoutPreviewState(
       status: status,
       date: date,
       isPastDay: isPastDate,
@@ -60,8 +60,8 @@ void main() {
     'should finish event call',
     build: () => createBloc(),
     setUp: () => authService.mockGetLoggedUserId(),
-    act: (DayPreviewBloc bloc) => bloc.add(
-      DayPreviewEventInitialize(date: date),
+    act: (WorkoutPreviewBloc bloc) => bloc.add(
+      WorkoutPreviewEventInitialize(date: date),
     ),
     expect: () => [],
     verify: (_) => verify(
@@ -88,8 +88,8 @@ void main() {
         ),
       );
     },
-    act: (DayPreviewBloc bloc) => bloc.add(
-      DayPreviewEventInitialize(
+    act: (WorkoutPreviewBloc bloc) => bloc.add(
+      WorkoutPreviewEventInitialize(
         date: date,
       ),
     ),
@@ -129,8 +129,8 @@ void main() {
     build: () => createBloc(
       workoutId: 'w1',
     ),
-    act: (DayPreviewBloc bloc) => bloc.add(
-      const DayPreviewEventWorkoutUpdated(workout: null),
+    act: (WorkoutPreviewBloc bloc) => bloc.add(
+      const WorkoutPreviewEventWorkoutUpdated(workout: null),
     ),
     expect: () => [
       createState(
@@ -145,8 +145,8 @@ void main() {
     'new workout is not null, '
     'should update workout id, name, stages and status in state',
     build: () => createBloc(),
-    act: (DayPreviewBloc bloc) => bloc.add(
-      DayPreviewEventWorkoutUpdated(
+    act: (WorkoutPreviewBloc bloc) => bloc.add(
+      WorkoutPreviewEventWorkoutUpdated(
         workout: createWorkout(
           id: 'w1',
           userId: 'u1',
@@ -182,8 +182,8 @@ void main() {
     'workout id is null, '
     'should finish event call',
     build: () => createBloc(),
-    act: (DayPreviewBloc bloc) => bloc.add(
-      const DayPreviewEventDeleteWorkout(),
+    act: (WorkoutPreviewBloc bloc) => bloc.add(
+      const WorkoutPreviewEventDeleteWorkout(),
     ),
     expect: () => [],
   );
@@ -196,8 +196,8 @@ void main() {
       workoutId: 'w1',
     ),
     setUp: () => authService.mockGetLoggedUserId(),
-    act: (DayPreviewBloc bloc) => bloc.add(
-      const DayPreviewEventDeleteWorkout(),
+    act: (WorkoutPreviewBloc bloc) => bloc.add(
+      const WorkoutPreviewEventDeleteWorkout(),
     ),
     expect: () => [],
     verify: (_) => verify(
@@ -215,8 +215,8 @@ void main() {
       authService.mockGetLoggedUserId(userId: 'u1');
       workoutRepository.mockDeleteWorkout();
     },
-    act: (DayPreviewBloc bloc) => bloc.add(
-      const DayPreviewEventDeleteWorkout(),
+    act: (WorkoutPreviewBloc bloc) => bloc.add(
+      const WorkoutPreviewEventDeleteWorkout(),
     ),
     expect: () => [
       createState(
@@ -224,8 +224,8 @@ void main() {
         workoutId: 'w1',
       ),
       createState(
-        status: const BlocStatusComplete<DayPreviewBlocInfo>(
-          info: DayPreviewBlocInfo.workoutDeleted,
+        status: const BlocStatusComplete<WorkoutPreviewBlocInfo>(
+          info: WorkoutPreviewBlocInfo.workoutDeleted,
         ),
         workoutId: 'w1',
       ),

@@ -1,9 +1,7 @@
-part of 'day_preview_screen.dart';
+part of 'workout_preview_screen.dart';
 
-class DayPreviewContent extends StatelessWidget {
-  const DayPreviewContent({
-    super.key,
-  });
+class _Content extends StatelessWidget {
+  const _Content();
 
   @override
   Widget build(BuildContext context) {
@@ -25,12 +23,13 @@ class _Body extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const _Date(),
+            const _WorkoutName(),
             Expanded(
-              child: BlocSelector<DayPreviewBloc, DayPreviewState, String?>(
+              child: BlocSelector<WorkoutPreviewBloc, WorkoutPreviewState,
+                  String?>(
                 selector: (state) => state.workoutId,
                 builder: (_, String? workoutId) => switch (workoutId) {
-                  null => const _NoWorkoutInfo(),
+                  null => const LoadingInfo(),
                   String() => const _Workout(),
                 },
               ),
@@ -42,17 +41,15 @@ class _Body extends StatelessWidget {
   }
 }
 
-class _Date extends StatelessWidget {
-  const _Date();
+class _WorkoutName extends StatelessWidget {
+  const _WorkoutName();
 
   @override
   Widget build(BuildContext context) {
-    final DateTime? date = context.select(
-      (DayPreviewBloc bloc) => bloc.state.date,
+    final String? name = context.select(
+      (WorkoutPreviewBloc bloc) => bloc.state.workoutName,
     );
 
-    return TitleLarge(
-      date?.toFullDate(context) ?? '',
-    );
+    return TitleLarge(name ?? '');
   }
 }

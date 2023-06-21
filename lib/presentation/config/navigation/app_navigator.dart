@@ -32,7 +32,7 @@ class AppNavigator extends StatelessWidget {
     } else if (routePath == RoutePath.home.path) {
       screen = const HomeScreen();
     } else if (routePath == RoutePath.dayPreview.path) {
-      screen = DayPreviewScreen(
+      screen = WorkoutPreviewScreen(
         date: settings.arguments as DateTime,
       );
     } else if (routePath == RoutePath.workoutCreator.path) {

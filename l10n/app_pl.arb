@@ -139,48 +139,24 @@
   "@homeSignOutConfirmationDialogMessage": {
     "description": "Message of the dialog to confirm sign out"
   },
-  "dayPreviewScreenTitle": "Podgląd dnia",
-  "@dayPreviewScreenTitle": {
-    "description": "Title of the day preview screen"
+  "workoutPreviewScreenTitle": "Trening",
+  "@workoutPreviewScreenTitle": {
+    "description": "Title of the workout preview screen"
   },
-  "dayPreviewNoWorkoutTitle": "Brak treningu",
-  "@dayPreviewNoWorkoutTitle": {
-    "description": "Title of the information about no workout"
+  "workoutPreviewWorkoutDate": "Nazwa",
+  "@workoutPreviewWorkoutDate": {
+    "description": "Label of the section to display workout date"
   },
-  "dayPreviewNoWorkoutMessagePastDay": "Tego dnia nie było zaplanowanego treningu",
-  "@dayPreviewNoWorkoutMessagePastDay": {
-    "description": "Message of the information about no workout on a day from the past"
-  },
-  "dayPreviewNoWorkoutMessageFutureDay": "Tego dnia nie masz zaplanowanego treningu",
-  "@dayPreviewNoWorkoutMessageFutureDay": {
-    "description": "Message of the information about no workout on a day from the future"
-  },
-  "dayPreviewAddWorkoutButton": "Dodaj trening",
-  "@dayPreviewAddWorkoutButton": {
-    "description": "Label of the button to add workout"
-  },
-  "dayPreviewWorkoutName": "Nazwa",
-  "@dayPreviewWorkoutName": {
-    "description": "Label of the section to display workout name"
-  },
-  "dayPreviewWorkoutStages": "Etapy",
-  "@dayPreviewWorkoutStages": {
+  "workoutPreviewWorkoutStages": "Etapy",
+  "@workoutPreviewWorkoutStages": {
     "description": "Label of the section to display stages"
   },
-  "dayPreviewTotalDistance": "Całkowity dystans",
-  "@dayPreviewTotalDistance": {
+  "workoutPreviewTotalDistance": "Całkowity dystans",
+  "@workoutPreviewTotalDistance": {
     "description": "Label of the section to display total distance of the workout"
   },
-  "dayPreviewEditWorkout": "Edytuj trening",
-  "@dayPreviewEditWorkout": {
-    "description": "Label of the option to edit workout"
-  },
-  "dayPreviewDeleteWorkout": "Usuń trening",
-  "@dayPreviewDeleteWorkout": {
-    "description": "Label of the option to delete workout"
-  },
-  "dayPreviewDeletedWorkoutMessage": "Pomyślnie usunięto trening",
-  "@dayPreviewDeletedWorkoutMessage": {
+  "workoutPreviewDeletedWorkoutMessage": "Pomyślnie usunięto trening",
+  "@workoutPreviewDeletedWorkoutMessage": {
     "description": "Message to inform that workout has been deleted"
   },
   "workoutCreatorScreenNewWorkoutTitle": "Nowy trening",

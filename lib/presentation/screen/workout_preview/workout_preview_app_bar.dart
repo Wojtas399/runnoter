@@ -1,4 +1,4 @@
-part of 'day_preview_screen.dart';
+part of 'workout_preview_screen.dart';
 
 class _AppBar extends StatelessWidget implements PreferredSizeWidget {
   const _AppBar();
@@ -10,7 +10,7 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       title: Text(
-        Str.of(context).dayPreviewScreenTitle,
+        Str.of(context).workoutPreviewScreenTitle,
       ),
       centerTitle: true,
       actions: const [
@@ -26,7 +26,7 @@ class _AppBarActions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final String? workoutId = context.select(
-      (DayPreviewBloc bloc) => bloc.state.workoutId,
+      (WorkoutPreviewBloc bloc) => bloc.state.workoutId,
     );
 
     if (workoutId == null) {
@@ -42,8 +42,6 @@ class _WorkoutActions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return EditDeletePopupMenu(
-      editLabel: Str.of(context).dayPreviewEditWorkout,
-      deleteLabel: Str.of(context).dayPreviewDeleteWorkout,
       onEditSelected: () {
         _onEditSelected(context);
       },
@@ -54,7 +52,8 @@ class _WorkoutActions extends StatelessWidget {
   }
 
   void _onEditSelected(BuildContext context) {
-    final DayPreviewBloc dayPreviewBloc = context.read<DayPreviewBloc>();
+    final WorkoutPreviewBloc dayPreviewBloc =
+        context.read<WorkoutPreviewBloc>();
     final DateTime? date = dayPreviewBloc.state.date;
     final String? workoutId = dayPreviewBloc.state.workoutId;
     if (date != null && workoutId != null) {
@@ -71,8 +70,8 @@ class _WorkoutActions extends StatelessWidget {
   }
 
   void _onDeleteSelected(BuildContext context) {
-    context.read<DayPreviewBloc>().add(
-          const DayPreviewEventDeleteWorkout(),
+    context.read<WorkoutPreviewBloc>().add(
+          const WorkoutPreviewEventDeleteWorkout(),
         );
   }
 }

@@ -1,6 +1,6 @@
-part of 'day_preview_bloc.dart';
+part of 'workout_preview_bloc.dart';
 
-class DayPreviewState extends BlocState<DayPreviewState> {
+class WorkoutPreviewState extends BlocState<WorkoutPreviewState> {
   final DateTime? date;
   final bool? isPastDay;
   final String? workoutId;
@@ -8,7 +8,7 @@ class DayPreviewState extends BlocState<DayPreviewState> {
   final List<WorkoutStage>? stages;
   final RunStatus? runStatus;
 
-  const DayPreviewState({
+  const WorkoutPreviewState({
     required super.status,
     this.date,
     this.isPastDay,
@@ -30,7 +30,7 @@ class DayPreviewState extends BlocState<DayPreviewState> {
       ];
 
   @override
-  DayPreviewState copyWith({
+  WorkoutPreviewState copyWith({
     BlocStatus? status,
     DateTime? date,
     bool? isPastDay,
@@ -40,7 +40,7 @@ class DayPreviewState extends BlocState<DayPreviewState> {
     List<WorkoutStage>? stages,
     RunStatus? runStatus,
   }) {
-    return DayPreviewState(
+    return WorkoutPreviewState(
       status: status ?? const BlocStatusComplete(),
       date: date ?? this.date,
       isPastDay: isPastDay ?? this.isPastDay,

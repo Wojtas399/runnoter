@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../common/date_service.dart';
-import '../../../domain/bloc/day_preview/day_preview_bloc.dart';
+import '../../../domain/bloc/workout_preview/workout_preview_bloc.dart';
 import '../../../domain/entity/run_status.dart';
 import '../../../domain/entity/workout_stage.dart';
 import '../../../domain/repository/workout_repository.dart';
@@ -12,6 +12,7 @@ import '../../component/big_button_component.dart';
 import '../../component/bloc_with_status_listener_component.dart';
 import '../../component/content_with_label_component.dart';
 import '../../component/edit_delete_popup_menu_component.dart';
+import '../../component/loading_info_component.dart';
 import '../../component/nullable_text_component.dart';
 import '../../component/padding/paddings_24.dart';
 import '../../component/run_stats_component.dart';
@@ -26,16 +27,15 @@ import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
 import '../screens.dart';
 
-part 'day_preview_app_bar.dart';
-part 'day_preview_content.dart';
-part 'day_preview_no_workout_info.dart';
-part 'day_preview_run_status.dart';
-part 'day_preview_workout.dart';
+part 'workout_preview_app_bar.dart';
+part 'workout_preview_content.dart';
+part 'workout_preview_run_status.dart';
+part 'workout_preview_workout.dart';
 
-class DayPreviewScreen extends StatelessWidget {
+class WorkoutPreviewScreen extends StatelessWidget {
   final DateTime date;
 
-  const DayPreviewScreen({
+  const WorkoutPreviewScreen({
     super.key,
     required this.date,
   });
@@ -45,7 +45,7 @@ class DayPreviewScreen extends StatelessWidget {
     return _BlocProvider(
       date: date,
       child: const _BlocListener(
-        child: DayPreviewContent(),
+        child: _Content(),
       ),
     );
   }
@@ -63,12 +63,12 @@ class _BlocProvider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (BuildContext context) => DayPreviewBloc(
+      create: (BuildContext context) => WorkoutPreviewBloc(
         authService: context.read<AuthService>(),
         workoutRepository: context.read<WorkoutRepository>(),
         dateService: DateService(),
       )..add(
-          DayPreviewEventInitialize(
+          WorkoutPreviewEventInitialize(
             date: date,
           ),
         ),
@@ -86,18 +86,18 @@ class _BlocListener extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocWithStatusListener<DayPreviewBloc, DayPreviewState,
-        DayPreviewBlocInfo, dynamic>(
-      onInfo: (DayPreviewBlocInfo info) {
+    return BlocWithStatusListener<WorkoutPreviewBloc, WorkoutPreviewState,
+        WorkoutPreviewBlocInfo, dynamic>(
+      onInfo: (WorkoutPreviewBlocInfo info) {
         _manageInfo(context, info);
       },
       child: child,
     );
   }
 
-  void _manageInfo(BuildContext context, DayPreviewBlocInfo info) {
+  void _manageInfo(BuildContext context, WorkoutPreviewBlocInfo info) {
     switch (info) {
-      case DayPreviewBlocInfo.workoutDeleted:
+      case WorkoutPreviewBlocInfo.workoutDeleted:
         _showInfoAboutDeletedWorkout(context);
         break;
     }
@@ -106,7 +106,7 @@ class _BlocListener extends StatelessWidget {
   void _showInfoAboutDeletedWorkout(BuildContext context) {
     showSnackbarMessage(
       context: context,
-      message: Str.of(context).dayPreviewDeletedWorkoutMessage,
+      message: Str.of(context).workoutPreviewDeletedWorkoutMessage,
     );
   }
 }

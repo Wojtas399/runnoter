@@ -1,4 +1,4 @@
-part of 'day_preview_screen.dart';
+part of 'workout_preview_screen.dart';
 
 class _RunStatus extends StatelessWidget {
   const _RunStatus();
@@ -6,7 +6,7 @@ class _RunStatus extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final RunStatus? status = context.select(
-      (DayPreviewBloc bloc) => bloc.state.runStatus,
+      (WorkoutPreviewBloc bloc) => bloc.state.runStatus,
     );
 
     if (status == null) {

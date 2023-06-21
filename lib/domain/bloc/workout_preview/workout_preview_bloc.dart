@@ -12,17 +12,17 @@ import '../../../../domain/entity/workout_stage.dart';
 import '../../../../domain/repository/workout_repository.dart';
 import '../../../../domain/service/auth_service.dart';
 
-part 'day_preview_event.dart';
-part 'day_preview_state.dart';
+part 'workout_preview_event.dart';
+part 'workout_preview_state.dart';
 
-class DayPreviewBloc extends BlocWithStatus<DayPreviewEvent, DayPreviewState,
-    DayPreviewBlocInfo, dynamic> {
+class WorkoutPreviewBloc extends BlocWithStatus<WorkoutPreviewEvent,
+    WorkoutPreviewState, WorkoutPreviewBlocInfo, dynamic> {
   final AuthService _authService;
   final WorkoutRepository _workoutRepository;
   final DateService _dateService;
   StreamSubscription<Workout?>? _workoutListener;
 
-  DayPreviewBloc({
+  WorkoutPreviewBloc({
     required AuthService authService,
     required WorkoutRepository workoutRepository,
     required DateService dateService,
@@ -32,14 +32,14 @@ class DayPreviewBloc extends BlocWithStatus<DayPreviewEvent, DayPreviewState,
         _workoutRepository = workoutRepository,
         _dateService = dateService,
         super(
-          DayPreviewState(
+          WorkoutPreviewState(
             status: status,
             workoutId: workoutId,
           ),
         ) {
-    on<DayPreviewEventInitialize>(_initialize);
-    on<DayPreviewEventWorkoutUpdated>(_workoutUpdated);
-    on<DayPreviewEventDeleteWorkout>(_deleteWorkout);
+    on<WorkoutPreviewEventInitialize>(_initialize);
+    on<WorkoutPreviewEventWorkoutUpdated>(_workoutUpdated);
+    on<WorkoutPreviewEventDeleteWorkout>(_deleteWorkout);
   }
 
   @override
@@ -50,8 +50,8 @@ class DayPreviewBloc extends BlocWithStatus<DayPreviewEvent, DayPreviewState,
   }
 
   Future<void> _initialize(
-    DayPreviewEventInitialize event,
-    Emitter<DayPreviewState> emit,
+    WorkoutPreviewEventInitialize event,
+    Emitter<WorkoutPreviewState> emit,
   ) async {
     final String? loggedUserId = await _authService.loggedUserId$.first;
     if (loggedUserId == null) {
@@ -65,8 +65,8 @@ class DayPreviewBloc extends BlocWithStatus<DayPreviewEvent, DayPreviewState,
   }
 
   void _workoutUpdated(
-    DayPreviewEventWorkoutUpdated event,
-    Emitter<DayPreviewState> emit,
+    WorkoutPreviewEventWorkoutUpdated event,
+    Emitter<WorkoutPreviewState> emit,
   ) {
     final Workout? workout = event.workout;
     emit(state.copyWith(
@@ -79,8 +79,8 @@ class DayPreviewBloc extends BlocWithStatus<DayPreviewEvent, DayPreviewState,
   }
 
   void _deleteWorkout(
-    DayPreviewEventDeleteWorkout event,
-    Emitter<DayPreviewState> emit,
+    WorkoutPreviewEventDeleteWorkout event,
+    Emitter<WorkoutPreviewState> emit,
   ) async {
     final String? workoutId = state.workoutId;
     if (workoutId == null) {
@@ -95,7 +95,7 @@ class DayPreviewBloc extends BlocWithStatus<DayPreviewEvent, DayPreviewState,
       userId: loggedUserId,
       workoutId: workoutId,
     );
-    emitCompleteStatus(emit, DayPreviewBlocInfo.workoutDeleted);
+    emitCompleteStatus(emit, WorkoutPreviewBlocInfo.workoutDeleted);
   }
 
   void _setWorkoutListener(String loggedUserId, DateTime date) {
@@ -106,7 +106,7 @@ class DayPreviewBloc extends BlocWithStatus<DayPreviewEvent, DayPreviewState,
         )
         .listen(
           (Workout? workout) => add(
-            DayPreviewEventWorkoutUpdated(
+            WorkoutPreviewEventWorkoutUpdated(
               workout: workout,
             ),
           ),
@@ -114,6 +114,6 @@ class DayPreviewBloc extends BlocWithStatus<DayPreviewEvent, DayPreviewState,
   }
 }
 
-enum DayPreviewBlocInfo {
+enum WorkoutPreviewBlocInfo {
   workoutDeleted,
 }

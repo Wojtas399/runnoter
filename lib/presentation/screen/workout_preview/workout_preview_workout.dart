@@ -1,4 +1,4 @@
-part of 'day_preview_screen.dart';
+part of 'workout_preview_screen.dart';
 
 class _Workout extends StatelessWidget {
   const _Workout();
@@ -16,17 +16,17 @@ class _Workout extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ContentWithLabel(
-                label: str.dayPreviewWorkoutName,
-                content: const _WorkoutName(),
+                label: str.workoutPreviewWorkoutDate,
+                content: const _WorkoutDate(),
               ),
               const SizedBox(height: 16),
               ContentWithLabel(
-                label: str.dayPreviewWorkoutStages,
+                label: str.workoutPreviewWorkoutStages,
                 content: const _WorkoutStages(),
               ),
               const SizedBox(height: 16),
               ContentWithLabel(
-                label: str.dayPreviewTotalDistance,
+                label: str.workoutPreviewTotalDistance,
                 content: const _WorkoutDistance(),
               ),
               const SizedBox(height: 16),
@@ -43,16 +43,18 @@ class _Workout extends StatelessWidget {
   }
 }
 
-class _WorkoutName extends StatelessWidget {
-  const _WorkoutName();
+class _WorkoutDate extends StatelessWidget {
+  const _WorkoutDate();
 
   @override
   Widget build(BuildContext context) {
-    final String? workoutName = context.select(
-      (DayPreviewBloc bloc) => bloc.state.workoutName,
+    final DateTime? date = context.select(
+      (WorkoutPreviewBloc bloc) => bloc.state.date,
     );
 
-    return NullableText(workoutName);
+    return NullableText(
+      date?.toFullDate(context),
+    );
   }
 }
 
@@ -62,7 +64,7 @@ class _WorkoutStages extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<WorkoutStage>? stages = context.select(
-      (DayPreviewBloc bloc) => bloc.state.stages,
+      (WorkoutPreviewBloc bloc) => bloc.state.stages,
     );
 
     if (stages == null) {
@@ -89,7 +91,7 @@ class _WorkoutDistance extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<WorkoutStage>? stages = context.select(
-      (DayPreviewBloc bloc) => bloc.state.stages,
+      (WorkoutPreviewBloc bloc) => bloc.state.stages,
     );
 
     return NullableText(stages?.toTotalDistanceDescription(context));
@@ -102,7 +104,7 @@ class _RunStatusButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final RunStatus? runStatus = context.select(
-      (DayPreviewBloc bloc) => bloc.state.runStatus,
+      (WorkoutPreviewBloc bloc) => bloc.state.runStatus,
     );
     String label = Str.of(context).runStatusEditStatus;
     if (runStatus is RunStatusPending) {
@@ -118,7 +120,7 @@ class _RunStatusButton extends StatelessWidget {
   }
 
   void _onPressed(BuildContext context) {
-    final DayPreviewBloc bloc = context.read<DayPreviewBloc>();
+    final WorkoutPreviewBloc bloc = context.read<WorkoutPreviewBloc>();
     final String? workoutId = bloc.state.workoutId;
     if (workoutId == null) {
       return;
