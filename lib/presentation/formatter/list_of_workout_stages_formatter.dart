@@ -14,14 +14,17 @@ extension ListOfWorkoutStagesFormatter on List<WorkoutStage> {
     double totalDistance = 0;
     List<String> stageDescriptions = [];
     for (final stage in this) {
-      final double stageDistanceInKm = calculateDistanceOfWorkoutStage(stage);
-      final double convertedStageDistance =
-          context.convertDistanceFromDefaultUnit(stageDistanceInKm).decimal(2);
-      final stageDistanceStr = convertedStageDistance.toString().trimZeros();
-      totalDistance += convertedStageDistance;
-      stageDescriptions.add(
-        '${stage.toTypeName(context)} $stageDistanceStr$distanceUnit',
-      );
+      if (stage is DistanceWorkoutStage || stage is SeriesWorkoutStage) {
+        final double stageDistanceInKm = calculateDistanceOfWorkoutStage(stage);
+        final double convertedStageDistance = context
+            .convertDistanceFromDefaultUnit(stageDistanceInKm)
+            .decimal(2);
+        final stageDistanceStr = convertedStageDistance.toString().trimZeros();
+        totalDistance += convertedStageDistance;
+        stageDescriptions.add(
+          '${stage.toTypeName(context)} $stageDistanceStr$distanceUnit',
+        );
+      }
     }
     final totalDistanceStr = totalDistance.toString().trimZeros();
     return '$totalDistanceStr$distanceUnit (${stageDescriptions.join(' + ')})';
