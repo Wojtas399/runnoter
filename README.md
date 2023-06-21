@@ -6,6 +6,7 @@
 - [Features](#features)
 - [UI Design](#ui-design)
 - [Installation & run process](#installation--run-process)
+- [Screenshots](#screenshots)
 
 # Description
 
@@ -75,3 +76,11 @@ If you have any troubles with installation process, below is link to the officia
 ```
 https://docs.flutter.dev/get-started/install
 ```
+# Screenshots
+<img width="300" src="https://github.com/Wojtas399/runnoter/assets/72093398/af32fd35-aa28-41a9-a72d-f9d88bc064ea.png"><img width="300" src="https://github.com/Wojtas399/runnoter/assets/72093398/6f8c34f0-760d-47dd-9cf9-5706e78c90a3.png">
+<img width="300" src="https://github.com/Wojtas399/runnoter/assets/72093398/f6e75460-080d-4904-ac3d-12970d0ecbc8.png"><img width="300" src="https://github.com/Wojtas399/runnoter/assets/72093398/ec83f730-3781-4a48-91bd-f33b08a224df.png">
+<img width="300" src="https://github.com/Wojtas399/runnoter/assets/72093398/8c7c06f0-d3c6-4eb5-94c9-7a1e27750179.png"><img width="300" src="https://github.com/Wojtas399/runnoter/assets/72093398/e77e6773-9984-4264-a0f2-2dedf59c0f13.png">
+<img width="300" src="https://github.com/Wojtas399/runnoter/assets/72093398/626ce102-7125-4d0e-89bf-f23d72924441.png"><img width="300" src="https://github.com/Wojtas399/runnoter/assets/72093398/44e5a22d-ba54-4ccc-8e62-0e9914544e23.png">
+<img width="300" src="https://github.com/Wojtas399/runnoter/assets/72093398/39bb753e-32f1-492c-99ee-dc37a5b051b2.png"><img width="300" src="https://github.com/Wojtas399/runnoter/assets/72093398/ea124d78-c63a-43dd-b670-83a628f9dc88.png">
+<img width="300" src="https://github.com/Wojtas399/runnoter/assets/72093398/1b7c7136-5169-40d9-995f-1712c80256b6.png"><img width="300" src="https://github.com/Wojtas399/runnoter/assets/72093398/c9ae0809-9a8e-4787-8fdb-5ccccb1c60b8.png">
+<img width="300" src="https://github.com/Wojtas399/runnoter/assets/72093398/0dd8df97-b710-4e79-b13e-63a3fdb22b17.png"><img width="300" src="https://github.com/Wojtas399/runnoter/assets/72093398/c553dc7e-b6fe-4e48-af3d-6ed483aae346.png">
