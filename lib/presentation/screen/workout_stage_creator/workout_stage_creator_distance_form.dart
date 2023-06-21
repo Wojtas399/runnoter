@@ -23,7 +23,7 @@ class _Distance extends StatelessWidget {
     return TextFieldComponent(
       label:
           '${Str.of(context).workoutStageCreatorDistance} [${context.distanceUnit.toUIShortFormat()}]',
-      keyboardType: TextInputType.number,
+      keyboardType: const TextInputType.numberWithOptions(decimal: true),
       maxLength: 8,
       isRequired: true,
       inputFormatters: [

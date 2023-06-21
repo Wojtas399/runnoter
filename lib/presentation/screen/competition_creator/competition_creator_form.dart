@@ -128,7 +128,7 @@ class _CompetitionDistance extends StatelessWidget {
       inputFormatters: [
         DecimalTextInputFormatter(decimalRange: 3),
       ],
-      keyboardType: TextInputType.number,
+      keyboardType: const TextInputType.numberWithOptions(decimal: true),
       onChanged: (String? value) {
         _onChanged(context, value);
       },
