@@ -41,50 +41,36 @@ class _WorkoutActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PopupMenuButton(
-      icon: const Icon(Icons.more_vert),
-      itemBuilder: (BuildContext context) => [
-        PopupMenuItem<int>(
-          value: 0,
-          onTap: () {
-            _onEditButtonPressed(context);
-          },
-          child: Row(
-            children: [
-              const Icon(Icons.edit_outlined),
-              const SizedBox(width: 8),
-              Text(
-                Str.of(context).dayPreviewEditWorkout,
-              ),
-            ],
-          ),
-        ),
-        PopupMenuItem<int>(
-          value: 1,
-          onTap: () {
-            _onDeleteButtonPressed(context);
-          },
-          child: Row(
-            children: [
-              const Icon(Icons.delete_outline),
-              const SizedBox(width: 8),
-              Text(
-                Str.of(context).dayPreviewDeleteWorkout,
-              ),
-            ],
-          ),
-        ),
-      ],
+    return EditDeletePopupMenu(
+      editLabel: Str.of(context).dayPreviewEditWorkout,
+      deleteLabel: Str.of(context).dayPreviewDeleteWorkout,
+      onEditSelected: () {
+        _onEditSelected(context);
+      },
+      onDeleteSelected: () {
+        _onDeleteSelected(context);
+      },
     );
   }
 
-  void _onEditButtonPressed(BuildContext context) {
-    context.read<DayPreviewBloc>().add(
-          const DayPreviewEventEditWorkout(),
-        );
+  void _onEditSelected(BuildContext context) {
+    final DayPreviewBloc dayPreviewBloc = context.read<DayPreviewBloc>();
+    final DateTime? date = dayPreviewBloc.state.date;
+    final String? workoutId = dayPreviewBloc.state.workoutId;
+    if (date != null && workoutId != null) {
+      navigateTo(
+        context: context,
+        route: WorkoutCreatorRoute(
+          creatorArguments: WorkoutCreatorEditModeArguments(
+            date: date,
+            workoutId: workoutId,
+          ),
+        ),
+      );
+    }
   }
 
-  void _onDeleteButtonPressed(BuildContext context) {
+  void _onDeleteSelected(BuildContext context) {
     context.read<DayPreviewBloc>().add(
           const DayPreviewEventDeleteWorkout(),
         );

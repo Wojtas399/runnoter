@@ -16,7 +16,7 @@ part 'day_preview_event.dart';
 part 'day_preview_state.dart';
 
 class DayPreviewBloc extends BlocWithStatus<DayPreviewEvent, DayPreviewState,
-    DayPreviewInfo, dynamic> {
+    DayPreviewBlocInfo, dynamic> {
   final AuthService _authService;
   final WorkoutRepository _workoutRepository;
   final DateService _dateService;
@@ -39,7 +39,6 @@ class DayPreviewBloc extends BlocWithStatus<DayPreviewEvent, DayPreviewState,
         ) {
     on<DayPreviewEventInitialize>(_initialize);
     on<DayPreviewEventWorkoutUpdated>(_workoutUpdated);
-    on<DayPreviewEventEditWorkout>(_editWorkout);
     on<DayPreviewEventDeleteWorkout>(_deleteWorkout);
   }
 
@@ -79,13 +78,6 @@ class DayPreviewBloc extends BlocWithStatus<DayPreviewEvent, DayPreviewState,
     ));
   }
 
-  void _editWorkout(
-    DayPreviewEventEditWorkout event,
-    Emitter<DayPreviewState> emit,
-  ) {
-    emitCompleteStatus(emit, DayPreviewInfo.editWorkout);
-  }
-
   void _deleteWorkout(
     DayPreviewEventDeleteWorkout event,
     Emitter<DayPreviewState> emit,
@@ -103,7 +95,7 @@ class DayPreviewBloc extends BlocWithStatus<DayPreviewEvent, DayPreviewState,
       userId: loggedUserId,
       workoutId: workoutId,
     );
-    emitCompleteStatus(emit, DayPreviewInfo.workoutDeleted);
+    emitCompleteStatus(emit, DayPreviewBlocInfo.workoutDeleted);
   }
 
   void _setWorkoutListener(String loggedUserId, DateTime date) {
@@ -120,4 +112,8 @@ class DayPreviewBloc extends BlocWithStatus<DayPreviewEvent, DayPreviewState,
           ),
         );
   }
+}
+
+enum DayPreviewBlocInfo {
+  workoutDeleted,
 }

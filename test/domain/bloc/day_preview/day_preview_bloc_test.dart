@@ -178,22 +178,6 @@ void main() {
   );
 
   blocTest(
-    'edit workout, '
-    'should emit DayPreviewInfo.editWorkout',
-    build: () => createBloc(),
-    act: (DayPreviewBloc bloc) => bloc.add(
-      const DayPreviewEventEditWorkout(),
-    ),
-    expect: () => [
-      createState(
-        status: const BlocStatusComplete<DayPreviewInfo>(
-          info: DayPreviewInfo.editWorkout,
-        ),
-      ),
-    ],
-  );
-
-  blocTest(
     'delete workout, '
     'workout id is null, '
     'should finish event call',
@@ -240,8 +224,8 @@ void main() {
         workoutId: 'w1',
       ),
       createState(
-        status: const BlocStatusComplete<DayPreviewInfo>(
-          info: DayPreviewInfo.workoutDeleted,
+        status: const BlocStatusComplete<DayPreviewBlocInfo>(
+          info: DayPreviewBlocInfo.workoutDeleted,
         ),
         workoutId: 'w1',
       ),

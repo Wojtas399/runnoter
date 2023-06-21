@@ -20,56 +20,19 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 }
 
-enum _Action { edit, delete }
-
 class _ActionsMenu extends StatelessWidget {
   const _ActionsMenu();
 
   @override
   Widget build(BuildContext context) {
-    return PopupMenuButton<_Action>(
-      icon: const Icon(Icons.more_vert),
-      onSelected: (_Action action) {
-        _manageActions(context, action);
-      },
-      itemBuilder: (BuildContext context) => [
-        PopupMenuItem<_Action>(
-          value: _Action.edit,
-          child: Row(
-            children: [
-              const Icon(Icons.edit_outlined),
-              const SizedBox(width: 8),
-              Text(
-                Str.of(context).edit,
-              )
-            ],
-          ),
-        ),
-        PopupMenuItem<_Action>(
-          value: _Action.delete,
-          child: Row(
-            children: [
-              const Icon(Icons.delete_outline),
-              const SizedBox(width: 8),
-              Text(
-                Str.of(context).delete,
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  void _manageActions(BuildContext context, _Action action) {
-    switch (action) {
-      case _Action.edit:
+    return EditDeletePopupMenu(
+      onEditSelected: () {
         _editTest(context);
-        break;
-      case _Action.delete:
+      },
+      onDeleteSelected: () {
         _deleteTest(context);
-        break;
-    }
+      },
+    );
   }
 
   void _editTest(BuildContext context) {

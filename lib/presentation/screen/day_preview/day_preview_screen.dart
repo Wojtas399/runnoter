@@ -11,6 +11,7 @@ import '../../../domain/service/auth_service.dart';
 import '../../component/big_button_component.dart';
 import '../../component/bloc_with_status_listener_component.dart';
 import '../../component/content_with_label_component.dart';
+import '../../component/edit_delete_popup_menu_component.dart';
 import '../../component/nullable_text_component.dart';
 import '../../component/padding/paddings_24.dart';
 import '../../component/run_stats_component.dart';
@@ -86,39 +87,19 @@ class _BlocListener extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocWithStatusListener<DayPreviewBloc, DayPreviewState,
-        DayPreviewInfo, dynamic>(
-      onInfo: (DayPreviewInfo info) {
+        DayPreviewBlocInfo, dynamic>(
+      onInfo: (DayPreviewBlocInfo info) {
         _manageInfo(context, info);
       },
       child: child,
     );
   }
 
-  void _manageInfo(BuildContext context, DayPreviewInfo info) {
+  void _manageInfo(BuildContext context, DayPreviewBlocInfo info) {
     switch (info) {
-      case DayPreviewInfo.editWorkout:
-        _navigateToWorkoutEditor(context);
-        break;
-      case DayPreviewInfo.workoutDeleted:
+      case DayPreviewBlocInfo.workoutDeleted:
         _showInfoAboutDeletedWorkout(context);
         break;
-    }
-  }
-
-  void _navigateToWorkoutEditor(BuildContext context) {
-    final DayPreviewBloc dayPreviewBloc = context.read<DayPreviewBloc>();
-    final DateTime? date = dayPreviewBloc.state.date;
-    final String? workoutId = dayPreviewBloc.state.workoutId;
-    if (date != null && workoutId != null) {
-      navigateTo(
-        context: context,
-        route: WorkoutCreatorRoute(
-          creatorArguments: WorkoutCreatorEditModeArguments(
-            date: date,
-            workoutId: workoutId,
-          ),
-        ),
-      );
     }
   }
 
