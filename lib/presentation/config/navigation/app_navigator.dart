@@ -31,9 +31,9 @@ class AppNavigator extends StatelessWidget {
       screen = const ForgotPasswordScreen();
     } else if (routePath == RoutePath.home.path) {
       screen = const HomeScreen();
-    } else if (routePath == RoutePath.dayPreview.path) {
+    } else if (routePath == RoutePath.workoutPreview.path) {
       screen = WorkoutPreviewScreen(
-        date: settings.arguments as DateTime,
+        workoutId: settings.arguments as String,
       );
     } else if (routePath == RoutePath.workoutCreator.path) {
       screen = WorkoutCreatorScreen(

@@ -6,40 +6,53 @@ class _Workout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final str = Str.of(context);
+    const Widget gap = SizedBox(height: 16);
 
-    return Padding(
-      padding: const EdgeInsets.only(top: 24),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ContentWithLabel(
-                label: str.workoutPreviewWorkoutDate,
-                content: const _WorkoutDate(),
-              ),
-              const SizedBox(height: 16),
-              ContentWithLabel(
-                label: str.workoutPreviewWorkoutStages,
-                content: const _WorkoutStages(),
-              ),
-              const SizedBox(height: 16),
-              ContentWithLabel(
-                label: str.workoutPreviewTotalDistance,
-                content: const _WorkoutDistance(),
-              ),
-              const SizedBox(height: 16),
-              ContentWithLabel(
-                label: str.runStatus,
-                content: const _RunStatus(),
-              ),
-            ],
-          ),
-          const _RunStatusButton(),
-        ],
-      ),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const _WorkoutName(),
+            const SizedBox(height: 24),
+            ContentWithLabel(
+              label: str.workoutPreviewWorkoutDate,
+              content: const _WorkoutDate(),
+            ),
+            gap,
+            ContentWithLabel(
+              label: str.workoutPreviewWorkoutStages,
+              content: const _WorkoutStages(),
+            ),
+            gap,
+            ContentWithLabel(
+              label: str.workoutPreviewTotalDistance,
+              content: const _WorkoutDistance(),
+            ),
+            gap,
+            ContentWithLabel(
+              label: str.runStatus,
+              content: const _RunStatus(),
+            ),
+          ],
+        ),
+        const _RunStatusButton(),
+      ],
     );
+  }
+}
+
+class _WorkoutName extends StatelessWidget {
+  const _WorkoutName();
+
+  @override
+  Widget build(BuildContext context) {
+    final String? name = context.select(
+      (WorkoutPreviewBloc bloc) => bloc.state.workoutName,
+    );
+
+    return TitleLarge(name ?? '');
   }
 }
 
@@ -120,16 +133,11 @@ class _RunStatusButton extends StatelessWidget {
   }
 
   void _onPressed(BuildContext context) {
-    final WorkoutPreviewBloc bloc = context.read<WorkoutPreviewBloc>();
-    final String? workoutId = bloc.state.workoutId;
-    if (workoutId == null) {
-      return;
-    }
     navigateTo(
       context: context,
       route: RunStatusCreatorRoute(
         creatorArguments: WorkoutRunStatusCreatorArguments(
-          entityId: workoutId,
+          entityId: context.read<WorkoutPreviewBloc>().workoutId,
         ),
       ),
     );

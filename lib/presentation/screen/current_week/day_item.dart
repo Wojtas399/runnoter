@@ -56,12 +56,14 @@ class DayItem extends StatelessWidget {
   }
 
   void _onPressed(BuildContext context) {
-    navigateTo(
-      context: context,
-      route: DayPreviewRoute(
-        date: day.date,
-      ),
-    );
+    if (day.workout != null) {
+      navigateTo(
+        context: context,
+        route: WorkoutPreviewRoute(
+          workoutId: day.workout!.id,
+        ),
+      );
+    }
   }
 }
 

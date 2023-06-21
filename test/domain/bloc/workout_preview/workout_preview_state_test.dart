@@ -14,6 +14,82 @@ void main() {
   });
 
   test(
+    'are data loaded, '
+    'all params are not null, '
+    'should be true',
+    () {
+      state = state.copyWith(
+        date: DateTime(2023),
+        workoutName: 'workout name',
+        stages: [],
+        runStatus: const RunStatusPending(),
+      );
+
+      expect(state.areDataLoaded, true);
+    },
+  );
+
+  test(
+    'are data loaded, '
+    'date is null, '
+    'should be false',
+    () {
+      state = state.copyWith(
+        workoutName: 'workout name',
+        stages: [],
+        runStatus: const RunStatusPending(),
+      );
+
+      expect(state.areDataLoaded, false);
+    },
+  );
+
+  test(
+    'are data loaded, '
+    'workout name is null, '
+    'should be false',
+    () {
+      state = state.copyWith(
+        date: DateTime(2023),
+        stages: [],
+        runStatus: const RunStatusPending(),
+      );
+
+      expect(state.areDataLoaded, false);
+    },
+  );
+
+  test(
+    'are data loaded, '
+    'stages are null, '
+    'should be false',
+    () {
+      state = state.copyWith(
+        date: DateTime(2023),
+        workoutName: 'workout name',
+        runStatus: const RunStatusPending(),
+      );
+
+      expect(state.areDataLoaded, false);
+    },
+  );
+
+  test(
+    'are data loaded, '
+    'run status is null, '
+    'should be false',
+    () {
+      state = state.copyWith(
+        date: DateTime(2023),
+        workoutName: 'workout name',
+        stages: [],
+      );
+
+      expect(state.areDataLoaded, false);
+    },
+  );
+
+  test(
     'copy with status',
     () {
       const BlocStatus expectedBlocStatus = BlocStatusLoading();
@@ -36,45 +112,6 @@ void main() {
 
       expect(state.date, expectedDate);
       expect(state2.date, expectedDate);
-    },
-  );
-
-  test(
-    'copy with is past day',
-    () {
-      const bool expectedValue = true;
-
-      state = state.copyWith(isPastDay: expectedValue);
-      final state2 = state.copyWith();
-
-      expect(state.isPastDay, expectedValue);
-      expect(state2.isPastDay, expectedValue);
-    },
-  );
-
-  test(
-    'copy with workout id',
-    () {
-      const String expectedWorkoutId = 'w1';
-
-      state = state.copyWith(workoutId: expectedWorkoutId);
-      final state2 = state.copyWith();
-
-      expect(state.workoutId, expectedWorkoutId);
-      expect(state2.workoutId, expectedWorkoutId);
-    },
-  );
-
-  test(
-    'copy with workout id as null',
-    () {
-      const String workoutId = 'w1';
-
-      state = state.copyWith(workoutId: workoutId);
-      final state2 = state.copyWith(workoutIdAsNull: true);
-
-      expect(state.workoutId, workoutId);
-      expect(state2.workoutId, null);
     },
   );
 

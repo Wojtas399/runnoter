@@ -33,12 +33,12 @@ class HomeRoute extends CustomRoute {
   const HomeRoute() : super(path: RoutePath.home);
 }
 
-class DayPreviewRoute extends CustomRouteWithArguments<DateTime> {
-  const DayPreviewRoute({
-    required DateTime date,
+class WorkoutPreviewRoute extends CustomRouteWithArguments<String> {
+  const WorkoutPreviewRoute({
+    required String workoutId,
   }) : super(
-          arguments: date,
-          path: RoutePath.dayPreview,
+          arguments: workoutId,
+          path: RoutePath.workoutPreview,
         );
 }
 
@@ -133,7 +133,7 @@ enum RoutePath {
   signUp('/sign-up'),
   forgotPassword('/forgot-password'),
   home('/home'),
-  dayPreview('/home/day-preview'),
+  workoutPreview('/home/workout-preview'),
   workoutCreator('/home/day-preview/workout-creator'),
   runStatusCreator('/home/day-preview/workout-status-creator'),
   healthMeasurementCreator('/home/health_measurement-creator'),

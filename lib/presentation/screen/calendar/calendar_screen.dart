@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -74,7 +75,7 @@ class _Calendar extends StatelessWidget {
         _onMonthChanged(context, firstDisplayingDate, lastDisplayingDate);
       },
       onDayPressed: (DateTime date) {
-        _onDayPressed(context, date);
+        _onDayPressed(context, date, workouts);
       },
     );
   }
@@ -90,10 +91,21 @@ class _Calendar extends StatelessWidget {
         );
   }
 
-  void _onDayPressed(BuildContext context, DateTime date) {
-    navigateTo(
-      context: context,
-      route: DayPreviewRoute(date: date),
-    );
+  void _onDayPressed(
+    BuildContext context,
+    DateTime date,
+    List<Workout>? workouts,
+  ) {
+    final String? workoutId = [...?workouts]
+        .firstWhereOrNull((workout) => workout.date.compareTo(date) == 0)
+        ?.id;
+    if (workoutId != null) {
+      navigateTo(
+        context: context,
+        route: WorkoutPreviewRoute(
+          workoutId: workoutId,
+        ),
+      );
+    }
   }
 }

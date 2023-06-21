@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../common/date_service.dart';
 import '../../../../domain/additional_model/bloc_state.dart';
 import '../../../../domain/additional_model/bloc_status.dart';
 import '../../../../domain/additional_model/bloc_with_status.dart';
@@ -17,26 +16,21 @@ part 'workout_preview_state.dart';
 
 class WorkoutPreviewBloc extends BlocWithStatus<WorkoutPreviewEvent,
     WorkoutPreviewState, WorkoutPreviewBlocInfo, dynamic> {
+  final String workoutId;
   final AuthService _authService;
   final WorkoutRepository _workoutRepository;
-  final DateService _dateService;
   StreamSubscription<Workout?>? _workoutListener;
 
   WorkoutPreviewBloc({
+    required this.workoutId,
     required AuthService authService,
     required WorkoutRepository workoutRepository,
-    required DateService dateService,
-    BlocStatus status = const BlocStatusInitial(),
-    String? workoutId,
+    WorkoutPreviewState state = const WorkoutPreviewState(
+      status: BlocStatusInitial(),
+    ),
   })  : _authService = authService,
         _workoutRepository = workoutRepository,
-        _dateService = dateService,
-        super(
-          WorkoutPreviewState(
-            status: status,
-            workoutId: workoutId,
-          ),
-        ) {
+        super(state) {
     on<WorkoutPreviewEventInitialize>(_initialize);
     on<WorkoutPreviewEventWorkoutUpdated>(_workoutUpdated);
     on<WorkoutPreviewEventDeleteWorkout>(_deleteWorkout);
@@ -57,11 +51,7 @@ class WorkoutPreviewBloc extends BlocWithStatus<WorkoutPreviewEvent,
     if (loggedUserId == null) {
       return;
     }
-    emit(state.copyWith(
-      date: event.date,
-      isPastDay: event.date.isBefore(_dateService.getToday()),
-    ));
-    _setWorkoutListener(loggedUserId, event.date);
+    _setWorkoutListener(loggedUserId);
   }
 
   void _workoutUpdated(
@@ -69,23 +59,26 @@ class WorkoutPreviewBloc extends BlocWithStatus<WorkoutPreviewEvent,
     Emitter<WorkoutPreviewState> emit,
   ) {
     final Workout? workout = event.workout;
-    emit(state.copyWith(
-      workoutId: workout?.id,
-      workoutIdAsNull: workout == null,
-      workoutName: workout?.name,
-      stages: workout?.stages,
-      runStatus: workout?.status,
-    ));
+    if (workout == null) {
+      emit(
+        const WorkoutPreviewState(
+          status: BlocStatusComplete(),
+        ),
+      );
+    } else {
+      emit(state.copyWith(
+        date: workout.date,
+        workoutName: workout.name,
+        stages: workout.stages,
+        runStatus: workout.status,
+      ));
+    }
   }
 
   void _deleteWorkout(
     WorkoutPreviewEventDeleteWorkout event,
     Emitter<WorkoutPreviewState> emit,
   ) async {
-    final String? workoutId = state.workoutId;
-    if (workoutId == null) {
-      return;
-    }
     final String? loggedUserId = await _authService.loggedUserId$.first;
     if (loggedUserId == null) {
       return;
@@ -98,11 +91,11 @@ class WorkoutPreviewBloc extends BlocWithStatus<WorkoutPreviewEvent,
     emitCompleteStatus(emit, WorkoutPreviewBlocInfo.workoutDeleted);
   }
 
-  void _setWorkoutListener(String loggedUserId, DateTime date) {
+  void _setWorkoutListener(String loggedUserId) {
     _workoutListener ??= _workoutRepository
-        .getWorkoutByDate(
+        .getWorkoutById(
           userId: loggedUserId,
-          date: date,
+          workoutId: workoutId,
         )
         .listen(
           (Workout? workout) => add(

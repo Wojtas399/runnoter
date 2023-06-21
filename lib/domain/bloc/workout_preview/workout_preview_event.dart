@@ -5,11 +5,7 @@ abstract class WorkoutPreviewEvent {
 }
 
 class WorkoutPreviewEventInitialize extends WorkoutPreviewEvent {
-  final DateTime date;
-
-  const WorkoutPreviewEventInitialize({
-    required this.date,
-  });
+  const WorkoutPreviewEventInitialize();
 }
 
 class WorkoutPreviewEventWorkoutUpdated extends WorkoutPreviewEvent {

@@ -7,32 +7,37 @@ import 'package:runnoter/domain/entity/run_status.dart';
 import 'package:runnoter/domain/entity/workout_stage.dart';
 
 import '../../../creators/workout_creator.dart';
-import '../../../mock/common/mock_date_service.dart';
 import '../../../mock/domain/repository/mock_workout_repository.dart';
 import '../../../mock/domain/service/mock_auth_service.dart';
 
 void main() {
   final authService = MockAuthService();
   final workoutRepository = MockWorkoutRepository();
-  final dateService = MockDateService();
-  final DateTime date = DateTime(2023, 1, 1);
+  const String workoutId = 'w1';
 
   WorkoutPreviewBloc createBloc({
-    String? workoutId,
+    DateTime? date,
+    String? workoutName,
+    List<WorkoutStage>? stages,
+    RunStatus? runStatus,
   }) {
     return WorkoutPreviewBloc(
+      workoutId: workoutId,
       authService: authService,
       workoutRepository: workoutRepository,
-      dateService: dateService,
-      workoutId: workoutId,
+      state: WorkoutPreviewState(
+        status: const BlocStatusInitial(),
+        date: date,
+        workoutName: workoutName,
+        stages: stages,
+        runStatus: runStatus,
+      ),
     );
   }
 
   WorkoutPreviewState createState({
     BlocStatus status = const BlocStatusInitial(),
     DateTime? date,
-    bool? isPastDate,
-    String? workoutId,
     String? workoutName,
     List<WorkoutStage>? stages,
     RunStatus? runStatus,
@@ -40,8 +45,6 @@ void main() {
     return WorkoutPreviewState(
       status: status,
       date: date,
-      isPastDay: isPastDate,
-      workoutId: workoutId,
       workoutName: workoutName,
       stages: stages,
       runStatus: runStatus,
@@ -51,7 +54,6 @@ void main() {
   tearDown(() {
     reset(authService);
     reset(workoutRepository);
-    reset(dateService);
   });
 
   blocTest(
@@ -61,7 +63,7 @@ void main() {
     build: () => createBloc(),
     setUp: () => authService.mockGetLoggedUserId(),
     act: (WorkoutPreviewBloc bloc) => bloc.add(
-      WorkoutPreviewEventInitialize(date: date),
+      const WorkoutPreviewEventInitialize(),
     ),
     expect: () => [],
     verify: (_) => verify(
@@ -71,17 +73,14 @@ void main() {
 
   blocTest(
     'initialize, '
-    'should update date and isPastDay param in state and should set listener on workout matching to date and user id',
+    'should set listener of workout matching to given id',
     build: () => createBloc(),
     setUp: () {
-      dateService.mockGetToday(
-        todayDate: DateTime(2023, 1, 10),
-      );
       authService.mockGetLoggedUserId(userId: 'u1');
-      workoutRepository.mockGetWorkoutByDate(
+      workoutRepository.mockGetWorkoutById(
         workout: createWorkout(
-          id: 'w1',
-          date: date,
+          id: workoutId,
+          date: DateTime(2023),
           stages: [],
           status: const RunStatusPending(),
           name: 'workout name',
@@ -89,21 +88,12 @@ void main() {
       );
     },
     act: (WorkoutPreviewBloc bloc) => bloc.add(
-      WorkoutPreviewEventInitialize(
-        date: date,
-      ),
+      const WorkoutPreviewEventInitialize(),
     ),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
-        date: date,
-        isPastDate: true,
-      ),
-      createState(
-        status: const BlocStatusComplete(),
-        date: date,
-        isPastDate: true,
-        workoutId: 'w1',
+        date: DateTime(2023),
         stages: [],
         runStatus: const RunStatusPending(),
         workoutName: 'workout name',
@@ -114,9 +104,9 @@ void main() {
         () => authService.loggedUserId$,
       ).called(1);
       verify(
-        () => workoutRepository.getWorkoutByDate(
+        () => workoutRepository.getWorkoutById(
           userId: 'u1',
-          date: date,
+          workoutId: workoutId,
         ),
       ).called(1);
     },
@@ -125,9 +115,12 @@ void main() {
   blocTest(
     'workout updated, '
     'new workout is null, '
-    'should set workout id as null in state',
+    'should set state with all params set as null',
     build: () => createBloc(
-      workoutId: 'w1',
+      date: DateTime(2023),
+      workoutName: 'workout name',
+      stages: [],
+      runStatus: const RunStatusPending(),
     ),
     act: (WorkoutPreviewBloc bloc) => bloc.add(
       const WorkoutPreviewEventWorkoutUpdated(workout: null),
@@ -135,7 +128,6 @@ void main() {
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
-        workoutId: null,
       ),
     ],
   );
@@ -143,13 +135,14 @@ void main() {
   blocTest(
     'workout updated, '
     'new workout is not null, '
-    'should update workout id, name, stages and status in state',
+    'should update workout date, name, stages and status in state',
     build: () => createBloc(),
     act: (WorkoutPreviewBloc bloc) => bloc.add(
       WorkoutPreviewEventWorkoutUpdated(
         workout: createWorkout(
-          id: 'w1',
+          id: workoutId,
           userId: 'u1',
+          date: DateTime(2023),
           name: 'workout name',
           stages: [
             WorkoutStageBaseRun(
@@ -164,7 +157,7 @@ void main() {
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
-        workoutId: 'w1',
+        date: DateTime(2023),
         workoutName: 'workout name',
         stages: [
           WorkoutStageBaseRun(
@@ -179,22 +172,9 @@ void main() {
 
   blocTest(
     'delete workout, '
-    'workout id is null, '
-    'should finish event call',
-    build: () => createBloc(),
-    act: (WorkoutPreviewBloc bloc) => bloc.add(
-      const WorkoutPreviewEventDeleteWorkout(),
-    ),
-    expect: () => [],
-  );
-
-  blocTest(
-    'delete workout, '
     'logged user does not exist, '
     'should finish event call',
-    build: () => createBloc(
-      workoutId: 'w1',
-    ),
+    build: () => createBloc(),
     setUp: () => authService.mockGetLoggedUserId(),
     act: (WorkoutPreviewBloc bloc) => bloc.add(
       const WorkoutPreviewEventDeleteWorkout(),
@@ -208,9 +188,7 @@ void main() {
   blocTest(
     'delete workout, '
     'should call method from workout repository to delete workout and should emit info that workout has been deleted',
-    build: () => createBloc(
-      workoutId: 'w1',
-    ),
+    build: () => createBloc(),
     setUp: () {
       authService.mockGetLoggedUserId(userId: 'u1');
       workoutRepository.mockDeleteWorkout();
@@ -221,13 +199,11 @@ void main() {
     expect: () => [
       createState(
         status: const BlocStatusLoading(),
-        workoutId: 'w1',
       ),
       createState(
         status: const BlocStatusComplete<WorkoutPreviewBlocInfo>(
           info: WorkoutPreviewBlocInfo.workoutDeleted,
         ),
-        workoutId: 'w1',
       ),
     ],
     verify: (_) {
@@ -237,7 +213,7 @@ void main() {
       verify(
         () => workoutRepository.deleteWorkout(
           userId: 'u1',
-          workoutId: 'w1',
+          workoutId: workoutId,
         ),
       ).called(1);
     },

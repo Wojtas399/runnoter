@@ -14,25 +14,9 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       centerTitle: true,
       actions: const [
-        _AppBarActions(),
+        _WorkoutActions(),
       ],
     );
-  }
-}
-
-class _AppBarActions extends StatelessWidget {
-  const _AppBarActions();
-
-  @override
-  Widget build(BuildContext context) {
-    final String? workoutId = context.select(
-      (WorkoutPreviewBloc bloc) => bloc.state.workoutId,
-    );
-
-    if (workoutId == null) {
-      return const SizedBox(height: 16);
-    }
-    return const _WorkoutActions();
   }
 }
 
@@ -55,14 +39,13 @@ class _WorkoutActions extends StatelessWidget {
     final WorkoutPreviewBloc dayPreviewBloc =
         context.read<WorkoutPreviewBloc>();
     final DateTime? date = dayPreviewBloc.state.date;
-    final String? workoutId = dayPreviewBloc.state.workoutId;
-    if (date != null && workoutId != null) {
+    if (date != null) {
       navigateTo(
         context: context,
         route: WorkoutCreatorRoute(
           creatorArguments: WorkoutCreatorEditModeArguments(
             date: date,
-            workoutId: workoutId,
+            workoutId: dayPreviewBloc.workoutId,
           ),
         ),
       );

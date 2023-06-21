@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../common/date_service.dart';
 import '../../../domain/bloc/workout_preview/workout_preview_bloc.dart';
 import '../../../domain/entity/run_status.dart';
 import '../../../domain/entity/workout_stage.dart';
@@ -33,17 +32,17 @@ part 'workout_preview_run_status.dart';
 part 'workout_preview_workout.dart';
 
 class WorkoutPreviewScreen extends StatelessWidget {
-  final DateTime date;
+  final String workoutId;
 
   const WorkoutPreviewScreen({
     super.key,
-    required this.date,
+    required this.workoutId,
   });
 
   @override
   Widget build(BuildContext context) {
     return _BlocProvider(
-      date: date,
+      workoutId: workoutId,
       child: const _BlocListener(
         child: _Content(),
       ),
@@ -52,11 +51,11 @@ class WorkoutPreviewScreen extends StatelessWidget {
 }
 
 class _BlocProvider extends StatelessWidget {
-  final DateTime date;
+  final String workoutId;
   final Widget child;
 
   const _BlocProvider({
-    required this.date,
+    required this.workoutId,
     required this.child,
   });
 
@@ -64,13 +63,11 @@ class _BlocProvider extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (BuildContext context) => WorkoutPreviewBloc(
+        workoutId: workoutId,
         authService: context.read<AuthService>(),
         workoutRepository: context.read<WorkoutRepository>(),
-        dateService: DateService(),
       )..add(
-          WorkoutPreviewEventInitialize(
-            date: date,
-          ),
+          const WorkoutPreviewEventInitialize(),
         ),
       child: child,
     );
