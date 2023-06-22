@@ -57,14 +57,11 @@ class _Calendar extends StatelessWidget {
     );
 
     return Calendar(
-      workoutDays: [...?workouts]
+      activities: [...?workouts]
           .map(
-            (Workout workout) => WorkoutDay(
+            (Workout workout) => CalendarDayActivity(
               date: workout.date,
-              runStatusIcon: Icon(
-                workout.status.toIcon(),
-                color: workout.status.toColor(context),
-              ),
+              color: workout.status.toColor(context),
             ),
           )
           .toList(),

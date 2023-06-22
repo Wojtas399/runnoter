@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../common/date_service.dart';
+import '../text/body_text_components.dart';
 import 'calendar_component_cubit.dart';
 
 part 'calendar_component_day_labels.dart';
@@ -10,7 +11,7 @@ part 'calendar_component_days.dart';
 part 'calendar_component_header.dart';
 
 class Calendar extends StatelessWidget {
-  final List<WorkoutDay> workoutDays;
+  final List<CalendarDayActivity> activities;
   final Function(
     DateTime firstDisplayingDate,
     DateTime lastDisplayingDate,
@@ -19,7 +20,7 @@ class Calendar extends StatelessWidget {
 
   const Calendar({
     super.key,
-    required this.workoutDays,
+    required this.activities,
     this.onMonthChanged,
     this.onDayPressed,
   });
@@ -30,9 +31,7 @@ class Calendar extends StatelessWidget {
       child: _CubitListener(
         onMonthChanged: onMonthChanged,
         onDayPressed: onDayPressed,
-        child: _Content(
-          workoutDays: workoutDays,
-        ),
+        child: _Content(activities: activities),
       ),
     );
   }
@@ -106,17 +105,15 @@ class _CubitListener extends StatelessWidget {
 }
 
 class _Content extends StatelessWidget {
-  final List<WorkoutDay>? workoutDays;
+  final List<CalendarDayActivity>? activities;
 
   const _Content({
-    required this.workoutDays,
+    required this.activities,
   });
 
   @override
   Widget build(BuildContext context) {
-    context.read<CalendarComponentCubit>().updateState(
-          workoutDays: workoutDays,
-        );
+    context.read<CalendarComponentCubit>().updateState(activities: activities);
 
     return const Column(
       children: [
