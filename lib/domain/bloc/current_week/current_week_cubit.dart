@@ -46,7 +46,10 @@ class CurrentWeekCubit extends Cubit<List<Day>?> {
   }
 
   void _manageWorkoutsFromWeek(List<Workout>? workouts) {
-    final List<Workout?> workoutsFromWeek = [...?workouts];
+    if (workouts == null) {
+      return;
+    }
+    final List<Workout> workoutsFromWeek = [...workouts];
     final DateTime today = _dateService.getToday();
     final List<DateTime> datesFromWeek = _dateService.getDaysFromWeek(today);
     final List<Day> days = datesFromWeek
@@ -54,10 +57,14 @@ class CurrentWeekCubit extends Cubit<List<Day>?> {
           (DateTime date) => Day(
             date: date,
             isToday: date == today,
-            workout: workoutsFromWeek.firstWhere(
-              (Workout? workout) => workout?.date == date,
-              orElse: () => null,
-            ),
+            workouts: workoutsFromWeek
+                .where(
+                  (Workout workout) => _dateService.areDatesTheSame(
+                    workout.date,
+                    date,
+                  ),
+                )
+                .toList(),
           ),
         )
         .toList();
@@ -68,18 +75,18 @@ class CurrentWeekCubit extends Cubit<List<Day>?> {
 class Day extends Equatable {
   final DateTime date;
   final bool isToday;
-  final Workout? workout;
+  final List<Workout> workouts;
 
   const Day({
     required this.date,
     required this.isToday,
-    required this.workout,
+    this.workouts = const [],
   });
 
   @override
   List<Object?> get props => [
         date,
         isToday,
-        workout,
+        workouts,
       ];
 }

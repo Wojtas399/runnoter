@@ -84,13 +84,17 @@ class _WorkoutStages extends StatelessWidget {
       return const NullableText(null);
     }
 
-    return Wrap(
-      direction: Axis.vertical,
-      spacing: 8,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ...stages.asMap().entries.map(
-              (MapEntry<int, WorkoutStage> entry) => Text(
-                '${entry.key + 1}. ${entry.value.toUIFormat(context)}',
+              (MapEntry<int, WorkoutStage> entry) => Padding(
+                padding: EdgeInsets.only(
+                  bottom: entry.key < stages.length ? 8 : 0,
+                ),
+                child: Text(
+                  '${entry.key + 1}. ${entry.value.toUIFormat(context)}',
+                ),
               ),
             ),
       ],

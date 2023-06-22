@@ -45,6 +45,19 @@ void main() {
           DateTime(2023, 4, 9),
         ],
       );
+      dateService.mockAreDatesTheSame(expected: false);
+      when(
+        () => dateService.areDatesTheSame(
+          DateTime(2023, 4, 5),
+          DateTime(2023, 4, 5),
+        ),
+      ).thenReturn(true);
+      when(
+        () => dateService.areDatesTheSame(
+          DateTime(2023, 4, 7),
+          DateTime(2023, 4, 7),
+        ),
+      ).thenReturn(true);
       authService.mockGetLoggedUserId(
         userId: 'u1',
       );
@@ -53,12 +66,14 @@ void main() {
           createWorkout(
             id: 'w1',
             date: DateTime(2023, 4, 5),
-            name: 'first workout name',
           ),
           createWorkout(
             id: 'w2',
             date: DateTime(2023, 4, 7),
-            name: 'second workout name',
+          ),
+          createWorkout(
+            id: 'w3',
+            date: DateTime(2023, 4, 5),
           ),
         ],
       );
@@ -71,45 +86,46 @@ void main() {
         Day(
           date: DateTime(2023, 4, 3),
           isToday: false,
-          workout: null,
         ),
         Day(
           date: DateTime(2023, 4, 4),
           isToday: false,
-          workout: null,
         ),
         Day(
           date: DateTime(2023, 4, 5),
           isToday: true,
-          workout: createWorkout(
-            id: 'w1',
-            date: DateTime(2023, 4, 5),
-            name: 'first workout name',
-          ),
+          workouts: [
+            createWorkout(
+              id: 'w1',
+              date: DateTime(2023, 4, 5),
+            ),
+            createWorkout(
+              id: 'w3',
+              date: DateTime(2023, 4, 5),
+            ),
+          ],
         ),
         Day(
           date: DateTime(2023, 4, 6),
           isToday: false,
-          workout: null,
         ),
         Day(
           date: DateTime(2023, 4, 7),
           isToday: false,
-          workout: createWorkout(
-            id: 'w2',
-            date: DateTime(2023, 4, 7),
-            name: 'second workout name',
-          ),
+          workouts: [
+            createWorkout(
+              id: 'w2',
+              date: DateTime(2023, 4, 7),
+            )
+          ],
         ),
         Day(
           date: DateTime(2023, 4, 8),
           isToday: false,
-          workout: null,
         ),
         Day(
           date: DateTime(2023, 4, 9),
           isToday: false,
-          workout: null,
         ),
       ]
     ],
