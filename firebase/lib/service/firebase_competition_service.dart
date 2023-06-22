@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../firebase_collections.dart';
+import '../mapper/date_mapper.dart';
 import '../model/competition_dto.dart';
 import '../model/run_status_dto.dart';
 import '../utils/utils.dart';
@@ -12,6 +13,29 @@ class FirebaseCompetitionService {
   }) async {
     final snapshot = await getCompetitionsRef(userId).doc(competitionId).get();
     return snapshot.data();
+  }
+
+  Future<List<CompetitionDto>?> loadCompetitionsByDateRange({
+    required DateTime startDate,
+    required DateTime endDate,
+    required String userId,
+  }) async {
+    final snapshot = await getCompetitionsRef(userId)
+        .where(
+          competitionDtoDateField,
+          isGreaterThanOrEqualTo: mapDateTimeToString(startDate),
+        )
+        .where(
+          competitionDtoDateField,
+          isLessThanOrEqualTo: mapDateTimeToString(endDate),
+        )
+        .get();
+    return snapshot.docs
+        .map(
+          (QueryDocumentSnapshot<CompetitionDto> docSnapshot) =>
+              docSnapshot.data(),
+        )
+        .toList();
   }
 
   Future<List<CompetitionDto>?> loadAllCompetitions({
