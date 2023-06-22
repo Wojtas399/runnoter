@@ -27,7 +27,7 @@ class DayItem extends StatelessWidget {
             ],
           ),
           Column(
-            children: day.workouts.map((e) => Text(e.name)).toList(),
+            children: day.workouts.map((workout) => _Workout(workout)).toList(),
           ),
         ],
       ),
@@ -92,24 +92,56 @@ class _Date extends StatelessWidget {
 class _Workout extends StatelessWidget {
   final Workout workout;
 
-  const _Workout({
+  const _Workout(this.workout);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: ElevatedButton(
+        onPressed: () {
+          _onPressed(context);
+        },
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              _WorkoutLabel(workout: workout),
+              Icon(
+                workout.status.toIcon(),
+                color: workout.status.toColor(context),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _onPressed(BuildContext context) {
+    navigateTo(
+      context: context,
+      route: WorkoutPreviewRoute(workoutId: workout.id),
+    );
+  }
+}
+
+class _WorkoutLabel extends StatelessWidget {
+  final Workout workout;
+
+  const _WorkoutLabel({
     required this.workout,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ...workout.stages.asMap().entries.map(
-                (MapEntry<int, WorkoutStage> entry) => Text(
-                  '${entry.key + 1}. ${entry.value.toUIFormat(context)}',
-                ),
-              ),
-        ],
-      ),
-    );
+    String label = workout.name;
+    final String totalDistance = workout.stages.toUITotalDistance(context);
+    if (!(totalDistance.substring(0, 3) == '0.0')) {
+      label += ' ($totalDistance)';
+    }
+
+    return BodyMedium(label);
   }
 }

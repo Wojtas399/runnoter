@@ -111,7 +111,7 @@ class _WorkoutDistance extends StatelessWidget {
       (WorkoutPreviewBloc bloc) => bloc.state.stages,
     );
 
-    return NullableText(stages?.toTotalDistanceDescription(context));
+    return NullableText(stages?.toUIDetailedTotalDistance(context));
   }
 }
 
