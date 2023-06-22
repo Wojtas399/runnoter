@@ -8,10 +8,12 @@ import 'package:runnoter/domain/entity/run_status.dart';
 
 import '../../creators/competition_creator.dart';
 import '../../creators/competition_dto_creator.dart';
+import '../../mock/common/mock_date_service.dart';
 import '../../mock/firebase/mock_firebase_competition_service.dart';
 
 void main() {
   final firebaseCompetitionService = MockFirebaseCompetitionService();
+  final dateService = MockDateService();
   late CompetitionRepositoryImpl repository;
   const String userId = 'u1';
 
@@ -20,8 +22,14 @@ void main() {
   }) =>
       CompetitionRepositoryImpl(
         firebaseCompetitionService: firebaseCompetitionService,
+        dateService: dateService,
         initialData: initialData,
       );
+
+  tearDown(() {
+    reset(firebaseCompetitionService);
+    reset(dateService);
+  });
 
   test(
     'get competition by id, '
@@ -105,6 +113,98 @@ void main() {
         emitsInOrder(
           [
             expectedCompetition,
+          ],
+        ),
+      );
+    },
+  );
+
+  test(
+    'get competitions by date range, '
+    'should load all competitions from date range belonging to user from remote db, should add them to repository and should emit them',
+    () {
+      final DateTime startDate = DateTime(2023, 6, 19);
+      final DateTime endDate = DateTime(2023, 6, 25);
+      final List<Competition> existingCompetitions = [
+        createCompetition(
+          id: 'c1',
+          userId: userId,
+          date: DateTime(2023, 6, 20),
+        ),
+        createCompetition(
+          id: 'c2',
+          userId: 'u2',
+          date: DateTime(2023, 6, 20),
+        ),
+        createCompetition(id: 'c3', userId: 'u3'),
+        createCompetition(id: 'c4', userId: userId),
+      ];
+      final List<CompetitionDto> loadedCompetitionDtos = [
+        createCompetitionDto(
+          id: 'c5',
+          userId: userId,
+          date: DateTime(2023, 6, 22),
+        ),
+        createCompetitionDto(
+          id: 'c6',
+          userId: userId,
+          date: DateTime(2023, 6, 23),
+        ),
+      ];
+      final List<Competition> loadedCompetitions = [
+        createCompetition(
+          id: 'c5',
+          userId: userId,
+          date: DateTime(2023, 6, 22),
+        ),
+        createCompetition(
+          id: 'c6',
+          userId: userId,
+          date: DateTime(2023, 6, 23),
+        ),
+      ];
+      dateService.mockIsDateFromRange(expected: false);
+      when(
+        () => dateService.isDateFromRange(
+          date: DateTime(2023, 6, 20),
+          startDate: startDate,
+          endDate: endDate,
+        ),
+      ).thenReturn(true);
+      when(
+        () => dateService.isDateFromRange(
+          date: DateTime(2023, 6, 22),
+          startDate: startDate,
+          endDate: endDate,
+        ),
+      ).thenReturn(true);
+      when(
+        () => dateService.isDateFromRange(
+          date: DateTime(2023, 6, 23),
+          startDate: startDate,
+          endDate: endDate,
+        ),
+      ).thenReturn(true);
+      firebaseCompetitionService.mockLoadCompetitionsByDateRange(
+        competitionDtos: loadedCompetitionDtos,
+      );
+      repository = createRepository(initialData: existingCompetitions);
+
+      final Stream<List<Competition>?> competitions$ =
+          repository.getCompetitionsByDateRange(
+        startDate: startDate,
+        endDate: endDate,
+        userId: userId,
+      );
+
+      expect(
+        competitions$,
+        emitsInOrder(
+          [
+            [
+              existingCompetitions.first,
+              ...loadedCompetitions,
+            ]
           ],
         ),
       );

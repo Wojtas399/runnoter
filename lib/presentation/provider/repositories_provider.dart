@@ -57,6 +57,7 @@ class RepositoriesProvider extends StatelessWidget {
         RepositoryProvider<CompetitionRepository>(
           create: (_) => CompetitionRepositoryImpl(
             firebaseCompetitionService: FirebaseCompetitionService(),
+            dateService: DateService(),
           ),
         ),
       ],

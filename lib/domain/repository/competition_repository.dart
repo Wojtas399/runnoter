@@ -7,6 +7,12 @@ abstract interface class CompetitionRepository {
     required String userId,
   });
 
+  Stream<List<Competition>?> getCompetitionsByDateRange({
+    required String userId,
+    required DateTime startDate,
+    required DateTime endDate,
+  });
+
   Stream<List<Competition>?> getAllCompetitions({
     required String userId,
   });
