@@ -14,7 +14,7 @@ class CalendarCubit extends Cubit<CalendarState> {
   final AuthService _authService;
   final WorkoutRepository _workoutRepository;
   final CompetitionRepository _competitionRepository;
-  StreamSubscription? _workoutsListener;
+  StreamSubscription? _listener;
 
   CalendarCubit({
     required AuthService authService,
@@ -28,7 +28,7 @@ class CalendarCubit extends Cubit<CalendarState> {
 
   @override
   Future<void> close() {
-    _disposeWorkoutsListener();
+    _disposeListener();
     return super.close();
   }
 
@@ -36,7 +36,7 @@ class CalendarCubit extends Cubit<CalendarState> {
     required DateTime firstDisplayingDate,
     required DateTime lastDisplayingDate,
   }) {
-    _disposeWorkoutsListener();
+    _disposeListener();
     _setWorkoutsAndCompetitionsListener(
       firstDisplayingDate,
       lastDisplayingDate,
@@ -47,7 +47,7 @@ class CalendarCubit extends Cubit<CalendarState> {
     DateTime startDate,
     DateTime endDate,
   ) {
-    _workoutsListener ??= _authService.loggedUserId$
+    _listener ??= _authService.loggedUserId$
         .whereType<String>()
         .switchMap(
           (String loggedUserId) => Rx.combineLatest2(
@@ -76,9 +76,9 @@ class CalendarCubit extends Cubit<CalendarState> {
         );
   }
 
-  void _disposeWorkoutsListener() {
-    _workoutsListener?.cancel();
-    _workoutsListener = null;
+  void _disposeListener() {
+    _listener?.cancel();
+    _listener = null;
   }
 }
 

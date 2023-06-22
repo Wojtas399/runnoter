@@ -213,6 +213,7 @@
   "email": "Email",
   "password": "Password",
   "passwordConfirmation": "Password confirmation",
+  "race": "Race",
   "loading": "Loading",
   "close": "Close",
   "cancel": "Cancel",

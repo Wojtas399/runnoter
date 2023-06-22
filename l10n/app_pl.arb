@@ -867,6 +867,7 @@
   "@passwordConfirmation": {
     "description": "Password confirmation"
   },
+  "race": "Wyścig",
   "loading": "Ładowanie",
   "close": "Zamknij",
   "cancel": "Anuluj",

@@ -27,7 +27,12 @@ class DayItem extends StatelessWidget {
             ],
           ),
           Column(
-            children: day.workouts.map((workout) => _Workout(workout)).toList(),
+            children: [
+              ...day.workouts.map((workout) => _Workout(workout)),
+              ...day.competitions.map(
+                (competition) => _Competition(competition),
+              ),
+            ],
           ),
         ],
       ),
@@ -123,6 +128,65 @@ class _Workout extends StatelessWidget {
     navigateTo(
       context: context,
       route: WorkoutPreviewRoute(workoutId: workout.id),
+    );
+  }
+}
+
+class _Competition extends StatelessWidget {
+  final Competition competition;
+
+  const _Competition(this.competition);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: ElevatedButton(
+        onPressed: () {
+          _onPressed(context);
+        },
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              BodyMedium(competition.name),
+              Row(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.primary,
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 4,
+                    ),
+                    child: LabelMedium(
+                      Str.of(context).race,
+                      color: Theme.of(context).canvasColor,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Icon(
+                    competition.status.toIcon(),
+                    color: competition.status.toColor(context),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _onPressed(BuildContext context) {
+    navigateTo(
+      context: context,
+      route: CompetitionPreviewRoute(
+        competitionId: competition.id,
+      ),
     );
   }
 }

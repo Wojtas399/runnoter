@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../common/date_service.dart';
 import '../../../domain/bloc/current_week/current_week_cubit.dart';
+import '../../../domain/entity/competition.dart';
 import '../../../domain/entity/workout.dart';
+import '../../../domain/repository/competition_repository.dart';
 import '../../../domain/repository/workout_repository.dart';
 import '../../../domain/service/auth_service.dart';
 import '../../component/text/body_text_components.dart';
+import '../../component/text/label_text_components.dart';
 import '../../component/text/title_text_components.dart';
 import '../../config/navigation/routes.dart';
 import '../../formatter/date_formatter.dart';
@@ -45,6 +49,7 @@ class _CubitProvider extends StatelessWidget {
         dateService: DateService(),
         authService: context.read<AuthService>(),
         workoutRepository: context.read<WorkoutRepository>(),
+        competitionRepository: context.read<CompetitionRepository>(),
       )..initialize(),
       child: child,
     );
