@@ -1,17 +1,16 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/bloc/calendar/calendar_cubit.dart';
+import '../../../domain/entity/competition.dart';
 import '../../../domain/entity/workout.dart';
+import '../../../domain/repository/competition_repository.dart';
 import '../../../domain/repository/workout_repository.dart';
 import '../../../domain/service/auth_service.dart';
 import '../../component/calendar/calendar_component.dart';
 import '../../component/calendar/calendar_component_cubit.dart';
 import '../../component/padding/paddings_24.dart';
-import '../../config/navigation/routes.dart';
 import '../../formatter/run_status_formatter.dart';
-import '../../service/navigator_service.dart';
 
 class CalendarScreen extends StatelessWidget {
   const CalendarScreen({
@@ -41,6 +40,7 @@ class _CubitProvider extends StatelessWidget {
       create: (BuildContext context) => CalendarCubit(
         authService: context.read<AuthService>(),
         workoutRepository: context.read<WorkoutRepository>(),
+        competitionRepository: context.read<CompetitionRepository>(),
       ),
       child: child,
     );
@@ -52,19 +52,25 @@ class _Calendar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<Workout>? workouts = context.select(
+    final CalendarState state = context.select(
       (CalendarCubit cubit) => cubit.state,
     );
 
     return Calendar(
-      activities: [...?workouts]
-          .map(
-            (Workout workout) => CalendarDayActivity(
-              date: workout.date,
-              color: workout.status.toColor(context),
-            ),
-          )
-          .toList(),
+      activities: [
+        ...?state.workouts?.map(
+          (Workout workout) => CalendarDayActivity(
+            date: workout.date,
+            color: workout.status.toColor(context),
+          ),
+        ),
+        ...?state.competitions?.map(
+          (Competition competition) => CalendarDayActivity(
+            date: competition.date,
+            color: Theme.of(context).colorScheme.primary,
+          ),
+        ),
+      ],
       onMonthChanged: (
         DateTime firstDisplayingDate,
         DateTime lastDisplayingDate,
@@ -72,7 +78,7 @@ class _Calendar extends StatelessWidget {
         _onMonthChanged(context, firstDisplayingDate, lastDisplayingDate);
       },
       onDayPressed: (DateTime date) {
-        _onDayPressed(context, date, workouts);
+        _onDayPressed(context, date);
       },
     );
   }
@@ -91,18 +97,7 @@ class _Calendar extends StatelessWidget {
   void _onDayPressed(
     BuildContext context,
     DateTime date,
-    List<Workout>? workouts,
   ) {
-    final String? workoutId = [...?workouts]
-        .firstWhereOrNull((workout) => workout.date.compareTo(date) == 0)
-        ?.id;
-    if (workoutId != null) {
-      navigateTo(
-        context: context,
-        route: WorkoutPreviewRoute(
-          workoutId: workoutId,
-        ),
-      );
-    }
+    //TODO: Show something with list of workouts and competitions from selected day.
   }
 }

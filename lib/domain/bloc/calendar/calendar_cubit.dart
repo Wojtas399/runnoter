@@ -1,23 +1,30 @@
 import 'dart:async';
 
+import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
+import '../../entity/competition.dart';
 import '../../entity/workout.dart';
+import '../../repository/competition_repository.dart';
 import '../../repository/workout_repository.dart';
 import '../../service/auth_service.dart';
 
-class CalendarCubit extends Cubit<List<Workout>?> {
+class CalendarCubit extends Cubit<CalendarState> {
   final AuthService _authService;
   final WorkoutRepository _workoutRepository;
-  StreamSubscription<List<Workout>?>? _workoutsListener;
+  final CompetitionRepository _competitionRepository;
+  StreamSubscription? _workoutsListener;
 
   CalendarCubit({
     required AuthService authService,
     required WorkoutRepository workoutRepository,
+    required CompetitionRepository competitionRepository,
+    CalendarState state = const CalendarState(),
   })  : _authService = authService,
         _workoutRepository = workoutRepository,
-        super(null);
+        _competitionRepository = competitionRepository,
+        super(state);
 
   @override
   Future<void> close() {
@@ -30,21 +37,42 @@ class CalendarCubit extends Cubit<List<Workout>?> {
     required DateTime lastDisplayingDate,
   }) {
     _disposeWorkoutsListener();
-    _setWorkoutsListener(firstDisplayingDate, lastDisplayingDate);
+    _setWorkoutsAndCompetitionsListener(
+      firstDisplayingDate,
+      lastDisplayingDate,
+    );
   }
 
-  void _setWorkoutsListener(DateTime startDate, DateTime endDate) {
+  void _setWorkoutsAndCompetitionsListener(
+    DateTime startDate,
+    DateTime endDate,
+  ) {
     _workoutsListener ??= _authService.loggedUserId$
         .whereType<String>()
         .switchMap(
-          (String loggedUserId) => _workoutRepository.getWorkoutsByDateRange(
-            startDate: startDate,
-            endDate: endDate,
-            userId: loggedUserId,
+          (String loggedUserId) => Rx.combineLatest2(
+            _workoutRepository.getWorkoutsByDateRange(
+              startDate: startDate,
+              endDate: endDate,
+              userId: loggedUserId,
+            ),
+            _competitionRepository.getCompetitionsByDateRange(
+              userId: loggedUserId,
+              startDate: startDate,
+              endDate: endDate,
+            ),
+            (
+              List<Workout>? workouts,
+              List<Competition>? competitions,
+            ) =>
+                (workouts, competitions),
           ),
         )
         .listen(
-          (List<Workout>? workouts) => emit(workouts),
+          ((List<Workout>?, List<Competition>?) params) => emit(CalendarState(
+            workouts: params.$1,
+            competitions: params.$2,
+          )),
         );
   }
 
@@ -52,4 +80,20 @@ class CalendarCubit extends Cubit<List<Workout>?> {
     _workoutsListener?.cancel();
     _workoutsListener = null;
   }
+}
+
+class CalendarState extends Equatable {
+  final List<Workout>? workouts;
+  final List<Competition>? competitions;
+
+  const CalendarState({
+    this.workouts,
+    this.competitions,
+  });
+
+  @override
+  List<Object?> get props => [
+        workouts,
+        competitions,
+      ];
 }

@@ -22,6 +22,18 @@ class MockCompetitionRepository extends Mock implements CompetitionRepository {
     ).thenAnswer((invocation) => Stream.value(competition));
   }
 
+  void mockGetCompetitionsByDateRange({
+    List<Competition>? competitions,
+  }) {
+    when(
+      () => getCompetitionsByDateRange(
+        userId: any(named: 'userId'),
+        startDate: any(named: 'startDate'),
+        endDate: any(named: 'endDate'),
+      ),
+    ).thenAnswer((invocation) => Stream.value(competitions));
+  }
+
   void mockGetAllCompetitions({
     List<Competition>? competitions,
   }) {
