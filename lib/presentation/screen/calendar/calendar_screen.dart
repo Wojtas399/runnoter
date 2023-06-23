@@ -10,7 +10,9 @@ import '../../../domain/service/auth_service.dart';
 import '../../component/calendar/calendar_component.dart';
 import '../../component/calendar/calendar_component_cubit.dart';
 import '../../component/padding/paddings_24.dart';
+import '../../config/navigation/routes.dart';
 import '../../formatter/run_status_formatter.dart';
+import '../../service/navigator_service.dart';
 
 class CalendarScreen extends StatelessWidget {
   const CalendarScreen({
@@ -94,10 +96,13 @@ class _Calendar extends StatelessWidget {
         );
   }
 
-  void _onDayPressed(
+  Future<void> _onDayPressed(
     BuildContext context,
     DateTime date,
-  ) {
-    //TODO: Show something with list of workouts and competitions from selected day.
+  ) async {
+    navigateTo(
+      context: context,
+      route: DayPreviewRoute(date: date),
+    );
   }
 }
