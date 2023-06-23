@@ -212,6 +212,68 @@ void main() {
   );
 
   test(
+    'get competitions by date, '
+    'should load all competitions by date belonging to user from remote db, should add them to repository and should emit them',
+    () {
+      final DateTime date = DateTime(2023, 6, 19);
+      final List<Competition> existingCompetitions = [
+        createCompetition(
+          id: 'c1',
+          userId: userId,
+          date: DateTime(2023, 6, 19),
+        ),
+        createCompetition(
+          id: 'c2',
+          userId: 'u2',
+          date: DateTime(2023, 6, 19),
+        ),
+        createCompetition(id: 'c3', userId: 'u3'),
+        createCompetition(id: 'c4', userId: userId),
+      ];
+      final List<CompetitionDto> loadedCompetitionDtos = [
+        createCompetitionDto(
+          id: 'c5',
+          userId: userId,
+          date: DateTime(2023, 6, 19),
+        ),
+      ];
+      final List<Competition> loadedCompetitions = [
+        createCompetition(
+          id: 'c5',
+          userId: userId,
+          date: DateTime(2023, 6, 19),
+        ),
+      ];
+      dateService.mockAreDatesTheSame(expected: false);
+      when(
+        () => dateService.areDatesTheSame(date, date),
+      ).thenReturn(true);
+      firebaseCompetitionService.mockLoadCompetitionsByDate(
+        competitionDtos: loadedCompetitionDtos,
+      );
+      repository = createRepository(initialData: existingCompetitions);
+
+      final Stream<List<Competition>?> competitions$ =
+          repository.getCompetitionsByDate(
+        date: date,
+        userId: userId,
+      );
+
+      expect(
+        competitions$,
+        emitsInOrder(
+          [
+            [
+              existingCompetitions.first,
+              ...loadedCompetitions,
+            ]
+          ],
+        ),
+      );
+    },
+  );
+
+  test(
     'get all competitions, '
     'should load all competitions belonging to user from remote db, should add them to repository and should emit them',
     () {

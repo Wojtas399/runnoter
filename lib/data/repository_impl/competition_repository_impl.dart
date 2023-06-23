@@ -59,6 +59,23 @@ class CompetitionRepositoryImpl extends StateRepository<Competition>
   }
 
   @override
+  Stream<List<Competition>?> getCompetitionsByDate({
+    required DateTime date,
+    required String userId,
+  }) async* {
+    await _loadCompetitionsByDateFromRemoteDb(date, userId);
+    await for (final competitions in dataStream$) {
+      yield competitions
+          ?.where(
+            (competition) =>
+                competition.userId == userId &&
+                _dateService.areDatesTheSame(competition.date, date),
+          )
+          .toList();
+    }
+  }
+
+  @override
   Stream<List<Competition>?> getAllCompetitions({
     required String userId,
   }) async* {
@@ -179,6 +196,22 @@ class CompetitionRepositoryImpl extends StateRepository<Competition>
         await _firebaseCompetitionService.loadCompetitionsByDateRange(
       startDate: startDate,
       endDate: endDate,
+      userId: userId,
+    );
+    if (competitionDtos != null) {
+      final List<Competition> competitions =
+          competitionDtos.map(mapCompetitionFromDto).toList();
+      addEntities(competitions);
+    }
+  }
+
+  Future<void> _loadCompetitionsByDateFromRemoteDb(
+    DateTime date,
+    String userId,
+  ) async {
+    final List<CompetitionDto>? competitionDtos =
+        await _firebaseCompetitionService.loadCompetitionsByDate(
+      date: date,
       userId: userId,
     );
     if (competitionDtos != null) {

@@ -50,10 +50,16 @@ void main() {
       lastDisplayingDate: DateTime(2023, 1, 31),
     ),
     expect: () => [
-      [
-        createWorkout(id: 'w1', name: 'workout 1'),
-        createWorkout(id: 'w2', name: 'workout 2'),
-      ],
+      CalendarState(
+        workouts: [
+          createWorkout(id: 'w1', name: 'workout 1'),
+          createWorkout(id: 'w2', name: 'workout 2'),
+        ],
+        competitions: [
+          createCompetition(id: 'c1', name: 'competition 1'),
+          createCompetition(id: 'c2', name: 'competition 2'),
+        ],
+      ),
     ],
     verify: (_) {
       verify(
