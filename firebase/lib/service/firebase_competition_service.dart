@@ -38,6 +38,23 @@ class FirebaseCompetitionService {
         .toList();
   }
 
+  Future<List<CompetitionDto>?> loadCompetitionsByDate({
+    required DateTime date,
+    required String userId,
+  }) async {
+    final snapshot = await getCompetitionsRef(userId)
+        .where(
+          competitionDtoDateField,
+          isEqualTo: mapDateTimeToString(date),
+        )
+        .limit(1)
+        .get();
+    if (snapshot.docs.isEmpty) {
+      return null;
+    }
+    return snapshot.docs.map((doc) => doc.data()).toList();
+  }
+
   Future<List<CompetitionDto>?> loadAllCompetitions({
     required String userId,
   }) async {

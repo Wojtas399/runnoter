@@ -36,6 +36,17 @@ class MockFirebaseCompetitionService extends Mock
     ).thenAnswer((invocation) => Future.value(competitionDtos));
   }
 
+  void mockLoadCompetitionsByDate({
+    List<CompetitionDto>? competitionDtos,
+  }) {
+    when(
+      () => loadCompetitionsByDate(
+        date: any(named: 'date'),
+        userId: any(named: 'userId'),
+      ),
+    ).thenAnswer((invocation) => Future.value(competitionDtos));
+  }
+
   void mockLoadAllCompetitions({
     List<CompetitionDto>? competitionDtos,
   }) {
