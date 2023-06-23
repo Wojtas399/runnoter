@@ -1,24 +1,19 @@
-import 'entity.dart';
-import 'run_status.dart';
+import 'activity.dart';
 
-class Competition extends Entity {
-  final String userId;
-  final String name;
-  final DateTime date;
+class Competition extends Activity {
   final String place;
   final double distance;
   final Duration? expectedDuration;
-  final RunStatus status;
 
   const Competition({
     required super.id,
-    required this.userId,
-    required this.name,
-    required this.date,
+    required super.userId,
+    required super.name,
+    required super.date,
+    required super.status,
     required this.place,
     required this.distance,
     required this.expectedDuration,
-    required this.status,
   });
 
   @override
@@ -27,9 +22,9 @@ class Competition extends Entity {
         userId,
         name,
         date,
+        status,
         place,
         distance,
         expectedDuration,
-        status,
       ];
 }
