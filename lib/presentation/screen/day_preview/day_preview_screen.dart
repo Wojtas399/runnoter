@@ -65,8 +65,25 @@ class _Content extends StatelessWidget {
         ),
       ),
       body: Center(
-        child: Text('Day preview'),
+        child: _Activities(),
       ),
+    );
+  }
+}
+
+class _Activities extends StatelessWidget {
+  const _Activities();
+
+  @override
+  Widget build(BuildContext context) {
+    final DayPreviewState state = context.select(
+      (DayPreviewCubit cubit) => cubit.state,
+    );
+
+    return Column(
+      children: [
+        ...?state.workouts?.map((workout) => Text(workout.name)),
+      ],
     );
   }
 }

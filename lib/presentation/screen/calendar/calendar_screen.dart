@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 
 import '../../../domain/bloc/calendar/calendar_cubit.dart';
 import '../../../domain/entity/competition.dart';
@@ -10,9 +11,9 @@ import '../../../domain/service/auth_service.dart';
 import '../../component/calendar/calendar_component.dart';
 import '../../component/calendar/calendar_component_cubit.dart';
 import '../../component/padding/paddings_24.dart';
-import '../../config/navigation/routes.dart';
 import '../../formatter/run_status_formatter.dart';
-import '../../service/navigator_service.dart';
+import '../../service/dialog_service.dart';
+import '../day_preview/day_preview_screen.dart';
 
 class CalendarScreen extends StatelessWidget {
   const CalendarScreen({
@@ -100,9 +101,15 @@ class _Calendar extends StatelessWidget {
     BuildContext context,
     DateTime date,
   ) async {
-    navigateTo(
+    await showFullScreenDialog(
       context: context,
-      route: DayPreviewRoute(date: date),
+      dialog: Provider<WorkoutRepository>.value(
+        value: context.read<WorkoutRepository>(),
+        child: Provider<CompetitionRepository>.value(
+          value: context.read<CompetitionRepository>(),
+          child: DayPreviewScreen(date: date),
+        ),
+      ),
     );
   }
 }
