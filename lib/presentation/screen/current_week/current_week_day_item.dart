@@ -28,13 +28,41 @@ class DayItem extends StatelessWidget {
           ),
           Column(
             children: [
-              ...day.workouts.map((workout) => _Workout(workout)),
+              ...day.workouts.map(
+                (workout) => ActivityItem(
+                  activity: workout,
+                  onPressed: () {
+                    _onWorkoutPressed(context, workout.id);
+                  },
+                ),
+              ),
               ...day.competitions.map(
-                (competition) => _Competition(competition),
+                (competition) => ActivityItem(
+                  activity: competition,
+                  onPressed: () {
+                    _onCompetitionPressed(context, competition.id);
+                  },
+                ),
               ),
             ],
           ),
         ],
+      ),
+    );
+  }
+
+  void _onWorkoutPressed(BuildContext context, String workoutId) {
+    navigateTo(
+      context: context,
+      route: WorkoutPreviewRoute(workoutId: workoutId),
+    );
+  }
+
+  void _onCompetitionPressed(BuildContext context, String competitionId) {
+    navigateTo(
+      context: context,
+      route: CompetitionPreviewRoute(
+        competitionId: competitionId,
       ),
     );
   }
@@ -91,121 +119,5 @@ class _Date extends StatelessWidget {
         color: isToday ? Theme.of(context).canvasColor : null,
       ),
     );
-  }
-}
-
-class _Workout extends StatelessWidget {
-  final Workout workout;
-
-  const _Workout(this.workout);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8.0),
-      child: ElevatedButton(
-        onPressed: () {
-          _onPressed(context);
-        },
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              _WorkoutLabel(workout: workout),
-              Icon(
-                workout.status.toIcon(),
-                color: workout.status.toColor(context),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  void _onPressed(BuildContext context) {
-    navigateTo(
-      context: context,
-      route: WorkoutPreviewRoute(workoutId: workout.id),
-    );
-  }
-}
-
-class _Competition extends StatelessWidget {
-  final Competition competition;
-
-  const _Competition(this.competition);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8.0),
-      child: ElevatedButton(
-        onPressed: () {
-          _onPressed(context);
-        },
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              BodyMedium(competition.name),
-              Row(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.primary,
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 4,
-                    ),
-                    child: LabelMedium(
-                      Str.of(context).race,
-                      color: Theme.of(context).canvasColor,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Icon(
-                    competition.status.toIcon(),
-                    color: competition.status.toColor(context),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  void _onPressed(BuildContext context) {
-    navigateTo(
-      context: context,
-      route: CompetitionPreviewRoute(
-        competitionId: competition.id,
-      ),
-    );
-  }
-}
-
-class _WorkoutLabel extends StatelessWidget {
-  final Workout workout;
-
-  const _WorkoutLabel({
-    required this.workout,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    String label = workout.name;
-    final String totalDistance = workout.stages.toUITotalDistance(context);
-    if (!(totalDistance.substring(0, 3) == '0.0')) {
-      label += ' ($totalDistance)';
-    }
-
-    return BodyMedium(label);
   }
 }

@@ -1,11 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 import '../../../domain/bloc/day_preview/day_preview_cubit.dart';
+import '../../../domain/entity/competition.dart';
+import '../../../domain/entity/workout.dart';
 import '../../../domain/repository/competition_repository.dart';
 import '../../../domain/repository/workout_repository.dart';
 import '../../../domain/service/auth_service.dart';
+import '../../component/activity_item_component.dart';
+import '../../component/loading_info_component.dart';
+import '../../config/navigation/routes.dart';
+import '../../formatter/date_formatter.dart';
 import '../../service/navigator_service.dart';
+import '../screens.dart';
+
+part 'day_preview_activities_content.dart';
 
 class DayPreviewScreen extends StatelessWidget {
   final DateTime date;
@@ -52,38 +63,87 @@ class _Content extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Podgląd dnia',
+    return const Scaffold(
+      appBar: _AppBar(),
+      floatingActionButton: _FloatingActionButton(),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.all(24),
+            child: _ActivitiesContent(),
+          ),
         ),
-        leading: IconButton(
-          onPressed: () {
-            navigateBack(context: context);
-          },
-          icon: const Icon(Icons.close),
-        ),
-      ),
-      body: Center(
-        child: _Activities(),
       ),
     );
   }
 }
 
-class _Activities extends StatelessWidget {
-  const _Activities();
+class _AppBar extends StatelessWidget implements PreferredSizeWidget {
+  const _AppBar();
+
+  @override
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 
   @override
   Widget build(BuildContext context) {
-    final DayPreviewState state = context.select(
-      (DayPreviewCubit cubit) => cubit.state,
-    );
+    final DateTime date = context.read<DayPreviewCubit>().date;
 
-    return Column(
+    return AppBar(
+      centerTitle: true,
+      title: Text(
+        '${Str.of(context).day} ${date.toDateWithDots()}',
+      ),
+    );
+  }
+}
+
+class _FloatingActionButton extends StatelessWidget {
+  const _FloatingActionButton();
+
+  @override
+  Widget build(BuildContext context) {
+    return SpeedDial(
+      icon: Icons.add,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(16)),
+      ),
+      spacing: 16,
+      childMargin: EdgeInsets.zero,
+      childPadding: const EdgeInsets.all(8.0),
       children: [
-        ...?state.workouts?.map((workout) => Text(workout.name)),
+        SpeedDialChild(
+          child: const Icon(Icons.directions_run_outlined),
+          label: Str.of(context).workout,
+          onTap: () {
+            _onAddWorkoutSelected(context);
+          },
+        ),
+        SpeedDialChild(
+          child: const Icon(Icons.emoji_events),
+          label: Str.of(context).race,
+          onTap: () {
+            _onAddRaceSelected(context);
+          },
+        ),
       ],
+    );
+  }
+
+  void _onAddWorkoutSelected(BuildContext context) {
+    navigateTo(
+      context: context,
+      route: WorkoutCreatorRoute(
+        creatorArguments: WorkoutCreatorAddModeArguments(
+          date: context.read<DayPreviewCubit>().date,
+        ),
+      ),
+    );
+  }
+
+  void _onAddRaceSelected(BuildContext context) {
+    navigateTo(
+      context: context,
+      route: const CompetitionCreatorRoute(),
     );
   }
 }

@@ -867,7 +867,9 @@
   "@passwordConfirmation": {
     "description": "Password confirmation"
   },
+  "workout": "Trening",
   "race": "Wyścig",
+  "day": "Dzień",
   "loading": "Ładowanie",
   "close": "Zamknij",
   "cancel": "Anuluj",

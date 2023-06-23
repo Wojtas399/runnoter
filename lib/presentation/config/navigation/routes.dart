@@ -62,6 +62,15 @@ class RunStatusCreatorRoute
         );
 }
 
+class DayPreviewRoute extends CustomRouteWithArguments<DateTime> {
+  const DayPreviewRoute({
+    required DateTime date,
+  }) : super(
+          arguments: date,
+          path: RoutePath.dayPreview,
+        );
+}
+
 class HealthMeasurementCreatorRoute
     extends CustomRouteWithArguments<DateTime?> {
   const HealthMeasurementCreatorRoute({
@@ -136,6 +145,7 @@ enum RoutePath {
   workoutPreview('/home/workout-preview'),
   workoutCreator('/home/workout-creator'),
   runStatusCreator('/home/workout-preview/workout-status-creator'),
+  dayPreview('/home/day-preview'),
   healthMeasurementCreator('/home/health_measurement-creator'),
   healthMeasurements('/home/health-measurements'),
   bloodTestCreator('/home/blood-test-creator'),
