@@ -5,19 +5,26 @@ class _ActivitiesContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<Workout>? workouts = context.select(
-      (DayPreviewCubit cubit) => cubit.state.workouts,
-    );
-    final List<Competition>? competitions = context.select(
-      (DayPreviewCubit cubit) => cubit.state.competitions,
-    );
+    final DayPreviewCubit cubit = context.watch<DayPreviewCubit>();
 
-    if (workouts == null && competitions == null) {
+    if (cubit.state.workouts == null && cubit.state.workouts == null) {
       return const LoadingInfo();
+    } else if (cubit.areThereActivities) {
+      return SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: _Activities(
+            workouts: cubit.state.workouts,
+            competitions: cubit.state.competitions,
+          ),
+        ),
+      );
     }
-    return _Activities(
-      workouts: workouts,
-      competitions: competitions,
+    return EmptyContentInfo(
+      title: Str.of(context).dayPreviewNoActivitiesTitle,
+      subtitle: cubit.isPastDate
+          ? Str.of(context).dayPreviewNoActivitiesMessagePastDay
+          : Str.of(context).dayPreviewNoActivitiesMessageFutureDay,
     );
   }
 }

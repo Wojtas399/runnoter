@@ -275,6 +275,18 @@
   "@runStatusCreatorSavedStatusMessage": {
     "description": "Info about successfully saved status"
   },
+  "dayPreviewNoActivitiesTitle": "Brak aktywności",
+  "@dayPreviewNoActivitiesTitle": {
+    "description": "Title of the information about no activities"
+  },
+  "dayPreviewNoActivitiesMessagePastDay": "Tego dnia nie było zaplanowanych żadnych aktywności",
+  "@dayPreviewNoActivitiesMessagePastDay": {
+    "description": "Message of the information about no activities on a day from the past"
+  },
+  "dayPreviewNoActivitiesMessageFutureDay": "Tego dnia nie masz zaplanowanych żadnych aktywności",
+  "@dayPreviewNoActivitiesMessageFutureDay": {
+    "description": "Message of the information about no activities on a day from the future"
+  },
   "healthTodayMeasurement": "Dzisiejszy pomiar",
   "@healthTodayMeasurement": {
     "description": "Label of today measurement"
