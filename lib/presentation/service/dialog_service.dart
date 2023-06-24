@@ -121,6 +121,7 @@ Future<String?> askForValue({
 Future<T?> askForAction<T>({
   required BuildContext context,
   required List<ActionSheetItem<T>> actions,
+  String? title,
 }) async {
   hideSnackbar(context: context);
   return await showModalBottomSheet(
@@ -128,6 +129,7 @@ Future<T?> askForAction<T>({
     showDragHandle: true,
     builder: (_) => ActionSheetComponent(
       actions: actions,
+      title: title,
     ),
   );
 }

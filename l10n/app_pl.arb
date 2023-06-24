@@ -139,6 +139,10 @@
   "@homeSignOutConfirmationDialogMessage": {
     "description": "Message of the dialog to confirm sign out"
   },
+  "currentWeekActivityActionSheetTitle": "Wybierz rodzaj aktywności do dodania",
+  "@currentWeekActivityActionSheetTitle": {
+    "description": "Title of action sheet with type of activities to add"
+  },
   "workoutPreviewScreenTitle": "Trening",
   "@workoutPreviewScreenTitle": {
     "description": "Title of the workout preview screen"

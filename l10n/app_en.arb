@@ -34,6 +34,7 @@
   "homeDrawerSignOut": "Sign out",
   "homeSignOutConfirmationDialogTitle": "Sign out",
   "homeSignOutConfirmationDialogMessage": "Are you sure you want to sign out?",
+  "currentWeekActivityActionSheetTitle": "Select type of activity to add",
   "workoutPreviewScreenTitle": "Workout",
   "workoutPreviewWorkoutDate": "Date",
   "workoutPreviewWorkoutStages": "Stages",

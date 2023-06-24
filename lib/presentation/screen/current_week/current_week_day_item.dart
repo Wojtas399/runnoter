@@ -23,7 +23,7 @@ class DayItem extends StatelessWidget {
                 date: day.date,
                 isToday: day.isToday,
               ),
-              _AddWorkoutButton(date: day.date),
+              _AddActivityButton(date: day.date),
             ],
           ),
           Column(
@@ -63,33 +63,6 @@ class DayItem extends StatelessWidget {
       context: context,
       route: CompetitionPreviewRoute(
         competitionId: competitionId,
-      ),
-    );
-  }
-}
-
-class _AddWorkoutButton extends StatelessWidget {
-  final DateTime date;
-
-  const _AddWorkoutButton({
-    required this.date,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return IconButton(
-      onPressed: () {
-        _onPressed(context);
-      },
-      icon: const Icon(Icons.add),
-    );
-  }
-
-  void _onPressed(BuildContext context) {
-    navigateTo(
-      context: context,
-      route: WorkoutCreatorRoute(
-        creatorArguments: WorkoutCreatorAddModeArguments(date: date),
       ),
     );
   }
