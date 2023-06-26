@@ -12,7 +12,7 @@ class CurrentWeekContent extends StatelessWidget {
     );
 
     if (days == null) {
-      return const CircularProgressIndicator();
+      return const LoadingInfo();
     }
 
     return ListView.separated(
