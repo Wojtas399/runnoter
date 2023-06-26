@@ -7,7 +7,7 @@ import '../../../domain/bloc/profile/identities/profile_identities_bloc.dart';
 import '../../../domain/bloc/profile/settings/profile_settings_bloc.dart';
 import '../../../domain/entity/settings.dart' as settings;
 import '../../../domain/repository/blood_test_repository.dart';
-import '../../../domain/repository/competition_repository.dart';
+import '../../../domain/repository/race_repository.dart';
 import '../../../domain/repository/health_measurement_repository.dart';
 import '../../../domain/repository/user_repository.dart';
 import '../../../domain/repository/workout_repository.dart';
@@ -68,7 +68,7 @@ class _IdentitiesBlocProvider extends StatelessWidget {
         healthMeasurementRepository:
             context.read<HealthMeasurementRepository>(),
         bloodTestRepository: context.read<BloodTestRepository>(),
-        competitionRepository: context.read<CompetitionRepository>(),
+        raceRepository: context.read<RaceRepository>(),
       )..add(
           const ProfileIdentitiesEventInitialize(),
         ),

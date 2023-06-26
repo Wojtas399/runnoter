@@ -11,8 +11,8 @@ import '../../../../../domain/service/auth_service.dart';
 import '../../../additional_model/bloc_state.dart';
 import '../../../additional_model/custom_exception.dart';
 import '../../../repository/blood_test_repository.dart';
-import '../../../repository/competition_repository.dart';
 import '../../../repository/health_measurement_repository.dart';
+import '../../../repository/race_repository.dart';
 import '../../../repository/workout_repository.dart';
 
 part 'profile_identities_event.dart';
@@ -25,7 +25,7 @@ class ProfileIdentitiesBloc extends BlocWithStatus<ProfileIdentitiesEvent,
   final WorkoutRepository _workoutRepository;
   final HealthMeasurementRepository _healthMeasurementRepository;
   final BloodTestRepository _bloodTestRepository;
-  final CompetitionRepository _competitionRepository;
+  final RaceRepository _raceRepository;
   StreamSubscription<(String?, User?)>? _userIdentitiesListener;
 
   ProfileIdentitiesBloc({
@@ -34,7 +34,7 @@ class ProfileIdentitiesBloc extends BlocWithStatus<ProfileIdentitiesEvent,
     required WorkoutRepository workoutRepository,
     required HealthMeasurementRepository healthMeasurementRepository,
     required BloodTestRepository bloodTestRepository,
-    required CompetitionRepository competitionRepository,
+    required RaceRepository raceRepository,
     ProfileIdentitiesState state = const ProfileIdentitiesState(
       status: BlocStatusInitial(),
     ),
@@ -43,7 +43,7 @@ class ProfileIdentitiesBloc extends BlocWithStatus<ProfileIdentitiesEvent,
         _workoutRepository = workoutRepository,
         _healthMeasurementRepository = healthMeasurementRepository,
         _bloodTestRepository = bloodTestRepository,
-        _competitionRepository = competitionRepository,
+        _raceRepository = raceRepository,
         super(state) {
     on<ProfileIdentitiesEventInitialize>(_initialize);
     on<ProfileIdentitiesEventIdentitiesUpdated>(_identitiesUpdated);
@@ -246,7 +246,7 @@ class ProfileIdentitiesBloc extends BlocWithStatus<ProfileIdentitiesEvent,
       userId: state.loggedUserId!,
     );
     await _bloodTestRepository.deleteAllUserTests(userId: state.loggedUserId!);
-    await _competitionRepository.deleteAllUserCompetitions(
+    await _raceRepository.deleteAllUserRaces(
       userId: state.loggedUserId!,
     );
     await _userRepository.deleteUser(userId: state.loggedUserId!);

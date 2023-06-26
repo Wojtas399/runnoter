@@ -33,6 +33,7 @@ class HealthState extends BlocState {
   HealthState copyWith({
     BlocStatus? status,
     HealthMeasurement? todayMeasurement,
+    bool removedTodayMeasurement = false,
     ChartRange? chartRange,
     DateTime? chartStartDate,
     DateTime? chartEndDate,
@@ -41,7 +42,9 @@ class HealthState extends BlocState {
   }) =>
       HealthState(
         status: status ?? const BlocStatusComplete(),
-        todayMeasurement: todayMeasurement ?? this.todayMeasurement,
+        todayMeasurement: removedTodayMeasurement
+            ? null
+            : todayMeasurement ?? this.todayMeasurement,
         chartRange: chartRange ?? this.chartRange,
         chartStartDate: chartStartDate ?? this.chartStartDate,
         chartEndDate: chartEndDate ?? this.chartEndDate,

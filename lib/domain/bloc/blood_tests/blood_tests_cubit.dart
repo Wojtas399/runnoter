@@ -35,11 +35,18 @@ class BloodTestsCubit extends Cubit<List<BloodTestsFromYear>?> {
             userId: loggedUserId,
           ),
         )
-        .listen(
-          (List<BloodTest>? bloodTests) => emit(
-            _segregateBloodTests(bloodTests),
-          ),
-        );
+        .listen(_onBloodTestsChanged);
+  }
+
+  void _onBloodTestsChanged(List<BloodTest>? bloodTests) {
+    final segregatedTests = _segregateBloodTests(bloodTests);
+    if (segregatedTests == null) {
+      return;
+    }
+    for (final testsFromYear in segregatedTests) {
+      testsFromYear.bloodTests.sort((t1, t2) => t2.date.compareTo(t1.date));
+    }
+    emit(segregatedTests);
   }
 
   List<BloodTestsFromYear>? _segregateBloodTests(

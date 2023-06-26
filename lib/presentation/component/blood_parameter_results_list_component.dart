@@ -358,7 +358,7 @@ class _EditableParameterValueState extends State<_EditableParameterValue> {
   Widget build(BuildContext context) {
     return TextFieldComponent(
       maxLines: 1,
-      keyboardType: TextInputType.number,
+      keyboardType: const TextInputType.numberWithOptions(decimal: true),
       maxLength: 10,
       inputFormatters: [
         DecimalTextInputFormatter(decimalRange: 2),

@@ -4,46 +4,33 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../domain/entity/run_status.dart';
 
 extension RunStatusFormatter on RunStatus {
-  IconData toIcon() {
-    if (this is RunStatusPending) {
-      return Icons.schedule;
-    } else if (this is RunStatusDone) {
-      return Icons.check_circle_outline;
-    } else if (this is RunStatusAborted) {
-      return Icons.stop_circle_outlined;
-    } else if (this is RunStatusUndone) {
-      return Icons.cancel_outlined;
-    } else {
-      throw '[RunStatusFormatter - toIcon()]: Unknown status type';
-    }
-  }
+  IconData toIcon() => switch (this) {
+        RunStatusPending() => Icons.schedule,
+        RunStatusDone() => Icons.check_circle_outline,
+        RunStatusAborted() => Icons.stop_circle_outlined,
+        RunStatusUndone() => Icons.cancel_outlined,
+      };
 
-  String toLabel(BuildContext context) {
-    final str = Str.of(context);
-    if (this is RunStatusPending) {
-      return str.runStatusPending;
-    } else if (this is RunStatusDone) {
-      return str.runStatusDone;
-    } else if (this is RunStatusAborted) {
-      return str.runStatusAborted;
-    } else if (this is RunStatusUndone) {
-      return str.runStatusUndone;
-    } else {
-      throw '[RunStatusFormatter - toLabel()]: Unknown status type';
-    }
-  }
+  String toLabel(BuildContext context) => switch (this) {
+        RunStatusPending() => Str.of(context).runStatusPending,
+        RunStatusDone() => Str.of(context).runStatusDone,
+        RunStatusAborted() => Str.of(context).runStatusAborted,
+        RunStatusUndone() => Str.of(context).runStatusUndone,
+      };
 
-  Color toColor() {
-    if (this is RunStatusPending) {
-      return Colors.deepOrangeAccent;
-    } else if (this is RunStatusDone) {
-      return Colors.green;
-    } else if (this is RunStatusAborted) {
-      return Colors.grey;
-    } else if (this is RunStatusUndone) {
-      return Colors.red;
-    } else {
-      throw '[RunStatusFormatter - toColor()]: Unknown status type';
-    }
-  }
+  Color toColor(BuildContext context) => switch (this) {
+        RunStatusPending() => switch (Theme.of(context).brightness) {
+            Brightness.light => const Color(0xFF855400),
+            Brightness.dark => const Color(0xFFFFB95C),
+          },
+        RunStatusDone() => switch (Theme.of(context).brightness) {
+            Brightness.light => const Color(0xFF296C24),
+            Brightness.dark => const Color(0xFF90d882),
+          },
+        RunStatusAborted() => switch (Theme.of(context).brightness) {
+            Brightness.light => const Color(0xFF4A6267),
+            Brightness.dark => const Color(0xFFB1CBD0),
+          },
+        RunStatusUndone() => Theme.of(context).colorScheme.error,
+      };
 }

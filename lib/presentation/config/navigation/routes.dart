@@ -33,12 +33,12 @@ class HomeRoute extends CustomRoute {
   const HomeRoute() : super(path: RoutePath.home);
 }
 
-class DayPreviewRoute extends CustomRouteWithArguments<DateTime> {
-  const DayPreviewRoute({
-    required DateTime date,
+class WorkoutPreviewRoute extends CustomRouteWithArguments<String> {
+  const WorkoutPreviewRoute({
+    required String workoutId,
   }) : super(
-          arguments: date,
-          path: RoutePath.dayPreview,
+          arguments: workoutId,
+          path: RoutePath.workoutPreview,
         );
 }
 
@@ -59,6 +59,15 @@ class RunStatusCreatorRoute
   }) : super(
           arguments: creatorArguments,
           path: RoutePath.runStatusCreator,
+        );
+}
+
+class DayPreviewRoute extends CustomRouteWithArguments<DateTime> {
+  const DayPreviewRoute({
+    required DateTime date,
+  }) : super(
+          arguments: date,
+          path: RoutePath.dayPreview,
         );
 }
 
@@ -94,21 +103,21 @@ class BloodTestPreviewRoute extends CustomRouteWithArguments<String> {
         );
 }
 
-class CompetitionCreatorRoute extends CustomRouteWithArguments<String?> {
-  const CompetitionCreatorRoute({
-    String? competitionId,
+class RaceCreatorRoute extends CustomRouteWithArguments<RaceCreatorArguments?> {
+  const RaceCreatorRoute({
+    RaceCreatorArguments? arguments,
   }) : super(
-          arguments: competitionId,
-          path: RoutePath.competitionCreator,
+          arguments: arguments,
+          path: RoutePath.raceCreator,
         );
 }
 
-class CompetitionPreviewRoute extends CustomRouteWithArguments<String> {
-  const CompetitionPreviewRoute({
-    required String competitionId,
+class RacePreviewRoute extends CustomRouteWithArguments<String> {
+  const RacePreviewRoute({
+    required String raceId,
   }) : super(
-          arguments: competitionId,
-          path: RoutePath.competitionPreview,
+          arguments: raceId,
+          path: RoutePath.racePreview,
         );
 }
 
@@ -133,15 +142,16 @@ enum RoutePath {
   signUp('/sign-up'),
   forgotPassword('/forgot-password'),
   home('/home'),
+  workoutPreview('/home/workout-preview'),
+  workoutCreator('/home/workout-creator'),
+  runStatusCreator('/home/workout-preview/workout-status-creator'),
   dayPreview('/home/day-preview'),
-  workoutCreator('/home/day-preview/workout-creator'),
-  runStatusCreator('/home/day-preview/workout-status-creator'),
   healthMeasurementCreator('/home/health_measurement-creator'),
   healthMeasurements('/home/health-measurements'),
   bloodTestCreator('/home/blood-test-creator'),
   bloodTestPreview('/home/blood-test-preview'),
-  competitionCreator('/home/competition-creator'),
-  competitionPreview('/home/competition-preview'),
+  raceCreator('/home/race-creator'),
+  racePreview('/home/race-preview'),
   themeMode('/home/profile/theme-mode'),
   language('/home/profile/language'),
   distanceUnit('/home/profile/distance-unit'),

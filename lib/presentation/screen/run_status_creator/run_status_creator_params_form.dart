@@ -12,7 +12,7 @@ class _ParamsForm extends StatelessWidget {
     return Column(
       children: [
         const _CoveredDistance(),
-        if (entityType == EntityType.competition)
+        if (entityType == EntityType.race)
           const Column(
             children: [
               gap,

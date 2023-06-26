@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../screen/competition_creator/competition_creator_screen.dart';
-import '../../screen/competition_preview/competition_preview_screen.dart';
 import '../../screen/screens.dart';
 import '../animation/slide_to_top_anim.dart';
 import 'routes.dart';
@@ -31,9 +29,9 @@ class AppNavigator extends StatelessWidget {
       screen = const ForgotPasswordScreen();
     } else if (routePath == RoutePath.home.path) {
       screen = const HomeScreen();
-    } else if (routePath == RoutePath.dayPreview.path) {
-      screen = DayPreviewScreen(
-        date: settings.arguments as DateTime,
+    } else if (routePath == RoutePath.workoutPreview.path) {
+      screen = WorkoutPreviewScreen(
+        workoutId: settings.arguments as String,
       );
     } else if (routePath == RoutePath.workoutCreator.path) {
       screen = WorkoutCreatorScreen(
@@ -42,6 +40,10 @@ class AppNavigator extends StatelessWidget {
     } else if (routePath == RoutePath.runStatusCreator.path) {
       screen = RunStatusCreatorScreen(
         arguments: settings.arguments as RunStatusCreatorArguments,
+      );
+    } else if (routePath == RoutePath.dayPreview.path) {
+      screen = DayPreviewScreen(
+        date: settings.arguments as DateTime,
       );
     } else if (routePath == RoutePath.healthMeasurementCreator.path) {
       screen = HealthMeasurementCreatorScreen(
@@ -57,13 +59,13 @@ class AppNavigator extends StatelessWidget {
       screen = BloodTestPreviewScreen(
         bloodTestId: settings.arguments as String,
       );
-    } else if (routePath == RoutePath.competitionCreator.path) {
-      screen = CompetitionCreatorScreen(
-        competitionId: settings.arguments as String?,
+    } else if (routePath == RoutePath.raceCreator.path) {
+      screen = RaceCreatorScreen(
+        arguments: settings.arguments as RaceCreatorArguments?,
       );
-    } else if (routePath == RoutePath.competitionPreview.path) {
-      screen = CompetitionPreviewScreen(
-        competitionId: settings.arguments as String,
+    } else if (routePath == RoutePath.racePreview.path) {
+      screen = RacePreviewScreen(
+        raceId: settings.arguments as String,
       );
     } else if (routePath == RoutePath.themeMode.path) {
       screen = const ThemeModeScreen();

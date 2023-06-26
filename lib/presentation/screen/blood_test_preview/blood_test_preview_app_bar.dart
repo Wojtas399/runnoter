@@ -21,55 +21,19 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 }
 
-enum _BloodTestAction { edit, delete }
-
 class _BloodTestActionsMenu extends StatelessWidget {
   const _BloodTestActionsMenu();
 
   @override
   Widget build(BuildContext context) {
-    return PopupMenuButton<_BloodTestAction>(
-      onSelected: (_BloodTestAction action) {
-        _manageActions(context, action);
-      },
-      itemBuilder: (BuildContext context) => [
-        PopupMenuItem<_BloodTestAction>(
-          value: _BloodTestAction.edit,
-          child: Row(
-            children: [
-              const Icon(Icons.edit_outlined),
-              const SizedBox(width: 8),
-              Text(
-                Str.of(context).edit,
-              )
-            ],
-          ),
-        ),
-        PopupMenuItem<_BloodTestAction>(
-          value: _BloodTestAction.delete,
-          child: Row(
-            children: [
-              const Icon(Icons.delete_outline),
-              const SizedBox(width: 8),
-              Text(
-                Str.of(context).delete,
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  void _manageActions(BuildContext context, _BloodTestAction action) {
-    switch (action) {
-      case _BloodTestAction.edit:
+    return EditDeletePopupMenu(
+      onEditSelected: () {
         _editTest(context);
-        break;
-      case _BloodTestAction.delete:
+      },
+      onDeleteSelected: () {
         _deleteTest(context);
-        break;
-    }
+      },
+    );
   }
 
   void _editTest(BuildContext context) {

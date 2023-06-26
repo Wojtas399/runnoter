@@ -15,7 +15,7 @@ class _SubmitButton extends StatelessWidget {
     return BigButton(
       label: workout != null
           ? Str.of(context).workoutCreatorEditWorkoutButton
-          : Str.of(context).workoutCreatorAddWorkoutButton,
+          : Str.of(context).workoutCreatorCreateWorkoutButton,
       isDisabled: isDisabled,
       onPressed: () {
         _onPressed(context);

@@ -21,6 +21,7 @@ void main() {
 
   HealthBloc createBloc({
     ChartRange chartRange = ChartRange.week,
+    HealthMeasurement? todayMeasurement,
     DateTime? chartStartDate,
     DateTime? chartEndDate,
   }) =>
@@ -29,9 +30,13 @@ void main() {
         authService: authService,
         healthMeasurementRepository: healthMeasurementRepository,
         chartService: chartService,
-        chartRange: chartRange,
-        chartStartDate: chartStartDate,
-        chartEndDate: chartEndDate,
+        state: HealthState(
+          status: const BlocStatusInitial(),
+          chartRange: chartRange,
+          todayMeasurement: todayMeasurement,
+          chartStartDate: chartStartDate,
+          chartEndDate: chartEndDate,
+        ),
       );
 
   HealthState createState({
@@ -173,6 +178,29 @@ void main() {
           restingHeartRate: 50,
           fastingWeight: 60.5,
         ),
+      ),
+    ],
+  );
+
+  blocTest(
+    'today measurement updated, '
+    'should set today measurement as null if given measurement is null',
+    build: () => createBloc(
+      todayMeasurement: createHealthMeasurement(
+        date: DateTime(2023, 5, 12),
+        restingHeartRate: 50,
+        fastingWeight: 60.5,
+      ),
+    ),
+    act: (HealthBloc bloc) => bloc.add(
+      const HealthEventTodayMeasurementUpdated(
+        todayMeasurement: null,
+      ),
+    ),
+    expect: () => [
+      createState(
+        status: const BlocStatusComplete(),
+        todayMeasurement: null,
       ),
     ],
   );

@@ -123,9 +123,9 @@
   "@homeDrawerBloodTests": {
     "description": "Label of drawer's blood readings option"
   },
-  "homeDrawerCompetitions": "Starty w zawodach",
-  "@homeDrawerCompetitions": {
-    "description": "Label of drawer's competitions option"
+  "homeDrawerRaces": "Starty w zawodach",
+  "@homeDrawerRaces": {
+    "description": "Label of drawer's races option"
   },
   "homeDrawerSignOut": "Wyloguj",
   "@homeDrawerSignOut": {
@@ -139,48 +139,28 @@
   "@homeSignOutConfirmationDialogMessage": {
     "description": "Message of the dialog to confirm sign out"
   },
-  "dayPreviewScreenTitle": "Podgląd dnia",
-  "@dayPreviewScreenTitle": {
-    "description": "Title of the day preview screen"
+  "currentWeekActivityActionSheetTitle": "Wybierz rodzaj aktywności do dodania",
+  "@currentWeekActivityActionSheetTitle": {
+    "description": "Title of action sheet with type of activities to add"
   },
-  "dayPreviewNoWorkoutTitle": "Brak treningu",
-  "@dayPreviewNoWorkoutTitle": {
-    "description": "Title of the information about no workout"
+  "workoutPreviewScreenTitle": "Trening",
+  "@workoutPreviewScreenTitle": {
+    "description": "Title of the workout preview screen"
   },
-  "dayPreviewNoWorkoutMessagePastDay": "Tego dnia nie było zaplanowanego treningu",
-  "@dayPreviewNoWorkoutMessagePastDay": {
-    "description": "Message of the information about no workout on a day from the past"
+  "workoutPreviewWorkoutDate": "Nazwa",
+  "@workoutPreviewWorkoutDate": {
+    "description": "Label of the section to display workout date"
   },
-  "dayPreviewNoWorkoutMessageFutureDay": "Tego dnia nie masz zaplanowanego treningu",
-  "@dayPreviewNoWorkoutMessageFutureDay": {
-    "description": "Message of the information about no workout on a day from the future"
-  },
-  "dayPreviewAddWorkoutButton": "Dodaj trening",
-  "@dayPreviewAddWorkoutButton": {
-    "description": "Label of the button to add workout"
-  },
-  "dayPreviewWorkoutName": "Nazwa",
-  "@dayPreviewWorkoutName": {
-    "description": "Label of the section to display workout name"
-  },
-  "dayPreviewWorkoutStages": "Etapy",
-  "@dayPreviewWorkoutStages": {
+  "workoutPreviewWorkoutStages": "Etapy",
+  "@workoutPreviewWorkoutStages": {
     "description": "Label of the section to display stages"
   },
-  "dayPreviewTotalDistance": "Całkowity dystans",
-  "@dayPreviewTotalDistance": {
+  "workoutPreviewTotalDistance": "Całkowity dystans",
+  "@workoutPreviewTotalDistance": {
     "description": "Label of the section to display total distance of the workout"
   },
-  "dayPreviewEditWorkout": "Edytuj trening",
-  "@dayPreviewEditWorkout": {
-    "description": "Label of the option to edit workout"
-  },
-  "dayPreviewDeleteWorkout": "Usuń trening",
-  "@dayPreviewDeleteWorkout": {
-    "description": "Label of the option to delete workout"
-  },
-  "dayPreviewDeletedWorkoutMessage": "Pomyślnie usunięto trening",
-  "@dayPreviewDeletedWorkoutMessage": {
+  "workoutPreviewDeletedWorkoutMessage": "Pomyślnie usunięto trening",
+  "@workoutPreviewDeletedWorkoutMessage": {
     "description": "Message to inform that workout has been deleted"
   },
   "workoutCreatorScreenNewWorkoutTitle": "Nowy trening",
@@ -211,9 +191,9 @@
   "@workoutCreatorAddStageInstructions": {
     "description": "Instruction on how to add new workout stage"
   },
-  "workoutCreatorAddWorkoutButton": "Dodaj",
-  "@workoutCreatorAddWorkoutButton": {
-    "description": "Label of the button to add workout"
+  "workoutCreatorCreateWorkoutButton": "Utwórz",
+  "@workoutCreatorCreateWorkoutButton": {
+    "description": "Label of the button to create workout"
   },
   "workoutCreatorEditWorkoutButton": "Zaktualizuj",
   "@workoutCreatorEditWorkoutButton": {
@@ -298,6 +278,18 @@
   "runStatusCreatorSavedStatusMessage": "Pomyślnie zaktualizowano status",
   "@runStatusCreatorSavedStatusMessage": {
     "description": "Info about successfully saved status"
+  },
+  "dayPreviewNoActivitiesTitle": "Brak aktywności",
+  "@dayPreviewNoActivitiesTitle": {
+    "description": "Title of the information about no activities"
+  },
+  "dayPreviewNoActivitiesMessagePastDay": "Tego dnia nie było zaplanowanych żadnych aktywności",
+  "@dayPreviewNoActivitiesMessagePastDay": {
+    "description": "Message of the information about no activities on a day from the past"
+  },
+  "dayPreviewNoActivitiesMessageFutureDay": "Tego dnia nie masz zaplanowanych żadnych aktywności",
+  "@dayPreviewNoActivitiesMessageFutureDay": {
+    "description": "Message of the information about no activities on a day from the future"
   },
   "healthTodayMeasurement": "Dzisiejszy pomiar",
   "@healthTodayMeasurement": {
@@ -543,73 +535,61 @@
   "@bloodTestAdditionalParams": {
     "description": "Label of the additional blood params"
   },
-  "competitionCreatorScreenTitle": "Nowe zawody",
-  "@competitionCreatorScreenTitle": {
-    "description": "Title of the competition creator screen"
+  "raceCreatorScreenTitle": "Nowe zawody",
+  "@raceCreatorScreenTitle": {
+    "description": "Title of the race creator screen"
   },
-  "competitionCreatorAddedCompetitionMessage": "Pomyślnie dodano nowe zawody",
-  "@competitionCreatorAddedCompetitionMessage": {
-    "description": "Message to inform that new competition has been added"
+  "raceCreatorAddedRaceMessage": "Pomyślnie dodano nowe zawody",
+  "@raceCreatorAddedRaceMessage": {
+    "description": "Message to inform that new race has been added"
   },
-  "competitionCreatorUpdatedCompetitionMessage": "Pomyślnie zaktualizowano zawody",
-  "@competitionCreatorUpdatedCompetitionMessage": {
-    "description": "Message to inform that competition has been updated"
+  "raceCreatorUpdatedRaceMessage": "Pomyślnie zaktualizowano zawody",
+  "@raceCreatorUpdatedRaceMessage": {
+    "description": "Message to inform that race has been updated"
   },
-  "competitionCreatorExpectedDurationHoursShort": "godz.",
-  "@competitionCreatorExpectedDurationHoursShort": {
-    "description": "Short label of duration hours"
+  "racesNoRacesTitle": "Brak zawodów",
+  "@racesNoRacesTitle": {
+    "description": "Title of the info about the lack of races"
   },
-  "competitionCreatorExpectedDurationMinutesShort": "min.",
-  "@competitionCreatorExpectedDurationMinutesShort": {
-    "description": "Short label of duration minutes"
+  "racesNoRacesMessage": "Dodaj zawody, aby mieć możliwość przeglądania tej listy",
+  "@racesNoRacesMessage": {
+    "description": "Message of the info about the lack of races"
   },
-  "competitionCreatorExpectedDurationSecondsShort": "sek.",
-  "@competitionCreatorExpectedDurationSecondsShort": {
-    "description": "Short label of duration seconds"
+  "racePreviewScreenTitle": "Zawody",
+  "@racePreviewScreenTitle": {
+    "description": "Title of the race preview screen"
   },
-  "competitionsNoCompetitionsTitle": "Brak zawodów",
-  "@competitionsNoCompetitionsTitle": {
-    "description": "Title of the info about the lack of competitions"
+  "racePreviewDeleteRaceTitle": "Usunięcie zawodów",
+  "@racePreviewDeleteRaceTitle": {
+    "description": "Title of the confirmation dialog to delete race"
   },
-  "competitionsNoCompetitionsMessage": "Dodaj zawody, aby mieć możliwość przeglądania tej listy",
-  "@competitionsNoCompetitionsMessage": {
-    "description": "Message of the info about the lack of competitions"
+  "racePreviewDeleteRaceMessage": "Tej operacji nie można cofnąć. Czy na pewno chcesz usunąć te zawody?",
+  "@racePreviewDeleteRaceMessage": {
+    "description": "Message of the confirmation dialog to delete race"
   },
-  "competitionPreviewScreenTitle": "Zawody",
-  "@competitionPreviewScreenTitle": {
-    "description": "Title of the competition preview screen"
+  "racePreviewDeletedRaceMessage": "Pomyślnie usunięto zawody",
+  "@racePreviewDeletedRaceMessage": {
+    "description": "Message to inform that race has been deleted"
   },
-  "competitionPreviewDeleteCompetitionTitle": "Usunięcie zawodów",
-  "@competitionPreviewDeleteCompetitionTitle": {
-    "description": "Title of the confirmation dialog to delete competition"
+  "raceDate": "Data",
+  "@raceDate": {
+    "description": "Label of race date"
   },
-  "competitionPreviewDeleteCompetitionMessage": "Tej operacji nie można cofnąć. Czy na pewno chcesz usunąć te zawody?",
-  "@competitionPreviewDeleteCompetitionMessage": {
-    "description": "Message of the confirmation dialog to delete competition"
+  "raceName": "Nazwa zawodów",
+  "@raceName": {
+    "description": "Label of race name"
   },
-  "competitionPreviewDeletedCompetitionMessage": "Pomyślnie usunięto zawody",
-  "@competitionPreviewDeletedCompetitionMessage": {
-    "description": "Message to inform that competition has been deleted"
+  "racePlace": "Miejsce",
+  "@racePlace": {
+    "description": "Label of race place"
   },
-  "competitionDate": "Data",
-  "@competitionDate": {
-    "description": "Label of competition date"
+  "raceDistance": "Dystans",
+  "@raceDistance": {
+    "description": "Label of race distance"
   },
-  "competitionName": "Nazwa zawodów",
-  "@competitionName": {
-    "description": "Label of competition name"
-  },
-  "competitionPlace": "Miejsce",
-  "@competitionPlace": {
-    "description": "Label of competition place"
-  },
-  "competitionDistance": "Dystans",
-  "@competitionDistance": {
-    "description": "Label of competition distance"
-  },
-  "competitionExpectedDuration": "Oczekiwany czas",
-  "@competitionExpectedDuration": {
-    "description": "Label of competition expected duration"
+  "raceExpectedDuration": "Oczekiwany czas",
+  "@raceExpectedDuration": {
+    "description": "Label of race expected duration"
   },
   "runStatus": "Status",
   "@runStatus": {
@@ -835,6 +815,18 @@
       }
     }
   },
+  "durationHoursShort": "godz.",
+  "@durationHoursShort": {
+    "description": "Short label of duration hours"
+  },
+  "durationMinutesShort": "min.",
+  "@durationMinutesShort": {
+    "description": "Short label of duration minutes"
+  },
+  "durationSecondsShort": "sek.",
+  "@durationSecondsShort": {
+    "description": "Short label of duration seconds"
+  },
   "noInternetConnectionDialogTitle": "Brak połączenia internetowego",
   "@noInternetConnectionDialogTitle": {
     "description": "Title of the dialog about no internet connection"
@@ -891,6 +883,9 @@
   "@passwordConfirmation": {
     "description": "Password confirmation"
   },
+  "workout": "Trening",
+  "race": "Wyścig",
+  "day": "Dzień",
   "loading": "Ładowanie",
   "close": "Zamknij",
   "cancel": "Anuluj",

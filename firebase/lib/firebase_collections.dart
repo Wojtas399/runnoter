@@ -84,12 +84,12 @@ CollectionReference<BloodTestDto> getBloodTestsRef(
           toFirestore: (bloodTestsDto, _) => bloodTestsDto.toJson(),
         );
 
-CollectionReference<CompetitionDto> getCompetitionsRef(
+CollectionReference<RaceDto> getRacesRef(
   String userId,
 ) =>
-    getUserRef(userId).collection('Competitions').withConverter<CompetitionDto>(
-          fromFirestore: (snapshot, _) => CompetitionDto.fromJson(
-            competitionId: snapshot.id,
+    getUserRef(userId).collection('Races').withConverter<RaceDto>(
+          fromFirestore: (snapshot, _) => RaceDto.fromJson(
+            raceId: snapshot.id,
             userId: userId,
             json: snapshot.data(),
           ),

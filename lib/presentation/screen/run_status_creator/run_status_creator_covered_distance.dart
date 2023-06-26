@@ -35,7 +35,7 @@ class _CoveredDistanceState extends State<_CoveredDistance> {
       label:
           '${Str.of(context).runStatusCreatorCoveredDistance} [${context.distanceUnit.toUIShortFormat()}]',
       maxLength: 8,
-      keyboardType: TextInputType.number,
+      keyboardType: const TextInputType.numberWithOptions(decimal: true),
       isRequired: true,
       requireHigherThan0: true,
       inputFormatters: [

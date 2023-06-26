@@ -50,7 +50,7 @@ class _Drawer extends StatelessWidget {
         NavigationDrawerDestination(
           icon: const Icon(Icons.emoji_events_outlined),
           selectedIcon: const Icon(Icons.emoji_events),
-          label: Text(Str.of(context).homeDrawerCompetitions),
+          label: Text(Str.of(context).homeDrawerRaces),
         ),
         divider,
         NavigationDrawerDestination(

@@ -1,12 +1,12 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../common/date_service.dart';
 
 class CalendarComponentCubit extends Cubit<CalendarComponentState> {
   final DateService _dateService;
-  List<WorkoutDay> _workoutDays = [];
+  List<CalendarDayActivity> _activities = [];
 
   CalendarComponentCubit({
     required DateService dateService,
@@ -21,9 +21,9 @@ class CalendarComponentCubit extends Cubit<CalendarComponentState> {
 
   void updateState({
     DateTime? date,
-    List<WorkoutDay>? workoutDays,
+    List<CalendarDayActivity>? activities,
   }) {
-    _workoutDays = workoutDays ?? _workoutDays;
+    _activities = [...?activities];
     final int? month = date?.month ?? state.displayingMonth;
     final int? year = date?.year ?? state.displayingYear;
     emit(state.copyWith(
@@ -61,6 +61,12 @@ class CalendarComponentCubit extends Cubit<CalendarComponentState> {
     ));
   }
 
+  void cleanPressedDay() {
+    emit(state.copyWith(
+      pressedDate: null,
+    ));
+  }
+
   List<CalendarWeek> _createWeeks(int month, int year) {
     List<CalendarWeek> weeks = [];
     DateTime date = DateTime(year, month);
@@ -87,7 +93,11 @@ class CalendarComponentCubit extends Cubit<CalendarComponentState> {
         date: date,
         isDisabled: date.month != month,
         isTodayDay: _dateService.areDatesTheSame(date, todayDate),
-        icon: _getRunStatusIconForDay(date),
+        activities: [..._activities]
+            .where(
+              (activity) => _dateService.areDatesTheSame(activity.date, date),
+            )
+            .toList(),
       );
       daysFromWeek.add(newCalendarDay);
       date = date.add(
@@ -95,15 +105,6 @@ class CalendarComponentCubit extends Cubit<CalendarComponentState> {
       );
     }
     return daysFromWeek;
-  }
-
-  Icon? _getRunStatusIconForDay(DateTime date) {
-    return <WorkoutDay?>[..._workoutDays]
-        .firstWhere(
-          (WorkoutDay? day) => day?.date == date,
-          orElse: () => null,
-        )
-        ?.runStatusIcon;
   }
 }
 
@@ -142,22 +143,6 @@ class CalendarComponentState extends Equatable {
       );
 }
 
-class WorkoutDay extends Equatable {
-  final DateTime date;
-  final Icon runStatusIcon;
-
-  const WorkoutDay({
-    required this.date,
-    required this.runStatusIcon,
-  });
-
-  @override
-  List<Object?> get props => [
-        date,
-        runStatusIcon,
-      ];
-}
-
 class CalendarWeek extends Equatable {
   final List<CalendarDay> days;
 
@@ -175,13 +160,13 @@ class CalendarDay extends Equatable {
   final DateTime date;
   final bool isDisabled;
   final bool isTodayDay;
-  final Icon? icon;
+  final List<CalendarDayActivity> activities;
 
   const CalendarDay({
     required this.date,
     required this.isDisabled,
     required this.isTodayDay,
-    this.icon,
+    this.activities = const [],
   });
 
   @override
@@ -189,6 +174,22 @@ class CalendarDay extends Equatable {
         date,
         isDisabled,
         isTodayDay,
-        icon,
+        activities,
+      ];
+}
+
+class CalendarDayActivity extends Equatable {
+  final DateTime date;
+  final Color color;
+
+  const CalendarDayActivity({
+    required this.date,
+    required this.color,
+  });
+
+  @override
+  List<Object?> get props => [
+        date,
+        color,
       ];
 }

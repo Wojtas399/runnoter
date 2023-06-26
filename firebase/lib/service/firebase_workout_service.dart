@@ -36,7 +36,7 @@ class FirebaseWorkoutService {
     return snapshot.data();
   }
 
-  Future<WorkoutDto?> loadWorkoutByDate({
+  Future<List<WorkoutDto>?> loadWorkoutsByDate({
     required DateTime date,
     required String userId,
   }) async {
@@ -50,7 +50,7 @@ class FirebaseWorkoutService {
     if (snapshot.docs.isEmpty) {
       return null;
     }
-    return snapshot.docs.first.data();
+    return snapshot.docs.map((doc) => doc.data()).toList();
   }
 
   Future<List<WorkoutDto>?> loadAllWorkouts({

@@ -1,35 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 import '../../../common/date_service.dart';
-import '../../../domain/bloc/day_preview/day_preview_bloc.dart';
-import '../../../domain/entity/run_status.dart';
-import '../../../domain/entity/workout_stage.dart';
+import '../../../domain/bloc/day_preview/day_preview_cubit.dart';
+import '../../../domain/entity/race.dart';
+import '../../../domain/entity/workout.dart';
+import '../../../domain/repository/race_repository.dart';
 import '../../../domain/repository/workout_repository.dart';
 import '../../../domain/service/auth_service.dart';
-import '../../component/big_button_component.dart';
-import '../../component/bloc_with_status_listener_component.dart';
-import '../../component/content_with_label_component.dart';
-import '../../component/nullable_text_component.dart';
-import '../../component/padding/paddings_24.dart';
-import '../../component/run_stats_component.dart';
-import '../../component/text/body_text_components.dart';
-import '../../component/text/title_text_components.dart';
+import '../../component/activity_item_component.dart';
+import '../../component/empty_content_info_component.dart';
+import '../../component/loading_info_component.dart';
 import '../../config/navigation/routes.dart';
 import '../../formatter/date_formatter.dart';
-import '../../formatter/list_of_workout_stages_formatter.dart';
-import '../../formatter/run_status_formatter.dart';
-import '../../formatter/workout_stage_formatter.dart';
-import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
 import '../screens.dart';
 
-part 'day_preview_app_bar.dart';
-part 'day_preview_content.dart';
-part 'day_preview_no_workout_info.dart';
-part 'day_preview_run_status.dart';
-part 'day_preview_workout.dart';
+part 'day_preview_activities_content.dart';
 
 class DayPreviewScreen extends StatelessWidget {
   final DateTime date;
@@ -41,20 +30,18 @@ class DayPreviewScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _BlocProvider(
+    return _CubitProvider(
       date: date,
-      child: const _BlocListener(
-        child: DayPreviewContent(),
-      ),
+      child: const _Content(),
     );
   }
 }
 
-class _BlocProvider extends StatelessWidget {
+class _CubitProvider extends StatelessWidget {
   final DateTime date;
   final Widget child;
 
-  const _BlocProvider({
+  const _CubitProvider({
     required this.date,
     required this.child,
   });
@@ -62,70 +49,103 @@ class _BlocProvider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (BuildContext context) => DayPreviewBloc(
+      create: (BuildContext context) => DayPreviewCubit(
+        date: date,
         authService: context.read<AuthService>(),
         workoutRepository: context.read<WorkoutRepository>(),
+        raceRepository: context.read<RaceRepository>(),
         dateService: DateService(),
-      )..add(
-          DayPreviewEventInitialize(
-            date: date,
-          ),
-        ),
+      )..initialize(),
       child: child,
     );
   }
 }
 
-class _BlocListener extends StatelessWidget {
-  final Widget child;
-
-  const _BlocListener({
-    required this.child,
-  });
+class _Content extends StatelessWidget {
+  const _Content();
 
   @override
   Widget build(BuildContext context) {
-    return BlocWithStatusListener<DayPreviewBloc, DayPreviewState,
-        DayPreviewInfo, dynamic>(
-      onInfo: (DayPreviewInfo info) {
-        _manageInfo(context, info);
-      },
-      child: child,
+    return const Scaffold(
+      appBar: _AppBar(),
+      floatingActionButton: _FloatingActionButton(),
+      body: SafeArea(
+        child: _ActivitiesContent(),
+      ),
+    );
+  }
+}
+
+class _AppBar extends StatelessWidget implements PreferredSizeWidget {
+  const _AppBar();
+
+  @override
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+
+  @override
+  Widget build(BuildContext context) {
+    final DateTime date = context.read<DayPreviewCubit>().date;
+
+    return AppBar(
+      centerTitle: true,
+      title: Text(
+        '${Str.of(context).day} ${date.toDateWithDots()}',
+      ),
+    );
+  }
+}
+
+class _FloatingActionButton extends StatelessWidget {
+  const _FloatingActionButton();
+
+  @override
+  Widget build(BuildContext context) {
+    return SpeedDial(
+      icon: Icons.add,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(16)),
+      ),
+      spacing: 16,
+      childMargin: EdgeInsets.zero,
+      childPadding: const EdgeInsets.all(8.0),
+      children: [
+        SpeedDialChild(
+          child: const Icon(Icons.emoji_events),
+          label: Str.of(context).race,
+          onTap: () {
+            _onAddRaceSelected(context);
+          },
+        ),
+        SpeedDialChild(
+          child: const Icon(Icons.directions_run_outlined),
+          label: Str.of(context).workout,
+          onTap: () {
+            _onAddWorkoutSelected(context);
+          },
+        ),
+      ],
     );
   }
 
-  void _manageInfo(BuildContext context, DayPreviewInfo info) {
-    switch (info) {
-      case DayPreviewInfo.editWorkout:
-        _navigateToWorkoutEditor(context);
-        break;
-      case DayPreviewInfo.workoutDeleted:
-        _showInfoAboutDeletedWorkout(context);
-        break;
-    }
-  }
-
-  void _navigateToWorkoutEditor(BuildContext context) {
-    final DayPreviewBloc dayPreviewBloc = context.read<DayPreviewBloc>();
-    final DateTime? date = dayPreviewBloc.state.date;
-    final String? workoutId = dayPreviewBloc.state.workoutId;
-    if (date != null && workoutId != null) {
-      navigateTo(
-        context: context,
-        route: WorkoutCreatorRoute(
-          creatorArguments: WorkoutCreatorEditModeArguments(
-            date: date,
-            workoutId: workoutId,
-          ),
-        ),
-      );
-    }
-  }
-
-  void _showInfoAboutDeletedWorkout(BuildContext context) {
-    showSnackbarMessage(
+  void _onAddWorkoutSelected(BuildContext context) {
+    navigateTo(
       context: context,
-      message: Str.of(context).dayPreviewDeletedWorkoutMessage,
+      route: WorkoutCreatorRoute(
+        creatorArguments: WorkoutCreatorAddModeArguments(
+          date: context.read<DayPreviewCubit>().date,
+        ),
+      ),
+    );
+  }
+
+  void _onAddRaceSelected(BuildContext context) {
+    navigateTo(
+      context: context,
+      route: RaceCreatorRoute(
+        arguments: RaceCreatorArguments(
+          date: context.read<DayPreviewCubit>().date,
+        ),
+      ),
     );
   }
 }

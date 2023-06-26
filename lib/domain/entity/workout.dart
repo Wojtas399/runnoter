@@ -1,20 +1,15 @@
-import 'entity.dart';
-import 'run_status.dart';
+import 'activity.dart';
 import 'workout_stage.dart';
 
-class Workout extends Entity {
-  final String userId;
-  final DateTime date;
-  final RunStatus status;
-  final String name;
+class Workout extends Activity {
   final List<WorkoutStage> stages;
 
   const Workout({
     required super.id,
-    required this.userId,
-    required this.date,
-    required this.status,
-    required this.name,
+    required super.userId,
+    required super.date,
+    required super.status,
+    required super.name,
     required this.stages,
   });
 

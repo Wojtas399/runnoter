@@ -7,8 +7,8 @@ import 'package:runnoter/domain/bloc/profile/identities/profile_identities_bloc.
 
 import '../../../creators/user_creator.dart';
 import '../../../mock/domain/repository/mock_blood_test_repository.dart';
-import '../../../mock/domain/repository/mock_competition_repository.dart';
 import '../../../mock/domain/repository/mock_health_measurement_repository.dart';
+import '../../../mock/domain/repository/mock_race_repository.dart';
 import '../../../mock/domain/repository/mock_user_repository.dart';
 import '../../../mock/domain/repository/mock_workout_repository.dart';
 import '../../../mock/domain/service/mock_auth_service.dart';
@@ -19,7 +19,7 @@ void main() {
   final workoutRepository = MockWorkoutRepository();
   final healthMeasurementRepository = MockHealthMeasurementRepository();
   final bloodTestRepository = MockBloodTestRepository();
-  final competitionRepository = MockCompetitionRepository();
+  final raceRepository = MockRaceRepository();
   const String loggedUserId = 'u1';
 
   ProfileIdentitiesState createState({
@@ -47,7 +47,7 @@ void main() {
       workoutRepository: workoutRepository,
       healthMeasurementRepository: healthMeasurementRepository,
       bloodTestRepository: bloodTestRepository,
-      competitionRepository: competitionRepository,
+      raceRepository: raceRepository,
       state: createState(
         loggedUserId: loggedUserId,
       ),
@@ -60,7 +60,7 @@ void main() {
     reset(workoutRepository);
     reset(healthMeasurementRepository);
     reset(bloodTestRepository);
-    reset(competitionRepository);
+    reset(raceRepository);
   });
 
   blocTest(
@@ -645,7 +645,7 @@ void main() {
       workoutRepository.mockDeleteAllUserWorkouts();
       healthMeasurementRepository.mockDeleteAllUserMeasurements();
       bloodTestRepository.mockDeleteAllUserTests();
-      competitionRepository.mockDeleteAllUserCompetitions();
+      raceRepository.mockDeleteAllUserRaces();
     },
     act: (ProfileIdentitiesBloc bloc) {
       bloc.add(
@@ -688,7 +688,7 @@ void main() {
         ),
       ).called(1);
       verify(
-        () => competitionRepository.deleteAllUserCompetitions(
+        () => raceRepository.deleteAllUserRaces(
           userId: loggedUserId,
         ),
       ).called(1);
@@ -799,7 +799,7 @@ void main() {
       workoutRepository.mockDeleteAllUserWorkouts();
       bloodTestRepository.mockDeleteAllUserTests();
       healthMeasurementRepository.mockDeleteAllUserMeasurements();
-      competitionRepository.mockDeleteAllUserCompetitions();
+      raceRepository.mockDeleteAllUserRaces();
       userRepository.mockDeleteUser();
       authService.mockDeleteAccount(
         throwable: const UnknownException(

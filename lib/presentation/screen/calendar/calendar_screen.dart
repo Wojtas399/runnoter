@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/bloc/calendar/calendar_cubit.dart';
+import '../../../domain/entity/race.dart';
 import '../../../domain/entity/workout.dart';
+import '../../../domain/repository/race_repository.dart';
 import '../../../domain/repository/workout_repository.dart';
 import '../../../domain/service/auth_service.dart';
 import '../../component/calendar/calendar_component.dart';
@@ -40,33 +42,42 @@ class _CubitProvider extends StatelessWidget {
       create: (BuildContext context) => CalendarCubit(
         authService: context.read<AuthService>(),
         workoutRepository: context.read<WorkoutRepository>(),
+        raceRepository: context.read<RaceRepository>(),
       ),
       child: child,
     );
   }
 }
 
-class _Calendar extends StatelessWidget {
+class _Calendar extends StatefulWidget {
   const _Calendar();
 
   @override
+  State<StatefulWidget> createState() => _CalendarState();
+}
+
+class _CalendarState extends State<_Calendar> {
+  @override
   Widget build(BuildContext context) {
-    final List<Workout>? workouts = context.select(
+    final CalendarState state = context.select(
       (CalendarCubit cubit) => cubit.state,
     );
 
     return Calendar(
-      workoutDays: [...?workouts]
-          .map(
-            (Workout workout) => WorkoutDay(
-              date: workout.date,
-              runStatusIcon: Icon(
-                workout.status.toIcon(),
-                color: workout.status.toColor(),
-              ),
-            ),
-          )
-          .toList(),
+      activities: [
+        ...?state.workouts?.map(
+          (Workout workout) => CalendarDayActivity(
+            date: workout.date,
+            color: workout.status.toColor(context),
+          ),
+        ),
+        ...?state.races?.map(
+          (Race race) => CalendarDayActivity(
+            date: race.date,
+            color: Theme.of(context).colorScheme.primary,
+          ),
+        ),
+      ],
       onMonthChanged: (
         DateTime firstDisplayingDate,
         DateTime lastDisplayingDate,
@@ -90,7 +101,10 @@ class _Calendar extends StatelessWidget {
         );
   }
 
-  void _onDayPressed(BuildContext context, DateTime date) {
+  void _onDayPressed(
+    BuildContext context,
+    DateTime date,
+  ) {
     navigateTo(
       context: context,
       route: DayPreviewRoute(date: date),

@@ -48,6 +48,24 @@ void main() {
   );
 
   test(
+    'copy with removed today measurement',
+    () {
+      final HealthMeasurement expectedMeasurement = HealthMeasurement(
+        userId: 'u1',
+        date: DateTime(2023, 1, 10),
+        restingHeartRate: 50,
+        fastingWeight: 80.2,
+      );
+
+      state = state.copyWith(todayMeasurement: expectedMeasurement);
+      final state2 = state.copyWith(removedTodayMeasurement: true);
+
+      expect(state.todayMeasurement, expectedMeasurement);
+      expect(state2.todayMeasurement, null);
+    },
+  );
+
+  test(
     'copy with chart range',
     () {
       const ChartRange expectedChartRange = ChartRange.month;

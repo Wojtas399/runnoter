@@ -36,17 +36,12 @@ void main() {
 
   blocTest(
     'initialize, '
-    'should set listener of blood tests grouped by year belonging to logged user',
+    'should set listener of blood tests grouped by year and sorting by date belonging to logged user',
     build: () => createCubit(),
     setUp: () {
       authService.mockGetLoggedUserId(userId: 'u1');
       bloodTestRepository.mockGetAllTests(
         tests: [
-          createBloodTest(
-            id: 'br1',
-            userId: 'u1',
-            date: DateTime(2023, 5, 20),
-          ),
           createBloodTest(
             id: 'br2',
             userId: 'u1',
@@ -56,6 +51,11 @@ void main() {
             id: 'br3',
             userId: 'u1',
             date: DateTime(2022, 4, 10),
+          ),
+          createBloodTest(
+            id: 'br1',
+            userId: 'u1',
+            date: DateTime(2023, 5, 20),
           ),
           createBloodTest(
             id: 'br4',

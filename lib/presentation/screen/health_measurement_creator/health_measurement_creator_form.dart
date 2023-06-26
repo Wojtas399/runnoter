@@ -133,7 +133,7 @@ class _FastingWeightState extends State<_FastingWeight> {
   Widget build(BuildContext context) {
     return TextFieldComponent(
       label: '${Str.of(context).healthFastingWeight} [kg]',
-      keyboardType: TextInputType.number,
+      keyboardType: const TextInputType.numberWithOptions(decimal: true),
       maxLength: 6,
       isRequired: true,
       requireHigherThan0: true,

@@ -22,17 +22,19 @@ class LabelLarge extends StatelessWidget {
 
 class LabelMedium extends StatelessWidget {
   final String data;
+  final Color? color;
 
   const LabelMedium(
     this.data, {
     super.key,
+    this.color,
   });
 
   @override
   Widget build(BuildContext context) {
     return Text(
       data,
-      style: Theme.of(context).textTheme.labelMedium,
+      style: Theme.of(context).textTheme.labelMedium?.copyWith(color: color),
     );
   }
 }

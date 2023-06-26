@@ -50,7 +50,7 @@ class _DayItem extends StatelessWidget {
           _onPressed(context);
         },
         child: SizedBox(
-          height: 70,
+          height: 80,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -58,13 +58,7 @@ class _DayItem extends StatelessWidget {
                 number: day.date.day,
                 isMarkedAsToday: day.isTodayDay,
               ),
-              if (day.icon != null)
-                Expanded(
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: day.icon,
-                  ),
-                ),
+              _Activities(activities: day.activities),
             ],
           ),
         ),
@@ -96,11 +90,56 @@ class _DayNumber extends StatelessWidget {
         ),
       ),
       padding: const EdgeInsets.all(4),
-      child: Text(
+      child: BodySmall(
         '$number',
-        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: isMarkedAsToday ? Theme.of(context).canvasColor : null,
-            ),
+        color: isMarkedAsToday ? Theme.of(context).canvasColor : null,
+      ),
+    );
+  }
+}
+
+class _Activities extends StatelessWidget {
+  final List<CalendarDayActivity> activities;
+
+  const _Activities({
+    required this.activities,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    List<CalendarDayActivity> maxThreeActivitiesToDisplay = activities.sublist(
+      0,
+      activities.length > 3
+          ? 2
+          : activities.length == 3
+              ? 3
+              : activities.length,
+    );
+
+    return Expanded(
+      child: Padding(
+        padding: const EdgeInsets.all(4),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            ...maxThreeActivitiesToDisplay
+                .map(
+                  (activity) => Padding(
+                    padding: const EdgeInsets.only(bottom: 4),
+                    child: Container(
+                      width: double.infinity,
+                      height: 12,
+                      decoration: BoxDecoration(
+                        color: activity.color,
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                    ),
+                  ),
+                )
+                .toList(),
+            if (activities.length > 3) BodySmall('+${activities.length - 2}'),
+          ],
+        ),
       ),
     );
   }

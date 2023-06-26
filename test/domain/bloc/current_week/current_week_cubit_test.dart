@@ -1,9 +1,12 @@
 import 'package:bloc_test/bloc_test.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/bloc/current_week/current_week_cubit.dart';
 
+import '../../../creators/race_creator.dart';
 import '../../../creators/workout_creator.dart';
 import '../../../mock/common/mock_date_service.dart';
+import '../../../mock/domain/repository/mock_race_repository.dart';
 import '../../../mock/domain/repository/mock_workout_repository.dart';
 import '../../../mock/domain/service/mock_auth_service.dart';
 
@@ -11,18 +14,27 @@ void main() {
   final dateService = MockDateService();
   final authService = MockAuthService();
   final workoutRepository = MockWorkoutRepository();
+  final raceRepository = MockRaceRepository();
 
   CurrentWeekCubit createCubit() {
     return CurrentWeekCubit(
       dateService: dateService,
       authService: authService,
       workoutRepository: workoutRepository,
+      raceRepository: raceRepository,
     );
   }
 
+  tearDown(() {
+    reset(dateService);
+    reset(authService);
+    reset(workoutRepository);
+    reset(raceRepository);
+  });
+
   blocTest(
     'initialize, '
-    "should set listener of logged user's workouts from week and should set days from current week in state",
+    "should set listener of logged user's workouts and races from week and should set days from current week in state",
     build: () => createCubit(),
     setUp: () {
       dateService.mockGetToday(
@@ -33,6 +45,37 @@ void main() {
       );
       dateService.mockGetLastDayOfTheWeek(
         date: DateTime(2023, 4, 9),
+      );
+      authService.mockGetLoggedUserId(
+        userId: 'u1',
+      );
+      workoutRepository.mockGetWorkoutsByDateRange(
+        workouts: [
+          createWorkout(
+            id: 'w1',
+            date: DateTime(2023, 4, 5),
+          ),
+          createWorkout(
+            id: 'w2',
+            date: DateTime(2023, 4, 7),
+          ),
+          createWorkout(
+            id: 'w3',
+            date: DateTime(2023, 4, 5),
+          ),
+        ],
+      );
+      raceRepository.mockGetRacesByDateRange(
+        races: [
+          createRace(
+            id: 'c1',
+            date: DateTime(2023, 4, 5),
+          ),
+          createRace(
+            id: 'c2',
+            date: DateTime(2023, 4, 6),
+          ),
+        ],
       );
       dateService.mockGetDaysFromWeek(
         dates: [
@@ -45,23 +88,25 @@ void main() {
           DateTime(2023, 4, 9),
         ],
       );
-      authService.mockGetLoggedUserId(
-        userId: 'u1',
-      );
-      workoutRepository.mockGetWorkoutsByDateRange(
-        workouts: [
-          createWorkout(
-            id: 'w1',
-            date: DateTime(2023, 4, 5),
-            name: 'first workout name',
-          ),
-          createWorkout(
-            id: 'w2',
-            date: DateTime(2023, 4, 7),
-            name: 'second workout name',
-          ),
-        ],
-      );
+      dateService.mockAreDatesTheSame(expected: false);
+      when(
+        () => dateService.areDatesTheSame(
+          DateTime(2023, 4, 5),
+          DateTime(2023, 4, 5),
+        ),
+      ).thenReturn(true);
+      when(
+        () => dateService.areDatesTheSame(
+          DateTime(2023, 4, 7),
+          DateTime(2023, 4, 7),
+        ),
+      ).thenReturn(true);
+      when(
+        () => dateService.areDatesTheSame(
+          DateTime(2023, 4, 6),
+          DateTime(2023, 4, 6),
+        ),
+      ).thenReturn(true);
     },
     act: (CurrentWeekCubit cubit) {
       cubit.initialize();
@@ -71,45 +116,58 @@ void main() {
         Day(
           date: DateTime(2023, 4, 3),
           isToday: false,
-          workout: null,
         ),
         Day(
           date: DateTime(2023, 4, 4),
           isToday: false,
-          workout: null,
         ),
         Day(
           date: DateTime(2023, 4, 5),
           isToday: true,
-          workout: createWorkout(
-            id: 'w1',
-            date: DateTime(2023, 4, 5),
-            name: 'first workout name',
-          ),
+          workouts: [
+            createWorkout(
+              id: 'w1',
+              date: DateTime(2023, 4, 5),
+            ),
+            createWorkout(
+              id: 'w3',
+              date: DateTime(2023, 4, 5),
+            ),
+          ],
+          races: [
+            createRace(
+              id: 'c1',
+              date: DateTime(2023, 4, 5),
+            ),
+          ],
         ),
         Day(
           date: DateTime(2023, 4, 6),
           isToday: false,
-          workout: null,
+          races: [
+            createRace(
+              id: 'c2',
+              date: DateTime(2023, 4, 6),
+            ),
+          ],
         ),
         Day(
           date: DateTime(2023, 4, 7),
           isToday: false,
-          workout: createWorkout(
-            id: 'w2',
-            date: DateTime(2023, 4, 7),
-            name: 'second workout name',
-          ),
+          workouts: [
+            createWorkout(
+              id: 'w2',
+              date: DateTime(2023, 4, 7),
+            )
+          ],
         ),
         Day(
           date: DateTime(2023, 4, 8),
           isToday: false,
-          workout: null,
         ),
         Day(
           date: DateTime(2023, 4, 9),
           isToday: false,
-          workout: null,
         ),
       ]
     ],
@@ -119,6 +177,13 @@ void main() {
       ).called(1);
       verify(
         () => workoutRepository.getWorkoutsByDateRange(
+          userId: 'u1',
+          startDate: DateTime(2023, 4, 3),
+          endDate: DateTime(2023, 4, 9),
+        ),
+      ).called(1);
+      verify(
+        () => raceRepository.getRacesByDateRange(
           userId: 'u1',
           startDate: DateTime(2023, 4, 3),
           endDate: DateTime(2023, 4, 9),
