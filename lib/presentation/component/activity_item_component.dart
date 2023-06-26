@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../domain/entity/activity.dart';
-import '../../domain/entity/competition.dart';
+import '../../domain/entity/race.dart';
 import '../../domain/entity/workout.dart';
 import '../formatter/list_of_workout_stages_formatter.dart';
 import '../formatter/run_status_formatter.dart';
@@ -33,7 +33,7 @@ class ActivityItem extends StatelessWidget {
               _Label(activity: activity),
               Row(
                 children: [
-                  if (activity is Competition) const _RaceMark(),
+                  if (activity is Race) const _RaceMark(),
                   Icon(
                     activity.status.toIcon(),
                     color: activity.status.toColor(context),

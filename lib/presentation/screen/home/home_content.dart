@@ -6,7 +6,7 @@ class _Content extends StatelessWidget {
     const ProfileScreen(),
     const MileageScreen(),
     const BloodTestsScreen(),
-    const CompetitionsScreen(),
+    const RacesScreen(),
   ];
 
   @override
@@ -21,7 +21,7 @@ class _Content extends StatelessWidget {
       bottomNavigationBar:
           drawerPage == DrawerPage.home ? const _BottomNavigationBar() : null,
       floatingActionButton: drawerPage == DrawerPage.blood ||
-              drawerPage == DrawerPage.competitions
+              drawerPage == DrawerPage.races
           ? FloatingActionButton(
               child: const Icon(Icons.add),
               onPressed: () {
@@ -44,10 +44,10 @@ class _Content extends StatelessWidget {
         context: context,
         route: const BloodTestCreatorRoute(),
       );
-    } else if (drawerPage == DrawerPage.competitions) {
+    } else if (drawerPage == DrawerPage.races) {
       navigateTo(
         context: context,
-        route: const CompetitionCreatorRoute(),
+        route: const RaceCreatorRoute(),
       );
     }
   }

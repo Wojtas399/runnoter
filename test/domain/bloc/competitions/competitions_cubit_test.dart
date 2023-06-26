@@ -1,18 +1,18 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/domain/bloc/competitions/competitions_cubit.dart';
+import 'package:runnoter/domain/bloc/races/races_cubit.dart';
 
-import '../../../creators/competition_creator.dart';
-import '../../../mock/domain/repository/mock_competition_repository.dart';
+import '../../../creators/race_creator.dart';
+import '../../../mock/domain/repository/mock_race_repository.dart';
 import '../../../mock/domain/service/mock_auth_service.dart';
 
 void main() {
   final authService = MockAuthService();
-  final competitionRepository = MockCompetitionRepository();
+  final raceRepository = MockRaceRepository();
 
-  CompetitionsCubit createCubit() => CompetitionsCubit(
+  RacesCubit createCubit() => RacesCubit(
         authService: authService,
-        competitionRepository: competitionRepository,
+        raceRepository: raceRepository,
       );
 
   blocTest(
@@ -21,7 +21,7 @@ void main() {
     'should do nothing',
     build: () => createCubit(),
     setUp: () => authService.mockGetLoggedUserId(),
-    act: (CompetitionsCubit cubit) => cubit.initialize(),
+    act: (RacesCubit cubit) => cubit.initialize(),
     expect: () => [],
     verify: (_) => verify(
       () => authService.loggedUserId$,
@@ -30,23 +30,23 @@ void main() {
 
   blocTest(
     'initialize, '
-    'should set listener of competitions belonging to logged user, should sort competitions by descending by date and emit them',
+    'should set listener of races belonging to logged user, should sort races by descending by date and emit them',
     build: () => createCubit(),
     setUp: () {
       authService.mockGetLoggedUserId(userId: 'u1');
-      competitionRepository.mockGetAllCompetitions(
-        competitions: [
-          createCompetition(
+      raceRepository.mockGetAllRaces(
+        races: [
+          createRace(
             id: 'c1',
             userId: 'u1',
             date: DateTime(2023, 6, 10),
           ),
-          createCompetition(
+          createRace(
             id: 'c2',
             userId: 'u1',
             date: DateTime(2023, 4, 20),
           ),
-          createCompetition(
+          createRace(
             id: 'c3',
             userId: 'u1',
             date: DateTime(2023, 5, 30),
@@ -54,20 +54,20 @@ void main() {
         ],
       );
     },
-    act: (CompetitionsCubit cubit) => cubit.initialize(),
+    act: (RacesCubit cubit) => cubit.initialize(),
     expect: () => [
       [
-        createCompetition(
+        createRace(
           id: 'c1',
           userId: 'u1',
           date: DateTime(2023, 6, 10),
         ),
-        createCompetition(
+        createRace(
           id: 'c3',
           userId: 'u1',
           date: DateTime(2023, 5, 30),
         ),
-        createCompetition(
+        createRace(
           id: 'c2',
           userId: 'u1',
           date: DateTime(2023, 4, 20),
@@ -79,7 +79,7 @@ void main() {
         () => authService.loggedUserId$,
       ).called(1);
       verify(
-        () => competitionRepository.getAllCompetitions(
+        () => raceRepository.getAllRaces(
           userId: 'u1',
         ),
       ).called(1);

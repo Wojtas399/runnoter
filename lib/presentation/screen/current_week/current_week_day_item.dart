@@ -36,11 +36,11 @@ class DayItem extends StatelessWidget {
                   },
                 ),
               ),
-              ...day.competitions.map(
-                (competition) => ActivityItem(
-                  activity: competition,
+              ...day.races.map(
+                (race) => ActivityItem(
+                  activity: race,
                   onPressed: () {
-                    _onCompetitionPressed(context, competition.id);
+                    _onRacePressed(context, race.id);
                   },
                 ),
               ),
@@ -58,11 +58,11 @@ class DayItem extends StatelessWidget {
     );
   }
 
-  void _onCompetitionPressed(BuildContext context, String competitionId) {
+  void _onRacePressed(BuildContext context, String raceId) {
     navigateTo(
       context: context,
-      route: CompetitionPreviewRoute(
-        competitionId: competitionId,
+      route: RacePreviewRoute(
+        raceId: raceId,
       ),
     );
   }

@@ -5,9 +5,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../../common/date_service.dart';
-import '../../entity/competition.dart';
+import '../../entity/race.dart';
 import '../../entity/workout.dart';
-import '../../repository/competition_repository.dart';
+import '../../repository/race_repository.dart';
 import '../../repository/workout_repository.dart';
 import '../../service/auth_service.dart';
 
@@ -15,18 +15,18 @@ class CurrentWeekCubit extends Cubit<List<Day>?> {
   final DateService _dateService;
   final AuthService _authService;
   final WorkoutRepository _workoutRepository;
-  final CompetitionRepository _competitionRepository;
+  final RaceRepository _raceRepository;
   StreamSubscription? _listener;
 
   CurrentWeekCubit({
     required DateService dateService,
     required AuthService authService,
     required WorkoutRepository workoutRepository,
-    required CompetitionRepository competitionRepository,
+    required RaceRepository raceRepository,
   })  : _dateService = dateService,
         _authService = authService,
         _workoutRepository = workoutRepository,
-        _competitionRepository = competitionRepository,
+        _raceRepository = raceRepository,
         super(null);
 
   @override
@@ -49,26 +49,26 @@ class CurrentWeekCubit extends Cubit<List<Day>?> {
               startDate: firstDayOfTheWeek,
               endDate: lastDayOfTheWeek,
             ),
-            _competitionRepository.getCompetitionsByDateRange(
+            _raceRepository.getRacesByDateRange(
               userId: loggedUserId,
               startDate: firstDayOfTheWeek,
               endDate: lastDayOfTheWeek,
             ),
             (
               List<Workout>? workouts,
-              List<Competition>? competitions,
+              List<Race>? races,
             ) =>
-                (workouts, competitions),
+                (workouts, races),
           ),
         )
-        .listen(_manageWorkoutsAndCompetitionsFromWeek);
+        .listen(_manageWorkoutsAndRacesFromWeek);
   }
 
-  void _manageWorkoutsAndCompetitionsFromWeek(
-    (List<Workout>?, List<Competition>?) params,
+  void _manageWorkoutsAndRacesFromWeek(
+    (List<Workout>?, List<Race>?) params,
   ) {
     final List<Workout> workoutsFromWeek = [...?params.$1];
-    final List<Competition> competitionsFromWeek = [...?params.$2];
+    final List<Race> racesFromWeek = [...?params.$2];
     final DateTime today = _dateService.getToday();
     final List<DateTime> datesFromWeek = _dateService.getDaysFromWeek(today);
     final List<Day> days = datesFromWeek
@@ -81,10 +81,9 @@ class CurrentWeekCubit extends Cubit<List<Day>?> {
                   (workout) => _dateService.areDatesTheSame(workout.date, date),
                 )
                 .toList(),
-            competitions: competitionsFromWeek
+            races: racesFromWeek
                 .where(
-                  (competition) =>
-                      _dateService.areDatesTheSame(competition.date, date),
+                  (race) => _dateService.areDatesTheSame(race.date, date),
                 )
                 .toList(),
           ),
@@ -98,13 +97,13 @@ class Day extends Equatable {
   final DateTime date;
   final bool isToday;
   final List<Workout> workouts;
-  final List<Competition> competitions;
+  final List<Race> races;
 
   const Day({
     required this.date,
     required this.isToday,
     this.workouts = const [],
-    this.competitions = const [],
+    this.races = const [],
   });
 
   @override
@@ -112,6 +111,6 @@ class Day extends Equatable {
         date,
         isToday,
         workouts,
-        competitions,
+        races,
       ];
 }

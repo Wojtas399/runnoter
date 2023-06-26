@@ -5,9 +5,9 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 import '../../../common/date_service.dart';
 import '../../../domain/bloc/day_preview/day_preview_cubit.dart';
-import '../../../domain/entity/competition.dart';
+import '../../../domain/entity/race.dart';
 import '../../../domain/entity/workout.dart';
-import '../../../domain/repository/competition_repository.dart';
+import '../../../domain/repository/race_repository.dart';
 import '../../../domain/repository/workout_repository.dart';
 import '../../../domain/service/auth_service.dart';
 import '../../component/activity_item_component.dart';
@@ -53,7 +53,7 @@ class _CubitProvider extends StatelessWidget {
         date: date,
         authService: context.read<AuthService>(),
         workoutRepository: context.read<WorkoutRepository>(),
-        competitionRepository: context.read<CompetitionRepository>(),
+        raceRepository: context.read<RaceRepository>(),
         dateService: DateService(),
       )..initialize(),
       child: child,
@@ -141,7 +141,7 @@ class _FloatingActionButton extends StatelessWidget {
   void _onAddRaceSelected(BuildContext context) {
     navigateTo(
       context: context,
-      route: const CompetitionCreatorRoute(),
+      route: const RaceCreatorRoute(),
     );
   }
 }

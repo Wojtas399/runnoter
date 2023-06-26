@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../screen/competition_creator/competition_creator_screen.dart';
-import '../../screen/competition_preview/competition_preview_screen.dart';
+import '../../screen/Race_creator/race_creator_screen.dart';
+import '../../screen/Race_preview/race_preview_screen.dart';
 import '../../screen/day_preview/day_preview_screen.dart';
 import '../../screen/screens.dart';
 import '../animation/slide_to_top_anim.dart';
@@ -62,13 +62,13 @@ class AppNavigator extends StatelessWidget {
       screen = BloodTestPreviewScreen(
         bloodTestId: settings.arguments as String,
       );
-    } else if (routePath == RoutePath.competitionCreator.path) {
-      screen = CompetitionCreatorScreen(
-        competitionId: settings.arguments as String?,
+    } else if (routePath == RoutePath.raceCreator.path) {
+      screen = RaceCreatorScreen(
+        raceId: settings.arguments as String?,
       );
-    } else if (routePath == RoutePath.competitionPreview.path) {
-      screen = CompetitionPreviewScreen(
-        competitionId: settings.arguments as String,
+    } else if (routePath == RoutePath.racePreview.path) {
+      screen = RacePreviewScreen(
+        raceId: settings.arguments as String,
       );
     } else if (routePath == RoutePath.themeMode.path) {
       screen = const ThemeModeScreen();

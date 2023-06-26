@@ -80,7 +80,7 @@ enum DrawerPage {
   profile(1),
   mileage(2),
   blood(3),
-  competitions(4),
+  races(4),
   signOut(5);
 
   final int pageIndex;

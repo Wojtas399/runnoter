@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/bloc/calendar/calendar_cubit.dart';
-import '../../../domain/entity/competition.dart';
+import '../../../domain/entity/race.dart';
 import '../../../domain/entity/workout.dart';
-import '../../../domain/repository/competition_repository.dart';
+import '../../../domain/repository/race_repository.dart';
 import '../../../domain/repository/workout_repository.dart';
 import '../../../domain/service/auth_service.dart';
 import '../../component/calendar/calendar_component.dart';
@@ -42,7 +42,7 @@ class _CubitProvider extends StatelessWidget {
       create: (BuildContext context) => CalendarCubit(
         authService: context.read<AuthService>(),
         workoutRepository: context.read<WorkoutRepository>(),
-        competitionRepository: context.read<CompetitionRepository>(),
+        raceRepository: context.read<RaceRepository>(),
       ),
       child: child,
     );
@@ -71,9 +71,9 @@ class _CalendarState extends State<_Calendar> {
             color: workout.status.toColor(context),
           ),
         ),
-        ...?state.competitions?.map(
-          (Competition competition) => CalendarDayActivity(
-            date: competition.date,
+        ...?state.races?.map(
+          (Race race) => CalendarDayActivity(
+            date: race.date,
             color: Theme.of(context).colorScheme.primary,
           ),
         ),

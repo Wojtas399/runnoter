@@ -4,7 +4,7 @@ import '../../../../domain/additional_model/bloc_state.dart';
 import '../../../../domain/additional_model/bloc_status.dart';
 import '../../../../domain/additional_model/bloc_with_status.dart';
 import '../../../../domain/entity/run_status.dart';
-import '../../repository/competition_repository.dart';
+import '../../repository/race_repository.dart';
 import '../../repository/workout_repository.dart';
 import '../../service/auth_service.dart';
 
@@ -13,7 +13,7 @@ part 'run_status_creator_state.dart';
 
 enum EntityType {
   workout,
-  competition,
+  race,
 }
 
 class RunStatusCreatorBloc extends BlocWithStatus<RunStatusCreatorEvent,
@@ -22,20 +22,20 @@ class RunStatusCreatorBloc extends BlocWithStatus<RunStatusCreatorEvent,
   final String _entityId;
   final AuthService _authService;
   final WorkoutRepository _workoutRepository;
-  final CompetitionRepository _competitionRepository;
+  final RaceRepository _raceRepository;
 
   RunStatusCreatorBloc({
     required EntityType entityType,
     required String entityId,
     required AuthService authService,
     required WorkoutRepository workoutRepository,
-    required CompetitionRepository competitionRepository,
+    required RaceRepository raceRepository,
     RunStatusCreatorState? state,
   })  : _entityType = entityType,
         _entityId = entityId,
         _authService = authService,
         _workoutRepository = workoutRepository,
-        _competitionRepository = competitionRepository,
+        _raceRepository = raceRepository,
         super(
           state ??
               RunStatusCreatorState(
@@ -171,8 +171,8 @@ class RunStatusCreatorBloc extends BlocWithStatus<RunStatusCreatorEvent,
           userId: loggedUserId,
           status: status,
         ),
-      EntityType.competition => _competitionRepository.updateCompetition(
-          competitionId: _entityId,
+      EntityType.race => _raceRepository.updateRace(
+          raceId: _entityId,
           userId: loggedUserId,
           status: status,
         ),
@@ -191,9 +191,9 @@ class RunStatusCreatorBloc extends BlocWithStatus<RunStatusCreatorEvent,
                 )
                 .first)
             ?.status,
-        EntityType.competition => (await _competitionRepository
-                .getCompetitionById(
-                  competitionId: _entityId,
+        EntityType.race => (await _raceRepository
+                .getRaceById(
+                  raceId: _entityId,
                   userId: loggedUserId,
                 )
                 .first)

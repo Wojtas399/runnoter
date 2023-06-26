@@ -2,7 +2,7 @@ export 'blood_test_creator/blood_test_creator_screen.dart';
 export 'blood_test_preview/blood_test_preview_screen.dart';
 export 'blood_tests/blood_tests_screen.dart';
 export 'calendar/calendar_screen.dart';
-export 'competitions/competitions_screen.dart';
+export 'races/races_screen.dart';
 export 'current_week/current_week_screen.dart';
 export 'distance_unit/distance_unit_screen.dart';
 export 'forgot_password/forgot_password_screen.dart';

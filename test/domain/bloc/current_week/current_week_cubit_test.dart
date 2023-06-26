@@ -3,10 +3,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/bloc/current_week/current_week_cubit.dart';
 
-import '../../../creators/competition_creator.dart';
+import '../../../creators/race_creator.dart';
 import '../../../creators/workout_creator.dart';
 import '../../../mock/common/mock_date_service.dart';
-import '../../../mock/domain/repository/mock_competition_repository.dart';
+import '../../../mock/domain/repository/mock_race_repository.dart';
 import '../../../mock/domain/repository/mock_workout_repository.dart';
 import '../../../mock/domain/service/mock_auth_service.dart';
 
@@ -14,14 +14,14 @@ void main() {
   final dateService = MockDateService();
   final authService = MockAuthService();
   final workoutRepository = MockWorkoutRepository();
-  final competitionRepository = MockCompetitionRepository();
+  final raceRepository = MockRaceRepository();
 
   CurrentWeekCubit createCubit() {
     return CurrentWeekCubit(
       dateService: dateService,
       authService: authService,
       workoutRepository: workoutRepository,
-      competitionRepository: competitionRepository,
+      raceRepository: raceRepository,
     );
   }
 
@@ -29,12 +29,12 @@ void main() {
     reset(dateService);
     reset(authService);
     reset(workoutRepository);
-    reset(competitionRepository);
+    reset(raceRepository);
   });
 
   blocTest(
     'initialize, '
-    "should set listener of logged user's workouts and competitions from week and should set days from current week in state",
+    "should set listener of logged user's workouts and races from week and should set days from current week in state",
     build: () => createCubit(),
     setUp: () {
       dateService.mockGetToday(
@@ -65,13 +65,13 @@ void main() {
           ),
         ],
       );
-      competitionRepository.mockGetCompetitionsByDateRange(
-        competitions: [
-          createCompetition(
+      raceRepository.mockGetRacesByDateRange(
+        races: [
+          createRace(
             id: 'c1',
             date: DateTime(2023, 4, 5),
           ),
-          createCompetition(
+          createRace(
             id: 'c2',
             date: DateTime(2023, 4, 6),
           ),
@@ -134,8 +134,8 @@ void main() {
               date: DateTime(2023, 4, 5),
             ),
           ],
-          competitions: [
-            createCompetition(
+          races: [
+            createRace(
               id: 'c1',
               date: DateTime(2023, 4, 5),
             ),
@@ -144,8 +144,8 @@ void main() {
         Day(
           date: DateTime(2023, 4, 6),
           isToday: false,
-          competitions: [
-            createCompetition(
+          races: [
+            createRace(
               id: 'c2',
               date: DateTime(2023, 4, 6),
             ),
@@ -183,7 +183,7 @@ void main() {
         ),
       ).called(1);
       verify(
-        () => competitionRepository.getCompetitionsByDateRange(
+        () => raceRepository.getRacesByDateRange(
           userId: 'u1',
           startDate: DateTime(2023, 4, 3),
           endDate: DateTime(2023, 4, 9),

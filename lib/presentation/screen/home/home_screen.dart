@@ -14,6 +14,7 @@ import '../../service/language_service.dart';
 import '../../service/navigator_service.dart';
 import '../../service/pace_unit_service.dart';
 import '../../service/theme_service.dart';
+import '../races/races_screen.dart';
 import '../screens.dart';
 
 part 'home_app_bar.dart';

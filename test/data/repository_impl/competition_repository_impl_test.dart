@@ -2,63 +2,63 @@ import 'package:collection/collection.dart';
 import 'package:firebase/firebase.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/data/repository_impl/competition_repository_impl.dart';
-import 'package:runnoter/domain/entity/competition.dart';
+import 'package:runnoter/data/repository_impl/race_repository_impl.dart';
+import 'package:runnoter/domain/entity/race.dart';
 import 'package:runnoter/domain/entity/run_status.dart';
 
-import '../../creators/competition_creator.dart';
-import '../../creators/competition_dto_creator.dart';
+import '../../creators/race_creator.dart';
+import '../../creators/race_dto_creator.dart';
 import '../../mock/common/mock_date_service.dart';
-import '../../mock/firebase/mock_firebase_competition_service.dart';
+import '../../mock/firebase/mock_firebase_race_service.dart';
 
 void main() {
-  final firebaseCompetitionService = MockFirebaseCompetitionService();
+  final firebaseRaceService = MockFirebaseRaceService();
   final dateService = MockDateService();
-  late CompetitionRepositoryImpl repository;
+  late RaceRepositoryImpl repository;
   const String userId = 'u1';
 
-  CompetitionRepositoryImpl createRepository({
-    List<Competition>? initialData,
+  RaceRepositoryImpl createRepository({
+    List<Race>? initialData,
   }) =>
-      CompetitionRepositoryImpl(
-        firebaseCompetitionService: firebaseCompetitionService,
+      RaceRepositoryImpl(
+        firebaseRaceService: firebaseRaceService,
         dateService: dateService,
         initialData: initialData,
       );
 
   tearDown(() {
-    reset(firebaseCompetitionService);
+    reset(firebaseRaceService);
     reset(dateService);
   });
 
   test(
-    'get competition by id, '
-    'competition exists in repository, '
-    'should emit matching competition',
+    'get race by id, '
+    'race exists in repository, '
+    'should emit matching race',
     () {
-      const String competitionId = 'c1';
-      final Competition expectedCompetition = createCompetition(
-        id: competitionId,
+      const String raceId = 'c1';
+      final Race expectedRace = createRace(
+        id: raceId,
         userId: userId,
       );
-      final List<Competition> existingCompetitions = [
-        expectedCompetition,
-        createCompetition(id: 'c2', userId: 'u2'),
-        createCompetition(id: 'c3', userId: 'u3'),
-        createCompetition(id: 'c4', userId: userId),
+      final List<Race> existingRaces = [
+        expectedRace,
+        createRace(id: 'c2', userId: 'u2'),
+        createRace(id: 'c3', userId: 'u3'),
+        createRace(id: 'c4', userId: userId),
       ];
-      repository = createRepository(initialData: existingCompetitions);
+      repository = createRepository(initialData: existingRaces);
 
-      final Stream<Competition?> competition$ = repository.getCompetitionById(
-        competitionId: competitionId,
+      final Stream<Race?> race$ = repository.getRaceById(
+        raceId: raceId,
         userId: userId,
       );
 
       expect(
-        competition$,
+        race$,
         emitsInOrder(
           [
-            expectedCompetition,
+            expectedRace,
           ],
         ),
       );
@@ -66,33 +66,32 @@ void main() {
   );
 
   test(
-    'get competition by id, '
-    'competition does not exist in repository, '
-    'should load competition from remote db, add it to repository and emit it',
+    'get race by id, '
+    'race does not exist in repository, '
+    'should load race from remote db, add it to repository and emit it',
     () {
-      const String competitionId = 'c1';
-      final CompetitionDto expectedCompetitionDto = createCompetitionDto(
-        id: competitionId,
+      const String raceId = 'c1';
+      final RaceDto expectedRaceDto = createRaceDto(
+        id: raceId,
         userId: userId,
       );
-      final Competition expectedCompetition = createCompetition(
-        id: competitionId,
+      final Race expectedRace = createRace(
+        id: raceId,
         userId: userId,
       );
-      final List<Competition> existingCompetitions = [
-        createCompetition(id: 'c2', userId: 'u2'),
-        createCompetition(id: 'c3', userId: 'u3'),
-        createCompetition(id: 'c4', userId: userId),
+      final List<Race> existingRaces = [
+        createRace(id: 'c2', userId: 'u2'),
+        createRace(id: 'c3', userId: 'u3'),
+        createRace(id: 'c4', userId: userId),
       ];
-      firebaseCompetitionService.mockLoadCompetitionById(
-        competitionDto: expectedCompetitionDto,
+      firebaseRaceService.mockLoadRaceById(
+        raceDto: expectedRaceDto,
       );
-      repository = createRepository(initialData: existingCompetitions);
+      repository = createRepository(initialData: existingRaces);
 
-      final Stream<List<Competition>?> repositoryState$ =
-          repository.dataStream$;
-      final Stream<Competition?> competition$ = repository.getCompetitionById(
-        competitionId: competitionId,
+      final Stream<List<Race>?> repositoryState$ = repository.dataStream$;
+      final Stream<Race?> race$ = repository.getRaceById(
+        raceId: raceId,
         userId: userId,
       );
 
@@ -100,19 +99,19 @@ void main() {
         repositoryState$,
         emitsInOrder(
           [
-            existingCompetitions,
+            existingRaces,
             [
-              ...existingCompetitions,
-              expectedCompetition,
+              ...existingRaces,
+              expectedRace,
             ]
           ],
         ),
       );
       expect(
-        competition$,
+        race$,
         emitsInOrder(
           [
-            expectedCompetition,
+            expectedRace,
           ],
         ),
       );
@@ -120,44 +119,44 @@ void main() {
   );
 
   test(
-    'get competitions by date range, '
-    'should load all competitions from date range belonging to user from remote db, should add them to repository and should emit them',
+    'get races by date range, '
+    'should load all races from date range belonging to user from remote db, should add them to repository and should emit them',
     () {
       final DateTime startDate = DateTime(2023, 6, 19);
       final DateTime endDate = DateTime(2023, 6, 25);
-      final List<Competition> existingCompetitions = [
-        createCompetition(
+      final List<Race> existingRaces = [
+        createRace(
           id: 'c1',
           userId: userId,
           date: DateTime(2023, 6, 20),
         ),
-        createCompetition(
+        createRace(
           id: 'c2',
           userId: 'u2',
           date: DateTime(2023, 6, 20),
         ),
-        createCompetition(id: 'c3', userId: 'u3'),
-        createCompetition(id: 'c4', userId: userId),
+        createRace(id: 'c3', userId: 'u3'),
+        createRace(id: 'c4', userId: userId),
       ];
-      final List<CompetitionDto> loadedCompetitionDtos = [
-        createCompetitionDto(
+      final List<RaceDto> loadedRaceDtos = [
+        createRaceDto(
           id: 'c5',
           userId: userId,
           date: DateTime(2023, 6, 22),
         ),
-        createCompetitionDto(
+        createRaceDto(
           id: 'c6',
           userId: userId,
           date: DateTime(2023, 6, 23),
         ),
       ];
-      final List<Competition> loadedCompetitions = [
-        createCompetition(
+      final List<Race> loadedRaces = [
+        createRace(
           id: 'c5',
           userId: userId,
           date: DateTime(2023, 6, 22),
         ),
-        createCompetition(
+        createRace(
           id: 'c6',
           userId: userId,
           date: DateTime(2023, 6, 23),
@@ -185,25 +184,24 @@ void main() {
           endDate: endDate,
         ),
       ).thenReturn(true);
-      firebaseCompetitionService.mockLoadCompetitionsByDateRange(
-        competitionDtos: loadedCompetitionDtos,
+      firebaseRaceService.mockLoadRacesByDateRange(
+        raceDtos: loadedRaceDtos,
       );
-      repository = createRepository(initialData: existingCompetitions);
+      repository = createRepository(initialData: existingRaces);
 
-      final Stream<List<Competition>?> competitions$ =
-          repository.getCompetitionsByDateRange(
+      final Stream<List<Race>?> races$ = repository.getRacesByDateRange(
         startDate: startDate,
         endDate: endDate,
         userId: userId,
       );
 
       expect(
-        competitions$,
+        races$,
         emitsInOrder(
           [
             [
-              existingCompetitions.first,
-              ...loadedCompetitions,
+              existingRaces.first,
+              ...loadedRaces,
             ]
           ],
         ),
@@ -212,33 +210,33 @@ void main() {
   );
 
   test(
-    'get competitions by date, '
-    'should load all competitions by date belonging to user from remote db, should add them to repository and should emit them',
+    'get races by date, '
+    'should load all races by date belonging to user from remote db, should add them to repository and should emit them',
     () {
       final DateTime date = DateTime(2023, 6, 19);
-      final List<Competition> existingCompetitions = [
-        createCompetition(
+      final List<Race> existingRaces = [
+        createRace(
           id: 'c1',
           userId: userId,
           date: DateTime(2023, 6, 19),
         ),
-        createCompetition(
+        createRace(
           id: 'c2',
           userId: 'u2',
           date: DateTime(2023, 6, 19),
         ),
-        createCompetition(id: 'c3', userId: 'u3'),
-        createCompetition(id: 'c4', userId: userId),
+        createRace(id: 'c3', userId: 'u3'),
+        createRace(id: 'c4', userId: userId),
       ];
-      final List<CompetitionDto> loadedCompetitionDtos = [
-        createCompetitionDto(
+      final List<RaceDto> loadedRaceDtos = [
+        createRaceDto(
           id: 'c5',
           userId: userId,
           date: DateTime(2023, 6, 19),
         ),
       ];
-      final List<Competition> loadedCompetitions = [
-        createCompetition(
+      final List<Race> loadedRaces = [
+        createRace(
           id: 'c5',
           userId: userId,
           date: DateTime(2023, 6, 19),
@@ -248,24 +246,23 @@ void main() {
       when(
         () => dateService.areDatesTheSame(date, date),
       ).thenReturn(true);
-      firebaseCompetitionService.mockLoadCompetitionsByDate(
-        competitionDtos: loadedCompetitionDtos,
+      firebaseRaceService.mockLoadRacesByDate(
+        raceDtos: loadedRaceDtos,
       );
-      repository = createRepository(initialData: existingCompetitions);
+      repository = createRepository(initialData: existingRaces);
 
-      final Stream<List<Competition>?> competitions$ =
-          repository.getCompetitionsByDate(
+      final Stream<List<Race>?> races$ = repository.getRacesByDate(
         date: date,
         userId: userId,
       );
 
       expect(
-        competitions$,
+        races$,
         emitsInOrder(
           [
             [
-              existingCompetitions.first,
-              ...loadedCompetitions,
+              existingRaces.first,
+              ...loadedRaces,
             ]
           ],
         ),
@@ -274,39 +271,38 @@ void main() {
   );
 
   test(
-    'get all competitions, '
-    'should load all competitions belonging to user from remote db, should add them to repository and should emit them',
+    'get all races, '
+    'should load all races belonging to user from remote db, should add them to repository and should emit them',
     () {
-      final List<Competition> existingCompetitions = [
-        createCompetition(id: 'c1', userId: userId),
-        createCompetition(id: 'c2', userId: 'u2'),
-        createCompetition(id: 'c3', userId: 'u3'),
-        createCompetition(id: 'c4', userId: userId),
+      final List<Race> existingRaces = [
+        createRace(id: 'c1', userId: userId),
+        createRace(id: 'c2', userId: 'u2'),
+        createRace(id: 'c3', userId: 'u3'),
+        createRace(id: 'c4', userId: userId),
       ];
-      final List<CompetitionDto> loadedCompetitionDtos = [
-        createCompetitionDto(id: 'c5', userId: userId),
-        createCompetitionDto(id: 'c6', userId: userId),
+      final List<RaceDto> loadedRaceDtos = [
+        createRaceDto(id: 'c5', userId: userId),
+        createRaceDto(id: 'c6', userId: userId),
       ];
-      final List<Competition> loadedCompetitions = [
-        createCompetition(id: 'c5', userId: userId),
-        createCompetition(id: 'c6', userId: userId),
+      final List<Race> loadedRaces = [
+        createRace(id: 'c5', userId: userId),
+        createRace(id: 'c6', userId: userId),
       ];
-      firebaseCompetitionService.mockLoadAllCompetitions(
-        competitionDtos: loadedCompetitionDtos,
+      firebaseRaceService.mockLoadAllRaces(
+        raceDtos: loadedRaceDtos,
       );
-      repository = createRepository(initialData: existingCompetitions);
+      repository = createRepository(initialData: existingRaces);
 
-      final Stream<List<Competition>?> competitions$ =
-          repository.getAllCompetitions(userId: userId);
+      final Stream<List<Race>?> races$ = repository.getAllRaces(userId: userId);
 
       expect(
-        competitions$,
+        races$,
         emitsInOrder(
           [
             [
-              existingCompetitions.first,
-              existingCompetitions.last,
-              ...loadedCompetitions,
+              existingRaces.first,
+              existingRaces.last,
+              ...loadedRaces,
             ]
           ],
         ),
@@ -315,11 +311,11 @@ void main() {
   );
 
   test(
-    'add new competition, '
-    'should call method from firebase service to add new competition and should add this new competition to repository',
+    'add new race, '
+    'should call method from firebase service to add new race and should add this new race to repository',
     () {
-      const String competitionId = 'c1';
-      const String name = 'competition 1';
+      const String raceId = 'c1';
+      const String name = 'race 1';
       final DateTime date = DateTime(2023, 5, 10);
       const String place = 'New York';
       const double distance = 21.100;
@@ -330,8 +326,8 @@ void main() {
       );
       const RunStatus status = RunStatusPending();
       const RunStatusDto statusDto = RunStatusPendingDto();
-      final Competition addedCompetition = Competition(
-        id: competitionId,
+      final Race addedRace = Race(
+        id: raceId,
         userId: userId,
         name: name,
         date: date,
@@ -340,8 +336,8 @@ void main() {
         expectedDuration: expectedDuration,
         status: status,
       );
-      final CompetitionDto addedCompetitionDto = CompetitionDto(
-        id: competitionId,
+      final RaceDto addedRaceDto = RaceDto(
+        id: raceId,
         userId: userId,
         name: name,
         date: date,
@@ -350,18 +346,17 @@ void main() {
         expectedDuration: expectedDuration,
         statusDto: statusDto,
       );
-      final List<Competition> existingCompetitions = [
-        createCompetition(id: 'c2', userId: 'u2'),
-        createCompetition(id: 'c3', userId: userId),
+      final List<Race> existingRaces = [
+        createRace(id: 'c2', userId: 'u2'),
+        createRace(id: 'c3', userId: userId),
       ];
-      firebaseCompetitionService.mockAddNewCompetition(
-        addedCompetitionDto: addedCompetitionDto,
+      firebaseRaceService.mockAddNewRace(
+        addedRaceDto: addedRaceDto,
       );
-      repository = createRepository(initialData: existingCompetitions);
+      repository = createRepository(initialData: existingRaces);
 
-      final Stream<List<Competition>?> repositoryState$ =
-          repository.dataStream$;
-      repository.addNewCompetition(
+      final Stream<List<Race>?> repositoryState$ = repository.dataStream$;
+      repository.addNewRace(
         userId: userId,
         name: name,
         date: date,
@@ -375,16 +370,16 @@ void main() {
         repositoryState$,
         emitsInOrder(
           [
-            existingCompetitions,
+            existingRaces,
             [
-              ...existingCompetitions,
-              addedCompetition,
+              ...existingRaces,
+              addedRace,
             ],
           ],
         ),
       );
       verify(
-        () => firebaseCompetitionService.addNewCompetition(
+        () => firebaseRaceService.addNewRace(
           userId: userId,
           name: name,
           date: date,
@@ -398,13 +393,13 @@ void main() {
   );
 
   test(
-    'update competition, '
-    'should call method from firebase competition service to update competition and should update this competition in repository',
+    'update race, '
+    'should call method from firebase race service to update race and should update this race in repository',
     () async {
-      const String competitionId = 'c1';
-      const String newName = 'new competition name';
+      const String raceId = 'c1';
+      const String newName = 'new race name';
       final DateTime newDate = DateTime(2023, 5, 20);
-      const String newPlace = 'new competition place';
+      const String newPlace = 'new race place';
       const double newDistance = 15.0;
       const Duration newExpectedDuration = Duration(
         hours: 1,
@@ -413,14 +408,14 @@ void main() {
       );
       const RunStatus newStatus = RunStatusPending();
       const RunStatusDto newStatusDto = RunStatusPendingDto();
-      final List<Competition> existingCompetitions = [
-        createCompetition(id: competitionId, userId: userId),
-        createCompetition(id: 'c2', userId: 'u2'),
-        createCompetition(id: 'c3', userId: 'u3'),
-        createCompetition(id: 'c4', userId: userId),
+      final List<Race> existingRaces = [
+        createRace(id: raceId, userId: userId),
+        createRace(id: 'c2', userId: 'u2'),
+        createRace(id: 'c3', userId: 'u3'),
+        createRace(id: 'c4', userId: userId),
       ];
-      final CompetitionDto updatedCompetitionDto = createCompetitionDto(
-        id: competitionId,
+      final RaceDto updatedRaceDto = createRaceDto(
+        id: raceId,
         userId: userId,
         name: newName,
         date: newDate,
@@ -429,8 +424,8 @@ void main() {
         expectedDuration: newExpectedDuration,
         status: newStatusDto,
       );
-      final Competition updatedCompetition = createCompetition(
-        id: competitionId,
+      final Race updatedRace = createRace(
+        id: raceId,
         userId: userId,
         name: newName,
         date: newDate,
@@ -439,15 +434,14 @@ void main() {
         expectedDuration: newExpectedDuration,
         status: newStatus,
       );
-      firebaseCompetitionService.mockUpdateCompetition(
-        updatedCompetitionDto: updatedCompetitionDto,
+      firebaseRaceService.mockUpdateRace(
+        updatedRaceDto: updatedRaceDto,
       );
-      repository = createRepository(initialData: existingCompetitions);
+      repository = createRepository(initialData: existingRaces);
 
-      final Stream<List<Competition>?> repositoryState$ =
-          repository.dataStream$;
-      await repository.updateCompetition(
-        competitionId: competitionId,
+      final Stream<List<Race>?> repositoryState$ = repository.dataStream$;
+      await repository.updateRace(
+        raceId: raceId,
         userId: userId,
         name: newName,
         date: newDate,
@@ -463,15 +457,15 @@ void main() {
         emitsInOrder(
           [
             [
-              updatedCompetition,
-              ...existingCompetitions.slice(1),
+              updatedRace,
+              ...existingRaces.slice(1),
             ]
           ],
         ),
       );
       verify(
-        () => firebaseCompetitionService.updateCompetition(
-          competitionId: competitionId,
+        () => firebaseRaceService.updateRace(
+          raceId: raceId,
           userId: userId,
           name: newName,
           date: newDate,
@@ -486,23 +480,22 @@ void main() {
   );
 
   test(
-    'delete competition, '
-    'should call method from firebase competition service to delete competition and should delete this competition from repository',
+    'delete race, '
+    'should call method from firebase race service to delete race and should delete this race from repository',
     () async {
-      const String competitionId = 'c1';
-      final List<Competition> existingCompetitions = [
-        createCompetition(id: competitionId, userId: userId),
-        createCompetition(id: 'c2', userId: 'u2'),
-        createCompetition(id: 'c3', userId: 'u3'),
-        createCompetition(id: 'c4', userId: userId),
+      const String raceId = 'c1';
+      final List<Race> existingRaces = [
+        createRace(id: raceId, userId: userId),
+        createRace(id: 'c2', userId: 'u2'),
+        createRace(id: 'c3', userId: 'u3'),
+        createRace(id: 'c4', userId: userId),
       ];
-      firebaseCompetitionService.mockDeleteCompetition();
-      repository = createRepository(initialData: existingCompetitions);
+      firebaseRaceService.mockDeleteRace();
+      repository = createRepository(initialData: existingRaces);
 
-      final Stream<List<Competition>?> repositoryState$ =
-          repository.dataStream$;
-      await repository.deleteCompetition(
-        competitionId: competitionId,
+      final Stream<List<Race>?> repositoryState$ = repository.dataStream$;
+      await repository.deleteRace(
+        raceId: raceId,
         userId: userId,
       );
 
@@ -510,13 +503,13 @@ void main() {
         repositoryState$,
         emitsInOrder(
           [
-            existingCompetitions.slice(1),
+            existingRaces.slice(1),
           ],
         ),
       );
       verify(
-        () => firebaseCompetitionService.deleteCompetition(
-          competitionId: competitionId,
+        () => firebaseRaceService.deleteRace(
+          raceId: raceId,
           userId: userId,
         ),
       ).called(1);
@@ -524,38 +517,37 @@ void main() {
   );
 
   test(
-    'delete all user competitions, '
-    'should call method from firebase competition service to delete all user competitions and should delete these competitions from repository',
+    'delete all user races, '
+    'should call method from firebase race service to delete all user races and should delete these races from repository',
     () {
-      final List<Competition> existingCompetitions = [
-        createCompetition(id: 'c1', userId: userId),
-        createCompetition(id: 'c2', userId: 'u2'),
-        createCompetition(id: 'c3', userId: 'u3'),
-        createCompetition(id: 'c4', userId: userId),
+      final List<Race> existingRaces = [
+        createRace(id: 'c1', userId: userId),
+        createRace(id: 'c2', userId: 'u2'),
+        createRace(id: 'c3', userId: 'u3'),
+        createRace(id: 'c4', userId: userId),
       ];
-      firebaseCompetitionService.mockDeleteAllUserCompetitions(
-        idsOfDeletedCompetitions: ['c1', 'c4'],
+      firebaseRaceService.mockDeleteAllUserRaces(
+        idsOfDeletedRaces: ['c1', 'c4'],
       );
-      repository = createRepository(initialData: existingCompetitions);
+      repository = createRepository(initialData: existingRaces);
 
-      final Stream<List<Competition>?> repositoryState$ =
-          repository.dataStream$;
-      repository.deleteAllUserCompetitions(userId: userId);
+      final Stream<List<Race>?> repositoryState$ = repository.dataStream$;
+      repository.deleteAllUserRaces(userId: userId);
 
       expect(
         repositoryState$,
         emitsInOrder(
           [
-            existingCompetitions,
+            existingRaces,
             [
-              existingCompetitions[1],
-              existingCompetitions[2],
+              existingRaces[1],
+              existingRaces[2],
             ]
           ],
         ),
       );
       verify(
-        () => firebaseCompetitionService.deleteAllUserCompetitions(
+        () => firebaseRaceService.deleteAllUserRaces(
           userId: userId,
         ),
       ).called(1);

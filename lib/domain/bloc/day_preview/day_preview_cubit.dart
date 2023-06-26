@@ -5,9 +5,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../../common/date_service.dart';
-import '../../entity/competition.dart';
+import '../../entity/race.dart';
 import '../../entity/workout.dart';
-import '../../repository/competition_repository.dart';
+import '../../repository/race_repository.dart';
 import '../../repository/workout_repository.dart';
 import '../../service/auth_service.dart';
 
@@ -15,7 +15,7 @@ class DayPreviewCubit extends Cubit<DayPreviewState> {
   final DateTime date;
   final AuthService _authService;
   final WorkoutRepository _workoutRepository;
-  final CompetitionRepository _competitionRepository;
+  final RaceRepository _raceRepository;
   final DateService _dateService;
   StreamSubscription? _listener;
 
@@ -23,12 +23,12 @@ class DayPreviewCubit extends Cubit<DayPreviewState> {
     required this.date,
     required AuthService authService,
     required WorkoutRepository workoutRepository,
-    required CompetitionRepository competitionRepository,
+    required RaceRepository raceRepository,
     required DateService dateService,
     DayPreviewState state = const DayPreviewState(),
   })  : _authService = authService,
         _workoutRepository = workoutRepository,
-        _competitionRepository = competitionRepository,
+        _raceRepository = raceRepository,
         _dateService = dateService,
         super(state);
 
@@ -43,7 +43,7 @@ class DayPreviewCubit extends Cubit<DayPreviewState> {
 
   bool get areThereActivities =>
       (state.workouts != null && state.workouts!.isNotEmpty) ||
-      (state.competitions != null && state.competitions!.isNotEmpty);
+      (state.races != null && state.races!.isNotEmpty);
 
   void initialize() {
     _listener ??= _authService.loggedUserId$
@@ -54,22 +54,22 @@ class DayPreviewCubit extends Cubit<DayPreviewState> {
               date: date,
               userId: loggedUserId,
             ),
-            _competitionRepository.getCompetitionsByDate(
+            _raceRepository.getRacesByDate(
               date: date,
               userId: loggedUserId,
             ),
             (
               List<Workout>? workouts,
-              List<Competition>? competitions,
+              List<Race>? races,
             ) =>
-                (workouts, competitions),
+                (workouts, races),
           ),
         )
         .listen(
-          ((List<Workout>?, List<Competition>?) params) => emit(
+          ((List<Workout>?, List<Race>?) params) => emit(
             DayPreviewState(
               workouts: params.$1,
-              competitions: params.$2,
+              races: params.$2,
             ),
           ),
         );
@@ -78,16 +78,16 @@ class DayPreviewCubit extends Cubit<DayPreviewState> {
 
 class DayPreviewState extends Equatable {
   final List<Workout>? workouts;
-  final List<Competition>? competitions;
+  final List<Race>? races;
 
   const DayPreviewState({
     this.workouts,
-    this.competitions,
+    this.races,
   });
 
   @override
   List<Object?> get props => [
         workouts,
-        competitions,
+        races,
       ];
 }

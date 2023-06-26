@@ -4,26 +4,26 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
-import '../../entity/competition.dart';
+import '../../entity/race.dart';
 import '../../entity/workout.dart';
-import '../../repository/competition_repository.dart';
+import '../../repository/race_repository.dart';
 import '../../repository/workout_repository.dart';
 import '../../service/auth_service.dart';
 
 class CalendarCubit extends Cubit<CalendarState> {
   final AuthService _authService;
   final WorkoutRepository _workoutRepository;
-  final CompetitionRepository _competitionRepository;
+  final RaceRepository _raceRepository;
   StreamSubscription? _listener;
 
   CalendarCubit({
     required AuthService authService,
     required WorkoutRepository workoutRepository,
-    required CompetitionRepository competitionRepository,
+    required RaceRepository raceRepository,
     CalendarState state = const CalendarState(),
   })  : _authService = authService,
         _workoutRepository = workoutRepository,
-        _competitionRepository = competitionRepository,
+        _raceRepository = raceRepository,
         super(state);
 
   @override
@@ -37,13 +37,13 @@ class CalendarCubit extends Cubit<CalendarState> {
     required DateTime lastDisplayingDate,
   }) {
     _disposeListener();
-    _setWorkoutsAndCompetitionsListener(
+    _setWorkoutsAndRacesListener(
       firstDisplayingDate,
       lastDisplayingDate,
     );
   }
 
-  void _setWorkoutsAndCompetitionsListener(
+  void _setWorkoutsAndRacesListener(
     DateTime startDate,
     DateTime endDate,
   ) {
@@ -56,22 +56,22 @@ class CalendarCubit extends Cubit<CalendarState> {
               endDate: endDate,
               userId: loggedUserId,
             ),
-            _competitionRepository.getCompetitionsByDateRange(
+            _raceRepository.getRacesByDateRange(
               userId: loggedUserId,
               startDate: startDate,
               endDate: endDate,
             ),
             (
               List<Workout>? workouts,
-              List<Competition>? competitions,
+              List<Race>? races,
             ) =>
-                (workouts, competitions),
+                (workouts, races),
           ),
         )
         .listen(
-          ((List<Workout>?, List<Competition>?) params) => emit(CalendarState(
+          ((List<Workout>?, List<Race>?) params) => emit(CalendarState(
             workouts: params.$1,
-            competitions: params.$2,
+            races: params.$2,
           )),
         );
   }
@@ -84,16 +84,16 @@ class CalendarCubit extends Cubit<CalendarState> {
 
 class CalendarState extends Equatable {
   final List<Workout>? workouts;
-  final List<Competition>? competitions;
+  final List<Race>? races;
 
   const CalendarState({
     this.workouts,
-    this.competitions,
+    this.races,
   });
 
   @override
   List<Object?> get props => [
         workouts,
-        competitions,
+        races,
       ];
 }

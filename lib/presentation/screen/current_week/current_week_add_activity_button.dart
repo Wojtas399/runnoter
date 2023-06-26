@@ -39,7 +39,7 @@ class _AddActivityButtonState extends State<_AddActivityButton> {
         case ActivityType.race:
           navigateTo(
             context: context,
-            route: const CompetitionCreatorRoute(),
+            route: const RaceCreatorRoute(),
           );
           break;
       }

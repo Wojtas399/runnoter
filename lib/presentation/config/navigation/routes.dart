@@ -103,21 +103,21 @@ class BloodTestPreviewRoute extends CustomRouteWithArguments<String> {
         );
 }
 
-class CompetitionCreatorRoute extends CustomRouteWithArguments<String?> {
-  const CompetitionCreatorRoute({
-    String? competitionId,
+class RaceCreatorRoute extends CustomRouteWithArguments<String?> {
+  const RaceCreatorRoute({
+    String? raceId,
   }) : super(
-          arguments: competitionId,
-          path: RoutePath.competitionCreator,
+          arguments: raceId,
+          path: RoutePath.raceCreator,
         );
 }
 
-class CompetitionPreviewRoute extends CustomRouteWithArguments<String> {
-  const CompetitionPreviewRoute({
-    required String competitionId,
+class RacePreviewRoute extends CustomRouteWithArguments<String> {
+  const RacePreviewRoute({
+    required String raceId,
   }) : super(
-          arguments: competitionId,
-          path: RoutePath.competitionPreview,
+          arguments: raceId,
+          path: RoutePath.racePreview,
         );
 }
 
@@ -150,8 +150,8 @@ enum RoutePath {
   healthMeasurements('/home/health-measurements'),
   bloodTestCreator('/home/blood-test-creator'),
   bloodTestPreview('/home/blood-test-preview'),
-  competitionCreator('/home/competition-creator'),
-  competitionPreview('/home/competition-preview'),
+  raceCreator('/home/race-creator'),
+  racePreview('/home/race-preview'),
   themeMode('/home/profile/theme-mode'),
   language('/home/profile/language'),
   distanceUnit('/home/profile/distance-unit'),

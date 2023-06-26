@@ -2,44 +2,44 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/bloc/day_preview/day_preview_cubit.dart';
-import 'package:runnoter/domain/entity/competition.dart';
+import 'package:runnoter/domain/entity/race.dart';
 import 'package:runnoter/domain/entity/workout.dart';
 
-import '../../../creators/competition_creator.dart';
+import '../../../creators/race_creator.dart';
 import '../../../creators/workout_creator.dart';
 import '../../../mock/common/mock_date_service.dart';
-import '../../../mock/domain/repository/mock_competition_repository.dart';
+import '../../../mock/domain/repository/mock_race_repository.dart';
 import '../../../mock/domain/repository/mock_workout_repository.dart';
 import '../../../mock/domain/service/mock_auth_service.dart';
 
 void main() {
   final authService = MockAuthService();
   final workoutRepository = MockWorkoutRepository();
-  final competitionRepository = MockCompetitionRepository();
+  final raceRepository = MockRaceRepository();
   final dateService = MockDateService();
   final DateTime date = DateTime(2023, 4, 10);
   const String loggedUserId = 'u1';
 
   DayPreviewCubit createCubit({
     List<Workout>? workouts,
-    List<Competition>? competitions,
+    List<Race>? races,
   }) =>
       DayPreviewCubit(
         date: date,
         authService: authService,
         workoutRepository: workoutRepository,
-        competitionRepository: competitionRepository,
+        raceRepository: raceRepository,
         dateService: dateService,
         state: DayPreviewState(
           workouts: workouts,
-          competitions: competitions,
+          races: races,
         ),
       );
 
   tearDown(() {
     reset(authService);
     reset(workoutRepository);
-    reset(competitionRepository);
+    reset(raceRepository);
     reset(dateService);
   });
 
@@ -108,11 +108,11 @@ void main() {
 
   blocTest(
     'are there activities, '
-    'list of competitions is not null and not empty, '
+    'list of races is not null and not empty, '
     'should be true',
     build: () => createCubit(
-      competitions: [
-        createCompetition(id: 'c®1'),
+      races: [
+        createRace(id: 'c®1'),
       ],
     ),
     verify: (DayPreviewCubit cubit) {
@@ -134,10 +134,10 @@ void main() {
 
   blocTest(
     'are there activities, '
-    'list of competitions is empty, '
+    'list of races is empty, '
     'should be false',
     build: () => createCubit(
-      competitions: [],
+      races: [],
     ),
     verify: (DayPreviewCubit cubit) {
       expect(cubit.areThereActivities, false);
@@ -146,7 +146,7 @@ void main() {
 
   blocTest(
     'are there activities, '
-    'list of workouts and list of competitions are null, '
+    'list of workouts and list of races are null, '
     'should be false',
     build: () => createCubit(),
     verify: (DayPreviewCubit cubit) {
@@ -169,7 +169,7 @@ void main() {
 
   blocTest(
     'initialize, '
-    'should set listener of workouts and competitions from given date belonging to logged user',
+    'should set listener of workouts and races from given date belonging to logged user',
     build: () => createCubit(),
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
@@ -179,9 +179,9 @@ void main() {
           createWorkout(id: 'w2', userId: loggedUserId),
         ],
       );
-      competitionRepository.mockGetCompetitionsByDate(
-        competitions: [
-          createCompetition(id: 'c1', userId: loggedUserId),
+      raceRepository.mockGetRacesByDate(
+        races: [
+          createRace(id: 'c1', userId: loggedUserId),
         ],
       );
     },
@@ -192,8 +192,8 @@ void main() {
           createWorkout(id: 'w1', userId: loggedUserId),
           createWorkout(id: 'w2', userId: loggedUserId),
         ],
-        competitions: [
-          createCompetition(id: 'c1', userId: loggedUserId),
+        races: [
+          createRace(id: 'c1', userId: loggedUserId),
         ],
       ),
     ],
@@ -208,7 +208,7 @@ void main() {
         ),
       ).called(1);
       verify(
-        () => competitionRepository.getCompetitionsByDate(
+        () => raceRepository.getRacesByDate(
           date: date,
           userId: loggedUserId,
         ),

@@ -15,7 +15,7 @@ class _ActivitiesContent extends StatelessWidget {
           padding: const EdgeInsets.all(24),
           child: _Activities(
             workouts: cubit.state.workouts,
-            competitions: cubit.state.competitions,
+            races: cubit.state.races,
           ),
         ),
       );
@@ -31,11 +31,11 @@ class _ActivitiesContent extends StatelessWidget {
 
 class _Activities extends StatelessWidget {
   final List<Workout>? workouts;
-  final List<Competition>? competitions;
+  final List<Race>? races;
 
   const _Activities({
     required this.workouts,
-    required this.competitions,
+    required this.races,
   });
 
   @override
@@ -50,11 +50,11 @@ class _Activities extends StatelessWidget {
             },
           ),
         ),
-        ...?competitions?.map(
-          (competition) => ActivityItem(
-            activity: competition,
+        ...?races?.map(
+          (race) => ActivityItem(
+            activity: race,
             onPressed: () {
-              _onCompetitionPressed(context, competition.id);
+              _onRacePressed(context, race.id);
             },
           ),
         ),
@@ -69,10 +69,10 @@ class _Activities extends StatelessWidget {
     );
   }
 
-  void _onCompetitionPressed(BuildContext context, String competitionId) {
+  void _onRacePressed(BuildContext context, String raceId) {
     navigateTo(
       context: context,
-      route: CompetitionPreviewRoute(competitionId: competitionId),
+      route: RacePreviewRoute(raceId: raceId),
     );
   }
 }

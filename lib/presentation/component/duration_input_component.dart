@@ -56,20 +56,17 @@ class _State extends State<DurationInput> {
         Row(
           children: [
             _DurationField(
-              label:
-                  Str.of(context).competitionCreatorExpectedDurationHoursShort,
+              label: Str.of(context).durationHoursShort,
               controller: _hoursController,
             ),
             const _TimeSeparator(),
             _DurationField(
-              label: Str.of(context)
-                  .competitionCreatorExpectedDurationMinutesShort,
+              label: Str.of(context).durationMinutesShort,
               controller: _minutesController,
             ),
             const _TimeSeparator(),
             _DurationField(
-              label: Str.of(context)
-                  .competitionCreatorExpectedDurationSecondsShort,
+              label: Str.of(context).durationSecondsShort,
               controller: _secondsController,
             ),
           ],

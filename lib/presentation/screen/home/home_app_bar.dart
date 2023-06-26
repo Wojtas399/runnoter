@@ -15,7 +15,7 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
       str.homeDrawerProfile,
       str.homeDrawerMileage,
       str.homeDrawerBloodTests,
-      str.homeDrawerCompetitions,
+      str.homeDrawerRaces,
     ];
     final List<String> bottomNavPageTitles = [
       str.homeCurrentWeekPageTitle,

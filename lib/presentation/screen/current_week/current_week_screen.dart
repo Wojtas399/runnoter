@@ -4,7 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../common/date_service.dart';
 import '../../../domain/bloc/current_week/current_week_cubit.dart';
-import '../../../domain/repository/competition_repository.dart';
+import '../../../domain/repository/race_repository.dart';
 import '../../../domain/repository/workout_repository.dart';
 import '../../../domain/service/auth_service.dart';
 import '../../component/action_sheet_component.dart';
@@ -47,7 +47,7 @@ class _CubitProvider extends StatelessWidget {
         dateService: DateService(),
         authService: context.read<AuthService>(),
         workoutRepository: context.read<WorkoutRepository>(),
-        competitionRepository: context.read<CompetitionRepository>(),
+        raceRepository: context.read<RaceRepository>(),
       )..initialize(),
       child: child,
     );

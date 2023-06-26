@@ -6,7 +6,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../domain/bloc/run_status_creator/run_status_creator_bloc.dart';
 import '../../../domain/entity/run_status.dart';
 import '../../../domain/entity/settings.dart';
-import '../../../domain/repository/competition_repository.dart';
+import '../../../domain/repository/race_repository.dart';
 import '../../../domain/repository/workout_repository.dart';
 import '../../../domain/service/auth_service.dart';
 import '../../component/big_button_component.dart';
@@ -51,8 +51,8 @@ class WorkoutRunStatusCreatorArguments extends RunStatusCreatorArguments {
   });
 }
 
-class CompetitionRunStatusCreatorArguments extends RunStatusCreatorArguments {
-  const CompetitionRunStatusCreatorArguments({
+class RaceRunStatusCreatorArguments extends RunStatusCreatorArguments {
+  const RaceRunStatusCreatorArguments({
     required super.entityId,
   });
 }
@@ -91,12 +91,12 @@ class _BlocProvider extends StatelessWidget {
       create: (BuildContext context) => RunStatusCreatorBloc(
         entityType: switch (arguments) {
           WorkoutRunStatusCreatorArguments() => EntityType.workout,
-          CompetitionRunStatusCreatorArguments() => EntityType.competition,
+          RaceRunStatusCreatorArguments() => EntityType.race,
         },
         entityId: arguments.entityId,
         authService: context.read<AuthService>(),
         workoutRepository: context.read<WorkoutRepository>(),
-        competitionRepository: context.read<CompetitionRepository>(),
+        raceRepository: context.read<RaceRepository>(),
       )..add(
           const RunStatusCreatorEventInitialize(),
         ),
