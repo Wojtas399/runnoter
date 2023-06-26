@@ -110,17 +110,17 @@ class _FloatingActionButton extends StatelessWidget {
       childPadding: const EdgeInsets.all(8.0),
       children: [
         SpeedDialChild(
-          child: const Icon(Icons.directions_run_outlined),
-          label: Str.of(context).workout,
-          onTap: () {
-            _onAddWorkoutSelected(context);
-          },
-        ),
-        SpeedDialChild(
           child: const Icon(Icons.emoji_events),
           label: Str.of(context).race,
           onTap: () {
             _onAddRaceSelected(context);
+          },
+        ),
+        SpeedDialChild(
+          child: const Icon(Icons.directions_run_outlined),
+          label: Str.of(context).workout,
+          onTap: () {
+            _onAddWorkoutSelected(context);
           },
         ),
       ],
@@ -141,7 +141,11 @@ class _FloatingActionButton extends StatelessWidget {
   void _onAddRaceSelected(BuildContext context) {
     navigateTo(
       context: context,
-      route: const RaceCreatorRoute(),
+      route: RaceCreatorRoute(
+        arguments: RaceCreatorArguments(
+          date: context.read<DayPreviewCubit>().date,
+        ),
+      ),
     );
   }
 }

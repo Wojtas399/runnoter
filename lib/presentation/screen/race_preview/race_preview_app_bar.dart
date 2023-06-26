@@ -41,7 +41,7 @@ class _ActionsMenu extends StatelessWidget {
       navigateTo(
         context: context,
         route: RaceCreatorRoute(
-          raceId: raceId,
+          arguments: RaceCreatorArguments(raceId: raceId),
         ),
       );
     }

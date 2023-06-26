@@ -13,10 +13,12 @@ part 'race_creator_state.dart';
 
 class RaceCreatorBloc extends BlocWithStatus<RaceCreatorEvent, RaceCreatorState,
     RaceCreatorBlocInfo, dynamic> {
+  final String? raceId;
   final AuthService _authService;
   final RaceRepository _raceRepository;
 
   RaceCreatorBloc({
+    this.raceId,
     required AuthService authService,
     required RaceRepository raceRepository,
     RaceCreatorState state = const RaceCreatorState(
@@ -40,8 +42,10 @@ class RaceCreatorBloc extends BlocWithStatus<RaceCreatorEvent, RaceCreatorState,
     RaceCreatorEventInitialize event,
     Emitter<RaceCreatorState> emit,
   ) async {
-    if (event.raceId == null) {
-      emitCompleteStatus(emit, null);
+    if (raceId == null) {
+      emit(state.copyWith(
+        date: event.date,
+      ));
       return;
     }
     final String? loggedUserId = await _authService.loggedUserId$.first;
@@ -51,7 +55,7 @@ class RaceCreatorBloc extends BlocWithStatus<RaceCreatorEvent, RaceCreatorState,
     }
     final Race? race = await _raceRepository
         .getRaceById(
-          raceId: event.raceId!,
+          raceId: raceId!,
           userId: loggedUserId,
         )
         .first;

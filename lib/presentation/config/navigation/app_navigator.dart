@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../screen/Race_creator/race_creator_screen.dart';
-import '../../screen/Race_preview/race_preview_screen.dart';
-import '../../screen/day_preview/day_preview_screen.dart';
 import '../../screen/screens.dart';
 import '../animation/slide_to_top_anim.dart';
 import 'routes.dart';
@@ -64,7 +61,7 @@ class AppNavigator extends StatelessWidget {
       );
     } else if (routePath == RoutePath.raceCreator.path) {
       screen = RaceCreatorScreen(
-        raceId: settings.arguments as String?,
+        arguments: settings.arguments as RaceCreatorArguments?,
       );
     } else if (routePath == RoutePath.racePreview.path) {
       screen = RacePreviewScreen(

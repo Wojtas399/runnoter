@@ -28,18 +28,29 @@ part 'race_creator_date.dart';
 part 'race_creator_expected_duration.dart';
 part 'race_creator_form.dart';
 
-class RaceCreatorScreen extends StatelessWidget {
+class RaceCreatorArguments {
   final String? raceId;
+  final DateTime? date;
+
+  RaceCreatorArguments({
+    this.raceId,
+    this.date,
+  });
+}
+
+class RaceCreatorScreen extends StatelessWidget {
+  final RaceCreatorArguments? arguments;
 
   const RaceCreatorScreen({
     super.key,
-    this.raceId,
+    this.arguments,
   });
 
   @override
   Widget build(BuildContext context) {
     return _BlocProvider(
-      raceId: raceId,
+      raceId: arguments?.raceId,
+      date: arguments?.date,
       child: const _BlocListener(
         child: _Content(),
       ),
@@ -49,10 +60,12 @@ class RaceCreatorScreen extends StatelessWidget {
 
 class _BlocProvider extends StatelessWidget {
   final String? raceId;
+  final DateTime? date;
   final Widget child;
 
   const _BlocProvider({
     required this.raceId,
+    required this.date,
     required this.child,
   });
 
@@ -60,10 +73,11 @@ class _BlocProvider extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (BuildContext context) => RaceCreatorBloc(
+        raceId: raceId,
         authService: context.read<AuthService>(),
         raceRepository: context.read<RaceRepository>(),
       )..add(
-          RaceCreatorEventInitialize(raceId: raceId),
+          RaceCreatorEventInitialize(date: date),
         ),
       child: child,
     );

@@ -5,10 +5,10 @@ abstract class RaceCreatorEvent {
 }
 
 class RaceCreatorEventInitialize extends RaceCreatorEvent {
-  final String? raceId;
+  final DateTime? date;
 
   const RaceCreatorEventInitialize({
-    required this.raceId,
+    this.date,
   });
 }
 

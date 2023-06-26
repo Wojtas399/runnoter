@@ -51,17 +51,17 @@ void main() {
 
   test(
     'map race from dto, '
-    'should map Race from dto to domain model',
+    'should map race from dto to domain model',
     () {
       final Race domainModel = mapRaceFromDto(raceDto);
 
-      expect(domainModel, Race);
+      expect(domainModel, race);
     },
   );
 
   test(
     'map race to dto, '
-    'should map Race from domain to dto model',
+    'should map race from domain to dto model',
     () {
       final firebase.RaceDto dto = mapRaceToDto(race);
 

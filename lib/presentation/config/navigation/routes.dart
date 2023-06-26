@@ -103,11 +103,11 @@ class BloodTestPreviewRoute extends CustomRouteWithArguments<String> {
         );
 }
 
-class RaceCreatorRoute extends CustomRouteWithArguments<String?> {
+class RaceCreatorRoute extends CustomRouteWithArguments<RaceCreatorArguments?> {
   const RaceCreatorRoute({
-    String? raceId,
+    RaceCreatorArguments? arguments,
   }) : super(
-          arguments: raceId,
+          arguments: arguments,
           path: RoutePath.raceCreator,
         );
 }

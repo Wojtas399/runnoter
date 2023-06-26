@@ -13,9 +13,10 @@ import '../../../mock/domain/service/mock_auth_service.dart';
 void main() {
   final authService = MockAuthService();
   final raceRepository = MockRaceRepository();
-  const String userId = 'u1';
+  const String loggedUserId = 'u1';
 
   RaceCreatorBloc createBloc({
+    String? raceId,
     Race? race,
     String? name,
     DateTime? date,
@@ -24,6 +25,7 @@ void main() {
     Duration? expectedDuration,
   }) =>
       RaceCreatorBloc(
+        raceId: raceId,
         authService: authService,
         raceRepository: raceRepository,
         state: RaceCreatorState(
@@ -64,14 +66,17 @@ void main() {
   blocTest(
     'initialize, '
     'race id is null, '
-    'should emit complete status',
+    'should only emit given date',
     build: () => createBloc(),
     act: (RaceCreatorBloc bloc) => bloc.add(
-      const RaceCreatorEventInitialize(raceId: null),
+      RaceCreatorEventInitialize(
+        date: DateTime(2023, 1, 10),
+      ),
     ),
     expect: () => [
       createState(
-        status: const BlocStatusComplete<RaceCreatorBlocInfo>(),
+        status: const BlocStatusComplete(),
+        date: DateTime(2023, 1, 10),
       ),
     ],
   );
@@ -80,10 +85,10 @@ void main() {
     'initialize, '
     'logged user does not exist, '
     'should emit no logged user status',
-    build: () => createBloc(),
+    build: () => createBloc(raceId: 'r1'),
     setUp: () => authService.mockGetLoggedUserId(),
     act: (RaceCreatorBloc bloc) => bloc.add(
-      const RaceCreatorEventInitialize(raceId: 'c1'),
+      const RaceCreatorEventInitialize(),
     ),
     expect: () => [
       createState(
@@ -97,16 +102,15 @@ void main() {
 
   blocTest(
     'initialize, '
+    'race id is not null'
     'should load race matching to given id from repository and should update all relevant params in state',
-    build: () => createBloc(),
+    build: () => createBloc(raceId: 'r1'),
     setUp: () {
-      authService.mockGetLoggedUserId(
-        userId: userId,
-      );
+      authService.mockGetLoggedUserId(userId: loggedUserId);
       raceRepository.mockGetRaceById(
         race: createRace(
-          id: 'c1',
-          userId: userId,
+          id: 'r1',
+          userId: loggedUserId,
           name: 'name',
           date: DateTime(2023, 6, 10),
           place: 'place',
@@ -116,7 +120,7 @@ void main() {
       );
     },
     act: (RaceCreatorBloc bloc) => bloc.add(
-      const RaceCreatorEventInitialize(raceId: 'c1'),
+      const RaceCreatorEventInitialize(),
     ),
     expect: () => [
       createState(
@@ -124,8 +128,8 @@ void main() {
           info: RaceCreatorBlocInfo.editModeInitialized,
         ),
         race: createRace(
-          id: 'c1',
-          userId: userId,
+          id: 'r1',
+          userId: loggedUserId,
           name: 'name',
           date: DateTime(2023, 6, 10),
           place: 'place',
@@ -145,8 +149,8 @@ void main() {
       ).called(1);
       verify(
         () => raceRepository.getRaceById(
-          raceId: 'c1',
-          userId: userId,
+          raceId: 'r1',
+          userId: loggedUserId,
         ),
       ).called(1);
     },
