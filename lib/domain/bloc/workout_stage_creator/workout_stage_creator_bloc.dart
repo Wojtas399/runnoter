@@ -191,16 +191,13 @@ class WorkoutStageCreatorBloc
     WorkoutStageType? stageType,
     WorkoutStageCreatorForm? form,
   ) {
-    if (stageType == null) {
-      return null;
-    }
+    if (stageType == null) return null;
     if (form is WorkoutStageCreatorDistanceStageForm) {
       return _mapDistanceStageFormToWorkoutStage(stageType, form);
     } else if (form is WorkoutStageCreatorSeriesStageForm) {
       return _mapSeriesStageFormToWorkoutStage(stageType, form);
-    } else {
-      return _mapNoFormStageToWorkoutStage(stageType);
     }
+    return null;
   }
 
   WorkoutStage? _mapDistanceStageFormToWorkoutStage(
@@ -261,19 +258,6 @@ class WorkoutStageCreatorBloc
         walkingDistanceInMeters: breakWalkingDistanceInMeters ?? 0,
         joggingDistanceInMeters: breakJoggingDistanceInMeters ?? 0,
       );
-    }
-    return null;
-  }
-
-  WorkoutStage? _mapNoFormStageToWorkoutStage(
-    WorkoutStageType stageType,
-  ) {
-    if (stageType == WorkoutStageType.stretching) {
-      return const WorkoutStageStretching();
-    } else if (stageType == WorkoutStageType.strengthening) {
-      return const WorkoutStageStrengthening();
-    } else if (stageType == WorkoutStageType.foamRolling) {
-      return const WorkoutStageFoamRolling();
     }
     return null;
   }

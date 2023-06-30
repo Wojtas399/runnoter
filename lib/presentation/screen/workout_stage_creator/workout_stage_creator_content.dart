@@ -71,12 +71,6 @@ class _WorkoutStageType extends StatelessWidget {
         return str.workoutStageHillRepeats;
       case WorkoutStageType.rhythms:
         return str.workoutStageRhythms;
-      case WorkoutStageType.stretching:
-        return str.workoutStageStretching;
-      case WorkoutStageType.strengthening:
-        return str.workoutStageStrengthening;
-      case WorkoutStageType.foamRolling:
-        return str.workoutStageFoamRolling;
     }
   }
 

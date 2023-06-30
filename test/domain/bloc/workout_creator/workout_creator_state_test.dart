@@ -26,7 +26,7 @@ void main() {
     () {
       state = state.copyWith(
         workoutName: 'workout name',
-        stages: [
+        stages: const [
           WorkoutStageBaseRun(
             distanceInKilometers: 10,
             maxHeartRate: 150,
@@ -45,7 +45,7 @@ void main() {
     () {
       state = state.copyWith(
         date: DateTime(2023, 2, 2),
-        stages: [
+        stages: const [
           WorkoutStageBaseRun(
             distanceInKilometers: 10,
             maxHeartRate: 150,
@@ -65,7 +65,7 @@ void main() {
       state = state.copyWith(
         date: DateTime(2023, 2, 2),
         workoutName: '',
-        stages: [
+        stages: const [
           WorkoutStageBaseRun(
             distanceInKilometers: 10,
             maxHeartRate: 150,
@@ -101,7 +101,7 @@ void main() {
         date: DateTime(2023, 2, 2),
         workout: createWorkout(
           name: 'workout name',
-          stages: [
+          stages: const [
             WorkoutStageBaseRun(
               distanceInKilometers: 10,
               maxHeartRate: 150,
@@ -113,7 +113,7 @@ void main() {
           ],
         ),
         workoutName: 'workout name',
-        stages: [
+        stages: const [
           WorkoutStageBaseRun(
             distanceInKilometers: 10,
             maxHeartRate: 150,
@@ -138,7 +138,7 @@ void main() {
       state = state.copyWith(
         date: DateTime(2023, 2, 2),
         workoutName: 'workout name',
-        stages: [
+        stages: const [
           WorkoutStageBaseRun(
             distanceInKilometers: 10,
             maxHeartRate: 150,
@@ -160,7 +160,7 @@ void main() {
         date: DateTime(2023, 2, 2),
         workout: createWorkout(
           name: 'workout 1',
-          stages: [
+          stages: const [
             WorkoutStageBaseRun(
               distanceInKilometers: 10,
               maxHeartRate: 150,
@@ -168,7 +168,7 @@ void main() {
           ],
         ),
         workoutName: 'workout name',
-        stages: [
+        stages: const [
           WorkoutStageBaseRun(
             distanceInKilometers: 10,
             maxHeartRate: 150,
@@ -190,7 +190,7 @@ void main() {
         date: DateTime(2023, 2, 2),
         workout: createWorkout(
           name: 'workout 1',
-          stages: [
+          stages: const [
             WorkoutStageBaseRun(
               distanceInKilometers: 10,
               maxHeartRate: 150,
@@ -202,7 +202,7 @@ void main() {
           ],
         ),
         workoutName: 'workout 1',
-        stages: [
+        stages: const [
           WorkoutStageZone2(
             distanceInKilometers: 2,
             maxHeartRate: 165,
@@ -267,25 +267,6 @@ void main() {
 
       expect(state.workoutName, expectedName);
       expect(state2.workoutName, expectedName);
-    },
-  );
-
-  test(
-    'copy with stages',
-    () {
-      final List<WorkoutStage> expectedStages = [
-        WorkoutStageBaseRun(
-          distanceInKilometers: 10.0,
-          maxHeartRate: 150,
-        ),
-        const WorkoutStageStretching(),
-      ];
-
-      state = state.copyWith(stages: expectedStages);
-      final state2 = state.copyWith();
-
-      expect(state.stages, expectedStages);
-      expect(state2.stages, expectedStages);
     },
   );
 }

@@ -9,7 +9,7 @@ void main() {
     'should simply return distance',
     () {
       const double expectedDistance = 10.0;
-      final stage = WorkoutStageBaseRun(
+      const stage = WorkoutStageBaseRun(
         distanceInKilometers: expectedDistance,
         maxHeartRate: 150,
       );
@@ -25,7 +25,7 @@ void main() {
     'series stage, '
     'should sum series, walking and jogging distances and multiply by number of series',
     () {
-      final stage = WorkoutStageHillRepeats(
+      const stage = WorkoutStageHillRepeats(
         amountOfSeries: 10,
         seriesDistanceInMeters: 100,
         walkingDistanceInMeters: 20,

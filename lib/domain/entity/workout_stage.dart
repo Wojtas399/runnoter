@@ -1,77 +1,43 @@
 import 'package:equatable/equatable.dart';
 
-abstract class WorkoutStage extends Equatable {
+sealed class WorkoutStage extends Equatable {
   const WorkoutStage();
 }
 
-class WorkoutStageBaseRun extends WorkoutStage with DistanceWorkoutStage {
-  WorkoutStageBaseRun({
-    required double distanceInKilometers,
-    required int maxHeartRate,
+sealed class DistanceWorkoutStage extends WorkoutStage {
+  final double distanceInKilometers;
+  final int maxHeartRate;
+
+  const DistanceWorkoutStage({
+    required this.distanceInKilometers,
+    required this.maxHeartRate,
   })  : assert(distanceInKilometers > 0),
-        assert(maxHeartRate > 0) {
-    this.distanceInKilometers = distanceInKilometers;
-    this.maxHeartRate = maxHeartRate;
-  }
+        assert(maxHeartRate > 0);
 
   @override
-  List<Object> get props => [
+  List<Object?> get props => [
         distanceInKilometers,
         maxHeartRate,
       ];
 }
 
-class WorkoutStageZone2 extends WorkoutStage with DistanceWorkoutStage {
-  WorkoutStageZone2({
-    required double distanceInKilometers,
-    required int maxHeartRate,
-  })  : assert(distanceInKilometers > 0),
-        assert(maxHeartRate > 0) {
-    this.distanceInKilometers = distanceInKilometers;
-    this.maxHeartRate = maxHeartRate;
-  }
+sealed class SeriesWorkoutStage extends WorkoutStage {
+  final int amountOfSeries;
+  final int seriesDistanceInMeters;
+  final int walkingDistanceInMeters;
+  final int joggingDistanceInMeters;
 
-  @override
-  List<Object> get props => [
-        distanceInKilometers,
-        maxHeartRate,
-      ];
-}
-
-class WorkoutStageZone3 extends WorkoutStage with DistanceWorkoutStage {
-  WorkoutStageZone3({
-    required double distanceInKilometers,
-    required int maxHeartRate,
-  })  : assert(distanceInKilometers > 0),
-        assert(maxHeartRate > 0) {
-    this.distanceInKilometers = distanceInKilometers;
-    this.maxHeartRate = maxHeartRate;
-  }
-
-  @override
-  List<Object> get props => [
-        distanceInKilometers,
-        maxHeartRate,
-      ];
-}
-
-class WorkoutStageHillRepeats extends WorkoutStage with SeriesWorkoutStage {
-  WorkoutStageHillRepeats({
-    required int amountOfSeries,
-    required int seriesDistanceInMeters,
-    required int walkingDistanceInMeters,
-    required int joggingDistanceInMeters,
+  const SeriesWorkoutStage({
+    required this.amountOfSeries,
+    required this.seriesDistanceInMeters,
+    required this.walkingDistanceInMeters,
+    required this.joggingDistanceInMeters,
   })  : assert(amountOfSeries > 0),
         assert(seriesDistanceInMeters > 0),
-        assert(walkingDistanceInMeters > 0 || joggingDistanceInMeters > 0) {
-    this.amountOfSeries = amountOfSeries;
-    this.seriesDistanceInMeters = seriesDistanceInMeters;
-    this.walkingDistanceInMeters = walkingDistanceInMeters;
-    this.joggingDistanceInMeters = joggingDistanceInMeters;
-  }
+        assert(walkingDistanceInMeters > 0 || joggingDistanceInMeters > 0);
 
   @override
-  List<Object> get props => [
+  List<Object?> get props => [
         amountOfSeries,
         seriesDistanceInMeters,
         walkingDistanceInMeters,
@@ -79,59 +45,41 @@ class WorkoutStageHillRepeats extends WorkoutStage with SeriesWorkoutStage {
       ];
 }
 
-class WorkoutStageRhythms extends WorkoutStage with SeriesWorkoutStage {
-  WorkoutStageRhythms({
-    required int amountOfSeries,
-    required int seriesDistanceInMeters,
-    required int walkingDistanceInMeters,
-    required int joggingDistanceInMeters,
-  })  : assert(amountOfSeries > 0),
-        assert(seriesDistanceInMeters > 0),
-        assert(walkingDistanceInMeters > 0 || joggingDistanceInMeters > 0) {
-    this.amountOfSeries = amountOfSeries;
-    this.seriesDistanceInMeters = seriesDistanceInMeters;
-    this.walkingDistanceInMeters = walkingDistanceInMeters;
-    this.joggingDistanceInMeters = joggingDistanceInMeters;
-  }
-
-  @override
-  List<Object> get props => [
-        amountOfSeries,
-        seriesDistanceInMeters,
-        walkingDistanceInMeters,
-        joggingDistanceInMeters,
-      ];
+class WorkoutStageBaseRun extends DistanceWorkoutStage {
+  const WorkoutStageBaseRun({
+    required super.distanceInKilometers,
+    required super.maxHeartRate,
+  });
 }
 
-class WorkoutStageStretching extends WorkoutStage {
-  const WorkoutStageStretching();
-
-  @override
-  List<Object> get props => [];
+class WorkoutStageZone2 extends DistanceWorkoutStage {
+  const WorkoutStageZone2({
+    required super.distanceInKilometers,
+    required super.maxHeartRate,
+  });
 }
 
-class WorkoutStageStrengthening extends WorkoutStage {
-  const WorkoutStageStrengthening();
-
-  @override
-  List<Object> get props => [];
+class WorkoutStageZone3 extends DistanceWorkoutStage {
+  const WorkoutStageZone3({
+    required super.distanceInKilometers,
+    required super.maxHeartRate,
+  });
 }
 
-class WorkoutStageFoamRolling extends WorkoutStage {
-  const WorkoutStageFoamRolling();
-
-  @override
-  List<Object> get props => [];
+class WorkoutStageHillRepeats extends SeriesWorkoutStage {
+  const WorkoutStageHillRepeats({
+    required super.amountOfSeries,
+    required super.seriesDistanceInMeters,
+    required super.walkingDistanceInMeters,
+    required super.joggingDistanceInMeters,
+  });
 }
 
-mixin DistanceWorkoutStage on WorkoutStage {
-  late final double distanceInKilometers;
-  late final int maxHeartRate;
-}
-
-mixin SeriesWorkoutStage on WorkoutStage {
-  late final int amountOfSeries;
-  late final int seriesDistanceInMeters;
-  late final int walkingDistanceInMeters;
-  late final int joggingDistanceInMeters;
+class WorkoutStageRhythms extends SeriesWorkoutStage {
+  const WorkoutStageRhythms({
+    required super.amountOfSeries,
+    required super.seriesDistanceInMeters,
+    required super.walkingDistanceInMeters,
+    required super.joggingDistanceInMeters,
+  });
 }

@@ -9,48 +9,22 @@ import 'distance_unit_formatter.dart';
 
 extension WorkoutStageFormatter on WorkoutStage {
   String toUIFormat(BuildContext context) {
-    String description = '';
     final WorkoutStage stage = this;
-    if (stage is WorkoutStageBaseRun) {
-      description = _createDistanceStageDescription(context, stage);
-    } else if (stage is WorkoutStageZone2) {
-      description = _createDistanceStageDescription(context, stage);
-    } else if (stage is WorkoutStageZone3) {
-      description = _createDistanceStageDescription(context, stage);
-    } else if (stage is WorkoutStageRhythms) {
-      description = _createSeriesStageDescription(context, stage);
-    } else if (stage is WorkoutStageHillRepeats) {
-      description = _createSeriesStageDescription(context, stage);
-    } else if (stage is WorkoutStageStretching) {
-      description = Str.of(context).workoutStageStretching;
-    } else if (stage is WorkoutStageStrengthening) {
-      description = Str.of(context).workoutStageStrengthening;
-    } else if (stage is WorkoutStageFoamRolling) {
-      description = Str.of(context).workoutStageFoamRolling;
-    }
-    return description;
+    return switch (stage) {
+      DistanceWorkoutStage() => _createDistanceStageDescription(context, stage),
+      SeriesWorkoutStage() => _createSeriesStageDescription(context, stage),
+    };
   }
 
   String toTypeName(BuildContext context) {
     final str = Str.of(context);
-    if (this is WorkoutStageBaseRun) {
-      return str.workoutStageBaseRun;
-    } else if (this is WorkoutStageZone2) {
-      return str.workoutStageZone2;
-    } else if (this is WorkoutStageZone3) {
-      return str.workoutStageZone3;
-    } else if (this is WorkoutStageRhythms) {
-      return str.workoutStageRhythms;
-    } else if (this is WorkoutStageHillRepeats) {
-      return str.workoutStageHillRepeats;
-    } else if (this is WorkoutStageStretching) {
-      return str.workoutStageStretching;
-    } else if (this is WorkoutStageStrengthening) {
-      return str.workoutStageStrengthening;
-    } else if (this is WorkoutStageFoamRolling) {
-      return str.workoutStageFoamRolling;
-    }
-    return '';
+    return switch (this) {
+      WorkoutStageBaseRun() => str.workoutStageBaseRun,
+      WorkoutStageZone2() => str.workoutStageZone2,
+      WorkoutStageZone3() => str.workoutStageZone3,
+      WorkoutStageRhythms() => str.workoutStageRhythms,
+      WorkoutStageHillRepeats() => str.workoutStageHillRepeats,
+    };
   }
 
   String _createDistanceStageDescription(

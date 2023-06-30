@@ -779,18 +779,6 @@
   "@workoutStageHillRepeats": {
     "description": "Type of workout stage called hill repeats"
   },
-  "workoutStageStretching": "Rozciąganie",
-  "@workoutStageStretching": {
-    "description": "Type of workout stage called stretching"
-  },
-  "workoutStageStrengthening": "Ćwiczenia wzmacniające",
-  "@workoutStageStrengthening": {
-    "description": "Type of workout stage called strengthening"
-  },
-  "workoutStageFoamRolling": "Rolowanie",
-  "@workoutStageFoamRolling": {
-    "description": "Type of workout stage called foam rolling"
-  },
   "workoutStageBreak": "przerwa",
   "@workoutStageBreak": {
     "description": "Break"

@@ -112,22 +112,6 @@ void main() {
   );
 
   test(
-    'state in progress, '
-    'is add button disabled, '
-    'stage type is not null and form is null, '
-    'should be false',
-    () {
-      const WorkoutStageType stageType = WorkoutStageType.stretching;
-
-      final state = createStateInProgress(
-        stageType: stageType,
-      );
-
-      expect(state.isAddButtonDisabled, false);
-    },
-  );
-
-  test(
     'copy with stage type',
     () {
       const WorkoutStageType expectedStageType = WorkoutStageType.hillRepeats;

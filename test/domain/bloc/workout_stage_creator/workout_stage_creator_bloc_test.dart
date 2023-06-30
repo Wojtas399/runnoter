@@ -151,72 +151,6 @@ void main() {
   );
 
   blocTest(
-    'stage type changed, '
-    'stretching stage, '
-    'should emit in progress state with form set as null and stage type set as stretching',
-    build: () => createBloc(
-      form: createDistanceStageForm(),
-    ),
-    act: (WorkoutStageCreatorBloc bloc) {
-      bloc.add(
-        const WorkoutStageCreatorEventStageTypeChanged(
-          stageType: WorkoutStageType.stretching,
-        ),
-      );
-    },
-    expect: () => [
-      createStateInProgress(
-        stageType: WorkoutStageType.stretching,
-        form: null,
-      ),
-    ],
-  );
-
-  blocTest(
-    'stage type changed, '
-    'strengthening stage, '
-    'should emit in progress state with form set as null and stage type set as strengthening',
-    build: () => createBloc(
-      form: createDistanceStageForm(),
-    ),
-    act: (WorkoutStageCreatorBloc bloc) {
-      bloc.add(
-        const WorkoutStageCreatorEventStageTypeChanged(
-          stageType: WorkoutStageType.strengthening,
-        ),
-      );
-    },
-    expect: () => [
-      createStateInProgress(
-        stageType: WorkoutStageType.strengthening,
-        form: null,
-      ),
-    ],
-  );
-
-  blocTest(
-    'stage type changed, '
-    'foam rolling stage, '
-    'should emit in progress state with form set as null and stage type set as foam rolling',
-    build: () => createBloc(
-      form: createDistanceStageForm(),
-    ),
-    act: (WorkoutStageCreatorBloc bloc) {
-      bloc.add(
-        const WorkoutStageCreatorEventStageTypeChanged(
-          stageType: WorkoutStageType.foamRolling,
-        ),
-      );
-    },
-    expect: () => [
-      createStateInProgress(
-        stageType: WorkoutStageType.foamRolling,
-        form: null,
-      ),
-    ],
-  );
-
-  blocTest(
     'distance changed, '
     'distance stage form, '
     'should update distance in form',
@@ -617,7 +551,7 @@ void main() {
     },
     expect: () => [
       createStateSubmitted(
-        workoutStage: WorkoutStageBaseRun(
+        workoutStage: const WorkoutStageBaseRun(
           distanceInKilometers: 10.5,
           maxHeartRate: 150,
         ),
@@ -659,7 +593,7 @@ void main() {
     },
     expect: () => [
       createStateSubmitted(
-        workoutStage: WorkoutStageZone2(
+        workoutStage: const WorkoutStageZone2(
           distanceInKilometers: 10.5,
           maxHeartRate: 150,
         ),
@@ -701,7 +635,7 @@ void main() {
     },
     expect: () => [
       createStateSubmitted(
-        workoutStage: WorkoutStageZone3(
+        workoutStage: const WorkoutStageZone3(
           distanceInKilometers: 10.5,
           maxHeartRate: 150,
         ),
@@ -745,7 +679,7 @@ void main() {
     },
     expect: () => [
       createStateSubmitted(
-        workoutStage: WorkoutStageHillRepeats(
+        workoutStage: const WorkoutStageHillRepeats(
           amountOfSeries: 10,
           seriesDistanceInMeters: 100,
           walkingDistanceInMeters: 20,
@@ -791,7 +725,7 @@ void main() {
     },
     expect: () => [
       createStateSubmitted(
-        workoutStage: WorkoutStageRhythms(
+        workoutStage: const WorkoutStageRhythms(
           amountOfSeries: 10,
           seriesDistanceInMeters: 100,
           walkingDistanceInMeters: 20,
@@ -815,62 +749,5 @@ void main() {
       );
     },
     expect: () => [],
-  );
-
-  blocTest(
-    'submit, '
-    'stretching, '
-    'should emit submitted state with stretching workout model',
-    build: () => createBloc(
-      stageType: WorkoutStageType.stretching,
-    ),
-    act: (WorkoutStageCreatorBloc bloc) {
-      bloc.add(
-        const WorkoutStageCreatorEventSubmit(),
-      );
-    },
-    expect: () => [
-      createStateSubmitted(
-        workoutStage: const WorkoutStageStretching(),
-      ),
-    ],
-  );
-
-  blocTest(
-    'submit, '
-    'strengthening, '
-    'should emit submitted state with strengthening workout model',
-    build: () => createBloc(
-      stageType: WorkoutStageType.strengthening,
-    ),
-    act: (WorkoutStageCreatorBloc bloc) {
-      bloc.add(
-        const WorkoutStageCreatorEventSubmit(),
-      );
-    },
-    expect: () => [
-      createStateSubmitted(
-        workoutStage: const WorkoutStageStrengthening(),
-      ),
-    ],
-  );
-
-  blocTest(
-    'submit, '
-    'foam rolling, '
-    'should emit submitted state with foam rolling workout model',
-    build: () => createBloc(
-      stageType: WorkoutStageType.foamRolling,
-    ),
-    act: (WorkoutStageCreatorBloc bloc) {
-      bloc.add(
-        const WorkoutStageCreatorEventSubmit(),
-      );
-    },
-    expect: () => [
-      createStateSubmitted(
-        workoutStage: const WorkoutStageFoamRolling(),
-      ),
-    ],
   );
 }

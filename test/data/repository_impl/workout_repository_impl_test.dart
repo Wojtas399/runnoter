@@ -382,7 +382,7 @@ void main() {
       const String workoutName = 'workout 3';
       final DateTime date = DateTime(2023, 2, 2);
       const RunStatus status = RunStatusPending();
-      final List<WorkoutStage> stages = [
+      const List<WorkoutStage> stages = [
         WorkoutStageBaseRun(
           distanceInKilometers: 2,
           maxHeartRate: 150,
@@ -402,7 +402,7 @@ void main() {
         name: workoutName,
         date: date,
         status: const firebase.RunStatusPendingDto(),
-        stages: [
+        stages: const [
           firebase.WorkoutStageBaseRunDto(
             distanceInKilometers: 2,
             maxHeartRate: 150,
@@ -468,13 +468,13 @@ void main() {
         moodRate: firebase.MoodRate.mr8,
         comment: 'Nice workout!',
       );
-      final List<WorkoutStage> newStages = [
+      const List<WorkoutStage> newStages = [
         WorkoutStageBaseRun(
           distanceInKilometers: 10,
           maxHeartRate: 150,
         ),
       ];
-      final List<firebase.WorkoutStageDto> newStageDtos = [
+      const List<firebase.WorkoutStageDto> newStageDtos = [
         firebase.WorkoutStageBaseRunDto(
           distanceInKilometers: 10,
           maxHeartRate: 150,
@@ -492,7 +492,7 @@ void main() {
         userId: userId,
         name: 'workout name',
         status: const RunStatusPending(),
-        stages: [
+        stages: const [
           WorkoutStageBaseRun(
             distanceInKilometers: 8,
             maxHeartRate: 150,

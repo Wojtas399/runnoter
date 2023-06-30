@@ -59,7 +59,4 @@ enum WorkoutStageType {
   zone3,
   hillRepeats,
   rhythms,
-  stretching,
-  strengthening,
-  foamRolling,
 }
