@@ -3,16 +3,16 @@ import 'package:runnoter/domain/bloc/workout_stage_creator/workout_stage_creator
 import 'package:runnoter/domain/entity/workout_stage.dart';
 
 void main() {
-  late WorkoutStageCreatorDistanceStageForm form;
+  late WorkoutStageCreatorDistanceForm form;
   const double distanceInKm = 9.5;
   const int maxHeartRate = 150;
 
-  WorkoutStageCreatorDistanceStageForm createForm({
+  WorkoutStageCreatorDistanceForm createForm({
     DistanceWorkoutStage? originalStage,
     double? distanceInKm,
     int? maxHeartRate,
   }) =>
-      WorkoutStageCreatorDistanceStageForm(
+      WorkoutStageCreatorDistanceForm(
         originalStage: originalStage,
         distanceInKm: distanceInKm,
         maxHeartRate: maxHeartRate,

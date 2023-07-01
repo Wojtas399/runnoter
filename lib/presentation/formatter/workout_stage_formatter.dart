@@ -19,7 +19,7 @@ extension WorkoutStageFormatter on WorkoutStage {
   String toTypeName(BuildContext context) {
     final str = Str.of(context);
     return switch (this) {
-      WorkoutStageBaseRun() => str.workoutStageBaseRun,
+      WorkoutStageBaseRun() => str.workoutStageCardio,
       WorkoutStageZone2() => str.workoutStageZone2,
       WorkoutStageZone3() => str.workoutStageZone3,
       WorkoutStageRhythms() => str.workoutStageRhythms,

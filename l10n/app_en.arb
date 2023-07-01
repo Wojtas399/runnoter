@@ -189,7 +189,7 @@
   "paceUnit": "Pace unit",
   "paceUnitSelect": "Select pace unit",
   "heartRateUnit": "bpm",
-  "workoutStageBaseRun": "Cardio",
+  "workoutStageCardio": "Cardio",
   "workoutStageZone2": "Zone2",
   "workoutStageZone3": "Zone3",
   "workoutStageRhythms": "Rhythms",

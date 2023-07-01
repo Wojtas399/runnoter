@@ -1,18 +1,18 @@
 part of 'workout_stage_creator_bloc.dart';
 
-class WorkoutStageCreatorSeriesStageForm extends WorkoutStageCreatorForm {
+class WorkoutStageCreatorSeriesForm extends WorkoutStageCreatorForm {
   final SeriesWorkoutStage? originalStage;
   final int? amountOfSeries;
   final int? seriesDistanceInMeters;
   final int? walkingDistanceInMeters;
   final int? joggingDistanceInMeters;
 
-  const WorkoutStageCreatorSeriesStageForm({
-    required this.originalStage,
-    required this.amountOfSeries,
-    required this.seriesDistanceInMeters,
-    required this.walkingDistanceInMeters,
-    required this.joggingDistanceInMeters,
+  const WorkoutStageCreatorSeriesForm({
+    this.originalStage,
+    this.amountOfSeries,
+    this.seriesDistanceInMeters,
+    this.walkingDistanceInMeters,
+    this.joggingDistanceInMeters,
   });
 
   @override
@@ -59,13 +59,13 @@ class WorkoutStageCreatorSeriesStageForm extends WorkoutStageCreatorForm {
   }
 
   @override
-  WorkoutStageCreatorSeriesStageForm copyWith({
+  WorkoutStageCreatorSeriesForm copyWith({
     int? amountOfSeries,
     int? seriesDistanceInMeters,
     int? walkingDistanceInMeters,
     int? joggingDistanceInMeters,
   }) =>
-      WorkoutStageCreatorSeriesStageForm(
+      WorkoutStageCreatorSeriesForm(
         originalStage: originalStage,
         amountOfSeries: amountOfSeries ?? this.amountOfSeries,
         seriesDistanceInMeters:

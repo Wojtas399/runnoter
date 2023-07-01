@@ -1,14 +1,14 @@
 part of 'workout_stage_creator_bloc.dart';
 
-class WorkoutStageCreatorDistanceStageForm extends WorkoutStageCreatorForm {
+class WorkoutStageCreatorDistanceForm extends WorkoutStageCreatorForm {
   final DistanceWorkoutStage? originalStage;
   final double? distanceInKm;
   final int? maxHeartRate;
 
-  const WorkoutStageCreatorDistanceStageForm({
-    required this.originalStage,
-    required this.distanceInKm,
-    required this.maxHeartRate,
+  const WorkoutStageCreatorDistanceForm({
+    this.originalStage,
+    this.distanceInKm,
+    this.maxHeartRate,
   });
 
   @override
@@ -36,11 +36,11 @@ class WorkoutStageCreatorDistanceStageForm extends WorkoutStageCreatorForm {
       maxHeartRate == null || maxHeartRate! <= 0;
 
   @override
-  WorkoutStageCreatorDistanceStageForm copyWith({
+  WorkoutStageCreatorDistanceForm copyWith({
     double? distanceInKm,
     int? maxHeartRate,
   }) =>
-      WorkoutStageCreatorDistanceStageForm(
+      WorkoutStageCreatorDistanceForm(
         originalStage: originalStage,
         distanceInKm: distanceInKm ?? this.distanceInKm,
         maxHeartRate: maxHeartRate ?? this.maxHeartRate,

@@ -759,9 +759,9 @@
   "@heartRateUnit": {
     "description": "Unit of heart rate"
   },
-  "workoutStageBaseRun": "OWB1",
-  "@workoutStageBaseRun": {
-    "description": "Type of workout stage called base run"
+  "workoutStageCardio": "OWB1",
+  "@workoutStageCardio": {
+    "description": "Type of workout stage called cardio"
   },
   "workoutStageZone2": "BC2",
   "@workoutStageZone2": {

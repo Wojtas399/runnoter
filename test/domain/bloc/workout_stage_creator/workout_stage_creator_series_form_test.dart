@@ -3,7 +3,7 @@ import 'package:runnoter/domain/bloc/workout_stage_creator/workout_stage_creator
 import 'package:runnoter/domain/entity/workout_stage.dart';
 
 void main() {
-  late WorkoutStageCreatorSeriesStageForm form;
+  late WorkoutStageCreatorSeriesForm form;
   const int amountOfSeries = 10;
   const int seriesDistanceInMeters = 100;
   const int walkingDistanceInMeters = 100;
@@ -15,14 +15,14 @@ void main() {
     joggingDistanceInMeters: joggingDistanceInMeters,
   );
 
-  WorkoutStageCreatorSeriesStageForm createForm({
+  WorkoutStageCreatorSeriesForm createForm({
     SeriesWorkoutStage? originalStage,
     int? amountOfSeries,
     int? seriesDistanceInMeters,
     int? walkingDistanceInMeters,
     int? joggingDistanceInMeters,
   }) =>
-      WorkoutStageCreatorSeriesStageForm(
+      WorkoutStageCreatorSeriesForm(
         originalStage: originalStage,
         amountOfSeries: amountOfSeries,
         seriesDistanceInMeters: seriesDistanceInMeters,

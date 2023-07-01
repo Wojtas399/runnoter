@@ -1,49 +1,57 @@
 part of 'workout_stage_creator_bloc.dart';
 
-abstract class WorkoutStageCreatorState extends Equatable {
-  const WorkoutStageCreatorState();
-}
-
-class WorkoutStageCreatorStateInProgress extends WorkoutStageCreatorState {
+class WorkoutStageCreatorState extends BlocState<WorkoutStageCreatorState> {
   final WorkoutStageType? stageType;
-  final WorkoutStageCreatorForm? form;
+  final WorkoutStageCreatorDistanceForm distanceForm;
+  final WorkoutStageCreatorSeriesForm seriesForm;
+  final WorkoutStage? stageToSubmit;
 
-  const WorkoutStageCreatorStateInProgress({
-    required this.stageType,
-    required this.form,
+  const WorkoutStageCreatorState({
+    required super.status,
+    this.stageType,
+    this.distanceForm = const WorkoutStageCreatorDistanceForm(),
+    this.seriesForm = const WorkoutStageCreatorSeriesForm(),
+    this.stageToSubmit,
   });
 
   @override
   List<Object?> get props => [
+        status,
         stageType,
-        form,
+        distanceForm,
+        seriesForm,
+        stageToSubmit,
       ];
 
   bool get isSubmitButtonDisabled =>
       stageType == null ||
-      (form != null ? form!.isSubmitButtonDisabled : false);
+      (isDistanceStage && distanceForm.isSubmitButtonDisabled) ||
+      (isSeriesStage && seriesForm.isSubmitButtonDisabled);
 
-  WorkoutStageCreatorStateInProgress copyWith({
-    WorkoutStageType? stageType,
-    WorkoutStageCreatorForm? form,
-  }) =>
-      WorkoutStageCreatorStateInProgress(
-        stageType: stageType ?? this.stageType,
-        form: form,
-      );
-}
+  bool get isDistanceStage =>
+      stageType == WorkoutStageType.cardio ||
+      stageType == WorkoutStageType.zone2 ||
+      stageType == WorkoutStageType.zone3;
 
-class WorkoutStageCreatorStateSubmitted extends WorkoutStageCreatorState {
-  final WorkoutStage workoutStage;
-
-  const WorkoutStageCreatorStateSubmitted({
-    required this.workoutStage,
-  });
+  bool get isSeriesStage =>
+      stageType == WorkoutStageType.hillRepeats ||
+      stageType == WorkoutStageType.rhythms;
 
   @override
-  List<Object> get props => [
-        workoutStage,
-      ];
+  WorkoutStageCreatorState copyWith({
+    BlocStatus? status,
+    WorkoutStageType? stageType,
+    WorkoutStageCreatorDistanceForm? distanceForm,
+    WorkoutStageCreatorSeriesForm? seriesForm,
+    WorkoutStage? stageToSubmit,
+  }) =>
+      WorkoutStageCreatorState(
+        status: status ?? const BlocStatusComplete(),
+        stageType: stageType ?? this.stageType,
+        distanceForm: distanceForm ?? this.distanceForm,
+        seriesForm: seriesForm ?? this.seriesForm,
+        stageToSubmit: stageToSubmit,
+      );
 }
 
 abstract class WorkoutStageCreatorForm extends Equatable {
@@ -55,7 +63,7 @@ abstract class WorkoutStageCreatorForm extends Equatable {
 }
 
 enum WorkoutStageType {
-  baseRun,
+  cardio,
   zone2,
   zone3,
   hillRepeats,
