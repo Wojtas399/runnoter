@@ -1,14 +1,19 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/domain/bloc/workout_stage_creator/workout_stage_creator_bloc.dart';
+import 'package:runnoter/domain/entity/workout_stage.dart';
 
 void main() {
   late WorkoutStageCreatorDistanceStageForm form;
+  const double distanceInKm = 9.5;
+  const int maxHeartRate = 150;
 
   WorkoutStageCreatorDistanceStageForm createForm({
+    DistanceWorkoutStage? originalStage,
     double? distanceInKm,
     int? maxHeartRate,
   }) =>
       WorkoutStageCreatorDistanceStageForm(
+        originalStage: originalStage,
         distanceInKm: distanceInKm,
         maxHeartRate: maxHeartRate,
       );
@@ -18,83 +23,155 @@ void main() {
   });
 
   test(
-    'are data correct, '
+    'is submit button disabled, '
     'distance is higher than 0 and max heart rate is higher than 0, '
+    'should be false',
+    () {
+      form = createForm(
+        distanceInKm: distanceInKm,
+        maxHeartRate: maxHeartRate,
+      );
+
+      expect(form.isSubmitButtonDisabled, false);
+    },
+  );
+
+  test(
+    'is submit button disabled, '
+    'distance is null, '
     'should be true',
     () {
-      const double distanceInKm = 9.5;
-      const int maxHeartRate = 150;
-
       form = createForm(
-        distanceInKm: distanceInKm,
         maxHeartRate: maxHeartRate,
       );
 
-      expect(form.areDataCorrect, true);
+      expect(form.isSubmitButtonDisabled, true);
     },
   );
 
   test(
-    'are data correct, '
-    'distance is null, '
-    'should be false',
+    'is submit button disabled, '
+    'distance is lower than 0, '
+    'should be true',
     () {
-      const int maxHeartRate = 150;
-
       form = createForm(
+        distanceInKm: -10,
         maxHeartRate: maxHeartRate,
       );
 
-      expect(form.areDataCorrect, false);
+      expect(form.isSubmitButtonDisabled, true);
     },
   );
 
   test(
-    'are data correct, '
-    'distance is lower or equal to 0, '
-    'should be false',
+    'is submit button disabled, '
+    'distance is equal to 0, '
+    'should be true',
     () {
-      const double distanceInKm = 0;
-      const int maxHeartRate = 150;
-
       form = createForm(
-        distanceInKm: distanceInKm,
+        distanceInKm: 0,
         maxHeartRate: maxHeartRate,
       );
 
-      expect(form.areDataCorrect, false);
+      expect(form.isSubmitButtonDisabled, true);
     },
   );
 
   test(
-    'are data correct, '
+    'is submit button disabled, '
     'max heart rate is null, '
-    'should be false',
+    'should be true',
     () {
-      const double distanceInKm = 10.0;
-
       form = createForm(
         distanceInKm: distanceInKm,
       );
 
-      expect(form.areDataCorrect, false);
+      expect(form.isSubmitButtonDisabled, true);
     },
   );
 
   test(
-    'are data correct, '
-    'max heart rate is lower or equal to 0, '
+    'is submit button disabled, '
+    'max heart rate is lower than 0, '
+    'should be true',
+    () {
+      form = createForm(
+        distanceInKm: distanceInKm,
+        maxHeartRate: -10,
+      );
+
+      expect(form.isSubmitButtonDisabled, true);
+    },
+  );
+
+  test(
+    'is submit button disabled, '
+    'max heart rate is equal to 0, '
+    'should be true',
+    () {
+      form = createForm(
+        distanceInKm: distanceInKm,
+        maxHeartRate: 0,
+      );
+
+      expect(form.isSubmitButtonDisabled, true);
+    },
+  );
+
+  test(
+    'is submit button disabled, '
+    'distance is different than original, '
     'should be false',
     () {
-      const double distanceInKm = 10.0;
-      const int maxHeartRate = 0;
-
+      const DistanceWorkoutStage originalStage = WorkoutStageBaseRun(
+        distanceInKilometers: distanceInKm,
+        maxHeartRate: maxHeartRate,
+      );
       form = createForm(
+        originalStage: originalStage,
+        distanceInKm: distanceInKm,
+        maxHeartRate: maxHeartRate + 10,
+      );
+
+      expect(form.isSubmitButtonDisabled, false);
+    },
+  );
+
+  test(
+    'is submit button disabled, '
+    'max heart rate is different than original, '
+    'should be false',
+    () {
+      const DistanceWorkoutStage originalStage = WorkoutStageBaseRun(
+        distanceInKilometers: distanceInKm,
+        maxHeartRate: maxHeartRate,
+      );
+      form = createForm(
+        originalStage: originalStage,
+        distanceInKm: distanceInKm + 5,
+        maxHeartRate: maxHeartRate,
+      );
+
+      expect(form.isSubmitButtonDisabled, false);
+    },
+  );
+
+  test(
+    'is submit button disabled, '
+    'distance and max heart rate are same as original, '
+    'should be true',
+    () {
+      const DistanceWorkoutStage originalStage = WorkoutStageBaseRun(
+        distanceInKilometers: distanceInKm,
+        maxHeartRate: maxHeartRate,
+      );
+      form = createForm(
+        originalStage: originalStage,
         distanceInKm: distanceInKm,
         maxHeartRate: maxHeartRate,
       );
 
-      expect(form.areDataCorrect, false);
+      expect(form.isSubmitButtonDisabled, true);
     },
   );
 

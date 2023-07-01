@@ -10,15 +10,16 @@ part 'workout_stage_creator_state.dart';
 
 class WorkoutStageCreatorBloc
     extends Bloc<WorkoutStageCreatorEvent, WorkoutStageCreatorState> {
+  final WorkoutStage? _originalStage;
+
   WorkoutStageCreatorBloc({
-    WorkoutStageType? stageType,
-    WorkoutStageCreatorForm? form,
-  }) : super(
-          WorkoutStageCreatorStateInProgress(
-            stageType: stageType,
-            form: form,
-          ),
-        ) {
+    required WorkoutStage? originalStage,
+    WorkoutStageCreatorState state = const WorkoutStageCreatorStateInProgress(
+      stageType: null,
+      form: null,
+    ),
+  })  : _originalStage = originalStage,
+        super(state) {
     on<WorkoutStageCreatorEventStageTypeChanged>(_stageTypeChanged);
     on<WorkoutStageCreatorEventDistanceChanged>(_distanceChanged);
     on<WorkoutStageCreatorEventMaxHeartRateChanged>(_maxHeartRateChanged);
@@ -35,17 +36,21 @@ class WorkoutStageCreatorBloc
   ) {
     final WorkoutStageType stageType = event.stageType;
     WorkoutStageCreatorForm? form;
-    if (_isDistanceStage(stageType)) {
-      form = const WorkoutStageCreatorDistanceStageForm(
+    if (_isDistanceStage(stageType) &&
+        (_originalStage is DistanceWorkoutStage || _originalStage == null)) {
+      form = WorkoutStageCreatorDistanceStageForm(
+        originalStage: _originalStage as DistanceWorkoutStage?,
         distanceInKm: null,
         maxHeartRate: null,
       );
-    } else if (_isSeriesStage(stageType)) {
-      form = const WorkoutStageCreatorSeriesStageForm(
+    } else if (_isSeriesStage(stageType) &&
+        (_originalStage is SeriesWorkoutStage || _originalStage == null)) {
+      form = WorkoutStageCreatorSeriesStageForm(
+        originalStage: _originalStage as SeriesWorkoutStage?,
         amountOfSeries: null,
         seriesDistanceInMeters: null,
-        breakWalkingDistanceInMeters: null,
-        breakJoggingDistanceInMeters: null,
+        walkingDistanceInMeters: null,
+        joggingDistanceInMeters: null,
       );
     }
     emit(WorkoutStageCreatorStateInProgress(
@@ -132,7 +137,7 @@ class WorkoutStageCreatorBloc
       if (form is WorkoutStageCreatorSeriesStageForm) {
         emit(state.copyWith(
           form: form.copyWith(
-            breakWalkingDistanceInMeters: event.walkingDistanceInMeters,
+            walkingDistanceInMeters: event.walkingDistanceInMeters,
           ),
         ));
       }
@@ -149,7 +154,7 @@ class WorkoutStageCreatorBloc
       if (form is WorkoutStageCreatorSeriesStageForm) {
         emit(state.copyWith(
           form: form.copyWith(
-            breakJoggingDistanceInMeters: event.joggingDistanceInMeters,
+            joggingDistanceInMeters: event.joggingDistanceInMeters,
           ),
         ));
       }
@@ -234,29 +239,28 @@ class WorkoutStageCreatorBloc
   ) {
     final int? amountOfSeries = seriesStageForm.amountOfSeries;
     final int? seriesDistanceInMeters = seriesStageForm.seriesDistanceInMeters;
-    final int? breakWalkingDistanceInMeters =
-        seriesStageForm.breakWalkingDistanceInMeters;
-    final int? breakJoggingDistanceInMeters =
-        seriesStageForm.breakJoggingDistanceInMeters;
+    final int? walkingDistanceInMeters =
+        seriesStageForm.walkingDistanceInMeters;
+    final int? joggingDistanceInMeters =
+        seriesStageForm.joggingDistanceInMeters;
     if (amountOfSeries == null ||
         seriesDistanceInMeters == null ||
-        (breakWalkingDistanceInMeters == null &&
-            breakJoggingDistanceInMeters == null)) {
+        (walkingDistanceInMeters == null && joggingDistanceInMeters == null)) {
       return null;
     }
     if (stageType == WorkoutStageType.hillRepeats) {
       return WorkoutStageHillRepeats(
         amountOfSeries: amountOfSeries,
         seriesDistanceInMeters: seriesDistanceInMeters,
-        walkingDistanceInMeters: breakWalkingDistanceInMeters ?? 0,
-        joggingDistanceInMeters: breakJoggingDistanceInMeters ?? 0,
+        walkingDistanceInMeters: walkingDistanceInMeters ?? 0,
+        joggingDistanceInMeters: joggingDistanceInMeters ?? 0,
       );
     } else if (stageType == WorkoutStageType.rhythms) {
       return WorkoutStageRhythms(
         amountOfSeries: amountOfSeries,
         seriesDistanceInMeters: seriesDistanceInMeters,
-        walkingDistanceInMeters: breakWalkingDistanceInMeters ?? 0,
-        joggingDistanceInMeters: breakJoggingDistanceInMeters ?? 0,
+        walkingDistanceInMeters: walkingDistanceInMeters ?? 0,
+        joggingDistanceInMeters: joggingDistanceInMeters ?? 0,
       );
     }
     return null;

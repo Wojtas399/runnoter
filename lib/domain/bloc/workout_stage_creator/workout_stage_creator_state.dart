@@ -19,8 +19,9 @@ class WorkoutStageCreatorStateInProgress extends WorkoutStageCreatorState {
         form,
       ];
 
-  bool get isAddButtonDisabled =>
-      stageType == null || (form != null ? !form!.areDataCorrect : false);
+  bool get isSubmitButtonDisabled =>
+      stageType == null ||
+      (form != null ? form!.isSubmitButtonDisabled : false);
 
   WorkoutStageCreatorStateInProgress copyWith({
     WorkoutStageType? stageType,
@@ -48,7 +49,7 @@ class WorkoutStageCreatorStateSubmitted extends WorkoutStageCreatorState {
 abstract class WorkoutStageCreatorForm extends Equatable {
   const WorkoutStageCreatorForm();
 
-  bool get areDataCorrect;
+  bool get isSubmitButtonDisabled;
 
   WorkoutStageCreatorForm copyWith();
 }

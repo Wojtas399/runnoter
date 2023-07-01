@@ -13,24 +13,25 @@ void main() {
 
   test(
     'state in progress, '
-    'is add button disabled, '
+    'is submit button disabled, '
     'stage type is null, '
     'should be true',
     () {
       final state = createStateInProgress();
 
-      expect(state.isAddButtonDisabled, true);
+      expect(state.isSubmitButtonDisabled, true);
     },
   );
 
   test(
     'state in progress, '
-    'is add button disabled, '
+    'is submit button disabled, '
     'stage type is not null and distance stage form data are invalid, '
     'should be true',
     () {
       const WorkoutStageType stageType = WorkoutStageType.baseRun;
       const distanceForm = WorkoutStageCreatorDistanceStageForm(
+        originalStage: null,
         distanceInKm: 0,
         maxHeartRate: 140,
       );
@@ -40,18 +41,19 @@ void main() {
         form: distanceForm,
       );
 
-      expect(state.isAddButtonDisabled, true);
+      expect(state.isSubmitButtonDisabled, true);
     },
   );
 
   test(
     'state in progress, '
-    'is add button disabled, '
+    'is submit button disabled, '
     'stage type is not null and distance stage form data are valid, '
     'should be false',
     () {
       const WorkoutStageType stageType = WorkoutStageType.baseRun;
       const distanceForm = WorkoutStageCreatorDistanceStageForm(
+        originalStage: null,
         distanceInKm: 10.5,
         maxHeartRate: 140,
       );
@@ -61,22 +63,23 @@ void main() {
         form: distanceForm,
       );
 
-      expect(state.isAddButtonDisabled, false);
+      expect(state.isSubmitButtonDisabled, false);
     },
   );
 
   test(
     'state in progress, '
-    'is add button disabled, '
+    'is submit button disabled, '
     'stage type is not null and series stage form data are invalid, '
     'should be true',
     () {
       const WorkoutStageType stageType = WorkoutStageType.hillRepeats;
       const distanceForm = WorkoutStageCreatorSeriesStageForm(
+        originalStage: null,
         amountOfSeries: 0,
         seriesDistanceInMeters: 100,
-        breakWalkingDistanceInMeters: 20,
-        breakJoggingDistanceInMeters: 80,
+        walkingDistanceInMeters: 20,
+        joggingDistanceInMeters: 80,
       );
 
       final state = createStateInProgress(
@@ -84,22 +87,23 @@ void main() {
         form: distanceForm,
       );
 
-      expect(state.isAddButtonDisabled, true);
+      expect(state.isSubmitButtonDisabled, true);
     },
   );
 
   test(
     'state in progress, '
-    'is add button disabled, '
+    'is submit button disabled, '
     'stage type is not null and series stage form data are valid, '
     'should be false',
     () {
       const WorkoutStageType stageType = WorkoutStageType.hillRepeats;
       const distanceForm = WorkoutStageCreatorSeriesStageForm(
+        originalStage: null,
         amountOfSeries: 10,
         seriesDistanceInMeters: 100,
-        breakWalkingDistanceInMeters: 20,
-        breakJoggingDistanceInMeters: 80,
+        walkingDistanceInMeters: 20,
+        joggingDistanceInMeters: 80,
       );
 
       final state = createStateInProgress(
@@ -107,7 +111,7 @@ void main() {
         form: distanceForm,
       );
 
-      expect(state.isAddButtonDisabled, false);
+      expect(state.isSubmitButtonDisabled, false);
     },
   );
 
@@ -129,6 +133,7 @@ void main() {
     () {
       const WorkoutStageCreatorForm expectedForm =
           WorkoutStageCreatorDistanceStageForm(
+        originalStage: null,
         distanceInKm: 10.0,
         maxHeartRate: 150,
       );

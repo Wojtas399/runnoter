@@ -8,8 +8,11 @@ void main() {
     WorkoutStageCreatorForm? form,
   }) =>
       WorkoutStageCreatorBloc(
-        stageType: stageType,
-        form: form,
+        originalStage: null,
+        state: WorkoutStageCreatorStateInProgress(
+          stageType: stageType,
+          form: form,
+        ),
       );
 
   WorkoutStageCreatorState createStateInProgress({
@@ -29,26 +32,35 @@ void main() {
       );
 
   WorkoutStageCreatorDistanceStageForm createDistanceStageForm({
+    DistanceWorkoutStage? originalStage,
     double? distanceInKm,
     int? maxHeartRate,
   }) =>
       WorkoutStageCreatorDistanceStageForm(
+        originalStage: originalStage,
         distanceInKm: distanceInKm,
         maxHeartRate: maxHeartRate,
       );
 
   WorkoutStageCreatorSeriesStageForm createSeriesStageForm({
+    SeriesWorkoutStage? originalStage,
     int? amountOfSeries,
     int? seriesDistanceInMeters,
-    int? breakWalkingDistanceInMeters,
-    int? breakJoggingDistanceInMeters,
+    int? walkingDistanceInMeters,
+    int? joggingDistanceInMeters,
   }) =>
       WorkoutStageCreatorSeriesStageForm(
+        originalStage: originalStage,
         amountOfSeries: amountOfSeries,
         seriesDistanceInMeters: seriesDistanceInMeters,
-        breakWalkingDistanceInMeters: breakWalkingDistanceInMeters,
-        breakJoggingDistanceInMeters: breakJoggingDistanceInMeters,
+        walkingDistanceInMeters: walkingDistanceInMeters,
+        joggingDistanceInMeters: joggingDistanceInMeters,
       );
+
+  blocTest(
+    'initialize, ',
+    build: () => createBloc(),
+  );
 
   blocTest(
     'stage type changed, '
@@ -276,8 +288,8 @@ void main() {
       form: createSeriesStageForm(
         amountOfSeries: 5,
         seriesDistanceInMeters: 100,
-        breakWalkingDistanceInMeters: 20,
-        breakJoggingDistanceInMeters: 80,
+        walkingDistanceInMeters: 20,
+        joggingDistanceInMeters: 80,
       ),
     ),
     act: (WorkoutStageCreatorBloc bloc) {
@@ -292,8 +304,8 @@ void main() {
         form: createSeriesStageForm(
           amountOfSeries: 10,
           seriesDistanceInMeters: 100,
-          breakWalkingDistanceInMeters: 20,
-          breakJoggingDistanceInMeters: 80,
+          walkingDistanceInMeters: 20,
+          joggingDistanceInMeters: 80,
         ),
       ),
     ],
@@ -339,8 +351,8 @@ void main() {
       form: createSeriesStageForm(
         amountOfSeries: 5,
         seriesDistanceInMeters: 50,
-        breakWalkingDistanceInMeters: 20,
-        breakJoggingDistanceInMeters: 80,
+        walkingDistanceInMeters: 20,
+        joggingDistanceInMeters: 80,
       ),
     ),
     act: (WorkoutStageCreatorBloc bloc) {
@@ -355,8 +367,8 @@ void main() {
         form: createSeriesStageForm(
           amountOfSeries: 5,
           seriesDistanceInMeters: 100,
-          breakWalkingDistanceInMeters: 20,
-          breakJoggingDistanceInMeters: 80,
+          walkingDistanceInMeters: 20,
+          joggingDistanceInMeters: 80,
         ),
       ),
     ],
@@ -402,8 +414,8 @@ void main() {
       form: createSeriesStageForm(
         amountOfSeries: 5,
         seriesDistanceInMeters: 100,
-        breakWalkingDistanceInMeters: 20,
-        breakJoggingDistanceInMeters: 80,
+        walkingDistanceInMeters: 20,
+        joggingDistanceInMeters: 80,
       ),
     ),
     act: (WorkoutStageCreatorBloc bloc) {
@@ -418,8 +430,8 @@ void main() {
         form: createSeriesStageForm(
           amountOfSeries: 5,
           seriesDistanceInMeters: 100,
-          breakWalkingDistanceInMeters: 100,
-          breakJoggingDistanceInMeters: 80,
+          walkingDistanceInMeters: 100,
+          joggingDistanceInMeters: 80,
         ),
       ),
     ],
@@ -465,8 +477,8 @@ void main() {
       form: createSeriesStageForm(
         amountOfSeries: 5,
         seriesDistanceInMeters: 100,
-        breakWalkingDistanceInMeters: 20,
-        breakJoggingDistanceInMeters: 80,
+        walkingDistanceInMeters: 20,
+        joggingDistanceInMeters: 80,
       ),
     ),
     act: (WorkoutStageCreatorBloc bloc) {
@@ -481,8 +493,8 @@ void main() {
         form: createSeriesStageForm(
           amountOfSeries: 5,
           seriesDistanceInMeters: 100,
-          breakWalkingDistanceInMeters: 20,
-          breakJoggingDistanceInMeters: 100,
+          walkingDistanceInMeters: 20,
+          joggingDistanceInMeters: 100,
         ),
       ),
     ],
@@ -540,6 +552,7 @@ void main() {
     build: () => createBloc(
       stageType: WorkoutStageType.baseRun,
       form: const WorkoutStageCreatorDistanceStageForm(
+        originalStage: null,
         distanceInKm: 10.5,
         maxHeartRate: 150,
       ),
@@ -582,6 +595,7 @@ void main() {
     build: () => createBloc(
       stageType: WorkoutStageType.zone2,
       form: const WorkoutStageCreatorDistanceStageForm(
+        originalStage: null,
         distanceInKm: 10.5,
         maxHeartRate: 150,
       ),
@@ -624,6 +638,7 @@ void main() {
     build: () => createBloc(
       stageType: WorkoutStageType.zone3,
       form: const WorkoutStageCreatorDistanceStageForm(
+        originalStage: null,
         distanceInKm: 10.5,
         maxHeartRate: 150,
       ),
@@ -666,10 +681,11 @@ void main() {
     build: () => createBloc(
       stageType: WorkoutStageType.hillRepeats,
       form: const WorkoutStageCreatorSeriesStageForm(
+        originalStage: null,
         amountOfSeries: 10,
         seriesDistanceInMeters: 100,
-        breakWalkingDistanceInMeters: 20,
-        breakJoggingDistanceInMeters: 80,
+        walkingDistanceInMeters: 20,
+        joggingDistanceInMeters: 80,
       ),
     ),
     act: (WorkoutStageCreatorBloc bloc) {
@@ -712,10 +728,11 @@ void main() {
     build: () => createBloc(
       stageType: WorkoutStageType.rhythms,
       form: const WorkoutStageCreatorSeriesStageForm(
+        originalStage: null,
         amountOfSeries: 10,
         seriesDistanceInMeters: 100,
-        breakWalkingDistanceInMeters: 20,
-        breakJoggingDistanceInMeters: 80,
+        walkingDistanceInMeters: 20,
+        joggingDistanceInMeters: 80,
       ),
     ),
     act: (WorkoutStageCreatorBloc bloc) {

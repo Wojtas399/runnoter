@@ -35,7 +35,7 @@ class _SaveButton extends StatelessWidget {
       (WorkoutStageCreatorBloc bloc) {
         final WorkoutStageCreatorState state = bloc.state;
         if (state is WorkoutStageCreatorStateInProgress) {
-          return state.isAddButtonDisabled;
+          return state.isSubmitButtonDisabled;
         }
         return false;
       },

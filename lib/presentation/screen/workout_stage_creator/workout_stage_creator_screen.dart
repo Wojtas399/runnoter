@@ -41,7 +41,9 @@ class _BlocProvider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => WorkoutStageCreatorBloc(),
+      create: (_) => WorkoutStageCreatorBloc(
+        originalStage: null,
+      ),
       child: child,
     );
   }
