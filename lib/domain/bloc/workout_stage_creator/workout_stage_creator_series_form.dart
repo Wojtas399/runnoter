@@ -55,7 +55,7 @@ class WorkoutStageCreatorSeriesForm extends WorkoutStageCreatorForm {
     } else if (joggingDistanceInMeters != null) {
       return joggingDistanceInMeters! <= 0;
     }
-    return false;
+    return true;
   }
 
   @override
