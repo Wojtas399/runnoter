@@ -12,24 +12,45 @@ class _WorkoutStageItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      child: Card(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(16, 8, 8, 8),
-          child: IntrinsicHeight(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _Description(workoutStage: workoutStage),
-                const SizedBox(width: 8),
-                _DeleteButton(workoutIndex: index),
-              ],
+    return GestureDetector(
+      onTap: () {
+        _onPressed(context);
+      },
+      child: SizedBox(
+        width: double.infinity,
+        child: Card(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(16, 8, 8, 8),
+            child: IntrinsicHeight(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _Description(workoutStage: workoutStage),
+                  const SizedBox(width: 8),
+                  _DeleteButton(workoutIndex: index),
+                ],
+              ),
             ),
           ),
         ),
       ),
     );
+  }
+
+  Future<void> _onPressed(BuildContext context) async {
+    final bloc = context.read<WorkoutCreatorBloc>();
+    final WorkoutStage? updatedWorkoutStage = await showFullScreenDialog(
+      context: context,
+      dialog: WorkoutStageCreatorScreen(stage: workoutStage),
+    );
+    if (updatedWorkoutStage != null) {
+      bloc.add(
+        WorkoutCreatorEventWorkoutStageUpdated(
+          stageIndex: index,
+          workoutStage: updatedWorkoutStage,
+        ),
+      );
+    }
   }
 }
 
