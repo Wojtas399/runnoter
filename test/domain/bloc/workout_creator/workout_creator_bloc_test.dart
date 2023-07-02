@@ -211,6 +211,90 @@ void main() {
   );
 
   blocTest(
+    'workout stage updated, '
+    'list of stages is empty, '
+    'should do nothing',
+    build: () => createBloc(
+      stages: const [],
+    ),
+    act: (WorkoutCreatorBloc bloc) => bloc.add(
+      const WorkoutCreatorEventWorkoutStageUpdated(
+        stageIndex: 1,
+        workoutStage: WorkoutStageZone2(
+          distanceInKilometers: 7,
+          maxHeartRate: 160,
+        ),
+      ),
+    ),
+    expect: () => [],
+  );
+
+  blocTest(
+    'workout stage updated, '
+    'length of list of stages is lower than given stage index, '
+    'should do nothing',
+    build: () => createBloc(
+      stages: const [
+        WorkoutStageBaseRun(
+          distanceInKilometers: 2,
+          maxHeartRate: 150,
+        ),
+      ],
+    ),
+    act: (WorkoutCreatorBloc bloc) => bloc.add(
+      const WorkoutCreatorEventWorkoutStageUpdated(
+        stageIndex: 1,
+        workoutStage: WorkoutStageZone2(
+          distanceInKilometers: 7,
+          maxHeartRate: 160,
+        ),
+      ),
+    ),
+    expect: () => [],
+  );
+
+  blocTest(
+    'workout stage updated, '
+    'should update workout stage at given index',
+    build: () => createBloc(
+      stages: const [
+        WorkoutStageBaseRun(
+          distanceInKilometers: 2,
+          maxHeartRate: 150,
+        ),
+        WorkoutStageZone2(
+          distanceInKilometers: 5,
+          maxHeartRate: 165,
+        ),
+      ],
+    ),
+    act: (WorkoutCreatorBloc bloc) => bloc.add(
+      const WorkoutCreatorEventWorkoutStageUpdated(
+        stageIndex: 1,
+        workoutStage: WorkoutStageZone2(
+          distanceInKilometers: 7,
+          maxHeartRate: 160,
+        ),
+      ),
+    ),
+    expect: () => [
+      createState(
+        status: const BlocStatusComplete(),
+        stages: const [
+          WorkoutStageBaseRun(
+            distanceInKilometers: 2,
+            maxHeartRate: 150,
+          ),
+          WorkoutStageZone2(
+            distanceInKilometers: 7,
+            maxHeartRate: 160,
+          ),
+        ],
+      ),
+    ],
+  );
+
+  blocTest(
     'workout stages order changed, '
     'should update list of workout stages in state',
     build: () => createBloc(

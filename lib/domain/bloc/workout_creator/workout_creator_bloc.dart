@@ -43,6 +43,7 @@ class WorkoutCreatorBloc extends BlocWithStatus<WorkoutCreatorEvent,
     on<WorkoutCreatorEventInitialize>(_initialize);
     on<WorkoutCreatorEventWorkoutNameChanged>(_workoutNameChanged);
     on<WorkoutCreatorEventWorkoutStageAdded>(_workoutStageAdded);
+    on<WorkoutCreatorEventWorkoutStageUpdated>(_workoutStageUpdated);
     on<WorkoutCreatorEventWorkoutStagesOrderChanged>(
       _workoutStagesOrderChanged,
     );
@@ -104,6 +105,20 @@ class WorkoutCreatorBloc extends BlocWithStatus<WorkoutCreatorEvent,
         ...state.stages,
         event.workoutStage,
       ],
+    ));
+  }
+
+  void _workoutStageUpdated(
+    WorkoutCreatorEventWorkoutStageUpdated event,
+    Emitter<WorkoutCreatorState> emit,
+  ) {
+    if (state.stages.isEmpty || state.stages.length <= event.stageIndex) {
+      return;
+    }
+    final List<WorkoutStage> updatedStages = [...state.stages];
+    updatedStages[event.stageIndex] = event.workoutStage;
+    emit(state.copyWith(
+      stages: updatedStages,
     ));
   }
 
