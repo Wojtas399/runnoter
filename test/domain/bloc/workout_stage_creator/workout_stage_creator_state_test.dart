@@ -30,6 +30,53 @@ void main() {
   );
 
   test(
+    'is edit mode, '
+    'original workout stage is not null in distance form, '
+    'should be true',
+    () {
+      state = state.copyWith(
+        distanceForm: const WorkoutStageCreatorDistanceForm(
+          originalStage: WorkoutStageZone2(
+            distanceInKilometers: 10,
+            maxHeartRate: 165,
+          ),
+        ),
+      );
+
+      expect(state.isEditMode, true);
+    },
+  );
+
+  test(
+    'is edit mode, '
+    'original workout stage is not null in series form, '
+    'should be true',
+    () {
+      state = state.copyWith(
+        seriesForm: const WorkoutStageCreatorSeriesForm(
+          originalStage: WorkoutStageRhythms(
+            amountOfSeries: 10,
+            seriesDistanceInMeters: 100,
+            walkingDistanceInMeters: 20,
+            joggingDistanceInMeters: 80,
+          ),
+        ),
+      );
+
+      expect(state.isEditMode, true);
+    },
+  );
+
+  test(
+    'is edit mode, '
+    'original workout stage is null in both forms, '
+    'should be false',
+    () {
+      expect(state.isEditMode, false);
+    },
+  );
+
+  test(
     'is submit button disabled, '
     'stage type is null, '
     'should be true',
