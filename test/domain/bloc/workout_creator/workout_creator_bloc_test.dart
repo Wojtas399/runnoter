@@ -105,8 +105,8 @@ void main() {
           id: 'w1',
           name: 'workout name',
           stages: const [
-            WorkoutStageBaseRun(
-              distanceInKilometers: 10,
+            WorkoutStageCardio(
+              distanceInKm: 10,
               maxHeartRate: 150,
             ),
           ],
@@ -129,16 +129,16 @@ void main() {
           id: 'w1',
           name: 'workout name',
           stages: const [
-            WorkoutStageBaseRun(
-              distanceInKilometers: 10,
+            WorkoutStageCardio(
+              distanceInKm: 10,
               maxHeartRate: 150,
             ),
           ],
         ),
         workoutName: 'workout name',
         stages: const [
-          WorkoutStageBaseRun(
-            distanceInKilometers: 10,
+          WorkoutStageCardio(
+            distanceInKm: 10,
             maxHeartRate: 150,
           ),
         ],
@@ -179,8 +179,8 @@ void main() {
     'should add workout stage to existing stages',
     build: () => createBloc(
       stages: const [
-        WorkoutStageBaseRun(
-          distanceInKilometers: 2,
+        WorkoutStageCardio(
+          distanceInKm: 2,
           maxHeartRate: 150,
         ),
       ],
@@ -188,7 +188,7 @@ void main() {
     act: (WorkoutCreatorBloc bloc) => bloc.add(
       const WorkoutCreatorEventWorkoutStageAdded(
         workoutStage: WorkoutStageZone2(
-          distanceInKilometers: 5,
+          distanceInKm: 5,
           maxHeartRate: 165,
         ),
       ),
@@ -197,12 +197,12 @@ void main() {
       createState(
         status: const BlocStatusComplete(),
         stages: const [
-          WorkoutStageBaseRun(
-            distanceInKilometers: 2,
+          WorkoutStageCardio(
+            distanceInKm: 2,
             maxHeartRate: 150,
           ),
           WorkoutStageZone2(
-            distanceInKilometers: 5,
+            distanceInKm: 5,
             maxHeartRate: 165,
           ),
         ],
@@ -221,7 +221,7 @@ void main() {
       const WorkoutCreatorEventWorkoutStageUpdated(
         stageIndex: 1,
         workoutStage: WorkoutStageZone2(
-          distanceInKilometers: 7,
+          distanceInKm: 7,
           maxHeartRate: 160,
         ),
       ),
@@ -235,8 +235,8 @@ void main() {
     'should do nothing',
     build: () => createBloc(
       stages: const [
-        WorkoutStageBaseRun(
-          distanceInKilometers: 2,
+        WorkoutStageCardio(
+          distanceInKm: 2,
           maxHeartRate: 150,
         ),
       ],
@@ -245,7 +245,7 @@ void main() {
       const WorkoutCreatorEventWorkoutStageUpdated(
         stageIndex: 1,
         workoutStage: WorkoutStageZone2(
-          distanceInKilometers: 7,
+          distanceInKm: 7,
           maxHeartRate: 160,
         ),
       ),
@@ -258,12 +258,12 @@ void main() {
     'should update workout stage at given index',
     build: () => createBloc(
       stages: const [
-        WorkoutStageBaseRun(
-          distanceInKilometers: 2,
+        WorkoutStageCardio(
+          distanceInKm: 2,
           maxHeartRate: 150,
         ),
         WorkoutStageZone2(
-          distanceInKilometers: 5,
+          distanceInKm: 5,
           maxHeartRate: 165,
         ),
       ],
@@ -272,7 +272,7 @@ void main() {
       const WorkoutCreatorEventWorkoutStageUpdated(
         stageIndex: 1,
         workoutStage: WorkoutStageZone2(
-          distanceInKilometers: 7,
+          distanceInKm: 7,
           maxHeartRate: 160,
         ),
       ),
@@ -281,12 +281,12 @@ void main() {
       createState(
         status: const BlocStatusComplete(),
         stages: const [
-          WorkoutStageBaseRun(
-            distanceInKilometers: 2,
+          WorkoutStageCardio(
+            distanceInKm: 2,
             maxHeartRate: 150,
           ),
           WorkoutStageZone2(
-            distanceInKilometers: 7,
+            distanceInKm: 7,
             maxHeartRate: 160,
           ),
         ],
@@ -299,20 +299,20 @@ void main() {
     'should update list of workout stages in state',
     build: () => createBloc(
       stages: const [
-        WorkoutStageBaseRun(
-          distanceInKilometers: 1,
+        WorkoutStageCardio(
+          distanceInKm: 1,
           maxHeartRate: 150,
         ),
         WorkoutStageZone2(
-          distanceInKilometers: 3,
+          distanceInKm: 3,
           maxHeartRate: 165,
         ),
-        WorkoutStageBaseRun(
-          distanceInKilometers: 3,
+        WorkoutStageCardio(
+          distanceInKm: 3,
           maxHeartRate: 150,
         ),
         WorkoutStageZone3(
-          distanceInKilometers: 2,
+          distanceInKm: 2,
           maxHeartRate: 180,
         ),
       ],
@@ -320,20 +320,20 @@ void main() {
     act: (WorkoutCreatorBloc bloc) => bloc.add(
       const WorkoutCreatorEventWorkoutStagesOrderChanged(
         workoutStages: [
-          WorkoutStageBaseRun(
-            distanceInKilometers: 3,
+          WorkoutStageCardio(
+            distanceInKm: 3,
             maxHeartRate: 150,
           ),
           WorkoutStageZone3(
-            distanceInKilometers: 2,
+            distanceInKm: 2,
             maxHeartRate: 180,
           ),
-          WorkoutStageBaseRun(
-            distanceInKilometers: 1,
+          WorkoutStageCardio(
+            distanceInKm: 1,
             maxHeartRate: 150,
           ),
           WorkoutStageZone2(
-            distanceInKilometers: 3,
+            distanceInKm: 3,
             maxHeartRate: 165,
           ),
         ],
@@ -343,20 +343,20 @@ void main() {
       createState(
         status: const BlocStatusComplete(),
         stages: const [
-          WorkoutStageBaseRun(
-            distanceInKilometers: 3,
+          WorkoutStageCardio(
+            distanceInKm: 3,
             maxHeartRate: 150,
           ),
           WorkoutStageZone3(
-            distanceInKilometers: 2,
+            distanceInKm: 2,
             maxHeartRate: 180,
           ),
-          WorkoutStageBaseRun(
-            distanceInKilometers: 1,
+          WorkoutStageCardio(
+            distanceInKm: 1,
             maxHeartRate: 150,
           ),
           WorkoutStageZone2(
-            distanceInKilometers: 3,
+            distanceInKm: 3,
             maxHeartRate: 165,
           ),
         ],
@@ -370,11 +370,11 @@ void main() {
     build: () => createBloc(
       stages: const [
         WorkoutStageZone2(
-          distanceInKilometers: 5,
+          distanceInKm: 5,
           maxHeartRate: 165,
         ),
-        WorkoutStageBaseRun(
-          distanceInKilometers: 15,
+        WorkoutStageCardio(
+          distanceInKm: 15,
           maxHeartRate: 150,
         ),
       ],
@@ -386,8 +386,8 @@ void main() {
       createState(
         status: const BlocStatusComplete(),
         stages: const [
-          WorkoutStageBaseRun(
-            distanceInKilometers: 15,
+          WorkoutStageCardio(
+            distanceInKm: 15,
             maxHeartRate: 150,
           ),
         ],
@@ -402,12 +402,12 @@ void main() {
     build: () => createBloc(
       workoutName: 'workout 1',
       stages: const [
-        WorkoutStageBaseRun(
-          distanceInKilometers: 4,
+        WorkoutStageCardio(
+          distanceInKm: 4,
           maxHeartRate: 150,
         ),
         WorkoutStageZone3(
-          distanceInKilometers: 2,
+          distanceInKm: 2,
           maxHeartRate: 180,
         ),
       ],
@@ -425,12 +425,12 @@ void main() {
     build: () => createBloc(
       date: DateTime(2023, 2, 2),
       stages: const [
-        WorkoutStageBaseRun(
-          distanceInKilometers: 4,
+        WorkoutStageCardio(
+          distanceInKm: 4,
           maxHeartRate: 150,
         ),
         WorkoutStageZone3(
-          distanceInKilometers: 2,
+          distanceInKm: 2,
           maxHeartRate: 180,
         ),
       ],
@@ -462,12 +462,12 @@ void main() {
       date: DateTime(2023, 2, 2),
       workoutName: 'workout 1',
       stages: const [
-        WorkoutStageBaseRun(
-          distanceInKilometers: 4,
+        WorkoutStageCardio(
+          distanceInKm: 4,
           maxHeartRate: 150,
         ),
         WorkoutStageZone3(
-          distanceInKilometers: 2,
+          distanceInKm: 2,
           maxHeartRate: 180,
         ),
       ],
@@ -490,12 +490,12 @@ void main() {
       date: DateTime(2023, 2, 2),
       workoutName: 'workout 1',
       stages: const [
-        WorkoutStageBaseRun(
-          distanceInKilometers: 4,
+        WorkoutStageCardio(
+          distanceInKm: 4,
           maxHeartRate: 150,
         ),
         WorkoutStageZone3(
-          distanceInKilometers: 2,
+          distanceInKm: 2,
           maxHeartRate: 180,
         ),
       ],
@@ -513,12 +513,12 @@ void main() {
         date: DateTime(2023, 2, 2),
         workoutName: 'workout 1',
         stages: const [
-          WorkoutStageBaseRun(
-            distanceInKilometers: 4,
+          WorkoutStageCardio(
+            distanceInKm: 4,
             maxHeartRate: 150,
           ),
           WorkoutStageZone3(
-            distanceInKilometers: 2,
+            distanceInKm: 2,
             maxHeartRate: 180,
           ),
         ],
@@ -530,12 +530,12 @@ void main() {
         date: DateTime(2023, 2, 2),
         workoutName: 'workout 1',
         stages: const [
-          WorkoutStageBaseRun(
-            distanceInKilometers: 4,
+          WorkoutStageCardio(
+            distanceInKm: 4,
             maxHeartRate: 150,
           ),
           WorkoutStageZone3(
-            distanceInKilometers: 2,
+            distanceInKm: 2,
             maxHeartRate: 180,
           ),
         ],
@@ -552,12 +552,12 @@ void main() {
           date: DateTime(2023, 2, 2),
           status: const RunStatusPending(),
           stages: const [
-            WorkoutStageBaseRun(
-              distanceInKilometers: 4,
+            WorkoutStageCardio(
+              distanceInKm: 4,
               maxHeartRate: 150,
             ),
             WorkoutStageZone3(
-              distanceInKilometers: 2,
+              distanceInKm: 2,
               maxHeartRate: 180,
             ),
           ],
@@ -576,20 +576,20 @@ void main() {
         id: 'w1',
         name: 'workout name',
         stages: const [
-          WorkoutStageBaseRun(
-            distanceInKilometers: 10,
+          WorkoutStageCardio(
+            distanceInKm: 10,
             maxHeartRate: 150,
           ),
         ],
       ),
       workoutName: 'workout 1',
       stages: const [
-        WorkoutStageBaseRun(
-          distanceInKilometers: 4,
+        WorkoutStageCardio(
+          distanceInKm: 4,
           maxHeartRate: 150,
         ),
         WorkoutStageZone3(
-          distanceInKilometers: 2,
+          distanceInKm: 2,
           maxHeartRate: 180,
         ),
       ],
@@ -609,20 +609,20 @@ void main() {
           id: 'w1',
           name: 'workout name',
           stages: const [
-            WorkoutStageBaseRun(
-              distanceInKilometers: 10,
+            WorkoutStageCardio(
+              distanceInKm: 10,
               maxHeartRate: 150,
             ),
           ],
         ),
         workoutName: 'workout 1',
         stages: const [
-          WorkoutStageBaseRun(
-            distanceInKilometers: 4,
+          WorkoutStageCardio(
+            distanceInKm: 4,
             maxHeartRate: 150,
           ),
           WorkoutStageZone3(
-            distanceInKilometers: 2,
+            distanceInKm: 2,
             maxHeartRate: 180,
           ),
         ],
@@ -636,20 +636,20 @@ void main() {
           id: 'w1',
           name: 'workout name',
           stages: const [
-            WorkoutStageBaseRun(
-              distanceInKilometers: 10,
+            WorkoutStageCardio(
+              distanceInKm: 10,
               maxHeartRate: 150,
             ),
           ],
         ),
         workoutName: 'workout 1',
         stages: const [
-          WorkoutStageBaseRun(
-            distanceInKilometers: 4,
+          WorkoutStageCardio(
+            distanceInKm: 4,
             maxHeartRate: 150,
           ),
           WorkoutStageZone3(
-            distanceInKilometers: 2,
+            distanceInKm: 2,
             maxHeartRate: 180,
           ),
         ],
@@ -665,12 +665,12 @@ void main() {
           userId: 'u1',
           workoutName: 'workout 1',
           stages: const [
-            WorkoutStageBaseRun(
-              distanceInKilometers: 4,
+            WorkoutStageCardio(
+              distanceInKm: 4,
               maxHeartRate: 150,
             ),
             WorkoutStageZone3(
-              distanceInKilometers: 2,
+              distanceInKm: 2,
               maxHeartRate: 180,
             ),
           ],

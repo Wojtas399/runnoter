@@ -4,16 +4,16 @@ import '../../domain/entity/workout_stage.dart';
 
 WorkoutStage mapWorkoutStageFromFirebase(WorkoutStageDto workoutStageDto) =>
     switch (workoutStageDto) {
-      WorkoutStageBaseRunDto() => WorkoutStageBaseRun(
-          distanceInKilometers: workoutStageDto.distanceInKilometers,
+      WorkoutStageCardioDto() => WorkoutStageCardio(
+          distanceInKm: workoutStageDto.distanceInKm,
           maxHeartRate: workoutStageDto.maxHeartRate,
         ),
       WorkoutStageZone2Dto() => WorkoutStageZone2(
-          distanceInKilometers: workoutStageDto.distanceInKilometers,
+          distanceInKm: workoutStageDto.distanceInKm,
           maxHeartRate: workoutStageDto.maxHeartRate,
         ),
       WorkoutStageZone3Dto() => WorkoutStageZone3(
-          distanceInKilometers: workoutStageDto.distanceInKilometers,
+          distanceInKm: workoutStageDto.distanceInKm,
           maxHeartRate: workoutStageDto.maxHeartRate,
         ),
       WorkoutStageHillRepeatsDto() => WorkoutStageHillRepeats(
@@ -32,16 +32,16 @@ WorkoutStage mapWorkoutStageFromFirebase(WorkoutStageDto workoutStageDto) =>
 
 WorkoutStageDto mapWorkoutStageToFirebase(WorkoutStage workoutStage) =>
     switch (workoutStage) {
-      WorkoutStageBaseRun() => WorkoutStageBaseRunDto(
-          distanceInKilometers: workoutStage.distanceInKilometers,
+      WorkoutStageCardio() => WorkoutStageCardioDto(
+          distanceInKm: workoutStage.distanceInKm,
           maxHeartRate: workoutStage.maxHeartRate,
         ),
       WorkoutStageZone2() => WorkoutStageZone2Dto(
-          distanceInKilometers: workoutStage.distanceInKilometers,
+          distanceInKm: workoutStage.distanceInKm,
           maxHeartRate: workoutStage.maxHeartRate,
         ),
       WorkoutStageZone3() => WorkoutStageZone3Dto(
-          distanceInKilometers: workoutStage.distanceInKilometers,
+          distanceInKm: workoutStage.distanceInKm,
           maxHeartRate: workoutStage.maxHeartRate,
         ),
       WorkoutStageHillRepeats() => WorkoutStageHillRepeatsDto(

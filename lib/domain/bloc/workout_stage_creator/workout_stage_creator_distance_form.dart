@@ -23,7 +23,7 @@ class WorkoutStageCreatorDistanceForm extends WorkoutStageCreatorForm {
       _areDataIncorrect || _areDataSameAsOriginal;
 
   bool get _areDataSameAsOriginal =>
-      distanceInKm == originalStage?.distanceInKilometers &&
+      distanceInKm == originalStage?.distanceInKm &&
       maxHeartRate == originalStage?.maxHeartRate;
 
   bool get _areDataIncorrect =>

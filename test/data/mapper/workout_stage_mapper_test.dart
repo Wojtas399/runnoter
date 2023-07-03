@@ -7,17 +7,17 @@ import 'package:runnoter/domain/entity/workout_stage.dart';
 void main() {
   test(
     'map workout stage from firebase, '
-    'workout stage base run dto should be mapped to domain workout stage base run model',
+    'workout stage cardio dto should be mapped to domain workout stage cardio model',
     () {
       const double distanceInKm = 14.0;
       const int maxHeartRate = 150;
-      const firebase.WorkoutStageBaseRunDto stageDto =
-          firebase.WorkoutStageBaseRunDto(
-        distanceInKilometers: distanceInKm,
+      const firebase.WorkoutStageCardioDto stageDto =
+          firebase.WorkoutStageCardioDto(
+        distanceInKm: distanceInKm,
         maxHeartRate: maxHeartRate,
       );
-      const WorkoutStageBaseRun expectedStage = WorkoutStageBaseRun(
-        distanceInKilometers: distanceInKm,
+      const WorkoutStageCardio expectedStage = WorkoutStageCardio(
+        distanceInKm: distanceInKm,
         maxHeartRate: maxHeartRate,
       );
 
@@ -35,11 +35,11 @@ void main() {
       const int maxHeartRate = 150;
       const firebase.WorkoutStageZone2Dto stageDto =
           firebase.WorkoutStageZone2Dto(
-        distanceInKilometers: distanceInKm,
+        distanceInKm: distanceInKm,
         maxHeartRate: maxHeartRate,
       );
       const WorkoutStageZone2 expectedStage = WorkoutStageZone2(
-        distanceInKilometers: distanceInKm,
+        distanceInKm: distanceInKm,
         maxHeartRate: maxHeartRate,
       );
 
@@ -57,11 +57,11 @@ void main() {
       const int maxHeartRate = 150;
       const firebase.WorkoutStageZone3Dto stageDto =
           firebase.WorkoutStageZone3Dto(
-        distanceInKilometers: distanceInKm,
+        distanceInKm: distanceInKm,
         maxHeartRate: maxHeartRate,
       );
       const WorkoutStageZone3 expectedStage = WorkoutStageZone3(
-        distanceInKilometers: distanceInKm,
+        distanceInKm: distanceInKm,
         maxHeartRate: maxHeartRate,
       );
 
@@ -129,17 +129,17 @@ void main() {
 
   test(
     'map workout stage to firebase, '
-    'workout stage base run should be mapped to workout stage base run dto',
+    'workout stage cardio should be mapped to workout stage cardio dto',
     () {
       const double distanceInKm = 14.0;
       const int maxHeartRate = 150;
-      const WorkoutStageBaseRun stage = WorkoutStageBaseRun(
-        distanceInKilometers: distanceInKm,
+      const WorkoutStageCardio stage = WorkoutStageCardio(
+        distanceInKm: distanceInKm,
         maxHeartRate: maxHeartRate,
       );
-      const firebase.WorkoutStageBaseRunDto expectedDto =
-          firebase.WorkoutStageBaseRunDto(
-        distanceInKilometers: distanceInKm,
+      const firebase.WorkoutStageCardioDto expectedDto =
+          firebase.WorkoutStageCardioDto(
+        distanceInKm: distanceInKm,
         maxHeartRate: maxHeartRate,
       );
 
@@ -156,12 +156,12 @@ void main() {
       const double distanceInKm = 14.0;
       const int maxHeartRate = 150;
       const WorkoutStageZone2 stage = WorkoutStageZone2(
-        distanceInKilometers: distanceInKm,
+        distanceInKm: distanceInKm,
         maxHeartRate: maxHeartRate,
       );
       const firebase.WorkoutStageZone2Dto expectedDto =
           firebase.WorkoutStageZone2Dto(
-        distanceInKilometers: distanceInKm,
+        distanceInKm: distanceInKm,
         maxHeartRate: maxHeartRate,
       );
 
@@ -178,12 +178,12 @@ void main() {
       const double distanceInKm = 14.0;
       const int maxHeartRate = 150;
       const WorkoutStageZone3 stage = WorkoutStageZone3(
-        distanceInKilometers: distanceInKm,
+        distanceInKm: distanceInKm,
         maxHeartRate: maxHeartRate,
       );
       const firebase.WorkoutStageZone3Dto expectedDto =
           firebase.WorkoutStageZone3Dto(
-        distanceInKilometers: distanceInKm,
+        distanceInKm: distanceInKm,
         maxHeartRate: maxHeartRate,
       );
 

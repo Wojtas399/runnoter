@@ -37,7 +37,7 @@ void main() {
       state = state.copyWith(
         distanceForm: const WorkoutStageCreatorDistanceForm(
           originalStage: WorkoutStageZone2(
-            distanceInKilometers: 10,
+            distanceInKm: 10,
             maxHeartRate: 165,
           ),
         ),
@@ -110,8 +110,8 @@ void main() {
         originalStageType: WorkoutStageType.zone2,
         stageType: WorkoutStageType.zone3,
         distanceForm: const WorkoutStageCreatorDistanceForm(
-          originalStage: WorkoutStageBaseRun(
-            distanceInKilometers: 10,
+          originalStage: WorkoutStageCardio(
+            distanceInKm: 10,
             maxHeartRate: 150,
           ),
           distanceInKm: 10,
@@ -369,7 +369,7 @@ void main() {
     () {
       const expectedDistanceForm = WorkoutStageCreatorDistanceForm(
         originalStage: WorkoutStageZone2(
-          distanceInKilometers: 5,
+          distanceInKm: 5,
           maxHeartRate: 165,
         ),
         distanceInKm: 6.0,
@@ -411,8 +411,8 @@ void main() {
   test(
     'copy with stage to submit',
     () {
-      const WorkoutStage expectedStageToSubmit = WorkoutStageBaseRun(
-        distanceInKilometers: 10.0,
+      const WorkoutStage expectedStageToSubmit = WorkoutStageCardio(
+        distanceInKm: 10.0,
         maxHeartRate: 150,
       );
 

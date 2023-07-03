@@ -123,8 +123,8 @@ void main() {
     'distance is different than original, '
     'should be false',
     () {
-      const DistanceWorkoutStage originalStage = WorkoutStageBaseRun(
-        distanceInKilometers: distanceInKm,
+      const DistanceWorkoutStage originalStage = WorkoutStageCardio(
+        distanceInKm: distanceInKm,
         maxHeartRate: maxHeartRate,
       );
       form = createForm(
@@ -142,8 +142,8 @@ void main() {
     'max heart rate is different than original, '
     'should be false',
     () {
-      const DistanceWorkoutStage originalStage = WorkoutStageBaseRun(
-        distanceInKilometers: distanceInKm,
+      const DistanceWorkoutStage originalStage = WorkoutStageCardio(
+        distanceInKm: distanceInKm,
         maxHeartRate: maxHeartRate,
       );
       form = createForm(
@@ -161,8 +161,8 @@ void main() {
     'distance and max heart rate are same as original, '
     'should be true',
     () {
-      const DistanceWorkoutStage originalStage = WorkoutStageBaseRun(
-        distanceInKilometers: distanceInKm,
+      const DistanceWorkoutStage originalStage = WorkoutStageCardio(
+        distanceInKm: distanceInKm,
         maxHeartRate: maxHeartRate,
       );
       form = createForm(

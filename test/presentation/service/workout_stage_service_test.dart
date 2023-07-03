@@ -9,8 +9,8 @@ void main() {
     'should simply return distance',
     () {
       const double expectedDistance = 10.0;
-      const stage = WorkoutStageBaseRun(
-        distanceInKilometers: expectedDistance,
+      const stage = WorkoutStageCardio(
+        distanceInKm: expectedDistance,
         maxHeartRate: 150,
       );
 

@@ -383,12 +383,12 @@ void main() {
       final DateTime date = DateTime(2023, 2, 2);
       const RunStatus status = RunStatusPending();
       const List<WorkoutStage> stages = [
-        WorkoutStageBaseRun(
-          distanceInKilometers: 2,
+        WorkoutStageCardio(
+          distanceInKm: 2,
           maxHeartRate: 150,
         ),
         WorkoutStageZone2(
-          distanceInKilometers: 3,
+          distanceInKm: 3,
           maxHeartRate: 165,
         ),
       ];
@@ -403,12 +403,12 @@ void main() {
         date: date,
         status: const firebase.RunStatusPendingDto(),
         stages: const [
-          firebase.WorkoutStageBaseRunDto(
-            distanceInKilometers: 2,
+          firebase.WorkoutStageCardioDto(
+            distanceInKm: 2,
             maxHeartRate: 150,
           ),
           firebase.WorkoutStageZone2Dto(
-            distanceInKilometers: 3,
+            distanceInKm: 3,
             maxHeartRate: 165,
           ),
         ],
@@ -469,14 +469,14 @@ void main() {
         comment: 'Nice workout!',
       );
       const List<WorkoutStage> newStages = [
-        WorkoutStageBaseRun(
-          distanceInKilometers: 10,
+        WorkoutStageCardio(
+          distanceInKm: 10,
           maxHeartRate: 150,
         ),
       ];
       const List<firebase.WorkoutStageDto> newStageDtos = [
-        firebase.WorkoutStageBaseRunDto(
-          distanceInKilometers: 10,
+        firebase.WorkoutStageCardioDto(
+          distanceInKm: 10,
           maxHeartRate: 150,
         ),
       ];
@@ -493,8 +493,8 @@ void main() {
         name: 'workout name',
         status: const RunStatusPending(),
         stages: const [
-          WorkoutStageBaseRun(
-            distanceInKilometers: 8,
+          WorkoutStageCardio(
+            distanceInKm: 8,
             maxHeartRate: 150,
           ),
         ],

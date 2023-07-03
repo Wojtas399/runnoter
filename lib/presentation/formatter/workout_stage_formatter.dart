@@ -19,7 +19,7 @@ extension WorkoutStageFormatter on WorkoutStage {
   String toTypeName(BuildContext context) {
     final str = Str.of(context);
     return switch (this) {
-      WorkoutStageBaseRun() => str.workoutStageCardio,
+      WorkoutStageCardio() => str.workoutStageCardio,
       WorkoutStageZone2() => str.workoutStageZone2,
       WorkoutStageZone3() => str.workoutStageZone3,
       WorkoutStageRhythms() => str.workoutStageRhythms,
@@ -32,7 +32,7 @@ extension WorkoutStageFormatter on WorkoutStage {
     DistanceWorkoutStage stage,
   ) {
     final double convertedDistance = context.convertDistanceFromDefaultUnit(
-      stage.distanceInKilometers,
+      stage.distanceInKm,
     );
     final String distanceUnit = context.distanceUnit.toUIShortFormat();
     final String distance =

@@ -5,18 +5,18 @@ sealed class WorkoutStage extends Equatable {
 }
 
 sealed class DistanceWorkoutStage extends WorkoutStage {
-  final double distanceInKilometers;
+  final double distanceInKm;
   final int maxHeartRate;
 
   const DistanceWorkoutStage({
-    required this.distanceInKilometers,
+    required this.distanceInKm,
     required this.maxHeartRate,
-  })  : assert(distanceInKilometers > 0),
+  })  : assert(distanceInKm > 0),
         assert(maxHeartRate > 0);
 
   @override
   List<Object?> get props => [
-        distanceInKilometers,
+        distanceInKm,
         maxHeartRate,
       ];
 }
@@ -45,23 +45,23 @@ sealed class SeriesWorkoutStage extends WorkoutStage {
       ];
 }
 
-class WorkoutStageBaseRun extends DistanceWorkoutStage {
-  const WorkoutStageBaseRun({
-    required super.distanceInKilometers,
+class WorkoutStageCardio extends DistanceWorkoutStage {
+  const WorkoutStageCardio({
+    required super.distanceInKm,
     required super.maxHeartRate,
   });
 }
 
 class WorkoutStageZone2 extends DistanceWorkoutStage {
   const WorkoutStageZone2({
-    required super.distanceInKilometers,
+    required super.distanceInKm,
     required super.maxHeartRate,
   });
 }
 
 class WorkoutStageZone3 extends DistanceWorkoutStage {
   const WorkoutStageZone3({
-    required super.distanceInKilometers,
+    required super.distanceInKm,
     required super.maxHeartRate,
   });
 }
