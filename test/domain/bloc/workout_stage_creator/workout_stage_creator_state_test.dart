@@ -103,7 +103,7 @@ void main() {
 
   test(
     'is submit button disabled, '
-    'stage type is different original, '
+    'original stage type is not null and stage type is different original, '
     'should be false',
     () {
       final state = createState(

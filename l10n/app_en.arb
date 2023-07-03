@@ -196,7 +196,7 @@
   "workoutStageRhythms": "Rhythms",
   "workoutStageHillRepeats": "Hill repeats",
   "workoutStageBreak": "break",
-  "workoutStageWalking": "{walkingDistanceInMeters}m marching",
+  "workoutStageWalking": "{walkingDistanceInMeters}m walking",
   "workoutStageJogging": "{joggingDistanceInMeters}m jogging",
   "durationHoursShort": "h.",
   "durationMinutesShort": "min.",

@@ -1,5 +1,3 @@
-import 'dart:math' as math;
-
 import 'package:flutter/services.dart';
 
 class DecimalTextInputFormatter extends TextInputFormatter {
@@ -20,14 +18,15 @@ class DecimalTextInputFormatter extends TextInputFormatter {
       newText = oldValue.text;
     } else if (newText == '.') {
       newText = '0.';
+      newSelection = newSelection.copyWith(
+        baseOffset: newText.length,
+        extentOffset: newText.length,
+      );
     }
     newText = _removeUnwantedCharacters(newText);
     return TextEditingValue(
       text: newText,
-      selection: newSelection.copyWith(
-        baseOffset: math.min(newText.length, newText.length + 1),
-        extentOffset: math.min(newText.length, newText.length + 1),
-      ),
+      selection: newSelection,
       composing: TextRange.empty,
     );
   }

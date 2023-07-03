@@ -30,7 +30,7 @@ class WorkoutStageCreatorState extends BlocState<WorkoutStageCreatorState> {
       distanceForm.originalStage != null || seriesForm.originalStage != null;
 
   bool get isSubmitButtonDisabled {
-    if (stageType != originalStageType) {
+    if (originalStageType != null && stageType != originalStageType) {
       return false;
     }
     return stageType == null ||
