@@ -68,7 +68,7 @@ class HealthMeasurementCreatorBloc extends BlocWithStatus<
       ));
     } else {
       emit(state.copyWith(
-        status: const BlocStatusComplete(),
+        date: _dateService.getToday(),
       ));
     }
   }

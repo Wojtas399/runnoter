@@ -54,14 +54,18 @@ void main() {
   blocTest(
     'initialize, '
     'given date is null, '
-    'should emit complete status',
+    'should emit today date',
     build: () => createBloc(),
-    act: (HealthMeasurementCreatorBloc bloc) => bloc.add(
+    setUp: () => dateService.mockGetToday(
+      todayDate: DateTime(2023, 4, 20),
+    ),
+    act: (bloc) => bloc.add(
       const HealthMeasurementCreatorEventInitialize(),
     ),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
+        date: DateTime(2023, 4, 20),
       ),
     ],
   );
