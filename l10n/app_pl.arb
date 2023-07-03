@@ -207,9 +207,13 @@
   "@workoutCreatorUpdatedWorkoutMessage": {
     "description": "Message to inform that workout has been updated"
   },
-  "workoutStageCreatorScreenTitle": "Nowy etap treningu",
-  "@workoutStageCreatorScreenTitle": {
-    "description": "Title of the workout stage creator screen"
+  "workoutStageCreatorScreenTitleAddMode": "Nowy etap treningu",
+  "@workoutStageCreatorScreenTitleAddMode": {
+    "description": "Title of the workout stage creator screen in add mode"
+  },
+  "workoutStageCreatorScreenTitleEditMode": "Edytuj etap treningu",
+  "@workoutStageCreatorScreenTitleEditMode": {
+    "description": "Title of the workout stage creator screen in edit mode"
   },
   "workoutStageCreatorStageType": "Rodzaj etapu",
   "@workoutStageCreatorStageType": {

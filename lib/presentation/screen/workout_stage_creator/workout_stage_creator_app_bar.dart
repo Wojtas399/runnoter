@@ -6,9 +6,7 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: Text(
-        Str.of(context).workoutStageCreatorScreenTitle,
-      ),
+      title: const _Title(),
       leading: IconButton(
         onPressed: () {
           navigateBack(context: context);
@@ -26,11 +24,30 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
 
+class _Title extends StatelessWidget {
+  const _Title();
+
+  @override
+  Widget build(BuildContext context) {
+    final bool isEditMode = context.select(
+      (WorkoutStageCreatorBloc bloc) => bloc.state.isEditMode,
+    );
+    return Text(
+      isEditMode
+          ? Str.of(context).workoutStageCreatorScreenTitleEditMode
+          : Str.of(context).workoutStageCreatorScreenTitleAddMode,
+    );
+  }
+}
+
 class _SaveButton extends StatelessWidget {
   const _SaveButton();
 
   @override
   Widget build(BuildContext context) {
+    final bool isEditMode = context.select(
+      (WorkoutStageCreatorBloc bloc) => bloc.state.isEditMode,
+    );
     final bool isButtonDisabled = context.select(
       (WorkoutStageCreatorBloc bloc) => bloc.state.isSubmitButtonDisabled,
     );
@@ -42,7 +59,7 @@ class _SaveButton extends StatelessWidget {
               _onPressed(context);
             },
       child: Text(
-        Str.of(context).add,
+        isEditMode ? Str.of(context).save : Str.of(context).add,
       ),
     );
   }
