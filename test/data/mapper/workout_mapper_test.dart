@@ -36,16 +36,16 @@ void main() {
         ),
         name: name,
         stages: const [
-          firebase.WorkoutStageBaseRunDto(
-            distanceInKilometers: 2,
+          firebase.WorkoutStageCardioDto(
+            distanceInKm: 2,
             maxHeartRate: 150,
           ),
           firebase.WorkoutStageZone2Dto(
-            distanceInKilometers: 5,
+            distanceInKm: 5,
             maxHeartRate: 165,
           ),
-          firebase.WorkoutStageBaseRunDto(
-            distanceInKilometers: 2,
+          firebase.WorkoutStageCardioDto(
+            distanceInKm: 2,
             maxHeartRate: 150,
           ),
         ],
@@ -63,16 +63,16 @@ void main() {
         ),
         name: name,
         stages: const [
-          WorkoutStageBaseRun(
-            distanceInKilometers: 2,
+          WorkoutStageCardio(
+            distanceInKm: 2,
             maxHeartRate: 150,
           ),
           WorkoutStageZone2(
-            distanceInKilometers: 5,
+            distanceInKm: 5,
             maxHeartRate: 165,
           ),
-          WorkoutStageBaseRun(
-            distanceInKilometers: 2,
+          WorkoutStageCardio(
+            distanceInKm: 2,
             maxHeartRate: 150,
           ),
         ],

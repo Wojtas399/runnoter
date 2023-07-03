@@ -84,7 +84,7 @@ void main() {
     'should set original stage type, stage type and distance form',
     build: () => createBloc(
       originalStage: const WorkoutStageZone2(
-        distanceInKilometers: 5,
+        distanceInKm: 5,
         maxHeartRate: 165,
       ),
     ),
@@ -98,7 +98,7 @@ void main() {
         stageType: WorkoutStageType.zone2,
         distanceForm: const WorkoutStageCreatorDistanceForm(
           originalStage: WorkoutStageZone2(
-            distanceInKilometers: 5,
+            distanceInKm: 5,
             maxHeartRate: 165,
           ),
           distanceInKm: 5,
@@ -305,7 +305,7 @@ void main() {
   blocTest(
     'submit, '
     'cardio, '
-    'should set stage to submit as workout stage base run',
+    'should set stage to submit as workout stage cardio',
     build: () => createBloc(
       stageType: WorkoutStageType.cardio,
       distanceForm: createDistanceForm(
@@ -326,8 +326,8 @@ void main() {
           distanceInKm: 10.5,
           maxHeartRate: 150,
         ),
-        stageToSubmit: const WorkoutStageBaseRun(
-          distanceInKilometers: 10.5,
+        stageToSubmit: const WorkoutStageCardio(
+          distanceInKm: 10.5,
           maxHeartRate: 150,
         ),
       ),
@@ -359,7 +359,7 @@ void main() {
           maxHeartRate: 150,
         ),
         stageToSubmit: const WorkoutStageZone2(
-          distanceInKilometers: 10.5,
+          distanceInKm: 10.5,
           maxHeartRate: 150,
         ),
       ),
@@ -391,7 +391,7 @@ void main() {
           maxHeartRate: 150,
         ),
         stageToSubmit: const WorkoutStageZone3(
-          distanceInKilometers: 10.5,
+          distanceInKm: 10.5,
           maxHeartRate: 150,
         ),
       ),

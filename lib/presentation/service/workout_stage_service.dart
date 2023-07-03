@@ -2,7 +2,7 @@ import '../../domain/entity/workout_stage.dart';
 
 double calculateDistanceOfWorkoutStage(WorkoutStage stage) {
   if (stage is DistanceWorkoutStage) {
-    return stage.distanceInKilometers;
+    return stage.distanceInKm;
   } else if (stage is SeriesWorkoutStage) {
     final int distanceInMeters = stage.amountOfSeries *
         (stage.seriesDistanceInMeters +

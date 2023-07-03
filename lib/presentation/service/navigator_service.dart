@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart' as material;
 
 import '../config/navigation/routes.dart';
+import 'dialog_service.dart';
 
 void navigateTo({
   required material.BuildContext context,
   required CustomRoute route,
 }) {
+  hideSnackbar(context: context);
   Object? arguments;
   if (route is CustomRouteWithArguments) {
     arguments = route.arguments;

@@ -45,7 +45,7 @@ class WorkoutStageCreatorBloc
         stageType: workoutStageType,
         distanceForm: WorkoutStageCreatorDistanceForm(
           originalStage: distanceStage,
-          distanceInKm: distanceStage.distanceInKilometers,
+          distanceInKm: distanceStage.distanceInKm,
           maxHeartRate: distanceStage.maxHeartRate,
         ),
       ));
@@ -162,7 +162,7 @@ class WorkoutStageCreatorBloc
     WorkoutStage stage,
   ) =>
       switch (stage) {
-        WorkoutStageBaseRun() => WorkoutStageType.cardio,
+        WorkoutStageCardio() => WorkoutStageType.cardio,
         WorkoutStageZone2() => WorkoutStageType.zone2,
         WorkoutStageZone3() => WorkoutStageType.zone3,
         WorkoutStageHillRepeats() => WorkoutStageType.hillRepeats,
@@ -171,24 +171,24 @@ class WorkoutStageCreatorBloc
 
   WorkoutStage? _mapDistanceFormToWorkoutStage() {
     final form = state.distanceForm;
-    final double? distanceInKilometers = form.distanceInKm;
+    final double? distanceInKm = form.distanceInKm;
     final int? maxHeartRate = form.maxHeartRate;
-    if (distanceInKilometers == null || maxHeartRate == null) {
+    if (distanceInKm == null || maxHeartRate == null) {
       return null;
     }
     if (state.stageType == WorkoutStageType.cardio) {
-      return WorkoutStageBaseRun(
-        distanceInKilometers: distanceInKilometers,
+      return WorkoutStageCardio(
+        distanceInKm: distanceInKm,
         maxHeartRate: maxHeartRate,
       );
     } else if (state.stageType == WorkoutStageType.zone2) {
       return WorkoutStageZone2(
-        distanceInKilometers: distanceInKilometers,
+        distanceInKm: distanceInKm,
         maxHeartRate: maxHeartRate,
       );
     } else if (state.stageType == WorkoutStageType.zone3) {
       return WorkoutStageZone3(
-        distanceInKilometers: distanceInKilometers,
+        distanceInKm: distanceInKm,
         maxHeartRate: maxHeartRate,
       );
     }

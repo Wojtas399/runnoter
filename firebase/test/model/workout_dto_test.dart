@@ -14,16 +14,16 @@ void main() {
   );
   const String name = 'workout name';
   final List<WorkoutStageDto> stages = [
-    const WorkoutStageBaseRunDto(
-      distanceInKilometers: 3,
+    const WorkoutStageCardioDto(
+      distanceInKm: 3,
       maxHeartRate: 150,
     ),
     const WorkoutStageZone2Dto(
-      distanceInKilometers: 5,
+      distanceInKm: 5,
       maxHeartRate: 165,
     ),
-    const WorkoutStageBaseRunDto(
-      distanceInKilometers: 2,
+    const WorkoutStageCardioDto(
+      distanceInKm: 2,
       maxHeartRate: 150,
     ),
   ];

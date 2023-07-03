@@ -145,8 +145,8 @@ void main() {
           date: DateTime(2023),
           name: 'workout name',
           stages: const [
-            WorkoutStageBaseRun(
-              distanceInKilometers: 10,
+            WorkoutStageCardio(
+              distanceInKm: 10,
               maxHeartRate: 150,
             ),
           ],
@@ -160,8 +160,8 @@ void main() {
         date: DateTime(2023),
         workoutName: 'workout name',
         stages: const [
-          WorkoutStageBaseRun(
-            distanceInKilometers: 10,
+          WorkoutStageCardio(
+            distanceInKm: 10,
             maxHeartRate: 150,
           ),
         ],

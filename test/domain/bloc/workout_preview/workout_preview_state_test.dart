@@ -132,12 +132,12 @@ void main() {
     'copy with stages',
     () {
       const List<WorkoutStage> expectedStages = [
-        WorkoutStageBaseRun(
-          distanceInKilometers: 2,
+        WorkoutStageCardio(
+          distanceInKm: 2,
           maxHeartRate: 150,
         ),
         WorkoutStageZone2(
-          distanceInKilometers: 5,
+          distanceInKm: 5,
           maxHeartRate: 165,
         ),
       ];

@@ -4,16 +4,16 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   test(
     'from json, '
-    'base run, '
-    'should map json with type key set as base run to base run workout stage',
+    'cardio, '
+    'should map json with type key set as cardio to cardio workout stage',
     () {
       final Map<String, dynamic> json = {
-        'name': 'baseRun',
+        'name': 'cardio',
         'distanceInKilometers': 10.0,
         'maxHeartRate': 150,
       };
-      const WorkoutStageDto expectedWorkoutStageDto = WorkoutStageBaseRunDto(
-        distanceInKilometers: 10,
+      const WorkoutStageDto expectedWorkoutStageDto = WorkoutStageCardioDto(
+        distanceInKm: 10,
         maxHeartRate: 150,
       );
 
@@ -34,7 +34,7 @@ void main() {
         'maxHeartRate': 165,
       };
       const WorkoutStageDto expectedWorkoutStageDto = WorkoutStageZone2Dto(
-        distanceInKilometers: 5.0,
+        distanceInKm: 5.0,
         maxHeartRate: 165,
       );
 
@@ -55,7 +55,7 @@ void main() {
         'maxHeartRate': 165,
       };
       const WorkoutStageDto expectedWorkoutStageDto = WorkoutStageZone3Dto(
-        distanceInKilometers: 5.0,
+        distanceInKm: 5.0,
         maxHeartRate: 165,
       );
 
@@ -118,15 +118,15 @@ void main() {
 
   test(
     'to json, '
-    'base run, '
-    'should map base run workout dto to json with type key set as base run',
+    'cardio, '
+    'should map cardio workout dto to json with type key set as cardio',
     () {
-      const WorkoutStageDto dto = WorkoutStageBaseRunDto(
-        distanceInKilometers: 10,
+      const WorkoutStageDto dto = WorkoutStageCardioDto(
+        distanceInKm: 10,
         maxHeartRate: 150,
       );
       final Map<String, dynamic> expectedJson = {
-        'name': 'baseRun',
+        'name': 'cardio',
         'distanceInKilometers': 10.0,
         'maxHeartRate': 150,
       };
@@ -143,7 +143,7 @@ void main() {
     'should map zone2 workout dto to json with type key set as zone2',
     () {
       const WorkoutStageDto dto = WorkoutStageZone2Dto(
-        distanceInKilometers: 5.0,
+        distanceInKm: 5.0,
         maxHeartRate: 165,
       );
       final Map<String, dynamic> expectedJson = {
@@ -164,7 +164,7 @@ void main() {
     'should map zone3 workout dto to json with type key set as zone3',
     () {
       const WorkoutStageDto dto = WorkoutStageZone3Dto(
-        distanceInKilometers: 5.0,
+        distanceInKm: 5.0,
         maxHeartRate: 165,
       );
       final Map<String, dynamic> expectedJson = {
