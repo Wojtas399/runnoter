@@ -16,7 +16,6 @@ import '../../component/text/title_text_components.dart';
 import '../../component/text_field_component.dart';
 import '../../formatter/decimal_text_input_formatter.dart';
 import '../../service/dialog_service.dart';
-import '../../service/navigator_service.dart';
 import '../../service/utils.dart';
 
 part 'health_measurement_creator_content.dart';
@@ -91,10 +90,6 @@ class _BlocListener extends StatelessWidget {
     BuildContext context,
     HealthMeasurementCreatorBlocInfo info,
   ) {
-    switch (info) {
-      case HealthMeasurementCreatorBlocInfo.measurementSaved:
-        navigateBack(context: context);
-        break;
-    }
+    //TODO
   }
 }

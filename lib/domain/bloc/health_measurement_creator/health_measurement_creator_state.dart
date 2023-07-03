@@ -37,8 +37,8 @@ class HealthMeasurementCreatorState
       return false;
     }
     final todayDate = _dateService.getToday();
-    return _dateService.areDatesTheSame(date!, todayDate) ||
-        date!.isBefore(todayDate);
+    return date!.isBefore(todayDate) ||
+        _dateService.areDatesTheSame(date!, todayDate);
   }
 
   bool get _isRestingHeartRateValid =>
