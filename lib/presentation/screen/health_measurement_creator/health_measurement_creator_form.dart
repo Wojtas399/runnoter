@@ -15,7 +15,7 @@ class _Form extends StatelessWidget {
         child: const Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _Title(),
+            _Date(),
             gap,
             _RestingHeartRate(),
             gap,
@@ -29,21 +29,33 @@ class _Form extends StatelessWidget {
   }
 }
 
-class _Title extends StatelessWidget {
-  const _Title();
+class _Date extends StatelessWidget {
+  const _Date();
 
   @override
   Widget build(BuildContext context) {
     final DateTime? date = context.select(
-      (HealthMeasurementCreatorBloc bloc) => bloc.state.measurement?.date,
+      (HealthMeasurementCreatorBloc bloc) => bloc.state.date,
     );
-    String title = Str.of(context).healthMeasurementCreatorMessage;
-    if (date != null) {
-      title = Str.of(context).healthMeasurementCreatorMessageWithDate(
-        date.toDateWithDots(),
-      );
-    }
-    return TitleLarge(title);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        TitleMedium(Str.of(context).date),
+        const SizedBox(height: 8),
+        DateSelector(
+          date: date,
+          onDateSelected: (DateTime date) {
+            _onDateSelected(context, date);
+          },
+        ),
+      ],
+    );
+  }
+
+  void _onDateSelected(BuildContext context, DateTime date) {
+    context.read<HealthMeasurementCreatorBloc>().add(
+          HealthMeasurementCreatorEventDateChanged(date: date),
+        );
   }
 }
 
