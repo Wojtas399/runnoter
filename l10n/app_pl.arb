@@ -207,9 +207,13 @@
   "@workoutCreatorUpdatedWorkoutMessage": {
     "description": "Message to inform that workout has been updated"
   },
-  "workoutStageCreatorScreenTitle": "Nowy etap treningu",
-  "@workoutStageCreatorScreenTitle": {
-    "description": "Title of the workout stage creator screen"
+  "workoutStageCreatorScreenTitleAddMode": "Nowy etap treningu",
+  "@workoutStageCreatorScreenTitleAddMode": {
+    "description": "Title of the workout stage creator screen in add mode"
+  },
+  "workoutStageCreatorScreenTitleEditMode": "Edytuj etap treningu",
+  "@workoutStageCreatorScreenTitleEditMode": {
+    "description": "Title of the workout stage creator screen in edit mode"
   },
   "workoutStageCreatorStageType": "Rodzaj etapu",
   "@workoutStageCreatorStageType": {
@@ -759,9 +763,9 @@
   "@heartRateUnit": {
     "description": "Unit of heart rate"
   },
-  "workoutStageBaseRun": "OWB1",
-  "@workoutStageBaseRun": {
-    "description": "Type of workout stage called base run"
+  "workoutStageCardio": "OWB1",
+  "@workoutStageCardio": {
+    "description": "Type of workout stage called cardio"
   },
   "workoutStageZone2": "BC2",
   "@workoutStageZone2": {
@@ -778,18 +782,6 @@
   "workoutStageHillRepeats": "Podbiegi",
   "@workoutStageHillRepeats": {
     "description": "Type of workout stage called hill repeats"
-  },
-  "workoutStageStretching": "Rozciąganie",
-  "@workoutStageStretching": {
-    "description": "Type of workout stage called stretching"
-  },
-  "workoutStageStrengthening": "Ćwiczenia wzmacniające",
-  "@workoutStageStrengthening": {
-    "description": "Type of workout stage called strengthening"
-  },
-  "workoutStageFoamRolling": "Rolowanie",
-  "@workoutStageFoamRolling": {
-    "description": "Type of workout stage called foam rolling"
   },
   "workoutStageBreak": "przerwa",
   "@workoutStageBreak": {

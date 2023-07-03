@@ -11,12 +11,12 @@ void main() {
     () {
       const double distanceInKm = 14.0;
       const int maxHeartRate = 150;
-      final firebase.WorkoutStageBaseRunDto stageDto =
+      const firebase.WorkoutStageBaseRunDto stageDto =
           firebase.WorkoutStageBaseRunDto(
         distanceInKilometers: distanceInKm,
         maxHeartRate: maxHeartRate,
       );
-      final WorkoutStageBaseRun expectedStage = WorkoutStageBaseRun(
+      const WorkoutStageBaseRun expectedStage = WorkoutStageBaseRun(
         distanceInKilometers: distanceInKm,
         maxHeartRate: maxHeartRate,
       );
@@ -33,12 +33,12 @@ void main() {
     () {
       const double distanceInKm = 14.0;
       const int maxHeartRate = 150;
-      final firebase.WorkoutStageZone2Dto stageDto =
+      const firebase.WorkoutStageZone2Dto stageDto =
           firebase.WorkoutStageZone2Dto(
         distanceInKilometers: distanceInKm,
         maxHeartRate: maxHeartRate,
       );
-      final WorkoutStageZone2 expectedStage = WorkoutStageZone2(
+      const WorkoutStageZone2 expectedStage = WorkoutStageZone2(
         distanceInKilometers: distanceInKm,
         maxHeartRate: maxHeartRate,
       );
@@ -55,12 +55,12 @@ void main() {
     () {
       const double distanceInKm = 14.0;
       const int maxHeartRate = 150;
-      final firebase.WorkoutStageZone3Dto stageDto =
+      const firebase.WorkoutStageZone3Dto stageDto =
           firebase.WorkoutStageZone3Dto(
         distanceInKilometers: distanceInKm,
         maxHeartRate: maxHeartRate,
       );
-      final WorkoutStageZone3 expectedStage = WorkoutStageZone3(
+      const WorkoutStageZone3 expectedStage = WorkoutStageZone3(
         distanceInKilometers: distanceInKm,
         maxHeartRate: maxHeartRate,
       );
@@ -79,14 +79,14 @@ void main() {
       const int seriesDistanceInMeters = 100;
       const int walkingDistanceInMeters = 0;
       const int joggingDistanceInMeters = 200;
-      final firebase.WorkoutStageHillRepeatsDto stageDto =
+      const firebase.WorkoutStageHillRepeatsDto stageDto =
           firebase.WorkoutStageHillRepeatsDto(
         amountOfSeries: amountOfSeries,
         seriesDistanceInMeters: seriesDistanceInMeters,
         walkingDistanceInMeters: walkingDistanceInMeters,
         joggingDistanceInMeters: joggingDistanceInMeters,
       );
-      final WorkoutStageHillRepeats expectedStage = WorkoutStageHillRepeats(
+      const WorkoutStageHillRepeats expectedStage = WorkoutStageHillRepeats(
         amountOfSeries: amountOfSeries,
         seriesDistanceInMeters: seriesDistanceInMeters,
         walkingDistanceInMeters: walkingDistanceInMeters,
@@ -107,62 +107,19 @@ void main() {
       const int seriesDistanceInMeters = 100;
       const int walkingDistanceInMeters = 0;
       const int joggingDistanceInMeters = 200;
-      final firebase.WorkoutStageRhythmsDto stageDto =
+      const firebase.WorkoutStageRhythmsDto stageDto =
           firebase.WorkoutStageRhythmsDto(
         amountOfSeries: amountOfSeries,
         seriesDistanceInMeters: seriesDistanceInMeters,
         walkingDistanceInMeters: walkingDistanceInMeters,
         joggingDistanceInMeters: joggingDistanceInMeters,
       );
-      final WorkoutStageRhythms expectedStage = WorkoutStageRhythms(
+      const WorkoutStageRhythms expectedStage = WorkoutStageRhythms(
         amountOfSeries: amountOfSeries,
         seriesDistanceInMeters: seriesDistanceInMeters,
         walkingDistanceInMeters: walkingDistanceInMeters,
         joggingDistanceInMeters: joggingDistanceInMeters,
       );
-
-      final WorkoutStage stage = mapWorkoutStageFromFirebase(stageDto);
-
-      expect(stage, expectedStage);
-    },
-  );
-
-  test(
-    'map workout stage from firebase, '
-    'workout stage stretching dto should be mapped to domain workout stage stretching model',
-    () {
-      const firebase.WorkoutStageStretchingDto stageDto =
-          firebase.WorkoutStageStretchingDto();
-      const WorkoutStageStretching expectedStage = WorkoutStageStretching();
-
-      final WorkoutStage stage = mapWorkoutStageFromFirebase(stageDto);
-
-      expect(stage, expectedStage);
-    },
-  );
-
-  test(
-    'map workout stage from firebase, '
-    'workout stage strengthening dto should be mapped to domain workout stage strengthening model',
-    () {
-      const firebase.WorkoutStageStrengtheningDto stageDto =
-          firebase.WorkoutStageStrengtheningDto();
-      const WorkoutStageStrengthening expectedStage =
-          WorkoutStageStrengthening();
-
-      final WorkoutStage stage = mapWorkoutStageFromFirebase(stageDto);
-
-      expect(stage, expectedStage);
-    },
-  );
-
-  test(
-    'map workout stage from firebase, '
-    'workout stage foam rolling dto should be mapped to domain workout stage foam rolling model',
-    () {
-      const firebase.WorkoutStageFoamRollingDto stageDto =
-          firebase.WorkoutStageFoamRollingDto();
-      const WorkoutStageFoamRolling expectedStage = WorkoutStageFoamRolling();
 
       final WorkoutStage stage = mapWorkoutStageFromFirebase(stageDto);
 
@@ -176,11 +133,11 @@ void main() {
     () {
       const double distanceInKm = 14.0;
       const int maxHeartRate = 150;
-      final WorkoutStageBaseRun stage = WorkoutStageBaseRun(
+      const WorkoutStageBaseRun stage = WorkoutStageBaseRun(
         distanceInKilometers: distanceInKm,
         maxHeartRate: maxHeartRate,
       );
-      final firebase.WorkoutStageBaseRunDto expectedDto =
+      const firebase.WorkoutStageBaseRunDto expectedDto =
           firebase.WorkoutStageBaseRunDto(
         distanceInKilometers: distanceInKm,
         maxHeartRate: maxHeartRate,
@@ -198,11 +155,11 @@ void main() {
     () {
       const double distanceInKm = 14.0;
       const int maxHeartRate = 150;
-      final WorkoutStageZone2 stage = WorkoutStageZone2(
+      const WorkoutStageZone2 stage = WorkoutStageZone2(
         distanceInKilometers: distanceInKm,
         maxHeartRate: maxHeartRate,
       );
-      final firebase.WorkoutStageZone2Dto expectedDto =
+      const firebase.WorkoutStageZone2Dto expectedDto =
           firebase.WorkoutStageZone2Dto(
         distanceInKilometers: distanceInKm,
         maxHeartRate: maxHeartRate,
@@ -220,11 +177,11 @@ void main() {
     () {
       const double distanceInKm = 14.0;
       const int maxHeartRate = 150;
-      final WorkoutStageZone3 stage = WorkoutStageZone3(
+      const WorkoutStageZone3 stage = WorkoutStageZone3(
         distanceInKilometers: distanceInKm,
         maxHeartRate: maxHeartRate,
       );
-      final firebase.WorkoutStageZone3Dto expectedDto =
+      const firebase.WorkoutStageZone3Dto expectedDto =
           firebase.WorkoutStageZone3Dto(
         distanceInKilometers: distanceInKm,
         maxHeartRate: maxHeartRate,
@@ -244,13 +201,13 @@ void main() {
       const int seriesDistanceInMeters = 100;
       const int walkingDistanceInMeters = 0;
       const int joggingDistanceInMeters = 200;
-      final WorkoutStageHillRepeats stage = WorkoutStageHillRepeats(
+      const WorkoutStageHillRepeats stage = WorkoutStageHillRepeats(
         amountOfSeries: amountOfSeries,
         seriesDistanceInMeters: seriesDistanceInMeters,
         walkingDistanceInMeters: walkingDistanceInMeters,
         joggingDistanceInMeters: joggingDistanceInMeters,
       );
-      final firebase.WorkoutStageHillRepeatsDto expectedDto =
+      const firebase.WorkoutStageHillRepeatsDto expectedDto =
           firebase.WorkoutStageHillRepeatsDto(
         amountOfSeries: amountOfSeries,
         seriesDistanceInMeters: seriesDistanceInMeters,
@@ -272,61 +229,19 @@ void main() {
       const int seriesDistanceInMeters = 100;
       const int walkingDistanceInMeters = 0;
       const int joggingDistanceInMeters = 200;
-      final WorkoutStageRhythms stage = WorkoutStageRhythms(
+      const WorkoutStageRhythms stage = WorkoutStageRhythms(
         amountOfSeries: amountOfSeries,
         seriesDistanceInMeters: seriesDistanceInMeters,
         walkingDistanceInMeters: walkingDistanceInMeters,
         joggingDistanceInMeters: joggingDistanceInMeters,
       );
-      final firebase.WorkoutStageRhythmsDto expectedDto =
+      const firebase.WorkoutStageRhythmsDto expectedDto =
           firebase.WorkoutStageRhythmsDto(
         amountOfSeries: amountOfSeries,
         seriesDistanceInMeters: seriesDistanceInMeters,
         walkingDistanceInMeters: walkingDistanceInMeters,
         joggingDistanceInMeters: joggingDistanceInMeters,
       );
-
-      final WorkoutStageDto dto = mapWorkoutStageToFirebase(stage);
-
-      expect(dto, expectedDto);
-    },
-  );
-
-  test(
-    'map workout stage to firebase, '
-    'workout stage stretching should be mapped to domain workout stage stretching dto',
-    () {
-      const WorkoutStageStretching stage = WorkoutStageStretching();
-      const firebase.WorkoutStageStretchingDto expectedDto =
-          firebase.WorkoutStageStretchingDto();
-
-      final WorkoutStageDto dto = mapWorkoutStageToFirebase(stage);
-
-      expect(dto, expectedDto);
-    },
-  );
-
-  test(
-    'map workout stage to firebase, '
-    'workout stage strengthening should be mapped to domain workout stage strengthening dto',
-    () {
-      const WorkoutStageStrengthening stage = WorkoutStageStrengthening();
-      const firebase.WorkoutStageStrengtheningDto expectedDto =
-          firebase.WorkoutStageStrengtheningDto();
-
-      final WorkoutStageDto dto = mapWorkoutStageToFirebase(stage);
-
-      expect(dto, expectedDto);
-    },
-  );
-
-  test(
-    'map workout stage to firebase, '
-    'workout stage foam rolling should be mapped to domain workout stage foam rolling dto',
-    () {
-      const WorkoutStageFoamRolling stage = WorkoutStageFoamRolling();
-      const firebase.WorkoutStageFoamRollingDto expectedDto =
-          firebase.WorkoutStageFoamRollingDto();
 
       final WorkoutStageDto dto = mapWorkoutStageToFirebase(stage);
 

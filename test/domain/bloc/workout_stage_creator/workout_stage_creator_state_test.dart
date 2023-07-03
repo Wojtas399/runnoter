@@ -1,129 +1,353 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/bloc/workout_stage_creator/workout_stage_creator_bloc.dart';
+import 'package:runnoter/domain/entity/workout_stage.dart';
 
 void main() {
-  WorkoutStageCreatorStateInProgress createStateInProgress({
+  late WorkoutStageCreatorState state;
+
+  WorkoutStageCreatorState createState({
+    BlocStatus status = const BlocStatusInitial(),
+    WorkoutStageType? originalStageType,
     WorkoutStageType? stageType,
-    WorkoutStageCreatorForm? form,
+    WorkoutStageCreatorDistanceForm distanceForm =
+        const WorkoutStageCreatorDistanceForm(),
+    WorkoutStageCreatorSeriesForm seriesForm =
+        const WorkoutStageCreatorSeriesForm(),
+    WorkoutStage? stageToSubmit,
   }) =>
-      WorkoutStageCreatorStateInProgress(
+      WorkoutStageCreatorState(
+        status: status,
+        originalStageType: originalStageType,
         stageType: stageType,
-        form: form,
+        distanceForm: distanceForm,
+        seriesForm: seriesForm,
+        stageToSubmit: stageToSubmit,
       );
 
+  setUp(
+    () => state = createState(),
+  );
+
   test(
-    'state in progress, '
-    'is add button disabled, '
-    'stage type is null, '
+    'is edit mode, '
+    'original workout stage is not null in distance form, '
     'should be true',
     () {
-      final state = createStateInProgress();
+      state = state.copyWith(
+        distanceForm: const WorkoutStageCreatorDistanceForm(
+          originalStage: WorkoutStageZone2(
+            distanceInKilometers: 10,
+            maxHeartRate: 165,
+          ),
+        ),
+      );
 
-      expect(state.isAddButtonDisabled, true);
+      expect(state.isEditMode, true);
     },
   );
 
   test(
-    'state in progress, '
-    'is add button disabled, '
-    'stage type is not null and distance stage form data are invalid, '
+    'is edit mode, '
+    'original workout stage is not null in series form, '
     'should be true',
     () {
-      const WorkoutStageType stageType = WorkoutStageType.baseRun;
-      const distanceForm = WorkoutStageCreatorDistanceStageForm(
+      state = state.copyWith(
+        seriesForm: const WorkoutStageCreatorSeriesForm(
+          originalStage: WorkoutStageRhythms(
+            amountOfSeries: 10,
+            seriesDistanceInMeters: 100,
+            walkingDistanceInMeters: 20,
+            joggingDistanceInMeters: 80,
+          ),
+        ),
+      );
+
+      expect(state.isEditMode, true);
+    },
+  );
+
+  test(
+    'is edit mode, '
+    'original workout stage is null in both forms, '
+    'should be false',
+    () {
+      expect(state.isEditMode, false);
+    },
+  );
+
+  test(
+    'is submit button disabled, '
+    'stage type is null, '
+    'should be true',
+    () {
+      final state = createState();
+
+      expect(state.isSubmitButtonDisabled, true);
+    },
+  );
+
+  test(
+    'is submit button disabled, '
+    'stage type is same as original, '
+    'should be true',
+    () {
+      final state = createState(
+        originalStageType: WorkoutStageType.zone2,
+        stageType: WorkoutStageType.zone2,
+      );
+
+      expect(state.isSubmitButtonDisabled, true);
+    },
+  );
+
+  test(
+    'is submit button disabled, '
+    'original stage type is not null and stage type is different original, '
+    'should be false',
+    () {
+      final state = createState(
+        originalStageType: WorkoutStageType.zone2,
+        stageType: WorkoutStageType.zone3,
+        distanceForm: const WorkoutStageCreatorDistanceForm(
+          originalStage: WorkoutStageBaseRun(
+            distanceInKilometers: 10,
+            maxHeartRate: 150,
+          ),
+          distanceInKm: 10,
+          maxHeartRate: 150,
+        ),
+      );
+
+      expect(state.isSubmitButtonDisabled, false);
+    },
+  );
+
+  test(
+    'is submit button disabled, '
+    'distance stage, '
+    'distance form data are invalid, '
+    'should be true',
+    () {
+      const WorkoutStageType stageType = WorkoutStageType.cardio;
+      const distanceForm = WorkoutStageCreatorDistanceForm(
         distanceInKm: 0,
         maxHeartRate: 140,
       );
 
-      final state = createStateInProgress(
+      final state = createState(
+        originalStageType: stageType,
         stageType: stageType,
-        form: distanceForm,
+        distanceForm: distanceForm,
       );
 
-      expect(state.isAddButtonDisabled, true);
+      expect(state.isSubmitButtonDisabled, true);
     },
   );
 
   test(
-    'state in progress, '
-    'is add button disabled, '
-    'stage type is not null and distance stage form data are valid, '
+    'is submit button disabled, '
+    'distance stage, '
+    'distance form data are valid, '
     'should be false',
     () {
-      const WorkoutStageType stageType = WorkoutStageType.baseRun;
-      const distanceForm = WorkoutStageCreatorDistanceStageForm(
+      const WorkoutStageType stageType = WorkoutStageType.cardio;
+      const distanceForm = WorkoutStageCreatorDistanceForm(
         distanceInKm: 10.5,
         maxHeartRate: 140,
       );
 
-      final state = createStateInProgress(
+      final state = createState(
+        originalStageType: stageType,
         stageType: stageType,
-        form: distanceForm,
+        distanceForm: distanceForm,
       );
 
-      expect(state.isAddButtonDisabled, false);
+      expect(state.isSubmitButtonDisabled, false);
     },
   );
 
   test(
-    'state in progress, '
-    'is add button disabled, '
-    'stage type is not null and series stage form data are invalid, '
+    'is submit button disabled, '
+    'series stage, '
+    'series form data are invalid, '
     'should be true',
     () {
       const WorkoutStageType stageType = WorkoutStageType.hillRepeats;
-      const distanceForm = WorkoutStageCreatorSeriesStageForm(
+      const seriesForm = WorkoutStageCreatorSeriesForm(
         amountOfSeries: 0,
         seriesDistanceInMeters: 100,
-        breakWalkingDistanceInMeters: 20,
-        breakJoggingDistanceInMeters: 80,
+        walkingDistanceInMeters: 20,
+        joggingDistanceInMeters: 80,
       );
 
-      final state = createStateInProgress(
+      final state = createState(
+        originalStageType: stageType,
         stageType: stageType,
-        form: distanceForm,
+        seriesForm: seriesForm,
       );
 
-      expect(state.isAddButtonDisabled, true);
+      expect(state.isSubmitButtonDisabled, true);
     },
   );
 
   test(
-    'state in progress, '
-    'is add button disabled, '
-    'stage type is not null and series stage form data are valid, '
+    'is submit button disabled, '
+    'series stage, '
+    'series form data are valid, '
     'should be false',
     () {
       const WorkoutStageType stageType = WorkoutStageType.hillRepeats;
-      const distanceForm = WorkoutStageCreatorSeriesStageForm(
+      const seriesForm = WorkoutStageCreatorSeriesForm(
         amountOfSeries: 10,
         seriesDistanceInMeters: 100,
-        breakWalkingDistanceInMeters: 20,
-        breakJoggingDistanceInMeters: 80,
+        walkingDistanceInMeters: 20,
+        joggingDistanceInMeters: 80,
       );
 
-      final state = createStateInProgress(
+      final state = createState(
+        originalStageType: stageType,
         stageType: stageType,
-        form: distanceForm,
+        seriesForm: seriesForm,
       );
 
-      expect(state.isAddButtonDisabled, false);
+      expect(state.isSubmitButtonDisabled, false);
     },
   );
 
   test(
-    'state in progress, '
-    'is add button disabled, '
-    'stage type is not null and form is null, '
+    'is distance stage, '
+    'stage type is set as cardio, '
+    'should be true',
+    () {
+      state = state.copyWith(stageType: WorkoutStageType.cardio);
+
+      expect(state.isDistanceStage, true);
+    },
+  );
+
+  test(
+    'is distance stage, '
+    'stage type is set as zone2, '
+    'should be true',
+    () {
+      state = state.copyWith(stageType: WorkoutStageType.zone2);
+
+      expect(state.isDistanceStage, true);
+    },
+  );
+
+  test(
+    'is distance stage, '
+    'stage type is set as zone3, '
+    'should be true',
+    () {
+      state = state.copyWith(stageType: WorkoutStageType.zone3);
+
+      expect(state.isDistanceStage, true);
+    },
+  );
+
+  test(
+    'is distance stage, '
+    'stage type is set as hill repeats, '
     'should be false',
     () {
-      const WorkoutStageType stageType = WorkoutStageType.stretching;
+      state = state.copyWith(stageType: WorkoutStageType.hillRepeats);
 
-      final state = createStateInProgress(
-        stageType: stageType,
-      );
+      expect(state.isDistanceStage, false);
+    },
+  );
 
-      expect(state.isAddButtonDisabled, false);
+  test(
+    'is distance stage, '
+    'stage type is set as rhythms, '
+    'should be false',
+    () {
+      state = state.copyWith(stageType: WorkoutStageType.rhythms);
+
+      expect(state.isDistanceStage, false);
+    },
+  );
+
+  test(
+    'is series stage, '
+    'stage type is set as cardio, '
+    'should be false',
+    () {
+      state = state.copyWith(stageType: WorkoutStageType.cardio);
+
+      expect(state.isSeriesStage, false);
+    },
+  );
+
+  test(
+    'is series stage, '
+    'stage type is set as zone2, '
+    'should be false',
+    () {
+      state = state.copyWith(stageType: WorkoutStageType.zone2);
+
+      expect(state.isSeriesStage, false);
+    },
+  );
+
+  test(
+    'is series stage, '
+    'stage type is set as zone3, '
+    'should be false',
+    () {
+      state = state.copyWith(stageType: WorkoutStageType.zone3);
+
+      expect(state.isSeriesStage, false);
+    },
+  );
+
+  test(
+    'is series stage, '
+    'stage type is set as hill repeats, '
+    'should be true',
+    () {
+      state = state.copyWith(stageType: WorkoutStageType.hillRepeats);
+
+      expect(state.isSeriesStage, true);
+    },
+  );
+
+  test(
+    'is series stage, '
+    'stage type is set as rhythms, '
+    'should be true',
+    () {
+      state = state.copyWith(stageType: WorkoutStageType.rhythms);
+
+      expect(state.isSeriesStage, true);
+    },
+  );
+
+  test(
+    'copy with status',
+    () {
+      const BlocStatus expectedStatus = BlocStatusLoading();
+
+      state = state.copyWith(status: expectedStatus);
+      final state2 = state.copyWith();
+
+      expect(state.status, expectedStatus);
+      expect(state2.status, const BlocStatusComplete());
+    },
+  );
+
+  test(
+    'copy with original stage type',
+    () {
+      const WorkoutStageType expectedStageType = WorkoutStageType.rhythms;
+
+      state = state.copyWith(originalStageType: expectedStageType);
+      final state2 = state.copyWith();
+
+      expect(state.originalStageType, expectedStageType);
+      expect(state2.originalStageType, expectedStageType);
     },
   );
 
@@ -132,7 +356,7 @@ void main() {
     () {
       const WorkoutStageType expectedStageType = WorkoutStageType.hillRepeats;
 
-      final state = createStateInProgress(stageType: expectedStageType);
+      state = state.copyWith(stageType: expectedStageType);
       final state2 = state.copyWith();
 
       expect(state.stageType, expectedStageType);
@@ -141,19 +365,62 @@ void main() {
   );
 
   test(
-    'copy with form',
+    'copy with distance form',
     () {
-      const WorkoutStageCreatorForm expectedForm =
-          WorkoutStageCreatorDistanceStageForm(
-        distanceInKm: 10.0,
+      const expectedDistanceForm = WorkoutStageCreatorDistanceForm(
+        originalStage: WorkoutStageZone2(
+          distanceInKilometers: 5,
+          maxHeartRate: 165,
+        ),
+        distanceInKm: 6.0,
+        maxHeartRate: 165,
+      );
+
+      state = state.copyWith(distanceForm: expectedDistanceForm);
+      final state2 = state.copyWith();
+
+      expect(state.distanceForm, expectedDistanceForm);
+      expect(state2.distanceForm, expectedDistanceForm);
+    },
+  );
+
+  test(
+    'copy with series form',
+    () {
+      const expectedSeriesForm = WorkoutStageCreatorSeriesForm(
+        originalStage: WorkoutStageRhythms(
+          amountOfSeries: 10,
+          seriesDistanceInMeters: 100,
+          walkingDistanceInMeters: 20,
+          joggingDistanceInMeters: 80,
+        ),
+        amountOfSeries: 10,
+        seriesDistanceInMeters: 100,
+        walkingDistanceInMeters: 20,
+        joggingDistanceInMeters: 80,
+      );
+
+      state = state.copyWith(seriesForm: expectedSeriesForm);
+      final state2 = state.copyWith();
+
+      expect(state.seriesForm, expectedSeriesForm);
+      expect(state2.seriesForm, expectedSeriesForm);
+    },
+  );
+
+  test(
+    'copy with stage to submit',
+    () {
+      const WorkoutStage expectedStageToSubmit = WorkoutStageBaseRun(
+        distanceInKilometers: 10.0,
         maxHeartRate: 150,
       );
 
-      final state = createStateInProgress(form: expectedForm);
+      state = state.copyWith(stageToSubmit: expectedStageToSubmit);
       final state2 = state.copyWith();
 
-      expect(state.form, expectedForm);
-      expect(state2.form, null);
+      expect(state.stageToSubmit, expectedStageToSubmit);
+      expect(state2.stageToSubmit, null);
     },
   );
 }

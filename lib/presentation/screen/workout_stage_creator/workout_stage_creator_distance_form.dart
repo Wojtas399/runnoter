@@ -15,8 +15,33 @@ class _DistanceStageForm extends StatelessWidget {
   }
 }
 
-class _Distance extends StatelessWidget {
+class _Distance extends StatefulWidget {
   const _Distance();
+
+  @override
+  State<StatefulWidget> createState() => _DistanceState();
+}
+
+class _DistanceState extends State<_Distance> {
+  final TextEditingController _controller = TextEditingController();
+
+  @override
+  void initState() {
+    final double? distanceInKm =
+        context.read<WorkoutStageCreatorBloc>().state.distanceForm.distanceInKm;
+    if (distanceInKm != null) {
+      _controller.text =
+          context.convertDistanceFromDefaultUnit(distanceInKm).toString();
+    }
+    _controller.addListener(_onChanged);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controller.removeListener(_onChanged);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,21 +56,16 @@ class _Distance extends StatelessWidget {
           decimalRange: 2,
         ),
       ],
-      onChanged: (String? value) {
-        _onChanged(context, value);
-      },
+      controller: _controller,
     );
   }
 
-  void _onChanged(BuildContext context, String? value) {
-    if (value == null) {
-      return;
-    }
+  void _onChanged() {
     double? distance;
-    if (value.isEmpty) {
+    if (_controller.text.isEmpty) {
       distance = 0;
     } else {
-      distance = double.tryParse(value);
+      distance = double.tryParse(_controller.text);
     }
     if (distance != null) {
       final convertedDistance = context.convertDistanceToDefaultUnit(distance);
@@ -58,8 +78,32 @@ class _Distance extends StatelessWidget {
   }
 }
 
-class _MaxHeartRate extends StatelessWidget {
+class _MaxHeartRate extends StatefulWidget {
   const _MaxHeartRate();
+
+  @override
+  State<StatefulWidget> createState() => _MaxHeartRateState();
+}
+
+class _MaxHeartRateState extends State<_MaxHeartRate> {
+  final TextEditingController _controller = TextEditingController();
+
+  @override
+  void initState() {
+    final int? maxHeartRate =
+        context.read<WorkoutStageCreatorBloc>().state.distanceForm.maxHeartRate;
+    if (maxHeartRate != null) {
+      _controller.text = maxHeartRate.toString();
+    }
+    _controller.addListener(_onChanged);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controller.removeListener(_onChanged);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,21 +115,16 @@ class _MaxHeartRate extends StatelessWidget {
       inputFormatters: [
         FilteringTextInputFormatter.digitsOnly,
       ],
-      onChanged: (String? value) {
-        _onChanged(context, value);
-      },
+      controller: _controller,
     );
   }
 
-  void _onChanged(BuildContext context, String? value) {
-    if (value == null) {
-      return;
-    }
+  void _onChanged() {
     int? maxHeartRate;
-    if (value.isEmpty) {
+    if (_controller.text.isEmpty) {
       maxHeartRate = 0;
     } else {
-      maxHeartRate = int.tryParse(value);
+      maxHeartRate = int.tryParse(_controller.text);
     }
     if (maxHeartRate != null) {
       context.read<WorkoutStageCreatorBloc>().add(

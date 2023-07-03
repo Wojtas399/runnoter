@@ -20,8 +20,32 @@ class _SeriesStageForm extends StatelessWidget {
   }
 }
 
-class _AmountOfSeries extends StatelessWidget {
+class _AmountOfSeries extends StatefulWidget {
   const _AmountOfSeries();
+
+  @override
+  State<StatefulWidget> createState() => _AmountOfSeriesState();
+}
+
+class _AmountOfSeriesState extends State<_AmountOfSeries> {
+  final TextEditingController _controller = TextEditingController();
+
+  @override
+  void initState() {
+    final int? amountOfSeries =
+        context.read<WorkoutStageCreatorBloc>().state.seriesForm.amountOfSeries;
+    if (amountOfSeries != null) {
+      _controller.text = amountOfSeries.toString();
+    }
+    _controller.addListener(_onChanged);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controller.removeListener(_onChanged);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,21 +57,16 @@ class _AmountOfSeries extends StatelessWidget {
       inputFormatters: [
         FilteringTextInputFormatter.digitsOnly,
       ],
-      onChanged: (String? value) {
-        _onChanged(context, value);
-      },
+      controller: _controller,
     );
   }
 
-  void _onChanged(BuildContext context, String? value) {
-    if (value == null) {
-      return;
-    }
+  void _onChanged() {
     int? amountOfSeries;
-    if (value == '') {
+    if (_controller.text == '') {
       amountOfSeries = 0;
     } else {
-      amountOfSeries = int.tryParse(value);
+      amountOfSeries = int.tryParse(_controller.text);
     }
     if (amountOfSeries != null) {
       context.read<WorkoutStageCreatorBloc>().add(
@@ -59,8 +78,35 @@ class _AmountOfSeries extends StatelessWidget {
   }
 }
 
-class _SeriesDistance extends StatelessWidget {
+class _SeriesDistance extends StatefulWidget {
   const _SeriesDistance();
+
+  @override
+  State<StatefulWidget> createState() => _SeriesDistanceState();
+}
+
+class _SeriesDistanceState extends State<_SeriesDistance> {
+  final TextEditingController _controller = TextEditingController();
+
+  @override
+  void initState() {
+    final int? seriesDistanceInMeters = context
+        .read<WorkoutStageCreatorBloc>()
+        .state
+        .seriesForm
+        .seriesDistanceInMeters;
+    if (seriesDistanceInMeters != null) {
+      _controller.text = seriesDistanceInMeters.toString();
+    }
+    _controller.addListener(_onChanged);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controller.removeListener(_onChanged);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -72,21 +118,16 @@ class _SeriesDistance extends StatelessWidget {
       inputFormatters: [
         FilteringTextInputFormatter.digitsOnly,
       ],
-      onChanged: (String? value) {
-        _onChanged(context, value);
-      },
+      controller: _controller,
     );
   }
 
-  void _onChanged(BuildContext context, String? value) {
-    if (value == null) {
-      return;
-    }
+  void _onChanged() {
     int? seriesDistance;
-    if (value == '') {
+    if (_controller.text == '') {
       seriesDistance = 0;
     } else {
-      seriesDistance = int.tryParse(value);
+      seriesDistance = int.tryParse(_controller.text);
     }
     if (seriesDistance != null) {
       context.read<WorkoutStageCreatorBloc>().add(
@@ -98,8 +139,35 @@ class _SeriesDistance extends StatelessWidget {
   }
 }
 
-class _WalkingDistance extends StatelessWidget {
+class _WalkingDistance extends StatefulWidget {
   const _WalkingDistance();
+
+  @override
+  State<StatefulWidget> createState() => _WalkingDistanceState();
+}
+
+class _WalkingDistanceState extends State<_WalkingDistance> {
+  final TextEditingController _controller = TextEditingController();
+
+  @override
+  void initState() {
+    final int? walkingDistanceInMeters = context
+        .read<WorkoutStageCreatorBloc>()
+        .state
+        .seriesForm
+        .walkingDistanceInMeters;
+    if (walkingDistanceInMeters != null) {
+      _controller.text = walkingDistanceInMeters.toString();
+    }
+    _controller.addListener(_onChanged);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controller.removeListener(_onChanged);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -110,21 +178,16 @@ class _WalkingDistance extends StatelessWidget {
       inputFormatters: [
         FilteringTextInputFormatter.digitsOnly,
       ],
-      onChanged: (String? value) {
-        _onChanged(context, value);
-      },
+      controller: _controller,
     );
   }
 
-  void _onChanged(BuildContext context, String? value) {
-    if (value == null) {
-      return;
-    }
+  void _onChanged() {
     int? walkingDistance;
-    if (value == '') {
+    if (_controller.text == '') {
       walkingDistance = 0;
     } else {
-      walkingDistance = int.tryParse(value);
+      walkingDistance = int.tryParse(_controller.text);
     }
     if (walkingDistance != null) {
       context.read<WorkoutStageCreatorBloc>().add(
@@ -136,8 +199,35 @@ class _WalkingDistance extends StatelessWidget {
   }
 }
 
-class _JoggingDistance extends StatelessWidget {
+class _JoggingDistance extends StatefulWidget {
   const _JoggingDistance();
+
+  @override
+  State<StatefulWidget> createState() => _JoggingDistanceState();
+}
+
+class _JoggingDistanceState extends State<_JoggingDistance> {
+  final TextEditingController _controller = TextEditingController();
+
+  @override
+  void initState() {
+    final int? joggingDistanceInMeters = context
+        .read<WorkoutStageCreatorBloc>()
+        .state
+        .seriesForm
+        .joggingDistanceInMeters;
+    if (joggingDistanceInMeters != null) {
+      _controller.text = joggingDistanceInMeters.toString();
+    }
+    _controller.addListener(_onChanged);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controller.removeListener(_onChanged);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -148,21 +238,16 @@ class _JoggingDistance extends StatelessWidget {
       inputFormatters: [
         FilteringTextInputFormatter.digitsOnly,
       ],
-      onChanged: (String? value) {
-        _onChanged(context, value);
-      },
+      controller: _controller,
     );
   }
 
-  void _onChanged(BuildContext context, String? value) {
-    if (value == null) {
-      return;
-    }
+  void _onChanged() {
     int? joggingDistance;
-    if (value == '') {
+    if (_controller.text == '') {
       joggingDistance = 0;
     } else {
-      joggingDistance = int.tryParse(value);
+      joggingDistance = int.tryParse(_controller.text);
     }
     if (joggingDistance != null) {
       context.read<WorkoutStageCreatorBloc>().add(

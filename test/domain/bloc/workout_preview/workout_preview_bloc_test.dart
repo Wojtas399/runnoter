@@ -144,7 +144,7 @@ void main() {
           userId: 'u1',
           date: DateTime(2023),
           name: 'workout name',
-          stages: [
+          stages: const [
             WorkoutStageBaseRun(
               distanceInKilometers: 10,
               maxHeartRate: 150,
@@ -159,7 +159,7 @@ void main() {
         status: const BlocStatusComplete(),
         date: DateTime(2023),
         workoutName: 'workout name',
-        stages: [
+        stages: const [
           WorkoutStageBaseRun(
             distanceInKilometers: 10,
             maxHeartRate: 150,

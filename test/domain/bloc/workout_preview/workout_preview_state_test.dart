@@ -131,7 +131,7 @@ void main() {
   test(
     'copy with stages',
     () {
-      final List<WorkoutStage> expectedStages = [
+      const List<WorkoutStage> expectedStages = [
         WorkoutStageBaseRun(
           distanceInKilometers: 2,
           maxHeartRate: 150,

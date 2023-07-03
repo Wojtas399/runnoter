@@ -35,7 +35,7 @@ void main() {
           comment: 'comment',
         ),
         name: name,
-        stages: [
+        stages: const [
           firebase.WorkoutStageBaseRunDto(
             distanceInKilometers: 2,
             maxHeartRate: 150,
@@ -62,7 +62,7 @@ void main() {
           comment: 'comment',
         ),
         name: name,
-        stages: [
+        stages: const [
           WorkoutStageBaseRun(
             distanceInKilometers: 2,
             maxHeartRate: 150,

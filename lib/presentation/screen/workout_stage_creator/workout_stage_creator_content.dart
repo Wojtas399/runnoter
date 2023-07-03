@@ -1,9 +1,7 @@
 part of 'workout_stage_creator_screen.dart';
 
-class WorkoutStageCreatorContent extends StatelessWidget {
-  const WorkoutStageCreatorContent({
-    super.key,
-  });
+class _Content extends StatelessWidget {
+  const _Content();
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +32,12 @@ class _WorkoutStageType extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DropdownButtonFormField(
+    final WorkoutStageType? stageType = context.select(
+      (WorkoutStageCreatorBloc bloc) => bloc.state.stageType,
+    );
+
+    return DropdownButtonFormField<WorkoutStageType>(
+      value: stageType,
       decoration: InputDecoration(
         filled: true,
         hintText: Str.of(context).workoutStageCreatorStageType,
@@ -61,8 +64,8 @@ class _WorkoutStageType extends StatelessWidget {
   ) {
     final str = Str.of(context);
     switch (stage) {
-      case WorkoutStageType.baseRun:
-        return str.workoutStageBaseRun;
+      case WorkoutStageType.cardio:
+        return str.workoutStageCardio;
       case WorkoutStageType.zone2:
         return str.workoutStageZone2;
       case WorkoutStageType.zone3:
@@ -71,12 +74,6 @@ class _WorkoutStageType extends StatelessWidget {
         return str.workoutStageHillRepeats;
       case WorkoutStageType.rhythms:
         return str.workoutStageRhythms;
-      case WorkoutStageType.stretching:
-        return str.workoutStageStretching;
-      case WorkoutStageType.strengthening:
-        return str.workoutStageStrengthening;
-      case WorkoutStageType.foamRolling:
-        return str.workoutStageFoamRolling;
     }
   }
 
@@ -97,19 +94,16 @@ class _Form extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final WorkoutStageCreatorForm? form = context.select(
-      (WorkoutStageCreatorBloc bloc) {
-        final WorkoutStageCreatorState state = bloc.state;
-        if (state is WorkoutStageCreatorStateInProgress) {
-          return state.form;
-        }
-        return null;
-      },
+    final bool isDistanceStage = context.select(
+      (WorkoutStageCreatorBloc bloc) => bloc.state.isDistanceStage,
+    );
+    final bool isSeriesStage = context.select(
+      (WorkoutStageCreatorBloc bloc) => bloc.state.isSeriesStage,
     );
 
-    if (form is WorkoutStageCreatorDistanceStageForm) {
+    if (isDistanceStage) {
       return const _DistanceStageForm();
-    } else if (form is WorkoutStageCreatorSeriesStageForm) {
+    } else if (isSeriesStage) {
       return const _SeriesStageForm();
     }
     return const SizedBox();

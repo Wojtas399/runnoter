@@ -4,6 +4,10 @@ abstract class WorkoutStageCreatorEvent {
   const WorkoutStageCreatorEvent();
 }
 
+class WorkoutStageCreatorEventInitialize extends WorkoutStageCreatorEvent {
+  const WorkoutStageCreatorEventInitialize();
+}
+
 class WorkoutStageCreatorEventStageTypeChanged
     extends WorkoutStageCreatorEvent {
   final WorkoutStageType stageType;
