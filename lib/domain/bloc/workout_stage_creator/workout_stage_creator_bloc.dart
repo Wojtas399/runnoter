@@ -39,8 +39,10 @@ class WorkoutStageCreatorBloc
     if (_originalStage == null) return;
     if (_originalStage is DistanceWorkoutStage) {
       final distanceStage = _originalStage as DistanceWorkoutStage;
+      final workoutStageType = _mapWorkoutStageToStageType(distanceStage);
       emit(state.copyWith(
-        stageType: _mapWorkoutStageToStageType(_originalStage!),
+        originalStageType: workoutStageType,
+        stageType: workoutStageType,
         distanceForm: WorkoutStageCreatorDistanceForm(
           originalStage: distanceStage,
           distanceInKm: distanceStage.distanceInKilometers,
@@ -49,8 +51,10 @@ class WorkoutStageCreatorBloc
       ));
     } else if (_originalStage is SeriesWorkoutStage) {
       final seriesStage = _originalStage as SeriesWorkoutStage;
+      final workoutStageType = _mapWorkoutStageToStageType(seriesStage);
       emit(state.copyWith(
-        stageType: _mapWorkoutStageToStageType(_originalStage!),
+        originalStageType: workoutStageType,
+        stageType: workoutStageType,
         seriesForm: WorkoutStageCreatorSeriesForm(
           originalStage: seriesStage,
           amountOfSeries: seriesStage.amountOfSeries,

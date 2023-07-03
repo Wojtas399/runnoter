@@ -30,7 +30,7 @@ class WorkoutStageCreatorScreen extends StatelessWidget {
     return _BlocProvider(
       stage: stage,
       child: const _BlocListener(
-        child: WorkoutStageCreatorContent(),
+        child: _Content(),
       ),
     );
   }
@@ -50,7 +50,9 @@ class _BlocProvider extends StatelessWidget {
     return BlocProvider(
       create: (_) => WorkoutStageCreatorBloc(
         originalStage: stage,
-      ),
+      )..add(
+          const WorkoutStageCreatorEventInitialize(),
+        ),
       child: child,
     );
   }

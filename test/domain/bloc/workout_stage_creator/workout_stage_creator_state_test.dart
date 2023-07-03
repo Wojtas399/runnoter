@@ -8,6 +8,7 @@ void main() {
 
   WorkoutStageCreatorState createState({
     BlocStatus status = const BlocStatusInitial(),
+    WorkoutStageType? originalStageType,
     WorkoutStageType? stageType,
     WorkoutStageCreatorDistanceForm distanceForm =
         const WorkoutStageCreatorDistanceForm(),
@@ -17,6 +18,7 @@ void main() {
   }) =>
       WorkoutStageCreatorState(
         status: status,
+        originalStageType: originalStageType,
         stageType: stageType,
         distanceForm: distanceForm,
         seriesForm: seriesForm,
@@ -40,6 +42,42 @@ void main() {
 
   test(
     'is submit button disabled, '
+    'stage type is same as original, '
+    'should be true',
+    () {
+      final state = createState(
+        originalStageType: WorkoutStageType.zone2,
+        stageType: WorkoutStageType.zone2,
+      );
+
+      expect(state.isSubmitButtonDisabled, true);
+    },
+  );
+
+  test(
+    'is submit button disabled, '
+    'stage type is different original, '
+    'should be false',
+    () {
+      final state = createState(
+        originalStageType: WorkoutStageType.zone2,
+        stageType: WorkoutStageType.zone3,
+        distanceForm: const WorkoutStageCreatorDistanceForm(
+          originalStage: WorkoutStageBaseRun(
+            distanceInKilometers: 10,
+            maxHeartRate: 150,
+          ),
+          distanceInKm: 10,
+          maxHeartRate: 150,
+        ),
+      );
+
+      expect(state.isSubmitButtonDisabled, false);
+    },
+  );
+
+  test(
+    'is submit button disabled, '
     'distance stage, '
     'distance form data are invalid, '
     'should be true',
@@ -51,6 +89,7 @@ void main() {
       );
 
       final state = createState(
+        originalStageType: stageType,
         stageType: stageType,
         distanceForm: distanceForm,
       );
@@ -72,6 +111,7 @@ void main() {
       );
 
       final state = createState(
+        originalStageType: stageType,
         stageType: stageType,
         distanceForm: distanceForm,
       );
@@ -95,6 +135,7 @@ void main() {
       );
 
       final state = createState(
+        originalStageType: stageType,
         stageType: stageType,
         seriesForm: seriesForm,
       );
@@ -118,6 +159,7 @@ void main() {
       );
 
       final state = createState(
+        originalStageType: stageType,
         stageType: stageType,
         seriesForm: seriesForm,
       );
@@ -246,6 +288,19 @@ void main() {
 
       expect(state.status, expectedStatus);
       expect(state2.status, const BlocStatusComplete());
+    },
+  );
+
+  test(
+    'copy with original stage type',
+    () {
+      const WorkoutStageType expectedStageType = WorkoutStageType.rhythms;
+
+      state = state.copyWith(originalStageType: expectedStageType);
+      final state2 = state.copyWith();
+
+      expect(state.originalStageType, expectedStageType);
+      expect(state2.originalStageType, expectedStageType);
     },
   );
 

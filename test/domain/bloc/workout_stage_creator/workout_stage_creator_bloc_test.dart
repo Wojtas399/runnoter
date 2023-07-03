@@ -24,6 +24,7 @@ void main() {
 
   WorkoutStageCreatorState createState({
     BlocStatus status = const BlocStatusInitial(),
+    WorkoutStageType? originalStageType,
     WorkoutStageType? stageType,
     WorkoutStageCreatorDistanceForm distanceForm =
         const WorkoutStageCreatorDistanceForm(),
@@ -33,6 +34,7 @@ void main() {
   }) =>
       WorkoutStageCreatorState(
         status: status,
+        originalStageType: originalStageType,
         stageType: stageType,
         distanceForm: distanceForm,
         seriesForm: seriesForm,
@@ -79,7 +81,7 @@ void main() {
   blocTest(
     'initialize, '
     'original stage is a distance stage, '
-    'should emit matching stage type and distance form',
+    'should set original stage type, stage type and distance form',
     build: () => createBloc(
       originalStage: const WorkoutStageZone2(
         distanceInKilometers: 5,
@@ -92,6 +94,7 @@ void main() {
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
+        originalStageType: WorkoutStageType.zone2,
         stageType: WorkoutStageType.zone2,
         distanceForm: const WorkoutStageCreatorDistanceForm(
           originalStage: WorkoutStageZone2(
@@ -108,7 +111,7 @@ void main() {
   blocTest(
     'initialize, '
     'original stage is a series stage, '
-    'should emit matching stage type and series form',
+    'should set original stage type, stage type and series form',
     build: () => createBloc(
       originalStage: const WorkoutStageRhythms(
         amountOfSeries: 10,
@@ -123,6 +126,7 @@ void main() {
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
+        originalStageType: WorkoutStageType.rhythms,
         stageType: WorkoutStageType.rhythms,
         seriesForm: const WorkoutStageCreatorSeriesForm(
           originalStage: WorkoutStageRhythms(

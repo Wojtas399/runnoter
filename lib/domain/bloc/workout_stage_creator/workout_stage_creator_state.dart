@@ -1,6 +1,7 @@
 part of 'workout_stage_creator_bloc.dart';
 
 class WorkoutStageCreatorState extends BlocState<WorkoutStageCreatorState> {
+  final WorkoutStageType? originalStageType;
   final WorkoutStageType? stageType;
   final WorkoutStageCreatorDistanceForm distanceForm;
   final WorkoutStageCreatorSeriesForm seriesForm;
@@ -8,6 +9,7 @@ class WorkoutStageCreatorState extends BlocState<WorkoutStageCreatorState> {
 
   const WorkoutStageCreatorState({
     required super.status,
+    this.originalStageType,
     this.stageType,
     this.distanceForm = const WorkoutStageCreatorDistanceForm(),
     this.seriesForm = const WorkoutStageCreatorSeriesForm(),
@@ -17,16 +19,21 @@ class WorkoutStageCreatorState extends BlocState<WorkoutStageCreatorState> {
   @override
   List<Object?> get props => [
         status,
+        originalStageType,
         stageType,
         distanceForm,
         seriesForm,
         stageToSubmit,
       ];
 
-  bool get isSubmitButtonDisabled =>
-      stageType == null ||
-      (isDistanceStage && distanceForm.isSubmitButtonDisabled) ||
-      (isSeriesStage && seriesForm.isSubmitButtonDisabled);
+  bool get isSubmitButtonDisabled {
+    if (stageType != originalStageType) {
+      return false;
+    }
+    return stageType == null ||
+        (isDistanceStage && distanceForm.isSubmitButtonDisabled) ||
+        (isSeriesStage && seriesForm.isSubmitButtonDisabled);
+  }
 
   bool get isDistanceStage =>
       stageType == WorkoutStageType.cardio ||
@@ -40,6 +47,7 @@ class WorkoutStageCreatorState extends BlocState<WorkoutStageCreatorState> {
   @override
   WorkoutStageCreatorState copyWith({
     BlocStatus? status,
+    WorkoutStageType? originalStageType,
     WorkoutStageType? stageType,
     WorkoutStageCreatorDistanceForm? distanceForm,
     WorkoutStageCreatorSeriesForm? seriesForm,
@@ -47,6 +55,7 @@ class WorkoutStageCreatorState extends BlocState<WorkoutStageCreatorState> {
   }) =>
       WorkoutStageCreatorState(
         status: status ?? const BlocStatusComplete(),
+        originalStageType: originalStageType ?? this.originalStageType,
         stageType: stageType ?? this.stageType,
         distanceForm: distanceForm ?? this.distanceForm,
         seriesForm: seriesForm ?? this.seriesForm,

@@ -1,9 +1,7 @@
 part of 'workout_stage_creator_screen.dart';
 
-class WorkoutStageCreatorContent extends StatelessWidget {
-  const WorkoutStageCreatorContent({
-    super.key,
-  });
+class _Content extends StatelessWidget {
+  const _Content();
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +32,12 @@ class _WorkoutStageType extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DropdownButtonFormField(
+    final WorkoutStageType? stageType = context.select(
+      (WorkoutStageCreatorBloc bloc) => bloc.state.stageType,
+    );
+
+    return DropdownButtonFormField<WorkoutStageType>(
+      value: stageType,
       decoration: InputDecoration(
         filled: true,
         hintText: Str.of(context).workoutStageCreatorStageType,
