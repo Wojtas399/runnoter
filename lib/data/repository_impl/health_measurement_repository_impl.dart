@@ -1,5 +1,5 @@
+import 'package:collection/collection.dart';
 import 'package:firebase/firebase.dart';
-import 'package:rxdart/rxdart.dart';
 
 import '../../common/date_service.dart';
 import '../../domain/additional_model/state_repository.dart';
@@ -24,52 +24,39 @@ class HealthMeasurementRepositoryImpl extends StateRepository<HealthMeasurement>
   Stream<HealthMeasurement?> getMeasurementByDate({
     required DateTime date,
     required String userId,
-  }) =>
-      dataStream$
-          .map(
-            (List<HealthMeasurement>? measurements) =>
-                <HealthMeasurement?>[...?measurements].firstWhere(
-              (HealthMeasurement? measurement) => measurement != null
-                  ? measurement.userId == userId &&
-                      _dateService.areDatesTheSame(measurement.date, date)
-                  : false,
-              orElse: () => null,
-            ),
-          )
-          .doOnListen(
-            () async =>
-                await _doesMeasurementWithGivenDateNotExist(date, userId)
-                    ? _loadMeasurementByDateFromRemoteDb(date, userId)
-                    : null,
-          );
+  }) async* {
+    await for (final measurements in dataStream$) {
+      HealthMeasurement? measurement = measurements?.firstWhereOrNull(
+        (measurement) =>
+            measurement.userId == userId &&
+            _dateService.areDatesTheSame(measurement.date, date),
+      );
+      measurement ??= await _loadMeasurementByDateFromRemoteDb(date, userId);
+      yield measurement;
+    }
+  }
 
   @override
   Stream<List<HealthMeasurement>?> getMeasurementsByDateRange({
     required DateTime startDate,
     required DateTime endDate,
     required String userId,
-  }) =>
-      dataStream$
-          .map(
-            (List<HealthMeasurement>? measurements) => measurements
-                ?.where(
-                  (measurement) =>
-                      measurement.userId == userId &&
-                      _dateService.isDateFromRange(
-                        date: measurement.date,
-                        startDate: startDate,
-                        endDate: endDate,
-                      ),
-                )
-                .toList(),
+  }) async* {
+    await _loadMeasurementsByDateRangeFromRemoteDb(startDate, endDate, userId);
+    await for (final measurements in dataStream$) {
+      yield measurements
+          ?.where(
+            (measurement) =>
+                measurement.userId == userId &&
+                _dateService.isDateFromRange(
+                  date: measurement.date,
+                  startDate: startDate,
+                  endDate: endDate,
+                ),
           )
-          .doOnListen(
-            () => _loadMeasurementsByDateRangeFromRemoteDb(
-              startDate,
-              endDate,
-              userId,
-            ),
-          );
+          .toList();
+    }
+  }
 
   @override
   Stream<List<HealthMeasurement>?> getAllMeasurements({
@@ -80,6 +67,29 @@ class HealthMeasurementRepositoryImpl extends StateRepository<HealthMeasurement>
       yield measurements
           ?.where((measurement) => measurement.userId == userId)
           .toList();
+    }
+  }
+
+  @override
+  Future<bool> doesMeasurementFromDateExist({
+    required String userId,
+    required DateTime date,
+  }) async {
+    final HealthMeasurement? measurement = await dataStream$
+        .map(
+          (measurements) => measurements?.firstWhereOrNull(
+            (measurement) =>
+                measurement.userId == userId &&
+                _dateService.areDatesTheSame(measurement.date, date),
+          ),
+        )
+        .first;
+    if (measurement != null) {
+      return true;
+    } else {
+      final HealthMeasurement? measurement =
+          await _loadMeasurementByDateFromRemoteDb(date, userId);
+      return measurement != null;
     }
   }
 
@@ -162,24 +172,7 @@ class HealthMeasurementRepositoryImpl extends StateRepository<HealthMeasurement>
     removeEntities(idsOfUserMeasurements);
   }
 
-  Future<bool> _doesMeasurementWithGivenDateNotExist(
-    DateTime date,
-    String userId,
-  ) async {
-    final List<HealthMeasurement>? measurements = await dataStream$.first;
-    if (measurements == null) {
-      return true;
-    }
-    for (final measurement in measurements) {
-      if (_dateService.areDatesTheSame(measurement.date, date) &&
-          measurement.userId == userId) {
-        return false;
-      }
-    }
-    return true;
-  }
-
-  Future<void> _loadMeasurementByDateFromRemoteDb(
+  Future<HealthMeasurement?> _loadMeasurementByDateFromRemoteDb(
     DateTime date,
     String userId,
   ) async {
@@ -193,7 +186,9 @@ class HealthMeasurementRepositoryImpl extends StateRepository<HealthMeasurement>
         measurementDto,
       );
       addEntity(measurement);
+      return measurement;
     }
+    return null;
   }
 
   Future<void> _loadMeasurementsByDateRangeFromRemoteDb(
