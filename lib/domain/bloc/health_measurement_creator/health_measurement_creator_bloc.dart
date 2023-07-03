@@ -17,7 +17,6 @@ class HealthMeasurementCreatorBloc extends BlocWithStatus<
     HealthMeasurementCreatorState,
     HealthMeasurementCreatorBlocInfo,
     HealthMeasurementCreatorBlocError> {
-  final DateService _dateService;
   final AuthService _authService;
   final HealthMeasurementRepository _healthMeasurementRepository;
 
@@ -30,8 +29,7 @@ class HealthMeasurementCreatorBloc extends BlocWithStatus<
     DateTime? date,
     int? restingHeartRate,
     double? fastingWeight,
-  })  : _dateService = dateService,
-        _authService = authService,
+  })  : _authService = authService,
         _healthMeasurementRepository = healthMeasurementRepository,
         super(
           HealthMeasurementCreatorState(
@@ -64,13 +62,13 @@ class HealthMeasurementCreatorBloc extends BlocWithStatus<
       );
       emit(state.copyWith(
         measurement: measurement,
-        date: measurement?.date,
+        date: event.date,
         restingHeartRate: measurement?.restingHeartRate,
         fastingWeight: measurement?.fastingWeight,
       ));
     } else {
       emit(state.copyWith(
-        date: _dateService.getToday(),
+        status: const BlocStatusComplete(),
       ));
     }
   }
