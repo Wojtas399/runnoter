@@ -127,87 +127,8 @@ void main() {
 
   blocTest(
     'date changed, '
-    'new date is different than original, '
-    'logged user does not exist, '
-    'should do nothing',
-    build: () => createBloc(),
-    setUp: () => authService.mockGetLoggedUserId(),
-    act: (bloc) => bloc.add(
-      HealthMeasurementCreatorEventDateChanged(
-        date: DateTime(2023, 2, 10),
-      ),
-    ),
-    expect: () => [],
-  );
-
-  blocTest(
-    'date changed, '
-    'new date is different than original, '
-    'measurement with given date already exist, '
-    'should emit info that measurement with given date already exist',
-    build: () => createBloc(),
-    setUp: () {
-      authService.mockGetLoggedUserId(userId: loggedUserId);
-      healthMeasurementRepository.mockDoesMeasurementFromDateExist(
-        expected: true,
-      );
-    },
-    act: (bloc) => bloc.add(
-      HealthMeasurementCreatorEventDateChanged(
-        date: DateTime(2023, 2, 10),
-      ),
-    ),
-    expect: () => [
-      createState(
-        status: const BlocStatusLoading(),
-      ),
-      createState(
-        status: const BlocStatusError<HealthMeasurementCreatorBlocError>(
-          error: HealthMeasurementCreatorBlocError
-              .measurementWithSelectedDateAlreadyExist,
-        ),
-      ),
-    ],
-  );
-
-  blocTest(
-    'date changed, '
-    'new date is different than original, '
-    'measurement with given date does not exist, '
     'should update date in state',
     build: () => createBloc(),
-    setUp: () {
-      authService.mockGetLoggedUserId(userId: loggedUserId);
-      healthMeasurementRepository.mockDoesMeasurementFromDateExist(
-        expected: false,
-      );
-    },
-    act: (bloc) => bloc.add(
-      HealthMeasurementCreatorEventDateChanged(
-        date: DateTime(2023, 2, 10),
-      ),
-    ),
-    expect: () => [
-      createState(
-        status: const BlocStatusLoading(),
-      ),
-      createState(
-        status: const BlocStatusComplete(),
-        date: DateTime(2023, 2, 10),
-      ),
-    ],
-  );
-
-  blocTest(
-    'date changed, '
-    'new date is the same as original, '
-    'should update date in state',
-    build: () => createBloc(
-      measurement: createHealthMeasurement(
-        date: DateTime(2023, 2, 10),
-      ),
-      date: DateTime(2023, 2, 5),
-    ),
     act: (bloc) => bloc.add(
       HealthMeasurementCreatorEventDateChanged(
         date: DateTime(2023, 2, 10),
@@ -216,11 +137,8 @@ void main() {
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
-        measurement: createHealthMeasurement(
-          date: DateTime(2023, 2, 10),
-        ),
         date: DateTime(2023, 2, 10),
-      ),
+      )
     ],
   );
 
@@ -300,6 +218,54 @@ void main() {
 
   blocTest(
     'submit, '
+    'measurement with selected date has already been added, '
+    'should emit info that measurement with selected date has already been added',
+    build: () => createBloc(
+      date: DateTime(2023, 5, 10),
+      restingHeartRate: 50,
+      fastingWeight: 65.2,
+    ),
+    setUp: () {
+      authService.mockGetLoggedUserId(userId: loggedUserId);
+      healthMeasurementRepository.mockDoesMeasurementFromDateExist(
+        expected: true,
+      );
+    },
+    act: (HealthMeasurementCreatorBloc bloc) => bloc.add(
+      const HealthMeasurementCreatorEventSubmit(),
+    ),
+    expect: () => [
+      createState(
+        status: const BlocStatusLoading(),
+        date: DateTime(2023, 5, 10),
+        restingHeartRate: 50,
+        fastingWeight: 65.2,
+      ),
+      createState(
+        status: const BlocStatusError<HealthMeasurementCreatorBlocError>(
+          error: HealthMeasurementCreatorBlocError
+              .measurementWithSelectedDateAlreadyExist,
+        ),
+        date: DateTime(2023, 5, 10),
+        restingHeartRate: 50,
+        fastingWeight: 65.2,
+      ),
+    ],
+    verify: (_) {
+      verify(
+        () => authService.loggedUserId$,
+      ).called(1);
+      verify(
+        () => healthMeasurementRepository.doesMeasurementFromDateExist(
+          userId: loggedUserId,
+          date: DateTime(2023, 5, 10),
+        ),
+      ).called(1);
+    },
+  );
+
+  blocTest(
+    'submit, '
     'measurement is null, '
     'should call repo method to add new measurement and should emit info about added measurement',
     build: () => createBloc(
@@ -309,6 +275,9 @@ void main() {
     ),
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
+      healthMeasurementRepository.mockDoesMeasurementFromDateExist(
+        expected: false,
+      );
       healthMeasurementRepository.mockAddMeasurement();
     },
     act: (HealthMeasurementCreatorBloc bloc) => bloc.add(
@@ -333,6 +302,12 @@ void main() {
     verify: (_) {
       verify(
         () => authService.loggedUserId$,
+      ).called(1);
+      verify(
+        () => healthMeasurementRepository.doesMeasurementFromDateExist(
+          userId: loggedUserId,
+          date: DateTime(2023, 5, 12),
+        ),
       ).called(1);
       verify(
         () => healthMeasurementRepository.addMeasurement(
@@ -364,6 +339,9 @@ void main() {
     ),
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
+      healthMeasurementRepository.mockDoesMeasurementFromDateExist(
+        expected: false,
+      );
       healthMeasurementRepository.mockUpdateMeasurement();
     },
     act: (HealthMeasurementCreatorBloc bloc) => bloc.add(
@@ -400,6 +378,12 @@ void main() {
         () => authService.loggedUserId$,
       ).called(1);
       verify(
+        () => healthMeasurementRepository.doesMeasurementFromDateExist(
+          userId: loggedUserId,
+          date: DateTime(2023, 5, 10),
+        ),
+      ).called(1);
+      verify(
         () => healthMeasurementRepository.updateMeasurement(
           userId: loggedUserId,
           date: DateTime(2023, 5, 10),
@@ -427,6 +411,9 @@ void main() {
     ),
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
+      healthMeasurementRepository.mockDoesMeasurementFromDateExist(
+        expected: false,
+      );
       healthMeasurementRepository.mockAddMeasurement();
       healthMeasurementRepository.mockDeleteMeasurement();
     },
@@ -462,6 +449,12 @@ void main() {
     verify: (_) {
       verify(
         () => authService.loggedUserId$,
+      ).called(1);
+      verify(
+        () => healthMeasurementRepository.doesMeasurementFromDateExist(
+          userId: loggedUserId,
+          date: DateTime(2023, 5, 8),
+        ),
       ).called(1);
       verify(
         () => healthMeasurementRepository.addMeasurement(

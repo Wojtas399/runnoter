@@ -79,29 +79,9 @@ class HealthMeasurementCreatorBloc extends BlocWithStatus<
     HealthMeasurementCreatorEventDateChanged event,
     Emitter<HealthMeasurementCreatorState> emit,
   ) async {
-    if (event.date == state.measurement?.date) {
-      emit(state.copyWith(
-        date: event.date,
-      ));
-      return;
-    }
-    final String? loggedUserId = await _authService.loggedUserId$.first;
-    if (loggedUserId == null) return;
-    emitLoadingStatus(emit);
-    if (await _healthMeasurementRepository.doesMeasurementFromDateExist(
-      userId: loggedUserId,
+    emit(state.copyWith(
       date: event.date,
-    )) {
-      emitErrorStatus(
-        emit,
-        HealthMeasurementCreatorBlocError
-            .measurementWithSelectedDateAlreadyExist,
-      );
-    } else {
-      emit(state.copyWith(
-        date: event.date,
-      ));
-    }
+    ));
   }
 
   void _restingHeartRateChanged(
@@ -126,41 +106,32 @@ class HealthMeasurementCreatorBloc extends BlocWithStatus<
     HealthMeasurementCreatorEventSubmit event,
     Emitter<HealthMeasurementCreatorState> emit,
   ) async {
-    if (!state.canSubmit) {
-      return;
-    }
+    if (!state.canSubmit) return;
     final String? loggedUserId = await _authService.loggedUserId$.first;
     if (loggedUserId == null) {
       emitNoLoggedUserStatus(emit);
       return;
     }
     emitLoadingStatus(emit);
-    if (state.date == state.measurement?.date) {
-      await _healthMeasurementRepository.updateMeasurement(
-        userId: loggedUserId,
-        date: state.measurement!.date,
-        restingHeartRate: state.restingHeartRate!,
-        fastingWeight: state.fastingWeight!,
+    if (await _healthMeasurementRepository.doesMeasurementFromDateExist(
+      userId: loggedUserId,
+      date: state.date!,
+    )) {
+      emitErrorStatus(
+        emit,
+        HealthMeasurementCreatorBlocError
+            .measurementWithSelectedDateAlreadyExist,
       );
+    } else if (state.date == state.measurement?.date) {
+      await _updateMeasurement(loggedUserId);
       emitCompleteStatus(
         emit,
         HealthMeasurementCreatorBlocInfo.measurementUpdated,
       );
     } else {
-      final HealthMeasurement measurement = HealthMeasurement(
-        userId: loggedUserId,
-        date: state.date!,
-        restingHeartRate: state.restingHeartRate!,
-        fastingWeight: state.fastingWeight!,
-      );
-      await _healthMeasurementRepository.addMeasurement(
-        measurement: measurement,
-      );
+      await _addMeasurement(loggedUserId);
       if (state.measurement != null) {
-        await _healthMeasurementRepository.deleteMeasurement(
-          userId: loggedUserId,
-          date: state.measurement!.date,
-        );
+        await _deleteOriginalMeasurement(loggedUserId);
         emitCompleteStatus(
           emit,
           HealthMeasurementCreatorBlocInfo.measurementUpdated,
@@ -186,6 +157,32 @@ class HealthMeasurementCreatorBloc extends BlocWithStatus<
             ),
           )
           .first;
+
+  Future<void> _updateMeasurement(String loggedUserId) async {
+    await _healthMeasurementRepository.updateMeasurement(
+      userId: loggedUserId,
+      date: state.measurement!.date,
+      restingHeartRate: state.restingHeartRate!,
+      fastingWeight: state.fastingWeight!,
+    );
+  }
+
+  Future<void> _addMeasurement(String loggedUserId) async {
+    final HealthMeasurement measurement = HealthMeasurement(
+      userId: loggedUserId,
+      date: state.date!,
+      restingHeartRate: state.restingHeartRate!,
+      fastingWeight: state.fastingWeight!,
+    );
+    await _healthMeasurementRepository.addMeasurement(measurement: measurement);
+  }
+
+  Future<void> _deleteOriginalMeasurement(String loggedUserId) async {
+    await _healthMeasurementRepository.deleteMeasurement(
+      userId: loggedUserId,
+      date: state.measurement!.date,
+    );
+  }
 }
 
 enum HealthMeasurementCreatorBlocInfo {

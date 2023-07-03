@@ -16,6 +16,7 @@ import '../../component/text/title_text_components.dart';
 import '../../component/text_field_component.dart';
 import '../../formatter/decimal_text_input_formatter.dart';
 import '../../service/dialog_service.dart';
+import '../../service/navigator_service.dart';
 import '../../service/utils.dart';
 
 part 'health_measurement_creator_content.dart';
@@ -78,9 +79,12 @@ class _BlocListener extends StatelessWidget {
         HealthMeasurementCreatorBloc,
         HealthMeasurementCreatorState,
         HealthMeasurementCreatorBlocInfo,
-        dynamic>(
+        HealthMeasurementCreatorBlocError>(
       onInfo: (HealthMeasurementCreatorBlocInfo info) {
         _manageInfo(context, info);
+      },
+      onError: (HealthMeasurementCreatorBlocError error) {
+        _manageError(context, error);
       },
       child: child,
     );
@@ -90,6 +94,39 @@ class _BlocListener extends StatelessWidget {
     BuildContext context,
     HealthMeasurementCreatorBlocInfo info,
   ) {
-    //TODO
+    final str = Str.of(context);
+    switch (info) {
+      case HealthMeasurementCreatorBlocInfo.measurementAdded:
+        navigateBack(context: context);
+        showSnackbarMessage(
+          context: context,
+          message: str.healthMeasurementCreatorSuccessfullyAddedMeasurement,
+        );
+        break;
+      case HealthMeasurementCreatorBlocInfo.measurementUpdated:
+        navigateBack(context: context);
+        showSnackbarMessage(
+          context: context,
+          message: str.healthMeasurementCreatorSuccessfullyUpdatedMeasurement,
+        );
+        break;
+    }
+  }
+
+  void _manageError(
+    BuildContext context,
+    HealthMeasurementCreatorBlocError error,
+  ) {
+    final str = Str.of(context);
+    switch (error) {
+      case HealthMeasurementCreatorBlocError
+            .measurementWithSelectedDateAlreadyExist:
+        showMessageDialog(
+          context: context,
+          title: str.healthMeasurementCreatorAlreadyAddedMeasurementTitle,
+          message: str.healthMeasurementCreatorAlreadyAddedMeasurementMessage,
+        );
+        break;
+    }
   }
 }

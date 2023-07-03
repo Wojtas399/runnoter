@@ -32,5 +32,6 @@ void navigateBack<T>({
   required material.BuildContext context,
   T? result,
 }) {
+  hideSnackbar(context: context);
   material.Navigator.of(context).pop(result);
 }

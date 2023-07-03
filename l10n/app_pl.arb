@@ -1,4 +1,5 @@
 {
+  "@__________SIGN_IN__________": {},
   "signInScreenTitle": "Logowanie",
   "@signInScreenTitle": {
     "description": "Title of sign in screen"
@@ -39,6 +40,7 @@
   "@signInWrongPasswordDialogMessage": {
     "description": "Message of the dialog to inform that password is wrong"
   },
+  "@__________SIGN_UP__________": {},
   "signUpScreenTitle": "Rejestracja",
   "@signUpScreenTitle": {
     "description": "Title of sign up screen"
@@ -59,6 +61,7 @@
   "@signUpAlreadyTakenEmailDialogMessage": {
     "description": "Message of the dialog to inform that email is already taken"
   },
+  "@__________FORGOT_PASSWORD__________": {},
   "forgotPasswordScreenTitle": "Zapomniałeś hasła?",
   "@forgotPasswordScreenTitle": {
     "description": "Title of the message displaying on forgot password screen"
@@ -95,6 +98,7 @@
   "@forgotPasswordUserNotFoundDialogMessage": {
     "description": "Message of the dialog to inform that user does not exist"
   },
+  "@__________HOME__________": {},
   "homeCurrentWeekPageTitle": "Obecny tydzień",
   "@homeCurrentWeekPageTitle": {
     "description": "Title of current week page"
@@ -139,10 +143,12 @@
   "@homeSignOutConfirmationDialogMessage": {
     "description": "Message of the dialog to confirm sign out"
   },
+  "@__________CURRENT_WEEK__________": {},
   "currentWeekActivityActionSheetTitle": "Wybierz rodzaj aktywności do dodania",
   "@currentWeekActivityActionSheetTitle": {
     "description": "Title of action sheet with type of activities to add"
   },
+  "@__________WORKOUT_PREVIEW__________": {},
   "workoutPreviewScreenTitle": "Trening",
   "@workoutPreviewScreenTitle": {
     "description": "Title of the workout preview screen"
@@ -163,6 +169,7 @@
   "@workoutPreviewDeletedWorkoutMessage": {
     "description": "Message to inform that workout has been deleted"
   },
+  "@__________WORKOUT_CREATOR__________": {},
   "workoutCreatorScreenNewWorkoutTitle": "Nowy trening",
   "@workoutCreatorScreenNewWorkoutTitle": {
     "description": "Title of the workout creator screen in add mode"
@@ -207,6 +214,7 @@
   "@workoutCreatorUpdatedWorkoutMessage": {
     "description": "Message to inform that workout has been updated"
   },
+  "@__________WORKOUT_STAGE_CREATOR__________": {},
   "workoutStageCreatorScreenTitleAddMode": "Nowy etap treningu",
   "@workoutStageCreatorScreenTitleAddMode": {
     "description": "Title of the workout stage creator screen in add mode"
@@ -243,6 +251,7 @@
   "@workoutStageCreatorJoggingDistance": {
     "description": "Jogging distance"
   },
+  "@__________RUN_STATUS_CREATOR__________": {},
   "runStatusCreatorScreenTitle": "Status",
   "@runStatusCreatorScreenTitle": {
     "description": "Title of status creator screen"
@@ -283,6 +292,7 @@
   "@runStatusCreatorSavedStatusMessage": {
     "description": "Info about successfully saved status"
   },
+  "@__________DAY_PREVIEW__________": {},
   "dayPreviewNoActivitiesTitle": "Brak aktywności",
   "@dayPreviewNoActivitiesTitle": {
     "description": "Title of the information about no activities"
@@ -295,6 +305,7 @@
   "@dayPreviewNoActivitiesMessageFutureDay": {
     "description": "Message of the information about no activities on a day from the future"
   },
+  "@__________HEALTH__________": {},
   "healthTodayMeasurement": "Dzisiejszy pomiar",
   "@healthTodayMeasurement": {
     "description": "Label of today measurement"
@@ -331,10 +342,28 @@
   "@healthShowAllMeasurementsButton": {
     "description": "Label of the button to show all measurements"
   },
+  "@__________HEALTH_MEASUREMENT_CREATOR__________": {},
   "healthMeasurementCreatorScreenTitle": "Pomiar zdrowia",
   "@healthMeasurementCreatorScreenTitle": {
     "description": "Title of the health measurement creator screen"
   },
+  "healthMeasurementCreatorSuccessfullyAddedMeasurement": "Pomyślnie dodano pomiar",
+  "@healthMeasurementCreatorSuccessfullyAddedMeasurement": {
+    "description": "Message of successfully added measurement"
+  },
+  "healthMeasurementCreatorSuccessfullyUpdatedMeasurement": "Pomyślnie zaktualizowano pomiar",
+  "@healthMeasurementCreatorSuccessfullyUpdatedMeasurement": {
+    "description": "Message of successfully updated measurement"
+  },
+  "healthMeasurementCreatorAlreadyAddedMeasurementTitle": "Błąd daty",
+  "@healthMeasurementCreatorAlreadyAddedMeasurementTitle": {
+    "description": "Title of dialog to inform that measurement with selected date is already added"
+  },
+  "healthMeasurementCreatorAlreadyAddedMeasurementMessage": "Pomiar z wybraną datą został już dodany",
+  "@healthMeasurementCreatorAlreadyAddedMeasurementMessage": {
+    "description": "Message of dialog to inform that measurement with selected date is already added"
+  },
+  "@__________HEALTH_MEASUREMENTS__________": {},
   "healthMeasurementsScreenTitle": "Wszystkie pomiary",
   "@healthMeasurementsScreenTitle": {
     "description": "Title of the screen displaying all health measurements"
@@ -361,6 +390,7 @@
   "@healthMeasurementsDeletedMeasurementMessage": {
     "description": "Message about deleted measurement"
   },
+  "@__________PROFILE__________": {},
   "profileUserData": "Dane użytkownika",
   "@profileUserData": {
     "description": "Title of the user data section"
@@ -437,6 +467,7 @@
   "@profileWrongCurrentPasswordDialogMessage": {
     "description": "Message of the dialog to inform that given current password is wrong"
   },
+  "@__________MILEAGE__________": {},
   "mileageChartMileage": "Kilometraż",
   "@mileageChartMileage": {
     "description": "Label of chart's mileage axis"
@@ -449,6 +480,7 @@
   "@mileageNoDataMessage": {
     "description": "Message of the information about no data to display mileage"
   },
+  "@__________BLOOD_TESTS__________": {},
   "bloodTestsAddNewBloodTest": "Dodaj nowe badanie",
   "@bloodTestAddNewBloodTest": {
     "description": "Label of the button to add new results"
@@ -461,6 +493,7 @@
   "@bloodTestsNoTestsMessage": {
     "description": "Message of the info about the lack of blood readings"
   },
+  "@__________BLOOD_TEST_CREATOR__________": {},
   "bloodTestCreatorScreenTitleAddMode": "Nowe badanie krwi",
   "@bloodTestCreatorScreenTitleAddMode": {
     "description": "Title of the blood test creator screen in add mode"
@@ -489,6 +522,7 @@
   "@bloodTestCreatorSuccessfullyEditedTest": {
     "description": "Message to inform that blood test has been edited"
   },
+  "@__________BLOOD_TEST_PREVIEW__________": {},
   "bloodTestPreviewScreenTitle": "Badanie krwi",
   "@bloodTestPreviewScreenTitle": {
     "description": "Title of the blood reading preview screen"
@@ -505,6 +539,7 @@
   "@bloodTestPreviewDeletedTestMessage": {
     "description": "Message to inform that blood test has been deleted"
   },
+  "@__________BLOOD_TEST_PARAMS__________": {},
   "bloodTestParameterName": "Nazwa",
   "@bloodTestParameterName": {
     "description": "Label of the parameter's name"
@@ -525,6 +560,7 @@
   "@bloodTestAdditionalParams": {
     "description": "Label of the additional blood params"
   },
+  "@__________RACE_CREATOR__________": {},
   "raceCreatorScreenTitle": "Nowe zawody",
   "@raceCreatorScreenTitle": {
     "description": "Title of the race creator screen"
@@ -537,6 +573,7 @@
   "@raceCreatorUpdatedRaceMessage": {
     "description": "Message to inform that race has been updated"
   },
+  "@__________RACES__________": {},
   "racesNoRacesTitle": "Brak zawodów",
   "@racesNoRacesTitle": {
     "description": "Title of the info about the lack of races"
@@ -545,6 +582,7 @@
   "@racesNoRacesMessage": {
     "description": "Message of the info about the lack of races"
   },
+  "@__________RACE_PREVIEW__________": {},
   "racePreviewScreenTitle": "Zawody",
   "@racePreviewScreenTitle": {
     "description": "Title of the race preview screen"
@@ -561,6 +599,7 @@
   "@racePreviewDeletedRaceMessage": {
     "description": "Message to inform that race has been deleted"
   },
+  "@__________RACE_PARAMS__________": {},
   "raceDate": "Data",
   "@raceDate": {
     "description": "Label of race date"
@@ -581,6 +620,7 @@
   "@raceExpectedDuration": {
     "description": "Label of race expected duration"
   },
+  "@__________RUN_STATUS_PARAMS__________": {},
   "runStatus": "Status",
   "@runStatus": {
     "description": "Label of run status"
@@ -633,6 +673,7 @@
   "@runStatusUndone": {
     "description": "Type of workout status called undone"
   },
+  "@__________MOOD_RATES__________": {},
   "moodRate1": "Maksymalne wyczerpanie",
   "@moodRate1": {
     "description": "Description of mood rate 1"
@@ -673,6 +714,7 @@
   "@moodRate10": {
     "description": "Description of mood rate 10"
   },
+  "@__________THEME_MODES__________": {},
   "themeMode": "Motyw",
   "@themeMode": {
     "description": "Label of theme mode"
@@ -697,6 +739,7 @@
   "@systemThemeModeDescription": {
     "description": "Description about system theme mode"
   },
+  "@__________LANGUAGES__________": {},
   "language": "Język",
   "@language": {
     "description": "Label of language"
@@ -721,6 +764,7 @@
   "@systemLanguageDescription": {
     "description": "Description about system language"
   },
+  "@__________DISTANCE_UNITS__________": {},
   "distanceUnit": "Jednostka dystansu",
   "@distanceUnit": {
     "description": "Label of distance unit"
@@ -737,6 +781,7 @@
   "@distanceUnitSelect": {
     "description": "Text about distance unit selection"
   },
+  "@__________PACE_UNITS__________": {},
   "paceUnit": "Jednostka tempa",
   "@paceUnit": {
     "description": "Label of pace unit"
@@ -745,10 +790,12 @@
   "@paceUnitSelect": {
     "description": "Text about pace unit selection"
   },
+  "@__________HEART_RATE_UNITS__________": {},
   "heartRateUnit": "ud/min",
   "@heartRateUnit": {
     "description": "Unit of heart rate"
   },
+  "@__________WORKOUT_STAGES__________": {},
   "workoutStageCardio": "OWB1",
   "@workoutStageCardio": {
     "description": "Type of workout stage called cardio"
@@ -793,6 +840,7 @@
       }
     }
   },
+  "@__________DURATION_PARAMS__________": {},
   "durationHoursShort": "godz.",
   "@durationHoursShort": {
     "description": "Short label of duration hours"
@@ -805,6 +853,7 @@
   "@durationSecondsShort": {
     "description": "Short label of duration seconds"
   },
+  "@__________EXCEPTION_MESSAGES__________": {},
   "noInternetConnectionDialogTitle": "Brak połączenia internetowego",
   "@noInternetConnectionDialogTitle": {
     "description": "Title of the dialog about no internet connection"
@@ -829,6 +878,7 @@
   "@unknownErrorDialogMessage": {
     "description": "Message of the dialog about unknown exception"
   },
+  "@__________CONFIRMATION_DIALOG_MESSAGES__________": {},
   "leavePageConfirmationDialogTitle": "Opuść stronę",
   "@leavePageConfirmationDialogTitle": {
     "description": "Title of the dialog to confirm leaving page"
@@ -841,26 +891,12 @@
   "@leavePageWithUnsavedChangesConfirmationDialogMessage": {
     "description": "Message of the dialog to confirm leaving page without saving changes"
   },
+  "@__________COMMON__________": {},
   "name": "Imię",
-  "@name": {
-    "description": "Name"
-  },
   "surname": "Nazwisko",
-  "@surname": {
-    "description": "Surname"
-  },
   "email": "Email",
-  "@email": {
-    "description": "Email"
-  },
   "password": "Hasło",
-  "@password": {
-    "description": "Password"
-  },
   "passwordConfirmation": "Potwierdź hasło",
-  "@passwordConfirmation": {
-    "description": "Password confirmation"
-  },
   "date": "Data",
   "workout": "Trening",
   "race": "Wyścig",
@@ -877,6 +913,7 @@
   "back": "Wróć",
   "add": "Dodaj",
   "leave": "Opuść",
+  "@__________VALIDATOR_MESSAGES__________": {},
   "requiredFieldMessage": "To pole jest wymagane",
   "@requiredFieldMessage": {
     "description": "Message to inform that field is required."
@@ -901,6 +938,7 @@
   "@invalidPasswordConfirmationMessage": {
     "description": "Message about invalid password confirmation"
   },
+  "@__________MONTHS__________": {},
   "january": "Styczeń",
   "@january": {
     "description": "January"
@@ -997,6 +1035,7 @@
   "@decemberShort": {
     "description": "Abbreviation of December"
   },
+  "@__________DAYS__________": {},
   "mondayShort": "Pon.",
   "@mondayShort": {
     "description": "Abbreviation of monday"
@@ -1025,6 +1064,7 @@
   "@sundayShort": {
     "description": "Abbreviation of sunday"
   },
+  "@__________BLOOD_PARAMS__________": {},
   "bloodParamWBC": "WBC",
   "@bloodParamWBC": {
     "description": "Blood test parameter called WBC"
