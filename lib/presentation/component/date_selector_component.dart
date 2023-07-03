@@ -8,11 +8,13 @@ import 'text/title_text_components.dart';
 class DateSelector extends StatelessWidget {
   final DateTime? date;
   final Function(DateTime date) onDateSelected;
+  final DateTime? lastDate;
 
   const DateSelector({
     super.key,
     required this.date,
     required this.onDateSelected,
+    this.lastDate,
   });
 
   @override
@@ -24,6 +26,7 @@ class DateSelector extends StatelessWidget {
         _Button(
           date: date,
           onDateSelected: onDateSelected,
+          lastDate: lastDate,
         ),
       ],
     );
@@ -53,10 +56,12 @@ class _Value extends StatelessWidget {
 class _Button extends StatelessWidget {
   final DateTime? date;
   final Function(DateTime date) onDateSelected;
+  final DateTime? lastDate;
 
   const _Button({
     required this.date,
     required this.onDateSelected,
+    this.lastDate,
   });
 
   @override
@@ -85,7 +90,7 @@ class _Button extends StatelessWidget {
     final DateTime? newDate = await askForDate(
       context: context,
       initialDate: date,
-      lastDate: DateTime.now(),
+      lastDate: lastDate,
     );
     if (newDate != null) {
       onDateSelected(newDate);

@@ -44,6 +44,7 @@ class _Date extends StatelessWidget {
         const SizedBox(height: 8),
         DateSelector(
           date: date,
+          lastDate: DateTime.now(),
           onDateSelected: (DateTime date) {
             _onDateSelected(context, date);
           },
