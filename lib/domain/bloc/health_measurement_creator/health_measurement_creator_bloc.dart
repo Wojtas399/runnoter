@@ -34,6 +34,7 @@ class HealthMeasurementCreatorBloc extends BlocWithStatus<
         _healthMeasurementRepository = healthMeasurementRepository,
         super(
           HealthMeasurementCreatorState(
+            dateService: dateService,
             status: status,
             measurement: measurement,
             restingHeartRate: restingHeartRate,
@@ -41,6 +42,7 @@ class HealthMeasurementCreatorBloc extends BlocWithStatus<
           ),
         ) {
     on<HealthMeasurementCreatorEventInitialize>(_initialize);
+    on<HealthMeasurementCreatorEventDateChanged>(_dateChanged);
     on<HealthMeasurementCreatorEventRestingHeartRateChanged>(
       _restingHeartRateChanged,
     );
@@ -60,6 +62,7 @@ class HealthMeasurementCreatorBloc extends BlocWithStatus<
       );
       emit(state.copyWith(
         measurement: measurement,
+        date: measurement?.date,
         restingHeartRate: measurement?.restingHeartRate,
         fastingWeight: measurement?.fastingWeight,
       ));
@@ -68,6 +71,15 @@ class HealthMeasurementCreatorBloc extends BlocWithStatus<
         status: const BlocStatusComplete(),
       ));
     }
+  }
+
+  void _dateChanged(
+    HealthMeasurementCreatorEventDateChanged event,
+    Emitter<HealthMeasurementCreatorState> emit,
+  ) {
+    emit(state.copyWith(
+      date: event.date,
+    ));
   }
 
   void _restingHeartRateChanged(

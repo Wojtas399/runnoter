@@ -13,6 +13,15 @@ class HealthMeasurementCreatorEventInitialize
   });
 }
 
+class HealthMeasurementCreatorEventDateChanged
+    extends HealthMeasurementCreatorEvent {
+  final DateTime? date;
+
+  const HealthMeasurementCreatorEventDateChanged({
+    required this.date,
+  });
+}
+
 class HealthMeasurementCreatorEventRestingHeartRateChanged
     extends HealthMeasurementCreatorEvent {
   final int? restingHeartRate;
