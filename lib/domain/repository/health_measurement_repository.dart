@@ -16,6 +16,11 @@ abstract class HealthMeasurementRepository {
     required String userId,
   });
 
+  Future<bool> doesMeasurementFromDateExist({
+    required String userId,
+    required DateTime date,
+  });
+
   Future<void> addMeasurement({
     required HealthMeasurement measurement,
   });

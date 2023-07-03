@@ -10,10 +10,10 @@ import '../../../domain/repository/health_measurement_repository.dart';
 import '../../../domain/service/auth_service.dart';
 import '../../component/big_button_component.dart';
 import '../../component/bloc_with_status_listener_component.dart';
+import '../../component/date_selector_component.dart';
 import '../../component/loading_info_component.dart';
 import '../../component/text/title_text_components.dart';
 import '../../component/text_field_component.dart';
-import '../../formatter/date_formatter.dart';
 import '../../formatter/decimal_text_input_formatter.dart';
 import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
@@ -79,9 +79,12 @@ class _BlocListener extends StatelessWidget {
         HealthMeasurementCreatorBloc,
         HealthMeasurementCreatorState,
         HealthMeasurementCreatorBlocInfo,
-        dynamic>(
+        HealthMeasurementCreatorBlocError>(
       onInfo: (HealthMeasurementCreatorBlocInfo info) {
         _manageInfo(context, info);
+      },
+      onError: (HealthMeasurementCreatorBlocError error) {
+        _manageError(context, error);
       },
       child: child,
     );
@@ -91,9 +94,38 @@ class _BlocListener extends StatelessWidget {
     BuildContext context,
     HealthMeasurementCreatorBlocInfo info,
   ) {
+    final str = Str.of(context);
     switch (info) {
-      case HealthMeasurementCreatorBlocInfo.measurementSaved:
+      case HealthMeasurementCreatorBlocInfo.measurementAdded:
         navigateBack(context: context);
+        showSnackbarMessage(
+          context: context,
+          message: str.healthMeasurementCreatorSuccessfullyAddedMeasurement,
+        );
+        break;
+      case HealthMeasurementCreatorBlocInfo.measurementUpdated:
+        navigateBack(context: context);
+        showSnackbarMessage(
+          context: context,
+          message: str.healthMeasurementCreatorSuccessfullyUpdatedMeasurement,
+        );
+        break;
+    }
+  }
+
+  void _manageError(
+    BuildContext context,
+    HealthMeasurementCreatorBlocError error,
+  ) {
+    final str = Str.of(context);
+    switch (error) {
+      case HealthMeasurementCreatorBlocError
+            .measurementWithSelectedDateAlreadyExist:
+        showMessageDialog(
+          context: context,
+          title: str.healthMeasurementCreatorAlreadyAddedMeasurementTitle,
+          message: str.healthMeasurementCreatorAlreadyAddedMeasurementMessage,
+        );
         break;
     }
   }

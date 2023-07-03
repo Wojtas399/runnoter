@@ -24,6 +24,8 @@ void main() {
         initialState: initialState,
       );
 
+  setUp(() => repository = createRepository());
+
   tearDown(() {
     reset(dateService);
     reset(firebaseHealthMeasurementService);
@@ -65,7 +67,6 @@ void main() {
         date: date,
         userId: userId,
       );
-      measurement$.listen((_) {});
 
       expect(
         measurement$,
@@ -121,15 +122,11 @@ void main() {
         date: date,
         userId: userId,
       );
-      measurement$.listen((_) {});
 
       expect(
         measurement$,
         emitsInOrder(
-          [
-            null,
-            expectedHealthMeasurement,
-          ],
+          [expectedHealthMeasurement],
         ),
       );
     },
@@ -216,7 +213,6 @@ void main() {
         endDate: endDate,
         userId: userId,
       );
-      measurements$.listen((_) {});
 
       expect(
         measurements$,
@@ -224,21 +220,11 @@ void main() {
           [
             [
               existingMeasurements[0],
-            ],
-            [
-              existingMeasurements[0],
               ...loadedMeasurements,
             ],
           ],
         ),
       );
-      verify(
-        () => firebaseHealthMeasurementService.loadMeasurementsByDateRange(
-          startDate: startDate,
-          endDate: endDate,
-          userId: userId,
-        ),
-      ).called(1);
     },
   );
 
@@ -313,6 +299,95 @@ void main() {
           ],
         ),
       );
+    },
+  );
+
+  test(
+    'does measurement from date exist, '
+    'measurement exist in repo, '
+    'should return true',
+    () async {
+      final DateTime date = DateTime(2023, 7, 2);
+      repository = createRepository(
+        initialState: [
+          createHealthMeasurement(userId: userId, date: date),
+        ],
+      );
+      dateService.mockAreDatesTheSame(expected: true);
+
+      final bool doesMeasurementExist = await repository
+          .doesMeasurementFromDateExist(userId: userId, date: date);
+
+      expect(doesMeasurementExist, true);
+    },
+  );
+
+  test(
+    'does measurement from date exist, '
+    'measurement does not exist in repo, '
+    'measurement loaded from remote db is not null, '
+    'should add measurement to repo and should return true',
+    () async {
+      final DateTime date = DateTime(2023, 7, 2);
+      final loadedMeasurementDto = HealthMeasurementDto(
+        userId: userId,
+        date: date,
+        restingHeartRate: 50,
+        fastingWeight: 60,
+      );
+      final loadedMeasurement = HealthMeasurement(
+        userId: userId,
+        date: date,
+        restingHeartRate: 50,
+        fastingWeight: 60,
+      );
+      repository = createRepository(
+        initialState: [
+          createHealthMeasurement(userId: 'u2', date: date),
+        ],
+      );
+      dateService.mockAreDatesTheSame(expected: false);
+      firebaseHealthMeasurementService.mockLoadMeasurementByDate(
+        healthMeasurementDto: loadedMeasurementDto,
+      );
+
+      final bool doesMeasurementExist = await repository
+          .doesMeasurementFromDateExist(userId: userId, date: date);
+
+      expect(doesMeasurementExist, true);
+      expect(
+        repository.dataStream$,
+        emitsInOrder(
+          [
+            [
+              createHealthMeasurement(userId: 'u2', date: date),
+              loadedMeasurement,
+            ],
+          ],
+        ),
+      );
+    },
+  );
+
+  test(
+    'does measurement from date exist, '
+    'measurement does not exist in repo, '
+    'measurement loaded from remote db is null, '
+    'should return false',
+    () async {
+      final DateTime date = DateTime(2023, 7, 2);
+      repository = createRepository(
+        initialState: [
+          createHealthMeasurement(userId: 'u2', date: date),
+        ],
+      );
+      dateService.mockAreDatesTheSame(expected: false);
+      firebaseHealthMeasurementService.mockLoadMeasurementByDate();
+
+      final bool doesMeasurementExist = await repository
+          .doesMeasurementFromDateExist(userId: userId, date: date);
+
+      expect(doesMeasurementExist, false);
     },
   );
 

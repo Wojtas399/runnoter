@@ -43,6 +43,17 @@ class MockHealthMeasurementRepository extends Mock
     ).thenAnswer((invocation) => Stream.value(measurements));
   }
 
+  void mockDoesMeasurementFromDateExist({
+    required bool expected,
+  }) {
+    when(
+      () => doesMeasurementFromDateExist(
+        userId: any(named: 'userId'),
+        date: any(named: 'date'),
+      ),
+    ).thenAnswer((invocation) => Future.value(expected));
+  }
+
   void mockAddMeasurement() {
     when(
       () => addMeasurement(

@@ -15,21 +15,15 @@ class _DateSection extends StatelessWidget {
             Str.of(context).bloodTestCreatorDate,
           ),
           const SizedBox(height: 8),
-          const Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              _Date(),
-              _DateButton(),
-            ],
-          ),
+          const _DateValue(),
         ],
       ),
     );
   }
 }
 
-class _Date extends StatelessWidget {
-  const _Date();
+class _DateValue extends StatelessWidget {
+  const _DateValue();
 
   @override
   Widget build(BuildContext context) {
@@ -37,54 +31,18 @@ class _Date extends StatelessWidget {
       (BloodTestCreatorBloc bloc) => bloc.state.date,
     );
 
-    if (date == null) {
-      return const SizedBox();
-    }
-    return Expanded(
-      child: TitleLarge(date.toDateWithDots()),
-    );
-  }
-}
-
-class _DateButton extends StatelessWidget {
-  const _DateButton();
-
-  @override
-  Widget build(BuildContext context) {
-    final DateTime? date = context.select(
-      (BloodTestCreatorBloc bloc) => bloc.state.date,
-    );
-
-    if (date == null) {
-      return FilledButton(
-        onPressed: () {
-          _onPressed(context);
-        },
-        child: Text(
-          Str.of(context).bloodTestCreatorSelectDate,
-        ),
-      );
-    }
-    return OutlinedButton(
-      onPressed: () {
-        _onPressed(context);
+    return DateSelector(
+      date: date,
+      lastDate: DateTime.now(),
+      onDateSelected: (DateTime date) {
+        _onDateSelected(context, date);
       },
-      child: Text(
-        Str.of(context).bloodTestCreatorChangeDate,
-      ),
     );
   }
 
-  Future<void> _onPressed(BuildContext context) async {
-    final bloc = context.read<BloodTestCreatorBloc>();
-    final DateTime? date = await askForDate(
-      context: context,
-      initialDate: bloc.state.date,
-    );
-    if (date != null) {
-      bloc.add(
-        BloodTestCreatorEventDateChanged(date: date),
-      );
-    }
+  void _onDateSelected(BuildContext context, DateTime date) {
+    context.read<BloodTestCreatorBloc>().add(
+          BloodTestCreatorEventDateChanged(date: date),
+        );
   }
 }

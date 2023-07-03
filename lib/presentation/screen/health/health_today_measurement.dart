@@ -88,7 +88,9 @@ class _TodayMeasurementButton extends StatelessWidget {
   void _onPressed(BuildContext context) {
     navigateTo(
       context: context,
-      route: const HealthMeasurementCreatorRoute(),
+      route: HealthMeasurementCreatorRoute(
+        date: DateTime.now(),
+      ),
     );
   }
 }

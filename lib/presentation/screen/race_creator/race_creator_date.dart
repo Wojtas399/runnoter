@@ -12,13 +12,7 @@ class _RaceDate extends StatelessWidget {
           Str.of(context).raceDate,
         ),
         const SizedBox(height: 8),
-        const Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _RaceDateValue(),
-            _RaceDateButton(),
-          ],
-        ),
+        const _RaceDateValue(),
       ],
     );
   }
@@ -33,54 +27,17 @@ class _RaceDateValue extends StatelessWidget {
       (RaceCreatorBloc bloc) => bloc.state.date,
     );
 
-    if (date == null) {
-      return const SizedBox();
-    }
-    return Expanded(
-      child: TitleLarge(date.toDateWithDots()),
-    );
-  }
-}
-
-class _RaceDateButton extends StatelessWidget {
-  const _RaceDateButton();
-
-  @override
-  Widget build(BuildContext context) {
-    final DateTime? date = context.select(
-      (RaceCreatorBloc bloc) => bloc.state.date,
-    );
-
-    if (date == null) {
-      return FilledButton(
-        onPressed: () {
-          _onPressed(context);
-        },
-        child: Text(
-          Str.of(context).select,
-        ),
-      );
-    }
-    return OutlinedButton(
-      onPressed: () {
-        _onPressed(context);
+    return DateSelector(
+      date: date,
+      onDateSelected: (DateTime date) {
+        _onDateSelected(context, date);
       },
-      child: Text(
-        Str.of(context).change,
-      ),
     );
   }
 
-  Future<void> _onPressed(BuildContext context) async {
-    final RaceCreatorBloc bloc = context.read<RaceCreatorBloc>();
-    final DateTime? date = await askForDate(
-      context: context,
-      initialDate: bloc.state.date,
-    );
-    if (date != null) {
-      bloc.add(
-        RaceCreatorEventDateChanged(date: date),
-      );
-    }
+  void _onDateSelected(BuildContext context, DateTime date) {
+    context.read<RaceCreatorBloc>().add(
+          RaceCreatorEventDateChanged(date: date),
+        );
   }
 }

@@ -1,12 +1,16 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/bloc/health_measurement_creator/health_measurement_creator_bloc.dart';
 import 'package:runnoter/domain/entity/health_measurement.dart';
 
 import '../../../creators/health_measurement_creator.dart';
+import '../../../mock/common/mock_date_service.dart';
 
 void main() {
+  final dateService = MockDateService();
   late HealthMeasurementCreatorState state;
+  final DateTime todayDate = DateTime(2023, 2, 10);
 
   HealthMeasurementCreatorState createState({
     BlocStatus status = const BlocStatusInitial(),
@@ -15,6 +19,7 @@ void main() {
     double? fastingWeight,
   }) =>
       HealthMeasurementCreatorState(
+        dateService: dateService,
         status: status,
         measurement: measurement,
         restingHeartRate: restingHeartRate,
@@ -23,14 +28,50 @@ void main() {
 
   setUp(() {
     state = createState();
+    dateService.mockGetToday(todayDate: todayDate);
+    dateService.mockAreDatesTheSame(expected: false);
   });
+
+  tearDown(() {
+    reset(dateService);
+  });
+
+  test(
+    'can submit, '
+    'date is null, '
+    'should be false',
+    () {
+      state = state.copyWith(
+        fastingWeight: 61.5,
+        restingHeartRate: 48,
+      );
+
+      expect(state.canSubmit, false);
+    },
+  );
+
+  test(
+    'can submit, '
+    'date is from the future, '
+    'should be false',
+    () {
+      state = state.copyWith(
+        date: DateTime(2023, 3, 1),
+        fastingWeight: 61.5,
+        restingHeartRate: 48,
+      );
+
+      expect(state.canSubmit, false);
+    },
+  );
 
   test(
     'can submit, '
     'resting heart rate is null, '
     'should be false',
     () {
-      state = createState(
+      state = state.copyWith(
+        date: DateTime(2023, 2, 8),
         fastingWeight: 61.5,
       );
 
@@ -43,7 +84,8 @@ void main() {
     'resting heart rate is 0, '
     'should be false',
     () {
-      state = createState(
+      state = state.copyWith(
+        date: DateTime(2023, 2, 8),
         restingHeartRate: 0,
         fastingWeight: 61.5,
       );
@@ -57,7 +99,8 @@ void main() {
     'fasting weight is null, '
     'should be false',
     () {
-      state = createState(
+      state = state.copyWith(
+        date: DateTime(2023, 2, 8),
         restingHeartRate: 50,
       );
 
@@ -70,7 +113,8 @@ void main() {
     'fasting weight is 0, '
     'should be false',
     () {
-      state = createState(
+      state = state.copyWith(
+        date: DateTime(2023, 2, 8),
         restingHeartRate: 50,
         fastingWeight: 0,
       );
@@ -81,14 +125,16 @@ void main() {
 
   test(
     'can submit, '
-    'resting heart rate and fasting weight are same as original, '
+    'date, resting heart rate and fasting weight are same as original, '
     'should be false',
     () {
-      state = createState(
+      state = state.copyWith(
         measurement: createHealthMeasurement(
+          date: DateTime(2023, 2, 8),
           restingHeartRate: 51,
           fastingWeight: 61.5,
         ),
+        date: DateTime(2023, 2, 8),
         restingHeartRate: 51,
         fastingWeight: 61.5,
       );
@@ -99,15 +145,89 @@ void main() {
 
   test(
     'can submit, '
-    'resting heart rate and fasting weight are not null and higher than 0, '
+    'date is different than original, '
     'should be true',
     () {
-      state = createState(
+      state = state.copyWith(
+        measurement: createHealthMeasurement(
+          date: DateTime(2023, 2, 8),
+          restingHeartRate: 51,
+          fastingWeight: 61.5,
+        ),
+        date: DateTime(2023, 2, 7),
         restingHeartRate: 51,
         fastingWeight: 61.5,
       );
 
       expect(state.canSubmit, true);
+    },
+  );
+
+  test(
+    'can submit, '
+    'resting heart rate is different than original, '
+    'should be true',
+    () {
+      state = state.copyWith(
+        measurement: createHealthMeasurement(
+          date: DateTime(2023, 2, 8),
+          restingHeartRate: 51,
+          fastingWeight: 61.5,
+        ),
+        date: DateTime(2023, 2, 8),
+        restingHeartRate: 49,
+        fastingWeight: 61.5,
+      );
+
+      expect(state.canSubmit, true);
+    },
+  );
+
+  test(
+    'can submit, '
+    'fasting weight is different than original, '
+    'should be true',
+    () {
+      state = state.copyWith(
+        measurement: createHealthMeasurement(
+          date: DateTime(2023, 2, 8),
+          restingHeartRate: 51,
+          fastingWeight: 61.5,
+        ),
+        date: DateTime(2023, 2, 8),
+        restingHeartRate: 51,
+        fastingWeight: 60.5,
+      );
+
+      expect(state.canSubmit, true);
+    },
+  );
+
+  test(
+    'can submit, '
+    'measurement is null and all data are valid, '
+    'should be true',
+    () {
+      state = state.copyWith(
+        date: DateTime(2023, 2, 8),
+        restingHeartRate: 51,
+        fastingWeight: 61.5,
+      );
+
+      expect(state.canSubmit, true);
+    },
+  );
+
+  test(
+    'copy with date',
+    () {
+      final DateTime expectedDate = DateTime(2023, 2, 20);
+
+      state = state.copyWith(date: expectedDate);
+      final state2 = state.copyWith();
+
+      expect(state.date, expectedDate);
+      expect(state2.date, expectedDate);
     },
   );
 

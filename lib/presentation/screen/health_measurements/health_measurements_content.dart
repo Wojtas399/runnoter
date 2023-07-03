@@ -13,6 +13,19 @@ class _Content extends StatelessWidget {
       body: const SafeArea(
         child: _Body(),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          _onAddButtonPressed(context);
+        },
+        child: const Icon(Icons.add),
+      ),
+    );
+  }
+
+  void _onAddButtonPressed(BuildContext context) {
+    navigateTo(
+      context: context,
+      route: const HealthMeasurementCreatorRoute(),
     );
   }
 }

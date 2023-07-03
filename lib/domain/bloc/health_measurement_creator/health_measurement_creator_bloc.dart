@@ -16,8 +16,7 @@ class HealthMeasurementCreatorBloc extends BlocWithStatus<
     HealthMeasurementCreatorEvent,
     HealthMeasurementCreatorState,
     HealthMeasurementCreatorBlocInfo,
-    dynamic> {
-  final DateService _dateService;
+    HealthMeasurementCreatorBlocError> {
   final AuthService _authService;
   final HealthMeasurementRepository _healthMeasurementRepository;
 
@@ -27,20 +26,23 @@ class HealthMeasurementCreatorBloc extends BlocWithStatus<
     required HealthMeasurementRepository healthMeasurementRepository,
     BlocStatus status = const BlocStatusInitial(),
     HealthMeasurement? measurement,
+    DateTime? date,
     int? restingHeartRate,
     double? fastingWeight,
-  })  : _dateService = dateService,
-        _authService = authService,
+  })  : _authService = authService,
         _healthMeasurementRepository = healthMeasurementRepository,
         super(
           HealthMeasurementCreatorState(
+            dateService: dateService,
             status: status,
             measurement: measurement,
+            date: date,
             restingHeartRate: restingHeartRate,
             fastingWeight: fastingWeight,
           ),
         ) {
     on<HealthMeasurementCreatorEventInitialize>(_initialize);
+    on<HealthMeasurementCreatorEventDateChanged>(_dateChanged);
     on<HealthMeasurementCreatorEventRestingHeartRateChanged>(
       _restingHeartRateChanged,
     );
@@ -60,6 +62,7 @@ class HealthMeasurementCreatorBloc extends BlocWithStatus<
       );
       emit(state.copyWith(
         measurement: measurement,
+        date: event.date,
         restingHeartRate: measurement?.restingHeartRate,
         fastingWeight: measurement?.fastingWeight,
       ));
@@ -68,6 +71,15 @@ class HealthMeasurementCreatorBloc extends BlocWithStatus<
         status: const BlocStatusComplete(),
       ));
     }
+  }
+
+  Future<void> _dateChanged(
+    HealthMeasurementCreatorEventDateChanged event,
+    Emitter<HealthMeasurementCreatorState> emit,
+  ) async {
+    emit(state.copyWith(
+      date: event.date,
+    ));
   }
 
   void _restingHeartRateChanged(
@@ -92,34 +104,43 @@ class HealthMeasurementCreatorBloc extends BlocWithStatus<
     HealthMeasurementCreatorEventSubmit event,
     Emitter<HealthMeasurementCreatorState> emit,
   ) async {
-    if (state.restingHeartRate == null || state.fastingWeight == null) {
-      return;
-    }
+    if (!state.canSubmit) return;
     final String? loggedUserId = await _authService.loggedUserId$.first;
     if (loggedUserId == null) {
       emitNoLoggedUserStatus(emit);
       return;
     }
     emitLoadingStatus(emit);
-    if (state.measurement == null) {
-      final HealthMeasurement measurement = HealthMeasurement(
-        userId: loggedUserId,
-        date: _dateService.getToday(),
-        restingHeartRate: state.restingHeartRate!,
-        fastingWeight: state.fastingWeight!,
+    if (await _healthMeasurementRepository.doesMeasurementFromDateExist(
+      userId: loggedUserId,
+      date: state.date!,
+    )) {
+      emitErrorStatus(
+        emit,
+        HealthMeasurementCreatorBlocError
+            .measurementWithSelectedDateAlreadyExist,
       );
-      await _healthMeasurementRepository.addMeasurement(
-        measurement: measurement,
+    } else if (state.date == state.measurement?.date) {
+      await _updateMeasurement(loggedUserId);
+      emitCompleteStatus(
+        emit,
+        HealthMeasurementCreatorBlocInfo.measurementUpdated,
       );
     } else {
-      await _healthMeasurementRepository.updateMeasurement(
-        userId: loggedUserId,
-        date: state.measurement!.date,
-        restingHeartRate: state.restingHeartRate!,
-        fastingWeight: state.fastingWeight!,
+      await _addMeasurement(loggedUserId);
+      if (state.measurement != null) {
+        await _deleteOriginalMeasurement(loggedUserId);
+        emitCompleteStatus(
+          emit,
+          HealthMeasurementCreatorBlocInfo.measurementUpdated,
+        );
+        return;
+      }
+      emitCompleteStatus(
+        emit,
+        HealthMeasurementCreatorBlocInfo.measurementAdded,
       );
     }
-    emitCompleteStatus(emit, HealthMeasurementCreatorBlocInfo.measurementSaved);
   }
 
   Future<HealthMeasurement?> _loadMeasurementFromRemoteDb(
@@ -134,8 +155,39 @@ class HealthMeasurementCreatorBloc extends BlocWithStatus<
             ),
           )
           .first;
+
+  Future<void> _updateMeasurement(String loggedUserId) async {
+    await _healthMeasurementRepository.updateMeasurement(
+      userId: loggedUserId,
+      date: state.measurement!.date,
+      restingHeartRate: state.restingHeartRate!,
+      fastingWeight: state.fastingWeight!,
+    );
+  }
+
+  Future<void> _addMeasurement(String loggedUserId) async {
+    final HealthMeasurement measurement = HealthMeasurement(
+      userId: loggedUserId,
+      date: state.date!,
+      restingHeartRate: state.restingHeartRate!,
+      fastingWeight: state.fastingWeight!,
+    );
+    await _healthMeasurementRepository.addMeasurement(measurement: measurement);
+  }
+
+  Future<void> _deleteOriginalMeasurement(String loggedUserId) async {
+    await _healthMeasurementRepository.deleteMeasurement(
+      userId: loggedUserId,
+      date: state.measurement!.date,
+    );
+  }
 }
 
 enum HealthMeasurementCreatorBlocInfo {
-  measurementSaved,
+  measurementAdded,
+  measurementUpdated,
+}
+
+enum HealthMeasurementCreatorBlocError {
+  measurementWithSelectedDateAlreadyExist,
 }
