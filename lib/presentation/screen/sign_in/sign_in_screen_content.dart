@@ -6,7 +6,7 @@ class _Content extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const _AppBar(),
+      appBar: AppBar(),
       body: SafeArea(
         child: SingleChildScrollView(
           child: GestureDetector(

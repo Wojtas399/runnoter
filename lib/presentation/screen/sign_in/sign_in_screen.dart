@@ -12,11 +12,9 @@ import '../../component/text_field_component.dart';
 import '../../config/navigation/routes.dart';
 import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
-import '../../service/theme_service.dart';
 import '../../service/utils.dart';
 
 part 'sign_in_alternative_options.dart';
-part 'sign_in_app_bar.dart';
 part 'sign_in_form.dart';
 part 'sign_in_screen_content.dart';
 part 'sign_in_submit_button.dart';
