@@ -193,7 +193,7 @@ void main() {
             name: name,
             surname: surname,
             settings: createSettings(
-              themeMode: ThemeMode.light,
+              themeMode: ThemeMode.system,
               language: Language.polish,
               distanceUnit: DistanceUnit.kilometers,
               paceUnit: PaceUnit.minutesPerKilometer,
