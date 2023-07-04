@@ -80,6 +80,7 @@ class _BlocListener extends StatelessWidget {
   void _manageInfo(BuildContext context, HomeInfo info) {
     switch (info) {
       case HomeInfo.userSignedOut:
+        context.read<ThemeService>().changeTheme(ThemeMode.system);
         navigateAndRemoveUntil(
           context: context,
           route: const SignInRoute(),

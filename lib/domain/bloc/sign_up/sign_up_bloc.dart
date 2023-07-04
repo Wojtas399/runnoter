@@ -135,7 +135,7 @@ class SignUpBloc extends BlocWithStatus<SignUpEvent, SignUpState,
         name: state.name,
         surname: state.surname,
         settings: const Settings(
-          themeMode: ThemeMode.light,
+          themeMode: ThemeMode.system,
           language: Language.polish,
           distanceUnit: DistanceUnit.kilometers,
           paceUnit: PaceUnit.minutesPerKilometer,
