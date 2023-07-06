@@ -1,10 +1,14 @@
 part of 'home_screen.dart';
 
-class _Drawer extends StatelessWidget {
-  final DrawerPage drawerPage;
+class _NavigationDrawer extends StatelessWidget {
+  final int selectedIndex;
+  final List<_Destination> destinations;
+  final Function(int index) onDestinationSelected;
 
-  const _Drawer({
-    required this.drawerPage,
+  const _NavigationDrawer({
+    required this.selectedIndex,
+    required this.destinations,
+    required this.onDestinationSelected,
   });
 
   @override
@@ -18,44 +22,29 @@ class _Drawer extends StatelessWidget {
     );
 
     return NavigationDrawer(
-      selectedIndex: drawerPage.index,
-      onDestinationSelected: (int destinationIndex) {
-        _onDestinationSelected(context, destinationIndex);
+      selectedIndex: selectedIndex,
+      surfaceTintColor: MediaQuery.of(context).size.width > maxTabletWidth
+          ? Theme.of(context).colorScheme.background
+          : null,
+      onDestinationSelected: (int index) {
+        _onDestinationSelected(context, index);
       },
       children: [
         const SizedBox(height: 16),
         const _AppLogo(),
         divider,
         const _UserInfo(),
-        NavigationDrawerDestination(
-          icon: const Icon(Icons.home_outlined),
-          selectedIcon: const Icon(Icons.home),
-          label: Text(Str.of(context).homeDrawerHome),
-        ),
-        NavigationDrawerDestination(
-          icon: const Icon(Icons.account_circle_outlined),
-          selectedIcon: const Icon(Icons.account_circle),
-          label: Text(Str.of(context).homeDrawerProfile),
-        ),
-        NavigationDrawerDestination(
-          icon: const Icon(Icons.insert_chart_outlined),
-          selectedIcon: const Icon(Icons.insert_chart),
-          label: Text(Str.of(context).homeDrawerMileage),
-        ),
-        NavigationDrawerDestination(
-          icon: const Icon(Icons.water_drop_outlined),
-          selectedIcon: const Icon(Icons.water_drop),
-          label: Text(Str.of(context).homeDrawerBloodTests),
-        ),
-        NavigationDrawerDestination(
-          icon: const Icon(Icons.emoji_events_outlined),
-          selectedIcon: const Icon(Icons.emoji_events),
-          label: Text(Str.of(context).homeDrawerRaces),
+        ...destinations.map(
+          (destination) => NavigationDrawerDestination(
+            icon: Icon(destination.iconData),
+            selectedIcon: Icon(destination.selectedIconData),
+            label: Text(destination.label),
+          ),
         ),
         divider,
         NavigationDrawerDestination(
           icon: const Icon(Icons.logout_outlined),
-          label: Text(Str.of(context).homeDrawerSignOut),
+          label: Text(Str.of(context).homeSignOut),
         ),
       ],
     );
@@ -65,13 +54,10 @@ class _Drawer extends StatelessWidget {
     BuildContext context,
     int destinationIndex,
   ) async {
-    final DrawerPage page = DrawerPage.values[destinationIndex];
-    if (page == DrawerPage.signOut) {
+    if (destinationIndex == destinations.length) {
       await _signOut(context);
     } else {
-      context.read<HomeBloc>().add(
-            HomeEventDrawerPageChanged(drawerPage: page),
-          );
+      onDestinationSelected(destinationIndex);
     }
   }
 
@@ -81,7 +67,7 @@ class _Drawer extends StatelessWidget {
       context: context,
       title: Str.of(context).homeSignOutConfirmationDialogTitle,
       message: Str.of(context).homeSignOutConfirmationDialogMessage,
-      confirmButtonLabel: Str.of(context).homeDrawerSignOut,
+      confirmButtonLabel: Str.of(context).homeSignOut,
     );
     if (confirmed == true) {
       bloc.add(

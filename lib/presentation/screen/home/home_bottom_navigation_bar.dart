@@ -1,45 +1,40 @@
 part of 'home_screen.dart';
 
 class _BottomNavigationBar extends StatelessWidget {
-  const _BottomNavigationBar();
+  final _MobileBottomNavPage page;
+  final Function(_MobileBottomNavPage page) onPageChanged;
+
+  const _BottomNavigationBar({
+    required this.page,
+    required this.onPageChanged,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final BottomNavPage page = context.select(
-      (HomeBloc bloc) => bloc.state.bottomNavPage,
-    );
-    final str = Str.of(context);
+    final List<_Destination> destinations = [
+      _DestinationCurrentWeek(context: context),
+      _DestinationCalendar(context: context),
+      _DestinationHealth(context: context),
+    ];
 
     return NavigationBar(
-      onDestinationSelected: (int pageIndex) {
-        _onCurrentPageChanged(context, pageIndex);
-      },
-      selectedIndex: page.pageIndex,
+      onDestinationSelected: _onCurrentPageChanged,
+      selectedIndex: page.index,
       destinations: <NavigationDestination>[
-        NavigationDestination(
-          selectedIcon: const Icon(Icons.date_range),
-          icon: const Icon(Icons.date_range_outlined),
-          label: str.homeCurrentWeekPageTitle,
-        ),
-        NavigationDestination(
-          selectedIcon: const Icon(Icons.calendar_month),
-          icon: const Icon(Icons.calendar_month_outlined),
-          label: str.homeCalendarPageTitle,
-        ),
-        NavigationDestination(
-          selectedIcon: const Icon(Icons.health_and_safety),
-          icon: const Icon(Icons.health_and_safety_outlined),
-          label: str.homeHealthPageTitle,
+        ...destinations.map(
+          (destination) => NavigationDestination(
+            selectedIcon: Icon(destination.selectedIconData),
+            icon: Icon(destination.iconData),
+            label: destination.label,
+          ),
         ),
       ],
     );
   }
 
-  void _onCurrentPageChanged(BuildContext context, int homePageIndex) {
-    context.read<HomeBloc>().add(
-          HomeEventBottomNavPageChanged(
-            bottomNavPage: BottomNavPage.values[homePageIndex],
-          ),
-        );
+  void _onCurrentPageChanged(int homePageIndex) {
+    onPageChanged(
+      _MobileBottomNavPage.values[homePageIndex],
+    );
   }
 }

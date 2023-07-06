@@ -24,21 +24,15 @@ class HomeBloc extends BlocWithStatus<HomeEvent, HomeState, HomeInfo, dynamic> {
     required AuthService authService,
     required UserRepository userRepository,
     BlocStatus status = const BlocStatusInitial(),
-    DrawerPage drawerPage = DrawerPage.home,
-    BottomNavPage bottomNavPage = BottomNavPage.currentWeek,
   })  : _authService = authService,
         _userRepository = userRepository,
         super(
           HomeState(
             status: status,
-            drawerPage: drawerPage,
-            bottomNavPage: bottomNavPage,
           ),
         ) {
     on<HomeEventInitialize>(_initialize);
     on<HomeEventListenedParamsChanged>(_listenedParamsChanged);
-    on<HomeEventDrawerPageChanged>(_drawerPageChanged);
-    on<HomeEventBottomNavPageChanged>(_bottomNavPageChanged);
     on<HomeEventSignOut>(_signOut);
   }
 
@@ -69,24 +63,6 @@ class HomeBloc extends BlocWithStatus<HomeEvent, HomeState, HomeInfo, dynamic> {
       language: event.listenedParams?.language,
       distanceUnit: event.listenedParams?.distanceUnit,
       paceUnit: event.listenedParams?.paceUnit,
-    ));
-  }
-
-  void _drawerPageChanged(
-    HomeEventDrawerPageChanged event,
-    Emitter<HomeState> emit,
-  ) {
-    emit(state.copyWith(
-      drawerPage: event.drawerPage,
-    ));
-  }
-
-  void _bottomNavPageChanged(
-    HomeEventBottomNavPageChanged event,
-    Emitter<HomeState> emit,
-  ) {
-    emit(state.copyWith(
-      bottomNavPage: event.bottomNavPage,
     ));
   }
 

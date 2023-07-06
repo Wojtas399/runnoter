@@ -99,40 +99,40 @@
     "description": "Message of the dialog to inform that user does not exist"
   },
   "@__________HOME__________": {},
-  "homeCurrentWeekPageTitle": "Obecny tydzień",
-  "@homeCurrentWeekPageTitle": {
+  "homeTitle": "Strona główna",
+  "@homeTitle": {
+    "description": "Label of home page"
+  },
+  "homeCurrentWeekTitle": "Obecny tydzień",
+  "@homeCurrentWeekTitle": {
     "description": "Title of current week page"
   },
-  "homeCalendarPageTitle": "Kalendarz",
-  "@homeCalendarPageTitle": {
+  "homeCalendarTitle": "Kalendarz",
+  "@homeCalendarTitle": {
     "description": "Title of calendar page"
   },
-  "homeHealthPageTitle": "Zdrowie",
-  "@homeHealthPageTitle": {
+  "homeHealthTitle": "Zdrowie",
+  "@homeHealthTitle": {
     "description": "Title of morning measurement page"
   },
-  "homeDrawerHome": "Strona główna",
-  "@homeDrawerHome": {
-    "description": "Label of drawer's home option"
+  "homeProfileTitle": "Profil",
+  "@homeProfileTitle": {
+    "description": "Label of profile page"
   },
-  "homeDrawerProfile": "Profil",
-  "@homeDrawerProfile": {
-    "description": "Label of drawer's profile option"
+  "homeMileageTitle": "Kilometraż",
+  "@homeMileageTitle": {
+    "description": "Label of mileage page"
   },
-  "homeDrawerMileage": "Kilometraż",
-  "@homeDrawerMileage": {
-    "description": "Label of drawer's mileage option"
+  "homeBloodTestsTitle": "Badania krwi",
+  "@homeBloodTestsTitle": {
+    "description": "Label of blood tests page"
   },
-  "homeDrawerBloodTests": "Badania krwi",
-  "@homeDrawerBloodTests": {
-    "description": "Label of drawer's blood readings option"
+  "homeRacesTitle": "Starty w zawodach",
+  "@homeRacesTitle": {
+    "description": "Label of races page"
   },
-  "homeDrawerRaces": "Starty w zawodach",
-  "@homeDrawerRaces": {
-    "description": "Label of drawer's races option"
-  },
-  "homeDrawerSignOut": "Wyloguj",
-  "@homeDrawerSignOut": {
+  "homeSignOut": "Wyloguj",
+  "@homeSignOut": {
     "description": "Label of drawer's sign out option"
   },
   "homeSignOutConfirmationDialogTitle": "Wylogowanie",

@@ -7,7 +7,9 @@ import '../../../domain/entity/settings.dart' as settings;
 import '../../../domain/repository/user_repository.dart';
 import '../../../domain/service/auth_service.dart';
 import '../../component/bloc_with_status_listener_component.dart';
+import '../../component/text/label_text_components.dart';
 import '../../config/navigation/routes.dart';
+import '../../config/screen_sizes.dart';
 import '../../service/dialog_service.dart';
 import '../../service/distance_unit_service.dart';
 import '../../service/language_service.dart';
@@ -16,10 +18,12 @@ import '../../service/pace_unit_service.dart';
 import '../../service/theme_service.dart';
 import '../screens.dart';
 
-part 'home_app_bar.dart';
 part 'home_bottom_navigation_bar.dart';
 part 'home_content.dart';
-part 'home_drawer.dart';
+part 'home_desktop_content.dart';
+part 'home_mobile_content.dart';
+part 'home_navigation_drawer.dart';
+part 'home_navigation_rail.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({
