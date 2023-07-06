@@ -16,9 +16,6 @@ class _AlternativeOptions extends StatelessWidget {
   }
 
   void _onPressed(BuildContext context) {
-    navigateTo(
-      context: context,
-      route: const SignInRoute(),
-    );
+    navigateBack(context: context);
   }
 }
