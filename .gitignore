@@ -46,7 +46,6 @@ app.*.map.json
 # Firebase related
 google-services.json
 GoogleService-Info.plist
-Info.plist
 firebase_options.dart
 firebase_app_id_file.json
 Podfile
