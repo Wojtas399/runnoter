@@ -185,13 +185,23 @@ class _ChangePassword extends StatelessWidget {
   }
 
   Future<void> _onPressed(BuildContext context) async {
-    await showFullScreenDialog(
-      context: context,
-      dialog: BlocProvider.value(
-        value: context.read<ProfileIdentitiesBloc>(),
-        child: const _UpdatePasswordDialog(),
-      ),
+    final DialogMode dialogMode = context.screenWidth > maxMobileWidth
+        ? DialogMode.normal
+        : DialogMode.fullScreen;
+    final Widget dialog = BlocProvider.value(
+      value: context.read<ProfileIdentitiesBloc>(),
+      child: _UpdatePasswordDialog(dialogMode: dialogMode),
     );
+    await switch (dialogMode) {
+      DialogMode.normal => showAlertDialog(
+          context: context,
+          dialog: dialog,
+        ),
+      DialogMode.fullScreen => showFullScreenDialog(
+          context: context,
+          dialog: dialog,
+        ),
+    };
   }
 }
 
