@@ -26,6 +26,7 @@ class DayItem extends StatelessWidget {
               _AddActivityButton(date: day.date),
             ],
           ),
+          const SizedBox(height: 8),
           Column(
             children: [
               ...day.workouts.map(
