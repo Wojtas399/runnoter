@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../screen/screens.dart';
-import '../animation/slide_to_top_anim.dart';
 import 'routes.dart';
 
 class AppNavigator extends StatelessWidget {
@@ -19,7 +18,6 @@ class AppNavigator extends StatelessWidget {
 
   Route<dynamic> _onGenerateRoute(RouteSettings settings) {
     final String? routePath = settings.name;
-    bool isSlideToTopAnim = false;
     Widget screen = const SignInScreen();
     if (routePath == RoutePath.signIn.path) {
       screen = const SignInScreen();
@@ -67,24 +65,10 @@ class AppNavigator extends StatelessWidget {
       screen = RacePreviewScreen(
         raceId: settings.arguments as String,
       );
-    } else if (routePath == RoutePath.paceUnit.path) {
-      screen = const PaceUnitScreen();
-      isSlideToTopAnim = true;
     }
-    if (isSlideToTopAnim) {
-      return PageRouteBuilder(
-        pageBuilder: (_, anim1, anim2) => screen,
-        transitionsBuilder: (context, anim1, anim2, child) => SlideToTopAnim(
-          animation: anim1,
-          child: child,
-        ),
-        transitionDuration: const Duration(milliseconds: 500),
-      );
-    } else {
-      return MaterialPageRoute(
-        builder: (_) => screen,
-        settings: settings,
-      );
-    }
+    return MaterialPageRoute(
+      builder: (_) => screen,
+      settings: settings,
+    );
   }
 }

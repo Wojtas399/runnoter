@@ -24,6 +24,7 @@ import '../../service/validation_service.dart';
 import 'profile_delete_account_dialog.dart';
 import 'profile_distance_unit_screen.dart';
 import 'profile_language_dialog.dart';
+import 'profile_pace_unit_dialog.dart';
 import 'profile_theme_mode_dialog.dart';
 import 'profile_update_email_dialog.dart';
 import 'profile_update_password_dialog.dart';

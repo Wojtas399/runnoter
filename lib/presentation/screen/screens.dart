@@ -10,7 +10,6 @@ export 'health_measurement_creator/health_measurement_creator_screen.dart';
 export 'health_measurements/health_measurements_screen.dart';
 export 'home/home_screen.dart';
 export 'mileage/mileage_screen.dart';
-export 'pace_unit/pace_unit_screen.dart';
 export 'profile/profile_screen.dart';
 export 'race_creator/race_creator_screen.dart';
 export 'race_preview/race_preview_screen.dart';
