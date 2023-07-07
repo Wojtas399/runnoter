@@ -121,10 +121,6 @@ class RacePreviewRoute extends CustomRouteWithArguments<String> {
         );
 }
 
-class DistanceUnitRoute extends CustomRoute {
-  const DistanceUnitRoute() : super(path: RoutePath.distanceUnit);
-}
-
 class PaceUnitRoute extends CustomRoute {
   const PaceUnitRoute() : super(path: RoutePath.paceUnit);
 }
@@ -144,7 +140,6 @@ enum RoutePath {
   bloodTestPreview('/home/blood-test-preview'),
   raceCreator('/home/race-creator'),
   racePreview('/home/race-preview'),
-  distanceUnit('/home/profile/distance-unit'),
   paceUnit('/home/profile/pace-unit');
 
   final String path;

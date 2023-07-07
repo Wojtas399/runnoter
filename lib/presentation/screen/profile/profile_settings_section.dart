@@ -107,12 +107,17 @@ class _DistanceUnit extends StatelessWidget {
     );
   }
 
-  void _onPressed(BuildContext context) {
-    navigateTo(
-      context: context,
-      route: const DistanceUnitRoute(),
-    );
-  }
+  Future<void> _onPressed(BuildContext context) async =>
+      showDialogDependingOnScreenSize(
+        context: context,
+        dialog: RepositoryProvider.value(
+          value: context.read<AuthService>(),
+          child: RepositoryProvider.value(
+            value: context.read<UserRepository>(),
+            child: const ProfileDistanceUnitDialog(),
+          ),
+        ),
+      );
 }
 
 class _PaceUnit extends StatelessWidget {

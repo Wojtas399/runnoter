@@ -90,7 +90,7 @@ class _NormalDialog extends StatelessWidget {
     final str = Str.of(context);
 
     return AlertDialog(
-      title: Text(str.themeMode),
+      title: Text(str.language),
       contentPadding: const EdgeInsets.symmetric(vertical: 24),
       content: const SizedBox(
         width: 500,
@@ -123,13 +123,9 @@ class _FullScreenDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          Str.of(context).language,
-        ),
+        title: Text(Str.of(context).language),
         leading: IconButton(
-          onPressed: () {
-            navigateBack(context: context);
-          },
+          onPressed: () => navigateBack(context: context),
           icon: const Icon(Icons.close),
         ),
       ),
@@ -212,11 +208,9 @@ class _SystemLanguageDescription extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: Text(
+      child: BodyMedium(
         Str.of(context).systemLanguageDescription,
-        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Theme.of(context).colorScheme.outline,
-            ),
+        color: Theme.of(context).colorScheme.outline,
       ),
     );
   }

@@ -178,9 +178,7 @@ class _OptionsToSelect extends StatelessWidget {
     return Column(
       children: [
         RadioListTile<settings.ThemeMode>(
-          title: Text(
-            str.themeModeLight,
-          ),
+          title: Text(str.themeModeLight),
           value: settings.ThemeMode.light,
           groupValue: selectedThemeMode,
           onChanged: (settings.ThemeMode? themeMode) {

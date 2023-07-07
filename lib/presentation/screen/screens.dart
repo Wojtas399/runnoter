@@ -4,7 +4,6 @@ export 'blood_tests/blood_tests_screen.dart';
 export 'calendar/calendar_screen.dart';
 export 'current_week/current_week_screen.dart';
 export 'day_preview/day_preview_screen.dart';
-export 'distance_unit/distance_unit_screen.dart';
 export 'forgot_password/forgot_password_screen.dart';
 export 'health/health_screen.dart';
 export 'health_measurement_creator/health_measurement_creator_screen.dart';

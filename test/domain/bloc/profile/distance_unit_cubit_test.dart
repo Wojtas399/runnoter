@@ -1,7 +1,7 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/domain/bloc/distance_unit/distance_unit_cubit.dart';
+import 'package:runnoter/domain/bloc/profile/distance_unit_cubit.dart';
 import 'package:runnoter/domain/entity/settings.dart';
 
 import '../../../creators/settings_creator.dart';
