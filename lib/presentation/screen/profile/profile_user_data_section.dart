@@ -62,7 +62,7 @@ class _Name extends StatelessWidget {
   Future<String?> _askForNewUsername(BuildContext context) async =>
       await askForValue(
         context: context,
-        dialogMode: MediaQuery.of(context).size.width > maxMobileWidth
+        dialogMode: context.screenWidth > maxMobileWidth
             ? DialogMode.normal
             : DialogMode.fullScreen,
         title: Str.of(context).profileNewUsernameDialogTitle,
@@ -113,7 +113,7 @@ class _Surname extends StatelessWidget {
   Future<String?> _askForNewSurname(BuildContext context) async =>
       await askForValue(
         context: context,
-        dialogMode: MediaQuery.of(context).size.width > maxMobileWidth
+        dialogMode: context.screenWidth > maxMobileWidth
             ? DialogMode.normal
             : DialogMode.fullScreen,
         title: Str.of(context).profileNewSurnameDialogTitle,
@@ -150,13 +150,23 @@ class _Email extends StatelessWidget {
   }
 
   Future<void> _onPressed(BuildContext context) async {
-    await showFullScreenDialog(
-      context: context,
-      dialog: BlocProvider<ProfileIdentitiesBloc>.value(
-        value: context.read<ProfileIdentitiesBloc>(),
-        child: const _UpdateEmailDialog(),
-      ),
+    final DialogMode dialogMode = context.screenWidth > maxMobileWidth
+        ? DialogMode.normal
+        : DialogMode.fullScreen;
+    final Widget dialog = BlocProvider<ProfileIdentitiesBloc>.value(
+      value: context.read<ProfileIdentitiesBloc>(),
+      child: _UpdateEmailDialog(dialogMode: dialogMode),
     );
+    await switch (dialogMode) {
+      DialogMode.normal => showAlertDialog(
+          context: context,
+          dialog: dialog,
+        ),
+      DialogMode.fullScreen => showFullScreenDialog(
+          context: context,
+          dialog: dialog,
+        ),
+    };
   }
 }
 

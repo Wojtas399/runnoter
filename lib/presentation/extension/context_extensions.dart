@@ -7,6 +7,8 @@ import '../service/distance_unit_service.dart';
 import '../service/pace_unit_service.dart';
 
 extension ContextExtensions on BuildContext {
+  double get screenWidth => MediaQuery.of(this).size.width;
+
   DistanceUnit get distanceUnit => read<DistanceUnitService>().state;
 
   PaceUnit get paceUnit => read<PaceUnitService>().state;

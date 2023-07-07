@@ -1,12 +1,14 @@
 part of 'profile_screen.dart';
 
 class _UpdateEmailDialog extends StatefulWidget {
-  const _UpdateEmailDialog();
+  final DialogMode dialogMode;
+
+  const _UpdateEmailDialog({
+    required this.dialogMode,
+  });
 
   @override
-  State<StatefulWidget> createState() {
-    return _UpdateEmailDialogState();
-  }
+  State<StatefulWidget> createState() => _UpdateEmailDialogState();
 }
 
 class _UpdateEmailDialogState extends State<_UpdateEmailDialog> {
@@ -41,58 +43,22 @@ class _UpdateEmailDialogState extends State<_UpdateEmailDialog> {
           navigateBack(context: context);
         }
       },
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            Str.of(context).profileNewEmailDialogTitle,
+      child: switch (widget.dialogMode) {
+        DialogMode.normal => _UpdateEmailNormalDialog(
+            isSaveButtonDisabled: _isSaveButtonDisabled,
+            onSaveButtonPressed: () => _onSaveButtonPressed(context),
+            emailController: _emailController,
+            passwordController: _passwordController,
+            emailValidator: _validateEmail,
           ),
-          leading: IconButton(
-            onPressed: () {
-              navigateBack(context: context);
-            },
-            icon: const Icon(Icons.close),
+        DialogMode.fullScreen => _UpdateEmailFullScreenDialog(
+            isSaveButtonDisabled: _isSaveButtonDisabled,
+            onSaveButtonPressed: () => _onSaveButtonPressed(context),
+            emailController: _emailController,
+            passwordController: _passwordController,
+            emailValidator: _validateEmail,
           ),
-          actions: [
-            TextButton(
-              onPressed: _isSaveButtonDisabled
-                  ? null
-                  : () {
-                      _onSaveButtonPressed(context);
-                    },
-              child: Text(
-                Str.of(context).save,
-              ),
-            ),
-            const SizedBox(width: 16),
-          ],
-        ),
-        body: SafeArea(
-          child: GestureDetector(
-            onTap: unfocusInputs,
-            child: Container(
-              padding: const EdgeInsets.all(24),
-              color: Colors.transparent,
-              child: Column(
-                children: [
-                  TextFieldComponent(
-                    label: Str.of(context).email,
-                    isRequired: true,
-                    controller: _emailController,
-                    validator: _validateEmail,
-                    icon: Icons.email,
-                  ),
-                  const SizedBox(height: 32),
-                  PasswordTextFieldComponent(
-                    label: Str.of(context).password,
-                    controller: _passwordController,
-                    isRequired: true,
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
+      },
     );
   }
 
@@ -122,5 +88,129 @@ class _UpdateEmailDialogState extends State<_UpdateEmailDialog> {
             password: _passwordController.text,
           ),
         );
+  }
+}
+
+class _UpdateEmailNormalDialog extends StatelessWidget {
+  final bool isSaveButtonDisabled;
+  final VoidCallback onSaveButtonPressed;
+  final TextEditingController emailController;
+  final TextEditingController passwordController;
+  final String? Function(String? value) emailValidator;
+
+  const _UpdateEmailNormalDialog({
+    required this.isSaveButtonDisabled,
+    required this.onSaveButtonPressed,
+    required this.emailController,
+    required this.passwordController,
+    required this.emailValidator,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text(Str.of(context).profileNewEmailDialogTitle),
+      content: Container(
+        padding: const EdgeInsets.all(16),
+        width: 400,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextFieldComponent(
+              label: Str.of(context).email,
+              isRequired: true,
+              controller: emailController,
+              validator: emailValidator,
+              icon: Icons.email,
+            ),
+            const SizedBox(height: 32),
+            PasswordTextFieldComponent(
+              label: Str.of(context).password,
+              controller: passwordController,
+              isRequired: true,
+            ),
+          ],
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => navigateBack(context: context),
+          child: LabelLarge(
+            Str.of(context).cancel,
+            color: Theme.of(context).colorScheme.error,
+          ),
+        ),
+        TextButton(
+          onPressed: isSaveButtonDisabled ? null : onSaveButtonPressed,
+          child: Text(Str.of(context).save),
+        ),
+      ],
+    );
+  }
+}
+
+class _UpdateEmailFullScreenDialog extends StatelessWidget {
+  final bool isSaveButtonDisabled;
+  final VoidCallback onSaveButtonPressed;
+  final TextEditingController emailController;
+  final TextEditingController passwordController;
+  final String? Function(String? value) emailValidator;
+
+  const _UpdateEmailFullScreenDialog({
+    required this.isSaveButtonDisabled,
+    required this.onSaveButtonPressed,
+    required this.emailController,
+    required this.passwordController,
+    required this.emailValidator,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          Str.of(context).profileNewEmailDialogTitle,
+        ),
+        leading: IconButton(
+          onPressed: () {
+            navigateBack(context: context);
+          },
+          icon: const Icon(Icons.close),
+        ),
+        actions: [
+          TextButton(
+            onPressed: isSaveButtonDisabled ? null : onSaveButtonPressed,
+            child: Text(Str.of(context).save),
+          ),
+          const SizedBox(width: 16),
+        ],
+      ),
+      body: SafeArea(
+        child: GestureDetector(
+          onTap: unfocusInputs,
+          child: Container(
+            padding: const EdgeInsets.all(24),
+            color: Colors.transparent,
+            child: Column(
+              children: [
+                TextFieldComponent(
+                  label: Str.of(context).email,
+                  isRequired: true,
+                  controller: emailController,
+                  validator: emailValidator,
+                  icon: Icons.email,
+                ),
+                const SizedBox(height: 32),
+                PasswordTextFieldComponent(
+                  label: Str.of(context).password,
+                  controller: passwordController,
+                  isRequired: true,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
