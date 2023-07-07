@@ -1,20 +1,28 @@
-part of 'profile_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class _ThemeModeDialog extends StatelessWidget {
-  final DialogMode dialogMode;
+import '../../../domain/bloc/profile/theme_mode_cubit.dart';
+import '../../../domain/entity/settings.dart' as settings;
+import '../../../domain/repository/user_repository.dart';
+import '../../../domain/service/auth_service.dart';
+import '../../component/text/body_text_components.dart';
+import '../../extension/context_extensions.dart';
+import '../../service/navigator_service.dart';
+import '../../service/theme_service.dart';
 
-  const _ThemeModeDialog({
-    required this.dialogMode,
+class ProfileThemeModeDialog extends StatelessWidget {
+  const ProfileThemeModeDialog({
+    super.key,
   });
 
   @override
   Widget build(BuildContext context) {
     return _ThemeModeCubitProvider(
       child: _CubitListener(
-        child: switch (dialogMode) {
-          DialogMode.normal => const _NormalDialog(),
-          DialogMode.fullScreen => const _FullScreenDialog(),
-        },
+        child: context.isMobileSize
+            ? const _FullScreenDialog()
+            : const _NormalDialog(),
       ),
     );
   }

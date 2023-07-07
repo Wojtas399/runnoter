@@ -62,9 +62,6 @@ class _Name extends StatelessWidget {
   Future<String?> _askForNewUsername(BuildContext context) async =>
       await askForValue(
         context: context,
-        dialogMode: context.screenWidth > maxMobileWidth
-            ? DialogMode.normal
-            : DialogMode.fullScreen,
         title: Str.of(context).profileNewUsernameDialogTitle,
         label: Str.of(context).name,
         textFieldIcon: Icons.person_rounded,
@@ -113,9 +110,6 @@ class _Surname extends StatelessWidget {
   Future<String?> _askForNewSurname(BuildContext context) async =>
       await askForValue(
         context: context,
-        dialogMode: context.screenWidth > maxMobileWidth
-            ? DialogMode.normal
-            : DialogMode.fullScreen,
         title: Str.of(context).profileNewSurnameDialogTitle,
         label: Str.of(context).surname,
         textFieldIcon: Icons.person_rounded,
@@ -149,25 +143,14 @@ class _Email extends StatelessWidget {
     );
   }
 
-  Future<void> _onPressed(BuildContext context) async {
-    final DialogMode dialogMode = context.screenWidth > maxMobileWidth
-        ? DialogMode.normal
-        : DialogMode.fullScreen;
-    final Widget dialog = BlocProvider<ProfileIdentitiesBloc>.value(
-      value: context.read<ProfileIdentitiesBloc>(),
-      child: _UpdateEmailDialog(dialogMode: dialogMode),
-    );
-    await switch (dialogMode) {
-      DialogMode.normal => showAlertDialog(
-          context: context,
-          dialog: dialog,
+  Future<void> _onPressed(BuildContext context) async =>
+      await showDialogDependingOnScreenSize(
+        context: context,
+        dialog: BlocProvider<ProfileIdentitiesBloc>.value(
+          value: context.read<ProfileIdentitiesBloc>(),
+          child: const ProfileUpdateEmailDialog(),
         ),
-      DialogMode.fullScreen => showFullScreenDialog(
-          context: context,
-          dialog: dialog,
-        ),
-    };
-  }
+      );
 }
 
 class _ChangePassword extends StatelessWidget {
@@ -184,25 +167,14 @@ class _ChangePassword extends StatelessWidget {
     );
   }
 
-  Future<void> _onPressed(BuildContext context) async {
-    final DialogMode dialogMode = context.screenWidth > maxMobileWidth
-        ? DialogMode.normal
-        : DialogMode.fullScreen;
-    final Widget dialog = BlocProvider.value(
-      value: context.read<ProfileIdentitiesBloc>(),
-      child: _UpdatePasswordDialog(dialogMode: dialogMode),
-    );
-    await switch (dialogMode) {
-      DialogMode.normal => showAlertDialog(
-          context: context,
-          dialog: dialog,
+  Future<void> _onPressed(BuildContext context) async =>
+      showDialogDependingOnScreenSize(
+        context: context,
+        dialog: BlocProvider.value(
+          value: context.read<ProfileIdentitiesBloc>(),
+          child: const ProfileUpdatePasswordDialog(),
         ),
-      DialogMode.fullScreen => showFullScreenDialog(
-          context: context,
-          dialog: dialog,
-        ),
-    };
-  }
+      );
 }
 
 class _DeleteAccount extends StatelessWidget {
@@ -220,23 +192,12 @@ class _DeleteAccount extends StatelessWidget {
     );
   }
 
-  Future<void> _onPressed(BuildContext context) async {
-    final DialogMode dialogMode = context.screenWidth > maxMobileWidth
-        ? DialogMode.normal
-        : DialogMode.fullScreen;
-    final Widget dialog = BlocProvider.value(
-      value: context.read<ProfileIdentitiesBloc>(),
-      child: _DeleteAccountDialog(dialogMode: dialogMode),
-    );
-    await switch (dialogMode) {
-      DialogMode.normal => showAlertDialog(
-          context: context,
-          dialog: dialog,
+  Future<void> _onPressed(BuildContext context) async =>
+      await showDialogDependingOnScreenSize(
+        context: context,
+        dialog: BlocProvider.value(
+          value: context.read<ProfileIdentitiesBloc>(),
+          child: const ProfileDeleteAccountDialog(),
         ),
-      DialogMode.fullScreen => showFullScreenDialog(
-          context: context,
-          dialog: dialog,
-        ),
-    };
-  }
+      );
 }

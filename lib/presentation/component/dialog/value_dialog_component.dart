@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../service/dialog_service.dart';
+import '../../extension/context_extensions.dart';
 import '../../service/navigator_service.dart';
 import '../../service/utils.dart';
 import '../text/label_text_components.dart';
 import '../text_field_component.dart';
 
 class ValueDialogComponent extends StatefulWidget {
-  final DialogMode dialogMode;
   final String title;
   final String? label;
   final IconData? textFieldIcon;
@@ -18,7 +17,6 @@ class ValueDialogComponent extends StatefulWidget {
 
   const ValueDialogComponent({
     super.key,
-    required this.dialogMode,
     required this.title,
     this.label,
     this.textFieldIcon,
@@ -51,32 +49,31 @@ class _State extends State<ValueDialogComponent> {
   }
 
   @override
-  Widget build(BuildContext context) => switch (widget.dialogMode) {
-        DialogMode.normal => _NormalDialog(
-            title: widget.title,
-            label: widget.label,
-            textFieldIcon: widget.textFieldIcon,
-            textController: _textController,
-            isValueRequired: widget.isValueRequired,
-            isSaveButtonDisabled: _isSaveButtonDisabled,
-            validator: widget.validator,
-            onSaveButtonPressed: () {
-              _onSaveButtonPressed(context);
-            },
-          ),
-        DialogMode.fullScreen => _FullScreenDialog(
-            title: widget.title,
-            label: widget.label,
-            textFieldIcon: widget.textFieldIcon,
-            textController: _textController,
-            isValueRequired: widget.isValueRequired,
-            isSaveButtonDisabled: _isSaveButtonDisabled,
-            validator: widget.validator,
-            onSaveButtonPressed: () {
-              _onSaveButtonPressed(context);
-            },
-          ),
-      };
+  Widget build(BuildContext context) => context.isMobileSize
+      ? _FullScreenDialog(
+          title: widget.title,
+          label: widget.label,
+          textFieldIcon: widget.textFieldIcon,
+          textController: _textController,
+          isValueRequired: widget.isValueRequired,
+          isSaveButtonDisabled: _isSaveButtonDisabled,
+          validator: widget.validator,
+          onSaveButtonPressed: () {
+            _onSaveButtonPressed(context);
+          },
+        )
+      : _NormalDialog(
+          title: widget.title,
+          label: widget.label,
+          textFieldIcon: widget.textFieldIcon,
+          textController: _textController,
+          isValueRequired: widget.isValueRequired,
+          isSaveButtonDisabled: _isSaveButtonDisabled,
+          validator: widget.validator,
+          onSaveButtonPressed: () {
+            _onSaveButtonPressed(context);
+          },
+        );
 
   void _onSaveButtonPressed(BuildContext context) {
     navigateBack(

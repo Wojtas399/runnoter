@@ -1,19 +1,26 @@
-part of 'profile_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class _UpdatePasswordDialog extends StatefulWidget {
-  final DialogMode dialogMode;
+import '../../../domain/additional_model/bloc_status.dart';
+import '../../../domain/bloc/profile/identities/profile_identities_bloc.dart';
+import '../../component/password_text_field_component.dart';
+import '../../component/text/label_text_components.dart';
+import '../../extension/context_extensions.dart';
+import '../../service/navigator_service.dart';
+import '../../service/utils.dart';
+import '../../service/validation_service.dart';
 
-  const _UpdatePasswordDialog({
-    required this.dialogMode,
+class ProfileUpdatePasswordDialog extends StatefulWidget {
+  const ProfileUpdatePasswordDialog({
+    super.key,
   });
 
   @override
-  State<StatefulWidget> createState() {
-    return _UpdatePasswordDialogState();
-  }
+  State<StatefulWidget> createState() => _State();
 }
 
-class _UpdatePasswordDialogState extends State<_UpdatePasswordDialog> {
+class _State extends State<ProfileUpdatePasswordDialog> {
   final TextEditingController _newPasswordController = TextEditingController();
   final TextEditingController _currentPasswordController =
       TextEditingController();
@@ -43,22 +50,21 @@ class _UpdatePasswordDialogState extends State<_UpdatePasswordDialog> {
           navigateBack(context: context);
         }
       },
-      child: switch (widget.dialogMode) {
-        DialogMode.normal => _UpdatePasswordNormalDialog(
-            newPasswordController: _newPasswordController,
-            currentPasswordController: _currentPasswordController,
-            isSaveButtonDisabled: _isSaveButtonDisabled,
-            newPasswordValidator: _validatePassword,
-            onSaveButtonPressed: () => _onSaveButtonPressed(context),
-          ),
-        DialogMode.fullScreen => _UpdatePasswordFullScreenDialog(
-            newPasswordController: _newPasswordController,
-            currentPasswordController: _currentPasswordController,
-            isSaveButtonDisabled: _isSaveButtonDisabled,
-            newPasswordValidator: _validatePassword,
-            onSaveButtonPressed: () => _onSaveButtonPressed(context),
-          ),
-      },
+      child: context.isMobileSize
+          ? _FullScreenDialog(
+              newPasswordController: _newPasswordController,
+              currentPasswordController: _currentPasswordController,
+              isSaveButtonDisabled: _isSaveButtonDisabled,
+              newPasswordValidator: _validatePassword,
+              onSaveButtonPressed: () => _onSaveButtonPressed(context),
+            )
+          : _NormalDialog(
+              newPasswordController: _newPasswordController,
+              currentPasswordController: _currentPasswordController,
+              isSaveButtonDisabled: _isSaveButtonDisabled,
+              newPasswordValidator: _validatePassword,
+              onSaveButtonPressed: () => _onSaveButtonPressed(context),
+            ),
     );
   }
 
@@ -90,14 +96,14 @@ class _UpdatePasswordDialogState extends State<_UpdatePasswordDialog> {
   }
 }
 
-class _UpdatePasswordNormalDialog extends StatelessWidget {
+class _NormalDialog extends StatelessWidget {
   final TextEditingController newPasswordController;
   final TextEditingController currentPasswordController;
   final bool isSaveButtonDisabled;
   final String? Function(String? value) newPasswordValidator;
   final VoidCallback onSaveButtonPressed;
 
-  const _UpdatePasswordNormalDialog({
+  const _NormalDialog({
     required this.newPasswordController,
     required this.currentPasswordController,
     required this.isSaveButtonDisabled,
@@ -135,27 +141,27 @@ class _UpdatePasswordNormalDialog extends StatelessWidget {
         TextButton(
           onPressed: () => navigateBack(context: context),
           child: LabelLarge(
-            Str.of(context).cancel,
+            str.cancel,
             color: Theme.of(context).colorScheme.error,
           ),
         ),
         TextButton(
           onPressed: isSaveButtonDisabled ? null : onSaveButtonPressed,
-          child: Text(Str.of(context).save),
+          child: Text(str.save),
         ),
       ],
     );
   }
 }
 
-class _UpdatePasswordFullScreenDialog extends StatelessWidget {
+class _FullScreenDialog extends StatelessWidget {
   final TextEditingController newPasswordController;
   final TextEditingController currentPasswordController;
   final bool isSaveButtonDisabled;
   final String? Function(String? value) newPasswordValidator;
   final VoidCallback onSaveButtonPressed;
 
-  const _UpdatePasswordFullScreenDialog({
+  const _FullScreenDialog({
     required this.newPasswordController,
     required this.currentPasswordController,
     required this.isSaveButtonDisabled,
@@ -181,7 +187,7 @@ class _UpdatePasswordFullScreenDialog extends StatelessWidget {
         actions: [
           TextButton(
             onPressed: isSaveButtonDisabled ? null : onSaveButtonPressed,
-            child: Text(Str.of(context).save),
+            child: Text(str.save),
           ),
           const SizedBox(width: 16),
         ],

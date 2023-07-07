@@ -7,13 +7,9 @@ import '../component/dialog/loading_dialog_component.dart';
 import '../component/dialog/message_dialog_component.dart';
 import '../component/dialog/value_dialog_component.dart';
 import '../config/animation/slide_to_top_anim.dart';
+import '../extension/context_extensions.dart';
 
 bool _isLoadingDialogOpened = false;
-
-enum DialogMode {
-  normal,
-  fullScreen,
-}
 
 void showLoadingDialog({
   required BuildContext context,
@@ -102,7 +98,6 @@ Future<bool> askForConfirmationToLeave({
 
 Future<String?> askForValue({
   required BuildContext context,
-  required DialogMode dialogMode,
   required String title,
   String? label,
   IconData? textFieldIcon,
@@ -111,25 +106,17 @@ Future<String?> askForValue({
   String? Function(String? value)? validator,
 }) async {
   hideSnackbar(context: context);
-  final Widget valueDialog = ValueDialogComponent(
-    dialogMode: dialogMode,
-    title: title,
-    label: label,
-    textFieldIcon: textFieldIcon,
-    initialValue: value,
-    isValueRequired: isValueRequired,
-    validator: validator,
+  return await showDialogDependingOnScreenSize(
+    context: context,
+    dialog: ValueDialogComponent(
+      title: title,
+      label: label,
+      textFieldIcon: textFieldIcon,
+      initialValue: value,
+      isValueRequired: isValueRequired,
+      validator: validator,
+    ),
   );
-  return await switch (dialogMode) {
-    DialogMode.normal => showAlertDialog<String?>(
-        context: context,
-        dialog: valueDialog,
-      ),
-    DialogMode.fullScreen => showFullScreenDialog<String?>(
-        context: context,
-        dialog: valueDialog,
-      ),
-  };
 }
 
 Future<T?> askForAction<T>({
@@ -160,6 +147,14 @@ Future<DateTime?> askForDate({
     lastDate: lastDate ?? DateTime(2099, 12, 31),
   );
 }
+
+Future<T?> showDialogDependingOnScreenSize<T>({
+  required BuildContext context,
+  required Widget dialog,
+}) async =>
+    await (context.isMobileSize
+        ? showFullScreenDialog(context: context, dialog: dialog)
+        : showAlertDialog(context: context, dialog: dialog));
 
 Future<T?> showAlertDialog<T>({
   required BuildContext context,

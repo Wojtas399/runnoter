@@ -1,17 +1,27 @@
-part of 'profile_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class _UpdateEmailDialog extends StatefulWidget {
-  final DialogMode dialogMode;
+import '../../../domain/additional_model/bloc_status.dart';
+import '../../../domain/bloc/profile/identities/profile_identities_bloc.dart';
+import '../../component/password_text_field_component.dart';
+import '../../component/text/label_text_components.dart';
+import '../../component/text_field_component.dart';
+import '../../extension/context_extensions.dart';
+import '../../service/navigator_service.dart';
+import '../../service/utils.dart';
+import '../../service/validation_service.dart';
 
-  const _UpdateEmailDialog({
-    required this.dialogMode,
+class ProfileUpdateEmailDialog extends StatefulWidget {
+  const ProfileUpdateEmailDialog({
+    super.key,
   });
 
   @override
-  State<StatefulWidget> createState() => _UpdateEmailDialogState();
+  State<StatefulWidget> createState() => _State();
 }
 
-class _UpdateEmailDialogState extends State<_UpdateEmailDialog> {
+class _State extends State<ProfileUpdateEmailDialog> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   late final String? _originalEmail;
@@ -43,22 +53,21 @@ class _UpdateEmailDialogState extends State<_UpdateEmailDialog> {
           navigateBack(context: context);
         }
       },
-      child: switch (widget.dialogMode) {
-        DialogMode.normal => _UpdateEmailNormalDialog(
-            isSaveButtonDisabled: _isSaveButtonDisabled,
-            onSaveButtonPressed: () => _onSaveButtonPressed(context),
-            emailController: _emailController,
-            passwordController: _passwordController,
-            emailValidator: _validateEmail,
-          ),
-        DialogMode.fullScreen => _UpdateEmailFullScreenDialog(
-            isSaveButtonDisabled: _isSaveButtonDisabled,
-            onSaveButtonPressed: () => _onSaveButtonPressed(context),
-            emailController: _emailController,
-            passwordController: _passwordController,
-            emailValidator: _validateEmail,
-          ),
-      },
+      child: context.isMobileSize
+          ? _FullScreenDialog(
+              isSaveButtonDisabled: _isSaveButtonDisabled,
+              onSaveButtonPressed: () => _onSaveButtonPressed(context),
+              emailController: _emailController,
+              passwordController: _passwordController,
+              emailValidator: _validateEmail,
+            )
+          : _NormalDialog(
+              isSaveButtonDisabled: _isSaveButtonDisabled,
+              onSaveButtonPressed: () => _onSaveButtonPressed(context),
+              emailController: _emailController,
+              passwordController: _passwordController,
+              emailValidator: _validateEmail,
+            ),
     );
   }
 
@@ -91,14 +100,14 @@ class _UpdateEmailDialogState extends State<_UpdateEmailDialog> {
   }
 }
 
-class _UpdateEmailNormalDialog extends StatelessWidget {
+class _NormalDialog extends StatelessWidget {
   final bool isSaveButtonDisabled;
   final VoidCallback onSaveButtonPressed;
   final TextEditingController emailController;
   final TextEditingController passwordController;
   final String? Function(String? value) emailValidator;
 
-  const _UpdateEmailNormalDialog({
+  const _NormalDialog({
     required this.isSaveButtonDisabled,
     required this.onSaveButtonPressed,
     required this.emailController,
@@ -108,15 +117,17 @@ class _UpdateEmailNormalDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final str = Str.of(context);
+
     return AlertDialog(
-      title: Text(Str.of(context).profileNewEmailDialogTitle),
+      title: Text(str.profileNewEmailDialogTitle),
       content: SizedBox(
         width: 400,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             TextFieldComponent(
-              label: Str.of(context).email,
+              label: str.email,
               isRequired: true,
               controller: emailController,
               validator: emailValidator,
@@ -124,7 +135,7 @@ class _UpdateEmailNormalDialog extends StatelessWidget {
             ),
             const SizedBox(height: 32),
             PasswordTextFieldComponent(
-              label: Str.of(context).password,
+              label: str.password,
               controller: passwordController,
               isRequired: true,
             ),
@@ -135,27 +146,27 @@ class _UpdateEmailNormalDialog extends StatelessWidget {
         TextButton(
           onPressed: () => navigateBack(context: context),
           child: LabelLarge(
-            Str.of(context).cancel,
+            str.cancel,
             color: Theme.of(context).colorScheme.error,
           ),
         ),
         TextButton(
           onPressed: isSaveButtonDisabled ? null : onSaveButtonPressed,
-          child: Text(Str.of(context).save),
+          child: Text(str.save),
         ),
       ],
     );
   }
 }
 
-class _UpdateEmailFullScreenDialog extends StatelessWidget {
+class _FullScreenDialog extends StatelessWidget {
   final bool isSaveButtonDisabled;
   final VoidCallback onSaveButtonPressed;
   final TextEditingController emailController;
   final TextEditingController passwordController;
   final String? Function(String? value) emailValidator;
 
-  const _UpdateEmailFullScreenDialog({
+  const _FullScreenDialog({
     required this.isSaveButtonDisabled,
     required this.onSaveButtonPressed,
     required this.emailController,
@@ -165,21 +176,19 @@ class _UpdateEmailFullScreenDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final str = Str.of(context);
+
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          Str.of(context).profileNewEmailDialogTitle,
-        ),
+        title: Text(str.profileNewEmailDialogTitle),
         leading: IconButton(
-          onPressed: () {
-            navigateBack(context: context);
-          },
+          onPressed: () => navigateBack(context: context),
           icon: const Icon(Icons.close),
         ),
         actions: [
           TextButton(
             onPressed: isSaveButtonDisabled ? null : onSaveButtonPressed,
-            child: Text(Str.of(context).save),
+            child: Text(str.save),
           ),
           const SizedBox(width: 16),
         ],
@@ -193,7 +202,7 @@ class _UpdateEmailFullScreenDialog extends StatelessWidget {
             child: Column(
               children: [
                 TextFieldComponent(
-                  label: Str.of(context).email,
+                  label: str.email,
                   isRequired: true,
                   controller: emailController,
                   validator: emailValidator,
@@ -201,7 +210,7 @@ class _UpdateEmailFullScreenDialog extends StatelessWidget {
                 ),
                 const SizedBox(height: 32),
                 PasswordTextFieldComponent(
-                  label: Str.of(context).password,
+                  label: str.password,
                   controller: passwordController,
                   isRequired: true,
                 ),

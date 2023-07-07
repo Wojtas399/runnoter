@@ -67,9 +67,6 @@ class AppNavigator extends StatelessWidget {
       screen = RacePreviewScreen(
         raceId: settings.arguments as String,
       );
-    } else if (routePath == RoutePath.language.path) {
-      screen = const LanguageScreen();
-      isSlideToTopAnim = true;
     } else if (routePath == RoutePath.distanceUnit.path) {
       screen = const DistanceUnitScreen();
       isSlideToTopAnim = true;

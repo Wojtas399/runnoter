@@ -43,25 +43,17 @@ class _Theme extends StatelessWidget {
     );
   }
 
-  Future<void> _onPressed(BuildContext context) async {
-    final DialogMode dialogMode = context.screenWidth > maxMobileWidth
-        ? DialogMode.normal
-        : DialogMode.fullScreen;
-    final Widget dialog = RepositoryProvider.value(
-      value: context.read<AuthService>(),
-      child: RepositoryProvider.value(
-        value: context.read<UserRepository>(),
-        child: _ThemeModeDialog(dialogMode: dialogMode),
-      ),
-    );
-    await switch (dialogMode) {
-      DialogMode.normal => showAlertDialog(context: context, dialog: dialog),
-      DialogMode.fullScreen => showFullScreenDialog(
-          context: context,
-          dialog: dialog,
+  Future<void> _onPressed(BuildContext context) async =>
+      await showDialogDependingOnScreenSize(
+        context: context,
+        dialog: RepositoryProvider.value(
+          value: context.read<AuthService>(),
+          child: RepositoryProvider.value(
+            value: context.read<UserRepository>(),
+            child: const ProfileThemeModeDialog(),
+          ),
         ),
-    };
-  }
+      );
 }
 
 class _Language extends StatelessWidget {
@@ -83,12 +75,17 @@ class _Language extends StatelessWidget {
     );
   }
 
-  void _onPressed(BuildContext context) {
-    navigateTo(
-      context: context,
-      route: const LanguageRoute(),
-    );
-  }
+  Future<void> _onPressed(BuildContext context) async =>
+      await showDialogDependingOnScreenSize(
+        context: context,
+        dialog: RepositoryProvider.value(
+          value: context.read<AuthService>(),
+          child: RepositoryProvider.value(
+            value: context.read<UserRepository>(),
+            child: const ProfileLanguageDialog(),
+          ),
+        ),
+      );
 }
 
 class _DistanceUnit extends StatelessWidget {

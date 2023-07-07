@@ -2,25 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/bloc/language/language_cubit.dart';
+import '../../../domain/bloc/profile/language_cubit.dart';
 import '../../../domain/entity/settings.dart';
 import '../../../domain/repository/user_repository.dart';
 import '../../../domain/service/auth_service.dart';
 import '../../component/text/body_text_components.dart';
+import '../../extension/context_extensions.dart';
 import '../../formatter/settings_formatter.dart';
 import '../../service/language_service.dart';
 import '../../service/navigator_service.dart';
 
-class LanguageScreen extends StatelessWidget {
-  const LanguageScreen({
+class ProfileLanguageDialog extends StatelessWidget {
+  const ProfileLanguageDialog({
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
-    return const _CubitProvider(
+    return _CubitProvider(
       child: _CubitListener(
-        child: _Content(),
+        child: context.isMobileSize
+            ? const _FullScreenDialog()
+            : const _NormalDialog(),
       ),
     );
   }
@@ -79,8 +82,42 @@ class _CubitListener extends StatelessWidget {
   }
 }
 
-class _Content extends StatelessWidget {
-  const _Content();
+class _NormalDialog extends StatelessWidget {
+  const _NormalDialog();
+
+  @override
+  Widget build(BuildContext context) {
+    final str = Str.of(context);
+
+    return AlertDialog(
+      title: Text(str.themeMode),
+      contentPadding: const EdgeInsets.symmetric(vertical: 24),
+      content: const SizedBox(
+        width: 500,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _Header(),
+            SizedBox(height: 16),
+            _OptionsToSelect(),
+            SizedBox(height: 16),
+            _SystemLanguageDescription(),
+          ],
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => navigateBack(context: context),
+          child: Text(str.close),
+        ),
+      ],
+    );
+  }
+}
+
+class _FullScreenDialog extends StatelessWidget {
+  const _FullScreenDialog();
 
   @override
   Widget build(BuildContext context) {
@@ -97,15 +134,18 @@ class _Content extends StatelessWidget {
         ),
       ),
       body: const SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _Header(),
-            SizedBox(height: 16),
-            _OptionsToSelect(),
-            SizedBox(height: 16),
-            _SystemLanguageDescription(),
-          ],
+        child: Padding(
+          padding: EdgeInsets.all(24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _Header(),
+              SizedBox(height: 16),
+              _OptionsToSelect(),
+              SizedBox(height: 16),
+              _SystemLanguageDescription(),
+            ],
+          ),
         ),
       ),
     );
@@ -118,7 +158,7 @@ class _Header extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
+      padding: const EdgeInsets.symmetric(horizontal: 24),
       child: BodyLarge(
         Str.of(context).languageSelect,
       ),
@@ -171,7 +211,7 @@ class _SystemLanguageDescription extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+      padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Text(
         Str.of(context).systemLanguageDescription,
         style: Theme.of(context).textTheme.bodyMedium?.copyWith(

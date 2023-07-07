@@ -1,19 +1,26 @@
-part of 'profile_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class _DeleteAccountDialog extends StatefulWidget {
-  final DialogMode dialogMode;
+import '../../../domain/additional_model/bloc_status.dart';
+import '../../../domain/bloc/profile/identities/profile_identities_bloc.dart';
+import '../../component/password_text_field_component.dart';
+import '../../component/text/body_text_components.dart';
+import '../../component/text/label_text_components.dart';
+import '../../extension/context_extensions.dart';
+import '../../service/navigator_service.dart';
+import '../../service/utils.dart';
 
-  const _DeleteAccountDialog({
-    required this.dialogMode,
+class ProfileDeleteAccountDialog extends StatefulWidget {
+  const ProfileDeleteAccountDialog({
+    super.key,
   });
 
   @override
-  State<StatefulWidget> createState() {
-    return _DeleteAccountDialogState();
-  }
+  State<StatefulWidget> createState() => _State();
 }
 
-class _DeleteAccountDialogState extends State<_DeleteAccountDialog> {
+class _State extends State<ProfileDeleteAccountDialog> {
   final TextEditingController _passwordController = TextEditingController();
   bool _isSaveButtonDisabled = true;
 
@@ -39,18 +46,17 @@ class _DeleteAccountDialogState extends State<_DeleteAccountDialog> {
           navigateBack(context: context);
         }
       },
-      child: switch (widget.dialogMode) {
-        DialogMode.normal => _DeleteAccountNormalDialog(
-            passwordController: _passwordController,
-            isSaveButtonDisabled: _isSaveButtonDisabled,
-            onSaveButtonPressed: () => _onSaveButtonPressed(context),
-          ),
-        DialogMode.fullScreen => _DeleteAccountFullScreenDialog(
-            passwordController: _passwordController,
-            isSaveButtonDisabled: _isSaveButtonDisabled,
-            onSaveButtonPressed: () => _onSaveButtonPressed(context),
-          ),
-      },
+      child: context.isMobileSize
+          ? _FullScreenDialog(
+              passwordController: _passwordController,
+              isSaveButtonDisabled: _isSaveButtonDisabled,
+              onSaveButtonPressed: () => _onSaveButtonPressed(context),
+            )
+          : _NormalDialog(
+              passwordController: _passwordController,
+              isSaveButtonDisabled: _isSaveButtonDisabled,
+              onSaveButtonPressed: () => _onSaveButtonPressed(context),
+            ),
     );
   }
 
@@ -69,12 +75,12 @@ class _DeleteAccountDialogState extends State<_DeleteAccountDialog> {
   }
 }
 
-class _DeleteAccountNormalDialog extends StatelessWidget {
+class _NormalDialog extends StatelessWidget {
   final TextEditingController passwordController;
   final bool isSaveButtonDisabled;
   final VoidCallback? onSaveButtonPressed;
 
-  const _DeleteAccountNormalDialog({
+  const _NormalDialog({
     required this.passwordController,
     required this.isSaveButtonDisabled,
     required this.onSaveButtonPressed,
@@ -118,12 +124,12 @@ class _DeleteAccountNormalDialog extends StatelessWidget {
   }
 }
 
-class _DeleteAccountFullScreenDialog extends StatelessWidget {
+class _FullScreenDialog extends StatelessWidget {
   final TextEditingController passwordController;
   final bool isSaveButtonDisabled;
   final VoidCallback? onSaveButtonPressed;
 
-  const _DeleteAccountFullScreenDialog({
+  const _FullScreenDialog({
     required this.passwordController,
     required this.isSaveButtonDisabled,
     required this.onSaveButtonPressed,
