@@ -126,8 +126,7 @@ class _NormalDialog extends StatelessWidget {
       title: Text(title),
       content: GestureDetector(
         onTap: unfocusInputs,
-        child: Container(
-          padding: const EdgeInsets.all(16),
+        child: SizedBox(
           width: 400,
           child: TextFieldComponent(
             label: label,

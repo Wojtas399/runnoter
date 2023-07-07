@@ -110,8 +110,7 @@ class _UpdateEmailNormalDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text(Str.of(context).profileNewEmailDialogTitle),
-      content: Container(
-        padding: const EdgeInsets.all(16),
+      content: SizedBox(
         width: 400,
         child: Column(
           mainAxisSize: MainAxisSize.min,

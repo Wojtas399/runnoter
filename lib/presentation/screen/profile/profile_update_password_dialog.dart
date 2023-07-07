@@ -111,8 +111,7 @@ class _UpdatePasswordNormalDialog extends StatelessWidget {
 
     return AlertDialog(
       title: Text(str.profileNewPasswordDialogTitle),
-      content: Container(
-        padding: const EdgeInsets.all(16),
+      content: SizedBox(
         width: 400,
         child: Column(
           mainAxisSize: MainAxisSize.min,
