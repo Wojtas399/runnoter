@@ -20,6 +20,5 @@ export 'races/races_screen.dart';
 export 'run_status_creator/run_status_creator_screen.dart';
 export 'sign_in/sign_in_screen.dart';
 export 'sign_up/sign_up_screen.dart';
-export 'theme_mode/theme_mode_screen.dart';
 export 'workout_creator/workout_creator_screen.dart';
 export 'workout_preview/workout_preview_screen.dart';

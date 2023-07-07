@@ -39,17 +39,28 @@ class _Theme extends StatelessWidget {
       label: Str.of(context).themeMode,
       iconData: Icons.brightness_6_outlined,
       value: themeMode?.toUIFormat(context) ?? '',
-      onPressed: () {
-        _onPressed(context);
-      },
+      onPressed: () => _onPressed(context),
     );
   }
 
-  void _onPressed(BuildContext context) {
-    navigateTo(
-      context: context,
-      route: const ThemeModeRoute(),
+  Future<void> _onPressed(BuildContext context) async {
+    final DialogMode dialogMode = context.screenWidth > maxMobileWidth
+        ? DialogMode.normal
+        : DialogMode.fullScreen;
+    final Widget dialog = RepositoryProvider.value(
+      value: context.read<AuthService>(),
+      child: RepositoryProvider.value(
+        value: context.read<UserRepository>(),
+        child: _ThemeModeDialog(dialogMode: dialogMode),
+      ),
     );
+    await switch (dialogMode) {
+      DialogMode.normal => showAlertDialog(context: context, dialog: dialog),
+      DialogMode.fullScreen => showFullScreenDialog(
+          context: context,
+          dialog: dialog,
+        ),
+    };
   }
 }
 

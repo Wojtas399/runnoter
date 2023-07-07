@@ -5,13 +5,13 @@ import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/additional_model/custom_exception.dart';
 import 'package:runnoter/domain/bloc/profile/identities/profile_identities_bloc.dart';
 
-import '../../../creators/user_creator.dart';
-import '../../../mock/domain/repository/mock_blood_test_repository.dart';
-import '../../../mock/domain/repository/mock_health_measurement_repository.dart';
-import '../../../mock/domain/repository/mock_race_repository.dart';
-import '../../../mock/domain/repository/mock_user_repository.dart';
-import '../../../mock/domain/repository/mock_workout_repository.dart';
-import '../../../mock/domain/service/mock_auth_service.dart';
+import '../../../../creators/user_creator.dart';
+import '../../../../mock/domain/repository/mock_blood_test_repository.dart';
+import '../../../../mock/domain/repository/mock_health_measurement_repository.dart';
+import '../../../../mock/domain/repository/mock_race_repository.dart';
+import '../../../../mock/domain/repository/mock_user_repository.dart';
+import '../../../../mock/domain/repository/mock_workout_repository.dart';
+import '../../../../mock/domain/service/mock_auth_service.dart';
 
 void main() {
   final authService = MockAuthService();

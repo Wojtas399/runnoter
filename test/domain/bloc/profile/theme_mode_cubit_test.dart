@@ -1,7 +1,7 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/domain/bloc/theme_mode/theme_mode_cubit.dart';
+import 'package:runnoter/domain/bloc/profile/theme_mode_cubit.dart';
 import 'package:runnoter/domain/entity/settings.dart';
 
 import '../../../creators/settings_creator.dart';

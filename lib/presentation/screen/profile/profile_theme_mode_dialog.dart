@@ -1,34 +1,29 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+part of 'profile_screen.dart';
 
-import '../../../../domain/entity/settings.dart' as settings;
-import '../../../domain/bloc/theme_mode/theme_mode_cubit.dart';
-import '../../../domain/repository/user_repository.dart';
-import '../../../domain/service/auth_service.dart';
-import '../../component/text/body_text_components.dart';
-import '../../service/navigator_service.dart';
-import '../../service/theme_service.dart';
+class _ThemeModeDialog extends StatelessWidget {
+  final DialogMode dialogMode;
 
-class ThemeModeScreen extends StatelessWidget {
-  const ThemeModeScreen({
-    super.key,
+  const _ThemeModeDialog({
+    required this.dialogMode,
   });
 
   @override
   Widget build(BuildContext context) {
-    return const _CubitProvider(
+    return _ThemeModeCubitProvider(
       child: _CubitListener(
-        child: _Content(),
+        child: switch (dialogMode) {
+          DialogMode.normal => const _NormalDialog(),
+          DialogMode.fullScreen => const _FullScreenDialog(),
+        },
       ),
     );
   }
 }
 
-class _CubitProvider extends StatelessWidget {
+class _ThemeModeCubitProvider extends StatelessWidget {
   final Widget child;
 
-  const _CubitProvider({
+  const _ThemeModeCubitProvider({
     required this.child,
   });
 
@@ -82,16 +77,48 @@ class _CubitListener extends StatelessWidget {
   }
 }
 
-class _Content extends StatelessWidget {
-  const _Content();
+class _NormalDialog extends StatelessWidget {
+  const _NormalDialog();
+
+  @override
+  Widget build(BuildContext context) {
+    final str = Str.of(context);
+
+    return AlertDialog(
+      title: Text(str.themeMode),
+      contentPadding: const EdgeInsets.symmetric(vertical: 24),
+      content: const SizedBox(
+        width: 500,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _Header(),
+            SizedBox(height: 16),
+            _OptionsToSelect(),
+            SizedBox(height: 16),
+            _SystemThemeDescription(),
+          ],
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => navigateBack(context: context),
+          child: Text(str.close),
+        ),
+      ],
+    );
+  }
+}
+
+class _FullScreenDialog extends StatelessWidget {
+  const _FullScreenDialog();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          Str.of(context).themeMode,
-        ),
+        title: Text(Str.of(context).themeMode),
         leading: IconButton(
           onPressed: () {
             navigateBack(context: context);
@@ -100,15 +127,18 @@ class _Content extends StatelessWidget {
         ),
       ),
       body: const SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _Header(),
-            SizedBox(height: 16),
-            _OptionsToSelect(),
-            SizedBox(height: 16),
-            _SystemThemeDescription(),
-          ],
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _Header(),
+              SizedBox(height: 16),
+              _OptionsToSelect(),
+              SizedBox(height: 16),
+              _SystemThemeDescription(),
+            ],
+          ),
         ),
       ),
     );
@@ -121,10 +151,8 @@ class _Header extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
-      child: BodyLarge(
-        Str.of(context).themeModeSelect,
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 24),
+      child: BodyLarge(Str.of(context).themeModeSelect),
     );
   }
 }
@@ -193,7 +221,7 @@ class _SystemThemeDescription extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+      padding: const EdgeInsets.symmetric(horizontal: 24),
       child: BodyMedium(
         Str.of(context).systemThemeModeDescription,
         color: Theme.of(context).colorScheme.outline,
