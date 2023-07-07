@@ -77,11 +77,16 @@ class _TodayMeasurementButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BigButton(
-      label: Str.of(context).healthAddTodayMeasurementButton,
-      onPressed: () {
-        _onPressed(context);
-      },
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        BigButton(
+          label: Str.of(context).healthAddTodayMeasurementButton,
+          onPressed: () {
+            _onPressed(context);
+          },
+        ),
+      ],
     );
   }
 

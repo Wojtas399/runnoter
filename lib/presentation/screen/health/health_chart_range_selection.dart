@@ -5,11 +5,14 @@ class _ChartRangeSelection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return Column(
       children: [
-        _ChartRangeType(),
-        SizedBox(height: 16),
-        _ChartRange(),
+        ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 500),
+          child: const _ChartRangeType(),
+        ),
+        const SizedBox(height: 16),
+        const _ChartRange(),
       ],
     );
   }
@@ -23,6 +26,7 @@ class _ChartRangeType extends StatelessWidget {
     final ChartRange chartRange = context.select(
       (HealthBloc bloc) => bloc.state.chartRange,
     );
+    const Widget gap = SizedBox(width: 16);
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -34,7 +38,7 @@ class _ChartRangeType extends StatelessWidget {
             _onButtonPressed(context, ChartRange.week);
           },
         ),
-        const SizedBox(width: 16),
+        gap,
         _ChartRangeTypeButton(
           label: Str.of(context).healthChartRangeMonth,
           isSelected: chartRange == ChartRange.month,
@@ -42,7 +46,7 @@ class _ChartRangeType extends StatelessWidget {
             _onButtonPressed(context, ChartRange.month);
           },
         ),
-        const SizedBox(width: 16),
+        gap,
         _ChartRangeTypeButton(
           label: Str.of(context).healthChartRangeYear,
           isSelected: chartRange == ChartRange.year,

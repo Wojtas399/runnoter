@@ -9,6 +9,7 @@ class _Content extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(24),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _Section(
               label: Str.of(context).healthTodayMeasurement,
@@ -57,11 +58,16 @@ class _ShowAllMeasurementsButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BigButton(
-      label: Str.of(context).healthShowAllMeasurementsButton,
-      onPressed: () {
-        _onPressed(context);
-      },
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        BigButton(
+          label: Str.of(context).healthShowAllMeasurementsButton,
+          onPressed: () {
+            _onPressed(context);
+          },
+        ),
+      ],
     );
   }
 
