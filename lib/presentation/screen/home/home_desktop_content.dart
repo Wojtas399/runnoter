@@ -4,10 +4,10 @@ enum _DesktopDrawerPage {
   currentWeek,
   calendar,
   health,
-  profile,
   mileage,
   blood,
   races,
+  profile,
 }
 
 class _DesktopContent extends StatefulWidget {
@@ -27,19 +27,19 @@ class _DesktopContentState extends State<_DesktopContent> {
       str.homeCurrentWeekTitle,
       str.homeCalendarTitle,
       str.homeHealthTitle,
-      str.homeProfileTitle,
       str.homeMileageTitle,
       str.homeBloodTestsTitle,
       str.homeRacesTitle,
+      str.homeProfileTitle,
     ];
     final List<_Destination> destinations = [
       _DestinationCurrentWeek(context: context),
       _DestinationCalendar(context: context),
       _DestinationHealth(context: context),
-      _DestinationProfile(context: context),
       _DestinationMileage(context: context),
       _DestinationBlood(context: context),
       _DestinationRaces(context: context),
+      _DestinationProfile(context: context),
     ];
 
     return Row(
@@ -70,19 +70,25 @@ class _DesktopContentState extends State<_DesktopContent> {
                   )
                 : null,
             body: SafeArea(
-              child: Center(
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 800),
-                  child: switch (_page) {
-                    _DesktopDrawerPage.currentWeek => const CurrentWeekScreen(),
-                    _DesktopDrawerPage.calendar => const CalendarScreen(),
-                    _DesktopDrawerPage.health => const HealthScreen(),
-                    _DesktopDrawerPage.profile => const ProfileScreen(),
-                    _DesktopDrawerPage.mileage => const MileageScreen(),
-                    _DesktopDrawerPage.blood => const BloodTestsScreen(),
-                    _DesktopDrawerPage.races => const RacesScreen(),
-                  },
-                ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Flexible(
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 800),
+                      child: switch (_page) {
+                        _DesktopDrawerPage.currentWeek =>
+                          const CurrentWeekScreen(),
+                        _DesktopDrawerPage.calendar => const CalendarScreen(),
+                        _DesktopDrawerPage.health => const HealthScreen(),
+                        _DesktopDrawerPage.profile => const ProfileScreen(),
+                        _DesktopDrawerPage.mileage => const MileageScreen(),
+                        _DesktopDrawerPage.blood => const BloodTestsScreen(),
+                        _DesktopDrawerPage.races => const RacesScreen(),
+                      },
+                    ),
+                  ),
+                ],
               ),
             ),
           ),

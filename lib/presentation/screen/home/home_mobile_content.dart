@@ -2,10 +2,10 @@ part of 'home_screen.dart';
 
 enum _MobileDrawerPage {
   home,
-  profile,
   mileage,
   blood,
   races,
+  profile,
 }
 
 enum _MobileBottomNavPage {
@@ -30,10 +30,10 @@ class _MobileContentState extends State<_MobileContent> {
     final str = Str.of(context);
     final drawerPageTitles = [
       str.homeTitle,
-      str.homeProfileTitle,
       str.homeMileageTitle,
       str.homeBloodTestsTitle,
       str.homeRacesTitle,
+      str.homeProfileTitle,
     ];
     final bottomNavPageTitles = [
       str.homeCurrentWeekTitle,
@@ -54,10 +54,10 @@ class _MobileContentState extends State<_MobileContent> {
         selectedIndex: _drawerPage.index,
         destinations: [
           _DestinationHome(context: context),
-          _DestinationProfile(context: context),
           _DestinationMileage(context: context),
           _DestinationBlood(context: context),
           _DestinationRaces(context: context),
+          _DestinationProfile(context: context),
         ],
         onDestinationSelected: _onDrawerPageSelected,
       ),

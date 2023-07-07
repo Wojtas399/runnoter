@@ -59,22 +59,24 @@ class _Name extends StatelessWidget {
     }
   }
 
-  Future<String?> _askForNewUsername(BuildContext context) async {
-    return await askForValue(
-      context: context,
-      title: Str.of(context).profileNewUsernameDialogTitle,
-      label: Str.of(context).name,
-      textFieldIcon: Icons.person_rounded,
-      value: context.read<ProfileIdentitiesBloc>().state.username,
-      isValueRequired: true,
-      validator: (String? value) {
-        if (value != null && !isNameOrSurnameValid(value)) {
-          return Str.of(context).invalidNameOrSurnameMessage;
-        }
-        return null;
-      },
-    );
-  }
+  Future<String?> _askForNewUsername(BuildContext context) async =>
+      await askForValue(
+        context: context,
+        dialogMode: MediaQuery.of(context).size.width > maxMobileWidth
+            ? DialogMode.normal
+            : DialogMode.fullScreen,
+        title: Str.of(context).profileNewUsernameDialogTitle,
+        label: Str.of(context).name,
+        textFieldIcon: Icons.person_rounded,
+        value: context.read<ProfileIdentitiesBloc>().state.username,
+        isValueRequired: true,
+        validator: (String? value) {
+          if (value != null && !isNameOrSurnameValid(value)) {
+            return Str.of(context).invalidNameOrSurnameMessage;
+          }
+          return null;
+        },
+      );
 }
 
 class _Surname extends StatelessWidget {
@@ -108,22 +110,24 @@ class _Surname extends StatelessWidget {
     }
   }
 
-  Future<String?> _askForNewSurname(BuildContext context) async {
-    return await askForValue(
-      context: context,
-      title: Str.of(context).profileNewSurnameDialogTitle,
-      label: Str.of(context).surname,
-      textFieldIcon: Icons.person_rounded,
-      value: context.read<ProfileIdentitiesBloc>().state.surname,
-      isValueRequired: true,
-      validator: (String? value) {
-        if (value != null && !isNameOrSurnameValid(value)) {
-          return Str.of(context).invalidNameOrSurnameMessage;
-        }
-        return null;
-      },
-    );
-  }
+  Future<String?> _askForNewSurname(BuildContext context) async =>
+      await askForValue(
+        context: context,
+        dialogMode: MediaQuery.of(context).size.width > maxMobileWidth
+            ? DialogMode.normal
+            : DialogMode.fullScreen,
+        title: Str.of(context).profileNewSurnameDialogTitle,
+        label: Str.of(context).surname,
+        textFieldIcon: Icons.person_rounded,
+        value: context.read<ProfileIdentitiesBloc>().state.surname,
+        isValueRequired: true,
+        validator: (String? value) {
+          if (value != null && !isNameOrSurnameValid(value)) {
+            return Str.of(context).invalidNameOrSurnameMessage;
+          }
+          return null;
+        },
+      );
 }
 
 class _Email extends StatelessWidget {

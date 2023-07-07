@@ -10,6 +10,11 @@ import '../config/animation/slide_to_top_anim.dart';
 
 bool _isLoadingDialogOpened = false;
 
+enum DialogMode {
+  normal,
+  fullScreen,
+}
+
 void showLoadingDialog({
   required BuildContext context,
 }) {
@@ -97,6 +102,7 @@ Future<bool> askForConfirmationToLeave({
 
 Future<String?> askForValue({
   required BuildContext context,
+  required DialogMode dialogMode,
   required String title,
   String? label,
   IconData? textFieldIcon,
@@ -105,17 +111,25 @@ Future<String?> askForValue({
   String? Function(String? value)? validator,
 }) async {
   hideSnackbar(context: context);
-  return await showFullScreenDialog<String?>(
-    context: context,
-    dialog: ValueDialogComponent(
-      title: title,
-      label: label,
-      textFieldIcon: textFieldIcon,
-      initialValue: value,
-      isValueRequired: isValueRequired,
-      validator: validator,
-    ),
+  final Widget valueDialog = ValueDialogComponent(
+    dialogMode: dialogMode,
+    title: title,
+    label: label,
+    textFieldIcon: textFieldIcon,
+    initialValue: value,
+    isValueRequired: isValueRequired,
+    validator: validator,
   );
+  return await switch (dialogMode) {
+    DialogMode.normal => showAlertDialog<String?>(
+        context: context,
+        dialog: valueDialog,
+      ),
+    DialogMode.fullScreen => showFullScreenDialog<String?>(
+        context: context,
+        dialog: valueDialog,
+      ),
+  };
 }
 
 Future<T?> askForAction<T>({

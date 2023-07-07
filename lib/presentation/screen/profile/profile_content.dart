@@ -5,23 +5,18 @@ class _Content extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Stack(
-      children: [
-        SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.all(16),
-            child: Column(
-              children: [
-                _UserDataSection(),
-                Divider(),
-                SizedBox(height: 16),
-                _SettingsSection(),
-                SizedBox(height: 160),
-              ],
-            ),
-          ),
+    return const SingleChildScrollView(
+      child: Padding(
+        padding: EdgeInsets.all(16),
+        child: Column(
+          children: [
+            _UserDataSection(),
+            Divider(),
+            SizedBox(height: 16),
+            _SettingsSection(),
+          ],
         ),
-      ],
+      ),
     );
   }
 }
