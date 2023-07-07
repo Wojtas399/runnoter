@@ -72,7 +72,7 @@ class _DesktopContentState extends State<_DesktopContent> {
             body: SafeArea(
               child: Center(
                 child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 1200),
+                  constraints: const BoxConstraints(maxWidth: 800),
                   child: switch (_page) {
                     _DesktopDrawerPage.currentWeek => const CurrentWeekScreen(),
                     _DesktopDrawerPage.calendar => const CalendarScreen(),
