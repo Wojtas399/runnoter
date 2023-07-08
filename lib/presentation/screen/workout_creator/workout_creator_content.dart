@@ -20,20 +20,30 @@ class _Content extends StatelessWidget {
           centerTitle: true,
         ),
         body: SafeArea(
-          child: ScrollableContent(
-            child: GestureDetector(
-              onTap: unfocusInputs,
-              child: Container(
-                color: Colors.transparent,
-                padding: const EdgeInsets.all(24),
+          child: GestureDetector(
+            onTap: unfocusInputs,
+            child: ScrollableContent(
+              child: SizedBox(
+                width: double.infinity,
                 child: Column(
-                  mainAxisSize: MainAxisSize.max,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    _WorkoutName(),
-                    const SizedBox(height: 24),
-                    const _WorkoutStagesSection(),
-                    const SizedBox(height: 40),
-                    const _SubmitButton(),
+                    Container(
+                      constraints: const BoxConstraints(
+                        maxWidth: maxContentWidth,
+                      ),
+                      padding: const EdgeInsets.all(24),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        children: [
+                          _WorkoutName(),
+                          const SizedBox(height: 24),
+                          const _WorkoutStagesSection(),
+                          const SizedBox(height: 40),
+                          const _SubmitButton(),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),
