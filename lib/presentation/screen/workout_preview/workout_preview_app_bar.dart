@@ -9,13 +9,9 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: Text(
-        Str.of(context).workoutPreviewScreenTitle,
-      ),
+      title: Text(Str.of(context).workoutPreviewScreenTitle),
       centerTitle: true,
-      actions: const [
-        _WorkoutActions(),
-      ],
+      actions: context.isMobileSize ? const [_WorkoutActions()] : null,
     );
   }
 }
@@ -25,13 +21,27 @@ class _WorkoutActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return EditDeletePopupMenu(
-      onEditSelected: () {
-        _onEditSelected(context);
-      },
-      onDeleteSelected: () {
-        _onDeleteSelected(context);
-      },
+    if (context.isMobileSize) {
+      return EditDeletePopupMenu(
+        onEditSelected: () {
+          _onEditSelected(context);
+        },
+        onDeleteSelected: () {
+          _onDeleteSelected(context);
+        },
+      );
+    }
+    return Row(
+      children: [
+        IconButton(
+          onPressed: () => _onEditSelected(context),
+          icon: const Icon(Icons.edit_outlined),
+        ),
+        IconButton(
+          onPressed: () => _onDeleteSelected(context),
+          icon: const Icon(Icons.delete_outline),
+        ),
+      ],
     );
   }
 

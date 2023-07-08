@@ -10,6 +10,7 @@ import '../../component/bloc_with_status_listener_component.dart';
 import '../../component/text/label_text_components.dart';
 import '../../config/navigation/routes.dart';
 import '../../config/screen_sizes.dart';
+import '../../config/ui_sizes.dart';
 import '../../service/dialog_service.dart';
 import '../../service/distance_unit_service.dart';
 import '../../service/language_service.dart';

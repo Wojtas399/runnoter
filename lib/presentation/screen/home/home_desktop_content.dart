@@ -75,7 +75,9 @@ class _DesktopContentState extends State<_DesktopContent> {
                 children: [
                   Flexible(
                     child: ConstrainedBox(
-                      constraints: const BoxConstraints(maxWidth: 800),
+                      constraints: const BoxConstraints(
+                        maxWidth: maxContentWidth,
+                      ),
                       child: switch (_page) {
                         _DesktopDrawerPage.currentWeek =>
                           const CurrentWeekScreen(),

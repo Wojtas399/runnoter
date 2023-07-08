@@ -10,6 +10,8 @@ import '../service/pace_unit_service.dart';
 extension ContextExtensions on BuildContext {
   bool get isMobileSize => MediaQuery.of(this).size.width <= maxMobileWidth;
 
+  bool get isDesktopSize => MediaQuery.of(this).size.width > maxTabletWidth;
+
   DistanceUnit get distanceUnit => read<DistanceUnitService>().state;
 
   PaceUnit get paceUnit => read<PaceUnitService>().state;
