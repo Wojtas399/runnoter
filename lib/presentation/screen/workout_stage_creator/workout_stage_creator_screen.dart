@@ -12,9 +12,9 @@ import '../../formatter/distance_unit_formatter.dart';
 import '../../service/navigator_service.dart';
 import '../../service/utils.dart';
 
-part 'workout_stage_creator_app_bar.dart';
 part 'workout_stage_creator_content.dart';
 part 'workout_stage_creator_distance_form.dart';
+part 'workout_stage_creator_form.dart';
 part 'workout_stage_creator_series_form.dart';
 
 class WorkoutStageCreatorScreen extends StatelessWidget {
@@ -29,8 +29,10 @@ class WorkoutStageCreatorScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return _BlocProvider(
       stage: stage,
-      child: const _BlocListener(
-        child: _Content(),
+      child: _BlocListener(
+        child: context.isMobileSize
+            ? const _FullScreenDialogContent()
+            : const _NormalDialogContent(),
       ),
     );
   }

@@ -39,7 +39,8 @@ class _WorkoutStageItem extends StatelessWidget {
 
   Future<void> _onPressed(BuildContext context) async {
     final bloc = context.read<WorkoutCreatorBloc>();
-    final WorkoutStage? updatedWorkoutStage = await showFullScreenDialog(
+    final WorkoutStage? updatedWorkoutStage =
+        await showDialogDependingOnScreenSize(
       context: context,
       dialog: WorkoutStageCreatorScreen(stage: workoutStage),
     );
