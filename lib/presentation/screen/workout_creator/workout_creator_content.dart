@@ -22,30 +22,15 @@ class _Content extends StatelessWidget {
         body: SafeArea(
           child: GestureDetector(
             onTap: unfocusInputs,
-            child: ScrollableContent(
-              child: SizedBox(
-                width: double.infinity,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                      constraints: const BoxConstraints(
-                        maxWidth: maxContentWidth,
-                      ),
-                      padding: const EdgeInsets.all(24),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          _WorkoutName(),
-                          const SizedBox(height: 24),
-                          const _WorkoutStagesSection(),
-                          const SizedBox(height: 40),
-                          const _SubmitButton(),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+            child: ScreenAdjustableBody(
+              child: Column(
+                children: [
+                  _WorkoutName(),
+                  const SizedBox(height: 24),
+                  const _WorkoutStagesSection(),
+                  const SizedBox(height: 40),
+                  const _SubmitButton(),
+                ],
               ),
             ),
           ),

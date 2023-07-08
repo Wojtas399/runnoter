@@ -31,22 +31,7 @@ class _PlatformDependableBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (context.isDesktopSize || MediaQuery.of(context).size.height < 700) {
-      return SizedBox(
-        width: double.infinity,
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Container(
-                constraints: const BoxConstraints(maxWidth: maxContentWidth),
-                width: double.infinity,
-                padding: const EdgeInsets.all(24),
-                child: child,
-              ),
-            ],
-          ),
-        ),
-      );
+      return ScreenAdjustableBody(child: child);
     }
     return Paddings24(child: child);
   }

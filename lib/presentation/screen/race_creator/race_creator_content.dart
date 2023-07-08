@@ -17,14 +17,12 @@ class _Content extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: Text(
-            Str.of(context).raceCreatorScreenTitle,
-          ),
+          title: const _AppBarTitle(),
         ),
-        body: GestureDetector(
-          onTap: unfocusInputs,
-          child: const ScrollableContent(
-            child: Paddings24(
+        body: SafeArea(
+          child: GestureDetector(
+            onTap: unfocusInputs,
+            child: const ScreenAdjustableBody(
               child: Column(
                 children: [
                   _Form(),
@@ -37,6 +35,22 @@ class _Content extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class _AppBarTitle extends StatelessWidget {
+  const _AppBarTitle();
+
+  @override
+  Widget build(BuildContext context) {
+    final Race? race = context.select(
+      (RaceCreatorBloc bloc) => bloc.state.race,
+    );
+    String title = Str.of(context).raceCreatorScreenNewRaceTitle;
+    if (race != null) {
+      title = Str.of(context).raceCreatorScreenEditRaceTitle;
+    }
+    return Text(title);
   }
 }
 

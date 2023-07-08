@@ -561,9 +561,13 @@
     "description": "Label of the additional blood params"
   },
   "@__________RACE_CREATOR__________": {},
-  "raceCreatorScreenTitle": "Nowe zawody",
-  "@raceCreatorScreenTitle": {
-    "description": "Title of the race creator screen"
+  "raceCreatorScreenNewRaceTitle": "Nowe zawody",
+  "@raceCreatorScreenNewRaceTitle": {
+    "description": "Title of the race creator screen in add mode"
+  },
+  "raceCreatorScreenEditRaceTitle": "Edytuj zawody",
+  "@raceCreatorScreenEditRaceTitle": {
+    "description": "Title of the race creator screen in edit mode"
   },
   "raceCreatorAddedRaceMessage": "Pomyślnie dodano nowe zawody",
   "@raceCreatorAddedRaceMessage": {
