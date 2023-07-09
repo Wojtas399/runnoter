@@ -8,12 +8,11 @@ class _Content extends StatelessWidget {
     return Scaffold(
       appBar: const _AppBar(),
       body: SafeArea(
-        child: _PlatformDependableBody(
+        child: _ScreenAdjustableBody(
           child: BlocSelector<WorkoutPreviewBloc, WorkoutPreviewState, bool>(
             selector: (state) => state.areDataLoaded,
-            builder: (_, bool areDataLoaded) {
-              return areDataLoaded ? const _Workout() : const LoadingInfo();
-            },
+            builder: (_, bool areDataLoaded) =>
+                areDataLoaded ? const _Workout() : const LoadingInfo(),
           ),
         ),
       ),
@@ -21,10 +20,26 @@ class _Content extends StatelessWidget {
   }
 }
 
-class _PlatformDependableBody extends StatelessWidget {
+class _AppBar extends StatelessWidget implements PreferredSizeWidget {
+  const _AppBar();
+
+  @override
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+
+  @override
+  Widget build(BuildContext context) {
+    return AppBar(
+      title: Text(Str.of(context).workoutPreviewScreenTitle),
+      centerTitle: true,
+      actions: context.isMobileSize ? const [_WorkoutActions()] : null,
+    );
+  }
+}
+
+class _ScreenAdjustableBody extends StatelessWidget {
   final Widget child;
 
-  const _PlatformDependableBody({
+  const _ScreenAdjustableBody({
     required this.child,
   });
 

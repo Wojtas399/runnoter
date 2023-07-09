@@ -10,9 +10,11 @@ import '../../component/big_button_component.dart';
 import '../../component/bloc_with_status_listener_component.dart';
 import '../../component/content_with_label_component.dart';
 import '../../component/edit_delete_popup_menu_component.dart';
+import '../../component/loading_info_component.dart';
 import '../../component/nullable_text_component.dart';
 import '../../component/padding/paddings_24.dart';
 import '../../component/run_stats_component.dart';
+import '../../component/screen_adjustable_body_component.dart';
 import '../../component/text/title_text_components.dart';
 import '../../config/navigation/routes.dart';
 import '../../extension/context_extensions.dart';
@@ -21,14 +23,14 @@ import '../../extension/string_extensions.dart';
 import '../../formatter/date_formatter.dart';
 import '../../formatter/distance_unit_formatter.dart';
 import '../../formatter/duration_formatter.dart';
-import '../../formatter/run_status_formatter.dart';
 import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
 import '../race_creator/race_creator_screen.dart';
 import '../run_status_creator/run_status_creator_screen.dart';
 
-part 'race_preview_app_bar.dart';
+part 'race_preview_actions.dart';
 part 'race_preview_content.dart';
+part 'race_preview_race.dart';
 
 class RacePreviewScreen extends StatelessWidget {
   final String raceId;

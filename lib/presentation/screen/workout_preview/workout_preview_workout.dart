@@ -15,7 +15,7 @@ class _Workout extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const _Header(),
-            const SizedBox(height: 16),
+            gap,
             ContentWithLabel(
               label: str.workoutPreviewWorkoutDate,
               content: const _WorkoutDate(),
@@ -128,6 +128,21 @@ class _WorkoutDistance extends StatelessWidget {
     );
 
     return NullableText(stages?.toUIDetailedTotalDistance(context));
+  }
+}
+
+class _RunStatus extends StatelessWidget {
+  const _RunStatus();
+
+  @override
+  Widget build(BuildContext context) {
+    final RunStatus? runStatus = context.select(
+      (WorkoutPreviewBloc bloc) => bloc.state.runStatus,
+    );
+
+    return runStatus == null
+        ? const NullableText(null)
+        : RunStatusInfo(runStatus: runStatus);
   }
 }
 

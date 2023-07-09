@@ -1,21 +1,5 @@
 part of 'workout_preview_screen.dart';
 
-class _AppBar extends StatelessWidget implements PreferredSizeWidget {
-  const _AppBar();
-
-  @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
-
-  @override
-  Widget build(BuildContext context) {
-    return AppBar(
-      title: Text(Str.of(context).workoutPreviewScreenTitle),
-      centerTitle: true,
-      actions: context.isMobileSize ? const [_WorkoutActions()] : null,
-    );
-  }
-}
-
 class _WorkoutActions extends StatelessWidget {
   const _WorkoutActions();
 
@@ -23,31 +7,26 @@ class _WorkoutActions extends StatelessWidget {
   Widget build(BuildContext context) {
     if (context.isMobileSize) {
       return EditDeletePopupMenu(
-        onEditSelected: () {
-          _onEditSelected(context);
-        },
-        onDeleteSelected: () {
-          _onDeleteSelected(context);
-        },
+        onEditSelected: () => _editWorkout(context),
+        onDeleteSelected: () => _deleteWorkout(context),
       );
     }
     return Row(
       children: [
         IconButton(
-          onPressed: () => _onEditSelected(context),
+          onPressed: () => _editWorkout(context),
           icon: const Icon(Icons.edit_outlined),
         ),
         IconButton(
-          onPressed: () => _onDeleteSelected(context),
+          onPressed: () => _deleteWorkout(context),
           icon: const Icon(Icons.delete_outline),
         ),
       ],
     );
   }
 
-  void _onEditSelected(BuildContext context) {
-    final WorkoutPreviewBloc dayPreviewBloc =
-        context.read<WorkoutPreviewBloc>();
+  void _editWorkout(BuildContext context) {
+    final dayPreviewBloc = context.read<WorkoutPreviewBloc>();
     final DateTime? date = dayPreviewBloc.state.date;
     if (date != null) {
       navigateTo(
@@ -62,7 +41,7 @@ class _WorkoutActions extends StatelessWidget {
     }
   }
 
-  void _onDeleteSelected(BuildContext context) {
+  void _deleteWorkout(BuildContext context) {
     context.read<WorkoutPreviewBloc>().add(
           const WorkoutPreviewEventDeleteWorkout(),
         );

@@ -16,21 +16,18 @@ import '../../component/nullable_text_component.dart';
 import '../../component/padding/paddings_24.dart';
 import '../../component/run_stats_component.dart';
 import '../../component/screen_adjustable_body_component.dart';
-import '../../component/text/body_text_components.dart';
 import '../../component/text/title_text_components.dart';
 import '../../config/navigation/routes.dart';
 import '../../extension/context_extensions.dart';
 import '../../formatter/date_formatter.dart';
 import '../../formatter/list_of_workout_stages_formatter.dart';
-import '../../formatter/run_status_formatter.dart';
 import '../../formatter/workout_stage_formatter.dart';
 import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
 import '../screens.dart';
 
-part 'workout_preview_app_bar.dart';
+part 'workout_preview_actions.dart';
 part 'workout_preview_content.dart';
-part 'workout_preview_run_status.dart';
 part 'workout_preview_workout.dart';
 
 class WorkoutPreviewScreen extends StatelessWidget {

@@ -9,16 +9,60 @@ import '../formatter/distance_unit_formatter.dart';
 import '../formatter/duration_formatter.dart';
 import '../formatter/mood_rate_formatter.dart';
 import '../formatter/pace_formatter.dart';
+import '../formatter/run_status_formatter.dart';
 import 'content_with_label_component.dart';
 import 'nullable_text_component.dart';
+import 'text/body_text_components.dart';
+import 'text/label_text_components.dart';
 
-class RunStats extends StatelessWidget {
-  final RunStatusWithParams runStatusWithParams;
+class RunStatusInfo extends StatelessWidget {
+  final RunStatus runStatus;
 
-  const RunStats({
+  const RunStatusInfo({
     super.key,
-    required this.runStatusWithParams,
+    required this.runStatus,
   });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        _RunStatusName(runStatus),
+        if (runStatus is RunStatusWithParams)
+          _RunStats(runStatus as RunStatusWithParams),
+      ],
+    );
+  }
+}
+
+class _RunStatusName extends StatelessWidget {
+  final RunStatus status;
+
+  const _RunStatusName(this.status);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Icon(
+          status.toIcon(),
+          color: status.toColor(context),
+        ),
+        const SizedBox(width: 16),
+        BodyMedium(
+          status.toLabel(context),
+          color: status.toColor(context),
+        ),
+      ],
+    );
+  }
+}
+
+class _RunStats extends StatelessWidget {
+  final RunStatusWithParams params;
+
+  const _RunStats(this.params);
 
   @override
   Widget build(BuildContext context) {
@@ -28,24 +72,20 @@ class RunStats extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _Stats(
-            coveredDistanceInKm: runStatusWithParams.coveredDistanceInKm,
-            duration: runStatusWithParams.duration,
-            avgPace: runStatusWithParams.avgPace,
-            avgHeartRate: runStatusWithParams.avgHeartRate,
+            coveredDistanceInKm: params.coveredDistanceInKm,
+            duration: params.duration,
+            avgPace: params.avgPace,
+            avgHeartRate: params.avgHeartRate,
           ),
           const SizedBox(height: 16),
           ContentWithLabel(
             label: Str.of(context).runStatusMoodRate,
-            content: NullableText(
-              runStatusWithParams.moodRate.toUIFormat(context),
-            ),
+            content: NullableText(params.moodRate.toUIFormat(context)),
           ),
           const SizedBox(height: 16),
           ContentWithLabel(
             label: Str.of(context).runStatusComment,
-            content: NullableText(
-              runStatusWithParams.comment,
-            ),
+            content: NullableText(params.comment),
           ),
         ],
       ),
@@ -151,10 +191,7 @@ class _StatParam extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text(
-          label,
-          style: Theme.of(context).textTheme.labelMedium,
-        ),
+        LabelMedium(label),
         const SizedBox(height: 4),
         Text(value),
       ],
