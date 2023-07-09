@@ -53,23 +53,24 @@ class RaceCreatorBloc extends BlocWithStatus<RaceCreatorEvent, RaceCreatorState,
       emitNoLoggedUserStatus(emit);
       return;
     }
-    final Race? race = await _raceRepository
-        .getRaceById(
-          raceId: raceId!,
-          userId: loggedUserId,
-        )
-        .first;
-    emit(state.copyWith(
-      status: const BlocStatusComplete<RaceCreatorBlocInfo>(
-        info: RaceCreatorBlocInfo.editModeInitialized,
-      ),
-      race: race,
-      name: race?.name,
-      date: race?.date,
-      place: race?.place,
-      distance: race?.distance,
-      expectedDuration: race?.expectedDuration,
-    ));
+    final Stream<Race?> race$ = _raceRepository.getRaceById(
+      raceId: raceId!,
+      userId: loggedUserId,
+    );
+    await for (final race in race$) {
+      emit(state.copyWith(
+        status: const BlocStatusComplete<RaceCreatorBlocInfo>(
+          info: RaceCreatorBlocInfo.editModeInitialized,
+        ),
+        race: race,
+        name: race?.name,
+        date: race?.date,
+        place: race?.place,
+        distance: race?.distance,
+        expectedDuration: race?.expectedDuration,
+      ));
+      return;
+    }
   }
 
   void _nameChanged(
