@@ -42,15 +42,13 @@ class _RaceActions extends StatelessWidget {
     final str = Str.of(context);
     final bool confirmed = await askForConfirmation(
       context: context,
-      title: str.racePreviewDeleteRaceTitle,
-      message: str.racePreviewDeleteRaceMessage,
+      title: str.racePreviewDeletionConfirmationTitle,
+      message: str.racePreviewDeletionConfirmationMessage,
       confirmButtonLabel: str.delete,
       cancelButtonColor: Theme.of(context).colorScheme.error,
     );
     if (confirmed == true) {
-      bloc.add(
-        const RacePreviewEventDeleteRace(),
-      );
+      bloc.add(const RacePreviewEventDeleteRace());
     }
   }
 }

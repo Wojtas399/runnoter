@@ -165,6 +165,14 @@
   "@workoutPreviewTotalDistance": {
     "description": "Label of the section to display total distance of the workout"
   },
+  "workoutPreviewDeletionConfirmationTitle": "Usunięcie treningu",
+  "@workoutPreviewDeletionConfirmationTitle": {
+    "description": "Title of the confirmation dialog to delete workout"
+  },
+  "workoutPreviewDeletionConfirmationMessage": "Tej operacji nie można cofnąć. Czy na pewno chcesz usunąć ten trening?",
+  "@workoutPreviewDeletionConfirmationMessage": {
+    "description": "Message of the confirmation dialog to delete workout"
+  },
   "workoutPreviewDeletedWorkoutMessage": "Pomyślnie usunięto trening",
   "@workoutPreviewDeletedWorkoutMessage": {
     "description": "Message to inform that workout has been deleted"
@@ -591,12 +599,12 @@
   "@racePreviewScreenTitle": {
     "description": "Title of the race preview screen"
   },
-  "racePreviewDeleteRaceTitle": "Usunięcie zawodów",
-  "@racePreviewDeleteRaceTitle": {
+  "racePreviewDeletionConfirmationTitle": "Usunięcie zawodów",
+  "@racePreviewDeletionConfirmationTitle": {
     "description": "Title of the confirmation dialog to delete race"
   },
-  "racePreviewDeleteRaceMessage": "Tej operacji nie można cofnąć. Czy na pewno chcesz usunąć te zawody?",
-  "@racePreviewDeleteRaceMessage": {
+  "racePreviewDeletionConfirmationMessage": "Tej operacji nie można cofnąć. Czy na pewno chcesz usunąć ten wyścig?",
+  "@racePreviewDeletionConfirmationMessage": {
     "description": "Message of the confirmation dialog to delete race"
   },
   "racePreviewDeletedRaceMessage": "Pomyślnie usunięto zawody",

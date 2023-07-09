@@ -26,24 +26,33 @@ class _WorkoutActions extends StatelessWidget {
   }
 
   void _editWorkout(BuildContext context) {
-    final dayPreviewBloc = context.read<WorkoutPreviewBloc>();
-    final DateTime? date = dayPreviewBloc.state.date;
+    final WorkoutPreviewBloc bloc = context.read<WorkoutPreviewBloc>();
+    final DateTime? date = bloc.state.date;
     if (date != null) {
       navigateTo(
         context: context,
         route: WorkoutCreatorRoute(
           creatorArguments: WorkoutCreatorEditModeArguments(
             date: date,
-            workoutId: dayPreviewBloc.workoutId,
+            workoutId: bloc.workoutId,
           ),
         ),
       );
     }
   }
 
-  void _deleteWorkout(BuildContext context) {
-    context.read<WorkoutPreviewBloc>().add(
-          const WorkoutPreviewEventDeleteWorkout(),
-        );
+  Future<void> _deleteWorkout(BuildContext context) async {
+    final WorkoutPreviewBloc bloc = context.read<WorkoutPreviewBloc>();
+    final str = Str.of(context);
+    final bool confirmed = await askForConfirmation(
+      context: context,
+      title: str.workoutPreviewDeletionConfirmationTitle,
+      message: str.workoutPreviewDeletionConfirmationMessage,
+      confirmButtonLabel: str.delete,
+      cancelButtonColor: Theme.of(context).colorScheme.error,
+    );
+    if (confirmed == true) {
+      bloc.add(const WorkoutPreviewEventDeleteWorkout());
+    }
   }
 }
