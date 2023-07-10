@@ -9,7 +9,6 @@ class _Form extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         _WorkoutStageType(),
-        SizedBox(height: 40),
         _MatchingForm(),
       ],
     );
@@ -25,25 +24,28 @@ class _WorkoutStageType extends StatelessWidget {
       (WorkoutStageCreatorBloc bloc) => bloc.state.stageType,
     );
 
-    return DropdownButtonFormField<WorkoutStageType>(
-      value: stageType,
-      decoration: InputDecoration(
-        filled: true,
-        hintText: Str.of(context).workoutStageCreatorStageType,
-      ),
-      items: <DropdownMenuItem<WorkoutStageType>>[
-        ...WorkoutStageType.values.map(
-          (WorkoutStageType stage) => DropdownMenuItem(
-            value: stage,
-            child: Text(
-              _getWorkoutStageName(context, stage),
+    return Padding(
+      padding: EdgeInsets.only(bottom: stageType != null ? 40 : 0),
+      child: DropdownButtonFormField<WorkoutStageType>(
+        value: stageType,
+        decoration: InputDecoration(
+          filled: true,
+          hintText: Str.of(context).workoutStageCreatorStageType,
+        ),
+        items: <DropdownMenuItem<WorkoutStageType>>[
+          ...WorkoutStageType.values.map(
+            (WorkoutStageType stage) => DropdownMenuItem(
+              value: stage,
+              child: Text(
+                _getWorkoutStageName(context, stage),
+              ),
             ),
           ),
-        ),
-      ],
-      onChanged: (WorkoutStageType? stage) {
-        _onWorkoutStageChanged(context, stage);
-      },
+        ],
+        onChanged: (WorkoutStageType? stage) {
+          _onWorkoutStageChanged(context, stage);
+        },
+      ),
     );
   }
 
