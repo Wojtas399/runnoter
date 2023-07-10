@@ -1,4 +1,4 @@
-part of 'day_preview_screen.dart';
+part of 'day_preview_dialog.dart';
 
 class _ActivitiesContent extends StatelessWidget {
   const _ActivitiesContent();
@@ -8,23 +8,24 @@ class _ActivitiesContent extends StatelessWidget {
     final DayPreviewCubit cubit = context.watch<DayPreviewCubit>();
 
     if (cubit.state.workouts == null && cubit.state.workouts == null) {
-      return const LoadingInfo();
+      return const Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          LoadingInfo(),
+        ],
+      );
     } else if (cubit.areThereActivities) {
-      return SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: _Activities(
-            workouts: cubit.state.workouts,
-            races: cubit.state.races,
-          ),
-        ),
+      return _Activities(
+        workouts: cubit.state.workouts,
+        races: cubit.state.races,
       );
     }
+    final str = Str.of(context);
     return EmptyContentInfo(
-      title: Str.of(context).dayPreviewNoActivitiesTitle,
+      title: str.dayPreviewNoActivitiesTitle,
       subtitle: cubit.isPastDate
-          ? Str.of(context).dayPreviewNoActivitiesMessagePastDay
-          : Str.of(context).dayPreviewNoActivitiesMessageFutureDay,
+          ? str.dayPreviewNoActivitiesMessagePastDay
+          : str.dayPreviewNoActivitiesMessageFutureDay,
     );
   }
 }
@@ -41,6 +42,7 @@ class _Activities extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         ...?workouts?.map(
           (workout) => ActivityItem(

@@ -10,9 +10,9 @@ import '../../../domain/service/auth_service.dart';
 import '../../component/calendar/calendar_component.dart';
 import '../../component/calendar/calendar_component_cubit.dart';
 import '../../component/padding/paddings_24.dart';
-import '../../config/navigation/routes.dart';
 import '../../formatter/run_status_formatter.dart';
-import '../../service/navigator_service.dart';
+import '../../service/dialog_service.dart';
+import '../day_preview/day_preview_dialog.dart';
 
 class CalendarScreen extends StatelessWidget {
   const CalendarScreen({
@@ -101,13 +101,22 @@ class _CalendarState extends State<_Calendar> {
         );
   }
 
-  void _onDayPressed(
+  Future<void> _onDayPressed(
     BuildContext context,
     DateTime date,
-  ) {
-    navigateTo(
+  ) async {
+    await showDialogDependingOnScreenSize(
       context: context,
-      route: DayPreviewRoute(date: date),
+      dialog: RepositoryProvider.value(
+        value: context.read<AuthService>(),
+        child: RepositoryProvider.value(
+          value: context.read<WorkoutRepository>(),
+          child: RepositoryProvider.value(
+            value: context.read<RaceRepository>(),
+            child: DayPreviewDialog(date: date),
+          ),
+        ),
+      ),
     );
   }
 }
