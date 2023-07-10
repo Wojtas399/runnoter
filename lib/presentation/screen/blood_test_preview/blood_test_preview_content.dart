@@ -5,16 +5,23 @@ class _Content extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      appBar: _AppBar(),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _DateSection(),
-          Expanded(
-            child: _Results(),
+    return Scaffold(
+      appBar: const _AppBar(),
+      body: SafeArea(
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: maxContentWidth),
+            child: const Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _DateSection(),
+                Expanded(
+                  child: _Results(),
+                ),
+              ],
+            ),
           ),
-        ],
+        ),
       ),
     );
   }

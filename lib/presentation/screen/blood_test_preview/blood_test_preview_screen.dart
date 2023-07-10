@@ -11,6 +11,7 @@ import '../../component/blood_parameter_results_list_component.dart';
 import '../../component/edit_delete_popup_menu_component.dart';
 import '../../component/text/title_text_components.dart';
 import '../../config/navigation/routes.dart';
+import '../../config/ui_sizes.dart';
 import '../../formatter/date_formatter.dart';
 import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
