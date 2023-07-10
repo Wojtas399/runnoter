@@ -10,8 +10,13 @@ class _Content extends StatelessWidget {
         centerTitle: true,
         title: Text(Str.of(context).healthMeasurementsScreenTitle),
       ),
-      body: const SafeArea(
-        child: _Body(),
+      body: SafeArea(
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: maxContentWidth),
+            child: const _Body(),
+          ),
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _onAddButtonPressed,
