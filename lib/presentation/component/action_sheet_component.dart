@@ -1,22 +1,11 @@
 import 'package:flutter/material.dart';
 
+import '../service/dialog_service.dart';
 import 'text/body_text_components.dart';
 import 'text/title_text_components.dart';
 
-class ActionSheetItem<T> {
-  final T id;
-  final String label;
-  final IconData iconData;
-
-  const ActionSheetItem({
-    required this.id,
-    required this.label,
-    required this.iconData,
-  });
-}
-
 class ActionSheetComponent extends StatelessWidget {
-  final List<ActionSheetItem> actions;
+  final List<ActionItem> actions;
   final String? title;
 
   const ActionSheetComponent({
@@ -35,7 +24,7 @@ class ActionSheetComponent extends StatelessWidget {
         children: [
           if (title != null) _Title(title: title!),
           ...actions.map(
-            (ActionSheetItem action) => _createMaterialAction(
+            (ActionItem action) => _createMaterialAction(
               action: action,
               context: context,
             ),
@@ -46,7 +35,7 @@ class ActionSheetComponent extends StatelessWidget {
   }
 
   Widget _createMaterialAction({
-    required ActionSheetItem action,
+    required ActionItem action,
     required BuildContext context,
   }) {
     return ListTile(

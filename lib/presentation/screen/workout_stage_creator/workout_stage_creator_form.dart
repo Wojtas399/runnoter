@@ -29,7 +29,6 @@ class _WorkoutStageType extends StatelessWidget {
       child: DropdownButtonFormField<WorkoutStageType>(
         value: stageType,
         decoration: InputDecoration(
-          filled: true,
           hintText: Str.of(context).workoutStageCreatorStageType,
         ),
         items: <DropdownMenuItem<WorkoutStageType>>[

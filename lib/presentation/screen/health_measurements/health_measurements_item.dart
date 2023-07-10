@@ -45,12 +45,12 @@ class _MeasurementItemState extends State<_MeasurementItem> {
     final str = Str.of(context);
     final _MeasurementAction? action = await askForAction<_MeasurementAction>(
       actions: [
-        ActionSheetItem(
+        ActionItem(
           id: _MeasurementAction.edit,
           label: str.edit,
           iconData: Icons.edit_outlined,
         ),
-        ActionSheetItem(
+        ActionItem(
           id: _MeasurementAction.delete,
           label: str.delete,
           iconData: Icons.delete_outline,

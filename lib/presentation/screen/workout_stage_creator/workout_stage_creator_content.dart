@@ -93,13 +93,7 @@ class _SaveButton extends StatelessWidget {
       isEditMode ? Str.of(context).save : Str.of(context).add,
     );
 
-    if (context.isMobileSize) {
-      return FilledButton(
-        onPressed: isButtonDisabled ? null : () => _onPressed(context),
-        child: label,
-      );
-    }
-    return TextButton(
+    return FilledButton(
       onPressed: isButtonDisabled ? null : () => _onPressed(context),
       child: label,
     );

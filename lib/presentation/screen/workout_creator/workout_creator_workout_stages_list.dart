@@ -77,16 +77,17 @@ class _ReorderableListOfWorkoutStagesState
 
   @override
   Widget build(BuildContext context) {
-    return ReorderableListView(
+    return ReorderableListView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
+      buildDefaultDragHandles: false,
       proxyDecorator: (Widget child, _, Animation<double> animation) {
         return AnimatedBuilder(
           animation: animation,
           builder: (BuildContext context, Widget? child) => Material(
             elevation: 10,
             color: Colors.transparent,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(100),
             child: child,
           ),
           child: child,
@@ -95,14 +96,12 @@ class _ReorderableListOfWorkoutStagesState
       onReorder: (int oldIndex, int newIndex) {
         _onReorder(oldIndex, newIndex);
       },
-      children: [
-        for (int i = 0; i < _stages.length; i++)
-          _WorkoutStageItem(
-            key: Key('$i'),
-            index: i,
-            workoutStage: _stages[i],
-          ),
-      ],
+      itemCount: _stages.length,
+      itemBuilder: (_, int itemIndex) => _WorkoutStageItem(
+        key: Key('$itemIndex'),
+        index: itemIndex,
+        workoutStage: _stages[itemIndex],
+      ),
     );
   }
 

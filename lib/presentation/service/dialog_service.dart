@@ -119,7 +119,7 @@ Future<String?> askForValue({
 }
 
 Future<T?> askForAction<T>({
-  required List<ActionSheetItem<T>> actions,
+  required List<ActionItem<T>> actions,
   String? title,
 }) async {
   if (navigatorKey.currentContext == null) return null;
@@ -131,6 +131,45 @@ Future<T?> askForAction<T>({
       actions: actions,
       title: title,
     ),
+  );
+}
+
+Future<T?> askForMenuAction<T>({
+  required BuildContext context,
+  required GlobalKey boxGlobalKey,
+  required List<ActionItem<T>> actions,
+  String? title,
+}) async {
+  if (navigatorKey.currentContext == null) return null;
+  hideSnackbar();
+  final box = boxGlobalKey.currentContext?.findRenderObject() as RenderBox;
+  final overlay = Overlay.of(context).context.findRenderObject();
+  final Offset position = box.localToGlobal(Offset.zero);
+  final double dx = position.dx + box.size.width;
+  final double dy = position.dy + box.size.height;
+  return await showMenu(
+    context: navigatorKey.currentContext!,
+    position: RelativeRect.fromSize(
+      Rect.fromLTWH(dx, dy, 10, 10),
+      Size(
+        overlay!.paintBounds.size.width,
+        overlay.paintBounds.size.height,
+      ),
+    ),
+    items: actions
+        .map(
+          (action) => PopupMenuItem(
+            value: action.id,
+            child: Row(
+              children: [
+                Icon(action.iconData),
+                const SizedBox(width: 8),
+                Text(action.label)
+              ],
+            ),
+          ),
+        )
+        .toList(),
   );
 }
 
@@ -188,4 +227,16 @@ Future<T?> showFullScreenDialog<T>(Widget dialog) async {
     },
     transitionDuration: const Duration(milliseconds: 500),
   );
+}
+
+class ActionItem<T> {
+  final T id;
+  final String label;
+  final IconData iconData;
+
+  const ActionItem({
+    required this.id,
+    required this.label,
+    required this.iconData,
+  });
 }

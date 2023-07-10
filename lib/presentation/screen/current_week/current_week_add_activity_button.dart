@@ -49,12 +49,12 @@ class _AddActivityButtonState extends State<_AddActivityButton> {
     return await askForAction<ActivityType>(
       title: str.currentWeekActivityActionSheetTitle,
       actions: [
-        ActionSheetItem(
+        ActionItem(
           id: ActivityType.workout,
           label: str.workout,
           iconData: Icons.directions_run,
         ),
-        ActionSheetItem(
+        ActionItem(
           id: ActivityType.race,
           label: str.race,
           iconData: Icons.emoji_events,

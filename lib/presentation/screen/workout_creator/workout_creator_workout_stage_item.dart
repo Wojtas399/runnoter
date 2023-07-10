@@ -1,6 +1,11 @@
 part of 'workout_creator_screen.dart';
 
-class _WorkoutStageItem extends StatelessWidget {
+enum _WorkoutStageAction {
+  edit,
+  delete,
+}
+
+class _WorkoutStageItem extends StatefulWidget {
   final int index;
   final WorkoutStage workoutStage;
 
@@ -11,25 +16,32 @@ class _WorkoutStageItem extends StatelessWidget {
   });
 
   @override
+  State<StatefulWidget> createState() => _WorkoutStageItemState();
+}
+
+class _WorkoutStageItemState extends State<_WorkoutStageItem> {
+  final GlobalKey globalKey = GlobalKey();
+
+  @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        _onPressed(context);
-      },
-      child: SizedBox(
-        width: double.infinity,
-        child: Card(
+    return SizedBox(
+      width: double.infinity,
+      child: Card(
+        key: globalKey,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(100),
+        ),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(100),
+          onTap: _onPressed,
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(16, 8, 8, 8),
-            child: IntrinsicHeight(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _Description(workoutStage: workoutStage),
-                  const SizedBox(width: 8),
-                  _DeleteButton(workoutIndex: index),
-                ],
-              ),
+            padding: const EdgeInsets.fromLTRB(24, 16, 20, 16),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                BodyMedium(widget.workoutStage.toUIFormat(context)),
+                _DragHandle(itemIndex: widget.index),
+              ],
             ),
           ),
         ),
@@ -37,74 +49,72 @@ class _WorkoutStageItem extends StatelessWidget {
     );
   }
 
-  Future<void> _onPressed(BuildContext context) async {
+  Future<void> _onPressed() async {
+    final _WorkoutStageAction? action = await _askForAction();
+    if (action == null || !mounted) return;
+    switch (action) {
+      case _WorkoutStageAction.edit:
+        await _editWorkoutStage();
+        break;
+      case _WorkoutStageAction.delete:
+        _deleteWorkoutStage();
+        break;
+    }
+  }
+
+  Future<_WorkoutStageAction?> _askForAction() async =>
+      await askForMenuAction<_WorkoutStageAction>(
+        context: context,
+        boxGlobalKey: globalKey,
+        actions: [
+          ActionItem(
+            id: _WorkoutStageAction.edit,
+            iconData: Icons.edit_outlined,
+            label: Str.of(context).edit,
+          ),
+          ActionItem(
+            id: _WorkoutStageAction.delete,
+            iconData: Icons.delete_outline,
+            label: Str.of(context).delete,
+          ),
+        ],
+      );
+
+  Future<void> _editWorkoutStage() async {
     final bloc = context.read<WorkoutCreatorBloc>();
     final WorkoutStage? updatedWorkoutStage =
         await showDialogDependingOnScreenSize(
-      WorkoutStageCreatorScreen(stage: workoutStage),
+      WorkoutStageCreatorScreen(stage: widget.workoutStage),
     );
     if (updatedWorkoutStage != null) {
       bloc.add(
         WorkoutCreatorEventWorkoutStageUpdated(
-          stageIndex: index,
+          stageIndex: widget.index,
           workoutStage: updatedWorkoutStage,
         ),
       );
     }
   }
-}
 
-class _Description extends StatelessWidget {
-  final WorkoutStage workoutStage;
-
-  const _Description({
-    required this.workoutStage,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            workoutStage.toUIFormat(context),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _DeleteButton extends StatelessWidget {
-  final int workoutIndex;
-
-  const _DeleteButton({
-    required this.workoutIndex,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: 32,
-      height: 32,
-      child: IconButton(
-        onPressed: () {
-          _onPressed(context, workoutIndex);
-        },
-        icon: const Icon(
-          Icons.close,
-        ),
-        iconSize: 20,
-        padding: EdgeInsets.zero,
-      ),
-    );
-  }
-
-  void _onPressed(BuildContext context, int workoutIndex) {
+  void _deleteWorkoutStage() {
     context.read<WorkoutCreatorBloc>().add(
-          WorkoutCreatorEventDeleteWorkoutStage(index: workoutIndex),
+          WorkoutCreatorEventDeleteWorkoutStage(index: widget.index),
         );
+  }
+}
+
+class _DragHandle extends StatelessWidget {
+  final int itemIndex;
+
+  const _DragHandle({
+    required this.itemIndex,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ReorderableDragStartListener(
+      index: itemIndex,
+      child: const Icon(Icons.drag_handle),
+    );
   }
 }

@@ -7,7 +7,6 @@ import '../../../domain/bloc/current_week/current_week_cubit.dart';
 import '../../../domain/repository/race_repository.dart';
 import '../../../domain/repository/workout_repository.dart';
 import '../../../domain/service/auth_service.dart';
-import '../../component/action_sheet_component.dart';
 import '../../component/activity_item_component.dart';
 import '../../component/loading_info_component.dart';
 import '../../component/text/title_text_components.dart';
