@@ -7,24 +7,17 @@ class _Form extends StatelessWidget {
   Widget build(BuildContext context) {
     const Widget gap = SizedBox(height: 24);
 
-    return GestureDetector(
-      onTap: unfocusInputs,
-      child: Container(
-        color: Colors.transparent,
-        padding: const EdgeInsets.all(24),
-        child: const Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _Date(),
-            gap,
-            _RestingHeartRate(),
-            gap,
-            _FastingWeight(),
-            gap,
-            _SubmitButton(),
-          ],
-        ),
-      ),
+    return const Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _Date(),
+        gap,
+        _RestingHeartRate(),
+        gap,
+        _FastingWeight(),
+        gap,
+        _SubmitButton(),
+      ],
     );
   }
 }
@@ -176,12 +169,17 @@ class _SubmitButton extends StatelessWidget {
       (HealthMeasurementCreatorBloc bloc) => !bloc.state.canSubmit,
     );
 
-    return BigButton(
-      label: Str.of(context).save,
-      onPressed: () {
-        _onPressed(context);
-      },
-      isDisabled: isDisabled,
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        BigButton(
+          label: Str.of(context).save,
+          onPressed: () {
+            _onPressed(context);
+          },
+          isDisabled: isDisabled,
+        ),
+      ],
     );
   }
 

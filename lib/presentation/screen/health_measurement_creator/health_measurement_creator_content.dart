@@ -17,12 +17,15 @@ class _Content extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: Text(
-            Str.of(context).healthMeasurementCreatorScreenTitle,
-          ),
+          title: Text(Str.of(context).healthMeasurementCreatorScreenTitle),
         ),
-        body: const SafeArea(
-          child: _Body(),
+        body: SafeArea(
+          child: GestureDetector(
+            onTap: unfocusInputs,
+            child: const ScreenAdjustableBody(
+              child: _Body(),
+            ),
+          ),
         ),
       ),
     );
