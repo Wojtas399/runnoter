@@ -2,14 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/bloc/profile/theme_mode_cubit.dart';
+import '../../../domain/bloc/profile/settings/profile_settings_bloc.dart';
 import '../../../domain/entity/settings.dart' as settings;
-import '../../../domain/repository/user_repository.dart';
-import '../../../domain/service/auth_service.dart';
 import '../../component/text/body_text_components.dart';
 import '../../extension/context_extensions.dart';
 import '../../service/navigator_service.dart';
-import '../../service/theme_service.dart';
 
 class ProfileThemeModeDialog extends StatelessWidget {
   const ProfileThemeModeDialog({
@@ -17,72 +14,8 @@ class ProfileThemeModeDialog extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    return _ThemeModeCubitProvider(
-      child: _CubitListener(
-        child: context.isMobileSize
-            ? const _FullScreenDialog()
-            : const _NormalDialog(),
-      ),
-    );
-  }
-}
-
-class _ThemeModeCubitProvider extends StatelessWidget {
-  final Widget child;
-
-  const _ThemeModeCubitProvider({
-    required this.child,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocProvider<ThemeModeCubit>(
-      create: (BuildContext context) => ThemeModeCubit(
-        authService: context.read<AuthService>(),
-        userRepository: context.read<UserRepository>(),
-      )..initialize(),
-      child: child,
-    );
-  }
-}
-
-class _CubitListener extends StatelessWidget {
-  final Widget child;
-
-  const _CubitListener({
-    required this.child,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocListener<ThemeModeCubit, settings.ThemeMode?>(
-      listener: (BuildContext context, settings.ThemeMode? themeMode) {
-        if (themeMode != null) {
-          _manageThemeMode(context, themeMode);
-        }
-      },
-      child: child,
-    );
-  }
-
-  void _manageThemeMode(
-    BuildContext context,
-    settings.ThemeMode themeMode,
-  ) {
-    final themeService = context.read<ThemeService>();
-    switch (themeMode) {
-      case settings.ThemeMode.dark:
-        themeService.changeTheme(ThemeMode.dark);
-        break;
-      case settings.ThemeMode.light:
-        themeService.changeTheme(ThemeMode.light);
-        break;
-      case settings.ThemeMode.system:
-        themeService.changeTheme(ThemeMode.system);
-        break;
-    }
-  }
+  Widget build(BuildContext context) =>
+      context.isMobileSize ? const _FullScreenDialog() : const _NormalDialog();
 }
 
 class _NormalDialog extends StatelessWidget {
@@ -166,7 +99,7 @@ class _OptionsToSelect extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final settings.ThemeMode? selectedThemeMode = context.select(
-      (ThemeModeCubit cubit) => cubit.state,
+      (ProfileSettingsBloc bloc) => bloc.state.themeMode,
     );
     final str = Str.of(context);
 
@@ -181,9 +114,7 @@ class _OptionsToSelect extends StatelessWidget {
           },
         ),
         RadioListTile<settings.ThemeMode>(
-          title: Text(
-            str.themeModeDark,
-          ),
+          title: Text(str.themeModeDark),
           value: settings.ThemeMode.dark,
           groupValue: selectedThemeMode,
           onChanged: (settings.ThemeMode? themeMode) {
@@ -191,9 +122,7 @@ class _OptionsToSelect extends StatelessWidget {
           },
         ),
         RadioListTile<settings.ThemeMode>(
-          title: Text(
-            str.themeModeSystem,
-          ),
+          title: Text(str.themeModeSystem),
           value: settings.ThemeMode.system,
           groupValue: selectedThemeMode,
           onChanged: (settings.ThemeMode? themeMode) {
@@ -209,8 +138,8 @@ class _OptionsToSelect extends StatelessWidget {
     settings.ThemeMode? newThemeMode,
   ) {
     if (newThemeMode != null) {
-      context.read<ThemeModeCubit>().updateThemeMode(
-            newThemeMode: newThemeMode,
+      context.read<ProfileSettingsBloc>().add(
+            ProfileSettingsEventUpdateThemeMode(newThemeMode: newThemeMode),
           );
     }
   }

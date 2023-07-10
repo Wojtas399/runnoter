@@ -45,11 +45,8 @@ class _Theme extends StatelessWidget {
 
   Future<void> _onPressed(BuildContext context) async =>
       await showDialogDependingOnScreenSize(
-        MultiRepositoryProvider(
-          providers: [
-            RepositoryProvider.value(value: context.read<AuthService>()),
-            RepositoryProvider.value(value: context.read<UserRepository>()),
-          ],
+        BlocProvider.value(
+          value: context.read<ProfileSettingsBloc>(),
           child: const ProfileThemeModeDialog(),
         ),
       );
@@ -76,11 +73,8 @@ class _Language extends StatelessWidget {
 
   Future<void> _onPressed(BuildContext context) async =>
       await showDialogDependingOnScreenSize(
-        MultiRepositoryProvider(
-          providers: [
-            RepositoryProvider.value(value: context.read<AuthService>()),
-            RepositoryProvider.value(value: context.read<UserRepository>()),
-          ],
+        BlocProvider.value(
+          value: context.read<ProfileSettingsBloc>(),
           child: const ProfileLanguageDialog(),
         ),
       );
@@ -107,11 +101,8 @@ class _DistanceUnit extends StatelessWidget {
 
   Future<void> _onPressed(BuildContext context) async =>
       await showDialogDependingOnScreenSize(
-        MultiRepositoryProvider(
-          providers: [
-            RepositoryProvider.value(value: context.read<AuthService>()),
-            RepositoryProvider.value(value: context.read<UserRepository>()),
-          ],
+        BlocProvider.value(
+          value: context.read<ProfileSettingsBloc>(),
           child: const ProfileDistanceUnitDialog(),
         ),
       );
@@ -138,11 +129,8 @@ class _PaceUnit extends StatelessWidget {
 
   Future<void> _onPressed(BuildContext context) async =>
       await showDialogDependingOnScreenSize(
-        MultiRepositoryProvider(
-          providers: [
-            RepositoryProvider.value(value: context.read<AuthService>()),
-            RepositoryProvider.value(value: context.read<UserRepository>()),
-          ],
+        BlocProvider.value(
+          value: context.read<ProfileSettingsBloc>(),
           child: const ProfilePaceUnitDialog(),
         ),
       );

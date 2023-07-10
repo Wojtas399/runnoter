@@ -24,24 +24,17 @@ class ProfileSettingsBloc extends BlocWithStatus<ProfileSettingsEvent,
   ProfileSettingsBloc({
     required AuthService authService,
     required UserRepository userRepository,
-    BlocStatus status = const BlocStatusInitial(),
-    ThemeMode? themeMode,
-    Language? language,
-    DistanceUnit? distanceUnit,
-    PaceUnit? paceUnit,
+    ProfileSettingsState state = const ProfileSettingsState(
+      status: BlocStatusInitial(),
+    ),
   })  : _authService = authService,
         _userRepository = userRepository,
-        super(
-          ProfileSettingsState(
-            status: status,
-            themeMode: themeMode,
-            language: language,
-            distanceUnit: distanceUnit,
-            paceUnit: paceUnit,
-          ),
-        ) {
+        super(state) {
     on<ProfileSettingsEventInitialize>(_initialize);
-    on<ProfileSettingsEventUserUpdated>(_userUpdated);
+    on<ProfileSettingsEventUpdateThemeMode>(_updateThemeMode);
+    on<ProfileSettingsEventUpdateLanguage>(_updateLanguage);
+    on<ProfileSettingsEventUpdateDistanceUnit>(_updateDistanceUnit);
+    on<ProfileSettingsEventUpdatePaceUnit>(_updatePaceUnit);
   }
 
   @override
@@ -51,34 +44,128 @@ class ProfileSettingsBloc extends BlocWithStatus<ProfileSettingsEvent,
     return super.close();
   }
 
-  void _initialize(
+  Future<void> _initialize(
     ProfileSettingsEventInitialize event,
     Emitter<ProfileSettingsState> emit,
-  ) {
-    _userListener ??= _authService.loggedUserId$
-        .whereType<String>()
-        .switchMap(
-          (String userId) => _userRepository.getUserById(userId: userId),
-        )
-        .listen(
-      (User? user) {
-        add(
-          ProfileSettingsEventUserUpdated(user: user),
-        );
-      },
-    );
+  ) async {
+    final Stream<User?> loggedUser$ =
+        _authService.loggedUserId$.whereType<String>().switchMap(
+              (String loggedUserId) => _userRepository.getUserById(
+                userId: loggedUserId,
+              ),
+            );
+    await for (final loggedUser in loggedUser$) {
+      final Settings? settings = loggedUser?.settings;
+      emit(state.copyWith(
+        themeMode: settings?.themeMode,
+        language: settings?.language,
+        distanceUnit: settings?.distanceUnit,
+        paceUnit: settings?.paceUnit,
+      ));
+    }
   }
 
-  void _userUpdated(
-    ProfileSettingsEventUserUpdated event,
+  Future<void> _updateThemeMode(
+    ProfileSettingsEventUpdateThemeMode event,
     Emitter<ProfileSettingsState> emit,
-  ) {
-    final Settings? settings = event.user?.settings;
+  ) async {
+    final ThemeMode? previousThemeMode = state.themeMode;
+    if (event.newThemeMode == previousThemeMode) return;
+    final String? loggedUserId = await _authService.loggedUserId$.first;
+    if (loggedUserId == null) {
+      emitNoLoggedUserStatus(emit);
+      return;
+    }
     emit(state.copyWith(
-      themeMode: settings?.themeMode,
-      language: settings?.language,
-      distanceUnit: settings?.distanceUnit,
-      paceUnit: settings?.paceUnit,
+      themeMode: event.newThemeMode,
     ));
+    try {
+      await _userRepository.updateUserSettings(
+        userId: loggedUserId,
+        themeMode: event.newThemeMode,
+      );
+    } catch (_) {
+      emit(state.copyWith(
+        themeMode: previousThemeMode,
+      ));
+    }
+  }
+
+  Future<void> _updateLanguage(
+    ProfileSettingsEventUpdateLanguage event,
+    Emitter<ProfileSettingsState> emit,
+  ) async {
+    final Language? previousLanguage = state.language;
+    if (event.newLanguage == previousLanguage) return;
+    final String? loggedUserId = await _authService.loggedUserId$.first;
+    if (loggedUserId == null) {
+      emitNoLoggedUserStatus(emit);
+      return;
+    }
+    emit(state.copyWith(
+      language: event.newLanguage,
+    ));
+    try {
+      await _userRepository.updateUserSettings(
+        userId: loggedUserId,
+        language: event.newLanguage,
+      );
+    } catch (_) {
+      emit(state.copyWith(
+        language: previousLanguage,
+      ));
+    }
+  }
+
+  Future<void> _updateDistanceUnit(
+    ProfileSettingsEventUpdateDistanceUnit event,
+    Emitter<ProfileSettingsState> emit,
+  ) async {
+    final DistanceUnit? previousDistanceUnit = state.distanceUnit;
+    if (event.newDistanceUnit == previousDistanceUnit) return;
+    final String? loggedUserId = await _authService.loggedUserId$.first;
+    if (loggedUserId == null) {
+      emitNoLoggedUserStatus(emit);
+      return;
+    }
+    emit(state.copyWith(
+      distanceUnit: event.newDistanceUnit,
+    ));
+    try {
+      await _userRepository.updateUserSettings(
+        userId: loggedUserId,
+        distanceUnit: event.newDistanceUnit,
+      );
+    } catch (_) {
+      emit(state.copyWith(
+        distanceUnit: previousDistanceUnit,
+      ));
+    }
+  }
+
+  Future<void> _updatePaceUnit(
+    ProfileSettingsEventUpdatePaceUnit event,
+    Emitter<ProfileSettingsState> emit,
+  ) async {
+    final PaceUnit? previousPaceUnit = state.paceUnit;
+    if (event.newPaceUnit == previousPaceUnit) return;
+    final String? loggedUserId = await _authService.loggedUserId$.first;
+    if (loggedUserId == null) {
+      emitNoLoggedUserStatus(emit);
+      return;
+    }
+    emit(state.copyWith(
+      paceUnit: event.newPaceUnit,
+    ));
+    try {
+      await _userRepository.updateUserSettings(
+        userId: loggedUserId,
+        paceUnit: event.newPaceUnit,
+      );
+    } catch (_) {
+      emit(state.copyWith(
+        paceUnit: previousPaceUnit,
+      ));
+    }
   }
 }

@@ -2,14 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/bloc/profile/language_cubit.dart';
+import '../../../domain/bloc/profile/settings/profile_settings_bloc.dart';
 import '../../../domain/entity/settings.dart';
-import '../../../domain/repository/user_repository.dart';
-import '../../../domain/service/auth_service.dart';
 import '../../component/text/body_text_components.dart';
 import '../../extension/context_extensions.dart';
 import '../../formatter/settings_formatter.dart';
-import '../../service/language_service.dart';
 import '../../service/navigator_service.dart';
 
 class ProfileLanguageDialog extends StatelessWidget {
@@ -18,68 +15,8 @@ class ProfileLanguageDialog extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    return _CubitProvider(
-      child: _CubitListener(
-        child: context.isMobileSize
-            ? const _FullScreenDialog()
-            : const _NormalDialog(),
-      ),
-    );
-  }
-}
-
-class _CubitProvider extends StatelessWidget {
-  final Widget child;
-
-  const _CubitProvider({
-    required this.child,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (BuildContext context) => LanguageCubit(
-        authService: context.read<AuthService>(),
-        userRepository: context.read<UserRepository>(),
-      )..initialize(),
-      child: child,
-    );
-  }
-}
-
-class _CubitListener extends StatelessWidget {
-  final Widget child;
-
-  const _CubitListener({
-    required this.child,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocListener<LanguageCubit, Language?>(
-      listener: (BuildContext context, Language? language) {
-        if (language != null) {
-          _manageLanguage(context, language);
-        }
-      },
-      child: child,
-    );
-  }
-
-  void _manageLanguage(BuildContext context, Language language) {
-    final LanguageService languageService = context.read<LanguageService>();
-    switch (language) {
-      case Language.polish:
-        languageService.changeLanguage(AppLanguage.polish);
-        break;
-      case Language.english:
-        languageService.changeLanguage(AppLanguage.english);
-        break;
-      case Language.system:
-        languageService.changeLanguage(AppLanguage.system);
-    }
-  }
+  Widget build(BuildContext context) =>
+      context.isMobileSize ? const _FullScreenDialog() : const _NormalDialog();
 }
 
 class _NormalDialog extends StatelessWidget {
@@ -152,9 +89,7 @@ class _Header extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: BodyLarge(
-        Str.of(context).languageSelect,
-      ),
+      child: BodyLarge(Str.of(context).languageSelect),
     );
   }
 }
@@ -165,16 +100,14 @@ class _OptionsToSelect extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Language? selectedLanguage = context.select(
-      (LanguageCubit cubit) => cubit.state,
+      (ProfileSettingsBloc bloc) => bloc.state.language,
     );
 
     return Column(
       children: Language.values
           .map(
             (Language language) => RadioListTile<Language>(
-              title: Text(
-                language.toUIFormat(context),
-              ),
+              title: Text(language.toUIFormat(context)),
               value: language,
               groupValue: selectedLanguage,
               onChanged: (Language? language) {
@@ -191,8 +124,8 @@ class _OptionsToSelect extends StatelessWidget {
     Language? newLanguage,
   ) {
     if (newLanguage != null) {
-      context.read<LanguageCubit>().updateLanguage(
-            newLanguage: newLanguage,
+      context.read<ProfileSettingsBloc>().add(
+            ProfileSettingsEventUpdateLanguage(newLanguage: newLanguage),
           );
     }
   }

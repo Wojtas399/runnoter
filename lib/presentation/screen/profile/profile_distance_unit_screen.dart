@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/bloc/profile/distance_unit_cubit.dart';
+import '../../../domain/bloc/profile/settings/profile_settings_bloc.dart';
 import '../../../domain/entity/settings.dart';
-import '../../../domain/repository/user_repository.dart';
-import '../../../domain/service/auth_service.dart';
 import '../../component/text/body_text_components.dart';
 import '../../extension/context_extensions.dart';
 import '../../formatter/distance_unit_formatter.dart';
@@ -17,32 +15,8 @@ class ProfileDistanceUnitDialog extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    return _CubitProvider(
-      child: context.isMobileSize
-          ? const _FullScreenDialog()
-          : const _NormalDialog(),
-    );
-  }
-}
-
-class _CubitProvider extends StatelessWidget {
-  final Widget child;
-
-  const _CubitProvider({
-    required this.child,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (BuildContext context) => DistanceUnitCubit(
-        authService: context.read<AuthService>(),
-        userRepository: context.read<UserRepository>(),
-      )..initialize(),
-      child: child,
-    );
-  }
+  Widget build(BuildContext context) =>
+      context.isMobileSize ? const _FullScreenDialog() : const _NormalDialog();
 }
 
 class _NormalDialog extends StatelessWidget {
@@ -122,16 +96,14 @@ class _OptionsToSelect extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final DistanceUnit? selectedDistanceUnit = context.select(
-      (DistanceUnitCubit cubit) => cubit.state,
+      (ProfileSettingsBloc bloc) => bloc.state.distanceUnit,
     );
 
     return Column(
       children: DistanceUnit.values
           .map(
             (DistanceUnit distanceUnit) => RadioListTile<DistanceUnit>(
-              title: Text(
-                distanceUnit.toUIFullFormat(context),
-              ),
+              title: Text(distanceUnit.toUIFullFormat(context)),
               value: distanceUnit,
               groupValue: selectedDistanceUnit,
               onChanged: (DistanceUnit? distanceUnit) {
@@ -148,8 +120,10 @@ class _OptionsToSelect extends StatelessWidget {
     DistanceUnit? newDistanceUnit,
   ) {
     if (newDistanceUnit != null) {
-      context.read<DistanceUnitCubit>().updateDistanceUnit(
-            newDistanceUnit: newDistanceUnit,
+      context.read<ProfileSettingsBloc>().add(
+            ProfileSettingsEventUpdateDistanceUnit(
+              newDistanceUnit: newDistanceUnit,
+            ),
           );
     }
   }
