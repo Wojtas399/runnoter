@@ -97,7 +97,6 @@ class _BlocListener extends StatelessWidget {
 
   Future<void> _showMessageAboutSubmittedEmail(BuildContext context) async {
     await showMessageDialog(
-      context: context,
       title: Str.of(context).forgotPasswordSentEmailDialogTitle,
       message: Str.of(context).forgotPasswordSentEmailDialogMessage,
     );
@@ -105,7 +104,6 @@ class _BlocListener extends StatelessWidget {
 
   void _showMessageAboutInvalidEmail(BuildContext context) {
     showMessageDialog(
-      context: context,
       title: Str.of(context).forgotPasswordInvalidEmailDialogTitle,
       message: Str.of(context).forgotPasswordInvalidEmailDialogMessage,
     );
@@ -113,7 +111,6 @@ class _BlocListener extends StatelessWidget {
 
   void _showMessageAboutNotFoundedUser(BuildContext context) {
     showMessageDialog(
-      context: context,
       title: Str.of(context).forgotPasswordUserNotFoundDialogTitle,
       message: Str.of(context).forgotPasswordUserNotFoundDialogMessage,
     );

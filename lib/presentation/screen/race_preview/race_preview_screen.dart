@@ -98,10 +98,7 @@ class _BlocListener extends StatelessWidget {
     switch (info) {
       case RacePreviewBlocInfo.raceDeleted:
         navigateBack();
-        showSnackbarMessage(
-          context: context,
-          message: Str.of(context).racePreviewDeletedRaceMessage,
-        );
+        showSnackbarMessage(Str.of(context).racePreviewDeletedRaceMessage);
     }
   }
 }

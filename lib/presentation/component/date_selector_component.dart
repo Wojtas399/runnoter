@@ -66,29 +66,22 @@ class _Button extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final str = Str.of(context);
+
     if (date == null) {
       return FilledButton(
-        onPressed: () {
-          _onPressed(context);
-        },
-        child: Text(
-          Str.of(context).select,
-        ),
+        onPressed: _onPressed,
+        child: Text(str.select),
       );
     }
     return OutlinedButton(
-      onPressed: () {
-        _onPressed(context);
-      },
-      child: Text(
-        Str.of(context).change,
-      ),
+      onPressed: _onPressed,
+      child: Text(str.change),
     );
   }
 
-  Future<void> _onPressed(BuildContext context) async {
+  Future<void> _onPressed() async {
     final DateTime? newDate = await askForDate(
-      context: context,
       initialDate: date,
       lastDate: lastDate,
     );

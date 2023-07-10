@@ -106,16 +106,13 @@ class _CalendarState extends State<_Calendar> {
     DateTime date,
   ) async {
     await showDialogDependingOnScreenSize(
-      context: context,
-      dialog: RepositoryProvider.value(
-        value: context.read<AuthService>(),
-        child: RepositoryProvider.value(
-          value: context.read<WorkoutRepository>(),
-          child: RepositoryProvider.value(
-            value: context.read<RaceRepository>(),
-            child: DayPreviewDialog(date: date),
-          ),
-        ),
+      MultiRepositoryProvider(
+        providers: [
+          RepositoryProvider.value(value: context.read<AuthService>()),
+          RepositoryProvider.value(value: context.read<WorkoutRepository>()),
+          RepositoryProvider.value(value: context.read<RaceRepository>()),
+        ],
+        child: DayPreviewDialog(date: date),
       ),
     );
   }

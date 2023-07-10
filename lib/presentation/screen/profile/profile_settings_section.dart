@@ -45,13 +45,12 @@ class _Theme extends StatelessWidget {
 
   Future<void> _onPressed(BuildContext context) async =>
       await showDialogDependingOnScreenSize(
-        context: context,
-        dialog: RepositoryProvider.value(
-          value: context.read<AuthService>(),
-          child: RepositoryProvider.value(
-            value: context.read<UserRepository>(),
-            child: const ProfileThemeModeDialog(),
-          ),
+        MultiRepositoryProvider(
+          providers: [
+            RepositoryProvider.value(value: context.read<AuthService>()),
+            RepositoryProvider.value(value: context.read<UserRepository>()),
+          ],
+          child: const ProfileThemeModeDialog(),
         ),
       );
 }
@@ -77,13 +76,12 @@ class _Language extends StatelessWidget {
 
   Future<void> _onPressed(BuildContext context) async =>
       await showDialogDependingOnScreenSize(
-        context: context,
-        dialog: RepositoryProvider.value(
-          value: context.read<AuthService>(),
-          child: RepositoryProvider.value(
-            value: context.read<UserRepository>(),
-            child: const ProfileLanguageDialog(),
-          ),
+        MultiRepositoryProvider(
+          providers: [
+            RepositoryProvider.value(value: context.read<AuthService>()),
+            RepositoryProvider.value(value: context.read<UserRepository>()),
+          ],
+          child: const ProfileLanguageDialog(),
         ),
       );
 }
@@ -108,14 +106,13 @@ class _DistanceUnit extends StatelessWidget {
   }
 
   Future<void> _onPressed(BuildContext context) async =>
-      showDialogDependingOnScreenSize(
-        context: context,
-        dialog: RepositoryProvider.value(
-          value: context.read<AuthService>(),
-          child: RepositoryProvider.value(
-            value: context.read<UserRepository>(),
-            child: const ProfileDistanceUnitDialog(),
-          ),
+      await showDialogDependingOnScreenSize(
+        MultiRepositoryProvider(
+          providers: [
+            RepositoryProvider.value(value: context.read<AuthService>()),
+            RepositoryProvider.value(value: context.read<UserRepository>()),
+          ],
+          child: const ProfileDistanceUnitDialog(),
         ),
       );
 }
@@ -140,14 +137,13 @@ class _PaceUnit extends StatelessWidget {
   }
 
   Future<void> _onPressed(BuildContext context) async =>
-      showDialogDependingOnScreenSize(
-        context: context,
-        dialog: RepositoryProvider.value(
-          value: context.read<AuthService>(),
-          child: RepositoryProvider.value(
-            value: context.read<UserRepository>(),
-            child: const ProfilePaceUnitDialog(),
-          ),
+      await showDialogDependingOnScreenSize(
+        MultiRepositoryProvider(
+          providers: [
+            RepositoryProvider.value(value: context.read<AuthService>()),
+            RepositoryProvider.value(value: context.read<UserRepository>()),
+          ],
+          child: const ProfilePaceUnitDialog(),
         ),
       );
 }

@@ -52,7 +52,6 @@ class _BloodTestActionsMenu extends StatelessWidget {
     final BloodTestPreviewBloc bloc = context.read<BloodTestPreviewBloc>();
     final str = Str.of(context);
     final bool confirmed = await askForConfirmation(
-      context: context,
       title: str.bloodTestPreviewDeleteTestTitle,
       message: str.bloodTestPreviewDeleteTestMessage,
       confirmButtonLabel: str.delete,

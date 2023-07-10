@@ -8,7 +8,6 @@ class _Content extends StatelessWidget {
     return WillPopScope(
       onWillPop: () async {
         final bool confirmationToLeave = await askForConfirmationToLeave(
-          context: context,
           areUnsavedChanges:
               context.read<HealthMeasurementCreatorBloc>().state.canSubmit,
         );

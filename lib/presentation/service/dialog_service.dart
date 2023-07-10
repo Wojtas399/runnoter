@@ -12,35 +12,31 @@ import 'navigator_service.dart';
 
 bool _isLoadingDialogOpened = false;
 
-void showLoadingDialog({
-  required BuildContext context,
-}) {
-  _isLoadingDialogOpened = true;
-  showDialog(
-    context: context,
-    builder: (_) => const LoadingDialog(),
-    barrierDismissible: false,
-  );
+void showLoadingDialog() {
+  if (navigatorKey.currentContext != null) {
+    _isLoadingDialogOpened = true;
+    showDialog(
+      context: navigatorKey.currentContext!,
+      builder: (_) => const LoadingDialog(),
+      barrierDismissible: false,
+    );
+  }
 }
 
-void closeLoadingDialog({
-  required BuildContext context,
-}) {
-  if (_isLoadingDialogOpened) {
-    Navigator.of(context, rootNavigator: true).pop();
+void closeLoadingDialog() {
+  if (_isLoadingDialogOpened && navigatorKey.currentContext != null) {
+    Navigator.of(navigatorKey.currentContext!, rootNavigator: true).pop();
     _isLoadingDialogOpened = false;
   }
 }
 
 Future<void> showMessageDialog({
-  required BuildContext context,
   required String title,
   required String message,
   String? closeButtonLabel,
 }) async {
   await showAlertDialog(
-    context: context,
-    dialog: MessageDialogComponent(
+    MessageDialogComponent(
       title: title,
       message: message,
       closeButtonLabel: closeButtonLabel,
@@ -48,15 +44,14 @@ Future<void> showMessageDialog({
   );
 }
 
-void showSnackbarMessage({
-  required BuildContext context,
-  required String message,
-}) {
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(
-      content: Text(message),
-    ),
-  );
+void showSnackbarMessage(String message) {
+  if (navigatorKey.currentContext != null) {
+    ScaffoldMessenger.of(navigatorKey.currentContext!).showSnackBar(
+      SnackBar(
+        content: Text(message),
+      ),
+    );
+  }
 }
 
 void hideSnackbar() {
@@ -66,7 +61,6 @@ void hideSnackbar() {
 }
 
 Future<bool> askForConfirmation({
-  required BuildContext context,
   required String title,
   required String message,
   String? confirmButtonLabel,
@@ -75,8 +69,7 @@ Future<bool> askForConfirmation({
   Color? cancelButtonColor,
 }) async =>
     await showAlertDialog(
-      context: context,
-      dialog: ConfirmationDialogComponent(
+      ConfirmationDialogComponent(
         title: title,
         message: message,
         confirmButtonLabel: confirmButtonLabel,
@@ -88,23 +81,23 @@ Future<bool> askForConfirmation({
     true;
 
 Future<bool> askForConfirmationToLeave({
-  required BuildContext context,
   bool areUnsavedChanges = false,
 }) async {
-  final str = Str.of(context);
-  return await askForConfirmation(
-    context: context,
-    title: str.leavePageConfirmationDialogTitle,
-    message: switch (areUnsavedChanges) {
-      true => str.leavePageWithUnsavedChangesConfirmationDialogMessage,
-      false => str.leavePageConfirmationDialogMessage,
-    },
-    confirmButtonLabel: str.leave,
-  );
+  if (navigatorKey.currentContext != null) {
+    final str = Str.of(navigatorKey.currentContext!);
+    return await askForConfirmation(
+      title: str.leavePageConfirmationDialogTitle,
+      message: switch (areUnsavedChanges) {
+        true => str.leavePageWithUnsavedChangesConfirmationDialogMessage,
+        false => str.leavePageConfirmationDialogMessage,
+      },
+      confirmButtonLabel: str.leave,
+    );
+  }
+  return false;
 }
 
 Future<String?> askForValue({
-  required BuildContext context,
   required String title,
   String? label,
   IconData? textFieldIcon,
@@ -114,8 +107,7 @@ Future<String?> askForValue({
 }) async {
   hideSnackbar();
   return await showDialogDependingOnScreenSize(
-    context: context,
-    dialog: ValueDialogComponent(
+    ValueDialogComponent(
       title: title,
       label: label,
       textFieldIcon: textFieldIcon,
@@ -127,13 +119,13 @@ Future<String?> askForValue({
 }
 
 Future<T?> askForAction<T>({
-  required BuildContext context,
   required List<ActionSheetItem<T>> actions,
   String? title,
 }) async {
+  if (navigatorKey.currentContext == null) return null;
   hideSnackbar();
   return await showModalBottomSheet(
-    context: context,
+    context: navigatorKey.currentContext!,
     showDragHandle: true,
     builder: (_) => ActionSheetComponent(
       actions: actions,
@@ -143,32 +135,29 @@ Future<T?> askForAction<T>({
 }
 
 Future<DateTime?> askForDate({
-  required BuildContext context,
   DateTime? initialDate,
   DateTime? lastDate,
 }) async {
+  if (navigatorKey.currentContext == null) return null;
   return await showDatePicker(
-    context: context,
+    context: navigatorKey.currentContext!,
     initialDate: initialDate ?? DateTime.now(),
     firstDate: DateTime(1900),
     lastDate: lastDate ?? DateTime(2099, 12, 31),
   );
 }
 
-Future<T?> showDialogDependingOnScreenSize<T>({
-  required BuildContext context,
-  required Widget dialog,
-}) async =>
-    await (context.isMobileSize
-        ? showFullScreenDialog(context: context, dialog: dialog)
-        : showAlertDialog(context: context, dialog: dialog));
+Future<T?> showDialogDependingOnScreenSize<T>(Widget dialog) async {
+  if (navigatorKey.currentContext == null) return null;
+  return await (navigatorKey.currentContext!.isMobileSize
+      ? showFullScreenDialog(dialog)
+      : showAlertDialog(dialog));
+}
 
-Future<T?> showAlertDialog<T>({
-  required BuildContext context,
-  required Widget dialog,
-}) async {
+Future<T?> showAlertDialog<T>(Widget dialog) async {
+  if (navigatorKey.currentContext == null) return null;
   return await showGeneralDialog<T>(
-    context: context,
+    context: navigatorKey.currentContext!,
     pageBuilder: (_, anim1, anim2) => dialog,
     transitionBuilder: (BuildContext context, anim1, anim2, child) {
       var curve = Curves.easeInOutQuart.transform(anim1.value);
@@ -183,12 +172,10 @@ Future<T?> showAlertDialog<T>({
   );
 }
 
-Future<T?> showFullScreenDialog<T>({
-  required BuildContext context,
-  required Widget dialog,
-}) async {
+Future<T?> showFullScreenDialog<T>(Widget dialog) async {
+  if (navigatorKey.currentContext == null) return null;
   return await showGeneralDialog<T?>(
-    context: context,
+    context: navigatorKey.currentContext!,
     barrierColor: Colors.transparent,
     pageBuilder: (_, a1, a2) => Dialog.fullscreen(
       child: dialog,

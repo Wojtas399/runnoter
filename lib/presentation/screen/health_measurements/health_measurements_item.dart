@@ -42,17 +42,17 @@ class _MeasurementItemState extends State<_MeasurementItem> {
   }
 
   Future<void> _onPressed() async {
+    final str = Str.of(context);
     final _MeasurementAction? action = await askForAction<_MeasurementAction>(
-      context: context,
       actions: [
         ActionSheetItem(
           id: _MeasurementAction.edit,
-          label: Str.of(context).edit,
+          label: str.edit,
           iconData: Icons.edit_outlined,
         ),
         ActionSheetItem(
           id: _MeasurementAction.delete,
-          label: Str.of(context).delete,
+          label: str.delete,
           iconData: Icons.delete_outline,
         ),
       ],
@@ -74,15 +74,13 @@ class _MeasurementItemState extends State<_MeasurementItem> {
 
   Future<void> _deleteMeasurement() async {
     final DateTime date = widget.measurement.date;
+    final str = Str.of(context);
     final bool confirmation = await askForConfirmation(
-      context: context,
-      title: Str.of(context)
-          .healthMeasurementsDeleteMeasurementConfirmationDialogTitle,
-      message: Str.of(context)
-          .healthMeasurementsDeleteMeasurementConfirmationDialogMessage(
+      title: str.healthMeasurementsDeleteMeasurementConfirmationDialogTitle,
+      message: str.healthMeasurementsDeleteMeasurementConfirmationDialogMessage(
         date.toDateWithDots(),
       ),
-      confirmButtonLabel: Str.of(context).delete,
+      confirmButtonLabel: str.delete,
     );
     if (confirmation == true && mounted) {
       context.read<HealthMeasurementsBloc>().add(

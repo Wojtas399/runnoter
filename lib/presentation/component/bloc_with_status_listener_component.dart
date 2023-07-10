@@ -43,21 +43,21 @@ class BlocWithStatusListener<Bloc extends StateStreamable<State>,
 
   void _manageBlocStatus(BlocStatus blocStatus, BuildContext context) {
     if (blocStatus is BlocStatusLoading) {
-      showLoadingDialog(context: context);
+      showLoadingDialog();
     } else if (blocStatus is BlocStatusComplete) {
-      _closeLoadingDialog(context);
+      closeLoadingDialog();
       _manageCompleteStatus(blocStatus, context);
     } else if (blocStatus is BlocStatusError) {
-      _closeLoadingDialog(context);
+      closeLoadingDialog();
       _manageErrorStatus(blocStatus, context);
     } else if (blocStatus is BlocStatusUnknownError) {
-      closeLoadingDialog(context: context);
+      closeLoadingDialog();
       _showUnknownErrorMessage(context);
     } else if (blocStatus is BlocStatusNetworkRequestFailed) {
-      closeLoadingDialog(context: context);
+      closeLoadingDialog();
       _showNoInternetConnectionMessage(context);
     } else if (blocStatus is BlocStatusNoLoggedUser) {
-      closeLoadingDialog(context: context);
+      closeLoadingDialog();
       _showNoLoggedUserMessage(context);
       navigateAndRemoveUntil(route: const SignInRoute());
     }
@@ -85,31 +85,19 @@ class BlocWithStatusListener<Bloc extends StateStreamable<State>,
     }
   }
 
-  void _showUnknownErrorMessage(BuildContext context) {
-    showMessageDialog(
-      context: context,
-      title: Str.of(context).unknownErrorDialogTitle,
-      message: Str.of(context).unknownErrorDialogMessage,
-    );
-  }
+  void _showUnknownErrorMessage(BuildContext context) => showMessageDialog(
+        title: Str.of(context).unknownErrorDialogTitle,
+        message: Str.of(context).unknownErrorDialogMessage,
+      );
 
-  void _showNoInternetConnectionMessage(BuildContext context) {
-    showMessageDialog(
-      context: context,
-      title: Str.of(context).noInternetConnectionDialogTitle,
-      message: Str.of(context).noInternetConnectionDialogMessage,
-    );
-  }
+  void _showNoInternetConnectionMessage(BuildContext context) =>
+      showMessageDialog(
+        title: Str.of(context).noInternetConnectionDialogTitle,
+        message: Str.of(context).noInternetConnectionDialogMessage,
+      );
 
-  void _showNoLoggedUserMessage(BuildContext context) {
-    showMessageDialog(
-      context: context,
-      title: Str.of(context).noLoggedUserDialogTitle,
-      message: Str.of(context).noLoggedUserDialogMessage,
-    );
-  }
-
-  void _closeLoadingDialog(BuildContext context) {
-    closeLoadingDialog(context: context);
-  }
+  void _showNoLoggedUserMessage(BuildContext context) => showMessageDialog(
+        title: Str.of(context).noLoggedUserDialogTitle,
+        message: Str.of(context).noLoggedUserDialogMessage,
+      );
 }

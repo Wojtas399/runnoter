@@ -63,11 +63,11 @@ class _NavigationDrawer extends StatelessWidget {
 
   Future<void> _signOut(BuildContext context) async {
     final HomeBloc bloc = context.read<HomeBloc>();
+    final str = Str.of(context);
     final bool confirmed = await askForConfirmation(
-      context: context,
-      title: Str.of(context).homeSignOutConfirmationDialogTitle,
-      message: Str.of(context).homeSignOutConfirmationDialogMessage,
-      confirmButtonLabel: Str.of(context).homeSignOut,
+      title: str.homeSignOutConfirmationDialogTitle,
+      message: str.homeSignOutConfirmationDialogMessage,
+      confirmButtonLabel: str.homeSignOut,
     );
     if (confirmed == true) {
       bloc.add(

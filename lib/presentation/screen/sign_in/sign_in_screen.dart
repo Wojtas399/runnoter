@@ -88,26 +88,24 @@ class _BlocListener extends StatelessWidget {
     SignInError error,
     BuildContext context,
   ) async {
+    final str = Str.of(context);
     switch (error) {
       case SignInError.invalidEmail:
         await showMessageDialog(
-          context: context,
-          title: Str.of(context).signInInvalidEmailDialogTitle,
-          message: Str.of(context).signInInvalidEmailDialogMessage,
+          title: str.signInInvalidEmailDialogTitle,
+          message: str.signInInvalidEmailDialogMessage,
         );
         break;
       case SignInError.userNotFound:
         await showMessageDialog(
-          context: context,
-          title: Str.of(context).signInUserNotFoundDialogTitle,
-          message: '${Str.of(context).signInUserNotFoundDialogMessage}...',
+          title: str.signInUserNotFoundDialogTitle,
+          message: '${str.signInUserNotFoundDialogMessage}...',
         );
         break;
       case SignInError.wrongPassword:
         await showMessageDialog(
-          context: context,
-          title: Str.of(context).signInWrongPasswordDialogTitle,
-          message: Str.of(context).signInWrongPasswordDialogMessage,
+          title: str.signInWrongPasswordDialogTitle,
+          message: str.signInWrongPasswordDialogMessage,
         );
         break;
     }

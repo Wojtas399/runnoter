@@ -122,8 +122,7 @@ class _IdentitiesBlocListener extends StatelessWidget {
     switch (info) {
       case ProfileInfo.savedData:
         showSnackbarMessage(
-          context: context,
-          message: Str.of(context).profileSuccessfullySavedDataMessage,
+          Str.of(context).profileSuccessfullySavedDataMessage,
         );
         break;
       case ProfileInfo.accountDeleted:
@@ -139,21 +138,18 @@ class _IdentitiesBlocListener extends StatelessWidget {
     switch (error) {
       case ProfileError.emailAlreadyInUse:
         showMessageDialog(
-          context: context,
           title: str.profileEmailAlreadyTakenDialogTitle,
           message: str.profileEmailAlreadyTakenDialogMessage,
         );
         break;
       case ProfileError.wrongPassword:
         showMessageDialog(
-          context: context,
           title: str.profileWrongPasswordDialogTitle,
           message: str.profileWrongPasswordDialogMessage,
         );
         break;
       case ProfileError.wrongCurrentPassword:
         showMessageDialog(
-          context: context,
           title: str.profileWrongCurrentPasswordDialogTitle,
           message: str.profileWrongCurrentPasswordDialogMessage,
         );

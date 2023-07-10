@@ -45,18 +45,18 @@ class _AddActivityButtonState extends State<_AddActivityButton> {
   }
 
   Future<ActivityType?> _askForActivityType(BuildContext context) async {
+    final str = Str.of(context);
     return await askForAction<ActivityType>(
-      context: context,
-      title: Str.of(context).currentWeekActivityActionSheetTitle,
+      title: str.currentWeekActivityActionSheetTitle,
       actions: [
         ActionSheetItem(
           id: ActivityType.workout,
-          label: Str.of(context).workout,
+          label: str.workout,
           iconData: Icons.directions_run,
         ),
         ActionSheetItem(
           id: ActivityType.race,
-          label: Str.of(context).race,
+          label: str.race,
           iconData: Icons.emoji_events,
         ),
       ],

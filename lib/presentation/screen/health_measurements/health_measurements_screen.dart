@@ -81,8 +81,7 @@ class _BlocListener extends StatelessWidget {
     switch (info) {
       case HealthMeasurementsBlocInfo.measurementDeleted:
         showSnackbarMessage(
-          context: context,
-          message: Str.of(context).healthMeasurementsDeletedMeasurementMessage,
+          Str.of(context).healthMeasurementsDeletedMeasurementMessage,
         );
         break;
     }

@@ -99,15 +99,13 @@ class _BlocListener extends StatelessWidget {
       case HealthMeasurementCreatorBlocInfo.measurementAdded:
         navigateBack();
         showSnackbarMessage(
-          context: context,
-          message: str.healthMeasurementCreatorSuccessfullyAddedMeasurement,
+          str.healthMeasurementCreatorSuccessfullyAddedMeasurement,
         );
         break;
       case HealthMeasurementCreatorBlocInfo.measurementUpdated:
         navigateBack();
         showSnackbarMessage(
-          context: context,
-          message: str.healthMeasurementCreatorSuccessfullyUpdatedMeasurement,
+          str.healthMeasurementCreatorSuccessfullyUpdatedMeasurement,
         );
         break;
     }
@@ -122,7 +120,6 @@ class _BlocListener extends StatelessWidget {
       case HealthMeasurementCreatorBlocError
             .measurementWithSelectedDateAlreadyExist:
         showMessageDialog(
-          context: context,
           title: str.healthMeasurementCreatorAlreadyAddedMeasurementTitle,
           message: str.healthMeasurementCreatorAlreadyAddedMeasurementMessage,
         );

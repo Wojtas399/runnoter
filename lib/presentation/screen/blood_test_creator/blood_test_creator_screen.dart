@@ -86,16 +86,10 @@ class _BlocListener extends StatelessWidget {
     final str = Str.of(context);
     if (info == BloodTestCreatorBlocInfo.bloodTestAdded) {
       navigateBack();
-      showSnackbarMessage(
-        context: context,
-        message: str.bloodTestCreatorSuccessfullyAddedTest,
-      );
+      showSnackbarMessage(str.bloodTestCreatorSuccessfullyAddedTest);
     } else if (info == BloodTestCreatorBlocInfo.bloodTestUpdated) {
       navigateBack();
-      showSnackbarMessage(
-        context: context,
-        message: str.bloodTestCreatorSuccessfullyEditedTest,
-      );
+      showSnackbarMessage(str.bloodTestCreatorSuccessfullyEditedTest);
     }
   }
 }
