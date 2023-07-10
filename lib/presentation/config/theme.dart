@@ -15,6 +15,6 @@ class GlobalTheme {
       );
 
   static const InputDecorationTheme _inputDecoration = InputDecorationTheme(
-    filled: true,
+    border: OutlineInputBorder(),
   );
 }

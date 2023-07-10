@@ -69,7 +69,6 @@ class _MoodRate extends StatelessWidget {
     return DropdownButtonFormField(
       value: moodRate,
       decoration: InputDecoration(
-        filled: true,
         labelText: Str.of(context).runStatusCreatorMood,
       ),
       isExpanded: true,

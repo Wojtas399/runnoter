@@ -12,7 +12,6 @@ class _StatusType extends StatelessWidget {
     return DropdownButtonFormField<RunStatusType>(
       value: runStatusType,
       decoration: InputDecoration(
-        filled: true,
         labelText: Str.of(context).runStatusCreatorScreenTitle,
       ),
       items: <DropdownMenuItem<RunStatusType>>[
