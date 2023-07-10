@@ -44,7 +44,7 @@ class WorkoutCreatorState extends BlocState<WorkoutCreatorState> {
       date: date ?? this.date,
       workout: workout ?? this.workout,
       workoutName: workoutName ?? this.workoutName,
-      stages: stages ?? this.stages,
+      stages: stages != null ? [...stages] : this.stages,
     );
   }
 
