@@ -19,7 +19,6 @@ class ProfileSettingsBloc extends BlocWithStatus<ProfileSettingsEvent,
     ProfileSettingsState, dynamic, dynamic> {
   final AuthService _authService;
   final UserRepository _userRepository;
-  StreamSubscription<User?>? _userListener;
 
   ProfileSettingsBloc({
     required AuthService authService,
@@ -35,13 +34,6 @@ class ProfileSettingsBloc extends BlocWithStatus<ProfileSettingsEvent,
     on<ProfileSettingsEventUpdateLanguage>(_updateLanguage);
     on<ProfileSettingsEventUpdateDistanceUnit>(_updateDistanceUnit);
     on<ProfileSettingsEventUpdatePaceUnit>(_updatePaceUnit);
-  }
-
-  @override
-  Future<void> close() {
-    _userListener?.cancel();
-    _userListener = null;
-    return super.close();
   }
 
   Future<void> _initialize(
