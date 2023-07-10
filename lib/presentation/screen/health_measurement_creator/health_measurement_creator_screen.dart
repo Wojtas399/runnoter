@@ -97,14 +97,14 @@ class _BlocListener extends StatelessWidget {
     final str = Str.of(context);
     switch (info) {
       case HealthMeasurementCreatorBlocInfo.measurementAdded:
-        navigateBack(context: context);
+        navigateBack();
         showSnackbarMessage(
           context: context,
           message: str.healthMeasurementCreatorSuccessfullyAddedMeasurement,
         );
         break;
       case HealthMeasurementCreatorBlocInfo.measurementUpdated:
-        navigateBack(context: context);
+        navigateBack();
         showSnackbarMessage(
           context: context,
           message: str.healthMeasurementCreatorSuccessfullyUpdatedMeasurement,

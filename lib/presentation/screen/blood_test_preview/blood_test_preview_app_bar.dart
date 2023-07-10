@@ -41,7 +41,6 @@ class _BloodTestActionsMenu extends StatelessWidget {
         context.read<BloodTestPreviewBloc>().state.bloodTestId;
     if (bloodTestId != null) {
       navigateTo(
-        context: context,
         route: BloodTestCreatorRoute(
           bloodTestId: bloodTestId,
         ),
@@ -51,11 +50,12 @@ class _BloodTestActionsMenu extends StatelessWidget {
 
   Future<void> _deleteTest(BuildContext context) async {
     final BloodTestPreviewBloc bloc = context.read<BloodTestPreviewBloc>();
+    final str = Str.of(context);
     final bool confirmed = await askForConfirmation(
       context: context,
-      title: Str.of(context).bloodTestPreviewDeleteTestTitle,
-      message: Str.of(context).bloodTestPreviewDeleteTestMessage,
-      confirmButtonLabel: Str.of(context).delete,
+      title: str.bloodTestPreviewDeleteTestTitle,
+      message: str.bloodTestPreviewDeleteTestMessage,
+      confirmButtonLabel: str.delete,
     );
     if (confirmed == true) {
       bloc.add(

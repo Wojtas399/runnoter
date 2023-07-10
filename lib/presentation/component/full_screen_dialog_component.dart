@@ -24,11 +24,9 @@ class FullScreenDialog extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(title),
-        leading: IconButton(
-          onPressed: () {
-            navigateBack(context: context);
-          },
-          icon: const Icon(Icons.close),
+        leading: const IconButton(
+          onPressed: navigateBack,
+          icon: Icon(Icons.close),
         ),
         actions: [
           TextButton(

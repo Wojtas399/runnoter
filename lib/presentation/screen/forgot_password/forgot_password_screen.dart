@@ -48,7 +48,7 @@ class _BlocProvider extends StatelessWidget {
   }
 }
 
-class _BlocListener extends StatefulWidget {
+class _BlocListener extends StatelessWidget {
   final Widget child;
 
   const _BlocListener({
@@ -56,20 +56,13 @@ class _BlocListener extends StatefulWidget {
   });
 
   @override
-  State<StatefulWidget> createState() {
-    return _BlocListenerState();
-  }
-}
-
-class _BlocListenerState extends State<_BlocListener> {
-  @override
   Widget build(BuildContext context) {
     return BlocWithStatusListener<ForgotPasswordBloc, ForgotPasswordState,
         ForgotPasswordBlocInfo, ForgotPasswordBlocError>(
       onInfo: (ForgotPasswordBlocInfo info) {
         _manageCompleteStatus(info, context);
       },
-      child: widget.child,
+      child: child,
       onError: (ForgotPasswordBlocError error) {
         _manageErrorStatus(error, context);
       },
@@ -83,9 +76,7 @@ class _BlocListenerState extends State<_BlocListener> {
     switch (info) {
       case ForgotPasswordBlocInfo.emailSubmitted:
         await _showMessageAboutSubmittedEmail(context);
-        if (mounted) {
-          navigateBack(context: context);
-        }
+        navigateBack;
         break;
     }
   }

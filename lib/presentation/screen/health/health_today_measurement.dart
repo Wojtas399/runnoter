@@ -82,17 +82,14 @@ class _TodayMeasurementButton extends StatelessWidget {
       children: [
         BigButton(
           label: Str.of(context).healthAddTodayMeasurementButton,
-          onPressed: () {
-            _onPressed(context);
-          },
+          onPressed: _onPressed,
         ),
       ],
     );
   }
 
-  void _onPressed(BuildContext context) {
+  void _onPressed() {
     navigateTo(
-      context: context,
       route: HealthMeasurementCreatorRoute(
         date: DateTime.now(),
       ),

@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
-import '../../../app.dart';
 import '../../../common/date_service.dart';
 import '../../../domain/bloc/day_preview/day_preview_cubit.dart';
 import '../../../domain/entity/race.dart';
@@ -89,7 +88,7 @@ class _NormalDialog extends StatelessWidget {
       ),
       actions: [
         TextButton(
-          onPressed: () => navigateBack(context: context),
+          onPressed: navigateBack,
           child: Text(str.close),
         ),
       ],
@@ -127,10 +126,7 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       centerTitle: true,
       title: const _Title(),
-      leading: IconButton(
-        onPressed: () => navigateBack(context: context),
-        icon: const Icon(Icons.close),
-      ),
+      leading: const CloseButton(),
     );
   }
 }
@@ -200,7 +196,6 @@ class _Actions extends StatelessWidget {
 
   void _addWorkout(BuildContext context) {
     navigateTo(
-      context: context,
       route: WorkoutCreatorRoute(
         creatorArguments: WorkoutCreatorAddModeArguments(
           date: context.read<DayPreviewCubit>().date,
@@ -210,16 +205,12 @@ class _Actions extends StatelessWidget {
   }
 
   void _addRace(BuildContext context) {
-    final ctx = navigatorKey.currentContext;
-    if (ctx != null) {
-      navigateTo(
-        context: ctx,
-        route: RaceCreatorRoute(
-          arguments: RaceCreatorArguments(
-            date: context.read<DayPreviewCubit>().date,
-          ),
+    navigateTo(
+      route: RaceCreatorRoute(
+        arguments: RaceCreatorArguments(
+          date: context.read<DayPreviewCubit>().date,
         ),
-      );
-    }
+      ),
+    );
   }
 }

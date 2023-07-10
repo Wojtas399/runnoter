@@ -41,9 +41,7 @@ class _ReadingsFromYear extends StatelessWidget {
           ...readingsFromYear.bloodTests.map(
             (BloodTest test) => _TestItem(
               bloodTest: test,
-              onPressed: () {
-                _onPressed(context, test.id);
-              },
+              onPressed: () => _onPressed(test.id),
             ),
           ),
         ],
@@ -51,9 +49,8 @@ class _ReadingsFromYear extends StatelessWidget {
     );
   }
 
-  void _onPressed(BuildContext context, String bloodTestId) {
+  void _onPressed(String bloodTestId) {
     navigateTo(
-      context: context,
       route: BloodTestPreviewRoute(
         bloodTestId: bloodTestId,
       ),

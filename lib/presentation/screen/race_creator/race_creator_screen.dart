@@ -104,13 +104,13 @@ class _BlocListener extends StatelessWidget {
 
   void _manageInfo(BuildContext context, RaceCreatorBlocInfo info) {
     if (info == RaceCreatorBlocInfo.raceAdded) {
-      navigateBack(context: context);
+      navigateBack();
       showSnackbarMessage(
         context: context,
         message: Str.of(context).raceCreatorAddedRaceMessage,
       );
     } else if (info == RaceCreatorBlocInfo.raceUpdated) {
-      navigateBack(context: context);
+      navigateBack();
       showSnackbarMessage(
         context: context,
         message: Str.of(context).raceCreatorUpdatedRaceMessage,

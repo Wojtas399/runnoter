@@ -108,12 +108,10 @@ class _DesktopContentState extends State<_DesktopContent> {
   void _onFloatingActionButtonPressed() {
     if (_page == _DesktopDrawerPage.blood) {
       navigateTo(
-        context: context,
         route: const BloodTestCreatorRoute(),
       );
     } else if (_page == _DesktopDrawerPage.races) {
       navigateTo(
-        context: context,
         route: const RaceCreatorRoute(),
       );
     }

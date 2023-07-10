@@ -134,7 +134,7 @@ class _BlocListener extends StatelessWidget {
   }
 
   void _onWorkoutAddedInfo(BuildContext context) {
-    navigateBack(context: context);
+    navigateBack();
     showSnackbarMessage(
       context: context,
       message: Str.of(context).workoutCreatorAddedWorkoutMessage,
@@ -142,7 +142,7 @@ class _BlocListener extends StatelessWidget {
   }
 
   void _onWorkoutUpdatedInfo(BuildContext context) {
-    navigateBack(context: context);
+    navigateBack();
     showSnackbarMessage(
       context: context,
       message: Str.of(context).workoutCreatorUpdatedWorkoutMessage,

@@ -66,24 +66,18 @@ class _BlocListener extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocWithStatusListener<SignInBloc, SignInState, SignInInfo,
         SignInError>(
-      child: child,
-      onInfo: (SignInInfo info) {
-        _manageCompletionInfo(info, context);
-      },
+      onInfo: _manageCompletionInfo,
       onError: (SignInError error) {
         _manageError(error, context);
       },
+      child: child,
     );
   }
 
-  Future<void> _manageCompletionInfo(
-    SignInInfo info,
-    BuildContext context,
-  ) async {
+  Future<void> _manageCompletionInfo(SignInInfo info) async {
     switch (info) {
       case SignInInfo.signedIn:
         navigateAndRemoveUntil(
-          context: context,
           route: const HomeRoute(),
         );
         break;

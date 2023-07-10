@@ -126,7 +126,7 @@ class _BlocListener extends StatelessWidget {
   void _manageInfo(BuildContext context, RunStatusCreatorBlocInfo info) {
     switch (info) {
       case RunStatusCreatorBlocInfo.runStatusSaved:
-        navigateBack(context: context);
+        navigateBack();
         showSnackbarMessage(
           context: context,
           message: Str.of(context).runStatusCreatorSavedStatusMessage,

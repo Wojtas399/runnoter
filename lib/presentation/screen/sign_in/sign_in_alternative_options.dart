@@ -8,18 +8,14 @@ class _AlternativeOptions extends StatelessWidget {
     return Column(
       children: [
         GestureDetector(
-          onTap: () {
-            _onSignUpOptionSelected(context);
-          },
+          onTap: _onSignUpOptionSelected,
           child: Text(
             Str.of(context).signInSignUpOption,
           ),
         ),
         const SizedBox(height: 8),
         GestureDetector(
-          onTap: () {
-            _onForgotPasswordSelected(context);
-          },
+          onTap: _onForgotPasswordSelected,
           child: Text(
             Str.of(context).signInForgotPasswordOption,
           ),
@@ -28,16 +24,14 @@ class _AlternativeOptions extends StatelessWidget {
     );
   }
 
-  void _onSignUpOptionSelected(BuildContext context) {
+  void _onSignUpOptionSelected() {
     navigateTo(
-      context: context,
       route: const SignUpRoute(),
     );
   }
 
-  void _onForgotPasswordSelected(BuildContext context) {
+  void _onForgotPasswordSelected() {
     navigateTo(
-      context: context,
       route: const ForgotPasswordRoute(),
     );
   }

@@ -40,9 +40,7 @@ class _RaceItem extends StatelessWidget {
           ),
         ),
       ),
-      onPressed: () {
-        _onPressed(context);
-      },
+      onPressed: _onPressed,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -64,12 +62,9 @@ class _RaceItem extends StatelessWidget {
     );
   }
 
-  void _onPressed(BuildContext context) {
+  void _onPressed() {
     navigateTo(
-      context: context,
-      route: RacePreviewRoute(
-        raceId: race.id,
-      ),
+      route: RacePreviewRoute(raceId: race.id),
     );
   }
 }

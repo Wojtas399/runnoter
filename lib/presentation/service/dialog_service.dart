@@ -8,6 +8,7 @@ import '../component/dialog/message_dialog_component.dart';
 import '../component/dialog/value_dialog_component.dart';
 import '../config/animation/slide_to_top_anim.dart';
 import '../extension/context_extensions.dart';
+import 'navigator_service.dart';
 
 bool _isLoadingDialogOpened = false;
 
@@ -58,10 +59,10 @@ void showSnackbarMessage({
   );
 }
 
-void hideSnackbar({
-  required BuildContext context,
-}) {
-  ScaffoldMessenger.of(context).hideCurrentSnackBar();
+void hideSnackbar() {
+  if (navigatorKey.currentContext != null) {
+    ScaffoldMessenger.of(navigatorKey.currentContext!).hideCurrentSnackBar();
+  }
 }
 
 Future<bool> askForConfirmation({
@@ -111,7 +112,7 @@ Future<String?> askForValue({
   bool isValueRequired = false,
   String? Function(String? value)? validator,
 }) async {
-  hideSnackbar(context: context);
+  hideSnackbar();
   return await showDialogDependingOnScreenSize(
     context: context,
     dialog: ValueDialogComponent(
@@ -130,7 +131,7 @@ Future<T?> askForAction<T>({
   required List<ActionSheetItem<T>> actions,
   String? title,
 }) async {
-  hideSnackbar(context: context);
+  hideSnackbar();
   return await showModalBottomSheet(
     context: context,
     showDragHandle: true,

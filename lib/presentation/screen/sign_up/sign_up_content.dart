@@ -25,7 +25,7 @@ class _Content extends StatelessWidget {
                     SizedBox(height: 32),
                     _SubmitButton(),
                     SizedBox(height: 16),
-                    _AlternativeOptions(),
+                    _GoToSignInOption(),
                   ],
                 ),
               ),
@@ -45,6 +45,18 @@ class _FormHeader extends StatelessWidget {
     return HeadlineMedium(
       Str.of(context).signUpScreenTitle,
       fontWeight: FontWeight.bold,
+    );
+  }
+}
+
+class _GoToSignInOption extends StatelessWidget {
+  const _GoToSignInOption();
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: navigateBack,
+      child: Text(Str.of(context).signUpSignInOption),
     );
   }
 }

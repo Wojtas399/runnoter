@@ -58,9 +58,7 @@ class _State extends State<ValueDialogComponent> {
           isValueRequired: widget.isValueRequired,
           isSaveButtonDisabled: _isSaveButtonDisabled,
           validator: widget.validator,
-          onSaveButtonPressed: () {
-            _onSaveButtonPressed(context);
-          },
+          onSaveButtonPressed: _onSaveButtonPressed,
         )
       : _NormalDialog(
           title: widget.title,
@@ -70,14 +68,11 @@ class _State extends State<ValueDialogComponent> {
           isValueRequired: widget.isValueRequired,
           isSaveButtonDisabled: _isSaveButtonDisabled,
           validator: widget.validator,
-          onSaveButtonPressed: () {
-            _onSaveButtonPressed(context);
-          },
+          onSaveButtonPressed: _onSaveButtonPressed,
         );
 
-  void _onSaveButtonPressed(BuildContext context) {
+  void _onSaveButtonPressed() {
     navigateBack(
-      context: context,
       result: _textController.text,
     );
   }
@@ -136,9 +131,7 @@ class _NormalDialog extends StatelessWidget {
       ),
       actions: [
         TextButton(
-          onPressed: () {
-            navigateBack(context: context);
-          },
+          onPressed: navigateBack,
           child: LabelLarge(
             Str.of(context).cancel,
             color: Theme.of(context).colorScheme.error,
@@ -179,11 +172,9 @@ class _FullScreenDialog extends StatelessWidget {
     return Dialog.fullscreen(
       child: Scaffold(
         appBar: AppBar(
-          leading: IconButton(
-            onPressed: () {
-              navigateBack(context: context);
-            },
-            icon: const Icon(Icons.close),
+          leading: const IconButton(
+            onPressed: navigateBack,
+            icon: Icon(Icons.close),
           ),
           title: Text(title),
           actions: [

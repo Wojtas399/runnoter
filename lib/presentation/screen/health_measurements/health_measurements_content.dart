@@ -14,17 +14,14 @@ class _Content extends StatelessWidget {
         child: _Body(),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          _onAddButtonPressed(context);
-        },
+        onPressed: _onAddButtonPressed,
         child: const Icon(Icons.add),
       ),
     );
   }
 
-  void _onAddButtonPressed(BuildContext context) {
+  void _onAddButtonPressed() {
     navigateTo(
-      context: context,
       route: const HealthMeasurementCreatorRoute(),
     );
   }

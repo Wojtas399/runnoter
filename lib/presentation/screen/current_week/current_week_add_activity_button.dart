@@ -15,20 +15,17 @@ class _AddActivityButtonState extends State<_AddActivityButton> {
   @override
   Widget build(BuildContext context) {
     return IconButton(
-      onPressed: () {
-        _onPressed(context);
-      },
+      onPressed: _onPressed,
       icon: const Icon(Icons.add),
     );
   }
 
-  Future<void> _onPressed(BuildContext context) async {
+  Future<void> _onPressed() async {
     final ActivityType? activityType = await _askForActivityType(context);
     if (activityType != null && mounted) {
       switch (activityType) {
         case ActivityType.workout:
           navigateTo(
-            context: context,
             route: WorkoutCreatorRoute(
               creatorArguments: WorkoutCreatorAddModeArguments(
                 date: widget.date,
@@ -38,7 +35,6 @@ class _AddActivityButtonState extends State<_AddActivityButton> {
           break;
         case ActivityType.race:
           navigateTo(
-            context: context,
             route: RaceCreatorRoute(
               arguments: RaceCreatorArguments(date: widget.date),
             ),

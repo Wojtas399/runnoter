@@ -66,7 +66,6 @@ class _MeasurementItemState extends State<_MeasurementItem> {
 
   void _navigateToHealthMeasurementCreator() {
     navigateTo(
-      context: context,
       route: HealthMeasurementCreatorRoute(
         date: widget.measurement.date,
       ),

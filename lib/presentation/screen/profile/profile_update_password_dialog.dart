@@ -47,7 +47,7 @@ class _State extends State<ProfileUpdatePasswordDialog> {
         final BlocStatus blocStatus = state.status;
         if (blocStatus is BlocStatusComplete &&
             blocStatus.info == ProfileInfo.savedData) {
-          navigateBack(context: context);
+          navigateBack();
         }
       },
       child: context.isMobileSize
@@ -139,7 +139,7 @@ class _NormalDialog extends StatelessWidget {
       ),
       actions: [
         TextButton(
-          onPressed: () => navigateBack(context: context),
+          onPressed: navigateBack,
           child: LabelLarge(
             str.cancel,
             color: Theme.of(context).colorScheme.error,
@@ -178,12 +178,7 @@ class _FullScreenDialog extends StatelessWidget {
         title: Text(
           str.profileNewPasswordDialogTitle,
         ),
-        leading: IconButton(
-          onPressed: () {
-            navigateBack(context: context);
-          },
-          icon: const Icon(Icons.close),
-        ),
+        leading: const CloseButton(),
         actions: [
           TextButton(
             onPressed: isSaveButtonDisabled ? null : onSaveButtonPressed,

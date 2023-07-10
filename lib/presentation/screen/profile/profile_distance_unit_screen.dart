@@ -69,7 +69,7 @@ class _NormalDialog extends StatelessWidget {
       ),
       actions: [
         TextButton(
-          onPressed: () => navigateBack(context: context),
+          onPressed: navigateBack,
           child: Text(str.close),
         ),
       ],
@@ -85,10 +85,7 @@ class _FullScreenDialog extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(Str.of(context).distanceUnit),
-        leading: IconButton(
-          onPressed: () => navigateBack(context: context),
-          icon: const Icon(Icons.close),
-        ),
+        leading: const CloseButton(),
       ),
       body: const SafeArea(
         child: Padding(

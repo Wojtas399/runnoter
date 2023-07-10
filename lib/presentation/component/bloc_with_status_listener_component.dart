@@ -59,10 +59,7 @@ class BlocWithStatusListener<Bloc extends StateStreamable<State>,
     } else if (blocStatus is BlocStatusNoLoggedUser) {
       closeLoadingDialog(context: context);
       _showNoLoggedUserMessage(context);
-      navigateAndRemoveUntil(
-        context: context,
-        route: const SignInRoute(),
-      );
+      navigateAndRemoveUntil(route: const SignInRoute());
     }
   }
 

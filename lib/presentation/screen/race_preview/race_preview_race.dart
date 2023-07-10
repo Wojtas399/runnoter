@@ -172,13 +172,11 @@ class _FinishRaceButton extends StatelessWidget {
   }
 
   void _onPressed(BuildContext context) {
-    final RacePreviewBloc bloc = context.read<RacePreviewBloc>();
-    final String? raceId = bloc.state.race?.id;
+    final String? raceId = context.read<RacePreviewBloc>().state.race?.id;
     if (raceId == null) {
       return;
     }
     navigateTo(
-      context: context,
       route: RunStatusCreatorRoute(
         creatorArguments: RaceRunStatusCreatorArguments(
           entityId: raceId,

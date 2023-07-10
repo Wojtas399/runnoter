@@ -16,7 +16,6 @@ import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
 import '../../service/utils.dart';
 
-part 'sign_up_alternative_option.dart';
 part 'sign_up_content.dart';
 part 'sign_up_form.dart';
 part 'sign_up_submit_button.dart';
@@ -66,24 +65,18 @@ class _BlocListener extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocWithStatusListener<SignUpBloc, SignUpState, SignUpBlocInfo,
         SignUpBlocError>(
-      child: child,
-      onInfo: (SignUpBlocInfo info) {
-        _manageCompletionInfo(info, context);
-      },
+      onInfo: _manageInfo,
       onError: (SignUpBlocError error) {
         _manageError(error, context);
       },
+      child: child,
     );
   }
 
-  Future<void> _manageCompletionInfo(
-    SignUpBlocInfo info,
-    BuildContext context,
-  ) async {
+  Future<void> _manageInfo(SignUpBlocInfo info) async {
     switch (info) {
       case SignUpBlocInfo.signedUp:
         navigateAndRemoveUntil(
-          context: context,
           route: const HomeRoute(),
         );
         break;

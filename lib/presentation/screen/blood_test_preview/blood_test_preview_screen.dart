@@ -86,7 +86,7 @@ class _BlocListener extends StatelessWidget {
   ) {
     switch (info) {
       case BloodTestPreviewBlocInfo.bloodTestDeleted:
-        navigateBack(context: context);
+        navigateBack();
         showSnackbarMessage(
           context: context,
           message: Str.of(context).bloodTestPreviewDeletedTestMessage,

@@ -10,9 +10,8 @@ import 'presentation/config/theme.dart';
 import 'presentation/provider/repositories_provider.dart';
 import 'presentation/provider/services_provider.dart';
 import 'presentation/service/language_service.dart';
+import 'presentation/service/navigator_service.dart';
 import 'presentation/service/theme_service.dart';
-
-final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 class App extends StatelessWidget {
   const App({

@@ -94,8 +94,8 @@ class _BlocListener extends StatelessWidget {
   void _manageInfo(BuildContext context, WorkoutPreviewBlocInfo info) {
     switch (info) {
       case WorkoutPreviewBlocInfo.workoutDeleted:
+        navigateBack();
         _showInfoAboutDeletedWorkout(context);
-        navigateBack(context: context);
         break;
     }
   }

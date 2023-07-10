@@ -34,7 +34,7 @@ class _NormalDialogContent extends StatelessWidget {
       ),
       actions: [
         TextButton(
-          onPressed: () => navigateBack(context: context),
+          onPressed: navigateBack,
           child: Text(Str.of(context).cancel),
         ),
         const _SaveButton(),
@@ -50,10 +50,7 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       title: const _DialogTitle(),
-      leading: IconButton(
-        onPressed: () => navigateBack(context: context),
-        icon: const Icon(Icons.close),
-      ),
+      leading: const CloseButton(),
       actions: const [
         _SaveButton(),
         SizedBox(width: 16),

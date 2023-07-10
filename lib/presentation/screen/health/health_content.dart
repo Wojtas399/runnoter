@@ -63,17 +63,14 @@ class _ShowAllMeasurementsButton extends StatelessWidget {
       children: [
         BigButton(
           label: Str.of(context).healthShowAllMeasurementsButton,
-          onPressed: () {
-            _onPressed(context);
-          },
+          onPressed: _onPressed,
         ),
       ],
     );
   }
 
-  void _onPressed(BuildContext context) {
+  void _onPressed() {
     navigateTo(
-      context: context,
       route: const HealthMeasurementsRoute(),
     );
   }

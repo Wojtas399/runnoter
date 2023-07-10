@@ -29,24 +29,14 @@ class ConfirmationDialogComponent extends StatelessWidget {
       content: Text(message),
       actions: [
         TextButton(
-          onPressed: () {
-            navigateBack(
-              context: context,
-              result: false,
-            );
-          },
+          onPressed: () => navigateBack(result: false),
           child: LabelMedium(
             cancelButtonLabel ?? Str.of(context).cancel,
             color: cancelButtonColor ?? Theme.of(context).colorScheme.primary,
           ),
         ),
         TextButton(
-          onPressed: () {
-            navigateBack(
-              context: context,
-              result: true,
-            );
-          },
+          onPressed: () => navigateBack(result: true),
           child: LabelMedium(
             confirmButtonLabel ?? Str.of(context).confirm,
             color: confirmButtonColor ?? Theme.of(context).colorScheme.primary,

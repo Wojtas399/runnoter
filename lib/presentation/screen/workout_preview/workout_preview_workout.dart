@@ -161,15 +161,12 @@ class _RunStatusButton extends StatelessWidget {
 
     return BigButton(
       label: label,
-      onPressed: () {
-        _onPressed(context);
-      },
+      onPressed: () => _onPressed(context),
     );
   }
 
   void _onPressed(BuildContext context) {
     navigateTo(
-      context: context,
       route: RunStatusCreatorRoute(
         creatorArguments: WorkoutRunStatusCreatorArguments(
           entityId: context.read<WorkoutPreviewBloc>().workoutId,
