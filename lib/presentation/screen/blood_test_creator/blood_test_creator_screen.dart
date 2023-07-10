@@ -10,6 +10,7 @@ import '../../component/bloc_with_status_listener_component.dart';
 import '../../component/blood_parameter_results_list_component.dart';
 import '../../component/date_selector_component.dart';
 import '../../component/text/title_text_components.dart';
+import '../../config/ui_sizes.dart';
 import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
 import '../../service/utils.dart';
