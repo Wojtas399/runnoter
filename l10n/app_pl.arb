@@ -53,9 +53,13 @@
   "@signUpButtonLabel": {
     "description": "Label of the button to submit sign up form"
   },
-  "signUpSignInOption": "Masz już konto? Zaloguj się!",
-  "@signUpSignInOption": {
-    "description": "Option to navigate to sign in screen,"
+  "signUpAlreadyHaveAccount": "Masz już konto?",
+  "@signUpAlreadyHaveAccount": {
+    "description": "First part of option to navigate to sign in screen"
+  },
+  "signUpSignIn": "Zaloguj się!",
+  "@signUpSignIn": {
+    "description": "Second part of option to navigate to sign in screen"
   },
   "signUpAlreadyTakenEmailDialogTitle": "Zajęty adres email",
   "@signUpAlreadyTakenEmailDialogTitle": {

@@ -54,9 +54,24 @@ class _GoToSignInOption extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: navigateBack,
-      child: Text(Str.of(context).signUpSignInOption),
+    final str = Str.of(context);
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: navigateBack,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(str.signUpAlreadyHaveAccount),
+            const SizedBox(width: 4),
+            BodyMedium(
+              str.signUpSignIn,
+              color: Theme.of(context).colorScheme.primary,
+              fontWeight: FontWeight.bold,
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
