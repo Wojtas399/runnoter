@@ -1,10 +1,5 @@
 part of 'workout_creator_screen.dart';
 
-enum _WorkoutStageAction {
-  edit,
-  delete,
-}
-
 class _WorkoutStageItem extends StatefulWidget {
   final int index;
   final WorkoutStage workoutStage;
@@ -26,95 +21,99 @@ class _WorkoutStageItemState extends State<_WorkoutStageItem> {
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      child: Card(
-        key: globalKey,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(100),
-        ),
-        child: InkWell(
-          borderRadius: BorderRadius.circular(100),
-          onTap: _onPressed,
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(24, 16, 20, 16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                BodyMedium(widget.workoutStage.toUIFormat(context)),
-                _DragHandle(itemIndex: widget.index),
-              ],
+      child: MouseRegion(
+        cursor: SystemMouseCursors.click,
+        child: ReorderableDelayedDragStartListener(
+          index: widget.index,
+          child: Card(
+            key: globalKey,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(100),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(24, 8, 16, 8),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: BodyMedium(
+                      widget.workoutStage.toUIFormat(context),
+                    ),
+                  ),
+                  _WorkoutStageActions(
+                    stageIndex: widget.index,
+                    stage: widget.workoutStage,
+                  ),
+                ],
+              ),
             ),
           ),
         ),
       ),
     );
   }
+}
 
-  Future<void> _onPressed() async {
-    final _WorkoutStageAction? action = await _askForAction();
-    if (action == null || !mounted) return;
-    switch (action) {
-      case _WorkoutStageAction.edit:
-        await _editWorkoutStage();
-        break;
-      case _WorkoutStageAction.delete:
-        _deleteWorkoutStage();
-        break;
+class _WorkoutStageActions extends StatelessWidget {
+  final int stageIndex;
+  final WorkoutStage stage;
+
+  const _WorkoutStageActions({
+    required this.stageIndex,
+    required this.stage,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    const double iconSize = 20;
+    if (context.isMobileSize) {
+      return EditDeletePopupMenu(
+        onEditSelected: () => _editWorkoutStage(context),
+        onDeleteSelected: () => _deleteWorkoutStage(context),
+      );
     }
+    return Row(
+      children: [
+        IconButton(
+          onPressed: () => _editWorkoutStage(context),
+          icon: Icon(
+            Icons.edit_outlined,
+            size: iconSize,
+            color: theme.colorScheme.primary,
+          ),
+        ),
+        IconButton(
+          onPressed: () => _deleteWorkoutStage(context),
+          icon: Icon(
+            Icons.delete_outline,
+            size: iconSize,
+            color: theme.colorScheme.error,
+          ),
+        ),
+      ],
+    );
   }
 
-  Future<_WorkoutStageAction?> _askForAction() async =>
-      await askForMenuAction<_WorkoutStageAction>(
-        context: context,
-        boxGlobalKey: globalKey,
-        actions: [
-          ActionItem(
-            id: _WorkoutStageAction.edit,
-            iconData: Icons.edit_outlined,
-            label: Str.of(context).edit,
-          ),
-          ActionItem(
-            id: _WorkoutStageAction.delete,
-            iconData: Icons.delete_outline,
-            label: Str.of(context).delete,
-          ),
-        ],
-      );
-
-  Future<void> _editWorkoutStage() async {
+  Future<void> _editWorkoutStage(BuildContext context) async {
     final bloc = context.read<WorkoutCreatorBloc>();
     final WorkoutStage? updatedWorkoutStage =
         await showDialogDependingOnScreenSize(
-      WorkoutStageCreatorScreen(stage: widget.workoutStage),
+      WorkoutStageCreatorScreen(stage: stage),
     );
     if (updatedWorkoutStage != null) {
       bloc.add(
         WorkoutCreatorEventWorkoutStageUpdated(
-          stageIndex: widget.index,
+          stageIndex: stageIndex,
           workoutStage: updatedWorkoutStage,
         ),
       );
     }
   }
 
-  void _deleteWorkoutStage() {
+  void _deleteWorkoutStage(BuildContext context) {
     context.read<WorkoutCreatorBloc>().add(
-          WorkoutCreatorEventDeleteWorkoutStage(index: widget.index),
+          WorkoutCreatorEventDeleteWorkoutStage(index: stageIndex),
         );
-  }
-}
-
-class _DragHandle extends StatelessWidget {
-  final int itemIndex;
-
-  const _DragHandle({
-    required this.itemIndex,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ReorderableDragStartListener(
-      index: itemIndex,
-      child: const Icon(Icons.drag_handle),
-    );
   }
 }

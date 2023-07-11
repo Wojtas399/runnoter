@@ -11,15 +11,22 @@ class _WorkoutActions extends StatelessWidget {
         onDeleteSelected: () => _deleteWorkout(context),
       );
     }
+    final theme = Theme.of(context);
     return Row(
       children: [
         IconButton(
           onPressed: () => _editWorkout(context),
-          icon: const Icon(Icons.edit_outlined),
+          icon: Icon(
+            Icons.edit_outlined,
+            color: theme.colorScheme.primary,
+          ),
         ),
         IconButton(
           onPressed: () => _deleteWorkout(context),
-          icon: const Icon(Icons.delete_outline),
+          icon: Icon(
+            Icons.delete_outline,
+            color: theme.colorScheme.error,
+          ),
         ),
       ],
     );
