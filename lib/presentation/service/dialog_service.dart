@@ -154,45 +154,6 @@ Future<T?> askForAction<T>({
   );
 }
 
-Future<T?> askForMenuAction<T>({
-  required BuildContext context,
-  required GlobalKey boxGlobalKey,
-  required List<ActionItem<T>> actions,
-  String? title,
-}) async {
-  if (navigatorKey.currentContext == null) return null;
-  hideSnackbar();
-  final box = boxGlobalKey.currentContext?.findRenderObject() as RenderBox;
-  final overlay = Overlay.of(context).context.findRenderObject();
-  final Offset position = box.localToGlobal(Offset.zero);
-  final double dx = position.dx + box.size.width;
-  final double dy = position.dy + box.size.height;
-  return await showMenu(
-    context: navigatorKey.currentContext!,
-    position: RelativeRect.fromSize(
-      Rect.fromLTWH(dx, dy, 10, 10),
-      Size(
-        overlay!.paintBounds.size.width,
-        overlay.paintBounds.size.height,
-      ),
-    ),
-    items: actions
-        .map(
-          (action) => PopupMenuItem(
-            value: action.id,
-            child: Row(
-              children: [
-                Icon(action.iconData),
-                const SizedBox(width: 8),
-                Text(action.label)
-              ],
-            ),
-          ),
-        )
-        .toList(),
-  );
-}
-
 Future<DateTime?> askForDate({
   DateTime? initialDate,
   DateTime? lastDate,
