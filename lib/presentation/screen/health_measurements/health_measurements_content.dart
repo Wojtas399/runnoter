@@ -8,13 +8,21 @@ class _Content extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
+        forceMaterialTransparency: true,
         title: Text(Str.of(context).healthMeasurementsScreenTitle),
       ),
       body: SafeArea(
         child: Center(
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: bigContentWidth),
-            child: const _Body(),
+            child: const Column(
+              children: [
+                _Header(),
+                Expanded(
+                  child: _Body(),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -48,6 +56,62 @@ class _Body extends StatelessWidget {
   }
 }
 
+class _Header extends StatelessWidget {
+  const _Header();
+
+  @override
+  Widget build(BuildContext context) {
+    final str = Str.of(context);
+    const FontWeight fontWeight = FontWeight.bold;
+
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+          child: Row(
+            children: [
+              Expanded(
+                flex: 2,
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: LabelLarge(
+                    str.date,
+                    fontWeight: fontWeight,
+                  ),
+                ),
+              ),
+              Expanded(
+                flex: 2,
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: LabelLarge(
+                    str.healthRestingHeartRate,
+                    textAlign: TextAlign.center,
+                    fontWeight: fontWeight,
+                  ),
+                ),
+              ),
+              Expanded(
+                flex: 2,
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: LabelLarge(
+                    str.healthFastingWeight,
+                    textAlign: TextAlign.center,
+                    fontWeight: fontWeight,
+                  ),
+                ),
+              ),
+              const Expanded(child: SizedBox()),
+            ],
+          ),
+        ),
+        const Divider(height: 1),
+      ],
+    );
+  }
+}
+
 class _Measurements extends StatelessWidget {
   final List<HealthMeasurement> measurements;
 
@@ -59,7 +123,7 @@ class _Measurements extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView.separated(
       itemCount: measurements.length,
-      padding: const EdgeInsets.fromLTRB(12, 12, 12, 80),
+      padding: const EdgeInsets.only(top: 8, bottom: 80),
       itemBuilder: (_, int measurementIndex) => _MeasurementItem(
         measurement: measurements[measurementIndex],
         isFirstItem: measurementIndex == 0,
