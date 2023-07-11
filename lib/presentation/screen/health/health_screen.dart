@@ -15,6 +15,7 @@ import '../../component/text/label_text_components.dart';
 import '../../component/text/title_text_components.dart';
 import '../../config/navigation/routes.dart';
 import '../../formatter/date_formatter.dart';
+import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
 import '../../service/utils.dart';
 

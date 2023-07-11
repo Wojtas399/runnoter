@@ -26,10 +26,6 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
     screen = RunStatusCreatorScreen(
       arguments: settings.arguments as RunStatusCreatorArguments,
     );
-  } else if (routePath == RoutePath.healthMeasurementCreator.path) {
-    screen = HealthMeasurementCreatorScreen(
-      date: settings.arguments as DateTime?,
-    );
   } else if (routePath == RoutePath.healthMeasurements.path) {
     screen = const HealthMeasurementsScreen();
   } else if (routePath == RoutePath.bloodTestCreator.path) {

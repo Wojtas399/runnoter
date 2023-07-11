@@ -57,19 +57,18 @@ class _MeasurementItemState extends State<_MeasurementItem> {
         ),
       ],
     );
-    if (action == _MeasurementAction.edit) {
-      _navigateToHealthMeasurementCreator();
-    } else if (action == _MeasurementAction.delete) {
-      await _deleteMeasurement();
+    if (action == null || !mounted) return;
+    switch (action) {
+      case _MeasurementAction.edit:
+        await showHealthMeasurementCreatorDialog(
+          context: context,
+          date: widget.measurement.date,
+        );
+        break;
+      case _MeasurementAction.delete:
+        await _deleteMeasurement();
+        break;
     }
-  }
-
-  void _navigateToHealthMeasurementCreator() {
-    navigateTo(
-      route: HealthMeasurementCreatorRoute(
-        date: widget.measurement.date,
-      ),
-    );
   }
 
   Future<void> _deleteMeasurement() async {

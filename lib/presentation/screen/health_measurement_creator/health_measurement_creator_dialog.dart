@@ -12,10 +12,12 @@ import '../../component/big_button_component.dart';
 import '../../component/bloc_with_status_listener_component.dart';
 import '../../component/date_selector_component.dart';
 import '../../component/loading_info_component.dart';
-import '../../component/screen_adjustable_body_component.dart';
+import '../../component/padding/paddings_24.dart';
+import '../../component/text/label_text_components.dart';
 import '../../component/text/title_text_components.dart';
 import '../../component/text_field_component.dart';
 import '../../config/ui_sizes.dart';
+import '../../extension/context_extensions.dart';
 import '../../formatter/decimal_text_input_formatter.dart';
 import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
@@ -24,12 +26,12 @@ import '../../service/utils.dart';
 part 'health_measurement_creator_content.dart';
 part 'health_measurement_creator_form.dart';
 
-class HealthMeasurementCreatorScreen extends StatelessWidget {
+class HealthMeasurementCreatorDialog extends StatelessWidget {
   final DateTime? date;
 
-  const HealthMeasurementCreatorScreen({
+  const HealthMeasurementCreatorDialog({
     super.key,
-    required this.date,
+    this.date,
   });
 
   @override

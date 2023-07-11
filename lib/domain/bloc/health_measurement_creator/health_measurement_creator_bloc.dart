@@ -118,7 +118,13 @@ class HealthMeasurementCreatorBloc extends BlocWithStatus<
       return;
     }
     emitLoadingStatus(emit);
-    if (await _healthMeasurementRepository.doesMeasurementFromDateExist(
+    if (state.date == state.measurement?.date) {
+      await _updateMeasurement(loggedUserId);
+      emitCompleteStatus(
+        emit,
+        HealthMeasurementCreatorBlocInfo.measurementUpdated,
+      );
+    } else if (await _healthMeasurementRepository.doesMeasurementFromDateExist(
       userId: loggedUserId,
       date: state.date!,
     )) {
@@ -126,12 +132,6 @@ class HealthMeasurementCreatorBloc extends BlocWithStatus<
         emit,
         HealthMeasurementCreatorBlocError
             .measurementWithSelectedDateAlreadyExist,
-      );
-    } else if (state.date == state.measurement?.date) {
-      await _updateMeasurement(loggedUserId);
-      emitCompleteStatus(
-        emit,
-        HealthMeasurementCreatorBlocInfo.measurementUpdated,
       );
     } else {
       await _addMeasurement(loggedUserId);

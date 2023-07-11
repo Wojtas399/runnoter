@@ -19,17 +19,14 @@ class _Content extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _onAddButtonPressed,
+        onPressed: () => _onAddButtonPressed(context),
         child: const Icon(Icons.add),
       ),
     );
   }
 
-  void _onAddButtonPressed() {
-    navigateTo(
-      route: const HealthMeasurementCreatorRoute(),
-    );
-  }
+  Future<void> _onAddButtonPressed(BuildContext context) async =>
+      await showHealthMeasurementCreatorDialog(context: context);
 }
 
 class _Body extends StatelessWidget {
