@@ -8,9 +8,13 @@
   "@signInButtonLabel": {
     "description": "Label of the button to submit sign in form"
   },
-  "signInSignUpOption": "Nie masz konta? Zarejestruj się!",
-  "@signInSignUpOption": {
-    "description": "Option to navigate to sign up form"
+  "signInDontHaveAccount": "Nie masz konta?",
+  "@signInDontHaveAccount": {
+    "description": "First part of option to navigate to sign up form"
+  },
+  "signInSignUp": "Zarejestruj się!",
+  "@signInSignUp": {
+    "description": "Second part of option to navigate to sign up form"
   },
   "signInForgotPasswordOption": "Zapomniałeś hasła?",
   "@signInForgotPasswordOption": {
