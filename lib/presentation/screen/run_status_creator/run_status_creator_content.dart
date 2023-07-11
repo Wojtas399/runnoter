@@ -30,7 +30,7 @@ class _Content extends StatelessWidget {
                   children: [
                     Container(
                       constraints: const BoxConstraints(
-                        maxWidth: maxContentWidth,
+                        maxWidth: bigContentWidth,
                       ),
                       padding: const EdgeInsets.all(24),
                       child: const Column(

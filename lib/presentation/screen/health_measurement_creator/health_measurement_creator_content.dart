@@ -23,6 +23,7 @@ class _Content extends StatelessWidget {
           child: GestureDetector(
             onTap: unfocusInputs,
             child: const ScreenAdjustableBody(
+              maxContentWidth: mediumContentWidth,
               child: _Body(),
             ),
           ),

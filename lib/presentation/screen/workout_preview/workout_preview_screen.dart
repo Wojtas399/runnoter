@@ -18,6 +18,7 @@ import '../../component/run_status_info_component.dart';
 import '../../component/screen_adjustable_body_component.dart';
 import '../../component/text/title_text_components.dart';
 import '../../config/navigation/routes.dart';
+import '../../config/ui_sizes.dart';
 import '../../extension/context_extensions.dart';
 import '../../formatter/date_formatter.dart';
 import '../../formatter/list_of_workout_stages_formatter.dart';

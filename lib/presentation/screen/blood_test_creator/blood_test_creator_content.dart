@@ -21,7 +21,7 @@ class _Content extends StatelessWidget {
             onTap: unfocusInputs,
             child: Center(
               child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: maxContentWidth),
+                constraints: const BoxConstraints(maxWidth: bigContentWidth),
                 child: const Column(
                   children: [
                     _DateSection(),

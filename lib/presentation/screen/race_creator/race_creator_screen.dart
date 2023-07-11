@@ -14,6 +14,7 @@ import '../../component/duration_input_component.dart';
 import '../../component/screen_adjustable_body_component.dart';
 import '../../component/text/title_text_components.dart';
 import '../../component/text_field_component.dart';
+import '../../config/ui_sizes.dart';
 import '../../extension/context_extensions.dart';
 import '../../extension/double_extensions.dart';
 import '../../extension/string_extensions.dart';

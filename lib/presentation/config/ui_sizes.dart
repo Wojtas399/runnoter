@@ -1,1 +1,2 @@
-const double maxContentWidth = 800;
+const double bigContentWidth = 800;
+const double mediumContentWidth = 500;

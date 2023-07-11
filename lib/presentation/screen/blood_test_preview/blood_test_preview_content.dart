@@ -10,7 +10,7 @@ class _Content extends StatelessWidget {
       body: SafeArea(
         child: Center(
           child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: maxContentWidth),
+            constraints: const BoxConstraints(maxWidth: bigContentWidth),
             child: const Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

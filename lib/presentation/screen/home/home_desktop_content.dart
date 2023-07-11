@@ -61,6 +61,7 @@ class _DesktopContentState extends State<_DesktopContent> {
             appBar: AppBar(
               title: Text(pageTitles[_page.index]),
               centerTitle: true,
+              automaticallyImplyLeading: false,
             ),
             floatingActionButton: _page == _DesktopDrawerPage.blood ||
                     _page == _DesktopDrawerPage.races
@@ -76,7 +77,7 @@ class _DesktopContentState extends State<_DesktopContent> {
                   Flexible(
                     child: ConstrainedBox(
                       constraints: const BoxConstraints(
-                        maxWidth: maxContentWidth,
+                        maxWidth: bigContentWidth,
                       ),
                       child: switch (_page) {
                         _DesktopDrawerPage.currentWeek =>
