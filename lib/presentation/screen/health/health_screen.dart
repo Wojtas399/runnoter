@@ -13,7 +13,7 @@ import '../../component/big_button_component.dart';
 import '../../component/bloc_with_status_listener_component.dart';
 import '../../component/text/label_text_components.dart';
 import '../../component/text/title_text_components.dart';
-import '../../config/navigation/routes.dart';
+import '../../config/navigation/router.dart';
 import '../../formatter/date_formatter.dart';
 import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';

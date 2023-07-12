@@ -10,7 +10,7 @@ import '../../component/empty_content_info_component.dart';
 import '../../component/loading_info_component.dart';
 import '../../component/padding/paddings_24.dart';
 import '../../component/text/title_text_components.dart';
-import '../../config/navigation/routes.dart';
+import '../../config/navigation/router.dart';
 import '../../formatter/date_formatter.dart';
 import '../../service/navigator_service.dart';
 

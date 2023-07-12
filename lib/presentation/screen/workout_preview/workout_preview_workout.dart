@@ -167,8 +167,8 @@ class _RunStatusButton extends StatelessWidget {
 
   void _onPressed(BuildContext context) {
     navigateTo(
-      route: RunStatusCreatorRoute(
-        creatorArguments: WorkoutRunStatusCreatorArguments(
+      RunStatusCreatorRoute(
+        arguments: WorkoutRunStatusCreatorArguments(
           entityId: context.read<WorkoutPreviewBloc>().workoutId,
         ),
       ),

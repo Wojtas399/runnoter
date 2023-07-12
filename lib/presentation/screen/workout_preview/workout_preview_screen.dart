@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -17,7 +18,7 @@ import '../../component/padding/paddings_24.dart';
 import '../../component/run_status_info_component.dart';
 import '../../component/screen_adjustable_body_component.dart';
 import '../../component/text/title_text_components.dart';
-import '../../config/navigation/routes.dart';
+import '../../config/navigation/router.dart';
 import '../../config/ui_sizes.dart';
 import '../../extension/context_extensions.dart';
 import '../../formatter/date_formatter.dart';
@@ -31,6 +32,7 @@ part 'workout_preview_actions.dart';
 part 'workout_preview_content.dart';
 part 'workout_preview_workout.dart';
 
+@RoutePage()
 class WorkoutPreviewScreen extends StatelessWidget {
   final String workoutId;
 

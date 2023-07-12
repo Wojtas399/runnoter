@@ -10,9 +10,8 @@ import '../../../domain/service/auth_service.dart';
 import '../../component/activity_item_component.dart';
 import '../../component/loading_info_component.dart';
 import '../../component/text/title_text_components.dart';
-import '../../config/navigation/routes.dart';
+import '../../config/navigation/router.dart';
 import '../../formatter/date_formatter.dart';
-import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
 import '../screens.dart';
 

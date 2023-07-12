@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -11,7 +12,7 @@ import '../../component/scrollable_content_component.dart';
 import '../../component/text/body_text_components.dart';
 import '../../component/text/headline_text_components.dart';
 import '../../component/text_field_component.dart';
-import '../../config/navigation/routes.dart';
+import '../../config/navigation/router.dart';
 import '../../config/ui_sizes.dart';
 import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
@@ -22,6 +23,7 @@ part 'sign_in_form.dart';
 part 'sign_in_screen_content.dart';
 part 'sign_in_submit_button.dart';
 
+@RoutePage()
 class SignInScreen extends StatelessWidget {
   const SignInScreen({
     super.key,
@@ -79,9 +81,7 @@ class _BlocListener extends StatelessWidget {
   Future<void> _manageCompletionInfo(SignInInfo info) async {
     switch (info) {
       case SignInInfo.signedIn:
-        navigateAndRemoveUntil(
-          route: const HomeRoute(),
-        );
+        navigateAndRemoveUntil(const HomeRoute());
         break;
     }
   }

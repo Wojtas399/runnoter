@@ -51,9 +51,7 @@ class _ReadingsFromYear extends StatelessWidget {
 
   void _onPressed(String bloodTestId) {
     navigateTo(
-      route: BloodTestPreviewRoute(
-        bloodTestId: bloodTestId,
-      ),
+      BloodTestPreviewRoute(bloodTestId: bloodTestId),
     );
   }
 }

@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -20,6 +21,7 @@ import '../../service/dialog_service.dart';
 part 'health_measurements_content.dart';
 part 'health_measurements_item.dart';
 
+@RoutePage()
 class HealthMeasurementsScreen extends StatelessWidget {
   const HealthMeasurementsScreen({
     super.key,

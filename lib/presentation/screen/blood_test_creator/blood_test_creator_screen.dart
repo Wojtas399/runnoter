@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -20,6 +21,7 @@ part 'blood_test_creator_content.dart';
 part 'blood_test_creator_date.dart';
 part 'blood_test_creator_parameters.dart';
 
+@RoutePage()
 class BloodTestCreatorScreen extends StatelessWidget {
   final String? bloodTestId;
 

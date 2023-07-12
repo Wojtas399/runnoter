@@ -70,8 +70,6 @@ class _ShowAllMeasurementsButton extends StatelessWidget {
   }
 
   void _onPressed() {
-    navigateTo(
-      route: const HealthMeasurementsRoute(),
-    );
+    navigateTo(const HealthMeasurementsRoute());
   }
 }

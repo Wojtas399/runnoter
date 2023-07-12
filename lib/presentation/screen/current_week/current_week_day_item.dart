@@ -50,15 +50,13 @@ class DayItem extends StatelessWidget {
 
   void _onWorkoutPressed(String workoutId) {
     navigateTo(
-      route: WorkoutPreviewRoute(workoutId: workoutId),
+      WorkoutPreviewRoute(workoutId: workoutId),
     );
   }
 
   void _onRacePressed(String raceId) {
     navigateTo(
-      route: RacePreviewRoute(
-        raceId: raceId,
-      ),
+      RacePreviewRoute(raceId: raceId),
     );
   }
 }

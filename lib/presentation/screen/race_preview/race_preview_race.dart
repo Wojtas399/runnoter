@@ -177,8 +177,8 @@ class _FinishRaceButton extends StatelessWidget {
       return;
     }
     navigateTo(
-      route: RunStatusCreatorRoute(
-        creatorArguments: RaceRunStatusCreatorArguments(
+      RunStatusCreatorRoute(
+        arguments: RaceRunStatusCreatorArguments(
           entityId: raceId,
         ),
       ),

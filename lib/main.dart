@@ -1,8 +1,10 @@
 import 'package:firebase/firebase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get_it/get_it.dart';
 
 import 'app.dart';
+import 'presentation/config/navigation/router.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -10,16 +12,8 @@ void main() async {
   SystemChrome.setPreferredOrientations(
     [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown],
   );
+  GetIt.I.registerSingleton<AppRouter>(AppRouter());
   runApp(
-    const MyApp(),
+    const App(),
   );
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const App();
-  }
 }

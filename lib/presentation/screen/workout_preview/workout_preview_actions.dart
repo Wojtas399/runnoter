@@ -37,8 +37,8 @@ class _WorkoutActions extends StatelessWidget {
     final DateTime? date = bloc.state.date;
     if (date != null) {
       navigateTo(
-        route: WorkoutCreatorRoute(
-          creatorArguments: WorkoutCreatorEditModeArguments(
+        WorkoutCreatorRoute(
+          arguments: WorkoutCreatorEditModeArguments(
             date: date,
             workoutId: bloc.workoutId,
           ),

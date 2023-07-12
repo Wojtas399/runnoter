@@ -14,7 +14,7 @@ import '../../../domain/service/auth_service.dart';
 import '../../component/bloc_with_status_listener_component.dart';
 import '../../component/text/title_text_components.dart';
 import '../../component/value_with_label_and_icon_component.dart';
-import '../../config/navigation/routes.dart';
+import '../../config/navigation/router.dart';
 import '../../formatter/distance_unit_formatter.dart';
 import '../../formatter/pace_unit_formatter.dart';
 import '../../formatter/settings_formatter.dart';
@@ -126,9 +126,7 @@ class _IdentitiesBlocListener extends StatelessWidget {
         );
         break;
       case ProfileInfo.accountDeleted:
-        navigateAndRemoveUntil(
-          route: const SignInRoute(),
-        );
+        navigateAndRemoveUntil(const SignInRoute());
         break;
     }
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:get_it/get_it.dart';
 
 import '../../domain/repository/health_measurement_repository.dart';
 import '../../domain/service/auth_service.dart';
@@ -9,17 +10,19 @@ import '../component/dialog/loading_dialog_component.dart';
 import '../component/dialog/message_dialog_component.dart';
 import '../component/dialog/value_dialog_component.dart';
 import '../config/animation/slide_to_top_anim.dart';
+import '../config/navigation/router.dart';
 import '../extension/context_extensions.dart';
 import '../screen/health_measurement_creator/health_measurement_creator_dialog.dart';
-import 'navigator_service.dart';
 
 bool _isLoadingDialogOpened = false;
 
 void showLoadingDialog() {
-  if (navigatorKey.currentContext != null) {
+  final BuildContext? context =
+      GetIt.I.get<AppRouter>().navigatorKey.currentContext;
+  if (context != null) {
     _isLoadingDialogOpened = true;
     showDialog(
-      context: navigatorKey.currentContext!,
+      context: context,
       builder: (_) => const LoadingDialog(),
       barrierDismissible: false,
     );
@@ -27,8 +30,10 @@ void showLoadingDialog() {
 }
 
 void closeLoadingDialog() {
-  if (_isLoadingDialogOpened && navigatorKey.currentContext != null) {
-    Navigator.of(navigatorKey.currentContext!, rootNavigator: true).pop();
+  final BuildContext? context =
+      GetIt.I.get<AppRouter>().navigatorKey.currentContext;
+  if (_isLoadingDialogOpened && context != null) {
+    Navigator.of(context, rootNavigator: true).pop();
     _isLoadingDialogOpened = false;
   }
 }
@@ -48,8 +53,10 @@ Future<void> showMessageDialog({
 }
 
 void showSnackbarMessage(String message) {
-  if (navigatorKey.currentContext != null) {
-    ScaffoldMessenger.of(navigatorKey.currentContext!).showSnackBar(
+  final BuildContext? context =
+      GetIt.I.get<AppRouter>().navigatorKey.currentContext;
+  if (context != null) {
+    ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
       ),
@@ -58,8 +65,10 @@ void showSnackbarMessage(String message) {
 }
 
 void hideSnackbar() {
-  if (navigatorKey.currentContext != null) {
-    ScaffoldMessenger.of(navigatorKey.currentContext!).hideCurrentSnackBar();
+  final BuildContext? context =
+      GetIt.I.get<AppRouter>().navigatorKey.currentContext;
+  if (context != null) {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
   }
 }
 
@@ -102,8 +111,10 @@ Future<bool> askForConfirmation({
 Future<bool> askForConfirmationToLeave({
   bool areUnsavedChanges = false,
 }) async {
-  if (navigatorKey.currentContext != null) {
-    final str = Str.of(navigatorKey.currentContext!);
+  final BuildContext? context =
+      GetIt.I.get<AppRouter>().navigatorKey.currentContext;
+  if (context != null) {
+    final str = Str.of(context);
     return await askForConfirmation(
       title: str.leavePageConfirmationDialogTitle,
       message: switch (areUnsavedChanges) {
@@ -141,9 +152,11 @@ Future<DateTime?> askForDate({
   DateTime? initialDate,
   DateTime? lastDate,
 }) async {
-  if (navigatorKey.currentContext == null) return null;
+  final BuildContext? context =
+      GetIt.I.get<AppRouter>().navigatorKey.currentContext;
+  if (context == null) return null;
   return await showDatePicker(
-    context: navigatorKey.currentContext!,
+    context: context,
     initialDate: initialDate ?? DateTime.now(),
     firstDate: DateTime(1900),
     lastDate: lastDate ?? DateTime(2099, 12, 31),
@@ -151,16 +164,20 @@ Future<DateTime?> askForDate({
 }
 
 Future<T?> showDialogDependingOnScreenSize<T>(Widget dialog) async {
-  if (navigatorKey.currentContext == null) return null;
-  return await (navigatorKey.currentContext!.isMobileSize
+  final BuildContext? context =
+      GetIt.I.get<AppRouter>().navigatorKey.currentContext;
+  if (context == null) return null;
+  return await (context.isMobileSize
       ? showFullScreenDialog(dialog)
       : showAlertDialog(dialog));
 }
 
 Future<T?> showAlertDialog<T>(Widget dialog) async {
-  if (navigatorKey.currentContext == null) return null;
+  final BuildContext? context =
+      GetIt.I.get<AppRouter>().navigatorKey.currentContext;
+  if (context == null) return null;
   return await showGeneralDialog<T>(
-    context: navigatorKey.currentContext!,
+    context: context,
     pageBuilder: (_, anim1, anim2) => dialog,
     transitionBuilder: (BuildContext context, anim1, anim2, child) {
       var curve = Curves.easeInOutQuart.transform(anim1.value);
@@ -176,9 +193,11 @@ Future<T?> showAlertDialog<T>(Widget dialog) async {
 }
 
 Future<T?> showFullScreenDialog<T>(Widget dialog) async {
-  if (navigatorKey.currentContext == null) return null;
+  final BuildContext? context =
+      GetIt.I.get<AppRouter>().navigatorKey.currentContext;
+  if (context == null) return null;
   return await showGeneralDialog<T?>(
-    context: navigatorKey.currentContext!,
+    context: context,
     barrierColor: Colors.transparent,
     pageBuilder: (_, a1, a2) => Dialog.fullscreen(
       child: dialog,

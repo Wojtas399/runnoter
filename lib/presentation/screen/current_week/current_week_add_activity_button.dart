@@ -43,14 +43,14 @@ class _AddActivityButton extends StatelessWidget {
     switch (activityType) {
       case _ActivityType.workout:
         navigateTo(
-          route: WorkoutCreatorRoute(
-            creatorArguments: WorkoutCreatorAddModeArguments(date: date),
+          WorkoutCreatorRoute(
+            arguments: WorkoutCreatorAddModeArguments(date: date),
           ),
         );
         break;
       case _ActivityType.race:
         navigateTo(
-          route: RaceCreatorRoute(
+          RaceCreatorRoute(
             arguments: RaceCreatorArguments(date: date),
           ),
         );

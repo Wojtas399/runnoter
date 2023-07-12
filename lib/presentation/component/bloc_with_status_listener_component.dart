@@ -4,7 +4,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../domain/additional_model/bloc_state.dart';
 import '../../domain/additional_model/bloc_status.dart';
-import '../config/navigation/routes.dart';
 import '../service/dialog_service.dart';
 import '../service/navigator_service.dart';
 
@@ -59,7 +58,7 @@ class BlocWithStatusListener<Bloc extends StateStreamable<State>,
     } else if (blocStatus is BlocStatusNoLoggedUser) {
       closeLoadingDialog();
       _showNoLoggedUserMessage(context);
-      navigateAndRemoveUntil(route: const SignInRoute());
+      navigateBackToRoute();
     }
   }
 

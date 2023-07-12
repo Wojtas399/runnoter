@@ -64,7 +64,7 @@ class _RaceItem extends StatelessWidget {
 
   void _onPressed() {
     navigateTo(
-      route: RacePreviewRoute(raceId: race.id),
+      RacePreviewRoute(raceId: race.id),
     );
   }
 }

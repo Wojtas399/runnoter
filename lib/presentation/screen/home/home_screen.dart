@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -8,7 +9,7 @@ import '../../../domain/repository/user_repository.dart';
 import '../../../domain/service/auth_service.dart';
 import '../../component/bloc_with_status_listener_component.dart';
 import '../../component/text/label_text_components.dart';
-import '../../config/navigation/routes.dart';
+import '../../config/navigation/router.dart';
 import '../../config/screen_sizes.dart';
 import '../../config/ui_sizes.dart';
 import '../../service/dialog_service.dart';
@@ -26,6 +27,7 @@ part 'home_mobile_content.dart';
 part 'home_navigation_drawer.dart';
 part 'home_navigation_rail.dart';
 
+@RoutePage()
 class HomeScreen extends StatelessWidget {
   const HomeScreen({
     super.key,
@@ -86,9 +88,7 @@ class _BlocListener extends StatelessWidget {
     switch (info) {
       case HomeInfo.userSignedOut:
         context.read<ThemeService>().changeTheme(ThemeMode.system);
-        navigateAndRemoveUntil(
-          route: const SignInRoute(),
-        );
+        navigateAndRemoveUntil(const SignInRoute());
         break;
     }
   }

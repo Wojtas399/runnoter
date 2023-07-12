@@ -104,13 +104,9 @@ class _MobileContentState extends State<_MobileContent> {
 
   void _onFloatingActionButtonPressed() {
     if (_drawerPage == _MobileDrawerPage.blood) {
-      navigateTo(
-        route: const BloodTestCreatorRoute(),
-      );
+      navigateTo(BloodTestCreatorRoute());
     } else if (_drawerPage == _MobileDrawerPage.races) {
-      navigateTo(
-        route: const RaceCreatorRoute(),
-      );
+      navigateTo(RaceCreatorRoute());
     }
   }
 }

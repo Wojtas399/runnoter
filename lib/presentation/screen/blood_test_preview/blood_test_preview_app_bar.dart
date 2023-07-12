@@ -41,9 +41,7 @@ class _BloodTestActionsMenu extends StatelessWidget {
         context.read<BloodTestPreviewBloc>().state.bloodTestId;
     if (bloodTestId != null) {
       navigateTo(
-        route: BloodTestCreatorRoute(
-          bloodTestId: bloodTestId,
-        ),
+        BloodTestCreatorRoute(bloodTestId: bloodTestId),
       );
     }
   }

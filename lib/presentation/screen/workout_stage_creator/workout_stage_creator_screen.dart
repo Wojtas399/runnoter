@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,6 +18,7 @@ part 'workout_stage_creator_distance_form.dart';
 part 'workout_stage_creator_form.dart';
 part 'workout_stage_creator_series_form.dart';
 
+@RoutePage()
 class WorkoutStageCreatorScreen extends StatelessWidget {
   final WorkoutStage? stage;
 

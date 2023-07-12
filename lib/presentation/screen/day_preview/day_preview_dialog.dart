@@ -14,7 +14,7 @@ import '../../component/activity_item_component.dart';
 import '../../component/empty_content_info_component.dart';
 import '../../component/loading_info_component.dart';
 import '../../component/padding/paddings_24.dart';
-import '../../config/navigation/routes.dart';
+import '../../config/navigation/router.dart';
 import '../../extension/context_extensions.dart';
 import '../../formatter/date_formatter.dart';
 import '../../service/navigator_service.dart';
@@ -196,8 +196,8 @@ class _Actions extends StatelessWidget {
 
   void _addWorkout(BuildContext context) {
     navigateTo(
-      route: WorkoutCreatorRoute(
-        creatorArguments: WorkoutCreatorAddModeArguments(
+      WorkoutCreatorRoute(
+        arguments: WorkoutCreatorAddModeArguments(
           date: context.read<DayPreviewCubit>().date,
         ),
       ),
@@ -206,7 +206,7 @@ class _Actions extends StatelessWidget {
 
   void _addRace(BuildContext context) {
     navigateTo(
-      route: RaceCreatorRoute(
+      RaceCreatorRoute(
         arguments: RaceCreatorArguments(
           date: context.read<DayPreviewCubit>().date,
         ),

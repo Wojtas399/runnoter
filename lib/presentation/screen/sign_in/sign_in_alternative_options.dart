@@ -40,14 +40,10 @@ class _AlternativeOptions extends StatelessWidget {
   }
 
   void _onSignUpOptionSelected() {
-    navigateTo(
-      route: const SignUpRoute(),
-    );
+    navigateTo(const SignUpRoute());
   }
 
   void _onForgotPasswordSelected() {
-    navigateTo(
-      route: const ForgotPasswordRoute(),
-    );
+    navigateTo(const ForgotPasswordRoute());
   }
 }
