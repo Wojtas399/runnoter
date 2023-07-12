@@ -4,7 +4,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../domain/repository/health_measurement_repository.dart';
 import '../../domain/service/auth_service.dart';
-import '../component/action_sheet_component.dart';
 import '../component/dialog/confirmation_dialog_component.dart';
 import '../component/dialog/loading_dialog_component.dart';
 import '../component/dialog/message_dialog_component.dart';
@@ -134,22 +133,6 @@ Future<String?> askForValue({
       initialValue: value,
       isValueRequired: isValueRequired,
       validator: validator,
-    ),
-  );
-}
-
-Future<T?> askForAction<T>({
-  required List<ActionItem<T>> actions,
-  String? title,
-}) async {
-  if (navigatorKey.currentContext == null) return null;
-  hideSnackbar();
-  return await showModalBottomSheet(
-    context: navigatorKey.currentContext!,
-    showDragHandle: true,
-    builder: (_) => ActionSheetComponent(
-      actions: actions,
-      title: title,
     ),
   );
 }
