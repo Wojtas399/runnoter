@@ -11,15 +11,22 @@ class _RaceActions extends StatelessWidget {
         onDeleteSelected: () => _deleteRace(context),
       );
     }
+    final theme = Theme.of(context);
     return Row(
       children: [
         IconButton(
           onPressed: () => _editRace(context),
-          icon: const Icon(Icons.edit_outlined),
+          icon: Icon(
+            Icons.edit_outlined,
+            color: theme.colorScheme.primary,
+          ),
         ),
         IconButton(
           onPressed: () => _deleteRace(context),
-          icon: const Icon(Icons.delete_outline),
+          icon: Icon(
+            Icons.delete_outline,
+            color: theme.colorScheme.error,
+          ),
         ),
       ],
     );
