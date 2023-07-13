@@ -1,97 +1,69 @@
 part of 'home_screen.dart';
 
 class _NavigationDrawer extends StatelessWidget {
-  final int selectedIndex;
-  final List<_Destination> destinations;
-  final Function(int index) onDestinationSelected;
+  final int? selectedIndex;
+  final Function(int pageIndex) onPageSelected;
 
   const _NavigationDrawer({
     required this.selectedIndex,
-    required this.destinations,
-    required this.onDestinationSelected,
+    required this.onPageSelected,
   });
 
   @override
   Widget build(BuildContext context) {
-    const Widget divider = Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: 16,
-        vertical: 8,
-      ),
-      child: Divider(),
-    );
+    final str = Str.of(context);
 
     return NavigationDrawer(
       selectedIndex: selectedIndex,
-      surfaceTintColor: MediaQuery.of(context).size.width > maxTabletWidth
-          ? Theme.of(context).colorScheme.background
-          : null,
-      onDestinationSelected: (int index) {
-        _onDestinationSelected(context, index);
-      },
+      onDestinationSelected: onPageSelected,
       children: [
-        const SizedBox(height: 16),
-        const _AppLogo(),
-        divider,
-        const _UserInfo(),
-        ...destinations.map(
-          (destination) => NavigationDrawerDestination(
-            icon: Icon(destination.iconData),
-            selectedIcon: Icon(destination.selectedIconData),
-            label: Text(destination.label),
+        const SizedBox(height: 32),
+        if (context.isMobileSize) const _AppLogo(),
+        if (context.isMobileSize)
+          NavigationDrawerDestination(
+            icon: const Icon(Icons.home_outlined),
+            selectedIcon: const Icon(Icons.home),
+            label: Text(str.homeTitle),
           ),
+        if (!context.isMobileSize)
+          NavigationDrawerDestination(
+            icon: const Icon(Icons.date_range_outlined),
+            selectedIcon: const Icon(Icons.date_range),
+            label: Text(str.currentWeekTitle),
+          ),
+        if (!context.isMobileSize)
+          NavigationDrawerDestination(
+            icon: const Icon(Icons.calendar_month_outlined),
+            selectedIcon: const Icon(Icons.calendar_month),
+            label: Text(str.calendarTitle),
+          ),
+        if (!context.isMobileSize)
+          NavigationDrawerDestination(
+            icon: const Icon(Icons.health_and_safety_outlined),
+            selectedIcon: const Icon(Icons.health_and_safety),
+            label: Text(str.healthTitle),
+          ),
+        NavigationDrawerDestination(
+          icon: const Icon(Icons.insert_chart_outlined),
+          selectedIcon: const Icon(Icons.insert_chart),
+          label: Text(str.mileageTitle),
         ),
-        divider,
+        NavigationDrawerDestination(
+          icon: const Icon(Icons.water_drop_outlined),
+          selectedIcon: const Icon(Icons.water_drop),
+          label: Text(str.bloodTestsTitle),
+        ),
+        NavigationDrawerDestination(
+          icon: const Icon(Icons.emoji_events_outlined),
+          selectedIcon: const Icon(Icons.emoji_events),
+          label: Text(str.racesTitle),
+        ),
+        const SizedBox(height: 24),
         NavigationDrawerDestination(
           icon: const Icon(Icons.logout_outlined),
           label: Text(Str.of(context).homeSignOut),
         ),
       ],
-    );
-  }
-
-  Future<void> _onDestinationSelected(
-    BuildContext context,
-    int destinationIndex,
-  ) async {
-    if (destinationIndex == destinations.length) {
-      await _signOut(context);
-    } else {
-      onDestinationSelected(destinationIndex);
-    }
-  }
-
-  Future<void> _signOut(BuildContext context) async {
-    final HomeBloc bloc = context.read<HomeBloc>();
-    final str = Str.of(context);
-    final bool confirmed = await askForConfirmation(
-      title: str.homeSignOutConfirmationDialogTitle,
-      message: str.homeSignOutConfirmationDialogMessage,
-      confirmButtonLabel: str.homeSignOut,
-    );
-    if (confirmed == true) {
-      bloc.add(
-        const HomeEventSignOut(),
-      );
-    }
-  }
-}
-
-class _UserInfo extends StatelessWidget {
-  const _UserInfo();
-
-  @override
-  Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.fromLTRB(24, 8, 24, 24),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _LoggedUserFullName(),
-          SizedBox(height: 4),
-          _LoggedUserEmail(),
-        ],
-      ),
     );
   }
 }
@@ -101,41 +73,10 @@ class _AppLogo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return Container(
       height: 48,
+      margin: const EdgeInsets.only(bottom: 24),
       child: Image.asset('assets/logo.png'),
     );
-  }
-}
-
-class _LoggedUserFullName extends StatelessWidget {
-  const _LoggedUserFullName();
-
-  @override
-  Widget build(BuildContext context) {
-    final String? name = context.select(
-      (HomeBloc bloc) => bloc.state.loggedUserName,
-    );
-    final String? surname = context.select(
-      (HomeBloc bloc) => bloc.state.loggedUserSurname,
-    );
-
-    return Text(
-      '${name ?? ''} ${surname ?? ''}',
-      style: Theme.of(context).textTheme.titleLarge,
-    );
-  }
-}
-
-class _LoggedUserEmail extends StatelessWidget {
-  const _LoggedUserEmail();
-
-  @override
-  Widget build(BuildContext context) {
-    final String? email = context.select(
-      (HomeBloc bloc) => bloc.state.loggedUserEmail,
-    );
-
-    return Text(email ?? '');
   }
 }

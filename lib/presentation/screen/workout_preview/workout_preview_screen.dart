@@ -34,21 +34,22 @@ part 'workout_preview_workout.dart';
 
 @RoutePage()
 class WorkoutPreviewScreen extends StatelessWidget {
-  final String workoutId;
+  final String? workoutId;
 
   const WorkoutPreviewScreen({
     super.key,
-    required this.workoutId,
+    @PathParam('workoutId') this.workoutId,
   });
 
   @override
   Widget build(BuildContext context) {
-    return _BlocProvider(
-      workoutId: workoutId,
-      child: const _BlocListener(
-        child: _Content(),
-      ),
-    );
+    return Text(workoutId.toString());
+    // return _BlocProvider(
+    //   workoutId: workoutId,
+    //   child: const _BlocListener(
+    //     child: _Content(),
+    //   ),
+    // );
   }
 }
 

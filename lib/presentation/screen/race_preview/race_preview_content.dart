@@ -29,7 +29,7 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: Text(Str.of(context).racePreviewScreenTitle),
+      title: Text(Str.of(context).racePreviewTitle),
       centerTitle: true,
       actions: context.isMobileSize ? const [_RaceActions()] : null,
     );

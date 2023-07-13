@@ -9,7 +9,7 @@ class _Content extends StatelessWidget {
       appBar: AppBar(
         centerTitle: true,
         forceMaterialTransparency: true,
-        title: Text(Str.of(context).healthMeasurementsScreenTitle),
+        title: Text(Str.of(context).healthMeasurementsTitle),
       ),
       body: SafeArea(
         child: Center(

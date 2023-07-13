@@ -1,4 +1,4 @@
-part of 'workout_stage_creator_screen.dart';
+part of 'workout_stage_creator_dialog.dart';
 
 class _Form extends StatelessWidget {
   const _Form();

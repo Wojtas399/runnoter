@@ -43,7 +43,7 @@ class _Header extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         HeadlineMedium(
-          Str.of(context).forgotPasswordScreenTitle,
+          Str.of(context).forgotPasswordTitle,
           fontWeight: FontWeight.bold,
         ),
         const SizedBox(height: 8),

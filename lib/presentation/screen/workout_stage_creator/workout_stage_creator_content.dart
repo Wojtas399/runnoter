@@ -1,4 +1,4 @@
-part of 'workout_stage_creator_screen.dart';
+part of 'workout_stage_creator_dialog.dart';
 
 class _FullScreenDialogContent extends StatelessWidget {
   const _FullScreenDialogContent();

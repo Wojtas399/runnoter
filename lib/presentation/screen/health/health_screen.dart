@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -24,6 +25,7 @@ part 'health_charts.dart';
 part 'health_content.dart';
 part 'health_today_measurement.dart';
 
+@RoutePage()
 class HealthScreen extends StatelessWidget {
   const HealthScreen({
     super.key,

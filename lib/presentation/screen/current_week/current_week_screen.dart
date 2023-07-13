@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -19,6 +20,7 @@ part 'current_week_add_activity_button.dart';
 part 'current_week_content.dart';
 part 'current_week_day_item.dart';
 
+@RoutePage()
 class CurrentWeekScreen extends StatelessWidget {
   const CurrentWeekScreen({
     super.key,

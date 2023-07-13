@@ -46,9 +46,9 @@ class _AppBarTitle extends StatelessWidget {
     final Race? race = context.select(
       (RaceCreatorBloc bloc) => bloc.state.race,
     );
-    String title = Str.of(context).raceCreatorScreenNewRaceTitle;
+    String title = Str.of(context).raceCreatorNewRaceTitle;
     if (race != null) {
-      title = Str.of(context).raceCreatorScreenEditRaceTitle;
+      title = Str.of(context).raceCreatorEditRaceTitle;
     }
     return Text(title);
   }

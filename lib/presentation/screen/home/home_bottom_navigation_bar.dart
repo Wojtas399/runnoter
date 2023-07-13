@@ -1,40 +1,38 @@
 part of 'home_screen.dart';
 
 class _BottomNavigationBar extends StatelessWidget {
-  final _MobileBottomNavPage page;
-  final Function(_MobileBottomNavPage page) onPageChanged;
+  final int selectedIndex;
+  final Function(int pageIndex) onPageSelected;
 
   const _BottomNavigationBar({
-    required this.page,
-    required this.onPageChanged,
+    required this.selectedIndex,
+    required this.onPageSelected,
   });
 
   @override
   Widget build(BuildContext context) {
-    final List<_Destination> destinations = [
-      _DestinationCurrentWeek(context: context),
-      _DestinationCalendar(context: context),
-      _DestinationHealth(context: context),
-    ];
+    final str = Str.of(context);
 
     return NavigationBar(
-      onDestinationSelected: _onCurrentPageChanged,
-      selectedIndex: page.index,
-      destinations: <NavigationDestination>[
-        ...destinations.map(
-          (destination) => NavigationDestination(
-            selectedIcon: Icon(destination.selectedIconData),
-            icon: Icon(destination.iconData),
-            label: destination.label,
-          ),
+      onDestinationSelected: onPageSelected,
+      selectedIndex: selectedIndex,
+      destinations: [
+        NavigationDestination(
+          icon: const Icon(Icons.date_range_outlined),
+          selectedIcon: const Icon(Icons.date_range),
+          label: str.currentWeekTitle,
+        ),
+        NavigationDestination(
+          icon: const Icon(Icons.calendar_month_outlined),
+          selectedIcon: const Icon(Icons.calendar_month),
+          label: str.calendarTitle,
+        ),
+        NavigationDestination(
+          icon: const Icon(Icons.health_and_safety_outlined),
+          selectedIcon: const Icon(Icons.health_and_safety),
+          label: str.healthTitle,
         ),
       ],
-    );
-  }
-
-  void _onCurrentPageChanged(int homePageIndex) {
-    onPageChanged(
-      _MobileBottomNavPage.values[homePageIndex],
     );
   }
 }

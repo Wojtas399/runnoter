@@ -1,7 +1,7 @@
 {
   "@__________SIGN_IN__________": {},
-  "signInScreenTitle": "Logowanie",
-  "@signInScreenTitle": {
+  "signInTitle": "Logowanie",
+  "@signInTitle": {
     "description": "Title of sign in screen"
   },
   "signInButtonLabel": "Zaloguj",
@@ -45,8 +45,8 @@
     "description": "Message of the dialog to inform that password is wrong"
   },
   "@__________SIGN_UP__________": {},
-  "signUpScreenTitle": "Rejestracja",
-  "@signUpScreenTitle": {
+  "signUpTitle": "Rejestracja",
+  "@signUpTitle": {
     "description": "Title of sign up screen"
   },
   "signUpButtonLabel": "Zarejestruj",
@@ -70,8 +70,8 @@
     "description": "Message of the dialog to inform that email is already taken"
   },
   "@__________FORGOT_PASSWORD__________": {},
-  "forgotPasswordScreenTitle": "Zapomniałeś hasła?",
-  "@forgotPasswordScreenTitle": {
+  "forgotPasswordTitle": "Zapomniałeś hasła?",
+  "@forgotPasswordTitle": {
     "description": "Title of the message displaying on forgot password screen"
   },
   "forgotPasswordMessage": "Podaj adres email, na który wyślecimy Ci link z możliwością zmiany hasła.",
@@ -111,34 +111,6 @@
   "@homeTitle": {
     "description": "Label of home page"
   },
-  "homeCurrentWeekTitle": "Obecny tydzień",
-  "@homeCurrentWeekTitle": {
-    "description": "Title of current week page"
-  },
-  "homeCalendarTitle": "Kalendarz",
-  "@homeCalendarTitle": {
-    "description": "Title of calendar page"
-  },
-  "homeHealthTitle": "Zdrowie",
-  "@homeHealthTitle": {
-    "description": "Title of morning measurement page"
-  },
-  "homeProfileTitle": "Profil",
-  "@homeProfileTitle": {
-    "description": "Label of profile page"
-  },
-  "homeMileageTitle": "Kilometraż",
-  "@homeMileageTitle": {
-    "description": "Label of mileage page"
-  },
-  "homeBloodTestsTitle": "Badania krwi",
-  "@homeBloodTestsTitle": {
-    "description": "Label of blood tests page"
-  },
-  "homeRacesTitle": "Starty w zawodach",
-  "@homeRacesTitle": {
-    "description": "Label of races page"
-  },
   "homeSignOut": "Wyloguj",
   "@homeSignOut": {
     "description": "Label of drawer's sign out option"
@@ -152,13 +124,22 @@
     "description": "Message of the dialog to confirm sign out"
   },
   "@__________CURRENT_WEEK__________": {},
+  "currentWeekTitle": "Obecny tydzień",
+  "@currentWeekTitle": {
+    "description": "Title of current week screen"
+  },
   "currentWeekActivityActionSheetTitle": "Wybierz rodzaj aktywności do dodania",
   "@currentWeekActivityActionSheetTitle": {
     "description": "Title of action sheet with type of activities to add"
   },
+  "@__________CALENDAR__________": {},
+  "calendarTitle": "Kalendarz",
+  "@calendarTitle": {
+    "description": "Title of calendar screen"
+  },
   "@__________WORKOUT_PREVIEW__________": {},
-  "workoutPreviewScreenTitle": "Trening",
-  "@workoutPreviewScreenTitle": {
+  "workoutPreviewTitle": "Trening",
+  "@workoutPreviewTitle": {
     "description": "Title of the workout preview screen"
   },
   "workoutPreviewWorkoutDate": "Nazwa",
@@ -186,12 +167,12 @@
     "description": "Message to inform that workout has been deleted"
   },
   "@__________WORKOUT_CREATOR__________": {},
-  "workoutCreatorScreenNewWorkoutTitle": "Nowy trening",
-  "@workoutCreatorScreenNewWorkoutTitle": {
+  "workoutCreatorNewWorkoutTitle": "Nowy trening",
+  "@workoutCreatorNewWorkoutTitle": {
     "description": "Title of the workout creator screen in add mode"
   },
-  "workoutCreatorScreeEditWorkoutTitle": "Edytuj trening",
-  "@workoutCreatorScreeEditWorkoutTitle": {
+  "workoutCreatorEditWorkoutTitle": "Edytuj trening",
+  "@workoutCreatorEditWorkoutTitle": {
     "description": "Title of the workout creator screen in edit mode"
   },
   "workoutCreatorWorkoutName": "Nazwa treningu",
@@ -322,6 +303,10 @@
     "description": "Message of the information about no activities on a day from the future"
   },
   "@__________HEALTH__________": {},
+  "healthTitle": "Zdrowie",
+  "@healthTitle": {
+    "description": "Title of health screen"
+  },
   "healthTodayMeasurement": "Dzisiejszy pomiar",
   "@healthTodayMeasurement": {
     "description": "Label of today measurement"
@@ -380,8 +365,8 @@
     "description": "Message of dialog to inform that measurement with selected date is already added"
   },
   "@__________HEALTH_MEASUREMENTS__________": {},
-  "healthMeasurementsScreenTitle": "Wszystkie pomiary",
-  "@healthMeasurementsScreenTitle": {
+  "healthMeasurementsTitle": "Wszystkie pomiary",
+  "@healthMeasurementsTitle": {
     "description": "Title of the screen displaying all health measurements"
   },
   "healthMeasurementsNoMeasurementsInfo": "Brak pomiarów",
@@ -407,6 +392,10 @@
     "description": "Message about deleted measurement"
   },
   "@__________PROFILE__________": {},
+  "profileTitle": "Profil",
+  "@profileTitle": {
+    "description": "Title of profile screen"
+  },
   "profileUserData": "Dane użytkownika",
   "@profileUserData": {
     "description": "Title of the user data section"
@@ -484,6 +473,10 @@
     "description": "Message of the dialog to inform that given current password is wrong"
   },
   "@__________MILEAGE__________": {},
+  "mileageTitle": "Kilometraż",
+  "@mileageTitle": {
+    "description": "Title of mileage screen"
+  },
   "mileageChartMileage": "Kilometraż",
   "@mileageChartMileage": {
     "description": "Label of chart's mileage axis"
@@ -497,6 +490,10 @@
     "description": "Message of the information about no data to display mileage"
   },
   "@__________BLOOD_TESTS__________": {},
+  "bloodTestsTitle": "Badania krwi",
+  "@bloodTestsTitle": {
+    "description": "Title of blood tests screen"
+  },
   "bloodTestsAddNewBloodTest": "Dodaj nowe badanie",
   "@bloodTestAddNewBloodTest": {
     "description": "Label of the button to add new results"
@@ -539,8 +536,8 @@
     "description": "Message to inform that blood test has been edited"
   },
   "@__________BLOOD_TEST_PREVIEW__________": {},
-  "bloodTestPreviewScreenTitle": "Badanie krwi",
-  "@bloodTestPreviewScreenTitle": {
+  "bloodTestPreviewTitle": "Badanie krwi",
+  "@bloodTestPreviewTitle": {
     "description": "Title of the blood reading preview screen"
   },
   "bloodTestPreviewDeleteTestTitle": "Usunięcie badania krwi",
@@ -577,12 +574,12 @@
     "description": "Label of the additional blood params"
   },
   "@__________RACE_CREATOR__________": {},
-  "raceCreatorScreenNewRaceTitle": "Nowe zawody",
-  "@raceCreatorScreenNewRaceTitle": {
+  "raceCreatorNewRaceTitle": "Nowe zawody",
+  "@raceCreatorNewRaceTitle": {
     "description": "Title of the race creator screen in add mode"
   },
-  "raceCreatorScreenEditRaceTitle": "Edytuj zawody",
-  "@raceCreatorScreenEditRaceTitle": {
+  "raceCreatorEditRaceTitle": "Edytuj zawody",
+  "@raceCreatorEditRaceTitle": {
     "description": "Title of the race creator screen in edit mode"
   },
   "raceCreatorAddedRaceMessage": "Pomyślnie dodano nowe zawody",
@@ -594,6 +591,10 @@
     "description": "Message to inform that race has been updated"
   },
   "@__________RACES__________": {},
+  "racesTitle": "Wyścigi",
+  "@racesTitle": {
+    "description": "Title of races screen"
+  },
   "racesNoRacesTitle": "Brak zawodów",
   "@racesNoRacesTitle": {
     "description": "Title of the info about the lack of races"
@@ -603,8 +604,8 @@
     "description": "Message of the info about the lack of races"
   },
   "@__________RACE_PREVIEW__________": {},
-  "racePreviewScreenTitle": "Zawody",
-  "@racePreviewScreenTitle": {
+  "racePreviewTitle": "Zawody",
+  "@racePreviewTitle": {
     "description": "Title of the race preview screen"
   },
   "racePreviewDeletionConfirmationTitle": "Usunięcie zawodów",

@@ -99,7 +99,7 @@ class _WorkoutStageActions extends StatelessWidget {
     final bloc = context.read<WorkoutCreatorBloc>();
     final WorkoutStage? updatedWorkoutStage =
         await showDialogDependingOnScreenSize(
-      WorkoutStageCreatorScreen(stage: stage),
+      WorkoutStageCreatorDialog(stage: stage),
     );
     if (updatedWorkoutStage != null) {
       bloc.add(

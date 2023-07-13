@@ -17,4 +17,3 @@ export 'sign_in/sign_in_screen.dart';
 export 'sign_up/sign_up_screen.dart';
 export 'workout_creator/workout_creator_screen.dart';
 export 'workout_preview/workout_preview_screen.dart';
-export 'workout_stage_creator/workout_stage_creator_screen.dart';

@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -14,6 +15,7 @@ import '../../formatter/run_status_formatter.dart';
 import '../../service/dialog_service.dart';
 import '../day_preview/day_preview_dialog.dart';
 
+@RoutePage()
 class CalendarScreen extends StatelessWidget {
   const CalendarScreen({
     super.key,

@@ -48,9 +48,9 @@ class _AppBarTitle extends StatelessWidget {
     final Workout? workout = context.select(
       (WorkoutCreatorBloc bloc) => bloc.state.workout,
     );
-    String title = Str.of(context).workoutCreatorScreenNewWorkoutTitle;
+    String title = Str.of(context).workoutCreatorNewWorkoutTitle;
     if (workout != null) {
-      title = Str.of(context).workoutCreatorScreeEditWorkoutTitle;
+      title = Str.of(context).workoutCreatorEditWorkoutTitle;
     }
     return Text(title);
   }

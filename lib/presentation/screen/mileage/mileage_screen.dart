@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -17,6 +18,7 @@ import '../../formatter/distance_unit_formatter.dart';
 part 'mileage_charts.dart';
 part 'mileage_content.dart';
 
+@RoutePage()
 class MileageScreen extends StatelessWidget {
   const MileageScreen({
     super.key,

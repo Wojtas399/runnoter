@@ -57,7 +57,7 @@ class _AddStageButton extends StatelessWidget {
     unfocusInputs();
     final WorkoutCreatorBloc bloc = context.read<WorkoutCreatorBloc>();
     final WorkoutStage? workoutStage = await showDialogDependingOnScreenSize(
-      const WorkoutStageCreatorScreen(),
+      const WorkoutStageCreatorDialog(),
     );
     if (workoutStage != null) {
       bloc.add(

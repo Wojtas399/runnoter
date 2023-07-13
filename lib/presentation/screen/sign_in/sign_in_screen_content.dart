@@ -52,7 +52,7 @@ class _FormHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return HeadlineMedium(
-      Str.of(context).signInScreenTitle,
+      Str.of(context).signInTitle,
       fontWeight: FontWeight.bold,
     );
   }

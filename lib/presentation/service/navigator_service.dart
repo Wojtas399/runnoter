@@ -11,7 +11,7 @@ void navigateTo(PageRouteInfo route) {
 
 void navigateAndRemoveUntil(PageRouteInfo route) {
   hideSnackbar();
-  GetIt.I.get<AppRouter>().navigate(route);
+  GetIt.I.get<AppRouter>().replaceAll([route]);
 }
 
 void navigateBack<T>({
@@ -19,9 +19,4 @@ void navigateBack<T>({
 }) {
   hideSnackbar();
   GetIt.I.get<AppRouter>().pop(result);
-}
-
-void navigateBackToRoute() {
-  hideSnackbar();
-  GetIt.I.get<AppRouter>().popUntilRoot();
 }

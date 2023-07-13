@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -19,6 +20,7 @@ import '../../service/navigator_service.dart';
 part 'races_content.dart';
 part 'races_list.dart';
 
+@RoutePage()
 class RacesScreen extends StatelessWidget {
   const RacesScreen({
     super.key,
