@@ -12,7 +12,7 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
       forceMaterialTransparency: true,
       centerTitle: true,
       title: Text(
-        Str.of(context).bloodTestPreviewScreenTitle,
+        Str.of(context).bloodTestPreviewTitle,
       ),
       actions: const [
         _BloodTestActionsMenu(),

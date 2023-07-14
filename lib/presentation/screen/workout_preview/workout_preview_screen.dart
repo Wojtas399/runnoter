@@ -43,18 +43,17 @@ class WorkoutPreviewScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(workoutId.toString());
-    // return _BlocProvider(
-    //   workoutId: workoutId,
-    //   child: const _BlocListener(
-    //     child: _Content(),
-    //   ),
-    // );
+    return _BlocProvider(
+      workoutId: workoutId,
+      child: const _BlocListener(
+        child: _Content(),
+      ),
+    );
   }
 }
 
 class _BlocProvider extends StatelessWidget {
-  final String workoutId;
+  final String? workoutId;
   final Widget child;
 
   const _BlocProvider({
