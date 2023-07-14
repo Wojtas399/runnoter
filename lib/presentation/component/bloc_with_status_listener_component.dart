@@ -44,22 +44,20 @@ class BlocWithStatusListener<Bloc extends StateStreamable<State>,
   void _manageBlocStatus(BlocStatus blocStatus, BuildContext context) {
     if (blocStatus is BlocStatusLoading) {
       showLoadingDialog();
-    } else if (blocStatus is BlocStatusComplete) {
+    } else {
       closeLoadingDialog();
-      _manageCompleteStatus(blocStatus, context);
-    } else if (blocStatus is BlocStatusError) {
-      closeLoadingDialog();
-      _manageErrorStatus(blocStatus, context);
-    } else if (blocStatus is BlocStatusUnknownError) {
-      closeLoadingDialog();
-      _showUnknownErrorMessage(context);
-    } else if (blocStatus is BlocStatusNetworkRequestFailed) {
-      closeLoadingDialog();
-      _showNoInternetConnectionMessage(context);
-    } else if (blocStatus is BlocStatusNoLoggedUser) {
-      closeLoadingDialog();
-      _showNoLoggedUserMessage(context);
-      navigateAndRemoveUntil(const SignInRoute());
+      if (blocStatus is BlocStatusComplete) {
+        _manageCompleteStatus(blocStatus, context);
+      } else if (blocStatus is BlocStatusError) {
+        _manageErrorStatus(blocStatus, context);
+      } else if (blocStatus is BlocStatusUnknownError) {
+        _showUnknownErrorMessage(context);
+      } else if (blocStatus is BlocStatusNetworkRequestFailed) {
+        _showNoInternetConnectionMessage(context);
+      } else if (blocStatus is BlocStatusNoLoggedUser) {
+        _showNoLoggedUserMessage(context);
+        navigateAndRemoveUntil(const SignInRoute());
+      }
     }
   }
 
