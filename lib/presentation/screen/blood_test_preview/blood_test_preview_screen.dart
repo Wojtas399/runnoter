@@ -23,11 +23,11 @@ part 'blood_test_preview_content.dart';
 
 @RoutePage()
 class BloodTestPreviewScreen extends StatelessWidget {
-  final String bloodTestId;
+  final String? bloodTestId;
 
   const BloodTestPreviewScreen({
     super.key,
-    required this.bloodTestId,
+    @PathParam('bloodTestId') this.bloodTestId,
   });
 
   @override
@@ -42,7 +42,7 @@ class BloodTestPreviewScreen extends StatelessWidget {
 }
 
 class _BlocProvider extends StatelessWidget {
-  final String bloodTestId;
+  final String? bloodTestId;
   final Widget child;
 
   const _BlocProvider({
@@ -56,11 +56,8 @@ class _BlocProvider extends StatelessWidget {
       create: (BuildContext context) => BloodTestPreviewBloc(
         authService: context.read<AuthService>(),
         bloodTestRepository: context.read<BloodTestRepository>(),
-      )..add(
-          BloodTestPreviewEventInitialize(
-            bloodTestId: bloodTestId,
-          ),
-        ),
+        bloodTestId: bloodTestId,
+      )..add(const BloodTestPreviewEventInitialize()),
       child: child,
     );
   }

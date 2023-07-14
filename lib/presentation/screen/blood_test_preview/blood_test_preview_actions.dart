@@ -38,7 +38,7 @@ class _BloodTestActions extends StatelessWidget {
 
   void _editTest(BuildContext context) {
     final String? bloodTestId =
-        context.read<BloodTestPreviewBloc>().state.bloodTestId;
+        context.read<BloodTestPreviewBloc>().bloodTestId;
     if (bloodTestId != null) {
       navigateTo(
         BloodTestCreatorRoute(bloodTestId: bloodTestId),

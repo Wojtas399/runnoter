@@ -52,7 +52,3 @@ class BlocStatusNetworkRequestFailed extends BlocStatus {
 class BlocStatusNoLoggedUser extends BlocStatus {
   const BlocStatusNoLoggedUser();
 }
-
-class BlocStatusCoreParamsAreNull extends BlocStatus {
-  const BlocStatusCoreParamsAreNull();
-}

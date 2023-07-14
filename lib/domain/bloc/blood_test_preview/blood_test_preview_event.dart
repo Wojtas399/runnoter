@@ -5,19 +5,7 @@ abstract class BloodTestPreviewEvent {
 }
 
 class BloodTestPreviewEventInitialize extends BloodTestPreviewEvent {
-  final String bloodTestId;
-
-  const BloodTestPreviewEventInitialize({
-    required this.bloodTestId,
-  });
-}
-
-class BloodTestPreviewEventBloodTestUpdated extends BloodTestPreviewEvent {
-  final BloodTest? bloodTest;
-
-  const BloodTestPreviewEventBloodTestUpdated({
-    required this.bloodTest,
-  });
+  const BloodTestPreviewEventInitialize();
 }
 
 class BloodTestPreviewEventDeleteTest extends BloodTestPreviewEvent {

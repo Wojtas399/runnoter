@@ -12,6 +12,8 @@ import '../../../mock/domain/service/mock_auth_service.dart';
 void main() {
   final authService = MockAuthService();
   final bloodTestRepository = MockBloodTestRepository();
+  const String loggedUserId = 'u1';
+  const String bloodTestId = 'b1';
 
   BloodTestPreviewBloc createBloc({
     String? bloodTestId,
@@ -19,21 +21,19 @@ void main() {
       BloodTestPreviewBloc(
         authService: authService,
         bloodTestRepository: bloodTestRepository,
-        state: BloodTestPreviewState(
-          status: const BlocStatusInitial(),
-          bloodTestId: bloodTestId,
+        bloodTestId: bloodTestId,
+        state: const BloodTestPreviewState(
+          status: BlocStatusInitial(),
         ),
       );
 
   BloodTestPreviewState createState({
     BlocStatus status = const BlocStatusInitial(),
-    String? bloodTestId,
     DateTime? date,
     List<BloodParameterResult>? parameterResults,
   }) =>
       BloodTestPreviewState(
         status: status,
-        bloodTestId: bloodTestId,
         date: date,
         parameterResults: parameterResults,
       );
@@ -45,15 +45,20 @@ void main() {
 
   blocTest(
     'initialize, '
-    'logged user does not exist, '
+    'blood test is null, '
     'should do nothing',
     build: () => createBloc(),
+    act: (bloc) => bloc.add(const BloodTestPreviewEventInitialize()),
+    expect: () => [],
+  );
+
+  blocTest(
+    'initialize, '
+    'logged user does not exist, '
+    'should do nothing',
+    build: () => createBloc(bloodTestId: bloodTestId),
     setUp: () => authService.mockGetLoggedUserId(),
-    act: (BloodTestPreviewBloc bloc) => bloc.add(
-      const BloodTestPreviewEventInitialize(
-        bloodTestId: 'br1',
-      ),
-    ),
+    act: (bloc) => bloc.add(const BloodTestPreviewEventInitialize()),
     expect: () => [],
     verify: (_) => verify(
       () => authService.loggedUserId$,
@@ -63,9 +68,9 @@ void main() {
   blocTest(
     'initialize, '
     'should set listener of blood test matching to given id',
-    build: () => createBloc(),
+    build: () => createBloc(bloodTestId: bloodTestId),
     setUp: () {
-      authService.mockGetLoggedUserId(userId: 'u1');
+      authService.mockGetLoggedUserId(userId: loggedUserId);
       bloodTestRepository.mockGetTestById(
         bloodTest: createBloodTest(
           id: 'br1',
@@ -83,15 +88,10 @@ void main() {
         ),
       );
     },
-    act: (BloodTestPreviewBloc bloc) => bloc.add(
-      const BloodTestPreviewEventInitialize(
-        bloodTestId: 'br1',
-      ),
-    ),
+    act: (bloc) => bloc.add(const BloodTestPreviewEventInitialize()),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
-        bloodTestId: 'br1',
         date: DateTime(2023, 5, 1),
         parameterResults: const [
           BloodParameterResult(
@@ -111,52 +111,11 @@ void main() {
       ).called(1);
       verify(
         () => bloodTestRepository.getTestById(
-          bloodTestId: 'br1',
-          userId: 'u1',
+          bloodTestId: bloodTestId,
+          userId: loggedUserId,
         ),
       ).called(1);
     },
-  );
-
-  blocTest(
-    'blood test updated, '
-    'should update date and parameter results in state',
-    build: () => createBloc(),
-    act: (BloodTestPreviewBloc bloc) => bloc.add(
-      BloodTestPreviewEventBloodTestUpdated(
-        bloodTest: createBloodTest(
-          id: 'br1',
-          date: DateTime(2023, 5, 1),
-          parameterResults: const [
-            BloodParameterResult(
-              parameter: BloodParameter.wbc,
-              value: 4.45,
-            ),
-            BloodParameterResult(
-              parameter: BloodParameter.cpk,
-              value: 300,
-            ),
-          ],
-        ),
-      ),
-    ),
-    expect: () => [
-      createState(
-        status: const BlocStatusComplete(),
-        bloodTestId: 'br1',
-        date: DateTime(2023, 5, 1),
-        parameterResults: const [
-          BloodParameterResult(
-            parameter: BloodParameter.wbc,
-            value: 4.45,
-          ),
-          BloodParameterResult(
-            parameter: BloodParameter.cpk,
-            value: 300,
-          ),
-        ],
-      ),
-    ],
   );
 
   blocTest(
@@ -164,9 +123,7 @@ void main() {
     'blood test id is null, '
     'should do nothing',
     build: () => createBloc(),
-    act: (BloodTestPreviewBloc bloc) => bloc.add(
-      const BloodTestPreviewEventDeleteTest(),
-    ),
+    act: (bloc) => bloc.add(const BloodTestPreviewEventDeleteTest()),
     expect: () => [],
   );
 
@@ -174,17 +131,12 @@ void main() {
     'delete test, '
     'logged user does not exist, '
     'should emit no logged user info',
-    build: () => createBloc(
-      bloodTestId: 'br1',
-    ),
+    build: () => createBloc(bloodTestId: bloodTestId),
     setUp: () => authService.mockGetLoggedUserId(),
-    act: (BloodTestPreviewBloc bloc) => bloc.add(
-      const BloodTestPreviewEventDeleteTest(),
-    ),
+    act: (bloc) => bloc.add(const BloodTestPreviewEventDeleteTest()),
     expect: () => [
       createState(
         status: const BlocStatusNoLoggedUser(),
-        bloodTestId: 'br1',
       ),
     ],
     verify: (_) => verify(
@@ -195,26 +147,20 @@ void main() {
   blocTest(
     'delete test, '
     'should call method from blood test repository to delete blood test and should emit info that blood test has been deleted',
-    build: () => createBloc(
-      bloodTestId: 'br1',
-    ),
+    build: () => createBloc(bloodTestId: bloodTestId),
     setUp: () {
       authService.mockGetLoggedUserId(userId: 'u1');
       bloodTestRepository.mockDeleteTest();
     },
-    act: (BloodTestPreviewBloc bloc) => bloc.add(
-      const BloodTestPreviewEventDeleteTest(),
-    ),
+    act: (bloc) => bloc.add(const BloodTestPreviewEventDeleteTest()),
     expect: () => [
       createState(
         status: const BlocStatusLoading(),
-        bloodTestId: 'br1',
       ),
       createState(
         status: const BlocStatusComplete<BloodTestPreviewBlocInfo>(
           info: BloodTestPreviewBlocInfo.bloodTestDeleted,
         ),
-        bloodTestId: 'br1',
       ),
     ],
     verify: (_) {
@@ -223,8 +169,8 @@ void main() {
       ).called(1);
       verify(
         () => bloodTestRepository.deleteTest(
-          bloodTestId: 'br1',
-          userId: 'u1',
+          bloodTestId: bloodTestId,
+          userId: loggedUserId,
         ),
       ).called(1);
     },

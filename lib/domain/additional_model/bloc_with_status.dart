@@ -42,10 +42,4 @@ abstract class BlocWithStatus<Event, State extends BlocState, Info, Error>
       status: const BlocStatusNoLoggedUser(),
     ));
   }
-
-  void emitCoreParamsAreNullStatus(Emitter<State> emit) {
-    emit(state.copyWith(
-      status: const BlocStatusCoreParamsAreNull(),
-    ));
-  }
 }
