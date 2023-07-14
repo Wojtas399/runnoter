@@ -17,11 +17,12 @@ class RacePreviewBloc extends BlocWithStatus<RacePreviewEvent, RacePreviewState,
     RacePreviewBlocInfo, dynamic> {
   final AuthService _authService;
   final RaceRepository _raceRepository;
-  StreamSubscription<Race?>? _raceListener;
+  final String? raceId;
 
   RacePreviewBloc({
     required AuthService authService,
     required RaceRepository raceRepository,
+    required this.raceId,
     RacePreviewState state = const RacePreviewState(
       status: BlocStatusInitial(),
     ),
@@ -29,45 +30,26 @@ class RacePreviewBloc extends BlocWithStatus<RacePreviewEvent, RacePreviewState,
         _raceRepository = raceRepository,
         super(state) {
     on<RacePreviewEventInitialize>(_initialize);
-    on<RacePreviewEventRaceUpdated>(_raceUpdated);
     on<RacePreviewEventDeleteRace>(_deleteRace);
   }
 
-  @override
-  Future<void> close() {
-    _raceListener?.cancel();
-    _raceListener = null;
-    return super.close();
-  }
-
-  void _initialize(
+  Future<void> _initialize(
     RacePreviewEventInitialize event,
     Emitter<RacePreviewState> emit,
-  ) {
-    _raceListener ??= _authService.loggedUserId$
-        .whereNotNull()
-        .switchMap(
-          (String loggedUserId) => _raceRepository.getRaceById(
-            raceId: event.raceId,
-            userId: loggedUserId,
-          ),
-        )
-        .listen(
-          (Race? race) => add(
-            RacePreviewEventRaceUpdated(
-              race: race,
-            ),
-          ),
-        );
-  }
-
-  void _raceUpdated(
-    RacePreviewEventRaceUpdated event,
-    Emitter<RacePreviewState> emit,
-  ) {
-    emit(state.copyWith(
-      race: event.race,
-    ));
+  ) async {
+    if (raceId == null) return;
+    final Stream<Race?> race$ =
+        _authService.loggedUserId$.whereNotNull().switchMap(
+              (String loggedUserId) => _raceRepository.getRaceById(
+                raceId: raceId!,
+                userId: loggedUserId,
+              ),
+            );
+    await for (final race in race$) {
+      emit(state.copyWith(
+        race: race,
+      ));
+    }
   }
 
   Future<void> _deleteRace(
@@ -75,9 +57,7 @@ class RacePreviewBloc extends BlocWithStatus<RacePreviewEvent, RacePreviewState,
     Emitter<RacePreviewState> emit,
   ) async {
     final String? raceId = state.race?.id;
-    if (raceId == null) {
-      return;
-    }
+    if (raceId == null) return;
     final String? loggedUserId = await _authService.loggedUserId$.first;
     if (loggedUserId == null) {
       emitNoLoggedUserStatus(emit);

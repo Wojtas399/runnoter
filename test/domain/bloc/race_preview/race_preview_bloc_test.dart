@@ -12,13 +12,17 @@ import '../../../mock/domain/service/mock_auth_service.dart';
 void main() {
   final authService = MockAuthService();
   final raceRepository = MockRaceRepository();
+  const String loggedUserId = 'u1';
+  const String raceId = 'r1';
 
   RacePreviewBloc createBloc({
+    String? raceId,
     Race? race,
   }) =>
       RacePreviewBloc(
         authService: authService,
         raceRepository: raceRepository,
+        raceId: raceId,
         state: RacePreviewState(
           status: const BlocStatusInitial(),
           race: race,
@@ -41,44 +45,34 @@ void main() {
 
   blocTest(
     'initialize, '
-    'logged user does not exist, '
+    'race id is null, '
     'should do nothing',
     build: () => createBloc(),
-    setUp: () => authService.mockGetLoggedUserId(),
-    act: (RacePreviewBloc bloc) => bloc.add(
-      const RacePreviewEventInitialize(raceId: 'c1'),
-    ),
+    act: (bloc) => bloc.add(const RacePreviewEventInitialize()),
     expect: () => [],
-    verify: (_) => verify(
-      () => authService.loggedUserId$,
-    ).called(1),
   );
 
   blocTest(
     'initialize, '
     'should set listener of race matching to given id',
-    build: () => createBloc(),
+    build: () => createBloc(raceId: raceId),
     setUp: () {
-      authService.mockGetLoggedUserId(
-        userId: 'u1',
-      );
+      authService.mockGetLoggedUserId(userId: 'u1');
       raceRepository.mockGetRaceById(
         race: createRace(
-          id: 'c1',
-          userId: 'u1',
+          id: raceId,
+          userId: loggedUserId,
           name: 'race 1',
         ),
       );
     },
-    act: (RacePreviewBloc bloc) => bloc.add(
-      const RacePreviewEventInitialize(raceId: 'c1'),
-    ),
+    act: (bloc) => bloc.add(const RacePreviewEventInitialize()),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
         race: createRace(
-          id: 'c1',
-          userId: 'u1',
+          id: raceId,
+          userId: loggedUserId,
           name: 'race 1',
         ),
       ),
@@ -89,36 +83,11 @@ void main() {
       ).called(1);
       verify(
         () => raceRepository.getRaceById(
-          raceId: 'c1',
-          userId: 'u1',
+          raceId: raceId,
+          userId: loggedUserId,
         ),
       ).called(1);
     },
-  );
-
-  blocTest(
-    'race updated, '
-    'should update race in state',
-    build: () => createBloc(),
-    act: (RacePreviewBloc bloc) => bloc.add(
-      RacePreviewEventRaceUpdated(
-        race: createRace(
-          id: 'c1',
-          userId: 'u1',
-          name: 'race 1',
-        ),
-      ),
-    ),
-    expect: () => [
-      createState(
-        status: const BlocStatusComplete(),
-        race: createRace(
-          id: 'c1',
-          userId: 'u1',
-          name: 'race 1',
-        ),
-      ),
-    ],
   );
 
   blocTest(
@@ -126,9 +95,7 @@ void main() {
     'race is null, '
     'should do nothing',
     build: () => createBloc(),
-    act: (RacePreviewBloc bloc) => bloc.add(
-      const RacePreviewEventDeleteRace(),
-    ),
+    act: (bloc) => bloc.add(const RacePreviewEventDeleteRace()),
     expect: () => [],
   );
 
@@ -140,9 +107,7 @@ void main() {
       race: createRace(id: 'c1'),
     ),
     setUp: () => authService.mockGetLoggedUserId(),
-    act: (RacePreviewBloc bloc) => bloc.add(
-      const RacePreviewEventDeleteRace(),
-    ),
+    act: (bloc) => bloc.add(const RacePreviewEventDeleteRace()),
     expect: () => [
       createState(
         status: const BlocStatusNoLoggedUser(),
@@ -164,9 +129,7 @@ void main() {
       authService.mockGetLoggedUserId(userId: 'u1');
       raceRepository.mockDeleteRace();
     },
-    act: (RacePreviewBloc bloc) => bloc.add(
-      const RacePreviewEventDeleteRace(),
-    ),
+    act: (bloc) => bloc.add(const RacePreviewEventDeleteRace()),
     expect: () => [
       createState(
         status: const BlocStatusLoading(),

@@ -36,11 +36,11 @@ part 'race_preview_race.dart';
 
 @RoutePage()
 class RacePreviewScreen extends StatelessWidget {
-  final String raceId;
+  final String? raceId;
 
   const RacePreviewScreen({
     super.key,
-    required this.raceId,
+    @PathParam('raceId') this.raceId,
   });
 
   @override
@@ -55,7 +55,7 @@ class RacePreviewScreen extends StatelessWidget {
 }
 
 class _BlocProvider extends StatelessWidget {
-  final String raceId;
+  final String? raceId;
   final Widget child;
 
   const _BlocProvider({
@@ -69,11 +69,8 @@ class _BlocProvider extends StatelessWidget {
       create: (BuildContext context) => RacePreviewBloc(
         authService: context.read<AuthService>(),
         raceRepository: context.read<RaceRepository>(),
-      )..add(
-          RacePreviewEventInitialize(
-            raceId: raceId,
-          ),
-        ),
+        raceId: raceId,
+      )..add(const RacePreviewEventInitialize()),
       child: child,
     );
   }

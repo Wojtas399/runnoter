@@ -79,7 +79,7 @@ class AppRouter extends _$AppRouter {
             ),
             AutoRoute(
               page: RacePreviewRoute.page,
-              path: 'race-preview',
+              path: 'race-preview/:raceId',
             ),
             AutoRoute(
               page: RaceCreatorRoute.page,
@@ -96,14 +96,6 @@ class AppRouter extends _$AppRouter {
             AutoRoute(
               page: BloodTestPreviewRoute.page,
               path: 'blood-test-preview',
-            ),
-            AutoRoute(
-              page: RacePreviewRoute.page,
-              path: 'race-preview',
-            ),
-            AutoRoute(
-              page: RaceCreatorRoute.page,
-              path: 'race-creator',
             ),
           ],
         ),
