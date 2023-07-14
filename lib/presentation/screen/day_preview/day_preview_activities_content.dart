@@ -21,11 +21,14 @@ class _ActivitiesContent extends StatelessWidget {
       );
     }
     final str = Str.of(context);
-    return EmptyContentInfo(
-      title: str.dayPreviewNoActivitiesTitle,
-      subtitle: cubit.isPastDate
-          ? str.dayPreviewNoActivitiesMessagePastDay
-          : str.dayPreviewNoActivitiesMessageFutureDay,
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 32),
+      child: EmptyContentInfo(
+        title: str.dayPreviewNoActivitiesTitle,
+        subtitle: cubit.isPastDate
+            ? str.dayPreviewNoActivitiesMessagePastDay
+            : str.dayPreviewNoActivitiesMessageFutureDay,
+      ),
     );
   }
 }
@@ -61,14 +64,14 @@ class _Activities extends StatelessWidget {
   }
 
   void _onWorkoutPressed(String workoutId) {
-    navigateTo(
-      WorkoutPreviewRoute(workoutId: workoutId),
+    navigateBack(
+      result: DayPreviewDialogActionShowWorkout(workoutId: workoutId),
     );
   }
 
   void _onRacePressed(String raceId) {
-    navigateTo(
-      RacePreviewRoute(raceId: raceId),
+    navigateBack(
+      result: DayPreviewDialogActionShowRace(raceId: raceId),
     );
   }
 }

@@ -10,9 +10,13 @@ import '../../../domain/repository/workout_repository.dart';
 import '../../../domain/service/auth_service.dart';
 import '../../component/calendar/calendar_component.dart';
 import '../../component/calendar/calendar_component_cubit.dart';
+import '../../config/navigation/router.dart';
+import '../../formatter/date_formatter.dart';
 import '../../formatter/run_status_formatter.dart';
 import '../../service/dialog_service.dart';
+import '../../service/navigator_service.dart';
 import '../day_preview/day_preview_dialog.dart';
+import '../day_preview/day_preview_dialog_actions.dart';
 
 @RoutePage()
 class CalendarScreen extends StatelessWidget {
@@ -103,11 +107,9 @@ class _CalendarState extends State<_Calendar> {
         );
   }
 
-  Future<void> _onDayPressed(
-    BuildContext context,
-    DateTime date,
-  ) async {
-    await showDialogDependingOnScreenSize(
+  Future<void> _onDayPressed(BuildContext context, DateTime date) async {
+    final DayPreviewDialogAction? action =
+        await showDialogDependingOnScreenSize(
       MultiRepositoryProvider(
         providers: [
           RepositoryProvider.value(value: context.read<AuthService>()),
@@ -117,5 +119,28 @@ class _CalendarState extends State<_Calendar> {
         child: DayPreviewDialog(date: date),
       ),
     );
+    if (action == null) return;
+    switch (action) {
+      case DayPreviewDialogActionAddWorkout():
+        navigateTo(
+          WorkoutCreatorRoute(date: action.date.toPathFormat()),
+        );
+        break;
+      case DayPreviewDialogActionAddRace():
+        navigateTo(
+          RaceCreatorRoute(dateStr: action.date.toPathFormat()),
+        );
+        break;
+      case DayPreviewDialogActionShowWorkout():
+        navigateTo(
+          WorkoutPreviewRoute(workoutId: action.workoutId),
+        );
+        break;
+      case DayPreviewDialogActionShowRace():
+        navigateTo(
+          RacePreviewRoute(raceId: action.raceId),
+        );
+        break;
+    }
   }
 }
