@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rxdart/rxdart.dart';
 
 import '../../../../domain/entity/blood_parameter.dart';
 import '../../../../domain/entity/blood_test.dart';
@@ -16,10 +17,12 @@ class BloodTestCreatorBloc extends BlocWithStatus<BloodTestCreatorEvent,
     BloodTestCreatorState, BloodTestCreatorBlocInfo, dynamic> {
   final AuthService _authService;
   final BloodTestRepository _bloodTestRepository;
+  final String? bloodTestId;
 
   BloodTestCreatorBloc({
     required AuthService authService,
     required BloodTestRepository bloodTestRepository,
+    required this.bloodTestId,
     BloodTestCreatorState state = const BloodTestCreatorState(
       status: BlocStatusInitial(),
     ),
@@ -36,10 +39,23 @@ class BloodTestCreatorBloc extends BlocWithStatus<BloodTestCreatorEvent,
     BloodTestCreatorEventInitialize event,
     Emitter<BloodTestCreatorState> emit,
   ) async {
-    if (event.bloodTestId == null) {
-      _initializeAddMode(emit);
-    } else {
-      await _initializeEditMode(event.bloodTestId!, emit);
+    if (bloodTestId == null) return;
+    final Stream<BloodTest?> bloodTest$ =
+        _authService.loggedUserId$.whereType<String>().switchMap(
+              (String loggedUserId) => _bloodTestRepository.getTestById(
+                bloodTestId: bloodTestId!,
+                userId: loggedUserId,
+              ),
+            );
+    await for (final bloodTest in bloodTest$) {
+      if (bloodTest != null) {
+        emit(state.copyWith(
+          bloodTest: bloodTest,
+          date: bloodTest.date,
+          parameterResults: bloodTest.parameterResults,
+        ));
+      }
+      return;
     }
   }
 
@@ -83,9 +99,7 @@ class BloodTestCreatorBloc extends BlocWithStatus<BloodTestCreatorEvent,
     BloodTestCreatorEventSubmit event,
     Emitter<BloodTestCreatorState> emit,
   ) async {
-    if (!state.canSubmit) {
-      return;
-    }
+    if (!state.canSubmit) return;
     final String? loggedUserId = await _authService.loggedUserId$.first;
     if (loggedUserId == null) {
       emitNoLoggedUserStatus(emit);
@@ -96,33 +110,6 @@ class BloodTestCreatorBloc extends BlocWithStatus<BloodTestCreatorEvent,
       await _updateTest(loggedUserId, emit);
     } else {
       await _addTest(loggedUserId, emit);
-    }
-  }
-
-  void _initializeAddMode(Emitter<BloodTestCreatorState> emit) {
-    emit(state.copyWith(
-      parameterResults: [],
-    ));
-  }
-
-  Future<void> _initializeEditMode(
-    String bloodTestId,
-    Emitter<BloodTestCreatorState> emit,
-  ) async {
-    final String? loggedUserId = await _authService.loggedUserId$.first;
-    if (loggedUserId == null) {
-      emitNoLoggedUserStatus(emit);
-      return;
-    }
-    final BloodTest? bloodTest = await _bloodTestRepository
-        .getTestById(bloodTestId: bloodTestId, userId: loggedUserId)
-        .first;
-    if (bloodTest != null) {
-      emit(state.copyWith(
-        bloodTest: bloodTest,
-        date: bloodTest.date,
-        parameterResults: bloodTest.parameterResults,
-      ));
     }
   }
 

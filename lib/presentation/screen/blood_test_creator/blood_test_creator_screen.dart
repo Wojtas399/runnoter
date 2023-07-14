@@ -27,7 +27,7 @@ class BloodTestCreatorScreen extends StatelessWidget {
 
   const BloodTestCreatorScreen({
     super.key,
-    this.bloodTestId,
+    @PathParam('bloodTestId') this.bloodTestId,
   });
 
   @override
@@ -56,9 +56,8 @@ class _BlocProvider extends StatelessWidget {
       create: (BuildContext context) => BloodTestCreatorBloc(
         authService: context.read<AuthService>(),
         bloodTestRepository: context.read<BloodTestRepository>(),
-      )..add(
-          BloodTestCreatorEventInitialize(bloodTestId: bloodTestId),
-        ),
+        bloodTestId: bloodTestId,
+      )..add(const BloodTestCreatorEventInitialize()),
       child: child,
     );
   }

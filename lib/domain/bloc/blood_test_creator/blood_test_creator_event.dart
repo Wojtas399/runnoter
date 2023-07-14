@@ -5,11 +5,7 @@ abstract class BloodTestCreatorEvent {
 }
 
 class BloodTestCreatorEventInitialize extends BloodTestCreatorEvent {
-  final String? bloodTestId;
-
-  const BloodTestCreatorEventInitialize({
-    this.bloodTestId,
-  });
+  const BloodTestCreatorEventInitialize();
 }
 
 class BloodTestCreatorEventDateChanged extends BloodTestCreatorEvent {
