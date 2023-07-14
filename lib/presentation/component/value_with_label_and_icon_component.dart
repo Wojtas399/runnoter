@@ -18,9 +18,14 @@ class ValueWithLabelAndIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onPressed,
-      borderRadius: BorderRadius.circular(4),
+    final theme = Theme.of(context);
+
+    return OutlinedButton(
+      onPressed: onPressed,
+      style: OutlinedButton.styleFrom(
+        side: BorderSide(color: theme.colorScheme.background),
+        padding: const EdgeInsets.symmetric(horizontal: 4),
+      ),
       child: Padding(
         padding: EdgeInsets.symmetric(
           horizontal: 16,
@@ -31,7 +36,7 @@ class ValueWithLabelAndIcon extends StatelessWidget {
             if (iconData != null)
               Icon(
                 iconData,
-                color: color,
+                color: color ?? theme.colorScheme.onSurfaceVariant,
               ),
             if (iconData != null) const SizedBox(width: 16),
             Column(
@@ -41,16 +46,14 @@ class ValueWithLabelAndIcon extends StatelessWidget {
                 if (label != null)
                   Text(
                     label!,
-                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                          color: color,
-                        ),
+                    style: theme.textTheme.labelLarge?.copyWith(
+                      color: color ?? theme.colorScheme.onSurfaceVariant,
+                    ),
                   ),
                 if (label != null) const SizedBox(height: 4),
                 Text(
                   value,
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        color: color,
-                      ),
+                  style: theme.textTheme.bodyLarge?.copyWith(color: color),
                 ),
               ],
             ),
