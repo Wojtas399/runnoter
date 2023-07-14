@@ -18,6 +18,7 @@ import '../../component/text/label_text_components.dart';
 import '../../component/text_field_component.dart';
 import '../../config/ui_sizes.dart';
 import '../../extension/context_extensions.dart';
+import '../../extension/string_extensions.dart';
 import '../../formatter/workout_stage_formatter.dart';
 import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
@@ -30,47 +31,23 @@ part 'workout_creator_workout_stage_item.dart';
 part 'workout_creator_workout_stages_list.dart';
 part 'workout_creator_workout_stages_section.dart';
 
-abstract class WorkoutCreatorArguments {
-  final DateTime date;
-
-  const WorkoutCreatorArguments({
-    required this.date,
-  });
-}
-
-class WorkoutCreatorAddModeArguments extends WorkoutCreatorArguments {
-  const WorkoutCreatorAddModeArguments({
-    required super.date,
-  });
-}
-
-class WorkoutCreatorEditModeArguments extends WorkoutCreatorArguments {
-  final String workoutId;
-
-  const WorkoutCreatorEditModeArguments({
-    required super.date,
-    required this.workoutId,
-  });
-}
-
 @RoutePage()
 class WorkoutCreatorScreen extends StatelessWidget {
-  final WorkoutCreatorArguments arguments;
+  final String? date;
+  final String? workoutId;
 
   const WorkoutCreatorScreen({
     super.key,
-    required this.arguments,
+    @PathParam('date') this.date,
+    @PathParam('workoutId') this.workoutId,
   });
 
   @override
   Widget build(BuildContext context) {
-    final WorkoutCreatorArguments arguments = this.arguments;
-    String? workoutId;
-    if (arguments is WorkoutCreatorEditModeArguments) {
-      workoutId = arguments.workoutId;
-    }
+    final DateTime? date = this.date?.toDateTime();
+    if (date == null) throw '[WORKOUT-CREATOR] Date is required!';
     return _BlocProvider(
-      date: arguments.date,
+      date: date,
       workoutId: workoutId,
       child: const _BlocListener(
         child: _Content(),
@@ -96,12 +73,9 @@ class _BlocProvider extends StatelessWidget {
       create: (BuildContext context) => WorkoutCreatorBloc(
         authService: context.read<AuthService>(),
         workoutRepository: context.read<WorkoutRepository>(),
-      )..add(
-          WorkoutCreatorEventInitialize(
-            date: date,
-            workoutId: workoutId,
-          ),
-        ),
+        date: date,
+        workoutId: workoutId,
+      )..add(const WorkoutCreatorEventInitialize()),
       child: child,
     );
   }

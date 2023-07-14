@@ -197,9 +197,7 @@ class _Actions extends StatelessWidget {
   void _addWorkout(BuildContext context) {
     navigateTo(
       WorkoutCreatorRoute(
-        arguments: WorkoutCreatorAddModeArguments(
-          date: context.read<DayPreviewCubit>().date,
-        ),
+        date: context.read<DayPreviewCubit>().date.toPathFormat(),
       ),
     );
   }

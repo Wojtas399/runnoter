@@ -335,9 +335,6 @@ void main() {
     ),
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
-      healthMeasurementRepository.mockDoesMeasurementFromDateExist(
-        expected: false,
-      );
       healthMeasurementRepository.mockUpdateMeasurement();
     },
     act: (HealthMeasurementCreatorBloc bloc) => bloc.add(
@@ -372,12 +369,6 @@ void main() {
     verify: (_) {
       verify(
         () => authService.loggedUserId$,
-      ).called(1);
-      verify(
-        () => healthMeasurementRepository.doesMeasurementFromDateExist(
-          userId: loggedUserId,
-          date: DateTime(2023, 5, 10),
-        ),
       ).called(1);
       verify(
         () => healthMeasurementRepository.updateMeasurement(

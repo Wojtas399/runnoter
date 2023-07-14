@@ -39,10 +39,8 @@ class _WorkoutActions extends StatelessWidget {
     if (date != null && workoutId != null) {
       navigateTo(
         WorkoutCreatorRoute(
-          arguments: WorkoutCreatorEditModeArguments(
-            date: date,
-            workoutId: workoutId,
-          ),
+          date: date.toPathFormat(),
+          workoutId: workoutId,
         ),
       );
     }

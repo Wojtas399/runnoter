@@ -7,4 +7,14 @@ extension StringExtensions on String {
     }
     return numAsStr;
   }
+
+  DateTime toDateTime({
+    String separator = '-',
+  }) {
+    final List<String> dateParts = split(separator);
+    final int day = int.parse(dateParts[0]);
+    final int month = int.parse(dateParts[1]);
+    final int year = int.parse(dateParts[2]);
+    return DateTime(year, month, day);
+  }
 }

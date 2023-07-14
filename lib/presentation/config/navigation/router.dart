@@ -75,7 +75,7 @@ class AppRouter extends _$AppRouter {
             ),
             AutoRoute(
               page: WorkoutCreatorRoute.page,
-              path: 'workout-creator',
+              path: 'workout-creator/:date/:workoutId',
             ),
             AutoRoute(
               page: RacePreviewRoute.page,
