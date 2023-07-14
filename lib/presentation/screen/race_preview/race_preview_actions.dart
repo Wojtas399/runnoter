@@ -36,9 +36,7 @@ class _RaceActions extends StatelessWidget {
     final String? raceId = context.read<RacePreviewBloc>().state.race?.id;
     if (raceId != null) {
       navigateTo(
-        RaceCreatorRoute(
-          arguments: RaceCreatorArguments(raceId: raceId),
-        ),
+        RaceCreatorRoute(raceId: raceId),
       );
     }
   }

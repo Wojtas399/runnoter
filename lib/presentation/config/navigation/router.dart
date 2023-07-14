@@ -83,7 +83,7 @@ class AppRouter extends _$AppRouter {
             ),
             AutoRoute(
               page: RaceCreatorRoute.page,
-              path: 'race-creator',
+              path: 'race-creator/:dateStr/:raceId',
             ),
             AutoRoute(
               page: HealthMeasurementsRoute.page,

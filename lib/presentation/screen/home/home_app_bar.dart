@@ -29,11 +29,16 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   if (context.isDesktopSize)
-                    IconButton(
-                      onPressed: onMenuPressed,
-                      icon: const Icon(Icons.menu),
+                    Row(
+                      children: [
+                        IconButton(
+                          onPressed: onMenuPressed,
+                          icon: const Icon(Icons.menu),
+                        ),
+                        const SizedBox(width: 24),
+                        Image.asset('assets/logo.png'),
+                      ],
                     ),
-                  Image.asset('assets/logo.png'),
                   _Avatar(onPressed: onAvatarPressed),
                 ],
               ),

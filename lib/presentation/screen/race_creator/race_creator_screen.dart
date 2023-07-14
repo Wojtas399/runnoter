@@ -30,30 +30,23 @@ part 'race_creator_date.dart';
 part 'race_creator_expected_duration.dart';
 part 'race_creator_form.dart';
 
-class RaceCreatorArguments {
-  final String? raceId;
-  final DateTime? date;
-
-  RaceCreatorArguments({
-    this.raceId,
-    this.date,
-  });
-}
-
 @RoutePage()
 class RaceCreatorScreen extends StatelessWidget {
-  final RaceCreatorArguments? arguments;
+  final String? dateStr;
+  final String? raceId;
 
   const RaceCreatorScreen({
     super.key,
-    this.arguments,
+    @PathParam('dateStr') this.dateStr,
+    @PathParam('raceId') this.raceId,
   });
 
   @override
   Widget build(BuildContext context) {
+    final DateTime? date = dateStr?.toDateTime();
     return _BlocProvider(
-      raceId: arguments?.raceId,
-      date: arguments?.date,
+      raceId: raceId,
+      date: date,
       child: const _BlocListener(
         child: _Content(),
       ),

@@ -18,7 +18,6 @@ import '../../config/navigation/router.dart';
 import '../../extension/context_extensions.dart';
 import '../../formatter/date_formatter.dart';
 import '../../service/navigator_service.dart';
-import '../screens.dart';
 
 part 'day_preview_activities_content.dart';
 
@@ -205,9 +204,7 @@ class _Actions extends StatelessWidget {
   void _addRace(BuildContext context) {
     navigateTo(
       RaceCreatorRoute(
-        arguments: RaceCreatorArguments(
-          date: context.read<DayPreviewCubit>().date,
-        ),
+        dateStr: context.read<DayPreviewCubit>().date.toPathFormat(),
       ),
     );
   }
