@@ -45,11 +45,18 @@ class _DayItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Opacity(
       opacity: day.isDisabled ? 0.3 : 1,
-      child: InkWell(
-        onTap: () {
-          _onPressed(context);
-        },
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Theme.of(context).colorScheme.background,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(0),
+          ),
+          elevation: 0,
+          padding: const EdgeInsets.all(0),
+        ),
+        onPressed: day.isDisabled ? null : () => _onPressed(context),
         child: SizedBox(
+          width: double.infinity,
           height: 80,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

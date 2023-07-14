@@ -10,7 +10,6 @@ import '../../../domain/repository/workout_repository.dart';
 import '../../../domain/service/auth_service.dart';
 import '../../component/calendar/calendar_component.dart';
 import '../../component/calendar/calendar_component_cubit.dart';
-import '../../component/padding/paddings_24.dart';
 import '../../formatter/run_status_formatter.dart';
 import '../../service/dialog_service.dart';
 import '../day_preview/day_preview_dialog.dart';
@@ -24,7 +23,8 @@ class CalendarScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const _CubitProvider(
-      child: Paddings24(
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
         child: _Calendar(),
       ),
     );
