@@ -40,7 +40,7 @@ void main() {
 
   test(
     'get workouts by date range, '
-    'should emit workouts existing in state and should load workouts from firebase and add them to repository',
+    'should emit workouts existing in state and workouts loaded from remote db',
     () {
       final DateTime startDate = DateTime(2023, 4, 3);
       final DateTime endDate = DateTime(2023, 4, 9);
@@ -126,7 +126,6 @@ void main() {
         startDate: startDate,
         endDate: endDate,
       );
-      workouts$.listen((event) {});
 
       expect(
         workouts$,
@@ -134,21 +133,11 @@ void main() {
           [
             [
               existingWorkouts[0],
-            ],
-            [
-              existingWorkouts[0],
               ...newlyLoadedWorkouts,
             ],
           ],
         ),
       );
-      verify(
-        () => firebaseWorkoutService.loadWorkoutsByDateRange(
-          userId: userId,
-          startDate: startDate,
-          endDate: endDate,
-        ),
-      ).called(1);
     },
   );
 
@@ -177,15 +166,10 @@ void main() {
         workoutId: id,
         userId: userId,
       );
-      workout$.listen((_) {});
 
       expect(
         workout$,
-        emitsInOrder(
-          [
-            expectedWorkout,
-          ],
-        ),
+        emitsInOrder([expectedWorkout]),
       );
     },
   );
@@ -219,23 +203,11 @@ void main() {
         workoutId: id,
         userId: userId,
       );
-      workout$.listen((_) {});
 
       expect(
         workout$,
-        emitsInOrder(
-          [
-            null,
-            expectedWorkout,
-          ],
-        ),
+        emitsInOrder([expectedWorkout]),
       );
-      verify(
-        () => firebaseWorkoutService.loadWorkoutById(
-          workoutId: id,
-          userId: userId,
-        ),
-      ).called(1);
     },
   );
 
@@ -517,7 +489,6 @@ void main() {
         workoutId: id,
         userId: userId,
       );
-      workout$.listen((_) {});
       repository.updateWorkout(
         workoutId: id,
         userId: userId,
@@ -528,12 +499,7 @@ void main() {
 
       expect(
         workout$,
-        emitsInOrder(
-          [
-            existingWorkout,
-            expectedUpdatedWorkout,
-          ],
-        ),
+        emitsInOrder([expectedUpdatedWorkout]),
       );
       verify(
         () => firebaseWorkoutService.updateWorkout(

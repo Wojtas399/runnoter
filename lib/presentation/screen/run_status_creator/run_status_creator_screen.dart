@@ -38,39 +38,24 @@ part 'run_status_creator_covered_distance.dart';
 part 'run_status_creator_params_form.dart';
 part 'run_status_creator_status_type.dart';
 
-sealed class RunStatusCreatorArguments {
-  final String entityId;
-
-  const RunStatusCreatorArguments({
-    required this.entityId,
-  });
-}
-
-class WorkoutRunStatusCreatorArguments extends RunStatusCreatorArguments {
-  const WorkoutRunStatusCreatorArguments({
-    required super.entityId,
-  });
-}
-
-class RaceRunStatusCreatorArguments extends RunStatusCreatorArguments {
-  const RaceRunStatusCreatorArguments({
-    required super.entityId,
-  });
-}
-
 @RoutePage()
 class RunStatusCreatorScreen extends StatelessWidget {
-  final RunStatusCreatorArguments arguments;
+  final String? entityType;
+  final String? entityId;
 
   const RunStatusCreatorScreen({
     super.key,
-    required this.arguments,
+    @PathParam('entityType') this.entityType,
+    @PathParam('entityId') this.entityId,
   });
 
   @override
   Widget build(BuildContext context) {
     return _BlocProvider(
-      arguments: arguments,
+      entityType: entityType != null
+          ? RunStatusCreatorEntityType.values.byName(entityType!)
+          : null,
+      entityId: entityId,
       child: const _BlocListener(
         child: _Content(),
       ),
@@ -79,11 +64,13 @@ class RunStatusCreatorScreen extends StatelessWidget {
 }
 
 class _BlocProvider extends StatelessWidget {
-  final RunStatusCreatorArguments arguments;
+  final RunStatusCreatorEntityType? entityType;
+  final String? entityId;
   final Widget child;
 
   const _BlocProvider({
-    required this.arguments,
+    required this.entityType,
+    required this.entityId,
     required this.child,
   });
 
@@ -91,17 +78,12 @@ class _BlocProvider extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (BuildContext context) => RunStatusCreatorBloc(
-        entityType: switch (arguments) {
-          WorkoutRunStatusCreatorArguments() => EntityType.workout,
-          RaceRunStatusCreatorArguments() => EntityType.race,
-        },
-        entityId: arguments.entityId,
         authService: context.read<AuthService>(),
         workoutRepository: context.read<WorkoutRepository>(),
         raceRepository: context.read<RaceRepository>(),
-      )..add(
-          const RunStatusCreatorEventInitialize(),
-        ),
+        entityType: entityType,
+        entityId: entityId,
+      )..add(const RunStatusCreatorEventInitialize()),
       child: child,
     );
   }

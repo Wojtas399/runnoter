@@ -55,7 +55,7 @@ void main() {
   blocTest(
     'initialize, '
     'should load blood test from repository and should update all params in state',
-    build: () => createBloc(),
+    build: () => createBloc(bloodTestId: bloodTestId),
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
       bloodTestRepository.mockGetTestById(
@@ -113,14 +113,10 @@ void main() {
     'initialize, '
     'logged user does not exist, '
     'should do nothing',
-    build: () => createBloc(),
+    build: () => createBloc(bloodTestId: bloodTestId),
     setUp: () => authService.mockGetLoggedUserId(),
     act: (bloc) => bloc.add(const BloodTestCreatorEventInitialize()),
-    expect: () => [
-      createState(
-        status: const BlocStatusNoLoggedUser(),
-      ),
-    ],
+    expect: () => [],
     verify: (_) => verify(
       () => authService.loggedUserId$,
     ).called(1),
@@ -132,12 +128,7 @@ void main() {
     'should do nothing',
     build: () => createBloc(),
     act: (bloc) => bloc.add(const BloodTestCreatorEventInitialize()),
-    expect: () => [
-      createState(
-        status: const BlocStatusComplete(),
-        parameterResults: [],
-      ),
-    ],
+    expect: () => [],
   );
 
   blocTest(

@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rxdart/rxdart.dart';
 
 import '../../../../domain/additional_model/bloc_state.dart';
 import '../../../../domain/additional_model/bloc_status.dart';
@@ -11,38 +12,32 @@ import '../../service/auth_service.dart';
 part 'run_status_creator_event.dart';
 part 'run_status_creator_state.dart';
 
-enum EntityType {
+enum RunStatusCreatorEntityType {
   workout,
   race,
 }
 
 class RunStatusCreatorBloc extends BlocWithStatus<RunStatusCreatorEvent,
     RunStatusCreatorState, RunStatusCreatorBlocInfo, dynamic> {
-  final EntityType _entityType;
-  final String _entityId;
   final AuthService _authService;
   final WorkoutRepository _workoutRepository;
   final RaceRepository _raceRepository;
+  final RunStatusCreatorEntityType? entityType;
+  final String? entityId;
 
   RunStatusCreatorBloc({
-    required EntityType entityType,
-    required String entityId,
     required AuthService authService,
     required WorkoutRepository workoutRepository,
     required RaceRepository raceRepository,
-    RunStatusCreatorState? state,
-  })  : _entityType = entityType,
-        _entityId = entityId,
-        _authService = authService,
+    required this.entityType,
+    required this.entityId,
+    RunStatusCreatorState state = const RunStatusCreatorState(
+      status: BlocStatusInitial(),
+    ),
+  })  : _authService = authService,
         _workoutRepository = workoutRepository,
         _raceRepository = raceRepository,
-        super(
-          state ??
-              RunStatusCreatorState(
-                status: const BlocStatusInitial(),
-                entityType: entityType,
-              ),
-        ) {
+        super(state) {
     on<RunStatusCreatorEventInitialize>(_initialize);
     on<RunStatusCreatorEventRunStatusTypeChanged>(_runStatusTypeChanged);
     on<RunStatusCreatorEventCoveredDistanceInKmChanged>(
@@ -60,32 +55,27 @@ class RunStatusCreatorBloc extends BlocWithStatus<RunStatusCreatorEvent,
     RunStatusCreatorEventInitialize event,
     Emitter<RunStatusCreatorState> emit,
   ) async {
-    final String? loggedUserId = await _authService.loggedUserId$.first;
-    if (loggedUserId == null) {
-      emitNoLoggedUserStatus(emit);
-      return;
-    }
-    final RunStatus? runStatus = await _loadRunStatus(loggedUserId);
-    if (runStatus == null) {
-      return;
-    }
-    RunStatusCreatorState updatedState = state.copyWith(
-      originalRunStatus: runStatus,
-      runStatusType: runStatus is RunStatusPending
-          ? RunStatusType.done
-          : _getRunStatusType(runStatus),
-    );
-    if (runStatus is RunStatusWithParams) {
-      updatedState = updatedState.copyWith(
-        coveredDistanceInKm: runStatus.coveredDistanceInKm,
-        duration: runStatus.duration,
-        moodRate: runStatus.moodRate,
-        avgPace: runStatus.avgPace,
-        avgHeartRate: runStatus.avgHeartRate,
-        comment: runStatus.comment,
+    if (entityType == null || entityId == null) return;
+    final Stream<RunStatus?> runStatus$ = _getRunStatus();
+    await for (final runStatus in runStatus$) {
+      if (runStatus == null) return;
+      RunStatusCreatorState updatedState = state.copyWith(
+        originalRunStatus: runStatus,
+        runStatusType: _getRunStatusType(runStatus),
       );
+      if (runStatus is RunStatusWithParams) {
+        updatedState = updatedState.copyWith(
+          coveredDistanceInKm: runStatus.coveredDistanceInKm,
+          duration: runStatus.duration,
+          moodRate: runStatus.moodRate,
+          avgPace: runStatus.avgPace,
+          avgHeartRate: runStatus.avgHeartRate,
+          comment: runStatus.comment,
+        );
+      }
+      emit(updatedState);
+      return;
     }
-    emit(updatedState);
   }
 
   void _runStatusTypeChanged(
@@ -155,9 +145,7 @@ class RunStatusCreatorBloc extends BlocWithStatus<RunStatusCreatorEvent,
     RunStatusCreatorEventSubmit event,
     Emitter<RunStatusCreatorState> emit,
   ) async {
-    if (!state.canSubmit) {
-      return;
-    }
+    if (!state.canSubmit || entityType == null || entityId == null) return;
     final String? loggedUserId = await _authService.loggedUserId$.first;
     if (loggedUserId == null) {
       emitNoLoggedUserStatus(emit);
@@ -165,14 +153,14 @@ class RunStatusCreatorBloc extends BlocWithStatus<RunStatusCreatorEvent,
     }
     final RunStatus status = _createStatus();
     emitLoadingStatus(emit);
-    await switch (_entityType) {
-      EntityType.workout => _workoutRepository.updateWorkout(
-          workoutId: _entityId,
+    await switch (entityType!) {
+      RunStatusCreatorEntityType.workout => _workoutRepository.updateWorkout(
+          workoutId: entityId!,
           userId: loggedUserId,
           status: status,
         ),
-      EntityType.race => _raceRepository.updateRace(
-          raceId: _entityId,
+      RunStatusCreatorEntityType.race => _raceRepository.updateRace(
+          raceId: entityId!,
           userId: loggedUserId,
           status: status,
         ),
@@ -180,28 +168,27 @@ class RunStatusCreatorBloc extends BlocWithStatus<RunStatusCreatorEvent,
     emitCompleteStatus(emit, RunStatusCreatorBlocInfo.runStatusSaved);
   }
 
-  Future<RunStatus?> _loadRunStatus(
-    String loggedUserId,
-  ) async =>
-      switch (_entityType) {
-        EntityType.workout => (await _workoutRepository
-                .getWorkoutById(
-                  workoutId: _entityId,
-                  userId: loggedUserId,
-                )
-                .first)
-            ?.status,
-        EntityType.race => (await _raceRepository
-                .getRaceById(
-                  raceId: _entityId,
-                  userId: loggedUserId,
-                )
-                .first)
-            ?.status,
-      };
+  Stream<RunStatus?> _getRunStatus() =>
+      _authService.loggedUserId$.whereType<String>().switchMap(
+            (String loggedUserId) => switch (entityType!) {
+              RunStatusCreatorEntityType.workout =>
+                _getWorkoutRunStatus(loggedUserId),
+              RunStatusCreatorEntityType.race =>
+                _getRaceRunStatus(loggedUserId),
+            },
+          );
+
+  Stream<RunStatus?> _getWorkoutRunStatus(String loggedUserId) =>
+      _workoutRepository
+          .getWorkoutById(workoutId: entityId!, userId: loggedUserId)
+          .map((workout) => workout?.status);
+
+  Stream<RunStatus?> _getRaceRunStatus(String loggedUserId) => _raceRepository
+      .getRaceById(raceId: entityId!, userId: loggedUserId)
+      .map((race) => race?.status);
 
   RunStatusType _getRunStatusType(RunStatus runStatus) => switch (runStatus) {
-        RunStatusPending() => RunStatusType.pending,
+        RunStatusPending() => RunStatusType.done,
         RunStatusDone() => RunStatusType.done,
         RunStatusAborted() => RunStatusType.aborted,
         RunStatusUndone() => RunStatusType.undone,

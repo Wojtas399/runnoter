@@ -97,6 +97,10 @@ class AppRouter extends _$AppRouter {
               page: BloodTestPreviewRoute.page,
               path: 'blood-test-preview/:bloodTestId',
             ),
+            AutoRoute(
+              page: RunStatusCreatorRoute.page,
+              path: 'run-status-creator/:entityType/:entityId',
+            ),
           ],
         ),
       ];

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../../domain/bloc/run_status_creator/run_status_creator_bloc.dart';
 import '../../../domain/bloc/workout_preview/workout_preview_bloc.dart';
 import '../../../domain/entity/run_status.dart';
 import '../../../domain/entity/workout_stage.dart';
@@ -26,7 +27,6 @@ import '../../formatter/list_of_workout_stages_formatter.dart';
 import '../../formatter/workout_stage_formatter.dart';
 import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
-import '../screens.dart';
 
 part 'workout_preview_actions.dart';
 part 'workout_preview_content.dart';

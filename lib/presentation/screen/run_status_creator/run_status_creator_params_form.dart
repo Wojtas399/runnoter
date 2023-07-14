@@ -5,14 +5,14 @@ class _ParamsForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final EntityType entityType =
-        context.read<RunStatusCreatorBloc>().state.entityType;
+    final RunStatusCreatorEntityType? entityType =
+        context.read<RunStatusCreatorBloc>().entityType;
     const Widget gap = SizedBox(height: 24);
 
     return Column(
       children: [
         const _CoveredDistance(),
-        if (entityType == EntityType.race)
+        if (entityType == RunStatusCreatorEntityType.race)
           const Column(
             children: [
               gap,

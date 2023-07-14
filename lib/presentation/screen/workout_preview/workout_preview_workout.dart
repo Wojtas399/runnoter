@@ -170,7 +170,8 @@ class _RunStatusButton extends StatelessWidget {
     if (workoutId != null) {
       navigateTo(
         RunStatusCreatorRoute(
-          arguments: WorkoutRunStatusCreatorArguments(entityId: workoutId),
+          entityType: RunStatusCreatorEntityType.workout.name,
+          entityId: workoutId,
         ),
       );
     }
