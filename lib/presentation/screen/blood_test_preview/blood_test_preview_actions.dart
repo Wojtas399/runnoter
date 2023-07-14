@@ -1,38 +1,38 @@
 part of 'blood_test_preview_screen.dart';
 
-class _AppBar extends StatelessWidget implements PreferredSizeWidget {
-  const _AppBar();
-
-  @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+class _BloodTestActions extends StatelessWidget {
+  const _BloodTestActions();
 
   @override
   Widget build(BuildContext context) {
-    return AppBar(
-      forceMaterialTransparency: true,
-      centerTitle: true,
-      title: Text(
-        Str.of(context).bloodTestPreviewTitle,
-      ),
-      actions: const [
-        _BloodTestActionsMenu(),
+    if (context.isMobileSize) {
+      return EditDeletePopupMenu(
+        onEditSelected: () {
+          _editTest(context);
+        },
+        onDeleteSelected: () {
+          _deleteTest(context);
+        },
+      );
+    }
+    final theme = Theme.of(context);
+    return Row(
+      children: [
+        IconButton(
+          onPressed: () => _editTest(context),
+          icon: Icon(
+            Icons.edit_outlined,
+            color: theme.colorScheme.primary,
+          ),
+        ),
+        IconButton(
+          onPressed: () => _deleteTest(context),
+          icon: Icon(
+            Icons.delete_outline,
+            color: theme.colorScheme.error,
+          ),
+        ),
       ],
-    );
-  }
-}
-
-class _BloodTestActionsMenu extends StatelessWidget {
-  const _BloodTestActionsMenu();
-
-  @override
-  Widget build(BuildContext context) {
-    return EditDeletePopupMenu(
-      onEditSelected: () {
-        _editTest(context);
-      },
-      onDeleteSelected: () {
-        _deleteTest(context);
-      },
     );
   }
 

@@ -27,14 +27,43 @@ class _Content extends StatelessWidget {
   }
 }
 
+class _AppBar extends StatelessWidget implements PreferredSizeWidget {
+  const _AppBar();
+
+  @override
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+
+  @override
+  Widget build(BuildContext context) {
+    return AppBar(
+      forceMaterialTransparency: true,
+      centerTitle: true,
+      title: Text(
+        Str.of(context).bloodTestPreviewTitle,
+      ),
+      actions: context.isMobileSize
+          ? const [
+              _BloodTestActions(),
+            ]
+          : null,
+    );
+  }
+}
+
 class _DateSection extends StatelessWidget {
   const _DateSection();
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.fromLTRB(24, 24, 24, 0),
-      child: _Date(),
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          const _Date(),
+          if (!context.isMobileSize) const _BloodTestActions(),
+        ],
+      ),
     );
   }
 }

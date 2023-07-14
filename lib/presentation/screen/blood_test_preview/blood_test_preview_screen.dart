@@ -13,11 +13,12 @@ import '../../component/edit_delete_popup_menu_component.dart';
 import '../../component/text/title_text_components.dart';
 import '../../config/navigation/router.dart';
 import '../../config/ui_sizes.dart';
+import '../../extension/context_extensions.dart';
 import '../../formatter/date_formatter.dart';
 import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
 
-part 'blood_test_preview_app_bar.dart';
+part 'blood_test_preview_actions.dart';
 part 'blood_test_preview_content.dart';
 
 @RoutePage()
