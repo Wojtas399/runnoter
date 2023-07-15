@@ -72,7 +72,7 @@ class _State extends State<ValueDialogComponent> {
         );
 
   void _onSaveButtonPressed() {
-    navigateBack(
+    popRoute(
       result: _textController.text,
     );
   }
@@ -131,7 +131,7 @@ class _NormalDialog extends StatelessWidget {
       ),
       actions: [
         TextButton(
-          onPressed: navigateBack,
+          onPressed: popRoute,
           child: LabelLarge(
             Str.of(context).cancel,
             color: Theme.of(context).colorScheme.error,
@@ -173,7 +173,7 @@ class _FullScreenDialog extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           leading: const IconButton(
-            onPressed: navigateBack,
+            onPressed: popRoute,
             icon: Icon(Icons.close),
           ),
           title: Text(title),

@@ -26,7 +26,6 @@ import '../../formatter/mood_rate_formatter.dart';
 import '../../formatter/pace_unit_formatter.dart';
 import '../../formatter/run_status_formatter.dart';
 import '../../service/dialog_service.dart';
-import '../../service/navigator_service.dart';
 import '../../service/pace_unit_service.dart';
 import '../../service/utils.dart';
 
@@ -110,7 +109,7 @@ class _BlocListener extends StatelessWidget {
   void _manageInfo(BuildContext context, RunStatusCreatorBlocInfo info) {
     switch (info) {
       case RunStatusCreatorBlocInfo.runStatusSaved:
-        navigateBack();
+        context.back();
         showSnackbarMessage(Str.of(context).runStatusCreatorSavedStatusMessage);
         break;
     }

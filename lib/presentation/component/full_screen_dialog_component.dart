@@ -25,7 +25,7 @@ class FullScreenDialog extends StatelessWidget {
       appBar: AppBar(
         title: Text(title),
         leading: const IconButton(
-          onPressed: navigateBack,
+          onPressed: popRoute,
           icon: Icon(Icons.close),
         ),
         actions: [

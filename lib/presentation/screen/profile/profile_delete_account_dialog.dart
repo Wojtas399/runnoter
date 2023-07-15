@@ -43,7 +43,7 @@ class _State extends State<ProfileDeleteAccountDialog> {
         final BlocStatus blocStatus = state.status;
         if (blocStatus is BlocStatusComplete &&
             blocStatus.info == ProfileInfo.accountDeleted) {
-          navigateBack();
+          popRoute();
         }
       },
       child: context.isMobileSize
@@ -109,7 +109,7 @@ class _NormalDialog extends StatelessWidget {
       ),
       actions: [
         TextButton(
-          onPressed: navigateBack,
+          onPressed: popRoute,
           child: LabelLarge(
             str.cancel,
             color: Theme.of(context).colorScheme.error,

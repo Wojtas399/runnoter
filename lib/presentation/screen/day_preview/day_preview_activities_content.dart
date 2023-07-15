@@ -64,13 +64,13 @@ class _Activities extends StatelessWidget {
   }
 
   void _onWorkoutPressed(String workoutId) {
-    navigateBack(
+    popRoute(
       result: DayPreviewDialogActionShowWorkout(workoutId: workoutId),
     );
   }
 
   void _onRacePressed(String raceId) {
-    navigateBack(
+    popRoute(
       result: DayPreviewDialogActionShowRace(raceId: raceId),
     );
   }

@@ -43,7 +43,7 @@ class _NormalDialog extends StatelessWidget {
       ),
       actions: [
         TextButton(
-          onPressed: navigateBack,
+          onPressed: popRoute,
           child: Text(str.close),
         ),
       ],

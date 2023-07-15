@@ -26,7 +26,7 @@ class _NormalDialogContent extends StatelessWidget {
       ),
       actions: [
         TextButton(
-          onPressed: navigateBack,
+          onPressed: popRoute,
           child: LabelLarge(
             str.cancel,
             color: Theme.of(context).colorScheme.error,

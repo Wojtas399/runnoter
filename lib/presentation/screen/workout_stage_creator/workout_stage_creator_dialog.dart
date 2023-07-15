@@ -72,7 +72,7 @@ class _BlocListener extends StatelessWidget {
     return BlocListener<WorkoutStageCreatorBloc, WorkoutStageCreatorState>(
       listener: (BuildContext context, WorkoutStageCreatorState state) {
         if (state.stageToSubmit != null) {
-          navigateBack(result: state.stageToSubmit);
+          popRoute(result: state.stageToSubmit);
         }
       },
       child: child,

@@ -79,7 +79,7 @@ class _BlocListener extends StatelessWidget {
     switch (info) {
       case ForgotPasswordBlocInfo.emailSubmitted:
         await _showMessageAboutSubmittedEmail(context);
-        navigateBack;
+        navigateBack();
         break;
     }
   }

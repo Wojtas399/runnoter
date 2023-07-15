@@ -87,7 +87,7 @@ class _NormalDialog extends StatelessWidget {
       ),
       actions: [
         TextButton(
-          onPressed: navigateBack,
+          onPressed: popRoute,
           child: Text(str.close),
         ),
       ],
@@ -194,7 +194,7 @@ class _Actions extends StatelessWidget {
   }
 
   void _addWorkout(BuildContext context) {
-    navigateBack(
+    popRoute(
       result: DayPreviewDialogActionAddWorkout(
         date: context.read<DayPreviewCubit>().date,
       ),
@@ -202,7 +202,7 @@ class _Actions extends StatelessWidget {
   }
 
   void _addRace(BuildContext context) {
-    navigateBack(
+    popRoute(
       result: DayPreviewDialogActionAddRace(
         date: context.read<DayPreviewCubit>().date,
       ),

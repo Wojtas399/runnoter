@@ -34,7 +34,7 @@ class _NormalDialogContent extends StatelessWidget {
       ),
       actions: [
         TextButton(
-          onPressed: navigateBack,
+          onPressed: popRoute,
           child: Text(Str.of(context).cancel),
         ),
         const _SaveButton(),
