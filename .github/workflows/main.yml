@@ -23,7 +23,7 @@ jobs:
           channel: "stable"
       - name: Create firebase options file
         working-directory: ./firebase/lib
-        run: touch firebase_options.dart && echo ${{ secrets.FIREBASE_OPTIONS }} > firebase_options.dart
+        run: touch firebase_options.dart && echo "${{ secrets.FIREBASE_OPTIONS }}" > firebase_options.dart
       - name: Flutter pub get main
         run: flutter pub get
       - name: Flutter pub get firebase
