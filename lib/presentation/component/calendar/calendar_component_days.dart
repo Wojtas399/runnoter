@@ -45,28 +45,25 @@ class _DayItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Opacity(
       opacity: day.isDisabled ? 0.3 : 1,
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Theme.of(context).colorScheme.background,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(0),
-          ),
-          elevation: 0,
-          padding: const EdgeInsets.all(0),
-        ),
-        onPressed: day.isDisabled ? null : () => _onPressed(context),
-        child: SizedBox(
-          width: double.infinity,
-          height: 80,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _DayNumber(
-                number: day.date.day,
-                isMarkedAsToday: day.isTodayDay,
-              ),
-              _Activities(activities: day.activities),
-            ],
+      child: Material(
+        color: day.isDisabled
+            ? Theme.of(context).colorScheme.outline.withOpacity(0.20)
+            : null,
+        child: InkWell(
+          onTap: day.isDisabled ? null : () => _onPressed(context),
+          child: SizedBox(
+            width: double.infinity,
+            height: 80,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _DayNumber(
+                  number: day.date.day,
+                  isMarkedAsToday: day.isTodayDay,
+                ),
+                _Activities(activities: day.activities),
+              ],
+            ),
           ),
         ),
       ),
