@@ -26,6 +26,8 @@ jobs:
       - name: Flutter pub get firebase
         working-directory: ./firebase
         run: flutter pub get
+      - name: Flutter build
+        run: flutter packages pub run build_runner build
       - name: Flutter analyze
         run: flutter analyze
   flutter_test_main:
