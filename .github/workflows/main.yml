@@ -21,6 +21,9 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: "stable"
+      - name: Create firebase options file
+        working-directory: ./firebase/lib
+        run: touch firebase_options.dart && echo ${{ secrets.FIREBASE_OPTIONS }} > firebase_options.dart
       - name: Flutter pub get main
         run: flutter pub get
       - name: Flutter pub get firebase
@@ -41,6 +44,9 @@ jobs:
         - uses: subosito/flutter-action@v2
           with:
             channel: "stable"
+        - name: Create firebase options file
+          working-directory: ./firebase/lib
+          run: touch firebase_options.dart && echo ${{ secrets.FIREBASE_OPTIONS }} > firebase_options.dart
         - name: Flutter pub get
           run: flutter pub get
         - name: Flutter test
@@ -56,6 +62,9 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: "stable"
+      - name: Create firebase options file
+        working-directory: ./firebase/lib
+        run: touch firebase_options.dart && echo ${{ secrets.FIREBASE_OPTIONS }} > firebase_options.dart
       - name: Flutter pub get
         working-directory: ./firebase
         run: flutter pub get
