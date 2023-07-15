@@ -18,11 +18,12 @@ class BloodTestPreviewBloc extends BlocWithStatus<BloodTestPreviewEvent,
     BloodTestPreviewState, BloodTestPreviewBlocInfo, dynamic> {
   final AuthService _authService;
   final BloodTestRepository _bloodTestRepository;
-  StreamSubscription<BloodTest?>? _bloodTestListener;
+  final String? bloodTestId;
 
   BloodTestPreviewBloc({
     required AuthService authService,
     required BloodTestRepository bloodTestRepository,
+    required this.bloodTestId,
     BloodTestPreviewState state = const BloodTestPreviewState(
       status: BlocStatusInitial(),
     ),
@@ -30,56 +31,34 @@ class BloodTestPreviewBloc extends BlocWithStatus<BloodTestPreviewEvent,
         _bloodTestRepository = bloodTestRepository,
         super(state) {
     on<BloodTestPreviewEventInitialize>(_initialize);
-    on<BloodTestPreviewEventBloodTestUpdated>(_bloodTestUpdated);
     on<BloodTestPreviewEventDeleteTest>(_deleteTest);
   }
 
-  @override
-  Future<void> close() {
-    _bloodTestListener?.cancel();
-    _bloodTestListener = null;
-    return super.close();
-  }
-
-  void _initialize(
+  Future<void> _initialize(
     BloodTestPreviewEventInitialize event,
     Emitter<BloodTestPreviewState> emit,
-  ) {
-    _bloodTestListener ??= _authService.loggedUserId$
-        .whereNotNull()
-        .switchMap(
-          (String loggedUserId) => _bloodTestRepository.getTestById(
-            bloodTestId: event.bloodTestId,
-            userId: loggedUserId,
-          ),
-        )
-        .listen(
-          (BloodTest? bloodTest) => add(
-            BloodTestPreviewEventBloodTestUpdated(
-              bloodTest: bloodTest,
-            ),
-          ),
-        );
-  }
-
-  void _bloodTestUpdated(
-    BloodTestPreviewEventBloodTestUpdated event,
-    Emitter<BloodTestPreviewState> emit,
-  ) {
-    emit(state.copyWith(
-      bloodTestId: event.bloodTest?.id,
-      date: event.bloodTest?.date,
-      parameterResults: event.bloodTest?.parameterResults,
-    ));
+  ) async {
+    if (bloodTestId == null) return;
+    final Stream<BloodTest?> bloodTest$ =
+        _authService.loggedUserId$.whereNotNull().switchMap(
+              (String loggedUserId) => _bloodTestRepository.getTestById(
+                bloodTestId: bloodTestId!,
+                userId: loggedUserId,
+              ),
+            );
+    await for (final bloodTest in bloodTest$) {
+      emit(state.copyWith(
+        date: bloodTest?.date,
+        parameterResults: bloodTest?.parameterResults,
+      ));
+    }
   }
 
   Future<void> _deleteTest(
     BloodTestPreviewEventDeleteTest event,
     Emitter<BloodTestPreviewState> emit,
   ) async {
-    if (state.bloodTestId == null) {
-      return;
-    }
+    if (bloodTestId == null) return;
     final String? loggedUserId = await _authService.loggedUserId$.first;
     if (loggedUserId == null) {
       emitNoLoggedUserStatus(emit);
@@ -87,7 +66,7 @@ class BloodTestPreviewBloc extends BlocWithStatus<BloodTestPreviewEvent,
     }
     emitLoadingStatus(emit);
     await _bloodTestRepository.deleteTest(
-      bloodTestId: state.bloodTestId!,
+      bloodTestId: bloodTestId!,
       userId: loggedUserId,
     );
     emitCompleteStatus(

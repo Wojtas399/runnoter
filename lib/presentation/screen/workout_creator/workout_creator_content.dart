@@ -8,7 +8,6 @@ class _Content extends StatelessWidget {
     return WillPopScope(
       onWillPop: () async {
         final bool confirmationToLeave = await askForConfirmationToLeave(
-          context: context,
           areUnsavedChanges: context.read<WorkoutCreatorBloc>().state.canSubmit,
         );
         if (confirmationToLeave) unfocusInputs();
@@ -20,22 +19,18 @@ class _Content extends StatelessWidget {
           centerTitle: true,
         ),
         body: SafeArea(
-          child: ScrollableContent(
-            child: GestureDetector(
-              onTap: unfocusInputs,
-              child: Container(
-                color: Colors.transparent,
-                padding: const EdgeInsets.all(24),
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    _WorkoutName(),
-                    const SizedBox(height: 24),
-                    const _WorkoutStagesSection(),
-                    const SizedBox(height: 40),
-                    const _SubmitButton(),
-                  ],
-                ),
+          child: GestureDetector(
+            onTap: unfocusInputs,
+            child: ScreenAdjustableBody(
+              maxContentWidth: bigContentWidth,
+              child: Column(
+                children: [
+                  _WorkoutName(),
+                  const SizedBox(height: 24),
+                  const _WorkoutStagesSection(),
+                  const SizedBox(height: 40),
+                  const _SubmitButton(),
+                ],
               ),
             ),
           ),
@@ -53,9 +48,9 @@ class _AppBarTitle extends StatelessWidget {
     final Workout? workout = context.select(
       (WorkoutCreatorBloc bloc) => bloc.state.workout,
     );
-    String title = Str.of(context).workoutCreatorScreenNewWorkoutTitle;
+    String title = Str.of(context).workoutCreatorNewWorkoutTitle;
     if (workout != null) {
-      title = Str.of(context).workoutCreatorScreeEditWorkoutTitle;
+      title = Str.of(context).workoutCreatorEditWorkoutTitle;
     }
     return Text(title);
   }

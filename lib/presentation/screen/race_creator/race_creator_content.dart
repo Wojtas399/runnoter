@@ -8,7 +8,6 @@ class _Content extends StatelessWidget {
     return WillPopScope(
       onWillPop: () async {
         final bool confirmationToLeave = await askForConfirmationToLeave(
-          context: context,
           areUnsavedChanges: context.read<RaceCreatorBloc>().state.canSubmit,
         );
         if (confirmationToLeave) unfocusInputs();
@@ -17,14 +16,13 @@ class _Content extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: Text(
-            Str.of(context).raceCreatorScreenTitle,
-          ),
+          title: const _AppBarTitle(),
         ),
-        body: GestureDetector(
-          onTap: unfocusInputs,
-          child: const ScrollableContent(
-            child: Paddings24(
+        body: SafeArea(
+          child: GestureDetector(
+            onTap: unfocusInputs,
+            child: const ScreenAdjustableBody(
+              maxContentWidth: bigContentWidth,
               child: Column(
                 children: [
                   _Form(),
@@ -37,6 +35,22 @@ class _Content extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class _AppBarTitle extends StatelessWidget {
+  const _AppBarTitle();
+
+  @override
+  Widget build(BuildContext context) {
+    final Race? race = context.select(
+      (RaceCreatorBloc bloc) => bloc.state.race,
+    );
+    String title = Str.of(context).raceCreatorNewRaceTitle;
+    if (race != null) {
+      title = Str.of(context).raceCreatorEditRaceTitle;
+    }
+    return Text(title);
   }
 }
 

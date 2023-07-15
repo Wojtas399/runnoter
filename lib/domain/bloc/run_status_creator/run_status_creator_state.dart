@@ -1,7 +1,6 @@
 part of 'run_status_creator_bloc.dart';
 
 class RunStatusCreatorState extends BlocState<RunStatusCreatorState> {
-  final EntityType entityType;
   final RunStatus? originalRunStatus;
   final RunStatusType? runStatusType;
   final double? coveredDistanceInKm;
@@ -13,7 +12,6 @@ class RunStatusCreatorState extends BlocState<RunStatusCreatorState> {
 
   const RunStatusCreatorState({
     required super.status,
-    required this.entityType,
     this.originalRunStatus,
     this.runStatusType,
     this.coveredDistanceInKm,
@@ -27,7 +25,6 @@ class RunStatusCreatorState extends BlocState<RunStatusCreatorState> {
   @override
   List<Object?> get props => [
         status,
-        entityType,
         originalRunStatus,
         runStatusType,
         coveredDistanceInKm,
@@ -84,7 +81,6 @@ class RunStatusCreatorState extends BlocState<RunStatusCreatorState> {
   }) =>
       RunStatusCreatorState(
         status: status ?? const BlocStatusComplete(),
-        entityType: entityType,
         originalRunStatus: originalRunStatus ?? this.originalRunStatus,
         runStatusType: runStatusType ?? this.runStatusType,
         coveredDistanceInKm: coveredDistanceInKm ?? this.coveredDistanceInKm,

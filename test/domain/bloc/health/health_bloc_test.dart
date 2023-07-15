@@ -309,6 +309,41 @@ void main() {
   );
 
   blocTest(
+    'delete today measurement, '
+    'should call method from health measurement repository responsible for deleting measurement with today date',
+    build: () => createBloc(),
+    setUp: () {
+      authService.mockGetLoggedUserId(userId: userId);
+      healthMeasurementRepository.mockDeleteMeasurement();
+      dateService.mockGetToday(todayDate: DateTime(2023, 5, 12));
+    },
+    act: (HealthBloc bloc) => bloc.add(
+      const HealthEventDeleteTodayMeasurement(),
+    ),
+    expect: () => [
+      createState(
+        status: const BlocStatusLoading(),
+      ),
+      createState(
+        status: const BlocStatusComplete<HealthBlocInfo>(
+          info: HealthBlocInfo.healthMeasurementDeleted,
+        ),
+      ),
+    ],
+    verify: (_) {
+      verify(
+        () => authService.loggedUserId$,
+      ).called(1);
+      verify(
+        () => healthMeasurementRepository.deleteMeasurement(
+          userId: userId,
+          date: DateTime(2023, 5, 12),
+        ),
+      ).called(1);
+    },
+  );
+
+  blocTest(
     'change chart range type, '
     'should update new computed range in state and should set new listener of measurements from new date range',
     build: () => createBloc(),

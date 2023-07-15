@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -10,20 +11,23 @@ import '../../component/bloc_with_status_listener_component.dart';
 import '../../component/blood_parameter_results_list_component.dart';
 import '../../component/edit_delete_popup_menu_component.dart';
 import '../../component/text/title_text_components.dart';
-import '../../config/navigation/routes.dart';
+import '../../config/navigation/router.dart';
+import '../../config/ui_sizes.dart';
+import '../../extension/context_extensions.dart';
 import '../../formatter/date_formatter.dart';
 import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
 
-part 'blood_test_preview_app_bar.dart';
+part 'blood_test_preview_actions.dart';
 part 'blood_test_preview_content.dart';
 
+@RoutePage()
 class BloodTestPreviewScreen extends StatelessWidget {
-  final String bloodTestId;
+  final String? bloodTestId;
 
   const BloodTestPreviewScreen({
     super.key,
-    required this.bloodTestId,
+    @PathParam('bloodTestId') this.bloodTestId,
   });
 
   @override
@@ -38,7 +42,7 @@ class BloodTestPreviewScreen extends StatelessWidget {
 }
 
 class _BlocProvider extends StatelessWidget {
-  final String bloodTestId;
+  final String? bloodTestId;
   final Widget child;
 
   const _BlocProvider({
@@ -52,11 +56,8 @@ class _BlocProvider extends StatelessWidget {
       create: (BuildContext context) => BloodTestPreviewBloc(
         authService: context.read<AuthService>(),
         bloodTestRepository: context.read<BloodTestRepository>(),
-      )..add(
-          BloodTestPreviewEventInitialize(
-            bloodTestId: bloodTestId,
-          ),
-        ),
+        bloodTestId: bloodTestId,
+      )..add(const BloodTestPreviewEventInitialize()),
       child: child,
     );
   }
@@ -86,11 +87,8 @@ class _BlocListener extends StatelessWidget {
   ) {
     switch (info) {
       case BloodTestPreviewBlocInfo.bloodTestDeleted:
-        navigateBack(context: context);
-        showSnackbarMessage(
-          context: context,
-          message: Str.of(context).bloodTestPreviewDeletedTestMessage,
-        );
+        navigateBack();
+        showSnackbarMessage(Str.of(context).bloodTestPreviewDeletedTestMessage);
         break;
     }
   }

@@ -1,4 +1,4 @@
-part of 'day_preview_screen.dart';
+part of 'day_preview_dialog.dart';
 
 class _ActivitiesContent extends StatelessWidget {
   const _ActivitiesContent();
@@ -8,23 +8,27 @@ class _ActivitiesContent extends StatelessWidget {
     final DayPreviewCubit cubit = context.watch<DayPreviewCubit>();
 
     if (cubit.state.workouts == null && cubit.state.workouts == null) {
-      return const LoadingInfo();
+      return const Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          LoadingInfo(),
+        ],
+      );
     } else if (cubit.areThereActivities) {
-      return SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: _Activities(
-            workouts: cubit.state.workouts,
-            races: cubit.state.races,
-          ),
-        ),
+      return _Activities(
+        workouts: cubit.state.workouts,
+        races: cubit.state.races,
       );
     }
-    return EmptyContentInfo(
-      title: Str.of(context).dayPreviewNoActivitiesTitle,
-      subtitle: cubit.isPastDate
-          ? Str.of(context).dayPreviewNoActivitiesMessagePastDay
-          : Str.of(context).dayPreviewNoActivitiesMessageFutureDay,
+    final str = Str.of(context);
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 32),
+      child: EmptyContentInfo(
+        title: str.dayPreviewNoActivitiesTitle,
+        subtitle: cubit.isPastDate
+            ? str.dayPreviewNoActivitiesMessagePastDay
+            : str.dayPreviewNoActivitiesMessageFutureDay,
+      ),
     );
   }
 }
@@ -41,38 +45,33 @@ class _Activities extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         ...?workouts?.map(
           (workout) => ActivityItem(
             activity: workout,
-            onPressed: () {
-              _onWorkoutPressed(context, workout.id);
-            },
+            onPressed: () => _onWorkoutPressed(workout.id),
           ),
         ),
         ...?races?.map(
           (race) => ActivityItem(
             activity: race,
-            onPressed: () {
-              _onRacePressed(context, race.id);
-            },
+            onPressed: () => _onRacePressed(race.id),
           ),
         ),
       ],
     );
   }
 
-  void _onWorkoutPressed(BuildContext context, String workoutId) {
-    navigateTo(
-      context: context,
-      route: WorkoutPreviewRoute(workoutId: workoutId),
+  void _onWorkoutPressed(String workoutId) {
+    popRoute(
+      result: DayPreviewDialogActionShowWorkout(workoutId: workoutId),
     );
   }
 
-  void _onRacePressed(BuildContext context, String raceId) {
-    navigateTo(
-      context: context,
-      route: RacePreviewRoute(raceId: raceId),
+  void _onRacePressed(String raceId) {
+    popRoute(
+      result: DayPreviewDialogActionShowRace(raceId: raceId),
     );
   }
 }

@@ -8,10 +8,10 @@ class ProfileSettingsState extends BlocState {
 
   const ProfileSettingsState({
     required super.status,
-    required this.themeMode,
-    required this.language,
-    required this.distanceUnit,
-    required this.paceUnit,
+    this.themeMode,
+    this.language,
+    this.distanceUnit,
+    this.paceUnit,
   });
 
   @override

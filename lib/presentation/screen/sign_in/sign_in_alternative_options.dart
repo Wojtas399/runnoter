@@ -5,40 +5,45 @@ class _AlternativeOptions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final str = Str.of(context);
+
     return Column(
       children: [
-        GestureDetector(
-          onTap: () {
-            _onSignUpOptionSelected(context);
-          },
-          child: Text(
-            Str.of(context).signInSignUpOption,
+        MouseRegion(
+          cursor: SystemMouseCursors.click,
+          child: GestureDetector(
+            onTap: _onSignUpOptionSelected,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(str.signInDontHaveAccount),
+                const SizedBox(width: 4),
+                BodyMedium(
+                  str.signInSignUp,
+                  color: Theme.of(context).colorScheme.primary,
+                  fontWeight: FontWeight.bold,
+                ),
+              ],
+            ),
           ),
         ),
         const SizedBox(height: 8),
-        GestureDetector(
-          onTap: () {
-            _onForgotPasswordSelected(context);
-          },
-          child: Text(
-            Str.of(context).signInForgotPasswordOption,
+        MouseRegion(
+          cursor: SystemMouseCursors.click,
+          child: GestureDetector(
+            onTap: _onForgotPasswordSelected,
+            child: Text(str.signInForgotPasswordOption),
           ),
         ),
       ],
     );
   }
 
-  void _onSignUpOptionSelected(BuildContext context) {
-    navigateTo(
-      context: context,
-      route: const SignUpRoute(),
-    );
+  void _onSignUpOptionSelected() {
+    navigateTo(const SignUpRoute());
   }
 
-  void _onForgotPasswordSelected(BuildContext context) {
-    navigateTo(
-      context: context,
-      route: const ForgotPasswordRoute(),
-    );
+  void _onForgotPasswordSelected() {
+    navigateTo(const ForgotPasswordRoute());
   }
 }

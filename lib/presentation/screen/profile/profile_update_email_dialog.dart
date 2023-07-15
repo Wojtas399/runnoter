@@ -1,15 +1,27 @@
-part of 'profile_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class _UpdateEmailDialog extends StatefulWidget {
-  const _UpdateEmailDialog();
+import '../../../domain/additional_model/bloc_status.dart';
+import '../../../domain/bloc/profile/identities/profile_identities_bloc.dart';
+import '../../component/password_text_field_component.dart';
+import '../../component/text/label_text_components.dart';
+import '../../component/text_field_component.dart';
+import '../../extension/context_extensions.dart';
+import '../../service/navigator_service.dart';
+import '../../service/utils.dart';
+import '../../service/validation_service.dart';
+
+class ProfileUpdateEmailDialog extends StatefulWidget {
+  const ProfileUpdateEmailDialog({
+    super.key,
+  });
 
   @override
-  State<StatefulWidget> createState() {
-    return _UpdateEmailDialogState();
-  }
+  State<StatefulWidget> createState() => _State();
 }
 
-class _UpdateEmailDialogState extends State<_UpdateEmailDialog> {
+class _State extends State<ProfileUpdateEmailDialog> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   late final String? _originalEmail;
@@ -38,61 +50,24 @@ class _UpdateEmailDialogState extends State<_UpdateEmailDialog> {
         final BlocStatus blocStatus = state.status;
         if (blocStatus is BlocStatusComplete &&
             blocStatus.info == ProfileInfo.savedData) {
-          navigateBack(context: context);
+          popRoute();
         }
       },
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            Str.of(context).profileNewEmailDialogTitle,
-          ),
-          leading: IconButton(
-            onPressed: () {
-              navigateBack(context: context);
-            },
-            icon: const Icon(Icons.close),
-          ),
-          actions: [
-            TextButton(
-              onPressed: _isSaveButtonDisabled
-                  ? null
-                  : () {
-                      _onSaveButtonPressed(context);
-                    },
-              child: Text(
-                Str.of(context).save,
-              ),
+      child: context.isMobileSize
+          ? _FullScreenDialog(
+              isSaveButtonDisabled: _isSaveButtonDisabled,
+              onSaveButtonPressed: () => _onSaveButtonPressed(context),
+              emailController: _emailController,
+              passwordController: _passwordController,
+              emailValidator: _validateEmail,
+            )
+          : _NormalDialog(
+              isSaveButtonDisabled: _isSaveButtonDisabled,
+              onSaveButtonPressed: () => _onSaveButtonPressed(context),
+              emailController: _emailController,
+              passwordController: _passwordController,
+              emailValidator: _validateEmail,
             ),
-            const SizedBox(width: 16),
-          ],
-        ),
-        body: SafeArea(
-          child: GestureDetector(
-            onTap: unfocusInputs,
-            child: Container(
-              padding: const EdgeInsets.all(24),
-              color: Colors.transparent,
-              child: Column(
-                children: [
-                  TextFieldComponent(
-                    label: Str.of(context).email,
-                    isRequired: true,
-                    controller: _emailController,
-                    validator: _validateEmail,
-                    icon: Icons.email,
-                  ),
-                  const SizedBox(height: 32),
-                  PasswordTextFieldComponent(
-                    label: Str.of(context).password,
-                    controller: _passwordController,
-                    isRequired: true,
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
     );
   }
 
@@ -122,5 +97,125 @@ class _UpdateEmailDialogState extends State<_UpdateEmailDialog> {
             password: _passwordController.text,
           ),
         );
+  }
+}
+
+class _NormalDialog extends StatelessWidget {
+  final bool isSaveButtonDisabled;
+  final VoidCallback onSaveButtonPressed;
+  final TextEditingController emailController;
+  final TextEditingController passwordController;
+  final String? Function(String? value) emailValidator;
+
+  const _NormalDialog({
+    required this.isSaveButtonDisabled,
+    required this.onSaveButtonPressed,
+    required this.emailController,
+    required this.passwordController,
+    required this.emailValidator,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final str = Str.of(context);
+
+    return AlertDialog(
+      title: Text(str.profileNewEmailDialogTitle),
+      content: SizedBox(
+        width: 400,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextFieldComponent(
+              label: str.email,
+              isRequired: true,
+              controller: emailController,
+              validator: emailValidator,
+              icon: Icons.email,
+            ),
+            const SizedBox(height: 32),
+            PasswordTextFieldComponent(
+              label: str.password,
+              controller: passwordController,
+              isRequired: true,
+            ),
+          ],
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: popRoute,
+          child: LabelLarge(
+            str.cancel,
+            color: Theme.of(context).colorScheme.error,
+          ),
+        ),
+        TextButton(
+          onPressed: isSaveButtonDisabled ? null : onSaveButtonPressed,
+          child: Text(str.save),
+        ),
+      ],
+    );
+  }
+}
+
+class _FullScreenDialog extends StatelessWidget {
+  final bool isSaveButtonDisabled;
+  final VoidCallback onSaveButtonPressed;
+  final TextEditingController emailController;
+  final TextEditingController passwordController;
+  final String? Function(String? value) emailValidator;
+
+  const _FullScreenDialog({
+    required this.isSaveButtonDisabled,
+    required this.onSaveButtonPressed,
+    required this.emailController,
+    required this.passwordController,
+    required this.emailValidator,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final str = Str.of(context);
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(str.profileNewEmailDialogTitle),
+        leading: const CloseButton(),
+        actions: [
+          TextButton(
+            onPressed: isSaveButtonDisabled ? null : onSaveButtonPressed,
+            child: Text(str.save),
+          ),
+          const SizedBox(width: 16),
+        ],
+      ),
+      body: SafeArea(
+        child: GestureDetector(
+          onTap: unfocusInputs,
+          child: Container(
+            padding: const EdgeInsets.all(24),
+            color: Colors.transparent,
+            child: Column(
+              children: [
+                TextFieldComponent(
+                  label: str.email,
+                  isRequired: true,
+                  controller: emailController,
+                  validator: emailValidator,
+                  icon: Icons.email,
+                ),
+                const SizedBox(height: 32),
+                PasswordTextFieldComponent(
+                  label: str.password,
+                  controller: passwordController,
+                  isRequired: true,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

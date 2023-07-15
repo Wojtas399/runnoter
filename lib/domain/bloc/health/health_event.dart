@@ -34,6 +34,10 @@ class HealthEventAddTodayMeasurement extends HealthEvent {
   });
 }
 
+class HealthEventDeleteTodayMeasurement extends HealthEvent {
+  const HealthEventDeleteTodayMeasurement();
+}
+
 class HealthEventChangeChartRangeType extends HealthEvent {
   final ChartRange chartRangeType;
 

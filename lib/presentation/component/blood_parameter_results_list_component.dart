@@ -310,7 +310,7 @@ class _ResultCell extends TableCell {
     required double? parameterValue,
     required bool isValueWithinNorm,
     required bool isEditMode,
-    double padding = 8,
+    double padding = 12,
     Function(double? value)? onValueChanged,
   }) : this(
           child: Padding(
@@ -360,6 +360,7 @@ class _EditableParameterValueState extends State<_EditableParameterValue> {
       maxLines: 1,
       keyboardType: const TextInputType.numberWithOptions(decimal: true),
       maxLength: 10,
+      contentPadding: const EdgeInsets.all(12),
       inputFormatters: [
         DecimalTextInputFormatter(decimalRange: 2),
       ],

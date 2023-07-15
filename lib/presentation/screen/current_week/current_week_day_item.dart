@@ -26,22 +26,19 @@ class DayItem extends StatelessWidget {
               _AddActivityButton(date: day.date),
             ],
           ),
+          const SizedBox(height: 8),
           Column(
             children: [
               ...day.workouts.map(
                 (workout) => ActivityItem(
                   activity: workout,
-                  onPressed: () {
-                    _onWorkoutPressed(context, workout.id);
-                  },
+                  onPressed: () => _onWorkoutPressed(workout.id),
                 ),
               ),
               ...day.races.map(
                 (race) => ActivityItem(
                   activity: race,
-                  onPressed: () {
-                    _onRacePressed(context, race.id);
-                  },
+                  onPressed: () => _onRacePressed(race.id),
                 ),
               ),
             ],
@@ -51,19 +48,15 @@ class DayItem extends StatelessWidget {
     );
   }
 
-  void _onWorkoutPressed(BuildContext context, String workoutId) {
+  void _onWorkoutPressed(String workoutId) {
     navigateTo(
-      context: context,
-      route: WorkoutPreviewRoute(workoutId: workoutId),
+      WorkoutPreviewRoute(workoutId: workoutId),
     );
   }
 
-  void _onRacePressed(BuildContext context, String raceId) {
+  void _onRacePressed(String raceId) {
     navigateTo(
-      context: context,
-      route: RacePreviewRoute(
-        raceId: raceId,
-      ),
+      RacePreviewRoute(raceId: raceId),
     );
   }
 }

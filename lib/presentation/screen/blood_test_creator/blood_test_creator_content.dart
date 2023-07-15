@@ -8,7 +8,6 @@ class _Content extends StatelessWidget {
     return WillPopScope(
       onWillPop: () async {
         final bool confirmationToLeave = await askForConfirmationToLeave(
-          context: context,
           areUnsavedChanges:
               context.read<BloodTestCreatorBloc>().state.canSubmit,
         );
@@ -17,17 +16,22 @@ class _Content extends StatelessWidget {
       },
       child: Scaffold(
         appBar: const _AppBar(),
-        body: GestureDetector(
-          onTap: () {
-            unfocusInputs();
-          },
-          child: const Column(
-            children: [
-              _DateSection(),
-              Expanded(
-                child: _ParametersSection(),
+        body: SafeArea(
+          child: GestureDetector(
+            onTap: unfocusInputs,
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: bigContentWidth),
+                child: const Column(
+                  children: [
+                    _DateSection(),
+                    Expanded(
+                      child: _ParametersSection(),
+                    ),
+                  ],
+                ),
               ),
-            ],
+            ),
           ),
         ),
       ),

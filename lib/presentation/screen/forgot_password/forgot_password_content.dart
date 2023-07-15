@@ -12,18 +12,20 @@ class ForgotPasswordContent extends StatelessWidget {
       body: SafeArea(
         child: GestureDetector(
           onTap: unfocusInputs,
-          child: Container(
-            color: Colors.transparent,
-            width: double.infinity,
-            padding: const EdgeInsets.all(24),
-            child: const Column(
-              children: [
-                _Header(),
-                SizedBox(height: 32),
-                _Email(),
-                SizedBox(height: 32),
-                _SubmitButton(),
-              ],
+          child: Center(
+            child: Container(
+              color: Colors.transparent,
+              constraints: const BoxConstraints(maxWidth: mediumContentWidth),
+              padding: const EdgeInsets.all(24),
+              child: const Column(
+                children: [
+                  _Header(),
+                  SizedBox(height: 32),
+                  _Email(),
+                  SizedBox(height: 32),
+                  _SubmitButton(),
+                ],
+              ),
             ),
           ),
         ),
@@ -41,7 +43,7 @@ class _Header extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         HeadlineMedium(
-          Str.of(context).forgotPasswordScreenTitle,
+          Str.of(context).forgotPasswordTitle,
           fontWeight: FontWeight.bold,
         ),
         const SizedBox(height: 8),

@@ -8,7 +8,6 @@ class _Content extends StatelessWidget {
     return WillPopScope(
       onWillPop: () async {
         final bool confirmationToLeave = await askForConfirmationToLeave(
-          context: context,
           areUnsavedChanges:
               context.read<RunStatusCreatorBloc>().state.canSubmit,
         );
@@ -17,23 +16,33 @@ class _Content extends StatelessWidget {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text(
-            Str.of(context).runStatusCreatorScreenTitle,
-          ),
+          title: Text(Str.of(context).runStatusCreatorScreenTitle),
           centerTitle: true,
         ),
         body: SafeArea(
           child: GestureDetector(
             onTap: unfocusInputs,
-            child: const ScrollableContent(
-              child: Paddings24(
+            child: ScrollableContent(
+              child: SizedBox(
+                width: double.infinity,
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    _StatusType(),
-                    SizedBox(height: 24),
-                    _Form(),
-                    SizedBox(height: 24),
-                    _SubmitButton(),
+                    Container(
+                      constraints: const BoxConstraints(
+                        maxWidth: bigContentWidth,
+                      ),
+                      padding: const EdgeInsets.all(24),
+                      child: const Column(
+                        children: [
+                          _StatusType(),
+                          SizedBox(height: 24),
+                          _Form(),
+                          SizedBox(height: 24),
+                          _SubmitButton(),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),

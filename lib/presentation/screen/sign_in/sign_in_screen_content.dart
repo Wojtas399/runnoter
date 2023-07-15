@@ -6,26 +6,28 @@ class _Content extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
       body: SafeArea(
-        child: SingleChildScrollView(
+        child: ScrollableContent(
           child: GestureDetector(
             onTap: unfocusInputs,
-            child: Container(
-              color: Colors.transparent,
-              padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
-              child: const Column(
-                children: [
-                  _Logo(),
-                  SizedBox(height: 24),
-                  _FormHeader(),
-                  SizedBox(height: 32),
-                  _Form(),
-                  SizedBox(height: 32),
-                  _SubmitButton(),
-                  SizedBox(height: 16),
-                  _AlternativeOptions(),
-                ],
+            child: Center(
+              child: Container(
+                color: Colors.transparent,
+                padding: const EdgeInsets.all(24),
+                constraints: const BoxConstraints(maxWidth: mediumContentWidth),
+                child: const Column(
+                  children: [
+                    _Logo(),
+                    SizedBox(height: 24),
+                    _FormHeader(),
+                    SizedBox(height: 32),
+                    _Form(),
+                    SizedBox(height: 32),
+                    _SubmitButton(),
+                    SizedBox(height: 16),
+                    _AlternativeOptions(),
+                  ],
+                ),
               ),
             ),
           ),
@@ -50,7 +52,7 @@ class _FormHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return HeadlineMedium(
-      Str.of(context).signInScreenTitle,
+      Str.of(context).signInTitle,
       fontWeight: FontWeight.bold,
     );
   }

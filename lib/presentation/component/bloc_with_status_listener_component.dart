@@ -4,7 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../domain/additional_model/bloc_state.dart';
 import '../../domain/additional_model/bloc_status.dart';
-import '../config/navigation/routes.dart';
+import '../config/navigation/router.dart';
 import '../service/dialog_service.dart';
 import '../service/navigator_service.dart';
 
@@ -43,26 +43,21 @@ class BlocWithStatusListener<Bloc extends StateStreamable<State>,
 
   void _manageBlocStatus(BlocStatus blocStatus, BuildContext context) {
     if (blocStatus is BlocStatusLoading) {
-      showLoadingDialog(context: context);
-    } else if (blocStatus is BlocStatusComplete) {
-      _closeLoadingDialog(context);
-      _manageCompleteStatus(blocStatus, context);
-    } else if (blocStatus is BlocStatusError) {
-      _closeLoadingDialog(context);
-      _manageErrorStatus(blocStatus, context);
-    } else if (blocStatus is BlocStatusUnknownError) {
-      closeLoadingDialog(context: context);
-      _showUnknownErrorMessage(context);
-    } else if (blocStatus is BlocStatusNetworkRequestFailed) {
-      closeLoadingDialog(context: context);
-      _showNoInternetConnectionMessage(context);
-    } else if (blocStatus is BlocStatusNoLoggedUser) {
-      closeLoadingDialog(context: context);
-      _showNoLoggedUserMessage(context);
-      navigateAndRemoveUntil(
-        context: context,
-        route: const SignInRoute(),
-      );
+      showLoadingDialog();
+    } else {
+      closeLoadingDialog();
+      if (blocStatus is BlocStatusComplete) {
+        _manageCompleteStatus(blocStatus, context);
+      } else if (blocStatus is BlocStatusError) {
+        _manageErrorStatus(blocStatus, context);
+      } else if (blocStatus is BlocStatusUnknownError) {
+        _showUnknownErrorMessage(context);
+      } else if (blocStatus is BlocStatusNetworkRequestFailed) {
+        _showNoInternetConnectionMessage(context);
+      } else if (blocStatus is BlocStatusNoLoggedUser) {
+        _showNoLoggedUserMessage(context);
+        navigateAndRemoveUntil(const SignInRoute());
+      }
     }
   }
 
@@ -88,31 +83,19 @@ class BlocWithStatusListener<Bloc extends StateStreamable<State>,
     }
   }
 
-  void _showUnknownErrorMessage(BuildContext context) {
-    showMessageDialog(
-      context: context,
-      title: Str.of(context).unknownErrorDialogTitle,
-      message: Str.of(context).unknownErrorDialogMessage,
-    );
-  }
+  void _showUnknownErrorMessage(BuildContext context) => showMessageDialog(
+        title: Str.of(context).unknownErrorDialogTitle,
+        message: Str.of(context).unknownErrorDialogMessage,
+      );
 
-  void _showNoInternetConnectionMessage(BuildContext context) {
-    showMessageDialog(
-      context: context,
-      title: Str.of(context).noInternetConnectionDialogTitle,
-      message: Str.of(context).noInternetConnectionDialogMessage,
-    );
-  }
+  void _showNoInternetConnectionMessage(BuildContext context) =>
+      showMessageDialog(
+        title: Str.of(context).noInternetConnectionDialogTitle,
+        message: Str.of(context).noInternetConnectionDialogMessage,
+      );
 
-  void _showNoLoggedUserMessage(BuildContext context) {
-    showMessageDialog(
-      context: context,
-      title: Str.of(context).noLoggedUserDialogTitle,
-      message: Str.of(context).noLoggedUserDialogMessage,
-    );
-  }
-
-  void _closeLoadingDialog(BuildContext context) {
-    closeLoadingDialog(context: context);
-  }
+  void _showNoLoggedUserMessage(BuildContext context) => showMessageDialog(
+        title: Str.of(context).noLoggedUserDialogTitle,
+        message: Str.of(context).noLoggedUserDialogMessage,
+      );
 }

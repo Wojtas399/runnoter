@@ -11,13 +11,34 @@ class ProfileSettingsEventInitialize extends ProfileSettingsEvent {
   const ProfileSettingsEventInitialize();
 }
 
-class ProfileSettingsEventUserUpdated extends ProfileSettingsEvent {
-  final User? user;
+class ProfileSettingsEventUpdateThemeMode extends ProfileSettingsEvent {
+  final ThemeMode newThemeMode;
 
-  const ProfileSettingsEventUserUpdated({
-    required this.user,
+  const ProfileSettingsEventUpdateThemeMode({
+    required this.newThemeMode,
   });
+}
 
-  @override
-  List<Object> get props => [];
+class ProfileSettingsEventUpdateLanguage extends ProfileSettingsEvent {
+  final Language newLanguage;
+
+  const ProfileSettingsEventUpdateLanguage({
+    required this.newLanguage,
+  });
+}
+
+class ProfileSettingsEventUpdateDistanceUnit extends ProfileSettingsEvent {
+  final DistanceUnit newDistanceUnit;
+
+  const ProfileSettingsEventUpdateDistanceUnit({
+    required this.newDistanceUnit,
+  });
+}
+
+class ProfileSettingsEventUpdatePaceUnit extends ProfileSettingsEvent {
+  final PaceUnit newPaceUnit;
+
+  const ProfileSettingsEventUpdatePaceUnit({
+    required this.newPaceUnit,
+  });
 }

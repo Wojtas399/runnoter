@@ -13,8 +13,11 @@ import '../../../mock/domain/service/mock_auth_service.dart';
 void main() {
   final authService = MockAuthService();
   final bloodTestRepository = MockBloodTestRepository();
+  const String loggedUserId = 'u1';
+  const String bloodTestId = 'b1';
 
   BloodTestCreatorBloc createBloc({
+    String? bloodTestId,
     BloodTest? bloodTest,
     DateTime? date,
     List<BloodParameterResult>? parameterResults,
@@ -22,6 +25,7 @@ void main() {
       BloodTestCreatorBloc(
         authService: authService,
         bloodTestRepository: bloodTestRepository,
+        bloodTestId: bloodTestId,
         state: BloodTestCreatorState(
           status: const BlocStatusInitial(),
           bloodTest: bloodTest,
@@ -50,15 +54,14 @@ void main() {
 
   blocTest(
     'initialize, '
-    'blood test id is not null, '
     'should load blood test from repository and should update all params in state',
-    build: () => createBloc(),
+    build: () => createBloc(bloodTestId: bloodTestId),
     setUp: () {
-      authService.mockGetLoggedUserId(userId: 'u1');
+      authService.mockGetLoggedUserId(userId: loggedUserId);
       bloodTestRepository.mockGetTestById(
         bloodTest: createBloodTest(
-          id: 'bt1',
-          userId: 'u1',
+          id: bloodTestId,
+          userId: loggedUserId,
           date: DateTime(2023, 5, 10),
           parameterResults: const [
             BloodParameterResult(
@@ -69,17 +72,13 @@ void main() {
         ),
       );
     },
-    act: (BloodTestCreatorBloc bloc) => bloc.add(
-      const BloodTestCreatorEventInitialize(
-        bloodTestId: 'bt1',
-      ),
-    ),
+    act: (bloc) => bloc.add(const BloodTestCreatorEventInitialize()),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
         bloodTest: createBloodTest(
-          id: 'bt1',
-          userId: 'u1',
+          id: bloodTestId,
+          userId: loggedUserId,
           date: DateTime(2023, 5, 10),
           parameterResults: const [
             BloodParameterResult(
@@ -103,8 +102,8 @@ void main() {
       ).called(1);
       verify(
         () => bloodTestRepository.getTestById(
-          bloodTestId: 'bt1',
-          userId: 'u1',
+          bloodTestId: bloodTestId,
+          userId: loggedUserId,
         ),
       ).called(1);
     },
@@ -112,21 +111,12 @@ void main() {
 
   blocTest(
     'initialize, '
-    'blood test id is not null, '
     'logged user does not exist, '
-    'should emit no logged user info',
-    build: () => createBloc(),
+    'should do nothing',
+    build: () => createBloc(bloodTestId: bloodTestId),
     setUp: () => authService.mockGetLoggedUserId(),
-    act: (BloodTestCreatorBloc bloc) => bloc.add(
-      const BloodTestCreatorEventInitialize(
-        bloodTestId: 'bt1',
-      ),
-    ),
-    expect: () => [
-      createState(
-        status: const BlocStatusNoLoggedUser(),
-      ),
-    ],
+    act: (bloc) => bloc.add(const BloodTestCreatorEventInitialize()),
+    expect: () => [],
     verify: (_) => verify(
       () => authService.loggedUserId$,
     ).called(1),
@@ -135,28 +125,19 @@ void main() {
   blocTest(
     'initialize, '
     'blood test id is null, '
-    'should set list of parameter results as empty in state',
+    'should do nothing',
     build: () => createBloc(),
-    act: (BloodTestCreatorBloc bloc) => bloc.add(
-      const BloodTestCreatorEventInitialize(),
-    ),
-    expect: () => [
-      createState(
-        status: const BlocStatusComplete(),
-        parameterResults: [],
-      ),
-    ],
+    act: (bloc) => bloc.add(const BloodTestCreatorEventInitialize()),
+    expect: () => [],
   );
 
   blocTest(
     'date changed, '
     'should update date in state',
     build: () => createBloc(),
-    act: (BloodTestCreatorBloc bloc) => bloc.add(
-      BloodTestCreatorEventDateChanged(
-        date: DateTime(2023, 5, 20),
-      ),
-    ),
+    act: (bloc) => bloc.add(BloodTestCreatorEventDateChanged(
+      date: DateTime(2023, 5, 20),
+    )),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
@@ -181,12 +162,10 @@ void main() {
         ),
       ],
     ),
-    act: (BloodTestCreatorBloc bloc) => bloc.add(
-      const BloodTestCreatorEventParameterResultChanged(
-        parameter: BloodParameter.wbc,
-        value: 4.45,
-      ),
-    ),
+    act: (bloc) => bloc.add(const BloodTestCreatorEventParameterResultChanged(
+      parameter: BloodParameter.wbc,
+      value: 4.45,
+    )),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
@@ -220,12 +199,10 @@ void main() {
         ),
       ],
     ),
-    act: (BloodTestCreatorBloc bloc) => bloc.add(
-      const BloodTestCreatorEventParameterResultChanged(
-        parameter: BloodParameter.wbc,
-        value: null,
-      ),
-    ),
+    act: (bloc) => bloc.add(const BloodTestCreatorEventParameterResultChanged(
+      parameter: BloodParameter.wbc,
+      value: null,
+    )),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
@@ -251,12 +228,10 @@ void main() {
         ),
       ],
     ),
-    act: (BloodTestCreatorBloc bloc) => bloc.add(
-      const BloodTestCreatorEventParameterResultChanged(
-        parameter: BloodParameter.sodium,
-        value: 140,
-      ),
-    ),
+    act: (bloc) => bloc.add(const BloodTestCreatorEventParameterResultChanged(
+      parameter: BloodParameter.sodium,
+      value: 140,
+    )),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
@@ -279,9 +254,7 @@ void main() {
     'data are invalid, '
     'should finish event call',
     build: () => createBloc(),
-    act: (BloodTestCreatorBloc bloc) => bloc.add(
-      const BloodTestCreatorEventSubmit(),
-    ),
+    act: (bloc) => bloc.add(const BloodTestCreatorEventSubmit()),
     expect: () => [],
   );
 
@@ -299,9 +272,7 @@ void main() {
       ],
     ),
     setUp: () => authService.mockGetLoggedUserId(),
-    act: (BloodTestCreatorBloc bloc) => bloc.add(
-      const BloodTestCreatorEventSubmit(),
-    ),
+    act: (bloc) => bloc.add(const BloodTestCreatorEventSubmit()),
     expect: () => [
       createState(
         status: const BlocStatusNoLoggedUser(),
@@ -337,12 +308,10 @@ void main() {
       ],
     ),
     setUp: () {
-      authService.mockGetLoggedUserId(userId: 'u1');
+      authService.mockGetLoggedUserId(userId: loggedUserId);
       bloodTestRepository.mockAddNewTest();
     },
-    act: (BloodTestCreatorBloc bloc) => bloc.add(
-      const BloodTestCreatorEventSubmit(),
-    ),
+    act: (bloc) => bloc.add(const BloodTestCreatorEventSubmit()),
     expect: () => [
       createState(
         status: const BlocStatusLoading(),
@@ -381,7 +350,7 @@ void main() {
       ).called(1);
       verify(
         () => bloodTestRepository.addNewTest(
-          userId: 'u1',
+          userId: loggedUserId,
           date: DateTime(2023, 5, 20),
           parameterResults: const [
             BloodParameterResult(
@@ -404,7 +373,7 @@ void main() {
     'should call method from blood test repository to update blood test and should emit info that new test has been updated',
     build: () => createBloc(
       bloodTest: createBloodTest(
-        id: 'bt1',
+        id: bloodTestId,
         date: DateTime(2023, 5, 12),
         parameterResults: const [
           BloodParameterResult(
@@ -426,17 +395,15 @@ void main() {
       ],
     ),
     setUp: () {
-      authService.mockGetLoggedUserId(userId: 'u1');
+      authService.mockGetLoggedUserId(userId: loggedUserId);
       bloodTestRepository.mockUpdateTest();
     },
-    act: (BloodTestCreatorBloc bloc) => bloc.add(
-      const BloodTestCreatorEventSubmit(),
-    ),
+    act: (bloc) => bloc.add(const BloodTestCreatorEventSubmit()),
     expect: () => [
       createState(
         status: const BlocStatusLoading(),
         bloodTest: createBloodTest(
-          id: 'bt1',
+          id: bloodTestId,
           date: DateTime(2023, 5, 12),
           parameterResults: const [
             BloodParameterResult(
@@ -462,7 +429,7 @@ void main() {
           info: BloodTestCreatorBlocInfo.bloodTestUpdated,
         ),
         bloodTest: createBloodTest(
-          id: 'bt1',
+          id: bloodTestId,
           date: DateTime(2023, 5, 12),
           parameterResults: const [
             BloodParameterResult(
@@ -490,8 +457,8 @@ void main() {
       ).called(1);
       verify(
         () => bloodTestRepository.updateTest(
-          bloodTestId: 'bt1',
-          userId: 'u1',
+          bloodTestId: bloodTestId,
+          userId: loggedUserId,
           date: DateTime(2023, 5, 20),
           parameterResults: const [
             BloodParameterResult(

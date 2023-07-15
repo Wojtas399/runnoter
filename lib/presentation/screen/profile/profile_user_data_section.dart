@@ -60,16 +60,16 @@ class _Name extends StatelessWidget {
   }
 
   Future<String?> _askForNewUsername(BuildContext context) async {
+    final str = Str.of(context);
     return await askForValue(
-      context: context,
-      title: Str.of(context).profileNewUsernameDialogTitle,
-      label: Str.of(context).name,
+      title: str.profileNewUsernameDialogTitle,
+      label: str.name,
       textFieldIcon: Icons.person_rounded,
       value: context.read<ProfileIdentitiesBloc>().state.username,
       isValueRequired: true,
       validator: (String? value) {
         if (value != null && !isNameOrSurnameValid(value)) {
-          return Str.of(context).invalidNameOrSurnameMessage;
+          return str.invalidNameOrSurnameMessage;
         }
         return null;
       },
@@ -109,16 +109,16 @@ class _Surname extends StatelessWidget {
   }
 
   Future<String?> _askForNewSurname(BuildContext context) async {
+    final str = Str.of(context);
     return await askForValue(
-      context: context,
-      title: Str.of(context).profileNewSurnameDialogTitle,
-      label: Str.of(context).surname,
+      title: str.profileNewSurnameDialogTitle,
+      label: str.surname,
       textFieldIcon: Icons.person_rounded,
       value: context.read<ProfileIdentitiesBloc>().state.surname,
       isValueRequired: true,
       validator: (String? value) {
         if (value != null && !isNameOrSurnameValid(value)) {
-          return Str.of(context).invalidNameOrSurnameMessage;
+          return str.invalidNameOrSurnameMessage;
         }
         return null;
       },
@@ -145,15 +145,13 @@ class _Email extends StatelessWidget {
     );
   }
 
-  Future<void> _onPressed(BuildContext context) async {
-    await showFullScreenDialog(
-      context: context,
-      dialog: BlocProvider<ProfileIdentitiesBloc>.value(
-        value: context.read<ProfileIdentitiesBloc>(),
-        child: const _UpdateEmailDialog(),
-      ),
-    );
-  }
+  Future<void> _onPressed(BuildContext context) async =>
+      await showDialogDependingOnScreenSize(
+        BlocProvider<ProfileIdentitiesBloc>.value(
+          value: context.read<ProfileIdentitiesBloc>(),
+          child: const ProfileUpdateEmailDialog(),
+        ),
+      );
 }
 
 class _ChangePassword extends StatelessWidget {
@@ -170,15 +168,13 @@ class _ChangePassword extends StatelessWidget {
     );
   }
 
-  Future<void> _onPressed(BuildContext context) async {
-    await showFullScreenDialog(
-      context: context,
-      dialog: BlocProvider.value(
-        value: context.read<ProfileIdentitiesBloc>(),
-        child: const _UpdatePasswordDialog(),
-      ),
-    );
-  }
+  Future<void> _onPressed(BuildContext context) async =>
+      showDialogDependingOnScreenSize(
+        BlocProvider.value(
+          value: context.read<ProfileIdentitiesBloc>(),
+          child: const ProfileUpdatePasswordDialog(),
+        ),
+      );
 }
 
 class _DeleteAccount extends StatelessWidget {
@@ -196,13 +192,11 @@ class _DeleteAccount extends StatelessWidget {
     );
   }
 
-  Future<void> _onPressed(BuildContext context) async {
-    await showFullScreenDialog(
-      context: context,
-      dialog: BlocProvider.value(
-        value: context.read<ProfileIdentitiesBloc>(),
-        child: const _DeleteAccountDialog(),
-      ),
-    );
-  }
+  Future<void> _onPressed(BuildContext context) async =>
+      await showDialogDependingOnScreenSize(
+        BlocProvider.value(
+          value: context.read<ProfileIdentitiesBloc>(),
+          child: const ProfileDeleteAccountDialog(),
+        ),
+      );
 }

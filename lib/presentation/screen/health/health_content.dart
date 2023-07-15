@@ -5,49 +5,20 @@ class _Content extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
+    return const SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.all(24),
+        padding: EdgeInsets.only(top: 8, bottom: 16),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _Section(
-              label: Str.of(context).healthTodayMeasurement,
-              child: const _TodayMeasurement(),
-            ),
-            const SizedBox(height: 24),
-            _Section(
-              label: Str.of(context).healthSummaryOfMeasurements,
-              child: const _ChartRangeSelection(),
-            ),
-            const SizedBox(height: 8),
-            const _Charts(),
-            const SizedBox(height: 24),
-            const _ShowAllMeasurementsButton(),
+            _TodayMeasurementSection(),
+            SizedBox(height: 24),
+            _ChartsSection(),
+            SizedBox(height: 24),
+            _ShowAllMeasurementsButton(),
           ],
         ),
       ),
-    );
-  }
-}
-
-class _Section extends StatelessWidget {
-  final String label;
-  final Widget child;
-
-  const _Section({
-    required this.label,
-    required this.child,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        TitleMedium(label),
-        const SizedBox(height: 16),
-        child,
-      ],
     );
   }
 }
@@ -57,18 +28,18 @@ class _ShowAllMeasurementsButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BigButton(
-      label: Str.of(context).healthShowAllMeasurementsButton,
-      onPressed: () {
-        _onPressed(context);
-      },
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        BigButton(
+          label: Str.of(context).healthShowAllMeasurementsButton,
+          onPressed: _onPressed,
+        ),
+      ],
     );
   }
 
-  void _onPressed(BuildContext context) {
-    navigateTo(
-      context: context,
-      route: const HealthMeasurementsRoute(),
-    );
+  void _onPressed() {
+    navigateTo(const HealthMeasurementsRoute());
   }
 }

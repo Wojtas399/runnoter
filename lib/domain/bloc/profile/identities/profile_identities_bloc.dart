@@ -26,7 +26,6 @@ class ProfileIdentitiesBloc extends BlocWithStatus<ProfileIdentitiesEvent,
   final HealthMeasurementRepository _healthMeasurementRepository;
   final BloodTestRepository _bloodTestRepository;
   final RaceRepository _raceRepository;
-  StreamSubscription<(String?, User?)>? _userIdentitiesListener;
 
   ProfileIdentitiesBloc({
     required AuthService authService,
@@ -54,18 +53,29 @@ class ProfileIdentitiesBloc extends BlocWithStatus<ProfileIdentitiesEvent,
     on<ProfileIdentitiesEventDeleteAccount>(_deleteAccount);
   }
 
-  @override
-  Future<void> close() {
-    _userIdentitiesListener?.cancel();
-    _userIdentitiesListener = null;
-    return super.close();
-  }
-
-  void _initialize(
+  Future<void> _initialize(
     ProfileIdentitiesEventInitialize event,
     Emitter<ProfileIdentitiesState> emit,
-  ) {
-    _setLoggedUserIdentitiesListener();
+  ) async {
+    final Stream<(String?, User?)> userIdentities$ = Rx.combineLatest2(
+      _authService.loggedUserEmail$,
+      _loggedUserData$,
+      (
+        String? loggedUserEmail,
+        User? loggedUserData,
+      ) =>
+          (loggedUserEmail, loggedUserData),
+    );
+    await for (final userIdentities in userIdentities$) {
+      final String? loggedUserEmail = userIdentities.$1;
+      final User? userData = userIdentities.$2;
+      emit(state.copyWith(
+        loggedUserId: userData?.id,
+        email: loggedUserEmail,
+        username: userData?.name,
+        surname: userData?.surname,
+      ));
+    }
   }
 
   void _identitiesUpdated(
@@ -200,25 +210,6 @@ class ProfileIdentitiesBloc extends BlocWithStatus<ProfileIdentitiesEvent,
       emitUnknownErrorStatus(emit);
       throw unknownException.message;
     }
-  }
-
-  void _setLoggedUserIdentitiesListener() {
-    _userIdentitiesListener ??= Rx.combineLatest2(
-      _authService.loggedUserEmail$,
-      _loggedUserData$,
-      (
-        String? loggedUserEmail,
-        User? loggedUserData,
-      ) =>
-          (loggedUserEmail, loggedUserData),
-    ).listen(
-      ((String?, User?) listenedParams) => add(
-        ProfileIdentitiesEventIdentitiesUpdated(
-          email: listenedParams.$1,
-          user: listenedParams.$2,
-        ),
-      ),
-    );
   }
 
   Stream<User?> get _loggedUserData$ {

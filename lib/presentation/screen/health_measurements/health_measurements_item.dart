@@ -1,10 +1,5 @@
 part of 'health_measurements_screen.dart';
 
-enum _MeasurementAction {
-  edit,
-  delete,
-}
-
 class _MeasurementItem extends StatefulWidget {
   final HealthMeasurement measurement;
   final bool isFirstItem;
@@ -21,103 +16,35 @@ class _MeasurementItem extends StatefulWidget {
 class _MeasurementItemState extends State<_MeasurementItem> {
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: _onPressed,
-      borderRadius: BorderRadius.circular(32),
-      child: Padding(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            LabelLarge(widget.measurement.date.toDateWithDots()),
-            const SizedBox(height: 8),
-            _MeasurementParams(
-              restingHeartRate: widget.measurement.restingHeartRate,
-              fastingWeight: widget.measurement.fastingWeight,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Future<void> _onPressed() async {
-    final _MeasurementAction? action = await askForAction<_MeasurementAction>(
-      context: context,
-      actions: [
-        ActionSheetItem(
-          id: _MeasurementAction.edit,
-          label: Str.of(context).edit,
-          iconData: Icons.edit_outlined,
-        ),
-        ActionSheetItem(
-          id: _MeasurementAction.delete,
-          label: Str.of(context).delete,
-          iconData: Icons.delete_outline,
-        ),
-      ],
-    );
-    if (action == _MeasurementAction.edit) {
-      _navigateToHealthMeasurementCreator();
-    } else if (action == _MeasurementAction.delete) {
-      await _deleteMeasurement();
-    }
-  }
-
-  void _navigateToHealthMeasurementCreator() {
-    navigateTo(
-      context: context,
-      route: HealthMeasurementCreatorRoute(
-        date: widget.measurement.date,
-      ),
-    );
-  }
-
-  Future<void> _deleteMeasurement() async {
-    final DateTime date = widget.measurement.date;
-    final bool confirmation = await askForConfirmation(
-      context: context,
-      title: Str.of(context)
-          .healthMeasurementsDeleteMeasurementConfirmationDialogTitle,
-      message: Str.of(context)
-          .healthMeasurementsDeleteMeasurementConfirmationDialogMessage(
-        date.toDateWithDots(),
-      ),
-      confirmButtonLabel: Str.of(context).delete,
-    );
-    if (confirmation == true && mounted) {
-      context.read<HealthMeasurementsBloc>().add(
-            HealthMeasurementsEventDeleteMeasurement(date: date),
-          );
-    }
-  }
-}
-
-class _MeasurementParams extends StatelessWidget {
-  final int restingHeartRate;
-  final double fastingWeight;
-
-  const _MeasurementParams({
-    required this.restingHeartRate,
-    required this.fastingWeight,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return IntrinsicHeight(
+    return Padding(
+      padding: const EdgeInsets.only(left: 24, right: 16),
       child: Row(
         children: [
           Expanded(
-            child: _MeasurementParamWithLabel(
-              label: Str.of(context).healthRestingHeartRate,
-              value: '$restingHeartRate ${Str.of(context).heartRateUnit}',
+            flex: 2,
+            child: BodyMedium(
+              widget.measurement.date.toDateWithDots(),
+              color: Theme.of(context).colorScheme.primary,
+              fontWeight: FontWeight.bold,
             ),
           ),
-          const VerticalDivider(),
           Expanded(
-            child: _MeasurementParamWithLabel(
-              label: Str.of(context).healthFastingWeight,
-              value: '$fastingWeight kg',
+            flex: 2,
+            child: Text(
+              widget.measurement.restingHeartRate.toString(),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Text(
+              widget.measurement.fastingWeight.toString(),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          Expanded(
+            child: _MeasurementActions(
+              measurementDate: widget.measurement.date,
             ),
           ),
         ],
@@ -126,24 +53,47 @@ class _MeasurementParams extends StatelessWidget {
   }
 }
 
-class _MeasurementParamWithLabel extends StatelessWidget {
-  final String label;
-  final String value;
+class _MeasurementActions extends StatelessWidget {
+  final DateTime measurementDate;
 
-  const _MeasurementParamWithLabel({
-    required this.label,
-    required this.value,
+  const _MeasurementActions({
+    required this.measurementDate,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        LabelMedium(label),
-        const SizedBox(height: 4),
-        Text(value),
+        EditDeleteActions(
+          displayAsPopupMenu: context.isMobileSize,
+          onEditSelected: () => _editMeasurement(context),
+          onDeleteSelected: () => _deleteMeasurement(context),
+        ),
       ],
     );
+  }
+
+  Future<void> _editMeasurement(BuildContext context) async =>
+      await showHealthMeasurementCreatorDialog(
+        context: context,
+        date: measurementDate,
+      );
+
+  Future<void> _deleteMeasurement(BuildContext context) async {
+    final bloc = context.read<HealthMeasurementsBloc>();
+    final str = Str.of(context);
+    final bool confirmation = await askForConfirmation(
+      title: str.healthMeasurementsDeleteMeasurementConfirmationDialogTitle,
+      message: str.healthMeasurementsDeleteMeasurementConfirmationDialogMessage(
+        measurementDate.toDateWithDots(),
+      ),
+      confirmButtonLabel: str.delete,
+    );
+    if (confirmation == true) {
+      bloc.add(
+        HealthMeasurementsEventDeleteMeasurement(date: measurementDate),
+      );
+    }
   }
 }

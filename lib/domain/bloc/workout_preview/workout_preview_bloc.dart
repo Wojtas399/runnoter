@@ -16,7 +16,7 @@ part 'workout_preview_state.dart';
 
 class WorkoutPreviewBloc extends BlocWithStatus<WorkoutPreviewEvent,
     WorkoutPreviewState, WorkoutPreviewBlocInfo, dynamic> {
-  final String workoutId;
+  final String? workoutId;
   final AuthService _authService;
   final WorkoutRepository _workoutRepository;
   StreamSubscription<Workout?>? _workoutListener;
@@ -79,23 +79,23 @@ class WorkoutPreviewBloc extends BlocWithStatus<WorkoutPreviewEvent,
     WorkoutPreviewEventDeleteWorkout event,
     Emitter<WorkoutPreviewState> emit,
   ) async {
+    if (workoutId == null) return;
     final String? loggedUserId = await _authService.loggedUserId$.first;
-    if (loggedUserId == null) {
-      return;
-    }
+    if (loggedUserId == null) return;
     emitLoadingStatus(emit);
     await _workoutRepository.deleteWorkout(
       userId: loggedUserId,
-      workoutId: workoutId,
+      workoutId: workoutId!,
     );
     emitCompleteStatus(emit, WorkoutPreviewBlocInfo.workoutDeleted);
   }
 
   void _setWorkoutListener(String loggedUserId) {
+    if (workoutId == null) return;
     _workoutListener ??= _workoutRepository
         .getWorkoutById(
           userId: loggedUserId,
-          workoutId: workoutId,
+          workoutId: workoutId!,
         )
         .listen(
           (Workout? workout) => add(

@@ -1,6 +1,6 @@
 part of 'current_week_screen.dart';
 
-class _AddActivityButton extends StatefulWidget {
+class _AddActivityButton extends StatelessWidget {
   final DateTime date;
 
   const _AddActivityButton({
@@ -8,67 +8,55 @@ class _AddActivityButton extends StatefulWidget {
   });
 
   @override
-  State<StatefulWidget> createState() => _AddActivityButtonState();
-}
-
-class _AddActivityButtonState extends State<_AddActivityButton> {
-  @override
   Widget build(BuildContext context) {
-    return IconButton(
-      onPressed: () {
-        _onPressed(context);
-      },
+    final str = Str.of(context);
+
+    return PopupMenuButton<_ActivityType>(
       icon: const Icon(Icons.add),
-    );
-  }
-
-  Future<void> _onPressed(BuildContext context) async {
-    final ActivityType? activityType = await _askForActivityType(context);
-    if (activityType != null && mounted) {
-      switch (activityType) {
-        case ActivityType.workout:
-          navigateTo(
-            context: context,
-            route: WorkoutCreatorRoute(
-              creatorArguments: WorkoutCreatorAddModeArguments(
-                date: widget.date,
-              ),
-            ),
-          );
-          break;
-        case ActivityType.race:
-          navigateTo(
-            context: context,
-            route: RaceCreatorRoute(
-              arguments: RaceCreatorArguments(date: widget.date),
-            ),
-          );
-          break;
-      }
-    }
-  }
-
-  Future<ActivityType?> _askForActivityType(BuildContext context) async {
-    return await askForAction<ActivityType>(
-      context: context,
-      title: Str.of(context).currentWeekActivityActionSheetTitle,
-      actions: [
-        ActionSheetItem(
-          id: ActivityType.workout,
-          label: Str.of(context).workout,
-          iconData: Icons.directions_run,
+      onSelected: (_ActivityType type) => _onSelected(context, type),
+      itemBuilder: (_) => [
+        PopupMenuItem(
+          value: _ActivityType.workout,
+          child: Row(
+            children: [
+              const Icon(Icons.directions_run),
+              const SizedBox(width: 8),
+              Text(str.workout),
+            ],
+          ),
         ),
-        ActionSheetItem(
-          id: ActivityType.race,
-          label: Str.of(context).race,
-          iconData: Icons.emoji_events,
+        PopupMenuItem(
+          value: _ActivityType.race,
+          child: Row(
+            children: [
+              const Icon(Icons.emoji_events),
+              const SizedBox(width: 8),
+              Text(str.race),
+            ],
+          ),
         ),
       ],
     );
   }
+
+  void _onSelected(BuildContext context, _ActivityType activityType) {
+    final String dateStr = date.toPathFormat();
+    switch (activityType) {
+      case _ActivityType.workout:
+        navigateTo(
+          WorkoutCreatorRoute(date: dateStr),
+        );
+        break;
+      case _ActivityType.race:
+        navigateTo(
+          RaceCreatorRoute(dateStr: dateStr),
+        );
+        break;
+    }
+  }
 }
 
-enum ActivityType {
+enum _ActivityType {
   workout,
   race,
 }

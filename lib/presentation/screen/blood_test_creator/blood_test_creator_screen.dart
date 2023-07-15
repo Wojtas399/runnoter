@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -10,6 +11,7 @@ import '../../component/bloc_with_status_listener_component.dart';
 import '../../component/blood_parameter_results_list_component.dart';
 import '../../component/date_selector_component.dart';
 import '../../component/text/title_text_components.dart';
+import '../../config/ui_sizes.dart';
 import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
 import '../../service/utils.dart';
@@ -19,12 +21,13 @@ part 'blood_test_creator_content.dart';
 part 'blood_test_creator_date.dart';
 part 'blood_test_creator_parameters.dart';
 
+@RoutePage()
 class BloodTestCreatorScreen extends StatelessWidget {
   final String? bloodTestId;
 
   const BloodTestCreatorScreen({
     super.key,
-    this.bloodTestId,
+    @PathParam('bloodTestId') this.bloodTestId,
   });
 
   @override
@@ -53,9 +56,8 @@ class _BlocProvider extends StatelessWidget {
       create: (BuildContext context) => BloodTestCreatorBloc(
         authService: context.read<AuthService>(),
         bloodTestRepository: context.read<BloodTestRepository>(),
-      )..add(
-          BloodTestCreatorEventInitialize(bloodTestId: bloodTestId),
-        ),
+        bloodTestId: bloodTestId,
+      )..add(const BloodTestCreatorEventInitialize()),
       child: child,
     );
   }
@@ -83,18 +85,13 @@ class _BlocListener extends StatelessWidget {
     BuildContext context,
     BloodTestCreatorBlocInfo info,
   ) {
+    final str = Str.of(context);
     if (info == BloodTestCreatorBlocInfo.bloodTestAdded) {
-      navigateBack(context: context);
-      showSnackbarMessage(
-        context: context,
-        message: Str.of(context).bloodTestCreatorSuccessfullyAddedTest,
-      );
+      navigateBack();
+      showSnackbarMessage(str.bloodTestCreatorSuccessfullyAddedTest);
     } else if (info == BloodTestCreatorBlocInfo.bloodTestUpdated) {
-      navigateBack(context: context);
-      showSnackbarMessage(
-        context: context,
-        message: Str.of(context).bloodTestCreatorSuccessfullyEditedTest,
-      );
+      navigateBack();
+      showSnackbarMessage(str.bloodTestCreatorSuccessfullyEditedTest);
     }
   }
 }

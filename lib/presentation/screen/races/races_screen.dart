@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -11,7 +12,7 @@ import '../../component/loading_info_component.dart';
 import '../../component/padding/paddings_24.dart';
 import '../../component/text/label_text_components.dart';
 import '../../component/text/title_text_components.dart';
-import '../../config/navigation/routes.dart';
+import '../../config/navigation/router.dart';
 import '../../formatter/date_formatter.dart';
 import '../../formatter/run_status_formatter.dart';
 import '../../service/navigator_service.dart';
@@ -19,6 +20,7 @@ import '../../service/navigator_service.dart';
 part 'races_content.dart';
 part 'races_list.dart';
 
+@RoutePage()
 class RacesScreen extends StatelessWidget {
   const RacesScreen({
     super.key,

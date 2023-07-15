@@ -1,7 +1,9 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../../domain/bloc/run_status_creator/run_status_creator_bloc.dart';
 import '../../../domain/bloc/workout_preview/workout_preview_bloc.dart';
 import '../../../domain/entity/run_status.dart';
 import '../../../domain/entity/workout_stage.dart';
@@ -14,29 +16,29 @@ import '../../component/edit_delete_popup_menu_component.dart';
 import '../../component/loading_info_component.dart';
 import '../../component/nullable_text_component.dart';
 import '../../component/padding/paddings_24.dart';
-import '../../component/run_stats_component.dart';
-import '../../component/text/body_text_components.dart';
+import '../../component/run_status_info_component.dart';
+import '../../component/screen_adjustable_body_component.dart';
 import '../../component/text/title_text_components.dart';
-import '../../config/navigation/routes.dart';
+import '../../config/navigation/router.dart';
+import '../../config/ui_sizes.dart';
+import '../../extension/context_extensions.dart';
 import '../../formatter/date_formatter.dart';
 import '../../formatter/list_of_workout_stages_formatter.dart';
-import '../../formatter/run_status_formatter.dart';
 import '../../formatter/workout_stage_formatter.dart';
 import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
-import '../screens.dart';
 
-part 'workout_preview_app_bar.dart';
+part 'workout_preview_actions.dart';
 part 'workout_preview_content.dart';
-part 'workout_preview_run_status.dart';
 part 'workout_preview_workout.dart';
 
+@RoutePage()
 class WorkoutPreviewScreen extends StatelessWidget {
-  final String workoutId;
+  final String? workoutId;
 
   const WorkoutPreviewScreen({
     super.key,
-    required this.workoutId,
+    @PathParam('workoutId') this.workoutId,
   });
 
   @override
@@ -51,7 +53,7 @@ class WorkoutPreviewScreen extends StatelessWidget {
 }
 
 class _BlocProvider extends StatelessWidget {
-  final String workoutId;
+  final String? workoutId;
   final Widget child;
 
   const _BlocProvider({
@@ -95,16 +97,13 @@ class _BlocListener extends StatelessWidget {
   void _manageInfo(BuildContext context, WorkoutPreviewBlocInfo info) {
     switch (info) {
       case WorkoutPreviewBlocInfo.workoutDeleted:
+        navigateBack();
         _showInfoAboutDeletedWorkout(context);
-        navigateBack(context: context);
         break;
     }
   }
 
   void _showInfoAboutDeletedWorkout(BuildContext context) {
-    showSnackbarMessage(
-      context: context,
-      message: Str.of(context).workoutPreviewDeletedWorkoutMessage,
-    );
+    showSnackbarMessage(Str.of(context).workoutPreviewDeletedWorkoutMessage);
   }
 }

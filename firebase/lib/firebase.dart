@@ -1,5 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 
+import 'firebase_options.dart';
+
 export 'model/appearance_settings_dto.dart';
 export 'model/blood_parameter.dart';
 export 'model/blood_parameter_norm_dto.dart';
@@ -22,5 +24,7 @@ export 'service/firebase_user_service.dart';
 export 'service/firebase_workout_settings_service.dart';
 
 Future<void> initializeFirebaseApp() async {
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 }

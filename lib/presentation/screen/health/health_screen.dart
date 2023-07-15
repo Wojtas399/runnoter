@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -11,18 +12,22 @@ import '../../../domain/service/auth_service.dart';
 import '../../../domain/service/health_chart_service.dart';
 import '../../component/big_button_component.dart';
 import '../../component/bloc_with_status_listener_component.dart';
+import '../../component/edit_delete_popup_menu_component.dart';
 import '../../component/text/label_text_components.dart';
 import '../../component/text/title_text_components.dart';
-import '../../config/navigation/routes.dart';
+import '../../config/navigation/router.dart';
+import '../../extension/context_extensions.dart';
 import '../../formatter/date_formatter.dart';
+import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
 import '../../service/utils.dart';
 
-part 'health_chart_range_selection.dart';
 part 'health_charts.dart';
+part 'health_charts_section.dart';
 part 'health_content.dart';
-part 'health_today_measurement.dart';
+part 'health_today_measurement_section.dart';
 
+@RoutePage()
 class HealthScreen extends StatelessWidget {
   const HealthScreen({
     super.key,
@@ -75,7 +80,14 @@ class _BlocListener extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocWithStatusListener<HealthBloc, HealthState, HealthBlocInfo,
         dynamic>(
+      onInfo: (HealthBlocInfo info) => _manageInfo(context, info),
       child: child,
     );
+  }
+
+  void _manageInfo(BuildContext context, HealthBlocInfo info) {
+    if (info == HealthBlocInfo.healthMeasurementDeleted) {
+      showSnackbarMessage(Str.of(context).healthSuccessfullyDeletedMeasurement);
+    }
   }
 }

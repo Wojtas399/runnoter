@@ -1,15 +1,26 @@
-part of 'profile_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class _UpdatePasswordDialog extends StatefulWidget {
-  const _UpdatePasswordDialog();
+import '../../../domain/additional_model/bloc_status.dart';
+import '../../../domain/bloc/profile/identities/profile_identities_bloc.dart';
+import '../../component/password_text_field_component.dart';
+import '../../component/text/label_text_components.dart';
+import '../../extension/context_extensions.dart';
+import '../../service/navigator_service.dart';
+import '../../service/utils.dart';
+import '../../service/validation_service.dart';
+
+class ProfileUpdatePasswordDialog extends StatefulWidget {
+  const ProfileUpdatePasswordDialog({
+    super.key,
+  });
 
   @override
-  State<StatefulWidget> createState() {
-    return _UpdatePasswordDialogState();
-  }
+  State<StatefulWidget> createState() => _State();
 }
 
-class _UpdatePasswordDialogState extends State<_UpdatePasswordDialog> {
+class _State extends State<ProfileUpdatePasswordDialog> {
   final TextEditingController _newPasswordController = TextEditingController();
   final TextEditingController _currentPasswordController =
       TextEditingController();
@@ -31,67 +42,29 @@ class _UpdatePasswordDialogState extends State<_UpdatePasswordDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final str = Str.of(context);
-
     return BlocListener<ProfileIdentitiesBloc, ProfileIdentitiesState>(
       listener: (BuildContext context, ProfileIdentitiesState state) {
         final BlocStatus blocStatus = state.status;
         if (blocStatus is BlocStatusComplete &&
             blocStatus.info == ProfileInfo.savedData) {
-          navigateBack(context: context);
+          popRoute();
         }
       },
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            str.profileNewPasswordDialogTitle,
-          ),
-          leading: IconButton(
-            onPressed: () {
-              navigateBack(context: context);
-            },
-            icon: const Icon(Icons.close),
-          ),
-          actions: [
-            TextButton(
-              onPressed: _isSaveButtonDisabled
-                  ? null
-                  : () {
-                      _onSaveButtonPressed(context);
-                    },
-              child: Text(
-                Str.of(context).save,
-              ),
+      child: context.isMobileSize
+          ? _FullScreenDialog(
+              newPasswordController: _newPasswordController,
+              currentPasswordController: _currentPasswordController,
+              isSaveButtonDisabled: _isSaveButtonDisabled,
+              newPasswordValidator: _validatePassword,
+              onSaveButtonPressed: () => _onSaveButtonPressed(context),
+            )
+          : _NormalDialog(
+              newPasswordController: _newPasswordController,
+              currentPasswordController: _currentPasswordController,
+              isSaveButtonDisabled: _isSaveButtonDisabled,
+              newPasswordValidator: _validatePassword,
+              onSaveButtonPressed: () => _onSaveButtonPressed(context),
             ),
-            const SizedBox(width: 16),
-          ],
-        ),
-        body: SafeArea(
-          child: GestureDetector(
-            onTap: unfocusInputs,
-            child: Container(
-              padding: const EdgeInsets.all(24),
-              color: Colors.transparent,
-              child: Column(
-                children: [
-                  PasswordTextFieldComponent(
-                    label: str.profileNewPasswordDialogNewPassword,
-                    isRequired: true,
-                    controller: _newPasswordController,
-                    validator: _validatePassword,
-                  ),
-                  const SizedBox(height: 32),
-                  PasswordTextFieldComponent(
-                    label: str.profileNewPasswordDialogCurrentPassword,
-                    isRequired: true,
-                    controller: _currentPasswordController,
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
     );
   }
 
@@ -120,5 +93,125 @@ class _UpdatePasswordDialogState extends State<_UpdatePasswordDialog> {
             currentPassword: _currentPasswordController.text,
           ),
         );
+  }
+}
+
+class _NormalDialog extends StatelessWidget {
+  final TextEditingController newPasswordController;
+  final TextEditingController currentPasswordController;
+  final bool isSaveButtonDisabled;
+  final String? Function(String? value) newPasswordValidator;
+  final VoidCallback onSaveButtonPressed;
+
+  const _NormalDialog({
+    required this.newPasswordController,
+    required this.currentPasswordController,
+    required this.isSaveButtonDisabled,
+    required this.newPasswordValidator,
+    required this.onSaveButtonPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final str = Str.of(context);
+
+    return AlertDialog(
+      title: Text(str.profileNewPasswordDialogTitle),
+      content: SizedBox(
+        width: 400,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            PasswordTextFieldComponent(
+              label: str.profileNewPasswordDialogNewPassword,
+              isRequired: true,
+              controller: newPasswordController,
+              validator: newPasswordValidator,
+            ),
+            const SizedBox(height: 32),
+            PasswordTextFieldComponent(
+              label: str.profileNewPasswordDialogCurrentPassword,
+              isRequired: true,
+              controller: currentPasswordController,
+            ),
+          ],
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: popRoute,
+          child: LabelLarge(
+            str.cancel,
+            color: Theme.of(context).colorScheme.error,
+          ),
+        ),
+        TextButton(
+          onPressed: isSaveButtonDisabled ? null : onSaveButtonPressed,
+          child: Text(str.save),
+        ),
+      ],
+    );
+  }
+}
+
+class _FullScreenDialog extends StatelessWidget {
+  final TextEditingController newPasswordController;
+  final TextEditingController currentPasswordController;
+  final bool isSaveButtonDisabled;
+  final String? Function(String? value) newPasswordValidator;
+  final VoidCallback onSaveButtonPressed;
+
+  const _FullScreenDialog({
+    required this.newPasswordController,
+    required this.currentPasswordController,
+    required this.isSaveButtonDisabled,
+    required this.newPasswordValidator,
+    required this.onSaveButtonPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final str = Str.of(context);
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          str.profileNewPasswordDialogTitle,
+        ),
+        leading: const CloseButton(),
+        actions: [
+          TextButton(
+            onPressed: isSaveButtonDisabled ? null : onSaveButtonPressed,
+            child: Text(str.save),
+          ),
+          const SizedBox(width: 16),
+        ],
+      ),
+      body: SafeArea(
+        child: GestureDetector(
+          onTap: unfocusInputs,
+          child: Container(
+            padding: const EdgeInsets.all(24),
+            color: Colors.transparent,
+            child: Column(
+              children: [
+                PasswordTextFieldComponent(
+                  label: str.profileNewPasswordDialogNewPassword,
+                  isRequired: true,
+                  controller: newPasswordController,
+                  validator: newPasswordValidator,
+                ),
+                const SizedBox(height: 32),
+                PasswordTextFieldComponent(
+                  label: str.profileNewPasswordDialogCurrentPassword,
+                  isRequired: true,
+                  controller: currentPasswordController,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

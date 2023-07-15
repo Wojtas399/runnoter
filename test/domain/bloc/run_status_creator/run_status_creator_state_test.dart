@@ -9,7 +9,6 @@ void main() {
   setUp(() {
     state = const RunStatusCreatorState(
       status: BlocStatusInitial(),
-      entityType: EntityType.workout,
     );
   });
 

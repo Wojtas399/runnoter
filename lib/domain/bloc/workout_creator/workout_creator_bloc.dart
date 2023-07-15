@@ -19,27 +19,21 @@ class WorkoutCreatorBloc extends BlocWithStatus<WorkoutCreatorEvent,
     WorkoutCreatorState, WorkoutCreatorBlocInfo, dynamic> {
   final AuthService _authService;
   final WorkoutRepository _workoutRepository;
-  StreamSubscription<Workout?>? _workoutListener;
+  final DateTime date;
+  final String? workoutId;
 
   WorkoutCreatorBloc({
     required AuthService authService,
     required WorkoutRepository workoutRepository,
-    BlocStatus status = const BlocStatusComplete(),
-    DateTime? date,
-    Workout? workout,
-    String? workoutName,
-    List<WorkoutStage> stages = const [],
+    required this.date,
+    this.workoutId,
+    WorkoutCreatorState state = const WorkoutCreatorState(
+      status: BlocStatusInitial(),
+      stages: [],
+    ),
   })  : _authService = authService,
         _workoutRepository = workoutRepository,
-        super(
-          WorkoutCreatorState(
-            status: status,
-            date: date,
-            workout: workout,
-            workoutName: workoutName,
-            stages: stages,
-          ),
-        ) {
+        super(state) {
     on<WorkoutCreatorEventInitialize>(_initialize);
     on<WorkoutCreatorEventWorkoutNameChanged>(_workoutNameChanged);
     on<WorkoutCreatorEventWorkoutStageAdded>(_workoutStageAdded);
@@ -51,40 +45,23 @@ class WorkoutCreatorBloc extends BlocWithStatus<WorkoutCreatorEvent,
     on<WorkoutCreatorEventSubmit>(_submit);
   }
 
-  @override
-  Future<void> close() {
-    _workoutListener?.cancel();
-    _workoutListener = null;
-    return super.close();
-  }
-
   Future<void> _initialize(
     WorkoutCreatorEventInitialize event,
     Emitter<WorkoutCreatorState> emit,
   ) async {
-    final String? workoutId = event.workoutId;
     if (workoutId != null) {
       final String? loggedUserId = await _authService.loggedUserId$.first;
-      if (loggedUserId != null) {
-        final Workout? workout = await _loadWorkoutById(
-          workoutId,
-          loggedUserId,
-        );
-        emit(state.copyWith(
-          status: const BlocStatusComplete<WorkoutCreatorBlocInfo>(
-            info: WorkoutCreatorBlocInfo.editModeInitialized,
-          ),
-          date: event.date,
-          workout: workout,
-          workoutName: workout?.name,
-          stages: [...?workout?.stages],
-        ));
-        return;
-      }
+      if (loggedUserId == null) return;
+      final Workout? workout = await _loadWorkoutById(workoutId!, loggedUserId);
+      emit(state.copyWith(
+        status: const BlocStatusComplete<WorkoutCreatorBlocInfo>(
+          info: WorkoutCreatorBlocInfo.editModeInitialized,
+        ),
+        workout: workout,
+        workoutName: workout?.name,
+        stages: [...?workout?.stages],
+      ));
     }
-    emit(state.copyWith(
-      date: event.date,
-    ));
   }
 
   void _workoutNameChanged(
@@ -148,15 +125,10 @@ class WorkoutCreatorBloc extends BlocWithStatus<WorkoutCreatorEvent,
     WorkoutCreatorEventSubmit event,
     Emitter<WorkoutCreatorState> emit,
   ) async {
-    final String? workoutName = state.workoutName;
-    if (state.date == null ||
-        workoutName == null ||
-        workoutName.isEmpty ||
-        state.stages.isEmpty) {
-      return;
-    }
+    if (!state.canSubmit) return;
     final String? loggedUserId = await _authService.loggedUserId$.first;
     if (loggedUserId == null) {
+      emitNoLoggedUserStatus(emit);
       return;
     }
     emitLoadingStatus(emit);
@@ -171,10 +143,7 @@ class WorkoutCreatorBloc extends BlocWithStatus<WorkoutCreatorEvent,
 
   Future<Workout?> _loadWorkoutById(String workoutId, String userId) async {
     return await _workoutRepository
-        .getWorkoutById(
-          workoutId: workoutId,
-          userId: userId,
-        )
+        .getWorkoutById(workoutId: workoutId, userId: userId)
         .first;
   }
 
@@ -182,7 +151,7 @@ class WorkoutCreatorBloc extends BlocWithStatus<WorkoutCreatorEvent,
     await _workoutRepository.addWorkout(
       userId: userId,
       workoutName: state.workoutName!,
-      date: state.date!,
+      date: date,
       status: const RunStatusPending(),
       stages: state.stages,
     );

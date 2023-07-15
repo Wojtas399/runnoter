@@ -5,17 +5,47 @@ class _Content extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      appBar: _AppBar(),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _DateSection(),
-          Expanded(
-            child: _Results(),
+    return Scaffold(
+      appBar: const _AppBar(),
+      body: SafeArea(
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: bigContentWidth),
+            child: const Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _DateSection(),
+                Expanded(
+                  child: _Results(),
+                ),
+              ],
+            ),
           ),
-        ],
+        ),
       ),
+    );
+  }
+}
+
+class _AppBar extends StatelessWidget implements PreferredSizeWidget {
+  const _AppBar();
+
+  @override
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+
+  @override
+  Widget build(BuildContext context) {
+    return AppBar(
+      forceMaterialTransparency: true,
+      centerTitle: true,
+      title: Text(
+        Str.of(context).bloodTestPreviewTitle,
+      ),
+      actions: context.isMobileSize
+          ? const [
+              _BloodTestActions(),
+            ]
+          : null,
     );
   }
 }
@@ -25,9 +55,15 @@ class _DateSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.fromLTRB(24, 24, 24, 0),
-      child: _Date(),
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          const _Date(),
+          if (!context.isMobileSize) const _BloodTestActions(),
+        ],
+      ),
     );
   }
 }

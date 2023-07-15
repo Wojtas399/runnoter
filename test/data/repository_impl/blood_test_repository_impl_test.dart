@@ -54,11 +54,7 @@ void main() {
 
       expect(
         test$,
-        emitsInOrder(
-          [
-            expectedTest,
-          ],
-        ),
+        emitsInOrder([expectedTest]),
       );
     },
   );
@@ -95,19 +91,8 @@ void main() {
 
       expect(
         test$,
-        emitsInOrder(
-          [
-            null,
-            expectedTest,
-          ],
-        ),
+        emitsInOrder([expectedTest]),
       );
-      verify(
-        () => firebaseBloodTestService.loadTestById(
-          bloodTestId: bloodTestId,
-          userId: userId,
-        ),
-      ).called(1);
     },
   );
 

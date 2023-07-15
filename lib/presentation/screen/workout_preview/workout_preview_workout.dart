@@ -14,8 +14,8 @@ class _Workout extends StatelessWidget {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const _WorkoutName(),
-            const SizedBox(height: 24),
+            const _Header(),
+            gap,
             ContentWithLabel(
               label: str.workoutPreviewWorkoutDate,
               content: const _WorkoutDate(),
@@ -37,7 +37,23 @@ class _Workout extends StatelessWidget {
             ),
           ],
         ),
+        const SizedBox(height: 32),
         const _RunStatusButton(),
+      ],
+    );
+  }
+}
+
+class _Header extends StatelessWidget {
+  const _Header();
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        const _WorkoutName(),
+        if (!context.isMobileSize) const _WorkoutActions(),
       ],
     );
   }
@@ -115,6 +131,21 @@ class _WorkoutDistance extends StatelessWidget {
   }
 }
 
+class _RunStatus extends StatelessWidget {
+  const _RunStatus();
+
+  @override
+  Widget build(BuildContext context) {
+    final RunStatus? runStatus = context.select(
+      (WorkoutPreviewBloc bloc) => bloc.state.runStatus,
+    );
+
+    return runStatus == null
+        ? const NullableText(null)
+        : RunStatusInfo(runStatus: runStatus);
+  }
+}
+
 class _RunStatusButton extends StatelessWidget {
   const _RunStatusButton();
 
@@ -130,20 +161,19 @@ class _RunStatusButton extends StatelessWidget {
 
     return BigButton(
       label: label,
-      onPressed: () {
-        _onPressed(context);
-      },
+      onPressed: () => _onPressed(context),
     );
   }
 
   void _onPressed(BuildContext context) {
-    navigateTo(
-      context: context,
-      route: RunStatusCreatorRoute(
-        creatorArguments: WorkoutRunStatusCreatorArguments(
-          entityId: context.read<WorkoutPreviewBloc>().workoutId,
+    final String? workoutId = context.read<WorkoutPreviewBloc>().workoutId;
+    if (workoutId != null) {
+      navigateTo(
+        RunStatusCreatorRoute(
+          entityType: RunStatusCreatorEntityType.workout.name,
+          entityId: workoutId,
         ),
-      ),
-    );
+      );
+    }
   }
 }

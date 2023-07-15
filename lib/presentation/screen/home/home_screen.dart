@@ -1,26 +1,33 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:get_it/get_it.dart';
 
 import '../../../domain/bloc/home/home_bloc.dart';
 import '../../../domain/entity/settings.dart' as settings;
 import '../../../domain/repository/user_repository.dart';
 import '../../../domain/service/auth_service.dart';
 import '../../component/bloc_with_status_listener_component.dart';
-import '../../config/navigation/routes.dart';
+import '../../component/nullable_text_component.dart';
+import '../../component/text/label_text_components.dart';
+import '../../config/navigation/router.dart';
+import '../../config/ui_sizes.dart';
+import '../../extension/context_extensions.dart';
 import '../../service/dialog_service.dart';
 import '../../service/distance_unit_service.dart';
 import '../../service/language_service.dart';
 import '../../service/navigator_service.dart';
 import '../../service/pace_unit_service.dart';
 import '../../service/theme_service.dart';
-import '../screens.dart';
 
 part 'home_app_bar.dart';
 part 'home_bottom_navigation_bar.dart';
 part 'home_content.dart';
-part 'home_drawer.dart';
+part 'home_navigation_drawer.dart';
+part 'home_navigation_rail.dart';
 
+@RoutePage()
 class HomeScreen extends StatelessWidget {
   const HomeScreen({
     super.key,
@@ -28,7 +35,7 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _BlocProvider(
+    return const _BlocProvider(
       child: _BlocListener(
         child: _Content(),
       ),
@@ -81,10 +88,7 @@ class _BlocListener extends StatelessWidget {
     switch (info) {
       case HomeInfo.userSignedOut:
         context.read<ThemeService>().changeTheme(ThemeMode.system);
-        navigateAndRemoveUntil(
-          context: context,
-          route: const SignInRoute(),
-        );
+        navigateAndRemoveUntil(const SignInRoute());
         break;
     }
   }

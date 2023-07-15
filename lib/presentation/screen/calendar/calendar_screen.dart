@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -9,11 +10,15 @@ import '../../../domain/repository/workout_repository.dart';
 import '../../../domain/service/auth_service.dart';
 import '../../component/calendar/calendar_component.dart';
 import '../../component/calendar/calendar_component_cubit.dart';
-import '../../component/padding/paddings_24.dart';
-import '../../config/navigation/routes.dart';
+import '../../config/navigation/router.dart';
+import '../../formatter/date_formatter.dart';
 import '../../formatter/run_status_formatter.dart';
+import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
+import '../day_preview/day_preview_dialog.dart';
+import '../day_preview/day_preview_dialog_actions.dart';
 
+@RoutePage()
 class CalendarScreen extends StatelessWidget {
   const CalendarScreen({
     super.key,
@@ -22,7 +27,8 @@ class CalendarScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const _CubitProvider(
-      child: Paddings24(
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
         child: _Calendar(),
       ),
     );
@@ -101,13 +107,40 @@ class _CalendarState extends State<_Calendar> {
         );
   }
 
-  void _onDayPressed(
-    BuildContext context,
-    DateTime date,
-  ) {
-    navigateTo(
-      context: context,
-      route: DayPreviewRoute(date: date),
+  Future<void> _onDayPressed(BuildContext context, DateTime date) async {
+    final DayPreviewDialogAction? action =
+        await showDialogDependingOnScreenSize(
+      MultiRepositoryProvider(
+        providers: [
+          RepositoryProvider.value(value: context.read<AuthService>()),
+          RepositoryProvider.value(value: context.read<WorkoutRepository>()),
+          RepositoryProvider.value(value: context.read<RaceRepository>()),
+        ],
+        child: DayPreviewDialog(date: date),
+      ),
     );
+    if (action == null) return;
+    switch (action) {
+      case DayPreviewDialogActionAddWorkout():
+        navigateTo(
+          WorkoutCreatorRoute(date: action.date.toPathFormat()),
+        );
+        break;
+      case DayPreviewDialogActionAddRace():
+        navigateTo(
+          RaceCreatorRoute(dateStr: action.date.toPathFormat()),
+        );
+        break;
+      case DayPreviewDialogActionShowWorkout():
+        navigateTo(
+          WorkoutPreviewRoute(workoutId: action.workoutId),
+        );
+        break;
+      case DayPreviewDialogActionShowRace():
+        navigateTo(
+          RacePreviewRoute(raceId: action.raceId),
+        );
+        break;
+    }
   }
 }

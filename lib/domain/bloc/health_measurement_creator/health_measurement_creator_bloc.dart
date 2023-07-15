@@ -1,5 +1,4 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rxdart/rxdart.dart';
 
 import '../../../../common/date_service.dart';
 import '../../../../domain/additional_model/bloc_state.dart';
@@ -56,20 +55,28 @@ class HealthMeasurementCreatorBloc extends BlocWithStatus<
     HealthMeasurementCreatorEventInitialize event,
     Emitter<HealthMeasurementCreatorState> emit,
   ) async {
-    if (event.date != null) {
-      final HealthMeasurement? measurement = await _loadMeasurementFromRemoteDb(
-        event.date!,
-      );
-      emit(state.copyWith(
-        measurement: measurement,
-        date: event.date,
-        restingHeartRate: measurement?.restingHeartRate,
-        fastingWeight: measurement?.fastingWeight,
-      ));
-    } else {
+    if (event.date == null) {
       emit(state.copyWith(
         status: const BlocStatusComplete(),
       ));
+      return;
+    }
+    final String? loggedUserId = await _authService.loggedUserId$.first;
+    if (loggedUserId != null) {
+      final Stream<HealthMeasurement?> measurement$ =
+          _healthMeasurementRepository.getMeasurementByDate(
+        date: event.date!,
+        userId: loggedUserId,
+      );
+      await for (final measurement in measurement$) {
+        emit(state.copyWith(
+          measurement: measurement,
+          date: event.date,
+          restingHeartRate: measurement?.restingHeartRate,
+          fastingWeight: measurement?.fastingWeight,
+        ));
+        return;
+      }
     }
   }
 
@@ -111,7 +118,13 @@ class HealthMeasurementCreatorBloc extends BlocWithStatus<
       return;
     }
     emitLoadingStatus(emit);
-    if (await _healthMeasurementRepository.doesMeasurementFromDateExist(
+    if (state.date == state.measurement?.date) {
+      await _updateMeasurement(loggedUserId);
+      emitCompleteStatus(
+        emit,
+        HealthMeasurementCreatorBlocInfo.measurementUpdated,
+      );
+    } else if (await _healthMeasurementRepository.doesMeasurementFromDateExist(
       userId: loggedUserId,
       date: state.date!,
     )) {
@@ -119,12 +132,6 @@ class HealthMeasurementCreatorBloc extends BlocWithStatus<
         emit,
         HealthMeasurementCreatorBlocError
             .measurementWithSelectedDateAlreadyExist,
-      );
-    } else if (state.date == state.measurement?.date) {
-      await _updateMeasurement(loggedUserId);
-      emitCompleteStatus(
-        emit,
-        HealthMeasurementCreatorBlocInfo.measurementUpdated,
       );
     } else {
       await _addMeasurement(loggedUserId);
@@ -142,19 +149,6 @@ class HealthMeasurementCreatorBloc extends BlocWithStatus<
       );
     }
   }
-
-  Future<HealthMeasurement?> _loadMeasurementFromRemoteDb(
-    DateTime date,
-  ) async =>
-      await _authService.loggedUserId$
-          .whereType<String>()
-          .switchMap(
-            (loggedUserId) => _healthMeasurementRepository.getMeasurementByDate(
-              date: date,
-              userId: loggedUserId,
-            ),
-          )
-          .first;
 
   Future<void> _updateMeasurement(String loggedUserId) async {
     await _healthMeasurementRepository.updateMeasurement(

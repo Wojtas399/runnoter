@@ -1,8 +1,6 @@
 part of 'home_bloc.dart';
 
 class HomeState extends BlocState<HomeState> {
-  final DrawerPage drawerPage;
-  final BottomNavPage bottomNavPage;
   final String? loggedUserEmail;
   final String? loggedUserName;
   final String? loggedUserSurname;
@@ -13,8 +11,6 @@ class HomeState extends BlocState<HomeState> {
 
   const HomeState({
     required super.status,
-    required this.drawerPage,
-    required this.bottomNavPage,
     this.loggedUserEmail,
     this.loggedUserName,
     this.loggedUserSurname,
@@ -27,8 +23,6 @@ class HomeState extends BlocState<HomeState> {
   @override
   List<Object?> get props => [
         status,
-        drawerPage,
-        bottomNavPage,
         loggedUserEmail,
         loggedUserName,
         loggedUserSurname,
@@ -50,8 +44,6 @@ class HomeState extends BlocState<HomeState> {
   @override
   HomeState copyWith({
     BlocStatus? status,
-    DrawerPage? drawerPage,
-    BottomNavPage? bottomNavPage,
     String? loggedUserEmail,
     String? loggedUserName,
     String? loggedUserSurname,
@@ -62,8 +54,6 @@ class HomeState extends BlocState<HomeState> {
   }) {
     return HomeState(
       status: status ?? const BlocStatusComplete(),
-      drawerPage: drawerPage ?? this.drawerPage,
-      bottomNavPage: bottomNavPage ?? this.bottomNavPage,
       loggedUserEmail: loggedUserEmail ?? this.loggedUserEmail,
       loggedUserName: loggedUserName ?? this.loggedUserName,
       loggedUserSurname: loggedUserSurname ?? this.loggedUserSurname,
@@ -73,29 +63,6 @@ class HomeState extends BlocState<HomeState> {
       paceUnit: paceUnit ?? this.paceUnit,
     );
   }
-}
-
-enum DrawerPage {
-  home(0),
-  profile(1),
-  mileage(2),
-  blood(3),
-  races(4),
-  signOut(5);
-
-  final int pageIndex;
-
-  const DrawerPage(this.pageIndex);
-}
-
-enum BottomNavPage {
-  currentWeek(0),
-  calendar(1),
-  pulseAndWeight(2);
-
-  final int pageIndex;
-
-  const BottomNavPage(this.pageIndex);
 }
 
 enum HomeInfo {

@@ -1,4 +1,4 @@
-part of 'health_measurement_creator_screen.dart';
+part of 'health_measurement_creator_dialog.dart';
 
 class _Form extends StatelessWidget {
   const _Form();
@@ -7,24 +7,18 @@ class _Form extends StatelessWidget {
   Widget build(BuildContext context) {
     const Widget gap = SizedBox(height: 24);
 
-    return GestureDetector(
-      onTap: unfocusInputs,
-      child: Container(
-        color: Colors.transparent,
-        padding: const EdgeInsets.all(24),
-        child: const Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _Date(),
-            gap,
-            _RestingHeartRate(),
-            gap,
-            _FastingWeight(),
-            gap,
-            _SubmitButton(),
-          ],
-        ),
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const _Date(),
+        gap,
+        const _RestingHeartRate(),
+        gap,
+        const _FastingWeight(),
+        gap,
+        if (context.isMobileSize) const _SubmitButton(),
+      ],
     );
   }
 }
@@ -175,14 +169,23 @@ class _SubmitButton extends StatelessWidget {
     final bool isDisabled = context.select(
       (HealthMeasurementCreatorBloc bloc) => !bloc.state.canSubmit,
     );
+    final String label = Str.of(context).save;
 
-    return BigButton(
-      label: Str.of(context).save,
-      onPressed: () {
-        _onPressed(context);
-      },
-      isDisabled: isDisabled,
-    );
+    return context.isMobileSize
+        ? Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              BigButton(
+                label: label,
+                onPressed: () => _onPressed(context),
+                isDisabled: isDisabled,
+              ),
+            ],
+          )
+        : FilledButton(
+            onPressed: isDisabled ? null : () => _onPressed(context),
+            child: Text(label),
+          );
   }
 
   void _onPressed(BuildContext context) {
