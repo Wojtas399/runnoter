@@ -5,25 +5,43 @@ class _TodayMeasurementSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return const Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        _TodayMeasurementSectionHeader(),
+        SizedBox(height: 8),
         Padding(
-          padding: const EdgeInsets.only(left: 24, right: 16),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              TitleMedium(Str.of(context).healthTodayMeasurement),
-              const _TodayMeasurementActions(),
-            ],
-          ),
-        ),
-        const SizedBox(height: 8),
-        const Padding(
           padding: EdgeInsets.symmetric(horizontal: 24),
           child: _TodayMeasurement(),
         )
       ],
+    );
+  }
+}
+
+class _TodayMeasurementSectionHeader extends StatelessWidget {
+  const _TodayMeasurementSectionHeader();
+
+  @override
+  Widget build(BuildContext context) {
+    final bool doesTodayMeasurementExist = context.select(
+      (HealthBloc bloc) => bloc.state.todayMeasurement != null,
+    );
+
+    return Padding(
+      padding: EdgeInsets.only(
+        left: 24,
+        right: 16,
+        top: doesTodayMeasurementExist ? 0 : 8,
+        bottom: doesTodayMeasurementExist ? 0 : 16,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          TitleMedium(Str.of(context).healthTodayMeasurement),
+          if (doesTodayMeasurementExist) const _TodayMeasurementActions(),
+        ],
+      ),
     );
   }
 }
@@ -35,15 +53,29 @@ class _TodayMeasurementActions extends StatelessWidget {
   Widget build(BuildContext context) {
     return EditDeleteActions(
       displayAsPopupMenu: context.isMobileSize,
+      onEditSelected: () => _editMeasurement(context),
+      onDeleteSelected: () => _deleteMeasurement(context),
     );
   }
 
-  void _editMeasurement() {
-    //TODO
-  }
+  Future<void> _editMeasurement(BuildContext context) async =>
+      await showHealthMeasurementCreatorDialog(
+        context: context,
+        date: DateTime.now(),
+      );
 
-  void _deleteMeasurement() {
-    //TODO
+  Future<void> _deleteMeasurement(BuildContext context) async {
+    final bloc = context.read<HealthBloc>();
+    final str = Str.of(context);
+    final bool confirmation = await askForConfirmation(
+      title: str.healthDeleteTodayMeasurementConfirmationDialogTitle,
+      message: str.healthDeleteTodayMeasurementConfirmationDialogMessage,
+      confirmButtonLabel: str.delete,
+      confirmButtonColor: Theme.of(context).colorScheme.error,
+    );
+    if (confirmation == true) {
+      bloc.add(const HealthEventDeleteTodayMeasurement());
+    }
   }
 }
 

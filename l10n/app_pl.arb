@@ -315,6 +315,14 @@
   "@healthAddTodayMeasurementButton": {
     "description": "Label of the button to add today measurement"
   },
+  "healthDeleteTodayMeasurementConfirmationDialogTitle": "Usuń dzisiejszy pomiar",
+  "@healthDeleteTodayMeasurementConfirmationDialogTitle": {
+    "description": "Title of the dialog to confirm today's measurement deletion"
+  },
+  "healthDeleteTodayMeasurementConfirmationDialogMessage": "Czy na pewno chcesz usunąć dzisiejszy pomiar?",
+  "@healthDeleteTodayMeasurementConfirmationDialogMessage": {
+    "description": "Message of the dialog to confirm today's measurement deletion"
+  },
   "healthRestingHeartRate": "Tętno spoczynkowe",
   "@healthRestingHeartRate": {
     "description": "Label of resting heart rate"
@@ -342,6 +350,10 @@
   "healthShowAllMeasurementsButton": "Pokaż wszystkie pomiary",
   "@healthShowAllMeasurementsButton": {
     "description": "Label of the button to show all measurements"
+  },
+  "healthSuccessfullyDeletedMeasurement": "Pomyślnie usunięto pomiar",
+  "@healthSuccessfullyDeletedMeasurement": {
+    "description": "Message of successfully deleted measurement"
   },
   "@__________HEALTH_MEASUREMENT_CREATOR__________": {},
   "healthMeasurementCreatorScreenTitle": "Pomiar zdrowia",

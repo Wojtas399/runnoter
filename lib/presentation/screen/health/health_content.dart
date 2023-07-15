@@ -7,7 +7,7 @@ class _Content extends StatelessWidget {
   Widget build(BuildContext context) {
     return const SingleChildScrollView(
       child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 16),
+        padding: EdgeInsets.only(top: 8, bottom: 16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

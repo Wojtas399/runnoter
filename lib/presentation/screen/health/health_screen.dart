@@ -80,7 +80,14 @@ class _BlocListener extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocWithStatusListener<HealthBloc, HealthState, HealthBlocInfo,
         dynamic>(
+      onInfo: (HealthBlocInfo info) => _manageInfo(context, info),
       child: child,
     );
+  }
+
+  void _manageInfo(BuildContext context, HealthBlocInfo info) {
+    if (info == HealthBlocInfo.healthMeasurementDeleted) {
+      showSnackbarMessage(Str.of(context).healthSuccessfullyDeletedMeasurement);
+    }
   }
 }

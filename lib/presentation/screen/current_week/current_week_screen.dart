@@ -14,7 +14,6 @@ import '../../component/text/title_text_components.dart';
 import '../../config/navigation/router.dart';
 import '../../formatter/date_formatter.dart';
 import '../../service/navigator_service.dart';
-import '../screens.dart';
 
 part 'current_week_add_activity_button.dart';
 part 'current_week_content.dart';
