@@ -45,6 +45,7 @@ class HealthBloc
       _measurementsFromDateRangeUpdated,
     );
     on<HealthEventAddTodayMeasurement>(_addTodayMeasurement);
+    on<HealthEventDeleteTodayMeasurement>(_deleteTodayMeasurement);
     on<HealthEventChangeChartRangeType>(_changeChartRangeType);
     on<HealthEventPreviousChartRange>(_previousChartRange);
     on<HealthEventNextChartRange>(_nextChartRange);
@@ -110,9 +111,7 @@ class HealthBloc
     Emitter<HealthState> emit,
   ) async {
     final String? loggedUserId = await _authService.loggedUserId$.first;
-    if (loggedUserId == null) {
-      return;
-    }
+    if (loggedUserId == null) return;
     emitLoadingStatus(emit);
     await _healthMeasurementRepository.addMeasurement(
       measurement: HealthMeasurement(
@@ -123,6 +122,20 @@ class HealthBloc
       ),
     );
     emitCompleteStatus(emit, HealthBlocInfo.healthMeasurementAdded);
+  }
+
+  Future<void> _deleteTodayMeasurement(
+    HealthEventDeleteTodayMeasurement event,
+    Emitter<HealthState> emit,
+  ) async {
+    final String? loggedUserId = await _authService.loggedUserId$.first;
+    if (loggedUserId == null) return;
+    emitLoadingStatus(emit);
+    await _healthMeasurementRepository.deleteMeasurement(
+      userId: loggedUserId,
+      date: _dateService.getToday(),
+    );
+    emitCompleteStatus(emit, HealthBlocInfo.healthMeasurementDeleted);
   }
 
   void _changeChartRangeType(
@@ -224,4 +237,9 @@ class HealthBloc
 
   Stream<String> get _loggedUserId$ =>
       _authService.loggedUserId$.whereType<String>();
+}
+
+enum HealthBlocInfo {
+  healthMeasurementAdded,
+  healthMeasurementDeleted,
 }
