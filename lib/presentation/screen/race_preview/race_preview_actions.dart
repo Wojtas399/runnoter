@@ -6,7 +6,7 @@ class _RaceActions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (context.isMobileSize) {
-      return EditDeletePopupMenu(
+      return EditDeleteActions(
         onEditSelected: () => _editRace(context),
         onDeleteSelected: () => _deleteRace(context),
       );

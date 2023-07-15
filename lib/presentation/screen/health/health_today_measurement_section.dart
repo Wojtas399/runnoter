@@ -1,5 +1,52 @@
 part of 'health_screen.dart';
 
+class _TodayMeasurementSection extends StatelessWidget {
+  const _TodayMeasurementSection();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 24, right: 16),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              TitleMedium(Str.of(context).healthTodayMeasurement),
+              const _TodayMeasurementActions(),
+            ],
+          ),
+        ),
+        const SizedBox(height: 8),
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 24),
+          child: _TodayMeasurement(),
+        )
+      ],
+    );
+  }
+}
+
+class _TodayMeasurementActions extends StatelessWidget {
+  const _TodayMeasurementActions();
+
+  @override
+  Widget build(BuildContext context) {
+    return EditDeleteActions(
+      displayAsPopupMenu: context.isMobileSize,
+    );
+  }
+
+  void _editMeasurement() {
+    //TODO
+  }
+
+  void _deleteMeasurement() {
+    //TODO
+  }
+}
+
 class _TodayMeasurement extends StatelessWidget {
   const _TodayMeasurement();
 
@@ -27,20 +74,21 @@ class _TodayMeasurementPreview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final str = Str.of(context);
+
     return IntrinsicHeight(
       child: Row(
         children: [
           Expanded(
             child: _HealthMeasurementParam(
-              label: Str.of(context).healthRestingHeartRate,
-              value:
-                  '${measurement.restingHeartRate} ${Str.of(context).heartRateUnit}',
+              label: str.healthRestingHeartRate,
+              value: '${measurement.restingHeartRate} ${str.heartRateUnit}',
             ),
           ),
           const VerticalDivider(),
           Expanded(
             child: _HealthMeasurementParam(
-              label: Str.of(context).healthFastingWeight,
+              label: str.healthFastingWeight,
               value: '${measurement.fastingWeight} kg',
             ),
           ),

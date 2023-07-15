@@ -6,7 +6,7 @@ class _WorkoutActions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (context.isMobileSize) {
-      return EditDeletePopupMenu(
+      return EditDeleteActions(
         onEditSelected: () => _editWorkout(context),
         onDeleteSelected: () => _deleteWorkout(context),
       );

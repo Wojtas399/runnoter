@@ -68,7 +68,7 @@ class _WorkoutStageActions extends StatelessWidget {
     final theme = Theme.of(context);
     const double iconSize = 20;
     if (context.isMobileSize) {
-      return EditDeletePopupMenu(
+      return EditDeleteActions(
         onEditSelected: () => _editWorkoutStage(context),
         onDeleteSelected: () => _deleteWorkoutStage(context),
       );

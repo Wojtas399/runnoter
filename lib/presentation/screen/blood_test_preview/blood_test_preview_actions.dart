@@ -5,34 +5,14 @@ class _BloodTestActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (context.isMobileSize) {
-      return EditDeletePopupMenu(
-        onEditSelected: () {
-          _editTest(context);
-        },
-        onDeleteSelected: () {
-          _deleteTest(context);
-        },
-      );
-    }
-    final theme = Theme.of(context);
-    return Row(
-      children: [
-        IconButton(
-          onPressed: () => _editTest(context),
-          icon: Icon(
-            Icons.edit_outlined,
-            color: theme.colorScheme.primary,
-          ),
-        ),
-        IconButton(
-          onPressed: () => _deleteTest(context),
-          icon: Icon(
-            Icons.delete_outline,
-            color: theme.colorScheme.error,
-          ),
-        ),
-      ],
+    return EditDeleteActions(
+      displayAsPopupMenu: context.isMobileSize,
+      onEditSelected: () {
+        _editTest(context);
+      },
+      onDeleteSelected: () {
+        _deleteTest(context);
+      },
     );
   }
 

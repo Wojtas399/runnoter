@@ -65,24 +65,11 @@ class _MeasurementActions extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        if (context.isMobileSize)
-          EditDeletePopupMenu(
-            onEditSelected: () => _editMeasurement(context),
-            onDeleteSelected: () => _deleteMeasurement(context),
-          ),
-        if (!context.isMobileSize)
-          IconButton(
-            onPressed: () => _editMeasurement(context),
-            icon: const Icon(Icons.edit_outlined),
-          ),
-        if (!context.isMobileSize)
-          IconButton(
-            onPressed: () => _deleteMeasurement(context),
-            icon: Icon(
-              Icons.delete_outline,
-              color: Theme.of(context).colorScheme.error,
-            ),
-          ),
+        EditDeleteActions(
+          displayAsPopupMenu: context.isMobileSize,
+          onEditSelected: () => _editMeasurement(context),
+          onDeleteSelected: () => _deleteMeasurement(context),
+        ),
       ],
     );
   }

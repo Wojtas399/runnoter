@@ -1,5 +1,35 @@
 part of 'health_screen.dart';
 
+class _ChartsSection extends StatelessWidget {
+  const _ChartsSection();
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: TitleMedium(Str.of(context).healthSummaryOfMeasurements),
+          ),
+          const SizedBox(height: 16),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 24),
+            child: _ChartRangeSelection(),
+          ),
+          const SizedBox(height: 8),
+          const Padding(
+            padding: EdgeInsets.only(left: 16, right: 24),
+            child: _Charts(),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class _ChartRangeSelection extends StatelessWidget {
   const _ChartRangeSelection();
 
@@ -11,7 +41,7 @@ class _ChartRangeSelection extends StatelessWidget {
           constraints: const BoxConstraints(maxWidth: 500),
           child: const _ChartRangeType(),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 8),
         const _ChartRange(),
       ],
     );
