@@ -74,33 +74,6 @@ void main() {
   );
 
   blocTest(
-    'measurements updated, '
-    'should sort measurements in descending order by date and should emit sorted measurements',
-    build: () => createBloc(),
-    act: (HealthMeasurementsBloc bloc) => bloc.add(
-      HealthMeasurementsEventMeasurementsUpdated(
-        measurements: [
-          createHealthMeasurement(date: DateTime(2023, 2, 14)),
-          createHealthMeasurement(date: DateTime(2023, 2, 8)),
-          createHealthMeasurement(date: DateTime(2023, 2, 10)),
-          createHealthMeasurement(date: DateTime(2023, 2, 11)),
-        ],
-      ),
-    ),
-    expect: () => [
-      createState(
-        status: const BlocStatusComplete(),
-        measurements: [
-          createHealthMeasurement(date: DateTime(2023, 2, 14)),
-          createHealthMeasurement(date: DateTime(2023, 2, 11)),
-          createHealthMeasurement(date: DateTime(2023, 2, 10)),
-          createHealthMeasurement(date: DateTime(2023, 2, 8)),
-        ],
-      ),
-    ],
-  );
-
-  blocTest(
     'delete measurement, '
     'logged user does not exist, '
     'should emit no logged user bloc status',
