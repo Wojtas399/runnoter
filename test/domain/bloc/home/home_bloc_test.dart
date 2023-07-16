@@ -22,42 +22,26 @@ void main() {
 
   HomeState createState({
     BlocStatus status = const BlocStatusInitial(),
-    String? loggedUserEmail,
     String? loggedUserName,
-    String? loggedUserSurname,
-    ThemeMode? themeMode,
-    Language? language,
-    DistanceUnit? distanceUnit,
-    PaceUnit? paceUnit,
+    Settings? appSettings,
   }) {
     return HomeState(
       status: status,
-      loggedUserEmail: loggedUserEmail,
       loggedUserName: loggedUserName,
-      loggedUserSurname: loggedUserSurname,
-      themeMode: themeMode,
-      language: language,
-      distanceUnit: distanceUnit,
-      paceUnit: paceUnit,
+      appSettings: appSettings,
     );
   }
 
   blocTest(
     'initialize, '
-    'should set listener of logged user email and logged user data',
+    "should set listener of logged user's data",
     build: () => createBloc(),
     setUp: () {
-      authService.mockGetLoggedUserEmail(
-        userEmail: 'user@example.com',
-      );
-      authService.mockGetLoggedUserId(
-        userId: 'u1',
-      );
+      authService.mockGetLoggedUserId(userId: 'u1');
       userRepository.mockGetUserById(
         user: createUser(
           id: 'u1',
-          name: 'name',
-          surname: 'surname',
+          name: 'Jack',
           settings: createSettings(
             themeMode: ThemeMode.dark,
             language: Language.polish,
@@ -67,100 +51,48 @@ void main() {
         ),
       );
     },
-    act: (HomeBloc bloc) {
-      bloc.add(
-        const HomeEventInitialize(),
-      );
-    },
+    act: (bloc) => bloc.add(const HomeEventInitialize()),
     expect: () => [
       createState(
         status: const BlocStatusLoading(),
       ),
       createState(
         status: const BlocStatusComplete(),
-        loggedUserEmail: 'user@example.com',
-        loggedUserName: 'name',
-        loggedUserSurname: 'surname',
-        themeMode: ThemeMode.dark,
-        language: Language.polish,
-        distanceUnit: DistanceUnit.miles,
-        paceUnit: PaceUnit.milesPerHour,
+        loggedUserName: 'Jack',
+        appSettings: createSettings(
+          themeMode: ThemeMode.dark,
+          language: Language.polish,
+          distanceUnit: DistanceUnit.miles,
+          paceUnit: PaceUnit.milesPerHour,
+        ),
       ),
     ],
     verify: (_) {
-      verify(
-        () => authService.loggedUserEmail$,
-      ).called(1);
       verify(
         () => authService.loggedUserId$,
       ).called(1);
       verify(
-        () => userRepository.getUserById(
-          userId: 'u1',
-        ),
+        () => userRepository.getUserById(userId: 'u1'),
       ).called(1);
     },
   );
 
   blocTest(
-    'listened params changed, '
-    "should update logged user's email, name, surname, theme mode, language, distance unit and pace unit in state",
-    build: () => createBloc(),
-    act: (HomeBloc bloc) {
-      bloc.add(
-        const HomeEventListenedParamsChanged(
-          listenedParams: HomeStateListenedParams(
-            loggedUserEmail: 'email@example.com',
-            loggedUserName: 'name',
-            loggedUserSurname: 'surname',
-            themeMode: ThemeMode.dark,
-            language: Language.english,
-            distanceUnit: DistanceUnit.miles,
-            paceUnit: PaceUnit.milesPerHour,
-          ),
-        ),
-      );
-    },
-    expect: () => [
-      createState(
-        status: const BlocStatusComplete(),
-        loggedUserEmail: 'email@example.com',
-        loggedUserName: 'name',
-        loggedUserSurname: 'surname',
-        themeMode: ThemeMode.dark,
-        language: Language.english,
-        distanceUnit: DistanceUnit.miles,
-        paceUnit: PaceUnit.milesPerHour,
-      ),
-    ],
-  );
-
-  blocTest(
     'sign out, '
-    'should call auth service method to sign out and should emit complete status with user signed out info',
+    'should call auth service method to sign out and should emit signed out info',
     build: () => createBloc(),
-    setUp: () {
-      authService.mockSignOut();
-    },
-    act: (HomeBloc bloc) {
-      bloc.add(
-        const HomeEventSignOut(),
-      );
-    },
+    setUp: () => authService.mockSignOut(),
+    act: (bloc) => bloc.add(const HomeEventSignOut()),
     expect: () => [
       createState(
         status: const BlocStatusLoading(),
       ),
       createState(
-        status: const BlocStatusComplete(
-          info: HomeInfo.userSignedOut,
-        ),
+        status: const BlocStatusComplete(info: HomeBlocInfo.userSignedOut),
       ),
     ],
-    verify: (_) {
-      verify(
-        () => authService.signOut(),
-      ).called(1);
-    },
+    verify: (_) => verify(
+      () => authService.signOut(),
+    ).called(1),
   );
 }
