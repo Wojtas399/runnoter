@@ -11,7 +11,7 @@ class _BloodTestsList extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView.separated(
       separatorBuilder: (_, int itemIndex) => const Divider(),
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
       itemCount: bloodTestsSortedByYear.length,
       itemBuilder: (_, int itemIndex) => _ReadingsFromYear(
         readingsFromYear: bloodTestsSortedByYear[itemIndex],
