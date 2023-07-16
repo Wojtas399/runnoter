@@ -160,7 +160,7 @@ void main() {
     'should do nothing',
     build: () => createCubit(),
     setUp: () => authService.mockGetLoggedUserId(),
-    act: (DayPreviewCubit cubit) => cubit.initialize(),
+    act: (cubit) => cubit.initialize(),
     expect: () => [],
     verify: (_) => verify(
       () => authService.loggedUserId$,
@@ -185,7 +185,7 @@ void main() {
         ],
       );
     },
-    act: (DayPreviewCubit cubit) => cubit.initialize(),
+    act: (cubit) => cubit.initialize(),
     expect: () => [
       DayPreviewState(
         workouts: [

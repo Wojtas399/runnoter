@@ -17,7 +17,7 @@ void main() {
   final authService = MockAuthService();
   final healthMeasurementRepository = MockHealthMeasurementRepository();
   final chartService = MockHealthChartService();
-  const String userId = 'u1';
+  const String loggedUserId = 'u1';
 
   HealthBloc createBloc({
     ChartRange chartRange = ChartRange.week,
@@ -70,7 +70,7 @@ void main() {
     'should set listeners of today health measurement and health measurements from this week',
     build: () => createBloc(),
     setUp: () {
-      authService.mockGetLoggedUserId(userId: userId);
+      authService.mockGetLoggedUserId(userId: loggedUserId);
       healthMeasurementRepository.mockGetMeasurementByDate(
         measurement: createHealthMeasurement(
           date: DateTime(2023, 5, 12),
@@ -101,13 +101,9 @@ void main() {
           ),
         ],
       );
-      chartService.mockCreatePointsOfCharts(
-        points: ([], []),
-      );
+      chartService.mockCreatePointsOfCharts(points: ([], []));
     },
-    act: (HealthBloc bloc) => bloc.add(
-      const HealthEventInitialize(),
-    ),
+    act: (bloc) => bloc.add(const HealthEventInitialize()),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
@@ -147,14 +143,14 @@ void main() {
       verify(
         () => healthMeasurementRepository.getMeasurementByDate(
           date: DateTime(2023, 5, 12),
-          userId: userId,
+          userId: loggedUserId,
         ),
       ).called(1);
       verify(
         () => healthMeasurementRepository.getMeasurementsByDateRange(
           startDate: DateTime(2023, 5, 8),
           endDate: DateTime(2023, 5, 14),
-          userId: userId,
+          userId: loggedUserId,
         ),
       ).called(1);
     },
@@ -183,14 +179,12 @@ void main() {
         ),
       );
     },
-    act: (HealthBloc bloc) => bloc.add(
-      HealthEventMeasurementsFromDateRangeUpdated(
-        measurements: [
-          createHealthMeasurement(date: DateTime(2023, 5, 8)),
-          createHealthMeasurement(date: DateTime(2023, 5, 10)),
-        ],
-      ),
-    ),
+    act: (bloc) => bloc.add(HealthEventMeasurementsFromDateRangeUpdated(
+      measurements: [
+        createHealthMeasurement(date: DateTime(2023, 5, 8)),
+        createHealthMeasurement(date: DateTime(2023, 5, 10)),
+      ],
+    )),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
@@ -226,16 +220,14 @@ void main() {
     'should call method from health measurement repository responsible for adding measurement with today date',
     build: () => createBloc(),
     setUp: () {
-      authService.mockGetLoggedUserId(userId: userId);
+      authService.mockGetLoggedUserId(userId: loggedUserId);
       healthMeasurementRepository.mockAddMeasurement();
       dateService.mockGetToday(todayDate: DateTime(2023, 5, 12));
     },
-    act: (HealthBloc bloc) => bloc.add(
-      const HealthEventAddTodayMeasurement(
-        restingHeartRate: 50,
-        fastingWeight: 60.5,
-      ),
-    ),
+    act: (bloc) => bloc.add(const HealthEventAddTodayMeasurement(
+      restingHeartRate: 50,
+      fastingWeight: 60.5,
+    )),
     expect: () => [
       createState(
         status: const BlocStatusLoading(),
@@ -253,7 +245,7 @@ void main() {
       verify(
         () => healthMeasurementRepository.addMeasurement(
           measurement: HealthMeasurement(
-            userId: userId,
+            userId: loggedUserId,
             date: DateTime(2023, 5, 12),
             restingHeartRate: 50,
             fastingWeight: 60.5,
@@ -268,13 +260,11 @@ void main() {
     'should call method from health measurement repository responsible for deleting measurement with today date',
     build: () => createBloc(),
     setUp: () {
-      authService.mockGetLoggedUserId(userId: userId);
+      authService.mockGetLoggedUserId(userId: loggedUserId);
       healthMeasurementRepository.mockDeleteMeasurement();
       dateService.mockGetToday(todayDate: DateTime(2023, 5, 12));
     },
-    act: (HealthBloc bloc) => bloc.add(
-      const HealthEventDeleteTodayMeasurement(),
-    ),
+    act: (bloc) => bloc.add(const HealthEventDeleteTodayMeasurement()),
     expect: () => [
       createState(
         status: const BlocStatusLoading(),
@@ -291,7 +281,7 @@ void main() {
       ).called(1);
       verify(
         () => healthMeasurementRepository.deleteMeasurement(
-          userId: userId,
+          userId: loggedUserId,
           date: DateTime(2023, 5, 12),
         ),
       ).called(1);
@@ -306,14 +296,12 @@ void main() {
       chartService.mockComputeNewRange(
         range: (DateTime(2023, 5, 8), DateTime(2023, 5, 14)),
       );
-      authService.mockGetLoggedUserId(userId: userId);
+      authService.mockGetLoggedUserId(userId: loggedUserId);
       healthMeasurementRepository.mockGetMeasurementsByDateRange();
     },
-    act: (HealthBloc bloc) => bloc.add(
-      const HealthEventChangeChartRangeType(
-        chartRangeType: ChartRange.week,
-      ),
-    ),
+    act: (bloc) => bloc.add(const HealthEventChangeChartRangeType(
+      chartRangeType: ChartRange.week,
+    )),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
@@ -332,7 +320,7 @@ void main() {
         () => healthMeasurementRepository.getMeasurementsByDateRange(
           startDate: DateTime(2023, 5, 8),
           endDate: DateTime(2023, 5, 14),
-          userId: userId,
+          userId: loggedUserId,
         ),
       ).called(1);
     },
@@ -350,12 +338,10 @@ void main() {
       chartService.mockComputePreviousRange(
         previousRange: (DateTime(2023, 5, 1), DateTime(2023, 5, 7)),
       );
-      authService.mockGetLoggedUserId(userId: userId);
+      authService.mockGetLoggedUserId(userId: loggedUserId);
       healthMeasurementRepository.mockGetMeasurementsByDateRange();
     },
-    act: (HealthBloc bloc) => bloc.add(
-      const HealthEventPreviousChartRange(),
-    ),
+    act: (bloc) => bloc.add(const HealthEventPreviousChartRange()),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
@@ -376,7 +362,7 @@ void main() {
         () => healthMeasurementRepository.getMeasurementsByDateRange(
           startDate: DateTime(2023, 5, 1),
           endDate: DateTime(2023, 5, 7),
-          userId: userId,
+          userId: loggedUserId,
         ),
       ).called(1);
     },
@@ -394,12 +380,10 @@ void main() {
       chartService.mockComputeNextRange(
         nextRange: (DateTime(2023, 5, 15), DateTime(2023, 5, 21)),
       );
-      authService.mockGetLoggedUserId(userId: userId);
+      authService.mockGetLoggedUserId(userId: loggedUserId);
       healthMeasurementRepository.mockGetMeasurementsByDateRange();
     },
-    act: (HealthBloc bloc) => bloc.add(
-      const HealthEventNextChartRange(),
-    ),
+    act: (bloc) => bloc.add(const HealthEventNextChartRange()),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
@@ -420,7 +404,7 @@ void main() {
         () => healthMeasurementRepository.getMeasurementsByDateRange(
           startDate: DateTime(2023, 5, 15),
           endDate: DateTime(2023, 5, 21),
-          userId: userId,
+          userId: loggedUserId,
         ),
       ).called(1);
     },

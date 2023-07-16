@@ -15,6 +15,7 @@ void main() {
   final authService = MockAuthService();
   final workoutRepository = MockWorkoutRepository();
   final raceRepository = MockRaceRepository();
+  const String loggedUserId = 'u1';
 
   CurrentWeekCubit createCubit() {
     return CurrentWeekCubit(
@@ -46,9 +47,7 @@ void main() {
       dateService.mockGetLastDayOfTheWeek(
         date: DateTime(2023, 4, 9),
       );
-      authService.mockGetLoggedUserId(
-        userId: 'u1',
-      );
+      authService.mockGetLoggedUserId(userId: loggedUserId);
       workoutRepository.mockGetWorkoutsByDateRange(
         workouts: [
           createWorkout(
@@ -108,9 +107,7 @@ void main() {
         ),
       ).thenReturn(true);
     },
-    act: (CurrentWeekCubit cubit) {
-      cubit.initialize();
-    },
+    act: (cubit) => cubit.initialize(),
     expect: () => [
       [
         Day(
@@ -177,14 +174,14 @@ void main() {
       ).called(1);
       verify(
         () => workoutRepository.getWorkoutsByDateRange(
-          userId: 'u1',
+          userId: loggedUserId,
           startDate: DateTime(2023, 4, 3),
           endDate: DateTime(2023, 4, 9),
         ),
       ).called(1);
       verify(
         () => raceRepository.getRacesByDateRange(
-          userId: 'u1',
+          userId: loggedUserId,
           startDate: DateTime(2023, 4, 3),
           endDate: DateTime(2023, 4, 9),
         ),

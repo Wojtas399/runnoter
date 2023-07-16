@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -26,7 +27,7 @@ class HomeBloc
   })  : _authService = authService,
         _userRepository = userRepository,
         super(state) {
-    on<HomeEventInitialize>(_initialize);
+    on<HomeEventInitialize>(_initialize, transformer: restartable());
     on<HomeEventSignOut>(_signOut);
   }
 

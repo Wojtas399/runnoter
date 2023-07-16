@@ -13,6 +13,7 @@ import '../../../mock/domain/service/mock_auth_service.dart';
 void main() {
   final authService = MockAuthService();
   final workoutRepository = MockWorkoutRepository();
+  const String loggedUserId = 'u1';
 
   MileageCubit createCubit() => MileageCubit(
         authService: authService,
@@ -30,7 +31,7 @@ void main() {
     'should finish event call',
     build: () => createCubit(),
     setUp: () => authService.mockGetLoggedUserId(),
-    act: (MileageCubit cubit) => cubit.initialize(),
+    act: (cubit) => cubit.initialize(),
     expect: () => [],
     verify: (_) => verify(
       () => authService.loggedUserId$,
@@ -42,7 +43,7 @@ void main() {
     'should create chart years which contain months with calculated mileage of done or aborted workouts',
     build: () => createCubit(),
     setUp: () {
-      authService.mockGetLoggedUserId(userId: 'u1');
+      authService.mockGetLoggedUserId(userId: loggedUserId);
       workoutRepository.mockGetAllWorkouts(
         allWorkouts: [
           createWorkout(
@@ -84,7 +85,7 @@ void main() {
         ],
       );
     },
-    act: (MileageCubit cubit) => cubit.initialize(),
+    act: (cubit) => cubit.initialize(),
     expect: () => [
       [
         ChartYear(
@@ -128,9 +129,7 @@ void main() {
         () => authService.loggedUserId$,
       ).called(1);
       verify(
-        () => workoutRepository.getAllWorkouts(
-          userId: 'u1',
-        ),
+        () => workoutRepository.getAllWorkouts(userId: loggedUserId),
       ).called(1);
     },
   );

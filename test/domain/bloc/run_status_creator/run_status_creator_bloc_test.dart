@@ -71,9 +71,7 @@ void main() {
       );
 
   setUpAll(() {
-    registerFallbackValue(
-      const RunStatusPending(),
-    );
+    registerFallbackValue(const RunStatusPending());
   });
 
   tearDown(() {

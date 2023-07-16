@@ -13,6 +13,7 @@ import '../../../mock/domain/service/mock_auth_service.dart';
 void main() {
   final authService = MockAuthService();
   final workoutRepository = MockWorkoutRepository();
+  const String loggedUserId = 'u1';
   const String workoutId = 'w1';
 
   WorkoutPreviewBloc createBloc({
@@ -84,7 +85,7 @@ void main() {
     'should set listener of workout matching to given id',
     build: () => createBloc(workoutId: workoutId),
     setUp: () {
-      authService.mockGetLoggedUserId(userId: 'u1');
+      authService.mockGetLoggedUserId(userId: loggedUserId);
       workoutRepository.mockGetWorkoutById(
         workout: createWorkout(
           id: workoutId,
@@ -111,7 +112,7 @@ void main() {
       ).called(1);
       verify(
         () => workoutRepository.getWorkoutById(
-          userId: 'u1',
+          userId: loggedUserId,
           workoutId: workoutId,
         ),
       ).called(1);
@@ -136,7 +137,7 @@ void main() {
     'should call method from workout repository to delete workout and should emit info that workout has been deleted',
     build: () => createBloc(workoutId: workoutId),
     setUp: () {
-      authService.mockGetLoggedUserId(userId: 'u1');
+      authService.mockGetLoggedUserId(userId: loggedUserId);
       workoutRepository.mockDeleteWorkout();
     },
     act: (bloc) => bloc.add(const WorkoutPreviewEventDeleteWorkout()),
@@ -156,7 +157,7 @@ void main() {
       ).called(1);
       verify(
         () => workoutRepository.deleteWorkout(
-          userId: 'u1',
+          userId: loggedUserId,
           workoutId: workoutId,
         ),
       ).called(1);

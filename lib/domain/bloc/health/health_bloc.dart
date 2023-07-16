@@ -51,9 +51,9 @@ class HealthBloc
   }
 
   @override
-  Future<void> close() async {
+  Future<void> close() {
     _removeMeasurementsFromDateRangeListener();
-    super.close();
+    return super.close();
   }
 
   Future<void> _initialize(

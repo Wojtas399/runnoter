@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -31,7 +32,10 @@ class HealthMeasurementsBloc extends BlocWithStatus<HealthMeasurementsEvent,
             measurements: measurements,
           ),
         ) {
-    on<HealthMeasurementsEventInitialize>(_initialize);
+    on<HealthMeasurementsEventInitialize>(
+      _initialize,
+      transformer: restartable(),
+    );
     on<HealthMeasurementsEventDeleteMeasurement>(_deleteMeasurement);
   }
 

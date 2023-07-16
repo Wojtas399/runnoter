@@ -65,9 +65,7 @@ void main() {
     'given date is null, '
     'should emit complete status',
     build: () => createBloc(),
-    act: (bloc) => bloc.add(
-      const HealthMeasurementCreatorEventInitialize(),
-    ),
+    act: (bloc) => bloc.add(const HealthMeasurementCreatorEventInitialize()),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
@@ -90,11 +88,9 @@ void main() {
         ),
       );
     },
-    act: (HealthMeasurementCreatorBloc bloc) => bloc.add(
-      HealthMeasurementCreatorEventInitialize(
-        date: DateTime(2023, 5, 10),
-      ),
-    ),
+    act: (bloc) => bloc.add(HealthMeasurementCreatorEventInitialize(
+      date: DateTime(2023, 5, 10),
+    )),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
@@ -125,11 +121,9 @@ void main() {
     'date changed, '
     'should update date in state',
     build: () => createBloc(),
-    act: (bloc) => bloc.add(
-      HealthMeasurementCreatorEventDateChanged(
-        date: DateTime(2023, 2, 10),
-      ),
-    ),
+    act: (bloc) => bloc.add(HealthMeasurementCreatorEventDateChanged(
+      date: DateTime(2023, 2, 10),
+    )),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
@@ -142,7 +136,7 @@ void main() {
     'resting heart rate changed, '
     'should update resting heart rate in state',
     build: () => createBloc(),
-    act: (HealthMeasurementCreatorBloc bloc) => bloc.add(
+    act: (bloc) => bloc.add(
       const HealthMeasurementCreatorEventRestingHeartRateChanged(
         restingHeartRate: 50,
       ),
@@ -159,7 +153,7 @@ void main() {
     'fasting weight changed, '
     'should update fasting weight in state',
     build: () => createBloc(),
-    act: (HealthMeasurementCreatorBloc bloc) => bloc.add(
+    act: (bloc) => bloc.add(
       const HealthMeasurementCreatorEventFastingWeightChanged(
         fastingWeight: 61.5,
       ),
@@ -180,9 +174,7 @@ void main() {
       restingHeartRate: null,
       fastingWeight: 0,
     ),
-    act: (HealthMeasurementCreatorBloc bloc) => bloc.add(
-      const HealthMeasurementCreatorEventSubmit(),
-    ),
+    act: (bloc) => bloc.add(const HealthMeasurementCreatorEventSubmit()),
     expect: () => [],
   );
 
@@ -196,9 +188,7 @@ void main() {
       fastingWeight: 65.2,
     ),
     setUp: () => authService.mockGetLoggedUserId(),
-    act: (HealthMeasurementCreatorBloc bloc) => bloc.add(
-      const HealthMeasurementCreatorEventSubmit(),
-    ),
+    act: (bloc) => bloc.add(const HealthMeasurementCreatorEventSubmit()),
     expect: () => [
       createState(
         status: const BlocStatusNoLoggedUser(),
@@ -227,9 +217,7 @@ void main() {
         expected: true,
       );
     },
-    act: (HealthMeasurementCreatorBloc bloc) => bloc.add(
-      const HealthMeasurementCreatorEventSubmit(),
-    ),
+    act: (bloc) => bloc.add(const HealthMeasurementCreatorEventSubmit()),
     expect: () => [
       createState(
         status: const BlocStatusLoading(),
@@ -276,9 +264,7 @@ void main() {
       );
       healthMeasurementRepository.mockAddMeasurement();
     },
-    act: (HealthMeasurementCreatorBloc bloc) => bloc.add(
-      const HealthMeasurementCreatorEventSubmit(),
-    ),
+    act: (bloc) => bloc.add(const HealthMeasurementCreatorEventSubmit()),
     expect: () => [
       createState(
         status: const BlocStatusLoading(),
@@ -337,9 +323,7 @@ void main() {
       authService.mockGetLoggedUserId(userId: loggedUserId);
       healthMeasurementRepository.mockUpdateMeasurement();
     },
-    act: (HealthMeasurementCreatorBloc bloc) => bloc.add(
-      const HealthMeasurementCreatorEventSubmit(),
-    ),
+    act: (bloc) => bloc.add(const HealthMeasurementCreatorEventSubmit()),
     expect: () => [
       createState(
         status: const BlocStatusLoading(),
@@ -404,9 +388,7 @@ void main() {
       healthMeasurementRepository.mockAddMeasurement();
       healthMeasurementRepository.mockDeleteMeasurement();
     },
-    act: (HealthMeasurementCreatorBloc bloc) => bloc.add(
-      const HealthMeasurementCreatorEventSubmit(),
-    ),
+    act: (bloc) => bloc.add(const HealthMeasurementCreatorEventSubmit()),
     expect: () => [
       createState(
         status: const BlocStatusLoading(),

@@ -100,9 +100,9 @@ void main() {
       authService.mockGetLoggedUserId(userId: loggedUserId);
       userRepository.mockUpdateUserSettings();
     },
-    act: (bloc) => bloc.add(
-      const ProfileSettingsEventUpdateThemeMode(newThemeMode: ThemeMode.system),
-    ),
+    act: (bloc) => bloc.add(const ProfileSettingsEventUpdateThemeMode(
+      newThemeMode: ThemeMode.system,
+    )),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
@@ -131,9 +131,9 @@ void main() {
       authService.mockGetLoggedUserId(userId: loggedUserId);
       userRepository.mockUpdateUserSettings(throwable: 'Exception...');
     },
-    act: (bloc) => bloc.add(
-      const ProfileSettingsEventUpdateThemeMode(newThemeMode: ThemeMode.system),
-    ),
+    act: (bloc) => bloc.add(const ProfileSettingsEventUpdateThemeMode(
+      newThemeMode: ThemeMode.system,
+    )),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
@@ -163,9 +163,9 @@ void main() {
     'should emit no logged user info',
     build: () => createBloc(),
     setUp: () => authService.mockGetLoggedUserId(),
-    act: (bloc) => bloc.add(
-      const ProfileSettingsEventUpdateThemeMode(newThemeMode: ThemeMode.system),
-    ),
+    act: (bloc) => bloc.add(const ProfileSettingsEventUpdateThemeMode(
+      newThemeMode: ThemeMode.system,
+    )),
     expect: () => [
       createState(
         status: const BlocStatusNoLoggedUser(),
@@ -188,12 +188,10 @@ void main() {
     'update theme mode, '
     'new theme mode is the same as current theme mode, '
     'should do nothing',
-    build: () => createBloc(
-      themeMode: ThemeMode.system,
-    ),
-    act: (bloc) => bloc.add(
-      const ProfileSettingsEventUpdateThemeMode(newThemeMode: ThemeMode.system),
-    ),
+    build: () => createBloc(themeMode: ThemeMode.system),
+    act: (bloc) => bloc.add(const ProfileSettingsEventUpdateThemeMode(
+      newThemeMode: ThemeMode.system,
+    )),
     expect: () => [],
     verify: (_) {
       verifyNever(
@@ -216,9 +214,9 @@ void main() {
       authService.mockGetLoggedUserId(userId: loggedUserId);
       userRepository.mockUpdateUserSettings();
     },
-    act: (bloc) => bloc.add(
-      const ProfileSettingsEventUpdateLanguage(newLanguage: Language.english),
-    ),
+    act: (bloc) => bloc.add(const ProfileSettingsEventUpdateLanguage(
+      newLanguage: Language.english,
+    )),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
@@ -247,9 +245,9 @@ void main() {
       authService.mockGetLoggedUserId(userId: loggedUserId);
       userRepository.mockUpdateUserSettings(throwable: 'Exception...');
     },
-    act: (bloc) => bloc.add(
-      const ProfileSettingsEventUpdateLanguage(newLanguage: Language.english),
-    ),
+    act: (bloc) => bloc.add(const ProfileSettingsEventUpdateLanguage(
+      newLanguage: Language.english,
+    )),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
@@ -279,9 +277,9 @@ void main() {
     'should emit no logged user info',
     build: () => createBloc(),
     setUp: () => authService.mockGetLoggedUserId(),
-    act: (bloc) => bloc.add(
-      const ProfileSettingsEventUpdateLanguage(newLanguage: Language.english),
-    ),
+    act: (bloc) => bloc.add(const ProfileSettingsEventUpdateLanguage(
+      newLanguage: Language.english,
+    )),
     expect: () => [
       createState(
         status: const BlocStatusNoLoggedUser(),
@@ -305,9 +303,9 @@ void main() {
     'new language is the same as current language, '
     'should do nothing',
     build: () => createBloc(language: Language.english),
-    act: (bloc) => bloc.add(
-      const ProfileSettingsEventUpdateLanguage(newLanguage: Language.english),
-    ),
+    act: (bloc) => bloc.add(const ProfileSettingsEventUpdateLanguage(
+      newLanguage: Language.english,
+    )),
     expect: () => [],
     verify: (_) {
       verifyNever(
@@ -330,11 +328,9 @@ void main() {
       authService.mockGetLoggedUserId(userId: loggedUserId);
       userRepository.mockUpdateUserSettings();
     },
-    act: (bloc) => bloc.add(
-      const ProfileSettingsEventUpdateDistanceUnit(
-        newDistanceUnit: DistanceUnit.miles,
-      ),
-    ),
+    act: (bloc) => bloc.add(const ProfileSettingsEventUpdateDistanceUnit(
+      newDistanceUnit: DistanceUnit.miles,
+    )),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
@@ -363,11 +359,9 @@ void main() {
       authService.mockGetLoggedUserId(userId: loggedUserId);
       userRepository.mockUpdateUserSettings(throwable: 'Exception...');
     },
-    act: (bloc) => bloc.add(
-      const ProfileSettingsEventUpdateDistanceUnit(
-        newDistanceUnit: DistanceUnit.miles,
-      ),
-    ),
+    act: (bloc) => bloc.add(const ProfileSettingsEventUpdateDistanceUnit(
+      newDistanceUnit: DistanceUnit.miles,
+    )),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
@@ -397,11 +391,9 @@ void main() {
     'should emit no logged user info',
     build: () => createBloc(),
     setUp: () => authService.mockGetLoggedUserId(),
-    act: (bloc) => bloc.add(
-      const ProfileSettingsEventUpdateDistanceUnit(
-        newDistanceUnit: DistanceUnit.miles,
-      ),
-    ),
+    act: (bloc) => bloc.add(const ProfileSettingsEventUpdateDistanceUnit(
+      newDistanceUnit: DistanceUnit.miles,
+    )),
     expect: () => [
       createState(
         status: const BlocStatusNoLoggedUser(),
@@ -425,11 +417,9 @@ void main() {
     'new distance unit is the same as current distance unit, '
     'should do nothing',
     build: () => createBloc(distanceUnit: DistanceUnit.miles),
-    act: (bloc) => bloc.add(
-      const ProfileSettingsEventUpdateDistanceUnit(
-        newDistanceUnit: DistanceUnit.miles,
-      ),
-    ),
+    act: (bloc) => bloc.add(const ProfileSettingsEventUpdateDistanceUnit(
+      newDistanceUnit: DistanceUnit.miles,
+    )),
     expect: () => [],
     verify: (_) {
       verifyNever(
@@ -452,11 +442,9 @@ void main() {
       authService.mockGetLoggedUserId(userId: loggedUserId);
       userRepository.mockUpdateUserSettings();
     },
-    act: (bloc) => bloc.add(
-      const ProfileSettingsEventUpdatePaceUnit(
-        newPaceUnit: PaceUnit.kilometersPerHour,
-      ),
-    ),
+    act: (bloc) => bloc.add(const ProfileSettingsEventUpdatePaceUnit(
+      newPaceUnit: PaceUnit.kilometersPerHour,
+    )),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
@@ -485,11 +473,9 @@ void main() {
       authService.mockGetLoggedUserId(userId: loggedUserId);
       userRepository.mockUpdateUserSettings(throwable: 'Exception...');
     },
-    act: (bloc) => bloc.add(
-      const ProfileSettingsEventUpdatePaceUnit(
-        newPaceUnit: PaceUnit.kilometersPerHour,
-      ),
-    ),
+    act: (bloc) => bloc.add(const ProfileSettingsEventUpdatePaceUnit(
+      newPaceUnit: PaceUnit.kilometersPerHour,
+    )),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
@@ -519,11 +505,9 @@ void main() {
     'should emit no logged user info',
     build: () => createBloc(),
     setUp: () => authService.mockGetLoggedUserId(),
-    act: (bloc) => bloc.add(
-      const ProfileSettingsEventUpdatePaceUnit(
-        newPaceUnit: PaceUnit.kilometersPerHour,
-      ),
-    ),
+    act: (bloc) => bloc.add(const ProfileSettingsEventUpdatePaceUnit(
+      newPaceUnit: PaceUnit.kilometersPerHour,
+    )),
     expect: () => [
       createState(
         status: const BlocStatusNoLoggedUser(),
@@ -547,11 +531,9 @@ void main() {
     'new pace unit is the same as current pace unit, '
     'should do nothing',
     build: () => createBloc(paceUnit: PaceUnit.kilometersPerHour),
-    act: (bloc) => bloc.add(
-      const ProfileSettingsEventUpdatePaceUnit(
-        newPaceUnit: PaceUnit.kilometersPerHour,
-      ),
-    ),
+    act: (bloc) => bloc.add(const ProfileSettingsEventUpdatePaceUnit(
+      newPaceUnit: PaceUnit.kilometersPerHour,
+    )),
     expect: () => [],
     verify: (_) {
       verifyNever(

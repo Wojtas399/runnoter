@@ -12,6 +12,7 @@ import '../../../mock/domain/service/mock_auth_service.dart';
 void main() {
   final authService = MockAuthService();
   final userRepository = MockUserRepository();
+  const String loggedUserId = 'u1';
 
   HomeBloc createBloc() {
     return HomeBloc(
@@ -37,10 +38,10 @@ void main() {
     "should set listener of logged user's data",
     build: () => createBloc(),
     setUp: () {
-      authService.mockGetLoggedUserId(userId: 'u1');
+      authService.mockGetLoggedUserId(userId: loggedUserId);
       userRepository.mockGetUserById(
         user: createUser(
-          id: 'u1',
+          id: loggedUserId,
           name: 'Jack',
           settings: createSettings(
             themeMode: ThemeMode.dark,
@@ -72,7 +73,7 @@ void main() {
         () => authService.loggedUserId$,
       ).called(1);
       verify(
-        () => userRepository.getUserById(userId: 'u1'),
+        () => userRepository.getUserById(userId: loggedUserId),
       ).called(1);
     },
   );
