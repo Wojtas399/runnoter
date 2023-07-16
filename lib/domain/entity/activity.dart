@@ -15,6 +15,11 @@ abstract class Activity extends Entity {
     required this.status,
   });
 
+  double get coveredDistance {
+    final RunStatus status = this.status;
+    return status is RunStatusWithParams ? status.coveredDistanceInKm : 0.0;
+  }
+
   @override
   List<Object?> get props => [
         id,

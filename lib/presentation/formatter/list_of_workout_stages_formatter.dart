@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
+import '../../common/workout_stage_service.dart';
 import '../../domain/entity/workout_stage.dart';
 import '../extension/context_extensions.dart';
 import '../extension/double_extensions.dart';
 import '../extension/string_extensions.dart';
-import '../service/workout_stage_service.dart';
 import 'distance_unit_formatter.dart';
 import 'workout_stage_formatter.dart';
 
