@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
@@ -7,7 +8,6 @@ import 'package:rxdart/rxdart.dart';
 import '../../../../../domain/additional_model/bloc_status.dart';
 import '../../../../../domain/additional_model/bloc_with_status.dart';
 import '../../../../../domain/entity/settings.dart';
-import '../../../../../domain/entity/user.dart';
 import '../../../../../domain/repository/user_repository.dart';
 import '../../../../../domain/service/auth_service.dart';
 import '../../../additional_model/bloc_state.dart';
@@ -29,7 +29,10 @@ class ProfileSettingsBloc extends BlocWithStatus<ProfileSettingsEvent,
   })  : _authService = authService,
         _userRepository = userRepository,
         super(state) {
-    on<ProfileSettingsEventInitialize>(_initialize);
+    on<ProfileSettingsEventInitialize>(
+      _initialize,
+      transformer: restartable(),
+    );
     on<ProfileSettingsEventUpdateThemeMode>(_updateThemeMode);
     on<ProfileSettingsEventUpdateLanguage>(_updateLanguage);
     on<ProfileSettingsEventUpdateDistanceUnit>(_updateDistanceUnit);
@@ -40,21 +43,21 @@ class ProfileSettingsBloc extends BlocWithStatus<ProfileSettingsEvent,
     ProfileSettingsEventInitialize event,
     Emitter<ProfileSettingsState> emit,
   ) async {
-    final Stream<User?> loggedUser$ =
-        _authService.loggedUserId$.whereType<String>().switchMap(
-              (String loggedUserId) => _userRepository.getUserById(
-                userId: loggedUserId,
-              ),
-            );
-    await for (final loggedUser in loggedUser$) {
-      final Settings? settings = loggedUser?.settings;
-      emit(state.copyWith(
+    final Stream<Settings?> loggedUserSettings$ = _authService.loggedUserId$
+        .whereNotNull()
+        .switchMap(
+          (loggedUserId) => _userRepository.getUserById(userId: loggedUserId),
+        )
+        .map((user) => user?.settings);
+    await emit.forEach(
+      loggedUserSettings$,
+      onData: (Settings? settings) => state.copyWith(
         themeMode: settings?.themeMode,
         language: settings?.language,
         distanceUnit: settings?.distanceUnit,
         paceUnit: settings?.paceUnit,
-      ));
-    }
+      ),
+    );
   }
 
   Future<void> _updateThemeMode(

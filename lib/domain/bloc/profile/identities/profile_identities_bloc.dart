@@ -217,7 +217,7 @@ class ProfileIdentitiesBloc extends BlocWithStatus<ProfileIdentitiesEvent,
   }
 
   Stream<User?> get _loggedUserData$ {
-    return _authService.loggedUserId$.whereType<String>().switchMap(
+    return _authService.loggedUserId$.whereNotNull().switchMap(
           (String userId) => _userRepository.getUserById(
             userId: userId,
           ),
