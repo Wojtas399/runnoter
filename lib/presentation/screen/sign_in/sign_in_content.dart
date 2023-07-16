@@ -14,7 +14,9 @@ class _Content extends StatelessWidget {
               child: Container(
                 color: Colors.transparent,
                 padding: const EdgeInsets.all(24),
-                constraints: const BoxConstraints(maxWidth: mediumContentWidth),
+                constraints: BoxConstraints(
+                  maxWidth: GetIt.I.get<BodySizes>().smallBodyWidth,
+                ),
                 child: const Column(
                   children: [
                     _Logo(),

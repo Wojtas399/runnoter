@@ -21,9 +21,9 @@ class _Content extends StatelessWidget {
         body: SafeArea(
           child: GestureDetector(
             onTap: unfocusInputs,
-            child: const ScreenAdjustableBody(
-              maxContentWidth: bigContentWidth,
-              child: Column(
+            child: ScreenAdjustableBody(
+              maxContentWidth: GetIt.I.get<BodySizes>().mediumBodyWidth,
+              child: const Column(
                 children: [
                   _Form(),
                   SizedBox(height: 40),

@@ -103,8 +103,8 @@ class _ContentState extends State<_Content> {
                       ),
                       child: Center(
                         child: ConstrainedBox(
-                          constraints: const BoxConstraints(
-                            maxWidth: bigContentWidth,
+                          constraints: BoxConstraints(
+                            maxWidth: GetIt.I.get<BodySizes>().bigBodyWidth,
                           ),
                           child: child,
                         ),

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:get_it/get_it.dart';
 
 import '../../../domain/bloc/run_status_creator/run_status_creator_bloc.dart';
 import '../../../domain/entity/run_status.dart';
@@ -17,7 +18,7 @@ import '../../component/scrollable_content_component.dart';
 import '../../component/text/label_text_components.dart';
 import '../../component/text/title_text_components.dart';
 import '../../component/text_field_component.dart';
-import '../../config/ui_sizes.dart';
+import '../../config/body_sizes.dart';
 import '../../extension/context_extensions.dart';
 import '../../formatter/decimal_text_input_formatter.dart';
 import '../../formatter/distance_unit_formatter.dart';

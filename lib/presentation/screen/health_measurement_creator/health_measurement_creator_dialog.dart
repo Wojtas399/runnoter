@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:get_it/get_it.dart';
 
 import '../../../common/date_service.dart';
 import '../../../domain/additional_model/bloc_status.dart';
@@ -16,7 +17,7 @@ import '../../component/padding/paddings_24.dart';
 import '../../component/text/label_text_components.dart';
 import '../../component/text/title_text_components.dart';
 import '../../component/text_field_component.dart';
-import '../../config/ui_sizes.dart';
+import '../../config/body_sizes.dart';
 import '../../extension/context_extensions.dart';
 import '../../formatter/decimal_text_input_formatter.dart';
 import '../../service/dialog_service.dart';

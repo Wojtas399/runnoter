@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:get_it/get_it.dart';
 
 import '../../../domain/additional_model/bloc_status.dart';
 import '../../../domain/bloc/workout_creator/workout_creator_bloc.dart';
@@ -16,7 +17,7 @@ import '../../component/screen_adjustable_body_component.dart';
 import '../../component/text/body_text_components.dart';
 import '../../component/text/label_text_components.dart';
 import '../../component/text_field_component.dart';
-import '../../config/ui_sizes.dart';
+import '../../config/body_sizes.dart';
 import '../../extension/context_extensions.dart';
 import '../../extension/string_extensions.dart';
 import '../../formatter/workout_stage_formatter.dart';

@@ -14,7 +14,9 @@ class _Content extends StatelessWidget {
       body: SafeArea(
         child: Center(
           child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: bigContentWidth),
+            constraints: BoxConstraints(
+              maxWidth: GetIt.I.get<BodySizes>().mediumBodyWidth,
+            ),
             child: const Column(
               children: [
                 _Header(),

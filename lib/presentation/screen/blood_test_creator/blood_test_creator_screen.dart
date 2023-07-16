@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:get_it/get_it.dart';
 
 import '../../../domain/bloc/blood_test_creator/blood_test_creator_bloc.dart';
 import '../../../domain/entity/blood_parameter.dart';
@@ -11,7 +12,7 @@ import '../../component/bloc_with_status_listener_component.dart';
 import '../../component/blood_parameter_results_list_component.dart';
 import '../../component/date_selector_component.dart';
 import '../../component/text/title_text_components.dart';
-import '../../config/ui_sizes.dart';
+import '../../config/body_sizes.dart';
 import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
 import '../../service/utils.dart';

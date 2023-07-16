@@ -29,8 +29,8 @@ class _Content extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Container(
-                      constraints: const BoxConstraints(
-                        maxWidth: bigContentWidth,
+                      constraints: BoxConstraints(
+                        maxWidth: GetIt.I.get<BodySizes>().mediumBodyWidth,
                       ),
                       padding: const EdgeInsets.all(24),
                       child: const Column(

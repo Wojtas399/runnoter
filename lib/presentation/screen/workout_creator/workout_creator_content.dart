@@ -22,7 +22,7 @@ class _Content extends StatelessWidget {
           child: GestureDetector(
             onTap: unfocusInputs,
             child: ScreenAdjustableBody(
-              maxContentWidth: bigContentWidth,
+              maxContentWidth: GetIt.I.get<BodySizes>().mediumBodyWidth,
               child: Column(
                 children: [
                   _WorkoutName(),

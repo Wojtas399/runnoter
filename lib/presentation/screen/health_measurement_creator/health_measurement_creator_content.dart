@@ -19,9 +19,9 @@ class _NormalDialogContent extends StatelessWidget {
       title: Text(str.healthMeasurementCreatorScreenTitle),
       content: GestureDetector(
         onTap: unfocusInputs,
-        child: const SizedBox(
-          width: mediumContentWidth,
-          child: _Body(),
+        child: SizedBox(
+          width: GetIt.I.get<BodySizes>().smallBodyWidth,
+          child: const _Body(),
         ),
       ),
       actions: [

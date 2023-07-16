@@ -47,7 +47,7 @@ class _ScreenAdjustableBody extends StatelessWidget {
   Widget build(BuildContext context) {
     if (context.isDesktopSize || MediaQuery.of(context).size.height < 700) {
       return ScreenAdjustableBody(
-        maxContentWidth: bigContentWidth,
+        maxContentWidth: GetIt.I.get<BodySizes>().mediumBodyWidth,
         child: child,
       );
     }
