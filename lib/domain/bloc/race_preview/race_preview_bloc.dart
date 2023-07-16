@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -29,7 +30,7 @@ class RacePreviewBloc extends BlocWithStatus<RacePreviewEvent, RacePreviewState,
   })  : _authService = authService,
         _raceRepository = raceRepository,
         super(state) {
-    on<RacePreviewEventInitialize>(_initialize);
+    on<RacePreviewEventInitialize>(_initialize, transformer: restartable());
     on<RacePreviewEventDeleteRace>(_deleteRace);
   }
 
@@ -45,11 +46,10 @@ class RacePreviewBloc extends BlocWithStatus<RacePreviewEvent, RacePreviewState,
                 userId: loggedUserId,
               ),
             );
-    await for (final race in race$) {
-      emit(state.copyWith(
-        race: race,
-      ));
-    }
+    await emit.forEach(
+      race$,
+      onData: (Race? race) => state.copyWith(race: race),
+    );
   }
 
   Future<void> _deleteRace(
