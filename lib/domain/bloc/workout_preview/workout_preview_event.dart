@@ -8,14 +8,6 @@ class WorkoutPreviewEventInitialize extends WorkoutPreviewEvent {
   const WorkoutPreviewEventInitialize();
 }
 
-class WorkoutPreviewEventWorkoutUpdated extends WorkoutPreviewEvent {
-  final Workout? workout;
-
-  const WorkoutPreviewEventWorkoutUpdated({
-    required this.workout,
-  });
-}
-
 class WorkoutPreviewEventDeleteWorkout extends WorkoutPreviewEvent {
   const WorkoutPreviewEventDeleteWorkout();
 }
