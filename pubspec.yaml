@@ -37,6 +37,7 @@ dependencies:
   flutter_speed_dial: ^7.0.0
   auto_route: ^7.7.0
   get_it: ^7.6.0
+  bloc_concurrency: ^0.2.2
 
 dependency_overrides:
   intl: ^0.17.0-nullsafety.2

@@ -13,149 +13,6 @@ void main() {
   });
 
   test(
-    'are all data loaded, '
-    "logged user's name, surname and email aren't null and theme mode, language distance unit and pace unit also aren't null, "
-    'should be true',
-    () {
-      state = state.copyWith(
-        loggedUserName: 'name',
-        loggedUserSurname: 'surname',
-        loggedUserEmail: 'email',
-        themeMode: ThemeMode.dark,
-        language: Language.english,
-        distanceUnit: DistanceUnit.kilometers,
-        paceUnit: PaceUnit.minutesPerKilometer,
-      );
-
-      expect(state.areAllDataLoaded, true);
-    },
-  );
-
-  test(
-    'are all data loaded, '
-    "logged user's name is null, "
-    'should be false',
-    () {
-      state = state.copyWith(
-        loggedUserSurname: 'surname',
-        loggedUserEmail: 'email',
-        themeMode: ThemeMode.dark,
-        language: Language.english,
-        distanceUnit: DistanceUnit.kilometers,
-        paceUnit: PaceUnit.minutesPerKilometer,
-      );
-
-      expect(state.areAllDataLoaded, false);
-    },
-  );
-
-  test(
-    'are all data loaded, '
-    "logged user's surname is null, "
-    'should be false',
-    () {
-      state = state.copyWith(
-        loggedUserName: 'name',
-        loggedUserEmail: 'email',
-        themeMode: ThemeMode.dark,
-        language: Language.english,
-        distanceUnit: DistanceUnit.kilometers,
-        paceUnit: PaceUnit.minutesPerKilometer,
-      );
-
-      expect(state.areAllDataLoaded, false);
-    },
-  );
-
-  test(
-    'are all data loaded, '
-    "logged user's email is null, "
-    'should be false',
-    () {
-      state = state.copyWith(
-        loggedUserName: 'name',
-        loggedUserSurname: 'surname',
-        themeMode: ThemeMode.dark,
-        language: Language.english,
-        distanceUnit: DistanceUnit.kilometers,
-        paceUnit: PaceUnit.minutesPerKilometer,
-      );
-
-      expect(state.areAllDataLoaded, false);
-    },
-  );
-
-  test(
-    'are all data loaded, '
-    'theme mode is null, '
-    'should be false',
-    () {
-      state = state.copyWith(
-        loggedUserName: 'name',
-        loggedUserSurname: 'surname',
-        loggedUserEmail: 'email',
-        language: Language.english,
-        distanceUnit: DistanceUnit.kilometers,
-        paceUnit: PaceUnit.minutesPerKilometer,
-      );
-
-      expect(state.areAllDataLoaded, false);
-    },
-  );
-
-  test(
-    'are all data loaded, '
-    'language is null, '
-    'should be false',
-    () {
-      state = state.copyWith(
-        loggedUserName: 'name',
-        loggedUserSurname: 'surname',
-        loggedUserEmail: 'email',
-        themeMode: ThemeMode.dark,
-        distanceUnit: DistanceUnit.kilometers,
-        paceUnit: PaceUnit.minutesPerKilometer,
-      );
-
-      expect(state.areAllDataLoaded, false);
-    },
-  );
-
-  test(
-    'are all data loaded, '
-    'distance unit is null, '
-    'should be false',
-    () {
-      state = state.copyWith(
-        loggedUserName: 'name',
-        loggedUserSurname: 'surname',
-        loggedUserEmail: 'email',
-        themeMode: ThemeMode.dark,
-        paceUnit: PaceUnit.minutesPerKilometer,
-      );
-
-      expect(state.areAllDataLoaded, false);
-    },
-  );
-
-  test(
-    'are all data loaded, '
-    'pace unit is null, '
-    'should be false',
-    () {
-      state = state.copyWith(
-        loggedUserName: 'name',
-        loggedUserSurname: 'surname',
-        loggedUserEmail: 'email',
-        themeMode: ThemeMode.dark,
-        distanceUnit: DistanceUnit.kilometers,
-      );
-
-      expect(state.areAllDataLoaded, false);
-    },
-  );
-
-  test(
     'copy with status',
     () {
       const BlocStatus expectedStatus = BlocStatusLoading();
@@ -169,93 +26,33 @@ void main() {
   );
 
   test(
-    'copy with logged user email',
-    () {
-      const String expectedEmail = 'email@example.com';
-
-      state = state.copyWith(loggedUserEmail: expectedEmail);
-      final state2 = state.copyWith();
-
-      expect(state.loggedUserEmail, expectedEmail);
-      expect(state2.loggedUserEmail, expectedEmail);
-    },
-  );
-
-  test(
     'copy with logged user name',
     () {
-      const String expectedName = 'name';
+      const String expectedLoggedUserName = 'name';
 
-      state = state.copyWith(loggedUserName: expectedName);
+      state = state.copyWith(loggedUserName: expectedLoggedUserName);
       final state2 = state.copyWith();
 
-      expect(state.loggedUserName, expectedName);
-      expect(state2.loggedUserName, expectedName);
+      expect(state.loggedUserName, expectedLoggedUserName);
+      expect(state2.loggedUserName, expectedLoggedUserName);
     },
   );
 
   test(
-    'copy with logged user surname',
+    'copy with app settings',
     () {
-      const String expectedSurname = 'surname';
+      const Settings expectedSettings = Settings(
+        themeMode: ThemeMode.dark,
+        language: Language.polish,
+        distanceUnit: DistanceUnit.miles,
+        paceUnit: PaceUnit.milesPerHour,
+      );
 
-      state = state.copyWith(loggedUserSurname: expectedSurname);
+      state = state.copyWith(appSettings: expectedSettings);
       final state2 = state.copyWith();
 
-      expect(state.loggedUserSurname, expectedSurname);
-      expect(state2.loggedUserSurname, expectedSurname);
-    },
-  );
-
-  test(
-    'copy with theme mode',
-    () {
-      const ThemeMode expectedThemeMode = ThemeMode.system;
-
-      state = state.copyWith(themeMode: expectedThemeMode);
-      final state2 = state.copyWith();
-
-      expect(state.themeMode, expectedThemeMode);
-      expect(state2.themeMode, expectedThemeMode);
-    },
-  );
-
-  test(
-    'copy with language',
-    () {
-      const Language expectedLanguage = Language.english;
-
-      state = state.copyWith(language: expectedLanguage);
-      final state2 = state.copyWith();
-
-      expect(state.language, expectedLanguage);
-      expect(state2.language, expectedLanguage);
-    },
-  );
-
-  test(
-    'copy with distance unit',
-    () {
-      const DistanceUnit expectedDistanceUnit = DistanceUnit.miles;
-
-      state = state.copyWith(distanceUnit: expectedDistanceUnit);
-      final state2 = state.copyWith();
-
-      expect(state.distanceUnit, expectedDistanceUnit);
-      expect(state2.distanceUnit, expectedDistanceUnit);
-    },
-  );
-
-  test(
-    'copy with pace unit',
-    () {
-      const PaceUnit expectedPaceUnit = PaceUnit.milesPerHour;
-
-      state = state.copyWith(paceUnit: expectedPaceUnit);
-      final state2 = state.copyWith();
-
-      expect(state.paceUnit, expectedPaceUnit);
-      expect(state2.paceUnit, expectedPaceUnit);
+      expect(state.appSettings, expectedSettings);
+      expect(state2.appSettings, expectedSettings);
     },
   );
 }

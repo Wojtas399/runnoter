@@ -10,6 +10,7 @@ import '../../../mock/domain/service/mock_auth_service.dart';
 void main() {
   final authService = MockAuthService();
   final bloodTestRepository = MockBloodTestRepository();
+  const String loggedUserId = 'u1';
 
   BloodTestsCubit createCubit() => BloodTestsCubit(
         authService: authService,
@@ -27,7 +28,7 @@ void main() {
     'should finish method call',
     build: () => createCubit(),
     setUp: () => authService.mockGetLoggedUserId(),
-    act: (BloodTestsCubit cubit) => cubit.initialize(),
+    act: (cubit) => cubit.initialize(),
     expect: () => [],
     verify: (_) => verify(
       () => authService.loggedUserId$,
@@ -39,33 +40,33 @@ void main() {
     'should set listener of blood tests grouped by year and sorting by date belonging to logged user',
     build: () => createCubit(),
     setUp: () {
-      authService.mockGetLoggedUserId(userId: 'u1');
+      authService.mockGetLoggedUserId(userId: loggedUserId);
       bloodTestRepository.mockGetAllTests(
         tests: [
           createBloodTest(
             id: 'br2',
-            userId: 'u1',
+            userId: loggedUserId,
             date: DateTime(2023, 2, 10),
           ),
           createBloodTest(
             id: 'br3',
-            userId: 'u1',
+            userId: loggedUserId,
             date: DateTime(2022, 4, 10),
           ),
           createBloodTest(
             id: 'br1',
-            userId: 'u1',
+            userId: loggedUserId,
             date: DateTime(2023, 5, 20),
           ),
           createBloodTest(
             id: 'br4',
-            userId: 'u1',
+            userId: loggedUserId,
             date: DateTime(2021, 7, 10),
           ),
         ],
       );
     },
-    act: (BloodTestsCubit cubit) => cubit.initialize(),
+    act: (cubit) => cubit.initialize(),
     expect: () => [
       [
         BloodTestsFromYear(
@@ -73,12 +74,12 @@ void main() {
           bloodTests: [
             createBloodTest(
               id: 'br1',
-              userId: 'u1',
+              userId: loggedUserId,
               date: DateTime(2023, 5, 20),
             ),
             createBloodTest(
               id: 'br2',
-              userId: 'u1',
+              userId: loggedUserId,
               date: DateTime(2023, 2, 10),
             ),
           ],
@@ -88,7 +89,7 @@ void main() {
           bloodTests: [
             createBloodTest(
               id: 'br3',
-              userId: 'u1',
+              userId: loggedUserId,
               date: DateTime(2022, 4, 10),
             ),
           ],
@@ -98,7 +99,7 @@ void main() {
           bloodTests: [
             createBloodTest(
               id: 'br4',
-              userId: 'u1',
+              userId: loggedUserId,
               date: DateTime(2021, 7, 10),
             ),
           ],
@@ -111,7 +112,7 @@ void main() {
       ).called(1);
       verify(
         () => bloodTestRepository.getAllTests(
-          userId: 'u1',
+          userId: loggedUserId,
         ),
       ).called(1);
     },

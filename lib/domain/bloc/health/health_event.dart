@@ -8,14 +8,6 @@ class HealthEventInitialize extends HealthEvent {
   const HealthEventInitialize();
 }
 
-class HealthEventTodayMeasurementUpdated extends HealthEvent {
-  final HealthMeasurement? todayMeasurement;
-
-  const HealthEventTodayMeasurementUpdated({
-    required this.todayMeasurement,
-  });
-}
-
 class HealthEventMeasurementsFromDateRangeUpdated extends HealthEvent {
   final List<HealthMeasurement>? measurements;
 

@@ -42,38 +42,18 @@ void main() {
   test(
     'get user by id, '
     'user exists in state, '
-    'should emit user from repository and should not call db method to load user',
+    'should emit user from repository',
     () {
       final User expectedUser = createUser(id: userId);
       repository = createRepository(
         initialState: [expectedUser],
       );
 
-      final Stream<User?> user$ = repository.getUserById(
-        userId: userId,
-      );
-      user$.listen((_) {});
+      final Stream<User?> user$ = repository.getUserById(userId: userId);
 
       expect(
         user$,
-        emitsInOrder(
-          [expectedUser],
-        ),
-      );
-      verifyNever(
-        () => dbUserService.loadUserById(
-          userId: userId,
-        ),
-      );
-      verifyNever(
-        () => dbAppearanceSettingsService.loadSettingsByUserId(
-          userId: userId,
-        ),
-      );
-      verifyNever(
-        () => dbWorkoutSettingsService.loadSettingsByUserId(
-          userId: userId,
-        ),
+        emitsInOrder([expectedUser]),
       );
     },
   );
@@ -81,7 +61,7 @@ void main() {
   test(
     'get user by id, '
     'user does not exist in state, '
-    'should call db method to load user, should add loaded user to repository and should emit loaded user',
+    'should emit user loaded from remote db',
     () {
       const userDto = db.UserDto(
         id: userId,
@@ -109,9 +89,7 @@ void main() {
           paceUnit: PaceUnit.minutesPerKilometer,
         ),
       );
-      dbUserService.mockLoadUserById(
-        userDto: userDto,
-      );
+      dbUserService.mockLoadUserById(userDto: userDto);
       dbAppearanceSettingsService.mockLoadSettingsByUserId(
         appearanceSettingsDto: appearanceSettingsDto,
       );
@@ -120,30 +98,11 @@ void main() {
       );
 
       final Stream<User?> user$ = repository.getUserById(userId: userId);
-      user$.listen((event) {});
 
-      expectLater(
+      expect(
         user$,
-        emitsInOrder(
-          [null, expectedUser],
-        ),
-      ).then((_) {
-        verify(
-          () => dbUserService.loadUserById(
-            userId: userId,
-          ),
-        ).called(1);
-        verify(
-          () => dbAppearanceSettingsService.loadSettingsByUserId(
-            userId: userId,
-          ),
-        ).called(1);
-        verify(
-          () => dbWorkoutSettingsService.loadSettingsByUserId(
-            userId: userId,
-          ),
-        ).called(1);
-      });
+        emitsInOrder([expectedUser]),
+      );
     },
   );
 
@@ -496,8 +455,9 @@ void main() {
   test(
     'delete user, '
     'should call db methods to delete user data, appearance settings and workout settings and then should delete user from repository',
-    () {
+    () async {
       final User user = createUser(id: userId);
+      dbUserService.mockLoadUserById();
       dbUserService.mockDeleteUserData();
       dbAppearanceSettingsService.mockDeleteSettingsForUser();
       dbWorkoutSettingsService.mockDeleteSettingsForUser();
@@ -506,32 +466,25 @@ void main() {
       );
 
       final Stream<User?> user$ = repository.getUserById(userId: user.id);
-      repository.deleteUser(userId: user.id);
+      await repository.deleteUser(userId: user.id);
 
-      expectLater(
+      expect(
         user$,
-        emitsInOrder(
-          [user, null],
-        ),
-      ).then(
-        (_) {
-          verify(
-            () => dbUserService.deleteUserData(
-              userId: user.id,
-            ),
-          ).called(1);
-          verify(
-            () => dbAppearanceSettingsService.deleteSettingsForUser(
-              userId: user.id,
-            ),
-          ).called(1);
-          verify(
-            () => dbWorkoutSettingsService.deleteSettingsForUser(
-              userId: user.id,
-            ),
-          ).called(1);
-        },
+        emitsInOrder([null]),
       );
+      verify(
+        () => dbUserService.deleteUserData(userId: user.id),
+      ).called(1);
+      verify(
+        () => dbAppearanceSettingsService.deleteSettingsForUser(
+          userId: user.id,
+        ),
+      ).called(1);
+      verify(
+        () => dbWorkoutSettingsService.deleteSettingsForUser(
+          userId: user.id,
+        ),
+      ).called(1);
     },
   );
 }

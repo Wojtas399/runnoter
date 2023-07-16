@@ -9,6 +9,7 @@ import '../../../mock/domain/service/mock_auth_service.dart';
 void main() {
   final authService = MockAuthService();
   final raceRepository = MockRaceRepository();
+  const String loggedUserId = 'u1';
 
   RacesCubit createCubit() => RacesCubit(
         authService: authService,
@@ -21,7 +22,7 @@ void main() {
     'should do nothing',
     build: () => createCubit(),
     setUp: () => authService.mockGetLoggedUserId(),
-    act: (RacesCubit cubit) => cubit.initialize(),
+    act: (cubit) => cubit.initialize(),
     expect: () => [],
     verify: (_) => verify(
       () => authService.loggedUserId$,
@@ -33,43 +34,43 @@ void main() {
     'should set listener of races belonging to logged user, should sort races by descending by date and emit them',
     build: () => createCubit(),
     setUp: () {
-      authService.mockGetLoggedUserId(userId: 'u1');
+      authService.mockGetLoggedUserId(userId: loggedUserId);
       raceRepository.mockGetAllRaces(
         races: [
           createRace(
             id: 'c1',
-            userId: 'u1',
+            userId: loggedUserId,
             date: DateTime(2023, 6, 10),
           ),
           createRace(
             id: 'c2',
-            userId: 'u1',
+            userId: loggedUserId,
             date: DateTime(2023, 4, 20),
           ),
           createRace(
             id: 'c3',
-            userId: 'u1',
+            userId: loggedUserId,
             date: DateTime(2023, 5, 30),
           ),
         ],
       );
     },
-    act: (RacesCubit cubit) => cubit.initialize(),
+    act: (cubit) => cubit.initialize(),
     expect: () => [
       [
         createRace(
           id: 'c1',
-          userId: 'u1',
+          userId: loggedUserId,
           date: DateTime(2023, 6, 10),
         ),
         createRace(
           id: 'c3',
-          userId: 'u1',
+          userId: loggedUserId,
           date: DateTime(2023, 5, 30),
         ),
         createRace(
           id: 'c2',
-          userId: 'u1',
+          userId: loggedUserId,
           date: DateTime(2023, 4, 20),
         ),
       ],
@@ -79,9 +80,7 @@ void main() {
         () => authService.loggedUserId$,
       ).called(1);
       verify(
-        () => raceRepository.getAllRaces(
-          userId: 'u1',
-        ),
+        () => raceRepository.getAllRaces(userId: loggedUserId),
       ).called(1);
     },
   );

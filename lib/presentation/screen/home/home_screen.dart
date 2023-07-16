@@ -73,9 +73,9 @@ class _BlocListener extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocWithStatusListener<HomeBloc, HomeState, HomeInfo, dynamic>(
+    return BlocWithStatusListener<HomeBloc, HomeState, HomeBlocInfo, dynamic>(
       child: child,
-      onInfo: (HomeInfo info) {
+      onInfo: (HomeBlocInfo info) {
         _manageInfo(context, info);
       },
       onStateChanged: (HomeState state) {
@@ -84,9 +84,9 @@ class _BlocListener extends StatelessWidget {
     );
   }
 
-  void _manageInfo(BuildContext context, HomeInfo info) {
+  void _manageInfo(BuildContext context, HomeBlocInfo info) {
     switch (info) {
-      case HomeInfo.userSignedOut:
+      case HomeBlocInfo.userSignedOut:
         context.read<ThemeService>().changeTheme(ThemeMode.system);
         navigateAndRemoveUntil(const SignInRoute());
         break;
@@ -97,17 +97,12 @@ class _BlocListener extends StatelessWidget {
     BuildContext context,
     HomeState state,
   ) {
-    if (state.themeMode != null) {
-      _manageThemeMode(context, state.themeMode!);
-    }
-    if (state.language != null) {
-      _manageLanguage(context, state.language!);
-    }
-    if (state.distanceUnit != null) {
-      context.read<DistanceUnitService>().changeUnit(state.distanceUnit!);
-    }
-    if (state.paceUnit != null) {
-      context.read<PaceUnitService>().changeUnit(state.paceUnit!);
+    final settings.Settings? appSettings = state.appSettings;
+    if (appSettings != null) {
+      _manageThemeMode(context, appSettings.themeMode);
+      _manageLanguage(context, appSettings.language);
+      context.read<DistanceUnitService>().changeUnit(appSettings.distanceUnit);
+      context.read<PaceUnitService>().changeUnit(appSettings.paceUnit);
     }
   }
 

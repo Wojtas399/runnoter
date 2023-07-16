@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -30,7 +31,10 @@ class BloodTestPreviewBloc extends BlocWithStatus<BloodTestPreviewEvent,
   })  : _authService = authService,
         _bloodTestRepository = bloodTestRepository,
         super(state) {
-    on<BloodTestPreviewEventInitialize>(_initialize);
+    on<BloodTestPreviewEventInitialize>(
+      _initialize,
+      transformer: restartable(),
+    );
     on<BloodTestPreviewEventDeleteTest>(_deleteTest);
   }
 
@@ -46,12 +50,13 @@ class BloodTestPreviewBloc extends BlocWithStatus<BloodTestPreviewEvent,
                 userId: loggedUserId,
               ),
             );
-    await for (final bloodTest in bloodTest$) {
-      emit(state.copyWith(
+    await emit.forEach(
+      bloodTest$,
+      onData: (BloodTest? bloodTest) => state.copyWith(
         date: bloodTest?.date,
         parameterResults: bloodTest?.parameterResults,
-      ));
-    }
+      ),
+    );
   }
 
   Future<void> _deleteTest(

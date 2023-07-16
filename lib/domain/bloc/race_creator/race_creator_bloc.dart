@@ -49,10 +49,7 @@ class RaceCreatorBloc extends BlocWithStatus<RaceCreatorEvent, RaceCreatorState,
       return;
     }
     final String? loggedUserId = await _authService.loggedUserId$.first;
-    if (loggedUserId == null) {
-      emitNoLoggedUserStatus(emit);
-      return;
-    }
+    if (loggedUserId == null) return;
     final Stream<Race?> race$ = _raceRepository.getRaceById(
       raceId: raceId!,
       userId: loggedUserId,

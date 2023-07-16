@@ -14,6 +14,7 @@ import '../../../mock/domain/service/mock_auth_service.dart';
 void main() {
   final authService = MockAuthService();
   final workoutRepository = MockWorkoutRepository();
+  const String loggedUserId = 'u1';
   const String workoutId = 'w1';
 
   WorkoutCreatorBloc createBloc({
@@ -84,10 +85,10 @@ void main() {
     'should load workout matching to given id and should emit updated date, workout, workout name and stages',
     build: () => createBloc(workoutId: workoutId),
     setUp: () {
-      authService.mockGetLoggedUserId(userId: 'u1');
+      authService.mockGetLoggedUserId(userId: loggedUserId);
       workoutRepository.mockGetWorkoutById(
         workout: createWorkout(
-          id: 'w1',
+          id: workoutId,
           name: 'workout name',
           stages: const [
             WorkoutStageCardio(
@@ -105,7 +106,7 @@ void main() {
           info: WorkoutCreatorBlocInfo.editModeInitialized,
         ),
         workout: createWorkout(
-          id: 'w1',
+          id: workoutId,
           name: 'workout name',
           stages: const [
             WorkoutStageCardio(
@@ -129,8 +130,8 @@ void main() {
       ).called(1);
       verify(
         () => workoutRepository.getWorkoutById(
-          workoutId: 'w1',
-          userId: 'u1',
+          workoutId: workoutId,
+          userId: loggedUserId,
         ),
       ).called(1);
     },
@@ -189,9 +190,7 @@ void main() {
     'workout stage updated, '
     'list of stages is empty, '
     'should do nothing',
-    build: () => createBloc(
-      stages: const [],
-    ),
+    build: () => createBloc(stages: const []),
     act: (bloc) => bloc.add(const WorkoutCreatorEventWorkoutStageUpdated(
       stageIndex: 1,
       workoutStage: WorkoutStageZone2(
@@ -455,7 +454,7 @@ void main() {
       ],
     ),
     setUp: () {
-      authService.mockGetLoggedUserId(userId: 'u1');
+      authService.mockGetLoggedUserId(userId: loggedUserId);
       workoutRepository.mockAddWorkout();
     },
     act: (bloc) => bloc.add(const WorkoutCreatorEventSubmit()),
@@ -497,7 +496,7 @@ void main() {
       ).called(1);
       verify(
         () => workoutRepository.addWorkout(
-          userId: 'u1',
+          userId: loggedUserId,
           workoutName: 'workout 1',
           date: DateTime(2023, 2, 2),
           status: const RunStatusPending(),
@@ -523,7 +522,7 @@ void main() {
     build: () => createBloc(
       date: DateTime(2023, 2, 2),
       workout: createWorkout(
-        id: 'w1',
+        id: workoutId,
         name: 'workout name',
         stages: const [
           WorkoutStageCardio(
@@ -545,7 +544,7 @@ void main() {
       ],
     ),
     setUp: () {
-      authService.mockGetLoggedUserId(userId: 'u1');
+      authService.mockGetLoggedUserId(userId: loggedUserId);
       workoutRepository.mockUpdateWorkout();
     },
     act: (bloc) => bloc.add(const WorkoutCreatorEventSubmit()),
@@ -553,7 +552,7 @@ void main() {
       createState(
         status: const BlocStatusLoading(),
         workout: createWorkout(
-          id: 'w1',
+          id: workoutId,
           name: 'workout name',
           stages: const [
             WorkoutStageCardio(
@@ -579,7 +578,7 @@ void main() {
           info: WorkoutCreatorBlocInfo.workoutUpdated,
         ),
         workout: createWorkout(
-          id: 'w1',
+          id: workoutId,
           name: 'workout name',
           stages: const [
             WorkoutStageCardio(
@@ -607,8 +606,8 @@ void main() {
       ).called(1);
       verify(
         () => workoutRepository.updateWorkout(
-          workoutId: 'w1',
-          userId: 'u1',
+          workoutId: workoutId,
+          userId: loggedUserId,
           workoutName: 'workout 1',
           stages: const [
             WorkoutStageCardio(

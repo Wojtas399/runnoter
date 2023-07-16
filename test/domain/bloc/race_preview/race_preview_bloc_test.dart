@@ -103,9 +103,7 @@ void main() {
     'delete race, '
     'logged user does not exist, '
     'should emit no logged user status',
-    build: () => createBloc(
-      race: createRace(id: 'c1'),
-    ),
+    build: () => createBloc(race: createRace(id: 'c1')),
     setUp: () => authService.mockGetLoggedUserId(),
     act: (bloc) => bloc.add(const RacePreviewEventDeleteRace()),
     expect: () => [
@@ -122,9 +120,7 @@ void main() {
   blocTest(
     'delete race, '
     'should call method from race repository to delete race and should emit info that race has been deleted',
-    build: () => createBloc(
-      race: createRace(id: 'c1'),
-    ),
+    build: () => createBloc(race: createRace(id: 'c1')),
     setUp: () {
       authService.mockGetLoggedUserId(userId: 'u1');
       raceRepository.mockDeleteRace();

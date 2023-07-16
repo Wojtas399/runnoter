@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -44,7 +45,10 @@ class ProfileIdentitiesBloc extends BlocWithStatus<ProfileIdentitiesEvent,
         _bloodTestRepository = bloodTestRepository,
         _raceRepository = raceRepository,
         super(state) {
-    on<ProfileIdentitiesEventInitialize>(_initialize);
+    on<ProfileIdentitiesEventInitialize>(
+      _initialize,
+      transformer: restartable(),
+    );
     on<ProfileIdentitiesEventIdentitiesUpdated>(_identitiesUpdated);
     on<ProfileIdentitiesEventUpdateUsername>(_updateUsername);
     on<ProfileIdentitiesEventUpdateSurname>(_updateSurname);
@@ -60,22 +64,22 @@ class ProfileIdentitiesBloc extends BlocWithStatus<ProfileIdentitiesEvent,
     final Stream<(String?, User?)> userIdentities$ = Rx.combineLatest2(
       _authService.loggedUserEmail$,
       _loggedUserData$,
-      (
-        String? loggedUserEmail,
-        User? loggedUserData,
-      ) =>
+      (String? loggedUserEmail, User? loggedUserData) =>
           (loggedUserEmail, loggedUserData),
     );
-    await for (final userIdentities in userIdentities$) {
-      final String? loggedUserEmail = userIdentities.$1;
-      final User? userData = userIdentities.$2;
-      emit(state.copyWith(
-        loggedUserId: userData?.id,
-        email: loggedUserEmail,
-        username: userData?.name,
-        surname: userData?.surname,
-      ));
-    }
+    await emit.forEach(
+      userIdentities$,
+      onData: ((String?, User?) identities) {
+        final String? loggedUserEmail = identities.$1;
+        final User? loggedUserData = identities.$2;
+        return state.copyWith(
+          loggedUserId: loggedUserData?.id,
+          email: loggedUserEmail,
+          username: loggedUserData?.name,
+          surname: loggedUserData?.surname,
+        );
+      },
+    );
   }
 
   void _identitiesUpdated(
@@ -213,7 +217,7 @@ class ProfileIdentitiesBloc extends BlocWithStatus<ProfileIdentitiesEvent,
   }
 
   Stream<User?> get _loggedUserData$ {
-    return _authService.loggedUserId$.whereType<String>().switchMap(
+    return _authService.loggedUserId$.whereNotNull().switchMap(
           (String userId) => _userRepository.getUserById(
             userId: userId,
           ),

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -21,7 +22,6 @@ class HealthBloc
   final AuthService _authService;
   final HealthMeasurementRepository _healthMeasurementRepository;
   final HealthChartService _chartService;
-  StreamSubscription<HealthMeasurement?>? _todayMeasurementListener;
   StreamSubscription<List<HealthMeasurement>?>?
       _measurementsFromDateRangeListener;
 
@@ -39,8 +39,7 @@ class HealthBloc
         _healthMeasurementRepository = healthMeasurementRepository,
         _chartService = chartService,
         super(state) {
-    on<HealthEventInitialize>(_initialize);
-    on<HealthEventTodayMeasurementUpdated>(_todayMeasurementUpdated);
+    on<HealthEventInitialize>(_initialize, transformer: restartable());
     on<HealthEventMeasurementsFromDateRangeUpdated>(
       _measurementsFromDateRangeUpdated,
     );
@@ -53,16 +52,14 @@ class HealthBloc
 
   @override
   Future<void> close() {
-    _todayMeasurementListener?.cancel();
-    _todayMeasurementListener = null;
     _removeMeasurementsFromDateRangeListener();
     return super.close();
   }
 
-  void _initialize(
+  Future<void> _initialize(
     HealthEventInitialize event,
     Emitter<HealthState> emit,
-  ) {
+  ) async {
     final DateTime today = _dateService.getToday();
     _setNewDateRange(
       _dateService.getFirstDayOfTheWeek(today),
@@ -70,17 +67,7 @@ class HealthBloc
       ChartRange.week,
       emit,
     );
-    _setTodayMeasurementListener();
-  }
-
-  void _todayMeasurementUpdated(
-    HealthEventTodayMeasurementUpdated event,
-    Emitter<HealthState> emit,
-  ) {
-    emit(state.copyWith(
-      todayMeasurement: event.todayMeasurement,
-      removedTodayMeasurement: event.todayMeasurement == null,
-    ));
+    await _setTodayMeasurementListener(emit);
   }
 
   void _measurementsFromDateRangeUpdated(
@@ -181,21 +168,21 @@ class HealthBloc
     _measurementsFromDateRangeListener = null;
   }
 
-  void _setTodayMeasurementListener() {
-    _todayMeasurementListener ??= _loggedUserId$
-        .switchMap(
-          (loggedUserId) => _healthMeasurementRepository.getMeasurementByDate(
-            date: _dateService.getToday(),
-            userId: loggedUserId,
-          ),
-        )
-        .listen(
-          (HealthMeasurement? todayMeasurement) => add(
-            HealthEventTodayMeasurementUpdated(
-              todayMeasurement: todayMeasurement,
-            ),
-          ),
-        );
+  Future<void> _setTodayMeasurementListener(Emitter<HealthState> emit) async {
+    final Stream<HealthMeasurement?> todayMeasurement$ =
+        _loggedUserId$.switchMap(
+      (loggedUserId) => _healthMeasurementRepository.getMeasurementByDate(
+        date: _dateService.getToday(),
+        userId: loggedUserId,
+      ),
+    );
+    await emit.forEach(
+      todayMeasurement$,
+      onData: (HealthMeasurement? todayMeasurement) => state.copyWith(
+        todayMeasurement: todayMeasurement,
+        removedTodayMeasurement: todayMeasurement == null,
+      ),
+    );
   }
 
   void _setMeasurementsFromDateRangeListener(

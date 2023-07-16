@@ -68,12 +68,8 @@ void main() {
     'should set listener for logged user email and data',
     build: () => createBloc(),
     setUp: () {
-      authService.mockGetLoggedUserId(
-        userId: loggedUserId,
-      );
-      authService.mockGetLoggedUserEmail(
-        userEmail: 'email@example.com',
-      );
+      authService.mockGetLoggedUserId(userId: loggedUserId);
+      authService.mockGetLoggedUserEmail(userEmail: 'email@example.com');
       userRepository.mockGetUserById(
         user: createUser(
           id: loggedUserId,
@@ -82,11 +78,7 @@ void main() {
         ),
       );
     },
-    act: (ProfileIdentitiesBloc bloc) {
-      bloc.add(
-        const ProfileIdentitiesEventInitialize(),
-      );
-    },
+    act: (bloc) => bloc.add(const ProfileIdentitiesEventInitialize()),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
@@ -115,18 +107,14 @@ void main() {
     'identities updated, '
     'should update logged user id, email, username and surname in state',
     build: () => createBloc(),
-    act: (ProfileIdentitiesBloc bloc) {
-      bloc.add(
-        ProfileIdentitiesEventIdentitiesUpdated(
-          email: 'email@example.com',
-          user: createUser(
-            id: loggedUserId,
-            name: 'name',
-            surname: 'surname',
-          ),
-        ),
-      );
-    },
+    act: (bloc) => bloc.add(ProfileIdentitiesEventIdentitiesUpdated(
+      email: 'email@example.com',
+      user: createUser(
+        id: loggedUserId,
+        name: 'name',
+        surname: 'surname',
+      ),
+    )),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
@@ -141,19 +129,11 @@ void main() {
   blocTest(
     'update username, '
     'should call method from user repository to update user and should emit info that data have been saved',
-    build: () => createBloc(
-      loggedUserId: loggedUserId,
-    ),
-    setUp: () {
-      userRepository.mockUpdateUserIdentities();
-    },
-    act: (ProfileIdentitiesBloc bloc) {
-      bloc.add(
-        const ProfileIdentitiesEventUpdateUsername(
-          username: 'new username',
-        ),
-      );
-    },
+    build: () => createBloc(loggedUserId: loggedUserId),
+    setUp: () => userRepository.mockUpdateUserIdentities(),
+    act: (bloc) => bloc.add(const ProfileIdentitiesEventUpdateUsername(
+      username: 'new username',
+    )),
     expect: () => [
       createState(
         status: const BlocStatusLoading(),
@@ -166,14 +146,12 @@ void main() {
         loggedUserId: loggedUserId,
       ),
     ],
-    verify: (_) {
-      verify(
-        () => userRepository.updateUserIdentities(
-          userId: loggedUserId,
-          name: 'new username',
-        ),
-      ).called(1);
-    },
+    verify: (_) => verify(
+      () => userRepository.updateUserIdentities(
+        userId: loggedUserId,
+        name: 'new username',
+      ),
+    ).called(1),
   );
 
   blocTest(
@@ -181,43 +159,27 @@ void main() {
     'user id is null'
     'should do nothing',
     build: () => createBloc(),
-    setUp: () {
-      userRepository.mockUpdateUserIdentities();
-    },
-    act: (ProfileIdentitiesBloc bloc) {
-      bloc.add(
-        const ProfileIdentitiesEventUpdateUsername(
-          username: 'new username',
-        ),
-      );
-    },
+    setUp: () => userRepository.mockUpdateUserIdentities(),
+    act: (bloc) => bloc.add(const ProfileIdentitiesEventUpdateUsername(
+      username: 'new username',
+    )),
     expect: () => [],
-    verify: (_) {
-      verifyNever(
-        () => userRepository.updateUserIdentities(
-          userId: loggedUserId,
-          name: 'new username',
-        ),
-      );
-    },
+    verify: (_) => verifyNever(
+      () => userRepository.updateUserIdentities(
+        userId: loggedUserId,
+        name: 'new username',
+      ),
+    ),
   );
 
   blocTest(
     'update surname, '
     'should call method from user repository to update user and should emit info that data have been saved',
-    build: () => createBloc(
-      loggedUserId: loggedUserId,
-    ),
-    setUp: () {
-      userRepository.mockUpdateUserIdentities();
-    },
-    act: (ProfileIdentitiesBloc bloc) {
-      bloc.add(
-        const ProfileIdentitiesEventUpdateSurname(
-          surname: 'new surname',
-        ),
-      );
-    },
+    build: () => createBloc(loggedUserId: loggedUserId),
+    setUp: () => userRepository.mockUpdateUserIdentities(),
+    act: (bloc) => bloc.add(const ProfileIdentitiesEventUpdateSurname(
+      surname: 'new surname',
+    )),
     expect: () => [
       createState(
         status: const BlocStatusLoading(),
@@ -230,14 +192,12 @@ void main() {
         loggedUserId: loggedUserId,
       ),
     ],
-    verify: (_) {
-      verify(
-        () => userRepository.updateUserIdentities(
-          userId: loggedUserId,
-          surname: 'new surname',
-        ),
-      ).called(1);
-    },
+    verify: (_) => verify(
+      () => userRepository.updateUserIdentities(
+        userId: loggedUserId,
+        surname: 'new surname',
+      ),
+    ).called(1),
   );
 
   blocTest(
@@ -245,42 +205,28 @@ void main() {
     'user id is null'
     'should do nothing',
     build: () => createBloc(),
-    setUp: () {
-      userRepository.mockUpdateUserIdentities();
-    },
-    act: (ProfileIdentitiesBloc bloc) {
-      bloc.add(
-        const ProfileIdentitiesEventUpdateSurname(
-          surname: 'new surname',
-        ),
-      );
-    },
+    setUp: () => userRepository.mockUpdateUserIdentities(),
+    act: (bloc) => bloc.add(const ProfileIdentitiesEventUpdateSurname(
+      surname: 'new surname',
+    )),
     expect: () => [],
-    verify: (_) {
-      verifyNever(
-        () => userRepository.updateUserIdentities(
-          userId: loggedUserId,
-          surname: 'new surname',
-        ),
-      );
-    },
+    verify: (_) => verifyNever(
+      () => userRepository.updateUserIdentities(
+        userId: loggedUserId,
+        surname: 'new surname',
+      ),
+    ),
   );
 
   blocTest(
     'update email, '
     'should call method from auth service to update email and should emit info that data have been saved',
     build: () => createBloc(),
-    setUp: () {
-      authService.mockUpdateEmail();
-    },
-    act: (ProfileIdentitiesBloc bloc) {
-      bloc.add(
-        const ProfileIdentitiesEventUpdateEmail(
-          newEmail: 'email@example.com',
-          password: 'Password1!',
-        ),
-      );
-    },
+    setUp: () => authService.mockUpdateEmail(),
+    act: (bloc) => bloc.add(const ProfileIdentitiesEventUpdateEmail(
+      newEmail: 'email@example.com',
+      password: 'Password1!',
+    )),
     expect: () => [
       createState(
         status: const BlocStatusLoading(),
@@ -291,14 +237,12 @@ void main() {
         ),
       ),
     ],
-    verify: (_) {
-      verify(
-        () => authService.updateEmail(
-          newEmail: 'email@example.com',
-          password: 'Password1!',
-        ),
-      ).called(1);
-    },
+    verify: (_) => verify(
+      () => authService.updateEmail(
+        newEmail: 'email@example.com',
+        password: 'Password1!',
+      ),
+    ).called(1),
   );
 
   blocTest(
@@ -306,21 +250,15 @@ void main() {
     'auth exception with email already in use code, '
     'should emit error status with email already in use error',
     build: () => createBloc(),
-    setUp: () {
-      authService.mockUpdateEmail(
-        throwable: const AuthException(
-          code: AuthExceptionCode.emailAlreadyInUse,
-        ),
-      );
-    },
-    act: (ProfileIdentitiesBloc bloc) {
-      bloc.add(
-        const ProfileIdentitiesEventUpdateEmail(
-          newEmail: 'email@example.com',
-          password: 'Password1!',
-        ),
-      );
-    },
+    setUp: () => authService.mockUpdateEmail(
+      throwable: const AuthException(
+        code: AuthExceptionCode.emailAlreadyInUse,
+      ),
+    ),
+    act: (bloc) => bloc.add(const ProfileIdentitiesEventUpdateEmail(
+      newEmail: 'email@example.com',
+      password: 'Password1!',
+    )),
     expect: () => [
       createState(
         status: const BlocStatusLoading(),
@@ -331,14 +269,12 @@ void main() {
         ),
       ),
     ],
-    verify: (_) {
-      verify(
-        () => authService.updateEmail(
-          newEmail: 'email@example.com',
-          password: 'Password1!',
-        ),
-      ).called(1);
-    },
+    verify: (_) => verify(
+      () => authService.updateEmail(
+        newEmail: 'email@example.com',
+        password: 'Password1!',
+      ),
+    ).called(1),
   );
 
   blocTest(
@@ -346,21 +282,15 @@ void main() {
     'auth exception with wrong password code, '
     'should emit error status with wrong password error',
     build: () => createBloc(),
-    setUp: () {
-      authService.mockUpdateEmail(
-        throwable: const AuthException(
-          code: AuthExceptionCode.wrongPassword,
-        ),
-      );
-    },
-    act: (ProfileIdentitiesBloc bloc) {
-      bloc.add(
-        const ProfileIdentitiesEventUpdateEmail(
-          newEmail: 'email@example.com',
-          password: 'Password1!',
-        ),
-      );
-    },
+    setUp: () => authService.mockUpdateEmail(
+      throwable: const AuthException(
+        code: AuthExceptionCode.wrongPassword,
+      ),
+    ),
+    act: (bloc) => bloc.add(const ProfileIdentitiesEventUpdateEmail(
+      newEmail: 'email@example.com',
+      password: 'Password1!',
+    )),
     expect: () => [
       createState(
         status: const BlocStatusLoading(),
@@ -371,14 +301,12 @@ void main() {
         ),
       ),
     ],
-    verify: (_) {
-      verify(
-        () => authService.updateEmail(
-          newEmail: 'email@example.com',
-          password: 'Password1!',
-        ),
-      ).called(1);
-    },
+    verify: (_) => verify(
+      () => authService.updateEmail(
+        newEmail: 'email@example.com',
+        password: 'Password1!',
+      ),
+    ).called(1),
   );
 
   blocTest(
@@ -386,21 +314,15 @@ void main() {
     'network exception with request failed code, '
     'should emit network request failed status',
     build: () => createBloc(),
-    setUp: () {
-      authService.mockUpdateEmail(
-        throwable: const NetworkException(
-          code: NetworkExceptionCode.requestFailed,
-        ),
-      );
-    },
-    act: (ProfileIdentitiesBloc bloc) {
-      bloc.add(
-        const ProfileIdentitiesEventUpdateEmail(
-          newEmail: 'email@example.com',
-          password: 'Password1!',
-        ),
-      );
-    },
+    setUp: () => authService.mockUpdateEmail(
+      throwable: const NetworkException(
+        code: NetworkExceptionCode.requestFailed,
+      ),
+    ),
+    act: (bloc) => bloc.add(const ProfileIdentitiesEventUpdateEmail(
+      newEmail: 'email@example.com',
+      password: 'Password1!',
+    )),
     expect: () => [
       createState(
         status: const BlocStatusLoading(),
@@ -409,14 +331,12 @@ void main() {
         status: const BlocStatusNetworkRequestFailed(),
       ),
     ],
-    verify: (_) {
-      verify(
-        () => authService.updateEmail(
-          newEmail: 'email@example.com',
-          password: 'Password1!',
-        ),
-      ).called(1);
-    },
+    verify: (_) => verify(
+      () => authService.updateEmail(
+        newEmail: 'email@example.com',
+        password: 'Password1!',
+      ),
+    ).called(1),
   );
 
   blocTest(
@@ -424,21 +344,15 @@ void main() {
     'unknown exception, '
     'should emit unknown error status and should rethrow exception',
     build: () => createBloc(),
-    setUp: () {
-      authService.mockUpdateEmail(
-        throwable: const UnknownException(
-          message: 'unknown exception message',
-        ),
-      );
-    },
-    act: (ProfileIdentitiesBloc bloc) {
-      bloc.add(
-        const ProfileIdentitiesEventUpdateEmail(
-          newEmail: 'email@example.com',
-          password: 'Password1!',
-        ),
-      );
-    },
+    setUp: () => authService.mockUpdateEmail(
+      throwable: const UnknownException(
+        message: 'unknown exception message',
+      ),
+    ),
+    act: (bloc) => bloc.add(const ProfileIdentitiesEventUpdateEmail(
+      newEmail: 'email@example.com',
+      password: 'Password1!',
+    )),
     expect: () => [
       createState(
         status: const BlocStatusLoading(),
@@ -447,34 +361,24 @@ void main() {
         status: const BlocStatusUnknownError(),
       ),
     ],
-    errors: () => [
-      'unknown exception message',
-    ],
-    verify: (_) {
-      verify(
-        () => authService.updateEmail(
-          newEmail: 'email@example.com',
-          password: 'Password1!',
-        ),
-      ).called(1);
-    },
+    errors: () => ['unknown exception message'],
+    verify: (_) => verify(
+      () => authService.updateEmail(
+        newEmail: 'email@example.com',
+        password: 'Password1!',
+      ),
+    ).called(1),
   );
 
   blocTest(
     'update password, '
     'should call method from auth service to update password and should emit info that data have been saved',
     build: () => createBloc(),
-    setUp: () {
-      authService.mockUpdatePassword();
-    },
-    act: (ProfileIdentitiesBloc bloc) {
-      bloc.add(
-        const ProfileIdentitiesEventUpdatePassword(
-          newPassword: 'newPassword',
-          currentPassword: 'currentPassword',
-        ),
-      );
-    },
+    setUp: () => authService.mockUpdatePassword(),
+    act: (bloc) => bloc.add(const ProfileIdentitiesEventUpdatePassword(
+      newPassword: 'newPassword',
+      currentPassword: 'currentPassword',
+    )),
     expect: () => [
       createState(
         status: const BlocStatusLoading(),
@@ -485,14 +389,12 @@ void main() {
         ),
       ),
     ],
-    verify: (_) {
-      verify(
-        () => authService.updatePassword(
-          newPassword: 'newPassword',
-          currentPassword: 'currentPassword',
-        ),
-      ).called(1);
-    },
+    verify: (_) => verify(
+      () => authService.updatePassword(
+        newPassword: 'newPassword',
+        currentPassword: 'currentPassword',
+      ),
+    ).called(1),
   );
 
   blocTest(
@@ -500,21 +402,15 @@ void main() {
     'auth exception with wrong password code, '
     'should emit error status with wrong current password error',
     build: () => createBloc(),
-    setUp: () {
-      authService.mockUpdatePassword(
-        throwable: const AuthException(
-          code: AuthExceptionCode.wrongPassword,
-        ),
-      );
-    },
-    act: (ProfileIdentitiesBloc bloc) {
-      bloc.add(
-        const ProfileIdentitiesEventUpdatePassword(
-          newPassword: 'newPassword',
-          currentPassword: 'currentPassword',
-        ),
-      );
-    },
+    setUp: () => authService.mockUpdatePassword(
+      throwable: const AuthException(
+        code: AuthExceptionCode.wrongPassword,
+      ),
+    ),
+    act: (bloc) => bloc.add(const ProfileIdentitiesEventUpdatePassword(
+      newPassword: 'newPassword',
+      currentPassword: 'currentPassword',
+    )),
     expect: () => [
       createState(
         status: const BlocStatusLoading(),
@@ -525,14 +421,12 @@ void main() {
         ),
       ),
     ],
-    verify: (_) {
-      verify(
-        () => authService.updatePassword(
-          newPassword: 'newPassword',
-          currentPassword: 'currentPassword',
-        ),
-      ).called(1);
-    },
+    verify: (_) => verify(
+      () => authService.updatePassword(
+        newPassword: 'newPassword',
+        currentPassword: 'currentPassword',
+      ),
+    ).called(1),
   );
 
   blocTest(
@@ -540,21 +434,15 @@ void main() {
     'network exception with request failed code, '
     'should emit network request failed status',
     build: () => createBloc(),
-    setUp: () {
-      authService.mockUpdatePassword(
-        throwable: const NetworkException(
-          code: NetworkExceptionCode.requestFailed,
-        ),
-      );
-    },
-    act: (ProfileIdentitiesBloc bloc) {
-      bloc.add(
-        const ProfileIdentitiesEventUpdatePassword(
-          newPassword: 'newPassword',
-          currentPassword: 'currentPassword',
-        ),
-      );
-    },
+    setUp: () => authService.mockUpdatePassword(
+      throwable: const NetworkException(
+        code: NetworkExceptionCode.requestFailed,
+      ),
+    ),
+    act: (bloc) => bloc.add(const ProfileIdentitiesEventUpdatePassword(
+      newPassword: 'newPassword',
+      currentPassword: 'currentPassword',
+    )),
     expect: () => [
       createState(
         status: const BlocStatusLoading(),
@@ -563,14 +451,12 @@ void main() {
         status: const BlocStatusNetworkRequestFailed(),
       ),
     ],
-    verify: (_) {
-      verify(
-        () => authService.updatePassword(
-          newPassword: 'newPassword',
-          currentPassword: 'currentPassword',
-        ),
-      ).called(1);
-    },
+    verify: (_) => verify(
+      () => authService.updatePassword(
+        newPassword: 'newPassword',
+        currentPassword: 'currentPassword',
+      ),
+    ).called(1),
   );
 
   blocTest(
@@ -578,21 +464,15 @@ void main() {
     'unknown exception, '
     'should emit unknown error status',
     build: () => createBloc(),
-    setUp: () {
-      authService.mockUpdatePassword(
-        throwable: const UnknownException(
-          message: 'unknown exception message',
-        ),
-      );
-    },
-    act: (ProfileIdentitiesBloc bloc) {
-      bloc.add(
-        const ProfileIdentitiesEventUpdatePassword(
-          newPassword: 'newPassword',
-          currentPassword: 'currentPassword',
-        ),
-      );
-    },
+    setUp: () => authService.mockUpdatePassword(
+      throwable: const UnknownException(
+        message: 'unknown exception message',
+      ),
+    ),
+    act: (bloc) => bloc.add(const ProfileIdentitiesEventUpdatePassword(
+      newPassword: 'newPassword',
+      currentPassword: 'currentPassword',
+    )),
     expect: () => [
       createState(
         status: const BlocStatusLoading(),
@@ -601,17 +481,13 @@ void main() {
         status: const BlocStatusUnknownError(),
       ),
     ],
-    errors: () => [
-      'unknown exception message',
-    ],
-    verify: (_) {
-      verify(
-        () => authService.updatePassword(
-          newPassword: 'newPassword',
-          currentPassword: 'currentPassword',
-        ),
-      ).called(1);
-    },
+    errors: () => ['unknown exception message'],
+    verify: (_) => verify(
+      () => authService.updatePassword(
+        newPassword: 'newPassword',
+        currentPassword: 'currentPassword',
+      ),
+    ).called(1),
   );
 
   blocTest(
@@ -619,13 +495,9 @@ void main() {
     'userId is null, '
     'should do nothing',
     build: () => createBloc(),
-    act: (ProfileIdentitiesBloc bloc) {
-      bloc.add(
-        const ProfileIdentitiesEventDeleteAccount(
-          password: 'password1',
-        ),
-      );
-    },
+    act: (bloc) => bloc.add(const ProfileIdentitiesEventDeleteAccount(
+      password: 'password1',
+    )),
     expect: () => [],
   );
 
@@ -633,13 +505,9 @@ void main() {
     'delete account, '
     'password is correct, '
     'should call methods to delete user data and account and should emit info that account has been deleted',
-    build: () => createBloc(
-      loggedUserId: loggedUserId,
-    ),
+    build: () => createBloc(loggedUserId: loggedUserId),
     setUp: () {
-      authService.mockIsPasswordCorrect(
-        isCorrect: true,
-      );
+      authService.mockIsPasswordCorrect(isCorrect: true);
       authService.mockDeleteAccount();
       userRepository.mockDeleteUser();
       workoutRepository.mockDeleteAllUserWorkouts();
@@ -647,13 +515,9 @@ void main() {
       bloodTestRepository.mockDeleteAllUserTests();
       raceRepository.mockDeleteAllUserRaces();
     },
-    act: (ProfileIdentitiesBloc bloc) {
-      bloc.add(
-        const ProfileIdentitiesEventDeleteAccount(
-          password: 'password1',
-        ),
-      );
-    },
+    act: (bloc) => bloc.add(const ProfileIdentitiesEventDeleteAccount(
+      password: 'password1',
+    )),
     expect: () => [
       createState(
         status: const BlocStatusLoading(),
@@ -668,14 +532,10 @@ void main() {
     ],
     verify: (_) {
       verify(
-        () => authService.isPasswordCorrect(
-          password: 'password1',
-        ),
+        () => authService.isPasswordCorrect(password: 'password1'),
       ).called(1);
       verify(
-        () => workoutRepository.deleteAllUserWorkouts(
-          userId: loggedUserId,
-        ),
+        () => workoutRepository.deleteAllUserWorkouts(userId: loggedUserId),
       ).called(1);
       verify(
         () => healthMeasurementRepository.deleteAllUserMeasurements(
@@ -683,24 +543,16 @@ void main() {
         ),
       ).called(1);
       verify(
-        () => bloodTestRepository.deleteAllUserTests(
-          userId: loggedUserId,
-        ),
+        () => bloodTestRepository.deleteAllUserTests(userId: loggedUserId),
       ).called(1);
       verify(
-        () => raceRepository.deleteAllUserRaces(
-          userId: loggedUserId,
-        ),
+        () => raceRepository.deleteAllUserRaces(userId: loggedUserId),
       ).called(1);
       verify(
-        () => userRepository.deleteUser(
-          userId: loggedUserId,
-        ),
+        () => userRepository.deleteUser(userId: loggedUserId),
       ).called(1);
       verify(
-        () => authService.deleteAccount(
-          password: 'password1',
-        ),
+        () => authService.deleteAccount(password: 'password1'),
       ).called(1);
     },
   );
@@ -709,21 +561,11 @@ void main() {
     'delete account, '
     'password is incorrect, '
     'should emit error status with wrong password error',
-    build: () => createBloc(
-      loggedUserId: loggedUserId,
-    ),
-    setUp: () {
-      authService.mockIsPasswordCorrect(
-        isCorrect: false,
-      );
-    },
-    act: (ProfileIdentitiesBloc bloc) {
-      bloc.add(
-        const ProfileIdentitiesEventDeleteAccount(
-          password: 'password1',
-        ),
-      );
-    },
+    build: () => createBloc(loggedUserId: loggedUserId),
+    setUp: () => authService.mockIsPasswordCorrect(isCorrect: false),
+    act: (bloc) => bloc.add(const ProfileIdentitiesEventDeleteAccount(
+      password: 'password1',
+    )),
     expect: () => [
       createState(
         status: const BlocStatusLoading(),
@@ -736,36 +578,24 @@ void main() {
         loggedUserId: loggedUserId,
       ),
     ],
-    verify: (_) {
-      verify(
-        () => authService.isPasswordCorrect(
-          password: 'password1',
-        ),
-      ).called(1);
-    },
+    verify: (_) => verify(
+      () => authService.isPasswordCorrect(password: 'password1'),
+    ).called(1),
   );
 
   blocTest(
     'delete account, '
     'network exception with request failed code, '
     'should emit network request failed code',
-    build: () => createBloc(
-      loggedUserId: loggedUserId,
+    build: () => createBloc(loggedUserId: loggedUserId),
+    setUp: () => authService.mockIsPasswordCorrect(
+      throwable: const NetworkException(
+        code: NetworkExceptionCode.requestFailed,
+      ),
     ),
-    setUp: () {
-      authService.mockIsPasswordCorrect(
-        throwable: const NetworkException(
-          code: NetworkExceptionCode.requestFailed,
-        ),
-      );
-    },
-    act: (ProfileIdentitiesBloc bloc) {
-      bloc.add(
-        const ProfileIdentitiesEventDeleteAccount(
-          password: 'password1',
-        ),
-      );
-    },
+    act: (bloc) => bloc.add(const ProfileIdentitiesEventDeleteAccount(
+      password: 'password1',
+    )),
     expect: () => [
       createState(
         status: const BlocStatusLoading(),
@@ -776,26 +606,18 @@ void main() {
         loggedUserId: loggedUserId,
       ),
     ],
-    verify: (_) {
-      verify(
-        () => authService.isPasswordCorrect(
-          password: 'password1',
-        ),
-      ).called(1);
-    },
+    verify: (_) => verify(
+      () => authService.isPasswordCorrect(password: 'password1'),
+    ).called(1),
   );
 
   blocTest(
     'delete account, '
     'unknown exception, '
     'should emit unknown error status and throw exception message',
-    build: () => createBloc(
-      loggedUserId: loggedUserId,
-    ),
+    build: () => createBloc(loggedUserId: loggedUserId),
     setUp: () {
-      authService.mockIsPasswordCorrect(
-        isCorrect: true,
-      );
+      authService.mockIsPasswordCorrect(isCorrect: true);
       workoutRepository.mockDeleteAllUserWorkouts();
       bloodTestRepository.mockDeleteAllUserTests();
       healthMeasurementRepository.mockDeleteAllUserMeasurements();
@@ -807,13 +629,9 @@ void main() {
         ),
       );
     },
-    act: (ProfileIdentitiesBloc bloc) {
-      bloc.add(
-        const ProfileIdentitiesEventDeleteAccount(
-          password: 'password1',
-        ),
-      );
-    },
+    act: (bloc) => bloc.add(const ProfileIdentitiesEventDeleteAccount(
+      password: 'password1',
+    )),
     expect: () => [
       createState(
         status: const BlocStatusLoading(),
@@ -824,24 +642,16 @@ void main() {
         loggedUserId: loggedUserId,
       ),
     ],
-    errors: () => [
-      'unknown exception message',
-    ],
+    errors: () => ['unknown exception message'],
     verify: (_) {
       verify(
-        () => authService.isPasswordCorrect(
-          password: 'password1',
-        ),
+        () => authService.isPasswordCorrect(password: 'password1'),
       ).called(1);
       verify(
-        () => userRepository.deleteUser(
-          userId: loggedUserId,
-        ),
+        () => userRepository.deleteUser(userId: loggedUserId),
       ).called(1);
       verify(
-        () => authService.deleteAccount(
-          password: 'password1',
-        ),
+        () => authService.deleteAccount(password: 'password1'),
       ).called(1);
     },
   );

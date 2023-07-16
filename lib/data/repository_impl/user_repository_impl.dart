@@ -1,5 +1,5 @@
+import 'package:collection/collection.dart';
 import 'package:firebase/firebase.dart';
-import 'package:rxdart/rxdart.dart';
 
 import '../../domain/additional_model/state_repository.dart';
 import '../../domain/entity/settings.dart' as settings;
@@ -30,21 +30,14 @@ class UserRepositoryImpl extends StateRepository<User>
   @override
   Stream<User?> getUserById({
     required String userId,
-  }) {
-    return dataStream$
-        .map(
-      (List<User>? users) => <User?>[...?users].firstWhere(
+  }) async* {
+    await for (final users in dataStream$) {
+      User? user = users?.firstWhereOrNull(
         (User? user) => user?.id == userId,
-        orElse: () => null,
-      ),
-    )
-        .doOnListen(
-      () async {
-        if (doesEntityNotExistInState(userId)) {
-          await _loadUserFromDb(userId);
-        }
-      },
-    );
+      );
+      user ??= await _loadUserFromDb(userId);
+      yield user;
+    }
   }
 
   @override
@@ -161,21 +154,13 @@ class UserRepositoryImpl extends StateRepository<User>
     removeEntity(userId);
   }
 
-  Future<void> _loadUserFromDb(String userId) async {
-    final UserDto? userDto = await _dbUserService.loadUserById(
-      userId: userId,
-    );
-    if (userDto == null) {
-      return;
-    }
+  Future<User?> _loadUserFromDb(String userId) async {
+    final UserDto? userDto = await _dbUserService.loadUserById(userId: userId);
+    if (userDto == null) return null;
     final AppearanceSettingsDto? appearanceSettingsDto =
-        await _dbAppearanceSettingsService.loadSettingsByUserId(
-      userId: userId,
-    );
+        await _dbAppearanceSettingsService.loadSettingsByUserId(userId: userId);
     final WorkoutSettingsDto? workoutSettingsDto =
-        await _dbWorkoutSettingsService.loadSettingsByUserId(
-      userId: userId,
-    );
+        await _dbWorkoutSettingsService.loadSettingsByUserId(userId: userId);
     if (appearanceSettingsDto != null && workoutSettingsDto != null) {
       final User user = mapUserFromDto(
         userDto: userDto,
@@ -183,7 +168,9 @@ class UserRepositoryImpl extends StateRepository<User>
         workoutSettingsDto: workoutSettingsDto,
       );
       addEntity(user);
+      return user;
     }
+    return null;
   }
 
   Future<AppearanceSettingsDto?> _updateAppearanceSettings(

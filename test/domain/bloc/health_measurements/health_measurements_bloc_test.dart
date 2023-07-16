@@ -12,6 +12,7 @@ import '../../../mock/domain/service/mock_auth_service.dart';
 void main() {
   final authService = MockAuthService();
   final healthMeasurementRepository = MockHealthMeasurementRepository();
+  const String loggedUserId = 'u1';
 
   HealthMeasurementsBloc createBloc() => HealthMeasurementsBloc(
         authService: authService,
@@ -37,7 +38,7 @@ void main() {
     'should set listener of all measurements and should sort measurements in descending order by date',
     build: () => createBloc(),
     setUp: () {
-      authService.mockGetLoggedUserId(userId: 'u1');
+      authService.mockGetLoggedUserId(userId: loggedUserId);
       healthMeasurementRepository.mockGetAllMeasurements(
         measurements: [
           createHealthMeasurement(date: DateTime(2023, 2, 14)),
@@ -47,9 +48,7 @@ void main() {
         ],
       );
     },
-    act: (HealthMeasurementsBloc bloc) => bloc.add(
-      const HealthMeasurementsEventInitialize(),
-    ),
+    act: (bloc) => bloc.add(const HealthMeasurementsEventInitialize()),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
@@ -67,37 +66,10 @@ void main() {
       ).called(1);
       verify(
         () => healthMeasurementRepository.getAllMeasurements(
-          userId: 'u1',
+          userId: loggedUserId,
         ),
       ).called(1);
     },
-  );
-
-  blocTest(
-    'measurements updated, '
-    'should sort measurements in descending order by date and should emit sorted measurements',
-    build: () => createBloc(),
-    act: (HealthMeasurementsBloc bloc) => bloc.add(
-      HealthMeasurementsEventMeasurementsUpdated(
-        measurements: [
-          createHealthMeasurement(date: DateTime(2023, 2, 14)),
-          createHealthMeasurement(date: DateTime(2023, 2, 8)),
-          createHealthMeasurement(date: DateTime(2023, 2, 10)),
-          createHealthMeasurement(date: DateTime(2023, 2, 11)),
-        ],
-      ),
-    ),
-    expect: () => [
-      createState(
-        status: const BlocStatusComplete(),
-        measurements: [
-          createHealthMeasurement(date: DateTime(2023, 2, 14)),
-          createHealthMeasurement(date: DateTime(2023, 2, 11)),
-          createHealthMeasurement(date: DateTime(2023, 2, 10)),
-          createHealthMeasurement(date: DateTime(2023, 2, 8)),
-        ],
-      ),
-    ],
   );
 
   blocTest(
@@ -106,11 +78,9 @@ void main() {
     'should emit no logged user bloc status',
     build: () => createBloc(),
     setUp: () => authService.mockGetLoggedUserId(),
-    act: (HealthMeasurementsBloc bloc) => bloc.add(
-      HealthMeasurementsEventDeleteMeasurement(
-        date: DateTime(2023, 5, 14),
-      ),
-    ),
+    act: (bloc) => bloc.add(HealthMeasurementsEventDeleteMeasurement(
+      date: DateTime(2023, 5, 14),
+    )),
     expect: () => [
       createState(
         status: const BlocStatusNoLoggedUser(),
@@ -126,14 +96,12 @@ void main() {
     'should call method from health measurement repository to delete measurement and should emit bloc info about deleted measurement',
     build: () => createBloc(),
     setUp: () {
-      authService.mockGetLoggedUserId(userId: 'u1');
+      authService.mockGetLoggedUserId(userId: loggedUserId);
       healthMeasurementRepository.mockDeleteMeasurement();
     },
-    act: (HealthMeasurementsBloc bloc) => bloc.add(
-      HealthMeasurementsEventDeleteMeasurement(
-        date: DateTime(2023, 5, 14),
-      ),
-    ),
+    act: (bloc) => bloc.add(HealthMeasurementsEventDeleteMeasurement(
+      date: DateTime(2023, 5, 14),
+    )),
     expect: () => [
       createState(
         status: const BlocStatusLoading(),
@@ -150,7 +118,7 @@ void main() {
       ).called(1);
       verify(
         () => healthMeasurementRepository.deleteMeasurement(
-          userId: 'u1',
+          userId: loggedUserId,
           date: DateTime(2023, 5, 14),
         ),
       ).called(1);

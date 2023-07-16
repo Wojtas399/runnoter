@@ -13,6 +13,7 @@ void main() {
   final authService = MockAuthService();
   final workoutRepository = MockWorkoutRepository();
   final raceRepository = MockRaceRepository();
+  const String loggedUserId = 'u1';
 
   CalendarCubit createCubit() => CalendarCubit(
         authService: authService,
@@ -31,7 +32,7 @@ void main() {
     'should set new listener of workouts and races from new month',
     build: () => createCubit(),
     setUp: () {
-      authService.mockGetLoggedUserId(userId: 'u1');
+      authService.mockGetLoggedUserId(userId: loggedUserId);
       workoutRepository.mockGetWorkoutsByDateRange(
         workouts: [
           createWorkout(id: 'w1', name: 'workout 1'),
@@ -45,7 +46,7 @@ void main() {
         ],
       );
     },
-    act: (CalendarCubit cubit) => cubit.monthChanged(
+    act: (cubit) => cubit.monthChanged(
       firstDisplayingDate: DateTime(2023, 1, 1),
       lastDisplayingDate: DateTime(2023, 1, 31),
     ),
@@ -69,7 +70,7 @@ void main() {
         () => workoutRepository.getWorkoutsByDateRange(
           startDate: DateTime(2023, 1, 1),
           endDate: DateTime(2023, 1, 31),
-          userId: 'u1',
+          userId: loggedUserId,
         ),
       ).called(1);
     },
