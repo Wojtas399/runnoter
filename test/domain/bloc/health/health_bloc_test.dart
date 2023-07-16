@@ -118,10 +118,13 @@ void main() {
       createState(
         status: const BlocStatusComplete(),
         chartRange: ChartRange.week,
+        todayMeasurement: createHealthMeasurement(
+          date: DateTime(2023, 5, 12),
+          restingHeartRate: 49,
+          fastingWeight: 60.5,
+        ),
         chartStartDate: DateTime(2023, 5, 8),
         chartEndDate: DateTime(2023, 5, 14),
-        restingHeartRatePoints: [],
-        fastingWeightPoints: [],
       ),
       createState(
         status: const BlocStatusComplete(),
@@ -155,54 +158,6 @@ void main() {
         ),
       ).called(1);
     },
-  );
-
-  blocTest(
-    'today measurement updated, '
-    'should update today measurement in state',
-    build: () => createBloc(),
-    act: (HealthBloc bloc) => bloc.add(
-      HealthEventTodayMeasurementUpdated(
-        todayMeasurement: createHealthMeasurement(
-          date: DateTime(2023, 5, 12),
-          restingHeartRate: 50,
-          fastingWeight: 60.5,
-        ),
-      ),
-    ),
-    expect: () => [
-      createState(
-        status: const BlocStatusComplete(),
-        todayMeasurement: createHealthMeasurement(
-          date: DateTime(2023, 5, 12),
-          restingHeartRate: 50,
-          fastingWeight: 60.5,
-        ),
-      ),
-    ],
-  );
-
-  blocTest(
-    'today measurement updated, '
-    'should set today measurement as null if given measurement is null',
-    build: () => createBloc(
-      todayMeasurement: createHealthMeasurement(
-        date: DateTime(2023, 5, 12),
-        restingHeartRate: 50,
-        fastingWeight: 60.5,
-      ),
-    ),
-    act: (HealthBloc bloc) => bloc.add(
-      const HealthEventTodayMeasurementUpdated(
-        todayMeasurement: null,
-      ),
-    ),
-    expect: () => [
-      createState(
-        status: const BlocStatusComplete(),
-        todayMeasurement: null,
-      ),
-    ],
   );
 
   blocTest(
