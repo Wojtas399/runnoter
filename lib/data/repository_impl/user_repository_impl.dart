@@ -23,9 +23,7 @@ class UserRepositoryImpl extends StateRepository<User>
   })  : _dbUserService = firebaseUserService,
         _dbAppearanceSettingsService = firebaseAppearanceSettingsService,
         _dbWorkoutSettingsService = firebaseWorkoutSettingsService,
-        super(
-          initialData: initialState,
-        );
+        super(initialData: initialState);
 
   @override
   Stream<User?> getUserById({
@@ -74,25 +72,24 @@ class UserRepositoryImpl extends StateRepository<User>
     String? name,
     String? surname,
   }) async {
-    final User? user = await getUserById(userId: userId).first;
-    if (user == null) {
+    final Stream<User?> user$ = getUserById(userId: userId);
+    await for (final user in user$) {
+      if (user == null) return;
+      final UserDto? updatedUserDto = await _dbUserService.updateUserData(
+        userId: userId,
+        name: name,
+        surname: surname,
+      );
+      if (updatedUserDto == null) return;
+      final User updatedUser = User(
+        id: userId,
+        name: updatedUserDto.name,
+        surname: updatedUserDto.surname,
+        settings: user.settings,
+      );
+      updateEntity(updatedUser);
       return;
     }
-    final UserDto? updatedUserDto = await _dbUserService.updateUserData(
-      userId: userId,
-      name: name,
-      surname: surname,
-    );
-    if (updatedUserDto == null) {
-      return;
-    }
-    final User updatedUser = User(
-      id: userId,
-      name: updatedUserDto.name,
-      surname: updatedUserDto.surname,
-      settings: user.settings,
-    );
-    updateEntity(updatedUser);
   }
 
   @override
@@ -103,45 +100,45 @@ class UserRepositoryImpl extends StateRepository<User>
     settings.DistanceUnit? distanceUnit,
     settings.PaceUnit? paceUnit,
   }) async {
-    final User? user = await getUserById(userId: userId).first;
-    if (user == null) {
+    final Stream<User?> user$ = getUserById(userId: userId);
+    await for (final user in user$) {
+      if (user == null) return;
+      AppearanceSettingsDto? newAppearanceSettingsDto;
+      WorkoutSettingsDto? newWorkoutSettingsDto;
+      if (themeMode != null || language != null) {
+        newAppearanceSettingsDto =
+            await _updateAppearanceSettings(userId, themeMode, language);
+      }
+      if (distanceUnit != null || paceUnit != null) {
+        newWorkoutSettingsDto =
+            await _updateWorkoutSettings(userId, distanceUnit, paceUnit);
+      }
+      if (newAppearanceSettingsDto == null && newWorkoutSettingsDto == null) {
+        return;
+      }
+      final settings.Settings updatedSettings = settings.Settings(
+        themeMode: newAppearanceSettingsDto != null
+            ? mapThemeModeFromDb(newAppearanceSettingsDto.themeMode)
+            : user.settings.themeMode,
+        language: newAppearanceSettingsDto != null
+            ? mapLanguageFromDb(newAppearanceSettingsDto.language)
+            : user.settings.language,
+        distanceUnit: newWorkoutSettingsDto != null
+            ? mapDistanceUnitFromDb(newWorkoutSettingsDto.distanceUnit)
+            : user.settings.distanceUnit,
+        paceUnit: newWorkoutSettingsDto != null
+            ? mapPaceUnitFromDb(newWorkoutSettingsDto.paceUnit)
+            : user.settings.paceUnit,
+      );
+      final User updatedUser = User(
+        id: user.id,
+        name: user.name,
+        surname: user.surname,
+        settings: updatedSettings,
+      );
+      updateEntity(updatedUser);
       return;
     }
-    AppearanceSettingsDto? updatedAppearanceSettingsDto;
-    WorkoutSettingsDto? updatedWorkoutSettingsDto;
-    if (themeMode != null || language != null) {
-      updatedAppearanceSettingsDto =
-          await _updateAppearanceSettings(userId, themeMode, language);
-    }
-    if (distanceUnit != null || paceUnit != null) {
-      updatedWorkoutSettingsDto =
-          await _updateWorkoutSettings(userId, distanceUnit, paceUnit);
-    }
-    if (updatedAppearanceSettingsDto == null &&
-        updatedWorkoutSettingsDto == null) {
-      return;
-    }
-    final settings.Settings updatedSettings = settings.Settings(
-      themeMode: updatedAppearanceSettingsDto != null
-          ? mapThemeModeFromDb(updatedAppearanceSettingsDto.themeMode)
-          : user.settings.themeMode,
-      language: updatedAppearanceSettingsDto != null
-          ? mapLanguageFromDb(updatedAppearanceSettingsDto.language)
-          : user.settings.language,
-      distanceUnit: updatedWorkoutSettingsDto != null
-          ? mapDistanceUnitFromDb(updatedWorkoutSettingsDto.distanceUnit)
-          : user.settings.distanceUnit,
-      paceUnit: updatedWorkoutSettingsDto != null
-          ? mapPaceUnitFromDb(updatedWorkoutSettingsDto.paceUnit)
-          : user.settings.paceUnit,
-    );
-    final User updatedUser = User(
-      id: user.id,
-      name: user.name,
-      surname: user.surname,
-      settings: updatedSettings,
-    );
-    updateEntity(updatedUser);
   }
 
   @override
@@ -175,26 +172,24 @@ class UserRepositoryImpl extends StateRepository<User>
 
   Future<AppearanceSettingsDto?> _updateAppearanceSettings(
     String userId,
-    settings.ThemeMode? newThemeMode,
-    settings.Language? newLanguage,
-  ) async {
-    return await _dbAppearanceSettingsService.updateSettings(
-      userId: userId,
-      themeMode: newThemeMode != null ? mapThemeModeToDb(newThemeMode) : null,
-      language: newLanguage != null ? mapLanguageToDb(newLanguage) : null,
-    );
-  }
+    settings.ThemeMode? themeMode,
+    settings.Language? language,
+  ) async =>
+      await _dbAppearanceSettingsService.updateSettings(
+        userId: userId,
+        themeMode: themeMode != null ? mapThemeModeToDb(themeMode) : null,
+        language: language != null ? mapLanguageToDb(language) : null,
+      );
 
   Future<WorkoutSettingsDto?> _updateWorkoutSettings(
     String userId,
-    settings.DistanceUnit? newDistanceUnit,
-    settings.PaceUnit? newPaceUnit,
-  ) async {
-    return await _dbWorkoutSettingsService.updateSettings(
-      userId: userId,
-      distanceUnit:
-          newDistanceUnit != null ? mapDistanceUnitToDb(newDistanceUnit) : null,
-      paceUnit: newPaceUnit != null ? mapPaceUnitToDb(newPaceUnit) : null,
-    );
-  }
+    settings.DistanceUnit? distanceUnit,
+    settings.PaceUnit? paceUnit,
+  ) async =>
+      await _dbWorkoutSettingsService.updateSettings(
+        userId: userId,
+        distanceUnit:
+            distanceUnit != null ? mapDistanceUnitToDb(distanceUnit) : null,
+        paceUnit: paceUnit != null ? mapPaceUnitToDb(paceUnit) : null,
+      );
 }
