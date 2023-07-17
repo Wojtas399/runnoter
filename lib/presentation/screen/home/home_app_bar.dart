@@ -1,11 +1,19 @@
-part of 'home_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 
-class _AppBar extends StatelessWidget implements PreferredSizeWidget {
+import '../../../domain/bloc/home/home_bloc.dart';
+import '../../component/nullable_text_component.dart';
+import '../../config/navigation/router.dart';
+import '../../extension/context_extensions.dart';
+
+class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Color? backgroundColor;
   final VoidCallback onMenuPressed;
   final VoidCallback onAvatarPressed;
 
-  const _AppBar({
+  const HomeAppBar({
+    super.key,
     this.backgroundColor,
     required this.onMenuPressed,
     required this.onAvatarPressed,
@@ -28,17 +36,9 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  if (context.isTabletSize) Image.asset('assets/logo.png'),
                   if (context.isDesktopSize)
-                    Row(
-                      children: [
-                        IconButton(
-                          onPressed: onMenuPressed,
-                          icon: const Icon(Icons.menu),
-                        ),
-                        const SizedBox(width: 24),
-                        Image.asset('assets/logo.png'),
-                      ],
-                    ),
+                    _DesktopLeftPart(onMenuPressed: onMenuPressed),
                   _Avatar(onPressed: onAvatarPressed),
                 ],
               ),
@@ -57,6 +57,28 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
     final router = GetIt.I.get<AppRouter>();
     final homeRoute = router.root.innerRouterOf(HomeBaseRoute.name);
     return homeRoute?.innerRouterOf(HomeRoute.name)?.current.title(context);
+  }
+}
+
+class _DesktopLeftPart extends StatelessWidget {
+  final VoidCallback onMenuPressed;
+
+  const _DesktopLeftPart({
+    required this.onMenuPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        IconButton(
+          onPressed: onMenuPressed,
+          icon: const Icon(Icons.menu),
+        ),
+        const SizedBox(width: 24),
+        Image.asset('assets/logo.png'),
+      ],
+    );
   }
 }
 

@@ -14,6 +14,10 @@ extension ContextExtensions on BuildContext {
   bool get isMobileSize =>
       screenSize.width <= GetIt.I.get<ScreenSizes>().maxMobileWidth;
 
+  bool get isTabletSize =>
+      screenSize.width > GetIt.I.get<ScreenSizes>().maxMobileWidth &&
+      screenSize.width <= GetIt.I.get<ScreenSizes>().maxTabletWidth;
+
   bool get isDesktopSize =>
       screenSize.width > GetIt.I.get<ScreenSizes>().maxTabletWidth;
 

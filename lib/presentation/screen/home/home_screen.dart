@@ -1,31 +1,19 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:get_it/get_it.dart';
 
 import '../../../domain/bloc/home/home_bloc.dart';
 import '../../../domain/entity/settings.dart' as settings;
 import '../../../domain/repository/user_repository.dart';
 import '../../../domain/service/auth_service.dart';
 import '../../component/bloc_with_status_listener_component.dart';
-import '../../component/nullable_text_component.dart';
-import '../../component/text/label_text_components.dart';
-import '../../config/body_sizes.dart';
 import '../../config/navigation/router.dart';
-import '../../extension/context_extensions.dart';
-import '../../service/dialog_service.dart';
 import '../../service/distance_unit_service.dart';
 import '../../service/language_service.dart';
 import '../../service/navigator_service.dart';
 import '../../service/pace_unit_service.dart';
 import '../../service/theme_service.dart';
-
-part 'home_app_bar.dart';
-part 'home_bottom_navigation_bar.dart';
-part 'home_content.dart';
-part 'home_navigation_drawer.dart';
-part 'home_navigation_rail.dart';
+import 'home_content.dart';
 
 @RoutePage()
 class HomeScreen extends StatelessWidget {
@@ -37,7 +25,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return const _BlocProvider(
       child: _BlocListener(
-        child: _Content(),
+        child: HomeContent(),
       ),
     );
   }

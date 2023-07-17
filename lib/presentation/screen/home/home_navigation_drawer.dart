@@ -1,10 +1,14 @@
-part of 'home_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class _NavigationDrawer extends StatelessWidget {
+import '../../extension/context_extensions.dart';
+
+class HomeNavigationDrawer extends StatelessWidget {
   final int? selectedIndex;
   final Function(int pageIndex) onPageSelected;
 
-  const _NavigationDrawer({
+  const HomeNavigationDrawer({
+    super.key,
     required this.selectedIndex,
     required this.onPageSelected,
   });
