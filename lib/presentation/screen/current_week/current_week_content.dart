@@ -5,13 +5,22 @@ class _Content extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _Days(),
-        SizedBox(width: 16),
-        _Stats(),
-      ],
+    return SingleChildScrollView(
+      child: Center(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxWidth: GetIt.I.get<BodySizes>().bigBodyWidth,
+          ),
+          child: const Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _Days(),
+              SizedBox(width: 16),
+              _Stats(),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
@@ -40,11 +49,10 @@ class _ListOfDays extends StatelessWidget {
 
     return days == null
         ? const LoadingInfo()
-        : ListView.separated(
-            itemCount: days.length,
-            padding: const EdgeInsets.fromLTRB(12, 12, 12, 80),
-            itemBuilder: (_, int itemIndex) => DayItem(day: days[itemIndex]),
-            separatorBuilder: (_, int itemIndex) => const Divider(),
+        : Column(
+            children: <Widget>[
+              ...days.map((day) => DayItem(day: day)),
+            ].addSeparator(const Divider(height: 16)),
           );
   }
 }

@@ -90,22 +90,7 @@ class _ContentState extends State<_Content> {
                     onPageSelected: (int pageIndex) =>
                         _onSidePageSelected(pageIndex, tabsRouter),
                   ),
-                Expanded(
-                  child: Padding(
-                    padding: EdgeInsets.only(
-                      right: context.isMobileSize ? 0 : 24,
-                      bottom: context.isMobileSize ? 0 : 24,
-                    ),
-                    child: Center(
-                      child: ConstrainedBox(
-                        constraints: BoxConstraints(
-                          maxWidth: GetIt.I.get<BodySizes>().bigBodyWidth,
-                        ),
-                        child: child,
-                      ),
-                    ),
-                  ),
-                ),
+                Expanded(child: child),
               ],
             ),
           ),
