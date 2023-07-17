@@ -41,7 +41,8 @@ class _MobileContent extends StatelessWidget {
   Widget build(BuildContext context) {
     const SizedBox gap = SizedBox(height: 24);
 
-    return const Paddings24(
+    return const Padding(
+      padding: EdgeInsets.fromLTRB(24, 16, 24, 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -63,8 +64,7 @@ class _DesktopContent extends StatelessWidget {
   Widget build(BuildContext context) {
     const SizedBox gap = SizedBox(height: 16);
 
-    return const Padding(
-      padding: EdgeInsets.only(right: 24, bottom: 24),
+    return const Paddings24(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

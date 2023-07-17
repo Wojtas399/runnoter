@@ -36,10 +36,12 @@ class CalendarScreen extends StatelessWidget {
             constraints: BoxConstraints(
               maxWidth: GetIt.I.get<BodySizes>().bigBodyWidth,
             ),
-            child: const ResponsiveLayout(
-              mobileBody: _MobileContent(),
-              tabletBody: _DesktopContent(),
-              desktopBody: _DesktopContent(),
+            child: const Paddings24(
+              child: ResponsiveLayout(
+                mobileBody: _Calendar(),
+                tabletBody: CardBody(child: _Calendar()),
+                desktopBody: CardBody(child: _Calendar()),
+              ),
             ),
           ),
         ),
@@ -64,31 +66,6 @@ class _CubitProvider extends StatelessWidget {
         raceRepository: context.read<RaceRepository>(),
       ),
       child: child,
-    );
-  }
-}
-
-class _MobileContent extends StatelessWidget {
-  const _MobileContent();
-
-  @override
-  Widget build(BuildContext context) {
-    return const Paddings24(
-      child: _Calendar(),
-    );
-  }
-}
-
-class _DesktopContent extends StatelessWidget {
-  const _DesktopContent();
-
-  @override
-  Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.only(right: 24, bottom: 24),
-      child: CardBody(
-        child: _Calendar(),
-      ),
     );
   }
 }

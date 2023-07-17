@@ -1,7 +1,33 @@
-part of 'blood_tests_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:get_it/get_it.dart';
 
-class _Content extends StatelessWidget {
-  const _Content();
+import '../../../domain/bloc/blood_tests/blood_tests_cubit.dart';
+import '../../component/empty_content_info_component.dart';
+import '../../component/loading_info_component.dart';
+import '../../component/padding/paddings_24.dart';
+import '../../config/body_sizes.dart';
+import 'blood_tests_list.dart';
+
+class BloodTestsContent extends StatelessWidget {
+  const BloodTestsContent({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxWidth: GetIt.I.get<BodySizes>().mediumBodyWidth,
+        ),
+        child: const _BloodTests(),
+      ),
+    );
+  }
+}
+
+class _BloodTests extends StatelessWidget {
+  const _BloodTests();
 
   @override
   Widget build(BuildContext context) {
@@ -9,15 +35,13 @@ class _Content extends StatelessWidget {
       (BloodTestsCubit cubit) => cubit.state,
     );
 
-    return SafeArea(
-      child: switch (bloodTestsSortedByYear) {
-        null => const LoadingInfo(),
-        [] => const _NoTestsInfo(),
-        [...] => _BloodTestsList(
-            bloodTestsSortedByYear: bloodTestsSortedByYear,
-          )
-      },
-    );
+    return switch (bloodTestsSortedByYear) {
+      null => const LoadingInfo(),
+      [] => const _NoTestsInfo(),
+      [...] => BloodTestsList(
+          bloodTestsSortedByYear: bloodTestsSortedByYear,
+        )
+    };
   }
 }
 

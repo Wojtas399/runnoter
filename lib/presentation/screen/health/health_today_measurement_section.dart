@@ -21,10 +21,7 @@ class HealthTodayMeasurementSection extends StatelessWidget {
       children: [
         _TodayMeasurementSectionHeader(),
         SizedBox(height: 8),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 24),
-          child: _TodayMeasurement(),
-        )
+        _TodayMeasurement()
       ],
     );
   }
@@ -39,20 +36,12 @@ class _TodayMeasurementSectionHeader extends StatelessWidget {
       (HealthBloc bloc) => bloc.state.todayMeasurement != null,
     );
 
-    return Padding(
-      padding: EdgeInsets.only(
-        left: 24,
-        right: 16,
-        top: doesTodayMeasurementExist ? 0 : 8,
-        bottom: doesTodayMeasurementExist ? 0 : 16,
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          TitleMedium(Str.of(context).healthTodayMeasurement),
-          if (doesTodayMeasurementExist) const _TodayMeasurementActions(),
-        ],
-      ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        TitleMedium(Str.of(context).healthTodayMeasurement),
+        if (doesTodayMeasurementExist) const _TodayMeasurementActions(),
+      ],
     );
   }
 }

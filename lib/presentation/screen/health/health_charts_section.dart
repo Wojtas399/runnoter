@@ -18,20 +18,11 @@ class HealthChartsSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: TitleMedium(Str.of(context).healthSummaryOfMeasurements),
-          ),
+          TitleMedium(Str.of(context).healthSummaryOfMeasurements),
           const SizedBox(height: 16),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 24),
-            child: _ChartRangeSelection(),
-          ),
+          const _ChartRangeSelection(),
           const SizedBox(height: 8),
-          const Padding(
-            padding: EdgeInsets.only(left: 16, right: 24),
-            child: HealthCharts(),
-          ),
+          const HealthCharts(),
         ],
       ),
     );

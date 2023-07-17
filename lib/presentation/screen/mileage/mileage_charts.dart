@@ -24,11 +24,11 @@ class MileageCharts extends StatelessWidget {
       itemCount: years.length,
       padding: const EdgeInsets.all(24),
       itemBuilder: (_, int itemIndex) {
-        final ChartYear yearData = years[itemIndex];
+        final Widget chart = _Chart(yearData: years[itemIndex]);
         return ResponsiveLayout(
-          mobileBody: _Chart(yearData: yearData),
-          tabletBody: CardBody(child: _Chart(yearData: yearData)),
-          desktopBody: CardBody(child: _Chart(yearData: yearData)),
+          mobileBody: chart,
+          tabletBody: CardBody(child: chart),
+          desktopBody: CardBody(child: chart),
         );
       },
       separatorBuilder: (_, int index) => const SizedBox(height: 32),
