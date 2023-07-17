@@ -51,14 +51,14 @@ class MileageCubit extends Cubit<List<ChartYear>?> {
     final int lastYear = sortedWorkouts.last.date.year;
     int yearCounter = sortedWorkouts.first.date.year;
     final List<ChartYear> years = [];
-    while (yearCounter <= lastYear) {
+    while (yearCounter >= lastYear) {
       final List<ChartMonth> months =
           _createMonthsForYear(yearCounter, workouts);
       years.add(ChartYear(
         year: yearCounter,
         months: months,
       ));
-      yearCounter++;
+      yearCounter--;
     }
     emit(years);
   }
@@ -66,7 +66,7 @@ class MileageCubit extends Cubit<List<ChartYear>?> {
   List<Workout> _sortWorkoutsByDate(List<Workout> workouts) {
     final List<Workout> sortedWorkouts = [...workouts];
     sortedWorkouts.sort(
-      (workout1, workout2) => workout1.date.compareTo(workout2.date),
+      (workout1, workout2) => workout2.date.compareTo(workout1.date),
     );
     return sortedWorkouts;
   }
