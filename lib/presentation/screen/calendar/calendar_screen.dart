@@ -34,10 +34,11 @@ class CalendarScreen extends StatelessWidget {
     return _CubitProvider(
       child: SingleChildScrollView(
         child: Center(
-          child: ConstrainedBox(
+          child: Container(
             constraints: BoxConstraints(
               maxWidth: GetIt.I.get<BodySizes>().bigBodyWidth,
             ),
+            padding: const EdgeInsets.only(right: 24),
             child: const ResponsiveLayout(
               mobileBody: Paddings24(
                 child: _Calendar(),
