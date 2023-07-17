@@ -1,7 +1,18 @@
-part of 'health_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class _TodayMeasurementSection extends StatelessWidget {
-  const _TodayMeasurementSection();
+import '../../../domain/bloc/health/health_bloc.dart';
+import '../../../domain/entity/health_measurement.dart';
+import '../../component/big_button_component.dart';
+import '../../component/edit_delete_popup_menu_component.dart';
+import '../../component/text/label_text_components.dart';
+import '../../component/text/title_text_components.dart';
+import '../../extension/context_extensions.dart';
+import '../../service/dialog_service.dart';
+
+class HealthTodayMeasurementSection extends StatelessWidget {
+  const HealthTodayMeasurementSection({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -88,12 +99,9 @@ class _TodayMeasurement extends StatelessWidget {
       (HealthBloc bloc) => bloc.state.todayMeasurement,
     );
 
-    if (thisHealthMeasurement == null) {
-      return const _TodayMeasurementButton();
-    }
-    return _TodayMeasurementPreview(
-      measurement: thisHealthMeasurement,
-    );
+    return thisHealthMeasurement == null
+        ? const _TodayMeasurementButton()
+        : _TodayMeasurementPreview(measurement: thisHealthMeasurement);
   }
 }
 
