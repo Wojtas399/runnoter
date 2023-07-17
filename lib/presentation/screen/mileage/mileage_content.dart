@@ -1,7 +1,33 @@
-part of 'mileage_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:get_it/get_it.dart';
 
-class _Content extends StatelessWidget {
-  const _Content();
+import '../../../domain/bloc/mileage/mileage_cubit.dart';
+import '../../component/empty_content_info_component.dart';
+import '../../component/loading_info_component.dart';
+import '../../component/padding/paddings_24.dart';
+import '../../config/body_sizes.dart';
+import 'mileage_charts.dart';
+
+class MileageContent extends StatelessWidget {
+  const MileageContent({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxWidth: GetIt.I.get<BodySizes>().bigBodyWidth,
+        ),
+        child: const _Charts(),
+      ),
+    );
+  }
+}
+
+class _Charts extends StatelessWidget {
+  const _Charts();
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +38,7 @@ class _Content extends StatelessWidget {
     return switch (years) {
       null => const LoadingInfo(),
       [] => const _NoDataInfo(),
-      [...] => _Charts(years: years),
+      [...] => MileageCharts(years: years),
     };
   }
 }
