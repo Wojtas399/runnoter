@@ -17,7 +17,9 @@ extension ContextExtensions on BuildContext {
   bool get isDesktopSize =>
       screenSize.width > GetIt.I.get<ScreenSizes>().maxTabletWidth;
 
-  DistanceUnit get distanceUnit => read<DistanceUnitService>().state;
+  DistanceUnit get distanceUnit => select(
+        (DistanceUnitService service) => service.state,
+      );
 
   PaceUnit get paceUnit => read<PaceUnitService>().state;
 

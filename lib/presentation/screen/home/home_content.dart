@@ -96,18 +96,12 @@ class _ContentState extends State<_Content> {
                       right: context.isMobileSize ? 0 : 24,
                       bottom: context.isMobileSize ? 0 : 24,
                     ),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        color: Theme.of(context).colorScheme.background,
-                      ),
-                      child: Center(
-                        child: ConstrainedBox(
-                          constraints: BoxConstraints(
-                            maxWidth: GetIt.I.get<BodySizes>().bigBodyWidth,
-                          ),
-                          child: child,
+                    child: Center(
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(
+                          maxWidth: GetIt.I.get<BodySizes>().bigBodyWidth,
                         ),
+                        child: child,
                       ),
                     ),
                   ),
