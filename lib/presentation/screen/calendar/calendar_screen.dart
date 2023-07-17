@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 
 import '../../../domain/bloc/calendar/calendar_cubit.dart';
 import '../../../domain/entity/race.dart';
@@ -10,6 +11,10 @@ import '../../../domain/repository/workout_repository.dart';
 import '../../../domain/service/auth_service.dart';
 import '../../component/calendar/calendar_component.dart';
 import '../../component/calendar/calendar_component_cubit.dart';
+import '../../component/card_body_component.dart';
+import '../../component/padding/paddings_24.dart';
+import '../../component/responsive_layout_component.dart';
+import '../../config/body_sizes.dart';
 import '../../config/navigation/router.dart';
 import '../../formatter/date_formatter.dart';
 import '../../formatter/run_status_formatter.dart';
@@ -26,10 +31,26 @@ class CalendarScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const _CubitProvider(
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-        child: _Calendar(),
+    return _CubitProvider(
+      child: SingleChildScrollView(
+        child: Center(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: GetIt.I.get<BodySizes>().bigBodyWidth,
+            ),
+            child: const ResponsiveLayout(
+              mobileBody: Paddings24(
+                child: _Calendar(),
+              ),
+              tabletBody: CardBody(
+                child: _Calendar(),
+              ),
+              desktopBody: CardBody(
+                child: _Calendar(),
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }

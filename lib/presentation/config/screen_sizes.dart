@@ -1,5 +1,5 @@
 class ScreenSizes {
-  int get maxMobileWidth => 500;
+  int get maxMobileWidth => 600;
 
-  int get maxTabletWidth => 850;
+  int get maxTabletWidth => 1100;
 }

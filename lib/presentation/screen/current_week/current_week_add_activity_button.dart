@@ -1,9 +1,15 @@
-part of 'current_week_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class _AddActivityButton extends StatelessWidget {
+import '../../config/navigation/router.dart';
+import '../../formatter/date_formatter.dart';
+import '../../service/navigator_service.dart';
+
+class CurrentWeekAddActivityButton extends StatelessWidget {
   final DateTime date;
 
-  const _AddActivityButton({
+  const CurrentWeekAddActivityButton({
+    super.key,
     required this.date,
   });
 
