@@ -21,7 +21,10 @@ class BloodTestsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
-      padding: const EdgeInsets.symmetric(vertical: 24),
+      padding: EdgeInsets.symmetric(
+        vertical: 24,
+        horizontal: context.isMobileSize ? 24 : 0,
+      ),
       itemCount: bloodTestsSortedByYear.length,
       itemBuilder: (_, int itemIndex) {
         final Widget tests = _TestsFromYear(

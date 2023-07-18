@@ -1,7 +1,19 @@
-part of 'blood_test_preview_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:get_it/get_it.dart';
 
-class _Content extends StatelessWidget {
-  const _Content();
+import '../../../domain/bloc/blood_test_preview/blood_test_preview_bloc.dart';
+import '../../../domain/entity/blood_parameter.dart';
+import '../../component/blood_parameter_results_list_component.dart';
+import '../../component/text/title_text_components.dart';
+import '../../config/body_sizes.dart';
+import '../../extension/context_extensions.dart';
+import '../../formatter/date_formatter.dart';
+import 'blood_test_preview_actions.dart';
+
+class BloodTestPreviewContent extends StatelessWidget {
+  const BloodTestPreviewContent({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -40,14 +52,8 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       forceMaterialTransparency: true,
       centerTitle: true,
-      title: Text(
-        Str.of(context).bloodTestPreviewTitle,
-      ),
-      actions: context.isMobileSize
-          ? const [
-              _BloodTestActions(),
-            ]
-          : null,
+      title: Text(Str.of(context).bloodTestPreviewTitle),
+      actions: context.isMobileSize ? const [BloodTestPreviewActions()] : null,
     );
   }
 }
@@ -63,7 +69,7 @@ class _DateSection extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           const _Date(),
-          if (!context.isMobileSize) const _BloodTestActions(),
+          if (!context.isMobileSize) const BloodTestPreviewActions(),
         ],
       ),
     );
@@ -79,9 +85,7 @@ class _Date extends StatelessWidget {
       (BloodTestPreviewBloc bloc) => bloc.state.date,
     );
 
-    return TitleLarge(
-      date?.toFullDate(context) ?? '--',
-    );
+    return TitleLarge(date?.toFullDate(context) ?? '--');
   }
 }
 
@@ -94,8 +98,6 @@ class _Results extends StatelessWidget {
       (BloodTestPreviewBloc bloc) => bloc.state.parameterResults,
     );
 
-    return BloodParameterResultsList(
-      parameterResults: parameterResults,
-    );
+    return BloodParameterResultsList(parameterResults: parameterResults);
   }
 }
