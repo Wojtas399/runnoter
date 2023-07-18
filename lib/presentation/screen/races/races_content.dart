@@ -5,12 +5,15 @@ import 'package:get_it/get_it.dart';
 
 import '../../../domain/bloc/races/races_cubit.dart';
 import '../../../domain/entity/race.dart';
+import '../../component/big_button_component.dart';
 import '../../component/card_body_component.dart';
 import '../../component/empty_content_info_component.dart';
 import '../../component/loading_info_component.dart';
 import '../../component/padding/paddings_24.dart';
 import '../../component/responsive_layout_component.dart';
 import '../../config/body_sizes.dart';
+import '../../config/navigation/router.dart';
+import '../../service/navigator_service.dart';
 import 'races_list.dart';
 
 class RacesContent extends StatelessWidget {
@@ -26,11 +29,47 @@ class RacesContent extends StatelessWidget {
         child: const Paddings24(
           child: ResponsiveLayout(
             mobileBody: _Races(),
-            tabletBody: CardBody(child: _Races()),
-            desktopBody: CardBody(child: _Races()),
+            tabletBody: _DesktopContent(),
+            desktopBody: _DesktopContent(),
           ),
         ),
       ),
+    );
+  }
+}
+
+class _DesktopContent extends StatelessWidget {
+  const _DesktopContent();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Column(
+      children: [
+        _AddRaceButton(),
+        SizedBox(height: 24),
+        Expanded(
+          child: CardBody(
+            child: _Races(),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _AddRaceButton extends StatelessWidget {
+  const _AddRaceButton();
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        BigButton(
+          label: Str.of(context).racesAddNewRace,
+          onPressed: () => navigateTo(RaceCreatorRoute()),
+        ),
+      ],
     );
   }
 }

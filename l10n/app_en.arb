@@ -170,6 +170,7 @@
   "raceCreatorUpdatedRaceMessage": "Successfully updated race",
   "@__________RACES__________": {},
   "racesTitle": "Races",
+  "racesAddNewRace": "Add new race",
   "racesNoRacesTitle": "No races",
   "racesNoRacesMessage": "Add races to be able to review this list",
   "@__________RACE_PREVIEW__________": {},

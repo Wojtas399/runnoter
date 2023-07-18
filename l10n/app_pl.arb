@@ -619,6 +619,10 @@
   "@racesTitle": {
     "description": "Title of races screen"
   },
+  "racesAddNewRace": "Dodaj nowy wyścig",
+  "@racesAddNewRace": {
+    "description": "Label of the button to add new race"
+  },
   "racesNoRacesTitle": "Brak zawodów",
   "@racesNoRacesTitle": {
     "description": "Title of the info about the lack of races"

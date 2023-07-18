@@ -42,6 +42,7 @@ class _State extends State<HomeContent> {
       ],
       builder: (context, child) {
         final tabsRouter = AutoTabsRouter.of(context);
+        final RouteData currentPage = tabsRouter.current;
         final int activeIndex = tabsRouter.activeIndex;
         final int? mobileDrawerActiveIndex = activeIndex < numberOfAllPages
             ? activeIndex < numberOfBottomNavPages
@@ -71,22 +72,20 @@ class _State extends State<HomeContent> {
                       _onSidePageSelected(pageIndex, tabsRouter),
                 )
               : null,
-          bottomNavigationBar:
-              context.isMobileSize && _isHomePage(tabsRouter.current)
-                  ? HomeBottomNavigationBar(
-                      selectedIndex: _bottomNavSelectedIndex,
-                      onPageSelected: (int pageIndex) =>
-                          _onBottomPageSelected(pageIndex, tabsRouter),
-                    )
-                  : null,
-          floatingActionButton:
-              context.isMobileSize && _isBloodTestsPage(tabsRouter.current)
-                  ? FloatingActionButton(
-                      onPressed: () =>
-                          _onFloatingActionButtonPressed(tabsRouter.current),
-                      child: const Icon(Icons.add),
-                    )
-                  : null,
+          bottomNavigationBar: context.isMobileSize && _isHomePage(currentPage)
+              ? HomeBottomNavigationBar(
+                  selectedIndex: _bottomNavSelectedIndex,
+                  onPageSelected: (int pageIndex) =>
+                      _onBottomPageSelected(pageIndex, tabsRouter),
+                )
+              : null,
+          floatingActionButton: context.isMobileSize &&
+                  (_isBloodTestsPage(currentPage) || _isRacesPage(currentPage))
+              ? FloatingActionButton(
+                  onPressed: () => _onFloatingActionButtonPressed(currentPage),
+                  child: const Icon(Icons.add),
+                )
+              : null,
           body: SafeArea(
             child: Row(
               children: [
@@ -177,9 +176,13 @@ class _State extends State<HomeContent> {
   bool _isBloodTestsPage(RouteData routeData) =>
       routeData.name == BloodTestsRoute.name;
 
+  bool _isRacesPage(RouteData routeData) => routeData.name == RacesRoute.name;
+
   void _onFloatingActionButtonPressed(RouteData routeData) {
     if (_isBloodTestsPage(routeData)) {
       navigateTo(BloodTestCreatorRoute());
+    } else if (_isRacesPage(routeData)) {
+      navigateTo(RaceCreatorRoute());
     }
   }
 }
