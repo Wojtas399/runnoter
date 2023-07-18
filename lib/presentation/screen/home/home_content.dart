@@ -7,6 +7,7 @@ import '../../../domain/bloc/home/home_bloc.dart';
 import '../../config/navigation/router.dart';
 import '../../extension/context_extensions.dart';
 import '../../service/dialog_service.dart';
+import '../../service/navigator_service.dart';
 import 'home_app_bar.dart';
 import 'home_bottom_navigation_bar.dart';
 import 'home_navigation_drawer.dart';
@@ -76,6 +77,14 @@ class _State extends State<HomeContent> {
                       selectedIndex: _bottomNavSelectedIndex,
                       onPageSelected: (int pageIndex) =>
                           _onBottomPageSelected(pageIndex, tabsRouter),
+                    )
+                  : null,
+          floatingActionButton:
+              context.isMobileSize && _isBloodTestsPage(tabsRouter.current)
+                  ? FloatingActionButton(
+                      onPressed: () =>
+                          _onFloatingActionButtonPressed(tabsRouter.current),
+                      child: const Icon(Icons.add),
                     )
                   : null,
           body: SafeArea(
@@ -164,4 +173,13 @@ class _State extends State<HomeContent> {
       routeData.name == CurrentWeekRoute.name ||
       routeData.name == CalendarRoute.name ||
       routeData.name == HealthRoute.name;
+
+  bool _isBloodTestsPage(RouteData routeData) =>
+      routeData.name == BloodTestsRoute.name;
+
+  void _onFloatingActionButtonPressed(RouteData routeData) {
+    if (_isBloodTestsPage(routeData)) {
+      navigateTo(BloodTestCreatorRoute());
+    }
+  }
 }

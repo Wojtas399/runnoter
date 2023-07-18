@@ -104,18 +104,15 @@ class _ParametersSection extends StatelessWidget {
       (BloodTestCreatorBloc bloc) => bloc.state.parameterResults,
     );
 
-    return parameterResults == null
-        ? const SizedBox()
-        : BloodParameterResultsList(
-            isEditMode: true,
-            parameterResults: parameterResults,
-            onParameterValueChanged: (
-              BloodParameter parameter,
-              double? value,
-            ) {
-              _onValueChanged(context, parameter, value);
-            },
-          );
+    return BloodParameterResultsList(
+      isEditMode: true,
+      parameterResults: parameterResults,
+      onParameterValueChanged: (
+        BloodParameter parameter,
+        double? value,
+      ) =>
+          _onValueChanged(context, parameter, value),
+    );
   }
 
   void _onValueChanged(
