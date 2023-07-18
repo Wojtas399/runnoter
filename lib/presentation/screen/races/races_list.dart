@@ -1,9 +1,18 @@
-part of 'races_screen.dart';
+import 'package:flutter/material.dart';
 
-class _RacesList extends StatelessWidget {
+import '../../../domain/entity/race.dart';
+import '../../component/text/label_text_components.dart';
+import '../../component/text/title_text_components.dart';
+import '../../config/navigation/router.dart';
+import '../../formatter/date_formatter.dart';
+import '../../formatter/run_status_formatter.dart';
+import '../../service/navigator_service.dart';
+
+class RacesList extends StatelessWidget {
   final List<Race> races;
 
-  const _RacesList({
+  const RacesList({
+    super.key,
     required this.races,
   });
 
@@ -12,10 +21,7 @@ class _RacesList extends StatelessWidget {
     return ListView.separated(
       itemCount: races.length,
       separatorBuilder: (_, int index) => const SizedBox(height: 16),
-      padding: const EdgeInsets.all(24),
-      itemBuilder: (_, int itemIndex) => _RaceItem(
-        race: races[itemIndex],
-      ),
+      itemBuilder: (_, int itemIndex) => _RaceItem(race: races[itemIndex]),
     );
   }
 }
@@ -47,9 +53,7 @@ class _RaceItem extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              LabelMedium(
-                race.date.toFullDate(context),
-              ),
+              LabelMedium(race.date.toFullDate(context)),
               Icon(
                 race.status.toIcon(),
                 color: race.status.toColor(context),
