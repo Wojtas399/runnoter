@@ -5,21 +5,15 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 import '../../../common/date_service.dart';
 import '../../../domain/bloc/day_preview/day_preview_cubit.dart';
-import '../../../domain/entity/race.dart';
-import '../../../domain/entity/workout.dart';
 import '../../../domain/repository/race_repository.dart';
 import '../../../domain/repository/workout_repository.dart';
 import '../../../domain/service/auth_service.dart';
-import '../../component/activity_item_component.dart';
-import '../../component/empty_content_info_component.dart';
-import '../../component/loading_info_component.dart';
 import '../../component/padding/paddings_24.dart';
 import '../../extension/context_extensions.dart';
 import '../../formatter/date_formatter.dart';
 import '../../service/navigator_service.dart';
+import 'day_preview_activities_content.dart';
 import 'day_preview_dialog_actions.dart';
-
-part 'day_preview_activities_content.dart';
 
 class DayPreviewDialog extends StatelessWidget {
   final DateTime date;
@@ -80,7 +74,7 @@ class _NormalDialog extends StatelessWidget {
             children: [
               _Actions(),
               SizedBox(height: 16),
-              _ActivitiesContent(),
+              DayPreviewActivities(),
             ],
           ),
         ),
@@ -106,7 +100,7 @@ class _FullScreenContent extends StatelessWidget {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Paddings24(
-            child: _ActivitiesContent(),
+            child: DayPreviewActivities(),
           ),
         ),
       ),
