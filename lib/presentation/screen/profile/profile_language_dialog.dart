@@ -10,9 +10,7 @@ import '../../formatter/settings_formatter.dart';
 import '../../service/navigator_service.dart';
 
 class ProfileLanguageDialog extends StatelessWidget {
-  const ProfileLanguageDialog({
-    super.key,
-  });
+  const ProfileLanguageDialog({super.key});
 
   @override
   Widget build(BuildContext context) =>

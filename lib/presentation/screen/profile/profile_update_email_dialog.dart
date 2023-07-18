@@ -13,9 +13,7 @@ import '../../service/utils.dart';
 import '../../service/validation_service.dart';
 
 class ProfileUpdateEmailDialog extends StatefulWidget {
-  const ProfileUpdateEmailDialog({
-    super.key,
-  });
+  const ProfileUpdateEmailDialog({super.key});
 
   @override
   State<StatefulWidget> createState() => _State();

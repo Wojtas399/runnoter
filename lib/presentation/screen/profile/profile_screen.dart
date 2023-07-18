@@ -5,7 +5,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/bloc/profile/identities/profile_identities_bloc.dart';
 import '../../../domain/bloc/profile/settings/profile_settings_bloc.dart';
-import '../../../domain/entity/settings.dart' as settings;
 import '../../../domain/repository/blood_test_repository.dart';
 import '../../../domain/repository/health_measurement_repository.dart';
 import '../../../domain/repository/race_repository.dart';
@@ -13,39 +12,21 @@ import '../../../domain/repository/user_repository.dart';
 import '../../../domain/repository/workout_repository.dart';
 import '../../../domain/service/auth_service.dart';
 import '../../component/bloc_with_status_listener_component.dart';
-import '../../component/text/title_text_components.dart';
-import '../../component/value_with_label_and_icon_component.dart';
 import '../../config/navigation/router.dart';
-import '../../formatter/distance_unit_formatter.dart';
-import '../../formatter/pace_unit_formatter.dart';
-import '../../formatter/settings_formatter.dart';
 import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
-import '../../service/validation_service.dart';
-import 'profile_delete_account_dialog.dart';
-import 'profile_distance_unit_dialog.dart';
-import 'profile_language_dialog.dart';
-import 'profile_pace_unit_dialog.dart';
-import 'profile_theme_mode_dialog.dart';
-import 'profile_update_email_dialog.dart';
-import 'profile_update_password_dialog.dart';
-
-part 'profile_content.dart';
-part 'profile_settings_section.dart';
-part 'profile_user_data_section.dart';
+import 'profile_content.dart';
 
 @RoutePage()
 class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({
-    super.key,
-  });
+  const ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return const _IdentitiesBlocProvider(
       child: _SettingsBlocProvider(
         child: _IdentitiesBlocListener(
-          child: _Content(),
+          child: ProfileContent(),
         ),
       ),
     );

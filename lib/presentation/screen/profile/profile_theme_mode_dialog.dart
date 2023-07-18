@@ -9,9 +9,7 @@ import '../../extension/context_extensions.dart';
 import '../../service/navigator_service.dart';
 
 class ProfileThemeModeDialog extends StatelessWidget {
-  const ProfileThemeModeDialog({
-    super.key,
-  });
+  const ProfileThemeModeDialog({super.key});
 
   @override
   Widget build(BuildContext context) =>

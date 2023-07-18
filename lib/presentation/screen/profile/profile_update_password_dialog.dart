@@ -12,9 +12,7 @@ import '../../service/utils.dart';
 import '../../service/validation_service.dart';
 
 class ProfileUpdatePasswordDialog extends StatefulWidget {
-  const ProfileUpdatePasswordDialog({
-    super.key,
-  });
+  const ProfileUpdatePasswordDialog({super.key});
 
   @override
   State<StatefulWidget> createState() => _State();

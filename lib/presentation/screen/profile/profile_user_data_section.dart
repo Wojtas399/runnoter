@@ -1,7 +1,18 @@
-part of 'profile_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class _UserDataSection extends StatelessWidget {
-  const _UserDataSection();
+import '../../../domain/bloc/profile/identities/profile_identities_bloc.dart';
+import '../../component/text/title_text_components.dart';
+import '../../component/value_with_label_and_icon_component.dart';
+import '../../service/dialog_service.dart';
+import '../../service/validation_service.dart';
+import 'profile_delete_account_dialog.dart';
+import 'profile_update_email_dialog.dart';
+import 'profile_update_password_dialog.dart';
+
+class ProfileUserDataSection extends StatelessWidget {
+  const ProfileUserDataSection({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -10,8 +21,9 @@ class _UserDataSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _SectionHeader(
-          title: Str.of(context).profileUserData,
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: TitleLarge(Str.of(context).profileUserData),
         ),
         const SizedBox(height: 16),
         const _Name(),

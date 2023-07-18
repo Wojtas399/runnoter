@@ -12,9 +12,7 @@ import '../../service/navigator_service.dart';
 import '../../service/utils.dart';
 
 class ProfileDeleteAccountDialog extends StatefulWidget {
-  const ProfileDeleteAccountDialog({
-    super.key,
-  });
+  const ProfileDeleteAccountDialog({super.key});
 
   @override
   State<StatefulWidget> createState() => _State();

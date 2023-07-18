@@ -10,9 +10,7 @@ import '../../formatter/pace_unit_formatter.dart';
 import '../../service/navigator_service.dart';
 
 class ProfilePaceUnitDialog extends StatelessWidget {
-  const ProfilePaceUnitDialog({
-    super.key,
-  });
+  const ProfilePaceUnitDialog({super.key});
 
   @override
   Widget build(BuildContext context) =>
