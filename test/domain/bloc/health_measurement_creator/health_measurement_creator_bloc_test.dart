@@ -320,6 +320,7 @@ void main() {
       fastingWeight: 65.2,
     ),
     setUp: () {
+      dateService.mockAreDatesTheSame(expected: true);
       authService.mockGetLoggedUserId(userId: loggedUserId);
       healthMeasurementRepository.mockUpdateMeasurement();
     },
@@ -381,6 +382,7 @@ void main() {
       fastingWeight: 65.2,
     ),
     setUp: () {
+      dateService.mockAreDatesTheSame(expected: false);
       authService.mockGetLoggedUserId(userId: loggedUserId);
       healthMeasurementRepository.mockDoesMeasurementFromDateExist(
         expected: false,

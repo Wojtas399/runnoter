@@ -138,6 +138,7 @@ void main() {
         restingHeartRate: 51,
         fastingWeight: 61.5,
       );
+      dateService.mockAreDatesTheSame(expected: true);
 
       expect(state.canSubmit, false);
     },
