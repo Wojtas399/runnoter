@@ -5,14 +5,14 @@ import '../config/screen_sizes.dart';
 
 class ResponsiveLayout extends StatelessWidget {
   final Widget mobileBody;
-  final Widget tabletBody;
   final Widget desktopBody;
+  final Widget? tabletBody;
 
   const ResponsiveLayout({
     super.key,
     required this.mobileBody,
-    required this.tabletBody,
     required this.desktopBody,
+    this.tabletBody,
   });
 
   @override
@@ -24,7 +24,7 @@ class ResponsiveLayout extends StatelessWidget {
     if (screenWidth <= maxMobileWidth) {
       return mobileBody;
     } else if (screenWidth <= maxTabletWidth) {
-      return tabletBody;
+      return tabletBody ?? desktopBody;
     } else {
       return desktopBody;
     }

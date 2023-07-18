@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../extension/context_extensions.dart';
 import '../../service/navigator_service.dart';
 import '../../service/utils.dart';
+import '../responsive_layout_component.dart';
 import '../text/label_text_components.dart';
 import '../text_field_component.dart';
 
@@ -49,8 +49,8 @@ class _State extends State<ValueDialogComponent> {
   }
 
   @override
-  Widget build(BuildContext context) => context.isMobileSize
-      ? _FullScreenDialog(
+  Widget build(BuildContext context) => ResponsiveLayout(
+        mobileBody: _FullScreenDialog(
           title: widget.title,
           label: widget.label,
           textFieldIcon: widget.textFieldIcon,
@@ -59,8 +59,8 @@ class _State extends State<ValueDialogComponent> {
           isSaveButtonDisabled: _isSaveButtonDisabled,
           validator: widget.validator,
           onSaveButtonPressed: _onSaveButtonPressed,
-        )
-      : _NormalDialog(
+        ),
+        desktopBody: _NormalDialog(
           title: widget.title,
           label: widget.label,
           textFieldIcon: widget.textFieldIcon,
@@ -69,7 +69,8 @@ class _State extends State<ValueDialogComponent> {
           isSaveButtonDisabled: _isSaveButtonDisabled,
           validator: widget.validator,
           onSaveButtonPressed: _onSaveButtonPressed,
-        );
+        ),
+      );
 
   void _onSaveButtonPressed() {
     popRoute(
@@ -134,10 +135,10 @@ class _NormalDialog extends StatelessWidget {
           onPressed: popRoute,
           child: LabelLarge(
             Str.of(context).cancel,
-            color: Theme.of(context).colorScheme.error,
+            color: Theme.of(context).colorScheme.primary,
           ),
         ),
-        TextButton(
+        FilledButton(
           onPressed: isSaveButtonDisabled ? null : onSaveButtonPressed,
           child: Text(Str.of(context).save),
         ),
@@ -178,11 +179,9 @@ class _FullScreenDialog extends StatelessWidget {
           ),
           title: Text(title),
           actions: [
-            TextButton(
+            FilledButton(
               onPressed: isSaveButtonDisabled ? null : onSaveButtonPressed,
-              child: Text(
-                Str.of(context).save,
-              ),
+              child: Text(Str.of(context).save),
             ),
             const SizedBox(width: 16),
           ],

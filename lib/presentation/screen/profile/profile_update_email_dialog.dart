@@ -5,9 +5,9 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../domain/additional_model/bloc_status.dart';
 import '../../../domain/bloc/profile/identities/profile_identities_bloc.dart';
 import '../../component/password_text_field_component.dart';
+import '../../component/responsive_layout_component.dart';
 import '../../component/text/label_text_components.dart';
 import '../../component/text_field_component.dart';
-import '../../extension/context_extensions.dart';
 import '../../service/navigator_service.dart';
 import '../../service/utils.dart';
 import '../../service/validation_service.dart';
@@ -51,21 +51,22 @@ class _State extends State<ProfileUpdateEmailDialog> {
           popRoute();
         }
       },
-      child: context.isMobileSize
-          ? _FullScreenDialog(
-              isSaveButtonDisabled: _isSaveButtonDisabled,
-              onSaveButtonPressed: () => _onSaveButtonPressed(context),
-              emailController: _emailController,
-              passwordController: _passwordController,
-              emailValidator: _validateEmail,
-            )
-          : _NormalDialog(
-              isSaveButtonDisabled: _isSaveButtonDisabled,
-              onSaveButtonPressed: () => _onSaveButtonPressed(context),
-              emailController: _emailController,
-              passwordController: _passwordController,
-              emailValidator: _validateEmail,
-            ),
+      child: ResponsiveLayout(
+        mobileBody: _FullScreenDialog(
+          isSaveButtonDisabled: _isSaveButtonDisabled,
+          onSaveButtonPressed: () => _onSaveButtonPressed(context),
+          emailController: _emailController,
+          passwordController: _passwordController,
+          emailValidator: _validateEmail,
+        ),
+        desktopBody: _NormalDialog(
+          isSaveButtonDisabled: _isSaveButtonDisabled,
+          onSaveButtonPressed: () => _onSaveButtonPressed(context),
+          emailController: _emailController,
+          passwordController: _passwordController,
+          emailValidator: _validateEmail,
+        ),
+      ),
     );
   }
 
@@ -145,10 +146,10 @@ class _NormalDialog extends StatelessWidget {
           onPressed: popRoute,
           child: LabelLarge(
             str.cancel,
-            color: Theme.of(context).colorScheme.error,
+            color: Theme.of(context).colorScheme.primary,
           ),
         ),
-        TextButton(
+        FilledButton(
           onPressed: isSaveButtonDisabled ? null : onSaveButtonPressed,
           child: Text(str.save),
         ),
@@ -181,7 +182,7 @@ class _FullScreenDialog extends StatelessWidget {
         title: Text(str.profileNewEmailDialogTitle),
         leading: const CloseButton(),
         actions: [
-          TextButton(
+          FilledButton(
             onPressed: isSaveButtonDisabled ? null : onSaveButtonPressed,
             child: Text(str.save),
           ),
