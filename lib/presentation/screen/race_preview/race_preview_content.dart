@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:get_it/get_it.dart';
 
 import '../../../domain/bloc/race_preview/race_preview_bloc.dart';
+import '../../component/body/medium_body_component.dart';
 import '../../component/loading_info_component.dart';
 import '../../component/padding/paddings_24.dart';
-import '../../config/body_sizes.dart';
 import '../../extension/context_extensions.dart';
 import 'race_preview_actions.dart';
 import 'race_preview_race.dart';
@@ -19,20 +18,13 @@ class RacePreviewContent extends StatelessWidget {
     return Scaffold(
       appBar: const _AppBar(),
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Center(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                maxWidth: GetIt.I.get<BodySizes>().mediumBodyWidth,
-              ),
-              child: Paddings24(
-                child: BlocSelector<RacePreviewBloc, RacePreviewState, bool>(
-                  selector: (state) => state.race != null,
-                  builder: (_, bool isRaceLoaded) => isRaceLoaded
-                      ? const RacePreviewRaceInfo()
-                      : const LoadingInfo(),
-                ),
-              ),
+        child: MediumBody(
+          child: Paddings24(
+            child: BlocSelector<RacePreviewBloc, RacePreviewState, bool>(
+              selector: (state) => state.race != null,
+              builder: (_, bool isRaceLoaded) => isRaceLoaded
+                  ? const RacePreviewRaceInfo()
+                  : const LoadingInfo(),
             ),
           ),
         ),

@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get_it/get_it.dart';
 
 import '../../../domain/bloc/current_week/current_week_cubit.dart';
+import '../../component/body/big_body_component.dart';
 import '../../component/card_body_component.dart';
 import '../../component/loading_info_component.dart';
 import '../../component/padding/paddings_24.dart';
 import '../../component/responsive_layout_component.dart';
-import '../../config/body_sizes.dart';
 import '../../extension/widgets_list_extensions.dart';
 import 'current_week_day_item.dart';
 import 'current_week_stats.dart';
@@ -17,19 +16,12 @@ class CurrentWeekContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Center(
-        child: ConstrainedBox(
-          constraints: BoxConstraints(
-            maxWidth: GetIt.I.get<BodySizes>().bigBodyWidth,
-          ),
-          child: const Paddings24(
-            child: ResponsiveLayout(
-              mobileBody: _MobileContent(),
-              tabletBody: _TabletContent(),
-              desktopBody: _DesktopContent(),
-            ),
-          ),
+    return const BigBody(
+      child: Paddings24(
+        child: ResponsiveLayout(
+          mobileBody: _MobileContent(),
+          tabletBody: _TabletContent(),
+          desktopBody: _DesktopContent(),
         ),
       ),
     );
