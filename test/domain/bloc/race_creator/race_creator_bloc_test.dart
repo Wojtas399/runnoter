@@ -114,9 +114,7 @@ void main() {
     act: (bloc) => bloc.add(const RaceCreatorEventInitialize()),
     expect: () => [
       createState(
-        status: const BlocStatusComplete<RaceCreatorBlocInfo>(
-          info: RaceCreatorBlocInfo.editModeInitialized,
-        ),
+        status: const BlocStatusComplete<RaceCreatorBlocInfo>(),
         race: createRace(
           id: 'r1',
           userId: loggedUserId,
