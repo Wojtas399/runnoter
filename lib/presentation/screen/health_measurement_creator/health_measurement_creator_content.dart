@@ -30,6 +30,7 @@ class _NormalDialogContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final str = Str.of(context);
+
     return AlertDialog(
       title: Text(str.healthMeasurementCreatorScreenTitle),
       content: GestureDetector(
@@ -88,10 +89,9 @@ class _Form extends StatelessWidget {
       (HealthMeasurementCreatorBloc bloc) => bloc.state.status,
     );
 
-    if (blocStatus is BlocStatusInitial) {
-      return const LoadingInfo();
-    }
-    return const HealthMeasurementCreatorForm();
+    return blocStatus is BlocStatusInitial
+        ? const LoadingInfo()
+        : const HealthMeasurementCreatorForm();
   }
 }
 

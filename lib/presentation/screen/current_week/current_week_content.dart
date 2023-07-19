@@ -16,12 +16,14 @@ class CurrentWeekContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const BigBody(
-      child: Paddings24(
-        child: ResponsiveLayout(
-          mobileBody: _MobileContent(),
-          tabletBody: _TabletContent(),
-          desktopBody: _DesktopContent(),
+    return const SingleChildScrollView(
+      child: BigBody(
+        child: Paddings24(
+          child: ResponsiveLayout(
+            mobileBody: _MobileContent(),
+            tabletBody: _TabletContent(),
+            desktopBody: _DesktopContent(),
+          ),
         ),
       ),
     );

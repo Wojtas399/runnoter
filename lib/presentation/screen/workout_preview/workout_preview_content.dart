@@ -5,14 +5,14 @@ class _Content extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const _AppBar(),
+    return const Scaffold(
+      appBar: _AppBar(),
       body: SafeArea(
-        child: _ScreenAdjustableBody(
-          child: BlocSelector<WorkoutPreviewBloc, WorkoutPreviewState, bool>(
-            selector: (state) => state.areDataLoaded,
-            builder: (_, bool areDataLoaded) =>
-                areDataLoaded ? const _Workout() : const LoadingInfo(),
+        child: SingleChildScrollView(
+          child: MediumBody(
+            child: Paddings24(
+              child: _WorkoutInfo(),
+            ),
           ),
         ),
       ),
@@ -36,21 +36,15 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 }
 
-class _ScreenAdjustableBody extends StatelessWidget {
-  final Widget child;
-
-  const _ScreenAdjustableBody({
-    required this.child,
-  });
+class _WorkoutInfo extends StatelessWidget {
+  const _WorkoutInfo();
 
   @override
   Widget build(BuildContext context) {
-    if (context.isDesktopSize || MediaQuery.of(context).size.height < 700) {
-      return ScreenAdjustableBody(
-        maxContentWidth: GetIt.I.get<BodySizes>().mediumBodyWidth,
-        child: child,
-      );
-    }
-    return Paddings24(child: child);
+    final bool areDataLoaded = context.select(
+      (WorkoutPreviewBloc bloc) => bloc.state.areDataLoaded,
+    );
+
+    return areDataLoaded ? const _Workout() : const LoadingInfo();
   }
 }

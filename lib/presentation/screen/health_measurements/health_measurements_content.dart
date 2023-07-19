@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:get_it/get_it.dart';
 
 import '../../../domain/bloc/health_measurements/health_measurements_bloc.dart';
 import '../../../domain/entity/health_measurement.dart';
+import '../../component/body/medium_body_component.dart';
 import '../../component/empty_content_info_component.dart';
 import '../../component/loading_info_component.dart';
 import '../../component/text/label_text_components.dart';
-import '../../config/body_sizes.dart';
 import '../../service/dialog_service.dart';
 import 'health_measurements_item.dart';
 
@@ -23,20 +22,15 @@ class HealthMeasurementsContent extends StatelessWidget {
         forceMaterialTransparency: true,
         title: Text(Str.of(context).healthMeasurementsTitle),
       ),
-      body: SafeArea(
-        child: Center(
-          child: ConstrainedBox(
-            constraints: BoxConstraints(
-              maxWidth: GetIt.I.get<BodySizes>().mediumBodyWidth,
-            ),
-            child: const Column(
-              children: [
-                _Header(),
-                Expanded(
-                  child: _Body(),
-                ),
-              ],
-            ),
+      body: const SafeArea(
+        child: MediumBody(
+          child: Column(
+            children: [
+              _Header(),
+              Expanded(
+                child: _Body(),
+              ),
+            ],
           ),
         ),
       ),

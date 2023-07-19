@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/bloc/race_preview/race_preview_bloc.dart';
+import '../../../domain/entity/race.dart';
 import '../../component/body/medium_body_component.dart';
 import '../../component/loading_info_component.dart';
 import '../../component/padding/paddings_24.dart';
@@ -15,16 +16,13 @@ class RacePreviewContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const _AppBar(),
+    return const Scaffold(
+      appBar: _AppBar(),
       body: SafeArea(
-        child: MediumBody(
-          child: Paddings24(
-            child: BlocSelector<RacePreviewBloc, RacePreviewState, bool>(
-              selector: (state) => state.race != null,
-              builder: (_, bool isRaceLoaded) => isRaceLoaded
-                  ? const RacePreviewRaceInfo()
-                  : const LoadingInfo(),
+        child: SingleChildScrollView(
+          child: MediumBody(
+            child: Paddings24(
+              child: _RaceInfo(),
             ),
           ),
         ),
@@ -52,5 +50,18 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
       ],
     );
+  }
+}
+
+class _RaceInfo extends StatelessWidget {
+  const _RaceInfo();
+
+  @override
+  Widget build(BuildContext context) {
+    final Race? race = context.select(
+      (RacePreviewBloc bloc) => bloc.state.race,
+    );
+
+    return race == null ? const LoadingInfo() : const RacePreviewRaceInfo();
   }
 }

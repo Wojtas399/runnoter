@@ -9,6 +9,7 @@ import '../../../domain/repository/race_repository.dart';
 import '../../../domain/repository/workout_repository.dart';
 import '../../../domain/service/auth_service.dart';
 import '../../component/padding/paddings_24.dart';
+import '../../component/responsive_layout_component.dart';
 import '../../extension/context_extensions.dart';
 import '../../formatter/date_formatter.dart';
 import '../../service/navigator_service.dart';
@@ -27,9 +28,10 @@ class DayPreviewDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return _CubitProvider(
       date: date,
-      child: context.isMobileSize
-          ? const _FullScreenContent()
-          : const _NormalDialog(),
+      child: const ResponsiveLayout(
+        mobileBody: _FullScreenContent(),
+        desktopBody: _NormalDialog(),
+      ),
     );
   }
 }

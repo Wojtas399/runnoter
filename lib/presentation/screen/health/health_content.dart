@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:get_it/get_it.dart';
 
 import '../../component/big_button_component.dart';
+import '../../component/body/big_body_component.dart';
 import '../../component/card_body_component.dart';
 import '../../component/padding/paddings_24.dart';
 import '../../component/responsive_layout_component.dart';
-import '../../config/body_sizes.dart';
 import '../../config/navigation/router.dart';
 import '../../service/navigator_service.dart';
 import 'health_charts_section.dart';
@@ -17,17 +16,12 @@ class HealthContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Center(
-        child: Container(
-          constraints: BoxConstraints(
-            maxWidth: GetIt.I.get<BodySizes>().bigBodyWidth,
-          ),
-          child: const ResponsiveLayout(
-            mobileBody: _MobileContent(),
-            tabletBody: _DesktopContent(),
-            desktopBody: _DesktopContent(),
-          ),
+    return const SingleChildScrollView(
+      child: BigBody(
+        child: ResponsiveLayout(
+          mobileBody: _MobileContent(),
+          tabletBody: _DesktopContent(),
+          desktopBody: _DesktopContent(),
         ),
       ),
     );
