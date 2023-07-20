@@ -9,17 +9,17 @@ import '../service/distance_unit_service.dart';
 import '../service/pace_unit_service.dart';
 
 extension ContextExtensions on BuildContext {
-  Size get screenSize => MediaQuery.of(this).size;
+  Size get _screenSize => MediaQuery.of(this).size;
 
   bool get isMobileSize =>
-      screenSize.width <= GetIt.I.get<ScreenSizes>().maxMobileWidth;
+      _screenSize.width <= GetIt.I.get<ScreenSizes>().maxMobileWidth;
 
   bool get isTabletSize =>
-      screenSize.width > GetIt.I.get<ScreenSizes>().maxMobileWidth &&
-      screenSize.width <= GetIt.I.get<ScreenSizes>().maxTabletWidth;
+      _screenSize.width > GetIt.I.get<ScreenSizes>().maxMobileWidth &&
+      _screenSize.width <= GetIt.I.get<ScreenSizes>().maxTabletWidth;
 
   bool get isDesktopSize =>
-      screenSize.width > GetIt.I.get<ScreenSizes>().maxTabletWidth;
+      _screenSize.width > GetIt.I.get<ScreenSizes>().maxTabletWidth;
 
   DistanceUnit get distanceUnit => select(
         (DistanceUnitService service) => service.state,
