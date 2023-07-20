@@ -43,7 +43,7 @@ class WorkoutPreviewWorkoutActions extends StatelessWidget {
       title: str.workoutPreviewDeletionConfirmationTitle,
       message: str.workoutPreviewDeletionConfirmationMessage,
       confirmButtonLabel: str.delete,
-      cancelButtonColor: Theme.of(context).colorScheme.error,
+      confirmButtonColor: Theme.of(context).colorScheme.error,
     );
     if (confirmed == true) {
       bloc.add(const WorkoutPreviewEventDeleteWorkout());

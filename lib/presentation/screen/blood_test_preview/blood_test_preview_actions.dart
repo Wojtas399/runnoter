@@ -42,6 +42,7 @@ class BloodTestPreviewActions extends StatelessWidget {
       title: str.bloodTestPreviewDeleteTestTitle,
       message: str.bloodTestPreviewDeleteTestMessage,
       confirmButtonLabel: str.delete,
+      confirmButtonColor: Theme.of(context).colorScheme.error,
     );
     if (confirmed == true) {
       bloc.add(

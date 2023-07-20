@@ -37,7 +37,7 @@ class RacePreviewActions extends StatelessWidget {
       title: str.racePreviewDeletionConfirmationTitle,
       message: str.racePreviewDeletionConfirmationMessage,
       confirmButtonLabel: str.delete,
-      cancelButtonColor: Theme.of(context).colorScheme.error,
+      confirmButtonColor: Theme.of(context).colorScheme.error,
     );
     if (confirmed == true) {
       bloc.add(const RacePreviewEventDeleteRace());
