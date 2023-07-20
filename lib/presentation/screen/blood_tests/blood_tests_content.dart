@@ -19,9 +19,11 @@ class BloodTestsContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MediumBody(
-      child: ResponsiveLayout(
-        mobileBody: _BloodTests(),
-        desktopBody: _DesktopContent(),
+      child: Paddings24(
+        child: ResponsiveLayout(
+          mobileBody: _BloodTests(),
+          desktopBody: _DesktopContent(),
+        ),
       ),
     );
   }
@@ -32,15 +34,14 @@ class _DesktopContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Paddings24(
-      child: Column(
-        children: [
-          _AddBloodTestButton(),
-          Expanded(
-            child: _BloodTests(),
-          ),
-        ],
-      ),
+    return const Column(
+      children: [
+        _AddBloodTestButton(),
+        SizedBox(height: 24),
+        Expanded(
+          child: _BloodTests(),
+        ),
+      ],
     );
   }
 }
@@ -73,23 +74,12 @@ class _BloodTests extends StatelessWidget {
 
     return switch (bloodTestsSortedByYear) {
       null => const LoadingInfo(),
-      [] => const _NoTestsInfo(),
+      [] => EmptyContentInfo(
+          icon: Icons.water_drop_outlined,
+          title: Str.of(context).bloodTestsNoTestsTitle,
+          subtitle: Str.of(context).bloodTestsNoTestsMessage,
+        ),
       [...] => BloodTestsList(bloodTestsSortedByYear: bloodTestsSortedByYear),
     };
-  }
-}
-
-class _NoTestsInfo extends StatelessWidget {
-  const _NoTestsInfo();
-
-  @override
-  Widget build(BuildContext context) {
-    return Paddings24(
-      child: EmptyContentInfo(
-        icon: Icons.water_drop_outlined,
-        title: Str.of(context).bloodTestsNoTestsTitle,
-        subtitle: Str.of(context).bloodTestsNoTestsMessage,
-      ),
-    );
   }
 }

@@ -22,7 +22,6 @@ class RacesContent extends StatelessWidget {
       child: Paddings24(
         child: ResponsiveLayout(
           mobileBody: _Races(),
-          tabletBody: _DesktopContent(),
           desktopBody: _DesktopContent(),
         ),
       ),
