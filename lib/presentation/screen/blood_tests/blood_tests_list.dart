@@ -6,7 +6,6 @@ import '../../component/card_body_component.dart';
 import '../../component/responsive_layout_component.dart';
 import '../../component/text/title_text_components.dart';
 import '../../config/navigation/router.dart';
-import '../../extension/context_extensions.dart';
 import '../../formatter/date_formatter.dart';
 import '../../service/navigator_service.dart';
 
@@ -21,25 +20,20 @@ class BloodTestsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
-      padding: EdgeInsets.symmetric(
-        vertical: 24,
-        horizontal: context.isMobileSize ? 24 : 0,
-      ),
       itemCount: bloodTestsSortedByYear.length,
+      separatorBuilder: (_, int index) => const ResponsiveLayout(
+        mobileBody: Divider(height: 32),
+        desktopBody: SizedBox(height: 24),
+      ),
       itemBuilder: (_, int itemIndex) {
         final Widget tests = _TestsFromYear(
           testsFromYear: bloodTestsSortedByYear[itemIndex],
         );
         return ResponsiveLayout(
           mobileBody: tests,
-          tabletBody: CardBody(child: tests),
           desktopBody: CardBody(child: tests),
         );
       },
-      separatorBuilder: (BuildContext context, int index) =>
-          context.isMobileSize
-              ? const Divider(height: 32)
-              : const SizedBox(height: 24),
     );
   }
 }
@@ -59,29 +53,18 @@ class _TestsFromYear extends StatelessWidget {
         TitleLarge(testsFromYear.year.toString()),
         const SizedBox(height: 16),
         ...testsFromYear.bloodTests.map(
-          (BloodTest test) => _TestItem(
-            bloodTest: test,
-            onPressed: () => _onPressed(test.id),
-          ),
+          (BloodTest test) => _TestItem(bloodTest: test),
         ),
       ],
-    );
-  }
-
-  void _onPressed(String bloodTestId) {
-    navigateTo(
-      BloodTestPreviewRoute(bloodTestId: bloodTestId),
     );
   }
 }
 
 class _TestItem extends StatelessWidget {
   final BloodTest bloodTest;
-  final VoidCallback? onPressed;
 
   const _TestItem({
     required this.bloodTest,
-    this.onPressed,
   });
 
   @override
@@ -90,12 +73,18 @@ class _TestItem extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.only(bottom: 16),
       child: ElevatedButton(
-        onPressed: onPressed,
+        onPressed: _onPressed,
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: TitleMedium(bloodTest.date.toDateWithDots()),
         ),
       ),
+    );
+  }
+
+  void _onPressed() {
+    navigateTo(
+      BloodTestPreviewRoute(bloodTestId: bloodTest.id),
     );
   }
 }

@@ -8,7 +8,6 @@ import '../../../domain/entity/race.dart';
 import '../../component/big_button_component.dart';
 import '../../component/body/medium_body_component.dart';
 import '../../component/loading_info_component.dart';
-import '../../component/padding/paddings_24.dart';
 import '../../service/dialog_service.dart';
 import '../../service/utils.dart';
 import 'race_creator_form.dart';
@@ -35,9 +34,11 @@ class RaceCreatorContent extends StatelessWidget {
           child: SingleChildScrollView(
             child: GestureDetector(
               onTap: unfocusInputs,
-              child: const MediumBody(
-                child: Paddings24(
-                  child: _Form(),
+              child: MediumBody(
+                child: Container(
+                  padding: const EdgeInsets.all(24),
+                  color: Colors.transparent,
+                  child: const _Form(),
                 ),
               ),
             ),

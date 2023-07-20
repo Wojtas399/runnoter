@@ -40,17 +40,22 @@ void main() {
           createRace(
             id: 'c1',
             userId: loggedUserId,
-            date: DateTime(2023, 6, 10),
+            date: DateTime(2023, 5, 10),
           ),
           createRace(
             id: 'c2',
             userId: loggedUserId,
-            date: DateTime(2023, 4, 20),
+            date: DateTime(2022, 4, 20),
           ),
           createRace(
             id: 'c3',
             userId: loggedUserId,
-            date: DateTime(2023, 5, 30),
+            date: DateTime(2023, 6, 30),
+          ),
+          createRace(
+            id: 'c4',
+            userId: loggedUserId,
+            date: DateTime(2022, 3, 30),
           ),
         ],
       );
@@ -58,20 +63,35 @@ void main() {
     act: (cubit) => cubit.initialize(),
     expect: () => [
       [
-        createRace(
-          id: 'c1',
-          userId: loggedUserId,
-          date: DateTime(2023, 6, 10),
+        RacesFromYear(
+          year: 2023,
+          races: [
+            createRace(
+              id: 'c3',
+              userId: loggedUserId,
+              date: DateTime(2023, 6, 30),
+            ),
+            createRace(
+              id: 'c1',
+              userId: loggedUserId,
+              date: DateTime(2023, 5, 10),
+            ),
+          ],
         ),
-        createRace(
-          id: 'c3',
-          userId: loggedUserId,
-          date: DateTime(2023, 5, 30),
-        ),
-        createRace(
-          id: 'c2',
-          userId: loggedUserId,
-          date: DateTime(2023, 4, 20),
+        RacesFromYear(
+          year: 2022,
+          races: [
+            createRace(
+              id: 'c2',
+              userId: loggedUserId,
+              date: DateTime(2022, 4, 20),
+            ),
+            createRace(
+              id: 'c4',
+              userId: loggedUserId,
+              date: DateTime(2022, 3, 30),
+            ),
+          ],
         ),
       ],
     ],

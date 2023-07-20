@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../formatter/minutes_or_seconds_input_formatter.dart';
 import 'text/title_text_components.dart';
 import 'text_field_component.dart';
 
@@ -57,6 +58,7 @@ class _State extends State<DurationInput> {
           children: [
             _DurationField(
               label: Str.of(context).durationHoursShort,
+              isHourField: true,
               controller: _hoursController,
             ),
             const _TimeSeparator(),
@@ -101,10 +103,12 @@ class _TimeSeparator extends StatelessWidget {
 
 class _DurationField extends StatelessWidget {
   final String label;
+  final bool isHourField;
   final TextEditingController controller;
 
   const _DurationField({
     required this.label,
+    this.isHourField = false,
     required this.controller,
   });
 
@@ -119,6 +123,7 @@ class _DurationField extends StatelessWidget {
         keyboardType: TextInputType.number,
         inputFormatters: [
           FilteringTextInputFormatter.digitsOnly,
+          if (!isHourField) MinutesOrSecondsInputFormatter(),
         ],
         controller: controller,
       ),
