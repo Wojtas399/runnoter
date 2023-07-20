@@ -5,30 +5,10 @@ class _WorkoutActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (context.isMobileSize) {
-      return EditDeleteActions(
-        onEditSelected: () => _editWorkout(context),
-        onDeleteSelected: () => _deleteWorkout(context),
-      );
-    }
-    final theme = Theme.of(context);
-    return Row(
-      children: [
-        IconButton(
-          onPressed: () => _editWorkout(context),
-          icon: Icon(
-            Icons.edit_outlined,
-            color: theme.colorScheme.primary,
-          ),
-        ),
-        IconButton(
-          onPressed: () => _deleteWorkout(context),
-          icon: Icon(
-            Icons.delete_outline,
-            color: theme.colorScheme.error,
-          ),
-        ),
-      ],
+    return EditDeleteActions(
+      displayAsPopupMenu: context.isMobileSize,
+      onEditSelected: () => _editWorkout(context),
+      onDeleteSelected: () => _deleteWorkout(context),
     );
   }
 

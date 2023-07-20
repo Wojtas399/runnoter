@@ -1,18 +1,32 @@
-part of 'run_status_creator_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class _AvgPace extends StatelessWidget {
-  const _AvgPace();
+import '../../../domain/bloc/run_status_creator/run_status_creator_bloc.dart';
+import '../../../domain/entity/run_status.dart';
+import '../../../domain/entity/settings.dart';
+import '../../component/text/label_text_components.dart';
+import '../../component/text/title_text_components.dart';
+import '../../component/text_field_component.dart';
+import '../../extension/context_extensions.dart';
+import '../../formatter/decimal_text_input_formatter.dart';
+import '../../formatter/minutes_or_seconds_input_formatter.dart';
+import '../../formatter/pace_unit_formatter.dart';
+import '../../service/pace_unit_service.dart';
+
+class RunStatusCreatorAvgPace extends StatelessWidget {
+  const RunStatusCreatorAvgPace({super.key});
 
   @override
   Widget build(BuildContext context) {
-    if (context.paceUnit == PaceUnit.kilometersPerHour ||
-        context.paceUnit == PaceUnit.milesPerHour) {
-      return const _AvgPaceDistance();
-    } else if (context.paceUnit == PaceUnit.minutesPerKilometer ||
-        context.paceUnit == PaceUnit.minutesPerMile) {
-      return const _AvgPaceTime();
-    }
-    return const SizedBox();
+    final PaceUnit paceUnit = context.paceUnit;
+    return switch (paceUnit) {
+      PaceUnit.kilometersPerHour => const _AvgPaceDistance(),
+      PaceUnit.milesPerHour => const _AvgPaceDistance(),
+      PaceUnit.minutesPerKilometer => const _AvgPaceTime(),
+      PaceUnit.minutesPerMile => const _AvgPaceTime(),
+    };
   }
 }
 
