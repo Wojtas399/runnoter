@@ -4,8 +4,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/bloc/profile/settings/profile_settings_bloc.dart';
 import '../../../domain/entity/settings.dart';
+import '../../component/responsive_layout_component.dart';
 import '../../component/text/body_text_components.dart';
-import '../../extension/context_extensions.dart';
 import '../../formatter/pace_unit_formatter.dart';
 import '../../service/navigator_service.dart';
 
@@ -13,8 +13,10 @@ class ProfilePaceUnitDialog extends StatelessWidget {
   const ProfilePaceUnitDialog({super.key});
 
   @override
-  Widget build(BuildContext context) =>
-      context.isMobileSize ? const _FullScreenDialog() : const _NormalDialog();
+  Widget build(BuildContext context) => const ResponsiveLayout(
+        mobileBody: _FullScreenDialog(),
+        desktopBody: _NormalDialog(),
+      );
 }
 
 class _NormalDialog extends StatelessWidget {

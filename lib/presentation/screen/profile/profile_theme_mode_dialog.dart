@@ -4,16 +4,18 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/bloc/profile/settings/profile_settings_bloc.dart';
 import '../../../domain/entity/settings.dart' as settings;
+import '../../component/responsive_layout_component.dart';
 import '../../component/text/body_text_components.dart';
-import '../../extension/context_extensions.dart';
 import '../../service/navigator_service.dart';
 
 class ProfileThemeModeDialog extends StatelessWidget {
   const ProfileThemeModeDialog({super.key});
 
   @override
-  Widget build(BuildContext context) =>
-      context.isMobileSize ? const _FullScreenDialog() : const _NormalDialog();
+  Widget build(BuildContext context) => const ResponsiveLayout(
+        mobileBody: _FullScreenDialog(),
+        desktopBody: _NormalDialog(),
+      );
 }
 
 class _NormalDialog extends StatelessWidget {
