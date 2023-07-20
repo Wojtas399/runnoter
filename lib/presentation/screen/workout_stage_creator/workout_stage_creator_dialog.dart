@@ -1,21 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/bloc/workout_stage_creator/workout_stage_creator_bloc.dart';
 import '../../../domain/entity/workout_stage.dart';
-import '../../component/text_field_component.dart';
-import '../../extension/context_extensions.dart';
-import '../../formatter/decimal_text_input_formatter.dart';
-import '../../formatter/distance_unit_formatter.dart';
 import '../../service/navigator_service.dart';
-import '../../service/utils.dart';
-
-part 'workout_stage_creator_content.dart';
-part 'workout_stage_creator_distance_form.dart';
-part 'workout_stage_creator_form.dart';
-part 'workout_stage_creator_series_form.dart';
+import 'workout_stage_creator_content.dart';
 
 class WorkoutStageCreatorDialog extends StatelessWidget {
   final WorkoutStage? stage;
@@ -29,10 +18,8 @@ class WorkoutStageCreatorDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return _BlocProvider(
       stage: stage,
-      child: _BlocListener(
-        child: context.isMobileSize
-            ? const _FullScreenDialogContent()
-            : const _NormalDialogContent(),
+      child: const _BlocListener(
+        child: WorkoutStageCreatorContent(),
       ),
     );
   }
