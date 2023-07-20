@@ -1,7 +1,13 @@
-part of 'sign_up_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class _Form extends StatelessWidget {
-  const _Form();
+import '../../../domain/bloc/sign_up/sign_up_bloc.dart';
+import '../../component/password_text_field_component.dart';
+import '../../component/text_field_component.dart';
+
+class SignUpForm extends StatelessWidget {
+  const SignUpForm({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -31,20 +37,14 @@ class _Name extends StatelessWidget {
     final bool isValid = context.select(
       (SignUpBloc bloc) => bloc.state.isNameValid,
     );
+    final str = Str.of(context);
 
     return TextFieldComponent(
       icon: Icons.person,
-      label: Str.of(context).name,
+      label: str.name,
       isRequired: true,
-      onChanged: (String? value) {
-        _onChanged(value, context);
-      },
-      validator: (_) {
-        if (!isValid) {
-          return Str.of(context).invalidNameOrSurnameMessage;
-        }
-        return null;
-      },
+      onChanged: (String? value) => _onChanged(value, context),
+      validator: (_) => !isValid ? str.invalidNameOrSurnameMessage : null,
     );
   }
 
@@ -63,20 +63,14 @@ class _Surname extends StatelessWidget {
     final bool isValid = context.select(
       (SignUpBloc bloc) => bloc.state.isSurnameValid,
     );
+    final str = Str.of(context);
 
     return TextFieldComponent(
       icon: Icons.person,
-      label: Str.of(context).surname,
+      label: str.surname,
       isRequired: true,
-      onChanged: (String? value) {
-        _onChanged(value, context);
-      },
-      validator: (_) {
-        if (!isValid) {
-          return Str.of(context).invalidNameOrSurnameMessage;
-        }
-        return null;
-      },
+      onChanged: (String? value) => _onChanged(value, context),
+      validator: (_) => !isValid ? str.invalidNameOrSurnameMessage : null,
     );
   }
 
@@ -95,20 +89,14 @@ class _Email extends StatelessWidget {
     final bool isValid = context.select(
       (SignUpBloc bloc) => bloc.state.isEmailValid,
     );
+    final str = Str.of(context);
 
     return TextFieldComponent(
       icon: Icons.email,
-      label: Str.of(context).email,
+      label: str.email,
       isRequired: true,
-      onChanged: (String? value) {
-        _onChanged(value, context);
-      },
-      validator: (_) {
-        if (!isValid) {
-          return Str.of(context).invalidEmailMessage;
-        }
-        return null;
-      },
+      onChanged: (String? value) => _onChanged(value, context),
+      validator: (_) => !isValid ? str.invalidEmailMessage : null,
     );
   }
 
@@ -130,15 +118,9 @@ class _Password extends StatelessWidget {
 
     return PasswordTextFieldComponent(
       isRequired: true,
-      onChanged: (String? value) {
-        _onChanged(value, context);
-      },
-      validator: (_) {
-        if (!isValid) {
-          return Str.of(context).invalidPasswordMessage;
-        }
-        return null;
-      },
+      onChanged: (String? value) => _onChanged(value, context),
+      validator: (_) =>
+          !isValid ? Str.of(context).invalidPasswordMessage : null,
     );
   }
 
@@ -161,15 +143,9 @@ class _PasswordConfirmation extends StatelessWidget {
     return PasswordTextFieldComponent(
       label: Str.of(context).passwordConfirmation,
       isRequired: true,
-      onChanged: (String? value) {
-        _onChanged(value, context);
-      },
-      validator: (_) {
-        if (!isValid) {
-          return Str.of(context).invalidPasswordConfirmationMessage;
-        }
-        return null;
-      },
+      onChanged: (String? value) => _onChanged(value, context),
+      validator: (_) =>
+          !isValid ? Str.of(context).invalidPasswordConfirmationMessage : null,
     );
   }
 
