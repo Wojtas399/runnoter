@@ -20,13 +20,13 @@ class WorkoutCreatorBloc extends BlocWithStatus<WorkoutCreatorEvent,
     WorkoutCreatorState, WorkoutCreatorBlocInfo, dynamic> {
   final AuthService _authService;
   final WorkoutRepository _workoutRepository;
-  final DateTime date;
+  final DateTime? date;
   final String? workoutId;
 
   WorkoutCreatorBloc({
     required AuthService authService,
     required WorkoutRepository workoutRepository,
-    required this.date,
+    this.date,
     this.workoutId,
     WorkoutCreatorState state = const WorkoutCreatorState(
       status: BlocStatusInitial(),
@@ -136,7 +136,7 @@ class WorkoutCreatorBloc extends BlocWithStatus<WorkoutCreatorEvent,
     if (state.workout != null) {
       await _updateWorkout(loggedUserId);
       emitCompleteStatus(emit, WorkoutCreatorBlocInfo.workoutUpdated);
-    } else {
+    } else if (date != null) {
       await _addWorkout(loggedUserId);
       emitCompleteStatus(emit, WorkoutCreatorBlocInfo.workoutAdded);
     }
@@ -154,7 +154,7 @@ class WorkoutCreatorBloc extends BlocWithStatus<WorkoutCreatorEvent,
     await _workoutRepository.addWorkout(
       userId: userId,
       workoutName: state.workoutName!,
-      date: date,
+      date: date!,
       status: const RunStatusPending(),
       stages: state.stages,
     );
