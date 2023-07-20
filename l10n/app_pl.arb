@@ -128,6 +128,18 @@
   "@currentWeekTitle": {
     "description": "Title of current week screen"
   },
+  "currentWeekNumberOfActivities": "Ilość aktywności",
+  "@currentWeekNumberOfActivities": {
+    "description": "Label of number of activities statistic"
+  },
+  "currentWeekScheduledDistance": "Zaplanowany dystans",
+  "@currentWeekScheduledDistance": {
+    "description": "Label of scheduled distance statistic"
+  },
+  "currentWeekCoveredDistance": "Pokonany dystans",
+  "@currentWeekCoveredDistance": {
+    "description": "Label of covered distance statistic"
+  },
   "currentWeekActivityActionSheetTitle": "Wybierz rodzaj aktywności do dodania",
   "@currentWeekActivityActionSheetTitle": {
     "description": "Title of action sheet with type of activities to add"
@@ -606,6 +618,10 @@
   "racesTitle": "Wyścigi",
   "@racesTitle": {
     "description": "Title of races screen"
+  },
+  "racesAddNewRace": "Dodaj nowy wyścig",
+  "@racesAddNewRace": {
+    "description": "Label of the button to add new race"
   },
   "racesNoRacesTitle": "Brak zawodów",
   "@racesNoRacesTitle": {

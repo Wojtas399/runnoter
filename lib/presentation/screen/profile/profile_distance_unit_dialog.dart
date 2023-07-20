@@ -10,9 +10,7 @@ import '../../formatter/distance_unit_formatter.dart';
 import '../../service/navigator_service.dart';
 
 class ProfileDistanceUnitDialog extends StatelessWidget {
-  const ProfileDistanceUnitDialog({
-    super.key,
-  });
+  const ProfileDistanceUnitDialog({super.key});
 
   @override
   Widget build(BuildContext context) =>

@@ -8,8 +8,12 @@ import '../../../domain/entity/workout.dart';
 import '../../../domain/repository/race_repository.dart';
 import '../../../domain/repository/workout_repository.dart';
 import '../../../domain/service/auth_service.dart';
+import '../../component/body/big_body_component.dart';
 import '../../component/calendar/calendar_component.dart';
 import '../../component/calendar/calendar_component_cubit.dart';
+import '../../component/card_body_component.dart';
+import '../../component/padding/paddings_24.dart';
+import '../../component/responsive_layout_component.dart';
 import '../../config/navigation/router.dart';
 import '../../formatter/date_formatter.dart';
 import '../../formatter/run_status_formatter.dart';
@@ -20,16 +24,21 @@ import '../day_preview/day_preview_dialog_actions.dart';
 
 @RoutePage()
 class CalendarScreen extends StatelessWidget {
-  const CalendarScreen({
-    super.key,
-  });
+  const CalendarScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return const _CubitProvider(
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-        child: _Calendar(),
+      child: SingleChildScrollView(
+        child: BigBody(
+          child: Paddings24(
+            child: ResponsiveLayout(
+              mobileBody: _Calendar(),
+              tabletBody: CardBody(child: _Calendar()),
+              desktopBody: CardBody(child: _Calendar()),
+            ),
+          ),
+        ),
       ),
     );
   }

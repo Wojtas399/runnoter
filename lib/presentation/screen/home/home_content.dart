@@ -1,15 +1,28 @@
-part of 'home_screen.dart';
+import 'package:auto_route/auto_route.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import '../../../domain/bloc/home/home_bloc.dart';
+import '../../config/navigation/router.dart';
+import '../../extension/context_extensions.dart';
+import '../../service/dialog_service.dart';
+import '../../service/navigator_service.dart';
+import 'home_app_bar.dart';
+import 'home_bottom_navigation_bar.dart';
+import 'home_navigation_drawer.dart';
+import 'home_navigation_rail.dart';
 
 enum _NavigationType { drawer, rail }
 
-class _Content extends StatefulWidget {
-  const _Content();
+class HomeContent extends StatefulWidget {
+  const HomeContent({super.key});
 
   @override
-  State<StatefulWidget> createState() => _ContentState();
+  State<StatefulWidget> createState() => _State();
 }
 
-class _ContentState extends State<_Content> {
+class _State extends State<HomeContent> {
   final int numberOfBottomNavPages = 3;
   final int numberOfAllPages = 6;
   int _bottomNavSelectedIndex = 0;
@@ -29,6 +42,7 @@ class _ContentState extends State<_Content> {
       ],
       builder: (context, child) {
         final tabsRouter = AutoTabsRouter.of(context);
+        final RouteData currentPage = tabsRouter.current;
         final int activeIndex = tabsRouter.activeIndex;
         final int? mobileDrawerActiveIndex = activeIndex < numberOfAllPages
             ? activeIndex < numberOfBottomNavPages
@@ -46,72 +60,57 @@ class _ContentState extends State<_Content> {
 
         return Scaffold(
           backgroundColor: bckColor,
-          appBar: _AppBar(
+          appBar: HomeAppBar(
             backgroundColor: bckColor,
             onMenuPressed: _onMenuAppBarPressed,
             onAvatarPressed: () => tabsRouter.setActiveIndex(6),
           ),
           drawer: context.isMobileSize
-              ? _NavigationDrawer(
+              ? HomeNavigationDrawer(
                   selectedIndex: mobileDrawerActiveIndex,
                   onPageSelected: (int pageIndex) =>
                       _onSidePageSelected(pageIndex, tabsRouter),
                 )
               : null,
-          bottomNavigationBar:
-              context.isMobileSize && _isHomePage(tabsRouter.current)
-                  ? _BottomNavigationBar(
-                      selectedIndex: _bottomNavSelectedIndex,
-                      onPageSelected: (int pageIndex) =>
-                          _onBottomPageSelected(pageIndex, tabsRouter),
-                    )
-                  : null,
+          bottomNavigationBar: context.isMobileSize && _isHomePage(currentPage)
+              ? HomeBottomNavigationBar(
+                  selectedIndex: _bottomNavSelectedIndex,
+                  onPageSelected: (int pageIndex) =>
+                      _onBottomPageSelected(pageIndex, tabsRouter),
+                )
+              : null,
+          floatingActionButton: context.isMobileSize &&
+                  (_isBloodTestsPage(currentPage) || _isRacesPage(currentPage))
+              ? FloatingActionButton(
+                  onPressed: () => _onFloatingActionButtonPressed(currentPage),
+                  child: const Icon(Icons.add),
+                )
+              : null,
           body: SafeArea(
             child: Row(
               children: [
                 if (context.isDesktopSize)
                   switch (_navigationType) {
-                    _NavigationType.drawer => _NavigationDrawer(
+                    _NavigationType.drawer => HomeNavigationDrawer(
                         selectedIndex: desktopDrawerActiveIndex,
                         onPageSelected: (int pageIndex) =>
                             _onSidePageSelected(pageIndex, tabsRouter),
                       ),
-                    _NavigationType.rail => _NavigationRail(
+                    _NavigationType.rail => HomeNavigationRail(
                         selectedIndex: desktopDrawerActiveIndex,
                         backgroundColor: bckColor,
                         onPageSelected: (int pageIndex) =>
                             _onSidePageSelected(pageIndex, tabsRouter),
                       ),
                   },
-                if (!context.isMobileSize && !context.isDesktopSize)
-                  _NavigationRail(
+                if (context.isTabletSize)
+                  HomeNavigationRail(
                     selectedIndex: desktopDrawerActiveIndex,
                     backgroundColor: bckColor,
                     onPageSelected: (int pageIndex) =>
                         _onSidePageSelected(pageIndex, tabsRouter),
                   ),
-                Expanded(
-                  child: Padding(
-                    padding: EdgeInsets.only(
-                      right: context.isMobileSize ? 0 : 24,
-                      bottom: context.isMobileSize ? 0 : 24,
-                    ),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        color: Theme.of(context).colorScheme.background,
-                      ),
-                      child: Center(
-                        child: ConstrainedBox(
-                          constraints: const BoxConstraints(
-                            maxWidth: bigContentWidth,
-                          ),
-                          child: child,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
+                Expanded(child: child),
               ],
             ),
           ),
@@ -173,4 +172,17 @@ class _ContentState extends State<_Content> {
       routeData.name == CurrentWeekRoute.name ||
       routeData.name == CalendarRoute.name ||
       routeData.name == HealthRoute.name;
+
+  bool _isBloodTestsPage(RouteData routeData) =>
+      routeData.name == BloodTestsRoute.name;
+
+  bool _isRacesPage(RouteData routeData) => routeData.name == RacesRoute.name;
+
+  void _onFloatingActionButtonPressed(RouteData routeData) {
+    if (_isBloodTestsPage(routeData)) {
+      navigateTo(BloodTestCreatorRoute());
+    } else if (_isRacesPage(routeData)) {
+      navigateTo(RaceCreatorRoute());
+    }
+  }
 }

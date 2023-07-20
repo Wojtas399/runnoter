@@ -1,18 +1,28 @@
-part of 'workout_preview_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class _Content extends StatelessWidget {
-  const _Content();
+import '../../../domain/bloc/workout_preview/workout_preview_bloc.dart';
+import '../../component/body/medium_body_component.dart';
+import '../../component/loading_info_component.dart';
+import '../../component/padding/paddings_24.dart';
+import '../../extension/context_extensions.dart';
+import 'workout_preview_actions.dart';
+import 'workout_preview_workout.dart';
+
+class WorkoutPreviewContent extends StatelessWidget {
+  const WorkoutPreviewContent({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const _AppBar(),
+    return const Scaffold(
+      appBar: _AppBar(),
       body: SafeArea(
-        child: _ScreenAdjustableBody(
-          child: BlocSelector<WorkoutPreviewBloc, WorkoutPreviewState, bool>(
-            selector: (state) => state.areDataLoaded,
-            builder: (_, bool areDataLoaded) =>
-                areDataLoaded ? const _Workout() : const LoadingInfo(),
+        child: SingleChildScrollView(
+          child: MediumBody(
+            child: Paddings24(
+              child: _WorkoutInfo(),
+            ),
           ),
         ),
       ),
@@ -31,26 +41,27 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       title: Text(Str.of(context).workoutPreviewTitle),
       centerTitle: true,
-      actions: context.isMobileSize ? const [_WorkoutActions()] : null,
+      actions: context.isMobileSize
+          ? const [
+              WorkoutPreviewWorkoutActions(),
+              SizedBox(width: 8),
+            ]
+          : null,
     );
   }
 }
 
-class _ScreenAdjustableBody extends StatelessWidget {
-  final Widget child;
-
-  const _ScreenAdjustableBody({
-    required this.child,
-  });
+class _WorkoutInfo extends StatelessWidget {
+  const _WorkoutInfo();
 
   @override
   Widget build(BuildContext context) {
-    if (context.isDesktopSize || MediaQuery.of(context).size.height < 700) {
-      return ScreenAdjustableBody(
-        maxContentWidth: bigContentWidth,
-        child: child,
-      );
-    }
-    return Paddings24(child: child);
+    final bool areDataLoaded = context.select(
+      (WorkoutPreviewBloc bloc) => bloc.state.areDataLoaded,
+    );
+
+    return areDataLoaded
+        ? const WorkoutPreviewWorkoutInfo()
+        : const LoadingInfo();
   }
 }

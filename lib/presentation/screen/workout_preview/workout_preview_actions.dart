@@ -1,34 +1,24 @@
-part of 'workout_preview_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class _WorkoutActions extends StatelessWidget {
-  const _WorkoutActions();
+import '../../../domain/bloc/workout_preview/workout_preview_bloc.dart';
+import '../../component/edit_delete_popup_menu_component.dart';
+import '../../config/navigation/router.dart';
+import '../../extension/context_extensions.dart';
+import '../../formatter/date_formatter.dart';
+import '../../service/dialog_service.dart';
+import '../../service/navigator_service.dart';
+
+class WorkoutPreviewWorkoutActions extends StatelessWidget {
+  const WorkoutPreviewWorkoutActions({super.key});
 
   @override
   Widget build(BuildContext context) {
-    if (context.isMobileSize) {
-      return EditDeleteActions(
-        onEditSelected: () => _editWorkout(context),
-        onDeleteSelected: () => _deleteWorkout(context),
-      );
-    }
-    final theme = Theme.of(context);
-    return Row(
-      children: [
-        IconButton(
-          onPressed: () => _editWorkout(context),
-          icon: Icon(
-            Icons.edit_outlined,
-            color: theme.colorScheme.primary,
-          ),
-        ),
-        IconButton(
-          onPressed: () => _deleteWorkout(context),
-          icon: Icon(
-            Icons.delete_outline,
-            color: theme.colorScheme.error,
-          ),
-        ),
-      ],
+    return EditDeleteActions(
+      displayAsPopupMenu: context.isMobileSize,
+      onEditSelected: () => _editWorkout(context),
+      onDeleteSelected: () => _deleteWorkout(context),
     );
   }
 

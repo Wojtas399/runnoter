@@ -1,7 +1,27 @@
-part of 'race_preview_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class _Race extends StatelessWidget {
-  const _Race();
+import '../../../domain/bloc/race_preview/race_preview_bloc.dart';
+import '../../../domain/bloc/run_status_creator/run_status_creator_bloc.dart';
+import '../../../domain/entity/run_status.dart';
+import '../../component/big_button_component.dart';
+import '../../component/content_with_label_component.dart';
+import '../../component/nullable_text_component.dart';
+import '../../component/run_status_info_component.dart';
+import '../../component/text/title_text_components.dart';
+import '../../config/navigation/router.dart';
+import '../../extension/context_extensions.dart';
+import '../../extension/double_extensions.dart';
+import '../../extension/string_extensions.dart';
+import '../../formatter/date_formatter.dart';
+import '../../formatter/distance_unit_formatter.dart';
+import '../../formatter/duration_formatter.dart';
+import '../../service/navigator_service.dart';
+import 'race_preview_actions.dart';
+
+class RacePreviewRaceInfo extends StatelessWidget {
+  const RacePreviewRaceInfo({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +78,7 @@ class _Header extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         const _RaceName(),
-        if (!context.isMobileSize) const _RaceActions(),
+        if (!context.isMobileSize) const RacePreviewActions(),
       ],
     );
   }
@@ -173,10 +193,11 @@ class _FinishRaceButton extends StatelessWidget {
 
   void _onPressed(BuildContext context) {
     final String? raceId = context.read<RacePreviewBloc>().state.race?.id;
-    if (raceId == null) return;
-    navigateTo(RunStatusCreatorRoute(
-      entityType: RunStatusCreatorEntityType.race.name,
-      entityId: raceId,
-    ));
+    if (raceId != null) {
+      navigateTo(RunStatusCreatorRoute(
+        entityType: RunStatusCreatorEntityType.race.name,
+        entityId: raceId,
+      ));
+    }
   }
 }

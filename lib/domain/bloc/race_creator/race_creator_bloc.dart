@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rxdart/rxdart.dart';
 
 import '../../additional_model/bloc_state.dart';
 import '../../additional_model/bloc_status.dart';
@@ -48,17 +49,16 @@ class RaceCreatorBloc extends BlocWithStatus<RaceCreatorEvent, RaceCreatorState,
       ));
       return;
     }
-    final String? loggedUserId = await _authService.loggedUserId$.first;
-    if (loggedUserId == null) return;
-    final Stream<Race?> race$ = _raceRepository.getRaceById(
-      raceId: raceId!,
-      userId: loggedUserId,
-    );
+    final Stream<Race?> race$ =
+        _authService.loggedUserId$.whereNotNull().switchMap(
+              (String loggedUserId) => _raceRepository.getRaceById(
+                raceId: raceId!,
+                userId: loggedUserId,
+              ),
+            );
     await for (final race in race$) {
       emit(state.copyWith(
-        status: const BlocStatusComplete<RaceCreatorBlocInfo>(
-          info: RaceCreatorBlocInfo.editModeInitialized,
-        ),
+        status: const BlocStatusComplete<RaceCreatorBlocInfo>(),
         race: race,
         name: race?.name,
         date: race?.date,
@@ -176,7 +176,6 @@ class RaceCreatorBloc extends BlocWithStatus<RaceCreatorEvent, RaceCreatorState,
 }
 
 enum RaceCreatorBlocInfo {
-  editModeInitialized,
   raceAdded,
   raceUpdated,
 }

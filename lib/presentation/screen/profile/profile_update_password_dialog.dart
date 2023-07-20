@@ -5,16 +5,14 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../domain/additional_model/bloc_status.dart';
 import '../../../domain/bloc/profile/identities/profile_identities_bloc.dart';
 import '../../component/password_text_field_component.dart';
+import '../../component/responsive_layout_component.dart';
 import '../../component/text/label_text_components.dart';
-import '../../extension/context_extensions.dart';
 import '../../service/navigator_service.dart';
 import '../../service/utils.dart';
 import '../../service/validation_service.dart';
 
 class ProfileUpdatePasswordDialog extends StatefulWidget {
-  const ProfileUpdatePasswordDialog({
-    super.key,
-  });
+  const ProfileUpdatePasswordDialog({super.key});
 
   @override
   State<StatefulWidget> createState() => _State();
@@ -50,21 +48,22 @@ class _State extends State<ProfileUpdatePasswordDialog> {
           popRoute();
         }
       },
-      child: context.isMobileSize
-          ? _FullScreenDialog(
-              newPasswordController: _newPasswordController,
-              currentPasswordController: _currentPasswordController,
-              isSaveButtonDisabled: _isSaveButtonDisabled,
-              newPasswordValidator: _validatePassword,
-              onSaveButtonPressed: () => _onSaveButtonPressed(context),
-            )
-          : _NormalDialog(
-              newPasswordController: _newPasswordController,
-              currentPasswordController: _currentPasswordController,
-              isSaveButtonDisabled: _isSaveButtonDisabled,
-              newPasswordValidator: _validatePassword,
-              onSaveButtonPressed: () => _onSaveButtonPressed(context),
-            ),
+      child: ResponsiveLayout(
+        mobileBody: _FullScreenDialog(
+          newPasswordController: _newPasswordController,
+          currentPasswordController: _currentPasswordController,
+          isSaveButtonDisabled: _isSaveButtonDisabled,
+          newPasswordValidator: _validatePassword,
+          onSaveButtonPressed: () => _onSaveButtonPressed(context),
+        ),
+        desktopBody: _NormalDialog(
+          newPasswordController: _newPasswordController,
+          currentPasswordController: _currentPasswordController,
+          isSaveButtonDisabled: _isSaveButtonDisabled,
+          newPasswordValidator: _validatePassword,
+          onSaveButtonPressed: () => _onSaveButtonPressed(context),
+        ),
+      ),
     );
   }
 
@@ -142,10 +141,10 @@ class _NormalDialog extends StatelessWidget {
           onPressed: popRoute,
           child: LabelLarge(
             str.cancel,
-            color: Theme.of(context).colorScheme.error,
+            color: Theme.of(context).colorScheme.primary,
           ),
         ),
-        TextButton(
+        FilledButton(
           onPressed: isSaveButtonDisabled ? null : onSaveButtonPressed,
           child: Text(str.save),
         ),
@@ -180,7 +179,7 @@ class _FullScreenDialog extends StatelessWidget {
         ),
         leading: const CloseButton(),
         actions: [
-          TextButton(
+          FilledButton(
             onPressed: isSaveButtonDisabled ? null : onSaveButtonPressed,
             child: Text(str.save),
           ),

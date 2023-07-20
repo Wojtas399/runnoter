@@ -1,2 +1,5 @@
-const int maxMobileWidth = 500;
-const int maxTabletWidth = 850;
+class ScreenSizes {
+  int get maxMobileWidth => 600;
+
+  int get maxTabletWidth => 1100;
+}

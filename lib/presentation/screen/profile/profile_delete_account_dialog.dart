@@ -5,16 +5,14 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../domain/additional_model/bloc_status.dart';
 import '../../../domain/bloc/profile/identities/profile_identities_bloc.dart';
 import '../../component/password_text_field_component.dart';
+import '../../component/responsive_layout_component.dart';
 import '../../component/text/body_text_components.dart';
 import '../../component/text/label_text_components.dart';
-import '../../extension/context_extensions.dart';
 import '../../service/navigator_service.dart';
 import '../../service/utils.dart';
 
 class ProfileDeleteAccountDialog extends StatefulWidget {
-  const ProfileDeleteAccountDialog({
-    super.key,
-  });
+  const ProfileDeleteAccountDialog({super.key});
 
   @override
   State<StatefulWidget> createState() => _State();
@@ -46,17 +44,18 @@ class _State extends State<ProfileDeleteAccountDialog> {
           popRoute();
         }
       },
-      child: context.isMobileSize
-          ? _FullScreenDialog(
-              passwordController: _passwordController,
-              isSaveButtonDisabled: _isSaveButtonDisabled,
-              onSaveButtonPressed: () => _onSaveButtonPressed(context),
-            )
-          : _NormalDialog(
-              passwordController: _passwordController,
-              isSaveButtonDisabled: _isSaveButtonDisabled,
-              onSaveButtonPressed: () => _onSaveButtonPressed(context),
-            ),
+      child: ResponsiveLayout(
+        mobileBody: _FullScreenDialog(
+          passwordController: _passwordController,
+          isSaveButtonDisabled: _isSaveButtonDisabled,
+          onSaveButtonPressed: () => _onSaveButtonPressed(context),
+        ),
+        desktopBody: _NormalDialog(
+          passwordController: _passwordController,
+          isSaveButtonDisabled: _isSaveButtonDisabled,
+          onSaveButtonPressed: () => _onSaveButtonPressed(context),
+        ),
+      ),
     );
   }
 
@@ -112,11 +111,14 @@ class _NormalDialog extends StatelessWidget {
           onPressed: popRoute,
           child: LabelLarge(
             str.cancel,
-            color: Theme.of(context).colorScheme.error,
+            color: Theme.of(context).colorScheme.primary,
           ),
         ),
-        TextButton(
+        FilledButton(
           onPressed: isSaveButtonDisabled ? null : onSaveButtonPressed,
+          style: FilledButton.styleFrom(
+            backgroundColor: Theme.of(context).colorScheme.error,
+          ),
           child: Text(str.delete),
         ),
       ],
@@ -144,8 +146,11 @@ class _FullScreenDialog extends StatelessWidget {
         title: Text(str.profileDeleteAccountDialogTitle),
         leading: const CloseButton(),
         actions: [
-          TextButton(
+          FilledButton(
             onPressed: isSaveButtonDisabled ? null : onSaveButtonPressed,
+            style: FilledButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.error,
+            ),
             child: Text(str.delete),
           ),
           const SizedBox(width: 16),

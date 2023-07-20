@@ -3,34 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/bloc/run_status_creator/run_status_creator_bloc.dart';
 import '../../../domain/bloc/workout_preview/workout_preview_bloc.dart';
-import '../../../domain/entity/run_status.dart';
-import '../../../domain/entity/workout_stage.dart';
 import '../../../domain/repository/workout_repository.dart';
 import '../../../domain/service/auth_service.dart';
-import '../../component/big_button_component.dart';
 import '../../component/bloc_with_status_listener_component.dart';
-import '../../component/content_with_label_component.dart';
-import '../../component/edit_delete_popup_menu_component.dart';
-import '../../component/loading_info_component.dart';
-import '../../component/nullable_text_component.dart';
-import '../../component/padding/paddings_24.dart';
-import '../../component/run_status_info_component.dart';
-import '../../component/screen_adjustable_body_component.dart';
-import '../../component/text/title_text_components.dart';
-import '../../config/navigation/router.dart';
-import '../../config/ui_sizes.dart';
-import '../../extension/context_extensions.dart';
-import '../../formatter/date_formatter.dart';
-import '../../formatter/list_of_workout_stages_formatter.dart';
-import '../../formatter/workout_stage_formatter.dart';
 import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
-
-part 'workout_preview_actions.dart';
-part 'workout_preview_content.dart';
-part 'workout_preview_workout.dart';
+import 'workout_preview_content.dart';
 
 @RoutePage()
 class WorkoutPreviewScreen extends StatelessWidget {
@@ -46,7 +25,7 @@ class WorkoutPreviewScreen extends StatelessWidget {
     return _BlocProvider(
       workoutId: workoutId,
       child: const _BlocListener(
-        child: _Content(),
+        child: WorkoutPreviewContent(),
       ),
     );
   }

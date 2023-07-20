@@ -89,23 +89,6 @@ void main() {
     expect: () => [
       [
         ChartYear(
-          year: 2022,
-          months: [
-            createChartMonth(month: Month.january),
-            createChartMonth(month: Month.february),
-            createChartMonth(month: Month.march),
-            createChartMonth(month: Month.april),
-            createChartMonth(month: Month.may),
-            createChartMonth(month: Month.june, mileage: 15.0),
-            createChartMonth(month: Month.july),
-            createChartMonth(month: Month.august),
-            createChartMonth(month: Month.september),
-            createChartMonth(month: Month.october),
-            createChartMonth(month: Month.november),
-            createChartMonth(month: Month.december),
-          ],
-        ),
-        ChartYear(
           year: 2023,
           months: [
             createChartMonth(month: Month.january),
@@ -115,6 +98,23 @@ void main() {
             createChartMonth(month: Month.may, mileage: 19.0),
             createChartMonth(month: Month.june),
             createChartMonth(month: Month.july, mileage: 18.0),
+            createChartMonth(month: Month.august),
+            createChartMonth(month: Month.september),
+            createChartMonth(month: Month.october),
+            createChartMonth(month: Month.november),
+            createChartMonth(month: Month.december),
+          ],
+        ),
+        ChartYear(
+          year: 2022,
+          months: [
+            createChartMonth(month: Month.january),
+            createChartMonth(month: Month.february),
+            createChartMonth(month: Month.march),
+            createChartMonth(month: Month.april),
+            createChartMonth(month: Month.may),
+            createChartMonth(month: Month.june, mileage: 15.0),
+            createChartMonth(month: Month.july),
             createChartMonth(month: Month.august),
             createChartMonth(month: Month.september),
             createChartMonth(month: Month.october),

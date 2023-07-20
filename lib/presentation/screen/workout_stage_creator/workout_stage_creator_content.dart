@@ -1,7 +1,27 @@
-part of 'workout_stage_creator_dialog.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class _FullScreenDialogContent extends StatelessWidget {
-  const _FullScreenDialogContent();
+import '../../../domain/bloc/workout_stage_creator/workout_stage_creator_bloc.dart';
+import '../../component/responsive_layout_component.dart';
+import '../../service/navigator_service.dart';
+import '../../service/utils.dart';
+import 'workout_stage_creator_form.dart';
+
+class WorkoutStageCreatorContent extends StatelessWidget {
+  const WorkoutStageCreatorContent({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const ResponsiveLayout(
+      mobileBody: _FullScreenDialog(),
+      desktopBody: _NormalDialog(),
+    );
+  }
+}
+
+class _FullScreenDialog extends StatelessWidget {
+  const _FullScreenDialog();
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +33,7 @@ class _FullScreenDialogContent extends StatelessWidget {
           child: Container(
             color: Colors.transparent,
             padding: const EdgeInsets.all(24),
-            child: const _Form(),
+            child: const WorkoutStageCreatorFormContent(),
           ),
         ),
       ),
@@ -21,8 +41,8 @@ class _FullScreenDialogContent extends StatelessWidget {
   }
 }
 
-class _NormalDialogContent extends StatelessWidget {
-  const _NormalDialogContent();
+class _NormalDialog extends StatelessWidget {
+  const _NormalDialog();
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +50,7 @@ class _NormalDialogContent extends StatelessWidget {
       title: const _DialogTitle(),
       content: const SizedBox(
         width: 500,
-        child: _Form(),
+        child: WorkoutStageCreatorFormContent(),
       ),
       actions: [
         TextButton(

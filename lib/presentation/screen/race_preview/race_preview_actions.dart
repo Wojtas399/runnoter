@@ -1,34 +1,23 @@
-part of 'race_preview_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class _RaceActions extends StatelessWidget {
-  const _RaceActions();
+import '../../../domain/bloc/race_preview/race_preview_bloc.dart';
+import '../../component/edit_delete_popup_menu_component.dart';
+import '../../config/navigation/router.dart';
+import '../../extension/context_extensions.dart';
+import '../../service/dialog_service.dart';
+import '../../service/navigator_service.dart';
+
+class RacePreviewActions extends StatelessWidget {
+  const RacePreviewActions({super.key});
 
   @override
   Widget build(BuildContext context) {
-    if (context.isMobileSize) {
-      return EditDeleteActions(
-        onEditSelected: () => _editRace(context),
-        onDeleteSelected: () => _deleteRace(context),
-      );
-    }
-    final theme = Theme.of(context);
-    return Row(
-      children: [
-        IconButton(
-          onPressed: () => _editRace(context),
-          icon: Icon(
-            Icons.edit_outlined,
-            color: theme.colorScheme.primary,
-          ),
-        ),
-        IconButton(
-          onPressed: () => _deleteRace(context),
-          icon: Icon(
-            Icons.delete_outline,
-            color: theme.colorScheme.error,
-          ),
-        ),
-      ],
+    return EditDeleteActions(
+      displayAsPopupMenu: context.isMobileSize,
+      onEditSelected: () => _editRace(context),
+      onDeleteSelected: () => _deleteRace(context),
     );
   }
 

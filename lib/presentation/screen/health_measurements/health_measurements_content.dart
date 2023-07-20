@@ -1,7 +1,18 @@
-part of 'health_measurements_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class _Content extends StatelessWidget {
-  const _Content();
+import '../../../domain/bloc/health_measurements/health_measurements_bloc.dart';
+import '../../../domain/entity/health_measurement.dart';
+import '../../component/body/medium_body_component.dart';
+import '../../component/empty_content_info_component.dart';
+import '../../component/loading_info_component.dart';
+import '../../component/text/label_text_components.dart';
+import '../../service/dialog_service.dart';
+import 'health_measurements_item.dart';
+
+class HealthMeasurementsContent extends StatelessWidget {
+  const HealthMeasurementsContent({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -11,18 +22,15 @@ class _Content extends StatelessWidget {
         forceMaterialTransparency: true,
         title: Text(Str.of(context).healthMeasurementsTitle),
       ),
-      body: SafeArea(
-        child: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: bigContentWidth),
-            child: const Column(
-              children: [
-                _Header(),
-                Expanded(
-                  child: _Body(),
-                ),
-              ],
-            ),
+      body: const SafeArea(
+        child: MediumBody(
+          child: Column(
+            children: [
+              _Header(),
+              Expanded(
+                child: _Body(),
+              ),
+            ],
           ),
         ),
       ),
@@ -124,7 +132,7 @@ class _Measurements extends StatelessWidget {
     return ListView.separated(
       itemCount: measurements.length,
       padding: const EdgeInsets.only(top: 8, bottom: 80),
-      itemBuilder: (_, int measurementIndex) => _MeasurementItem(
+      itemBuilder: (_, int measurementIndex) => HealthMeasurementsItem(
         measurement: measurements[measurementIndex],
         isFirstItem: measurementIndex == 0,
       ),

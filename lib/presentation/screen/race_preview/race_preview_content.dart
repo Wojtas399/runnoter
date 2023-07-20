@@ -1,18 +1,29 @@
-part of 'race_preview_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class _Content extends StatelessWidget {
-  const _Content();
+import '../../../domain/bloc/race_preview/race_preview_bloc.dart';
+import '../../../domain/entity/race.dart';
+import '../../component/body/medium_body_component.dart';
+import '../../component/loading_info_component.dart';
+import '../../component/padding/paddings_24.dart';
+import '../../extension/context_extensions.dart';
+import 'race_preview_actions.dart';
+import 'race_preview_race.dart';
+
+class RacePreviewContent extends StatelessWidget {
+  const RacePreviewContent({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const _AppBar(),
+    return const Scaffold(
+      appBar: _AppBar(),
       body: SafeArea(
-        child: _ScreenAdjustableBody(
-          child: BlocSelector<RacePreviewBloc, RacePreviewState, bool>(
-            selector: (state) => state.race != null,
-            builder: (_, bool isRaceLoaded) =>
-                isRaceLoaded ? const _Race() : const LoadingInfo(),
+        child: SingleChildScrollView(
+          child: MediumBody(
+            child: Paddings24(
+              child: _RaceInfo(),
+            ),
           ),
         ),
       ),
@@ -31,26 +42,26 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       title: Text(Str.of(context).racePreviewTitle),
       centerTitle: true,
-      actions: context.isMobileSize ? const [_RaceActions()] : null,
+      actions: [
+        if (context.isMobileSize)
+          const Padding(
+            padding: EdgeInsets.only(right: 8),
+            child: RacePreviewActions(),
+          ),
+      ],
     );
   }
 }
 
-class _ScreenAdjustableBody extends StatelessWidget {
-  final Widget child;
-
-  const _ScreenAdjustableBody({
-    required this.child,
-  });
+class _RaceInfo extends StatelessWidget {
+  const _RaceInfo();
 
   @override
   Widget build(BuildContext context) {
-    if (context.isDesktopSize || MediaQuery.of(context).size.height < 700) {
-      return ScreenAdjustableBody(
-        maxContentWidth: bigContentWidth,
-        child: child,
-      );
-    }
-    return Paddings24(child: child);
+    final Race? race = context.select(
+      (RacePreviewBloc bloc) => bloc.state.race,
+    );
+
+    return race == null ? const LoadingInfo() : const RacePreviewRaceInfo();
   }
 }

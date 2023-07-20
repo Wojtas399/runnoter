@@ -1,9 +1,17 @@
-part of 'current_week_screen.dart';
+import 'package:flutter/material.dart';
 
-class DayItem extends StatelessWidget {
+import '../../../domain/bloc/current_week/current_week_cubit.dart';
+import '../../component/activity_item_component.dart';
+import '../../component/text/title_text_components.dart';
+import '../../config/navigation/router.dart';
+import '../../formatter/date_formatter.dart';
+import '../../service/navigator_service.dart';
+import 'current_week_add_activity_button.dart';
+
+class CurrentWeekDayItem extends StatelessWidget {
   final Day day;
 
-  const DayItem({
+  const CurrentWeekDayItem({
     super.key,
     required this.day,
   });
@@ -23,7 +31,7 @@ class DayItem extends StatelessWidget {
                 date: day.date,
                 isToday: day.isToday,
               ),
-              _AddActivityButton(date: day.date),
+              CurrentWeekAddActivityButton(date: day.date),
             ],
           ),
           const SizedBox(height: 8),

@@ -1,7 +1,16 @@
-part of 'blood_test_preview_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class _BloodTestActions extends StatelessWidget {
-  const _BloodTestActions();
+import '../../../domain/bloc/blood_test_preview/blood_test_preview_bloc.dart';
+import '../../component/edit_delete_popup_menu_component.dart';
+import '../../config/navigation/router.dart';
+import '../../extension/context_extensions.dart';
+import '../../service/dialog_service.dart';
+import '../../service/navigator_service.dart';
+
+class BloodTestPreviewActions extends StatelessWidget {
+  const BloodTestPreviewActions({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -1,7 +1,20 @@
-part of 'run_status_creator_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class _ParamsForm extends StatelessWidget {
-  const _ParamsForm();
+import '../../../domain/bloc/run_status_creator/run_status_creator_bloc.dart';
+import '../../../domain/entity/run_status.dart';
+import '../../component/duration_input_component.dart';
+import '../../component/text_field_component.dart';
+import '../../extension/context_extensions.dart';
+import '../../formatter/decimal_text_input_formatter.dart';
+import '../../formatter/distance_unit_formatter.dart';
+import '../../formatter/mood_rate_formatter.dart';
+import 'run_status_creator_avg_pace.dart';
+
+class RunStatusCreatorParamsForm extends StatelessWidget {
+  const RunStatusCreatorParamsForm({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,13 +35,70 @@ class _ParamsForm extends StatelessWidget {
         gap,
         const _MoodRate(),
         gap,
-        const _AvgPace(),
+        const RunStatusCreatorAvgPace(),
         gap,
         const _AvgHeartRate(),
         gap,
         const _Comment(),
       ],
     );
+  }
+}
+
+class _CoveredDistance extends StatefulWidget {
+  const _CoveredDistance();
+
+  @override
+  State<StatefulWidget> createState() => _CoveredDistanceState();
+}
+
+class _CoveredDistanceState extends State<_CoveredDistance> {
+  final TextEditingController _controller = TextEditingController();
+
+  @override
+  void initState() {
+    final double? coveredDistanceInKm =
+        context.read<RunStatusCreatorBloc>().state.coveredDistanceInKm;
+    if (coveredDistanceInKm != null) {
+      _controller.text = context
+          .convertDistanceFromDefaultUnit(coveredDistanceInKm)
+          .toStringAsFixed(2);
+    }
+    _controller.addListener(_onChanged);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controller.removeListener(_onChanged);
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFieldComponent(
+      label:
+          '${Str.of(context).runStatusCreatorCoveredDistance} [${context.distanceUnit.toUIShortFormat()}]',
+      maxLength: 8,
+      keyboardType: const TextInputType.numberWithOptions(decimal: true),
+      isRequired: true,
+      requireHigherThan0: true,
+      inputFormatters: [
+        DecimalTextInputFormatter(decimalRange: 2),
+      ],
+      controller: _controller,
+    );
+  }
+
+  void _onChanged() {
+    final double coveredDistance = double.tryParse(_controller.text) ?? 0;
+    final double convertedCoveredDistance =
+        context.convertDistanceToDefaultUnit(coveredDistance);
+    context.read<RunStatusCreatorBloc>().add(
+          RunStatusCreatorEventCoveredDistanceInKmChanged(
+            coveredDistanceInKm: convertedCoveredDistance,
+          ),
+        );
   }
 }
 
@@ -44,9 +114,7 @@ class _Duration extends StatelessWidget {
     return DurationInput(
       label: Str.of(context).runStatusCreatorDuration,
       initialDuration: duration,
-      onDurationChanged: (Duration? duration) {
-        _onChanged(context, duration);
-      },
+      onDurationChanged: (Duration? duration) => _onChanged(context, duration),
     );
   }
 
@@ -78,24 +146,20 @@ class _MoodRate extends StatelessWidget {
             value: moodRate,
             child: Padding(
               padding: const EdgeInsets.all(8),
-              child: Text(
-                moodRate.toUIFormat(context),
-              ),
+              child: Text(moodRate.toUIFormat(context)),
             ),
           ),
         ),
       ],
-      selectedItemBuilder: (BuildContext context) {
-        return MoodRate.values.map((MoodRate moodRate) {
-          return Text(
-            moodRate.toUIFormat(context),
-            overflow: TextOverflow.ellipsis,
-          );
-        }).toList();
-      },
-      onChanged: (MoodRate? moodRate) {
-        _onChanged(context, moodRate);
-      },
+      selectedItemBuilder: (BuildContext context) => MoodRate.values
+          .map(
+            (MoodRate moodRate) => Text(
+              moodRate.toUIFormat(context),
+              overflow: TextOverflow.ellipsis,
+            ),
+          )
+          .toList(),
+      onChanged: (MoodRate? moodRate) => _onChanged(context, moodRate),
     );
   }
 
@@ -103,6 +167,100 @@ class _MoodRate extends StatelessWidget {
     context.read<RunStatusCreatorBloc>().add(
           RunStatusCreatorEventMoodRateChanged(
             moodRate: moodRate,
+          ),
+        );
+  }
+}
+
+class _AvgHeartRate extends StatefulWidget {
+  const _AvgHeartRate();
+
+  @override
+  State<StatefulWidget> createState() => _AvgHeartRateState();
+}
+
+class _AvgHeartRateState extends State<_AvgHeartRate> {
+  final TextEditingController _controller = TextEditingController();
+
+  @override
+  void initState() {
+    final int? avgHeartRate =
+        context.read<RunStatusCreatorBloc>().state.avgHeartRate;
+    if (avgHeartRate != null) _controller.text = avgHeartRate.toString();
+    _controller.addListener(_onChanged);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controller.removeListener(_onChanged);
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFieldComponent(
+      label: Str.of(context).runStatusCreatorAverageHeartRate,
+      maxLength: 3,
+      keyboardType: TextInputType.number,
+      isRequired: true,
+      requireHigherThan0: true,
+      inputFormatters: [
+        FilteringTextInputFormatter.digitsOnly,
+      ],
+      controller: _controller,
+    );
+  }
+
+  void _onChanged() {
+    final int averageHeartRate = int.tryParse(_controller.text) ?? 0;
+    context.read<RunStatusCreatorBloc>().add(
+          RunStatusCreatorEventAvgHeartRateChanged(
+            averageHeartRate: averageHeartRate,
+          ),
+        );
+  }
+}
+
+class _Comment extends StatefulWidget {
+  const _Comment();
+
+  @override
+  State<StatefulWidget> createState() => _CommentState();
+}
+
+class _CommentState extends State<_Comment> {
+  final TextEditingController _controller = TextEditingController();
+
+  @override
+  void initState() {
+    _controller.text = context.read<RunStatusCreatorBloc>().state.comment ?? '';
+    _controller.addListener(_onChanged);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controller.removeListener(_onChanged);
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFieldComponent(
+      label: Str.of(context).runStatusCreatorComment,
+      maxLength: 100,
+      maxLines: null,
+      keyboardType: TextInputType.multiline,
+      displayCounterText: true,
+      controller: _controller,
+    );
+  }
+
+  void _onChanged() {
+    context.read<RunStatusCreatorBloc>().add(
+          RunStatusCreatorEventCommentChanged(
+            comment: _controller.text,
           ),
         );
   }

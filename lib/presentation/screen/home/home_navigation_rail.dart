@@ -1,11 +1,15 @@
-part of 'home_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class _NavigationRail extends StatelessWidget {
+import '../../component/text/label_text_components.dart';
+
+class HomeNavigationRail extends StatelessWidget {
   final int? selectedIndex;
   final Color? backgroundColor;
   final Function(int index) onPageSelected;
 
-  const _NavigationRail({
+  const HomeNavigationRail({
+    super.key,
     required this.selectedIndex,
     required this.backgroundColor,
     required this.onPageSelected,

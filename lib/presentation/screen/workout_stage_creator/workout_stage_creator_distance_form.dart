@@ -1,7 +1,16 @@
-part of 'workout_stage_creator_dialog.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class _DistanceStageForm extends StatelessWidget {
-  const _DistanceStageForm();
+import '../../../domain/bloc/workout_stage_creator/workout_stage_creator_bloc.dart';
+import '../../component/text_field_component.dart';
+import '../../extension/context_extensions.dart';
+import '../../formatter/decimal_text_input_formatter.dart';
+import '../../formatter/distance_unit_formatter.dart';
+
+class WorkoutStageCreatorDistanceStageForm extends StatelessWidget {
+  const WorkoutStageCreatorDistanceStageForm({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -52,9 +61,7 @@ class _DistanceState extends State<_Distance> {
       maxLength: 8,
       isRequired: true,
       inputFormatters: [
-        DecimalTextInputFormatter(
-          decimalRange: 2,
-        ),
+        DecimalTextInputFormatter(decimalRange: 2),
       ],
       controller: _controller,
     );

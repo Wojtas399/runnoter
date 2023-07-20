@@ -1,18 +1,30 @@
-part of 'day_preview_dialog.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class _ActivitiesContent extends StatelessWidget {
-  const _ActivitiesContent();
+import '../../../domain/bloc/day_preview/day_preview_cubit.dart';
+import '../../../domain/entity/race.dart';
+import '../../../domain/entity/workout.dart';
+import '../../component/activity_item_component.dart';
+import '../../component/empty_content_info_component.dart';
+import '../../component/loading_info_component.dart';
+import '../../service/navigator_service.dart';
+import 'day_preview_dialog_actions.dart';
+
+class DayPreviewActivities extends StatelessWidget {
+  const DayPreviewActivities({super.key});
 
   @override
   Widget build(BuildContext context) {
     final DayPreviewCubit cubit = context.watch<DayPreviewCubit>();
 
     if (cubit.state.workouts == null && cubit.state.workouts == null) {
-      return const Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          LoadingInfo(),
-        ],
+      return const Padding(
+        padding: EdgeInsets.symmetric(vertical: 32),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [LoadingInfo()],
+        ),
       );
     } else if (cubit.areThereActivities) {
       return _Activities(

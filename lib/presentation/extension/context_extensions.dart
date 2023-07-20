@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 
 import '../../domain/entity/run_status.dart';
 import '../../domain/entity/settings.dart';
@@ -8,11 +9,21 @@ import '../service/distance_unit_service.dart';
 import '../service/pace_unit_service.dart';
 
 extension ContextExtensions on BuildContext {
-  bool get isMobileSize => MediaQuery.of(this).size.width <= maxMobileWidth;
+  Size get screenSize => MediaQuery.of(this).size;
 
-  bool get isDesktopSize => MediaQuery.of(this).size.width > maxTabletWidth;
+  bool get isMobileSize =>
+      screenSize.width <= GetIt.I.get<ScreenSizes>().maxMobileWidth;
 
-  DistanceUnit get distanceUnit => read<DistanceUnitService>().state;
+  bool get isTabletSize =>
+      screenSize.width > GetIt.I.get<ScreenSizes>().maxMobileWidth &&
+      screenSize.width <= GetIt.I.get<ScreenSizes>().maxTabletWidth;
+
+  bool get isDesktopSize =>
+      screenSize.width > GetIt.I.get<ScreenSizes>().maxTabletWidth;
+
+  DistanceUnit get distanceUnit => select(
+        (DistanceUnitService service) => service.state,
+      );
 
   PaceUnit get paceUnit => read<PaceUnitService>().state;
 

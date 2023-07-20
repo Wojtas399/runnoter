@@ -1,10 +1,12 @@
-part of 'home_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class _BottomNavigationBar extends StatelessWidget {
+class HomeBottomNavigationBar extends StatelessWidget {
   final int selectedIndex;
   final Function(int pageIndex) onPageSelected;
 
-  const _BottomNavigationBar({
+  const HomeBottomNavigationBar({
+    super.key,
     required this.selectedIndex,
     required this.onPageSelected,
   });

@@ -1,7 +1,13 @@
-part of 'sign_in_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class _Form extends StatelessWidget {
-  const _Form();
+import '../../../domain/bloc/sign_in/sign_in_bloc.dart';
+import '../../component/password_text_field_component.dart';
+import '../../component/text_field_component.dart';
+
+class SignInForm extends StatelessWidget {
+  const SignInForm({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -23,9 +29,7 @@ class _Email extends StatelessWidget {
     return TextFieldComponent(
       label: Str.of(context).email,
       icon: Icons.email,
-      onChanged: (String? value) {
-        _onChanged(value, context);
-      },
+      onChanged: (String? value) => _onChanged(value, context),
     );
   }
 
@@ -44,9 +48,7 @@ class _Password extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PasswordTextFieldComponent(
-      onChanged: (String? value) {
-        _onChanged(value, context);
-      },
+      onChanged: (String? value) => _onChanged(value, context),
     );
   }
 

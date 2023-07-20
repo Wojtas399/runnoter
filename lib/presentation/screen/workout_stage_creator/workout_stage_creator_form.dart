@@ -1,7 +1,13 @@
-part of 'workout_stage_creator_dialog.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class _Form extends StatelessWidget {
-  const _Form();
+import '../../../domain/bloc/workout_stage_creator/workout_stage_creator_bloc.dart';
+import 'workout_stage_creator_distance_form.dart';
+import 'workout_stage_creator_series_form.dart';
+
+class WorkoutStageCreatorFormContent extends StatelessWidget {
+  const WorkoutStageCreatorFormContent({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -41,9 +47,8 @@ class _WorkoutStageType extends StatelessWidget {
             ),
           ),
         ],
-        onChanged: (WorkoutStageType? stage) {
-          _onWorkoutStageChanged(context, stage);
-        },
+        onChanged: (WorkoutStageType? stage) =>
+            _onWorkoutStageChanged(context, stage),
       ),
     );
   }
@@ -68,7 +73,9 @@ class _WorkoutStageType extends StatelessWidget {
   }
 
   void _onWorkoutStageChanged(
-      BuildContext context, WorkoutStageType? stageType) {
+    BuildContext context,
+    WorkoutStageType? stageType,
+  ) {
     if (stageType != null) {
       context.read<WorkoutStageCreatorBloc>().add(
             WorkoutStageCreatorEventStageTypeChanged(
@@ -92,9 +99,9 @@ class _MatchingForm extends StatelessWidget {
     );
 
     if (isDistanceStage) {
-      return const _DistanceStageForm();
+      return const WorkoutStageCreatorDistanceStageForm();
     } else if (isSeriesStage) {
-      return const _SeriesStageForm();
+      return const WorkoutStageCreatorSeriesStageForm();
     }
     return const SizedBox();
   }

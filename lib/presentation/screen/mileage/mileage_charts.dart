@@ -1,9 +1,20 @@
-part of 'mileage_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 
-class _Charts extends StatelessWidget {
+import '../../../domain/bloc/mileage/mileage_cubit.dart';
+import '../../component/card_body_component.dart';
+import '../../component/responsive_layout_component.dart';
+import '../../component/text/title_text_components.dart';
+import '../../extension/context_extensions.dart';
+import '../../formatter/date_formatter.dart';
+import '../../formatter/distance_unit_formatter.dart';
+
+class MileageCharts extends StatelessWidget {
   final List<ChartYear> years;
 
-  const _Charts({
+  const MileageCharts({
+    super.key,
     required this.years,
   });
 
@@ -11,15 +22,13 @@ class _Charts extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView.separated(
       itemCount: years.length,
-      padding: const EdgeInsets.fromLTRB(8, 24, 24, 24),
+      padding: const EdgeInsets.all(24),
       itemBuilder: (_, int itemIndex) {
-        final ChartYear yearData = years[itemIndex];
-        return Column(
-          children: [
-            TitleLarge('${yearData.year}'),
-            const SizedBox(height: 16),
-            _YearChart(yearData: yearData),
-          ],
+        final Widget chart = _Chart(yearData: years[itemIndex]);
+        return ResponsiveLayout(
+          mobileBody: chart,
+          tabletBody: CardBody(child: chart),
+          desktopBody: CardBody(child: chart),
         );
       },
       separatorBuilder: (_, int index) => const SizedBox(height: 32),
@@ -27,35 +36,39 @@ class _Charts extends StatelessWidget {
   }
 }
 
-class _YearChart extends StatelessWidget {
+class _Chart extends StatelessWidget {
   final ChartYear yearData;
 
-  const _YearChart({
+  const _Chart({
     required this.yearData,
   });
 
   @override
   Widget build(BuildContext context) {
-    return SfCartesianChart(
-      primaryXAxis: CategoryAxis(
-        interval: 1,
-      ),
-      primaryYAxis: NumericAxis(
-        title: AxisTitle(
-          text:
-              '${Str.of(context).mileageChartMileage} [${context.distanceUnit.toUIShortFormat()}]',
-          textStyle: Theme.of(context).textTheme.labelSmall,
-        ),
-      ),
-      series: <ColumnSeries<ChartMonth, String>>[
-        ColumnSeries(
-          dataSource: yearData.months,
-          xValueMapper: (ChartMonth point, _) => DateTime(
-            yearData.year,
-            point.month.monthNumber,
-          ).toMonthAbbreviation(context),
-          yValueMapper: (ChartMonth point, _) =>
-              context.convertDistanceFromDefaultUnit(point.mileage),
+    return Column(
+      children: [
+        TitleLarge('${yearData.year}'),
+        const SizedBox(height: 16),
+        SfCartesianChart(
+          primaryXAxis: CategoryAxis(interval: 1),
+          primaryYAxis: NumericAxis(
+            title: AxisTitle(
+              text:
+                  '${Str.of(context).mileageChartMileage} [${context.distanceUnit.toUIShortFormat()}]',
+              textStyle: Theme.of(context).textTheme.labelSmall,
+            ),
+          ),
+          series: <ColumnSeries<ChartMonth, String>>[
+            ColumnSeries(
+              dataSource: yearData.months,
+              xValueMapper: (ChartMonth point, _) => DateTime(
+                yearData.year,
+                point.month.monthNumber,
+              ).toMonthAbbreviation(context),
+              yValueMapper: (ChartMonth point, _) =>
+                  context.convertDistanceFromDefaultUnit(point.mileage),
+            ),
+          ],
         ),
       ],
     );

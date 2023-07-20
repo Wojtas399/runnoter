@@ -1,19 +1,30 @@
-part of 'health_measurements_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class _MeasurementItem extends StatefulWidget {
+import '../../../domain/bloc/health_measurements/health_measurements_bloc.dart';
+import '../../../domain/entity/health_measurement.dart';
+import '../../component/edit_delete_popup_menu_component.dart';
+import '../../component/text/body_text_components.dart';
+import '../../extension/context_extensions.dart';
+import '../../formatter/date_formatter.dart';
+import '../../service/dialog_service.dart';
+
+class HealthMeasurementsItem extends StatefulWidget {
   final HealthMeasurement measurement;
   final bool isFirstItem;
 
-  const _MeasurementItem({
+  const HealthMeasurementsItem({
+    super.key,
     required this.measurement,
     this.isFirstItem = false,
   });
 
   @override
-  State<StatefulWidget> createState() => _MeasurementItemState();
+  State<StatefulWidget> createState() => _State();
 }
 
-class _MeasurementItemState extends State<_MeasurementItem> {
+class _State extends State<HealthMeasurementsItem> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -24,7 +35,6 @@ class _MeasurementItemState extends State<_MeasurementItem> {
             flex: 2,
             child: BodyMedium(
               widget.measurement.date.toDateWithDots(),
-              color: Theme.of(context).colorScheme.primary,
               fontWeight: FontWeight.bold,
             ),
           ),
