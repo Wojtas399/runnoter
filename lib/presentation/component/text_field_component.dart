@@ -51,7 +51,6 @@ class TextFieldComponent extends StatelessWidget {
             : null,
         prefixIcon: icon != null ? Icon(icon) : null,
         counterText: displayCounterText ? null : '',
-        errorMaxLines: 2,
         contentPadding: contentPadding,
       ),
       maxLength: maxLength,
