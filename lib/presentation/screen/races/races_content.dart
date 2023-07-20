@@ -3,10 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/bloc/races/races_cubit.dart';
-import '../../../domain/entity/race.dart';
 import '../../component/big_button_component.dart';
 import '../../component/body/medium_body_component.dart';
-import '../../component/card_body_component.dart';
 import '../../component/empty_content_info_component.dart';
 import '../../component/loading_info_component.dart';
 import '../../component/padding/paddings_24.dart';
@@ -42,9 +40,7 @@ class _DesktopContent extends StatelessWidget {
         _AddRaceButton(),
         SizedBox(height: 24),
         Expanded(
-          child: CardBody(
-            child: _Races(),
-          ),
+          child: _Races(),
         ),
       ],
     );
@@ -73,18 +69,18 @@ class _Races extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<Race>? races = context.select(
+    final List<RacesFromYear>? racesGroupedByYear = context.select(
       (RacesCubit cubit) => cubit.state,
     );
 
-    return switch (races) {
+    return switch (racesGroupedByYear) {
       null => const LoadingInfo(),
       [] => EmptyContentInfo(
           icon: Icons.emoji_events_outlined,
           title: Str.of(context).racesNoRacesTitle,
           subtitle: Str.of(context).racesNoRacesMessage,
         ),
-      [...] => RacesList(races: races),
+      [...] => RacesList(racesGroupedByYear: racesGroupedByYear),
     };
   }
 }
