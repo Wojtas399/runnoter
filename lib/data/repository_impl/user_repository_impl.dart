@@ -1,24 +1,26 @@
 import 'package:collection/collection.dart';
-import 'package:firebase/firebase.dart';
+import 'package:firebase/firebase.dart' as firebase;
 
 import '../../domain/additional_model/state_repository.dart';
 import '../../domain/entity/settings.dart' as settings;
 import '../../domain/entity/user.dart';
 import '../../domain/repository/user_repository.dart';
+import '../mapper/gender_mapper.dart';
 import '../mapper/settings_mapper.dart';
 import '../mapper/user_mapper.dart';
 
 class UserRepositoryImpl extends StateRepository<User>
     implements UserRepository {
-  final FirebaseUserService _dbUserService;
-  final FirebaseAppearanceSettingsService _dbAppearanceSettingsService;
-  final FirebaseWorkoutSettingsService _dbWorkoutSettingsService;
+  final firebase.FirebaseUserService _dbUserService;
+  final firebase.FirebaseAppearanceSettingsService _dbAppearanceSettingsService;
+  final firebase.FirebaseWorkoutSettingsService _dbWorkoutSettingsService;
 
   UserRepositoryImpl({
-    required FirebaseUserService firebaseUserService,
-    required FirebaseAppearanceSettingsService
+    required firebase.FirebaseUserService firebaseUserService,
+    required firebase.FirebaseAppearanceSettingsService
         firebaseAppearanceSettingsService,
-    required FirebaseWorkoutSettingsService firebaseWorkoutSettingsService,
+    required firebase.FirebaseWorkoutSettingsService
+        firebaseWorkoutSettingsService,
     List<User>? initialState,
   })  : _dbUserService = firebaseUserService,
         _dbAppearanceSettingsService = firebaseAppearanceSettingsService,
@@ -43,21 +45,22 @@ class UserRepositoryImpl extends StateRepository<User>
     required User user,
   }) async {
     await _dbUserService.addUserPersonalData(
-      userDto: UserDto(
+      userDto: firebase.UserDto(
         id: user.id,
+        gender: mapGenderToDto(user.gender),
         name: user.name,
         surname: user.surname,
       ),
     );
     await _dbAppearanceSettingsService.addSettings(
-      appearanceSettingsDto: AppearanceSettingsDto(
+      appearanceSettingsDto: firebase.AppearanceSettingsDto(
         userId: user.id,
         themeMode: mapThemeModeToDb(user.settings.themeMode),
         language: mapLanguageToDb(user.settings.language),
       ),
     );
     await _dbWorkoutSettingsService.addSettings(
-      workoutSettingsDto: WorkoutSettingsDto(
+      workoutSettingsDto: firebase.WorkoutSettingsDto(
         userId: user.id,
         distanceUnit: mapDistanceUnitToDb(user.settings.distanceUnit),
         paceUnit: mapPaceUnitToDb(user.settings.paceUnit),
@@ -69,20 +72,24 @@ class UserRepositoryImpl extends StateRepository<User>
   @override
   Future<void> updateUserIdentities({
     required String userId,
+    Gender? gender,
     String? name,
     String? surname,
   }) async {
     final Stream<User?> user$ = getUserById(userId: userId);
     await for (final user in user$) {
       if (user == null) return;
-      final UserDto? updatedUserDto = await _dbUserService.updateUserData(
+      final firebase.UserDto? updatedUserDto =
+          await _dbUserService.updateUserData(
         userId: userId,
+        gender: gender != null ? mapGenderToDto(gender) : null,
         name: name,
         surname: surname,
       );
       if (updatedUserDto == null) return;
       final User updatedUser = User(
         id: userId,
+        gender: mapGenderFromDto(updatedUserDto.gender),
         name: updatedUserDto.name,
         surname: updatedUserDto.surname,
         settings: user.settings,
@@ -103,8 +110,8 @@ class UserRepositoryImpl extends StateRepository<User>
     final Stream<User?> user$ = getUserById(userId: userId);
     await for (final user in user$) {
       if (user == null) return;
-      AppearanceSettingsDto? newAppearanceSettingsDto;
-      WorkoutSettingsDto? newWorkoutSettingsDto;
+      firebase.AppearanceSettingsDto? newAppearanceSettingsDto;
+      firebase.WorkoutSettingsDto? newWorkoutSettingsDto;
       if (themeMode != null || language != null) {
         newAppearanceSettingsDto =
             await _updateAppearanceSettings(userId, themeMode, language);
@@ -132,6 +139,7 @@ class UserRepositoryImpl extends StateRepository<User>
       );
       final User updatedUser = User(
         id: user.id,
+        gender: user.gender,
         name: user.name,
         surname: user.surname,
         settings: updatedSettings,
@@ -152,11 +160,11 @@ class UserRepositoryImpl extends StateRepository<User>
   }
 
   Future<User?> _loadUserFromDb(String userId) async {
-    final UserDto? userDto = await _dbUserService.loadUserById(userId: userId);
+    final userDto = await _dbUserService.loadUserById(userId: userId);
     if (userDto == null) return null;
-    final AppearanceSettingsDto? appearanceSettingsDto =
+    final firebase.AppearanceSettingsDto? appearanceSettingsDto =
         await _dbAppearanceSettingsService.loadSettingsByUserId(userId: userId);
-    final WorkoutSettingsDto? workoutSettingsDto =
+    final firebase.WorkoutSettingsDto? workoutSettingsDto =
         await _dbWorkoutSettingsService.loadSettingsByUserId(userId: userId);
     if (appearanceSettingsDto != null && workoutSettingsDto != null) {
       final User user = mapUserFromDto(
@@ -170,7 +178,7 @@ class UserRepositoryImpl extends StateRepository<User>
     return null;
   }
 
-  Future<AppearanceSettingsDto?> _updateAppearanceSettings(
+  Future<firebase.AppearanceSettingsDto?> _updateAppearanceSettings(
     String userId,
     settings.ThemeMode? themeMode,
     settings.Language? language,
@@ -181,7 +189,7 @@ class UserRepositoryImpl extends StateRepository<User>
         language: language != null ? mapLanguageToDb(language) : null,
       );
 
-  Future<WorkoutSettingsDto?> _updateWorkoutSettings(
+  Future<firebase.WorkoutSettingsDto?> _updateWorkoutSettings(
     String userId,
     settings.DistanceUnit? distanceUnit,
     settings.PaceUnit? paceUnit,

@@ -5,14 +5,15 @@ import 'settings_creator.dart';
 
 User createUser({
   String id = '',
+  Gender gender = Gender.male,
   String name = '',
   String surname = '',
   Settings? settings,
-}) {
-  return User(
-    id: id,
-    name: name,
-    surname: surname,
-    settings: settings ?? createSettings(),
-  );
-}
+}) =>
+    User(
+      id: id,
+      gender: gender,
+      name: name,
+      surname: surname,
+      settings: settings ?? createSettings(),
+    );

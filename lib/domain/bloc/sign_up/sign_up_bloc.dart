@@ -132,6 +132,7 @@ class SignUpBloc extends BlocWithStatus<SignUpEvent, SignUpState,
     await _userRepository.addUser(
       user: User(
         id: userId,
+        gender: Gender.male,
         name: state.name,
         surname: state.surname,
         settings: const Settings(
