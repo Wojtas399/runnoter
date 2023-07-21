@@ -29,7 +29,7 @@ class SignUpContent extends StatelessWidget {
                 child: Column(
                   children: [
                     _FormHeader(),
-                    SizedBox(height: 32),
+                    SizedBox(height: 24),
                     SignUpForm(),
                     SizedBox(height: 32),
                     _SubmitButton(),

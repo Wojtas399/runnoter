@@ -722,6 +722,9 @@
   "@runStatusUndone": {
     "description": "Type of workout status called undone"
   },
+  "@__________GENDER__________": {},
+  "male": "Mężczyzna",
+  "female": "Kobieta",
   "@__________MOOD_RATES__________": {},
   "moodRate1": "Maksymalne wyczerpanie",
   "@moodRate1": {
