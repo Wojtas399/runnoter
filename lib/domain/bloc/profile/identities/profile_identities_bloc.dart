@@ -49,7 +49,6 @@ class ProfileIdentitiesBloc extends BlocWithStatus<ProfileIdentitiesEvent,
       _initialize,
       transformer: restartable(),
     );
-    on<ProfileIdentitiesEventIdentitiesUpdated>(_identitiesUpdated);
     on<ProfileIdentitiesEventUpdateUsername>(_updateUsername);
     on<ProfileIdentitiesEventUpdateSurname>(_updateSurname);
     on<ProfileIdentitiesEventUpdateEmail>(_updateEmail);
@@ -74,24 +73,13 @@ class ProfileIdentitiesBloc extends BlocWithStatus<ProfileIdentitiesEvent,
         final User? loggedUserData = identities.$2;
         return state.copyWith(
           loggedUserId: loggedUserData?.id,
+          gender: loggedUserData?.gender,
           email: loggedUserEmail,
           username: loggedUserData?.name,
           surname: loggedUserData?.surname,
         );
       },
     );
-  }
-
-  void _identitiesUpdated(
-    ProfileIdentitiesEventIdentitiesUpdated event,
-    Emitter<ProfileIdentitiesState> emit,
-  ) {
-    emit(state.copyWith(
-      loggedUserId: event.user?.id,
-      email: event.email,
-      username: event.user?.name,
-      surname: event.user?.surname,
-    ));
   }
 
   Future<void> _updateUsername(

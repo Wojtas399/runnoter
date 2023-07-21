@@ -4,6 +4,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/additional_model/custom_exception.dart';
 import 'package:runnoter/domain/bloc/profile/identities/profile_identities_bloc.dart';
+import 'package:runnoter/domain/entity/user.dart';
 
 import '../../../../creators/user_creator.dart';
 import '../../../../mock/domain/repository/mock_blood_test_repository.dart';
@@ -25,6 +26,7 @@ void main() {
   ProfileIdentitiesState createState({
     BlocStatus status = const BlocStatusInitial(),
     String? loggedUserId,
+    Gender? gender,
     String? username,
     String? surname,
     String? email,
@@ -32,6 +34,7 @@ void main() {
     return ProfileIdentitiesState(
       status: status,
       loggedUserId: loggedUserId,
+      gender: gender,
       username: username,
       surname: surname,
       email: email,
@@ -65,7 +68,7 @@ void main() {
 
   blocTest(
     'initialize, '
-    'should set listener for logged user email and data',
+    'should set listener of logged user email and data',
     build: () => createBloc(),
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
@@ -73,6 +76,7 @@ void main() {
       userRepository.mockGetUserById(
         user: createUser(
           id: loggedUserId,
+          gender: Gender.female,
           name: 'name',
           surname: 'surname',
         ),
@@ -83,6 +87,7 @@ void main() {
       createState(
         status: const BlocStatusComplete(),
         loggedUserId: loggedUserId,
+        gender: Gender.female,
         username: 'name',
         surname: 'surname',
         email: 'email@example.com',
@@ -101,29 +106,6 @@ void main() {
         ),
       ).called(1);
     },
-  );
-
-  blocTest(
-    'identities updated, '
-    'should update logged user id, email, username and surname in state',
-    build: () => createBloc(),
-    act: (bloc) => bloc.add(ProfileIdentitiesEventIdentitiesUpdated(
-      email: 'email@example.com',
-      user: createUser(
-        id: loggedUserId,
-        name: 'name',
-        surname: 'surname',
-      ),
-    )),
-    expect: () => [
-      createState(
-        status: const BlocStatusComplete(),
-        loggedUserId: loggedUserId,
-        email: 'email@example.com',
-        username: 'name',
-        surname: 'surname',
-      ),
-    ],
   );
 
   blocTest(

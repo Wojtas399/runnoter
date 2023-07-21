@@ -8,16 +8,6 @@ class ProfileIdentitiesEventInitialize extends ProfileIdentitiesEvent {
   const ProfileIdentitiesEventInitialize();
 }
 
-class ProfileIdentitiesEventIdentitiesUpdated extends ProfileIdentitiesEvent {
-  final String? email;
-  final User? user;
-
-  const ProfileIdentitiesEventIdentitiesUpdated({
-    required this.email,
-    required this.user,
-  });
-}
-
 class ProfileIdentitiesEventUpdateUsername extends ProfileIdentitiesEvent {
   final String username;
 
