@@ -9,12 +9,6 @@ void main() {
   setUp(() {
     state = const SignUpState(
       status: BlocStatusInitial(),
-      gender: null,
-      name: '',
-      surname: '',
-      email: '',
-      password: '',
-      passwordConfirmation: '',
     );
   });
 
@@ -67,23 +61,6 @@ void main() {
       );
 
       expect(state.isSubmitButtonDisabled, false);
-    },
-  );
-
-  test(
-    'is submit button disabled, '
-    'gender is null, '
-    'should be true',
-    () {
-      state = state.copyWith(
-        name: 'Jack',
-        surname: 'Obvsky',
-        email: 'jack@example.com',
-        password: 'Password123!',
-        passwordConfirmation: 'Password123!',
-      );
-
-      expect(state.isSubmitButtonDisabled, true);
     },
   );
 

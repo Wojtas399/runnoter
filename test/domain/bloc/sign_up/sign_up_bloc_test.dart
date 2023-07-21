@@ -21,11 +21,12 @@ void main() {
   const String password = 'Password1!';
 
   SignUpBloc createBloc({
-    Gender? gender,
+    Gender gender = Gender.male,
     String name = '',
     String surname = '',
     String email = '',
     String password = '',
+    String passwordConfirmation = '',
   }) {
     return SignUpBloc(
       authService: authService,
@@ -37,13 +38,14 @@ void main() {
         surname: surname,
         email: email,
         password: password,
+        passwordConfirmation: passwordConfirmation,
       ),
     );
   }
 
   SignUpState createState({
     BlocStatus status = const BlocStatusInitial(),
-    Gender? gender,
+    Gender gender = Gender.male,
     String name = '',
     String surname = '',
     String email = '',
@@ -152,6 +154,21 @@ void main() {
 
   blocTest(
     'submit, '
+    'submit button is disabled, '
+    'should do nothing',
+    build: () => createBloc(
+      gender: Gender.male,
+      name: name,
+      surname: surname,
+      email: email,
+      password: password,
+    ),
+    act: (bloc) => bloc.add(const SignUpEventSubmit()),
+    expect: () => [],
+  );
+
+  blocTest(
+    'submit, '
     'should call auth service method to sign up and user repository method to add user with default settings, and should emit complete status with signed up info',
     build: () => createBloc(
       gender: Gender.male,
@@ -159,6 +176,7 @@ void main() {
       surname: surname,
       email: email,
       password: password,
+      passwordConfirmation: password,
     ),
     setUp: () {
       authService.mockSignUp(userId: 'u1');
@@ -173,6 +191,7 @@ void main() {
         surname: surname,
         email: email,
         password: password,
+        passwordConfirmation: password,
       ),
       createState(
         status: const BlocStatusComplete<SignUpBlocInfo>(
@@ -183,6 +202,7 @@ void main() {
         surname: surname,
         email: email,
         password: password,
+        passwordConfirmation: password,
       ),
     ],
     verify: (_) {
@@ -221,6 +241,7 @@ void main() {
       surname: surname,
       email: email,
       password: password,
+      passwordConfirmation: password,
     ),
     setUp: () => authService.mockSignUp(
       throwable: const AuthException(
@@ -236,6 +257,7 @@ void main() {
         surname: surname,
         email: email,
         password: password,
+        passwordConfirmation: password,
       ),
       createState(
         status: const BlocStatusError<SignUpBlocError>(
@@ -246,6 +268,7 @@ void main() {
         surname: surname,
         email: email,
         password: password,
+        passwordConfirmation: password,
       ),
     ],
     verify: (_) => verify(
@@ -266,6 +289,7 @@ void main() {
       surname: surname,
       email: email,
       password: password,
+      passwordConfirmation: password,
     ),
     setUp: () => authService.mockSignUp(
       throwable: const NetworkException(
@@ -281,6 +305,7 @@ void main() {
         surname: surname,
         email: email,
         password: password,
+        passwordConfirmation: password,
       ),
       createState(
         status: const BlocStatusNetworkRequestFailed(),
@@ -289,6 +314,7 @@ void main() {
         surname: surname,
         email: email,
         password: password,
+        passwordConfirmation: password,
       ),
     ],
     verify: (_) => verify(
@@ -309,6 +335,7 @@ void main() {
       surname: surname,
       email: email,
       password: password,
+      passwordConfirmation: password,
     ),
     setUp: () => authService.mockSignUp(
       throwable: const UnknownException(
@@ -324,6 +351,7 @@ void main() {
         surname: surname,
         email: email,
         password: password,
+        passwordConfirmation: password,
       ),
       createState(
         status: const BlocStatusUnknownError(),
@@ -332,6 +360,7 @@ void main() {
         surname: surname,
         email: email,
         password: password,
+        passwordConfirmation: password,
       ),
     ],
     errors: () => ['unknown exception message'],

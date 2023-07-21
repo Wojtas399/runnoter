@@ -1,7 +1,7 @@
 part of 'sign_up_bloc.dart';
 
 class SignUpState extends BlocState {
-  final Gender? gender;
+  final Gender gender;
   final String name;
   final String surname;
   final String email;
@@ -10,7 +10,7 @@ class SignUpState extends BlocState {
 
   const SignUpState({
     required super.status,
-    this.gender,
+    this.gender = Gender.male,
     this.name = '',
     this.surname = '',
     this.email = '',
@@ -63,8 +63,7 @@ class SignUpState extends BlocState {
   }
 
   bool _areAllParamsValid() {
-    return gender != null &&
-        isNameValid &&
+    return isNameValid &&
         isSurnameValid &&
         isEmailValid &&
         isPasswordValid &&
