@@ -723,6 +723,7 @@
     "description": "Type of workout status called undone"
   },
   "@__________GENDER__________": {},
+  "gender": "Płeć",
   "male": "Mężczyzna",
   "female": "Kobieta",
   "@__________MOOD_RATES__________": {},

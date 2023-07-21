@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../../component/body/medium_body_component.dart';
 import '../../component/card_body_component.dart';
-import '../../component/padding/paddings_24.dart';
 import '../../component/responsive_layout_component.dart';
 import 'profile_settings_section.dart';
 import 'profile_user_data_section.dart';
@@ -14,7 +13,8 @@ class ProfileContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return const SingleChildScrollView(
       child: MediumBody(
-        child: Paddings24(
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 24, horizontal: 16),
           child: ResponsiveLayout(
             mobileBody: _MobileContent(),
             tabletBody: _DesktopContent(),

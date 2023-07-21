@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 import '../../../domain/bloc/profile/identities/profile_identities_bloc.dart';
+import '../../../domain/entity/user.dart';
 import '../../component/text/title_text_components.dart';
 import '../../component/value_with_label_and_icon_component.dart';
 import '../../service/dialog_service.dart';
@@ -26,6 +28,8 @@ class ProfileUserDataSection extends StatelessWidget {
           child: TitleLarge(Str.of(context).profileUserData),
         ),
         const SizedBox(height: 16),
+        const _Gender(),
+        gap,
         const _Name(),
         gap,
         const _Surname(),
@@ -36,6 +40,28 @@ class ProfileUserDataSection extends StatelessWidget {
         gap,
         const _DeleteAccount(),
       ],
+    );
+  }
+}
+
+class _Gender extends StatelessWidget {
+  const _Gender();
+
+  @override
+  Widget build(BuildContext context) {
+    final Gender? gender = context.select(
+      (ProfileIdentitiesBloc bloc) => bloc.state.gender,
+    );
+    final str = Str.of(context);
+
+    return ValueWithLabelAndIcon(
+      iconData: MdiIcons.genderMaleFemale,
+      label: str.gender,
+      value: switch (gender) {
+        Gender.male => str.male,
+        Gender.female => str.female,
+        null => '',
+      },
     );
   }
 }
