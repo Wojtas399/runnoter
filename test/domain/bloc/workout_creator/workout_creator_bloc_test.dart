@@ -58,10 +58,14 @@ void main() {
   blocTest(
     'initialize, '
     'workout id is null, '
-    'should do nothing',
+    'should emit complete status',
     build: () => createBloc(),
     act: (bloc) => bloc.add(const WorkoutCreatorEventInitialize()),
-    expect: () => [],
+    expect: () => [
+      createState(
+        status: const BlocStatusComplete(),
+      ),
+    ],
   );
 
   blocTest(
