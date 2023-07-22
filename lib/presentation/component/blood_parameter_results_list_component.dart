@@ -4,8 +4,9 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 
 import '../../domain/entity/blood_parameter.dart';
+import '../../domain/entity/user.dart';
 import '../formatter/blood_test_parameter_formatter.dart';
-import '../formatter/blood_test_parameter_norm_formatter.dart';
+import '../formatter/blood_test_parameter_norm_range_formatter.dart';
 import '../formatter/blood_test_parameter_unit_formatter.dart';
 import '../formatter/decimal_text_input_formatter.dart';
 import '../service/blood_parameter_service.dart';
@@ -15,6 +16,7 @@ import 'text/title_text_components.dart';
 import 'text_field_component.dart';
 
 class BloodParameterResultsList extends StatelessWidget {
+  final Gender gender;
   final List<BloodParameterResult>? parameterResults;
   final bool isEditMode;
   final Function(BloodParameter bloodParameter, double? value)?
@@ -22,6 +24,7 @@ class BloodParameterResultsList extends StatelessWidget {
 
   const BloodParameterResultsList({
     super.key,
+    required this.gender,
     this.parameterResults,
     this.isEditMode = false,
     this.onParameterValueChanged,
@@ -36,6 +39,7 @@ class BloodParameterResultsList extends StatelessWidget {
           sliver: _SectionParameters.build(
             context: context,
             label: Str.of(context).bloodTestBasicParams,
+            gender: gender,
             parametersWithValues: _createBloodParametersWithValuesForType(
               BloodParameterType.basic,
             ),
@@ -48,6 +52,7 @@ class BloodParameterResultsList extends StatelessWidget {
           sliver: _SectionParameters.build(
             context: context,
             label: Str.of(context).bloodTestAdditionalParams,
+            gender: gender,
             parametersWithValues: _createBloodParametersWithValuesForType(
               BloodParameterType.additional,
             ),
@@ -89,6 +94,7 @@ class _SectionParameters extends SliverStickyHeader {
   factory _SectionParameters.build({
     required BuildContext context,
     required String label,
+    required Gender gender,
     required List<_BloodParameterWithValue> parametersWithValues,
     required bool isEditMode,
     Function(BloodParameter parameter, double? value)? onParameterValueChanged,
@@ -111,6 +117,7 @@ class _SectionParameters extends SliverStickyHeader {
         sliver: SliverList(
           delegate: SliverChildBuilderDelegate(
             (context, i) => _ParamsTable(
+              gender: gender,
               parametersWithValues: parametersWithValues,
               isEditMode: isEditMode,
               onParameterValueChanged: onParameterValueChanged,
@@ -177,12 +184,14 @@ class _HeaderRow extends StatelessWidget {
 }
 
 class _ParamsTable extends StatelessWidget {
+  final Gender gender;
   final List<_BloodParameterWithValue> parametersWithValues;
   final bool isEditMode;
   final Function(BloodParameter parameter, double? value)?
       onParameterValueChanged;
 
   const _ParamsTable({
+    required this.gender,
     required this.parametersWithValues,
     required this.isEditMode,
     this.onParameterValueChanged,
@@ -203,6 +212,7 @@ class _ParamsTable extends StatelessWidget {
           .map(
             (parameterWithValue) => _ParameterRow.build(
               context: context,
+              gender: gender,
               parameterWithValue: parameterWithValue,
               isEditMode: isEditMode,
               onValueChanged: (double? value) {
@@ -227,6 +237,7 @@ class _ParameterRow extends TableRow {
 
   factory _ParameterRow.build({
     required BuildContext context,
+    required Gender gender,
     required _BloodParameterWithValue parameterWithValue,
     required bool isEditMode,
     required Function(double? value) onValueChanged,
@@ -239,6 +250,7 @@ class _ParameterRow extends TableRow {
           parameterName: parameter.toName(context),
         ),
         _NormCell.buildForNorm(
+          gender: gender,
           norm: parameter.norm,
           unit: parameter.unit,
         ),
@@ -246,6 +258,7 @@ class _ParameterRow extends TableRow {
           parameterValue: value,
           isValueWithinNorm: value != null
               ? isParameterValueWithinNorm(
+                  gender: gender,
                   parameter: parameter,
                   result: value,
                 )
@@ -285,18 +298,28 @@ class _NormCell extends TableCell {
           verticalAlignment: TableCellVerticalAlignment.middle,
         );
 
-  _NormCell.buildForNorm({
+  factory _NormCell.buildForNorm({
+    required Gender gender,
     required BloodParameterNorm norm,
     required BloodParameterUnit unit,
-  }) : this(
-          child: Padding(
-            padding: const EdgeInsets.all(8),
-            child: Text(
-              '${norm.toUIFormat()} ${unit.toUIFormat()}',
-              textAlign: TextAlign.center,
-            ),
-          ),
-        );
+  }) {
+    final String normStr = switch (norm) {
+      BloodParameterNormGeneral() => norm.range.toUIFormat(),
+      BloodParameterNormGenderDependent() => switch (gender) {
+          Gender.male => norm.maleRange.toUIFormat(),
+          Gender.female => norm.femaleRange.toUIFormat(),
+        }
+    };
+    return _NormCell(
+      child: Padding(
+        padding: const EdgeInsets.all(8),
+        child: Text(
+          '$normStr ${unit.toUIFormat()}',
+          textAlign: TextAlign.center,
+        ),
+      ),
+    );
+  }
 }
 
 class _ResultCell extends TableCell {

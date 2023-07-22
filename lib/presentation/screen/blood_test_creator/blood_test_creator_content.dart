@@ -4,6 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/bloc/blood_test_creator/blood_test_creator_bloc.dart';
 import '../../../domain/entity/blood_parameter.dart';
+import '../../../domain/entity/user.dart';
 import '../../component/blood_parameter_results_list_component.dart';
 import '../../component/body/medium_body_component.dart';
 import '../../component/date_selector_component.dart';
@@ -100,6 +101,7 @@ class _ParametersSection extends StatelessWidget {
 
     return BloodParameterResultsList(
       isEditMode: true,
+      gender: Gender.male,
       parameterResults: parameterResults,
       onParameterValueChanged: (
         BloodParameter parameter,

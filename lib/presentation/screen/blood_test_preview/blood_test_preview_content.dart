@@ -4,6 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/bloc/blood_test_preview/blood_test_preview_bloc.dart';
 import '../../../domain/entity/blood_parameter.dart';
+import '../../../domain/entity/user.dart';
 import '../../component/blood_parameter_results_list_component.dart';
 import '../../component/body/medium_body_component.dart';
 import '../../component/text/title_text_components.dart';
@@ -92,6 +93,9 @@ class _Results extends StatelessWidget {
       (BloodTestPreviewBloc bloc) => bloc.state.parameterResults,
     );
 
-    return BloodParameterResultsList(parameterResults: parameterResults);
+    return BloodParameterResultsList(
+      gender: Gender.male,
+      parameterResults: parameterResults,
+    );
   }
 }
