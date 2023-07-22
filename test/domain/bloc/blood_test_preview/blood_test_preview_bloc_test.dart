@@ -7,14 +7,13 @@ import 'package:runnoter/domain/entity/blood_parameter.dart';
 import 'package:runnoter/domain/entity/user.dart';
 
 import '../../../creators/blood_test_creator.dart';
-import '../../../creators/user_creator.dart';
 import '../../../mock/domain/repository/mock_blood_test_repository.dart';
-import '../../../mock/domain/repository/mock_user_repository.dart';
 import '../../../mock/domain/service/mock_auth_service.dart';
+import '../../../mock/domain/use_case/mock_get_logged_user_gender_use_case.dart';
 
 void main() {
   final authService = MockAuthService();
-  final userRepository = MockUserRepository();
+  final getLoggedUserGenderUseCase = MockGetLoggedUserGenderUseCase();
   final bloodTestRepository = MockBloodTestRepository();
   const String loggedUserId = 'u1';
   const String bloodTestId = 'b1';
@@ -24,7 +23,7 @@ void main() {
   }) =>
       BloodTestPreviewBloc(
         authService: authService,
-        userRepository: userRepository,
+        getLoggedUserGenderUseCase: getLoggedUserGenderUseCase,
         bloodTestRepository: bloodTestRepository,
         bloodTestId: bloodTestId,
         state: const BloodTestPreviewState(
@@ -47,7 +46,7 @@ void main() {
 
   tearDown(() {
     reset(authService);
-    reset(userRepository);
+    reset(getLoggedUserGenderUseCase);
     reset(bloodTestRepository);
   });
 
@@ -62,24 +61,11 @@ void main() {
 
   blocTest(
     'initialize, '
-    'logged user does not exist, '
-    'should do nothing',
-    build: () => createBloc(bloodTestId: bloodTestId),
-    setUp: () => authService.mockGetLoggedUserId(),
-    act: (bloc) => bloc.add(const BloodTestPreviewEventInitialize()),
-    expect: () => [],
-    verify: (_) => verify(
-      () => authService.loggedUserId$,
-    ).called(1),
-  );
-
-  blocTest(
-    'initialize, '
     "should set listener of logged user's gender and blood test matching to given id",
     build: () => createBloc(bloodTestId: bloodTestId),
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
-      userRepository.mockGetUserById(user: createUser(gender: Gender.male));
+      getLoggedUserGenderUseCase.mock(gender: Gender.male);
       bloodTestRepository.mockGetTestById(
         bloodTest: createBloodTest(
           id: 'br1',
@@ -120,7 +106,7 @@ void main() {
         () => authService.loggedUserId$,
       ).called(1);
       verify(
-        () => userRepository.getUserById(userId: loggedUserId),
+        () => getLoggedUserGenderUseCase.execute(),
       ).called(1);
       verify(
         () => bloodTestRepository.getTestById(

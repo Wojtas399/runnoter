@@ -7,6 +7,7 @@ import '../../../domain/bloc/blood_test_preview/blood_test_preview_bloc.dart';
 import '../../../domain/repository/blood_test_repository.dart';
 import '../../../domain/repository/user_repository.dart';
 import '../../../domain/service/auth_service.dart';
+import '../../../domain/use_case/get_logged_user_gender_use_case.dart';
 import '../../component/bloc_with_status_listener_component.dart';
 import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
@@ -46,7 +47,10 @@ class _BlocProvider extends StatelessWidget {
     return BlocProvider(
       create: (BuildContext context) => BloodTestPreviewBloc(
         authService: context.read<AuthService>(),
-        userRepository: context.read<UserRepository>(),
+        getLoggedUserGenderUseCase: GetLoggedUserGenderUseCase(
+          authService: context.read<AuthService>(),
+          userRepository: context.read<UserRepository>(),
+        ),
         bloodTestRepository: context.read<BloodTestRepository>(),
         bloodTestId: bloodTestId,
       )..add(const BloodTestPreviewEventInitialize()),
