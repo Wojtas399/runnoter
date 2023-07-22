@@ -49,6 +49,7 @@ class ProfileIdentitiesBloc extends BlocWithStatus<ProfileIdentitiesEvent,
       _initialize,
       transformer: restartable(),
     );
+    on<ProfileIdentitiesEventUpdateGender>(_updateGender);
     on<ProfileIdentitiesEventUpdateUsername>(_updateUsername);
     on<ProfileIdentitiesEventUpdateSurname>(_updateSurname);
     on<ProfileIdentitiesEventUpdateEmail>(_updateEmail);
@@ -80,6 +81,32 @@ class ProfileIdentitiesBloc extends BlocWithStatus<ProfileIdentitiesEvent,
         );
       },
     );
+  }
+
+  Future<void> _updateGender(
+    ProfileIdentitiesEventUpdateGender event,
+    Emitter<ProfileIdentitiesState> emit,
+  ) async {
+    final Gender? previousGender = state.gender;
+    if (event.gender == previousGender) return;
+    final String? loggedUserId = await _authService.loggedUserId$.first;
+    if (loggedUserId == null) {
+      emitNoLoggedUserStatus(emit);
+      return;
+    }
+    emit(state.copyWith(
+      gender: event.gender,
+    ));
+    try {
+      await _userRepository.updateUserIdentities(
+        userId: loggedUserId,
+        gender: event.gender,
+      );
+    } catch (_) {
+      emit(state.copyWith(
+        gender: previousGender,
+      ));
+    }
   }
 
   Future<void> _updateUsername(

@@ -16,7 +16,7 @@ class MockUserRepository extends Mock implements UserRepository {
       () => getUserById(
         userId: any(named: 'userId'),
       ),
-    ).thenAnswer((invocation) => Stream.value(user));
+    ).thenAnswer((_) => Stream.value(user));
   }
 
   void mockAddUser() {
@@ -24,17 +24,17 @@ class MockUserRepository extends Mock implements UserRepository {
       () => addUser(
         user: any(named: 'user'),
       ),
-    ).thenAnswer((invocation) => Future.value());
+    ).thenAnswer((_) => Future.value());
   }
 
-  void mockUpdateUserIdentities() {
-    when(
-      () => updateUserIdentities(
-        userId: any(named: 'userId'),
-        name: any(named: 'name'),
-        surname: any(named: 'surname'),
-      ),
-    ).thenAnswer((invocation) => Future.value());
+  void mockUpdateUserIdentities({
+    Object? throwable,
+  }) {
+    if (throwable != null) {
+      when(_updateUserIdentitiesCall).thenThrow(throwable);
+    } else {
+      when(_updateUserIdentitiesCall).thenAnswer((_) => Future.value());
+    }
   }
 
   void mockUpdateUserSettings({
@@ -43,7 +43,7 @@ class MockUserRepository extends Mock implements UserRepository {
     if (throwable != null) {
       when(_updateUserSettingsCall).thenThrow(throwable);
     } else {
-      when(_updateUserSettingsCall).thenAnswer((invocation) => Future.value());
+      when(_updateUserSettingsCall).thenAnswer((_) => Future.value());
     }
   }
 
@@ -55,13 +55,18 @@ class MockUserRepository extends Mock implements UserRepository {
     ).thenAnswer((invocation) => Future.value());
   }
 
-  Future<void> _updateUserSettingsCall() {
-    return updateUserSettings(
-      userId: any(named: 'userId'),
-      themeMode: any(named: 'themeMode'),
-      language: any(named: 'language'),
-      distanceUnit: any(named: 'distanceUnit'),
-      paceUnit: any(named: 'paceUnit'),
-    );
-  }
+  Future<void> _updateUserIdentitiesCall() => updateUserIdentities(
+        userId: any(named: 'userId'),
+        gender: any(named: 'gender'),
+        name: any(named: 'name'),
+        surname: any(named: 'surname'),
+      );
+
+  Future<void> _updateUserSettingsCall() => updateUserSettings(
+        userId: any(named: 'userId'),
+        themeMode: any(named: 'themeMode'),
+        language: any(named: 'language'),
+        distanceUnit: any(named: 'distanceUnit'),
+        paceUnit: any(named: 'paceUnit'),
+      );
 }

@@ -43,6 +43,7 @@ void main() {
 
   ProfileIdentitiesBloc createBloc({
     String? loggedUserId,
+    Gender? gender,
   }) {
     return ProfileIdentitiesBloc(
       authService: authService,
@@ -53,6 +54,7 @@ void main() {
       raceRepository: raceRepository,
       state: createState(
         loggedUserId: loggedUserId,
+        gender: gender,
       ),
     );
   }
@@ -106,6 +108,103 @@ void main() {
         ),
       ).called(1);
     },
+  );
+
+  blocTest(
+    'update gender, '
+    "should update gender in state and should call method from user repository to update user's data with new gender",
+    build: () => createBloc(gender: Gender.male),
+    setUp: () {
+      authService.mockGetLoggedUserId(userId: loggedUserId);
+      userRepository.mockUpdateUserIdentities();
+    },
+    act: (bloc) => bloc.add(const ProfileIdentitiesEventUpdateGender(
+      gender: Gender.female,
+    )),
+    expect: () => [
+      createState(
+        status: const BlocStatusComplete(),
+        gender: Gender.female,
+      ),
+    ],
+    verify: (_) {
+      verify(
+        () => authService.loggedUserId$,
+      ).called(1);
+      verify(
+        () => userRepository.updateUserIdentities(
+          userId: loggedUserId,
+          gender: Gender.female,
+        ),
+      ).called(1);
+    },
+  );
+
+  blocTest(
+    'update gender, '
+    'method from user repository to update identities throws exception, '
+    'should set previous gender',
+    build: () => createBloc(gender: Gender.male),
+    setUp: () {
+      authService.mockGetLoggedUserId(userId: loggedUserId);
+      userRepository.mockUpdateUserIdentities(throwable: 'Exception...');
+    },
+    act: (bloc) => bloc.add(const ProfileIdentitiesEventUpdateGender(
+      gender: Gender.female,
+    )),
+    expect: () => [
+      createState(
+        status: const BlocStatusComplete(),
+        gender: Gender.female,
+      ),
+      createState(
+        status: const BlocStatusComplete(),
+        gender: Gender.male,
+      ),
+    ],
+    verify: (_) {
+      verify(
+        () => authService.loggedUserId$,
+      ).called(1);
+      verify(
+        () => userRepository.updateUserIdentities(
+          userId: loggedUserId,
+          gender: Gender.female,
+        ),
+      ).called(1);
+    },
+  );
+
+  blocTest(
+    'update gender, '
+    'logged user does not exist, '
+    'should emit no logged user info',
+    build: () => createBloc(),
+    setUp: () => authService.mockGetLoggedUserId(),
+    act: (bloc) => bloc.add(const ProfileIdentitiesEventUpdateGender(
+      gender: Gender.female,
+    )),
+    expect: () => [
+      createState(
+        status: const BlocStatusNoLoggedUser(),
+      ),
+    ],
+    verify: (_) {
+      verify(
+        () => authService.loggedUserId$,
+      ).called(1);
+    },
+  );
+
+  blocTest(
+    'update gender, '
+    'new gender is the same as current gender, '
+    'should do nothing',
+    build: () => createBloc(gender: Gender.male),
+    act: (bloc) => bloc.add(const ProfileIdentitiesEventUpdateGender(
+      gender: Gender.male,
+    )),
+    expect: () => [],
   );
 
   blocTest(

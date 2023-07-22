@@ -12,6 +12,7 @@ abstract class UserRepository {
 
   Future<void> updateUserIdentities({
     required String userId,
+    Gender? gender,
     String? name,
     String? surname,
   });
