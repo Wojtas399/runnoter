@@ -89,13 +89,18 @@ class _Results extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Gender? gender = context.select(
+      (BloodTestPreviewBloc bloc) => bloc.state.gender,
+    );
     final List<BloodParameterResult>? parameterResults = context.select(
       (BloodTestPreviewBloc bloc) => bloc.state.parameterResults,
     );
 
-    return BloodParameterResultsList(
-      gender: Gender.male,
-      parameterResults: parameterResults,
-    );
+    return gender == null
+        ? const CircularProgressIndicator()
+        : BloodParameterResultsList(
+            gender: gender,
+            parameterResults: parameterResults,
+          );
   }
 }
