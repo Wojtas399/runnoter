@@ -2,15 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/bloc/profile/settings/profile_settings_bloc.dart';
-import '../../../domain/entity/settings.dart';
+import '../../../domain/bloc/profile/identities/profile_identities_bloc.dart';
+import '../../../domain/entity/user.dart';
 import '../../component/responsive_layout_component.dart';
 import '../../component/text/body_text_components.dart';
-import '../../formatter/settings_formatter.dart';
 import '../../service/navigator_service.dart';
 
-class ProfileLanguageDialog extends StatelessWidget {
-  const ProfileLanguageDialog({super.key});
+class ProfileGenderDialog extends StatelessWidget {
+  const ProfileGenderDialog({super.key});
 
   @override
   Widget build(BuildContext context) => const ResponsiveLayout(
@@ -27,7 +26,7 @@ class _NormalDialog extends StatelessWidget {
     final str = Str.of(context);
 
     return AlertDialog(
-      title: Text(str.language),
+      title: Text(str.gender),
       contentPadding: const EdgeInsets.symmetric(vertical: 24),
       content: const SizedBox(
         width: 500,
@@ -38,8 +37,6 @@ class _NormalDialog extends StatelessWidget {
             _Header(),
             SizedBox(height: 16),
             _OptionsToSelect(),
-            SizedBox(height: 16),
-            _SystemLanguageDescription(),
           ],
         ),
       ),
@@ -60,7 +57,7 @@ class _FullScreenDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(Str.of(context).language),
+        title: Text(Str.of(context).gender),
         leading: const CloseButton(),
       ),
       body: const SafeArea(
@@ -72,8 +69,6 @@ class _FullScreenDialog extends StatelessWidget {
               _Header(),
               SizedBox(height: 16),
               _OptionsToSelect(),
-              SizedBox(height: 16),
-              _SystemLanguageDescription(),
             ],
           ),
         ),
@@ -89,7 +84,7 @@ class _Header extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: BodyLarge(Str.of(context).languageSelection),
+      child: BodyLarge(Str.of(context).genderSelection),
     );
   }
 }
@@ -99,49 +94,34 @@ class _OptionsToSelect extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Language? selectedLanguage = context.select(
-      (ProfileSettingsBloc bloc) => bloc.state.language,
+    final Gender? selectedGender = context.select(
+      (ProfileIdentitiesBloc bloc) => bloc.state.gender,
     );
+    final str = Str.of(context);
 
     return Column(
-      children: Language.values
-          .map(
-            (Language language) => RadioListTile<Language>(
-              title: Text(language.toUIFormat(context)),
-              value: language,
-              groupValue: selectedLanguage,
-              onChanged: (Language? language) {
-                _onLanguageChanged(context, language);
-              },
-            ),
-          )
-          .toList(),
+      children: [
+        RadioListTile<Gender>(
+          title: Text(str.male),
+          value: Gender.male,
+          groupValue: selectedGender,
+          onChanged: (Gender? gender) => _onGenderChanged(context, gender),
+        ),
+        RadioListTile<Gender>(
+          title: Text(str.female),
+          value: Gender.female,
+          groupValue: selectedGender,
+          onChanged: (Gender? gender) => _onGenderChanged(context, gender),
+        ),
+      ],
     );
   }
 
-  void _onLanguageChanged(
-    BuildContext context,
-    Language? newLanguage,
-  ) {
-    if (newLanguage != null) {
-      context.read<ProfileSettingsBloc>().add(
-            ProfileSettingsEventUpdateLanguage(newLanguage: newLanguage),
+  void _onGenderChanged(BuildContext context, Gender? newGender) {
+    if (newGender != null) {
+      context.read<ProfileIdentitiesBloc>().add(
+            ProfileIdentitiesEventUpdateGender(gender: newGender),
           );
     }
-  }
-}
-
-class _SystemLanguageDescription extends StatelessWidget {
-  const _SystemLanguageDescription();
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: BodyMedium(
-        Str.of(context).systemLanguageDescription,
-        color: Theme.of(context).colorScheme.outline,
-      ),
-    );
   }
 }

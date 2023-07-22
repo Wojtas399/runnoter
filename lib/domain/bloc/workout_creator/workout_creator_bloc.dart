@@ -50,7 +50,12 @@ class WorkoutCreatorBloc extends BlocWithStatus<WorkoutCreatorEvent,
     WorkoutCreatorEventInitialize event,
     Emitter<WorkoutCreatorState> emit,
   ) async {
-    if (workoutId == null) return;
+    if (workoutId == null) {
+      emit(state.copyWith(
+        status: const BlocStatusComplete(),
+      ));
+      return;
+    }
     final Stream<Workout?> workout$ = _getWorkoutById(workoutId!);
     await for (final workout in workout$) {
       emit(state.copyWith(

@@ -7,6 +7,14 @@ abstract class SignUpEvent extends Equatable {
   List<Object> get props => [];
 }
 
+class SignUpEventGenderChanged extends SignUpEvent {
+  final Gender gender;
+
+  const SignUpEventGenderChanged({
+    required this.gender,
+  });
+}
+
 class SignUpEventNameChanged extends SignUpEvent {
   final String name;
 

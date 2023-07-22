@@ -4,6 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/bloc/blood_test_preview/blood_test_preview_bloc.dart';
 import '../../../domain/entity/blood_parameter.dart';
+import '../../../domain/entity/user.dart';
 import '../../component/blood_parameter_results_list_component.dart';
 import '../../component/body/medium_body_component.dart';
 import '../../component/text/title_text_components.dart';
@@ -47,7 +48,12 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
       forceMaterialTransparency: true,
       centerTitle: true,
       title: Text(Str.of(context).bloodTestPreviewTitle),
-      actions: context.isMobileSize ? const [BloodTestPreviewActions()] : null,
+      actions: context.isMobileSize
+          ? const [
+              BloodTestPreviewActions(),
+              SizedBox(width: 8),
+            ]
+          : null,
     );
   }
 }
@@ -88,10 +94,18 @@ class _Results extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Gender? gender = context.select(
+      (BloodTestPreviewBloc bloc) => bloc.state.gender,
+    );
     final List<BloodParameterResult>? parameterResults = context.select(
       (BloodTestPreviewBloc bloc) => bloc.state.parameterResults,
     );
 
-    return BloodParameterResultsList(parameterResults: parameterResults);
+    return gender == null
+        ? const CircularProgressIndicator()
+        : BloodParameterResultsList(
+            gender: gender,
+            parameterResults: parameterResults,
+          );
   }
 }

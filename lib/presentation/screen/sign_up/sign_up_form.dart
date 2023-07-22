@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/bloc/sign_up/sign_up_bloc.dart';
+import '../../../domain/entity/user.dart';
 import '../../component/password_text_field_component.dart';
 import '../../component/text_field_component.dart';
 
@@ -15,6 +16,8 @@ class SignUpForm extends StatelessWidget {
 
     return const Column(
       children: [
+        _Gender(),
+        gap,
         _Name(),
         gap,
         _Surname(),
@@ -26,6 +29,55 @@ class SignUpForm extends StatelessWidget {
         _PasswordConfirmation(),
       ],
     );
+  }
+}
+
+class _Gender extends StatelessWidget {
+  const _Gender();
+
+  @override
+  Widget build(BuildContext context) {
+    final str = Str.of(context);
+    final Gender? selectedGender = context.select(
+      (SignUpBloc bloc) => bloc.state.gender,
+    );
+
+    return Row(
+      children: [
+        Expanded(
+          child: ListTile(
+            contentPadding: const EdgeInsets.all(0),
+            title: Text(str.male),
+            leading: Radio(
+              value: Gender.male,
+              groupValue: selectedGender,
+              onChanged: (Gender? gender) => _onGenderChanged(context, gender),
+            ),
+            onTap: () => _onGenderChanged(context, Gender.male),
+          ),
+        ),
+        Expanded(
+          child: ListTile(
+            contentPadding: const EdgeInsets.all(0),
+            title: Text(str.female),
+            leading: Radio(
+              value: Gender.female,
+              groupValue: selectedGender,
+              onChanged: (Gender? gender) => _onGenderChanged(context, gender),
+            ),
+            onTap: () => _onGenderChanged(context, Gender.female),
+          ),
+        ),
+      ],
+    );
+  }
+
+  void _onGenderChanged(BuildContext context, Gender? gender) {
+    if (gender != null) {
+      context.read<SignUpBloc>().add(
+            SignUpEventGenderChanged(gender: gender),
+          );
+    }
   }
 }
 

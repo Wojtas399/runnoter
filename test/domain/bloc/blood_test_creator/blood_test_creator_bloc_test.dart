@@ -5,29 +5,35 @@ import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/bloc/blood_test_creator/blood_test_creator_bloc.dart';
 import 'package:runnoter/domain/entity/blood_parameter.dart';
 import 'package:runnoter/domain/entity/blood_test.dart';
+import 'package:runnoter/domain/entity/user.dart';
 
 import '../../../creators/blood_test_creator.dart';
 import '../../../mock/domain/repository/mock_blood_test_repository.dart';
 import '../../../mock/domain/service/mock_auth_service.dart';
+import '../../../mock/domain/use_case/mock_get_logged_user_gender_use_case.dart';
 
 void main() {
   final authService = MockAuthService();
+  final getLoggedUserGenderUseCase = MockGetLoggedUserGenderUseCase();
   final bloodTestRepository = MockBloodTestRepository();
   const String loggedUserId = 'u1';
   const String bloodTestId = 'b1';
 
   BloodTestCreatorBloc createBloc({
     String? bloodTestId,
+    Gender? gender,
     BloodTest? bloodTest,
     DateTime? date,
     List<BloodParameterResult>? parameterResults,
   }) =>
       BloodTestCreatorBloc(
         authService: authService,
+        getLoggedUserGenderUseCase: getLoggedUserGenderUseCase,
         bloodTestRepository: bloodTestRepository,
         bloodTestId: bloodTestId,
         state: BloodTestCreatorState(
           status: const BlocStatusInitial(),
+          gender: gender,
           bloodTest: bloodTest,
           date: date,
           parameterResults: parameterResults,
@@ -36,12 +42,14 @@ void main() {
 
   BloodTestCreatorState createState({
     BlocStatus status = const BlocStatusInitial(),
+    Gender? gender,
     BloodTest? bloodTest,
     DateTime? date,
     List<BloodParameterResult>? parameterResults,
   }) =>
       BloodTestCreatorState(
         status: status,
+        gender: gender,
         bloodTest: bloodTest,
         date: date,
         parameterResults: parameterResults,
@@ -49,14 +57,16 @@ void main() {
 
   tearDown(() {
     reset(authService);
+    reset(getLoggedUserGenderUseCase);
     reset(bloodTestRepository);
   });
 
   blocTest(
     'initialize, '
-    'should load blood test from repository and should update all params in state',
+    "should load logged user's gender and blood test from repository and should update all params in state",
     build: () => createBloc(bloodTestId: bloodTestId),
     setUp: () {
+      getLoggedUserGenderUseCase.mock(gender: Gender.male);
       authService.mockGetLoggedUserId(userId: loggedUserId);
       bloodTestRepository.mockGetTestById(
         bloodTest: createBloodTest(
@@ -76,6 +86,7 @@ void main() {
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
+        gender: Gender.male,
         bloodTest: createBloodTest(
           id: bloodTestId,
           userId: loggedUserId,
@@ -98,6 +109,9 @@ void main() {
     ],
     verify: (_) {
       verify(
+        () => getLoggedUserGenderUseCase.execute(),
+      ).called(1);
+      verify(
         () => authService.loggedUserId$,
       ).called(1);
       verify(
@@ -111,24 +125,24 @@ void main() {
 
   blocTest(
     'initialize, '
-    'logged user does not exist, '
-    'should do nothing',
-    build: () => createBloc(bloodTestId: bloodTestId),
-    setUp: () => authService.mockGetLoggedUserId(),
-    act: (bloc) => bloc.add(const BloodTestCreatorEventInitialize()),
-    expect: () => [],
-    verify: (_) => verify(
-      () => authService.loggedUserId$,
-    ).called(1),
-  );
-
-  blocTest(
-    'initialize, '
     'blood test id is null, '
-    'should do nothing',
+    "should only load logged user's gender",
     build: () => createBloc(),
+    setUp: () {
+      getLoggedUserGenderUseCase.mock(gender: Gender.male);
+    },
     act: (bloc) => bloc.add(const BloodTestCreatorEventInitialize()),
-    expect: () => [],
+    expect: () => [
+      createState(
+        status: const BlocStatusComplete(),
+        gender: Gender.male,
+      ),
+    ],
+    verify: (_) {
+      verify(
+        () => getLoggedUserGenderUseCase.execute(),
+      ).called(1);
+    },
   );
 
   blocTest(
@@ -263,6 +277,7 @@ void main() {
     'logged user does not exist, '
     'should emit no logged user status',
     build: () => createBloc(
+      gender: Gender.male,
       date: DateTime(2023, 5, 20),
       parameterResults: const [
         BloodParameterResult(
@@ -276,6 +291,7 @@ void main() {
     expect: () => [
       createState(
         status: const BlocStatusNoLoggedUser(),
+        gender: Gender.male,
         date: DateTime(2023, 5, 20),
         parameterResults: const [
           BloodParameterResult(
@@ -295,6 +311,7 @@ void main() {
     'blood test in state is null, '
     'should call method from blood test repository to add new blood test and should emit info that new test has been added',
     build: () => createBloc(
+      gender: Gender.male,
       date: DateTime(2023, 5, 20),
       parameterResults: const [
         BloodParameterResult(
@@ -315,6 +332,7 @@ void main() {
     expect: () => [
       createState(
         status: const BlocStatusLoading(),
+        gender: Gender.male,
         date: DateTime(2023, 5, 20),
         parameterResults: const [
           BloodParameterResult(
@@ -331,6 +349,7 @@ void main() {
         status: const BlocStatusComplete<BloodTestCreatorBlocInfo>(
           info: BloodTestCreatorBlocInfo.bloodTestAdded,
         ),
+        gender: Gender.male,
         date: DateTime(2023, 5, 20),
         parameterResults: const [
           BloodParameterResult(
@@ -372,6 +391,7 @@ void main() {
     'blood test in state is not null, '
     'should call method from blood test repository to update blood test and should emit info that new test has been updated',
     build: () => createBloc(
+      gender: Gender.male,
       bloodTest: createBloodTest(
         id: bloodTestId,
         date: DateTime(2023, 5, 12),
@@ -402,6 +422,7 @@ void main() {
     expect: () => [
       createState(
         status: const BlocStatusLoading(),
+        gender: Gender.male,
         bloodTest: createBloodTest(
           id: bloodTestId,
           date: DateTime(2023, 5, 12),
@@ -428,6 +449,7 @@ void main() {
         status: const BlocStatusComplete<BloodTestCreatorBlocInfo>(
           info: BloodTestCreatorBlocInfo.bloodTestUpdated,
         ),
+        gender: Gender.male,
         bloodTest: createBloodTest(
           id: bloodTestId,
           date: DateTime(2023, 5, 12),

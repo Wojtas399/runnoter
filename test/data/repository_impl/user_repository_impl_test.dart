@@ -65,6 +65,7 @@ void main() {
     () {
       const userDto = db.UserDto(
         id: userId,
+        gender: db.Gender.male,
         name: 'name',
         surname: 'surname',
       );
@@ -80,6 +81,7 @@ void main() {
       );
       final User expectedUser = createUser(
         id: userId,
+        gender: Gender.male,
         name: 'name',
         surname: 'surname',
         settings: createSettings(
@@ -112,6 +114,7 @@ void main() {
     () async {
       final User userToAdd = createUser(
         id: userId,
+        gender: Gender.male,
         name: 'username',
         surname: 'surname',
         settings: createSettings(
@@ -133,6 +136,7 @@ void main() {
         () => dbUserService.addUserPersonalData(
           userDto: const db.UserDto(
             id: userId,
+            gender: db.Gender.male,
             name: 'username',
             surname: 'surname',
           ),
@@ -257,11 +261,13 @@ void main() {
       );
       const updatedUserDto = db.UserDto(
         id: userId,
+        gender: db.Gender.male,
         name: newName,
         surname: newSurname,
       );
       final User expectedUpdatedUser = createUser(
         id: userId,
+        gender: Gender.male,
         name: newName,
         surname: newSurname,
         settings: userSettings,

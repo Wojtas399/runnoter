@@ -10,6 +10,7 @@ void main() {
     () {
       const userDto = firebase.UserDto(
         id: 'u1',
+        gender: firebase.Gender.male,
         name: 'name',
         surname: 'surname',
       );
@@ -25,6 +26,7 @@ void main() {
       );
       const User expectedUser = User(
         id: 'u1',
+        gender: Gender.male,
         name: 'name',
         surname: 'surname',
         settings: Settings(

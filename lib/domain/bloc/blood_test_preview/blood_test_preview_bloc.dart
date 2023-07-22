@@ -11,6 +11,8 @@ import '../../../../domain/service/auth_service.dart';
 import '../../additional_model/bloc_state.dart';
 import '../../additional_model/bloc_status.dart';
 import '../../additional_model/bloc_with_status.dart';
+import '../../entity/user.dart';
+import '../../use_case/get_logged_user_gender_use_case.dart';
 
 part 'blood_test_preview_event.dart';
 part 'blood_test_preview_state.dart';
@@ -18,17 +20,20 @@ part 'blood_test_preview_state.dart';
 class BloodTestPreviewBloc extends BlocWithStatus<BloodTestPreviewEvent,
     BloodTestPreviewState, BloodTestPreviewBlocInfo, dynamic> {
   final AuthService _authService;
+  final GetLoggedUserGenderUseCase _getLoggedUserGenderUseCase;
   final BloodTestRepository _bloodTestRepository;
   final String? bloodTestId;
 
   BloodTestPreviewBloc({
     required AuthService authService,
+    required GetLoggedUserGenderUseCase getLoggedUserGenderUseCase,
     required BloodTestRepository bloodTestRepository,
     required this.bloodTestId,
     BloodTestPreviewState state = const BloodTestPreviewState(
       status: BlocStatusInitial(),
     ),
   })  : _authService = authService,
+        _getLoggedUserGenderUseCase = getLoggedUserGenderUseCase,
         _bloodTestRepository = bloodTestRepository,
         super(state) {
     on<BloodTestPreviewEventInitialize>(
@@ -43,18 +48,17 @@ class BloodTestPreviewBloc extends BlocWithStatus<BloodTestPreviewEvent,
     Emitter<BloodTestPreviewState> emit,
   ) async {
     if (bloodTestId == null) return;
-    final Stream<BloodTest?> bloodTest$ =
-        _authService.loggedUserId$.whereNotNull().switchMap(
-              (String loggedUserId) => _bloodTestRepository.getTestById(
-                bloodTestId: bloodTestId!,
-                userId: loggedUserId,
-              ),
-            );
+    final Stream<(Gender, BloodTest?)> stream$ = Rx.combineLatest2(
+      _getLoggedUserGenderUseCase.execute(),
+      _getBloodTest(),
+      (Gender gender, BloodTest? bloodTest) => (gender, bloodTest),
+    );
     await emit.forEach(
-      bloodTest$,
-      onData: (BloodTest? bloodTest) => state.copyWith(
-        date: bloodTest?.date,
-        parameterResults: bloodTest?.parameterResults,
+      stream$,
+      onData: ((Gender, BloodTest?) params) => state.copyWith(
+        date: params.$2?.date,
+        gender: params.$1,
+        parameterResults: params.$2?.parameterResults,
       ),
     );
   }
@@ -79,6 +83,14 @@ class BloodTestPreviewBloc extends BlocWithStatus<BloodTestPreviewEvent,
       BloodTestPreviewBlocInfo.bloodTestDeleted,
     );
   }
+
+  Stream<BloodTest?> _getBloodTest() =>
+      _authService.loggedUserId$.whereNotNull().switchMap(
+            (String loggedUserId) => _bloodTestRepository.getTestById(
+              bloodTestId: bloodTestId!,
+              userId: loggedUserId,
+            ),
+          );
 }
 
 enum BloodTestPreviewBlocInfo {

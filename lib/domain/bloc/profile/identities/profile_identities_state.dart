@@ -2,6 +2,7 @@ part of 'profile_identities_bloc.dart';
 
 class ProfileIdentitiesState extends BlocState {
   final String? loggedUserId;
+  final Gender? gender;
   final String? username;
   final String? surname;
   final String? email;
@@ -9,6 +10,7 @@ class ProfileIdentitiesState extends BlocState {
   const ProfileIdentitiesState({
     required super.status,
     this.loggedUserId,
+    this.gender,
     this.username,
     this.surname,
     this.email,
@@ -18,6 +20,7 @@ class ProfileIdentitiesState extends BlocState {
   List<Object?> get props => [
         status,
         loggedUserId,
+        gender,
         username,
         surname,
         email,
@@ -27,6 +30,7 @@ class ProfileIdentitiesState extends BlocState {
   ProfileIdentitiesState copyWith({
     BlocStatus? status,
     String? loggedUserId,
+    Gender? gender,
     String? username,
     String? surname,
     String? email,
@@ -34,6 +38,7 @@ class ProfileIdentitiesState extends BlocState {
     return ProfileIdentitiesState(
       status: status ?? const BlocStatusComplete(),
       loggedUserId: loggedUserId ?? this.loggedUserId,
+      gender: gender ?? this.gender,
       username: username ?? this.username,
       surname: surname ?? this.surname,
       email: email ?? this.email,

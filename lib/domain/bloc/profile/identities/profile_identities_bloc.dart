@@ -49,7 +49,7 @@ class ProfileIdentitiesBloc extends BlocWithStatus<ProfileIdentitiesEvent,
       _initialize,
       transformer: restartable(),
     );
-    on<ProfileIdentitiesEventIdentitiesUpdated>(_identitiesUpdated);
+    on<ProfileIdentitiesEventUpdateGender>(_updateGender);
     on<ProfileIdentitiesEventUpdateUsername>(_updateUsername);
     on<ProfileIdentitiesEventUpdateSurname>(_updateSurname);
     on<ProfileIdentitiesEventUpdateEmail>(_updateEmail);
@@ -74,6 +74,7 @@ class ProfileIdentitiesBloc extends BlocWithStatus<ProfileIdentitiesEvent,
         final User? loggedUserData = identities.$2;
         return state.copyWith(
           loggedUserId: loggedUserData?.id,
+          gender: loggedUserData?.gender,
           email: loggedUserEmail,
           username: loggedUserData?.name,
           surname: loggedUserData?.surname,
@@ -82,16 +83,30 @@ class ProfileIdentitiesBloc extends BlocWithStatus<ProfileIdentitiesEvent,
     );
   }
 
-  void _identitiesUpdated(
-    ProfileIdentitiesEventIdentitiesUpdated event,
+  Future<void> _updateGender(
+    ProfileIdentitiesEventUpdateGender event,
     Emitter<ProfileIdentitiesState> emit,
-  ) {
+  ) async {
+    final Gender? previousGender = state.gender;
+    if (event.gender == previousGender) return;
+    final String? loggedUserId = await _authService.loggedUserId$.first;
+    if (loggedUserId == null) {
+      emitNoLoggedUserStatus(emit);
+      return;
+    }
     emit(state.copyWith(
-      loggedUserId: event.user?.id,
-      email: event.email,
-      username: event.user?.name,
-      surname: event.user?.surname,
+      gender: event.gender,
     ));
+    try {
+      await _userRepository.updateUserIdentities(
+        userId: loggedUserId,
+        gender: event.gender,
+      );
+    } catch (_) {
+      emit(state.copyWith(
+        gender: previousGender,
+      ));
+    }
   }
 
   Future<void> _updateUsername(

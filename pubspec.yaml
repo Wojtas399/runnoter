@@ -38,6 +38,7 @@ dependencies:
   auto_route: ^7.7.0
   get_it: ^7.6.0
   bloc_concurrency: ^0.2.2
+  material_design_icons_flutter: ^7.0.7296
 
 dependency_overrides:
   intl: ^0.17.0-nullsafety.2

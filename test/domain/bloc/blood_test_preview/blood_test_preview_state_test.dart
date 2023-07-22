@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/bloc/blood_test_preview/blood_test_preview_bloc.dart';
 import 'package:runnoter/domain/entity/blood_parameter.dart';
+import 'package:runnoter/domain/entity/user.dart';
 
 void main() {
   late BloodTestPreviewState state;
@@ -35,6 +36,19 @@ void main() {
 
       expect(state.date, expectedDate);
       expect(state2.date, expectedDate);
+    },
+  );
+
+  test(
+    'copy with gender',
+    () {
+      const Gender expectedGender = Gender.female;
+
+      state = state.copyWith(gender: expectedGender);
+      final state2 = state.copyWith();
+
+      expect(state.gender, expectedGender);
+      expect(state2.gender, expectedGender);
     },
   );
 

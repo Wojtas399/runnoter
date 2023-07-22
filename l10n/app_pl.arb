@@ -722,6 +722,14 @@
   "@runStatusUndone": {
     "description": "Type of workout status called undone"
   },
+  "@__________GENDERS__________": {},
+  "gender": "Płeć",
+  "male": "Mężczyzna",
+  "female": "Kobieta",
+  "genderSelection": "Wybierz płeć",
+  "@genderSelection": {
+    "description": "Text about gender selection"
+  },
   "@__________MOOD_RATES__________": {},
   "moodRate1": "Maksymalne wyczerpanie",
   "@moodRate1": {
@@ -780,8 +788,8 @@
   "@themeModeSystem": {
     "description": "System theme mode"
   },
-  "themeModeSelect": "Wybierz motyw aplikacji",
-  "@themeModeSelect": {
+  "themeModeSelection": "Wybierz motyw aplikacji",
+  "@themeModeSelection": {
     "description": "Text about theme mode selection"
   },
   "systemThemeModeDescription": "Jeśli wybierzesz motyw systemowy, aplikacja będzie używała motywu obecnie ustawionego na Twoim urządzeniu.",
@@ -805,8 +813,8 @@
   "@languageSystem": {
     "description": "System language"
   },
-  "languageSelect": "Wybierz język aplikacji",
-  "@languageSelect": {
+  "languageSelection": "Wybierz język aplikacji",
+  "@languageSelection": {
     "description": "Text about language selection"
   },
   "systemLanguageDescription": "Jeśli wybierzesz język systemowy, aplikacja będzie używała języka obecnie ustawionego na Twoim urządzeniu.",
@@ -826,8 +834,8 @@
   "@distanceUnitMiles": {
     "description": "Miles distance unit"
   },
-  "distanceUnitSelect": "Wybierz jednostkę dystansu",
-  "@distanceUnitSelect": {
+  "distanceUnitSelection": "Wybierz jednostkę dystansu",
+  "@distanceUnitSelection": {
     "description": "Text about distance unit selection"
   },
   "@__________PACE_UNITS__________": {},
@@ -835,8 +843,8 @@
   "@paceUnit": {
     "description": "Label of pace unit"
   },
-  "paceUnitSelect": "Wybierz jednostkę tempa",
-  "@paceUnitSelect": {
+  "paceUnitSelection": "Wybierz jednostkę tempa",
+  "@paceUnitSelection": {
     "description": "Text about pace unit selection"
   },
   "@__________HEART_RATE_UNITS__________": {},

@@ -3,6 +3,7 @@ import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/bloc/blood_test_creator/blood_test_creator_bloc.dart';
 import 'package:runnoter/domain/entity/blood_parameter.dart';
 import 'package:runnoter/domain/entity/blood_test.dart';
+import 'package:runnoter/domain/entity/user.dart';
 
 import '../../../creators/blood_test_creator.dart';
 
@@ -22,6 +23,20 @@ void main() {
     ],
   );
 
+  BloodTestCreatorState createState({
+    Gender? gender,
+    BloodTest? bloodTest,
+    DateTime? date,
+    List<BloodParameterResult>? parameterResults,
+  }) =>
+      BloodTestCreatorState(
+        status: const BlocStatusInitial(),
+        gender: gender,
+        bloodTest: bloodTest,
+        date: date,
+        parameterResults: parameterResults,
+      );
+
   setUp(
     () => state = const BloodTestCreatorState(
       status: BlocStatusInitial(),
@@ -30,12 +45,32 @@ void main() {
 
   test(
     'can submit, '
+    'gender is null, '
+    'should be false',
+    () {
+      state = createState(
+        bloodTest: bloodTest,
+        date: bloodTest.date,
+        parameterResults: const [
+          BloodParameterResult(
+            parameter: BloodParameter.wbc,
+            value: 4.45,
+          ),
+        ],
+      );
+
+      expect(state.canSubmit, false);
+    },
+  );
+
+  test(
+    'can submit, '
     'date is null, '
     'should be false',
     () {
-      state = state.copyWith(
+      state = createState(
+        gender: Gender.male,
         bloodTest: bloodTest,
-        date: null,
         parameterResults: const [
           BloodParameterResult(
             parameter: BloodParameter.wbc,
@@ -53,7 +88,8 @@ void main() {
     'date is same as original, '
     'should be false',
     () {
-      state = state.copyWith(
+      state = createState(
+        gender: Gender.male,
         bloodTest: bloodTest,
         date: bloodTest.date,
         parameterResults: bloodTest.parameterResults,
@@ -68,7 +104,8 @@ void main() {
     'parameter results are null, '
     'should be false',
     () {
-      state = state.copyWith(
+      state = createState(
+        gender: Gender.male,
         bloodTest: bloodTest,
         date: DateTime(2023, 5, 12),
         parameterResults: null,
@@ -83,7 +120,8 @@ void main() {
     'list of parameter results is empty, '
     'should be false',
     () {
-      state = state.copyWith(
+      state = createState(
+        gender: Gender.male,
         bloodTest: bloodTest,
         date: DateTime(2023, 5, 20),
         parameterResults: const [],
@@ -98,7 +136,8 @@ void main() {
     'parameter results are same as original, '
     'should be false',
     () {
-      state = state.copyWith(
+      state = createState(
+        gender: Gender.male,
         bloodTest: bloodTest,
         date: DateTime(2023, 5, 20),
         parameterResults: bloodTest.parameterResults,
@@ -113,7 +152,8 @@ void main() {
     'date and parameter results are valid and date is different than original, '
     'should be true',
     () {
-      state = state.copyWith(
+      state = createState(
+        gender: Gender.male,
         bloodTest: bloodTest,
         date: DateTime(2023, 5, 12),
         parameterResults: bloodTest.parameterResults,
@@ -128,7 +168,8 @@ void main() {
     'date and parameter results are valid and parameterResults are different than original, '
     'should be true',
     () {
-      state = state.copyWith(
+      state = createState(
+        gender: Gender.male,
         bloodTest: bloodTest,
         date: bloodTest.date,
         parameterResults: const [
@@ -157,6 +198,19 @@ void main() {
 
       expect(state.status, expectedStatus);
       expect(state2.status, const BlocStatusComplete());
+    },
+  );
+
+  test(
+    'copy with gender',
+    () {
+      const Gender expectedGender = Gender.male;
+
+      state = state.copyWith(gender: expectedGender);
+      final state2 = state.copyWith();
+
+      expect(state.gender, expectedGender);
+      expect(state2.gender, expectedGender);
     },
   );
 

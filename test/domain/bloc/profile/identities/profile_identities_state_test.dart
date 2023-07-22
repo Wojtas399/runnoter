@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/bloc/profile/identities/profile_identities_bloc.dart';
+import 'package:runnoter/domain/entity/user.dart';
 
 void main() {
   late ProfileIdentitiesState state;
@@ -38,6 +39,19 @@ void main() {
 
       expect(state.loggedUserId, expectedUserId);
       expect(state2.loggedUserId, expectedUserId);
+    },
+  );
+
+  test(
+    'copy with gender',
+    () {
+      const Gender expectedGender = Gender.female;
+
+      state = state.copyWith(gender: expectedGender);
+      final state2 = state.copyWith();
+
+      expect(state.gender, expectedGender);
+      expect(state2.gender, expectedGender);
     },
   );
 

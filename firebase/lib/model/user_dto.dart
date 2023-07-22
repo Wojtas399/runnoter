@@ -1,12 +1,19 @@
 import 'package:equatable/equatable.dart';
 
+enum Gender {
+  male,
+  female,
+}
+
 class UserDto extends Equatable {
   final String id;
+  final Gender gender;
   final String name;
   final String surname;
 
   const UserDto({
     required this.id,
+    required this.gender,
     required this.name,
     required this.surname,
   });
@@ -14,6 +21,7 @@ class UserDto extends Equatable {
   @override
   List<Object> get props => [
         id,
+        gender,
         name,
         surname,
       ];
@@ -23,29 +31,31 @@ class UserDto extends Equatable {
     Map<String, dynamic>? json,
   ) : this(
           id: id,
-          name: json?[_UserFields.name.name],
-          surname: json?[_UserFields.surname.name],
+          gender: Gender.values.byName(json?[_genderField]),
+          name: json?[_nameField],
+          surname: json?[_surnameField],
         );
 
   Map<String, dynamic> toJson() {
     return {
-      _UserFields.name.name: name,
-      _UserFields.surname.name: surname,
+      _genderField: gender.name,
+      _nameField: name,
+      _surnameField: surname,
     };
   }
 }
 
 Map<String, dynamic> createUserJsonToUpdate({
+  Gender? gender,
   String? name,
   String? surname,
-}) {
-  return {
-    if (name != null) _UserFields.name.name: name,
-    if (surname != null) _UserFields.surname.name: surname,
-  };
-}
+}) =>
+    {
+      if (gender != null) _genderField: gender.name,
+      if (name != null) _nameField: name,
+      if (surname != null) _surnameField: surname,
+    };
 
-enum _UserFields {
-  name,
-  surname,
-}
+const String _genderField = 'gender';
+const String _nameField = 'name';
+const String _surnameField = 'surname';

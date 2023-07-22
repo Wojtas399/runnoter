@@ -7,37 +7,34 @@ import '../../../domain/bloc/profile/identities/profile_identities_bloc.dart';
 import '../../component/password_text_field_component.dart';
 import '../../component/responsive_layout_component.dart';
 import '../../component/text/label_text_components.dart';
-import '../../component/text_field_component.dart';
 import '../../service/navigator_service.dart';
 import '../../service/utils.dart';
 import '../../service/validation_service.dart';
 
-class ProfileUpdateEmailDialog extends StatefulWidget {
-  const ProfileUpdateEmailDialog({super.key});
+class ProfilePasswordDialog extends StatefulWidget {
+  const ProfilePasswordDialog({super.key});
 
   @override
   State<StatefulWidget> createState() => _State();
 }
 
-class _State extends State<ProfileUpdateEmailDialog> {
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  late final String? _originalEmail;
+class _State extends State<ProfilePasswordDialog> {
+  final TextEditingController _newPasswordController = TextEditingController();
+  final TextEditingController _currentPasswordController =
+      TextEditingController();
   bool _isSaveButtonDisabled = true;
 
   @override
   void initState() {
-    _originalEmail = context.read<ProfileIdentitiesBloc>().state.email ?? '';
-    _emailController.text = _originalEmail ?? '';
-    _emailController.addListener(_checkValuesCorrectness);
-    _passwordController.addListener(_checkValuesCorrectness);
+    _newPasswordController.addListener(_checkPasswordsCorrectness);
+    _currentPasswordController.addListener(_checkPasswordsCorrectness);
     super.initState();
   }
 
   @override
   void dispose() {
-    _emailController.removeListener(_checkValuesCorrectness);
-    _passwordController.removeListener(_checkValuesCorrectness);
+    _newPasswordController.removeListener(_checkPasswordsCorrectness);
+    _currentPasswordController.removeListener(_checkPasswordsCorrectness);
     super.dispose();
   }
 
@@ -53,37 +50,36 @@ class _State extends State<ProfileUpdateEmailDialog> {
       },
       child: ResponsiveLayout(
         mobileBody: _FullScreenDialog(
+          newPasswordController: _newPasswordController,
+          currentPasswordController: _currentPasswordController,
           isSaveButtonDisabled: _isSaveButtonDisabled,
+          newPasswordValidator: _validatePassword,
           onSaveButtonPressed: () => _onSaveButtonPressed(context),
-          emailController: _emailController,
-          passwordController: _passwordController,
-          emailValidator: _validateEmail,
         ),
         desktopBody: _NormalDialog(
+          newPasswordController: _newPasswordController,
+          currentPasswordController: _currentPasswordController,
           isSaveButtonDisabled: _isSaveButtonDisabled,
+          newPasswordValidator: _validatePassword,
           onSaveButtonPressed: () => _onSaveButtonPressed(context),
-          emailController: _emailController,
-          passwordController: _passwordController,
-          emailValidator: _validateEmail,
         ),
       ),
     );
   }
 
-  void _checkValuesCorrectness() {
-    final String email = _emailController.text;
-    final String password = _passwordController.text;
+  void _checkPasswordsCorrectness() {
+    final String newPassword = _newPasswordController.text;
+    final String currentPassword = _currentPasswordController.text;
     setState(() {
-      _isSaveButtonDisabled = email.isEmpty ||
-          email == _originalEmail ||
-          !isEmailValid(email) ||
-          password.isEmpty;
+      _isSaveButtonDisabled = newPassword.isEmpty ||
+          !isPasswordValid(newPassword) ||
+          currentPassword.isEmpty;
     });
   }
 
-  String? _validateEmail(String? value) {
-    if (value != null && !isEmailValid(value)) {
-      return Str.of(context).invalidEmailMessage;
+  String? _validatePassword(String? value) {
+    if (value != null && !isPasswordValid(value)) {
+      return Str.of(context).invalidPasswordMessage;
     }
     return null;
   }
@@ -91,27 +87,27 @@ class _State extends State<ProfileUpdateEmailDialog> {
   void _onSaveButtonPressed(BuildContext context) {
     unfocusInputs();
     context.read<ProfileIdentitiesBloc>().add(
-          ProfileIdentitiesEventUpdateEmail(
-            newEmail: _emailController.text,
-            password: _passwordController.text,
+          ProfileIdentitiesEventUpdatePassword(
+            newPassword: _newPasswordController.text,
+            currentPassword: _currentPasswordController.text,
           ),
         );
   }
 }
 
 class _NormalDialog extends StatelessWidget {
+  final TextEditingController newPasswordController;
+  final TextEditingController currentPasswordController;
   final bool isSaveButtonDisabled;
+  final String? Function(String? value) newPasswordValidator;
   final VoidCallback onSaveButtonPressed;
-  final TextEditingController emailController;
-  final TextEditingController passwordController;
-  final String? Function(String? value) emailValidator;
 
   const _NormalDialog({
+    required this.newPasswordController,
+    required this.currentPasswordController,
     required this.isSaveButtonDisabled,
+    required this.newPasswordValidator,
     required this.onSaveButtonPressed,
-    required this.emailController,
-    required this.passwordController,
-    required this.emailValidator,
   });
 
   @override
@@ -119,24 +115,23 @@ class _NormalDialog extends StatelessWidget {
     final str = Str.of(context);
 
     return AlertDialog(
-      title: Text(str.profileNewEmailDialogTitle),
+      title: Text(str.profileNewPasswordDialogTitle),
       content: SizedBox(
         width: 400,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            TextFieldComponent(
-              label: str.email,
+            PasswordTextFieldComponent(
+              label: str.profileNewPasswordDialogNewPassword,
               isRequired: true,
-              controller: emailController,
-              validator: emailValidator,
-              icon: Icons.email,
+              controller: newPasswordController,
+              validator: newPasswordValidator,
             ),
             const SizedBox(height: 32),
             PasswordTextFieldComponent(
-              label: str.password,
-              controller: passwordController,
+              label: str.profileNewPasswordDialogCurrentPassword,
               isRequired: true,
+              controller: currentPasswordController,
             ),
           ],
         ),
@@ -159,18 +154,18 @@ class _NormalDialog extends StatelessWidget {
 }
 
 class _FullScreenDialog extends StatelessWidget {
+  final TextEditingController newPasswordController;
+  final TextEditingController currentPasswordController;
   final bool isSaveButtonDisabled;
+  final String? Function(String? value) newPasswordValidator;
   final VoidCallback onSaveButtonPressed;
-  final TextEditingController emailController;
-  final TextEditingController passwordController;
-  final String? Function(String? value) emailValidator;
 
   const _FullScreenDialog({
+    required this.newPasswordController,
+    required this.currentPasswordController,
     required this.isSaveButtonDisabled,
+    required this.newPasswordValidator,
     required this.onSaveButtonPressed,
-    required this.emailController,
-    required this.passwordController,
-    required this.emailValidator,
   });
 
   @override
@@ -179,7 +174,9 @@ class _FullScreenDialog extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(str.profileNewEmailDialogTitle),
+        title: Text(
+          str.profileNewPasswordDialogTitle,
+        ),
         leading: const CloseButton(),
         actions: [
           FilledButton(
@@ -197,18 +194,17 @@ class _FullScreenDialog extends StatelessWidget {
             color: Colors.transparent,
             child: Column(
               children: [
-                TextFieldComponent(
-                  label: str.email,
+                PasswordTextFieldComponent(
+                  label: str.profileNewPasswordDialogNewPassword,
                   isRequired: true,
-                  controller: emailController,
-                  validator: emailValidator,
-                  icon: Icons.email,
+                  controller: newPasswordController,
+                  validator: newPasswordValidator,
                 ),
                 const SizedBox(height: 32),
                 PasswordTextFieldComponent(
-                  label: str.password,
-                  controller: passwordController,
+                  label: str.profileNewPasswordDialogCurrentPassword,
                   isRequired: true,
+                  controller: currentPasswordController,
                 ),
               ],
             ),
