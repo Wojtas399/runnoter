@@ -10,8 +10,9 @@ import '../../component/value_with_label_and_icon_component.dart';
 import '../../service/dialog_service.dart';
 import '../../service/validation_service.dart';
 import 'profile_delete_account_dialog.dart';
-import 'profile_update_email_dialog.dart';
-import 'profile_update_password_dialog.dart';
+import 'profile_email_dialog.dart';
+import 'profile_gender_dialog.dart';
+import 'profile_password_dialog.dart';
 
 class ProfileUserDataSection extends StatelessWidget {
   const ProfileUserDataSection({super.key});
@@ -62,8 +63,17 @@ class _Gender extends StatelessWidget {
         Gender.female => str.female,
         null => '',
       },
+      onPressed: () => _onPressed(context),
     );
   }
+
+  Future<void> _onPressed(BuildContext context) async =>
+      showDialogDependingOnScreenSize(
+        BlocProvider.value(
+          value: context.read<ProfileIdentitiesBloc>(),
+          child: const ProfileGenderDialog(),
+        ),
+      );
 }
 
 class _Name extends StatelessWidget {
@@ -187,7 +197,7 @@ class _Email extends StatelessWidget {
       await showDialogDependingOnScreenSize(
         BlocProvider<ProfileIdentitiesBloc>.value(
           value: context.read<ProfileIdentitiesBloc>(),
-          child: const ProfileUpdateEmailDialog(),
+          child: const ProfileEmailDialog(),
         ),
       );
 }
@@ -210,7 +220,7 @@ class _ChangePassword extends StatelessWidget {
       showDialogDependingOnScreenSize(
         BlocProvider.value(
           value: context.read<ProfileIdentitiesBloc>(),
-          child: const ProfileUpdatePasswordDialog(),
+          child: const ProfilePasswordDialog(),
         ),
       );
 }

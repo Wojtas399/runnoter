@@ -85,7 +85,7 @@ class _Header extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: BodyLarge(Str.of(context).distanceUnitSelect),
+      child: BodyLarge(Str.of(context).distanceUnitSelection),
     );
   }
 }
