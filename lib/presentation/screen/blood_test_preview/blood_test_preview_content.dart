@@ -48,7 +48,12 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
       forceMaterialTransparency: true,
       centerTitle: true,
       title: Text(Str.of(context).bloodTestPreviewTitle),
-      actions: context.isMobileSize ? const [BloodTestPreviewActions()] : null,
+      actions: context.isMobileSize
+          ? const [
+              BloodTestPreviewActions(),
+              SizedBox(width: 8),
+            ]
+          : null,
     );
   }
 }

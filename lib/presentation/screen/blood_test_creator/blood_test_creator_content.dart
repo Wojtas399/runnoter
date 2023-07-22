@@ -95,20 +95,25 @@ class _ParametersSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Gender? gender = context.select(
+      (BloodTestCreatorBloc bloc) => bloc.state.gender,
+    );
     final List<BloodParameterResult>? parameterResults = context.select(
       (BloodTestCreatorBloc bloc) => bloc.state.parameterResults,
     );
 
-    return BloodParameterResultsList(
-      isEditMode: true,
-      gender: Gender.male,
-      parameterResults: parameterResults,
-      onParameterValueChanged: (
-        BloodParameter parameter,
-        double? value,
-      ) =>
-          _onValueChanged(context, parameter, value),
-    );
+    return gender == null
+        ? const CircularProgressIndicator()
+        : BloodParameterResultsList(
+            isEditMode: true,
+            gender: gender,
+            parameterResults: parameterResults,
+            onParameterValueChanged: (
+              BloodParameter parameter,
+              double? value,
+            ) =>
+                _onValueChanged(context, parameter, value),
+          );
   }
 
   void _onValueChanged(
