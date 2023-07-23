@@ -4,6 +4,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
+import '../../../dependency_injection.dart';
 import '../../entity/run_status.dart';
 import '../../entity/workout.dart';
 import '../../repository/workout_repository.dart';
@@ -14,11 +15,9 @@ class MileageCubit extends Cubit<List<ChartYear>?> {
   final WorkoutRepository _workoutRepository;
   StreamSubscription<List<Workout>?>? _workoutListener;
 
-  MileageCubit({
-    required AuthService authService,
-    required WorkoutRepository workoutRepository,
-  })  : _authService = authService,
-        _workoutRepository = workoutRepository,
+  MileageCubit()
+      : _authService = getIt<AuthService>(),
+        _workoutRepository = getIt<WorkoutRepository>(),
         super(null);
 
   @override

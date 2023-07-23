@@ -1,9 +1,12 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/bloc/profile/settings/profile_settings_bloc.dart';
 import 'package:runnoter/domain/entity/settings.dart';
+import 'package:runnoter/domain/repository/user_repository.dart';
+import 'package:runnoter/domain/service/auth_service.dart';
 
 import '../../../../creators/settings_creator.dart';
 import '../../../../creators/user_creator.dart';
@@ -20,19 +23,16 @@ void main() {
     Language? language,
     DistanceUnit? distanceUnit,
     PaceUnit? paceUnit,
-  }) {
-    return ProfileSettingsBloc(
-      authService: authService,
-      userRepository: userRepository,
-      state: ProfileSettingsState(
-        status: const BlocStatusInitial(),
-        themeMode: themeMode,
-        language: language,
-        distanceUnit: distanceUnit,
-        paceUnit: paceUnit,
-      ),
-    );
-  }
+  }) =>
+      ProfileSettingsBloc(
+        state: ProfileSettingsState(
+          status: const BlocStatusInitial(),
+          themeMode: themeMode,
+          language: language,
+          distanceUnit: distanceUnit,
+          paceUnit: paceUnit,
+        ),
+      );
 
   ProfileSettingsState createState({
     BlocStatus status = const BlocStatusInitial(),
@@ -40,15 +40,19 @@ void main() {
     Language? language,
     DistanceUnit? distanceUnit,
     PaceUnit? paceUnit,
-  }) {
-    return ProfileSettingsState(
-      status: status,
-      themeMode: themeMode,
-      language: language,
-      distanceUnit: distanceUnit,
-      paceUnit: paceUnit,
-    );
-  }
+  }) =>
+      ProfileSettingsState(
+        status: status,
+        themeMode: themeMode,
+        language: language,
+        distanceUnit: distanceUnit,
+        paceUnit: paceUnit,
+      );
+
+  setUpAll(() {
+    GetIt.I.registerSingleton<AuthService>(authService);
+    GetIt.I.registerSingleton<UserRepository>(userRepository);
+  });
 
   tearDown(() {
     reset(authService);

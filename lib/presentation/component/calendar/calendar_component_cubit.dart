@@ -3,18 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../common/date_service.dart';
+import '../../../dependency_injection.dart';
 
 class CalendarComponentCubit extends Cubit<CalendarComponentState> {
   final DateService _dateService;
   List<CalendarDayActivity> _activities = [];
 
-  CalendarComponentCubit({
-    required DateService dateService,
-  })  : _dateService = dateService,
+  CalendarComponentCubit()
+      : _dateService = getIt<DateService>(),
         super(
           CalendarComponentState(
-            displayingMonth: dateService.getToday().month,
-            displayingYear: dateService.getToday().year,
+            displayingMonth: getIt<DateService>().getToday().month,
+            displayingYear: getIt<DateService>().getToday().year,
             weeks: null,
           ),
         );

@@ -2,11 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../common/date_service.dart';
 import '../../../domain/bloc/current_week/current_week_cubit.dart';
-import '../../../domain/repository/race_repository.dart';
-import '../../../domain/repository/workout_repository.dart';
-import '../../../domain/service/auth_service.dart';
 import 'current_week_content.dart';
 
 @RoutePage()
@@ -15,29 +11,9 @@ class CurrentWeekScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const _CubitProvider(
-      child: CurrentWeekContent(),
-    );
-  }
-}
-
-class _CubitProvider extends StatelessWidget {
-  final Widget child;
-
-  const _CubitProvider({
-    required this.child,
-  });
-
-  @override
-  Widget build(BuildContext context) {
     return BlocProvider(
-      create: (BuildContext context) => CurrentWeekCubit(
-        dateService: DateService(),
-        authService: context.read<AuthService>(),
-        workoutRepository: context.read<WorkoutRepository>(),
-        raceRepository: context.read<RaceRepository>(),
-      )..initialize(),
-      child: child,
+      create: (_) => CurrentWeekCubit()..initialize(),
+      child: const CurrentWeekContent(),
     );
   }
 }

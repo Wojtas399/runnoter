@@ -1,5 +1,6 @@
 import 'package:rxdart/rxdart.dart';
 
+import '../../dependency_injection.dart';
 import '../entity/user.dart';
 import '../repository/user_repository.dart';
 import '../service/auth_service.dart';
@@ -8,11 +9,9 @@ class GetLoggedUserGenderUseCase {
   final AuthService _authService;
   final UserRepository _userRepository;
 
-  const GetLoggedUserGenderUseCase({
-    required AuthService authService,
-    required UserRepository userRepository,
-  })  : _authService = authService,
-        _userRepository = userRepository;
+  GetLoggedUserGenderUseCase()
+      : _authService = getIt<AuthService>(),
+        _userRepository = getIt<UserRepository>();
 
   Stream<Gender> execute() => _authService.loggedUserId$
       .whereNotNull()

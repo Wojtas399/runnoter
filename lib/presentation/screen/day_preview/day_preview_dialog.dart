@@ -3,11 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
-import '../../../common/date_service.dart';
 import '../../../domain/bloc/day_preview/day_preview_cubit.dart';
-import '../../../domain/repository/race_repository.dart';
-import '../../../domain/repository/workout_repository.dart';
-import '../../../domain/service/auth_service.dart';
 import '../../component/padding/paddings_24.dart';
 import '../../component/responsive_layout_component.dart';
 import '../../extension/context_extensions.dart';
@@ -26,36 +22,12 @@ class DayPreviewDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _CubitProvider(
-      date: date,
+    return BlocProvider(
+      create: (_) => DayPreviewCubit(date: date)..initialize(),
       child: const ResponsiveLayout(
         mobileBody: _FullScreenContent(),
         desktopBody: _NormalDialog(),
       ),
-    );
-  }
-}
-
-class _CubitProvider extends StatelessWidget {
-  final DateTime date;
-  final Widget child;
-
-  const _CubitProvider({
-    required this.date,
-    required this.child,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (BuildContext context) => DayPreviewCubit(
-        date: date,
-        authService: context.read<AuthService>(),
-        workoutRepository: context.read<WorkoutRepository>(),
-        raceRepository: context.read<RaceRepository>(),
-        dateService: DateService(),
-      )..initialize(),
-      child: child,
     );
   }
 }

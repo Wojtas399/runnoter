@@ -1,11 +1,14 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/bloc/workout_creator/workout_creator_bloc.dart';
 import 'package:runnoter/domain/entity/run_status.dart';
 import 'package:runnoter/domain/entity/workout.dart';
 import 'package:runnoter/domain/entity/workout_stage.dart';
+import 'package:runnoter/domain/repository/workout_repository.dart';
+import 'package:runnoter/domain/service/auth_service.dart';
 
 import '../../../creators/workout_creator.dart';
 import '../../../mock/domain/repository/mock_workout_repository.dart';
@@ -25,8 +28,6 @@ void main() {
     List<WorkoutStage> stages = const [],
   }) =>
       WorkoutCreatorBloc(
-        authService: authService,
-        workoutRepository: workoutRepository,
         date: date ?? DateTime(2023),
         workoutId: workoutId,
         state: WorkoutCreatorState(
@@ -49,6 +50,11 @@ void main() {
         workoutName: workoutName,
         stages: stages,
       );
+
+  setUpAll(() {
+    GetIt.I.registerSingleton<AuthService>(authService);
+    GetIt.I.registerSingleton<WorkoutRepository>(workoutRepository);
+  });
 
   tearDown(() {
     reset(authService);

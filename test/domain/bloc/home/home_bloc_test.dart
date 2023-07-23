@@ -1,8 +1,12 @@
 import 'package:bloc_test/bloc_test.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/bloc/home/home_bloc.dart';
 import 'package:runnoter/domain/entity/settings.dart';
+import 'package:runnoter/domain/repository/user_repository.dart';
+import 'package:runnoter/domain/service/auth_service.dart';
 
 import '../../../creators/settings_creator.dart';
 import '../../../creators/user_creator.dart';
@@ -13,13 +17,6 @@ void main() {
   final authService = MockAuthService();
   final userRepository = MockUserRepository();
   const String loggedUserId = 'u1';
-
-  HomeBloc createBloc() {
-    return HomeBloc(
-      authService: authService,
-      userRepository: userRepository,
-    );
-  }
 
   HomeState createState({
     BlocStatus status = const BlocStatusInitial(),
@@ -33,10 +30,15 @@ void main() {
     );
   }
 
+  setUpAll(() {
+    GetIt.I.registerSingleton<AuthService>(authService);
+    GetIt.I.registerSingleton<UserRepository>(userRepository);
+  });
+
   blocTest(
     'initialize, '
     "should set listener of logged user's data",
-    build: () => createBloc(),
+    build: () => HomeBloc(),
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
       userRepository.mockGetUserById(
@@ -81,7 +83,7 @@ void main() {
   blocTest(
     'sign out, '
     'should call auth service method to sign out and should emit signed out info',
-    build: () => createBloc(),
+    build: () => HomeBloc(),
     setUp: () => authService.mockSignOut(),
     act: (bloc) => bloc.add(const HomeEventSignOut()),
     expect: () => [

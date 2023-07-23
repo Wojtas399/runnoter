@@ -9,6 +9,7 @@ import '../../../../../domain/additional_model/bloc_with_status.dart';
 import '../../../../../domain/entity/user.dart';
 import '../../../../../domain/repository/user_repository.dart';
 import '../../../../../domain/service/auth_service.dart';
+import '../../../../dependency_injection.dart';
 import '../../../additional_model/bloc_state.dart';
 import '../../../additional_model/custom_exception.dart';
 import '../../../repository/blood_test_repository.dart';
@@ -29,21 +30,15 @@ class ProfileIdentitiesBloc extends BlocWithStatus<ProfileIdentitiesEvent,
   final RaceRepository _raceRepository;
 
   ProfileIdentitiesBloc({
-    required AuthService authService,
-    required UserRepository userRepository,
-    required WorkoutRepository workoutRepository,
-    required HealthMeasurementRepository healthMeasurementRepository,
-    required BloodTestRepository bloodTestRepository,
-    required RaceRepository raceRepository,
     ProfileIdentitiesState state = const ProfileIdentitiesState(
       status: BlocStatusInitial(),
     ),
-  })  : _authService = authService,
-        _userRepository = userRepository,
-        _workoutRepository = workoutRepository,
-        _healthMeasurementRepository = healthMeasurementRepository,
-        _bloodTestRepository = bloodTestRepository,
-        _raceRepository = raceRepository,
+  })  : _authService = getIt<AuthService>(),
+        _userRepository = getIt<UserRepository>(),
+        _workoutRepository = getIt<WorkoutRepository>(),
+        _healthMeasurementRepository = getIt<HealthMeasurementRepository>(),
+        _bloodTestRepository = getIt<BloodTestRepository>(),
+        _raceRepository = getIt<RaceRepository>(),
         super(state) {
     on<ProfileIdentitiesEventInitialize>(
       _initialize,

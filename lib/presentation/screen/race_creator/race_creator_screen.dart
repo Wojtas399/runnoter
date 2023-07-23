@@ -4,8 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/bloc/race_creator/race_creator_bloc.dart';
-import '../../../domain/repository/race_repository.dart';
-import '../../../domain/service/auth_service.dart';
 import '../../component/bloc_with_status_listener_component.dart';
 import '../../extension/string_extensions.dart';
 import '../../service/dialog_service.dart';
@@ -27,36 +25,12 @@ class RaceCreatorScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final DateTime? date = dateStr?.toDateTime();
 
-    return _BlocProvider(
-      raceId: raceId,
-      date: date,
+    return BlocProvider(
+      create: (_) => RaceCreatorBloc(raceId: raceId)
+        ..add(RaceCreatorEventInitialize(date: date)),
       child: const _BlocListener(
         child: RaceCreatorContent(),
       ),
-    );
-  }
-}
-
-class _BlocProvider extends StatelessWidget {
-  final String? raceId;
-  final DateTime? date;
-  final Widget child;
-
-  const _BlocProvider({
-    required this.raceId,
-    required this.date,
-    required this.child,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (BuildContext context) => RaceCreatorBloc(
-        raceId: raceId,
-        authService: context.read<AuthService>(),
-        raceRepository: context.read<RaceRepository>(),
-      )..add(RaceCreatorEventInitialize(date: date)),
-      child: child,
     );
   }
 }

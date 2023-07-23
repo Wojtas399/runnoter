@@ -4,8 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/bloc/sign_up/sign_up_bloc.dart';
-import '../../../domain/repository/user_repository.dart';
-import '../../../domain/service/auth_service.dart';
 import '../../component/bloc_with_status_listener_component.dart';
 import '../../config/navigation/router.dart';
 import '../../service/dialog_service.dart';
@@ -18,29 +16,11 @@ class SignUpScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const _BlocProvider(
-      child: _BlocListener(
+    return BlocProvider(
+      create: (_) => SignUpBloc(),
+      child: const _BlocListener(
         child: SignUpContent(),
       ),
-    );
-  }
-}
-
-class _BlocProvider extends StatelessWidget {
-  final Widget child;
-
-  const _BlocProvider({
-    required this.child,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => SignUpBloc(
-        authService: context.read<AuthService>(),
-        userRepository: context.read<UserRepository>(),
-      ),
-      child: child,
     );
   }
 }

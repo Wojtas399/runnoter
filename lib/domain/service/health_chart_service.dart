@@ -3,13 +3,12 @@ import 'package:equatable/equatable.dart';
 
 import '../../../common/date_service.dart';
 import '../../../domain/entity/health_measurement.dart';
+import '../../dependency_injection.dart';
 
 class HealthChartService {
   final DateService _dateService;
 
-  const HealthChartService({
-    required DateService dateService,
-  }) : _dateService = dateService;
+  HealthChartService() : _dateService = getIt<DateService>();
 
   (List<HealthChartPoint>, List<HealthChartPoint>) createPointsOfCharts({
     required ChartRange chartRange,

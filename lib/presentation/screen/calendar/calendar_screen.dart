@@ -5,9 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../domain/bloc/calendar/calendar_cubit.dart';
 import '../../../domain/entity/race.dart';
 import '../../../domain/entity/workout.dart';
-import '../../../domain/repository/race_repository.dart';
-import '../../../domain/repository/workout_repository.dart';
-import '../../../domain/service/auth_service.dart';
 import '../../component/body/big_body_component.dart';
 import '../../component/calendar/calendar_component.dart';
 import '../../component/calendar/calendar_component_cubit.dart';
@@ -28,8 +25,9 @@ class CalendarScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const _CubitProvider(
-      child: SingleChildScrollView(
+    return BlocProvider(
+      create: (_) => CalendarCubit(),
+      child: const SingleChildScrollView(
         child: BigBody(
           child: Paddings24(
             child: ResponsiveLayout(
@@ -40,26 +38,6 @@ class CalendarScreen extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-class _CubitProvider extends StatelessWidget {
-  final Widget child;
-
-  const _CubitProvider({
-    required this.child,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (BuildContext context) => CalendarCubit(
-        authService: context.read<AuthService>(),
-        workoutRepository: context.read<WorkoutRepository>(),
-        raceRepository: context.read<RaceRepository>(),
-      ),
-      child: child,
     );
   }
 }
@@ -118,16 +96,7 @@ class _CalendarState extends State<_Calendar> {
 
   Future<void> _onDayPressed(BuildContext context, DateTime date) async {
     final DayPreviewDialogAction? action =
-        await showDialogDependingOnScreenSize(
-      MultiRepositoryProvider(
-        providers: [
-          RepositoryProvider.value(value: context.read<AuthService>()),
-          RepositoryProvider.value(value: context.read<WorkoutRepository>()),
-          RepositoryProvider.value(value: context.read<RaceRepository>()),
-        ],
-        child: DayPreviewDialog(date: date),
-      ),
-    );
+        await showDialogDependingOnScreenSize(DayPreviewDialog(date: date));
     if (action == null) return;
     switch (action) {
       case DayPreviewDialogActionAddWorkout():

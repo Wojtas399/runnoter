@@ -4,10 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/bloc/blood_test_preview/blood_test_preview_bloc.dart';
-import '../../../domain/repository/blood_test_repository.dart';
-import '../../../domain/repository/user_repository.dart';
-import '../../../domain/service/auth_service.dart';
-import '../../../domain/use_case/get_logged_user_gender_use_case.dart';
 import '../../component/bloc_with_status_listener_component.dart';
 import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
@@ -24,37 +20,12 @@ class BloodTestPreviewScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _BlocProvider(
-      bloodTestId: bloodTestId,
+    return BlocProvider(
+      create: (_) => BloodTestPreviewBloc(bloodTestId: bloodTestId)
+        ..add(const BloodTestPreviewEventInitialize()),
       child: const _BlocListener(
         child: BloodTestPreviewContent(),
       ),
-    );
-  }
-}
-
-class _BlocProvider extends StatelessWidget {
-  final String? bloodTestId;
-  final Widget child;
-
-  const _BlocProvider({
-    required this.bloodTestId,
-    required this.child,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (BuildContext context) => BloodTestPreviewBloc(
-        authService: context.read<AuthService>(),
-        getLoggedUserGenderUseCase: GetLoggedUserGenderUseCase(
-          authService: context.read<AuthService>(),
-          userRepository: context.read<UserRepository>(),
-        ),
-        bloodTestRepository: context.read<BloodTestRepository>(),
-        bloodTestId: bloodTestId,
-      )..add(const BloodTestPreviewEventInitialize()),
-      child: child,
     );
   }
 }

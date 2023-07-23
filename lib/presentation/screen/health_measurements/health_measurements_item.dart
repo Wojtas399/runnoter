@@ -9,6 +9,7 @@ import '../../component/text/body_text_components.dart';
 import '../../extension/context_extensions.dart';
 import '../../formatter/date_formatter.dart';
 import '../../service/dialog_service.dart';
+import '../health_measurement_creator/health_measurement_creator_dialog.dart';
 
 class HealthMeasurementsItem extends StatefulWidget {
   final HealthMeasurement measurement;
@@ -77,17 +78,16 @@ class _MeasurementActions extends StatelessWidget {
       children: [
         EditDeleteActions(
           displayAsPopupMenu: context.isMobileSize,
-          onEditSelected: () => _editMeasurement(context),
+          onEditSelected: _editMeasurement,
           onDeleteSelected: () => _deleteMeasurement(context),
         ),
       ],
     );
   }
 
-  Future<void> _editMeasurement(BuildContext context) async =>
-      await showHealthMeasurementCreatorDialog(
-        context: context,
-        date: measurementDate,
+  Future<void> _editMeasurement() async =>
+      await showDialogDependingOnScreenSize(
+        HealthMeasurementCreatorDialog(date: measurementDate),
       );
 
   Future<void> _deleteMeasurement(BuildContext context) async {

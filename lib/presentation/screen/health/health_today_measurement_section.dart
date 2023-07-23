@@ -10,6 +10,7 @@ import '../../component/text/label_text_components.dart';
 import '../../component/text/title_text_components.dart';
 import '../../extension/context_extensions.dart';
 import '../../service/dialog_service.dart';
+import '../health_measurement_creator/health_measurement_creator_dialog.dart';
 
 class HealthTodayMeasurementSection extends StatelessWidget {
   const HealthTodayMeasurementSection({super.key});
@@ -53,15 +54,14 @@ class _TodayMeasurementActions extends StatelessWidget {
   Widget build(BuildContext context) {
     return EditDeleteActions(
       displayAsPopupMenu: context.isMobileSize,
-      onEditSelected: () => _editMeasurement(context),
+      onEditSelected: _editMeasurement,
       onDeleteSelected: () => _deleteMeasurement(context),
     );
   }
 
-  Future<void> _editMeasurement(BuildContext context) async =>
-      await showHealthMeasurementCreatorDialog(
-        context: context,
-        date: DateTime.now(),
+  Future<void> _editMeasurement() async =>
+      await showDialogDependingOnScreenSize(
+        HealthMeasurementCreatorDialog(date: DateTime.now()),
       );
 
   Future<void> _deleteMeasurement(BuildContext context) async {
@@ -159,15 +159,13 @@ class _TodayMeasurementButton extends StatelessWidget {
       children: [
         BigButton(
           label: Str.of(context).healthAddTodayMeasurementButton,
-          onPressed: () => _onPressed(context),
+          onPressed: _onPressed,
         ),
       ],
     );
   }
 
-  Future<void> _onPressed(BuildContext context) async =>
-      await showHealthMeasurementCreatorDialog(
-        context: context,
-        date: DateTime.now(),
+  Future<void> _onPressed() async => await showDialogDependingOnScreenSize(
+        HealthMeasurementCreatorDialog(date: DateTime.now()),
       );
 }

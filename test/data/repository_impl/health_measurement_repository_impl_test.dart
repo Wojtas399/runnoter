@@ -1,6 +1,8 @@
 import 'package:firebase/firebase.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:runnoter/common/date_service.dart';
 import 'package:runnoter/data/repository_impl/health_measurement_repository_impl.dart';
 import 'package:runnoter/domain/entity/health_measurement.dart';
 
@@ -15,16 +17,14 @@ void main() {
   late HealthMeasurementRepositoryImpl repository;
   const String userId = 'u1';
 
-  HealthMeasurementRepositoryImpl createRepository({
-    List<HealthMeasurement>? initialState,
-  }) =>
-      HealthMeasurementRepositoryImpl(
-        dateService: dateService,
-        firebaseHealthMeasurementService: firebaseHealthMeasurementService,
-        initialState: initialState,
-      );
+  setUpAll(() {
+    GetIt.I.registerFactory<DateService>(() => dateService);
+    GetIt.I.registerFactory<FirebaseHealthMeasurementService>(
+      () => firebaseHealthMeasurementService,
+    );
+  });
 
-  setUp(() => repository = createRepository());
+  setUp(() => repository = HealthMeasurementRepositoryImpl());
 
   tearDown(() {
     reset(dateService);
@@ -42,7 +42,7 @@ void main() {
         date: date,
         userId: userId,
       );
-      repository = createRepository(
+      repository = HealthMeasurementRepositoryImpl(
         initialState: [
           createHealthMeasurement(
             date: DateTime(2023, 2, 10),
@@ -98,7 +98,7 @@ void main() {
       firebaseHealthMeasurementService.mockLoadMeasurementByDate(
         healthMeasurementDto: healthMeasurementDto,
       );
-      repository = createRepository(
+      repository = HealthMeasurementRepositoryImpl(
         initialState: [
           createHealthMeasurement(
             date: DateTime(2023, 2, 10),
@@ -205,7 +205,8 @@ void main() {
       firebaseHealthMeasurementService.mockLoadMeasurementsByDateRange(
         healthMeasurementDtos: loadedMeasurementDtos,
       );
-      repository = createRepository(initialState: existingMeasurements);
+      repository =
+          HealthMeasurementRepositoryImpl(initialState: existingMeasurements);
 
       Stream<List<HealthMeasurement>?> measurements$ =
           repository.getMeasurementsByDateRange(
@@ -283,7 +284,8 @@ void main() {
       firebaseHealthMeasurementService.mockLoadAllMeasurements(
         healthMeasurementDtos: loadedMeasurementDtos,
       );
-      repository = createRepository(initialState: existingMeasurements);
+      repository =
+          HealthMeasurementRepositoryImpl(initialState: existingMeasurements);
 
       Stream<List<HealthMeasurement>?> measurements$ =
           repository.getAllMeasurements(userId: userId);
@@ -308,7 +310,7 @@ void main() {
     'should return true',
     () async {
       final DateTime date = DateTime(2023, 7, 2);
-      repository = createRepository(
+      repository = HealthMeasurementRepositoryImpl(
         initialState: [
           createHealthMeasurement(userId: userId, date: date),
         ],
@@ -341,7 +343,7 @@ void main() {
         restingHeartRate: 50,
         fastingWeight: 60,
       );
-      repository = createRepository(
+      repository = HealthMeasurementRepositoryImpl(
         initialState: [
           createHealthMeasurement(userId: 'u2', date: date),
         ],
@@ -376,7 +378,7 @@ void main() {
     'should return false',
     () async {
       final DateTime date = DateTime(2023, 7, 2);
-      repository = createRepository(
+      repository = HealthMeasurementRepositoryImpl(
         initialState: [
           createHealthMeasurement(userId: 'u2', date: date),
         ],
@@ -413,7 +415,7 @@ void main() {
       firebaseHealthMeasurementService.mockAddMeasurement(
         addedMeasurementDto: healthMeasurementDto,
       );
-      repository = createRepository();
+      repository = HealthMeasurementRepositoryImpl();
 
       final Stream<List<HealthMeasurement>?> state$ = repository.dataStream$;
       repository.addMeasurement(measurement: healthMeasurement);
@@ -471,7 +473,7 @@ void main() {
       firebaseHealthMeasurementService.mockUpdateMeasurement(
         updatedMeasurementDto: updatedHealthMeasurementDto,
       );
-      repository = createRepository(
+      repository = HealthMeasurementRepositoryImpl(
         initialState: existingMeasurements,
       );
 
@@ -529,7 +531,7 @@ void main() {
         () => dateService.areDatesTheSame(date, date),
       ).thenReturn(true);
       firebaseHealthMeasurementService.mockDeleteMeasurement();
-      repository = createRepository(
+      repository = HealthMeasurementRepositoryImpl(
         initialState: existingMeasurements,
       );
 
@@ -587,7 +589,7 @@ void main() {
       firebaseHealthMeasurementService.mockDeleteAllUserMeasurements(
         idsOfDeletedMeasurements: ['2023-02-10', '2023-02,12'],
       );
-      repository = createRepository(
+      repository = HealthMeasurementRepositoryImpl(
         initialState: existingMeasurements,
       );
 

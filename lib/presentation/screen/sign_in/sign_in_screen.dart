@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/bloc/sign_in/sign_in_bloc.dart';
-import '../../../domain/service/auth_service.dart';
 import '../../component/bloc_with_status_listener_component.dart';
 import '../../config/navigation/router.dart';
 import '../../service/dialog_service.dart';
@@ -35,11 +34,8 @@ class _BlocProvider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (BuildContext context) => SignInBloc(
-        authService: context.read<AuthService>(),
-      )..add(
-          const SignInEventInitialize(),
-        ),
+      create: (BuildContext context) =>
+          SignInBloc()..add(const SignInEventInitialize()),
       child: child,
     );
   }

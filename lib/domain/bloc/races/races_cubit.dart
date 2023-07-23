@@ -4,6 +4,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
+import '../../../dependency_injection.dart';
 import '../../entity/race.dart';
 import '../../repository/race_repository.dart';
 import '../../service/auth_service.dart';
@@ -13,11 +14,9 @@ class RacesCubit extends Cubit<List<RacesFromYear>?> {
   final RaceRepository _raceRepository;
   StreamSubscription<List<Race>?>? _racesListener;
 
-  RacesCubit({
-    required AuthService authService,
-    required RaceRepository raceRepository,
-  })  : _authService = authService,
-        _raceRepository = raceRepository,
+  RacesCubit()
+      : _authService = getIt<AuthService>(),
+        _raceRepository = getIt<RaceRepository>(),
         super(null);
 
   @override

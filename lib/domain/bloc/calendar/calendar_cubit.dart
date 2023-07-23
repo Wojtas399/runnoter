@@ -4,6 +4,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
+import '../../../dependency_injection.dart';
 import '../../entity/race.dart';
 import '../../entity/workout.dart';
 import '../../repository/race_repository.dart';
@@ -17,13 +18,10 @@ class CalendarCubit extends Cubit<CalendarState> {
   StreamSubscription? _listener;
 
   CalendarCubit({
-    required AuthService authService,
-    required WorkoutRepository workoutRepository,
-    required RaceRepository raceRepository,
     CalendarState state = const CalendarState(),
-  })  : _authService = authService,
-        _workoutRepository = workoutRepository,
-        _raceRepository = raceRepository,
+  })  : _authService = getIt<AuthService>(),
+        _workoutRepository = getIt<WorkoutRepository>(),
+        _raceRepository = getIt<RaceRepository>(),
         super(state);
 
   @override

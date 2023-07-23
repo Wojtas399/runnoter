@@ -4,6 +4,7 @@ import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
+import '../../../dependency_injection.dart';
 import '../../additional_model/bloc_state.dart';
 import '../../additional_model/bloc_status.dart';
 import '../../additional_model/bloc_with_status.dart';
@@ -21,14 +22,12 @@ class RacePreviewBloc extends BlocWithStatus<RacePreviewEvent, RacePreviewState,
   final String? raceId;
 
   RacePreviewBloc({
-    required AuthService authService,
-    required RaceRepository raceRepository,
     required this.raceId,
     RacePreviewState state = const RacePreviewState(
       status: BlocStatusInitial(),
     ),
-  })  : _authService = authService,
-        _raceRepository = raceRepository,
+  })  : _authService = getIt<AuthService>(),
+        _raceRepository = getIt<RaceRepository>(),
         super(state) {
     on<RacePreviewEventInitialize>(_initialize, transformer: restartable());
     on<RacePreviewEventDeleteRace>(_deleteRace);

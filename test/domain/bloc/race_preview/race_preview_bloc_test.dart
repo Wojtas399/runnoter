@@ -1,9 +1,12 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/bloc/race_preview/race_preview_bloc.dart';
 import 'package:runnoter/domain/entity/race.dart';
+import 'package:runnoter/domain/repository/race_repository.dart';
+import 'package:runnoter/domain/service/auth_service.dart';
 
 import '../../../creators/race_creator.dart';
 import '../../../mock/domain/repository/mock_race_repository.dart';
@@ -20,8 +23,6 @@ void main() {
     Race? race,
   }) =>
       RacePreviewBloc(
-        authService: authService,
-        raceRepository: raceRepository,
         raceId: raceId,
         state: RacePreviewState(
           status: const BlocStatusInitial(),
@@ -37,6 +38,11 @@ void main() {
         status: status,
         race: race,
       );
+
+  setUpAll(() {
+    GetIt.I.registerSingleton<AuthService>(authService);
+    GetIt.I.registerSingleton<RaceRepository>(raceRepository);
+  });
 
   tearDown(() {
     reset(authService);

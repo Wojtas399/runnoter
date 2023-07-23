@@ -5,6 +5,7 @@ import '../../../../domain/additional_model/bloc_state.dart';
 import '../../../../domain/additional_model/bloc_status.dart';
 import '../../../../domain/additional_model/bloc_with_status.dart';
 import '../../../../domain/entity/run_status.dart';
+import '../../../dependency_injection.dart';
 import '../../repository/race_repository.dart';
 import '../../repository/workout_repository.dart';
 import '../../service/auth_service.dart';
@@ -26,17 +27,14 @@ class RunStatusCreatorBloc extends BlocWithStatus<RunStatusCreatorEvent,
   final String? entityId;
 
   RunStatusCreatorBloc({
-    required AuthService authService,
-    required WorkoutRepository workoutRepository,
-    required RaceRepository raceRepository,
     required this.entityType,
     required this.entityId,
     RunStatusCreatorState state = const RunStatusCreatorState(
       status: BlocStatusInitial(),
     ),
-  })  : _authService = authService,
-        _workoutRepository = workoutRepository,
-        _raceRepository = raceRepository,
+  })  : _authService = getIt<AuthService>(),
+        _workoutRepository = getIt<WorkoutRepository>(),
+        _raceRepository = getIt<RaceRepository>(),
         super(state) {
     on<RunStatusCreatorEventInitialize>(_initialize);
     on<RunStatusCreatorEventRunStatusTypeChanged>(_runStatusTypeChanged);

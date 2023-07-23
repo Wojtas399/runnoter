@@ -4,8 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/bloc/workout_creator/workout_creator_bloc.dart';
-import '../../../domain/repository/workout_repository.dart';
-import '../../../domain/service/auth_service.dart';
 import '../../component/bloc_with_status_listener_component.dart';
 import '../../extension/string_extensions.dart';
 import '../../service/dialog_service.dart';
@@ -51,8 +49,6 @@ class _BlocProvider extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (BuildContext context) => WorkoutCreatorBloc(
-        authService: context.read<AuthService>(),
-        workoutRepository: context.read<WorkoutRepository>(),
         date: date,
         workoutId: workoutId,
       )..add(const WorkoutCreatorEventInitialize()),

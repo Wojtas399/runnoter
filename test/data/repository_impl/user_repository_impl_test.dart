@@ -1,5 +1,6 @@
 import 'package:firebase/firebase.dart' as db;
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/data/repository_impl/user_repository_impl.dart';
 import 'package:runnoter/domain/entity/settings.dart';
@@ -7,36 +8,35 @@ import 'package:runnoter/domain/entity/user.dart';
 
 import '../../creators/settings_creator.dart';
 import '../../creators/user_creator.dart';
+import '../../mock/firebase/mock_firebase_activities_settings_service.dart';
 import '../../mock/firebase/mock_firebase_appearance_settings_service.dart';
 import '../../mock/firebase/mock_firebase_user_service.dart';
-import '../../mock/firebase/mock_firebase_workout_settings_service.dart';
 
 void main() {
   final dbUserService = MockFirebaseUserService();
   final dbAppearanceSettingsService = MockFirebaseAppearanceSettingsService();
-  final dbWorkoutSettingsService = MockFirebaseWorkoutSettingsService();
+  final dbActivitiesSettingsService = MockFirebaseActivitiesSettingsService();
   late UserRepositoryImpl repository;
   const String userId = 'u1';
 
-  UserRepositoryImpl createRepository({
-    List<User>? initialState,
-  }) {
-    return UserRepositoryImpl(
-      firebaseUserService: dbUserService,
-      firebaseAppearanceSettingsService: dbAppearanceSettingsService,
-      firebaseWorkoutSettingsService: dbWorkoutSettingsService,
-      initialState: initialState,
+  setUpAll(() {
+    GetIt.I.registerFactory<db.FirebaseUserService>(() => dbUserService);
+    GetIt.I.registerFactory<db.FirebaseAppearanceSettingsService>(
+      () => dbAppearanceSettingsService,
     );
-  }
+    GetIt.I.registerFactory<db.FirebaseActivitiesSettingsService>(
+      () => dbActivitiesSettingsService,
+    );
+  });
 
   setUp(() {
-    repository = createRepository();
+    repository = UserRepositoryImpl();
   });
 
   tearDown(() {
     reset(dbUserService);
     reset(dbAppearanceSettingsService);
-    reset(dbWorkoutSettingsService);
+    reset(dbActivitiesSettingsService);
   });
 
   test(
@@ -45,9 +45,7 @@ void main() {
     'should emit user from repository',
     () {
       final User expectedUser = createUser(id: userId);
-      repository = createRepository(
-        initialState: [expectedUser],
-      );
+      repository = UserRepositoryImpl(initialState: [expectedUser]);
 
       final Stream<User?> user$ = repository.getUserById(userId: userId);
 
@@ -95,7 +93,7 @@ void main() {
       dbAppearanceSettingsService.mockLoadSettingsByUserId(
         appearanceSettingsDto: appearanceSettingsDto,
       );
-      dbWorkoutSettingsService.mockLoadSettingsByUserId(
+      dbActivitiesSettingsService.mockLoadSettingsByUserId(
         workoutSettingsDto: workoutSettingsDto,
       );
 
@@ -124,7 +122,7 @@ void main() {
       );
       dbUserService.mockAddUserPersonalData();
       dbAppearanceSettingsService.mockAddSettings();
-      dbWorkoutSettingsService.mockAddSettings();
+      dbActivitiesSettingsService.mockAddSettings();
 
       await repository.addUser(user: userToAdd);
       final Stream<User?> user$ = repository.getUserById(
@@ -152,7 +150,7 @@ void main() {
         ),
       ).called(1);
       verify(
-        () => dbWorkoutSettingsService.addSettings(
+        () => dbActivitiesSettingsService.addSettings(
           workoutSettingsDto: const db.WorkoutSettingsDto(
             userId: userId,
             distanceUnit: db.DistanceUnit.kilometers,
@@ -174,9 +172,7 @@ void main() {
       ];
       const String newName = 'name';
       const String newSurname = 'surname';
-      repository = createRepository(
-        initialState: existingUsers,
-      );
+      repository = UserRepositoryImpl(initialState: existingUsers);
       dbUserService.mockLoadUserById();
 
       await repository.updateUserIdentities(
@@ -217,7 +213,7 @@ void main() {
         surname: 'surname1',
         settings: userSettings,
       );
-      repository = createRepository(
+      repository = UserRepositoryImpl(
         initialState: [existingUser],
       );
       dbUserService.mockUpdateUserData();
@@ -272,7 +268,7 @@ void main() {
         surname: newSurname,
         settings: userSettings,
       );
-      repository = createRepository(
+      repository = UserRepositoryImpl(
         initialState: [existingUser],
       );
       dbUserService.mockUpdateUserData(userDto: updatedUserDto);
@@ -308,7 +304,7 @@ void main() {
       const Language newLanguage = Language.english;
       const DistanceUnit newDistanceUnit = DistanceUnit.miles;
       const PaceUnit newPaceUnit = PaceUnit.minutesPerMile;
-      repository = createRepository(
+      repository = UserRepositoryImpl(
         initialState: existingUsers,
       );
       dbUserService.mockLoadUserById();
@@ -331,7 +327,7 @@ void main() {
         ),
       );
       verifyNever(
-        () => dbWorkoutSettingsService.updateSettings(
+        () => dbActivitiesSettingsService.updateSettings(
           userId: userId,
           distanceUnit: any(named: 'distanceUnit'),
           paceUnit: any(named: 'paceUnit'),
@@ -356,8 +352,8 @@ void main() {
       const db.DistanceUnit newDbDistanceUnit = db.DistanceUnit.miles;
       const db.PaceUnit newDbPaceUnit = db.PaceUnit.minutesPerMile;
       dbAppearanceSettingsService.mockUpdateSettings();
-      dbWorkoutSettingsService.mockUpdateSettings();
-      repository = createRepository(
+      dbActivitiesSettingsService.mockUpdateSettings();
+      repository = UserRepositoryImpl(
         initialState: [existingUser],
       );
 
@@ -379,7 +375,7 @@ void main() {
         ),
       ).called(1);
       verify(
-        () => dbWorkoutSettingsService.updateSettings(
+        () => dbActivitiesSettingsService.updateSettings(
           userId: userId,
           distanceUnit: newDbDistanceUnit,
           paceUnit: newDbPaceUnit,
@@ -424,10 +420,10 @@ void main() {
       dbAppearanceSettingsService.mockUpdateSettings(
         updatedAppearanceSettingsDto: updatedAppearanceSettingsDto,
       );
-      dbWorkoutSettingsService.mockUpdateSettings(
+      dbActivitiesSettingsService.mockUpdateSettings(
         updatedWorkoutSettingsDto: updatedWorkoutSettingsDto,
       );
-      repository = createRepository(
+      repository = UserRepositoryImpl(
         initialState: [existingUser],
       );
 
@@ -449,7 +445,7 @@ void main() {
         ),
       ).called(1);
       verify(
-        () => dbWorkoutSettingsService.updateSettings(
+        () => dbActivitiesSettingsService.updateSettings(
           userId: userId,
           distanceUnit: newDbDistanceUnit,
           paceUnit: newDbPaceUnit,
@@ -466,8 +462,8 @@ void main() {
       dbUserService.mockLoadUserById();
       dbUserService.mockDeleteUserData();
       dbAppearanceSettingsService.mockDeleteSettingsForUser();
-      dbWorkoutSettingsService.mockDeleteSettingsForUser();
-      repository = createRepository(
+      dbActivitiesSettingsService.mockDeleteSettingsForUser();
+      repository = UserRepositoryImpl(
         initialState: [user],
       );
 
@@ -487,7 +483,7 @@ void main() {
         ),
       ).called(1);
       verify(
-        () => dbWorkoutSettingsService.deleteSettingsForUser(
+        () => dbActivitiesSettingsService.deleteSettingsForUser(
           userId: user.id,
         ),
       ).called(1);

@@ -11,6 +11,7 @@ import '../../../../domain/entity/workout.dart';
 import '../../../../domain/entity/workout_stage.dart';
 import '../../../../domain/repository/workout_repository.dart';
 import '../../../../domain/service/auth_service.dart';
+import '../../../dependency_injection.dart';
 import '../../service/list_service.dart';
 
 part 'workout_creator_event.dart';
@@ -24,16 +25,14 @@ class WorkoutCreatorBloc extends BlocWithStatus<WorkoutCreatorEvent,
   final String? workoutId;
 
   WorkoutCreatorBloc({
-    required AuthService authService,
-    required WorkoutRepository workoutRepository,
     this.date,
     this.workoutId,
     WorkoutCreatorState state = const WorkoutCreatorState(
       status: BlocStatusInitial(),
       stages: [],
     ),
-  })  : _authService = authService,
-        _workoutRepository = workoutRepository,
+  })  : _authService = getIt<AuthService>(),
+        _workoutRepository = getIt<WorkoutRepository>(),
         super(state) {
     on<WorkoutCreatorEventInitialize>(_initialize);
     on<WorkoutCreatorEventWorkoutNameChanged>(_workoutNameChanged);

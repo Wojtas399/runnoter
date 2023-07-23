@@ -1,9 +1,14 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:runnoter/common/date_service.dart';
 import 'package:runnoter/domain/bloc/current_week/current_week_cubit.dart';
 import 'package:runnoter/domain/entity/run_status.dart';
 import 'package:runnoter/domain/entity/workout_stage.dart';
+import 'package:runnoter/domain/repository/race_repository.dart';
+import 'package:runnoter/domain/repository/workout_repository.dart';
+import 'package:runnoter/domain/service/auth_service.dart';
 
 import '../../../creators/race_creator.dart';
 import '../../../creators/run_status_creator.dart';
@@ -20,17 +25,12 @@ void main() {
   final raceRepository = MockRaceRepository();
   const String loggedUserId = 'u1';
 
-  CurrentWeekCubit createCubit({
-    List<Day>? days,
-  }) {
-    return CurrentWeekCubit(
-      dateService: dateService,
-      authService: authService,
-      workoutRepository: workoutRepository,
-      raceRepository: raceRepository,
-      days: days,
-    );
-  }
+  setUpAll(() {
+    GetIt.I.registerFactory<DateService>(() => dateService);
+    GetIt.I.registerSingleton<AuthService>(authService);
+    GetIt.I.registerSingleton<WorkoutRepository>(workoutRepository);
+    GetIt.I.registerSingleton<RaceRepository>(raceRepository);
+  });
 
   tearDown(() {
     reset(dateService);
@@ -42,7 +42,7 @@ void main() {
   blocTest(
     'number of activities, '
     'should sum activities from all days',
-    build: () => createCubit(
+    build: () => CurrentWeekCubit(
       days: [
         Day(date: DateTime(2023, 4, 3), isToday: false),
         Day(date: DateTime(2023, 4, 4), isToday: false),
@@ -96,7 +96,7 @@ void main() {
   blocTest(
     'scheduled total distance, '
     'should sum distance of all activities from all days',
-    build: () => createCubit(
+    build: () => CurrentWeekCubit(
       days: [
         Day(date: DateTime(2023, 4, 3), isToday: false),
         Day(date: DateTime(2023, 4, 4), isToday: false),
@@ -172,7 +172,7 @@ void main() {
   blocTest(
     'covered total distance, '
     'should sum distance of covered distance of all activities from all days',
-    build: () => createCubit(
+    build: () => CurrentWeekCubit(
       days: [
         Day(date: DateTime(2023, 4, 3), isToday: false),
         Day(date: DateTime(2023, 4, 4), isToday: false),
@@ -231,7 +231,7 @@ void main() {
   blocTest(
     'initialize, '
     "should set listener of logged user's workouts and races from week and should set days from current week in state",
-    build: () => createCubit(),
+    build: () => CurrentWeekCubit(),
     setUp: () {
       dateService.mockGetToday(todayDate: DateTime(2023, 4, 5));
       dateService.mockGetFirstDayOfTheWeek(date: DateTime(2023, 4, 3));

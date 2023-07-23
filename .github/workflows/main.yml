@@ -49,6 +49,8 @@ jobs:
           run: touch firebase_options.dart && echo "${{ secrets.FIREBASE_OPTIONS }}" > firebase_options.dart
         - name: Flutter pub get
           run: flutter pub get
+        - name: Flutter run build_runner
+          run: flutter packages pub run build_runner build
         - name: Flutter test
           run: flutter test
   flutter_test_firebase:
