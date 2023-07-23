@@ -18,11 +18,10 @@ class CalendarCubit extends Cubit<CalendarState> {
   StreamSubscription? _listener;
 
   CalendarCubit({
-    required RaceRepository raceRepository,
     CalendarState state = const CalendarState(),
   })  : _authService = getIt<AuthService>(),
         _workoutRepository = getIt<WorkoutRepository>(),
-        _raceRepository = raceRepository,
+        _raceRepository = getIt<RaceRepository>(),
         super(state);
 
   @override

@@ -23,12 +23,11 @@ class CurrentWeekCubit extends Cubit<List<Day>?> {
 
   CurrentWeekCubit({
     required DateService dateService,
-    required RaceRepository raceRepository,
     List<Day>? days,
   })  : _dateService = dateService,
         _authService = getIt<AuthService>(),
         _workoutRepository = getIt<WorkoutRepository>(),
-        _raceRepository = raceRepository,
+        _raceRepository = getIt<RaceRepository>(),
         super(days);
 
   int? get numberOfActivities =>

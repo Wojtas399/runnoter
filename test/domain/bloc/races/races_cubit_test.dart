@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/bloc/races/races_cubit.dart';
+import 'package:runnoter/domain/repository/race_repository.dart';
 import 'package:runnoter/domain/service/auth_service.dart';
 
 import '../../../creators/race_creator.dart';
@@ -14,12 +15,9 @@ void main() {
   final raceRepository = MockRaceRepository();
   const String loggedUserId = 'u1';
 
-  RacesCubit createCubit() => RacesCubit(
-        raceRepository: raceRepository,
-      );
-
   setUpAll(() {
     GetIt.I.registerSingleton<AuthService>(authService);
+    GetIt.I.registerSingleton<RaceRepository>(raceRepository);
   });
 
   tearDown(() {
@@ -31,7 +29,7 @@ void main() {
     'initialize, '
     'logged user does not exist, '
     'should do nothing',
-    build: () => createCubit(),
+    build: () => RacesCubit(),
     setUp: () => authService.mockGetLoggedUserId(),
     act: (cubit) => cubit.initialize(),
     expect: () => [],
@@ -43,7 +41,7 @@ void main() {
   blocTest(
     'initialize, '
     'should set listener of races belonging to logged user, should sort races by descending by date and emit them',
-    build: () => createCubit(),
+    build: () => RacesCubit(),
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
       raceRepository.mockGetAllRaces(

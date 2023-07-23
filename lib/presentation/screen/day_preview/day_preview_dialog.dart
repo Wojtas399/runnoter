@@ -5,7 +5,6 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 import '../../../common/date_service.dart';
 import '../../../domain/bloc/day_preview/day_preview_cubit.dart';
-import '../../../domain/repository/race_repository.dart';
 import '../../component/padding/paddings_24.dart';
 import '../../component/responsive_layout_component.dart';
 import '../../extension/context_extensions.dart';
@@ -48,7 +47,6 @@ class _CubitProvider extends StatelessWidget {
     return BlocProvider(
       create: (BuildContext context) => DayPreviewCubit(
         date: date,
-        raceRepository: context.read<RaceRepository>(),
         dateService: DateService(),
       )..initialize(),
       child: child,

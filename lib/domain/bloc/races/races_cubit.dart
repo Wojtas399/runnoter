@@ -14,10 +14,9 @@ class RacesCubit extends Cubit<List<RacesFromYear>?> {
   final RaceRepository _raceRepository;
   StreamSubscription<List<Race>?>? _racesListener;
 
-  RacesCubit({
-    required RaceRepository raceRepository,
-  })  : _authService = getIt<AuthService>(),
-        _raceRepository = raceRepository,
+  RacesCubit()
+      : _authService = getIt<AuthService>(),
+        _raceRepository = getIt<RaceRepository>(),
         super(null);
 
   @override

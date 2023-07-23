@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/bloc/calendar/calendar_cubit.dart';
+import 'package:runnoter/domain/repository/race_repository.dart';
 import 'package:runnoter/domain/repository/workout_repository.dart';
 import 'package:runnoter/domain/service/auth_service.dart';
 
@@ -18,13 +19,10 @@ void main() {
   final raceRepository = MockRaceRepository();
   const String loggedUserId = 'u1';
 
-  CalendarCubit createCubit() => CalendarCubit(
-        raceRepository: raceRepository,
-      );
-
   setUpAll(() {
     GetIt.I.registerSingleton<AuthService>(authService);
     GetIt.I.registerSingleton<WorkoutRepository>(workoutRepository);
+    GetIt.I.registerSingleton<RaceRepository>(raceRepository);
   });
 
   tearDown(() {
@@ -36,7 +34,7 @@ void main() {
   blocTest(
     'month changed, '
     'should set new listener of workouts and races from new month',
-    build: () => createCubit(),
+    build: () => CalendarCubit(),
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
       workoutRepository.mockGetWorkoutsByDateRange(

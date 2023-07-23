@@ -5,6 +5,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/bloc/race_preview/race_preview_bloc.dart';
 import 'package:runnoter/domain/entity/race.dart';
+import 'package:runnoter/domain/repository/race_repository.dart';
 import 'package:runnoter/domain/service/auth_service.dart';
 
 import '../../../creators/race_creator.dart';
@@ -22,7 +23,6 @@ void main() {
     Race? race,
   }) =>
       RacePreviewBloc(
-        raceRepository: raceRepository,
         raceId: raceId,
         state: RacePreviewState(
           status: const BlocStatusInitial(),
@@ -41,6 +41,7 @@ void main() {
 
   setUpAll(() {
     GetIt.I.registerSingleton<AuthService>(authService);
+    GetIt.I.registerSingleton<RaceRepository>(raceRepository);
   });
 
   tearDown(() {

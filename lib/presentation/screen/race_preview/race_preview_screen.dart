@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/bloc/race_preview/race_preview_bloc.dart';
-import '../../../domain/repository/race_repository.dart';
 import '../../component/bloc_with_status_listener_component.dart';
 import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
@@ -21,32 +20,12 @@ class RacePreviewScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _BlocProvider(
-      raceId: raceId,
+    return BlocProvider(
+      create: (_) => RacePreviewBloc(raceId: raceId)
+        ..add(const RacePreviewEventInitialize()),
       child: const _BlocListener(
         child: RacePreviewContent(),
       ),
-    );
-  }
-}
-
-class _BlocProvider extends StatelessWidget {
-  final String? raceId;
-  final Widget child;
-
-  const _BlocProvider({
-    required this.raceId,
-    required this.child,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (BuildContext context) => RacePreviewBloc(
-        raceRepository: context.read<RaceRepository>(),
-        raceId: raceId,
-      )..add(const RacePreviewEventInitialize()),
-      child: child,
     );
   }
 }

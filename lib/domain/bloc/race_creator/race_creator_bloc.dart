@@ -21,12 +21,11 @@ class RaceCreatorBloc extends BlocWithStatus<RaceCreatorEvent, RaceCreatorState,
 
   RaceCreatorBloc({
     this.raceId,
-    required RaceRepository raceRepository,
     RaceCreatorState state = const RaceCreatorState(
       status: BlocStatusInitial(),
     ),
   })  : _authService = getIt<AuthService>(),
-        _raceRepository = raceRepository,
+        _raceRepository = getIt<RaceRepository>(),
         super(state) {
     on<RaceCreatorEventInitialize>(_initialize);
     on<RaceCreatorEventNameChanged>(_nameChanged);

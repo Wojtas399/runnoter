@@ -22,13 +22,12 @@ class RacePreviewBloc extends BlocWithStatus<RacePreviewEvent, RacePreviewState,
   final String? raceId;
 
   RacePreviewBloc({
-    required RaceRepository raceRepository,
     required this.raceId,
     RacePreviewState state = const RacePreviewState(
       status: BlocStatusInitial(),
     ),
   })  : _authService = getIt<AuthService>(),
-        _raceRepository = raceRepository,
+        _raceRepository = getIt<RaceRepository>(),
         super(state) {
     on<RacePreviewEventInitialize>(_initialize, transformer: restartable());
     on<RacePreviewEventDeleteRace>(_deleteRace);

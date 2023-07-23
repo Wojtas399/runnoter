@@ -5,7 +5,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/bloc/profile/identities/profile_identities_bloc.dart';
 import '../../../domain/bloc/profile/settings/profile_settings_bloc.dart';
-import '../../../domain/repository/race_repository.dart';
 import '../../component/bloc_with_status_listener_component.dart';
 import '../../config/navigation/router.dart';
 import '../../service/dialog_service.dart';
@@ -18,49 +17,20 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const _IdentitiesBlocProvider(
-      child: _SettingsBlocProvider(
-        child: _IdentitiesBlocListener(
+    return BlocProvider(
+      create: (_) => ProfileIdentitiesBloc()
+        ..add(
+          const ProfileIdentitiesEventInitialize(),
+        ),
+      child: BlocProvider(
+        create: (_) => ProfileSettingsBloc()
+          ..add(
+            const ProfileSettingsEventInitialize(),
+          ),
+        child: const _IdentitiesBlocListener(
           child: ProfileContent(),
         ),
       ),
-    );
-  }
-}
-
-class _IdentitiesBlocProvider extends StatelessWidget {
-  final Widget child;
-
-  const _IdentitiesBlocProvider({
-    required this.child,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocProvider<ProfileIdentitiesBloc>(
-      create: (BuildContext context) => ProfileIdentitiesBloc(
-        raceRepository: context.read<RaceRepository>(),
-      )..add(
-          const ProfileIdentitiesEventInitialize(),
-        ),
-      child: child,
-    );
-  }
-}
-
-class _SettingsBlocProvider extends StatelessWidget {
-  final Widget child;
-
-  const _SettingsBlocProvider({
-    required this.child,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocProvider<ProfileSettingsBloc>(
-      create: (_) =>
-          ProfileSettingsBloc()..add(const ProfileSettingsEventInitialize()),
-      child: child,
     );
   }
 }

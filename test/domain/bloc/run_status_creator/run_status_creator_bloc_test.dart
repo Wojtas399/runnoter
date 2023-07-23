@@ -5,6 +5,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/bloc/run_status_creator/run_status_creator_bloc.dart';
 import 'package:runnoter/domain/entity/run_status.dart';
+import 'package:runnoter/domain/repository/race_repository.dart';
 import 'package:runnoter/domain/repository/workout_repository.dart';
 import 'package:runnoter/domain/service/auth_service.dart';
 
@@ -33,7 +34,6 @@ void main() {
     String? comment,
   }) =>
       RunStatusCreatorBloc(
-        raceRepository: raceRepository,
         entityType: entityType,
         entityId: entityId,
         state: RunStatusCreatorState(
@@ -74,6 +74,7 @@ void main() {
   setUpAll(() {
     GetIt.I.registerSingleton<AuthService>(authService);
     GetIt.I.registerSingleton<WorkoutRepository>(workoutRepository);
+    GetIt.I.registerSingleton<RaceRepository>(raceRepository);
     registerFallbackValue(const RunStatusPending());
   });
 

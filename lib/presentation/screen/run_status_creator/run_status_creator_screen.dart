@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/bloc/run_status_creator/run_status_creator_bloc.dart';
-import '../../../domain/repository/race_repository.dart';
 import '../../component/bloc_with_status_listener_component.dart';
 import '../../service/dialog_service.dart';
 import 'run_status_creator_content.dart';
@@ -22,38 +21,16 @@ class RunStatusCreatorScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _BlocProvider(
-      entityType: entityType != null
-          ? RunStatusCreatorEntityType.values.byName(entityType!)
-          : null,
-      entityId: entityId,
+    return BlocProvider(
+      create: (_) => RunStatusCreatorBloc(
+        entityType: entityType != null
+            ? RunStatusCreatorEntityType.values.byName(entityType!)
+            : null,
+        entityId: entityId,
+      )..add(const RunStatusCreatorEventInitialize()),
       child: const _BlocListener(
         child: RunStatusCreatorContent(),
       ),
-    );
-  }
-}
-
-class _BlocProvider extends StatelessWidget {
-  final RunStatusCreatorEntityType? entityType;
-  final String? entityId;
-  final Widget child;
-
-  const _BlocProvider({
-    required this.entityType,
-    required this.entityId,
-    required this.child,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (BuildContext context) => RunStatusCreatorBloc(
-        raceRepository: context.read<RaceRepository>(),
-        entityType: entityType,
-        entityId: entityId,
-      )..add(const RunStatusCreatorEventInitialize()),
-      child: child,
     );
   }
 }

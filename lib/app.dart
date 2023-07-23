@@ -7,7 +7,6 @@ import 'package:syncfusion_localizations/syncfusion_localizations.dart';
 import 'dependency_injection.dart';
 import 'presentation/config/navigation/router.dart';
 import 'presentation/config/theme.dart';
-import 'presentation/provider/repositories_provider.dart';
 import 'presentation/provider/services_provider.dart';
 import 'presentation/service/language_service.dart';
 import 'presentation/service/theme_service.dart';
@@ -24,26 +23,24 @@ class App extends StatelessWidget {
         builder: (_, ThemeMode themeMode) {
           return BlocBuilder<LanguageService, AppLanguage?>(
             builder: (BuildContext context, AppLanguage? language) {
-              return RepositoriesProvider(
-                child: MaterialApp.router(
-                  title: 'Runnoter',
-                  localizationsDelegates: const [
-                    Str.delegate,
-                    GlobalMaterialLocalizations.delegate,
-                    GlobalWidgetsLocalizations.delegate,
-                    GlobalCupertinoLocalizations.delegate,
-                    SfGlobalLocalizations.delegate,
-                  ],
-                  supportedLocales: [
-                    AppLanguage.polish.locale!,
-                    AppLanguage.english.locale!,
-                  ],
-                  locale: language?.locale,
-                  themeMode: themeMode,
-                  theme: GlobalTheme.lightTheme,
-                  darkTheme: GlobalTheme.darkTheme,
-                  routerConfig: getIt<AppRouter>().config(),
-                ),
+              return MaterialApp.router(
+                title: 'Runnoter',
+                localizationsDelegates: const [
+                  Str.delegate,
+                  GlobalMaterialLocalizations.delegate,
+                  GlobalWidgetsLocalizations.delegate,
+                  GlobalCupertinoLocalizations.delegate,
+                  SfGlobalLocalizations.delegate,
+                ],
+                supportedLocales: [
+                  AppLanguage.polish.locale!,
+                  AppLanguage.english.locale!,
+                ],
+                locale: language?.locale,
+                themeMode: themeMode,
+                theme: GlobalTheme.lightTheme,
+                darkTheme: GlobalTheme.darkTheme,
+                routerConfig: getIt<AppRouter>().config(),
               );
             },
           );

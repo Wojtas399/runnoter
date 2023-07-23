@@ -22,12 +22,11 @@ class DayPreviewCubit extends Cubit<DayPreviewState> {
 
   DayPreviewCubit({
     required this.date,
-    required RaceRepository raceRepository,
     required DateService dateService,
     DayPreviewState state = const DayPreviewState(),
   })  : _authService = getIt<AuthService>(),
         _workoutRepository = getIt<WorkoutRepository>(),
-        _raceRepository = raceRepository,
+        _raceRepository = getIt<RaceRepository>(),
         _dateService = dateService,
         super(state);
 
