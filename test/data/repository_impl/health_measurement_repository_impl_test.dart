@@ -1,6 +1,8 @@
 import 'package:firebase/firebase.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:runnoter/common/date_service.dart';
 import 'package:runnoter/data/repository_impl/health_measurement_repository_impl.dart';
 import 'package:runnoter/domain/entity/health_measurement.dart';
 
@@ -19,10 +21,13 @@ void main() {
     List<HealthMeasurement>? initialState,
   }) =>
       HealthMeasurementRepositoryImpl(
-        dateService: dateService,
         firebaseHealthMeasurementService: firebaseHealthMeasurementService,
         initialState: initialState,
       );
+
+  setUpAll(() {
+    GetIt.I.registerFactory(() => DateService());
+  });
 
   setUp(() => repository = createRepository());
 

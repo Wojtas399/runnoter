@@ -1,7 +1,9 @@
 import 'package:collection/collection.dart';
 import 'package:firebase/firebase.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:runnoter/common/date_service.dart';
 import 'package:runnoter/data/repository_impl/race_repository_impl.dart';
 import 'package:runnoter/domain/entity/race.dart';
 import 'package:runnoter/domain/entity/run_status.dart';
@@ -22,9 +24,12 @@ void main() {
   }) =>
       RaceRepositoryImpl(
         firebaseRaceService: firebaseRaceService,
-        dateService: dateService,
         initialData: initialData,
       );
+
+  setUpAll(() {
+    GetIt.I.registerFactory(() => DateService());
+  });
 
   tearDown(() {
     reset(firebaseRaceService);

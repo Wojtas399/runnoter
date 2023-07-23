@@ -1,5 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:runnoter/common/date_service.dart';
 import 'package:runnoter/domain/entity/health_measurement.dart';
 import 'package:runnoter/domain/service/health_chart_service.dart';
 
@@ -10,9 +12,11 @@ void main() {
   final dateService = MockDateService();
   late HealthChartService service;
 
-  setUp(
-    () => service = HealthChartService(dateService: dateService),
-  );
+  setUpAll(() {
+    GetIt.I.registerFactory<DateService>(() => dateService);
+  });
+
+  setUp(() => service = HealthChartService());
 
   tearDown(() {
     reset(dateService);

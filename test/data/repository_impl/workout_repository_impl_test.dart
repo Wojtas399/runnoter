@@ -2,7 +2,9 @@ import 'package:firebase/firebase.dart' as firebase;
 import 'package:firebase/model/pace_dto.dart';
 import 'package:firebase/model/workout_dto.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:runnoter/common/date_service.dart';
 import 'package:runnoter/data/repository_impl/workout_repository_impl.dart';
 import 'package:runnoter/domain/entity/run_status.dart';
 import 'package:runnoter/domain/entity/workout.dart';
@@ -24,10 +26,13 @@ void main() {
   }) {
     return WorkoutRepositoryImpl(
       firebaseWorkoutService: firebaseWorkoutService,
-      dateService: dateService,
       initialState: initialState,
     );
   }
+
+  setUpAll(() {
+    GetIt.I.registerFactory(() => DateService());
+  });
 
   setUp(() {
     repository = createRepository();

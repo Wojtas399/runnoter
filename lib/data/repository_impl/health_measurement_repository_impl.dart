@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:firebase/firebase.dart';
 
 import '../../common/date_service.dart';
+import '../../dependency_injection.dart';
 import '../../domain/additional_model/state_repository.dart';
 import '../../domain/entity/health_measurement.dart';
 import '../../domain/repository/health_measurement_repository.dart';
@@ -13,10 +14,9 @@ class HealthMeasurementRepositoryImpl extends StateRepository<HealthMeasurement>
   final FirebaseHealthMeasurementService _firebaseHealthMeasurementService;
 
   HealthMeasurementRepositoryImpl({
-    required DateService dateService,
     required FirebaseHealthMeasurementService firebaseHealthMeasurementService,
     List<HealthMeasurement>? initialState,
-  })  : _dateService = dateService,
+  })  : _dateService = getIt<DateService>(),
         _firebaseHealthMeasurementService = firebaseHealthMeasurementService,
         super(initialData: initialState);
 

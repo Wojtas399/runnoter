@@ -21,7 +21,6 @@ class HealthMeasurementCreatorBloc extends BlocWithStatus<
   final HealthMeasurementRepository _healthMeasurementRepository;
 
   HealthMeasurementCreatorBloc({
-    required DateService dateService,
     BlocStatus status = const BlocStatusInitial(),
     HealthMeasurement? measurement,
     DateTime? date,
@@ -31,7 +30,7 @@ class HealthMeasurementCreatorBloc extends BlocWithStatus<
         _healthMeasurementRepository = getIt<HealthMeasurementRepository>(),
         super(
           HealthMeasurementCreatorState(
-            dateService: dateService,
+            dateService: getIt<DateService>(),
             status: status,
             measurement: measurement,
             date: date,

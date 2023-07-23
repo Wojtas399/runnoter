@@ -26,6 +26,7 @@ void setUpGetIt() {
   getIt.registerLazySingleton(() => AppRouter());
   getIt.registerLazySingleton(() => ScreenSizes());
   getIt.registerLazySingleton(() => BodySizes());
+  getIt.registerFactory(() => DateService());
   getIt.registerLazySingleton<AuthService>(
     () => AuthServiceImpl(
       firebaseAuthService: FirebaseAuthService(),
@@ -53,12 +54,10 @@ void _registerRepositories() {
   getIt.registerLazySingleton<WorkoutRepository>(
     () => WorkoutRepositoryImpl(
       firebaseWorkoutService: FirebaseWorkoutService(),
-      dateService: DateService(),
     ),
   );
   getIt.registerLazySingleton<HealthMeasurementRepository>(
     () => HealthMeasurementRepositoryImpl(
-      dateService: DateService(),
       firebaseHealthMeasurementService: FirebaseHealthMeasurementService(),
     ),
   );
@@ -70,7 +69,6 @@ void _registerRepositories() {
   getIt.registerLazySingleton<RaceRepository>(
     () => RaceRepositoryImpl(
       firebaseRaceService: FirebaseRaceService(),
-      dateService: DateService(),
     ),
   );
 }

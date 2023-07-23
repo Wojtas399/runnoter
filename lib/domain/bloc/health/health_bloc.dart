@@ -27,13 +27,12 @@ class HealthBloc
       _measurementsFromDateRangeListener;
 
   HealthBloc({
-    required DateService dateService,
     required HealthChartService chartService,
     HealthState state = const HealthState(
       status: BlocStatusInitial(),
       chartRange: ChartRange.week,
     ),
-  })  : _dateService = dateService,
+  })  : _dateService = getIt<DateService>(),
         _authService = getIt<AuthService>(),
         _healthMeasurementRepository = getIt<HealthMeasurementRepository>(),
         _chartService = chartService,

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../common/date_service.dart';
 import '../../../domain/bloc/health_measurement_creator/health_measurement_creator_bloc.dart';
 import '../../component/bloc_with_status_listener_component.dart';
 import '../../service/dialog_service.dart';
@@ -19,31 +18,12 @@ class HealthMeasurementCreatorDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _BlocProvider(
-      date: date,
+    return BlocProvider(
+      create: (_) => HealthMeasurementCreatorBloc()
+        ..add(HealthMeasurementCreatorEventInitialize(date: date)),
       child: const _BlocListener(
         child: HealthMeasurementCreatorContent(),
       ),
-    );
-  }
-}
-
-class _BlocProvider extends StatelessWidget {
-  final DateTime? date;
-  final Widget child;
-
-  const _BlocProvider({
-    required this.date,
-    required this.child,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => HealthMeasurementCreatorBloc(
-        dateService: DateService(),
-      )..add(HealthMeasurementCreatorEventInitialize(date: date)),
-      child: child,
     );
   }
 }

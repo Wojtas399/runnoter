@@ -5,6 +5,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/bloc/health_measurements/health_measurements_bloc.dart';
 import 'package:runnoter/domain/entity/health_measurement.dart';
+import 'package:runnoter/domain/repository/health_measurement_repository.dart';
 import 'package:runnoter/domain/service/auth_service.dart';
 
 import '../../../creators/health_measurement_creator.dart';
@@ -27,6 +28,9 @@ void main() {
 
   setUpAll(() {
     GetIt.I.registerSingleton<AuthService>(authService);
+    GetIt.I.registerSingleton<HealthMeasurementRepository>(
+      healthMeasurementRepository,
+    );
   });
 
   tearDown(() {

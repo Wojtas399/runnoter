@@ -3,6 +3,7 @@ import 'package:firebase/firebase.dart';
 import 'package:firebase/service/firebase_race_service.dart';
 
 import '../../common/date_service.dart';
+import '../../dependency_injection.dart';
 import '../../domain/additional_model/state_repository.dart';
 import '../../domain/entity/race.dart';
 import '../../domain/entity/run_status.dart';
@@ -17,10 +18,9 @@ class RaceRepositoryImpl extends StateRepository<Race>
 
   RaceRepositoryImpl({
     required FirebaseRaceService firebaseRaceService,
-    required DateService dateService,
     super.initialData,
   })  : _firebaseRaceService = firebaseRaceService,
-        _dateService = dateService;
+        _dateService = getIt<DateService>();
 
   @override
   Stream<Race?> getRaceById({

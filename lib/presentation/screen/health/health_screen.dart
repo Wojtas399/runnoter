@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../common/date_service.dart';
 import '../../../domain/bloc/health/health_bloc.dart';
 import '../../../domain/service/health_chart_service.dart';
 import '../../component/bloc_with_status_listener_component.dart';
@@ -16,33 +15,12 @@ class HealthScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const _BlocProvider(
-      child: _BlocListener(
+    return BlocProvider(
+      create: (_) => HealthBloc(chartService: HealthChartService())
+        ..add(const HealthEventInitialize()),
+      child: const _BlocListener(
         child: HealthContent(),
       ),
-    );
-  }
-}
-
-class _BlocProvider extends StatelessWidget {
-  final Widget child;
-
-  const _BlocProvider({
-    required this.child,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (BuildContext context) => HealthBloc(
-        dateService: DateService(),
-        chartService: HealthChartService(
-          dateService: DateService(),
-        ),
-      )..add(
-          const HealthEventInitialize(),
-        ),
-      child: child,
     );
   }
 }

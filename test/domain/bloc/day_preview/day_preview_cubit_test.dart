@@ -2,6 +2,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:runnoter/common/date_service.dart';
 import 'package:runnoter/domain/bloc/day_preview/day_preview_cubit.dart';
 import 'package:runnoter/domain/entity/race.dart';
 import 'package:runnoter/domain/entity/workout.dart';
@@ -30,7 +31,6 @@ void main() {
   }) =>
       DayPreviewCubit(
         date: date,
-        dateService: dateService,
         state: DayPreviewState(
           workouts: workouts,
           races: races,
@@ -38,6 +38,7 @@ void main() {
       );
 
   setUpAll(() {
+    GetIt.I.registerFactory<DateService>(() => dateService);
     GetIt.I.registerSingleton<AuthService>(authService);
     GetIt.I.registerSingleton<WorkoutRepository>(workoutRepository);
     GetIt.I.registerSingleton<RaceRepository>(raceRepository);

@@ -22,9 +22,8 @@ class CurrentWeekCubit extends Cubit<List<Day>?> {
   StreamSubscription? _listener;
 
   CurrentWeekCubit({
-    required DateService dateService,
     List<Day>? days,
-  })  : _dateService = dateService,
+  })  : _dateService = getIt<DateService>(),
         _authService = getIt<AuthService>(),
         _workoutRepository = getIt<WorkoutRepository>(),
         _raceRepository = getIt<RaceRepository>(),
