@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
+import '../../../dependency_injection.dart';
 import '../../additional_model/bloc_state.dart';
 import '../../additional_model/bloc_status.dart';
 import '../../additional_model/bloc_with_status.dart';
@@ -20,12 +21,11 @@ class RaceCreatorBloc extends BlocWithStatus<RaceCreatorEvent, RaceCreatorState,
 
   RaceCreatorBloc({
     this.raceId,
-    required AuthService authService,
     required RaceRepository raceRepository,
     RaceCreatorState state = const RaceCreatorState(
       status: BlocStatusInitial(),
     ),
-  })  : _authService = authService,
+  })  : _authService = getIt<AuthService>(),
         _raceRepository = raceRepository,
         super(state) {
     on<RaceCreatorEventInitialize>(_initialize);

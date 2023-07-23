@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/bloc/mileage/mileage_cubit.dart';
 import '../../../domain/repository/workout_repository.dart';
-import '../../../domain/service/auth_service.dart';
 import 'mileage_content.dart';
 
 @RoutePage()
@@ -30,7 +29,6 @@ class _CubitProvider extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (BuildContext context) => MileageCubit(
-        authService: context.read<AuthService>(),
         workoutRepository: context.read<WorkoutRepository>(),
       )..initialize(),
       child: child,

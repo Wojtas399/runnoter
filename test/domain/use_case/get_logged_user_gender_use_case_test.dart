@@ -1,5 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get_it/get_it.dart';
 import 'package:runnoter/domain/entity/user.dart';
+import 'package:runnoter/domain/service/auth_service.dart';
 import 'package:runnoter/domain/use_case/get_logged_user_gender_use_case.dart';
 
 import '../../creators/user_creator.dart';
@@ -9,10 +11,10 @@ import '../../mock/domain/service/mock_auth_service.dart';
 void main() {
   final authService = MockAuthService();
   final userRepository = MockUserRepository();
-  final useCase = GetLoggedUserGenderUseCase(
-    authService: authService,
-    userRepository: userRepository,
-  );
+
+  setUpAll(() {
+    GetIt.I.registerSingleton<AuthService>(authService);
+  });
 
   test(
     'should return gender of logged user',
@@ -24,6 +26,9 @@ void main() {
       );
       authService.mockGetLoggedUserId(userId: loggedUserid);
       userRepository.mockGetUserById(user: user);
+      final useCase = GetLoggedUserGenderUseCase(
+        userRepository: userRepository,
+      );
 
       final Stream<Gender> gender$ = useCase.execute();
 

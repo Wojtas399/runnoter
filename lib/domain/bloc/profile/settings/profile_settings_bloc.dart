@@ -10,6 +10,7 @@ import '../../../../../domain/additional_model/bloc_with_status.dart';
 import '../../../../../domain/entity/settings.dart';
 import '../../../../../domain/repository/user_repository.dart';
 import '../../../../../domain/service/auth_service.dart';
+import '../../../../dependency_injection.dart';
 import '../../../additional_model/bloc_state.dart';
 
 part 'profile_settings_event.dart';
@@ -21,12 +22,11 @@ class ProfileSettingsBloc extends BlocWithStatus<ProfileSettingsEvent,
   final UserRepository _userRepository;
 
   ProfileSettingsBloc({
-    required AuthService authService,
     required UserRepository userRepository,
     ProfileSettingsState state = const ProfileSettingsState(
       status: BlocStatusInitial(),
     ),
-  })  : _authService = authService,
+  })  : _authService = getIt<AuthService>(),
         _userRepository = userRepository,
         super(state) {
     on<ProfileSettingsEventInitialize>(

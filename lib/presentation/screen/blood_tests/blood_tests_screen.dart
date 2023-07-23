@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/bloc/blood_tests/blood_tests_cubit.dart';
 import '../../../domain/repository/blood_test_repository.dart';
-import '../../../domain/service/auth_service.dart';
 import 'blood_tests_content.dart';
 
 @RoutePage()
@@ -32,7 +31,6 @@ class _CubitProvider extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => BloodTestsCubit(
-        authService: context.read<AuthService>(),
         bloodTestRepository: context.read<BloodTestRepository>(),
       )..initialize(),
       child: child,

@@ -1,6 +1,9 @@
 import 'package:bloc_test/bloc_test.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/bloc/races/races_cubit.dart';
+import 'package:runnoter/domain/service/auth_service.dart';
 
 import '../../../creators/race_creator.dart';
 import '../../../mock/domain/repository/mock_race_repository.dart';
@@ -12,9 +15,17 @@ void main() {
   const String loggedUserId = 'u1';
 
   RacesCubit createCubit() => RacesCubit(
-        authService: authService,
         raceRepository: raceRepository,
       );
+
+  setUpAll(() {
+    GetIt.I.registerSingleton<AuthService>(authService);
+  });
+
+  tearDown(() {
+    reset(authService);
+    reset(raceRepository);
+  });
 
   blocTest(
     'initialize, '

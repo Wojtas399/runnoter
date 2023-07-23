@@ -4,7 +4,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get_it/get_it.dart';
 
 import '../../domain/repository/health_measurement_repository.dart';
-import '../../domain/service/auth_service.dart';
 import '../component/dialog/confirmation_dialog_component.dart';
 import '../component/dialog/loading_dialog_component.dart';
 import '../component/dialog/message_dialog_component.dart';
@@ -79,7 +78,6 @@ Future<void> showHealthMeasurementCreatorDialog({
     await showDialogDependingOnScreenSize(
       MultiRepositoryProvider(
         providers: [
-          RepositoryProvider.value(value: context.read<AuthService>()),
           RepositoryProvider.value(
             value: context.read<HealthMeasurementRepository>(),
           ),

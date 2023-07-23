@@ -8,6 +8,7 @@ import '../../../../domain/additional_model/bloc_status.dart';
 import '../../../../domain/additional_model/bloc_with_status.dart';
 import '../../../../domain/repository/user_repository.dart';
 import '../../../../domain/service/auth_service.dart';
+import '../../../dependency_injection.dart';
 import '../../additional_model/bloc_state.dart';
 import '../../entity/settings.dart';
 import '../../entity/user.dart';
@@ -21,10 +22,9 @@ class HomeBloc
   final UserRepository _userRepository;
 
   HomeBloc({
-    required AuthService authService,
     required UserRepository userRepository,
     HomeState state = const HomeState(status: BlocStatusInitial()),
-  })  : _authService = authService,
+  })  : _authService = getIt<AuthService>(),
         _userRepository = userRepository,
         super(state) {
     on<HomeEventInitialize>(_initialize, transformer: restartable());

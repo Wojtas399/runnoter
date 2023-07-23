@@ -1,9 +1,11 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/bloc/current_week/current_week_cubit.dart';
 import 'package:runnoter/domain/entity/run_status.dart';
 import 'package:runnoter/domain/entity/workout_stage.dart';
+import 'package:runnoter/domain/service/auth_service.dart';
 
 import '../../../creators/race_creator.dart';
 import '../../../creators/run_status_creator.dart';
@@ -25,12 +27,15 @@ void main() {
   }) {
     return CurrentWeekCubit(
       dateService: dateService,
-      authService: authService,
       workoutRepository: workoutRepository,
       raceRepository: raceRepository,
       days: days,
     );
   }
+
+  setUpAll(() {
+    GetIt.I.registerSingleton<AuthService>(authService);
+  });
 
   tearDown(() {
     reset(dateService);

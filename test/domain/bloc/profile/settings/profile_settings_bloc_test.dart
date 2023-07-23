@@ -1,9 +1,11 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/bloc/profile/settings/profile_settings_bloc.dart';
 import 'package:runnoter/domain/entity/settings.dart';
+import 'package:runnoter/domain/service/auth_service.dart';
 
 import '../../../../creators/settings_creator.dart';
 import '../../../../creators/user_creator.dart';
@@ -22,7 +24,6 @@ void main() {
     PaceUnit? paceUnit,
   }) {
     return ProfileSettingsBloc(
-      authService: authService,
       userRepository: userRepository,
       state: ProfileSettingsState(
         status: const BlocStatusInitial(),
@@ -49,6 +50,10 @@ void main() {
       paceUnit: paceUnit,
     );
   }
+
+  setUpAll(() {
+    GetIt.I.registerSingleton<AuthService>(authService);
+  });
 
   tearDown(() {
     reset(authService);

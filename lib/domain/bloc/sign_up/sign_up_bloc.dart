@@ -7,6 +7,7 @@ import '../../../../domain/entity/settings.dart';
 import '../../../../domain/entity/user.dart';
 import '../../../../domain/repository/user_repository.dart';
 import '../../../../domain/service/auth_service.dart';
+import '../../../dependency_injection.dart';
 import '../../../presentation/service/validation_service.dart' as validator;
 import '../../additional_model/bloc_state.dart';
 import '../../additional_model/custom_exception.dart';
@@ -19,11 +20,10 @@ class SignUpBloc extends BlocWithStatus<SignUpEvent, SignUpState,
   final AuthService _authService;
   final UserRepository _userRepository;
 
-  SignUpBloc(
-      {required AuthService authService,
-      required UserRepository userRepository,
-      SignUpState state = const SignUpState(status: BlocStatusInitial())})
-      : _authService = authService,
+  SignUpBloc({
+    required UserRepository userRepository,
+    SignUpState state = const SignUpState(status: BlocStatusInitial()),
+  })  : _authService = getIt<AuthService>(),
         _userRepository = userRepository,
         super(state) {
     on<SignUpEventGenderChanged>(_genderChanged);

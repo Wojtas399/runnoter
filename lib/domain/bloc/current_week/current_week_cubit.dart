@@ -7,6 +7,7 @@ import 'package:rxdart/rxdart.dart';
 
 import '../../../common/date_service.dart';
 import '../../../common/workout_stage_service.dart';
+import '../../../dependency_injection.dart';
 import '../../entity/race.dart';
 import '../../entity/workout.dart';
 import '../../repository/race_repository.dart';
@@ -22,12 +23,11 @@ class CurrentWeekCubit extends Cubit<List<Day>?> {
 
   CurrentWeekCubit({
     required DateService dateService,
-    required AuthService authService,
     required WorkoutRepository workoutRepository,
     required RaceRepository raceRepository,
     List<Day>? days,
   })  : _dateService = dateService,
-        _authService = authService,
+        _authService = getIt<AuthService>(),
         _workoutRepository = workoutRepository,
         _raceRepository = raceRepository,
         super(days);

@@ -1,10 +1,12 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/bloc/blood_test_preview/blood_test_preview_bloc.dart';
 import 'package:runnoter/domain/entity/blood_parameter.dart';
 import 'package:runnoter/domain/entity/user.dart';
+import 'package:runnoter/domain/service/auth_service.dart';
 
 import '../../../creators/blood_test_creator.dart';
 import '../../../mock/domain/repository/mock_blood_test_repository.dart';
@@ -22,7 +24,6 @@ void main() {
     String? bloodTestId,
   }) =>
       BloodTestPreviewBloc(
-        authService: authService,
         getLoggedUserGenderUseCase: getLoggedUserGenderUseCase,
         bloodTestRepository: bloodTestRepository,
         bloodTestId: bloodTestId,
@@ -43,6 +44,10 @@ void main() {
         gender: gender,
         parameterResults: parameterResults,
       );
+
+  setUpAll(() {
+    GetIt.I.registerSingleton<AuthService>(authService);
+  });
 
   tearDown(() {
     reset(authService);

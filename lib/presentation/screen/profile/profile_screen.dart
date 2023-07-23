@@ -10,7 +10,6 @@ import '../../../domain/repository/health_measurement_repository.dart';
 import '../../../domain/repository/race_repository.dart';
 import '../../../domain/repository/user_repository.dart';
 import '../../../domain/repository/workout_repository.dart';
-import '../../../domain/service/auth_service.dart';
 import '../../component/bloc_with_status_listener_component.dart';
 import '../../config/navigation/router.dart';
 import '../../service/dialog_service.dart';
@@ -44,7 +43,6 @@ class _IdentitiesBlocProvider extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider<ProfileIdentitiesBloc>(
       create: (BuildContext context) => ProfileIdentitiesBloc(
-        authService: context.read<AuthService>(),
         userRepository: context.read<UserRepository>(),
         workoutRepository: context.read<WorkoutRepository>(),
         healthMeasurementRepository:
@@ -70,7 +68,6 @@ class _SettingsBlocProvider extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider<ProfileSettingsBloc>(
       create: (BuildContext context) => ProfileSettingsBloc(
-        authService: context.read<AuthService>(),
         userRepository: context.read<UserRepository>(),
       )..add(
           const ProfileSettingsEventInitialize(),

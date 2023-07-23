@@ -1,10 +1,12 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/additional_model/custom_exception.dart';
 import 'package:runnoter/domain/bloc/profile/identities/profile_identities_bloc.dart';
 import 'package:runnoter/domain/entity/user.dart';
+import 'package:runnoter/domain/service/auth_service.dart';
 
 import '../../../../creators/user_creator.dart';
 import '../../../../mock/domain/repository/mock_blood_test_repository.dart';
@@ -46,7 +48,6 @@ void main() {
     Gender? gender,
   }) {
     return ProfileIdentitiesBloc(
-      authService: authService,
       userRepository: userRepository,
       workoutRepository: workoutRepository,
       healthMeasurementRepository: healthMeasurementRepository,
@@ -58,6 +59,10 @@ void main() {
       ),
     );
   }
+
+  setUpAll(() {
+    GetIt.I.registerSingleton<AuthService>(authService);
+  });
 
   tearDown(() {
     reset(authService);

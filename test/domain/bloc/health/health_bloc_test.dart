@@ -1,9 +1,11 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/bloc/health/health_bloc.dart';
 import 'package:runnoter/domain/entity/health_measurement.dart';
+import 'package:runnoter/domain/service/auth_service.dart';
 import 'package:runnoter/domain/service/health_chart_service.dart';
 
 import '../../../creators/health_measurement_creator.dart';
@@ -27,7 +29,6 @@ void main() {
   }) =>
       HealthBloc(
         dateService: dateService,
-        authService: authService,
         healthMeasurementRepository: healthMeasurementRepository,
         chartService: chartService,
         state: HealthState(
@@ -57,6 +58,10 @@ void main() {
         restingHeartRatePoints: restingHeartRatePoints,
         fastingWeightPoints: fastingWeightPoints,
       );
+
+  setUpAll(() {
+    GetIt.I.registerSingleton<AuthService>(authService);
+  });
 
   tearDown(() {
     reset(dateService);

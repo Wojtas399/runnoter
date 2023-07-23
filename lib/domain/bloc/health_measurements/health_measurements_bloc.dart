@@ -10,6 +10,7 @@ import '../../../../domain/additional_model/bloc_with_status.dart';
 import '../../../../domain/entity/health_measurement.dart';
 import '../../../../domain/repository/health_measurement_repository.dart';
 import '../../../../domain/service/auth_service.dart';
+import '../../../dependency_injection.dart';
 
 part 'health_measurements_event.dart';
 part 'health_measurements_state.dart';
@@ -20,11 +21,10 @@ class HealthMeasurementsBloc extends BlocWithStatus<HealthMeasurementsEvent,
   final HealthMeasurementRepository _healthMeasurementRepository;
 
   HealthMeasurementsBloc({
-    required AuthService authService,
     required HealthMeasurementRepository healthMeasurementRepository,
     BlocStatus status = const BlocStatusInitial(),
     List<HealthMeasurement>? measurements,
-  })  : _authService = authService,
+  })  : _authService = getIt<AuthService>(),
         _healthMeasurementRepository = healthMeasurementRepository,
         super(
           HealthMeasurementsState(

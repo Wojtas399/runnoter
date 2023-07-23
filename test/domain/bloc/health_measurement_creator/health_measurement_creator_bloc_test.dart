@@ -1,9 +1,11 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/bloc/health_measurement_creator/health_measurement_creator_bloc.dart';
 import 'package:runnoter/domain/entity/health_measurement.dart';
+import 'package:runnoter/domain/service/auth_service.dart';
 
 import '../../../creators/health_measurement_creator.dart';
 import '../../../mock/common/mock_date_service.dart';
@@ -24,7 +26,6 @@ void main() {
   }) =>
       HealthMeasurementCreatorBloc(
         dateService: dateService,
-        authService: authService,
         healthMeasurementRepository: healthMeasurementRepository,
         measurement: measurement,
         date: date,
@@ -47,6 +48,10 @@ void main() {
         restingHeartRate: restingHeartRate,
         fastingWeight: fastingWeight,
       );
+
+  setUpAll(() {
+    GetIt.I.registerSingleton<AuthService>(authService);
+  });
 
   setUp(() {
     dateService.mockGetToday(

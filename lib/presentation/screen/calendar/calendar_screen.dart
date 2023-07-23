@@ -7,7 +7,6 @@ import '../../../domain/entity/race.dart';
 import '../../../domain/entity/workout.dart';
 import '../../../domain/repository/race_repository.dart';
 import '../../../domain/repository/workout_repository.dart';
-import '../../../domain/service/auth_service.dart';
 import '../../component/body/big_body_component.dart';
 import '../../component/calendar/calendar_component.dart';
 import '../../component/calendar/calendar_component_cubit.dart';
@@ -55,7 +54,6 @@ class _CubitProvider extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (BuildContext context) => CalendarCubit(
-        authService: context.read<AuthService>(),
         workoutRepository: context.read<WorkoutRepository>(),
         raceRepository: context.read<RaceRepository>(),
       ),
@@ -121,7 +119,6 @@ class _CalendarState extends State<_Calendar> {
         await showDialogDependingOnScreenSize(
       MultiRepositoryProvider(
         providers: [
-          RepositoryProvider.value(value: context.read<AuthService>()),
           RepositoryProvider.value(value: context.read<WorkoutRepository>()),
           RepositoryProvider.value(value: context.read<RaceRepository>()),
         ],

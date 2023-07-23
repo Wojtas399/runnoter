@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../../common/date_service.dart';
+import '../../../dependency_injection.dart';
 import '../../entity/race.dart';
 import '../../entity/workout.dart';
 import '../../repository/race_repository.dart';
@@ -21,12 +22,11 @@ class DayPreviewCubit extends Cubit<DayPreviewState> {
 
   DayPreviewCubit({
     required this.date,
-    required AuthService authService,
     required WorkoutRepository workoutRepository,
     required RaceRepository raceRepository,
     required DateService dateService,
     DayPreviewState state = const DayPreviewState(),
-  })  : _authService = authService,
+  })  : _authService = getIt<AuthService>(),
         _workoutRepository = workoutRepository,
         _raceRepository = raceRepository,
         _dateService = dateService,

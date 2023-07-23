@@ -5,7 +5,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/bloc/race_creator/race_creator_bloc.dart';
 import '../../../domain/repository/race_repository.dart';
-import '../../../domain/service/auth_service.dart';
 import '../../component/bloc_with_status_listener_component.dart';
 import '../../extension/string_extensions.dart';
 import '../../service/dialog_service.dart';
@@ -53,7 +52,6 @@ class _BlocProvider extends StatelessWidget {
     return BlocProvider(
       create: (BuildContext context) => RaceCreatorBloc(
         raceId: raceId,
-        authService: context.read<AuthService>(),
         raceRepository: context.read<RaceRepository>(),
       )..add(RaceCreatorEventInitialize(date: date)),
       child: child,

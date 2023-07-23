@@ -7,6 +7,7 @@ import '../../../../domain/additional_model/bloc_with_status.dart';
 import '../../../../domain/entity/health_measurement.dart';
 import '../../../../domain/repository/health_measurement_repository.dart';
 import '../../../../domain/service/auth_service.dart';
+import '../../../dependency_injection.dart';
 
 part 'health_measurement_creator_event.dart';
 part 'health_measurement_creator_state.dart';
@@ -21,14 +22,13 @@ class HealthMeasurementCreatorBloc extends BlocWithStatus<
 
   HealthMeasurementCreatorBloc({
     required DateService dateService,
-    required AuthService authService,
     required HealthMeasurementRepository healthMeasurementRepository,
     BlocStatus status = const BlocStatusInitial(),
     HealthMeasurement? measurement,
     DateTime? date,
     int? restingHeartRate,
     double? fastingWeight,
-  })  : _authService = authService,
+  })  : _authService = getIt<AuthService>(),
         _healthMeasurementRepository = healthMeasurementRepository,
         super(
           HealthMeasurementCreatorState(

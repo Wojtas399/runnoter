@@ -1,8 +1,10 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/bloc/mileage/mileage_cubit.dart';
 import 'package:runnoter/domain/entity/run_status.dart';
+import 'package:runnoter/domain/service/auth_service.dart';
 
 import '../../../creators/chart_month_creator.dart';
 import '../../../creators/run_status_creator.dart';
@@ -16,9 +18,12 @@ void main() {
   const String loggedUserId = 'u1';
 
   MileageCubit createCubit() => MileageCubit(
-        authService: authService,
         workoutRepository: workoutRepository,
       );
+
+  setUpAll(() {
+    GetIt.I.registerSingleton<AuthService>(authService);
+  });
 
   tearDown(() {
     reset(authService);

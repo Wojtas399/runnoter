@@ -12,6 +12,7 @@ import '../../../../domain/entity/workout.dart';
 import '../../../../domain/entity/workout_stage.dart';
 import '../../../../domain/repository/workout_repository.dart';
 import '../../../../domain/service/auth_service.dart';
+import '../../../dependency_injection.dart';
 
 part 'workout_preview_event.dart';
 part 'workout_preview_state.dart';
@@ -24,12 +25,11 @@ class WorkoutPreviewBloc extends BlocWithStatus<WorkoutPreviewEvent,
 
   WorkoutPreviewBloc({
     required this.workoutId,
-    required AuthService authService,
     required WorkoutRepository workoutRepository,
     WorkoutPreviewState state = const WorkoutPreviewState(
       status: BlocStatusInitial(),
     ),
-  })  : _authService = authService,
+  })  : _authService = getIt<AuthService>(),
         _workoutRepository = workoutRepository,
         super(state) {
     on<WorkoutPreviewEventInitialize>(_initialize, transformer: restartable());

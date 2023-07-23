@@ -1,10 +1,12 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/bloc/race_creator/race_creator_bloc.dart';
 import 'package:runnoter/domain/entity/race.dart';
 import 'package:runnoter/domain/entity/run_status.dart';
+import 'package:runnoter/domain/service/auth_service.dart';
 
 import '../../../creators/race_creator.dart';
 import '../../../mock/domain/repository/mock_race_repository.dart';
@@ -26,7 +28,6 @@ void main() {
   }) =>
       RaceCreatorBloc(
         raceId: raceId,
-        authService: authService,
         raceRepository: raceRepository,
         state: RaceCreatorState(
           status: const BlocStatusInitial(),
@@ -57,6 +58,10 @@ void main() {
         distance: distance,
         expectedDuration: expectedDuration,
       );
+
+  setUpAll(() {
+    GetIt.I.registerSingleton<AuthService>(authService);
+  });
 
   tearDown(() {
     reset(authService);

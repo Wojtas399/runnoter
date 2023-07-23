@@ -11,6 +11,7 @@ import '../../../../domain/additional_model/bloc_with_status.dart';
 import '../../../../domain/entity/health_measurement.dart';
 import '../../../../domain/repository/health_measurement_repository.dart';
 import '../../../../domain/service/auth_service.dart';
+import '../../../dependency_injection.dart';
 import '../../service/health_chart_service.dart';
 
 part 'health_event.dart';
@@ -27,7 +28,6 @@ class HealthBloc
 
   HealthBloc({
     required DateService dateService,
-    required AuthService authService,
     required HealthMeasurementRepository healthMeasurementRepository,
     required HealthChartService chartService,
     HealthState state = const HealthState(
@@ -35,7 +35,7 @@ class HealthBloc
       chartRange: ChartRange.week,
     ),
   })  : _dateService = dateService,
-        _authService = authService,
+        _authService = getIt<AuthService>(),
         _healthMeasurementRepository = healthMeasurementRepository,
         _chartService = chartService,
         super(state) {

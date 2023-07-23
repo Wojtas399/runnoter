@@ -1,9 +1,11 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/bloc/day_preview/day_preview_cubit.dart';
 import 'package:runnoter/domain/entity/race.dart';
 import 'package:runnoter/domain/entity/workout.dart';
+import 'package:runnoter/domain/service/auth_service.dart';
 
 import '../../../creators/race_creator.dart';
 import '../../../creators/workout_creator.dart';
@@ -26,7 +28,6 @@ void main() {
   }) =>
       DayPreviewCubit(
         date: date,
-        authService: authService,
         workoutRepository: workoutRepository,
         raceRepository: raceRepository,
         dateService: dateService,
@@ -35,6 +36,10 @@ void main() {
           races: races,
         ),
       );
+
+  setUpAll(() {
+    GetIt.I.registerSingleton<AuthService>(authService);
+  });
 
   tearDown(() {
     reset(authService);

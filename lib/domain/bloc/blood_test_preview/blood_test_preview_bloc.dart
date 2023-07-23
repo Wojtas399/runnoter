@@ -8,6 +8,7 @@ import '../../../../domain/entity/blood_parameter.dart';
 import '../../../../domain/entity/blood_test.dart';
 import '../../../../domain/repository/blood_test_repository.dart';
 import '../../../../domain/service/auth_service.dart';
+import '../../../dependency_injection.dart';
 import '../../additional_model/bloc_state.dart';
 import '../../additional_model/bloc_status.dart';
 import '../../additional_model/bloc_with_status.dart';
@@ -25,14 +26,13 @@ class BloodTestPreviewBloc extends BlocWithStatus<BloodTestPreviewEvent,
   final String? bloodTestId;
 
   BloodTestPreviewBloc({
-    required AuthService authService,
     required GetLoggedUserGenderUseCase getLoggedUserGenderUseCase,
     required BloodTestRepository bloodTestRepository,
     required this.bloodTestId,
     BloodTestPreviewState state = const BloodTestPreviewState(
       status: BlocStatusInitial(),
     ),
-  })  : _authService = authService,
+  })  : _authService = getIt<AuthService>(),
         _getLoggedUserGenderUseCase = getLoggedUserGenderUseCase,
         _bloodTestRepository = bloodTestRepository,
         super(state) {

@@ -5,7 +5,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../common/date_service.dart';
 import '../../../domain/bloc/health_measurement_creator/health_measurement_creator_bloc.dart';
 import '../../../domain/repository/health_measurement_repository.dart';
-import '../../../domain/service/auth_service.dart';
 import '../../component/bloc_with_status_listener_component.dart';
 import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
@@ -44,7 +43,6 @@ class _BlocProvider extends StatelessWidget {
     return BlocProvider(
       create: (BuildContext context) => HealthMeasurementCreatorBloc(
         dateService: DateService(),
-        authService: context.read<AuthService>(),
         healthMeasurementRepository:
             context.read<HealthMeasurementRepository>(),
       )..add(
