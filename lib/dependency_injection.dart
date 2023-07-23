@@ -44,12 +44,12 @@ void resetGetItRepositories() {
 
 void _registerFirebaseServices() {
   getIt.registerFactory(() => FirebaseAuthService());
+  getIt.registerFactory(() => FirebaseUserService());
 }
 
 void _registerRepositories() {
   getIt.registerLazySingleton<UserRepository>(
     () => UserRepositoryImpl(
-      firebaseUserService: FirebaseUserService(),
       firebaseAppearanceSettingsService: FirebaseAppearanceSettingsService(),
       firebaseWorkoutSettingsService: FirebaseWorkoutSettingsService(),
     ),

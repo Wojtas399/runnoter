@@ -1,6 +1,8 @@
 import 'package:collection/collection.dart';
 import 'package:firebase/firebase.dart' as firebase;
+import 'package:firebase/service/firebase_user_service.dart';
 
+import '../../dependency_injection.dart';
 import '../../domain/additional_model/state_repository.dart';
 import '../../domain/entity/settings.dart' as settings;
 import '../../domain/entity/user.dart';
@@ -16,13 +18,12 @@ class UserRepositoryImpl extends StateRepository<User>
   final firebase.FirebaseWorkoutSettingsService _dbWorkoutSettingsService;
 
   UserRepositoryImpl({
-    required firebase.FirebaseUserService firebaseUserService,
     required firebase.FirebaseAppearanceSettingsService
         firebaseAppearanceSettingsService,
     required firebase.FirebaseWorkoutSettingsService
         firebaseWorkoutSettingsService,
     List<User>? initialState,
-  })  : _dbUserService = firebaseUserService,
+  })  : _dbUserService = getIt<FirebaseUserService>(),
         _dbAppearanceSettingsService = firebaseAppearanceSettingsService,
         _dbWorkoutSettingsService = firebaseWorkoutSettingsService,
         super(initialData: initialState);

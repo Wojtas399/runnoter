@@ -1,5 +1,6 @@
 import 'package:firebase/firebase.dart' as db;
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/data/repository_impl/user_repository_impl.dart';
 import 'package:runnoter/domain/entity/settings.dart';
@@ -22,12 +23,15 @@ void main() {
     List<User>? initialState,
   }) {
     return UserRepositoryImpl(
-      firebaseUserService: dbUserService,
       firebaseAppearanceSettingsService: dbAppearanceSettingsService,
       firebaseWorkoutSettingsService: dbWorkoutSettingsService,
       initialState: initialState,
     );
   }
+
+  setUpAll(() {
+    GetIt.I.registerFactory<db.FirebaseUserService>(() => dbUserService);
+  });
 
   setUp(() {
     repository = createRepository();
