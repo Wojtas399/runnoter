@@ -28,11 +28,8 @@ void setUpGetIt() {
   getIt.registerLazySingleton(() => ScreenSizes());
   getIt.registerLazySingleton(() => BodySizes());
   getIt.registerFactory(() => DateService());
-  getIt.registerLazySingleton<AuthService>(
-    () => AuthServiceImpl(
-      firebaseAuthService: FirebaseAuthService(),
-    ),
-  );
+  _registerFirebaseServices();
+  getIt.registerLazySingleton<AuthService>(() => AuthServiceImpl());
   _registerRepositories();
   _registerUseCases();
 }
@@ -43,6 +40,10 @@ void resetGetItRepositories() {
   getIt.resetLazySingleton<HealthMeasurementRepository>();
   getIt.resetLazySingleton<BloodTestRepository>();
   getIt.resetLazySingleton<RaceRepository>();
+}
+
+void _registerFirebaseServices() {
+  getIt.registerFactory(() => FirebaseAuthService());
 }
 
 void _registerRepositories() {

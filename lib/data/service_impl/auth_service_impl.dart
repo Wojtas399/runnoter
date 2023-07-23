@@ -1,14 +1,13 @@
 import 'package:firebase/firebase.dart';
 
+import '../../dependency_injection.dart';
 import '../../domain/service/auth_service.dart';
 import '../mapper/custom_exception_mapper.dart';
 
 class AuthServiceImpl implements AuthService {
   final FirebaseAuthService _firebaseAuthService;
 
-  AuthServiceImpl({
-    required FirebaseAuthService firebaseAuthService,
-  }) : _firebaseAuthService = firebaseAuthService;
+  AuthServiceImpl() : _firebaseAuthService = getIt<FirebaseAuthService>();
 
   @override
   Stream<String?> get loggedUserId$ => _firebaseAuthService.loggedUserId$;

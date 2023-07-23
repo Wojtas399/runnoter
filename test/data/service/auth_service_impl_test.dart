@@ -1,5 +1,6 @@
 import 'package:firebase/firebase.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/data/service_impl/auth_service_impl.dart';
 import 'package:runnoter/domain/additional_model/custom_exception.dart';
@@ -16,10 +17,12 @@ void main() {
     registerFallbackValue(FakeUserDto());
   });
 
+  setUpAll(() {
+    GetIt.I.registerFactory<FirebaseAuthService>(() => firebaseAuthService);
+  });
+
   setUp(() {
-    service = AuthServiceImpl(
-      firebaseAuthService: firebaseAuthService,
-    );
+    service = AuthServiceImpl();
   });
 
   tearDown(() {
