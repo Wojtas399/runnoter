@@ -24,13 +24,12 @@ class BloodTestCreatorBloc extends BlocWithStatus<BloodTestCreatorEvent,
   final String? bloodTestId;
 
   BloodTestCreatorBloc({
-    required GetLoggedUserGenderUseCase getLoggedUserGenderUseCase,
     required this.bloodTestId,
     BloodTestCreatorState state = const BloodTestCreatorState(
       status: BlocStatusInitial(),
     ),
   })  : _authService = getIt<AuthService>(),
-        _getLoggedUserGenderUseCase = getLoggedUserGenderUseCase,
+        _getLoggedUserGenderUseCase = getIt.get<GetLoggedUserGenderUseCase>(),
         _bloodTestRepository = getIt<BloodTestRepository>(),
         super(state) {
     on<BloodTestCreatorEventInitialize>(_initialize);

@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/bloc/blood_test_creator/blood_test_creator_bloc.dart';
-import '../../../domain/use_case/get_logged_user_gender_use_case.dart';
 import '../../component/bloc_with_status_listener_component.dart';
 import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
@@ -21,32 +20,12 @@ class BloodTestCreatorScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _BlocProvider(
-      bloodTestId: bloodTestId,
+    return BlocProvider(
+      create: (_) => BloodTestCreatorBloc(bloodTestId: bloodTestId)
+        ..add(const BloodTestCreatorEventInitialize()),
       child: const _BlocListener(
         child: BloodTestCreatorContent(),
       ),
-    );
-  }
-}
-
-class _BlocProvider extends StatelessWidget {
-  final String? bloodTestId;
-  final Widget child;
-
-  const _BlocProvider({
-    this.bloodTestId,
-    required this.child,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (BuildContext context) => BloodTestCreatorBloc(
-        getLoggedUserGenderUseCase: GetLoggedUserGenderUseCase(),
-        bloodTestId: bloodTestId,
-      )..add(const BloodTestCreatorEventInitialize()),
-      child: child,
     );
   }
 }

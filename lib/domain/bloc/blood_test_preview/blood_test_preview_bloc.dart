@@ -26,13 +26,12 @@ class BloodTestPreviewBloc extends BlocWithStatus<BloodTestPreviewEvent,
   final String? bloodTestId;
 
   BloodTestPreviewBloc({
-    required GetLoggedUserGenderUseCase getLoggedUserGenderUseCase,
     required this.bloodTestId,
     BloodTestPreviewState state = const BloodTestPreviewState(
       status: BlocStatusInitial(),
     ),
   })  : _authService = getIt<AuthService>(),
-        _getLoggedUserGenderUseCase = getLoggedUserGenderUseCase,
+        _getLoggedUserGenderUseCase = getIt<GetLoggedUserGenderUseCase>(),
         _bloodTestRepository = getIt<BloodTestRepository>(),
         super(state) {
     on<BloodTestPreviewEventInitialize>(

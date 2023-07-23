@@ -16,6 +16,7 @@ import 'domain/repository/race_repository.dart';
 import 'domain/repository/user_repository.dart';
 import 'domain/repository/workout_repository.dart';
 import 'domain/service/auth_service.dart';
+import 'domain/use_case/get_logged_user_gender_use_case.dart';
 import 'presentation/config/body_sizes.dart';
 import 'presentation/config/navigation/router.dart';
 import 'presentation/config/screen_sizes.dart';
@@ -33,6 +34,7 @@ void setUpGetIt() {
     ),
   );
   _registerRepositories();
+  _registerUseCases();
 }
 
 void resetGetItRepositories() {
@@ -71,4 +73,8 @@ void _registerRepositories() {
       firebaseRaceService: FirebaseRaceService(),
     ),
   );
+}
+
+void _registerUseCases() {
+  getIt.registerFactory(() => GetLoggedUserGenderUseCase());
 }
