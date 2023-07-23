@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/bloc/blood_tests/blood_tests_cubit.dart';
+import 'package:runnoter/domain/repository/blood_test_repository.dart';
 import 'package:runnoter/domain/service/auth_service.dart';
 
 import '../../../creators/blood_test_creator.dart';
@@ -14,12 +15,9 @@ void main() {
   final bloodTestRepository = MockBloodTestRepository();
   const String loggedUserId = 'u1';
 
-  BloodTestsCubit createCubit() => BloodTestsCubit(
-        bloodTestRepository: bloodTestRepository,
-      );
-
   setUpAll(() {
     GetIt.I.registerSingleton<AuthService>(authService);
+    GetIt.I.registerSingleton<BloodTestRepository>(bloodTestRepository);
   });
 
   tearDown(() {
@@ -31,7 +29,7 @@ void main() {
     'initialize, '
     'logged user does not exist, '
     'should finish method call',
-    build: () => createCubit(),
+    build: () => BloodTestsCubit(),
     setUp: () => authService.mockGetLoggedUserId(),
     act: (cubit) => cubit.initialize(),
     expect: () => [],
@@ -43,7 +41,7 @@ void main() {
   blocTest(
     'initialize, '
     'should set listener of blood tests grouped by year and sorting by date belonging to logged user',
-    build: () => createCubit(),
+    build: () => BloodTestsCubit(),
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
       bloodTestRepository.mockGetAllTests(

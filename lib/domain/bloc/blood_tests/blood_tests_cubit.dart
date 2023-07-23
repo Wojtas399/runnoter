@@ -14,10 +14,9 @@ class BloodTestsCubit extends Cubit<List<BloodTestsFromYear>?> {
   final BloodTestRepository _bloodTestRepository;
   StreamSubscription<List<BloodTest>?>? _bloodTestsListener;
 
-  BloodTestsCubit({
-    required BloodTestRepository bloodTestRepository,
-  })  : _authService = getIt<AuthService>(),
-        _bloodTestRepository = bloodTestRepository,
+  BloodTestsCubit()
+      : _authService = getIt<AuthService>(),
+        _bloodTestRepository = getIt<BloodTestRepository>(),
         super(null);
 
   @override

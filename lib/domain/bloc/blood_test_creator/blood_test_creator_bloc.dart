@@ -25,14 +25,13 @@ class BloodTestCreatorBloc extends BlocWithStatus<BloodTestCreatorEvent,
 
   BloodTestCreatorBloc({
     required GetLoggedUserGenderUseCase getLoggedUserGenderUseCase,
-    required BloodTestRepository bloodTestRepository,
     required this.bloodTestId,
     BloodTestCreatorState state = const BloodTestCreatorState(
       status: BlocStatusInitial(),
     ),
   })  : _authService = getIt<AuthService>(),
         _getLoggedUserGenderUseCase = getLoggedUserGenderUseCase,
-        _bloodTestRepository = bloodTestRepository,
+        _bloodTestRepository = getIt<BloodTestRepository>(),
         super(state) {
     on<BloodTestCreatorEventInitialize>(_initialize);
     on<BloodTestCreatorEventDateChanged>(_dateChanged);

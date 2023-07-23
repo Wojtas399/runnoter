@@ -5,7 +5,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/bloc/profile/identities/profile_identities_bloc.dart';
 import '../../../domain/bloc/profile/settings/profile_settings_bloc.dart';
-import '../../../domain/repository/blood_test_repository.dart';
 import '../../../domain/repository/race_repository.dart';
 import '../../component/bloc_with_status_listener_component.dart';
 import '../../config/navigation/router.dart';
@@ -40,7 +39,6 @@ class _IdentitiesBlocProvider extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider<ProfileIdentitiesBloc>(
       create: (BuildContext context) => ProfileIdentitiesBloc(
-        bloodTestRepository: context.read<BloodTestRepository>(),
         raceRepository: context.read<RaceRepository>(),
       )..add(
           const ProfileIdentitiesEventInitialize(),

@@ -3,10 +3,12 @@ import 'package:firebase/service/firebase_workout_service.dart';
 import 'package:get_it/get_it.dart';
 
 import 'common/date_service.dart';
+import 'data/repository_impl/blood_test_repository_impl.dart';
 import 'data/repository_impl/health_measurement_repository_impl.dart';
 import 'data/repository_impl/user_repository_impl.dart';
 import 'data/repository_impl/workout_repository_impl.dart';
 import 'data/service_impl/auth_service_impl.dart';
+import 'domain/repository/blood_test_repository.dart';
 import 'domain/repository/health_measurement_repository.dart';
 import 'domain/repository/user_repository.dart';
 import 'domain/repository/workout_repository.dart';
@@ -33,6 +35,7 @@ void resetGetItRepositories() {
   getIt.resetLazySingleton<UserRepository>();
   getIt.resetLazySingleton<WorkoutRepository>();
   getIt.resetLazySingleton<HealthMeasurementRepository>();
+  getIt.resetLazySingleton<BloodTestRepository>();
 }
 
 void _registerRepositories() {
@@ -53,6 +56,11 @@ void _registerRepositories() {
     () => HealthMeasurementRepositoryImpl(
       dateService: DateService(),
       firebaseHealthMeasurementService: FirebaseHealthMeasurementService(),
+    ),
+  );
+  getIt.registerLazySingleton<BloodTestRepository>(
+    () => BloodTestRepositoryImpl(
+      firebaseBloodTestService: FirebaseBloodTestService(),
     ),
   );
 }

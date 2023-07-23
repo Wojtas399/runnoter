@@ -7,6 +7,7 @@ import 'package:runnoter/domain/bloc/blood_test_creator/blood_test_creator_bloc.
 import 'package:runnoter/domain/entity/blood_parameter.dart';
 import 'package:runnoter/domain/entity/blood_test.dart';
 import 'package:runnoter/domain/entity/user.dart';
+import 'package:runnoter/domain/repository/blood_test_repository.dart';
 import 'package:runnoter/domain/service/auth_service.dart';
 
 import '../../../creators/blood_test_creator.dart';
@@ -30,7 +31,6 @@ void main() {
   }) =>
       BloodTestCreatorBloc(
         getLoggedUserGenderUseCase: getLoggedUserGenderUseCase,
-        bloodTestRepository: bloodTestRepository,
         bloodTestId: bloodTestId,
         state: BloodTestCreatorState(
           status: const BlocStatusInitial(),
@@ -58,6 +58,7 @@ void main() {
 
   setUpAll(() {
     GetIt.I.registerSingleton<AuthService>(authService);
+    GetIt.I.registerSingleton<BloodTestRepository>(bloodTestRepository);
   });
 
   tearDown(() {

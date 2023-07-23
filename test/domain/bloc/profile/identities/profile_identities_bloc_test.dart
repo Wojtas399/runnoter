@@ -6,6 +6,7 @@ import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/additional_model/custom_exception.dart';
 import 'package:runnoter/domain/bloc/profile/identities/profile_identities_bloc.dart';
 import 'package:runnoter/domain/entity/user.dart';
+import 'package:runnoter/domain/repository/blood_test_repository.dart';
 import 'package:runnoter/domain/repository/health_measurement_repository.dart';
 import 'package:runnoter/domain/repository/user_repository.dart';
 import 'package:runnoter/domain/repository/workout_repository.dart';
@@ -50,7 +51,6 @@ void main() {
     Gender? gender,
   }) =>
       ProfileIdentitiesBloc(
-        bloodTestRepository: bloodTestRepository,
         raceRepository: raceRepository,
         state: createState(
           loggedUserId: loggedUserId,
@@ -65,6 +65,7 @@ void main() {
     GetIt.I.registerSingleton<HealthMeasurementRepository>(
       healthMeasurementRepository,
     );
+    GetIt.I.registerSingleton<BloodTestRepository>(bloodTestRepository);
   });
 
   tearDown(() {

@@ -1,12 +1,9 @@
-import 'package:firebase/firebase.dart';
 import 'package:firebase/service/firebase_race_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../common/date_service.dart';
-import '../../data/repository_impl/blood_test_repository_impl.dart';
 import '../../data/repository_impl/race_repository_impl.dart';
-import '../../domain/repository/blood_test_repository.dart';
 import '../../domain/repository/race_repository.dart';
 
 class RepositoriesProvider extends StatelessWidget {
@@ -21,11 +18,6 @@ class RepositoriesProvider extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
       providers: [
-        RepositoryProvider<BloodTestRepository>(
-          create: (_) => BloodTestRepositoryImpl(
-            firebaseBloodTestService: FirebaseBloodTestService(),
-          ),
-        ),
         RepositoryProvider<RaceRepository>(
           create: (_) => RaceRepositoryImpl(
             firebaseRaceService: FirebaseRaceService(),

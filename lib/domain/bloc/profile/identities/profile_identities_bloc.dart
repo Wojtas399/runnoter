@@ -30,7 +30,6 @@ class ProfileIdentitiesBloc extends BlocWithStatus<ProfileIdentitiesEvent,
   final RaceRepository _raceRepository;
 
   ProfileIdentitiesBloc({
-    required BloodTestRepository bloodTestRepository,
     required RaceRepository raceRepository,
     ProfileIdentitiesState state = const ProfileIdentitiesState(
       status: BlocStatusInitial(),
@@ -39,7 +38,7 @@ class ProfileIdentitiesBloc extends BlocWithStatus<ProfileIdentitiesEvent,
         _userRepository = getIt<UserRepository>(),
         _workoutRepository = getIt<WorkoutRepository>(),
         _healthMeasurementRepository = getIt<HealthMeasurementRepository>(),
-        _bloodTestRepository = bloodTestRepository,
+        _bloodTestRepository = getIt<BloodTestRepository>(),
         _raceRepository = raceRepository,
         super(state) {
     on<ProfileIdentitiesEventInitialize>(
