@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'shimmer_loading.dart';
+
 class ShimmerContainer extends StatelessWidget {
   final double? width;
   final double? height;
@@ -14,13 +16,15 @@ class ShimmerContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      constraints: constraints,
-      width: width,
-      height: height,
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.outline,
-        borderRadius: BorderRadius.circular(100),
+    return ShimmerLoading(
+      child: Container(
+        constraints: constraints,
+        width: width,
+        height: height,
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.outline,
+          borderRadius: BorderRadius.circular(100),
+        ),
       ),
     );
   }
