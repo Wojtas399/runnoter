@@ -48,6 +48,7 @@ void _registerFirebaseServices() {
   getIt.registerFactory(() => FirebaseWorkoutService());
   getIt.registerFactory(() => FirebaseHealthMeasurementService());
   getIt.registerFactory(() => FirebaseBloodTestService());
+  getIt.registerFactory(() => FirebaseRaceService());
 }
 
 void _registerRepositories() {
@@ -59,11 +60,7 @@ void _registerRepositories() {
   getIt.registerLazySingleton<BloodTestRepository>(
     () => BloodTestRepositoryImpl(),
   );
-  getIt.registerLazySingleton<RaceRepository>(
-    () => RaceRepositoryImpl(
-      firebaseRaceService: FirebaseRaceService(),
-    ),
-  );
+  getIt.registerLazySingleton<RaceRepository>(() => RaceRepositoryImpl());
 }
 
 void _registerUseCases() {
