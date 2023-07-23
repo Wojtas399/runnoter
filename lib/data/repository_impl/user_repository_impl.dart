@@ -1,7 +1,5 @@
 import 'package:collection/collection.dart';
 import 'package:firebase/firebase.dart' as firebase;
-import 'package:firebase/service/firebase_appearance_settings_service.dart';
-import 'package:firebase/service/firebase_user_service.dart';
 
 import '../../dependency_injection.dart';
 import '../../domain/additional_model/state_repository.dart';
@@ -16,16 +14,15 @@ class UserRepositoryImpl extends StateRepository<User>
     implements UserRepository {
   final firebase.FirebaseUserService _dbUserService;
   final firebase.FirebaseAppearanceSettingsService _dbAppearanceSettingsService;
-  final firebase.FirebaseWorkoutSettingsService _dbWorkoutSettingsService;
+  final firebase.FirebaseActivitiesSettingsService _dbActivitiesSettingsService;
 
   UserRepositoryImpl({
-    required firebase.FirebaseWorkoutSettingsService
-        firebaseWorkoutSettingsService,
     List<User>? initialState,
-  })  : _dbUserService = getIt<FirebaseUserService>(),
+  })  : _dbUserService = getIt<firebase.FirebaseUserService>(),
         _dbAppearanceSettingsService =
-            getIt<FirebaseAppearanceSettingsService>(),
-        _dbWorkoutSettingsService = firebaseWorkoutSettingsService,
+            getIt<firebase.FirebaseAppearanceSettingsService>(),
+        _dbActivitiesSettingsService =
+            getIt<firebase.FirebaseActivitiesSettingsService>(),
         super(initialData: initialState);
 
   @override
@@ -60,7 +57,7 @@ class UserRepositoryImpl extends StateRepository<User>
         language: mapLanguageToDb(user.settings.language),
       ),
     );
-    await _dbWorkoutSettingsService.addSettings(
+    await _dbActivitiesSettingsService.addSettings(
       workoutSettingsDto: firebase.WorkoutSettingsDto(
         userId: user.id,
         distanceUnit: mapDistanceUnitToDb(user.settings.distanceUnit),
@@ -155,7 +152,7 @@ class UserRepositoryImpl extends StateRepository<User>
     required String userId,
   }) async {
     await _dbAppearanceSettingsService.deleteSettingsForUser(userId: userId);
-    await _dbWorkoutSettingsService.deleteSettingsForUser(userId: userId);
+    await _dbActivitiesSettingsService.deleteSettingsForUser(userId: userId);
     await _dbUserService.deleteUserData(userId: userId);
     removeEntity(userId);
   }
@@ -166,7 +163,7 @@ class UserRepositoryImpl extends StateRepository<User>
     final firebase.AppearanceSettingsDto? appearanceSettingsDto =
         await _dbAppearanceSettingsService.loadSettingsByUserId(userId: userId);
     final firebase.WorkoutSettingsDto? workoutSettingsDto =
-        await _dbWorkoutSettingsService.loadSettingsByUserId(userId: userId);
+        await _dbActivitiesSettingsService.loadSettingsByUserId(userId: userId);
     if (appearanceSettingsDto != null && workoutSettingsDto != null) {
       final User user = mapUserFromDto(
         userDto: userDto,
@@ -195,7 +192,7 @@ class UserRepositoryImpl extends StateRepository<User>
     settings.DistanceUnit? distanceUnit,
     settings.PaceUnit? paceUnit,
   ) async =>
-      await _dbWorkoutSettingsService.updateSettings(
+      await _dbActivitiesSettingsService.updateSettings(
         userId: userId,
         distanceUnit:
             distanceUnit != null ? mapDistanceUnitToDb(distanceUnit) : null,

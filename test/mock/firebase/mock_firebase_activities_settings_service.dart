@@ -3,8 +3,8 @@ import 'package:mocktail/mocktail.dart';
 
 class FakeWorkoutSettingsDto extends Fake implements WorkoutSettingsDto {}
 
-class MockFirebaseWorkoutSettingsService extends Mock
-    implements FirebaseWorkoutSettingsService {
+class MockFirebaseActivitiesSettingsService extends Mock
+    implements FirebaseActivitiesSettingsService {
   void mockLoadSettingsByUserId({
     WorkoutSettingsDto? workoutSettingsDto,
   }) {

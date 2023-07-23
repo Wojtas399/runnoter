@@ -1,6 +1,4 @@
 import 'package:firebase/firebase.dart';
-import 'package:firebase/service/firebase_race_service.dart';
-import 'package:firebase/service/firebase_workout_service.dart';
 import 'package:get_it/get_it.dart';
 
 import 'common/date_service.dart';
@@ -46,14 +44,11 @@ void _registerFirebaseServices() {
   getIt.registerFactory(() => FirebaseAuthService());
   getIt.registerFactory(() => FirebaseUserService());
   getIt.registerFactory(() => FirebaseAppearanceSettingsService());
+  getIt.registerFactory(() => FirebaseActivitiesSettingsService());
 }
 
 void _registerRepositories() {
-  getIt.registerLazySingleton<UserRepository>(
-    () => UserRepositoryImpl(
-      firebaseWorkoutSettingsService: FirebaseWorkoutSettingsService(),
-    ),
-  );
+  getIt.registerLazySingleton<UserRepository>(() => UserRepositoryImpl());
   getIt.registerLazySingleton<WorkoutRepository>(
     () => WorkoutRepositoryImpl(
       firebaseWorkoutService: FirebaseWorkoutService(),

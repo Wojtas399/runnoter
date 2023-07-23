@@ -2,7 +2,7 @@ import '../firebase.dart';
 import '../firebase_collections.dart';
 import '../utils/utils.dart';
 
-class FirebaseWorkoutSettingsService {
+class FirebaseActivitiesSettingsService {
   Future<WorkoutSettingsDto?> loadSettingsByUserId({
     required String userId,
   }) async {
