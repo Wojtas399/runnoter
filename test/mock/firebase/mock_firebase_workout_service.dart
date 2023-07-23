@@ -1,5 +1,4 @@
 import 'package:firebase/firebase.dart';
-import 'package:firebase/service/firebase_workout_service.dart';
 import 'package:mocktail/mocktail.dart';
 
 class _FakeRunStatusDto extends Fake implements RunStatusDto {}
