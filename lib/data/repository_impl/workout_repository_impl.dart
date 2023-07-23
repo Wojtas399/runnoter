@@ -1,6 +1,5 @@
 import 'package:collection/collection.dart';
 import 'package:firebase/firebase.dart';
-import 'package:firebase/service/firebase_workout_service.dart';
 
 import '../../common/date_service.dart';
 import '../../dependency_injection.dart';
@@ -19,9 +18,8 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
   final DateService _dateService;
 
   WorkoutRepositoryImpl({
-    required FirebaseWorkoutService firebaseWorkoutService,
     List<Workout>? initialState,
-  })  : _firebaseWorkoutService = firebaseWorkoutService,
+  })  : _firebaseWorkoutService = getIt<FirebaseWorkoutService>(),
         _dateService = getIt<DateService>(),
         super(initialData: initialState);
 
