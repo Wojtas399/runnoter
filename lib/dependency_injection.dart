@@ -46,15 +46,14 @@ void _registerFirebaseServices() {
   getIt.registerFactory(() => FirebaseAppearanceSettingsService());
   getIt.registerFactory(() => FirebaseActivitiesSettingsService());
   getIt.registerFactory(() => FirebaseWorkoutService());
+  getIt.registerFactory(() => FirebaseHealthMeasurementService());
 }
 
 void _registerRepositories() {
   getIt.registerLazySingleton<UserRepository>(() => UserRepositoryImpl());
   getIt.registerLazySingleton<WorkoutRepository>(() => WorkoutRepositoryImpl());
   getIt.registerLazySingleton<HealthMeasurementRepository>(
-    () => HealthMeasurementRepositoryImpl(
-      firebaseHealthMeasurementService: FirebaseHealthMeasurementService(),
-    ),
+    () => HealthMeasurementRepositoryImpl(),
   );
   getIt.registerLazySingleton<BloodTestRepository>(
     () => BloodTestRepositoryImpl(

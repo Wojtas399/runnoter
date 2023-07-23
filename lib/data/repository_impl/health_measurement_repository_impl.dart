@@ -14,10 +14,10 @@ class HealthMeasurementRepositoryImpl extends StateRepository<HealthMeasurement>
   final FirebaseHealthMeasurementService _firebaseHealthMeasurementService;
 
   HealthMeasurementRepositoryImpl({
-    required FirebaseHealthMeasurementService firebaseHealthMeasurementService,
     List<HealthMeasurement>? initialState,
   })  : _dateService = getIt<DateService>(),
-        _firebaseHealthMeasurementService = firebaseHealthMeasurementService,
+        _firebaseHealthMeasurementService =
+            getIt<FirebaseHealthMeasurementService>(),
         super(initialData: initialState);
 
   @override
