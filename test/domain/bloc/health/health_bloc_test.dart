@@ -5,6 +5,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/bloc/health/health_bloc.dart';
 import 'package:runnoter/domain/entity/health_measurement.dart';
+import 'package:runnoter/domain/repository/health_measurement_repository.dart';
 import 'package:runnoter/domain/service/auth_service.dart';
 import 'package:runnoter/domain/service/health_chart_service.dart';
 
@@ -29,7 +30,6 @@ void main() {
   }) =>
       HealthBloc(
         dateService: dateService,
-        healthMeasurementRepository: healthMeasurementRepository,
         chartService: chartService,
         state: HealthState(
           status: const BlocStatusInitial(),
@@ -61,6 +61,9 @@ void main() {
 
   setUpAll(() {
     GetIt.I.registerSingleton<AuthService>(authService);
+    GetIt.I.registerSingleton<HealthMeasurementRepository>(
+      healthMeasurementRepository,
+    );
   });
 
   tearDown(() {

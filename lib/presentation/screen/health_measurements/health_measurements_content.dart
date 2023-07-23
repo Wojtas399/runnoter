@@ -9,6 +9,7 @@ import '../../component/empty_content_info_component.dart';
 import '../../component/loading_info_component.dart';
 import '../../component/text/label_text_components.dart';
 import '../../service/dialog_service.dart';
+import '../health_measurement_creator/health_measurement_creator_dialog.dart';
 import 'health_measurements_item.dart';
 
 class HealthMeasurementsContent extends StatelessWidget {
@@ -35,14 +36,16 @@ class HealthMeasurementsContent extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => _onAddButtonPressed(context),
+        onPressed: _onAddButtonPressed,
         child: const Icon(Icons.add),
       ),
     );
   }
 
-  Future<void> _onAddButtonPressed(BuildContext context) async =>
-      await showHealthMeasurementCreatorDialog(context: context);
+  Future<void> _onAddButtonPressed() async =>
+      await showDialogDependingOnScreenSize(
+        const HealthMeasurementCreatorDialog(),
+      );
 }
 
 class _Body extends StatelessWidget {

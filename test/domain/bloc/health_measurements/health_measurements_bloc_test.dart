@@ -16,10 +16,6 @@ void main() {
   final healthMeasurementRepository = MockHealthMeasurementRepository();
   const String loggedUserId = 'u1';
 
-  HealthMeasurementsBloc createBloc() => HealthMeasurementsBloc(
-        healthMeasurementRepository: healthMeasurementRepository,
-      );
-
   HealthMeasurementsState createState({
     BlocStatus status = const BlocStatusInitial(),
     List<HealthMeasurement>? measurements,
@@ -41,7 +37,7 @@ void main() {
   blocTest(
     'initialize, '
     'should set listener of all measurements and should sort measurements in descending order by date',
-    build: () => createBloc(),
+    build: () => HealthMeasurementsBloc(),
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
       healthMeasurementRepository.mockGetAllMeasurements(
@@ -81,7 +77,7 @@ void main() {
     'delete measurement, '
     'logged user does not exist, '
     'should emit no logged user bloc status',
-    build: () => createBloc(),
+    build: () => HealthMeasurementsBloc(),
     setUp: () => authService.mockGetLoggedUserId(),
     act: (bloc) => bloc.add(HealthMeasurementsEventDeleteMeasurement(
       date: DateTime(2023, 5, 14),
@@ -99,7 +95,7 @@ void main() {
   blocTest(
     'delete measurement, '
     'should call method from health measurement repository to delete measurement and should emit bloc info about deleted measurement',
-    build: () => createBloc(),
+    build: () => HealthMeasurementsBloc(),
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
       healthMeasurementRepository.mockDeleteMeasurement();

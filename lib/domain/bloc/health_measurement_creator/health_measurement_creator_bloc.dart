@@ -22,14 +22,13 @@ class HealthMeasurementCreatorBloc extends BlocWithStatus<
 
   HealthMeasurementCreatorBloc({
     required DateService dateService,
-    required HealthMeasurementRepository healthMeasurementRepository,
     BlocStatus status = const BlocStatusInitial(),
     HealthMeasurement? measurement,
     DateTime? date,
     int? restingHeartRate,
     double? fastingWeight,
   })  : _authService = getIt<AuthService>(),
-        _healthMeasurementRepository = healthMeasurementRepository,
+        _healthMeasurementRepository = getIt<HealthMeasurementRepository>(),
         super(
           HealthMeasurementCreatorState(
             dateService: dateService,

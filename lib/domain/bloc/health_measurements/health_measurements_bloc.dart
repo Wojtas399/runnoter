@@ -21,11 +21,10 @@ class HealthMeasurementsBloc extends BlocWithStatus<HealthMeasurementsEvent,
   final HealthMeasurementRepository _healthMeasurementRepository;
 
   HealthMeasurementsBloc({
-    required HealthMeasurementRepository healthMeasurementRepository,
     BlocStatus status = const BlocStatusInitial(),
     List<HealthMeasurement>? measurements,
   })  : _authService = getIt<AuthService>(),
-        _healthMeasurementRepository = healthMeasurementRepository,
+        _healthMeasurementRepository = getIt<HealthMeasurementRepository>(),
         super(
           HealthMeasurementsState(
             status: status,

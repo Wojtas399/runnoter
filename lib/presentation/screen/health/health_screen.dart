@@ -5,7 +5,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../common/date_service.dart';
 import '../../../domain/bloc/health/health_bloc.dart';
-import '../../../domain/repository/health_measurement_repository.dart';
 import '../../../domain/service/health_chart_service.dart';
 import '../../component/bloc_with_status_listener_component.dart';
 import '../../service/dialog_service.dart';
@@ -13,9 +12,7 @@ import 'health_content.dart';
 
 @RoutePage()
 class HealthScreen extends StatelessWidget {
-  const HealthScreen({
-    super.key,
-  });
+  const HealthScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -39,8 +36,6 @@ class _BlocProvider extends StatelessWidget {
     return BlocProvider(
       create: (BuildContext context) => HealthBloc(
         dateService: DateService(),
-        healthMeasurementRepository:
-            context.read<HealthMeasurementRepository>(),
         chartService: HealthChartService(
           dateService: DateService(),
         ),

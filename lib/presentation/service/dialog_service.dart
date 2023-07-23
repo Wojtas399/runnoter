@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get_it/get_it.dart';
 
-import '../../domain/repository/health_measurement_repository.dart';
 import '../component/dialog/confirmation_dialog_component.dart';
 import '../component/dialog/loading_dialog_component.dart';
 import '../component/dialog/message_dialog_component.dart';
@@ -11,7 +9,6 @@ import '../component/dialog/value_dialog_component.dart';
 import '../config/animation/slide_to_top_anim.dart';
 import '../config/navigation/router.dart';
 import '../extension/context_extensions.dart';
-import '../screen/health_measurement_creator/health_measurement_creator_dialog.dart';
 
 bool _isLoadingDialogOpened = false;
 
@@ -70,21 +67,6 @@ void hideSnackbar() {
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
   }
 }
-
-Future<void> showHealthMeasurementCreatorDialog({
-  required BuildContext context,
-  DateTime? date,
-}) async =>
-    await showDialogDependingOnScreenSize(
-      MultiRepositoryProvider(
-        providers: [
-          RepositoryProvider.value(
-            value: context.read<HealthMeasurementRepository>(),
-          ),
-        ],
-        child: HealthMeasurementCreatorDialog(date: date),
-      ),
-    );
 
 Future<bool> askForConfirmation({
   required String title,

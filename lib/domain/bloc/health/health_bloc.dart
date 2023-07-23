@@ -28,7 +28,6 @@ class HealthBloc
 
   HealthBloc({
     required DateService dateService,
-    required HealthMeasurementRepository healthMeasurementRepository,
     required HealthChartService chartService,
     HealthState state = const HealthState(
       status: BlocStatusInitial(),
@@ -36,7 +35,7 @@ class HealthBloc
     ),
   })  : _dateService = dateService,
         _authService = getIt<AuthService>(),
-        _healthMeasurementRepository = healthMeasurementRepository,
+        _healthMeasurementRepository = getIt<HealthMeasurementRepository>(),
         _chartService = chartService,
         super(state) {
     on<HealthEventInitialize>(_initialize, transformer: restartable());
