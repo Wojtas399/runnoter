@@ -22,10 +22,9 @@ class HomeBloc
   final UserRepository _userRepository;
 
   HomeBloc({
-    required UserRepository userRepository,
     HomeState state = const HomeState(status: BlocStatusInitial()),
   })  : _authService = getIt<AuthService>(),
-        _userRepository = userRepository,
+        _userRepository = getIt<UserRepository>(),
         super(state) {
     on<HomeEventInitialize>(_initialize, transformer: restartable());
     on<HomeEventSignOut>(_signOut);

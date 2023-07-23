@@ -2,9 +2,9 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../dependency_injection.dart';
 import '../../../domain/bloc/home/home_bloc.dart';
 import '../../../domain/entity/settings.dart' as settings;
-import '../../../domain/repository/user_repository.dart';
 import '../../component/bloc_with_status_listener_component.dart';
 import '../../config/navigation/router.dart';
 import '../../service/distance_unit_service.dart';
@@ -22,30 +22,11 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const _BlocProvider(
-      child: _BlocListener(
+    return BlocProvider(
+      create: (_) => HomeBloc()..add(const HomeEventInitialize()),
+      child: const _BlocListener(
         child: HomeContent(),
       ),
-    );
-  }
-}
-
-class _BlocProvider extends StatelessWidget {
-  final Widget child;
-
-  const _BlocProvider({
-    required this.child,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => HomeBloc(
-        userRepository: context.read<UserRepository>(),
-      )..add(
-          const HomeEventInitialize(),
-        ),
-      child: child,
     );
   }
 }
@@ -75,6 +56,7 @@ class _BlocListener extends StatelessWidget {
       case HomeBlocInfo.userSignedOut:
         context.read<ThemeService>().changeTheme(ThemeMode.system);
         navigateAndRemoveUntil(const SignInRoute());
+        resetGetItRepositories();
         break;
     }
   }

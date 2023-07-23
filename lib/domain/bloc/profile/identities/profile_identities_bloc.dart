@@ -30,7 +30,6 @@ class ProfileIdentitiesBloc extends BlocWithStatus<ProfileIdentitiesEvent,
   final RaceRepository _raceRepository;
 
   ProfileIdentitiesBloc({
-    required UserRepository userRepository,
     required WorkoutRepository workoutRepository,
     required HealthMeasurementRepository healthMeasurementRepository,
     required BloodTestRepository bloodTestRepository,
@@ -39,7 +38,7 @@ class ProfileIdentitiesBloc extends BlocWithStatus<ProfileIdentitiesEvent,
       status: BlocStatusInitial(),
     ),
   })  : _authService = getIt<AuthService>(),
-        _userRepository = userRepository,
+        _userRepository = getIt<UserRepository>(),
         _workoutRepository = workoutRepository,
         _healthMeasurementRepository = healthMeasurementRepository,
         _bloodTestRepository = bloodTestRepository,

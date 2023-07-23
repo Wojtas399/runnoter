@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:get_it/get_it.dart';
 import 'package:syncfusion_localizations/syncfusion_localizations.dart';
 
+import 'dependency_injection.dart';
 import 'presentation/config/navigation/router.dart';
 import 'presentation/config/theme.dart';
 import 'presentation/provider/repositories_provider.dart';
@@ -42,7 +42,7 @@ class App extends StatelessWidget {
                   themeMode: themeMode,
                   theme: GlobalTheme.lightTheme,
                   darkTheme: GlobalTheme.darkTheme,
-                  routerConfig: GetIt.I.get<AppRouter>().config(),
+                  routerConfig: getIt<AppRouter>().config(),
                 ),
               );
             },

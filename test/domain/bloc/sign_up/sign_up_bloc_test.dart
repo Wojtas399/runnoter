@@ -7,6 +7,7 @@ import 'package:runnoter/domain/additional_model/custom_exception.dart';
 import 'package:runnoter/domain/bloc/sign_up/sign_up_bloc.dart';
 import 'package:runnoter/domain/entity/settings.dart';
 import 'package:runnoter/domain/entity/user.dart';
+import 'package:runnoter/domain/repository/user_repository.dart';
 import 'package:runnoter/domain/service/auth_service.dart';
 
 import '../../../creators/settings_creator.dart';
@@ -29,20 +30,18 @@ void main() {
     String email = '',
     String password = '',
     String passwordConfirmation = '',
-  }) {
-    return SignUpBloc(
-      userRepository: userRepository,
-      state: SignUpState(
-        status: const BlocStatusInitial(),
-        gender: gender,
-        name: name,
-        surname: surname,
-        email: email,
-        password: password,
-        passwordConfirmation: passwordConfirmation,
-      ),
-    );
-  }
+  }) =>
+      SignUpBloc(
+        state: SignUpState(
+          status: const BlocStatusInitial(),
+          gender: gender,
+          name: name,
+          surname: surname,
+          email: email,
+          password: password,
+          passwordConfirmation: passwordConfirmation,
+        ),
+      );
 
   SignUpState createState({
     BlocStatus status = const BlocStatusInitial(),
@@ -52,20 +51,20 @@ void main() {
     String email = '',
     String password = '',
     String passwordConfirmation = '',
-  }) {
-    return SignUpState(
-      status: status,
-      gender: gender,
-      name: name,
-      surname: surname,
-      email: email,
-      password: password,
-      passwordConfirmation: passwordConfirmation,
-    );
-  }
+  }) =>
+      SignUpState(
+        status: status,
+        gender: gender,
+        name: name,
+        surname: surname,
+        email: email,
+        password: password,
+        passwordConfirmation: passwordConfirmation,
+      );
 
   setUpAll(() {
     GetIt.I.registerSingleton<AuthService>(authService);
+    GetIt.I.registerSingleton<UserRepository>(userRepository);
   });
 
   tearDown(() {

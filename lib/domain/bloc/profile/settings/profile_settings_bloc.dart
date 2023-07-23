@@ -22,12 +22,11 @@ class ProfileSettingsBloc extends BlocWithStatus<ProfileSettingsEvent,
   final UserRepository _userRepository;
 
   ProfileSettingsBloc({
-    required UserRepository userRepository,
     ProfileSettingsState state = const ProfileSettingsState(
       status: BlocStatusInitial(),
     ),
   })  : _authService = getIt<AuthService>(),
-        _userRepository = userRepository,
+        _userRepository = getIt<UserRepository>(),
         super(state) {
     on<ProfileSettingsEventInitialize>(
       _initialize,

@@ -1,7 +1,9 @@
 import 'package:firebase/firebase.dart';
 import 'package:get_it/get_it.dart';
 
+import 'data/repository_impl/user_repository_impl.dart';
 import 'data/service_impl/auth_service_impl.dart';
+import 'domain/repository/user_repository.dart';
 import 'domain/service/auth_service.dart';
 import 'presentation/config/body_sizes.dart';
 import 'presentation/config/navigation/router.dart';
@@ -18,4 +20,15 @@ void setUpGetIt() {
       firebaseAuthService: FirebaseAuthService(),
     ),
   );
+  getIt.registerLazySingleton<UserRepository>(
+    () => UserRepositoryImpl(
+      firebaseUserService: FirebaseUserService(),
+      firebaseAppearanceSettingsService: FirebaseAppearanceSettingsService(),
+      firebaseWorkoutSettingsService: FirebaseWorkoutSettingsService(),
+    ),
+  );
+}
+
+void resetGetItRepositories() {
+  getIt.resetLazySingleton<UserRepository>();
 }

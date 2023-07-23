@@ -21,10 +21,9 @@ class SignUpBloc extends BlocWithStatus<SignUpEvent, SignUpState,
   final UserRepository _userRepository;
 
   SignUpBloc({
-    required UserRepository userRepository,
     SignUpState state = const SignUpState(status: BlocStatusInitial()),
   })  : _authService = getIt<AuthService>(),
-        _userRepository = userRepository,
+        _userRepository = getIt<UserRepository>(),
         super(state) {
     on<SignUpEventGenderChanged>(_genderChanged);
     on<SignUpEventNameChanged>(_nameChanged);

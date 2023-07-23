@@ -9,10 +9,9 @@ class GetLoggedUserGenderUseCase {
   final AuthService _authService;
   final UserRepository _userRepository;
 
-  GetLoggedUserGenderUseCase({
-    required UserRepository userRepository,
-  })  : _authService = getIt<AuthService>(),
-        _userRepository = userRepository;
+  GetLoggedUserGenderUseCase()
+      : _authService = getIt<AuthService>(),
+        _userRepository = getIt<UserRepository>();
 
   Stream<Gender> execute() => _authService.loggedUserId$
       .whereNotNull()

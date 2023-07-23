@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:runnoter/domain/entity/user.dart';
+import 'package:runnoter/domain/repository/user_repository.dart';
 import 'package:runnoter/domain/service/auth_service.dart';
 import 'package:runnoter/domain/use_case/get_logged_user_gender_use_case.dart';
 
@@ -14,6 +15,7 @@ void main() {
 
   setUpAll(() {
     GetIt.I.registerSingleton<AuthService>(authService);
+    GetIt.I.registerSingleton<UserRepository>(userRepository);
   });
 
   test(
@@ -26,9 +28,7 @@ void main() {
       );
       authService.mockGetLoggedUserId(userId: loggedUserid);
       userRepository.mockGetUserById(user: user);
-      final useCase = GetLoggedUserGenderUseCase(
-        userRepository: userRepository,
-      );
+      final useCase = GetLoggedUserGenderUseCase();
 
       final Stream<Gender> gender$ = useCase.execute();
 

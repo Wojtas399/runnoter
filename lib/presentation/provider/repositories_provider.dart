@@ -8,12 +8,10 @@ import '../../common/date_service.dart';
 import '../../data/repository_impl/blood_test_repository_impl.dart';
 import '../../data/repository_impl/health_measurement_repository_impl.dart';
 import '../../data/repository_impl/race_repository_impl.dart';
-import '../../data/repository_impl/user_repository_impl.dart';
 import '../../data/repository_impl/workout_repository_impl.dart';
 import '../../domain/repository/blood_test_repository.dart';
 import '../../domain/repository/health_measurement_repository.dart';
 import '../../domain/repository/race_repository.dart';
-import '../../domain/repository/user_repository.dart';
 import '../../domain/repository/workout_repository.dart';
 
 class RepositoriesProvider extends StatelessWidget {
@@ -28,14 +26,6 @@ class RepositoriesProvider extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
       providers: [
-        RepositoryProvider<UserRepository>(
-          create: (_) => UserRepositoryImpl(
-            firebaseUserService: FirebaseUserService(),
-            firebaseAppearanceSettingsService:
-                FirebaseAppearanceSettingsService(),
-            firebaseWorkoutSettingsService: FirebaseWorkoutSettingsService(),
-          ),
-        ),
         RepositoryProvider<WorkoutRepository>(
           create: (_) => WorkoutRepositoryImpl(
             firebaseWorkoutService: FirebaseWorkoutService(),
