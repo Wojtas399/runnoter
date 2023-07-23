@@ -23,7 +23,6 @@ void main() {
     List<User>? initialState,
   }) {
     return UserRepositoryImpl(
-      firebaseAppearanceSettingsService: dbAppearanceSettingsService,
       firebaseWorkoutSettingsService: dbWorkoutSettingsService,
       initialState: initialState,
     );
@@ -31,6 +30,9 @@ void main() {
 
   setUpAll(() {
     GetIt.I.registerFactory<db.FirebaseUserService>(() => dbUserService);
+    GetIt.I.registerFactory<db.FirebaseAppearanceSettingsService>(
+      () => dbAppearanceSettingsService,
+    );
   });
 
   setUp(() {
