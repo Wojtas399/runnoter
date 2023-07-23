@@ -25,7 +25,6 @@ class WorkoutCreatorBloc extends BlocWithStatus<WorkoutCreatorEvent,
   final String? workoutId;
 
   WorkoutCreatorBloc({
-    required WorkoutRepository workoutRepository,
     this.date,
     this.workoutId,
     WorkoutCreatorState state = const WorkoutCreatorState(
@@ -33,7 +32,7 @@ class WorkoutCreatorBloc extends BlocWithStatus<WorkoutCreatorEvent,
       stages: [],
     ),
   })  : _authService = getIt<AuthService>(),
-        _workoutRepository = workoutRepository,
+        _workoutRepository = getIt<WorkoutRepository>(),
         super(state) {
     on<WorkoutCreatorEventInitialize>(_initialize);
     on<WorkoutCreatorEventWorkoutNameChanged>(_workoutNameChanged);

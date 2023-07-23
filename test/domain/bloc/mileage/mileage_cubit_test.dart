@@ -4,6 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/bloc/mileage/mileage_cubit.dart';
 import 'package:runnoter/domain/entity/run_status.dart';
+import 'package:runnoter/domain/repository/workout_repository.dart';
 import 'package:runnoter/domain/service/auth_service.dart';
 
 import '../../../creators/chart_month_creator.dart';
@@ -17,12 +18,9 @@ void main() {
   final workoutRepository = MockWorkoutRepository();
   const String loggedUserId = 'u1';
 
-  MileageCubit createCubit() => MileageCubit(
-        workoutRepository: workoutRepository,
-      );
-
   setUpAll(() {
     GetIt.I.registerSingleton<AuthService>(authService);
+    GetIt.I.registerSingleton<WorkoutRepository>(workoutRepository);
   });
 
   tearDown(() {
@@ -34,7 +32,7 @@ void main() {
     'initialize, '
     'logged user does not exist, '
     'should finish event call',
-    build: () => createCubit(),
+    build: () => MileageCubit(),
     setUp: () => authService.mockGetLoggedUserId(),
     act: (cubit) => cubit.initialize(),
     expect: () => [],
@@ -46,7 +44,7 @@ void main() {
   blocTest(
     'initialize, '
     'should create chart years which contain months with calculated mileage of done or aborted workouts',
-    build: () => createCubit(),
+    build: () => MileageCubit(),
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
       workoutRepository.mockGetAllWorkouts(

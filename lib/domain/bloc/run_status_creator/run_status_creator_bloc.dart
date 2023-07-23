@@ -27,7 +27,6 @@ class RunStatusCreatorBloc extends BlocWithStatus<RunStatusCreatorEvent,
   final String? entityId;
 
   RunStatusCreatorBloc({
-    required WorkoutRepository workoutRepository,
     required RaceRepository raceRepository,
     required this.entityType,
     required this.entityId,
@@ -35,7 +34,7 @@ class RunStatusCreatorBloc extends BlocWithStatus<RunStatusCreatorEvent,
       status: BlocStatusInitial(),
     ),
   })  : _authService = getIt<AuthService>(),
-        _workoutRepository = workoutRepository,
+        _workoutRepository = getIt<WorkoutRepository>(),
         _raceRepository = raceRepository,
         super(state) {
     on<RunStatusCreatorEventInitialize>(_initialize);

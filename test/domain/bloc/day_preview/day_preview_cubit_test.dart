@@ -5,6 +5,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/bloc/day_preview/day_preview_cubit.dart';
 import 'package:runnoter/domain/entity/race.dart';
 import 'package:runnoter/domain/entity/workout.dart';
+import 'package:runnoter/domain/repository/workout_repository.dart';
 import 'package:runnoter/domain/service/auth_service.dart';
 
 import '../../../creators/race_creator.dart';
@@ -28,7 +29,6 @@ void main() {
   }) =>
       DayPreviewCubit(
         date: date,
-        workoutRepository: workoutRepository,
         raceRepository: raceRepository,
         dateService: dateService,
         state: DayPreviewState(
@@ -39,6 +39,7 @@ void main() {
 
   setUpAll(() {
     GetIt.I.registerSingleton<AuthService>(authService);
+    GetIt.I.registerSingleton<WorkoutRepository>(workoutRepository);
   });
 
   tearDown(() {

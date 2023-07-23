@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/bloc/workout_preview/workout_preview_bloc.dart';
-import '../../../domain/repository/workout_repository.dart';
 import '../../component/bloc_with_status_listener_component.dart';
 import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
@@ -21,34 +20,12 @@ class WorkoutPreviewScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _BlocProvider(
-      workoutId: workoutId,
+    return BlocProvider(
+      create: (_) => WorkoutPreviewBloc(workoutId: workoutId)
+        ..add(const WorkoutPreviewEventInitialize()),
       child: const _BlocListener(
         child: WorkoutPreviewContent(),
       ),
-    );
-  }
-}
-
-class _BlocProvider extends StatelessWidget {
-  final String? workoutId;
-  final Widget child;
-
-  const _BlocProvider({
-    required this.workoutId,
-    required this.child,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (BuildContext context) => WorkoutPreviewBloc(
-        workoutId: workoutId,
-        workoutRepository: context.read<WorkoutRepository>(),
-      )..add(
-          const WorkoutPreviewEventInitialize(),
-        ),
-      child: child,
     );
   }
 }

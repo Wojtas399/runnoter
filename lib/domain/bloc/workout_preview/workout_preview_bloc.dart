@@ -25,12 +25,11 @@ class WorkoutPreviewBloc extends BlocWithStatus<WorkoutPreviewEvent,
 
   WorkoutPreviewBloc({
     required this.workoutId,
-    required WorkoutRepository workoutRepository,
     WorkoutPreviewState state = const WorkoutPreviewState(
       status: BlocStatusInitial(),
     ),
   })  : _authService = getIt<AuthService>(),
-        _workoutRepository = workoutRepository,
+        _workoutRepository = getIt<WorkoutRepository>(),
         super(state) {
     on<WorkoutPreviewEventInitialize>(_initialize, transformer: restartable());
     on<WorkoutPreviewEventDeleteWorkout>(_deleteWorkout);

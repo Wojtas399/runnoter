@@ -5,6 +5,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/bloc/current_week/current_week_cubit.dart';
 import 'package:runnoter/domain/entity/run_status.dart';
 import 'package:runnoter/domain/entity/workout_stage.dart';
+import 'package:runnoter/domain/repository/workout_repository.dart';
 import 'package:runnoter/domain/service/auth_service.dart';
 
 import '../../../creators/race_creator.dart';
@@ -27,7 +28,6 @@ void main() {
   }) {
     return CurrentWeekCubit(
       dateService: dateService,
-      workoutRepository: workoutRepository,
       raceRepository: raceRepository,
       days: days,
     );
@@ -35,6 +35,7 @@ void main() {
 
   setUpAll(() {
     GetIt.I.registerSingleton<AuthService>(authService);
+    GetIt.I.registerSingleton<WorkoutRepository>(workoutRepository);
   });
 
   tearDown(() {

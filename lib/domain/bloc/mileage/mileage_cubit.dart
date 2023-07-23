@@ -15,10 +15,9 @@ class MileageCubit extends Cubit<List<ChartYear>?> {
   final WorkoutRepository _workoutRepository;
   StreamSubscription<List<Workout>?>? _workoutListener;
 
-  MileageCubit({
-    required WorkoutRepository workoutRepository,
-  })  : _authService = getIt<AuthService>(),
-        _workoutRepository = workoutRepository,
+  MileageCubit()
+      : _authService = getIt<AuthService>(),
+        _workoutRepository = getIt<WorkoutRepository>(),
         super(null);
 
   @override

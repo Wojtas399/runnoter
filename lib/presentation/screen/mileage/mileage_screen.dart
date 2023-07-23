@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/bloc/mileage/mileage_cubit.dart';
-import '../../../domain/repository/workout_repository.dart';
 import 'mileage_content.dart';
 
 @RoutePage()
@@ -12,26 +11,9 @@ class MileageScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const _CubitProvider(
-      child: MileageContent(),
-    );
-  }
-}
-
-class _CubitProvider extends StatelessWidget {
-  final Widget child;
-
-  const _CubitProvider({
-    required this.child,
-  });
-
-  @override
-  Widget build(BuildContext context) {
     return BlocProvider(
-      create: (BuildContext context) => MileageCubit(
-        workoutRepository: context.read<WorkoutRepository>(),
-      )..initialize(),
-      child: child,
+      create: (_) => MileageCubit()..initialize(),
+      child: const MileageContent(),
     );
   }
 }

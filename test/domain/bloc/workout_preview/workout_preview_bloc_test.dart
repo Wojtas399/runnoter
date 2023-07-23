@@ -6,6 +6,7 @@ import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/bloc/workout_preview/workout_preview_bloc.dart';
 import 'package:runnoter/domain/entity/run_status.dart';
 import 'package:runnoter/domain/entity/workout_stage.dart';
+import 'package:runnoter/domain/repository/workout_repository.dart';
 import 'package:runnoter/domain/service/auth_service.dart';
 
 import '../../../creators/workout_creator.dart';
@@ -24,19 +25,17 @@ void main() {
     String? workoutName,
     List<WorkoutStage>? stages,
     RunStatus? runStatus,
-  }) {
-    return WorkoutPreviewBloc(
-      workoutId: workoutId,
-      workoutRepository: workoutRepository,
-      state: WorkoutPreviewState(
-        status: const BlocStatusInitial(),
-        date: date,
-        workoutName: workoutName,
-        stages: stages,
-        runStatus: runStatus,
-      ),
-    );
-  }
+  }) =>
+      WorkoutPreviewBloc(
+        workoutId: workoutId,
+        state: WorkoutPreviewState(
+          status: const BlocStatusInitial(),
+          date: date,
+          workoutName: workoutName,
+          stages: stages,
+          runStatus: runStatus,
+        ),
+      );
 
   WorkoutPreviewState createState({
     BlocStatus status = const BlocStatusInitial(),
@@ -44,18 +43,18 @@ void main() {
     String? workoutName,
     List<WorkoutStage>? stages,
     RunStatus? runStatus,
-  }) {
-    return WorkoutPreviewState(
-      status: status,
-      date: date,
-      workoutName: workoutName,
-      stages: stages,
-      runStatus: runStatus,
-    );
-  }
+  }) =>
+      WorkoutPreviewState(
+        status: status,
+        date: date,
+        workoutName: workoutName,
+        stages: stages,
+        runStatus: runStatus,
+      );
 
   setUpAll(() {
     GetIt.I.registerSingleton<AuthService>(authService);
+    GetIt.I.registerSingleton<WorkoutRepository>(workoutRepository);
   });
 
   tearDown(() {

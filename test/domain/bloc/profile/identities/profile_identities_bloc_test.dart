@@ -7,6 +7,7 @@ import 'package:runnoter/domain/additional_model/custom_exception.dart';
 import 'package:runnoter/domain/bloc/profile/identities/profile_identities_bloc.dart';
 import 'package:runnoter/domain/entity/user.dart';
 import 'package:runnoter/domain/repository/user_repository.dart';
+import 'package:runnoter/domain/repository/workout_repository.dart';
 import 'package:runnoter/domain/service/auth_service.dart';
 
 import '../../../../creators/user_creator.dart';
@@ -33,36 +34,34 @@ void main() {
     String? username,
     String? surname,
     String? email,
-  }) {
-    return ProfileIdentitiesState(
-      status: status,
-      loggedUserId: loggedUserId,
-      gender: gender,
-      username: username,
-      surname: surname,
-      email: email,
-    );
-  }
+  }) =>
+      ProfileIdentitiesState(
+        status: status,
+        loggedUserId: loggedUserId,
+        gender: gender,
+        username: username,
+        surname: surname,
+        email: email,
+      );
 
   ProfileIdentitiesBloc createBloc({
     String? loggedUserId,
     Gender? gender,
-  }) {
-    return ProfileIdentitiesBloc(
-      workoutRepository: workoutRepository,
-      healthMeasurementRepository: healthMeasurementRepository,
-      bloodTestRepository: bloodTestRepository,
-      raceRepository: raceRepository,
-      state: createState(
-        loggedUserId: loggedUserId,
-        gender: gender,
-      ),
-    );
-  }
+  }) =>
+      ProfileIdentitiesBloc(
+        healthMeasurementRepository: healthMeasurementRepository,
+        bloodTestRepository: bloodTestRepository,
+        raceRepository: raceRepository,
+        state: createState(
+          loggedUserId: loggedUserId,
+          gender: gender,
+        ),
+      );
 
   setUpAll(() {
     GetIt.I.registerSingleton<AuthService>(authService);
     GetIt.I.registerSingleton<UserRepository>(userRepository);
+    GetIt.I.registerSingleton<WorkoutRepository>(workoutRepository);
   });
 
   tearDown(() {

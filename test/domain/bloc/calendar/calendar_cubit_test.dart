@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/bloc/calendar/calendar_cubit.dart';
+import 'package:runnoter/domain/repository/workout_repository.dart';
 import 'package:runnoter/domain/service/auth_service.dart';
 
 import '../../../creators/race_creator.dart';
@@ -18,12 +19,12 @@ void main() {
   const String loggedUserId = 'u1';
 
   CalendarCubit createCubit() => CalendarCubit(
-        workoutRepository: workoutRepository,
         raceRepository: raceRepository,
       );
 
   setUpAll(() {
     GetIt.I.registerSingleton<AuthService>(authService);
+    GetIt.I.registerSingleton<WorkoutRepository>(workoutRepository);
   });
 
   tearDown(() {
