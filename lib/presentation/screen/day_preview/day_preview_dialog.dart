@@ -4,7 +4,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 import '../../../domain/bloc/day_preview/day_preview_cubit.dart';
-import '../../component/padding/paddings_24.dart';
 import '../../component/responsive_layout_component.dart';
 import '../../extension/context_extensions.dart';
 import '../../formatter/date_formatter.dart';
@@ -25,7 +24,7 @@ class DayPreviewDialog extends StatelessWidget {
     return BlocProvider(
       create: (_) => DayPreviewCubit(date: date)..initialize(),
       child: const ResponsiveLayout(
-        mobileBody: _FullScreenContent(),
+        mobileBody: _FullScreenDialog(),
         desktopBody: _NormalDialog(),
       ),
     );
@@ -63,8 +62,8 @@ class _NormalDialog extends StatelessWidget {
   }
 }
 
-class _FullScreenContent extends StatelessWidget {
-  const _FullScreenContent();
+class _FullScreenDialog extends StatelessWidget {
+  const _FullScreenDialog();
 
   @override
   Widget build(BuildContext context) {
@@ -72,11 +71,7 @@ class _FullScreenContent extends StatelessWidget {
       appBar: _AppBar(),
       floatingActionButton: _Actions(),
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Paddings24(
-            child: DayPreviewActivities(),
-          ),
-        ),
+        child: DayPreviewActivities(),
       ),
     );
   }
