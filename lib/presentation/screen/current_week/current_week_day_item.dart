@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../domain/bloc/current_week/current_week_cubit.dart';
 import '../../component/activity_item_component.dart';
+import '../../component/shimmer_container.dart';
 import '../../component/text/title_text_components.dart';
 import '../../config/navigation/router.dart';
 import '../../formatter/date_formatter.dart';
@@ -65,6 +66,25 @@ class CurrentWeekDayItem extends StatelessWidget {
   void _onRacePressed(String raceId) {
     navigateTo(
       RacePreviewRoute(raceId: raceId),
+    );
+  }
+}
+
+class CurrentWeekDayItemShimmer extends StatelessWidget {
+  const CurrentWeekDayItemShimmer({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Padding(
+      padding: EdgeInsets.all(4),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ShimmerContainer(height: 24, width: 150),
+          SizedBox(height: 8),
+          ShimmerContainer(height: 48, width: double.infinity),
+        ],
+      ),
     );
   }
 }

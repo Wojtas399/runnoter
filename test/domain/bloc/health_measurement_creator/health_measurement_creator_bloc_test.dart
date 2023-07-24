@@ -58,22 +58,22 @@ void main() {
 
   blocTest(
     'initialize, '
-    'given date is null, '
+    'date is null, '
     'should emit complete status',
     build: () => HealthMeasurementCreatorBloc(),
     act: (bloc) => bloc.add(const HealthMeasurementCreatorEventInitialize()),
     expect: () => [
       createState(
-        status: const BlocStatusComplete(),
+        status: const BlocStatusComplete<HealthMeasurementCreatorBlocInfo>(),
       ),
     ],
   );
 
   blocTest(
     'initialize, '
-    'given date is not null, '
+    'date is not null, '
     'should load health measurement from repository and should emit loaded measurement, date, resting heart rate and fasting weight',
-    build: () => HealthMeasurementCreatorBloc(),
+    build: () => HealthMeasurementCreatorBloc(date: DateTime(2023, 5, 10)),
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
       healthMeasurementRepository.mockGetMeasurementByDate(
@@ -84,9 +84,7 @@ void main() {
         ),
       );
     },
-    act: (bloc) => bloc.add(HealthMeasurementCreatorEventInitialize(
-      date: DateTime(2023, 5, 10),
-    )),
+    act: (bloc) => bloc.add(const HealthMeasurementCreatorEventInitialize()),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),

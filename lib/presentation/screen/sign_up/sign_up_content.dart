@@ -6,7 +6,6 @@ import '../../../domain/bloc/sign_up/sign_up_bloc.dart';
 import '../../component/app_bar_with_logo.dart';
 import '../../component/big_button_component.dart';
 import '../../component/body/small_body_component.dart';
-import '../../component/padding/paddings_24.dart';
 import '../../component/text/body_text_components.dart';
 import '../../component/text/headline_text_components.dart';
 import '../../service/navigator_service.dart';
@@ -24,9 +23,11 @@ class SignUpContent extends StatelessWidget {
         child: SingleChildScrollView(
           child: GestureDetector(
             onTap: unfocusInputs,
-            child: const SmallBody(
-              child: Paddings24(
-                child: Column(
+            child: SmallBody(
+              child: Container(
+                color: Colors.transparent,
+                padding: const EdgeInsets.all(24),
+                child: const Column(
                   children: [
                     _FormHeader(),
                     SizedBox(height: 24),

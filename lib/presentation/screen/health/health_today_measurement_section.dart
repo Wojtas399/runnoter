@@ -20,16 +20,16 @@ class HealthTodayMeasurementSection extends StatelessWidget {
     return const Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _TodayMeasurementSectionHeader(),
+        _Header(),
         SizedBox(height: 8),
-        _TodayMeasurement()
+        _TodayMeasurement(),
       ],
     );
   }
 }
 
-class _TodayMeasurementSectionHeader extends StatelessWidget {
-  const _TodayMeasurementSectionHeader();
+class _Header extends StatelessWidget {
+  const _Header();
 
   @override
   Widget build(BuildContext context) {
@@ -41,21 +41,13 @@ class _TodayMeasurementSectionHeader extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         TitleMedium(Str.of(context).healthTodayMeasurement),
-        if (doesTodayMeasurementExist) const _TodayMeasurementActions(),
+        if (doesTodayMeasurementExist)
+          EditDeleteActions(
+            displayAsPopupMenu: context.isMobileSize,
+            onEditSelected: _editMeasurement,
+            onDeleteSelected: () => _deleteMeasurement(context),
+          ),
       ],
-    );
-  }
-}
-
-class _TodayMeasurementActions extends StatelessWidget {
-  const _TodayMeasurementActions();
-
-  @override
-  Widget build(BuildContext context) {
-    return EditDeleteActions(
-      displayAsPopupMenu: context.isMobileSize,
-      onEditSelected: _editMeasurement,
-      onDeleteSelected: () => _deleteMeasurement(context),
     );
   }
 
@@ -89,17 +81,15 @@ class _TodayMeasurement extends StatelessWidget {
     );
 
     return thisHealthMeasurement == null
-        ? const _TodayMeasurementButton()
-        : _TodayMeasurementPreview(measurement: thisHealthMeasurement);
+        ? const _AddMeasurementButton()
+        : _MeasurementData(measurement: thisHealthMeasurement);
   }
 }
 
-class _TodayMeasurementPreview extends StatelessWidget {
+class _MeasurementData extends StatelessWidget {
   final HealthMeasurement measurement;
 
-  const _TodayMeasurementPreview({
-    required this.measurement,
-  });
+  const _MeasurementData({required this.measurement});
 
   @override
   Widget build(BuildContext context) {
@@ -109,14 +99,14 @@ class _TodayMeasurementPreview extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
-            child: _HealthMeasurementParam(
+            child: _Param(
               label: str.healthRestingHeartRate,
               value: '${measurement.restingHeartRate} ${str.heartRateUnit}',
             ),
           ),
           const VerticalDivider(),
           Expanded(
-            child: _HealthMeasurementParam(
+            child: _Param(
               label: str.healthFastingWeight,
               value: '${measurement.fastingWeight} kg',
             ),
@@ -127,11 +117,11 @@ class _TodayMeasurementPreview extends StatelessWidget {
   }
 }
 
-class _HealthMeasurementParam extends StatelessWidget {
+class _Param extends StatelessWidget {
   final String label;
   final String value;
 
-  const _HealthMeasurementParam({
+  const _Param({
     required this.label,
     required this.value,
   });
@@ -149,19 +139,22 @@ class _HealthMeasurementParam extends StatelessWidget {
   }
 }
 
-class _TodayMeasurementButton extends StatelessWidget {
-  const _TodayMeasurementButton();
+class _AddMeasurementButton extends StatelessWidget {
+  const _AddMeasurementButton();
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        BigButton(
-          label: Str.of(context).healthAddTodayMeasurementButton,
-          onPressed: _onPressed,
-        ),
-      ],
+    return Padding(
+      padding: const EdgeInsets.only(top: 8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          BigButton(
+            label: Str.of(context).healthAddTodayMeasurementButton,
+            onPressed: _onPressed,
+          ),
+        ],
+      ),
     );
   }
 

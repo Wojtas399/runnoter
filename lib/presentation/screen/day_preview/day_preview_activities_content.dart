@@ -8,6 +8,7 @@ import '../../../domain/entity/workout.dart';
 import '../../component/activity_item_component.dart';
 import '../../component/empty_content_info_component.dart';
 import '../../component/loading_info_component.dart';
+import '../../component/padding/paddings_24.dart';
 import '../../service/navigator_service.dart';
 import 'day_preview_dialog_actions.dart';
 
@@ -19,27 +20,30 @@ class DayPreviewActivities extends StatelessWidget {
     final DayPreviewCubit cubit = context.watch<DayPreviewCubit>();
 
     if (cubit.state.workouts == null && cubit.state.workouts == null) {
-      return const Padding(
-        padding: EdgeInsets.symmetric(vertical: 32),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [LoadingInfo()],
+      return const Center(
+        child: Paddings24(
+          child: LoadingInfo(),
         ),
       );
     } else if (cubit.areThereActivities) {
-      return _Activities(
-        workouts: cubit.state.workouts,
-        races: cubit.state.races,
+      return SingleChildScrollView(
+        child: Paddings24(
+          child: _Activities(
+            workouts: cubit.state.workouts,
+            races: cubit.state.races,
+          ),
+        ),
       );
     }
     final str = Str.of(context);
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 32),
-      child: EmptyContentInfo(
-        title: str.dayPreviewNoActivitiesTitle,
-        subtitle: cubit.isPastDate
-            ? str.dayPreviewNoActivitiesMessagePastDay
-            : str.dayPreviewNoActivitiesMessageFutureDay,
+    return Center(
+      child: Paddings24(
+        child: EmptyContentInfo(
+          title: str.dayPreviewNoActivitiesTitle,
+          subtitle: cubit.isPastDate
+              ? str.dayPreviewNoActivitiesMessagePastDay
+              : str.dayPreviewNoActivitiesMessageFutureDay,
+        ),
       ),
     );
   }

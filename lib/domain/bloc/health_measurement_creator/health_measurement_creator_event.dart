@@ -6,11 +6,7 @@ abstract class HealthMeasurementCreatorEvent {
 
 class HealthMeasurementCreatorEventInitialize
     extends HealthMeasurementCreatorEvent {
-  final DateTime? date;
-
-  const HealthMeasurementCreatorEventInitialize({
-    this.date,
-  });
+  const HealthMeasurementCreatorEventInitialize();
 }
 
 class HealthMeasurementCreatorEventDateChanged

@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rxdart/rxdart.dart';
 
 import '../../../../common/date_service.dart';
 import '../../../../domain/additional_model/bloc_state.dart';
@@ -53,35 +54,32 @@ class HealthMeasurementCreatorBloc extends BlocWithStatus<
     HealthMeasurementCreatorEventInitialize event,
     Emitter<HealthMeasurementCreatorState> emit,
   ) async {
-    if (event.date == null) {
+    if (state.date == null) {
+      emitCompleteStatus(emit, null);
+      return;
+    }
+    final Stream<HealthMeasurement?> measurement$ =
+        _authService.loggedUserId$.whereNotNull().switchMap(
+              (String loggedUserId) =>
+                  _healthMeasurementRepository.getMeasurementByDate(
+                date: state.date!,
+                userId: loggedUserId,
+              ),
+            );
+    await for (final measurement in measurement$) {
       emit(state.copyWith(
-        status: const BlocStatusComplete(),
+        measurement: measurement,
+        restingHeartRate: measurement?.restingHeartRate,
+        fastingWeight: measurement?.fastingWeight,
       ));
       return;
     }
-    final String? loggedUserId = await _authService.loggedUserId$.first;
-    if (loggedUserId != null) {
-      final Stream<HealthMeasurement?> measurement$ =
-          _healthMeasurementRepository.getMeasurementByDate(
-        date: event.date!,
-        userId: loggedUserId,
-      );
-      await for (final measurement in measurement$) {
-        emit(state.copyWith(
-          measurement: measurement,
-          date: event.date,
-          restingHeartRate: measurement?.restingHeartRate,
-          fastingWeight: measurement?.fastingWeight,
-        ));
-        return;
-      }
-    }
   }
 
-  Future<void> _dateChanged(
+  void _dateChanged(
     HealthMeasurementCreatorEventDateChanged event,
     Emitter<HealthMeasurementCreatorState> emit,
-  ) async {
+  ) {
     emit(state.copyWith(
       date: event.date,
     ));

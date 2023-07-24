@@ -19,8 +19,8 @@ class HealthMeasurementCreatorDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => HealthMeasurementCreatorBloc()
-        ..add(HealthMeasurementCreatorEventInitialize(date: date)),
+      create: (_) => HealthMeasurementCreatorBloc(date: date)
+        ..add(const HealthMeasurementCreatorEventInitialize()),
       child: const _BlocListener(
         child: HealthMeasurementCreatorContent(),
       ),

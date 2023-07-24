@@ -4,9 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../domain/bloc/current_week/current_week_cubit.dart';
 import '../../component/body/big_body_component.dart';
 import '../../component/card_body_component.dart';
-import '../../component/loading_info_component.dart';
 import '../../component/padding/paddings_24.dart';
 import '../../component/responsive_layout_component.dart';
+import '../../component/shimmer.dart';
 import '../../extension/widgets_list_extensions.dart';
 import 'current_week_day_item.dart';
 import 'current_week_stats.dart';
@@ -19,10 +19,12 @@ class CurrentWeekContent extends StatelessWidget {
     return const SingleChildScrollView(
       child: BigBody(
         child: Paddings24(
-          child: ResponsiveLayout(
-            mobileBody: _MobileContent(),
-            tabletBody: _TabletContent(),
-            desktopBody: _DesktopContent(),
+          child: Shimmer(
+            child: ResponsiveLayout(
+              mobileBody: _MobileContent(),
+              tabletBody: _TabletContent(),
+              desktopBody: _DesktopContent(),
+            ),
           ),
         ),
       ),
@@ -89,12 +91,12 @@ class _ListOfDays extends StatelessWidget {
       (CurrentWeekCubit cubit) => cubit.state,
     );
 
-    return days == null
-        ? const LoadingInfo()
-        : Column(
-            children: <Widget>[
-              ...days.map((day) => CurrentWeekDayItem(day: day)),
-            ].addSeparator(const Divider(height: 16)),
-          );
+    return Column(
+      children: <Widget>[
+        if (days == null)
+          for (int i = 0; i < 7; i++) const CurrentWeekDayItemShimmer(),
+        if (days != null) ...days.map((day) => CurrentWeekDayItem(day: day)),
+      ].addSeparator(const Divider(height: 16)),
+    );
   }
 }
