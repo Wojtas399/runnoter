@@ -12,7 +12,6 @@ void main() {
   setUp(() {
     state = const WorkoutCreatorState(
       status: BlocStatusInitial(),
-      date: null,
       workout: null,
       workoutName: null,
       stages: [],
@@ -21,30 +20,10 @@ void main() {
 
   test(
     'can submit, '
-    'date is null, '
-    'should be false',
-    () {
-      state = state.copyWith(
-        workoutName: 'workout name',
-        stages: const [
-          WorkoutStageCardio(
-            distanceInKm: 10,
-            maxHeartRate: 150,
-          ),
-        ],
-      );
-
-      expect(state.canSubmit, false);
-    },
-  );
-
-  test(
-    'can submit, '
     'workout name is null, '
     'should be false',
     () {
       state = state.copyWith(
-        date: DateTime(2023, 2, 2),
         stages: const [
           WorkoutStageCardio(
             distanceInKm: 10,
@@ -63,7 +42,6 @@ void main() {
     'should be false',
     () {
       state = state.copyWith(
-        date: DateTime(2023, 2, 2),
         workoutName: '',
         stages: const [
           WorkoutStageCardio(
@@ -83,7 +61,6 @@ void main() {
     'should be false',
     () {
       state = state.copyWith(
-        date: DateTime(2023, 2, 2),
         workoutName: 'workout name',
       );
 
@@ -98,7 +75,6 @@ void main() {
     'should be false',
     () {
       state = state.copyWith(
-        date: DateTime(2023, 2, 2),
         workout: createWorkout(
           name: 'workout name',
           stages: const [
@@ -136,7 +112,6 @@ void main() {
     'should be true',
     () {
       state = state.copyWith(
-        date: DateTime(2023, 2, 2),
         workoutName: 'workout name',
         stages: const [
           WorkoutStageCardio(
@@ -157,7 +132,6 @@ void main() {
     'should be true',
     () {
       state = state.copyWith(
-        date: DateTime(2023, 2, 2),
         workout: createWorkout(
           name: 'workout 1',
           stages: const [
@@ -187,7 +161,6 @@ void main() {
     'should be true',
     () {
       state = state.copyWith(
-        date: DateTime(2023, 2, 2),
         workout: createWorkout(
           name: 'workout 1',
           stages: const [
@@ -228,19 +201,6 @@ void main() {
 
       expect(state.status, expectedStatus);
       expect(state2.status, const BlocStatusComplete());
-    },
-  );
-
-  test(
-    'copy with date',
-    () {
-      final DateTime expectedDate = DateTime(2023, 2, 1);
-
-      state = state.copyWith(date: expectedDate);
-      final state2 = state.copyWith();
-
-      expect(state.date, expectedDate);
-      expect(state2.date, expectedDate);
     },
   );
 

@@ -1,7 +1,26 @@
-part of 'workout_preview_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class _Workout extends StatelessWidget {
-  const _Workout();
+import '../../../domain/bloc/run_status_creator/run_status_creator_bloc.dart';
+import '../../../domain/bloc/workout_preview/workout_preview_bloc.dart';
+import '../../../domain/entity/run_status.dart';
+import '../../../domain/entity/workout_stage.dart';
+import '../../component/big_button_component.dart';
+import '../../component/content_with_label_component.dart';
+import '../../component/nullable_text_component.dart';
+import '../../component/run_status_info_component.dart';
+import '../../component/text/title_text_components.dart';
+import '../../config/navigation/router.dart';
+import '../../extension/context_extensions.dart';
+import '../../formatter/date_formatter.dart';
+import '../../formatter/list_of_workout_stages_formatter.dart';
+import '../../formatter/workout_stage_formatter.dart';
+import '../../service/navigator_service.dart';
+import 'workout_preview_actions.dart';
+
+class WorkoutPreviewWorkoutInfo extends StatelessWidget {
+  const WorkoutPreviewWorkoutInfo({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -14,8 +33,8 @@ class _Workout extends StatelessWidget {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const _WorkoutName(),
-            const SizedBox(height: 24),
+            const _Header(),
+            gap,
             ContentWithLabel(
               label: str.workoutPreviewWorkoutDate,
               content: const _WorkoutDate(),
@@ -37,7 +56,23 @@ class _Workout extends StatelessWidget {
             ),
           ],
         ),
+        const SizedBox(height: 32),
         const _RunStatusButton(),
+      ],
+    );
+  }
+}
+
+class _Header extends StatelessWidget {
+  const _Header();
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        const _WorkoutName(),
+        if (!context.isMobileSize) const WorkoutPreviewWorkoutActions(),
       ],
     );
   }
@@ -65,9 +100,7 @@ class _WorkoutDate extends StatelessWidget {
       (WorkoutPreviewBloc bloc) => bloc.state.date,
     );
 
-    return NullableText(
-      date?.toFullDate(context),
-    );
+    return NullableText(date?.toFullDate(context));
   }
 }
 
@@ -80,25 +113,23 @@ class _WorkoutStages extends StatelessWidget {
       (WorkoutPreviewBloc bloc) => bloc.state.stages,
     );
 
-    if (stages == null) {
-      return const NullableText(null);
-    }
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        ...stages.asMap().entries.map(
-              (MapEntry<int, WorkoutStage> entry) => Padding(
-                padding: EdgeInsets.only(
-                  bottom: entry.key < stages.length ? 8 : 0,
-                ),
-                child: Text(
-                  '${entry.key + 1}. ${entry.value.toUIFormat(context)}',
-                ),
-              ),
-            ),
-      ],
-    );
+    return stages == null
+        ? const NullableText(null)
+        : Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ...stages.asMap().entries.map(
+                    (MapEntry<int, WorkoutStage> entry) => Padding(
+                      padding: EdgeInsets.only(
+                        bottom: entry.key < stages.length ? 8 : 0,
+                      ),
+                      child: Text(
+                        '${entry.key + 1}. ${entry.value.toUIFormat(context)}',
+                      ),
+                    ),
+                  ),
+            ],
+          );
   }
 }
 
@@ -112,6 +143,21 @@ class _WorkoutDistance extends StatelessWidget {
     );
 
     return NullableText(stages?.toUIDetailedTotalDistance(context));
+  }
+}
+
+class _RunStatus extends StatelessWidget {
+  const _RunStatus();
+
+  @override
+  Widget build(BuildContext context) {
+    final RunStatus? runStatus = context.select(
+      (WorkoutPreviewBloc bloc) => bloc.state.runStatus,
+    );
+
+    return runStatus == null
+        ? const NullableText(null)
+        : RunStatusInfo(runStatus: runStatus);
   }
 }
 
@@ -130,20 +176,19 @@ class _RunStatusButton extends StatelessWidget {
 
     return BigButton(
       label: label,
-      onPressed: () {
-        _onPressed(context);
-      },
+      onPressed: () => _onPressed(context),
     );
   }
 
   void _onPressed(BuildContext context) {
-    navigateTo(
-      context: context,
-      route: RunStatusCreatorRoute(
-        creatorArguments: WorkoutRunStatusCreatorArguments(
-          entityId: context.read<WorkoutPreviewBloc>().workoutId,
+    final String? workoutId = context.read<WorkoutPreviewBloc>().workoutId;
+    if (workoutId != null) {
+      navigateTo(
+        RunStatusCreatorRoute(
+          entityType: RunStatusCreatorEntityType.workout.name,
+          entityId: workoutId,
         ),
-      ),
-    );
+      );
+    }
   }
 }

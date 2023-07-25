@@ -1,5 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rxdart/rxdart.dart';
 
+import '../../../dependency_injection.dart';
 import '../../additional_model/bloc_state.dart';
 import '../../additional_model/bloc_status.dart';
 import '../../additional_model/bloc_with_status.dart';
@@ -19,13 +21,11 @@ class RaceCreatorBloc extends BlocWithStatus<RaceCreatorEvent, RaceCreatorState,
 
   RaceCreatorBloc({
     this.raceId,
-    required AuthService authService,
-    required RaceRepository raceRepository,
     RaceCreatorState state = const RaceCreatorState(
       status: BlocStatusInitial(),
     ),
-  })  : _authService = authService,
-        _raceRepository = raceRepository,
+  })  : _authService = getIt<AuthService>(),
+        _raceRepository = getIt<RaceRepository>(),
         super(state) {
     on<RaceCreatorEventInitialize>(_initialize);
     on<RaceCreatorEventNameChanged>(_nameChanged);
@@ -48,28 +48,25 @@ class RaceCreatorBloc extends BlocWithStatus<RaceCreatorEvent, RaceCreatorState,
       ));
       return;
     }
-    final String? loggedUserId = await _authService.loggedUserId$.first;
-    if (loggedUserId == null) {
-      emitNoLoggedUserStatus(emit);
+    final Stream<Race?> race$ =
+        _authService.loggedUserId$.whereNotNull().switchMap(
+              (String loggedUserId) => _raceRepository.getRaceById(
+                raceId: raceId!,
+                userId: loggedUserId,
+              ),
+            );
+    await for (final race in race$) {
+      emit(state.copyWith(
+        status: const BlocStatusComplete<RaceCreatorBlocInfo>(),
+        race: race,
+        name: race?.name,
+        date: race?.date,
+        place: race?.place,
+        distance: race?.distance,
+        expectedDuration: race?.expectedDuration,
+      ));
       return;
     }
-    final Race? race = await _raceRepository
-        .getRaceById(
-          raceId: raceId!,
-          userId: loggedUserId,
-        )
-        .first;
-    emit(state.copyWith(
-      status: const BlocStatusComplete<RaceCreatorBlocInfo>(
-        info: RaceCreatorBlocInfo.editModeInitialized,
-      ),
-      race: race,
-      name: race?.name,
-      date: race?.date,
-      place: race?.place,
-      distance: race?.distance,
-      expectedDuration: race?.expectedDuration,
-    ));
   }
 
   void _nameChanged(
@@ -178,7 +175,6 @@ class RaceCreatorBloc extends BlocWithStatus<RaceCreatorEvent, RaceCreatorState,
 }
 
 enum RaceCreatorBlocInfo {
-  editModeInitialized,
   raceAdded,
   raceUpdated,
 }

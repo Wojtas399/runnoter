@@ -1,10 +1,14 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/additional_model/custom_exception.dart';
 import 'package:runnoter/domain/bloc/sign_up/sign_up_bloc.dart';
 import 'package:runnoter/domain/entity/settings.dart';
+import 'package:runnoter/domain/entity/user.dart';
+import 'package:runnoter/domain/repository/user_repository.dart';
+import 'package:runnoter/domain/service/auth_service.dart';
 
 import '../../../creators/settings_creator.dart';
 import '../../../creators/user_creator.dart';
@@ -20,38 +24,48 @@ void main() {
   const String password = 'Password1!';
 
   SignUpBloc createBloc({
-    String name = '',
-    String surname = '',
-    String email = '',
-    String password = '',
-  }) {
-    return SignUpBloc(
-      authService: authService,
-      userRepository: userRepository,
-      name: name,
-      surname: surname,
-      email: email,
-      password: password,
-    );
-  }
-
-  SignUpState createState({
-    BlocStatus status = const BlocStatusInitial(),
+    Gender gender = Gender.male,
     String name = '',
     String surname = '',
     String email = '',
     String password = '',
     String passwordConfirmation = '',
-  }) {
-    return SignUpState(
-      status: status,
-      name: name,
-      surname: surname,
-      email: email,
-      password: password,
-      passwordConfirmation: passwordConfirmation,
-    );
-  }
+  }) =>
+      SignUpBloc(
+        state: SignUpState(
+          status: const BlocStatusInitial(),
+          gender: gender,
+          name: name,
+          surname: surname,
+          email: email,
+          password: password,
+          passwordConfirmation: passwordConfirmation,
+        ),
+      );
+
+  SignUpState createState({
+    BlocStatus status = const BlocStatusInitial(),
+    Gender gender = Gender.male,
+    String name = '',
+    String surname = '',
+    String email = '',
+    String password = '',
+    String passwordConfirmation = '',
+  }) =>
+      SignUpState(
+        status: status,
+        gender: gender,
+        name: name,
+        surname: surname,
+        email: email,
+        password: password,
+        passwordConfirmation: passwordConfirmation,
+      );
+
+  setUpAll(() {
+    GetIt.I.registerSingleton<AuthService>(authService);
+    GetIt.I.registerSingleton<UserRepository>(userRepository);
+  });
 
   tearDown(() {
     reset(authService);
@@ -59,14 +73,25 @@ void main() {
   });
 
   blocTest(
-    'name changed, '
-    'should update username in state',
+    'gender changed, '
+    'should update gender in state',
     build: () => createBloc(),
-    act: (SignUpBloc bloc) => bloc.add(
-      const SignUpEventNameChanged(
-        name: name,
+    act: (bloc) => bloc.add(const SignUpEventGenderChanged(
+      gender: Gender.female,
+    )),
+    expect: () => [
+      createState(
+        status: const BlocStatusComplete(),
+        gender: Gender.female,
       ),
-    ),
+    ],
+  );
+
+  blocTest(
+    'name changed, '
+    'should update name in state',
+    build: () => createBloc(),
+    act: (bloc) => bloc.add(const SignUpEventNameChanged(name: name)),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
@@ -79,11 +104,7 @@ void main() {
     'surname changed, '
     'should update surname in state',
     build: () => createBloc(),
-    act: (SignUpBloc bloc) => bloc.add(
-      const SignUpEventSurnameChanged(
-        surname: surname,
-      ),
-    ),
+    act: (bloc) => bloc.add(const SignUpEventSurnameChanged(surname: surname)),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
@@ -96,11 +117,7 @@ void main() {
     'email changed, '
     'should update email in state',
     build: () => createBloc(),
-    act: (SignUpBloc bloc) => bloc.add(
-      const SignUpEventEmailChanged(
-        email: email,
-      ),
-    ),
+    act: (bloc) => bloc.add(const SignUpEventEmailChanged(email: email)),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
@@ -113,11 +130,9 @@ void main() {
     'password changed, '
     'should update password in state',
     build: () => createBloc(),
-    act: (SignUpBloc bloc) => bloc.add(
-      const SignUpEventPasswordChanged(
-        password: password,
-      ),
-    ),
+    act: (bloc) => bloc.add(const SignUpEventPasswordChanged(
+      password: password,
+    )),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
@@ -130,11 +145,9 @@ void main() {
     'password confirmation changed, '
     'should update password confirmation in state',
     build: () => createBloc(),
-    act: (SignUpBloc bloc) => bloc.add(
-      const SignUpEventPasswordConfirmationChanged(
-        passwordConfirmation: password,
-      ),
-    ),
+    act: (bloc) => bloc.add(const SignUpEventPasswordConfirmationChanged(
+      passwordConfirmation: password,
+    )),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
@@ -145,38 +158,55 @@ void main() {
 
   blocTest(
     'submit, '
-    'should call auth service method to sign up and user repository method to add user with default settings, and should emit complete status with signed up info',
+    'submit button is disabled, '
+    'should do nothing',
     build: () => createBloc(
+      gender: Gender.male,
       name: name,
       surname: surname,
       email: email,
       password: password,
     ),
+    act: (bloc) => bloc.add(const SignUpEventSubmit()),
+    expect: () => [],
+  );
+
+  blocTest(
+    'submit, '
+    'should call auth service method to sign up and user repository method to add user with default settings, and should emit complete status with signed up info',
+    build: () => createBloc(
+      gender: Gender.male,
+      name: name,
+      surname: surname,
+      email: email,
+      password: password,
+      passwordConfirmation: password,
+    ),
     setUp: () {
-      authService.mockSignUp(
-        userId: 'u1',
-      );
+      authService.mockSignUp(userId: 'u1');
       userRepository.mockAddUser();
     },
-    act: (SignUpBloc bloc) => bloc.add(
-      const SignUpEventSubmit(),
-    ),
+    act: (bloc) => bloc.add(const SignUpEventSubmit()),
     expect: () => [
       createState(
         status: const BlocStatusLoading(),
+        gender: Gender.male,
         name: name,
         surname: surname,
         email: email,
         password: password,
+        passwordConfirmation: password,
       ),
       createState(
         status: const BlocStatusComplete<SignUpBlocInfo>(
           info: SignUpBlocInfo.signedUp,
         ),
+        gender: Gender.male,
         name: name,
         surname: surname,
         email: email,
         password: password,
+        passwordConfirmation: password,
       ),
     ],
     verify: (_) {
@@ -190,6 +220,7 @@ void main() {
         () => userRepository.addUser(
           user: createUser(
             id: 'u1',
+            gender: Gender.male,
             name: name,
             surname: surname,
             settings: createSettings(
@@ -209,47 +240,47 @@ void main() {
     'auth exception with email already in use code, '
     'should emit error status with email already in use error',
     build: () => createBloc(
+      gender: Gender.male,
       name: name,
       surname: surname,
       email: email,
       password: password,
+      passwordConfirmation: password,
     ),
-    setUp: () {
-      authService.mockSignUp(
-        throwable: const AuthException(
-          code: AuthExceptionCode.emailAlreadyInUse,
-        ),
-      );
-    },
-    act: (SignUpBloc bloc) => bloc.add(
-      const SignUpEventSubmit(),
+    setUp: () => authService.mockSignUp(
+      throwable: const AuthException(
+        code: AuthExceptionCode.emailAlreadyInUse,
+      ),
     ),
+    act: (bloc) => bloc.add(const SignUpEventSubmit()),
     expect: () => [
       createState(
         status: const BlocStatusLoading(),
+        gender: Gender.male,
         name: name,
         surname: surname,
         email: email,
         password: password,
+        passwordConfirmation: password,
       ),
       createState(
         status: const BlocStatusError<SignUpBlocError>(
           error: SignUpBlocError.emailAlreadyInUse,
         ),
+        gender: Gender.male,
         name: name,
         surname: surname,
         email: email,
         password: password,
+        passwordConfirmation: password,
       ),
     ],
-    verify: (_) {
-      verify(
-        () => authService.signUp(
-          email: email,
-          password: password,
-        ),
-      ).called(1);
-    },
+    verify: (_) => verify(
+      () => authService.signUp(
+        email: email,
+        password: password,
+      ),
+    ).called(1),
   );
 
   blocTest(
@@ -257,33 +288,37 @@ void main() {
     'network exception with request failed code, '
     'should emit network request failed status',
     build: () => createBloc(
+      gender: Gender.male,
       name: name,
       surname: surname,
       email: email,
       password: password,
+      passwordConfirmation: password,
     ),
     setUp: () => authService.mockSignUp(
       throwable: const NetworkException(
         code: NetworkExceptionCode.requestFailed,
       ),
     ),
-    act: (SignUpBloc bloc) => bloc.add(
-      const SignUpEventSubmit(),
-    ),
+    act: (bloc) => bloc.add(const SignUpEventSubmit()),
     expect: () => [
       createState(
         status: const BlocStatusLoading(),
+        gender: Gender.male,
         name: name,
         surname: surname,
         email: email,
         password: password,
+        passwordConfirmation: password,
       ),
       createState(
         status: const BlocStatusNetworkRequestFailed(),
+        gender: Gender.male,
         name: name,
         surname: surname,
         email: email,
         password: password,
+        passwordConfirmation: password,
       ),
     ],
     verify: (_) => verify(
@@ -299,47 +334,45 @@ void main() {
     'unknown exception, '
     'should emit error status with unknown error',
     build: () => createBloc(
+      gender: Gender.male,
       name: name,
       surname: surname,
       email: email,
       password: password,
+      passwordConfirmation: password,
     ),
-    setUp: () {
-      authService.mockSignUp(
-        throwable: const UnknownException(
-          message: 'unknown exception message',
-        ),
-      );
-    },
-    act: (SignUpBloc bloc) => bloc.add(
-      const SignUpEventSubmit(),
+    setUp: () => authService.mockSignUp(
+      throwable: const UnknownException(
+        message: 'unknown exception message',
+      ),
     ),
+    act: (bloc) => bloc.add(const SignUpEventSubmit()),
     expect: () => [
       createState(
         status: const BlocStatusLoading(),
+        gender: Gender.male,
         name: name,
         surname: surname,
         email: email,
         password: password,
+        passwordConfirmation: password,
       ),
       createState(
         status: const BlocStatusUnknownError(),
+        gender: Gender.male,
         name: name,
         surname: surname,
         email: email,
         password: password,
+        passwordConfirmation: password,
       ),
     ],
-    errors: () => [
-      'unknown exception message',
-    ],
-    verify: (_) {
-      verify(
-        () => authService.signUp(
-          email: email,
-          password: password,
-        ),
-      ).called(1);
-    },
+    errors: () => ['unknown exception message'],
+    verify: (_) => verify(
+      () => authService.signUp(
+        email: email,
+        password: password,
+      ),
+    ).called(1),
   );
 }

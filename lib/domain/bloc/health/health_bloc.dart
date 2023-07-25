@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -10,6 +11,7 @@ import '../../../../domain/additional_model/bloc_with_status.dart';
 import '../../../../domain/entity/health_measurement.dart';
 import '../../../../domain/repository/health_measurement_repository.dart';
 import '../../../../domain/service/auth_service.dart';
+import '../../../dependency_injection.dart';
 import '../../service/health_chart_service.dart';
 
 part 'health_event.dart';
@@ -21,30 +23,26 @@ class HealthBloc
   final AuthService _authService;
   final HealthMeasurementRepository _healthMeasurementRepository;
   final HealthChartService _chartService;
-  StreamSubscription<HealthMeasurement?>? _todayMeasurementListener;
   StreamSubscription<List<HealthMeasurement>?>?
       _measurementsFromDateRangeListener;
 
   HealthBloc({
-    required DateService dateService,
-    required AuthService authService,
-    required HealthMeasurementRepository healthMeasurementRepository,
     required HealthChartService chartService,
     HealthState state = const HealthState(
       status: BlocStatusInitial(),
       chartRange: ChartRange.week,
     ),
-  })  : _dateService = dateService,
-        _authService = authService,
-        _healthMeasurementRepository = healthMeasurementRepository,
+  })  : _dateService = getIt<DateService>(),
+        _authService = getIt<AuthService>(),
+        _healthMeasurementRepository = getIt<HealthMeasurementRepository>(),
         _chartService = chartService,
         super(state) {
-    on<HealthEventInitialize>(_initialize);
-    on<HealthEventTodayMeasurementUpdated>(_todayMeasurementUpdated);
+    on<HealthEventInitialize>(_initialize, transformer: restartable());
     on<HealthEventMeasurementsFromDateRangeUpdated>(
       _measurementsFromDateRangeUpdated,
     );
     on<HealthEventAddTodayMeasurement>(_addTodayMeasurement);
+    on<HealthEventDeleteTodayMeasurement>(_deleteTodayMeasurement);
     on<HealthEventChangeChartRangeType>(_changeChartRangeType);
     on<HealthEventPreviousChartRange>(_previousChartRange);
     on<HealthEventNextChartRange>(_nextChartRange);
@@ -52,16 +50,14 @@ class HealthBloc
 
   @override
   Future<void> close() {
-    _todayMeasurementListener?.cancel();
-    _todayMeasurementListener = null;
     _removeMeasurementsFromDateRangeListener();
     return super.close();
   }
 
-  void _initialize(
+  Future<void> _initialize(
     HealthEventInitialize event,
     Emitter<HealthState> emit,
-  ) {
+  ) async {
     final DateTime today = _dateService.getToday();
     _setNewDateRange(
       _dateService.getFirstDayOfTheWeek(today),
@@ -69,17 +65,7 @@ class HealthBloc
       ChartRange.week,
       emit,
     );
-    _setTodayMeasurementListener();
-  }
-
-  void _todayMeasurementUpdated(
-    HealthEventTodayMeasurementUpdated event,
-    Emitter<HealthState> emit,
-  ) {
-    emit(state.copyWith(
-      todayMeasurement: event.todayMeasurement,
-      removedTodayMeasurement: event.todayMeasurement == null,
-    ));
+    await _setTodayMeasurementListener(emit);
   }
 
   void _measurementsFromDateRangeUpdated(
@@ -110,9 +96,7 @@ class HealthBloc
     Emitter<HealthState> emit,
   ) async {
     final String? loggedUserId = await _authService.loggedUserId$.first;
-    if (loggedUserId == null) {
-      return;
-    }
+    if (loggedUserId == null) return;
     emitLoadingStatus(emit);
     await _healthMeasurementRepository.addMeasurement(
       measurement: HealthMeasurement(
@@ -123,6 +107,20 @@ class HealthBloc
       ),
     );
     emitCompleteStatus(emit, HealthBlocInfo.healthMeasurementAdded);
+  }
+
+  Future<void> _deleteTodayMeasurement(
+    HealthEventDeleteTodayMeasurement event,
+    Emitter<HealthState> emit,
+  ) async {
+    final String? loggedUserId = await _authService.loggedUserId$.first;
+    if (loggedUserId == null) return;
+    emitLoadingStatus(emit);
+    await _healthMeasurementRepository.deleteMeasurement(
+      userId: loggedUserId,
+      date: _dateService.getToday(),
+    );
+    emitCompleteStatus(emit, HealthBlocInfo.healthMeasurementDeleted);
   }
 
   void _changeChartRangeType(
@@ -168,21 +166,21 @@ class HealthBloc
     _measurementsFromDateRangeListener = null;
   }
 
-  void _setTodayMeasurementListener() {
-    _todayMeasurementListener ??= _loggedUserId$
-        .switchMap(
-          (loggedUserId) => _healthMeasurementRepository.getMeasurementByDate(
-            date: _dateService.getToday(),
-            userId: loggedUserId,
-          ),
-        )
-        .listen(
-          (HealthMeasurement? todayMeasurement) => add(
-            HealthEventTodayMeasurementUpdated(
-              todayMeasurement: todayMeasurement,
-            ),
-          ),
-        );
+  Future<void> _setTodayMeasurementListener(Emitter<HealthState> emit) async {
+    final Stream<HealthMeasurement?> todayMeasurement$ =
+        _loggedUserId$.switchMap(
+      (loggedUserId) => _healthMeasurementRepository.getMeasurementByDate(
+        date: _dateService.getToday(),
+        userId: loggedUserId,
+      ),
+    );
+    await emit.forEach(
+      todayMeasurement$,
+      onData: (HealthMeasurement? todayMeasurement) => state.copyWith(
+        todayMeasurement: todayMeasurement,
+        removedTodayMeasurement: todayMeasurement == null,
+      ),
+    );
   }
 
   void _setMeasurementsFromDateRangeListener(
@@ -224,4 +222,9 @@ class HealthBloc
 
   Stream<String> get _loggedUserId$ =>
       _authService.loggedUserId$.whereType<String>();
+}
+
+enum HealthBlocInfo {
+  healthMeasurementAdded,
+  healthMeasurementDeleted,
 }

@@ -1,7 +1,27 @@
-part of 'workout_stage_creator_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class _Content extends StatelessWidget {
-  const _Content();
+import '../../../domain/bloc/workout_stage_creator/workout_stage_creator_bloc.dart';
+import '../../component/responsive_layout_component.dart';
+import '../../service/navigator_service.dart';
+import '../../service/utils.dart';
+import 'workout_stage_creator_form.dart';
+
+class WorkoutStageCreatorContent extends StatelessWidget {
+  const WorkoutStageCreatorContent({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const ResponsiveLayout(
+      mobileBody: _FullScreenDialog(),
+      desktopBody: _NormalDialog(),
+    );
+  }
+}
+
+class _FullScreenDialog extends StatelessWidget {
+  const _FullScreenDialog();
 
   @override
   Widget build(BuildContext context) {
@@ -13,13 +33,7 @@ class _Content extends StatelessWidget {
           child: Container(
             color: Colors.transparent,
             padding: const EdgeInsets.all(24),
-            child: const Column(
-              children: [
-                _WorkoutStageType(),
-                SizedBox(height: 40),
-                _Form(),
-              ],
-            ),
+            child: const WorkoutStageCreatorFormContent(),
           ),
         ),
       ),
@@ -27,85 +41,87 @@ class _Content extends StatelessWidget {
   }
 }
 
-class _WorkoutStageType extends StatelessWidget {
-  const _WorkoutStageType();
+class _NormalDialog extends StatelessWidget {
+  const _NormalDialog();
 
   @override
   Widget build(BuildContext context) {
-    final WorkoutStageType? stageType = context.select(
-      (WorkoutStageCreatorBloc bloc) => bloc.state.stageType,
-    );
-
-    return DropdownButtonFormField<WorkoutStageType>(
-      value: stageType,
-      decoration: InputDecoration(
-        filled: true,
-        hintText: Str.of(context).workoutStageCreatorStageType,
+    return AlertDialog(
+      title: const _DialogTitle(),
+      content: const SizedBox(
+        width: 500,
+        child: WorkoutStageCreatorFormContent(),
       ),
-      items: <DropdownMenuItem<WorkoutStageType>>[
-        ...WorkoutStageType.values.map(
-          (WorkoutStageType stage) => DropdownMenuItem(
-            value: stage,
-            child: Text(
-              _getWorkoutStageName(context, stage),
-            ),
-          ),
+      actions: [
+        TextButton(
+          onPressed: popRoute,
+          child: Text(Str.of(context).cancel),
         ),
+        const _SaveButton(),
       ],
-      onChanged: (WorkoutStageType? stage) {
-        _onWorkoutStageChanged(context, stage);
-      },
     );
-  }
-
-  String _getWorkoutStageName(
-    BuildContext context,
-    WorkoutStageType stage,
-  ) {
-    final str = Str.of(context);
-    switch (stage) {
-      case WorkoutStageType.cardio:
-        return str.workoutStageCardio;
-      case WorkoutStageType.zone2:
-        return str.workoutStageZone2;
-      case WorkoutStageType.zone3:
-        return str.workoutStageZone3;
-      case WorkoutStageType.hillRepeats:
-        return str.workoutStageHillRepeats;
-      case WorkoutStageType.rhythms:
-        return str.workoutStageRhythms;
-    }
-  }
-
-  void _onWorkoutStageChanged(
-      BuildContext context, WorkoutStageType? stageType) {
-    if (stageType != null) {
-      context.read<WorkoutStageCreatorBloc>().add(
-            WorkoutStageCreatorEventStageTypeChanged(
-              stageType: stageType,
-            ),
-          );
-    }
   }
 }
 
-class _Form extends StatelessWidget {
-  const _Form();
+class _AppBar extends StatelessWidget implements PreferredSizeWidget {
+  const _AppBar();
 
   @override
   Widget build(BuildContext context) {
-    final bool isDistanceStage = context.select(
-      (WorkoutStageCreatorBloc bloc) => bloc.state.isDistanceStage,
+    return AppBar(
+      title: const _DialogTitle(),
+      leading: const CloseButton(),
+      actions: const [
+        _SaveButton(),
+        SizedBox(width: 16),
+      ],
     );
-    final bool isSeriesStage = context.select(
-      (WorkoutStageCreatorBloc bloc) => bloc.state.isSeriesStage,
+  }
+
+  @override
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+}
+
+class _DialogTitle extends StatelessWidget {
+  const _DialogTitle();
+
+  @override
+  Widget build(BuildContext context) {
+    final bool isEditMode = context.select(
+      (WorkoutStageCreatorBloc bloc) => bloc.state.isEditMode,
+    );
+    return Text(
+      isEditMode
+          ? Str.of(context).workoutStageCreatorScreenTitleEditMode
+          : Str.of(context).workoutStageCreatorScreenTitleAddMode,
+    );
+  }
+}
+
+class _SaveButton extends StatelessWidget {
+  const _SaveButton();
+
+  @override
+  Widget build(BuildContext context) {
+    final bool isEditMode = context.select(
+      (WorkoutStageCreatorBloc bloc) => bloc.state.isEditMode,
+    );
+    final bool isButtonDisabled = context.select(
+      (WorkoutStageCreatorBloc bloc) => bloc.state.isSubmitButtonDisabled,
+    );
+    final Widget label = Text(
+      isEditMode ? Str.of(context).save : Str.of(context).add,
     );
 
-    if (isDistanceStage) {
-      return const _DistanceStageForm();
-    } else if (isSeriesStage) {
-      return const _SeriesStageForm();
-    }
-    return const SizedBox();
+    return FilledButton(
+      onPressed: isButtonDisabled ? null : () => _onPressed(context),
+      child: label,
+    );
+  }
+
+  void _onPressed(BuildContext context) {
+    context.read<WorkoutStageCreatorBloc>().add(
+          const WorkoutStageCreatorEventSubmit(),
+        );
   }
 }

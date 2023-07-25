@@ -20,11 +20,13 @@ class BodyLarge extends StatelessWidget {
 class BodyMedium extends StatelessWidget {
   final String data;
   final Color? color;
+  final FontWeight? fontWeight;
 
   const BodyMedium(
     this.data, {
     super.key,
     this.color,
+    this.fontWeight,
   });
 
   @override
@@ -33,6 +35,7 @@ class BodyMedium extends StatelessWidget {
       data,
       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
             color: color,
+            fontWeight: fontWeight,
           ),
     );
   }

@@ -1,45 +1,40 @@
-part of 'home_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class _BottomNavigationBar extends StatelessWidget {
-  const _BottomNavigationBar();
+class HomeBottomNavigationBar extends StatelessWidget {
+  final int selectedIndex;
+  final Function(int pageIndex) onPageSelected;
+
+  const HomeBottomNavigationBar({
+    super.key,
+    required this.selectedIndex,
+    required this.onPageSelected,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final BottomNavPage page = context.select(
-      (HomeBloc bloc) => bloc.state.bottomNavPage,
-    );
     final str = Str.of(context);
 
     return NavigationBar(
-      onDestinationSelected: (int pageIndex) {
-        _onCurrentPageChanged(context, pageIndex);
-      },
-      selectedIndex: page.pageIndex,
-      destinations: <NavigationDestination>[
+      onDestinationSelected: onPageSelected,
+      selectedIndex: selectedIndex,
+      destinations: [
         NavigationDestination(
-          selectedIcon: const Icon(Icons.date_range),
           icon: const Icon(Icons.date_range_outlined),
-          label: str.homeCurrentWeekPageTitle,
+          selectedIcon: const Icon(Icons.date_range),
+          label: str.currentWeekTitle,
         ),
         NavigationDestination(
-          selectedIcon: const Icon(Icons.calendar_month),
           icon: const Icon(Icons.calendar_month_outlined),
-          label: str.homeCalendarPageTitle,
+          selectedIcon: const Icon(Icons.calendar_month),
+          label: str.calendarTitle,
         ),
         NavigationDestination(
-          selectedIcon: const Icon(Icons.health_and_safety),
           icon: const Icon(Icons.health_and_safety_outlined),
-          label: str.homeHealthPageTitle,
+          selectedIcon: const Icon(Icons.health_and_safety),
+          label: str.healthTitle,
         ),
       ],
     );
-  }
-
-  void _onCurrentPageChanged(BuildContext context, int homePageIndex) {
-    context.read<HomeBloc>().add(
-          HomeEventBottomNavPageChanged(
-            bottomNavPage: BottomNavPage.values[homePageIndex],
-          ),
-        );
   }
 }

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../domain/additional_model/bloc_status.dart';
 import '../../../../domain/additional_model/bloc_with_status.dart';
 import '../../../../domain/service/auth_service.dart';
+import '../../../dependency_injection.dart';
 import '../../additional_model/bloc_state.dart';
 import '../../additional_model/custom_exception.dart';
 
@@ -14,10 +15,9 @@ class ForgotPasswordBloc extends BlocWithStatus<ForgotPasswordEvent,
   final AuthService _authService;
 
   ForgotPasswordBloc({
-    required AuthService authService,
     BlocStatus status = const BlocStatusInitial(),
     String email = '',
-  })  : _authService = authService,
+  })  : _authService = getIt<AuthService>(),
         super(
           ForgotPasswordState(
             status: status,

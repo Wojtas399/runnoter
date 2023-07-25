@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -9,6 +10,7 @@ import '../../../../domain/additional_model/bloc_with_status.dart';
 import '../../../../domain/entity/health_measurement.dart';
 import '../../../../domain/repository/health_measurement_repository.dart';
 import '../../../../domain/service/auth_service.dart';
+import '../../../dependency_injection.dart';
 
 part 'health_measurements_event.dart';
 part 'health_measurements_state.dart';
@@ -17,65 +19,44 @@ class HealthMeasurementsBloc extends BlocWithStatus<HealthMeasurementsEvent,
     HealthMeasurementsState, HealthMeasurementsBlocInfo, dynamic> {
   final AuthService _authService;
   final HealthMeasurementRepository _healthMeasurementRepository;
-  StreamSubscription<List<HealthMeasurement>?>? _measurementsListener;
 
   HealthMeasurementsBloc({
-    required AuthService authService,
-    required HealthMeasurementRepository healthMeasurementRepository,
     BlocStatus status = const BlocStatusInitial(),
     List<HealthMeasurement>? measurements,
-  })  : _authService = authService,
-        _healthMeasurementRepository = healthMeasurementRepository,
+  })  : _authService = getIt<AuthService>(),
+        _healthMeasurementRepository = getIt<HealthMeasurementRepository>(),
         super(
           HealthMeasurementsState(
             status: status,
             measurements: measurements,
           ),
         ) {
-    on<HealthMeasurementsEventInitialize>(_initialize);
-    on<HealthMeasurementsEventMeasurementsUpdated>(_measurementsUpdated);
+    on<HealthMeasurementsEventInitialize>(
+      _initialize,
+      transformer: restartable(),
+    );
     on<HealthMeasurementsEventDeleteMeasurement>(_deleteMeasurement);
   }
 
-  @override
-  Future<void> close() {
-    _measurementsListener?.cancel();
-    _measurementsListener = null;
-    return super.close();
-  }
-
-  void _initialize(
+  Future<void> _initialize(
     HealthMeasurementsEventInitialize event,
     Emitter<HealthMeasurementsState> emit,
-  ) {
-    _measurementsListener ??= _authService.loggedUserId$
-        .whereType<String>()
-        .switchMap(
-          (loggedUserId) => _healthMeasurementRepository.getAllMeasurements(
-            userId: loggedUserId,
-          ),
-        )
-        .listen(
-          (measurements) => add(
-            HealthMeasurementsEventMeasurementsUpdated(
-              measurements: measurements,
-            ),
-          ),
-        );
-  }
-
-  void _measurementsUpdated(
-    HealthMeasurementsEventMeasurementsUpdated event,
-    Emitter<HealthMeasurementsState> emit,
-  ) {
-    List<HealthMeasurement>? sortedMeasurements;
-    if (event.measurements != null) {
-      sortedMeasurements = [...?event.measurements];
-    }
-    sortedMeasurements?.sort(_compareDatesOfMeasurements);
-    emit(state.copyWith(
-      measurements: sortedMeasurements,
-    ));
+  ) async {
+    final Stream<List<HealthMeasurement>?> measurements$ =
+        _authService.loggedUserId$.whereNotNull().switchMap(
+              (loggedUserId) => _healthMeasurementRepository.getAllMeasurements(
+                userId: loggedUserId,
+              ),
+            );
+    await emit.forEach(
+      measurements$,
+      onData: (List<HealthMeasurement>? measurements) {
+        List<HealthMeasurement>? sortedMeasurements;
+        if (measurements != null) sortedMeasurements = [...measurements];
+        sortedMeasurements?.sort(_compareDatesOfMeasurements);
+        return state.copyWith(measurements: sortedMeasurements);
+      },
+    );
   }
 
   Future<void> _deleteMeasurement(
@@ -95,10 +76,7 @@ class HealthMeasurementsBloc extends BlocWithStatus<HealthMeasurementsEvent,
     emitCompleteStatus(emit, HealthMeasurementsBlocInfo.measurementDeleted);
   }
 
-  int _compareDatesOfMeasurements(
-    HealthMeasurement m1,
-    HealthMeasurement m2,
-  ) =>
+  int _compareDatesOfMeasurements(HealthMeasurement m1, HealthMeasurement m2) =>
       m1.date.isBefore(m2.date)
           ? 1
           : m1.date.isAfter(m2.date)

@@ -53,7 +53,3 @@ class HealthState extends BlocState {
         fastingWeightPoints: fastingWeightPoints ?? this.fastingWeightPoints,
       );
 }
-
-enum HealthBlocInfo {
-  healthMeasurementAdded,
-}

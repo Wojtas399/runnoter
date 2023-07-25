@@ -2,19 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../service/navigator_service.dart';
+import '../text/label_text_components.dart';
 
 class ConfirmationDialogComponent extends StatelessWidget {
   final String title;
   final String message;
-  final String? cancelButtonLabel;
   final String? confirmButtonLabel;
+  final String? cancelButtonLabel;
+  final Color? confirmButtonColor;
+  final Color? cancelButtonColor;
 
   const ConfirmationDialogComponent({
     super.key,
     required this.title,
     required this.message,
-    this.cancelButtonLabel,
     this.confirmButtonLabel,
+    this.cancelButtonLabel,
+    this.confirmButtonColor,
+    this.cancelButtonColor,
   });
 
   @override
@@ -24,25 +29,17 @@ class ConfirmationDialogComponent extends StatelessWidget {
       content: Text(message),
       actions: [
         TextButton(
-          onPressed: () {
-            navigateBack(
-              context: context,
-              result: false,
-            );
-          },
-          child: Text(
+          onPressed: () => popRoute(result: false),
+          child: LabelMedium(
             cancelButtonLabel ?? Str.of(context).cancel,
+            color: cancelButtonColor ?? Theme.of(context).colorScheme.primary,
           ),
         ),
         TextButton(
-          onPressed: () {
-            navigateBack(
-              context: context,
-              result: true,
-            );
-          },
-          child: Text(
+          onPressed: () => popRoute(result: true),
+          child: LabelMedium(
             confirmButtonLabel ?? Str.of(context).confirm,
+            color: confirmButtonColor ?? Theme.of(context).colorScheme.primary,
           ),
         ),
       ],

@@ -1,11 +1,14 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/bloc/workout_creator/workout_creator_bloc.dart';
 import 'package:runnoter/domain/entity/run_status.dart';
 import 'package:runnoter/domain/entity/workout.dart';
 import 'package:runnoter/domain/entity/workout_stage.dart';
+import 'package:runnoter/domain/repository/workout_repository.dart';
+import 'package:runnoter/domain/service/auth_service.dart';
 
 import '../../../creators/workout_creator.dart';
 import '../../../mock/domain/repository/mock_workout_repository.dart';
@@ -14,36 +17,44 @@ import '../../../mock/domain/service/mock_auth_service.dart';
 void main() {
   final authService = MockAuthService();
   final workoutRepository = MockWorkoutRepository();
+  const String loggedUserId = 'u1';
+  const String workoutId = 'w1';
 
   WorkoutCreatorBloc createBloc({
+    String? workoutId,
     DateTime? date,
     Workout? workout,
     String? workoutName,
     List<WorkoutStage> stages = const [],
   }) =>
       WorkoutCreatorBloc(
-        authService: authService,
-        workoutRepository: workoutRepository,
-        date: date,
-        workout: workout,
-        workoutName: workoutName,
-        stages: stages,
+        date: date ?? DateTime(2023),
+        workoutId: workoutId,
+        state: WorkoutCreatorState(
+          status: const BlocStatusInitial(),
+          workout: workout,
+          workoutName: workoutName,
+          stages: stages,
+        ),
       );
 
   WorkoutCreatorState createState({
     BlocStatus status = const BlocStatusInitial(),
-    DateTime? date,
     Workout? workout,
     String? workoutName,
     List<WorkoutStage> stages = const [],
   }) =>
       WorkoutCreatorState(
         status: status,
-        date: date,
         workout: workout,
         workoutName: workoutName,
         stages: stages,
       );
+
+  setUpAll(() {
+    GetIt.I.registerSingleton<AuthService>(authService);
+    GetIt.I.registerSingleton<WorkoutRepository>(workoutRepository);
+  });
 
   tearDown(() {
     reset(authService);
@@ -53,17 +64,12 @@ void main() {
   blocTest(
     'initialize, '
     'workout id is null, '
-    'should only update date in state',
+    'should emit complete status',
     build: () => createBloc(),
-    act: (WorkoutCreatorBloc bloc) => bloc.add(
-      WorkoutCreatorEventInitialize(
-        date: DateTime(2023, 1, 1),
-      ),
-    ),
+    act: (bloc) => bloc.add(const WorkoutCreatorEventInitialize()),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
-        date: DateTime(2023, 1, 1),
       ),
     ],
   );
@@ -72,21 +78,11 @@ void main() {
     'initialize, '
     'workout id is not null, '
     'logged user does not exist, '
-    'should only update date in state',
-    build: () => createBloc(),
+    'should do nothing',
+    build: () => createBloc(workoutId: workoutId),
     setUp: () => authService.mockGetLoggedUserId(),
-    act: (WorkoutCreatorBloc bloc) => bloc.add(
-      WorkoutCreatorEventInitialize(
-        date: DateTime(2023, 1, 1),
-        workoutId: 'w1',
-      ),
-    ),
-    expect: () => [
-      createState(
-        status: const BlocStatusComplete(),
-        date: DateTime(2023, 1, 1),
-      ),
-    ],
+    act: (bloc) => bloc.add(const WorkoutCreatorEventInitialize()),
+    expect: () => [],
     verify: (_) => verify(
       () => authService.loggedUserId$,
     ).called(1),
@@ -97,12 +93,12 @@ void main() {
     'workout id is not null, '
     'logged user exists, '
     'should load workout matching to given id and should emit updated date, workout, workout name and stages',
-    build: () => createBloc(),
+    build: () => createBloc(workoutId: workoutId),
     setUp: () {
-      authService.mockGetLoggedUserId(userId: 'u1');
+      authService.mockGetLoggedUserId(userId: loggedUserId);
       workoutRepository.mockGetWorkoutById(
         workout: createWorkout(
-          id: 'w1',
+          id: workoutId,
           name: 'workout name',
           stages: const [
             WorkoutStageCardio(
@@ -113,20 +109,14 @@ void main() {
         ),
       );
     },
-    act: (WorkoutCreatorBloc bloc) => bloc.add(
-      WorkoutCreatorEventInitialize(
-        date: DateTime(2023, 1, 1),
-        workoutId: 'w1',
-      ),
-    ),
+    act: (bloc) => bloc.add(const WorkoutCreatorEventInitialize()),
     expect: () => [
       createState(
         status: const BlocStatusComplete<WorkoutCreatorBlocInfo>(
           info: WorkoutCreatorBlocInfo.editModeInitialized,
         ),
-        date: DateTime(2023, 1, 1),
         workout: createWorkout(
-          id: 'w1',
+          id: workoutId,
           name: 'workout name',
           stages: const [
             WorkoutStageCardio(
@@ -150,8 +140,8 @@ void main() {
       ).called(1);
       verify(
         () => workoutRepository.getWorkoutById(
-          workoutId: 'w1',
-          userId: 'u1',
+          workoutId: workoutId,
+          userId: loggedUserId,
         ),
       ).called(1);
     },
@@ -161,11 +151,9 @@ void main() {
     'workout name changed, '
     'should update workout name in state',
     build: () => createBloc(),
-    act: (WorkoutCreatorBloc bloc) => bloc.add(
-      const WorkoutCreatorEventWorkoutNameChanged(
-        workoutName: 'new workout name',
-      ),
-    ),
+    act: (bloc) => bloc.add(const WorkoutCreatorEventWorkoutNameChanged(
+      workoutName: 'new workout name',
+    )),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
@@ -185,14 +173,12 @@ void main() {
         ),
       ],
     ),
-    act: (WorkoutCreatorBloc bloc) => bloc.add(
-      const WorkoutCreatorEventWorkoutStageAdded(
-        workoutStage: WorkoutStageZone2(
-          distanceInKm: 5,
-          maxHeartRate: 165,
-        ),
+    act: (bloc) => bloc.add(const WorkoutCreatorEventWorkoutStageAdded(
+      workoutStage: WorkoutStageZone2(
+        distanceInKm: 5,
+        maxHeartRate: 165,
       ),
-    ),
+    )),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
@@ -214,18 +200,14 @@ void main() {
     'workout stage updated, '
     'list of stages is empty, '
     'should do nothing',
-    build: () => createBloc(
-      stages: const [],
-    ),
-    act: (WorkoutCreatorBloc bloc) => bloc.add(
-      const WorkoutCreatorEventWorkoutStageUpdated(
-        stageIndex: 1,
-        workoutStage: WorkoutStageZone2(
-          distanceInKm: 7,
-          maxHeartRate: 160,
-        ),
+    build: () => createBloc(stages: const []),
+    act: (bloc) => bloc.add(const WorkoutCreatorEventWorkoutStageUpdated(
+      stageIndex: 1,
+      workoutStage: WorkoutStageZone2(
+        distanceInKm: 7,
+        maxHeartRate: 160,
       ),
-    ),
+    )),
     expect: () => [],
   );
 
@@ -241,15 +223,13 @@ void main() {
         ),
       ],
     ),
-    act: (WorkoutCreatorBloc bloc) => bloc.add(
-      const WorkoutCreatorEventWorkoutStageUpdated(
-        stageIndex: 1,
-        workoutStage: WorkoutStageZone2(
-          distanceInKm: 7,
-          maxHeartRate: 160,
-        ),
+    act: (bloc) => bloc.add(const WorkoutCreatorEventWorkoutStageUpdated(
+      stageIndex: 1,
+      workoutStage: WorkoutStageZone2(
+        distanceInKm: 7,
+        maxHeartRate: 160,
       ),
-    ),
+    )),
     expect: () => [],
   );
 
@@ -268,15 +248,13 @@ void main() {
         ),
       ],
     ),
-    act: (WorkoutCreatorBloc bloc) => bloc.add(
-      const WorkoutCreatorEventWorkoutStageUpdated(
-        stageIndex: 1,
-        workoutStage: WorkoutStageZone2(
-          distanceInKm: 7,
-          maxHeartRate: 160,
-        ),
+    act: (bloc) => bloc.add(const WorkoutCreatorEventWorkoutStageUpdated(
+      stageIndex: 1,
+      workoutStage: WorkoutStageZone2(
+        distanceInKm: 7,
+        maxHeartRate: 160,
       ),
-    ),
+    )),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
@@ -317,28 +295,26 @@ void main() {
         ),
       ],
     ),
-    act: (WorkoutCreatorBloc bloc) => bloc.add(
-      const WorkoutCreatorEventWorkoutStagesOrderChanged(
-        workoutStages: [
-          WorkoutStageCardio(
-            distanceInKm: 3,
-            maxHeartRate: 150,
-          ),
-          WorkoutStageZone3(
-            distanceInKm: 2,
-            maxHeartRate: 180,
-          ),
-          WorkoutStageCardio(
-            distanceInKm: 1,
-            maxHeartRate: 150,
-          ),
-          WorkoutStageZone2(
-            distanceInKm: 3,
-            maxHeartRate: 165,
-          ),
-        ],
-      ),
-    ),
+    act: (bloc) => bloc.add(const WorkoutCreatorEventWorkoutStagesOrderChanged(
+      workoutStages: [
+        WorkoutStageCardio(
+          distanceInKm: 3,
+          maxHeartRate: 150,
+        ),
+        WorkoutStageZone3(
+          distanceInKm: 2,
+          maxHeartRate: 180,
+        ),
+        WorkoutStageCardio(
+          distanceInKm: 1,
+          maxHeartRate: 150,
+        ),
+        WorkoutStageZone2(
+          distanceInKm: 3,
+          maxHeartRate: 165,
+        ),
+      ],
+    )),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
@@ -379,9 +355,9 @@ void main() {
         ),
       ],
     ),
-    act: (WorkoutCreatorBloc bloc) => bloc.add(
-      const WorkoutCreatorEventDeleteWorkoutStage(index: 0),
-    ),
+    act: (bloc) => bloc.add(const WorkoutCreatorEventDeleteWorkoutStage(
+      index: 0,
+    )),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
@@ -393,29 +369,6 @@ void main() {
         ],
       ),
     ],
-  );
-
-  blocTest(
-    'submit, '
-    'date is not set, '
-    'should finish event call',
-    build: () => createBloc(
-      workoutName: 'workout 1',
-      stages: const [
-        WorkoutStageCardio(
-          distanceInKm: 4,
-          maxHeartRate: 150,
-        ),
-        WorkoutStageZone3(
-          distanceInKm: 2,
-          maxHeartRate: 180,
-        ),
-      ],
-    ),
-    act: (WorkoutCreatorBloc bloc) => bloc.add(
-      const WorkoutCreatorEventSubmit(),
-    ),
-    expect: () => [],
   );
 
   blocTest(
@@ -435,29 +388,26 @@ void main() {
         ),
       ],
     ),
-    act: (WorkoutCreatorBloc bloc) => bloc.add(
-      const WorkoutCreatorEventSubmit(),
-    ),
+    act: (bloc) => bloc.add(const WorkoutCreatorEventSubmit()),
     expect: () => [],
   );
 
   blocTest(
     'submit, '
-    'no workout stages, '
+    'list of workout stage is empty, '
     'should finish event call',
     build: () => createBloc(
       date: DateTime(2023, 2, 2),
       workoutName: 'workout 1',
     ),
-    act: (WorkoutCreatorBloc bloc) => bloc.add(
-      const WorkoutCreatorEventSubmit(),
-    ),
+    act: (bloc) => bloc.add(const WorkoutCreatorEventSubmit()),
     expect: () => [],
   );
 
   blocTest(
     'submit, '
-    'logged user does not exist, should finish event call',
+    'logged user does not exist, '
+    'should emit no logged user status',
     build: () => createBloc(
       date: DateTime(2023, 2, 2),
       workoutName: 'workout 1',
@@ -473,10 +423,23 @@ void main() {
       ],
     ),
     setUp: () => authService.mockGetLoggedUserId(),
-    act: (WorkoutCreatorBloc bloc) => bloc.add(
-      const WorkoutCreatorEventSubmit(),
-    ),
-    expect: () => [],
+    act: (bloc) => bloc.add(const WorkoutCreatorEventSubmit()),
+    expect: () => [
+      createState(
+        status: const BlocStatusNoLoggedUser(),
+        workoutName: 'workout 1',
+        stages: const [
+          WorkoutStageCardio(
+            distanceInKm: 4,
+            maxHeartRate: 150,
+          ),
+          WorkoutStageZone3(
+            distanceInKm: 2,
+            maxHeartRate: 180,
+          ),
+        ],
+      ),
+    ],
     verify: (_) => verify(
       () => authService.loggedUserId$,
     ).called(1),
@@ -501,16 +464,13 @@ void main() {
       ],
     ),
     setUp: () {
-      authService.mockGetLoggedUserId(userId: 'u1');
+      authService.mockGetLoggedUserId(userId: loggedUserId);
       workoutRepository.mockAddWorkout();
     },
-    act: (WorkoutCreatorBloc bloc) => bloc.add(
-      const WorkoutCreatorEventSubmit(),
-    ),
+    act: (bloc) => bloc.add(const WorkoutCreatorEventSubmit()),
     expect: () => [
       createState(
         status: const BlocStatusLoading(),
-        date: DateTime(2023, 2, 2),
         workoutName: 'workout 1',
         stages: const [
           WorkoutStageCardio(
@@ -527,7 +487,6 @@ void main() {
         status: const BlocStatusComplete<WorkoutCreatorBlocInfo>(
           info: WorkoutCreatorBlocInfo.workoutAdded,
         ),
-        date: DateTime(2023, 2, 2),
         workoutName: 'workout 1',
         stages: const [
           WorkoutStageCardio(
@@ -547,7 +506,7 @@ void main() {
       ).called(1);
       verify(
         () => workoutRepository.addWorkout(
-          userId: 'u1',
+          userId: loggedUserId,
           workoutName: 'workout 1',
           date: DateTime(2023, 2, 2),
           status: const RunStatusPending(),
@@ -573,7 +532,7 @@ void main() {
     build: () => createBloc(
       date: DateTime(2023, 2, 2),
       workout: createWorkout(
-        id: 'w1',
+        id: workoutId,
         name: 'workout name',
         stages: const [
           WorkoutStageCardio(
@@ -595,18 +554,15 @@ void main() {
       ],
     ),
     setUp: () {
-      authService.mockGetLoggedUserId(userId: 'u1');
+      authService.mockGetLoggedUserId(userId: loggedUserId);
       workoutRepository.mockUpdateWorkout();
     },
-    act: (WorkoutCreatorBloc bloc) => bloc.add(
-      const WorkoutCreatorEventSubmit(),
-    ),
+    act: (bloc) => bloc.add(const WorkoutCreatorEventSubmit()),
     expect: () => [
       createState(
         status: const BlocStatusLoading(),
-        date: DateTime(2023, 2, 2),
         workout: createWorkout(
-          id: 'w1',
+          id: workoutId,
           name: 'workout name',
           stages: const [
             WorkoutStageCardio(
@@ -631,9 +587,8 @@ void main() {
         status: const BlocStatusComplete<WorkoutCreatorBlocInfo>(
           info: WorkoutCreatorBlocInfo.workoutUpdated,
         ),
-        date: DateTime(2023, 2, 2),
         workout: createWorkout(
-          id: 'w1',
+          id: workoutId,
           name: 'workout name',
           stages: const [
             WorkoutStageCardio(
@@ -661,8 +616,8 @@ void main() {
       ).called(1);
       verify(
         () => workoutRepository.updateWorkout(
-          workoutId: 'w1',
-          userId: 'u1',
+          workoutId: workoutId,
+          userId: loggedUserId,
           workoutName: 'workout 1',
           stages: const [
             WorkoutStageCardio(

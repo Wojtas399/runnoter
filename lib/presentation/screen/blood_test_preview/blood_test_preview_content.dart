@@ -1,21 +1,59 @@
-part of 'blood_test_preview_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class _Content extends StatelessWidget {
-  const _Content();
+import '../../../domain/bloc/blood_test_preview/blood_test_preview_bloc.dart';
+import '../../../domain/entity/blood_parameter.dart';
+import '../../../domain/entity/user.dart';
+import '../../component/blood_parameter_results_list_component.dart';
+import '../../component/body/medium_body_component.dart';
+import '../../component/text/title_text_components.dart';
+import '../../extension/context_extensions.dart';
+import '../../formatter/date_formatter.dart';
+import 'blood_test_preview_actions.dart';
+
+class BloodTestPreviewContent extends StatelessWidget {
+  const BloodTestPreviewContent({super.key});
 
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
       appBar: _AppBar(),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _DateSection(),
-          Expanded(
-            child: _Results(),
+      body: SafeArea(
+        child: MediumBody(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _DateSection(),
+              Expanded(
+                child: _Results(),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
+    );
+  }
+}
+
+class _AppBar extends StatelessWidget implements PreferredSizeWidget {
+  const _AppBar();
+
+  @override
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+
+  @override
+  Widget build(BuildContext context) {
+    return AppBar(
+      forceMaterialTransparency: true,
+      centerTitle: true,
+      title: Text(Str.of(context).bloodTestPreviewTitle),
+      actions: context.isMobileSize
+          ? const [
+              BloodTestPreviewActions(),
+              SizedBox(width: 8),
+            ]
+          : null,
     );
   }
 }
@@ -25,9 +63,15 @@ class _DateSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.fromLTRB(24, 24, 24, 0),
-      child: _Date(),
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          const _Date(),
+          if (!context.isMobileSize) const BloodTestPreviewActions(),
+        ],
+      ),
     );
   }
 }
@@ -41,9 +85,7 @@ class _Date extends StatelessWidget {
       (BloodTestPreviewBloc bloc) => bloc.state.date,
     );
 
-    return TitleLarge(
-      date?.toFullDate(context) ?? '--',
-    );
+    return TitleLarge(date?.toFullDate(context) ?? '--');
   }
 }
 
@@ -52,12 +94,18 @@ class _Results extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Gender? gender = context.select(
+      (BloodTestPreviewBloc bloc) => bloc.state.gender,
+    );
     final List<BloodParameterResult>? parameterResults = context.select(
       (BloodTestPreviewBloc bloc) => bloc.state.parameterResults,
     );
 
-    return BloodParameterResultsList(
-      parameterResults: parameterResults,
-    );
+    return gender == null
+        ? const CircularProgressIndicator()
+        : BloodParameterResultsList(
+            gender: gender,
+            parameterResults: parameterResults,
+          );
   }
 }

@@ -27,6 +27,8 @@ extension DateFormatter on DateTime {
 
   String toDateWithDots() => '${twoDigits(day)}.${twoDigits(month)}.$year';
 
+  String toPathFormat() => '${twoDigits(day)}-${twoDigits(month)}-$year';
+
   String toDayAbbreviation(BuildContext context) {
     final str = Str.of(context);
     final List<String> dayNameAbbreviations = [

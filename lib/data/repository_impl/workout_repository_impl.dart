@@ -1,8 +1,8 @@
+import 'package:collection/collection.dart';
 import 'package:firebase/firebase.dart';
-import 'package:firebase/service/firebase_workout_service.dart';
-import 'package:rxdart/rxdart.dart';
 
 import '../../common/date_service.dart';
+import '../../dependency_injection.dart';
 import '../../domain/additional_model/state_repository.dart';
 import '../../domain/entity/run_status.dart';
 import '../../domain/entity/workout.dart';
@@ -18,11 +18,9 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
   final DateService _dateService;
 
   WorkoutRepositoryImpl({
-    required FirebaseWorkoutService firebaseWorkoutService,
-    required DateService dateService,
     List<Workout>? initialState,
-  })  : _firebaseWorkoutService = firebaseWorkoutService,
-        _dateService = dateService,
+  })  : _firebaseWorkoutService = getIt<FirebaseWorkoutService>(),
+        _dateService = getIt<DateService>(),
         super(initialData: initialState);
 
   @override
@@ -30,34 +28,36 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
     required DateTime startDate,
     required DateTime endDate,
     required String userId,
-  }) =>
-      dataStream$
-          .map(
-            (List<Workout>? workouts) =>
-                _findWorkoutsByDateRange(workouts, userId, startDate, endDate),
+  }) async* {
+    await _loadWorkoutsByDateRangeFromRemoteDb(startDate, endDate, userId);
+    await for (final workouts in dataStream$) {
+      yield workouts
+          ?.where(
+            (Workout workout) =>
+                workout.userId == userId &&
+                _dateService.isDateFromRange(
+                  date: workout.date,
+                  startDate: startDate,
+                  endDate: endDate,
+                ),
           )
-          .doOnListen(
-            () => _loadWorkoutsByDateRangeFromRemoteDb(
-                startDate, endDate, userId),
-          );
+          .toList();
+    }
+  }
 
   @override
   Stream<Workout?> getWorkoutById({
     required String workoutId,
     required String userId,
-  }) =>
-      dataStream$
-          .map(
-        (List<Workout>? workouts) =>
-            _findWorkoutById(workouts, workoutId, userId),
-      )
-          .doOnListen(
-        () {
-          if (doesEntityNotExistInState(workoutId)) {
-            _loadWorkoutByIdFromRemoteDb(workoutId, userId);
-          }
-        },
+  }) async* {
+    await for (final workouts in dataStream$) {
+      Workout? workout = workouts?.firstWhereOrNull(
+        (workout) => workout.id == workoutId && workout.userId == userId,
       );
+      workout ??= await _loadWorkoutByIdFromRemoteDb(workoutId, userId);
+      yield workout;
+    }
+  }
 
   @override
   Stream<List<Workout>?> getWorkoutsByDate({
@@ -150,35 +150,6 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
     removeEntities(idsOfDeletedWorkouts);
   }
 
-  List<Workout>? _findWorkoutsByDateRange(
-    List<Workout>? workouts,
-    String userId,
-    DateTime startDate,
-    DateTime endDate,
-  ) =>
-      workouts
-          ?.where(
-            (Workout workout) =>
-                workout.userId == userId &&
-                _dateService.isDateFromRange(
-                  date: workout.date,
-                  startDate: startDate,
-                  endDate: endDate,
-                ),
-          )
-          .toList();
-
-  Workout? _findWorkoutById(
-    List<Workout>? workouts,
-    String workoutId,
-    String userId,
-  ) =>
-      <Workout?>[...?workouts].firstWhere(
-        (Workout? workout) =>
-            workout?.id == workoutId && workout?.userId == userId,
-        orElse: () => null,
-      );
-
   Future<void> _loadWorkoutsByDateRangeFromRemoteDb(
     DateTime startDate,
     DateTime endDate,
@@ -200,7 +171,7 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
     }
   }
 
-  Future<void> _loadWorkoutByIdFromRemoteDb(
+  Future<Workout?> _loadWorkoutByIdFromRemoteDb(
     String workoutId,
     String userId,
   ) async {
@@ -212,7 +183,9 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
     if (workoutDto != null) {
       final Workout workout = mapWorkoutFromFirebase(workoutDto);
       addEntity(workout);
+      return workout;
     }
+    return null;
   }
 
   Future<void> _loadWorkoutsFromRemoteDb(String userId) async {

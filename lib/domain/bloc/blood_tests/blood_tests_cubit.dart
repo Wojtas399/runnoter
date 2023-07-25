@@ -4,6 +4,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
+import '../../../dependency_injection.dart';
 import '../../entity/blood_test.dart';
 import '../../repository/blood_test_repository.dart';
 import '../../service/auth_service.dart';
@@ -13,11 +14,9 @@ class BloodTestsCubit extends Cubit<List<BloodTestsFromYear>?> {
   final BloodTestRepository _bloodTestRepository;
   StreamSubscription<List<BloodTest>?>? _bloodTestsListener;
 
-  BloodTestsCubit({
-    required AuthService authService,
-    required BloodTestRepository bloodTestRepository,
-  })  : _authService = authService,
-        _bloodTestRepository = bloodTestRepository,
+  BloodTestsCubit()
+      : _authService = getIt<AuthService>(),
+        _bloodTestRepository = getIt<BloodTestRepository>(),
         super(null);
 
   @override

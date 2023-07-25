@@ -1,44 +1,46 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:get_it/get_it.dart';
 
-import '../component/action_sheet_component.dart';
 import '../component/dialog/confirmation_dialog_component.dart';
 import '../component/dialog/loading_dialog_component.dart';
 import '../component/dialog/message_dialog_component.dart';
 import '../component/dialog/value_dialog_component.dart';
 import '../config/animation/slide_to_top_anim.dart';
+import '../config/navigation/router.dart';
+import '../extension/context_extensions.dart';
 
 bool _isLoadingDialogOpened = false;
 
-void showLoadingDialog({
-  required BuildContext context,
-}) {
-  _isLoadingDialogOpened = true;
-  showDialog(
-    context: context,
-    builder: (_) => const LoadingDialog(),
-    barrierDismissible: false,
-  );
+void showLoadingDialog() {
+  final BuildContext? context =
+      GetIt.I.get<AppRouter>().navigatorKey.currentContext;
+  if (context != null) {
+    _isLoadingDialogOpened = true;
+    showDialog(
+      context: context,
+      builder: (_) => const LoadingDialog(),
+      barrierDismissible: false,
+    );
+  }
 }
 
-void closeLoadingDialog({
-  required BuildContext context,
-}) {
-  if (_isLoadingDialogOpened) {
+void closeLoadingDialog() {
+  final BuildContext? context =
+      GetIt.I.get<AppRouter>().navigatorKey.currentContext;
+  if (_isLoadingDialogOpened && context != null) {
     Navigator.of(context, rootNavigator: true).pop();
     _isLoadingDialogOpened = false;
   }
 }
 
 Future<void> showMessageDialog({
-  required BuildContext context,
   required String title,
   required String message,
   String? closeButtonLabel,
 }) async {
   await showAlertDialog(
-    context: context,
-    dialog: MessageDialogComponent(
+    MessageDialogComponent(
       title: title,
       message: message,
       closeButtonLabel: closeButtonLabel,
@@ -46,57 +48,66 @@ Future<void> showMessageDialog({
   );
 }
 
-void showSnackbarMessage({
-  required BuildContext context,
-  required String message,
-}) {
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(
-      content: Text(message),
-    ),
-  );
+void showSnackbarMessage(String message) {
+  final BuildContext? context =
+      GetIt.I.get<AppRouter>().navigatorKey.currentContext;
+  if (context != null) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+      ),
+    );
+  }
 }
 
-void hideSnackbar({
-  required BuildContext context,
-}) {
-  ScaffoldMessenger.of(context).hideCurrentSnackBar();
+void hideSnackbar() {
+  final BuildContext? context =
+      GetIt.I.get<AppRouter>().navigatorKey.currentContext;
+  if (context != null) {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+  }
 }
 
 Future<bool> askForConfirmation({
-  required BuildContext context,
   required String title,
   required String message,
   String? confirmButtonLabel,
+  String? cancelButtonLabel,
+  Color? confirmButtonColor,
+  Color? cancelButtonColor,
 }) async =>
     await showAlertDialog(
-      context: context,
-      dialog: ConfirmationDialogComponent(
+      ConfirmationDialogComponent(
         title: title,
         message: message,
         confirmButtonLabel: confirmButtonLabel,
+        cancelButtonLabel: cancelButtonLabel,
+        confirmButtonColor: confirmButtonColor,
+        cancelButtonColor: cancelButtonColor,
       ),
     ) ==
     true;
 
 Future<bool> askForConfirmationToLeave({
-  required BuildContext context,
   bool areUnsavedChanges = false,
 }) async {
-  final str = Str.of(context);
-  return await askForConfirmation(
-    context: context,
-    title: str.leavePageConfirmationDialogTitle,
-    message: switch (areUnsavedChanges) {
-      true => str.leavePageWithUnsavedChangesConfirmationDialogMessage,
-      false => str.leavePageConfirmationDialogMessage,
-    },
-    confirmButtonLabel: str.leave,
-  );
+  final BuildContext? context =
+      GetIt.I.get<AppRouter>().navigatorKey.currentContext;
+  if (context != null) {
+    final str = Str.of(context);
+    return await askForConfirmation(
+      title: str.leavePageConfirmationDialogTitle,
+      message: switch (areUnsavedChanges) {
+        true => str.leavePageWithUnsavedChangesConfirmationDialogMessage,
+        false => str.leavePageConfirmationDialogMessage,
+      },
+      confirmButtonLabel: str.leave,
+    );
+  }
+  return false;
 }
 
 Future<String?> askForValue({
-  required BuildContext context,
   required String title,
   String? label,
   IconData? textFieldIcon,
@@ -104,10 +115,9 @@ Future<String?> askForValue({
   bool isValueRequired = false,
   String? Function(String? value)? validator,
 }) async {
-  hideSnackbar(context: context);
-  return await showFullScreenDialog<String?>(
-    context: context,
-    dialog: ValueDialogComponent(
+  hideSnackbar();
+  return await showDialogDependingOnScreenSize(
+    ValueDialogComponent(
       title: title,
       label: label,
       textFieldIcon: textFieldIcon,
@@ -118,27 +128,13 @@ Future<String?> askForValue({
   );
 }
 
-Future<T?> askForAction<T>({
-  required BuildContext context,
-  required List<ActionSheetItem<T>> actions,
-  String? title,
-}) async {
-  hideSnackbar(context: context);
-  return await showModalBottomSheet(
-    context: context,
-    showDragHandle: true,
-    builder: (_) => ActionSheetComponent(
-      actions: actions,
-      title: title,
-    ),
-  );
-}
-
 Future<DateTime?> askForDate({
-  required BuildContext context,
   DateTime? initialDate,
   DateTime? lastDate,
 }) async {
+  final BuildContext? context =
+      GetIt.I.get<AppRouter>().navigatorKey.currentContext;
+  if (context == null) return null;
   return await showDatePicker(
     context: context,
     initialDate: initialDate ?? DateTime.now(),
@@ -147,10 +143,19 @@ Future<DateTime?> askForDate({
   );
 }
 
-Future<T?> showAlertDialog<T>({
-  required BuildContext context,
-  required Widget dialog,
-}) async {
+Future<T?> showDialogDependingOnScreenSize<T>(Widget dialog) async {
+  final BuildContext? context =
+      GetIt.I.get<AppRouter>().navigatorKey.currentContext;
+  if (context == null) return null;
+  return await (context.isMobileSize
+      ? showFullScreenDialog(dialog)
+      : showAlertDialog(dialog));
+}
+
+Future<T?> showAlertDialog<T>(Widget dialog) async {
+  final BuildContext? context =
+      GetIt.I.get<AppRouter>().navigatorKey.currentContext;
+  if (context == null) return null;
   return await showGeneralDialog<T>(
     context: context,
     pageBuilder: (_, anim1, anim2) => dialog,
@@ -167,10 +172,10 @@ Future<T?> showAlertDialog<T>({
   );
 }
 
-Future<T?> showFullScreenDialog<T>({
-  required BuildContext context,
-  required Widget dialog,
-}) async {
+Future<T?> showFullScreenDialog<T>(Widget dialog) async {
+  final BuildContext? context =
+      GetIt.I.get<AppRouter>().navigatorKey.currentContext;
+  if (context == null) return null;
   return await showGeneralDialog<T?>(
     context: context,
     barrierColor: Colors.transparent,
@@ -185,4 +190,16 @@ Future<T?> showFullScreenDialog<T>({
     },
     transitionDuration: const Duration(milliseconds: 500),
   );
+}
+
+class ActionItem<T> {
+  final T id;
+  final String label;
+  final IconData iconData;
+
+  const ActionItem({
+    required this.id,
+    required this.label,
+    required this.iconData,
+  });
 }

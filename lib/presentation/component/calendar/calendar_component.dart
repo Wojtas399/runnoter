@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../common/date_service.dart';
 import '../text/body_text_components.dart';
 import 'calendar_component_cubit.dart';
 
@@ -27,30 +26,13 @@ class Calendar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _CubitProvider(
+    return BlocProvider(
+      create: (_) => CalendarComponentCubit(),
       child: _CubitListener(
         onMonthChanged: onMonthChanged,
         onDayPressed: onDayPressed,
         child: _Content(activities: activities),
       ),
-    );
-  }
-}
-
-class _CubitProvider extends StatelessWidget {
-  final Widget child;
-
-  const _CubitProvider({
-    required this.child,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => CalendarComponentCubit(
-        dateService: DateService(),
-      ),
-      child: child,
     );
   }
 }

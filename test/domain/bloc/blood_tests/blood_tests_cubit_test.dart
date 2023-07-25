@@ -1,7 +1,10 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/bloc/blood_tests/blood_tests_cubit.dart';
+import 'package:runnoter/domain/repository/blood_test_repository.dart';
+import 'package:runnoter/domain/service/auth_service.dart';
 
 import '../../../creators/blood_test_creator.dart';
 import '../../../mock/domain/repository/mock_blood_test_repository.dart';
@@ -10,11 +13,12 @@ import '../../../mock/domain/service/mock_auth_service.dart';
 void main() {
   final authService = MockAuthService();
   final bloodTestRepository = MockBloodTestRepository();
+  const String loggedUserId = 'u1';
 
-  BloodTestsCubit createCubit() => BloodTestsCubit(
-        authService: authService,
-        bloodTestRepository: bloodTestRepository,
-      );
+  setUpAll(() {
+    GetIt.I.registerSingleton<AuthService>(authService);
+    GetIt.I.registerSingleton<BloodTestRepository>(bloodTestRepository);
+  });
 
   tearDown(() {
     reset(authService);
@@ -25,9 +29,9 @@ void main() {
     'initialize, '
     'logged user does not exist, '
     'should finish method call',
-    build: () => createCubit(),
+    build: () => BloodTestsCubit(),
     setUp: () => authService.mockGetLoggedUserId(),
-    act: (BloodTestsCubit cubit) => cubit.initialize(),
+    act: (cubit) => cubit.initialize(),
     expect: () => [],
     verify: (_) => verify(
       () => authService.loggedUserId$,
@@ -37,35 +41,35 @@ void main() {
   blocTest(
     'initialize, '
     'should set listener of blood tests grouped by year and sorting by date belonging to logged user',
-    build: () => createCubit(),
+    build: () => BloodTestsCubit(),
     setUp: () {
-      authService.mockGetLoggedUserId(userId: 'u1');
+      authService.mockGetLoggedUserId(userId: loggedUserId);
       bloodTestRepository.mockGetAllTests(
         tests: [
           createBloodTest(
             id: 'br2',
-            userId: 'u1',
+            userId: loggedUserId,
             date: DateTime(2023, 2, 10),
           ),
           createBloodTest(
             id: 'br3',
-            userId: 'u1',
+            userId: loggedUserId,
             date: DateTime(2022, 4, 10),
           ),
           createBloodTest(
             id: 'br1',
-            userId: 'u1',
+            userId: loggedUserId,
             date: DateTime(2023, 5, 20),
           ),
           createBloodTest(
             id: 'br4',
-            userId: 'u1',
+            userId: loggedUserId,
             date: DateTime(2021, 7, 10),
           ),
         ],
       );
     },
-    act: (BloodTestsCubit cubit) => cubit.initialize(),
+    act: (cubit) => cubit.initialize(),
     expect: () => [
       [
         BloodTestsFromYear(
@@ -73,12 +77,12 @@ void main() {
           bloodTests: [
             createBloodTest(
               id: 'br1',
-              userId: 'u1',
+              userId: loggedUserId,
               date: DateTime(2023, 5, 20),
             ),
             createBloodTest(
               id: 'br2',
-              userId: 'u1',
+              userId: loggedUserId,
               date: DateTime(2023, 2, 10),
             ),
           ],
@@ -88,7 +92,7 @@ void main() {
           bloodTests: [
             createBloodTest(
               id: 'br3',
-              userId: 'u1',
+              userId: loggedUserId,
               date: DateTime(2022, 4, 10),
             ),
           ],
@@ -98,7 +102,7 @@ void main() {
           bloodTests: [
             createBloodTest(
               id: 'br4',
-              userId: 'u1',
+              userId: loggedUserId,
               date: DateTime(2021, 7, 10),
             ),
           ],
@@ -111,7 +115,7 @@ void main() {
       ).called(1);
       verify(
         () => bloodTestRepository.getAllTests(
-          userId: 'u1',
+          userId: loggedUserId,
         ),
       ).called(1);
     },

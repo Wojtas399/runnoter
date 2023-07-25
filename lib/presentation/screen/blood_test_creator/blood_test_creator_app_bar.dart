@@ -1,7 +1,13 @@
-part of 'blood_test_creator_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class _AppBar extends StatelessWidget implements PreferredSizeWidget {
-  const _AppBar();
+import '../../../domain/bloc/blood_test_creator/blood_test_creator_bloc.dart';
+import '../../service/utils.dart';
+
+class BloodTestCreatorAppBar extends StatelessWidget
+    implements PreferredSizeWidget {
+  const BloodTestCreatorAppBar({super.key});
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
@@ -32,5 +38,33 @@ class _AppBarTitle extends StatelessWidget {
       false => Str.of(context).bloodTestCreatorScreenTitleAddMode,
     };
     return Text(title);
+  }
+}
+
+class _SubmitButton extends StatelessWidget {
+  const _SubmitButton();
+
+  @override
+  Widget build(BuildContext context) {
+    final bool isDisabled = context.select(
+      (BloodTestCreatorBloc bloc) => !bloc.state.canSubmit,
+    );
+    final bool isEditMode = context.select(
+      (BloodTestCreatorBloc bloc) => bloc.state.bloodTest != null,
+    );
+
+    return FilledButton(
+      onPressed: isDisabled ? null : () => _onPressed(context),
+      child: Text(
+        isEditMode ? Str.of(context).save : Str.of(context).add,
+      ),
+    );
+  }
+
+  void _onPressed(BuildContext context) {
+    unfocusInputs();
+    context.read<BloodTestCreatorBloc>().add(
+          const BloodTestCreatorEventSubmit(),
+        );
   }
 }

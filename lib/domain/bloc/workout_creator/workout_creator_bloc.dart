@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rxdart/rxdart.dart';
 
 import '../../../../domain/additional_model/bloc_state.dart';
 import '../../../../domain/additional_model/bloc_status.dart';
@@ -10,6 +11,7 @@ import '../../../../domain/entity/workout.dart';
 import '../../../../domain/entity/workout_stage.dart';
 import '../../../../domain/repository/workout_repository.dart';
 import '../../../../domain/service/auth_service.dart';
+import '../../../dependency_injection.dart';
 import '../../service/list_service.dart';
 
 part 'workout_creator_event.dart';
@@ -19,27 +21,19 @@ class WorkoutCreatorBloc extends BlocWithStatus<WorkoutCreatorEvent,
     WorkoutCreatorState, WorkoutCreatorBlocInfo, dynamic> {
   final AuthService _authService;
   final WorkoutRepository _workoutRepository;
-  StreamSubscription<Workout?>? _workoutListener;
+  final DateTime? date;
+  final String? workoutId;
 
   WorkoutCreatorBloc({
-    required AuthService authService,
-    required WorkoutRepository workoutRepository,
-    BlocStatus status = const BlocStatusComplete(),
-    DateTime? date,
-    Workout? workout,
-    String? workoutName,
-    List<WorkoutStage> stages = const [],
-  })  : _authService = authService,
-        _workoutRepository = workoutRepository,
-        super(
-          WorkoutCreatorState(
-            status: status,
-            date: date,
-            workout: workout,
-            workoutName: workoutName,
-            stages: stages,
-          ),
-        ) {
+    this.date,
+    this.workoutId,
+    WorkoutCreatorState state = const WorkoutCreatorState(
+      status: BlocStatusInitial(),
+      stages: [],
+    ),
+  })  : _authService = getIt<AuthService>(),
+        _workoutRepository = getIt<WorkoutRepository>(),
+        super(state) {
     on<WorkoutCreatorEventInitialize>(_initialize);
     on<WorkoutCreatorEventWorkoutNameChanged>(_workoutNameChanged);
     on<WorkoutCreatorEventWorkoutStageAdded>(_workoutStageAdded);
@@ -51,40 +45,28 @@ class WorkoutCreatorBloc extends BlocWithStatus<WorkoutCreatorEvent,
     on<WorkoutCreatorEventSubmit>(_submit);
   }
 
-  @override
-  Future<void> close() {
-    _workoutListener?.cancel();
-    _workoutListener = null;
-    return super.close();
-  }
-
   Future<void> _initialize(
     WorkoutCreatorEventInitialize event,
     Emitter<WorkoutCreatorState> emit,
   ) async {
-    final String? workoutId = event.workoutId;
-    if (workoutId != null) {
-      final String? loggedUserId = await _authService.loggedUserId$.first;
-      if (loggedUserId != null) {
-        final Workout? workout = await _loadWorkoutById(
-          workoutId,
-          loggedUserId,
-        );
-        emit(state.copyWith(
-          status: const BlocStatusComplete<WorkoutCreatorBlocInfo>(
-            info: WorkoutCreatorBlocInfo.editModeInitialized,
-          ),
-          date: event.date,
-          workout: workout,
-          workoutName: workout?.name,
-          stages: [...?workout?.stages],
-        ));
-        return;
-      }
+    if (workoutId == null) {
+      emit(state.copyWith(
+        status: const BlocStatusComplete(),
+      ));
+      return;
     }
-    emit(state.copyWith(
-      date: event.date,
-    ));
+    final Stream<Workout?> workout$ = _getWorkoutById(workoutId!);
+    await for (final workout in workout$) {
+      emit(state.copyWith(
+        status: const BlocStatusComplete<WorkoutCreatorBlocInfo>(
+          info: WorkoutCreatorBlocInfo.editModeInitialized,
+        ),
+        workout: workout,
+        workoutName: workout?.name,
+        stages: [...?workout?.stages],
+      ));
+      return;
+    }
   }
 
   void _workoutNameChanged(
@@ -148,41 +130,35 @@ class WorkoutCreatorBloc extends BlocWithStatus<WorkoutCreatorEvent,
     WorkoutCreatorEventSubmit event,
     Emitter<WorkoutCreatorState> emit,
   ) async {
-    final String? workoutName = state.workoutName;
-    if (state.date == null ||
-        workoutName == null ||
-        workoutName.isEmpty ||
-        state.stages.isEmpty) {
-      return;
-    }
+    if (!state.canSubmit) return;
     final String? loggedUserId = await _authService.loggedUserId$.first;
     if (loggedUserId == null) {
+      emitNoLoggedUserStatus(emit);
       return;
     }
     emitLoadingStatus(emit);
     if (state.workout != null) {
       await _updateWorkout(loggedUserId);
       emitCompleteStatus(emit, WorkoutCreatorBlocInfo.workoutUpdated);
-    } else {
+    } else if (date != null) {
       await _addWorkout(loggedUserId);
       emitCompleteStatus(emit, WorkoutCreatorBlocInfo.workoutAdded);
     }
   }
 
-  Future<Workout?> _loadWorkoutById(String workoutId, String userId) async {
-    return await _workoutRepository
-        .getWorkoutById(
-          workoutId: workoutId,
-          userId: userId,
-        )
-        .first;
-  }
+  Stream<Workout?> _getWorkoutById(String workoutId) =>
+      _authService.loggedUserId$.whereNotNull().switchMap(
+            (String loggedUserId) => _workoutRepository.getWorkoutById(
+              workoutId: workoutId,
+              userId: loggedUserId,
+            ),
+          );
 
   Future<void> _addWorkout(String userId) async {
     await _workoutRepository.addWorkout(
       userId: userId,
       workoutName: state.workoutName!,
-      date: state.date!,
+      date: date!,
       status: const RunStatusPending(),
       stages: state.stages,
     );

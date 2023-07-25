@@ -1,6 +1,7 @@
 import 'package:firebase/firebase.dart';
 
 import '../../domain/entity/user.dart';
+import 'gender_mapper.dart';
 import 'settings_mapper.dart';
 
 User mapUserFromDto({
@@ -10,6 +11,7 @@ User mapUserFromDto({
 }) {
   return User(
     id: userDto.id,
+    gender: mapGenderFromDto(userDto.gender),
     name: userDto.name,
     surname: userDto.surname,
     settings: mapSettingsFromDto(

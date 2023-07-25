@@ -36,8 +36,8 @@ extension WorkoutStageFormatter on WorkoutStage {
     );
     final String distanceUnit = context.distanceUnit.toUIShortFormat();
     final String distance =
-        '${convertedDistance.decimal(2).toString().trimZeros()}$distanceUnit';
-    return '${stage.toTypeName(context)} $distance HR<${stage.maxHeartRate}';
+        '${convertedDistance.decimal(2).toString().trimZeros()} $distanceUnit';
+    return '${stage.toTypeName(context)} $distance, HR<${stage.maxHeartRate}';
   }
 
   String _createSeriesStageDescription(

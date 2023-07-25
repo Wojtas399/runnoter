@@ -1,9 +1,14 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:runnoter/common/date_service.dart';
 import 'package:runnoter/domain/bloc/day_preview/day_preview_cubit.dart';
 import 'package:runnoter/domain/entity/race.dart';
 import 'package:runnoter/domain/entity/workout.dart';
+import 'package:runnoter/domain/repository/race_repository.dart';
+import 'package:runnoter/domain/repository/workout_repository.dart';
+import 'package:runnoter/domain/service/auth_service.dart';
 
 import '../../../creators/race_creator.dart';
 import '../../../creators/workout_creator.dart';
@@ -26,15 +31,18 @@ void main() {
   }) =>
       DayPreviewCubit(
         date: date,
-        authService: authService,
-        workoutRepository: workoutRepository,
-        raceRepository: raceRepository,
-        dateService: dateService,
         state: DayPreviewState(
           workouts: workouts,
           races: races,
         ),
       );
+
+  setUpAll(() {
+    GetIt.I.registerFactory<DateService>(() => dateService);
+    GetIt.I.registerSingleton<AuthService>(authService);
+    GetIt.I.registerSingleton<WorkoutRepository>(workoutRepository);
+    GetIt.I.registerSingleton<RaceRepository>(raceRepository);
+  });
 
   tearDown(() {
     reset(authService);
@@ -160,7 +168,7 @@ void main() {
     'should do nothing',
     build: () => createCubit(),
     setUp: () => authService.mockGetLoggedUserId(),
-    act: (DayPreviewCubit cubit) => cubit.initialize(),
+    act: (cubit) => cubit.initialize(),
     expect: () => [],
     verify: (_) => verify(
       () => authService.loggedUserId$,
@@ -185,7 +193,7 @@ void main() {
         ],
       );
     },
-    act: (DayPreviewCubit cubit) => cubit.initialize(),
+    act: (cubit) => cubit.initialize(),
     expect: () => [
       DayPreviewState(
         workouts: [

@@ -1,81 +1,41 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/additional_model/bloc_status.dart';
 import '../../../domain/bloc/workout_creator/workout_creator_bloc.dart';
-import '../../../domain/entity/workout.dart';
-import '../../../domain/entity/workout_stage.dart';
-import '../../../domain/repository/workout_repository.dart';
-import '../../../domain/service/auth_service.dart';
-import '../../component/big_button_component.dart';
 import '../../component/bloc_with_status_listener_component.dart';
-import '../../component/scrollable_content_component.dart';
-import '../../component/text/body_text_components.dart';
-import '../../component/text/label_text_components.dart';
-import '../../component/text_field_component.dart';
-import '../../formatter/workout_stage_formatter.dart';
+import '../../extension/string_extensions.dart';
 import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
-import '../../service/utils.dart';
-import '../workout_stage_creator/workout_stage_creator_screen.dart';
+import 'workout_creator_content.dart';
 
-part 'workout_creator_content.dart';
-part 'workout_creator_submit_button.dart';
-part 'workout_creator_workout_stage_item.dart';
-part 'workout_creator_workout_stages_list.dart';
-part 'workout_creator_workout_stages_section.dart';
-
-abstract class WorkoutCreatorArguments {
-  final DateTime date;
-
-  const WorkoutCreatorArguments({
-    required this.date,
-  });
-}
-
-class WorkoutCreatorAddModeArguments extends WorkoutCreatorArguments {
-  const WorkoutCreatorAddModeArguments({
-    required super.date,
-  });
-}
-
-class WorkoutCreatorEditModeArguments extends WorkoutCreatorArguments {
-  final String workoutId;
-
-  const WorkoutCreatorEditModeArguments({
-    required super.date,
-    required this.workoutId,
-  });
-}
-
+@RoutePage()
 class WorkoutCreatorScreen extends StatelessWidget {
-  final WorkoutCreatorArguments arguments;
+  final String? date;
+  final String? workoutId;
 
   const WorkoutCreatorScreen({
     super.key,
-    required this.arguments,
+    @PathParam('date') this.date,
+    @PathParam('workoutId') this.workoutId,
   });
 
   @override
   Widget build(BuildContext context) {
-    final WorkoutCreatorArguments arguments = this.arguments;
-    String? workoutId;
-    if (arguments is WorkoutCreatorEditModeArguments) {
-      workoutId = arguments.workoutId;
-    }
+    final DateTime? date = this.date?.toDateTime();
     return _BlocProvider(
-      date: arguments.date,
+      date: date,
       workoutId: workoutId,
       child: const _BlocListener(
-        child: _Content(),
+        child: WorkoutCreatorContent(),
       ),
     );
   }
 }
 
 class _BlocProvider extends StatelessWidget {
-  final DateTime date;
+  final DateTime? date;
   final String? workoutId;
   final Widget child;
 
@@ -89,14 +49,9 @@ class _BlocProvider extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (BuildContext context) => WorkoutCreatorBloc(
-        authService: context.read<AuthService>(),
-        workoutRepository: context.read<WorkoutRepository>(),
-      )..add(
-          WorkoutCreatorEventInitialize(
-            date: date,
-            workoutId: workoutId,
-          ),
-        ),
+        date: date,
+        workoutId: workoutId,
+      )..add(const WorkoutCreatorEventInitialize()),
       child: child,
     );
   }
@@ -134,18 +89,12 @@ class _BlocListener extends StatelessWidget {
   }
 
   void _onWorkoutAddedInfo(BuildContext context) {
-    navigateBack(context: context);
-    showSnackbarMessage(
-      context: context,
-      message: Str.of(context).workoutCreatorAddedWorkoutMessage,
-    );
+    navigateBack();
+    showSnackbarMessage(Str.of(context).workoutCreatorAddedWorkoutMessage);
   }
 
   void _onWorkoutUpdatedInfo(BuildContext context) {
-    navigateBack(context: context);
-    showSnackbarMessage(
-      context: context,
-      message: Str.of(context).workoutCreatorUpdatedWorkoutMessage,
-    );
+    navigateBack();
+    showSnackbarMessage(Str.of(context).workoutCreatorUpdatedWorkoutMessage);
   }
 }

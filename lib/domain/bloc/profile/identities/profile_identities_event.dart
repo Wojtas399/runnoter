@@ -8,13 +8,11 @@ class ProfileIdentitiesEventInitialize extends ProfileIdentitiesEvent {
   const ProfileIdentitiesEventInitialize();
 }
 
-class ProfileIdentitiesEventIdentitiesUpdated extends ProfileIdentitiesEvent {
-  final String? email;
-  final User? user;
+class ProfileIdentitiesEventUpdateGender extends ProfileIdentitiesEvent {
+  final Gender gender;
 
-  const ProfileIdentitiesEventIdentitiesUpdated({
-    required this.email,
-    required this.user,
+  const ProfileIdentitiesEventUpdateGender({
+    required this.gender,
   });
 }
 

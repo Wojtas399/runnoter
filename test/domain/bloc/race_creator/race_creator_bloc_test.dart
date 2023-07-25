@@ -1,10 +1,13 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/bloc/race_creator/race_creator_bloc.dart';
 import 'package:runnoter/domain/entity/race.dart';
 import 'package:runnoter/domain/entity/run_status.dart';
+import 'package:runnoter/domain/repository/race_repository.dart';
+import 'package:runnoter/domain/service/auth_service.dart';
 
 import '../../../creators/race_creator.dart';
 import '../../../mock/domain/repository/mock_race_repository.dart';
@@ -26,8 +29,6 @@ void main() {
   }) =>
       RaceCreatorBloc(
         raceId: raceId,
-        authService: authService,
-        raceRepository: raceRepository,
         state: RaceCreatorState(
           status: const BlocStatusInitial(),
           race: race,
@@ -58,6 +59,11 @@ void main() {
         expectedDuration: expectedDuration,
       );
 
+  setUpAll(() {
+    GetIt.I.registerSingleton<AuthService>(authService);
+    GetIt.I.registerSingleton<RaceRepository>(raceRepository);
+  });
+
   tearDown(() {
     reset(authService);
     reset(raceRepository);
@@ -68,11 +74,9 @@ void main() {
     'race id is null, '
     'should only emit given date',
     build: () => createBloc(),
-    act: (RaceCreatorBloc bloc) => bloc.add(
-      RaceCreatorEventInitialize(
-        date: DateTime(2023, 1, 10),
-      ),
-    ),
+    act: (bloc) => bloc.add(RaceCreatorEventInitialize(
+      date: DateTime(2023, 1, 10),
+    )),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
@@ -84,17 +88,11 @@ void main() {
   blocTest(
     'initialize, '
     'logged user does not exist, '
-    'should emit no logged user status',
+    'should do nothing',
     build: () => createBloc(raceId: 'r1'),
     setUp: () => authService.mockGetLoggedUserId(),
-    act: (RaceCreatorBloc bloc) => bloc.add(
-      const RaceCreatorEventInitialize(),
-    ),
-    expect: () => [
-      createState(
-        status: const BlocStatusNoLoggedUser(),
-      ),
-    ],
+    act: (bloc) => bloc.add(const RaceCreatorEventInitialize()),
+    expect: () => [],
     verify: (_) => verify(
       () => authService.loggedUserId$,
     ).called(1),
@@ -119,14 +117,10 @@ void main() {
         ),
       );
     },
-    act: (RaceCreatorBloc bloc) => bloc.add(
-      const RaceCreatorEventInitialize(),
-    ),
+    act: (bloc) => bloc.add(const RaceCreatorEventInitialize()),
     expect: () => [
       createState(
-        status: const BlocStatusComplete<RaceCreatorBlocInfo>(
-          info: RaceCreatorBlocInfo.editModeInitialized,
-        ),
+        status: const BlocStatusComplete<RaceCreatorBlocInfo>(),
         race: createRace(
           id: 'r1',
           userId: loggedUserId,
@@ -160,11 +154,9 @@ void main() {
     'name changed, '
     'should update name in state',
     build: () => createBloc(),
-    act: (RaceCreatorBloc bloc) => bloc.add(
-      const RaceCreatorEventNameChanged(
-        name: 'race name',
-      ),
-    ),
+    act: (bloc) => bloc.add(const RaceCreatorEventNameChanged(
+      name: 'race name',
+    )),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
@@ -177,11 +169,9 @@ void main() {
     'date changed, '
     'should update date in state',
     build: () => createBloc(),
-    act: (RaceCreatorBloc bloc) => bloc.add(
-      RaceCreatorEventDateChanged(
-        date: DateTime(2023, 6, 2),
-      ),
-    ),
+    act: (bloc) => bloc.add(RaceCreatorEventDateChanged(
+      date: DateTime(2023, 6, 2),
+    )),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
@@ -194,11 +184,9 @@ void main() {
     'place changed, '
     'should update place in state',
     build: () => createBloc(),
-    act: (RaceCreatorBloc bloc) => bloc.add(
-      const RaceCreatorEventPlaceChanged(
-        place: 'race place',
-      ),
-    ),
+    act: (bloc) => bloc.add(const RaceCreatorEventPlaceChanged(
+      place: 'race place',
+    )),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
@@ -211,11 +199,9 @@ void main() {
     'distance changed, '
     'should update distance in state',
     build: () => createBloc(),
-    act: (RaceCreatorBloc bloc) => bloc.add(
-      const RaceCreatorEventDistanceChanged(
-        distance: 21,
-      ),
-    ),
+    act: (bloc) => bloc.add(const RaceCreatorEventDistanceChanged(
+      distance: 21,
+    )),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
@@ -228,11 +214,9 @@ void main() {
     'expected duration changed, '
     'should update duration in state',
     build: () => createBloc(),
-    act: (RaceCreatorBloc bloc) => bloc.add(
-      const RaceCreatorEventExpectedDurationChanged(
-        expectedDuration: Duration(hours: 1, minutes: 45, seconds: 20),
-      ),
-    ),
+    act: (bloc) => bloc.add(const RaceCreatorEventExpectedDurationChanged(
+      expectedDuration: Duration(hours: 1, minutes: 45, seconds: 20),
+    )),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
@@ -246,9 +230,7 @@ void main() {
     'data are invalid, '
     'should do nothing',
     build: () => createBloc(),
-    act: (RaceCreatorBloc bloc) => bloc.add(
-      const RaceCreatorEventSubmit(),
-    ),
+    act: (bloc) => bloc.add(const RaceCreatorEventSubmit()),
     expect: () => [],
   );
 
@@ -271,9 +253,7 @@ void main() {
       distance: 21,
       expectedDuration: const Duration(hours: 1),
     ),
-    act: (RaceCreatorBloc bloc) => bloc.add(
-      const RaceCreatorEventSubmit(),
-    ),
+    act: (bloc) => bloc.add(const RaceCreatorEventSubmit()),
     expect: () => [],
   );
 
@@ -289,9 +269,7 @@ void main() {
       expectedDuration: const Duration(hours: 1, minutes: 45, seconds: 20),
     ),
     setUp: () => authService.mockGetLoggedUserId(),
-    act: (RaceCreatorBloc bloc) => bloc.add(
-      const RaceCreatorEventSubmit(),
-    ),
+    act: (bloc) => bloc.add(const RaceCreatorEventSubmit()),
     expect: () => [
       createState(
         status: const BlocStatusNoLoggedUser(),
@@ -322,9 +300,7 @@ void main() {
       authService.mockGetLoggedUserId(userId: 'u1');
       raceRepository.mockAddNewRace();
     },
-    act: (RaceCreatorBloc bloc) => bloc.add(
-      const RaceCreatorEventSubmit(),
-    ),
+    act: (bloc) => bloc.add(const RaceCreatorEventSubmit()),
     expect: () => [
       createState(
         status: const BlocStatusLoading(),
@@ -379,9 +355,7 @@ void main() {
       authService.mockGetLoggedUserId(userId: 'u1');
       raceRepository.mockAddNewRace();
     },
-    act: (RaceCreatorBloc bloc) => bloc.add(
-      const RaceCreatorEventSubmit(),
-    ),
+    act: (bloc) => bloc.add(const RaceCreatorEventSubmit()),
     expect: () => [
       createState(
         status: const BlocStatusLoading(),
@@ -436,9 +410,7 @@ void main() {
       authService.mockGetLoggedUserId(userId: 'u1');
       raceRepository.mockUpdateRace();
     },
-    act: (RaceCreatorBloc bloc) => bloc.add(
-      const RaceCreatorEventSubmit(),
-    ),
+    act: (bloc) => bloc.add(const RaceCreatorEventSubmit()),
     expect: () => [
       createState(
         status: const BlocStatusLoading(),
@@ -496,9 +468,7 @@ void main() {
       authService.mockGetLoggedUserId(userId: 'u1');
       raceRepository.mockUpdateRace();
     },
-    act: (RaceCreatorBloc bloc) => bloc.add(
-      const RaceCreatorEventSubmit(),
-    ),
+    act: (bloc) => bloc.add(const RaceCreatorEventSubmit()),
     expect: () => [
       createState(
         status: const BlocStatusLoading(),

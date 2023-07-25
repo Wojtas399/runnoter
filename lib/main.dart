@@ -1,21 +1,16 @@
 import 'package:firebase/firebase.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'app.dart';
+import 'dependency_injection.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initializeFirebaseApp();
-  runApp(
-    const MyApp(),
+  SystemChrome.setPreferredOrientations(
+    [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown],
   );
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const App();
-  }
+  setUpGetIt();
+  runApp(const App());
 }

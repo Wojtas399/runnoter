@@ -13,6 +13,7 @@ class TextFieldComponent extends StatelessWidget {
   final int? maxLines;
   final TextInputType? keyboardType;
   final TextAlign textAlign;
+  final EdgeInsets? contentPadding;
   final List<TextInputFormatter>? inputFormatters;
   final TextEditingController? controller;
   final Function(String? value)? onChanged;
@@ -30,6 +31,7 @@ class TextFieldComponent extends StatelessWidget {
     this.maxLines,
     this.keyboardType,
     this.textAlign = TextAlign.start,
+    this.contentPadding,
     this.inputFormatters,
     this.controller,
     this.onChanged,
@@ -49,7 +51,7 @@ class TextFieldComponent extends StatelessWidget {
             : null,
         prefixIcon: icon != null ? Icon(icon) : null,
         counterText: displayCounterText ? null : '',
-        errorMaxLines: 2,
+        contentPadding: contentPadding,
       ),
       maxLength: maxLength,
       maxLines: maxLines,

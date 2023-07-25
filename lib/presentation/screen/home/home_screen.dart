@@ -1,26 +1,20 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../../dependency_injection.dart';
 import '../../../domain/bloc/home/home_bloc.dart';
 import '../../../domain/entity/settings.dart' as settings;
-import '../../../domain/repository/user_repository.dart';
-import '../../../domain/service/auth_service.dart';
 import '../../component/bloc_with_status_listener_component.dart';
-import '../../config/navigation/routes.dart';
-import '../../service/dialog_service.dart';
+import '../../config/navigation/router.dart';
 import '../../service/distance_unit_service.dart';
 import '../../service/language_service.dart';
 import '../../service/navigator_service.dart';
 import '../../service/pace_unit_service.dart';
 import '../../service/theme_service.dart';
-import '../screens.dart';
+import 'home_content.dart';
 
-part 'home_app_bar.dart';
-part 'home_bottom_navigation_bar.dart';
-part 'home_content.dart';
-part 'home_drawer.dart';
-
+@RoutePage()
 class HomeScreen extends StatelessWidget {
   const HomeScreen({
     super.key,
@@ -28,31 +22,11 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _BlocProvider(
-      child: _BlocListener(
-        child: _Content(),
-      ),
-    );
-  }
-}
-
-class _BlocProvider extends StatelessWidget {
-  final Widget child;
-
-  const _BlocProvider({
-    required this.child,
-  });
-
-  @override
-  Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => HomeBloc(
-        authService: context.read<AuthService>(),
-        userRepository: context.read<UserRepository>(),
-      )..add(
-          const HomeEventInitialize(),
-        ),
-      child: child,
+      create: (_) => HomeBloc()..add(const HomeEventInitialize()),
+      child: const _BlocListener(
+        child: HomeContent(),
+      ),
     );
   }
 }
@@ -66,9 +40,9 @@ class _BlocListener extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocWithStatusListener<HomeBloc, HomeState, HomeInfo, dynamic>(
+    return BlocWithStatusListener<HomeBloc, HomeState, HomeBlocInfo, dynamic>(
       child: child,
-      onInfo: (HomeInfo info) {
+      onInfo: (HomeBlocInfo info) {
         _manageInfo(context, info);
       },
       onStateChanged: (HomeState state) {
@@ -77,14 +51,12 @@ class _BlocListener extends StatelessWidget {
     );
   }
 
-  void _manageInfo(BuildContext context, HomeInfo info) {
+  void _manageInfo(BuildContext context, HomeBlocInfo info) {
     switch (info) {
-      case HomeInfo.userSignedOut:
+      case HomeBlocInfo.userSignedOut:
         context.read<ThemeService>().changeTheme(ThemeMode.system);
-        navigateAndRemoveUntil(
-          context: context,
-          route: const SignInRoute(),
-        );
+        navigateAndRemoveUntil(const SignInRoute());
+        resetGetItRepositories();
         break;
     }
   }
@@ -93,17 +65,12 @@ class _BlocListener extends StatelessWidget {
     BuildContext context,
     HomeState state,
   ) {
-    if (state.themeMode != null) {
-      _manageThemeMode(context, state.themeMode!);
-    }
-    if (state.language != null) {
-      _manageLanguage(context, state.language!);
-    }
-    if (state.distanceUnit != null) {
-      context.read<DistanceUnitService>().changeUnit(state.distanceUnit!);
-    }
-    if (state.paceUnit != null) {
-      context.read<PaceUnitService>().changeUnit(state.paceUnit!);
+    final settings.Settings? appSettings = state.appSettings;
+    if (appSettings != null) {
+      _manageThemeMode(context, appSettings.themeMode);
+      _manageLanguage(context, appSettings.language);
+      context.read<DistanceUnitService>().changeUnit(appSettings.distanceUnit);
+      context.read<PaceUnitService>().changeUnit(appSettings.paceUnit);
     }
   }
 

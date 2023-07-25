@@ -63,8 +63,14 @@ class HealthMeasurementCreatorState
         fastingWeight: fastingWeight ?? this.fastingWeight,
       );
 
-  bool get _areDataDifferentThanOriginal =>
-      date != measurement?.date ||
-      restingHeartRate != measurement?.restingHeartRate ||
-      fastingWeight != measurement?.fastingWeight;
+  bool get _areDataDifferentThanOriginal {
+    bool areDatesDifferent = true;
+    if (date != null && measurement != null) {
+      areDatesDifferent =
+          !_dateService.areDatesTheSame(date!, measurement!.date);
+    }
+    return areDatesDifferent ||
+        restingHeartRate != measurement?.restingHeartRate ||
+        fastingWeight != measurement?.fastingWeight;
+  }
 }

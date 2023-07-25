@@ -14,18 +14,16 @@ class BigButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        SizedBox(
-          width: 300,
-          height: 52,
-          child: FilledButton(
-            onPressed: isDisabled ? null : onPressed,
-            child: Text(label),
-          ),
+    return ConstrainedBox(
+      constraints: const BoxConstraints(maxWidth: 300),
+      child: SizedBox(
+        height: 52,
+        width: double.infinity,
+        child: FilledButton(
+          onPressed: isDisabled ? null : onPressed,
+          child: Text(label),
         ),
-      ],
+      ),
     );
   }
 }

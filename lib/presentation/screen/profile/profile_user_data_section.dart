@@ -1,7 +1,21 @@
-part of 'profile_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
-class _UserDataSection extends StatelessWidget {
-  const _UserDataSection();
+import '../../../domain/bloc/profile/identities/profile_identities_bloc.dart';
+import '../../../domain/entity/user.dart';
+import '../../component/text/title_text_components.dart';
+import '../../component/value_with_label_and_icon_component.dart';
+import '../../service/dialog_service.dart';
+import '../../service/validation_service.dart';
+import 'profile_delete_account_dialog.dart';
+import 'profile_email_dialog.dart';
+import 'profile_gender_dialog.dart';
+import 'profile_password_dialog.dart';
+
+class ProfileUserDataSection extends StatelessWidget {
+  const ProfileUserDataSection({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -10,10 +24,13 @@ class _UserDataSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _SectionHeader(
-          title: Str.of(context).profileUserData,
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: TitleLarge(Str.of(context).profileUserData),
         ),
         const SizedBox(height: 16),
+        const _Gender(),
+        gap,
         const _Name(),
         gap,
         const _Surname(),
@@ -26,6 +43,37 @@ class _UserDataSection extends StatelessWidget {
       ],
     );
   }
+}
+
+class _Gender extends StatelessWidget {
+  const _Gender();
+
+  @override
+  Widget build(BuildContext context) {
+    final Gender? gender = context.select(
+      (ProfileIdentitiesBloc bloc) => bloc.state.gender,
+    );
+    final str = Str.of(context);
+
+    return ValueWithLabelAndIcon(
+      iconData: MdiIcons.genderMaleFemale,
+      label: str.gender,
+      value: switch (gender) {
+        Gender.male => str.male,
+        Gender.female => str.female,
+        null => '',
+      },
+      onPressed: () => _onPressed(context),
+    );
+  }
+
+  Future<void> _onPressed(BuildContext context) async =>
+      showDialogDependingOnScreenSize(
+        BlocProvider.value(
+          value: context.read<ProfileIdentitiesBloc>(),
+          child: const ProfileGenderDialog(),
+        ),
+      );
 }
 
 class _Name extends StatelessWidget {
@@ -60,16 +108,16 @@ class _Name extends StatelessWidget {
   }
 
   Future<String?> _askForNewUsername(BuildContext context) async {
+    final str = Str.of(context);
     return await askForValue(
-      context: context,
-      title: Str.of(context).profileNewUsernameDialogTitle,
-      label: Str.of(context).name,
+      title: str.profileNewUsernameDialogTitle,
+      label: str.name,
       textFieldIcon: Icons.person_rounded,
       value: context.read<ProfileIdentitiesBloc>().state.username,
       isValueRequired: true,
       validator: (String? value) {
         if (value != null && !isNameOrSurnameValid(value)) {
-          return Str.of(context).invalidNameOrSurnameMessage;
+          return str.invalidNameOrSurnameMessage;
         }
         return null;
       },
@@ -109,16 +157,16 @@ class _Surname extends StatelessWidget {
   }
 
   Future<String?> _askForNewSurname(BuildContext context) async {
+    final str = Str.of(context);
     return await askForValue(
-      context: context,
-      title: Str.of(context).profileNewSurnameDialogTitle,
-      label: Str.of(context).surname,
+      title: str.profileNewSurnameDialogTitle,
+      label: str.surname,
       textFieldIcon: Icons.person_rounded,
       value: context.read<ProfileIdentitiesBloc>().state.surname,
       isValueRequired: true,
       validator: (String? value) {
         if (value != null && !isNameOrSurnameValid(value)) {
-          return Str.of(context).invalidNameOrSurnameMessage;
+          return str.invalidNameOrSurnameMessage;
         }
         return null;
       },
@@ -145,15 +193,13 @@ class _Email extends StatelessWidget {
     );
   }
 
-  Future<void> _onPressed(BuildContext context) async {
-    await showFullScreenDialog(
-      context: context,
-      dialog: BlocProvider<ProfileIdentitiesBloc>.value(
-        value: context.read<ProfileIdentitiesBloc>(),
-        child: const _UpdateEmailDialog(),
-      ),
-    );
-  }
+  Future<void> _onPressed(BuildContext context) async =>
+      await showDialogDependingOnScreenSize(
+        BlocProvider<ProfileIdentitiesBloc>.value(
+          value: context.read<ProfileIdentitiesBloc>(),
+          child: const ProfileEmailDialog(),
+        ),
+      );
 }
 
 class _ChangePassword extends StatelessWidget {
@@ -170,15 +216,13 @@ class _ChangePassword extends StatelessWidget {
     );
   }
 
-  Future<void> _onPressed(BuildContext context) async {
-    await showFullScreenDialog(
-      context: context,
-      dialog: BlocProvider.value(
-        value: context.read<ProfileIdentitiesBloc>(),
-        child: const _UpdatePasswordDialog(),
-      ),
-    );
-  }
+  Future<void> _onPressed(BuildContext context) async =>
+      showDialogDependingOnScreenSize(
+        BlocProvider.value(
+          value: context.read<ProfileIdentitiesBloc>(),
+          child: const ProfilePasswordDialog(),
+        ),
+      );
 }
 
 class _DeleteAccount extends StatelessWidget {
@@ -196,13 +240,11 @@ class _DeleteAccount extends StatelessWidget {
     );
   }
 
-  Future<void> _onPressed(BuildContext context) async {
-    await showFullScreenDialog(
-      context: context,
-      dialog: BlocProvider.value(
-        value: context.read<ProfileIdentitiesBloc>(),
-        child: const _DeleteAccountDialog(),
-      ),
-    );
-  }
+  Future<void> _onPressed(BuildContext context) async =>
+      await showDialogDependingOnScreenSize(
+        BlocProvider.value(
+          value: context.read<ProfileIdentitiesBloc>(),
+          child: const ProfileDeleteAccountDialog(),
+        ),
+      );
 }

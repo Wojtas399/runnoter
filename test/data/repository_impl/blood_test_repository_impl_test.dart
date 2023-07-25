@@ -1,5 +1,6 @@
 import 'package:firebase/firebase.dart' as firebase;
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/data/repository_impl/blood_test_repository_impl.dart';
 import 'package:runnoter/domain/entity/blood_parameter.dart';
@@ -14,16 +15,14 @@ void main() {
   late BloodTestRepositoryImpl repository;
   const String userId = 'u1';
 
-  BloodTestRepositoryImpl createRepository({
-    List<BloodTest>? initialState,
-  }) =>
-      BloodTestRepositoryImpl(
-        firebaseBloodTestService: firebaseBloodTestService,
-        initialData: initialState,
-      );
+  setUpAll(() {
+    GetIt.I.registerFactory<firebase.FirebaseBloodTestService>(
+      () => firebaseBloodTestService,
+    );
+  });
 
   setUp(
-    () => repository = createRepository(),
+    () => repository = BloodTestRepositoryImpl(),
   );
 
   tearDown(() {
@@ -45,7 +44,7 @@ void main() {
         createBloodTest(id: 'bt2', userId: userId),
         createBloodTest(id: 'bt3', userId: 'u2'),
       ];
-      repository = createRepository(initialState: existingTests);
+      repository = BloodTestRepositoryImpl(initialData: existingTests);
 
       final Stream<BloodTest?> test$ = repository.getTestById(
         bloodTestId: 'bt1',
@@ -54,11 +53,7 @@ void main() {
 
       expect(
         test$,
-        emitsInOrder(
-          [
-            expectedTest,
-          ],
-        ),
+        emitsInOrder([expectedTest]),
       );
     },
   );
@@ -86,7 +81,7 @@ void main() {
       firebaseBloodTestService.mockLoadTestById(
         bloodTestDto: expectedTestDto,
       );
-      repository = createRepository(initialState: existingTests);
+      repository = BloodTestRepositoryImpl(initialData: existingTests);
 
       final Stream<BloodTest?> test$ = repository.getTestById(
         bloodTestId: bloodTestId,
@@ -95,19 +90,8 @@ void main() {
 
       expect(
         test$,
-        emitsInOrder(
-          [
-            null,
-            expectedTest,
-          ],
-        ),
+        emitsInOrder([expectedTest]),
       );
-      verify(
-        () => firebaseBloodTestService.loadTestById(
-          bloodTestId: bloodTestId,
-          userId: userId,
-        ),
-      ).called(1);
     },
   );
 
@@ -180,7 +164,7 @@ void main() {
       firebaseBloodTestService.mockLoadAllTests(
         bloodTestDtos: loadedTestsDtos,
       );
-      repository = createRepository(initialState: existingTests);
+      repository = BloodTestRepositoryImpl(initialData: existingTests);
 
       final Stream<List<BloodTest>?> tests$ = repository.getAllTests(
         userId: userId,
@@ -247,7 +231,7 @@ void main() {
       firebaseBloodTestService.mockAddNewTest(
         addedBloodTestDto: addedBloodTestDto,
       );
-      repository = createRepository(initialState: existingTests);
+      repository = BloodTestRepositoryImpl(initialData: existingTests);
 
       final Stream<List<BloodTest>?> bloodTests$ = repository.dataStream$;
       bloodTests$.listen((_) {});
@@ -335,7 +319,7 @@ void main() {
       firebaseBloodTestService.mockUpdateTest(
         updatedBloodTestDto: updatedBloodTestDto,
       );
-      repository = createRepository(initialState: existingTests);
+      repository = BloodTestRepositoryImpl(initialData: existingTests);
 
       final Stream<List<BloodTest>?> bloodTests$ = repository.dataStream$;
       bloodTests$.listen((_) {});
@@ -379,7 +363,7 @@ void main() {
         createBloodTest(id: 'bt2', userId: 'u2'),
       ];
       firebaseBloodTestService.mockDeleteTest();
-      repository = createRepository(initialState: existingTests);
+      repository = BloodTestRepositoryImpl(initialData: existingTests);
 
       final Stream<List<BloodTest>?> repositoryState$ = repository.dataStream$;
       repository.deleteTest(
@@ -420,7 +404,7 @@ void main() {
       firebaseBloodTestService.mockDeleteAllUserTests(
         idsOfDeletedTests: ['bt1', 'bt3'],
       );
-      repository = createRepository(initialState: existingTests);
+      repository = BloodTestRepositoryImpl(initialData: existingTests);
 
       final Stream<List<BloodTest>?> repositoryState$ = repository.dataStream$;
       repository.deleteAllUserTests(userId: userId);

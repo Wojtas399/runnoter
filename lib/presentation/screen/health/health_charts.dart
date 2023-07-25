@@ -1,17 +1,27 @@
-part of 'health_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 
-class _Charts extends StatelessWidget {
-  const _Charts();
+import '../../../domain/bloc/health/health_bloc.dart';
+import '../../../domain/service/health_chart_service.dart';
+import '../../component/text/label_text_components.dart';
+import '../../formatter/date_formatter.dart';
+import '../../service/utils.dart';
+
+class HealthCharts extends StatelessWidget {
+  const HealthCharts({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final str = Str.of(context);
     return Column(
       children: [
-        LabelLarge(Str.of(context).healthRestingHeartRate),
+        LabelLarge(str.healthRestingHeartRate),
         const SizedBox(height: 8),
         const _RestingHeartRateChart(),
         const SizedBox(height: 16),
-        LabelLarge(Str.of(context).healthFastingWeight),
+        LabelLarge(str.healthFastingWeight),
         const SizedBox(height: 8),
         const _FastingWeightChart(),
       ],
@@ -31,13 +41,9 @@ class _RestingHeartRateChart extends StatelessWidget {
       (HealthBloc bloc) => bloc.state.restingHeartRatePoints,
     );
 
-    if (points != null) {
-      return _LineChart(
-        points: points,
-        chartRange: chartRange,
-      );
-    }
-    return const SizedBox();
+    return points != null
+        ? _LineChart(points: points, chartRange: chartRange)
+        : const SizedBox();
   }
 }
 

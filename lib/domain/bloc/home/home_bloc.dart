@@ -1,93 +1,53 @@
 import 'dart:async';
 
-import 'package:equatable/equatable.dart';
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../../../domain/additional_model/bloc_status.dart';
 import '../../../../domain/additional_model/bloc_with_status.dart';
-import '../../../../domain/entity/user.dart';
 import '../../../../domain/repository/user_repository.dart';
 import '../../../../domain/service/auth_service.dart';
+import '../../../dependency_injection.dart';
 import '../../additional_model/bloc_state.dart';
 import '../../entity/settings.dart';
+import '../../entity/user.dart';
 
 part 'home_event.dart';
 part 'home_state.dart';
 
-class HomeBloc extends BlocWithStatus<HomeEvent, HomeState, HomeInfo, dynamic> {
+class HomeBloc
+    extends BlocWithStatus<HomeEvent, HomeState, HomeBlocInfo, dynamic> {
   final AuthService _authService;
   final UserRepository _userRepository;
-  StreamSubscription<HomeStateListenedParams?>? _listenedParamsListener;
 
   HomeBloc({
-    required AuthService authService,
-    required UserRepository userRepository,
-    BlocStatus status = const BlocStatusInitial(),
-    DrawerPage drawerPage = DrawerPage.home,
-    BottomNavPage bottomNavPage = BottomNavPage.currentWeek,
-  })  : _authService = authService,
-        _userRepository = userRepository,
-        super(
-          HomeState(
-            status: status,
-            drawerPage: drawerPage,
-            bottomNavPage: bottomNavPage,
-          ),
-        ) {
-    on<HomeEventInitialize>(_initialize);
-    on<HomeEventListenedParamsChanged>(_listenedParamsChanged);
-    on<HomeEventDrawerPageChanged>(_drawerPageChanged);
-    on<HomeEventBottomNavPageChanged>(_bottomNavPageChanged);
+    HomeState state = const HomeState(status: BlocStatusInitial()),
+  })  : _authService = getIt<AuthService>(),
+        _userRepository = getIt<UserRepository>(),
+        super(state) {
+    on<HomeEventInitialize>(_initialize, transformer: restartable());
     on<HomeEventSignOut>(_signOut);
   }
 
-  @override
-  Future<void> close() {
-    _listenedParamsListener?.cancel();
-    _listenedParamsListener = null;
-    return super.close();
-  }
-
-  _initialize(
+  Future<void> _initialize(
     HomeEventInitialize event,
     Emitter<HomeState> emit,
-  ) {
+  ) async {
     emitLoadingStatus(emit);
-    _setListenedParamsListener();
-  }
-
-  void _listenedParamsChanged(
-    HomeEventListenedParamsChanged event,
-    Emitter<HomeState> emit,
-  ) {
-    emit(state.copyWith(
-      loggedUserEmail: event.listenedParams?.loggedUserEmail,
-      loggedUserName: event.listenedParams?.loggedUserName,
-      loggedUserSurname: event.listenedParams?.loggedUserSurname,
-      themeMode: event.listenedParams?.themeMode,
-      language: event.listenedParams?.language,
-      distanceUnit: event.listenedParams?.distanceUnit,
-      paceUnit: event.listenedParams?.paceUnit,
-    ));
-  }
-
-  void _drawerPageChanged(
-    HomeEventDrawerPageChanged event,
-    Emitter<HomeState> emit,
-  ) {
-    emit(state.copyWith(
-      drawerPage: event.drawerPage,
-    ));
-  }
-
-  void _bottomNavPageChanged(
-    HomeEventBottomNavPageChanged event,
-    Emitter<HomeState> emit,
-  ) {
-    emit(state.copyWith(
-      bottomNavPage: event.bottomNavPage,
-    ));
+    final Stream<User?> loggedUser$ =
+        _authService.loggedUserId$.whereNotNull().switchMap(
+              (String loggedUserId) => _userRepository.getUserById(
+                userId: loggedUserId,
+              ),
+            );
+    await emit.forEach(
+      loggedUser$,
+      onData: (User? loggedUser) => state.copyWith(
+        loggedUserName: loggedUser?.name,
+        appSettings: loggedUser?.settings,
+      ),
+    );
   }
 
   Future<void> _signOut(
@@ -96,37 +56,10 @@ class HomeBloc extends BlocWithStatus<HomeEvent, HomeState, HomeInfo, dynamic> {
   ) async {
     emitLoadingStatus(emit);
     await _authService.signOut();
-    emitCompleteStatus(emit, HomeInfo.userSignedOut);
+    emitCompleteStatus(emit, HomeBlocInfo.userSignedOut);
   }
+}
 
-  void _setListenedParamsListener() {
-    _listenedParamsListener ??= Rx.combineLatest2(
-      _authService.loggedUserEmail$,
-      _getLoggedUserData(),
-      (String? loggedUserEmail, User? loggedUserData) =>
-          HomeStateListenedParams(
-        loggedUserEmail: loggedUserEmail,
-        loggedUserName: loggedUserData?.name,
-        loggedUserSurname: loggedUserData?.surname,
-        themeMode: loggedUserData?.settings.themeMode,
-        language: loggedUserData?.settings.language,
-        distanceUnit: loggedUserData?.settings.distanceUnit,
-        paceUnit: loggedUserData?.settings.paceUnit,
-      ),
-    ).listen((HomeStateListenedParams listenedParams) {
-      add(
-        HomeEventListenedParamsChanged(
-          listenedParams: listenedParams,
-        ),
-      );
-    });
-  }
-
-  Stream<User?> _getLoggedUserData() {
-    return _authService.loggedUserId$.whereType<String>().switchMap(
-          (String loggedUserId) => _userRepository.getUserById(
-            userId: loggedUserId,
-          ),
-        );
-  }
+enum HomeBlocInfo {
+  userSignedOut,
 }

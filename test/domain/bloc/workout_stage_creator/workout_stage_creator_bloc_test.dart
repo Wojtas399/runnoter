@@ -72,9 +72,7 @@ void main() {
     'original stage is null, '
     'should do nothing',
     build: () => createBloc(),
-    act: (bloc) => bloc.add(
-      const WorkoutStageCreatorEventInitialize(),
-    ),
+    act: (bloc) => bloc.add(const WorkoutStageCreatorEventInitialize()),
     expect: () => [],
   );
 
@@ -88,9 +86,7 @@ void main() {
         maxHeartRate: 165,
       ),
     ),
-    act: (bloc) => bloc.add(
-      const WorkoutStageCreatorEventInitialize(),
-    ),
+    act: (bloc) => bloc.add(const WorkoutStageCreatorEventInitialize()),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
@@ -120,9 +116,7 @@ void main() {
         joggingDistanceInMeters: 80,
       ),
     ),
-    act: (bloc) => bloc.add(
-      const WorkoutStageCreatorEventInitialize(),
-    ),
+    act: (bloc) => bloc.add(const WorkoutStageCreatorEventInitialize()),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
@@ -148,13 +142,9 @@ void main() {
     'stage type changed, '
     'should update stage type in state',
     build: () => createBloc(),
-    act: (WorkoutStageCreatorBloc bloc) {
-      bloc.add(
-        const WorkoutStageCreatorEventStageTypeChanged(
-          stageType: WorkoutStageType.zone2,
-        ),
-      );
-    },
+    act: (bloc) => bloc.add(const WorkoutStageCreatorEventStageTypeChanged(
+      stageType: WorkoutStageType.zone2,
+    )),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
@@ -167,13 +157,9 @@ void main() {
     'distance changed, '
     'should update distance in distance form',
     build: () => createBloc(),
-    act: (WorkoutStageCreatorBloc bloc) {
-      bloc.add(
-        const WorkoutStageCreatorEventDistanceChanged(
-          distanceInKm: 10.5,
-        ),
-      );
-    },
+    act: (bloc) => bloc.add(const WorkoutStageCreatorEventDistanceChanged(
+      distanceInKm: 10.5,
+    )),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
@@ -188,13 +174,9 @@ void main() {
     'max heart rate changed, '
     'should update max heart rate in distance form',
     build: () => createBloc(),
-    act: (WorkoutStageCreatorBloc bloc) {
-      bloc.add(
-        const WorkoutStageCreatorEventMaxHeartRateChanged(
-          maxHeartRate: 140,
-        ),
-      );
-    },
+    act: (bloc) => bloc.add(const WorkoutStageCreatorEventMaxHeartRateChanged(
+      maxHeartRate: 140,
+    )),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
@@ -209,13 +191,9 @@ void main() {
     'amount of series changed, '
     'should update amount of series in series form',
     build: () => createBloc(),
-    act: (WorkoutStageCreatorBloc bloc) {
-      bloc.add(
-        const WorkoutStageCreatorEventAmountOfSeriesChanged(
-          amountOfSeries: 10,
-        ),
-      );
-    },
+    act: (bloc) => bloc.add(const WorkoutStageCreatorEventAmountOfSeriesChanged(
+      amountOfSeries: 10,
+    )),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
@@ -230,13 +208,9 @@ void main() {
     'series distance changed, '
     'should update series distance in series form',
     build: () => createBloc(),
-    act: (WorkoutStageCreatorBloc bloc) {
-      bloc.add(
-        const WorkoutStageCreatorEventSeriesDistanceChanged(
-          seriesDistanceInMeters: 100,
-        ),
-      );
-    },
+    act: (bloc) => bloc.add(const WorkoutStageCreatorEventSeriesDistanceChanged(
+      seriesDistanceInMeters: 100,
+    )),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
@@ -251,13 +225,11 @@ void main() {
     'walking distance changed, '
     'should update walking distance in series form',
     build: () => createBloc(),
-    act: (WorkoutStageCreatorBloc bloc) {
-      bloc.add(
-        const WorkoutStageCreatorEventWalkingDistanceChanged(
-          walkingDistanceInMeters: 100,
-        ),
-      );
-    },
+    act: (bloc) => bloc.add(
+      const WorkoutStageCreatorEventWalkingDistanceChanged(
+        walkingDistanceInMeters: 100,
+      ),
+    ),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
@@ -272,13 +244,11 @@ void main() {
     'jogging distance changed, '
     'should update jogging distance in series form',
     build: () => createBloc(),
-    act: (WorkoutStageCreatorBloc bloc) {
-      bloc.add(
-        const WorkoutStageCreatorEventJoggingDistanceChanged(
-          joggingDistanceInMeters: 100,
-        ),
-      );
-    },
+    act: (bloc) => bloc.add(
+      const WorkoutStageCreatorEventJoggingDistanceChanged(
+        joggingDistanceInMeters: 100,
+      ),
+    ),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
@@ -294,11 +264,7 @@ void main() {
     'stage type is null, '
     'should do nothing',
     build: () => createBloc(),
-    act: (WorkoutStageCreatorBloc bloc) {
-      bloc.add(
-        const WorkoutStageCreatorEventSubmit(),
-      );
-    },
+    act: (bloc) => bloc.add(const WorkoutStageCreatorEventSubmit()),
     expect: () => [],
   );
 
@@ -313,11 +279,7 @@ void main() {
         maxHeartRate: 150,
       ),
     ),
-    act: (WorkoutStageCreatorBloc bloc) {
-      bloc.add(
-        const WorkoutStageCreatorEventSubmit(),
-      );
-    },
+    act: (bloc) => bloc.add(const WorkoutStageCreatorEventSubmit()),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
@@ -345,11 +307,7 @@ void main() {
         maxHeartRate: 150,
       ),
     ),
-    act: (WorkoutStageCreatorBloc bloc) {
-      bloc.add(
-        const WorkoutStageCreatorEventSubmit(),
-      );
-    },
+    act: (bloc) => bloc.add(const WorkoutStageCreatorEventSubmit()),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
@@ -377,11 +335,7 @@ void main() {
         maxHeartRate: 150,
       ),
     ),
-    act: (WorkoutStageCreatorBloc bloc) {
-      bloc.add(
-        const WorkoutStageCreatorEventSubmit(),
-      );
-    },
+    act: (bloc) => bloc.add(const WorkoutStageCreatorEventSubmit()),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
@@ -411,11 +365,7 @@ void main() {
         joggingDistanceInMeters: 80,
       ),
     ),
-    act: (WorkoutStageCreatorBloc bloc) {
-      bloc.add(
-        const WorkoutStageCreatorEventSubmit(),
-      );
-    },
+    act: (bloc) => bloc.add(const WorkoutStageCreatorEventSubmit()),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
@@ -449,11 +399,7 @@ void main() {
         joggingDistanceInMeters: 80,
       ),
     ),
-    act: (WorkoutStageCreatorBloc bloc) {
-      bloc.add(
-        const WorkoutStageCreatorEventSubmit(),
-      );
-    },
+    act: (bloc) => bloc.add(const WorkoutStageCreatorEventSubmit()),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),

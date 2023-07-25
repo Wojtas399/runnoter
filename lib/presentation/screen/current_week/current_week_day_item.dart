@@ -1,9 +1,18 @@
-part of 'current_week_screen.dart';
+import 'package:flutter/material.dart';
 
-class DayItem extends StatelessWidget {
+import '../../../domain/bloc/current_week/current_week_cubit.dart';
+import '../../component/activity_item_component.dart';
+import '../../component/shimmer_container.dart';
+import '../../component/text/title_text_components.dart';
+import '../../config/navigation/router.dart';
+import '../../formatter/date_formatter.dart';
+import '../../service/navigator_service.dart';
+import 'current_week_add_activity_button.dart';
+
+class CurrentWeekDayItem extends StatelessWidget {
   final Day day;
 
-  const DayItem({
+  const CurrentWeekDayItem({
     super.key,
     required this.day,
   });
@@ -23,25 +32,22 @@ class DayItem extends StatelessWidget {
                 date: day.date,
                 isToday: day.isToday,
               ),
-              _AddActivityButton(date: day.date),
+              CurrentWeekAddActivityButton(date: day.date),
             ],
           ),
+          const SizedBox(height: 8),
           Column(
             children: [
               ...day.workouts.map(
                 (workout) => ActivityItem(
                   activity: workout,
-                  onPressed: () {
-                    _onWorkoutPressed(context, workout.id);
-                  },
+                  onPressed: () => _onWorkoutPressed(workout.id),
                 ),
               ),
               ...day.races.map(
                 (race) => ActivityItem(
                   activity: race,
-                  onPressed: () {
-                    _onRacePressed(context, race.id);
-                  },
+                  onPressed: () => _onRacePressed(race.id),
                 ),
               ),
             ],
@@ -51,18 +57,33 @@ class DayItem extends StatelessWidget {
     );
   }
 
-  void _onWorkoutPressed(BuildContext context, String workoutId) {
+  void _onWorkoutPressed(String workoutId) {
     navigateTo(
-      context: context,
-      route: WorkoutPreviewRoute(workoutId: workoutId),
+      WorkoutPreviewRoute(workoutId: workoutId),
     );
   }
 
-  void _onRacePressed(BuildContext context, String raceId) {
+  void _onRacePressed(String raceId) {
     navigateTo(
-      context: context,
-      route: RacePreviewRoute(
-        raceId: raceId,
+      RacePreviewRoute(raceId: raceId),
+    );
+  }
+}
+
+class CurrentWeekDayItemShimmer extends StatelessWidget {
+  const CurrentWeekDayItemShimmer({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Padding(
+      padding: EdgeInsets.all(4),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ShimmerContainer(height: 24, width: 150),
+          SizedBox(height: 8),
+          ShimmerContainer(height: 48, width: double.infinity),
+        ],
       ),
     );
   }

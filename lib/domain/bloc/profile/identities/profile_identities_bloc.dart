@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -8,6 +9,7 @@ import '../../../../../domain/additional_model/bloc_with_status.dart';
 import '../../../../../domain/entity/user.dart';
 import '../../../../../domain/repository/user_repository.dart';
 import '../../../../../domain/service/auth_service.dart';
+import '../../../../dependency_injection.dart';
 import '../../../additional_model/bloc_state.dart';
 import '../../../additional_model/custom_exception.dart';
 import '../../../repository/blood_test_repository.dart';
@@ -26,27 +28,23 @@ class ProfileIdentitiesBloc extends BlocWithStatus<ProfileIdentitiesEvent,
   final HealthMeasurementRepository _healthMeasurementRepository;
   final BloodTestRepository _bloodTestRepository;
   final RaceRepository _raceRepository;
-  StreamSubscription<(String?, User?)>? _userIdentitiesListener;
 
   ProfileIdentitiesBloc({
-    required AuthService authService,
-    required UserRepository userRepository,
-    required WorkoutRepository workoutRepository,
-    required HealthMeasurementRepository healthMeasurementRepository,
-    required BloodTestRepository bloodTestRepository,
-    required RaceRepository raceRepository,
     ProfileIdentitiesState state = const ProfileIdentitiesState(
       status: BlocStatusInitial(),
     ),
-  })  : _authService = authService,
-        _userRepository = userRepository,
-        _workoutRepository = workoutRepository,
-        _healthMeasurementRepository = healthMeasurementRepository,
-        _bloodTestRepository = bloodTestRepository,
-        _raceRepository = raceRepository,
+  })  : _authService = getIt<AuthService>(),
+        _userRepository = getIt<UserRepository>(),
+        _workoutRepository = getIt<WorkoutRepository>(),
+        _healthMeasurementRepository = getIt<HealthMeasurementRepository>(),
+        _bloodTestRepository = getIt<BloodTestRepository>(),
+        _raceRepository = getIt<RaceRepository>(),
         super(state) {
-    on<ProfileIdentitiesEventInitialize>(_initialize);
-    on<ProfileIdentitiesEventIdentitiesUpdated>(_identitiesUpdated);
+    on<ProfileIdentitiesEventInitialize>(
+      _initialize,
+      transformer: restartable(),
+    );
+    on<ProfileIdentitiesEventUpdateGender>(_updateGender);
     on<ProfileIdentitiesEventUpdateUsername>(_updateUsername);
     on<ProfileIdentitiesEventUpdateSurname>(_updateSurname);
     on<ProfileIdentitiesEventUpdateEmail>(_updateEmail);
@@ -54,30 +52,56 @@ class ProfileIdentitiesBloc extends BlocWithStatus<ProfileIdentitiesEvent,
     on<ProfileIdentitiesEventDeleteAccount>(_deleteAccount);
   }
 
-  @override
-  Future<void> close() {
-    _userIdentitiesListener?.cancel();
-    _userIdentitiesListener = null;
-    return super.close();
-  }
-
-  void _initialize(
+  Future<void> _initialize(
     ProfileIdentitiesEventInitialize event,
     Emitter<ProfileIdentitiesState> emit,
-  ) {
-    _setLoggedUserIdentitiesListener();
+  ) async {
+    final Stream<(String?, User?)> userIdentities$ = Rx.combineLatest2(
+      _authService.loggedUserEmail$,
+      _loggedUserData$,
+      (String? loggedUserEmail, User? loggedUserData) =>
+          (loggedUserEmail, loggedUserData),
+    );
+    await emit.forEach(
+      userIdentities$,
+      onData: ((String?, User?) identities) {
+        final String? loggedUserEmail = identities.$1;
+        final User? loggedUserData = identities.$2;
+        return state.copyWith(
+          loggedUserId: loggedUserData?.id,
+          gender: loggedUserData?.gender,
+          email: loggedUserEmail,
+          username: loggedUserData?.name,
+          surname: loggedUserData?.surname,
+        );
+      },
+    );
   }
 
-  void _identitiesUpdated(
-    ProfileIdentitiesEventIdentitiesUpdated event,
+  Future<void> _updateGender(
+    ProfileIdentitiesEventUpdateGender event,
     Emitter<ProfileIdentitiesState> emit,
-  ) {
+  ) async {
+    final Gender? previousGender = state.gender;
+    if (event.gender == previousGender) return;
+    final String? loggedUserId = await _authService.loggedUserId$.first;
+    if (loggedUserId == null) {
+      emitNoLoggedUserStatus(emit);
+      return;
+    }
     emit(state.copyWith(
-      loggedUserId: event.user?.id,
-      email: event.email,
-      username: event.user?.name,
-      surname: event.user?.surname,
+      gender: event.gender,
     ));
+    try {
+      await _userRepository.updateUserIdentities(
+        userId: loggedUserId,
+        gender: event.gender,
+      );
+    } catch (_) {
+      emit(state.copyWith(
+        gender: previousGender,
+      ));
+    }
   }
 
   Future<void> _updateUsername(
@@ -202,27 +226,8 @@ class ProfileIdentitiesBloc extends BlocWithStatus<ProfileIdentitiesEvent,
     }
   }
 
-  void _setLoggedUserIdentitiesListener() {
-    _userIdentitiesListener ??= Rx.combineLatest2(
-      _authService.loggedUserEmail$,
-      _loggedUserData$,
-      (
-        String? loggedUserEmail,
-        User? loggedUserData,
-      ) =>
-          (loggedUserEmail, loggedUserData),
-    ).listen(
-      ((String?, User?) listenedParams) => add(
-        ProfileIdentitiesEventIdentitiesUpdated(
-          email: listenedParams.$1,
-          user: listenedParams.$2,
-        ),
-      ),
-    );
-  }
-
   Stream<User?> get _loggedUserData$ {
-    return _authService.loggedUserId$.whereType<String>().switchMap(
+    return _authService.loggedUserId$.whereNotNull().switchMap(
           (String userId) => _userRepository.getUserById(
             userId: userId,
           ),

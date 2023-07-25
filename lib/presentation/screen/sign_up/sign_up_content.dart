@@ -1,7 +1,19 @@
-part of 'sign_up_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class _Content extends StatelessWidget {
-  const _Content();
+import '../../../domain/bloc/sign_up/sign_up_bloc.dart';
+import '../../component/app_bar_with_logo.dart';
+import '../../component/big_button_component.dart';
+import '../../component/body/small_body_component.dart';
+import '../../component/text/body_text_components.dart';
+import '../../component/text/headline_text_components.dart';
+import '../../service/navigator_service.dart';
+import '../../service/utils.dart';
+import 'sign_up_form.dart';
+
+class SignUpContent extends StatelessWidget {
+  const SignUpContent({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -11,21 +23,21 @@ class _Content extends StatelessWidget {
         child: SingleChildScrollView(
           child: GestureDetector(
             onTap: unfocusInputs,
-            child: Container(
-              color: Colors.transparent,
-              width: double.infinity,
-              padding: const EdgeInsets.all(24),
-              child: const Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  _FormHeader(),
-                  SizedBox(height: 32),
-                  _Form(),
-                  SizedBox(height: 32),
-                  _SubmitButton(),
-                  SizedBox(height: 16),
-                  _AlternativeOptions(),
-                ],
+            child: SmallBody(
+              child: Container(
+                color: Colors.transparent,
+                padding: const EdgeInsets.all(24),
+                child: const Column(
+                  children: [
+                    _FormHeader(),
+                    SizedBox(height: 24),
+                    SignUpForm(),
+                    SizedBox(height: 32),
+                    _SubmitButton(),
+                    SizedBox(height: 16),
+                    _GoToSignInOption(),
+                  ],
+                ),
               ),
             ),
           ),
@@ -41,8 +53,60 @@ class _FormHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return HeadlineMedium(
-      Str.of(context).signUpScreenTitle,
+      Str.of(context).signUpTitle,
       fontWeight: FontWeight.bold,
+    );
+  }
+}
+
+class _SubmitButton extends StatelessWidget {
+  const _SubmitButton();
+
+  @override
+  Widget build(BuildContext context) {
+    final bool isDisabled = context.select(
+      (SignUpBloc bloc) => bloc.state.isSubmitButtonDisabled,
+    );
+
+    return BigButton(
+      label: Str.of(context).signUpButtonLabel,
+      isDisabled: isDisabled,
+      onPressed: () => _onPressed(context),
+    );
+  }
+
+  void _onPressed(BuildContext context) {
+    unfocusInputs();
+    context.read<SignUpBloc>().add(
+          const SignUpEventSubmit(),
+        );
+  }
+}
+
+class _GoToSignInOption extends StatelessWidget {
+  const _GoToSignInOption();
+
+  @override
+  Widget build(BuildContext context) {
+    final str = Str.of(context);
+
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: navigateBack,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(str.signUpAlreadyHaveAccount),
+            const SizedBox(width: 4),
+            BodyMedium(
+              str.signUpSignIn,
+              color: Theme.of(context).colorScheme.primary,
+              fontWeight: FontWeight.bold,
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

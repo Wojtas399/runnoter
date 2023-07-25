@@ -1,10 +1,11 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
+import '../../common/workout_stage_service.dart';
 import '../../domain/entity/workout_stage.dart';
 import '../extension/context_extensions.dart';
 import '../extension/double_extensions.dart';
 import '../extension/string_extensions.dart';
-import '../service/workout_stage_service.dart';
 import 'distance_unit_formatter.dart';
 import 'workout_stage_formatter.dart';
 
@@ -13,8 +14,8 @@ extension ListOfWorkoutStagesFormatter on List<WorkoutStage> {
     final String distanceUnit = context.distanceUnit.toUIShortFormat();
     double totalDistance = map(
       (stage) => _calculateConvertedDistanceOfWorkoutStage(context, stage),
-    ).reduce((totalDist, workout) => totalDist + workout);
-    return '$totalDistance$distanceUnit';
+    ).sum;
+    return '$totalDistance $distanceUnit';
   }
 
   String toUIDetailedTotalDistance(BuildContext context) {
@@ -28,12 +29,12 @@ extension ListOfWorkoutStagesFormatter on List<WorkoutStage> {
         final stageDistanceStr = convertedStageDistance.toString().trimZeros();
         totalDistance += convertedStageDistance;
         stageDescriptions.add(
-          '${stage.toTypeName(context)} $stageDistanceStr$distanceUnit',
+          '${stage.toTypeName(context)} $stageDistanceStr $distanceUnit',
         );
       }
     }
     final totalDistanceStr = totalDistance.toString().trimZeros();
-    String description = '$totalDistanceStr$distanceUnit';
+    String description = '$totalDistanceStr $distanceUnit';
     if (totalDistance > 0) {
       description += ' (${stageDescriptions.join(' + ')})';
     }

@@ -7,6 +7,7 @@ import '../../../../domain/entity/settings.dart';
 import '../../../../domain/entity/user.dart';
 import '../../../../domain/repository/user_repository.dart';
 import '../../../../domain/service/auth_service.dart';
+import '../../../dependency_injection.dart';
 import '../../../presentation/service/validation_service.dart' as validator;
 import '../../additional_model/bloc_state.dart';
 import '../../additional_model/custom_exception.dart';
@@ -20,32 +21,26 @@ class SignUpBloc extends BlocWithStatus<SignUpEvent, SignUpState,
   final UserRepository _userRepository;
 
   SignUpBloc({
-    required AuthService authService,
-    required UserRepository userRepository,
-    BlocStatus status = const BlocStatusInitial(),
-    String name = '',
-    String surname = '',
-    String email = '',
-    String password = '',
-    String passwordConfirmation = '',
-  })  : _authService = authService,
-        _userRepository = userRepository,
-        super(
-          SignUpState(
-            status: status,
-            name: name,
-            surname: surname,
-            email: email,
-            password: password,
-            passwordConfirmation: passwordConfirmation,
-          ),
-        ) {
+    SignUpState state = const SignUpState(status: BlocStatusInitial()),
+  })  : _authService = getIt<AuthService>(),
+        _userRepository = getIt<UserRepository>(),
+        super(state) {
+    on<SignUpEventGenderChanged>(_genderChanged);
     on<SignUpEventNameChanged>(_nameChanged);
     on<SignUpEventSurnameChanged>(_surnameChanged);
     on<SignUpEventEmailChanged>(_emailChanged);
     on<SignUpEventPasswordChanged>(_passwordChanged);
     on<SignUpEventPasswordConfirmationChanged>(_passwordConfirmationChanged);
     on<SignUpEventSubmit>(_submit);
+  }
+
+  void _genderChanged(
+    SignUpEventGenderChanged event,
+    Emitter<SignUpState> emit,
+  ) {
+    emit(state.copyWith(
+      gender: event.gender,
+    ));
   }
 
   void _nameChanged(
@@ -97,6 +92,7 @@ class SignUpBloc extends BlocWithStatus<SignUpEvent, SignUpState,
     SignUpEventSubmit event,
     Emitter<SignUpState> emit,
   ) async {
+    if (state.isSubmitButtonDisabled) return;
     emitLoadingStatus(emit);
     try {
       await _tryToSignUp();
@@ -126,12 +122,11 @@ class SignUpBloc extends BlocWithStatus<SignUpEvent, SignUpState,
       email: state.email,
       password: state.password,
     );
-    if (userId == null) {
-      return;
-    }
+    if (userId == null) return;
     await _userRepository.addUser(
       user: User(
         id: userId,
+        gender: state.gender,
         name: state.name,
         surname: state.surname,
         settings: const Settings(

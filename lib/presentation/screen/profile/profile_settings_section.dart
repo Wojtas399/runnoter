@@ -1,7 +1,22 @@
-part of 'profile_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class _SettingsSection extends StatelessWidget {
-  const _SettingsSection();
+import '../../../domain/bloc/profile/settings/profile_settings_bloc.dart';
+import '../../../domain/entity/settings.dart' as settings;
+import '../../component/text/title_text_components.dart';
+import '../../component/value_with_label_and_icon_component.dart';
+import '../../formatter/distance_unit_formatter.dart';
+import '../../formatter/pace_unit_formatter.dart';
+import '../../formatter/settings_formatter.dart';
+import '../../service/dialog_service.dart';
+import 'profile_distance_unit_dialog.dart';
+import 'profile_language_dialog.dart';
+import 'profile_pace_unit_dialog.dart';
+import 'profile_theme_mode_dialog.dart';
+
+class ProfileSettingsSection extends StatelessWidget {
+  const ProfileSettingsSection({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -10,8 +25,9 @@ class _SettingsSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _SectionHeader(
-          title: Str.of(context).profileSettings,
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: TitleLarge(Str.of(context).profileSettings),
         ),
         const SizedBox(height: 16),
         const _Theme(),
@@ -39,18 +55,17 @@ class _Theme extends StatelessWidget {
       label: Str.of(context).themeMode,
       iconData: Icons.brightness_6_outlined,
       value: themeMode?.toUIFormat(context) ?? '',
-      onPressed: () {
-        _onPressed(context);
-      },
+      onPressed: () => _onPressed(context),
     );
   }
 
-  void _onPressed(BuildContext context) {
-    navigateTo(
-      context: context,
-      route: const ThemeModeRoute(),
-    );
-  }
+  Future<void> _onPressed(BuildContext context) async =>
+      await showDialogDependingOnScreenSize(
+        BlocProvider.value(
+          value: context.read<ProfileSettingsBloc>(),
+          child: const ProfileThemeModeDialog(),
+        ),
+      );
 }
 
 class _Language extends StatelessWidget {
@@ -72,12 +87,13 @@ class _Language extends StatelessWidget {
     );
   }
 
-  void _onPressed(BuildContext context) {
-    navigateTo(
-      context: context,
-      route: const LanguageRoute(),
-    );
-  }
+  Future<void> _onPressed(BuildContext context) async =>
+      await showDialogDependingOnScreenSize(
+        BlocProvider.value(
+          value: context.read<ProfileSettingsBloc>(),
+          child: const ProfileLanguageDialog(),
+        ),
+      );
 }
 
 class _DistanceUnit extends StatelessWidget {
@@ -99,12 +115,13 @@ class _DistanceUnit extends StatelessWidget {
     );
   }
 
-  void _onPressed(BuildContext context) {
-    navigateTo(
-      context: context,
-      route: const DistanceUnitRoute(),
-    );
-  }
+  Future<void> _onPressed(BuildContext context) async =>
+      await showDialogDependingOnScreenSize(
+        BlocProvider.value(
+          value: context.read<ProfileSettingsBloc>(),
+          child: const ProfileDistanceUnitDialog(),
+        ),
+      );
 }
 
 class _PaceUnit extends StatelessWidget {
@@ -126,10 +143,11 @@ class _PaceUnit extends StatelessWidget {
     );
   }
 
-  void _onPressed(BuildContext context) {
-    navigateTo(
-      context: context,
-      route: const PaceUnitRoute(),
-    );
-  }
+  Future<void> _onPressed(BuildContext context) async =>
+      await showDialogDependingOnScreenSize(
+        BlocProvider.value(
+          value: context.read<ProfileSettingsBloc>(),
+          child: const ProfilePaceUnitDialog(),
+        ),
+      );
 }

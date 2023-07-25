@@ -1,6 +1,7 @@
 part of 'sign_up_bloc.dart';
 
 class SignUpState extends BlocState {
+  final Gender gender;
   final String name;
   final String surname;
   final String email;
@@ -9,16 +10,18 @@ class SignUpState extends BlocState {
 
   const SignUpState({
     required super.status,
-    required this.name,
-    required this.surname,
-    required this.email,
-    required this.password,
-    required this.passwordConfirmation,
+    this.gender = Gender.male,
+    this.name = '',
+    this.surname = '',
+    this.email = '',
+    this.password = '',
+    this.passwordConfirmation = '',
   });
 
   @override
-  List<Object> get props => [
+  List<Object?> get props => [
         status,
+        gender,
         name,
         surname,
         email,
@@ -41,6 +44,7 @@ class SignUpState extends BlocState {
   @override
   SignUpState copyWith({
     BlocStatus? status,
+    Gender? gender,
     String? name,
     String? surname,
     String? email,
@@ -49,6 +53,7 @@ class SignUpState extends BlocState {
   }) {
     return SignUpState(
       status: status ?? const BlocStatusComplete(),
+      gender: gender ?? this.gender,
       name: name ?? this.name,
       surname: surname ?? this.surname,
       email: email ?? this.email,

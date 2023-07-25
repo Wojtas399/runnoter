@@ -2,7 +2,9 @@ import 'package:firebase/firebase.dart' as firebase;
 import 'package:firebase/model/pace_dto.dart';
 import 'package:firebase/model/workout_dto.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:runnoter/common/date_service.dart';
 import 'package:runnoter/data/repository_impl/workout_repository_impl.dart';
 import 'package:runnoter/domain/entity/run_status.dart';
 import 'package:runnoter/domain/entity/workout.dart';
@@ -19,18 +21,15 @@ void main() {
   late WorkoutRepositoryImpl repository;
   const String userId = 'u1';
 
-  WorkoutRepositoryImpl createRepository({
-    List<Workout>? initialState,
-  }) {
-    return WorkoutRepositoryImpl(
-      firebaseWorkoutService: firebaseWorkoutService,
-      dateService: dateService,
-      initialState: initialState,
+  setUpAll(() {
+    GetIt.I.registerFactory<DateService>(() => dateService);
+    GetIt.I.registerFactory<firebase.FirebaseWorkoutService>(
+      () => firebaseWorkoutService,
     );
-  }
+  });
 
   setUp(() {
-    repository = createRepository();
+    repository = WorkoutRepositoryImpl();
   });
 
   tearDown(() {
@@ -40,7 +39,7 @@ void main() {
 
   test(
     'get workouts by date range, '
-    'should emit workouts existing in state and should load workouts from firebase and add them to repository',
+    'should emit workouts existing in state and workouts loaded from remote db',
     () {
       final DateTime startDate = DateTime(2023, 4, 3);
       final DateTime endDate = DateTime(2023, 4, 9);
@@ -116,7 +115,7 @@ void main() {
       firebaseWorkoutService.mockLoadWorkoutsByDateRange(
         workoutDtos: newlyLoadedWorkoutDtos,
       );
-      repository = createRepository(
+      repository = WorkoutRepositoryImpl(
         initialState: existingWorkouts,
       );
 
@@ -126,7 +125,6 @@ void main() {
         startDate: startDate,
         endDate: endDate,
       );
-      workouts$.listen((event) {});
 
       expect(
         workouts$,
@@ -134,21 +132,11 @@ void main() {
           [
             [
               existingWorkouts[0],
-            ],
-            [
-              existingWorkouts[0],
               ...newlyLoadedWorkouts,
             ],
           ],
         ),
       );
-      verify(
-        () => firebaseWorkoutService.loadWorkoutsByDateRange(
-          userId: userId,
-          startDate: startDate,
-          endDate: endDate,
-        ),
-      ).called(1);
     },
   );
 
@@ -171,21 +159,16 @@ void main() {
           name: 'workout 2',
         ),
       ];
-      repository = createRepository(initialState: existingWorkouts);
+      repository = WorkoutRepositoryImpl(initialState: existingWorkouts);
 
       final Stream<Workout?> workout$ = repository.getWorkoutById(
         workoutId: id,
         userId: userId,
       );
-      workout$.listen((_) {});
 
       expect(
         workout$,
-        emitsInOrder(
-          [
-            expectedWorkout,
-          ],
-        ),
+        emitsInOrder([expectedWorkout]),
       );
     },
   );
@@ -210,7 +193,7 @@ void main() {
           name: 'workout 2',
         ),
       ];
-      repository = createRepository(initialState: existingWorkouts);
+      repository = WorkoutRepositoryImpl(initialState: existingWorkouts);
       firebaseWorkoutService.mockLoadWorkoutById(
         workoutDto: expectedWorkoutDto,
       );
@@ -219,23 +202,11 @@ void main() {
         workoutId: id,
         userId: userId,
       );
-      workout$.listen((_) {});
 
       expect(
         workout$,
-        emitsInOrder(
-          [
-            null,
-            expectedWorkout,
-          ],
-        ),
+        emitsInOrder([expectedWorkout]),
       );
-      verify(
-        () => firebaseWorkoutService.loadWorkoutById(
-          workoutId: id,
-          userId: userId,
-        ),
-      ).called(1);
     },
   );
 
@@ -278,7 +249,7 @@ void main() {
       firebaseWorkoutService.mockLoadWorkoutsByDate(
         workoutDtos: [loadedWorkoutDto],
       );
-      repository = createRepository(initialState: existingWorkouts);
+      repository = WorkoutRepositoryImpl(initialState: existingWorkouts);
 
       final Stream<List<Workout>?> workouts$ = repository.getWorkoutsByDate(
         userId: userId,
@@ -358,7 +329,7 @@ void main() {
       firebaseWorkoutService.mockLoadAllWorkouts(
         workoutDtos: newlyLoadedWorkoutDtos,
       );
-      repository = createRepository(
+      repository = WorkoutRepositoryImpl(
         initialState: existingWorkouts,
       );
 
@@ -422,7 +393,7 @@ void main() {
         stages: stages,
       );
       firebaseWorkoutService.mockAddWorkout(addedWorkoutDto: addedWorkoutDto);
-      repository = createRepository(initialState: existingWorkouts);
+      repository = WorkoutRepositoryImpl(initialState: existingWorkouts);
 
       await repository.addWorkout(
         userId: userId,
@@ -509,7 +480,7 @@ void main() {
       firebaseWorkoutService.mockUpdateWorkout(
         updatedWorkoutDto: updatedWorkoutDto,
       );
-      repository = createRepository(
+      repository = WorkoutRepositoryImpl(
         initialState: [existingWorkout],
       );
 
@@ -517,7 +488,6 @@ void main() {
         workoutId: id,
         userId: userId,
       );
-      workout$.listen((_) {});
       repository.updateWorkout(
         workoutId: id,
         userId: userId,
@@ -528,12 +498,7 @@ void main() {
 
       expect(
         workout$,
-        emitsInOrder(
-          [
-            existingWorkout,
-            expectedUpdatedWorkout,
-          ],
-        ),
+        emitsInOrder([expectedUpdatedWorkout]),
       );
       verify(
         () => firebaseWorkoutService.updateWorkout(
@@ -637,7 +602,7 @@ void main() {
         createWorkout(id: 'w2', userId: userId),
         createWorkout(id: id, userId: userId),
       ];
-      repository = createRepository(initialState: existingWorkouts);
+      repository = WorkoutRepositoryImpl(initialState: existingWorkouts);
       firebaseWorkoutService.mockDeleteWorkout();
 
       final Stream<List<Workout>?> repositoryState$ = repository.dataStream$;
@@ -678,7 +643,7 @@ void main() {
         createWorkout(id: 'w3', userId: 'u2'),
         createWorkout(id: 'w4', userId: userId),
       ];
-      repository = createRepository(initialState: existingWorkouts);
+      repository = WorkoutRepositoryImpl(initialState: existingWorkouts);
       firebaseWorkoutService.mockDeleteAllUserWorkouts(
         idsOfDeletedWorkouts: ['w2', 'w1', 'w4'],
       );

@@ -1,9 +1,89 @@
-part of 'current_week_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../../domain/bloc/current_week/current_week_cubit.dart';
+import '../../component/body/big_body_component.dart';
+import '../../component/card_body_component.dart';
+import '../../component/padding/paddings_24.dart';
+import '../../component/responsive_layout_component.dart';
+import '../../component/shimmer.dart';
+import '../../extension/widgets_list_extensions.dart';
+import 'current_week_day_item.dart';
+import 'current_week_stats.dart';
 
 class CurrentWeekContent extends StatelessWidget {
-  const CurrentWeekContent({
-    super.key,
-  });
+  const CurrentWeekContent({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const SingleChildScrollView(
+      child: BigBody(
+        child: Paddings24(
+          child: Shimmer(
+            child: ResponsiveLayout(
+              mobileBody: _MobileContent(),
+              tabletBody: _TabletContent(),
+              desktopBody: _DesktopContent(),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _MobileContent extends StatelessWidget {
+  const _MobileContent();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Column(
+      children: [
+        CurrentWeekMobileStats(),
+        SizedBox(height: 32),
+        _ListOfDays(),
+      ],
+    );
+  }
+}
+
+class _TabletContent extends StatelessWidget {
+  const _TabletContent();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Column(
+      children: [
+        CurrentWeekTabletStats(),
+        SizedBox(width: 32),
+        CardBody(child: _ListOfDays()),
+      ],
+    );
+  }
+}
+
+class _DesktopContent extends StatelessWidget {
+  const _DesktopContent();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: CardBody(
+            child: _ListOfDays(),
+          ),
+        ),
+        SizedBox(width: 16),
+        CurrentWeekDesktopStats(),
+      ],
+    );
+  }
+}
+
+class _ListOfDays extends StatelessWidget {
+  const _ListOfDays();
 
   @override
   Widget build(BuildContext context) {
@@ -11,17 +91,12 @@ class CurrentWeekContent extends StatelessWidget {
       (CurrentWeekCubit cubit) => cubit.state,
     );
 
-    if (days == null) {
-      return const LoadingInfo();
-    }
-
-    return ListView.separated(
-      itemCount: days.length,
-      padding: const EdgeInsets.fromLTRB(12, 12, 12, 80),
-      itemBuilder: (_, int itemIndex) => DayItem(
-        day: days[itemIndex],
-      ),
-      separatorBuilder: (_, int itemIndex) => const Divider(),
+    return Column(
+      children: <Widget>[
+        if (days == null)
+          for (int i = 0; i < 7; i++) const CurrentWeekDayItemShimmer(),
+        if (days != null) ...days.map((day) => CurrentWeekDayItem(day: day)),
+      ].addSeparator(const Divider(height: 16)),
     );
   }
 }

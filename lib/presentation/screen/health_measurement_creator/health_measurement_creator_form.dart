@@ -1,30 +1,31 @@
-part of 'health_measurement_creator_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class _Form extends StatelessWidget {
-  const _Form();
+import '../../../domain/bloc/health_measurement_creator/health_measurement_creator_bloc.dart';
+import '../../component/date_selector_component.dart';
+import '../../component/text/title_text_components.dart';
+import '../../component/text_field_component.dart';
+import '../../formatter/decimal_text_input_formatter.dart';
+
+class HealthMeasurementCreatorForm extends StatelessWidget {
+  const HealthMeasurementCreatorForm({super.key});
 
   @override
   Widget build(BuildContext context) {
     const Widget gap = SizedBox(height: 24);
 
-    return GestureDetector(
-      onTap: unfocusInputs,
-      child: Container(
-        color: Colors.transparent,
-        padding: const EdgeInsets.all(24),
-        child: const Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _Date(),
-            gap,
-            _RestingHeartRate(),
-            gap,
-            _FastingWeight(),
-            gap,
-            _SubmitButton(),
-          ],
-        ),
-      ),
+    return const Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        _Date(),
+        gap,
+        _RestingHeartRate(),
+        gap,
+        _FastingWeight(),
+      ],
     );
   }
 }
@@ -90,9 +91,9 @@ class _RestingHeartRateState extends State<_RestingHeartRate> {
 
   @override
   Widget build(BuildContext context) {
+    final str = Str.of(context);
     return TextFieldComponent(
-      label:
-          '${Str.of(context).healthRestingHeartRate} [${Str.of(context).heartRateUnit}]',
+      label: '${str.healthRestingHeartRate} [${str.heartRateUnit}]',
       keyboardType: TextInputType.number,
       maxLength: 3,
       isRequired: true,
@@ -163,32 +164,6 @@ class _FastingWeightState extends State<_FastingWeight> {
           HealthMeasurementCreatorEventFastingWeightChanged(
             fastingWeight: fastingWeight,
           ),
-        );
-  }
-}
-
-class _SubmitButton extends StatelessWidget {
-  const _SubmitButton();
-
-  @override
-  Widget build(BuildContext context) {
-    final bool isDisabled = context.select(
-      (HealthMeasurementCreatorBloc bloc) => !bloc.state.canSubmit,
-    );
-
-    return BigButton(
-      label: Str.of(context).save,
-      onPressed: () {
-        _onPressed(context);
-      },
-      isDisabled: isDisabled,
-    );
-  }
-
-  void _onPressed(BuildContext context) {
-    unfocusInputs();
-    context.read<HealthMeasurementCreatorBloc>().add(
-          const HealthMeasurementCreatorEventSubmit(),
         );
   }
 }

@@ -1,37 +1,29 @@
-part of 'race_preview_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class _Content extends StatelessWidget {
-  const _Content();
+import '../../../domain/bloc/race_preview/race_preview_bloc.dart';
+import '../../../domain/entity/race.dart';
+import '../../component/body/medium_body_component.dart';
+import '../../component/loading_info_component.dart';
+import '../../component/padding/paddings_24.dart';
+import '../../extension/context_extensions.dart';
+import 'race_preview_actions.dart';
+import 'race_preview_race.dart';
+
+class RacePreviewContent extends StatelessWidget {
+  const RacePreviewContent({super.key});
 
   @override
   Widget build(BuildContext context) {
-    const Widget gap = SizedBox(height: 16);
-
     return const Scaffold(
       appBar: _AppBar(),
       body: SafeArea(
-        child: Paddings24(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _RaceName(),
-                  gap,
-                  _RaceDate(),
-                  gap,
-                  _Place(),
-                  gap,
-                  _Distance(),
-                  gap,
-                  _ExpectedDuration(),
-                  gap,
-                  _Status(),
-                ],
-              ),
-              _FinishRaceButton(),
-            ],
+        child: SingleChildScrollView(
+          child: MediumBody(
+            child: Paddings24(
+              child: _RaceInfo(),
+            ),
           ),
         ),
       ),
@@ -39,170 +31,37 @@ class _Content extends StatelessWidget {
   }
 }
 
-class _RaceName extends StatelessWidget {
-  const _RaceName();
+class _AppBar extends StatelessWidget implements PreferredSizeWidget {
+  const _AppBar();
+
+  @override
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 
   @override
   Widget build(BuildContext context) {
-    final String? raceName = context.select(
-      (RacePreviewBloc bloc) => bloc.state.race?.name,
-    );
-
-    return TitleLarge(
-      raceName ?? '--',
-    );
-  }
-}
-
-class _RaceDate extends StatelessWidget {
-  const _RaceDate();
-
-  @override
-  Widget build(BuildContext context) {
-    final DateTime? date = context.select(
-      (RacePreviewBloc bloc) => bloc.state.race?.date,
-    );
-
-    return ContentWithLabel(
-      label: Str.of(context).raceDate,
-      content: NullableText(
-        date?.toFullDate(context),
-      ),
-    );
-  }
-}
-
-class _Place extends StatelessWidget {
-  const _Place();
-
-  @override
-  Widget build(BuildContext context) {
-    final String? place = context.select(
-      (RacePreviewBloc bloc) => bloc.state.race?.place,
-    );
-
-    return ContentWithLabel(
-      label: Str.of(context).racePlace,
-      content: NullableText(place),
-    );
-  }
-}
-
-class _Distance extends StatelessWidget {
-  const _Distance();
-
-  @override
-  Widget build(BuildContext context) {
-    final double? distance = context.select(
-      (RacePreviewBloc bloc) => bloc.state.race?.distance,
-    );
-    String? distanceStr;
-    if (distance != null) {
-      distanceStr = context
-          .convertDistanceFromDefaultUnit(distance)
-          .decimal(2)
-          .toString()
-          .trimZeros();
-      distanceStr += context.distanceUnit.toUIShortFormat();
-    }
-
-    return ContentWithLabel(
-      label: Str.of(context).raceDistance,
-      content: NullableText(distanceStr),
-    );
-  }
-}
-
-class _ExpectedDuration extends StatelessWidget {
-  const _ExpectedDuration();
-
-  @override
-  Widget build(BuildContext context) {
-    final Duration? expectedDuration = context.select(
-      (RacePreviewBloc bloc) => bloc.state.race?.expectedDuration,
-    );
-
-    return ContentWithLabel(
-      label: Str.of(context).raceExpectedDuration,
-      content: NullableText(
-        expectedDuration?.toUIFormat(),
-      ),
-    );
-  }
-}
-
-class _Status extends StatelessWidget {
-  const _Status();
-
-  @override
-  Widget build(BuildContext context) {
-    final RunStatus? status = context.select(
-      (RacePreviewBloc bloc) => bloc.state.race?.status,
-    );
-
-    return Column(
-      children: [
-        ContentWithLabel(
-          label: Str.of(context).runStatus,
-          content: switch (status) {
-            null => const Text('--'),
-            RunStatus() => Row(
-                children: [
-                  Icon(
-                    status.toIcon(),
-                    color: status.toColor(context),
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    status.toLabel(context),
-                    style: TextStyle(
-                      color: status.toColor(context),
-                    ),
-                  )
-                ],
-              ),
-          },
-        ),
-        if (status is RunStatusWithParams)
-          RunStats(
-            runStatusWithParams: status,
+    return AppBar(
+      title: Text(Str.of(context).racePreviewTitle),
+      centerTitle: true,
+      actions: [
+        if (context.isMobileSize)
+          const Padding(
+            padding: EdgeInsets.only(right: 8),
+            child: RacePreviewActions(),
           ),
       ],
     );
   }
 }
 
-class _FinishRaceButton extends StatelessWidget {
-  const _FinishRaceButton();
+class _RaceInfo extends StatelessWidget {
+  const _RaceInfo();
 
   @override
   Widget build(BuildContext context) {
-    final RunStatus? runStatus = context.select(
-      (RacePreviewBloc bloc) => bloc.state.race?.status,
+    final Race? race = context.select(
+      (RacePreviewBloc bloc) => bloc.state.race,
     );
-    return BigButton(
-      label: runStatus is RunStatusPending
-          ? Str.of(context).runStatusFinish
-          : Str.of(context).runStatusEditStatus,
-      onPressed: () {
-        _onPressed(context);
-      },
-    );
-  }
 
-  void _onPressed(BuildContext context) {
-    final RacePreviewBloc bloc = context.read<RacePreviewBloc>();
-    final String? raceId = bloc.state.race?.id;
-    if (raceId == null) {
-      return;
-    }
-    navigateTo(
-      context: context,
-      route: RunStatusCreatorRoute(
-        creatorArguments: RaceRunStatusCreatorArguments(
-          entityId: raceId,
-        ),
-      ),
-    );
+    return race == null ? const LoadingInfo() : const RacePreviewRaceInfo();
   }
 }

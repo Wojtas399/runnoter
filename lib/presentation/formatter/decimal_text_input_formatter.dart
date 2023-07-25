@@ -16,6 +16,10 @@ class DecimalTextInputFormatter extends TextInputFormatter {
     TextSelection newSelection = newValue.selection;
     if (newText.contains('.') && _isThereTooMuchDecimalDigits(newText)) {
       newText = oldValue.text;
+      newSelection = newSelection.copyWith(
+        baseOffset: newText.length,
+        extentOffset: newText.length,
+      );
     } else if (newText == '.') {
       newText = '0.';
       newSelection = newSelection.copyWith(

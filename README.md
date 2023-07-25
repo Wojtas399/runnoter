@@ -77,10 +77,19 @@ If you have any troubles with installation process, below is link to the officia
 https://docs.flutter.dev/get-started/install
 ```
 # Screenshots
-<img width="300" src="https://github.com/Wojtas399/runnoter/assets/72093398/af32fd35-aa28-41a9-a72d-f9d88bc064ea.png"><img width="300" src="https://github.com/Wojtas399/runnoter/assets/72093398/6f8c34f0-760d-47dd-9cf9-5706e78c90a3.png">
-<img width="300" src="https://github.com/Wojtas399/runnoter/assets/72093398/f6e75460-080d-4904-ac3d-12970d0ecbc8.png"><img width="300" src="https://github.com/Wojtas399/runnoter/assets/72093398/ec83f730-3781-4a48-91bd-f33b08a224df.png">
-<img width="300" src="https://github.com/Wojtas399/runnoter/assets/72093398/8c7c06f0-d3c6-4eb5-94c9-7a1e27750179.png"><img width="300" src="https://github.com/Wojtas399/runnoter/assets/72093398/e77e6773-9984-4264-a0f2-2dedf59c0f13.png">
-<img width="300" src="https://github.com/Wojtas399/runnoter/assets/72093398/626ce102-7125-4d0e-89bf-f23d72924441.png"><img width="300" src="https://github.com/Wojtas399/runnoter/assets/72093398/44e5a22d-ba54-4ccc-8e62-0e9914544e23.png">
-<img width="300" src="https://github.com/Wojtas399/runnoter/assets/72093398/39bb753e-32f1-492c-99ee-dc37a5b051b2.png"><img width="300" src="https://github.com/Wojtas399/runnoter/assets/72093398/ea124d78-c63a-43dd-b670-83a628f9dc88.png">
-<img width="300" src="https://github.com/Wojtas399/runnoter/assets/72093398/1b7c7136-5169-40d9-995f-1712c80256b6.png"><img width="300" src="https://github.com/Wojtas399/runnoter/assets/72093398/c9ae0809-9a8e-4787-8fdb-5ccccb1c60b8.png">
-<img width="300" src="https://github.com/Wojtas399/runnoter/assets/72093398/0dd8df97-b710-4e79-b13e-63a3fdb22b17.png"><img width="300" src="https://github.com/Wojtas399/runnoter/assets/72093398/c553dc7e-b6fe-4e48-af3d-6ed483aae346.png">
+<img width="300" alt="lightCurrentWeek" src="https://github.com/Wojtas399/runnoter/assets/72093398/b37467e5-5ae4-4f74-b65d-e6684a611055.png"><img width="300" alt="darkCurrentWeek" src="https://github.com/Wojtas399/runnoter/assets/72093398/a7a8fcb0-8af8-4d70-93d3-3c15f2576027.png">
+
+<img width="300" alt="lightWorkoutPreview" src="https://github.com/Wojtas399/runnoter/assets/72093398/58031c8b-1195-433d-a28c-84fd40ed9f14.png"><img width="300" alt="darkWorkoutPreview" src="https://github.com/Wojtas399/runnoter/assets/72093398/fa423723-59c3-4f3f-8d07-aa043fa362b3.png">
+
+
+<img width="300" alt="lightCalendar" src="https://github.com/Wojtas399/runnoter/assets/72093398/6b4df555-176e-49a8-ac89-eab30f6eb5ab.png"><img width="300" alt="darkCalendar" src="https://github.com/Wojtas399/runnoter/assets/72093398/902b62bf-2773-48b2-9456-4b7edf26caaf.png">
+
+<img width="300" alt="lightHealth" src="https://github.com/Wojtas399/runnoter/assets/72093398/7e73ea7c-575f-41e6-8923-1d112f89b8d8.png"><img width="300" alt="darkHealth" src="https://github.com/Wojtas399/runnoter/assets/72093398/31730b26-0dc0-4b67-a4f4-e13832ec1544.png">
+
+<img width="300" alt="lightBloodTests" src="https://github.com/Wojtas399/runnoter/assets/72093398/10e3aaea-08bb-4cde-bf80-6e8ecbc13d29.png"><img width="300" alt="darkBloodTests" src="https://github.com/Wojtas399/runnoter/assets/72093398/cb8bd32d-e020-42e8-a5b4-ea791dea1a45">
+
+<img width="300" alt="lightRaces" src="https://github.com/Wojtas399/runnoter/assets/72093398/40d14c41-e1ac-4edc-9b70-75f72bb550b1.png"><img width="300" alt="darkRaces" src="https://github.com/Wojtas399/runnoter/assets/72093398/7c7adb2c-4792-476a-9ccd-7195bde7bc90.png">
+
+<img width="1840" alt="webCurrentWeek" src="https://github.com/Wojtas399/runnoter/assets/72093398/6c500a69-b610-4e45-a70c-fcbb012344da">
+<img width="1840" alt="webCalendar" src="https://github.com/Wojtas399/runnoter/assets/72093398/b4b2cff5-f4bd-4577-b520-010e4c2e1bdc">
+<img width="1840" alt="webHealth" src="https://github.com/Wojtas399/runnoter/assets/72093398/23ea0099-1afa-4ea7-a40b-7832fcb57cc4">

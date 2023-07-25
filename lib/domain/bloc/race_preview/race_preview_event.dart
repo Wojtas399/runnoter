@@ -5,19 +5,7 @@ abstract class RacePreviewEvent {
 }
 
 class RacePreviewEventInitialize extends RacePreviewEvent {
-  final String raceId;
-
-  const RacePreviewEventInitialize({
-    required this.raceId,
-  });
-}
-
-class RacePreviewEventRaceUpdated extends RacePreviewEvent {
-  final Race? race;
-
-  const RacePreviewEventRaceUpdated({
-    required this.race,
-  });
+  const RacePreviewEventInitialize();
 }
 
 class RacePreviewEventDeleteRace extends RacePreviewEvent {

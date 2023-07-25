@@ -1,37 +1,27 @@
-import 'package:flutter/material.dart' as material;
+import 'package:auto_route/auto_route.dart';
+import 'package:get_it/get_it.dart';
 
-import '../config/navigation/routes.dart';
+import '../config/navigation/router.dart';
 import 'dialog_service.dart';
 
-void navigateTo({
-  required material.BuildContext context,
-  required CustomRoute route,
-}) {
-  hideSnackbar(context: context);
-  Object? arguments;
-  if (route is CustomRouteWithArguments) {
-    arguments = route.arguments;
-  }
-  material.Navigator.of(context).pushNamed(
-    route.path.path,
-    arguments: arguments,
-  );
+void navigateTo(PageRouteInfo route) {
+  hideSnackbar();
+  GetIt.I.get<AppRouter>().push(route);
 }
 
-void navigateAndRemoveUntil({
-  required material.BuildContext context,
-  required CustomRoute route,
-}) {
-  material.Navigator.of(context).pushNamedAndRemoveUntil(
-    route.path.path,
-    material.ModalRoute.withName(route.path.path),
-  );
+void navigateAndRemoveUntil(PageRouteInfo route) {
+  hideSnackbar();
+  GetIt.I.get<AppRouter>().replaceAll([route]);
 }
 
-void navigateBack<T>({
-  required material.BuildContext context,
+void popRoute<T>({
   T? result,
 }) {
-  hideSnackbar(context: context);
-  material.Navigator.of(context).pop(result);
+  hideSnackbar();
+  GetIt.I.get<AppRouter>().pop(result);
+}
+
+void navigateBack() {
+  hideSnackbar();
+  GetIt.I.get<AppRouter>().back();
 }

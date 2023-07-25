@@ -1,7 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:firebase/firebase.dart' as firebase;
-import 'package:rxdart/rxdart.dart';
 
+import '../../dependency_injection.dart';
 import '../../domain/additional_model/state_repository.dart';
 import '../../domain/entity/blood_parameter.dart';
 import '../../domain/entity/blood_test.dart';
@@ -14,26 +14,21 @@ class BloodTestRepositoryImpl extends StateRepository<BloodTest>
   final firebase.FirebaseBloodTestService _firebaseBloodTestService;
 
   BloodTestRepositoryImpl({
-    required firebase.FirebaseBloodTestService firebaseBloodTestService,
     super.initialData,
-  }) : _firebaseBloodTestService = firebaseBloodTestService;
+  }) : _firebaseBloodTestService = getIt<firebase.FirebaseBloodTestService>();
 
   @override
   Stream<BloodTest?> getTestById({
     required String bloodTestId,
     required String userId,
-  }) {
-    return dataStream$
-        .map(
-          (List<BloodTest>? bloodTests) => bloodTests?.firstWhereOrNull(
-            (BloodTest test) => test.id == bloodTestId && test.userId == userId,
-          ),
-        )
-        .doOnListen(
-          () => doesEntityNotExistInState(bloodTestId)
-              ? _loadTestByIdFromRemoteDb(bloodTestId, userId)
-              : null,
-        );
+  }) async* {
+    await for (final bloodTests in dataStream$) {
+      BloodTest? bloodTest = bloodTests?.firstWhereOrNull(
+        (BloodTest test) => test.id == bloodTestId && test.userId == userId,
+      );
+      bloodTest ??= await _loadTestByIdFromRemoteDb(bloodTestId, userId);
+      yield bloodTest;
+    }
   }
 
   @override
@@ -105,7 +100,7 @@ class BloodTestRepositoryImpl extends StateRepository<BloodTest>
     removeEntities(idsOfDeletedTests);
   }
 
-  Future<void> _loadTestByIdFromRemoteDb(
+  Future<BloodTest?> _loadTestByIdFromRemoteDb(
     String bloodTestId,
     String userId,
   ) async {
@@ -116,7 +111,9 @@ class BloodTestRepositoryImpl extends StateRepository<BloodTest>
     if (bloodTestDto != null) {
       final BloodTest bloodTest = mapBloodTestFromDto(bloodTestDto);
       addEntity(bloodTest);
+      return bloodTest;
     }
+    return null;
   }
 
   Future<void> _loadTestsFromRemoteDb(String userId) async {

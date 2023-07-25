@@ -1,34 +1,24 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/bloc/sign_in/sign_in_bloc.dart';
-import '../../../domain/service/auth_service.dart';
-import '../../component/big_button_component.dart';
 import '../../component/bloc_with_status_listener_component.dart';
-import '../../component/password_text_field_component.dart';
-import '../../component/text/headline_text_components.dart';
-import '../../component/text_field_component.dart';
-import '../../config/navigation/routes.dart';
+import '../../config/navigation/router.dart';
 import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
-import '../../service/utils.dart';
+import 'sign_in_content.dart';
 
-part 'sign_in_alternative_options.dart';
-part 'sign_in_form.dart';
-part 'sign_in_screen_content.dart';
-part 'sign_in_submit_button.dart';
-
+@RoutePage()
 class SignInScreen extends StatelessWidget {
-  const SignInScreen({
-    super.key,
-  });
+  const SignInScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return const _BlocProvider(
       child: _BlocListener(
-        child: _Content(),
+        child: SignInContent(),
       ),
     );
   }
@@ -44,11 +34,8 @@ class _BlocProvider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (BuildContext context) => SignInBloc(
-        authService: context.read<AuthService>(),
-      )..add(
-          const SignInEventInitialize(),
-        ),
+      create: (BuildContext context) =>
+          SignInBloc()..add(const SignInEventInitialize()),
       child: child,
     );
   }
@@ -65,26 +52,18 @@ class _BlocListener extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocWithStatusListener<SignInBloc, SignInState, SignInInfo,
         SignInError>(
-      child: child,
-      onInfo: (SignInInfo info) {
-        _manageCompletionInfo(info, context);
-      },
+      onInfo: _manageCompletionInfo,
       onError: (SignInError error) {
         _manageError(error, context);
       },
+      child: child,
     );
   }
 
-  Future<void> _manageCompletionInfo(
-    SignInInfo info,
-    BuildContext context,
-  ) async {
+  Future<void> _manageCompletionInfo(SignInInfo info) async {
     switch (info) {
       case SignInInfo.signedIn:
-        navigateAndRemoveUntil(
-          context: context,
-          route: const HomeRoute(),
-        );
+        navigateAndRemoveUntil(const HomeRoute());
         break;
     }
   }
@@ -93,26 +72,24 @@ class _BlocListener extends StatelessWidget {
     SignInError error,
     BuildContext context,
   ) async {
+    final str = Str.of(context);
     switch (error) {
       case SignInError.invalidEmail:
         await showMessageDialog(
-          context: context,
-          title: Str.of(context).signInInvalidEmailDialogTitle,
-          message: Str.of(context).signInInvalidEmailDialogMessage,
+          title: str.signInInvalidEmailDialogTitle,
+          message: str.signInInvalidEmailDialogMessage,
         );
         break;
       case SignInError.userNotFound:
         await showMessageDialog(
-          context: context,
-          title: Str.of(context).signInUserNotFoundDialogTitle,
-          message: '${Str.of(context).signInUserNotFoundDialogMessage}...',
+          title: str.signInUserNotFoundDialogTitle,
+          message: '${str.signInUserNotFoundDialogMessage}...',
         );
         break;
       case SignInError.wrongPassword:
         await showMessageDialog(
-          context: context,
-          title: Str.of(context).signInWrongPasswordDialogTitle,
-          message: Str.of(context).signInWrongPasswordDialogMessage,
+          title: str.signInWrongPasswordDialogTitle,
+          message: str.signInWrongPasswordDialogMessage,
         );
         break;
     }

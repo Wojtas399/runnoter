@@ -8,6 +8,7 @@ import '../../../../domain/additional_model/bloc_with_status.dart';
 import '../../../../domain/entity/health_measurement.dart';
 import '../../../../domain/repository/health_measurement_repository.dart';
 import '../../../../domain/service/auth_service.dart';
+import '../../../dependency_injection.dart';
 
 part 'health_measurement_creator_event.dart';
 part 'health_measurement_creator_state.dart';
@@ -21,19 +22,16 @@ class HealthMeasurementCreatorBloc extends BlocWithStatus<
   final HealthMeasurementRepository _healthMeasurementRepository;
 
   HealthMeasurementCreatorBloc({
-    required DateService dateService,
-    required AuthService authService,
-    required HealthMeasurementRepository healthMeasurementRepository,
     BlocStatus status = const BlocStatusInitial(),
     HealthMeasurement? measurement,
     DateTime? date,
     int? restingHeartRate,
     double? fastingWeight,
-  })  : _authService = authService,
-        _healthMeasurementRepository = healthMeasurementRepository,
+  })  : _authService = getIt<AuthService>(),
+        _healthMeasurementRepository = getIt<HealthMeasurementRepository>(),
         super(
           HealthMeasurementCreatorState(
-            dateService: dateService,
+            dateService: getIt<DateService>(),
             status: status,
             measurement: measurement,
             date: date,
@@ -56,27 +54,32 @@ class HealthMeasurementCreatorBloc extends BlocWithStatus<
     HealthMeasurementCreatorEventInitialize event,
     Emitter<HealthMeasurementCreatorState> emit,
   ) async {
-    if (event.date != null) {
-      final HealthMeasurement? measurement = await _loadMeasurementFromRemoteDb(
-        event.date!,
-      );
+    if (state.date == null) {
+      emitCompleteStatus(emit, null);
+      return;
+    }
+    final Stream<HealthMeasurement?> measurement$ =
+        _authService.loggedUserId$.whereNotNull().switchMap(
+              (String loggedUserId) =>
+                  _healthMeasurementRepository.getMeasurementByDate(
+                date: state.date!,
+                userId: loggedUserId,
+              ),
+            );
+    await for (final measurement in measurement$) {
       emit(state.copyWith(
         measurement: measurement,
-        date: event.date,
         restingHeartRate: measurement?.restingHeartRate,
         fastingWeight: measurement?.fastingWeight,
       ));
-    } else {
-      emit(state.copyWith(
-        status: const BlocStatusComplete(),
-      ));
+      return;
     }
   }
 
-  Future<void> _dateChanged(
+  void _dateChanged(
     HealthMeasurementCreatorEventDateChanged event,
     Emitter<HealthMeasurementCreatorState> emit,
-  ) async {
+  ) {
     emit(state.copyWith(
       date: event.date,
     ));
@@ -111,7 +114,13 @@ class HealthMeasurementCreatorBloc extends BlocWithStatus<
       return;
     }
     emitLoadingStatus(emit);
-    if (await _healthMeasurementRepository.doesMeasurementFromDateExist(
+    if (state.date == state.measurement?.date) {
+      await _updateMeasurement(loggedUserId);
+      emitCompleteStatus(
+        emit,
+        HealthMeasurementCreatorBlocInfo.measurementUpdated,
+      );
+    } else if (await _healthMeasurementRepository.doesMeasurementFromDateExist(
       userId: loggedUserId,
       date: state.date!,
     )) {
@@ -119,12 +128,6 @@ class HealthMeasurementCreatorBloc extends BlocWithStatus<
         emit,
         HealthMeasurementCreatorBlocError
             .measurementWithSelectedDateAlreadyExist,
-      );
-    } else if (state.date == state.measurement?.date) {
-      await _updateMeasurement(loggedUserId);
-      emitCompleteStatus(
-        emit,
-        HealthMeasurementCreatorBlocInfo.measurementUpdated,
       );
     } else {
       await _addMeasurement(loggedUserId);
@@ -142,19 +145,6 @@ class HealthMeasurementCreatorBloc extends BlocWithStatus<
       );
     }
   }
-
-  Future<HealthMeasurement?> _loadMeasurementFromRemoteDb(
-    DateTime date,
-  ) async =>
-      await _authService.loggedUserId$
-          .whereType<String>()
-          .switchMap(
-            (loggedUserId) => _healthMeasurementRepository.getMeasurementByDate(
-              date: date,
-              userId: loggedUserId,
-            ),
-          )
-          .first;
 
   Future<void> _updateMeasurement(String loggedUserId) async {
     await _healthMeasurementRepository.updateMeasurement(

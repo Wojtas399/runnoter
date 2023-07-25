@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/bloc/sign_up/sign_up_bloc.dart';
+import 'package:runnoter/domain/entity/user.dart';
 
 void main() {
   late SignUpState state;
@@ -8,16 +9,13 @@ void main() {
   setUp(() {
     state = const SignUpState(
       status: BlocStatusInitial(),
-      name: '',
-      surname: '',
-      email: '',
-      password: '',
-      passwordConfirmation: '',
     );
   });
 
   test(
-    "is password confirmation valid, passwords aren't the same, should be false",
+    'is password confirmation valid, '
+    "passwords aren't the same, "
+    'should be false',
     () {
       const String password = 'password';
       const String passwordConfirmation = 'passw';
@@ -32,7 +30,9 @@ void main() {
   );
 
   test(
-    'is password confirmation valid, passwords are the same, should be true',
+    'is password confirmation valid, '
+    'passwords are the same, '
+    'should be true',
     () {
       const String password = 'password';
       const String passwordConfirmation = 'password';
@@ -46,70 +46,111 @@ void main() {
     },
   );
 
-  group(
-    'is submit button disabled',
+  test(
+    'is submit button disabled, '
+    'all params are valid, '
+    'should be false',
     () {
-      setUp(() {
-        state = state.copyWith(
-          name: 'Jack',
-          surname: 'Obvsky',
-          email: 'jack@example.com',
-          password: 'Password123!',
-          passwordConfirmation: 'Password123!',
-        );
-      });
-
-      test(
-        'all params are valid, should be false',
-        () {
-          expect(state.isSubmitButtonDisabled, false);
-        },
+      state = state.copyWith(
+        gender: Gender.male,
+        name: 'Jack',
+        surname: 'Obvsky',
+        email: 'jack@example.com',
+        password: 'Password123!',
+        passwordConfirmation: 'Password123!',
       );
 
-      test(
-        'name is invalid, should be true',
-        () {
-          state = state.copyWith(name: 'n');
+      expect(state.isSubmitButtonDisabled, false);
+    },
+  );
 
-          expect(state.isSubmitButtonDisabled, true);
-        },
+  test(
+    'is submit button disabled, '
+    'name is invalid, '
+    'should be true',
+    () {
+      state = state.copyWith(
+        gender: Gender.male,
+        name: 'J',
+        surname: 'Obvsky',
+        email: 'jack@example.com',
+        password: 'Password123!',
+        passwordConfirmation: 'Password123!',
       );
 
-      test(
-        'surname is invalid, should be true',
-        () {
-          state = state.copyWith(surname: 's');
+      expect(state.isSubmitButtonDisabled, true);
+    },
+  );
 
-          expect(state.isSubmitButtonDisabled, true);
-        },
+  test(
+    'is submit button disabled, '
+    'surname is invalid, '
+    'should be true',
+    () {
+      state = state.copyWith(
+        gender: Gender.male,
+        name: 'Jack',
+        surname: 'O',
+        email: 'jack@example.com',
+        password: 'Password123!',
+        passwordConfirmation: 'Password123!',
       );
 
-      test(
-        'email is invalid, should be true',
-        () {
-          state = state.copyWith(email: 'jackexample.com');
+      expect(state.isSubmitButtonDisabled, true);
+    },
+  );
 
-          expect(state.isSubmitButtonDisabled, true);
-        },
+  test(
+    'is submit button disabled, '
+    'email is invalid, '
+    'should be true',
+    () {
+      state = state.copyWith(
+        gender: Gender.male,
+        name: 'Jack',
+        surname: 'Obvsky',
+        email: 'jackexample.com',
+        password: 'Password123!',
+        passwordConfirmation: 'Password123!',
       );
 
-      test(
-        'password is invalid, should be true',
-        () {
-          state = state.copyWith(password: 'pass');
+      expect(state.isSubmitButtonDisabled, true);
+    },
+  );
 
-          expect(state.isSubmitButtonDisabled, true);
-        },
+  test(
+    'is submit button disabled, '
+    'password is invalid, '
+    'should be true',
+    () {
+      state = state.copyWith(
+        gender: Gender.male,
+        name: 'Jack',
+        surname: 'Obvsky',
+        email: 'jack@example.com',
+        password: 'Password123',
+        passwordConfirmation: 'Password123!',
       );
 
-      test(
-        'password confirmation is invalid, should be true',
-        () {
-          state = state.copyWith(passwordConfirmation: 'Password123');
+      expect(state.isSubmitButtonDisabled, true);
+    },
+  );
 
-          expect(state.isSubmitButtonDisabled, true);
-        },
+  test(
+    'is submit button disabled, '
+    'password confirmation is invalid, '
+    'should be true',
+    () {
+      state = state.copyWith(
+        gender: Gender.male,
+        name: 'Jack',
+        surname: 'Obvsky',
+        email: 'jack@example.com',
+        password: 'Password123!',
+        passwordConfirmation: 'Password123',
       );
+
+      expect(state.isSubmitButtonDisabled, true);
     },
   );
 

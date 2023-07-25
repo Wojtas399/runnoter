@@ -1,8 +1,11 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/bloc/mileage/mileage_cubit.dart';
 import 'package:runnoter/domain/entity/run_status.dart';
+import 'package:runnoter/domain/repository/workout_repository.dart';
+import 'package:runnoter/domain/service/auth_service.dart';
 
 import '../../../creators/chart_month_creator.dart';
 import '../../../creators/run_status_creator.dart';
@@ -13,11 +16,12 @@ import '../../../mock/domain/service/mock_auth_service.dart';
 void main() {
   final authService = MockAuthService();
   final workoutRepository = MockWorkoutRepository();
+  const String loggedUserId = 'u1';
 
-  MileageCubit createCubit() => MileageCubit(
-        authService: authService,
-        workoutRepository: workoutRepository,
-      );
+  setUpAll(() {
+    GetIt.I.registerSingleton<AuthService>(authService);
+    GetIt.I.registerSingleton<WorkoutRepository>(workoutRepository);
+  });
 
   tearDown(() {
     reset(authService);
@@ -28,9 +32,9 @@ void main() {
     'initialize, '
     'logged user does not exist, '
     'should finish event call',
-    build: () => createCubit(),
+    build: () => MileageCubit(),
     setUp: () => authService.mockGetLoggedUserId(),
-    act: (MileageCubit cubit) => cubit.initialize(),
+    act: (cubit) => cubit.initialize(),
     expect: () => [],
     verify: (_) => verify(
       () => authService.loggedUserId$,
@@ -40,9 +44,9 @@ void main() {
   blocTest(
     'initialize, '
     'should create chart years which contain months with calculated mileage of done or aborted workouts',
-    build: () => createCubit(),
+    build: () => MileageCubit(),
     setUp: () {
-      authService.mockGetLoggedUserId(userId: 'u1');
+      authService.mockGetLoggedUserId(userId: loggedUserId);
       workoutRepository.mockGetAllWorkouts(
         allWorkouts: [
           createWorkout(
@@ -84,26 +88,9 @@ void main() {
         ],
       );
     },
-    act: (MileageCubit cubit) => cubit.initialize(),
+    act: (cubit) => cubit.initialize(),
     expect: () => [
       [
-        ChartYear(
-          year: 2022,
-          months: [
-            createChartMonth(month: Month.january),
-            createChartMonth(month: Month.february),
-            createChartMonth(month: Month.march),
-            createChartMonth(month: Month.april),
-            createChartMonth(month: Month.may),
-            createChartMonth(month: Month.june, mileage: 15.0),
-            createChartMonth(month: Month.july),
-            createChartMonth(month: Month.august),
-            createChartMonth(month: Month.september),
-            createChartMonth(month: Month.october),
-            createChartMonth(month: Month.november),
-            createChartMonth(month: Month.december),
-          ],
-        ),
         ChartYear(
           year: 2023,
           months: [
@@ -121,6 +108,23 @@ void main() {
             createChartMonth(month: Month.december),
           ],
         ),
+        ChartYear(
+          year: 2022,
+          months: [
+            createChartMonth(month: Month.january),
+            createChartMonth(month: Month.february),
+            createChartMonth(month: Month.march),
+            createChartMonth(month: Month.april),
+            createChartMonth(month: Month.may),
+            createChartMonth(month: Month.june, mileage: 15.0),
+            createChartMonth(month: Month.july),
+            createChartMonth(month: Month.august),
+            createChartMonth(month: Month.september),
+            createChartMonth(month: Month.october),
+            createChartMonth(month: Month.november),
+            createChartMonth(month: Month.december),
+          ],
+        ),
       ],
     ],
     verify: (_) {
@@ -128,9 +132,7 @@ void main() {
         () => authService.loggedUserId$,
       ).called(1);
       verify(
-        () => workoutRepository.getAllWorkouts(
-          userId: 'u1',
-        ),
+        () => workoutRepository.getAllWorkouts(userId: loggedUserId),
       ).called(1);
     },
   );

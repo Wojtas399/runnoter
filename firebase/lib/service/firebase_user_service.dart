@@ -20,11 +20,13 @@ class FirebaseUserService {
 
   Future<UserDto?> updateUserData({
     required String userId,
+    Gender? gender,
     String? name,
     String? surname,
   }) async {
     final userRef = getUserRef(userId);
     final userJsonToUpdate = createUserJsonToUpdate(
+      gender: gender,
       name: name,
       surname: surname,
     );

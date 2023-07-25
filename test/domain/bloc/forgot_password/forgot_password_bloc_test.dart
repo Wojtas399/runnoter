@@ -1,8 +1,11 @@
 import 'package:bloc_test/bloc_test.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/additional_model/custom_exception.dart';
 import 'package:runnoter/domain/bloc/forgot_password/forgot_password_bloc.dart';
+import 'package:runnoter/domain/service/auth_service.dart';
 
 import '../../../mock/domain/service/mock_auth_service.dart';
 
@@ -14,7 +17,6 @@ void main() {
     String email = '',
   }) {
     return ForgotPasswordBloc(
-      authService: authService,
       email: email,
     );
   }
@@ -29,17 +31,21 @@ void main() {
     );
   }
 
+  setUpAll(() {
+    GetIt.I.registerSingleton<AuthService>(authService);
+  });
+
+  tearDown(() {
+    reset(authService);
+  });
+
   blocTest(
     'email changed, '
     'should update email in state',
     build: () => createBloc(),
-    act: (ForgotPasswordBloc bloc) {
-      bloc.add(
-        const ForgotPasswordEventEmailChanged(
-          email: email,
-        ),
-      );
-    },
+    act: (bloc) => bloc.add(const ForgotPasswordEventEmailChanged(
+      email: email,
+    )),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
@@ -51,17 +57,9 @@ void main() {
   blocTest(
     'submit, '
     'should call auth service method to send password reset email and should emit complete status with email submitted info',
-    build: () => createBloc(
-      email: email,
-    ),
-    setUp: () {
-      authService.mockSendPasswordResetEmail();
-    },
-    act: (ForgotPasswordBloc bloc) {
-      bloc.add(
-        const ForgotPasswordEventSubmit(),
-      );
-    },
+    build: () => createBloc(email: email),
+    setUp: () => authService.mockSendPasswordResetEmail(),
+    act: (bloc) => bloc.add(const ForgotPasswordEventSubmit()),
     expect: () => [
       createState(
         status: const BlocStatusLoading(),
@@ -74,34 +72,22 @@ void main() {
         email: email,
       ),
     ],
-    verify: (_) {
-      verify(
-        () => authService.sendPasswordResetEmail(
-          email: email,
-        ),
-      ).called(1);
-    },
+    verify: (_) => verify(
+      () => authService.sendPasswordResetEmail(email: email),
+    ).called(1),
   );
 
   blocTest(
     'submit, '
     'auth exception with invalid email code, '
     'should emit error status with invalid email error',
-    build: () => createBloc(
-      email: email,
+    build: () => createBloc(email: email),
+    setUp: () => authService.mockSendPasswordResetEmail(
+      throwable: const AuthException(
+        code: AuthExceptionCode.invalidEmail,
+      ),
     ),
-    setUp: () {
-      authService.mockSendPasswordResetEmail(
-        throwable: const AuthException(
-          code: AuthExceptionCode.invalidEmail,
-        ),
-      );
-    },
-    act: (ForgotPasswordBloc bloc) {
-      bloc.add(
-        const ForgotPasswordEventSubmit(),
-      );
-    },
+    act: (bloc) => bloc.add(const ForgotPasswordEventSubmit()),
     expect: () => [
       createState(
         status: const BlocStatusLoading(),
@@ -114,34 +100,22 @@ void main() {
         email: email,
       ),
     ],
-    verify: (_) {
-      verify(
-        () => authService.sendPasswordResetEmail(
-          email: email,
-        ),
-      ).called(1);
-    },
+    verify: (_) => verify(
+      () => authService.sendPasswordResetEmail(email: email),
+    ).called(1),
   );
 
   blocTest(
     'submit, '
     'auth exception with user not found code, '
     'should emit error status with user not found error',
-    build: () => createBloc(
-      email: email,
+    build: () => createBloc(email: email),
+    setUp: () => authService.mockSendPasswordResetEmail(
+      throwable: const AuthException(
+        code: AuthExceptionCode.userNotFound,
+      ),
     ),
-    setUp: () {
-      authService.mockSendPasswordResetEmail(
-        throwable: const AuthException(
-          code: AuthExceptionCode.userNotFound,
-        ),
-      );
-    },
-    act: (ForgotPasswordBloc bloc) {
-      bloc.add(
-        const ForgotPasswordEventSubmit(),
-      );
-    },
+    act: (bloc) => bloc.add(const ForgotPasswordEventSubmit()),
     expect: () => [
       createState(
         status: const BlocStatusLoading(),
@@ -154,34 +128,22 @@ void main() {
         email: email,
       ),
     ],
-    verify: (_) {
-      verify(
-        () => authService.sendPasswordResetEmail(
-          email: email,
-        ),
-      ).called(1);
-    },
+    verify: (_) => verify(
+      () => authService.sendPasswordResetEmail(email: email),
+    ).called(1),
   );
 
   blocTest(
     'submit, '
     'network exception with request failed code, '
     'should emit network request failed status',
-    build: () => createBloc(
-      email: email,
+    build: () => createBloc(email: email),
+    setUp: () => authService.mockSendPasswordResetEmail(
+      throwable: const NetworkException(
+        code: NetworkExceptionCode.requestFailed,
+      ),
     ),
-    setUp: () {
-      authService.mockSendPasswordResetEmail(
-        throwable: const NetworkException(
-          code: NetworkExceptionCode.requestFailed,
-        ),
-      );
-    },
-    act: (ForgotPasswordBloc bloc) {
-      bloc.add(
-        const ForgotPasswordEventSubmit(),
-      );
-    },
+    act: (bloc) => bloc.add(const ForgotPasswordEventSubmit()),
     expect: () => [
       createState(
         status: const BlocStatusLoading(),
@@ -192,34 +154,22 @@ void main() {
         email: email,
       ),
     ],
-    verify: (_) {
-      verify(
-        () => authService.sendPasswordResetEmail(
-          email: email,
-        ),
-      ).called(1);
-    },
+    verify: (_) => verify(
+      () => authService.sendPasswordResetEmail(email: email),
+    ).called(1),
   );
 
   blocTest(
     'submit, '
     'unknown exception, '
     'should emit unknown error status and throw exception message',
-    build: () => createBloc(
-      email: email,
+    build: () => createBloc(email: email),
+    setUp: () => authService.mockSendPasswordResetEmail(
+      throwable: const UnknownException(
+        message: 'unknown exception message',
+      ),
     ),
-    setUp: () {
-      authService.mockSendPasswordResetEmail(
-        throwable: const UnknownException(
-          message: 'unknown exception message',
-        ),
-      );
-    },
-    act: (ForgotPasswordBloc bloc) {
-      bloc.add(
-        const ForgotPasswordEventSubmit(),
-      );
-    },
+    act: (bloc) => bloc.add(const ForgotPasswordEventSubmit()),
     expect: () => [
       createState(
         status: const BlocStatusLoading(),
@@ -230,15 +180,9 @@ void main() {
         email: email,
       ),
     ],
-    errors: () => [
-      'unknown exception message',
-    ],
-    verify: (_) {
-      verify(
-        () => authService.sendPasswordResetEmail(
-          email: email,
-        ),
-      ).called(1);
-    },
+    errors: () => ['unknown exception message'],
+    verify: (_) => verify(
+      () => authService.sendPasswordResetEmail(email: email),
+    ).called(1),
   );
 }

@@ -1,13 +1,12 @@
-import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:syncfusion_localizations/syncfusion_localizations.dart';
 
-import 'presentation/config/navigation/app_navigator.dart';
+import 'dependency_injection.dart';
+import 'presentation/config/navigation/router.dart';
 import 'presentation/config/theme.dart';
-import 'presentation/provider/repositories_provider.dart';
 import 'presentation/provider/services_provider.dart';
 import 'presentation/service/language_service.dart';
 import 'presentation/service/theme_service.dart';
@@ -24,7 +23,7 @@ class App extends StatelessWidget {
         builder: (_, ThemeMode themeMode) {
           return BlocBuilder<LanguageService, AppLanguage?>(
             builder: (BuildContext context, AppLanguage? language) {
-              return MaterialApp(
+              return MaterialApp.router(
                 title: 'Runnoter',
                 localizationsDelegates: const [
                   Str.delegate,
@@ -41,15 +40,7 @@ class App extends StatelessWidget {
                 themeMode: themeMode,
                 theme: GlobalTheme.lightTheme,
                 darkTheme: GlobalTheme.darkTheme,
-                home: AnimatedSplashScreen(
-                  duration: 2000,
-                  splash: 'assets/logo.png',
-                  nextScreen: const RepositoriesProvider(
-                    child: AppNavigator(),
-                  ),
-                  splashTransition: SplashTransition.fadeTransition,
-                  backgroundColor: Theme.of(context).colorScheme.background,
-                ),
+                routerConfig: getIt<AppRouter>().config(),
               );
             },
           );

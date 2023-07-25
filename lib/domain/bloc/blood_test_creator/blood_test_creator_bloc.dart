@@ -1,13 +1,17 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rxdart/rxdart.dart';
 
 import '../../../../domain/entity/blood_parameter.dart';
 import '../../../../domain/entity/blood_test.dart';
 import '../../../../domain/repository/blood_test_repository.dart';
 import '../../../../domain/service/auth_service.dart';
+import '../../../dependency_injection.dart';
 import '../../additional_model/bloc_state.dart';
 import '../../additional_model/bloc_status.dart';
 import '../../additional_model/bloc_with_status.dart';
+import '../../entity/user.dart';
 import '../../service/list_service.dart';
+import '../../use_case/get_logged_user_gender_use_case.dart';
 
 part 'blood_test_creator_event.dart';
 part 'blood_test_creator_state.dart';
@@ -15,16 +19,18 @@ part 'blood_test_creator_state.dart';
 class BloodTestCreatorBloc extends BlocWithStatus<BloodTestCreatorEvent,
     BloodTestCreatorState, BloodTestCreatorBlocInfo, dynamic> {
   final AuthService _authService;
+  final GetLoggedUserGenderUseCase _getLoggedUserGenderUseCase;
   final BloodTestRepository _bloodTestRepository;
+  final String? bloodTestId;
 
   BloodTestCreatorBloc({
-    required AuthService authService,
-    required BloodTestRepository bloodTestRepository,
+    required this.bloodTestId,
     BloodTestCreatorState state = const BloodTestCreatorState(
       status: BlocStatusInitial(),
     ),
-  })  : _authService = authService,
-        _bloodTestRepository = bloodTestRepository,
+  })  : _authService = getIt<AuthService>(),
+        _getLoggedUserGenderUseCase = getIt.get<GetLoggedUserGenderUseCase>(),
+        _bloodTestRepository = getIt<BloodTestRepository>(),
         super(state) {
     on<BloodTestCreatorEventInitialize>(_initialize);
     on<BloodTestCreatorEventDateChanged>(_dateChanged);
@@ -36,10 +42,31 @@ class BloodTestCreatorBloc extends BlocWithStatus<BloodTestCreatorEvent,
     BloodTestCreatorEventInitialize event,
     Emitter<BloodTestCreatorState> emit,
   ) async {
-    if (event.bloodTestId == null) {
-      _initializeAddMode(emit);
-    } else {
-      await _initializeEditMode(event.bloodTestId!, emit);
+    if (bloodTestId == null) {
+      await for (final gender in _getLoggedUserGenderUseCase.execute()) {
+        emit(state.copyWith(
+          gender: gender,
+        ));
+        return;
+      }
+    }
+    final Stream<(Gender, BloodTest?)> stream$ = Rx.combineLatest2(
+      _getLoggedUserGenderUseCase.execute(),
+      _getBloodTest(),
+      (Gender gender, BloodTest? bloodTest) => (gender, bloodTest),
+    );
+    await for (final params in stream$) {
+      final Gender gender = params.$1;
+      final BloodTest? bloodTest = params.$2;
+      if (bloodTest != null) {
+        emit(state.copyWith(
+          gender: gender,
+          bloodTest: bloodTest,
+          date: bloodTest.date,
+          parameterResults: bloodTest.parameterResults,
+        ));
+      }
+      return;
     }
   }
 
@@ -83,9 +110,7 @@ class BloodTestCreatorBloc extends BlocWithStatus<BloodTestCreatorEvent,
     BloodTestCreatorEventSubmit event,
     Emitter<BloodTestCreatorState> emit,
   ) async {
-    if (!state.canSubmit) {
-      return;
-    }
+    if (!state.canSubmit) return;
     final String? loggedUserId = await _authService.loggedUserId$.first;
     if (loggedUserId == null) {
       emitNoLoggedUserStatus(emit);
@@ -99,32 +124,13 @@ class BloodTestCreatorBloc extends BlocWithStatus<BloodTestCreatorEvent,
     }
   }
 
-  void _initializeAddMode(Emitter<BloodTestCreatorState> emit) {
-    emit(state.copyWith(
-      parameterResults: [],
-    ));
-  }
-
-  Future<void> _initializeEditMode(
-    String bloodTestId,
-    Emitter<BloodTestCreatorState> emit,
-  ) async {
-    final String? loggedUserId = await _authService.loggedUserId$.first;
-    if (loggedUserId == null) {
-      emitNoLoggedUserStatus(emit);
-      return;
-    }
-    final BloodTest? bloodTest = await _bloodTestRepository
-        .getTestById(bloodTestId: bloodTestId, userId: loggedUserId)
-        .first;
-    if (bloodTest != null) {
-      emit(state.copyWith(
-        bloodTest: bloodTest,
-        date: bloodTest.date,
-        parameterResults: bloodTest.parameterResults,
-      ));
-    }
-  }
+  Stream<BloodTest?> _getBloodTest() =>
+      _authService.loggedUserId$.whereType<String>().switchMap(
+            (String loggedUserId) => _bloodTestRepository.getTestById(
+              bloodTestId: bloodTestId!,
+              userId: loggedUserId,
+            ),
+          );
 
   int _findParameterIndex(BloodParameter parameter) =>
       state.parameterResults?.indexWhere(

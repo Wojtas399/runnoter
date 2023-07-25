@@ -1,7 +1,13 @@
-part of 'run_status_creator_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class _StatusType extends StatelessWidget {
-  const _StatusType();
+import '../../../domain/bloc/run_status_creator/run_status_creator_bloc.dart';
+import '../../../domain/entity/run_status.dart';
+import '../../formatter/run_status_formatter.dart';
+
+class RunStatusCreatorStatusType extends StatelessWidget {
+  const RunStatusCreatorStatusType({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -12,22 +18,17 @@ class _StatusType extends StatelessWidget {
     return DropdownButtonFormField<RunStatusType>(
       value: runStatusType,
       decoration: InputDecoration(
-        filled: true,
         labelText: Str.of(context).runStatusCreatorScreenTitle,
       ),
       items: <DropdownMenuItem<RunStatusType>>[
         ...RunStatusType.values.map(
           (RunStatusType statusType) => DropdownMenuItem(
             value: statusType,
-            child: _RunStatusDescription(
-              statusType: statusType,
-            ),
+            child: _RunStatusDescription(statusType: statusType),
           ),
         ),
       ],
-      onChanged: (RunStatusType? statusType) {
-        _onChanged(context, statusType);
-      },
+      onChanged: (RunStatusType? statusType) => _onChanged(context, statusType),
     );
   }
 

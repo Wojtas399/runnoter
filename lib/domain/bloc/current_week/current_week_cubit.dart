@@ -1,10 +1,13 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../../common/date_service.dart';
+import '../../../common/workout_stage_service.dart';
+import '../../../dependency_injection.dart';
 import '../../entity/race.dart';
 import '../../entity/workout.dart';
 import '../../repository/race_repository.dart';
@@ -19,15 +22,21 @@ class CurrentWeekCubit extends Cubit<List<Day>?> {
   StreamSubscription? _listener;
 
   CurrentWeekCubit({
-    required DateService dateService,
-    required AuthService authService,
-    required WorkoutRepository workoutRepository,
-    required RaceRepository raceRepository,
-  })  : _dateService = dateService,
-        _authService = authService,
-        _workoutRepository = workoutRepository,
-        _raceRepository = raceRepository,
-        super(null);
+    List<Day>? days,
+  })  : _dateService = getIt<DateService>(),
+        _authService = getIt<AuthService>(),
+        _workoutRepository = getIt<WorkoutRepository>(),
+        _raceRepository = getIt<RaceRepository>(),
+        super(days);
+
+  int? get numberOfActivities =>
+      state?.map((Day day) => day.workouts.length + day.races.length).sum;
+
+  double? get scheduledTotalDistance =>
+      state?.map(_calculateScheduledTotalDayDistance).sum;
+
+  double? get coveredTotalDistance =>
+      state?.map(_calculateCoveredTotalDayDistance).sum;
 
   @override
   Future<void> close() {
@@ -54,19 +63,13 @@ class CurrentWeekCubit extends Cubit<List<Day>?> {
               startDate: firstDayOfTheWeek,
               endDate: lastDayOfTheWeek,
             ),
-            (
-              List<Workout>? workouts,
-              List<Race>? races,
-            ) =>
-                (workouts, races),
+            (List<Workout>? workouts, List<Race>? races) => (workouts, races),
           ),
         )
         .listen(_manageWorkoutsAndRacesFromWeek);
   }
 
-  void _manageWorkoutsAndRacesFromWeek(
-    (List<Workout>?, List<Race>?) params,
-  ) {
+  void _manageWorkoutsAndRacesFromWeek((List<Workout>?, List<Race>?) params) {
     final List<Workout> workoutsFromWeek = [...?params.$1];
     final List<Race> racesFromWeek = [...?params.$2];
     final DateTime today = _dateService.getToday();
@@ -82,14 +85,31 @@ class CurrentWeekCubit extends Cubit<List<Day>?> {
                 )
                 .toList(),
             races: racesFromWeek
-                .where(
-                  (race) => _dateService.areDatesTheSame(race.date, date),
-                )
+                .where((race) => _dateService.areDatesTheSame(race.date, date))
                 .toList(),
           ),
         )
         .toList();
     emit(days);
+  }
+
+  double _calculateScheduledTotalDayDistance(Day day) {
+    final double workoutsDistance = day.workouts
+        .map(
+          (workout) => workout.stages.map(calculateDistanceOfWorkoutStage).sum,
+        )
+        .sum;
+    final double racesDistance =
+        day.races.map((Race race) => race.distance).sum;
+    return workoutsDistance + racesDistance;
+  }
+
+  double _calculateCoveredTotalDayDistance(Day day) {
+    final double workoutsCoveredDistance =
+        day.workouts.map((workout) => workout.coveredDistance).sum;
+    final double racesCoveredDistance =
+        day.races.map((race) => race.coveredDistance).sum;
+    return workoutsCoveredDistance + racesCoveredDistance;
   }
 }
 

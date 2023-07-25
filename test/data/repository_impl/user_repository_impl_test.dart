@@ -1,5 +1,6 @@
 import 'package:firebase/firebase.dart' as db;
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/data/repository_impl/user_repository_impl.dart';
 import 'package:runnoter/domain/entity/settings.dart';
@@ -7,73 +8,50 @@ import 'package:runnoter/domain/entity/user.dart';
 
 import '../../creators/settings_creator.dart';
 import '../../creators/user_creator.dart';
+import '../../mock/firebase/mock_firebase_activities_settings_service.dart';
 import '../../mock/firebase/mock_firebase_appearance_settings_service.dart';
 import '../../mock/firebase/mock_firebase_user_service.dart';
-import '../../mock/firebase/mock_firebase_workout_settings_service.dart';
 
 void main() {
   final dbUserService = MockFirebaseUserService();
   final dbAppearanceSettingsService = MockFirebaseAppearanceSettingsService();
-  final dbWorkoutSettingsService = MockFirebaseWorkoutSettingsService();
+  final dbActivitiesSettingsService = MockFirebaseActivitiesSettingsService();
   late UserRepositoryImpl repository;
   const String userId = 'u1';
 
-  UserRepositoryImpl createRepository({
-    List<User>? initialState,
-  }) {
-    return UserRepositoryImpl(
-      firebaseUserService: dbUserService,
-      firebaseAppearanceSettingsService: dbAppearanceSettingsService,
-      firebaseWorkoutSettingsService: dbWorkoutSettingsService,
-      initialState: initialState,
+  setUpAll(() {
+    GetIt.I.registerFactory<db.FirebaseUserService>(() => dbUserService);
+    GetIt.I.registerFactory<db.FirebaseAppearanceSettingsService>(
+      () => dbAppearanceSettingsService,
     );
-  }
+    GetIt.I.registerFactory<db.FirebaseActivitiesSettingsService>(
+      () => dbActivitiesSettingsService,
+    );
+  });
 
   setUp(() {
-    repository = createRepository();
+    repository = UserRepositoryImpl();
   });
 
   tearDown(() {
     reset(dbUserService);
     reset(dbAppearanceSettingsService);
-    reset(dbWorkoutSettingsService);
+    reset(dbActivitiesSettingsService);
   });
 
   test(
     'get user by id, '
     'user exists in state, '
-    'should emit user from repository and should not call db method to load user',
+    'should emit user from repository',
     () {
       final User expectedUser = createUser(id: userId);
-      repository = createRepository(
-        initialState: [expectedUser],
-      );
+      repository = UserRepositoryImpl(initialState: [expectedUser]);
 
-      final Stream<User?> user$ = repository.getUserById(
-        userId: userId,
-      );
-      user$.listen((_) {});
+      final Stream<User?> user$ = repository.getUserById(userId: userId);
 
       expect(
         user$,
-        emitsInOrder(
-          [expectedUser],
-        ),
-      );
-      verifyNever(
-        () => dbUserService.loadUserById(
-          userId: userId,
-        ),
-      );
-      verifyNever(
-        () => dbAppearanceSettingsService.loadSettingsByUserId(
-          userId: userId,
-        ),
-      );
-      verifyNever(
-        () => dbWorkoutSettingsService.loadSettingsByUserId(
-          userId: userId,
-        ),
+        emitsInOrder([expectedUser]),
       );
     },
   );
@@ -81,10 +59,11 @@ void main() {
   test(
     'get user by id, '
     'user does not exist in state, '
-    'should call db method to load user, should add loaded user to repository and should emit loaded user',
+    'should emit user loaded from remote db',
     () {
       const userDto = db.UserDto(
         id: userId,
+        gender: db.Gender.male,
         name: 'name',
         surname: 'surname',
       );
@@ -100,6 +79,7 @@ void main() {
       );
       final User expectedUser = createUser(
         id: userId,
+        gender: Gender.male,
         name: 'name',
         surname: 'surname',
         settings: createSettings(
@@ -109,41 +89,20 @@ void main() {
           paceUnit: PaceUnit.minutesPerKilometer,
         ),
       );
-      dbUserService.mockLoadUserById(
-        userDto: userDto,
-      );
+      dbUserService.mockLoadUserById(userDto: userDto);
       dbAppearanceSettingsService.mockLoadSettingsByUserId(
         appearanceSettingsDto: appearanceSettingsDto,
       );
-      dbWorkoutSettingsService.mockLoadSettingsByUserId(
+      dbActivitiesSettingsService.mockLoadSettingsByUserId(
         workoutSettingsDto: workoutSettingsDto,
       );
 
       final Stream<User?> user$ = repository.getUserById(userId: userId);
-      user$.listen((event) {});
 
-      expectLater(
+      expect(
         user$,
-        emitsInOrder(
-          [null, expectedUser],
-        ),
-      ).then((_) {
-        verify(
-          () => dbUserService.loadUserById(
-            userId: userId,
-          ),
-        ).called(1);
-        verify(
-          () => dbAppearanceSettingsService.loadSettingsByUserId(
-            userId: userId,
-          ),
-        ).called(1);
-        verify(
-          () => dbWorkoutSettingsService.loadSettingsByUserId(
-            userId: userId,
-          ),
-        ).called(1);
-      });
+        emitsInOrder([expectedUser]),
+      );
     },
   );
 
@@ -153,6 +112,7 @@ void main() {
     () async {
       final User userToAdd = createUser(
         id: userId,
+        gender: Gender.male,
         name: 'username',
         surname: 'surname',
         settings: createSettings(
@@ -162,7 +122,7 @@ void main() {
       );
       dbUserService.mockAddUserPersonalData();
       dbAppearanceSettingsService.mockAddSettings();
-      dbWorkoutSettingsService.mockAddSettings();
+      dbActivitiesSettingsService.mockAddSettings();
 
       await repository.addUser(user: userToAdd);
       final Stream<User?> user$ = repository.getUserById(
@@ -174,6 +134,7 @@ void main() {
         () => dbUserService.addUserPersonalData(
           userDto: const db.UserDto(
             id: userId,
+            gender: db.Gender.male,
             name: 'username',
             surname: 'surname',
           ),
@@ -189,7 +150,7 @@ void main() {
         ),
       ).called(1);
       verify(
-        () => dbWorkoutSettingsService.addSettings(
+        () => dbActivitiesSettingsService.addSettings(
           workoutSettingsDto: const db.WorkoutSettingsDto(
             userId: userId,
             distanceUnit: db.DistanceUnit.kilometers,
@@ -211,9 +172,7 @@ void main() {
       ];
       const String newName = 'name';
       const String newSurname = 'surname';
-      repository = createRepository(
-        initialState: existingUsers,
-      );
+      repository = UserRepositoryImpl(initialState: existingUsers);
       dbUserService.mockLoadUserById();
 
       await repository.updateUserIdentities(
@@ -254,7 +213,7 @@ void main() {
         surname: 'surname1',
         settings: userSettings,
       );
-      repository = createRepository(
+      repository = UserRepositoryImpl(
         initialState: [existingUser],
       );
       dbUserService.mockUpdateUserData();
@@ -298,16 +257,18 @@ void main() {
       );
       const updatedUserDto = db.UserDto(
         id: userId,
+        gender: db.Gender.male,
         name: newName,
         surname: newSurname,
       );
       final User expectedUpdatedUser = createUser(
         id: userId,
+        gender: Gender.male,
         name: newName,
         surname: newSurname,
         settings: userSettings,
       );
-      repository = createRepository(
+      repository = UserRepositoryImpl(
         initialState: [existingUser],
       );
       dbUserService.mockUpdateUserData(userDto: updatedUserDto);
@@ -343,7 +304,7 @@ void main() {
       const Language newLanguage = Language.english;
       const DistanceUnit newDistanceUnit = DistanceUnit.miles;
       const PaceUnit newPaceUnit = PaceUnit.minutesPerMile;
-      repository = createRepository(
+      repository = UserRepositoryImpl(
         initialState: existingUsers,
       );
       dbUserService.mockLoadUserById();
@@ -366,7 +327,7 @@ void main() {
         ),
       );
       verifyNever(
-        () => dbWorkoutSettingsService.updateSettings(
+        () => dbActivitiesSettingsService.updateSettings(
           userId: userId,
           distanceUnit: any(named: 'distanceUnit'),
           paceUnit: any(named: 'paceUnit'),
@@ -391,8 +352,8 @@ void main() {
       const db.DistanceUnit newDbDistanceUnit = db.DistanceUnit.miles;
       const db.PaceUnit newDbPaceUnit = db.PaceUnit.minutesPerMile;
       dbAppearanceSettingsService.mockUpdateSettings();
-      dbWorkoutSettingsService.mockUpdateSettings();
-      repository = createRepository(
+      dbActivitiesSettingsService.mockUpdateSettings();
+      repository = UserRepositoryImpl(
         initialState: [existingUser],
       );
 
@@ -414,7 +375,7 @@ void main() {
         ),
       ).called(1);
       verify(
-        () => dbWorkoutSettingsService.updateSettings(
+        () => dbActivitiesSettingsService.updateSettings(
           userId: userId,
           distanceUnit: newDbDistanceUnit,
           paceUnit: newDbPaceUnit,
@@ -459,10 +420,10 @@ void main() {
       dbAppearanceSettingsService.mockUpdateSettings(
         updatedAppearanceSettingsDto: updatedAppearanceSettingsDto,
       );
-      dbWorkoutSettingsService.mockUpdateSettings(
+      dbActivitiesSettingsService.mockUpdateSettings(
         updatedWorkoutSettingsDto: updatedWorkoutSettingsDto,
       );
-      repository = createRepository(
+      repository = UserRepositoryImpl(
         initialState: [existingUser],
       );
 
@@ -484,7 +445,7 @@ void main() {
         ),
       ).called(1);
       verify(
-        () => dbWorkoutSettingsService.updateSettings(
+        () => dbActivitiesSettingsService.updateSettings(
           userId: userId,
           distanceUnit: newDbDistanceUnit,
           paceUnit: newDbPaceUnit,
@@ -496,42 +457,36 @@ void main() {
   test(
     'delete user, '
     'should call db methods to delete user data, appearance settings and workout settings and then should delete user from repository',
-    () {
+    () async {
       final User user = createUser(id: userId);
+      dbUserService.mockLoadUserById();
       dbUserService.mockDeleteUserData();
       dbAppearanceSettingsService.mockDeleteSettingsForUser();
-      dbWorkoutSettingsService.mockDeleteSettingsForUser();
-      repository = createRepository(
+      dbActivitiesSettingsService.mockDeleteSettingsForUser();
+      repository = UserRepositoryImpl(
         initialState: [user],
       );
 
       final Stream<User?> user$ = repository.getUserById(userId: user.id);
-      repository.deleteUser(userId: user.id);
+      await repository.deleteUser(userId: user.id);
 
-      expectLater(
+      expect(
         user$,
-        emitsInOrder(
-          [user, null],
-        ),
-      ).then(
-        (_) {
-          verify(
-            () => dbUserService.deleteUserData(
-              userId: user.id,
-            ),
-          ).called(1);
-          verify(
-            () => dbAppearanceSettingsService.deleteSettingsForUser(
-              userId: user.id,
-            ),
-          ).called(1);
-          verify(
-            () => dbWorkoutSettingsService.deleteSettingsForUser(
-              userId: user.id,
-            ),
-          ).called(1);
-        },
+        emitsInOrder([null]),
       );
+      verify(
+        () => dbUserService.deleteUserData(userId: user.id),
+      ).called(1);
+      verify(
+        () => dbAppearanceSettingsService.deleteSettingsForUser(
+          userId: user.id,
+        ),
+      ).called(1);
+      verify(
+        () => dbActivitiesSettingsService.deleteSettingsForUser(
+          userId: user.id,
+        ),
+      ).called(1);
     },
   );
 }

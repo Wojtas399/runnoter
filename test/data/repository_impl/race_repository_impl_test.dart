@@ -1,7 +1,9 @@
 import 'package:collection/collection.dart';
 import 'package:firebase/firebase.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:runnoter/common/date_service.dart';
 import 'package:runnoter/data/repository_impl/race_repository_impl.dart';
 import 'package:runnoter/domain/entity/race.dart';
 import 'package:runnoter/domain/entity/run_status.dart';
@@ -17,14 +19,10 @@ void main() {
   late RaceRepositoryImpl repository;
   const String userId = 'u1';
 
-  RaceRepositoryImpl createRepository({
-    List<Race>? initialData,
-  }) =>
-      RaceRepositoryImpl(
-        firebaseRaceService: firebaseRaceService,
-        dateService: dateService,
-        initialData: initialData,
-      );
+  setUpAll(() {
+    GetIt.I.registerFactory<FirebaseRaceService>(() => firebaseRaceService);
+    GetIt.I.registerFactory<DateService>(() => dateService);
+  });
 
   tearDown(() {
     reset(firebaseRaceService);
@@ -47,7 +45,7 @@ void main() {
         createRace(id: 'c3', userId: 'u3'),
         createRace(id: 'c4', userId: userId),
       ];
-      repository = createRepository(initialData: existingRaces);
+      repository = RaceRepositoryImpl(initialData: existingRaces);
 
       final Stream<Race?> race$ = repository.getRaceById(
         raceId: raceId,
@@ -87,7 +85,7 @@ void main() {
       firebaseRaceService.mockLoadRaceById(
         raceDto: expectedRaceDto,
       );
-      repository = createRepository(initialData: existingRaces);
+      repository = RaceRepositoryImpl(initialData: existingRaces);
 
       final Stream<List<Race>?> repositoryState$ = repository.dataStream$;
       final Stream<Race?> race$ = repository.getRaceById(
@@ -187,7 +185,7 @@ void main() {
       firebaseRaceService.mockLoadRacesByDateRange(
         raceDtos: loadedRaceDtos,
       );
-      repository = createRepository(initialData: existingRaces);
+      repository = RaceRepositoryImpl(initialData: existingRaces);
 
       final Stream<List<Race>?> races$ = repository.getRacesByDateRange(
         startDate: startDate,
@@ -249,7 +247,7 @@ void main() {
       firebaseRaceService.mockLoadRacesByDate(
         raceDtos: loadedRaceDtos,
       );
-      repository = createRepository(initialData: existingRaces);
+      repository = RaceRepositoryImpl(initialData: existingRaces);
 
       final Stream<List<Race>?> races$ = repository.getRacesByDate(
         date: date,
@@ -291,7 +289,7 @@ void main() {
       firebaseRaceService.mockLoadAllRaces(
         raceDtos: loadedRaceDtos,
       );
-      repository = createRepository(initialData: existingRaces);
+      repository = RaceRepositoryImpl(initialData: existingRaces);
 
       final Stream<List<Race>?> races$ = repository.getAllRaces(userId: userId);
 
@@ -353,7 +351,7 @@ void main() {
       firebaseRaceService.mockAddNewRace(
         addedRaceDto: addedRaceDto,
       );
-      repository = createRepository(initialData: existingRaces);
+      repository = RaceRepositoryImpl(initialData: existingRaces);
 
       final Stream<List<Race>?> repositoryState$ = repository.dataStream$;
       repository.addNewRace(
@@ -437,7 +435,7 @@ void main() {
       firebaseRaceService.mockUpdateRace(
         updatedRaceDto: updatedRaceDto,
       );
-      repository = createRepository(initialData: existingRaces);
+      repository = RaceRepositoryImpl(initialData: existingRaces);
 
       final Stream<List<Race>?> repositoryState$ = repository.dataStream$;
       await repository.updateRace(
@@ -491,7 +489,7 @@ void main() {
         createRace(id: 'c4', userId: userId),
       ];
       firebaseRaceService.mockDeleteRace();
-      repository = createRepository(initialData: existingRaces);
+      repository = RaceRepositoryImpl(initialData: existingRaces);
 
       final Stream<List<Race>?> repositoryState$ = repository.dataStream$;
       await repository.deleteRace(
@@ -529,7 +527,7 @@ void main() {
       firebaseRaceService.mockDeleteAllUserRaces(
         idsOfDeletedRaces: ['c1', 'c4'],
       );
-      repository = createRepository(initialData: existingRaces);
+      repository = RaceRepositoryImpl(initialData: existingRaces);
 
       final Stream<List<Race>?> repositoryState$ = repository.dataStream$;
       repository.deleteAllUserRaces(userId: userId);

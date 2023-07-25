@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../domain/additional_model/bloc_status.dart';
 import '../../../../domain/additional_model/bloc_with_status.dart';
 import '../../../../domain/service/auth_service.dart';
+import '../../../dependency_injection.dart';
 import '../../additional_model/bloc_state.dart';
 import '../../additional_model/custom_exception.dart';
 
@@ -15,11 +16,10 @@ class SignInBloc
   final AuthService _authService;
 
   SignInBloc({
-    required AuthService authService,
     BlocStatus status = const BlocStatusInitial(),
     String email = '',
     String password = '',
-  })  : _authService = authService,
+  })  : _authService = getIt<AuthService>(),
         super(
           SignInState(
             status: status,

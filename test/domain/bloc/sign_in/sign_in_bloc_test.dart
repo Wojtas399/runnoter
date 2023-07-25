@@ -1,14 +1,17 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/additional_model/custom_exception.dart';
 import 'package:runnoter/domain/bloc/sign_in/sign_in_bloc.dart';
+import 'package:runnoter/domain/service/auth_service.dart';
 
 import '../../../mock/domain/service/mock_auth_service.dart';
 
 void main() {
   final authService = MockAuthService();
+  const String loggedUserId = 'u1';
   const String email = 'email@example.com';
   const String password = 'Password1!';
 
@@ -17,7 +20,6 @@ void main() {
     final String? password,
   }) {
     return SignInBloc(
-      authService: authService,
       email: email ?? '',
       password: password ?? '',
     );
@@ -36,6 +38,10 @@ void main() {
     );
   }
 
+  setUpAll(() {
+    GetIt.I.registerSingleton<AuthService>(authService);
+  });
+
   tearDown(() {
     reset(authService);
   });
@@ -45,20 +51,12 @@ void main() {
     'logged user id is not null, '
     'should emit complete status with signed in info',
     build: () => createBloc(),
-    setUp: () => authService.mockGetLoggedUserId(
-      userId: 'u1',
-    ),
-    act: (SignInBloc bloc) => bloc.add(
-      const SignInEventInitialize(),
-    ),
+    setUp: () => authService.mockGetLoggedUserId(userId: loggedUserId),
+    act: (bloc) => bloc.add(const SignInEventInitialize()),
     expect: () => [
+      createState(status: const BlocStatusLoading()),
       createState(
-        status: const BlocStatusLoading(),
-      ),
-      createState(
-        status: const BlocStatusComplete<SignInInfo>(
-          info: SignInInfo.signedIn,
-        ),
+        status: const BlocStatusComplete<SignInInfo>(info: SignInInfo.signedIn),
       ),
     ],
     verify: (_) => verify(
@@ -72,16 +70,10 @@ void main() {
     'should emit complete status without any info',
     build: () => createBloc(),
     setUp: () => authService.mockGetLoggedUserId(),
-    act: (SignInBloc bloc) => bloc.add(
-      const SignInEventInitialize(),
-    ),
+    act: (bloc) => bloc.add(const SignInEventInitialize()),
     expect: () => [
-      createState(
-        status: const BlocStatusLoading(),
-      ),
-      createState(
-        status: const BlocStatusComplete<SignInInfo>(),
-      ),
+      createState(status: const BlocStatusLoading()),
+      createState(status: const BlocStatusComplete<SignInInfo>()),
     ],
     verify: (_) => verify(
       () => authService.loggedUserId$,
@@ -92,11 +84,7 @@ void main() {
     'email changed, '
     'should update email in state',
     build: () => createBloc(),
-    act: (SignInBloc bloc) => bloc.add(
-      const SignInEventEmailChanged(
-        email: email,
-      ),
-    ),
+    act: (bloc) => bloc.add(const SignInEventEmailChanged(email: email)),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
@@ -109,11 +97,8 @@ void main() {
     'password changed, '
     'should update password in state',
     build: () => createBloc(),
-    act: (SignInBloc bloc) => bloc.add(
-      const SignInEventPasswordChanged(
-        password: password,
-      ),
-    ),
+    act: (bloc) =>
+        bloc.add(const SignInEventPasswordChanged(password: password)),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
@@ -130,9 +115,7 @@ void main() {
       password: password,
     ),
     setUp: () => authService.mockSignIn(),
-    act: (SignInBloc bloc) => bloc.add(
-      const SignInEventSubmit(),
-    ),
+    act: (bloc) => bloc.add(const SignInEventSubmit()),
     expect: () => [
       createState(
         status: const BlocStatusLoading(),
@@ -168,9 +151,7 @@ void main() {
         code: AuthExceptionCode.invalidEmail,
       ),
     ),
-    act: (SignInBloc bloc) => bloc.add(
-      const SignInEventSubmit(),
-    ),
+    act: (bloc) => bloc.add(const SignInEventSubmit()),
     expect: () => [
       createState(
         status: const BlocStatusLoading(),
@@ -206,9 +187,7 @@ void main() {
         code: AuthExceptionCode.userNotFound,
       ),
     ),
-    act: (SignInBloc bloc) => bloc.add(
-      const SignInEventSubmit(),
-    ),
+    act: (bloc) => bloc.add(const SignInEventSubmit()),
     expect: () => [
       createState(
         status: const BlocStatusLoading(),
@@ -244,9 +223,7 @@ void main() {
         code: AuthExceptionCode.wrongPassword,
       ),
     ),
-    act: (SignInBloc bloc) => bloc.add(
-      const SignInEventSubmit(),
-    ),
+    act: (bloc) => bloc.add(const SignInEventSubmit()),
     expect: () => [
       createState(
         status: const BlocStatusLoading(),
@@ -282,9 +259,7 @@ void main() {
         code: NetworkExceptionCode.requestFailed,
       ),
     ),
-    act: (SignInBloc bloc) => bloc.add(
-      const SignInEventSubmit(),
-    ),
+    act: (bloc) => bloc.add(const SignInEventSubmit()),
     expect: () => [
       createState(
         status: const BlocStatusLoading(),
@@ -318,11 +293,7 @@ void main() {
         message: 'unknown exception message',
       ),
     ),
-    act: (SignInBloc bloc) {
-      bloc.add(
-        const SignInEventSubmit(),
-      );
-    },
+    act: (bloc) => bloc.add(const SignInEventSubmit()),
     expect: () => [
       createState(
         status: const BlocStatusLoading(),
@@ -335,9 +306,7 @@ void main() {
         password: password,
       ),
     ],
-    errors: () => [
-      'unknown exception message',
-    ],
+    errors: () => ['unknown exception message'],
     verify: (_) => verify(
       () => authService.signIn(
         email: email,
@@ -354,9 +323,7 @@ void main() {
       email: '',
       password: password,
     ),
-    act: (SignInBloc bloc) => bloc.add(
-      const SignInEventSubmit(),
-    ),
+    act: (bloc) => bloc.add(const SignInEventSubmit()),
     expect: () => [],
     verify: (_) => verifyNever(
       () => authService.signIn(
@@ -374,9 +341,7 @@ void main() {
       email: email,
       password: '',
     ),
-    act: (SignInBloc bloc) => bloc.add(
-      const SignInEventSubmit(),
-    ),
+    act: (bloc) => bloc.add(const SignInEventSubmit()),
     expect: () => [],
     verify: (_) => verifyNever(
       () => authService.signIn(
