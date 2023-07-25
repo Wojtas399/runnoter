@@ -47,14 +47,14 @@ void main() {
       raceRepository.mockGetAllRaces(
         races: [
           createRace(
-            id: 'c1',
-            userId: loggedUserId,
-            date: DateTime(2023, 5, 10),
-          ),
-          createRace(
             id: 'c2',
             userId: loggedUserId,
             date: DateTime(2022, 4, 20),
+          ),
+          createRace(
+            id: 'c1',
+            userId: loggedUserId,
+            date: DateTime(2023, 5, 10),
           ),
           createRace(
             id: 'c3',

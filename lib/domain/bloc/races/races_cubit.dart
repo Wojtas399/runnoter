@@ -39,14 +39,15 @@ class RacesCubit extends Cubit<List<RacesFromYear>?> {
 
   void _onRacesChanged(List<Race>? races) {
     if (races == null) return;
-    final segregatedRaces = _segregateRaces(races);
-    for (final racesFromYear in segregatedRaces) {
+    final groupedRaces = _groupRaces(races);
+    groupedRaces.sort((g1, g2) => g2.year < g1.year ? -1 : 1);
+    for (final racesFromYear in groupedRaces) {
       racesFromYear.races.sort((r1, r2) => r2.date.compareTo(r1.date));
     }
-    emit(segregatedRaces);
+    emit(groupedRaces);
   }
 
-  List<RacesFromYear> _segregateRaces(List<Race> races) {
+  List<RacesFromYear> _groupRaces(List<Race> races) {
     final List<RacesFromYear> segregatedRaces = [];
     for (final race in races) {
       final int year = race.date.year;
