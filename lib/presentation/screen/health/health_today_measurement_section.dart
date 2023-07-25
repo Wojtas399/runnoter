@@ -17,12 +17,15 @@ class HealthTodayMeasurementSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _Header(),
-        SizedBox(height: 8),
-        _TodayMeasurement(),
+        const _Header(),
+        const SizedBox(height: 8),
+        Padding(
+          padding: EdgeInsets.only(right: context.isMobileSize ? 16 : 0),
+          child: const _TodayMeasurement(),
+        ),
       ],
     );
   }

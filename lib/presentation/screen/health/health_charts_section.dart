@@ -5,6 +5,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../domain/bloc/health/health_bloc.dart';
 import '../../../domain/service/health_chart_service.dart';
 import '../../component/text/title_text_components.dart';
+import '../../extension/context_extensions.dart';
 import '../../formatter/date_formatter.dart';
 import 'health_charts.dart';
 
@@ -14,7 +15,10 @@ class HealthChartsSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 24),
+      padding: EdgeInsets.only(
+        bottom: 24,
+        right: context.isMobileSize ? 16 : 0,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

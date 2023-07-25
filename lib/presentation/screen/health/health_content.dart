@@ -36,7 +36,7 @@ class _MobileContent extends StatelessWidget {
     const SizedBox gap = SizedBox(height: 24);
 
     return const Padding(
-      padding: EdgeInsets.fromLTRB(24, 16, 24, 24),
+      padding: EdgeInsets.fromLTRB(24, 16, 8, 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
