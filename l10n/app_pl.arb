@@ -8,6 +8,10 @@
   "@signInButtonLabel": {
     "description": "Label of the button to submit sign in form"
   },
+  "signInSignInWith": "lub zaloguj z",
+  "@signInSignInWith": {
+    "description": "Label of social sign in options"
+  },
   "signInDontHaveAccount": "Nie masz konta?",
   "@signInDontHaveAccount": {
     "description": "First part of option to navigate to sign up form"

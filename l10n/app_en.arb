@@ -2,6 +2,7 @@
   "@__________SIGN_IN__________": {},
   "signInTitle": "Sign in",
   "signInButtonLabel": "Sign in",
+  "signInSignInWith": "or sign in with",
   "signInDontHaveAccount": "Don't have account?",
   "signInSignUp": "Sign up!",
   "signInForgotPasswordOption": "Forgot password?",
