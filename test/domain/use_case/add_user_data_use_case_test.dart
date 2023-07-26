@@ -4,7 +4,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/entity/settings.dart';
 import 'package:runnoter/domain/entity/user.dart';
 import 'package:runnoter/domain/repository/user_repository.dart';
-import 'package:runnoter/domain/use_case/set_initial_user_settings_use_case.dart';
+import 'package:runnoter/domain/use_case/add_user_data_use_case.dart';
 
 import '../../creators/user_creator.dart';
 import '../../mock/domain/repository/mock_user_repository.dart';
@@ -37,7 +37,7 @@ void main() {
         settings: defaultSettings,
       );
       userRepository.mockAddUser();
-      final useCase = SetInitialUserSettingsUseCase();
+      final useCase = AddUserDataUseCase();
 
       await useCase.execute(
         userId: userId,

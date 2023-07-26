@@ -3,14 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../domain/additional_model/bloc_status.dart';
 import '../../../../domain/additional_model/bloc_with_status.dart';
-import '../../../../domain/entity/settings.dart';
 import '../../../../domain/entity/user.dart';
-import '../../../../domain/repository/user_repository.dart';
 import '../../../../domain/service/auth_service.dart';
 import '../../../dependency_injection.dart';
 import '../../../presentation/service/validation_service.dart' as validator;
 import '../../additional_model/bloc_state.dart';
 import '../../additional_model/custom_exception.dart';
+import '../../use_case/add_user_data_use_case.dart';
 
 part 'sign_up_event.dart';
 part 'sign_up_state.dart';
@@ -18,12 +17,12 @@ part 'sign_up_state.dart';
 class SignUpBloc extends BlocWithStatus<SignUpEvent, SignUpState,
     SignUpBlocInfo, SignUpBlocError> {
   final AuthService _authService;
-  final UserRepository _userRepository;
+  final AddUserDataUseCase _addUserDataUseCase;
 
   SignUpBloc({
     SignUpState state = const SignUpState(status: BlocStatusInitial()),
   })  : _authService = getIt<AuthService>(),
-        _userRepository = getIt<UserRepository>(),
+        _addUserDataUseCase = getIt<AddUserDataUseCase>(),
         super(state) {
     on<SignUpEventGenderChanged>(_genderChanged);
     on<SignUpEventNameChanged>(_nameChanged);
@@ -123,19 +122,11 @@ class SignUpBloc extends BlocWithStatus<SignUpEvent, SignUpState,
       password: state.password,
     );
     if (userId == null) return;
-    await _userRepository.addUser(
-      user: User(
-        id: userId,
-        gender: state.gender,
-        name: state.name,
-        surname: state.surname,
-        settings: const Settings(
-          themeMode: ThemeMode.system,
-          language: Language.polish,
-          distanceUnit: DistanceUnit.kilometers,
-          paceUnit: PaceUnit.minutesPerKilometer,
-        ),
-      ),
+    await _addUserDataUseCase.execute(
+      userId: userId,
+      gender: state.gender,
+      name: state.name,
+      surname: state.surname,
     );
   }
 

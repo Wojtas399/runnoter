@@ -3,10 +3,10 @@ import '../entity/settings.dart';
 import '../entity/user.dart';
 import '../repository/user_repository.dart';
 
-class SetInitialUserSettingsUseCase {
+class AddUserDataUseCase {
   final UserRepository _userRepository;
 
-  SetInitialUserSettingsUseCase() : _userRepository = getIt<UserRepository>();
+  AddUserDataUseCase() : _userRepository = getIt<UserRepository>();
 
   Future<void> execute({
     required String userId,
