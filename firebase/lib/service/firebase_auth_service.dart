@@ -30,18 +30,16 @@ class FirebaseAuthService {
     }
   }
 
-  Future<String?> signInWithGoogle() async {
+  Future<void> signInWithGoogle() async {
     try {
       final GoogleSignInAccount? gAccount = await GoogleSignIn().signIn();
-      if (gAccount == null) return null;
+      if (gAccount == null) return;
       final GoogleSignInAuthentication gAuth = await gAccount.authentication;
       final gCredential = GoogleAuthProvider.credential(
         accessToken: gAuth.accessToken,
         idToken: gAuth.idToken,
       );
-      final credential =
-          await FirebaseAuth.instance.signInWithCredential(gCredential);
-      return credential.user?.uid;
+      await FirebaseAuth.instance.signInWithCredential(gCredential);
     } on FirebaseAuthException catch (exception) {
       throw mapFirebaseExceptionFromCodeStr(exception.code);
     }

@@ -16,8 +16,8 @@ class SignInState extends BlocState {
 
   const SignInState({
     required super.status,
-    required this.email,
-    required this.password,
+    this.email = '',
+    this.password = '',
   });
 
   @override

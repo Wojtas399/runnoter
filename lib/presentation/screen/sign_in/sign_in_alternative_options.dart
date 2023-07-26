@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/svg.dart';
 
+import '../../../domain/bloc/sign_in/sign_in_bloc.dart';
 import '../../component/text/body_text_components.dart';
 import '../../config/navigation/router.dart';
 import '../../service/navigator_service.dart';
@@ -75,13 +77,17 @@ class _SignInWithGoogle extends StatelessWidget {
     return SizedBox(
       height: 40,
       child: OutlinedButton(
-        onPressed: () {},
+        onPressed: () => _onPressed(context),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: SvgPicture.asset('assets/google_icon.svg'),
         ),
       ),
     );
+  }
+
+  void _onPressed(BuildContext context) {
+    context.read<SignInBloc>().add(const SignInEventSignInWithGoogle());
   }
 }
 

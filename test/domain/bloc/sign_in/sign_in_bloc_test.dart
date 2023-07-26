@@ -15,29 +15,6 @@ void main() {
   const String email = 'email@example.com';
   const String password = 'Password1!';
 
-  SignInBloc createBloc({
-    final String? email,
-    final String? password,
-  }) {
-    return SignInBloc(
-      email: email ?? '',
-      password: password ?? '',
-    );
-  }
-
-  SignInState createState({
-    BlocStatus? status,
-    String? email,
-    String? password,
-  }) {
-    final bloc = createBloc();
-    return bloc.state.copyWith(
-      status: status,
-      email: email,
-      password: password,
-    );
-  }
-
   setUpAll(() {
     GetIt.I.registerSingleton<AuthService>(authService);
   });
@@ -50,13 +27,13 @@ void main() {
     'initialize, '
     'logged user id is not null, '
     'should emit complete status with signed in info',
-    build: () => createBloc(),
+    build: () => SignInBloc(),
     setUp: () => authService.mockGetLoggedUserId(userId: loggedUserId),
     act: (bloc) => bloc.add(const SignInEventInitialize()),
     expect: () => [
-      createState(status: const BlocStatusLoading()),
-      createState(
-        status: const BlocStatusComplete<SignInInfo>(info: SignInInfo.signedIn),
+      const SignInState(status: BlocStatusLoading()),
+      const SignInState(
+        status: BlocStatusComplete<SignInInfo>(info: SignInInfo.signedIn),
       ),
     ],
     verify: (_) => verify(
@@ -68,12 +45,12 @@ void main() {
     'initialize, '
     'logged user id is null, '
     'should emit complete status without any info',
-    build: () => createBloc(),
+    build: () => SignInBloc(),
     setUp: () => authService.mockGetLoggedUserId(),
     act: (bloc) => bloc.add(const SignInEventInitialize()),
     expect: () => [
-      createState(status: const BlocStatusLoading()),
-      createState(status: const BlocStatusComplete<SignInInfo>()),
+      const SignInState(status: BlocStatusLoading()),
+      const SignInState(status: BlocStatusComplete<SignInInfo>()),
     ],
     verify: (_) => verify(
       () => authService.loggedUserId$,
@@ -83,11 +60,11 @@ void main() {
   blocTest(
     'email changed, '
     'should update email in state',
-    build: () => createBloc(),
+    build: () => SignInBloc(),
     act: (bloc) => bloc.add(const SignInEventEmailChanged(email: email)),
     expect: () => [
-      createState(
-        status: const BlocStatusComplete(),
+      const SignInState(
+        status: BlocStatusComplete(),
         email: email,
       ),
     ],
@@ -96,12 +73,12 @@ void main() {
   blocTest(
     'password changed, '
     'should update password in state',
-    build: () => createBloc(),
+    build: () => SignInBloc(),
     act: (bloc) =>
         bloc.add(const SignInEventPasswordChanged(password: password)),
     expect: () => [
-      createState(
-        status: const BlocStatusComplete(),
+      const SignInState(
+        status: BlocStatusComplete(),
         password: password,
       ),
     ],
@@ -110,20 +87,20 @@ void main() {
   blocTest(
     'submit, '
     'should call method responsible for signing in user and should emit complete status with signed in info',
-    build: () => createBloc(
+    build: () => SignInBloc(
       email: email,
       password: password,
     ),
     setUp: () => authService.mockSignIn(),
     act: (bloc) => bloc.add(const SignInEventSubmit()),
     expect: () => [
-      createState(
-        status: const BlocStatusLoading(),
+      const SignInState(
+        status: BlocStatusLoading(),
         email: email,
         password: password,
       ),
-      createState(
-        status: const BlocStatusComplete<SignInInfo>(
+      const SignInState(
+        status: BlocStatusComplete<SignInInfo>(
           info: SignInInfo.signedIn,
         ),
         email: email,
@@ -142,7 +119,7 @@ void main() {
     'submit, '
     'auth exception with invalid email code, '
     'should emit error status with invalid email error',
-    build: () => createBloc(
+    build: () => SignInBloc(
       email: email,
       password: password,
     ),
@@ -153,13 +130,13 @@ void main() {
     ),
     act: (bloc) => bloc.add(const SignInEventSubmit()),
     expect: () => [
-      createState(
-        status: const BlocStatusLoading(),
+      const SignInState(
+        status: BlocStatusLoading(),
         email: email,
         password: password,
       ),
-      createState(
-        status: const BlocStatusError<SignInError>(
+      const SignInState(
+        status: BlocStatusError<SignInError>(
           error: SignInError.invalidEmail,
         ),
         email: email,
@@ -178,7 +155,7 @@ void main() {
     'submit, '
     'auth exception with user not found code, '
     'should emit error status with user not found error',
-    build: () => createBloc(
+    build: () => SignInBloc(
       email: email,
       password: password,
     ),
@@ -189,13 +166,13 @@ void main() {
     ),
     act: (bloc) => bloc.add(const SignInEventSubmit()),
     expect: () => [
-      createState(
-        status: const BlocStatusLoading(),
+      const SignInState(
+        status: BlocStatusLoading(),
         email: email,
         password: password,
       ),
-      createState(
-        status: const BlocStatusError<SignInError>(
+      const SignInState(
+        status: BlocStatusError<SignInError>(
           error: SignInError.userNotFound,
         ),
         email: email,
@@ -214,7 +191,7 @@ void main() {
     'submit, '
     'auth exception with wrong password code, '
     'should emit error status with wrong password error',
-    build: () => createBloc(
+    build: () => SignInBloc(
       email: email,
       password: password,
     ),
@@ -225,13 +202,13 @@ void main() {
     ),
     act: (bloc) => bloc.add(const SignInEventSubmit()),
     expect: () => [
-      createState(
-        status: const BlocStatusLoading(),
+      const SignInState(
+        status: BlocStatusLoading(),
         email: email,
         password: password,
       ),
-      createState(
-        status: const BlocStatusError<SignInError>(
+      const SignInState(
+        status: BlocStatusError<SignInError>(
           error: SignInError.wrongPassword,
         ),
         email: email,
@@ -250,7 +227,7 @@ void main() {
     'submit, '
     'network exception with request failed code, '
     'should emit network request failed status',
-    build: () => createBloc(
+    build: () => SignInBloc(
       email: email,
       password: password,
     ),
@@ -261,13 +238,13 @@ void main() {
     ),
     act: (bloc) => bloc.add(const SignInEventSubmit()),
     expect: () => [
-      createState(
-        status: const BlocStatusLoading(),
+      const SignInState(
+        status: BlocStatusLoading(),
         email: email,
         password: password,
       ),
-      createState(
-        status: const BlocStatusNetworkRequestFailed(),
+      const SignInState(
+        status: BlocStatusNetworkRequestFailed(),
         email: email,
         password: password,
       ),
@@ -284,7 +261,7 @@ void main() {
     'submit, '
     'unknown exception, '
     'should emit unknown error status',
-    build: () => createBloc(
+    build: () => SignInBloc(
       email: email,
       password: password,
     ),
@@ -295,13 +272,13 @@ void main() {
     ),
     act: (bloc) => bloc.add(const SignInEventSubmit()),
     expect: () => [
-      createState(
-        status: const BlocStatusLoading(),
+      const SignInState(
+        status: BlocStatusLoading(),
         email: email,
         password: password,
       ),
-      createState(
-        status: const BlocStatusUnknownError(),
+      const SignInState(
+        status: BlocStatusUnknownError(),
         email: email,
         password: password,
       ),
@@ -319,7 +296,7 @@ void main() {
     'submit, '
     'email is empty, '
     'should do nothing',
-    build: () => createBloc(
+    build: () => SignInBloc(
       email: '',
       password: password,
     ),
@@ -337,7 +314,7 @@ void main() {
     'submit, '
     'password is empty, '
     'should do nothing',
-    build: () => createBloc(
+    build: () => SignInBloc(
       email: email,
       password: '',
     ),
@@ -349,5 +326,47 @@ void main() {
         password: any(named: 'password'),
       ),
     ),
+  );
+
+  blocTest(
+    'sign in with google, '
+    "should call auth service's method to sign in with google and should emit complete status with signed in info if logged user id is not null",
+    build: () => SignInBloc(),
+    setUp: () {
+      authService.mockSignInWithGoogle();
+      authService.mockGetLoggedUserId(userId: 'u1');
+    },
+    act: (bloc) => bloc.add(const SignInEventSignInWithGoogle()),
+    expect: () => [
+      const SignInState(status: BlocStatusLoading()),
+      const SignInState(
+        status: BlocStatusComplete<SignInInfo>(info: SignInInfo.signedIn),
+      ),
+    ],
+    verify: (_) {
+      verify(() => authService.signInWithGoogle()).called(1);
+      verify(() => authService.loggedUserId$).called(1);
+    },
+  );
+
+  blocTest(
+    'sign in with google, '
+    "should call auth service's method to sign in with google and should emit complete status without info if logged user id is null",
+    build: () => SignInBloc(),
+    setUp: () {
+      authService.mockSignInWithGoogle();
+      authService.mockGetLoggedUserId();
+    },
+    act: (bloc) => bloc.add(const SignInEventSignInWithGoogle()),
+    expect: () => [
+      const SignInState(status: BlocStatusLoading()),
+      const SignInState(
+        status: BlocStatusComplete<SignInInfo>(),
+      ),
+    ],
+    verify: (_) {
+      verify(() => authService.signInWithGoogle()).called(1);
+      verify(() => authService.loggedUserId$).called(1);
+    },
   );
 }

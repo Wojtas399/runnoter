@@ -31,6 +31,7 @@ class SignInBloc
     on<SignInEventEmailChanged>(_emailChanged);
     on<SignInEventPasswordChanged>(_passwordChanged);
     on<SignInEventSubmit>(_submit);
+    on<SignInEventSignInWithGoogle>(_signInWithGoogle);
   }
 
   Future<void> _initialize(
@@ -68,9 +69,7 @@ class SignInBloc
     SignInEventSubmit event,
     Emitter<SignInState> emit,
   ) async {
-    if (_isFormNotCompleted()) {
-      return;
-    }
+    if (state.isButtonDisabled) return;
     emitLoadingStatus(emit);
     try {
       await _tryToSignIn();
@@ -95,8 +94,17 @@ class SignInBloc
     }
   }
 
-  bool _isFormNotCompleted() {
-    return state.email.isEmpty || state.password.isEmpty;
+  Future<void> _signInWithGoogle(
+    SignInEventSignInWithGoogle event,
+    Emitter<SignInState> emit,
+  ) async {
+    emitLoadingStatus(emit);
+    await _authService.signInWithGoogle();
+    final String? loggedUserId = await _authService.loggedUserId$.first;
+    emitCompleteStatus(
+      emit,
+      loggedUserId != null ? SignInInfo.signedIn : null,
+    );
   }
 
   Future<void> _tryToSignIn() async {

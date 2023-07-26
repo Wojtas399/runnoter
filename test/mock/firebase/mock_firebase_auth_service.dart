@@ -28,12 +28,10 @@ class MockFirebaseAuthService extends Mock implements FirebaseAuthService {
     }
   }
 
-  void mockSignInWithGoogle({
-    String? userId,
-  }) {
+  void mockSignInWithGoogle() {
     when(
       () => signInWithGoogle(),
-    ).thenAnswer((_) => Future.value(userId));
+    ).thenAnswer((_) => Future.value());
   }
 
   void mockSignUp({

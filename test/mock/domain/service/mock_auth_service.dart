@@ -28,6 +28,12 @@ class MockAuthService extends Mock implements AuthService {
     }
   }
 
+  void mockSignInWithGoogle({String? userId}) {
+    when(
+      () => signInWithGoogle(),
+    ).thenAnswer((_) => Future.value(userId));
+  }
+
   void mockSignUp({
     String? userId,
     Object? throwable,

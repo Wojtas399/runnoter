@@ -40,3 +40,7 @@ class SignInEventPasswordChanged extends SignInEvent {
 class SignInEventSubmit extends SignInEvent {
   const SignInEventSubmit();
 }
+
+class SignInEventSignInWithGoogle extends SignInEvent {
+  const SignInEventSignInWithGoogle();
+}
