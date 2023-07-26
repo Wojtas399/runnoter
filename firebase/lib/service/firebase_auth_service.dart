@@ -1,17 +1,18 @@
-import 'package:firebase_auth/firebase_auth.dart' as firebase;
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 import '../mapper/firebase_exception_mapper.dart';
 
 class FirebaseAuthService {
   Stream<String?> get loggedUserId$ {
-    return firebase.FirebaseAuth.instance.authStateChanges().map(
-          (firebase.User? user) => user?.uid,
+    return FirebaseAuth.instance.authStateChanges().map(
+          (User? user) => user?.uid,
         );
   }
 
   Stream<String?> get loggedUserEmail$ {
-    return firebase.FirebaseAuth.instance.authStateChanges().map(
-          (firebase.User? user) => user?.email,
+    return FirebaseAuth.instance.authStateChanges().map(
+          (User? user) => user?.email,
         );
   }
 
@@ -20,11 +21,28 @@ class FirebaseAuthService {
     required String password,
   }) async {
     try {
-      await firebase.FirebaseAuth.instance.signInWithEmailAndPassword(
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
-    } on firebase.FirebaseAuthException catch (exception) {
+    } on FirebaseAuthException catch (exception) {
+      throw mapFirebaseExceptionFromCodeStr(exception.code);
+    }
+  }
+
+  Future<String?> signInWithGoogle() async {
+    try {
+      final GoogleSignInAccount? gAccount = await GoogleSignIn().signIn();
+      if (gAccount == null) return null;
+      final GoogleSignInAuthentication gAuth = await gAccount.authentication;
+      final gCredential = GoogleAuthProvider.credential(
+        accessToken: gAuth.accessToken,
+        idToken: gAuth.idToken,
+      );
+      final credential =
+          await FirebaseAuth.instance.signInWithCredential(gCredential);
+      return credential.user?.uid;
+    } on FirebaseAuthException catch (exception) {
       throw mapFirebaseExceptionFromCodeStr(exception.code);
     }
   }
@@ -35,15 +53,12 @@ class FirebaseAuthService {
   }) async {
     try {
       final credential =
-          await firebase.FirebaseAuth.instance.createUserWithEmailAndPassword(
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
-      if (credential.user == null) {
-        return null;
-      }
-      return credential.user!.uid;
-    } on firebase.FirebaseAuthException catch (exception) {
+      return credential.user?.uid;
+    } on FirebaseAuthException catch (exception) {
       throw mapFirebaseExceptionFromCodeStr(exception.code);
     }
   }
@@ -52,16 +67,16 @@ class FirebaseAuthService {
     required String email,
   }) async {
     try {
-      await firebase.FirebaseAuth.instance.sendPasswordResetEmail(
+      await FirebaseAuth.instance.sendPasswordResetEmail(
         email: email,
       );
-    } on firebase.FirebaseAuthException catch (exception) {
+    } on FirebaseAuthException catch (exception) {
       throw mapFirebaseExceptionFromCodeStr(exception.code);
     }
   }
 
   Future<void> signOut() async {
-    await firebase.FirebaseAuth.instance.signOut();
+    await FirebaseAuth.instance.signOut();
   }
 
   Future<void> updateEmail({
@@ -70,8 +85,8 @@ class FirebaseAuthService {
   }) async {
     try {
       await _reauthenticate(password);
-      await firebase.FirebaseAuth.instance.currentUser?.updateEmail(newEmail);
-    } on firebase.FirebaseAuthException catch (exception) {
+      await FirebaseAuth.instance.currentUser?.updateEmail(newEmail);
+    } on FirebaseAuthException catch (exception) {
       throw mapFirebaseExceptionFromCodeStr(exception.code);
     }
   }
@@ -82,9 +97,8 @@ class FirebaseAuthService {
   }) async {
     try {
       await _reauthenticate(currentPassword);
-      await firebase.FirebaseAuth.instance.currentUser
-          ?.updatePassword(newPassword);
-    } on firebase.FirebaseAuthException catch (exception) {
+      await FirebaseAuth.instance.currentUser?.updatePassword(newPassword);
+    } on FirebaseAuthException catch (exception) {
       throw mapFirebaseExceptionFromCodeStr(exception.code);
     }
   }
@@ -94,8 +108,8 @@ class FirebaseAuthService {
   }) async {
     try {
       await _reauthenticate(password);
-      await firebase.FirebaseAuth.instance.currentUser?.delete();
-    } on firebase.FirebaseAuthException catch (exception) {
+      await FirebaseAuth.instance.currentUser?.delete();
+    } on FirebaseAuthException catch (exception) {
       throw mapFirebaseExceptionFromCodeStr(exception.code);
     }
   }
@@ -106,7 +120,7 @@ class FirebaseAuthService {
     try {
       await _reauthenticate(password);
       return true;
-    } on firebase.FirebaseAuthException catch (exception) {
+    } on FirebaseAuthException catch (exception) {
       throw mapFirebaseExceptionFromCodeStr(exception.code);
     }
   }
@@ -116,12 +130,11 @@ class FirebaseAuthService {
     if (email == null) {
       return;
     }
-    final firebase.AuthCredential credential =
-        firebase.EmailAuthProvider.credential(
+    final AuthCredential credential = EmailAuthProvider.credential(
       email: email,
       password: password,
     );
-    await firebase.FirebaseAuth.instance.currentUser
+    await FirebaseAuth.instance.currentUser
         ?.reauthenticateWithCredential(credential);
   }
 }
