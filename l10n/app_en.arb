@@ -134,6 +134,8 @@
   "profileWrongPasswordDialogMessage": "Given password is wrong",
   "profileWrongCurrentPasswordDialogTitle": "Wrong current password",
   "profileWrongCurrentPasswordDialogMessage": "Given current password is wrong...",
+  "profileSuccessfullyDeletedAccountDialogTitle": "Account deletion",
+  "profileSuccessfullyDeletedAccountDialogMessage": "Account has been successfully deleted. You have to create new one if you want to use the app again.",
   "@__________MILEAGE__________": {},
   "mileageTitle": "Mileage",
   "mileageChartMileage": "Mileage",

@@ -56,7 +56,7 @@ class _IdentitiesBlocListener extends StatelessWidget {
     );
   }
 
-  void _manageInfo(BuildContext context, ProfileInfo info) {
+  Future<void> _manageInfo(BuildContext context, ProfileInfo info) async {
     switch (info) {
       case ProfileInfo.savedData:
         showSnackbarMessage(
@@ -64,6 +64,11 @@ class _IdentitiesBlocListener extends StatelessWidget {
         );
         break;
       case ProfileInfo.accountDeleted:
+        await showMessageDialog(
+          title: Str.of(context).profileSuccessfullyDeletedAccountDialogTitle,
+          message:
+              Str.of(context).profileSuccessfullyDeletedAccountDialogMessage,
+        );
         navigateAndRemoveUntil(const SignInRoute());
         break;
     }
