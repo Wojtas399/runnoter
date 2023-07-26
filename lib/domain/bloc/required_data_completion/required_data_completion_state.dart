@@ -1,7 +1,4 @@
-import '../../../presentation/service/validation_service.dart' as validator;
-import '../../additional_model/bloc_state.dart';
-import '../../additional_model/bloc_status.dart';
-import '../../entity/user.dart';
+part of 'required_data_completion_bloc.dart';
 
 class RequiredDataCompletionState
     extends BlocState<RequiredDataCompletionState> {
@@ -10,7 +7,7 @@ class RequiredDataCompletionState
   final String surname;
 
   const RequiredDataCompletionState({
-    required super.status,
+    super.status = const BlocStatusInitial(),
     this.gender = Gender.male,
     this.name = '',
     this.surname = '',

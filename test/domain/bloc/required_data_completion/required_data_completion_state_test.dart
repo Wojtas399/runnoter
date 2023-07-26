@@ -1,15 +1,28 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
-import 'package:runnoter/domain/bloc/required_data_completion/required_data_completion_state.dart';
+import 'package:runnoter/domain/bloc/required_data_completion/required_data_completion_bloc.dart';
 import 'package:runnoter/domain/entity/user.dart';
 
 void main() {
   late RequiredDataCompletionState state;
 
   setUp(
-    () => state = const RequiredDataCompletionState(
-      status: BlocStatusInitial(),
-    ),
+    () => state = const RequiredDataCompletionState(),
+  );
+
+  test(
+    'initial data',
+    () {
+      expect(
+        state,
+        const RequiredDataCompletionState(
+          status: BlocStatusInitial(),
+          gender: Gender.male,
+          name: '',
+          surname: '',
+        ),
+      );
+    },
   );
 
   test(

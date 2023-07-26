@@ -1,4 +1,4 @@
-import '../../entity/user.dart';
+part of 'required_data_completion_bloc.dart';
 
 class RequiredDataCompletionEvent {
   const RequiredDataCompletionEvent();
