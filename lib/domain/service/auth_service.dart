@@ -8,6 +8,8 @@ abstract class AuthService {
     required String password,
   });
 
+  Future<String?> signInWithGoogle();
+
   Future<String?> signUp({
     required String email,
     required String password,

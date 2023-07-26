@@ -212,6 +212,22 @@ void main() {
   );
 
   test(
+    'sign in with google, '
+    'should call and return result of firebase method to sign in with google',
+    () async {
+      const String expectedSignedInUserId = 'u1';
+      firebaseAuthService.mockSignInWithGoogle(userId: expectedSignedInUserId);
+
+      final String? signedInUserId = await service.signInWithGoogle();
+
+      expect(signedInUserId, expectedSignedInUserId);
+      verify(
+        () => firebaseAuthService.signInWithGoogle(),
+      ).called(1);
+    },
+  );
+
+  test(
     'sign up, '
     'should call firebase method to sign up user and should return user id',
     () async {

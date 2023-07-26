@@ -31,6 +31,10 @@ class AuthServiceImpl implements AuthService {
   }
 
   @override
+  Future<String?> signInWithGoogle() async =>
+      await _firebaseAuthService.signInWithGoogle();
+
+  @override
   Future<String?> signUp({
     required String email,
     required String password,
