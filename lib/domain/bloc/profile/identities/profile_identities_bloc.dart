@@ -12,7 +12,6 @@ import '../../../../../domain/service/auth_service.dart';
 import '../../../../dependency_injection.dart';
 import '../../../additional_model/bloc_state.dart';
 import '../../../additional_model/custom_exception.dart';
-import '../../../entity/auth_provider.dart';
 import '../../../repository/blood_test_repository.dart';
 import '../../../repository/health_measurement_repository.dart';
 import '../../../repository/race_repository.dart';
@@ -69,7 +68,6 @@ class ProfileIdentitiesBloc extends BlocWithStatus<ProfileIdentitiesEvent,
         final String? loggedUserEmail = identities.$1;
         final User? loggedUserData = identities.$2;
         return state.copyWith(
-          loggedUserId: loggedUserData?.id,
           gender: loggedUserData?.gender,
           email: loggedUserEmail,
           username: loggedUserData?.name,
@@ -109,13 +107,14 @@ class ProfileIdentitiesBloc extends BlocWithStatus<ProfileIdentitiesEvent,
     ProfileIdentitiesEventUpdateUsername event,
     Emitter<ProfileIdentitiesState> emit,
   ) async {
-    final String? userId = state.loggedUserId;
-    if (userId == null) {
+    final String? loggedUserId = await _authService.loggedUserId$.first;
+    if (loggedUserId == null) {
+      emitNoLoggedUserStatus(emit);
       return;
     }
     emitLoadingStatus(emit);
     await _userRepository.updateUserIdentities(
-      userId: userId,
+      userId: loggedUserId,
       name: event.username,
     );
     emitCompleteStatus(emit, ProfileInfo.savedData);
@@ -125,13 +124,14 @@ class ProfileIdentitiesBloc extends BlocWithStatus<ProfileIdentitiesEvent,
     ProfileIdentitiesEventUpdateSurname event,
     Emitter<ProfileIdentitiesState> emit,
   ) async {
-    final String? userId = state.loggedUserId;
-    if (userId == null) {
+    final String? loggedUserId = await _authService.loggedUserId$.first;
+    if (loggedUserId == null) {
+      emitNoLoggedUserStatus(emit);
       return;
     }
     emitLoadingStatus(emit);
     await _userRepository.updateUserIdentities(
-      userId: userId,
+      userId: loggedUserId,
       surname: event.surname,
     );
     emitCompleteStatus(emit, ProfileInfo.savedData);
@@ -143,10 +143,7 @@ class ProfileIdentitiesBloc extends BlocWithStatus<ProfileIdentitiesEvent,
   ) async {
     emitLoadingStatus(emit);
     try {
-      await _authService.updateEmail(
-        newEmail: event.newEmail,
-        authProvider: const AuthProviderGoogle(),
-      );
+      await _authService.updateEmail(newEmail: event.newEmail);
       emitCompleteStatus(emit, ProfileInfo.savedData);
     } on AuthException catch (authException) {
       final ProfileError? error = _mapAuthExceptionCodeToBlocError(
@@ -174,10 +171,7 @@ class ProfileIdentitiesBloc extends BlocWithStatus<ProfileIdentitiesEvent,
   ) async {
     emitLoadingStatus(emit);
     try {
-      await _authService.updatePassword(
-        newPassword: event.newPassword,
-        authProvider: const AuthProviderGoogle(),
-      );
+      await _authService.updatePassword(newPassword: event.newPassword);
       emitCompleteStatus(emit, ProfileInfo.savedData);
     } on AuthException catch (authException) {
       if (authException.code == AuthExceptionCode.wrongPassword) {
@@ -200,22 +194,15 @@ class ProfileIdentitiesBloc extends BlocWithStatus<ProfileIdentitiesEvent,
     ProfileIdentitiesEventDeleteAccount event,
     Emitter<ProfileIdentitiesState> emit,
   ) async {
-    if (state.loggedUserId == null) {
+    final String? loggedUserId = await _authService.loggedUserId$.first;
+    if (loggedUserId == null) {
+      emitNoLoggedUserStatus(emit);
       return;
     }
     emitLoadingStatus(emit);
     try {
-      final bool isPasswordCorrect = await _authService.isPasswordCorrect(
-        password: event.password,
-      );
-      if (!isPasswordCorrect) {
-        emitErrorStatus(emit, ProfileError.wrongPassword);
-        return;
-      }
-      await _deleteAllLoggedUserData();
-      await _authService.deleteAccount(
-        authProvider: const AuthProviderGoogle(),
-      );
+      await _deleteAllLoggedUserData(loggedUserId);
+      await _authService.deleteAccount();
       emitCompleteStatus(emit, ProfileInfo.accountDeleted);
     } on NetworkException catch (networkException) {
       if (networkException.code == NetworkExceptionCode.requestFailed) {
@@ -229,9 +216,7 @@ class ProfileIdentitiesBloc extends BlocWithStatus<ProfileIdentitiesEvent,
 
   Stream<User?> get _loggedUserData$ {
     return _authService.loggedUserId$.whereNotNull().switchMap(
-          (String userId) => _userRepository.getUserById(
-            userId: userId,
-          ),
+          (String userId) => _userRepository.getUserById(userId: userId),
         );
   }
 
@@ -246,15 +231,13 @@ class ProfileIdentitiesBloc extends BlocWithStatus<ProfileIdentitiesEvent,
     return null;
   }
 
-  Future<void> _deleteAllLoggedUserData() async {
-    await _workoutRepository.deleteAllUserWorkouts(userId: state.loggedUserId!);
+  Future<void> _deleteAllLoggedUserData(String loggedUserId) async {
+    await _workoutRepository.deleteAllUserWorkouts(userId: loggedUserId);
     await _healthMeasurementRepository.deleteAllUserMeasurements(
-      userId: state.loggedUserId!,
+      userId: loggedUserId,
     );
-    await _bloodTestRepository.deleteAllUserTests(userId: state.loggedUserId!);
-    await _raceRepository.deleteAllUserRaces(
-      userId: state.loggedUserId!,
-    );
-    await _userRepository.deleteUser(userId: state.loggedUserId!);
+    await _bloodTestRepository.deleteAllUserTests(userId: loggedUserId);
+    await _raceRepository.deleteAllUserRaces(userId: loggedUserId);
+    await _userRepository.deleteUser(userId: loggedUserId);
   }
 }

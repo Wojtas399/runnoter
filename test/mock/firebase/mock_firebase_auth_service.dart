@@ -79,19 +79,11 @@ class MockFirebaseAuthService extends Mock implements FirebaseAuthService {
     }
   }
 
-  void mockIsPasswordCorrect({bool isCorrect = true}) {
-    when(
-      () => isPasswordCorrect(
-        password: any(named: 'password'),
-      ),
-    ).thenAnswer((_) => Future.value(isCorrect));
-  }
-
   void mockDeleteAccount({Object? throwable}) {
     if (throwable != null) {
-      when(_deleteAccount).thenThrow(throwable);
+      when(deleteAccount).thenThrow(throwable);
     } else {
-      when(_deleteAccount).thenAnswer((_) => Future.value());
+      when(deleteAccount).thenAnswer((_) => Future.value());
     }
   }
 
@@ -118,18 +110,10 @@ class MockFirebaseAuthService extends Mock implements FirebaseAuthService {
   Future<void> _updateEmailCall() {
     return updateEmail(
       newEmail: any(named: 'newEmail'),
-      authProvider: any(named: 'authProvider'),
     );
   }
 
-  Future<void> _updatePasswordCall() {
-    return updatePassword(
-      newPassword: any(named: 'newPassword'),
-      authProvider: any(named: 'authProvider'),
-    );
-  }
-
-  Future<void> _deleteAccount() {
-    return deleteAccount(authProvider: any(named: 'authProvider'));
-  }
+  Future<void> _updatePasswordCall() => updatePassword(
+        newPassword: any(named: 'newPassword'),
+      );
 }

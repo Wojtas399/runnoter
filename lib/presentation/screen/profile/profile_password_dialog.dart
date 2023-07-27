@@ -89,7 +89,6 @@ class _State extends State<ProfilePasswordDialog> {
     context.read<ProfileIdentitiesBloc>().add(
           ProfileIdentitiesEventUpdatePassword(
             newPassword: _newPasswordController.text,
-            currentPassword: _currentPasswordController.text,
           ),
         );
   }

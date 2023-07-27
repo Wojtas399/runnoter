@@ -91,10 +91,7 @@ class _State extends State<ProfileEmailDialog> {
   void _onSaveButtonPressed(BuildContext context) {
     unfocusInputs();
     context.read<ProfileIdentitiesBloc>().add(
-          ProfileIdentitiesEventUpdateEmail(
-            newEmail: _emailController.text,
-            password: _passwordController.text,
-          ),
+          ProfileIdentitiesEventUpdateEmail(newEmail: _emailController.text),
         );
   }
 }

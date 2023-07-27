@@ -1,9 +1,7 @@
 import 'package:firebase/firebase.dart';
 
 import '../../dependency_injection.dart';
-import '../../domain/entity/auth_provider.dart';
 import '../../domain/service/auth_service.dart';
-import '../mapper/auth_provider_mapper.dart';
 import '../mapper/custom_exception_mapper.dart';
 
 class AuthServiceImpl implements AuthService {
@@ -23,10 +21,7 @@ class AuthServiceImpl implements AuthService {
     required String password,
   }) async {
     try {
-      await _firebaseAuthService.signIn(
-        email: email,
-        password: password,
-      );
+      await _firebaseAuthService.signIn(email: email, password: password);
     } on FirebaseException catch (exception) {
       throw mapExceptionFromFirebase(exception);
     }
@@ -53,9 +48,7 @@ class AuthServiceImpl implements AuthService {
   }
 
   @override
-  Future<void> sendPasswordResetEmail({
-    required String email,
-  }) async {
+  Future<void> sendPasswordResetEmail({required String email}) async {
     try {
       await _firebaseAuthService.sendPasswordResetEmail(email: email);
     } on FirebaseException catch (exception) {
@@ -69,52 +62,27 @@ class AuthServiceImpl implements AuthService {
   }
 
   @override
-  Future<void> updateEmail({
-    required String newEmail,
-    required AuthProvider authProvider,
-  }) async {
+  Future<void> updateEmail({required String newEmail}) async {
     try {
-      await _firebaseAuthService.updateEmail(
-        newEmail: newEmail,
-        authProvider: mapAuthProviderToDb(authProvider),
-      );
+      await _firebaseAuthService.updateEmail(newEmail: newEmail);
     } on FirebaseException catch (exception) {
       throw mapExceptionFromFirebase(exception);
     }
   }
 
   @override
-  Future<void> updatePassword({
-    required String newPassword,
-    required AuthProvider authProvider,
-  }) async {
+  Future<void> updatePassword({required String newPassword}) async {
     try {
-      await _firebaseAuthService.updatePassword(
-        newPassword: newPassword,
-        authProvider: mapAuthProviderToDb(authProvider),
-      );
+      await _firebaseAuthService.updatePassword(newPassword: newPassword);
     } on FirebaseException catch (exception) {
       throw mapExceptionFromFirebase(exception);
     }
   }
 
   @override
-  Future<bool> isPasswordCorrect({
-    required String password,
-  }) async {
-    return await _firebaseAuthService.isPasswordCorrect(
-      password: password,
-    );
-  }
-
-  @override
-  Future<void> deleteAccount({
-    required AuthProvider authProvider,
-  }) async {
+  Future<void> deleteAccount() async {
     try {
-      await _firebaseAuthService.deleteAccount(
-        authProvider: mapAuthProviderToDb(authProvider),
-      );
+      await _firebaseAuthService.deleteAccount();
     } on FirebaseException catch (exception) {
       throw mapExceptionFromFirebase(exception);
     }

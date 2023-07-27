@@ -7,25 +7,15 @@ class MockAuthService extends Mock implements AuthService {
     registerFallbackValue(const AuthProviderGoogle());
   }
 
-  void mockGetLoggedUserId({
-    String? userId,
-  }) {
-    when(
-      () => loggedUserId$,
-    ).thenAnswer((invocation) => Stream.value(userId));
+  void mockGetLoggedUserId({String? userId}) {
+    when(() => loggedUserId$).thenAnswer((_) => Stream.value(userId));
   }
 
-  void mockGetLoggedUserEmail({
-    String? userEmail,
-  }) {
-    when(
-      () => loggedUserEmail$,
-    ).thenAnswer((invocation) => Stream.value(userEmail));
+  void mockGetLoggedUserEmail({String? userEmail}) {
+    when(() => loggedUserEmail$).thenAnswer((_) => Stream.value(userEmail));
   }
 
-  void mockSignIn({
-    Object? throwable,
-  }) {
+  void mockSignIn({Object? throwable}) {
     if (throwable != null) {
       when(_signInCall).thenThrow(throwable);
     } else {
@@ -34,126 +24,72 @@ class MockAuthService extends Mock implements AuthService {
   }
 
   void mockSignInWithGoogle() {
-    when(
-      () => signInWithGoogle(),
-    ).thenAnswer((_) => Future.value());
+    when(() => signInWithGoogle()).thenAnswer((_) => Future.value());
   }
 
-  void mockSignUp({
-    String? userId,
-    Object? throwable,
-  }) {
+  void mockSignUp({String? userId, Object? throwable}) {
     if (throwable != null) {
       when(_signUpCall).thenThrow(throwable);
     } else {
-      when(_signUpCall).thenAnswer((invocation) => Future.value(userId));
+      when(_signUpCall).thenAnswer((_) => Future.value(userId));
     }
   }
 
-  void mockSendPasswordResetEmail({
-    Object? throwable,
-  }) {
+  void mockSendPasswordResetEmail({Object? throwable}) {
     if (throwable != null) {
       when(_sendPasswordResetEmailCall).thenThrow(throwable);
     } else {
-      when(_sendPasswordResetEmailCall).thenAnswer(
-        (invocation) => Future.value(),
-      );
+      when(_sendPasswordResetEmailCall).thenAnswer((_) => Future.value());
     }
   }
 
   void mockSignOut() {
-    when(
-      () => signOut(),
-    ).thenAnswer((invocation) => Future.value());
+    when(() => signOut()).thenAnswer((_) => Future.value());
   }
 
-  void mockUpdateEmail({
-    Object? throwable,
-  }) {
+  void mockUpdateEmail({Object? throwable}) {
     if (throwable != null) {
       when(_updateEmailCall).thenThrow(throwable);
     } else {
-      when(_updateEmailCall).thenAnswer((invocation) => Future.value());
+      when(_updateEmailCall).thenAnswer((_) => Future.value());
     }
   }
 
-  void mockUpdatePassword({
-    Object? throwable,
-  }) {
+  void mockUpdatePassword({Object? throwable}) {
     if (throwable != null) {
       when(_updatePasswordCall).thenThrow(throwable);
     } else {
-      when(_updatePasswordCall).thenAnswer((invocation) => Future.value());
+      when(_updatePasswordCall).thenAnswer((_) => Future.value());
     }
   }
 
-  void mockIsPasswordCorrect({
-    bool isCorrect = true,
-    Object? throwable,
-  }) {
+  void mockDeleteAccount({Object? throwable}) {
     if (throwable != null) {
-      when(_isPasswordCorrectCall).thenThrow(throwable);
+      when(deleteAccount).thenThrow(throwable);
     } else {
-      when(
-        _isPasswordCorrectCall,
-      ).thenAnswer((invocation) => Future.value(isCorrect));
+      when(deleteAccount).thenAnswer((_) => Future.value());
     }
   }
 
-  void mockDeleteAccount({
-    Object? throwable,
-  }) {
-    if (throwable != null) {
-      when(_deleteAccountCall).thenThrow(throwable);
-    } else {
-      when(
-        _deleteAccountCall,
-      ).thenAnswer((invocation) => Future.value());
-    }
-  }
-
-  Future<void> _signInCall() {
-    return signIn(
-      email: any(named: 'email'),
-      password: any(named: 'password'),
-    );
-  }
-
-  Future<String?> _signUpCall() {
-    return signUp(
-      email: any(named: 'email'),
-      password: any(named: 'password'),
-    );
-  }
-
-  Future<void> _sendPasswordResetEmailCall() {
-    return sendPasswordResetEmail(
-      email: any(named: 'email'),
-    );
-  }
-
-  Future<void> _updateEmailCall() {
-    return updateEmail(
-      newEmail: any(named: 'newEmail'),
-      authProvider: any(named: 'authProvider'),
-    );
-  }
-
-  Future<void> _updatePasswordCall() {
-    return updatePassword(
-      newPassword: any(named: 'newPassword'),
-      authProvider: any(named: 'authProvider'),
-    );
-  }
-
-  Future<void> _deleteAccountCall() {
-    return deleteAccount(
-      authProvider: any(named: 'authProvider'),
-    );
-  }
-
-  Future<bool> _isPasswordCorrectCall() => isPasswordCorrect(
+  Future<void> _signInCall() => signIn(
+        email: any(named: 'email'),
         password: any(named: 'password'),
+      );
+
+  Future<String?> _signUpCall() => signUp(
+        email: any(named: 'email'),
+        password: any(named: 'password'),
+      );
+
+  Future<void> _sendPasswordResetEmailCall() => sendPasswordResetEmail(
+        email: any(named: 'email'),
+      );
+
+  Future<void> _updateEmailCall() => updateEmail(
+        newEmail: any(named: 'newEmail'),
+      );
+
+  Future<void> _updatePasswordCall() => updatePassword(
+        newPassword: any(named: 'newPassword'),
       );
 }

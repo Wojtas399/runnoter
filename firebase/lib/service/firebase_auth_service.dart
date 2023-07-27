@@ -66,51 +66,33 @@ class FirebaseAuthService {
 
   Future<void> signOut() async => await FirebaseAuth.instance.signOut();
 
-  Future<void> updateEmail({
-    required String newEmail,
-    required FirebaseAuthProvider authProvider,
-  }) async {
+  Future<void> updateEmail({required String newEmail}) async {
     try {
-      await _reauthenticate(authProvider);
       await FirebaseAuth.instance.currentUser?.updateEmail(newEmail);
     } on FirebaseAuthException catch (exception) {
       throw mapFirebaseExceptionFromCodeStr(exception.code);
     }
   }
 
-  Future<void> updatePassword({
-    required String newPassword,
-    required FirebaseAuthProvider authProvider,
-  }) async {
+  Future<void> updatePassword({required String newPassword}) async {
     try {
-      await _reauthenticate(authProvider);
       await FirebaseAuth.instance.currentUser?.updatePassword(newPassword);
     } on FirebaseAuthException catch (exception) {
       throw mapFirebaseExceptionFromCodeStr(exception.code);
     }
   }
 
-  Future<void> deleteAccount({
-    required FirebaseAuthProvider authProvider,
-  }) async {
+  Future<void> deleteAccount() async {
     try {
-      await _reauthenticate(authProvider);
       await FirebaseAuth.instance.currentUser?.delete();
     } on FirebaseAuthException catch (exception) {
       throw mapFirebaseExceptionFromCodeStr(exception.code);
     }
   }
 
-  Future<bool> isPasswordCorrect({required String password}) async {
-    try {
-      await _reauthenticate(FirebaseAuthProviderPassword(password: password));
-      return true;
-    } on FirebaseAuthException catch (exception) {
-      throw mapFirebaseExceptionFromCodeStr(exception.code);
-    }
-  }
-
-  Future<void> _reauthenticate(FirebaseAuthProvider authProvider) async {
+  Future<void> reauthenticate({
+    required FirebaseAuthProvider authProvider,
+  }) async {
     final User? user = FirebaseAuth.instance.currentUser;
     if (user == null) return;
     await switch (authProvider) {

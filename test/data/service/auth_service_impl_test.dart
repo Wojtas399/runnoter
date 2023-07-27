@@ -4,7 +4,6 @@ import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/data/service_impl/auth_service_impl.dart';
 import 'package:runnoter/domain/additional_model/custom_exception.dart';
-import 'package:runnoter/domain/entity/auth_provider.dart';
 
 import '../../mock/firebase/mock_firebase_auth_service.dart';
 
@@ -465,16 +464,10 @@ void main() {
       const String newEmail = 'email@example.com';
       firebaseAuthService.mockUpdateEmail();
 
-      await service.updateEmail(
-        newEmail: newEmail,
-        authProvider: const AuthProviderGoogle(),
-      );
+      await service.updateEmail(newEmail: newEmail);
 
       verify(
-        () => firebaseAuthService.updateEmail(
-          newEmail: newEmail,
-          authProvider: const FirebaseAuthProviderGoogle(),
-        ),
+        () => firebaseAuthService.updateEmail(newEmail: newEmail),
       ).called(1);
     },
   );
@@ -496,20 +489,14 @@ void main() {
 
       Object? exception;
       try {
-        await service.updateEmail(
-          newEmail: newEmail,
-          authProvider: const AuthProviderGoogle(),
-        );
+        await service.updateEmail(newEmail: newEmail);
       } catch (e) {
         exception = e;
       }
 
       expect(exception, expectedException);
       verify(
-        () => firebaseAuthService.updateEmail(
-          newEmail: newEmail,
-          authProvider: const FirebaseAuthProviderGoogle(),
-        ),
+        () => firebaseAuthService.updateEmail(newEmail: newEmail),
       ).called(1);
     },
   );
@@ -531,20 +518,14 @@ void main() {
 
       Object? exception;
       try {
-        await service.updateEmail(
-          newEmail: newEmail,
-          authProvider: const AuthProviderGoogle(),
-        );
+        await service.updateEmail(newEmail: newEmail);
       } catch (e) {
         exception = e;
       }
 
       expect(exception, expectedException);
       verify(
-        () => firebaseAuthService.updateEmail(
-          newEmail: newEmail,
-          authProvider: const FirebaseAuthProviderGoogle(),
-        ),
+        () => firebaseAuthService.updateEmail(newEmail: newEmail),
       ).called(1);
     },
   );
@@ -567,20 +548,14 @@ void main() {
 
       Object? exception;
       try {
-        await service.updateEmail(
-          newEmail: newEmail,
-          authProvider: const AuthProviderGoogle(),
-        );
+        await service.updateEmail(newEmail: newEmail);
       } catch (e) {
         exception = e;
       }
 
       expect(exception, expectedException);
       verify(
-        () => firebaseAuthService.updateEmail(
-          newEmail: newEmail,
-          authProvider: const FirebaseAuthProviderGoogle(),
-        ),
+        () => firebaseAuthService.updateEmail(newEmail: newEmail),
       ).called(1);
     },
   );
@@ -592,16 +567,10 @@ void main() {
       const String newPassword = 'password1';
       firebaseAuthService.mockUpdatePassword();
 
-      await service.updatePassword(
-        newPassword: newPassword,
-        authProvider: const AuthProviderGoogle(),
-      );
+      await service.updatePassword(newPassword: newPassword);
 
       verify(
-        () => firebaseAuthService.updatePassword(
-          newPassword: newPassword,
-          authProvider: const FirebaseAuthProviderGoogle(),
-        ),
+        () => firebaseAuthService.updatePassword(newPassword: newPassword),
       ).called(1);
     },
   );
@@ -622,20 +591,14 @@ void main() {
 
       Object? exception;
       try {
-        await service.updatePassword(
-          newPassword: newPassword,
-          authProvider: const AuthProviderGoogle(),
-        );
+        await service.updatePassword(newPassword: newPassword);
       } catch (e) {
         exception = e;
       }
 
       expect(exception, expectedException);
       verify(
-        () => firebaseAuthService.updatePassword(
-          newPassword: newPassword,
-          authProvider: const FirebaseAuthProviderGoogle(),
-        ),
+        () => firebaseAuthService.updatePassword(newPassword: newPassword),
       ).called(1);
     },
   );
@@ -658,41 +621,14 @@ void main() {
 
       Object? exception;
       try {
-        await service.updatePassword(
-          newPassword: newPassword,
-          authProvider: const AuthProviderGoogle(),
-        );
+        await service.updatePassword(newPassword: newPassword);
       } catch (e) {
         exception = e;
       }
 
       expect(exception, expectedException);
       verify(
-        () => firebaseAuthService.updatePassword(
-          newPassword: newPassword,
-          authProvider: const FirebaseAuthProviderGoogle(),
-        ),
-      ).called(1);
-    },
-  );
-
-  test(
-    'is password correct, '
-    'should return result of firebase auth service method to check password correctness',
-    () async {
-      const String password = 'password1';
-      const bool expectedResult = true;
-      firebaseAuthService.mockIsPasswordCorrect(isCorrect: expectedResult);
-
-      final bool result = await service.isPasswordCorrect(
-        password: password,
-      );
-
-      expect(result, expectedResult);
-      verify(
-        () => firebaseAuthService.isPasswordCorrect(
-          password: password,
-        ),
+        () => firebaseAuthService.updatePassword(newPassword: newPassword),
       ).called(1);
     },
   );
@@ -703,13 +639,9 @@ void main() {
     () async {
       firebaseAuthService.mockDeleteAccount();
 
-      await service.deleteAccount(authProvider: const AuthProviderGoogle());
+      await service.deleteAccount();
 
-      verify(
-        () => firebaseAuthService.deleteAccount(
-          authProvider: const FirebaseAuthProviderGoogle(),
-        ),
-      ).called(1);
+      verify(() => firebaseAuthService.deleteAccount()).called(1);
     },
   );
 
@@ -729,17 +661,13 @@ void main() {
 
       Object? exception;
       try {
-        await service.deleteAccount(authProvider: const AuthProviderGoogle());
+        await service.deleteAccount();
       } catch (e) {
         exception = e;
       }
 
       expect(exception, expectedException);
-      verify(
-        () => firebaseAuthService.deleteAccount(
-          authProvider: const FirebaseAuthProviderGoogle(),
-        ),
-      ).called(1);
+      verify(() => firebaseAuthService.deleteAccount()).called(1);
     },
   );
 
@@ -760,17 +688,13 @@ void main() {
 
       Object? exception;
       try {
-        await service.deleteAccount(authProvider: const AuthProviderGoogle());
+        await service.deleteAccount();
       } catch (e) {
         exception = e;
       }
 
       expect(exception, expectedException);
-      verify(
-        () => firebaseAuthService.deleteAccount(
-          authProvider: const FirebaseAuthProviderGoogle(),
-        ),
-      ).called(1);
+      verify(() => firebaseAuthService.deleteAccount()).called(1);
     },
   );
 }

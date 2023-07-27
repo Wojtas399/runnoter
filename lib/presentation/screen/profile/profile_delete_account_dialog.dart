@@ -57,9 +57,7 @@ class _State extends State<ProfileDeleteAccountDialog> {
 
   void _onSaveButtonPressed(BuildContext context) {
     context.read<ProfileIdentitiesBloc>().add(
-          ProfileIdentitiesEventDeleteAccount(
-            password: _passwordController.text,
-          ),
+          const ProfileIdentitiesEventDeleteAccount(),
         );
   }
 }

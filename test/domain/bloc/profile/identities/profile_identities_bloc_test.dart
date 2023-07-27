@@ -5,7 +5,6 @@ import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/additional_model/custom_exception.dart';
 import 'package:runnoter/domain/bloc/profile/identities/profile_identities_bloc.dart';
-import 'package:runnoter/domain/entity/auth_provider.dart';
 import 'package:runnoter/domain/entity/user.dart';
 import 'package:runnoter/domain/repository/blood_test_repository.dart';
 import 'package:runnoter/domain/repository/health_measurement_repository.dart';
@@ -31,34 +30,6 @@ void main() {
   final raceRepository = MockRaceRepository();
   const String loggedUserId = 'u1';
 
-  ProfileIdentitiesState createState({
-    BlocStatus status = const BlocStatusInitial(),
-    String? loggedUserId,
-    Gender? gender,
-    String? username,
-    String? surname,
-    String? email,
-  }) =>
-      ProfileIdentitiesState(
-        status: status,
-        loggedUserId: loggedUserId,
-        gender: gender,
-        username: username,
-        surname: surname,
-        email: email,
-      );
-
-  ProfileIdentitiesBloc createBloc({
-    String? loggedUserId,
-    Gender? gender,
-  }) =>
-      ProfileIdentitiesBloc(
-        state: createState(
-          loggedUserId: loggedUserId,
-          gender: gender,
-        ),
-      );
-
   setUpAll(() {
     GetIt.I.registerSingleton<AuthService>(authService);
     GetIt.I.registerSingleton<UserRepository>(userRepository);
@@ -82,7 +53,7 @@ void main() {
   blocTest(
     'initialize, '
     'should set listener of logged user email and data',
-    build: () => createBloc(),
+    build: () => ProfileIdentitiesBloc(),
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
       authService.mockGetLoggedUserEmail(userEmail: 'email@example.com');
@@ -97,9 +68,8 @@ void main() {
     },
     act: (bloc) => bloc.add(const ProfileIdentitiesEventInitialize()),
     expect: () => [
-      createState(
-        status: const BlocStatusComplete(),
-        loggedUserId: loggedUserId,
+      const ProfileIdentitiesState(
+        status: BlocStatusComplete(),
         gender: Gender.female,
         username: 'name',
         surname: 'surname',
@@ -107,24 +77,16 @@ void main() {
       ),
     ],
     verify: (_) {
-      verify(
-        () => authService.loggedUserId$,
-      ).called(1);
-      verify(
-        () => authService.loggedUserEmail$,
-      ).called(1);
-      verify(
-        () => userRepository.getUserById(
-          userId: loggedUserId,
-        ),
-      ).called(1);
+      verify(() => authService.loggedUserId$).called(1);
+      verify(() => authService.loggedUserEmail$).called(1);
+      verify(() => userRepository.getUserById(userId: loggedUserId)).called(1);
     },
   );
 
   blocTest(
     'update gender, '
     "should update gender in state and should call method from user repository to update user's data with new gender",
-    build: () => createBloc(gender: Gender.male),
+    build: () => ProfileIdentitiesBloc(),
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
       userRepository.mockUpdateUserIdentities();
@@ -133,15 +95,13 @@ void main() {
       gender: Gender.female,
     )),
     expect: () => [
-      createState(
-        status: const BlocStatusComplete(),
+      const ProfileIdentitiesState(
+        status: BlocStatusComplete(),
         gender: Gender.female,
       ),
     ],
     verify: (_) {
-      verify(
-        () => authService.loggedUserId$,
-      ).called(1);
+      verify(() => authService.loggedUserId$).called(1);
       verify(
         () => userRepository.updateUserIdentities(
           userId: loggedUserId,
@@ -155,7 +115,12 @@ void main() {
     'update gender, '
     'method from user repository to update identities throws exception, '
     'should set previous gender',
-    build: () => createBloc(gender: Gender.male),
+    build: () => ProfileIdentitiesBloc(
+      state: const ProfileIdentitiesState(
+        status: BlocStatusInitial(),
+        gender: Gender.male,
+      ),
+    ),
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
       userRepository.mockUpdateUserIdentities(throwable: 'Exception...');
@@ -164,19 +129,17 @@ void main() {
       gender: Gender.female,
     )),
     expect: () => [
-      createState(
-        status: const BlocStatusComplete(),
+      const ProfileIdentitiesState(
+        status: BlocStatusComplete(),
         gender: Gender.female,
       ),
-      createState(
-        status: const BlocStatusComplete(),
+      const ProfileIdentitiesState(
+        status: BlocStatusComplete(),
         gender: Gender.male,
       ),
     ],
     verify: (_) {
-      verify(
-        () => authService.loggedUserId$,
-      ).called(1);
+      verify(() => authService.loggedUserId$).called(1);
       verify(
         () => userRepository.updateUserIdentities(
           userId: loggedUserId,
@@ -190,28 +153,27 @@ void main() {
     'update gender, '
     'logged user does not exist, '
     'should emit no logged user info',
-    build: () => createBloc(),
+    build: () => ProfileIdentitiesBloc(),
     setUp: () => authService.mockGetLoggedUserId(),
     act: (bloc) => bloc.add(const ProfileIdentitiesEventUpdateGender(
       gender: Gender.female,
     )),
     expect: () => [
-      createState(
-        status: const BlocStatusNoLoggedUser(),
-      ),
+      const ProfileIdentitiesState(status: BlocStatusNoLoggedUser()),
     ],
-    verify: (_) {
-      verify(
-        () => authService.loggedUserId$,
-      ).called(1);
-    },
+    verify: (_) => verify(() => authService.loggedUserId$).called(1),
   );
 
   blocTest(
     'update gender, '
     'new gender is the same as current gender, '
     'should do nothing',
-    build: () => createBloc(gender: Gender.male),
+    build: () => ProfileIdentitiesBloc(
+      state: const ProfileIdentitiesState(
+        status: BlocStatusInitial(),
+        gender: Gender.male,
+      ),
+    ),
     act: (bloc) => bloc.add(const ProfileIdentitiesEventUpdateGender(
       gender: Gender.male,
     )),
@@ -221,119 +183,105 @@ void main() {
   blocTest(
     'update username, '
     'should call method from user repository to update user and should emit info that data have been saved',
-    build: () => createBloc(loggedUserId: loggedUserId),
-    setUp: () => userRepository.mockUpdateUserIdentities(),
+    build: () => ProfileIdentitiesBloc(),
+    setUp: () {
+      authService.mockGetLoggedUserId(userId: loggedUserId);
+      userRepository.mockUpdateUserIdentities();
+    },
     act: (bloc) => bloc.add(const ProfileIdentitiesEventUpdateUsername(
       username: 'new username',
     )),
     expect: () => [
-      createState(
-        status: const BlocStatusLoading(),
-        loggedUserId: loggedUserId,
-      ),
-      createState(
-        status: const BlocStatusComplete<ProfileInfo>(
-          info: ProfileInfo.savedData,
-        ),
-        loggedUserId: loggedUserId,
+      const ProfileIdentitiesState(status: BlocStatusLoading()),
+      const ProfileIdentitiesState(
+        status: BlocStatusComplete<ProfileInfo>(info: ProfileInfo.savedData),
       ),
     ],
-    verify: (_) => verify(
-      () => userRepository.updateUserIdentities(
-        userId: loggedUserId,
-        name: 'new username',
-      ),
-    ).called(1),
+    verify: (_) {
+      verify(() => authService.loggedUserId$).called(1);
+      verify(
+        () => userRepository.updateUserIdentities(
+          userId: loggedUserId,
+          name: 'new username',
+        ),
+      ).called(1);
+    },
   );
 
   blocTest(
     'update username, '
-    'user id is null'
-    'should do nothing',
-    build: () => createBloc(),
-    setUp: () => userRepository.mockUpdateUserIdentities(),
+    'logged user does not exist, '
+    'should emit no logged user status',
+    build: () => ProfileIdentitiesBloc(),
+    setUp: () => authService.mockGetLoggedUserId(),
     act: (bloc) => bloc.add(const ProfileIdentitiesEventUpdateUsername(
       username: 'new username',
     )),
-    expect: () => [],
-    verify: (_) => verifyNever(
-      () => userRepository.updateUserIdentities(
-        userId: loggedUserId,
-        name: 'new username',
-      ),
-    ),
+    expect: () => [
+      const ProfileIdentitiesState(status: BlocStatusNoLoggedUser()),
+    ],
+    verify: (_) => verify(() => authService.loggedUserId$).called(1),
   );
 
   blocTest(
     'update surname, '
     'should call method from user repository to update user and should emit info that data have been saved',
-    build: () => createBloc(loggedUserId: loggedUserId),
-    setUp: () => userRepository.mockUpdateUserIdentities(),
+    build: () => ProfileIdentitiesBloc(),
+    setUp: () {
+      authService.mockGetLoggedUserId(userId: loggedUserId);
+      userRepository.mockUpdateUserIdentities();
+    },
     act: (bloc) => bloc.add(const ProfileIdentitiesEventUpdateSurname(
       surname: 'new surname',
     )),
     expect: () => [
-      createState(
-        status: const BlocStatusLoading(),
-        loggedUserId: loggedUserId,
-      ),
-      createState(
-        status: const BlocStatusComplete<ProfileInfo>(
-          info: ProfileInfo.savedData,
-        ),
-        loggedUserId: loggedUserId,
+      const ProfileIdentitiesState(status: BlocStatusLoading()),
+      const ProfileIdentitiesState(
+        status: BlocStatusComplete<ProfileInfo>(info: ProfileInfo.savedData),
       ),
     ],
-    verify: (_) => verify(
-      () => userRepository.updateUserIdentities(
-        userId: loggedUserId,
-        surname: 'new surname',
-      ),
-    ).called(1),
+    verify: (_) {
+      verify(() => authService.loggedUserId$).called(1);
+      verify(
+        () => userRepository.updateUserIdentities(
+          userId: loggedUserId,
+          surname: 'new surname',
+        ),
+      ).called(1);
+    },
   );
 
   blocTest(
     'update surname, '
-    'user id is null'
-    'should do nothing',
-    build: () => createBloc(),
-    setUp: () => userRepository.mockUpdateUserIdentities(),
+    'logged user does not exist, '
+    'should emit no logged user status',
+    build: () => ProfileIdentitiesBloc(),
+    setUp: () => authService.mockGetLoggedUserId(),
     act: (bloc) => bloc.add(const ProfileIdentitiesEventUpdateSurname(
       surname: 'new surname',
     )),
-    expect: () => [],
-    verify: (_) => verifyNever(
-      () => userRepository.updateUserIdentities(
-        userId: loggedUserId,
-        surname: 'new surname',
-      ),
-    ),
+    expect: () => [
+      const ProfileIdentitiesState(status: BlocStatusNoLoggedUser()),
+    ],
+    verify: (_) => verify(() => authService.loggedUserId$).called(1),
   );
 
   blocTest(
     'update email, '
     'should call method from auth service to update email and should emit info that data have been saved',
-    build: () => createBloc(),
+    build: () => ProfileIdentitiesBloc(),
     setUp: () => authService.mockUpdateEmail(),
     act: (bloc) => bloc.add(const ProfileIdentitiesEventUpdateEmail(
       newEmail: 'email@example.com',
-      password: 'Password1!',
     )),
     expect: () => [
-      createState(
-        status: const BlocStatusLoading(),
-      ),
-      createState(
-        status: const BlocStatusComplete<ProfileInfo>(
-          info: ProfileInfo.savedData,
-        ),
+      const ProfileIdentitiesState(status: BlocStatusLoading()),
+      const ProfileIdentitiesState(
+        status: BlocStatusComplete<ProfileInfo>(info: ProfileInfo.savedData),
       ),
     ],
     verify: (_) => verify(
-      () => authService.updateEmail(
-        newEmail: 'email@example.com',
-        authProvider: const AuthProviderGoogle(),
-      ),
+      () => authService.updateEmail(newEmail: 'email@example.com'),
     ).called(1),
   );
 
@@ -341,7 +289,7 @@ void main() {
     'update email, '
     'auth exception with email already in use code, '
     'should emit error status with email already in use error',
-    build: () => createBloc(),
+    build: () => ProfileIdentitiesBloc(),
     setUp: () => authService.mockUpdateEmail(
       throwable: const AuthException(
         code: AuthExceptionCode.emailAlreadyInUse,
@@ -349,23 +297,17 @@ void main() {
     ),
     act: (bloc) => bloc.add(const ProfileIdentitiesEventUpdateEmail(
       newEmail: 'email@example.com',
-      password: 'Password1!',
     )),
     expect: () => [
-      createState(
-        status: const BlocStatusLoading(),
-      ),
-      createState(
-        status: const BlocStatusError<ProfileError>(
+      const ProfileIdentitiesState(status: BlocStatusLoading()),
+      const ProfileIdentitiesState(
+        status: BlocStatusError<ProfileError>(
           error: ProfileError.emailAlreadyInUse,
         ),
       ),
     ],
     verify: (_) => verify(
-      () => authService.updateEmail(
-        newEmail: 'email@example.com',
-        authProvider: const AuthProviderGoogle(),
-      ),
+      () => authService.updateEmail(newEmail: 'email@example.com'),
     ).called(1),
   );
 
@@ -373,7 +315,7 @@ void main() {
     'update email, '
     'auth exception with wrong password code, '
     'should emit error status with wrong password error',
-    build: () => createBloc(),
+    build: () => ProfileIdentitiesBloc(),
     setUp: () => authService.mockUpdateEmail(
       throwable: const AuthException(
         code: AuthExceptionCode.wrongPassword,
@@ -381,23 +323,17 @@ void main() {
     ),
     act: (bloc) => bloc.add(const ProfileIdentitiesEventUpdateEmail(
       newEmail: 'email@example.com',
-      password: 'Password1!',
     )),
     expect: () => [
-      createState(
-        status: const BlocStatusLoading(),
-      ),
-      createState(
-        status: const BlocStatusError<ProfileError>(
+      const ProfileIdentitiesState(status: BlocStatusLoading()),
+      const ProfileIdentitiesState(
+        status: BlocStatusError<ProfileError>(
           error: ProfileError.wrongPassword,
         ),
       ),
     ],
     verify: (_) => verify(
-      () => authService.updateEmail(
-        newEmail: 'email@example.com',
-        authProvider: const AuthProviderGoogle(),
-      ),
+      () => authService.updateEmail(newEmail: 'email@example.com'),
     ).called(1),
   );
 
@@ -405,7 +341,7 @@ void main() {
     'update email, '
     'network exception with request failed code, '
     'should emit network request failed status',
-    build: () => createBloc(),
+    build: () => ProfileIdentitiesBloc(),
     setUp: () => authService.mockUpdateEmail(
       throwable: const NetworkException(
         code: NetworkExceptionCode.requestFailed,
@@ -413,21 +349,13 @@ void main() {
     ),
     act: (bloc) => bloc.add(const ProfileIdentitiesEventUpdateEmail(
       newEmail: 'email@example.com',
-      password: 'Password1!',
     )),
     expect: () => [
-      createState(
-        status: const BlocStatusLoading(),
-      ),
-      createState(
-        status: const BlocStatusNetworkRequestFailed(),
-      ),
+      const ProfileIdentitiesState(status: BlocStatusLoading()),
+      const ProfileIdentitiesState(status: BlocStatusNetworkRequestFailed()),
     ],
     verify: (_) => verify(
-      () => authService.updateEmail(
-        newEmail: 'email@example.com',
-        authProvider: const AuthProviderGoogle(),
-      ),
+      () => authService.updateEmail(newEmail: 'email@example.com'),
     ).called(1),
   );
 
@@ -435,57 +363,39 @@ void main() {
     'update email, '
     'unknown exception, '
     'should emit unknown error status and should rethrow exception',
-    build: () => createBloc(),
+    build: () => ProfileIdentitiesBloc(),
     setUp: () => authService.mockUpdateEmail(
-      throwable: const UnknownException(
-        message: 'unknown exception message',
-      ),
+      throwable: const UnknownException(message: 'unknown exception message'),
     ),
     act: (bloc) => bloc.add(const ProfileIdentitiesEventUpdateEmail(
       newEmail: 'email@example.com',
-      password: 'Password1!',
     )),
     expect: () => [
-      createState(
-        status: const BlocStatusLoading(),
-      ),
-      createState(
-        status: const BlocStatusUnknownError(),
-      ),
+      const ProfileIdentitiesState(status: BlocStatusLoading()),
+      const ProfileIdentitiesState(status: BlocStatusUnknownError()),
     ],
     errors: () => ['unknown exception message'],
     verify: (_) => verify(
-      () => authService.updateEmail(
-        newEmail: 'email@example.com',
-        authProvider: const AuthProviderGoogle(),
-      ),
+      () => authService.updateEmail(newEmail: 'email@example.com'),
     ).called(1),
   );
 
   blocTest(
     'update password, '
     'should call method from auth service to update password and should emit info that data have been saved',
-    build: () => createBloc(),
+    build: () => ProfileIdentitiesBloc(),
     setUp: () => authService.mockUpdatePassword(),
     act: (bloc) => bloc.add(const ProfileIdentitiesEventUpdatePassword(
       newPassword: 'newPassword',
-      currentPassword: 'currentPassword',
     )),
     expect: () => [
-      createState(
-        status: const BlocStatusLoading(),
-      ),
-      createState(
-        status: const BlocStatusComplete<ProfileInfo>(
-          info: ProfileInfo.savedData,
-        ),
+      const ProfileIdentitiesState(status: BlocStatusLoading()),
+      const ProfileIdentitiesState(
+        status: BlocStatusComplete<ProfileInfo>(info: ProfileInfo.savedData),
       ),
     ],
     verify: (_) => verify(
-      () => authService.updatePassword(
-        newPassword: 'newPassword',
-        authProvider: const AuthProviderGoogle(),
-      ),
+      () => authService.updatePassword(newPassword: 'newPassword'),
     ).called(1),
   );
 
@@ -493,31 +403,23 @@ void main() {
     'update password, '
     'auth exception with wrong password code, '
     'should emit error status with wrong current password error',
-    build: () => createBloc(),
+    build: () => ProfileIdentitiesBloc(),
     setUp: () => authService.mockUpdatePassword(
-      throwable: const AuthException(
-        code: AuthExceptionCode.wrongPassword,
-      ),
+      throwable: const AuthException(code: AuthExceptionCode.wrongPassword),
     ),
     act: (bloc) => bloc.add(const ProfileIdentitiesEventUpdatePassword(
       newPassword: 'newPassword',
-      currentPassword: 'currentPassword',
     )),
     expect: () => [
-      createState(
-        status: const BlocStatusLoading(),
-      ),
-      createState(
-        status: const BlocStatusError<ProfileError>(
+      const ProfileIdentitiesState(status: BlocStatusLoading()),
+      const ProfileIdentitiesState(
+        status: BlocStatusError<ProfileError>(
           error: ProfileError.wrongCurrentPassword,
         ),
       ),
     ],
     verify: (_) => verify(
-      () => authService.updatePassword(
-        newPassword: 'newPassword',
-        authProvider: const AuthProviderGoogle(),
-      ),
+      () => authService.updatePassword(newPassword: 'newPassword'),
     ).called(1),
   );
 
@@ -525,7 +427,7 @@ void main() {
     'update password, '
     'network exception with request failed code, '
     'should emit network request failed status',
-    build: () => createBloc(),
+    build: () => ProfileIdentitiesBloc(),
     setUp: () => authService.mockUpdatePassword(
       throwable: const NetworkException(
         code: NetworkExceptionCode.requestFailed,
@@ -533,21 +435,13 @@ void main() {
     ),
     act: (bloc) => bloc.add(const ProfileIdentitiesEventUpdatePassword(
       newPassword: 'newPassword',
-      currentPassword: 'currentPassword',
     )),
     expect: () => [
-      createState(
-        status: const BlocStatusLoading(),
-      ),
-      createState(
-        status: const BlocStatusNetworkRequestFailed(),
-      ),
+      const ProfileIdentitiesState(status: BlocStatusLoading()),
+      const ProfileIdentitiesState(status: BlocStatusNetworkRequestFailed()),
     ],
     verify: (_) => verify(
-      () => authService.updatePassword(
-        newPassword: 'newPassword',
-        authProvider: const AuthProviderGoogle(),
-      ),
+      () => authService.updatePassword(newPassword: 'newPassword'),
     ).called(1),
   );
 
@@ -555,51 +449,42 @@ void main() {
     'update password, '
     'unknown exception, '
     'should emit unknown error status',
-    build: () => createBloc(),
+    build: () => ProfileIdentitiesBloc(),
     setUp: () => authService.mockUpdatePassword(
-      throwable: const UnknownException(
-        message: 'unknown exception message',
-      ),
+      throwable: const UnknownException(message: 'unknown exception message'),
     ),
     act: (bloc) => bloc.add(const ProfileIdentitiesEventUpdatePassword(
       newPassword: 'newPassword',
-      currentPassword: 'currentPassword',
     )),
     expect: () => [
-      createState(
-        status: const BlocStatusLoading(),
-      ),
-      createState(
-        status: const BlocStatusUnknownError(),
-      ),
+      const ProfileIdentitiesState(status: BlocStatusLoading()),
+      const ProfileIdentitiesState(status: BlocStatusUnknownError()),
     ],
     errors: () => ['unknown exception message'],
     verify: (_) => verify(
-      () => authService.updatePassword(
-        newPassword: 'newPassword',
-        authProvider: const AuthProviderGoogle(),
-      ),
+      () => authService.updatePassword(newPassword: 'newPassword'),
     ).called(1),
   );
 
   blocTest(
     'delete account, '
-    'userId is null, '
-    'should do nothing',
-    build: () => createBloc(),
-    act: (bloc) => bloc.add(const ProfileIdentitiesEventDeleteAccount(
-      password: 'password1',
-    )),
-    expect: () => [],
+    'logged user does not exist, '
+    'should emit no logged user status',
+    build: () => ProfileIdentitiesBloc(),
+    setUp: () => authService.mockGetLoggedUserId(),
+    act: (bloc) => bloc.add(const ProfileIdentitiesEventDeleteAccount()),
+    expect: () => [
+      const ProfileIdentitiesState(status: BlocStatusNoLoggedUser()),
+    ],
+    verify: (_) => verify(() => authService.loggedUserId$).called(1),
   );
 
   blocTest(
     'delete account, '
-    'password is correct, '
     'should call methods to delete user data and account and should emit info that account has been deleted',
-    build: () => createBloc(loggedUserId: loggedUserId),
+    build: () => ProfileIdentitiesBloc(),
     setUp: () {
-      authService.mockIsPasswordCorrect(isCorrect: true);
+      authService.mockGetLoggedUserId(userId: loggedUserId);
       authService.mockDeleteAccount();
       userRepository.mockDeleteUser();
       workoutRepository.mockDeleteAllUserWorkouts();
@@ -607,25 +492,16 @@ void main() {
       bloodTestRepository.mockDeleteAllUserTests();
       raceRepository.mockDeleteAllUserRaces();
     },
-    act: (bloc) => bloc.add(const ProfileIdentitiesEventDeleteAccount(
-      password: 'password1',
-    )),
+    act: (bloc) => bloc.add(const ProfileIdentitiesEventDeleteAccount()),
     expect: () => [
-      createState(
-        status: const BlocStatusLoading(),
-        loggedUserId: loggedUserId,
-      ),
-      createState(
-        status: const BlocStatusComplete<ProfileInfo>(
+      const ProfileIdentitiesState(status: BlocStatusLoading()),
+      const ProfileIdentitiesState(
+        status: BlocStatusComplete<ProfileInfo>(
           info: ProfileInfo.accountDeleted,
         ),
-        loggedUserId: loggedUserId,
       ),
     ],
     verify: (_) {
-      verify(
-        () => authService.isPasswordCorrect(password: 'password1'),
-      ).called(1);
       verify(
         () => workoutRepository.deleteAllUserWorkouts(userId: loggedUserId),
       ).called(1);
@@ -640,115 +516,83 @@ void main() {
       verify(
         () => raceRepository.deleteAllUserRaces(userId: loggedUserId),
       ).called(1);
-      verify(
-        () => userRepository.deleteUser(userId: loggedUserId),
-      ).called(1);
-      verify(
-        () => authService.deleteAccount(
-          authProvider: const AuthProviderGoogle(),
-        ),
-      ).called(1);
+      verify(() => userRepository.deleteUser(userId: loggedUserId)).called(1);
+      verify(() => authService.deleteAccount()).called(1);
     },
-  );
-
-  blocTest(
-    'delete account, '
-    'password is incorrect, '
-    'should emit error status with wrong password error',
-    build: () => createBloc(loggedUserId: loggedUserId),
-    setUp: () => authService.mockIsPasswordCorrect(isCorrect: false),
-    act: (bloc) => bloc.add(const ProfileIdentitiesEventDeleteAccount(
-      password: 'password1',
-    )),
-    expect: () => [
-      createState(
-        status: const BlocStatusLoading(),
-        loggedUserId: loggedUserId,
-      ),
-      createState(
-        status: const BlocStatusError<ProfileError>(
-          error: ProfileError.wrongPassword,
-        ),
-        loggedUserId: loggedUserId,
-      ),
-    ],
-    verify: (_) => verify(
-      () => authService.isPasswordCorrect(password: 'password1'),
-    ).called(1),
   );
 
   blocTest(
     'delete account, '
     'network exception with request failed code, '
     'should emit network request failed code',
-    build: () => createBloc(loggedUserId: loggedUserId),
-    setUp: () => authService.mockIsPasswordCorrect(
-      throwable: const NetworkException(
-        code: NetworkExceptionCode.requestFailed,
-      ),
-    ),
-    act: (bloc) => bloc.add(const ProfileIdentitiesEventDeleteAccount(
-      password: 'password1',
-    )),
+    build: () => ProfileIdentitiesBloc(),
+    setUp: () {
+      authService.mockGetLoggedUserId(userId: loggedUserId);
+      userRepository.mockDeleteUser();
+      workoutRepository.mockDeleteAllUserWorkouts();
+      healthMeasurementRepository.mockDeleteAllUserMeasurements();
+      bloodTestRepository.mockDeleteAllUserTests();
+      raceRepository.mockDeleteAllUserRaces();
+      authService.mockDeleteAccount(
+        throwable: const NetworkException(
+          code: NetworkExceptionCode.requestFailed,
+        ),
+      );
+    },
+    act: (bloc) => bloc.add(const ProfileIdentitiesEventDeleteAccount()),
     expect: () => [
-      createState(
-        status: const BlocStatusLoading(),
-        loggedUserId: loggedUserId,
-      ),
-      createState(
-        status: const BlocStatusNetworkRequestFailed(),
-        loggedUserId: loggedUserId,
-      ),
+      const ProfileIdentitiesState(status: BlocStatusLoading()),
+      const ProfileIdentitiesState(status: BlocStatusNetworkRequestFailed()),
     ],
-    verify: (_) => verify(
-      () => authService.isPasswordCorrect(password: 'password1'),
-    ).called(1),
+    verify: (_) {
+      verify(() => authService.loggedUserId$).called(1);
+      verify(
+        () => workoutRepository.deleteAllUserWorkouts(userId: loggedUserId),
+      ).called(1);
+      verify(
+        () => healthMeasurementRepository.deleteAllUserMeasurements(
+          userId: loggedUserId,
+        ),
+      ).called(1);
+      verify(
+        () => bloodTestRepository.deleteAllUserTests(userId: loggedUserId),
+      ).called(1);
+      verify(
+        () => raceRepository.deleteAllUserRaces(userId: loggedUserId),
+      ).called(1);
+      verify(() => userRepository.deleteUser(userId: loggedUserId)).called(1);
+      verify(() => authService.deleteAccount()).called(1);
+    },
   );
 
   blocTest(
     'delete account, '
     'unknown exception, '
     'should emit unknown error status and throw exception message',
-    build: () => createBloc(loggedUserId: loggedUserId),
+    build: () => ProfileIdentitiesBloc(),
     setUp: () {
-      authService.mockIsPasswordCorrect(isCorrect: true);
+      authService.mockGetLoggedUserId(userId: loggedUserId);
       workoutRepository.mockDeleteAllUserWorkouts();
       bloodTestRepository.mockDeleteAllUserTests();
       healthMeasurementRepository.mockDeleteAllUserMeasurements();
       raceRepository.mockDeleteAllUserRaces();
       userRepository.mockDeleteUser();
       authService.mockDeleteAccount(
-        throwable: const UnknownException(
-          message: 'unknown exception message',
-        ),
+        throwable: const UnknownException(message: 'unknown exception message'),
       );
     },
-    act: (bloc) => bloc.add(const ProfileIdentitiesEventDeleteAccount(
-      password: 'password1',
-    )),
+    act: (bloc) => bloc.add(const ProfileIdentitiesEventDeleteAccount()),
     expect: () => [
-      createState(
-        status: const BlocStatusLoading(),
-        loggedUserId: loggedUserId,
-      ),
-      createState(
-        status: const BlocStatusUnknownError(),
-        loggedUserId: loggedUserId,
-      ),
+      const ProfileIdentitiesState(status: BlocStatusLoading()),
+      const ProfileIdentitiesState(status: BlocStatusUnknownError()),
     ],
     errors: () => ['unknown exception message'],
     verify: (_) {
-      verify(
-        () => authService.isPasswordCorrect(password: 'password1'),
-      ).called(1);
+      verify(() => authService.loggedUserId$).called(1);
       verify(
         () => userRepository.deleteUser(userId: loggedUserId),
       ).called(1);
-      verify(
-        () => authService.deleteAccount(
-          authProvider: const AuthProviderGoogle(),
-        ),
-      ).called(1);
+      verify(() => authService.deleteAccount()).called(1);
     },
   );
 }
