@@ -4,6 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/data/service_impl/auth_service_impl.dart';
 import 'package:runnoter/domain/additional_model/custom_exception.dart';
+import 'package:runnoter/domain/entity/auth_provider.dart';
 
 import '../../mock/firebase/mock_firebase_auth_service.dart';
 
@@ -464,7 +465,10 @@ void main() {
       const String newEmail = 'email@example.com';
       firebaseAuthService.mockUpdateEmail();
 
-      await service.updateEmail(newEmail: newEmail, password: '');
+      await service.updateEmail(
+        newEmail: newEmail,
+        authProvider: const AuthProviderGoogle(),
+      );
 
       verify(
         () => firebaseAuthService.updateEmail(
@@ -494,7 +498,7 @@ void main() {
       try {
         await service.updateEmail(
           newEmail: newEmail,
-          password: '',
+          authProvider: const AuthProviderGoogle(),
         );
       } catch (e) {
         exception = e;
@@ -527,7 +531,10 @@ void main() {
 
       Object? exception;
       try {
-        await service.updateEmail(newEmail: newEmail, password: '');
+        await service.updateEmail(
+          newEmail: newEmail,
+          authProvider: const AuthProviderGoogle(),
+        );
       } catch (e) {
         exception = e;
       }
@@ -560,7 +567,10 @@ void main() {
 
       Object? exception;
       try {
-        await service.updateEmail(newEmail: newEmail, password: '');
+        await service.updateEmail(
+          newEmail: newEmail,
+          authProvider: const AuthProviderGoogle(),
+        );
       } catch (e) {
         exception = e;
       }
@@ -584,7 +594,7 @@ void main() {
 
       await service.updatePassword(
         newPassword: newPassword,
-        currentPassword: '',
+        authProvider: const AuthProviderGoogle(),
       );
 
       verify(
@@ -614,7 +624,7 @@ void main() {
       try {
         await service.updatePassword(
           newPassword: newPassword,
-          currentPassword: '',
+          authProvider: const AuthProviderGoogle(),
         );
       } catch (e) {
         exception = e;
@@ -650,7 +660,7 @@ void main() {
       try {
         await service.updatePassword(
           newPassword: newPassword,
-          currentPassword: '',
+          authProvider: const AuthProviderGoogle(),
         );
       } catch (e) {
         exception = e;
@@ -693,7 +703,7 @@ void main() {
     () async {
       firebaseAuthService.mockDeleteAccount();
 
-      await service.deleteAccount(password: '');
+      await service.deleteAccount(authProvider: const AuthProviderGoogle());
 
       verify(
         () => firebaseAuthService.deleteAccount(
@@ -719,7 +729,7 @@ void main() {
 
       Object? exception;
       try {
-        await service.deleteAccount(password: '');
+        await service.deleteAccount(authProvider: const AuthProviderGoogle());
       } catch (e) {
         exception = e;
       }
@@ -750,7 +760,7 @@ void main() {
 
       Object? exception;
       try {
-        await service.deleteAccount(password: '');
+        await service.deleteAccount(authProvider: const AuthProviderGoogle());
       } catch (e) {
         exception = e;
       }

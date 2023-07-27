@@ -1,7 +1,9 @@
 import 'package:firebase/firebase.dart';
 
 import '../../dependency_injection.dart';
+import '../../domain/entity/auth_provider.dart';
 import '../../domain/service/auth_service.dart';
+import '../mapper/auth_provider_mapper.dart';
 import '../mapper/custom_exception_mapper.dart';
 
 class AuthServiceImpl implements AuthService {
@@ -69,12 +71,12 @@ class AuthServiceImpl implements AuthService {
   @override
   Future<void> updateEmail({
     required String newEmail,
-    required String password,
+    required AuthProvider authProvider,
   }) async {
     try {
       await _firebaseAuthService.updateEmail(
         newEmail: newEmail,
-        authProvider: const FirebaseAuthProviderGoogle(),
+        authProvider: mapAuthProviderToDb(authProvider),
       );
     } on FirebaseException catch (exception) {
       throw mapExceptionFromFirebase(exception);
@@ -84,12 +86,12 @@ class AuthServiceImpl implements AuthService {
   @override
   Future<void> updatePassword({
     required String newPassword,
-    required String currentPassword,
+    required AuthProvider authProvider,
   }) async {
     try {
       await _firebaseAuthService.updatePassword(
         newPassword: newPassword,
-        authProvider: const FirebaseAuthProviderGoogle(),
+        authProvider: mapAuthProviderToDb(authProvider),
       );
     } on FirebaseException catch (exception) {
       throw mapExceptionFromFirebase(exception);
@@ -107,11 +109,11 @@ class AuthServiceImpl implements AuthService {
 
   @override
   Future<void> deleteAccount({
-    required String password,
+    required AuthProvider authProvider,
   }) async {
     try {
       await _firebaseAuthService.deleteAccount(
-        authProvider: const FirebaseAuthProviderGoogle(),
+        authProvider: mapAuthProviderToDb(authProvider),
       );
     } on FirebaseException catch (exception) {
       throw mapExceptionFromFirebase(exception);

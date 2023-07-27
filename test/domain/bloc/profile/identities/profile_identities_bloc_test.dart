@@ -5,6 +5,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/additional_model/custom_exception.dart';
 import 'package:runnoter/domain/bloc/profile/identities/profile_identities_bloc.dart';
+import 'package:runnoter/domain/entity/auth_provider.dart';
 import 'package:runnoter/domain/entity/user.dart';
 import 'package:runnoter/domain/repository/blood_test_repository.dart';
 import 'package:runnoter/domain/repository/health_measurement_repository.dart';
@@ -331,7 +332,7 @@ void main() {
     verify: (_) => verify(
       () => authService.updateEmail(
         newEmail: 'email@example.com',
-        password: 'Password1!',
+        authProvider: const AuthProviderGoogle(),
       ),
     ).called(1),
   );
@@ -363,7 +364,7 @@ void main() {
     verify: (_) => verify(
       () => authService.updateEmail(
         newEmail: 'email@example.com',
-        password: 'Password1!',
+        authProvider: const AuthProviderGoogle(),
       ),
     ).called(1),
   );
@@ -395,7 +396,7 @@ void main() {
     verify: (_) => verify(
       () => authService.updateEmail(
         newEmail: 'email@example.com',
-        password: 'Password1!',
+        authProvider: const AuthProviderGoogle(),
       ),
     ).called(1),
   );
@@ -425,7 +426,7 @@ void main() {
     verify: (_) => verify(
       () => authService.updateEmail(
         newEmail: 'email@example.com',
-        password: 'Password1!',
+        authProvider: const AuthProviderGoogle(),
       ),
     ).called(1),
   );
@@ -456,7 +457,7 @@ void main() {
     verify: (_) => verify(
       () => authService.updateEmail(
         newEmail: 'email@example.com',
-        password: 'Password1!',
+        authProvider: const AuthProviderGoogle(),
       ),
     ).called(1),
   );
@@ -483,7 +484,7 @@ void main() {
     verify: (_) => verify(
       () => authService.updatePassword(
         newPassword: 'newPassword',
-        currentPassword: 'currentPassword',
+        authProvider: const AuthProviderGoogle(),
       ),
     ).called(1),
   );
@@ -515,7 +516,7 @@ void main() {
     verify: (_) => verify(
       () => authService.updatePassword(
         newPassword: 'newPassword',
-        currentPassword: 'currentPassword',
+        authProvider: const AuthProviderGoogle(),
       ),
     ).called(1),
   );
@@ -545,7 +546,7 @@ void main() {
     verify: (_) => verify(
       () => authService.updatePassword(
         newPassword: 'newPassword',
-        currentPassword: 'currentPassword',
+        authProvider: const AuthProviderGoogle(),
       ),
     ).called(1),
   );
@@ -576,7 +577,7 @@ void main() {
     verify: (_) => verify(
       () => authService.updatePassword(
         newPassword: 'newPassword',
-        currentPassword: 'currentPassword',
+        authProvider: const AuthProviderGoogle(),
       ),
     ).called(1),
   );
@@ -643,7 +644,9 @@ void main() {
         () => userRepository.deleteUser(userId: loggedUserId),
       ).called(1);
       verify(
-        () => authService.deleteAccount(password: 'password1'),
+        () => authService.deleteAccount(
+          authProvider: const AuthProviderGoogle(),
+        ),
       ).called(1);
     },
   );
@@ -742,7 +745,9 @@ void main() {
         () => userRepository.deleteUser(userId: loggedUserId),
       ).called(1);
       verify(
-        () => authService.deleteAccount(password: 'password1'),
+        () => authService.deleteAccount(
+          authProvider: const AuthProviderGoogle(),
+        ),
       ).called(1);
     },
   );

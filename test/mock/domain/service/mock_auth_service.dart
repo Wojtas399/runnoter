@@ -1,7 +1,12 @@
 import 'package:mocktail/mocktail.dart';
+import 'package:runnoter/domain/entity/auth_provider.dart';
 import 'package:runnoter/domain/service/auth_service.dart';
 
 class MockAuthService extends Mock implements AuthService {
+  MockAuthService() {
+    registerFallbackValue(const AuthProviderGoogle());
+  }
+
   void mockGetLoggedUserId({
     String? userId,
   }) {
@@ -131,20 +136,20 @@ class MockAuthService extends Mock implements AuthService {
   Future<void> _updateEmailCall() {
     return updateEmail(
       newEmail: any(named: 'newEmail'),
-      password: any(named: 'password'),
+      authProvider: any(named: 'authProvider'),
     );
   }
 
   Future<void> _updatePasswordCall() {
     return updatePassword(
       newPassword: any(named: 'newPassword'),
-      currentPassword: any(named: 'currentPassword'),
+      authProvider: any(named: 'authProvider'),
     );
   }
 
   Future<void> _deleteAccountCall() {
     return deleteAccount(
-      password: any(named: 'password'),
+      authProvider: any(named: 'authProvider'),
     );
   }
 

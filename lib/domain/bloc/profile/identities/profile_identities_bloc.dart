@@ -12,6 +12,7 @@ import '../../../../../domain/service/auth_service.dart';
 import '../../../../dependency_injection.dart';
 import '../../../additional_model/bloc_state.dart';
 import '../../../additional_model/custom_exception.dart';
+import '../../../entity/auth_provider.dart';
 import '../../../repository/blood_test_repository.dart';
 import '../../../repository/health_measurement_repository.dart';
 import '../../../repository/race_repository.dart';
@@ -144,7 +145,7 @@ class ProfileIdentitiesBloc extends BlocWithStatus<ProfileIdentitiesEvent,
     try {
       await _authService.updateEmail(
         newEmail: event.newEmail,
-        password: event.password,
+        authProvider: const AuthProviderGoogle(),
       );
       emitCompleteStatus(emit, ProfileInfo.savedData);
     } on AuthException catch (authException) {
@@ -175,7 +176,7 @@ class ProfileIdentitiesBloc extends BlocWithStatus<ProfileIdentitiesEvent,
     try {
       await _authService.updatePassword(
         newPassword: event.newPassword,
-        currentPassword: event.currentPassword,
+        authProvider: const AuthProviderGoogle(),
       );
       emitCompleteStatus(emit, ProfileInfo.savedData);
     } on AuthException catch (authException) {
@@ -213,7 +214,7 @@ class ProfileIdentitiesBloc extends BlocWithStatus<ProfileIdentitiesEvent,
       }
       await _deleteAllLoggedUserData();
       await _authService.deleteAccount(
-        password: event.password,
+        authProvider: const AuthProviderGoogle(),
       );
       emitCompleteStatus(emit, ProfileInfo.accountDeleted);
     } on NetworkException catch (networkException) {

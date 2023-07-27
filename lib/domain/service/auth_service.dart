@@ -1,3 +1,5 @@
+import '../entity/auth_provider.dart';
+
 abstract class AuthService {
   Stream<String?> get loggedUserId$;
 
@@ -23,12 +25,12 @@ abstract class AuthService {
 
   Future<void> updateEmail({
     required String newEmail,
-    required String password,
+    required AuthProvider authProvider,
   });
 
   Future<void> updatePassword({
     required String newPassword,
-    required String currentPassword,
+    required AuthProvider authProvider,
   });
 
   Future<bool> isPasswordCorrect({
@@ -36,6 +38,6 @@ abstract class AuthService {
   });
 
   Future<void> deleteAccount({
-    required String password,
+    required AuthProvider authProvider,
   });
 }
