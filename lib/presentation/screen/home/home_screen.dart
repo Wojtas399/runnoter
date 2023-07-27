@@ -3,15 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../dependency_injection.dart';
+import '../../../domain/additional_model/bloc_status.dart';
 import '../../../domain/bloc/home/home_bloc.dart';
 import '../../../domain/entity/settings.dart' as settings;
 import '../../component/bloc_with_status_listener_component.dart';
 import '../../config/navigation/router.dart';
+import '../../service/dialog_service.dart';
 import '../../service/distance_unit_service.dart';
 import '../../service/language_service.dart';
 import '../../service/navigator_service.dart';
 import '../../service/pace_unit_service.dart';
 import '../../service/theme_service.dart';
+import '../required_data_completion/required_data_completion_dialog.dart';
 import 'home_content.dart';
 
 @RoutePage()
@@ -61,16 +64,27 @@ class _BlocListener extends StatelessWidget {
     }
   }
 
-  void _manageStateChanges(
+  _manageStateChanges(
     BuildContext context,
     HomeState state,
   ) {
-    final settings.Settings? appSettings = state.appSettings;
-    if (appSettings != null) {
-      _manageThemeMode(context, appSettings.themeMode);
-      _manageLanguage(context, appSettings.language);
-      context.read<DistanceUnitService>().changeUnit(appSettings.distanceUnit);
-      context.read<PaceUnitService>().changeUnit(appSettings.paceUnit);
+    if (state.status is BlocStatusComplete &&
+        state.loggedUserName == null &&
+        state.appSettings == null) {
+      showDialogDependingOnScreenSize(
+        const RequiredDataCompletionDialog(),
+        barrierDismissible: false,
+      );
+    } else {
+      final settings.Settings? appSettings = state.appSettings;
+      if (appSettings != null) {
+        _manageThemeMode(context, appSettings.themeMode);
+        _manageLanguage(context, appSettings.language);
+        context
+            .read<DistanceUnitService>()
+            .changeUnit(appSettings.distanceUnit);
+        context.read<PaceUnitService>().changeUnit(appSettings.paceUnit);
+      }
     }
   }
 

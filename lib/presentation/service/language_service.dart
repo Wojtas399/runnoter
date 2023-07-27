@@ -16,7 +16,7 @@ enum AppLanguage {
 }
 
 class LanguageService extends Cubit<AppLanguage> {
-  LanguageService() : super(AppLanguage.english);
+  LanguageService() : super(AppLanguage.system);
 
   void changeLanguage(AppLanguage newLanguage) {
     emit(newLanguage);

@@ -27,8 +27,8 @@ class BlocWithStatusListener<Bloc extends StateStreamable<State>,
   Widget build(BuildContext context) {
     return BlocListener<Bloc, State>(
       listener: (BuildContext context, State state) {
-        _emitStateChange(state);
         _manageBlocStatus(state.status, context);
+        _emitStateChange(state);
       },
       child: child,
     );

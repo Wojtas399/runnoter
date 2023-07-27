@@ -143,16 +143,22 @@ Future<DateTime?> askForDate({
   );
 }
 
-Future<T?> showDialogDependingOnScreenSize<T>(Widget dialog) async {
+Future<T?> showDialogDependingOnScreenSize<T>(
+  Widget dialog, {
+  bool barrierDismissible = true,
+}) async {
   final BuildContext? context =
       GetIt.I.get<AppRouter>().navigatorKey.currentContext;
   if (context == null) return null;
   return await (context.isMobileSize
       ? showFullScreenDialog(dialog)
-      : showAlertDialog(dialog));
+      : showAlertDialog(dialog, barrierDismissible: barrierDismissible));
 }
 
-Future<T?> showAlertDialog<T>(Widget dialog) async {
+Future<T?> showAlertDialog<T>(
+  Widget dialog, {
+  bool barrierDismissible = true,
+}) async {
   final BuildContext? context =
       GetIt.I.get<AppRouter>().navigatorKey.currentContext;
   if (context == null) return null;
@@ -167,7 +173,7 @@ Future<T?> showAlertDialog<T>(Widget dialog) async {
       );
     },
     transitionDuration: const Duration(milliseconds: 250),
-    barrierDismissible: true,
+    barrierDismissible: barrierDismissible,
     barrierLabel: '',
   );
 }

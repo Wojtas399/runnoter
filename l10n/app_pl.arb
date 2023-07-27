@@ -127,6 +127,15 @@
   "@homeSignOutConfirmationDialogMessage": {
     "description": "Message of the dialog to confirm sign out"
   },
+  "@__________REQUIRED_DATA_COMPLETION__________": {},
+  "requiredDataCompletionTitle": "Wymagane dane",
+  "@requiredDataCompletionTitle": {
+    "description": "Title of required data completion screen"
+  },
+  "requiredDataCompletionMessage": "Wygląda na to, że zalogowałeś się po raz pierwszy korzystając z jednej z platform mediów społecznościowych. Aby poprawnie korzystać z aplikacji musisz podać wymagane dane osobowe.",
+  "@requiredDataCompletionMessage": {
+    "description": "Message to information about required data completion"
+  },
   "@__________CURRENT_WEEK__________": {},
   "currentWeekTitle": "Obecny tydzień",
   "@currentWeekTitle": {
