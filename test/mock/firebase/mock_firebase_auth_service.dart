@@ -2,6 +2,10 @@ import 'package:firebase/firebase.dart';
 import 'package:mocktail/mocktail.dart';
 
 class MockFirebaseAuthService extends Mock implements FirebaseAuthService {
+  MockFirebaseAuthService() {
+    registerFallbackValue(const FirebaseAuthProviderGoogle());
+  }
+
   void mockGetLoggedUserId({
     String? userId,
   }) {
@@ -13,9 +17,7 @@ class MockFirebaseAuthService extends Mock implements FirebaseAuthService {
   void mockGetLoggedUserEmail({
     String? userEmail,
   }) {
-    when(
-      () => loggedUserEmail$,
-    ).thenAnswer((invocation) => Stream.value(userEmail));
+    when(() => loggedUserEmail$).thenAnswer((_) => Stream.value(userEmail));
   }
 
   void mockSignIn({
@@ -29,9 +31,7 @@ class MockFirebaseAuthService extends Mock implements FirebaseAuthService {
   }
 
   void mockSignInWithGoogle() {
-    when(
-      () => signInWithGoogle(),
-    ).thenAnswer((_) => Future.value());
+    when(() => signInWithGoogle()).thenAnswer((_) => Future.value());
   }
 
   void mockSignUp({
@@ -51,16 +51,14 @@ class MockFirebaseAuthService extends Mock implements FirebaseAuthService {
     if (throwable != null) {
       when(_sendPasswordResetEmailCall).thenThrow(throwable);
     } else {
-      when(_sendPasswordResetEmailCall).thenAnswer(
-        (invocation) => Future.value(),
-      );
+      when(
+        _sendPasswordResetEmailCall,
+      ).thenAnswer((invocation) => Future.value());
     }
   }
 
   void mockSignOut() {
-    when(
-      () => signOut(),
-    ).thenAnswer((invocation) => Future.value());
+    when(() => signOut()).thenAnswer((_) => Future.value());
   }
 
   void mockUpdateEmail({
@@ -69,37 +67,31 @@ class MockFirebaseAuthService extends Mock implements FirebaseAuthService {
     if (throwable != null) {
       when(_updateEmailCall).thenThrow(throwable);
     } else {
-      when(_updateEmailCall).thenAnswer((invocation) => Future.value());
+      when(_updateEmailCall).thenAnswer((_) => Future.value());
     }
   }
 
-  void mockUpdatePassword({
-    Object? throwable,
-  }) {
+  void mockUpdatePassword({Object? throwable}) {
     if (throwable != null) {
       when(_updatePasswordCall).thenThrow(throwable);
     } else {
-      when(_updatePasswordCall).thenAnswer((invocation) => Future.value());
+      when(_updatePasswordCall).thenAnswer((_) => Future.value());
     }
   }
 
-  void mockIsPasswordCorrect({
-    bool isCorrect = true,
-  }) {
+  void mockIsPasswordCorrect({bool isCorrect = true}) {
     when(
       () => isPasswordCorrect(
         password: any(named: 'password'),
       ),
-    ).thenAnswer((invocation) => Future.value(isCorrect));
+    ).thenAnswer((_) => Future.value(isCorrect));
   }
 
-  void mockDeleteAccount({
-    Object? throwable,
-  }) {
+  void mockDeleteAccount({Object? throwable}) {
     if (throwable != null) {
       when(_deleteAccount).thenThrow(throwable);
     } else {
-      when(_deleteAccount).thenAnswer((invocation) => Future.value());
+      when(_deleteAccount).thenAnswer((_) => Future.value());
     }
   }
 
@@ -126,20 +118,18 @@ class MockFirebaseAuthService extends Mock implements FirebaseAuthService {
   Future<void> _updateEmailCall() {
     return updateEmail(
       newEmail: any(named: 'newEmail'),
-      password: any(named: 'password'),
+      authProvider: any(named: 'authProvider'),
     );
   }
 
   Future<void> _updatePasswordCall() {
     return updatePassword(
-      currentPassword: any(named: 'currentPassword'),
       newPassword: any(named: 'newPassword'),
+      authProvider: any(named: 'authProvider'),
     );
   }
 
   Future<void> _deleteAccount() {
-    return deleteAccount(
-      password: any(named: 'password'),
-    );
+    return deleteAccount(authProvider: any(named: 'authProvider'));
   }
 }

@@ -74,7 +74,7 @@ class AuthServiceImpl implements AuthService {
     try {
       await _firebaseAuthService.updateEmail(
         newEmail: newEmail,
-        password: password,
+        authProvider: const FirebaseAuthProviderGoogle(),
       );
     } on FirebaseException catch (exception) {
       throw mapExceptionFromFirebase(exception);
@@ -88,8 +88,8 @@ class AuthServiceImpl implements AuthService {
   }) async {
     try {
       await _firebaseAuthService.updatePassword(
-        currentPassword: currentPassword,
         newPassword: newPassword,
+        authProvider: const FirebaseAuthProviderGoogle(),
       );
     } on FirebaseException catch (exception) {
       throw mapExceptionFromFirebase(exception);
@@ -111,7 +111,7 @@ class AuthServiceImpl implements AuthService {
   }) async {
     try {
       await _firebaseAuthService.deleteAccount(
-        password: password,
+        authProvider: const FirebaseAuthProviderGoogle(),
       );
     } on FirebaseException catch (exception) {
       throw mapExceptionFromFirebase(exception);
