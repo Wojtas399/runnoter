@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 import '../mapper/firebase_exception_mapper.dart';
@@ -35,6 +36,19 @@ class FirebaseAuthService {
         idToken: gAuth.idToken,
       );
       await FirebaseAuth.instance.signInWithCredential(gCredential);
+    } on FirebaseAuthException catch (exception) {
+      throw mapFirebaseExceptionFromCodeStr(exception.code);
+    }
+  }
+
+  Future<void> signInWithTwitter() async {
+    try {
+      TwitterAuthProvider twitterProvider = TwitterAuthProvider();
+      if (kIsWeb) {
+        await FirebaseAuth.instance.signInWithPopup(twitterProvider);
+      } else {
+        await FirebaseAuth.instance.signInWithProvider(twitterProvider);
+      }
     } on FirebaseAuthException catch (exception) {
       throw mapFirebaseExceptionFromCodeStr(exception.code);
     }

@@ -34,6 +34,10 @@ class MockFirebaseAuthService extends Mock implements FirebaseAuthService {
     when(() => signInWithGoogle()).thenAnswer((_) => Future.value());
   }
 
+  void mockSignInWithTwitter() {
+    when(() => signInWithTwitter()).thenAnswer((_) => Future.value());
+  }
+
   void mockSignUp({
     String? userId,
     Object? throwable,
