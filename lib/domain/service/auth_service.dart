@@ -1,3 +1,5 @@
+import '../entity/auth_provider.dart';
+
 abstract class AuthService {
   Stream<String?> get loggedUserId$;
 
@@ -18,4 +20,6 @@ abstract class AuthService {
   Future<void> updatePassword({required String newPassword});
 
   Future<void> deleteAccount();
+
+  Future<void> reauthenticate({required AuthProvider authProvider});
 }

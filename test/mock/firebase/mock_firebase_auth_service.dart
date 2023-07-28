@@ -87,6 +87,14 @@ class MockFirebaseAuthService extends Mock implements FirebaseAuthService {
     }
   }
 
+  void mockReauthenticate({Object? throwable}) {
+    if (throwable != null) {
+      when(_reauthenticateCall).thenThrow(throwable);
+    } else {
+      when(_reauthenticateCall).thenAnswer((_) => Future.value());
+    }
+  }
+
   Future<void> _signInCall() {
     return signIn(
       email: any(named: 'email'),
@@ -115,5 +123,9 @@ class MockFirebaseAuthService extends Mock implements FirebaseAuthService {
 
   Future<void> _updatePasswordCall() => updatePassword(
         newPassword: any(named: 'newPassword'),
+      );
+
+  Future<void> _reauthenticateCall() => reauthenticate(
+        authProvider: any(named: 'authProvider'),
       );
 }

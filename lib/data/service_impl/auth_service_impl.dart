@@ -1,7 +1,9 @@
 import 'package:firebase/firebase.dart';
 
 import '../../dependency_injection.dart';
+import '../../domain/entity/auth_provider.dart';
 import '../../domain/service/auth_service.dart';
+import '../mapper/auth_provider_mapper.dart';
 import '../mapper/custom_exception_mapper.dart';
 
 class AuthServiceImpl implements AuthService {
@@ -72,17 +74,20 @@ class AuthServiceImpl implements AuthService {
 
   @override
   Future<void> updatePassword({required String newPassword}) async {
-    try {
-      await _firebaseAuthService.updatePassword(newPassword: newPassword);
-    } on FirebaseException catch (exception) {
-      throw mapExceptionFromFirebase(exception);
-    }
+    await _firebaseAuthService.updatePassword(newPassword: newPassword);
   }
 
   @override
   Future<void> deleteAccount() async {
+    await _firebaseAuthService.deleteAccount();
+  }
+
+  @override
+  Future<void> reauthenticate({required AuthProvider authProvider}) async {
     try {
-      await _firebaseAuthService.deleteAccount();
+      await _firebaseAuthService.reauthenticate(
+        authProvider: mapAuthProviderToDb(authProvider),
+      );
     } on FirebaseException catch (exception) {
       throw mapExceptionFromFirebase(exception);
     }
