@@ -20,21 +20,17 @@ class ProfilePasswordDialog extends StatefulWidget {
 
 class _State extends State<ProfilePasswordDialog> {
   final TextEditingController _newPasswordController = TextEditingController();
-  final TextEditingController _currentPasswordController =
-      TextEditingController();
   bool _isSaveButtonDisabled = true;
 
   @override
   void initState() {
     _newPasswordController.addListener(_checkPasswordsCorrectness);
-    _currentPasswordController.addListener(_checkPasswordsCorrectness);
     super.initState();
   }
 
   @override
   void dispose() {
     _newPasswordController.removeListener(_checkPasswordsCorrectness);
-    _currentPasswordController.removeListener(_checkPasswordsCorrectness);
     super.dispose();
   }
 
@@ -51,14 +47,12 @@ class _State extends State<ProfilePasswordDialog> {
       child: ResponsiveLayout(
         mobileBody: _FullScreenDialog(
           newPasswordController: _newPasswordController,
-          currentPasswordController: _currentPasswordController,
           isSaveButtonDisabled: _isSaveButtonDisabled,
           newPasswordValidator: _validatePassword,
           onSaveButtonPressed: () => _onSaveButtonPressed(context),
         ),
         desktopBody: _NormalDialog(
           newPasswordController: _newPasswordController,
-          currentPasswordController: _currentPasswordController,
           isSaveButtonDisabled: _isSaveButtonDisabled,
           newPasswordValidator: _validatePassword,
           onSaveButtonPressed: () => _onSaveButtonPressed(context),
@@ -69,19 +63,16 @@ class _State extends State<ProfilePasswordDialog> {
 
   void _checkPasswordsCorrectness() {
     final String newPassword = _newPasswordController.text;
-    final String currentPassword = _currentPasswordController.text;
     setState(() {
-      _isSaveButtonDisabled = newPassword.isEmpty ||
-          !isPasswordValid(newPassword) ||
-          currentPassword.isEmpty;
+      _isSaveButtonDisabled =
+          newPassword.isEmpty || !isPasswordValid(newPassword);
     });
   }
 
   String? _validatePassword(String? value) {
-    if (value != null && !isPasswordValid(value)) {
-      return Str.of(context).invalidPasswordMessage;
-    }
-    return null;
+    return value != null && !isPasswordValid(value)
+        ? Str.of(context).invalidPasswordMessage
+        : null;
   }
 
   void _onSaveButtonPressed(BuildContext context) {
@@ -96,14 +87,12 @@ class _State extends State<ProfilePasswordDialog> {
 
 class _NormalDialog extends StatelessWidget {
   final TextEditingController newPasswordController;
-  final TextEditingController currentPasswordController;
   final bool isSaveButtonDisabled;
   final String? Function(String? value) newPasswordValidator;
   final VoidCallback onSaveButtonPressed;
 
   const _NormalDialog({
     required this.newPasswordController,
-    required this.currentPasswordController,
     required this.isSaveButtonDisabled,
     required this.newPasswordValidator,
     required this.onSaveButtonPressed,
@@ -125,12 +114,6 @@ class _NormalDialog extends StatelessWidget {
               isRequired: true,
               controller: newPasswordController,
               validator: newPasswordValidator,
-            ),
-            const SizedBox(height: 32),
-            PasswordTextFieldComponent(
-              label: str.profileNewPasswordDialogCurrentPassword,
-              isRequired: true,
-              controller: currentPasswordController,
             ),
           ],
         ),
@@ -154,14 +137,12 @@ class _NormalDialog extends StatelessWidget {
 
 class _FullScreenDialog extends StatelessWidget {
   final TextEditingController newPasswordController;
-  final TextEditingController currentPasswordController;
   final bool isSaveButtonDisabled;
   final String? Function(String? value) newPasswordValidator;
   final VoidCallback onSaveButtonPressed;
 
   const _FullScreenDialog({
     required this.newPasswordController,
-    required this.currentPasswordController,
     required this.isSaveButtonDisabled,
     required this.newPasswordValidator,
     required this.onSaveButtonPressed,
@@ -173,9 +154,7 @@ class _FullScreenDialog extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          str.profileNewPasswordDialogTitle,
-        ),
+        title: Text(str.profileNewPasswordDialogTitle),
         leading: const CloseButton(),
         actions: [
           FilledButton(
@@ -198,12 +177,6 @@ class _FullScreenDialog extends StatelessWidget {
                   isRequired: true,
                   controller: newPasswordController,
                   validator: newPasswordValidator,
-                ),
-                const SizedBox(height: 32),
-                PasswordTextFieldComponent(
-                  label: str.profileNewPasswordDialogCurrentPassword,
-                  isRequired: true,
-                  controller: currentPasswordController,
                 ),
               ],
             ),

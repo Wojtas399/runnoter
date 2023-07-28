@@ -4,7 +4,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/additional_model/bloc_status.dart';
 import '../../../domain/bloc/profile/identities/profile_identities_bloc.dart';
-import '../../component/password_text_field_component.dart';
 import '../../component/responsive_layout_component.dart';
 import '../../component/text/label_text_components.dart';
 import '../../component/text_field_component.dart';
@@ -21,7 +20,6 @@ class ProfileEmailDialog extends StatefulWidget {
 
 class _State extends State<ProfileEmailDialog> {
   final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
   late final String? _originalEmail;
   bool _isSaveButtonDisabled = true;
 
@@ -30,14 +28,12 @@ class _State extends State<ProfileEmailDialog> {
     _originalEmail = context.read<ProfileIdentitiesBloc>().state.email ?? '';
     _emailController.text = _originalEmail ?? '';
     _emailController.addListener(_checkValuesCorrectness);
-    _passwordController.addListener(_checkValuesCorrectness);
     super.initState();
   }
 
   @override
   void dispose() {
     _emailController.removeListener(_checkValuesCorrectness);
-    _passwordController.removeListener(_checkValuesCorrectness);
     super.dispose();
   }
 
@@ -56,14 +52,12 @@ class _State extends State<ProfileEmailDialog> {
           isSaveButtonDisabled: _isSaveButtonDisabled,
           onSaveButtonPressed: () => _onSaveButtonPressed(context),
           emailController: _emailController,
-          passwordController: _passwordController,
           emailValidator: _validateEmail,
         ),
         desktopBody: _NormalDialog(
           isSaveButtonDisabled: _isSaveButtonDisabled,
           onSaveButtonPressed: () => _onSaveButtonPressed(context),
           emailController: _emailController,
-          passwordController: _passwordController,
           emailValidator: _validateEmail,
         ),
       ),
@@ -72,12 +66,9 @@ class _State extends State<ProfileEmailDialog> {
 
   void _checkValuesCorrectness() {
     final String email = _emailController.text;
-    final String password = _passwordController.text;
     setState(() {
-      _isSaveButtonDisabled = email.isEmpty ||
-          email == _originalEmail ||
-          !isEmailValid(email) ||
-          password.isEmpty;
+      _isSaveButtonDisabled =
+          email.isEmpty || email == _originalEmail || !isEmailValid(email);
     });
   }
 
@@ -100,14 +91,12 @@ class _NormalDialog extends StatelessWidget {
   final bool isSaveButtonDisabled;
   final VoidCallback onSaveButtonPressed;
   final TextEditingController emailController;
-  final TextEditingController passwordController;
   final String? Function(String? value) emailValidator;
 
   const _NormalDialog({
     required this.isSaveButtonDisabled,
     required this.onSaveButtonPressed,
     required this.emailController,
-    required this.passwordController,
     required this.emailValidator,
   });
 
@@ -128,12 +117,6 @@ class _NormalDialog extends StatelessWidget {
               controller: emailController,
               validator: emailValidator,
               icon: Icons.email,
-            ),
-            const SizedBox(height: 32),
-            PasswordTextFieldComponent(
-              label: str.password,
-              controller: passwordController,
-              isRequired: true,
             ),
           ],
         ),
@@ -159,14 +142,12 @@ class _FullScreenDialog extends StatelessWidget {
   final bool isSaveButtonDisabled;
   final VoidCallback onSaveButtonPressed;
   final TextEditingController emailController;
-  final TextEditingController passwordController;
   final String? Function(String? value) emailValidator;
 
   const _FullScreenDialog({
     required this.isSaveButtonDisabled,
     required this.onSaveButtonPressed,
     required this.emailController,
-    required this.passwordController,
     required this.emailValidator,
   });
 
@@ -200,12 +181,6 @@ class _FullScreenDialog extends StatelessWidget {
                   controller: emailController,
                   validator: emailValidator,
                   icon: Icons.email,
-                ),
-                const SizedBox(height: 32),
-                PasswordTextFieldComponent(
-                  label: str.password,
-                  controller: passwordController,
-                  isRequired: true,
                 ),
               ],
             ),
