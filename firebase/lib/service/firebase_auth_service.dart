@@ -9,7 +9,7 @@ class FirebaseAuthService {
       FirebaseAuth.instance.authStateChanges().map((User? user) => user?.uid);
 
   Stream<String?> get loggedUserEmail$ =>
-      FirebaseAuth.instance.authStateChanges().map((User? user) => user?.email);
+      FirebaseAuth.instance.userChanges().map((User? user) => user?.email);
 
   Future<void> signIn({
     required String email,
