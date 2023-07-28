@@ -493,22 +493,6 @@
   "@profileEmailAlreadyTakenDialogMessage": {
     "description": "Message of the dialog to inform that new email is already taken"
   },
-  "profileWrongPasswordDialogTitle": "Błędne hasło",
-  "@profileWrongPasswordDialogTitle": {
-    "description": "Title of the dialog to inform that given password is wrong"
-  },
-  "profileWrongPasswordDialogMessage": "Podane hasło jest błędne...",
-  "@profileWrongPasswordDialogMessage": {
-    "description": "Message of the dialog to inform that given password is wrong"
-  },
-  "profileWrongCurrentPasswordDialogTitle": "Błędne obecne hasło",
-  "@profileWrongCurrentPasswordDialogTitle": {
-    "description": "Title of the dialog to inform that given current password is wrong"
-  },
-  "profileWrongCurrentPasswordDialogMessage": "Podane obecne hasło jest błędne...",
-  "@profileWrongCurrentPasswordDialogMessage": {
-    "description": "Message of the dialog to inform that given current password is wrong"
-  },
   "profileSuccessfullyDeletedAccountDialogTitle": "Usunięcie konta",
   "@profileSuccessfullyDeletedAccountDialogTitle": {
     "description": "Title of the dialog to inform that the account has been deleted"
@@ -516,6 +500,27 @@
   "profileSuccessfullyDeletedAccountDialogMessage": "Twoje konto zostało pomyślnie usunięte. Jeśli chcesz ponownie skorzystać z aplikacji, musisz założyć nowe konto.",
   "@profileSuccessfullyDeletedAccountDialogMessage": {
     "description": "Message of the dialog to inform that the account has been deleted"
+  },
+  "@__________RE_AUTHENTICATION__________": {},
+  "reauthenticationMessage": "Aby wykonać tę operację musisz powtórzyć procedurę uwierzytelnienia.",
+  "@reauthenticationMessage": {
+    "description": "Message about reauthentication procedure"
+  },
+  "reauthenticationAuthenticate": "Uwierzytelnij",
+  "@reauthenticationAuthenticate": {
+    "description": "Label of authenticate button"
+  },
+  "reauthenticationOrUse": "albo użyj",
+  "@reauthenticationOrUse": {
+    "description": "label of social authentication options"
+  },
+  "reauthenticationWrongPasswordDialogTitle": "Błędne hasło",
+  "@reauthenticationWrongPasswordDialogTitle": {
+    "description": "Title of the dialog to inform that given password is wrong"
+  },
+  "reauthenticationWrongPasswordDialogMessage": "Podane hasło jest błędne...",
+  "@reauthenticationWrongPasswordDialogMessage": {
+    "description": "Message of the dialog to inform that given password is wrong"
   },
   "@__________MILEAGE__________": {},
   "mileageTitle": "Kilometraż",

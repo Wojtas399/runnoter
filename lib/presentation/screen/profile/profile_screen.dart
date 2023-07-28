@@ -45,25 +45,28 @@ class _IdentitiesBlocListener extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocWithStatusListener<ProfileIdentitiesBloc, ProfileIdentitiesState,
-        ProfileInfo, ProfileError>(
+        ProfileIdentitiesBlocInfo, ProfileIdentitiesBlocError>(
       child: child,
-      onInfo: (ProfileInfo info) {
+      onInfo: (ProfileIdentitiesBlocInfo info) {
         _manageInfo(context, info);
       },
-      onError: (ProfileError error) {
+      onError: (ProfileIdentitiesBlocError error) {
         _manageError(context, error);
       },
     );
   }
 
-  Future<void> _manageInfo(BuildContext context, ProfileInfo info) async {
+  Future<void> _manageInfo(
+    BuildContext context,
+    ProfileIdentitiesBlocInfo info,
+  ) async {
     switch (info) {
-      case ProfileInfo.savedData:
+      case ProfileIdentitiesBlocInfo.dataSaved:
         showSnackbarMessage(
           Str.of(context).profileSuccessfullySavedDataMessage,
         );
         break;
-      case ProfileInfo.accountDeleted:
+      case ProfileIdentitiesBlocInfo.accountDeleted:
         await showMessageDialog(
           title: Str.of(context).profileSuccessfullyDeletedAccountDialogTitle,
           message:
@@ -74,26 +77,15 @@ class _IdentitiesBlocListener extends StatelessWidget {
     }
   }
 
-  void _manageError(BuildContext context, ProfileError error) {
+  void _manageError(BuildContext context, ProfileIdentitiesBlocError error) {
     final str = Str.of(context);
     switch (error) {
-      case ProfileError.emailAlreadyInUse:
+      case ProfileIdentitiesBlocError.emailAlreadyInUse:
         showMessageDialog(
           title: str.profileEmailAlreadyTakenDialogTitle,
           message: str.profileEmailAlreadyTakenDialogMessage,
         );
         break;
-      case ProfileError.wrongPassword:
-        showMessageDialog(
-          title: str.profileWrongPasswordDialogTitle,
-          message: str.profileWrongPasswordDialogMessage,
-        );
-        break;
-      case ProfileError.wrongCurrentPassword:
-        showMessageDialog(
-          title: str.profileWrongCurrentPasswordDialogTitle,
-          message: str.profileWrongCurrentPasswordDialogMessage,
-        );
     }
   }
 }

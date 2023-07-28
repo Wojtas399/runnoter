@@ -194,7 +194,8 @@ void main() {
     expect: () => [
       const ProfileIdentitiesState(status: BlocStatusLoading()),
       const ProfileIdentitiesState(
-        status: BlocStatusComplete<ProfileInfo>(info: ProfileInfo.savedData),
+        status: BlocStatusComplete<ProfileIdentitiesBlocInfo>(
+            info: ProfileIdentitiesBlocInfo.dataSaved),
       ),
     ],
     verify: (_) {
@@ -237,7 +238,8 @@ void main() {
     expect: () => [
       const ProfileIdentitiesState(status: BlocStatusLoading()),
       const ProfileIdentitiesState(
-        status: BlocStatusComplete<ProfileInfo>(info: ProfileInfo.savedData),
+        status: BlocStatusComplete<ProfileIdentitiesBlocInfo>(
+            info: ProfileIdentitiesBlocInfo.dataSaved),
       ),
     ],
     verify: (_) {
@@ -277,7 +279,8 @@ void main() {
     expect: () => [
       const ProfileIdentitiesState(status: BlocStatusLoading()),
       const ProfileIdentitiesState(
-        status: BlocStatusComplete<ProfileInfo>(info: ProfileInfo.savedData),
+        status: BlocStatusComplete<ProfileIdentitiesBlocInfo>(
+            info: ProfileIdentitiesBlocInfo.dataSaved),
       ),
     ],
     verify: (_) => verify(
@@ -301,34 +304,8 @@ void main() {
     expect: () => [
       const ProfileIdentitiesState(status: BlocStatusLoading()),
       const ProfileIdentitiesState(
-        status: BlocStatusError<ProfileError>(
-          error: ProfileError.emailAlreadyInUse,
-        ),
-      ),
-    ],
-    verify: (_) => verify(
-      () => authService.updateEmail(newEmail: 'email@example.com'),
-    ).called(1),
-  );
-
-  blocTest(
-    'update email, '
-    'auth exception with wrong password code, '
-    'should emit error status with wrong password error',
-    build: () => ProfileIdentitiesBloc(),
-    setUp: () => authService.mockUpdateEmail(
-      throwable: const AuthException(
-        code: AuthExceptionCode.wrongPassword,
-      ),
-    ),
-    act: (bloc) => bloc.add(const ProfileIdentitiesEventUpdateEmail(
-      newEmail: 'email@example.com',
-    )),
-    expect: () => [
-      const ProfileIdentitiesState(status: BlocStatusLoading()),
-      const ProfileIdentitiesState(
-        status: BlocStatusError<ProfileError>(
-          error: ProfileError.wrongPassword,
+        status: BlocStatusError<ProfileIdentitiesBlocError>(
+          error: ProfileIdentitiesBlocError.emailAlreadyInUse,
         ),
       ),
     ],
@@ -391,31 +368,8 @@ void main() {
     expect: () => [
       const ProfileIdentitiesState(status: BlocStatusLoading()),
       const ProfileIdentitiesState(
-        status: BlocStatusComplete<ProfileInfo>(info: ProfileInfo.savedData),
-      ),
-    ],
-    verify: (_) => verify(
-      () => authService.updatePassword(newPassword: 'newPassword'),
-    ).called(1),
-  );
-
-  blocTest(
-    'update password, '
-    'auth exception with wrong password code, '
-    'should emit error status with wrong current password error',
-    build: () => ProfileIdentitiesBloc(),
-    setUp: () => authService.mockUpdatePassword(
-      throwable: const AuthException(code: AuthExceptionCode.wrongPassword),
-    ),
-    act: (bloc) => bloc.add(const ProfileIdentitiesEventUpdatePassword(
-      newPassword: 'newPassword',
-    )),
-    expect: () => [
-      const ProfileIdentitiesState(status: BlocStatusLoading()),
-      const ProfileIdentitiesState(
-        status: BlocStatusError<ProfileError>(
-          error: ProfileError.wrongCurrentPassword,
-        ),
+        status: BlocStatusComplete<ProfileIdentitiesBlocInfo>(
+            info: ProfileIdentitiesBlocInfo.dataSaved),
       ),
     ],
     verify: (_) => verify(
@@ -496,8 +450,8 @@ void main() {
     expect: () => [
       const ProfileIdentitiesState(status: BlocStatusLoading()),
       const ProfileIdentitiesState(
-        status: BlocStatusComplete<ProfileInfo>(
-          info: ProfileInfo.accountDeleted,
+        status: BlocStatusComplete<ProfileIdentitiesBlocInfo>(
+          info: ProfileIdentitiesBlocInfo.accountDeleted,
         ),
       ),
     ],

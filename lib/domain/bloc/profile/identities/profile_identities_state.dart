@@ -40,14 +40,3 @@ class ProfileIdentitiesState extends BlocState {
     );
   }
 }
-
-enum ProfileInfo {
-  savedData,
-  accountDeleted,
-}
-
-enum ProfileError {
-  emailAlreadyInUse,
-  wrongPassword,
-  wrongCurrentPassword,
-}

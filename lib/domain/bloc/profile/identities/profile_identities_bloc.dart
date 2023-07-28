@@ -20,8 +20,11 @@ import '../../../repository/workout_repository.dart';
 part 'profile_identities_event.dart';
 part 'profile_identities_state.dart';
 
-class ProfileIdentitiesBloc extends BlocWithStatus<ProfileIdentitiesEvent,
-    ProfileIdentitiesState, ProfileInfo, ProfileError> {
+class ProfileIdentitiesBloc extends BlocWithStatus<
+    ProfileIdentitiesEvent,
+    ProfileIdentitiesState,
+    ProfileIdentitiesBlocInfo,
+    ProfileIdentitiesBlocError> {
   final AuthService _authService;
   final UserRepository _userRepository;
   final WorkoutRepository _workoutRepository;
@@ -117,7 +120,7 @@ class ProfileIdentitiesBloc extends BlocWithStatus<ProfileIdentitiesEvent,
       userId: loggedUserId,
       name: event.username,
     );
-    emitCompleteStatus(emit, ProfileInfo.savedData);
+    emitCompleteStatus(emit, ProfileIdentitiesBlocInfo.dataSaved);
   }
 
   Future<void> _updateSurname(
@@ -134,7 +137,7 @@ class ProfileIdentitiesBloc extends BlocWithStatus<ProfileIdentitiesEvent,
       userId: loggedUserId,
       surname: event.surname,
     );
-    emitCompleteStatus(emit, ProfileInfo.savedData);
+    emitCompleteStatus(emit, ProfileIdentitiesBlocInfo.dataSaved);
   }
 
   Future<void> _updateEmail(
@@ -144,11 +147,10 @@ class ProfileIdentitiesBloc extends BlocWithStatus<ProfileIdentitiesEvent,
     emitLoadingStatus(emit);
     try {
       await _authService.updateEmail(newEmail: event.newEmail);
-      emitCompleteStatus(emit, ProfileInfo.savedData);
+      emitCompleteStatus(emit, ProfileIdentitiesBlocInfo.dataSaved);
     } on AuthException catch (authException) {
-      final ProfileError? error = _mapAuthExceptionCodeToBlocError(
-        authException.code,
-      );
+      final ProfileIdentitiesBlocError? error =
+          _mapAuthExceptionCodeToBlocError(authException.code);
       if (error != null) {
         emitErrorStatus(emit, error);
       } else {
@@ -172,14 +174,7 @@ class ProfileIdentitiesBloc extends BlocWithStatus<ProfileIdentitiesEvent,
     emitLoadingStatus(emit);
     try {
       await _authService.updatePassword(newPassword: event.newPassword);
-      emitCompleteStatus(emit, ProfileInfo.savedData);
-    } on AuthException catch (authException) {
-      if (authException.code == AuthExceptionCode.wrongPassword) {
-        emitErrorStatus(emit, ProfileError.wrongCurrentPassword);
-      } else {
-        emitUnknownErrorStatus(emit);
-        rethrow;
-      }
+      emitCompleteStatus(emit, ProfileIdentitiesBlocInfo.dataSaved);
     } on NetworkException catch (networkException) {
       if (networkException.code == NetworkExceptionCode.requestFailed) {
         emitNetworkRequestFailed(emit);
@@ -203,7 +198,7 @@ class ProfileIdentitiesBloc extends BlocWithStatus<ProfileIdentitiesEvent,
     try {
       await _deleteAllLoggedUserData(loggedUserId);
       await _authService.deleteAccount();
-      emitCompleteStatus(emit, ProfileInfo.accountDeleted);
+      emitCompleteStatus(emit, ProfileIdentitiesBlocInfo.accountDeleted);
     } on NetworkException catch (networkException) {
       if (networkException.code == NetworkExceptionCode.requestFailed) {
         emitNetworkRequestFailed(emit);
@@ -220,13 +215,11 @@ class ProfileIdentitiesBloc extends BlocWithStatus<ProfileIdentitiesEvent,
         );
   }
 
-  ProfileError? _mapAuthExceptionCodeToBlocError(
+  ProfileIdentitiesBlocError? _mapAuthExceptionCodeToBlocError(
     AuthExceptionCode authExceptionCode,
   ) {
-    if (authExceptionCode == AuthExceptionCode.wrongPassword) {
-      return ProfileError.wrongPassword;
-    } else if (authExceptionCode == AuthExceptionCode.emailAlreadyInUse) {
-      return ProfileError.emailAlreadyInUse;
+    if (authExceptionCode == AuthExceptionCode.emailAlreadyInUse) {
+      return ProfileIdentitiesBlocError.emailAlreadyInUse;
     }
     return null;
   }
@@ -241,3 +234,7 @@ class ProfileIdentitiesBloc extends BlocWithStatus<ProfileIdentitiesEvent,
     await _userRepository.deleteUser(userId: loggedUserId);
   }
 }
+
+enum ProfileIdentitiesBlocInfo { dataSaved, accountDeleted }
+
+enum ProfileIdentitiesBlocError { emailAlreadyInUse }

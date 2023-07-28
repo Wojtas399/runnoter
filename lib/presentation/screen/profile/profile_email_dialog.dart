@@ -7,6 +7,7 @@ import '../../../domain/bloc/profile/identities/profile_identities_bloc.dart';
 import '../../component/responsive_layout_component.dart';
 import '../../component/text/label_text_components.dart';
 import '../../component/text_field_component.dart';
+import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
 import '../../service/utils.dart';
 import '../../service/validation_service.dart';
@@ -43,7 +44,7 @@ class _State extends State<ProfileEmailDialog> {
       listener: (BuildContext context, ProfileIdentitiesState state) {
         final BlocStatus blocStatus = state.status;
         if (blocStatus is BlocStatusComplete &&
-            blocStatus.info == ProfileInfo.savedData) {
+            blocStatus.info == ProfileIdentitiesBlocInfo.dataSaved) {
           popRoute();
         }
       },
@@ -79,11 +80,15 @@ class _State extends State<ProfileEmailDialog> {
     return null;
   }
 
-  void _onSaveButtonPressed(BuildContext context) {
+  Future<void> _onSaveButtonPressed(BuildContext context) async {
     unfocusInputs();
-    context.read<ProfileIdentitiesBloc>().add(
-          ProfileIdentitiesEventUpdateEmail(newEmail: _emailController.text),
-        );
+    final bloc = context.read<ProfileIdentitiesBloc>();
+    final bool reauthenticated = await askForReauthentication();
+    if (reauthenticated) {
+      bloc.add(
+        ProfileIdentitiesEventUpdateEmail(newEmail: _emailController.text),
+      );
+    }
   }
 }
 

@@ -95,16 +95,20 @@ class FirebaseAuthService {
   }) async {
     final User? user = FirebaseAuth.instance.currentUser;
     if (user == null) return;
-    await switch (authProvider) {
-      FirebaseAuthProviderPassword() => user.reauthenticateWithCredential(
-          EmailAuthProvider.credential(
-            email: user.email!,
-            password: authProvider.password,
+    try {
+      await switch (authProvider) {
+        FirebaseAuthProviderPassword() => user.reauthenticateWithCredential(
+            EmailAuthProvider.credential(
+              email: user.email!,
+              password: authProvider.password,
+            ),
           ),
-        ),
-      FirebaseAuthProviderGoogle() => user.reauthenticateWithProvider(
-          GoogleAuthProvider(),
-        )
-    };
+        FirebaseAuthProviderGoogle() => user.reauthenticateWithProvider(
+            GoogleAuthProvider(),
+          )
+      };
+    } on FirebaseAuthException catch (exception) {
+      throw mapFirebaseExceptionFromCodeStr(exception.code);
+    }
   }
 }
