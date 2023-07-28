@@ -53,7 +53,7 @@ class BlocWithStatusListener<Bloc extends StateStreamable<State>,
       } else if (blocStatus is BlocStatusUnknownError) {
         _showUnknownErrorMessage(context);
       } else if (blocStatus is BlocStatusNetworkRequestFailed) {
-        _showNoInternetConnectionMessage(context);
+        showNoInternetConnectionMessage();
       } else if (blocStatus is BlocStatusNoLoggedUser) {
         _showNoLoggedUserMessage(context);
         navigateAndRemoveUntil(const SignInRoute());
@@ -86,12 +86,6 @@ class BlocWithStatusListener<Bloc extends StateStreamable<State>,
   void _showUnknownErrorMessage(BuildContext context) => showMessageDialog(
         title: Str.of(context).unknownErrorDialogTitle,
         message: Str.of(context).unknownErrorDialogMessage,
-      );
-
-  void _showNoInternetConnectionMessage(BuildContext context) =>
-      showMessageDialog(
-        title: Str.of(context).noInternetConnectionDialogTitle,
-        message: Str.of(context).noInternetConnectionDialogMessage,
       );
 
   void _showNoLoggedUserMessage(BuildContext context) => showMessageDialog(

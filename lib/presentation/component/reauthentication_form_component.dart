@@ -160,6 +160,11 @@ class _PasswordAuthenticationState extends State<_PasswordAuthentication> {
           message: Str.of(context).reauthenticationWrongPasswordDialogMessage,
         );
       }
+    } on NetworkException catch (exception) {
+      closeLoadingDialog();
+      if (exception.code == NetworkExceptionCode.requestFailed) {
+        await showNoInternetConnectionMessage();
+      }
     }
   }
 }
@@ -210,6 +215,18 @@ class _GoogleAuthentication extends StatelessWidget {
       );
       closeLoadingDialog();
       popRoute(result: true);
-    } catch (_) {}
+    } on AuthException catch (exception) {
+      closeLoadingDialog();
+      if (exception.code != AuthExceptionCode.socialAuthenticationCancelled) {
+        rethrow;
+      }
+    } on NetworkException catch (exception) {
+      closeLoadingDialog();
+      if (exception.code == NetworkExceptionCode.requestFailed) {
+        await showNoInternetConnectionMessage();
+      } else {
+        rethrow;
+      }
+    }
   }
 }

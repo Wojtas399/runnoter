@@ -9,6 +9,7 @@ enum FirebaseAuthExceptionCode {
   userNotFound,
   wrongPassword,
   emailAlreadyInUse,
+  socialAuthenticationCancelled,
 }
 
 class FirebaseAuthException extends FirebaseException {

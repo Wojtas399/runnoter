@@ -14,6 +14,9 @@ FirebaseException mapFirebaseExceptionFromCodeStr(String codeStr) =>
       'email-already-in-use' => const FirebaseAuthException(
           code: FirebaseAuthExceptionCode.emailAlreadyInUse,
         ),
+      'web-context-cancelled' => const FirebaseAuthException(
+          code: FirebaseAuthExceptionCode.socialAuthenticationCancelled,
+        ),
       'network-request-failed' => const FirebaseNetworkException(
           code: FirebaseNetworkExceptionCode.requestFailed,
         ),

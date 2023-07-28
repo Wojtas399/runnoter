@@ -9,6 +9,7 @@ enum AuthExceptionCode {
   wrongPassword,
   userNotFound,
   emailAlreadyInUse,
+  socialAuthenticationCancelled,
   networkRequestFailed,
 }
 

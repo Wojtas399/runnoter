@@ -27,6 +27,8 @@ AuthExceptionCode _mapAuthExceptionCodeFromFirebase(
       FirebaseAuthExceptionCode.userNotFound => AuthExceptionCode.userNotFound,
       FirebaseAuthExceptionCode.wrongPassword =>
         AuthExceptionCode.wrongPassword,
+      FirebaseAuthExceptionCode.socialAuthenticationCancelled =>
+        AuthExceptionCode.socialAuthenticationCancelled,
     };
 
 NetworkExceptionCode _mapNetworkExceptionCodeFromFirebase(
