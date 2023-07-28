@@ -469,9 +469,9 @@
   "@profileNewPasswordDialogNewPassword": {
     "description": "Label of text field to enter new password"
   },
-  "profileNewPasswordDialogCurrentPassword": "Obecne hasło",
-  "@profileNewPasswordDialogCurrentPassword": {
-    "description": "Label of text field to enter current password"
+  "profileNewPasswordDialogNewPasswordConfirmation": "Potwierdź nowe hasło",
+  "@profileNewPasswordDialogNewPasswordConfirmation": {
+    "description": "Label of text field to enter new password confirmation"
   },
   "profileDeleteAccountDialogTitle": "Usuń konto",
   "@profileDeleteAccountDialogTitle": {

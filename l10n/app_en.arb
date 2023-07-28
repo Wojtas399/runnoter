@@ -128,7 +128,7 @@
   "profileNewEmailDialogTitle": "Change email",
   "profileNewPasswordDialogTitle": "Change password",
   "profileNewPasswordDialogNewPassword": "New password",
-  "profileNewPasswordDialogCurrentPassword": "Current password",
+  "profileNewPasswordDialogNewPasswordConfirmation": "New password confirmation",
   "profileDeleteAccountDialogTitle": "Delete account",
   "profileDeleteAccountDialogMessage": "Deleting the account, you will lose all saved data, without the option of recovering them.",
   "profileSuccessfullySavedDataMessage": "Successfully saved changes",
