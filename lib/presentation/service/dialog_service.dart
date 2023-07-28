@@ -154,7 +154,13 @@ Future<bool> askForReauthentication() async {
   if (context.isMobileSize) {
     return await showModalBottomSheet(
           context: context,
-          builder: (_) => const ReauthenticationBottomSheet(),
+          isScrollControlled: true,
+          builder: (_) => Padding(
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom,
+            ),
+            child: const ReauthenticationBottomSheet(),
+          ),
         ) ==
         true;
   }
