@@ -44,3 +44,7 @@ class SignInEventSubmit extends SignInEvent {
 class SignInEventSignInWithGoogle extends SignInEvent {
   const SignInEventSignInWithGoogle();
 }
+
+class SignInEventSignInWithFacebook extends SignInEvent {
+  const SignInEventSignInWithFacebook();
+}

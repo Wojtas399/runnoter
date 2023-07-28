@@ -33,7 +33,8 @@ void main() {
     expect: () => [
       const SignInState(status: BlocStatusLoading()),
       const SignInState(
-        status: BlocStatusComplete<SignInInfo>(info: SignInInfo.signedIn),
+        status:
+            BlocStatusComplete<SignInBlocInfo>(info: SignInBlocInfo.signedIn),
       ),
     ],
     verify: (_) => verify(
@@ -50,7 +51,7 @@ void main() {
     act: (bloc) => bloc.add(const SignInEventInitialize()),
     expect: () => [
       const SignInState(status: BlocStatusLoading()),
-      const SignInState(status: BlocStatusComplete<SignInInfo>()),
+      const SignInState(status: BlocStatusComplete<SignInBlocInfo>()),
     ],
     verify: (_) => verify(
       () => authService.loggedUserId$,
@@ -100,8 +101,8 @@ void main() {
         password: password,
       ),
       const SignInState(
-        status: BlocStatusComplete<SignInInfo>(
-          info: SignInInfo.signedIn,
+        status: BlocStatusComplete<SignInBlocInfo>(
+          info: SignInBlocInfo.signedIn,
         ),
         email: email,
         password: password,
@@ -136,8 +137,8 @@ void main() {
         password: password,
       ),
       const SignInState(
-        status: BlocStatusError<SignInError>(
-          error: SignInError.invalidEmail,
+        status: BlocStatusError<SignInBlocError>(
+          error: SignInBlocError.invalidEmail,
         ),
         email: email,
         password: password,
@@ -172,8 +173,8 @@ void main() {
         password: password,
       ),
       const SignInState(
-        status: BlocStatusError<SignInError>(
-          error: SignInError.userNotFound,
+        status: BlocStatusError<SignInBlocError>(
+          error: SignInBlocError.userNotFound,
         ),
         email: email,
         password: password,
@@ -208,8 +209,8 @@ void main() {
         password: password,
       ),
       const SignInState(
-        status: BlocStatusError<SignInError>(
-          error: SignInError.wrongPassword,
+        status: BlocStatusError<SignInBlocError>(
+          error: SignInBlocError.wrongPassword,
         ),
         email: email,
         password: password,
@@ -340,7 +341,8 @@ void main() {
     expect: () => [
       const SignInState(status: BlocStatusLoading()),
       const SignInState(
-        status: BlocStatusComplete<SignInInfo>(info: SignInInfo.signedIn),
+        status:
+            BlocStatusComplete<SignInBlocInfo>(info: SignInBlocInfo.signedIn),
       ),
     ],
     verify: (_) {
@@ -360,12 +362,51 @@ void main() {
     act: (bloc) => bloc.add(const SignInEventSignInWithGoogle()),
     expect: () => [
       const SignInState(status: BlocStatusLoading()),
-      const SignInState(
-        status: BlocStatusComplete<SignInInfo>(),
-      ),
+      const SignInState(status: BlocStatusComplete<SignInBlocInfo>()),
     ],
     verify: (_) {
       verify(() => authService.signInWithGoogle()).called(1);
+      verify(() => authService.loggedUserId$).called(1);
+    },
+  );
+
+  blocTest(
+    'sign in with facebook, '
+    "should call auth service's method to sign in with facebook and should emit complete status with signed in info if logged user id is not null",
+    build: () => SignInBloc(),
+    setUp: () {
+      authService.mockSignInWithFacebook();
+      authService.mockGetLoggedUserId(userId: 'u1');
+    },
+    act: (bloc) => bloc.add(const SignInEventSignInWithFacebook()),
+    expect: () => [
+      const SignInState(status: BlocStatusLoading()),
+      const SignInState(
+        status:
+            BlocStatusComplete<SignInBlocInfo>(info: SignInBlocInfo.signedIn),
+      ),
+    ],
+    verify: (_) {
+      verify(() => authService.signInWithFacebook()).called(1);
+      verify(() => authService.loggedUserId$).called(1);
+    },
+  );
+
+  blocTest(
+    'sign in with facebook, '
+    "should call auth service's method to sign in with facebook and should emit complete status without info if logged user id is null",
+    build: () => SignInBloc(),
+    setUp: () {
+      authService.mockSignInWithFacebook();
+      authService.mockGetLoggedUserId();
+    },
+    act: (bloc) => bloc.add(const SignInEventSignInWithFacebook()),
+    expect: () => [
+      const SignInState(status: BlocStatusLoading()),
+      const SignInState(status: BlocStatusComplete<SignInBlocInfo>()),
+    ],
+    verify: (_) {
+      verify(() => authService.signInWithFacebook()).called(1);
       verify(() => authService.loggedUserId$).called(1);
     },
   );

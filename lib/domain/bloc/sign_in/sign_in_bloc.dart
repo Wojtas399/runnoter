@@ -11,8 +11,8 @@ import '../../additional_model/custom_exception.dart';
 part 'sign_in_event.dart';
 part 'sign_in_state.dart';
 
-class SignInBloc
-    extends BlocWithStatus<SignInEvent, SignInState, SignInInfo, SignInError> {
+class SignInBloc extends BlocWithStatus<SignInEvent, SignInState,
+    SignInBlocInfo, SignInBlocError> {
   final AuthService _authService;
 
   SignInBloc({
@@ -32,6 +32,7 @@ class SignInBloc
     on<SignInEventPasswordChanged>(_passwordChanged);
     on<SignInEventSubmit>(_submit);
     on<SignInEventSignInWithGoogle>(_signInWithGoogle);
+    on<SignInEventSignInWithFacebook>(_signInWithFacebook);
   }
 
   Future<void> _initialize(
@@ -39,10 +40,10 @@ class SignInBloc
     Emitter<SignInState> emit,
   ) async {
     emitLoadingStatus(emit);
-    SignInInfo? info;
+    SignInBlocInfo? info;
     final String? loggedUserId = await _authService.loggedUserId$.first;
     if (loggedUserId != null) {
-      info = SignInInfo.signedIn;
+      info = SignInBlocInfo.signedIn;
     }
     emitCompleteStatus(emit, info);
   }
@@ -73,9 +74,9 @@ class SignInBloc
     emitLoadingStatus(emit);
     try {
       await _tryToSignIn();
-      emitCompleteStatus(emit, SignInInfo.signedIn);
+      emitCompleteStatus(emit, SignInBlocInfo.signedIn);
     } on AuthException catch (authException) {
-      final SignInError? error = _mapAuthExceptionCodeToBlocError(
+      final SignInBlocError? error = _mapAuthExceptionCodeToBlocError(
         authException.code,
       );
       if (error != null) {
@@ -100,11 +101,16 @@ class SignInBloc
   ) async {
     emitLoadingStatus(emit);
     await _authService.signInWithGoogle();
-    final String? loggedUserId = await _authService.loggedUserId$.first;
-    emitCompleteStatus(
-      emit,
-      loggedUserId != null ? SignInInfo.signedIn : null,
-    );
+    await _checkIfUserIsSignedIn(emit);
+  }
+
+  Future<void> _signInWithFacebook(
+    SignInEventSignInWithFacebook event,
+    Emitter<SignInState> emit,
+  ) async {
+    emitLoadingStatus(emit);
+    await _authService.signInWithFacebook();
+    await _checkIfUserIsSignedIn(emit);
   }
 
   Future<void> _tryToSignIn() async {
@@ -114,16 +120,34 @@ class SignInBloc
     );
   }
 
-  SignInError? _mapAuthExceptionCodeToBlocError(
+  SignInBlocError? _mapAuthExceptionCodeToBlocError(
     AuthExceptionCode authExceptionCode,
   ) {
     if (authExceptionCode == AuthExceptionCode.invalidEmail) {
-      return SignInError.invalidEmail;
+      return SignInBlocError.invalidEmail;
     } else if (authExceptionCode == AuthExceptionCode.userNotFound) {
-      return SignInError.userNotFound;
+      return SignInBlocError.userNotFound;
     } else if (authExceptionCode == AuthExceptionCode.wrongPassword) {
-      return SignInError.wrongPassword;
+      return SignInBlocError.wrongPassword;
     }
     return null;
   }
+
+  Future<void> _checkIfUserIsSignedIn(Emitter<SignInState> emit) async {
+    final String? loggedUserId = await _authService.loggedUserId$.first;
+    emitCompleteStatus(
+      emit,
+      loggedUserId != null ? SignInBlocInfo.signedIn : null,
+    );
+  }
+}
+
+enum SignInBlocInfo {
+  signedIn,
+}
+
+enum SignInBlocError {
+  invalidEmail,
+  userNotFound,
+  wrongPassword,
 }

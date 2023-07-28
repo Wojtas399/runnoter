@@ -1,15 +1,5 @@
 part of 'sign_in_bloc.dart';
 
-enum SignInInfo {
-  signedIn,
-}
-
-enum SignInError {
-  invalidEmail,
-  userNotFound,
-  wrongPassword,
-}
-
 class SignInState extends BlocState {
   final String email;
   final String password;

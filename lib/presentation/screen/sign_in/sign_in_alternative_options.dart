@@ -102,13 +102,17 @@ class _SignInWithFacebook extends StatelessWidget {
     return SizedBox(
       height: 40,
       child: OutlinedButton(
-        onPressed: () {},
+        onPressed: () => _onPressed(context),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: SvgPicture.asset('assets/facebook_icon.svg'),
         ),
       ),
     );
+  }
+
+  void _onPressed(BuildContext context) {
+    context.read<SignInBloc>().add(const SignInEventSignInWithFacebook());
   }
 }
 

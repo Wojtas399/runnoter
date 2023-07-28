@@ -50,43 +50,43 @@ class _BlocListener extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocWithStatusListener<SignInBloc, SignInState, SignInInfo,
-        SignInError>(
+    return BlocWithStatusListener<SignInBloc, SignInState, SignInBlocInfo,
+        SignInBlocError>(
       onInfo: _manageCompletionInfo,
-      onError: (SignInError error) {
+      onError: (SignInBlocError error) {
         _manageError(error, context);
       },
       child: child,
     );
   }
 
-  Future<void> _manageCompletionInfo(SignInInfo info) async {
+  Future<void> _manageCompletionInfo(SignInBlocInfo info) async {
     switch (info) {
-      case SignInInfo.signedIn:
+      case SignInBlocInfo.signedIn:
         navigateAndRemoveUntil(const HomeRoute());
         break;
     }
   }
 
   Future<void> _manageError(
-    SignInError error,
+    SignInBlocError error,
     BuildContext context,
   ) async {
     final str = Str.of(context);
     switch (error) {
-      case SignInError.invalidEmail:
+      case SignInBlocError.invalidEmail:
         await showMessageDialog(
           title: str.signInInvalidEmailDialogTitle,
           message: str.signInInvalidEmailDialogMessage,
         );
         break;
-      case SignInError.userNotFound:
+      case SignInBlocError.userNotFound:
         await showMessageDialog(
           title: str.signInUserNotFoundDialogTitle,
           message: '${str.signInUserNotFoundDialogMessage}...',
         );
         break;
-      case SignInError.wrongPassword:
+      case SignInBlocError.wrongPassword:
         await showMessageDialog(
           title: str.signInWrongPasswordDialogTitle,
           message: str.signInWrongPasswordDialogMessage,
