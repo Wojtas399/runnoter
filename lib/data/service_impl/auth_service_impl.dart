@@ -35,6 +35,11 @@ class AuthServiceImpl implements AuthService {
   }
 
   @override
+  Future<void> signInWithFacebook() async {
+    //TODO
+  }
+
+  @override
   Future<String?> signUp({
     required String email,
     required String password,

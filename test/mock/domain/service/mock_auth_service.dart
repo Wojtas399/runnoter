@@ -27,6 +27,10 @@ class MockAuthService extends Mock implements AuthService {
     when(() => signInWithGoogle()).thenAnswer((_) => Future.value());
   }
 
+  void mockSignInWithFacebook() {
+    when(() => signInWithFacebook()).thenAnswer((_) => Future.value());
+  }
+
   void mockSignUp({String? userId, Object? throwable}) {
     if (throwable != null) {
       when(_signUpCall).thenThrow(throwable);

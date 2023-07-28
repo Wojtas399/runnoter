@@ -9,6 +9,8 @@ abstract class AuthService {
 
   Future<void> signInWithGoogle();
 
+  Future<void> signInWithFacebook();
+
   Future<String?> signUp({required String email, required String password});
 
   Future<void> sendPasswordResetEmail({required String email});
