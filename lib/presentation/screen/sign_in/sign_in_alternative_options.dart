@@ -39,7 +39,10 @@ class _Separator extends StatelessWidget {
       children: [
         const Expanded(child: Divider()),
         textMargin,
-        Text(Str.of(context).signInSignInWith),
+        BodyMedium(
+          Str.of(context).signInSignInWith,
+          color: Theme.of(context).colorScheme.outline,
+        ),
         textMargin,
         const Expanded(child: Divider()),
       ],

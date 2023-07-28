@@ -137,6 +137,7 @@
   "profileSuccessfullyDeletedAccountDialogTitle": "Account deletion",
   "profileSuccessfullyDeletedAccountDialogMessage": "Account has been successfully deleted. You have to create new one if you want to use the app again.",
   "@__________RE_AUTHENTICATION__________": {},
+  "reauthenticationTitle": "Authentication",
   "reauthenticationMessage": "To perform this operation, you must repeat the authentication procedure.",
   "reauthenticationAuthenticate": "Authenticate",
   "reauthenticationOrUse": "or use",

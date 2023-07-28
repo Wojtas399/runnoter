@@ -502,6 +502,10 @@
     "description": "Message of the dialog to inform that the account has been deleted"
   },
   "@__________RE_AUTHENTICATION__________": {},
+  "reauthenticationTitle": "Uwierzytelnienie",
+  "@reauthenticationTitle": {
+    "description": "Title of the reauthentication form"
+  },
   "reauthenticationMessage": "Aby wykonać tę operację musisz powtórzyć procedurę uwierzytelnienia.",
   "@reauthenticationMessage": {
     "description": "Message about reauthentication procedure"

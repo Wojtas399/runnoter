@@ -10,41 +10,87 @@ import '../service/dialog_service.dart';
 import '../service/navigator_service.dart';
 import '../service/utils.dart';
 import 'password_text_field_component.dart';
+import 'text/body_text_components.dart';
+import 'text/title_text_components.dart';
 
 class ReauthenticationBottomSheet extends StatelessWidget {
   const ReauthenticationBottomSheet({super.key});
 
   @override
   Widget build(BuildContext context) {
+    return SafeArea(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
+            child: Column(
+              children: [
+                TitleLarge(Str.of(context).reauthenticationTitle),
+                const SizedBox(height: 16),
+                const _Form(),
+              ],
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            width: double.infinity,
+            child: TextButton(
+              onPressed: () => popRoute(result: false),
+              child: Text(Str.of(context).cancel),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class ReauthenticationDialog extends StatelessWidget {
+  const ReauthenticationDialog({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text(Str.of(context).reauthenticationTitle),
+      content: const SizedBox(
+        width: 400,
+        child: _Form(),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => popRoute(result: false),
+          child: Text(Str.of(context).cancel),
+        )
+      ],
+    );
+  }
+}
+
+class _Form extends StatelessWidget {
+  const _Form();
+
+  @override
+  Widget build(BuildContext context) {
     final str = Str.of(context);
     const Widget gap = SizedBox(height: 24);
 
-    return SafeArea(
-      child: GestureDetector(
-        onTap: unfocusInputs,
-        child: Container(
-          padding: const EdgeInsets.all(24),
-          color: Colors.transparent,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(str.reauthenticationMessage),
-              gap,
-              const _PasswordAuthentication(),
-              gap,
-              const _Separator(),
-              gap,
-              const _GoogleAuthentication(),
-              gap,
-              SizedBox(
-                width: double.infinity,
-                child: TextButton(
-                  onPressed: () => popRoute(result: false),
-                  child: Text(str.cancel),
-                ),
-              ),
-            ],
-          ),
+    return GestureDetector(
+      onTap: unfocusInputs,
+      child: Container(
+        color: Colors.transparent,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(str.reauthenticationMessage),
+            gap,
+            const _PasswordAuthentication(),
+            gap,
+            const _Separator(),
+            gap,
+            const _GoogleAuthentication(),
+            gap,
+          ],
         ),
       ),
     );
@@ -127,7 +173,10 @@ class _Separator extends StatelessWidget {
       children: [
         const Expanded(child: Divider()),
         const SizedBox(width: 16),
-        Text(Str.of(context).reauthenticationOrUse),
+        BodyMedium(
+          Str.of(context).reauthenticationOrUse,
+          color: Theme.of(context).colorScheme.outline,
+        ),
         const SizedBox(width: 16),
         const Expanded(child: Divider()),
       ],

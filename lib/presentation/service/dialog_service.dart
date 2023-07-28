@@ -141,10 +141,16 @@ Future<DateTime?> askForDate({
 Future<bool> askForReauthentication() async {
   final BuildContext? context = getIt<AppRouter>().navigatorKey.currentContext;
   if (context == null) return false;
-  return await showModalBottomSheet(
+  if (context.isMobileSize) {
+    return await showModalBottomSheet(
+          context: context,
+          builder: (_) => const ReauthenticationBottomSheet(),
+        ) ==
+        true;
+  }
+  return await showDialog(
         context: context,
-        builder: (_) => const ReauthenticationBottomSheet(),
-        isDismissible: false,
+        builder: (_) => const ReauthenticationDialog(),
       ) ==
       true;
 }
