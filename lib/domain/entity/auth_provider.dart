@@ -19,3 +19,10 @@ class AuthProviderGoogle extends AuthProvider {
   @override
   List<Object?> get props => [];
 }
+
+class AuthProviderTwitter extends AuthProvider {
+  const AuthProviderTwitter();
+
+  @override
+  List<Object?> get props => [];
+}

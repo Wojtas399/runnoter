@@ -19,3 +19,10 @@ class FirebaseAuthProviderGoogle extends FirebaseAuthProvider {
   @override
   List<Object?> get props => [];
 }
+
+class FirebaseAuthProviderTwitter extends FirebaseAuthProvider {
+  const FirebaseAuthProviderTwitter();
+
+  @override
+  List<Object?> get props => [];
+}

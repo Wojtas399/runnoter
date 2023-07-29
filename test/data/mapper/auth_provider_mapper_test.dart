@@ -40,4 +40,21 @@ void main() {
       expect(firebaseAuthProvider, expectedFirebaseAuthProvider);
     },
   );
+
+  test(
+    'map auth provider to db, '
+    'twitter, '
+    'should map AuthProviderTwitter to FirebaseAuthProviderTwitter',
+    () {
+      const AuthProvider authProvider = AuthProviderTwitter();
+      const FirebaseAuthProvider expectedFirebaseAuthProvider =
+          FirebaseAuthProviderTwitter();
+
+      final FirebaseAuthProvider firebaseAuthProvider = mapAuthProviderToDb(
+        authProvider,
+      );
+
+      expect(firebaseAuthProvider, expectedFirebaseAuthProvider);
+    },
+  );
 }
