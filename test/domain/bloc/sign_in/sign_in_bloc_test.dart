@@ -346,7 +346,7 @@ void main() {
       ),
     ],
     verify: (_) {
-      verify(() => authService.signInWithGoogle()).called(1);
+      verify(authService.signInWithGoogle).called(1);
       verify(() => authService.loggedUserId$).called(1);
     },
   );
@@ -365,49 +365,86 @@ void main() {
       const SignInState(status: BlocStatusComplete<SignInBlocInfo>()),
     ],
     verify: (_) {
-      verify(() => authService.signInWithGoogle()).called(1);
+      verify(authService.signInWithGoogle).called(1);
       verify(() => authService.loggedUserId$).called(1);
     },
   );
 
   blocTest(
-    'sign in with facebook, '
-    "should call auth service's method to sign in with facebook and should emit complete status with signed in info if logged user id is not null",
+    'sign in with google, '
+    'auth exception with socialAuthenticationCancelled code'
+    'should emit complete status',
+    build: () => SignInBloc(),
+    setUp: () => authService.mockSignInWithGoogle(
+      throwable: const AuthException(
+        code: AuthExceptionCode.socialAuthenticationCancelled,
+      ),
+    ),
+    act: (bloc) => bloc.add(const SignInEventSignInWithGoogle()),
+    expect: () => [
+      const SignInState(status: BlocStatusLoading()),
+      const SignInState(status: BlocStatusComplete<SignInBlocInfo>()),
+    ],
+    verify: (_) => verify(authService.signInWithGoogle).called(1),
+  );
+
+  blocTest(
+    'sign in with twitter, '
+    "should call auth service's method to sign in with twitter and should emit complete status with signed in info if logged user id is not null",
     build: () => SignInBloc(),
     setUp: () {
-      authService.mockSignInWithFacebook();
+      authService.mockSignInWithTwitter();
       authService.mockGetLoggedUserId(userId: 'u1');
     },
-    act: (bloc) => bloc.add(const SignInEventSignInWithFacebook()),
+    act: (bloc) => bloc.add(const SignInEventSignInWithTwitter()),
     expect: () => [
       const SignInState(status: BlocStatusLoading()),
       const SignInState(
-        status:
-            BlocStatusComplete<SignInBlocInfo>(info: SignInBlocInfo.signedIn),
+        status: BlocStatusComplete<SignInBlocInfo>(
+          info: SignInBlocInfo.signedIn,
+        ),
       ),
     ],
     verify: (_) {
-      verify(() => authService.signInWithFacebook()).called(1);
+      verify(authService.signInWithTwitter).called(1);
       verify(() => authService.loggedUserId$).called(1);
     },
   );
 
   blocTest(
-    'sign in with facebook, '
-    "should call auth service's method to sign in with facebook and should emit complete status without info if logged user id is null",
+    'sign in with twitter, '
+    "should call auth service's method to sign in with twitter and should emit complete status without info if logged user id is null",
     build: () => SignInBloc(),
     setUp: () {
-      authService.mockSignInWithFacebook();
+      authService.mockSignInWithTwitter();
       authService.mockGetLoggedUserId();
     },
-    act: (bloc) => bloc.add(const SignInEventSignInWithFacebook()),
+    act: (bloc) => bloc.add(const SignInEventSignInWithTwitter()),
     expect: () => [
       const SignInState(status: BlocStatusLoading()),
       const SignInState(status: BlocStatusComplete<SignInBlocInfo>()),
     ],
     verify: (_) {
-      verify(() => authService.signInWithFacebook()).called(1);
+      verify(authService.signInWithTwitter).called(1);
       verify(() => authService.loggedUserId$).called(1);
     },
+  );
+
+  blocTest(
+    'sign in with twitter, '
+    'auth exception with socialAuthenticationCancelled code'
+    'should emit complete status',
+    build: () => SignInBloc(),
+    setUp: () => authService.mockSignInWithTwitter(
+      throwable: const AuthException(
+        code: AuthExceptionCode.socialAuthenticationCancelled,
+      ),
+    ),
+    act: (bloc) => bloc.add(const SignInEventSignInWithTwitter()),
+    expect: () => [
+      const SignInState(status: BlocStatusLoading()),
+      const SignInState(status: BlocStatusComplete<SignInBlocInfo>()),
+    ],
+    verify: (_) => verify(authService.signInWithTwitter).called(1),
   );
 }

@@ -174,7 +174,71 @@ void main() {
 
       await service.signInWithGoogle();
 
-      verify(() => firebaseAuthService.signInWithGoogle()).called(1);
+      verify(firebaseAuthService.signInWithGoogle).called(1);
+    },
+  );
+
+  test(
+    'sign in with google, '
+    'firebase auth exception with socialAuthenticationCancelled code, '
+    'should throw auth exception with socialAuthenticationCancelled code',
+    () async {
+      const AuthException expectedAuthException = AuthException(
+        code: AuthExceptionCode.socialAuthenticationCancelled,
+      );
+      firebaseAuthService.mockSignInWithGoogle(
+        throwable: const FirebaseAuthException(
+          code: FirebaseAuthExceptionCode.socialAuthenticationCancelled,
+        ),
+      );
+
+      Object? exception;
+      try {
+        await service.signInWithGoogle();
+      } catch (e) {
+        exception = e;
+      }
+
+      expect(exception, expectedAuthException);
+      verify(firebaseAuthService.signInWithGoogle).called(1);
+    },
+  );
+
+  test(
+    'sign in with twitter, '
+    'should call firebase method to sign in with twitter',
+    () async {
+      firebaseAuthService.mockSignInWithTwitter();
+
+      await service.signInWithTwitter();
+
+      verify(firebaseAuthService.signInWithTwitter).called(1);
+    },
+  );
+
+  test(
+    'sign in with twitter, '
+    'firebase auth exception with socialAuthenticationCancelled code, '
+    'should throw auth exception with socialAuthenticationCancelled code',
+    () async {
+      const AuthException expectedAuthException = AuthException(
+        code: AuthExceptionCode.socialAuthenticationCancelled,
+      );
+      firebaseAuthService.mockSignInWithTwitter(
+        throwable: const FirebaseAuthException(
+          code: FirebaseAuthExceptionCode.socialAuthenticationCancelled,
+        ),
+      );
+
+      Object? exception;
+      try {
+        await service.signInWithTwitter();
+      } catch (e) {
+        exception = e;
+      }
+
+      expect(exception, expectedAuthException);
+      verify(firebaseAuthService.signInWithTwitter).called(1);
     },
   );
 

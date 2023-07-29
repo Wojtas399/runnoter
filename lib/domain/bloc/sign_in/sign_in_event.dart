@@ -45,6 +45,6 @@ class SignInEventSignInWithGoogle extends SignInEvent {
   const SignInEventSignInWithGoogle();
 }
 
-class SignInEventSignInWithFacebook extends SignInEvent {
-  const SignInEventSignInWithFacebook();
+class SignInEventSignInWithTwitter extends SignInEvent {
+  const SignInEventSignInWithTwitter();
 }

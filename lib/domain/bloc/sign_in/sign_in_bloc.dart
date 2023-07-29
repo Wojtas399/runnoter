@@ -32,7 +32,7 @@ class SignInBloc extends BlocWithStatus<SignInEvent, SignInState,
     on<SignInEventPasswordChanged>(_passwordChanged);
     on<SignInEventSubmit>(_submit);
     on<SignInEventSignInWithGoogle>(_signInWithGoogle);
-    on<SignInEventSignInWithFacebook>(_signInWithFacebook);
+    on<SignInEventSignInWithTwitter>(_signInWithTwitter);
   }
 
   Future<void> _initialize(
@@ -100,17 +100,29 @@ class SignInBloc extends BlocWithStatus<SignInEvent, SignInState,
     Emitter<SignInState> emit,
   ) async {
     emitLoadingStatus(emit);
-    await _authService.signInWithGoogle();
-    await _checkIfUserIsSignedIn(emit);
+    try {
+      await _authService.signInWithGoogle();
+      await _checkIfUserIsSignedIn(emit);
+    } on AuthException catch (exception) {
+      if (exception.code == AuthExceptionCode.socialAuthenticationCancelled) {
+        emitCompleteStatus(emit, null);
+      }
+    }
   }
 
-  Future<void> _signInWithFacebook(
-    SignInEventSignInWithFacebook event,
+  Future<void> _signInWithTwitter(
+    SignInEventSignInWithTwitter event,
     Emitter<SignInState> emit,
   ) async {
     emitLoadingStatus(emit);
-    await _authService.signInWithFacebook();
-    await _checkIfUserIsSignedIn(emit);
+    try {
+      await _authService.signInWithTwitter();
+      await _checkIfUserIsSignedIn(emit);
+    } on AuthException catch (exception) {
+      if (exception.code == AuthExceptionCode.socialAuthenticationCancelled) {
+        emitCompleteStatus(emit, null);
+      }
+    }
   }
 
   Future<void> _tryToSignIn() async {

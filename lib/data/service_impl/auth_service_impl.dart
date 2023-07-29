@@ -31,12 +31,20 @@ class AuthServiceImpl implements AuthService {
 
   @override
   Future<void> signInWithGoogle() async {
-    await _firebaseAuthService.signInWithGoogle();
+    try {
+      await _firebaseAuthService.signInWithGoogle();
+    } on FirebaseException catch (exception) {
+      throw mapExceptionFromFirebase(exception);
+    }
   }
 
   @override
-  Future<void> signInWithFacebook() async {
-    //TODO
+  Future<void> signInWithTwitter() async {
+    try {
+      await _firebaseAuthService.signInWithTwitter();
+    } on FirebaseException catch (exception) {
+      throw mapExceptionFromFirebase(exception);
+    }
   }
 
   @override
