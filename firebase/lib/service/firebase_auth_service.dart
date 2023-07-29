@@ -28,16 +28,22 @@ class FirebaseAuthService {
 
   Future<void> signInWithGoogle() async {
     try {
-      final GoogleSignInAccount? gAccount = await GoogleSignIn().signIn();
-      if (gAccount == null) return;
-      final GoogleSignInAuthentication gAuth = await gAccount.authentication;
-      final gCredential = GoogleAuthProvider.credential(
-        accessToken: gAuth.accessToken,
-        idToken: gAuth.idToken,
-      );
-      await FirebaseAuth.instance.signInWithCredential(gCredential);
+      if (kIsWeb) {
+        await FirebaseAuth.instance.signInWithPopup(GoogleAuthProvider());
+      } else {
+        final GoogleSignInAccount? gAccount = await GoogleSignIn().signIn();
+        if (gAccount == null) return;
+        final GoogleSignInAuthentication gAuth = await gAccount.authentication;
+        final gCredential = GoogleAuthProvider.credential(
+          accessToken: gAuth.accessToken,
+          idToken: gAuth.idToken,
+        );
+        await FirebaseAuth.instance.signInWithCredential(gCredential);
+      }
     } on FirebaseAuthException catch (exception) {
-      throw mapFirebaseExceptionFromCodeStr(exception.code);
+      String code = exception.code;
+      if (_hasPopupBeenCancelled(exception)) code = 'web-context-cancelled';
+      throw mapFirebaseExceptionFromCodeStr(code);
     }
   }
 
@@ -50,7 +56,9 @@ class FirebaseAuthService {
         await FirebaseAuth.instance.signInWithProvider(twitterProvider);
       }
     } on FirebaseAuthException catch (exception) {
-      throw mapFirebaseExceptionFromCodeStr(exception.code);
+      String code = exception.code;
+      if (_hasPopupBeenCancelled(exception)) code = 'web-context-cancelled';
+      throw mapFirebaseExceptionFromCodeStr(code);
     }
   }
 
@@ -118,14 +126,22 @@ class FirebaseAuthService {
             ),
           ),
         FirebaseAuthProviderGoogle() => kIsWeb
-            ? user.reauthenticateWithRedirect(GoogleAuthProvider())
+            ? user.reauthenticateWithPopup(GoogleAuthProvider())
             : user.reauthenticateWithProvider(GoogleAuthProvider()),
         FirebaseAuthProviderTwitter() => kIsWeb
-            ? user.reauthenticateWithRedirect(TwitterAuthProvider())
+            ? user.reauthenticateWithPopup(TwitterAuthProvider())
             : user.reauthenticateWithProvider(TwitterAuthProvider()),
       };
     } on FirebaseAuthException catch (exception) {
-      throw mapFirebaseExceptionFromCodeStr(exception.code);
+      String code = exception.code;
+      if (_hasPopupBeenCancelled(exception)) code = 'web-context-cancelled';
+      throw mapFirebaseExceptionFromCodeStr(code);
     }
   }
+
+  bool _hasPopupBeenCancelled(FirebaseAuthException exception) =>
+      exception.code == 'web-context-canceled' ||
+      exception.message?.contains('popup-closed-by-user') == true ||
+      exception.message?.contains('cancelled-popup-request') == true ||
+      exception.message?.contains('user-cancelled') == true;
 }

@@ -99,14 +99,12 @@ class SignInBloc extends BlocWithStatus<SignInEvent, SignInState,
     SignInEventSignInWithGoogle event,
     Emitter<SignInState> emit,
   ) async {
-    emitLoadingStatus(emit);
     try {
       await _authService.signInWithGoogle();
       await _checkIfUserIsSignedIn(emit);
-    } on AuthException catch (exception) {
-      if (exception.code == AuthExceptionCode.socialAuthenticationCancelled) {
-        emitCompleteStatus(emit, null);
-      }
+    } on AuthException catch (_) {
+      //TODO: manage user mismatch
+      emitCompleteStatus(emit, null);
     }
   }
 
@@ -114,14 +112,12 @@ class SignInBloc extends BlocWithStatus<SignInEvent, SignInState,
     SignInEventSignInWithTwitter event,
     Emitter<SignInState> emit,
   ) async {
-    emitLoadingStatus(emit);
     try {
       await _authService.signInWithTwitter();
       await _checkIfUserIsSignedIn(emit);
-    } on AuthException catch (exception) {
-      if (exception.code == AuthExceptionCode.socialAuthenticationCancelled) {
-        emitCompleteStatus(emit, null);
-      }
+    } on AuthException catch (_) {
+      //TODO: manage user mismatch
+      emitCompleteStatus(emit, null);
     }
   }
 

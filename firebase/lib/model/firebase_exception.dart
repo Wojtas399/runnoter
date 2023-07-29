@@ -9,6 +9,7 @@ enum FirebaseAuthExceptionCode {
   userNotFound,
   wrongPassword,
   emailAlreadyInUse,
+  userMismatch,
   socialAuthenticationCancelled,
 }
 
