@@ -202,19 +202,15 @@ class _GoogleAuthentication extends StatelessWidget {
 
   Future<void> _authenticateWithGoogle() async {
     try {
-      showLoadingDialog();
       await getIt<AuthService>().reauthenticate(
         authProvider: const AuthProviderGoogle(),
       );
-      closeLoadingDialog();
       popRoute(result: true);
     } on AuthException catch (exception) {
-      closeLoadingDialog();
       if (exception.code != AuthExceptionCode.socialAuthenticationCancelled) {
         rethrow;
       }
     } on NetworkException catch (exception) {
-      closeLoadingDialog();
       if (exception.code == NetworkExceptionCode.requestFailed) {
         await showNoInternetConnectionMessage();
       } else {
@@ -235,19 +231,15 @@ class _TwitterAuthentication extends StatelessWidget {
 
   Future<void> _authenticateWithTwitter() async {
     try {
-      showLoadingDialog();
       await getIt<AuthService>().reauthenticate(
         authProvider: const AuthProviderTwitter(),
       );
-      closeLoadingDialog();
       popRoute(result: true);
     } on AuthException catch (exception) {
-      closeLoadingDialog();
       if (exception.code != AuthExceptionCode.socialAuthenticationCancelled) {
         rethrow;
       }
     } on NetworkException catch (exception) {
-      closeLoadingDialog();
       if (exception.code == NetworkExceptionCode.requestFailed) {
         await showNoInternetConnectionMessage();
       } else {
