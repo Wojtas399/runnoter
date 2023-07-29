@@ -90,6 +90,8 @@ class _Form extends StatelessWidget {
             gap,
             const _GoogleAuthentication(),
             gap,
+            const _TwitterAuthentication(),
+            gap,
           ],
         ),
       ),
@@ -193,19 +195,10 @@ class _GoogleAuthentication extends StatelessWidget {
   const _GoogleAuthentication();
 
   @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      height: 40,
-      child: OutlinedButton(
+  Widget build(BuildContext context) => _SocialAuthenticationButton(
+        svgIconPath: 'assets/google_icon.svg',
         onPressed: _authenticateWithGoogle,
-        child: Padding(
-          padding: const EdgeInsets.all(8),
-          child: SvgPicture.asset('assets/google_icon.svg'),
-        ),
-      ),
-    );
-  }
+      );
 
   Future<void> _authenticateWithGoogle() async {
     try {
@@ -228,5 +221,63 @@ class _GoogleAuthentication extends StatelessWidget {
         rethrow;
       }
     }
+  }
+}
+
+class _TwitterAuthentication extends StatelessWidget {
+  const _TwitterAuthentication();
+
+  @override
+  Widget build(BuildContext context) => _SocialAuthenticationButton(
+        svgIconPath: 'assets/twitter_icon.svg',
+        onPressed: _authenticateWithTwitter,
+      );
+
+  Future<void> _authenticateWithTwitter() async {
+    try {
+      showLoadingDialog();
+      await getIt<AuthService>().reauthenticate(
+        authProvider: const AuthProviderTwitter(),
+      );
+      closeLoadingDialog();
+      popRoute(result: true);
+    } on AuthException catch (exception) {
+      closeLoadingDialog();
+      if (exception.code != AuthExceptionCode.socialAuthenticationCancelled) {
+        rethrow;
+      }
+    } on NetworkException catch (exception) {
+      closeLoadingDialog();
+      if (exception.code == NetworkExceptionCode.requestFailed) {
+        await showNoInternetConnectionMessage();
+      } else {
+        rethrow;
+      }
+    }
+  }
+}
+
+class _SocialAuthenticationButton extends StatelessWidget {
+  final String svgIconPath;
+  final VoidCallback onPressed;
+
+  const _SocialAuthenticationButton({
+    required this.svgIconPath,
+    required this.onPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      height: 40,
+      child: OutlinedButton(
+        onPressed: onPressed,
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: SvgPicture.asset(svgIconPath),
+        ),
+      ),
+    );
   }
 }
