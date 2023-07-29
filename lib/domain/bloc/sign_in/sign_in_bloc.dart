@@ -103,7 +103,6 @@ class SignInBloc extends BlocWithStatus<SignInEvent, SignInState,
       await _authService.signInWithGoogle();
       await _checkIfUserIsSignedIn(emit);
     } on AuthException catch (_) {
-      //TODO: manage user mismatch
       emitCompleteStatus(emit, null);
     }
   }
@@ -116,7 +115,6 @@ class SignInBloc extends BlocWithStatus<SignInEvent, SignInState,
       await _authService.signInWithTwitter();
       await _checkIfUserIsSignedIn(emit);
     } on AuthException catch (_) {
-      //TODO: manage user mismatch
       emitCompleteStatus(emit, null);
     }
   }

@@ -265,6 +265,8 @@
   "noInternetConnectionDialogMessage": "It seems that you lost internet connection which is required to do this operation. Resolve this problem and try again",
   "noLoggedUserDialogTitle": "Session error",
   "noLoggedUserDialogMessage": "We've lost connection with your session. Sign in again to use the app properly.",
+  "userMismatchDialogTitle": "Authentication error",
+  "userMismatchDialogMessage": "Authentication attempt failed, because credentials do not match the account you are currently signed in.",
   "unknownErrorDialogTitle": "Unknown error",
   "unknownErrorDialogMessage": "An unknown error occurred",
   "@__________CONFIRMATION_DIALOG_MESSAGES__________": {},

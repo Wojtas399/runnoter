@@ -957,6 +957,14 @@
   "@noLoggedUserDialogMessage": {
     "description": "Message of the dialog about no logged user"
   },
+  "userMismatchDialogTitle": "Błąd uwierzytelnienia",
+  "@userMismatchDialogTitle": {
+    "description": "Title of the dialog about user mismatch"
+  },
+  "userMismatchDialogMessage": "Próba uwierzytelnienia nie powiodła się, ponieważ dane uwierzytelniające są niezgodne z kontem, na którym jesteś obecnie zalogowany.",
+  "@userMismatchDialogMessage": {
+    "description": "Message of the dialog about user mismatch"
+  },
   "unknownErrorDialogTitle": "Nieznany błąd",
   "@unknownErrorDialogTitle": {
     "description": "Title of the dialog about unknown exception"

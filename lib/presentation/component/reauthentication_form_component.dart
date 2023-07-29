@@ -197,20 +197,30 @@ class _GoogleAuthentication extends StatelessWidget {
   @override
   Widget build(BuildContext context) => _SocialAuthenticationButton(
         svgIconPath: 'assets/google_icon.svg',
-        onPressed: _authenticateWithGoogle,
+        onPressed: () => _authenticateWithGoogle(context),
       );
 
-  Future<void> _authenticateWithGoogle() async {
+  Future<void> _authenticateWithGoogle(BuildContext context) async {
     try {
+      showLoadingDialog();
       await getIt<AuthService>().reauthenticate(
         authProvider: const AuthProviderGoogle(),
       );
+      closeLoadingDialog();
       popRoute(result: true);
     } on AuthException catch (exception) {
+      closeLoadingDialog();
+      if (exception.code == AuthExceptionCode.userMismatch) {
+        await showMessageDialog(
+          title: Str.of(context).userMismatchDialogTitle,
+          message: Str.of(context).userMismatchDialogMessage,
+        );
+      }
       if (exception.code != AuthExceptionCode.socialAuthenticationCancelled) {
         rethrow;
       }
     } on NetworkException catch (exception) {
+      closeLoadingDialog();
       if (exception.code == NetworkExceptionCode.requestFailed) {
         await showNoInternetConnectionMessage();
       } else {
@@ -226,20 +236,30 @@ class _TwitterAuthentication extends StatelessWidget {
   @override
   Widget build(BuildContext context) => _SocialAuthenticationButton(
         svgIconPath: 'assets/twitter_icon.svg',
-        onPressed: _authenticateWithTwitter,
+        onPressed: () => _authenticateWithTwitter(context),
       );
 
-  Future<void> _authenticateWithTwitter() async {
+  Future<void> _authenticateWithTwitter(BuildContext context) async {
     try {
+      showLoadingDialog();
       await getIt<AuthService>().reauthenticate(
         authProvider: const AuthProviderTwitter(),
       );
+      closeLoadingDialog();
       popRoute(result: true);
     } on AuthException catch (exception) {
-      if (exception.code != AuthExceptionCode.socialAuthenticationCancelled) {
+      closeLoadingDialog();
+      if (exception.code == AuthExceptionCode.userMismatch) {
+        await showMessageDialog(
+          title: Str.of(context).userMismatchDialogTitle,
+          message: Str.of(context).userMismatchDialogMessage,
+        );
+      } else if (exception.code !=
+          AuthExceptionCode.socialAuthenticationCancelled) {
         rethrow;
       }
     } on NetworkException catch (exception) {
+      closeLoadingDialog();
       if (exception.code == NetworkExceptionCode.requestFailed) {
         await showNoInternetConnectionMessage();
       } else {
