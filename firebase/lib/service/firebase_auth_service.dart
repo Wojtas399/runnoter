@@ -117,12 +117,12 @@ class FirebaseAuthService {
               password: authProvider.password,
             ),
           ),
-        FirebaseAuthProviderGoogle() => user.reauthenticateWithProvider(
-            GoogleAuthProvider(),
-          ),
-        FirebaseAuthProviderTwitter() => user.reauthenticateWithProvider(
-            TwitterAuthProvider(),
-          ),
+        FirebaseAuthProviderGoogle() => kIsWeb
+            ? user.reauthenticateWithRedirect(GoogleAuthProvider())
+            : user.reauthenticateWithProvider(GoogleAuthProvider()),
+        FirebaseAuthProviderTwitter() => kIsWeb
+            ? user.reauthenticateWithRedirect(TwitterAuthProvider())
+            : user.reauthenticateWithProvider(TwitterAuthProvider()),
       };
     } on FirebaseAuthException catch (exception) {
       throw mapFirebaseExceptionFromCodeStr(exception.code);
