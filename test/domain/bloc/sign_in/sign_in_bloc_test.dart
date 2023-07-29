@@ -5,22 +5,28 @@ import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/additional_model/custom_exception.dart';
 import 'package:runnoter/domain/bloc/sign_in/sign_in_bloc.dart';
+import 'package:runnoter/domain/repository/user_repository.dart';
 import 'package:runnoter/domain/service/auth_service.dart';
 
+import '../../../creators/user_creator.dart';
+import '../../../mock/domain/repository/mock_user_repository.dart';
 import '../../../mock/domain/service/mock_auth_service.dart';
 
 void main() {
   final authService = MockAuthService();
+  final userRepository = MockUserRepository();
   const String loggedUserId = 'u1';
   const String email = 'email@example.com';
   const String password = 'Password1!';
 
   setUpAll(() {
     GetIt.I.registerSingleton<AuthService>(authService);
+    GetIt.I.registerSingleton<UserRepository>(userRepository);
   });
 
   tearDown(() {
     reset(authService);
+    reset(userRepository);
   });
 
   blocTest(
@@ -331,29 +337,60 @@ void main() {
 
   blocTest(
     'sign in with google, '
-    "should call auth service's method to sign in with google and should emit complete status with signed in info if logged user id is not null",
+    'existing user, '
+    'should emit complete status with signed in info',
     build: () => SignInBloc(),
     setUp: () {
       authService.mockSignInWithGoogle();
       authService.mockGetLoggedUserId(userId: 'u1');
+      userRepository.mockGetUserById(user: createUser(id: 'u1'));
     },
     act: (bloc) => bloc.add(const SignInEventSignInWithGoogle()),
     expect: () => [
       const SignInState(status: BlocStatusLoading()),
       const SignInState(
-        status:
-            BlocStatusComplete<SignInBlocInfo>(info: SignInBlocInfo.signedIn),
+        status: BlocStatusComplete<SignInBlocInfo>(
+          info: SignInBlocInfo.signedIn,
+        ),
       ),
     ],
     verify: (_) {
       verify(authService.signInWithGoogle).called(1);
       verify(() => authService.loggedUserId$).called(1);
+      verify(() => userRepository.getUserById(userId: 'u1')).called(1);
     },
   );
 
   blocTest(
     'sign in with google, '
-    "should call auth service's method to sign in with google and should emit complete status without info if logged user id is null",
+    'new user, '
+    'should emit complete status with new signed in user info',
+    build: () => SignInBloc(),
+    setUp: () {
+      authService.mockSignInWithGoogle();
+      authService.mockGetLoggedUserId(userId: 'u1');
+      userRepository.mockGetUserById();
+    },
+    act: (bloc) => bloc.add(const SignInEventSignInWithGoogle()),
+    expect: () => [
+      const SignInState(status: BlocStatusLoading()),
+      const SignInState(
+        status: BlocStatusComplete<SignInBlocInfo>(
+          info: SignInBlocInfo.newSignedInUser,
+        ),
+      ),
+    ],
+    verify: (_) {
+      verify(authService.signInWithGoogle).called(1);
+      verify(() => authService.loggedUserId$).called(1);
+      verify(() => userRepository.getUserById(userId: 'u1')).called(1);
+    },
+  );
+
+  blocTest(
+    'sign in with google, '
+    'there is no signed in user, '
+    'should emit complete status without info',
     build: () => SignInBloc(),
     setUp: () {
       authService.mockSignInWithGoogle();
@@ -446,5 +483,18 @@ void main() {
       const SignInState(status: BlocStatusComplete<SignInBlocInfo>()),
     ],
     verify: (_) => verify(authService.signInWithTwitter).called(1),
+  );
+
+  blocTest(
+    'delete recently created account, '
+    'should call auth service method to delete logged user and should emit complete status',
+    build: () => SignInBloc(),
+    setUp: () => authService.mockDeleteAccount(),
+    act: (bloc) => bloc.add(const SignInEventDeleteRecentlyCreatedAccount()),
+    expect: () => [
+      const SignInState(status: BlocStatusLoading()),
+      const SignInState(status: BlocStatusComplete<SignInBlocInfo>()),
+    ],
+    verify: (_) => verify(authService.deleteAccount).called(1),
   );
 }

@@ -82,6 +82,7 @@ Future<bool> askForConfirmation({
   String? cancelButtonLabel,
   Color? confirmButtonColor,
   Color? cancelButtonColor,
+  bool barrierDismissible = true,
 }) async =>
     await showAlertDialog(
       ConfirmationDialogComponent(
@@ -92,6 +93,7 @@ Future<bool> askForConfirmation({
         confirmButtonColor: confirmButtonColor,
         cancelButtonColor: cancelButtonColor,
       ),
+      barrierDismissible: barrierDismissible,
     ) ==
     true;
 

@@ -7,6 +7,8 @@ import '../../../../domain/service/auth_service.dart';
 import '../../../dependency_injection.dart';
 import '../../additional_model/bloc_state.dart';
 import '../../additional_model/custom_exception.dart';
+import '../../entity/user.dart';
+import '../../repository/user_repository.dart';
 
 part 'sign_in_event.dart';
 part 'sign_in_state.dart';
@@ -14,12 +16,14 @@ part 'sign_in_state.dart';
 class SignInBloc extends BlocWithStatus<SignInEvent, SignInState,
     SignInBlocInfo, SignInBlocError> {
   final AuthService _authService;
+  final UserRepository _userRepository;
 
   SignInBloc({
     BlocStatus status = const BlocStatusInitial(),
     String email = '',
     String password = '',
   })  : _authService = getIt<AuthService>(),
+        _userRepository = getIt<UserRepository>(),
         super(
           SignInState(
             status: status,
@@ -33,6 +37,7 @@ class SignInBloc extends BlocWithStatus<SignInEvent, SignInState,
     on<SignInEventSubmit>(_submit);
     on<SignInEventSignInWithGoogle>(_signInWithGoogle);
     on<SignInEventSignInWithTwitter>(_signInWithTwitter);
+    on<SignInEventDeleteRecentlyCreatedAccount>(_deleteRecentlyCreatedAccount);
   }
 
   Future<void> _initialize(
@@ -73,7 +78,7 @@ class SignInBloc extends BlocWithStatus<SignInEvent, SignInState,
     if (state.isButtonDisabled) return;
     emitLoadingStatus(emit);
     try {
-      await _tryToSignIn();
+      await _authService.signIn(email: state.email, password: state.password);
       emitCompleteStatus(emit, SignInBlocInfo.signedIn);
     } on AuthException catch (authException) {
       final SignInBlocError? error = _mapAuthExceptionCodeToBlocError(
@@ -100,8 +105,24 @@ class SignInBloc extends BlocWithStatus<SignInEvent, SignInState,
     Emitter<SignInState> emit,
   ) async {
     try {
+      emitLoadingStatus(emit);
       await _authService.signInWithGoogle();
-      await _checkIfUserIsSignedIn(emit);
+      final String? loggedUserId = await _authService.loggedUserId$.first;
+      if (loggedUserId == null) {
+        emitCompleteStatus(emit, null);
+        return;
+      }
+      final Stream<User?> user$ = _userRepository.getUserById(
+        userId: loggedUserId,
+      );
+      await for (final user in user$) {
+        if (user != null) {
+          emitCompleteStatus(emit, SignInBlocInfo.signedIn);
+        } else {
+          emitCompleteStatus(emit, SignInBlocInfo.newSignedInUser);
+        }
+        return;
+      }
     } on AuthException catch (_) {
       emitCompleteStatus(emit, null);
     }
@@ -112,6 +133,7 @@ class SignInBloc extends BlocWithStatus<SignInEvent, SignInState,
     Emitter<SignInState> emit,
   ) async {
     try {
+      emitLoadingStatus(emit);
       await _authService.signInWithTwitter();
       await _checkIfUserIsSignedIn(emit);
     } on AuthException catch (_) {
@@ -119,11 +141,13 @@ class SignInBloc extends BlocWithStatus<SignInEvent, SignInState,
     }
   }
 
-  Future<void> _tryToSignIn() async {
-    await _authService.signIn(
-      email: state.email,
-      password: state.password,
-    );
+  Future<void> _deleteRecentlyCreatedAccount(
+    SignInEventDeleteRecentlyCreatedAccount event,
+    Emitter<SignInState> emit,
+  ) async {
+    emitLoadingStatus(emit);
+    await _authService.deleteAccount();
+    emitCompleteStatus(emit, null);
   }
 
   SignInBlocError? _mapAuthExceptionCodeToBlocError(
@@ -148,12 +172,6 @@ class SignInBloc extends BlocWithStatus<SignInEvent, SignInState,
   }
 }
 
-enum SignInBlocInfo {
-  signedIn,
-}
+enum SignInBlocInfo { signedIn, newSignedInUser }
 
-enum SignInBlocError {
-  invalidEmail,
-  userNotFound,
-  wrongPassword,
-}
+enum SignInBlocError { invalidEmail, userNotFound, wrongPassword }

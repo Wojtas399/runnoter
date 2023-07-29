@@ -10,6 +10,8 @@
   "signInInvalidEmailDialogMessage": "Given email address is invalid",
   "signInUserNotFoundDialogTitle": "No user",
   "signInUserNotFoundDialogMessage": "There is no user with given email address",
+  "signInCreateNewAccountConfirmationDialogTitle": "No matching user",
+  "signInCreateNewAccountConfirmationDialogMessage": "There is no user matching to your credentials. Do you want to create account?",
   "signInWrongPasswordDialogTitle": "Wrong password",
   "signInWrongPasswordDialogMessage": "Given password is wrong. Try again with correct one.",
   "@__________SIGN_UP__________": {},

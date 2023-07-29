@@ -8,6 +8,7 @@ import '../../component/bloc_with_status_listener_component.dart';
 import '../../config/navigation/router.dart';
 import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
+import '../required_data_completion/required_data_completion_dialog.dart';
 import 'sign_in_content.dart';
 
 @RoutePage()
@@ -52,18 +53,19 @@ class _BlocListener extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocWithStatusListener<SignInBloc, SignInState, SignInBlocInfo,
         SignInBlocError>(
-      onInfo: _manageCompletionInfo,
-      onError: (SignInBlocError error) {
-        _manageError(error, context);
-      },
+      onInfo: (SignInBlocInfo info) => _manageInfo(context, info),
+      onError: (SignInBlocError error) => _manageError(error, context),
       child: child,
     );
   }
 
-  Future<void> _manageCompletionInfo(SignInBlocInfo info) async {
+  Future<void> _manageInfo(BuildContext context, SignInBlocInfo info) async {
     switch (info) {
       case SignInBlocInfo.signedIn:
         navigateAndRemoveUntil(const HomeRoute());
+        break;
+      case SignInBlocInfo.newSignedInUser:
+        await _manageNewUser(context);
         break;
     }
   }
@@ -92,6 +94,23 @@ class _BlocListener extends StatelessWidget {
           message: str.signInWrongPasswordDialogMessage,
         );
         break;
+    }
+  }
+
+  Future<void> _manageNewUser(BuildContext context) async {
+    final SignInBloc bloc = context.read<SignInBloc>();
+    final bool wantToCreateAccount = await askForConfirmation(
+      title: Str.of(context).signInCreateNewAccountConfirmationDialogTitle,
+      message: Str.of(context).signInCreateNewAccountConfirmationDialogMessage,
+      barrierDismissible: false,
+    );
+    if (wantToCreateAccount) {
+      showDialogDependingOnScreenSize(
+        const RequiredDataCompletionDialog(),
+        barrierDismissible: false,
+      );
+    } else {
+      bloc.add(const SignInEventDeleteRecentlyCreatedAccount());
     }
   }
 }

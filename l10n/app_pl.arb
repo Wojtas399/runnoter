@@ -40,6 +40,14 @@
   "@signInUserNotFoundDialogMessage": {
     "description": "Message of the dialog to inform that user does not exist"
   },
+  "signInCreateNewAccountConfirmationDialogTitle": "Brak pasującego użytkownika",
+  "@signInCreateNewAccountConfirmationDialogTitle": {
+    "description": "Title of the dialog to confirm to create new account"
+  },
+  "signInCreateNewAccountConfirmationDialogMessage": "Nie znaleziono użytkownika o pasujących danych uwierzytelniających. Czy chcesz utworzyć konto?",
+  "@signInCreatorNewAccountConfirmationDialogMessage": {
+    "description": "Message of the dialog to confirm to create new account"
+  },
   "signInWrongPasswordDialogTitle": "Błędne hasło",
   "@signInWrongPasswordDialogTitle": {
     "description": "Title of the dialog to inform that password is wrong"
