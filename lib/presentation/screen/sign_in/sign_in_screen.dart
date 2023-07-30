@@ -102,13 +102,15 @@ class _BlocListener extends StatelessWidget {
     final bool wantToCreateAccount = await askForConfirmation(
       title: Str.of(context).signInCreateNewAccountConfirmationDialogTitle,
       message: Str.of(context).signInCreateNewAccountConfirmationDialogMessage,
+      confirmButtonLabel: Str.of(context).create,
       barrierDismissible: false,
     );
     if (wantToCreateAccount) {
-      showDialogDependingOnScreenSize(
+      await showDialogDependingOnScreenSize(
         const RequiredDataCompletionDialog(),
         barrierDismissible: false,
       );
+      navigateAndRemoveUntil(const HomeRoute());
     } else {
       bloc.add(const SignInEventDeleteRecentlyCreatedAccount());
     }

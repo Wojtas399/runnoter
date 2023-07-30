@@ -140,7 +140,7 @@
   "@requiredDataCompletionTitle": {
     "description": "Title of required data completion screen"
   },
-  "requiredDataCompletionMessage": "Wygląda na to, że zalogowałeś się po raz pierwszy korzystając z jednej z platform mediów społecznościowych. Aby poprawnie korzystać z aplikacji musisz podać wymagane dane osobowe.",
+  "requiredDataCompletionMessage": "Dokończ tworzenie konta podając swoje dane osobowe. Są one niezbędne do prawidłowego działania aplikacji.",
   "@requiredDataCompletionMessage": {
     "description": "Message to information about required data completion"
   },
@@ -1016,6 +1016,7 @@
   "back": "Wróć",
   "add": "Dodaj",
   "leave": "Opuść",
+  "create": "Utwórz",
   "@__________VALIDATOR_MESSAGES__________": {},
   "requiredFieldMessage": "To pole jest wymagane",
   "@requiredFieldMessage": {
