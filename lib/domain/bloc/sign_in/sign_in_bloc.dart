@@ -112,17 +112,7 @@ class SignInBloc extends BlocWithStatus<SignInEvent, SignInState,
         emitCompleteStatus(emit, null);
         return;
       }
-      final Stream<User?> user$ = _userRepository.getUserById(
-        userId: loggedUserId,
-      );
-      await for (final user in user$) {
-        if (user != null) {
-          emitCompleteStatus(emit, SignInBlocInfo.signedIn);
-        } else {
-          emitCompleteStatus(emit, SignInBlocInfo.newSignedInUser);
-        }
-        return;
-      }
+      await _checkIfLoggedUserDataExist(loggedUserId, emit);
     } on AuthException catch (_) {
       emitCompleteStatus(emit, null);
     }
@@ -135,7 +125,12 @@ class SignInBloc extends BlocWithStatus<SignInEvent, SignInState,
     try {
       emitLoadingStatus(emit);
       await _authService.signInWithFacebook();
-      await _checkIfUserIsSignedIn(emit);
+      final String? loggedUserId = await _authService.loggedUserId$.first;
+      if (loggedUserId == null) {
+        emitCompleteStatus(emit, null);
+        return;
+      }
+      await _checkIfLoggedUserDataExist(loggedUserId, emit);
     } on AuthException catch (_) {
       emitCompleteStatus(emit, null);
     }
@@ -163,12 +158,21 @@ class SignInBloc extends BlocWithStatus<SignInEvent, SignInState,
     return null;
   }
 
-  Future<void> _checkIfUserIsSignedIn(Emitter<SignInState> emit) async {
-    final String? loggedUserId = await _authService.loggedUserId$.first;
-    emitCompleteStatus(
-      emit,
-      loggedUserId != null ? SignInBlocInfo.signedIn : null,
+  Future<void> _checkIfLoggedUserDataExist(
+    String loggedUserId,
+    Emitter<SignInState> emit,
+  ) async {
+    final Stream<User?> loggedUser$ = _userRepository.getUserById(
+      userId: loggedUserId,
     );
+    await for (final loggedUser in loggedUser$) {
+      if (loggedUser != null) {
+        emitCompleteStatus(emit, SignInBlocInfo.signedIn);
+      } else {
+        emitCompleteStatus(emit, SignInBlocInfo.newSignedInUser);
+      }
+      return;
+    }
   }
 }
 

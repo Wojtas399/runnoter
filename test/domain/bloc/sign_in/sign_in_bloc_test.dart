@@ -427,11 +427,13 @@ void main() {
 
   blocTest(
     'sign in with facebook, '
-    "should call auth service's method to sign in with facebook and should emit complete status with signed in info if logged user id is not null",
+    'existing user, '
+    'should emit complete status with signed in info',
     build: () => SignInBloc(),
     setUp: () {
       authService.mockSignInWithFacebook();
       authService.mockGetLoggedUserId(userId: 'u1');
+      userRepository.mockGetUserById(user: createUser(id: 'u1'));
     },
     act: (bloc) => bloc.add(const SignInEventSignInWithFacebook()),
     expect: () => [
@@ -445,12 +447,40 @@ void main() {
     verify: (_) {
       verify(authService.signInWithFacebook).called(1);
       verify(() => authService.loggedUserId$).called(1);
+      verify(() => userRepository.getUserById(userId: 'u1')).called(1);
     },
   );
 
   blocTest(
     'sign in with facebook, '
-    "should call auth service's method to sign in with facebook and should emit complete status without info if logged user id is null",
+    'new user, '
+    'should emit complete status with new signed in user info',
+    build: () => SignInBloc(),
+    setUp: () {
+      authService.mockSignInWithFacebook();
+      authService.mockGetLoggedUserId(userId: 'u1');
+      userRepository.mockGetUserById();
+    },
+    act: (bloc) => bloc.add(const SignInEventSignInWithFacebook()),
+    expect: () => [
+      const SignInState(status: BlocStatusLoading()),
+      const SignInState(
+        status: BlocStatusComplete<SignInBlocInfo>(
+          info: SignInBlocInfo.newSignedInUser,
+        ),
+      ),
+    ],
+    verify: (_) {
+      verify(authService.signInWithFacebook).called(1);
+      verify(() => authService.loggedUserId$).called(1);
+      verify(() => userRepository.getUserById(userId: 'u1')).called(1);
+    },
+  );
+
+  blocTest(
+    'sign in with facebook, '
+    'there is no signed in user, '
+    'should emit complete status without info',
     build: () => SignInBloc(),
     setUp: () {
       authService.mockSignInWithFacebook();
