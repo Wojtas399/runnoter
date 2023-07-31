@@ -9,7 +9,7 @@ abstract class AuthService {
 
   Future<void> signInWithGoogle();
 
-  Future<void> signInWithTwitter();
+  Future<void> signInWithFacebook();
 
   Future<String?> signUp({required String email, required String password});
 

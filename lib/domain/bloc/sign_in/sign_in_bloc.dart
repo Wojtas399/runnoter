@@ -36,7 +36,7 @@ class SignInBloc extends BlocWithStatus<SignInEvent, SignInState,
     on<SignInEventPasswordChanged>(_passwordChanged);
     on<SignInEventSubmit>(_submit);
     on<SignInEventSignInWithGoogle>(_signInWithGoogle);
-    on<SignInEventSignInWithTwitter>(_signInWithTwitter);
+    on<SignInEventSignInWithFacebook>(_signInWithFacebook);
     on<SignInEventDeleteRecentlyCreatedAccount>(_deleteRecentlyCreatedAccount);
   }
 
@@ -128,13 +128,13 @@ class SignInBloc extends BlocWithStatus<SignInEvent, SignInState,
     }
   }
 
-  Future<void> _signInWithTwitter(
-    SignInEventSignInWithTwitter event,
+  Future<void> _signInWithFacebook(
+    SignInEventSignInWithFacebook event,
     Emitter<SignInState> emit,
   ) async {
     try {
       emitLoadingStatus(emit);
-      await _authService.signInWithTwitter();
+      await _authService.signInWithFacebook();
       await _checkIfUserIsSignedIn(emit);
     } on AuthException catch (_) {
       emitCompleteStatus(emit, null);

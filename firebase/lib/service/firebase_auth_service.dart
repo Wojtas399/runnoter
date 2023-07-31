@@ -48,7 +48,7 @@ class FirebaseAuthService {
     }
   }
 
-  Future<void> signInWithTwitter() async {
+  Future<void> signInWithFacebook() async {
     try {
       if (kIsWeb) {
         FacebookAuthProvider facebookProvider = FacebookAuthProvider();

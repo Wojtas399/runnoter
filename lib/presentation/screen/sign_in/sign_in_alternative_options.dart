@@ -64,7 +64,7 @@ class _SocialSignIn extends StatelessWidget {
           ),
           SizedBox(width: 16),
           Expanded(
-            child: _SignInWithTwitter(),
+            child: _SignInWithFacebook(),
           ),
         ],
       ),
@@ -94,8 +94,8 @@ class _SignInWithGoogle extends StatelessWidget {
   }
 }
 
-class _SignInWithTwitter extends StatelessWidget {
-  const _SignInWithTwitter();
+class _SignInWithFacebook extends StatelessWidget {
+  const _SignInWithFacebook();
 
   @override
   Widget build(BuildContext context) {
@@ -105,14 +105,14 @@ class _SignInWithTwitter extends StatelessWidget {
         onPressed: () => _onPressed(context),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: SvgPicture.asset('assets/twitter_icon.svg'),
+          child: SvgPicture.asset('assets/facebook_icon.svg'),
         ),
       ),
     );
   }
 
   void _onPressed(BuildContext context) {
-    context.read<SignInBloc>().add(const SignInEventSignInWithTwitter());
+    context.read<SignInBloc>().add(const SignInEventSignInWithFacebook());
   }
 }
 

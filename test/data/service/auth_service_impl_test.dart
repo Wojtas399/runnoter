@@ -205,26 +205,26 @@ void main() {
   );
 
   test(
-    'sign in with twitter, '
-    'should call firebase method to sign in with twitter',
+    'sign in with facebook, '
+    'should call firebase method to sign in with facebook',
     () async {
-      firebaseAuthService.mockSignInWithTwitter();
+      firebaseAuthService.mockSignInWithFacebook();
 
-      await service.signInWithTwitter();
+      await service.signInWithFacebook();
 
-      verify(firebaseAuthService.signInWithTwitter).called(1);
+      verify(firebaseAuthService.signInWithFacebook).called(1);
     },
   );
 
   test(
-    'sign in with twitter, '
+    'sign in with facebook, '
     'firebase auth exception with socialAuthenticationCancelled code, '
     'should throw auth exception with socialAuthenticationCancelled code',
     () async {
       const AuthException expectedAuthException = AuthException(
         code: AuthExceptionCode.socialAuthenticationCancelled,
       );
-      firebaseAuthService.mockSignInWithTwitter(
+      firebaseAuthService.mockSignInWithFacebook(
         throwable: const FirebaseAuthException(
           code: FirebaseAuthExceptionCode.socialAuthenticationCancelled,
         ),
@@ -232,13 +232,13 @@ void main() {
 
       Object? exception;
       try {
-        await service.signInWithTwitter();
+        await service.signInWithFacebook();
       } catch (e) {
         exception = e;
       }
 
       expect(exception, expectedAuthException);
-      verify(firebaseAuthService.signInWithTwitter).called(1);
+      verify(firebaseAuthService.signInWithFacebook).called(1);
     },
   );
 

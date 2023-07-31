@@ -426,14 +426,14 @@ void main() {
   );
 
   blocTest(
-    'sign in with twitter, '
-    "should call auth service's method to sign in with twitter and should emit complete status with signed in info if logged user id is not null",
+    'sign in with facebook, '
+    "should call auth service's method to sign in with facebook and should emit complete status with signed in info if logged user id is not null",
     build: () => SignInBloc(),
     setUp: () {
-      authService.mockSignInWithTwitter();
+      authService.mockSignInWithFacebook();
       authService.mockGetLoggedUserId(userId: 'u1');
     },
-    act: (bloc) => bloc.add(const SignInEventSignInWithTwitter()),
+    act: (bloc) => bloc.add(const SignInEventSignInWithFacebook()),
     expect: () => [
       const SignInState(status: BlocStatusLoading()),
       const SignInState(
@@ -443,46 +443,46 @@ void main() {
       ),
     ],
     verify: (_) {
-      verify(authService.signInWithTwitter).called(1);
+      verify(authService.signInWithFacebook).called(1);
       verify(() => authService.loggedUserId$).called(1);
     },
   );
 
   blocTest(
-    'sign in with twitter, '
-    "should call auth service's method to sign in with twitter and should emit complete status without info if logged user id is null",
+    'sign in with facebook, '
+    "should call auth service's method to sign in with facebook and should emit complete status without info if logged user id is null",
     build: () => SignInBloc(),
     setUp: () {
-      authService.mockSignInWithTwitter();
+      authService.mockSignInWithFacebook();
       authService.mockGetLoggedUserId();
     },
-    act: (bloc) => bloc.add(const SignInEventSignInWithTwitter()),
+    act: (bloc) => bloc.add(const SignInEventSignInWithFacebook()),
     expect: () => [
       const SignInState(status: BlocStatusLoading()),
       const SignInState(status: BlocStatusComplete<SignInBlocInfo>()),
     ],
     verify: (_) {
-      verify(authService.signInWithTwitter).called(1);
+      verify(authService.signInWithFacebook).called(1);
       verify(() => authService.loggedUserId$).called(1);
     },
   );
 
   blocTest(
-    'sign in with twitter, '
+    'sign in with facebook, '
     'auth exception with socialAuthenticationCancelled code'
     'should emit complete status',
     build: () => SignInBloc(),
-    setUp: () => authService.mockSignInWithTwitter(
+    setUp: () => authService.mockSignInWithFacebook(
       throwable: const AuthException(
         code: AuthExceptionCode.socialAuthenticationCancelled,
       ),
     ),
-    act: (bloc) => bloc.add(const SignInEventSignInWithTwitter()),
+    act: (bloc) => bloc.add(const SignInEventSignInWithFacebook()),
     expect: () => [
       const SignInState(status: BlocStatusLoading()),
       const SignInState(status: BlocStatusComplete<SignInBlocInfo>()),
     ],
-    verify: (_) => verify(authService.signInWithTwitter).called(1),
+    verify: (_) => verify(authService.signInWithFacebook).called(1),
   );
 
   blocTest(

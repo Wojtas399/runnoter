@@ -39,9 +39,9 @@ class AuthServiceImpl implements AuthService {
   }
 
   @override
-  Future<void> signInWithTwitter() async {
+  Future<void> signInWithFacebook() async {
     try {
-      await _firebaseAuthService.signInWithTwitter();
+      await _firebaseAuthService.signInWithFacebook();
     } on FirebaseException catch (exception) {
       throw mapExceptionFromFirebase(exception);
     }

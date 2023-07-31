@@ -31,11 +31,11 @@ class MockAuthService extends Mock implements AuthService {
     }
   }
 
-  void mockSignInWithTwitter({Object? throwable}) {
+  void mockSignInWithFacebook({Object? throwable}) {
     if (throwable != null) {
-      when(signInWithTwitter).thenThrow(throwable);
+      when(signInWithFacebook).thenThrow(throwable);
     } else {
-      when(signInWithTwitter).thenAnswer((_) => Future.value());
+      when(signInWithFacebook).thenAnswer((_) => Future.value());
     }
   }
 
