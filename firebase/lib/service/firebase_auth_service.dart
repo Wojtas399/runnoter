@@ -50,13 +50,20 @@ class FirebaseAuthService {
 
   Future<void> signInWithTwitter() async {
     try {
-      final LoginResult loginResult = await FacebookAuth.instance.login();
-      if (loginResult.accessToken != null) {
-        final OAuthCredential facebookAuthCredential =
-            FacebookAuthProvider.credential(loginResult.accessToken!.token);
-        await FirebaseAuth.instance.signInWithCredential(
-          facebookAuthCredential,
-        );
+      if (kIsWeb) {
+        FacebookAuthProvider facebookProvider = FacebookAuthProvider();
+        facebookProvider.addScope('email');
+        facebookProvider.setCustomParameters({'display': 'popup'});
+        await FirebaseAuth.instance.signInWithPopup(facebookProvider);
+      } else {
+        final LoginResult loginResult = await FacebookAuth.instance.login();
+        if (loginResult.accessToken != null) {
+          final OAuthCredential facebookAuthCredential =
+              FacebookAuthProvider.credential(loginResult.accessToken!.token);
+          await FirebaseAuth.instance.signInWithCredential(
+            facebookAuthCredential,
+          );
+        }
       }
     } on FirebaseAuthException catch (exception) {
       String code = exception.code;
