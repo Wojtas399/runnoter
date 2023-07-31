@@ -9,10 +9,17 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
+			    <string>fb$(FACEBOOK_APP_ID)</string>
 				<string>com.googleusercontent.apps.$(REVERSED_CLIENT_ID)</string>
 			</array>
 		</dict>
 	</array>
+	<key>FacebookAppID</key>
+    <string>$(FACEBOOK_APP_ID)</string>
+    <key>FacebookClientToken</key>
+    <string>$(FACEBOOK_CLIENT_TOKEN)</string>
+    <key>FacebookDisplayName</key>
+    <string>Runnoter</string>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>

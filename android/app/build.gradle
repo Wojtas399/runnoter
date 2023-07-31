@@ -83,5 +83,6 @@ flutter {
 }
 
 dependencies {
+    implementation 'com.facebook.android:facebook-android-sdk:[8,9)'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }

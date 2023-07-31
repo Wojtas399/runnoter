@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 import '../mapper/firebase_exception_mapper.dart';
@@ -49,11 +50,13 @@ class FirebaseAuthService {
 
   Future<void> signInWithTwitter() async {
     try {
-      TwitterAuthProvider twitterProvider = TwitterAuthProvider();
-      if (kIsWeb) {
-        await FirebaseAuth.instance.signInWithPopup(twitterProvider);
-      } else {
-        await FirebaseAuth.instance.signInWithProvider(twitterProvider);
+      final LoginResult loginResult = await FacebookAuth.instance.login();
+      if (loginResult.accessToken != null) {
+        final OAuthCredential facebookAuthCredential =
+            FacebookAuthProvider.credential(loginResult.accessToken!.token);
+        await FirebaseAuth.instance.signInWithCredential(
+          facebookAuthCredential,
+        );
       }
     } on FirebaseAuthException catch (exception) {
       String code = exception.code;

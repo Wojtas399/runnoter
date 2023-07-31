@@ -53,3 +53,4 @@ Podfile.lock
 
 # API related
 Keys.xcconfig
+strings.xml
