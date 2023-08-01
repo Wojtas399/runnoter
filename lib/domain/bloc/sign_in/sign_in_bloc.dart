@@ -47,7 +47,8 @@ class SignInBloc extends BlocWithStatus<SignInEvent, SignInState,
     emitLoadingStatus(emit);
     SignInBlocInfo? info;
     final String? loggedUserId = await _authService.loggedUserId$.first;
-    if (loggedUserId != null) {
+    if (loggedUserId != null &&
+        await _authService.hasLoggedUserVerifiedEmail$.first == true) {
       info = SignInBlocInfo.signedIn;
     }
     emitCompleteStatus(emit, info);

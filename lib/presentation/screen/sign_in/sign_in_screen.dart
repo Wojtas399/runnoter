@@ -10,6 +10,7 @@ import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
 import '../required_data_completion/required_data_completion_dialog.dart';
 import 'sign_in_content.dart';
+import 'sign_in_verify_email_dialog.dart';
 
 @RoutePage()
 class SignInScreen extends StatelessWidget {
@@ -80,7 +81,12 @@ class _BlocListener extends StatelessWidget {
         );
         break;
       case SignInBlocError.unverifiedEmail:
-        //TODO
+        await showDialogDependingOnScreenSize(
+          BlocProvider.value(
+            value: context.read<SignInBloc>(),
+            child: const SignInVerifyEmailDialog(),
+          ),
+        );
         break;
       case SignInBlocError.userNotFound:
         await showMessageDialog(

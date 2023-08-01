@@ -32,6 +32,26 @@
   "@signInInvalidEmailDialogMessage": {
     "description": "Message of the dialog to inform that given email address is invalid"
   },
+  "signInUnverifiedEmailDialogTitle": "Potwierdź swój adres email",
+  "@signInUnverifiedEmailDialogTitle": {
+    "description": "Title of the dialog to inform that user has to confirm email address"
+  },
+  "signInUnverifiedEmailDialogMessage": "Wysłaliśmy wiadomość z linkiem potwierdzającym na twój adres email:",
+  "@signInUnverifiedEmailDialogMessage": {
+    "description": "Message of the dialog to inform that user has to confirm email address"
+  },
+  "signInUnverifiedEmailDialogInstruction": "Sprawdź swoją skrzynkę pocztową i kliknij na ten link, aby potwierdzić swój adres email.",
+  "@signInUnverifiedEmailDialogInstruction": {
+    "description": "Instruction of the dialog to inform that user has to confirm email address"
+  },
+  "signInUnverifiedEmailDialogResend": "Wyślij ponownie",
+  "@signInUnverifiedEmailDialogResend": {
+    "description": "Label of the button to resend confirmation email in email verification dialog"
+  },
+  "signInUnverifiedEmailDialogBackToLogin": "Wróć do logowania",
+  "@signInUnverifiedEmailDialogBackToLogin": {
+    "description": "Label of the button to navigate back to login in email verification dialog"
+  },
   "signInUserNotFoundDialogTitle": "Brak użytkownika",
   "@signInUserNotFoundDialogTitle": {
     "description": "Title of the dialog to inform that user does not exist"
