@@ -16,6 +16,10 @@ class FirebaseAuthService {
   Stream<String?> get loggedUserEmail$ =>
       FirebaseAuth.instance.userChanges().map((User? user) => user?.email);
 
+  Stream<bool?> get hasLoggedUserVerifiedEmail$ => FirebaseAuth.instance
+      .userChanges()
+      .map((User? user) => user?.emailVerified);
+
   Future<void> signIn({
     required String email,
     required String password,

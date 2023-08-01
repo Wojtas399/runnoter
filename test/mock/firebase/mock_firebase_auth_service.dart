@@ -6,23 +6,23 @@ class MockFirebaseAuthService extends Mock implements FirebaseAuthService {
     registerFallbackValue(const FirebaseAuthProviderGoogle());
   }
 
-  void mockGetLoggedUserId({
-    String? userId,
-  }) {
+  void mockGetLoggedUserId({String? userId}) {
     when(
       () => loggedUserId$,
     ).thenAnswer((invocation) => Stream.value(userId));
   }
 
-  void mockGetLoggedUserEmail({
-    String? userEmail,
-  }) {
+  void mockGetLoggedUserEmail({String? userEmail}) {
     when(() => loggedUserEmail$).thenAnswer((_) => Stream.value(userEmail));
   }
 
-  void mockSignIn({
-    Object? throwable,
-  }) {
+  void mockHasLoggedUserVerifiedEmail({bool? expected}) {
+    when(
+      () => hasLoggedUserVerifiedEmail$,
+    ).thenAnswer((_) => Stream.value(expected));
+  }
+
+  void mockSignIn({Object? throwable}) {
     if (throwable != null) {
       when(_signInCall).thenThrow(throwable);
     } else {
@@ -46,10 +46,7 @@ class MockFirebaseAuthService extends Mock implements FirebaseAuthService {
     }
   }
 
-  void mockSignUp({
-    String? userId,
-    Object? throwable,
-  }) {
+  void mockSignUp({String? userId, Object? throwable}) {
     if (throwable != null) {
       when(_signUpCall).thenThrow(throwable);
     } else {
@@ -57,9 +54,7 @@ class MockFirebaseAuthService extends Mock implements FirebaseAuthService {
     }
   }
 
-  void mockSendPasswordResetEmail({
-    Object? throwable,
-  }) {
+  void mockSendPasswordResetEmail({Object? throwable}) {
     if (throwable != null) {
       when(_sendPasswordResetEmailCall).thenThrow(throwable);
     } else {
@@ -73,9 +68,7 @@ class MockFirebaseAuthService extends Mock implements FirebaseAuthService {
     when(() => signOut()).thenAnswer((_) => Future.value());
   }
 
-  void mockUpdateEmail({
-    Object? throwable,
-  }) {
+  void mockUpdateEmail({Object? throwable}) {
     if (throwable != null) {
       when(_updateEmailCall).thenThrow(throwable);
     } else {
