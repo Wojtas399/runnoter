@@ -70,10 +70,7 @@ class _BlocListener extends StatelessWidget {
     }
   }
 
-  Future<void> _manageError(
-    SignInBlocError error,
-    BuildContext context,
-  ) async {
+  Future<void> _manageError(SignInBlocError error, BuildContext context) async {
     final str = Str.of(context);
     switch (error) {
       case SignInBlocError.invalidEmail:
@@ -81,6 +78,9 @@ class _BlocListener extends StatelessWidget {
           title: str.signInInvalidEmailDialogTitle,
           message: str.signInInvalidEmailDialogMessage,
         );
+        break;
+      case SignInBlocError.unverifiedEmail:
+        //TODO
         break;
       case SignInBlocError.userNotFound:
         await showMessageDialog(

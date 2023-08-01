@@ -39,13 +39,12 @@ void main() {
     expect: () => [
       const SignInState(status: BlocStatusLoading()),
       const SignInState(
-        status:
-            BlocStatusComplete<SignInBlocInfo>(info: SignInBlocInfo.signedIn),
+        status: BlocStatusComplete<SignInBlocInfo>(
+          info: SignInBlocInfo.signedIn,
+        ),
       ),
     ],
-    verify: (_) => verify(
-      () => authService.loggedUserId$,
-    ).called(1),
+    verify: (_) => verify(() => authService.loggedUserId$).called(1),
   );
 
   blocTest(
@@ -59,9 +58,7 @@ void main() {
       const SignInState(status: BlocStatusLoading()),
       const SignInState(status: BlocStatusComplete<SignInBlocInfo>()),
     ],
-    verify: (_) => verify(
-      () => authService.loggedUserId$,
-    ).called(1),
+    verify: (_) => verify(() => authService.loggedUserId$).called(1),
   );
 
   blocTest(
@@ -70,10 +67,7 @@ void main() {
     build: () => SignInBloc(),
     act: (bloc) => bloc.add(const SignInEventEmailChanged(email: email)),
     expect: () => [
-      const SignInState(
-        status: BlocStatusComplete(),
-        email: email,
-      ),
+      const SignInState(status: BlocStatusComplete(), email: email),
     ],
   );
 
@@ -81,24 +75,23 @@ void main() {
     'password changed, '
     'should update password in state',
     build: () => SignInBloc(),
-    act: (bloc) =>
-        bloc.add(const SignInEventPasswordChanged(password: password)),
+    act: (bloc) => bloc.add(const SignInEventPasswordChanged(
+      password: password,
+    )),
     expect: () => [
-      const SignInState(
-        status: BlocStatusComplete(),
-        password: password,
-      ),
+      const SignInState(status: BlocStatusComplete(), password: password),
     ],
   );
 
   blocTest(
     'submit, '
+    'user has verified email, '
     'should call method responsible for signing in user and should emit complete status with signed in info',
-    build: () => SignInBloc(
-      email: email,
-      password: password,
-    ),
-    setUp: () => authService.mockSignIn(),
+    build: () => SignInBloc(email: email, password: password),
+    setUp: () {
+      authService.mockSignIn();
+      authService.mockHasLoggedUserVerifiedEmail(expected: true);
+    },
     act: (bloc) => bloc.add(const SignInEventSubmit()),
     expect: () => [
       const SignInState(
@@ -114,26 +107,53 @@ void main() {
         password: password,
       ),
     ],
-    verify: (_) => verify(
-      () => authService.signIn(
+    verify: (_) {
+      verify(
+        () => authService.signIn(email: email, password: password),
+      ).called(1);
+      verify(() => authService.hasLoggedUserVerifiedEmail$).called(1);
+    },
+  );
+
+  blocTest(
+    'submit, '
+    'user has not verified email, '
+    'should call method responsible for signing in user and should emit error status with unverified email error',
+    build: () => SignInBloc(email: email, password: password),
+    setUp: () {
+      authService.mockSignIn();
+      authService.mockHasLoggedUserVerifiedEmail(expected: false);
+    },
+    act: (bloc) => bloc.add(const SignInEventSubmit()),
+    expect: () => [
+      const SignInState(
+        status: BlocStatusLoading(),
         email: email,
         password: password,
       ),
-    ).called(1),
+      const SignInState(
+        status: BlocStatusError<SignInBlocError>(
+          error: SignInBlocError.unverifiedEmail,
+        ),
+        email: email,
+        password: password,
+      ),
+    ],
+    verify: (_) {
+      verify(
+        () => authService.signIn(email: email, password: password),
+      ).called(1);
+      verify(() => authService.hasLoggedUserVerifiedEmail$).called(1);
+    },
   );
 
   blocTest(
     'submit, '
     'auth exception with invalid email code, '
     'should emit error status with invalid email error',
-    build: () => SignInBloc(
-      email: email,
-      password: password,
-    ),
+    build: () => SignInBloc(email: email, password: password),
     setUp: () => authService.mockSignIn(
-      throwable: const AuthException(
-        code: AuthExceptionCode.invalidEmail,
-      ),
+      throwable: const AuthException(code: AuthExceptionCode.invalidEmail),
     ),
     act: (bloc) => bloc.add(const SignInEventSubmit()),
     expect: () => [
@@ -151,10 +171,7 @@ void main() {
       ),
     ],
     verify: (_) => verify(
-      () => authService.signIn(
-        email: email,
-        password: password,
-      ),
+      () => authService.signIn(email: email, password: password),
     ).called(1),
   );
 
@@ -162,14 +179,9 @@ void main() {
     'submit, '
     'auth exception with user not found code, '
     'should emit error status with user not found error',
-    build: () => SignInBloc(
-      email: email,
-      password: password,
-    ),
+    build: () => SignInBloc(email: email, password: password),
     setUp: () => authService.mockSignIn(
-      throwable: const AuthException(
-        code: AuthExceptionCode.userNotFound,
-      ),
+      throwable: const AuthException(code: AuthExceptionCode.userNotFound),
     ),
     act: (bloc) => bloc.add(const SignInEventSubmit()),
     expect: () => [
@@ -187,10 +199,7 @@ void main() {
       ),
     ],
     verify: (_) => verify(
-      () => authService.signIn(
-        email: email,
-        password: password,
-      ),
+      () => authService.signIn(email: email, password: password),
     ).called(1),
   );
 
@@ -198,14 +207,9 @@ void main() {
     'submit, '
     'auth exception with wrong password code, '
     'should emit error status with wrong password error',
-    build: () => SignInBloc(
-      email: email,
-      password: password,
-    ),
+    build: () => SignInBloc(email: email, password: password),
     setUp: () => authService.mockSignIn(
-      throwable: const AuthException(
-        code: AuthExceptionCode.wrongPassword,
-      ),
+      throwable: const AuthException(code: AuthExceptionCode.wrongPassword),
     ),
     act: (bloc) => bloc.add(const SignInEventSubmit()),
     expect: () => [
@@ -223,10 +227,7 @@ void main() {
       ),
     ],
     verify: (_) => verify(
-      () => authService.signIn(
-        email: email,
-        password: password,
-      ),
+      () => authService.signIn(email: email, password: password),
     ).called(1),
   );
 
@@ -234,10 +235,7 @@ void main() {
     'submit, '
     'network exception with request failed code, '
     'should emit network request failed status',
-    build: () => SignInBloc(
-      email: email,
-      password: password,
-    ),
+    build: () => SignInBloc(email: email, password: password),
     setUp: () => authService.mockSignIn(
       throwable: const NetworkException(
         code: NetworkExceptionCode.requestFailed,
@@ -257,10 +255,7 @@ void main() {
       ),
     ],
     verify: (_) => verify(
-      () => authService.signIn(
-        email: email,
-        password: password,
-      ),
+      () => authService.signIn(email: email, password: password),
     ).called(1),
   );
 
@@ -268,14 +263,9 @@ void main() {
     'submit, '
     'unknown exception, '
     'should emit unknown error status',
-    build: () => SignInBloc(
-      email: email,
-      password: password,
-    ),
+    build: () => SignInBloc(email: email, password: password),
     setUp: () => authService.mockSignIn(
-      throwable: const UnknownException(
-        message: 'unknown exception message',
-      ),
+      throwable: const UnknownException(message: 'unknown exception message'),
     ),
     act: (bloc) => bloc.add(const SignInEventSubmit()),
     expect: () => [
@@ -292,10 +282,7 @@ void main() {
     ],
     errors: () => ['unknown exception message'],
     verify: (_) => verify(
-      () => authService.signIn(
-        email: email,
-        password: password,
-      ),
+      () => authService.signIn(email: email, password: password),
     ).called(1),
   );
 
@@ -303,10 +290,7 @@ void main() {
     'submit, '
     'email is empty, '
     'should do nothing',
-    build: () => SignInBloc(
-      email: '',
-      password: password,
-    ),
+    build: () => SignInBloc(email: '', password: password),
     act: (bloc) => bloc.add(const SignInEventSubmit()),
     expect: () => [],
     verify: (_) => verifyNever(
@@ -321,10 +305,7 @@ void main() {
     'submit, '
     'password is empty, '
     'should do nothing',
-    build: () => SignInBloc(
-      email: email,
-      password: '',
-    ),
+    build: () => SignInBloc(email: email, password: ''),
     act: (bloc) => bloc.add(const SignInEventSubmit()),
     expect: () => [],
     verify: (_) => verifyNever(
@@ -337,13 +318,14 @@ void main() {
 
   blocTest(
     'sign in with google, '
-    'existing user, '
+    'existing user with verified email, '
     'should emit complete status with signed in info',
     build: () => SignInBloc(),
     setUp: () {
       authService.mockSignInWithGoogle();
       authService.mockGetLoggedUserId(userId: 'u1');
       userRepository.mockGetUserById(user: createUser(id: 'u1'));
+      authService.mockHasLoggedUserVerifiedEmail(expected: true);
     },
     act: (bloc) => bloc.add(const SignInEventSignInWithGoogle()),
     expect: () => [
@@ -358,6 +340,35 @@ void main() {
       verify(authService.signInWithGoogle).called(1);
       verify(() => authService.loggedUserId$).called(1);
       verify(() => userRepository.getUserById(userId: 'u1')).called(1);
+      verify(() => authService.hasLoggedUserVerifiedEmail$).called(1);
+    },
+  );
+
+  blocTest(
+    'sign in with google, '
+    'existing user with unverified email, '
+    'should emit error status with unverified email error',
+    build: () => SignInBloc(),
+    setUp: () {
+      authService.mockSignInWithGoogle();
+      authService.mockGetLoggedUserId(userId: 'u1');
+      userRepository.mockGetUserById(user: createUser(id: 'u1'));
+      authService.mockHasLoggedUserVerifiedEmail(expected: false);
+    },
+    act: (bloc) => bloc.add(const SignInEventSignInWithGoogle()),
+    expect: () => [
+      const SignInState(status: BlocStatusLoading()),
+      const SignInState(
+        status: BlocStatusError<SignInBlocError>(
+          error: SignInBlocError.unverifiedEmail,
+        ),
+      ),
+    ],
+    verify: (_) {
+      verify(authService.signInWithGoogle).called(1);
+      verify(() => authService.loggedUserId$).called(1);
+      verify(() => userRepository.getUserById(userId: 'u1')).called(1);
+      verify(() => authService.hasLoggedUserVerifiedEmail$).called(1);
     },
   );
 
@@ -445,13 +456,14 @@ void main() {
 
   blocTest(
     'sign in with facebook, '
-    'existing user, '
+    'existing user with verified email, '
     'should emit complete status with signed in info',
     build: () => SignInBloc(),
     setUp: () {
       authService.mockSignInWithFacebook();
       authService.mockGetLoggedUserId(userId: 'u1');
       userRepository.mockGetUserById(user: createUser(id: 'u1'));
+      authService.mockHasLoggedUserVerifiedEmail(expected: true);
     },
     act: (bloc) => bloc.add(const SignInEventSignInWithFacebook()),
     expect: () => [
@@ -466,6 +478,35 @@ void main() {
       verify(authService.signInWithFacebook).called(1);
       verify(() => authService.loggedUserId$).called(1);
       verify(() => userRepository.getUserById(userId: 'u1')).called(1);
+      verify(() => authService.hasLoggedUserVerifiedEmail$).called(1);
+    },
+  );
+
+  blocTest(
+    'sign in with facebook, '
+    'existing user with unverified email, '
+    'should emit error status with unverified email error',
+    build: () => SignInBloc(),
+    setUp: () {
+      authService.mockSignInWithFacebook();
+      authService.mockGetLoggedUserId(userId: 'u1');
+      userRepository.mockGetUserById(user: createUser(id: 'u1'));
+      authService.mockHasLoggedUserVerifiedEmail(expected: false);
+    },
+    act: (bloc) => bloc.add(const SignInEventSignInWithFacebook()),
+    expect: () => [
+      const SignInState(status: BlocStatusLoading()),
+      const SignInState(
+        status: BlocStatusError<SignInBlocError>(
+          error: SignInBlocError.unverifiedEmail,
+        ),
+      ),
+    ],
+    verify: (_) {
+      verify(authService.signInWithFacebook).called(1);
+      verify(() => authService.loggedUserId$).called(1);
+      verify(() => userRepository.getUserById(userId: 'u1')).called(1);
+      verify(() => authService.hasLoggedUserVerifiedEmail$).called(1);
     },
   );
 

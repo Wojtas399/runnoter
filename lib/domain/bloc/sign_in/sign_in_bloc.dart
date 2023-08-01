@@ -79,7 +79,11 @@ class SignInBloc extends BlocWithStatus<SignInEvent, SignInState,
     emitLoadingStatus(emit);
     try {
       await _authService.signIn(email: state.email, password: state.password);
-      emitCompleteStatus(emit, SignInBlocInfo.signedIn);
+      if (await _authService.hasLoggedUserVerifiedEmail$.first == true) {
+        emitCompleteStatus(emit, SignInBlocInfo.signedIn);
+      } else {
+        emitErrorStatus(emit, SignInBlocError.unverifiedEmail);
+      }
     } on AuthException catch (authException) {
       final SignInBlocError? error = _mapAuthExceptionCodeToBlocError(
         authException.code,
@@ -175,15 +179,30 @@ class SignInBloc extends BlocWithStatus<SignInEvent, SignInState,
     );
     await for (final loggedUser in loggedUser$) {
       if (loggedUser != null) {
-        emitCompleteStatus(emit, SignInBlocInfo.signedIn);
+        await _checkIfLoggedUserHasVerifiedEmail(emit);
       } else {
         emitCompleteStatus(emit, SignInBlocInfo.newSignedInUser);
       }
       return;
     }
   }
+
+  Future<void> _checkIfLoggedUserHasVerifiedEmail(
+    Emitter<SignInState> emit,
+  ) async {
+    if (await _authService.hasLoggedUserVerifiedEmail$.first == true) {
+      emitCompleteStatus(emit, SignInBlocInfo.signedIn);
+    } else {
+      emitErrorStatus(emit, SignInBlocError.unverifiedEmail);
+    }
+  }
 }
 
 enum SignInBlocInfo { signedIn, newSignedInUser }
 
-enum SignInBlocError { invalidEmail, userNotFound, wrongPassword }
+enum SignInBlocError {
+  invalidEmail,
+  unverifiedEmail,
+  userNotFound,
+  wrongPassword,
+}
