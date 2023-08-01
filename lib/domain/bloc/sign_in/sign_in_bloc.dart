@@ -79,11 +79,7 @@ class SignInBloc extends BlocWithStatus<SignInEvent, SignInState,
     emitLoadingStatus(emit);
     try {
       await _authService.signIn(email: state.email, password: state.password);
-      if (await _authService.hasLoggedUserVerifiedEmail$.first == true) {
-        emitCompleteStatus(emit, SignInBlocInfo.signedIn);
-      } else {
-        emitErrorStatus(emit, SignInBlocError.unverifiedEmail);
-      }
+      await _checkIfLoggedUserHasVerifiedEmail(emit);
     } on AuthException catch (authException) {
       final SignInBlocError? error = _mapAuthExceptionCodeToBlocError(
         authException.code,
@@ -193,6 +189,7 @@ class SignInBloc extends BlocWithStatus<SignInEvent, SignInState,
     if (await _authService.hasLoggedUserVerifiedEmail$.first == true) {
       emitCompleteStatus(emit, SignInBlocInfo.signedIn);
     } else {
+      await _authService.sendEmailVerification();
       emitErrorStatus(emit, SignInBlocError.unverifiedEmail);
     }
   }

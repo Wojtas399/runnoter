@@ -112,7 +112,7 @@ void main() {
   blocTest(
     'submit, '
     'user has verified email, '
-    'should call method responsible for signing in user and should emit complete status with signed in info',
+    'should emit complete status with signed in info',
     build: () => SignInBloc(email: email, password: password),
     setUp: () {
       authService.mockSignIn();
@@ -144,11 +144,12 @@ void main() {
   blocTest(
     'submit, '
     'user has not verified email, '
-    'should call method responsible for signing in user and should emit error status with unverified email error',
+    "should emit error status with unverified email error and should call auth service's method to send email verification",
     build: () => SignInBloc(email: email, password: password),
     setUp: () {
       authService.mockSignIn();
       authService.mockHasLoggedUserVerifiedEmail(expected: false);
+      authService.mockSendEmailVerification();
     },
     act: (bloc) => bloc.add(const SignInEventSubmit()),
     expect: () => [
@@ -170,6 +171,7 @@ void main() {
         () => authService.signIn(email: email, password: password),
       ).called(1);
       verify(() => authService.hasLoggedUserVerifiedEmail$).called(1);
+      verify(authService.sendEmailVerification).called(1);
     },
   );
 
@@ -373,13 +375,14 @@ void main() {
   blocTest(
     'sign in with google, '
     'existing user with unverified email, '
-    'should emit error status with unverified email error',
+    "should emit error status with unverified email error and should call auth service's method to send email verification",
     build: () => SignInBloc(),
     setUp: () {
       authService.mockSignInWithGoogle();
       authService.mockGetLoggedUserId(userId: 'u1');
       userRepository.mockGetUserById(user: createUser(id: 'u1'));
       authService.mockHasLoggedUserVerifiedEmail(expected: false);
+      authService.mockSendEmailVerification();
     },
     act: (bloc) => bloc.add(const SignInEventSignInWithGoogle()),
     expect: () => [
@@ -395,6 +398,7 @@ void main() {
       verify(() => authService.loggedUserId$).called(1);
       verify(() => userRepository.getUserById(userId: 'u1')).called(1);
       verify(() => authService.hasLoggedUserVerifiedEmail$).called(1);
+      verify(authService.sendEmailVerification).called(1);
     },
   );
 
@@ -511,13 +515,14 @@ void main() {
   blocTest(
     'sign in with facebook, '
     'existing user with unverified email, '
-    'should emit error status with unverified email error',
+    "should emit error status with unverified email error and should call auth service's method to send email verification",
     build: () => SignInBloc(),
     setUp: () {
       authService.mockSignInWithFacebook();
       authService.mockGetLoggedUserId(userId: 'u1');
       userRepository.mockGetUserById(user: createUser(id: 'u1'));
       authService.mockHasLoggedUserVerifiedEmail(expected: false);
+      authService.mockSendEmailVerification();
     },
     act: (bloc) => bloc.add(const SignInEventSignInWithFacebook()),
     expect: () => [
@@ -533,6 +538,7 @@ void main() {
       verify(() => authService.loggedUserId$).called(1);
       verify(() => userRepository.getUserById(userId: 'u1')).called(1);
       verify(() => authService.hasLoggedUserVerifiedEmail$).called(1);
+      verify(authService.sendEmailVerification).called(1);
     },
   );
 
