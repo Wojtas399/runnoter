@@ -67,6 +67,11 @@ class AuthServiceImpl implements AuthService {
   }
 
   @override
+  Future<void> sendEmailVerification() async {
+    await _firebaseAuthService.sendEmailVerification();
+  }
+
+  @override
   Future<void> sendPasswordResetEmail({required String email}) async {
     try {
       await _firebaseAuthService.sendPasswordResetEmail(email: email);

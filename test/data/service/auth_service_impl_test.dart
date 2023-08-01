@@ -310,8 +310,20 @@ void main() {
   );
 
   test(
+    'send email verification, '
+    "should call firebase service's method to send email verification",
+    () async {
+      firebaseAuthService.mockSendEmailVerification();
+
+      await service.sendEmailVerification();
+
+      verify(firebaseAuthService.sendEmailVerification).called(1);
+    },
+  );
+
+  test(
     'send password reset email, '
-    'should call firebase method to send password reset email',
+    "should call firebase service's method to send password reset email",
     () async {
       const String email = 'email@example.com';
       firebaseAuthService.mockSendPasswordResetEmail();

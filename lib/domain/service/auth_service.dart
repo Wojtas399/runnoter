@@ -15,6 +15,8 @@ abstract class AuthService {
 
   Future<String?> signUp({required String email, required String password});
 
+  Future<void> sendEmailVerification();
+
   Future<void> sendPasswordResetEmail({required String email});
 
   Future<void> signOut();

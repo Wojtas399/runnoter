@@ -31,10 +31,13 @@ void main() {
 
   blocTest(
     'initialize, '
-    'logged user id is not null, '
+    'logged user exists and has verified email, '
     'should emit complete status with signed in info',
     build: () => SignInBloc(),
-    setUp: () => authService.mockGetLoggedUserId(userId: loggedUserId),
+    setUp: () {
+      authService.mockGetLoggedUserId(userId: loggedUserId);
+      authService.mockHasLoggedUserVerifiedEmail(expected: true);
+    },
     act: (bloc) => bloc.add(const SignInEventInitialize()),
     expect: () => [
       const SignInState(status: BlocStatusLoading()),
@@ -44,12 +47,35 @@ void main() {
         ),
       ),
     ],
-    verify: (_) => verify(() => authService.loggedUserId$).called(1),
+    verify: (_) {
+      verify(() => authService.loggedUserId$).called(1);
+      verify(() => authService.hasLoggedUserVerifiedEmail$).called(1);
+    },
   );
 
   blocTest(
     'initialize, '
-    'logged user id is null, '
+    'logged user exists and has unverified email, '
+    'should emit complete status without any info',
+    build: () => SignInBloc(),
+    setUp: () {
+      authService.mockGetLoggedUserId(userId: loggedUserId);
+      authService.mockHasLoggedUserVerifiedEmail(expected: false);
+    },
+    act: (bloc) => bloc.add(const SignInEventInitialize()),
+    expect: () => [
+      const SignInState(status: BlocStatusLoading()),
+      const SignInState(status: BlocStatusComplete<SignInBlocInfo>()),
+    ],
+    verify: (_) {
+      verify(() => authService.loggedUserId$).called(1);
+      verify(() => authService.hasLoggedUserVerifiedEmail$).called(1);
+    },
+  );
+
+  blocTest(
+    'initialize, '
+    'logged user does not exist, '
     'should emit complete status without any info',
     build: () => SignInBloc(),
     setUp: () => authService.mockGetLoggedUserId(),
