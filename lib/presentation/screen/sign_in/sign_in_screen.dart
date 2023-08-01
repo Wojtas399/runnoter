@@ -8,9 +8,9 @@ import '../../component/bloc_with_status_listener_component.dart';
 import '../../config/navigation/router.dart';
 import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
+import '../email_verification/email_verification_dialog.dart';
 import '../required_data_completion/required_data_completion_dialog.dart';
 import 'sign_in_content.dart';
-import 'sign_in_verify_email_dialog.dart';
 
 @RoutePage()
 class SignInScreen extends StatelessWidget {
@@ -68,11 +68,6 @@ class _BlocListener extends StatelessWidget {
       case SignInBlocInfo.newSignedInUser:
         await _manageNewUser(context);
         break;
-      case SignInBlocInfo.emailVerificationResent:
-        showSnackbarMessage(
-          Str.of(context).signInSuccessfullyResentEmailVerification,
-        );
-        break;
     }
   }
 
@@ -86,12 +81,7 @@ class _BlocListener extends StatelessWidget {
         );
         break;
       case SignInBlocError.unverifiedEmail:
-        await showDialogDependingOnScreenSize(
-          BlocProvider.value(
-            value: context.read<SignInBloc>(),
-            child: const SignInVerifyEmailDialog(),
-          ),
-        );
+        await showDialogDependingOnScreenSize(const EmailVerificationDialog());
         break;
       case SignInBlocError.userNotFound:
         await showMessageDialog(

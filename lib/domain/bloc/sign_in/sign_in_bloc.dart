@@ -37,7 +37,6 @@ class SignInBloc extends BlocWithStatus<SignInEvent, SignInState,
     on<SignInEventSubmit>(_submit);
     on<SignInEventSignInWithGoogle>(_signInWithGoogle);
     on<SignInEventSignInWithFacebook>(_signInWithFacebook);
-    on<SignInEventResendEmailVerification>(_resendEmailVerification);
     on<SignInEventDeleteRecentlyCreatedAccount>(_deleteRecentlyCreatedAccount);
   }
 
@@ -145,15 +144,6 @@ class SignInBloc extends BlocWithStatus<SignInEvent, SignInState,
     }
   }
 
-  Future<void> _resendEmailVerification(
-    SignInEventResendEmailVerification event,
-    Emitter<SignInState> emit,
-  ) async {
-    emitLoadingStatus(emit);
-    await _authService.sendEmailVerification();
-    emitCompleteStatus(emit, SignInBlocInfo.emailVerificationResent);
-  }
-
   Future<void> _deleteRecentlyCreatedAccount(
     SignInEventDeleteRecentlyCreatedAccount event,
     Emitter<SignInState> emit,
@@ -205,7 +195,7 @@ class SignInBloc extends BlocWithStatus<SignInEvent, SignInState,
   }
 }
 
-enum SignInBlocInfo { signedIn, newSignedInUser, emailVerificationResent }
+enum SignInBlocInfo { signedIn, newSignedInUser }
 
 enum SignInBlocError {
   invalidEmail,

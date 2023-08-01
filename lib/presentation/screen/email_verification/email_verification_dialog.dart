@@ -2,22 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/bloc/sign_in/sign_in_bloc.dart';
-import '../../component/big_button_component.dart';
+import '../../../domain/bloc/email_verification/email_verification_cubit.dart';
 import '../../component/padding/paddings_24.dart';
 import '../../component/responsive_layout_component.dart';
 import '../../component/text/body_text_components.dart';
 import '../../component/text/title_text_components.dart';
+import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
 
-class SignInVerifyEmailDialog extends StatelessWidget {
-  const SignInVerifyEmailDialog({super.key});
+class EmailVerificationDialog extends StatelessWidget {
+  const EmailVerificationDialog({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const ResponsiveLayout(
-      mobileBody: _MobileDialog(),
-      desktopBody: _DesktopDialog(),
+    return BlocProvider(
+      create: (_) => EmailVerificationCubit(),
+      child: const ResponsiveLayout(
+        mobileBody: _MobileDialog(),
+        desktopBody: _DesktopDialog(),
+      ),
     );
   }
 }
@@ -73,43 +76,36 @@ class _EmailVerificationInfo extends StatelessWidget {
         ),
         gapBig,
         TitleLarge(
-          str.signInUnverifiedEmailDialogTitle,
+          str.emailVerificationTitle,
           fontWeight: FontWeight.bold,
         ),
         gapSmall,
         BodyMedium(
-          str.signInUnverifiedEmailDialogMessage,
+          str.emailVerificationMessage,
           textAlign: TextAlign.center,
         ),
         gapSmall,
         const _Email(),
         gapSmall,
         BodyMedium(
-          str.signInUnverifiedEmailDialogInstruction,
+          str.emailVerificationInstruction,
           textAlign: TextAlign.center,
         ),
         gapBig,
-        BigButton(
-          label: str.signInUnverifiedEmailDialogResend,
-          onPressed: () => _onResendPressed(context),
-        ),
+        const _ResendEmailVerificationButton(),
         gapSmall,
         MouseRegion(
           cursor: SystemMouseCursors.click,
           child: GestureDetector(
             onTap: popRoute,
             child: BodyMedium(
-              str.signInUnverifiedEmailDialogBackToLogin,
+              str.emailVerificationBackToLogin,
               color: Theme.of(context).colorScheme.outline,
             ),
           ),
         ),
       ],
     );
-  }
-
-  void _onResendPressed(BuildContext context) {
-    context.read<SignInBloc>().add(const SignInEventResendEmailVerification());
   }
 }
 
@@ -118,8 +114,55 @@ class _Email extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String? email = context.select((SignInBloc bloc) => bloc.state.email);
+    final String? email = context.select(
+      (EmailVerificationCubit cubit) => cubit.state,
+    );
 
     return BodyLarge(email ?? '--', fontWeight: FontWeight.bold);
+  }
+}
+
+class _ResendEmailVerificationButton extends StatefulWidget {
+  const _ResendEmailVerificationButton();
+
+  @override
+  State<StatefulWidget> createState() => _ResendEmailVerificationButtonState();
+}
+
+class _ResendEmailVerificationButtonState
+    extends State<_ResendEmailVerificationButton> {
+  bool _isLoading = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return ConstrainedBox(
+      constraints: const BoxConstraints(maxWidth: 300),
+      child: SizedBox(
+        height: 52,
+        width: double.infinity,
+        child: FilledButton(
+          onPressed: _onPressed,
+          child: _isLoading
+              ? const CircularProgressIndicator()
+              : Text(Str.of(context).emailVerificationResend),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _onPressed() async {
+    if (_isLoading) return;
+    setState(() {
+      _isLoading = true;
+    });
+    await context.read<EmailVerificationCubit>().resendEmailVerification();
+    setState(() {
+      _isLoading = false;
+    });
+    if (mounted) {
+      showSnackbarMessage(
+        Str.of(context).emailVerificationSuccessfullyResentEmailVerification,
+      );
+    }
   }
 }

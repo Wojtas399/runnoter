@@ -638,23 +638,6 @@ void main() {
   );
 
   blocTest(
-    'resend email verification, '
-    "should call auth service's method to send email verification and should emit complete status with emailVerificationResent info",
-    build: () => SignInBloc(),
-    setUp: () => authService.mockSendEmailVerification(),
-    act: (bloc) => bloc.add(const SignInEventResendEmailVerification()),
-    expect: () => [
-      const SignInState(status: BlocStatusLoading()),
-      const SignInState(
-        status: BlocStatusComplete<SignInBlocInfo>(
-          info: SignInBlocInfo.emailVerificationResent,
-        ),
-      ),
-    ],
-    verify: (_) => verify(authService.sendEmailVerification).called(1),
-  );
-
-  blocTest(
     'delete recently created account, '
     'should call auth service method to delete logged user and should emit complete status',
     build: () => SignInBloc(),
