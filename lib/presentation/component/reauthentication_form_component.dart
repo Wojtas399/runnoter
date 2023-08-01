@@ -90,7 +90,7 @@ class _Form extends StatelessWidget {
             gap,
             const _GoogleAuthentication(),
             gap,
-            const _TwitterAuthentication(),
+            const _FacebookAuthentication(),
             gap,
           ],
         ),
@@ -230,20 +230,20 @@ class _GoogleAuthentication extends StatelessWidget {
   }
 }
 
-class _TwitterAuthentication extends StatelessWidget {
-  const _TwitterAuthentication();
+class _FacebookAuthentication extends StatelessWidget {
+  const _FacebookAuthentication();
 
   @override
   Widget build(BuildContext context) => _SocialAuthenticationButton(
-        svgIconPath: 'assets/twitter_icon.svg',
-        onPressed: () => _authenticateWithTwitter(context),
+        svgIconPath: 'assets/facebook_icon.svg',
+        onPressed: () => _authenticateWithFacebook(context),
       );
 
-  Future<void> _authenticateWithTwitter(BuildContext context) async {
+  Future<void> _authenticateWithFacebook(BuildContext context) async {
     try {
       showLoadingDialog();
       await getIt<AuthService>().reauthenticate(
-        authProvider: const AuthProviderTwitter(),
+        authProvider: const AuthProviderFacebook(),
       );
       closeLoadingDialog();
       popRoute(result: true);

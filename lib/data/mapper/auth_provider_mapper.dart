@@ -8,5 +8,5 @@ FirebaseAuthProvider mapAuthProviderToDb(AuthProvider authProvider) =>
           password: authProvider.password,
         ),
       AuthProviderGoogle() => const FirebaseAuthProviderGoogle(),
-      AuthProviderTwitter() => const FirebaseAuthProviderTwitter(),
+      AuthProviderFacebook() => const FirebaseAuthProviderFacebook(),
     };

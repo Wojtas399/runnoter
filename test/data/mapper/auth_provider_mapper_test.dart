@@ -43,12 +43,12 @@ void main() {
 
   test(
     'map auth provider to db, '
-    'twitter, '
-    'should map AuthProviderTwitter to FirebaseAuthProviderTwitter',
+    'facebook, '
+    'should map AuthProviderFacebook to FirebaseAuthProviderFacebook',
     () {
-      const AuthProvider authProvider = AuthProviderTwitter();
+      const AuthProvider authProvider = AuthProviderFacebook();
       const FirebaseAuthProvider expectedFirebaseAuthProvider =
-          FirebaseAuthProviderTwitter();
+          FirebaseAuthProviderFacebook();
 
       final FirebaseAuthProvider firebaseAuthProvider = mapAuthProviderToDb(
         authProvider,
