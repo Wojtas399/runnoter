@@ -37,7 +37,7 @@ class FirebaseAuthService {
       String code = exception.code;
       if (_hasPopupBeenCancelled(exception)) {
         code = 'web-context-cancelled';
-      } else if (exception.message?.contains('internal-error') == true) {
+      } else if (_isInternalError(exception)) {
         code = 'network-request-failed';
       }
       throw mapFirebaseExceptionFromCodeStr(code);
@@ -51,7 +51,7 @@ class FirebaseAuthService {
       String code = exception.code;
       if (_hasPopupBeenCancelled(exception)) {
         code = 'web-context-cancelled';
-      } else if (exception.message?.contains('internal-error') == true) {
+      } else if (_isInternalError(exception)) {
         code = 'network-request-failed';
       }
       throw mapFirebaseExceptionFromCodeStr(code);
@@ -126,6 +126,8 @@ class FirebaseAuthService {
         code = 'web-context-cancelled';
       } else if (exception.message?.contains('user-mismatch') == true) {
         code = 'user-mismatch';
+      } else if (_isInternalError(exception)) {
+        code = 'network-request-failed';
       }
       throw mapFirebaseExceptionFromCodeStr(code);
     }
@@ -136,6 +138,10 @@ class FirebaseAuthService {
       exception.message?.contains('popup-closed-by-user') == true ||
       exception.message?.contains('cancelled-popup-request') == true ||
       exception.message?.contains('user-cancelled') == true;
+
+  bool _isInternalError(FirebaseAuthException exception) =>
+      exception.message?.contains('An internal error') == true ||
+      exception.message?.contains('internal-error') == true;
 
   Future<void> _reauthenticateUserWithPassword(
     User user,
