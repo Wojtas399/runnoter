@@ -1,12 +1,15 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 
 import '../mapper/firebase_exception_mapper.dart';
 import '../model/auth_provider.dart';
+import '../social_auth/facebook_auth_service.dart';
+import '../social_auth/google_auth_service.dart';
+import '../social_auth/social_auth_service.dart';
 
 class FirebaseAuthService {
+  final SocialAuthService _googleAuthService = GoogleAuthService();
+  final SocialAuthService _facebookAuthService = FacebookAuthService();
+
   Stream<String?> get loggedUserId$ =>
       FirebaseAuth.instance.authStateChanges().map((User? user) => user?.uid);
 
@@ -29,18 +32,7 @@ class FirebaseAuthService {
 
   Future<void> signInWithGoogle() async {
     try {
-      if (kIsWeb) {
-        await FirebaseAuth.instance.signInWithPopup(GoogleAuthProvider());
-      } else {
-        final GoogleSignInAccount? gAccount = await GoogleSignIn().signIn();
-        if (gAccount == null) return;
-        final GoogleSignInAuthentication gAuth = await gAccount.authentication;
-        final gCredential = GoogleAuthProvider.credential(
-          accessToken: gAuth.accessToken,
-          idToken: gAuth.idToken,
-        );
-        await FirebaseAuth.instance.signInWithCredential(gCredential);
-      }
+      await _googleAuthService.signIn();
     } on FirebaseAuthException catch (exception) {
       String code = exception.code;
       if (_hasPopupBeenCancelled(exception)) code = 'web-context-cancelled';
@@ -50,17 +42,7 @@ class FirebaseAuthService {
 
   Future<void> signInWithFacebook() async {
     try {
-      if (kIsWeb) {
-        FacebookAuthProvider facebookProvider =
-            _createWebFacebookAuthProvider();
-        await FirebaseAuth.instance.signInWithPopup(facebookProvider);
-      } else {
-        final OAuthCredential? fbAuthCredential =
-            await _authenticateWithFacebookMobile();
-        if (fbAuthCredential != null) {
-          await FirebaseAuth.instance.signInWithCredential(fbAuthCredential);
-        }
-      }
+      await _facebookAuthService.signIn();
     } on FirebaseAuthException catch (exception) {
       String code = exception.code;
       if (_hasPopupBeenCancelled(exception)) code = 'web-context-cancelled';
@@ -125,16 +107,10 @@ class FirebaseAuthService {
     if (user == null) return;
     try {
       await switch (authProvider) {
-        FirebaseAuthProviderPassword() => user.reauthenticateWithCredential(
-            EmailAuthProvider.credential(
-              email: user.email!,
-              password: authProvider.password,
-            ),
-          ),
-        FirebaseAuthProviderGoogle() => kIsWeb
-            ? user.reauthenticateWithPopup(GoogleAuthProvider())
-            : user.reauthenticateWithProvider(GoogleAuthProvider()),
-        FirebaseAuthProviderFacebook() => _reauthenticateWithFacebook(user),
+        FirebaseAuthProviderPassword() =>
+          _reauthenticateUserWithPassword(user, authProvider.password),
+        FirebaseAuthProviderGoogle() => _googleAuthService.reauthenticate(),
+        FirebaseAuthProviderFacebook() => _facebookAuthService.reauthenticate(),
       };
     } on FirebaseAuthException catch (exception) {
       String code = exception.code;
@@ -153,33 +129,12 @@ class FirebaseAuthService {
       exception.message?.contains('cancelled-popup-request') == true ||
       exception.message?.contains('user-cancelled') == true;
 
-  Future<void> _reauthenticateWithFacebook(User user) async {
-    if (kIsWeb) {
-      final facebookProvider = _createWebFacebookAuthProvider();
-      await user.reauthenticateWithPopup(facebookProvider);
-    } else {
-      final OAuthCredential? facebookAuthCredential =
-          await _authenticateWithFacebookMobile();
-      if (facebookAuthCredential != null) {
-        await user.reauthenticateWithCredential(facebookAuthCredential);
-      }
-    }
-  }
-
-  Future<OAuthCredential?> _authenticateWithFacebookMobile() async {
-    final LoginResult loginResult = await FacebookAuth.instance.login();
-    if (loginResult.status == LoginStatus.cancelled) {
-      throw FirebaseAuthException(code: 'web-context-cancelled');
-    }
-    return loginResult.accessToken != null
-        ? FacebookAuthProvider.credential(loginResult.accessToken!.token)
-        : null;
-  }
-
-  FacebookAuthProvider _createWebFacebookAuthProvider() {
-    final facebookProvider = FacebookAuthProvider();
-    facebookProvider.addScope('email');
-    facebookProvider.setCustomParameters({'display': 'popup'});
-    return facebookProvider;
+  Future<void> _reauthenticateUserWithPassword(
+    User user,
+    String password,
+  ) async {
+    await user.reauthenticateWithCredential(
+      EmailAuthProvider.credential(email: user.email!, password: password),
+    );
   }
 }
