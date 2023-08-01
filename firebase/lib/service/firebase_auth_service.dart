@@ -35,7 +35,11 @@ class FirebaseAuthService {
       await _googleAuthService.signIn();
     } on FirebaseAuthException catch (exception) {
       String code = exception.code;
-      if (_hasPopupBeenCancelled(exception)) code = 'web-context-cancelled';
+      if (_hasPopupBeenCancelled(exception)) {
+        code = 'web-context-cancelled';
+      } else if (exception.message?.contains('internal-error') == true) {
+        code = 'network-request-failed';
+      }
       throw mapFirebaseExceptionFromCodeStr(code);
     }
   }
@@ -45,7 +49,11 @@ class FirebaseAuthService {
       await _facebookAuthService.signIn();
     } on FirebaseAuthException catch (exception) {
       String code = exception.code;
-      if (_hasPopupBeenCancelled(exception)) code = 'web-context-cancelled';
+      if (_hasPopupBeenCancelled(exception)) {
+        code = 'web-context-cancelled';
+      } else if (exception.message?.contains('internal-error') == true) {
+        code = 'network-request-failed';
+      }
       throw mapFirebaseExceptionFromCodeStr(code);
     }
   }
