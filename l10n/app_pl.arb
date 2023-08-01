@@ -52,6 +52,10 @@
   "@signInUnverifiedEmailDialogBackToLogin": {
     "description": "Label of the button to navigate back to login in email verification dialog"
   },
+  "signInSuccessfullyResentEmailVerification": "Email weryfikacyjny został ponownie wysłany",
+  "@signInSuccessfullyResentEmailVerification": {
+    "description": "Information that email verification has been sent again"
+  },
   "signInUserNotFoundDialogTitle": "Brak użytkownika",
   "@signInUserNotFoundDialogTitle": {
     "description": "Title of the dialog to inform that user does not exist"

@@ -49,6 +49,10 @@ class SignInEventSignInWithFacebook extends SignInEvent {
   const SignInEventSignInWithFacebook();
 }
 
+class SignInEventResendEmailVerification extends SignInEvent {
+  const SignInEventResendEmailVerification();
+}
+
 class SignInEventDeleteRecentlyCreatedAccount extends SignInEvent {
   const SignInEventDeleteRecentlyCreatedAccount();
 }

@@ -109,7 +109,7 @@ class _EmailVerificationInfo extends StatelessWidget {
   }
 
   void _onResendPressed(BuildContext context) {
-    //TODO: Call sign in bloc's event to resend email
+    context.read<SignInBloc>().add(const SignInEventResendEmailVerification());
   }
 }
 

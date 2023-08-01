@@ -68,6 +68,11 @@ class _BlocListener extends StatelessWidget {
       case SignInBlocInfo.newSignedInUser:
         await _manageNewUser(context);
         break;
+      case SignInBlocInfo.emailVerificationResent:
+        showSnackbarMessage(
+          Str.of(context).signInSuccessfullyResentEmailVerification,
+        );
+        break;
     }
   }
 

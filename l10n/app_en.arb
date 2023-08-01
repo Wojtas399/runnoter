@@ -13,6 +13,7 @@
   "signInUnverifiedEmailDialogInstruction": "Check your email and click on that link to confirm your email address.",
   "signInUnverifiedEmailDialogResend": "Resend email",
   "signInUnverifiedEmailDialogBackToLogin": "Back to login",
+  "signInSuccessfullyResentEmailVerification": "Verification email has been sent again",
   "signInUserNotFoundDialogTitle": "No user",
   "signInUserNotFoundDialogMessage": "There is no user with given email address",
   "signInCreateNewAccountConfirmationDialogTitle": "No matching user",
