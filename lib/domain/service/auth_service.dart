@@ -5,6 +5,8 @@ abstract class AuthService {
 
   Stream<String?> get loggedUserEmail$;
 
+  Stream<bool?> get hasLoggedUserVerifiedEmail$;
+
   Future<void> signIn({required String email, required String password});
 
   Future<void> signInWithGoogle();

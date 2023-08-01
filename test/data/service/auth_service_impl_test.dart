@@ -61,6 +61,19 @@ void main() {
   );
 
   test(
+    'has logged user verified email, '
+    'should call and return result of firebase has logged user verified email getter',
+    () async {
+      firebaseAuthService.mockHasLoggedUserVerifiedEmail(expected: true);
+
+      final Stream<bool?> hasLoggedUserVerifiedEmail$ =
+          service.hasLoggedUserVerifiedEmail$;
+
+      expect(await hasLoggedUserVerifiedEmail$.first, true);
+    },
+  );
+
+  test(
     'sign in, '
     'should call firebase method to sign in user',
     () async {
