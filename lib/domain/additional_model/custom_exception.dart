@@ -9,8 +9,6 @@ enum AuthExceptionCode {
   wrongPassword,
   userNotFound,
   emailAlreadyInUse,
-  userMismatch,
-  socialAuthenticationCancelled,
 }
 
 class AuthException extends CustomException {

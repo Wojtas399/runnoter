@@ -82,44 +82,6 @@ void main() {
 
   test(
     'map exception from firebase, '
-    'FirebaseAuthException with userMismatch code should be mapped to AuthException with userMismatch code',
-    () {
-      const FirebaseException firebaseException = FirebaseAuthException(
-        code: FirebaseAuthExceptionCode.userMismatch,
-      );
-      const CustomException expectedException = AuthException(
-        code: AuthExceptionCode.userMismatch,
-      );
-
-      final CustomException exception = mapExceptionFromFirebase(
-        firebaseException,
-      );
-
-      expect(exception, expectedException);
-    },
-  );
-
-  test(
-    'map exception from firebase, '
-    'FirebaseAuthException with socialAuthenticationCancelled code should be mapped to AuthException with socialAuthenticationCancelled code',
-    () {
-      const FirebaseException firebaseException = FirebaseAuthException(
-        code: FirebaseAuthExceptionCode.socialAuthenticationCancelled,
-      );
-      const CustomException expectedException = AuthException(
-        code: AuthExceptionCode.socialAuthenticationCancelled,
-      );
-
-      final CustomException exception = mapExceptionFromFirebase(
-        firebaseException,
-      );
-
-      expect(exception, expectedException);
-    },
-  );
-
-  test(
-    'map exception from firebase, '
     'FirebaseNetworkException with requestFailed code should be mapped to NetworkException with requestFailed code',
     () {
       const FirebaseException firebaseException = FirebaseNetworkException(

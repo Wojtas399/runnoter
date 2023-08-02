@@ -73,40 +73,6 @@ void main() {
 
   test(
     'map firebase exception from code str, '
-    'user-mismatch code should be mapped to FirebaseAuthException with userMismatch code',
-    () {
-      const String codeStr = 'user-mismatch';
-      const FirebaseException expectedException = FirebaseAuthException(
-        code: FirebaseAuthExceptionCode.userMismatch,
-      );
-
-      final FirebaseException exception = mapFirebaseExceptionFromCodeStr(
-        codeStr,
-      );
-
-      expect(exception, expectedException);
-    },
-  );
-
-  test(
-    'map firebase exception from code str, '
-    'web-context-cancelled code should be mapped to FirebaseAuthException with socialAuthenticationCancelled code',
-    () {
-      const String codeStr = 'web-context-cancelled';
-      const FirebaseException expectedException = FirebaseAuthException(
-        code: FirebaseAuthExceptionCode.socialAuthenticationCancelled,
-      );
-
-      final FirebaseException exception = mapFirebaseExceptionFromCodeStr(
-        codeStr,
-      );
-
-      expect(exception, expectedException);
-    },
-  );
-
-  test(
-    'map firebase exception from code str, '
     'network-request-failed code should be mapped to FirebaseNetworkException with requestFailed code',
     () {
       const String codeStr = 'network-request-failed';

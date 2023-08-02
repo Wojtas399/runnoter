@@ -121,22 +121,15 @@ class FirebaseAuthService {
   Future<ReauthenticationStatus> reauthenticate({
     required FirebaseAuthProvider authProvider,
   }) async {
-    final User? user = FirebaseAuth.instance.currentUser;
-    if (user == null) return ReauthenticationStatus.cancelled;
     try {
-      final String? reauthenticatedUserId = await switch (authProvider) {
-        FirebaseAuthProviderPassword() =>
-          _reauthenticateUserWithPassword(user, authProvider.password),
-        FirebaseAuthProviderGoogle() => _googleAuthService.reauthenticate(),
-        FirebaseAuthProviderFacebook() => _facebookAuthService.reauthenticate(),
-      };
+      final String? reauthenticatedUserId = await _reauthenticate(authProvider);
       return reauthenticatedUserId != null
           ? ReauthenticationStatus.confirmed
           : ReauthenticationStatus.cancelled;
     } on FirebaseAuthException catch (exception) {
       if (_hasPopupBeenCancelled(exception)) {
         return ReauthenticationStatus.cancelled;
-      } else if (exception.message?.contains('user-mismatch') == true) {
+      } else if (_isUserMismatch(exception)) {
         return ReauthenticationStatus.userMismatch;
       }
       String code = exception.code;
@@ -148,19 +141,31 @@ class FirebaseAuthService {
   }
 
   bool _hasPopupBeenCancelled(FirebaseAuthException exception) =>
+      exception.code == 'web-context-cancelled' ||
       exception.code == 'web-context-canceled' ||
       exception.message?.contains('popup-closed-by-user') == true ||
       exception.message?.contains('cancelled-popup-request') == true ||
       exception.message?.contains('user-cancelled') == true;
 
+  bool _isUserMismatch(FirebaseAuthException exception) =>
+      exception.code == 'user-mismatch' ||
+      exception.message?.contains('user-mismatch') == true;
+
   bool _isInternalError(FirebaseAuthException exception) =>
       exception.message?.contains('An internal error') == true ||
       exception.message?.contains('internal-error') == true;
 
-  Future<String?> _reauthenticateUserWithPassword(
-    User user,
-    String password,
-  ) async {
+  Future<String?> _reauthenticate(FirebaseAuthProvider authProvider) async =>
+      await switch (authProvider) {
+        FirebaseAuthProviderPassword() =>
+          _reauthenticateWithPassword(authProvider.password),
+        FirebaseAuthProviderGoogle() => _googleAuthService.reauthenticate(),
+        FirebaseAuthProviderFacebook() => _facebookAuthService.reauthenticate(),
+      };
+
+  Future<String?> _reauthenticateWithPassword(String password) async {
+    final User? user = FirebaseAuth.instance.currentUser;
+    if (user == null) return null;
     final UserCredential credential = await user.reauthenticateWithCredential(
       EmailAuthProvider.credential(email: user.email!, password: password),
     );
