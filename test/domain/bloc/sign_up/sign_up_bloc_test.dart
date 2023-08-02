@@ -133,7 +133,7 @@ void main() {
 
   blocTest(
     'submit, '
-    'should call auth service method to sign up and use case to add user data and should emit complete status with signed up info',
+    "should call auth service's method to sign up, use case to add user data, auth service's method to send email verification and should emit complete status with signed up info",
     build: () => SignUpBloc(
       state: const SignUpState(
         status: BlocStatusInitial(),
@@ -148,6 +148,7 @@ void main() {
     setUp: () {
       authService.mockSignUp(userId: 'u1');
       addUserDataUseCase.mock();
+      authService.mockSendEmailVerification();
     },
     act: (bloc) => bloc.add(const SignUpEventSubmit()),
     expect: () => [
@@ -174,10 +175,7 @@ void main() {
     ],
     verify: (_) {
       verify(
-        () => authService.signUp(
-          email: email,
-          password: password,
-        ),
+        () => authService.signUp(email: email, password: password),
       ).called(1);
       verify(
         () => addUserDataUseCase.execute(
@@ -187,6 +185,7 @@ void main() {
           surname: surname,
         ),
       ).called(1);
+      verify(authService.sendEmailVerification).called(1);
     },
   );
 

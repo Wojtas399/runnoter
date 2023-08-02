@@ -16,7 +16,7 @@ class EmailVerificationDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => EmailVerificationCubit(),
+      create: (_) => EmailVerificationCubit()..initialize(),
       child: const ResponsiveLayout(
         mobileBody: _MobileDialog(),
         desktopBody: _DesktopDialog(),
@@ -32,7 +32,7 @@ class _MobileDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: const CloseButton(),
+        leading: const CloseButton(onPressed: popUntilRoot),
       ),
       body: const SafeArea(
         child: Paddings24(
@@ -97,7 +97,7 @@ class _EmailVerificationInfo extends StatelessWidget {
         MouseRegion(
           cursor: SystemMouseCursors.click,
           child: GestureDetector(
-            onTap: popRoute,
+            onTap: popUntilRoot,
             child: BodyMedium(
               str.emailVerificationBackToLogin,
               color: Theme.of(context).colorScheme.outline,
@@ -143,7 +143,13 @@ class _ResendEmailVerificationButtonState
         child: FilledButton(
           onPressed: _onPressed,
           child: _isLoading
-              ? const CircularProgressIndicator()
+              ? SizedBox(
+                  height: 24,
+                  width: 24,
+                  child: CircularProgressIndicator(
+                    color: Theme.of(context).colorScheme.primaryContainer,
+                  ),
+                )
               : Text(Str.of(context).emailVerificationResend),
         ),
       ),

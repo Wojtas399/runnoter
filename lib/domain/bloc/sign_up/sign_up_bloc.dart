@@ -95,6 +95,7 @@ class SignUpBloc extends BlocWithStatus<SignUpEvent, SignUpState,
     emitLoadingStatus(emit);
     try {
       await _tryToSignUp();
+      await _authService.sendEmailVerification();
       emitCompleteStatus(emit, SignUpBlocInfo.signedUp);
     } on AuthException catch (authException) {
       final SignUpBlocError? error = _mapAuthExceptionCodeToBlocError(

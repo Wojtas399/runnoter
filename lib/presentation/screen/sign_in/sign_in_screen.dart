@@ -81,7 +81,7 @@ class _BlocListener extends StatelessWidget {
         );
         break;
       case SignInBlocError.unverifiedEmail:
-        await showDialogDependingOnScreenSize(const EmailVerificationDialog());
+        showDialogDependingOnScreenSize(const EmailVerificationDialog());
         break;
       case SignInBlocError.userNotFound:
         await showMessageDialog(
