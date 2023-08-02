@@ -118,25 +118,29 @@ class FirebaseAuthService {
     }
   }
 
-  Future<void> reauthenticate({
+  Future<ReauthenticationStatus> reauthenticate({
     required FirebaseAuthProvider authProvider,
   }) async {
     final User? user = FirebaseAuth.instance.currentUser;
-    if (user == null) return;
+    if (user == null) return ReauthenticationStatus.cancelled;
     try {
-      await switch (authProvider) {
+      final String? reauthenticatedUserId = await switch (authProvider) {
         FirebaseAuthProviderPassword() =>
           _reauthenticateUserWithPassword(user, authProvider.password),
         FirebaseAuthProviderGoogle() => _googleAuthService.reauthenticate(),
         FirebaseAuthProviderFacebook() => _facebookAuthService.reauthenticate(),
       };
+      return reauthenticatedUserId != null
+          ? ReauthenticationStatus.confirmed
+          : ReauthenticationStatus.cancelled;
     } on FirebaseAuthException catch (exception) {
-      String code = exception.code;
       if (_hasPopupBeenCancelled(exception)) {
-        code = 'web-context-cancelled';
+        return ReauthenticationStatus.cancelled;
       } else if (exception.message?.contains('user-mismatch') == true) {
-        code = 'user-mismatch';
-      } else if (_isInternalError(exception)) {
+        return ReauthenticationStatus.userMismatch;
+      }
+      String code = exception.code;
+      if (_isInternalError(exception)) {
         code = 'network-request-failed';
       }
       throw mapFirebaseExceptionFromCodeStr(code);
@@ -153,12 +157,15 @@ class FirebaseAuthService {
       exception.message?.contains('An internal error') == true ||
       exception.message?.contains('internal-error') == true;
 
-  Future<void> _reauthenticateUserWithPassword(
+  Future<String?> _reauthenticateUserWithPassword(
     User user,
     String password,
   ) async {
-    await user.reauthenticateWithCredential(
+    final UserCredential credential = await user.reauthenticateWithCredential(
       EmailAuthProvider.credential(email: user.email!, password: password),
     );
+    return credential.user?.uid;
   }
 }
+
+enum ReauthenticationStatus { confirmed, cancelled, userMismatch }

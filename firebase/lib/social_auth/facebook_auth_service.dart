@@ -23,17 +23,19 @@ class FacebookAuthService implements SocialAuthService {
   }
 
   @override
-  Future<void> reauthenticate() async {
+  Future<String?> reauthenticate() async {
     final User? user = FirebaseAuth.instance.currentUser;
+    UserCredential? credential;
     if (kIsWeb) {
       final facebookProvider = _createWebProvider();
-      await user?.reauthenticateWithPopup(facebookProvider);
+      credential = await user?.reauthenticateWithPopup(facebookProvider);
     } else {
-      final OAuthCredential? credential = await _authenticateMobile();
-      if (credential != null) {
-        await user?.reauthenticateWithCredential(credential);
+      final OAuthCredential? oAuthCredential = await _authenticateMobile();
+      if (oAuthCredential != null) {
+        credential = await user?.reauthenticateWithCredential(oAuthCredential);
       }
     }
+    return credential?.user?.uid;
   }
 
   Future<OAuthCredential?> _authenticateMobile() async {

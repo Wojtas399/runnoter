@@ -27,5 +27,9 @@ abstract class AuthService {
 
   Future<void> deleteAccount();
 
-  Future<void> reauthenticate({required AuthProvider authProvider});
+  Future<ReauthenticationStatus> reauthenticate({
+    required AuthProvider authProvider,
+  });
 }
+
+enum ReauthenticationStatus { confirmed, cancelled, userMismatch }

@@ -26,12 +26,14 @@ class GoogleAuthService implements SocialAuthService {
   }
 
   @override
-  Future<void> reauthenticate() async {
+  Future<String?> reauthenticate() async {
     final User? user = FirebaseAuth.instance.currentUser;
+    UserCredential? credential;
     if (kIsWeb) {
-      await user?.reauthenticateWithPopup(GoogleAuthProvider());
+      credential = await user?.reauthenticateWithPopup(GoogleAuthProvider());
     } else {
-      await user?.reauthenticateWithProvider(GoogleAuthProvider());
+      credential = await user?.reauthenticateWithProvider(GoogleAuthProvider());
     }
+    return credential?.user?.uid;
   }
 }

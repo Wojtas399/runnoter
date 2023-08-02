@@ -1,4 +1,4 @@
-import 'package:firebase/firebase.dart';
+import 'package:firebase/firebase.dart' as firebase;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
@@ -9,7 +9,7 @@ import 'package:runnoter/domain/service/auth_service.dart';
 
 import '../../mock/firebase/mock_firebase_auth_service.dart';
 
-class FakeUserDto extends Fake implements UserDto {}
+class FakeUserDto extends Fake implements firebase.UserDto {}
 
 void main() {
   final firebaseAuthService = MockFirebaseAuthService();
@@ -20,7 +20,9 @@ void main() {
   });
 
   setUpAll(() {
-    GetIt.I.registerFactory<FirebaseAuthService>(() => firebaseAuthService);
+    GetIt.I.registerFactory<firebase.FirebaseAuthService>(
+      () => firebaseAuthService,
+    );
   });
 
   setUp(() {
@@ -101,8 +103,8 @@ void main() {
         code: AuthExceptionCode.invalidEmail,
       );
       firebaseAuthService.mockSignIn(
-        throwable: const FirebaseAuthException(
-          code: FirebaseAuthExceptionCode.invalidEmail,
+        throwable: const firebase.FirebaseAuthException(
+          code: firebase.FirebaseAuthExceptionCode.invalidEmail,
         ),
       );
 
@@ -131,8 +133,8 @@ void main() {
         code: AuthExceptionCode.userNotFound,
       );
       firebaseAuthService.mockSignIn(
-        throwable: const FirebaseAuthException(
-          code: FirebaseAuthExceptionCode.userNotFound,
+        throwable: const firebase.FirebaseAuthException(
+          code: firebase.FirebaseAuthExceptionCode.userNotFound,
         ),
       );
 
@@ -161,8 +163,8 @@ void main() {
         code: AuthExceptionCode.wrongPassword,
       );
       firebaseAuthService.mockSignIn(
-        throwable: const FirebaseAuthException(
-          code: FirebaseAuthExceptionCode.wrongPassword,
+        throwable: const firebase.FirebaseAuthException(
+          code: firebase.FirebaseAuthExceptionCode.wrongPassword,
         ),
       );
 
@@ -241,8 +243,8 @@ void main() {
         code: AuthExceptionCode.emailAlreadyInUse,
       );
       firebaseAuthService.mockSignUp(
-        throwable: const FirebaseAuthException(
-          code: FirebaseAuthExceptionCode.emailAlreadyInUse,
+        throwable: const firebase.FirebaseAuthException(
+          code: firebase.FirebaseAuthExceptionCode.emailAlreadyInUse,
         ),
       );
 
@@ -281,8 +283,8 @@ void main() {
         code: NetworkExceptionCode.tooManyRequests,
       );
       firebaseAuthService.mockSendEmailVerification(
-        throwable: const FirebaseNetworkException(
-          code: FirebaseNetworkExceptionCode.tooManyRequests,
+        throwable: const firebase.FirebaseNetworkException(
+          code: firebase.FirebaseNetworkExceptionCode.tooManyRequests,
         ),
       );
 
@@ -323,8 +325,8 @@ void main() {
         code: AuthExceptionCode.invalidEmail,
       );
       firebaseAuthService.mockSendPasswordResetEmail(
-        throwable: const FirebaseAuthException(
-          code: FirebaseAuthExceptionCode.invalidEmail,
+        throwable: const firebase.FirebaseAuthException(
+          code: firebase.FirebaseAuthExceptionCode.invalidEmail,
         ),
       );
 
@@ -352,8 +354,8 @@ void main() {
         code: AuthExceptionCode.userNotFound,
       );
       firebaseAuthService.mockSendPasswordResetEmail(
-        throwable: const FirebaseAuthException(
-          code: FirebaseAuthExceptionCode.userNotFound,
+        throwable: const firebase.FirebaseAuthException(
+          code: firebase.FirebaseAuthExceptionCode.userNotFound,
         ),
       );
 
@@ -410,8 +412,8 @@ void main() {
         code: AuthExceptionCode.emailAlreadyInUse,
       );
       firebaseAuthService.mockUpdateEmail(
-        throwable: const FirebaseAuthException(
-          code: FirebaseAuthExceptionCode.emailAlreadyInUse,
+        throwable: const firebase.FirebaseAuthException(
+          code: firebase.FirebaseAuthExceptionCode.emailAlreadyInUse,
         ),
       );
 
@@ -460,13 +462,18 @@ void main() {
     'reauthenticate, '
     'should call firebase method to reauthenticate user',
     () async {
-      firebaseAuthService.mockReauthenticate();
+      firebaseAuthService.mockReauthenticate(
+        reauthenticationStatus: firebase.ReauthenticationStatus.confirmed,
+      );
 
-      await service.reauthenticate(authProvider: const AuthProviderGoogle());
+      final reauthenticationStatus = await service.reauthenticate(
+        authProvider: const AuthProviderGoogle(),
+      );
 
+      expect(reauthenticationStatus, ReauthenticationStatus.confirmed);
       verify(
         () => firebaseAuthService.reauthenticate(
-          authProvider: const FirebaseAuthProviderGoogle(),
+          authProvider: const firebase.FirebaseAuthProviderGoogle(),
         ),
       ).called(1);
     },
@@ -482,8 +489,8 @@ void main() {
         code: AuthExceptionCode.wrongPassword,
       );
       firebaseAuthService.mockReauthenticate(
-        throwable: const FirebaseAuthException(
-          code: FirebaseAuthExceptionCode.wrongPassword,
+        throwable: const firebase.FirebaseAuthException(
+          code: firebase.FirebaseAuthExceptionCode.wrongPassword,
         ),
       );
 
@@ -499,7 +506,9 @@ void main() {
       expect(exception, expectedException);
       verify(
         () => firebaseAuthService.reauthenticate(
-          authProvider: const FirebaseAuthProviderPassword(password: password),
+          authProvider: const firebase.FirebaseAuthProviderPassword(
+            password: password,
+          ),
         ),
       ).called(1);
     },

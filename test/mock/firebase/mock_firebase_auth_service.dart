@@ -100,11 +100,16 @@ class MockFirebaseAuthService extends Mock implements FirebaseAuthService {
     }
   }
 
-  void mockReauthenticate({String? userId, Object? throwable}) {
+  void mockReauthenticate({
+    ReauthenticationStatus? reauthenticationStatus,
+    Object? throwable,
+  }) {
     if (throwable != null) {
       when(_reauthenticateCall).thenThrow(throwable);
     } else {
-      when(_reauthenticateCall).thenAnswer((_) => Future.value(userId));
+      when(
+        _reauthenticateCall,
+      ).thenAnswer((_) => Future.value(reauthenticationStatus));
     }
   }
 
@@ -138,7 +143,7 @@ class MockFirebaseAuthService extends Mock implements FirebaseAuthService {
         newPassword: any(named: 'newPassword'),
       );
 
-  Future<void> _reauthenticateCall() => reauthenticate(
+  Future<ReauthenticationStatus> _reauthenticateCall() => reauthenticate(
         authProvider: any(named: 'authProvider'),
       );
 }
