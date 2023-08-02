@@ -5,6 +5,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../domain/additional_model/bloc_status.dart';
 import '../../../domain/bloc/profile/identities/profile_identities_bloc.dart';
 import '../../component/responsive_layout_component.dart';
+import '../../component/text/body_text_components.dart';
 import '../../component/text/label_text_components.dart';
 import '../../component/text_field_component.dart';
 import '../../service/dialog_service.dart';
@@ -110,7 +111,7 @@ class _NormalDialog extends StatelessWidget {
     final str = Str.of(context);
 
     return AlertDialog(
-      title: Text(str.profileNewEmailDialogTitle),
+      title: Text(str.profileChangeEmailDialogTitle),
       content: SizedBox(
         width: 400,
         child: Column(
@@ -122,6 +123,18 @@ class _NormalDialog extends StatelessWidget {
               controller: emailController,
               validator: emailValidator,
               icon: Icons.email,
+            ),
+            TextFieldComponent(
+              label: str.email,
+              isRequired: true,
+              controller: emailController,
+              validator: emailValidator,
+              icon: Icons.email,
+            ),
+            const SizedBox(height: 24),
+            BodyMedium(
+              Str.of(context).profileChangeEmailDialogMessage,
+              color: Theme.of(context).colorScheme.outline,
             ),
           ],
         ),
@@ -162,7 +175,7 @@ class _FullScreenDialog extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(str.profileNewEmailDialogTitle),
+        title: Text(str.profileChangeEmailDialogTitle),
         leading: const CloseButton(),
         actions: [
           FilledButton(
@@ -186,6 +199,11 @@ class _FullScreenDialog extends StatelessWidget {
                   controller: emailController,
                   validator: emailValidator,
                   icon: Icons.email,
+                ),
+                const SizedBox(height: 24),
+                BodyMedium(
+                  Str.of(context).profileChangeEmailDialogMessage,
+                  color: Theme.of(context).colorScheme.outline,
                 ),
               ],
             ),

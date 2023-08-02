@@ -490,9 +490,13 @@
   "@profileNewSurnameDialogTitle": {
     "description": "Title of the dialog to change surname"
   },
-  "profileNewEmailDialogTitle": "Zmień email",
-  "@profileNewEmailDialogTitle": {
+  "profileChangeEmailDialogTitle": "Zmień email",
+  "@profileChangeEmailDialogTitle": {
     "description": "Title of the dialog to change email"
+  },
+  "profileChangeEmailDialogMessage": "Otrzymasz wiadomość weryfikacyjną w celu potwierdzenia twojego nowego adresu email.",
+  "@profileChangeEmailDialogMessage": {
+    "description": "Message of the dialog to change email"
   },
   "profileNewPasswordDialogTitle": "Zmień hasło",
   "@profileNewPasswordDialogTitle": {
