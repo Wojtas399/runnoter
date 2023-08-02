@@ -38,4 +38,6 @@ NetworkExceptionCode _mapNetworkExceptionCodeFromFirebase(
     switch (firebaseNetworkExceptionCode) {
       FirebaseNetworkExceptionCode.requestFailed =>
         NetworkExceptionCode.requestFailed,
+      FirebaseNetworkExceptionCode.tooManyRequests =>
+        NetworkExceptionCode.tooManyRequests,
     };

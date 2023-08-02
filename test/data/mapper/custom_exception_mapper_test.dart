@@ -139,6 +139,25 @@ void main() {
 
   test(
     'map exception from firebase, '
+    'FirebaseNetworkException with tooManyRequests code should be mapped to NetworkException with tooManyRequests code',
+    () {
+      const FirebaseException firebaseException = FirebaseNetworkException(
+        code: FirebaseNetworkExceptionCode.tooManyRequests,
+      );
+      const CustomException expectedException = NetworkException(
+        code: NetworkExceptionCode.tooManyRequests,
+      );
+
+      final CustomException exception = mapExceptionFromFirebase(
+        firebaseException,
+      );
+
+      expect(exception, expectedException);
+    },
+  );
+
+  test(
+    'map exception from firebase, '
     'FirebaseUnknownException should be mapped to UnknownException',
     () {
       const FirebaseException firebaseException = FirebaseUnknownException(
