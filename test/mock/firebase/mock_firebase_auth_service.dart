@@ -54,8 +54,12 @@ class MockFirebaseAuthService extends Mock implements FirebaseAuthService {
     }
   }
 
-  void mockSendEmailVerification() async {
-    when(sendEmailVerification).thenAnswer((_) => Future.value());
+  void mockSendEmailVerification({Object? throwable}) async {
+    if (throwable != null) {
+      when(sendEmailVerification).thenThrow(throwable);
+    } else {
+      when(sendEmailVerification).thenAnswer((_) => Future.value());
+    }
   }
 
   void mockSendPasswordResetEmail({Object? throwable}) {

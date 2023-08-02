@@ -17,11 +17,26 @@ class EmailVerificationDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => EmailVerificationCubit()..initialize(),
-      child: const ResponsiveLayout(
-        mobileBody: _MobileDialog(),
-        desktopBody: _DesktopDialog(),
+      child: BlocListener<EmailVerificationCubit, EmailVerificationState>(
+        listener: _manageCubitState,
+        child: const ResponsiveLayout(
+          mobileBody: _MobileDialog(),
+          desktopBody: _DesktopDialog(),
+        ),
       ),
     );
+  }
+
+  Future<void> _manageCubitState(
+    BuildContext context,
+    EmailVerificationState state,
+  ) async {
+    if (state is EmailVerificationStateTooManyRequests) {
+      await showMessageDialog(
+        title: Str.of(context).tooManyRequestsDialogTitle,
+        message: Str.of(context).tooManyRequestsDialogMessage,
+      );
+    }
   }
 }
 
@@ -115,40 +130,36 @@ class _Email extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final String? email = context.select(
-      (EmailVerificationCubit cubit) => cubit.state,
+      (EmailVerificationCubit cubit) => cubit.state.email,
     );
 
     return BodyLarge(email ?? '--', fontWeight: FontWeight.bold);
   }
 }
 
-class _ResendEmailVerificationButton extends StatefulWidget {
+class _ResendEmailVerificationButton extends StatelessWidget {
   const _ResendEmailVerificationButton();
 
   @override
-  State<StatefulWidget> createState() => _ResendEmailVerificationButtonState();
-}
-
-class _ResendEmailVerificationButtonState
-    extends State<_ResendEmailVerificationButton> {
-  bool _isLoading = false;
-
-  @override
   Widget build(BuildContext context) {
+    final cubitState = context.select(
+      (EmailVerificationCubit cubit) => cubit.state,
+    );
+
     return ConstrainedBox(
       constraints: const BoxConstraints(maxWidth: 300),
       child: SizedBox(
         height: 52,
         width: double.infinity,
         child: FilledButton(
-          onPressed: _onPressed,
-          child: _isLoading
-              ? SizedBox(
+          onPressed: cubitState is EmailVerificationStateLoading
+              ? null
+              : () => _onPressed(context),
+          child: cubitState is EmailVerificationStateLoading
+              ? const SizedBox(
                   height: 24,
                   width: 24,
-                  child: CircularProgressIndicator(
-                    color: Theme.of(context).colorScheme.primaryContainer,
-                  ),
+                  child: CircularProgressIndicator(),
                 )
               : Text(Str.of(context).emailVerificationResend),
         ),
@@ -156,19 +167,7 @@ class _ResendEmailVerificationButtonState
     );
   }
 
-  Future<void> _onPressed() async {
-    if (_isLoading) return;
-    setState(() {
-      _isLoading = true;
-    });
+  Future<void> _onPressed(BuildContext context) async {
     await context.read<EmailVerificationCubit>().resendEmailVerification();
-    setState(() {
-      _isLoading = false;
-    });
-    if (mounted) {
-      showSnackbarMessage(
-        Str.of(context).emailVerificationSuccessfullyResentEmailVerification,
-      );
-    }
   }
 }

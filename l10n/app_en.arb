@@ -272,6 +272,8 @@
   "@__________EXCEPTION_MESSAGES__________": {},
   "noInternetConnectionDialogTitle": "No internet connection",
   "noInternetConnectionDialogMessage": "It seems that you lost internet connection which is required to do this operation. Resolve this problem and try again",
+  "tooManyRequestsDialogTitle": "Too many requests",
+  "tooManyRequestsDialogMessage": "This operation has been called to many times. Try again later.",
   "noLoggedUserDialogTitle": "Session error",
   "noLoggedUserDialogMessage": "We've lost connection with your session. Sign in again to use the app properly.",
   "userMismatchDialogTitle": "Authentication error",

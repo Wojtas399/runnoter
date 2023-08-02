@@ -322,6 +322,32 @@ void main() {
   );
 
   test(
+    'send email verification, '
+    'firebase network exception with tooManyRequests code, '
+    'should throw auth exception with tooManyRequests code',
+    () async {
+      const NetworkException expectedException = NetworkException(
+        code: NetworkExceptionCode.tooManyRequests,
+      );
+      firebaseAuthService.mockSendEmailVerification(
+        throwable: const FirebaseNetworkException(
+          code: FirebaseNetworkExceptionCode.tooManyRequests,
+        ),
+      );
+
+      Object? exception;
+      try {
+        await service.sendEmailVerification();
+      } catch (e) {
+        exception = e;
+      }
+
+      expect(exception, expectedException);
+      verify(firebaseAuthService.sendEmailVerification).called(1);
+    },
+  );
+
+  test(
     'send password reset email, '
     "should call firebase service's method to send password reset email",
     () async {

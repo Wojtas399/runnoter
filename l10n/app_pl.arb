@@ -982,6 +982,14 @@
   "@noInternetConnectionDialogMessage": {
     "description": "Message of the dialog about no internet connection"
   },
+  "tooManyRequestsDialogTitle": "Za dużo żądań",
+  "@tooManyRequestsDialogTitle": {
+    "description": "Title of the dialog about too many requests"
+  },
+  "tooManyRequestsDialogMessage": "Ta operacja została wywołana zbyt wiele razy. Spróbuj ponownie później.",
+  "@tooManyRequestsDialogMessage": {
+    "description": "Message of the dialog about too many requests"
+  },
   "noLoggedUserDialogTitle": "Błąd sesji",
   "@noLoggedUserDialogTitle": {
     "description": "Title of the dialog about no logged user"

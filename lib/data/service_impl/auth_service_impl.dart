@@ -68,7 +68,11 @@ class AuthServiceImpl implements AuthService {
 
   @override
   Future<void> sendEmailVerification() async {
-    await _firebaseAuthService.sendEmailVerification();
+    try {
+      await _firebaseAuthService.sendEmailVerification();
+    } on FirebaseException catch (exception) {
+      throw mapExceptionFromFirebase(exception);
+    }
   }
 
   @override

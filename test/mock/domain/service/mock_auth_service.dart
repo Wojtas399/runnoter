@@ -53,8 +53,12 @@ class MockAuthService extends Mock implements AuthService {
     }
   }
 
-  void mockSendEmailVerification() {
-    when(sendEmailVerification).thenAnswer((_) => Future.value());
+  void mockSendEmailVerification({Object? throwable}) {
+    if (throwable != null) {
+      when(sendEmailVerification).thenThrow(throwable);
+    } else {
+      when(sendEmailVerification).thenAnswer((_) => Future.value());
+    }
   }
 
   void mockSendPasswordResetEmail({Object? throwable}) {
