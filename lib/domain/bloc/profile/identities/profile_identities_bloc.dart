@@ -155,6 +155,7 @@ class ProfileIdentitiesBloc extends BlocWithStatus<
     emitLoadingStatus(emit);
     try {
       await _authService.updateEmail(newEmail: event.newEmail);
+      await _authService.sendEmailVerification();
       emitCompleteStatus(emit, ProfileIdentitiesBlocInfo.dataSaved);
     } on AuthException catch (authException) {
       final ProfileIdentitiesBlocError? error =

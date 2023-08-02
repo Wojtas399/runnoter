@@ -52,10 +52,11 @@ void main() {
 
   blocTest(
     'initialize, '
-    'should set listener of logged user email and data',
+    'should set listener of logged user email, email verification status and data',
     build: () => ProfileIdentitiesBloc(),
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
+      authService.mockHasLoggedUserVerifiedEmail(expected: true);
       authService.mockGetLoggedUserEmail(userEmail: 'email@example.com');
       userRepository.mockGetUserById(
         user: createUser(
@@ -74,11 +75,13 @@ void main() {
         username: 'name',
         surname: 'surname',
         email: 'email@example.com',
+        isEmailVerified: true,
       ),
     ],
     verify: (_) {
       verify(() => authService.loggedUserId$).called(1);
       verify(() => authService.loggedUserEmail$).called(1);
+      verify(() => authService.hasLoggedUserVerifiedEmail$).called(1);
       verify(() => userRepository.getUserById(userId: loggedUserId)).called(1);
     },
   );
@@ -270,9 +273,12 @@ void main() {
 
   blocTest(
     'update email, '
-    'should call method from auth service to update email and should emit info that data have been saved',
+    'should call method from auth service to update email and to send email verification and should emit info that data have been saved',
     build: () => ProfileIdentitiesBloc(),
-    setUp: () => authService.mockUpdateEmail(),
+    setUp: () {
+      authService.mockUpdateEmail();
+      authService.mockSendEmailVerification();
+    },
     act: (bloc) => bloc.add(const ProfileIdentitiesEventUpdateEmail(
       newEmail: 'email@example.com',
     )),
@@ -280,12 +286,16 @@ void main() {
       const ProfileIdentitiesState(status: BlocStatusLoading()),
       const ProfileIdentitiesState(
         status: BlocStatusComplete<ProfileIdentitiesBlocInfo>(
-            info: ProfileIdentitiesBlocInfo.dataSaved),
+          info: ProfileIdentitiesBlocInfo.dataSaved,
+        ),
       ),
     ],
-    verify: (_) => verify(
-      () => authService.updateEmail(newEmail: 'email@example.com'),
-    ).called(1),
+    verify: (_) {
+      verify(
+        () => authService.updateEmail(newEmail: 'email@example.com'),
+      ).called(1);
+      verify(authService.sendEmailVerification).called(1);
+    },
   );
 
   blocTest(
