@@ -111,6 +111,36 @@ void main() {
 
   blocTest(
     'submit, '
+    'logged user does not exist, '
+    'should emit complete status without any info',
+    build: () => SignInBloc(email: email, password: password),
+    setUp: () {
+      authService.mockSignIn();
+      authService.mockHasLoggedUserVerifiedEmail();
+    },
+    act: (bloc) => bloc.add(const SignInEventSubmit()),
+    expect: () => [
+      const SignInState(
+        status: BlocStatusLoading(),
+        email: email,
+        password: password,
+      ),
+      const SignInState(
+        status: BlocStatusComplete<SignInBlocInfo>(),
+        email: email,
+        password: password,
+      ),
+    ],
+    verify: (_) {
+      verify(
+        () => authService.signIn(email: email, password: password),
+      ).called(1);
+      verify(() => authService.hasLoggedUserVerifiedEmail$).called(1);
+    },
+  );
+
+  blocTest(
+    'submit, '
     'user has verified email, '
     'should emit complete status with signed in info',
     build: () => SignInBloc(email: email, password: password),
@@ -350,8 +380,7 @@ void main() {
     'should emit complete status with signed in info',
     build: () => SignInBloc(),
     setUp: () {
-      authService.mockSignInWithGoogle();
-      authService.mockGetLoggedUserId(userId: 'u1');
+      authService.mockSignInWithGoogle(userId: 'u1');
       userRepository.mockGetUserById(user: createUser(id: 'u1'));
       authService.mockHasLoggedUserVerifiedEmail(expected: true);
     },
@@ -366,7 +395,6 @@ void main() {
     ],
     verify: (_) {
       verify(authService.signInWithGoogle).called(1);
-      verify(() => authService.loggedUserId$).called(1);
       verify(() => userRepository.getUserById(userId: 'u1')).called(1);
       verify(() => authService.hasLoggedUserVerifiedEmail$).called(1);
     },
@@ -378,8 +406,7 @@ void main() {
     "should emit error status with unverified email error and should call auth service's method to send email verification",
     build: () => SignInBloc(),
     setUp: () {
-      authService.mockSignInWithGoogle();
-      authService.mockGetLoggedUserId(userId: 'u1');
+      authService.mockSignInWithGoogle(userId: 'u1');
       userRepository.mockGetUserById(user: createUser(id: 'u1'));
       authService.mockHasLoggedUserVerifiedEmail(expected: false);
       authService.mockSendEmailVerification();
@@ -395,7 +422,6 @@ void main() {
     ],
     verify: (_) {
       verify(authService.signInWithGoogle).called(1);
-      verify(() => authService.loggedUserId$).called(1);
       verify(() => userRepository.getUserById(userId: 'u1')).called(1);
       verify(() => authService.hasLoggedUserVerifiedEmail$).called(1);
       verify(authService.sendEmailVerification).called(1);
@@ -408,8 +434,7 @@ void main() {
     'should emit complete status with new signed in user info',
     build: () => SignInBloc(),
     setUp: () {
-      authService.mockSignInWithGoogle();
-      authService.mockGetLoggedUserId(userId: 'u1');
+      authService.mockSignInWithGoogle(userId: 'u1');
       userRepository.mockGetUserById();
     },
     act: (bloc) => bloc.add(const SignInEventSignInWithGoogle()),
@@ -423,7 +448,6 @@ void main() {
     ],
     verify: (_) {
       verify(authService.signInWithGoogle).called(1);
-      verify(() => authService.loggedUserId$).called(1);
       verify(() => userRepository.getUserById(userId: 'u1')).called(1);
     },
   );
@@ -433,19 +457,13 @@ void main() {
     'there is no signed in user, '
     'should emit complete status without info',
     build: () => SignInBloc(),
-    setUp: () {
-      authService.mockSignInWithGoogle();
-      authService.mockGetLoggedUserId();
-    },
+    setUp: () => authService.mockSignInWithGoogle(),
     act: (bloc) => bloc.add(const SignInEventSignInWithGoogle()),
     expect: () => [
       const SignInState(status: BlocStatusLoading()),
       const SignInState(status: BlocStatusComplete<SignInBlocInfo>()),
     ],
-    verify: (_) {
-      verify(authService.signInWithGoogle).called(1);
-      verify(() => authService.loggedUserId$).called(1);
-    },
+    verify: (_) => verify(authService.signInWithGoogle).called(1),
   );
 
   blocTest(
@@ -490,8 +508,7 @@ void main() {
     'should emit complete status with signed in info',
     build: () => SignInBloc(),
     setUp: () {
-      authService.mockSignInWithFacebook();
-      authService.mockGetLoggedUserId(userId: 'u1');
+      authService.mockSignInWithFacebook(userId: 'u1');
       userRepository.mockGetUserById(user: createUser(id: 'u1'));
       authService.mockHasLoggedUserVerifiedEmail(expected: true);
     },
@@ -506,7 +523,6 @@ void main() {
     ],
     verify: (_) {
       verify(authService.signInWithFacebook).called(1);
-      verify(() => authService.loggedUserId$).called(1);
       verify(() => userRepository.getUserById(userId: 'u1')).called(1);
       verify(() => authService.hasLoggedUserVerifiedEmail$).called(1);
     },
@@ -518,8 +534,7 @@ void main() {
     "should emit error status with unverified email error and should call auth service's method to send email verification",
     build: () => SignInBloc(),
     setUp: () {
-      authService.mockSignInWithFacebook();
-      authService.mockGetLoggedUserId(userId: 'u1');
+      authService.mockSignInWithFacebook(userId: 'u1');
       userRepository.mockGetUserById(user: createUser(id: 'u1'));
       authService.mockHasLoggedUserVerifiedEmail(expected: false);
       authService.mockSendEmailVerification();
@@ -535,7 +550,6 @@ void main() {
     ],
     verify: (_) {
       verify(authService.signInWithFacebook).called(1);
-      verify(() => authService.loggedUserId$).called(1);
       verify(() => userRepository.getUserById(userId: 'u1')).called(1);
       verify(() => authService.hasLoggedUserVerifiedEmail$).called(1);
       verify(authService.sendEmailVerification).called(1);
@@ -548,8 +562,7 @@ void main() {
     'should emit complete status with new signed in user info',
     build: () => SignInBloc(),
     setUp: () {
-      authService.mockSignInWithFacebook();
-      authService.mockGetLoggedUserId(userId: 'u1');
+      authService.mockSignInWithFacebook(userId: 'u1');
       userRepository.mockGetUserById();
     },
     act: (bloc) => bloc.add(const SignInEventSignInWithFacebook()),
@@ -563,7 +576,6 @@ void main() {
     ],
     verify: (_) {
       verify(authService.signInWithFacebook).called(1);
-      verify(() => authService.loggedUserId$).called(1);
       verify(() => userRepository.getUserById(userId: 'u1')).called(1);
     },
   );
@@ -573,19 +585,13 @@ void main() {
     'there is no signed in user, '
     'should emit complete status without info',
     build: () => SignInBloc(),
-    setUp: () {
-      authService.mockSignInWithFacebook();
-      authService.mockGetLoggedUserId();
-    },
+    setUp: () => authService.mockSignInWithFacebook(),
     act: (bloc) => bloc.add(const SignInEventSignInWithFacebook()),
     expect: () => [
       const SignInState(status: BlocStatusLoading()),
       const SignInState(status: BlocStatusComplete<SignInBlocInfo>()),
     ],
-    verify: (_) {
-      verify(authService.signInWithFacebook).called(1);
-      verify(() => authService.loggedUserId$).called(1);
-    },
+    verify: (_) => verify(authService.signInWithFacebook).called(1),
   );
 
   blocTest(

@@ -106,8 +106,7 @@ class SignInBloc extends BlocWithStatus<SignInEvent, SignInState,
   ) async {
     try {
       emitLoadingStatus(emit);
-      await _authService.signInWithGoogle();
-      final String? loggedUserId = await _authService.loggedUserId$.first;
+      final String? loggedUserId = await _authService.signInWithGoogle();
       if (loggedUserId == null) {
         emitCompleteStatus(emit, null);
         return;
@@ -128,8 +127,7 @@ class SignInBloc extends BlocWithStatus<SignInEvent, SignInState,
   ) async {
     try {
       emitLoadingStatus(emit);
-      await _authService.signInWithFacebook();
-      final String? loggedUserId = await _authService.loggedUserId$.first;
+      final String? loggedUserId = await _authService.signInWithFacebook();
       if (loggedUserId == null) {
         emitCompleteStatus(emit, null);
         return;
@@ -186,7 +184,13 @@ class SignInBloc extends BlocWithStatus<SignInEvent, SignInState,
   Future<void> _checkIfLoggedUserHasVerifiedEmail(
     Emitter<SignInState> emit,
   ) async {
-    if (await _authService.hasLoggedUserVerifiedEmail$.first == true) {
+    final bool? hasLoggedUserVerifiedEmail =
+        await _authService.hasLoggedUserVerifiedEmail$.first;
+    if (hasLoggedUserVerifiedEmail == null) {
+      emitCompleteStatus(emit, null);
+      return;
+    }
+    if (hasLoggedUserVerifiedEmail == true) {
       emitCompleteStatus(emit, SignInBlocInfo.signedIn);
     } else {
       await _authService.sendEmailVerification();

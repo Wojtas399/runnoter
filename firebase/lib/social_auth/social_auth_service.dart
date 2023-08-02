@@ -1,5 +1,5 @@
 abstract interface class SocialAuthService {
-  Future<void> signIn();
+  Future<String?> signIn();
 
   Future<void> reauthenticate();
 }

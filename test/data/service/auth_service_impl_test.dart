@@ -5,6 +5,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/data/service_impl/auth_service_impl.dart';
 import 'package:runnoter/domain/additional_model/custom_exception.dart';
 import 'package:runnoter/domain/entity/auth_provider.dart';
+import 'package:runnoter/domain/service/auth_service.dart';
 
 import '../../mock/firebase/mock_firebase_auth_service.dart';
 
@@ -12,7 +13,7 @@ class FakeUserDto extends Fake implements UserDto {}
 
 void main() {
   final firebaseAuthService = MockFirebaseAuthService();
-  late AuthServiceImpl service;
+  late AuthService service;
 
   setUpAll(() {
     registerFallbackValue(FakeUserDto());
@@ -183,36 +184,11 @@ void main() {
     'sign in with google, '
     'should call firebase method to sign in with google',
     () async {
-      firebaseAuthService.mockSignInWithGoogle();
+      firebaseAuthService.mockSignInWithGoogle(userId: 'u1');
 
-      await service.signInWithGoogle();
+      final String? loggedUserId = await service.signInWithGoogle();
 
-      verify(firebaseAuthService.signInWithGoogle).called(1);
-    },
-  );
-
-  test(
-    'sign in with google, '
-    'firebase auth exception with socialAuthenticationCancelled code, '
-    'should throw auth exception with socialAuthenticationCancelled code',
-    () async {
-      const AuthException expectedAuthException = AuthException(
-        code: AuthExceptionCode.socialAuthenticationCancelled,
-      );
-      firebaseAuthService.mockSignInWithGoogle(
-        throwable: const FirebaseAuthException(
-          code: FirebaseAuthExceptionCode.socialAuthenticationCancelled,
-        ),
-      );
-
-      Object? exception;
-      try {
-        await service.signInWithGoogle();
-      } catch (e) {
-        exception = e;
-      }
-
-      expect(exception, expectedAuthException);
+      expect(loggedUserId, 'u1');
       verify(firebaseAuthService.signInWithGoogle).called(1);
     },
   );
@@ -221,36 +197,11 @@ void main() {
     'sign in with facebook, '
     'should call firebase method to sign in with facebook',
     () async {
-      firebaseAuthService.mockSignInWithFacebook();
+      firebaseAuthService.mockSignInWithFacebook(userId: 'u1');
 
-      await service.signInWithFacebook();
+      final String? loggedUserId = await service.signInWithFacebook();
 
-      verify(firebaseAuthService.signInWithFacebook).called(1);
-    },
-  );
-
-  test(
-    'sign in with facebook, '
-    'firebase auth exception with socialAuthenticationCancelled code, '
-    'should throw auth exception with socialAuthenticationCancelled code',
-    () async {
-      const AuthException expectedAuthException = AuthException(
-        code: AuthExceptionCode.socialAuthenticationCancelled,
-      );
-      firebaseAuthService.mockSignInWithFacebook(
-        throwable: const FirebaseAuthException(
-          code: FirebaseAuthExceptionCode.socialAuthenticationCancelled,
-        ),
-      );
-
-      Object? exception;
-      try {
-        await service.signInWithFacebook();
-      } catch (e) {
-        exception = e;
-      }
-
-      expect(exception, expectedAuthException);
+      expect(loggedUserId, 'u1');
       verify(firebaseAuthService.signInWithFacebook).called(1);
     },
   );

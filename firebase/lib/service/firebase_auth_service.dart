@@ -17,7 +17,7 @@ class FirebaseAuthService {
       FirebaseAuth.instance.userChanges().map((User? user) => user?.email);
 
   Stream<bool?> get hasLoggedUserVerifiedEmail$ => FirebaseAuth.instance
-      .userChanges()
+      .authStateChanges()
       .map((User? user) => user?.emailVerified);
 
   Future<void> signIn({
@@ -34,28 +34,26 @@ class FirebaseAuthService {
     }
   }
 
-  Future<void> signInWithGoogle() async {
+  Future<String?> signInWithGoogle() async {
     try {
-      await _googleAuthService.signIn();
+      return await _googleAuthService.signIn();
     } on FirebaseAuthException catch (exception) {
+      if (_hasPopupBeenCancelled(exception)) return null;
       String code = exception.code;
-      if (_hasPopupBeenCancelled(exception)) {
-        code = 'web-context-cancelled';
-      } else if (_isInternalError(exception)) {
+      if (_isInternalError(exception)) {
         code = 'network-request-failed';
       }
       throw mapFirebaseExceptionFromCodeStr(code);
     }
   }
 
-  Future<void> signInWithFacebook() async {
+  Future<String?> signInWithFacebook() async {
     try {
-      await _facebookAuthService.signIn();
+      return await _facebookAuthService.signIn();
     } on FirebaseAuthException catch (exception) {
+      if (_hasPopupBeenCancelled(exception)) return null;
       String code = exception.code;
-      if (_hasPopupBeenCancelled(exception)) {
-        code = 'web-context-cancelled';
-      } else if (_isInternalError(exception)) {
+      if (_isInternalError(exception)) {
         code = 'network-request-failed';
       }
       throw mapFirebaseExceptionFromCodeStr(code);

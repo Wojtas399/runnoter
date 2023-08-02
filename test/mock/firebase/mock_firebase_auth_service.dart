@@ -30,19 +30,19 @@ class MockFirebaseAuthService extends Mock implements FirebaseAuthService {
     }
   }
 
-  void mockSignInWithGoogle({Object? throwable}) {
+  void mockSignInWithGoogle({String? userId, Object? throwable}) {
     if (throwable != null) {
       when(signInWithGoogle).thenThrow(throwable);
     } else {
-      when(signInWithGoogle).thenAnswer((_) => Future.value());
+      when(signInWithGoogle).thenAnswer((_) => Future.value(userId));
     }
   }
 
-  void mockSignInWithFacebook({Object? throwable}) {
+  void mockSignInWithFacebook({String? userId, Object? throwable}) {
     if (throwable != null) {
       when(signInWithFacebook).thenThrow(throwable);
     } else {
-      when(signInWithFacebook).thenAnswer((_) => Future.value());
+      when(signInWithFacebook).thenAnswer((_) => Future.value(userId));
     }
   }
 
@@ -100,11 +100,11 @@ class MockFirebaseAuthService extends Mock implements FirebaseAuthService {
     }
   }
 
-  void mockReauthenticate({Object? throwable}) {
+  void mockReauthenticate({String? userId, Object? throwable}) {
     if (throwable != null) {
       when(_reauthenticateCall).thenThrow(throwable);
     } else {
-      when(_reauthenticateCall).thenAnswer((_) => Future.value());
+      when(_reauthenticateCall).thenAnswer((_) => Future.value(userId));
     }
   }
 

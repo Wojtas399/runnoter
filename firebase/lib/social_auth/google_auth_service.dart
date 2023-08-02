@@ -6,19 +6,23 @@ import 'social_auth_service.dart';
 
 class GoogleAuthService implements SocialAuthService {
   @override
-  Future<void> signIn() async {
+  Future<String?> signIn() async {
+    UserCredential? credential;
     if (kIsWeb) {
-      await FirebaseAuth.instance.signInWithPopup(GoogleAuthProvider());
+      credential =
+          await FirebaseAuth.instance.signInWithPopup(GoogleAuthProvider());
     } else {
       final GoogleSignInAccount? gAccount = await GoogleSignIn().signIn();
-      if (gAccount == null) return;
+      if (gAccount == null) return null;
       final GoogleSignInAuthentication gAuth = await gAccount.authentication;
       final gCredential = GoogleAuthProvider.credential(
         accessToken: gAuth.accessToken,
         idToken: gAuth.idToken,
       );
-      await FirebaseAuth.instance.signInWithCredential(gCredential);
+      credential =
+          await FirebaseAuth.instance.signInWithCredential(gCredential);
     }
+    return credential.user?.uid;
   }
 
   @override

@@ -6,16 +6,20 @@ import 'social_auth_service.dart';
 
 class FacebookAuthService implements SocialAuthService {
   @override
-  Future<void> signIn() async {
+  Future<String?> signIn() async {
+    UserCredential? credential;
     if (kIsWeb) {
       final facebookAuthProvider = _createWebProvider();
-      await FirebaseAuth.instance.signInWithPopup(facebookAuthProvider);
+      credential =
+          await FirebaseAuth.instance.signInWithPopup(facebookAuthProvider);
     } else {
-      final OAuthCredential? credential = await _authenticateMobile();
-      if (credential != null) {
-        await FirebaseAuth.instance.signInWithCredential(credential);
+      final OAuthCredential? oAuthCredential = await _authenticateMobile();
+      if (oAuthCredential != null) {
+        credential =
+            await FirebaseAuth.instance.signInWithCredential(oAuthCredential);
       }
     }
+    return credential?.user?.uid;
   }
 
   @override
