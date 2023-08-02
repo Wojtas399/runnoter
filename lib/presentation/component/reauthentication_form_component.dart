@@ -201,23 +201,22 @@ class _GoogleAuthentication extends StatelessWidget {
       );
 
   Future<void> _authenticateWithGoogle(BuildContext context) async {
+    final str = Str.of(context);
     try {
       showLoadingDialog();
-      await getIt<AuthService>().reauthenticate(
+      final ReauthenticationStatus reauthenticationStatus =
+          await getIt<AuthService>().reauthenticate(
         authProvider: const AuthProviderGoogle(),
       );
       closeLoadingDialog();
-      popRoute(result: true);
-    } on AuthException catch (exception) {
-      closeLoadingDialog();
-      if (exception.code == AuthExceptionCode.userMismatch) {
+      if (reauthenticationStatus == ReauthenticationStatus.confirmed) {
+        popRoute(result: true);
+      } else if (reauthenticationStatus ==
+          ReauthenticationStatus.userMismatch) {
         await showMessageDialog(
-          title: Str.of(context).userMismatchDialogTitle,
-          message: Str.of(context).userMismatchDialogMessage,
+          title: str.userMismatchDialogTitle,
+          message: str.userMismatchDialogMessage,
         );
-      }
-      if (exception.code != AuthExceptionCode.socialAuthenticationCancelled) {
-        rethrow;
       }
     } on NetworkException catch (exception) {
       closeLoadingDialog();
@@ -240,23 +239,22 @@ class _FacebookAuthentication extends StatelessWidget {
       );
 
   Future<void> _authenticateWithFacebook(BuildContext context) async {
+    final str = Str.of(context);
     try {
       showLoadingDialog();
-      await getIt<AuthService>().reauthenticate(
+      final ReauthenticationStatus reauthenticationStatus =
+          await getIt<AuthService>().reauthenticate(
         authProvider: const AuthProviderFacebook(),
       );
       closeLoadingDialog();
-      popRoute(result: true);
-    } on AuthException catch (exception) {
-      closeLoadingDialog();
-      if (exception.code == AuthExceptionCode.userMismatch) {
+      if (reauthenticationStatus == ReauthenticationStatus.confirmed) {
+        popRoute(result: true);
+      } else if (reauthenticationStatus ==
+          ReauthenticationStatus.userMismatch) {
         await showMessageDialog(
-          title: Str.of(context).userMismatchDialogTitle,
-          message: Str.of(context).userMismatchDialogMessage,
+          title: str.userMismatchDialogTitle,
+          message: str.userMismatchDialogMessage,
         );
-      } else if (exception.code !=
-          AuthExceptionCode.socialAuthenticationCancelled) {
-        rethrow;
       }
     } on NetworkException catch (exception) {
       closeLoadingDialog();

@@ -468,24 +468,6 @@ void main() {
 
   blocTest(
     'sign in with google, '
-    'auth exception with socialAuthenticationCancelled code'
-    'should emit complete status',
-    build: () => SignInBloc(),
-    setUp: () => authService.mockSignInWithGoogle(
-      throwable: const AuthException(
-        code: AuthExceptionCode.socialAuthenticationCancelled,
-      ),
-    ),
-    act: (bloc) => bloc.add(const SignInEventSignInWithGoogle()),
-    expect: () => [
-      const SignInState(status: BlocStatusLoading()),
-      const SignInState(status: BlocStatusComplete<SignInBlocInfo>()),
-    ],
-    verify: (_) => verify(authService.signInWithGoogle).called(1),
-  );
-
-  blocTest(
-    'sign in with google, '
     'network exception with requestFailed code'
     'should emit network request failed status',
     build: () => SignInBloc(),
@@ -586,24 +568,6 @@ void main() {
     'should emit complete status without info',
     build: () => SignInBloc(),
     setUp: () => authService.mockSignInWithFacebook(),
-    act: (bloc) => bloc.add(const SignInEventSignInWithFacebook()),
-    expect: () => [
-      const SignInState(status: BlocStatusLoading()),
-      const SignInState(status: BlocStatusComplete<SignInBlocInfo>()),
-    ],
-    verify: (_) => verify(authService.signInWithFacebook).called(1),
-  );
-
-  blocTest(
-    'sign in with facebook, '
-    'auth exception with socialAuthenticationCancelled code'
-    'should emit complete status',
-    build: () => SignInBloc(),
-    setUp: () => authService.mockSignInWithFacebook(
-      throwable: const AuthException(
-        code: AuthExceptionCode.socialAuthenticationCancelled,
-      ),
-    ),
     act: (bloc) => bloc.add(const SignInEventSignInWithFacebook()),
     expect: () => [
       const SignInState(status: BlocStatusLoading()),

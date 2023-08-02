@@ -112,8 +112,6 @@ class SignInBloc extends BlocWithStatus<SignInEvent, SignInState,
         return;
       }
       await _checkIfLoggedUserDataExist(loggedUserId, emit);
-    } on AuthException catch (_) {
-      emitCompleteStatus(emit, null);
     } on NetworkException catch (exception) {
       if (exception.code == NetworkExceptionCode.requestFailed) {
         emitNetworkRequestFailed(emit);
@@ -133,8 +131,6 @@ class SignInBloc extends BlocWithStatus<SignInEvent, SignInState,
         return;
       }
       await _checkIfLoggedUserDataExist(loggedUserId, emit);
-    } on AuthException catch (_) {
-      emitCompleteStatus(emit, null);
     } on NetworkException catch (exception) {
       if (exception.code == NetworkExceptionCode.requestFailed) {
         emitNetworkRequestFailed(emit);
