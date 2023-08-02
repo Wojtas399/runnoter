@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc_concurrency/bloc_concurrency.dart';
+import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -59,24 +60,31 @@ class ProfileIdentitiesBloc extends BlocWithStatus<
     ProfileIdentitiesEventInitialize event,
     Emitter<ProfileIdentitiesState> emit,
   ) async {
-    final Stream<(String?, User?)> userIdentities$ = Rx.combineLatest2(
+    final Stream<ProfileIdentitiesBlocListenedParams> stream$ =
+        Rx.combineLatest3(
       _authService.loggedUserEmail$,
+      _authService.hasLoggedUserVerifiedEmail$,
       _loggedUserData$,
-      (String? loggedUserEmail, User? loggedUserData) =>
-          (loggedUserEmail, loggedUserData),
+      (
+        String? loggedUserEmail,
+        bool? hasLoggedUserVerifiedEmail,
+        User? loggedUserData,
+      ) =>
+          ProfileIdentitiesBlocListenedParams(
+        loggedUserEmail: loggedUserEmail,
+        isEmailVerified: hasLoggedUserVerifiedEmail,
+        loggedUserData: loggedUserData,
+      ),
     );
     await emit.forEach(
-      userIdentities$,
-      onData: ((String?, User?) identities) {
-        final String? loggedUserEmail = identities.$1;
-        final User? loggedUserData = identities.$2;
-        return state.copyWith(
-          gender: loggedUserData?.gender,
-          email: loggedUserEmail,
-          username: loggedUserData?.name,
-          surname: loggedUserData?.surname,
-        );
-      },
+      stream$,
+      onData: (ProfileIdentitiesBlocListenedParams params) => state.copyWith(
+        gender: params.loggedUserData?.gender,
+        username: params.loggedUserData?.name,
+        surname: params.loggedUserData?.surname,
+        email: params.loggedUserEmail,
+        isEmailVerified: params.isEmailVerified,
+      ),
     );
   }
 
@@ -233,6 +241,21 @@ class ProfileIdentitiesBloc extends BlocWithStatus<
     await _raceRepository.deleteAllUserRaces(userId: loggedUserId);
     await _userRepository.deleteUser(userId: loggedUserId);
   }
+}
+
+class ProfileIdentitiesBlocListenedParams extends Equatable {
+  final String? loggedUserEmail;
+  final bool? isEmailVerified;
+  final User? loggedUserData;
+
+  const ProfileIdentitiesBlocListenedParams({
+    required this.loggedUserEmail,
+    required this.isEmailVerified,
+    required this.loggedUserData,
+  });
+
+  @override
+  List<Object?> get props => [loggedUserEmail, isEmailVerified, loggedUserData];
 }
 
 enum ProfileIdentitiesBlocInfo { dataSaved, accountDeleted }

@@ -17,7 +17,7 @@ class FirebaseAuthService {
       FirebaseAuth.instance.userChanges().map((User? user) => user?.email);
 
   Stream<bool?> get hasLoggedUserVerifiedEmail$ => FirebaseAuth.instance
-      .authStateChanges()
+      .userChanges()
       .map((User? user) => user?.emailVerified);
 
   Future<void> signIn({

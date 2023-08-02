@@ -181,14 +181,19 @@ class _Email extends StatelessWidget {
     final String? email = context.select(
       (ProfileIdentitiesBloc bloc) => bloc.state.email,
     );
+    final bool? isEmailVerified = context.select(
+      (ProfileIdentitiesBloc bloc) => bloc.state.isEmailVerified,
+    );
+    String? value = email;
+    if (isEmailVerified == false && value != null) {
+      value += ' (NOT VERIFIED!)';
+    }
 
     return ValueWithLabelAndIcon(
       iconData: Icons.email_outlined,
       label: Str.of(context).email,
-      value: email ?? '',
-      onPressed: () {
-        _onPressed(context);
-      },
+      value: value ?? '--',
+      onPressed: () => _onPressed(context),
     );
   }
 

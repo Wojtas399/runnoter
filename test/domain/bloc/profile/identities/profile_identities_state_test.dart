@@ -79,4 +79,17 @@ void main() {
       expect(state2.email, expectedEmail);
     },
   );
+
+  test(
+    'copy with is email verified',
+    () {
+      const bool expected = false;
+
+      state = state.copyWith(isEmailVerified: expected);
+      final state2 = state.copyWith();
+
+      expect(state.isEmailVerified, expected);
+      expect(state2.isEmailVerified, expected);
+    },
+  );
 }

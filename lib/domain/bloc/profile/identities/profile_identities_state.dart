@@ -5,6 +5,7 @@ class ProfileIdentitiesState extends BlocState {
   final String? username;
   final String? surname;
   final String? email;
+  final bool? isEmailVerified;
 
   const ProfileIdentitiesState({
     required super.status,
@@ -12,6 +13,7 @@ class ProfileIdentitiesState extends BlocState {
     this.username,
     this.surname,
     this.email,
+    this.isEmailVerified,
   });
 
   @override
@@ -21,6 +23,7 @@ class ProfileIdentitiesState extends BlocState {
         username,
         surname,
         email,
+        isEmailVerified,
       ];
 
   @override
@@ -30,6 +33,7 @@ class ProfileIdentitiesState extends BlocState {
     String? username,
     String? surname,
     String? email,
+    bool? isEmailVerified,
   }) {
     return ProfileIdentitiesState(
       status: status ?? const BlocStatusComplete(),
@@ -37,6 +41,7 @@ class ProfileIdentitiesState extends BlocState {
       username: username ?? this.username,
       surname: surname ?? this.surname,
       email: email ?? this.email,
+      isEmailVerified: isEmailVerified ?? this.isEmailVerified,
     );
   }
 }
