@@ -474,6 +474,10 @@
   "@profileSettings": {
     "description": "Title of settings section"
   },
+  "profileResendEmailVerification": "Wyślij ponownie email weryfikacyjny",
+  "@profileResendEmailVerification": {
+    "description": "Label of the button to send email verification"
+  },
   "profileChangePassword": "Zmień hasło",
   "@profileChangePassword": {
     "description": "Label of change password option"

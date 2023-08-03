@@ -66,6 +66,13 @@ class _IdentitiesBlocListener extends StatelessWidget {
           Str.of(context).profileSuccessfullySavedDataMessage,
         );
         break;
+      //TODO: check it on the web
+      case ProfileIdentitiesBlocInfo.emailChanged:
+        //TODO
+        break;
+      case ProfileIdentitiesBlocInfo.emailVerificationSent:
+        //TODO
+        break;
       case ProfileIdentitiesBlocInfo.accountDeleted:
         await showMessageDialog(
           title: Str.of(context).profileSuccessfullyDeletedAccountDialogTitle,

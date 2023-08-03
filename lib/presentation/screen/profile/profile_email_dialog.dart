@@ -114,29 +114,9 @@ class _NormalDialog extends StatelessWidget {
       title: Text(str.profileChangeEmailDialogTitle),
       content: SizedBox(
         width: 400,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextFieldComponent(
-              label: str.email,
-              isRequired: true,
-              controller: emailController,
-              validator: emailValidator,
-              icon: Icons.email,
-            ),
-            TextFieldComponent(
-              label: str.email,
-              isRequired: true,
-              controller: emailController,
-              validator: emailValidator,
-              icon: Icons.email,
-            ),
-            const SizedBox(height: 24),
-            BodyMedium(
-              Str.of(context).profileChangeEmailDialogMessage,
-              color: Theme.of(context).colorScheme.outline,
-            ),
-          ],
+        child: _Form(
+          emailController: emailController,
+          emailValidator: emailValidator,
         ),
       ),
       actions: [
@@ -191,25 +171,62 @@ class _FullScreenDialog extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.all(24),
             color: Colors.transparent,
-            child: Column(
-              children: [
-                TextFieldComponent(
-                  label: str.email,
-                  isRequired: true,
-                  controller: emailController,
-                  validator: emailValidator,
-                  icon: Icons.email,
-                ),
-                const SizedBox(height: 24),
-                BodyMedium(
-                  Str.of(context).profileChangeEmailDialogMessage,
-                  color: Theme.of(context).colorScheme.outline,
-                ),
-              ],
+            child: _Form(
+              emailController: emailController,
+              emailValidator: emailValidator,
             ),
           ),
         ),
       ),
     );
+  }
+}
+
+class _Form extends StatelessWidget {
+  final TextEditingController emailController;
+  final String? Function(String? value) emailValidator;
+
+  const _Form({
+    required this.emailController,
+    required this.emailValidator,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final str = Str.of(context);
+    final bool? isEmailVerified = context.select(
+      (ProfileIdentitiesBloc bloc) => bloc.state.isEmailVerified,
+    );
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        TextFieldComponent(
+          label: str.email,
+          isRequired: true,
+          controller: emailController,
+          validator: emailValidator,
+          icon: Icons.email,
+        ),
+        const SizedBox(height: 24),
+        BodyMedium(
+          str.profileChangeEmailDialogMessage,
+          color: Theme.of(context).colorScheme.outline,
+        ),
+        if (isEmailVerified == false) ...[
+          const SizedBox(height: 24),
+          OutlinedButton(
+            onPressed: () => _resendEmailVerification(context),
+            child: Text(str.profileResendEmailVerification),
+          ),
+        ],
+      ],
+    );
+  }
+
+  void _resendEmailVerification(BuildContext context) {
+    context.read<ProfileIdentitiesBloc>().add(
+          const ProfileIdentitiesEventSendEmailVerification(),
+        );
   }
 }

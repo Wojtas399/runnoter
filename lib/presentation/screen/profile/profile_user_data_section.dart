@@ -186,7 +186,7 @@ class _Email extends StatelessWidget {
     );
     String? value = email;
     if (isEmailVerified == false && value != null) {
-      value += ' (NOT VERIFIED!)';
+      value += ' (not verified)';
     }
 
     return ValueWithLabelAndIcon(

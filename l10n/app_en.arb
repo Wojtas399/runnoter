@@ -130,6 +130,7 @@
   "profileScreenTitle": "Profile",
   "profileUserData": "User identities",
   "profileSettings": "Settings",
+  "profileResendEmailVerification": "Resend email verification",
   "profileChangePassword": "Change password",
   "profileDeleteAccount": "Delete account",
   "profileNewUsernameDialogTitle": "Change name",

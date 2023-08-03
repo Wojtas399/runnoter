@@ -52,6 +52,7 @@ class ProfileIdentitiesBloc extends BlocWithStatus<
     on<ProfileIdentitiesEventUpdateUsername>(_updateUsername);
     on<ProfileIdentitiesEventUpdateSurname>(_updateSurname);
     on<ProfileIdentitiesEventUpdateEmail>(_updateEmail);
+    on<ProfileIdentitiesEventSendEmailVerification>(_sendEmailVerification);
     on<ProfileIdentitiesEventUpdatePassword>(_updatePassword);
     on<ProfileIdentitiesEventDeleteAccount>(_deleteAccount);
   }
@@ -156,7 +157,7 @@ class ProfileIdentitiesBloc extends BlocWithStatus<
     try {
       await _authService.updateEmail(newEmail: event.newEmail);
       await _authService.sendEmailVerification();
-      emitCompleteStatus(emit, ProfileIdentitiesBlocInfo.dataSaved);
+      emitCompleteStatus(emit, ProfileIdentitiesBlocInfo.emailChanged);
     } on AuthException catch (authException) {
       final ProfileIdentitiesBlocError? error =
           _mapAuthExceptionCodeToBlocError(authException.code);
@@ -174,6 +175,15 @@ class ProfileIdentitiesBloc extends BlocWithStatus<
       emitUnknownErrorStatus(emit);
       throw unknownException.message;
     }
+  }
+
+  Future<void> _sendEmailVerification(
+    ProfileIdentitiesEventSendEmailVerification event,
+    Emitter<ProfileIdentitiesState> emit,
+  ) async {
+    emitLoadingStatus(emit);
+    await _authService.sendEmailVerification();
+    emitCompleteStatus(emit, ProfileIdentitiesBlocInfo.emailVerificationSent);
   }
 
   Future<void> _updatePassword(
@@ -259,6 +269,11 @@ class ProfileIdentitiesBlocListenedParams extends Equatable {
   List<Object?> get props => [loggedUserEmail, isEmailVerified, loggedUserData];
 }
 
-enum ProfileIdentitiesBlocInfo { dataSaved, accountDeleted }
+enum ProfileIdentitiesBlocInfo {
+  dataSaved,
+  emailChanged,
+  emailVerificationSent,
+  accountDeleted,
+}
 
 enum ProfileIdentitiesBlocError { emailAlreadyInUse }

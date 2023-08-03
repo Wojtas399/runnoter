@@ -273,7 +273,7 @@ void main() {
 
   blocTest(
     'update email, '
-    'should call method from auth service to update email and to send email verification and should emit info that data have been saved',
+    'should call method from auth service to update email and to send email verification and should emit emailChanged info',
     build: () => ProfileIdentitiesBloc(),
     setUp: () {
       authService.mockUpdateEmail();
@@ -286,7 +286,7 @@ void main() {
       const ProfileIdentitiesState(status: BlocStatusLoading()),
       const ProfileIdentitiesState(
         status: BlocStatusComplete<ProfileIdentitiesBlocInfo>(
-          info: ProfileIdentitiesBlocInfo.dataSaved,
+          info: ProfileIdentitiesBlocInfo.emailChanged,
         ),
       ),
     ],
@@ -365,6 +365,25 @@ void main() {
     verify: (_) => verify(
       () => authService.updateEmail(newEmail: 'email@example.com'),
     ).called(1),
+  );
+
+  blocTest(
+    'send email verification, '
+    "should call auth service's method to send email verification and should emit emailVerificationSent info",
+    build: () => ProfileIdentitiesBloc(),
+    setUp: () => authService.mockSendEmailVerification(),
+    act: (bloc) => bloc.add(
+      const ProfileIdentitiesEventSendEmailVerification(),
+    ),
+    expect: () => [
+      const ProfileIdentitiesState(status: BlocStatusLoading()),
+      const ProfileIdentitiesState(
+        status: BlocStatusComplete<ProfileIdentitiesBlocInfo>(
+          info: ProfileIdentitiesBlocInfo.emailVerificationSent,
+        ),
+      ),
+    ],
+    verify: (_) => verify(authService.sendEmailVerification).called(1),
   );
 
   blocTest(

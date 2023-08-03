@@ -32,6 +32,11 @@ class ProfileIdentitiesEventUpdateEmail extends ProfileIdentitiesEvent {
   const ProfileIdentitiesEventUpdateEmail({required this.newEmail});
 }
 
+class ProfileIdentitiesEventSendEmailVerification
+    extends ProfileIdentitiesEvent {
+  const ProfileIdentitiesEventSendEmailVerification();
+}
+
 class ProfileIdentitiesEventUpdatePassword extends ProfileIdentitiesEvent {
   final String newPassword;
 
