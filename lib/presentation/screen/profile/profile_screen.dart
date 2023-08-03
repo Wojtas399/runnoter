@@ -69,9 +69,9 @@ class _IdentitiesBlocListenerState extends State<_IdentitiesBlocListener>
   ) async {
     switch (info) {
       case ProfileIdentitiesBlocInfo.dataSaved:
-        showSnackbarMessage(
-          Str.of(context).profileSuccessfullySavedDataMessage,
-        );
+        final str = Str.of(context);
+        await popRoute();
+        showSnackbarMessage(str.profileSuccessfullySavedDataMessage);
         break;
       case ProfileIdentitiesBlocInfo.emailChanged:
         await popRoute();

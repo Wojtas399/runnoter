@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/additional_model/bloc_status.dart';
 import '../../../domain/bloc/profile/identities/profile_identities_bloc.dart';
 import '../../component/password_text_field_component.dart';
 import '../../component/responsive_layout_component.dart';
@@ -42,31 +41,22 @@ class _State extends State<ProfilePasswordDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<ProfileIdentitiesBloc, ProfileIdentitiesState>(
-      listener: (BuildContext context, ProfileIdentitiesState state) {
-        final BlocStatus blocStatus = state.status;
-        if (blocStatus is BlocStatusComplete &&
-            blocStatus.info == ProfileIdentitiesBlocInfo.dataSaved) {
-          popRoute();
-        }
-      },
-      child: ResponsiveLayout(
-        mobileBody: _FullScreenDialog(
-          passwordController: _passwordController,
-          passwordConfirmationController: _passwordConfirmationController,
-          isSaveButtonDisabled: _isSaveButtonDisabled,
-          passwordValidator: _validatePassword,
-          passwordConfirmationValidator: _validatePasswordConfirmation,
-          onSaveButtonPressed: () => _onSaveButtonPressed(context),
-        ),
-        desktopBody: _NormalDialog(
-          passwordController: _passwordController,
-          passwordConfirmationController: _passwordConfirmationController,
-          isSaveButtonDisabled: _isSaveButtonDisabled,
-          passwordValidator: _validatePassword,
-          passwordConfirmationValidator: _validatePasswordConfirmation,
-          onSaveButtonPressed: () => _onSaveButtonPressed(context),
-        ),
+    return ResponsiveLayout(
+      mobileBody: _FullScreenDialog(
+        passwordController: _passwordController,
+        passwordConfirmationController: _passwordConfirmationController,
+        isSaveButtonDisabled: _isSaveButtonDisabled,
+        passwordValidator: _validatePassword,
+        passwordConfirmationValidator: _validatePasswordConfirmation,
+        onSaveButtonPressed: () => _onSaveButtonPressed(context),
+      ),
+      desktopBody: _NormalDialog(
+        passwordController: _passwordController,
+        passwordConfirmationController: _passwordConfirmationController,
+        isSaveButtonDisabled: _isSaveButtonDisabled,
+        passwordValidator: _validatePassword,
+        passwordConfirmationValidator: _validatePasswordConfirmation,
+        onSaveButtonPressed: () => _onSaveButtonPressed(context),
       ),
     );
   }
