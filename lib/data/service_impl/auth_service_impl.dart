@@ -126,7 +126,7 @@ class AuthServiceImpl implements AuthService {
   }
 
   @override
-  Future<void> reloadLoggedUserState() async {
-    await _firebaseAuthService.reloadLoggedUserState();
+  Future<void> reloadLoggedUser() async {
+    await _firebaseAuthService.reloadLoggedUser();
   }
 }

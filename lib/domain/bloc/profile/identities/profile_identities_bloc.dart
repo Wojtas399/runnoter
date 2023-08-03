@@ -55,6 +55,7 @@ class ProfileIdentitiesBloc extends BlocWithStatus<
     on<ProfileIdentitiesEventSendEmailVerification>(_sendEmailVerification);
     on<ProfileIdentitiesEventUpdatePassword>(_updatePassword);
     on<ProfileIdentitiesEventDeleteAccount>(_deleteAccount);
+    on<ProfileIdentitiesEventReloadLoggedUser>(_reloadLoggedUser);
   }
 
   Future<void> _initialize(
@@ -226,6 +227,13 @@ class ProfileIdentitiesBloc extends BlocWithStatus<
       emitUnknownErrorStatus(emit);
       throw unknownException.message;
     }
+  }
+
+  Future<void> _reloadLoggedUser(
+    ProfileIdentitiesEventReloadLoggedUser event,
+    Emitter<ProfileIdentitiesState> emit,
+  ) async {
+    await _authService.reloadLoggedUser();
   }
 
   Stream<User?> get _loggedUserData$ {

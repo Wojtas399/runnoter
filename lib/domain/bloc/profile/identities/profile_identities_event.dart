@@ -46,3 +46,7 @@ class ProfileIdentitiesEventUpdatePassword extends ProfileIdentitiesEvent {
 class ProfileIdentitiesEventDeleteAccount extends ProfileIdentitiesEvent {
   const ProfileIdentitiesEventDeleteAccount();
 }
+
+class ProfileIdentitiesEventReloadLoggedUser extends ProfileIdentitiesEvent {
+  const ProfileIdentitiesEventReloadLoggedUser();
+}

@@ -578,4 +578,14 @@ void main() {
       verify(() => authService.deleteAccount()).called(1);
     },
   );
+
+  blocTest(
+    'reload logged user, '
+    "should call auth service's method to reload logged user",
+    build: () => ProfileIdentitiesBloc(),
+    setUp: () => authService.mockReloadLoggedUser(),
+    act: (bloc) => bloc.add(const ProfileIdentitiesEventReloadLoggedUser()),
+    expect: () => [],
+    verify: (_) => verify(authService.reloadLoggedUser).called(1),
+  );
 }

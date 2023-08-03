@@ -31,7 +31,7 @@ abstract class AuthService {
     required AuthProvider authProvider,
   });
 
-  Future<void> reloadLoggedUserState();
+  Future<void> reloadLoggedUser();
 }
 
 enum ReauthenticationStatus { confirmed, cancelled, userMismatch }

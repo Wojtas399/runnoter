@@ -140,7 +140,7 @@ class FirebaseAuthService {
     }
   }
 
-  Future<void> reloadLoggedUserState() async {
+  Future<void> reloadLoggedUser() async {
     await FirebaseAuth.instance.currentUser?.reload();
   }
 

@@ -19,14 +19,10 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => ProfileIdentitiesBloc()
-        ..add(
-          const ProfileIdentitiesEventInitialize(),
-        ),
+        ..add(const ProfileIdentitiesEventInitialize()),
       child: BlocProvider(
-        create: (_) => ProfileSettingsBloc()
-          ..add(
-            const ProfileSettingsEventInitialize(),
-          ),
+        create: (_) =>
+            ProfileSettingsBloc()..add(const ProfileSettingsEventInitialize()),
         child: const _IdentitiesBlocListener(
           child: ProfileContent(),
         ),
@@ -35,7 +31,7 @@ class ProfileScreen extends StatelessWidget {
   }
 }
 
-class _IdentitiesBlocListener extends StatelessWidget {
+class _IdentitiesBlocListener extends StatefulWidget {
   final Widget child;
 
   const _IdentitiesBlocListener({
@@ -43,16 +39,27 @@ class _IdentitiesBlocListener extends StatelessWidget {
   });
 
   @override
+  State<StatefulWidget> createState() => _IdentitiesBlocListenerState();
+}
+
+class _IdentitiesBlocListenerState extends State<_IdentitiesBlocListener>
+    with AutoRouteAwareStateMixin {
+  @override
+  void didChangeTabRoute(TabPageRoute previousRoute) {
+    context.read<ProfileIdentitiesBloc>().add(
+          const ProfileIdentitiesEventReloadLoggedUser(),
+        );
+    super.didChangeTabRoute(previousRoute);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BlocWithStatusListener<ProfileIdentitiesBloc, ProfileIdentitiesState,
         ProfileIdentitiesBlocInfo, ProfileIdentitiesBlocError>(
-      child: child,
-      onInfo: (ProfileIdentitiesBlocInfo info) {
-        _manageInfo(context, info);
-      },
-      onError: (ProfileIdentitiesBlocError error) {
-        _manageError(context, error);
-      },
+      child: widget.child,
+      onInfo: (ProfileIdentitiesBlocInfo info) => _manageInfo(context, info),
+      onError: (ProfileIdentitiesBlocError error) =>
+          _manageError(context, error),
     );
   }
 
