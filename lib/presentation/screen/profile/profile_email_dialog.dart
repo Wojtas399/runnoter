@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/additional_model/bloc_status.dart';
 import '../../../domain/bloc/profile/identities/profile_identities_bloc.dart';
 import '../../component/responsive_layout_component.dart';
 import '../../component/text/body_text_components.dart';
@@ -41,27 +40,18 @@ class _State extends State<ProfileEmailDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<ProfileIdentitiesBloc, ProfileIdentitiesState>(
-      listener: (BuildContext context, ProfileIdentitiesState state) {
-        final BlocStatus blocStatus = state.status;
-        if (blocStatus is BlocStatusComplete &&
-            blocStatus.info == ProfileIdentitiesBlocInfo.dataSaved) {
-          popRoute();
-        }
-      },
-      child: ResponsiveLayout(
-        mobileBody: _FullScreenDialog(
-          isSaveButtonDisabled: _isSaveButtonDisabled,
-          onSaveButtonPressed: () => _onSaveButtonPressed(context),
-          emailController: _emailController,
-          emailValidator: _validateEmail,
-        ),
-        desktopBody: _NormalDialog(
-          isSaveButtonDisabled: _isSaveButtonDisabled,
-          onSaveButtonPressed: () => _onSaveButtonPressed(context),
-          emailController: _emailController,
-          emailValidator: _validateEmail,
-        ),
+    return ResponsiveLayout(
+      mobileBody: _FullScreenDialog(
+        isSaveButtonDisabled: _isSaveButtonDisabled,
+        onSaveButtonPressed: () => _onSaveButtonPressed(context),
+        emailController: _emailController,
+        emailValidator: _validateEmail,
+      ),
+      desktopBody: _NormalDialog(
+        isSaveButtonDisabled: _isSaveButtonDisabled,
+        onSaveButtonPressed: () => _onSaveButtonPressed(context),
+        emailController: _emailController,
+        emailValidator: _validateEmail,
       ),
     );
   }

@@ -14,11 +14,9 @@ void navigateAndRemoveUntil(PageRouteInfo route) {
   getIt<AppRouter>().replaceAll([route]);
 }
 
-void popRoute<T>({
-  T? result,
-}) {
+Future<void> popRoute<T>({T? result}) async {
   hideSnackbar();
-  getIt<AppRouter>().pop(result);
+  await getIt<AppRouter>().pop(result);
 }
 
 void popUntilRoot() {

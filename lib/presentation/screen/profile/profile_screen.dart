@@ -73,13 +73,13 @@ class _IdentitiesBlocListenerState extends State<_IdentitiesBlocListener>
           Str.of(context).profileSuccessfullySavedDataMessage,
         );
         break;
-      //TODO: check it on the web
       case ProfileIdentitiesBlocInfo.emailChanged:
-        //TODO
+        await popRoute();
+        if (mounted) await _showEmailVerificationMessage(context);
         break;
       case ProfileIdentitiesBlocInfo.emailVerificationSent:
-        //TODO
-        break;
+        await popRoute();
+        if (mounted) await _showEmailVerificationMessage(context);
       case ProfileIdentitiesBlocInfo.accountDeleted:
         await showMessageDialog(
           title: Str.of(context).profileSuccessfullyDeletedAccountDialogTitle,
@@ -101,5 +101,16 @@ class _IdentitiesBlocListenerState extends State<_IdentitiesBlocListener>
         );
         break;
     }
+  }
+
+  Future<void> _showEmailVerificationMessage(BuildContext context) async {
+    final String? email = context.read<ProfileIdentitiesBloc>().state.email;
+    if (email == null) return;
+    final str = Str.of(context);
+    await showMessageDialog(
+      title: str.emailVerificationTitle,
+      message:
+          '${str.emailVerificationMessage} $email. ${str.emailVerificationInstruction}',
+    );
   }
 }
