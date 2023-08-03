@@ -109,7 +109,7 @@ class SignUpBloc extends BlocWithStatus<SignUpEvent, SignUpState,
       }
     } on NetworkException catch (networkException) {
       if (networkException.code == NetworkExceptionCode.requestFailed) {
-        emitNetworkRequestFailed(emit);
+        emitNoInternetConnectionStatus(emit);
       }
     } on UnknownException catch (unknownException) {
       emitUnknownErrorStatus(emit);

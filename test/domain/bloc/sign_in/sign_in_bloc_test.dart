@@ -307,7 +307,7 @@ void main() {
         password: password,
       ),
       const SignInState(
-        status: BlocStatusNetworkRequestFailed(),
+        status: BlocStatusNoInternetConnection(),
         email: email,
         password: password,
       ),
@@ -479,7 +479,7 @@ void main() {
     act: (bloc) => bloc.add(const SignInEventSignInWithGoogle()),
     expect: () => [
       const SignInState(status: BlocStatusLoading()),
-      const SignInState(status: BlocStatusNetworkRequestFailed()),
+      const SignInState(status: BlocStatusNoInternetConnection()),
     ],
     verify: (_) => verify(authService.signInWithGoogle).called(1),
   );
@@ -589,7 +589,7 @@ void main() {
     act: (bloc) => bloc.add(const SignInEventSignInWithFacebook()),
     expect: () => [
       const SignInState(status: BlocStatusLoading()),
-      const SignInState(status: BlocStatusNetworkRequestFailed()),
+      const SignInState(status: BlocStatusNoInternetConnection()),
     ],
     verify: (_) => verify(authService.signInWithFacebook).called(1),
   );

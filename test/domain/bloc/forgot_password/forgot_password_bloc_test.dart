@@ -150,7 +150,7 @@ void main() {
         email: email,
       ),
       createState(
-        status: const BlocStatusNetworkRequestFailed(),
+        status: const BlocStatusNoInternetConnection(),
         email: email,
       ),
     ],

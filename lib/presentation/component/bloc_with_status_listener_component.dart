@@ -52,7 +52,7 @@ class BlocWithStatusListener<Bloc extends StateStreamable<State>,
         _manageErrorStatus(blocStatus, context);
       } else if (blocStatus is BlocStatusUnknownError) {
         _showUnknownErrorMessage(context);
-      } else if (blocStatus is BlocStatusNetworkRequestFailed) {
+      } else if (blocStatus is BlocStatusNoInternetConnection) {
         showNoInternetConnectionMessage();
       } else if (blocStatus is BlocStatusNoLoggedUser) {
         _showNoLoggedUserMessage(context);

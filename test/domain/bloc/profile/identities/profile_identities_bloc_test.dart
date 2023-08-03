@@ -339,7 +339,7 @@ void main() {
     )),
     expect: () => [
       const ProfileIdentitiesState(status: BlocStatusLoading()),
-      const ProfileIdentitiesState(status: BlocStatusNetworkRequestFailed()),
+      const ProfileIdentitiesState(status: BlocStatusNoInternetConnection()),
     ],
     verify: (_) => verify(
       () => authService.updateEmail(newEmail: 'email@example.com'),
@@ -421,7 +421,7 @@ void main() {
     )),
     expect: () => [
       const ProfileIdentitiesState(status: BlocStatusLoading()),
-      const ProfileIdentitiesState(status: BlocStatusNetworkRequestFailed()),
+      const ProfileIdentitiesState(status: BlocStatusNoInternetConnection()),
     ],
     verify: (_) => verify(
       () => authService.updatePassword(newPassword: 'newPassword'),
@@ -525,7 +525,7 @@ void main() {
     act: (bloc) => bloc.add(const ProfileIdentitiesEventDeleteAccount()),
     expect: () => [
       const ProfileIdentitiesState(status: BlocStatusLoading()),
-      const ProfileIdentitiesState(status: BlocStatusNetworkRequestFailed()),
+      const ProfileIdentitiesState(status: BlocStatusNoInternetConnection()),
     ],
     verify: (_) {
       verify(() => authService.loggedUserId$).called(1);

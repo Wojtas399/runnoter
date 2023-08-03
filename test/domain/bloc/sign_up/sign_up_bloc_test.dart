@@ -272,7 +272,7 @@ void main() {
         passwordConfirmation: password,
       ),
       const SignUpState(
-        status: BlocStatusNetworkRequestFailed(),
+        status: BlocStatusNoInternetConnection(),
         gender: gender,
         name: name,
         surname: surname,

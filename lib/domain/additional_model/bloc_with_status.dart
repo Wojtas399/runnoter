@@ -7,9 +7,9 @@ abstract class BlocWithStatus<Event, State extends BlocState, Info, Error>
     extends Bloc<Event, State> {
   BlocWithStatus(super.initialState);
 
-  void emitLoadingStatus(Emitter<State> emit) {
+  void emitLoadingStatus<T>(Emitter<State> emit, {T? loadingInfo}) {
     emit(state.copyWith(
-      status: const BlocStatusLoading(),
+      status: BlocStatusLoading<T>(loadingInfo: loadingInfo),
     ));
   }
 
@@ -31,9 +31,9 @@ abstract class BlocWithStatus<Event, State extends BlocState, Info, Error>
     ));
   }
 
-  void emitNetworkRequestFailed(Emitter<State> emit) {
+  void emitNoInternetConnectionStatus(Emitter<State> emit) {
     emit(state.copyWith(
-      status: const BlocStatusNetworkRequestFailed(),
+      status: const BlocStatusNoInternetConnection(),
     ));
   }
 

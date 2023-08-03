@@ -92,7 +92,7 @@ class SignInBloc extends BlocWithStatus<SignInEvent, SignInState,
       }
     } on NetworkException catch (networkException) {
       if (networkException.code == NetworkExceptionCode.requestFailed) {
-        emitNetworkRequestFailed(emit);
+        emitNoInternetConnectionStatus(emit);
       }
     } on UnknownException catch (unknownException) {
       emitUnknownErrorStatus(emit);
@@ -114,7 +114,7 @@ class SignInBloc extends BlocWithStatus<SignInEvent, SignInState,
       await _checkIfLoggedUserDataExist(loggedUserId, emit);
     } on NetworkException catch (exception) {
       if (exception.code == NetworkExceptionCode.requestFailed) {
-        emitNetworkRequestFailed(emit);
+        emitNoInternetConnectionStatus(emit);
       }
     }
   }
@@ -133,7 +133,7 @@ class SignInBloc extends BlocWithStatus<SignInEvent, SignInState,
       await _checkIfLoggedUserDataExist(loggedUserId, emit);
     } on NetworkException catch (exception) {
       if (exception.code == NetworkExceptionCode.requestFailed) {
-        emitNetworkRequestFailed(emit);
+        emitNoInternetConnectionStatus(emit);
       }
     }
   }

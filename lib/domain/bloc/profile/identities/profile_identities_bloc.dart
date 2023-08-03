@@ -170,7 +170,7 @@ class ProfileIdentitiesBloc extends BlocWithStatus<
       }
     } on NetworkException catch (networkException) {
       if (networkException.code == NetworkExceptionCode.requestFailed) {
-        emitNetworkRequestFailed(emit);
+        emitNoInternetConnectionStatus(emit);
       }
     } on UnknownException catch (unknownException) {
       emitUnknownErrorStatus(emit);
@@ -197,7 +197,7 @@ class ProfileIdentitiesBloc extends BlocWithStatus<
       emitCompleteStatus(emit, ProfileIdentitiesBlocInfo.dataSaved);
     } on NetworkException catch (networkException) {
       if (networkException.code == NetworkExceptionCode.requestFailed) {
-        emitNetworkRequestFailed(emit);
+        emitNoInternetConnectionStatus(emit);
       }
     } on UnknownException catch (unknownException) {
       emitUnknownErrorStatus(emit);
@@ -221,7 +221,7 @@ class ProfileIdentitiesBloc extends BlocWithStatus<
       emitCompleteStatus(emit, ProfileIdentitiesBlocInfo.accountDeleted);
     } on NetworkException catch (networkException) {
       if (networkException.code == NetworkExceptionCode.requestFailed) {
-        emitNetworkRequestFailed(emit);
+        emitNoInternetConnectionStatus(emit);
       }
     } on UnknownException catch (unknownException) {
       emitUnknownErrorStatus(emit);

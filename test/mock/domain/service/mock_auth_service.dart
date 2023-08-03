@@ -97,6 +97,19 @@ class MockAuthService extends Mock implements AuthService {
     }
   }
 
+  void mockReauthenticate({
+    ReauthenticationStatus? reauthenticationStatus,
+    Object? throwable,
+  }) {
+    if (throwable != null) {
+      when(_reauthenticateCall).thenThrow(throwable);
+    } else {
+      when(
+        _reauthenticateCall,
+      ).thenAnswer((_) => Future.value(reauthenticationStatus));
+    }
+  }
+
   void mockReloadLoggedUser() {
     when(reloadLoggedUser).thenAnswer((_) => Future.value());
   }
@@ -121,5 +134,9 @@ class MockAuthService extends Mock implements AuthService {
 
   Future<void> _updatePasswordCall() => updatePassword(
         newPassword: any(named: 'newPassword'),
+      );
+
+  Future<ReauthenticationStatus> _reauthenticateCall() => reauthenticate(
+        authProvider: any(named: 'authProvider'),
       );
 }
