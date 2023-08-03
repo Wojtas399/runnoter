@@ -513,4 +513,16 @@ void main() {
       ).called(1);
     },
   );
+
+  test(
+    'reload logged user state, '
+    "should call firebase auth service's method to reload logged user state",
+    () async {
+      firebaseAuthService.mockReloadLoggedUserState();
+
+      await service.reloadLoggedUserState();
+
+      verify(firebaseAuthService.reloadLoggedUserState).called(1);
+    },
+  );
 }

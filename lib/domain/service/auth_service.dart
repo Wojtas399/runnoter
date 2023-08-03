@@ -30,6 +30,8 @@ abstract class AuthService {
   Future<ReauthenticationStatus> reauthenticate({
     required AuthProvider authProvider,
   });
+
+  Future<void> reloadLoggedUserState();
 }
 
 enum ReauthenticationStatus { confirmed, cancelled, userMismatch }

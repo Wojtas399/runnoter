@@ -97,6 +97,10 @@ class MockAuthService extends Mock implements AuthService {
     }
   }
 
+  void mockReloadLoggedUserState() {
+    when(reloadLoggedUserState).thenAnswer((_) => Future.value());
+  }
+
   Future<void> _signInCall() => signIn(
         email: any(named: 'email'),
         password: any(named: 'password'),

@@ -140,6 +140,10 @@ class FirebaseAuthService {
     }
   }
 
+  Future<void> reloadLoggedUserState() async {
+    await FirebaseAuth.instance.currentUser?.reload();
+  }
+
   bool _hasPopupBeenCancelled(FirebaseAuthException exception) =>
       exception.code == 'web-context-cancelled' ||
       exception.code == 'web-context-canceled' ||

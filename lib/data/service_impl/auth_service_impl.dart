@@ -124,4 +124,9 @@ class AuthServiceImpl implements AuthService {
       throw mapExceptionFromFirebase(exception);
     }
   }
+
+  @override
+  Future<void> reloadLoggedUserState() async {
+    await _firebaseAuthService.reloadLoggedUserState();
+  }
 }
