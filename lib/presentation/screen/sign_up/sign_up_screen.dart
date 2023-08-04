@@ -5,8 +5,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/bloc/sign_up/sign_up_bloc.dart';
 import '../../component/bloc_with_status_listener_component.dart';
+import '../../dialog/email_verification/email_verification_dialog.dart';
 import '../../service/dialog_service.dart';
-import '../email_verification/email_verification_dialog.dart';
 import 'sign_up_content.dart';
 
 @RoutePage()
