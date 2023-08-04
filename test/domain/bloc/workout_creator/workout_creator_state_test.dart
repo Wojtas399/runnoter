@@ -1,22 +1,49 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/bloc/workout_creator/workout_creator_bloc.dart';
 import 'package:runnoter/domain/entity/workout.dart';
 import 'package:runnoter/domain/entity/workout_stage.dart';
 
 import '../../../creators/workout_creator.dart';
+import '../../../mock/common/mock_date_service.dart';
 
 void main() {
+  final dateService = MockDateService();
   late WorkoutCreatorState state;
 
   setUp(() {
-    state = const WorkoutCreatorState(
-      status: BlocStatusInitial(),
-      workout: null,
-      workoutName: null,
-      stages: [],
+    state = WorkoutCreatorState(
+      dateService: dateService,
+      status: const BlocStatusInitial(),
+      stages: const [],
     );
+    dateService.mockAreDatesTheSame(expected: true);
   });
+
+  tearDown(() {
+    reset(dateService);
+  });
+
+  test(
+    'can submit, '
+    'date is null, '
+    'should be false',
+    () {
+      state = state.copyWith(
+        status: const BlocStatusComplete(),
+        workoutName: 'workout name',
+        stages: const [
+          WorkoutStageCardio(
+            distanceInKm: 10,
+            maxHeartRate: 150,
+          ),
+        ],
+      );
+
+      expect(state.canSubmit, false);
+    },
+  );
 
   test(
     'can submit, '
@@ -24,6 +51,8 @@ void main() {
     'should be false',
     () {
       state = state.copyWith(
+        status: const BlocStatusComplete(),
+        date: DateTime(2023),
         stages: const [
           WorkoutStageCardio(
             distanceInKm: 10,
@@ -42,6 +71,8 @@ void main() {
     'should be false',
     () {
       state = state.copyWith(
+        status: const BlocStatusComplete(),
+        date: DateTime(2023),
         workoutName: '',
         stages: const [
           WorkoutStageCardio(
@@ -61,7 +92,10 @@ void main() {
     'should be false',
     () {
       state = state.copyWith(
+        status: const BlocStatusComplete(),
+        date: DateTime(2023),
         workoutName: 'workout name',
+        stages: const [],
       );
 
       expect(state.canSubmit, false);
@@ -70,13 +104,17 @@ void main() {
 
   test(
     'can submit, '
+    'date is the same as original date, '
     'workout name is the same as original workout name and '
     'stages are the same as original stages, '
     'should be false',
     () {
       state = state.copyWith(
+        status: const BlocStatusComplete(),
+        date: DateTime(2023),
         workout: createWorkout(
           name: 'workout name',
+          date: DateTime(2023),
           stages: const [
             WorkoutStageCardio(
               distanceInKm: 10,
@@ -112,7 +150,42 @@ void main() {
     'should be true',
     () {
       state = state.copyWith(
+        status: const BlocStatusComplete(),
+        date: DateTime(2023),
         workoutName: 'workout name',
+        stages: const [
+          WorkoutStageCardio(
+            distanceInKm: 10,
+            maxHeartRate: 150,
+          ),
+        ],
+      );
+
+      expect(state.canSubmit, true);
+    },
+  );
+
+  test(
+    'can submit, '
+    'workout is not null, '
+    'date is different than the original workout date, '
+    'should be true',
+    () {
+      dateService.mockAreDatesTheSame(expected: false);
+      state = state.copyWith(
+        status: const BlocStatusComplete(),
+        date: DateTime(2023, 2, 1),
+        workout: createWorkout(
+          date: DateTime(2023),
+          name: 'workout 1',
+          stages: const [
+            WorkoutStageCardio(
+              distanceInKm: 10,
+              maxHeartRate: 150,
+            ),
+          ],
+        ),
+        workoutName: 'workout 1',
         stages: const [
           WorkoutStageCardio(
             distanceInKm: 10,
@@ -132,7 +205,10 @@ void main() {
     'should be true',
     () {
       state = state.copyWith(
+        status: const BlocStatusComplete(),
+        date: DateTime(2023),
         workout: createWorkout(
+          date: DateTime(2023),
           name: 'workout 1',
           stages: const [
             WorkoutStageCardio(
@@ -161,7 +237,10 @@ void main() {
     'should be true',
     () {
       state = state.copyWith(
+        status: const BlocStatusComplete(),
+        date: DateTime(2023),
         workout: createWorkout(
+          date: DateTime(2023),
           name: 'workout 1',
           stages: const [
             WorkoutStageCardio(
@@ -201,6 +280,19 @@ void main() {
 
       expect(state.status, expectedStatus);
       expect(state2.status, const BlocStatusComplete());
+    },
+  );
+
+  test(
+    'copy with date',
+    () {
+      final DateTime expectedDate = DateTime(2023);
+
+      state = state.copyWith(date: expectedDate);
+      final state2 = state.copyWith();
+
+      expect(state.date, expectedDate);
+      expect(state2.date, expectedDate);
     },
   );
 
