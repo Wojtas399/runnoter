@@ -7,9 +7,9 @@ import '../../../domain/bloc/sign_in/sign_in_bloc.dart';
 import '../../component/bloc_with_status_listener_component.dart';
 import '../../config/navigation/router.dart';
 import '../../dialog/email_verification/email_verification_dialog.dart';
+import '../../dialog/required_data_completion/required_data_completion_dialog.dart';
 import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
-import '../required_data_completion/required_data_completion_dialog.dart';
 import 'sign_in_content.dart';
 
 @RoutePage()
