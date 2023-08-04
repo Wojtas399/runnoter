@@ -1,31 +1,62 @@
-import 'package:firebase_auth/firebase_auth.dart' as firebase;
+import 'package:firebase_auth/firebase_auth.dart';
 
 import '../mapper/firebase_exception_mapper.dart';
+import '../model/auth_provider.dart';
+import '../social_auth/facebook_auth_service.dart';
+import '../social_auth/google_auth_service.dart';
+import '../social_auth/social_auth_service.dart';
 
 class FirebaseAuthService {
-  Stream<String?> get loggedUserId$ {
-    return firebase.FirebaseAuth.instance.authStateChanges().map(
-          (firebase.User? user) => user?.uid,
-        );
-  }
+  final SocialAuthService _googleAuthService = GoogleAuthService();
+  final SocialAuthService _facebookAuthService = FacebookAuthService();
 
-  Stream<String?> get loggedUserEmail$ {
-    return firebase.FirebaseAuth.instance.authStateChanges().map(
-          (firebase.User? user) => user?.email,
-        );
-  }
+  Stream<String?> get loggedUserId$ =>
+      FirebaseAuth.instance.authStateChanges().map((User? user) => user?.uid);
+
+  Stream<String?> get loggedUserEmail$ =>
+      FirebaseAuth.instance.userChanges().map((User? user) => user?.email);
+
+  Stream<bool?> get hasLoggedUserVerifiedEmail$ => FirebaseAuth.instance
+      .userChanges()
+      .map((User? user) => user?.emailVerified);
 
   Future<void> signIn({
     required String email,
     required String password,
   }) async {
     try {
-      await firebase.FirebaseAuth.instance.signInWithEmailAndPassword(
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
-    } on firebase.FirebaseAuthException catch (exception) {
+    } on FirebaseAuthException catch (exception) {
       throw mapFirebaseExceptionFromCodeStr(exception.code);
+    }
+  }
+
+  Future<String?> signInWithGoogle() async {
+    try {
+      return await _googleAuthService.signIn();
+    } on FirebaseAuthException catch (exception) {
+      if (_hasPopupBeenCancelled(exception)) return null;
+      String code = exception.code;
+      if (_isInternalError(exception)) {
+        code = 'network-request-failed';
+      }
+      throw mapFirebaseExceptionFromCodeStr(code);
+    }
+  }
+
+  Future<String?> signInWithFacebook() async {
+    try {
+      return await _facebookAuthService.signIn();
+    } on FirebaseAuthException catch (exception) {
+      if (_hasPopupBeenCancelled(exception)) return null;
+      String code = exception.code;
+      if (_isInternalError(exception)) {
+        code = 'network-request-failed';
+      }
+      throw mapFirebaseExceptionFromCodeStr(code);
     }
   }
 
@@ -35,93 +66,119 @@ class FirebaseAuthService {
   }) async {
     try {
       final credential =
-          await firebase.FirebaseAuth.instance.createUserWithEmailAndPassword(
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
-      if (credential.user == null) {
-        return null;
+      return credential.user?.uid;
+    } on FirebaseAuthException catch (exception) {
+      throw mapFirebaseExceptionFromCodeStr(exception.code);
+    }
+  }
+
+  Future<void> sendEmailVerification() async {
+    try {
+      await FirebaseAuth.instance.currentUser?.sendEmailVerification();
+    } on FirebaseAuthException catch (exception) {
+      throw mapFirebaseExceptionFromCodeStr(exception.code);
+    }
+  }
+
+  Future<void> sendPasswordResetEmail({required String email}) async {
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+    } on FirebaseAuthException catch (exception) {
+      throw mapFirebaseExceptionFromCodeStr(exception.code);
+    }
+  }
+
+  Future<void> signOut() async => await FirebaseAuth.instance.signOut();
+
+  Future<void> updateEmail({required String newEmail}) async {
+    try {
+      await FirebaseAuth.instance.currentUser?.updateEmail(newEmail);
+    } on FirebaseAuthException catch (exception) {
+      throw mapFirebaseExceptionFromCodeStr(exception.code);
+    }
+  }
+
+  Future<void> updatePassword({required String newPassword}) async {
+    try {
+      await FirebaseAuth.instance.currentUser?.updatePassword(newPassword);
+    } on FirebaseAuthException catch (exception) {
+      throw mapFirebaseExceptionFromCodeStr(exception.code);
+    }
+  }
+
+  Future<void> deleteAccount() async {
+    try {
+      await FirebaseAuth.instance.currentUser?.delete();
+    } on FirebaseAuthException catch (exception) {
+      throw mapFirebaseExceptionFromCodeStr(exception.code);
+    }
+  }
+
+  Future<ReauthenticationStatus> reauthenticate({
+    required FirebaseAuthProvider authProvider,
+  }) async {
+    try {
+      final String? reauthenticatedUserId = await _reauthenticate(authProvider);
+      return reauthenticatedUserId != null
+          ? ReauthenticationStatus.confirmed
+          : ReauthenticationStatus.cancelled;
+    } on FirebaseAuthException catch (exception) {
+      if (_hasPopupBeenCancelled(exception)) {
+        return ReauthenticationStatus.cancelled;
+      } else if (_isUserMismatch(exception)) {
+        return ReauthenticationStatus.userMismatch;
       }
-      return credential.user!.uid;
-    } on firebase.FirebaseAuthException catch (exception) {
-      throw mapFirebaseExceptionFromCodeStr(exception.code);
+      String code = exception.code;
+      if (_isInternalError(exception)) {
+        code = 'network-request-failed';
+      }
+      throw mapFirebaseExceptionFromCodeStr(code);
     }
   }
 
-  Future<void> sendPasswordResetEmail({
-    required String email,
-  }) async {
+  Future<void> reloadLoggedUser() async {
     try {
-      await firebase.FirebaseAuth.instance.sendPasswordResetEmail(
-        email: email,
-      );
-    } on firebase.FirebaseAuthException catch (exception) {
+      await FirebaseAuth.instance.currentUser?.reload();
+    } on FirebaseAuthException catch (exception) {
       throw mapFirebaseExceptionFromCodeStr(exception.code);
     }
   }
 
-  Future<void> signOut() async {
-    await firebase.FirebaseAuth.instance.signOut();
-  }
+  bool _hasPopupBeenCancelled(FirebaseAuthException exception) =>
+      exception.code == 'web-context-cancelled' ||
+      exception.code == 'web-context-canceled' ||
+      exception.message?.contains('popup-closed-by-user') == true ||
+      exception.message?.contains('cancelled-popup-request') == true ||
+      exception.message?.contains('user-cancelled') == true;
 
-  Future<void> updateEmail({
-    required String newEmail,
-    required String password,
-  }) async {
-    try {
-      await _reauthenticate(password);
-      await firebase.FirebaseAuth.instance.currentUser?.updateEmail(newEmail);
-    } on firebase.FirebaseAuthException catch (exception) {
-      throw mapFirebaseExceptionFromCodeStr(exception.code);
-    }
-  }
+  bool _isUserMismatch(FirebaseAuthException exception) =>
+      exception.code == 'user-mismatch' ||
+      exception.message?.contains('user-mismatch') == true;
 
-  Future<void> updatePassword({
-    required String currentPassword,
-    required String newPassword,
-  }) async {
-    try {
-      await _reauthenticate(currentPassword);
-      await firebase.FirebaseAuth.instance.currentUser
-          ?.updatePassword(newPassword);
-    } on firebase.FirebaseAuthException catch (exception) {
-      throw mapFirebaseExceptionFromCodeStr(exception.code);
-    }
-  }
+  bool _isInternalError(FirebaseAuthException exception) =>
+      exception.message?.contains('An internal error') == true ||
+      exception.message?.contains('internal-error') == true;
 
-  Future<void> deleteAccount({
-    required String password,
-  }) async {
-    try {
-      await _reauthenticate(password);
-      await firebase.FirebaseAuth.instance.currentUser?.delete();
-    } on firebase.FirebaseAuthException catch (exception) {
-      throw mapFirebaseExceptionFromCodeStr(exception.code);
-    }
-  }
+  Future<String?> _reauthenticate(FirebaseAuthProvider authProvider) async =>
+      await switch (authProvider) {
+        FirebaseAuthProviderPassword() =>
+          _reauthenticateWithPassword(authProvider.password),
+        FirebaseAuthProviderGoogle() => _googleAuthService.reauthenticate(),
+        FirebaseAuthProviderFacebook() => _facebookAuthService.reauthenticate(),
+      };
 
-  Future<bool> isPasswordCorrect({
-    required String password,
-  }) async {
-    try {
-      await _reauthenticate(password);
-      return true;
-    } on firebase.FirebaseAuthException catch (exception) {
-      throw mapFirebaseExceptionFromCodeStr(exception.code);
-    }
-  }
-
-  Future<void> _reauthenticate(String password) async {
-    final String? email = await loggedUserEmail$.first;
-    if (email == null) {
-      return;
-    }
-    final firebase.AuthCredential credential =
-        firebase.EmailAuthProvider.credential(
-      email: email,
-      password: password,
+  Future<String?> _reauthenticateWithPassword(String password) async {
+    final User? user = FirebaseAuth.instance.currentUser;
+    if (user == null) return null;
+    final UserCredential credential = await user.reauthenticateWithCredential(
+      EmailAuthProvider.credential(email: user.email!, password: password),
     );
-    await firebase.FirebaseAuth.instance.currentUser
-        ?.reauthenticateWithCredential(credential);
+    return credential.user?.uid;
   }
 }
+
+enum ReauthenticationStatus { confirmed, cancelled, userMismatch }

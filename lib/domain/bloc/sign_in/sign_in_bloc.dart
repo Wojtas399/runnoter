@@ -7,19 +7,23 @@ import '../../../../domain/service/auth_service.dart';
 import '../../../dependency_injection.dart';
 import '../../additional_model/bloc_state.dart';
 import '../../additional_model/custom_exception.dart';
+import '../../entity/user.dart';
+import '../../repository/user_repository.dart';
 
 part 'sign_in_event.dart';
 part 'sign_in_state.dart';
 
-class SignInBloc
-    extends BlocWithStatus<SignInEvent, SignInState, SignInInfo, SignInError> {
+class SignInBloc extends BlocWithStatus<SignInEvent, SignInState,
+    SignInBlocInfo, SignInBlocError> {
   final AuthService _authService;
+  final UserRepository _userRepository;
 
   SignInBloc({
     BlocStatus status = const BlocStatusInitial(),
     String email = '',
     String password = '',
   })  : _authService = getIt<AuthService>(),
+        _userRepository = getIt<UserRepository>(),
         super(
           SignInState(
             status: status,
@@ -31,6 +35,9 @@ class SignInBloc
     on<SignInEventEmailChanged>(_emailChanged);
     on<SignInEventPasswordChanged>(_passwordChanged);
     on<SignInEventSubmit>(_submit);
+    on<SignInEventSignInWithGoogle>(_signInWithGoogle);
+    on<SignInEventSignInWithFacebook>(_signInWithFacebook);
+    on<SignInEventDeleteRecentlyCreatedAccount>(_deleteRecentlyCreatedAccount);
   }
 
   Future<void> _initialize(
@@ -38,12 +45,12 @@ class SignInBloc
     Emitter<SignInState> emit,
   ) async {
     emitLoadingStatus(emit);
-    SignInInfo? info;
-    final String? loggedUserId = await _authService.loggedUserId$.first;
-    if (loggedUserId != null) {
-      info = SignInInfo.signedIn;
+    SignInBlocInfo? info;
+    if (await _authService.loggedUserId$.first != null &&
+        await _authService.hasLoggedUserVerifiedEmail$.first == true) {
+      info = SignInBlocInfo.signedIn;
     }
-    emitCompleteStatus(emit, info);
+    emitCompleteStatus(emit, info: info);
   }
 
   void _emailChanged(
@@ -68,15 +75,13 @@ class SignInBloc
     SignInEventSubmit event,
     Emitter<SignInState> emit,
   ) async {
-    if (_isFormNotCompleted()) {
-      return;
-    }
+    if (state.isButtonDisabled) return;
     emitLoadingStatus(emit);
     try {
-      await _tryToSignIn();
-      emitCompleteStatus(emit, SignInInfo.signedIn);
+      await _authService.signIn(email: state.email, password: state.password);
+      await _checkIfLoggedUserHasVerifiedEmail(emit);
     } on AuthException catch (authException) {
-      final SignInError? error = _mapAuthExceptionCodeToBlocError(
+      final SignInBlocError? error = _mapAuthExceptionCodeToBlocError(
         authException.code,
       );
       if (error != null) {
@@ -87,7 +92,7 @@ class SignInBloc
       }
     } on NetworkException catch (networkException) {
       if (networkException.code == NetworkExceptionCode.requestFailed) {
-        emitNetworkRequestFailed(emit);
+        emitNoInternetConnectionStatus(emit);
       }
     } on UnknownException catch (unknownException) {
       emitUnknownErrorStatus(emit);
@@ -95,27 +100,106 @@ class SignInBloc
     }
   }
 
-  bool _isFormNotCompleted() {
-    return state.email.isEmpty || state.password.isEmpty;
+  Future<void> _signInWithGoogle(
+    SignInEventSignInWithGoogle event,
+    Emitter<SignInState> emit,
+  ) async {
+    try {
+      emitLoadingStatus(emit);
+      final String? loggedUserId = await _authService.signInWithGoogle();
+      if (loggedUserId == null) {
+        emitCompleteStatus(emit);
+        return;
+      }
+      await _checkIfLoggedUserDataExist(loggedUserId, emit);
+    } on NetworkException catch (exception) {
+      if (exception.code == NetworkExceptionCode.requestFailed) {
+        emitNoInternetConnectionStatus(emit);
+      }
+    }
   }
 
-  Future<void> _tryToSignIn() async {
-    await _authService.signIn(
-      email: state.email,
-      password: state.password,
-    );
+  Future<void> _signInWithFacebook(
+    SignInEventSignInWithFacebook event,
+    Emitter<SignInState> emit,
+  ) async {
+    try {
+      emitLoadingStatus(emit);
+      final String? loggedUserId = await _authService.signInWithFacebook();
+      if (loggedUserId == null) {
+        emitCompleteStatus(emit);
+        return;
+      }
+      await _checkIfLoggedUserDataExist(loggedUserId, emit);
+    } on NetworkException catch (exception) {
+      if (exception.code == NetworkExceptionCode.requestFailed) {
+        emitNoInternetConnectionStatus(emit);
+      }
+    }
   }
 
-  SignInError? _mapAuthExceptionCodeToBlocError(
+  Future<void> _deleteRecentlyCreatedAccount(
+    SignInEventDeleteRecentlyCreatedAccount event,
+    Emitter<SignInState> emit,
+  ) async {
+    emitLoadingStatus(emit);
+    await _authService.deleteAccount();
+    emitCompleteStatus(emit);
+  }
+
+  SignInBlocError? _mapAuthExceptionCodeToBlocError(
     AuthExceptionCode authExceptionCode,
   ) {
     if (authExceptionCode == AuthExceptionCode.invalidEmail) {
-      return SignInError.invalidEmail;
+      return SignInBlocError.invalidEmail;
     } else if (authExceptionCode == AuthExceptionCode.userNotFound) {
-      return SignInError.userNotFound;
+      return SignInBlocError.userNotFound;
     } else if (authExceptionCode == AuthExceptionCode.wrongPassword) {
-      return SignInError.wrongPassword;
+      return SignInBlocError.wrongPassword;
     }
     return null;
   }
+
+  Future<void> _checkIfLoggedUserDataExist(
+    String loggedUserId,
+    Emitter<SignInState> emit,
+  ) async {
+    final Stream<User?> loggedUser$ = _userRepository.getUserById(
+      userId: loggedUserId,
+    );
+    await for (final loggedUser in loggedUser$) {
+      if (loggedUser != null) {
+        await _checkIfLoggedUserHasVerifiedEmail(emit);
+      } else {
+        emitCompleteStatus(emit, info: SignInBlocInfo.newSignedInUser);
+      }
+      return;
+    }
+  }
+
+  Future<void> _checkIfLoggedUserHasVerifiedEmail(
+    Emitter<SignInState> emit,
+  ) async {
+    final bool? hasLoggedUserVerifiedEmail =
+        await _authService.hasLoggedUserVerifiedEmail$.first;
+    if (hasLoggedUserVerifiedEmail == null) {
+      emitCompleteStatus(emit);
+      return;
+    }
+    if (hasLoggedUserVerifiedEmail == true) {
+      emitCompleteStatus(emit, info: SignInBlocInfo.signedIn);
+    } else {
+      await _authService.sendEmailVerification();
+      emitErrorStatus(emit, SignInBlocError.unverifiedEmail);
+    }
+  }
+}
+
+enum SignInBlocInfo { signedIn, newSignedInUser }
+
+enum SignInBlocError {
+  invalidEmail,
+  unverifiedEmail,
+  userNotFound,
+  wrongPassword,
 }

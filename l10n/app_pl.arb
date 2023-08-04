@@ -8,6 +8,10 @@
   "@signInButtonLabel": {
     "description": "Label of the button to submit sign in form"
   },
+  "signInSignInWith": "lub zaloguj z",
+  "@signInSignInWith": {
+    "description": "Label of social sign in options"
+  },
   "signInDontHaveAccount": "Nie masz konta?",
   "@signInDontHaveAccount": {
     "description": "First part of option to navigate to sign up form"
@@ -35,6 +39,14 @@
   "signInUserNotFoundDialogMessage": "Użytkownik o podanym adresie email nie istnieje",
   "@signInUserNotFoundDialogMessage": {
     "description": "Message of the dialog to inform that user does not exist"
+  },
+  "signInCreateNewAccountConfirmationDialogTitle": "Brak pasującego użytkownika",
+  "@signInCreateNewAccountConfirmationDialogTitle": {
+    "description": "Title of the dialog to confirm to create new account"
+  },
+  "signInCreateNewAccountConfirmationDialogMessage": "Nie znaleziono użytkownika o pasujących danych uwierzytelniających. Czy chcesz utworzyć konto?",
+  "@signInCreatorNewAccountConfirmationDialogMessage": {
+    "description": "Message of the dialog to confirm to create new account"
   },
   "signInWrongPasswordDialogTitle": "Błędne hasło",
   "@signInWrongPasswordDialogTitle": {
@@ -68,6 +80,31 @@
   "signUpAlreadyTakenEmailDialogMessage": "Podany adres email jest już zajęty przez innego użytkownika...",
   "@signUpAlreadyTakenEmailDialogMessage": {
     "description": "Message of the dialog to inform that email is already taken"
+  },
+  "@__________EMAIL_VERIFICATION__________": {},
+  "emailVerificationTitle": "Potwierdź swój adres email",
+  "@emailVerificationTitle": {
+    "description": "Title of the dialog to inform that user has to confirm email address"
+  },
+  "emailVerificationMessage": "Wysłaliśmy wiadomość z linkiem potwierdzającym na twój adres email:",
+  "@emailVerificationMessage": {
+    "description": "Message of the dialog to inform that user has to confirm email address"
+  },
+  "emailVerificationInstruction": "Sprawdź swoją skrzynkę pocztową i kliknij na ten link, aby potwierdzić swój adres email.",
+  "@emailVerificationInstruction": {
+    "description": "Instruction of the dialog to inform that user has to confirm email address"
+  },
+  "emailVerificationResend": "Wyślij ponownie",
+  "@emailVerificationResend": {
+    "description": "Label of the button to resend confirmation email in email verification dialog"
+  },
+  "emailVerificationBackToLogin": "Wróć do logowania",
+  "@emailVerificationBackToLogin": {
+    "description": "Label of the button to navigate back to login in email verification dialog"
+  },
+  "emailVerificationSuccessfullyResentEmailVerification": "Email weryfikacyjny został ponownie wysłany",
+  "@emailVerificationSuccessfullyResentEmailVerification": {
+    "description": "Information that email verification has been sent again"
   },
   "@__________FORGOT_PASSWORD__________": {},
   "forgotPasswordTitle": "Zapomniałeś hasła?",
@@ -122,6 +159,15 @@
   "homeSignOutConfirmationDialogMessage": "Czy na pewno chcesz się wylogować?",
   "@homeSignOutConfirmationDialogMessage": {
     "description": "Message of the dialog to confirm sign out"
+  },
+  "@__________REQUIRED_DATA_COMPLETION__________": {},
+  "requiredDataCompletionTitle": "Wymagane dane",
+  "@requiredDataCompletionTitle": {
+    "description": "Title of required data completion screen"
+  },
+  "requiredDataCompletionMessage": "Dokończ tworzenie konta podając swoje dane osobowe. Są one niezbędne do prawidłowego działania aplikacji.",
+  "@requiredDataCompletionMessage": {
+    "description": "Message to information about required data completion"
   },
   "@__________CURRENT_WEEK__________": {},
   "currentWeekTitle": "Obecny tydzień",
@@ -428,6 +474,10 @@
   "@profileSettings": {
     "description": "Title of settings section"
   },
+  "profileResendEmailVerification": "Wyślij ponownie email weryfikacyjny",
+  "@profileResendEmailVerification": {
+    "description": "Label of the button to send email verification"
+  },
   "profileChangePassword": "Zmień hasło",
   "@profileChangePassword": {
     "description": "Label of change password option"
@@ -444,9 +494,13 @@
   "@profileNewSurnameDialogTitle": {
     "description": "Title of the dialog to change surname"
   },
-  "profileNewEmailDialogTitle": "Zmień email",
-  "@profileNewEmailDialogTitle": {
+  "profileChangeEmailDialogTitle": "Zmień email",
+  "@profileChangeEmailDialogTitle": {
     "description": "Title of the dialog to change email"
+  },
+  "profileChangeEmailDialogMessage": "Otrzymasz wiadomość weryfikacyjną w celu potwierdzenia twojego nowego adresu email.",
+  "@profileChangeEmailDialogMessage": {
+    "description": "Message of the dialog to change email"
   },
   "profileNewPasswordDialogTitle": "Zmień hasło",
   "@profileNewPasswordDialogTitle": {
@@ -456,9 +510,9 @@
   "@profileNewPasswordDialogNewPassword": {
     "description": "Label of text field to enter new password"
   },
-  "profileNewPasswordDialogCurrentPassword": "Obecne hasło",
-  "@profileNewPasswordDialogCurrentPassword": {
-    "description": "Label of text field to enter current password"
+  "profileNewPasswordDialogNewPasswordConfirmation": "Potwierdź nowe hasło",
+  "@profileNewPasswordDialogNewPasswordConfirmation": {
+    "description": "Label of text field to enter new password confirmation"
   },
   "profileDeleteAccountDialogTitle": "Usuń konto",
   "@profileDeleteAccountDialogTitle": {
@@ -480,21 +534,38 @@
   "@profileEmailAlreadyTakenDialogMessage": {
     "description": "Message of the dialog to inform that new email is already taken"
   },
-  "profileWrongPasswordDialogTitle": "Błędne hasło",
-  "@profileWrongPasswordDialogTitle": {
+  "profileSuccessfullyDeletedAccountDialogTitle": "Usunięcie konta",
+  "@profileSuccessfullyDeletedAccountDialogTitle": {
+    "description": "Title of the dialog to inform that the account has been deleted"
+  },
+  "profileSuccessfullyDeletedAccountDialogMessage": "Twoje konto zostało pomyślnie usunięte. Jeśli chcesz ponownie skorzystać z aplikacji, musisz założyć nowe konto.",
+  "@profileSuccessfullyDeletedAccountDialogMessage": {
+    "description": "Message of the dialog to inform that the account has been deleted"
+  },
+  "@__________RE_AUTHENTICATION__________": {},
+  "reauthenticationTitle": "Uwierzytelnienie",
+  "@reauthenticationTitle": {
+    "description": "Title of the reauthentication form"
+  },
+  "reauthenticationMessage": "Aby wykonać tę operację musisz powtórzyć procedurę uwierzytelnienia.",
+  "@reauthenticationMessage": {
+    "description": "Message about reauthentication procedure"
+  },
+  "reauthenticationAuthenticate": "Uwierzytelnij",
+  "@reauthenticationAuthenticate": {
+    "description": "Label of authenticate button"
+  },
+  "reauthenticationOrUse": "albo użyj",
+  "@reauthenticationOrUse": {
+    "description": "label of social authentication options"
+  },
+  "reauthenticationWrongPasswordDialogTitle": "Błędne hasło",
+  "@reauthenticationWrongPasswordDialogTitle": {
     "description": "Title of the dialog to inform that given password is wrong"
   },
-  "profileWrongPasswordDialogMessage": "Podane hasło jest błędne...",
-  "@profileWrongPasswordDialogMessage": {
+  "reauthenticationWrongPasswordDialogMessage": "Podane hasło jest błędne...",
+  "@reauthenticationWrongPasswordDialogMessage": {
     "description": "Message of the dialog to inform that given password is wrong"
-  },
-  "profileWrongCurrentPasswordDialogTitle": "Błędne obecne hasło",
-  "@profileWrongCurrentPasswordDialogTitle": {
-    "description": "Title of the dialog to inform that given current password is wrong"
-  },
-  "profileWrongCurrentPasswordDialogMessage": "Podane obecne hasło jest błędne...",
-  "@profileWrongCurrentPasswordDialogMessage": {
-    "description": "Message of the dialog to inform that given current password is wrong"
   },
   "@__________MILEAGE__________": {},
   "mileageTitle": "Kilometraż",
@@ -919,6 +990,14 @@
   "@noInternetConnectionDialogMessage": {
     "description": "Message of the dialog about no internet connection"
   },
+  "tooManyRequestsDialogTitle": "Za dużo żądań",
+  "@tooManyRequestsDialogTitle": {
+    "description": "Title of the dialog about too many requests"
+  },
+  "tooManyRequestsDialogMessage": "Ta operacja została wywołana zbyt wiele razy. Spróbuj ponownie później.",
+  "@tooManyRequestsDialogMessage": {
+    "description": "Message of the dialog about too many requests"
+  },
   "noLoggedUserDialogTitle": "Błąd sesji",
   "@noLoggedUserDialogTitle": {
     "description": "Title of the dialog about no logged user"
@@ -926,6 +1005,14 @@
   "noLoggedUserDialogMessage": "Utraciliśmy połączenie z twoją sesją. Zaloguj się ponownie, aby moć poprawnie korzystać z aplikacji.",
   "@noLoggedUserDialogMessage": {
     "description": "Message of the dialog about no logged user"
+  },
+  "userMismatchDialogTitle": "Błąd uwierzytelnienia",
+  "@userMismatchDialogTitle": {
+    "description": "Title of the dialog about user mismatch"
+  },
+  "userMismatchDialogMessage": "Próba uwierzytelnienia nie powiodła się, ponieważ dane uwierzytelniające są niezgodne z kontem, na którym jesteś obecnie zalogowany.",
+  "@userMismatchDialogMessage": {
+    "description": "Message of the dialog about user mismatch"
   },
   "unknownErrorDialogTitle": "Nieznany błąd",
   "@unknownErrorDialogTitle": {
@@ -970,6 +1057,7 @@
   "back": "Wróć",
   "add": "Dodaj",
   "leave": "Opuść",
+  "create": "Utwórz",
   "@__________VALIDATOR_MESSAGES__________": {},
   "requiredFieldMessage": "To pole jest wymagane",
   "@requiredFieldMessage": {

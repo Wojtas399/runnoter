@@ -139,10 +139,10 @@ class WorkoutCreatorBloc extends BlocWithStatus<WorkoutCreatorEvent,
     emitLoadingStatus(emit);
     if (state.workout != null) {
       await _updateWorkout(loggedUserId);
-      emitCompleteStatus(emit, WorkoutCreatorBlocInfo.workoutUpdated);
+      emitCompleteStatus(emit, info: WorkoutCreatorBlocInfo.workoutUpdated);
     } else if (date != null) {
       await _addWorkout(loggedUserId);
-      emitCompleteStatus(emit, WorkoutCreatorBlocInfo.workoutAdded);
+      emitCompleteStatus(emit, info: WorkoutCreatorBlocInfo.workoutAdded);
     }
   }
 

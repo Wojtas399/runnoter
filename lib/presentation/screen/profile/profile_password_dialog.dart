@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/additional_model/bloc_status.dart';
 import '../../../domain/bloc/profile/identities/profile_identities_bloc.dart';
 import '../../component/password_text_field_component.dart';
 import '../../component/responsive_layout_component.dart';
 import '../../component/text/label_text_components.dart';
+import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
 import '../../service/utils.dart';
 import '../../service/validation_service.dart';
@@ -19,94 +19,97 @@ class ProfilePasswordDialog extends StatefulWidget {
 }
 
 class _State extends State<ProfilePasswordDialog> {
-  final TextEditingController _newPasswordController = TextEditingController();
-  final TextEditingController _currentPasswordController =
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _passwordConfirmationController =
       TextEditingController();
+
   bool _isSaveButtonDisabled = true;
 
   @override
   void initState() {
-    _newPasswordController.addListener(_checkPasswordsCorrectness);
-    _currentPasswordController.addListener(_checkPasswordsCorrectness);
+    _passwordController.addListener(_checkPasswordsCorrectness);
+    _passwordConfirmationController.addListener(_checkPasswordsCorrectness);
     super.initState();
   }
 
   @override
   void dispose() {
-    _newPasswordController.removeListener(_checkPasswordsCorrectness);
-    _currentPasswordController.removeListener(_checkPasswordsCorrectness);
+    _passwordController.removeListener(_checkPasswordsCorrectness);
+    _passwordConfirmationController.removeListener(_checkPasswordsCorrectness);
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<ProfileIdentitiesBloc, ProfileIdentitiesState>(
-      listener: (BuildContext context, ProfileIdentitiesState state) {
-        final BlocStatus blocStatus = state.status;
-        if (blocStatus is BlocStatusComplete &&
-            blocStatus.info == ProfileInfo.savedData) {
-          popRoute();
-        }
-      },
-      child: ResponsiveLayout(
-        mobileBody: _FullScreenDialog(
-          newPasswordController: _newPasswordController,
-          currentPasswordController: _currentPasswordController,
-          isSaveButtonDisabled: _isSaveButtonDisabled,
-          newPasswordValidator: _validatePassword,
-          onSaveButtonPressed: () => _onSaveButtonPressed(context),
-        ),
-        desktopBody: _NormalDialog(
-          newPasswordController: _newPasswordController,
-          currentPasswordController: _currentPasswordController,
-          isSaveButtonDisabled: _isSaveButtonDisabled,
-          newPasswordValidator: _validatePassword,
-          onSaveButtonPressed: () => _onSaveButtonPressed(context),
-        ),
+    return ResponsiveLayout(
+      mobileBody: _FullScreenDialog(
+        passwordController: _passwordController,
+        passwordConfirmationController: _passwordConfirmationController,
+        isSaveButtonDisabled: _isSaveButtonDisabled,
+        passwordValidator: _validatePassword,
+        passwordConfirmationValidator: _validatePasswordConfirmation,
+        onSaveButtonPressed: () => _onSaveButtonPressed(context),
+      ),
+      desktopBody: _NormalDialog(
+        passwordController: _passwordController,
+        passwordConfirmationController: _passwordConfirmationController,
+        isSaveButtonDisabled: _isSaveButtonDisabled,
+        passwordValidator: _validatePassword,
+        passwordConfirmationValidator: _validatePasswordConfirmation,
+        onSaveButtonPressed: () => _onSaveButtonPressed(context),
       ),
     );
   }
 
   void _checkPasswordsCorrectness() {
-    final String newPassword = _newPasswordController.text;
-    final String currentPassword = _currentPasswordController.text;
+    final String password = _passwordController.text;
+    final String passwordConfirmation = _passwordConfirmationController.text;
     setState(() {
-      _isSaveButtonDisabled = newPassword.isEmpty ||
-          !isPasswordValid(newPassword) ||
-          currentPassword.isEmpty;
+      _isSaveButtonDisabled = password.isEmpty ||
+          !isPasswordValid(password) ||
+          passwordConfirmation.isEmpty ||
+          password != passwordConfirmation;
     });
   }
 
-  String? _validatePassword(String? value) {
-    if (value != null && !isPasswordValid(value)) {
-      return Str.of(context).invalidPasswordMessage;
-    }
-    return null;
-  }
+  String? _validatePassword(String? value) =>
+      value != null && !isPasswordValid(value)
+          ? Str.of(context).invalidPasswordMessage
+          : null;
 
-  void _onSaveButtonPressed(BuildContext context) {
+  String? _validatePasswordConfirmation(String? value) =>
+      value != null && value != _passwordController.text
+          ? Str.of(context).invalidPasswordConfirmationMessage
+          : null;
+
+  Future<void> _onSaveButtonPressed(BuildContext context) async {
     unfocusInputs();
-    context.read<ProfileIdentitiesBloc>().add(
-          ProfileIdentitiesEventUpdatePassword(
-            newPassword: _newPasswordController.text,
-            currentPassword: _currentPasswordController.text,
-          ),
-        );
+    final bloc = context.read<ProfileIdentitiesBloc>();
+    final bool reauthenticated = await askForReauthentication();
+    if (reauthenticated) {
+      bloc.add(
+        ProfileIdentitiesEventUpdatePassword(
+          newPassword: _passwordController.text,
+        ),
+      );
+    }
   }
 }
 
 class _NormalDialog extends StatelessWidget {
-  final TextEditingController newPasswordController;
-  final TextEditingController currentPasswordController;
+  final TextEditingController passwordController;
+  final TextEditingController passwordConfirmationController;
   final bool isSaveButtonDisabled;
-  final String? Function(String? value) newPasswordValidator;
+  final String? Function(String? value) passwordValidator;
+  final String? Function(String? value) passwordConfirmationValidator;
   final VoidCallback onSaveButtonPressed;
 
   const _NormalDialog({
-    required this.newPasswordController,
-    required this.currentPasswordController,
+    required this.passwordController,
+    required this.passwordConfirmationController,
     required this.isSaveButtonDisabled,
-    required this.newPasswordValidator,
+    required this.passwordValidator,
+    required this.passwordConfirmationValidator,
     required this.onSaveButtonPressed,
   });
 
@@ -124,14 +127,15 @@ class _NormalDialog extends StatelessWidget {
             PasswordTextFieldComponent(
               label: str.profileNewPasswordDialogNewPassword,
               isRequired: true,
-              controller: newPasswordController,
-              validator: newPasswordValidator,
+              controller: passwordController,
+              validator: passwordValidator,
             ),
-            const SizedBox(height: 32),
+            const SizedBox(height: 24),
             PasswordTextFieldComponent(
-              label: str.profileNewPasswordDialogCurrentPassword,
+              label: str.profileNewPasswordDialogNewPasswordConfirmation,
               isRequired: true,
-              controller: currentPasswordController,
+              controller: passwordConfirmationController,
+              validator: passwordConfirmationValidator,
             ),
           ],
         ),
@@ -154,17 +158,19 @@ class _NormalDialog extends StatelessWidget {
 }
 
 class _FullScreenDialog extends StatelessWidget {
-  final TextEditingController newPasswordController;
-  final TextEditingController currentPasswordController;
+  final TextEditingController passwordController;
+  final TextEditingController passwordConfirmationController;
   final bool isSaveButtonDisabled;
-  final String? Function(String? value) newPasswordValidator;
+  final String? Function(String? value) passwordValidator;
+  final String? Function(String? value) passwordConfirmationValidator;
   final VoidCallback onSaveButtonPressed;
 
   const _FullScreenDialog({
-    required this.newPasswordController,
-    required this.currentPasswordController,
+    required this.passwordController,
+    required this.passwordConfirmationController,
     required this.isSaveButtonDisabled,
-    required this.newPasswordValidator,
+    required this.passwordValidator,
+    required this.passwordConfirmationValidator,
     required this.onSaveButtonPressed,
   });
 
@@ -174,9 +180,7 @@ class _FullScreenDialog extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          str.profileNewPasswordDialogTitle,
-        ),
+        title: Text(str.profileNewPasswordDialogTitle),
         leading: const CloseButton(),
         actions: [
           FilledButton(
@@ -197,14 +201,15 @@ class _FullScreenDialog extends StatelessWidget {
                 PasswordTextFieldComponent(
                   label: str.profileNewPasswordDialogNewPassword,
                   isRequired: true,
-                  controller: newPasswordController,
-                  validator: newPasswordValidator,
+                  controller: passwordController,
+                  validator: passwordValidator,
                 ),
-                const SizedBox(height: 32),
+                const SizedBox(height: 24),
                 PasswordTextFieldComponent(
-                  label: str.profileNewPasswordDialogCurrentPassword,
+                  label: str.profileNewPasswordDialogNewPasswordConfirmation,
                   isRequired: true,
-                  controller: currentPasswordController,
+                  controller: passwordConfirmationController,
+                  validator: passwordConfirmationValidator,
                 ),
               ],
             ),

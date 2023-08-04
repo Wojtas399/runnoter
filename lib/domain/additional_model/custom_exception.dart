@@ -9,7 +9,6 @@ enum AuthExceptionCode {
   wrongPassword,
   userNotFound,
   emailAlreadyInUse,
-  networkRequestFailed,
 }
 
 class AuthException extends CustomException {
@@ -27,6 +26,7 @@ class AuthException extends CustomException {
 
 enum NetworkExceptionCode {
   requestFailed,
+  tooManyRequests,
 }
 
 class NetworkException extends CustomException {

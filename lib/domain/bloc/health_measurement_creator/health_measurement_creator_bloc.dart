@@ -55,7 +55,7 @@ class HealthMeasurementCreatorBloc extends BlocWithStatus<
     Emitter<HealthMeasurementCreatorState> emit,
   ) async {
     if (state.date == null) {
-      emitCompleteStatus(emit, null);
+      emitCompleteStatus(emit);
       return;
     }
     final Stream<HealthMeasurement?> measurement$ =
@@ -118,7 +118,7 @@ class HealthMeasurementCreatorBloc extends BlocWithStatus<
       await _updateMeasurement(loggedUserId);
       emitCompleteStatus(
         emit,
-        HealthMeasurementCreatorBlocInfo.measurementUpdated,
+        info: HealthMeasurementCreatorBlocInfo.measurementUpdated,
       );
     } else if (await _healthMeasurementRepository.doesMeasurementFromDateExist(
       userId: loggedUserId,
@@ -135,13 +135,13 @@ class HealthMeasurementCreatorBloc extends BlocWithStatus<
         await _deleteOriginalMeasurement(loggedUserId);
         emitCompleteStatus(
           emit,
-          HealthMeasurementCreatorBlocInfo.measurementUpdated,
+          info: HealthMeasurementCreatorBlocInfo.measurementUpdated,
         );
         return;
       }
       emitCompleteStatus(
         emit,
-        HealthMeasurementCreatorBlocInfo.measurementAdded,
+        info: HealthMeasurementCreatorBlocInfo.measurementAdded,
       );
     }
   }

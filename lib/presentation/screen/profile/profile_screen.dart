@@ -19,14 +19,10 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => ProfileIdentitiesBloc()
-        ..add(
-          const ProfileIdentitiesEventInitialize(),
-        ),
+        ..add(const ProfileIdentitiesEventInitialize()),
       child: BlocProvider(
-        create: (_) => ProfileSettingsBloc()
-          ..add(
-            const ProfileSettingsEventInitialize(),
-          ),
+        create: (_) =>
+            ProfileSettingsBloc()..add(const ProfileSettingsEventInitialize()),
         child: const _IdentitiesBlocListener(
           child: ProfileContent(),
         ),
@@ -35,7 +31,7 @@ class ProfileScreen extends StatelessWidget {
   }
 }
 
-class _IdentitiesBlocListener extends StatelessWidget {
+class _IdentitiesBlocListener extends StatefulWidget {
   final Widget child;
 
   const _IdentitiesBlocListener({
@@ -43,52 +39,78 @@ class _IdentitiesBlocListener extends StatelessWidget {
   });
 
   @override
+  State<StatefulWidget> createState() => _IdentitiesBlocListenerState();
+}
+
+class _IdentitiesBlocListenerState extends State<_IdentitiesBlocListener>
+    with AutoRouteAwareStateMixin {
+  @override
+  void didChangeTabRoute(TabPageRoute previousRoute) {
+    context.read<ProfileIdentitiesBloc>().add(
+          const ProfileIdentitiesEventReloadLoggedUser(),
+        );
+    super.didChangeTabRoute(previousRoute);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BlocWithStatusListener<ProfileIdentitiesBloc, ProfileIdentitiesState,
-        ProfileInfo, ProfileError>(
-      child: child,
-      onInfo: (ProfileInfo info) {
-        _manageInfo(context, info);
-      },
-      onError: (ProfileError error) {
-        _manageError(context, error);
-      },
+        ProfileIdentitiesBlocInfo, ProfileIdentitiesBlocError>(
+      child: widget.child,
+      onInfo: (ProfileIdentitiesBlocInfo info) => _manageInfo(context, info),
+      onError: (ProfileIdentitiesBlocError error) =>
+          _manageError(context, error),
     );
   }
 
-  void _manageInfo(BuildContext context, ProfileInfo info) {
+  Future<void> _manageInfo(
+    BuildContext context,
+    ProfileIdentitiesBlocInfo info,
+  ) async {
     switch (info) {
-      case ProfileInfo.savedData:
-        showSnackbarMessage(
-          Str.of(context).profileSuccessfullySavedDataMessage,
-        );
+      case ProfileIdentitiesBlocInfo.dataSaved:
+        final str = Str.of(context);
+        await popRoute();
+        showSnackbarMessage(str.profileSuccessfullySavedDataMessage);
         break;
-      case ProfileInfo.accountDeleted:
+      case ProfileIdentitiesBlocInfo.emailChanged:
+        await popRoute();
+        if (mounted) await _showEmailVerificationMessage(context);
+        break;
+      case ProfileIdentitiesBlocInfo.emailVerificationSent:
+        await popRoute();
+        if (mounted) await _showEmailVerificationMessage(context);
+      case ProfileIdentitiesBlocInfo.accountDeleted:
+        await showMessageDialog(
+          title: Str.of(context).profileSuccessfullyDeletedAccountDialogTitle,
+          message:
+              Str.of(context).profileSuccessfullyDeletedAccountDialogMessage,
+        );
         navigateAndRemoveUntil(const SignInRoute());
         break;
     }
   }
 
-  void _manageError(BuildContext context, ProfileError error) {
+  void _manageError(BuildContext context, ProfileIdentitiesBlocError error) {
     final str = Str.of(context);
     switch (error) {
-      case ProfileError.emailAlreadyInUse:
+      case ProfileIdentitiesBlocError.emailAlreadyInUse:
         showMessageDialog(
           title: str.profileEmailAlreadyTakenDialogTitle,
           message: str.profileEmailAlreadyTakenDialogMessage,
         );
         break;
-      case ProfileError.wrongPassword:
-        showMessageDialog(
-          title: str.profileWrongPasswordDialogTitle,
-          message: str.profileWrongPasswordDialogMessage,
-        );
-        break;
-      case ProfileError.wrongCurrentPassword:
-        showMessageDialog(
-          title: str.profileWrongCurrentPasswordDialogTitle,
-          message: str.profileWrongCurrentPasswordDialogMessage,
-        );
     }
+  }
+
+  Future<void> _showEmailVerificationMessage(BuildContext context) async {
+    final String? email = context.read<ProfileIdentitiesBloc>().state.email;
+    if (email == null) return;
+    final str = Str.of(context);
+    await showMessageDialog(
+      title: str.emailVerificationTitle,
+      message:
+          '${str.emailVerificationMessage} $email. ${str.emailVerificationInstruction}',
+    );
   }
 }

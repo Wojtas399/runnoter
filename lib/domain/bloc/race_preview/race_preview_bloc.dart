@@ -69,7 +69,7 @@ class RacePreviewBloc extends BlocWithStatus<RacePreviewEvent, RacePreviewState,
     );
     emitCompleteStatus(
       emit,
-      RacePreviewBlocInfo.raceDeleted,
+      info: RacePreviewBlocInfo.raceDeleted,
     );
   }
 }

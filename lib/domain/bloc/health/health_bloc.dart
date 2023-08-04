@@ -106,7 +106,7 @@ class HealthBloc
         fastingWeight: event.fastingWeight,
       ),
     );
-    emitCompleteStatus(emit, HealthBlocInfo.healthMeasurementAdded);
+    emitCompleteStatus(emit, info: HealthBlocInfo.healthMeasurementAdded);
   }
 
   Future<void> _deleteTodayMeasurement(
@@ -120,7 +120,7 @@ class HealthBloc
       userId: loggedUserId,
       date: _dateService.getToday(),
     );
-    emitCompleteStatus(emit, HealthBlocInfo.healthMeasurementDeleted);
+    emitCompleteStatus(emit, info: HealthBlocInfo.healthMeasurementDeleted);
   }
 
   void _changeChartRangeType(

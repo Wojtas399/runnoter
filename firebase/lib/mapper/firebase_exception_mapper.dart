@@ -17,5 +17,8 @@ FirebaseException mapFirebaseExceptionFromCodeStr(String codeStr) =>
       'network-request-failed' => const FirebaseNetworkException(
           code: FirebaseNetworkExceptionCode.requestFailed,
         ),
+      'too-many-requests' => const FirebaseNetworkException(
+          code: FirebaseNetworkExceptionCode.tooManyRequests,
+        ),
       String() => FirebaseUnknownException(message: codeStr),
     };

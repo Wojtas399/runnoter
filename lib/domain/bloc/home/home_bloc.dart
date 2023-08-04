@@ -56,7 +56,7 @@ class HomeBloc
   ) async {
     emitLoadingStatus(emit);
     await _authService.signOut();
-    emitCompleteStatus(emit, HomeBlocInfo.userSignedOut);
+    emitCompleteStatus(emit, info: HomeBlocInfo.userSignedOut);
   }
 }
 

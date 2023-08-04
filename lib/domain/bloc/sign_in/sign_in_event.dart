@@ -40,3 +40,15 @@ class SignInEventPasswordChanged extends SignInEvent {
 class SignInEventSubmit extends SignInEvent {
   const SignInEventSubmit();
 }
+
+class SignInEventSignInWithGoogle extends SignInEvent {
+  const SignInEventSignInWithGoogle();
+}
+
+class SignInEventSignInWithFacebook extends SignInEvent {
+  const SignInEventSignInWithFacebook();
+}
+
+class SignInEventDeleteRecentlyCreatedAccount extends SignInEvent {
+  const SignInEventDeleteRecentlyCreatedAccount();
+}

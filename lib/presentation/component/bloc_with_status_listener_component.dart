@@ -11,6 +11,7 @@ import '../service/navigator_service.dart';
 class BlocWithStatusListener<Bloc extends StateStreamable<State>,
     State extends BlocState, Info, Error> extends StatelessWidget {
   final Widget child;
+  final bool showDialogOnLoading;
   final void Function(State state)? onStateChanged;
   final void Function(Info info)? onInfo;
   final void Function(Error error)? onError;
@@ -18,6 +19,7 @@ class BlocWithStatusListener<Bloc extends StateStreamable<State>,
   const BlocWithStatusListener({
     super.key,
     required this.child,
+    this.showDialogOnLoading = true,
     this.onStateChanged,
     this.onInfo,
     this.onError,
@@ -27,8 +29,8 @@ class BlocWithStatusListener<Bloc extends StateStreamable<State>,
   Widget build(BuildContext context) {
     return BlocListener<Bloc, State>(
       listener: (BuildContext context, State state) {
-        _emitStateChange(state);
         _manageBlocStatus(state.status, context);
+        _emitStateChange(state);
       },
       child: child,
     );
@@ -43,7 +45,7 @@ class BlocWithStatusListener<Bloc extends StateStreamable<State>,
 
   void _manageBlocStatus(BlocStatus blocStatus, BuildContext context) {
     if (blocStatus is BlocStatusLoading) {
-      showLoadingDialog();
+      if (showDialogOnLoading) showLoadingDialog();
     } else {
       closeLoadingDialog();
       if (blocStatus is BlocStatusComplete) {
@@ -52,8 +54,8 @@ class BlocWithStatusListener<Bloc extends StateStreamable<State>,
         _manageErrorStatus(blocStatus, context);
       } else if (blocStatus is BlocStatusUnknownError) {
         _showUnknownErrorMessage(context);
-      } else if (blocStatus is BlocStatusNetworkRequestFailed) {
-        _showNoInternetConnectionMessage(context);
+      } else if (blocStatus is BlocStatusNoInternetConnection) {
+        showNoInternetConnectionMessage();
       } else if (blocStatus is BlocStatusNoLoggedUser) {
         _showNoLoggedUserMessage(context);
         navigateAndRemoveUntil(const SignInRoute());
@@ -86,12 +88,6 @@ class BlocWithStatusListener<Bloc extends StateStreamable<State>,
   void _showUnknownErrorMessage(BuildContext context) => showMessageDialog(
         title: Str.of(context).unknownErrorDialogTitle,
         message: Str.of(context).unknownErrorDialogMessage,
-      );
-
-  void _showNoInternetConnectionMessage(BuildContext context) =>
-      showMessageDialog(
-        title: Str.of(context).noInternetConnectionDialogTitle,
-        message: Str.of(context).noInternetConnectionDialogMessage,
       );
 
   void _showNoLoggedUserMessage(BuildContext context) => showMessageDialog(

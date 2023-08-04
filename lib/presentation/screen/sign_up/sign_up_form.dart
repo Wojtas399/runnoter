@@ -46,7 +46,7 @@ class _Gender extends StatelessWidget {
       children: [
         Expanded(
           child: ListTile(
-            contentPadding: const EdgeInsets.all(0),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 4),
             title: Text(str.male),
             leading: Radio(
               value: Gender.male,
@@ -58,7 +58,7 @@ class _Gender extends StatelessWidget {
         ),
         Expanded(
           child: ListTile(
-            contentPadding: const EdgeInsets.all(0),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 4),
             title: Text(str.female),
             leading: Radio(
               value: Gender.female,

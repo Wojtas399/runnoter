@@ -8,6 +8,8 @@ import '../../component/bloc_with_status_listener_component.dart';
 import '../../config/navigation/router.dart';
 import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
+import '../email_verification/email_verification_dialog.dart';
+import '../required_data_completion/required_data_completion_dialog.dart';
 import 'sign_in_content.dart';
 
 @RoutePage()
@@ -50,48 +52,68 @@ class _BlocListener extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocWithStatusListener<SignInBloc, SignInState, SignInInfo,
-        SignInError>(
-      onInfo: _manageCompletionInfo,
-      onError: (SignInError error) {
-        _manageError(error, context);
-      },
+    return BlocWithStatusListener<SignInBloc, SignInState, SignInBlocInfo,
+        SignInBlocError>(
+      onInfo: (SignInBlocInfo info) => _manageInfo(context, info),
+      onError: (SignInBlocError error) => _manageError(error, context),
       child: child,
     );
   }
 
-  Future<void> _manageCompletionInfo(SignInInfo info) async {
+  Future<void> _manageInfo(BuildContext context, SignInBlocInfo info) async {
     switch (info) {
-      case SignInInfo.signedIn:
+      case SignInBlocInfo.signedIn:
         navigateAndRemoveUntil(const HomeRoute());
+        break;
+      case SignInBlocInfo.newSignedInUser:
+        await _manageNewUser(context);
         break;
     }
   }
 
-  Future<void> _manageError(
-    SignInError error,
-    BuildContext context,
-  ) async {
+  Future<void> _manageError(SignInBlocError error, BuildContext context) async {
     final str = Str.of(context);
     switch (error) {
-      case SignInError.invalidEmail:
+      case SignInBlocError.invalidEmail:
         await showMessageDialog(
           title: str.signInInvalidEmailDialogTitle,
           message: str.signInInvalidEmailDialogMessage,
         );
         break;
-      case SignInError.userNotFound:
+      case SignInBlocError.unverifiedEmail:
+        showDialogDependingOnScreenSize(const EmailVerificationDialog());
+        break;
+      case SignInBlocError.userNotFound:
         await showMessageDialog(
           title: str.signInUserNotFoundDialogTitle,
           message: '${str.signInUserNotFoundDialogMessage}...',
         );
         break;
-      case SignInError.wrongPassword:
+      case SignInBlocError.wrongPassword:
         await showMessageDialog(
           title: str.signInWrongPasswordDialogTitle,
           message: str.signInWrongPasswordDialogMessage,
         );
         break;
+    }
+  }
+
+  Future<void> _manageNewUser(BuildContext context) async {
+    final SignInBloc bloc = context.read<SignInBloc>();
+    final bool wantToCreateAccount = await askForConfirmation(
+      title: Str.of(context).signInCreateNewAccountConfirmationDialogTitle,
+      message: Str.of(context).signInCreateNewAccountConfirmationDialogMessage,
+      confirmButtonLabel: Str.of(context).create,
+      barrierDismissible: false,
+    );
+    if (wantToCreateAccount) {
+      await showDialogDependingOnScreenSize(
+        const RequiredDataCompletionDialog(),
+        barrierDismissible: false,
+      );
+      navigateAndRemoveUntil(const HomeRoute());
+    } else {
+      bloc.add(const SignInEventDeleteRecentlyCreatedAccount());
     }
   }
 }

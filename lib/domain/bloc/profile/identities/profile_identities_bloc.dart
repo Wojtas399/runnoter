@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc_concurrency/bloc_concurrency.dart';
+import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -20,8 +21,11 @@ import '../../../repository/workout_repository.dart';
 part 'profile_identities_event.dart';
 part 'profile_identities_state.dart';
 
-class ProfileIdentitiesBloc extends BlocWithStatus<ProfileIdentitiesEvent,
-    ProfileIdentitiesState, ProfileInfo, ProfileError> {
+class ProfileIdentitiesBloc extends BlocWithStatus<
+    ProfileIdentitiesEvent,
+    ProfileIdentitiesState,
+    ProfileIdentitiesBlocInfo,
+    ProfileIdentitiesBlocError> {
   final AuthService _authService;
   final UserRepository _userRepository;
   final WorkoutRepository _workoutRepository;
@@ -48,33 +52,41 @@ class ProfileIdentitiesBloc extends BlocWithStatus<ProfileIdentitiesEvent,
     on<ProfileIdentitiesEventUpdateUsername>(_updateUsername);
     on<ProfileIdentitiesEventUpdateSurname>(_updateSurname);
     on<ProfileIdentitiesEventUpdateEmail>(_updateEmail);
+    on<ProfileIdentitiesEventSendEmailVerification>(_sendEmailVerification);
     on<ProfileIdentitiesEventUpdatePassword>(_updatePassword);
     on<ProfileIdentitiesEventDeleteAccount>(_deleteAccount);
+    on<ProfileIdentitiesEventReloadLoggedUser>(_reloadLoggedUser);
   }
 
   Future<void> _initialize(
     ProfileIdentitiesEventInitialize event,
     Emitter<ProfileIdentitiesState> emit,
   ) async {
-    final Stream<(String?, User?)> userIdentities$ = Rx.combineLatest2(
+    final Stream<ProfileIdentitiesBlocListenedParams> stream$ =
+        Rx.combineLatest3(
       _authService.loggedUserEmail$,
+      _authService.hasLoggedUserVerifiedEmail$,
       _loggedUserData$,
-      (String? loggedUserEmail, User? loggedUserData) =>
-          (loggedUserEmail, loggedUserData),
+      (
+        String? loggedUserEmail,
+        bool? hasLoggedUserVerifiedEmail,
+        User? loggedUserData,
+      ) =>
+          ProfileIdentitiesBlocListenedParams(
+        loggedUserEmail: loggedUserEmail,
+        isEmailVerified: hasLoggedUserVerifiedEmail,
+        loggedUserData: loggedUserData,
+      ),
     );
     await emit.forEach(
-      userIdentities$,
-      onData: ((String?, User?) identities) {
-        final String? loggedUserEmail = identities.$1;
-        final User? loggedUserData = identities.$2;
-        return state.copyWith(
-          loggedUserId: loggedUserData?.id,
-          gender: loggedUserData?.gender,
-          email: loggedUserEmail,
-          username: loggedUserData?.name,
-          surname: loggedUserData?.surname,
-        );
-      },
+      stream$,
+      onData: (ProfileIdentitiesBlocListenedParams params) => state.copyWith(
+        gender: params.loggedUserData?.gender,
+        username: params.loggedUserData?.name,
+        surname: params.loggedUserData?.surname,
+        email: params.loggedUserEmail,
+        isEmailVerified: params.isEmailVerified,
+      ),
     );
   }
 
@@ -108,32 +120,34 @@ class ProfileIdentitiesBloc extends BlocWithStatus<ProfileIdentitiesEvent,
     ProfileIdentitiesEventUpdateUsername event,
     Emitter<ProfileIdentitiesState> emit,
   ) async {
-    final String? userId = state.loggedUserId;
-    if (userId == null) {
+    final String? loggedUserId = await _authService.loggedUserId$.first;
+    if (loggedUserId == null) {
+      emitNoLoggedUserStatus(emit);
       return;
     }
     emitLoadingStatus(emit);
     await _userRepository.updateUserIdentities(
-      userId: userId,
+      userId: loggedUserId,
       name: event.username,
     );
-    emitCompleteStatus(emit, ProfileInfo.savedData);
+    emitCompleteStatus(emit, info: ProfileIdentitiesBlocInfo.dataSaved);
   }
 
   Future<void> _updateSurname(
     ProfileIdentitiesEventUpdateSurname event,
     Emitter<ProfileIdentitiesState> emit,
   ) async {
-    final String? userId = state.loggedUserId;
-    if (userId == null) {
+    final String? loggedUserId = await _authService.loggedUserId$.first;
+    if (loggedUserId == null) {
+      emitNoLoggedUserStatus(emit);
       return;
     }
     emitLoadingStatus(emit);
     await _userRepository.updateUserIdentities(
-      userId: userId,
+      userId: loggedUserId,
       surname: event.surname,
     );
-    emitCompleteStatus(emit, ProfileInfo.savedData);
+    emitCompleteStatus(emit, info: ProfileIdentitiesBlocInfo.dataSaved);
   }
 
   Future<void> _updateEmail(
@@ -142,15 +156,12 @@ class ProfileIdentitiesBloc extends BlocWithStatus<ProfileIdentitiesEvent,
   ) async {
     emitLoadingStatus(emit);
     try {
-      await _authService.updateEmail(
-        newEmail: event.newEmail,
-        password: event.password,
-      );
-      emitCompleteStatus(emit, ProfileInfo.savedData);
+      await _authService.updateEmail(newEmail: event.newEmail);
+      await _authService.sendEmailVerification();
+      emitCompleteStatus(emit, info: ProfileIdentitiesBlocInfo.emailChanged);
     } on AuthException catch (authException) {
-      final ProfileError? error = _mapAuthExceptionCodeToBlocError(
-        authException.code,
-      );
+      final ProfileIdentitiesBlocError? error =
+          _mapAuthExceptionCodeToBlocError(authException.code);
       if (error != null) {
         emitErrorStatus(emit, error);
       } else {
@@ -159,12 +170,24 @@ class ProfileIdentitiesBloc extends BlocWithStatus<ProfileIdentitiesEvent,
       }
     } on NetworkException catch (networkException) {
       if (networkException.code == NetworkExceptionCode.requestFailed) {
-        emitNetworkRequestFailed(emit);
+        emitNoInternetConnectionStatus(emit);
       }
     } on UnknownException catch (unknownException) {
       emitUnknownErrorStatus(emit);
       throw unknownException.message;
     }
+  }
+
+  Future<void> _sendEmailVerification(
+    ProfileIdentitiesEventSendEmailVerification event,
+    Emitter<ProfileIdentitiesState> emit,
+  ) async {
+    emitLoadingStatus(emit);
+    await _authService.sendEmailVerification();
+    emitCompleteStatus(
+      emit,
+      info: ProfileIdentitiesBlocInfo.emailVerificationSent,
+    );
   }
 
   Future<void> _updatePassword(
@@ -173,21 +196,11 @@ class ProfileIdentitiesBloc extends BlocWithStatus<ProfileIdentitiesEvent,
   ) async {
     emitLoadingStatus(emit);
     try {
-      await _authService.updatePassword(
-        newPassword: event.newPassword,
-        currentPassword: event.currentPassword,
-      );
-      emitCompleteStatus(emit, ProfileInfo.savedData);
-    } on AuthException catch (authException) {
-      if (authException.code == AuthExceptionCode.wrongPassword) {
-        emitErrorStatus(emit, ProfileError.wrongCurrentPassword);
-      } else {
-        emitUnknownErrorStatus(emit);
-        rethrow;
-      }
+      await _authService.updatePassword(newPassword: event.newPassword);
+      emitCompleteStatus(emit, info: ProfileIdentitiesBlocInfo.dataSaved);
     } on NetworkException catch (networkException) {
       if (networkException.code == NetworkExceptionCode.requestFailed) {
-        emitNetworkRequestFailed(emit);
+        emitNoInternetConnectionStatus(emit);
       }
     } on UnknownException catch (unknownException) {
       emitUnknownErrorStatus(emit);
@@ -199,26 +212,19 @@ class ProfileIdentitiesBloc extends BlocWithStatus<ProfileIdentitiesEvent,
     ProfileIdentitiesEventDeleteAccount event,
     Emitter<ProfileIdentitiesState> emit,
   ) async {
-    if (state.loggedUserId == null) {
+    final String? loggedUserId = await _authService.loggedUserId$.first;
+    if (loggedUserId == null) {
+      emitNoLoggedUserStatus(emit);
       return;
     }
     emitLoadingStatus(emit);
     try {
-      final bool isPasswordCorrect = await _authService.isPasswordCorrect(
-        password: event.password,
-      );
-      if (!isPasswordCorrect) {
-        emitErrorStatus(emit, ProfileError.wrongPassword);
-        return;
-      }
-      await _deleteAllLoggedUserData();
-      await _authService.deleteAccount(
-        password: event.password,
-      );
-      emitCompleteStatus(emit, ProfileInfo.accountDeleted);
+      await _deleteAllLoggedUserData(loggedUserId);
+      await _authService.deleteAccount();
+      emitCompleteStatus(emit, info: ProfileIdentitiesBlocInfo.accountDeleted);
     } on NetworkException catch (networkException) {
       if (networkException.code == NetworkExceptionCode.requestFailed) {
-        emitNetworkRequestFailed(emit);
+        emitNoInternetConnectionStatus(emit);
       }
     } on UnknownException catch (unknownException) {
       emitUnknownErrorStatus(emit);
@@ -226,34 +232,65 @@ class ProfileIdentitiesBloc extends BlocWithStatus<ProfileIdentitiesEvent,
     }
   }
 
+  Future<void> _reloadLoggedUser(
+    ProfileIdentitiesEventReloadLoggedUser event,
+    Emitter<ProfileIdentitiesState> emit,
+  ) async {
+    try {
+      await _authService.reloadLoggedUser();
+    } on NetworkException catch (networkException) {
+      if (networkException.code == NetworkExceptionCode.requestFailed) {
+        emitNoInternetConnectionStatus(emit);
+      }
+    }
+  }
+
   Stream<User?> get _loggedUserData$ {
     return _authService.loggedUserId$.whereNotNull().switchMap(
-          (String userId) => _userRepository.getUserById(
-            userId: userId,
-          ),
+          (String userId) => _userRepository.getUserById(userId: userId),
         );
   }
 
-  ProfileError? _mapAuthExceptionCodeToBlocError(
+  ProfileIdentitiesBlocError? _mapAuthExceptionCodeToBlocError(
     AuthExceptionCode authExceptionCode,
   ) {
-    if (authExceptionCode == AuthExceptionCode.wrongPassword) {
-      return ProfileError.wrongPassword;
-    } else if (authExceptionCode == AuthExceptionCode.emailAlreadyInUse) {
-      return ProfileError.emailAlreadyInUse;
+    if (authExceptionCode == AuthExceptionCode.emailAlreadyInUse) {
+      return ProfileIdentitiesBlocError.emailAlreadyInUse;
     }
     return null;
   }
 
-  Future<void> _deleteAllLoggedUserData() async {
-    await _workoutRepository.deleteAllUserWorkouts(userId: state.loggedUserId!);
+  Future<void> _deleteAllLoggedUserData(String loggedUserId) async {
+    await _workoutRepository.deleteAllUserWorkouts(userId: loggedUserId);
     await _healthMeasurementRepository.deleteAllUserMeasurements(
-      userId: state.loggedUserId!,
+      userId: loggedUserId,
     );
-    await _bloodTestRepository.deleteAllUserTests(userId: state.loggedUserId!);
-    await _raceRepository.deleteAllUserRaces(
-      userId: state.loggedUserId!,
-    );
-    await _userRepository.deleteUser(userId: state.loggedUserId!);
+    await _bloodTestRepository.deleteAllUserTests(userId: loggedUserId);
+    await _raceRepository.deleteAllUserRaces(userId: loggedUserId);
+    await _userRepository.deleteUser(userId: loggedUserId);
   }
 }
+
+class ProfileIdentitiesBlocListenedParams extends Equatable {
+  final String? loggedUserEmail;
+  final bool? isEmailVerified;
+  final User? loggedUserData;
+
+  const ProfileIdentitiesBlocListenedParams({
+    required this.loggedUserEmail,
+    required this.isEmailVerified,
+    required this.loggedUserData,
+  });
+
+  @override
+  List<Object?> get props => [loggedUserEmail, isEmailVerified, loggedUserData];
+}
+
+enum ProfileIdentitiesBlocInfo {
+  dataSaved,
+  emailChanged,
+  emailVerificationSent,
+  accountDeleted,
+}
+
+enum ProfileIdentitiesBlocError { emailAlreadyInUse }

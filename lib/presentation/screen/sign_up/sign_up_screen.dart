@@ -5,9 +5,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/bloc/sign_up/sign_up_bloc.dart';
 import '../../component/bloc_with_status_listener_component.dart';
-import '../../config/navigation/router.dart';
 import '../../service/dialog_service.dart';
-import '../../service/navigator_service.dart';
+import '../email_verification/email_verification_dialog.dart';
 import 'sign_up_content.dart';
 
 @RoutePage()
@@ -45,7 +44,7 @@ class _BlocListener extends StatelessWidget {
   Future<void> _manageInfo(SignUpBlocInfo info) async {
     switch (info) {
       case SignUpBlocInfo.signedUp:
-        navigateAndRemoveUntil(const HomeRoute());
+        showDialogDependingOnScreenSize(const EmailVerificationDialog());
         break;
     }
   }

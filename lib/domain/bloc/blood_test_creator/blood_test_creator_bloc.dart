@@ -150,7 +150,7 @@ class BloodTestCreatorBloc extends BlocWithStatus<BloodTestCreatorEvent,
     );
     emitCompleteStatus(
       emit,
-      BloodTestCreatorBlocInfo.bloodTestUpdated,
+      info: BloodTestCreatorBlocInfo.bloodTestUpdated,
     );
   }
 
@@ -165,7 +165,7 @@ class BloodTestCreatorBloc extends BlocWithStatus<BloodTestCreatorEvent,
     );
     emitCompleteStatus(
       emit,
-      BloodTestCreatorBlocInfo.bloodTestAdded,
+      info: BloodTestCreatorBlocInfo.bloodTestAdded,
     );
   }
 }

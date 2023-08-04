@@ -9,7 +9,6 @@ import '../../component/text/title_text_components.dart';
 import '../../component/value_with_label_and_icon_component.dart';
 import '../../service/dialog_service.dart';
 import '../../service/validation_service.dart';
-import 'profile_delete_account_dialog.dart';
 import 'profile_email_dialog.dart';
 import 'profile_gender_dialog.dart';
 import 'profile_password_dialog.dart';
@@ -182,14 +181,19 @@ class _Email extends StatelessWidget {
     final String? email = context.select(
       (ProfileIdentitiesBloc bloc) => bloc.state.email,
     );
+    final bool? isEmailVerified = context.select(
+      (ProfileIdentitiesBloc bloc) => bloc.state.isEmailVerified,
+    );
+    String? value = email;
+    if (isEmailVerified == false && value != null) {
+      value += ' (not verified)';
+    }
 
     return ValueWithLabelAndIcon(
       iconData: Icons.email_outlined,
       label: Str.of(context).email,
-      value: email ?? '',
-      onPressed: () {
-        _onPressed(context);
-      },
+      value: value ?? '--',
+      onPressed: () => _onPressed(context),
     );
   }
 
@@ -225,26 +229,38 @@ class _ChangePassword extends StatelessWidget {
       );
 }
 
-class _DeleteAccount extends StatelessWidget {
+class _DeleteAccount extends StatefulWidget {
   const _DeleteAccount();
 
+  @override
+  State<StatefulWidget> createState() => _DeleteAccountState();
+}
+
+class _DeleteAccountState extends State<_DeleteAccount> {
   @override
   Widget build(BuildContext context) {
     return ValueWithLabelAndIcon(
       iconData: Icons.no_accounts_outlined,
       value: Str.of(context).profileDeleteAccount,
       color: Theme.of(context).colorScheme.error,
-      onPressed: () {
-        _onPressed(context);
-      },
+      onPressed: _onPressed,
     );
   }
 
-  Future<void> _onPressed(BuildContext context) async =>
-      await showDialogDependingOnScreenSize(
-        BlocProvider.value(
-          value: context.read<ProfileIdentitiesBloc>(),
-          child: const ProfileDeleteAccountDialog(),
-        ),
-      );
+  Future<void> _onPressed() async {
+    final str = Str.of(context);
+    final bool confirmed = await askForConfirmation(
+      title: str.profileDeleteAccountDialogTitle,
+      message: str.profileDeleteAccountDialogMessage,
+      confirmButtonLabel: str.delete,
+      confirmButtonColor: Theme.of(context).colorScheme.error,
+    );
+    if (!confirmed) return;
+    final bool reauthenticated = await askForReauthentication();
+    if (reauthenticated && mounted) {
+      context.read<ProfileIdentitiesBloc>().add(
+            const ProfileIdentitiesEventDeleteAccount(),
+          );
+    }
+  }
 }

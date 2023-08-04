@@ -44,7 +44,7 @@ class ForgotPasswordBloc extends BlocWithStatus<ForgotPasswordEvent,
     emitLoadingStatus(emit);
     try {
       await _tryToSendPasswordResetEmail();
-      emitCompleteStatus(emit, ForgotPasswordBlocInfo.emailSubmitted);
+      emitCompleteStatus(emit, info: ForgotPasswordBlocInfo.emailSubmitted);
     } on AuthException catch (authException) {
       final ForgotPasswordBlocError? error = _mapAuthExceptionCodeToBlocError(
         authException.code,
@@ -56,7 +56,7 @@ class ForgotPasswordBloc extends BlocWithStatus<ForgotPasswordEvent,
       }
     } on NetworkException catch (networkException) {
       if (networkException.code == NetworkExceptionCode.requestFailed) {
-        emitNetworkRequestFailed(emit);
+        emitNoInternetConnectionStatus(emit);
       }
     } on UnknownException catch (unknownException) {
       emitUnknownErrorStatus(emit);

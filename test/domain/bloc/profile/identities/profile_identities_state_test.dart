@@ -9,7 +9,6 @@ void main() {
   setUp(() {
     state = const ProfileIdentitiesState(
       status: BlocStatusInitial(),
-      loggedUserId: null,
       username: null,
       surname: null,
       email: null,
@@ -26,19 +25,6 @@ void main() {
 
       expect(state.status, expectedStatus);
       expect(state2.status, const BlocStatusComplete());
-    },
-  );
-
-  test(
-    'copy with logged user id',
-    () {
-      const String expectedUserId = 'u1';
-
-      state = state.copyWith(loggedUserId: expectedUserId);
-      final state2 = state.copyWith();
-
-      expect(state.loggedUserId, expectedUserId);
-      expect(state2.loggedUserId, expectedUserId);
     },
   );
 
@@ -91,6 +77,19 @@ void main() {
 
       expect(state.email, expectedEmail);
       expect(state2.email, expectedEmail);
+    },
+  );
+
+  test(
+    'copy with is email verified',
+    () {
+      const bool expected = false;
+
+      state = state.copyWith(isEmailVerified: expected);
+      final state2 = state.copyWith();
+
+      expect(state.isEmailVerified, expected);
+      expect(state2.isEmailVerified, expected);
     },
   );
 }

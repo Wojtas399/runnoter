@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
 export 'model/appearance_settings_dto.dart';
+export 'model/auth_provider.dart';
 export 'model/blood_parameter.dart';
 export 'model/blood_parameter_norm_dto.dart';
 export 'model/blood_parameter_result_dto.dart';

@@ -73,7 +73,10 @@ class HealthMeasurementsBloc extends BlocWithStatus<HealthMeasurementsEvent,
       userId: loggedUserId,
       date: event.date,
     );
-    emitCompleteStatus(emit, HealthMeasurementsBlocInfo.measurementDeleted);
+    emitCompleteStatus(
+      emit,
+      info: HealthMeasurementsBlocInfo.measurementDeleted,
+    );
   }
 
   int _compareDatesOfMeasurements(HealthMeasurement m1, HealthMeasurement m2) =>

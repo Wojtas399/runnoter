@@ -1,39 +1,37 @@
+import '../entity/auth_provider.dart';
+
 abstract class AuthService {
   Stream<String?> get loggedUserId$;
 
   Stream<String?> get loggedUserEmail$;
 
-  Future<void> signIn({
-    required String email,
-    required String password,
-  });
+  Stream<bool?> get hasLoggedUserVerifiedEmail$;
 
-  Future<String?> signUp({
-    required String email,
-    required String password,
-  });
+  Future<void> signIn({required String email, required String password});
 
-  Future<void> sendPasswordResetEmail({
-    required String email,
-  });
+  Future<String?> signInWithGoogle();
+
+  Future<String?> signInWithFacebook();
+
+  Future<String?> signUp({required String email, required String password});
+
+  Future<void> sendEmailVerification();
+
+  Future<void> sendPasswordResetEmail({required String email});
 
   Future<void> signOut();
 
-  Future<void> updateEmail({
-    required String newEmail,
-    required String password,
+  Future<void> updateEmail({required String newEmail});
+
+  Future<void> updatePassword({required String newPassword});
+
+  Future<void> deleteAccount();
+
+  Future<ReauthenticationStatus> reauthenticate({
+    required AuthProvider authProvider,
   });
 
-  Future<void> updatePassword({
-    required String newPassword,
-    required String currentPassword,
-  });
-
-  Future<bool> isPasswordCorrect({
-    required String password,
-  });
-
-  Future<void> deleteAccount({
-    required String password,
-  });
+  Future<void> reloadLoggedUser();
 }
+
+enum ReauthenticationStatus { confirmed, cancelled, userMismatch }

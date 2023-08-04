@@ -26,6 +26,7 @@ class FirebaseAuthException extends FirebaseException {
 
 enum FirebaseNetworkExceptionCode {
   requestFailed,
+  tooManyRequests,
 }
 
 class FirebaseNetworkException extends FirebaseException {
