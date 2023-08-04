@@ -134,6 +134,21 @@ void main() {
   );
 
   blocTest(
+    'date changed, '
+    'should update date in state',
+    build: () => WorkoutCreatorBloc(),
+    act: (bloc) => bloc.add(WorkoutCreatorEventDateChanged(
+      date: DateTime(2023, 2, 2),
+    )),
+    expect: () => [
+      createState(
+        status: const BlocStatusComplete(),
+        date: DateTime(2023, 2, 2),
+      ),
+    ],
+  );
+
+  blocTest(
     'workout name changed, '
     'should update workout name in state',
     build: () => WorkoutCreatorBloc(),

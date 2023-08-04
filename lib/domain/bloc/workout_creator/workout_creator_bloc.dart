@@ -44,6 +44,7 @@ class WorkoutCreatorBloc extends BlocWithStatus<WorkoutCreatorEvent,
           ),
         ) {
     on<WorkoutCreatorEventInitialize>(_initialize);
+    on<WorkoutCreatorEventDateChanged>(_dateChanged);
     on<WorkoutCreatorEventWorkoutNameChanged>(_workoutNameChanged);
     on<WorkoutCreatorEventWorkoutStageAdded>(_workoutStageAdded);
     on<WorkoutCreatorEventWorkoutStageUpdated>(_workoutStageUpdated);
@@ -76,6 +77,15 @@ class WorkoutCreatorBloc extends BlocWithStatus<WorkoutCreatorEvent,
       ));
       return;
     }
+  }
+
+  void _dateChanged(
+    WorkoutCreatorEventDateChanged event,
+    Emitter<WorkoutCreatorState> emit,
+  ) {
+    emit(state.copyWith(
+      date: event.date,
+    ));
   }
 
   void _workoutNameChanged(
