@@ -6,9 +6,9 @@ import '../component/dialog/confirmation_dialog_component.dart';
 import '../component/dialog/loading_dialog_component.dart';
 import '../component/dialog/message_dialog_component.dart';
 import '../component/dialog/value_dialog_component.dart';
-import '../component/reauthentication_form_component.dart';
 import '../config/animation/slide_to_top_anim.dart';
 import '../config/navigation/router.dart';
+import '../dialog/reauthentication/reauthentication_dialog.dart';
 import '../extension/context_extensions.dart';
 
 bool _isLoadingDialogOpened = false;

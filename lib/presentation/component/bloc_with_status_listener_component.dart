@@ -11,6 +11,7 @@ import '../service/navigator_service.dart';
 class BlocWithStatusListener<Bloc extends StateStreamable<State>,
     State extends BlocState, Info, Error> extends StatelessWidget {
   final Widget child;
+  final bool showDialogOnLoading;
   final void Function(State state)? onStateChanged;
   final void Function(Info info)? onInfo;
   final void Function(Error error)? onError;
@@ -18,6 +19,7 @@ class BlocWithStatusListener<Bloc extends StateStreamable<State>,
   const BlocWithStatusListener({
     super.key,
     required this.child,
+    this.showDialogOnLoading = true,
     this.onStateChanged,
     this.onInfo,
     this.onError,
@@ -43,7 +45,7 @@ class BlocWithStatusListener<Bloc extends StateStreamable<State>,
 
   void _manageBlocStatus(BlocStatus blocStatus, BuildContext context) {
     if (blocStatus is BlocStatusLoading) {
-      showLoadingDialog();
+      if (showDialogOnLoading) showLoadingDialog();
     } else {
       closeLoadingDialog();
       if (blocStatus is BlocStatusComplete) {
