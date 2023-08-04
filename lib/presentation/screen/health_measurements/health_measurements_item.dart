@@ -6,10 +6,10 @@ import '../../../domain/bloc/health_measurements/health_measurements_bloc.dart';
 import '../../../domain/entity/health_measurement.dart';
 import '../../component/edit_delete_popup_menu_component.dart';
 import '../../component/text/body_text_components.dart';
+import '../../dialog/health_measurement_creator/health_measurement_creator_dialog.dart';
 import '../../extension/context_extensions.dart';
 import '../../formatter/date_formatter.dart';
 import '../../service/dialog_service.dart';
-import '../health_measurement_creator/health_measurement_creator_dialog.dart';
 
 class HealthMeasurementsItem extends StatefulWidget {
   final HealthMeasurement measurement;
