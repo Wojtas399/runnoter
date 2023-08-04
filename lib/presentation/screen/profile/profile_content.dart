@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../domain/bloc/profile/identities/profile_identities_bloc.dart';
 import '../../component/body/medium_body_component.dart';
 import '../../component/card_body_component.dart';
 import '../../component/responsive_layout_component.dart';
@@ -11,18 +13,27 @@ class ProfileContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const SingleChildScrollView(
-      child: MediumBody(
-        child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 24, horizontal: 16),
-          child: ResponsiveLayout(
-            mobileBody: _MobileContent(),
-            tabletBody: _DesktopContent(),
-            desktopBody: _DesktopContent(),
+    return RefreshIndicator(
+      onRefresh: () async => _onRefresh(context),
+      child: const SingleChildScrollView(
+        child: MediumBody(
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: 24, horizontal: 16),
+            child: ResponsiveLayout(
+              mobileBody: _MobileContent(),
+              tabletBody: _DesktopContent(),
+              desktopBody: _DesktopContent(),
+            ),
           ),
         ),
       ),
     );
+  }
+
+  void _onRefresh(BuildContext context) {
+    context.read<ProfileIdentitiesBloc>().add(
+          const ProfileIdentitiesEventReloadLoggedUser(),
+        );
   }
 }
 
