@@ -588,4 +588,21 @@ void main() {
     expect: () => [],
     verify: (_) => verify(authService.reloadLoggedUser).called(1),
   );
+
+  blocTest(
+    'reload logged user, '
+    'network exception with requestFailed code, '
+    'should emit no internet connection status',
+    build: () => ProfileIdentitiesBloc(),
+    setUp: () => authService.mockReloadLoggedUser(
+      throwable: const NetworkException(
+        code: NetworkExceptionCode.requestFailed,
+      ),
+    ),
+    act: (bloc) => bloc.add(const ProfileIdentitiesEventReloadLoggedUser()),
+    expect: () => [
+      const ProfileIdentitiesState(status: BlocStatusNoInternetConnection()),
+    ],
+    verify: (_) => verify(authService.reloadLoggedUser).called(1),
+  );
 }

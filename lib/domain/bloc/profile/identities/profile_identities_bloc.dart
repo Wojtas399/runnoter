@@ -236,7 +236,13 @@ class ProfileIdentitiesBloc extends BlocWithStatus<
     ProfileIdentitiesEventReloadLoggedUser event,
     Emitter<ProfileIdentitiesState> emit,
   ) async {
-    await _authService.reloadLoggedUser();
+    try {
+      await _authService.reloadLoggedUser();
+    } on NetworkException catch (networkException) {
+      if (networkException.code == NetworkExceptionCode.requestFailed) {
+        emitNoInternetConnectionStatus(emit);
+      }
+    }
   }
 
   Stream<User?> get _loggedUserData$ {

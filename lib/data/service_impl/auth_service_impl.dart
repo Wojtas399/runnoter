@@ -102,12 +102,20 @@ class AuthServiceImpl implements AuthService {
 
   @override
   Future<void> updatePassword({required String newPassword}) async {
-    await _firebaseAuthService.updatePassword(newPassword: newPassword);
+    try {
+      await _firebaseAuthService.updatePassword(newPassword: newPassword);
+    } on firebase.FirebaseException catch (exception) {
+      throw mapExceptionFromFirebase(exception);
+    }
   }
 
   @override
   Future<void> deleteAccount() async {
-    await _firebaseAuthService.deleteAccount();
+    try {
+      await _firebaseAuthService.deleteAccount();
+    } on firebase.FirebaseException catch (exception) {
+      throw mapExceptionFromFirebase(exception);
+    }
   }
 
   @override
@@ -127,6 +135,10 @@ class AuthServiceImpl implements AuthService {
 
   @override
   Future<void> reloadLoggedUser() async {
-    await _firebaseAuthService.reloadLoggedUser();
+    try {
+      await _firebaseAuthService.reloadLoggedUser();
+    } on firebase.FirebaseException catch (exception) {
+      throw mapExceptionFromFirebase(exception);
+    }
   }
 }

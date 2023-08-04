@@ -113,8 +113,12 @@ class MockFirebaseAuthService extends Mock implements FirebaseAuthService {
     }
   }
 
-  void mockReloadLoggedUser() {
-    when(reloadLoggedUser).thenAnswer((_) => Future.value());
+  void mockReloadLoggedUser({Object? throwable}) {
+    if (throwable != null) {
+      when(reloadLoggedUser).thenThrow(throwable);
+    } else {
+      when(reloadLoggedUser).thenAnswer((_) => Future.value());
+    }
   }
 
   Future<void> _signInCall() {

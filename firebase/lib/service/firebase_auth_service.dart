@@ -141,7 +141,11 @@ class FirebaseAuthService {
   }
 
   Future<void> reloadLoggedUser() async {
-    await FirebaseAuth.instance.currentUser?.reload();
+    try {
+      await FirebaseAuth.instance.currentUser?.reload();
+    } on FirebaseAuthException catch (exception) {
+      throw mapFirebaseExceptionFromCodeStr(exception.code);
+    }
   }
 
   bool _hasPopupBeenCancelled(FirebaseAuthException exception) =>

@@ -78,7 +78,7 @@ void main() {
 
   test(
     'sign in, '
-    'should call firebase method to sign in user',
+    "should call firebase service's method to sign in user",
     () async {
       const String email = 'email@example.com';
       const String password = 'password123';
@@ -94,8 +94,8 @@ void main() {
 
   test(
     'sign in, '
-    'firebase auth exception with invalid email code, '
-    'should throw auth exception with invalid email code',
+    'firebase auth exception with invalidEmail code, '
+    'should throw domain auth exception with invalidEmail code',
     () async {
       const String email = 'email@example.com';
       const String password = 'password123';
@@ -124,8 +124,8 @@ void main() {
 
   test(
     'sign in, '
-    'firebase auth exception with user not found code, '
-    'should throw auth exception with user not found code',
+    'firebase auth exception with userNotFound code, '
+    'should throw domain auth exception with userNotFound code',
     () async {
       const String email = 'email@example.com';
       const String password = 'password123';
@@ -154,8 +154,8 @@ void main() {
 
   test(
     'sign in, '
-    'firebase auth exception with wrong password code, '
-    'should throw auth exception with wrong password code',
+    'firebase auth exception with wrongPassword code, '
+    'should throw domain auth exception with wrongPassword code',
     () async {
       const String email = 'email@example.com';
       const String password = 'password123';
@@ -210,7 +210,7 @@ void main() {
 
   test(
     'sign up, '
-    'should call firebase method to sign up user and should return user id',
+    "should call firebase service's method to sign up user and should return user id",
     () async {
       const String expectedUserId = 'u1';
       const String email = 'email@example.com';
@@ -234,8 +234,8 @@ void main() {
 
   test(
     'sign up, '
-    'firebase auth exception with email already in use code, '
-    'should throw auth exception with email already in use code',
+    'firebase auth exception with emailAlreadyInUse code, '
+    'should throw domain auth exception with emailAlreadyInUse code',
     () async {
       const String email = 'email@example.com';
       const String password = 'password123';
@@ -277,7 +277,7 @@ void main() {
   test(
     'send email verification, '
     'firebase network exception with tooManyRequests code, '
-    'should throw auth exception with tooManyRequests code',
+    'should throw domain auth exception with tooManyRequests code',
     () async {
       const NetworkException expectedException = NetworkException(
         code: NetworkExceptionCode.tooManyRequests,
@@ -317,8 +317,8 @@ void main() {
 
   test(
     'send password reset email, '
-    'firebase auth exception with invalid email code, '
-    'should throw auth exception with invalid email code',
+    'firebase auth exception with invalidEmail code, '
+    'should throw domain auth exception with invalidEmail code',
     () async {
       const String email = 'email@example.com';
       const AuthException expectedException = AuthException(
@@ -346,8 +346,8 @@ void main() {
 
   test(
     'send password reset email, '
-    'firebase auth exception with user not found code, '
-    'should throw auth exception with user not found code',
+    'firebase auth exception with userNotFound code, '
+    'should throw domain auth exception with userNotFound code',
     () async {
       const String email = 'email@example.com';
       const AuthException expectedException = AuthException(
@@ -375,7 +375,7 @@ void main() {
 
   test(
     'sign out, '
-    'should call firebase method to sign out',
+    "should call firebase service's method to sign out",
     () async {
       firebaseAuthService.mockSignOut();
 
@@ -389,7 +389,7 @@ void main() {
 
   test(
     'update email, '
-    'should call firebase method to update email',
+    "should call firebase service's method to update email",
     () async {
       const String newEmail = 'email@example.com';
       firebaseAuthService.mockUpdateEmail();
@@ -404,8 +404,8 @@ void main() {
 
   test(
     'update email, '
-    'firebase auth exception with email already in use code, '
-    'should throw auth exception with email already in use code',
+    'firebase auth exception with emailAlreadyInUse code, '
+    'should throw domain auth exception with emailAlreadyInUse code',
     () async {
       const String newEmail = 'email@example.com';
       const AuthException expectedException = AuthException(
@@ -433,7 +433,7 @@ void main() {
 
   test(
     'update password, '
-    'should call firebase method to update password',
+    "should call firebase service's method to update password",
     () async {
       const String newPassword = 'password1';
       firebaseAuthService.mockUpdatePassword();
@@ -447,8 +447,37 @@ void main() {
   );
 
   test(
+    'update password, '
+    'firebase network exception with requestFailed code, '
+    'should throw domain network exception with requestFailed code',
+    () async {
+      const String newPassword = 'password1';
+      const NetworkException expectedException = NetworkException(
+        code: NetworkExceptionCode.requestFailed,
+      );
+      firebaseAuthService.mockUpdatePassword(
+        throwable: const firebase.FirebaseNetworkException(
+          code: firebase.FirebaseNetworkExceptionCode.requestFailed,
+        ),
+      );
+
+      Object? exception;
+      try {
+        await service.updatePassword(newPassword: newPassword);
+      } catch (e) {
+        exception = e;
+      }
+
+      expect(exception, expectedException);
+      verify(
+        () => firebaseAuthService.updatePassword(newPassword: newPassword),
+      ).called(1);
+    },
+  );
+
+  test(
     'delete account, '
-    'should call firebase method to delete currently logged user',
+    "should call firebase service's method to delete currently logged user",
     () async {
       firebaseAuthService.mockDeleteAccount();
 
@@ -459,8 +488,34 @@ void main() {
   );
 
   test(
+    'delete account, '
+    'firebase network exception with requestFailed code, '
+    'should throw domain network exception with requestFailed code',
+    () async {
+      const NetworkException expectedException = NetworkException(
+        code: NetworkExceptionCode.requestFailed,
+      );
+      firebaseAuthService.mockDeleteAccount(
+        throwable: const firebase.FirebaseNetworkException(
+          code: firebase.FirebaseNetworkExceptionCode.requestFailed,
+        ),
+      );
+
+      Object? exception;
+      try {
+        await service.deleteAccount();
+      } catch (e) {
+        exception = e;
+      }
+
+      expect(exception, expectedException);
+      verify(() => firebaseAuthService.deleteAccount()).called(1);
+    },
+  );
+
+  test(
     'reauthenticate, '
-    'should call firebase method to reauthenticate user',
+    "should call firebase service's method to reauthenticate user",
     () async {
       firebaseAuthService.mockReauthenticate(
         reauthenticationStatus: firebase.ReauthenticationStatus.confirmed,
@@ -481,8 +536,8 @@ void main() {
 
   test(
     'reauthenticate, '
-    'firebase exception with wrong password code, '
-    'should throw auth exception with wrong password code',
+    'firebase exception with wrongPassword code, '
+    'should throw domain auth exception with wrongPassword code',
     () async {
       const String password = 'passwd';
       const AuthException expectedException = AuthException(
@@ -522,6 +577,32 @@ void main() {
 
       await service.reloadLoggedUser();
 
+      verify(firebaseAuthService.reloadLoggedUser).called(1);
+    },
+  );
+
+  test(
+    'reload logged user, '
+    'firebase network exception with requestFailed code, '
+    'should throw domain network exception with requestFailed code',
+    () async {
+      const NetworkException expectedException = NetworkException(
+        code: NetworkExceptionCode.requestFailed,
+      );
+      firebaseAuthService.mockReloadLoggedUser(
+        throwable: const firebase.FirebaseNetworkException(
+          code: firebase.FirebaseNetworkExceptionCode.requestFailed,
+        ),
+      );
+
+      Object? exception;
+      try {
+        await service.reloadLoggedUser();
+      } catch (e) {
+        exception = e;
+      }
+
+      expect(exception, expectedException);
       verify(firebaseAuthService.reloadLoggedUser).called(1);
     },
   );
