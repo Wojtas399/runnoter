@@ -6,9 +6,9 @@ import '../../../domain/bloc/workout_creator/workout_creator_bloc.dart';
 import '../../../domain/entity/workout_stage.dart';
 import '../../component/text/body_text_components.dart';
 import '../../component/text/label_text_components.dart';
+import '../../dialog/workout_stage_creator/workout_stage_creator_dialog.dart';
 import '../../service/dialog_service.dart';
 import '../../service/utils.dart';
-import '../workout_stage_creator/workout_stage_creator_dialog.dart';
 import 'workout_creator_workout_stage_item.dart';
 
 class WorkoutCreatorWorkoutStages extends StatelessWidget {
