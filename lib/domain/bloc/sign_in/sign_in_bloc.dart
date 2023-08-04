@@ -50,7 +50,7 @@ class SignInBloc extends BlocWithStatus<SignInEvent, SignInState,
         await _authService.hasLoggedUserVerifiedEmail$.first == true) {
       info = SignInBlocInfo.signedIn;
     }
-    emitCompleteStatus(emit, info);
+    emitCompleteStatus(emit, info: info);
   }
 
   void _emailChanged(
@@ -108,7 +108,7 @@ class SignInBloc extends BlocWithStatus<SignInEvent, SignInState,
       emitLoadingStatus(emit);
       final String? loggedUserId = await _authService.signInWithGoogle();
       if (loggedUserId == null) {
-        emitCompleteStatus(emit, null);
+        emitCompleteStatus(emit);
         return;
       }
       await _checkIfLoggedUserDataExist(loggedUserId, emit);
@@ -127,7 +127,7 @@ class SignInBloc extends BlocWithStatus<SignInEvent, SignInState,
       emitLoadingStatus(emit);
       final String? loggedUserId = await _authService.signInWithFacebook();
       if (loggedUserId == null) {
-        emitCompleteStatus(emit, null);
+        emitCompleteStatus(emit);
         return;
       }
       await _checkIfLoggedUserDataExist(loggedUserId, emit);
@@ -144,7 +144,7 @@ class SignInBloc extends BlocWithStatus<SignInEvent, SignInState,
   ) async {
     emitLoadingStatus(emit);
     await _authService.deleteAccount();
-    emitCompleteStatus(emit, null);
+    emitCompleteStatus(emit);
   }
 
   SignInBlocError? _mapAuthExceptionCodeToBlocError(
@@ -171,7 +171,7 @@ class SignInBloc extends BlocWithStatus<SignInEvent, SignInState,
       if (loggedUser != null) {
         await _checkIfLoggedUserHasVerifiedEmail(emit);
       } else {
-        emitCompleteStatus(emit, SignInBlocInfo.newSignedInUser);
+        emitCompleteStatus(emit, info: SignInBlocInfo.newSignedInUser);
       }
       return;
     }
@@ -183,11 +183,11 @@ class SignInBloc extends BlocWithStatus<SignInEvent, SignInState,
     final bool? hasLoggedUserVerifiedEmail =
         await _authService.hasLoggedUserVerifiedEmail$.first;
     if (hasLoggedUserVerifiedEmail == null) {
-      emitCompleteStatus(emit, null);
+      emitCompleteStatus(emit);
       return;
     }
     if (hasLoggedUserVerifiedEmail == true) {
-      emitCompleteStatus(emit, SignInBlocInfo.signedIn);
+      emitCompleteStatus(emit, info: SignInBlocInfo.signedIn);
     } else {
       await _authService.sendEmailVerification();
       emitErrorStatus(emit, SignInBlocError.unverifiedEmail);

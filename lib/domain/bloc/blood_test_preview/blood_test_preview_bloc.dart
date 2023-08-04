@@ -78,7 +78,7 @@ class BloodTestPreviewBloc extends BlocWithStatus<BloodTestPreviewEvent,
     );
     emitCompleteStatus(
       emit,
-      BloodTestPreviewBlocInfo.bloodTestDeleted,
+      info: BloodTestPreviewBlocInfo.bloodTestDeleted,
     );
   }
 

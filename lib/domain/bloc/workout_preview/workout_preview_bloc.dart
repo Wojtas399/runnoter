@@ -70,7 +70,7 @@ class WorkoutPreviewBloc extends BlocWithStatus<WorkoutPreviewEvent,
       userId: loggedUserId,
       workoutId: workoutId!,
     );
-    emitCompleteStatus(emit, WorkoutPreviewBlocInfo.workoutDeleted);
+    emitCompleteStatus(emit, info: WorkoutPreviewBlocInfo.workoutDeleted);
   }
 }
 

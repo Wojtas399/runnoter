@@ -13,7 +13,7 @@ abstract class BlocWithStatus<Event, State extends BlocState, Info, Error>
     ));
   }
 
-  void emitCompleteStatus(Emitter<State> emit, Info? info) {
+  void emitCompleteStatus(Emitter<State> emit, {Info? info}) {
     emit(state.copyWith(
       status: BlocStatusComplete<Info>(info: info),
     ));

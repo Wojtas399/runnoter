@@ -163,7 +163,7 @@ class RunStatusCreatorBloc extends BlocWithStatus<RunStatusCreatorEvent,
           status: status,
         ),
     };
-    emitCompleteStatus(emit, RunStatusCreatorBlocInfo.runStatusSaved);
+    emitCompleteStatus(emit, info: RunStatusCreatorBlocInfo.runStatusSaved);
   }
 
   Stream<RunStatus?> _getRunStatus() =>

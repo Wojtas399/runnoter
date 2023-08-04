@@ -75,7 +75,10 @@ class RequiredDataCompletionBloc extends BlocWithStatus<
       surname: state.surname,
       gender: state.gender,
     );
-    emitCompleteStatus(emit, RequiredDataCompletionBlocInfo.userDataAdded);
+    emitCompleteStatus(
+      emit,
+      info: RequiredDataCompletionBlocInfo.userDataAdded,
+    );
   }
 }
 

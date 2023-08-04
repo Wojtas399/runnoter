@@ -44,7 +44,7 @@ class ForgotPasswordBloc extends BlocWithStatus<ForgotPasswordEvent,
     emitLoadingStatus(emit);
     try {
       await _tryToSendPasswordResetEmail();
-      emitCompleteStatus(emit, ForgotPasswordBlocInfo.emailSubmitted);
+      emitCompleteStatus(emit, info: ForgotPasswordBlocInfo.emailSubmitted);
     } on AuthException catch (authException) {
       final ForgotPasswordBlocError? error = _mapAuthExceptionCodeToBlocError(
         authException.code,

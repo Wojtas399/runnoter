@@ -112,10 +112,10 @@ class ReauthenticationBloc extends BlocWithStatus<
   ) {
     switch (reauthenticationStatus) {
       case ReauthenticationStatus.confirmed:
-        emitCompleteStatus(emit, ReauthenticationBlocInfo.userConfirmed);
+        emitCompleteStatus(emit, info: ReauthenticationBlocInfo.userConfirmed);
         break;
       case ReauthenticationStatus.cancelled:
-        emitCompleteStatus(emit, null);
+        emitCompleteStatus(emit);
         break;
       case ReauthenticationStatus.userMismatch:
         emitErrorStatus(emit, ReauthenticationBlocError.userMismatch);

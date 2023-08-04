@@ -130,7 +130,7 @@ class ProfileIdentitiesBloc extends BlocWithStatus<
       userId: loggedUserId,
       name: event.username,
     );
-    emitCompleteStatus(emit, ProfileIdentitiesBlocInfo.dataSaved);
+    emitCompleteStatus(emit, info: ProfileIdentitiesBlocInfo.dataSaved);
   }
 
   Future<void> _updateSurname(
@@ -147,7 +147,7 @@ class ProfileIdentitiesBloc extends BlocWithStatus<
       userId: loggedUserId,
       surname: event.surname,
     );
-    emitCompleteStatus(emit, ProfileIdentitiesBlocInfo.dataSaved);
+    emitCompleteStatus(emit, info: ProfileIdentitiesBlocInfo.dataSaved);
   }
 
   Future<void> _updateEmail(
@@ -158,7 +158,7 @@ class ProfileIdentitiesBloc extends BlocWithStatus<
     try {
       await _authService.updateEmail(newEmail: event.newEmail);
       await _authService.sendEmailVerification();
-      emitCompleteStatus(emit, ProfileIdentitiesBlocInfo.emailChanged);
+      emitCompleteStatus(emit, info: ProfileIdentitiesBlocInfo.emailChanged);
     } on AuthException catch (authException) {
       final ProfileIdentitiesBlocError? error =
           _mapAuthExceptionCodeToBlocError(authException.code);
@@ -184,7 +184,10 @@ class ProfileIdentitiesBloc extends BlocWithStatus<
   ) async {
     emitLoadingStatus(emit);
     await _authService.sendEmailVerification();
-    emitCompleteStatus(emit, ProfileIdentitiesBlocInfo.emailVerificationSent);
+    emitCompleteStatus(
+      emit,
+      info: ProfileIdentitiesBlocInfo.emailVerificationSent,
+    );
   }
 
   Future<void> _updatePassword(
@@ -194,7 +197,7 @@ class ProfileIdentitiesBloc extends BlocWithStatus<
     emitLoadingStatus(emit);
     try {
       await _authService.updatePassword(newPassword: event.newPassword);
-      emitCompleteStatus(emit, ProfileIdentitiesBlocInfo.dataSaved);
+      emitCompleteStatus(emit, info: ProfileIdentitiesBlocInfo.dataSaved);
     } on NetworkException catch (networkException) {
       if (networkException.code == NetworkExceptionCode.requestFailed) {
         emitNoInternetConnectionStatus(emit);
@@ -218,7 +221,7 @@ class ProfileIdentitiesBloc extends BlocWithStatus<
     try {
       await _deleteAllLoggedUserData(loggedUserId);
       await _authService.deleteAccount();
-      emitCompleteStatus(emit, ProfileIdentitiesBlocInfo.accountDeleted);
+      emitCompleteStatus(emit, info: ProfileIdentitiesBlocInfo.accountDeleted);
     } on NetworkException catch (networkException) {
       if (networkException.code == NetworkExceptionCode.requestFailed) {
         emitNoInternetConnectionStatus(emit);

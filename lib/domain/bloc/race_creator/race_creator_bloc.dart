@@ -152,7 +152,7 @@ class RaceCreatorBloc extends BlocWithStatus<RaceCreatorEvent, RaceCreatorState,
       expectedDuration: expectedDuration,
       status: const RunStatusPending(),
     );
-    emitCompleteStatus(emit, RaceCreatorBlocInfo.raceAdded);
+    emitCompleteStatus(emit, info: RaceCreatorBlocInfo.raceAdded);
   }
 
   Future<void> _updateRace(
@@ -170,7 +170,7 @@ class RaceCreatorBloc extends BlocWithStatus<RaceCreatorEvent, RaceCreatorState,
       expectedDuration: expectedDuration,
       setDurationAsNull: expectedDuration == null,
     );
-    emitCompleteStatus(emit, RaceCreatorBlocInfo.raceUpdated);
+    emitCompleteStatus(emit, info: RaceCreatorBlocInfo.raceUpdated);
   }
 }
 
