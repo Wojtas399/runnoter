@@ -71,6 +71,7 @@ class WorkoutCreatorBloc extends BlocWithStatus<WorkoutCreatorEvent,
         status: const BlocStatusComplete<WorkoutCreatorBlocInfo>(
           info: WorkoutCreatorBlocInfo.editModeInitialized,
         ),
+        date: workout?.date,
         workout: workout,
         workoutName: workout?.name,
         stages: [...?workout?.stages],

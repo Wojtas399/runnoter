@@ -85,12 +85,10 @@ void main() {
       workoutRepository.mockGetWorkoutById(
         workout: createWorkout(
           id: workoutId,
+          date: DateTime(2023, 2, 4),
           name: 'workout name',
           stages: const [
-            WorkoutStageCardio(
-              distanceInKm: 10,
-              maxHeartRate: 150,
-            ),
+            WorkoutStageCardio(distanceInKm: 10, maxHeartRate: 150),
           ],
         ),
       );
@@ -101,29 +99,23 @@ void main() {
         status: const BlocStatusComplete<WorkoutCreatorBlocInfo>(
           info: WorkoutCreatorBlocInfo.editModeInitialized,
         ),
+        date: DateTime(2023, 2, 4),
         workout: createWorkout(
           id: workoutId,
+          date: DateTime(2023, 2, 4),
           name: 'workout name',
           stages: const [
-            WorkoutStageCardio(
-              distanceInKm: 10,
-              maxHeartRate: 150,
-            ),
+            WorkoutStageCardio(distanceInKm: 10, maxHeartRate: 150),
           ],
         ),
         workoutName: 'workout name',
         stages: const [
-          WorkoutStageCardio(
-            distanceInKm: 10,
-            maxHeartRate: 150,
-          ),
+          WorkoutStageCardio(distanceInKm: 10, maxHeartRate: 150),
         ],
       ),
     ],
     verify: (_) {
-      verify(
-        () => authService.loggedUserId$,
-      ).called(1);
+      verify(() => authService.loggedUserId$).called(1);
       verify(
         () => workoutRepository.getWorkoutById(
           workoutId: workoutId,
