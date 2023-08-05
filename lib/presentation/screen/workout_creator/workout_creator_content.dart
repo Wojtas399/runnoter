@@ -7,7 +7,9 @@ import '../../../domain/bloc/workout_creator/workout_creator_bloc.dart';
 import '../../../domain/entity/workout.dart';
 import '../../component/big_button_component.dart';
 import '../../component/body/medium_body_component.dart';
+import '../../component/date_selector_component.dart';
 import '../../component/loading_info_component.dart';
+import '../../component/text/title_text_components.dart';
 import '../../component/text_field_component.dart';
 import '../../service/dialog_service.dart';
 import '../../service/utils.dart';
@@ -79,6 +81,8 @@ class _Form extends StatelessWidget {
         ? const LoadingInfo()
         : const Column(
             children: [
+              _Date(),
+              SizedBox(height: 24),
               _WorkoutName(),
               SizedBox(height: 24),
               WorkoutCreatorWorkoutStages(),
@@ -86,6 +90,44 @@ class _Form extends StatelessWidget {
               _SubmitButton(),
             ],
           );
+  }
+}
+
+class _Date extends StatelessWidget {
+  const _Date();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        TitleMedium(Str.of(context).date),
+        const SizedBox(height: 8),
+        const _DateValue(),
+      ],
+    );
+  }
+}
+
+class _DateValue extends StatelessWidget {
+  const _DateValue();
+
+  @override
+  Widget build(BuildContext context) {
+    final DateTime? date = context.select(
+      (WorkoutCreatorBloc bloc) => bloc.state.date,
+    );
+
+    return DateSelector(
+      date: date,
+      onDateSelected: (DateTime date) => _onDateSelected(context, date),
+    );
+  }
+
+  void _onDateSelected(BuildContext context, DateTime date) {
+    context.read<WorkoutCreatorBloc>().add(
+          WorkoutCreatorEventDateChanged(date: date),
+        );
   }
 }
 

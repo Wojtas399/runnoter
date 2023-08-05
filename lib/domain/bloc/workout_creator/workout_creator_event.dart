@@ -8,20 +8,22 @@ class WorkoutCreatorEventInitialize extends WorkoutCreatorEvent {
   const WorkoutCreatorEventInitialize();
 }
 
+class WorkoutCreatorEventDateChanged extends WorkoutCreatorEvent {
+  final DateTime? date;
+
+  const WorkoutCreatorEventDateChanged({required this.date});
+}
+
 class WorkoutCreatorEventWorkoutNameChanged extends WorkoutCreatorEvent {
   final String? workoutName;
 
-  const WorkoutCreatorEventWorkoutNameChanged({
-    required this.workoutName,
-  });
+  const WorkoutCreatorEventWorkoutNameChanged({required this.workoutName});
 }
 
 class WorkoutCreatorEventWorkoutStageAdded extends WorkoutCreatorEvent {
   final WorkoutStage workoutStage;
 
-  const WorkoutCreatorEventWorkoutStageAdded({
-    required this.workoutStage,
-  });
+  const WorkoutCreatorEventWorkoutStageAdded({required this.workoutStage});
 }
 
 class WorkoutCreatorEventWorkoutStageUpdated extends WorkoutCreatorEvent {
@@ -45,9 +47,7 @@ class WorkoutCreatorEventWorkoutStagesOrderChanged extends WorkoutCreatorEvent {
 class WorkoutCreatorEventDeleteWorkoutStage extends WorkoutCreatorEvent {
   final int index;
 
-  const WorkoutCreatorEventDeleteWorkoutStage({
-    required this.index,
-  });
+  const WorkoutCreatorEventDeleteWorkoutStage({required this.index});
 }
 
 class WorkoutCreatorEventSubmit extends WorkoutCreatorEvent {

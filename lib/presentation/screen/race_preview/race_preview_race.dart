@@ -37,7 +37,7 @@ class RacePreviewRaceInfo extends StatelessWidget {
             const _Header(),
             gap,
             ContentWithLabel(
-              label: str.raceDate,
+              label: str.date,
               content: const _RaceDate(),
             ),
             gap,

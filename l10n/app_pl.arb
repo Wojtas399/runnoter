@@ -200,10 +200,6 @@
   "@workoutPreviewTitle": {
     "description": "Title of the workout preview screen"
   },
-  "workoutPreviewWorkoutDate": "Nazwa",
-  "@workoutPreviewWorkoutDate": {
-    "description": "Label of the section to display workout date"
-  },
   "workoutPreviewWorkoutStages": "Etapy",
   "@workoutPreviewWorkoutStages": {
     "description": "Label of the section to display stages"
@@ -610,10 +606,6 @@
   "@bloodTestCreatorScreenTitleEditMode": {
     "description": "Title of the blood test creator screen in edit mode"
   },
-  "bloodTestCreatorDate": "Data",
-  "@bloodTestCreatorDate": {
-    "description": "Label of the date"
-  },
   "bloodTestCreatorSelectDate": "Wybierz datę",
   "@bloodTestCreatorSelectDate": {
     "description": "Label of the button to select date"
@@ -720,10 +712,6 @@
     "description": "Message to inform that race has been deleted"
   },
   "@__________RACE_PARAMS__________": {},
-  "raceDate": "Data",
-  "@raceDate": {
-    "description": "Label of race date"
-  },
   "raceName": "Nazwa zawodów",
   "@raceName": {
     "description": "Label of race name"

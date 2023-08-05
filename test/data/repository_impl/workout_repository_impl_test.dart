@@ -424,6 +424,7 @@ void main() {
     'should call method from firebase service to update workout and should update workout in repository',
     () {
       const String id = 'w1';
+      final DateTime newDate = DateTime(2023, 5, 10);
       const String newWorkoutName = 'new workout name';
       const RunStatus newStatus = RunStatusDone(
         coveredDistanceInKm: 10,
@@ -440,20 +441,15 @@ void main() {
         comment: 'Nice workout!',
       );
       const List<WorkoutStage> newStages = [
-        WorkoutStageCardio(
-          distanceInKm: 10,
-          maxHeartRate: 150,
-        ),
+        WorkoutStageCardio(distanceInKm: 10, maxHeartRate: 150),
       ];
       const List<firebase.WorkoutStageDto> newStageDtos = [
-        firebase.WorkoutStageCardioDto(
-          distanceInKm: 10,
-          maxHeartRate: 150,
-        ),
+        firebase.WorkoutStageCardioDto(distanceInKm: 10, maxHeartRate: 150),
       ];
       final WorkoutDto updatedWorkoutDto = createWorkoutDto(
         id: id,
         userId: userId,
+        date: newDate,
         name: newWorkoutName,
         status: newStatusDto,
         stages: newStageDtos,
@@ -461,18 +457,17 @@ void main() {
       final Workout existingWorkout = createWorkout(
         id: id,
         userId: userId,
+        date: DateTime(2023, 5, 5),
         name: 'workout name',
         status: const RunStatusPending(),
         stages: const [
-          WorkoutStageCardio(
-            distanceInKm: 8,
-            maxHeartRate: 150,
-          ),
+          WorkoutStageCardio(distanceInKm: 8, maxHeartRate: 150),
         ],
       );
       final Workout expectedUpdatedWorkout = createWorkout(
         id: id,
         userId: userId,
+        date: newDate,
         name: newWorkoutName,
         status: newStatus,
         stages: newStages,
@@ -480,9 +475,7 @@ void main() {
       firebaseWorkoutService.mockUpdateWorkout(
         updatedWorkoutDto: updatedWorkoutDto,
       );
-      repository = WorkoutRepositoryImpl(
-        initialState: [existingWorkout],
-      );
+      repository = WorkoutRepositoryImpl(initialState: [existingWorkout]);
 
       final Stream<Workout?> workout$ = repository.getWorkoutById(
         workoutId: id,
@@ -491,6 +484,7 @@ void main() {
       repository.updateWorkout(
         workoutId: id,
         userId: userId,
+        date: newDate,
         workoutName: newWorkoutName,
         status: newStatus,
         stages: newStages,
@@ -504,6 +498,7 @@ void main() {
         () => firebaseWorkoutService.updateWorkout(
           workoutId: id,
           userId: userId,
+          date: newDate,
           workoutName: newWorkoutName,
           status: newStatusDto,
           stages: newStageDtos,

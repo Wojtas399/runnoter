@@ -36,7 +36,7 @@ class WorkoutPreviewWorkoutInfo extends StatelessWidget {
             const _Header(),
             gap,
             ContentWithLabel(
-              label: str.workoutPreviewWorkoutDate,
+              label: str.date,
               content: const _WorkoutDate(),
             ),
             gap,

@@ -7,28 +7,29 @@ void main() {
   final DateTime date = DateTime(2023, 1, 10);
   const int restingHeartRate = 50;
   const double fastingWeight = 50.6;
-  final HealthMeasurementDto healthMeasurementDto = HealthMeasurementDto(
-    userId: userId,
-    date: date,
-    restingHeartRate: restingHeartRate,
-    fastingWeight: fastingWeight,
-  );
-  final Map<String, dynamic> healthMeasurementJson = {
-    'restingHeartRate': restingHeartRate,
-    'fastingWeight': fastingWeight,
-  };
 
   test(
     'from json, '
     'should map json to dto model',
     () {
+      final Map<String, dynamic> json = {
+        'restingHeartRate': restingHeartRate,
+        'fastingWeight': fastingWeight,
+      };
+      final HealthMeasurementDto expectedDto = HealthMeasurementDto(
+        userId: userId,
+        date: date,
+        restingHeartRate: restingHeartRate,
+        fastingWeight: fastingWeight,
+      );
+
       final HealthMeasurementDto dto = HealthMeasurementDto.fromJson(
         userId: userId,
         dateStr: dateStr,
-        json: healthMeasurementJson,
+        json: json,
       );
 
-      expect(dto, healthMeasurementDto);
+      expect(dto, expectedDto);
     },
   );
 
@@ -36,9 +37,54 @@ void main() {
     'to json, '
     'should map dto model to json',
     () {
-      final Map<String, dynamic> json = healthMeasurementDto.toJson();
+      final HealthMeasurementDto dto = HealthMeasurementDto(
+        userId: userId,
+        date: date,
+        restingHeartRate: restingHeartRate,
+        fastingWeight: fastingWeight,
+      );
+      final Map<String, dynamic> expectedJson = {
+        'restingHeartRate': restingHeartRate,
+        'fastingWeight': fastingWeight,
+      };
 
-      expect(json, healthMeasurementJson);
+      final Map<String, dynamic> json = dto.toJson();
+
+      expect(json, expectedJson);
+    },
+  );
+
+  test(
+    'create json to update, '
+    'resting heart rate is null, '
+    'should not include resting heart rate in json',
+    () {
+      final Map<String, dynamic> expectedJson = {
+        'fastingWeight': fastingWeight,
+      };
+
+      final Map<String, dynamic> json = createHealthMeasurementJsonToUpdate(
+        fastingWeight: fastingWeight,
+      );
+
+      expect(json, expectedJson);
+    },
+  );
+
+  test(
+    'create json to update, '
+    'fasting weight is null, '
+    'should not include fasting weight in json',
+    () {
+      final Map<String, dynamic> expectedJson = {
+        'restingHeartRate': restingHeartRate,
+      };
+
+      final Map<String, dynamic> json = createHealthMeasurementJsonToUpdate(
+        restingHeartRate: restingHeartRate,
+      );
+
+      expect(json, expectedJson);
     },
   );
 }

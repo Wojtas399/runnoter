@@ -50,9 +50,7 @@ Map<String, dynamic> createBloodTestJsonToUpdate({
     {
       if (date != null) _dateField: mapDateTimeToString(date),
       if (parameterResultDtos != null)
-        _parameterResultsField: parameterResultDtos.map(
-          (dto) => dto.toJson(),
-        ),
+        _parameterResultsField: parameterResultDtos.map((dto) => dto.toJson()),
     };
 
 const String _dateField = 'date';
