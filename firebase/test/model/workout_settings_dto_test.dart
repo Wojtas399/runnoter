@@ -5,26 +5,24 @@ void main() {
   const String userId = 'u1';
   const DistanceUnit distanceUnit = DistanceUnit.kilometers;
   const PaceUnit paceUnit = PaceUnit.minutesPerKilometer;
-  const WorkoutSettingsDto workoutSettingsDto = WorkoutSettingsDto(
-    userId: userId,
-    distanceUnit: distanceUnit,
-    paceUnit: paceUnit,
-  );
-  final Map<String, dynamic> workoutSettingsJson = {
-    'distanceUnit': distanceUnit.name,
-    'paceUnit': paceUnit.name,
-  };
 
   test(
     'from json, '
     'should map json to dto model',
     () {
-      final WorkoutSettingsDto dto = WorkoutSettingsDto.fromJson(
-        userId,
-        workoutSettingsJson,
+      final Map<String, dynamic> json = {
+        'distanceUnit': distanceUnit.name,
+        'paceUnit': paceUnit.name,
+      };
+      const WorkoutSettingsDto expectedDto = WorkoutSettingsDto(
+        userId: userId,
+        distanceUnit: distanceUnit,
+        paceUnit: paceUnit,
       );
 
-      expect(dto, workoutSettingsDto);
+      final WorkoutSettingsDto dto = WorkoutSettingsDto.fromJson(userId, json);
+
+      expect(dto, expectedDto);
     },
   );
 
@@ -32,9 +30,53 @@ void main() {
     'to json, '
     'should map dto model to json',
     () {
-      final Map<String, dynamic> json = workoutSettingsDto.toJson();
+      const WorkoutSettingsDto dto = WorkoutSettingsDto(
+        userId: userId,
+        distanceUnit: distanceUnit,
+        paceUnit: paceUnit,
+      );
+      final Map<String, dynamic> expectedJson = {
+        'distanceUnit': distanceUnit.name,
+        'paceUnit': paceUnit.name,
+      };
 
-      expect(json, workoutSettingsJson);
+      final Map<String, dynamic> json = dto.toJson();
+
+      expect(json, expectedJson);
+    },
+  );
+
+  test(
+    'create json to update, '
+    'distance unit is null, '
+    'should not include distance unit in json',
+    () {
+      final Map<String, dynamic> expectedJson = {
+        'paceUnit': paceUnit.name,
+      };
+
+      final Map<String, dynamic> json = createWorkoutSettingsJsonToUpdate(
+        paceUnit: paceUnit,
+      );
+
+      expect(json, expectedJson);
+    },
+  );
+
+  test(
+    'create json to update, '
+    'pace unit is null, '
+    'should not include pace unit in json',
+    () {
+      final Map<String, dynamic> expectedJson = {
+        'distanceUnit': distanceUnit.name,
+      };
+
+      final Map<String, dynamic> json = createWorkoutSettingsJsonToUpdate(
+        distanceUnit: distanceUnit,
+      );
+
+      expect(json, expectedJson);
     },
   );
 }
