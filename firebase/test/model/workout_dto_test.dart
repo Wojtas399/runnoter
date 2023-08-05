@@ -5,6 +5,7 @@ void main() {
   const String id = 'w1';
   const String userId = 'u1';
   final DateTime date = DateTime(2023, 4, 10);
+  const String dateStr = '2023-04-10';
   final RunStatusDto status = RunStatusDoneDto(
     coveredDistanceInKm: 10.0,
     avgPaceDto: const PaceDto(minutes: 5, seconds: 30),
@@ -27,36 +28,38 @@ void main() {
       maxHeartRate: 150,
     ),
   ];
-  final WorkoutDto workoutDtoModel = WorkoutDto(
-    id: id,
-    userId: userId,
-    date: date,
-    status: status,
-    name: name,
-    stages: stages,
-  );
-  final Map<String, dynamic> workoutJson = {
-    'date': '2023-04-10',
-    'status': status.toJson(),
-    'name': name,
-    'stages': [
-      stages[0].toJson(),
-      stages[1].toJson(),
-      stages[2].toJson(),
-    ],
-  };
+  final List<Map<String, dynamic>> stageJsons = [
+    stages[0].toJson(),
+    stages[1].toJson(),
+    stages[2].toJson(),
+  ];
 
   test(
     'from json, '
     'should map json to dto model',
     () {
+      final Map<String, dynamic> json = {
+        'date': dateStr,
+        'status': status.toJson(),
+        'name': name,
+        'stages': stageJsons,
+      };
+      final WorkoutDto expectedDto = WorkoutDto(
+        id: id,
+        userId: userId,
+        date: date,
+        status: status,
+        name: name,
+        stages: stages,
+      );
+
       final WorkoutDto dto = WorkoutDto.fromJson(
         docId: id,
         userId: userId,
-        json: workoutJson,
+        json: json,
       );
 
-      expect(dto, workoutDtoModel);
+      expect(dto, expectedDto);
     },
   );
 
@@ -64,9 +67,108 @@ void main() {
     'to json, '
     'should map dto model to json',
     () {
-      final Map<String, dynamic> json = workoutDtoModel.toJson();
+      final WorkoutDto dto = WorkoutDto(
+        id: id,
+        userId: userId,
+        date: date,
+        status: status,
+        name: name,
+        stages: stages,
+      );
+      final Map<String, dynamic> expectedJson = {
+        'date': dateStr,
+        'status': status.toJson(),
+        'name': name,
+        'stages': stageJsons,
+      };
 
-      expect(json, workoutJson);
+      final Map<String, dynamic> json = dto.toJson();
+
+      expect(json, expectedJson);
+    },
+  );
+
+  test(
+    'create json to update, '
+    'date is null, '
+    'should not include date in json',
+    () {
+      final Map<String, dynamic> expectedJson = {
+        'name': name,
+        'status': status.toJson(),
+        'stages': stageJsons,
+      };
+
+      final Map<String, dynamic> json = createWorkoutJsonToUpdate(
+        workoutName: name,
+        status: status,
+        stages: stages,
+      );
+
+      expect(json, expectedJson);
+    },
+  );
+
+  test(
+    'create json to update, '
+    'name is null, '
+    'should not include name in json',
+    () {
+      final Map<String, dynamic> expectedJson = {
+        'date': dateStr,
+        'status': status.toJson(),
+        'stages': stageJsons,
+      };
+
+      final Map<String, dynamic> json = createWorkoutJsonToUpdate(
+        date: date,
+        status: status,
+        stages: stages,
+      );
+
+      expect(json, expectedJson);
+    },
+  );
+
+  test(
+    'create json to update, '
+    'status is null, '
+    'should not include status in json',
+    () {
+      final Map<String, dynamic> expectedJson = {
+        'date': dateStr,
+        'name': name,
+        'stages': stageJsons,
+      };
+
+      final Map<String, dynamic> json = createWorkoutJsonToUpdate(
+        date: date,
+        workoutName: name,
+        stages: stages,
+      );
+
+      expect(json, expectedJson);
+    },
+  );
+
+  test(
+    'create json to update, '
+    'stages are null, '
+    'should not include stages in json',
+    () {
+      final Map<String, dynamic> expectedJson = {
+        'date': dateStr,
+        'name': name,
+        'status': status.toJson(),
+      };
+
+      final Map<String, dynamic> json = createWorkoutJsonToUpdate(
+        date: date,
+        workoutName: name,
+        status: status,
+      );
+
+      expect(json, expectedJson);
     },
   );
 }
