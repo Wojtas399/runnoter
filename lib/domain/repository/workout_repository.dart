@@ -19,9 +19,7 @@ abstract class WorkoutRepository {
     required String userId,
   });
 
-  Stream<List<Workout>?> getAllWorkouts({
-    required String userId,
-  });
+  Stream<List<Workout>?> getAllWorkouts({required String userId});
 
   Future<void> addWorkout({
     required String userId,
@@ -34,6 +32,7 @@ abstract class WorkoutRepository {
   Future<void> updateWorkout({
     required String workoutId,
     required String userId,
+    DateTime? date,
     String? workoutName,
     RunStatus? status,
     List<WorkoutStage>? stages,
@@ -44,7 +43,5 @@ abstract class WorkoutRepository {
     required String workoutId,
   });
 
-  Future<void> deleteAllUserWorkouts({
-    required String userId,
-  });
+  Future<void> deleteAllUserWorkouts({required String userId});
 }

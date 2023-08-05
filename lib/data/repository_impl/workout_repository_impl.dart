@@ -77,9 +77,7 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
   }
 
   @override
-  Stream<List<Workout>?> getAllWorkouts({
-    required String userId,
-  }) async* {
+  Stream<List<Workout>?> getAllWorkouts({required String userId}) async* {
     await _loadWorkoutsFromRemoteDb(userId);
     await for (final workouts in dataStream$) {
       yield workouts?.where((workout) => workout.userId == userId).toList();
@@ -111,6 +109,7 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
   Future<void> updateWorkout({
     required String workoutId,
     required String userId,
+    DateTime? date,
     String? workoutName,
     RunStatus? status,
     List<WorkoutStage>? stages,
@@ -119,6 +118,7 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
         await _firebaseWorkoutService.updateWorkout(
       workoutId: workoutId,
       userId: userId,
+      date: date,
       workoutName: workoutName,
       status: status != null ? mapRunStatusToDto(status) : null,
       stages: stages?.map(mapWorkoutStageToFirebase).toList(),
@@ -142,9 +142,7 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
   }
 
   @override
-  Future<void> deleteAllUserWorkouts({
-    required String userId,
-  }) async {
+  Future<void> deleteAllUserWorkouts({required String userId}) async {
     final List<String> idsOfDeletedWorkouts =
         await _firebaseWorkoutService.deleteAllUserWorkouts(userId: userId);
     removeEntities(idsOfDeletedWorkouts);

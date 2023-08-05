@@ -69,6 +69,7 @@ class MockWorkoutRepository extends Mock implements WorkoutRepository {
       () => updateWorkout(
         workoutId: any(named: 'workoutId'),
         userId: any(named: 'userId'),
+        date: any(named: 'date'),
         workoutName: any(named: 'workoutName'),
         status: any(named: 'status'),
         stages: any(named: 'stages'),

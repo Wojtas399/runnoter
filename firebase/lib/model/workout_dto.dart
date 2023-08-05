@@ -58,11 +58,13 @@ class WorkoutDto extends Equatable {
 }
 
 Map<String, dynamic> createWorkoutJsonToUpdate({
+  DateTime? date,
   String? workoutName,
   RunStatusDto? status,
   List<WorkoutStageDto>? stages,
 }) =>
     {
+      if (date != null) workoutDtoDateField: date,
       if (workoutName != null) _nameField: workoutName,
       if (status != null) _statusField: status.toJson(),
       if (stages != null)
