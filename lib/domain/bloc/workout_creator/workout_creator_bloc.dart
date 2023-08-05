@@ -188,6 +188,7 @@ class WorkoutCreatorBloc extends BlocWithStatus<WorkoutCreatorEvent,
     await _workoutRepository.updateWorkout(
       workoutId: state.workout!.id,
       userId: userId,
+      date: state.date,
       workoutName: state.workoutName,
       stages: state.stages,
     );
