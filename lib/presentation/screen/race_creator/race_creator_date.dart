@@ -14,7 +14,7 @@ class RaceCreatorDate extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        TitleMedium(Str.of(context).raceDate),
+        TitleMedium(Str.of(context).date),
         const SizedBox(height: 8),
         const _RaceDateValue(),
       ],
