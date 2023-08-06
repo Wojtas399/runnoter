@@ -4,14 +4,12 @@ import 'package:mocktail/mocktail.dart';
 class FakeUserDto extends Fake implements UserDto {}
 
 class MockFirebaseUserService extends Mock implements FirebaseUserService {
-  void mockLoadUserById({
-    UserDto? userDto,
-  }) {
+  void mockLoadUserById({UserDto? userDto}) {
     when(
       () => loadUserById(
         userId: any(named: 'userId'),
       ),
-    ).thenAnswer((invocation) => Future.value(userDto));
+    ).thenAnswer((_) => Future.value(userDto));
   }
 
   void mockAddUserPersonalData() {
@@ -23,16 +21,18 @@ class MockFirebaseUserService extends Mock implements FirebaseUserService {
     ).thenAnswer((_) async => '');
   }
 
-  void mockUpdateUserData({
-    UserDto? userDto,
-  }) {
+  void mockUpdateUserData({UserDto? userDto}) {
     when(
       () => updateUserData(
         userId: any(named: 'userId'),
         name: any(named: 'name'),
         surname: any(named: 'surname'),
+        coachId: any(named: 'coachId'),
+        coachIdAsNull: any(named: 'coachIdAsNull'),
+        idsOfRunners: any(named: 'idsOfRunners'),
+        idsOfRunnersAsNull: any(named: 'idsOfRunnersAsNull'),
       ),
-    ).thenAnswer((invocation) => Future.value(userDto));
+    ).thenAnswer((_) => Future.value(userDto));
   }
 
   void mockDeleteUserData() {
@@ -40,7 +40,7 @@ class MockFirebaseUserService extends Mock implements FirebaseUserService {
       () => deleteUserData(
         userId: any(named: 'userId'),
       ),
-    ).thenAnswer((invocation) => Future.value());
+    ).thenAnswer((_) => Future.value());
   }
 
   void _mockUserDto() {
