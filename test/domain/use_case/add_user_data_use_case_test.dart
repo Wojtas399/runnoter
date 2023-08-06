@@ -44,7 +44,7 @@ void main() {
         name: name,
         surname: surname,
         settings: defaultSettings,
-        runners: [],
+        idsOfRunners: [],
       );
       userRepository.mockAddUser();
 

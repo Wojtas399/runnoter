@@ -1,16 +1,14 @@
 import 'entity.dart';
 import 'settings.dart';
 
-enum Gender {
-  male,
-  female,
-}
+enum Gender { male, female }
 
 sealed class User extends Entity {
   final Gender gender;
   final String name;
   final String surname;
   final Settings settings;
+  final String? coachId;
 
   const User({
     required super.id,
@@ -18,14 +16,26 @@ sealed class User extends Entity {
     required this.name,
     required this.surname,
     required this.settings,
+    this.coachId,
+  });
+}
+
+class Runner extends User {
+  const Runner({
+    required super.id,
+    required super.gender,
+    required super.name,
+    required super.surname,
+    required super.settings,
+    super.coachId,
   });
 
   @override
-  List<Object?> get props => [id, gender, name, surname, settings];
+  List<Object?> get props => [id, gender, name, surname, settings, coachId];
 }
 
 class Coach extends User {
-  final List<Runner> runners;
+  final List<String> idsOfRunners;
 
   const Coach({
     required super.id,
@@ -33,25 +43,18 @@ class Coach extends User {
     required super.name,
     required super.surname,
     required super.settings,
-    required this.runners,
+    super.coachId,
+    required this.idsOfRunners,
   });
 
   @override
-  List<Object?> get props => [id, gender, name, surname, settings, runners];
-}
-
-class Runner extends User {
-  final String? coachId;
-
-  const Runner({
-    required super.id,
-    required super.gender,
-    required super.name,
-    required super.surname,
-    required super.settings,
-    this.coachId,
-  });
-
-  @override
-  List<Object?> get props => [id, gender, name, surname, settings, coachId];
+  List<Object?> get props => [
+        id,
+        gender,
+        name,
+        surname,
+        settings,
+        coachId,
+        idsOfRunners,
+      ];
 }

@@ -9,15 +9,28 @@ User mapUserFromDto({
   required AppearanceSettingsDto appearanceSettingsDto,
   required WorkoutSettingsDto workoutSettingsDto,
 }) {
-  //TODO: Implement mapper for all types
-  return Runner(
-    id: userDto.id,
-    gender: mapGenderFromDto(userDto.gender),
-    name: userDto.name,
-    surname: userDto.surname,
-    settings: mapSettingsFromDto(
-      appearanceSettingsDto: appearanceSettingsDto,
-      workoutSettingsDto: workoutSettingsDto,
-    ),
-  );
+  return userDto.idsOfRunners == null
+      ? Runner(
+          id: userDto.id,
+          gender: mapGenderFromDto(userDto.gender),
+          name: userDto.name,
+          surname: userDto.surname,
+          settings: mapSettingsFromDto(
+            appearanceSettingsDto: appearanceSettingsDto,
+            workoutSettingsDto: workoutSettingsDto,
+          ),
+          coachId: userDto.coachId,
+        )
+      : Coach(
+          id: userDto.id,
+          gender: mapGenderFromDto(userDto.gender),
+          name: userDto.name,
+          surname: userDto.surname,
+          settings: mapSettingsFromDto(
+            appearanceSettingsDto: appearanceSettingsDto,
+            workoutSettingsDto: workoutSettingsDto,
+          ),
+          coachId: userDto.coachId,
+          idsOfRunners: userDto.idsOfRunners!,
+        );
 }
