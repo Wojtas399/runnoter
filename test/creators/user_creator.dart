@@ -10,7 +10,8 @@ User createUser({
   String surname = '',
   Settings? settings,
 }) =>
-    User(
+    //TODO: Implement for all types
+    Runner(
       id: id,
       gender: gender,
       name: name,

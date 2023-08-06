@@ -123,7 +123,9 @@ class SignUpBloc extends BlocWithStatus<SignUpEvent, SignUpState,
       password: state.password,
     );
     if (userId == null) return;
+    //TODO: Implement account type in state
     await _addUserDataUseCase.execute(
+      accountType: AccountType.runner,
       userId: userId,
       gender: state.gender,
       name: state.name,

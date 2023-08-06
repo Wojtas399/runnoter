@@ -24,7 +24,7 @@ void main() {
         distanceUnit: firebase.DistanceUnit.kilometers,
         paceUnit: firebase.PaceUnit.minutesPerKilometer,
       );
-      const User expectedUser = User(
+      const User expectedUser = Runner(
         id: 'u1',
         gender: Gender.male,
         name: 'name',

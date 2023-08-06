@@ -179,6 +179,7 @@ void main() {
       ).called(1);
       verify(
         () => addUserDataUseCase.execute(
+          accountType: AccountType.runner,
           userId: 'u1',
           gender: gender,
           name: name,

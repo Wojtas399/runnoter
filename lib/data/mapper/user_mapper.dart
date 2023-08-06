@@ -9,7 +9,8 @@ User mapUserFromDto({
   required AppearanceSettingsDto appearanceSettingsDto,
   required WorkoutSettingsDto workoutSettingsDto,
 }) {
-  return User(
+  //TODO: Implement mapper for all types
+  return Runner(
     id: userDto.id,
     gender: mapGenderFromDto(userDto.gender),
     name: userDto.name,

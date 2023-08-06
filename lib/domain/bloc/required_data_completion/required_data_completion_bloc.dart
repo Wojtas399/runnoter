@@ -69,7 +69,9 @@ class RequiredDataCompletionBloc extends BlocWithStatus<
       emitNoLoggedUserStatus(emit);
       return;
     }
+    //TODO: Implement account type in state
     await _addUserDataUseCase.execute(
+      accountType: AccountType.runner,
       userId: loggedUserId,
       name: state.name,
       surname: state.surname,

@@ -85,7 +85,8 @@ class UserRepositoryImpl extends StateRepository<User>
         surname: surname,
       );
       if (updatedUserDto == null) return;
-      final User updatedUser = User(
+      //TODO: Implement for all types
+      final User updatedUser = Runner(
         id: userId,
         gender: mapGenderFromDto(updatedUserDto.gender),
         name: updatedUserDto.name,
@@ -135,7 +136,8 @@ class UserRepositoryImpl extends StateRepository<User>
             ? mapPaceUnitFromDb(newWorkoutSettingsDto.paceUnit)
             : user.settings.paceUnit,
       );
-      final User updatedUser = User(
+      //TODO: Implement for all types
+      final User updatedUser = Runner(
         id: user.id,
         gender: user.gender,
         name: user.name,
