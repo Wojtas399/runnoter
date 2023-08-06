@@ -59,7 +59,7 @@ void main() {
       authService.mockHasLoggedUserVerifiedEmail(expected: true);
       authService.mockGetLoggedUserEmail(userEmail: 'email@example.com');
       userRepository.mockGetUserById(
-        user: createUser(
+        user: createRunner(
           id: loggedUserId,
           gender: Gender.female,
           name: 'name',
@@ -92,7 +92,7 @@ void main() {
     build: () => ProfileIdentitiesBloc(),
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
-      userRepository.mockUpdateUserIdentities();
+      userRepository.mockUpdateUser();
     },
     act: (bloc) => bloc.add(const ProfileIdentitiesEventUpdateGender(
       gender: Gender.female,
@@ -106,7 +106,7 @@ void main() {
     verify: (_) {
       verify(() => authService.loggedUserId$).called(1);
       verify(
-        () => userRepository.updateUserIdentities(
+        () => userRepository.updateUser(
           userId: loggedUserId,
           gender: Gender.female,
         ),
@@ -116,7 +116,7 @@ void main() {
 
   blocTest(
     'update gender, '
-    'method from user repository to update identities throws exception, '
+    'method from user repository to update user throws exception, '
     'should set previous gender',
     build: () => ProfileIdentitiesBloc(
       state: const ProfileIdentitiesState(
@@ -126,7 +126,7 @@ void main() {
     ),
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
-      userRepository.mockUpdateUserIdentities(throwable: 'Exception...');
+      userRepository.mockUpdateUser(throwable: 'Exception...');
     },
     act: (bloc) => bloc.add(const ProfileIdentitiesEventUpdateGender(
       gender: Gender.female,
@@ -144,7 +144,7 @@ void main() {
     verify: (_) {
       verify(() => authService.loggedUserId$).called(1);
       verify(
-        () => userRepository.updateUserIdentities(
+        () => userRepository.updateUser(
           userId: loggedUserId,
           gender: Gender.female,
         ),
@@ -189,7 +189,7 @@ void main() {
     build: () => ProfileIdentitiesBloc(),
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
-      userRepository.mockUpdateUserIdentities();
+      userRepository.mockUpdateUser();
     },
     act: (bloc) => bloc.add(const ProfileIdentitiesEventUpdateUsername(
       username: 'new username',
@@ -204,7 +204,7 @@ void main() {
     verify: (_) {
       verify(() => authService.loggedUserId$).called(1);
       verify(
-        () => userRepository.updateUserIdentities(
+        () => userRepository.updateUser(
           userId: loggedUserId,
           name: 'new username',
         ),
@@ -233,7 +233,7 @@ void main() {
     build: () => ProfileIdentitiesBloc(),
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
-      userRepository.mockUpdateUserIdentities();
+      userRepository.mockUpdateUser();
     },
     act: (bloc) => bloc.add(const ProfileIdentitiesEventUpdateSurname(
       surname: 'new surname',
@@ -248,7 +248,7 @@ void main() {
     verify: (_) {
       verify(() => authService.loggedUserId$).called(1);
       verify(
-        () => userRepository.updateUserIdentities(
+        () => userRepository.updateUser(
           userId: loggedUserId,
           surname: 'new surname',
         ),

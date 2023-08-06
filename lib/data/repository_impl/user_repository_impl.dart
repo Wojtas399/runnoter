@@ -26,9 +26,7 @@ class UserRepositoryImpl extends StateRepository<User>
         super(initialData: initialState);
 
   @override
-  Stream<User?> getUserById({
-    required String userId,
-  }) async* {
+  Stream<User?> getUserById({required String userId}) async* {
     await for (final users in dataStream$) {
       User? user = users?.firstWhereOrNull(
         (User? user) => user?.id == userId,
@@ -39,15 +37,15 @@ class UserRepositoryImpl extends StateRepository<User>
   }
 
   @override
-  Future<void> addUser({
-    required User user,
-  }) async {
+  Future<void> addUser({required User user}) async {
     await _dbUserService.addUserPersonalData(
       userDto: firebase.UserDto(
         id: user.id,
         gender: mapGenderToDto(user.gender),
         name: user.name,
         surname: user.surname,
+        coachId: user.coachId,
+        idsOfRunners: user is Coach ? user.idsOfRunners : null,
       ),
     );
     await _dbAppearanceSettingsService.addSettings(
@@ -68,29 +66,32 @@ class UserRepositoryImpl extends StateRepository<User>
   }
 
   @override
-  Future<void> updateUserIdentities({
+  Future<void> updateUser({
     required String userId,
     Gender? gender,
     String? name,
     String? surname,
+    String? coachId,
+    bool coachIdAsNull = false,
+    List<String>? idsOfRunners,
+    bool idsOfRunnersAsNull = false,
   }) async {
     final Stream<User?> user$ = getUserById(userId: userId);
     await for (final user in user$) {
       if (user == null) return;
-      final firebase.UserDto? updatedUserDto =
-          await _dbUserService.updateUserData(
+      final updatedUserDto = await _dbUserService.updateUserData(
         userId: userId,
         gender: gender != null ? mapGenderToDto(gender) : null,
         name: name,
         surname: surname,
+        coachId: coachId,
+        coachIdAsNull: coachIdAsNull,
+        idsOfRunners: idsOfRunners,
+        idsOfRunnersAsNull: idsOfRunnersAsNull,
       );
       if (updatedUserDto == null) return;
-      //TODO: Implement for all types
-      final User updatedUser = Runner(
-        id: userId,
-        gender: mapGenderFromDto(updatedUserDto.gender),
-        name: updatedUserDto.name,
-        surname: updatedUserDto.surname,
+      final User updatedUser = mapUserFromDto(
+        userDto: updatedUserDto,
         settings: user.settings,
       );
       updateEntity(updatedUser);
@@ -136,14 +137,25 @@ class UserRepositoryImpl extends StateRepository<User>
             ? mapPaceUnitFromDb(newWorkoutSettingsDto.paceUnit)
             : user.settings.paceUnit,
       );
-      //TODO: Implement for all types
-      final User updatedUser = Runner(
-        id: user.id,
-        gender: user.gender,
-        name: user.name,
-        surname: user.surname,
-        settings: updatedSettings,
-      );
+      final User updatedUser = switch (user) {
+        Runner() => Runner(
+            id: user.id,
+            gender: user.gender,
+            name: user.name,
+            surname: user.surname,
+            settings: updatedSettings,
+            coachId: user.coachId,
+          ),
+        Coach() => Coach(
+            id: user.id,
+            gender: user.gender,
+            name: user.name,
+            surname: user.surname,
+            settings: updatedSettings,
+            coachId: user.coachId,
+            idsOfRunners: user.idsOfRunners,
+          ),
+      };
       updateEntity(updatedUser);
       return;
     }
@@ -169,8 +181,10 @@ class UserRepositoryImpl extends StateRepository<User>
     if (appearanceSettingsDto != null && workoutSettingsDto != null) {
       final User user = mapUserFromDto(
         userDto: userDto,
-        appearanceSettingsDto: appearanceSettingsDto,
-        workoutSettingsDto: workoutSettingsDto,
+        settings: mapSettingsFromDto(
+          appearanceSettingsDto: appearanceSettingsDto,
+          workoutSettingsDto: workoutSettingsDto,
+        ),
       );
       addEntity(user);
       return user;

@@ -2,19 +2,19 @@ import '../entity/settings.dart';
 import '../entity/user.dart';
 
 abstract class UserRepository {
-  Stream<User?> getUserById({
-    required String userId,
-  });
+  Stream<User?> getUserById({required String userId});
 
-  Future<void> addUser({
-    required User user,
-  });
+  Future<void> addUser({required User user});
 
-  Future<void> updateUserIdentities({
+  Future<void> updateUser({
     required String userId,
     Gender? gender,
     String? name,
     String? surname,
+    String? coachId,
+    bool coachIdAsNull = false,
+    List<String>? idsOfRunners,
+    bool idsOfRunnersAsNull = false,
   });
 
   Future<void> updateUserSettings({
@@ -25,7 +25,5 @@ abstract class UserRepository {
     PaceUnit? paceUnit,
   });
 
-  Future<void> deleteUser({
-    required String userId,
-  });
+  Future<void> deleteUser({required String userId});
 }

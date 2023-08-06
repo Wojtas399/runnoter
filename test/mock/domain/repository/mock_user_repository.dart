@@ -9,9 +9,7 @@ class MockUserRepository extends Mock implements UserRepository {
     registerFallbackValue(_FakeUser());
   }
 
-  void mockGetUserById({
-    User? user,
-  }) {
+  void mockGetUserById({User? user}) {
     when(
       () => getUserById(
         userId: any(named: 'userId'),
@@ -27,19 +25,15 @@ class MockUserRepository extends Mock implements UserRepository {
     ).thenAnswer((_) => Future.value());
   }
 
-  void mockUpdateUserIdentities({
-    Object? throwable,
-  }) {
+  void mockUpdateUser({Object? throwable}) {
     if (throwable != null) {
-      when(_updateUserIdentitiesCall).thenThrow(throwable);
+      when(_updateUserCall).thenThrow(throwable);
     } else {
-      when(_updateUserIdentitiesCall).thenAnswer((_) => Future.value());
+      when(_updateUserCall).thenAnswer((_) => Future.value());
     }
   }
 
-  void mockUpdateUserSettings({
-    Object? throwable,
-  }) {
+  void mockUpdateUserSettings({Object? throwable}) {
     if (throwable != null) {
       when(_updateUserSettingsCall).thenThrow(throwable);
     } else {
@@ -55,11 +49,15 @@ class MockUserRepository extends Mock implements UserRepository {
     ).thenAnswer((invocation) => Future.value());
   }
 
-  Future<void> _updateUserIdentitiesCall() => updateUserIdentities(
+  Future<void> _updateUserCall() => updateUser(
         userId: any(named: 'userId'),
         gender: any(named: 'gender'),
         name: any(named: 'name'),
         surname: any(named: 'surname'),
+        coachId: any(named: 'coachId'),
+        coachIdAsNull: any(named: 'coachIdAsNull'),
+        idsOfRunners: any(named: 'idsOfRunners'),
+        idsOfRunnersAsNull: any(named: 'idsOfRunnersAsNull'),
       );
 
   Future<void> _updateUserSettingsCall() => updateUserSettings(

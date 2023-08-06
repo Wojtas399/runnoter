@@ -11,16 +11,6 @@ void main() {
   const String name = 'name';
   const String surname = 'surname';
   const String coachId = 'c1';
-  const appearanceSettingsDto = firebase.AppearanceSettingsDto(
-    userId: userId,
-    themeMode: firebase.ThemeMode.dark,
-    language: firebase.Language.english,
-  );
-  const workoutSettingsDto = firebase.WorkoutSettingsDto(
-    userId: userId,
-    distanceUnit: firebase.DistanceUnit.kilometers,
-    paceUnit: firebase.PaceUnit.minutesPerKilometer,
-  );
   const Settings settings = Settings(
     themeMode: ThemeMode.dark,
     language: Language.english,
@@ -49,11 +39,7 @@ void main() {
         coachId: coachId,
       );
 
-      final User user = mapUserFromDto(
-        userDto: userDto,
-        appearanceSettingsDto: appearanceSettingsDto,
-        workoutSettingsDto: workoutSettingsDto,
-      );
+      final User user = mapUserFromDto(userDto: userDto, settings: settings);
 
       expect(user, expectedUser);
     },
@@ -83,11 +69,7 @@ void main() {
         idsOfRunners: idsOfRunners,
       );
 
-      final User user = mapUserFromDto(
-        userDto: userDto,
-        appearanceSettingsDto: appearanceSettingsDto,
-        workoutSettingsDto: workoutSettingsDto,
-      );
+      final User user = mapUserFromDto(userDto: userDto, settings: settings);
 
       expect(user, expectedUser);
     },

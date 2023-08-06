@@ -42,7 +42,7 @@ void main() {
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
       userRepository.mockGetUserById(
-        user: createUser(
+        user: createRunner(
           id: loggedUserId,
           name: 'Jack',
           settings: createSettings(

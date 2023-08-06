@@ -66,7 +66,7 @@ void main() {
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
       userRepository.mockGetUserById(
-        user: createUser(
+        user: createRunner(
           settings: createSettings(
             themeMode: ThemeMode.dark,
             language: Language.english,

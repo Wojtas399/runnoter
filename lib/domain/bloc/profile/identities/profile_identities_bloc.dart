@@ -105,7 +105,7 @@ class ProfileIdentitiesBloc extends BlocWithStatus<
       gender: event.gender,
     ));
     try {
-      await _userRepository.updateUserIdentities(
+      await _userRepository.updateUser(
         userId: loggedUserId,
         gender: event.gender,
       );
@@ -126,7 +126,7 @@ class ProfileIdentitiesBloc extends BlocWithStatus<
       return;
     }
     emitLoadingStatus(emit);
-    await _userRepository.updateUserIdentities(
+    await _userRepository.updateUser(
       userId: loggedUserId,
       name: event.username,
     );
@@ -143,7 +143,7 @@ class ProfileIdentitiesBloc extends BlocWithStatus<
       return;
     }
     emitLoadingStatus(emit);
-    await _userRepository.updateUserIdentities(
+    await _userRepository.updateUser(
       userId: loggedUserId,
       surname: event.surname,
     );
