@@ -3,13 +3,12 @@ import 'package:equatable/equatable.dart';
 import '../mapper/distance_unit_mapper.dart';
 import '../mapper/pace_unit_mapper.dart';
 
-//TODO: Rename it to activities settings dto
-class WorkoutSettingsDto extends Equatable {
+class ActivitiesSettingsDto extends Equatable {
   final String userId;
   final DistanceUnit distanceUnit;
   final PaceUnit paceUnit;
 
-  const WorkoutSettingsDto({
+  const ActivitiesSettingsDto({
     required this.userId,
     required this.distanceUnit,
     required this.paceUnit,
@@ -22,7 +21,7 @@ class WorkoutSettingsDto extends Equatable {
         paceUnit,
       ];
 
-  WorkoutSettingsDto.fromJson(
+  ActivitiesSettingsDto.fromJson(
     String userId,
     Map<String, dynamic>? json,
   ) : this(
@@ -55,7 +54,7 @@ enum DistanceUnit {
   miles,
 }
 
-Map<String, dynamic> createWorkoutSettingsJsonToUpdate({
+Map<String, dynamic> createActivitiesSettingsJsonToUpdate({
   DistanceUnit? distanceUnit,
   PaceUnit? paceUnit,
 }) {

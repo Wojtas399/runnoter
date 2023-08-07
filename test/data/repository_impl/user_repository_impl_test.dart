@@ -72,7 +72,7 @@ void main() {
         themeMode: db.ThemeMode.light,
         language: db.Language.polish,
       );
-      const workoutSettingsDto = db.WorkoutSettingsDto(
+      const activitiesSettingsDto = db.ActivitiesSettingsDto(
         userId: userId,
         distanceUnit: db.DistanceUnit.kilometers,
         paceUnit: db.PaceUnit.minutesPerKilometer,
@@ -94,7 +94,7 @@ void main() {
         appearanceSettingsDto: appearanceSettingsDto,
       );
       dbActivitiesSettingsService.mockLoadSettingsByUserId(
-        workoutSettingsDto: workoutSettingsDto,
+        activitiesSettingsDto: activitiesSettingsDto,
       );
 
       final Stream<User?> user$ = repository.getUserById(userId: userId);
@@ -108,7 +108,7 @@ void main() {
 
   test(
     'add user, '
-    'should call db methods to add user personal data, appearance settings, workout settings and should add user to repository',
+    'should call db methods to add user personal data, appearance settings, activities settings and should add user to repository',
     () async {
       const String name = 'name';
       const Gender gender = Gender.male;
@@ -127,7 +127,7 @@ void main() {
         themeMode: db.ThemeMode.dark,
         language: db.Language.english,
       );
-      const dbActivitiesSettings = db.WorkoutSettingsDto(
+      const dbActivitiesSettings = db.ActivitiesSettingsDto(
         userId: userId,
         distanceUnit: db.DistanceUnit.miles,
         paceUnit: db.PaceUnit.milesPerHour,
@@ -164,7 +164,7 @@ void main() {
         appearanceSettingsDto: dbAppearanceSettings,
       );
       dbActivitiesSettingsService.mockAddSettings(
-        workoutSettingsDto: dbActivitiesSettings,
+        activitiesSettingsDto: dbActivitiesSettings,
       );
 
       await repository.addUser(user: userToAdd);
@@ -190,7 +190,7 @@ void main() {
       ).called(1);
       verify(
         () => dbActivitiesSettingsService.addSettings(
-          workoutSettingsDto: dbActivitiesSettings,
+          activitiesSettingsDto: dbActivitiesSettings,
         ),
       ).called(1);
     },
@@ -434,7 +434,7 @@ void main() {
 
   test(
     'update user settings, '
-    'should call db method to update appearance and workout settings and should update user in repository',
+    'should call db method to update appearance and activities settings and should update user in repository',
     () async {
       final User existingUser = createUser(
         id: userId,
@@ -473,7 +473,7 @@ void main() {
         themeMode: newDbThemeMode,
         language: newDbLanguage,
       );
-      const updatedWorkoutSettingsDto = db.WorkoutSettingsDto(
+      const updatedActivitiesSettingsDto = db.ActivitiesSettingsDto(
         userId: userId,
         distanceUnit: newDbDistanceUnit,
         paceUnit: newDbPaceUnit,
@@ -482,7 +482,7 @@ void main() {
         updatedAppearanceSettingsDto: updatedAppearanceSettingsDto,
       );
       dbActivitiesSettingsService.mockUpdateSettings(
-        updatedWorkoutSettingsDto: updatedWorkoutSettingsDto,
+        updatedActivitiesSettingsDto: updatedActivitiesSettingsDto,
       );
       repository = UserRepositoryImpl(initialState: [existingUser]);
 
@@ -515,7 +515,7 @@ void main() {
 
   test(
     'delete user, '
-    'should call db methods to delete user data, appearance settings and workout settings and then should delete user from repository',
+    'should call db methods to delete user data, appearance settings and activities settings and then should delete user from repository',
     () async {
       final User user = createUser(id: userId);
       dbUserService.mockLoadUserById();

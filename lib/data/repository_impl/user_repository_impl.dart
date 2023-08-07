@@ -59,7 +59,7 @@ class UserRepositoryImpl extends StateRepository<User>
     );
     final activitiesSettingsDto =
         await _dbActivitiesSettingsService.addSettings(
-      workoutSettingsDto: firebase.WorkoutSettingsDto(
+      activitiesSettingsDto: firebase.ActivitiesSettingsDto(
         userId: user.id,
         distanceUnit: mapDistanceUnitToDb(user.settings.distanceUnit),
         paceUnit: mapPaceUnitToDb(user.settings.paceUnit),
@@ -70,7 +70,7 @@ class UserRepositoryImpl extends StateRepository<User>
         activitiesSettingsDto == null) return;
     final Settings settings = mapSettingsFromDto(
       appearanceSettingsDto: appearanceSettingsDto,
-      workoutSettingsDto: activitiesSettingsDto,
+      activitiesSettingsDto: activitiesSettingsDto,
     );
     final User addedUser = mapUserFromDto(userDto: userDto, settings: settings);
     addEntity(addedUser);
@@ -122,16 +122,17 @@ class UserRepositoryImpl extends StateRepository<User>
     await for (final user in user$) {
       if (user == null) return;
       firebase.AppearanceSettingsDto? newAppearanceSettingsDto;
-      firebase.WorkoutSettingsDto? newWorkoutSettingsDto;
+      firebase.ActivitiesSettingsDto? newActivitiesSettingsDto;
       if (themeMode != null || language != null) {
         newAppearanceSettingsDto =
             await _updateAppearanceSettings(userId, themeMode, language);
       }
       if (distanceUnit != null || paceUnit != null) {
-        newWorkoutSettingsDto =
-            await _updateWorkoutSettings(userId, distanceUnit, paceUnit);
+        newActivitiesSettingsDto =
+            await _updateActivitiesSettings(userId, distanceUnit, paceUnit);
       }
-      if (newAppearanceSettingsDto == null && newWorkoutSettingsDto == null) {
+      if (newAppearanceSettingsDto == null &&
+          newActivitiesSettingsDto == null) {
         return;
       }
       final settings.Settings updatedSettings = settings.Settings(
@@ -141,11 +142,11 @@ class UserRepositoryImpl extends StateRepository<User>
         language: newAppearanceSettingsDto != null
             ? mapLanguageFromDb(newAppearanceSettingsDto.language)
             : user.settings.language,
-        distanceUnit: newWorkoutSettingsDto != null
-            ? mapDistanceUnitFromDb(newWorkoutSettingsDto.distanceUnit)
+        distanceUnit: newActivitiesSettingsDto != null
+            ? mapDistanceUnitFromDb(newActivitiesSettingsDto.distanceUnit)
             : user.settings.distanceUnit,
-        paceUnit: newWorkoutSettingsDto != null
-            ? mapPaceUnitFromDb(newWorkoutSettingsDto.paceUnit)
+        paceUnit: newActivitiesSettingsDto != null
+            ? mapPaceUnitFromDb(newActivitiesSettingsDto.paceUnit)
             : user.settings.paceUnit,
       );
       //TODO: Implement email
@@ -180,14 +181,14 @@ class UserRepositoryImpl extends StateRepository<User>
     if (userDto == null) return null;
     final firebase.AppearanceSettingsDto? appearanceSettingsDto =
         await _dbAppearanceSettingsService.loadSettingsByUserId(userId: userId);
-    final firebase.WorkoutSettingsDto? workoutSettingsDto =
+    final firebase.ActivitiesSettingsDto? activitiesSettingsDto =
         await _dbActivitiesSettingsService.loadSettingsByUserId(userId: userId);
-    if (appearanceSettingsDto != null && workoutSettingsDto != null) {
+    if (appearanceSettingsDto != null && activitiesSettingsDto != null) {
       final User user = mapUserFromDto(
         userDto: userDto,
         settings: mapSettingsFromDto(
           appearanceSettingsDto: appearanceSettingsDto,
-          workoutSettingsDto: workoutSettingsDto,
+          activitiesSettingsDto: activitiesSettingsDto,
         ),
       );
       addEntity(user);
@@ -207,7 +208,7 @@ class UserRepositoryImpl extends StateRepository<User>
         language: language != null ? mapLanguageToDb(language) : null,
       );
 
-  Future<firebase.WorkoutSettingsDto?> _updateWorkoutSettings(
+  Future<firebase.ActivitiesSettingsDto?> _updateActivitiesSettings(
     String userId,
     settings.DistanceUnit? distanceUnit,
     settings.PaceUnit? paceUnit,

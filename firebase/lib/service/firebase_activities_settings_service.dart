@@ -3,38 +3,33 @@ import '../firebase_collections.dart';
 import '../utils/utils.dart';
 
 class FirebaseActivitiesSettingsService {
-  Future<WorkoutSettingsDto?> loadSettingsByUserId({
+  Future<ActivitiesSettingsDto?> loadSettingsByUserId({
     required String userId,
   }) async {
-    final snapshot = await getWorkoutSettingsRef(userId).get();
+    final snapshot = await getActivitiesSettingsRef(userId).get();
     return snapshot.data();
   }
 
-  //TODO: Rename parameter to activitiesSettingsDto
-  Future<WorkoutSettingsDto?> addSettings({
-    required WorkoutSettingsDto workoutSettingsDto,
+  Future<ActivitiesSettingsDto?> addSettings({
+    required ActivitiesSettingsDto activitiesSettingsDto,
   }) async {
-    final settingsRef = getWorkoutSettingsRef(workoutSettingsDto.userId);
-    await asyncOrSyncCall(
-      () => settingsRef.set(workoutSettingsDto),
-    );
+    final settingsRef = getActivitiesSettingsRef(activitiesSettingsDto.userId);
+    await asyncOrSyncCall(() => settingsRef.set(activitiesSettingsDto));
     final snapshot = await settingsRef.get();
     return snapshot.data();
   }
 
-  Future<WorkoutSettingsDto?> updateSettings({
+  Future<ActivitiesSettingsDto?> updateSettings({
     required String userId,
     DistanceUnit? distanceUnit,
     PaceUnit? paceUnit,
   }) async {
-    final settingsRef = getWorkoutSettingsRef(userId);
-    final jsonToUpdate = createWorkoutSettingsJsonToUpdate(
+    final settingsRef = getActivitiesSettingsRef(userId);
+    final jsonToUpdate = createActivitiesSettingsJsonToUpdate(
       distanceUnit: distanceUnit,
       paceUnit: paceUnit,
     );
-    await asyncOrSyncCall(
-      () => settingsRef.update(jsonToUpdate),
-    );
+    await asyncOrSyncCall(() => settingsRef.update(jsonToUpdate));
     final snapshot = await settingsRef.get();
     return snapshot.data();
   }
@@ -42,8 +37,6 @@ class FirebaseActivitiesSettingsService {
   Future<void> deleteSettingsForUser({
     required String userId,
   }) async {
-    await asyncOrSyncCall(
-      () => getWorkoutSettingsRef(userId).delete(),
-    );
+    await asyncOrSyncCall(() => getActivitiesSettingsRef(userId).delete());
   }
 }

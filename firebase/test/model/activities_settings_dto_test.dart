@@ -14,13 +14,14 @@ void main() {
         'distanceUnit': distanceUnit.name,
         'paceUnit': paceUnit.name,
       };
-      const WorkoutSettingsDto expectedDto = WorkoutSettingsDto(
+      const ActivitiesSettingsDto expectedDto = ActivitiesSettingsDto(
         userId: userId,
         distanceUnit: distanceUnit,
         paceUnit: paceUnit,
       );
 
-      final WorkoutSettingsDto dto = WorkoutSettingsDto.fromJson(userId, json);
+      final ActivitiesSettingsDto dto =
+          ActivitiesSettingsDto.fromJson(userId, json);
 
       expect(dto, expectedDto);
     },
@@ -30,7 +31,7 @@ void main() {
     'to json, '
     'should map dto model to json',
     () {
-      const WorkoutSettingsDto dto = WorkoutSettingsDto(
+      const ActivitiesSettingsDto dto = ActivitiesSettingsDto(
         userId: userId,
         distanceUnit: distanceUnit,
         paceUnit: paceUnit,
@@ -55,7 +56,7 @@ void main() {
         'paceUnit': paceUnit.name,
       };
 
-      final Map<String, dynamic> json = createWorkoutSettingsJsonToUpdate(
+      final Map<String, dynamic> json = createActivitiesSettingsJsonToUpdate(
         paceUnit: paceUnit,
       );
 
@@ -72,7 +73,7 @@ void main() {
         'distanceUnit': distanceUnit.name,
       };
 
-      final Map<String, dynamic> json = createWorkoutSettingsJsonToUpdate(
+      final Map<String, dynamic> json = createActivitiesSettingsJsonToUpdate(
         distanceUnit: distanceUnit,
       );
 

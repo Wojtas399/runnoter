@@ -58,18 +58,19 @@ DocumentReference<AppearanceSettingsDto> getAppearanceSettingsRef(
               appearanceSettingsDto.toJson(),
         );
 
-DocumentReference<WorkoutSettingsDto> getWorkoutSettingsRef(
+DocumentReference<ActivitiesSettingsDto> getActivitiesSettingsRef(
   String userId,
 ) =>
     getUserRef(userId)
         .collection('Settings')
-        .doc('WorkoutSettings')
-        .withConverter<WorkoutSettingsDto>(
-          fromFirestore: (snapshot, _) => WorkoutSettingsDto.fromJson(
+        .doc('ActivitiesSettings')
+        .withConverter<ActivitiesSettingsDto>(
+          fromFirestore: (snapshot, _) => ActivitiesSettingsDto.fromJson(
             userId,
             snapshot.data(),
           ),
-          toFirestore: (workoutSettingsDto, _) => workoutSettingsDto.toJson(),
+          toFirestore: (activitiesSettingsDto, _) =>
+              activitiesSettingsDto.toJson(),
         );
 
 CollectionReference<BloodTestDto> getBloodTestsRef(
