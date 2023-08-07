@@ -1,4 +1,3 @@
-import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../domain/additional_model/bloc_status.dart';
@@ -24,6 +23,7 @@ class SignUpBloc extends BlocWithStatus<SignUpEvent, SignUpState,
   })  : _authService = getIt<AuthService>(),
         _addUserDataUseCase = getIt<AddUserDataUseCase>(),
         super(state) {
+    on<SignUpEventAccountTypeChanged>(_accountTypeChanged);
     on<SignUpEventGenderChanged>(_genderChanged);
     on<SignUpEventNameChanged>(_nameChanged);
     on<SignUpEventSurnameChanged>(_surnameChanged);
@@ -31,6 +31,15 @@ class SignUpBloc extends BlocWithStatus<SignUpEvent, SignUpState,
     on<SignUpEventPasswordChanged>(_passwordChanged);
     on<SignUpEventPasswordConfirmationChanged>(_passwordConfirmationChanged);
     on<SignUpEventSubmit>(_submit);
+  }
+
+  void _accountTypeChanged(
+    SignUpEventAccountTypeChanged event,
+    Emitter<SignUpState> emit,
+  ) {
+    emit(state.copyWith(
+      accountType: event.accountType,
+    ));
   }
 
   void _genderChanged(
@@ -98,11 +107,8 @@ class SignUpBloc extends BlocWithStatus<SignUpEvent, SignUpState,
       await _authService.sendEmailVerification();
       emitCompleteStatus(emit, info: SignUpBlocInfo.signedUp);
     } on AuthException catch (authException) {
-      final SignUpBlocError? error = _mapAuthExceptionCodeToBlocError(
-        authException.code,
-      );
-      if (error != null) {
-        emitErrorStatus(emit, error);
+      if (authException.code == AuthExceptionCode.emailAlreadyInUse) {
+        emitErrorStatus(emit, SignUpBlocError.emailAlreadyInUse);
       } else {
         emitUnknownErrorStatus(emit);
         rethrow;
@@ -123,30 +129,16 @@ class SignUpBloc extends BlocWithStatus<SignUpEvent, SignUpState,
       password: state.password,
     );
     if (userId == null) return;
-    //TODO: Implement account type in state
     await _addUserDataUseCase.execute(
-      accountType: AccountType.runner,
+      accountType: state.accountType,
       userId: userId,
       gender: state.gender,
       name: state.name,
       surname: state.surname,
     );
   }
-
-  SignUpBlocError? _mapAuthExceptionCodeToBlocError(
-    AuthExceptionCode authExceptionCode,
-  ) {
-    if (authExceptionCode == AuthExceptionCode.emailAlreadyInUse) {
-      return SignUpBlocError.emailAlreadyInUse;
-    }
-    return null;
-  }
 }
 
-enum SignUpBlocInfo {
-  signedUp,
-}
+enum SignUpBlocInfo { signedUp }
 
-enum SignUpBlocError {
-  emailAlreadyInUse,
-}
+enum SignUpBlocError { emailAlreadyInUse }

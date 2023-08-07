@@ -15,6 +15,7 @@ import '../../../mock/domain/use_case/mock_add_user_data_use_case.dart';
 void main() {
   final authService = MockAuthService();
   final addUserDataUseCase = MockAddUserDataUseCase();
+  const AccountType accountType = AccountType.coach;
   const Gender gender = Gender.male;
   const String name = 'Jack';
   const String surname = 'Gadovsky';
@@ -30,6 +31,20 @@ void main() {
     reset(authService);
     reset(addUserDataUseCase);
   });
+
+  blocTest(
+    'account type changed, ',
+    build: () => SignUpBloc(),
+    act: (bloc) => bloc.add(const SignUpEventAccountTypeChanged(
+      accountType: accountType,
+    )),
+    expect: () => [
+      const SignUpState(
+        status: BlocStatusComplete(),
+        accountType: accountType,
+      ),
+    ],
+  );
 
   blocTest(
     'gender changed, '
@@ -120,6 +135,7 @@ void main() {
     build: () => SignUpBloc(
       state: const SignUpState(
         status: BlocStatusInitial(),
+        accountType: accountType,
         gender: gender,
         name: name,
         surname: surname,
@@ -137,6 +153,7 @@ void main() {
     build: () => SignUpBloc(
       state: const SignUpState(
         status: BlocStatusInitial(),
+        accountType: accountType,
         gender: gender,
         name: name,
         surname: surname,
@@ -154,6 +171,7 @@ void main() {
     expect: () => [
       const SignUpState(
         status: BlocStatusLoading(),
+        accountType: accountType,
         gender: gender,
         name: name,
         surname: surname,
@@ -165,6 +183,7 @@ void main() {
         status: BlocStatusComplete<SignUpBlocInfo>(
           info: SignUpBlocInfo.signedUp,
         ),
+        accountType: accountType,
         gender: gender,
         name: name,
         surname: surname,
@@ -179,7 +198,7 @@ void main() {
       ).called(1);
       verify(
         () => addUserDataUseCase.execute(
-          accountType: AccountType.runner,
+          accountType: accountType,
           userId: 'u1',
           gender: gender,
           name: name,
@@ -197,6 +216,7 @@ void main() {
     build: () => SignUpBloc(
       state: const SignUpState(
         status: BlocStatusInitial(),
+        accountType: accountType,
         gender: gender,
         name: name,
         surname: surname,
@@ -214,6 +234,7 @@ void main() {
     expect: () => [
       const SignUpState(
         status: BlocStatusLoading(),
+        accountType: accountType,
         gender: gender,
         name: name,
         surname: surname,
@@ -225,6 +246,7 @@ void main() {
         status: BlocStatusError<SignUpBlocError>(
           error: SignUpBlocError.emailAlreadyInUse,
         ),
+        accountType: accountType,
         gender: gender,
         name: name,
         surname: surname,
@@ -234,10 +256,7 @@ void main() {
       ),
     ],
     verify: (_) => verify(
-      () => authService.signUp(
-        email: email,
-        password: password,
-      ),
+      () => authService.signUp(email: email, password: password),
     ).called(1),
   );
 
@@ -248,6 +267,7 @@ void main() {
     build: () => SignUpBloc(
       state: const SignUpState(
         status: BlocStatusInitial(),
+        accountType: accountType,
         gender: gender,
         name: name,
         surname: surname,
@@ -265,6 +285,7 @@ void main() {
     expect: () => [
       const SignUpState(
         status: BlocStatusLoading(),
+        accountType: accountType,
         gender: gender,
         name: name,
         surname: surname,
@@ -274,6 +295,7 @@ void main() {
       ),
       const SignUpState(
         status: BlocStatusNoInternetConnection(),
+        accountType: accountType,
         gender: gender,
         name: name,
         surname: surname,
@@ -283,10 +305,7 @@ void main() {
       ),
     ],
     verify: (_) => verify(
-      () => authService.signUp(
-        email: email,
-        password: password,
-      ),
+      () => authService.signUp(email: email, password: password),
     ).called(1),
   );
 
@@ -297,6 +316,7 @@ void main() {
     build: () => SignUpBloc(
       state: const SignUpState(
         status: BlocStatusInitial(),
+        accountType: accountType,
         gender: gender,
         name: name,
         surname: surname,
@@ -314,6 +334,7 @@ void main() {
     expect: () => [
       const SignUpState(
         status: BlocStatusLoading(),
+        accountType: accountType,
         gender: gender,
         name: name,
         surname: surname,
@@ -323,6 +344,7 @@ void main() {
       ),
       const SignUpState(
         status: BlocStatusUnknownError(),
+        accountType: accountType,
         gender: gender,
         name: name,
         surname: surname,
@@ -333,10 +355,7 @@ void main() {
     ],
     errors: () => ['unknown exception message'],
     verify: (_) => verify(
-      () => authService.signUp(
-        email: email,
-        password: password,
-      ),
+      () => authService.signUp(email: email, password: password),
     ).called(1),
   );
 }
