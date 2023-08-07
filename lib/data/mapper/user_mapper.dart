@@ -5,7 +5,7 @@ import '../../domain/entity/user.dart';
 import 'gender_mapper.dart';
 
 User mapUserFromDto({required UserDto userDto, required Settings settings}) {
-  return userDto.idsOfRunners == null
+  return userDto.clientIds == null
       ? Runner(
           id: userDto.id,
           gender: mapGenderFromDto(userDto.gender),
@@ -21,6 +21,6 @@ User mapUserFromDto({required UserDto userDto, required Settings settings}) {
           surname: userDto.surname,
           settings: settings,
           coachId: userDto.coachId,
-          idsOfRunners: userDto.idsOfRunners!,
+          clientIds: userDto.clientIds!,
         );
 }

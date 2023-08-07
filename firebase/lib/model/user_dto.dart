@@ -8,7 +8,7 @@ class UserDto extends Equatable {
   final String name;
   final String surname;
   final String? coachId;
-  final List<String>? idsOfRunners;
+  final List<String>? clientIds;
 
   const UserDto({
     required this.id,
@@ -16,7 +16,7 @@ class UserDto extends Equatable {
     required this.name,
     required this.surname,
     this.coachId,
-    this.idsOfRunners,
+    this.clientIds,
   });
 
   @override
@@ -26,7 +26,7 @@ class UserDto extends Equatable {
         name,
         surname,
         coachId,
-        idsOfRunners,
+        clientIds,
       ];
 
   UserDto.fromJson(
@@ -37,8 +37,8 @@ class UserDto extends Equatable {
           gender: Gender.values.byName(json?[_genderField]),
           name: json?[_nameField],
           surname: json?[_surnameField],
-          coachId: json?[_coachIdField],
-          idsOfRunners: (json?[_idsOfRunnersField] as List?)
+          coachId: json?[coachIdField],
+          clientIds: (json?[_clientIdsField] as List?)
               ?.map((e) => e.toString())
               .toList(),
         );
@@ -47,8 +47,8 @@ class UserDto extends Equatable {
         _genderField: gender.name,
         _nameField: name,
         _surnameField: surname,
-        _coachIdField: coachId,
-        _idsOfRunnersField: idsOfRunners,
+        coachIdField: coachId,
+        _clientIdsField: clientIds,
       };
 }
 
@@ -58,25 +58,25 @@ Map<String, dynamic> createUserJsonToUpdate({
   String? surname,
   String? coachId,
   bool coachIdAsNull = false,
-  List<String>? idsOfRunners,
-  bool idsOfRunnersAsNull = false,
+  List<String>? clientIds,
+  bool clientIdsAsNull = false,
 }) =>
     {
       if (gender != null) _genderField: gender.name,
       if (name != null) _nameField: name,
       if (surname != null) _surnameField: surname,
       if (coachIdAsNull)
-        _coachIdField: null
+        coachIdField: null
       else if (coachId != null)
-        _coachIdField: coachId,
-      if (idsOfRunnersAsNull)
-        _idsOfRunnersField: null
-      else if (idsOfRunners != null)
-        _idsOfRunnersField: idsOfRunners,
+        coachIdField: coachId,
+      if (clientIdsAsNull)
+        _clientIdsField: null
+      else if (clientIds != null)
+        _clientIdsField: clientIds,
     };
 
 const String _genderField = 'gender';
 const String _nameField = 'name';
 const String _surnameField = 'surname';
-const String _coachIdField = 'coachId';
-const String _idsOfRunnersField = 'idsOfRunners';
+const String coachIdField = 'coachId';
+const String _clientIdsField = 'clientIds';

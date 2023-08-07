@@ -29,7 +29,7 @@ class AddUserDataUseCase {
           name: name,
           surname: surname,
           settings: defaultSettings,
-          idsOfRunners: const [],
+          clientIds: const [],
         ),
       AccountType.runner => Runner(
           id: userId,

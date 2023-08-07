@@ -177,7 +177,7 @@ void main() {
           language: Language.english,
         ),
         coachId: 'c1',
-        idsOfRunners: ['r1', 'r2'],
+        clientIds: ['r1', 'r2'],
       );
       dbUserService.mockAddUserPersonalData();
       dbAppearanceSettingsService.mockAddSettings();
@@ -195,7 +195,7 @@ void main() {
             name: 'username',
             surname: 'surname',
             coachId: 'c1',
-            idsOfRunners: ['r1', 'r2'],
+            clientIds: ['r1', 'r2'],
           ),
         ),
       ).called(1);
@@ -360,7 +360,7 @@ void main() {
       const String newName = 'name';
       const String newSurname = 'surname';
       const String newCoachId = 'c2';
-      const List<String> newIdsOfRunners = ['r1', 'r2'];
+      const List<String> newClientIds = ['r1', 'r2'];
       final Settings userSettings = createSettings(
         themeMode: ThemeMode.dark,
         language: Language.english,
@@ -373,7 +373,7 @@ void main() {
         surname: 'surname1',
         settings: userSettings,
         coachId: 'c1',
-        idsOfRunners: ['r1'],
+        clientIds: ['r1'],
       );
       const updatedUserDto = db.UserDto(
         id: userId,
@@ -381,7 +381,7 @@ void main() {
         name: newName,
         surname: newSurname,
         coachId: newCoachId,
-        idsOfRunners: newIdsOfRunners,
+        clientIds: newClientIds,
       );
       final User expectedUpdatedUser = createCoach(
         id: userId,
@@ -390,7 +390,7 @@ void main() {
         surname: newSurname,
         settings: userSettings,
         coachId: newCoachId,
-        idsOfRunners: newIdsOfRunners,
+        clientIds: newClientIds,
       );
       repository = UserRepositoryImpl(initialState: [existingUser]);
       dbUserService.mockUpdateUserData(userDto: updatedUserDto);
@@ -400,7 +400,7 @@ void main() {
         name: newName,
         surname: newSurname,
         coachId: newCoachId,
-        idsOfRunners: newIdsOfRunners,
+        clientIds: newClientIds,
       );
       final Stream<User?> user$ = repository.getUserById(userId: userId);
 
@@ -411,7 +411,7 @@ void main() {
           name: newName,
           surname: newSurname,
           coachId: newCoachId,
-          idsOfRunners: newIdsOfRunners,
+          clientIds: newClientIds,
         ),
       ).called(1);
     },
@@ -425,7 +425,7 @@ void main() {
       const String newName = 'name';
       const String newSurname = 'surname';
       const String newCoachId = 'c2';
-      const List<String> idsOfRunners = ['r1', 'r2'];
+      const List<String> clientIds = ['r1', 'r2'];
       final Settings userSettings = createSettings(
         themeMode: ThemeMode.dark,
         language: Language.english,
@@ -445,7 +445,7 @@ void main() {
         name: newName,
         surname: newSurname,
         coachId: newCoachId,
-        idsOfRunners: idsOfRunners,
+        clientIds: clientIds,
       );
       final User expectedUpdatedUser = createCoach(
         id: userId,
@@ -454,7 +454,7 @@ void main() {
         surname: newSurname,
         settings: userSettings,
         coachId: newCoachId,
-        idsOfRunners: idsOfRunners,
+        clientIds: clientIds,
       );
       repository = UserRepositoryImpl(initialState: [existingUser]);
       dbUserService.mockUpdateUserData(userDto: updatedUserDto);
@@ -464,7 +464,7 @@ void main() {
         name: newName,
         surname: newSurname,
         coachId: newCoachId,
-        idsOfRunners: idsOfRunners,
+        clientIds: clientIds,
       );
       final Stream<User?> user$ = repository.getUserById(userId: userId);
 
@@ -475,7 +475,7 @@ void main() {
           name: newName,
           surname: newSurname,
           coachId: newCoachId,
-          idsOfRunners: idsOfRunners,
+          clientIds: clientIds,
         ),
       ).called(1);
     },
@@ -501,7 +501,7 @@ void main() {
         surname: 'surname1',
         settings: userSettings,
         coachId: 'c1',
-        idsOfRunners: ['r1'],
+        clientIds: ['r1'],
       );
       const updatedUserDto = db.UserDto(
         id: userId,
@@ -526,7 +526,7 @@ void main() {
         name: newName,
         surname: newSurname,
         coachId: newCoachId,
-        idsOfRunnersAsNull: true,
+        clientIdsAsNull: true,
       );
       final Stream<User?> user$ = repository.getUserById(userId: userId);
 
@@ -537,7 +537,7 @@ void main() {
           name: newName,
           surname: newSurname,
           coachId: newCoachId,
-          idsOfRunnersAsNull: true,
+          clientIdsAsNull: true,
         ),
       ).called(1);
     },
@@ -725,7 +725,7 @@ void main() {
         name: 'name',
         surname: 'surname',
         coachId: 'c1',
-        idsOfRunners: ['r1'],
+        clientIds: ['r1'],
       );
       const ThemeMode newThemeMode = ThemeMode.dark;
       const Language newLanguage = Language.english;
@@ -741,7 +741,7 @@ void main() {
         name: existingUser.name,
         surname: existingUser.surname,
         coachId: existingUser.coachId,
-        idsOfRunners: existingUser.idsOfRunners,
+        clientIds: existingUser.clientIds,
         settings: createSettings(
           themeMode: newThemeMode,
           language: newLanguage,

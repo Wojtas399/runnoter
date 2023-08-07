@@ -13,8 +13,8 @@ abstract class UserRepository {
     String? surname,
     String? coachId,
     bool coachIdAsNull = false,
-    List<String>? idsOfRunners,
-    bool idsOfRunnersAsNull = false,
+    List<String>? clientIds,
+    bool clientIdsAsNull = false,
   });
 
   Future<void> updateUserSettings({

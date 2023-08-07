@@ -45,7 +45,7 @@ class UserRepositoryImpl extends StateRepository<User>
         name: user.name,
         surname: user.surname,
         coachId: user.coachId,
-        idsOfRunners: user is Coach ? user.idsOfRunners : null,
+        clientIds: user is Coach ? user.clientIds : null,
       ),
     );
     await _dbAppearanceSettingsService.addSettings(
@@ -73,8 +73,8 @@ class UserRepositoryImpl extends StateRepository<User>
     String? surname,
     String? coachId,
     bool coachIdAsNull = false,
-    List<String>? idsOfRunners,
-    bool idsOfRunnersAsNull = false,
+    List<String>? clientIds,
+    bool clientIdsAsNull = false,
   }) async {
     final Stream<User?> user$ = getUserById(userId: userId);
     await for (final user in user$) {
@@ -86,8 +86,8 @@ class UserRepositoryImpl extends StateRepository<User>
         surname: surname,
         coachId: coachId,
         coachIdAsNull: coachIdAsNull,
-        idsOfRunners: idsOfRunners,
-        idsOfRunnersAsNull: idsOfRunnersAsNull,
+        clientIds: clientIds,
+        clientIdsAsNull: clientIdsAsNull,
       );
       if (updatedUserDto == null) return;
       final User updatedUser = mapUserFromDto(
@@ -153,7 +153,7 @@ class UserRepositoryImpl extends StateRepository<User>
             surname: user.surname,
             settings: updatedSettings,
             coachId: user.coachId,
-            idsOfRunners: user.idsOfRunners,
+            clientIds: user.clientIds,
           ),
       };
       updateEntity(updatedUser);

@@ -7,7 +7,7 @@ void main() {
   const String name = 'Jack';
   const String surname = 'Gadovsky';
   const String coachId = 'c1';
-  const List<String> idsOfRunners = ['r1', 'r2'];
+  const List<String> clientIds = ['r1', 'r2'];
 
   test(
     'from json, '
@@ -18,7 +18,7 @@ void main() {
         'name': name,
         'surname': surname,
         'coachId': coachId,
-        'idsOfRunners': idsOfRunners
+        'clientIds': clientIds
       };
       const UserDto expectedDto = UserDto(
         id: id,
@@ -26,7 +26,7 @@ void main() {
         name: name,
         surname: surname,
         coachId: coachId,
-        idsOfRunners: idsOfRunners,
+        clientIds: clientIds,
       );
 
       final UserDto dto = UserDto.fromJson(id, json);
@@ -45,14 +45,14 @@ void main() {
         name: name,
         surname: surname,
         coachId: coachId,
-        idsOfRunners: idsOfRunners,
+        clientIds: clientIds,
       );
       final Map<String, dynamic> expectedJson = {
         'gender': gender.name,
         'name': name,
         'surname': surname,
         'coachId': coachId,
-        'idsOfRunners': idsOfRunners,
+        'clientIds': clientIds,
       };
 
       final Map<String, dynamic> json = dto.toJson();
@@ -70,14 +70,14 @@ void main() {
         'name': name,
         'surname': surname,
         'coachId': coachId,
-        'idsOfRunners': idsOfRunners,
+        'clientIds': clientIds,
       };
 
       final Map<String, dynamic> json = createUserJsonToUpdate(
         name: name,
         surname: surname,
         coachId: coachId,
-        idsOfRunners: idsOfRunners,
+        clientIds: clientIds,
       );
 
       expect(json, expectedJson);
@@ -93,14 +93,14 @@ void main() {
         'gender': gender.name,
         'surname': surname,
         'coachId': coachId,
-        'idsOfRunners': idsOfRunners,
+        'clientIds': clientIds,
       };
 
       final Map<String, dynamic> json = createUserJsonToUpdate(
         gender: gender,
         surname: surname,
         coachId: coachId,
-        idsOfRunners: idsOfRunners,
+        clientIds: clientIds,
       );
 
       expect(json, expectedJson);
@@ -116,14 +116,14 @@ void main() {
         'gender': gender.name,
         'name': name,
         'coachId': coachId,
-        'idsOfRunners': idsOfRunners,
+        'clientIds': clientIds,
       };
 
       final Map<String, dynamic> json = createUserJsonToUpdate(
         gender: gender,
         name: name,
         coachId: coachId,
-        idsOfRunners: idsOfRunners,
+        clientIds: clientIds,
       );
 
       expect(json, expectedJson);
@@ -139,14 +139,14 @@ void main() {
         'gender': gender.name,
         'name': name,
         'surname': surname,
-        'idsOfRunners': idsOfRunners,
+        'clientIds': clientIds,
       };
 
       final Map<String, dynamic> json = createUserJsonToUpdate(
         gender: gender,
         name: name,
         surname: surname,
-        idsOfRunners: idsOfRunners,
+        clientIds: clientIds,
       );
 
       expect(json, expectedJson);
@@ -163,7 +163,7 @@ void main() {
         'name': name,
         'surname': surname,
         'coachId': null,
-        'idsOfRunners': idsOfRunners,
+        'clientIds': clientIds,
       };
 
       final Map<String, dynamic> json = createUserJsonToUpdate(
@@ -172,7 +172,7 @@ void main() {
         surname: surname,
         coachId: coachId,
         coachIdAsNull: true,
-        idsOfRunners: idsOfRunners,
+        clientIds: clientIds,
       );
 
       expect(json, expectedJson);
@@ -181,8 +181,8 @@ void main() {
 
   test(
     'create json to update, '
-    'ids of runners is null, '
-    'should not include ids of runners in json',
+    'clientIds is null, '
+    'should not include clientIds in json',
     () {
       final Map<String, dynamic> expectedJson = {
         'gender': gender.name,
@@ -204,15 +204,15 @@ void main() {
 
   test(
     'create json to update, '
-    'ids of runners as null set to true, '
-    'should include ids of runners param with null value',
+    'clientIds as null set to true, '
+    'should include clientIds param with null value',
     () {
       final Map<String, dynamic> expectedJson = {
         'gender': gender.name,
         'name': name,
         'surname': surname,
         'coachId': coachId,
-        'idsOfRunners': null,
+        'clientIds': null,
       };
 
       final Map<String, dynamic> json = createUserJsonToUpdate(
@@ -220,8 +220,8 @@ void main() {
         name: name,
         surname: surname,
         coachId: coachId,
-        idsOfRunners: idsOfRunners,
-        idsOfRunnersAsNull: true,
+        clientIds: clientIds,
+        clientIdsAsNull: true,
       );
 
       expect(json, expectedJson);

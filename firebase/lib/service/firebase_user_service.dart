@@ -19,8 +19,8 @@ class FirebaseUserService {
     String? surname,
     String? coachId,
     bool coachIdAsNull = false,
-    List<String>? idsOfRunners,
-    bool idsOfRunnersAsNull = false,
+    List<String>? clientIds,
+    bool clientIdsAsNull = false,
   }) async {
     final userRef = getUserRef(userId);
     final userJsonToUpdate = createUserJsonToUpdate(
@@ -29,8 +29,8 @@ class FirebaseUserService {
       surname: surname,
       coachId: coachId,
       coachIdAsNull: coachIdAsNull,
-      idsOfRunners: idsOfRunners,
-      idsOfRunnersAsNull: idsOfRunnersAsNull,
+      clientIds: clientIds,
+      clientIdsAsNull: clientIdsAsNull,
     );
     await asyncOrSyncCall(() => userRef.update(userJsonToUpdate));
     final user = await userRef.get();

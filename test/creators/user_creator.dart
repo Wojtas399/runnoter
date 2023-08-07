@@ -27,7 +27,7 @@ Coach createCoach({
   String surname = '',
   Settings? settings,
   String? coachId,
-  List<String> idsOfRunners = const [],
+  List<String> clientIds = const [],
 }) =>
     Coach(
       id: id,
@@ -36,5 +36,5 @@ Coach createCoach({
       surname: surname,
       settings: settings ?? createSettings(),
       coachId: coachId,
-      idsOfRunners: idsOfRunners,
+      clientIds: clientIds,
     );

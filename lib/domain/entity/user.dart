@@ -37,7 +37,7 @@ class Runner extends User {
 }
 
 class Coach extends User {
-  final List<String> idsOfRunners;
+  final List<String> clientIds;
 
   const Coach({
     required super.id,
@@ -46,7 +46,7 @@ class Coach extends User {
     required super.surname,
     required super.settings,
     super.coachId,
-    required this.idsOfRunners,
+    required this.clientIds,
   });
 
   @override
@@ -57,6 +57,6 @@ class Coach extends User {
         surname,
         settings,
         coachId,
-        idsOfRunners,
+        clientIds,
       ];
 }

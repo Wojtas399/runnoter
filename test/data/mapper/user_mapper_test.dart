@@ -47,17 +47,17 @@ void main() {
 
   test(
     'map user from dto, '
-    'ids of runners are not null, '
+    'clientIds is not null, '
     'should map firebase dto model to coach model',
     () {
-      const List<String> idsOfRunners = ['r1', 'r2'];
+      const List<String> clientIds = ['r1', 'r2'];
       const userDto = firebase.UserDto(
         id: userId,
         gender: firebaseGender,
         name: name,
         surname: surname,
         coachId: coachId,
-        idsOfRunners: idsOfRunners,
+        clientIds: clientIds,
       );
       const User expectedUser = Coach(
         id: userId,
@@ -66,7 +66,7 @@ void main() {
         surname: surname,
         settings: settings,
         coachId: coachId,
-        idsOfRunners: idsOfRunners,
+        clientIds: clientIds,
       );
 
       final User user = mapUserFromDto(userDto: userDto, settings: settings);

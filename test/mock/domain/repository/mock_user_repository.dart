@@ -56,8 +56,8 @@ class MockUserRepository extends Mock implements UserRepository {
         surname: any(named: 'surname'),
         coachId: any(named: 'coachId'),
         coachIdAsNull: any(named: 'coachIdAsNull'),
-        idsOfRunners: any(named: 'idsOfRunners'),
-        idsOfRunnersAsNull: any(named: 'idsOfRunnersAsNull'),
+        clientIds: any(named: 'clientIds'),
+        clientIdsAsNull: any(named: 'clientIdsAsNull'),
       );
 
   Future<void> _updateUserSettingsCall() => updateUserSettings(
