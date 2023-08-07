@@ -1,6 +1,7 @@
 part of 'profile_identities_bloc.dart';
 
 class ProfileIdentitiesState extends BlocState {
+  final AccountType? accountType;
   final Gender? gender;
   final String? username;
   final String? surname;
@@ -9,6 +10,7 @@ class ProfileIdentitiesState extends BlocState {
 
   const ProfileIdentitiesState({
     required super.status,
+    this.accountType,
     this.gender,
     this.username,
     this.surname,
@@ -19,6 +21,7 @@ class ProfileIdentitiesState extends BlocState {
   @override
   List<Object?> get props => [
         status,
+        accountType,
         gender,
         username,
         surname,
@@ -29,19 +32,20 @@ class ProfileIdentitiesState extends BlocState {
   @override
   ProfileIdentitiesState copyWith({
     BlocStatus? status,
+    AccountType? accountType,
     Gender? gender,
     String? username,
     String? surname,
     String? email,
     bool? isEmailVerified,
-  }) {
-    return ProfileIdentitiesState(
-      status: status ?? const BlocStatusComplete(),
-      gender: gender ?? this.gender,
-      username: username ?? this.username,
-      surname: surname ?? this.surname,
-      email: email ?? this.email,
-      isEmailVerified: isEmailVerified ?? this.isEmailVerified,
-    );
-  }
+  }) =>
+      ProfileIdentitiesState(
+        status: status ?? const BlocStatusComplete(),
+        accountType: accountType ?? this.accountType,
+        gender: gender ?? this.gender,
+        username: username ?? this.username,
+        surname: surname ?? this.surname,
+        email: email ?? this.email,
+        isEmailVerified: isEmailVerified ?? this.isEmailVerified,
+      );
 }

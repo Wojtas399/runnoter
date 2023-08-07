@@ -1,6 +1,8 @@
 import 'entity.dart';
 import 'settings.dart';
 
+enum AccountType { coach, runner }
+
 enum Gender { male, female }
 
 sealed class User extends Entity {

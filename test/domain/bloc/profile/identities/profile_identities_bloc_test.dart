@@ -52,6 +52,7 @@ void main() {
 
   blocTest(
     'initialize, '
+    'coach, '
     'should set listener of logged user email, email verification status and data',
     build: () => ProfileIdentitiesBloc(),
     setUp: () {
@@ -59,7 +60,7 @@ void main() {
       authService.mockHasLoggedUserVerifiedEmail(expected: true);
       authService.mockGetLoggedUserEmail(userEmail: 'email@example.com');
       userRepository.mockGetUserById(
-        user: createRunner(
+        user: createCoach(
           id: loggedUserId,
           gender: Gender.female,
           name: 'name',
@@ -71,6 +72,7 @@ void main() {
     expect: () => [
       const ProfileIdentitiesState(
         status: BlocStatusComplete(),
+        accountType: AccountType.coach,
         gender: Gender.female,
         username: 'name',
         surname: 'surname',

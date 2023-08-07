@@ -3,8 +3,6 @@ import '../entity/settings.dart';
 import '../entity/user.dart';
 import '../repository/user_repository.dart';
 
-enum AccountType { coach, runner }
-
 class AddUserDataUseCase {
   final UserRepository _userRepository;
 
