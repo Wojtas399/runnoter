@@ -33,7 +33,7 @@ void main() {
     'account type changed, '
     'should update account type in state',
     build: () => RequiredDataCompletionBloc(),
-    act: (bloc) => bloc.add(const RequiredDataCompletionAccountTypeChanged(
+    act: (bloc) => bloc.add(const RequiredDataCompletionEventAccountTypeChanged(
       accountType: accountType,
     )),
     expect: () => [

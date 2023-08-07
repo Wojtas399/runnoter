@@ -78,7 +78,7 @@ class _Content extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Text(Str.of(context).requiredDataCompletionMessage),
-        const SizedBox(height: 16),
+        const SizedBox(height: 24),
         const RequiredDataCompletionForm(),
       ],
     );

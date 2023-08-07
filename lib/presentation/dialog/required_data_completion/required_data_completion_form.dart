@@ -4,25 +4,57 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/bloc/required_data_completion/required_data_completion_bloc.dart';
 import '../../../domain/entity/user.dart';
+import '../../../domain/use_case/add_user_data_use_case.dart';
 import '../../component/text_field_component.dart';
+import '../../component/two_options_component.dart';
 
 class RequiredDataCompletionForm extends StatelessWidget {
   const RequiredDataCompletionForm({super.key});
 
   @override
   Widget build(BuildContext context) {
-    const gap = SizedBox(height: 24);
-
     return const Column(
       mainAxisSize: MainAxisSize.min,
       children: [
+        _AccountType(),
+        SizedBox(height: 16),
         _Gender(),
-        gap,
+        SizedBox(height: 24),
         _Name(),
-        gap,
+        SizedBox(height: 24),
         _Surname(),
       ],
     );
+  }
+}
+
+class _AccountType extends StatelessWidget {
+  const _AccountType();
+
+  @override
+  Widget build(BuildContext context) {
+    final str = Str.of(context);
+    final AccountType? selectedAccountType = context.select(
+      (RequiredDataCompletionBloc bloc) => bloc.state.accountType,
+    );
+
+    return selectedAccountType == null
+        ? const SizedBox()
+        : TwoOptions<AccountType>(
+            label: str.accountType,
+            selectedValue: selectedAccountType,
+            option1: OptionParams(label: str.runner, value: AccountType.runner),
+            option2: OptionParams(label: str.coach, value: AccountType.coach),
+            onChanged: (accountType) => _onChanged(context, accountType),
+          );
+  }
+
+  void _onChanged(BuildContext context, AccountType accountType) {
+    context.read<RequiredDataCompletionBloc>().add(
+          RequiredDataCompletionEventAccountTypeChanged(
+            accountType: accountType,
+          ),
+        );
   }
 }
 
@@ -36,42 +68,21 @@ class _Gender extends StatelessWidget {
       (RequiredDataCompletionBloc bloc) => bloc.state.gender,
     );
 
-    return Row(
-      children: [
-        Expanded(
-          child: ListTile(
-            contentPadding: const EdgeInsets.symmetric(horizontal: 4),
-            title: Text(str.male),
-            leading: Radio(
-              value: Gender.male,
-              groupValue: selectedGender,
-              onChanged: (Gender? gender) => _onGenderChanged(context, gender),
-            ),
-            onTap: () => _onGenderChanged(context, Gender.male),
-          ),
-        ),
-        Expanded(
-          child: ListTile(
-            contentPadding: const EdgeInsets.symmetric(horizontal: 4),
-            title: Text(str.female),
-            leading: Radio(
-              value: Gender.female,
-              groupValue: selectedGender,
-              onChanged: (Gender? gender) => _onGenderChanged(context, gender),
-            ),
-            onTap: () => _onGenderChanged(context, Gender.female),
-          ),
-        ),
-      ],
-    );
+    return selectedGender == null
+        ? const SizedBox()
+        : TwoOptions<Gender>(
+            label: str.gender,
+            selectedValue: selectedGender,
+            option1: OptionParams(label: str.male, value: Gender.male),
+            option2: OptionParams(label: str.female, value: Gender.female),
+            onChanged: (gender) => _onChanged(context, gender),
+          );
   }
 
-  void _onGenderChanged(BuildContext context, Gender? gender) {
-    if (gender != null) {
-      context.read<RequiredDataCompletionBloc>().add(
-            RequiredDataCompletionEventGenderChanged(gender: gender),
-          );
-    }
+  void _onChanged(BuildContext context, Gender gender) {
+    context.read<RequiredDataCompletionBloc>().add(
+          RequiredDataCompletionEventGenderChanged(gender: gender),
+        );
   }
 }
 

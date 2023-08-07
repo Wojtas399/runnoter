@@ -21,7 +21,7 @@ class SignUpForm extends StatelessWidget {
         _AccountType(),
         SizedBox(height: 16),
         _Gender(),
-        SizedBox(height: 16),
+        gap,
         _Name(),
         gap,
         _Surname(),

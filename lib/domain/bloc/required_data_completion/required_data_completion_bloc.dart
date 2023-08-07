@@ -25,7 +25,7 @@ class RequiredDataCompletionBloc extends BlocWithStatus<
   })  : _authService = getIt<AuthService>(),
         _addUserDataUseCase = getIt<AddUserDataUseCase>(),
         super(state) {
-    on<RequiredDataCompletionAccountTypeChanged>(_accountTypeChanged);
+    on<RequiredDataCompletionEventAccountTypeChanged>(_accountTypeChanged);
     on<RequiredDataCompletionEventGenderChanged>(_genderChanged);
     on<RequiredDataCompletionEventNameChanged>(_nameChanged);
     on<RequiredDataCompletionEventSurnameChanged>(_surnameChanged);
@@ -33,7 +33,7 @@ class RequiredDataCompletionBloc extends BlocWithStatus<
   }
 
   void _accountTypeChanged(
-    RequiredDataCompletionAccountTypeChanged event,
+    RequiredDataCompletionEventAccountTypeChanged event,
     Emitter<RequiredDataCompletionState> emit,
   ) {
     emit(state.copyWith(
