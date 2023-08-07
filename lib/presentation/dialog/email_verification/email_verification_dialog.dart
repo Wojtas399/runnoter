@@ -7,6 +7,7 @@ import '../../component/padding/paddings_24.dart';
 import '../../component/responsive_layout_component.dart';
 import '../../component/text/body_text_components.dart';
 import '../../component/text/title_text_components.dart';
+import '../../config/navigation/router.dart';
 import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
 
@@ -112,7 +113,7 @@ class _EmailVerificationInfo extends StatelessWidget {
         MouseRegion(
           cursor: SystemMouseCursors.click,
           child: GestureDetector(
-            onTap: popUntilRoot,
+            onTap: () => navigateAndRemoveUntil(const SignInRoute()),
             child: BodyMedium(
               str.emailVerificationBackToLogin,
               color: Theme.of(context).colorScheme.outline,
