@@ -26,14 +26,14 @@ void main() {
 
   blocTest(
     'initialize, '
-    'runner user, '
     "should set listener of logged user's data",
     build: () => HomeBloc(),
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
       userRepository.mockGetUserById(
-        user: createRunner(
+        user: createUser(
           id: loggedUserId,
+          accountType: AccountType.runner,
           name: 'Jack',
           settings: createSettings(
             themeMode: ThemeMode.dark,
@@ -50,47 +50,6 @@ void main() {
       HomeState(
         status: const BlocStatusComplete(),
         accountType: AccountType.runner,
-        loggedUserName: 'Jack',
-        appSettings: createSettings(
-          themeMode: ThemeMode.dark,
-          language: Language.polish,
-          distanceUnit: DistanceUnit.miles,
-          paceUnit: PaceUnit.milesPerHour,
-        ),
-      ),
-    ],
-    verify: (_) {
-      verify(() => authService.loggedUserId$).called(1);
-      verify(() => userRepository.getUserById(userId: loggedUserId)).called(1);
-    },
-  );
-
-  blocTest(
-    'initialize, '
-    'coach user, '
-    "should set listener of logged user's data",
-    build: () => HomeBloc(),
-    setUp: () {
-      authService.mockGetLoggedUserId(userId: loggedUserId);
-      userRepository.mockGetUserById(
-        user: createCoach(
-          id: loggedUserId,
-          name: 'Jack',
-          settings: createSettings(
-            themeMode: ThemeMode.dark,
-            language: Language.polish,
-            distanceUnit: DistanceUnit.miles,
-            paceUnit: PaceUnit.milesPerHour,
-          ),
-        ),
-      );
-    },
-    act: (bloc) => bloc.add(const HomeEventInitialize()),
-    expect: () => [
-      const HomeState(status: BlocStatusLoading()),
-      HomeState(
-        status: const BlocStatusComplete(),
-        accountType: AccountType.coach,
         loggedUserName: 'Jack',
         appSettings: createSettings(
           themeMode: ThemeMode.dark,

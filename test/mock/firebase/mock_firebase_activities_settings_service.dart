@@ -15,6 +15,7 @@ class MockFirebaseActivitiesSettingsService extends Mock
     ).thenAnswer((invocation) => Future.value(workoutSettingsDto));
   }
 
+  //TODO: Rename it to activitiesSettingsDto
   void mockAddSettings({
     WorkoutSettingsDto? workoutSettingsDto,
   }) {

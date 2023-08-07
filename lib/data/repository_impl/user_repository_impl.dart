@@ -4,6 +4,7 @@ import 'package:firebase/firebase.dart' as firebase;
 import '../../dependency_injection.dart';
 import '../../domain/additional_model/state_repository.dart';
 import '../../domain/entity/settings.dart' as settings;
+import '../../domain/entity/settings.dart';
 import '../../domain/entity/user.dart';
 import '../../domain/repository/user_repository.dart';
 import '../mapper/gender_mapper.dart';
@@ -38,31 +39,41 @@ class UserRepositoryImpl extends StateRepository<User>
 
   @override
   Future<void> addUser({required User user}) async {
-    await _dbUserService.addUserPersonalData(
+    final firebase.UserDto? userDto = await _dbUserService.addUserData(
       userDto: firebase.UserDto(
         id: user.id,
         gender: mapGenderToDto(user.gender),
         name: user.name,
         surname: user.surname,
         coachId: user.coachId,
-        clientIds: user is Coach ? user.clientIds : null,
+        clientIds: user.clientIds,
       ),
     );
-    await _dbAppearanceSettingsService.addSettings(
+    final appearanceSettingsDto =
+        await _dbAppearanceSettingsService.addSettings(
       appearanceSettingsDto: firebase.AppearanceSettingsDto(
         userId: user.id,
         themeMode: mapThemeModeToDb(user.settings.themeMode),
         language: mapLanguageToDb(user.settings.language),
       ),
     );
-    await _dbActivitiesSettingsService.addSettings(
+    final activitiesSettingsDto =
+        await _dbActivitiesSettingsService.addSettings(
       workoutSettingsDto: firebase.WorkoutSettingsDto(
         userId: user.id,
         distanceUnit: mapDistanceUnitToDb(user.settings.distanceUnit),
         paceUnit: mapPaceUnitToDb(user.settings.paceUnit),
       ),
     );
-    addEntity(user);
+    if (userDto == null ||
+        appearanceSettingsDto == null ||
+        activitiesSettingsDto == null) return;
+    final Settings settings = mapSettingsFromDto(
+      appearanceSettingsDto: appearanceSettingsDto,
+      workoutSettingsDto: activitiesSettingsDto,
+    );
+    final User addedUser = mapUserFromDto(userDto: userDto, settings: settings);
+    addEntity(addedUser);
   }
 
   @override
@@ -137,25 +148,18 @@ class UserRepositoryImpl extends StateRepository<User>
             ? mapPaceUnitFromDb(newWorkoutSettingsDto.paceUnit)
             : user.settings.paceUnit,
       );
-      final User updatedUser = switch (user) {
-        Runner() => Runner(
-            id: user.id,
-            gender: user.gender,
-            name: user.name,
-            surname: user.surname,
-            settings: updatedSettings,
-            coachId: user.coachId,
-          ),
-        Coach() => Coach(
-            id: user.id,
-            gender: user.gender,
-            name: user.name,
-            surname: user.surname,
-            settings: updatedSettings,
-            coachId: user.coachId,
-            clientIds: user.clientIds,
-          ),
-      };
+      //TODO: Implement email
+      final User updatedUser = User(
+        id: user.id,
+        accountType: user.accountType,
+        gender: user.gender,
+        name: user.name,
+        surname: user.surname,
+        email: '',
+        settings: updatedSettings,
+        coachId: user.coachId,
+        clientIds: user.clientIds,
+      );
       updateEntity(updatedUser);
       return;
     }

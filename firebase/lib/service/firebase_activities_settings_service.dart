@@ -10,6 +10,7 @@ class FirebaseActivitiesSettingsService {
     return snapshot.data();
   }
 
+  //TODO: Rename parameter to activitiesSettingsDto
   Future<WorkoutSettingsDto?> addSettings({
     required WorkoutSettingsDto workoutSettingsDto,
   }) async {

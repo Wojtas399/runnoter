@@ -22,7 +22,7 @@ void main() {
     'should return gender of logged user',
     () {
       const String loggedUserid = 'u1';
-      final User user = createRunner(
+      final User user = createUser(
         id: loggedUserid,
         gender: Gender.female,
       );

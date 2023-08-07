@@ -14,7 +14,6 @@ class AddUserDataUseCase {
     required String name,
     required String surname,
     required Gender gender,
-    String? coachId,
   }) async {
     const Settings defaultSettings = Settings(
       themeMode: ThemeMode.system,
@@ -22,24 +21,20 @@ class AddUserDataUseCase {
       distanceUnit: DistanceUnit.kilometers,
       paceUnit: PaceUnit.minutesPerKilometer,
     );
-    final User userData = switch (accountType) {
-      AccountType.coach => Coach(
-          id: userId,
-          gender: gender,
-          name: name,
-          surname: surname,
-          settings: defaultSettings,
-          clientIds: const [],
-        ),
-      AccountType.runner => Runner(
-          id: userId,
-          gender: gender,
-          name: name,
-          surname: surname,
-          settings: defaultSettings,
-          coachId: coachId,
-        ),
-    };
+    //TODO: Implement email
+    final User userData = User(
+      accountType: accountType,
+      id: userId,
+      gender: gender,
+      name: name,
+      surname: surname,
+      email: '',
+      settings: defaultSettings,
+      clientIds: switch (accountType) {
+        AccountType.runner => null,
+        AccountType.coach => const [],
+      },
+    );
     await _userRepository.addUser(user: userData);
   }
 }

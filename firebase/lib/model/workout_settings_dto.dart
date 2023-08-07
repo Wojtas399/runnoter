@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 import '../mapper/distance_unit_mapper.dart';
 import '../mapper/pace_unit_mapper.dart';
 
+//TODO: Rename it to activities settings dto
 class WorkoutSettingsDto extends Equatable {
   final String userId;
   final DistanceUnit distanceUnit;

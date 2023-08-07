@@ -381,7 +381,7 @@ void main() {
     build: () => SignInBloc(),
     setUp: () {
       authService.mockSignInWithGoogle(userId: 'u1');
-      userRepository.mockGetUserById(user: createRunner(id: 'u1'));
+      userRepository.mockGetUserById(user: createUser(id: 'u1'));
       authService.mockHasLoggedUserVerifiedEmail(expected: true);
     },
     act: (bloc) => bloc.add(const SignInEventSignInWithGoogle()),
@@ -407,7 +407,7 @@ void main() {
     build: () => SignInBloc(),
     setUp: () {
       authService.mockSignInWithGoogle(userId: 'u1');
-      userRepository.mockGetUserById(user: createRunner(id: 'u1'));
+      userRepository.mockGetUserById(user: createUser(id: 'u1'));
       authService.mockHasLoggedUserVerifiedEmail(expected: false);
       authService.mockSendEmailVerification();
     },
@@ -491,7 +491,7 @@ void main() {
     build: () => SignInBloc(),
     setUp: () {
       authService.mockSignInWithFacebook(userId: 'u1');
-      userRepository.mockGetUserById(user: createRunner(id: 'u1'));
+      userRepository.mockGetUserById(user: createUser(id: 'u1'));
       authService.mockHasLoggedUserVerifiedEmail(expected: true);
     },
     act: (bloc) => bloc.add(const SignInEventSignInWithFacebook()),
@@ -517,7 +517,7 @@ void main() {
     build: () => SignInBloc(),
     setUp: () {
       authService.mockSignInWithFacebook(userId: 'u1');
-      userRepository.mockGetUserById(user: createRunner(id: 'u1'));
+      userRepository.mockGetUserById(user: createUser(id: 'u1'));
       authService.mockHasLoggedUserVerifiedEmail(expected: false);
       authService.mockSendEmailVerification();
     },

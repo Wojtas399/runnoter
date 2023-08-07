@@ -44,7 +44,7 @@ void main() {
     'user exists in state, '
     'should emit user from repository',
     () {
-      final User expectedUser = createRunner(id: userId);
+      final User expectedUser = createUser(id: userId);
       repository = UserRepositoryImpl(initialState: [expectedUser]);
 
       final Stream<User?> user$ = repository.getUserById(userId: userId);
@@ -77,7 +77,7 @@ void main() {
         distanceUnit: db.DistanceUnit.kilometers,
         paceUnit: db.PaceUnit.minutesPerKilometer,
       );
-      final User expectedUser = createRunner(
+      final User expectedUser = createUser(
         id: userId,
         gender: Gender.male,
         name: 'name',
@@ -108,113 +108,89 @@ void main() {
 
   test(
     'add user, '
-    'runner, '
     'should call db methods to add user personal data, appearance settings, workout settings and should add user to repository',
     () async {
-      final User userToAdd = createRunner(
-        id: userId,
-        gender: Gender.male,
-        name: 'username',
-        surname: 'surname',
-        settings: createSettings(
-          themeMode: ThemeMode.light,
-          language: Language.english,
-        ),
-        coachId: 'c1',
+      const String name = 'name';
+      const Gender gender = Gender.male;
+      const db.Gender dbGender = db.Gender.male;
+      const String surname = 'surname';
+      const String coachId = 'c1';
+      const List<String> clientIds = ['r1', 'r2'];
+      const Settings settings = Settings(
+        themeMode: ThemeMode.dark,
+        language: Language.english,
+        distanceUnit: DistanceUnit.miles,
+        paceUnit: PaceUnit.milesPerHour,
       );
-      dbUserService.mockAddUserPersonalData();
-      dbAppearanceSettingsService.mockAddSettings();
-      dbActivitiesSettingsService.mockAddSettings();
+      const dbAppearanceSettings = db.AppearanceSettingsDto(
+        userId: userId,
+        themeMode: db.ThemeMode.dark,
+        language: db.Language.english,
+      );
+      const dbActivitiesSettings = db.WorkoutSettingsDto(
+        userId: userId,
+        distanceUnit: db.DistanceUnit.miles,
+        paceUnit: db.PaceUnit.milesPerHour,
+      );
+      final User userToAdd = createUser(
+        id: userId,
+        gender: gender,
+        name: name,
+        surname: surname,
+        settings: settings,
+        coachId: coachId,
+        clientIds: clientIds,
+      );
+      const db.UserDto addedUserDto = db.UserDto(
+        id: userId,
+        gender: dbGender,
+        name: name,
+        surname: surname,
+        coachId: coachId,
+        clientIds: clientIds,
+      );
+      final User addedUser = createUser(
+        id: userId,
+        accountType: AccountType.coach,
+        gender: gender,
+        name: name,
+        surname: surname,
+        settings: settings,
+        coachId: coachId,
+        clientIds: clientIds,
+      );
+      dbUserService.mockAddUserData(addedUser: addedUserDto);
+      dbAppearanceSettingsService.mockAddSettings(
+        appearanceSettingsDto: dbAppearanceSettings,
+      );
+      dbActivitiesSettingsService.mockAddSettings(
+        workoutSettingsDto: dbActivitiesSettings,
+      );
 
       await repository.addUser(user: userToAdd);
-      final Stream<User?> user$ = repository.getUserById(userId: userToAdd.id);
+      final Stream<User?> user$ = repository.getUserById(userId: userId);
 
-      expect(await user$.first, userToAdd);
+      expect(await user$.first, addedUser);
       verify(
-        () => dbUserService.addUserPersonalData(
+        () => dbUserService.addUserData(
           userDto: const db.UserDto(
             id: userId,
-            gender: db.Gender.male,
-            name: 'username',
-            surname: 'surname',
-            coachId: 'c1',
+            gender: dbGender,
+            name: name,
+            surname: surname,
+            coachId: coachId,
+            clientIds: clientIds,
           ),
         ),
       ).called(1);
       verify(
         () => dbAppearanceSettingsService.addSettings(
-          appearanceSettingsDto: const db.AppearanceSettingsDto(
-            userId: userId,
-            themeMode: db.ThemeMode.light,
-            language: db.Language.english,
-          ),
+          appearanceSettingsDto: dbAppearanceSettings,
         ),
       ).called(1);
       verify(
         () => dbActivitiesSettingsService.addSettings(
-          workoutSettingsDto: const db.WorkoutSettingsDto(
-            userId: userId,
-            distanceUnit: db.DistanceUnit.kilometers,
-            paceUnit: db.PaceUnit.minutesPerKilometer,
-          ),
-        ),
-      ).called(1);
-    },
-  );
-
-  test(
-    'add user, '
-    'coach, '
-    'should call db methods to add user personal data, appearance settings, workout settings and should add user to repository',
-    () async {
-      final User userToAdd = createCoach(
-        id: userId,
-        gender: Gender.male,
-        name: 'username',
-        surname: 'surname',
-        settings: createSettings(
-          themeMode: ThemeMode.light,
-          language: Language.english,
-        ),
-        coachId: 'c1',
-        clientIds: ['r1', 'r2'],
-      );
-      dbUserService.mockAddUserPersonalData();
-      dbAppearanceSettingsService.mockAddSettings();
-      dbActivitiesSettingsService.mockAddSettings();
-
-      await repository.addUser(user: userToAdd);
-      final Stream<User?> user$ = repository.getUserById(userId: userToAdd.id);
-
-      expect(await user$.first, userToAdd);
-      verify(
-        () => dbUserService.addUserPersonalData(
-          userDto: const db.UserDto(
-            id: userId,
-            gender: db.Gender.male,
-            name: 'username',
-            surname: 'surname',
-            coachId: 'c1',
-            clientIds: ['r1', 'r2'],
-          ),
-        ),
-      ).called(1);
-      verify(
-        () => dbAppearanceSettingsService.addSettings(
-          appearanceSettingsDto: const db.AppearanceSettingsDto(
-            userId: userId,
-            themeMode: db.ThemeMode.light,
-            language: db.Language.english,
-          ),
-        ),
-      ).called(1);
-      verify(
-        () => dbActivitiesSettingsService.addSettings(
-          workoutSettingsDto: const db.WorkoutSettingsDto(
-            userId: userId,
-            distanceUnit: db.DistanceUnit.kilometers,
-            paceUnit: db.PaceUnit.minutesPerKilometer,
-          ),
+          workoutSettingsDto: dbActivitiesSettings,
         ),
       ).called(1);
     },
@@ -226,8 +202,8 @@ void main() {
     'should do nothing',
     () async {
       final List<User> existingUsers = [
-        createRunner(id: 'u2'),
-        createRunner(id: 'u3'),
+        createUser(id: 'u2'),
+        createUser(id: 'u3'),
       ];
       const String newName = 'name';
       const String newSurname = 'surname';
@@ -266,7 +242,7 @@ void main() {
         distanceUnit: DistanceUnit.miles,
         paceUnit: PaceUnit.milesPerHour,
       );
-      final User existingUser = createRunner(
+      final User existingUser = createUser(
         id: userId,
         name: 'username',
         surname: 'surname1',
@@ -295,85 +271,26 @@ void main() {
 
   test(
     'update user, '
-    'runner, '
     "should call db method to update user's data and should update user in repository",
     () async {
       const String newName = 'name';
       const String newSurname = 'surname';
       const String newCoachId = 'c2';
+      const List<String> newClientIds = ['r1'];
       final Settings userSettings = createSettings(
         themeMode: ThemeMode.dark,
         language: Language.english,
         distanceUnit: DistanceUnit.miles,
         paceUnit: PaceUnit.milesPerHour,
       );
-      final User existingUser = createRunner(
+      final User existingUser = createUser(
         id: userId,
+        accountType: AccountType.runner,
         name: 'username',
         surname: 'surname1',
         settings: userSettings,
         coachId: 'c1',
-      );
-      const updatedUserDto = db.UserDto(
-        id: userId,
-        gender: db.Gender.male,
-        name: newName,
-        surname: newSurname,
-        coachId: newCoachId,
-      );
-      final User expectedUpdatedUser = createRunner(
-        id: userId,
-        gender: Gender.male,
-        name: newName,
-        surname: newSurname,
-        settings: userSettings,
-        coachId: newCoachId,
-      );
-      repository = UserRepositoryImpl(initialState: [existingUser]);
-      dbUserService.mockUpdateUserData(userDto: updatedUserDto);
-
-      await repository.updateUser(
-        userId: userId,
-        name: newName,
-        surname: newSurname,
-        coachId: newCoachId,
-      );
-      final Stream<User?> user$ = repository.getUserById(userId: userId);
-
-      expect(await user$.first, expectedUpdatedUser);
-      verify(
-        () => dbUserService.updateUserData(
-          userId: userId,
-          name: newName,
-          surname: newSurname,
-          coachId: newCoachId,
-        ),
-      ).called(1);
-    },
-  );
-
-  test(
-    'update user, '
-    'coach, '
-    "should call db method to update user's data and should update user in repository",
-    () async {
-      const String newName = 'name';
-      const String newSurname = 'surname';
-      const String newCoachId = 'c2';
-      const List<String> newClientIds = ['r1', 'r2'];
-      final Settings userSettings = createSettings(
-        themeMode: ThemeMode.dark,
-        language: Language.english,
-        distanceUnit: DistanceUnit.miles,
-        paceUnit: PaceUnit.milesPerHour,
-      );
-      final User existingUser = createCoach(
-        id: userId,
-        name: 'username',
-        surname: 'surname1',
-        settings: userSettings,
-        coachId: 'c1',
-        clientIds: ['r1'],
+        clientIds: null,
       );
       const updatedUserDto = db.UserDto(
         id: userId,
@@ -383,8 +300,9 @@ void main() {
         coachId: newCoachId,
         clientIds: newClientIds,
       );
-      final User expectedUpdatedUser = createCoach(
+      final User expectedUpdatedUser = createUser(
         id: userId,
+        accountType: AccountType.coach,
         gender: Gender.male,
         name: newName,
         surname: newSurname,
@@ -400,7 +318,9 @@ void main() {
         name: newName,
         surname: newSurname,
         coachId: newCoachId,
+        coachIdAsNull: false,
         clientIds: newClientIds,
+        clientIdsAsNull: false,
       );
       final Stream<User?> user$ = repository.getUserById(userId: userId);
 
@@ -411,133 +331,9 @@ void main() {
           name: newName,
           surname: newSurname,
           coachId: newCoachId,
+          coachIdAsNull: false,
           clientIds: newClientIds,
-        ),
-      ).called(1);
-    },
-  );
-
-  test(
-    'update user, '
-    'runner to coach, '
-    "should call db method to update user's data and should update user in repository",
-    () async {
-      const String newName = 'name';
-      const String newSurname = 'surname';
-      const String newCoachId = 'c2';
-      const List<String> clientIds = ['r1', 'r2'];
-      final Settings userSettings = createSettings(
-        themeMode: ThemeMode.dark,
-        language: Language.english,
-        distanceUnit: DistanceUnit.miles,
-        paceUnit: PaceUnit.milesPerHour,
-      );
-      final User existingUser = createRunner(
-        id: userId,
-        name: 'username',
-        surname: 'surname1',
-        settings: userSettings,
-        coachId: 'c1',
-      );
-      const updatedUserDto = db.UserDto(
-        id: userId,
-        gender: db.Gender.male,
-        name: newName,
-        surname: newSurname,
-        coachId: newCoachId,
-        clientIds: clientIds,
-      );
-      final User expectedUpdatedUser = createCoach(
-        id: userId,
-        gender: Gender.male,
-        name: newName,
-        surname: newSurname,
-        settings: userSettings,
-        coachId: newCoachId,
-        clientIds: clientIds,
-      );
-      repository = UserRepositoryImpl(initialState: [existingUser]);
-      dbUserService.mockUpdateUserData(userDto: updatedUserDto);
-
-      await repository.updateUser(
-        userId: userId,
-        name: newName,
-        surname: newSurname,
-        coachId: newCoachId,
-        clientIds: clientIds,
-      );
-      final Stream<User?> user$ = repository.getUserById(userId: userId);
-
-      expect(await user$.first, expectedUpdatedUser);
-      verify(
-        () => dbUserService.updateUserData(
-          userId: userId,
-          name: newName,
-          surname: newSurname,
-          coachId: newCoachId,
-          clientIds: clientIds,
-        ),
-      ).called(1);
-    },
-  );
-
-  test(
-    'update user, '
-    'coach to runner, '
-    "should call db method to update user's data and should update user in repository",
-    () async {
-      const String newName = 'name';
-      const String newSurname = 'surname';
-      const String newCoachId = 'c2';
-      final Settings userSettings = createSettings(
-        themeMode: ThemeMode.dark,
-        language: Language.english,
-        distanceUnit: DistanceUnit.miles,
-        paceUnit: PaceUnit.milesPerHour,
-      );
-      final User existingUser = createCoach(
-        id: userId,
-        name: 'username',
-        surname: 'surname1',
-        settings: userSettings,
-        coachId: 'c1',
-        clientIds: ['r1'],
-      );
-      const updatedUserDto = db.UserDto(
-        id: userId,
-        gender: db.Gender.male,
-        name: newName,
-        surname: newSurname,
-        coachId: newCoachId,
-      );
-      final User expectedUpdatedUser = createRunner(
-        id: userId,
-        gender: Gender.male,
-        name: newName,
-        surname: newSurname,
-        settings: userSettings,
-        coachId: newCoachId,
-      );
-      repository = UserRepositoryImpl(initialState: [existingUser]);
-      dbUserService.mockUpdateUserData(userDto: updatedUserDto);
-
-      await repository.updateUser(
-        userId: userId,
-        name: newName,
-        surname: newSurname,
-        coachId: newCoachId,
-        clientIdsAsNull: true,
-      );
-      final Stream<User?> user$ = repository.getUserById(userId: userId);
-
-      expect(await user$.first, expectedUpdatedUser);
-      verify(
-        () => dbUserService.updateUserData(
-          userId: userId,
-          name: newName,
-          surname: newSurname,
-          coachId: newCoachId,
-          clientIdsAsNull: true,
+          clientIdsAsNull: false,
         ),
       ).called(1);
     },
@@ -549,8 +345,8 @@ void main() {
     'should do nothing',
     () async {
       final List<User> existingUsers = [
-        createRunner(id: 'u2'),
-        createRunner(id: 'u3'),
+        createUser(id: 'u2'),
+        createUser(id: 'u3'),
       ];
       const ThemeMode newThemeMode = ThemeMode.dark;
       const Language newLanguage = Language.english;
@@ -594,7 +390,7 @@ void main() {
     'db methods do not return updated appearance and workout settings, '
     'should not update user in repository',
     () async {
-      final User existingUser = createRunner(id: userId);
+      final User existingUser = createUser(id: userId);
       const ThemeMode newThemeMode = ThemeMode.dark;
       const Language newLanguage = Language.english;
       const DistanceUnit newDistanceUnit = DistanceUnit.miles;
@@ -638,89 +434,11 @@ void main() {
 
   test(
     'update user settings, '
-    'runner, '
     'should call db method to update appearance and workout settings and should update user in repository',
     () async {
-      final User existingUser = createRunner(
+      final User existingUser = createUser(
         id: userId,
-        gender: Gender.male,
-        name: 'name',
-        surname: 'surname',
-        coachId: 'c1',
-      );
-      const ThemeMode newThemeMode = ThemeMode.dark;
-      const Language newLanguage = Language.english;
-      const DistanceUnit newDistanceUnit = DistanceUnit.miles;
-      const PaceUnit newPaceUnit = PaceUnit.minutesPerMile;
-      const db.ThemeMode newDbThemeMode = db.ThemeMode.dark;
-      const db.Language newDbLanguage = db.Language.english;
-      const db.DistanceUnit newDbDistanceUnit = db.DistanceUnit.miles;
-      const db.PaceUnit newDbPaceUnit = db.PaceUnit.minutesPerMile;
-      final User expectedUpdatedUser = createRunner(
-        id: userId,
-        gender: existingUser.gender,
-        name: existingUser.name,
-        surname: existingUser.surname,
-        coachId: existingUser.coachId,
-        settings: createSettings(
-          themeMode: newThemeMode,
-          language: newLanguage,
-          distanceUnit: newDistanceUnit,
-          paceUnit: newPaceUnit,
-        ),
-      );
-      const updatedAppearanceSettingsDto = db.AppearanceSettingsDto(
-        userId: userId,
-        themeMode: newDbThemeMode,
-        language: newDbLanguage,
-      );
-      const updatedWorkoutSettingsDto = db.WorkoutSettingsDto(
-        userId: userId,
-        distanceUnit: newDbDistanceUnit,
-        paceUnit: newDbPaceUnit,
-      );
-      dbAppearanceSettingsService.mockUpdateSettings(
-        updatedAppearanceSettingsDto: updatedAppearanceSettingsDto,
-      );
-      dbActivitiesSettingsService.mockUpdateSettings(
-        updatedWorkoutSettingsDto: updatedWorkoutSettingsDto,
-      );
-      repository = UserRepositoryImpl(initialState: [existingUser]);
-
-      await repository.updateUserSettings(
-        userId: userId,
-        themeMode: newThemeMode,
-        language: newLanguage,
-        distanceUnit: newDistanceUnit,
-        paceUnit: newPaceUnit,
-      );
-      final Stream<User?> user$ = repository.getUserById(userId: userId);
-
-      expect(await user$.first, expectedUpdatedUser);
-      verify(
-        () => dbAppearanceSettingsService.updateSettings(
-          userId: userId,
-          themeMode: newDbThemeMode,
-          language: newDbLanguage,
-        ),
-      ).called(1);
-      verify(
-        () => dbActivitiesSettingsService.updateSettings(
-          userId: userId,
-          distanceUnit: newDbDistanceUnit,
-          paceUnit: newDbPaceUnit,
-        ),
-      ).called(1);
-    },
-  );
-
-  test(
-    'update user settings, '
-    'coach, '
-    'should call db method to update appearance and workout settings and should update user in repository',
-    () async {
-      final Coach existingUser = createCoach(
-        id: userId,
+        accountType: AccountType.coach,
         gender: Gender.male,
         name: 'name',
         surname: 'surname',
@@ -735,8 +453,9 @@ void main() {
       const db.Language newDbLanguage = db.Language.english;
       const db.DistanceUnit newDbDistanceUnit = db.DistanceUnit.miles;
       const db.PaceUnit newDbPaceUnit = db.PaceUnit.minutesPerMile;
-      final User expectedUpdatedUser = createCoach(
+      final User expectedUpdatedUser = createUser(
         id: userId,
+        accountType: existingUser.accountType,
         gender: existingUser.gender,
         name: existingUser.name,
         surname: existingUser.surname,
@@ -798,7 +517,7 @@ void main() {
     'delete user, '
     'should call db methods to delete user data, appearance settings and workout settings and then should delete user from repository',
     () async {
-      final User user = createRunner(id: userId);
+      final User user = createUser(id: userId);
       dbUserService.mockLoadUserById();
       dbUserService.mockDeleteUserData();
       dbAppearanceSettingsService.mockDeleteSettingsForUser();

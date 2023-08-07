@@ -8,8 +8,11 @@ class FirebaseUserService {
     return user.data();
   }
 
-  Future<void> addUserPersonalData({required UserDto userDto}) async {
-    await asyncOrSyncCall(() => getUserRef(userDto.id).set(userDto));
+  Future<UserDto?> addUserData({required UserDto userDto}) async {
+    final userRef = getUserRef(userDto.id);
+    await asyncOrSyncCall(() => userRef.set(userDto));
+    final snapshot = await userRef.get();
+    return snapshot.data();
   }
 
   Future<UserDto?> updateUserData({

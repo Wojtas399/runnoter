@@ -36,20 +36,23 @@ void main() {
 
   test(
     'coach, '
-    'should call method from user repository to add new coach with default settings',
+    'should call method from user repository to add new user with clientIds param set as empty array',
     () async {
-      const User user = Coach(
+      const AccountType accountType = AccountType.coach;
+      const User user = User(
         id: userId,
+        accountType: accountType,
         gender: gender,
         name: name,
         surname: surname,
+        email: '',
         settings: defaultSettings,
         clientIds: [],
       );
       userRepository.mockAddUser();
 
       await useCase.execute(
-        accountType: AccountType.coach,
+        accountType: accountType,
         userId: userId,
         name: name,
         surname: surname,
@@ -62,15 +65,18 @@ void main() {
 
   test(
     'runner, '
-    'should call method from user repository to add new runner with default settings',
+    'should call method from user repository to add new user with clientIds param set as null',
     () async {
-      const User user = Runner(
+      const AccountType accountType = AccountType.runner;
+      const User user = User(
         id: userId,
+        accountType: accountType,
         gender: gender,
         name: name,
         surname: surname,
+        email: '',
         settings: defaultSettings,
-        coachId: 'c1',
+        clientIds: null,
       );
       userRepository.mockAddUser();
 
@@ -80,7 +86,6 @@ void main() {
         name: name,
         surname: surname,
         gender: gender,
-        coachId: 'c1',
       );
 
       verify(() => userRepository.addUser(user: user)).called(1);

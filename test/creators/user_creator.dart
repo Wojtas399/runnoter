@@ -3,37 +3,24 @@ import 'package:runnoter/domain/entity/user.dart';
 
 import 'settings_creator.dart';
 
-Runner createRunner({
+User createUser({
   String id = '',
+  AccountType accountType = AccountType.runner,
   Gender gender = Gender.male,
   String name = '',
   String surname = '',
+  String email = '',
   Settings? settings,
   String? coachId,
+  List<String>? clientIds,
 }) =>
-    Runner(
+    User(
       id: id,
+      accountType: accountType,
       gender: gender,
       name: name,
       surname: surname,
-      settings: settings ?? createSettings(),
-      coachId: coachId,
-    );
-
-Coach createCoach({
-  String id = '',
-  Gender gender = Gender.male,
-  String name = '',
-  String surname = '',
-  Settings? settings,
-  String? coachId,
-  List<String> clientIds = const [],
-}) =>
-    Coach(
-      id: id,
-      gender: gender,
-      name: name,
-      surname: surname,
+      email: email,
       settings: settings ?? createSettings(),
       coachId: coachId,
       clientIds: clientIds,

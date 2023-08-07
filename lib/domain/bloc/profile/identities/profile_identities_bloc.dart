@@ -81,12 +81,7 @@ class ProfileIdentitiesBloc extends BlocWithStatus<
     await emit.forEach(
       stream$,
       onData: (ProfileIdentitiesBlocListenedParams params) => state.copyWith(
-        accountType: params.loggedUserData != null
-            ? switch (params.loggedUserData!) {
-                Runner() => AccountType.runner,
-                Coach() => AccountType.coach,
-              }
-            : null,
+        accountType: params.loggedUserData?.accountType,
         gender: params.loggedUserData?.gender,
         username: params.loggedUserData?.name,
         surname: params.loggedUserData?.surname,

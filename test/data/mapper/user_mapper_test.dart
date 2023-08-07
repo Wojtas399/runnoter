@@ -20,8 +20,8 @@ void main() {
 
   test(
     'map user from dto, '
-    'ids of runners are null, '
-    'should map firebase dto model to runner model',
+    'clientIds param is null, '
+    'should map firebase dto model to user model with account type runner',
     () {
       const userDto = firebase.UserDto(
         id: userId,
@@ -30,11 +30,13 @@ void main() {
         surname: surname,
         coachId: coachId,
       );
-      const User expectedUser = Runner(
+      const User expectedUser = User(
         id: userId,
+        accountType: AccountType.runner,
         gender: gender,
         name: name,
         surname: surname,
+        email: '',
         settings: settings,
         coachId: coachId,
       );
@@ -47,8 +49,8 @@ void main() {
 
   test(
     'map user from dto, '
-    'clientIds is not null, '
-    'should map firebase dto model to coach model',
+    'clientIds param is not null, '
+    'should map firebase dto model to user model with account type coach',
     () {
       const List<String> clientIds = ['r1', 'r2'];
       const userDto = firebase.UserDto(
@@ -59,11 +61,13 @@ void main() {
         coachId: coachId,
         clientIds: clientIds,
       );
-      const User expectedUser = Coach(
+      const User expectedUser = User(
         id: userId,
+        accountType: AccountType.coach,
         gender: gender,
         name: name,
         surname: surname,
+        email: '',
         settings: settings,
         coachId: coachId,
         clientIds: clientIds,

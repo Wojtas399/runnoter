@@ -44,12 +44,7 @@ class HomeBloc
     await emit.forEach(
       loggedUser$,
       onData: (User? loggedUser) => state.copyWith(
-        accountType: loggedUser != null
-            ? switch (loggedUser) {
-                Runner() => AccountType.runner,
-                Coach() => AccountType.coach,
-              }
-            : null,
+        accountType: loggedUser?.accountType,
         loggedUserName: loggedUser?.name,
         appSettings: loggedUser?.settings,
       ),
