@@ -38,8 +38,8 @@ class UserDto extends Equatable {
           name: json?[_nameField],
           surname: json?[_surnameField],
           coachId: json?[_coachIdField],
-          idsOfRunners: (json?[_idsOfRunnersField] as List)
-              .map((e) => e.toString())
+          idsOfRunners: (json?[_idsOfRunnersField] as List?)
+              ?.map((e) => e.toString())
               .toList(),
         );
 

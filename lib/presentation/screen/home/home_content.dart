@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/bloc/home/home_bloc.dart';
+import '../../../domain/entity/user.dart';
 import '../../config/navigation/router.dart';
 import '../../extension/context_extensions.dart';
 import '../../service/dialog_service.dart';
@@ -24,22 +25,27 @@ class HomeContent extends StatefulWidget {
 
 class _State extends State<HomeContent> {
   final int numberOfBottomNavPages = 3;
-  final int numberOfAllPages = 7;
+  int numberOfAllPages = 6;
   int _bottomNavSelectedIndex = 0;
   _NavigationType _navigationType = _NavigationType.drawer;
 
   @override
   Widget build(BuildContext context) {
+    final AccountType? accountType = context.select(
+      (HomeBloc bloc) => bloc.state.accountType,
+    );
+    if (accountType == AccountType.coach) numberOfAllPages++;
+
     return AutoTabsRouter(
-      routes: const [
-        CurrentWeekRoute(),
-        CalendarRoute(),
-        HealthRoute(),
-        MileageRoute(),
-        BloodTestsRoute(),
-        RacesRoute(),
-        ClientsRoute(),
-        ProfileRoute(),
+      routes: [
+        const CurrentWeekRoute(),
+        const CalendarRoute(),
+        const HealthRoute(),
+        const MileageRoute(),
+        const BloodTestsRoute(),
+        const RacesRoute(),
+        if (accountType == AccountType.coach) const ClientsRoute(),
+        const ProfileRoute(),
       ],
       builder: (context, child) {
         final tabsRouter = AutoTabsRouter.of(context);
@@ -64,7 +70,9 @@ class _State extends State<HomeContent> {
           appBar: HomeAppBar(
             backgroundColor: bckColor,
             onMenuPressed: _onMenuAppBarPressed,
-            onAvatarPressed: () => tabsRouter.setActiveIndex(7),
+            onAvatarPressed: () => tabsRouter.setActiveIndex(
+              accountType == AccountType.coach ? 7 : 6,
+            ),
           ),
           drawer: context.isMobileSize
               ? HomeNavigationDrawer(
@@ -131,7 +139,7 @@ class _State extends State<HomeContent> {
 
   Future<void> _onSidePageSelected(int pageIndex, TabsRouter tabsRouter) async {
     if (context.isMobileSize) {
-      if (pageIndex == 5) {
+      if (pageIndex == numberOfAllPages - 2) {
         await _signOut(context);
       } else if (pageIndex == 0) {
         tabsRouter.setActiveIndex(_bottomNavSelectedIndex);
@@ -139,7 +147,7 @@ class _State extends State<HomeContent> {
         tabsRouter.setActiveIndex(pageIndex + 2);
       }
     } else {
-      if (pageIndex == 7) {
+      if (pageIndex == numberOfAllPages) {
         await _signOut(context);
       } else {
         tabsRouter.setActiveIndex(pageIndex);
@@ -161,11 +169,10 @@ class _State extends State<HomeContent> {
       title: str.homeSignOutConfirmationDialogTitle,
       message: str.homeSignOutConfirmationDialogMessage,
       confirmButtonLabel: str.homeSignOut,
+      displaySubmitButtonAsFilled: true,
     );
     if (confirmed == true) {
-      bloc.add(
-        const HomeEventSignOut(),
-      );
+      bloc.add(const HomeEventSignOut());
     }
   }
 

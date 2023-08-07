@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../../domain/bloc/home/home_bloc.dart';
+import '../../../domain/entity/user.dart';
 import '../../component/gap/gap_components.dart';
 import '../../extension/context_extensions.dart';
 
@@ -16,6 +19,9 @@ class HomeNavigationDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AccountType? accountType = context.select(
+      (HomeBloc bloc) => bloc.state.accountType,
+    );
     final str = Str.of(context);
 
     return NavigationDrawer(
@@ -63,11 +69,12 @@ class HomeNavigationDrawer extends StatelessWidget {
           selectedIcon: const Icon(Icons.emoji_events),
           label: Text(str.racesTitle),
         ),
-        NavigationDrawerDestination(
-          icon: const Icon(Icons.groups_outlined),
-          selectedIcon: const Icon(Icons.groups),
-          label: Text(str.clientsTitle),
-        ),
+        if (accountType == AccountType.coach)
+          NavigationDrawerDestination(
+            icon: const Icon(Icons.groups_outlined),
+            selectedIcon: const Icon(Icons.groups),
+            label: Text(str.clientsTitle),
+          ),
         const Gap24(),
         NavigationDrawerDestination(
           icon: const Icon(Icons.logout_outlined),
