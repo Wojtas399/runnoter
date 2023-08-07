@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../gap/gap_components.dart';
 import '../text/body_text_components.dart';
 import 'calendar_component_cubit.dart';
 
@@ -100,7 +101,7 @@ class _Content extends StatelessWidget {
     return const Column(
       children: [
         _Header(),
-        SizedBox(height: 8),
+        Gap8(),
         _DayLabels(),
         _Days(),
       ],

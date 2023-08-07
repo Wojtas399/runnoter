@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../service/navigator_service.dart';
+import 'gap/gap_horizontal_components.dart';
 
 class FullScreenDialog extends StatelessWidget {
   final String title;
@@ -35,7 +36,7 @@ class FullScreenDialog extends StatelessWidget {
               submitButtonLabel ?? Str.of(context).save,
             ),
           ),
-          const SizedBox(width: 16),
+          const GapHorizontal16(),
         ],
       ),
       body: body,

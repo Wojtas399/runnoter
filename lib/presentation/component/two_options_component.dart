@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'gap/gap_components.dart';
 import 'text/label_text_components.dart';
 
 class OptionParams<T> {
@@ -32,7 +33,7 @@ class TwoOptions<T> extends StatelessWidget {
       children: [
         if (label != null) ...[
           LabelLarge(label!),
-          const SizedBox(height: 8),
+          const Gap8(),
         ],
         Row(
           children: [

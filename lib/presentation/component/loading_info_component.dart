@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import 'gap/gap_components.dart';
 import 'text/title_text_components.dart';
 
 class LoadingInfo extends StatelessWidget {
@@ -15,7 +16,7 @@ class LoadingInfo extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const CircularProgressIndicator(),
-          const SizedBox(height: 16),
+          const Gap16(),
           TitleSmall(
             '${Str.of(context).loading}...',
           ),

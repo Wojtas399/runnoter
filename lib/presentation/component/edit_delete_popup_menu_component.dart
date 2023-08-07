@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import 'gap/gap_horizontal_components.dart';
+
 enum _Action { edit, delete }
 
 class EditDeleteActions extends StatelessWidget {
@@ -32,7 +34,7 @@ class EditDeleteActions extends StatelessWidget {
             child: Row(
               children: [
                 const Icon(editIcon),
-                const SizedBox(width: 8),
+                const GapHorizontal8(),
                 Text(str.edit),
               ],
             ),
@@ -42,7 +44,7 @@ class EditDeleteActions extends StatelessWidget {
             child: Row(
               children: [
                 const Icon(deleteIcon),
-                const SizedBox(width: 8),
+                const GapHorizontal8(),
                 Text(str.delete),
               ],
             ),

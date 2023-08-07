@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../formatter/minutes_or_seconds_input_formatter.dart';
+import 'gap/gap_components.dart';
 import 'text/title_text_components.dart';
 import 'text_field_component.dart';
 
@@ -53,7 +54,7 @@ class _State extends State<DurationInput> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         TitleMedium(widget.label),
-        const SizedBox(height: 8),
+        const Gap8(),
         Row(
           children: [
             _DurationField(

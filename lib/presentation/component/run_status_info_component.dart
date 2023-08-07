@@ -11,6 +11,8 @@ import '../formatter/mood_rate_formatter.dart';
 import '../formatter/pace_formatter.dart';
 import '../formatter/run_status_formatter.dart';
 import 'content_with_label_component.dart';
+import 'gap/gap_components.dart';
+import 'gap/gap_horizontal_components.dart';
 import 'nullable_text_component.dart';
 import 'text/body_text_components.dart';
 import 'text/label_text_components.dart';
@@ -49,7 +51,7 @@ class _RunStatusName extends StatelessWidget {
           status.toIcon(),
           color: status.toColor(context),
         ),
-        const SizedBox(width: 16),
+        const GapHorizontal16(),
         BodyMedium(
           status.toLabel(context),
           color: status.toColor(context),
@@ -77,12 +79,12 @@ class _RunStats extends StatelessWidget {
             avgPace: params.avgPace,
             avgHeartRate: params.avgHeartRate,
           ),
-          const SizedBox(height: 16),
+          const Gap16(),
           ContentWithLabel(
             label: Str.of(context).runStatusMoodRate,
             content: NullableText(params.moodRate.toUIFormat(context)),
           ),
-          const SizedBox(height: 16),
+          const Gap16(),
           ContentWithLabel(
             label: Str.of(context).runStatusComment,
             content: NullableText(params.comment),
