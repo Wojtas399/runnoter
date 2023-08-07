@@ -112,7 +112,10 @@ class _EmailVerificationInfo extends StatelessWidget {
         MouseRegion(
           cursor: SystemMouseCursors.click,
           child: GestureDetector(
-            onTap: () => navigateAndRemoveUntil(const SignInRoute()),
+            onTap: () {
+              popRoute();
+              navigateAndRemoveUntil(const SignInRoute());
+            },
             child: BodyMedium(
               str.emailVerificationBackToLogin,
               color: Theme.of(context).colorScheme.outline,

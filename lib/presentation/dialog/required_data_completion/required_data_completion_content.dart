@@ -6,6 +6,7 @@ import '../../../domain/bloc/required_data_completion/required_data_completion_b
 import '../../component/gap/gap_components.dart';
 import '../../component/gap/gap_horizontal_components.dart';
 import '../../component/responsive_layout_component.dart';
+import '../../service/navigator_service.dart';
 import '../../service/utils.dart';
 import 'required_data_completion_form.dart';
 
@@ -32,7 +33,13 @@ class _NormalDialog extends StatelessWidget {
         width: 400,
         child: _Content(),
       ),
-      actions: const [_SubmitButton()],
+      actions: [
+        TextButton(
+          onPressed: () => popRoute(result: false),
+          child: Text(Str.of(context).cancel),
+        ),
+        const _SubmitButton(),
+      ],
     );
   }
 }
@@ -44,7 +51,7 @@ class _FullScreenDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
+        leading: CloseButton(onPressed: () => popRoute(result: false)),
         title: Text(Str.of(context).requiredDataCompletionTitle),
         actions: const [
           _SubmitButton(),
