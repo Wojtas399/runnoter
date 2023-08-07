@@ -6,6 +6,7 @@ import 'package:flutter_svg/svg.dart';
 import '../../../domain/additional_model/bloc_status.dart';
 import '../../../domain/bloc/reauthentication/reauthentication_bloc.dart';
 import '../../component/gap/gap_components.dart';
+import '../../component/gap/gap_horizontal_components.dart';
 import '../../component/text/body_text_components.dart';
 import '../../service/utils.dart';
 import 'reauthentication_password.dart';
@@ -50,12 +51,12 @@ class _Separator extends StatelessWidget {
     return Row(
       children: [
         const Expanded(child: Divider()),
-        const Gap16(),
+        const GapHorizontal16(),
         BodyMedium(
           Str.of(context).reauthenticationOrUse,
           color: Theme.of(context).colorScheme.outline,
         ),
-        const Gap16(),
+        const GapHorizontal16(),
         const Expanded(child: Divider()),
       ],
     );

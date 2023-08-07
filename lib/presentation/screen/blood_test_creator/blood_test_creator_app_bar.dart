@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/bloc/blood_test_creator/blood_test_creator_bloc.dart';
+import '../../component/gap/gap_horizontal_components.dart';
 import '../../service/utils.dart';
 
 class BloodTestCreatorAppBar extends StatelessWidget
@@ -19,7 +20,7 @@ class BloodTestCreatorAppBar extends StatelessWidget
       title: const _AppBarTitle(),
       actions: const [
         _SubmitButton(),
-        SizedBox(width: 16),
+        GapHorizontal16(),
       ],
     );
   }

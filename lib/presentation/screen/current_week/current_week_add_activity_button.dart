@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../component/gap/gap_horizontal_components.dart';
 import '../../config/navigation/router.dart';
 import '../../formatter/date_formatter.dart';
 import '../../service/navigator_service.dart';
@@ -26,7 +27,7 @@ class CurrentWeekAddActivityButton extends StatelessWidget {
           child: Row(
             children: [
               const Icon(Icons.directions_run),
-              const SizedBox(width: 8),
+              const GapHorizontal8(),
               Text(str.workout),
             ],
           ),
@@ -36,7 +37,7 @@ class CurrentWeekAddActivityButton extends StatelessWidget {
           child: Row(
             children: [
               const Icon(Icons.emoji_events),
-              const SizedBox(width: 8),
+              const GapHorizontal8(),
               Text(str.race),
             ],
           ),

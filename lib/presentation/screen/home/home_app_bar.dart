@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 
 import '../../../domain/bloc/home/home_bloc.dart';
+import '../../component/gap/gap_horizontal_components.dart';
 import '../../component/nullable_text_component.dart';
 import '../../config/navigation/router.dart';
 import '../../extension/context_extensions.dart';
@@ -75,7 +76,7 @@ class _DesktopLeftPart extends StatelessWidget {
           onPressed: onMenuPressed,
           icon: const Icon(Icons.menu),
         ),
-        const SizedBox(width: 24),
+        const GapHorizontal24(),
         Image.asset('assets/logo.png'),
       ],
     );

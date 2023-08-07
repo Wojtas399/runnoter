@@ -4,6 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/bloc/run_status_creator/run_status_creator_bloc.dart';
 import '../../../domain/entity/run_status.dart';
+import '../../component/gap/gap_horizontal_components.dart';
 import '../../formatter/run_status_formatter.dart';
 
 class RunStatusCreatorStatusType extends StatelessWidget {
@@ -89,7 +90,7 @@ class _RunStatusDescription extends StatelessWidget {
           size: 20,
           color: status.toColor(context),
         ),
-        const SizedBox(width: 8),
+        const GapHorizontal8(),
         Text(
           status.toLabel(context),
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(

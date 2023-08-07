@@ -5,6 +5,7 @@ import '../../../domain/bloc/current_week/current_week_cubit.dart';
 import '../../component/body/big_body_component.dart';
 import '../../component/card_body_component.dart';
 import '../../component/gap/gap_components.dart';
+import '../../component/gap/gap_horizontal_components.dart';
 import '../../component/padding/paddings_24.dart';
 import '../../component/responsive_layout_component.dart';
 import '../../component/shimmer.dart';
@@ -56,7 +57,7 @@ class _TabletContent extends StatelessWidget {
     return const Column(
       children: [
         CurrentWeekTabletStats(),
-        SizedBox(width: 32),
+        GapHorizontal32(),
         CardBody(child: _ListOfDays()),
       ],
     );
@@ -76,7 +77,7 @@ class _DesktopContent extends StatelessWidget {
             child: _ListOfDays(),
           ),
         ),
-        SizedBox(width: 16),
+        GapHorizontal16(),
         CurrentWeekDesktopStats(),
       ],
     );

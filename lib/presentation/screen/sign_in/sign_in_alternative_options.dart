@@ -5,6 +5,7 @@ import 'package:flutter_svg/svg.dart';
 
 import '../../../domain/bloc/sign_in/sign_in_bloc.dart';
 import '../../component/gap/gap_components.dart';
+import '../../component/gap/gap_horizontal_components.dart';
 import '../../component/text/body_text_components.dart';
 import '../../config/navigation/router.dart';
 import '../../service/navigator_service.dart';
@@ -34,7 +35,7 @@ class _Separator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const textMargin = SizedBox(width: 24);
+    const textMargin = GapHorizontal24();
 
     return Row(
       children: [
@@ -63,7 +64,7 @@ class _SocialSignIn extends StatelessWidget {
           Expanded(
             child: _SignInWithGoogle(),
           ),
-          SizedBox(width: 16),
+          GapHorizontal16(),
           Expanded(
             child: _SignInWithFacebook(),
           ),

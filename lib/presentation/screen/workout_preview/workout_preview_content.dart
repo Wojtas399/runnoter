@@ -4,6 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/bloc/workout_preview/workout_preview_bloc.dart';
 import '../../component/body/medium_body_component.dart';
+import '../../component/gap/gap_horizontal_components.dart';
 import '../../component/loading_info_component.dart';
 import '../../component/padding/paddings_24.dart';
 import '../../extension/context_extensions.dart';
@@ -44,7 +45,7 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
       actions: context.isMobileSize
           ? const [
               WorkoutPreviewWorkoutActions(),
-              SizedBox(width: 8),
+              GapHorizontal8(),
             ]
           : null,
     );

@@ -4,6 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/bloc/profile/identities/profile_identities_bloc.dart';
 import '../../component/gap/gap_components.dart';
+import '../../component/gap/gap_horizontal_components.dart';
 import '../../component/responsive_layout_component.dart';
 import '../../component/text/body_text_components.dart';
 import '../../component/text/label_text_components.dart';
@@ -153,7 +154,7 @@ class _FullScreenDialog extends StatelessWidget {
             onPressed: isSaveButtonDisabled ? null : onSaveButtonPressed,
             child: Text(str.save),
           ),
-          const SizedBox(width: 16),
+          const GapHorizontal16(),
         ],
       ),
       body: SafeArea(

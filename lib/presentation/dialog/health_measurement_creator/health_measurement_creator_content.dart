@@ -5,7 +5,7 @@ import 'package:get_it/get_it.dart';
 
 import '../../../domain/additional_model/bloc_status.dart';
 import '../../../domain/bloc/health_measurement_creator/health_measurement_creator_bloc.dart';
-import '../../component/gap/gap_components.dart';
+import '../../component/gap/gap_horizontal_components.dart';
 import '../../component/loading_info_component.dart';
 import '../../component/padding/paddings_24.dart';
 import '../../component/responsive_layout_component.dart';
@@ -66,7 +66,7 @@ class _FullScreenDialogContent extends StatelessWidget {
         leading: const CloseButton(),
         actions: const [
           _SubmitButton(),
-          Gap16(),
+          GapHorizontal16(),
         ],
       ),
       body: SafeArea(

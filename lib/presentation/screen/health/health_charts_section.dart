@@ -5,6 +5,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../domain/bloc/health/health_bloc.dart';
 import '../../../domain/service/health_chart_service.dart';
 import '../../component/gap/gap_components.dart';
+import '../../component/gap/gap_horizontal_components.dart';
 import '../../component/text/title_text_components.dart';
 import '../../extension/context_extensions.dart';
 import '../../formatter/date_formatter.dart';
@@ -60,7 +61,7 @@ class _ChartRangeType extends StatelessWidget {
     final ChartRange chartRange = context.select(
       (HealthBloc bloc) => bloc.state.chartRange,
     );
-    const Widget gap = SizedBox(width: 16);
+    const Widget gap = GapHorizontal16();
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,

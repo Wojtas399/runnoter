@@ -4,6 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/bloc/required_data_completion/required_data_completion_bloc.dart';
 import '../../component/gap/gap_components.dart';
+import '../../component/gap/gap_horizontal_components.dart';
 import '../../component/responsive_layout_component.dart';
 import '../../service/utils.dart';
 import 'required_data_completion_form.dart';
@@ -47,7 +48,7 @@ class _FullScreenDialog extends StatelessWidget {
         title: Text(Str.of(context).requiredDataCompletionTitle),
         actions: const [
           _SubmitButton(),
-          Gap8(),
+          GapHorizontal8(),
         ],
       ),
       body: LayoutBuilder(builder: (_, BoxConstraints constraints) {
