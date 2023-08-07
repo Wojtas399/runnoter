@@ -8,6 +8,8 @@ import '../../../domain/entity/user.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/text/title_text_components.dart';
 import '../../component/value_with_label_and_icon_component.dart';
+import '../../extension/account_type_extensions.dart';
+import '../../extension/gender_extensions.dart';
 import '../../service/dialog_service.dart';
 import '../../service/validation_service.dart';
 import 'profile_email_dialog.dart';
@@ -29,6 +31,8 @@ class ProfileUserDataSection extends StatelessWidget {
           child: TitleLarge(Str.of(context).profileUserData),
         ),
         const Gap16(),
+        const _AccountType(),
+        gap,
         const _Gender(),
         gap,
         const _Name(),
@@ -45,6 +49,23 @@ class ProfileUserDataSection extends StatelessWidget {
   }
 }
 
+class _AccountType extends StatelessWidget {
+  const _AccountType();
+
+  @override
+  Widget build(BuildContext context) {
+    final AccountType? accountType = context.select(
+      (ProfileIdentitiesBloc bloc) => bloc.state.accountType,
+    );
+
+    return ValueWithLabelAndIcon(
+      iconData: Icons.badge_outlined,
+      label: Str.of(context).accountType,
+      value: accountType?.toUIFormat(context) ?? '',
+    );
+  }
+}
+
 class _Gender extends StatelessWidget {
   const _Gender();
 
@@ -53,16 +74,11 @@ class _Gender extends StatelessWidget {
     final Gender? gender = context.select(
       (ProfileIdentitiesBloc bloc) => bloc.state.gender,
     );
-    final str = Str.of(context);
 
     return ValueWithLabelAndIcon(
       iconData: MdiIcons.genderMaleFemale,
-      label: str.gender,
-      value: switch (gender) {
-        Gender.male => str.male,
-        Gender.female => str.female,
-        null => '',
-      },
+      label: Str.of(context).gender,
+      value: gender?.toUIFormat(context) ?? '',
       onPressed: () => _onPressed(context),
     );
   }
