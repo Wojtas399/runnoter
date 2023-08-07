@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/bloc/profile/identities/profile_identities_bloc.dart';
+import '../../component/gap_components.dart';
 import '../../component/password_text_field_component.dart';
 import '../../component/responsive_layout_component.dart';
 import '../../component/text/label_text_components.dart';
@@ -130,7 +131,7 @@ class _NormalDialog extends StatelessWidget {
               controller: passwordController,
               validator: passwordValidator,
             ),
-            const SizedBox(height: 24),
+            const Gap24(),
             PasswordTextFieldComponent(
               label: str.profileNewPasswordDialogNewPasswordConfirmation,
               isRequired: true,
@@ -204,7 +205,7 @@ class _FullScreenDialog extends StatelessWidget {
                   controller: passwordController,
                   validator: passwordValidator,
                 ),
-                const SizedBox(height: 24),
+                const Gap24(),
                 PasswordTextFieldComponent(
                   label: str.profileNewPasswordDialogNewPasswordConfirmation,
                   isRequired: true,

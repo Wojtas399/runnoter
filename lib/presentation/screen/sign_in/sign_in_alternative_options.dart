@@ -4,6 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/svg.dart';
 
 import '../../../domain/bloc/sign_in/sign_in_bloc.dart';
+import '../../component/gap_components.dart';
 import '../../component/text/body_text_components.dart';
 import '../../config/navigation/router.dart';
 import '../../service/navigator_service.dart';
@@ -13,7 +14,7 @@ class SignInAlternativeOptions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const gap = SizedBox(height: 24);
+    const gap = Gap24();
 
     return const Column(
       children: [

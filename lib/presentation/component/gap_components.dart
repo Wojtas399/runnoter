@@ -21,6 +21,13 @@ class Gap24 extends StatelessWidget {
   Widget build(BuildContext context) => const SizedBox(height: 24);
 }
 
+class Gap32 extends StatelessWidget {
+  const Gap32({super.key});
+
+  @override
+  Widget build(BuildContext context) => const SizedBox(height: 32);
+}
+
 class Gap40 extends StatelessWidget {
   const Gap40({super.key});
 

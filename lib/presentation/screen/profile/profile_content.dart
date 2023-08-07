@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../domain/bloc/profile/identities/profile_identities_bloc.dart';
 import '../../component/body/medium_body_component.dart';
 import '../../component/card_body_component.dart';
+import '../../component/gap_components.dart';
 import '../../component/responsive_layout_component.dart';
 import 'profile_settings_section.dart';
 import 'profile_user_data_section.dart';
@@ -60,7 +61,7 @@ class _DesktopContent extends StatelessWidget {
     return const Column(
       children: [
         CardBody(child: ProfileUserDataSection()),
-        SizedBox(height: 16),
+        Gap16(),
         CardBody(child: ProfileSettingsSection()),
       ],
     );

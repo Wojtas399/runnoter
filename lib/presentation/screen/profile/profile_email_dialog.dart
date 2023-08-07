@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/bloc/profile/identities/profile_identities_bloc.dart';
+import '../../component/gap_components.dart';
 import '../../component/responsive_layout_component.dart';
 import '../../component/text/body_text_components.dart';
 import '../../component/text/label_text_components.dart';
@@ -198,13 +199,13 @@ class _Form extends StatelessWidget {
           validator: emailValidator,
           icon: Icons.email,
         ),
-        const SizedBox(height: 24),
+        const Gap24(),
         BodyMedium(
           str.profileChangeEmailDialogMessage,
           color: Theme.of(context).colorScheme.outline,
         ),
         if (isEmailVerified == false) ...[
-          const SizedBox(height: 24),
+          const Gap24(),
           OutlinedButton(
             onPressed: () => _resendEmailVerification(context),
             child: Text(str.profileResendEmailVerification),

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../domain/bloc/races/races_cubit.dart';
 import '../../../domain/entity/race.dart';
 import '../../component/card_body_component.dart';
+import '../../component/gap_components.dart';
 import '../../component/responsive_layout_component.dart';
 import '../../component/text/label_text_components.dart';
 import '../../component/text/title_text_components.dart';
@@ -25,7 +26,7 @@ class RacesList extends StatelessWidget {
       itemCount: racesGroupedByYear.length,
       separatorBuilder: (_, int index) => const ResponsiveLayout(
         mobileBody: Divider(height: 32),
-        desktopBody: SizedBox(height: 24),
+        desktopBody: Gap24(),
       ),
       itemBuilder: (_, int itemIndex) {
         final Widget races = _RacesFromYear(
@@ -53,7 +54,7 @@ class _RacesFromYear extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         TitleLarge(racesFromYear.year.toString()),
-        const SizedBox(height: 16),
+        const Gap16(),
         ...racesFromYear.races.map(
           (Race race) => _RaceItem(race: race),
         ),

@@ -5,6 +5,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../domain/bloc/sign_up/sign_up_bloc.dart';
 import '../../../domain/entity/user.dart';
 import '../../../domain/use_case/add_user_data_use_case.dart';
+import '../../component/gap_components.dart';
 import '../../component/password_text_field_component.dart';
 import '../../component/text_field_component.dart';
 import '../../component/two_options_component.dart';
@@ -14,12 +15,12 @@ class SignUpForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const gap = SizedBox(height: 24);
+    const gap = Gap24();
 
     return const Column(
       children: [
         _AccountType(),
-        SizedBox(height: 16),
+        Gap16(),
         _Gender(),
         gap,
         _Name(),

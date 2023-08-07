@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../domain/bloc/current_week/current_week_cubit.dart';
 import '../../component/activity_item_component.dart';
+import '../../component/gap_components.dart';
 import '../../component/shimmer_container.dart';
 import '../../component/text/title_text_components.dart';
 import '../../config/navigation/router.dart';
@@ -35,7 +36,7 @@ class CurrentWeekDayItem extends StatelessWidget {
               CurrentWeekAddActivityButton(date: day.date),
             ],
           ),
-          const SizedBox(height: 8),
+          const Gap8(),
           Column(
             children: [
               ...day.workouts.map(
@@ -81,7 +82,7 @@ class CurrentWeekDayItemShimmer extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ShimmerContainer(height: 24, width: 150),
-          SizedBox(height: 8),
+          Gap8(),
           ShimmerContainer(height: 48, width: double.infinity),
         ],
       ),

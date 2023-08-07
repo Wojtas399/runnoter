@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../component/gap_components.dart';
 import '../../extension/context_extensions.dart';
 
 class HomeNavigationDrawer extends StatelessWidget {
@@ -21,7 +22,7 @@ class HomeNavigationDrawer extends StatelessWidget {
       selectedIndex: selectedIndex,
       onDestinationSelected: onPageSelected,
       children: [
-        const SizedBox(height: 32),
+        const Gap32(),
         if (context.isMobileSize) const _AppLogo(),
         if (context.isMobileSize)
           NavigationDrawerDestination(
@@ -62,7 +63,7 @@ class HomeNavigationDrawer extends StatelessWidget {
           selectedIcon: const Icon(Icons.emoji_events),
           label: Text(str.racesTitle),
         ),
-        const SizedBox(height: 24),
+        const Gap24(),
         NavigationDrawerDestination(
           icon: const Icon(Icons.logout_outlined),
           label: Text(Str.of(context).homeSignOut),

@@ -4,6 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/bloc/sign_in/sign_in_bloc.dart';
 import '../../component/big_button_component.dart';
+import '../../component/gap_components.dart';
 import '../../component/password_text_field_component.dart';
 import '../../component/text_field_component.dart';
 import '../../config/navigation/router.dart';
@@ -18,9 +19,9 @@ class SignInForm extends StatelessWidget {
     return const Column(
       children: [
         _Email(),
-        SizedBox(height: 24),
+        Gap24(),
         _Password(),
-        SizedBox(height: 32),
+        Gap32(),
         _SubmitButton(),
       ],
     );
@@ -59,7 +60,7 @@ class _Password extends StatelessWidget {
         PasswordTextFieldComponent(
           onChanged: (String? value) => _onChanged(value, context),
         ),
-        const SizedBox(height: 8),
+        const Gap8(),
         MouseRegion(
           cursor: SystemMouseCursors.click,
           child: GestureDetector(

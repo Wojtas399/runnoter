@@ -6,6 +6,7 @@ import '../../../domain/bloc/races/races_cubit.dart';
 import '../../component/big_button_component.dart';
 import '../../component/body/medium_body_component.dart';
 import '../../component/empty_content_info_component.dart';
+import '../../component/gap_components.dart';
 import '../../component/loading_info_component.dart';
 import '../../component/padding/paddings_24.dart';
 import '../../component/responsive_layout_component.dart';
@@ -37,7 +38,7 @@ class _DesktopContent extends StatelessWidget {
     return const Column(
       children: [
         _AddRaceButton(),
-        SizedBox(height: 24),
+        Gap24(),
         Expanded(
           child: _Races(),
         ),

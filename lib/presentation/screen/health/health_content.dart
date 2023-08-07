@@ -4,6 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../component/big_button_component.dart';
 import '../../component/body/big_body_component.dart';
 import '../../component/card_body_component.dart';
+import '../../component/gap_components.dart';
 import '../../component/padding/paddings_24.dart';
 import '../../component/responsive_layout_component.dart';
 import '../../config/navigation/router.dart';
@@ -33,17 +34,15 @@ class _MobileContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const SizedBox gap = SizedBox(height: 24);
-
     return const Padding(
       padding: EdgeInsets.fromLTRB(24, 16, 8, 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           HealthTodayMeasurementSection(),
-          gap,
+          Gap24(),
           HealthChartsSection(),
-          gap,
+          Gap24(),
           _ShowAllMeasurementsButton(),
         ],
       ),
@@ -56,16 +55,14 @@ class _DesktopContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const SizedBox gap = SizedBox(height: 16);
-
     return const Paddings24(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           CardBody(child: HealthTodayMeasurementSection()),
-          gap,
+          Gap16(),
           CardBody(child: HealthChartsSection()),
-          gap,
+          Gap16(),
           _ShowAllMeasurementsButton(),
         ],
       ),

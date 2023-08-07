@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../component/body/small_body_component.dart';
+import '../../component/gap_components.dart';
 import '../../component/padding/paddings_24.dart';
 import '../../component/text/headline_text_components.dart';
 import '../../service/utils.dart';
@@ -26,9 +27,9 @@ class SignInContent extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Image.asset('assets/logo.png'),
-                      const SizedBox(height: 24),
+                      const Gap24(),
                       const _FormHeader(),
-                      const SizedBox(height: 32),
+                      const Gap32(),
                       const SignInForm(),
                       const SignInAlternativeOptions(),
                     ],

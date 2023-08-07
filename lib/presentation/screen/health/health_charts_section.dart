@@ -4,6 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/bloc/health/health_bloc.dart';
 import '../../../domain/service/health_chart_service.dart';
+import '../../component/gap_components.dart';
 import '../../component/text/title_text_components.dart';
 import '../../extension/context_extensions.dart';
 import '../../formatter/date_formatter.dart';
@@ -23,9 +24,9 @@ class HealthChartsSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           TitleMedium(Str.of(context).healthSummaryOfMeasurements),
-          const SizedBox(height: 16),
+          const Gap16(),
           const _ChartRangeSelection(),
-          const SizedBox(height: 8),
+          const Gap8(),
           const HealthCharts(),
         ],
       ),
@@ -44,7 +45,7 @@ class _ChartRangeSelection extends StatelessWidget {
           constraints: const BoxConstraints(maxWidth: 500),
           child: const _ChartRangeType(),
         ),
-        const SizedBox(height: 8),
+        const Gap8(),
         const _ChartRange(),
       ],
     );
@@ -173,9 +174,7 @@ class _CurrentRangeLabel extends StatelessWidget {
       (HealthBloc bloc) => bloc.state.restingHeartRatePoints,
     );
 
-    if (chartPoints == null) {
-      return const SizedBox();
-    }
+    if (chartPoints == null) return const SizedBox();
 
     final DateTime startDate = chartPoints.first.date;
     final DateTime endDate = chartPoints.last.date;

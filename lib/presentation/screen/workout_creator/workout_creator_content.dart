@@ -8,6 +8,7 @@ import '../../../domain/entity/workout.dart';
 import '../../component/big_button_component.dart';
 import '../../component/body/medium_body_component.dart';
 import '../../component/date_selector_component.dart';
+import '../../component/gap_components.dart';
 import '../../component/loading_info_component.dart';
 import '../../component/text/title_text_components.dart';
 import '../../component/text_field_component.dart';
@@ -82,11 +83,11 @@ class _Form extends StatelessWidget {
         : const Column(
             children: [
               _Date(),
-              SizedBox(height: 24),
+              Gap24(),
               _WorkoutName(),
-              SizedBox(height: 24),
+              Gap24(),
               WorkoutCreatorWorkoutStages(),
-              SizedBox(height: 40),
+              Gap40(),
               _SubmitButton(),
             ],
           );
@@ -102,7 +103,7 @@ class _Date extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         TitleMedium(Str.of(context).date),
-        const SizedBox(height: 8),
+        const Gap8(),
         const _DateValue(),
       ],
     );

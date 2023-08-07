@@ -5,6 +5,7 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 
 import '../../../domain/bloc/health/health_bloc.dart';
 import '../../../domain/service/health_chart_service.dart';
+import '../../component/gap_components.dart';
 import '../../component/text/label_text_components.dart';
 import '../../formatter/date_formatter.dart';
 import '../../service/utils.dart';
@@ -18,11 +19,11 @@ class HealthCharts extends StatelessWidget {
     return Column(
       children: [
         LabelLarge(str.healthRestingHeartRate),
-        const SizedBox(height: 8),
+        const Gap8(),
         const _RestingHeartRateChart(),
-        const SizedBox(height: 16),
+        const Gap16(),
         LabelLarge(str.healthFastingWeight),
-        const SizedBox(height: 8),
+        const Gap8(),
         const _FastingWeightChart(),
       ],
     );

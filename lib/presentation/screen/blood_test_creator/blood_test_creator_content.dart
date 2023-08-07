@@ -8,6 +8,7 @@ import '../../../domain/entity/user.dart';
 import '../../component/blood_parameter_results_list_component.dart';
 import '../../component/body/medium_body_component.dart';
 import '../../component/date_selector_component.dart';
+import '../../component/gap_components.dart';
 import '../../component/text/title_text_components.dart';
 import '../../service/dialog_service.dart';
 import '../../service/utils.dart';
@@ -59,7 +60,7 @@ class _DateSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           TitleMedium(Str.of(context).date),
-          const SizedBox(height: 8),
+          const Gap8(),
           const _DateValue(),
         ],
       ),

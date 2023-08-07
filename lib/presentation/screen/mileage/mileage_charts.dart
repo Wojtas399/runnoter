@@ -4,6 +4,7 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 
 import '../../../domain/bloc/mileage/mileage_cubit.dart';
 import '../../component/card_body_component.dart';
+import '../../component/gap_components.dart';
 import '../../component/responsive_layout_component.dart';
 import '../../component/text/title_text_components.dart';
 import '../../extension/context_extensions.dart';
@@ -31,7 +32,7 @@ class MileageCharts extends StatelessWidget {
           desktopBody: CardBody(child: chart),
         );
       },
-      separatorBuilder: (_, int index) => const SizedBox(height: 32),
+      separatorBuilder: (_, int index) => const Gap32(),
     );
   }
 }
@@ -48,7 +49,7 @@ class _Chart extends StatelessWidget {
     return Column(
       children: [
         TitleLarge('${yearData.year}'),
-        const SizedBox(height: 16),
+        const Gap16(),
         SfCartesianChart(
           primaryXAxis: CategoryAxis(interval: 1),
           primaryYAxis: NumericAxis(

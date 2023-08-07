@@ -7,6 +7,7 @@ import '../../../domain/bloc/race_creator/race_creator_bloc.dart';
 import '../../../domain/entity/race.dart';
 import '../../component/big_button_component.dart';
 import '../../component/body/medium_body_component.dart';
+import '../../component/gap_components.dart';
 import '../../component/loading_info_component.dart';
 import '../../service/dialog_service.dart';
 import '../../service/utils.dart';
@@ -79,7 +80,7 @@ class _Form extends StatelessWidget {
         : const Column(
             children: [
               RaceCreatorForm(),
-              SizedBox(height: 40),
+              Gap40(),
               _SubmitButton(),
             ],
           );

@@ -5,6 +5,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 
 import '../../../domain/bloc/profile/identities/profile_identities_bloc.dart';
 import '../../../domain/entity/user.dart';
+import '../../component/gap_components.dart';
 import '../../component/text/title_text_components.dart';
 import '../../component/value_with_label_and_icon_component.dart';
 import '../../service/dialog_service.dart';
@@ -18,7 +19,7 @@ class ProfileUserDataSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const gap = SizedBox(height: 8);
+    const gap = Gap8();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -27,7 +28,7 @@ class ProfileUserDataSection extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 8),
           child: TitleLarge(Str.of(context).profileUserData),
         ),
-        const SizedBox(height: 16),
+        const Gap16(),
         const _Gender(),
         gap,
         const _Name(),

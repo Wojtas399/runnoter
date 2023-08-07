@@ -6,6 +6,7 @@ import '../../../domain/bloc/health/health_bloc.dart';
 import '../../../domain/entity/health_measurement.dart';
 import '../../component/big_button_component.dart';
 import '../../component/edit_delete_popup_menu_component.dart';
+import '../../component/gap_components.dart';
 import '../../component/text/label_text_components.dart';
 import '../../component/text/title_text_components.dart';
 import '../../dialog/health_measurement_creator/health_measurement_creator_dialog.dart';
@@ -21,7 +22,7 @@ class HealthTodayMeasurementSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const _Header(),
-        const SizedBox(height: 8),
+        const Gap8(),
         Padding(
           padding: EdgeInsets.only(right: context.isMobileSize ? 16 : 0),
           child: const _TodayMeasurement(),

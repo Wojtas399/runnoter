@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../component/gap_components.dart';
 import '../../component/text/label_text_components.dart';
 
 class HomeNavigationRail extends StatelessWidget {
@@ -25,7 +26,7 @@ class HomeNavigationRail extends StatelessWidget {
       groupAlignment: -0.90,
       trailing: Column(
         children: [
-          const SizedBox(height: 32),
+          const Gap32(),
           IconButton(
             onPressed: () => onPageSelected(7),
             icon: const Icon(Icons.logout_outlined),

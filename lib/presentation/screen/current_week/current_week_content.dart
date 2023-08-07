@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../domain/bloc/current_week/current_week_cubit.dart';
 import '../../component/body/big_body_component.dart';
 import '../../component/card_body_component.dart';
+import '../../component/gap_components.dart';
 import '../../component/padding/paddings_24.dart';
 import '../../component/responsive_layout_component.dart';
 import '../../component/shimmer.dart';
@@ -40,7 +41,7 @@ class _MobileContent extends StatelessWidget {
     return const Column(
       children: [
         CurrentWeekMobileStats(),
-        SizedBox(height: 32),
+        Gap32(),
         _ListOfDays(),
       ],
     );
