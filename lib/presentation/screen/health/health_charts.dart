@@ -5,7 +5,7 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 
 import '../../../domain/bloc/health/health_bloc.dart';
 import '../../../domain/service/health_chart_service.dart';
-import '../../component/gap_components.dart';
+import '../../component/gap/gap_components.dart';
 import '../../component/text/label_text_components.dart';
 import '../../formatter/date_formatter.dart';
 import '../../service/utils.dart';

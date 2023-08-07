@@ -4,7 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/bloc/sign_in/sign_in_bloc.dart';
 import '../../component/big_button_component.dart';
-import '../../component/gap_components.dart';
+import '../../component/gap/gap_components.dart';
 import '../../component/password_text_field_component.dart';
 import '../../component/text_field_component.dart';
 import '../../config/navigation/router.dart';

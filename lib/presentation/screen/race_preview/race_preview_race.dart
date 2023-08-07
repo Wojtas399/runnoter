@@ -7,7 +7,7 @@ import '../../../domain/bloc/run_status_creator/run_status_creator_bloc.dart';
 import '../../../domain/entity/run_status.dart';
 import '../../component/big_button_component.dart';
 import '../../component/content_with_label_component.dart';
-import '../../component/gap_components.dart';
+import '../../component/gap/gap_components.dart';
 import '../../component/nullable_text_component.dart';
 import '../../component/run_status_info_component.dart';
 import '../../component/text/title_text_components.dart';

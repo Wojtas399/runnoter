@@ -6,7 +6,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../domain/bloc/run_status_creator/run_status_creator_bloc.dart';
 import '../../../domain/entity/run_status.dart';
 import '../../component/duration_input_component.dart';
-import '../../component/gap_components.dart';
+import '../../component/gap/gap_components.dart';
 import '../../component/text_field_component.dart';
 import '../../extension/context_extensions.dart';
 import '../../formatter/decimal_text_input_formatter.dart';

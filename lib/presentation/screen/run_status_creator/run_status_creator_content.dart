@@ -5,7 +5,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../domain/bloc/run_status_creator/run_status_creator_bloc.dart';
 import '../../component/big_button_component.dart';
 import '../../component/body/medium_body_component.dart';
-import '../../component/gap_components.dart';
+import '../../component/gap/gap_components.dart';
 import '../../component/padding/paddings_24.dart';
 import '../../service/dialog_service.dart';
 import '../../service/utils.dart';

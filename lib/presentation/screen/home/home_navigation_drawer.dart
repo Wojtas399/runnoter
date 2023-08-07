@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../component/gap_components.dart';
+import '../../component/gap/gap_components.dart';
 import '../../extension/context_extensions.dart';
 
 class HomeNavigationDrawer extends StatelessWidget {

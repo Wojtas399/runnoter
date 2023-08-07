@@ -4,7 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/bloc/current_week/current_week_cubit.dart';
 import '../../component/card_body_component.dart';
-import '../../component/gap_components.dart';
+import '../../component/gap/gap_components.dart';
 import '../../component/responsive_layout_component.dart';
 import '../../component/shimmer_container.dart';
 import '../../component/text/body_text_components.dart';

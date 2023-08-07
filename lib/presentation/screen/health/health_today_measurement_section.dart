@@ -6,7 +6,7 @@ import '../../../domain/bloc/health/health_bloc.dart';
 import '../../../domain/entity/health_measurement.dart';
 import '../../component/big_button_component.dart';
 import '../../component/edit_delete_popup_menu_component.dart';
-import '../../component/gap_components.dart';
+import '../../component/gap/gap_components.dart';
 import '../../component/text/label_text_components.dart';
 import '../../component/text/title_text_components.dart';
 import '../../dialog/health_measurement_creator/health_measurement_creator_dialog.dart';

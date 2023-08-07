@@ -4,7 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/bloc/workout_creator/workout_creator_bloc.dart';
 import '../../../domain/entity/workout_stage.dart';
-import '../../component/gap_components.dart';
+import '../../component/gap/gap_components.dart';
 import '../../component/text/body_text_components.dart';
 import '../../component/text/label_text_components.dart';
 import '../../dialog/workout_stage_creator/workout_stage_creator_dialog.dart';

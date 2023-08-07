@@ -4,7 +4,7 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 
 import '../../../domain/bloc/mileage/mileage_cubit.dart';
 import '../../component/card_body_component.dart';
-import '../../component/gap_components.dart';
+import '../../component/gap/gap_components.dart';
 import '../../component/responsive_layout_component.dart';
 import '../../component/text/title_text_components.dart';
 import '../../extension/context_extensions.dart';

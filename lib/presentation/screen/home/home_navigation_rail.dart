@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../component/gap_components.dart';
+import '../../component/gap/gap_components.dart';
 import '../../component/text/label_text_components.dart';
 
 class HomeNavigationRail extends StatelessWidget {

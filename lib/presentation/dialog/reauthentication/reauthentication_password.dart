@@ -4,7 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/additional_model/bloc_status.dart';
 import '../../../domain/bloc/reauthentication/reauthentication_bloc.dart';
-import '../../component/gap_components.dart';
+import '../../component/gap/gap_components.dart';
 import '../../component/password_text_field_component.dart';
 
 class ReauthenticationPassword extends StatelessWidget {
