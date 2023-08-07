@@ -5,6 +5,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/bloc/home/home_bloc.dart';
 import 'package:runnoter/domain/entity/settings.dart';
+import 'package:runnoter/domain/entity/user.dart';
 import 'package:runnoter/domain/repository/user_repository.dart';
 import 'package:runnoter/domain/service/auth_service.dart';
 
@@ -18,18 +19,6 @@ void main() {
   final userRepository = MockUserRepository();
   const String loggedUserId = 'u1';
 
-  HomeState createState({
-    BlocStatus status = const BlocStatusInitial(),
-    String? loggedUserName,
-    Settings? appSettings,
-  }) {
-    return HomeState(
-      status: status,
-      loggedUserName: loggedUserName,
-      appSettings: appSettings,
-    );
-  }
-
   setUpAll(() {
     GetIt.I.registerSingleton<AuthService>(authService);
     GetIt.I.registerSingleton<UserRepository>(userRepository);
@@ -37,6 +26,7 @@ void main() {
 
   blocTest(
     'initialize, '
+    'runner user, '
     "should set listener of logged user's data",
     build: () => HomeBloc(),
     setUp: () {
@@ -56,11 +46,10 @@ void main() {
     },
     act: (bloc) => bloc.add(const HomeEventInitialize()),
     expect: () => [
-      createState(
-        status: const BlocStatusLoading(),
-      ),
-      createState(
+      const HomeState(status: BlocStatusLoading()),
+      HomeState(
         status: const BlocStatusComplete(),
+        accountType: AccountType.runner,
         loggedUserName: 'Jack',
         appSettings: createSettings(
           themeMode: ThemeMode.dark,
@@ -71,12 +60,49 @@ void main() {
       ),
     ],
     verify: (_) {
-      verify(
-        () => authService.loggedUserId$,
-      ).called(1);
-      verify(
-        () => userRepository.getUserById(userId: loggedUserId),
-      ).called(1);
+      verify(() => authService.loggedUserId$).called(1);
+      verify(() => userRepository.getUserById(userId: loggedUserId)).called(1);
+    },
+  );
+
+  blocTest(
+    'initialize, '
+    'coach user, '
+    "should set listener of logged user's data",
+    build: () => HomeBloc(),
+    setUp: () {
+      authService.mockGetLoggedUserId(userId: loggedUserId);
+      userRepository.mockGetUserById(
+        user: createCoach(
+          id: loggedUserId,
+          name: 'Jack',
+          settings: createSettings(
+            themeMode: ThemeMode.dark,
+            language: Language.polish,
+            distanceUnit: DistanceUnit.miles,
+            paceUnit: PaceUnit.milesPerHour,
+          ),
+        ),
+      );
+    },
+    act: (bloc) => bloc.add(const HomeEventInitialize()),
+    expect: () => [
+      const HomeState(status: BlocStatusLoading()),
+      HomeState(
+        status: const BlocStatusComplete(),
+        accountType: AccountType.coach,
+        loggedUserName: 'Jack',
+        appSettings: createSettings(
+          themeMode: ThemeMode.dark,
+          language: Language.polish,
+          distanceUnit: DistanceUnit.miles,
+          paceUnit: PaceUnit.milesPerHour,
+        ),
+      ),
+    ],
+    verify: (_) {
+      verify(() => authService.loggedUserId$).called(1);
+      verify(() => userRepository.getUserById(userId: loggedUserId)).called(1);
     },
   );
 
@@ -87,15 +113,11 @@ void main() {
     setUp: () => authService.mockSignOut(),
     act: (bloc) => bloc.add(const HomeEventSignOut()),
     expect: () => [
-      createState(
-        status: const BlocStatusLoading(),
-      ),
-      createState(
-        status: const BlocStatusComplete(info: HomeBlocInfo.userSignedOut),
+      const HomeState(status: BlocStatusLoading()),
+      const HomeState(
+        status: BlocStatusComplete(info: HomeBlocInfo.userSignedOut),
       ),
     ],
-    verify: (_) => verify(
-      () => authService.signOut(),
-    ).called(1),
+    verify: (_) => verify(authService.signOut).called(1),
   );
 }

@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/bloc/home/home_bloc.dart';
 import 'package:runnoter/domain/entity/settings.dart';
+import 'package:runnoter/domain/entity/user.dart';
 
 void main() {
   late HomeState state;
@@ -22,6 +23,19 @@ void main() {
 
       expect(state.status, expectedStatus);
       expect(state2.status, const BlocStatusComplete());
+    },
+  );
+
+  test(
+    'copy with account type',
+    () {
+      const AccountType expectedAccountType = AccountType.coach;
+
+      state = state.copyWith(accountType: expectedAccountType);
+      final state2 = state.copyWith();
+
+      expect(state.accountType, expectedAccountType);
+      expect(state2.accountType, expectedAccountType);
     },
   );
 

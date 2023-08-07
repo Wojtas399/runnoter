@@ -70,7 +70,7 @@ class MockAuthService extends Mock implements AuthService {
   }
 
   void mockSignOut() {
-    when(() => signOut()).thenAnswer((_) => Future.value());
+    when(signOut).thenAnswer((_) => Future.value());
   }
 
   void mockUpdateEmail({Object? throwable}) {
