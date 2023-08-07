@@ -694,6 +694,11 @@
   "@racesNoRacesMessage": {
     "description": "Message of the info about the lack of races"
   },
+  "@__________CLIENTS__________": {},
+  "clientsTitle": "Klienci",
+  "@clientsTitle": {
+    "description": "Title of clients screen"
+  },
   "@__________RACE_PREVIEW__________": {},
   "racePreviewTitle": "Zawody",
   "@racePreviewTitle": {

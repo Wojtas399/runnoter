@@ -67,6 +67,11 @@ class AppRouter extends _$AppRouter {
                   path: 'profile',
                   title: (context, _) => Str.of(context).profileTitle,
                 ),
+                AutoRoute(
+                  page: ClientsRoute.page,
+                  path: 'clients',
+                  title: (context, _) => Str.of(context).clientsTitle,
+                ),
               ],
             ),
             AutoRoute(

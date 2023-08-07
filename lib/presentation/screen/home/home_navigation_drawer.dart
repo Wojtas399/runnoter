@@ -63,6 +63,11 @@ class HomeNavigationDrawer extends StatelessWidget {
           selectedIcon: const Icon(Icons.emoji_events),
           label: Text(str.racesTitle),
         ),
+        NavigationDrawerDestination(
+          icon: const Icon(Icons.groups_outlined),
+          selectedIcon: const Icon(Icons.groups),
+          label: Text(str.clientsTitle),
+        ),
         const Gap24(),
         NavigationDrawerDestination(
           icon: const Icon(Icons.logout_outlined),

@@ -65,6 +65,11 @@ class HomeNavigationRail extends StatelessWidget {
           selectedIcon: const Icon(Icons.emoji_events),
           label: Text(str.racesTitle),
         ),
+        NavigationRailDestination(
+          icon: const Icon(Icons.groups_outlined),
+          selectedIcon: const Icon(Icons.groups),
+          label: Text(str.clientsTitle),
+        ),
       ],
       selectedIndex: selectedIndex,
       onDestinationSelected: onPageSelected,

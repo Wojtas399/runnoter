@@ -24,7 +24,7 @@ class HomeContent extends StatefulWidget {
 
 class _State extends State<HomeContent> {
   final int numberOfBottomNavPages = 3;
-  final int numberOfAllPages = 6;
+  final int numberOfAllPages = 7;
   int _bottomNavSelectedIndex = 0;
   _NavigationType _navigationType = _NavigationType.drawer;
 
@@ -38,6 +38,7 @@ class _State extends State<HomeContent> {
         MileageRoute(),
         BloodTestsRoute(),
         RacesRoute(),
+        ClientsRoute(),
         ProfileRoute(),
       ],
       builder: (context, child) {
@@ -63,7 +64,7 @@ class _State extends State<HomeContent> {
           appBar: HomeAppBar(
             backgroundColor: bckColor,
             onMenuPressed: _onMenuAppBarPressed,
-            onAvatarPressed: () => tabsRouter.setActiveIndex(6),
+            onAvatarPressed: () => tabsRouter.setActiveIndex(7),
           ),
           drawer: context.isMobileSize
               ? HomeNavigationDrawer(
@@ -130,7 +131,7 @@ class _State extends State<HomeContent> {
 
   Future<void> _onSidePageSelected(int pageIndex, TabsRouter tabsRouter) async {
     if (context.isMobileSize) {
-      if (pageIndex == 4) {
+      if (pageIndex == 5) {
         await _signOut(context);
       } else if (pageIndex == 0) {
         tabsRouter.setActiveIndex(_bottomNavSelectedIndex);
@@ -138,7 +139,7 @@ class _State extends State<HomeContent> {
         tabsRouter.setActiveIndex(pageIndex + 2);
       }
     } else {
-      if (pageIndex == 6) {
+      if (pageIndex == 7) {
         await _signOut(context);
       } else {
         tabsRouter.setActiveIndex(pageIndex);
