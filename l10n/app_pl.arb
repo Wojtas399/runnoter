@@ -781,6 +781,10 @@
   "@runStatusUndone": {
     "description": "Type of workout status called undone"
   },
+  "@__________ACCOUNT_TYPES__________": {},
+  "accountType": "Rola",
+  "runner": "Biegacz",
+  "coach": "Trener",
   "@__________GENDERS__________": {},
   "gender": "Płeć",
   "male": "Mężczyzna",
