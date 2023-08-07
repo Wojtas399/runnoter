@@ -5,6 +5,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/bloc/health_measurement_creator/health_measurement_creator_bloc.dart';
 import '../../component/date_selector_component.dart';
+import '../../component/gap_components.dart';
 import '../../component/text/title_text_components.dart';
 import '../../component/text_field_component.dart';
 import '../../formatter/decimal_text_input_formatter.dart';
@@ -14,16 +15,14 @@ class HealthMeasurementCreatorForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const Widget gap = SizedBox(height: 24);
-
     return const Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
         _Date(),
-        gap,
+        Gap24(),
         _RestingHeartRate(),
-        gap,
+        Gap24(),
         _FastingWeight(),
       ],
     );
@@ -42,7 +41,7 @@ class _Date extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         TitleMedium(Str.of(context).date),
-        const SizedBox(height: 8),
+        const Gap8(),
         DateSelector(
           date: date,
           lastDate: DateTime.now(),

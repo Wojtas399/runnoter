@@ -4,6 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/additional_model/bloc_status.dart';
 import '../../../domain/bloc/reauthentication/reauthentication_bloc.dart';
+import '../../component/gap_components.dart';
 import '../../component/password_text_field_component.dart';
 
 class ReauthenticationPassword extends StatelessWidget {
@@ -17,7 +18,7 @@ class ReauthenticationPassword extends StatelessWidget {
           onChanged: (String? password) =>
               _onPasswordChanged(context, password),
         ),
-        const SizedBox(height: 16),
+        const Gap16(),
         const _PasswordSubmitButton(),
       ],
     );

@@ -5,6 +5,7 @@ import 'package:flutter_svg/svg.dart';
 
 import '../../../domain/additional_model/bloc_status.dart';
 import '../../../domain/bloc/reauthentication/reauthentication_bloc.dart';
+import '../../component/gap_components.dart';
 import '../../component/text/body_text_components.dart';
 import '../../service/utils.dart';
 import 'reauthentication_password.dart';
@@ -15,7 +16,7 @@ class ReauthenticationForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final str = Str.of(context);
-    const Widget gap = SizedBox(height: 24);
+    const Widget gap = Gap24();
 
     return GestureDetector(
       onTap: unfocusInputs,
@@ -49,12 +50,12 @@ class _Separator extends StatelessWidget {
     return Row(
       children: [
         const Expanded(child: Divider()),
-        const SizedBox(width: 16),
+        const Gap16(),
         BodyMedium(
           Str.of(context).reauthenticationOrUse,
           color: Theme.of(context).colorScheme.outline,
         ),
-        const SizedBox(width: 16),
+        const Gap16(),
         const Expanded(child: Divider()),
       ],
     );

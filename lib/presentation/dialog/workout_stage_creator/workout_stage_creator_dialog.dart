@@ -9,10 +9,7 @@ import 'workout_stage_creator_content.dart';
 class WorkoutStageCreatorDialog extends StatelessWidget {
   final WorkoutStage? stage;
 
-  const WorkoutStageCreatorDialog({
-    super.key,
-    this.stage,
-  });
+  const WorkoutStageCreatorDialog({super.key, this.stage});
 
   @override
   Widget build(BuildContext context) {

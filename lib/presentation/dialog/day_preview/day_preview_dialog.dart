@@ -4,6 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 import '../../../domain/bloc/day_preview/day_preview_cubit.dart';
+import '../../component/gap_components.dart';
 import '../../component/responsive_layout_component.dart';
 import '../../extension/context_extensions.dart';
 import '../../formatter/date_formatter.dart';
@@ -46,7 +47,7 @@ class _NormalDialog extends StatelessWidget {
           child: Column(
             children: [
               _Actions(),
-              SizedBox(height: 16),
+              Gap16(),
               DayPreviewActivities(),
             ],
           ),
@@ -144,7 +145,7 @@ class _Actions extends StatelessWidget {
               child: Text('${str.add} ${str.workout}'),
             ),
           ),
-          const SizedBox(width: 24),
+          const Gap24(),
           Expanded(
             child: FilledButton(
               onPressed: () => _addRace(context),

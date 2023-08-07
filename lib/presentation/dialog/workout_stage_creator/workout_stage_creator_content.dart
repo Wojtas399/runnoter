@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/bloc/workout_stage_creator/workout_stage_creator_bloc.dart';
+import '../../component/gap_components.dart';
 import '../../component/responsive_layout_component.dart';
 import '../../service/navigator_service.dart';
 import '../../service/utils.dart';
@@ -73,7 +74,7 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
       leading: const CloseButton(),
       actions: const [
         _SaveButton(),
-        SizedBox(width: 16),
+        Gap16(),
       ],
     );
   }

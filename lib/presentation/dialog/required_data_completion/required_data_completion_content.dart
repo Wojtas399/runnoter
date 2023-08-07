@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/bloc/required_data_completion/required_data_completion_bloc.dart';
+import '../../component/gap_components.dart';
 import '../../component/responsive_layout_component.dart';
 import '../../service/utils.dart';
 import 'required_data_completion_form.dart';
@@ -46,7 +47,7 @@ class _FullScreenDialog extends StatelessWidget {
         title: Text(Str.of(context).requiredDataCompletionTitle),
         actions: const [
           _SubmitButton(),
-          SizedBox(width: 8),
+          Gap8(),
         ],
       ),
       body: LayoutBuilder(builder: (_, BoxConstraints constraints) {
@@ -78,7 +79,7 @@ class _Content extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Text(Str.of(context).requiredDataCompletionMessage),
-        const SizedBox(height: 24),
+        const Gap24(),
         const RequiredDataCompletionForm(),
       ],
     );

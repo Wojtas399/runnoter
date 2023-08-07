@@ -5,6 +5,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../domain/bloc/required_data_completion/required_data_completion_bloc.dart';
 import '../../../domain/entity/user.dart';
 import '../../../domain/use_case/add_user_data_use_case.dart';
+import '../../component/gap_components.dart';
 import '../../component/text_field_component.dart';
 import '../../component/two_options_component.dart';
 
@@ -17,11 +18,11 @@ class RequiredDataCompletionForm extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         _AccountType(),
-        SizedBox(height: 16),
+        Gap16(),
         _Gender(),
-        SizedBox(height: 24),
+        Gap24(),
         _Name(),
-        SizedBox(height: 24),
+        Gap24(),
         _Surname(),
       ],
     );
