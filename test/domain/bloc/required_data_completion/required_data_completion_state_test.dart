@@ -18,6 +18,7 @@ void main() {
         state,
         const RequiredDataCompletionState(
           status: BlocStatusInitial(),
+          accountType: AccountType.runner,
           gender: Gender.male,
           name: '',
           surname: '',

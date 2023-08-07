@@ -16,7 +16,7 @@ class RequiredDataCompletionState
   });
 
   @override
-  List<Object?> get props => [accountType, status, gender, name, surname];
+  List<Object?> get props => [status, accountType, gender, name, surname];
 
   bool get isNameValid => validator.isNameOrSurnameValid(name);
 

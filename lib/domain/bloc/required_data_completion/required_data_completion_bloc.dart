@@ -25,10 +25,20 @@ class RequiredDataCompletionBloc extends BlocWithStatus<
   })  : _authService = getIt<AuthService>(),
         _addUserDataUseCase = getIt<AddUserDataUseCase>(),
         super(state) {
+    on<RequiredDataCompletionAccountTypeChanged>(_accountTypeChanged);
     on<RequiredDataCompletionEventGenderChanged>(_genderChanged);
     on<RequiredDataCompletionEventNameChanged>(_nameChanged);
     on<RequiredDataCompletionEventSurnameChanged>(_surnameChanged);
     on<RequiredDataCompletionEventSubmit>(_submit);
+  }
+
+  void _accountTypeChanged(
+    RequiredDataCompletionAccountTypeChanged event,
+    Emitter<RequiredDataCompletionState> emit,
+  ) {
+    emit(state.copyWith(
+      accountType: event.accountType,
+    ));
   }
 
   void _genderChanged(
@@ -69,13 +79,12 @@ class RequiredDataCompletionBloc extends BlocWithStatus<
       emitNoLoggedUserStatus(emit);
       return;
     }
-    //TODO: Implement account type in state
     await _addUserDataUseCase.execute(
-      accountType: AccountType.runner,
       userId: loggedUserId,
       name: state.name,
       surname: state.surname,
       gender: state.gender,
+      accountType: state.accountType,
     );
     emitCompleteStatus(
       emit,
@@ -84,6 +93,4 @@ class RequiredDataCompletionBloc extends BlocWithStatus<
   }
 }
 
-enum RequiredDataCompletionBlocInfo {
-  userDataAdded,
-}
+enum RequiredDataCompletionBlocInfo { userDataAdded }

@@ -14,6 +14,10 @@ import '../../../mock/domain/use_case/mock_add_user_data_use_case.dart';
 void main() {
   final authService = MockAuthService();
   final addUserDataUseCase = MockAddUserDataUseCase();
+  const AccountType accountType = AccountType.coach;
+  const Gender gender = Gender.female;
+  const String name = 'name';
+  const String surname = 'surname';
 
   setUpAll(() {
     GetIt.I.registerSingleton<AuthService>(authService);
@@ -26,16 +30,31 @@ void main() {
   });
 
   blocTest(
-    'gender changed, '
-    'should update gender in state',
+    'account type changed, '
+    'should update account type in state',
     build: () => RequiredDataCompletionBloc(),
-    act: (bloc) => bloc.add(const RequiredDataCompletionEventGenderChanged(
-      gender: Gender.female,
+    act: (bloc) => bloc.add(const RequiredDataCompletionAccountTypeChanged(
+      accountType: accountType,
     )),
     expect: () => [
       const RequiredDataCompletionState(
         status: BlocStatusComplete(),
-        gender: Gender.female,
+        accountType: accountType,
+      ),
+    ],
+  );
+
+  blocTest(
+    'gender changed, '
+    'should update gender in state',
+    build: () => RequiredDataCompletionBloc(),
+    act: (bloc) => bloc.add(const RequiredDataCompletionEventGenderChanged(
+      gender: gender,
+    )),
+    expect: () => [
+      const RequiredDataCompletionState(
+        status: BlocStatusComplete(),
+        gender: gender,
       ),
     ],
   );
@@ -45,12 +64,12 @@ void main() {
     'should update name in state',
     build: () => RequiredDataCompletionBloc(),
     act: (bloc) => bloc.add(const RequiredDataCompletionEventNameChanged(
-      name: 'Jack',
+      name: name,
     )),
     expect: () => [
       const RequiredDataCompletionState(
         status: BlocStatusComplete(),
-        name: 'Jack',
+        name: name,
       ),
     ],
   );
@@ -60,12 +79,12 @@ void main() {
     'should update surname in state',
     build: () => RequiredDataCompletionBloc(),
     act: (bloc) => bloc.add(const RequiredDataCompletionEventSurnameChanged(
-      surname: 'Erl',
+      surname: surname,
     )),
     expect: () => [
       const RequiredDataCompletionState(
         status: BlocStatusComplete(),
-        surname: 'Erl',
+        surname: surname,
       ),
     ],
   );
@@ -85,9 +104,8 @@ void main() {
     'should emit no logged user status',
     build: () => RequiredDataCompletionBloc(
       state: const RequiredDataCompletionState(
-        gender: Gender.female,
-        name: 'Ariana',
-        surname: 'Novsky',
+        name: name,
+        surname: surname,
       ),
     ),
     setUp: () => authService.mockGetLoggedUserId(),
@@ -95,15 +113,13 @@ void main() {
     expect: () => [
       const RequiredDataCompletionState(
         status: BlocStatusLoading(),
-        gender: Gender.female,
-        name: 'Ariana',
-        surname: 'Novsky',
+        name: name,
+        surname: surname,
       ),
       const RequiredDataCompletionState(
         status: BlocStatusNoLoggedUser(),
-        gender: Gender.female,
-        name: 'Ariana',
-        surname: 'Novsky',
+        name: name,
+        surname: surname,
       ),
     ],
     verify: (_) => verify(() => authService.loggedUserId$).called(1),
@@ -114,9 +130,10 @@ void main() {
     "should call use case to add user data and should emit info that user's data has been added",
     build: () => RequiredDataCompletionBloc(
       state: const RequiredDataCompletionState(
-        gender: Gender.female,
-        name: 'Ariana',
-        surname: 'Novsky',
+        accountType: accountType,
+        gender: gender,
+        name: name,
+        surname: surname,
       ),
     ),
     setUp: () {
@@ -127,28 +144,30 @@ void main() {
     expect: () => [
       const RequiredDataCompletionState(
         status: BlocStatusLoading(),
-        gender: Gender.female,
-        name: 'Ariana',
-        surname: 'Novsky',
+        accountType: accountType,
+        gender: gender,
+        name: name,
+        surname: surname,
       ),
       const RequiredDataCompletionState(
         status: BlocStatusComplete<RequiredDataCompletionBlocInfo>(
           info: RequiredDataCompletionBlocInfo.userDataAdded,
         ),
-        gender: Gender.female,
-        name: 'Ariana',
-        surname: 'Novsky',
+        accountType: accountType,
+        gender: gender,
+        name: name,
+        surname: surname,
       ),
     ],
     verify: (_) {
       verify(() => authService.loggedUserId$).called(1);
       verify(
         () => addUserDataUseCase.execute(
-          accountType: AccountType.runner,
           userId: 'u1',
-          name: 'Ariana',
-          surname: 'Novsky',
-          gender: Gender.female,
+          accountType: accountType,
+          gender: gender,
+          name: name,
+          surname: surname,
         ),
       ).called(1);
     },
