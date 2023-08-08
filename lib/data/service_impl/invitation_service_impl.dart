@@ -1,44 +1,68 @@
+import 'package:firebase/firebase.dart' as firebase;
+
+import '../../dependency_injection.dart';
 import '../../domain/entity/invitation.dart';
 import '../../domain/service/invitation_service.dart';
+import '../mapper/invitation_mapper.dart';
+import '../mapper/invitation_status_mapper.dart';
 
 class InvitationServiceImpl implements InvitationService {
+  final firebase.FirebaseInvitationService _firebaseInvitationService;
+
+  InvitationServiceImpl()
+      : _firebaseInvitationService =
+            getIt<firebase.FirebaseInvitationService>();
+
   @override
   Stream<List<Invitation>?> getInvitationsBySenderId({
     required String senderId,
-  }) {
-    // TODO: implement getInvitationsBySenderId
-    throw UnimplementedError();
-  }
+  }) =>
+      _firebaseInvitationService
+          .getInvitationsBySenderId(senderId: senderId)
+          .map(
+            (invitationDtos) =>
+                invitationDtos?.map(mapInvitationFromDto).toList(),
+          );
 
   @override
   Stream<List<Invitation>?> getInvitationsByReceiverId({
     required String receiverId,
-  }) {
-    // TODO: implement getInvitationsByReceiverId
-    throw UnimplementedError();
-  }
+  }) =>
+      _firebaseInvitationService
+          .getInvitationsByReceiverId(receiverId: receiverId)
+          .map(
+            (invitationDtos) =>
+                invitationDtos?.map(mapInvitationFromDto).toList(),
+          );
 
   @override
-  Future<void> sendInvitation({
+  Future<void> addInvitation({
     required String senderId,
     required String receiverId,
-  }) {
-    // TODO: implement sendInvitation
-    throw UnimplementedError();
+    required InvitationStatus status,
+  }) async {
+    await _firebaseInvitationService.addInvitation(
+      senderId: senderId,
+      receiverId: receiverId,
+      status: mapInvitationStatusToDto(status),
+    );
   }
 
   @override
   Future<void> updateInvitationStatus({
     required String invitationId,
     required InvitationStatus status,
-  }) {
-    // TODO: implement updateInvitationStatus
-    throw UnimplementedError();
+  }) async {
+    await _firebaseInvitationService.updateInvitationStatus(
+      invitationId: invitationId,
+      status: mapInvitationStatusToDto(status),
+    );
   }
 
   @override
-  Future<void> deleteInvitation({required String invitationId}) {
-    // TODO: implement deleteInvitation
-    throw UnimplementedError();
+  Future<void> deleteInvitation({required String invitationId}) async {
+    await _firebaseInvitationService.deleteInvitation(
+      invitationId: invitationId,
+    );
   }
 }

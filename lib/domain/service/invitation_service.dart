@@ -9,9 +9,10 @@ abstract interface class InvitationService {
     required String receiverId,
   });
 
-  Future<void> sendInvitation({
+  Future<void> addInvitation({
     required String senderId,
     required String receiverId,
+    required InvitationStatus status,
   });
 
   Future<void> updateInvitationStatus({

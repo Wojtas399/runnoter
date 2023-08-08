@@ -1,13 +1,13 @@
-import 'package:firebase/firebase.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:runnoter/domain/entity/invitation.dart';
+import 'package:runnoter/domain/service/invitation_service.dart';
 
-class MockFirebaseInvitationService extends Mock
-    implements FirebaseInvitationService {
-  MockFirebaseInvitationService() {
+class MockInvitationService extends Mock implements InvitationService {
+  MockInvitationService() {
     registerFallbackValue(InvitationStatus.pending);
   }
 
-  void mockGetInvitationsBySenderId({List<InvitationDto>? invitations}) {
+  void mockGetInvitationsBySenderId({List<Invitation>? invitations}) {
     when(
       () => getInvitationsBySenderId(
         senderId: any(named: 'senderId'),
@@ -15,7 +15,7 @@ class MockFirebaseInvitationService extends Mock
     ).thenAnswer((_) => Stream.value(invitations));
   }
 
-  void mockGetInvitationsByReceiverId({List<InvitationDto>? invitations}) {
+  void mockGetInvitationsByReceiverId({List<Invitation>? invitations}) {
     when(
       () => getInvitationsByReceiverId(
         receiverId: any(named: 'receiverId'),
@@ -39,7 +39,7 @@ class MockFirebaseInvitationService extends Mock
         invitationId: any(named: 'invitationId'),
         status: any(named: 'status'),
       ),
-    ).thenAnswer((_) => Future.value(_));
+    ).thenAnswer((_) => Future.value());
   }
 
   void mockDeleteInvitation() {
