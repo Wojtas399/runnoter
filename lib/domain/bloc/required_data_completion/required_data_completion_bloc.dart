@@ -75,18 +75,18 @@ class RequiredDataCompletionBloc extends BlocWithStatus<
     if (!state.canSubmit) return;
     emitLoadingStatus(emit);
     final String? loggedUserId = await _authService.loggedUserId$.first;
-    if (loggedUserId == null) {
+    final String? loggedUserEmail = await _authService.loggedUserEmail$.first;
+    if (loggedUserId == null || loggedUserEmail == null) {
       emitNoLoggedUserStatus(emit);
       return;
     }
-    //TODO: Implement email
     await _addUserDataUseCase.execute(
       userId: loggedUserId,
+      email: loggedUserEmail,
       name: state.name,
       surname: state.surname,
       gender: state.gender,
       accountType: state.accountType,
-      email: '',
     );
     emitCompleteStatus(
       emit,

@@ -14,6 +14,8 @@ import '../../../mock/domain/use_case/mock_add_user_data_use_case.dart';
 void main() {
   final authService = MockAuthService();
   final addUserDataUseCase = MockAddUserDataUseCase();
+  const String userId = 'u1';
+  const String email = 'email@example.com';
   const AccountType accountType = AccountType.coach;
   const Gender gender = Gender.female;
   const String name = 'name';
@@ -100,7 +102,7 @@ void main() {
 
   blocTest(
     'submit, '
-    'logged user does not exist, '
+    'logged user id is null, '
     'should emit no logged user status',
     build: () => RequiredDataCompletionBloc(
       state: const RequiredDataCompletionState(
@@ -108,7 +110,10 @@ void main() {
         surname: surname,
       ),
     ),
-    setUp: () => authService.mockGetLoggedUserId(),
+    setUp: () {
+      authService.mockGetLoggedUserId();
+      authService.mockGetLoggedUserEmail(userEmail: email);
+    },
     act: (bloc) => bloc.add(const RequiredDataCompletionEventSubmit()),
     expect: () => [
       const RequiredDataCompletionState(
@@ -122,7 +127,43 @@ void main() {
         surname: surname,
       ),
     ],
-    verify: (_) => verify(() => authService.loggedUserId$).called(1),
+    verify: (_) {
+      verify(() => authService.loggedUserId$).called(1);
+      verify(() => authService.loggedUserEmail$).called(1);
+    },
+  );
+
+  blocTest(
+    'submit, '
+    'logged user email is null, '
+    'should emit no logged user status',
+    build: () => RequiredDataCompletionBloc(
+      state: const RequiredDataCompletionState(
+        name: name,
+        surname: surname,
+      ),
+    ),
+    setUp: () {
+      authService.mockGetLoggedUserId(userId: userId);
+      authService.mockGetLoggedUserEmail();
+    },
+    act: (bloc) => bloc.add(const RequiredDataCompletionEventSubmit()),
+    expect: () => [
+      const RequiredDataCompletionState(
+        status: BlocStatusLoading(),
+        name: name,
+        surname: surname,
+      ),
+      const RequiredDataCompletionState(
+        status: BlocStatusNoLoggedUser(),
+        name: name,
+        surname: surname,
+      ),
+    ],
+    verify: (_) {
+      verify(() => authService.loggedUserId$).called(1);
+      verify(() => authService.loggedUserEmail$).called(1);
+    },
   );
 
   blocTest(
@@ -137,7 +178,8 @@ void main() {
       ),
     ),
     setUp: () {
-      authService.mockGetLoggedUserId(userId: 'u1');
+      authService.mockGetLoggedUserId(userId: userId);
+      authService.mockGetLoggedUserEmail(userEmail: email);
       addUserDataUseCase.mock();
     },
     act: (bloc) => bloc.add(const RequiredDataCompletionEventSubmit()),
@@ -161,14 +203,15 @@ void main() {
     ],
     verify: (_) {
       verify(() => authService.loggedUserId$).called(1);
+      verify(() => authService.loggedUserEmail$).called(1);
       verify(
         () => addUserDataUseCase.execute(
-          userId: 'u1',
+          userId: userId,
           accountType: accountType,
           gender: gender,
           name: name,
           surname: surname,
-          email: '',
+          email: email,
         ),
       ).called(1);
     },
