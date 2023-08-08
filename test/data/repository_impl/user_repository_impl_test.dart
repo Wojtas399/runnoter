@@ -154,6 +154,96 @@ void main() {
   );
 
   test(
+    'search for users, '
+    'should load matching users from firebase, add them to repository and should return all matching users from repository',
+    () async {
+      final List<User> existingUsers = [
+        createUser(
+          id: 'u1',
+          name: 'Eli',
+          surname: 'Zabeth',
+          email: 'eli@example.com',
+        ),
+        createUser(
+          id: 'u2',
+          name: 'Jean',
+          surname: 'Novsky',
+          email: 'jean@example.com',
+        ),
+        createUser(
+          id: 'u3',
+          name: 'Ste',
+          surname: 'Phanie',
+          email: 'ste@example.com',
+        ),
+      ];
+      final List<db.UserDto> loadedUserDtos = [
+        createUserDto(
+          id: 'u4',
+          name: 'Jen',
+          surname: 'Nna',
+          email: 'jen@example.com.com',
+        ),
+        createUserDto(
+          id: 'u5',
+          name: 'Bart',
+          surname: 'Osh',
+          email: 'bart@example.com',
+        ),
+      ];
+      final List<User> expectedUsers = [
+        existingUsers.first,
+        existingUsers.last,
+        createUser(
+          id: 'u5',
+          name: 'Bart',
+          surname: 'Osh',
+          email: 'bart@example.com',
+        ),
+      ];
+      dbUserService.mockSearchForUsers(userDtos: loadedUserDtos);
+      dbAppearanceSettingsService.mockLoadSettingsByUserId(
+        appearanceSettingsDto: createAppearanceSettingsDto(),
+      );
+      dbActivitiesSettingsService.mockLoadSettingsByUserId(
+        activitiesSettingsDto: createActivitiesSettingsDto(),
+      );
+      repository = UserRepositoryImpl(initialState: existingUsers);
+
+      final List<User> users = await repository.searchForUsers(
+        name: 'li',
+        surname: 'ani',
+        email: 'rt',
+      );
+      final Stream<List<User>?> repositoryState$ = repository.dataStream$;
+
+      expect(users, expectedUsers);
+      expect(
+        repositoryState$,
+        emitsInOrder(
+          [
+            [
+              ...existingUsers,
+              createUser(
+                id: 'u4',
+                name: 'Jen',
+                surname: 'Nna',
+                email: 'jen@example.com.com',
+              ),
+              createUser(
+                id: 'u5',
+                name: 'Bart',
+                surname: 'Osh',
+                email: 'bart@example.com',
+              ),
+            ]
+          ],
+        ),
+      );
+    },
+  );
+
+  test(
     'add user, '
     'should call db methods to add user personal data, appearance settings, activities settings and should add user to repository',
     () async {

@@ -47,6 +47,37 @@ class UserRepositoryImpl extends StateRepository<User>
   }
 
   @override
+  Future<List<User>> searchForUsers({
+    String? name,
+    String? surname,
+    String? email,
+  }) async {
+    await _searchForUsersInDb(name: name, surname: surname, email: email);
+    final Stream<List<User>> matchingUsers$ = dataStream$.map(
+      (List<User>? users) => [
+        ...?users?.where(
+          (User user) {
+            bool doesNameMatch = false;
+            bool doesSurnameMatch = false;
+            bool doesEmailMatch = false;
+            if (name?.isNotEmpty == true) {
+              doesNameMatch = user.name.contains(name!);
+            }
+            if (surname?.isNotEmpty == true) {
+              doesSurnameMatch = user.surname.contains(surname!);
+            }
+            if (email?.isNotEmpty == true) {
+              doesEmailMatch = user.email.contains(email!);
+            }
+            return doesNameMatch || doesSurnameMatch || doesEmailMatch;
+          },
+        ),
+      ],
+    );
+    return await matchingUsers$.first;
+  }
+
+  @override
   Future<void> addUser({required User user}) async {
     final firebase.UserDto? userDto = await _dbUserService.addUserData(
       userDto: firebase.UserDto(
@@ -196,6 +227,25 @@ class UserRepositoryImpl extends StateRepository<User>
 
   Future<void> _loadUsersByCoachIdFromDb(String coachId) async {
     final userDtos = await _dbUserService.loadUsersByCoachId(coachId: coachId);
+    final List<User> loadedUsers = await _loadUserSettings(userDtos);
+    addEntities(loadedUsers);
+  }
+
+  Future<void> _searchForUsersInDb({
+    String? name,
+    String? surname,
+    String? email,
+  }) async {
+    final userDtos = await _dbUserService.searchForUsers(
+      name: name,
+      surname: surname,
+      email: email,
+    );
+    final List<User> loadedUsers = await _loadUserSettings(userDtos);
+    addEntities(loadedUsers);
+  }
+
+  Future<List<User>> _loadUserSettings(List<firebase.UserDto> userDtos) async {
     final List<User> loadedUsers = [];
     for (final userDto in userDtos) {
       final Settings userSettings = await _loadUserSettingsFromDb(userDto.id);
@@ -205,7 +255,7 @@ class UserRepositoryImpl extends StateRepository<User>
       );
       loadedUsers.add(user);
     }
-    addEntities(loadedUsers);
+    return loadedUsers;
   }
 
   Future<Settings> _loadUserSettingsFromDb(String userId) async {

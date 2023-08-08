@@ -44,18 +44,18 @@ class UserDto extends Equatable {
           id: userId,
           accountType: mapAccountTypeFromStr(json?[_accountTypeField]),
           gender: mapGenderFromString(json?[_genderField]),
-          name: json?[_nameField],
-          surname: json?[_surnameField],
-          email: json?[_emailField],
+          name: json?[nameField],
+          surname: json?[surnameField],
+          email: json?[emailField],
           coachId: json?[coachIdField],
         );
 
   Map<String, dynamic> toJson() => {
         _accountTypeField: mapAccountTypeToStr(accountType),
         _genderField: mapGenderToString(gender),
-        _nameField: name,
-        _surnameField: surname,
-        _emailField: email,
+        nameField: name,
+        surnameField: surname,
+        emailField: email,
         coachIdField: coachId,
       };
 }
@@ -73,9 +73,9 @@ Map<String, dynamic> createUserJsonToUpdate({
       if (accountType != null)
         _accountTypeField: mapAccountTypeToStr(accountType),
       if (gender != null) _genderField: mapGenderToString(gender),
-      if (name != null) _nameField: name,
-      if (surname != null) _surnameField: surname,
-      if (email != null) _emailField: email,
+      if (name != null) nameField: name,
+      if (surname != null) surnameField: surname,
+      if (email != null) emailField: email,
       if (coachIdAsNull)
         coachIdField: null
       else if (coachId != null)
@@ -84,7 +84,7 @@ Map<String, dynamic> createUserJsonToUpdate({
 
 const String _accountTypeField = 'accountType';
 const String _genderField = 'gender';
-const String _nameField = 'name';
-const String _surnameField = 'surname';
-const String _emailField = 'email';
+const String nameField = 'name';
+const String surnameField = 'surname';
+const String emailField = 'email';
 const String coachIdField = 'coachId';

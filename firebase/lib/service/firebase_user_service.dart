@@ -14,6 +14,36 @@ class FirebaseUserService {
     return querySnapshot.docs.map((docSnapshot) => docSnapshot.data()).toList();
   }
 
+  Future<List<UserDto>> searchForUsers({
+    String? name,
+    String? surname,
+    String? email,
+  }) async {
+    final usersRef = getUsersRef();
+    List<UserDto> nameQueries = [];
+    List<UserDto> surnameQueries = [];
+    List<UserDto> emailQueries = [];
+    if (name != null) {
+      final snapshot =
+          await usersRef.where(nameField, isGreaterThanOrEqualTo: name).get();
+      nameQueries =
+          snapshot.docs.map((docSnapshot) => docSnapshot.data()).toList();
+    }
+    if (surname != null) {
+      final snapshot =
+          await usersRef.where(surname, isGreaterThanOrEqualTo: surname).get();
+      surnameQueries =
+          snapshot.docs.map((docSnapshot) => docSnapshot.data()).toList();
+    }
+    if (email != null) {
+      final snapshot =
+          await usersRef.where(emailField, isGreaterThanOrEqualTo: email).get();
+      emailQueries =
+          snapshot.docs.map((docSnapshot) => docSnapshot.data()).toList();
+    }
+    return [...nameQueries, ...surnameQueries, ...emailQueries];
+  }
+
   Future<UserDto?> addUserData({required UserDto userDto}) async {
     final userRef = getUserRef(userDto.id);
     await asyncOrSyncCall(() => userRef.set(userDto));
