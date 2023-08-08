@@ -275,11 +275,28 @@ void main() {
 
   blocTest(
     'update email, '
-    'should call method from auth service to update email and to send email verification and should emit emailChanged info',
+    'logged user id is null, '
+    'should emit no logged user status',
+    build: () => ProfileIdentitiesBloc(),
+    setUp: () => authService.mockGetLoggedUserId(),
+    act: (bloc) => bloc.add(const ProfileIdentitiesEventUpdateEmail(
+      newEmail: 'email@example.com',
+    )),
+    expect: () => [
+      const ProfileIdentitiesState(status: BlocStatusNoLoggedUser()),
+    ],
+    verify: (_) => verify(() => authService.loggedUserId$).called(1),
+  );
+
+  blocTest(
+    'update email, '
+    'should call methods from auth service to update email and to send email verification and method from user repository to update user data with new email',
     build: () => ProfileIdentitiesBloc(),
     setUp: () {
+      authService.mockGetLoggedUserId(userId: loggedUserId);
       authService.mockUpdateEmail();
       authService.mockSendEmailVerification();
+      userRepository.mockUpdateUser();
     },
     act: (bloc) => bloc.add(const ProfileIdentitiesEventUpdateEmail(
       newEmail: 'email@example.com',
@@ -293,10 +310,17 @@ void main() {
       ),
     ],
     verify: (_) {
+      verify(() => authService.loggedUserId$).called(1);
       verify(
         () => authService.updateEmail(newEmail: 'email@example.com'),
       ).called(1);
       verify(authService.sendEmailVerification).called(1);
+      verify(
+        () => userRepository.updateUser(
+          userId: loggedUserId,
+          email: 'email@example.com',
+        ),
+      ).called(1);
     },
   );
 
@@ -305,11 +329,14 @@ void main() {
     'auth exception with email already in use code, '
     'should emit error status with email already in use error',
     build: () => ProfileIdentitiesBloc(),
-    setUp: () => authService.mockUpdateEmail(
-      throwable: const AuthException(
-        code: AuthExceptionCode.emailAlreadyInUse,
-      ),
-    ),
+    setUp: () {
+      authService.mockGetLoggedUserId(userId: loggedUserId);
+      authService.mockUpdateEmail(
+        throwable: const AuthException(
+          code: AuthExceptionCode.emailAlreadyInUse,
+        ),
+      );
+    },
     act: (bloc) => bloc.add(const ProfileIdentitiesEventUpdateEmail(
       newEmail: 'email@example.com',
     )),
@@ -321,9 +348,12 @@ void main() {
         ),
       ),
     ],
-    verify: (_) => verify(
-      () => authService.updateEmail(newEmail: 'email@example.com'),
-    ).called(1),
+    verify: (_) {
+      verify(() => authService.loggedUserId$).called(1);
+      verify(
+        () => authService.updateEmail(newEmail: 'email@example.com'),
+      ).called(1);
+    },
   );
 
   blocTest(
@@ -331,11 +361,14 @@ void main() {
     'network exception with request failed code, '
     'should emit network request failed status',
     build: () => ProfileIdentitiesBloc(),
-    setUp: () => authService.mockUpdateEmail(
-      throwable: const NetworkException(
-        code: NetworkExceptionCode.requestFailed,
-      ),
-    ),
+    setUp: () {
+      authService.mockGetLoggedUserId(userId: loggedUserId);
+      authService.mockUpdateEmail(
+        throwable: const NetworkException(
+          code: NetworkExceptionCode.requestFailed,
+        ),
+      );
+    },
     act: (bloc) => bloc.add(const ProfileIdentitiesEventUpdateEmail(
       newEmail: 'email@example.com',
     )),
@@ -343,9 +376,12 @@ void main() {
       const ProfileIdentitiesState(status: BlocStatusLoading()),
       const ProfileIdentitiesState(status: BlocStatusNoInternetConnection()),
     ],
-    verify: (_) => verify(
-      () => authService.updateEmail(newEmail: 'email@example.com'),
-    ).called(1),
+    verify: (_) {
+      verify(() => authService.loggedUserId$).called(1);
+      verify(
+        () => authService.updateEmail(newEmail: 'email@example.com'),
+      ).called(1);
+    },
   );
 
   blocTest(
@@ -353,9 +389,12 @@ void main() {
     'unknown exception, '
     'should emit unknown error status and should rethrow exception',
     build: () => ProfileIdentitiesBloc(),
-    setUp: () => authService.mockUpdateEmail(
-      throwable: const UnknownException(message: 'unknown exception message'),
-    ),
+    setUp: () {
+      authService.mockGetLoggedUserId(userId: loggedUserId);
+      authService.mockUpdateEmail(
+        throwable: const UnknownException(message: 'unknown exception message'),
+      );
+    },
     act: (bloc) => bloc.add(const ProfileIdentitiesEventUpdateEmail(
       newEmail: 'email@example.com',
     )),
@@ -364,9 +403,12 @@ void main() {
       const ProfileIdentitiesState(status: BlocStatusUnknownError()),
     ],
     errors: () => ['unknown exception message'],
-    verify: (_) => verify(
-      () => authService.updateEmail(newEmail: 'email@example.com'),
-    ).called(1),
+    verify: (_) {
+      verify(() => authService.loggedUserId$).called(1);
+      verify(
+        () => authService.updateEmail(newEmail: 'email@example.com'),
+      ).called(1);
+    },
   );
 
   blocTest(

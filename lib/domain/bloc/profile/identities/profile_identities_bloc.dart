@@ -155,16 +155,23 @@ class ProfileIdentitiesBloc extends BlocWithStatus<
     ProfileIdentitiesEventUpdateEmail event,
     Emitter<ProfileIdentitiesState> emit,
   ) async {
+    final String? loggedUserId = await _authService.loggedUserId$.first;
+    if (loggedUserId == null) {
+      emitNoLoggedUserStatus(emit);
+      return;
+    }
     emitLoadingStatus(emit);
     try {
       await _authService.updateEmail(newEmail: event.newEmail);
       await _authService.sendEmailVerification();
+      await _userRepository.updateUser(
+        userId: loggedUserId,
+        email: event.newEmail,
+      );
       emitCompleteStatus(emit, info: ProfileIdentitiesBlocInfo.emailChanged);
     } on AuthException catch (authException) {
-      final ProfileIdentitiesBlocError? error =
-          _mapAuthExceptionCodeToBlocError(authException.code);
-      if (error != null) {
-        emitErrorStatus(emit, error);
+      if (authException.code == AuthExceptionCode.emailAlreadyInUse) {
+        emitErrorStatus(emit, ProfileIdentitiesBlocError.emailAlreadyInUse);
       } else {
         emitUnknownErrorStatus(emit);
         rethrow;
@@ -250,15 +257,6 @@ class ProfileIdentitiesBloc extends BlocWithStatus<
     return _authService.loggedUserId$.whereNotNull().switchMap(
           (String userId) => _userRepository.getUserById(userId: userId),
         );
-  }
-
-  ProfileIdentitiesBlocError? _mapAuthExceptionCodeToBlocError(
-    AuthExceptionCode authExceptionCode,
-  ) {
-    if (authExceptionCode == AuthExceptionCode.emailAlreadyInUse) {
-      return ProfileIdentitiesBlocError.emailAlreadyInUse;
-    }
-    return null;
   }
 
   Future<void> _deleteAllLoggedUserData(String loggedUserId) async {
