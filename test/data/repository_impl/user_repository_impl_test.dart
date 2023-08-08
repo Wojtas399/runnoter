@@ -66,6 +66,7 @@ void main() {
     () {
       const userDto = db.UserDto(
         id: userId,
+        accountType: db.AccountType.coach,
         gender: db.Gender.male,
         name: 'name',
         surname: 'surname',
@@ -83,6 +84,7 @@ void main() {
       );
       final User expectedUser = createUser(
         id: userId,
+        accountType: AccountType.coach,
         gender: Gender.male,
         name: 'name',
         surname: 'surname',
@@ -156,12 +158,13 @@ void main() {
     'should call db methods to add user personal data, appearance settings, activities settings and should add user to repository',
     () async {
       const String name = 'name';
+      const AccountType accountType = AccountType.runner;
+      const db.AccountType dbAccountType = db.AccountType.runner;
       const Gender gender = Gender.male;
       const db.Gender dbGender = db.Gender.male;
       const String surname = 'surname';
       const String email = 'email@example.com';
       const String coachId = 'c1';
-      const List<String> clientIds = ['r1', 'r2'];
       const Settings settings = Settings(
         themeMode: ThemeMode.dark,
         language: Language.english,
@@ -180,33 +183,32 @@ void main() {
       );
       final User userToAdd = createUser(
         id: userId,
+        accountType: accountType,
         gender: gender,
         name: name,
         surname: surname,
         email: email,
         settings: settings,
         coachId: coachId,
-        clientIds: clientIds,
       );
       const db.UserDto addedUserDto = db.UserDto(
         id: userId,
+        accountType: dbAccountType,
         gender: dbGender,
         name: name,
         surname: surname,
         email: email,
         coachId: coachId,
-        clientIds: clientIds,
       );
       final User addedUser = createUser(
         id: userId,
-        accountType: AccountType.coach,
+        accountType: accountType,
         gender: gender,
         name: name,
         surname: surname,
         email: email,
         settings: settings,
         coachId: coachId,
-        clientIds: clientIds,
       );
       dbUserService.mockAddUserData(addedUser: addedUserDto);
       dbAppearanceSettingsService.mockAddSettings(
@@ -224,12 +226,12 @@ void main() {
         () => dbUserService.addUserData(
           userDto: const db.UserDto(
             id: userId,
+            accountType: dbAccountType,
             gender: dbGender,
             name: name,
             surname: surname,
             email: email,
             coachId: coachId,
-            clientIds: clientIds,
           ),
         ),
       ).called(1);
@@ -323,11 +325,14 @@ void main() {
     'update user, '
     "should call db method to update user's data and should update user in repository",
     () async {
+      const AccountType newAccountType = AccountType.coach;
+      const db.AccountType newDbAccountType = db.AccountType.coach;
+      const Gender newGender = Gender.male;
+      const db.Gender newDbGender = db.Gender.male;
       const String newName = 'name';
       const String newSurname = 'surname';
       const String newEmail = 'new.email@example.com';
       const String newCoachId = 'c2';
-      const List<String> newClientIds = ['r1'];
       final Settings userSettings = createSettings(
         themeMode: ThemeMode.dark,
         language: Language.english,
@@ -342,40 +347,38 @@ void main() {
         email: 'email@example.com',
         settings: userSettings,
         coachId: 'c1',
-        clientIds: null,
       );
       const updatedUserDto = db.UserDto(
         id: userId,
-        gender: db.Gender.male,
+        accountType: newDbAccountType,
+        gender: newDbGender,
         name: newName,
         surname: newSurname,
         email: newEmail,
         coachId: newCoachId,
-        clientIds: newClientIds,
       );
       final User expectedUpdatedUser = createUser(
         id: userId,
-        accountType: AccountType.coach,
-        gender: Gender.male,
+        accountType: newAccountType,
+        gender: newGender,
         name: newName,
         surname: newSurname,
         email: newEmail,
         settings: userSettings,
         coachId: newCoachId,
-        clientIds: newClientIds,
       );
       repository = UserRepositoryImpl(initialState: [existingUser]);
       dbUserService.mockUpdateUserData(userDto: updatedUserDto);
 
       await repository.updateUser(
         userId: userId,
+        accountType: newAccountType,
+        gender: newGender,
         name: newName,
         surname: newSurname,
         email: newEmail,
         coachId: newCoachId,
         coachIdAsNull: false,
-        clientIds: newClientIds,
-        clientIdsAsNull: false,
       );
       final Stream<User?> user$ = repository.getUserById(userId: userId);
 
@@ -383,13 +386,13 @@ void main() {
       verify(
         () => dbUserService.updateUserData(
           userId: userId,
+          accountType: newDbAccountType,
+          gender: newDbGender,
           name: newName,
           surname: newSurname,
           email: newEmail,
           coachId: newCoachId,
           coachIdAsNull: false,
-          clientIds: newClientIds,
-          clientIdsAsNull: false,
         ),
       ).called(1);
     },
@@ -497,7 +500,6 @@ void main() {
         surname: 'surname',
         email: 'email@example.com',
         coachId: 'c1',
-        clientIds: ['r1'],
       );
       const ThemeMode newThemeMode = ThemeMode.dark;
       const Language newLanguage = Language.english;
@@ -515,7 +517,6 @@ void main() {
         surname: existingUser.surname,
         email: existingUser.email,
         coachId: existingUser.coachId,
-        clientIds: existingUser.clientIds,
         settings: createSettings(
           themeMode: newThemeMode,
           language: newLanguage,

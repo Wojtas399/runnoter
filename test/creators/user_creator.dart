@@ -12,7 +12,6 @@ User createUser({
   String email = '',
   Settings? settings,
   String? coachId,
-  List<String>? clientIds,
 }) =>
     User(
       id: id,
@@ -23,5 +22,4 @@ User createUser({
       email: email,
       settings: settings ?? createSettings(),
       coachId: coachId,
-      clientIds: clientIds,
     );

@@ -36,13 +36,13 @@ class MockFirebaseUserService extends Mock implements FirebaseUserService {
     when(
       () => updateUserData(
         userId: any(named: 'userId'),
+        accountType: any(named: 'accountType'),
+        gender: any(named: 'gender'),
         name: any(named: 'name'),
         surname: any(named: 'surname'),
         email: any(named: 'email'),
         coachId: any(named: 'coachId'),
         coachIdAsNull: any(named: 'coachIdAsNull'),
-        clientIds: any(named: 'clientIds'),
-        clientIdsAsNull: any(named: 'clientIdsAsNull'),
       ),
     ).thenAnswer((_) => Future.value(userDto));
   }

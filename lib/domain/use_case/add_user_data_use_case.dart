@@ -30,10 +30,6 @@ class AddUserDataUseCase {
       surname: surname,
       email: email,
       settings: defaultSettings,
-      clientIds: switch (accountType) {
-        AccountType.runner => null,
-        AccountType.coach => const [],
-      },
     );
     await _userRepository.addUser(user: userData);
   }

@@ -3,33 +3,33 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   const String id = 'u1';
+  const AccountType accountType = AccountType.runner;
   const Gender gender = Gender.male;
   const String name = 'Jack';
   const String surname = 'Gadovsky';
   const String email = 'email@example.com';
   const String coachId = 'c1';
-  const List<String> clientIds = ['r1', 'r2'];
 
   test(
     'from json, '
     'should map json to dto model',
     () {
       final Map<String, dynamic> json = {
+        'accountType': accountType.name,
         'gender': gender.name,
         'name': name,
         'surname': surname,
         'email': email,
         'coachId': coachId,
-        'clientIds': clientIds
       };
       const UserDto expectedDto = UserDto(
         id: id,
+        accountType: accountType,
         gender: gender,
         name: name,
         surname: surname,
         email: email,
         coachId: coachId,
-        clientIds: clientIds,
       );
 
       final UserDto dto = UserDto.fromJson(id, json);
@@ -44,23 +44,48 @@ void main() {
     () {
       const UserDto dto = UserDto(
         id: id,
+        accountType: accountType,
         gender: gender,
         name: name,
         surname: surname,
         email: email,
         coachId: coachId,
-        clientIds: clientIds,
       );
+      final Map<String, dynamic> expectedJson = {
+        'accountType': accountType.name,
+        'gender': gender.name,
+        'name': name,
+        'surname': surname,
+        'email': email,
+        'coachId': coachId,
+      };
+
+      final Map<String, dynamic> json = dto.toJson();
+
+      expect(json, expectedJson);
+    },
+  );
+
+  test(
+    'create json to update, '
+    'account type is null, '
+    'should not include account type in json',
+    () {
       final Map<String, dynamic> expectedJson = {
         'gender': gender.name,
         'name': name,
         'surname': surname,
         'email': email,
         'coachId': coachId,
-        'clientIds': clientIds,
       };
 
-      final Map<String, dynamic> json = dto.toJson();
+      final Map<String, dynamic> json = createUserJsonToUpdate(
+        gender: gender,
+        name: name,
+        surname: surname,
+        email: email,
+        coachId: coachId,
+      );
 
       expect(json, expectedJson);
     },
@@ -72,19 +97,19 @@ void main() {
     'should not include gender in json',
     () {
       final Map<String, dynamic> expectedJson = {
+        'accountType': accountType.name,
         'name': name,
         'surname': surname,
         'email': email,
         'coachId': coachId,
-        'clientIds': clientIds,
       };
 
       final Map<String, dynamic> json = createUserJsonToUpdate(
+        accountType: accountType,
         name: name,
         surname: surname,
         email: email,
         coachId: coachId,
-        clientIds: clientIds,
       );
 
       expect(json, expectedJson);
@@ -97,19 +122,19 @@ void main() {
     'should not include name in json',
     () {
       final Map<String, dynamic> expectedJson = {
+        'accountType': accountType.name,
         'gender': gender.name,
         'surname': surname,
         'email': email,
         'coachId': coachId,
-        'clientIds': clientIds,
       };
 
       final Map<String, dynamic> json = createUserJsonToUpdate(
+        accountType: accountType,
         gender: gender,
         surname: surname,
         email: email,
         coachId: coachId,
-        clientIds: clientIds,
       );
 
       expect(json, expectedJson);
@@ -122,19 +147,19 @@ void main() {
     'should not include surname in json',
     () {
       final Map<String, dynamic> expectedJson = {
+        'accountType': accountType.name,
         'gender': gender.name,
         'name': name,
         'email': email,
         'coachId': coachId,
-        'clientIds': clientIds,
       };
 
       final Map<String, dynamic> json = createUserJsonToUpdate(
+        accountType: accountType,
         gender: gender,
         name: name,
         email: email,
         coachId: coachId,
-        clientIds: clientIds,
       );
 
       expect(json, expectedJson);
@@ -147,19 +172,19 @@ void main() {
     'should not include email in json',
     () {
       final Map<String, dynamic> expectedJson = {
+        'accountType': accountType.name,
         'gender': gender.name,
         'name': name,
         'surname': surname,
         'coachId': coachId,
-        'clientIds': clientIds,
       };
 
       final Map<String, dynamic> json = createUserJsonToUpdate(
+        accountType: accountType,
         gender: gender,
         name: name,
         surname: surname,
         coachId: coachId,
-        clientIds: clientIds,
       );
 
       expect(json, expectedJson);
@@ -172,19 +197,19 @@ void main() {
     'should not include coach id in json',
     () {
       final Map<String, dynamic> expectedJson = {
+        'accountType': accountType.name,
         'gender': gender.name,
         'name': name,
         'surname': surname,
         'email': email,
-        'clientIds': clientIds,
       };
 
       final Map<String, dynamic> json = createUserJsonToUpdate(
+        accountType: accountType,
         gender: gender,
         name: name,
         surname: surname,
         email: email,
-        clientIds: clientIds,
       );
 
       expect(json, expectedJson);
@@ -197,75 +222,22 @@ void main() {
     'should include coach id param with null value',
     () {
       final Map<String, dynamic> expectedJson = {
+        'accountType': accountType.name,
         'gender': gender.name,
         'name': name,
         'surname': surname,
         'email': email,
         'coachId': null,
-        'clientIds': clientIds,
       };
 
       final Map<String, dynamic> json = createUserJsonToUpdate(
+        accountType: accountType,
         gender: gender,
         name: name,
         surname: surname,
         email: email,
         coachId: coachId,
         coachIdAsNull: true,
-        clientIds: clientIds,
-      );
-
-      expect(json, expectedJson);
-    },
-  );
-
-  test(
-    'create json to update, '
-    'clientIds is null, '
-    'should not include clientIds in json',
-    () {
-      final Map<String, dynamic> expectedJson = {
-        'gender': gender.name,
-        'name': name,
-        'surname': surname,
-        'email': email,
-        'coachId': coachId,
-      };
-
-      final Map<String, dynamic> json = createUserJsonToUpdate(
-        gender: gender,
-        name: name,
-        surname: surname,
-        email: email,
-        coachId: coachId,
-      );
-
-      expect(json, expectedJson);
-    },
-  );
-
-  test(
-    'create json to update, '
-    'clientIds as null set to true, '
-    'should include clientIds param with null value',
-    () {
-      final Map<String, dynamic> expectedJson = {
-        'gender': gender.name,
-        'name': name,
-        'surname': surname,
-        'email': email,
-        'coachId': coachId,
-        'clientIds': null,
-      };
-
-      final Map<String, dynamic> json = createUserJsonToUpdate(
-        gender: gender,
-        name: name,
-        surname: surname,
-        email: email,
-        coachId: coachId,
-        clientIds: clientIds,
-        clientIdsAsNull: true,
       );
 
       expect(json, expectedJson);

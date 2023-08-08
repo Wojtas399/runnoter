@@ -23,25 +23,23 @@ class FirebaseUserService {
 
   Future<UserDto?> updateUserData({
     required String userId,
+    AccountType? accountType,
     Gender? gender,
     String? name,
     String? surname,
     String? email,
     String? coachId,
     bool coachIdAsNull = false,
-    List<String>? clientIds,
-    bool clientIdsAsNull = false,
   }) async {
     final userRef = getUserRef(userId);
     final userJsonToUpdate = createUserJsonToUpdate(
+      accountType: accountType,
       gender: gender,
       name: name,
       surname: surname,
       email: email,
       coachId: coachId,
       coachIdAsNull: coachIdAsNull,
-      clientIds: clientIds,
-      clientIdsAsNull: clientIdsAsNull,
     );
     await asyncOrSyncCall(() => userRef.update(userJsonToUpdate));
     final user = await userRef.get();

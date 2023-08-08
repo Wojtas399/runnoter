@@ -13,7 +13,6 @@ class User extends Entity {
   final String email;
   final Settings settings;
   final String? coachId;
-  final List<String>? clientIds;
 
   const User({
     required super.id,
@@ -24,7 +23,6 @@ class User extends Entity {
     required this.email,
     required this.settings,
     this.coachId,
-    this.clientIds,
   });
 
   @override
@@ -36,6 +34,5 @@ class User extends Entity {
         email,
         settings,
         coachId,
-        clientIds,
       ];
 }

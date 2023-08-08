@@ -10,14 +10,13 @@ abstract class UserRepository {
 
   Future<void> updateUser({
     required String userId,
+    AccountType? accountType,
     Gender? gender,
     String? name,
     String? surname,
     String? email,
     String? coachId,
     bool coachIdAsNull = false,
-    List<String>? clientIds,
-    bool clientIdsAsNull = false,
   });
 
   Future<void> updateUserSettings({

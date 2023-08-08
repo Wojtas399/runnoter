@@ -7,6 +7,7 @@ import '../../domain/entity/settings.dart' as settings;
 import '../../domain/entity/settings.dart';
 import '../../domain/entity/user.dart';
 import '../../domain/repository/user_repository.dart';
+import '../mapper/account_type_mapper.dart';
 import '../mapper/gender_mapper.dart';
 import '../mapper/settings_mapper.dart';
 import '../mapper/user_mapper.dart';
@@ -50,12 +51,12 @@ class UserRepositoryImpl extends StateRepository<User>
     final firebase.UserDto? userDto = await _dbUserService.addUserData(
       userDto: firebase.UserDto(
         id: user.id,
+        accountType: mapAccountTypeToDto(user.accountType),
         gender: mapGenderToDto(user.gender),
         name: user.name,
         surname: user.surname,
         email: user.email,
         coachId: user.coachId,
-        clientIds: user.clientIds,
       ),
     );
     final appearanceSettingsDto =
@@ -88,28 +89,27 @@ class UserRepositoryImpl extends StateRepository<User>
   @override
   Future<void> updateUser({
     required String userId,
+    AccountType? accountType,
     Gender? gender,
     String? name,
     String? surname,
     String? email,
     String? coachId,
     bool coachIdAsNull = false,
-    List<String>? clientIds,
-    bool clientIdsAsNull = false,
   }) async {
     final Stream<User?> user$ = getUserById(userId: userId);
     await for (final user in user$) {
       if (user == null) return;
       final updatedUserDto = await _dbUserService.updateUserData(
         userId: userId,
+        accountType:
+            accountType != null ? mapAccountTypeToDto(accountType) : null,
         gender: gender != null ? mapGenderToDto(gender) : null,
         name: name,
         surname: surname,
         email: email,
         coachId: coachId,
         coachIdAsNull: coachIdAsNull,
-        clientIds: clientIds,
-        clientIdsAsNull: clientIdsAsNull,
       );
       if (updatedUserDto == null) return;
       final User updatedUser = mapUserFromDto(
@@ -169,7 +169,6 @@ class UserRepositoryImpl extends StateRepository<User>
         email: user.email,
         settings: updatedSettings,
         coachId: user.coachId,
-        clientIds: user.clientIds,
       );
       updateEntity(updatedUser);
       return;
