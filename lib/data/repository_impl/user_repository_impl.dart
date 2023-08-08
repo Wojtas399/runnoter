@@ -77,13 +77,13 @@ class UserRepositoryImpl extends StateRepository<User>
     addEntity(addedUser);
   }
 
-  //TODO: Add email parameter
   @override
   Future<void> updateUser({
     required String userId,
     Gender? gender,
     String? name,
     String? surname,
+    String? email,
     String? coachId,
     bool coachIdAsNull = false,
     List<String>? clientIds,
@@ -97,6 +97,7 @@ class UserRepositoryImpl extends StateRepository<User>
         gender: gender != null ? mapGenderToDto(gender) : null,
         name: name,
         surname: surname,
+        email: email,
         coachId: coachId,
         coachIdAsNull: coachIdAsNull,
         clientIds: clientIds,
@@ -151,14 +152,13 @@ class UserRepositoryImpl extends StateRepository<User>
             ? mapPaceUnitFromDb(newActivitiesSettingsDto.paceUnit)
             : user.settings.paceUnit,
       );
-      //TODO: Implement email
       final User updatedUser = User(
         id: user.id,
         accountType: user.accountType,
         gender: user.gender,
         name: user.name,
         surname: user.surname,
-        email: '',
+        email: user.email,
         settings: updatedSettings,
         coachId: user.coachId,
         clientIds: user.clientIds,

@@ -11,6 +11,7 @@ abstract class UserRepository {
     Gender? gender,
     String? name,
     String? surname,
+    String? email,
     String? coachId,
     bool coachIdAsNull = false,
     List<String>? clientIds,

@@ -15,12 +15,12 @@ class FirebaseUserService {
     return snapshot.data();
   }
 
-  //TODO: Add email parameter
   Future<UserDto?> updateUserData({
     required String userId,
     Gender? gender,
     String? name,
     String? surname,
+    String? email,
     String? coachId,
     bool coachIdAsNull = false,
     List<String>? clientIds,
@@ -31,6 +31,7 @@ class FirebaseUserService {
       gender: gender,
       name: name,
       surname: surname,
+      email: email,
       coachId: coachId,
       coachIdAsNull: coachIdAsNull,
       clientIds: clientIds,

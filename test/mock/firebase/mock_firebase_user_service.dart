@@ -4,6 +4,10 @@ import 'package:mocktail/mocktail.dart';
 class FakeUserDto extends Fake implements UserDto {}
 
 class MockFirebaseUserService extends Mock implements FirebaseUserService {
+  MockFirebaseUserService() {
+    registerFallbackValue(FakeUserDto());
+  }
+
   void mockLoadUserById({UserDto? userDto}) {
     when(
       () => loadUserById(
@@ -13,7 +17,6 @@ class MockFirebaseUserService extends Mock implements FirebaseUserService {
   }
 
   void mockAddUserData({UserDto? addedUser}) {
-    _mockUserDto();
     when(
       () => addUserData(
         userDto: any(named: 'userDto'),
@@ -27,6 +30,7 @@ class MockFirebaseUserService extends Mock implements FirebaseUserService {
         userId: any(named: 'userId'),
         name: any(named: 'name'),
         surname: any(named: 'surname'),
+        email: any(named: 'email'),
         coachId: any(named: 'coachId'),
         coachIdAsNull: any(named: 'coachIdAsNull'),
         clientIds: any(named: 'clientIds'),
@@ -41,9 +45,5 @@ class MockFirebaseUserService extends Mock implements FirebaseUserService {
         userId: any(named: 'userId'),
       ),
     ).thenAnswer((_) => Future.value());
-  }
-
-  void _mockUserDto() {
-    registerFallbackValue(FakeUserDto());
   }
 }

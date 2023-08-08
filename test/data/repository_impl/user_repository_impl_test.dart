@@ -282,6 +282,7 @@ void main() {
     () async {
       const String newName = 'name';
       const String newSurname = 'surname';
+      const String newEmail = 'new.email@example.com';
       const String newCoachId = 'c2';
       const List<String> newClientIds = ['r1'];
       final Settings userSettings = createSettings(
@@ -295,6 +296,7 @@ void main() {
         accountType: AccountType.runner,
         name: 'username',
         surname: 'surname1',
+        email: 'email@example.com',
         settings: userSettings,
         coachId: 'c1',
         clientIds: null,
@@ -304,7 +306,7 @@ void main() {
         gender: db.Gender.male,
         name: newName,
         surname: newSurname,
-        email: '',
+        email: newEmail,
         coachId: newCoachId,
         clientIds: newClientIds,
       );
@@ -314,6 +316,7 @@ void main() {
         gender: Gender.male,
         name: newName,
         surname: newSurname,
+        email: newEmail,
         settings: userSettings,
         coachId: newCoachId,
         clientIds: newClientIds,
@@ -325,6 +328,7 @@ void main() {
         userId: userId,
         name: newName,
         surname: newSurname,
+        email: newEmail,
         coachId: newCoachId,
         coachIdAsNull: false,
         clientIds: newClientIds,
@@ -338,6 +342,7 @@ void main() {
           userId: userId,
           name: newName,
           surname: newSurname,
+          email: newEmail,
           coachId: newCoachId,
           coachIdAsNull: false,
           clientIds: newClientIds,
@@ -394,8 +399,7 @@ void main() {
 
   test(
     'update user settings, '
-    'user exists in state, '
-    'db methods do not return updated appearance and workout settings, '
+    'db methods do not return updated appearance and activities settings, '
     'should not update user in repository',
     () async {
       final User existingUser = createUser(id: userId);
@@ -409,9 +413,7 @@ void main() {
       const db.PaceUnit newDbPaceUnit = db.PaceUnit.minutesPerMile;
       dbAppearanceSettingsService.mockUpdateSettings();
       dbActivitiesSettingsService.mockUpdateSettings();
-      repository = UserRepositoryImpl(
-        initialState: [existingUser],
-      );
+      repository = UserRepositoryImpl(initialState: [existingUser]);
 
       await repository.updateUserSettings(
         userId: userId,
@@ -450,6 +452,7 @@ void main() {
         gender: Gender.male,
         name: 'name',
         surname: 'surname',
+        email: 'email@example.com',
         coachId: 'c1',
         clientIds: ['r1'],
       );
@@ -467,6 +470,7 @@ void main() {
         gender: existingUser.gender,
         name: existingUser.name,
         surname: existingUser.surname,
+        email: existingUser.email,
         coachId: existingUser.coachId,
         clientIds: existingUser.clientIds,
         settings: createSettings(
