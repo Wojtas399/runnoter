@@ -38,6 +38,14 @@ class UserRepositoryImpl extends StateRepository<User>
   }
 
   @override
+  Stream<List<User>?> getUsersByCoachId({required String coachId}) async* {
+    await _loadUsersByCoachIdFromDb(coachId);
+    await for (final users in dataStream$) {
+      yield users?.where((User user) => user.coachId == coachId).toList();
+    }
+  }
+
+  @override
   Future<void> addUser({required User user}) async {
     final firebase.UserDto? userDto = await _dbUserService.addUserData(
       userDto: firebase.UserDto(
@@ -181,22 +189,38 @@ class UserRepositoryImpl extends StateRepository<User>
   Future<User?> _loadUserFromDb(String userId) async {
     final userDto = await _dbUserService.loadUserById(userId: userId);
     if (userDto == null) return null;
+    final Settings settings = await _loadUserSettingsFromDb(userId);
+    final User user = mapUserFromDto(userDto: userDto, settings: settings);
+    addEntity(user);
+    return user;
+  }
+
+  Future<void> _loadUsersByCoachIdFromDb(String coachId) async {
+    final userDtos = await _dbUserService.loadUsersByCoachId(coachId: coachId);
+    final List<User> loadedUsers = [];
+    for (final userDto in userDtos) {
+      final Settings userSettings = await _loadUserSettingsFromDb(userDto.id);
+      final User user = mapUserFromDto(
+        userDto: userDto,
+        settings: userSettings,
+      );
+      loadedUsers.add(user);
+    }
+    addEntities(loadedUsers);
+  }
+
+  Future<Settings> _loadUserSettingsFromDb(String userId) async {
     final firebase.AppearanceSettingsDto? appearanceSettingsDto =
         await _dbAppearanceSettingsService.loadSettingsByUserId(userId: userId);
     final firebase.ActivitiesSettingsDto? activitiesSettingsDto =
         await _dbActivitiesSettingsService.loadSettingsByUserId(userId: userId);
-    if (appearanceSettingsDto != null && activitiesSettingsDto != null) {
-      final User user = mapUserFromDto(
-        userDto: userDto,
-        settings: mapSettingsFromDto(
-          appearanceSettingsDto: appearanceSettingsDto,
-          activitiesSettingsDto: activitiesSettingsDto,
-        ),
-      );
-      addEntity(user);
-      return user;
+    if (appearanceSettingsDto == null || activitiesSettingsDto == null) {
+      throw '[UserRepository] Cannot load user settings';
     }
-    return null;
+    return mapSettingsFromDto(
+      appearanceSettingsDto: appearanceSettingsDto,
+      activitiesSettingsDto: activitiesSettingsDto,
+    );
   }
 
   Future<firebase.AppearanceSettingsDto?> _updateAppearanceSettings(

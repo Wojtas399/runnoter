@@ -4,6 +4,8 @@ import '../entity/user.dart';
 abstract class UserRepository {
   Stream<User?> getUserById({required String userId});
 
+  Stream<List<User>?> getUsersByCoachId({required String coachId});
+
   Future<void> addUser({required User user});
 
   Future<void> updateUser({

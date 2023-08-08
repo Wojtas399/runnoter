@@ -8,6 +8,12 @@ class FirebaseUserService {
     return user.data();
   }
 
+  Future<List<UserDto>> loadUsersByCoachId({required String coachId}) async {
+    final querySnapshot =
+        await getUsersRef().where(coachIdField, isEqualTo: coachId).get();
+    return querySnapshot.docs.map((docSnapshot) => docSnapshot.data()).toList();
+  }
+
   Future<UserDto?> addUserData({required UserDto userDto}) async {
     final userRef = getUserRef(userDto.id);
     await asyncOrSyncCall(() => userRef.set(userDto));
