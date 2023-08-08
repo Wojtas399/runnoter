@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 import '../mapper/account_type_mapper.dart';
+import '../mapper/gender_mapper.dart';
 
 enum AccountType { runner, coach }
 
@@ -42,8 +43,7 @@ class UserDto extends Equatable {
   ) : this(
           id: id,
           accountType: mapAccountTypeFromStr(json?[_accountTypeField]),
-          gender: Gender.values.byName(json?[_genderField]),
-          //TODO: Write function to map gender type
+          gender: mapGenderFromString(json?[_genderField]),
           name: json?[_nameField],
           surname: json?[_surnameField],
           email: json?[_emailField],
@@ -52,7 +52,7 @@ class UserDto extends Equatable {
 
   Map<String, dynamic> toJson() => {
         _accountTypeField: mapAccountTypeToStr(accountType),
-        _genderField: gender.name,
+        _genderField: mapGenderToString(gender),
         _nameField: name,
         _surnameField: surname,
         _emailField: email,
@@ -72,7 +72,7 @@ Map<String, dynamic> createUserJsonToUpdate({
     {
       if (accountType != null)
         _accountTypeField: mapAccountTypeToStr(accountType),
-      if (gender != null) _genderField: gender.name,
+      if (gender != null) _genderField: mapGenderToString(gender),
       if (name != null) _nameField: name,
       if (surname != null) _surnameField: surname,
       if (email != null) _emailField: email,
