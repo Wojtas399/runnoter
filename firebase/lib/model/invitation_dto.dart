@@ -25,18 +25,18 @@ class InvitationDto extends Equatable {
     required Map<String, dynamic>? json,
   }) : this(
           id: invitationId,
-          senderId: json?[_senderIdField],
-          receiverId: json?[_receiverIdField],
+          senderId: json?[senderIdField],
+          receiverId: json?[receiverIdField],
           status: mapInvitationStatusFromString(json?[invitationStatusField]),
         );
 
   Map<String, dynamic> toJson() => {
-        _senderIdField: senderId,
-        _receiverIdField: receiverId,
+        senderIdField: senderId,
+        receiverIdField: receiverId,
         invitationStatusField: mapInvitationStatusToString(status),
       };
 }
 
-const String _senderIdField = 'senderId';
-const String _receiverIdField = 'receiverId';
+const String senderIdField = 'senderId';
+const String receiverIdField = 'receiverId';
 const String invitationStatusField = 'status';

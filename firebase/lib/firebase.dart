@@ -23,6 +23,7 @@ export 'service/firebase_appearance_settings_service.dart';
 export 'service/firebase_auth_service.dart';
 export 'service/firebase_blood_test_service.dart';
 export 'service/firebase_health_measurement_service.dart';
+export 'service/firebase_invitation_service.dart';
 export 'service/firebase_race_service.dart';
 export 'service/firebase_user_service.dart';
 export 'service/firebase_workout_service.dart';

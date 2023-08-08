@@ -52,6 +52,7 @@ void _registerFirebaseServices() {
   getIt.registerFactory(() => FirebaseHealthMeasurementService());
   getIt.registerFactory(() => FirebaseBloodTestService());
   getIt.registerFactory(() => FirebaseRaceService());
+  getIt.registerFactory(() => FirebaseInvitationService());
 }
 
 void _registerServices() {
