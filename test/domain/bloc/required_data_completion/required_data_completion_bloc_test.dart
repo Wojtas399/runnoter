@@ -168,6 +168,7 @@ void main() {
           gender: gender,
           name: name,
           surname: surname,
+          email: '',
         ),
       ).called(1);
     },

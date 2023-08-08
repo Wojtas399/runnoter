@@ -135,6 +135,7 @@ class SignUpBloc extends BlocWithStatus<SignUpEvent, SignUpState,
       gender: state.gender,
       name: state.name,
       surname: state.surname,
+      email: state.email,
     );
   }
 }

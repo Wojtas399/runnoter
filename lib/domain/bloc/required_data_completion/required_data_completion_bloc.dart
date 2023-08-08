@@ -79,12 +79,14 @@ class RequiredDataCompletionBloc extends BlocWithStatus<
       emitNoLoggedUserStatus(emit);
       return;
     }
+    //TODO: Implement email
     await _addUserDataUseCase.execute(
       userId: loggedUserId,
       name: state.name,
       surname: state.surname,
       gender: state.gender,
       accountType: state.accountType,
+      email: '',
     );
     emitCompleteStatus(
       emit,

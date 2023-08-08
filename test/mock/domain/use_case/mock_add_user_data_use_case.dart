@@ -16,6 +16,7 @@ class MockAddUserDataUseCase extends Mock implements AddUserDataUseCase {
         name: any(named: 'name'),
         surname: any(named: 'surname'),
         gender: any(named: 'gender'),
+        email: any(named: 'email'),
       ),
     ).thenAnswer((_) => Future.value());
   }

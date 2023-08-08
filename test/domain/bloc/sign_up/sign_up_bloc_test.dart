@@ -203,6 +203,7 @@ void main() {
           gender: gender,
           name: name,
           surname: surname,
+          email: email,
         ),
       ).called(1);
       verify(authService.sendEmailVerification).called(1);

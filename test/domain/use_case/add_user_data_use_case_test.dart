@@ -11,9 +11,10 @@ import '../../mock/domain/repository/mock_user_repository.dart';
 void main() {
   final userRepository = MockUserRepository();
   const String userId = 'u1';
+  const Gender gender = Gender.male;
   const String name = 'Jack';
   const String surname = 'Novsky';
-  const Gender gender = Gender.male;
+  const String email = 'email@example.com';
   const defaultSettings = Settings(
     themeMode: ThemeMode.system,
     language: Language.english,
@@ -45,7 +46,7 @@ void main() {
         gender: gender,
         name: name,
         surname: surname,
-        email: '',
+        email: email,
         settings: defaultSettings,
         clientIds: [],
       );
@@ -56,6 +57,7 @@ void main() {
         userId: userId,
         name: name,
         surname: surname,
+        email: email,
         gender: gender,
       );
 
@@ -74,7 +76,7 @@ void main() {
         gender: gender,
         name: name,
         surname: surname,
-        email: '',
+        email: email,
         settings: defaultSettings,
         clientIds: null,
       );
@@ -85,6 +87,7 @@ void main() {
         userId: userId,
         name: name,
         surname: surname,
+        email: email,
         gender: gender,
       );
 
