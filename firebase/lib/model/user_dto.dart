@@ -7,6 +7,7 @@ class UserDto extends Equatable {
   final Gender gender;
   final String name;
   final String surname;
+  final String email;
   final String? coachId;
   final List<String>? clientIds;
 
@@ -15,6 +16,7 @@ class UserDto extends Equatable {
     required this.gender,
     required this.name,
     required this.surname,
+    required this.email,
     this.coachId,
     this.clientIds,
   });
@@ -25,6 +27,7 @@ class UserDto extends Equatable {
         gender,
         name,
         surname,
+        email,
         coachId,
         clientIds,
       ];
@@ -37,6 +40,7 @@ class UserDto extends Equatable {
           gender: Gender.values.byName(json?[_genderField]),
           name: json?[_nameField],
           surname: json?[_surnameField],
+          email: json?[_emailField],
           coachId: json?[coachIdField],
           clientIds: (json?[_clientIdsField] as List?)
               ?.map((e) => e.toString())
@@ -47,6 +51,7 @@ class UserDto extends Equatable {
         _genderField: gender.name,
         _nameField: name,
         _surnameField: surname,
+        _emailField: email,
         coachIdField: coachId,
         _clientIdsField: clientIds,
       };
@@ -56,6 +61,7 @@ Map<String, dynamic> createUserJsonToUpdate({
   Gender? gender,
   String? name,
   String? surname,
+  String? email,
   String? coachId,
   bool coachIdAsNull = false,
   List<String>? clientIds,
@@ -65,6 +71,7 @@ Map<String, dynamic> createUserJsonToUpdate({
       if (gender != null) _genderField: gender.name,
       if (name != null) _nameField: name,
       if (surname != null) _surnameField: surname,
+      if (email != null) _emailField: email,
       if (coachIdAsNull)
         coachIdField: null
       else if (coachId != null)
@@ -78,5 +85,6 @@ Map<String, dynamic> createUserJsonToUpdate({
 const String _genderField = 'gender';
 const String _nameField = 'name';
 const String _surnameField = 'surname';
+const String _emailField = 'email';
 const String coachIdField = 'coachId';
 const String _clientIdsField = 'clientIds';

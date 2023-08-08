@@ -45,6 +45,7 @@ class UserRepositoryImpl extends StateRepository<User>
         gender: mapGenderToDto(user.gender),
         name: user.name,
         surname: user.surname,
+        email: user.email,
         coachId: user.coachId,
         clientIds: user.clientIds,
       ),
@@ -76,6 +77,7 @@ class UserRepositoryImpl extends StateRepository<User>
     addEntity(addedUser);
   }
 
+  //TODO: Add email parameter
   @override
   Future<void> updateUser({
     required String userId,

@@ -5,6 +5,7 @@ UserDto createUserDto({
   Gender gender = Gender.male,
   String name = '',
   String surname = '',
+  String email = '',
   String? coachId,
   List<String>? clientIds,
 }) =>
@@ -13,6 +14,7 @@ UserDto createUserDto({
       gender: gender,
       name: name,
       surname: surname,
+      email: email,
       coachId: coachId,
       clientIds: clientIds,
     );

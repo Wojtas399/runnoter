@@ -66,6 +66,7 @@ void main() {
         gender: db.Gender.male,
         name: 'name',
         surname: 'surname',
+        email: 'email@example.com',
       );
       const appearanceSettingsDto = db.AppearanceSettingsDto(
         userId: userId,
@@ -82,6 +83,7 @@ void main() {
         gender: Gender.male,
         name: 'name',
         surname: 'surname',
+        email: 'email@example.com',
         settings: createSettings(
           themeMode: ThemeMode.light,
           language: Language.polish,
@@ -114,6 +116,7 @@ void main() {
       const Gender gender = Gender.male;
       const db.Gender dbGender = db.Gender.male;
       const String surname = 'surname';
+      const String email = 'email@example.com';
       const String coachId = 'c1';
       const List<String> clientIds = ['r1', 'r2'];
       const Settings settings = Settings(
@@ -137,6 +140,7 @@ void main() {
         gender: gender,
         name: name,
         surname: surname,
+        email: email,
         settings: settings,
         coachId: coachId,
         clientIds: clientIds,
@@ -146,6 +150,7 @@ void main() {
         gender: dbGender,
         name: name,
         surname: surname,
+        email: email,
         coachId: coachId,
         clientIds: clientIds,
       );
@@ -155,6 +160,7 @@ void main() {
         gender: gender,
         name: name,
         surname: surname,
+        email: email,
         settings: settings,
         coachId: coachId,
         clientIds: clientIds,
@@ -178,6 +184,7 @@ void main() {
             gender: dbGender,
             name: name,
             surname: surname,
+            email: email,
             coachId: coachId,
             clientIds: clientIds,
           ),
@@ -297,6 +304,7 @@ void main() {
         gender: db.Gender.male,
         name: newName,
         surname: newSurname,
+        email: '',
         coachId: newCoachId,
         clientIds: newClientIds,
       );

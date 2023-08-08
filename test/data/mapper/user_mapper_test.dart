@@ -10,6 +10,7 @@ void main() {
   const Gender gender = Gender.male;
   const String name = 'name';
   const String surname = 'surname';
+  const String email = 'email@example.com';
   const String coachId = 'c1';
   const Settings settings = Settings(
     themeMode: ThemeMode.dark,
@@ -28,6 +29,7 @@ void main() {
         gender: firebaseGender,
         name: name,
         surname: surname,
+        email: email,
         coachId: coachId,
       );
       const User expectedUser = User(
@@ -36,7 +38,7 @@ void main() {
         gender: gender,
         name: name,
         surname: surname,
-        email: '',
+        email: email,
         settings: settings,
         coachId: coachId,
       );
@@ -58,6 +60,7 @@ void main() {
         gender: firebaseGender,
         name: name,
         surname: surname,
+        email: email,
         coachId: coachId,
         clientIds: clientIds,
       );
@@ -67,7 +70,7 @@ void main() {
         gender: gender,
         name: name,
         surname: surname,
-        email: '',
+        email: email,
         settings: settings,
         coachId: coachId,
         clientIds: clientIds,

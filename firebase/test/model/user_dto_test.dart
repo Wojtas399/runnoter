@@ -6,6 +6,7 @@ void main() {
   const Gender gender = Gender.male;
   const String name = 'Jack';
   const String surname = 'Gadovsky';
+  const String email = 'email@example.com';
   const String coachId = 'c1';
   const List<String> clientIds = ['r1', 'r2'];
 
@@ -17,6 +18,7 @@ void main() {
         'gender': gender.name,
         'name': name,
         'surname': surname,
+        'email': email,
         'coachId': coachId,
         'clientIds': clientIds
       };
@@ -25,6 +27,7 @@ void main() {
         gender: gender,
         name: name,
         surname: surname,
+        email: email,
         coachId: coachId,
         clientIds: clientIds,
       );
@@ -44,6 +47,7 @@ void main() {
         gender: gender,
         name: name,
         surname: surname,
+        email: email,
         coachId: coachId,
         clientIds: clientIds,
       );
@@ -51,6 +55,7 @@ void main() {
         'gender': gender.name,
         'name': name,
         'surname': surname,
+        'email': email,
         'coachId': coachId,
         'clientIds': clientIds,
       };
@@ -69,6 +74,7 @@ void main() {
       final Map<String, dynamic> expectedJson = {
         'name': name,
         'surname': surname,
+        'email': email,
         'coachId': coachId,
         'clientIds': clientIds,
       };
@@ -76,6 +82,7 @@ void main() {
       final Map<String, dynamic> json = createUserJsonToUpdate(
         name: name,
         surname: surname,
+        email: email,
         coachId: coachId,
         clientIds: clientIds,
       );
@@ -92,6 +99,7 @@ void main() {
       final Map<String, dynamic> expectedJson = {
         'gender': gender.name,
         'surname': surname,
+        'email': email,
         'coachId': coachId,
         'clientIds': clientIds,
       };
@@ -99,6 +107,7 @@ void main() {
       final Map<String, dynamic> json = createUserJsonToUpdate(
         gender: gender,
         surname: surname,
+        email: email,
         coachId: coachId,
         clientIds: clientIds,
       );
@@ -115,6 +124,7 @@ void main() {
       final Map<String, dynamic> expectedJson = {
         'gender': gender.name,
         'name': name,
+        'email': email,
         'coachId': coachId,
         'clientIds': clientIds,
       };
@@ -122,6 +132,32 @@ void main() {
       final Map<String, dynamic> json = createUserJsonToUpdate(
         gender: gender,
         name: name,
+        email: email,
+        coachId: coachId,
+        clientIds: clientIds,
+      );
+
+      expect(json, expectedJson);
+    },
+  );
+
+  test(
+    'create json to update, '
+    'email is null, '
+    'should not include email in json',
+    () {
+      final Map<String, dynamic> expectedJson = {
+        'gender': gender.name,
+        'name': name,
+        'surname': surname,
+        'coachId': coachId,
+        'clientIds': clientIds,
+      };
+
+      final Map<String, dynamic> json = createUserJsonToUpdate(
+        gender: gender,
+        name: name,
+        surname: surname,
         coachId: coachId,
         clientIds: clientIds,
       );
@@ -139,6 +175,7 @@ void main() {
         'gender': gender.name,
         'name': name,
         'surname': surname,
+        'email': email,
         'clientIds': clientIds,
       };
 
@@ -146,6 +183,7 @@ void main() {
         gender: gender,
         name: name,
         surname: surname,
+        email: email,
         clientIds: clientIds,
       );
 
@@ -162,6 +200,7 @@ void main() {
         'gender': gender.name,
         'name': name,
         'surname': surname,
+        'email': email,
         'coachId': null,
         'clientIds': clientIds,
       };
@@ -170,6 +209,7 @@ void main() {
         gender: gender,
         name: name,
         surname: surname,
+        email: email,
         coachId: coachId,
         coachIdAsNull: true,
         clientIds: clientIds,
@@ -188,6 +228,7 @@ void main() {
         'gender': gender.name,
         'name': name,
         'surname': surname,
+        'email': email,
         'coachId': coachId,
       };
 
@@ -195,6 +236,7 @@ void main() {
         gender: gender,
         name: name,
         surname: surname,
+        email: email,
         coachId: coachId,
       );
 
@@ -211,6 +253,7 @@ void main() {
         'gender': gender.name,
         'name': name,
         'surname': surname,
+        'email': email,
         'coachId': coachId,
         'clientIds': null,
       };
@@ -219,6 +262,7 @@ void main() {
         gender: gender,
         name: name,
         surname: surname,
+        email: email,
         coachId: coachId,
         clientIds: clientIds,
         clientIdsAsNull: true,
