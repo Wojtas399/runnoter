@@ -17,7 +17,7 @@ void main() {
   const String loggedUserId = 'u1';
 
   setUpAll(() {
-    GetIt.I.registerLazySingleton<AuthService>(() => authService);
+    GetIt.I.registerFactory<AuthService>(() => authService);
     GetIt.I.registerLazySingleton<UserRepository>(() => userRepository);
   });
 

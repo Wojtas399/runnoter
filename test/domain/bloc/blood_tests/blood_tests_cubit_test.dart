@@ -16,7 +16,7 @@ void main() {
   const String loggedUserId = 'u1';
 
   setUpAll(() {
-    GetIt.I.registerSingleton<AuthService>(authService);
+    GetIt.I.registerFactory<AuthService>(() => authService);
     GetIt.I.registerSingleton<BloodTestRepository>(bloodTestRepository);
   });
 

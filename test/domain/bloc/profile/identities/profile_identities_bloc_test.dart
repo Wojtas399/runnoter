@@ -31,7 +31,8 @@ void main() {
   const String loggedUserId = 'u1';
 
   setUpAll(() {
-    GetIt.I.registerSingleton<AuthService>(authService);
+    GetIt.I.registerFactory<AuthService>(() => authService);
+    ;
     GetIt.I.registerSingleton<UserRepository>(userRepository);
     GetIt.I.registerSingleton<WorkoutRepository>(workoutRepository);
     GetIt.I.registerSingleton<HealthMeasurementRepository>(

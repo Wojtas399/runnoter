@@ -72,7 +72,8 @@ void main() {
       );
 
   setUpAll(() {
-    GetIt.I.registerSingleton<AuthService>(authService);
+    GetIt.I.registerFactory<AuthService>(() => authService);
+    ;
     GetIt.I.registerSingleton<WorkoutRepository>(workoutRepository);
     GetIt.I.registerSingleton<RaceRepository>(raceRepository);
     registerFallbackValue(const RunStatusPending());

@@ -61,7 +61,7 @@ void main() {
 
   setUpAll(() {
     GetIt.I.registerFactory<DateService>(() => dateService);
-    GetIt.I.registerSingleton<AuthService>(authService);
+    GetIt.I.registerFactory<AuthService>(() => authService);
     GetIt.I.registerSingleton<HealthMeasurementRepository>(
       healthMeasurementRepository,
     );

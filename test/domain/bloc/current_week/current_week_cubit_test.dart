@@ -27,7 +27,7 @@ void main() {
 
   setUpAll(() {
     GetIt.I.registerFactory<DateService>(() => dateService);
-    GetIt.I.registerSingleton<AuthService>(authService);
+    GetIt.I.registerFactory<AuthService>(() => authService);
     GetIt.I.registerSingleton<WorkoutRepository>(workoutRepository);
     GetIt.I.registerSingleton<RaceRepository>(raceRepository);
   });

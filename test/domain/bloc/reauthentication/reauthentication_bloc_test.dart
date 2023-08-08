@@ -14,7 +14,7 @@ void main() {
   final authService = MockAuthService();
 
   setUpAll(() {
-    GetIt.I.registerLazySingleton<AuthService>(() => authService);
+    GetIt.I.registerFactory<AuthService>(() => authService);
   });
 
   tearDown(() {

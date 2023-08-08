@@ -13,7 +13,7 @@ void main() {
   const String loggedUserEmail = 'email@example.com';
 
   setUpAll(() {
-    GetIt.I.registerLazySingleton<AuthService>(() => authService);
+    GetIt.I.registerFactory<AuthService>(() => authService);
   });
 
   tearDown(() {

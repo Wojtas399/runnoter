@@ -23,7 +23,8 @@ void main() {
   const String password = 'Password1!';
 
   setUpAll(() {
-    GetIt.I.registerSingleton<AuthService>(authService);
+    GetIt.I.registerFactory<AuthService>(() => authService);
+    ;
     GetIt.I.registerFactory<AddUserDataUseCase>(() => addUserDataUseCase);
   });
 

@@ -22,7 +22,8 @@ void main() {
   const String surname = 'surname';
 
   setUpAll(() {
-    GetIt.I.registerSingleton<AuthService>(authService);
+    GetIt.I.registerFactory<AuthService>(() => authService);
+    ;
     GetIt.I.registerFactory<AddUserDataUseCase>(() => addUserDataUseCase);
   });
 

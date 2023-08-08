@@ -40,7 +40,8 @@ void main() {
       );
 
   setUpAll(() {
-    GetIt.I.registerSingleton<AuthService>(authService);
+    GetIt.I.registerFactory<AuthService>(() => authService);
+    ;
     GetIt.I.registerSingleton<WorkoutRepository>(workoutRepository);
     GetIt.I.registerFactory<DateService>(() => dateService);
   });
