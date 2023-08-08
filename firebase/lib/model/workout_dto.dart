@@ -21,11 +21,11 @@ class WorkoutDto extends Equatable {
   });
 
   WorkoutDto.fromJson({
-    required String docId,
+    required String workoutId,
     required String userId,
     required Map<String, dynamic>? json,
   }) : this(
-          id: docId,
+          id: workoutId,
           userId: userId,
           date: mapDateTimeFromString(json?[workoutDtoDateField]),
           status: RunStatusDto.fromJson(json?[_statusField]),

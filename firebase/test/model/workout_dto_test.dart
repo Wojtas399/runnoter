@@ -54,7 +54,7 @@ void main() {
       );
 
       final WorkoutDto dto = WorkoutDto.fromJson(
-        docId: id,
+        workoutId: id,
         userId: userId,
         json: json,
       );

@@ -37,7 +37,7 @@ void main() {
       );
 
       final BloodTestDto dto = BloodTestDto.fromJson(
-        id: id,
+        bloodTestId: id,
         userId: userId,
         json: json,
       );

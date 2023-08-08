@@ -20,8 +20,10 @@ void main() {
         paceUnit: paceUnit,
       );
 
-      final ActivitiesSettingsDto dto =
-          ActivitiesSettingsDto.fromJson(userId, json);
+      final ActivitiesSettingsDto dto = ActivitiesSettingsDto.fromJson(
+        userId: userId,
+        json: json,
+      );
 
       expect(dto, expectedDto);
     },

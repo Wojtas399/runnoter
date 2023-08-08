@@ -24,7 +24,10 @@ void main() {
         status: status,
       );
 
-      final InvitationDto dto = InvitationDto.fromJson(invitationId, json);
+      final InvitationDto dto = InvitationDto.fromJson(
+        invitationId: invitationId,
+        json: json,
+      );
 
       expect(dto, expectedDto);
     },

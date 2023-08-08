@@ -20,9 +20,11 @@ class InvitationDto extends Equatable {
   @override
   List<Object?> get props => [id, senderId, receiverId, status];
 
-  InvitationDto.fromJson(String id, Map<String, dynamic>? json)
-      : this(
-          id: id,
+  InvitationDto.fromJson({
+    required String invitationId,
+    required Map<String, dynamic>? json,
+  }) : this(
+          id: invitationId,
           senderId: json?[_senderIdField],
           receiverId: json?[_receiverIdField],
           status: mapInvitationStatusFromString(json?[invitationStatusField]),

@@ -11,6 +11,7 @@ export 'model/blood_parameter_result_dto.dart';
 export 'model/blood_test_dto.dart';
 export 'model/firebase_exception.dart';
 export 'model/health_measurement_dto.dart';
+export 'model/invitation_dto.dart';
 export 'model/pace_dto.dart';
 export 'model/race_dto.dart';
 export 'model/run_status_dto.dart';

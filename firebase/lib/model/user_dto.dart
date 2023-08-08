@@ -37,11 +37,11 @@ class UserDto extends Equatable {
         coachId,
       ];
 
-  UserDto.fromJson(
-    String id,
-    Map<String, dynamic>? json,
-  ) : this(
-          id: id,
+  UserDto.fromJson({
+    required String userId,
+    required Map<String, dynamic>? json,
+  }) : this(
+          id: userId,
           accountType: mapAccountTypeFromStr(json?[_accountTypeField]),
           gender: mapGenderFromString(json?[_genderField]),
           name: json?[_nameField],

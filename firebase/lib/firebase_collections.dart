@@ -5,8 +5,8 @@ import 'firebase.dart';
 CollectionReference<UserDto> getUsersRef() =>
     FirebaseFirestore.instance.collection('Users').withConverter<UserDto>(
           fromFirestore: (snapshot, _) => UserDto.fromJson(
-            snapshot.id,
-            snapshot.data(),
+            userId: snapshot.id,
+            json: snapshot.data(),
           ),
           toFirestore: (UserDto userDto, _) => userDto.toJson(),
         );
@@ -21,7 +21,7 @@ CollectionReference<WorkoutDto> getWorkoutsRef(
 ) =>
     getUserRef(userId).collection('Workouts').withConverter<WorkoutDto>(
           fromFirestore: (snapshot, _) => WorkoutDto.fromJson(
-            docId: snapshot.id,
+            workoutId: snapshot.id,
             userId: userId,
             json: snapshot.data(),
           ),
@@ -51,8 +51,8 @@ DocumentReference<AppearanceSettingsDto> getAppearanceSettingsRef(
         .doc('AppearanceSettings')
         .withConverter<AppearanceSettingsDto>(
           fromFirestore: (snapshot, _) => AppearanceSettingsDto.fromJson(
-            userId,
-            snapshot.data(),
+            userId: userId,
+            json: snapshot.data(),
           ),
           toFirestore: (appearanceSettingsDto, _) =>
               appearanceSettingsDto.toJson(),
@@ -66,8 +66,8 @@ DocumentReference<ActivitiesSettingsDto> getActivitiesSettingsRef(
         .doc('ActivitiesSettings')
         .withConverter<ActivitiesSettingsDto>(
           fromFirestore: (snapshot, _) => ActivitiesSettingsDto.fromJson(
-            userId,
-            snapshot.data(),
+            userId: userId,
+            json: snapshot.data(),
           ),
           toFirestore: (activitiesSettingsDto, _) =>
               activitiesSettingsDto.toJson(),
@@ -78,7 +78,7 @@ CollectionReference<BloodTestDto> getBloodTestsRef(
 ) =>
     getUserRef(userId).collection('BloodTests').withConverter<BloodTestDto>(
           fromFirestore: (snapshot, _) => BloodTestDto.fromJson(
-            id: snapshot.id,
+            bloodTestId: snapshot.id,
             userId: userId,
             json: snapshot.data(),
           ),
@@ -95,4 +95,15 @@ CollectionReference<RaceDto> getRacesRef(
             json: snapshot.data(),
           ),
           toFirestore: (competitionDto, _) => competitionDto.toJson(),
+        );
+
+CollectionReference<InvitationDto> getInvitationsRef() =>
+    FirebaseFirestore.instance
+        .collection('Invitations')
+        .withConverter<InvitationDto>(
+          fromFirestore: (snapshot, _) => InvitationDto.fromJson(
+            invitationId: snapshot.id,
+            json: snapshot.data(),
+          ),
+          toFirestore: (invitationDto, _) => invitationDto.toJson(),
         );

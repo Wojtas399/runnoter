@@ -32,7 +32,7 @@ void main() {
         coachId: coachId,
       );
 
-      final UserDto dto = UserDto.fromJson(id, json);
+      final UserDto dto = UserDto.fromJson(userId: id, json: json);
 
       expect(dto, expectedDto);
     },

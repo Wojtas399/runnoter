@@ -21,10 +21,10 @@ class ActivitiesSettingsDto extends Equatable {
         paceUnit,
       ];
 
-  ActivitiesSettingsDto.fromJson(
-    String userId,
-    Map<String, dynamic>? json,
-  ) : this(
+  ActivitiesSettingsDto.fromJson({
+    required String userId,
+    required Map<String, dynamic>? json,
+  }) : this(
           userId: userId,
           distanceUnit: mapDistanceUnitFromStringToEnum(
             json?[_WorkoutSettingsField.distanceUnit.name],
