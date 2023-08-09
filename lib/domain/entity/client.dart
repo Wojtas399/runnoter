@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 
 import 'user.dart';
 
+//TODO: Change the name to UserBasicInfo
 class Client extends Equatable {
   final String id;
   final Gender gender;

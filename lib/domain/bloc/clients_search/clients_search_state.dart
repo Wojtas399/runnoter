@@ -1,6 +1,4 @@
-import '../../additional_model/bloc_state.dart';
-import '../../additional_model/bloc_status.dart';
-import '../../entity/client.dart';
+part of 'clients_search_bloc.dart';
 
 class ClientsSearchState extends BlocState<ClientsSearchState> {
   final String searchText;
