@@ -10,6 +10,7 @@ import '../formatter/blood_test_parameter_norm_range_formatter.dart';
 import '../formatter/blood_test_parameter_unit_formatter.dart';
 import '../formatter/decimal_text_input_formatter.dart';
 import '../service/blood_parameter_service.dart';
+import '../service/utils.dart';
 import 'nullable_text_component.dart';
 import 'text/label_text_components.dart';
 import 'text/title_text_components.dart';
@@ -38,6 +39,7 @@ class BloodParameterResultsList extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
           sliver: _SectionParameters.build(
             context: context,
+            isFirstSection: true,
             label: Str.of(context).bloodTestBasicParams,
             gender: gender,
             parametersWithValues: _createBloodParametersWithValuesForType(
@@ -51,6 +53,7 @@ class BloodParameterResultsList extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
           sliver: _SectionParameters.build(
             context: context,
+            isFirstSection: false,
             label: Str.of(context).bloodTestAdditionalParams,
             gender: gender,
             parametersWithValues: _createBloodParametersWithValuesForType(
@@ -93,6 +96,7 @@ class _SectionParameters extends SliverStickyHeader {
 
   factory _SectionParameters.build({
     required BuildContext context,
+    required bool isFirstSection,
     required String label,
     required Gender gender,
     required List<_BloodParameterWithValue> parametersWithValues,
@@ -117,6 +121,7 @@ class _SectionParameters extends SliverStickyHeader {
         sliver: SliverList(
           delegate: SliverChildBuilderDelegate(
             (context, i) => _ParamsTable(
+              isFirstTable: isFirstSection,
               gender: gender,
               parametersWithValues: parametersWithValues,
               isEditMode: isEditMode,
@@ -184,6 +189,7 @@ class _HeaderRow extends StatelessWidget {
 }
 
 class _ParamsTable extends StatelessWidget {
+  final bool isFirstTable;
   final Gender gender;
   final List<_BloodParameterWithValue> parametersWithValues;
   final bool isEditMode;
@@ -191,6 +197,7 @@ class _ParamsTable extends StatelessWidget {
       onParameterValueChanged;
 
   const _ParamsTable({
+    required this.isFirstTable,
     required this.gender,
     required this.parametersWithValues,
     required this.isEditMode,
@@ -209,16 +216,19 @@ class _ParamsTable extends StatelessWidget {
         ),
       ),
       children: parametersWithValues
+          .asMap()
+          .entries
           .map(
-            (parameterWithValue) => _ParameterRow.build(
+            (entry) => _ParameterRow.build(
               context: context,
+              isFirstRow: isFirstTable && entry.key == 0,
               gender: gender,
-              parameterWithValue: parameterWithValue,
+              parameterWithValue: entry.value,
               isEditMode: isEditMode,
               onValueChanged: (double? value) {
                 if (onParameterValueChanged != null) {
                   onParameterValueChanged!(
-                    parameterWithValue.bloodParameter,
+                    entry.value.bloodParameter,
                     value,
                   );
                 }
@@ -237,6 +247,7 @@ class _ParameterRow extends TableRow {
 
   factory _ParameterRow.build({
     required BuildContext context,
+    required bool isFirstRow,
     required Gender gender,
     required _BloodParameterWithValue parameterWithValue,
     required bool isEditMode,
@@ -255,6 +266,7 @@ class _ParameterRow extends TableRow {
           unit: parameter.unit,
         ),
         _ResultCell.buildForValue(
+          isFirstRow: isFirstRow,
           parameterValue: value,
           isValueWithinNorm: value != null
               ? isParameterValueWithinNorm(
@@ -325,11 +337,10 @@ class _NormCell extends TableCell {
 class _ResultCell extends TableCell {
   const _ResultCell({
     required super.child,
-  }) : super(
-          verticalAlignment: TableCellVerticalAlignment.middle,
-        );
+  }) : super(verticalAlignment: TableCellVerticalAlignment.middle);
 
   _ResultCell.buildForValue({
+    required bool isFirstRow,
     required double? parameterValue,
     required bool isValueWithinNorm,
     required bool isEditMode,
@@ -340,6 +351,7 @@ class _ResultCell extends TableCell {
             padding: EdgeInsets.all(padding),
             child: isEditMode
                 ? _EditableParameterValue(
+                    isFirstRow: isFirstRow,
                     initialValue: parameterValue,
                     onValueChanged: onValueChanged,
                   )
@@ -355,10 +367,12 @@ class _ResultCell extends TableCell {
 }
 
 class _EditableParameterValue extends StatefulWidget {
+  final bool isFirstRow;
   final double? initialValue;
   final Function(double? value)? onValueChanged;
 
   const _EditableParameterValue({
+    required this.isFirstRow,
     this.initialValue,
     this.onValueChanged,
   });
@@ -396,6 +410,7 @@ class _EditableParameterValueState extends State<_EditableParameterValue> {
           );
         }
       },
+      onTapOutside: widget.isFirstRow ? (_) => unfocusInputs() : null,
     );
   }
 }

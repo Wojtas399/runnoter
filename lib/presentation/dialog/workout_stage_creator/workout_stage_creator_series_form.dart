@@ -6,6 +6,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../domain/bloc/workout_stage_creator/workout_stage_creator_bloc.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/text_field_component.dart';
+import '../../service/utils.dart';
 
 class WorkoutStageCreatorSeriesStageForm extends StatelessWidget {
   const WorkoutStageCreatorSeriesStageForm({super.key});
@@ -66,6 +67,7 @@ class _AmountOfSeriesState extends State<_AmountOfSeries> {
         FilteringTextInputFormatter.digitsOnly,
       ],
       controller: _controller,
+      onTapOutside: (_) => unfocusInputs(),
     );
   }
 

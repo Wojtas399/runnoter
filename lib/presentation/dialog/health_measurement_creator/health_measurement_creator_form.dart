@@ -9,6 +9,7 @@ import '../../component/gap/gap_components.dart';
 import '../../component/text/title_text_components.dart';
 import '../../component/text_field_component.dart';
 import '../../formatter/decimal_text_input_formatter.dart';
+import '../../service/utils.dart';
 
 class HealthMeasurementCreatorForm extends StatelessWidget {
   const HealthMeasurementCreatorForm({super.key});
@@ -101,6 +102,7 @@ class _RestingHeartRateState extends State<_RestingHeartRate> {
         FilteringTextInputFormatter.digitsOnly,
       ],
       controller: _controller,
+      onTapOutside: (_) => unfocusInputs(),
     );
   }
 

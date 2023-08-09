@@ -11,7 +11,6 @@ import '../../component/date_selector_component.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/text/title_text_components.dart';
 import '../../service/dialog_service.dart';
-import '../../service/utils.dart';
 import 'blood_test_creator_app_bar.dart';
 
 class BloodTestCreatorContent extends StatelessWidget {
@@ -20,26 +19,18 @@ class BloodTestCreatorContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () async {
-        final bool confirmationToLeave = await askForConfirmationToLeave(
-          areUnsavedChanges:
-              context.read<BloodTestCreatorBloc>().state.canSubmit,
-        );
-        if (confirmationToLeave) unfocusInputs();
-        return confirmationToLeave;
-      },
-      child: Scaffold(
-        appBar: const BloodTestCreatorAppBar(),
+      onWillPop: () async => await askForConfirmationToLeave(
+        areUnsavedChanges: context.read<BloodTestCreatorBloc>().state.canSubmit,
+      ),
+      child: const Scaffold(
+        appBar: BloodTestCreatorAppBar(),
         body: SafeArea(
-          child: GestureDetector(
-            onTap: unfocusInputs,
-            child: const MediumBody(
-              child: Column(
-                children: [
-                  _DateSection(),
-                  Expanded(child: _ParametersSection()),
-                ],
-              ),
+          child: MediumBody(
+            child: Column(
+              children: [
+                _DateSection(),
+                Expanded(child: _ParametersSection()),
+              ],
             ),
           ),
         ),

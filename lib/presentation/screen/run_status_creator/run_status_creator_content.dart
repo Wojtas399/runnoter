@@ -8,7 +8,6 @@ import '../../component/body/medium_body_component.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/padding/paddings_24.dart';
 import '../../service/dialog_service.dart';
-import '../../service/utils.dart';
 import 'run_status_creator_params_form.dart';
 import 'run_status_creator_status_type.dart';
 
@@ -18,34 +17,26 @@ class RunStatusCreatorContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () async {
-        final bool confirmationToLeave = await askForConfirmationToLeave(
-          areUnsavedChanges:
-              context.read<RunStatusCreatorBloc>().state.canSubmit,
-        );
-        if (confirmationToLeave) unfocusInputs();
-        return confirmationToLeave;
-      },
+      onWillPop: () async => await askForConfirmationToLeave(
+        areUnsavedChanges: context.read<RunStatusCreatorBloc>().state.canSubmit,
+      ),
       child: Scaffold(
         appBar: AppBar(
           title: Text(Str.of(context).runStatusCreatorScreenTitle),
           centerTitle: true,
         ),
-        body: SafeArea(
+        body: const SafeArea(
           child: SingleChildScrollView(
-            child: GestureDetector(
-              onTap: unfocusInputs,
-              child: const MediumBody(
-                child: Paddings24(
-                  child: Column(
-                    children: [
-                      RunStatusCreatorStatusType(),
-                      Gap24(),
-                      _Form(),
-                      Gap24(),
-                      _SubmitButton(),
-                    ],
-                  ),
+            child: MediumBody(
+              child: Paddings24(
+                child: Column(
+                  children: [
+                    RunStatusCreatorStatusType(),
+                    Gap24(),
+                    _Form(),
+                    Gap24(),
+                    _SubmitButton(),
+                  ],
                 ),
               ),
             ),

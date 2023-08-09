@@ -22,13 +22,9 @@ class WorkoutCreatorContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () async {
-        final bool confirmationToLeave = await askForConfirmationToLeave(
-          areUnsavedChanges: context.read<WorkoutCreatorBloc>().state.canSubmit,
-        );
-        if (confirmationToLeave) unfocusInputs();
-        return confirmationToLeave;
-      },
+      onWillPop: () async => await askForConfirmationToLeave(
+        areUnsavedChanges: context.read<WorkoutCreatorBloc>().state.canSubmit,
+      ),
       child: Scaffold(
         appBar: AppBar(
           title: const _AppBarTitle(),
@@ -36,14 +32,11 @@ class WorkoutCreatorContent extends StatelessWidget {
         ),
         body: SafeArea(
           child: SingleChildScrollView(
-            child: GestureDetector(
-              onTap: unfocusInputs,
-              child: MediumBody(
-                child: Container(
-                  color: Colors.transparent,
-                  padding: const EdgeInsets.all(24),
-                  child: const _Form(),
-                ),
+            child: MediumBody(
+              child: Container(
+                color: Colors.transparent,
+                padding: const EdgeInsets.all(24),
+                child: const _Form(),
               ),
             ),
           ),
@@ -164,6 +157,7 @@ class _WorkoutNameState extends State<_WorkoutName> {
       isRequired: true,
       controller: _controller,
       maxLength: 100,
+      onTapOutside: (_) => unfocusInputs(),
     );
   }
 

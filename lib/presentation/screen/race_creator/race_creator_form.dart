@@ -10,6 +10,7 @@ import '../../extension/double_extensions.dart';
 import '../../extension/string_extensions.dart';
 import '../../formatter/decimal_text_input_formatter.dart';
 import '../../formatter/distance_unit_formatter.dart';
+import '../../service/utils.dart';
 import 'race_creator_date.dart';
 import 'race_creator_expected_duration.dart';
 
@@ -68,6 +69,7 @@ class _RaceNameState extends State<_RaceName> {
       controller: _controller,
       isRequired: true,
       maxLength: 100,
+      onTapOutside: (_) => unfocusInputs(),
     );
   }
 

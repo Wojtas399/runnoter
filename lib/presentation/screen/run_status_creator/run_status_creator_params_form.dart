@@ -12,6 +12,7 @@ import '../../extension/context_extensions.dart';
 import '../../formatter/decimal_text_input_formatter.dart';
 import '../../formatter/distance_unit_formatter.dart';
 import '../../formatter/mood_rate_formatter.dart';
+import '../../service/utils.dart';
 import 'run_status_creator_avg_pace.dart';
 
 class RunStatusCreatorParamsForm extends StatelessWidget {
@@ -88,6 +89,7 @@ class _CoveredDistanceState extends State<_CoveredDistance> {
         DecimalTextInputFormatter(decimalRange: 2),
       ],
       controller: _controller,
+      onTapOutside: (_) => unfocusInputs(),
     );
   }
 

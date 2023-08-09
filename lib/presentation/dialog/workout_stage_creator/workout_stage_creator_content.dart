@@ -6,7 +6,6 @@ import '../../../domain/bloc/workout_stage_creator/workout_stage_creator_bloc.da
 import '../../component/gap/gap_horizontal_components.dart';
 import '../../component/responsive_layout_component.dart';
 import '../../service/navigator_service.dart';
-import '../../service/utils.dart';
 import 'workout_stage_creator_form.dart';
 
 class WorkoutStageCreatorContent extends StatelessWidget {
@@ -29,13 +28,10 @@ class _FullScreenDialog extends StatelessWidget {
     return Scaffold(
       appBar: const _AppBar(),
       body: SafeArea(
-        child: GestureDetector(
-          onTap: unfocusInputs,
-          child: Container(
-            color: Colors.transparent,
-            padding: const EdgeInsets.all(24),
-            child: const WorkoutStageCreatorFormContent(),
-          ),
+        child: Container(
+          color: Colors.transparent,
+          padding: const EdgeInsets.all(24),
+          child: const WorkoutStageCreatorFormContent(),
         ),
       ),
     );

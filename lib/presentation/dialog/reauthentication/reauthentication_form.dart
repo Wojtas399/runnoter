@@ -8,7 +8,6 @@ import '../../../domain/bloc/reauthentication/reauthentication_bloc.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/gap/gap_horizontal_components.dart';
 import '../../component/text/body_text_components.dart';
-import '../../service/utils.dart';
 import 'reauthentication_password.dart';
 
 class ReauthenticationForm extends StatelessWidget {
@@ -19,26 +18,20 @@ class ReauthenticationForm extends StatelessWidget {
     final str = Str.of(context);
     const Widget gap = Gap24();
 
-    return GestureDetector(
-      onTap: unfocusInputs,
-      child: Container(
-        color: Colors.transparent,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(str.reauthenticationMessage),
-            gap,
-            const ReauthenticationPassword(),
-            gap,
-            const _Separator(),
-            gap,
-            const _GoogleAuthentication(),
-            gap,
-            const _FacebookAuthentication(),
-            gap,
-          ],
-        ),
-      ),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(str.reauthenticationMessage),
+        gap,
+        const ReauthenticationPassword(),
+        gap,
+        const _Separator(),
+        gap,
+        const _GoogleAuthentication(),
+        gap,
+        const _FacebookAuthentication(),
+        gap,
+      ],
     );
   }
 }

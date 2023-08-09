@@ -4,11 +4,11 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/bloc/sign_up/sign_up_bloc.dart';
 import '../../../domain/entity/user.dart';
-import '../../../domain/use_case/add_user_data_use_case.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/password_text_field_component.dart';
 import '../../component/text_field_component.dart';
 import '../../component/two_options_component.dart';
+import '../../service/utils.dart';
 
 class SignUpForm extends StatelessWidget {
   const SignUpForm({super.key});
@@ -108,6 +108,7 @@ class _Name extends StatelessWidget {
       label: str.name,
       isRequired: true,
       onChanged: (String? value) => _onChanged(value, context),
+      onTapOutside: (_) => unfocusInputs(),
       validator: (_) => !isValid ? str.invalidNameOrSurnameMessage : null,
     );
   }

@@ -4,7 +4,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/bloc/blood_test_creator/blood_test_creator_bloc.dart';
 import '../../component/gap/gap_horizontal_components.dart';
-import '../../service/utils.dart';
 
 class BloodTestCreatorAppBar extends StatelessWidget
     implements PreferredSizeWidget {
@@ -63,7 +62,6 @@ class _SubmitButton extends StatelessWidget {
   }
 
   void _onPressed(BuildContext context) {
-    unfocusInputs();
     context.read<BloodTestCreatorBloc>().add(
           const BloodTestCreatorEventSubmit(),
         );

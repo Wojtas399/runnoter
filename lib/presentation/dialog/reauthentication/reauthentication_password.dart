@@ -6,6 +6,7 @@ import '../../../domain/additional_model/bloc_status.dart';
 import '../../../domain/bloc/reauthentication/reauthentication_bloc.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/password_text_field_component.dart';
+import '../../service/utils.dart';
 
 class ReauthenticationPassword extends StatelessWidget {
   const ReauthenticationPassword({super.key});
@@ -17,6 +18,7 @@ class ReauthenticationPassword extends StatelessWidget {
         PasswordTextFieldComponent(
           onChanged: (String? password) =>
               _onPasswordChanged(context, password),
+          onTapOutside: (_) => unfocusInputs(),
         ),
         const Gap16(),
         const _PasswordSubmitButton(),

@@ -9,7 +9,6 @@ import '../../component/text/body_text_components.dart';
 import '../../component/text/label_text_components.dart';
 import '../../dialog/workout_stage_creator/workout_stage_creator_dialog.dart';
 import '../../service/dialog_service.dart';
-import '../../service/utils.dart';
 import 'workout_creator_workout_stage_item.dart';
 
 class WorkoutCreatorWorkoutStages extends StatelessWidget {
@@ -161,7 +160,6 @@ class _AddStageButton extends StatelessWidget {
   }
 
   Future<void> _onPressed(BuildContext context) async {
-    unfocusInputs();
     final WorkoutCreatorBloc bloc = context.read<WorkoutCreatorBloc>();
     final WorkoutStage? workoutStage = await showDialogDependingOnScreenSize(
       const WorkoutStageCreatorDialog(),

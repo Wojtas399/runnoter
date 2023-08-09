@@ -5,6 +5,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../domain/bloc/profile/identities/profile_identities_bloc.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/gap/gap_horizontal_components.dart';
+import '../../component/padding/paddings_24.dart';
 import '../../component/responsive_layout_component.dart';
 import '../../component/text/body_text_components.dart';
 import '../../component/text/label_text_components.dart';
@@ -74,7 +75,6 @@ class _State extends State<ProfileEmailDialog> {
   }
 
   Future<void> _onSaveButtonPressed(BuildContext context) async {
-    unfocusInputs();
     final bloc = context.read<ProfileIdentitiesBloc>();
     final bool reauthenticated = await askForReauthentication();
     if (reauthenticated) {
@@ -158,15 +158,10 @@ class _FullScreenDialog extends StatelessWidget {
         ],
       ),
       body: SafeArea(
-        child: GestureDetector(
-          onTap: unfocusInputs,
-          child: Container(
-            padding: const EdgeInsets.all(24),
-            color: Colors.transparent,
-            child: _Form(
-              emailController: emailController,
-              emailValidator: emailValidator,
-            ),
+        child: Paddings24(
+          child: _Form(
+            emailController: emailController,
+            emailValidator: emailValidator,
           ),
         ),
       ),
@@ -199,6 +194,7 @@ class _Form extends StatelessWidget {
           controller: emailController,
           validator: emailValidator,
           icon: Icons.email,
+          onTapOutside: (_) => unfocusInputs(),
         ),
         const Gap24(),
         BodyMedium(

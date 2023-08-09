@@ -37,6 +37,7 @@ class _Email extends StatelessWidget {
       label: Str.of(context).email,
       icon: Icons.email,
       onChanged: (String? value) => _onChanged(value, context),
+      onTapOutside: (_) => unfocusInputs(),
     );
   }
 
@@ -104,7 +105,6 @@ class _SubmitButton extends StatelessWidget {
   }
 
   void _onPressed(BuildContext context) {
-    unfocusInputs();
     context.read<SignInBloc>().add(
           const SignInEventSubmit(),
         );

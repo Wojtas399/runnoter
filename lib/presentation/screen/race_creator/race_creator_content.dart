@@ -9,8 +9,8 @@ import '../../component/big_button_component.dart';
 import '../../component/body/medium_body_component.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/loading_info_component.dart';
+import '../../component/padding/paddings_24.dart';
 import '../../service/dialog_service.dart';
-import '../../service/utils.dart';
 import 'race_creator_form.dart';
 
 class RaceCreatorContent extends StatelessWidget {
@@ -19,28 +19,19 @@ class RaceCreatorContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () async {
-        final bool confirmationToLeave = await askForConfirmationToLeave(
-          areUnsavedChanges: context.read<RaceCreatorBloc>().state.canSubmit,
-        );
-        if (confirmationToLeave) unfocusInputs();
-        return confirmationToLeave;
-      },
+      onWillPop: () async => await askForConfirmationToLeave(
+        areUnsavedChanges: context.read<RaceCreatorBloc>().state.canSubmit,
+      ),
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,
           title: const _AppBarTitle(),
         ),
-        body: SafeArea(
+        body: const SafeArea(
           child: SingleChildScrollView(
-            child: GestureDetector(
-              onTap: unfocusInputs,
-              child: MediumBody(
-                child: Container(
-                  padding: const EdgeInsets.all(24),
-                  color: Colors.transparent,
-                  child: const _Form(),
-                ),
+            child: MediumBody(
+              child: Paddings24(
+                child: _Form(),
               ),
             ),
           ),

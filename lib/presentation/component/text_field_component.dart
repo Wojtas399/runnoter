@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../service/utils.dart';
-
 class TextFieldComponent extends StatelessWidget {
   final String? label;
   final String? hintText;
@@ -23,6 +21,7 @@ class TextFieldComponent extends StatelessWidget {
   final TextEditingController? controller;
   final Function(String? value)? onChanged;
   final Function(String? value)? onSubmitted;
+  final Function(PointerDownEvent event)? onTapOutside;
   final String? Function(String? value)? validator;
 
   const TextFieldComponent({
@@ -45,6 +44,7 @@ class TextFieldComponent extends StatelessWidget {
     this.controller,
     this.onChanged,
     this.onSubmitted,
+    this.onTapOutside,
     this.validator,
   });
 
@@ -76,7 +76,7 @@ class TextFieldComponent extends StatelessWidget {
       inputFormatters: inputFormatters,
       keyboardType: keyboardType,
       autovalidateMode: AutovalidateMode.onUserInteraction,
-      onTapOutside: (_) => unfocusInputs(),
+      onTapOutside: onTapOutside,
     );
   }
 

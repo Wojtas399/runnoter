@@ -7,7 +7,6 @@ import '../../component/gap/gap_components.dart';
 import '../../component/gap/gap_horizontal_components.dart';
 import '../../component/responsive_layout_component.dart';
 import '../../service/navigator_service.dart';
-import '../../service/utils.dart';
 import 'required_data_completion_form.dart';
 
 class RequiredDataCompletionContent extends StatelessWidget {
@@ -60,17 +59,14 @@ class _FullScreenDialog extends StatelessWidget {
       ),
       body: LayoutBuilder(builder: (_, BoxConstraints constraints) {
         return SingleChildScrollView(
-          child: GestureDetector(
-            onTap: unfocusInputs,
-            child: Container(
-              constraints: constraints.copyWith(
-                minHeight: constraints.maxHeight,
-                maxHeight: double.infinity,
-              ),
-              padding: const EdgeInsets.all(24),
-              color: Colors.transparent,
-              child: const _Content(),
+          child: Container(
+            constraints: constraints.copyWith(
+              minHeight: constraints.maxHeight,
+              maxHeight: double.infinity,
             ),
+            padding: const EdgeInsets.all(24),
+            color: Colors.transparent,
+            child: const _Content(),
           ),
         );
       }),

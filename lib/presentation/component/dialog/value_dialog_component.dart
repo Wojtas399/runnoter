@@ -118,17 +118,14 @@ class _NormalDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text(title),
-      content: GestureDetector(
-        onTap: unfocusInputs,
-        child: SizedBox(
-          width: 400,
-          child: TextFieldComponent(
-            label: label,
-            icon: textFieldIcon,
-            isRequired: isValueRequired,
-            controller: textController,
-            validator: validator,
-          ),
+      content: SizedBox(
+        width: 400,
+        child: TextFieldComponent(
+          label: label,
+          icon: textFieldIcon,
+          isRequired: isValueRequired,
+          controller: textController,
+          validator: validator,
         ),
       ),
       actions: [
@@ -188,22 +185,20 @@ class _FullScreenDialog extends StatelessWidget {
           ],
         ),
         body: SafeArea(
-          child: GestureDetector(
-            onTap: unfocusInputs,
-            child: Container(
-              padding: const EdgeInsets.all(24),
-              color: Colors.transparent,
-              child: Column(
-                children: [
-                  TextFieldComponent(
-                    label: label,
-                    icon: textFieldIcon,
-                    isRequired: isValueRequired,
-                    controller: textController,
-                    validator: validator,
-                  ),
-                ],
-              ),
+          child: Container(
+            padding: const EdgeInsets.all(24),
+            color: Colors.transparent,
+            child: Column(
+              children: [
+                TextFieldComponent(
+                  label: label,
+                  icon: textFieldIcon,
+                  isRequired: isValueRequired,
+                  controller: textController,
+                  validator: validator,
+                  onTapOutside: (_) => unfocusInputs(),
+                ),
+              ],
             ),
           ),
         ),

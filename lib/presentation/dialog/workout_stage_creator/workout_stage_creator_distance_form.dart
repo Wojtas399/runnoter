@@ -9,6 +9,7 @@ import '../../component/text_field_component.dart';
 import '../../extension/context_extensions.dart';
 import '../../formatter/decimal_text_input_formatter.dart';
 import '../../formatter/distance_unit_formatter.dart';
+import '../../service/utils.dart';
 
 class WorkoutStageCreatorDistanceStageForm extends StatelessWidget {
   const WorkoutStageCreatorDistanceStageForm({super.key});
@@ -65,6 +66,7 @@ class _DistanceState extends State<_Distance> {
         DecimalTextInputFormatter(decimalRange: 2),
       ],
       controller: _controller,
+      onTapOutside: (_) => unfocusInputs(),
     );
   }
 
