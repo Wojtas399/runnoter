@@ -11,6 +11,8 @@ import 'package:runnoter/domain/repository/user_repository.dart';
 import 'package:runnoter/domain/service/auth_service.dart';
 import 'package:runnoter/domain/service/invitation_service.dart';
 
+import '../../../creators/invitation_creator.dart';
+import '../../../creators/user_basic_info_creator.dart';
 import '../../../creators/user_creator.dart';
 import '../../../mock/domain/repository/mock_user_repository.dart';
 import '../../../mock/domain/service/mock_auth_service.dart';
@@ -20,6 +22,7 @@ void main() {
   final authService = MockAuthService();
   final userRepository = MockUserRepository();
   final invitationService = MockInvitationService();
+  const String loggedUserId = 'u1';
 
   setUpAll(() {
     GetIt.I.registerFactory<AuthService>(() => authService);
@@ -32,6 +35,105 @@ void main() {
     reset(userRepository);
     reset(invitationService);
   });
+
+  blocTest(
+    'initialize, '
+    'logged user does not exist, '
+    'should do nothing',
+    build: () => UsersSearchBloc(),
+    setUp: () => authService.mockGetLoggedUserId(),
+    act: (bloc) => bloc.add(const UsersSearchEventInitialize()),
+    expect: () => [],
+    verify: (_) => verify(() => authService.loggedUserId$).called(1),
+  );
+
+  blocTest(
+    'initialize, '
+    'found users does not exist, '
+    'should only emit client ids and invited users ids',
+    build: () => UsersSearchBloc(),
+    setUp: () {
+      authService.mockGetLoggedUserId(userId: loggedUserId);
+      userRepository.mockGetUsersByCoachId(
+        users: [createUser(id: 'u2'), createUser(id: 'u3')],
+      );
+      invitationService.mockGetInvitationsBySenderId(
+        invitations: [
+          createInvitation(receiverId: 'u4', status: InvitationStatus.pending),
+          createInvitation(receiverId: 'u5', status: InvitationStatus.accepted),
+          createInvitation(receiverId: 'u3', status: InvitationStatus.accepted),
+          createInvitation(
+            receiverId: 'u6',
+            status: InvitationStatus.discarded,
+          ),
+        ],
+      );
+    },
+    act: (bloc) => bloc.add(const UsersSearchEventInitialize()),
+    expect: () => [
+      const UsersSearchState(
+        status: BlocStatusComplete(),
+        clientIds: ['u2', 'u3', 'u5'],
+        invitedUserIds: ['u4'],
+      ),
+    ],
+  );
+
+  blocTest(
+    'initialize, '
+    'found users exists, '
+    'should emit client ids, ids of invited users and found users',
+    build: () => UsersSearchBloc(
+      state: UsersSearchState(
+        status: const BlocStatusComplete(),
+        foundUsers: [
+          FoundUser(
+            info: createUserBasicInfo(id: 'u2'),
+            relationshipStatus: RelationshipStatus.pending,
+          ),
+          FoundUser(
+            info: createUserBasicInfo(id: 'u4'),
+            relationshipStatus: RelationshipStatus.notInvited,
+          ),
+        ],
+      ),
+    ),
+    setUp: () {
+      authService.mockGetLoggedUserId(userId: loggedUserId);
+      userRepository.mockGetUsersByCoachId(
+        users: [createUser(id: 'u2'), createUser(id: 'u3')],
+      );
+      invitationService.mockGetInvitationsBySenderId(
+        invitations: [
+          createInvitation(receiverId: 'u4', status: InvitationStatus.pending),
+          createInvitation(receiverId: 'u5', status: InvitationStatus.accepted),
+          createInvitation(receiverId: 'u3', status: InvitationStatus.accepted),
+          createInvitation(
+            receiverId: 'u6',
+            status: InvitationStatus.discarded,
+          ),
+        ],
+      );
+    },
+    act: (bloc) => bloc.add(const UsersSearchEventInitialize()),
+    expect: () => [
+      UsersSearchState(
+        status: const BlocStatusComplete(),
+        clientIds: const ['u2', 'u3', 'u5'],
+        invitedUserIds: const ['u4'],
+        foundUsers: [
+          FoundUser(
+            info: createUserBasicInfo(id: 'u2'),
+            relationshipStatus: RelationshipStatus.accepted,
+          ),
+          FoundUser(
+            info: createUserBasicInfo(id: 'u4'),
+            relationshipStatus: RelationshipStatus.pending,
+          ),
+        ],
+      ),
+    ],
+  );
 
   blocTest(
     'search, '
@@ -58,7 +160,11 @@ void main() {
     'search, '
     "should call user repository's method to search users and should updated found users in state",
     build: () => UsersSearchBloc(
-      state: const UsersSearchState(status: BlocStatusComplete()),
+      state: const UsersSearchState(
+        status: BlocStatusComplete(),
+        clientIds: ['u1'],
+        invitedUserIds: ['u2'],
+      ),
     ),
     setUp: () => userRepository.mockSearchForUsers(
       users: [
@@ -76,28 +182,57 @@ void main() {
           surname: 'surname2',
           email: 'email2@example.com',
         ),
+        createUser(
+          id: 'u3',
+          gender: Gender.female,
+          name: 'name3',
+          surname: 'surname3',
+          email: 'email3@example.com',
+        ),
       ],
     ),
     act: (bloc) => bloc.add(const UsersSearchEventSearch(searchText: 'sea')),
     expect: () => [
-      const UsersSearchState(status: BlocStatusLoading()),
+      const UsersSearchState(
+        status: BlocStatusLoading(),
+        clientIds: ['u1'],
+        invitedUserIds: ['u2'],
+      ),
       const UsersSearchState(
         status: BlocStatusComplete(),
+        clientIds: ['u1'],
+        invitedUserIds: ['u2'],
         foundUsers: [
-          UserBasicInfo(
-            id: 'u1',
-            gender: Gender.male,
-            name: 'name1',
-            surname: 'surname1',
-            email: 'email1@example.com',
+          FoundUser(
+            info: UserBasicInfo(
+              id: 'u1',
+              gender: Gender.male,
+              name: 'name1',
+              surname: 'surname1',
+              email: 'email1@example.com',
+            ),
+            relationshipStatus: RelationshipStatus.accepted,
           ),
-          UserBasicInfo(
-            id: 'u2',
-            gender: Gender.female,
-            name: 'name2',
-            surname: 'surname2',
-            email: 'email2@example.com',
+          FoundUser(
+            info: UserBasicInfo(
+              id: 'u2',
+              gender: Gender.female,
+              name: 'name2',
+              surname: 'surname2',
+              email: 'email2@example.com',
+            ),
+            relationshipStatus: RelationshipStatus.pending,
           ),
+          FoundUser(
+            info: UserBasicInfo(
+              id: 'u3',
+              gender: Gender.female,
+              name: 'name3',
+              surname: 'surname3',
+              email: 'email3@example.com',
+            ),
+            relationshipStatus: RelationshipStatus.notInvited,
+          )
         ],
       ),
     ],
@@ -129,25 +264,7 @@ void main() {
     'invite user, '
     "should call invite repository's method to add invite with given user id set as receiver id and pending invitation status",
     build: () => UsersSearchBloc(
-      state: const UsersSearchState(
-        status: BlocStatusComplete(),
-        foundUsers: [
-          UserBasicInfo(
-            id: 'u1',
-            gender: Gender.male,
-            name: 'name1',
-            surname: 'surname1',
-            email: 'email1@example.com',
-          ),
-          UserBasicInfo(
-            id: 'u2',
-            gender: Gender.female,
-            name: 'name2',
-            surname: 'surname2',
-            email: 'email2@example.com',
-          ),
-        ],
-      ),
+      state: const UsersSearchState(status: BlocStatusComplete()),
     ),
     setUp: () {
       authService.mockGetLoggedUserId(userId: 'u1');
@@ -157,45 +274,11 @@ void main() {
       idOfUserToInvite: 'u2',
     )),
     expect: () => [
-      const UsersSearchState(
-        status: BlocStatusLoading(),
-        foundUsers: [
-          UserBasicInfo(
-            id: 'u1',
-            gender: Gender.male,
-            name: 'name1',
-            surname: 'surname1',
-            email: 'email1@example.com',
-          ),
-          UserBasicInfo(
-            id: 'u2',
-            gender: Gender.female,
-            name: 'name2',
-            surname: 'surname2',
-            email: 'email2@example.com',
-          ),
-        ],
-      ),
+      const UsersSearchState(status: BlocStatusLoading()),
       const UsersSearchState(
         status: BlocStatusComplete<UsersSearchBlocInfo>(
           info: UsersSearchBlocInfo.invitationSent,
         ),
-        foundUsers: [
-          UserBasicInfo(
-            id: 'u1',
-            gender: Gender.male,
-            name: 'name1',
-            surname: 'surname1',
-            email: 'email1@example.com',
-          ),
-          UserBasicInfo(
-            id: 'u2',
-            gender: Gender.female,
-            name: 'name2',
-            surname: 'surname2',
-            email: 'email2@example.com',
-          ),
-        ],
       ),
     ],
     verify: (_) {

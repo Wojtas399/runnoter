@@ -16,7 +16,7 @@ class UsersSearchDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => UsersSearchBloc(),
+      create: (_) => UsersSearchBloc()..add(const UsersSearchEventInitialize()),
       child: const _BlocListener(
         child: ResponsiveLayout(
           mobileBody: _FullScreenDialog(),
@@ -36,6 +36,7 @@ class _BlocListener extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocWithStatusListener<UsersSearchBloc, UsersSearchState,
         UsersSearchBlocInfo, dynamic>(
+      showDialogOnLoading: false,
       onInfo: (UsersSearchBlocInfo info) => _manageInfo(context, info),
       child: child,
     );

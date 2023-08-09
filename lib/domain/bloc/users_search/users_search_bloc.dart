@@ -1,4 +1,6 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rxdart/rxdart.dart';
 
 import '../../../dependency_injection.dart';
 import '../../additional_model/bloc_state.dart';
@@ -28,8 +30,39 @@ class UsersSearchBloc extends BlocWithStatus<UsersSearchEvent, UsersSearchState,
         _userRepository = getIt<UserRepository>(),
         _invitationService = getIt<InvitationService>(),
         super(state) {
+    on<UsersSearchEventInitialize>(_initialize);
     on<UsersSearchEventSearch>(_search);
     on<UsersSearchEventInviteUser>(_inviteUser);
+  }
+
+  Future<void> _initialize(
+    UsersSearchEventInitialize event,
+    Emitter<UsersSearchState> emit,
+  ) async {
+    final stream$ = _authService.loggedUserId$.whereNotNull().switchMap(
+          (String loggedUserId) => Rx.combineLatest2(
+            _getClientIds(loggedUserId),
+            _invitationService
+                .getInvitationsBySenderId(senderId: loggedUserId)
+                .whereNotNull(),
+            (List<String> clientIds, List<Invitation> sentInvitations) =>
+                (clientIds, sentInvitations),
+          ),
+        );
+    await emit.forEach(
+      stream$,
+      onData: ((List<String>, List<Invitation>) data) {
+        final clientIds = {...data.$1, ...data.$2.clientIds}.toList();
+        final invitedUserIds = data.$2.invitedUserIds;
+        return state.copyWith(
+          clientIds: clientIds,
+          invitedUserIds: invitedUserIds,
+          foundUsers: state.foundUsers != null
+              ? _updateFoundUsers(clientIds, invitedUserIds)
+              : null,
+        );
+      },
+    );
   }
 
   Future<void> _search(
@@ -39,7 +72,7 @@ class UsersSearchBloc extends BlocWithStatus<UsersSearchEvent, UsersSearchState,
     if (event.searchText.isEmpty) {
       emit(state.copyWith(
         status: const BlocStatusComplete(),
-        foundUsersAsNull: true,
+        setFoundUsersAsNull: true,
       ));
       return;
     }
@@ -50,7 +83,7 @@ class UsersSearchBloc extends BlocWithStatus<UsersSearchEvent, UsersSearchState,
       email: event.searchText,
     );
     emit(state.copyWith(
-      foundUsers: _getUsersBasicInfo(foundUsers),
+      foundUsers: _addRelationshipStatusForUsers(foundUsers),
     ));
   }
 
@@ -72,17 +105,71 @@ class UsersSearchBloc extends BlocWithStatus<UsersSearchEvent, UsersSearchState,
     emitCompleteStatus(emit, info: UsersSearchBlocInfo.invitationSent);
   }
 
-  List<UserBasicInfo> _getUsersBasicInfo(List<User> users) => users
+  Stream<List<String>> _getClientIds(String loggedUserId) =>
+      _userRepository.getUsersByCoachId(coachId: loggedUserId).map(
+            (List<User>? users) => [...?users?.map((User user) => user.id)],
+          );
+
+  List<FoundUser> _updateFoundUsers(
+    List<String> clientIds,
+    List<String> invitedUserIds,
+  ) {
+    final List<FoundUser> updatedFoundUsers = [];
+    for (final user in [...?state.foundUsers]) {
+      final RelationshipStatus status = _selectUserRelationshipStatus(
+        userId: user.info.id,
+        clientIds: clientIds,
+        invitedUserIds: invitedUserIds,
+      );
+      updatedFoundUsers.add(user.copyWithStatus(status));
+    }
+    return updatedFoundUsers;
+  }
+
+  List<FoundUser> _addRelationshipStatusForUsers(List<User> users) => users
       .map(
-        (User user) => UserBasicInfo(
-          id: user.id,
-          gender: user.gender,
-          name: user.name,
-          surname: user.surname,
-          email: user.email,
+        (User user) => FoundUser(
+          info: UserBasicInfo(
+            id: user.id,
+            gender: user.gender,
+            name: user.name,
+            surname: user.surname,
+            email: user.email,
+          ),
+          relationshipStatus: _selectUserRelationshipStatus(
+            userId: user.id,
+            clientIds: state.clientIds,
+            invitedUserIds: state.invitedUserIds,
+          ),
         ),
       )
       .toList();
+
+  RelationshipStatus _selectUserRelationshipStatus({
+    required String userId,
+    required List<String> clientIds,
+    required List<String> invitedUserIds,
+  }) {
+    if (clientIds.contains(userId)) {
+      return RelationshipStatus.accepted;
+    } else if (invitedUserIds.contains(userId)) {
+      return RelationshipStatus.pending;
+    } else {
+      return RelationshipStatus.notInvited;
+    }
+  }
 }
 
 enum UsersSearchBlocInfo { invitationSent }
+
+extension _InvitationsExtensions on List<Invitation> {
+  List<String> get clientIds =>
+      where((invitation) => invitation.status == InvitationStatus.accepted)
+          .map((invitation) => invitation.receiverId)
+          .toList();
+
+  List<String> get invitedUserIds =>
+      where((invitation) => invitation.status == InvitationStatus.pending)
+          .map((invitation) => invitation.receiverId)
+          .toList();
+}

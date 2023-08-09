@@ -18,7 +18,7 @@ class UsersSearchFoundUsers extends StatelessWidget {
     final BlocStatus blocStatus = context.select(
       (UsersSearchBloc bloc) => bloc.state.status,
     );
-    final List<UserBasicInfo>? foundUsers = context.select(
+    final List<FoundUser>? foundUsers = context.select(
       (UsersSearchBloc bloc) => bloc.state.foundUsers,
     );
     final str = Str.of(context);
@@ -33,9 +33,7 @@ class UsersSearchFoundUsers extends StatelessWidget {
             [...] => ListView(
                 children: ListTile.divideTiles(
                   context: context,
-                  tiles: foundUsers.map(
-                    (UserBasicInfo userInfo) => _UserItem(userInfo: userInfo),
-                  ),
+                  tiles: foundUsers.map((FoundUser user) => _UserItem(user)),
                 ).toList(),
               ),
           };
@@ -43,12 +41,14 @@ class UsersSearchFoundUsers extends StatelessWidget {
 }
 
 class _UserItem extends StatelessWidget {
-  final UserBasicInfo userInfo;
+  final FoundUser foundUser;
 
-  const _UserItem({required this.userInfo});
+  const _UserItem(this.foundUser);
 
   @override
   Widget build(BuildContext context) {
+    final UserBasicInfo userInfo = foundUser.info;
+
     return ListTile(
       title: Text('${userInfo.name} ${userInfo.surname}'),
       subtitle: Text(userInfo.email),
@@ -63,7 +63,7 @@ class _UserItem extends StatelessWidget {
 
   void _inviteUser(BuildContext context) {
     context.read<UsersSearchBloc>().add(
-          UsersSearchEventInviteUser(idOfUserToInvite: userInfo.id),
+          UsersSearchEventInviteUser(idOfUserToInvite: foundUser.info.id),
         );
   }
 }

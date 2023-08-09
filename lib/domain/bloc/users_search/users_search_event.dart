@@ -4,6 +4,10 @@ abstract class UsersSearchEvent {
   const UsersSearchEvent();
 }
 
+class UsersSearchEventInitialize extends UsersSearchEvent {
+  const UsersSearchEventInitialize();
+}
+
 class UsersSearchEventSearch extends UsersSearchEvent {
   final String searchText;
 
