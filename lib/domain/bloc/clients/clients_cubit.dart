@@ -1,10 +1,10 @@
 import 'dart:async';
 
-import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../../dependency_injection.dart';
+import '../../entity/client.dart';
 import '../../entity/user.dart';
 import '../../repository/user_repository.dart';
 import '../../service/auth_service.dart';
@@ -52,23 +52,4 @@ class ClientsCubit extends Cubit<List<Client>?> {
     clients?.sort((c1, c2) => c1.surname.compareTo(c2.surname));
     emit(clients);
   }
-}
-
-class Client extends Equatable {
-  final String id;
-  final Gender gender;
-  final String name;
-  final String surname;
-  final String email;
-
-  const Client({
-    required this.id,
-    required this.gender,
-    required this.name,
-    required this.surname,
-    required this.email,
-  });
-
-  @override
-  List<Object?> get props => [id, gender, name, surname, email];
 }

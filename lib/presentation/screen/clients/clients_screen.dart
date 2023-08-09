@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/bloc/clients/clients_cubit.dart';
+import '../../../domain/entity/client.dart';
 import '../../component/empty_content_info_component.dart';
 
 @RoutePage()
