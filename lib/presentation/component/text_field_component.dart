@@ -2,9 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../service/utils.dart';
+
 class TextFieldComponent extends StatelessWidget {
   final String? label;
+  final String? hintText;
   final IconData? icon;
+  final Widget? suffixIcon;
   final bool isLabelCentered;
   final bool isRequired;
   final bool requireHigherThan0;
@@ -12,17 +16,21 @@ class TextFieldComponent extends StatelessWidget {
   final bool displayCounterText;
   final int? maxLines;
   final TextInputType? keyboardType;
+  final TextInputAction? textInputAction;
   final TextAlign textAlign;
   final EdgeInsets? contentPadding;
   final List<TextInputFormatter>? inputFormatters;
   final TextEditingController? controller;
   final Function(String? value)? onChanged;
+  final Function(String? value)? onSubmitted;
   final String? Function(String? value)? validator;
 
   const TextFieldComponent({
     super.key,
     this.label,
+    this.hintText,
     this.icon,
+    this.suffixIcon,
     this.isLabelCentered = false,
     this.isRequired = false,
     this.requireHigherThan0 = false,
@@ -30,11 +38,13 @@ class TextFieldComponent extends StatelessWidget {
     this.displayCounterText = false,
     this.maxLines,
     this.keyboardType,
+    this.textInputAction,
     this.textAlign = TextAlign.start,
     this.contentPadding,
     this.inputFormatters,
     this.controller,
     this.onChanged,
+    this.onSubmitted,
     this.validator,
   });
 
@@ -49,21 +59,24 @@ class TextFieldComponent extends StatelessWidget {
                   )
                 : Text(label!)
             : null,
+        hintText: hintText,
         prefixIcon: icon != null ? Icon(icon) : null,
+        suffixIcon: suffixIcon,
         counterText: displayCounterText ? null : '',
         contentPadding: contentPadding,
       ),
+      textInputAction: textInputAction,
       maxLength: maxLength,
       maxLines: maxLines,
       textAlign: textAlign,
       controller: controller,
       onChanged: onChanged,
-      validator: (String? value) {
-        return _validate(value, context);
-      },
+      onFieldSubmitted: onSubmitted,
+      validator: (String? value) => _validate(value, context),
       inputFormatters: inputFormatters,
       keyboardType: keyboardType,
       autovalidateMode: AutovalidateMode.onUserInteraction,
+      onTapOutside: (_) => unfocusInputs(),
     );
   }
 

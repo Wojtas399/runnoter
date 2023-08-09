@@ -6,6 +6,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../domain/bloc/home/home_bloc.dart';
 import '../../../domain/entity/user.dart';
 import '../../config/navigation/router.dart';
+import '../../dialog/clients_search/clients_search_dialog.dart';
 import '../../extension/context_extensions.dart';
 import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
@@ -88,8 +89,7 @@ class _State extends State<HomeContent> {
                       _onBottomPageSelected(pageIndex, tabsRouter),
                 )
               : null,
-          floatingActionButton: context.isMobileSize &&
-                  (_isBloodTestsPage(currentPage) || _isRacesPage(currentPage))
+          floatingActionButton: _isFloatingButtonRequired(context, currentPage)
               ? FloatingActionButton(
                   onPressed: () => _onFloatingActionButtonPressed(currentPage),
                   child: const Icon(Icons.add),
@@ -181,16 +181,19 @@ class _State extends State<HomeContent> {
       routeData.name == CalendarRoute.name ||
       routeData.name == HealthRoute.name;
 
-  bool _isBloodTestsPage(RouteData routeData) =>
-      routeData.name == BloodTestsRoute.name;
+  bool _isFloatingButtonRequired(BuildContext context, RouteData currentPage) =>
+      context.isMobileSize &&
+      (currentPage.name == BloodTestsRoute.name ||
+          currentPage.name == RacesRoute.name ||
+          currentPage.name == ClientsRoute.name);
 
-  bool _isRacesPage(RouteData routeData) => routeData.name == RacesRoute.name;
-
-  void _onFloatingActionButtonPressed(RouteData routeData) {
-    if (_isBloodTestsPage(routeData)) {
+  void _onFloatingActionButtonPressed(RouteData currentPage) {
+    if (currentPage.name == BloodTestsRoute.name) {
       navigateTo(BloodTestCreatorRoute());
-    } else if (_isRacesPage(routeData)) {
+    } else if (currentPage.name == RacesRoute.name) {
       navigateTo(RaceCreatorRoute());
+    } else if (currentPage.name == ClientsRoute.name) {
+      showDialogDependingOnScreenSize(const ClientsSearchDialog());
     }
   }
 }

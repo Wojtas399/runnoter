@@ -5,21 +5,25 @@ import 'gap/gap_components.dart';
 import 'text/title_text_components.dart';
 
 class LoadingInfo extends StatelessWidget {
+  final String? loadingText;
+
   const LoadingInfo({
     super.key,
+    this.loadingText,
   });
 
   @override
   Widget build(BuildContext context) {
+    final String loadingText =
+        this.loadingText ?? '${Str.of(context).loading}...';
+
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const CircularProgressIndicator(),
           const Gap16(),
-          TitleSmall(
-            '${Str.of(context).loading}...',
-          ),
+          TitleSmall(loadingText),
         ],
       ),
     );

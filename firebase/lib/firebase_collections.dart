@@ -43,6 +43,7 @@ CollectionReference<HealthMeasurementDto> getHealthMeasurementsRef(
               healthMeasurementDto.toJson(),
         );
 
+//TODO: Change it to Appearance instead of AppearanceSettings
 DocumentReference<AppearanceSettingsDto> getAppearanceSettingsRef(
   String userId,
 ) =>
@@ -58,6 +59,7 @@ DocumentReference<AppearanceSettingsDto> getAppearanceSettingsRef(
               appearanceSettingsDto.toJson(),
         );
 
+//TODO: Change it to Activities instead of ActivitiesSettings
 DocumentReference<ActivitiesSettingsDto> getActivitiesSettingsRef(
   String userId,
 ) =>

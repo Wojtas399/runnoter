@@ -26,6 +26,7 @@ class ClientsSearchBloc extends BlocWithStatus<ClientsSearchEvent,
     on<ClientsSearchEventSearch>(_search);
   }
 
+  //TODO: Remove below event. We only want to search on submit, so we need only search event.
   void _searchTextChanged(
     ClientsSearchEventSearchTextChanged event,
     Emitter<ClientsSearchState> emit,
@@ -46,6 +47,7 @@ class ClientsSearchBloc extends BlocWithStatus<ClientsSearchEvent,
       surname: state.searchText,
       email: state.searchText,
     );
+    print(foundUsers);
     emit(state.copyWith(
       foundUsers: _getUsersBasicInfo(foundUsers),
     ));

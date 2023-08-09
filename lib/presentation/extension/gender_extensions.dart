@@ -8,4 +8,9 @@ extension GenderExtensions on Gender {
         Gender.male => Str.of(context).male,
         Gender.female => Str.of(context).female,
       };
+
+  IconData toIconData() => switch (this) {
+        Gender.male => Icons.male,
+        Gender.female => Icons.female,
+      };
 }

@@ -143,6 +143,15 @@
   "@forgotPasswordUserNotFoundDialogMessage": {
     "description": "Message of the dialog to inform that user does not exist"
   },
+  "@__________REQUIRED_DATA_COMPLETION__________": {},
+  "requiredDataCompletionTitle": "Wymagane dane",
+  "@requiredDataCompletionTitle": {
+    "description": "Title of required data completion screen"
+  },
+  "requiredDataCompletionMessage": "Dokończ tworzenie konta podając swoje dane osobowe. Są one niezbędne do prawidłowego działania aplikacji.",
+  "@requiredDataCompletionMessage": {
+    "description": "Message to information about required data completion"
+  },
   "@__________HOME__________": {},
   "homeTitle": "Strona główna",
   "@homeTitle": {
@@ -159,15 +168,6 @@
   "homeSignOutConfirmationDialogMessage": "Czy na pewno chcesz się wylogować?",
   "@homeSignOutConfirmationDialogMessage": {
     "description": "Message of the dialog to confirm sign out"
-  },
-  "@__________REQUIRED_DATA_COMPLETION__________": {},
-  "requiredDataCompletionTitle": "Wymagane dane",
-  "@requiredDataCompletionTitle": {
-    "description": "Title of required data completion screen"
-  },
-  "requiredDataCompletionMessage": "Dokończ tworzenie konta podając swoje dane osobowe. Są one niezbędne do prawidłowego działania aplikacji.",
-  "@requiredDataCompletionMessage": {
-    "description": "Message to information about required data completion"
   },
   "@__________CURRENT_WEEK__________": {},
   "currentWeekTitle": "Obecny tydzień",
@@ -694,11 +694,6 @@
   "@racesNoRacesMessage": {
     "description": "Message of the info about the lack of races"
   },
-  "@__________CLIENTS__________": {},
-  "clientsTitle": "Klienci",
-  "@clientsTitle": {
-    "description": "Title of clients screen"
-  },
   "@__________RACE_PREVIEW__________": {},
   "racePreviewTitle": "Zawody",
   "@racePreviewTitle": {
@@ -732,6 +727,24 @@
   "raceExpectedDuration": "Oczekiwany czas",
   "@raceExpectedDuration": {
     "description": "Label of race expected duration"
+  },
+  "@__________CLIENTS__________": {},
+  "clientsTitle": "Klienci",
+  "@clientsTitle": {
+    "description": "Title of clients screen"
+  },
+  "@__________USERS_SEARCH__________": {},
+  "usersSearchTitle": "Szukaj użytkowników",
+  "@usersSearchTitle": {
+    "description": "Title of users search screen"
+  },
+  "usersSearchSearchingInfo": "Szukanie...",
+  "@usersSearchSearchingInfo": {
+    "description": "Info about searching process"
+  },
+  "usersSearchNoResultsInfo": "Brak pasujących użytkowników",
+  "@usersSearchNoResultsInfo": {
+    "description": "Info about no matching users"
   },
   "@__________RUN_STATUS_PARAMS__________": {},
   "runStatus": "Status",
