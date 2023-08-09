@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/bloc/users_search/users_search_bloc.dart';
-import '../../component/custom_text_field_component.dart';
 
 class UsersSearchInput extends StatefulWidget {
   const UsersSearchInput({super.key});
@@ -29,19 +28,21 @@ class _State extends State<UsersSearchInput> {
 
   @override
   Widget build(BuildContext context) {
-    return CustomTextField(
+    return TextField(
       controller: _controller,
       textInputAction: TextInputAction.search,
       onSubmitted: (_) => _onSubmitted(context),
-      icon: Icons.person_search,
-      hintText: 'Search...',
-      suffixIcon: _showClearButton
-          ? IconButton(
-              padding: const EdgeInsets.all(0),
-              onPressed: () => _controller.clear(),
-              icon: const Icon(Icons.close),
-            )
-          : null,
+      decoration: InputDecoration(
+        prefixIcon: const Icon(Icons.person_search),
+        hintText: 'Search...',
+        suffixIcon: _showClearButton
+            ? IconButton(
+                padding: const EdgeInsets.all(0),
+                onPressed: () => _controller.clear(),
+                icon: const Icon(Icons.close),
+              )
+            : null,
+      ),
     );
   }
 

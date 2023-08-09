@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../formatter/minutes_or_seconds_input_formatter.dart';
-import 'custom_text_field_component.dart';
 import 'gap/gap_components.dart';
 import 'text/title_text_components.dart';
 
@@ -116,9 +115,12 @@ class _DurationField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: CustomTextField(
-        label: label,
-        isLabelCentered: true,
+      child: TextField(
+        decoration: InputDecoration(
+          label: Center(
+            child: Text(label),
+          ),
+        ),
         textAlign: TextAlign.center,
         maxLength: 2,
         keyboardType: TextInputType.number,

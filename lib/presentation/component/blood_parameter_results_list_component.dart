@@ -11,7 +11,6 @@ import '../formatter/blood_test_parameter_unit_formatter.dart';
 import '../formatter/decimal_text_input_formatter.dart';
 import '../service/blood_parameter_service.dart';
 import '../service/utils.dart';
-import 'custom_text_field_component.dart';
 import 'nullable_text_component.dart';
 import 'text/label_text_components.dart';
 import 'text/title_text_components.dart';
@@ -393,11 +392,11 @@ class _EditableParameterValueState extends State<_EditableParameterValue> {
 
   @override
   Widget build(BuildContext context) {
-    return CustomTextField(
+    return TextField(
+      decoration: const InputDecoration(contentPadding: EdgeInsets.all(12)),
       maxLines: 1,
       keyboardType: const TextInputType.numberWithOptions(decimal: true),
       maxLength: 10,
-      contentPadding: const EdgeInsets.all(12),
       inputFormatters: [
         DecimalTextInputFormatter(decimalRange: 2),
       ],

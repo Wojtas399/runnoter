@@ -6,7 +6,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../domain/additional_model/run_status.dart';
 import '../../../domain/additional_model/settings.dart';
 import '../../../domain/bloc/run_status_creator/run_status_creator_bloc.dart';
-import '../../component/custom_text_field_component.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/text/label_text_components.dart';
 import '../../component/text/title_text_components.dart';
@@ -64,9 +63,12 @@ class _AvgPaceDistanceState extends State<_AvgPaceDistance> {
 
   @override
   Widget build(BuildContext context) {
-    return CustomTextField(
-      label:
+    return TextField(
+      decoration: InputDecoration(
+        label: Text(
           '${Str.of(context).runStatusCreatorAveragePace} [${context.paceUnit.toUIFormat()}]',
+        ),
+      ),
       controller: _controller,
       keyboardType: TextInputType.number,
       maxLength: 5,
@@ -199,9 +201,12 @@ class _AveragePaceField extends StatelessWidget {
     return Expanded(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24),
-        child: CustomTextField(
-          label: label,
-          isLabelCentered: true,
+        child: TextField(
+          decoration: InputDecoration(
+            label: Center(
+              child: Text(label),
+            ),
+          ),
           textAlign: TextAlign.center,
           controller: controller,
           maxLength: 2,

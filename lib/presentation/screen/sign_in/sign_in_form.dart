@@ -4,7 +4,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/bloc/sign_in/sign_in_bloc.dart';
 import '../../component/big_button_component.dart';
-import '../../component/custom_text_field_component.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/password_text_field_component.dart';
 import '../../config/navigation/router.dart';
@@ -33,9 +32,11 @@ class _Email extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomTextField(
-      label: Str.of(context).email,
-      icon: Icons.email,
+    return TextField(
+      decoration: InputDecoration(
+        label: Text(Str.of(context).email),
+        prefixIcon: const Icon(Icons.email),
+      ),
       onChanged: (String? value) => _onChanged(value, context),
       onTapOutside: (_) => unfocusInputs(),
     );
