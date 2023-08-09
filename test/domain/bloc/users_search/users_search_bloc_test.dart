@@ -4,7 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/additional_model/user_basic_info.dart';
-import 'package:runnoter/domain/bloc/clients_search/clients_search_bloc.dart';
+import 'package:runnoter/domain/bloc/users_search/users_search_bloc.dart';
 import 'package:runnoter/domain/entity/user.dart';
 import 'package:runnoter/domain/repository/user_repository.dart';
 
@@ -23,37 +23,28 @@ void main() {
   });
 
   blocTest(
-    'search text changed, '
-    'should update search text in state',
-    build: () => ClientsSearchBloc(),
-    act: (bloc) => bloc.add(const ClientsSearchEventSearchTextChanged(
-      searchText: 'searchText',
+    'search, '
+    'search text is empty string, '
+    'should set found users as null',
+    build: () => UsersSearchBloc(
+      state: const UsersSearchState(
+        status: BlocStatusComplete(),
+        foundUsers: [],
+      ),
+    ),
+    act: (bloc) => bloc.add(const UsersSearchEventSearch(
+      searchText: '',
     )),
     expect: () => [
-      const ClientsSearchState(
-        status: BlocStatusComplete(),
-        searchText: 'searchText',
-      ),
+      const UsersSearchState(status: BlocStatusComplete(), foundUsers: null),
     ],
   );
 
   blocTest(
     'search, '
-    'search text is empty string, '
-    'should do nothing',
-    build: () => ClientsSearchBloc(),
-    act: (bloc) => bloc.add(const ClientsSearchEventSearch()),
-    expect: () => [],
-  );
-
-  blocTest(
-    'search, '
     "should call user repository's method to search users and should updated found users in state",
-    build: () => ClientsSearchBloc(
-      state: const ClientsSearchState(
-        status: BlocStatusComplete(),
-        searchText: 'sea',
-      ),
+    build: () => UsersSearchBloc(
+      state: const UsersSearchState(status: BlocStatusComplete()),
     ),
     setUp: () => userRepository.mockSearchForUsers(
       users: [
@@ -73,12 +64,11 @@ void main() {
         ),
       ],
     ),
-    act: (bloc) => bloc.add(const ClientsSearchEventSearch()),
+    act: (bloc) => bloc.add(const UsersSearchEventSearch(searchText: 'sea')),
     expect: () => [
-      const ClientsSearchState(status: BlocStatusLoading(), searchText: 'sea'),
-      const ClientsSearchState(
+      const UsersSearchState(status: BlocStatusLoading()),
+      const UsersSearchState(
         status: BlocStatusComplete(),
-        searchText: 'sea',
         foundUsers: [
           UserBasicInfo(
             id: 'u1',

@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/bloc/clients_search/clients_search_bloc.dart';
+import '../../../domain/bloc/users_search/users_search_bloc.dart';
 import '../../component/text_field_component.dart';
 
-class ClientsSearchInput extends StatefulWidget {
-  const ClientsSearchInput({super.key});
+class UsersSearchInput extends StatefulWidget {
+  const UsersSearchInput({super.key});
 
   @override
   State<StatefulWidget> createState() => _State();
 }
 
-class _State extends State<ClientsSearchInput> {
+class _State extends State<UsersSearchInput> {
   final TextEditingController _controller = TextEditingController();
   bool _showClearButton = false;
 
@@ -46,9 +46,6 @@ class _State extends State<ClientsSearchInput> {
   }
 
   void _manageCleanButtonVisibility() {
-    context.read<ClientsSearchBloc>().add(
-          ClientsSearchEventSearchTextChanged(searchText: _controller.text),
-        );
     if (_controller.text.isEmpty && _showClearButton) {
       setState(() {
         _showClearButton = false;
@@ -61,8 +58,8 @@ class _State extends State<ClientsSearchInput> {
   }
 
   void _onSubmitted(BuildContext context) {
-    context.read<ClientsSearchBloc>().add(
-          const ClientsSearchEventSearch(),
+    context.read<UsersSearchBloc>().add(
+          UsersSearchEventSearch(searchText: _controller.text),
         );
   }
 }

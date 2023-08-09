@@ -4,30 +4,32 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/additional_model/bloc_status.dart';
 import '../../../domain/additional_model/user_basic_info.dart';
-import '../../../domain/bloc/clients_search/clients_search_bloc.dart';
+import '../../../domain/bloc/users_search/users_search_bloc.dart';
 import '../../component/empty_content_info_component.dart';
 import '../../component/loading_info_component.dart';
+import '../../component/padding/paddings_24.dart';
 import '../../extension/gender_extensions.dart';
 
-class ClientsSearchFoundUsers extends StatelessWidget {
-  const ClientsSearchFoundUsers({super.key});
+class UsersSearchFoundUsers extends StatelessWidget {
+  const UsersSearchFoundUsers({super.key});
 
   @override
   Widget build(BuildContext context) {
     final BlocStatus blocStatus = context.select(
-      (ClientsSearchBloc bloc) => bloc.state.status,
+      (UsersSearchBloc bloc) => bloc.state.status,
     );
     final List<UserBasicInfo>? foundUsers = context.select(
-      (ClientsSearchBloc bloc) => bloc.state.foundUsers,
+      (UsersSearchBloc bloc) => bloc.state.foundUsers,
     );
+    final str = Str.of(context);
 
     return blocStatus is BlocStatusLoading
-        ? LoadingInfo(loadingText: Str.of(context).usersSearchSearchingInfo)
+        ? LoadingInfo(loadingText: str.usersSearchSearchingInfo)
         : switch (foundUsers) {
-            null => const SizedBox(),
-            [] => EmptyContentInfo(
-                title: Str.of(context).usersSearchNoResultsInfo,
+            null => Paddings24(
+                child: EmptyContentInfo(title: str.usersSearchInstruction),
               ),
+            [] => EmptyContentInfo(title: str.usersSearchNoResultsInfo),
             [...] => ListView(
                 children: ListTile.divideTiles(
                   context: context,

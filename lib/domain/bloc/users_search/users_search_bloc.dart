@@ -8,46 +8,36 @@ import '../../additional_model/user_basic_info.dart';
 import '../../entity/user.dart';
 import '../../repository/user_repository.dart';
 
-part 'clients_search_event.dart';
-part 'clients_search_state.dart';
+part 'users_search_event.dart';
+part 'users_search_state.dart';
 
-class ClientsSearchBloc extends BlocWithStatus<ClientsSearchEvent,
-    ClientsSearchState, dynamic, dynamic> {
+class UsersSearchBloc extends BlocWithStatus<UsersSearchEvent, UsersSearchState,
+    dynamic, dynamic> {
   final UserRepository _userRepository;
 
-  ClientsSearchBloc({
-    ClientsSearchState state = const ClientsSearchState(
+  UsersSearchBloc({
+    UsersSearchState state = const UsersSearchState(
       status: BlocStatusInitial(),
-      searchText: '',
     ),
   })  : _userRepository = getIt<UserRepository>(),
         super(state) {
-    on<ClientsSearchEventSearchTextChanged>(_searchTextChanged);
-    on<ClientsSearchEventSearch>(_search);
-  }
-
-  //TODO: Remove below event. We only want to search on submit, so we need only search event.
-  void _searchTextChanged(
-    ClientsSearchEventSearchTextChanged event,
-    Emitter<ClientsSearchState> emit,
-  ) {
-    emit(state.copyWith(
-      searchText: event.searchText,
-    ));
+    on<UsersSearchEventSearch>(_search);
   }
 
   Future<void> _search(
-    ClientsSearchEventSearch event,
-    Emitter<ClientsSearchState> emit,
+    UsersSearchEventSearch event,
+    Emitter<UsersSearchState> emit,
   ) async {
-    if (state.searchText.isEmpty) return;
+    if (event.searchText.isEmpty) {
+      emitCompleteStatus(emit);
+      return;
+    }
     emitLoadingStatus(emit);
     final List<User> foundUsers = await _userRepository.searchForUsers(
-      name: state.searchText,
-      surname: state.searchText,
-      email: state.searchText,
+      name: event.searchText,
+      surname: event.searchText,
+      email: event.searchText,
     );
-    print(foundUsers);
     emit(state.copyWith(
       foundUsers: _getUsersBasicInfo(foundUsers),
     ));

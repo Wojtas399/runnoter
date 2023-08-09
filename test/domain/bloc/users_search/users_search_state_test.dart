@@ -1,16 +1,15 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/additional_model/user_basic_info.dart';
-import 'package:runnoter/domain/bloc/clients_search/clients_search_bloc.dart';
+import 'package:runnoter/domain/bloc/users_search/users_search_bloc.dart';
 import 'package:runnoter/domain/entity/user.dart';
 
 void main() {
-  late ClientsSearchState state;
+  late UsersSearchState state;
 
   setUp(() {
-    state = const ClientsSearchState(
+    state = const UsersSearchState(
       status: BlocStatusInitial(),
-      searchText: '',
     );
   });
 
@@ -24,19 +23,6 @@ void main() {
 
       expect(state.status, expectedStatus);
       expect(state2.status, const BlocStatusComplete());
-    },
-  );
-
-  test(
-    'copy with search text',
-    () {
-      const String expectedSearchText = 'sea';
-
-      state = state.copyWith(searchText: expectedSearchText);
-      final state2 = state.copyWith();
-
-      expect(state.searchText, expectedSearchText);
-      expect(state2.searchText, expectedSearchText);
     },
   );
 
@@ -64,7 +50,7 @@ void main() {
       final state2 = state.copyWith();
 
       expect(state.foundUsers, expectedFoundUsers);
-      expect(state2.foundUsers, expectedFoundUsers);
+      expect(state2.foundUsers, null);
     },
   );
 }

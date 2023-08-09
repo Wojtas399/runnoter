@@ -738,6 +738,10 @@
   "@usersSearchTitle": {
     "description": "Title of users search screen"
   },
+  "usersSearchInstruction": "Wprowadź tekst, aby wyszukać użytkowników",
+  "@usersSearchInstruction": {
+    "description": "Instruction to search users"
+  },
   "usersSearchSearchingInfo": "Szukanie...",
   "@usersSearchSearchingInfo": {
     "description": "Info about searching process"

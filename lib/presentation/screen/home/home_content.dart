@@ -6,7 +6,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../domain/bloc/home/home_bloc.dart';
 import '../../../domain/entity/user.dart';
 import '../../config/navigation/router.dart';
-import '../../dialog/clients_search/clients_search_dialog.dart';
+import '../../dialog/users_search/users_search_dialog.dart';
 import '../../extension/context_extensions.dart';
 import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
@@ -193,7 +193,7 @@ class _State extends State<HomeContent> {
     } else if (currentPage.name == RacesRoute.name) {
       navigateTo(RaceCreatorRoute());
     } else if (currentPage.name == ClientsRoute.name) {
-      showDialogDependingOnScreenSize(const ClientsSearchDialog());
+      showDialogDependingOnScreenSize(const UsersSearchDialog());
     }
   }
 }

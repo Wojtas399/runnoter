@@ -205,6 +205,7 @@
   "clientsTitle": "Clients",
   "@__________USERS_SEARCH__________": {},
   "usersSearchTitle": "Search users",
+  "usersSearchInstruction": "Enter text to search users",
   "usersSearchSearchingInfo": "Searching...",
   "usersSearchNoResultsInfo": "No matching users",
   "@__________RUN_STATUS_PARAMS__________": {},
