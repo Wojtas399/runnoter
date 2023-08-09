@@ -3,9 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../formatter/minutes_or_seconds_input_formatter.dart';
+import 'custom_text_field_component.dart';
 import 'gap/gap_components.dart';
 import 'text/title_text_components.dart';
-import 'text_field_component.dart';
 
 class DurationInput extends StatefulWidget {
   final String label;
@@ -116,7 +116,7 @@ class _DurationField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: TextFieldComponent(
+      child: CustomTextField(
         label: label,
         isLabelCentered: true,
         textAlign: TextAlign.center,

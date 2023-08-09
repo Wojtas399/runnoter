@@ -4,8 +4,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/bloc/required_data_completion/required_data_completion_bloc.dart';
 import '../../../domain/entity/user.dart';
+import '../../component/custom_text_field_component.dart';
 import '../../component/gap/gap_components.dart';
-import '../../component/text_field_component.dart';
 import '../../component/two_options_component.dart';
 import '../../service/utils.dart';
 
@@ -97,7 +97,7 @@ class _Name extends StatelessWidget {
     );
     final str = Str.of(context);
 
-    return TextFieldComponent(
+    return CustomTextField(
       icon: Icons.person,
       label: str.name,
       isRequired: true,
@@ -124,7 +124,7 @@ class _Surname extends StatelessWidget {
     );
     final str = Str.of(context);
 
-    return TextFieldComponent(
+    return CustomTextField(
       icon: Icons.person,
       label: str.surname,
       isRequired: true,

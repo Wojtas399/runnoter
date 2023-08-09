@@ -4,8 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/bloc/workout_stage_creator/workout_stage_creator_bloc.dart';
+import '../../component/custom_text_field_component.dart';
 import '../../component/gap/gap_components.dart';
-import '../../component/text_field_component.dart';
 import '../../service/utils.dart';
 
 class WorkoutStageCreatorSeriesStageForm extends StatelessWidget {
@@ -58,7 +58,7 @@ class _AmountOfSeriesState extends State<_AmountOfSeries> {
 
   @override
   Widget build(BuildContext context) {
-    return TextFieldComponent(
+    return CustomTextField(
       label: Str.of(context).workoutStageCreatorAmountOfSeries,
       keyboardType: TextInputType.number,
       maxLength: 2,
@@ -120,7 +120,7 @@ class _SeriesDistanceState extends State<_SeriesDistance> {
 
   @override
   Widget build(BuildContext context) {
-    return TextFieldComponent(
+    return CustomTextField(
       label: '${Str.of(context).workoutStageCreatorSeriesDistance} [m]',
       keyboardType: TextInputType.number,
       maxLength: 6,
@@ -181,7 +181,7 @@ class _WalkingDistanceState extends State<_WalkingDistance> {
 
   @override
   Widget build(BuildContext context) {
-    return TextFieldComponent(
+    return CustomTextField(
       label: '${Str.of(context).workoutStageCreatorWalkingDistance} [m]',
       keyboardType: TextInputType.number,
       maxLength: 6,
@@ -241,7 +241,7 @@ class _JoggingDistanceState extends State<_JoggingDistance> {
 
   @override
   Widget build(BuildContext context) {
-    return TextFieldComponent(
+    return CustomTextField(
       label: '${Str.of(context).workoutStageCreatorJoggingDistance} [m]',
       keyboardType: TextInputType.number,
       maxLength: 6,

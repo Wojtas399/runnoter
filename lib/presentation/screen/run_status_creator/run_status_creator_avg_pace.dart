@@ -6,10 +6,10 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../domain/additional_model/run_status.dart';
 import '../../../domain/additional_model/settings.dart';
 import '../../../domain/bloc/run_status_creator/run_status_creator_bloc.dart';
+import '../../component/custom_text_field_component.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/text/label_text_components.dart';
 import '../../component/text/title_text_components.dart';
-import '../../component/text_field_component.dart';
 import '../../extension/context_extensions.dart';
 import '../../formatter/decimal_text_input_formatter.dart';
 import '../../formatter/minutes_or_seconds_input_formatter.dart';
@@ -64,7 +64,7 @@ class _AvgPaceDistanceState extends State<_AvgPaceDistance> {
 
   @override
   Widget build(BuildContext context) {
-    return TextFieldComponent(
+    return CustomTextField(
       label:
           '${Str.of(context).runStatusCreatorAveragePace} [${context.paceUnit.toUIFormat()}]',
       controller: _controller,
@@ -199,7 +199,7 @@ class _AveragePaceField extends StatelessWidget {
     return Expanded(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24),
-        child: TextFieldComponent(
+        child: CustomTextField(
           label: label,
           isLabelCentered: true,
           textAlign: TextAlign.center,

@@ -3,13 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/bloc/profile/identities/profile_identities_bloc.dart';
+import '../../component/custom_text_field_component.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/gap/gap_horizontal_components.dart';
 import '../../component/padding/paddings_24.dart';
 import '../../component/responsive_layout_component.dart';
 import '../../component/text/body_text_components.dart';
 import '../../component/text/label_text_components.dart';
-import '../../component/text_field_component.dart';
 import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
 import '../../service/utils.dart';
@@ -188,7 +188,7 @@ class _Form extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        TextFieldComponent(
+        CustomTextField(
           label: str.email,
           isRequired: true,
           controller: emailController,

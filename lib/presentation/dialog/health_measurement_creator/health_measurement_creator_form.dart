@@ -7,7 +7,7 @@ import '../../../domain/bloc/health_measurement_creator/health_measurement_creat
 import '../../component/date_selector_component.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/text/title_text_components.dart';
-import '../../component/text_field_component.dart';
+import '../../component/custom_text_field_component.dart';
 import '../../formatter/decimal_text_input_formatter.dart';
 import '../../service/utils.dart';
 
@@ -92,7 +92,7 @@ class _RestingHeartRateState extends State<_RestingHeartRate> {
   @override
   Widget build(BuildContext context) {
     final str = Str.of(context);
-    return TextFieldComponent(
+    return CustomTextField(
       label: '${str.healthRestingHeartRate} [${str.heartRateUnit}]',
       keyboardType: TextInputType.number,
       maxLength: 3,
@@ -146,7 +146,7 @@ class _FastingWeightState extends State<_FastingWeight> {
 
   @override
   Widget build(BuildContext context) {
-    return TextFieldComponent(
+    return CustomTextField(
       label: '${Str.of(context).healthFastingWeight} [kg]',
       keyboardType: const TextInputType.numberWithOptions(decimal: true),
       maxLength: 6,

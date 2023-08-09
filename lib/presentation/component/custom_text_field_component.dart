@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class TextFieldComponent extends StatelessWidget {
+class CustomTextField extends StatelessWidget {
   final String? label;
   final String? hintText;
   final IconData? icon;
@@ -24,7 +24,7 @@ class TextFieldComponent extends StatelessWidget {
   final Function(PointerDownEvent event)? onTapOutside;
   final String? Function(String? value)? validator;
 
-  const TextFieldComponent({
+  const CustomTextField({
     super.key,
     this.label,
     this.hintText,

@@ -3,10 +3,10 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../service/navigator_service.dart';
 import '../../service/utils.dart';
+import '../custom_text_field_component.dart';
 import '../gap/gap_horizontal_components.dart';
 import '../responsive_layout_component.dart';
 import '../text/label_text_components.dart';
-import '../text_field_component.dart';
 
 class ValueDialogComponent extends StatefulWidget {
   final String title;
@@ -120,7 +120,7 @@ class _NormalDialog extends StatelessWidget {
       title: Text(title),
       content: SizedBox(
         width: 400,
-        child: TextFieldComponent(
+        child: CustomTextField(
           label: label,
           icon: textFieldIcon,
           isRequired: isValueRequired,
@@ -190,7 +190,7 @@ class _FullScreenDialog extends StatelessWidget {
             color: Colors.transparent,
             child: Column(
               children: [
-                TextFieldComponent(
+                CustomTextField(
                   label: label,
                   icon: textFieldIcon,
                   isRequired: isValueRequired,

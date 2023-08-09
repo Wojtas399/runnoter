@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/bloc/race_creator/race_creator_bloc.dart';
+import '../../component/custom_text_field_component.dart';
 import '../../component/gap/gap_components.dart';
-import '../../component/text_field_component.dart';
 import '../../extension/context_extensions.dart';
 import '../../extension/double_extensions.dart';
 import '../../extension/string_extensions.dart';
@@ -64,7 +64,7 @@ class _RaceNameState extends State<_RaceName> {
 
   @override
   Widget build(BuildContext context) {
-    return TextFieldComponent(
+    return CustomTextField(
       label: Str.of(context).raceName,
       controller: _controller,
       isRequired: true,
@@ -106,7 +106,7 @@ class _RacePlaceState extends State<_RacePlace> {
 
   @override
   Widget build(BuildContext context) {
-    return TextFieldComponent(
+    return CustomTextField(
       label: Str.of(context).racePlace,
       isRequired: true,
       maxLength: 100,
@@ -153,7 +153,7 @@ class _RaceDistanceState extends State<_RaceDistance> {
 
   @override
   Widget build(BuildContext context) {
-    return TextFieldComponent(
+    return CustomTextField(
       label:
           '${Str.of(context).raceDistance} [${context.distanceUnit.toUIShortFormat()}]',
       controller: _controller,
