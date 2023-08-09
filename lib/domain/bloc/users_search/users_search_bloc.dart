@@ -69,7 +69,7 @@ class UsersSearchBloc extends BlocWithStatus<UsersSearchEvent, UsersSearchState,
     UsersSearchEventSearch event,
     Emitter<UsersSearchState> emit,
   ) async {
-    if (event.searchText.isEmpty) {
+    if (event.searchQuery.isEmpty) {
       emit(state.copyWith(
         status: const BlocStatusComplete(),
         setFoundUsersAsNull: true,
@@ -77,11 +77,8 @@ class UsersSearchBloc extends BlocWithStatus<UsersSearchEvent, UsersSearchState,
       return;
     }
     emitLoadingStatus(emit);
-    final List<User> foundUsers = await _userRepository.searchForUsers(
-      name: event.searchText,
-      surname: event.searchText,
-      email: event.searchText,
-    );
+    final List<User> foundUsers =
+        await _userRepository.searchForUsers(searchQuery: event.searchQuery);
     emit(state.copyWith(
       foundUsers: _addRelationshipStatusForUsers(foundUsers),
     ));

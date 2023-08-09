@@ -211,9 +211,7 @@ void main() {
       repository = UserRepositoryImpl(initialState: existingUsers);
 
       final List<User> users = await repository.searchForUsers(
-        name: 'li',
-        surname: 'ani',
-        email: 'rt',
+        searchQuery: 'li',
       );
       final Stream<List<User>?> repositoryState$ = repository.dataStream$;
 

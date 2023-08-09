@@ -9,9 +9,9 @@ class UsersSearchEventInitialize extends UsersSearchEvent {
 }
 
 class UsersSearchEventSearch extends UsersSearchEvent {
-  final String searchText;
+  final String searchQuery;
 
-  const UsersSearchEventSearch({required this.searchText});
+  const UsersSearchEventSearch({required this.searchQuery});
 }
 
 class UsersSearchEventInviteUser extends UsersSearchEvent {

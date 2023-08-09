@@ -63,7 +63,7 @@ class _State extends State<UsersSearchInput> {
 
   void _onSubmitted(BuildContext context) {
     context.read<UsersSearchBloc>().add(
-          UsersSearchEventSearch(searchText: _controller.text),
+          UsersSearchEventSearch(searchQuery: _controller.text),
         );
   }
 }

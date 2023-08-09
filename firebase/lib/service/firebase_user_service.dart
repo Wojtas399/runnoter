@@ -14,34 +14,22 @@ class FirebaseUserService {
     return querySnapshot.docs.map((docSnapshot) => docSnapshot.data()).toList();
   }
 
-  Future<List<UserDto>> searchForUsers({
-    String? name,
-    String? surname,
-    String? email,
-  }) async {
+  Future<List<UserDto>> searchForUsers({required String searchQuery}) async {
     final usersRef = getUsersRef();
-    List<UserDto> nameQueries = [];
-    List<UserDto> surnameQueries = [];
-    List<UserDto> emailQueries = [];
-    if (name != null) {
-      final snapshot =
-          await usersRef.where(nameField, isGreaterThanOrEqualTo: name).get();
-      nameQueries =
-          snapshot.docs.map((docSnapshot) => docSnapshot.data()).toList();
-    }
-    if (surname != null) {
-      final snapshot =
-          await usersRef.where(surname, isGreaterThanOrEqualTo: surname).get();
-      surnameQueries =
-          snapshot.docs.map((docSnapshot) => docSnapshot.data()).toList();
-    }
-    if (email != null) {
-      final snapshot =
-          await usersRef.where(emailField, isGreaterThanOrEqualTo: email).get();
-      emailQueries =
-          snapshot.docs.map((docSnapshot) => docSnapshot.data()).toList();
-    }
-    return [...nameQueries, ...surnameQueries, ...emailQueries];
+    final nameQuerySnapshot = await usersRef
+        .where(nameField, isGreaterThanOrEqualTo: searchQuery)
+        .get();
+    final surnameQuerySnapshot = await usersRef
+        .where(surnameField, isGreaterThanOrEqualTo: searchQuery)
+        .get();
+    final emailQuerySnapshot = await usersRef
+        .where(emailField, isGreaterThanOrEqualTo: searchQuery)
+        .get();
+    return [
+      ...nameQuerySnapshot.docs.map((docSnapshot) => docSnapshot.data()),
+      ...surnameQuerySnapshot.docs.map((docSnapshot) => docSnapshot.data()),
+      ...emailQuerySnapshot.docs.map((docSnapshot) => docSnapshot.data()),
+    ];
   }
 
   Future<UserDto?> addUserData({required UserDto userDto}) async {

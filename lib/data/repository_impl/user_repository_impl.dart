@@ -47,28 +47,15 @@ class UserRepositoryImpl extends StateRepository<User>
   }
 
   @override
-  Future<List<User>> searchForUsers({
-    String? name,
-    String? surname,
-    String? email,
-  }) async {
-    await _searchForUsersInDb(name: name, surname: surname, email: email);
+  Future<List<User>> searchForUsers({required searchQuery}) async {
+    await _searchForUsersInDb(searchQuery);
     final Stream<List<User>> matchingUsers$ = dataStream$.map(
       (List<User>? users) => [
         ...?users?.where(
           (User user) {
-            bool doesNameMatch = false;
-            bool doesSurnameMatch = false;
-            bool doesEmailMatch = false;
-            if (name?.isNotEmpty == true) {
-              doesNameMatch = user.name.contains(name!);
-            }
-            if (surname?.isNotEmpty == true) {
-              doesSurnameMatch = user.surname.contains(surname!);
-            }
-            if (email?.isNotEmpty == true) {
-              doesEmailMatch = user.email.contains(email!);
-            }
+            bool doesNameMatch = user.name.contains(searchQuery);
+            bool doesSurnameMatch = user.surname.contains(searchQuery);
+            bool doesEmailMatch = user.email.contains(searchQuery);
             return doesNameMatch || doesSurnameMatch || doesEmailMatch;
           },
         ),
@@ -231,17 +218,10 @@ class UserRepositoryImpl extends StateRepository<User>
     addEntities(loadedUsers);
   }
 
-  Future<void> _searchForUsersInDb({
-    String? name,
-    String? surname,
-    String? email,
-  }) async {
-    final userDtos = await _dbUserService.searchForUsers(
-      name: name,
-      surname: surname,
-      email: email,
-    );
-    final List<User> loadedUsers = await _loadUserSettings(userDtos);
+  Future<void> _searchForUsersInDb(String searchQuery) async {
+    final List<firebase.UserDto> foundUserDtos =
+        await _dbUserService.searchForUsers(searchQuery: searchQuery);
+    final List<User> loadedUsers = await _loadUserSettings(foundUserDtos);
     addEntities(loadedUsers);
   }
 

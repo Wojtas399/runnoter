@@ -137,7 +137,7 @@ void main() {
 
   blocTest(
     'search, '
-    'search text is empty string, '
+    'search query is empty string, '
     'should set found users as null',
     build: () => UsersSearchBloc(
       state: const UsersSearchState(
@@ -146,7 +146,7 @@ void main() {
       ),
     ),
     act: (bloc) => bloc.add(const UsersSearchEventSearch(
-      searchText: '',
+      searchQuery: '',
     )),
     expect: () => [
       const UsersSearchState(
@@ -191,7 +191,7 @@ void main() {
         ),
       ],
     ),
-    act: (bloc) => bloc.add(const UsersSearchEventSearch(searchText: 'sea')),
+    act: (bloc) => bloc.add(const UsersSearchEventSearch(searchQuery: 'sea')),
     expect: () => [
       const UsersSearchState(
         status: BlocStatusLoading(),
@@ -237,11 +237,7 @@ void main() {
       ),
     ],
     verify: (_) => verify(
-      () => userRepository.searchForUsers(
-        name: 'sea',
-        surname: 'sea',
-        email: 'sea',
-      ),
+      () => userRepository.searchForUsers(searchQuery: 'sea'),
     ).called(1),
   );
 
