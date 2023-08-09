@@ -4,7 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/bloc/sign_up/sign_up_bloc.dart';
 import '../../../domain/entity/user.dart';
-import '../../component/custom_text_field_component.dart';
+import '../../component/form_text_field_component.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/password_text_field_component.dart';
 import '../../component/two_options_component.dart';
@@ -103,7 +103,7 @@ class _Name extends StatelessWidget {
     );
     final str = Str.of(context);
 
-    return CustomTextField(
+    return FormTextField(
       icon: Icons.person,
       label: str.name,
       isRequired: true,
@@ -130,7 +130,7 @@ class _Surname extends StatelessWidget {
     );
     final str = Str.of(context);
 
-    return CustomTextField(
+    return FormTextField(
       icon: Icons.person,
       label: str.surname,
       isRequired: true,
@@ -156,7 +156,7 @@ class _Email extends StatelessWidget {
     );
     final str = Str.of(context);
 
-    return CustomTextField(
+    return FormTextField(
       icon: Icons.email,
       label: str.email,
       isRequired: true,

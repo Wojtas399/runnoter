@@ -7,8 +7,8 @@ import '../../../domain/bloc/workout_creator/workout_creator_bloc.dart';
 import '../../../domain/entity/workout.dart';
 import '../../component/big_button_component.dart';
 import '../../component/body/medium_body_component.dart';
-import '../../component/custom_text_field_component.dart';
 import '../../component/date_selector_component.dart';
+import '../../component/form_text_field_component.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/loading_info_component.dart';
 import '../../component/text/title_text_components.dart';
@@ -152,7 +152,7 @@ class _WorkoutNameState extends State<_WorkoutName> {
 
   @override
   Widget build(BuildContext context) {
-    return CustomTextField(
+    return FormTextField(
       label: Str.of(context).workoutCreatorWorkoutName,
       isRequired: true,
       controller: _controller,

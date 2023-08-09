@@ -6,7 +6,7 @@ import '../../../domain/bloc/forgot_password/forgot_password_bloc.dart';
 import '../../component/app_bar_with_logo.dart';
 import '../../component/big_button_component.dart';
 import '../../component/body/small_body_component.dart';
-import '../../component/custom_text_field_component.dart';
+import '../../component/form_text_field_component.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/padding/paddings_24.dart';
 import '../../component/text/headline_text_components.dart';
@@ -62,7 +62,7 @@ class _Email extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomTextField(
+    return FormTextField(
       isRequired: true,
       label: Str.of(context).email,
       icon: Icons.email,

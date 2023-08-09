@@ -5,8 +5,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/additional_model/run_status.dart';
 import '../../../domain/bloc/run_status_creator/run_status_creator_bloc.dart';
-import '../../component/custom_text_field_component.dart';
 import '../../component/duration_input_component.dart';
+import '../../component/form_text_field_component.dart';
 import '../../component/gap/gap_components.dart';
 import '../../extension/context_extensions.dart';
 import '../../formatter/decimal_text_input_formatter.dart';
@@ -78,7 +78,7 @@ class _CoveredDistanceState extends State<_CoveredDistance> {
 
   @override
   Widget build(BuildContext context) {
-    return CustomTextField(
+    return FormTextField(
       label:
           '${Str.of(context).runStatusCreatorCoveredDistance} [${context.distanceUnit.toUIShortFormat()}]',
       maxLength: 8,
@@ -202,7 +202,7 @@ class _AvgHeartRateState extends State<_AvgHeartRate> {
 
   @override
   Widget build(BuildContext context) {
-    return CustomTextField(
+    return FormTextField(
       label: Str.of(context).runStatusCreatorAverageHeartRate,
       maxLength: 3,
       keyboardType: TextInputType.number,
@@ -250,7 +250,7 @@ class _CommentState extends State<_Comment> {
 
   @override
   Widget build(BuildContext context) {
-    return CustomTextField(
+    return FormTextField(
       label: Str.of(context).runStatusCreatorComment,
       maxLength: 100,
       maxLines: null,
