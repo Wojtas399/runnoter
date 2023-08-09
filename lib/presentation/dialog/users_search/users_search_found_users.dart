@@ -53,11 +53,15 @@ class _UserItem extends StatelessWidget {
       title: Text('${userInfo.name} ${userInfo.surname}'),
       subtitle: Text(userInfo.email),
       leading: Icon(userInfo.gender.toIconData()),
-      trailing: FilledButton(
-        style: FilledButton.styleFrom(padding: const EdgeInsets.all(0)),
-        onPressed: () => _inviteUser(context),
-        child: const Icon(Icons.person_add),
-      ),
+      trailing: switch (foundUser.relationshipStatus) {
+        RelationshipStatus.notInvited => FilledButton(
+            style: FilledButton.styleFrom(padding: const EdgeInsets.all(0)),
+            onPressed: () => _inviteUser(context),
+            child: const Icon(Icons.person_add),
+          ),
+        RelationshipStatus.pending => const Icon(Icons.access_time),
+        RelationshipStatus.accepted => const Icon(Icons.check),
+      },
     );
   }
 
