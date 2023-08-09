@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../domain/bloc/races/races_cubit.dart';
+import '../../../domain/cubit/races_cubit.dart';
 import '../../../domain/entity/race.dart';
 import '../../component/card_body_component.dart';
 import '../../component/gap/gap_components.dart';

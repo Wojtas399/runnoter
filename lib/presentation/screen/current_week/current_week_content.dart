@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/bloc/current_week/current_week_cubit.dart';
+import '../../../domain/cubit/current_week_cubit.dart';
 import '../../component/body/big_body_component.dart';
 import '../../component/card_body_component.dart';
 import '../../component/gap/gap_components.dart';

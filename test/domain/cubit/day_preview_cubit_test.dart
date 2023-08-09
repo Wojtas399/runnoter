@@ -3,19 +3,19 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/common/date_service.dart';
-import 'package:runnoter/domain/bloc/day_preview/day_preview_cubit.dart';
+import 'package:runnoter/domain/cubit/day_preview_cubit.dart';
 import 'package:runnoter/domain/entity/race.dart';
 import 'package:runnoter/domain/entity/workout.dart';
 import 'package:runnoter/domain/repository/race_repository.dart';
 import 'package:runnoter/domain/repository/workout_repository.dart';
 import 'package:runnoter/domain/service/auth_service.dart';
 
-import '../../../creators/race_creator.dart';
-import '../../../creators/workout_creator.dart';
-import '../../../mock/common/mock_date_service.dart';
-import '../../../mock/domain/repository/mock_race_repository.dart';
-import '../../../mock/domain/repository/mock_workout_repository.dart';
-import '../../../mock/domain/service/mock_auth_service.dart';
+import '../../creators/race_creator.dart';
+import '../../creators/workout_creator.dart';
+import '../../mock/common/mock_date_service.dart';
+import '../../mock/domain/repository/mock_race_repository.dart';
+import '../../mock/domain/repository/mock_workout_repository.dart';
+import '../../mock/domain/service/mock_auth_service.dart';
 
 void main() {
   final authService = MockAuthService();

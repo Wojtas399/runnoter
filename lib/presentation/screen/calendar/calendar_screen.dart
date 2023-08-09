@@ -2,7 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/bloc/calendar/calendar_cubit.dart';
+import '../../../domain/cubit/calendar_cubit.dart';
 import '../../../domain/entity/race.dart';
 import '../../../domain/entity/workout.dart';
 import '../../component/body/big_body_component.dart';

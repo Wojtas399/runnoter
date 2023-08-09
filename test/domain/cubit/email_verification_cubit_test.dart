@@ -3,10 +3,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/additional_model/custom_exception.dart';
-import 'package:runnoter/domain/bloc/email_verification/email_verification_cubit.dart';
+import 'package:runnoter/domain/cubit/email_verification_cubit.dart';
 import 'package:runnoter/domain/service/auth_service.dart';
 
-import '../../../mock/domain/service/mock_auth_service.dart';
+import '../../mock/domain/service/mock_auth_service.dart';
 
 void main() {
   final authService = MockAuthService();

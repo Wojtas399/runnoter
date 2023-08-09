@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
-import '../../../domain/bloc/mileage/mileage_cubit.dart';
+import '../../../domain/cubit/mileage_cubit.dart';
 import '../../component/card_body_component.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/responsive_layout_component.dart';

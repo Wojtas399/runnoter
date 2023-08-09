@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../domain/bloc/current_week/current_week_cubit.dart';
+import '../../../domain/cubit/current_week_cubit.dart';
 import '../../component/activity_item_component.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/shimmer_container.dart';

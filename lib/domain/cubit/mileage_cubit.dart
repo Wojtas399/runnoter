@@ -4,11 +4,11 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
-import '../../../dependency_injection.dart';
-import '../../entity/run_status.dart';
-import '../../entity/workout.dart';
-import '../../repository/workout_repository.dart';
-import '../../service/auth_service.dart';
+import '../../dependency_injection.dart';
+import '../entity/run_status.dart';
+import '../entity/workout.dart';
+import '../repository/workout_repository.dart';
+import '../service/auth_service.dart';
 
 class MileageCubit extends Cubit<List<ChartYear>?> {
   final AuthService _authService;

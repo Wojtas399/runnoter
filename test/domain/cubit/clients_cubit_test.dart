@@ -2,15 +2,15 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/domain/bloc/clients/clients_cubit.dart';
+import 'package:runnoter/domain/cubit/clients_cubit.dart';
 import 'package:runnoter/domain/entity/client.dart';
 import 'package:runnoter/domain/entity/user.dart';
 import 'package:runnoter/domain/repository/user_repository.dart';
 import 'package:runnoter/domain/service/auth_service.dart';
 
-import '../../../creators/user_creator.dart';
-import '../../../mock/domain/repository/mock_user_repository.dart';
-import '../../../mock/domain/service/mock_auth_service.dart';
+import '../../creators/user_creator.dart';
+import '../../mock/domain/repository/mock_user_repository.dart';
+import '../../mock/domain/service/mock_auth_service.dart';
 
 void main() {
   final authService = MockAuthService();

@@ -1,4 +1,4 @@
-import 'package:runnoter/domain/bloc/mileage/mileage_cubit.dart';
+import 'package:runnoter/domain/cubit/mileage_cubit.dart';
 
 ChartMonth createChartMonth({
   Month month = Month.january,

@@ -3,11 +3,11 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
-import '../../../dependency_injection.dart';
-import '../../entity/client.dart';
-import '../../entity/user.dart';
-import '../../repository/user_repository.dart';
-import '../../service/auth_service.dart';
+import '../../dependency_injection.dart';
+import '../entity/client.dart';
+import '../entity/user.dart';
+import '../repository/user_repository.dart';
+import '../service/auth_service.dart';
 
 class ClientsCubit extends Cubit<List<Client>?> {
   final AuthService _authService;

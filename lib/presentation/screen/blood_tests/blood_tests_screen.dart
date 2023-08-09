@@ -2,7 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/bloc/blood_tests/blood_tests_cubit.dart';
+import '../../../domain/cubit/blood_tests_cubit.dart';
 import 'blood_tests_content.dart';
 
 @RoutePage()

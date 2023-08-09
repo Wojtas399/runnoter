@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../domain/bloc/blood_tests/blood_tests_cubit.dart';
+import '../../../domain/cubit/blood_tests_cubit.dart';
 import '../../../domain/entity/blood_test.dart';
 import '../../component/card_body_component.dart';
 import '../../component/gap/gap_components.dart';

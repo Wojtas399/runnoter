@@ -4,10 +4,10 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
-import '../../../dependency_injection.dart';
-import '../../entity/race.dart';
-import '../../repository/race_repository.dart';
-import '../../service/auth_service.dart';
+import '../../dependency_injection.dart';
+import '../entity/race.dart';
+import '../repository/race_repository.dart';
+import '../service/auth_service.dart';
 
 class RacesCubit extends Cubit<List<RacesFromYear>?> {
   final AuthService _authService;

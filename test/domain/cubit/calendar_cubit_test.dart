@@ -2,16 +2,16 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/domain/bloc/calendar/calendar_cubit.dart';
+import 'package:runnoter/domain/cubit/calendar_cubit.dart';
 import 'package:runnoter/domain/repository/race_repository.dart';
 import 'package:runnoter/domain/repository/workout_repository.dart';
 import 'package:runnoter/domain/service/auth_service.dart';
 
-import '../../../creators/race_creator.dart';
-import '../../../creators/workout_creator.dart';
-import '../../../mock/domain/repository/mock_race_repository.dart';
-import '../../../mock/domain/repository/mock_workout_repository.dart';
-import '../../../mock/domain/service/mock_auth_service.dart';
+import '../../creators/race_creator.dart';
+import '../../creators/workout_creator.dart';
+import '../../mock/domain/repository/mock_race_repository.dart';
+import '../../mock/domain/repository/mock_workout_repository.dart';
+import '../../mock/domain/service/mock_auth_service.dart';
 
 void main() {
   final authService = MockAuthService();
