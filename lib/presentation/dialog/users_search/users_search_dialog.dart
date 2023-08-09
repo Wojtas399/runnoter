@@ -4,6 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/bloc/users_search/users_search_bloc.dart';
 import '../../component/responsive_layout_component.dart';
+import '../../service/navigator_service.dart';
 import 'users_search_found_users.dart';
 import 'users_search_input.dart';
 
@@ -27,8 +28,19 @@ class _NormalDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Dialog(
-      child: Text('Search for Users'),
+    return AlertDialog(
+      title: Text(Str.of(context).usersSearchTitle),
+      content: const SizedBox(
+        width: 500,
+        height: 500,
+        child: _Content(),
+      ),
+      actions: [
+        TextButton(
+          onPressed: popRoute,
+          child: Text(Str.of(context).close),
+        ),
+      ],
     );
   }
 }

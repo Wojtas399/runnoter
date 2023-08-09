@@ -733,6 +733,10 @@
   "@clientsTitle": {
     "description": "Title of clients screen"
   },
+  "clientsSearchUsers": "Szukaj użytkowników",
+  "@clientsSearchUser": {
+    "description": "Label of the button to search user"
+  },
   "@__________USERS_SEARCH__________": {},
   "usersSearchTitle": "Szukaj użytkowników",
   "@usersSearchTitle": {
