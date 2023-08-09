@@ -2,8 +2,8 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../domain/additional_model/user_basic_info.dart';
 import '../../../domain/cubit/clients_cubit.dart';
-import '../../../domain/entity/client.dart';
 import '../../component/empty_content_info_component.dart';
 
 @RoutePage()
@@ -24,7 +24,7 @@ class _Clients extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<Client>? clients = context.select(
+    final List<UserBasicInfo>? clients = context.select(
       (ClientsCubit cubit) => cubit.state,
     );
 
@@ -34,7 +34,7 @@ class _Clients extends StatelessWidget {
       [...] => ListView.builder(
           itemCount: clients.length,
           itemBuilder: (_, int itemIndex) {
-            final Client client = clients[itemIndex];
+            final UserBasicInfo client = clients[itemIndex];
             return Text('${client.name} ${client.surname}');
           },
         ),

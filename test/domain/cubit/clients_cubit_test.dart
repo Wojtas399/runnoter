@@ -2,8 +2,8 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:runnoter/domain/additional_model/user_basic_info.dart';
 import 'package:runnoter/domain/cubit/clients_cubit.dart';
-import 'package:runnoter/domain/entity/client.dart';
 import 'package:runnoter/domain/entity/user.dart';
 import 'package:runnoter/domain/repository/user_repository.dart';
 import 'package:runnoter/domain/service/auth_service.dart';
@@ -65,21 +65,21 @@ void main() {
     act: (cubit) => cubit.initialize(),
     expect: () => [
       const [
-        Client(
+        UserBasicInfo(
           id: 'u3',
           gender: Gender.female,
           name: 'Elizabeth',
           surname: 'Bobsly',
           email: 'elizabeth.bobsly@example.com',
         ),
-        Client(
+        UserBasicInfo(
           id: 'u4',
           gender: Gender.female,
           name: 'Elizabeth',
           surname: 'Bugly',
           email: 'elizabeth.bug@example.com',
         ),
-        Client(
+        UserBasicInfo(
           id: 'u2',
           gender: Gender.male,
           name: 'Jack',

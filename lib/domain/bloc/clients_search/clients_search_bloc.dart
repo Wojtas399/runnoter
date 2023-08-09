@@ -4,7 +4,7 @@ import '../../../dependency_injection.dart';
 import '../../additional_model/bloc_state.dart';
 import '../../additional_model/bloc_status.dart';
 import '../../additional_model/bloc_with_status.dart';
-import '../../entity/client.dart';
+import '../../additional_model/user_basic_info.dart';
 import '../../entity/user.dart';
 import '../../repository/user_repository.dart';
 
@@ -47,13 +47,13 @@ class ClientsSearchBloc extends BlocWithStatus<ClientsSearchEvent,
       email: state.searchText,
     );
     emit(state.copyWith(
-      clients: _mapUsersToClients(foundUsers),
+      foundUsers: _getUsersBasicInfo(foundUsers),
     ));
   }
 
-  List<Client> _mapUsersToClients(List<User> users) => users
+  List<UserBasicInfo> _getUsersBasicInfo(List<User> users) => users
       .map(
-        (User user) => Client(
+        (User user) => UserBasicInfo(
           id: user.id,
           gender: user.gender,
           name: user.name,

@@ -1,16 +1,15 @@
 import 'package:equatable/equatable.dart';
 
-import 'user.dart';
+import '../entity/user.dart';
 
-//TODO: Change the name to UserBasicInfo
-class Client extends Equatable {
+class UserBasicInfo extends Equatable {
   final String id;
   final Gender gender;
   final String name;
   final String surname;
   final String email;
 
-  const Client({
+  const UserBasicInfo({
     required this.id,
     required this.gender,
     required this.name,

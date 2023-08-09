@@ -3,8 +3,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
+import 'package:runnoter/domain/additional_model/user_basic_info.dart';
 import 'package:runnoter/domain/bloc/clients_search/clients_search_bloc.dart';
-import 'package:runnoter/domain/entity/client.dart';
 import 'package:runnoter/domain/entity/user.dart';
 import 'package:runnoter/domain/repository/user_repository.dart';
 
@@ -48,7 +48,7 @@ void main() {
 
   blocTest(
     'search, '
-    "should call user repository's method to search users, should convert users to clients and should updated clients in state",
+    "should call user repository's method to search users and should updated found users in state",
     build: () => ClientsSearchBloc(
       state: const ClientsSearchState(
         status: BlocStatusComplete(),
@@ -79,15 +79,15 @@ void main() {
       const ClientsSearchState(
         status: BlocStatusComplete(),
         searchText: 'sea',
-        clients: [
-          Client(
+        foundUsers: [
+          UserBasicInfo(
             id: 'u1',
             gender: Gender.male,
             name: 'name1',
             surname: 'surname1',
             email: 'email1@example.com',
           ),
-          Client(
+          UserBasicInfo(
             id: 'u2',
             gender: Gender.female,
             name: 'name2',

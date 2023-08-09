@@ -2,26 +2,26 @@ part of 'clients_search_bloc.dart';
 
 class ClientsSearchState extends BlocState<ClientsSearchState> {
   final String searchText;
-  final List<Client>? clients;
+  final List<UserBasicInfo>? foundUsers;
 
   const ClientsSearchState({
     required super.status,
     required this.searchText,
-    this.clients,
+    this.foundUsers,
   });
 
   @override
-  List<Object?> get props => [status, searchText, clients];
+  List<Object?> get props => [status, searchText, foundUsers];
 
   @override
   ClientsSearchState copyWith({
     BlocStatus? status,
     String? searchText,
-    List<Client>? clients,
+    List<UserBasicInfo>? foundUsers,
   }) =>
       ClientsSearchState(
         status: status ?? const BlocStatusComplete(),
         searchText: searchText ?? this.searchText,
-        clients: clients ?? this.clients,
+        foundUsers: foundUsers ?? this.foundUsers,
       );
 }

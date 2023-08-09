@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
+import 'package:runnoter/domain/additional_model/user_basic_info.dart';
 import 'package:runnoter/domain/bloc/clients_search/clients_search_bloc.dart';
-import 'package:runnoter/domain/entity/client.dart';
 import 'package:runnoter/domain/entity/user.dart';
 
 void main() {
@@ -41,17 +41,17 @@ void main() {
   );
 
   test(
-    'copy with clients',
+    'copy with found users',
     () {
-      const List<Client> expectedClients = [
-        Client(
+      const List<UserBasicInfo> expectedFoundUsers = [
+        UserBasicInfo(
           id: 'c1',
           gender: Gender.male,
           name: 'name1',
           surname: 'surname1',
           email: 'email1@example.com',
         ),
-        Client(
+        UserBasicInfo(
           id: 'c2',
           gender: Gender.female,
           name: 'name2',
@@ -60,11 +60,11 @@ void main() {
         ),
       ];
 
-      state = state.copyWith(clients: expectedClients);
+      state = state.copyWith(foundUsers: expectedFoundUsers);
       final state2 = state.copyWith();
 
-      expect(state.clients, expectedClients);
-      expect(state2.clients, expectedClients);
+      expect(state.foundUsers, expectedFoundUsers);
+      expect(state2.foundUsers, expectedFoundUsers);
     },
   );
 }

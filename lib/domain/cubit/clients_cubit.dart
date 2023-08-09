@@ -4,17 +4,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../dependency_injection.dart';
-import '../entity/client.dart';
+import '../additional_model/user_basic_info.dart';
 import '../entity/user.dart';
 import '../repository/user_repository.dart';
 import '../service/auth_service.dart';
 
-class ClientsCubit extends Cubit<List<Client>?> {
+class ClientsCubit extends Cubit<List<UserBasicInfo>?> {
   final AuthService _authService;
   final UserRepository _userRepository;
   StreamSubscription<List<User>?>? _listener;
 
-  ClientsCubit({List<Client>? clients})
+  ClientsCubit({List<UserBasicInfo>? clients})
       : _authService = getIt<AuthService>(),
         _userRepository = getIt<UserRepository>(),
         super(clients);
@@ -38,9 +38,9 @@ class ClientsCubit extends Cubit<List<Client>?> {
   }
 
   void _clientsChanged(List<User>? users) {
-    final List<Client>? clients = users
+    final List<UserBasicInfo>? clients = users
         ?.map(
-          (User user) => Client(
+          (User user) => UserBasicInfo(
             id: user.id,
             gender: user.gender,
             name: user.name,
