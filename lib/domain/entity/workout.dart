@@ -1,5 +1,5 @@
+import '../additional_model/workout_stage.dart';
 import 'activity.dart';
-import 'workout_stage.dart';
 
 class Workout extends Activity {
   final List<WorkoutStage> stages;

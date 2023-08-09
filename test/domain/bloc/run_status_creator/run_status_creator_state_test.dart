@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
+import 'package:runnoter/domain/additional_model/run_status.dart';
 import 'package:runnoter/domain/bloc/run_status_creator/run_status_creator_bloc.dart';
-import 'package:runnoter/domain/entity/run_status.dart';
 
 void main() {
   late RunStatusCreatorState state;

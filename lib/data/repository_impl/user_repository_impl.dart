@@ -2,9 +2,9 @@ import 'package:collection/collection.dart';
 import 'package:firebase/firebase.dart' as firebase;
 
 import '../../dependency_injection.dart';
+import '../../domain/additional_model/settings.dart' as settings;
+import '../../domain/additional_model/settings.dart';
 import '../../domain/additional_model/state_repository.dart';
-import '../../domain/entity/settings.dart' as settings;
-import '../../domain/entity/settings.dart';
 import '../../domain/entity/user.dart';
 import '../../domain/repository/user_repository.dart';
 import '../mapper/account_type_mapper.dart';

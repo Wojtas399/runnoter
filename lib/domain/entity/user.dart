@@ -1,5 +1,5 @@
+import '../additional_model/settings.dart';
 import 'entity.dart';
-import 'settings.dart';
 
 enum AccountType { coach, runner }
 

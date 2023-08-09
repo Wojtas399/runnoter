@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../dependency_injection.dart';
-import '../entity/run_status.dart';
+import '../additional_model/run_status.dart';
 import '../entity/workout.dart';
 import '../repository/workout_repository.dart';
 import '../service/auth_service.dart';

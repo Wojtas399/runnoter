@@ -1,11 +1,11 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../dependency_injection.dart';
+import '../../additional_model/auth_provider.dart';
 import '../../additional_model/bloc_state.dart';
 import '../../additional_model/bloc_status.dart';
 import '../../additional_model/bloc_with_status.dart';
 import '../../additional_model/custom_exception.dart';
-import '../../entity/auth_provider.dart';
 import '../../service/auth_service.dart';
 
 part 'reauthentication_event.dart';

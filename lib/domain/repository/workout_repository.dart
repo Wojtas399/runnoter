@@ -1,6 +1,6 @@
-import '../entity/run_status.dart';
+import '../additional_model/run_status.dart';
+import '../additional_model/workout_stage.dart';
 import '../entity/workout.dart';
-import '../entity/workout_stage.dart';
 
 abstract class WorkoutRepository {
   Stream<List<Workout>?> getWorkoutsByDateRange({

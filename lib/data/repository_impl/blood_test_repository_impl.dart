@@ -2,8 +2,8 @@ import 'package:collection/collection.dart';
 import 'package:firebase/firebase.dart' as firebase;
 
 import '../../dependency_injection.dart';
+import '../../domain/additional_model/blood_parameter.dart';
 import '../../domain/additional_model/state_repository.dart';
-import '../../domain/entity/blood_parameter.dart';
 import '../../domain/entity/blood_test.dart';
 import '../../domain/repository/blood_test_repository.dart';
 import '../mapper/blood_parameter_result_mapper.dart';

@@ -3,8 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../../domain/additional_model/run_status.dart';
 import '../../../domain/bloc/run_status_creator/run_status_creator_bloc.dart';
-import '../../../domain/entity/run_status.dart';
 import '../../component/duration_input_component.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/text_field_component.dart';

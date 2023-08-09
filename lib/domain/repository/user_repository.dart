@@ -1,4 +1,4 @@
-import '../entity/settings.dart';
+import '../additional_model/settings.dart';
 import '../entity/user.dart';
 
 abstract class UserRepository {

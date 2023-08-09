@@ -7,11 +7,11 @@ import 'package:rxdart/rxdart.dart';
 
 import '../../../../../domain/additional_model/bloc_status.dart';
 import '../../../../../domain/additional_model/bloc_with_status.dart';
-import '../../../../../domain/entity/settings.dart';
 import '../../../../../domain/repository/user_repository.dart';
 import '../../../../../domain/service/auth_service.dart';
 import '../../../../dependency_injection.dart';
 import '../../../additional_model/bloc_state.dart';
+import '../../../additional_model/settings.dart';
 
 part 'profile_settings_event.dart';
 part 'profile_settings_state.dart';

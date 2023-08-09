@@ -2,7 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import '../../common/workout_stage_service.dart';
-import '../../domain/entity/workout_stage.dart';
+import '../../domain/additional_model/workout_stage.dart';
 import '../extension/context_extensions.dart';
 import '../extension/double_extensions.dart';
 import '../extension/string_extensions.dart';

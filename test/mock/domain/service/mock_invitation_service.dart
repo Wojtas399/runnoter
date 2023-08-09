@@ -1,5 +1,5 @@
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/domain/entity/invitation.dart';
+import 'package:runnoter/domain/additional_model/invitation.dart';
 import 'package:runnoter/domain/service/invitation_service.dart';
 
 class MockInvitationService extends Mock implements InvitationService {

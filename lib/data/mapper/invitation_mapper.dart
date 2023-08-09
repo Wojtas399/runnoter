@@ -1,6 +1,6 @@
 import 'package:firebase/firebase.dart';
 
-import '../../domain/entity/invitation.dart';
+import '../../domain/additional_model/invitation.dart';
 import 'invitation_status_mapper.dart';
 
 Invitation mapInvitationFromDto(InvitationDto invitationDto) => Invitation(

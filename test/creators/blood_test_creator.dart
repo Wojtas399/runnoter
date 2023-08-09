@@ -1,4 +1,4 @@
-import 'package:runnoter/domain/entity/blood_parameter.dart';
+import 'package:runnoter/domain/additional_model/blood_parameter.dart';
 import 'package:runnoter/domain/entity/blood_test.dart';
 
 BloodTest createBloodTest({

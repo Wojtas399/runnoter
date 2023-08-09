@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../domain/additional_model/workout_stage.dart';
 import '../../../domain/bloc/workout_creator/workout_creator_bloc.dart';
-import '../../../domain/entity/workout_stage.dart';
 import '../../component/edit_delete_popup_menu_component.dart';
 import '../../component/text/body_text_components.dart';
 import '../../dialog/workout_stage_creator/workout_stage_creator_dialog.dart';

@@ -1,5 +1,5 @@
+import '../additional_model/run_status.dart';
 import 'entity.dart';
-import 'run_status.dart';
 
 abstract class Activity extends Entity {
   final String userId;

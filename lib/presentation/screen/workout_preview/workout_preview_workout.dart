@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../../domain/additional_model/run_status.dart';
+import '../../../domain/additional_model/workout_stage.dart';
 import '../../../domain/bloc/run_status_creator/run_status_creator_bloc.dart';
 import '../../../domain/bloc/workout_preview/workout_preview_bloc.dart';
-import '../../../domain/entity/run_status.dart';
-import '../../../domain/entity/workout_stage.dart';
 import '../../component/big_button_component.dart';
 import '../../component/content_with_label_component.dart';
 import '../../component/gap/gap_components.dart';

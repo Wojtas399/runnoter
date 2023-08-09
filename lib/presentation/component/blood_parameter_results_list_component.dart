@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_sticky_header/flutter_sticky_header.dart';
 
-import '../../domain/entity/blood_parameter.dart';
+import '../../domain/additional_model/blood_parameter.dart';
 import '../../domain/entity/user.dart';
 import '../formatter/blood_test_parameter_formatter.dart';
 import '../formatter/blood_test_parameter_norm_range_formatter.dart';

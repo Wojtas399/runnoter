@@ -10,7 +10,7 @@ import '../../../../domain/repository/user_repository.dart';
 import '../../../../domain/service/auth_service.dart';
 import '../../../dependency_injection.dart';
 import '../../additional_model/bloc_state.dart';
-import '../../entity/settings.dart';
+import '../../additional_model/settings.dart';
 import '../../entity/user.dart';
 
 part 'home_event.dart';

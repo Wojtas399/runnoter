@@ -3,9 +3,9 @@ import 'package:firebase/firebase.dart';
 
 import '../../common/date_service.dart';
 import '../../dependency_injection.dart';
+import '../../domain/additional_model/run_status.dart';
 import '../../domain/additional_model/state_repository.dart';
 import '../../domain/entity/race.dart';
-import '../../domain/entity/run_status.dart';
 import '../../domain/repository/race_repository.dart';
 import '../mapper/race_mapper.dart';
 import '../mapper/run_status_mapper.dart';

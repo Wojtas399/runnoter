@@ -1,4 +1,4 @@
-import '../../domain/entity/settings.dart';
+import '../../domain/additional_model/settings.dart';
 
 extension PaceUnitFormatter on PaceUnit {
   String toUIFormat() => switch (this) {

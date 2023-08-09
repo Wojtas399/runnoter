@@ -6,9 +6,9 @@ import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/common/date_service.dart';
 import 'package:runnoter/data/repository_impl/workout_repository_impl.dart';
-import 'package:runnoter/domain/entity/run_status.dart';
+import 'package:runnoter/domain/additional_model/run_status.dart';
+import 'package:runnoter/domain/additional_model/workout_stage.dart';
 import 'package:runnoter/domain/entity/workout.dart';
-import 'package:runnoter/domain/entity/workout_stage.dart';
 
 import '../../creators/workout_creator.dart';
 import '../../creators/workout_dto_creator.dart';

@@ -2,8 +2,8 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:runnoter/domain/additional_model/run_status.dart';
 import 'package:runnoter/domain/cubit/mileage_cubit.dart';
-import 'package:runnoter/domain/entity/run_status.dart';
 import 'package:runnoter/domain/repository/workout_repository.dart';
 import 'package:runnoter/domain/service/auth_service.dart';
 

@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
+import 'package:runnoter/domain/additional_model/workout_stage.dart';
 import 'package:runnoter/domain/bloc/workout_stage_creator/workout_stage_creator_bloc.dart';
-import 'package:runnoter/domain/entity/workout_stage.dart';
 
 void main() {
   late WorkoutStageCreatorState state;

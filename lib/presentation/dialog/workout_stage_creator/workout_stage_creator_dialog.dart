@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../domain/additional_model/workout_stage.dart';
 import '../../../domain/bloc/workout_stage_creator/workout_stage_creator_bloc.dart';
-import '../../../domain/entity/workout_stage.dart';
 import '../../service/navigator_service.dart';
 import 'workout_stage_creator_content.dart';
 

@@ -5,8 +5,8 @@ import '../../../dependency_injection.dart';
 import '../../additional_model/bloc_state.dart';
 import '../../additional_model/bloc_status.dart';
 import '../../additional_model/bloc_with_status.dart';
+import '../../additional_model/run_status.dart';
 import '../../entity/race.dart';
-import '../../entity/run_status.dart';
 import '../../repository/race_repository.dart';
 import '../../service/auth_service.dart';
 

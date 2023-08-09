@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../dependency_injection.dart';
 import '../../../domain/additional_model/bloc_status.dart';
 import '../../../domain/bloc/home/home_bloc.dart';
-import '../../../domain/entity/settings.dart' as settings;
+import '../../../domain/additional_model/settings.dart' as settings;
 import '../../component/bloc_with_status_listener_component.dart';
 import '../../config/navigation/router.dart';
 import '../../dialog/required_data_completion/required_data_completion_dialog.dart';

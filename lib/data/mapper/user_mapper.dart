@@ -1,6 +1,6 @@
 import 'package:firebase/firebase.dart';
 
-import '../../domain/entity/settings.dart';
+import '../../domain/additional_model/settings.dart';
 import '../../domain/entity/user.dart';
 import 'account_type_mapper.dart';
 import 'gender_mapper.dart';

@@ -1,7 +1,7 @@
 import 'package:firebase/firebase.dart' as firebase;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/data/mapper/invitation_status_mapper.dart';
-import 'package:runnoter/domain/entity/invitation.dart';
+import 'package:runnoter/domain/additional_model/invitation.dart';
 
 void main() {
   test(

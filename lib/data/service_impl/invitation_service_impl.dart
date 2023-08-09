@@ -1,7 +1,7 @@
 import 'package:firebase/firebase.dart' as firebase;
 
 import '../../dependency_injection.dart';
-import '../../domain/entity/invitation.dart';
+import '../../domain/additional_model/invitation.dart';
 import '../../domain/service/invitation_service.dart';
 import '../mapper/invitation_mapper.dart';
 import '../mapper/invitation_status_mapper.dart';

@@ -1,14 +1,15 @@
-import 'entity.dart';
+import 'package:equatable/equatable.dart';
 
 enum InvitationStatus { pending, accepted, discarded }
 
-class Invitation extends Entity {
+class Invitation extends Equatable {
+  final String id;
   final String senderId;
   final String receiverId;
   final InvitationStatus status;
 
   const Invitation({
-    required super.id,
+    required this.id,
     required this.senderId,
     required this.receiverId,
     required this.status,

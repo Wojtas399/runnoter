@@ -1,4 +1,4 @@
-import '../entity/blood_parameter.dart';
+import '../additional_model/blood_parameter.dart';
 import '../entity/blood_test.dart';
 
 abstract interface class BloodTestRepository {

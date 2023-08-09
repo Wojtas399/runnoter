@@ -1,5 +1,5 @@
+import '../additional_model/run_status.dart';
 import '../entity/race.dart';
-import '../entity/run_status.dart';
 
 abstract interface class RaceRepository {
   Stream<Race?> getRaceById({

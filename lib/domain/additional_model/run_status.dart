@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 
+//TODO: Change the name to ActivityStatus
 sealed class RunStatus extends Equatable {
   const RunStatus();
 }

@@ -1,4 +1,4 @@
-import '../entity/invitation.dart';
+import '../additional_model/invitation.dart';
 
 abstract interface class InvitationService {
   Stream<List<Invitation>?> getInvitationsBySenderId({

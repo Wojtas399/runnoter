@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../../domain/additional_model/settings.dart' as settings;
 import '../../../domain/bloc/profile/settings/profile_settings_bloc.dart';
-import '../../../domain/entity/settings.dart' as settings;
 import '../../component/gap/gap_components.dart';
 import '../../component/text/title_text_components.dart';
 import '../../component/value_with_label_and_icon_component.dart';

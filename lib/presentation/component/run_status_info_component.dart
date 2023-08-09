@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../domain/entity/run_status.dart';
+import '../../domain/additional_model/run_status.dart';
 import '../extension/context_extensions.dart';
 import '../extension/double_extensions.dart';
 import '../extension/string_extensions.dart';

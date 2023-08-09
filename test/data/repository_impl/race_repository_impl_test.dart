@@ -5,8 +5,8 @@ import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/common/date_service.dart';
 import 'package:runnoter/data/repository_impl/race_repository_impl.dart';
+import 'package:runnoter/domain/additional_model/run_status.dart';
 import 'package:runnoter/domain/entity/race.dart';
-import 'package:runnoter/domain/entity/run_status.dart';
 
 import '../../creators/race_creator.dart';
 import '../../creators/race_dto_creator.dart';

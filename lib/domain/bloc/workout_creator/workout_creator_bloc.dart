@@ -6,13 +6,13 @@ import 'package:rxdart/rxdart.dart';
 import '../../../../domain/additional_model/bloc_state.dart';
 import '../../../../domain/additional_model/bloc_status.dart';
 import '../../../../domain/additional_model/bloc_with_status.dart';
-import '../../../../domain/entity/run_status.dart';
 import '../../../../domain/entity/workout.dart';
-import '../../../../domain/entity/workout_stage.dart';
 import '../../../../domain/repository/workout_repository.dart';
 import '../../../../domain/service/auth_service.dart';
 import '../../../common/date_service.dart';
 import '../../../dependency_injection.dart';
+import '../../additional_model/run_status.dart';
+import '../../additional_model/workout_stage.dart';
 import '../../service/list_service.dart';
 
 part 'workout_creator_event.dart';

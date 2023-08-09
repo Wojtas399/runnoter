@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/data/service_impl/invitation_service_impl.dart';
-import 'package:runnoter/domain/entity/invitation.dart';
+import 'package:runnoter/domain/additional_model/invitation.dart';
 import 'package:runnoter/domain/service/invitation_service.dart';
 
 import '../../mock/firebase/mock_firebase_invitation_service.dart';

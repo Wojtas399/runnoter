@@ -7,12 +7,12 @@ import 'package:rxdart/rxdart.dart';
 import '../../../../domain/additional_model/bloc_state.dart';
 import '../../../../domain/additional_model/bloc_status.dart';
 import '../../../../domain/additional_model/bloc_with_status.dart';
-import '../../../../domain/entity/run_status.dart';
 import '../../../../domain/entity/workout.dart';
-import '../../../../domain/entity/workout_stage.dart';
 import '../../../../domain/repository/workout_repository.dart';
 import '../../../../domain/service/auth_service.dart';
 import '../../../dependency_injection.dart';
+import '../../additional_model/run_status.dart';
+import '../../additional_model/workout_stage.dart';
 
 part 'workout_preview_event.dart';
 part 'workout_preview_state.dart';

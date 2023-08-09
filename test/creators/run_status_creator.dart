@@ -1,4 +1,4 @@
-import 'package:runnoter/domain/entity/run_status.dart';
+import 'package:runnoter/domain/additional_model/run_status.dart';
 
 RunStatusDone createRunStatusDone({
   double coveredDistanceInKm = 0.0,

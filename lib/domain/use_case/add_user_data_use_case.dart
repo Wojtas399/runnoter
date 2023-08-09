@@ -1,5 +1,5 @@
 import '../../dependency_injection.dart';
-import '../entity/settings.dart';
+import '../additional_model/settings.dart';
 import '../entity/user.dart';
 import '../repository/user_repository.dart';
 
