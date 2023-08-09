@@ -62,6 +62,8 @@ class _UserItem extends StatelessWidget {
   }
 
   void _inviteUser(BuildContext context) {
-    //TODO
+    context.read<UsersSearchBloc>().add(
+          UsersSearchEventInviteUser(idOfUserToInvite: userInfo.id),
+        );
   }
 }

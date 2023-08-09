@@ -33,7 +33,10 @@ class _State extends State<UsersSearchInput> {
       textInputAction: TextInputAction.search,
       onSubmitted: (_) => _onSubmitted(context),
       decoration: InputDecoration(
-        prefixIcon: const Icon(Icons.person_search),
+        prefixIcon: IconButton(
+          onPressed: () => _onSubmitted(context),
+          icon: const Icon(Icons.person_search),
+        ),
         hintText: 'Search...',
         suffixIcon: _showClearButton
             ? IconButton(

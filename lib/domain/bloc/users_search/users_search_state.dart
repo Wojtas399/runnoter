@@ -15,9 +15,10 @@ class UsersSearchState extends BlocState<UsersSearchState> {
   UsersSearchState copyWith({
     BlocStatus? status,
     List<UserBasicInfo>? foundUsers,
+    bool foundUsersAsNull = false,
   }) =>
       UsersSearchState(
         status: status ?? const BlocStatusComplete(),
-        foundUsers: foundUsers,
+        foundUsers: foundUsersAsNull ? null : foundUsers ?? this.foundUsers,
       );
 }

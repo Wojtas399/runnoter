@@ -50,6 +50,34 @@ void main() {
       final state2 = state.copyWith();
 
       expect(state.foundUsers, expectedFoundUsers);
+      expect(state2.foundUsers, expectedFoundUsers);
+    },
+  );
+
+  test(
+    'copy with found users as null',
+    () {
+      const List<UserBasicInfo> expectedFoundUsers = [
+        UserBasicInfo(
+          id: 'c1',
+          gender: Gender.male,
+          name: 'name1',
+          surname: 'surname1',
+          email: 'email1@example.com',
+        ),
+        UserBasicInfo(
+          id: 'c2',
+          gender: Gender.female,
+          name: 'name2',
+          surname: 'surname2',
+          email: 'email2@example.com',
+        ),
+      ];
+
+      state = state.copyWith(foundUsers: expectedFoundUsers);
+      final state2 = state.copyWith(foundUsersAsNull: true);
+
+      expect(state.foundUsers, expectedFoundUsers);
       expect(state2.foundUsers, null);
     },
   );

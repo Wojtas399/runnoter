@@ -9,3 +9,9 @@ class UsersSearchEventSearch extends UsersSearchEvent {
 
   const UsersSearchEventSearch({required this.searchText});
 }
+
+class UsersSearchEventInviteUser extends UsersSearchEvent {
+  final String idOfUserToInvite;
+
+  const UsersSearchEventInviteUser({required this.idOfUserToInvite});
+}

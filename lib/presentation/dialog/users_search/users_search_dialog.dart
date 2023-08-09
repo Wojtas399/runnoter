@@ -3,7 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/bloc/users_search/users_search_bloc.dart';
+import '../../component/bloc_with_status_listener_component.dart';
 import '../../component/responsive_layout_component.dart';
+import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
 import 'users_search_found_users.dart';
 import 'users_search_input.dart';
@@ -15,11 +17,36 @@ class UsersSearchDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => UsersSearchBloc(),
-      child: const ResponsiveLayout(
-        mobileBody: _FullScreenDialog(),
-        desktopBody: _NormalDialog(),
+      child: const _BlocListener(
+        child: ResponsiveLayout(
+          mobileBody: _FullScreenDialog(),
+          desktopBody: _NormalDialog(),
+        ),
       ),
     );
+  }
+}
+
+class _BlocListener extends StatelessWidget {
+  final Widget child;
+
+  const _BlocListener({required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocWithStatusListener<UsersSearchBloc, UsersSearchState,
+        UsersSearchBlocInfo, dynamic>(
+      onInfo: (UsersSearchBlocInfo info) => _manageInfo(context, info),
+      child: child,
+    );
+  }
+
+  void _manageInfo(BuildContext context, UsersSearchBlocInfo info) {
+    switch (info) {
+      case UsersSearchBlocInfo.invitationSent:
+        showSnackbarMessage('Successfully send invitation');
+        break;
+    }
   }
 }
 
