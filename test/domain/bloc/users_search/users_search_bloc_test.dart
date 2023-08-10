@@ -185,53 +185,66 @@ void main() {
     build: () => UsersSearchBloc(
       state: const UsersSearchState(
         status: BlocStatusComplete(),
-        clientIds: ['u1'],
+        clientIds: ['u12'],
         invitedUserIds: ['u2'],
       ),
     ),
     setUp: () => userBasicInfoRepository.mockSearchForUsers(
       usersBasicInfo: [
-        createUserBasicInfo(id: 'u1', name: 'name1', surname: 'surname1'),
-        createUserBasicInfo(id: 'u2', name: 'name2', surname: 'surname2'),
-        createUserBasicInfo(id: 'u3', name: 'name3', surname: 'surname3'),
+        createUserBasicInfo(
+          id: 'u12',
+          name: 'na1',
+          surname: 'su1',
+          coachId: loggedUserId,
+        ),
+        createUserBasicInfo(id: 'u2', name: 'na2', surname: 'su2'),
+        createUserBasicInfo(id: 'u3', name: 'na3', surname: 'su3'),
+        createUserBasicInfo(
+          id: 'u4',
+          name: 'na4',
+          surname: 'su4',
+          coachId: 'c1',
+        ),
       ],
     ),
     act: (bloc) => bloc.add(const UsersSearchEventSearch(searchQuery: 'sea')),
     expect: () => [
       const UsersSearchState(
         status: BlocStatusLoading(),
-        clientIds: ['u1'],
+        clientIds: ['u12'],
         invitedUserIds: ['u2'],
       ),
       UsersSearchState(
         status: const BlocStatusComplete(),
-        clientIds: const ['u1'],
+        clientIds: const ['u12'],
         invitedUserIds: const ['u2'],
         foundUsers: [
           FoundUser(
             info: createUserBasicInfo(
-              id: 'u1',
-              name: 'name1',
-              surname: 'surname1',
+              id: 'u12',
+              name: 'na1',
+              surname: 'su1',
+              coachId: loggedUserId,
             ),
             relationshipStatus: RelationshipStatus.accepted,
           ),
           FoundUser(
-            info: createUserBasicInfo(
-              id: 'u2',
-              name: 'name2',
-              surname: 'surname2',
-            ),
+            info: createUserBasicInfo(id: 'u2', name: 'na2', surname: 'su2'),
             relationshipStatus: RelationshipStatus.pending,
           ),
           FoundUser(
-            info: createUserBasicInfo(
-              id: 'u3',
-              name: 'name3',
-              surname: 'surname3',
-            ),
+            info: createUserBasicInfo(id: 'u3', name: 'na3', surname: 'su3'),
             relationshipStatus: RelationshipStatus.notInvited,
-          )
+          ),
+          FoundUser(
+            info: createUserBasicInfo(
+              id: 'u4',
+              name: 'na4',
+              surname: 'su4',
+              coachId: 'c1',
+            ),
+            relationshipStatus: RelationshipStatus.alreadyTaken,
+          ),
         ],
       ),
     ],

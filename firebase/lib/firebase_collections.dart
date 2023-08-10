@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'firebase.dart';
-import 'model/coaching_request_dto.dart';
 
 CollectionReference<UserDto> getUsersRef() =>
     FirebaseFirestore.instance.collection('Users').withConverter<UserDto>(

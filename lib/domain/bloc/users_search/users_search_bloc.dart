@@ -84,7 +84,7 @@ class UsersSearchBloc extends BlocWithStatus<UsersSearchEvent, UsersSearchState,
           (UserBasicInfo userInfo) => FoundUser(
             info: userInfo,
             relationshipStatus: _selectUserRelationshipStatus(
-              userId: userInfo.id,
+              userInfo: userInfo,
               clientIds: state.clientIds,
               invitedUserIds: state.invitedUserIds,
             ),
@@ -124,7 +124,7 @@ class UsersSearchBloc extends BlocWithStatus<UsersSearchEvent, UsersSearchState,
     final List<FoundUser> updatedFoundUsers = [];
     for (final user in [...?state.foundUsers]) {
       final RelationshipStatus status = _selectUserRelationshipStatus(
-        userId: user.info.id,
+        userInfo: user.info,
         clientIds: clientIds,
         invitedUserIds: invitedUserIds,
       );
@@ -134,13 +134,15 @@ class UsersSearchBloc extends BlocWithStatus<UsersSearchEvent, UsersSearchState,
   }
 
   RelationshipStatus _selectUserRelationshipStatus({
-    required String userId,
+    required UserBasicInfo userInfo,
     required List<String> clientIds,
     required List<String> invitedUserIds,
   }) {
-    if (clientIds.contains(userId)) {
+    if (clientIds.contains(userInfo.id)) {
       return RelationshipStatus.accepted;
-    } else if (invitedUserIds.contains(userId)) {
+    } else if (userInfo.coachId != null) {
+      return RelationshipStatus.alreadyTaken;
+    } else if (invitedUserIds.contains(userInfo.id)) {
       return RelationshipStatus.pending;
     } else {
       return RelationshipStatus.notInvited;

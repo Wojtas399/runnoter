@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/bloc/users_search/users_search_bloc.dart';
+import '../../service/utils.dart';
 
 class UsersSearchInput extends StatefulWidget {
   const UsersSearchInput({super.key});
@@ -46,6 +47,7 @@ class _State extends State<UsersSearchInput> {
               )
             : null,
       ),
+      onTapOutside: (_) => unfocusInputs(),
     );
   }
 

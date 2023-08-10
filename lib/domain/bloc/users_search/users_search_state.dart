@@ -31,7 +31,7 @@ class UsersSearchState extends BlocState<UsersSearchState> {
       );
 }
 
-enum RelationshipStatus { notInvited, pending, accepted }
+enum RelationshipStatus { notInvited, alreadyTaken, pending, accepted }
 
 class FoundUser extends Equatable {
   final UserBasicInfo info;

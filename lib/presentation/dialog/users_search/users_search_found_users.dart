@@ -62,6 +62,9 @@ class _UserItem extends StatelessWidget {
           ),
         RelationshipStatus.pending => const Icon(Icons.access_time),
         RelationshipStatus.accepted => const Icon(Icons.check),
+        RelationshipStatus.alreadyTaken => const Icon(
+            Icons.do_not_disturb_on_outlined,
+          ),
       },
     );
   }
