@@ -1,10 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
-import 'package:runnoter/domain/additional_model/invitation.dart';
+import 'package:runnoter/domain/additional_model/coaching_request.dart';
 import 'package:runnoter/domain/additional_model/user_basic_info.dart';
 import 'package:runnoter/domain/bloc/coach/coach_bloc.dart';
 
-import '../../../creators/invitation_creator.dart';
+import '../../../creators/coaching_request_creator.dart';
 import '../../../creators/user_basic_info_creator.dart';
 
 void main() {
@@ -28,15 +28,19 @@ void main() {
   );
 
   test(
-    'copy with invitations',
+    'copy with receivedCoachingRequests',
     () {
-      final List<Invitation> expectedInvitations = [createInvitation(id: 'i1')];
+      final List<CoachingRequest> expectedReceivedCoachingRequests = [
+        createCoachingRequest(id: 'i1')
+      ];
 
-      state = state.copyWith(invitations: expectedInvitations);
+      state = state.copyWith(
+        receivedCoachingRequests: expectedReceivedCoachingRequests,
+      );
       final state2 = state.copyWith();
 
-      expect(state.invitations, expectedInvitations);
-      expect(state2.invitations, expectedInvitations);
+      expect(state.receivedCoachingRequests, expectedReceivedCoachingRequests);
+      expect(state2.receivedCoachingRequests, expectedReceivedCoachingRequests);
     },
   );
 

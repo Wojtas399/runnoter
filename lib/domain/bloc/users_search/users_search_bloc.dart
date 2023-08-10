@@ -6,12 +6,12 @@ import '../../../dependency_injection.dart';
 import '../../additional_model/bloc_state.dart';
 import '../../additional_model/bloc_status.dart';
 import '../../additional_model/bloc_with_status.dart';
-import '../../additional_model/invitation.dart';
+import '../../additional_model/coaching_request.dart';
 import '../../additional_model/user_basic_info.dart';
 import '../../entity/user.dart';
 import '../../repository/user_repository.dart';
 import '../../service/auth_service.dart';
-import '../../service/invitation_service.dart';
+import '../../service/coaching_request_service.dart';
 
 part 'users_search_event.dart';
 part 'users_search_state.dart';
@@ -20,7 +20,7 @@ class UsersSearchBloc extends BlocWithStatus<UsersSearchEvent, UsersSearchState,
     UsersSearchBlocInfo, dynamic> {
   final AuthService _authService;
   final UserRepository _userRepository;
-  final InvitationService _invitationService;
+  final CoachingRequestService _coachingRequestService;
 
   UsersSearchBloc({
     UsersSearchState state = const UsersSearchState(
@@ -28,7 +28,7 @@ class UsersSearchBloc extends BlocWithStatus<UsersSearchEvent, UsersSearchState,
     ),
   })  : _authService = getIt<AuthService>(),
         _userRepository = getIt<UserRepository>(),
-        _invitationService = getIt<InvitationService>(),
+        _coachingRequestService = getIt<CoachingRequestService>(),
         super(state) {
     on<UsersSearchEventInitialize>(_initialize);
     on<UsersSearchEventSearch>(_search);
@@ -42,16 +42,17 @@ class UsersSearchBloc extends BlocWithStatus<UsersSearchEvent, UsersSearchState,
     final stream$ = _authService.loggedUserId$.whereNotNull().switchMap(
           (String loggedUserId) => Rx.combineLatest2(
             _getClientIds(loggedUserId),
-            _invitationService
-                .getInvitationsBySenderId(senderId: loggedUserId)
+            _coachingRequestService
+                .getCoachingRequestsBySenderId(senderId: loggedUserId)
                 .whereNotNull(),
-            (List<String> clientIds, List<Invitation> sentInvitations) =>
-                (clientIds, sentInvitations),
+            (List<String> clientIds,
+                    List<CoachingRequest> sentCoachingRequests) =>
+                (clientIds, sentCoachingRequests),
           ),
         );
     await emit.forEach(
       stream$,
-      onData: ((List<String>, List<Invitation>) data) {
+      onData: ((List<String>, List<CoachingRequest>) data) {
         final clientIds = {...data.$1, ...data.$2.clientIds}.toList();
         final invitedUserIds = data.$2.invitedUserIds;
         return state.copyWith(
@@ -94,12 +95,12 @@ class UsersSearchBloc extends BlocWithStatus<UsersSearchEvent, UsersSearchState,
       return;
     }
     emitLoadingStatus(emit);
-    await _invitationService.addInvitation(
+    await _coachingRequestService.addCoachingRequest(
       senderId: loggedUserId,
       receiverId: event.idOfUserToInvite,
-      status: InvitationStatus.pending,
+      status: CoachingRequestStatus.pending,
     );
-    emitCompleteStatus(emit, info: UsersSearchBlocInfo.invitationSent);
+    emitCompleteStatus(emit, info: UsersSearchBlocInfo.requestSent);
   }
 
   Stream<List<String>> _getClientIds(String loggedUserId) =>
@@ -157,16 +158,16 @@ class UsersSearchBloc extends BlocWithStatus<UsersSearchEvent, UsersSearchState,
   }
 }
 
-enum UsersSearchBlocInfo { invitationSent }
+enum UsersSearchBlocInfo { requestSent }
 
-extension _InvitationsExtensions on List<Invitation> {
-  List<String> get clientIds =>
-      where((invitation) => invitation.status == InvitationStatus.accepted)
-          .map((invitation) => invitation.receiverId)
-          .toList();
+extension _CoachingRequestsExtensions on List<CoachingRequest> {
+  List<String> get clientIds => where((coachingRequest) =>
+          coachingRequest.status == CoachingRequestStatus.accepted)
+      .map((coachingRequest) => coachingRequest.receiverId)
+      .toList();
 
-  List<String> get invitedUserIds =>
-      where((invitation) => invitation.status == InvitationStatus.pending)
-          .map((invitation) => invitation.receiverId)
-          .toList();
+  List<String> get invitedUserIds => where((coachingRequest) =>
+          coachingRequest.status == CoachingRequestStatus.pending)
+      .map((coachingRequest) => coachingRequest.receiverId)
+      .toList();
 }

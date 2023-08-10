@@ -43,7 +43,7 @@ class _BlocListener extends StatelessWidget {
 
   void _manageInfo(BuildContext context, UsersSearchBlocInfo info) {
     switch (info) {
-      case UsersSearchBlocInfo.invitationSent:
+      case UsersSearchBlocInfo.requestSent:
         showSnackbarMessage(
           Str.of(context).usersSearchSuccessfullySentInvitation,
         );

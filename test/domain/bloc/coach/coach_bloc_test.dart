@@ -8,30 +8,32 @@ import 'package:runnoter/domain/bloc/coach/coach_bloc.dart';
 import 'package:runnoter/domain/entity/user.dart';
 import 'package:runnoter/domain/repository/user_repository.dart';
 import 'package:runnoter/domain/service/auth_service.dart';
-import 'package:runnoter/domain/service/invitation_service.dart';
+import 'package:runnoter/domain/service/coaching_request_service.dart';
 
-import '../../../creators/invitation_creator.dart';
+import '../../../creators/coaching_request_creator.dart';
 import '../../../creators/user_creator.dart';
 import '../../../mock/domain/repository/mock_user_repository.dart';
 import '../../../mock/domain/service/mock_auth_service.dart';
-import '../../../mock/domain/service/mock_invitation_service.dart';
+import '../../../mock/domain/service/mock_coaching_request_service.dart';
 
 void main() {
   final authService = MockAuthService();
   final userRepository = MockUserRepository();
-  final invitationService = MockInvitationService();
+  final coachingRequestService = MockCoachingRequestService();
   const String loggedUserId = 'u1';
 
   setUpAll(() {
     GetIt.I.registerFactory<AuthService>(() => authService);
     GetIt.I.registerLazySingleton<UserRepository>(() => userRepository);
-    GetIt.I.registerFactory<InvitationService>(() => invitationService);
+    GetIt.I.registerFactory<CoachingRequestService>(
+      () => coachingRequestService,
+    );
   });
 
   tearDown(() {
     reset(authService);
     reset(userRepository);
-    reset(invitationService);
+    reset(coachingRequestService);
   });
 
   blocTest(
@@ -99,10 +101,10 @@ void main() {
       when(
         () => userRepository.getUserById(userId: loggedUserId),
       ).thenAnswer((_) => Stream.value(createUser(id: loggedUserId)));
-      invitationService.mockGetInvitationsByReceiverId(
-        invitations: [
-          createInvitation(id: 'i1'),
-          createInvitation(id: 'i2'),
+      coachingRequestService.mockGetCoachingRequestsByReceiverId(
+        requests: [
+          createCoachingRequest(id: 'i1'),
+          createCoachingRequest(id: 'i2'),
         ],
       );
     },
@@ -110,9 +112,9 @@ void main() {
     expect: () => [
       CoachState(
         status: const BlocStatusComplete(),
-        invitations: [
-          createInvitation(id: 'i1'),
-          createInvitation(id: 'i2'),
+        receivedCoachingRequests: [
+          createCoachingRequest(id: 'i1'),
+          createCoachingRequest(id: 'i2'),
         ],
       ),
     ],
@@ -120,7 +122,7 @@ void main() {
       verify(() => authService.loggedUserId$).called(1);
       verify(() => userRepository.getUserById(userId: loggedUserId)).called(1);
       verify(
-        () => invitationService.getInvitationsByReceiverId(
+        () => coachingRequestService.getCoachingRequestsByReceiverId(
           receiverId: loggedUserId,
         ),
       ).called(1);

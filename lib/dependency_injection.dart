@@ -8,14 +8,14 @@ import 'data/repository_impl/race_repository_impl.dart';
 import 'data/repository_impl/user_repository_impl.dart';
 import 'data/repository_impl/workout_repository_impl.dart';
 import 'data/service_impl/auth_service_impl.dart';
-import 'data/service_impl/invitation_service_impl.dart';
+import 'data/service_impl/coaching_request_service_impl.dart';
 import 'domain/repository/blood_test_repository.dart';
 import 'domain/repository/health_measurement_repository.dart';
 import 'domain/repository/race_repository.dart';
 import 'domain/repository/user_repository.dart';
 import 'domain/repository/workout_repository.dart';
 import 'domain/service/auth_service.dart';
-import 'domain/service/invitation_service.dart';
+import 'domain/service/coaching_request_service.dart';
 import 'domain/use_case/add_user_data_use_case.dart';
 import 'domain/use_case/get_logged_user_gender_use_case.dart';
 import 'presentation/config/body_sizes.dart';
@@ -57,7 +57,9 @@ void _registerFirebaseServices() {
 
 void _registerServices() {
   getIt.registerFactory<AuthService>(() => AuthServiceImpl());
-  getIt.registerFactory<InvitationService>(() => InvitationServiceImpl());
+  getIt.registerFactory<CoachingRequestService>(
+    () => CoachingRequestServiceImpl(),
+  );
 }
 
 void _registerRepositories() {

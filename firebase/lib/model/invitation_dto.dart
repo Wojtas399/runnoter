@@ -4,6 +4,7 @@ import '../mapper/invitation_status_mapper.dart';
 
 enum InvitationStatus { pending, accepted, discarded }
 
+//TODO: Change the name to CoachingRequestDto
 class InvitationDto extends Equatable {
   final String id;
   final String senderId;

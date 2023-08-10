@@ -1,24 +1,25 @@
 part of 'coach_bloc.dart';
 
 class CoachState extends BlocState<CoachState> {
-  final List<Invitation>? invitations;
+  final List<CoachingRequest>? receivedCoachingRequests;
   final UserBasicInfo? coach;
 
   const CoachState({
     required super.status,
-    this.invitations,
+    this.receivedCoachingRequests,
     this.coach,
   });
 
   @override
   CoachState copyWith({
     BlocStatus? status,
-    List<Invitation>? invitations,
+    List<CoachingRequest>? receivedCoachingRequests,
     UserBasicInfo? coach,
   }) =>
       CoachState(
         status: status ?? const BlocStatusComplete(),
-        invitations: invitations ?? this.invitations,
+        receivedCoachingRequests:
+            receivedCoachingRequests ?? this.receivedCoachingRequests,
         coach: coach ?? this.coach,
       );
 }

@@ -1,15 +1,14 @@
 import 'package:equatable/equatable.dart';
 
-//TODO: Change the name to coachingRequest
-enum InvitationStatus { pending, accepted, discarded }
+enum CoachingRequestStatus { pending, accepted, declined }
 
-class Invitation extends Equatable {
+class CoachingRequest extends Equatable {
   final String id;
   final String senderId;
   final String receiverId;
-  final InvitationStatus status;
+  final CoachingRequestStatus status;
 
-  const Invitation({
+  const CoachingRequest({
     required this.id,
     required this.senderId,
     required this.receiverId,

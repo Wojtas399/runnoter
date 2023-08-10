@@ -3,37 +3,39 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
-import 'package:runnoter/domain/additional_model/invitation.dart';
+import 'package:runnoter/domain/additional_model/coaching_request.dart';
 import 'package:runnoter/domain/additional_model/user_basic_info.dart';
 import 'package:runnoter/domain/bloc/users_search/users_search_bloc.dart';
 import 'package:runnoter/domain/entity/user.dart';
 import 'package:runnoter/domain/repository/user_repository.dart';
 import 'package:runnoter/domain/service/auth_service.dart';
-import 'package:runnoter/domain/service/invitation_service.dart';
+import 'package:runnoter/domain/service/coaching_request_service.dart';
 
-import '../../../creators/invitation_creator.dart';
+import '../../../creators/coaching_request_creator.dart';
 import '../../../creators/user_basic_info_creator.dart';
 import '../../../creators/user_creator.dart';
 import '../../../mock/domain/repository/mock_user_repository.dart';
 import '../../../mock/domain/service/mock_auth_service.dart';
-import '../../../mock/domain/service/mock_invitation_service.dart';
+import '../../../mock/domain/service/mock_coaching_request_service.dart';
 
 void main() {
   final authService = MockAuthService();
   final userRepository = MockUserRepository();
-  final invitationService = MockInvitationService();
+  final coachingRequestService = MockCoachingRequestService();
   const String loggedUserId = 'u1';
 
   setUpAll(() {
     GetIt.I.registerFactory<AuthService>(() => authService);
     GetIt.I.registerSingleton<UserRepository>(userRepository);
-    GetIt.I.registerFactory<InvitationService>(() => invitationService);
+    GetIt.I.registerFactory<CoachingRequestService>(
+      () => coachingRequestService,
+    );
   });
 
   tearDown(() {
     reset(authService);
     reset(userRepository);
-    reset(invitationService);
+    reset(coachingRequestService);
   });
 
   blocTest(
@@ -57,14 +59,23 @@ void main() {
       userRepository.mockGetUsersByCoachId(
         users: [createUser(id: 'u2'), createUser(id: 'u3')],
       );
-      invitationService.mockGetInvitationsBySenderId(
-        invitations: [
-          createInvitation(receiverId: 'u4', status: InvitationStatus.pending),
-          createInvitation(receiverId: 'u5', status: InvitationStatus.accepted),
-          createInvitation(receiverId: 'u3', status: InvitationStatus.accepted),
-          createInvitation(
+      coachingRequestService.mockGetCoachingRequestsBySenderId(
+        requests: [
+          createCoachingRequest(
+            receiverId: 'u4',
+            status: CoachingRequestStatus.pending,
+          ),
+          createCoachingRequest(
+            receiverId: 'u5',
+            status: CoachingRequestStatus.accepted,
+          ),
+          createCoachingRequest(
+            receiverId: 'u3',
+            status: CoachingRequestStatus.accepted,
+          ),
+          createCoachingRequest(
             receiverId: 'u6',
-            status: InvitationStatus.discarded,
+            status: CoachingRequestStatus.declined,
           ),
         ],
       );
@@ -103,14 +114,23 @@ void main() {
       userRepository.mockGetUsersByCoachId(
         users: [createUser(id: 'u2'), createUser(id: 'u3')],
       );
-      invitationService.mockGetInvitationsBySenderId(
-        invitations: [
-          createInvitation(receiverId: 'u4', status: InvitationStatus.pending),
-          createInvitation(receiverId: 'u5', status: InvitationStatus.accepted),
-          createInvitation(receiverId: 'u3', status: InvitationStatus.accepted),
-          createInvitation(
+      coachingRequestService.mockGetCoachingRequestsBySenderId(
+        requests: [
+          createCoachingRequest(
+            receiverId: 'u4',
+            status: CoachingRequestStatus.pending,
+          ),
+          createCoachingRequest(
+            receiverId: 'u5',
+            status: CoachingRequestStatus.accepted,
+          ),
+          createCoachingRequest(
+            receiverId: 'u3',
+            status: CoachingRequestStatus.accepted,
+          ),
+          createCoachingRequest(
             receiverId: 'u6',
-            status: InvitationStatus.discarded,
+            status: CoachingRequestStatus.declined,
           ),
         ],
       );
@@ -264,7 +284,7 @@ void main() {
     ),
     setUp: () {
       authService.mockGetLoggedUserId(userId: 'u1');
-      invitationService.mockAddInvitation();
+      coachingRequestService.mockAddCoachingRequest();
     },
     act: (bloc) => bloc.add(const UsersSearchEventInviteUser(
       idOfUserToInvite: 'u2',
@@ -273,17 +293,17 @@ void main() {
       const UsersSearchState(status: BlocStatusLoading()),
       const UsersSearchState(
         status: BlocStatusComplete<UsersSearchBlocInfo>(
-          info: UsersSearchBlocInfo.invitationSent,
+          info: UsersSearchBlocInfo.requestSent,
         ),
       ),
     ],
     verify: (_) {
       verify(() => authService.loggedUserId$).called(1);
       verify(
-        () => invitationService.addInvitation(
+        () => coachingRequestService.addCoachingRequest(
           senderId: 'u1',
           receiverId: 'u2',
-          status: InvitationStatus.pending,
+          status: CoachingRequestStatus.pending,
         ),
       ).called(1);
     },
