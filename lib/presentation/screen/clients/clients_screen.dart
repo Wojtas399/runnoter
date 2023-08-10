@@ -9,9 +9,10 @@ import '../../component/big_button_component.dart';
 import '../../component/body/medium_body_component.dart';
 import '../../component/empty_content_info_component.dart';
 import '../../component/gap/gap_components.dart';
-import '../../component/padding/paddings_24.dart';
+import '../../component/loading_info_component.dart';
 import '../../component/responsive_layout_component.dart';
 import '../../dialog/users_search/users_search_dialog.dart';
+import '../../extension/gender_extensions.dart';
 import '../../service/dialog_service.dart';
 
 @RoutePage()
@@ -33,7 +34,8 @@ class _Content extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MediumBody(
-      child: Paddings24(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 24),
         child: ResponsiveLayout(
           mobileBody: const _Clients(),
           desktopBody: Column(
@@ -44,7 +46,7 @@ class _Content extends StatelessWidget {
                   const UsersSearchDialog(),
                 ),
               ),
-              const Gap24(),
+              const Gap32(),
               const Expanded(
                 child: _Clients(),
               ),
@@ -66,15 +68,41 @@ class _Clients extends StatelessWidget {
     );
 
     return switch (clients) {
-      null => const CircularProgressIndicator(),
-      [] => const EmptyContentInfo(title: 'No clients'),
-      [...] => ListView.builder(
-          itemCount: clients.length,
-          itemBuilder: (_, int itemIndex) {
-            final UserBasicInfo client = clients[itemIndex];
-            return Text('${client.name} ${client.surname}');
-          },
+      null => const LoadingInfo(),
+      [] => EmptyContentInfo(
+          icon: Icons.groups,
+          title: Str.of(context).clientsNoClientsTitle,
+          subtitle: Str.of(context).clientsNoClientsMessage,
+        ),
+      [...] => ListView(
+          children: ListTile.divideTiles(
+            context: context,
+            tiles: clients.map((UserBasicInfo client) => _ClientItem(client)),
+          ).toList(),
         ),
     };
+  }
+}
+
+class _ClientItem extends StatelessWidget {
+  final UserBasicInfo clientInfo;
+
+  const _ClientItem(this.clientInfo);
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      title: Text('${clientInfo.name} ${clientInfo.surname}'),
+      subtitle: Text(clientInfo.email),
+      leading: Icon(clientInfo.gender.toIconData()),
+      trailing: OutlinedButton(
+        onPressed: () => _onMessagePressed(),
+        child: Text(Str.of(context).clientsMessage),
+      ),
+    );
+  }
+
+  void _onMessagePressed() {
+    //TODO
   }
 }

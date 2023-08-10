@@ -737,6 +737,18 @@
   "@clientsSearchUser": {
     "description": "Label of the button to search user"
   },
+  "clientsMessage": "Wiadomość",
+  "@clientsMessage": {
+    "description": "Label of the button to send message"
+  },
+  "clientsNoClientsTitle": "Brak zawodów",
+  "@clientsNoClientsTitle": {
+    "description": "Title of the info about the lack of clients"
+  },
+  "clientsNoClientsMessage": "Dodaj klientów, aby mieć możliwość przeglądania tej listy",
+  "@clientsNoClientsMessage": {
+    "description": "Message of the info about the lack of races"
+  },
   "@__________USERS_SEARCH__________": {},
   "usersSearchTitle": "Szukaj użytkowników",
   "@usersSearchTitle": {
