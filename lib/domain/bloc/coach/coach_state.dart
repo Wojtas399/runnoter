@@ -1,28 +1,24 @@
-import '../../additional_model/bloc_state.dart';
-import '../../additional_model/bloc_status.dart';
-import '../../additional_model/user_basic_info.dart';
+part of 'coach_bloc.dart';
 
 class CoachState extends BlocState<CoachState> {
-  final CoachStatus? coachStatus;
+  final List<Invitation>? invitations;
   final UserBasicInfo? coach;
 
   const CoachState({
     required super.status,
-    this.coachStatus,
+    this.invitations,
     this.coach,
   });
 
   @override
   CoachState copyWith({
     BlocStatus? status,
-    CoachStatus? coachStatus,
+    List<Invitation>? invitations,
     UserBasicInfo? coach,
   }) =>
       CoachState(
         status: status ?? const BlocStatusComplete(),
-        coachStatus: coachStatus ?? this.coachStatus,
+        invitations: invitations ?? this.invitations,
         coach: coach ?? this.coach,
       );
 }
-
-enum CoachStatus { notFound, waitingForApproval, accepted }

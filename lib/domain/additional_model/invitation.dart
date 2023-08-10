@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 
+//TODO: Change the name to coachingRequest
 enum InvitationStatus { pending, accepted, discarded }
 
 class Invitation extends Equatable {

@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 
 import '../entity/user.dart';
 
+//TODO: Add coachId parameter
 class UserBasicInfo extends Equatable {
   final String id;
   final Gender gender;
