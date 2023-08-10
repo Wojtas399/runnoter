@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 import '../../../domain/bloc/home/home_bloc.dart';
 import '../../../domain/entity/user.dart';
@@ -70,6 +71,11 @@ class HomeNavigationRail extends StatelessWidget {
           icon: const Icon(Icons.emoji_events_outlined),
           selectedIcon: const Icon(Icons.emoji_events),
           label: Text(str.racesTitle),
+        ),
+        NavigationRailDestination(
+          icon: Icon(MdiIcons.whistleOutline),
+          selectedIcon: Icon(MdiIcons.whistle),
+          label: Text(str.coachTitle),
         ),
         if (accountType == AccountType.coach)
           NavigationRailDestination(

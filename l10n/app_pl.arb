@@ -778,6 +778,11 @@
   "@usersSearchSuccessfullySentInvitation": {
     "description": "Message about successfully sent invitation"
   },
+  "@__________COACH__________": {},
+  "coachTitle": "Trener",
+  "@coachTitle": {
+    "description": "Title of coach screen"
+  },
   "@__________RUN_STATUS_PARAMS__________": {},
   "runStatus": "Status",
   "@runStatus": {

@@ -215,6 +215,8 @@
   "usersSearchSendInvitationConfirmationDialogTitle": "Add client",
   "usersSearchSendInvitationConfirmationDialogMessage": "To become a coach of the selected person, they must approve the request to share their profile. Do you want to send such a request to the user ",
   "usersSearchSuccessfullySentInvitation": "Successfully sent request",
+  "@__________COACH__________": {},
+  "coachTitle": "Coach",
   "@__________RUN_STATUS_PARAMS__________": {},
   "runStatus": "Status",
   "runStatusCoveredDistance": "Covered distance",

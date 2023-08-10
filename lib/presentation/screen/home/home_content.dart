@@ -26,7 +26,6 @@ class HomeContent extends StatefulWidget {
 
 class _State extends State<HomeContent> {
   final int numberOfBottomNavPages = 3;
-  int numberOfAllPages = 6;
   int _bottomNavSelectedIndex = 0;
   _NavigationType _navigationType = _NavigationType.drawer;
 
@@ -35,30 +34,32 @@ class _State extends State<HomeContent> {
     final AccountType? accountType = context.select(
       (HomeBloc bloc) => bloc.state.accountType,
     );
-    if (accountType == AccountType.coach) numberOfAllPages++;
+    final List<PageRouteInfo> routes = [
+      const CurrentWeekRoute(),
+      const CalendarRoute(),
+      const HealthRoute(),
+      const MileageRoute(),
+      const BloodTestsRoute(),
+      const RacesRoute(),
+      const CoachRoute(),
+      if (accountType == AccountType.coach) const ClientsRoute(),
+      const ProfileRoute(),
+    ];
+    final int numberOfAllPages = routes.length;
 
     return AutoTabsRouter(
-      routes: [
-        const CurrentWeekRoute(),
-        const CalendarRoute(),
-        const HealthRoute(),
-        const MileageRoute(),
-        const BloodTestsRoute(),
-        const RacesRoute(),
-        if (accountType == AccountType.coach) const ClientsRoute(),
-        const ProfileRoute(),
-      ],
+      routes: routes,
       builder: (context, child) {
         final tabsRouter = AutoTabsRouter.of(context);
         final RouteData currentPage = tabsRouter.current;
         final int activeIndex = tabsRouter.activeIndex;
-        final int? mobileDrawerActiveIndex = activeIndex < numberOfAllPages
+        final int? mobileDrawerActiveIndex = activeIndex < numberOfAllPages - 1
             ? activeIndex < numberOfBottomNavPages
                 ? 0
                 : activeIndex - 2
             : null;
         final int? desktopDrawerActiveIndex =
-            activeIndex < numberOfAllPages ? activeIndex : null;
+            activeIndex < numberOfAllPages - 1 ? activeIndex : null;
         final Color? bckColor = context.isMobileSize
             ? null
             : Color.alphaBlend(
@@ -72,14 +73,17 @@ class _State extends State<HomeContent> {
             backgroundColor: bckColor,
             onMenuPressed: _onMenuAppBarPressed,
             onAvatarPressed: () => tabsRouter.setActiveIndex(
-              accountType == AccountType.coach ? 7 : 6,
+              numberOfAllPages - 1,
             ),
           ),
           drawer: context.isMobileSize
               ? HomeNavigationDrawer(
                   selectedIndex: mobileDrawerActiveIndex,
-                  onPageSelected: (int pageIndex) =>
-                      _onSidePageSelected(pageIndex, tabsRouter),
+                  onPageSelected: (int pageIndex) => _onSidePageSelected(
+                    pageIndex,
+                    tabsRouter,
+                    numberOfAllPages,
+                  ),
                 )
               : null,
           bottomNavigationBar: context.isMobileSize && _isHomePage(currentPage)
@@ -102,22 +106,31 @@ class _State extends State<HomeContent> {
                   switch (_navigationType) {
                     _NavigationType.drawer => HomeNavigationDrawer(
                         selectedIndex: desktopDrawerActiveIndex,
-                        onPageSelected: (int pageIndex) =>
-                            _onSidePageSelected(pageIndex, tabsRouter),
+                        onPageSelected: (int pageIndex) => _onSidePageSelected(
+                          pageIndex,
+                          tabsRouter,
+                          numberOfAllPages,
+                        ),
                       ),
                     _NavigationType.rail => HomeNavigationRail(
                         selectedIndex: desktopDrawerActiveIndex,
                         backgroundColor: bckColor,
-                        onPageSelected: (int pageIndex) =>
-                            _onSidePageSelected(pageIndex, tabsRouter),
+                        onPageSelected: (int pageIndex) => _onSidePageSelected(
+                          pageIndex,
+                          tabsRouter,
+                          numberOfAllPages,
+                        ),
                       ),
                   },
                 if (context.isTabletSize)
                   HomeNavigationRail(
                     selectedIndex: desktopDrawerActiveIndex,
                     backgroundColor: bckColor,
-                    onPageSelected: (int pageIndex) =>
-                        _onSidePageSelected(pageIndex, tabsRouter),
+                    onPageSelected: (int pageIndex) => _onSidePageSelected(
+                      pageIndex,
+                      tabsRouter,
+                      numberOfAllPages,
+                    ),
                   ),
                 Expanded(child: child),
               ],
@@ -137,9 +150,13 @@ class _State extends State<HomeContent> {
     });
   }
 
-  Future<void> _onSidePageSelected(int pageIndex, TabsRouter tabsRouter) async {
+  Future<void> _onSidePageSelected(
+    int pageIndex,
+    TabsRouter tabsRouter,
+    int numberOfAllPages,
+  ) async {
     if (context.isMobileSize) {
-      if (pageIndex == numberOfAllPages - 2) {
+      if (pageIndex == numberOfAllPages - 3) {
         await _signOut(context);
       } else if (pageIndex == 0) {
         tabsRouter.setActiveIndex(_bottomNavSelectedIndex);
@@ -147,7 +164,7 @@ class _State extends State<HomeContent> {
         tabsRouter.setActiveIndex(pageIndex + 2);
       }
     } else {
-      if (pageIndex == numberOfAllPages) {
+      if (pageIndex == numberOfAllPages - 1) {
         await _signOut(context);
       } else {
         tabsRouter.setActiveIndex(pageIndex);
