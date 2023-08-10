@@ -3,10 +3,12 @@ import 'package:firebase/firebase.dart';
 import '../../domain/additional_model/coaching_request.dart';
 import 'coaching_request_status_mapper.dart';
 
-CoachingRequest mapCoachingRequestFromDto(InvitationDto invitationDto) =>
+CoachingRequest mapCoachingRequestFromDto(
+  CoachingRequestDto coachingRequestDto,
+) =>
     CoachingRequest(
-      id: invitationDto.id,
-      senderId: invitationDto.senderId,
-      receiverId: invitationDto.receiverId,
-      status: mapCoachingRequestStatusFromDto(invitationDto.status),
+      id: coachingRequestDto.id,
+      senderId: coachingRequestDto.senderId,
+      receiverId: coachingRequestDto.receiverId,
+      status: mapCoachingRequestStatusFromDto(coachingRequestDto.status),
     );

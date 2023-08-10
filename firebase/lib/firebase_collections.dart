@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'firebase.dart';
+import 'model/coaching_request_dto.dart';
 
 CollectionReference<UserDto> getUsersRef() =>
     FirebaseFirestore.instance.collection('Users').withConverter<UserDto>(
@@ -99,13 +100,13 @@ CollectionReference<RaceDto> getRacesRef(
           toFirestore: (competitionDto, _) => competitionDto.toJson(),
         );
 
-CollectionReference<InvitationDto> getInvitationsRef() =>
+CollectionReference<CoachingRequestDto> getCoachingRequestsRef() =>
     FirebaseFirestore.instance
-        .collection('Invitations')
-        .withConverter<InvitationDto>(
-          fromFirestore: (snapshot, _) => InvitationDto.fromJson(
-            invitationId: snapshot.id,
+        .collection('CoachingRequests')
+        .withConverter<CoachingRequestDto>(
+          fromFirestore: (snapshot, _) => CoachingRequestDto.fromJson(
+            coachingRequestId: snapshot.id,
             json: snapshot.data(),
           ),
-          toFirestore: (invitationDto, _) => invitationDto.toJson(),
+          toFirestore: (coachingRequestDto, _) => coachingRequestDto.toJson(),
         );

@@ -6,10 +6,10 @@ import 'package:runnoter/domain/additional_model/coaching_request.dart';
 void main() {
   test(
     'map coaching request status from dto, '
-    'dto InvitationStatus.pending should be mapped to domain CoachingRequestStatus.pending',
+    'dto CoachingRequestStatus.pending should be mapped to domain CoachingRequestStatus.pending',
     () {
-      const firebase.InvitationStatus dtoStatus =
-          firebase.InvitationStatus.pending;
+      const firebase.CoachingRequestStatus dtoStatus =
+          firebase.CoachingRequestStatus.pending;
       const CoachingRequestStatus expectedStatus =
           CoachingRequestStatus.pending;
 
@@ -22,10 +22,10 @@ void main() {
 
   test(
     'map coaching request status from dto, '
-    'dto InvitationStatus.accepted should be mapped to domain CoachingRequestStatus.accepted',
+    'dto CoachingRequestStatus.accepted should be mapped to domain CoachingRequestStatus.accepted',
     () {
-      const firebase.InvitationStatus dtoStatus =
-          firebase.InvitationStatus.accepted;
+      const firebase.CoachingRequestStatus dtoStatus =
+          firebase.CoachingRequestStatus.accepted;
       const CoachingRequestStatus expectedStatus =
           CoachingRequestStatus.accepted;
 
@@ -38,10 +38,10 @@ void main() {
 
   test(
     'map coaching request status from dto, '
-    'dto InvitationStatus.discarded should be mapped to domain CoachingRequestStatus.declined',
+    'dto CoachingRequestStatus.declined should be mapped to domain CoachingRequestStatus.declined',
     () {
-      const firebase.InvitationStatus dtoStatus =
-          firebase.InvitationStatus.discarded;
+      const firebase.CoachingRequestStatus dtoStatus =
+          firebase.CoachingRequestStatus.declined;
       const CoachingRequestStatus expectedStatus =
           CoachingRequestStatus.declined;
 
@@ -54,13 +54,13 @@ void main() {
 
   test(
     'map coaching request status to dto, '
-    'domain InvitationStatus.pending should be mapped to dto InvitationStatus.pending',
+    'domain CoachingRequestStatus.pending should be mapped to dto CoachingRequestStatus.pending',
     () {
       const CoachingRequestStatus status = CoachingRequestStatus.pending;
-      const firebase.InvitationStatus expectedDtoStatus =
-          firebase.InvitationStatus.pending;
+      const firebase.CoachingRequestStatus expectedDtoStatus =
+          firebase.CoachingRequestStatus.pending;
 
-      final firebase.InvitationStatus dtoStatus =
+      final firebase.CoachingRequestStatus dtoStatus =
           mapCoachingRequestStatusToDto(status);
 
       expect(dtoStatus, expectedDtoStatus);
@@ -69,13 +69,13 @@ void main() {
 
   test(
     'map coaching request status to dto, '
-    'domain InvitationStatus.accepted should be mapped to dto InvitationStatus.accepted',
+    'domain CoachingRequestStatus.accepted should be mapped to dto CoachingRequestStatus.accepted',
     () {
       const CoachingRequestStatus status = CoachingRequestStatus.accepted;
-      const firebase.InvitationStatus expectedDtoStatus =
-          firebase.InvitationStatus.accepted;
+      const firebase.CoachingRequestStatus expectedDtoStatus =
+          firebase.CoachingRequestStatus.accepted;
 
-      final firebase.InvitationStatus dtoStatus =
+      final firebase.CoachingRequestStatus dtoStatus =
           mapCoachingRequestStatusToDto(status);
 
       expect(dtoStatus, expectedDtoStatus);
@@ -84,13 +84,13 @@ void main() {
 
   test(
     'map coaching request status to dto, '
-    'domain InvitationStatus.declined should be mapped to dto InvitationStatus.discarded',
+    'domain CoachingRequestStatus.declined should be mapped to dto CoachingRequestStatus.declined',
     () {
       const CoachingRequestStatus status = CoachingRequestStatus.declined;
-      const firebase.InvitationStatus expectedDtoStatus =
-          firebase.InvitationStatus.discarded;
+      const firebase.CoachingRequestStatus expectedDtoStatus =
+          firebase.CoachingRequestStatus.declined;
 
-      final firebase.InvitationStatus dtoStatus =
+      final firebase.CoachingRequestStatus dtoStatus =
           mapCoachingRequestStatusToDto(status);
 
       expect(dtoStatus, expectedDtoStatus);

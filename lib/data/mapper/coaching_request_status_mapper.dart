@@ -3,19 +3,19 @@ import 'package:firebase/firebase.dart' as firebase;
 import '../../domain/additional_model/coaching_request.dart';
 
 CoachingRequestStatus mapCoachingRequestStatusFromDto(
-  firebase.InvitationStatus dtoInvitationStatus,
+  firebase.CoachingRequestStatus dtoCoachingRequestStatus,
 ) =>
-    switch (dtoInvitationStatus) {
-      firebase.InvitationStatus.pending => CoachingRequestStatus.pending,
-      firebase.InvitationStatus.accepted => CoachingRequestStatus.accepted,
-      firebase.InvitationStatus.discarded => CoachingRequestStatus.declined,
+    switch (dtoCoachingRequestStatus) {
+      firebase.CoachingRequestStatus.pending => CoachingRequestStatus.pending,
+      firebase.CoachingRequestStatus.accepted => CoachingRequestStatus.accepted,
+      firebase.CoachingRequestStatus.declined => CoachingRequestStatus.declined,
     };
 
-firebase.InvitationStatus mapCoachingRequestStatusToDto(
+firebase.CoachingRequestStatus mapCoachingRequestStatusToDto(
   CoachingRequestStatus coachingRequestStatus,
 ) =>
     switch (coachingRequestStatus) {
-      CoachingRequestStatus.pending => firebase.InvitationStatus.pending,
-      CoachingRequestStatus.accepted => firebase.InvitationStatus.accepted,
-      CoachingRequestStatus.declined => firebase.InvitationStatus.discarded,
+      CoachingRequestStatus.pending => firebase.CoachingRequestStatus.pending,
+      CoachingRequestStatus.accepted => firebase.CoachingRequestStatus.accepted,
+      CoachingRequestStatus.declined => firebase.CoachingRequestStatus.declined,
     };

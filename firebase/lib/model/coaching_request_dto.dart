@@ -1,17 +1,16 @@
 import 'package:equatable/equatable.dart';
 
-import '../mapper/invitation_status_mapper.dart';
+import '../mapper/coatching_request_status_mapper.dart';
 
-enum InvitationStatus { pending, accepted, discarded }
+enum CoachingRequestStatus { pending, accepted, declined }
 
-//TODO: Change the name to CoachingRequestDto
-class InvitationDto extends Equatable {
+class CoachingRequestDto extends Equatable {
   final String id;
   final String senderId;
   final String receiverId;
-  final InvitationStatus status;
+  final CoachingRequestStatus status;
 
-  const InvitationDto({
+  const CoachingRequestDto({
     required this.id,
     required this.senderId,
     required this.receiverId,
@@ -21,23 +20,25 @@ class InvitationDto extends Equatable {
   @override
   List<Object?> get props => [id, senderId, receiverId, status];
 
-  InvitationDto.fromJson({
-    required String invitationId,
+  CoachingRequestDto.fromJson({
+    required String coachingRequestId,
     required Map<String, dynamic>? json,
   }) : this(
-          id: invitationId,
+          id: coachingRequestId,
           senderId: json?[senderIdField],
           receiverId: json?[receiverIdField],
-          status: mapInvitationStatusFromString(json?[invitationStatusField]),
+          status: mapCoachingRequestStatusFromString(
+            json?[coachingRequestStatusField],
+          ),
         );
 
   Map<String, dynamic> toJson() => {
         senderIdField: senderId,
         receiverIdField: receiverId,
-        invitationStatusField: mapInvitationStatusToString(status),
+        coachingRequestStatusField: mapCoachingRequestStatusToString(status),
       };
 }
 
 const String senderIdField = 'senderId';
 const String receiverIdField = 'receiverId';
-const String invitationStatusField = 'status';
+const String coachingRequestStatusField = 'status';

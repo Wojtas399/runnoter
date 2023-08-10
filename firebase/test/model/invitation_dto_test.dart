@@ -1,11 +1,11 @@
-import 'package:firebase/model/invitation_dto.dart';
+import 'package:firebase/model/coaching_request_dto.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  const String invitationId = 'i1';
+  const String coachingRequestId = 'i1';
   const String senderId = 'u1';
   const String receiverId = 'u2';
-  const InvitationStatus status = InvitationStatus.pending;
+  const CoachingRequestStatus status = CoachingRequestStatus.pending;
   const String statusStr = 'pending';
 
   test(
@@ -17,15 +17,15 @@ void main() {
         'receiverId': receiverId,
         'status': statusStr,
       };
-      const InvitationDto expectedDto = InvitationDto(
-        id: invitationId,
+      const CoachingRequestDto expectedDto = CoachingRequestDto(
+        id: coachingRequestId,
         senderId: senderId,
         receiverId: receiverId,
         status: status,
       );
 
-      final InvitationDto dto = InvitationDto.fromJson(
-        invitationId: invitationId,
+      final CoachingRequestDto dto = CoachingRequestDto.fromJson(
+        coachingRequestId: coachingRequestId,
         json: json,
       );
 
@@ -37,8 +37,8 @@ void main() {
     'to json, '
     'should map dto model to json',
     () {
-      const InvitationDto dto = InvitationDto(
-        id: invitationId,
+      const CoachingRequestDto dto = CoachingRequestDto(
+        id: coachingRequestId,
         senderId: senderId,
         receiverId: receiverId,
         status: status,

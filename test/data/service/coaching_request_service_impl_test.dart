@@ -5,46 +5,46 @@ import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/data/service_impl/coaching_request_service_impl.dart';
 import 'package:runnoter/domain/additional_model/coaching_request.dart';
 
-import '../../mock/firebase/mock_firebase_invitation_service.dart';
+import '../../mock/firebase/mock_firebase_coaching_request_service.dart';
 
 void main() {
-  final firebaseInvitationService = MockFirebaseInvitationService();
+  final firebaseCoachingRequestService = MockFirebaseCoachingRequestService();
   late CoachingRequestServiceImpl service;
 
   setUpAll(() {
-    GetIt.I.registerFactory<firebase.FirebaseInvitationService>(
-      () => firebaseInvitationService,
+    GetIt.I.registerFactory<firebase.FirebaseCoachingRequestService>(
+      () => firebaseCoachingRequestService,
     );
     service = CoachingRequestServiceImpl();
   });
 
   tearDown(() {
-    reset(firebaseInvitationService);
+    reset(firebaseCoachingRequestService);
   });
 
   test(
     'get coaching requests by sender id, '
-    'should emit stream from firebase invitation service to get invitations by sender id',
+    'should emit stream from firebase coaching request service to get coaching requests by sender id',
     () {
       const String senderId = 'u1';
-      const List<firebase.InvitationDto> invitationDtos = [
-        firebase.InvitationDto(
+      const List<firebase.CoachingRequestDto> requestDtos = [
+        firebase.CoachingRequestDto(
           id: 'i1',
           senderId: senderId,
           receiverId: 'u2',
-          status: firebase.InvitationStatus.pending,
+          status: firebase.CoachingRequestStatus.pending,
         ),
-        firebase.InvitationDto(
+        firebase.CoachingRequestDto(
           id: 'i2',
           senderId: senderId,
           receiverId: 'u3',
-          status: firebase.InvitationStatus.accepted,
+          status: firebase.CoachingRequestStatus.accepted,
         ),
-        firebase.InvitationDto(
+        firebase.CoachingRequestDto(
           id: 'i3',
           senderId: senderId,
           receiverId: 'u4',
-          status: firebase.InvitationStatus.discarded,
+          status: firebase.CoachingRequestStatus.declined,
         ),
       ];
       const List<CoachingRequest> expectedCoachingRequests = [
@@ -67,8 +67,8 @@ void main() {
           status: CoachingRequestStatus.declined,
         ),
       ];
-      firebaseInvitationService.mockGetInvitationsBySenderId(
-        invitations: invitationDtos,
+      firebaseCoachingRequestService.mockGetCoachingRequestsBySenderId(
+        requests: requestDtos,
       );
 
       final Stream<List<CoachingRequest>?> coachingRequests$ =
@@ -83,27 +83,27 @@ void main() {
 
   test(
     'get coaching requests by receiver id, '
-    'should emit stream from firebase invitation service to get invitations by receiver id',
+    'should emit stream from firebase coaching request service to get coaching requests by receiver id',
     () {
       const String receiverId = 'u1';
-      const List<firebase.InvitationDto> invitationDtos = [
-        firebase.InvitationDto(
+      const List<firebase.CoachingRequestDto> requestDtos = [
+        firebase.CoachingRequestDto(
           id: 'i1',
           senderId: 'u2',
           receiverId: receiverId,
-          status: firebase.InvitationStatus.pending,
+          status: firebase.CoachingRequestStatus.pending,
         ),
-        firebase.InvitationDto(
+        firebase.CoachingRequestDto(
           id: 'i2',
           senderId: 'u3',
           receiverId: receiverId,
-          status: firebase.InvitationStatus.accepted,
+          status: firebase.CoachingRequestStatus.accepted,
         ),
-        firebase.InvitationDto(
+        firebase.CoachingRequestDto(
           id: 'i3',
           senderId: 'u4',
           receiverId: receiverId,
-          status: firebase.InvitationStatus.discarded,
+          status: firebase.CoachingRequestStatus.declined,
         ),
       ];
       const List<CoachingRequest> expectedCoachingRequests = [
@@ -126,8 +126,8 @@ void main() {
           status: CoachingRequestStatus.declined,
         ),
       ];
-      firebaseInvitationService.mockGetInvitationsByReceiverId(
-        invitations: invitationDtos,
+      firebaseCoachingRequestService.mockGetCoachingRequestsByReceiverId(
+        requests: requestDtos,
       );
 
       final Stream<List<CoachingRequest>?> coachingRequests$ =
@@ -142,11 +142,11 @@ void main() {
 
   test(
     'add coaching request, '
-    "should call firebase invitation service's method to add invitation",
+    "should call firebase coaching request service's method to add coaching request",
     () async {
       const String senderId = 'u1';
       const String receiverId = 'u2';
-      firebaseInvitationService.mockAddInvitation();
+      firebaseCoachingRequestService.mockAddCoachingRequest();
 
       await service.addCoachingRequest(
         senderId: senderId,
@@ -155,10 +155,10 @@ void main() {
       );
 
       verify(
-        () => firebaseInvitationService.addInvitation(
+        () => firebaseCoachingRequestService.addCoachingRequest(
           senderId: senderId,
           receiverId: receiverId,
-          status: firebase.InvitationStatus.pending,
+          status: firebase.CoachingRequestStatus.pending,
         ),
       ).called(1);
     },
@@ -166,10 +166,10 @@ void main() {
 
   test(
     'update coaching request status, '
-    "should call firebase invitation service's method to update invitation status",
+    "should call firebase coaching request service's method to update coaching request's status",
     () async {
       const String requestId = 'i1';
-      firebaseInvitationService.mockUpdateInvitationStatus();
+      firebaseCoachingRequestService.mockUpdateCoachingRequestStatus();
 
       await service.updateCoachingRequestStatus(
         requestId: requestId,
@@ -177,9 +177,9 @@ void main() {
       );
 
       verify(
-        () => firebaseInvitationService.updateInvitationStatus(
-          invitationId: requestId,
-          status: firebase.InvitationStatus.discarded,
+        () => firebaseCoachingRequestService.updateCoachingRequestStatus(
+          requestId: requestId,
+          status: firebase.CoachingRequestStatus.declined,
         ),
       ).called(1);
     },
@@ -187,16 +187,16 @@ void main() {
 
   test(
     'delete coaching request, '
-    "should call firebase invitation service's method to delete invitation",
+    "should call firebase coaching request service's method to delete coaching request",
     () async {
       const String requestId = 'i1';
-      firebaseInvitationService.mockDeleteInvitation();
+      firebaseCoachingRequestService.mockDeleteCoachingRequest();
 
       await service.deleteCoachingRequest(requestId: requestId);
 
       verify(
-        () => firebaseInvitationService.deleteInvitation(
-          invitationId: requestId,
+        () => firebaseCoachingRequestService.deleteCoachingRequest(
+          requestId: requestId,
         ),
       ).called(1);
     },

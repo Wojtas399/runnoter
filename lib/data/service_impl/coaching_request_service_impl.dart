@@ -7,26 +7,26 @@ import '../mapper/coaching_request_mapper.dart';
 import '../mapper/coaching_request_status_mapper.dart';
 
 class CoachingRequestServiceImpl implements CoachingRequestService {
-  final firebase.FirebaseInvitationService _firebaseInvitationService;
+  final firebase.FirebaseCoachingRequestService _firebaseCoachingRequestService;
 
   CoachingRequestServiceImpl()
-      : _firebaseInvitationService =
-            getIt<firebase.FirebaseInvitationService>();
+      : _firebaseCoachingRequestService =
+            getIt<firebase.FirebaseCoachingRequestService>();
 
   @override
   Stream<List<CoachingRequest>?> getCoachingRequestsBySenderId({
     required String senderId,
   }) =>
-      _firebaseInvitationService
-          .getInvitationsBySenderId(senderId: senderId)
+      _firebaseCoachingRequestService
+          .getCoachingRequestsBySenderId(senderId: senderId)
           .map((dtos) => dtos?.map(mapCoachingRequestFromDto).toList());
 
   @override
   Stream<List<CoachingRequest>?> getCoachingRequestsByReceiverId({
     required String receiverId,
   }) =>
-      _firebaseInvitationService
-          .getInvitationsByReceiverId(receiverId: receiverId)
+      _firebaseCoachingRequestService
+          .getCoachingRequestsByReceiverId(receiverId: receiverId)
           .map((dtos) => dtos?.map(mapCoachingRequestFromDto).toList());
 
   @override
@@ -35,7 +35,7 @@ class CoachingRequestServiceImpl implements CoachingRequestService {
     required String receiverId,
     required CoachingRequestStatus status,
   }) async {
-    await _firebaseInvitationService.addInvitation(
+    await _firebaseCoachingRequestService.addCoachingRequest(
       senderId: senderId,
       receiverId: receiverId,
       status: mapCoachingRequestStatusToDto(status),
@@ -47,14 +47,16 @@ class CoachingRequestServiceImpl implements CoachingRequestService {
     required String requestId,
     required CoachingRequestStatus status,
   }) async {
-    await _firebaseInvitationService.updateInvitationStatus(
-      invitationId: requestId,
+    await _firebaseCoachingRequestService.updateCoachingRequestStatus(
+      requestId: requestId,
       status: mapCoachingRequestStatusToDto(status),
     );
   }
 
   @override
   Future<void> deleteCoachingRequest({required String requestId}) async {
-    await _firebaseInvitationService.deleteInvitation(invitationId: requestId);
+    await _firebaseCoachingRequestService.deleteCoachingRequest(
+      requestId: requestId,
+    );
   }
 }
