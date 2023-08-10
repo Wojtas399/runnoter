@@ -46,25 +46,6 @@ class UserRepositoryImpl extends StateRepository<User>
     }
   }
 
-  //TODO: should compare lower case strings
-  @override
-  Future<List<User>> searchForUsers({required searchQuery}) async {
-    await _searchForUsersInDb(searchQuery);
-    final Stream<List<User>> matchingUsers$ = dataStream$.map(
-      (List<User>? users) => [
-        ...?users?.where(
-          (User user) {
-            bool doesNameMatch = user.name.contains(searchQuery);
-            bool doesSurnameMatch = user.surname.contains(searchQuery);
-            bool doesEmailMatch = user.email.contains(searchQuery);
-            return doesNameMatch || doesSurnameMatch || doesEmailMatch;
-          },
-        ),
-      ],
-    );
-    return await matchingUsers$.first;
-  }
-
   @override
   Future<void> addUser({required User user}) async {
     final firebase.UserDto? userDto = await _dbUserService.addUserData(
@@ -216,13 +197,6 @@ class UserRepositoryImpl extends StateRepository<User>
   Future<void> _loadUsersByCoachIdFromDb(String coachId) async {
     final userDtos = await _dbUserService.loadUsersByCoachId(coachId: coachId);
     final List<User> loadedUsers = await _loadUserSettings(userDtos);
-    addEntities(loadedUsers);
-  }
-
-  Future<void> _searchForUsersInDb(String searchQuery) async {
-    final List<firebase.UserDto> foundUserDtos =
-        await _dbUserService.searchForUsers(searchQuery: searchQuery);
-    final List<User> loadedUsers = await _loadUserSettings(foundUserDtos);
     addEntities(loadedUsers);
   }
 

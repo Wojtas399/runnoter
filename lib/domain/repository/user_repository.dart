@@ -6,8 +6,6 @@ abstract class UserRepository {
 
   Stream<List<User>?> getUsersByCoachId({required String coachId});
 
-  Future<List<User>> searchForUsers({required String searchQuery});
-
   Future<void> addUser({required User user});
 
   Future<void> updateUser({

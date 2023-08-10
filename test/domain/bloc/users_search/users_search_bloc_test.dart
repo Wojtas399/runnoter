@@ -5,28 +5,25 @@ import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/additional_model/coaching_request.dart';
 import 'package:runnoter/domain/bloc/users_search/users_search_bloc.dart';
-import 'package:runnoter/domain/entity/user.dart';
-import 'package:runnoter/domain/entity/user_basic_info.dart';
-import 'package:runnoter/domain/repository/user_repository.dart';
+import 'package:runnoter/domain/repository/user_basic_info_repository.dart';
 import 'package:runnoter/domain/service/auth_service.dart';
 import 'package:runnoter/domain/service/coaching_request_service.dart';
 
 import '../../../creators/coaching_request_creator.dart';
 import '../../../creators/user_basic_info_creator.dart';
-import '../../../creators/user_creator.dart';
-import '../../../mock/domain/repository/mock_user_repository.dart';
+import '../../../mock/domain/repository/mock_user_basic_info_repository.dart';
 import '../../../mock/domain/service/mock_auth_service.dart';
 import '../../../mock/domain/service/mock_coaching_request_service.dart';
 
 void main() {
   final authService = MockAuthService();
-  final userRepository = MockUserRepository();
+  final userBasicInfoRepository = MockUserBasicInfoRepository();
   final coachingRequestService = MockCoachingRequestService();
   const String loggedUserId = 'u1';
 
   setUpAll(() {
     GetIt.I.registerFactory<AuthService>(() => authService);
-    GetIt.I.registerSingleton<UserRepository>(userRepository);
+    GetIt.I.registerSingleton<UserBasicInfoRepository>(userBasicInfoRepository);
     GetIt.I.registerFactory<CoachingRequestService>(
       () => coachingRequestService,
     );
@@ -34,7 +31,7 @@ void main() {
 
   tearDown(() {
     reset(authService);
-    reset(userRepository);
+    reset(userBasicInfoRepository);
     reset(coachingRequestService);
   });
 
@@ -56,8 +53,11 @@ void main() {
     build: () => UsersSearchBloc(),
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
-      userRepository.mockGetUsersByCoachId(
-        users: [createUser(id: 'u2'), createUser(id: 'u3')],
+      userBasicInfoRepository.mockGetUsersBasicInfoByCoachId(
+        usersBasicInfo: [
+          createUserBasicInfo(id: 'u2'),
+          createUserBasicInfo(id: 'u3'),
+        ],
       );
       coachingRequestService.mockGetCoachingRequestsBySenderId(
         requests: [
@@ -111,8 +111,11 @@ void main() {
     ),
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
-      userRepository.mockGetUsersByCoachId(
-        users: [createUser(id: 'u2'), createUser(id: 'u3')],
+      userBasicInfoRepository.mockGetUsersBasicInfoByCoachId(
+        usersBasicInfo: [
+          createUserBasicInfo(id: 'u2'),
+          createUserBasicInfo(id: 'u3'),
+        ],
       );
       coachingRequestService.mockGetCoachingRequestsBySenderId(
         requests: [
@@ -186,29 +189,11 @@ void main() {
         invitedUserIds: ['u2'],
       ),
     ),
-    setUp: () => userRepository.mockSearchForUsers(
-      users: [
-        createUser(
-          id: 'u1',
-          gender: Gender.male,
-          name: 'name1',
-          surname: 'surname1',
-          email: 'email1@example.com',
-        ),
-        createUser(
-          id: 'u2',
-          gender: Gender.female,
-          name: 'name2',
-          surname: 'surname2',
-          email: 'email2@example.com',
-        ),
-        createUser(
-          id: 'u3',
-          gender: Gender.female,
-          name: 'name3',
-          surname: 'surname3',
-          email: 'email3@example.com',
-        ),
+    setUp: () => userBasicInfoRepository.mockSearchForUsers(
+      usersBasicInfo: [
+        createUserBasicInfo(id: 'u1', name: 'name1', surname: 'surname1'),
+        createUserBasicInfo(id: 'u2', name: 'name2', surname: 'surname2'),
+        createUserBasicInfo(id: 'u3', name: 'name3', surname: 'surname3'),
       ],
     ),
     act: (bloc) => bloc.add(const UsersSearchEventSearch(searchQuery: 'sea')),
@@ -218,38 +203,32 @@ void main() {
         clientIds: ['u1'],
         invitedUserIds: ['u2'],
       ),
-      const UsersSearchState(
-        status: BlocStatusComplete(),
-        clientIds: ['u1'],
-        invitedUserIds: ['u2'],
+      UsersSearchState(
+        status: const BlocStatusComplete(),
+        clientIds: const ['u1'],
+        invitedUserIds: const ['u2'],
         foundUsers: [
           FoundUser(
-            info: UserBasicInfo(
+            info: createUserBasicInfo(
               id: 'u1',
-              gender: Gender.male,
               name: 'name1',
               surname: 'surname1',
-              email: 'email1@example.com',
             ),
             relationshipStatus: RelationshipStatus.accepted,
           ),
           FoundUser(
-            info: UserBasicInfo(
+            info: createUserBasicInfo(
               id: 'u2',
-              gender: Gender.female,
               name: 'name2',
               surname: 'surname2',
-              email: 'email2@example.com',
             ),
             relationshipStatus: RelationshipStatus.pending,
           ),
           FoundUser(
-            info: UserBasicInfo(
+            info: createUserBasicInfo(
               id: 'u3',
-              gender: Gender.female,
               name: 'name3',
               surname: 'surname3',
-              email: 'email3@example.com',
             ),
             relationshipStatus: RelationshipStatus.notInvited,
           )
@@ -257,7 +236,7 @@ void main() {
       ),
     ],
     verify: (_) => verify(
-      () => userRepository.searchForUsers(searchQuery: 'sea'),
+      () => userBasicInfoRepository.searchForUsers(searchQuery: 'sea'),
     ).called(1),
   );
 

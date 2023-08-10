@@ -136,4 +136,87 @@ void main() {
       );
     },
   );
+
+  test(
+    'search for users, '
+    'should load matching users from firebase, add them to repository and should return all matching users from repository',
+    () async {
+      final List<UserBasicInfo> existingUsers = [
+        createUserBasicInfo(
+          id: 'u1',
+          name: 'Eli',
+          surname: 'Zabeth',
+          email: 'eli@example.com',
+        ),
+        createUserBasicInfo(
+          id: 'u2',
+          name: 'Jean',
+          surname: 'Novsky',
+          email: 'jean@example.com',
+        ),
+        createUserBasicInfo(
+          id: 'u3',
+          name: 'Ste',
+          surname: 'Phali',
+          email: 'ste@example.com',
+        ),
+      ];
+      final List<firebase.UserDto> loadedUserDtos = [
+        createUserDto(
+          id: 'u4',
+          name: 'Jen',
+          surname: 'Nna',
+          email: 'jen@example.com.com',
+        ),
+        createUserDto(
+          id: 'u5',
+          name: 'Bart',
+          surname: 'Osh',
+          email: 'barli@example.com',
+        ),
+      ];
+      final List<UserBasicInfo> expectedUsersInfo = [
+        existingUsers.first,
+        existingUsers.last,
+        createUserBasicInfo(
+          id: 'u5',
+          name: 'Bart',
+          surname: 'Osh',
+          email: 'barli@example.com',
+        ),
+      ];
+      firebaseUserService.mockSearchForUsers(userDtos: loadedUserDtos);
+      repository = UserBasicInfoRepositoryImpl(initialData: existingUsers);
+
+      final List<UserBasicInfo> users = await repository.searchForUsers(
+        searchQuery: 'li',
+      );
+      final Stream<List<UserBasicInfo>?> repositoryState$ =
+          repository.dataStream$;
+
+      expect(users, expectedUsersInfo);
+      expect(
+        repositoryState$,
+        emitsInOrder(
+          [
+            [
+              ...existingUsers,
+              createUserBasicInfo(
+                id: 'u4',
+                name: 'Jen',
+                surname: 'Nna',
+                email: 'jen@example.com.com',
+              ),
+              createUserBasicInfo(
+                id: 'u5',
+                name: 'Bart',
+                surname: 'Osh',
+                email: 'barli@example.com',
+              ),
+            ]
+          ],
+        ),
+      );
+    },
+  );
 }

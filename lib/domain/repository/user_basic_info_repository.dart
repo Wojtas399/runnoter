@@ -6,4 +6,6 @@ abstract interface class UserBasicInfoRepository {
   Stream<List<UserBasicInfo>?> getUsersBasicInfoByCoachId({
     required String coachId,
   });
+
+  Future<List<UserBasicInfo>> searchForUsers({required String searchQuery});
 }

@@ -7,9 +7,8 @@ import '../../additional_model/bloc_state.dart';
 import '../../additional_model/bloc_status.dart';
 import '../../additional_model/bloc_with_status.dart';
 import '../../additional_model/coaching_request.dart';
-import '../../entity/user.dart';
 import '../../entity/user_basic_info.dart';
-import '../../repository/user_repository.dart';
+import '../../repository/user_basic_info_repository.dart';
 import '../../service/auth_service.dart';
 import '../../service/coaching_request_service.dart';
 
@@ -19,7 +18,7 @@ part 'users_search_state.dart';
 class UsersSearchBloc extends BlocWithStatus<UsersSearchEvent, UsersSearchState,
     UsersSearchBlocInfo, dynamic> {
   final AuthService _authService;
-  final UserRepository _userRepository;
+  final UserBasicInfoRepository _userBasicInfoRepository;
   final CoachingRequestService _coachingRequestService;
 
   UsersSearchBloc({
@@ -27,7 +26,7 @@ class UsersSearchBloc extends BlocWithStatus<UsersSearchEvent, UsersSearchState,
       status: BlocStatusInitial(),
     ),
   })  : _authService = getIt<AuthService>(),
-        _userRepository = getIt<UserRepository>(),
+        _userBasicInfoRepository = getIt<UserBasicInfoRepository>(),
         _coachingRequestService = getIt<CoachingRequestService>(),
         super(state) {
     on<UsersSearchEventInitialize>(_initialize);
@@ -78,11 +77,21 @@ class UsersSearchBloc extends BlocWithStatus<UsersSearchEvent, UsersSearchState,
       return;
     }
     emitLoadingStatus(emit);
-    final List<User> foundUsers =
-        await _userRepository.searchForUsers(searchQuery: event.searchQuery);
-    emit(state.copyWith(
-      foundUsers: _addRelationshipStatusForUsers(foundUsers),
-    ));
+    final List<UserBasicInfo> foundUsersInfo = await _userBasicInfoRepository
+        .searchForUsers(searchQuery: event.searchQuery);
+    final List<FoundUser> foundUsers = foundUsersInfo
+        .map(
+          (UserBasicInfo userInfo) => FoundUser(
+            info: userInfo,
+            relationshipStatus: _selectUserRelationshipStatus(
+              userId: userInfo.id,
+              clientIds: state.clientIds,
+              invitedUserIds: state.invitedUserIds,
+            ),
+          ),
+        )
+        .toList();
+    emit(state.copyWith(foundUsers: foundUsers));
   }
 
   Future<void> _inviteUser(
@@ -104,9 +113,9 @@ class UsersSearchBloc extends BlocWithStatus<UsersSearchEvent, UsersSearchState,
   }
 
   Stream<List<String>> _getClientIds(String loggedUserId) =>
-      _userRepository.getUsersByCoachId(coachId: loggedUserId).map(
-            (List<User>? users) => [...?users?.map((User user) => user.id)],
-          );
+      _userBasicInfoRepository
+          .getUsersBasicInfoByCoachId(coachId: loggedUserId)
+          .map((users) => [...?users?.map((user) => user.id)]);
 
   List<FoundUser> _updateFoundUsers(
     List<String> clientIds,
@@ -123,25 +132,6 @@ class UsersSearchBloc extends BlocWithStatus<UsersSearchEvent, UsersSearchState,
     }
     return updatedFoundUsers;
   }
-
-  List<FoundUser> _addRelationshipStatusForUsers(List<User> users) => users
-      .map(
-        (User user) => FoundUser(
-          info: UserBasicInfo(
-            id: user.id,
-            gender: user.gender,
-            name: user.name,
-            surname: user.surname,
-            email: user.email,
-          ),
-          relationshipStatus: _selectUserRelationshipStatus(
-            userId: user.id,
-            clientIds: state.clientIds,
-            invitedUserIds: state.invitedUserIds,
-          ),
-        ),
-      )
-      .toList();
 
   RelationshipStatus _selectUserRelationshipStatus({
     required String userId,

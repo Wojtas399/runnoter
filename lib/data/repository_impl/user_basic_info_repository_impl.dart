@@ -39,6 +39,28 @@ class UserBasicInfoRepositoryImpl extends StateRepository<UserBasicInfo>
     }
   }
 
+  @override
+  Future<List<UserBasicInfo>> searchForUsers({required searchQuery}) async {
+    await _searchForUsersInDb(searchQuery);
+    final Stream<List<UserBasicInfo>> matchingUsers$ = dataStream$.map(
+      (List<UserBasicInfo>? usersInfo) => [
+        ...?usersInfo?.where(
+          (UserBasicInfo userInfo) {
+            final String lowerCaseSearchQuery = searchQuery.toLowerCase();
+            bool doesNameMatch =
+                userInfo.name.toLowerCase().contains(lowerCaseSearchQuery);
+            bool doesSurnameMatch =
+                userInfo.surname.toLowerCase().contains(lowerCaseSearchQuery);
+            bool doesEmailMatch =
+                userInfo.email.toLowerCase().contains(lowerCaseSearchQuery);
+            return doesNameMatch || doesSurnameMatch || doesEmailMatch;
+          },
+        ),
+      ],
+    );
+    return await matchingUsers$.first;
+  }
+
   Future<UserBasicInfo?> _loadUserByUserIdFromDb(String userId) async {
     final userDto = await _firebaseUserService.loadUserById(userId: userId);
     if (userDto == null) return null;
@@ -48,11 +70,19 @@ class UserBasicInfoRepositoryImpl extends StateRepository<UserBasicInfo>
   }
 
   Future<void> _loadUsersByCoachIdFromDb(String coachId) async {
-    final userDtos =
+    final List<UserDto> userDtos =
         await _firebaseUserService.loadUsersByCoachId(coachId: coachId);
     if (userDtos.isEmpty) return;
     final List<UserBasicInfo> usersBasicInfo =
         userDtos.map(mapUserBasicInfoFromDto).toList();
+    addEntities(usersBasicInfo);
+  }
+
+  Future<void> _searchForUsersInDb(String searchQuery) async {
+    final List<UserDto> foundUserDtos =
+        await _firebaseUserService.searchForUsers(searchQuery: searchQuery);
+    final List<UserBasicInfo> usersBasicInfo =
+        foundUserDtos.map(mapUserBasicInfoFromDto).toList();
     addEntities(usersBasicInfo);
   }
 }

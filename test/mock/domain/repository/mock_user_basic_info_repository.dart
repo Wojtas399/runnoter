@@ -19,4 +19,12 @@ class MockUserBasicInfoRepository extends Mock
       ),
     ).thenAnswer((_) => Stream.value(usersBasicInfo));
   }
+
+  void mockSearchForUsers({List<UserBasicInfo>? usersBasicInfo}) {
+    when(
+      () => searchForUsers(
+        searchQuery: any(named: 'searchQuery'),
+      ),
+    ).thenAnswer((_) => Future.value(usersBasicInfo));
+  }
 }

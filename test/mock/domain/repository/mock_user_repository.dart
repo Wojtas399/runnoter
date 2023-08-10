@@ -25,14 +25,6 @@ class MockUserRepository extends Mock implements UserRepository {
     ).thenAnswer((_) => Stream.value(users));
   }
 
-  void mockSearchForUsers({List<User>? users}) {
-    when(
-      () => searchForUsers(
-        searchQuery: any(named: 'searchQuery'),
-      ),
-    ).thenAnswer((_) => Future.value(users));
-  }
-
   void mockAddUser() {
     when(
       () => addUser(
