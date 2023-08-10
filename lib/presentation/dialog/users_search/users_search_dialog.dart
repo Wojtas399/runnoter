@@ -35,8 +35,9 @@ class _BlocListener extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocWithStatusListener<UsersSearchBloc, UsersSearchState,
-        UsersSearchBlocInfo, dynamic>(
+        UsersSearchBlocInfo, UsersSearchBlocError>(
       onInfo: (UsersSearchBlocInfo info) => _manageInfo(context, info),
+      onError: (UsersSearchBlocError error) => _manageError(context, error),
       child: child,
     );
   }
@@ -47,6 +48,22 @@ class _BlocListener extends StatelessWidget {
         showSnackbarMessage(
           Str.of(context).usersSearchSuccessfullySentInvitation,
         );
+        break;
+    }
+  }
+
+  Future<void> _manageError(
+    BuildContext context,
+    UsersSearchBlocError error,
+  ) async {
+    switch (error) {
+      case UsersSearchBlocError.userAlreadyHasCoach:
+        final bloc = context.read<UsersSearchBloc>();
+        await showMessageDialog(
+          title: Str.of(context).usersSearchUserAlreadyHasCoachInfoTitle,
+          message: Str.of(context).usersSearchUserAlreadyHasCoachInfoMessage,
+        );
+        bloc.add(UsersSearchEventSearch(searchQuery: bloc.state.searchQuery));
         break;
     }
   }

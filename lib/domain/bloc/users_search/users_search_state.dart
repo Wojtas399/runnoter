@@ -1,23 +1,32 @@
 part of 'users_search_bloc.dart';
 
 class UsersSearchState extends BlocState<UsersSearchState> {
+  final String searchQuery;
   final List<String> clientIds;
   final List<String> invitedUserIds;
   final List<FoundUser>? foundUsers;
 
   const UsersSearchState({
     required super.status,
+    this.searchQuery = '',
     this.clientIds = const [],
     this.invitedUserIds = const [],
     this.foundUsers,
   });
 
   @override
-  List<Object?> get props => [status, clientIds, invitedUserIds, foundUsers];
+  List<Object?> get props => [
+        status,
+        searchQuery,
+        clientIds,
+        invitedUserIds,
+        foundUsers,
+      ];
 
   @override
   UsersSearchState copyWith({
     BlocStatus? status,
+    String? searchQuery,
     List<String>? clientIds,
     List<String>? invitedUserIds,
     List<FoundUser>? foundUsers,
@@ -25,6 +34,7 @@ class UsersSearchState extends BlocState<UsersSearchState> {
   }) =>
       UsersSearchState(
         status: status ?? const BlocStatusComplete(),
+        searchQuery: searchQuery ?? this.searchQuery,
         clientIds: clientIds ?? this.clientIds,
         invitedUserIds: invitedUserIds ?? this.invitedUserIds,
         foundUsers: setFoundUsersAsNull ? null : foundUsers ?? this.foundUsers,

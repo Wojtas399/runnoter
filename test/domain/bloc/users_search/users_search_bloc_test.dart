@@ -4,6 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/additional_model/coaching_request.dart';
+import 'package:runnoter/domain/additional_model/custom_exception.dart';
 import 'package:runnoter/domain/bloc/users_search/users_search_bloc.dart';
 import 'package:runnoter/domain/repository/user_basic_info_repository.dart';
 import 'package:runnoter/domain/service/auth_service.dart';
@@ -165,6 +166,7 @@ void main() {
     build: () => UsersSearchBloc(
       state: const UsersSearchState(
         status: BlocStatusComplete(),
+        searchQuery: 'sea',
         foundUsers: [],
       ),
     ),
@@ -174,6 +176,7 @@ void main() {
     expect: () => [
       const UsersSearchState(
         status: BlocStatusComplete(),
+        searchQuery: '',
         foundUsers: null,
       ),
     ],
@@ -216,6 +219,7 @@ void main() {
       ),
       UsersSearchState(
         status: const BlocStatusComplete(),
+        searchQuery: 'sea',
         clientIds: const ['u12'],
         invitedUserIds: const ['u2'],
         foundUsers: [
@@ -286,6 +290,44 @@ void main() {
       const UsersSearchState(
         status: BlocStatusComplete<UsersSearchBlocInfo>(
           info: UsersSearchBlocInfo.requestSent,
+        ),
+      ),
+    ],
+    verify: (_) {
+      verify(() => authService.loggedUserId$).called(1);
+      verify(
+        () => coachingRequestService.addCoachingRequest(
+          senderId: 'u1',
+          receiverId: 'u2',
+          status: CoachingRequestStatus.pending,
+        ),
+      ).called(1);
+    },
+  );
+
+  blocTest(
+    'invite user, '
+    'CoachingRequestException with userAlreadyHasCoach code, '
+    'should emit error status with userAlreadyHasCoach error',
+    build: () => UsersSearchBloc(
+      state: const UsersSearchState(status: BlocStatusComplete()),
+    ),
+    setUp: () {
+      authService.mockGetLoggedUserId(userId: 'u1');
+      coachingRequestService.mockAddCoachingRequest(
+        throwable: const CoachingRequestException(
+          code: CoachingRequestExceptionCode.userAlreadyHasCoach,
+        ),
+      );
+    },
+    act: (bloc) => bloc.add(const UsersSearchEventInviteUser(
+      idOfUserToInvite: 'u2',
+    )),
+    expect: () => [
+      const UsersSearchState(status: BlocStatusLoading()),
+      const UsersSearchState(
+        status: BlocStatusError<UsersSearchBlocError>(
+          error: UsersSearchBlocError.userAlreadyHasCoach,
         ),
       ),
     ],

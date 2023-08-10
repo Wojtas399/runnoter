@@ -7,6 +7,7 @@ import '../../additional_model/bloc_state.dart';
 import '../../additional_model/bloc_status.dart';
 import '../../additional_model/bloc_with_status.dart';
 import '../../additional_model/coaching_request.dart';
+import '../../additional_model/custom_exception.dart';
 import '../../entity/user_basic_info.dart';
 import '../../repository/user_basic_info_repository.dart';
 import '../../service/auth_service.dart';
@@ -16,7 +17,7 @@ part 'users_search_event.dart';
 part 'users_search_state.dart';
 
 class UsersSearchBloc extends BlocWithStatus<UsersSearchEvent, UsersSearchState,
-    UsersSearchBlocInfo, dynamic> {
+    UsersSearchBlocInfo, UsersSearchBlocError> {
   final AuthService _authService;
   final UserBasicInfoRepository _userBasicInfoRepository;
   final CoachingRequestService _coachingRequestService;
@@ -72,6 +73,7 @@ class UsersSearchBloc extends BlocWithStatus<UsersSearchEvent, UsersSearchState,
     if (event.searchQuery.isEmpty) {
       emit(state.copyWith(
         status: const BlocStatusComplete(),
+        searchQuery: event.searchQuery,
         setFoundUsersAsNull: true,
       ));
       return;
@@ -91,7 +93,10 @@ class UsersSearchBloc extends BlocWithStatus<UsersSearchEvent, UsersSearchState,
           ),
         )
         .toList();
-    emit(state.copyWith(foundUsers: foundUsers));
+    emit(state.copyWith(
+      searchQuery: event.searchQuery,
+      foundUsers: foundUsers,
+    ));
   }
 
   Future<void> _inviteUser(
@@ -104,12 +109,20 @@ class UsersSearchBloc extends BlocWithStatus<UsersSearchEvent, UsersSearchState,
       return;
     }
     emitLoadingStatus(emit);
-    await _coachingRequestService.addCoachingRequest(
-      senderId: loggedUserId,
-      receiverId: event.idOfUserToInvite,
-      status: CoachingRequestStatus.pending,
-    );
-    emitCompleteStatus(emit, info: UsersSearchBlocInfo.requestSent);
+    try {
+      await _coachingRequestService.addCoachingRequest(
+        senderId: loggedUserId,
+        receiverId: event.idOfUserToInvite,
+        status: CoachingRequestStatus.pending,
+      );
+      emitCompleteStatus(emit, info: UsersSearchBlocInfo.requestSent);
+    } on CoachingRequestException catch (exception) {
+      if (exception.code == CoachingRequestExceptionCode.userAlreadyHasCoach) {
+        emitErrorStatus(emit, UsersSearchBlocError.userAlreadyHasCoach);
+      } else {
+        rethrow;
+      }
+    }
   }
 
   Stream<List<String>> _getClientIds(String loggedUserId) =>
@@ -151,6 +164,8 @@ class UsersSearchBloc extends BlocWithStatus<UsersSearchEvent, UsersSearchState,
 }
 
 enum UsersSearchBlocInfo { requestSent }
+
+enum UsersSearchBlocError { userAlreadyHasCoach }
 
 extension _CoachingRequestsExtensions on List<CoachingRequest> {
   List<String> get clientIds => where((coachingRequest) =>

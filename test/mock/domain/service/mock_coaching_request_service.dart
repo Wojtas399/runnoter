@@ -24,14 +24,12 @@ class MockCoachingRequestService extends Mock
     ).thenAnswer((_) => Stream.value(requests));
   }
 
-  void mockAddCoachingRequest() {
-    when(
-      () => addCoachingRequest(
-        senderId: any(named: 'senderId'),
-        receiverId: any(named: 'receiverId'),
-        status: any(named: 'status'),
-      ),
-    ).thenAnswer((_) => Future.value());
+  void mockAddCoachingRequest({Object? throwable}) {
+    if (throwable != null) {
+      when(_addCoachingRequestCall).thenThrow(throwable);
+    } else {
+      when(_addCoachingRequestCall).thenAnswer((_) => Future.value());
+    }
   }
 
   void mockUpdateCoachingRequestStatus() {
@@ -50,4 +48,10 @@ class MockCoachingRequestService extends Mock
       ),
     ).thenAnswer((_) => Future.value());
   }
+
+  Future<void> _addCoachingRequestCall() => addCoachingRequest(
+        senderId: any(named: 'senderId'),
+        receiverId: any(named: 'receiverId'),
+        status: any(named: 'status'),
+      );
 }

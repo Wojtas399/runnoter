@@ -778,6 +778,14 @@
   "@usersSearchSuccessfullySentInvitation": {
     "description": "Message about successfully sent invitation"
   },
+  "usersSearchUserAlreadyHasCoachInfoTitle": "Użytkownik ma już trenera",
+  "@usersSearchUserAlreadyHasCoachInfoTitle": {
+    "description": "Title of the information about user who already has a coach"
+  },
+  "usersSearchUserAlreadyHasCoachInfoMessage": "Wygląda na to, że ten użytkownik rozpoczął niedawno współpracę z trenerem. Z tego powodu nie możesz mu wysłać prośby.",
+  "@usersSearchUserAlreadyHasCoachInfoMessage": {
+    "description": "Message of the information about user who already has a coach"
+  },
   "@__________COACH__________": {},
   "coachTitle": "Trener",
   "@coachTitle": {
@@ -1105,6 +1113,7 @@
   "add": "Dodaj",
   "leave": "Opuść",
   "create": "Utwórz",
+  "submit": "Wyślij",
   "@__________VALIDATOR_MESSAGES__________": {},
   "requiredFieldMessage": "To pole jest wymagane",
   "@requiredFieldMessage": {

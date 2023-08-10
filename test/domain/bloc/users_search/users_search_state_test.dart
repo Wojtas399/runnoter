@@ -29,6 +29,19 @@ void main() {
   );
 
   test(
+    'copy with search query',
+    () {
+      const String expectedSearchQuery = 'WOW';
+
+      state = state.copyWith(searchQuery: expectedSearchQuery);
+      final state2 = state.copyWith();
+
+      expect(state.searchQuery, expectedSearchQuery);
+      expect(state2.searchQuery, expectedSearchQuery);
+    },
+  );
+
+  test(
     'copy with clientIds',
     () {
       const List<String> expectedClientIds = ['c1', 'c2'];

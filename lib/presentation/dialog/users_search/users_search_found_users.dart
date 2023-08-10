@@ -101,6 +101,7 @@ class _UserItem extends StatelessWidget {
           ],
         ),
       ),
+      confirmButtonLabel: str.submit,
     );
   }
 }
