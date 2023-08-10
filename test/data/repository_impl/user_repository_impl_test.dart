@@ -173,7 +173,7 @@ void main() {
         createUser(
           id: 'u3',
           name: 'Ste',
-          surname: 'Phanie',
+          surname: 'Phali',
           email: 'ste@example.com',
         ),
       ];
@@ -188,7 +188,7 @@ void main() {
           id: 'u5',
           name: 'Bart',
           surname: 'Osh',
-          email: 'bart@example.com',
+          email: 'barli@example.com',
         ),
       ];
       final List<User> expectedUsers = [
@@ -198,7 +198,7 @@ void main() {
           id: 'u5',
           name: 'Bart',
           surname: 'Osh',
-          email: 'bart@example.com',
+          email: 'barli@example.com',
         ),
       ];
       dbUserService.mockSearchForUsers(userDtos: loadedUserDtos);
@@ -232,7 +232,7 @@ void main() {
                 id: 'u5',
                 name: 'Bart',
                 surname: 'Osh',
-                email: 'bart@example.com',
+                email: 'barli@example.com',
               ),
             ]
           ],

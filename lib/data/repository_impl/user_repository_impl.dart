@@ -46,6 +46,7 @@ class UserRepositoryImpl extends StateRepository<User>
     }
   }
 
+  //TODO: should compare lower case strings
   @override
   Future<List<User>> searchForUsers({required searchQuery}) async {
     await _searchForUsersInDb(searchQuery);
