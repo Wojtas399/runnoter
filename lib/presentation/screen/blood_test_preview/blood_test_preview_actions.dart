@@ -39,8 +39,8 @@ class BloodTestPreviewActions extends StatelessWidget {
     final BloodTestPreviewBloc bloc = context.read<BloodTestPreviewBloc>();
     final str = Str.of(context);
     final bool confirmed = await askForConfirmation(
-      title: str.bloodTestPreviewDeleteTestTitle,
-      message: str.bloodTestPreviewDeleteTestMessage,
+      title: Text(str.bloodTestPreviewDeleteTestTitle),
+      content: Text(str.bloodTestPreviewDeleteTestMessage),
       confirmButtonLabel: str.delete,
       confirmButtonColor: Theme.of(context).colorScheme.error,
     );

@@ -64,8 +64,8 @@ class _Header extends StatelessWidget {
     final bloc = context.read<HealthBloc>();
     final str = Str.of(context);
     final bool confirmation = await askForConfirmation(
-      title: str.healthDeleteTodayMeasurementConfirmationDialogTitle,
-      message: str.healthDeleteTodayMeasurementConfirmationDialogMessage,
+      title: Text(str.healthDeleteTodayMeasurementConfirmationDialogTitle),
+      content: Text(str.healthDeleteTodayMeasurementConfirmationDialogMessage),
       confirmButtonLabel: str.delete,
       confirmButtonColor: Theme.of(context).colorScheme.error,
     );

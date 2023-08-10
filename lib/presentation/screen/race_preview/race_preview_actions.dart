@@ -34,8 +34,8 @@ class RacePreviewActions extends StatelessWidget {
     final RacePreviewBloc bloc = context.read<RacePreviewBloc>();
     final str = Str.of(context);
     final bool confirmed = await askForConfirmation(
-      title: str.racePreviewDeletionConfirmationTitle,
-      message: str.racePreviewDeletionConfirmationMessage,
+      title: Text(str.racePreviewDeletionConfirmationTitle),
+      content: Text(str.racePreviewDeletionConfirmationMessage),
       confirmButtonLabel: str.delete,
       confirmButtonColor: Theme.of(context).colorScheme.error,
     );

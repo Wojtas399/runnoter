@@ -40,8 +40,8 @@ class WorkoutPreviewWorkoutActions extends StatelessWidget {
     final WorkoutPreviewBloc bloc = context.read<WorkoutPreviewBloc>();
     final str = Str.of(context);
     final bool confirmed = await askForConfirmation(
-      title: str.workoutPreviewDeletionConfirmationTitle,
-      message: str.workoutPreviewDeletionConfirmationMessage,
+      title: Text(str.workoutPreviewDeletionConfirmationTitle),
+      content: Text(str.workoutPreviewDeletionConfirmationMessage),
       confirmButtonLabel: str.delete,
       confirmButtonColor: Theme.of(context).colorScheme.error,
     );

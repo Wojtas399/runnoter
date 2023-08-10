@@ -267,8 +267,8 @@ class _DeleteAccountState extends State<_DeleteAccount> {
   Future<void> _onPressed() async {
     final str = Str.of(context);
     final bool confirmed = await askForConfirmation(
-      title: str.profileDeleteAccountDialogTitle,
-      message: str.profileDeleteAccountDialogMessage,
+      title: Text(str.profileDeleteAccountDialogTitle),
+      content: Text(str.profileDeleteAccountDialogMessage),
       confirmButtonLabel: str.delete,
       confirmButtonColor: Theme.of(context).colorScheme.error,
     );

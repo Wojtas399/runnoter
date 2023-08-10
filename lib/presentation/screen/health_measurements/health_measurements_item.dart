@@ -94,9 +94,13 @@ class _MeasurementActions extends StatelessWidget {
     final bloc = context.read<HealthMeasurementsBloc>();
     final str = Str.of(context);
     final bool confirmation = await askForConfirmation(
-      title: str.healthMeasurementsDeleteMeasurementConfirmationDialogTitle,
-      message: str.healthMeasurementsDeleteMeasurementConfirmationDialogMessage(
-        measurementDate.toDateWithDots(),
+      title: Text(
+        str.healthMeasurementsDeleteMeasurementConfirmationDialogTitle,
+      ),
+      content: Text(
+        str.healthMeasurementsDeleteMeasurementConfirmationDialogMessage(
+          measurementDate.toDateWithDots(),
+        ),
       ),
       confirmButtonLabel: str.delete,
     );

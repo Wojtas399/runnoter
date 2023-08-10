@@ -76,8 +76,8 @@ void hideSnackbar() {
 }
 
 Future<bool> askForConfirmation({
-  required String title,
-  required String message,
+  required Widget title,
+  required Widget content,
   String? confirmButtonLabel,
   String? cancelButtonLabel,
   Color? confirmButtonColor,
@@ -88,7 +88,7 @@ Future<bool> askForConfirmation({
     await showAlertDialog(
       ConfirmationDialogComponent(
         title: title,
-        message: message,
+        content: content,
         confirmButtonLabel: confirmButtonLabel,
         cancelButtonLabel: cancelButtonLabel,
         confirmButtonColor: confirmButtonColor,
@@ -106,11 +106,13 @@ Future<bool> askForConfirmationToLeave({
   if (context != null) {
     final str = Str.of(context);
     return await askForConfirmation(
-      title: str.leavePageConfirmationDialogTitle,
-      message: switch (areUnsavedChanges) {
-        true => str.leavePageWithUnsavedChangesConfirmationDialogMessage,
-        false => str.leavePageConfirmationDialogMessage,
-      },
+      title: Text(str.leavePageConfirmationDialogTitle),
+      content: Text(
+        switch (areUnsavedChanges) {
+          true => str.leavePageWithUnsavedChangesConfirmationDialogMessage,
+          false => str.leavePageConfirmationDialogMessage,
+        },
+      ),
       confirmButtonLabel: str.leave,
     );
   }

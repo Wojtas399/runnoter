@@ -754,6 +754,18 @@
   "@usersSearchNoResultsInfo": {
     "description": "Info about no matching users"
   },
+  "usersSearchSendInvitationConfirmationDialogTitle": "Dodaj klienta",
+  "@usersSearchSendInvitationConfirmationDialogTitle": {
+    "description": "Title of dialog to confirm to send invitation"
+  },
+  "usersSearchSendInvitationConfirmationDialogMessage": "Aby zostać trenerem wybranej osoby, musi ona zatwierdzić prośbę o udostępnienie swojego profilu. Czy chcesz wysłać taką prośbę do użytkownika ",
+  "@usersSearchSendInvitationConfirmationDialogMessage": {
+    "description": "Message of the dialog to confirm to send invitation"
+  },
+  "usersSearchSuccessfullySentInvitation": "Pomyślnie wysłano prośbę",
+  "@usersSearchSuccessfullySentInvitation": {
+    "description": "Message about successfully sent invitation"
+  },
   "@__________RUN_STATUS_PARAMS__________": {},
   "runStatus": "Status",
   "@runStatus": {

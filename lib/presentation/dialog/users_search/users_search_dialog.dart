@@ -36,7 +36,6 @@ class _BlocListener extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocWithStatusListener<UsersSearchBloc, UsersSearchState,
         UsersSearchBlocInfo, dynamic>(
-      showDialogOnLoading: false,
       onInfo: (UsersSearchBlocInfo info) => _manageInfo(context, info),
       child: child,
     );
@@ -45,7 +44,9 @@ class _BlocListener extends StatelessWidget {
   void _manageInfo(BuildContext context, UsersSearchBlocInfo info) {
     switch (info) {
       case UsersSearchBlocInfo.invitationSent:
-        showSnackbarMessage('Successfully send invitation');
+        showSnackbarMessage(
+          Str.of(context).usersSearchSuccessfullySentInvitation,
+        );
         break;
     }
   }

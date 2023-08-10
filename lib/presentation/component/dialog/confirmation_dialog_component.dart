@@ -5,8 +5,8 @@ import '../../service/navigator_service.dart';
 import '../text/label_text_components.dart';
 
 class ConfirmationDialogComponent extends StatelessWidget {
-  final String title;
-  final String message;
+  final Widget title;
+  final Widget content;
   final String? confirmButtonLabel;
   final String? cancelButtonLabel;
   final Color? confirmButtonColor;
@@ -16,7 +16,7 @@ class ConfirmationDialogComponent extends StatelessWidget {
   const ConfirmationDialogComponent({
     super.key,
     required this.title,
-    required this.message,
+    required this.content,
     this.confirmButtonLabel,
     this.cancelButtonLabel,
     this.confirmButtonColor,
@@ -27,8 +27,8 @@ class ConfirmationDialogComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(title),
-      content: Text(message),
+      title: title,
+      content: content,
       actions: [
         TextButton(
           onPressed: () => popRoute(result: false),

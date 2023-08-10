@@ -117,8 +117,8 @@ class _BlocListener extends StatelessWidget {
   Future<bool> _askForConfirmationToCreateAccount(BuildContext context) async {
     final str = Str.of(context);
     return await askForConfirmation(
-      title: str.signInCreateNewAccountConfirmationDialogTitle,
-      message: str.signInCreateNewAccountConfirmationDialogMessage,
+      title: Text(str.signInCreateNewAccountConfirmationDialogTitle),
+      content: Text(str.signInCreateNewAccountConfirmationDialogMessage),
       confirmButtonLabel: str.create,
       displaySubmitButtonAsFilled: true,
       barrierDismissible: false,

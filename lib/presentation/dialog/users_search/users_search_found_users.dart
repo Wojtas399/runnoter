@@ -9,6 +9,7 @@ import '../../component/empty_content_info_component.dart';
 import '../../component/loading_info_component.dart';
 import '../../component/padding/paddings_24.dart';
 import '../../extension/gender_extensions.dart';
+import '../../service/dialog_service.dart';
 
 class UsersSearchFoundUsers extends StatelessWidget {
   const UsersSearchFoundUsers({super.key});
@@ -65,9 +66,38 @@ class _UserItem extends StatelessWidget {
     );
   }
 
-  void _inviteUser(BuildContext context) {
-    context.read<UsersSearchBloc>().add(
-          UsersSearchEventInviteUser(idOfUserToInvite: foundUser.info.id),
-        );
+  Future<void> _inviteUser(BuildContext context) async {
+    final UsersSearchBloc bloc = context.read<UsersSearchBloc>();
+    final bool confirmed = await _askForConfirmationToSendInvitation(context);
+    if (confirmed) {
+      bloc.add(UsersSearchEventInviteUser(idOfUserToInvite: foundUser.info.id));
+    }
+  }
+
+  Future<bool> _askForConfirmationToSendInvitation(
+    BuildContext context,
+  ) async {
+    final str = Str.of(context);
+    final TextStyle? textStyle = Theme.of(context).textTheme.bodyMedium;
+    return askForConfirmation(
+      title: Text(str.usersSearchSendInvitationConfirmationDialogTitle),
+      displaySubmitButtonAsFilled: true,
+      content: RichText(
+        text: TextSpan(
+          children: [
+            TextSpan(
+              text: str.usersSearchSendInvitationConfirmationDialogMessage,
+              style: textStyle,
+            ),
+            TextSpan(
+              text:
+                  '${foundUser.info.name} ${foundUser.info.surname} (${foundUser.info.email})',
+              style: textStyle?.copyWith(fontWeight: FontWeight.bold),
+            ),
+            TextSpan(text: '?', style: textStyle),
+          ],
+        ),
+      ),
+    );
   }
 }
