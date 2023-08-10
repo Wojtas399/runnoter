@@ -4,19 +4,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../dependency_injection.dart';
-import '../entity/user.dart';
 import '../entity/user_basic_info.dart';
-import '../repository/user_repository.dart';
+import '../repository/user_basic_info_repository.dart';
 import '../service/auth_service.dart';
 
 class ClientsCubit extends Cubit<List<UserBasicInfo>?> {
   final AuthService _authService;
-  final UserRepository _userRepository;
-  StreamSubscription<List<User>?>? _listener;
+  final UserBasicInfoRepository _userBasicInfoRepository;
+  StreamSubscription<List<UserBasicInfo>?>? _listener;
 
   ClientsCubit({List<UserBasicInfo>? clients})
       : _authService = getIt<AuthService>(),
-        _userRepository = getIt<UserRepository>(),
+        _userBasicInfoRepository = getIt<UserBasicInfoRepository>(),
         super(clients);
 
   @override
@@ -30,26 +29,10 @@ class ClientsCubit extends Cubit<List<UserBasicInfo>?> {
     _listener = _authService.loggedUserId$
         .whereNotNull()
         .switchMap(
-          (String loggedUserId) => _userRepository.getUsersByCoachId(
+          (loggedUserId) => _userBasicInfoRepository.getUsersBasicInfoByCoachId(
             coachId: loggedUserId,
           ),
         )
-        .listen(_clientsChanged);
-  }
-
-  void _clientsChanged(List<User>? users) {
-    final List<UserBasicInfo>? clients = users
-        ?.map(
-          (User user) => UserBasicInfo(
-            id: user.id,
-            gender: user.gender,
-            name: user.name,
-            surname: user.surname,
-            email: user.email,
-          ),
-        )
-        .toList();
-    clients?.sort((c1, c2) => c1.surname.compareTo(c2.surname));
-    emit(clients);
+        .listen((List<UserBasicInfo>? usersBasicInfo) => emit(usersBasicInfo));
   }
 }
