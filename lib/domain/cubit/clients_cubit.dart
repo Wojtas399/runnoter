@@ -4,8 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../dependency_injection.dart';
-import '../additional_model/user_basic_info.dart';
 import '../entity/user.dart';
+import '../entity/user_basic_info.dart';
 import '../repository/user_repository.dart';
 import '../service/auth_service.dart';
 

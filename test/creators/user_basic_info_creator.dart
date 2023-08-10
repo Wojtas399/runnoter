@@ -1,5 +1,5 @@
-import 'package:runnoter/domain/additional_model/user_basic_info.dart';
 import 'package:runnoter/domain/entity/user.dart';
+import 'package:runnoter/domain/entity/user_basic_info.dart';
 
 UserBasicInfo createUserBasicInfo({
   String id = '',
@@ -7,6 +7,7 @@ UserBasicInfo createUserBasicInfo({
   String name = '',
   String surname = '',
   String email = '',
+  String? coachId,
 }) =>
     UserBasicInfo(
       id: id,
@@ -14,4 +15,5 @@ UserBasicInfo createUserBasicInfo({
       name: name,
       surname: surname,
       email: email,
+      coachId: coachId,
     );

@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
-import 'package:runnoter/domain/additional_model/user_basic_info.dart';
 import 'package:runnoter/domain/bloc/users_search/users_search_bloc.dart';
 import 'package:runnoter/domain/entity/user.dart';
+import 'package:runnoter/domain/entity/user_basic_info.dart';
 
 void main() {
   late UsersSearchState state;
