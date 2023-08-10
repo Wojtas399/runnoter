@@ -4,22 +4,30 @@ import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/data/service_impl/coaching_request_service_impl.dart';
 import 'package:runnoter/domain/additional_model/coaching_request.dart';
+import 'package:runnoter/domain/additional_model/custom_exception.dart';
 
+import '../../creators/user_dto_creator.dart';
 import '../../mock/firebase/mock_firebase_coaching_request_service.dart';
+import '../../mock/firebase/mock_firebase_user_service.dart';
 
 void main() {
   final firebaseCoachingRequestService = MockFirebaseCoachingRequestService();
+  final firebaseUserService = MockFirebaseUserService();
   late CoachingRequestServiceImpl service;
 
   setUpAll(() {
     GetIt.I.registerFactory<firebase.FirebaseCoachingRequestService>(
       () => firebaseCoachingRequestService,
     );
+    GetIt.I.registerFactory<firebase.FirebaseUserService>(
+      () => firebaseUserService,
+    );
     service = CoachingRequestServiceImpl();
   });
 
   tearDown(() {
     reset(firebaseCoachingRequestService);
+    reset(firebaseUserService);
   });
 
   test(
@@ -146,6 +154,9 @@ void main() {
     () async {
       const String senderId = 'u1';
       const String receiverId = 'u2';
+      firebaseUserService.mockLoadUserById(
+        userDto: createUserDto(id: receiverId),
+      );
       firebaseCoachingRequestService.mockAddCoachingRequest();
 
       await service.addCoachingRequest(
@@ -155,11 +166,47 @@ void main() {
       );
 
       verify(
+        () => firebaseUserService.loadUserById(userId: receiverId),
+      ).called(1);
+      verify(
         () => firebaseCoachingRequestService.addCoachingRequest(
           senderId: senderId,
           receiverId: receiverId,
           status: firebase.CoachingRequestStatus.pending,
         ),
+      ).called(1);
+    },
+  );
+
+  test(
+    'add coaching request, '
+    'receiver already has coach, '
+    'should throw CoachingRequestException with userAlreadyHasCoach code',
+    () async {
+      const String senderId = 'u1';
+      const String receiverId = 'u2';
+      const CustomException expectedException = CoachingRequestException(
+        code: CoachingRequestExceptionCode.userAlreadyHasCoach,
+      );
+      firebaseUserService.mockLoadUserById(
+        userDto: createUserDto(id: receiverId, coachId: 'c1'),
+      );
+      firebaseCoachingRequestService.mockAddCoachingRequest();
+
+      Object? exception;
+      try {
+        await service.addCoachingRequest(
+          senderId: senderId,
+          receiverId: receiverId,
+          status: CoachingRequestStatus.pending,
+        );
+      } catch (e) {
+        exception = e;
+      }
+
+      expect(exception, expectedException);
+      verify(
+        () => firebaseUserService.loadUserById(userId: receiverId),
       ).called(1);
     },
   );
