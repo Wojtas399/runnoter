@@ -34,46 +34,44 @@ class CoachBloc
     CoachEventInitialize event,
     Emitter<CoachState> emit,
   ) async {
-    final Stream stream$ = _getLoggedUserData().map(
-      (User loggedUser) => loggedUser.coachId != null
-          ? _getCoach(loggedUser.coachId!)
-          : _coachingRequestService.getCoachingRequestsByReceiverId(
-              receiverId: loggedUser.id,
-            ),
-    );
+    final Stream<(UserBasicInfo?, List<CoachingRequest>?)> stream$ =
+        _authService.loggedUserId$.whereNotNull().switchMap(
+              (String loggedUserId) => Rx.combineLatest2(
+                _getCoach(loggedUserId),
+                _coachingRequestService.getCoachingRequestsByReceiverId(
+                  receiverId: loggedUserId,
+                ),
+                (coachInfo, receivedRequests) => (coachInfo, receivedRequests),
+              ),
+            );
     await emit.forEach(
       stream$,
-      onData: (data) {
-        if (data is UserBasicInfo) {
-          return CoachState(status: const BlocStatusComplete(), coach: data);
-        } else if (data is List<CoachingRequest>) {
-          return CoachState(
-            status: const BlocStatusComplete(),
-            receivedCoachingRequests: data,
-          );
-        }
-        return const CoachState(status: BlocStatusComplete());
-      },
+      onData: ((UserBasicInfo?, List<CoachingRequest>?) data) => CoachState(
+        status: const BlocStatusComplete(),
+        coach: data.$1,
+        receivedCoachingRequests: data.$1 != null ? null : data.$2,
+      ),
     );
   }
 
-  Stream<User> _getLoggedUserData() => _authService.loggedUserId$
+  Stream<UserBasicInfo?> _getCoach(String loggedUserId) => _userRepository
+      .getUserById(userId: loggedUserId)
       .whereNotNull()
+      .map((User loggedUserData) => loggedUserData.coachId)
       .switchMap(
-        (loggedUserId) => _userRepository.getUserById(userId: loggedUserId),
+        (String? coachId) => coachId != null
+            ? _userRepository.getUserById(userId: coachId)
+            : Stream.value(null),
       )
-      .whereNotNull();
-
-  Stream<UserBasicInfo?> _getCoach(String coachId) =>
-      _userRepository.getUserById(userId: coachId).map(
-            (User? coachData) => coachData != null
-                ? UserBasicInfo(
-                    id: coachData.id,
-                    gender: coachData.gender,
-                    name: coachData.name,
-                    surname: coachData.surname,
-                    email: coachData.email,
-                  )
-                : null,
-          );
+      .map(
+        (User? coachData) => coachData == null
+            ? null
+            : UserBasicInfo(
+                id: coachData.id,
+                gender: coachData.gender,
+                name: coachData.name,
+                surname: coachData.surname,
+                email: coachData.email,
+              ),
+      );
 }

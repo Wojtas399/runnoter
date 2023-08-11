@@ -70,6 +70,7 @@ void main() {
           ),
         ),
       );
+      coachingRequestService.mockGetCoachingRequestsByReceiverId();
     },
     act: (bloc) => bloc.add(const CoachEventInitialize()),
     expect: () => [
