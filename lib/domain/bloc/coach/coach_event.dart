@@ -9,9 +9,13 @@ class CoachEventInitialize extends CoachEvent {
 }
 
 class CoachEventAcceptRequest extends CoachEvent {
-  const CoachEventAcceptRequest();
+  final String requestId;
+
+  const CoachEventAcceptRequest({required this.requestId});
 }
 
 class CoachEventDeclineRequest extends CoachEvent {
-  const CoachEventDeclineRequest();
+  final String requestId;
+
+  const CoachEventDeclineRequest({required this.requestId});
 }

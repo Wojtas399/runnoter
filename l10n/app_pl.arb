@@ -791,6 +791,18 @@
   "@coachTitle": {
     "description": "Title of coach screen"
   },
+  "coachNoCoachTitle": "Brak trenera",
+  "@coachNoCoachTitle": {
+    "description": "Title of the info about no coach"
+  },
+  "coachNoCoachMessage": "Nie masz żadnego trenera. Musisz zaakceptować prośbę od trenera lub dodać go samodzielnie, aby móc korzystać z tej strony.",
+  "@coachNoCoachMessage": {
+    "description": "Message of the info about no coach"
+  },
+  "coachCoachingRequests": "Prośby o trenowanie",
+  "@coachCoachingRequests": {
+    "description": "Label of coaching requests section"
+  },
   "@__________RUN_STATUS_PARAMS__________": {},
   "runStatus": "Status",
   "@runStatus": {
@@ -1114,6 +1126,7 @@
   "leave": "Opuść",
   "create": "Utwórz",
   "submit": "Wyślij",
+  "accept": "Akceptuj",
   "@__________VALIDATOR_MESSAGES__________": {},
   "requiredFieldMessage": "To pole jest wymagane",
   "@requiredFieldMessage": {
