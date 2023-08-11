@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/bloc/users_search/users_search_bloc.dart';
+import '../../../domain/bloc/persons_search/persons_search_bloc.dart';
 import '../../service/utils.dart';
 
-class UsersSearchInput extends StatefulWidget {
-  const UsersSearchInput({super.key});
+class PersonsSearchInput extends StatefulWidget {
+  const PersonsSearchInput({super.key});
 
   @override
   State<StatefulWidget> createState() => _State();
 }
 
-class _State extends State<UsersSearchInput> {
+class _State extends State<PersonsSearchInput> {
   final TextEditingController _controller = TextEditingController();
   bool _showClearButton = false;
 
@@ -64,8 +64,8 @@ class _State extends State<UsersSearchInput> {
   }
 
   void _onSubmitted(BuildContext context) {
-    context.read<UsersSearchBloc>().add(
-          UsersSearchEventSearch(searchQuery: _controller.text),
+    context.read<PersonsSearchBloc>().add(
+          PersonsSearchEventSearch(searchQuery: _controller.text),
         );
   }
 }

@@ -1,12 +1,12 @@
-part of 'users_search_bloc.dart';
+part of 'persons_search_bloc.dart';
 
-class UsersSearchState extends BlocState<UsersSearchState> {
+class PersonsSearchState extends BlocState<PersonsSearchState> {
   final String searchQuery;
   final List<String> clientIds;
   final List<String> invitedPersonIds;
   final List<FoundPerson>? foundPersons;
 
-  const UsersSearchState({
+  const PersonsSearchState({
     required super.status,
     this.searchQuery = '',
     this.clientIds = const [],
@@ -24,7 +24,7 @@ class UsersSearchState extends BlocState<UsersSearchState> {
       ];
 
   @override
-  UsersSearchState copyWith({
+  PersonsSearchState copyWith({
     BlocStatus? status,
     String? searchQuery,
     List<String>? clientIds,
@@ -32,7 +32,7 @@ class UsersSearchState extends BlocState<UsersSearchState> {
     List<FoundPerson>? foundPersons,
     bool setFoundPersonsAsNull = false,
   }) =>
-      UsersSearchState(
+      PersonsSearchState(
         status: status ?? const BlocStatusComplete(),
         searchQuery: searchQuery ?? this.searchQuery,
         clientIds: clientIds ?? this.clientIds,

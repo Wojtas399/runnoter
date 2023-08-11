@@ -11,7 +11,7 @@ import '../../component/empty_content_info_component.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/loading_info_component.dart';
 import '../../component/responsive_layout_component.dart';
-import '../../dialog/users_search/users_search_dialog.dart';
+import '../../dialog/persons_search/persons_search_dialog.dart';
 import '../../extension/gender_extensions.dart';
 import '../../service/dialog_service.dart';
 
@@ -43,7 +43,7 @@ class _Content extends StatelessWidget {
               BigButton(
                 label: Str.of(context).clientsSearchUsers,
                 onPressed: () => showDialogDependingOnScreenSize(
-                  const UsersSearchDialog(),
+                  const PersonsSearchDialog(),
                 ),
               ),
               const Gap32(),

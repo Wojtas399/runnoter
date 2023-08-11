@@ -749,41 +749,41 @@
   "@clientsNoClientsMessage": {
     "description": "Message of the info about the lack of races"
   },
-  "@__________USERS_SEARCH__________": {},
-  "usersSearchTitle": "Szukaj użytkowników",
-  "@usersSearchTitle": {
+  "@__________PERSONS_SEARCH__________": {},
+  "personsSearchTitle": "Szukaj użytkowników",
+  "@personsSearchTitle": {
     "description": "Title of users search screen"
   },
-  "usersSearchInstruction": "Wprowadź tekst, aby wyszukać użytkowników",
-  "@usersSearchInstruction": {
+  "personsSearchInstruction": "Wprowadź tekst, aby wyszukać użytkowników",
+  "@personsSearchInstruction": {
     "description": "Instruction to search users"
   },
-  "usersSearchSearchingInfo": "Szukanie...",
-  "@usersSearchSearchingInfo": {
+  "personsSearchSearchingInfo": "Szukanie...",
+  "@personsSearchSearchingInfo": {
     "description": "Info about searching process"
   },
-  "usersSearchNoResultsInfo": "Brak pasujących użytkowników",
-  "@usersSearchNoResultsInfo": {
+  "personsSearchNoResultsInfo": "Brak pasujących użytkowników",
+  "@personsSearchNoResultsInfo": {
     "description": "Info about no matching users"
   },
-  "usersSearchSendInvitationConfirmationDialogTitle": "Dodaj klienta",
-  "@usersSearchSendInvitationConfirmationDialogTitle": {
+  "personsSearchSendInvitationConfirmationDialogTitle": "Dodaj klienta",
+  "@personsSearchSendInvitationConfirmationDialogTitle": {
     "description": "Title of dialog to confirm to send invitation"
   },
-  "usersSearchSendInvitationConfirmationDialogMessage": "Aby zostać trenerem wybranej osoby, musi ona zatwierdzić prośbę o udostępnienie swojego profilu. Czy chcesz wysłać taką prośbę do użytkownika ",
-  "@usersSearchSendInvitationConfirmationDialogMessage": {
+  "personsSearchSendInvitationConfirmationDialogMessage": "Aby zostać trenerem wybranej osoby, musi ona zatwierdzić prośbę o udostępnienie swojego profilu. Czy chcesz wysłać taką prośbę do użytkownika ",
+  "@personsSearchSendInvitationConfirmationDialogMessage": {
     "description": "Message of the dialog to confirm to send invitation"
   },
-  "usersSearchSuccessfullySentInvitation": "Pomyślnie wysłano prośbę",
-  "@usersSearchSuccessfullySentInvitation": {
+  "personsSearchSuccessfullySentInvitation": "Pomyślnie wysłano prośbę",
+  "@personsSearchSuccessfullySentInvitation": {
     "description": "Message about successfully sent invitation"
   },
-  "usersSearchUserAlreadyHasCoachInfoTitle": "Użytkownik ma już trenera",
-  "@usersSearchUserAlreadyHasCoachInfoTitle": {
+  "personsSearchUserAlreadyHasCoachInfoTitle": "Użytkownik ma już trenera",
+  "@personsSearchUserAlreadyHasCoachInfoTitle": {
     "description": "Title of the information about user who already has a coach"
   },
-  "usersSearchUserAlreadyHasCoachInfoMessage": "Wygląda na to, że ten użytkownik rozpoczął niedawno współpracę z trenerem. Z tego powodu nie możesz mu wysłać prośby.",
-  "@usersSearchUserAlreadyHasCoachInfoMessage": {
+  "personsSearchUserAlreadyHasCoachInfoMessage": "Wygląda na to, że ten użytkownik rozpoczął niedawno współpracę z trenerem. Z tego powodu nie możesz mu wysłać prośby.",
+  "@personsSearchUserAlreadyHasCoachInfoMessage": {
     "description": "Message of the information about user who already has a coach"
   },
   "@__________COACH__________": {},

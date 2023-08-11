@@ -13,31 +13,31 @@ import '../../repository/person_repository.dart';
 import '../../service/auth_service.dart';
 import '../../service/coaching_request_service.dart';
 
-part 'users_search_event.dart';
-part 'users_search_state.dart';
+part 'persons_search_event.dart';
+part 'persons_search_state.dart';
 
-class UsersSearchBloc extends BlocWithStatus<UsersSearchEvent, UsersSearchState,
-    UsersSearchBlocInfo, UsersSearchBlocError> {
+class PersonsSearchBloc extends BlocWithStatus<PersonsSearchEvent,
+    PersonsSearchState, PersonsSearchBlocInfo, PersonsSearchBlocError> {
   final AuthService _authService;
   final PersonRepository _personRepository;
   final CoachingRequestService _coachingRequestService;
 
-  UsersSearchBloc({
-    UsersSearchState state = const UsersSearchState(
+  PersonsSearchBloc({
+    PersonsSearchState state = const PersonsSearchState(
       status: BlocStatusInitial(),
     ),
   })  : _authService = getIt<AuthService>(),
         _personRepository = getIt<PersonRepository>(),
         _coachingRequestService = getIt<CoachingRequestService>(),
         super(state) {
-    on<UsersSearchEventInitialize>(_initialize);
-    on<UsersSearchEventSearch>(_search);
-    on<UsersSearchEventInviteUser>(_inviteUser);
+    on<PersonsSearchEventInitialize>(_initialize);
+    on<PersonsSearchEventSearch>(_search);
+    on<PersonsSearchEventInvitePerson>(_invitePerson);
   }
 
   Future<void> _initialize(
-    UsersSearchEventInitialize event,
-    Emitter<UsersSearchState> emit,
+    PersonsSearchEventInitialize event,
+    Emitter<PersonsSearchState> emit,
   ) async {
     final stream$ = _authService.loggedUserId$.whereNotNull().switchMap(
           (String loggedUserId) => Rx.combineLatest2(
@@ -69,8 +69,8 @@ class UsersSearchBloc extends BlocWithStatus<UsersSearchEvent, UsersSearchState,
   }
 
   Future<void> _search(
-    UsersSearchEventSearch event,
-    Emitter<UsersSearchState> emit,
+    PersonsSearchEventSearch event,
+    Emitter<PersonsSearchState> emit,
   ) async {
     if (event.searchQuery.isEmpty) {
       emit(state.copyWith(
@@ -101,9 +101,9 @@ class UsersSearchBloc extends BlocWithStatus<UsersSearchEvent, UsersSearchState,
     ));
   }
 
-  Future<void> _inviteUser(
-    UsersSearchEventInviteUser event,
-    Emitter<UsersSearchState> emit,
+  Future<void> _invitePerson(
+    PersonsSearchEventInvitePerson event,
+    Emitter<PersonsSearchState> emit,
   ) async {
     final String? loggedUserId = await _authService.loggedUserId$.first;
     if (loggedUserId == null) {
@@ -114,13 +114,13 @@ class UsersSearchBloc extends BlocWithStatus<UsersSearchEvent, UsersSearchState,
     try {
       await _coachingRequestService.addCoachingRequest(
         senderId: loggedUserId,
-        receiverId: event.idOfUserToInvite,
+        receiverId: event.personId,
         status: CoachingRequestStatus.pending,
       );
-      emitCompleteStatus(emit, info: UsersSearchBlocInfo.requestSent);
+      emitCompleteStatus(emit, info: PersonsSearchBlocInfo.requestSent);
     } on CoachingRequestException catch (exception) {
       if (exception.code == CoachingRequestExceptionCode.userAlreadyHasCoach) {
-        emitErrorStatus(emit, UsersSearchBlocError.userAlreadyHasCoach);
+        emitErrorStatus(emit, PersonsSearchBlocError.userAlreadyHasCoach);
       } else {
         rethrow;
       }
@@ -164,9 +164,9 @@ class UsersSearchBloc extends BlocWithStatus<UsersSearchEvent, UsersSearchState,
   }
 }
 
-enum UsersSearchBlocInfo { requestSent }
+enum PersonsSearchBlocInfo { requestSent }
 
-enum UsersSearchBlocError { userAlreadyHasCoach }
+enum PersonsSearchBlocError { userAlreadyHasCoach }
 
 extension _CoachingRequestsExtensions on List<CoachingRequest> {
   List<String> get clientIds => where((coachingRequest) =>

@@ -1,14 +1,14 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
-import 'package:runnoter/domain/bloc/users_search/users_search_bloc.dart';
+import 'package:runnoter/domain/bloc/persons_search/persons_search_bloc.dart';
 import 'package:runnoter/domain/entity/person.dart';
 import 'package:runnoter/domain/entity/user.dart';
 
 void main() {
-  late UsersSearchState state;
+  late PersonsSearchState state;
 
   setUp(() {
-    state = const UsersSearchState(
+    state = const PersonsSearchState(
       status: BlocStatusInitial(),
       clientIds: [],
       invitedPersonIds: [],

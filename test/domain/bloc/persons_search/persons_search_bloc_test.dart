@@ -5,7 +5,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/additional_model/coaching_request.dart';
 import 'package:runnoter/domain/additional_model/custom_exception.dart';
-import 'package:runnoter/domain/bloc/users_search/users_search_bloc.dart';
+import 'package:runnoter/domain/bloc/persons_search/persons_search_bloc.dart';
 import 'package:runnoter/domain/repository/person_repository.dart';
 import 'package:runnoter/domain/service/auth_service.dart';
 import 'package:runnoter/domain/service/coaching_request_service.dart';
@@ -40,9 +40,9 @@ void main() {
     'initialize, '
     'logged user does not exist, '
     'should do nothing',
-    build: () => UsersSearchBloc(),
+    build: () => PersonsSearchBloc(),
     setUp: () => authService.mockGetLoggedUserId(),
-    act: (bloc) => bloc.add(const UsersSearchEventInitialize()),
+    act: (bloc) => bloc.add(const PersonsSearchEventInitialize()),
     expect: () => [],
     verify: (_) => verify(() => authService.loggedUserId$).called(1),
   );
@@ -51,7 +51,7 @@ void main() {
     'initialize, '
     'found persons do not exist, '
     'should only emit client ids and invited persons ids',
-    build: () => UsersSearchBloc(),
+    build: () => PersonsSearchBloc(),
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
       personRepository.mockGetPersonsByCoachId(
@@ -78,9 +78,9 @@ void main() {
         ],
       );
     },
-    act: (bloc) => bloc.add(const UsersSearchEventInitialize()),
+    act: (bloc) => bloc.add(const PersonsSearchEventInitialize()),
     expect: () => [
-      const UsersSearchState(
+      const PersonsSearchState(
         status: BlocStatusComplete(),
         clientIds: ['u2', 'u3', 'u5'],
         invitedPersonIds: ['u4'],
@@ -92,8 +92,8 @@ void main() {
     'initialize, '
     'found persons exist, '
     'should emit client ids, ids of invited persons and found persons',
-    build: () => UsersSearchBloc(
-      state: UsersSearchState(
+    build: () => PersonsSearchBloc(
+      state: PersonsSearchState(
         status: const BlocStatusComplete(),
         foundPersons: [
           FoundPerson(
@@ -133,9 +133,9 @@ void main() {
         ],
       );
     },
-    act: (bloc) => bloc.add(const UsersSearchEventInitialize()),
+    act: (bloc) => bloc.add(const PersonsSearchEventInitialize()),
     expect: () => [
-      UsersSearchState(
+      PersonsSearchState(
         status: const BlocStatusComplete(),
         clientIds: const ['u2', 'u3', 'u5'],
         invitedPersonIds: const ['u4'],
@@ -157,18 +157,18 @@ void main() {
     'search, '
     'search query is empty string, '
     'should set found persons as null',
-    build: () => UsersSearchBloc(
-      state: const UsersSearchState(
+    build: () => PersonsSearchBloc(
+      state: const PersonsSearchState(
         status: BlocStatusComplete(),
         searchQuery: 'sea',
         foundPersons: [],
       ),
     ),
-    act: (bloc) => bloc.add(const UsersSearchEventSearch(
+    act: (bloc) => bloc.add(const PersonsSearchEventSearch(
       searchQuery: '',
     )),
     expect: () => [
-      const UsersSearchState(
+      const PersonsSearchState(
         status: BlocStatusComplete(),
         searchQuery: '',
         foundPersons: null,
@@ -179,8 +179,8 @@ void main() {
   blocTest(
     'search, '
     "should call person repository's method to search persons and should update found persons in state",
-    build: () => UsersSearchBloc(
-      state: const UsersSearchState(
+    build: () => PersonsSearchBloc(
+      state: const PersonsSearchState(
         status: BlocStatusComplete(),
         clientIds: ['u12'],
         invitedPersonIds: ['u2'],
@@ -204,14 +204,14 @@ void main() {
         ),
       ],
     ),
-    act: (bloc) => bloc.add(const UsersSearchEventSearch(searchQuery: 'sea')),
+    act: (bloc) => bloc.add(const PersonsSearchEventSearch(searchQuery: 'sea')),
     expect: () => [
-      const UsersSearchState(
+      const PersonsSearchState(
         status: BlocStatusLoading(),
         clientIds: ['u12'],
         invitedPersonIds: ['u2'],
       ),
-      UsersSearchState(
+      PersonsSearchState(
         status: const BlocStatusComplete(),
         searchQuery: 'sea',
         clientIds: const ['u12'],
@@ -252,38 +252,38 @@ void main() {
   );
 
   blocTest(
-    'invite user, '
+    'invite person, '
     'logged user does not exist, '
     'should emit no logged user status',
-    build: () => UsersSearchBloc(),
+    build: () => PersonsSearchBloc(),
     setUp: () => authService.mockGetLoggedUserId(),
-    act: (bloc) => bloc.add(const UsersSearchEventInviteUser(
-      idOfUserToInvite: 'u2',
+    act: (bloc) => bloc.add(const PersonsSearchEventInvitePerson(
+      personId: 'u2',
     )),
     expect: () => [
-      const UsersSearchState(status: BlocStatusNoLoggedUser()),
+      const PersonsSearchState(status: BlocStatusNoLoggedUser()),
     ],
     verify: (_) => verify(() => authService.loggedUserId$).called(1),
   );
 
   blocTest(
-    'invite user, '
+    'invite person, '
     "should call coaching request repository's method to add request with given person id set as receiver id and pending invitation status",
-    build: () => UsersSearchBloc(
-      state: const UsersSearchState(status: BlocStatusComplete()),
+    build: () => PersonsSearchBloc(
+      state: const PersonsSearchState(status: BlocStatusComplete()),
     ),
     setUp: () {
       authService.mockGetLoggedUserId(userId: 'u1');
       coachingRequestService.mockAddCoachingRequest();
     },
-    act: (bloc) => bloc.add(const UsersSearchEventInviteUser(
-      idOfUserToInvite: 'u2',
+    act: (bloc) => bloc.add(const PersonsSearchEventInvitePerson(
+      personId: 'u2',
     )),
     expect: () => [
-      const UsersSearchState(status: BlocStatusLoading()),
-      const UsersSearchState(
-        status: BlocStatusComplete<UsersSearchBlocInfo>(
-          info: UsersSearchBlocInfo.requestSent,
+      const PersonsSearchState(status: BlocStatusLoading()),
+      const PersonsSearchState(
+        status: BlocStatusComplete<PersonsSearchBlocInfo>(
+          info: PersonsSearchBlocInfo.requestSent,
         ),
       ),
     ],
@@ -303,8 +303,8 @@ void main() {
     'invite user, '
     'CoachingRequestException with userAlreadyHasCoach code, '
     'should emit error status with userAlreadyHasCoach error',
-    build: () => UsersSearchBloc(
-      state: const UsersSearchState(status: BlocStatusComplete()),
+    build: () => PersonsSearchBloc(
+      state: const PersonsSearchState(status: BlocStatusComplete()),
     ),
     setUp: () {
       authService.mockGetLoggedUserId(userId: 'u1');
@@ -314,14 +314,14 @@ void main() {
         ),
       );
     },
-    act: (bloc) => bloc.add(const UsersSearchEventInviteUser(
-      idOfUserToInvite: 'u2',
+    act: (bloc) => bloc.add(const PersonsSearchEventInvitePerson(
+      personId: 'u2',
     )),
     expect: () => [
-      const UsersSearchState(status: BlocStatusLoading()),
-      const UsersSearchState(
-        status: BlocStatusError<UsersSearchBlocError>(
-          error: UsersSearchBlocError.userAlreadyHasCoach,
+      const PersonsSearchState(status: BlocStatusLoading()),
+      const PersonsSearchState(
+        status: BlocStatusError<PersonsSearchBlocError>(
+          error: PersonsSearchBlocError.userAlreadyHasCoach,
         ),
       ),
     ],
