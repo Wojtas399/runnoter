@@ -33,6 +33,6 @@ class ClientsCubit extends Cubit<List<Person>?> {
             coachId: loggedUserId,
           ),
         )
-        .listen((List<Person>? persons) => emit(persons));
+        .listen((List<Person>? persons) => emit(persons ?? []));
   }
 }

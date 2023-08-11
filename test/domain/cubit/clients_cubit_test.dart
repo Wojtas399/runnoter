@@ -91,4 +91,23 @@ void main() {
       ).called(1);
     },
   );
+
+  blocTest(
+    'initialize, '
+    'method to get persons by coach id emits null, '
+    'should emit empty array in state',
+    build: () => ClientsCubit(),
+    setUp: () {
+      authService.mockGetLoggedUserId(userId: loggedUserId);
+      personRepository.mockGetPersonsByCoachId(persons: null);
+    },
+    act: (cubit) => cubit.initialize(),
+    expect: () => [const []],
+    verify: (_) {
+      verify(() => authService.loggedUserId$).called(1);
+      verify(
+        () => personRepository.getPersonsByCoachId(coachId: loggedUserId),
+      ).called(1);
+    },
+  );
 }
