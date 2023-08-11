@@ -101,7 +101,7 @@ class _CoachingRequestItem extends StatelessWidget {
 
   void _onDecline(BuildContext context) {
     context.read<CoachBloc>().add(
-          CoachEventDeclineRequest(requestId: requestInfo.id),
+          CoachEventDeleteRequest(requestId: requestInfo.id),
         );
   }
 }

@@ -11,6 +11,9 @@ class CoachState extends BlocState<CoachState> {
   });
 
   @override
+  List<Object?> get props => [status, receivedCoachingRequests, coach];
+
+  @override
   CoachState copyWith({
     BlocStatus? status,
     List<CoachingRequestInfo>? receivedCoachingRequests,

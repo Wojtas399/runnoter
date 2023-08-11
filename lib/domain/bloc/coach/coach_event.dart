@@ -14,8 +14,8 @@ class CoachEventAcceptRequest extends CoachEvent {
   const CoachEventAcceptRequest({required this.requestId});
 }
 
-class CoachEventDeclineRequest extends CoachEvent {
+class CoachEventDeleteRequest extends CoachEvent {
   final String requestId;
 
-  const CoachEventDeclineRequest({required this.requestId});
+  const CoachEventDeleteRequest({required this.requestId});
 }
