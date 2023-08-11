@@ -1,10 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
-import 'package:runnoter/domain/additional_model/coaching_request.dart';
 import 'package:runnoter/domain/bloc/coach/coach_bloc.dart';
 import 'package:runnoter/domain/entity/user_basic_info.dart';
 
-import '../../../creators/coaching_request_creator.dart';
 import '../../../creators/user_basic_info_creator.dart';
 
 void main() {
@@ -30,8 +28,11 @@ void main() {
   test(
     'copy with receivedCoachingRequests',
     () {
-      final List<CoachingRequest> expectedReceivedCoachingRequests = [
-        createCoachingRequest(id: 'i1')
+      final List<CoachingRequestInfo> expectedReceivedCoachingRequests = [
+        CoachingRequestInfo(
+          id: 'r1',
+          senderInfo: createUserBasicInfo(id: 'u1'),
+        ),
       ];
 
       state = state.copyWith(

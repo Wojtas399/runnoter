@@ -1,7 +1,7 @@
 part of 'coach_bloc.dart';
 
 class CoachState extends BlocState<CoachState> {
-  final List<CoachingRequest>? receivedCoachingRequests;
+  final List<CoachingRequestInfo>? receivedCoachingRequests;
   final UserBasicInfo? coach;
 
   const CoachState({
@@ -13,7 +13,7 @@ class CoachState extends BlocState<CoachState> {
   @override
   CoachState copyWith({
     BlocStatus? status,
-    List<CoachingRequest>? receivedCoachingRequests,
+    List<CoachingRequestInfo>? receivedCoachingRequests,
     UserBasicInfo? coach,
   }) =>
       CoachState(
@@ -22,4 +22,17 @@ class CoachState extends BlocState<CoachState> {
             receivedCoachingRequests ?? this.receivedCoachingRequests,
         coach: coach ?? this.coach,
       );
+}
+
+class CoachingRequestInfo extends Equatable {
+  final String id;
+  final UserBasicInfo senderInfo;
+
+  const CoachingRequestInfo({
+    required this.id,
+    required this.senderInfo,
+  });
+
+  @override
+  List<Object?> get props => [id, senderInfo];
 }
