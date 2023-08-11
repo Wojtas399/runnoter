@@ -7,8 +7,9 @@ import '../../additional_model/bloc_state.dart';
 import '../../additional_model/bloc_status.dart';
 import '../../additional_model/bloc_with_status.dart';
 import '../../additional_model/coaching_request.dart';
-import '../../entity/user_basic_info.dart';
-import '../../repository/user_basic_info_repository.dart';
+import '../../entity/person.dart';
+import '../../entity/user.dart';
+import '../../repository/person_repository.dart';
 import '../../repository/user_repository.dart';
 import '../../service/auth_service.dart';
 import '../../service/coaching_request_service.dart';
@@ -20,14 +21,14 @@ class CoachBloc
     extends BlocWithStatus<CoachEvent, CoachState, CoachBlocInfo, dynamic> {
   final AuthService _authService;
   final UserRepository _userRepository;
-  final UserBasicInfoRepository _userBasicInfoRepository;
+  final PersonRepository _personRepository;
   final CoachingRequestService _coachingRequestService;
 
   CoachBloc({
     CoachState state = const CoachState(status: BlocStatusInitial()),
   })  : _authService = getIt<AuthService>(),
         _userRepository = getIt<UserRepository>(),
-        _userBasicInfoRepository = getIt<UserBasicInfoRepository>(),
+        _personRepository = getIt<PersonRepository>(),
         _coachingRequestService = getIt<CoachingRequestService>(),
         super(state) {
     on<CoachEventInitialize>(_initialize);
@@ -39,7 +40,7 @@ class CoachBloc
     CoachEventInitialize event,
     Emitter<CoachState> emit,
   ) async {
-    final Stream<(UserBasicInfo?, List<CoachingRequestInfo>?)> stream$ =
+    final Stream<(Person?, List<CoachingRequestInfo>?)> stream$ =
         _authService.loggedUserId$.whereNotNull().switchMap(
               (String loggedUserId) => Rx.combineLatest2(
                 _getCoach(loggedUserId),
@@ -49,7 +50,7 @@ class CoachBloc
             );
     await emit.forEach(
       stream$,
-      onData: ((UserBasicInfo?, List<CoachingRequestInfo>?) data) => CoachState(
+      onData: ((Person?, List<CoachingRequestInfo>?) data) => CoachState(
         status: const BlocStatusComplete(),
         coach: data.$1,
         receivedCoachingRequests: data.$1 != null ? null : data.$2,
@@ -70,7 +71,7 @@ class CoachBloc
     emitLoadingStatus(emit);
     final String senderId = state.receivedCoachingRequests!
         .firstWhere((request) => request.id == event.requestId)
-        .senderInfo
+        .sender
         .id;
     await _userRepository.updateUser(userId: loggedUserId, coachId: senderId);
     await _coachingRequestService.updateCoachingRequestStatus(
@@ -91,13 +92,13 @@ class CoachBloc
     emitCompleteStatus(emit);
   }
 
-  Stream<UserBasicInfo?> _getCoach(String loggedUserId) => _userRepository
+  Stream<Person?> _getCoach(String loggedUserId) => _userRepository
       .getUserById(userId: loggedUserId)
       .whereNotNull()
-      .map((loggedUserData) => loggedUserData.coachId)
+      .map((User loggedUserData) => loggedUserData.coachId)
       .switchMap(
-        (coachId) => coachId != null
-            ? _userBasicInfoRepository.getUserBasicInfoByUserId(userId: coachId)
+        (String? coachId) => coachId != null
+            ? _personRepository.getPersonById(personId: coachId)
             : Stream.value(null),
       );
 
@@ -106,18 +107,18 @@ class CoachBloc
   ) =>
       _coachingRequestService
           .getCoachingRequestsByReceiverId(receiverId: loggedUserId)
-          .map(_linkCoachingRequestIdsWithSendersInfo)
+          .map(_combineCoachingRequestIdsWithSendersInfo)
           .switchMap(_switchToStreamWithCoachingRequestsInfo);
 
-  List<Stream<(String, UserBasicInfo)>>? _linkCoachingRequestIdsWithSendersInfo(
+  List<Stream<(String, Person)>>? _combineCoachingRequestIdsWithSendersInfo(
     List<CoachingRequest>? coachingRequests,
   ) =>
       coachingRequests
           ?.map(
             (CoachingRequest request) => Rx.combineLatest2(
               Stream.value(request.id),
-              _userBasicInfoRepository
-                  .getUserBasicInfoByUserId(userId: request.senderId)
+              _personRepository
+                  .getPersonById(personId: request.senderId)
                   .whereNotNull(),
               (requestId, senderInfo) => (requestId, senderInfo),
             ),
@@ -125,17 +126,17 @@ class CoachBloc
           .toList();
 
   Stream<List<CoachingRequestInfo>?> _switchToStreamWithCoachingRequestsInfo(
-    List<Stream<(String, UserBasicInfo)>>? streams,
+    List<Stream<(String, Person)>>? streams,
   ) =>
       streams == null
           ? Stream.value(null)
           : Rx.combineLatest(
               streams,
-              (List<(String, UserBasicInfo)> values) => values
+              (List<(String, Person)> values) => values
                   .map(
-                    ((String, UserBasicInfo) data) => CoachingRequestInfo(
+                    ((String, Person) data) => CoachingRequestInfo(
                       id: data.$1,
-                      senderInfo: data.$2,
+                      sender: data.$2,
                     ),
                   )
                   .toList(),

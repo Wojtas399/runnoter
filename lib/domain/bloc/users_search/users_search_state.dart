@@ -3,15 +3,15 @@ part of 'users_search_bloc.dart';
 class UsersSearchState extends BlocState<UsersSearchState> {
   final String searchQuery;
   final List<String> clientIds;
-  final List<String> invitedUserIds;
-  final List<FoundUser>? foundUsers;
+  final List<String> invitedPersonIds;
+  final List<FoundPerson>? foundPersons;
 
   const UsersSearchState({
     required super.status,
     this.searchQuery = '',
     this.clientIds = const [],
-    this.invitedUserIds = const [],
-    this.foundUsers,
+    this.invitedPersonIds = const [],
+    this.foundPersons,
   });
 
   @override
@@ -19,8 +19,8 @@ class UsersSearchState extends BlocState<UsersSearchState> {
         status,
         searchQuery,
         clientIds,
-        invitedUserIds,
-        foundUsers,
+        invitedPersonIds,
+        foundPersons,
       ];
 
   @override
@@ -28,26 +28,27 @@ class UsersSearchState extends BlocState<UsersSearchState> {
     BlocStatus? status,
     String? searchQuery,
     List<String>? clientIds,
-    List<String>? invitedUserIds,
-    List<FoundUser>? foundUsers,
-    bool setFoundUsersAsNull = false,
+    List<String>? invitedPersonIds,
+    List<FoundPerson>? foundPersons,
+    bool setFoundPersonsAsNull = false,
   }) =>
       UsersSearchState(
         status: status ?? const BlocStatusComplete(),
         searchQuery: searchQuery ?? this.searchQuery,
         clientIds: clientIds ?? this.clientIds,
-        invitedUserIds: invitedUserIds ?? this.invitedUserIds,
-        foundUsers: setFoundUsersAsNull ? null : foundUsers ?? this.foundUsers,
+        invitedPersonIds: invitedPersonIds ?? this.invitedPersonIds,
+        foundPersons:
+            setFoundPersonsAsNull ? null : foundPersons ?? this.foundPersons,
       );
 }
 
 enum RelationshipStatus { notInvited, alreadyTaken, pending, accepted }
 
-class FoundUser extends Equatable {
-  final UserBasicInfo info;
+class FoundPerson extends Equatable {
+  final Person info;
   final RelationshipStatus relationshipStatus;
 
-  const FoundUser({
+  const FoundPerson({
     required this.info,
     required this.relationshipStatus,
   });
@@ -55,7 +56,7 @@ class FoundUser extends Equatable {
   @override
   List<Object?> get props => [info, relationshipStatus];
 
-  FoundUser copyWithStatus(RelationshipStatus status) => FoundUser(
+  FoundPerson copyWithStatus(RelationshipStatus status) => FoundPerson(
         info: info,
         relationshipStatus: status,
       );

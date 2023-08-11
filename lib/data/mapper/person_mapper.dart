@@ -1,9 +1,9 @@
 import 'package:firebase/firebase.dart';
 
-import '../../domain/entity/user_basic_info.dart';
+import '../../domain/entity/person.dart';
 import 'gender_mapper.dart';
 
-UserBasicInfo mapUserBasicInfoFromDto(UserDto userDto) => UserBasicInfo(
+Person mapPersonFromUserDto(UserDto userDto) => Person(
       id: userDto.id,
       gender: mapGenderFromDto(userDto.gender),
       name: userDto.name,

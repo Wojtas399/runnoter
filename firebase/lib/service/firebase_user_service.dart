@@ -3,6 +3,9 @@ import '../firebase_collections.dart';
 import '../utils/utils.dart';
 
 class FirebaseUserService {
+  Stream<UserDto?> getUserById({required String userId}) =>
+      getUserRef(userId).snapshots().map((snapshot) => snapshot.data());
+
   Future<UserDto?> loadUserById({required String userId}) async {
     final user = await getUserRef(userId).get();
     return user.data();

@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/bloc/users_search/users_search_bloc.dart';
+import 'package:runnoter/domain/entity/person.dart';
 import 'package:runnoter/domain/entity/user.dart';
-import 'package:runnoter/domain/entity/user_basic_info.dart';
 
 void main() {
   late UsersSearchState state;
@@ -11,7 +11,7 @@ void main() {
     state = const UsersSearchState(
       status: BlocStatusInitial(),
       clientIds: [],
-      invitedUserIds: [],
+      invitedPersonIds: [],
     );
   });
 
@@ -55,24 +55,24 @@ void main() {
   );
 
   test(
-    'copy with invitedUserIds',
+    'copy with invitedPersonIds',
     () {
-      const List<String> expectedInvitedUserIds = ['c1', 'c2'];
+      const List<String> expectedInvitedPersonIds = ['c1', 'c2'];
 
-      state = state.copyWith(invitedUserIds: expectedInvitedUserIds);
+      state = state.copyWith(invitedPersonIds: expectedInvitedPersonIds);
       final state2 = state.copyWith();
 
-      expect(state.invitedUserIds, expectedInvitedUserIds);
-      expect(state2.invitedUserIds, expectedInvitedUserIds);
+      expect(state.invitedPersonIds, expectedInvitedPersonIds);
+      expect(state2.invitedPersonIds, expectedInvitedPersonIds);
     },
   );
 
   test(
-    'copy with found users',
+    'copy with foundPersons',
     () {
-      const List<FoundUser> expectedFoundUsers = [
-        FoundUser(
-          info: UserBasicInfo(
+      const List<FoundPerson> expectedFoundPersons = [
+        FoundPerson(
+          info: Person(
             id: 'c1',
             gender: Gender.male,
             name: 'name1',
@@ -81,8 +81,8 @@ void main() {
           ),
           relationshipStatus: RelationshipStatus.notInvited,
         ),
-        FoundUser(
-          info: UserBasicInfo(
+        FoundPerson(
+          info: Person(
             id: 'c2',
             gender: Gender.female,
             name: 'name2',
@@ -93,20 +93,20 @@ void main() {
         ),
       ];
 
-      state = state.copyWith(foundUsers: expectedFoundUsers);
+      state = state.copyWith(foundPersons: expectedFoundPersons);
       final state2 = state.copyWith();
 
-      expect(state.foundUsers, expectedFoundUsers);
-      expect(state2.foundUsers, expectedFoundUsers);
+      expect(state.foundPersons, expectedFoundPersons);
+      expect(state2.foundPersons, expectedFoundPersons);
     },
   );
 
   test(
-    'copy with set found users as null',
+    'copy with setFoundPersonsAsNull',
     () {
-      const List<FoundUser> expectedFoundUsers = [
-        FoundUser(
-          info: UserBasicInfo(
+      const List<FoundPerson> expectedFoundPersons = [
+        FoundPerson(
+          info: Person(
             id: 'c1',
             gender: Gender.male,
             name: 'name1',
@@ -115,8 +115,8 @@ void main() {
           ),
           relationshipStatus: RelationshipStatus.notInvited,
         ),
-        FoundUser(
-          info: UserBasicInfo(
+        FoundPerson(
+          info: Person(
             id: 'c2',
             gender: Gender.female,
             name: 'name2',
@@ -127,11 +127,11 @@ void main() {
         ),
       ];
 
-      state = state.copyWith(foundUsers: expectedFoundUsers);
-      final state2 = state.copyWith(setFoundUsersAsNull: true);
+      state = state.copyWith(foundPersons: expectedFoundPersons);
+      final state2 = state.copyWith(setFoundPersonsAsNull: true);
 
-      expect(state.foundUsers, expectedFoundUsers);
-      expect(state2.foundUsers, null);
+      expect(state.foundPersons, expectedFoundPersons);
+      expect(state2.foundPersons, null);
     },
   );
 }

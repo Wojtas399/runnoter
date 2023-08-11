@@ -6,25 +6,25 @@ import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/additional_model/coaching_request.dart';
 import 'package:runnoter/domain/additional_model/custom_exception.dart';
 import 'package:runnoter/domain/bloc/users_search/users_search_bloc.dart';
-import 'package:runnoter/domain/repository/user_basic_info_repository.dart';
+import 'package:runnoter/domain/repository/person_repository.dart';
 import 'package:runnoter/domain/service/auth_service.dart';
 import 'package:runnoter/domain/service/coaching_request_service.dart';
 
 import '../../../creators/coaching_request_creator.dart';
-import '../../../creators/user_basic_info_creator.dart';
-import '../../../mock/domain/repository/mock_user_basic_info_repository.dart';
+import '../../../creators/person_creator.dart';
+import '../../../mock/domain/repository/mock_person_repository.dart';
 import '../../../mock/domain/service/mock_auth_service.dart';
 import '../../../mock/domain/service/mock_coaching_request_service.dart';
 
 void main() {
   final authService = MockAuthService();
-  final userBasicInfoRepository = MockUserBasicInfoRepository();
+  final personRepository = MockPersonRepository();
   final coachingRequestService = MockCoachingRequestService();
   const String loggedUserId = 'u1';
 
   setUpAll(() {
     GetIt.I.registerFactory<AuthService>(() => authService);
-    GetIt.I.registerSingleton<UserBasicInfoRepository>(userBasicInfoRepository);
+    GetIt.I.registerSingleton<PersonRepository>(personRepository);
     GetIt.I.registerFactory<CoachingRequestService>(
       () => coachingRequestService,
     );
@@ -32,7 +32,7 @@ void main() {
 
   tearDown(() {
     reset(authService);
-    reset(userBasicInfoRepository);
+    reset(personRepository);
     reset(coachingRequestService);
   });
 
@@ -49,16 +49,13 @@ void main() {
 
   blocTest(
     'initialize, '
-    'found users does not exist, '
-    'should only emit client ids and invited users ids',
+    'found persons do not exist, '
+    'should only emit client ids and invited persons ids',
     build: () => UsersSearchBloc(),
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
-      userBasicInfoRepository.mockGetUsersBasicInfoByCoachId(
-        usersBasicInfo: [
-          createUserBasicInfo(id: 'u2'),
-          createUserBasicInfo(id: 'u3'),
-        ],
+      personRepository.mockGetPersonsByCoachId(
+        persons: [createPerson(id: 'u2'), createPerson(id: 'u3')],
       );
       coachingRequestService.mockGetCoachingRequestsBySenderId(
         requests: [
@@ -86,25 +83,25 @@ void main() {
       const UsersSearchState(
         status: BlocStatusComplete(),
         clientIds: ['u2', 'u3', 'u5'],
-        invitedUserIds: ['u4'],
+        invitedPersonIds: ['u4'],
       ),
     ],
   );
 
   blocTest(
     'initialize, '
-    'found users exists, '
-    'should emit client ids, ids of invited users and found users',
+    'found persons exist, '
+    'should emit client ids, ids of invited persons and found persons',
     build: () => UsersSearchBloc(
       state: UsersSearchState(
         status: const BlocStatusComplete(),
-        foundUsers: [
-          FoundUser(
-            info: createUserBasicInfo(id: 'u2'),
+        foundPersons: [
+          FoundPerson(
+            info: createPerson(id: 'u2'),
             relationshipStatus: RelationshipStatus.pending,
           ),
-          FoundUser(
-            info: createUserBasicInfo(id: 'u4'),
+          FoundPerson(
+            info: createPerson(id: 'u4'),
             relationshipStatus: RelationshipStatus.notInvited,
           ),
         ],
@@ -112,11 +109,8 @@ void main() {
     ),
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
-      userBasicInfoRepository.mockGetUsersBasicInfoByCoachId(
-        usersBasicInfo: [
-          createUserBasicInfo(id: 'u2'),
-          createUserBasicInfo(id: 'u3'),
-        ],
+      personRepository.mockGetPersonsByCoachId(
+        persons: [createPerson(id: 'u2'), createPerson(id: 'u3')],
       );
       coachingRequestService.mockGetCoachingRequestsBySenderId(
         requests: [
@@ -144,14 +138,14 @@ void main() {
       UsersSearchState(
         status: const BlocStatusComplete(),
         clientIds: const ['u2', 'u3', 'u5'],
-        invitedUserIds: const ['u4'],
-        foundUsers: [
-          FoundUser(
-            info: createUserBasicInfo(id: 'u2'),
+        invitedPersonIds: const ['u4'],
+        foundPersons: [
+          FoundPerson(
+            info: createPerson(id: 'u2'),
             relationshipStatus: RelationshipStatus.accepted,
           ),
-          FoundUser(
-            info: createUserBasicInfo(id: 'u4'),
+          FoundPerson(
+            info: createPerson(id: 'u4'),
             relationshipStatus: RelationshipStatus.pending,
           ),
         ],
@@ -162,12 +156,12 @@ void main() {
   blocTest(
     'search, '
     'search query is empty string, '
-    'should set found users as null',
+    'should set found persons as null',
     build: () => UsersSearchBloc(
       state: const UsersSearchState(
         status: BlocStatusComplete(),
         searchQuery: 'sea',
-        foundUsers: [],
+        foundPersons: [],
       ),
     ),
     act: (bloc) => bloc.add(const UsersSearchEventSearch(
@@ -177,32 +171,32 @@ void main() {
       const UsersSearchState(
         status: BlocStatusComplete(),
         searchQuery: '',
-        foundUsers: null,
+        foundPersons: null,
       ),
     ],
   );
 
   blocTest(
     'search, '
-    "should call user repository's method to search users and should updated found users in state",
+    "should call person repository's method to search persons and should update found persons in state",
     build: () => UsersSearchBloc(
       state: const UsersSearchState(
         status: BlocStatusComplete(),
         clientIds: ['u12'],
-        invitedUserIds: ['u2'],
+        invitedPersonIds: ['u2'],
       ),
     ),
-    setUp: () => userBasicInfoRepository.mockSearchForUsers(
-      usersBasicInfo: [
-        createUserBasicInfo(
+    setUp: () => personRepository.mockSearchForPersons(
+      persons: [
+        createPerson(
           id: 'u12',
           name: 'na1',
           surname: 'su1',
           coachId: loggedUserId,
         ),
-        createUserBasicInfo(id: 'u2', name: 'na2', surname: 'su2'),
-        createUserBasicInfo(id: 'u3', name: 'na3', surname: 'su3'),
-        createUserBasicInfo(
+        createPerson(id: 'u2', name: 'na2', surname: 'su2'),
+        createPerson(id: 'u3', name: 'na3', surname: 'su3'),
+        createPerson(
           id: 'u4',
           name: 'na4',
           surname: 'su4',
@@ -215,16 +209,16 @@ void main() {
       const UsersSearchState(
         status: BlocStatusLoading(),
         clientIds: ['u12'],
-        invitedUserIds: ['u2'],
+        invitedPersonIds: ['u2'],
       ),
       UsersSearchState(
         status: const BlocStatusComplete(),
         searchQuery: 'sea',
         clientIds: const ['u12'],
-        invitedUserIds: const ['u2'],
-        foundUsers: [
-          FoundUser(
-            info: createUserBasicInfo(
+        invitedPersonIds: const ['u2'],
+        foundPersons: [
+          FoundPerson(
+            info: createPerson(
               id: 'u12',
               name: 'na1',
               surname: 'su1',
@@ -232,16 +226,16 @@ void main() {
             ),
             relationshipStatus: RelationshipStatus.accepted,
           ),
-          FoundUser(
-            info: createUserBasicInfo(id: 'u2', name: 'na2', surname: 'su2'),
+          FoundPerson(
+            info: createPerson(id: 'u2', name: 'na2', surname: 'su2'),
             relationshipStatus: RelationshipStatus.pending,
           ),
-          FoundUser(
-            info: createUserBasicInfo(id: 'u3', name: 'na3', surname: 'su3'),
+          FoundPerson(
+            info: createPerson(id: 'u3', name: 'na3', surname: 'su3'),
             relationshipStatus: RelationshipStatus.notInvited,
           ),
-          FoundUser(
-            info: createUserBasicInfo(
+          FoundPerson(
+            info: createPerson(
               id: 'u4',
               name: 'na4',
               surname: 'su4',
@@ -253,7 +247,7 @@ void main() {
       ),
     ],
     verify: (_) => verify(
-      () => userBasicInfoRepository.searchForUsers(searchQuery: 'sea'),
+      () => personRepository.searchForPersons(searchQuery: 'sea'),
     ).called(1),
   );
 
@@ -274,7 +268,7 @@ void main() {
 
   blocTest(
     'invite user, '
-    "should call invite repository's method to add invite with given user id set as receiver id and pending invitation status",
+    "should call coaching request repository's method to add request with given person id set as receiver id and pending invitation status",
     build: () => UsersSearchBloc(
       state: const UsersSearchState(status: BlocStatusComplete()),
     ),

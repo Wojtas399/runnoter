@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/cubit/clients_cubit.dart';
-import '../../../domain/entity/user_basic_info.dart';
+import '../../../domain/entity/person.dart';
 import '../../component/big_button_component.dart';
 import '../../component/body/medium_body_component.dart';
 import '../../component/empty_content_info_component.dart';
@@ -63,7 +63,7 @@ class _Clients extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<UserBasicInfo>? clients = context.select(
+    final List<Person>? clients = context.select(
       (ClientsCubit cubit) => cubit.state,
     );
 
@@ -77,7 +77,7 @@ class _Clients extends StatelessWidget {
       [...] => ListView(
           children: ListTile.divideTiles(
             context: context,
-            tiles: clients.map((UserBasicInfo client) => _ClientItem(client)),
+            tiles: clients.map((Person client) => _ClientItem(client)),
           ).toList(),
         ),
     };
@@ -85,7 +85,7 @@ class _Clients extends StatelessWidget {
 }
 
 class _ClientItem extends StatelessWidget {
-  final UserBasicInfo clientInfo;
+  final Person clientInfo;
 
   const _ClientItem(this.clientInfo);
 

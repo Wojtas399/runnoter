@@ -4,7 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/additional_model/bloc_status.dart';
 import '../../../domain/bloc/users_search/users_search_bloc.dart';
-import '../../../domain/entity/user_basic_info.dart';
+import '../../../domain/entity/person.dart';
 import '../../component/empty_content_info_component.dart';
 import '../../component/loading_info_component.dart';
 import '../../component/padding/paddings_24.dart';
@@ -19,8 +19,8 @@ class UsersSearchFoundUsers extends StatelessWidget {
     final BlocStatus blocStatus = context.select(
       (UsersSearchBloc bloc) => bloc.state.status,
     );
-    final List<FoundUser>? foundUsers = context.select(
-      (UsersSearchBloc bloc) => bloc.state.foundUsers,
+    final List<FoundPerson>? foundUsers = context.select(
+      (UsersSearchBloc bloc) => bloc.state.foundPersons,
     );
     final str = Str.of(context);
 
@@ -34,7 +34,7 @@ class UsersSearchFoundUsers extends StatelessWidget {
             [...] => ListView(
                 children: ListTile.divideTiles(
                   context: context,
-                  tiles: foundUsers.map((FoundUser user) => _UserItem(user)),
+                  tiles: foundUsers.map((FoundPerson user) => _UserItem(user)),
                 ).toList(),
               ),
           };
@@ -42,13 +42,13 @@ class UsersSearchFoundUsers extends StatelessWidget {
 }
 
 class _UserItem extends StatelessWidget {
-  final FoundUser foundUser;
+  final FoundPerson foundUser;
 
   const _UserItem(this.foundUser);
 
   @override
   Widget build(BuildContext context) {
-    final UserBasicInfo userInfo = foundUser.info;
+    final Person userInfo = foundUser.info;
 
     return ListTile(
       title: Text('${userInfo.name} ${userInfo.surname}'),

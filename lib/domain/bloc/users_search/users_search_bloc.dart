@@ -8,8 +8,8 @@ import '../../additional_model/bloc_status.dart';
 import '../../additional_model/bloc_with_status.dart';
 import '../../additional_model/coaching_request.dart';
 import '../../additional_model/custom_exception.dart';
-import '../../entity/user_basic_info.dart';
-import '../../repository/user_basic_info_repository.dart';
+import '../../entity/person.dart';
+import '../../repository/person_repository.dart';
 import '../../service/auth_service.dart';
 import '../../service/coaching_request_service.dart';
 
@@ -19,7 +19,7 @@ part 'users_search_state.dart';
 class UsersSearchBloc extends BlocWithStatus<UsersSearchEvent, UsersSearchState,
     UsersSearchBlocInfo, UsersSearchBlocError> {
   final AuthService _authService;
-  final UserBasicInfoRepository _userBasicInfoRepository;
+  final PersonRepository _personRepository;
   final CoachingRequestService _coachingRequestService;
 
   UsersSearchBloc({
@@ -27,7 +27,7 @@ class UsersSearchBloc extends BlocWithStatus<UsersSearchEvent, UsersSearchState,
       status: BlocStatusInitial(),
     ),
   })  : _authService = getIt<AuthService>(),
-        _userBasicInfoRepository = getIt<UserBasicInfoRepository>(),
+        _personRepository = getIt<PersonRepository>(),
         _coachingRequestService = getIt<CoachingRequestService>(),
         super(state) {
     on<UsersSearchEventInitialize>(_initialize);
@@ -45,8 +45,10 @@ class UsersSearchBloc extends BlocWithStatus<UsersSearchEvent, UsersSearchState,
             _coachingRequestService
                 .getCoachingRequestsBySenderId(senderId: loggedUserId)
                 .whereNotNull(),
-            (List<String> clientIds,
-                    List<CoachingRequest> sentCoachingRequests) =>
+            (
+              List<String> clientIds,
+              List<CoachingRequest> sentCoachingRequests,
+            ) =>
                 (clientIds, sentCoachingRequests),
           ),
         );
@@ -54,12 +56,12 @@ class UsersSearchBloc extends BlocWithStatus<UsersSearchEvent, UsersSearchState,
       stream$,
       onData: ((List<String>, List<CoachingRequest>) data) {
         final clientIds = {...data.$1, ...data.$2.clientIds}.toList();
-        final invitedUserIds = data.$2.invitedUserIds;
+        final invitedPersonIds = data.$2.invitedUserIds;
         return state.copyWith(
           clientIds: clientIds,
-          invitedUserIds: invitedUserIds,
-          foundUsers: state.foundUsers != null
-              ? _updateFoundUsers(clientIds, invitedUserIds)
+          invitedPersonIds: invitedPersonIds,
+          foundPersons: state.foundPersons != null
+              ? _updateFoundPersons(clientIds, invitedPersonIds)
               : null,
         );
       },
@@ -74,28 +76,28 @@ class UsersSearchBloc extends BlocWithStatus<UsersSearchEvent, UsersSearchState,
       emit(state.copyWith(
         status: const BlocStatusComplete(),
         searchQuery: event.searchQuery,
-        setFoundUsersAsNull: true,
+        setFoundPersonsAsNull: true,
       ));
       return;
     }
     emitLoadingStatus(emit);
-    final List<UserBasicInfo> foundUsersInfo = await _userBasicInfoRepository
-        .searchForUsers(searchQuery: event.searchQuery);
-    final List<FoundUser> foundUsers = foundUsersInfo
-        .map(
-          (UserBasicInfo userInfo) => FoundUser(
-            info: userInfo,
-            relationshipStatus: _selectUserRelationshipStatus(
-              userInfo: userInfo,
-              clientIds: state.clientIds,
-              invitedUserIds: state.invitedUserIds,
-            ),
-          ),
-        )
-        .toList();
+    final List<Person> foundPersons = await _personRepository.searchForPersons(
+      searchQuery: event.searchQuery,
+    );
     emit(state.copyWith(
       searchQuery: event.searchQuery,
-      foundUsers: foundUsers,
+      foundPersons: foundPersons
+          .map(
+            (Person person) => FoundPerson(
+              info: person,
+              relationshipStatus: _selectRelationshipStatus(
+                person: person,
+                clientIds: state.clientIds,
+                invitedPersonIds: state.invitedPersonIds,
+              ),
+            ),
+          )
+          .toList(),
     ));
   }
 
@@ -125,37 +127,36 @@ class UsersSearchBloc extends BlocWithStatus<UsersSearchEvent, UsersSearchState,
     }
   }
 
-  Stream<List<String>> _getClientIds(String loggedUserId) =>
-      _userBasicInfoRepository
-          .getUsersBasicInfoByCoachId(coachId: loggedUserId)
-          .map((users) => [...?users?.map((user) => user.id)]);
+  Stream<List<String>> _getClientIds(String loggedUserId) => _personRepository
+      .getPersonsByCoachId(coachId: loggedUserId)
+      .map((persons) => [...?persons?.map((person) => person.id)]);
 
-  List<FoundUser> _updateFoundUsers(
+  List<FoundPerson> _updateFoundPersons(
     List<String> clientIds,
-    List<String> invitedUserIds,
+    List<String> invitedPersonIds,
   ) {
-    final List<FoundUser> updatedFoundUsers = [];
-    for (final user in [...?state.foundUsers]) {
-      final RelationshipStatus status = _selectUserRelationshipStatus(
-        userInfo: user.info,
+    final List<FoundPerson> updatedFoundPersons = [];
+    for (final foundPerson in [...?state.foundPersons]) {
+      final RelationshipStatus status = _selectRelationshipStatus(
+        person: foundPerson.info,
         clientIds: clientIds,
-        invitedUserIds: invitedUserIds,
+        invitedPersonIds: invitedPersonIds,
       );
-      updatedFoundUsers.add(user.copyWithStatus(status));
+      updatedFoundPersons.add(foundPerson.copyWithStatus(status));
     }
-    return updatedFoundUsers;
+    return updatedFoundPersons;
   }
 
-  RelationshipStatus _selectUserRelationshipStatus({
-    required UserBasicInfo userInfo,
+  RelationshipStatus _selectRelationshipStatus({
+    required Person person,
     required List<String> clientIds,
-    required List<String> invitedUserIds,
+    required List<String> invitedPersonIds,
   }) {
-    if (clientIds.contains(userInfo.id)) {
+    if (clientIds.contains(person.id)) {
       return RelationshipStatus.accepted;
-    } else if (userInfo.coachId != null) {
+    } else if (person.coachId != null) {
       return RelationshipStatus.alreadyTaken;
-    } else if (invitedUserIds.contains(userInfo.id)) {
+    } else if (invitedPersonIds.contains(person.id)) {
       return RelationshipStatus.pending;
     } else {
       return RelationshipStatus.notInvited;

@@ -1,14 +1,14 @@
 import 'entity.dart';
 import 'user.dart';
 
-class UserBasicInfo extends Entity {
+class Person extends Entity {
   final Gender gender;
   final String name;
   final String surname;
   final String email;
   final String? coachId;
 
-  const UserBasicInfo({
+  const Person({
     required super.id,
     required this.gender,
     required this.name,

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/bloc/coach/coach_bloc.dart';
-import '../../../domain/entity/user_basic_info.dart';
+import '../../../domain/entity/person.dart';
 import '../../component/body/medium_body_component.dart';
 import 'coach_received_coaching_requests.dart';
 
@@ -39,7 +39,7 @@ class _Coach extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final UserBasicInfo? coach = context.select(
+    final Person? coach = context.select(
       (CoachBloc bloc) => bloc.state.coach,
     );
 

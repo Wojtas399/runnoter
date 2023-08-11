@@ -3,54 +3,52 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/cubit/clients_cubit.dart';
+import 'package:runnoter/domain/entity/person.dart';
 import 'package:runnoter/domain/entity/user.dart';
-import 'package:runnoter/domain/entity/user_basic_info.dart';
-import 'package:runnoter/domain/repository/user_basic_info_repository.dart';
+import 'package:runnoter/domain/repository/person_repository.dart';
 import 'package:runnoter/domain/service/auth_service.dart';
 
-import '../../mock/domain/repository/mock_user_basic_info_repository.dart';
+import '../../mock/domain/repository/mock_person_repository.dart';
 import '../../mock/domain/service/mock_auth_service.dart';
 
 void main() {
   final authService = MockAuthService();
-  final userBasicInfoRepository = MockUserBasicInfoRepository();
+  final personRepository = MockPersonRepository();
   const String loggedUserId = 'u1';
 
   setUpAll(() {
     GetIt.I.registerFactory<AuthService>(() => authService);
-    GetIt.I.registerLazySingleton<UserBasicInfoRepository>(
-      () => userBasicInfoRepository,
-    );
+    GetIt.I.registerLazySingleton<PersonRepository>(() => personRepository);
   });
 
   tearDown(() {
     reset(authService);
-    reset(userBasicInfoRepository);
+    reset(personRepository);
   });
 
   blocTest(
     'initialize, '
-    'should get users by coach id from user basic info repository and should emit them',
+    'should get persons by coach id from person repository and should emit them',
     build: () => ClientsCubit(),
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
-      userBasicInfoRepository.mockGetUsersBasicInfoByCoachId(
-        usersBasicInfo: const [
-          UserBasicInfo(
+      personRepository.mockGetPersonsByCoachId(
+        persons: const [
+          Person(
             id: 'u3',
             gender: Gender.female,
             name: 'Elizabeth',
             surname: 'Bobsly',
             email: 'elizabeth.bobsly@example.com',
           ),
-          UserBasicInfo(
+          Person(
             id: 'u4',
             gender: Gender.female,
             name: 'Elizabeth',
             surname: 'Bugly',
             email: 'elizabeth.bug@example.com',
           ),
-          UserBasicInfo(
+          Person(
             id: 'u2',
             gender: Gender.male,
             name: 'Jack',
@@ -63,21 +61,21 @@ void main() {
     act: (cubit) => cubit.initialize(),
     expect: () => [
       const [
-        UserBasicInfo(
+        Person(
           id: 'u3',
           gender: Gender.female,
           name: 'Elizabeth',
           surname: 'Bobsly',
           email: 'elizabeth.bobsly@example.com',
         ),
-        UserBasicInfo(
+        Person(
           id: 'u4',
           gender: Gender.female,
           name: 'Elizabeth',
           surname: 'Bugly',
           email: 'elizabeth.bug@example.com',
         ),
-        UserBasicInfo(
+        Person(
           id: 'u2',
           gender: Gender.male,
           name: 'Jack',
@@ -89,9 +87,7 @@ void main() {
     verify: (_) {
       verify(() => authService.loggedUserId$).called(1);
       verify(
-        () => userBasicInfoRepository.getUsersBasicInfoByCoachId(
-          coachId: loggedUserId,
-        ),
+        () => personRepository.getPersonsByCoachId(coachId: loggedUserId),
       ).called(1);
     },
   );

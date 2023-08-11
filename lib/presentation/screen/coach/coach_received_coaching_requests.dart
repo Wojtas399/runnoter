@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/bloc/coach/coach_bloc.dart';
-import '../../../domain/entity/user_basic_info.dart';
+import '../../../domain/entity/person.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/loading_info_component.dart';
 import '../../component/text/body_text_components.dart';
@@ -71,7 +71,7 @@ class _CoachingRequestItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final UserBasicInfo senderInfo = requestInfo.senderInfo;
+    final Person senderInfo = requestInfo.sender;
 
     return ListTile(
       contentPadding: const EdgeInsets.only(left: 8),

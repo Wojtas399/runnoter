@@ -1,8 +1,8 @@
 import 'package:firebase/firebase.dart' as firebase;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:runnoter/data/mapper/user_basic_info_mapper.dart';
+import 'package:runnoter/data/mapper/person_mapper.dart';
+import 'package:runnoter/domain/entity/person.dart';
 import 'package:runnoter/domain/entity/user.dart';
-import 'package:runnoter/domain/entity/user_basic_info.dart';
 
 import '../../creators/user_dto_creator.dart';
 
@@ -16,7 +16,7 @@ void main() {
   const String coachId = 'c1';
 
   test(
-    'map user basic info from dto, '
+    'map person from user dto, '
     'should map UserDto model to domain UserBasicInfo model',
     () {
       final firebase.UserDto userDto = createUserDto(
@@ -27,7 +27,7 @@ void main() {
         email: email,
         coachId: coachId,
       );
-      const UserBasicInfo expectedUserBasicInfo = UserBasicInfo(
+      const Person expectedPerson = Person(
         id: id,
         gender: gender,
         name: name,
@@ -36,9 +36,9 @@ void main() {
         coachId: coachId,
       );
 
-      final UserBasicInfo userBasicInfo = mapUserBasicInfoFromDto(userDto);
+      final Person person = mapPersonFromUserDto(userDto);
 
-      expect(userBasicInfo, expectedUserBasicInfo);
+      expect(person, expectedPerson);
     },
   );
 }

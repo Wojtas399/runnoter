@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/bloc/coach/coach_bloc.dart';
-import 'package:runnoter/domain/entity/user_basic_info.dart';
+import 'package:runnoter/domain/entity/person.dart';
 
-import '../../../creators/user_basic_info_creator.dart';
+import '../../../creators/person_creator.dart';
 
 void main() {
   late CoachState state;
@@ -29,10 +29,7 @@ void main() {
     'copy with receivedCoachingRequests',
     () {
       final List<CoachingRequestInfo> expectedReceivedCoachingRequests = [
-        CoachingRequestInfo(
-          id: 'r1',
-          senderInfo: createUserBasicInfo(id: 'u1'),
-        ),
+        CoachingRequestInfo(id: 'r1', sender: createPerson(id: 'u1')),
       ];
 
       state = state.copyWith(
@@ -48,7 +45,7 @@ void main() {
   test(
     'copy with coach',
     () {
-      final UserBasicInfo expectedCoach = createUserBasicInfo(id: 'c1');
+      final Person expectedCoach = createPerson(id: 'c1');
 
       state = state.copyWith(coach: expectedCoach);
       final state2 = state.copyWith();
