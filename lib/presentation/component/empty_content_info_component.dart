@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+import 'gap/gap_components.dart';
+import 'text/body_text_components.dart';
+import 'text/title_text_components.dart';
+
 class EmptyContentInfo extends StatelessWidget {
   final IconData? icon;
   final String? title;
@@ -21,30 +25,15 @@ class EmptyContentInfo extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          if (icon != null)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 16),
-              child: Icon(icon, size: 48, color: color),
-            ),
-          if (title != null)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 8),
-              child: Text(
-                title!,
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      color: color,
-                    ),
-                textAlign: TextAlign.center,
-              ),
-            ),
-          if (subtitle != null)
-            Text(
-              subtitle!,
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    color: color,
-                  ),
-              textAlign: TextAlign.center,
-            ),
+          if (icon != null) Icon(icon, size: 48, color: color),
+          if (title != null) ...[
+            const Gap16(),
+            TitleLarge(title!, color: color, textAlign: TextAlign.center),
+          ],
+          if (subtitle != null) ...[
+            const Gap8(),
+            BodyLarge(subtitle!, color: color, textAlign: TextAlign.center),
+          ],
         ],
       ),
     );

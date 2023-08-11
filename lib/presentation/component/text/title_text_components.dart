@@ -3,11 +3,15 @@ import 'package:flutter/material.dart';
 class TitleLarge extends StatelessWidget {
   final String data;
   final FontWeight? fontWeight;
+  final Color? color;
+  final TextAlign? textAlign;
 
   const TitleLarge(
     this.data, {
     super.key,
     this.fontWeight,
+    this.color,
+    this.textAlign,
   });
 
   @override
@@ -16,7 +20,9 @@ class TitleLarge extends StatelessWidget {
       data,
       style: Theme.of(context).textTheme.titleLarge?.copyWith(
             fontWeight: fontWeight,
+            color: color,
           ),
+      textAlign: textAlign,
     );
   }
 }

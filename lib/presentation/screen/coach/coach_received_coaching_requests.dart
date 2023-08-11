@@ -4,10 +4,11 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/bloc/coach/coach_bloc.dart';
 import '../../../domain/entity/person.dart';
+import '../../component/big_button_component.dart';
+import '../../component/empty_content_info_component.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/loading_info_component.dart';
 import '../../component/text/body_text_components.dart';
-import '../../component/text/label_text_components.dart';
 import '../../component/text/title_text_components.dart';
 
 class CoachReceivedCoachingRequests extends StatelessWidget {
@@ -27,18 +28,11 @@ class CoachReceivedCoachingRequests extends StatelessWidget {
         const Gap32(),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8),
-          child: LabelLarge(Str.of(context).coachCoachingRequests),
+          child: TitleMedium(Str.of(context).coachCoachingRequests),
         ),
         const Gap8(),
         Expanded(
-          child: ListView(
-            children: ListTile.divideTiles(
-              context: context,
-              tiles: receivedCoachingRequests.map(
-                (requestInfo) => _CoachingRequestItem(requestInfo),
-              ),
-            ).toList(),
-          ),
+          child: _ReceivedCoachingRequests(requests: receivedCoachingRequests),
         ),
       ],
     );
@@ -50,17 +44,58 @@ class _NoCoachInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final str = Str.of(context);
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          TitleMedium(Str.of(context).coachNoCoachTitle),
+          TitleMedium(str.coachNoCoachTitle),
           const Gap8(),
-          BodyMedium(Str.of(context).coachNoCoachMessage),
+          BodyMedium(
+            str.coachNoCoachMessage,
+            color: Theme.of(context).colorScheme.outline,
+          ),
+          const Gap24(),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              BigButton(
+                label: str.coachFindCoach,
+                onPressed: _onFindCoachPressed,
+              ),
+            ],
+          ),
         ],
       ),
     );
+  }
+
+  void _onFindCoachPressed() {
+    //TODO
+  }
+}
+
+class _ReceivedCoachingRequests extends StatelessWidget {
+  final List<CoachingRequestInfo> requests;
+
+  const _ReceivedCoachingRequests({required this.requests});
+
+  @override
+  Widget build(BuildContext context) {
+    return requests.isEmpty
+        ? EmptyContentInfo(
+            icon: Icons.notifications,
+            title: Str.of(context).coachNoRequestsInfoTitle,
+          )
+        : ListView(
+            children: ListTile.divideTiles(
+              context: context,
+              tiles: requests.map(
+                (requestInfo) => _CoachingRequestItem(requestInfo),
+              ),
+            ).toList(),
+          );
   }
 }
 
