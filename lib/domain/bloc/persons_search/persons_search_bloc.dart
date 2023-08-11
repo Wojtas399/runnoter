@@ -115,7 +115,7 @@ class PersonsSearchBloc extends BlocWithStatus<PersonsSearchEvent,
       await _coachingRequestService.addCoachingRequest(
         senderId: loggedUserId,
         receiverId: event.personId,
-        status: CoachingRequestStatus.pending,
+        isAccepted: false,
       );
       emitCompleteStatus(emit, info: PersonsSearchBlocInfo.requestSent);
     } on CoachingRequestException catch (exception) {
@@ -169,13 +169,13 @@ enum PersonsSearchBlocInfo { requestSent }
 enum PersonsSearchBlocError { userAlreadyHasCoach }
 
 extension _CoachingRequestsExtensions on List<CoachingRequest> {
-  List<String> get clientIds => where((coachingRequest) =>
-          coachingRequest.status == CoachingRequestStatus.accepted)
-      .map((coachingRequest) => coachingRequest.receiverId)
-      .toList();
+  List<String> get clientIds =>
+      where((coachingRequest) => coachingRequest.isAccepted)
+          .map((coachingRequest) => coachingRequest.receiverId)
+          .toList();
 
-  List<String> get invitedUserIds => where((coachingRequest) =>
-          coachingRequest.status == CoachingRequestStatus.pending)
-      .map((coachingRequest) => coachingRequest.receiverId)
-      .toList();
+  List<String> get invitedUserIds =>
+      where((coachingRequest) => !coachingRequest.isAccepted)
+          .map((coachingRequest) => coachingRequest.receiverId)
+          .toList();
 }

@@ -3,7 +3,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
-import 'package:runnoter/domain/additional_model/coaching_request.dart';
 import 'package:runnoter/domain/additional_model/custom_exception.dart';
 import 'package:runnoter/domain/bloc/persons_search/persons_search_bloc.dart';
 import 'package:runnoter/domain/repository/person_repository.dart';
@@ -61,19 +60,15 @@ void main() {
         requests: [
           createCoachingRequest(
             receiverId: 'u4',
-            status: CoachingRequestStatus.pending,
+            isAccepted: false,
           ),
           createCoachingRequest(
             receiverId: 'u5',
-            status: CoachingRequestStatus.accepted,
+            isAccepted: true,
           ),
           createCoachingRequest(
             receiverId: 'u3',
-            status: CoachingRequestStatus.accepted,
-          ),
-          createCoachingRequest(
-            receiverId: 'u6',
-            status: CoachingRequestStatus.declined,
+            isAccepted: true,
           ),
         ],
       );
@@ -116,19 +111,15 @@ void main() {
         requests: [
           createCoachingRequest(
             receiverId: 'u4',
-            status: CoachingRequestStatus.pending,
+            isAccepted: false,
           ),
           createCoachingRequest(
             receiverId: 'u5',
-            status: CoachingRequestStatus.accepted,
+            isAccepted: true,
           ),
           createCoachingRequest(
             receiverId: 'u3',
-            status: CoachingRequestStatus.accepted,
-          ),
-          createCoachingRequest(
-            receiverId: 'u6',
-            status: CoachingRequestStatus.declined,
+            isAccepted: true,
           ),
         ],
       );
@@ -293,7 +284,7 @@ void main() {
         () => coachingRequestService.addCoachingRequest(
           senderId: 'u1',
           receiverId: 'u2',
-          status: CoachingRequestStatus.pending,
+          isAccepted: false,
         ),
       ).called(1);
     },
@@ -331,7 +322,7 @@ void main() {
         () => coachingRequestService.addCoachingRequest(
           senderId: 'u1',
           receiverId: 'u2',
-          status: CoachingRequestStatus.pending,
+          isAccepted: false,
         ),
       ).called(1);
     },

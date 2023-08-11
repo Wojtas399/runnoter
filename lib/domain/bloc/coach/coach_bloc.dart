@@ -74,9 +74,9 @@ class CoachBloc
         .sender
         .id;
     await _userRepository.updateUser(userId: loggedUserId, coachId: senderId);
-    await _coachingRequestService.updateCoachingRequestStatus(
+    await _coachingRequestService.updateCoachingRequest(
       requestId: event.requestId,
-      status: CoachingRequestStatus.accepted,
+      isAccepted: true,
     );
     emitCompleteStatus(emit, info: CoachBlocInfo.requestAccepted);
   }

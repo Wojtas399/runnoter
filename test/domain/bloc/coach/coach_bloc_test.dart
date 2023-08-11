@@ -3,7 +3,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
-import 'package:runnoter/domain/additional_model/coaching_request.dart';
 import 'package:runnoter/domain/bloc/coach/coach_bloc.dart';
 import 'package:runnoter/domain/entity/user.dart';
 import 'package:runnoter/domain/repository/person_repository.dart';
@@ -173,7 +172,7 @@ void main() {
 
   blocTest(
     'accept request, '
-    "should call coaching request service's method to update request status with accepted status and should call user repository's method to update logged user with new coach id",
+    "should call coaching request service's method to update request with isAccepted param set as true and should call user repository's method to update logged user with new coach id",
     build: () => CoachBloc(
       state: CoachState(
         status: const BlocStatusComplete(),
@@ -186,7 +185,7 @@ void main() {
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
       userRepository.mockUpdateUser();
-      coachingRequestService.mockUpdateCoachingRequestStatus();
+      coachingRequestService.mockUpdateCoachingRequest();
     },
     act: (bloc) => bloc.add(const CoachEventAcceptRequest(requestId: 'r1')),
     expect: () => [
@@ -213,9 +212,9 @@ void main() {
         () => userRepository.updateUser(userId: loggedUserId, coachId: 'u3'),
       ).called(1);
       verify(
-        () => coachingRequestService.updateCoachingRequestStatus(
+        () => coachingRequestService.updateCoachingRequest(
           requestId: 'r1',
-          status: CoachingRequestStatus.accepted,
+          isAccepted: true,
         ),
       ).called(1);
     },

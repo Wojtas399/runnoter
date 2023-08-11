@@ -12,12 +12,12 @@ abstract interface class CoachingRequestService {
   Future<void> addCoachingRequest({
     required String senderId,
     required String receiverId,
-    required CoachingRequestStatus status,
+    required bool isAccepted,
   });
 
-  Future<void> updateCoachingRequestStatus({
+  Future<void> updateCoachingRequest({
     required String requestId,
-    required CoachingRequestStatus status,
+    required bool isAccepted,
   });
 
   Future<void> deleteCoachingRequest({required String requestId});

@@ -40,19 +40,13 @@ void main() {
           id: 'i1',
           senderId: senderId,
           receiverId: 'u2',
-          status: firebase.CoachingRequestStatus.pending,
+          isAccepted: false,
         ),
         firebase.CoachingRequestDto(
           id: 'i2',
           senderId: senderId,
           receiverId: 'u3',
-          status: firebase.CoachingRequestStatus.accepted,
-        ),
-        firebase.CoachingRequestDto(
-          id: 'i3',
-          senderId: senderId,
-          receiverId: 'u4',
-          status: firebase.CoachingRequestStatus.declined,
+          isAccepted: true,
         ),
       ];
       const List<CoachingRequest> expectedCoachingRequests = [
@@ -60,19 +54,13 @@ void main() {
           id: 'i1',
           senderId: senderId,
           receiverId: 'u2',
-          status: CoachingRequestStatus.pending,
+          isAccepted: false,
         ),
         CoachingRequest(
           id: 'i2',
           senderId: senderId,
           receiverId: 'u3',
-          status: CoachingRequestStatus.accepted,
-        ),
-        CoachingRequest(
-          id: 'i3',
-          senderId: senderId,
-          receiverId: 'u4',
-          status: CoachingRequestStatus.declined,
+          isAccepted: true,
         ),
       ];
       firebaseCoachingRequestService.mockGetCoachingRequestsBySenderId(
@@ -99,19 +87,13 @@ void main() {
           id: 'i1',
           senderId: 'u2',
           receiverId: receiverId,
-          status: firebase.CoachingRequestStatus.pending,
+          isAccepted: false,
         ),
         firebase.CoachingRequestDto(
           id: 'i2',
           senderId: 'u3',
           receiverId: receiverId,
-          status: firebase.CoachingRequestStatus.accepted,
-        ),
-        firebase.CoachingRequestDto(
-          id: 'i3',
-          senderId: 'u4',
-          receiverId: receiverId,
-          status: firebase.CoachingRequestStatus.declined,
+          isAccepted: true,
         ),
       ];
       const List<CoachingRequest> expectedCoachingRequests = [
@@ -119,19 +101,13 @@ void main() {
           id: 'i1',
           senderId: 'u2',
           receiverId: receiverId,
-          status: CoachingRequestStatus.pending,
+          isAccepted: false,
         ),
         CoachingRequest(
           id: 'i2',
           senderId: 'u3',
           receiverId: receiverId,
-          status: CoachingRequestStatus.accepted,
-        ),
-        CoachingRequest(
-          id: 'i3',
-          senderId: 'u4',
-          receiverId: receiverId,
-          status: CoachingRequestStatus.declined,
+          isAccepted: true,
         ),
       ];
       firebaseCoachingRequestService.mockGetCoachingRequestsByReceiverId(
@@ -154,6 +130,7 @@ void main() {
     () async {
       const String senderId = 'u1';
       const String receiverId = 'u2';
+      const bool isAccepted = false;
       firebaseUserService.mockLoadUserById(
         userDto: createUserDto(id: receiverId),
       );
@@ -162,7 +139,7 @@ void main() {
       await service.addCoachingRequest(
         senderId: senderId,
         receiverId: receiverId,
-        status: CoachingRequestStatus.pending,
+        isAccepted: isAccepted,
       );
 
       verify(
@@ -172,7 +149,7 @@ void main() {
         () => firebaseCoachingRequestService.addCoachingRequest(
           senderId: senderId,
           receiverId: receiverId,
-          status: firebase.CoachingRequestStatus.pending,
+          isAccepted: isAccepted,
         ),
       ).called(1);
     },
@@ -198,7 +175,7 @@ void main() {
         await service.addCoachingRequest(
           senderId: senderId,
           receiverId: receiverId,
-          status: CoachingRequestStatus.pending,
+          isAccepted: false,
         );
       } catch (e) {
         exception = e;
@@ -212,21 +189,22 @@ void main() {
   );
 
   test(
-    'update coaching request status, '
-    "should call firebase coaching request service's method to update coaching request's status",
+    'update coaching request, '
+    "should call firebase coaching request service's method to update coaching request",
     () async {
       const String requestId = 'i1';
-      firebaseCoachingRequestService.mockUpdateCoachingRequestStatus();
+      const bool isAccepted = true;
+      firebaseCoachingRequestService.mockUpdateCoachingRequest();
 
-      await service.updateCoachingRequestStatus(
+      await service.updateCoachingRequest(
         requestId: requestId,
-        status: CoachingRequestStatus.declined,
+        isAccepted: isAccepted,
       );
 
       verify(
-        () => firebaseCoachingRequestService.updateCoachingRequestStatus(
+        () => firebaseCoachingRequestService.updateCoachingRequest(
           requestId: requestId,
-          status: firebase.CoachingRequestStatus.declined,
+          isAccepted: isAccepted,
         ),
       ).called(1);
     },

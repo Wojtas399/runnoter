@@ -1,18 +1,16 @@
 import 'package:equatable/equatable.dart';
 
-enum CoachingRequestStatus { pending, accepted, declined }
-
 class CoachingRequest extends Equatable {
   final String id;
   final String senderId;
   final String receiverId;
-  final CoachingRequestStatus status;
+  final bool isAccepted;
 
   const CoachingRequest({
     required this.id,
     required this.senderId,
     required this.receiverId,
-    required this.status,
+    required this.isAccepted,
   });
 
   @override
@@ -20,6 +18,6 @@ class CoachingRequest extends Equatable {
         id,
         senderId,
         receiverId,
-        status,
+        isAccepted,
       ];
 }

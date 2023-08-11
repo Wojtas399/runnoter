@@ -4,11 +4,11 @@ CoachingRequest createCoachingRequest({
   String id = '',
   String senderId = '',
   String receiverId = '',
-  CoachingRequestStatus status = CoachingRequestStatus.pending,
+  bool isAccepted = false,
 }) =>
     CoachingRequest(
       id: id,
       senderId: senderId,
       receiverId: receiverId,
-      status: status,
+      isAccepted: isAccepted,
     );

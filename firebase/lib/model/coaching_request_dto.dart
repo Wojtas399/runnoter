@@ -1,24 +1,20 @@
 import 'package:equatable/equatable.dart';
 
-import '../mapper/coatching_request_status_mapper.dart';
-
-enum CoachingRequestStatus { pending, accepted, declined }
-
 class CoachingRequestDto extends Equatable {
   final String id;
   final String senderId;
   final String receiverId;
-  final CoachingRequestStatus status;
+  final bool isAccepted;
 
   const CoachingRequestDto({
     required this.id,
     required this.senderId,
     required this.receiverId,
-    required this.status,
+    required this.isAccepted,
   }) : assert(senderId != receiverId);
 
   @override
-  List<Object?> get props => [id, senderId, receiverId, status];
+  List<Object?> get props => [id, senderId, receiverId, isAccepted];
 
   CoachingRequestDto.fromJson({
     required String coachingRequestId,
@@ -27,18 +23,16 @@ class CoachingRequestDto extends Equatable {
           id: coachingRequestId,
           senderId: json?[senderIdField],
           receiverId: json?[receiverIdField],
-          status: mapCoachingRequestStatusFromString(
-            json?[coachingRequestStatusField],
-          ),
+          isAccepted: json?[isAcceptedField],
         );
 
   Map<String, dynamic> toJson() => {
         senderIdField: senderId,
         receiverIdField: receiverId,
-        coachingRequestStatusField: mapCoachingRequestStatusToString(status),
+        isAcceptedField: isAccepted,
       };
 }
 
 const String senderIdField = 'senderId';
 const String receiverIdField = 'receiverId';
-const String coachingRequestStatusField = 'status';
+const String isAcceptedField = 'isAccepted';

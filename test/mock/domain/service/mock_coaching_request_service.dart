@@ -4,10 +4,6 @@ import 'package:runnoter/domain/service/coaching_request_service.dart';
 
 class MockCoachingRequestService extends Mock
     implements CoachingRequestService {
-  MockCoachingRequestService() {
-    registerFallbackValue(CoachingRequestStatus.pending);
-  }
-
   void mockGetCoachingRequestsBySenderId({List<CoachingRequest>? requests}) {
     when(
       () => getCoachingRequestsBySenderId(
@@ -32,11 +28,11 @@ class MockCoachingRequestService extends Mock
     }
   }
 
-  void mockUpdateCoachingRequestStatus() {
+  void mockUpdateCoachingRequest() {
     when(
-      () => updateCoachingRequestStatus(
+      () => updateCoachingRequest(
         requestId: any(named: 'requestId'),
-        status: any(named: 'status'),
+        isAccepted: any(named: 'isAccepted'),
       ),
     ).thenAnswer((_) => Future.value());
   }
@@ -52,6 +48,6 @@ class MockCoachingRequestService extends Mock
   Future<void> _addCoachingRequestCall() => addCoachingRequest(
         senderId: any(named: 'senderId'),
         receiverId: any(named: 'receiverId'),
-        status: any(named: 'status'),
+        isAccepted: any(named: 'isAccepted'),
       );
 }

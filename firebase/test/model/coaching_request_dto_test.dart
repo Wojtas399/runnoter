@@ -5,8 +5,7 @@ void main() {
   const String coachingRequestId = 'i1';
   const String senderId = 'u1';
   const String receiverId = 'u2';
-  const CoachingRequestStatus status = CoachingRequestStatus.pending;
-  const String statusStr = 'pending';
+  const bool isAccepted = false;
 
   test(
     'from json, '
@@ -15,13 +14,13 @@ void main() {
       final Map<String, dynamic> json = {
         'senderId': senderId,
         'receiverId': receiverId,
-        'status': statusStr,
+        'isAccepted': isAccepted,
       };
       const CoachingRequestDto expectedDto = CoachingRequestDto(
         id: coachingRequestId,
         senderId: senderId,
         receiverId: receiverId,
-        status: status,
+        isAccepted: isAccepted,
       );
 
       final CoachingRequestDto dto = CoachingRequestDto.fromJson(
@@ -41,12 +40,12 @@ void main() {
         id: coachingRequestId,
         senderId: senderId,
         receiverId: receiverId,
-        status: status,
+        isAccepted: isAccepted,
       );
       final Map<String, dynamic> expectedJson = {
         'senderId': senderId,
         'receiverId': receiverId,
-        'status': statusStr,
+        'isAccepted': isAccepted,
       };
 
       final Map<String, dynamic> json = dto.toJson();

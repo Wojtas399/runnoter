@@ -7,9 +7,7 @@ void main() {
   const String coachingRequestId = 'i1';
   const String senderId = 'u1';
   const String receiverId = 'u2';
-  const firebase.CoachingRequestStatus dtoStatus =
-      firebase.CoachingRequestStatus.pending;
-  const CoachingRequestStatus status = CoachingRequestStatus.pending;
+  const bool isAccepted = false;
 
   test(
     'map coaching request from dto, '
@@ -20,13 +18,13 @@ void main() {
         id: coachingRequestId,
         senderId: senderId,
         receiverId: receiverId,
-        status: dtoStatus,
+        isAccepted: isAccepted,
       );
       const CoachingRequest expectedCoachingRequest = CoachingRequest(
         id: coachingRequestId,
         senderId: senderId,
         receiverId: receiverId,
-        status: status,
+        isAccepted: isAccepted,
       );
 
       final CoachingRequest coachingRequest =

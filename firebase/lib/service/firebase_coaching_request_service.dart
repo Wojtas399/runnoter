@@ -1,5 +1,4 @@
 import '../firebase_collections.dart';
-import '../mapper/coatching_request_status_mapper.dart';
 import '../model/coaching_request_dto.dart';
 
 class FirebaseCoachingRequestService {
@@ -28,24 +27,24 @@ class FirebaseCoachingRequestService {
   Future<void> addCoachingRequest({
     required String senderId,
     required String receiverId,
-    required CoachingRequestStatus status,
+    required bool isAccepted,
   }) async {
     final CoachingRequestDto invitationDto = CoachingRequestDto(
       id: '',
       senderId: senderId,
       receiverId: receiverId,
-      status: status,
+      isAccepted: isAccepted,
     );
     await getCoachingRequestsRef().add(invitationDto);
   }
 
-  Future<void> updateCoachingRequestStatus({
+  Future<void> updateCoachingRequest({
     required String requestId,
-    required CoachingRequestStatus status,
+    required bool isAccepted,
   }) async {
     await getCoachingRequestsRef().doc(requestId).update(
       {
-        coachingRequestStatusField: mapCoachingRequestStatusToString(status),
+        isAcceptedField: isAccepted,
       },
     );
   }

@@ -3,10 +3,6 @@ import 'package:mocktail/mocktail.dart';
 
 class MockFirebaseCoachingRequestService extends Mock
     implements FirebaseCoachingRequestService {
-  MockFirebaseCoachingRequestService() {
-    registerFallbackValue(CoachingRequestStatus.pending);
-  }
-
   void mockGetCoachingRequestsBySenderId({List<CoachingRequestDto>? requests}) {
     when(
       () => getCoachingRequestsBySenderId(
@@ -30,16 +26,16 @@ class MockFirebaseCoachingRequestService extends Mock
       () => addCoachingRequest(
         senderId: any(named: 'senderId'),
         receiverId: any(named: 'receiverId'),
-        status: any(named: 'status'),
+        isAccepted: any(named: 'isAccepted'),
       ),
     ).thenAnswer((_) => Future.value());
   }
 
-  void mockUpdateCoachingRequestStatus() {
+  void mockUpdateCoachingRequest() {
     when(
-      () => updateCoachingRequestStatus(
+      () => updateCoachingRequest(
         requestId: any(named: 'requestId'),
-        status: any(named: 'status'),
+        isAccepted: any(named: 'isAccepted'),
       ),
     ).thenAnswer((_) => Future.value(_));
   }
