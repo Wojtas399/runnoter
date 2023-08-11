@@ -3,7 +3,9 @@ import 'package:mocktail/mocktail.dart';
 
 class MockFirebaseCoachingRequestService extends Mock
     implements FirebaseCoachingRequestService {
-  void mockGetCoachingRequestsBySenderId({List<CoachingRequestDto>? requests}) {
+  void mockGetCoachingRequestsBySenderId({
+    required List<CoachingRequestDto> requests,
+  }) {
     when(
       () => getCoachingRequestsBySenderId(
         senderId: any(named: 'senderId'),
@@ -12,7 +14,7 @@ class MockFirebaseCoachingRequestService extends Mock
   }
 
   void mockGetCoachingRequestsByReceiverId({
-    List<CoachingRequestDto>? requests,
+    required List<CoachingRequestDto> requests,
   }) {
     when(
       () => getCoachingRequestsByReceiverId(
@@ -37,7 +39,7 @@ class MockFirebaseCoachingRequestService extends Mock
         requestId: any(named: 'requestId'),
         isAccepted: any(named: 'isAccepted'),
       ),
-    ).thenAnswer((_) => Future.value(_));
+    ).thenAnswer((_) => Future.value());
   }
 
   void mockDeleteCoachingRequest() {

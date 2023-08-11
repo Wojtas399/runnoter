@@ -4,7 +4,9 @@ import 'package:runnoter/domain/service/coaching_request_service.dart';
 
 class MockCoachingRequestService extends Mock
     implements CoachingRequestService {
-  void mockGetCoachingRequestsBySenderId({List<CoachingRequest>? requests}) {
+  void mockGetCoachingRequestsBySenderId({
+    required List<CoachingRequest> requests,
+  }) {
     when(
       () => getCoachingRequestsBySenderId(
         senderId: any(named: 'senderId'),
@@ -12,7 +14,9 @@ class MockCoachingRequestService extends Mock
     ).thenAnswer((_) => Stream.value(requests));
   }
 
-  void mockGetCoachingRequestsByReceiverId({List<CoachingRequest>? requests}) {
+  void mockGetCoachingRequestsByReceiverId({
+    required List<CoachingRequest> requests,
+  }) {
     when(
       () => getCoachingRequestsByReceiverId(
         receiverId: any(named: 'receiverId'),

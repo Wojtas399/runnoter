@@ -2,7 +2,7 @@ import '../firebase_collections.dart';
 import '../model/coaching_request_dto.dart';
 
 class FirebaseCoachingRequestService {
-  Stream<List<CoachingRequestDto>?> getCoachingRequestsBySenderId({
+  Stream<List<CoachingRequestDto>> getCoachingRequestsBySenderId({
     required String senderId,
   }) =>
       getCoachingRequestsRef()
@@ -13,7 +13,7 @@ class FirebaseCoachingRequestService {
             (docs) => docs.map((docSnapshot) => docSnapshot.data()).toList(),
           );
 
-  Stream<List<CoachingRequestDto>?> getCoachingRequestsByReceiverId({
+  Stream<List<CoachingRequestDto>> getCoachingRequestsByReceiverId({
     required String receiverId,
   }) =>
       getCoachingRequestsRef()

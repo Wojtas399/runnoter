@@ -71,7 +71,7 @@ void main() {
           email: 'email1@example.com',
         ),
       );
-      coachingRequestService.mockGetCoachingRequestsByReceiverId();
+      coachingRequestService.mockGetCoachingRequestsByReceiverId(requests: []);
     },
     act: (bloc) => bloc.add(const CoachEventInitialize()),
     expect: () => [

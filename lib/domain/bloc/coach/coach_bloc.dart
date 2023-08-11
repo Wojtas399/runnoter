@@ -8,7 +8,6 @@ import '../../additional_model/bloc_status.dart';
 import '../../additional_model/bloc_with_status.dart';
 import '../../additional_model/coaching_request.dart';
 import '../../entity/person.dart';
-import '../../entity/user.dart';
 import '../../repository/person_repository.dart';
 import '../../repository/user_repository.dart';
 import '../../service/auth_service.dart';
@@ -40,21 +39,27 @@ class CoachBloc
     CoachEventInitialize event,
     Emitter<CoachState> emit,
   ) async {
-    final Stream<(Person?, List<CoachingRequestInfo>?)> stream$ =
-        _authService.loggedUserId$.whereNotNull().switchMap(
-              (String loggedUserId) => Rx.combineLatest2(
-                _getCoach(loggedUserId),
-                _getCoachingRequestsInfo(loggedUserId),
-                (coachInfo, receivedRequests) => (coachInfo, receivedRequests),
-              ),
-            );
+    final Stream stream$ = _authService.loggedUserId$
+        .whereNotNull()
+        .switchMap(_combineWithCoachId)
+        .switchMap(
+          ((String, String?) data) => data.$2 != null
+              ? _personRepository.getPersonById(personId: data.$2!)
+              : _getCoachingRequestsInfo(data.$1),
+        );
     await emit.forEach(
       stream$,
-      onData: ((Person?, List<CoachingRequestInfo>?) data) => CoachState(
-        status: const BlocStatusComplete(),
-        coach: data.$1,
-        receivedCoachingRequests: data.$1 != null ? null : data.$2,
-      ),
+      onData: (data) {
+        if (data is Person) {
+          return CoachState(status: const BlocStatusComplete(), coach: data);
+        } else if (data is List<CoachingRequestInfo>) {
+          return CoachState(
+            status: const BlocStatusComplete(),
+            receivedCoachingRequests: data,
+          );
+        }
+        return const CoachState(status: BlocStatusComplete());
+      },
     );
   }
 
@@ -92,15 +97,11 @@ class CoachBloc
     emitCompleteStatus(emit);
   }
 
-  Stream<Person?> _getCoach(String loggedUserId) => _userRepository
-      .getUserById(userId: loggedUserId)
-      .whereNotNull()
-      .map((User loggedUserData) => loggedUserData.coachId)
-      .switchMap(
-        (String? coachId) => coachId != null
-            ? _personRepository.getPersonById(personId: coachId)
-            : Stream.value(null),
-      );
+  Stream<(String, String?)> _combineWithCoachId(String loggedUserId) =>
+      _userRepository
+          .getUserById(userId: loggedUserId)
+          .whereNotNull()
+          .map((loggedUserData) => (loggedUserData.id, loggedUserData.coachId));
 
   Stream<List<CoachingRequestInfo>?> _getCoachingRequestsInfo(
     String loggedUserId,
@@ -111,25 +112,27 @@ class CoachBloc
           .switchMap(_switchToStreamWithCoachingRequestsInfo);
 
   List<Stream<(String, Person)>>? _combineCoachingRequestIdsWithSendersInfo(
-    List<CoachingRequest>? coachingRequests,
+    List<CoachingRequest> coachingRequests,
   ) =>
-      coachingRequests
-          ?.map(
-            (CoachingRequest request) => Rx.combineLatest2(
-              Stream.value(request.id),
-              _personRepository
-                  .getPersonById(personId: request.senderId)
-                  .whereNotNull(),
-              (requestId, senderInfo) => (requestId, senderInfo),
-            ),
-          )
-          .toList();
+      coachingRequests.isEmpty
+          ? []
+          : coachingRequests
+              .map(
+                (CoachingRequest request) => Rx.combineLatest2(
+                  Stream.value(request.id),
+                  _personRepository
+                      .getPersonById(personId: request.senderId)
+                      .whereNotNull(),
+                  (requestId, senderInfo) => (requestId, senderInfo),
+                ),
+              )
+              .toList();
 
   Stream<List<CoachingRequestInfo>?> _switchToStreamWithCoachingRequestsInfo(
     List<Stream<(String, Person)>>? streams,
   ) =>
-      streams == null
-          ? Stream.value(null)
+      streams == null || streams.isEmpty == true
+          ? Stream.value([])
           : Rx.combineLatest(
               streams,
               (List<(String, Person)> values) => values

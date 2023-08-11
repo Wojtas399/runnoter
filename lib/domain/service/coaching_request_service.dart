@@ -1,11 +1,11 @@
 import '../additional_model/coaching_request.dart';
 
 abstract interface class CoachingRequestService {
-  Stream<List<CoachingRequest>?> getCoachingRequestsBySenderId({
+  Stream<List<CoachingRequest>> getCoachingRequestsBySenderId({
     required String senderId,
   });
 
-  Stream<List<CoachingRequest>?> getCoachingRequestsByReceiverId({
+  Stream<List<CoachingRequest>> getCoachingRequestsByReceiverId({
     required String receiverId,
   });
 
