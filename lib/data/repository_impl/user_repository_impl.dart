@@ -39,14 +39,6 @@ class UserRepositoryImpl extends StateRepository<User>
   }
 
   @override
-  Stream<List<User>?> getUsersByCoachId({required String coachId}) async* {
-    await _loadUsersByCoachIdFromDb(coachId);
-    await for (final users in dataStream$) {
-      yield users?.where((User user) => user.coachId == coachId).toList();
-    }
-  }
-
-  @override
   Future<void> addUser({required User user}) async {
     final firebase.UserDto? userDto = await _dbUserService.addUserData(
       userDto: firebase.UserDto(
@@ -192,25 +184,6 @@ class UserRepositoryImpl extends StateRepository<User>
     final User user = mapUserFromDto(userDto: userDto, settings: settings);
     addEntity(user);
     return user;
-  }
-
-  Future<void> _loadUsersByCoachIdFromDb(String coachId) async {
-    final userDtos = await _dbUserService.loadUsersByCoachId(coachId: coachId);
-    final List<User> loadedUsers = await _loadUserSettings(userDtos);
-    addEntities(loadedUsers);
-  }
-
-  Future<List<User>> _loadUserSettings(List<firebase.UserDto> userDtos) async {
-    final List<User> loadedUsers = [];
-    for (final userDto in userDtos) {
-      final Settings userSettings = await _loadUserSettingsFromDb(userDto.id);
-      final User user = mapUserFromDto(
-        userDto: userDto,
-        settings: userSettings,
-      );
-      loadedUsers.add(user);
-    }
-    return loadedUsers;
   }
 
   Future<Settings> _loadUserSettingsFromDb(String userId) async {

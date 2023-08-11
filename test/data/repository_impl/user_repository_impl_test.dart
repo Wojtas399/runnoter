@@ -6,11 +6,8 @@ import 'package:runnoter/data/repository_impl/user_repository_impl.dart';
 import 'package:runnoter/domain/additional_model/settings.dart';
 import 'package:runnoter/domain/entity/user.dart';
 
-import '../../creators/activities_settings_dto.dart';
-import '../../creators/appearance_settings_dto_creator.dart';
 import '../../creators/settings_creator.dart';
 import '../../creators/user_creator.dart';
-import '../../creators/user_dto_creator.dart';
 import '../../mock/firebase/mock_firebase_activities_settings_service.dart';
 import '../../mock/firebase/mock_firebase_appearance_settings_service.dart';
 import '../../mock/firebase/mock_firebase_user_service.dart';
@@ -109,46 +106,6 @@ void main() {
       expect(
         user$,
         emitsInOrder([expectedUser]),
-      );
-    },
-  );
-
-  test(
-    'get users by coachId, '
-    'should load users by coachId from remote db and should emit all users with matching coachId',
-    () {
-      const String coachId = 'c1';
-      final List<User> existingUsers = [
-        createUser(id: 'u1', coachId: coachId),
-        createUser(id: 'u2', coachId: 'c2'),
-        createUser(id: 'u3', coachId: coachId),
-        createUser(id: 'u4'),
-      ];
-      final List<db.UserDto> loadedUserDtos = [
-        createUserDto(id: 'u5', coachId: coachId),
-        createUserDto(id: 'u6', coachId: coachId),
-      ];
-      final List<User> expectedUsers = [
-        existingUsers.first,
-        existingUsers[2],
-        createUser(id: 'u5', coachId: coachId),
-        createUser(id: 'u6', coachId: coachId),
-      ];
-      dbUserService.mockLoadUsersByCoachId(users: loadedUserDtos);
-      dbAppearanceSettingsService.mockLoadSettingsByUserId(
-        appearanceSettingsDto: createAppearanceSettingsDto(),
-      );
-      dbActivitiesSettingsService.mockLoadSettingsByUserId(
-        activitiesSettingsDto: createActivitiesSettingsDto(),
-      );
-      repository = UserRepositoryImpl(initialState: existingUsers);
-
-      final Stream<List<User>?> users$ =
-          repository.getUsersByCoachId(coachId: coachId);
-
-      expect(
-        users$,
-        emitsInOrder([expectedUsers]),
       );
     },
   );
