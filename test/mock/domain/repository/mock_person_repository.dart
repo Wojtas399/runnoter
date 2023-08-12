@@ -26,4 +26,12 @@ class MockPersonRepository extends Mock implements PersonRepository {
       ),
     ).thenAnswer((_) => Future.value(persons));
   }
+
+  void mockRefreshPersonsByCoachId() {
+    when(
+      () => refreshPersonsByCoachId(
+        coachId: any(named: 'coachId'),
+      ),
+    ).thenAnswer((_) => Future.value());
+  }
 }

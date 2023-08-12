@@ -66,6 +66,11 @@ class ClientsBloc extends BlocWithStatus<ClientsEvent, ClientsState,
           .getCoachingRequestsBySenderId(senderId: loggedUserId)
           .map((requests) => requests.where((request) => !request.isAccepted))
           .map((pendingRequests) => pendingRequests.map(_mapToSentRequest))
+          .doOnData(
+            (_) => _personRepository.refreshPersonsByCoachId(
+              coachId: loggedUserId,
+            ),
+          )
           .switchMap(
             (sentRequests$) => sentRequests$.isEmpty
                 ? Stream.value([])

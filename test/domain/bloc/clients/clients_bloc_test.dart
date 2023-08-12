@@ -56,6 +56,7 @@ void main() {
       when(
         () => personRepository.getPersonById(personId: 'u5'),
       ).thenAnswer((_) => Stream.value(createPerson(id: 'u5')));
+      personRepository.mockRefreshPersonsByCoachId();
     },
     act: (bloc) => bloc.add(const ClientsEventInitialize()),
     expect: () => [
@@ -86,6 +87,9 @@ void main() {
       ).called(1);
       verify(() => personRepository.getPersonById(personId: 'u4')).called(1);
       verify(() => personRepository.getPersonById(personId: 'u5')).called(1);
+      verify(
+        () => personRepository.refreshPersonsByCoachId(coachId: loggedUserId),
+      ).called(1);
     },
   );
 
@@ -100,6 +104,7 @@ void main() {
         persons: [createPerson(id: 'u2'), createPerson(id: 'u3')],
       );
       coachingRequestService.mockGetCoachingRequestsBySenderId(requests: []);
+      personRepository.mockRefreshPersonsByCoachId();
     },
     act: (bloc) => bloc.add(const ClientsEventInitialize()),
     expect: () => [
@@ -118,6 +123,9 @@ void main() {
         () => coachingRequestService.getCoachingRequestsBySenderId(
           senderId: loggedUserId,
         ),
+      ).called(1);
+      verify(
+        () => personRepository.refreshPersonsByCoachId(coachId: loggedUserId),
       ).called(1);
     },
   );
