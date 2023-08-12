@@ -41,7 +41,6 @@ class _State extends State<HomeContent> {
       const MileageRoute(),
       const BloodTestsRoute(),
       const RacesRoute(),
-      const CoachRoute(),
       if (accountType == AccountType.coach) const ClientsRoute(),
       const ProfileRoute(),
     ];

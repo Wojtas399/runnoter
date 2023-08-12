@@ -2,42 +2,44 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
-import '../../../dependency_injection.dart';
-import '../../additional_model/bloc_state.dart';
-import '../../additional_model/bloc_status.dart';
-import '../../additional_model/bloc_with_status.dart';
-import '../../additional_model/coaching_request.dart';
-import '../../entity/person.dart';
-import '../../repository/person_repository.dart';
-import '../../repository/user_repository.dart';
-import '../../service/auth_service.dart';
-import '../../service/coaching_request_service.dart';
+import '../../../../dependency_injection.dart';
+import '../../../additional_model/bloc_state.dart';
+import '../../../additional_model/bloc_status.dart';
+import '../../../additional_model/bloc_with_status.dart';
+import '../../../additional_model/coaching_request.dart';
+import '../../../entity/person.dart';
+import '../../../repository/person_repository.dart';
+import '../../../repository/user_repository.dart';
+import '../../../service/auth_service.dart';
+import '../../../service/coaching_request_service.dart';
 
-part 'coach_event.dart';
-part 'coach_state.dart';
+part 'profile_coach_event.dart';
+part 'profile_coach_state.dart';
 
-class CoachBloc
-    extends BlocWithStatus<CoachEvent, CoachState, CoachBlocInfo, dynamic> {
+class ProfileCoachBloc extends BlocWithStatus<ProfileCoachEvent,
+    ProfileCoachState, ProfileCoachBlocInfo, dynamic> {
   final AuthService _authService;
   final UserRepository _userRepository;
   final PersonRepository _personRepository;
   final CoachingRequestService _coachingRequestService;
 
-  CoachBloc({
-    CoachState state = const CoachState(status: BlocStatusInitial()),
+  ProfileCoachBloc({
+    ProfileCoachState state = const ProfileCoachState(
+      status: BlocStatusInitial(),
+    ),
   })  : _authService = getIt<AuthService>(),
         _userRepository = getIt<UserRepository>(),
         _personRepository = getIt<PersonRepository>(),
         _coachingRequestService = getIt<CoachingRequestService>(),
         super(state) {
-    on<CoachEventInitialize>(_initialize);
-    on<CoachEventAcceptRequest>(_acceptRequest);
-    on<CoachEventDeleteRequest>(_deleteRequest);
+    on<ProfileCoachEventInitialize>(_initialize);
+    on<ProfileCoachEventAcceptRequest>(_acceptRequest);
+    on<ProfileCoachEventDeleteRequest>(_deleteRequest);
   }
 
   Future<void> _initialize(
-    CoachEventInitialize event,
-    Emitter<CoachState> emit,
+    ProfileCoachEventInitialize event,
+    Emitter<ProfileCoachState> emit,
   ) async {
     final Stream stream$ = _authService.loggedUserId$
         .whereNotNull()
@@ -51,21 +53,22 @@ class CoachBloc
       stream$,
       onData: (data) {
         if (data is Person) {
-          return CoachState(status: const BlocStatusComplete(), coach: data);
+          return ProfileCoachState(
+              status: const BlocStatusComplete(), coach: data);
         } else if (data is List<CoachingRequestInfo>) {
-          return CoachState(
+          return ProfileCoachState(
             status: const BlocStatusComplete(),
             receivedCoachingRequests: data,
           );
         }
-        return const CoachState(status: BlocStatusComplete());
+        return const ProfileCoachState(status: BlocStatusComplete());
       },
     );
   }
 
   Future<void> _acceptRequest(
-    CoachEventAcceptRequest event,
-    Emitter<CoachState> emit,
+    ProfileCoachEventAcceptRequest event,
+    Emitter<ProfileCoachState> emit,
   ) async {
     if (state.receivedCoachingRequests == null) return;
     final String? loggedUserId = await _authService.loggedUserId$.first;
@@ -83,12 +86,12 @@ class CoachBloc
       requestId: event.requestId,
       isAccepted: true,
     );
-    emitCompleteStatus(emit, info: CoachBlocInfo.requestAccepted);
+    emitCompleteStatus(emit, info: ProfileCoachBlocInfo.requestAccepted);
   }
 
   Future<void> _deleteRequest(
-    CoachEventDeleteRequest event,
-    Emitter<CoachState> emit,
+    ProfileCoachEventDeleteRequest event,
+    Emitter<ProfileCoachState> emit,
   ) async {
     emitLoadingStatus(emit);
     await _coachingRequestService.deleteCoachingRequest(
@@ -147,4 +150,4 @@ class CoachBloc
             );
 }
 
-enum CoachBlocInfo { requestAccepted }
+enum ProfileCoachBlocInfo { requestAccepted }

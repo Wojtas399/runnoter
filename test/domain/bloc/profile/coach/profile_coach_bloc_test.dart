@@ -3,20 +3,20 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
-import 'package:runnoter/domain/bloc/coach/coach_bloc.dart';
+import 'package:runnoter/domain/bloc/profile/coach/profile_coach_bloc.dart';
 import 'package:runnoter/domain/entity/user.dart';
 import 'package:runnoter/domain/repository/person_repository.dart';
 import 'package:runnoter/domain/repository/user_repository.dart';
 import 'package:runnoter/domain/service/auth_service.dart';
 import 'package:runnoter/domain/service/coaching_request_service.dart';
 
-import '../../../creators/coaching_request_creator.dart';
-import '../../../creators/person_creator.dart';
-import '../../../creators/user_creator.dart';
-import '../../../mock/domain/repository/mock_person_repository.dart';
-import '../../../mock/domain/repository/mock_user_repository.dart';
-import '../../../mock/domain/service/mock_auth_service.dart';
-import '../../../mock/domain/service/mock_coaching_request_service.dart';
+import '../../../../creators/coaching_request_creator.dart';
+import '../../../../creators/person_creator.dart';
+import '../../../../creators/user_creator.dart';
+import '../../../../mock/domain/repository/mock_person_repository.dart';
+import '../../../../mock/domain/repository/mock_user_repository.dart';
+import '../../../../mock/domain/service/mock_auth_service.dart';
+import '../../../../mock/domain/service/mock_coaching_request_service.dart';
 
 void main() {
   final authService = MockAuthService();
@@ -45,9 +45,9 @@ void main() {
     'initialize, '
     'logged user does not exist, '
     'should do nothing',
-    build: () => CoachBloc(),
+    build: () => ProfileCoachBloc(),
     setUp: () => authService.mockGetLoggedUserId(),
-    act: (bloc) => bloc.add(const CoachEventInitialize()),
+    act: (bloc) => bloc.add(const ProfileCoachEventInitialize()),
     expect: () => [],
     verify: (_) => verify(() => authService.loggedUserId$).called(1),
   );
@@ -56,7 +56,7 @@ void main() {
     'initialize, '
     'logged user has a coach, '
     'should load coach and update coach param in state',
-    build: () => CoachBloc(),
+    build: () => ProfileCoachBloc(),
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
       userRepository.mockGetUserById(
@@ -73,9 +73,9 @@ void main() {
       );
       coachingRequestService.mockGetCoachingRequestsByReceiverId(requests: []);
     },
-    act: (bloc) => bloc.add(const CoachEventInitialize()),
+    act: (bloc) => bloc.add(const ProfileCoachEventInitialize()),
     expect: () => [
-      CoachState(
+      ProfileCoachState(
         status: const BlocStatusComplete(),
         coach: createPerson(
           id: 'c1',
@@ -97,7 +97,7 @@ void main() {
     'initialize, '
     'logged user does not have a coach, '
     'should load and emit all received coaching requests',
-    build: () => CoachBloc(),
+    build: () => ProfileCoachBloc(),
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
       userRepository.mockGetUserById(user: createUser(id: loggedUserId));
@@ -115,9 +115,9 @@ void main() {
         () => personRepository.getPersonById(personId: 'u3'),
       ).thenAnswer((_) => Stream.value(createPerson(id: 'u3', name: 'name3')));
     },
-    act: (bloc) => bloc.add(const CoachEventInitialize()),
+    act: (bloc) => bloc.add(const ProfileCoachEventInitialize()),
     expect: () => [
-      CoachState(
+      ProfileCoachState(
         status: const BlocStatusComplete(),
         receivedCoachingRequests: [
           CoachingRequestInfo(
@@ -148,8 +148,8 @@ void main() {
     'accept request, '
     'logged user does not exist, '
     'should emit no logged user info',
-    build: () => CoachBloc(
-      state: CoachState(
+    build: () => ProfileCoachBloc(
+      state: ProfileCoachState(
         status: const BlocStatusComplete(),
         receivedCoachingRequests: [
           CoachingRequestInfo(id: 'r2', sender: createPerson(id: 'u2')),
@@ -158,9 +158,11 @@ void main() {
       ),
     ),
     setUp: () => authService.mockGetLoggedUserId(),
-    act: (bloc) => bloc.add(const CoachEventAcceptRequest(requestId: 'r1')),
+    act: (bloc) => bloc.add(
+      const ProfileCoachEventAcceptRequest(requestId: 'r1'),
+    ),
     expect: () => [
-      CoachState(
+      ProfileCoachState(
         status: const BlocStatusNoLoggedUser(),
         receivedCoachingRequests: [
           CoachingRequestInfo(id: 'r2', sender: createPerson(id: 'u2')),
@@ -174,8 +176,8 @@ void main() {
   blocTest(
     'accept request, '
     "should call coaching request service's method to update request with isAccepted param set as true and should call user repository's method to update logged user with new coach id",
-    build: () => CoachBloc(
-      state: CoachState(
+    build: () => ProfileCoachBloc(
+      state: ProfileCoachState(
         status: const BlocStatusComplete(),
         receivedCoachingRequests: [
           CoachingRequestInfo(id: 'r2', sender: createPerson(id: 'u2')),
@@ -188,18 +190,20 @@ void main() {
       userRepository.mockUpdateUser();
       coachingRequestService.mockUpdateCoachingRequest();
     },
-    act: (bloc) => bloc.add(const CoachEventAcceptRequest(requestId: 'r1')),
+    act: (bloc) => bloc.add(
+      const ProfileCoachEventAcceptRequest(requestId: 'r1'),
+    ),
     expect: () => [
-      CoachState(
+      ProfileCoachState(
         status: const BlocStatusLoading(),
         receivedCoachingRequests: [
           CoachingRequestInfo(id: 'r2', sender: createPerson(id: 'u2')),
           CoachingRequestInfo(id: 'r1', sender: createPerson(id: 'u3')),
         ],
       ),
-      CoachState(
-        status: const BlocStatusComplete<CoachBlocInfo>(
-          info: CoachBlocInfo.requestAccepted,
+      ProfileCoachState(
+        status: const BlocStatusComplete<ProfileCoachBlocInfo>(
+          info: ProfileCoachBlocInfo.requestAccepted,
         ),
         receivedCoachingRequests: [
           CoachingRequestInfo(id: 'r2', sender: createPerson(id: 'u2')),
@@ -224,12 +228,16 @@ void main() {
   blocTest(
     'delete request, '
     "should call coaching request service's method to delete request",
-    build: () => CoachBloc(),
+    build: () => ProfileCoachBloc(),
     setUp: () => coachingRequestService.mockDeleteCoachingRequest(),
-    act: (bloc) => bloc.add(const CoachEventDeleteRequest(requestId: 'r1')),
+    act: (bloc) => bloc.add(
+      const ProfileCoachEventDeleteRequest(requestId: 'r1'),
+    ),
     expect: () => [
-      const CoachState(status: BlocStatusLoading()),
-      const CoachState(status: BlocStatusComplete<CoachBlocInfo>()),
+      const ProfileCoachState(status: BlocStatusLoading()),
+      const ProfileCoachState(
+        status: BlocStatusComplete<ProfileCoachBlocInfo>(),
+      ),
     ],
     verify: (_) => verify(
       () => coachingRequestService.deleteCoachingRequest(requestId: 'r1'),

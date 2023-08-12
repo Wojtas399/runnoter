@@ -1,10 +1,10 @@
-part of 'coach_bloc.dart';
+part of 'profile_coach_bloc.dart';
 
-class CoachState extends BlocState<CoachState> {
+class ProfileCoachState extends BlocState<ProfileCoachState> {
   final List<CoachingRequestInfo>? receivedCoachingRequests;
   final Person? coach;
 
-  const CoachState({
+  const ProfileCoachState({
     required super.status,
     this.receivedCoachingRequests,
     this.coach,
@@ -14,12 +14,12 @@ class CoachState extends BlocState<CoachState> {
   List<Object?> get props => [status, receivedCoachingRequests, coach];
 
   @override
-  CoachState copyWith({
+  ProfileCoachState copyWith({
     BlocStatus? status,
     List<CoachingRequestInfo>? receivedCoachingRequests,
     Person? coach,
   }) =>
-      CoachState(
+      ProfileCoachState(
         status: status ?? const BlocStatusComplete(),
         receivedCoachingRequests:
             receivedCoachingRequests ?? this.receivedCoachingRequests,

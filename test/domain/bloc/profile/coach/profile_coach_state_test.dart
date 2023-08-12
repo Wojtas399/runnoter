@@ -1,15 +1,15 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
-import 'package:runnoter/domain/bloc/coach/coach_bloc.dart';
+import 'package:runnoter/domain/bloc/profile/coach/profile_coach_bloc.dart';
 import 'package:runnoter/domain/entity/person.dart';
 
-import '../../../creators/person_creator.dart';
+import '../../../../creators/person_creator.dart';
 
 void main() {
-  late CoachState state;
+  late ProfileCoachState state;
 
   setUp(
-    () => state = const CoachState(status: BlocStatusInitial()),
+    () => state = const ProfileCoachState(status: BlocStatusInitial()),
   );
 
   test(
