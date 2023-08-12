@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/cubit/clients_cubit.dart';
+import '../../../domain/bloc/clients/clients_bloc.dart';
 import '../../../domain/entity/person.dart';
 import '../../component/big_button_component.dart';
 import '../../component/body/medium_body_component.dart';
@@ -22,7 +22,7 @@ class ClientsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => ClientsCubit()..initialize(),
+      create: (_) => ClientsBloc()..add(const ClientsEventInitialize()),
       child: const _Content(),
     );
   }
@@ -64,7 +64,7 @@ class _Clients extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<Person>? clients = context.select(
-      (ClientsCubit cubit) => cubit.state,
+      (ClientsBloc bloc) => bloc.state.clients,
     );
 
     return switch (clients) {
