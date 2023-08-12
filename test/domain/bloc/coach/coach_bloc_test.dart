@@ -103,8 +103,9 @@ void main() {
       userRepository.mockGetUserById(user: createUser(id: loggedUserId));
       coachingRequestService.mockGetCoachingRequestsByReceiverId(
         requests: [
-          createCoachingRequest(id: 'i1', senderId: 'u2'),
-          createCoachingRequest(id: 'i2', senderId: 'u3'),
+          createCoachingRequest(id: 'i1', senderId: 'u2', isAccepted: false),
+          createCoachingRequest(id: 'i2', senderId: 'u3', isAccepted: false),
+          createCoachingRequest(id: 'i3', senderId: 'u4', isAccepted: true),
         ],
       );
       when(

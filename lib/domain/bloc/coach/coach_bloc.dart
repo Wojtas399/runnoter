@@ -108,11 +108,12 @@ class CoachBloc
   ) =>
       _coachingRequestService
           .getCoachingRequestsByReceiverId(receiverId: loggedUserId)
+          .map((requests) => requests.where((request) => !request.isAccepted))
           .map(_combineCoachingRequestIdsWithSendersInfo)
           .switchMap(_switchToStreamWithCoachingRequestsInfo);
 
   List<Stream<(String, Person)>>? _combineCoachingRequestIdsWithSendersInfo(
-    List<CoachingRequest> coachingRequests,
+    Iterable<CoachingRequest> coachingRequests,
   ) =>
       coachingRequests.isEmpty
           ? []
