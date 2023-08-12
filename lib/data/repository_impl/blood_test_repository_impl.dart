@@ -122,7 +122,7 @@ class BloodTestRepositoryImpl extends StateRepository<BloodTest>
     );
     if (testsDtos != null) {
       final List<BloodTest> tests = testsDtos.map(mapBloodTestFromDto).toList();
-      addEntities(tests);
+      addOrUpdateEntities(tests);
     }
   }
 }

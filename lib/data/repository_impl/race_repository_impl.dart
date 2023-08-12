@@ -193,7 +193,7 @@ class RaceRepositoryImpl extends StateRepository<Race>
     );
     if (raceDtos != null) {
       final List<Race> races = raceDtos.map(mapRaceFromDto).toList();
-      addEntities(races);
+      addOrUpdateEntities(races);
     }
   }
 
@@ -207,7 +207,7 @@ class RaceRepositoryImpl extends StateRepository<Race>
     );
     if (raceDtos != null) {
       final List<Race> races = raceDtos.map(mapRaceFromDto).toList();
-      addEntities(races);
+      addOrUpdateEntities(races);
     }
   }
 
@@ -216,7 +216,7 @@ class RaceRepositoryImpl extends StateRepository<Race>
         await _firebaseRaceService.loadAllRaces(userId: userId);
     if (raceDtos != null) {
       final List<Race> races = raceDtos.map(mapRaceFromDto).toList();
-      addEntities(races);
+      addOrUpdateEntities(races);
     }
   }
 }

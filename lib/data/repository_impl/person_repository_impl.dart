@@ -73,7 +73,7 @@ class PersonRepositoryImpl extends StateRepository<Person>
         await _firebaseUserService.loadUsersByCoachId(coachId: coachId);
     if (userDtos.isEmpty) return;
     final List<Person> persons = userDtos.map(mapPersonFromUserDto).toList();
-    addEntities(persons);
+    addOrUpdateEntities(persons);
   }
 
   Future<void> _searchForPersonsInDb(String searchQuery) async {
@@ -81,6 +81,6 @@ class PersonRepositoryImpl extends StateRepository<Person>
         await _firebaseUserService.searchForUsers(searchQuery: searchQuery);
     final List<Person> persons =
         foundUserDtos.map(mapPersonFromUserDto).toList();
-    addEntities(persons);
+    addOrUpdateEntities(persons);
   }
 }

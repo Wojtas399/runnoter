@@ -220,6 +220,6 @@ class HealthMeasurementRepositoryImpl extends StateRepository<HealthMeasurement>
   void _addDtos(List<HealthMeasurementDto> dtos) {
     final List<HealthMeasurement> measurements =
         dtos.map(mapHealthMeasurementFromFirebase).toList();
-    addEntities(measurements);
+    addOrUpdateEntities(measurements);
   }
 }

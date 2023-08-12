@@ -165,7 +165,7 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
             (WorkoutDto workoutDto) => mapWorkoutFromFirebase(workoutDto),
           )
           .toList();
-      addEntities(workouts);
+      addOrUpdateEntities(workouts);
     }
   }
 
@@ -192,7 +192,7 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
     if (workoutDtos != null) {
       final List<Workout> workouts =
           workoutDtos.map(mapWorkoutFromFirebase).toList();
-      addEntities(workouts);
+      addOrUpdateEntities(workouts);
     }
   }
 
@@ -205,7 +205,7 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
     if (workoutDtos != null) {
       final List<Workout> workouts =
           workoutDtos.map(mapWorkoutFromFirebase).toList();
-      addEntities(workouts);
+      addOrUpdateEntities(workouts);
     }
   }
 }

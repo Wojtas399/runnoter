@@ -85,7 +85,7 @@ void main() {
   );
 
   test(
-    'add entities, '
+    'add or update entities, '
     'should add new entities and update existing entities',
     () async {
       final List<TestModel> existingEntities = [
@@ -99,7 +99,7 @@ void main() {
       ];
       repository = createRepository(initialData: existingEntities);
 
-      repository.addEntities(entitiesToAdd);
+      repository.addOrUpdateEntities(entitiesToAdd);
 
       expect(
         await repository.dataStream$.first,
