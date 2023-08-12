@@ -34,33 +34,31 @@ class ClientsBloc
     ClientsEventInitialize event,
     Emitter<ClientsState> emit,
   ) async {
-    final Stream<(List<InvitedPerson>, List<Person>)> stream$ =
+    final Stream<(List<SentCoachingRequest>, List<Person>)> stream$ =
         _authService.loggedUserId$.whereNotNull().switchMap(
               (String loggedUserId) => Rx.combineLatest2(
-                _getInvitedPersons(loggedUserId),
+                _getSentRequests(loggedUserId),
                 _getClients(loggedUserId),
                 (invitedPersons, clients) => (invitedPersons, clients),
               ),
             );
     await emit.forEach(
       stream$,
-      onData: ((List<InvitedPerson>, List<Person>) data) => state.copyWith(
-        invitedPersons: data.$1,
-        clients: data.$2,
-      ),
+      onData: ((List<SentCoachingRequest>, List<Person>) data) =>
+          state.copyWith(sentRequests: data.$1, clients: data.$2),
     );
   }
 
-  Stream<List<InvitedPerson>> _getInvitedPersons(String loggedUserId) =>
+  Stream<List<SentCoachingRequest>> _getSentRequests(String loggedUserId) =>
       _coachingRequestService
           .getCoachingRequestsBySenderId(senderId: loggedUserId)
           .map(
-            (List<CoachingRequest> requests) => requests.map(_getInvitedPerson),
+            (List<CoachingRequest> requests) => requests.map(_getSentRequest),
           )
           .switchMap(
-            (invitedPersons$) => Rx.combineLatest(
-              invitedPersons$,
-              (List<InvitedPerson> invitedPersons) => invitedPersons,
+            (sentRequests$) => Rx.combineLatest(
+              sentRequests$,
+              (List<SentCoachingRequest> sentRequests) => sentRequests,
             ),
           );
 
@@ -68,14 +66,12 @@ class ClientsBloc
       .getPersonsByCoachId(coachId: loggedUserId)
       .map((List<Person>? clients) => [...?clients]);
 
-  Stream<InvitedPerson> _getInvitedPerson(CoachingRequest request) =>
+  Stream<SentCoachingRequest> _getSentRequest(CoachingRequest request) =>
       _personRepository
           .getPersonById(personId: request.receiverId)
           .whereNotNull()
           .map(
-            (Person person) => InvitedPerson(
-              coachingRequestId: request.id,
-              person: person,
-            ),
+            (Person person) =>
+                SentCoachingRequest(requestId: request.id, receiver: person),
           );
 }

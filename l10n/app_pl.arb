@@ -737,8 +737,8 @@
   "@clientsSearchUser": {
     "description": "Label of the button to search user"
   },
-  "clientsPendingRequests": "Oczekujące prośby",
-  "@clientsPendingRequests": {
+  "clientsSentRequests": "Wysłane prośby",
+  "@clientsSentRequests": {
     "description": "Label of the pending requests section"
   },
   "clientsUndoRequestConfirmationDialogTitle": "Cofnij prośbę",

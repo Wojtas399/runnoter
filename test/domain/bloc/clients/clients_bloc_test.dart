@@ -36,7 +36,7 @@ void main() {
 
   blocTest(
     'initialize, '
-    'should emit clients and invited persons',
+    'should emit clients and sent requests',
     build: () => ClientsBloc(),
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
@@ -60,14 +60,14 @@ void main() {
     expect: () => [
       ClientsState(
         status: const BlocStatusComplete(),
-        invitedPersons: [
-          InvitedPerson(
-            coachingRequestId: 'r1',
-            person: createPerson(id: 'u4'),
+        sentRequests: [
+          SentCoachingRequest(
+            requestId: 'r1',
+            receiver: createPerson(id: 'u4'),
           ),
-          InvitedPerson(
-            coachingRequestId: 'r2',
-            person: createPerson(id: 'u5'),
+          SentCoachingRequest(
+            requestId: 'r2',
+            receiver: createPerson(id: 'u5'),
           ),
         ],
         clients: [createPerson(id: 'u2'), createPerson(id: 'u3')],

@@ -26,18 +26,18 @@ void main() {
   );
 
   test(
-    'copy with invitedPersons',
+    'copy with sentRequests',
     () {
-      final List<InvitedPerson> expectedInvitedPersons = [
-        InvitedPerson(coachingRequestId: 'r1', person: createPerson(id: 'p1')),
-        InvitedPerson(coachingRequestId: 'r2', person: createPerson(id: 'p2')),
+      final List<SentCoachingRequest> expectedSentRequests = [
+        SentCoachingRequest(requestId: 'r1', receiver: createPerson(id: 'p1')),
+        SentCoachingRequest(requestId: 'r2', receiver: createPerson(id: 'p2')),
       ];
 
-      state = state.copyWith(invitedPersons: expectedInvitedPersons);
+      state = state.copyWith(sentRequests: expectedSentRequests);
       final state2 = state.copyWith();
 
-      expect(state.invitedPersons, expectedInvitedPersons);
-      expect(state2.invitedPersons, expectedInvitedPersons);
+      expect(state.sentRequests, expectedSentRequests);
+      expect(state2.sentRequests, expectedSentRequests);
     },
   );
 

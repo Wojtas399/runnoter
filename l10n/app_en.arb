@@ -204,7 +204,7 @@
   "@__________CLIENTS__________": {},
   "clientsTitle": "Clients",
   "clientsSearchUsers": "Search users",
-  "clientsPendingRequests": "Pending requests",
+  "clientsSentRequests": "Sent requests",
   "clientsUndoRequestConfirmationDialogTitle": "Undo request",
   "clientsUndoRequestConfirmationDialogMessage": "Are you sure you want to undo a request sent to ",
   "clientsMessage": "Message",

@@ -10,14 +10,14 @@ import '../../extension/context_extensions.dart';
 import '../../extension/gender_extensions.dart';
 import '../../service/dialog_service.dart';
 
-class ClientsPendingRequests extends StatefulWidget {
-  const ClientsPendingRequests({super.key});
+class ClientsSentRequests extends StatefulWidget {
+  const ClientsSentRequests({super.key});
 
   @override
   State<StatefulWidget> createState() => _State();
 }
 
-class _State extends State<ClientsPendingRequests> {
+class _State extends State<ClientsSentRequests> {
   bool _isExpanded = true;
 
   @override
@@ -40,7 +40,7 @@ class _State extends State<ClientsPendingRequests> {
               right: context.isMobileSize ? 16 : 0,
               top: 8,
             ),
-            child: TitleLarge(Str.of(context).clientsPendingRequests),
+            child: TitleLarge(Str.of(context).clientsSentRequests),
           ),
           body: Padding(
             padding: EdgeInsets.symmetric(
@@ -59,11 +59,11 @@ class _Content extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<InvitedPerson>? invitedPersons = context.select(
-      (ClientsBloc bloc) => bloc.state.invitedPersons,
+    final List<SentCoachingRequest>? sentRequests = context.select(
+      (ClientsBloc bloc) => bloc.state.sentRequests,
     );
 
-    return switch (invitedPersons) {
+    return switch (sentRequests) {
       null => const SizedBox(
           height: 80,
           child: Center(
@@ -84,27 +84,27 @@ class _Content extends StatelessWidget {
           shrinkWrap: true,
           children: ListTile.divideTiles(
             context: context,
-            tiles: invitedPersons.map((person) => _InvitedPersonItem(person)),
+            tiles: sentRequests.map((request) => _SentRequestItem(request)),
           ).toList(),
         ),
     };
   }
 }
 
-class _InvitedPersonItem extends StatelessWidget {
-  final InvitedPerson invitedPerson;
+class _SentRequestItem extends StatelessWidget {
+  final SentCoachingRequest request;
 
-  const _InvitedPersonItem(this.invitedPerson);
+  const _SentRequestItem(this.request);
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
       contentPadding: const EdgeInsets.symmetric(horizontal: 8),
       title: Text(
-        '${invitedPerson.person.name} ${invitedPerson.person.surname}',
+        '${request.receiver.name} ${request.receiver.surname}',
       ),
-      subtitle: Text(invitedPerson.person.email),
-      leading: Icon(invitedPerson.person.gender.toIconData()),
+      subtitle: Text(request.receiver.email),
+      leading: Icon(request.receiver.gender.toIconData()),
       trailing: IconButton(
         onPressed: () => _onDeleteIconPressed(context),
         icon: const Icon(Icons.delete_outline),
@@ -123,7 +123,7 @@ class _InvitedPersonItem extends StatelessWidget {
   Future<bool> _askForRequestDeletionConfirmation(
     BuildContext context,
   ) async {
-    final Person personInfo = invitedPerson.person;
+    final Person receiverInfo = request.receiver;
     final TextStyle? textStyle = Theme.of(context).textTheme.bodyMedium;
     final str = Str.of(context);
 
@@ -138,7 +138,7 @@ class _InvitedPersonItem extends StatelessWidget {
             ),
             TextSpan(
               text:
-                  '${personInfo.name} ${personInfo.surname} (${personInfo.email})',
+                  '${receiverInfo.name} ${receiverInfo.surname} (${receiverInfo.email})',
               style: textStyle?.copyWith(fontWeight: FontWeight.bold),
             ),
           ],

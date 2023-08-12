@@ -1,37 +1,37 @@
 part of 'clients_bloc.dart';
 
 class ClientsState extends BlocState<ClientsState> {
-  final List<InvitedPerson>? invitedPersons;
+  final List<SentCoachingRequest>? sentRequests;
   final List<Person>? clients;
 
   const ClientsState({
     required super.status,
-    this.invitedPersons,
+    this.sentRequests,
     this.clients,
   });
 
   @override
-  List<Object?> get props => [status, invitedPersons, clients];
+  List<Object?> get props => [status, sentRequests, clients];
 
   @override
   ClientsState copyWith({
     BlocStatus? status,
-    List<InvitedPerson>? invitedPersons,
+    List<SentCoachingRequest>? sentRequests,
     List<Person>? clients,
   }) =>
       ClientsState(
         status: status ?? const BlocStatusComplete(),
-        invitedPersons: invitedPersons ?? this.invitedPersons,
+        sentRequests: sentRequests ?? this.sentRequests,
         clients: clients ?? this.clients,
       );
 }
 
-class InvitedPerson extends Equatable {
-  final String coachingRequestId;
-  final Person person;
+class SentCoachingRequest extends Equatable {
+  final String requestId;
+  final Person receiver;
 
-  const InvitedPerson({required this.coachingRequestId, required this.person});
+  const SentCoachingRequest({required this.requestId, required this.receiver});
 
   @override
-  List<Object?> get props => [coachingRequestId, person];
+  List<Object?> get props => [requestId, receiver];
 }
