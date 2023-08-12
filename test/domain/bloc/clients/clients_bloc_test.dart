@@ -45,8 +45,9 @@ void main() {
       );
       coachingRequestService.mockGetCoachingRequestsBySenderId(
         requests: [
-          createCoachingRequest(id: 'r1', receiverId: 'u4'),
-          createCoachingRequest(id: 'r2', receiverId: 'u5'),
+          createCoachingRequest(id: 'r1', receiverId: 'u4', isAccepted: false),
+          createCoachingRequest(id: 'r2', receiverId: 'u5', isAccepted: false),
+          createCoachingRequest(id: 'r3', receiverId: 'u6', isAccepted: true),
         ],
       );
       when(
@@ -86,5 +87,57 @@ void main() {
       verify(() => personRepository.getPersonById(personId: 'u4')).called(1);
       verify(() => personRepository.getPersonById(personId: 'u5')).called(1);
     },
+  );
+
+  blocTest(
+    'initialize, '
+    'there are no sent requests, '
+    'should emit sent requests param as empty array',
+    build: () => ClientsBloc(),
+    setUp: () {
+      authService.mockGetLoggedUserId(userId: loggedUserId);
+      personRepository.mockGetPersonsByCoachId(
+        persons: [createPerson(id: 'u2'), createPerson(id: 'u3')],
+      );
+      coachingRequestService.mockGetCoachingRequestsBySenderId(requests: []);
+    },
+    act: (bloc) => bloc.add(const ClientsEventInitialize()),
+    expect: () => [
+      ClientsState(
+        status: const BlocStatusComplete(),
+        sentRequests: const [],
+        clients: [createPerson(id: 'u2'), createPerson(id: 'u3')],
+      ),
+    ],
+    verify: (_) {
+      verify(() => authService.loggedUserId$).called(1);
+      verify(
+        () => personRepository.getPersonsByCoachId(coachId: loggedUserId),
+      ).called(1);
+      verify(
+        () => coachingRequestService.getCoachingRequestsBySenderId(
+          senderId: loggedUserId,
+        ),
+      ).called(1);
+    },
+  );
+
+  blocTest(
+    'delete request, '
+    "should call coaching request service's method to delete request, ",
+    build: () => ClientsBloc(),
+    setUp: () => coachingRequestService.mockDeleteCoachingRequest(),
+    act: (bloc) => bloc.add(const ClientsEventDeleteRequest(requestId: 'r1')),
+    expect: () => [
+      const ClientsState(status: BlocStatusLoading()),
+      const ClientsState(
+        status: BlocStatusComplete<ClientsBlocInfo>(
+          info: ClientsBlocInfo.requestDeleted,
+        ),
+      ),
+    ],
+    verify: (_) => verify(
+      () => coachingRequestService.deleteCoachingRequest(requestId: 'r1'),
+    ).called(1),
   );
 }

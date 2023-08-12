@@ -749,6 +749,10 @@
   "@clientsUndoRequestConfirmationDialogMessage": {
     "description": "Message of the dialog to confirm to undo request"
   },
+  "clientsSuccessfullyUndidRequest": "Pomyślnie cofnięto wysłaną prośbę",
+  "@clientsSuccessfullyUndidRequest": {
+    "description": "Message of successfully undid sent message"
+  },
   "clientsMessage": "Wiadomość",
   "@clientsMessage": {
     "description": "Label of the button to send message"

@@ -207,6 +207,7 @@
   "clientsSentRequests": "Sent requests",
   "clientsUndoRequestConfirmationDialogTitle": "Undo request",
   "clientsUndoRequestConfirmationDialogMessage": "Are you sure you want to undo a request sent to ",
+  "clientsSuccessfullyUndidRequest": "Successfully undid sent request",
   "clientsMessage": "Message",
   "clientsNoSentCoachingRequests": "No sent coaching requests",
   "clientsNoClientsTitle": "No clients",

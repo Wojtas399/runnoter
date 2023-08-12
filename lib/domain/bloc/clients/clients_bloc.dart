@@ -15,8 +15,8 @@ import '../../service/coaching_request_service.dart';
 part 'clients_event.dart';
 part 'clients_state.dart';
 
-class ClientsBloc
-    extends BlocWithStatus<ClientsEvent, ClientsState, dynamic, dynamic> {
+class ClientsBloc extends BlocWithStatus<ClientsEvent, ClientsState,
+    ClientsBlocInfo, dynamic> {
   final AuthService _authService;
   final CoachingRequestService _coachingRequestService;
   final PersonRepository _personRepository;
@@ -28,6 +28,7 @@ class ClientsBloc
         _personRepository = getIt<PersonRepository>(),
         super(state) {
     on<ClientsEventInitialize>(_initialize);
+    on<ClientsEventDeleteRequest>(_deleteRequest);
   }
 
   Future<void> _initialize(
@@ -49,29 +50,45 @@ class ClientsBloc
     );
   }
 
+  Future<void> _deleteRequest(
+    ClientsEventDeleteRequest event,
+    Emitter<ClientsState> emit,
+  ) async {
+    emitLoadingStatus(emit);
+    await _coachingRequestService.deleteCoachingRequest(
+      requestId: event.requestId,
+    );
+    emitCompleteStatus(emit, info: ClientsBlocInfo.requestDeleted);
+  }
+
   Stream<List<SentCoachingRequest>> _getSentRequests(String loggedUserId) =>
       _coachingRequestService
           .getCoachingRequestsBySenderId(senderId: loggedUserId)
-          .map(
-            (List<CoachingRequest> requests) => requests.map(_getSentRequest),
-          )
+          .map((requests) => requests.where((request) => !request.isAccepted))
+          .map((pendingRequests) => pendingRequests.map(_mapToSentRequest))
           .switchMap(
-            (sentRequests$) => Rx.combineLatest(
-              sentRequests$,
-              (List<SentCoachingRequest> sentRequests) => sentRequests,
-            ),
+            (sentRequests$) => sentRequests$.isEmpty
+                ? Stream.value([])
+                : Rx.combineLatest(
+                    sentRequests$,
+                    (List<SentCoachingRequest> sentRequests) => sentRequests,
+                  ),
           );
 
   Stream<List<Person>> _getClients(String loggedUserId) => _personRepository
       .getPersonsByCoachId(coachId: loggedUserId)
       .map((List<Person>? clients) => [...?clients]);
 
-  Stream<SentCoachingRequest> _getSentRequest(CoachingRequest request) =>
+  Stream<SentCoachingRequest> _mapToSentRequest(CoachingRequest request) =>
       _personRepository
           .getPersonById(personId: request.receiverId)
           .whereNotNull()
           .map(
-            (Person person) =>
-                SentCoachingRequest(requestId: request.id, receiver: person),
+            (Person person) => SentCoachingRequest(
+              requestId: request.id,
+              receiver: person,
+            ),
           );
 }
+
+enum ClientsBlocInfo { requestDeleted }

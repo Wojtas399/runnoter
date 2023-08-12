@@ -51,12 +51,7 @@ class _Content extends StatelessWidget {
           title: Str.of(context).clientsNoClientsTitle,
           subtitle: Str.of(context).clientsNoClientsMessage,
         ),
-      [...] => ListView(
-          children: ListTile.divideTiles(
-            context: context,
-            tiles: clients.map((Person client) => _ClientItem(client)),
-          ).toList(),
-        ),
+      [...] => const Text('Users exist!'),
     };
   }
 }

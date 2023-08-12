@@ -70,14 +70,17 @@ class _Content extends StatelessWidget {
             child: CircularProgressIndicator(),
           ),
         ),
-      [] => Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            BodyLarge(
-              Str.of(context).clientsNoSentCoachingRequests,
-              color: Theme.of(context).colorScheme.outline,
-            ),
-          ],
+      [] => Padding(
+          padding: const EdgeInsets.only(top: 8),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              BodyLarge(
+                Str.of(context).clientsNoSentCoachingRequests,
+                color: Theme.of(context).colorScheme.outline,
+              ),
+            ],
+          ),
         ),
       [...] => ListView(
           physics: const NeverScrollableScrollPhysics(),
@@ -113,10 +116,11 @@ class _SentRequestItem extends StatelessWidget {
   }
 
   Future<void> _onDeleteIconPressed(BuildContext context) async {
+    final ClientsBloc bloc = context.read<ClientsBloc>();
     final bool isDeletionConfirmed =
         await _askForRequestDeletionConfirmation(context);
     if (isDeletionConfirmed) {
-      //TODO
+      bloc.add(ClientsEventDeleteRequest(requestId: request.requestId));
     }
   }
 
