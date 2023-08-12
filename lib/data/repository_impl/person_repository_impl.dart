@@ -55,6 +55,11 @@ class PersonRepositoryImpl extends StateRepository<Person>
     return await matchingPersons$.first;
   }
 
+  @override
+  Future<void> refreshPersonsByCoachId({required String coachId}) async {
+    await _loadPersonsByCoachIdFromDb(coachId);
+  }
+
   Future<Person?> _loadPersonByIdFromDb(String personId) async {
     final userDto = await _firebaseUserService.loadUserById(userId: personId);
     if (userDto == null) return null;

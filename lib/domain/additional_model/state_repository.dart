@@ -39,6 +39,7 @@ class StateRepository<T extends Entity> {
     _dataStream.add(updatedData);
   }
 
+  //TODO: Rename it to addOrUpdateEntities
   void addEntities(List<T> entities) {
     final List<T> updatedData = [...?_dataStream.value];
     final List<String> existingEntityIds = _getIdsOfExistingEntities();

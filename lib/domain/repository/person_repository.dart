@@ -6,4 +6,6 @@ abstract interface class PersonRepository {
   Stream<List<Person>?> getPersonsByCoachId({required String coachId});
 
   Future<List<Person>> searchForPersons({required String searchQuery});
+
+  Future<void> refreshPersonsByCoachId({required String coachId});
 }

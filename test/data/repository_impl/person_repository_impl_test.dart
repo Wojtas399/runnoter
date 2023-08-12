@@ -207,4 +207,39 @@ void main() {
       );
     },
   );
+
+  test(
+    'refresh persons by coach id, '
+    'should load persons by coach id from db and should update them in state',
+    () async {
+      const String coachId = 'c1';
+      final List<Person> existingPersons = [
+        createPerson(id: 'u1', name: 'name1', coachId: coachId),
+        createPerson(id: 'u2', name: 'name2', coachId: coachId),
+      ];
+      final List<firebase.UserDto> loadedUserDtos = [
+        createUserDto(id: 'u1', name: 'new name1', coachId: coachId),
+        createUserDto(id: 'u2', name: 'new name2', coachId: coachId),
+        createUserDto(id: 'u3', name: 'new name3', coachId: coachId),
+      ];
+      final List<Person> expectedPersons = [
+        createPerson(id: 'u1', name: 'new name1', coachId: coachId),
+        createPerson(id: 'u2', name: 'new name2', coachId: coachId),
+        createPerson(id: 'u3', name: 'new name3', coachId: coachId),
+      ];
+      firebaseUserService.mockLoadUsersByCoachId(users: loadedUserDtos);
+      repository = PersonRepositoryImpl(initialData: existingPersons);
+
+      final Stream<List<Person>?> repositoryState$ = repository.dataStream$;
+      repository.refreshPersonsByCoachId(coachId: coachId);
+
+      expect(
+        repositoryState$,
+        emitsInOrder([
+          existingPersons,
+          expectedPersons,
+        ]),
+      );
+    },
+  );
 }
