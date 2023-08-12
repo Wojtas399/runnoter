@@ -8,4 +8,6 @@ abstract interface class PersonRepository {
   Future<List<Person>> searchForPersons({required String searchQuery});
 
   Future<void> refreshPersonsByCoachId({required String coachId});
+
+  Future<void> removeCoachOfPerson({required String personId});
 }

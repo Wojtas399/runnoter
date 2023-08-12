@@ -242,4 +242,37 @@ void main() {
       );
     },
   );
+
+  test(
+    'remove coach of person, '
+    "should call firebase user service's method to update user with coach set as null and should update user in state",
+    () async {
+      final List<Person> existingPersons = [
+        createPerson(id: 'p1', coachId: 'c1'),
+        createPerson(id: 'p2', coachId: 'c2'),
+        createPerson(id: 'p3', coachId: null),
+      ];
+      final firebase.UserDto updatedUserDto = createUserDto(
+        id: 'p1',
+        coachId: null,
+      );
+      final Person expectedUpdatedPerson = createPerson(
+        id: 'p1',
+        coachId: null,
+      );
+      firebaseUserService.mockUpdateUserData(userDto: updatedUserDto);
+      repository = PersonRepositoryImpl(initialData: existingPersons);
+
+      final Stream<Person?> person$ = repository.getPersonById(personId: 'p1');
+      await repository.removeCoachOfPerson(personId: 'p1');
+
+      expect(person$, emitsInOrder([expectedUpdatedPerson]));
+      verify(
+        () => firebaseUserService.updateUserData(
+          userId: 'p1',
+          coachIdAsNull: true,
+        ),
+      ).called(1);
+    },
+  );
 }
