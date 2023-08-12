@@ -18,21 +18,16 @@ class FirebaseUserService {
   }
 
   Future<List<UserDto>> searchForUsers({required String searchQuery}) async {
-    final usersRef = getUsersRef();
-    final nameQuerySnapshot = await usersRef
-        .where(nameField, isGreaterThanOrEqualTo: searchQuery)
-        .get();
-    final surnameQuerySnapshot = await usersRef
-        .where(surnameField, isGreaterThanOrEqualTo: searchQuery)
-        .get();
-    final emailQuerySnapshot = await usersRef
-        .where(emailField, isGreaterThanOrEqualTo: searchQuery)
-        .get();
-    return [
-      ...nameQuerySnapshot.docs.map((docSnapshot) => docSnapshot.data()),
-      ...surnameQuerySnapshot.docs.map((docSnapshot) => docSnapshot.data()),
-      ...emailQuerySnapshot.docs.map((docSnapshot) => docSnapshot.data()),
-    ];
+    final snapshot = await getUsersRef().get();
+    final userDtos = snapshot.docs.map((doc) => doc.data());
+    return userDtos
+        .where(
+          (UserDto userDto) =>
+              userDto.name.contains(searchQuery) ||
+              userDto.surname.contains(searchQuery) ||
+              userDto.email.contains(searchQuery),
+        )
+        .toList();
   }
 
   Future<UserDto?> addUserData({required UserDto userDto}) async {

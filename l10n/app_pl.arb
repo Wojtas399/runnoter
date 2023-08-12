@@ -737,11 +737,27 @@
   "@clientsSearchUser": {
     "description": "Label of the button to search user"
   },
+  "clientsPendingRequests": "Oczekujące prośby",
+  "@clientsPendingRequests": {
+    "description": "Label of the pending requests section"
+  },
+  "clientsUndoRequestConfirmationDialogTitle": "Cofnij prośbę",
+  "@clientsUndoRequestConfirmationDialogTitle": {
+    "description": "Title of the dialog to confirm to undo request"
+  },
+  "clientsUndoRequestConfirmationDialogMessage": "Czy na pewno chcesz cofnąć prośbę wysłaną do ",
+  "@clientsUndoRequestConfirmationDialogMessage": {
+    "description": "Message of the dialog to confirm to undo request"
+  },
   "clientsMessage": "Wiadomość",
   "@clientsMessage": {
     "description": "Label of the button to send message"
   },
-  "clientsNoClientsTitle": "Brak zawodów",
+  "clientsNoSentCoachingRequests": "Brak wysłanych próśb o trenowanie",
+  "@clientsNoSentCoachingRequests": {
+    "description": "Title of the info about no sent coaching requests"
+  },
+  "clientsNoClientsTitle": "Brak klientów",
   "@clientsNoClientsTitle": {
     "description": "Title of the info about the lack of clients"
   },
@@ -1135,6 +1151,7 @@
   "create": "Utwórz",
   "submit": "Wyślij",
   "accept": "Akceptuj",
+  "undo": "Cofnij",
   "@__________VALIDATOR_MESSAGES__________": {},
   "requiredFieldMessage": "To pole jest wymagane",
   "@requiredFieldMessage": {
