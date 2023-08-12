@@ -71,7 +71,11 @@ class _MobileContent extends StatelessWidget {
     return const Column(
       children: [
         ClientsSentRequests(),
-        Gap24(),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16),
+          child: Divider(),
+        ),
+        Gap8(),
         ClientsList(),
       ],
     );

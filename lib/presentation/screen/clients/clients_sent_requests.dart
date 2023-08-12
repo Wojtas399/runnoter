@@ -102,7 +102,9 @@ class _SentRequestItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      contentPadding: const EdgeInsets.symmetric(horizontal: 8),
+      contentPadding: EdgeInsets.symmetric(
+        horizontal: context.isMobileSize ? 8 : 0,
+      ),
       title: Text(
         '${request.receiver.name} ${request.receiver.surname}',
       ),
@@ -110,7 +112,10 @@ class _SentRequestItem extends StatelessWidget {
       leading: Icon(request.receiver.gender.toIconData()),
       trailing: IconButton(
         onPressed: () => _onDeleteIconPressed(context),
-        icon: const Icon(Icons.delete_outline),
+        icon: Icon(
+          Icons.delete_outline,
+          color: Theme.of(context).colorScheme.error,
+        ),
       ),
     );
   }

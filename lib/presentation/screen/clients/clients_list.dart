@@ -6,6 +6,7 @@ import '../../../domain/bloc/clients/clients_bloc.dart';
 import '../../../domain/entity/person.dart';
 import '../../component/empty_content_info_component.dart';
 import '../../component/gap/gap_components.dart';
+import '../../component/gap/gap_horizontal_components.dart';
 import '../../component/loading_info_component.dart';
 import '../../component/text/title_text_components.dart';
 import '../../extension/context_extensions.dart';
@@ -18,13 +19,13 @@ class ClientsList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.symmetric(horizontal: context.isMobileSize ? 16 : 0),
+      padding: EdgeInsets.symmetric(horizontal: context.isMobileSize ? 8 : 0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
             padding: EdgeInsets.symmetric(
-              horizontal: context.isMobileSize ? 8 : 0,
+              horizontal: context.isMobileSize ? 16 : 0,
             ),
             child: TitleLarge(Str.of(context).clientsTitle),
           ),
@@ -51,7 +52,10 @@ class _Content extends StatelessWidget {
           title: Str.of(context).clientsNoClientsTitle,
           subtitle: Str.of(context).clientsNoClientsMessage,
         ),
-      [...] => const Text('Users exist!'),
+      [...] => Column(
+          children:
+              clients.map((Person client) => _ClientItem(client)).toList(),
+        ),
     };
   }
 }
@@ -67,14 +71,37 @@ class _ClientItem extends StatelessWidget {
       title: Text('${clientInfo.name} ${clientInfo.surname}'),
       subtitle: Text(clientInfo.email),
       leading: Icon(clientInfo.gender.toIconData()),
-      trailing: OutlinedButton(
-        onPressed: () => _onMessagePressed(),
-        child: Text(Str.of(context).clientsMessage),
+      contentPadding: EdgeInsets.symmetric(
+        horizontal: context.isMobileSize ? 16 : 0,
+      ),
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          IconButton(
+            onPressed: () => _onMessagePressed(),
+            icon: Icon(
+              Icons.message,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+          ),
+          if (!context.isMobileSize) const GapHorizontal8(),
+          IconButton(
+            onPressed: () => _onDeleteClientPressed(),
+            icon: Icon(
+              Icons.person_remove,
+              color: Theme.of(context).colorScheme.error,
+            ),
+          ),
+        ],
       ),
     );
   }
 
   void _onMessagePressed() {
+    //TODO
+  }
+
+  void _onDeleteClientPressed() {
     //TODO
   }
 }
