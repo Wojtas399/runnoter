@@ -82,7 +82,8 @@ Future<bool> askForConfirmation({
   String? cancelButtonLabel,
   Color? confirmButtonColor,
   Color? cancelButtonColor,
-  bool displaySubmitButtonAsFilled = false,
+  bool displaySubmitButtonAsFilled =
+      false, //TODO: Change this name to displayConfirmationButtonAsFilled
   bool barrierDismissible = true,
 }) async =>
     await showAlertDialog(

@@ -132,7 +132,7 @@ void main() {
 
   blocTest(
     'delete request, '
-    "should call coaching request service's method to delete request, ",
+    "should call coaching request service's method to delete request and should emit requestDeleted info",
     build: () => ClientsBloc(),
     setUp: () => coachingRequestService.mockDeleteCoachingRequest(),
     act: (bloc) => bloc.add(const ClientsEventDeleteRequest(requestId: 'r1')),
@@ -146,6 +146,25 @@ void main() {
     ],
     verify: (_) => verify(
       () => coachingRequestService.deleteCoachingRequest(requestId: 'r1'),
+    ).called(1),
+  );
+
+  blocTest(
+    'delete client, '
+    "should call person repository's method to remove coach of person and should emit clientDeleted info",
+    build: () => ClientsBloc(),
+    setUp: () => personRepository.mockRemoveCoachOfPerson(),
+    act: (bloc) => bloc.add(const ClientsEventDeleteClient(clientId: 'c1')),
+    expect: () => [
+      const ClientsState(status: BlocStatusLoading()),
+      const ClientsState(
+        status: BlocStatusComplete<ClientsBlocInfo>(
+          info: ClientsBlocInfo.clientDeleted,
+        ),
+      ),
+    ],
+    verify: (_) => verify(
+      () => personRepository.removeCoachOfPerson(personId: 'c1'),
     ).called(1),
   );
 }

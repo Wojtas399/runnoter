@@ -11,6 +11,7 @@ import '../../component/loading_info_component.dart';
 import '../../component/text/title_text_components.dart';
 import '../../extension/context_extensions.dart';
 import '../../extension/gender_extensions.dart';
+import '../../service/dialog_service.dart';
 
 class ClientsList extends StatelessWidget {
   const ClientsList({super.key});
@@ -86,7 +87,7 @@ class _ClientItem extends StatelessWidget {
           ),
           if (!context.isMobileSize) const GapHorizontal8(),
           IconButton(
-            onPressed: () => _onDeleteClientPressed(),
+            onPressed: () => _onDeleteClientPressed(context),
             icon: Icon(
               Icons.person_remove,
               color: Theme.of(context).colorScheme.error,
@@ -101,7 +102,44 @@ class _ClientItem extends StatelessWidget {
     //TODO
   }
 
-  void _onDeleteClientPressed() {
-    //TODO
+  Future<void> _onDeleteClientPressed(BuildContext context) async {
+    final ClientsBloc bloc = context.read<ClientsBloc>();
+    final bool isDeletionConfirmed =
+        await _askForClientDeletionConfirmation(context);
+    if (isDeletionConfirmed) {
+      bloc.add(ClientsEventDeleteClient(clientId: clientInfo.id));
+    }
+  }
+
+  Future<bool> _askForClientDeletionConfirmation(BuildContext context) async {
+    final TextStyle? textStyle = Theme.of(context).textTheme.bodyMedium;
+    final str = Str.of(context);
+
+    return await askForConfirmation(
+      title: Text(str.clientsDeleteClientConfirmationDialogTitle),
+      content: RichText(
+        text: TextSpan(
+          children: [
+            TextSpan(
+              text: str.clientsDeleteClientConfirmationDialogAreYouSure,
+              style: textStyle,
+            ),
+            TextSpan(
+              text:
+                  '${clientInfo.name} ${clientInfo.surname} (${clientInfo.email})',
+              style: textStyle?.copyWith(fontWeight: FontWeight.bold),
+            ),
+            TextSpan(
+              text:
+                  '? ${str.clientsDeleteClientConfirmationDialogInfoAboutAccessLoss}',
+              style: textStyle,
+            ),
+          ],
+        ),
+      ),
+      confirmButtonLabel: Str.of(context).delete,
+      confirmButtonColor: Theme.of(context).colorScheme.error,
+      displaySubmitButtonAsFilled: true,
+    );
   }
 }

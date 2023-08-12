@@ -13,3 +13,9 @@ class ClientsEventDeleteRequest extends ClientsEvent {
 
   const ClientsEventDeleteRequest({required this.requestId});
 }
+
+class ClientsEventDeleteClient extends ClientsEvent {
+  final String clientId;
+
+  const ClientsEventDeleteClient({required this.clientId});
+}

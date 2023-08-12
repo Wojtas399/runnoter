@@ -29,6 +29,7 @@ class ClientsBloc extends BlocWithStatus<ClientsEvent, ClientsState,
         super(state) {
     on<ClientsEventInitialize>(_initialize);
     on<ClientsEventDeleteRequest>(_deleteRequest);
+    on<ClientsEventDeleteClient>(_deleteClient);
   }
 
   Future<void> _initialize(
@@ -59,6 +60,15 @@ class ClientsBloc extends BlocWithStatus<ClientsEvent, ClientsState,
       requestId: event.requestId,
     );
     emitCompleteStatus(emit, info: ClientsBlocInfo.requestDeleted);
+  }
+
+  Future<void> _deleteClient(
+    ClientsEventDeleteClient event,
+    Emitter<ClientsState> emit,
+  ) async {
+    emitLoadingStatus(emit);
+    await _personRepository.removeCoachOfPerson(personId: event.clientId);
+    emitCompleteStatus(emit, info: ClientsBlocInfo.clientDeleted);
   }
 
   Stream<List<SentCoachingRequest>> _getSentRequests(String loggedUserId) =>
@@ -96,4 +106,4 @@ class ClientsBloc extends BlocWithStatus<ClientsEvent, ClientsState,
           );
 }
 
-enum ClientsBlocInfo { requestDeleted }
+enum ClientsBlocInfo { requestDeleted, clientDeleted }

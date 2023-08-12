@@ -757,6 +757,22 @@
   "@clientsMessage": {
     "description": "Label of the button to send message"
   },
+  "clientsDeleteClientConfirmationDialogTitle": "Usuń klienta",
+  "@clientsDeleteClientConfirmationDialogTitle": {
+    "description": "Title of the dialog to confirm client deletion"
+  },
+  "clientsDeleteClientConfirmationDialogAreYouSure": "Czy na pewno chcesz zakończyć trenowanie ",
+  "@clientsDeleteClientConfirmationDialogAreYouSure": {
+    "description": "Message to ask if user surely want to finish coaching client"
+  },
+  "clientsDeleteClientConfirmationDialogInfoAboutAccessLoss": "Utracisz dostęp do danych treningowych, wyścigowych oraz zdrowotnych tego użytkownika.",
+  "@clientsDeleteClientConfirmationDialogInfoAboutAccessLoss": {
+    "description": "Message to info user about data access loss"
+  },
+  "clientsSuccessfullyDeletedClient": "Pomyślnie usunięto klienta",
+  "@clientsSuccessfullyDeletedClient": {
+    "description": "Message of successfully deleted client"
+  },
   "clientsNoSentCoachingRequests": "Brak wysłanych próśb o trenowanie",
   "@clientsNoSentCoachingRequests": {
     "description": "Title of the info about no sent coaching requests"
