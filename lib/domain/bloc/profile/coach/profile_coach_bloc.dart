@@ -86,6 +86,9 @@ class ProfileCoachBloc extends BlocWithStatus<ProfileCoachEvent,
       requestId: event.requestId,
       isAccepted: true,
     );
+    await _coachingRequestService.deleteCoachingRequestsByReceiverId(
+      receiverId: loggedUserId,
+    );
     emitCompleteStatus(emit, info: ProfileCoachBlocInfo.requestAccepted);
   }
 
