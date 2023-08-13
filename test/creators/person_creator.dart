@@ -3,6 +3,7 @@ import 'package:runnoter/domain/entity/user.dart';
 
 Person createPerson({
   String id = '',
+  AccountType accountType = AccountType.runner,
   Gender gender = Gender.male,
   String name = '',
   String surname = '',
@@ -11,6 +12,7 @@ Person createPerson({
 }) =>
     Person(
       id: id,
+      accountType: accountType,
       gender: gender,
       name: name,
       surname: surname,

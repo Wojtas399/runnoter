@@ -8,6 +8,8 @@ import '../../creators/user_dto_creator.dart';
 
 void main() {
   const String id = 'u1';
+  const firebase.AccountType dtoAccountType = firebase.AccountType.coach;
+  const AccountType accountType = AccountType.coach;
   const firebase.Gender dtoGender = firebase.Gender.male;
   const Gender gender = Gender.male;
   const String name = 'name';
@@ -21,6 +23,7 @@ void main() {
     () {
       final firebase.UserDto userDto = createUserDto(
         id: id,
+        accountType: dtoAccountType,
         gender: dtoGender,
         name: name,
         surname: surname,
@@ -29,6 +32,7 @@ void main() {
       );
       const Person expectedPerson = Person(
         id: id,
+        accountType: accountType,
         gender: gender,
         name: name,
         surname: surname,

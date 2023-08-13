@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/bloc/persons_search/persons_search_bloc.dart';
-import 'package:runnoter/domain/entity/person.dart';
-import 'package:runnoter/domain/entity/user.dart';
+
+import '../../../creators/person_creator.dart';
 
 void main() {
   late PersonsSearchState state;
@@ -70,25 +70,13 @@ void main() {
   test(
     'copy with foundPersons',
     () {
-      const List<FoundPerson> expectedFoundPersons = [
+      final List<FoundPerson> expectedFoundPersons = [
         FoundPerson(
-          info: Person(
-            id: 'c1',
-            gender: Gender.male,
-            name: 'name1',
-            surname: 'surname1',
-            email: 'email1@example.com',
-          ),
+          info: createPerson(id: 'c1', name: 'name1', surname: 'surname1'),
           relationshipStatus: RelationshipStatus.notInvited,
         ),
         FoundPerson(
-          info: Person(
-            id: 'c2',
-            gender: Gender.female,
-            name: 'name2',
-            surname: 'surname2',
-            email: 'email2@example.com',
-          ),
+          info: createPerson(id: 'c2', name: 'name2', surname: 'surname2'),
           relationshipStatus: RelationshipStatus.accepted,
         ),
       ];
@@ -104,25 +92,13 @@ void main() {
   test(
     'copy with setFoundPersonsAsNull',
     () {
-      const List<FoundPerson> expectedFoundPersons = [
+      final List<FoundPerson> expectedFoundPersons = [
         FoundPerson(
-          info: Person(
-            id: 'c1',
-            gender: Gender.male,
-            name: 'name1',
-            surname: 'surname1',
-            email: 'email1@example.com',
-          ),
+          info: createPerson(id: 'c1', name: 'name1', surname: 'surname1'),
           relationshipStatus: RelationshipStatus.notInvited,
         ),
         FoundPerson(
-          info: Person(
-            id: 'c2',
-            gender: Gender.female,
-            name: 'name2',
-            surname: 'surname2',
-            email: 'email2@example.com',
-          ),
+          info: createPerson(id: 'c2', name: 'name2', surname: 'surname2'),
           relationshipStatus: RelationshipStatus.accepted,
         ),
       ];

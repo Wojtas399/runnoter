@@ -53,6 +53,7 @@ void main() {
       ];
       final firebase.UserDto loadedUserDto = createUserDto(
         id: 'u1',
+        accountType: firebase.AccountType.coach,
         gender: firebase.Gender.male,
         name: 'name1',
         surname: 'surname1',
@@ -61,6 +62,7 @@ void main() {
       );
       final Person expectedPerson = Person(
         id: loadedUserDto.id,
+        accountType: AccountType.coach,
         gender: Gender.male,
         name: loadedUserDto.name,
         surname: loadedUserDto.surname,
@@ -133,18 +135,21 @@ void main() {
       final List<Person> existingPersons = [
         createPerson(
           id: 'u1',
+          accountType: AccountType.coach,
           name: 'Eli',
           surname: 'Zabeth',
           email: 'eli@example.com',
         ),
         createPerson(
           id: 'u2',
+          accountType: AccountType.coach,
           name: 'Jean',
           surname: 'Novsky',
           email: 'jean@example.com',
         ),
         createPerson(
           id: 'u3',
+          accountType: AccountType.runner,
           name: 'Ste',
           surname: 'Phali',
           email: 'ste@example.com',
@@ -153,12 +158,14 @@ void main() {
       final List<firebase.UserDto> loadedUserDtos = [
         createUserDto(
           id: 'u4',
+          accountType: firebase.AccountType.coach,
           name: 'Jen',
-          surname: 'Nna',
+          surname: 'li',
           email: 'jen@example.com.com',
         ),
         createUserDto(
           id: 'u5',
+          accountType: firebase.AccountType.coach,
           name: 'Bart',
           surname: 'Osh',
           email: 'barli@example.com',
@@ -166,9 +173,16 @@ void main() {
       ];
       final List<Person> expectedPersons = [
         existingPersons.first,
-        existingPersons.last,
+        createPerson(
+          id: 'u4',
+          accountType: AccountType.coach,
+          name: 'Jen',
+          surname: 'li',
+          email: 'jen@example.com.com',
+        ),
         createPerson(
           id: 'u5',
+          accountType: AccountType.coach,
           name: 'Bart',
           surname: 'Osh',
           email: 'barli@example.com',
@@ -192,12 +206,14 @@ void main() {
               ...existingPersons,
               createPerson(
                 id: 'u4',
+                accountType: AccountType.coach,
                 name: 'Jen',
-                surname: 'Nna',
+                surname: 'li',
                 email: 'jen@example.com.com',
               ),
               createPerson(
                 id: 'u5',
+                accountType: AccountType.coach,
                 name: 'Bart',
                 surname: 'Osh',
                 email: 'barli@example.com',

@@ -44,16 +44,7 @@ class PersonRepositoryImpl extends StateRepository<Person>
     final Stream<List<Person>> matchingPersons$ = dataStream$.map(
       (List<Person>? persons) => [
         ...?persons?.where(
-          (Person person) {
-            final String lowerCaseSearchQuery = searchQuery.toLowerCase();
-            bool doesNameMatch =
-                person.name.toLowerCase().contains(lowerCaseSearchQuery);
-            bool doesSurnameMatch =
-                person.surname.toLowerCase().contains(lowerCaseSearchQuery);
-            bool doesEmailMatch =
-                person.email.toLowerCase().contains(lowerCaseSearchQuery);
-            return doesNameMatch || doesSurnameMatch || doesEmailMatch;
-          },
+          (Person person) => _doesPersonMatch(person, searchQuery, accountType),
         ),
       ],
     );
@@ -106,5 +97,17 @@ class PersonRepositoryImpl extends StateRepository<Person>
     final List<Person> persons =
         foundUserDtos.map(mapPersonFromUserDto).toList();
     addOrUpdateEntities(persons);
+  }
+
+  bool _doesPersonMatch(
+    Person person,
+    String searchQuery,
+    AccountType? accountType,
+  ) {
+    if (accountType != null && person.accountType != accountType) return false;
+    final String lowerCaseSearchQuery = searchQuery.toLowerCase();
+    return person.name.toLowerCase().contains(lowerCaseSearchQuery) ||
+        person.surname.toLowerCase().contains(lowerCaseSearchQuery) ||
+        person.email.contains(lowerCaseSearchQuery);
   }
 }

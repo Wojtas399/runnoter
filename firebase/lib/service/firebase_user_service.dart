@@ -34,14 +34,14 @@ class FirebaseUserService {
       snapshot = await usersRef.get();
     }
     final userDtos = snapshot.docs.map((doc) => doc.data());
-    return userDtos
-        .where(
-          (UserDto userDto) =>
-              userDto.name.contains(searchQuery) ||
-              userDto.surname.contains(searchQuery) ||
-              userDto.email.contains(searchQuery),
-        )
-        .toList();
+    return userDtos.where(
+      (UserDto userDto) {
+        final String lowerCaseSearchQuery = searchQuery.toLowerCase();
+        return userDto.name.toLowerCase().contains(lowerCaseSearchQuery) ||
+            userDto.surname.toLowerCase().contains(lowerCaseSearchQuery) ||
+            userDto.email.toLowerCase().contains(lowerCaseSearchQuery);
+      },
+    ).toList();
   }
 
   Future<UserDto?> addUserData({required UserDto userDto}) async {
