@@ -4,6 +4,10 @@ import 'package:runnoter/domain/service/coaching_request_service.dart';
 
 class MockCoachingRequestService extends Mock
     implements CoachingRequestService {
+  MockCoachingRequestService() {
+    registerFallbackValue(CoachingRequestDirection.clientToCoach);
+  }
+
   void mockGetCoachingRequestsBySenderId({
     required List<CoachingRequest> requests,
   }) {
@@ -68,6 +72,7 @@ class MockCoachingRequestService extends Mock
   Future<void> _addCoachingRequestCall() => addCoachingRequest(
         senderId: any(named: 'senderId'),
         receiverId: any(named: 'receiverId'),
+        direction: any(named: 'direction'),
         isAccepted: any(named: 'isAccepted'),
       );
 }

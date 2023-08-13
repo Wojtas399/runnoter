@@ -12,6 +12,7 @@ abstract interface class CoachingRequestService {
   Future<void> addCoachingRequest({
     required String senderId,
     required String receiverId,
+    required CoachingRequestDirection direction,
     required bool isAccepted,
   });
 

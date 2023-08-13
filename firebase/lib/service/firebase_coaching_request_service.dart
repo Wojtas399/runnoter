@@ -29,12 +29,14 @@ class FirebaseCoachingRequestService {
   Future<void> addCoachingRequest({
     required String senderId,
     required String receiverId,
+    required CoachingRequestDirection direction,
     required bool isAccepted,
   }) async {
     final CoachingRequestDto invitationDto = CoachingRequestDto(
       id: '',
       senderId: senderId,
       receiverId: receiverId,
+      direction: direction,
       isAccepted: isAccepted,
     );
     await getCoachingRequestsRef().add(invitationDto);

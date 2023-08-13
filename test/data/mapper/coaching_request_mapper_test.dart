@@ -7,6 +7,10 @@ void main() {
   const String coachingRequestId = 'i1';
   const String senderId = 'u1';
   const String receiverId = 'u2';
+  const firebase.CoachingRequestDirection dtoDirection =
+      firebase.CoachingRequestDirection.clientToCoach;
+  const CoachingRequestDirection direction =
+      CoachingRequestDirection.clientToCoach;
   const bool isAccepted = false;
 
   test(
@@ -18,12 +22,14 @@ void main() {
         id: coachingRequestId,
         senderId: senderId,
         receiverId: receiverId,
+        direction: dtoDirection,
         isAccepted: isAccepted,
       );
       const CoachingRequest expectedCoachingRequest = CoachingRequest(
         id: coachingRequestId,
         senderId: senderId,
         receiverId: receiverId,
+        direction: direction,
         isAccepted: isAccepted,
       );
 

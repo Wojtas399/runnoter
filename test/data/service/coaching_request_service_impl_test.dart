@@ -40,12 +40,14 @@ void main() {
           id: 'i1',
           senderId: senderId,
           receiverId: 'u2',
+          direction: firebase.CoachingRequestDirection.coachToClient,
           isAccepted: false,
         ),
         firebase.CoachingRequestDto(
           id: 'i2',
           senderId: senderId,
           receiverId: 'u3',
+          direction: firebase.CoachingRequestDirection.clientToCoach,
           isAccepted: true,
         ),
       ];
@@ -54,12 +56,14 @@ void main() {
           id: 'i1',
           senderId: senderId,
           receiverId: 'u2',
+          direction: CoachingRequestDirection.coachToClient,
           isAccepted: false,
         ),
         CoachingRequest(
           id: 'i2',
           senderId: senderId,
           receiverId: 'u3',
+          direction: CoachingRequestDirection.clientToCoach,
           isAccepted: true,
         ),
       ];
@@ -87,12 +91,14 @@ void main() {
           id: 'i1',
           senderId: 'u2',
           receiverId: receiverId,
+          direction: firebase.CoachingRequestDirection.coachToClient,
           isAccepted: false,
         ),
         firebase.CoachingRequestDto(
           id: 'i2',
           senderId: 'u3',
           receiverId: receiverId,
+          direction: firebase.CoachingRequestDirection.clientToCoach,
           isAccepted: true,
         ),
       ];
@@ -101,12 +107,14 @@ void main() {
           id: 'i1',
           senderId: 'u2',
           receiverId: receiverId,
+          direction: CoachingRequestDirection.coachToClient,
           isAccepted: false,
         ),
         CoachingRequest(
           id: 'i2',
           senderId: 'u3',
           receiverId: receiverId,
+          direction: CoachingRequestDirection.clientToCoach,
           isAccepted: true,
         ),
       ];
@@ -139,6 +147,7 @@ void main() {
       await service.addCoachingRequest(
         senderId: senderId,
         receiverId: receiverId,
+        direction: CoachingRequestDirection.coachToClient,
         isAccepted: isAccepted,
       );
 
@@ -149,6 +158,7 @@ void main() {
         () => firebaseCoachingRequestService.addCoachingRequest(
           senderId: senderId,
           receiverId: receiverId,
+          direction: firebase.CoachingRequestDirection.coachToClient,
           isAccepted: isAccepted,
         ),
       ).called(1);
@@ -175,6 +185,7 @@ void main() {
         await service.addCoachingRequest(
           senderId: senderId,
           receiverId: receiverId,
+          direction: CoachingRequestDirection.coachToClient,
           isAccepted: false,
         );
       } catch (e) {

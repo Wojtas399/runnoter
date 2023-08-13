@@ -4,6 +4,7 @@ import '../../dependency_injection.dart';
 import '../../domain/additional_model/coaching_request.dart';
 import '../../domain/additional_model/custom_exception.dart';
 import '../../domain/service/coaching_request_service.dart';
+import '../mapper/coaching_request_direction_mapper.dart';
 import '../mapper/coaching_request_mapper.dart';
 
 class CoachingRequestServiceImpl implements CoachingRequestService {
@@ -35,6 +36,7 @@ class CoachingRequestServiceImpl implements CoachingRequestService {
   Future<void> addCoachingRequest({
     required String senderId,
     required String receiverId,
+    required CoachingRequestDirection direction,
     required bool isAccepted,
   }) async {
     final firebase.UserDto? receiverDto =
@@ -47,6 +49,7 @@ class CoachingRequestServiceImpl implements CoachingRequestService {
       await _firebaseCoachingRequestService.addCoachingRequest(
         senderId: senderId,
         receiverId: receiverId,
+        direction: mapCoachingRequestDirectionToDto(direction),
         isAccepted: isAccepted,
       );
     }

@@ -5,6 +5,9 @@ void main() {
   const String coachingRequestId = 'i1';
   const String senderId = 'u1';
   const String receiverId = 'u2';
+  const CoachingRequestDirection direction =
+      CoachingRequestDirection.clientToCoach;
+  const String directionStr = 'clientToCoach';
   const bool isAccepted = false;
 
   test(
@@ -14,12 +17,14 @@ void main() {
       final Map<String, dynamic> json = {
         'senderId': senderId,
         'receiverId': receiverId,
+        'direction': directionStr,
         'isAccepted': isAccepted,
       };
       const CoachingRequestDto expectedDto = CoachingRequestDto(
         id: coachingRequestId,
         senderId: senderId,
         receiverId: receiverId,
+        direction: direction,
         isAccepted: isAccepted,
       );
 
@@ -40,11 +45,13 @@ void main() {
         id: coachingRequestId,
         senderId: senderId,
         receiverId: receiverId,
+        direction: direction,
         isAccepted: isAccepted,
       );
       final Map<String, dynamic> expectedJson = {
         'senderId': senderId,
         'receiverId': receiverId,
+        'direction': directionStr,
         'isAccepted': isAccepted,
       };
 

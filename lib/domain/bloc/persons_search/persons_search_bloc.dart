@@ -115,6 +115,7 @@ class PersonsSearchBloc extends BlocWithStatus<PersonsSearchEvent,
       await _coachingRequestService.addCoachingRequest(
         senderId: loggedUserId,
         receiverId: event.personId,
+        direction: CoachingRequestDirection.coachToClient,
         isAccepted: false,
       );
       emitCompleteStatus(emit, info: PersonsSearchBlocInfo.requestSent);
