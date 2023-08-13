@@ -69,4 +69,13 @@ class CoachingRequestServiceImpl implements CoachingRequestService {
       requestId: requestId,
     );
   }
+
+  @override
+  Future<void> deleteCoachingRequestsByReceiverId({
+    required String receiverId,
+  }) async {
+    await _firebaseCoachingRequestService.deleteCoachingRequestsByReceiverId(
+      receiverId: receiverId,
+    );
+  }
 }

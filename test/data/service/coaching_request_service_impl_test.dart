@@ -226,4 +226,21 @@ void main() {
       ).called(1);
     },
   );
+
+  test(
+    'delete coaching requests by receiver id, '
+    "should call firebase coaching request service's method to delete coaching requests by receiver id",
+    () async {
+      const String receiverId = 'u1';
+      firebaseCoachingRequestService.mockDeleteCoachingRequestsByReceiverId();
+
+      await service.deleteCoachingRequestsByReceiverId(receiverId: receiverId);
+
+      verify(
+        () => firebaseCoachingRequestService.deleteCoachingRequestsByReceiverId(
+          receiverId: receiverId,
+        ),
+      ).called(1);
+    },
+  );
 }

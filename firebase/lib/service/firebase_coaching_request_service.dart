@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 import '../firebase_collections.dart';
 import '../model/coaching_request_dto.dart';
 
@@ -51,5 +53,18 @@ class FirebaseCoachingRequestService {
 
   Future<void> deleteCoachingRequest({required String requestId}) async {
     await getCoachingRequestsRef().doc(requestId).delete();
+  }
+
+  Future<void> deleteCoachingRequestsByReceiverId({
+    required String receiverId,
+  }) async {
+    final snapshot = await getCoachingRequestsRef()
+        .where(receiverIdField, isEqualTo: receiverId)
+        .get();
+    final batch = FirebaseFirestore.instance.batch();
+    for (final request in snapshot.docs) {
+      batch.delete(request.reference);
+    }
+    await batch.commit();
   }
 }
