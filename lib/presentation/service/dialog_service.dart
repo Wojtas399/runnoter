@@ -47,11 +47,17 @@ Future<void> showMessageDialog({
   );
 }
 
-void showSnackbarMessage(String message) {
+void showSnackbarMessage(
+  String message, {
+  bool showCloseIcon = false,
+  Duration duration = const Duration(seconds: 4),
+}) {
   final BuildContext? context = getIt<AppRouter>().navigatorKey.currentContext;
   if (context != null) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
+        showCloseIcon: showCloseIcon,
+        duration: duration,
         content: Text(message),
       ),
     );

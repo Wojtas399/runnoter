@@ -2,7 +2,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/additional_model/settings.dart';
 import 'package:runnoter/domain/bloc/home/home_bloc.dart';
+import 'package:runnoter/domain/entity/person.dart';
 import 'package:runnoter/domain/entity/user.dart';
+
+import '../../../creators/person_creator.dart';
 
 void main() {
   late HomeState state;
@@ -67,6 +70,22 @@ void main() {
 
       expect(state.appSettings, expectedSettings);
       expect(state2.appSettings, expectedSettings);
+    },
+  );
+
+  test(
+    'copy with new clients',
+    () {
+      final List<Person> expectedNewClients = [
+        createPerson(id: 'u1'),
+        createPerson(id: 'u2'),
+      ];
+
+      state = state.copyWith(newClients: expectedNewClients);
+      final state2 = state.copyWith();
+
+      expect(state.newClients, expectedNewClients);
+      expect(state2.newClients, expectedNewClients);
     },
   );
 }

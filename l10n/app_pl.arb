@@ -169,6 +169,16 @@
   "@homeSignOutConfirmationDialogMessage": {
     "description": "Message of the dialog to confirm sign out"
   },
+  "homeNewClientInfo": "Użytkownik {user} zaakceptował twoją prośbę o trenowanie",
+  "@homeNewClientInfo": {
+    "description": "",
+    "placeholders": {
+      "user": {
+        "type": "String",
+        "example": "Jack Unknown"
+      }
+    }
+  },
   "@__________CURRENT_WEEK__________": {},
   "currentWeekTitle": "Obecny tydzień",
   "@currentWeekTitle": {

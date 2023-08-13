@@ -46,6 +46,7 @@
   "homeSignOut": "Sign out",
   "homeSignOutConfirmationDialogTitle": "Sign out",
   "homeSignOutConfirmationDialogMessage": "Are you sure you want to sign out?",
+  "homeNewClientInfo": "User {user} has accepted your coaching request",
   "@__________CURRENT_WEEK__________": {},
   "currentWeekTitle": "Current week",
   "currentWeekNumberOfActivities": "Number of activities",

@@ -49,6 +49,14 @@ class MockCoachingRequestService extends Mock
     ).thenAnswer((_) => Future.value());
   }
 
+  void mockDeleteAcceptedCoachingRequestsBySenderId() {
+    when(
+      () => deleteAcceptedCoachingRequestsBySenderId(
+        senderId: any(named: 'senderId'),
+      ),
+    ).thenAnswer((_) => Future.value());
+  }
+
   void mockDeleteUnacceptedCoachingRequestsByReceiverId() {
     when(
       () => deleteUnacceptedCoachingRequestsByReceiverId(

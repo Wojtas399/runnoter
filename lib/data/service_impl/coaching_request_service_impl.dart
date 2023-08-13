@@ -71,6 +71,14 @@ class CoachingRequestServiceImpl implements CoachingRequestService {
   }
 
   @override
+  Future<void> deleteAcceptedCoachingRequestsBySenderId({
+    required String senderId,
+  }) async {
+    // TODO: implement deleteAcceptedCoachingRequestsBySenderId
+    throw UnimplementedError();
+  }
+
+  @override
   Future<void> deleteUnacceptedCoachingRequestsByReceiverId({
     required String receiverId,
   }) async {

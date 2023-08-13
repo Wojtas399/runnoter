@@ -4,12 +4,14 @@ class HomeState extends BlocState<HomeState> {
   final AccountType? accountType;
   final String? loggedUserName;
   final Settings? appSettings;
+  final List<Person> newClients;
 
   const HomeState({
     required super.status,
     this.accountType,
     this.loggedUserName,
     this.appSettings,
+    this.newClients = const [],
   });
 
   @override
@@ -18,6 +20,7 @@ class HomeState extends BlocState<HomeState> {
         accountType,
         loggedUserName,
         appSettings,
+        newClients,
       ];
 
   @override
@@ -26,12 +29,14 @@ class HomeState extends BlocState<HomeState> {
     AccountType? accountType,
     String? loggedUserName,
     Settings? appSettings,
+    List<Person>? newClients,
   }) {
     return HomeState(
       status: status ?? const BlocStatusComplete(),
       accountType: accountType ?? this.accountType,
       loggedUserName: loggedUserName ?? this.loggedUserName,
       appSettings: appSettings ?? this.appSettings,
+      newClients: newClients ?? this.newClients,
     );
   }
 }

@@ -71,7 +71,7 @@ class _Content extends StatelessWidget {
           ),
         ),
       [] => Padding(
-          padding: const EdgeInsets.only(top: 8),
+          padding: const EdgeInsets.symmetric(vertical: 16),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

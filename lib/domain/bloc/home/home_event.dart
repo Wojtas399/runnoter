@@ -8,6 +8,10 @@ class HomeEventInitialize extends HomeEvent {
   const HomeEventInitialize();
 }
 
+class HomeEventDeleteAcceptedCoachingRequests extends HomeEvent {
+  const HomeEventDeleteAcceptedCoachingRequests();
+}
+
 class HomeEventSignOut extends HomeEvent {
   const HomeEventSignOut();
 }

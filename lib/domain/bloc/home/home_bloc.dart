@@ -11,7 +11,10 @@ import '../../../../domain/service/auth_service.dart';
 import '../../../dependency_injection.dart';
 import '../../additional_model/bloc_state.dart';
 import '../../additional_model/settings.dart';
+import '../../entity/person.dart';
 import '../../entity/user.dart';
+import '../../repository/person_repository.dart';
+import '../../service/coaching_request_service.dart';
 
 part 'home_event.dart';
 part 'home_state.dart';
@@ -20,13 +23,20 @@ class HomeBloc
     extends BlocWithStatus<HomeEvent, HomeState, HomeBlocInfo, dynamic> {
   final AuthService _authService;
   final UserRepository _userRepository;
+  final CoachingRequestService _coachingRequestService;
+  final PersonRepository _personRepository;
 
   HomeBloc({
     HomeState state = const HomeState(status: BlocStatusInitial()),
   })  : _authService = getIt<AuthService>(),
         _userRepository = getIt<UserRepository>(),
+        _coachingRequestService = getIt<CoachingRequestService>(),
+        _personRepository = getIt<PersonRepository>(),
         super(state) {
     on<HomeEventInitialize>(_initialize, transformer: restartable());
+    on<HomeEventDeleteAcceptedCoachingRequests>(
+      _deleteAcceptedCoachingRequests,
+    );
     on<HomeEventSignOut>(_signOut);
   }
 
@@ -35,20 +45,35 @@ class HomeBloc
     Emitter<HomeState> emit,
   ) async {
     emitLoadingStatus(emit);
-    final Stream<User?> loggedUser$ =
+    final Stream<(User?, List<Person>)> stream$ =
         _authService.loggedUserId$.whereNotNull().switchMap(
-              (String loggedUserId) => _userRepository.getUserById(
-                userId: loggedUserId,
+              (String loggedUserId) => Rx.combineLatest2(
+                _userRepository.getUserById(userId: loggedUserId),
+                _getNewClients(loggedUserId),
+                (loggedUserData, newClients) => (loggedUserData, newClients),
               ),
             );
     await emit.forEach(
-      loggedUser$,
-      onData: (User? loggedUser) => state.copyWith(
-        accountType: loggedUser?.accountType,
-        loggedUserName: loggedUser?.name,
-        appSettings: loggedUser?.settings,
+      stream$,
+      onData: ((User?, List<Person>) data) => state.copyWith(
+        accountType: data.$1?.accountType,
+        loggedUserName: data.$1?.name,
+        appSettings: data.$1?.settings,
+        newClients: data.$2,
       ),
     );
+  }
+
+  Future<void> _deleteAcceptedCoachingRequests(
+    HomeEventDeleteAcceptedCoachingRequests event,
+    Emitter<HomeState> emit,
+  ) async {
+    final String? loggedUserId = await _authService.loggedUserId$.first;
+    if (loggedUserId != null) {
+      await _coachingRequestService.deleteAcceptedCoachingRequestsBySenderId(
+        senderId: loggedUserId,
+      );
+    }
   }
 
   Future<void> _signOut(
@@ -59,8 +84,21 @@ class HomeBloc
     await _authService.signOut();
     emitCompleteStatus(emit, info: HomeBlocInfo.userSignedOut);
   }
+
+  Stream<List<Person>> _getNewClients(String loggedUserId) =>
+      _coachingRequestService
+          .getCoachingRequestsBySenderId(senderId: loggedUserId)
+          .map((requests) => requests.where((req) => req.isAccepted).toList())
+          .map(
+            (acceptedRequests) => acceptedRequests.map(
+              (req) => _personRepository
+                  .getPersonById(personId: req.receiverId)
+                  .whereNotNull(),
+            ),
+          )
+          .switchMap(
+            (streams) => Rx.combineLatest(streams, (newClients) => newClients),
+          );
 }
 
-enum HomeBlocInfo {
-  userSignedOut,
-}
+enum HomeBlocInfo { userSignedOut }

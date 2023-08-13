@@ -1,14 +1,16 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../dependency_injection.dart';
 import '../../../domain/additional_model/bloc_status.dart';
-import '../../../domain/bloc/home/home_bloc.dart';
 import '../../../domain/additional_model/settings.dart' as settings;
+import '../../../domain/bloc/home/home_bloc.dart';
 import '../../component/bloc_with_status_listener_component.dart';
 import '../../config/navigation/router.dart';
 import '../../dialog/required_data_completion/required_data_completion_dialog.dart';
+import '../../formatter/person_formatter.dart';
 import '../../service/dialog_service.dart';
 import '../../service/distance_unit_service.dart';
 import '../../service/language_service.dart';
@@ -19,9 +21,7 @@ import 'home_content.dart';
 
 @RoutePage()
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({
-    super.key,
-  });
+  const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -45,12 +45,8 @@ class _BlocListener extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocWithStatusListener<HomeBloc, HomeState, HomeBlocInfo, dynamic>(
       child: child,
-      onInfo: (HomeBlocInfo info) {
-        _manageInfo(context, info);
-      },
-      onStateChanged: (HomeState state) {
-        _manageStateChanges(context, state);
-      },
+      onInfo: (HomeBlocInfo info) => _manageInfo(context, info),
+      onStateChanged: (HomeState state) => _manageStateChanges(context, state),
     );
   }
 
@@ -64,7 +60,7 @@ class _BlocListener extends StatelessWidget {
     }
   }
 
-  _manageStateChanges(
+  void _manageStateChanges(
     BuildContext context,
     HomeState state,
   ) {
@@ -75,16 +71,26 @@ class _BlocListener extends StatelessWidget {
         const RequiredDataCompletionDialog(),
         barrierDismissible: false,
       );
-    } else {
-      final settings.Settings? appSettings = state.appSettings;
-      if (appSettings != null) {
-        _manageThemeMode(context, appSettings.themeMode);
-        _manageLanguage(context, appSettings.language);
-        context
-            .read<DistanceUnitService>()
-            .changeUnit(appSettings.distanceUnit);
-        context.read<PaceUnitService>().changeUnit(appSettings.paceUnit);
+      return;
+    }
+    final settings.Settings? appSettings = state.appSettings;
+    if (appSettings != null) {
+      _manageThemeMode(context, appSettings.themeMode);
+      _manageLanguage(context, appSettings.language);
+      context.read<DistanceUnitService>().changeUnit(appSettings.distanceUnit);
+      context.read<PaceUnitService>().changeUnit(appSettings.paceUnit);
+    }
+    if (state.newClients.isNotEmpty) {
+      for (final newClient in state.newClients) {
+        showSnackbarMessage(
+          Str.of(context).homeNewClientInfo(newClient.toUIFormat()),
+          showCloseIcon: true,
+          duration: const Duration(seconds: 6),
+        );
       }
+      context.read<HomeBloc>().add(
+            const HomeEventDeleteAcceptedCoachingRequests(),
+          );
     }
   }
 
