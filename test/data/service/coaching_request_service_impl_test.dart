@@ -40,7 +40,7 @@ void main() {
           id: 'i1',
           senderId: senderId,
           receiverId: 'u2',
-          direction: firebase.CoachingRequestDirection.coachToClient,
+          direction: firebase.CoachingRequestDirection.clientToCoach,
           isAccepted: false,
         ),
         firebase.CoachingRequestDto(
@@ -56,7 +56,7 @@ void main() {
           id: 'i1',
           senderId: senderId,
           receiverId: 'u2',
-          direction: CoachingRequestDirection.coachToClient,
+          direction: CoachingRequestDirection.clientToCoach,
           isAccepted: false,
         ),
         CoachingRequest(
@@ -72,12 +72,21 @@ void main() {
       );
 
       final Stream<List<CoachingRequest>?> coachingRequests$ =
-          service.getCoachingRequestsBySenderId(senderId: senderId);
+          service.getCoachingRequestsBySenderId(
+        senderId: senderId,
+        direction: CoachingRequestDirection.clientToCoach,
+      );
 
       expect(
         coachingRequests$,
         emitsInOrder([expectedCoachingRequests]),
       );
+      verify(
+        () => firebaseCoachingRequestService.getCoachingRequestsBySenderId(
+          senderId: senderId,
+          direction: firebase.CoachingRequestDirection.clientToCoach,
+        ),
+      ).called(1);
     },
   );
 
@@ -98,7 +107,7 @@ void main() {
           id: 'i2',
           senderId: 'u3',
           receiverId: receiverId,
-          direction: firebase.CoachingRequestDirection.clientToCoach,
+          direction: firebase.CoachingRequestDirection.coachToClient,
           isAccepted: true,
         ),
       ];
@@ -114,7 +123,7 @@ void main() {
           id: 'i2',
           senderId: 'u3',
           receiverId: receiverId,
-          direction: CoachingRequestDirection.clientToCoach,
+          direction: CoachingRequestDirection.coachToClient,
           isAccepted: true,
         ),
       ];
@@ -123,12 +132,21 @@ void main() {
       );
 
       final Stream<List<CoachingRequest>?> coachingRequests$ =
-          service.getCoachingRequestsByReceiverId(receiverId: receiverId);
+          service.getCoachingRequestsByReceiverId(
+        receiverId: receiverId,
+        direction: CoachingRequestDirection.coachToClient,
+      );
 
       expect(
         coachingRequests$,
         emitsInOrder([expectedCoachingRequests]),
       );
+      verify(
+        () => firebaseCoachingRequestService.getCoachingRequestsByReceiverId(
+          receiverId: receiverId,
+          direction: firebase.CoachingRequestDirection.coachToClient,
+        ),
+      ).called(1);
     },
   );
 

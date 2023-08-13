@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
+import 'package:runnoter/domain/additional_model/coaching_request.dart';
 import 'package:runnoter/domain/bloc/clients/clients_bloc.dart';
 import 'package:runnoter/domain/repository/person_repository.dart';
 import 'package:runnoter/domain/service/auth_service.dart';
@@ -83,6 +84,7 @@ void main() {
       verify(
         () => coachingRequestService.getCoachingRequestsBySenderId(
           senderId: loggedUserId,
+          direction: CoachingRequestDirection.coachToClient,
         ),
       ).called(1);
       verify(() => personRepository.getPersonById(personId: 'u4')).called(1);
@@ -122,6 +124,7 @@ void main() {
       verify(
         () => coachingRequestService.getCoachingRequestsBySenderId(
           senderId: loggedUserId,
+          direction: CoachingRequestDirection.coachToClient,
         ),
       ).called(1);
       verify(

@@ -73,7 +73,10 @@ class ClientsBloc extends BlocWithStatus<ClientsEvent, ClientsState,
 
   Stream<List<SentCoachingRequest>> _getSentRequests(String loggedUserId) =>
       _coachingRequestService
-          .getCoachingRequestsBySenderId(senderId: loggedUserId)
+          .getCoachingRequestsBySenderId(
+            senderId: loggedUserId,
+            direction: CoachingRequestDirection.coachToClient,
+          )
           .map((requests) => requests.where((request) => !request.isAccepted))
           .map((pendingRequests) => pendingRequests.map(_mapToSentRequest))
           .doOnData(

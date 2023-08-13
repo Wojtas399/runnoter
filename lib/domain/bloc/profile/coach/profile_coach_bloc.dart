@@ -56,7 +56,7 @@ class ProfileCoachBloc extends BlocWithStatus<ProfileCoachEvent,
         if (data is Person) {
           return ProfileCoachState(
               status: const BlocStatusComplete(), coach: data);
-        } else if (data is List<CoachingRequestInfo>) {
+        } else if (data is List<CoachingRequestDetails>) {
           return ProfileCoachState(
             status: const BlocStatusComplete(),
             receivedCoachingRequests: data,
@@ -80,7 +80,7 @@ class ProfileCoachBloc extends BlocWithStatus<ProfileCoachEvent,
     emitLoadingStatus(emit);
     final String senderId = state.receivedCoachingRequests!
         .firstWhere((request) => request.id == event.requestId)
-        .sender
+        .personToDisplay
         .id;
     await _coachingRequestService.updateCoachingRequest(
       requestId: event.requestId,
@@ -124,14 +124,17 @@ class ProfileCoachBloc extends BlocWithStatus<ProfileCoachEvent,
           .whereNotNull()
           .map((loggedUserData) => (loggedUserData.id, loggedUserData.coachId));
 
-  Stream<List<CoachingRequestInfo>?> _getCoachingRequestsInfo(
+  Stream<List<CoachingRequestDetails>?> _getCoachingRequestsInfo(
     String loggedUserId,
   ) =>
       _coachingRequestService
-          .getCoachingRequestsByReceiverId(receiverId: loggedUserId)
+          .getCoachingRequestsByReceiverId(
+            receiverId: loggedUserId,
+            direction: CoachingRequestDirection.coachToClient,
+          )
           .map((requests) => requests.where((request) => !request.isAccepted))
           .map(_combineCoachingRequestIdsWithSendersInfo)
-          .switchMap(_switchToStreamWithCoachingRequestsInfo);
+          .switchMap(_switchToStreamWithCoachingRequestsDetails);
 
   List<Stream<(String, Person)>>? _combineCoachingRequestIdsWithSendersInfo(
     Iterable<CoachingRequest> coachingRequests,
@@ -150,22 +153,23 @@ class ProfileCoachBloc extends BlocWithStatus<ProfileCoachEvent,
               )
               .toList();
 
-  Stream<List<CoachingRequestInfo>?> _switchToStreamWithCoachingRequestsInfo(
+  Stream<List<CoachingRequestDetails>?>
+      _switchToStreamWithCoachingRequestsDetails(
     List<Stream<(String, Person)>>? streams,
   ) =>
-      streams == null || streams.isEmpty == true
-          ? Stream.value([])
-          : Rx.combineLatest(
-              streams,
-              (List<(String, Person)> values) => values
-                  .map(
-                    ((String, Person) data) => CoachingRequestInfo(
-                      id: data.$1,
-                      sender: data.$2,
-                    ),
-                  )
-                  .toList(),
-            );
+          streams == null || streams.isEmpty == true
+              ? Stream.value([])
+              : Rx.combineLatest(
+                  streams,
+                  (List<(String, Person)> values) => values
+                      .map(
+                        ((String, Person) data) => CoachingRequestDetails(
+                          id: data.$1,
+                          personToDisplay: data.$2,
+                        ),
+                      )
+                      .toList(),
+                );
 }
 
 enum ProfileCoachBlocInfo { requestAccepted, requestDeleted, coachDeleted }

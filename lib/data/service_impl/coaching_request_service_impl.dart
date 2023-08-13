@@ -19,17 +19,25 @@ class CoachingRequestServiceImpl implements CoachingRequestService {
   @override
   Stream<List<CoachingRequest>> getCoachingRequestsBySenderId({
     required String senderId,
+    required CoachingRequestDirection direction,
   }) =>
       _firebaseCoachingRequestService
-          .getCoachingRequestsBySenderId(senderId: senderId)
+          .getCoachingRequestsBySenderId(
+            senderId: senderId,
+            direction: mapCoachingRequestDirectionToDto(direction),
+          )
           .map((dtos) => dtos.map(mapCoachingRequestFromDto).toList());
 
   @override
   Stream<List<CoachingRequest>> getCoachingRequestsByReceiverId({
     required String receiverId,
+    required CoachingRequestDirection direction,
   }) =>
       _firebaseCoachingRequestService
-          .getCoachingRequestsByReceiverId(receiverId: receiverId)
+          .getCoachingRequestsByReceiverId(
+            receiverId: receiverId,
+            direction: mapCoachingRequestDirectionToDto(direction),
+          )
           .map((dtos) => dtos.map(mapCoachingRequestFromDto).toList());
 
   @override

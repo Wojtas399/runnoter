@@ -10,6 +10,7 @@ import '../../component/gap/gap_horizontal_components.dart';
 import '../../component/text/body_text_components.dart';
 import '../../component/text/title_text_components.dart';
 import '../../dialog/persons_search/persons_search_dialog.dart';
+import '../../formatter/person_formatter.dart';
 import '../../service/dialog_service.dart';
 
 class ProfileCoachSection extends StatelessWidget {
@@ -140,7 +141,7 @@ class _CoachingRequests extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<CoachingRequestInfo>? requests = context.select(
+    final List<CoachingRequestDetails>? requests = context.select(
       (ProfileCoachBloc bloc) => bloc.state.receivedCoachingRequests,
     );
 
@@ -169,16 +170,16 @@ class _CoachingRequests extends StatelessWidget {
 }
 
 class _CoachingRequestItem extends StatelessWidget {
-  final CoachingRequestInfo requestInfo;
+  final CoachingRequestDetails requestDetails;
 
-  const _CoachingRequestItem(this.requestInfo);
+  const _CoachingRequestItem(this.requestDetails);
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
       contentPadding: const EdgeInsets.all(0),
-      title: Text('${requestInfo.sender.name} ${requestInfo.sender.surname}'),
-      subtitle: Text(requestInfo.sender.email),
+      title: Text(requestDetails.personToDisplay.toFullName()),
+      subtitle: Text(requestDetails.personToDisplay.email),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -203,13 +204,13 @@ class _CoachingRequestItem extends StatelessWidget {
 
   void _onAccept(BuildContext context) {
     context.read<ProfileCoachBloc>().add(
-          ProfileCoachEventAcceptRequest(requestId: requestInfo.id),
+          ProfileCoachEventAcceptRequest(requestId: requestDetails.id),
         );
   }
 
   void _onDelete(BuildContext context) {
     context.read<ProfileCoachBloc>().add(
-          ProfileCoachEventDeleteRequest(requestId: requestInfo.id),
+          ProfileCoachEventDeleteRequest(requestId: requestDetails.id),
         );
   }
 }

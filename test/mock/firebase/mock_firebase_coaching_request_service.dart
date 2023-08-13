@@ -13,6 +13,7 @@ class MockFirebaseCoachingRequestService extends Mock
     when(
       () => getCoachingRequestsBySenderId(
         senderId: any(named: 'senderId'),
+        direction: any(named: 'direction'),
       ),
     ).thenAnswer((_) => Stream.value(requests));
   }
@@ -23,6 +24,7 @@ class MockFirebaseCoachingRequestService extends Mock
     when(
       () => getCoachingRequestsByReceiverId(
         receiverId: any(named: 'receiverId'),
+        direction: any(named: 'direction'),
       ),
     ).thenAnswer((_) => Stream.value(requests));
   }

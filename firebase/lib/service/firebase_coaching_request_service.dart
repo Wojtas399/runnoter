@@ -1,14 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../firebase_collections.dart';
+import '../mapper/coaching_request_direction_mapper.dart';
 import '../model/coaching_request_dto.dart';
 
 class FirebaseCoachingRequestService {
   Stream<List<CoachingRequestDto>> getCoachingRequestsBySenderId({
     required String senderId,
+    required CoachingRequestDirection direction,
   }) =>
       getCoachingRequestsRef()
           .where(senderIdField, isEqualTo: senderId)
+          .where(
+            directionField,
+            isEqualTo: mapCoachingRequestDirectionToString(direction),
+          )
           .snapshots()
           .map((snapshots) => snapshots.docs)
           .map(
@@ -17,9 +23,14 @@ class FirebaseCoachingRequestService {
 
   Stream<List<CoachingRequestDto>> getCoachingRequestsByReceiverId({
     required String receiverId,
+    required CoachingRequestDirection direction,
   }) =>
       getCoachingRequestsRef()
           .where(receiverIdField, isEqualTo: receiverId)
+          .where(
+            directionField,
+            isEqualTo: mapCoachingRequestDirectionToString(direction),
+          )
           .snapshots()
           .map((snapshots) => snapshots.docs)
           .map(

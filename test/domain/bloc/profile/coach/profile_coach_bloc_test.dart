@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
+import 'package:runnoter/domain/additional_model/coaching_request.dart';
 import 'package:runnoter/domain/bloc/profile/coach/profile_coach_bloc.dart';
 import 'package:runnoter/domain/entity/user.dart';
 import 'package:runnoter/domain/repository/person_repository.dart';
@@ -96,7 +97,7 @@ void main() {
   blocTest(
     'initialize, '
     'logged user does not have a coach, '
-    'should load and emit all received coaching requests',
+    'should load and emit all sent and received coaching requests',
     build: () => ProfileCoachBloc(),
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
@@ -120,13 +121,13 @@ void main() {
       ProfileCoachState(
         status: const BlocStatusComplete(),
         receivedCoachingRequests: [
-          CoachingRequestInfo(
+          CoachingRequestDetails(
             id: 'i1',
-            sender: createPerson(id: 'u2', name: 'name2'),
+            personToDisplay: createPerson(id: 'u2', name: 'name2'),
           ),
-          CoachingRequestInfo(
+          CoachingRequestDetails(
             id: 'i2',
-            sender: createPerson(id: 'u3', name: 'name3'),
+            personToDisplay: createPerson(id: 'u3', name: 'name3'),
           ),
         ],
       ),
@@ -137,6 +138,7 @@ void main() {
       verify(
         () => coachingRequestService.getCoachingRequestsByReceiverId(
           receiverId: loggedUserId,
+          direction: CoachingRequestDirection.coachToClient,
         ),
       ).called(1);
       verify(() => personRepository.getPersonById(personId: 'u2')).called(1);
@@ -152,8 +154,14 @@ void main() {
       state: ProfileCoachState(
         status: const BlocStatusComplete(),
         receivedCoachingRequests: [
-          CoachingRequestInfo(id: 'r2', sender: createPerson(id: 'u2')),
-          CoachingRequestInfo(id: 'r1', sender: createPerson(id: 'u3')),
+          CoachingRequestDetails(
+            id: 'r2',
+            personToDisplay: createPerson(id: 'u2'),
+          ),
+          CoachingRequestDetails(
+            id: 'r1',
+            personToDisplay: createPerson(id: 'u3'),
+          ),
         ],
       ),
     ),
@@ -165,8 +173,14 @@ void main() {
       ProfileCoachState(
         status: const BlocStatusNoLoggedUser(),
         receivedCoachingRequests: [
-          CoachingRequestInfo(id: 'r2', sender: createPerson(id: 'u2')),
-          CoachingRequestInfo(id: 'r1', sender: createPerson(id: 'u3')),
+          CoachingRequestDetails(
+            id: 'r2',
+            personToDisplay: createPerson(id: 'u2'),
+          ),
+          CoachingRequestDetails(
+            id: 'r1',
+            personToDisplay: createPerson(id: 'u3'),
+          ),
         ],
       ),
     ],
@@ -182,8 +196,14 @@ void main() {
       state: ProfileCoachState(
         status: const BlocStatusComplete(),
         receivedCoachingRequests: [
-          CoachingRequestInfo(id: 'r2', sender: createPerson(id: 'u2')),
-          CoachingRequestInfo(id: 'r1', sender: createPerson(id: 'u3')),
+          CoachingRequestDetails(
+            id: 'r2',
+            personToDisplay: createPerson(id: 'u2'),
+          ),
+          CoachingRequestDetails(
+            id: 'r1',
+            personToDisplay: createPerson(id: 'u3'),
+          ),
         ],
       ),
     ),
@@ -200,8 +220,14 @@ void main() {
       ProfileCoachState(
         status: const BlocStatusLoading(),
         receivedCoachingRequests: [
-          CoachingRequestInfo(id: 'r2', sender: createPerson(id: 'u2')),
-          CoachingRequestInfo(id: 'r1', sender: createPerson(id: 'u3')),
+          CoachingRequestDetails(
+            id: 'r2',
+            personToDisplay: createPerson(id: 'u2'),
+          ),
+          CoachingRequestDetails(
+            id: 'r1',
+            personToDisplay: createPerson(id: 'u3'),
+          ),
         ],
       ),
       ProfileCoachState(
@@ -209,8 +235,14 @@ void main() {
           info: ProfileCoachBlocInfo.requestAccepted,
         ),
         receivedCoachingRequests: [
-          CoachingRequestInfo(id: 'r2', sender: createPerson(id: 'u2')),
-          CoachingRequestInfo(id: 'r1', sender: createPerson(id: 'u3')),
+          CoachingRequestDetails(
+            id: 'r2',
+            personToDisplay: createPerson(id: 'u2'),
+          ),
+          CoachingRequestDetails(
+            id: 'r1',
+            personToDisplay: createPerson(id: 'u3'),
+          ),
         ],
       ),
     ],

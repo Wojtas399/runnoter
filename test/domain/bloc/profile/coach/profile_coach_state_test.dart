@@ -26,10 +26,33 @@ void main() {
   );
 
   test(
+    'copy with sentCoachingRequests',
+    () {
+      final List<CoachingRequestDetails> expectedSentCoachingRequests = [
+        CoachingRequestDetails(
+          id: 'r1',
+          personToDisplay: createPerson(id: 'u1'),
+        ),
+      ];
+
+      state = state.copyWith(
+        sentCoachingRequests: expectedSentCoachingRequests,
+      );
+      final state2 = state.copyWith();
+
+      expect(state.sentCoachingRequests, expectedSentCoachingRequests);
+      expect(state2.sentCoachingRequests, expectedSentCoachingRequests);
+    },
+  );
+
+  test(
     'copy with receivedCoachingRequests',
     () {
-      final List<CoachingRequestInfo> expectedReceivedCoachingRequests = [
-        CoachingRequestInfo(id: 'r1', sender: createPerson(id: 'u1')),
+      final List<CoachingRequestDetails> expectedReceivedCoachingRequests = [
+        CoachingRequestDetails(
+          id: 'r1',
+          personToDisplay: createPerson(id: 'u1'),
+        ),
       ];
 
       state = state.copyWith(

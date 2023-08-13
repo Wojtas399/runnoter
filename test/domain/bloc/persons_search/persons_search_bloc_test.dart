@@ -52,6 +52,7 @@ void main() {
 
   blocTest(
     'initialize, '
+    'coach to client direction, '
     'found persons do not exist, '
     'should only emit client ids and invited persons ids',
     build: () => PersonsSearchBloc(
@@ -64,18 +65,9 @@ void main() {
       );
       coachingRequestService.mockGetCoachingRequestsBySenderId(
         requests: [
-          createCoachingRequest(
-            receiverId: 'u4',
-            isAccepted: false,
-          ),
-          createCoachingRequest(
-            receiverId: 'u5',
-            isAccepted: true,
-          ),
-          createCoachingRequest(
-            receiverId: 'u3',
-            isAccepted: true,
-          ),
+          createCoachingRequest(receiverId: 'u4', isAccepted: false),
+          createCoachingRequest(receiverId: 'u5', isAccepted: true),
+          createCoachingRequest(receiverId: 'u3', isAccepted: true),
         ],
       );
     },
@@ -87,12 +79,25 @@ void main() {
         invitedPersonIds: ['u4'],
       ),
     ],
+    verify: (_) {
+      verify(() => authService.loggedUserId$).called(1);
+      verify(
+        () => personRepository.getPersonsByCoachId(coachId: loggedUserId),
+      ).called(1);
+      verify(
+        () => coachingRequestService.getCoachingRequestsBySenderId(
+          senderId: loggedUserId,
+          direction: CoachingRequestDirection.coachToClient,
+        ),
+      ).called(1);
+    },
   );
 
   blocTest(
     'initialize, '
+    'coach to client direction, '
     'found persons exist, '
-    'should emit client ids, ids of invited persons and found persons',
+    'should emit client ids, ids of invited persons and updated found persons',
     build: () => PersonsSearchBloc(
       requestDirection: CoachingRequestDirection.coachToClient,
       state: PersonsSearchState(
@@ -116,18 +121,9 @@ void main() {
       );
       coachingRequestService.mockGetCoachingRequestsBySenderId(
         requests: [
-          createCoachingRequest(
-            receiverId: 'u4',
-            isAccepted: false,
-          ),
-          createCoachingRequest(
-            receiverId: 'u5',
-            isAccepted: true,
-          ),
-          createCoachingRequest(
-            receiverId: 'u3',
-            isAccepted: true,
-          ),
+          createCoachingRequest(receiverId: 'u4', isAccepted: false),
+          createCoachingRequest(receiverId: 'u5', isAccepted: true),
+          createCoachingRequest(receiverId: 'u3', isAccepted: true),
         ],
       );
     },
@@ -149,6 +145,127 @@ void main() {
         ],
       ),
     ],
+    verify: (_) {
+      verify(() => authService.loggedUserId$).called(1);
+      verify(
+        () => personRepository.getPersonsByCoachId(coachId: loggedUserId),
+      ).called(1);
+      verify(
+        () => coachingRequestService.getCoachingRequestsBySenderId(
+          senderId: loggedUserId,
+          direction: CoachingRequestDirection.coachToClient,
+        ),
+      ).called(1);
+    },
+  );
+
+  blocTest(
+    'initialize, '
+    'coach to client direction, '
+    'found persons do not exist, '
+    'should only emit client ids and invited persons ids',
+    build: () => PersonsSearchBloc(
+      requestDirection: CoachingRequestDirection.clientToCoach,
+    ),
+    setUp: () {
+      authService.mockGetLoggedUserId(userId: loggedUserId);
+      personRepository.mockGetPersonsByCoachId(
+        persons: [createPerson(id: 'u2'), createPerson(id: 'u3')],
+      );
+      coachingRequestService.mockGetCoachingRequestsBySenderId(
+        requests: [
+          createCoachingRequest(receiverId: 'u4', isAccepted: false),
+          createCoachingRequest(receiverId: 'u5', isAccepted: true),
+          createCoachingRequest(receiverId: 'u3', isAccepted: true),
+        ],
+      );
+    },
+    act: (bloc) => bloc.add(const PersonsSearchEventInitialize()),
+    expect: () => [
+      const PersonsSearchState(
+        status: BlocStatusComplete(),
+        clientIds: ['u2', 'u3', 'u5'],
+        invitedPersonIds: ['u4'],
+      ),
+    ],
+    verify: (_) {
+      verify(() => authService.loggedUserId$).called(1);
+      verify(
+        () => personRepository.getPersonsByCoachId(coachId: loggedUserId),
+      ).called(1);
+      verify(
+        () => coachingRequestService.getCoachingRequestsBySenderId(
+          senderId: loggedUserId,
+          direction: CoachingRequestDirection.clientToCoach,
+        ),
+      ).called(1);
+    },
+  );
+
+  blocTest(
+    'initialize, '
+    'client to coach direction, '
+    'found persons exist, '
+    'should emit client ids, ids of invited persons and updated found persons',
+    build: () => PersonsSearchBloc(
+      requestDirection: CoachingRequestDirection.clientToCoach,
+      state: PersonsSearchState(
+        status: const BlocStatusComplete(),
+        foundPersons: [
+          FoundPerson(
+            info: createPerson(id: 'u2'),
+            relationshipStatus: RelationshipStatus.pending,
+          ),
+          FoundPerson(
+            info: createPerson(id: 'u4', coachId: 'c1'),
+            relationshipStatus: RelationshipStatus.notInvited,
+          ),
+        ],
+      ),
+    ),
+    setUp: () {
+      authService.mockGetLoggedUserId(userId: loggedUserId);
+      personRepository.mockGetPersonsByCoachId(
+        persons: [createPerson(id: 'u2'), createPerson(id: 'u3')],
+      );
+      coachingRequestService.mockGetCoachingRequestsBySenderId(
+        requests: [
+          createCoachingRequest(receiverId: 'u4', isAccepted: false),
+          createCoachingRequest(receiverId: 'u5', isAccepted: true),
+          createCoachingRequest(receiverId: 'u3', isAccepted: true),
+        ],
+      );
+    },
+    act: (bloc) => bloc.add(const PersonsSearchEventInitialize()),
+    expect: () => [
+      PersonsSearchState(
+        status: const BlocStatusComplete(),
+        clientIds: const ['u2', 'u3', 'u5'],
+        invitedPersonIds: const ['u4'],
+        foundPersons: [
+          FoundPerson(
+            info: createPerson(id: 'u2'),
+            relationshipStatus: RelationshipStatus.accepted,
+          ),
+          FoundPerson(
+            info: createPerson(id: 'u4', coachId: 'c1'),
+            relationshipStatus: RelationshipStatus.pending,
+          ),
+        ],
+      ),
+    ],
+    verify: (_) {
+      verify(() => authService.loggedUserId$).called(1);
+      verify(
+        () => personRepository.getPersonsByCoachId(coachId: loggedUserId),
+      ).called(1);
+      verify(
+        () => coachingRequestService.getCoachingRequestsBySenderId(
+          senderId: loggedUserId,
+          direction: CoachingRequestDirection.clientToCoach,
+        ),
+      ).called(1);
+    },
   );
 
   blocTest(

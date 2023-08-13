@@ -10,6 +10,7 @@ import '../../../../domain/repository/user_repository.dart';
 import '../../../../domain/service/auth_service.dart';
 import '../../../dependency_injection.dart';
 import '../../additional_model/bloc_state.dart';
+import '../../additional_model/coaching_request.dart';
 import '../../additional_model/settings.dart';
 import '../../entity/person.dart';
 import '../../entity/user.dart';
@@ -87,7 +88,10 @@ class HomeBloc
 
   Stream<List<Person>> _getNewClients(String loggedUserId) =>
       _coachingRequestService
-          .getCoachingRequestsBySenderId(senderId: loggedUserId)
+          .getCoachingRequestsBySenderId(
+            senderId: loggedUserId,
+            direction: CoachingRequestDirection.coachToClient,
+          )
           .map((requests) => requests.where((req) => req.isAccepted).toList())
           .map(
             (acceptedRequests) => acceptedRequests.map(

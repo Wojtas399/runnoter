@@ -104,7 +104,7 @@ class _UserItem extends StatelessWidget {
           children: [
             TextSpan(text: message, style: textStyle),
             TextSpan(
-              text: foundUser.info.toUIFormat(),
+              text: foundUser.info.toFullNameWithEmail(),
               style: textStyle?.copyWith(fontWeight: FontWeight.bold),
             ),
             TextSpan(text: '?', style: textStyle),

@@ -3,10 +3,12 @@ import '../additional_model/coaching_request.dart';
 abstract interface class CoachingRequestService {
   Stream<List<CoachingRequest>> getCoachingRequestsBySenderId({
     required String senderId,
+    required CoachingRequestDirection direction,
   });
 
   Stream<List<CoachingRequest>> getCoachingRequestsByReceiverId({
     required String receiverId,
+    required CoachingRequestDirection direction,
   });
 
   Future<void> addCoachingRequest({

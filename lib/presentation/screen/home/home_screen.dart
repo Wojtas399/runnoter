@@ -83,7 +83,7 @@ class _BlocListener extends StatelessWidget {
     if (state.newClients.isNotEmpty) {
       for (final newClient in state.newClients) {
         showSnackbarMessage(
-          Str.of(context).homeNewClientInfo(newClient.toUIFormat()),
+          Str.of(context).homeNewClientInfo(newClient.toFullNameWithEmail()),
           showCloseIcon: true,
           duration: const Duration(seconds: 6),
         );

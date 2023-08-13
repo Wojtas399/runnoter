@@ -46,7 +46,10 @@ class PersonsSearchBloc extends BlocWithStatus<PersonsSearchEvent,
           (String loggedUserId) => Rx.combineLatest2(
             _getClientIds(loggedUserId),
             _coachingRequestService
-                .getCoachingRequestsBySenderId(senderId: loggedUserId)
+                .getCoachingRequestsBySenderId(
+                  senderId: loggedUserId,
+                  direction: requestDirection,
+                )
                 .whereNotNull(),
             (
               List<String> clientIds,
