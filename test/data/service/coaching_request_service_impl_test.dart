@@ -134,6 +134,8 @@ void main() {
 
   test(
     'add coaching request, '
+    'coach to client, '
+    'receiver does not have a coach, '
     "should call firebase coaching request service's method to add coaching request",
     () async {
       const String senderId = 'u1';
@@ -167,7 +169,8 @@ void main() {
 
   test(
     'add coaching request, '
-    'receiver already has coach, '
+    'coach to client, '
+    'receiver already has a coach, '
     'should throw CoachingRequestException with userAlreadyHasCoach code',
     () async {
       const String senderId = 'u1';
@@ -195,6 +198,34 @@ void main() {
       expect(exception, expectedException);
       verify(
         () => firebaseUserService.loadUserById(userId: receiverId),
+      ).called(1);
+    },
+  );
+
+  test(
+    'add coaching request, '
+    'client to coach, '
+    "should call firebase coaching request service's method to add coaching request",
+    () async {
+      const String senderId = 'u1';
+      const String receiverId = 'u2';
+      const bool isAccepted = false;
+      firebaseCoachingRequestService.mockAddCoachingRequest();
+
+      await service.addCoachingRequest(
+        senderId: senderId,
+        receiverId: receiverId,
+        direction: CoachingRequestDirection.clientToCoach,
+        isAccepted: isAccepted,
+      );
+
+      verify(
+        () => firebaseCoachingRequestService.addCoachingRequest(
+          senderId: senderId,
+          receiverId: receiverId,
+          direction: firebase.CoachingRequestDirection.clientToCoach,
+          isAccepted: isAccepted,
+        ),
       ).called(1);
     },
   );

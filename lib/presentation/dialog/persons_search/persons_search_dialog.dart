@@ -79,7 +79,7 @@ class _NormalDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(Str.of(context).personsSearchTitle),
+      title: const _DialogTitle(),
       content: const SizedBox(
         width: 500,
         height: 500,
@@ -102,13 +102,30 @@ class _FullScreenDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(Str.of(context).personsSearchTitle),
+        title: const _DialogTitle(),
         leading: const CloseButton(),
       ),
       body: const SafeArea(
         child: _Content(),
       ),
     );
+  }
+}
+
+class _DialogTitle extends StatelessWidget {
+  const _DialogTitle();
+
+  @override
+  Widget build(BuildContext context) {
+    final CoachingRequestDirection requestDirection =
+        context.read<PersonsSearchBloc>().requestDirection;
+    final str = Str.of(context);
+    final String title = switch (requestDirection) {
+      CoachingRequestDirection.clientToCoach => str.coachesSearchTitle,
+      CoachingRequestDirection.coachToClient => str.usersSearchTitle,
+    };
+
+    return Text(title);
   }
 }
 

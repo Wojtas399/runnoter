@@ -3,12 +3,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/additional_model/bloc_status.dart';
+import '../../../domain/additional_model/coaching_request.dart';
 import '../../../domain/bloc/persons_search/persons_search_bloc.dart';
 import '../../../domain/entity/person.dart';
 import '../../component/empty_content_info_component.dart';
 import '../../component/loading_info_component.dart';
 import '../../component/padding/paddings_24.dart';
 import '../../extension/gender_extensions.dart';
+import '../../formatter/person_formatter.dart';
 import '../../service/dialog_service.dart';
 
 class PersonsSearchFoundPersons extends StatelessWidget {
@@ -22,15 +24,12 @@ class PersonsSearchFoundPersons extends StatelessWidget {
     final List<FoundPerson>? foundUsers = context.select(
       (PersonsSearchBloc bloc) => bloc.state.foundPersons,
     );
-    final str = Str.of(context);
 
     return blocStatus is BlocStatusLoading
-        ? LoadingInfo(loadingText: str.personsSearchSearchingInfo)
+        ? LoadingInfo(loadingText: Str.of(context).loading)
         : switch (foundUsers) {
-            null => Paddings24(
-                child: EmptyContentInfo(title: str.personsSearchInstruction),
-              ),
-            [] => EmptyContentInfo(title: str.personsSearchNoResultsInfo),
+            null => const _EmptySearchQueryInfo(),
+            [] => const _NoResultsInfo(),
             [...] => ListView(
                 children: ListTile.divideTiles(
                   context: context,
@@ -82,19 +81,30 @@ class _UserItem extends StatelessWidget {
   ) async {
     final str = Str.of(context);
     final TextStyle? textStyle = Theme.of(context).textTheme.bodyMedium;
+    final CoachingRequestDirection requestDirection =
+        context.read<PersonsSearchBloc>().requestDirection;
+    final String dialogTitle = switch (requestDirection) {
+      CoachingRequestDirection.clientToCoach =>
+        str.coachesSearchSendInvitationConfirmationDialogTitle,
+      CoachingRequestDirection.coachToClient =>
+        str.usersSearchSendInvitationConfirmationDialogTitle,
+    };
+    final String message = switch (requestDirection) {
+      CoachingRequestDirection.clientToCoach =>
+        str.coachesSearchSendInvitationConfirmationDialogMessage,
+      CoachingRequestDirection.coachToClient =>
+        str.usersSearchSendInvitationConfirmationDialogMessage,
+    };
+
     return askForConfirmation(
-      title: Text(str.personsSearchSendInvitationConfirmationDialogTitle),
+      title: Text(dialogTitle),
       displaySubmitButtonAsFilled: true,
       content: RichText(
         text: TextSpan(
           children: [
+            TextSpan(text: message, style: textStyle),
             TextSpan(
-              text: str.personsSearchSendInvitationConfirmationDialogMessage,
-              style: textStyle,
-            ),
-            TextSpan(
-              text:
-                  '${foundUser.info.name} ${foundUser.info.surname} (${foundUser.info.email})',
+              text: foundUser.info.toUIFormat(),
               style: textStyle?.copyWith(fontWeight: FontWeight.bold),
             ),
             TextSpan(text: '?', style: textStyle),
@@ -103,5 +113,41 @@ class _UserItem extends StatelessWidget {
       ),
       confirmButtonLabel: str.submit,
     );
+  }
+}
+
+class _EmptySearchQueryInfo extends StatelessWidget {
+  const _EmptySearchQueryInfo();
+
+  @override
+  Widget build(BuildContext context) {
+    final CoachingRequestDirection requestDirection =
+        context.read<PersonsSearchBloc>().requestDirection;
+    final str = Str.of(context);
+    final String title = switch (requestDirection) {
+      CoachingRequestDirection.coachToClient => str.usersSearchInstruction,
+      CoachingRequestDirection.clientToCoach => str.coachesSearchTitle,
+    };
+
+    return Paddings24(
+      child: EmptyContentInfo(title: title),
+    );
+  }
+}
+
+class _NoResultsInfo extends StatelessWidget {
+  const _NoResultsInfo();
+
+  @override
+  Widget build(BuildContext context) {
+    final CoachingRequestDirection requestDirection =
+        context.read<PersonsSearchBloc>().requestDirection;
+    final str = Str.of(context);
+    final String title = switch (requestDirection) {
+      CoachingRequestDirection.clientToCoach => str.coachesSearchNoResultsInfo,
+      CoachingRequestDirection.coachToClient => str.usersSearchNoResultsInfo,
+    };
+
+    return EmptyContentInfo(title: title);
   }
 }

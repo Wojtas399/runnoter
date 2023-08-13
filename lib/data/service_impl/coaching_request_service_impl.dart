@@ -39,20 +39,21 @@ class CoachingRequestServiceImpl implements CoachingRequestService {
     required CoachingRequestDirection direction,
     required bool isAccepted,
   }) async {
-    final firebase.UserDto? receiverDto =
-        await _firebaseUserService.loadUserById(userId: receiverId);
-    if (receiverDto?.coachId != null) {
-      throw const CoachingRequestException(
-        code: CoachingRequestExceptionCode.userAlreadyHasCoach,
-      );
-    } else {
-      await _firebaseCoachingRequestService.addCoachingRequest(
-        senderId: senderId,
-        receiverId: receiverId,
-        direction: mapCoachingRequestDirectionToDto(direction),
-        isAccepted: isAccepted,
-      );
+    if (direction == CoachingRequestDirection.coachToClient) {
+      final firebase.UserDto? receiverDto =
+          await _firebaseUserService.loadUserById(userId: receiverId);
+      if (receiverDto?.coachId != null) {
+        throw const CoachingRequestException(
+          code: CoachingRequestExceptionCode.userAlreadyHasCoach,
+        );
+      }
     }
+    await _firebaseCoachingRequestService.addCoachingRequest(
+      senderId: senderId,
+      receiverId: receiverId,
+      direction: mapCoachingRequestDirectionToDto(direction),
+      isAccepted: isAccepted,
+    );
   }
 
   @override

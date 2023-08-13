@@ -22,17 +22,16 @@ class PersonsSearchBloc extends BlocWithStatus<PersonsSearchEvent,
   final AuthService _authService;
   final PersonRepository _personRepository;
   final CoachingRequestService _coachingRequestService;
-  final CoachingRequestDirection _requestDirection;
+  final CoachingRequestDirection requestDirection;
 
   PersonsSearchBloc({
-    required CoachingRequestDirection requestDirection,
+    required this.requestDirection,
     PersonsSearchState state = const PersonsSearchState(
       status: BlocStatusInitial(),
     ),
   })  : _authService = getIt<AuthService>(),
         _personRepository = getIt<PersonRepository>(),
         _coachingRequestService = getIt<CoachingRequestService>(),
-        _requestDirection = requestDirection,
         super(state) {
     on<PersonsSearchEventInitialize>(_initialize);
     on<PersonsSearchEventSearch>(_search);
@@ -87,7 +86,7 @@ class PersonsSearchBloc extends BlocWithStatus<PersonsSearchEvent,
     emitLoadingStatus(emit);
     final List<Person> foundPersons = await _personRepository.searchForPersons(
       searchQuery: event.searchQuery,
-      accountType: _requestDirection == CoachingRequestDirection.clientToCoach
+      accountType: requestDirection == CoachingRequestDirection.clientToCoach
           ? AccountType.coach
           : null,
     );
@@ -122,7 +121,7 @@ class PersonsSearchBloc extends BlocWithStatus<PersonsSearchEvent,
       await _coachingRequestService.addCoachingRequest(
         senderId: loggedUserId,
         receiverId: event.personId,
-        direction: _requestDirection,
+        direction: requestDirection,
         isAccepted: false,
       );
       emitCompleteStatus(emit, info: PersonsSearchBlocInfo.requestSent);
@@ -162,7 +161,7 @@ class PersonsSearchBloc extends BlocWithStatus<PersonsSearchEvent,
   }) {
     if (clientIds.contains(person.id)) {
       return RelationshipStatus.accepted;
-    } else if (_requestDirection == CoachingRequestDirection.coachToClient &&
+    } else if (requestDirection == CoachingRequestDirection.coachToClient &&
         person.coachId != null) {
       return RelationshipStatus.alreadyTaken;
     } else if (invitedPersonIds.contains(person.id)) {

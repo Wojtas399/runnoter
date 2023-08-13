@@ -840,28 +840,44 @@
     "description": "Message of the info about the lack of races"
   },
   "@__________PERSONS_SEARCH__________": {},
-  "personsSearchTitle": "Szukaj użytkowników",
-  "@personsSearchTitle": {
+  "coachesSearchTitle": "Szukaj trenerów",
+  "@coachesSearchTitle": {
+    "description": "Title of coaches search screen"
+  },
+  "usersSearchTitle": "Szukaj użytkowników",
+  "@usersSearchTitle": {
     "description": "Title of users search screen"
   },
-  "personsSearchInstruction": "Wprowadź tekst, aby wyszukać użytkowników",
-  "@personsSearchInstruction": {
+  "coachesSearchInstruction": "Wprowadź tekst, aby wyszukać trenerów",
+  "@coachesSearchInstruction": {
+    "description": "Instruction to search coaches"
+  },
+  "usersSearchInstruction": "Wprowadź tekst, aby wyszukać użytkowników",
+  "@usersSearchInstruction": {
     "description": "Instruction to search users"
   },
-  "personsSearchSearchingInfo": "Szukanie...",
-  "@personsSearchSearchingInfo": {
-    "description": "Info about searching process"
+  "coachesSearchNoResultsInfo": "Brak pasujących trenerów",
+  "@coachesSearchNoResultsInfo": {
+    "description": "Info about no matching coaches"
   },
-  "personsSearchNoResultsInfo": "Brak pasujących użytkowników",
-  "@personsSearchNoResultsInfo": {
+  "usersSearchNoResultsInfo": "Brak pasujących użytkowników",
+  "@usersSearchNoResultsInfo": {
     "description": "Info about no matching users"
   },
-  "personsSearchSendInvitationConfirmationDialogTitle": "Dodaj klienta",
-  "@personsSearchSendInvitationConfirmationDialogTitle": {
-    "description": "Title of dialog to confirm to send invitation"
+  "coachesSearchSendInvitationConfirmationDialogTitle": "Dodaj trenera",
+  "@coachesSearchSendInvitationConfirmationDialogTitle": {
+    "description": "Title of dialog to confirm to send invitation to coach"
   },
-  "personsSearchSendInvitationConfirmationDialogMessage": "Aby zostać trenerem wybranej osoby, musi ona zatwierdzić prośbę o udostępnienie swojego profilu. Czy chcesz wysłać taką prośbę do użytkownika ",
-  "@personsSearchSendInvitationConfirmationDialogMessage": {
+  "usersSearchSendInvitationConfirmationDialogTitle": "Dodaj klienta",
+  "@usersSearchSendInvitationConfirmationDialogTitle": {
+    "description": "Title of dialog to confirm to send invitation to client"
+  },
+  "coachesSearchSendInvitationConfirmationDialogMessage": "Aby wybrana osoba została twoim trenerem, musi ona zatwierdzić prośbę o trenowanie. Wówczas zostaną jej udostępnione twoje dane treningowe, wyścigowe oraz zdrowotne. Czy chcesz wysłać taką prośbę do użytkownika ",
+  "@coachesSearchSendInvitationConfirmationDialogMessage": {
+    "description": "Message of the dialog to confirm to send invitation"
+  },
+  "usersSearchSendInvitationConfirmationDialogMessage": "Aby zostać trenerem wybranej osoby, musi ona zatwierdzić prośbę o udostępnienie swojego profilu. Czy chcesz wysłać taką prośbę do użytkownika ",
+  "@usersSearchSendInvitationConfirmationDialogMessage": {
     "description": "Message of the dialog to confirm to send invitation"
   },
   "personsSearchSuccessfullySentInvitation": "Pomyślnie wysłano prośbę",
