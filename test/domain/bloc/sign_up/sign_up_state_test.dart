@@ -2,7 +2,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/bloc/sign_up/sign_up_bloc.dart';
 import 'package:runnoter/domain/entity/user.dart';
-import 'package:runnoter/domain/use_case/add_user_data_use_case.dart';
 
 void main() {
   late SignUpState state;

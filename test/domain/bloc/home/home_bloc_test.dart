@@ -78,7 +78,7 @@ void main() {
           distanceUnit: DistanceUnit.miles,
           paceUnit: PaceUnit.milesPerHour,
         ),
-        newClients: [],
+        newClients: const [],
       ),
     ],
     verify: (_) {

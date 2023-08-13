@@ -51,7 +51,6 @@ void main() {
 
   setUpAll(() {
     GetIt.I.registerFactory<AuthService>(() => authService);
-    ;
     GetIt.I.registerSingleton<UserRepository>(userRepository);
   });
 
