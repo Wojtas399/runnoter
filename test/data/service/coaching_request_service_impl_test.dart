@@ -228,16 +228,20 @@ void main() {
   );
 
   test(
-    'delete coaching requests by receiver id, '
+    'delete unaccepted coaching requests by receiver id, '
     "should call firebase coaching request service's method to delete coaching requests by receiver id",
     () async {
       const String receiverId = 'u1';
-      firebaseCoachingRequestService.mockDeleteCoachingRequestsByReceiverId();
+      firebaseCoachingRequestService
+          .mockDeleteUnacceptedCoachingRequestsByReceiverId();
 
-      await service.deleteCoachingRequestsByReceiverId(receiverId: receiverId);
+      await service.deleteUnacceptedCoachingRequestsByReceiverId(
+        receiverId: receiverId,
+      );
 
       verify(
-        () => firebaseCoachingRequestService.deleteCoachingRequestsByReceiverId(
+        () => firebaseCoachingRequestService
+            .deleteUnacceptedCoachingRequestsByReceiverId(
           receiverId: receiverId,
         ),
       ).called(1);

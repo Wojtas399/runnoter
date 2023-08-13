@@ -191,7 +191,7 @@ void main() {
       authService.mockGetLoggedUserId(userId: loggedUserId);
       userRepository.mockUpdateUser();
       coachingRequestService.mockUpdateCoachingRequest();
-      coachingRequestService.mockDeleteCoachingRequestsByReceiverId();
+      coachingRequestService.mockDeleteUnacceptedCoachingRequestsByReceiverId();
     },
     act: (bloc) => bloc.add(
       const ProfileCoachEventAcceptRequest(requestId: 'r1'),
@@ -226,7 +226,8 @@ void main() {
         ),
       ).called(1);
       verify(
-        () => coachingRequestService.deleteCoachingRequestsByReceiverId(
+        () =>
+            coachingRequestService.deleteUnacceptedCoachingRequestsByReceiverId(
           receiverId: loggedUserId,
         ),
       ).called(1);
