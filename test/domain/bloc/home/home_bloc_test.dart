@@ -113,7 +113,7 @@ void main() {
     'logged user does not exist, '
     'should finish event call',
     build: () => HomeBloc(),
-    setUp: () => authService.mockGetLoggedUserId(userId: loggedUserId),
+    setUp: () => authService.mockGetLoggedUserId(),
     act: (bloc) => bloc.add(const HomeEventDeleteAcceptedCoachingRequests()),
     expect: () => [],
     verify: (_) {

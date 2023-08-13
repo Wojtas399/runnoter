@@ -55,6 +55,20 @@ class FirebaseCoachingRequestService {
     await getCoachingRequestsRef().doc(requestId).delete();
   }
 
+  Future<void> deleteAcceptedCoachingRequestsBySenderId({
+    required String senderId,
+  }) async {
+    final snapshot = await getCoachingRequestsRef()
+        .where(senderIdField, isEqualTo: senderId)
+        .where(isAcceptedField, isEqualTo: true)
+        .get();
+    final batch = FirebaseFirestore.instance.batch();
+    for (final request in snapshot.docs) {
+      batch.delete(request.reference);
+    }
+    await batch.commit();
+  }
+
   Future<void> deleteUnacceptedCoachingRequestsByReceiverId({
     required String receiverId,
   }) async {
