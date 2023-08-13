@@ -122,7 +122,7 @@ class PersonsSearchBloc extends BlocWithStatus<PersonsSearchEvent,
       await _coachingRequestService.addCoachingRequest(
         senderId: loggedUserId,
         receiverId: event.personId,
-        direction: CoachingRequestDirection.coachToClient,
+        direction: _requestDirection,
         isAccepted: false,
       );
       emitCompleteStatus(emit, info: PersonsSearchBlocInfo.requestSent);
@@ -162,7 +162,8 @@ class PersonsSearchBloc extends BlocWithStatus<PersonsSearchEvent,
   }) {
     if (clientIds.contains(person.id)) {
       return RelationshipStatus.accepted;
-    } else if (person.coachId != null) {
+    } else if (_requestDirection == CoachingRequestDirection.coachToClient &&
+        person.coachId != null) {
       return RelationshipStatus.alreadyTaken;
     } else if (invitedPersonIds.contains(person.id)) {
       return RelationshipStatus.pending;

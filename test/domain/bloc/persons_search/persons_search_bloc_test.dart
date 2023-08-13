@@ -266,20 +266,10 @@ void main() {
     ),
     setUp: () => personRepository.mockSearchForPersons(
       persons: [
-        createPerson(
-          id: 'u12',
-          name: 'na1',
-          surname: 'su1',
-          coachId: loggedUserId,
-        ),
-        createPerson(id: 'u2', name: 'na2', surname: 'su2'),
-        createPerson(id: 'u3', name: 'na3', surname: 'su3'),
-        createPerson(
-          id: 'u4',
-          name: 'na4',
-          surname: 'su4',
-          coachId: 'c1',
-        ),
+        createPerson(id: 'u12', name: 'na1', surname: 'su1'),
+        createPerson(id: 'u2', name: 'na2', surname: 'su2', coachId: 'c1'),
+        createPerson(id: 'u3', name: 'na3', surname: 'su3', coachId: 'c2'),
+        createPerson(id: 'u4', name: 'na4', surname: 'su4', coachId: 'c1'),
       ],
     ),
     act: (bloc) => bloc.add(const PersonsSearchEventSearch(searchQuery: 'sea')),
@@ -296,20 +286,25 @@ void main() {
         invitedPersonIds: const ['u2'],
         foundPersons: [
           FoundPerson(
-            info: createPerson(
-              id: 'u12',
-              name: 'na1',
-              surname: 'su1',
-              coachId: loggedUserId,
-            ),
+            info: createPerson(id: 'u12', name: 'na1', surname: 'su1'),
             relationshipStatus: RelationshipStatus.accepted,
           ),
           FoundPerson(
-            info: createPerson(id: 'u2', name: 'na2', surname: 'su2'),
+            info: createPerson(
+              id: 'u2',
+              name: 'na2',
+              surname: 'su2',
+              coachId: 'c1',
+            ),
             relationshipStatus: RelationshipStatus.pending,
           ),
           FoundPerson(
-            info: createPerson(id: 'u3', name: 'na3', surname: 'su3'),
+            info: createPerson(
+              id: 'u3',
+              name: 'na3',
+              surname: 'su3',
+              coachId: 'c2',
+            ),
             relationshipStatus: RelationshipStatus.notInvited,
           ),
           FoundPerson(
@@ -319,7 +314,7 @@ void main() {
               surname: 'su4',
               coachId: 'c1',
             ),
-            relationshipStatus: RelationshipStatus.alreadyTaken,
+            relationshipStatus: RelationshipStatus.notInvited,
           ),
         ],
       ),
@@ -351,7 +346,8 @@ void main() {
 
   blocTest(
     'invite person, '
-    "should call coaching request repository's method to add request with given person id set as receiver id and pending invitation status",
+    'coach to client, '
+    "should call coaching request repository's method to add request with given person id set as receiver id, coachToClient direction and pending invitation status",
     build: () => PersonsSearchBloc(
       requestDirection: CoachingRequestDirection.coachToClient,
       state: const PersonsSearchState(status: BlocStatusComplete()),
@@ -378,6 +374,42 @@ void main() {
           senderId: 'u1',
           receiverId: 'u2',
           direction: CoachingRequestDirection.coachToClient,
+          isAccepted: false,
+        ),
+      ).called(1);
+    },
+  );
+
+  blocTest(
+    'invite person, '
+    'client to coach, '
+    "should call coaching request repository's method to add request with given person id set as receiver id, clientToCoach direction and pending invitation status",
+    build: () => PersonsSearchBloc(
+      requestDirection: CoachingRequestDirection.clientToCoach,
+      state: const PersonsSearchState(status: BlocStatusComplete()),
+    ),
+    setUp: () {
+      authService.mockGetLoggedUserId(userId: 'u1');
+      coachingRequestService.mockAddCoachingRequest();
+    },
+    act: (bloc) => bloc.add(const PersonsSearchEventInvitePerson(
+      personId: 'u2',
+    )),
+    expect: () => [
+      const PersonsSearchState(status: BlocStatusLoading()),
+      const PersonsSearchState(
+        status: BlocStatusComplete<PersonsSearchBlocInfo>(
+          info: PersonsSearchBlocInfo.requestSent,
+        ),
+      ),
+    ],
+    verify: (_) {
+      verify(() => authService.loggedUserId$).called(1);
+      verify(
+        () => coachingRequestService.addCoachingRequest(
+          senderId: 'u1',
+          receiverId: 'u2',
+          direction: CoachingRequestDirection.clientToCoach,
           isAccepted: false,
         ),
       ).called(1);
