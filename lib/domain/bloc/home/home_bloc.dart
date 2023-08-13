@@ -97,7 +97,9 @@ class HomeBloc
             ),
           )
           .switchMap(
-            (streams) => Rx.combineLatest(streams, (newClients) => newClients),
+            (streams) => streams.isEmpty
+                ? Stream.value([])
+                : Rx.combineLatest(streams, (newClients) => newClients),
           );
 }
 

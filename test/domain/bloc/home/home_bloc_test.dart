@@ -45,6 +45,55 @@ void main() {
 
   blocTest(
     'initialize, '
+    'there are no sent coaching requests, '
+    'should emit new clients as empty array',
+    build: () => HomeBloc(),
+    setUp: () {
+      authService.mockGetLoggedUserId(userId: loggedUserId);
+      userRepository.mockGetUserById(
+        user: createUser(
+          id: loggedUserId,
+          accountType: AccountType.runner,
+          name: 'Jack',
+          settings: createSettings(
+            themeMode: ThemeMode.dark,
+            language: Language.polish,
+            distanceUnit: DistanceUnit.miles,
+            paceUnit: PaceUnit.milesPerHour,
+          ),
+        ),
+      );
+      coachingRequestService.mockGetCoachingRequestsBySenderId(requests: []);
+    },
+    act: (bloc) => bloc.add(const HomeEventInitialize()),
+    expect: () => [
+      const HomeState(status: BlocStatusLoading()),
+      HomeState(
+        status: const BlocStatusComplete(),
+        accountType: AccountType.runner,
+        loggedUserName: 'Jack',
+        appSettings: createSettings(
+          themeMode: ThemeMode.dark,
+          language: Language.polish,
+          distanceUnit: DistanceUnit.miles,
+          paceUnit: PaceUnit.milesPerHour,
+        ),
+        newClients: [],
+      ),
+    ],
+    verify: (_) {
+      verify(() => authService.loggedUserId$).called(1);
+      verify(() => userRepository.getUserById(userId: loggedUserId)).called(1);
+      verify(
+        () => coachingRequestService.getCoachingRequestsBySenderId(
+          senderId: loggedUserId,
+        ),
+      ).called(1);
+    },
+  );
+
+  blocTest(
+    'initialize, '
     "should set listener of logged user's data and new clients",
     build: () => HomeBloc(),
     setUp: () {

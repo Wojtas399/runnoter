@@ -81,7 +81,6 @@ class ProfileCoachBloc extends BlocWithStatus<ProfileCoachEvent,
         .firstWhere((request) => request.id == event.requestId)
         .sender
         .id;
-    await _userRepository.updateUser(userId: loggedUserId, coachId: senderId);
     await _coachingRequestService.updateCoachingRequest(
       requestId: event.requestId,
       isAccepted: true,
@@ -89,6 +88,7 @@ class ProfileCoachBloc extends BlocWithStatus<ProfileCoachEvent,
     await _coachingRequestService.deleteUnacceptedCoachingRequestsByReceiverId(
       receiverId: loggedUserId,
     );
+    await _userRepository.updateUser(userId: loggedUserId, coachId: senderId);
     emitCompleteStatus(emit, info: ProfileCoachBlocInfo.requestAccepted);
   }
 
