@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../../domain/additional_model/coaching_request.dart';
 import '../../../domain/bloc/persons_search/persons_search_bloc.dart';
 import '../../component/bloc_with_status_listener_component.dart';
 import '../../component/responsive_layout_component.dart';
@@ -11,13 +12,15 @@ import 'persons_search_found_perons.dart';
 import 'persons_search_input.dart';
 
 class PersonsSearchDialog extends StatelessWidget {
-  const PersonsSearchDialog({super.key});
+  final CoachingRequestDirection requestDirection;
+
+  const PersonsSearchDialog({super.key, required this.requestDirection});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) =>
-          PersonsSearchBloc()..add(const PersonsSearchEventInitialize()),
+      create: (_) => PersonsSearchBloc(requestDirection: requestDirection)
+        ..add(const PersonsSearchEventInitialize()),
       child: const _BlocListener(
         child: ResponsiveLayout(
           mobileBody: _FullScreenDialog(),

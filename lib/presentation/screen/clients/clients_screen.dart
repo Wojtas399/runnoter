@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../../domain/additional_model/coaching_request.dart';
 import '../../../domain/bloc/clients/clients_bloc.dart';
 import '../../component/big_button_component.dart';
 import '../../component/bloc_with_status_listener_component.dart';
@@ -95,7 +96,9 @@ class _DesktopContent extends StatelessWidget {
         BigButton(
           label: Str.of(context).clientsSearchUsers,
           onPressed: () => showDialogDependingOnScreenSize(
-            const PersonsSearchDialog(),
+            const PersonsSearchDialog(
+              requestDirection: CoachingRequestDirection.coachToClient,
+            ),
           ),
         ),
         const Gap32(),

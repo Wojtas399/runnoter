@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../../domain/additional_model/coaching_request.dart';
 import '../../../domain/bloc/profile/coach/profile_coach_bloc.dart';
 import '../../../domain/entity/person.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/gap/gap_horizontal_components.dart';
 import '../../component/text/body_text_components.dart';
 import '../../component/text/title_text_components.dart';
+import '../../dialog/persons_search/persons_search_dialog.dart';
 import '../../service/dialog_service.dart';
 
 class ProfileCoachSection extends StatelessWidget {
@@ -125,7 +127,11 @@ class _NoCoachContent extends StatelessWidget {
   }
 
   void _onFindCoachPressed() {
-    //TODO
+    showDialogDependingOnScreenSize(
+      const PersonsSearchDialog(
+        requestDirection: CoachingRequestDirection.clientToCoach,
+      ),
+    );
   }
 }
 

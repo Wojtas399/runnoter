@@ -6,6 +6,7 @@ import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/additional_model/coaching_request.dart';
 import 'package:runnoter/domain/additional_model/custom_exception.dart';
 import 'package:runnoter/domain/bloc/persons_search/persons_search_bloc.dart';
+import 'package:runnoter/domain/entity/user.dart';
 import 'package:runnoter/domain/repository/person_repository.dart';
 import 'package:runnoter/domain/service/auth_service.dart';
 import 'package:runnoter/domain/service/coaching_request_service.dart';
@@ -40,7 +41,9 @@ void main() {
     'initialize, '
     'logged user does not exist, '
     'should do nothing',
-    build: () => PersonsSearchBloc(),
+    build: () => PersonsSearchBloc(
+      requestDirection: CoachingRequestDirection.coachToClient,
+    ),
     setUp: () => authService.mockGetLoggedUserId(),
     act: (bloc) => bloc.add(const PersonsSearchEventInitialize()),
     expect: () => [],
@@ -51,7 +54,9 @@ void main() {
     'initialize, '
     'found persons do not exist, '
     'should only emit client ids and invited persons ids',
-    build: () => PersonsSearchBloc(),
+    build: () => PersonsSearchBloc(
+      requestDirection: CoachingRequestDirection.coachToClient,
+    ),
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
       personRepository.mockGetPersonsByCoachId(
@@ -89,6 +94,7 @@ void main() {
     'found persons exist, '
     'should emit client ids, ids of invited persons and found persons',
     build: () => PersonsSearchBloc(
+      requestDirection: CoachingRequestDirection.coachToClient,
       state: PersonsSearchState(
         status: const BlocStatusComplete(),
         foundPersons: [
@@ -150,6 +156,7 @@ void main() {
     'search query is empty string, '
     'should set found persons as null',
     build: () => PersonsSearchBloc(
+      requestDirection: CoachingRequestDirection.coachToClient,
       state: const PersonsSearchState(
         status: BlocStatusComplete(),
         searchQuery: 'sea',
@@ -170,8 +177,10 @@ void main() {
 
   blocTest(
     'search, '
+    'coach to client request direction, '
     "should call person repository's method to search persons and should update found persons in state",
     build: () => PersonsSearchBloc(
+      requestDirection: CoachingRequestDirection.coachToClient,
       state: const PersonsSearchState(
         status: BlocStatusComplete(),
         clientIds: ['u12'],
@@ -244,10 +253,92 @@ void main() {
   );
 
   blocTest(
+    'search, '
+    'client to coach request direction, '
+    "should call person repository's method to search persons and should update found persons in state",
+    build: () => PersonsSearchBloc(
+      requestDirection: CoachingRequestDirection.clientToCoach,
+      state: const PersonsSearchState(
+        status: BlocStatusComplete(),
+        clientIds: ['u12'],
+        invitedPersonIds: ['u2'],
+      ),
+    ),
+    setUp: () => personRepository.mockSearchForPersons(
+      persons: [
+        createPerson(
+          id: 'u12',
+          name: 'na1',
+          surname: 'su1',
+          coachId: loggedUserId,
+        ),
+        createPerson(id: 'u2', name: 'na2', surname: 'su2'),
+        createPerson(id: 'u3', name: 'na3', surname: 'su3'),
+        createPerson(
+          id: 'u4',
+          name: 'na4',
+          surname: 'su4',
+          coachId: 'c1',
+        ),
+      ],
+    ),
+    act: (bloc) => bloc.add(const PersonsSearchEventSearch(searchQuery: 'sea')),
+    expect: () => [
+      const PersonsSearchState(
+        status: BlocStatusLoading(),
+        clientIds: ['u12'],
+        invitedPersonIds: ['u2'],
+      ),
+      PersonsSearchState(
+        status: const BlocStatusComplete(),
+        searchQuery: 'sea',
+        clientIds: const ['u12'],
+        invitedPersonIds: const ['u2'],
+        foundPersons: [
+          FoundPerson(
+            info: createPerson(
+              id: 'u12',
+              name: 'na1',
+              surname: 'su1',
+              coachId: loggedUserId,
+            ),
+            relationshipStatus: RelationshipStatus.accepted,
+          ),
+          FoundPerson(
+            info: createPerson(id: 'u2', name: 'na2', surname: 'su2'),
+            relationshipStatus: RelationshipStatus.pending,
+          ),
+          FoundPerson(
+            info: createPerson(id: 'u3', name: 'na3', surname: 'su3'),
+            relationshipStatus: RelationshipStatus.notInvited,
+          ),
+          FoundPerson(
+            info: createPerson(
+              id: 'u4',
+              name: 'na4',
+              surname: 'su4',
+              coachId: 'c1',
+            ),
+            relationshipStatus: RelationshipStatus.alreadyTaken,
+          ),
+        ],
+      ),
+    ],
+    verify: (_) => verify(
+      () => personRepository.searchForPersons(
+        searchQuery: 'sea',
+        accountType: AccountType.coach,
+      ),
+    ).called(1),
+  );
+
+  blocTest(
     'invite person, '
     'logged user does not exist, '
     'should emit no logged user status',
-    build: () => PersonsSearchBloc(),
+    build: () => PersonsSearchBloc(
+      requestDirection: CoachingRequestDirection.coachToClient,
+    ),
     setUp: () => authService.mockGetLoggedUserId(),
     act: (bloc) => bloc.add(const PersonsSearchEventInvitePerson(
       personId: 'u2',
@@ -262,6 +353,7 @@ void main() {
     'invite person, '
     "should call coaching request repository's method to add request with given person id set as receiver id and pending invitation status",
     build: () => PersonsSearchBloc(
+      requestDirection: CoachingRequestDirection.coachToClient,
       state: const PersonsSearchState(status: BlocStatusComplete()),
     ),
     setUp: () {
@@ -297,6 +389,7 @@ void main() {
     'CoachingRequestException with userAlreadyHasCoach code, '
     'should emit error status with userAlreadyHasCoach error',
     build: () => PersonsSearchBloc(
+      requestDirection: CoachingRequestDirection.coachToClient,
       state: const PersonsSearchState(status: BlocStatusComplete()),
     ),
     setUp: () {

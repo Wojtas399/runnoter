@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../../domain/additional_model/coaching_request.dart';
 import '../../../domain/bloc/home/home_bloc.dart';
 import '../../../domain/entity/user.dart';
 import '../../config/navigation/router.dart';
@@ -209,7 +210,9 @@ class _State extends State<HomeContent> {
     } else if (currentPage.name == RacesRoute.name) {
       navigateTo(RaceCreatorRoute());
     } else if (currentPage.name == ClientsRoute.name) {
-      showDialogDependingOnScreenSize(const PersonsSearchDialog());
+      showDialogDependingOnScreenSize(const PersonsSearchDialog(
+        requestDirection: CoachingRequestDirection.coachToClient,
+      ));
     }
   }
 }

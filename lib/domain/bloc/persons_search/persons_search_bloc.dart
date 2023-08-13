@@ -9,6 +9,7 @@ import '../../additional_model/bloc_with_status.dart';
 import '../../additional_model/coaching_request.dart';
 import '../../additional_model/custom_exception.dart';
 import '../../entity/person.dart';
+import '../../entity/user.dart';
 import '../../repository/person_repository.dart';
 import '../../service/auth_service.dart';
 import '../../service/coaching_request_service.dart';
@@ -21,14 +22,17 @@ class PersonsSearchBloc extends BlocWithStatus<PersonsSearchEvent,
   final AuthService _authService;
   final PersonRepository _personRepository;
   final CoachingRequestService _coachingRequestService;
+  final CoachingRequestDirection _requestDirection;
 
   PersonsSearchBloc({
+    required CoachingRequestDirection requestDirection,
     PersonsSearchState state = const PersonsSearchState(
       status: BlocStatusInitial(),
     ),
   })  : _authService = getIt<AuthService>(),
         _personRepository = getIt<PersonRepository>(),
         _coachingRequestService = getIt<CoachingRequestService>(),
+        _requestDirection = requestDirection,
         super(state) {
     on<PersonsSearchEventInitialize>(_initialize);
     on<PersonsSearchEventSearch>(_search);
@@ -83,6 +87,9 @@ class PersonsSearchBloc extends BlocWithStatus<PersonsSearchEvent,
     emitLoadingStatus(emit);
     final List<Person> foundPersons = await _personRepository.searchForPersons(
       searchQuery: event.searchQuery,
+      accountType: _requestDirection == CoachingRequestDirection.clientToCoach
+          ? AccountType.coach
+          : null,
     );
     emit(state.copyWith(
       searchQuery: event.searchQuery,
