@@ -1,5 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 import '../firebase.dart';
 import '../firebase_collections.dart';
+import '../mapper/account_type_mapper.dart';
 import '../utils/utils.dart';
 
 class FirebaseUserService {
@@ -17,8 +20,19 @@ class FirebaseUserService {
     return querySnapshot.docs.map((docSnapshot) => docSnapshot.data()).toList();
   }
 
-  Future<List<UserDto>> searchForUsers({required String searchQuery}) async {
-    final snapshot = await getUsersRef().get();
+  Future<List<UserDto>> searchForUsers({
+    required String searchQuery,
+    AccountType? accountType,
+  }) async {
+    final CollectionReference<UserDto> usersRef = getUsersRef();
+    QuerySnapshot<UserDto> snapshot;
+    if (accountType != null) {
+      snapshot = await usersRef
+          .where(accountTypeField, isEqualTo: mapAccountTypeToStr(accountType))
+          .get();
+    } else {
+      snapshot = await usersRef.get();
+    }
     final userDtos = snapshot.docs.map((doc) => doc.data());
     return userDtos
         .where(

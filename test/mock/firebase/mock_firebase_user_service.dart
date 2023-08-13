@@ -28,6 +28,7 @@ class MockFirebaseUserService extends Mock implements FirebaseUserService {
     when(
       () => searchForUsers(
         searchQuery: any(named: 'searchQuery'),
+        accountType: any(named: 'accountType'),
       ),
     ).thenAnswer((_) => Future.value(userDtos));
   }

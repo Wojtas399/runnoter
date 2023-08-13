@@ -23,6 +23,7 @@ class MockPersonRepository extends Mock implements PersonRepository {
     when(
       () => searchForPersons(
         searchQuery: any(named: 'searchQuery'),
+        accountType: any(named: 'accountType'),
       ),
     ).thenAnswer((_) => Future.value(persons));
   }

@@ -42,7 +42,7 @@ class UserDto extends Equatable {
     required Map<String, dynamic>? json,
   }) : this(
           id: userId,
-          accountType: mapAccountTypeFromStr(json?[_accountTypeField]),
+          accountType: mapAccountTypeFromStr(json?[accountTypeField]),
           gender: mapGenderFromString(json?[_genderField]),
           name: json?[nameField],
           surname: json?[surnameField],
@@ -51,7 +51,7 @@ class UserDto extends Equatable {
         );
 
   Map<String, dynamic> toJson() => {
-        _accountTypeField: mapAccountTypeToStr(accountType),
+        accountTypeField: mapAccountTypeToStr(accountType),
         _genderField: mapGenderToString(gender),
         nameField: name,
         surnameField: surname,
@@ -71,7 +71,7 @@ Map<String, dynamic> createUserJsonToUpdate({
 }) =>
     {
       if (accountType != null)
-        _accountTypeField: mapAccountTypeToStr(accountType),
+        accountTypeField: mapAccountTypeToStr(accountType),
       if (gender != null) _genderField: mapGenderToString(gender),
       if (name != null) nameField: name,
       if (surname != null) surnameField: surname,
@@ -82,7 +82,7 @@ Map<String, dynamic> createUserJsonToUpdate({
         coachIdField: coachId,
     };
 
-const String _accountTypeField = 'accountType';
+const String accountTypeField = 'accountType';
 const String _genderField = 'gender';
 const String nameField = 'name';
 const String surnameField = 'surname';

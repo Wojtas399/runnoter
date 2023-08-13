@@ -179,6 +179,7 @@ void main() {
 
       final List<Person> persons = await repository.searchForPersons(
         searchQuery: 'li',
+        accountType: AccountType.coach,
       );
       final Stream<List<Person>?> repositoryState$ = repository.dataStream$;
 
@@ -205,6 +206,12 @@ void main() {
           ],
         ),
       );
+      verify(
+        () => firebaseUserService.searchForUsers(
+          searchQuery: 'li',
+          accountType: firebase.AccountType.coach,
+        ),
+      ).called(1);
     },
   );
 
