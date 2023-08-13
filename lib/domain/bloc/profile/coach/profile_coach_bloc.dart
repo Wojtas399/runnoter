@@ -35,6 +35,7 @@ class ProfileCoachBloc extends BlocWithStatus<ProfileCoachEvent,
     on<ProfileCoachEventInitialize>(_initialize);
     on<ProfileCoachEventAcceptRequest>(_acceptRequest);
     on<ProfileCoachEventDeleteRequest>(_deleteRequest);
+    on<ProfileCoachEventDeleteCoach>(_deleteCoach);
   }
 
   Future<void> _initialize(
@@ -103,6 +104,20 @@ class ProfileCoachBloc extends BlocWithStatus<ProfileCoachEvent,
     emitCompleteStatus(emit, info: ProfileCoachBlocInfo.requestDeleted);
   }
 
+  Future<void> _deleteCoach(
+    ProfileCoachEventDeleteCoach event,
+    Emitter<ProfileCoachState> emit,
+  ) async {
+    final String? loggedUserId = await _authService.loggedUserId$.first;
+    if (loggedUserId == null) {
+      emitNoLoggedUserStatus(emit);
+      return;
+    }
+    emitLoadingStatus(emit);
+    await _userRepository.updateUser(userId: loggedUserId, coachIdAsNull: true);
+    emitCompleteStatus(emit, info: ProfileCoachBlocInfo.coachDeleted);
+  }
+
   Stream<(String, String?)> _combineWithCoachId(String loggedUserId) =>
       _userRepository
           .getUserById(userId: loggedUserId)
@@ -153,4 +168,4 @@ class ProfileCoachBloc extends BlocWithStatus<ProfileCoachEvent,
             );
 }
 
-enum ProfileCoachBlocInfo { requestAccepted, requestDeleted }
+enum ProfileCoachBlocInfo { requestAccepted, requestDeleted, coachDeleted }

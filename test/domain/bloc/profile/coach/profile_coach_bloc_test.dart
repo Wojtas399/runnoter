@@ -254,4 +254,45 @@ void main() {
       () => coachingRequestService.deleteCoachingRequest(requestId: 'r1'),
     ).called(1),
   );
+
+  blocTest(
+    'delete coach, '
+    'logged user does not exist, '
+    'should emit no logged user status',
+    build: () => ProfileCoachBloc(),
+    setUp: () => authService.mockGetLoggedUserId(),
+    act: (bloc) => bloc.add(const ProfileCoachEventDeleteCoach()),
+    expect: () => [
+      const ProfileCoachState(status: BlocStatusNoLoggedUser()),
+    ],
+    verify: (_) => verify(() => authService.loggedUserId$).called(1),
+  );
+
+  blocTest(
+    'delete coach, '
+    "should call user repository's method to update user with coach id set as null and should emit coachDeleted info",
+    build: () => ProfileCoachBloc(),
+    setUp: () {
+      authService.mockGetLoggedUserId(userId: loggedUserId);
+      userRepository.mockUpdateUser();
+    },
+    act: (bloc) => bloc.add(const ProfileCoachEventDeleteCoach()),
+    expect: () => [
+      const ProfileCoachState(status: BlocStatusLoading()),
+      const ProfileCoachState(
+        status: BlocStatusComplete<ProfileCoachBlocInfo>(
+          info: ProfileCoachBlocInfo.coachDeleted,
+        ),
+      ),
+    ],
+    verify: (_) {
+      verify(() => authService.loggedUserId$).called(1);
+      verify(
+        () => userRepository.updateUser(
+          userId: loggedUserId,
+          coachIdAsNull: true,
+        ),
+      ).called(1);
+    },
+  );
 }

@@ -19,3 +19,7 @@ class ProfileCoachEventDeleteRequest extends ProfileCoachEvent {
 
   const ProfileCoachEventDeleteRequest({required this.requestId});
 }
+
+class ProfileCoachEventDeleteCoach extends ProfileCoachEvent {
+  const ProfileCoachEventDeleteCoach();
+}

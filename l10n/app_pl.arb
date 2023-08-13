@@ -580,6 +580,18 @@
   "@profileSuccessfullyDeletedRequest": {
     "description": "Message to inform that request has been successfully deleted"
   },
+  "profileFinishCooperationWithCoachDialogTitle": "Usuń trenera",
+  "@profileFinishCooperationWithCoachDialogTitle": {
+    "description": "Title of the dialog to confirm finishing cooperation with coach"
+  },
+  "profileFinishCooperationWithCoachDialogMessage": "Czy na pewno chcesz zakończyć współpracę ze swoim trenerem? Trener utraci dostęp do twoich danych treningowych, wyścigowych oraz zdrowotnych.",
+  "@profileFinishCooperationWithCoachDialogMessage": {
+    "description": "Message of the dialog to confirm finishing cooperation with coach"
+  },
+  "profileSuccessfullyFinishedCooperationWithCoach": "Pomyślnie zakończono współpracę z trenerem",
+  "@profileSuccessfullyFinishedCooperationWithCoach": {
+    "description": "Message to inform about finished cooperation with a coach"
+  },
   "@__________RE_AUTHENTICATION__________": {},
   "reauthenticationTitle": "Uwierzytelnienie",
   "@reauthenticationTitle": {

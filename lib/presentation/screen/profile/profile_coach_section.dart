@@ -5,8 +5,10 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../domain/bloc/profile/coach/profile_coach_bloc.dart';
 import '../../../domain/entity/person.dart';
 import '../../component/gap/gap_components.dart';
+import '../../component/gap/gap_horizontal_components.dart';
 import '../../component/text/body_text_components.dart';
 import '../../component/text/title_text_components.dart';
+import '../../service/dialog_service.dart';
 
 class ProfileCoachSection extends StatelessWidget {
   const ProfileCoachSection({super.key});
@@ -40,12 +42,25 @@ class _Coach extends StatelessWidget {
     return coach == null
         ? const _NoCoachContent()
         : ListTile(
-            contentPadding: const EdgeInsets.symmetric(horizontal: 8),
+            contentPadding: const EdgeInsets.only(left: 8),
             title: Text('${coach.name} ${coach.surname}'),
             subtitle: Text(coach.email),
-            trailing: OutlinedButton(
-              onPressed: () => _onMessagePressed(context),
-              child: Text(Str.of(context).message),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                OutlinedButton(
+                  onPressed: () => _onMessagePressed(context),
+                  child: Text(Str.of(context).message),
+                ),
+                const GapHorizontal8(),
+                IconButton(
+                  onPressed: () => _onDeletePressed(context),
+                  icon: Icon(
+                    Icons.delete_outline,
+                    color: Theme.of(context).colorScheme.error,
+                  ),
+                ),
+              ],
             ),
           );
   }
@@ -53,6 +68,27 @@ class _Coach extends StatelessWidget {
   void _onMessagePressed(BuildContext context) {
     //TODO
   }
+
+  Future<void> _onDeletePressed(BuildContext context) async {
+    final ProfileCoachBloc bloc = context.read<ProfileCoachBloc>();
+    final bool isDeletionConfirmed =
+        await _askForCoachDeletionConfirmation(context);
+    if (isDeletionConfirmed) {
+      bloc.add(const ProfileCoachEventDeleteCoach());
+    }
+  }
+
+  Future<bool> _askForCoachDeletionConfirmation(BuildContext context) async =>
+      await askForConfirmation(
+        title: Text(
+          Str.of(context).profileFinishCooperationWithCoachDialogTitle,
+        ),
+        content: Text(
+          Str.of(context).profileFinishCooperationWithCoachDialogMessage,
+        ),
+        displaySubmitButtonAsFilled: true,
+        confirmButtonColor: Theme.of(context).colorScheme.error,
+      );
 }
 
 class _NoCoachContent extends StatelessWidget {

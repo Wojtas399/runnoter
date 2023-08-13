@@ -141,12 +141,18 @@ class _CoachBlocListener extends StatelessWidget {
   }
 
   void _manageInfo(BuildContext context, ProfileCoachBlocInfo info) {
+    final str = Str.of(context);
     switch (info) {
       case ProfileCoachBlocInfo.requestAccepted:
-        showSnackbarMessage(Str.of(context).profileSuccessfullyAcceptedRequest);
+        showSnackbarMessage(str.profileSuccessfullyAcceptedRequest);
         break;
       case ProfileCoachBlocInfo.requestDeleted:
-        showSnackbarMessage(Str.of(context).profileSuccessfullyDeletedRequest);
+        showSnackbarMessage(str.profileSuccessfullyDeletedRequest);
+        break;
+      case ProfileCoachBlocInfo.coachDeleted:
+        showSnackbarMessage(
+          str.profileSuccessfullyFinishedCooperationWithCoach,
+        );
         break;
     }
   }
