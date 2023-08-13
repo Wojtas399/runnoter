@@ -462,9 +462,13 @@
   "@profileTitle": {
     "description": "Title of profile screen"
   },
-  "profileUserData": "Dane użytkownika",
+  "profileUserData": "Dane osobowe",
   "@profileUserData": {
-    "description": "Title of the user data section"
+    "description": "Title of the personal data section"
+  },
+  "profileCoach": "Trener",
+  "@profileCoach": {
+    "description": "Title of the coach section"
   },
   "profileSettings": "Ustawienia",
   "@profileSettings": {
@@ -537,6 +541,34 @@
   "profileSuccessfullyDeletedAccountDialogMessage": "Twoje konto zostało pomyślnie usunięte. Jeśli chcesz ponownie skorzystać z aplikacji, musisz założyć nowe konto.",
   "@profileSuccessfullyDeletedAccountDialogMessage": {
     "description": "Message of the dialog to inform that the account has been deleted"
+  },
+  "profileNoCoachTitle": "Brak trenera",
+  "@profileNoCoachTitle": {
+    "description": "Title of the info about no coach"
+  },
+  "profileNoCoachMessage": "Nie masz żadnego trenera. Musisz zaakceptować prośbę od trenera lub znaleźć go samodzielnie.",
+  "@profileNoCoachMessage": {
+    "description": "Message of the info about no coach"
+  },
+  "profileCoachingRequests": "Prośby o trenowanie",
+  "@profileCoachingRequests": {
+    "description": "Label of coaching requests section"
+  },
+  "profileNoRequestsInfo": "Brak oczekujących próśb o trenowanie",
+  "@profileNoRequestsInfo": {
+    "description": "Title of the info about no coaching requests"
+  },
+  "profileFindCoach": "Znajdź trenera",
+  "@profileFindCoach": {
+    "description": "Label of the button to find a coach"
+  },
+  "profileSuccessfullyAcceptedRequest": "Pomyślnie zaakceptowano prośbę",
+  "@profileSuccessfullyAcceptedRequest": {
+    "description": "Message to inform that request has been successfully accepted"
+  },
+  "profileSuccessfullyDeletedRequest": "Pomyślnie usunięto prośbę",
+  "@profileSuccessfullyDeletedRequest": {
+    "description": "Message to inform that request has been successfully deleted"
   },
   "@__________RE_AUTHENTICATION__________": {},
   "reauthenticationTitle": "Uwierzytelnienie",
@@ -821,31 +853,6 @@
   "personsSearchUserAlreadyHasCoachInfoMessage": "Wygląda na to, że ten użytkownik rozpoczął niedawno współpracę z trenerem. Z tego powodu nie możesz mu wysłać prośby.",
   "@personsSearchUserAlreadyHasCoachInfoMessage": {
     "description": "Message of the information about user who already has a coach"
-  },
-  "@__________COACH__________": {},
-  "coachTitle": "Trener",
-  "@coachTitle": {
-    "description": "Title of coach screen"
-  },
-  "coachNoCoachTitle": "Brak trenera",
-  "@coachNoCoachTitle": {
-    "description": "Title of the info about no coach"
-  },
-  "coachNoCoachMessage": "Nie masz żadnego trenera. Musisz zaakceptować prośbę od trenera lub znaleźć go samodzielnie, aby móc korzystać z tej strony.",
-  "@coachNoCoachMessage": {
-    "description": "Message of the info about no coach"
-  },
-  "coachCoachingRequests": "Prośby o trenowanie",
-  "@coachCoachingRequests": {
-    "description": "Label of coaching requests section"
-  },
-  "coachNoRequestsInfoTitle": "Brak oczekujących próśb o trenowanie",
-  "@coachNoRequestsInfoTitle": {
-    "description": "Title of the info about no coaching requests"
-  },
-  "coachFindCoach": "Znajdź trenera",
-  "@coachFindCoach": {
-    "description": "Label of the button to find a coach"
   },
   "@__________RUN_STATUS_PARAMS__________": {},
   "runStatus": "Status",
@@ -1172,6 +1179,7 @@
   "submit": "Wyślij",
   "accept": "Akceptuj",
   "undo": "Cofnij",
+  "message": "Wiadomość",
   "@__________VALIDATOR_MESSAGES__________": {},
   "requiredFieldMessage": "To pole jest wymagane",
   "@requiredFieldMessage": {

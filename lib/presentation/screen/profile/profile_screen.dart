@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../../domain/bloc/profile/coach/profile_coach_bloc.dart';
 import '../../../domain/bloc/profile/identities/profile_identities_bloc.dart';
 import '../../../domain/bloc/profile/settings/profile_settings_bloc.dart';
 import '../../component/bloc_with_status_listener_component.dart';
@@ -17,13 +18,23 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => ProfileIdentitiesBloc()
-        ..add(const ProfileIdentitiesEventInitialize()),
-      child: BlocProvider(
-        create: (_) =>
-            ProfileSettingsBloc()..add(const ProfileSettingsEventInitialize()),
-        child: const _IdentitiesBlocListener(
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (_) => ProfileIdentitiesBloc()
+            ..add(const ProfileIdentitiesEventInitialize()),
+        ),
+        BlocProvider(
+          create: (_) =>
+              ProfileCoachBloc()..add(const ProfileCoachEventInitialize()),
+        ),
+        BlocProvider(
+          create: (_) => ProfileSettingsBloc()
+            ..add(const ProfileSettingsEventInitialize()),
+        ),
+      ],
+      child: const _IdentitiesBlocListener(
+        child: _CoachBlocListener(
           child: ProfileContent(),
         ),
       ),
@@ -112,5 +123,31 @@ class _IdentitiesBlocListenerState extends State<_IdentitiesBlocListener>
       message:
           '${str.emailVerificationMessage} $email. ${str.emailVerificationInstruction}',
     );
+  }
+}
+
+class _CoachBlocListener extends StatelessWidget {
+  final Widget child;
+
+  const _CoachBlocListener({required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocWithStatusListener<ProfileCoachBloc, ProfileCoachState,
+        ProfileCoachBlocInfo, dynamic>(
+      onInfo: (ProfileCoachBlocInfo info) => _manageInfo(context, info),
+      child: child,
+    );
+  }
+
+  void _manageInfo(BuildContext context, ProfileCoachBlocInfo info) {
+    switch (info) {
+      case ProfileCoachBlocInfo.requestAccepted:
+        showSnackbarMessage(Str.of(context).profileSuccessfullyAcceptedRequest);
+        break;
+      case ProfileCoachBlocInfo.requestDeleted:
+        showSnackbarMessage(Str.of(context).profileSuccessfullyDeletedRequest);
+        break;
+    }
   }
 }

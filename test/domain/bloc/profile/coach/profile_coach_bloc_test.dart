@@ -236,7 +236,9 @@ void main() {
     expect: () => [
       const ProfileCoachState(status: BlocStatusLoading()),
       const ProfileCoachState(
-        status: BlocStatusComplete<ProfileCoachBlocInfo>(),
+        status: BlocStatusComplete<ProfileCoachBlocInfo>(
+          info: ProfileCoachBlocInfo.requestDeleted,
+        ),
       ),
     ],
     verify: (_) => verify(

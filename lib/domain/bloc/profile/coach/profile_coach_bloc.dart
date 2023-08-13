@@ -97,7 +97,7 @@ class ProfileCoachBloc extends BlocWithStatus<ProfileCoachEvent,
     await _coachingRequestService.deleteCoachingRequest(
       requestId: event.requestId,
     );
-    emitCompleteStatus(emit);
+    emitCompleteStatus(emit, info: ProfileCoachBlocInfo.requestDeleted);
   }
 
   Stream<(String, String?)> _combineWithCoachId(String loggedUserId) =>
@@ -150,4 +150,4 @@ class ProfileCoachBloc extends BlocWithStatus<ProfileCoachEvent,
             );
 }
 
-enum ProfileCoachBlocInfo { requestAccepted }
+enum ProfileCoachBlocInfo { requestAccepted, requestDeleted }
