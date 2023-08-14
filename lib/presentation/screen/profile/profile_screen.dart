@@ -149,6 +149,9 @@ class _CoachBlocListener extends StatelessWidget {
       case ProfileCoachBlocInfo.requestDeleted:
         showSnackbarMessage(str.profileSuccessfullyDeletedRequest);
         break;
+      case ProfileCoachBlocInfo.requestUndid:
+        showSnackbarMessage(str.successfullyUndidRequest);
+        break;
       case ProfileCoachBlocInfo.coachDeleted:
         showSnackbarMessage(
           str.profileSuccessfullyFinishedCooperationWithCoach,

@@ -34,8 +34,12 @@ class ProfileCoachEventAcceptRequest extends ProfileCoachEvent {
 
 class ProfileCoachEventDeleteRequest extends ProfileCoachEvent {
   final String requestId;
+  final CoachingRequestDirection requestDirection;
 
-  const ProfileCoachEventDeleteRequest({required this.requestId});
+  const ProfileCoachEventDeleteRequest({
+    required this.requestId,
+    required this.requestDirection,
+  });
 }
 
 class ProfileCoachEventDeleteCoach extends ProfileCoachEvent {

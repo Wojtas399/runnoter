@@ -140,7 +140,15 @@ class ProfileCoachBloc extends BlocWithStatus<ProfileCoachEvent,
     await _coachingRequestService.deleteCoachingRequest(
       requestId: event.requestId,
     );
-    emitCompleteStatus(emit, info: ProfileCoachBlocInfo.requestDeleted);
+    emitCompleteStatus(
+      emit,
+      info: switch (event.requestDirection) {
+        CoachingRequestDirection.clientToCoach =>
+          ProfileCoachBlocInfo.requestUndid,
+        CoachingRequestDirection.coachToClient =>
+          ProfileCoachBlocInfo.requestDeleted,
+      },
+    );
   }
 
   Future<void> _deleteCoach(
@@ -254,4 +262,9 @@ class ProfileCoachBloc extends BlocWithStatus<ProfileCoachEvent,
             );
 }
 
-enum ProfileCoachBlocInfo { requestAccepted, requestDeleted, coachDeleted }
+enum ProfileCoachBlocInfo {
+  requestAccepted,
+  requestDeleted,
+  requestUndid,
+  coachDeleted,
+}

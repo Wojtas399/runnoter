@@ -799,18 +799,6 @@
   "@clientsSentRequests": {
     "description": "Label of the pending requests section"
   },
-  "clientsUndoRequestConfirmationDialogTitle": "Cofnij prośbę",
-  "@clientsUndoRequestConfirmationDialogTitle": {
-    "description": "Title of the dialog to confirm to undo request"
-  },
-  "clientsUndoRequestConfirmationDialogMessage": "Czy na pewno chcesz cofnąć prośbę wysłaną do ",
-  "@clientsUndoRequestConfirmationDialogMessage": {
-    "description": "Message of the dialog to confirm to undo request"
-  },
-  "clientsSuccessfullyUndidRequest": "Pomyślnie cofnięto wysłaną prośbę",
-  "@clientsSuccessfullyUndidRequest": {
-    "description": "Message of successfully undid sent message"
-  },
   "clientsMessage": "Wiadomość",
   "@clientsMessage": {
     "description": "Label of the button to send message"
@@ -1194,6 +1182,18 @@
   "leavePageWithUnsavedChangesConfirmationDialogMessage": "Masz niezapisane zmiany, które zostaną odrzucone. Czy na pewno chcesz opuścić tę stronę?",
   "@leavePageWithUnsavedChangesConfirmationDialogMessage": {
     "description": "Message of the dialog to confirm leaving page without saving changes"
+  },
+  "undoRequestConfirmationDialogTitle": "Cofnij prośbę",
+  "@undoRequestConfirmationDialogTitle": {
+    "description": "Title of the dialog to confirm to undo request"
+  },
+  "undoRequestConfirmationDialogMessage": "Czy na pewno chcesz cofnąć prośbę wysłaną do ",
+  "@undoRequestConfirmationDialogMessage": {
+    "description": "Message of the dialog to confirm to undo request"
+  },
+  "successfullyUndidRequest": "Pomyślnie cofnięto wysłaną prośbę",
+  "@successfullyUndidRequest": {
+    "description": "Message of successfully undid sent message"
   },
   "@__________COMMON__________": {},
   "name": "Imię",

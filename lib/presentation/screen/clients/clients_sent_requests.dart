@@ -8,6 +8,7 @@ import '../../component/text/body_text_components.dart';
 import '../../component/text/title_text_components.dart';
 import '../../extension/context_extensions.dart';
 import '../../extension/gender_extensions.dart';
+import '../../formatter/person_formatter.dart';
 import '../../service/dialog_service.dart';
 
 class ClientsSentRequests extends StatefulWidget {
@@ -137,17 +138,16 @@ class _SentRequestItem extends StatelessWidget {
     final str = Str.of(context);
 
     return askForConfirmation(
-      title: Text(str.clientsUndoRequestConfirmationDialogTitle),
+      title: Text(str.undoRequestConfirmationDialogTitle),
       content: RichText(
         text: TextSpan(
           children: [
             TextSpan(
-              text: str.clientsUndoRequestConfirmationDialogMessage,
+              text: str.undoRequestConfirmationDialogMessage,
               style: textStyle,
             ),
             TextSpan(
-              text:
-                  '${receiverInfo.name} ${receiverInfo.surname} (${receiverInfo.email})',
+              text: receiverInfo.toFullNameWithEmail(),
               style: textStyle?.copyWith(fontWeight: FontWeight.bold),
             ),
           ],

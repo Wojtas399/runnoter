@@ -228,24 +228,33 @@ class _CoachingRequestItem extends StatelessWidget {
       subtitle: Text(requestDetails.personToDisplay.email),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
-        children: [
-          if (requestDirection == CoachingRequestDirection.coachToClient) ...[
-            IconButton(
-              onPressed: () => _onAccept(context),
-              icon: Icon(
-                Icons.check,
-                color: Theme.of(context).colorScheme.primary,
+        children: switch (requestDirection) {
+          CoachingRequestDirection.coachToClient => [
+              IconButton(
+                onPressed: () => _onAccept(context),
+                icon: Icon(
+                  Icons.check,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
               ),
-            ),
-            IconButton(
-              onPressed: () => _onDelete(context),
-              icon: Icon(
-                Icons.close,
-                color: Theme.of(context).colorScheme.error,
+              IconButton(
+                onPressed: () => _onDelete(context),
+                icon: Icon(
+                  Icons.close,
+                  color: Theme.of(context).colorScheme.error,
+                ),
               ),
-            ),
-          ],
-        ],
+            ],
+          CoachingRequestDirection.clientToCoach => [
+              IconButton(
+                onPressed: () => _onDelete(context),
+                icon: Icon(
+                  Icons.delete_outline,
+                  color: Theme.of(context).colorScheme.error,
+                ),
+              ),
+            ],
+        },
       ),
     );
   }
@@ -256,9 +265,46 @@ class _CoachingRequestItem extends StatelessWidget {
         );
   }
 
-  void _onDelete(BuildContext context) {
-    context.read<ProfileCoachBloc>().add(
-          ProfileCoachEventDeleteRequest(requestId: requestDetails.id),
-        );
+  Future<void> _onDelete(BuildContext context) async {
+    bool isDeletionAccepted = true;
+    final bloc = context.read<ProfileCoachBloc>();
+    if (requestDirection == CoachingRequestDirection.clientToCoach) {
+      isDeletionAccepted = await _askForRequestDeletionConfirmation(context);
+    }
+    if (isDeletionAccepted) {
+      bloc.add(ProfileCoachEventDeleteRequest(
+        requestId: requestDetails.id,
+        requestDirection: requestDirection,
+      ));
+    }
+  }
+
+  Future<bool> _askForRequestDeletionConfirmation(
+    BuildContext context,
+  ) async {
+    final Person person = requestDetails.personToDisplay;
+    final TextStyle? textStyle = Theme.of(context).textTheme.bodyMedium;
+    final str = Str.of(context);
+
+    return askForConfirmation(
+      title: Text(str.undoRequestConfirmationDialogTitle),
+      content: RichText(
+        text: TextSpan(
+          children: [
+            TextSpan(
+              text: str.undoRequestConfirmationDialogMessage,
+              style: textStyle,
+            ),
+            TextSpan(
+              text: person.toFullNameWithEmail(),
+              style: textStyle?.copyWith(fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+      ),
+      confirmButtonLabel: str.undo,
+      displaySubmitButtonAsFilled: true,
+      confirmButtonColor: Theme.of(context).colorScheme.error,
+    );
   }
 }

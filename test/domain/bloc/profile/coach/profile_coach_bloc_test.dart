@@ -540,17 +540,48 @@ void main() {
 
   blocTest(
     'delete request, '
-    "should call coaching request service's method to delete request",
+    'coach to client'
+    "should call coaching request service's method to delete request, "
+    'should emit requestDeleted info',
     build: () => ProfileCoachBloc(),
     setUp: () => coachingRequestService.mockDeleteCoachingRequest(),
     act: (bloc) => bloc.add(
-      const ProfileCoachEventDeleteRequest(requestId: 'r1'),
+      const ProfileCoachEventDeleteRequest(
+        requestId: 'r1',
+        requestDirection: CoachingRequestDirection.coachToClient,
+      ),
     ),
     expect: () => [
       const ProfileCoachState(status: BlocStatusLoading()),
       const ProfileCoachState(
         status: BlocStatusComplete<ProfileCoachBlocInfo>(
           info: ProfileCoachBlocInfo.requestDeleted,
+        ),
+      ),
+    ],
+    verify: (_) => verify(
+      () => coachingRequestService.deleteCoachingRequest(requestId: 'r1'),
+    ).called(1),
+  );
+
+  blocTest(
+    'delete request, '
+    'client to coach'
+    "should call coaching request service's method to delete request, "
+    'should emit requestUndid info',
+    build: () => ProfileCoachBloc(),
+    setUp: () => coachingRequestService.mockDeleteCoachingRequest(),
+    act: (bloc) => bloc.add(
+      const ProfileCoachEventDeleteRequest(
+        requestId: 'r1',
+        requestDirection: CoachingRequestDirection.clientToCoach,
+      ),
+    ),
+    expect: () => [
+      const ProfileCoachState(status: BlocStatusLoading()),
+      const ProfileCoachState(
+        status: BlocStatusComplete<ProfileCoachBlocInfo>(
+          info: ProfileCoachBlocInfo.requestUndid,
         ),
       ),
     ],
