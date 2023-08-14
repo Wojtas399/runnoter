@@ -9,25 +9,27 @@ class MockCoachingRequestService extends Mock
   }
 
   void mockGetCoachingRequestsBySenderId({
-    required List<CoachingRequest> requests,
+    List<CoachingRequest>? requests,
+    Stream<List<CoachingRequest>>? requestsStream,
   }) {
     when(
       () => getCoachingRequestsBySenderId(
         senderId: any(named: 'senderId'),
         direction: any(named: 'direction'),
       ),
-    ).thenAnswer((_) => Stream.value(requests));
+    ).thenAnswer((_) => requestsStream ?? Stream.value(requests ?? []));
   }
 
   void mockGetCoachingRequestsByReceiverId({
-    required List<CoachingRequest> requests,
+    List<CoachingRequest>? requests,
+    Stream<List<CoachingRequest>>? requestsStream,
   }) {
     when(
       () => getCoachingRequestsByReceiverId(
         receiverId: any(named: 'receiverId'),
         direction: any(named: 'direction'),
       ),
-    ).thenAnswer((_) => Stream.value(requests));
+    ).thenAnswer((_) => requestsStream ?? Stream.value(requests ?? []));
   }
 
   void mockAddCoachingRequest({Object? throwable}) {

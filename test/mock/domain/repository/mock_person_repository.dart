@@ -3,12 +3,12 @@ import 'package:runnoter/domain/entity/person.dart';
 import 'package:runnoter/domain/repository/person_repository.dart';
 
 class MockPersonRepository extends Mock implements PersonRepository {
-  void mockGetPersonById({Person? person}) {
+  void mockGetPersonById({Person? person, Stream<Person?>? personStream}) {
     when(
       () => getPersonById(
         personId: any(named: 'personId'),
       ),
-    ).thenAnswer((_) => Stream.value(person));
+    ).thenAnswer((_) => personStream ?? Stream.value(person));
   }
 
   void mockGetPersonsByCoachId({List<Person>? persons}) {

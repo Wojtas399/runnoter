@@ -4,8 +4,26 @@ abstract class ProfileCoachEvent {
   const ProfileCoachEvent();
 }
 
-class ProfileCoachEventInitialize extends ProfileCoachEvent {
-  const ProfileCoachEventInitialize();
+class ProfileCoachEventInitializeCoachListener extends ProfileCoachEvent {
+  const ProfileCoachEventInitializeCoachListener();
+}
+
+class ProfileCoachEventInitializeRequestsListener extends ProfileCoachEvent {
+  const ProfileCoachEventInitializeRequestsListener();
+}
+
+class ProfileCoachEventRemoveRequestsListener extends ProfileCoachEvent {
+  const ProfileCoachEventRemoveRequestsListener();
+}
+
+class ProfileCoachEventRequestsUpdated extends ProfileCoachEvent {
+  final List<CoachingRequestDetails>? sentRequests;
+  final List<CoachingRequestDetails>? receivedRequests;
+
+  const ProfileCoachEventRequestsUpdated({
+    required this.sentRequests,
+    required this.receivedRequests,
+  });
 }
 
 class ProfileCoachEventAcceptRequest extends ProfileCoachEvent {

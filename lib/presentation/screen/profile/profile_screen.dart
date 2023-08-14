@@ -25,8 +25,8 @@ class ProfileScreen extends StatelessWidget {
             ..add(const ProfileIdentitiesEventInitialize()),
         ),
         BlocProvider(
-          create: (_) =>
-              ProfileCoachBloc()..add(const ProfileCoachEventInitialize()),
+          create: (_) => ProfileCoachBloc()
+            ..add(const ProfileCoachEventInitializeCoachListener()),
         ),
         BlocProvider(
           create: (_) => ProfileSettingsBloc()

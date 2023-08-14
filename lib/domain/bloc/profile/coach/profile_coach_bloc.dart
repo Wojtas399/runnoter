@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
@@ -8,6 +10,7 @@ import '../../../additional_model/bloc_status.dart';
 import '../../../additional_model/bloc_with_status.dart';
 import '../../../additional_model/coaching_request.dart';
 import '../../../entity/person.dart';
+import '../../../entity/user.dart';
 import '../../../repository/person_repository.dart';
 import '../../../repository/user_repository.dart';
 import '../../../service/auth_service.dart';
@@ -22,6 +25,9 @@ class ProfileCoachBloc extends BlocWithStatus<ProfileCoachEvent,
   final UserRepository _userRepository;
   final PersonRepository _personRepository;
   final CoachingRequestService _coachingRequestService;
+  StreamSubscription<
+          (List<CoachingRequestDetails>?, List<CoachingRequestDetails>?)>?
+      _requestsListener;
 
   ProfileCoachBloc({
     ProfileCoachState state = const ProfileCoachState(
@@ -32,39 +38,72 @@ class ProfileCoachBloc extends BlocWithStatus<ProfileCoachEvent,
         _personRepository = getIt<PersonRepository>(),
         _coachingRequestService = getIt<CoachingRequestService>(),
         super(state) {
-    on<ProfileCoachEventInitialize>(_initialize);
+    on<ProfileCoachEventInitializeCoachListener>(_initializeCoachListener);
+    on<ProfileCoachEventInitializeRequestsListener>(
+      _initializeRequestsListener,
+    );
+    on<ProfileCoachEventRemoveRequestsListener>(_removeRequestsListener);
+    on<ProfileCoachEventRequestsUpdated>(_requestsUpdated);
     on<ProfileCoachEventAcceptRequest>(_acceptRequest);
     on<ProfileCoachEventDeleteRequest>(_deleteRequest);
     on<ProfileCoachEventDeleteCoach>(_deleteCoach);
   }
 
-  Future<void> _initialize(
-    ProfileCoachEventInitialize event,
+  @override
+  Future<void> close() {
+    _requestsListener?.cancel();
+    _requestsListener = null;
+    return super.close();
+  }
+
+  Future<void> _initializeCoachListener(
+    ProfileCoachEventInitializeCoachListener event,
     Emitter<ProfileCoachState> emit,
   ) async {
-    final Stream stream$ = _authService.loggedUserId$
-        .whereNotNull()
-        .switchMap(_combineWithCoachId)
-        .switchMap(
-          ((String, String?) data) => data.$2 != null
-              ? _personRepository.getPersonById(personId: data.$2!)
-              : _getCoachingRequestsInfo(data.$1),
-        );
     await emit.forEach(
-      stream$,
-      onData: (data) {
-        if (data is Person) {
-          return ProfileCoachState(
-              status: const BlocStatusComplete(), coach: data);
-        } else if (data is List<CoachingRequestDetails>) {
-          return ProfileCoachState(
-            status: const BlocStatusComplete(),
-            receivedCoachingRequests: data,
-          );
+      _getCoach(),
+      onData: (Person? coach) {
+        if (coach == null) {
+          add(const ProfileCoachEventInitializeRequestsListener());
+        } else {
+          add(const ProfileCoachEventRemoveRequestsListener());
         }
-        return const ProfileCoachState(status: BlocStatusComplete());
+        return state.copyWith(coach: coach);
       },
     );
+  }
+
+  void _initializeRequestsListener(
+    ProfileCoachEventInitializeRequestsListener event,
+    Emitter<ProfileCoachState> emit,
+  ) {
+    _requestsListener ??= _authService.loggedUserId$
+        .whereNotNull()
+        .switchMap(_getSentAndReceivedCoachingRequests)
+        .listen(
+          (requests) => add(ProfileCoachEventRequestsUpdated(
+            sentRequests: requests.$1,
+            receivedRequests: requests.$2,
+          )),
+        );
+  }
+
+  void _removeRequestsListener(
+    ProfileCoachEventRemoveRequestsListener event,
+    Emitter<ProfileCoachState> emit,
+  ) {
+    _requestsListener?.cancel();
+    _requestsListener = null;
+  }
+
+  void _requestsUpdated(
+    ProfileCoachEventRequestsUpdated event,
+    Emitter<ProfileCoachState> emit,
+  ) {
+    emit(state.copyWith(
+      sentCoachingRequests: event.sentRequests,
+      receivedCoachingRequests: event.receivedRequests,
+    ));
   }
 
   Future<void> _acceptRequest(
@@ -118,13 +157,40 @@ class ProfileCoachBloc extends BlocWithStatus<ProfileCoachEvent,
     emitCompleteStatus(emit, info: ProfileCoachBlocInfo.coachDeleted);
   }
 
-  Stream<(String, String?)> _combineWithCoachId(String loggedUserId) =>
-      _userRepository
-          .getUserById(userId: loggedUserId)
-          .whereNotNull()
-          .map((loggedUserData) => (loggedUserData.id, loggedUserData.coachId));
+  Stream<Person?> _getCoach() => _authService.loggedUserId$
+      .whereNotNull()
+      .switchMap(
+        (loggedUserId) => _userRepository.getUserById(userId: loggedUserId),
+      )
+      .whereNotNull()
+      .map((User loggedUser) => loggedUser.coachId)
+      .switchMap(
+        (coachId) => coachId != null
+            ? _personRepository.getPersonById(personId: coachId)
+            : Stream.value(null),
+      );
 
-  Stream<List<CoachingRequestDetails>?> _getCoachingRequestsInfo(
+  Stream<(List<CoachingRequestDetails>?, List<CoachingRequestDetails>?)>
+      _getSentAndReceivedCoachingRequests(String loggedUserId) =>
+          Rx.combineLatest2(
+            _getSentCoachingRequests(loggedUserId),
+            _getReceivedCoachingRequests(loggedUserId),
+            (sentReqs, receivedReqs) => (sentReqs, receivedReqs),
+          );
+
+  Stream<List<CoachingRequestDetails>?> _getSentCoachingRequests(
+    String loggedUserId,
+  ) =>
+      _coachingRequestService
+          .getCoachingRequestsBySenderId(
+            senderId: loggedUserId,
+            direction: CoachingRequestDirection.clientToCoach,
+          )
+          .map((requests) => requests.where((req) => !req.isAccepted))
+          .map(_combineCoachingRequestIdsWithReceiversInfo)
+          .switchMap(_switchToStreamWithRequestsDetails);
+
+  Stream<List<CoachingRequestDetails>?> _getReceivedCoachingRequests(
     String loggedUserId,
   ) =>
       _coachingRequestService
@@ -134,7 +200,24 @@ class ProfileCoachBloc extends BlocWithStatus<ProfileCoachEvent,
           )
           .map((requests) => requests.where((request) => !request.isAccepted))
           .map(_combineCoachingRequestIdsWithSendersInfo)
-          .switchMap(_switchToStreamWithCoachingRequestsDetails);
+          .switchMap(_switchToStreamWithRequestsDetails);
+
+  List<Stream<(String, Person)>>? _combineCoachingRequestIdsWithReceiversInfo(
+    Iterable<CoachingRequest> coachingRequests,
+  ) =>
+      coachingRequests.isEmpty
+          ? []
+          : coachingRequests
+              .map(
+                (CoachingRequest request) => Rx.combineLatest2(
+                  Stream.value(request.id),
+                  _personRepository
+                      .getPersonById(personId: request.receiverId)
+                      .whereNotNull(),
+                  (requestId, senderInfo) => (requestId, senderInfo),
+                ),
+              )
+              .toList();
 
   List<Stream<(String, Person)>>? _combineCoachingRequestIdsWithSendersInfo(
     Iterable<CoachingRequest> coachingRequests,
@@ -153,23 +236,22 @@ class ProfileCoachBloc extends BlocWithStatus<ProfileCoachEvent,
               )
               .toList();
 
-  Stream<List<CoachingRequestDetails>?>
-      _switchToStreamWithCoachingRequestsDetails(
+  Stream<List<CoachingRequestDetails>?> _switchToStreamWithRequestsDetails(
     List<Stream<(String, Person)>>? streams,
   ) =>
-          streams == null || streams.isEmpty == true
-              ? Stream.value([])
-              : Rx.combineLatest(
-                  streams,
-                  (List<(String, Person)> values) => values
-                      .map(
-                        ((String, Person) data) => CoachingRequestDetails(
-                          id: data.$1,
-                          personToDisplay: data.$2,
-                        ),
-                      )
-                      .toList(),
-                );
+      streams == null || streams.isEmpty == true
+          ? Stream.value([])
+          : Rx.combineLatest(
+              streams,
+              (List<(String, Person)> values) => values
+                  .map(
+                    ((String, Person) data) => CoachingRequestDetails(
+                      id: data.$1,
+                      personToDisplay: data.$2,
+                    ),
+                  )
+                  .toList(),
+            );
 }
 
 enum ProfileCoachBlocInfo { requestAccepted, requestDeleted, coachDeleted }
