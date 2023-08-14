@@ -118,11 +118,20 @@ class _NoCoachContent extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            TitleMedium(Str.of(context).profileCoachingRequests),
+            TitleMedium(Str.of(context).profileSentCoachingRequests),
           ],
         ),
         const Gap8(),
-        const _CoachingRequests(),
+        const _SentCoachingRequests(),
+        const Gap16(),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            TitleMedium(Str.of(context).profileReceivedCoachingRequests),
+          ],
+        ),
+        const Gap8(),
+        const _ReceivedCoachingRequests(),
       ],
     );
   }
@@ -136,8 +145,24 @@ class _NoCoachContent extends StatelessWidget {
   }
 }
 
-class _CoachingRequests extends StatelessWidget {
-  const _CoachingRequests();
+class _SentCoachingRequests extends StatelessWidget {
+  const _SentCoachingRequests();
+
+  @override
+  Widget build(BuildContext context) {
+    final List<CoachingRequestDetails>? requests = context.select(
+      (ProfileCoachBloc bloc) => bloc.state.sentCoachingRequests,
+    );
+
+    return _RequestsList(
+      requestDetails: requests,
+      requestDirection: CoachingRequestDirection.clientToCoach,
+    );
+  }
+}
+
+class _ReceivedCoachingRequests extends StatelessWidget {
+  const _ReceivedCoachingRequests();
 
   @override
   Widget build(BuildContext context) {
@@ -145,7 +170,25 @@ class _CoachingRequests extends StatelessWidget {
       (ProfileCoachBloc bloc) => bloc.state.receivedCoachingRequests,
     );
 
-    return switch (requests) {
+    return _RequestsList(
+      requestDetails: requests,
+      requestDirection: CoachingRequestDirection.coachToClient,
+    );
+  }
+}
+
+class _RequestsList extends StatelessWidget {
+  final List<CoachingRequestDetails>? requestDetails;
+  final CoachingRequestDirection requestDirection;
+
+  const _RequestsList({
+    required this.requestDetails,
+    required this.requestDirection,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return switch (requestDetails) {
       null => const Padding(
           padding: EdgeInsets.symmetric(vertical: 16),
           child: CircularProgressIndicator(),
@@ -162,7 +205,9 @@ class _CoachingRequests extends StatelessWidget {
           physics: const NeverScrollableScrollPhysics(),
           children: ListTile.divideTiles(
             context: context,
-            tiles: requests.map((request) => _CoachingRequestItem(request)),
+            tiles: requestDetails!.map(
+              (request) => _CoachingRequestItem(request, requestDirection),
+            ),
           ).toList(),
         ),
     };
@@ -171,8 +216,9 @@ class _CoachingRequests extends StatelessWidget {
 
 class _CoachingRequestItem extends StatelessWidget {
   final CoachingRequestDetails requestDetails;
+  final CoachingRequestDirection requestDirection;
 
-  const _CoachingRequestItem(this.requestDetails);
+  const _CoachingRequestItem(this.requestDetails, this.requestDirection);
 
   @override
   Widget build(BuildContext context) {
@@ -183,20 +229,22 @@ class _CoachingRequestItem extends StatelessWidget {
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          IconButton(
-            onPressed: () => _onAccept(context),
-            icon: Icon(
-              Icons.check,
-              color: Theme.of(context).colorScheme.primary,
+          if (requestDirection == CoachingRequestDirection.coachToClient) ...[
+            IconButton(
+              onPressed: () => _onAccept(context),
+              icon: Icon(
+                Icons.check,
+                color: Theme.of(context).colorScheme.primary,
+              ),
             ),
-          ),
-          IconButton(
-            onPressed: () => _onDelete(context),
-            icon: Icon(
-              Icons.close,
-              color: Theme.of(context).colorScheme.error,
+            IconButton(
+              onPressed: () => _onDelete(context),
+              icon: Icon(
+                Icons.close,
+                color: Theme.of(context).colorScheme.error,
+              ),
             ),
-          ),
+          ],
         ],
       ),
     );

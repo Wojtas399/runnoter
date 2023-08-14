@@ -560,9 +560,13 @@
   "@profileNoCoachMessage": {
     "description": "Message of the info about no coach"
   },
-  "profileCoachingRequests": "Prośby o trenowanie",
-  "@profileCoachingRequests": {
-    "description": "Label of coaching requests section"
+  "profileSentCoachingRequests": "Wysłane prośby do trenerów",
+  "@profileSentCoachingRequests": {
+    "description": "Label of sent coaching requests section"
+  },
+  "profileReceivedCoachingRequests": "Otrzymane prośby od trenerów",
+  "@profileReceivedCoachingRequests": {
+    "description": "Label of received coaching requests section"
   },
   "profileNoRequestsInfo": "Brak oczekujących próśb o trenowanie",
   "@profileNoRequestsInfo": {
