@@ -28,7 +28,10 @@ class ConfirmationDialogComponent extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: title,
-      content: content,
+      content: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 600),
+        child: content,
+      ),
       actions: [
         TextButton(
           onPressed: () => popRoute(result: false),
