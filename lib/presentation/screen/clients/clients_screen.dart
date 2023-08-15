@@ -58,12 +58,15 @@ class _BlocListener extends StatelessWidget {
   }
 
   void _manageInfo(BuildContext context, ClientsBlocInfo info) {
+    final str = Str.of(context);
     switch (info) {
+      case ClientsBlocInfo.requestAccepted:
+        showSnackbarMessage(str.successfullyAcceptedRequest);
       case ClientsBlocInfo.requestDeleted:
-        showSnackbarMessage(Str.of(context).successfullyUndidRequest);
+        showSnackbarMessage(str.successfullyUndidRequest);
         break;
       case ClientsBlocInfo.clientDeleted:
-        showSnackbarMessage(Str.of(context).clientsSuccessfullyDeletedClient);
+        showSnackbarMessage(str.clientsSuccessfullyDeletedClient);
         break;
     }
   }

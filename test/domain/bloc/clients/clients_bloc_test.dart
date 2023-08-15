@@ -9,12 +9,14 @@ import 'package:runnoter/domain/additional_model/coaching_request.dart';
 import 'package:runnoter/domain/bloc/clients/clients_bloc.dart';
 import 'package:runnoter/domain/entity/person.dart';
 import 'package:runnoter/domain/repository/person_repository.dart';
+import 'package:runnoter/domain/repository/user_repository.dart';
 import 'package:runnoter/domain/service/auth_service.dart';
 import 'package:runnoter/domain/service/coaching_request_service.dart';
 
 import '../../../creators/coaching_request_creator.dart';
 import '../../../creators/person_creator.dart';
 import '../../../mock/domain/repository/mock_person_repository.dart';
+import '../../../mock/domain/repository/mock_user_repository.dart';
 import '../../../mock/domain/service/mock_auth_service.dart';
 import '../../../mock/domain/service/mock_coaching_request_service.dart';
 
@@ -22,6 +24,7 @@ void main() {
   final authService = MockAuthService();
   final coachingRequestService = MockCoachingRequestService();
   final personRepository = MockPersonRepository();
+  final userRepository = MockUserRepository();
   const String loggedUserId = 'u1';
 
   setUpAll(() {
@@ -30,12 +33,14 @@ void main() {
       () => coachingRequestService,
     );
     GetIt.I.registerSingleton<PersonRepository>(personRepository);
+    GetIt.I.registerSingleton<UserRepository>(userRepository);
   });
 
   tearDown(() {
     reset(authService);
     reset(coachingRequestService);
     reset(personRepository);
+    reset(userRepository);
   });
 
   group(
@@ -166,6 +171,91 @@ void main() {
           ).called(1);
         },
       );
+    },
+  );
+
+  blocTest(
+    'accept request, '
+    'logged user does not exist, '
+    'should emit no logged user status',
+    build: () => ClientsBloc(),
+    setUp: () => authService.mockGetLoggedUserId(),
+    act: (bloc) => bloc.add(const ClientsEventAcceptRequest(requestId: 'r1')),
+    expect: () => [
+      const ClientsState(status: BlocStatusNoLoggedUser()),
+    ],
+    verify: (_) => verify(() => authService.loggedUserId$).called(1),
+  );
+
+  blocTest(
+    'accept request, '
+    "should call coaching request service's method to update request with isAccepted param set as true, "
+    "should assign logged user's id to coach id of request's sender",
+    build: () => ClientsBloc(
+      state: ClientsState(
+        status: const BlocStatusComplete(),
+        receivedRequests: [
+          CoachingRequestDetails(
+            id: 'r1',
+            personToDisplay: createPerson(id: 'p1'),
+          ),
+          CoachingRequestDetails(
+            id: 'r2',
+            personToDisplay: createPerson(id: 'p2'),
+          ),
+        ],
+      ),
+    ),
+    setUp: () {
+      authService.mockGetLoggedUserId(userId: loggedUserId);
+      coachingRequestService.mockUpdateCoachingRequest();
+      userRepository.mockUpdateUser();
+    },
+    act: (bloc) => bloc.add(const ClientsEventAcceptRequest(requestId: 'r1')),
+    expect: () => [
+      ClientsState(
+        status: const BlocStatusLoading(),
+        receivedRequests: [
+          CoachingRequestDetails(
+            id: 'r1',
+            personToDisplay: createPerson(id: 'p1'),
+          ),
+          CoachingRequestDetails(
+            id: 'r2',
+            personToDisplay: createPerson(id: 'p2'),
+          ),
+        ],
+      ),
+      ClientsState(
+        status: const BlocStatusComplete<ClientsBlocInfo>(
+          info: ClientsBlocInfo.requestAccepted,
+        ),
+        receivedRequests: [
+          CoachingRequestDetails(
+            id: 'r1',
+            personToDisplay: createPerson(id: 'p1'),
+          ),
+          CoachingRequestDetails(
+            id: 'r2',
+            personToDisplay: createPerson(id: 'p2'),
+          ),
+        ],
+      ),
+    ],
+    verify: (_) {
+      verify(() => authService.loggedUserId$).called(1);
+      verify(
+        () => coachingRequestService.updateCoachingRequest(
+          requestId: 'r1',
+          isAccepted: true,
+        ),
+      ).called(1);
+      verify(
+        () => userRepository.updateUser(
+          userId: 'p1',
+          coachId: loggedUserId,
+        ),
+      ).called(1);
     },
   );
 
