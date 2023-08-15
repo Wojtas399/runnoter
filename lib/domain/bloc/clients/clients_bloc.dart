@@ -27,27 +27,45 @@ class ClientsBloc extends BlocWithStatus<ClientsEvent, ClientsState,
         _coachingRequestService = getIt<CoachingRequestService>(),
         _personRepository = getIt<PersonRepository>(),
         super(state) {
-    on<ClientsEventInitialize>(_initialize);
+    on<ClientsEventInitializeRequests>(_initializeRequests);
+    on<ClientsEventInitializeClients>(_initializeClients);
     on<ClientsEventDeleteRequest>(_deleteRequest);
     on<ClientsEventDeleteClient>(_deleteClient);
   }
 
-  Future<void> _initialize(
-    ClientsEventInitialize event,
+  Future<void> _initializeRequests(
+    ClientsEventInitializeRequests event,
     Emitter<ClientsState> emit,
   ) async {
-    final Stream<(List<SentCoachingRequest>, List<Person>)> stream$ =
-        _authService.loggedUserId$.whereNotNull().switchMap(
-              (String loggedUserId) => Rx.combineLatest2(
-                _getSentRequests(loggedUserId),
-                _getClients(loggedUserId),
-                (invitedPersons, clients) => (invitedPersons, clients),
-              ),
-            );
+    final Stream<(List<CoachingRequestDetails>, List<CoachingRequestDetails>)>
+        requests$ =
+        _getLoggedUserId().switchMap((String loggedUserId) => Rx.combineLatest2(
+              _getSentRequestDetails(loggedUserId),
+              _getReceivedRequestDetails(loggedUserId),
+              (sentReqs, receivedReqs) => (sentReqs, receivedReqs),
+            ));
     await emit.forEach(
-      stream$,
-      onData: ((List<SentCoachingRequest>, List<Person>) data) =>
-          state.copyWith(sentRequests: data.$1, clients: data.$2),
+      requests$,
+      onData: ((
+                List<CoachingRequestDetails>,
+                List<CoachingRequestDetails>
+              ) requests) =>
+          state.copyWith(
+        sentRequests: requests.$1,
+        receivedRequests: requests.$2,
+      ),
+    );
+  }
+
+  Future<void> _initializeClients(
+    ClientsEventInitializeClients event,
+    Emitter<ClientsState> emit,
+  ) async {
+    final Stream<List<Person>> clients$ = _getLoggedUserId()
+        .switchMap((String loggedUserId) => _getClients(loggedUserId));
+    await emit.forEach(
+      clients$,
+      onData: (clients) => state.copyWith(clients: clients),
     );
   }
 
@@ -71,42 +89,73 @@ class ClientsBloc extends BlocWithStatus<ClientsEvent, ClientsState,
     emitCompleteStatus(emit, info: ClientsBlocInfo.clientDeleted);
   }
 
-  Stream<List<SentCoachingRequest>> _getSentRequests(String loggedUserId) =>
-      _coachingRequestService
-          .getCoachingRequestsBySenderId(
-            senderId: loggedUserId,
-            direction: CoachingRequestDirection.coachToClient,
-          )
-          .map((requests) => requests.where((request) => !request.isAccepted))
-          .map((pendingRequests) => pendingRequests.map(_mapToSentRequest))
-          .doOnData(
-            (_) => _personRepository.refreshPersonsByCoachId(
-              coachId: loggedUserId,
-            ),
-          )
-          .switchMap(
-            (sentRequests$) => sentRequests$.isEmpty
-                ? Stream.value([])
-                : Rx.combineLatest(
-                    sentRequests$,
-                    (List<SentCoachingRequest> sentRequests) => sentRequests,
-                  ),
-          );
+  Stream<String> _getLoggedUserId() =>
+      _authService.loggedUserId$.whereNotNull();
 
   Stream<List<Person>> _getClients(String loggedUserId) => _personRepository
       .getPersonsByCoachId(coachId: loggedUserId)
       .map((List<Person>? clients) => [...?clients]);
 
-  Stream<SentCoachingRequest> _mapToSentRequest(CoachingRequest request) =>
-      _personRepository
-          .getPersonById(personId: request.receiverId)
-          .whereNotNull()
+  Stream<List<CoachingRequestDetails>> _getSentRequestDetails(
+    String loggedUserId,
+  ) =>
+      _coachingRequestService
+          .getCoachingRequestsBySenderId(
+            senderId: loggedUserId,
+            direction: CoachingRequestDirection.coachToClient,
+          )
+          .map((sentRequests) => sentRequests.where((req) => !req.isAccepted))
           .map(
-            (Person person) => SentCoachingRequest(
-              requestId: request.id,
-              receiver: person,
+            (pendingSentRequests) => pendingSentRequests.map(
+              (req) => Rx.combineLatest2(
+                Stream.value(req.id),
+                _personRepository
+                    .getPersonById(personId: req.receiverId)
+                    .whereNotNull(),
+                (requestId, receiver) => (requestId, receiver),
+              ),
             ),
-          );
+          )
+          .switchMap(_createRequestDetailsFromStreams);
+
+  Stream<List<CoachingRequestDetails>> _getReceivedRequestDetails(
+    String loggedUserId,
+  ) =>
+      _coachingRequestService
+          .getCoachingRequestsByReceiverId(
+            receiverId: loggedUserId,
+            direction: CoachingRequestDirection.clientToCoach,
+          )
+          .map((requests) => requests.where((req) => !req.isAccepted))
+          .map(
+            (pendingRequests) => pendingRequests.map(
+              (req) => Rx.combineLatest2(
+                Stream.value(req.id),
+                _personRepository
+                    .getPersonById(personId: req.senderId)
+                    .whereNotNull(),
+                (requestId, sender) => (requestId, sender),
+              ),
+            ),
+          )
+          .switchMap(_createRequestDetailsFromStreams);
+
+  Stream<List<CoachingRequestDetails>> _createRequestDetailsFromStreams(
+    Iterable<Stream<(String, Person)>> streams,
+  ) =>
+      streams.isEmpty
+          ? Stream.value([])
+          : Rx.combineLatest(
+              streams,
+              (List<(String, Person)> values) => values
+                  .map(
+                    (requestDetails) => CoachingRequestDetails(
+                      id: requestDetails.$1,
+                      personToDisplay: requestDetails.$2,
+                    ),
+                  )
+                  .toList(),
+            );
 }
 
 enum ClientsBlocInfo { requestDeleted, clientDeleted }

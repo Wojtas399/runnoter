@@ -28,9 +28,15 @@ void main() {
   test(
     'copy with sentRequests',
     () {
-      final List<SentCoachingRequest> expectedSentRequests = [
-        SentCoachingRequest(requestId: 'r1', receiver: createPerson(id: 'p1')),
-        SentCoachingRequest(requestId: 'r2', receiver: createPerson(id: 'p2')),
+      final List<CoachingRequestDetails> expectedSentRequests = [
+        CoachingRequestDetails(
+          id: 'r1',
+          personToDisplay: createPerson(id: 'p1'),
+        ),
+        CoachingRequestDetails(
+          id: 'r2',
+          personToDisplay: createPerson(id: 'p2'),
+        ),
       ];
 
       state = state.copyWith(sentRequests: expectedSentRequests);
@@ -38,6 +44,28 @@ void main() {
 
       expect(state.sentRequests, expectedSentRequests);
       expect(state2.sentRequests, expectedSentRequests);
+    },
+  );
+
+  test(
+    'copy with receivedRequests',
+    () {
+      final List<CoachingRequestDetails> expectedReceivedRequests = [
+        CoachingRequestDetails(
+          id: 'r1',
+          personToDisplay: createPerson(id: 'p1'),
+        ),
+        CoachingRequestDetails(
+          id: 'r2',
+          personToDisplay: createPerson(id: 'p2'),
+        ),
+      ];
+
+      state = state.copyWith(receivedRequests: expectedReceivedRequests);
+      final state2 = state.copyWith();
+
+      expect(state.receivedRequests, expectedReceivedRequests);
+      expect(state2.receivedRequests, expectedReceivedRequests);
     },
   );
 

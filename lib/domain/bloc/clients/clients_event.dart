@@ -4,8 +4,12 @@ abstract class ClientsEvent {
   const ClientsEvent();
 }
 
-class ClientsEventInitialize extends ClientsEvent {
-  const ClientsEventInitialize();
+class ClientsEventInitializeRequests extends ClientsEvent {
+  const ClientsEventInitializeRequests();
+}
+
+class ClientsEventInitializeClients extends ClientsEvent {
+  const ClientsEventInitializeClients();
 }
 
 class ClientsEventDeleteRequest extends ClientsEvent {

@@ -23,7 +23,9 @@ class ClientsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => ClientsBloc()..add(const ClientsEventInitialize()),
+      create: (_) => ClientsBloc()
+        ..add(const ClientsEventInitializeRequests())
+        ..add(const ClientsEventInitializeClients()),
       child: const _BlocListener(
         child: SingleChildScrollView(
           child: MediumBody(

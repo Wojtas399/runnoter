@@ -11,12 +11,15 @@ class MockPersonRepository extends Mock implements PersonRepository {
     ).thenAnswer((_) => personStream ?? Stream.value(person));
   }
 
-  void mockGetPersonsByCoachId({List<Person>? persons}) {
+  void mockGetPersonsByCoachId({
+    List<Person>? persons,
+    Stream<List<Person>?>? personsStream,
+  }) {
     when(
       () => getPersonsByCoachId(
         coachId: any(named: 'coachId'),
       ),
-    ).thenAnswer((_) => Stream.value(persons));
+    ).thenAnswer((_) => personsStream ?? Stream.value(persons));
   }
 
   void mockSearchForPersons({List<Person>? persons}) {
