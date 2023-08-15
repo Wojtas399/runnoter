@@ -232,6 +232,82 @@ void main() {
   );
 
   test(
+    'update coachId of person, '
+    "should call firebase user service's method to update user with coachId and should update user in state",
+    () async {
+      const String personId = 'u1';
+      const String coachId = 'c1';
+      final List<Person> existingPersons = [
+        createPerson(id: 'u1', coachId: null),
+        createPerson(id: 'u2', coachId: coachId),
+      ];
+      final firebase.UserDto updatedUserDto = createUserDto(
+        id: personId,
+        coachId: coachId,
+      );
+      final Person updatedPerson = createPerson(id: personId, coachId: coachId);
+      repository = PersonRepositoryImpl(initialData: existingPersons);
+      firebaseUserService.mockUpdateUserData(userDto: updatedUserDto);
+
+      await repository.updateCoachIdOfPerson(
+        personId: personId,
+        coachId: coachId,
+      );
+      final Stream<List<Person>?> repoState$ = repository.dataStream$;
+
+      expect(
+        repoState$,
+        emitsInOrder([
+          [updatedPerson, existingPersons.last],
+        ]),
+      );
+      verify(
+        () => firebaseUserService.updateUserData(
+          userId: personId,
+          coachId: coachId,
+        ),
+      ).called(1);
+    },
+  );
+
+  test(
+    'update coachId of person, '
+    'coach id is null, '
+    "should call firebase user service's method to update user with coachIdAsNull set to true and should update user in state",
+    () async {
+      const String personId = 'u1';
+      const String coachId = 'c1';
+      final List<Person> existingPersons = [
+        createPerson(id: 'u1', coachId: coachId),
+        createPerson(id: 'u2', coachId: coachId),
+      ];
+      final firebase.UserDto updatedUserDto = createUserDto(
+        id: personId,
+        coachId: null,
+      );
+      final Person updatedPerson = createPerson(id: personId, coachId: null);
+      repository = PersonRepositoryImpl(initialData: existingPersons);
+      firebaseUserService.mockUpdateUserData(userDto: updatedUserDto);
+
+      await repository.updateCoachIdOfPerson(personId: personId, coachId: null);
+      final Stream<List<Person>?> repoState$ = repository.dataStream$;
+
+      expect(
+        repoState$,
+        emitsInOrder([
+          [updatedPerson, existingPersons.last],
+        ]),
+      );
+      verify(
+        () => firebaseUserService.updateUserData(
+          userId: personId,
+          coachIdAsNull: true,
+        ),
+      ).called(1);
+    },
+  );
+
+  test(
     'refresh persons by coach id, '
     'should load persons by coach id from db and should update them in state',
     () async {

@@ -11,7 +11,13 @@ abstract interface class PersonRepository {
     AccountType? accountType,
   });
 
+  Future<void> updateCoachIdOfPerson({
+    required String personId,
+    required String? coachId,
+  });
+
   Future<void> refreshPersonsByCoachId({required String coachId});
 
+  //TODO: Remove below method
   Future<void> removeCoachOfPerson({required String personId});
 }

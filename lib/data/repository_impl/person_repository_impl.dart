@@ -52,6 +52,22 @@ class PersonRepositoryImpl extends StateRepository<Person>
   }
 
   @override
+  Future<void> updateCoachIdOfPerson({
+    required String personId,
+    required String? coachId,
+  }) async {
+    final updatedUserDto = await _firebaseUserService.updateUserData(
+      userId: personId,
+      coachId: coachId,
+      coachIdAsNull: coachId == null,
+    );
+    if (updatedUserDto != null) {
+      final Person updatedPerson = mapPersonFromUserDto(updatedUserDto);
+      updateEntity(updatedPerson);
+    }
+  }
+
+  @override
   Future<void> refreshPersonsByCoachId({required String coachId}) async {
     await _loadPersonsByCoachIdFromDb(coachId);
   }
