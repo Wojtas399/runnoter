@@ -560,29 +560,9 @@
   "@profileNoCoachMessage": {
     "description": "Message of the info about no coach"
   },
-  "profileSentCoachingRequests": "Wysłane prośby do trenerów",
-  "@profileSentCoachingRequests": {
-    "description": "Label of sent coaching requests section"
-  },
-  "profileReceivedCoachingRequests": "Otrzymane prośby od trenerów",
-  "@profileReceivedCoachingRequests": {
-    "description": "Label of received coaching requests section"
-  },
-  "profileNoRequestsInfo": "Brak oczekujących próśb o trenowanie",
-  "@profileNoRequestsInfo": {
-    "description": "Title of the info about no coaching requests"
-  },
   "profileFindCoach": "Znajdź trenera",
   "@profileFindCoach": {
     "description": "Label of the button to find a coach"
-  },
-  "profileSuccessfullyAcceptedRequest": "Pomyślnie zaakceptowano prośbę",
-  "@profileSuccessfullyAcceptedRequest": {
-    "description": "Message to inform that request has been successfully accepted"
-  },
-  "profileSuccessfullyDeletedRequest": "Pomyślnie usunięto prośbę",
-  "@profileSuccessfullyDeletedRequest": {
-    "description": "Message to inform that request has been successfully deleted"
   },
   "profileFinishCooperationWithCoachDialogTitle": "Usuń trenera",
   "@profileFinishCooperationWithCoachDialogTitle": {
@@ -795,10 +775,6 @@
   "@clientsSearchUser": {
     "description": "Label of the button to search user"
   },
-  "clientsSentRequests": "Wysłane prośby",
-  "@clientsSentRequests": {
-    "description": "Label of the pending requests section"
-  },
   "clientsMessage": "Wiadomość",
   "@clientsMessage": {
     "description": "Label of the button to send message"
@@ -818,10 +794,6 @@
   "clientsSuccessfullyDeletedClient": "Pomyślnie usunięto klienta",
   "@clientsSuccessfullyDeletedClient": {
     "description": "Message of successfully deleted client"
-  },
-  "clientsNoSentCoachingRequests": "Brak wysłanych próśb o trenowanie",
-  "@clientsNoSentCoachingRequests": {
-    "description": "Title of the info about no sent coaching requests"
   },
   "clientsNoClientsTitle": "Brak klientów",
   "@clientsNoClientsTitle": {
@@ -1222,6 +1194,18 @@
   "accept": "Akceptuj",
   "undo": "Cofnij",
   "message": "Wiadomość",
+  "sentRequests": "Wysłane prośby",
+  "receivedRequests": "Otrzymane prośby",
+  "noSentRequests": "Brak wysłanych próśb",
+  "noReceivedRequests": "Brak otrzymanych próśb",
+  "successfullyAcceptedRequest": "Pomyślnie zaakceptowano prośbę",
+  "@successfullyAcceptedRequest": {
+    "description": "Message to inform that request has been successfully accepted"
+  },
+  "successfullyDeletedRequest": "Pomyślnie usunięto prośbę",
+  "@successfullyDeletedRequest": {
+    "description": "Message to inform that request has been successfully deleted"
+  },
   "@__________VALIDATOR_MESSAGES__________": {},
   "requiredFieldMessage": "To pole jest wymagane",
   "@requiredFieldMessage": {

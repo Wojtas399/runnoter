@@ -99,26 +99,28 @@ class _NoCoachContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final str = Str.of(context);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        TitleMedium(Str.of(context).profileNoCoachTitle),
+        TitleMedium(str.profileNoCoachTitle),
         const Gap8(),
         BodyMedium(
-          Str.of(context).profileNoCoachMessage,
+          str.profileNoCoachMessage,
           textAlign: TextAlign.center,
           color: Theme.of(context).colorScheme.outline,
         ),
         const Gap16(),
         FilledButton(
           onPressed: () => _onFindCoachPressed(),
-          child: Text(Str.of(context).profileFindCoach),
+          child: Text(str.profileFindCoach),
         ),
         const Gap24(),
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            TitleMedium(Str.of(context).profileSentCoachingRequests),
+            TitleMedium(str.sentRequests),
           ],
         ),
         const Gap8(),
@@ -127,7 +129,7 @@ class _NoCoachContent extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            TitleMedium(Str.of(context).profileReceivedCoachingRequests),
+            TitleMedium(str.receivedRequests),
           ],
         ),
         const Gap8(),
@@ -188,6 +190,8 @@ class _RequestsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final str = Str.of(context);
+
     return switch (requestDetails) {
       null => const Padding(
           padding: EdgeInsets.symmetric(vertical: 16),
@@ -196,7 +200,10 @@ class _RequestsList extends StatelessWidget {
       [] => Padding(
           padding: const EdgeInsets.symmetric(vertical: 24),
           child: BodyMedium(
-            Str.of(context).profileNoRequestsInfo,
+            switch (requestDirection) {
+              CoachingRequestDirection.clientToCoach => str.noSentRequests,
+              CoachingRequestDirection.coachToClient => str.noReceivedRequests,
+            },
             color: Theme.of(context).colorScheme.outline,
           ),
         ),
@@ -226,10 +233,17 @@ class _CoachingRequestItem extends StatelessWidget {
       contentPadding: const EdgeInsets.all(0),
       title: Text(requestDetails.personToDisplay.toFullName()),
       subtitle: Text(requestDetails.personToDisplay.email),
-      trailing: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: switch (requestDirection) {
-          CoachingRequestDirection.coachToClient => [
+      trailing: switch (requestDirection) {
+        CoachingRequestDirection.clientToCoach => IconButton(
+            onPressed: () => _onDelete(context),
+            icon: Icon(
+              Icons.delete_outline,
+              color: Theme.of(context).colorScheme.error,
+            ),
+          ),
+        CoachingRequestDirection.coachToClient => Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
               IconButton(
                 onPressed: () => _onAccept(context),
                 icon: Icon(
@@ -245,17 +259,8 @@ class _CoachingRequestItem extends StatelessWidget {
                 ),
               ),
             ],
-          CoachingRequestDirection.clientToCoach => [
-              IconButton(
-                onPressed: () => _onDelete(context),
-                icon: Icon(
-                  Icons.delete_outline,
-                  color: Theme.of(context).colorScheme.error,
-                ),
-              ),
-            ],
-        },
-      ),
+          ),
+      },
     );
   }
 

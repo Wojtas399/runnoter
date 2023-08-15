@@ -14,7 +14,7 @@ import '../../component/responsive_layout_component.dart';
 import '../../dialog/persons_search/persons_search_dialog.dart';
 import '../../service/dialog_service.dart';
 import 'clients_list.dart';
-import 'clients_sent_requests.dart';
+import 'clients_requests.dart';
 
 @RoutePage()
 class ClientsScreen extends StatelessWidget {
@@ -74,13 +74,17 @@ class _MobileContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const divider = Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16),
+      child: Divider(),
+    );
+
     return const Column(
       children: [
         ClientsSentRequests(),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16),
-          child: Divider(),
-        ),
+        divider,
+        ClientsReceivedRequests(),
+        divider,
         Gap8(),
         ClientsList(),
       ],
@@ -108,6 +112,10 @@ class _DesktopContent extends StatelessWidget {
           children: [
             CardBody(
               child: ClientsSentRequests(),
+            ),
+            Gap16(),
+            CardBody(
+              child: ClientsReceivedRequests(),
             ),
             Gap16(),
             CardBody(

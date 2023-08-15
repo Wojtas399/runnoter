@@ -12,6 +12,12 @@ class ClientsEventInitializeClients extends ClientsEvent {
   const ClientsEventInitializeClients();
 }
 
+class ClientsEventAcceptRequest extends ClientsEvent {
+  final String requestId;
+
+  const ClientsEventAcceptRequest({required this.requestId});
+}
+
 class ClientsEventDeleteRequest extends ClientsEvent {
   final String requestId;
 
