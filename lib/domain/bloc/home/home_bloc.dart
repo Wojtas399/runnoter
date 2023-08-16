@@ -106,6 +106,11 @@ class HomeBloc
             direction: CoachingRequestDirection.coachToClient,
           )
           .map((requests) => requests.where((req) => req.isAccepted))
+          .doOnData((acceptedReqs) {
+            if (acceptedReqs.isNotEmpty) {
+              _personRepository.refreshPersonsByCoachId(coachId: loggedUserId);
+            }
+          })
           .map(
             (acceptedReqs) => acceptedReqs.map(_convertToCoachingRequestShort),
           )

@@ -122,6 +122,7 @@ void main() {
         setUp: () {
           authService.mockGetLoggedUserId(userId: loggedUserId);
           userRepository.mockGetUserById(userStream: loggedUserData$.stream);
+          personRepository.mockRefreshPersonsByCoachId();
           when(
             () => coachingRequestService.getCoachingRequestsBySenderId(
               senderId: loggedUserId,
@@ -192,6 +193,11 @@ void main() {
           verify(() => authService.loggedUserId$).called(1);
           verify(
             () => userRepository.getUserById(userId: loggedUserId),
+          ).called(1);
+          verify(
+            () => personRepository.refreshPersonsByCoachId(
+              coachId: loggedUserId,
+            ),
           ).called(1);
           verify(
             () => coachingRequestService.getCoachingRequestsBySenderId(
