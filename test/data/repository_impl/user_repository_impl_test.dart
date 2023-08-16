@@ -6,8 +6,11 @@ import 'package:runnoter/data/repository_impl/user_repository_impl.dart';
 import 'package:runnoter/domain/additional_model/settings.dart';
 import 'package:runnoter/domain/entity/user.dart';
 
+import '../../creators/activities_settings_dto.dart';
+import '../../creators/appearance_settings_dto_creator.dart';
 import '../../creators/settings_creator.dart';
 import '../../creators/user_creator.dart';
+import '../../creators/user_dto_creator.dart';
 import '../../mock/firebase/mock_firebase_activities_settings_service.dart';
 import '../../mock/firebase/mock_firebase_appearance_settings_service.dart';
 import '../../mock/firebase/mock_firebase_user_service.dart';
@@ -523,6 +526,47 @@ void main() {
           paceUnit: newDbPaceUnit,
         ),
       ).called(1);
+    },
+  );
+
+  test(
+    'refresh user by id',
+    () async {
+      const String userId = 'u1';
+      final User existingUser = createUser(
+        id: userId,
+        name: 'name',
+        surname: 'surname',
+      );
+      final db.UserDto updatedUserDto = createUserDto(
+        id: userId,
+        name: 'updated name',
+        surname: 'updated surname',
+      );
+      final User updatedUser = createUser(
+        id: userId,
+        name: 'updated name',
+        surname: 'updated surname',
+      );
+      repository = UserRepositoryImpl(initialState: [existingUser]);
+      dbUserService.mockLoadUserById(userDto: updatedUserDto);
+      dbAppearanceSettingsService.mockLoadSettingsByUserId(
+        appearanceSettingsDto: createAppearanceSettingsDto(),
+      );
+      dbActivitiesSettingsService.mockLoadSettingsByUserId(
+        activitiesSettingsDto: createActivitiesSettingsDto(),
+      );
+
+      final Stream<List<User>?> repoState$ = repository.dataStream$;
+      repository.refreshUserById(userId: userId);
+
+      expect(
+        repoState$,
+        emitsInOrder([
+          [existingUser],
+          [updatedUser],
+        ]),
+      );
     },
   );
 

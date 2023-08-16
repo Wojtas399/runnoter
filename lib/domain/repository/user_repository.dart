@@ -25,5 +25,7 @@ abstract class UserRepository {
     PaceUnit? paceUnit,
   });
 
+  Future<void> refreshUserById({required String userId});
+
   Future<void> deleteUser({required String userId});
 }

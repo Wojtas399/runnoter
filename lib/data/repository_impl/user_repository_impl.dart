@@ -168,6 +168,11 @@ class UserRepositoryImpl extends StateRepository<User>
   }
 
   @override
+  Future<void> refreshUserById({required String userId}) async {
+    await _loadUserFromDb(userId);
+  }
+
+  @override
   Future<void> deleteUser({
     required String userId,
   }) async {
