@@ -47,4 +47,12 @@ class MockPersonRepository extends Mock implements PersonRepository {
       ),
     ).thenAnswer((_) => Future.value());
   }
+
+  void mockRemoveCoachIdInAllMatchingPersons() {
+    when(
+      () => removeCoachIdInAllMatchingPersons(
+        coachId: any(named: 'coachId'),
+      ),
+    ).thenAnswer((_) => Future.value());
+  }
 }

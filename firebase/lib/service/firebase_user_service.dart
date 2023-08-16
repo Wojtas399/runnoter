@@ -76,6 +76,25 @@ class FirebaseUserService {
     return user.data();
   }
 
+  Future<List<UserDto>> setCoachIdAsNullInAllMatchingUsers({
+    required String coachId,
+  }) async {
+    final usersWitchMatchingCoachId =
+        await getUsersRef().where(coachIdField, isEqualTo: coachId).get();
+    final userRefs = usersWitchMatchingCoachId.docs.map((doc) => doc.reference);
+    final batch = FirebaseFirestore.instance.batch();
+    for (final user in usersWitchMatchingCoachId.docs) {
+      batch.update(user.reference, createUserJsonToUpdate(coachIdAsNull: true));
+    }
+    await batch.commit();
+    final List<UserDto> updatedUsers = [];
+    for (final ref in userRefs) {
+      final snapshot = await ref.get();
+      if (snapshot.data() != null) updatedUsers.add(snapshot.data()!);
+    }
+    return updatedUsers;
+  }
+
   Future<void> deleteUserData({required String userId}) async {
     await asyncOrSyncCall(() => getUserRef(userId).delete());
   }

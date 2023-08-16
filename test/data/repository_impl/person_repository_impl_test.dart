@@ -341,4 +341,42 @@ void main() {
       );
     },
   );
+
+  test(
+    'remove coach id in all matching users, '
+    "should call firebase user service's method to set coach id as null in all matching users and should update these users in state",
+    () async {
+      const String coachId = 'c1';
+      final List<Person> existingPersons = [
+        createPerson(id: 'u1', coachId: coachId),
+        createPerson(id: 'u2', coachId: 'c2'),
+        createPerson(id: 'u3', coachId: coachId),
+        createPerson(id: 'u4', coachId: 'c3'),
+      ];
+      final List<firebase.UserDto> updatedUserDtos = [
+        createUserDto(id: 'u1', coachId: null),
+        createUserDto(id: 'u3', coachId: null),
+      ];
+      final List<Person> updatedUsers = [
+        createPerson(id: 'u1', coachId: null),
+        existingPersons[1],
+        createPerson(id: 'u3', coachId: null),
+        existingPersons.last,
+      ];
+      firebaseUserService.mockSetCoachIdAsNullInAllMatchingUsers(
+        updatedUserDtos: updatedUserDtos,
+      );
+      repository = PersonRepositoryImpl(initialData: existingPersons);
+
+      final Stream<List<Person>?> repoState$ = repository.dataStream$;
+      await repository.removeCoachIdInAllMatchingPersons(coachId: coachId);
+
+      expect(repoState$, emitsInOrder([updatedUsers]));
+      verify(
+        () => firebaseUserService.setCoachIdAsNullInAllMatchingUsers(
+          coachId: coachId,
+        ),
+      ).called(1);
+    },
+  );
 }

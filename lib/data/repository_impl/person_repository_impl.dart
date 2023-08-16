@@ -72,6 +72,19 @@ class PersonRepositoryImpl extends StateRepository<Person>
     await _loadPersonsByCoachIdFromDb(coachId);
   }
 
+  @override
+  Future<void> removeCoachIdInAllMatchingPersons({
+    required String coachId,
+  }) async {
+    final updatedUserDtos = await _firebaseUserService
+        .setCoachIdAsNullInAllMatchingUsers(coachId: coachId);
+    if (updatedUserDtos.isNotEmpty) {
+      final List<Person> updatedPersons =
+          updatedUserDtos.map(mapPersonFromUserDto).toList();
+      addOrUpdateEntities(updatedPersons);
+    }
+  }
+
   Future<Person?> _loadPersonByIdFromDb(String personId) async {
     final userDto = await _firebaseUserService.loadUserById(userId: personId);
     if (userDto == null) return null;
