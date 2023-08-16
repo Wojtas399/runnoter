@@ -30,7 +30,7 @@ void main() {
   );
 
   test(
-    'copy with account type',
+    'copy with accountType',
     () {
       const AccountType expectedAccountType = AccountType.coach;
 
@@ -43,7 +43,7 @@ void main() {
   );
 
   test(
-    'copy with logged user name',
+    'copy with loggedUserName',
     () {
       const String expectedLoggedUserName = 'name';
 
@@ -56,7 +56,7 @@ void main() {
   );
 
   test(
-    'copy with app settings',
+    'copy with appSettings',
     () {
       const Settings expectedSettings = Settings(
         themeMode: ThemeMode.dark,
@@ -74,7 +74,7 @@ void main() {
   );
 
   test(
-    'copy with new clients',
+    'copy with newClients',
     () {
       final List<Person> expectedNewClients = [
         createPerson(id: 'u1'),
@@ -86,6 +86,19 @@ void main() {
 
       expect(state.newClients, expectedNewClients);
       expect(state2.newClients, expectedNewClients);
+    },
+  );
+
+  test(
+    'copy with newCoach',
+    () {
+      final Person expectedCoach = createPerson(id: 'p1');
+
+      state = state.copyWith(newCoach: expectedCoach);
+      final state2 = state.copyWith();
+
+      expect(state.newCoach, expectedCoach);
+      expect(state2.newCoach, null);
     },
   );
 }

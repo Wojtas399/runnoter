@@ -9,12 +9,15 @@ class MockUserRepository extends Mock implements UserRepository {
     registerFallbackValue(_FakeUser());
   }
 
-  void mockGetUserById({User? user}) {
+  void mockGetUserById({
+    User? user,
+    Stream<User?>? userStream,
+  }) {
     when(
       () => getUserById(
         userId: any(named: 'userId'),
       ),
-    ).thenAnswer((_) => Stream.value(user));
+    ).thenAnswer((_) => userStream ?? Stream.value(user));
   }
 
   void mockAddUser() {

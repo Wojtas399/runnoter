@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:bloc_concurrency/bloc_concurrency.dart';
+import 'package:collection/collection.dart';
+import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -46,21 +48,35 @@ class HomeBloc
     Emitter<HomeState> emit,
   ) async {
     emitLoadingStatus(emit);
-    final Stream<(User?, List<Person>)> stream$ =
-        _authService.loggedUserId$.whereNotNull().switchMap(
-              (String loggedUserId) => Rx.combineLatest2(
-                _userRepository.getUserById(userId: loggedUserId),
-                _getNewClients(loggedUserId),
-                (loggedUserData, newClients) => (loggedUserData, newClients),
+    final Stream<HomeBlocListenedParams?> stream$ =
+        _authService.loggedUserId$.switchMap(
+      (String? loggedUserId) => loggedUserId != null
+          ? Rx.combineLatest3(
+              _userRepository.getUserById(userId: loggedUserId),
+              _getNewClients(loggedUserId),
+              _getNewCoach(loggedUserId),
+              (
+                User? loggedUserData,
+                List<Person> newClients,
+                Person? newCoach,
+              ) =>
+                  HomeBlocListenedParams(
+                loggedUserData: loggedUserData,
+                newClients: newClients,
+                newCoach: newCoach,
               ),
-            );
+            )
+          : Stream.value(null),
+    );
     await emit.forEach(
       stream$,
-      onData: ((User?, List<Person>) data) => state.copyWith(
-        accountType: data.$1?.accountType,
-        loggedUserName: data.$1?.name,
-        appSettings: data.$1?.settings,
-        newClients: data.$2,
+      onData: (HomeBlocListenedParams? params) => state.copyWith(
+        status: params == null ? const BlocStatusNoLoggedUser() : null,
+        accountType: params?.loggedUserData?.accountType,
+        loggedUserName: params?.loggedUserData?.name,
+        appSettings: params?.loggedUserData?.settings,
+        newClients: params?.newClients,
+        newCoach: params?.newCoach,
       ),
     );
   }
@@ -92,7 +108,7 @@ class HomeBloc
             senderId: loggedUserId,
             direction: CoachingRequestDirection.coachToClient,
           )
-          .map((requests) => requests.where((req) => req.isAccepted).toList())
+          .map((requests) => requests.where((req) => req.isAccepted))
           .map(
             (acceptedRequests) => acceptedRequests.map(
               (req) => _personRepository
@@ -105,6 +121,33 @@ class HomeBloc
                 ? Stream.value([])
                 : Rx.combineLatest(streams, (newClients) => newClients),
           );
+
+  Stream<Person?> _getNewCoach(String loggedUserId) => _coachingRequestService
+      .getCoachingRequestsBySenderId(
+        senderId: loggedUserId,
+        direction: CoachingRequestDirection.clientToCoach,
+      )
+      .map((requests) => requests.firstWhereOrNull((req) => req.isAccepted))
+      .switchMap(
+        (CoachingRequest? acceptedReq) => acceptedReq != null
+            ? _personRepository.getPersonById(personId: acceptedReq.receiverId)
+            : Stream.value(null),
+      );
 }
 
 enum HomeBlocInfo { userSignedOut }
+
+class HomeBlocListenedParams extends Equatable {
+  final User? loggedUserData;
+  final List<Person> newClients;
+  final Person? newCoach;
+
+  const HomeBlocListenedParams({
+    required this.loggedUserData,
+    required this.newClients,
+    required this.newCoach,
+  });
+
+  @override
+  List<Object?> get props => [loggedUserData, newClients, newCoach];
+}

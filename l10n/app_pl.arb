@@ -179,6 +179,16 @@
       }
     }
   },
+  "homeNewCoachInfo": "Użytkownik {user} zgodził się zostać twoim trenerem",
+  "@homeNewCoachInfo": {
+    "description": "",
+    "placeholders": {
+      "user": {
+        "type": "String",
+        "example": "Jack Unknown"
+      }
+    }
+  },
   "@__________CURRENT_WEEK__________": {},
   "currentWeekTitle": "Obecny tydzień",
   "@currentWeekTitle": {

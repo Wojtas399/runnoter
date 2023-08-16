@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
@@ -6,6 +8,7 @@ import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/additional_model/coaching_request.dart';
 import 'package:runnoter/domain/additional_model/settings.dart';
 import 'package:runnoter/domain/bloc/home/home_bloc.dart';
+import 'package:runnoter/domain/entity/person.dart';
 import 'package:runnoter/domain/entity/user.dart';
 import 'package:runnoter/domain/repository/person_repository.dart';
 import 'package:runnoter/domain/repository/user_repository.dart';
@@ -44,119 +47,180 @@ void main() {
     reset(personRepository);
   });
 
-  blocTest(
-    'initialize, '
-    'there are no sent coaching requests, '
-    'should emit new clients as empty array',
-    build: () => HomeBloc(),
-    setUp: () {
-      authService.mockGetLoggedUserId(userId: loggedUserId);
-      userRepository.mockGetUserById(
-        user: createUser(
-          id: loggedUserId,
-          accountType: AccountType.runner,
-          name: 'Jack',
-          settings: createSettings(
-            themeMode: ThemeMode.dark,
-            language: Language.polish,
-            distanceUnit: DistanceUnit.miles,
-            paceUnit: PaceUnit.milesPerHour,
-          ),
-        ),
-      );
-      coachingRequestService.mockGetCoachingRequestsBySenderId(requests: []);
-    },
-    act: (bloc) => bloc.add(const HomeEventInitialize()),
-    expect: () => [
-      const HomeState(status: BlocStatusLoading()),
-      HomeState(
-        status: const BlocStatusComplete(),
+  group(
+    'initialize',
+    () {
+      final User loggedUserData = createUser(
+        id: loggedUserId,
         accountType: AccountType.runner,
-        loggedUserName: 'Jack',
-        appSettings: createSettings(
+        name: 'Jack',
+        settings: createSettings(
           themeMode: ThemeMode.dark,
           language: Language.polish,
           distanceUnit: DistanceUnit.miles,
           paceUnit: PaceUnit.milesPerHour,
         ),
-        newClients: const [],
-      ),
-    ],
-    verify: (_) {
-      verify(() => authService.loggedUserId$).called(1);
-      verify(() => userRepository.getUserById(userId: loggedUserId)).called(1);
-      verify(
-        () => coachingRequestService.getCoachingRequestsBySenderId(
-          senderId: loggedUserId,
-          direction: CoachingRequestDirection.coachToClient,
+      );
+      final User updatedLoggedUserData = createUser(
+        id: loggedUserId,
+        accountType: AccountType.runner,
+        name: 'James',
+        settings: createSettings(
+          themeMode: ThemeMode.light,
+          language: Language.english,
+          distanceUnit: DistanceUnit.kilometers,
+          paceUnit: PaceUnit.milesPerHour,
         ),
-      ).called(1);
-    },
-  );
+      );
+      final Person client1 = createPerson(id: 'cl1', name: 'first client');
+      final Person client2 = createPerson(id: 'cl2', name: 'second client');
+      final Person coach = createPerson(id: 'co1', name: 'coach');
+      final List<CoachingRequest> requestsSentToClients = [
+        createCoachingRequest(
+          id: 'r1',
+          receiverId: 'cl3',
+          isAccepted: false,
+        ),
+        createCoachingRequest(
+          id: 'r2',
+          receiverId: client1.id,
+          isAccepted: true,
+        ),
+        createCoachingRequest(
+          id: 'r3',
+          receiverId: client2.id,
+          isAccepted: true,
+        ),
+      ];
+      final List<CoachingRequest> requestsSentToCoaches = [
+        createCoachingRequest(
+          id: 'r4',
+          receiverId: coach.id,
+          isAccepted: true,
+        ),
+        createCoachingRequest(
+          id: 'r5',
+          receiverId: 'co2',
+          isAccepted: false,
+        ),
+      ];
+      StreamController<User?> loggedUserData$ = StreamController()
+        ..add(loggedUserData);
+      final StreamController<List<CoachingRequest>> clientsRequests$ =
+          StreamController()..add(requestsSentToClients);
+      final StreamController<List<CoachingRequest>> coachesRequests$ =
+          StreamController()..add(requestsSentToCoaches);
 
-  blocTest(
-    'initialize, '
-    "should set listener of logged user's data and new clients",
-    build: () => HomeBloc(),
-    setUp: () {
-      authService.mockGetLoggedUserId(userId: loggedUserId);
-      userRepository.mockGetUserById(
-        user: createUser(
-          id: loggedUserId,
-          accountType: AccountType.runner,
-          name: 'Jack',
-          settings: createSettings(
-            themeMode: ThemeMode.dark,
-            language: Language.polish,
-            distanceUnit: DistanceUnit.miles,
-            paceUnit: PaceUnit.milesPerHour,
+      blocTest(
+        "should set listener of logged user's data, new clients and new coach",
+        build: () => HomeBloc(),
+        setUp: () {
+          authService.mockGetLoggedUserId(userId: loggedUserId);
+          userRepository.mockGetUserById(userStream: loggedUserData$.stream);
+          when(
+            () => coachingRequestService.getCoachingRequestsBySenderId(
+              senderId: loggedUserId,
+              direction: CoachingRequestDirection.coachToClient,
+            ),
+          ).thenAnswer((_) => clientsRequests$.stream);
+          when(
+            () => coachingRequestService.getCoachingRequestsBySenderId(
+              senderId: loggedUserId,
+              direction: CoachingRequestDirection.clientToCoach,
+            ),
+          ).thenAnswer((_) => coachesRequests$.stream);
+          when(
+            () => personRepository.getPersonById(personId: client1.id),
+          ).thenAnswer((_) => Stream.value(client1));
+          when(
+            () => personRepository.getPersonById(personId: client2.id),
+          ).thenAnswer((_) => Stream.value(client2));
+          when(
+            () => personRepository.getPersonById(personId: coach.id),
+          ).thenAnswer((_) => Stream.value(coach));
+        },
+        act: (bloc) async {
+          bloc.add(const HomeEventInitialize());
+          await bloc.stream.first;
+          coachesRequests$.add([]);
+          await bloc.stream.first;
+          clientsRequests$.add([]);
+          await bloc.stream.first;
+          loggedUserData$.add(updatedLoggedUserData);
+        },
+        expect: () => [
+          const HomeState(status: BlocStatusLoading()),
+          HomeState(
+            status: const BlocStatusComplete(),
+            accountType: loggedUserData.accountType,
+            loggedUserName: loggedUserData.name,
+            appSettings: loggedUserData.settings,
+            newClients: [client1, client2],
+            newCoach: coach,
           ),
-        ),
-      );
-      coachingRequestService.mockGetCoachingRequestsBySenderId(
-        requests: [
-          createCoachingRequest(id: 'r1', receiverId: 'u2', isAccepted: true),
-          createCoachingRequest(id: 'r2', receiverId: 'u3', isAccepted: false),
-          createCoachingRequest(id: 'r3', receiverId: 'u4', isAccepted: true),
+          HomeState(
+            status: const BlocStatusComplete(),
+            accountType: loggedUserData.accountType,
+            loggedUserName: loggedUserData.name,
+            appSettings: loggedUserData.settings,
+            newClients: [client1, client2],
+          ),
+          HomeState(
+            status: const BlocStatusComplete(),
+            accountType: loggedUserData.accountType,
+            loggedUserName: loggedUserData.name,
+            appSettings: loggedUserData.settings,
+            newClients: const [],
+          ),
+          HomeState(
+            status: const BlocStatusComplete(),
+            accountType: updatedLoggedUserData.accountType,
+            loggedUserName: updatedLoggedUserData.name,
+            appSettings: updatedLoggedUserData.settings,
+            newClients: const [],
+          ),
         ],
+        verify: (_) {
+          verify(() => authService.loggedUserId$).called(1);
+          verify(
+            () => userRepository.getUserById(userId: loggedUserId),
+          ).called(1);
+          verify(
+            () => coachingRequestService.getCoachingRequestsBySenderId(
+              senderId: loggedUserId,
+              direction: CoachingRequestDirection.coachToClient,
+            ),
+          ).called(1);
+          verify(
+            () => coachingRequestService.getCoachingRequestsBySenderId(
+              senderId: loggedUserId,
+              direction: CoachingRequestDirection.clientToCoach,
+            ),
+          ).called(1);
+          verify(
+            () => personRepository.getPersonById(personId: client1.id),
+          ).called(1);
+          verify(
+            () => personRepository.getPersonById(personId: client2.id),
+          ).called(1);
+          verify(
+            () => personRepository.getPersonById(personId: coach.id),
+          ).called(1);
+        },
       );
-      when(
-        () => personRepository.getPersonById(personId: 'u2'),
-      ).thenAnswer((_) => Stream.value(createPerson(id: 'u2', name: 'name2')));
-      when(
-        () => personRepository.getPersonById(personId: 'u4'),
-      ).thenAnswer((_) => Stream.value(createPerson(id: 'u4', name: 'name4')));
-    },
-    act: (bloc) => bloc.add(const HomeEventInitialize()),
-    expect: () => [
-      const HomeState(status: BlocStatusLoading()),
-      HomeState(
-        status: const BlocStatusComplete(),
-        accountType: AccountType.runner,
-        loggedUserName: 'Jack',
-        appSettings: createSettings(
-          themeMode: ThemeMode.dark,
-          language: Language.polish,
-          distanceUnit: DistanceUnit.miles,
-          paceUnit: PaceUnit.milesPerHour,
-        ),
-        newClients: [
-          createPerson(id: 'u2', name: 'name2'),
-          createPerson(id: 'u4', name: 'name4'),
+
+      blocTest(
+        'logged user does not exist, '
+        'should emit no logged user status',
+        build: () => HomeBloc(),
+        setUp: () => authService.mockGetLoggedUserId(),
+        act: (bloc) => bloc.add(const HomeEventInitialize()),
+        expect: () => [
+          const HomeState(status: BlocStatusLoading()),
+          const HomeState(status: BlocStatusNoLoggedUser()),
         ],
-      ),
-    ],
-    verify: (_) {
-      verify(() => authService.loggedUserId$).called(1);
-      verify(() => userRepository.getUserById(userId: loggedUserId)).called(1);
-      verify(
-        () => coachingRequestService.getCoachingRequestsBySenderId(
-          senderId: loggedUserId,
-          direction: CoachingRequestDirection.coachToClient,
-        ),
-      ).called(1);
-      verify(() => personRepository.getPersonById(personId: 'u2')).called(1);
-      verify(() => personRepository.getPersonById(personId: 'u4')).called(1);
+        verify: (_) => verify(() => authService.loggedUserId$).called(1),
+      );
     },
   );
 

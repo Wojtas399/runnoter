@@ -7,6 +7,7 @@ import '../../../dependency_injection.dart';
 import '../../../domain/additional_model/bloc_status.dart';
 import '../../../domain/additional_model/settings.dart' as settings;
 import '../../../domain/bloc/home/home_bloc.dart';
+import '../../../domain/entity/person.dart';
 import '../../component/bloc_with_status_listener_component.dart';
 import '../../config/navigation/router.dart';
 import '../../dialog/required_data_completion/required_data_completion_dialog.dart';
@@ -80,18 +81,8 @@ class _BlocListener extends StatelessWidget {
       context.read<DistanceUnitService>().changeUnit(appSettings.distanceUnit);
       context.read<PaceUnitService>().changeUnit(appSettings.paceUnit);
     }
-    if (state.newClients.isNotEmpty) {
-      for (final newClient in state.newClients) {
-        showSnackbarMessage(
-          Str.of(context).homeNewClientInfo(newClient.toFullNameWithEmail()),
-          showCloseIcon: true,
-          duration: const Duration(seconds: 6),
-        );
-      }
-      context.read<HomeBloc>().add(
-            const HomeEventDeleteAcceptedCoachingRequests(),
-          );
-    }
+    _manageNewClients(context, state.newClients);
+    _manageNewCoach(context, state.newCoach);
   }
 
   void _manageThemeMode(
@@ -127,6 +118,31 @@ class _BlocListener extends StatelessWidget {
       case settings.Language.system:
         languageService.changeLanguage(AppLanguage.system);
         break;
+    }
+  }
+
+  void _manageNewClients(BuildContext context, List<Person> newClients) {
+    if (newClients.isNotEmpty) {
+      for (final client in newClients) {
+        showSnackbarMessage(
+          Str.of(context).homeNewClientInfo(client.toFullNameWithEmail()),
+          showCloseIcon: true,
+          duration: const Duration(seconds: 6),
+        );
+      }
+      context.read<HomeBloc>().add(
+            const HomeEventDeleteAcceptedCoachingRequests(),
+          );
+    }
+  }
+
+  void _manageNewCoach(BuildContext context, Person? newCoach) {
+    if (newCoach != null) {
+      showSnackbarMessage(
+        Str.of(context).homeNewCoachInfo(newCoach.toFullNameWithEmail()),
+        showCloseIcon: true,
+        duration: const Duration(seconds: 6),
+      );
     }
   }
 }
