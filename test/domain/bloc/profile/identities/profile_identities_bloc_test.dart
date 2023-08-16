@@ -8,18 +8,22 @@ import 'package:runnoter/domain/bloc/profile/identities/profile_identities_bloc.
 import 'package:runnoter/domain/entity/user.dart';
 import 'package:runnoter/domain/repository/blood_test_repository.dart';
 import 'package:runnoter/domain/repository/health_measurement_repository.dart';
+import 'package:runnoter/domain/repository/person_repository.dart';
 import 'package:runnoter/domain/repository/race_repository.dart';
 import 'package:runnoter/domain/repository/user_repository.dart';
 import 'package:runnoter/domain/repository/workout_repository.dart';
 import 'package:runnoter/domain/service/auth_service.dart';
+import 'package:runnoter/domain/service/coaching_request_service.dart';
 
 import '../../../../creators/user_creator.dart';
 import '../../../../mock/domain/repository/mock_blood_test_repository.dart';
 import '../../../../mock/domain/repository/mock_health_measurement_repository.dart';
+import '../../../../mock/domain/repository/mock_person_repository.dart';
 import '../../../../mock/domain/repository/mock_race_repository.dart';
 import '../../../../mock/domain/repository/mock_user_repository.dart';
 import '../../../../mock/domain/repository/mock_workout_repository.dart';
 import '../../../../mock/domain/service/mock_auth_service.dart';
+import '../../../../mock/domain/service/mock_coaching_request_service.dart';
 
 void main() {
   final authService = MockAuthService();
@@ -28,6 +32,8 @@ void main() {
   final healthMeasurementRepository = MockHealthMeasurementRepository();
   final bloodTestRepository = MockBloodTestRepository();
   final raceRepository = MockRaceRepository();
+  final coachingRequestService = MockCoachingRequestService();
+  final personRepository = MockPersonRepository();
   const String loggedUserId = 'u1';
 
   setUpAll(() {
@@ -39,6 +45,10 @@ void main() {
     );
     GetIt.I.registerSingleton<BloodTestRepository>(bloodTestRepository);
     GetIt.I.registerSingleton<RaceRepository>(raceRepository);
+    GetIt.I.registerFactory<CoachingRequestService>(
+      () => coachingRequestService,
+    );
+    GetIt.I.registerSingleton<PersonRepository>(personRepository);
   });
 
   tearDown(() {
@@ -518,6 +528,8 @@ void main() {
       healthMeasurementRepository.mockDeleteAllUserMeasurements();
       bloodTestRepository.mockDeleteAllUserTests();
       raceRepository.mockDeleteAllUserRaces();
+      coachingRequestService.mockDeleteCoachingRequestsByUserId();
+      personRepository.mockRemoveCoachIdInAllMatchingPersons();
     },
     act: (bloc) => bloc.add(const ProfileIdentitiesEventDeleteAccount()),
     expect: () => [
@@ -544,6 +556,16 @@ void main() {
         () => raceRepository.deleteAllUserRaces(userId: loggedUserId),
       ).called(1);
       verify(() => userRepository.deleteUser(userId: loggedUserId)).called(1);
+      verify(
+        () => coachingRequestService.deleteCoachingRequestsByUserId(
+          userId: loggedUserId,
+        ),
+      ).called(1);
+      verify(
+        () => personRepository.removeCoachIdInAllMatchingPersons(
+          coachId: loggedUserId,
+        ),
+      ).called(1);
       verify(() => authService.deleteAccount()).called(1);
     },
   );

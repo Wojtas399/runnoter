@@ -15,8 +15,10 @@ import '../../../additional_model/bloc_state.dart';
 import '../../../additional_model/custom_exception.dart';
 import '../../../repository/blood_test_repository.dart';
 import '../../../repository/health_measurement_repository.dart';
+import '../../../repository/person_repository.dart';
 import '../../../repository/race_repository.dart';
 import '../../../repository/workout_repository.dart';
+import '../../../service/coaching_request_service.dart';
 
 part 'profile_identities_event.dart';
 part 'profile_identities_state.dart';
@@ -32,6 +34,8 @@ class ProfileIdentitiesBloc extends BlocWithStatus<
   final HealthMeasurementRepository _healthMeasurementRepository;
   final BloodTestRepository _bloodTestRepository;
   final RaceRepository _raceRepository;
+  final CoachingRequestService _coachingRequestService;
+  final PersonRepository _personRepository;
 
   ProfileIdentitiesBloc({
     ProfileIdentitiesState state = const ProfileIdentitiesState(
@@ -43,6 +47,8 @@ class ProfileIdentitiesBloc extends BlocWithStatus<
         _healthMeasurementRepository = getIt<HealthMeasurementRepository>(),
         _bloodTestRepository = getIt<BloodTestRepository>(),
         _raceRepository = getIt<RaceRepository>(),
+        _coachingRequestService = getIt<CoachingRequestService>(),
+        _personRepository = getIt<PersonRepository>(),
         super(state) {
     on<ProfileIdentitiesEventInitialize>(
       _initialize,
@@ -267,6 +273,12 @@ class ProfileIdentitiesBloc extends BlocWithStatus<
     await _bloodTestRepository.deleteAllUserTests(userId: loggedUserId);
     await _raceRepository.deleteAllUserRaces(userId: loggedUserId);
     await _userRepository.deleteUser(userId: loggedUserId);
+    await _coachingRequestService.deleteCoachingRequestsByUserId(
+      userId: loggedUserId,
+    );
+    await _personRepository.removeCoachIdInAllMatchingPersons(
+      coachId: loggedUserId,
+    );
   }
 }
 
