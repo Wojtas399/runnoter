@@ -39,7 +39,7 @@ class ClientsBloc extends BlocWithStatus<ClientsEvent, ClientsState,
     ClientsEventInitialize event,
     Emitter<ClientsState> emit,
   ) async {
-    final Stream<ClientsBlocListenedParams> stream$ =
+    final Stream<_ListenedParams> stream$ =
         _authService.loggedUserId$.whereNotNull().switchMap(
               (String loggedUserId) => Rx.combineLatest3(
                 _getSentRequests(loggedUserId),
@@ -50,7 +50,7 @@ class ClientsBloc extends BlocWithStatus<ClientsEvent, ClientsState,
                   List<CoachingRequestShort> receivedRequests,
                   List<Person> clients,
                 ) =>
-                    ClientsBlocListenedParams(
+                    _ListenedParams(
                   sentRequests: sentRequests,
                   receivedRequests: receivedRequests,
                   clients: clients,
@@ -59,7 +59,7 @@ class ClientsBloc extends BlocWithStatus<ClientsEvent, ClientsState,
             );
     await emit.forEach(
       stream$,
-      onData: (ClientsBlocListenedParams params) => state.copyWith(
+      onData: (_ListenedParams params) => state.copyWith(
         sentRequests: params.sentRequests,
         receivedRequests: params.receivedRequests,
         clients: params.clients,
@@ -181,12 +181,12 @@ class ClientsBloc extends BlocWithStatus<ClientsEvent, ClientsState,
 
 enum ClientsBlocInfo { requestAccepted, requestDeleted, clientDeleted }
 
-class ClientsBlocListenedParams extends Equatable {
+class _ListenedParams extends Equatable {
   final List<CoachingRequestShort> sentRequests;
   final List<CoachingRequestShort> receivedRequests;
   final List<Person> clients;
 
-  const ClientsBlocListenedParams({
+  const _ListenedParams({
     required this.sentRequests,
     required this.receivedRequests,
     required this.clients,
