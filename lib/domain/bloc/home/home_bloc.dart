@@ -106,11 +106,13 @@ class HomeBloc
             direction: CoachingRequestDirection.coachToClient,
           )
           .map((requests) => requests.where((req) => req.isAccepted))
-          .doOnData((acceptedReqs) {
-            if (acceptedReqs.isNotEmpty) {
-              _personRepository.refreshPersonsByCoachId(coachId: loggedUserId);
-            }
-          })
+          .doOnData(
+            (acceptedReqs) => acceptedReqs.isNotEmpty
+                ? _personRepository.refreshPersonsByCoachId(
+                    coachId: loggedUserId,
+                  )
+                : null,
+          )
           .map(
             (acceptedReqs) => acceptedReqs.map(_convertToCoachingRequestShort),
           )
@@ -132,6 +134,11 @@ class HomeBloc
             direction: CoachingRequestDirection.clientToCoach,
           )
           .map((requests) => requests.firstWhereOrNull((req) => req.isAccepted))
+          .doOnData(
+            (acceptedReq) => acceptedReq != null
+                ? _userRepository.refreshUserById(userId: loggedUserId)
+                : null,
+          )
           .switchMap(
             (CoachingRequest? acceptedReq) => acceptedReq != null
                 ? _convertToCoachingRequestShort(acceptedReq)

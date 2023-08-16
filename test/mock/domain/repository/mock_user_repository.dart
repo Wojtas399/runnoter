@@ -44,6 +44,14 @@ class MockUserRepository extends Mock implements UserRepository {
     }
   }
 
+  void mockRefreshUserById() {
+    when(
+      () => refreshUserById(
+        userId: any(named: 'userId'),
+      ),
+    ).thenAnswer((_) => Future.value());
+  }
+
   void mockDeleteUser() {
     when(
       () => deleteUser(
