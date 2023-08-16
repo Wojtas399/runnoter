@@ -242,7 +242,7 @@ class _RequestItem extends StatelessWidget {
         ),
       ),
       confirmButtonLabel: str.undo,
-      displaySubmitButtonAsFilled: true,
+      displayConfirmationButtonAsFilled: true,
       confirmButtonColor: Theme.of(context).colorScheme.error,
     );
   }

@@ -90,7 +90,7 @@ class _Coach extends StatelessWidget {
         content: Text(
           Str.of(context).profileFinishCooperationWithCoachDialogMessage,
         ),
-        displaySubmitButtonAsFilled: true,
+        displayConfirmationButtonAsFilled: true,
         confirmButtonColor: Theme.of(context).colorScheme.error,
       );
 }
@@ -309,7 +309,7 @@ class _CoachingRequestItem extends StatelessWidget {
         ),
       ),
       confirmButtonLabel: str.undo,
-      displaySubmitButtonAsFilled: true,
+      displayConfirmationButtonAsFilled: true,
       confirmButtonColor: Theme.of(context).colorScheme.error,
     );
   }

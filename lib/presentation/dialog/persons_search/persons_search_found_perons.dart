@@ -98,7 +98,7 @@ class _UserItem extends StatelessWidget {
 
     return askForConfirmation(
       title: Text(dialogTitle),
-      displaySubmitButtonAsFilled: true,
+      displayConfirmationButtonAsFilled: true,
       content: RichText(
         text: TextSpan(
           children: [

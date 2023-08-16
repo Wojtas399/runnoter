@@ -186,7 +186,7 @@ class _State extends State<HomeContent> {
       title: Text(str.homeSignOutConfirmationDialogTitle),
       content: Text(str.homeSignOutConfirmationDialogMessage),
       confirmButtonLabel: str.homeSignOut,
-      displaySubmitButtonAsFilled: true,
+      displayConfirmationButtonAsFilled: true,
     );
     if (confirmed == true) {
       bloc.add(const HomeEventSignOut());

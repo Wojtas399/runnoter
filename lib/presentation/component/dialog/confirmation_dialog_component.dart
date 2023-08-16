@@ -11,7 +11,7 @@ class ConfirmationDialogComponent extends StatelessWidget {
   final String? cancelButtonLabel;
   final Color? confirmButtonColor;
   final Color? cancelButtonColor;
-  final bool displaySubmitButtonAsFilled;
+  final bool displayConfirmationButtonAsFilled;
 
   const ConfirmationDialogComponent({
     super.key,
@@ -21,7 +21,7 @@ class ConfirmationDialogComponent extends StatelessWidget {
     this.cancelButtonLabel,
     this.confirmButtonColor,
     this.cancelButtonColor,
-    this.displaySubmitButtonAsFilled = false,
+    this.displayConfirmationButtonAsFilled = false,
   });
 
   @override
@@ -40,7 +40,7 @@ class ConfirmationDialogComponent extends StatelessWidget {
             color: cancelButtonColor ?? Theme.of(context).colorScheme.primary,
           ),
         ),
-        displaySubmitButtonAsFilled
+        displayConfirmationButtonAsFilled
             ? FilledButton(
                 onPressed: () => popRoute(result: true),
                 style: FilledButton.styleFrom(

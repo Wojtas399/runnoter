@@ -139,7 +139,7 @@ class _ClientItem extends StatelessWidget {
       ),
       confirmButtonLabel: Str.of(context).delete,
       confirmButtonColor: Theme.of(context).colorScheme.error,
-      displaySubmitButtonAsFilled: true,
+      displayConfirmationButtonAsFilled: true,
     );
   }
 }

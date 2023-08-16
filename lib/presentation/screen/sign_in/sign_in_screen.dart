@@ -120,7 +120,7 @@ class _BlocListener extends StatelessWidget {
       title: Text(str.signInCreateNewAccountConfirmationDialogTitle),
       content: Text(str.signInCreateNewAccountConfirmationDialogMessage),
       confirmButtonLabel: str.create,
-      displaySubmitButtonAsFilled: true,
+      displayConfirmationButtonAsFilled: true,
       barrierDismissible: false,
     );
   }
