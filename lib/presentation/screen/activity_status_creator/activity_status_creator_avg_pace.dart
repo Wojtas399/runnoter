@@ -69,6 +69,7 @@ class _AvgPaceDistanceState extends State<_AvgPaceDistance> {
         label: Text(
           '${Str.of(context).activityStatusAvgPace} [${context.paceUnit.toUIFormat()}]',
         ),
+        counterText: '',
       ),
       controller: _controller,
       keyboardType: TextInputType.number,
@@ -208,6 +209,7 @@ class _AveragePaceField extends StatelessWidget {
             label: Center(
               child: Text(label),
             ),
+            counterText: '',
           ),
           textAlign: TextAlign.center,
           controller: controller,
