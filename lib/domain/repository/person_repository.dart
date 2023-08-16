@@ -17,7 +17,4 @@ abstract interface class PersonRepository {
   });
 
   Future<void> refreshPersonsByCoachId({required String coachId});
-
-  //TODO: Remove below method
-  Future<void> removeCoachOfPerson({required String personId});
 }

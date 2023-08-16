@@ -108,7 +108,10 @@ class ClientsBloc extends BlocWithStatus<ClientsEvent, ClientsState,
     Emitter<ClientsState> emit,
   ) async {
     emitLoadingStatus(emit);
-    await _personRepository.removeCoachOfPerson(personId: event.clientId);
+    await _personRepository.updateCoachIdOfPerson(
+      personId: event.clientId,
+      coachId: null,
+    );
     emitCompleteStatus(emit, info: ClientsBlocInfo.clientDeleted);
   }
 
