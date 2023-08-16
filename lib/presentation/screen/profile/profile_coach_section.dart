@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/additional_model/coaching_request.dart';
+import '../../../domain/additional_model/coaching_request_short.dart';
 import '../../../domain/bloc/profile/coach/profile_coach_bloc.dart';
 import '../../../domain/entity/person.dart';
 import '../../component/gap/gap_components.dart';
@@ -152,12 +153,12 @@ class _SentCoachingRequests extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<CoachingRequestDetails>? requests = context.select(
-      (ProfileCoachBloc bloc) => bloc.state.sentCoachingRequests,
+    final List<CoachingRequestShort>? requests = context.select(
+      (ProfileCoachBloc bloc) => bloc.state.sentRequests,
     );
 
     return _RequestsList(
-      requestDetails: requests,
+      requests: requests,
       requestDirection: CoachingRequestDirection.clientToCoach,
     );
   }
@@ -168,23 +169,23 @@ class _ReceivedCoachingRequests extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<CoachingRequestDetails>? requests = context.select(
-      (ProfileCoachBloc bloc) => bloc.state.receivedCoachingRequests,
+    final List<CoachingRequestShort>? requests = context.select(
+      (ProfileCoachBloc bloc) => bloc.state.receivedRequests,
     );
 
     return _RequestsList(
-      requestDetails: requests,
+      requests: requests,
       requestDirection: CoachingRequestDirection.coachToClient,
     );
   }
 }
 
 class _RequestsList extends StatelessWidget {
-  final List<CoachingRequestDetails>? requestDetails;
+  final List<CoachingRequestShort>? requests;
   final CoachingRequestDirection requestDirection;
 
   const _RequestsList({
-    required this.requestDetails,
+    required this.requests,
     required this.requestDirection,
   });
 
@@ -192,7 +193,7 @@ class _RequestsList extends StatelessWidget {
   Widget build(BuildContext context) {
     final str = Str.of(context);
 
-    return switch (requestDetails) {
+    return switch (requests) {
       null => const Padding(
           padding: EdgeInsets.symmetric(vertical: 16),
           child: CircularProgressIndicator(),
@@ -212,7 +213,7 @@ class _RequestsList extends StatelessWidget {
           physics: const NeverScrollableScrollPhysics(),
           children: ListTile.divideTiles(
             context: context,
-            tiles: requestDetails!.map(
+            tiles: requests!.map(
               (request) => _CoachingRequestItem(request, requestDirection),
             ),
           ).toList(),
@@ -222,17 +223,17 @@ class _RequestsList extends StatelessWidget {
 }
 
 class _CoachingRequestItem extends StatelessWidget {
-  final CoachingRequestDetails requestDetails;
+  final CoachingRequestShort request;
   final CoachingRequestDirection requestDirection;
 
-  const _CoachingRequestItem(this.requestDetails, this.requestDirection);
+  const _CoachingRequestItem(this.request, this.requestDirection);
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
       contentPadding: const EdgeInsets.all(0),
-      title: Text(requestDetails.personToDisplay.toFullName()),
-      subtitle: Text(requestDetails.personToDisplay.email),
+      title: Text(request.personToDisplay.toFullName()),
+      subtitle: Text(request.personToDisplay.email),
       trailing: switch (requestDirection) {
         CoachingRequestDirection.clientToCoach => IconButton(
             onPressed: () => _onDelete(context),
@@ -266,7 +267,7 @@ class _CoachingRequestItem extends StatelessWidget {
 
   void _onAccept(BuildContext context) {
     context.read<ProfileCoachBloc>().add(
-          ProfileCoachEventAcceptRequest(requestId: requestDetails.id),
+          ProfileCoachEventAcceptRequest(requestId: request.id),
         );
   }
 
@@ -278,7 +279,7 @@ class _CoachingRequestItem extends StatelessWidget {
     }
     if (isDeletionAccepted) {
       bloc.add(ProfileCoachEventDeleteRequest(
-        requestId: requestDetails.id,
+        requestId: request.id,
         requestDirection: requestDirection,
       ));
     }
@@ -287,7 +288,7 @@ class _CoachingRequestItem extends StatelessWidget {
   Future<bool> _askForRequestDeletionConfirmation(
     BuildContext context,
   ) async {
-    final Person person = requestDetails.personToDisplay;
+    final Person person = request.personToDisplay;
     final TextStyle? textStyle = Theme.of(context).textTheme.bodyMedium;
     final str = Str.of(context);
 

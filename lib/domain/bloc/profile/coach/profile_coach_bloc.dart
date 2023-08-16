@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -9,6 +8,7 @@ import '../../../additional_model/bloc_state.dart';
 import '../../../additional_model/bloc_status.dart';
 import '../../../additional_model/bloc_with_status.dart';
 import '../../../additional_model/coaching_request.dart';
+import '../../../additional_model/coaching_request_short.dart';
 import '../../../entity/person.dart';
 import '../../../entity/user.dart';
 import '../../../repository/person_repository.dart';
@@ -26,7 +26,7 @@ class ProfileCoachBloc extends BlocWithStatus<ProfileCoachEvent,
   final PersonRepository _personRepository;
   final CoachingRequestService _coachingRequestService;
   StreamSubscription<
-          (List<CoachingRequestDetails>?, List<CoachingRequestDetails>?)>?
+          (List<CoachingRequestShort>?, List<CoachingRequestShort>?)>?
       _requestsListener;
 
   ProfileCoachBloc({
@@ -101,8 +101,8 @@ class ProfileCoachBloc extends BlocWithStatus<ProfileCoachEvent,
     Emitter<ProfileCoachState> emit,
   ) {
     emit(state.copyWith(
-      sentCoachingRequests: event.sentRequests,
-      receivedCoachingRequests: event.receivedRequests,
+      sentRequests: event.sentRequests,
+      receivedRequests: event.receivedRequests,
     ));
   }
 
@@ -110,14 +110,14 @@ class ProfileCoachBloc extends BlocWithStatus<ProfileCoachEvent,
     ProfileCoachEventAcceptRequest event,
     Emitter<ProfileCoachState> emit,
   ) async {
-    if (state.receivedCoachingRequests == null) return;
+    if (state.receivedRequests == null) return;
     final String? loggedUserId = await _authService.loggedUserId$.first;
     if (loggedUserId == null) {
       emitNoLoggedUserStatus(emit);
       return;
     }
     emitLoadingStatus(emit);
-    final String senderId = state.receivedCoachingRequests!
+    final String senderId = state.receivedRequests!
         .firstWhere((request) => request.id == event.requestId)
         .personToDisplay
         .id;
@@ -178,7 +178,7 @@ class ProfileCoachBloc extends BlocWithStatus<ProfileCoachEvent,
             : Stream.value(null),
       );
 
-  Stream<(List<CoachingRequestDetails>?, List<CoachingRequestDetails>?)>
+  Stream<(List<CoachingRequestShort>?, List<CoachingRequestShort>?)>
       _getSentAndReceivedCoachingRequests(String loggedUserId) =>
           Rx.combineLatest2(
             _getSentCoachingRequests(loggedUserId),
@@ -186,7 +186,7 @@ class ProfileCoachBloc extends BlocWithStatus<ProfileCoachEvent,
             (sentReqs, receivedReqs) => (sentReqs, receivedReqs),
           );
 
-  Stream<List<CoachingRequestDetails>?> _getSentCoachingRequests(
+  Stream<List<CoachingRequestShort>?> _getSentCoachingRequests(
     String loggedUserId,
   ) =>
       _coachingRequestService
@@ -198,7 +198,7 @@ class ProfileCoachBloc extends BlocWithStatus<ProfileCoachEvent,
           .map(_combineCoachingRequestIdsWithReceiversInfo)
           .switchMap(_switchToStreamWithRequestsDetails);
 
-  Stream<List<CoachingRequestDetails>?> _getReceivedCoachingRequests(
+  Stream<List<CoachingRequestShort>?> _getReceivedCoachingRequests(
     String loggedUserId,
   ) =>
       _coachingRequestService
@@ -244,7 +244,7 @@ class ProfileCoachBloc extends BlocWithStatus<ProfileCoachEvent,
               )
               .toList();
 
-  Stream<List<CoachingRequestDetails>?> _switchToStreamWithRequestsDetails(
+  Stream<List<CoachingRequestShort>?> _switchToStreamWithRequestsDetails(
     List<Stream<(String, Person)>>? streams,
   ) =>
       streams == null || streams.isEmpty == true
@@ -253,7 +253,7 @@ class ProfileCoachBloc extends BlocWithStatus<ProfileCoachEvent,
               streams,
               (List<(String, Person)> values) => values
                   .map(
-                    ((String, Person) data) => CoachingRequestDetails(
+                    ((String, Person) data) => CoachingRequestShort(
                       id: data.$1,
                       personToDisplay: data.$2,
                     ),

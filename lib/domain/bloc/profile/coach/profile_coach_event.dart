@@ -17,8 +17,8 @@ class ProfileCoachEventRemoveRequestsListener extends ProfileCoachEvent {
 }
 
 class ProfileCoachEventRequestsUpdated extends ProfileCoachEvent {
-  final List<CoachingRequestDetails>? sentRequests;
-  final List<CoachingRequestDetails>? receivedRequests;
+  final List<CoachingRequestShort>? sentRequests;
+  final List<CoachingRequestShort>? receivedRequests;
 
   const ProfileCoachEventRequestsUpdated({
     required this.sentRequests,

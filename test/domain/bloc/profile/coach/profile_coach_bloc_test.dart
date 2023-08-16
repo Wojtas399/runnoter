@@ -6,6 +6,7 @@ import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/additional_model/coaching_request.dart';
+import 'package:runnoter/domain/additional_model/coaching_request_short.dart';
 import 'package:runnoter/domain/bloc/profile/coach/profile_coach_bloc.dart';
 import 'package:runnoter/domain/entity/person.dart';
 import 'package:runnoter/domain/repository/person_repository.dart';
@@ -115,10 +116,10 @@ void main() {
         createCoachingRequest(id: 'r2', senderId: person2.id),
       ];
       final sentRequestDetails = [
-        CoachingRequestDetails(id: 'r1', personToDisplay: person1),
+        CoachingRequestShort(id: 'r1', personToDisplay: person1),
       ];
       final receivedRequestDetails = [
-        CoachingRequestDetails(id: 'r2', personToDisplay: person2),
+        CoachingRequestShort(id: 'r2', personToDisplay: person2),
       ];
       final StreamController<List<CoachingRequest>> sentRequests$ =
           StreamController()..add(sentRequests);
@@ -126,7 +127,7 @@ void main() {
           StreamController()..add(receivedRequests);
 
       blocTest(
-        'should set listener of sent and received coaching requests',
+        'should set listener of sent and received requests',
         build: () => ProfileCoachBloc(),
         setUp: () {
           authService.mockGetLoggedUserId(userId: loggedUserId);
@@ -153,18 +154,18 @@ void main() {
           const ProfileCoachState(status: BlocStatusComplete()),
           ProfileCoachState(
             status: const BlocStatusComplete(),
-            sentCoachingRequests: sentRequestDetails,
-            receivedCoachingRequests: receivedRequestDetails,
+            sentRequests: sentRequestDetails,
+            receivedRequests: receivedRequestDetails,
           ),
           ProfileCoachState(
             status: const BlocStatusComplete(),
-            sentCoachingRequests: const [],
-            receivedCoachingRequests: receivedRequestDetails,
+            sentRequests: const [],
+            receivedRequests: receivedRequestDetails,
           ),
           const ProfileCoachState(
             status: BlocStatusComplete(),
-            sentCoachingRequests: [],
-            receivedCoachingRequests: [],
+            sentRequests: [],
+            receivedRequests: [],
           ),
         ],
         verify: (_) {
@@ -207,10 +208,10 @@ void main() {
         createCoachingRequest(id: 'r2', senderId: person2.id),
       ];
       final sentRequestDetails = [
-        CoachingRequestDetails(id: 'r1', personToDisplay: person1),
+        CoachingRequestShort(id: 'r1', personToDisplay: person1),
       ];
       final receivedRequestDetails = [
-        CoachingRequestDetails(id: 'r2', personToDisplay: person2),
+        CoachingRequestShort(id: 'r2', personToDisplay: person2),
       ];
       final StreamController<List<CoachingRequest>> sentRequests$ =
           StreamController()..add(sentRequests);
@@ -249,18 +250,18 @@ void main() {
         expect: () => [
           ProfileCoachState(
             status: const BlocStatusComplete(),
-            sentCoachingRequests: sentRequestDetails,
-            receivedCoachingRequests: receivedRequestDetails,
+            sentRequests: sentRequestDetails,
+            receivedRequests: receivedRequestDetails,
           ),
           ProfileCoachState(
             status: const BlocStatusComplete(),
-            sentCoachingRequests: const [],
-            receivedCoachingRequests: receivedRequestDetails,
+            sentRequests: const [],
+            receivedRequests: receivedRequestDetails,
           ),
           const ProfileCoachState(
             status: BlocStatusComplete(),
-            sentCoachingRequests: [],
-            receivedCoachingRequests: [],
+            sentRequests: [],
+            receivedRequests: [],
           ),
         ],
         verify: (_) {
@@ -338,11 +339,11 @@ void main() {
         expect: () => [
           ProfileCoachState(
             status: const BlocStatusComplete(),
-            sentCoachingRequests: [
-              CoachingRequestDetails(id: 'r1', personToDisplay: person1),
+            sentRequests: [
+              CoachingRequestShort(id: 'r1', personToDisplay: person1),
             ],
-            receivedCoachingRequests: [
-              CoachingRequestDetails(id: 'r2', personToDisplay: person2),
+            receivedRequests: [
+              CoachingRequestShort(id: 'r2', personToDisplay: person2),
             ],
           ),
         ],
@@ -378,17 +379,17 @@ void main() {
     act: (bloc) => bloc.add(
       ProfileCoachEventRequestsUpdated(
         sentRequests: [
-          CoachingRequestDetails(
+          CoachingRequestShort(
             id: 'r1',
             personToDisplay: createPerson(id: 'u1', name: 'name1'),
           ),
-          CoachingRequestDetails(
+          CoachingRequestShort(
             id: 'r3',
             personToDisplay: createPerson(id: 'u3', name: 'name3'),
           ),
         ],
         receivedRequests: [
-          CoachingRequestDetails(
+          CoachingRequestShort(
             id: 'r2',
             personToDisplay: createPerson(id: 'u2', name: 'name2'),
           ),
@@ -398,18 +399,18 @@ void main() {
     expect: () => [
       ProfileCoachState(
         status: const BlocStatusComplete(),
-        sentCoachingRequests: [
-          CoachingRequestDetails(
+        sentRequests: [
+          CoachingRequestShort(
             id: 'r1',
             personToDisplay: createPerson(id: 'u1', name: 'name1'),
           ),
-          CoachingRequestDetails(
+          CoachingRequestShort(
             id: 'r3',
             personToDisplay: createPerson(id: 'u3', name: 'name3'),
           ),
         ],
-        receivedCoachingRequests: [
-          CoachingRequestDetails(
+        receivedRequests: [
+          CoachingRequestShort(
             id: 'r2',
             personToDisplay: createPerson(id: 'u2', name: 'name2'),
           ),
@@ -425,12 +426,12 @@ void main() {
     build: () => ProfileCoachBloc(
       state: ProfileCoachState(
         status: const BlocStatusComplete(),
-        receivedCoachingRequests: [
-          CoachingRequestDetails(
+        receivedRequests: [
+          CoachingRequestShort(
             id: 'r2',
             personToDisplay: createPerson(id: 'u2'),
           ),
-          CoachingRequestDetails(
+          CoachingRequestShort(
             id: 'r1',
             personToDisplay: createPerson(id: 'u3'),
           ),
@@ -444,12 +445,12 @@ void main() {
     expect: () => [
       ProfileCoachState(
         status: const BlocStatusNoLoggedUser(),
-        receivedCoachingRequests: [
-          CoachingRequestDetails(
+        receivedRequests: [
+          CoachingRequestShort(
             id: 'r2',
             personToDisplay: createPerson(id: 'u2'),
           ),
-          CoachingRequestDetails(
+          CoachingRequestShort(
             id: 'r1',
             personToDisplay: createPerson(id: 'u3'),
           ),
@@ -467,12 +468,12 @@ void main() {
     build: () => ProfileCoachBloc(
       state: ProfileCoachState(
         status: const BlocStatusComplete(),
-        receivedCoachingRequests: [
-          CoachingRequestDetails(
+        receivedRequests: [
+          CoachingRequestShort(
             id: 'r2',
             personToDisplay: createPerson(id: 'u2'),
           ),
-          CoachingRequestDetails(
+          CoachingRequestShort(
             id: 'r1',
             personToDisplay: createPerson(id: 'u3'),
           ),
@@ -491,12 +492,12 @@ void main() {
     expect: () => [
       ProfileCoachState(
         status: const BlocStatusLoading(),
-        receivedCoachingRequests: [
-          CoachingRequestDetails(
+        receivedRequests: [
+          CoachingRequestShort(
             id: 'r2',
             personToDisplay: createPerson(id: 'u2'),
           ),
-          CoachingRequestDetails(
+          CoachingRequestShort(
             id: 'r1',
             personToDisplay: createPerson(id: 'u3'),
           ),
@@ -506,12 +507,12 @@ void main() {
         status: const BlocStatusComplete<ProfileCoachBlocInfo>(
           info: ProfileCoachBlocInfo.requestAccepted,
         ),
-        receivedCoachingRequests: [
-          CoachingRequestDetails(
+        receivedRequests: [
+          CoachingRequestShort(
             id: 'r2',
             personToDisplay: createPerson(id: 'u2'),
           ),
-          CoachingRequestDetails(
+          CoachingRequestShort(
             id: 'r1',
             personToDisplay: createPerson(id: 'u3'),
           ),

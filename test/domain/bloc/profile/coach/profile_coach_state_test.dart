@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
+import 'package:runnoter/domain/additional_model/coaching_request_short.dart';
 import 'package:runnoter/domain/bloc/profile/coach/profile_coach_bloc.dart';
 import 'package:runnoter/domain/entity/person.dart';
 
@@ -26,42 +27,38 @@ void main() {
   );
 
   test(
-    'copy with sentCoachingRequests',
+    'copy with sentRequests',
     () {
-      final List<CoachingRequestDetails> expectedSentCoachingRequests = [
-        CoachingRequestDetails(
+      final List<CoachingRequestShort> expectedSentRequests = [
+        CoachingRequestShort(
           id: 'r1',
           personToDisplay: createPerson(id: 'u1'),
         ),
       ];
 
-      state = state.copyWith(
-        sentCoachingRequests: expectedSentCoachingRequests,
-      );
+      state = state.copyWith(sentRequests: expectedSentRequests);
       final state2 = state.copyWith();
 
-      expect(state.sentCoachingRequests, expectedSentCoachingRequests);
-      expect(state2.sentCoachingRequests, expectedSentCoachingRequests);
+      expect(state.sentRequests, expectedSentRequests);
+      expect(state2.sentRequests, expectedSentRequests);
     },
   );
 
   test(
-    'copy with receivedCoachingRequests',
+    'copy with receivedRequests',
     () {
-      final List<CoachingRequestDetails> expectedReceivedCoachingRequests = [
-        CoachingRequestDetails(
+      final List<CoachingRequestShort> expectedReceivedRequests = [
+        CoachingRequestShort(
           id: 'r1',
           personToDisplay: createPerson(id: 'u1'),
         ),
       ];
 
-      state = state.copyWith(
-        receivedCoachingRequests: expectedReceivedCoachingRequests,
-      );
+      state = state.copyWith(receivedRequests: expectedReceivedRequests);
       final state2 = state.copyWith();
 
-      expect(state.receivedCoachingRequests, expectedReceivedCoachingRequests);
-      expect(state2.receivedCoachingRequests, expectedReceivedCoachingRequests);
+      expect(state.receivedRequests, expectedReceivedRequests);
+      expect(state2.receivedRequests, expectedReceivedRequests);
     },
   );
 

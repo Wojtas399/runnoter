@@ -1,51 +1,32 @@
 part of 'profile_coach_bloc.dart';
 
 class ProfileCoachState extends BlocState<ProfileCoachState> {
-  final List<CoachingRequestDetails>? sentCoachingRequests;
-  final List<CoachingRequestDetails>? receivedCoachingRequests;
+  final List<CoachingRequestShort>? sentRequests;
+  final List<CoachingRequestShort>? receivedRequests;
   final Person? coach;
 
   const ProfileCoachState({
     required super.status,
-    this.sentCoachingRequests,
-    this.receivedCoachingRequests,
+    this.sentRequests,
+    this.receivedRequests,
     this.coach,
   });
 
   @override
-  List<Object?> get props => [
-        status,
-        sentCoachingRequests,
-        receivedCoachingRequests,
-        coach,
-      ];
+  List<Object?> get props => [status, sentRequests, receivedRequests, coach];
 
   @override
   ProfileCoachState copyWith({
     BlocStatus? status,
-    List<CoachingRequestDetails>? sentCoachingRequests,
-    List<CoachingRequestDetails>? receivedCoachingRequests,
+    List<CoachingRequestShort>? sentRequests,
+    List<CoachingRequestShort>? receivedRequests,
     Person? coach,
     bool setCoachAsNull = false,
   }) =>
       ProfileCoachState(
         status: status ?? const BlocStatusComplete(),
-        sentCoachingRequests: sentCoachingRequests ?? this.sentCoachingRequests,
-        receivedCoachingRequests:
-            receivedCoachingRequests ?? this.receivedCoachingRequests,
+        sentRequests: sentRequests ?? this.sentRequests,
+        receivedRequests: receivedRequests ?? this.receivedRequests,
         coach: setCoachAsNull ? null : coach ?? this.coach,
       );
-}
-
-class CoachingRequestDetails extends Equatable {
-  final String id;
-  final Person personToDisplay;
-
-  const CoachingRequestDetails({
-    required this.id,
-    required this.personToDisplay,
-  });
-
-  @override
-  List<Object?> get props => [id, personToDisplay];
 }
