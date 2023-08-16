@@ -7,7 +7,6 @@ import '../../../domain/additional_model/coaching_request_short.dart';
 import '../../../domain/bloc/profile/coach/profile_coach_bloc.dart';
 import '../../../domain/entity/person.dart';
 import '../../component/gap/gap_components.dart';
-import '../../component/gap/gap_horizontal_components.dart';
 import '../../component/text/body_text_components.dart';
 import '../../component/text/title_text_components.dart';
 import '../../dialog/persons_search/persons_search_dialog.dart';
@@ -49,28 +48,14 @@ class _Coach extends StatelessWidget {
             contentPadding: const EdgeInsets.only(left: 8),
             title: Text('${coach.name} ${coach.surname}'),
             subtitle: Text(coach.email),
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                OutlinedButton(
-                  onPressed: () => _onMessagePressed(context),
-                  child: Text(Str.of(context).message),
-                ),
-                const GapHorizontal8(),
-                IconButton(
-                  onPressed: () => _onDeletePressed(context),
-                  icon: Icon(
-                    Icons.delete_outline,
-                    color: Theme.of(context).colorScheme.error,
-                  ),
-                ),
-              ],
+            trailing: IconButton(
+              onPressed: () => _onDeletePressed(context),
+              icon: Icon(
+                Icons.delete_outline,
+                color: Theme.of(context).colorScheme.error,
+              ),
             ),
           );
-  }
-
-  void _onMessagePressed(BuildContext context) {
-    //TODO
   }
 
   Future<void> _onDeletePressed(BuildContext context) async {

@@ -6,7 +6,6 @@ import '../../../domain/bloc/clients/clients_bloc.dart';
 import '../../../domain/entity/person.dart';
 import '../../component/empty_content_info_component.dart';
 import '../../component/gap/gap_components.dart';
-import '../../component/gap/gap_horizontal_components.dart';
 import '../../component/loading_info_component.dart';
 import '../../component/text/title_text_components.dart';
 import '../../extension/context_extensions.dart';
@@ -75,31 +74,14 @@ class _ClientItem extends StatelessWidget {
       contentPadding: EdgeInsets.symmetric(
         horizontal: context.isMobileSize ? 16 : 0,
       ),
-      trailing: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          IconButton(
-            onPressed: () => _onMessagePressed(),
-            icon: Icon(
-              Icons.message,
-              color: Theme.of(context).colorScheme.primary,
-            ),
-          ),
-          if (!context.isMobileSize) const GapHorizontal8(),
-          IconButton(
-            onPressed: () => _onDeleteClientPressed(context),
-            icon: Icon(
-              Icons.person_remove,
-              color: Theme.of(context).colorScheme.error,
-            ),
-          ),
-        ],
+      trailing: IconButton(
+        onPressed: () => _onDeleteClientPressed(context),
+        icon: Icon(
+          Icons.person_remove,
+          color: Theme.of(context).colorScheme.error,
+        ),
       ),
     );
-  }
-
-  void _onMessagePressed() {
-    //TODO
   }
 
   Future<void> _onDeleteClientPressed(BuildContext context) async {
