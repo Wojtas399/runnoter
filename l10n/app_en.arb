@@ -231,7 +231,7 @@
   "usersSearchSendInvitationConfirmationDialogTitle": "Add client",
   "coachesSearchSendInvitationConfirmationDialogMessage": "If you want selected person to become your coach, they must approve the coaching request. Then your training, racing and health data will be shared. Do you want to send such a request to the user ",
   "usersSearchSendInvitationConfirmationDialogMessage": "To become a coach of the selected person, they must approve the request to share their profile. Do you want to send such a request to the user ",
-  "personsSearchSuccessfullySentInvitation": "Successfully sent request",
+  "personsSearchSuccessfullySentRequest": "Successfully sent request",
   "personsSearchUserAlreadyHasCoachInfoTitle": "User already has a coach",
   "personsSearchUserAlreadyHasCoachInfoMessage": "It seems that this user recently started working with a coach. For this reason you cannot send a coaching request.",
   "@__________RUN_STATUS_PARAMS__________": {},

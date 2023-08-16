@@ -854,8 +854,8 @@
   "@usersSearchSendInvitationConfirmationDialogMessage": {
     "description": "Message of the dialog to confirm to send invitation"
   },
-  "personsSearchSuccessfullySentInvitation": "Pomyślnie wysłano prośbę",
-  "@personsSearchSuccessfullySentInvitation": {
+  "personsSearchSuccessfullySentRequest": "Pomyślnie wysłano prośbę",
+  "@personsSearchSuccessfullySentRequest": {
     "description": "Message about successfully sent invitation"
   },
   "personsSearchUserAlreadyHasCoachInfoTitle": "Użytkownik ma już trenera",

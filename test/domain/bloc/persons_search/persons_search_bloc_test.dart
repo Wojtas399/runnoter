@@ -478,7 +478,11 @@ void main() {
     )),
     expect: () => [
       const PersonsSearchState(status: BlocStatusLoading()),
-      const PersonsSearchState(status: BlocStatusComplete()),
+      const PersonsSearchState(
+        status: BlocStatusComplete<PersonsSearchBlocInfo>(
+          info: PersonsSearchBlocInfo.requestSent,
+        ),
+      ),
     ],
     verify: (_) {
       verify(() => authService.loggedUserId$).called(1);
@@ -510,7 +514,11 @@ void main() {
     )),
     expect: () => [
       const PersonsSearchState(status: BlocStatusLoading()),
-      const PersonsSearchState(status: BlocStatusComplete()),
+      const PersonsSearchState(
+        status: BlocStatusComplete<PersonsSearchBlocInfo>(
+          info: PersonsSearchBlocInfo.requestSent,
+        ),
+      ),
     ],
     verify: (_) {
       verify(() => authService.loggedUserId$).called(1);
