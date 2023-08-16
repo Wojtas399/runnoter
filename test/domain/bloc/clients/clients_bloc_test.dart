@@ -6,6 +6,7 @@ import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/additional_model/coaching_request.dart';
+import 'package:runnoter/domain/additional_model/coaching_request_short.dart';
 import 'package:runnoter/domain/bloc/clients/clients_bloc.dart';
 import 'package:runnoter/domain/entity/person.dart';
 import 'package:runnoter/domain/repository/person_repository.dart';
@@ -39,24 +40,34 @@ void main() {
   });
 
   group(
-    'initialize requests, ',
+    'initialize, ',
     () {
       final Person person1 = createPerson(id: 'p1', name: 'nameFirst');
       final Person person2 = createPerson(id: 'p2', name: 'nameSecond');
+      final List<Person> clients = [
+        createPerson(id: 'p1', name: 'first client'),
+        createPerson(id: 'p2', name: 'second client'),
+      ];
+      final List<Person> updatedClients = [
+        ...clients,
+        createPerson(id: 'p3', name: 'third client'),
+      ];
       StreamController<List<CoachingRequest>> sentRequests$ = StreamController()
         ..add([createCoachingRequest(id: 'r1', receiverId: person1.id)]);
       StreamController<List<CoachingRequest>> receivedRequests$ =
           StreamController()
             ..add([createCoachingRequest(id: 'r2', senderId: person2.id)]);
-      final List<CoachingRequestDetails> sentRequestDetails = [
-        CoachingRequestDetails(id: 'r1', personToDisplay: person1),
+      final StreamController<List<Person>> clients$ = StreamController()
+        ..add(clients);
+      final List<CoachingRequestShort> shortSentRequests = [
+        CoachingRequestShort(id: 'r1', personToDisplay: person1),
       ];
-      final List<CoachingRequestDetails> receivedRequestDetails = [
-        CoachingRequestDetails(id: 'r2', personToDisplay: person2),
+      final List<CoachingRequestShort> shortReceivedRequests = [
+        CoachingRequestShort(id: 'r2', personToDisplay: person2),
       ];
 
       blocTest(
-        'should set listener of sent and received requests',
+        'should set listener of clients, sent requests and received requests',
         build: () => ClientsBloc(),
         setUp: () {
           authService.mockGetLoggedUserId(userId: loggedUserId);
@@ -72,27 +83,42 @@ void main() {
           when(
             () => personRepository.getPersonById(personId: person2.id),
           ).thenAnswer((invocation) => Stream.value(person2));
+          personRepository.mockGetPersonsByCoachId(
+            personsStream: clients$.stream,
+          );
         },
-        act: (bloc) {
-          bloc.add(const ClientsEventInitializeRequests());
+        act: (bloc) async {
+          bloc.add(const ClientsEventInitialize());
+          await bloc.stream.first;
           sentRequests$.add([]);
+          await bloc.stream.first;
           receivedRequests$.add([]);
+          await bloc.stream.first;
+          clients$.add(updatedClients);
         },
         expect: () => [
           ClientsState(
             status: const BlocStatusComplete(),
-            sentRequests: sentRequestDetails,
-            receivedRequests: receivedRequestDetails,
+            sentRequests: shortSentRequests,
+            receivedRequests: shortReceivedRequests,
+            clients: clients,
+          ),
+          ClientsState(
+              status: const BlocStatusComplete(),
+              sentRequests: const [],
+              receivedRequests: shortReceivedRequests,
+              clients: clients),
+          ClientsState(
+            status: const BlocStatusComplete(),
+            sentRequests: const [],
+            receivedRequests: const [],
+            clients: clients,
           ),
           ClientsState(
             status: const BlocStatusComplete(),
             sentRequests: const [],
-            receivedRequests: receivedRequestDetails,
-          ),
-          const ClientsState(
-            status: BlocStatusComplete(),
-            sentRequests: [],
-            receivedRequests: [],
+            receivedRequests: const [],
+            clients: updatedClients,
           ),
         ],
         verify: (_) {
@@ -115,50 +141,6 @@ void main() {
           verify(
             () => personRepository.getPersonById(personId: person2.id),
           ).called(1);
-        },
-      );
-    },
-  );
-
-  group(
-    'initialize clients, ',
-    () {
-      final List<Person> clients = [
-        createPerson(id: 'p1', name: 'first client'),
-        createPerson(id: 'p2', name: 'second client'),
-      ];
-      final List<Person> updatedClients = [
-        ...clients,
-        createPerson(id: 'p3', name: 'third client'),
-      ];
-      final StreamController<List<Person>> clients$ = StreamController()
-        ..add(clients);
-
-      blocTest(
-        "should set listener of logged user's clients",
-        build: () => ClientsBloc(),
-        setUp: () {
-          authService.mockGetLoggedUserId(userId: loggedUserId);
-          personRepository.mockGetPersonsByCoachId(
-            personsStream: clients$.stream,
-          );
-        },
-        act: (bloc) {
-          bloc.add(const ClientsEventInitializeClients());
-          clients$.add(updatedClients);
-        },
-        expect: () => [
-          ClientsState(
-            status: const BlocStatusComplete(),
-            clients: clients,
-          ),
-          ClientsState(
-            status: const BlocStatusComplete(),
-            clients: updatedClients,
-          ),
-        ],
-        verify: (_) {
-          verify(() => authService.loggedUserId$).called(1);
           verify(
             () => personRepository.getPersonsByCoachId(
               coachId: loggedUserId,
@@ -190,11 +172,11 @@ void main() {
       state: ClientsState(
         status: const BlocStatusComplete(),
         receivedRequests: [
-          CoachingRequestDetails(
+          CoachingRequestShort(
             id: 'r1',
             personToDisplay: createPerson(id: 'p1'),
           ),
-          CoachingRequestDetails(
+          CoachingRequestShort(
             id: 'r2',
             personToDisplay: createPerson(id: 'p2'),
           ),
@@ -211,11 +193,11 @@ void main() {
       ClientsState(
         status: const BlocStatusLoading(),
         receivedRequests: [
-          CoachingRequestDetails(
+          CoachingRequestShort(
             id: 'r1',
             personToDisplay: createPerson(id: 'p1'),
           ),
-          CoachingRequestDetails(
+          CoachingRequestShort(
             id: 'r2',
             personToDisplay: createPerson(id: 'p2'),
           ),
@@ -226,11 +208,11 @@ void main() {
           info: ClientsBlocInfo.requestAccepted,
         ),
         receivedRequests: [
-          CoachingRequestDetails(
+          CoachingRequestShort(
             id: 'r1',
             personToDisplay: createPerson(id: 'p1'),
           ),
-          CoachingRequestDetails(
+          CoachingRequestShort(
             id: 'r2',
             personToDisplay: createPerson(id: 'p2'),
           ),

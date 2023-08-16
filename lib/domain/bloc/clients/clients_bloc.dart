@@ -1,3 +1,4 @@
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
@@ -7,6 +8,7 @@ import '../../additional_model/bloc_state.dart';
 import '../../additional_model/bloc_status.dart';
 import '../../additional_model/bloc_with_status.dart';
 import '../../additional_model/coaching_request.dart';
+import '../../additional_model/coaching_request_short.dart';
 import '../../entity/person.dart';
 import '../../repository/person_repository.dart';
 import '../../service/auth_service.dart';
@@ -27,46 +29,41 @@ class ClientsBloc extends BlocWithStatus<ClientsEvent, ClientsState,
         _coachingRequestService = getIt<CoachingRequestService>(),
         _personRepository = getIt<PersonRepository>(),
         super(state) {
-    on<ClientsEventInitializeRequests>(_initializeRequests);
-    on<ClientsEventInitializeClients>(_initializeClients);
+    on<ClientsEventInitialize>(_initialize, transformer: restartable());
     on<ClientsEventAcceptRequest>(_acceptRequest);
     on<ClientsEventDeleteRequest>(_deleteRequest);
     on<ClientsEventDeleteClient>(_deleteClient);
   }
 
-  Future<void> _initializeRequests(
-    ClientsEventInitializeRequests event,
+  Future<void> _initialize(
+    ClientsEventInitialize event,
     Emitter<ClientsState> emit,
   ) async {
-    final Stream<(List<CoachingRequestDetails>, List<CoachingRequestDetails>)>
-        requests$ =
-        _getLoggedUserId().switchMap((String loggedUserId) => Rx.combineLatest2(
-              _getSentRequestDetails(loggedUserId),
-              _getReceivedRequestDetails(loggedUserId),
-              (sentReqs, receivedReqs) => (sentReqs, receivedReqs),
-            ));
+    final Stream<ClientsBlocListenedParams> stream$ =
+        _authService.loggedUserId$.whereNotNull().switchMap(
+              (String loggedUserId) => Rx.combineLatest3(
+                _getSentRequests(loggedUserId),
+                _getReceivedRequests(loggedUserId),
+                _getClients(loggedUserId),
+                (
+                  List<CoachingRequestShort> sentRequests,
+                  List<CoachingRequestShort> receivedRequests,
+                  List<Person> clients,
+                ) =>
+                    ClientsBlocListenedParams(
+                  sentRequests: sentRequests,
+                  receivedRequests: receivedRequests,
+                  clients: clients,
+                ),
+              ),
+            );
     await emit.forEach(
-      requests$,
-      onData: ((
-                List<CoachingRequestDetails>,
-                List<CoachingRequestDetails>
-              ) requests) =>
-          state.copyWith(
-        sentRequests: requests.$1,
-        receivedRequests: requests.$2,
+      stream$,
+      onData: (ClientsBlocListenedParams params) => state.copyWith(
+        sentRequests: params.sentRequests,
+        receivedRequests: params.receivedRequests,
+        clients: params.clients,
       ),
-    );
-  }
-
-  Future<void> _initializeClients(
-    ClientsEventInitializeClients event,
-    Emitter<ClientsState> emit,
-  ) async {
-    final Stream<List<Person>> clients$ = _getLoggedUserId()
-        .switchMap((String loggedUserId) => _getClients(loggedUserId));
-    await emit.forEach(
-      clients$,
-      onData: (clients) => state.copyWith(clients: clients),
     );
   }
 
@@ -115,16 +112,11 @@ class ClientsBloc extends BlocWithStatus<ClientsEvent, ClientsState,
     emitCompleteStatus(emit, info: ClientsBlocInfo.clientDeleted);
   }
 
-  Stream<String> _getLoggedUserId() =>
-      _authService.loggedUserId$.whereNotNull();
-
   Stream<List<Person>> _getClients(String loggedUserId) => _personRepository
       .getPersonsByCoachId(coachId: loggedUserId)
       .map((List<Person>? clients) => [...?clients]);
 
-  Stream<List<CoachingRequestDetails>> _getSentRequestDetails(
-    String loggedUserId,
-  ) =>
+  Stream<List<CoachingRequestShort>> _getSentRequests(String loggedUserId) =>
       _coachingRequestService
           .getCoachingRequestsBySenderId(
             senderId: loggedUserId,
@@ -142,9 +134,9 @@ class ClientsBloc extends BlocWithStatus<ClientsEvent, ClientsState,
               ),
             ),
           )
-          .switchMap(_createRequestDetailsFromStreams);
+          .switchMap(_createShortRequestsFromStreams);
 
-  Stream<List<CoachingRequestDetails>> _getReceivedRequestDetails(
+  Stream<List<CoachingRequestShort>> _getReceivedRequests(
     String loggedUserId,
   ) =>
       _coachingRequestService
@@ -164,9 +156,9 @@ class ClientsBloc extends BlocWithStatus<ClientsEvent, ClientsState,
               ),
             ),
           )
-          .switchMap(_createRequestDetailsFromStreams);
+          .switchMap(_createShortRequestsFromStreams);
 
-  Stream<List<CoachingRequestDetails>> _createRequestDetailsFromStreams(
+  Stream<List<CoachingRequestShort>> _createShortRequestsFromStreams(
     Iterable<Stream<(String, Person)>> streams,
   ) =>
       streams.isEmpty
@@ -175,9 +167,9 @@ class ClientsBloc extends BlocWithStatus<ClientsEvent, ClientsState,
               streams,
               (List<(String, Person)> values) => values
                   .map(
-                    (requestDetails) => CoachingRequestDetails(
-                      id: requestDetails.$1,
-                      personToDisplay: requestDetails.$2,
+                    (req) => CoachingRequestShort(
+                      id: req.$1,
+                      personToDisplay: req.$2,
                     ),
                   )
                   .toList(),
@@ -185,3 +177,18 @@ class ClientsBloc extends BlocWithStatus<ClientsEvent, ClientsState,
 }
 
 enum ClientsBlocInfo { requestAccepted, requestDeleted, clientDeleted }
+
+class ClientsBlocListenedParams extends Equatable {
+  final List<CoachingRequestShort> sentRequests;
+  final List<CoachingRequestShort> receivedRequests;
+  final List<Person> clients;
+
+  const ClientsBlocListenedParams({
+    required this.sentRequests,
+    required this.receivedRequests,
+    required this.clients,
+  });
+
+  @override
+  List<Object?> get props => [sentRequests, receivedRequests, clients];
+}

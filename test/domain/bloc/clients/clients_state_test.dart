@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
+import 'package:runnoter/domain/additional_model/coaching_request_short.dart';
 import 'package:runnoter/domain/bloc/clients/clients_bloc.dart';
 import 'package:runnoter/domain/entity/person.dart';
 
@@ -28,12 +29,12 @@ void main() {
   test(
     'copy with sentRequests',
     () {
-      final List<CoachingRequestDetails> expectedSentRequests = [
-        CoachingRequestDetails(
+      final List<CoachingRequestShort> expectedSentRequests = [
+        CoachingRequestShort(
           id: 'r1',
           personToDisplay: createPerson(id: 'p1'),
         ),
-        CoachingRequestDetails(
+        CoachingRequestShort(
           id: 'r2',
           personToDisplay: createPerson(id: 'p2'),
         ),
@@ -50,12 +51,12 @@ void main() {
   test(
     'copy with receivedRequests',
     () {
-      final List<CoachingRequestDetails> expectedReceivedRequests = [
-        CoachingRequestDetails(
+      final List<CoachingRequestShort> expectedReceivedRequests = [
+        CoachingRequestShort(
           id: 'r1',
           personToDisplay: createPerson(id: 'p1'),
         ),
-        CoachingRequestDetails(
+        CoachingRequestShort(
           id: 'r2',
           personToDisplay: createPerson(id: 'p2'),
         ),

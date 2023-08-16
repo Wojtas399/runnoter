@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../../domain/additional_model/coaching_request_short.dart';
 import '../../../domain/bloc/clients/clients_bloc.dart';
 import '../../../domain/entity/person.dart';
 import '../../component/text/body_text_components.dart';
@@ -17,7 +18,7 @@ class ClientsSentRequests extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<CoachingRequestDetails>? requests = context.select(
+    final List<CoachingRequestShort>? requests = context.select(
       (ClientsBloc bloc) => bloc.state.sentRequests,
     );
 
@@ -33,7 +34,7 @@ class ClientsReceivedRequests extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<CoachingRequestDetails>? requests = context.select(
+    final List<CoachingRequestShort>? requests = context.select(
       (ClientsBloc bloc) => bloc.state.receivedRequests,
     );
 
@@ -45,7 +46,7 @@ class ClientsReceivedRequests extends StatelessWidget {
 }
 
 class _RequestsList extends StatefulWidget {
-  final List<CoachingRequestDetails>? requests;
+  final List<CoachingRequestShort>? requests;
   final CoachingRequestDirection requestDirection;
 
   const _RequestsList({
@@ -105,7 +106,7 @@ class _RequestsListState extends State<_RequestsList> {
 }
 
 class _RequestsListContent extends StatelessWidget {
-  final List<CoachingRequestDetails>? requests;
+  final List<CoachingRequestShort>? requests;
   final CoachingRequestDirection requestDirection;
 
   const _RequestsListContent({
@@ -155,7 +156,7 @@ class _RequestsListContent extends StatelessWidget {
 }
 
 class _RequestItem extends StatelessWidget {
-  final CoachingRequestDetails request;
+  final CoachingRequestShort request;
   final CoachingRequestDirection requestDirection;
 
   const _RequestItem(this.request, this.requestDirection);
