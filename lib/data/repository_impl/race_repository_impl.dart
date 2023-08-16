@@ -3,12 +3,12 @@ import 'package:firebase/firebase.dart';
 
 import '../../common/date_service.dart';
 import '../../dependency_injection.dart';
-import '../../domain/additional_model/run_status.dart';
+import '../../domain/additional_model/activity_status.dart';
 import '../../domain/additional_model/state_repository.dart';
 import '../../domain/entity/race.dart';
 import '../../domain/repository/race_repository.dart';
+import '../mapper/activity_status_mapper.dart';
 import '../mapper/race_mapper.dart';
-import '../mapper/run_status_mapper.dart';
 
 class RaceRepositoryImpl extends StateRepository<Race>
     implements RaceRepository {
@@ -91,7 +91,7 @@ class RaceRepositoryImpl extends StateRepository<Race>
     required String place,
     required double distance,
     required Duration? expectedDuration,
-    required RunStatus status,
+    required ActivityStatus status,
   }) async {
     final RaceDto? addedRaceDto = await _firebaseRaceService.addNewRace(
       userId: userId,
@@ -100,7 +100,7 @@ class RaceRepositoryImpl extends StateRepository<Race>
       place: place,
       distance: distance,
       expectedDuration: expectedDuration,
-      statusDto: mapRunStatusToDto(status),
+      statusDto: mapActivityStatusToDto(status),
     );
     if (addedRaceDto != null) {
       final Race race = mapRaceFromDto(
@@ -120,7 +120,7 @@ class RaceRepositoryImpl extends StateRepository<Race>
     double? distance,
     Duration? expectedDuration,
     bool setDurationAsNull = false,
-    RunStatus? status,
+    ActivityStatus? status,
   }) async {
     final RaceDto? updatedRaceDto = await _firebaseRaceService.updateRace(
       raceId: raceId,
@@ -131,7 +131,7 @@ class RaceRepositoryImpl extends StateRepository<Race>
       distance: distance,
       expectedDuration: expectedDuration,
       setDurationAsNull: setDurationAsNull,
-      statusDto: status != null ? mapRunStatusToDto(status) : null,
+      statusDto: status != null ? mapActivityStatusToDto(status) : null,
     );
     if (updatedRaceDto != null) {
       final Race race = mapRaceFromDto(

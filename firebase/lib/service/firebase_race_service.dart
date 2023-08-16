@@ -2,8 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../firebase_collections.dart';
 import '../mapper/date_mapper.dart';
+import '../model/activity_status_dto.dart';
 import '../model/race_dto.dart';
-import '../model/run_status_dto.dart';
 import '../utils/utils.dart';
 
 class FirebaseRaceService {
@@ -68,7 +68,7 @@ class FirebaseRaceService {
     required String place,
     required double distance,
     required Duration? expectedDuration,
-    required RunStatusDto statusDto,
+    required ActivityStatusDto statusDto,
   }) async {
     final competitionRef = getRacesRef(userId).doc();
     final RaceDto competitionDto = RaceDto(
@@ -97,7 +97,7 @@ class FirebaseRaceService {
     double? distance,
     Duration? expectedDuration,
     bool setDurationAsNull = false,
-    RunStatusDto? statusDto,
+    ActivityStatusDto? statusDto,
   }) async {
     final docRef = getRacesRef(userId).doc(raceId);
     final Map<String, dynamic> jsonToUpdate = createRaceJsonToUpdate(

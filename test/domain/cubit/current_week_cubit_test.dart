@@ -3,15 +3,15 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/common/date_service.dart';
-import 'package:runnoter/domain/additional_model/run_status.dart';
+import 'package:runnoter/domain/additional_model/activity_status.dart';
 import 'package:runnoter/domain/additional_model/workout_stage.dart';
 import 'package:runnoter/domain/cubit/current_week_cubit.dart';
 import 'package:runnoter/domain/repository/race_repository.dart';
 import 'package:runnoter/domain/repository/workout_repository.dart';
 import 'package:runnoter/domain/service/auth_service.dart';
 
+import '../../creators/activity_status_creator.dart';
 import '../../creators/race_creator.dart';
-import '../../creators/run_status_creator.dart';
 import '../../creators/workout_creator.dart';
 import '../../mock/common/mock_date_service.dart';
 import '../../mock/domain/repository/mock_race_repository.dart';
@@ -183,19 +183,19 @@ void main() {
             createWorkout(
               id: 'w1',
               date: DateTime(2023, 4, 5),
-              status: createRunStatusDone(coveredDistanceInKm: 5.2),
+              status: createActivityStatusDone(coveredDistanceInKm: 5.2),
             ),
             createWorkout(
               id: 'w3',
               date: DateTime(2023, 4, 5),
-              status: createRunStatusAborted(coveredDistanceInKm: 2.5),
+              status: createActivityStatusAborted(coveredDistanceInKm: 2.5),
             ),
           ],
           races: [
             createRace(
               id: 'c1',
               date: DateTime(2023, 4, 5),
-              status: createRunStatusDone(coveredDistanceInKm: 10.0),
+              status: createActivityStatusDone(coveredDistanceInKm: 10.0),
             ),
           ],
         ),
@@ -206,7 +206,7 @@ void main() {
             createRace(
               id: 'c2',
               date: DateTime(2023, 4, 6),
-              status: const RunStatusUndone(),
+              status: const ActivityStatusUndone(),
             ),
           ],
         ),
@@ -217,7 +217,7 @@ void main() {
             createWorkout(
               id: 'w2',
               date: DateTime(2023, 4, 7),
-              status: const RunStatusPending(),
+              status: const ActivityStatusPending(),
             )
           ],
         ),

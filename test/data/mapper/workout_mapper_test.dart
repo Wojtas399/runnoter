@@ -1,7 +1,7 @@
 import 'package:firebase/firebase.dart' as firebase;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/data/mapper/workout_mapper.dart';
-import 'package:runnoter/domain/additional_model/run_status.dart';
+import 'package:runnoter/domain/additional_model/activity_status.dart';
 import 'package:runnoter/domain/additional_model/workout_stage.dart';
 import 'package:runnoter/domain/entity/workout.dart';
 
@@ -24,7 +24,7 @@ void main() {
         id: id,
         userId: userId,
         date: date,
-        status: firebase.RunStatusDoneDto(
+        status: firebase.ActivityStatusDoneDto(
           coveredDistanceInKm: coveredDistanceInKm,
           avgPaceDto: const firebase.PaceDto(
             minutes: avgPaceMin,
@@ -54,7 +54,7 @@ void main() {
         id: id,
         userId: userId,
         date: date,
-        status: const RunStatusDone(
+        status: const ActivityStatusDone(
           coveredDistanceInKm: coveredDistanceInKm,
           avgPace: Pace(minutes: avgPaceMin, seconds: avgPaceSeconds),
           avgHeartRate: avgHeartRate,

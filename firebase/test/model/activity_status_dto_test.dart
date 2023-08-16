@@ -6,12 +6,10 @@ void main() {
     'from json, '
     'pending status',
     () {
-      final Map<String, dynamic> json = {
-        'name': 'pending',
-      };
-      const RunStatusPendingDto expectedDto = RunStatusPendingDto();
+      final Map<String, dynamic> json = {'name': 'pending'};
+      const ActivityStatusPendingDto expectedDto = ActivityStatusPendingDto();
 
-      final RunStatusDto dto = RunStatusDto.fromJson(json);
+      final ActivityStatusDto dto = ActivityStatusDto.fromJson(json);
 
       expect(dto, expectedDto);
     },
@@ -31,7 +29,7 @@ void main() {
         'duration': '0:45:30',
         'comment': 'comment',
       };
-      final RunStatusDoneDto expectedDto = RunStatusDoneDto(
+      final ActivityStatusDoneDto expectedDto = ActivityStatusDoneDto(
         coveredDistanceInKm: 8.5,
         avgPaceDto: avgPace,
         avgHeartRate: 145,
@@ -40,7 +38,7 @@ void main() {
         comment: 'comment',
       );
 
-      final RunStatusDto dto = RunStatusDto.fromJson(json);
+      final ActivityStatusDto dto = ActivityStatusDto.fromJson(json);
 
       expect(dto, expectedDto);
     },
@@ -60,7 +58,7 @@ void main() {
         'duration': '0:45:30',
         'comment': 'comment',
       };
-      final RunStatusAbortedDto expectedDto = RunStatusAbortedDto(
+      final ActivityStatusAbortedDto expectedDto = ActivityStatusAbortedDto(
         coveredDistanceInKm: 8.5,
         avgPaceDto: avgPace,
         avgHeartRate: 145,
@@ -69,7 +67,7 @@ void main() {
         comment: 'comment',
       );
 
-      final RunStatusDto dto = RunStatusDto.fromJson(json);
+      final ActivityStatusDto dto = ActivityStatusDto.fromJson(json);
 
       expect(dto, expectedDto);
     },
@@ -79,12 +77,10 @@ void main() {
     'from json, '
     'undone status',
     () {
-      final Map<String, dynamic> json = {
-        'name': 'undone',
-      };
-      const RunStatusUndoneDto expectedDto = RunStatusUndoneDto();
+      final Map<String, dynamic> json = {'name': 'undone'};
+      const ActivityStatusUndoneDto expectedDto = ActivityStatusUndoneDto();
 
-      final RunStatusDto dto = RunStatusDto.fromJson(json);
+      final ActivityStatusDto dto = ActivityStatusDto.fromJson(json);
 
       expect(dto, expectedDto);
     },
@@ -94,10 +90,8 @@ void main() {
     'to json, '
     'pending status',
     () {
-      const RunStatusPendingDto dto = RunStatusPendingDto();
-      final Map<String, dynamic> expectedJson = {
-        'name': 'pending',
-      };
+      const ActivityStatusPendingDto dto = ActivityStatusPendingDto();
+      final Map<String, dynamic> expectedJson = {'name': 'pending'};
 
       final Map<String, dynamic> json = dto.toJson();
 
@@ -110,7 +104,7 @@ void main() {
     'done status',
     () {
       const PaceDto avgPace = PaceDto(minutes: 5, seconds: 30);
-      final RunStatusDoneDto dto = RunStatusDoneDto(
+      final ActivityStatusDoneDto dto = ActivityStatusDoneDto(
         coveredDistanceInKm: 8.5,
         avgPaceDto: avgPace,
         avgHeartRate: 145,
@@ -139,7 +133,7 @@ void main() {
     'aborted status',
     () {
       const PaceDto avgPace = PaceDto(minutes: 5, seconds: 30);
-      final RunStatusAbortedDto dto = RunStatusAbortedDto(
+      final ActivityStatusAbortedDto dto = ActivityStatusAbortedDto(
         coveredDistanceInKm: 8.5,
         avgPaceDto: avgPace,
         avgHeartRate: 145,
@@ -167,10 +161,8 @@ void main() {
     'to json, '
     'undone status',
     () {
-      const RunStatusUndoneDto dto = RunStatusUndoneDto();
-      final Map<String, dynamic> expectedJson = {
-        'name': 'undone',
-      };
+      const ActivityStatusUndoneDto dto = ActivityStatusUndoneDto();
+      final Map<String, dynamic> expectedJson = {'name': 'undone'};
 
       final Map<String, dynamic> json = dto.toJson();
 

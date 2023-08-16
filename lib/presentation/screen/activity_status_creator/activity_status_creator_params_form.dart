@@ -3,8 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/additional_model/run_status.dart';
-import '../../../domain/bloc/run_status_creator/run_status_creator_bloc.dart';
+import '../../../domain/additional_model/activity_status.dart';
+import '../../../domain/bloc/activity_status_creator/activity_status_creator_bloc.dart';
 import '../../component/duration_input_component.dart';
 import '../../component/form_text_field_component.dart';
 import '../../component/gap/gap_components.dart';
@@ -13,21 +13,21 @@ import '../../formatter/decimal_text_input_formatter.dart';
 import '../../formatter/distance_unit_formatter.dart';
 import '../../formatter/mood_rate_formatter.dart';
 import '../../service/utils.dart';
-import 'run_status_creator_avg_pace.dart';
+import 'activity_status_creator_avg_pace.dart';
 
-class RunStatusCreatorParamsForm extends StatelessWidget {
-  const RunStatusCreatorParamsForm({super.key});
+class ActivityStatusCreatorParamsForm extends StatelessWidget {
+  const ActivityStatusCreatorParamsForm({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final RunStatusCreatorEntityType? entityType =
-        context.read<RunStatusCreatorBloc>().entityType;
+    final ActivityStatusCreatorEntityType? entityType =
+        context.read<ActivityStatusCreatorBloc>().entityType;
     const Widget gap = Gap24();
 
     return Column(
       children: [
         const _CoveredDistance(),
-        if (entityType == RunStatusCreatorEntityType.race)
+        if (entityType == ActivityStatusCreatorEntityType.race)
           const Column(
             children: [
               gap,
@@ -37,7 +37,7 @@ class RunStatusCreatorParamsForm extends StatelessWidget {
         gap,
         const _MoodRate(),
         gap,
-        const RunStatusCreatorAvgPace(),
+        const ActivityStatusCreatorAvgPace(),
         gap,
         const _AvgHeartRate(),
         gap,
@@ -60,7 +60,7 @@ class _CoveredDistanceState extends State<_CoveredDistance> {
   @override
   void initState() {
     final double? coveredDistanceInKm =
-        context.read<RunStatusCreatorBloc>().state.coveredDistanceInKm;
+        context.read<ActivityStatusCreatorBloc>().state.coveredDistanceInKm;
     if (coveredDistanceInKm != null) {
       _controller.text = context
           .convertDistanceFromDefaultUnit(coveredDistanceInKm)
@@ -80,7 +80,7 @@ class _CoveredDistanceState extends State<_CoveredDistance> {
   Widget build(BuildContext context) {
     return FormTextField(
       label:
-          '${Str.of(context).runStatusCreatorCoveredDistance} [${context.distanceUnit.toUIShortFormat()}]',
+          '${Str.of(context).activityStatusCoveredDistance} [${context.distanceUnit.toUIShortFormat()}]',
       maxLength: 8,
       keyboardType: const TextInputType.numberWithOptions(decimal: true),
       isRequired: true,
@@ -97,8 +97,8 @@ class _CoveredDistanceState extends State<_CoveredDistance> {
     final double coveredDistance = double.tryParse(_controller.text) ?? 0;
     final double convertedCoveredDistance =
         context.convertDistanceToDefaultUnit(coveredDistance);
-    context.read<RunStatusCreatorBloc>().add(
-          RunStatusCreatorEventCoveredDistanceInKmChanged(
+    context.read<ActivityStatusCreatorBloc>().add(
+          ActivityStatusCreatorEventCoveredDistanceInKmChanged(
             coveredDistanceInKm: convertedCoveredDistance,
           ),
         );
@@ -111,19 +111,19 @@ class _Duration extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Duration? duration = context.select(
-      (RunStatusCreatorBloc bloc) => bloc.state.duration,
+      (ActivityStatusCreatorBloc bloc) => bloc.state.duration,
     );
 
     return DurationInput(
-      label: Str.of(context).runStatusCreatorDuration,
+      label: Str.of(context).activityStatusDuration,
       initialDuration: duration,
       onDurationChanged: (Duration? duration) => _onChanged(context, duration),
     );
   }
 
   void _onChanged(BuildContext context, Duration? duration) {
-    context.read<RunStatusCreatorBloc>().add(
-          RunStatusCreatorEventDurationChanged(duration: duration),
+    context.read<ActivityStatusCreatorBloc>().add(
+          ActivityStatusCreatorEventDurationChanged(duration: duration),
         );
   }
 }
@@ -134,13 +134,13 @@ class _MoodRate extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final MoodRate? moodRate = context.select(
-      (RunStatusCreatorBloc bloc) => bloc.state.moodRate,
+      (ActivityStatusCreatorBloc bloc) => bloc.state.moodRate,
     );
 
     return DropdownButtonFormField(
       value: moodRate,
       decoration: InputDecoration(
-        labelText: Str.of(context).runStatusCreatorMood,
+        labelText: Str.of(context).activityStatusMoodRate,
       ),
       isExpanded: true,
       items: <DropdownMenuItem<MoodRate>>[
@@ -167,8 +167,8 @@ class _MoodRate extends StatelessWidget {
   }
 
   void _onChanged(BuildContext context, MoodRate? moodRate) {
-    context.read<RunStatusCreatorBloc>().add(
-          RunStatusCreatorEventMoodRateChanged(
+    context.read<ActivityStatusCreatorBloc>().add(
+          ActivityStatusCreatorEventMoodRateChanged(
             moodRate: moodRate,
           ),
         );
@@ -188,7 +188,7 @@ class _AvgHeartRateState extends State<_AvgHeartRate> {
   @override
   void initState() {
     final int? avgHeartRate =
-        context.read<RunStatusCreatorBloc>().state.avgHeartRate;
+        context.read<ActivityStatusCreatorBloc>().state.avgHeartRate;
     if (avgHeartRate != null) _controller.text = avgHeartRate.toString();
     _controller.addListener(_onChanged);
     super.initState();
@@ -203,7 +203,7 @@ class _AvgHeartRateState extends State<_AvgHeartRate> {
   @override
   Widget build(BuildContext context) {
     return FormTextField(
-      label: Str.of(context).runStatusCreatorAverageHeartRate,
+      label: Str.of(context).activityStatusAvgHeartRate,
       maxLength: 3,
       keyboardType: TextInputType.number,
       isRequired: true,
@@ -217,8 +217,8 @@ class _AvgHeartRateState extends State<_AvgHeartRate> {
 
   void _onChanged() {
     final int averageHeartRate = int.tryParse(_controller.text) ?? 0;
-    context.read<RunStatusCreatorBloc>().add(
-          RunStatusCreatorEventAvgHeartRateChanged(
+    context.read<ActivityStatusCreatorBloc>().add(
+          ActivityStatusCreatorEventAvgHeartRateChanged(
             averageHeartRate: averageHeartRate,
           ),
         );
@@ -237,7 +237,8 @@ class _CommentState extends State<_Comment> {
 
   @override
   void initState() {
-    _controller.text = context.read<RunStatusCreatorBloc>().state.comment ?? '';
+    _controller.text =
+        context.read<ActivityStatusCreatorBloc>().state.comment ?? '';
     _controller.addListener(_onChanged);
     super.initState();
   }
@@ -251,7 +252,7 @@ class _CommentState extends State<_Comment> {
   @override
   Widget build(BuildContext context) {
     return FormTextField(
-      label: Str.of(context).runStatusCreatorComment,
+      label: Str.of(context).activityStatusComment,
       maxLength: 100,
       maxLines: null,
       keyboardType: TextInputType.multiline,
@@ -261,8 +262,8 @@ class _CommentState extends State<_Comment> {
   }
 
   void _onChanged() {
-    context.read<RunStatusCreatorBloc>().add(
-          RunStatusCreatorEventCommentChanged(
+    context.read<ActivityStatusCreatorBloc>().add(
+          ActivityStatusCreatorEventCommentChanged(
             comment: _controller.text,
           ),
         );

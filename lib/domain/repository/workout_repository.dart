@@ -1,4 +1,4 @@
-import '../additional_model/run_status.dart';
+import '../additional_model/activity_status.dart';
 import '../additional_model/workout_stage.dart';
 import '../entity/workout.dart';
 
@@ -25,7 +25,7 @@ abstract class WorkoutRepository {
     required String userId,
     required String workoutName,
     required DateTime date,
-    required RunStatus status,
+    required ActivityStatus status,
     required List<WorkoutStage> stages,
   });
 
@@ -34,7 +34,7 @@ abstract class WorkoutRepository {
     required String userId,
     DateTime? date,
     String? workoutName,
-    RunStatus? status,
+    ActivityStatus? status,
     List<WorkoutStage>? stages,
   });
 

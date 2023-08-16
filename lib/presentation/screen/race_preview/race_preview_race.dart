@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/additional_model/run_status.dart';
+import '../../../domain/additional_model/activity_status.dart';
+import '../../../domain/bloc/activity_status_creator/activity_status_creator_bloc.dart';
 import '../../../domain/bloc/race_preview/race_preview_bloc.dart';
-import '../../../domain/bloc/run_status_creator/run_status_creator_bloc.dart';
+import '../../component/activity_status_info_component.dart';
 import '../../component/big_button_component.dart';
 import '../../component/content_with_label_component.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/nullable_text_component.dart';
-import '../../component/run_status_info_component.dart';
 import '../../component/text/title_text_components.dart';
 import '../../config/navigation/router.dart';
 import '../../extension/context_extensions.dart';
@@ -58,8 +58,8 @@ class RacePreviewRaceInfo extends StatelessWidget {
             ),
             gap,
             ContentWithLabel(
-              label: str.runStatus,
-              content: const _RunStatus(),
+              label: str.activityStatus,
+              content: const _ActivityStatus(),
             ),
           ],
         ),
@@ -159,18 +159,18 @@ class _ExpectedDuration extends StatelessWidget {
   }
 }
 
-class _RunStatus extends StatelessWidget {
-  const _RunStatus();
+class _ActivityStatus extends StatelessWidget {
+  const _ActivityStatus();
 
   @override
   Widget build(BuildContext context) {
-    final RunStatus? runStatus = context.select(
+    final ActivityStatus? activityStatus = context.select(
       (RacePreviewBloc bloc) => bloc.state.race?.status,
     );
 
-    return runStatus == null
+    return activityStatus == null
         ? const NullableText(null)
-        : RunStatusInfo(runStatus: runStatus);
+        : ActivityStatusInfo(activityStatus: activityStatus);
   }
 }
 
@@ -179,13 +179,13 @@ class _FinishRaceButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final RunStatus? runStatus = context.select(
+    final ActivityStatus? activityStatus = context.select(
       (RacePreviewBloc bloc) => bloc.state.race?.status,
     );
     return BigButton(
-      label: runStatus is RunStatusPending
-          ? Str.of(context).runStatusFinish
-          : Str.of(context).runStatusEditStatus,
+      label: activityStatus is ActivityStatusPending
+          ? Str.of(context).activityStatusFinish
+          : Str.of(context).activityStatusEditStatus,
       onPressed: () {
         _onPressed(context);
       },
@@ -195,8 +195,8 @@ class _FinishRaceButton extends StatelessWidget {
   void _onPressed(BuildContext context) {
     final String? raceId = context.read<RacePreviewBloc>().state.race?.id;
     if (raceId != null) {
-      navigateTo(RunStatusCreatorRoute(
-        entityType: RunStatusCreatorEntityType.race.name,
+      navigateTo(ActivityStatusCreatorRoute(
+        entityType: ActivityStatusCreatorEntityType.race.name,
         entityId: raceId,
       ));
     }

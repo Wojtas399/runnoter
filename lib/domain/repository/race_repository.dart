@@ -1,4 +1,4 @@
-import '../additional_model/run_status.dart';
+import '../additional_model/activity_status.dart';
 import '../entity/race.dart';
 
 abstract interface class RaceRepository {
@@ -29,7 +29,7 @@ abstract interface class RaceRepository {
     required String place,
     required double distance,
     required Duration? expectedDuration,
-    required RunStatus status,
+    required ActivityStatus status,
   });
 
   Future<void> updateRace({
@@ -41,7 +41,7 @@ abstract interface class RaceRepository {
     double? distance,
     Duration? expectedDuration,
     bool setDurationAsNull = false,
-    RunStatus? status,
+    ActivityStatus? status,
   });
 
   Future<void> deleteRace({

@@ -11,7 +11,7 @@ import '../../../../domain/repository/workout_repository.dart';
 import '../../../../domain/service/auth_service.dart';
 import '../../../common/date_service.dart';
 import '../../../dependency_injection.dart';
-import '../../additional_model/run_status.dart';
+import '../../additional_model/activity_status.dart';
 import '../../additional_model/workout_stage.dart';
 import '../../service/list_service.dart';
 
@@ -179,7 +179,7 @@ class WorkoutCreatorBloc extends BlocWithStatus<WorkoutCreatorEvent,
       userId: userId,
       workoutName: state.workoutName!,
       date: state.date!,
-      status: const RunStatusPending(),
+      status: const ActivityStatusPending(),
       stages: state.stages,
     );
   }

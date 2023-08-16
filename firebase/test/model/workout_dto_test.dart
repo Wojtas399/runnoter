@@ -6,7 +6,7 @@ void main() {
   const String userId = 'u1';
   final DateTime date = DateTime(2023, 4, 10);
   const String dateStr = '2023-04-10';
-  final RunStatusDto status = RunStatusDoneDto(
+  final ActivityStatusDto status = ActivityStatusDoneDto(
     coveredDistanceInKm: 10.0,
     avgPaceDto: const PaceDto(minutes: 5, seconds: 30),
     avgHeartRate: 145,

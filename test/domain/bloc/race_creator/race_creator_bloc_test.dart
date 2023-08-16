@@ -2,8 +2,8 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:runnoter/domain/additional_model/activity_status.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
-import 'package:runnoter/domain/additional_model/run_status.dart';
 import 'package:runnoter/domain/bloc/race_creator/race_creator_bloc.dart';
 import 'package:runnoter/domain/entity/race.dart';
 import 'package:runnoter/domain/repository/race_repository.dart';
@@ -333,7 +333,7 @@ void main() {
           place: 'New York',
           distance: 21,
           expectedDuration: const Duration(hours: 1, minutes: 45, seconds: 20),
-          status: const RunStatusPending(),
+          status: const ActivityStatusPending(),
         ),
       ).called(1);
     },
@@ -388,7 +388,7 @@ void main() {
           place: 'New York',
           distance: 21,
           expectedDuration: null,
-          status: const RunStatusPending(),
+          status: const ActivityStatusPending(),
         ),
       ).called(1);
     },

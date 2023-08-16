@@ -12,7 +12,7 @@ class RaceDto extends Equatable {
   final String place;
   final double distance;
   final Duration? expectedDuration;
-  final RunStatusDto statusDto;
+  final ActivityStatusDto statusDto;
 
   const RaceDto({
     required this.id,
@@ -39,7 +39,7 @@ class RaceDto extends Equatable {
           expectedDuration: json?[_expectedDurationField] != null
               ? mapDurationFromString(json?[_expectedDurationField])
               : null,
-          statusDto: RunStatusDto.fromJson(json?[_statusField]),
+          statusDto: ActivityStatusDto.fromJson(json?[_statusField]),
         );
 
   @override
@@ -73,7 +73,7 @@ Map<String, dynamic> createRaceJsonToUpdate({
   double? distance,
   Duration? expectedDuration,
   bool setDurationAsNull = false,
-  RunStatusDto? statusDto,
+  ActivityStatusDto? statusDto,
 }) =>
     {
       if (name != null) _nameField: name,

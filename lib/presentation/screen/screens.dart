@@ -1,3 +1,4 @@
+export 'activity_status_creator/activity_status_creator_screen.dart';
 export 'blood_test_creator/blood_test_creator_screen.dart';
 export 'blood_test_preview/blood_test_preview_screen.dart';
 export 'blood_tests/blood_tests_screen.dart';
@@ -13,7 +14,6 @@ export 'profile/profile_screen.dart';
 export 'race_creator/race_creator_screen.dart';
 export 'race_preview/race_preview_screen.dart';
 export 'races/races_screen.dart';
-export 'run_status_creator/run_status_creator_screen.dart';
 export 'sign_in/sign_in_screen.dart';
 export 'sign_up/sign_up_screen.dart';
 export 'workout_creator/workout_creator_screen.dart';

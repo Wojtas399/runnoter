@@ -14,8 +14,8 @@ import '../../component/responsive_layout_component.dart';
 import '../../config/navigation/router.dart';
 import '../../dialog/day_preview/day_preview_dialog.dart';
 import '../../dialog/day_preview/day_preview_dialog_actions.dart';
+import '../../formatter/activity_status_formatter.dart';
 import '../../formatter/date_formatter.dart';
-import '../../formatter/run_status_formatter.dart';
 import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
 

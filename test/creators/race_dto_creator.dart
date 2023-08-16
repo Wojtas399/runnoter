@@ -8,7 +8,7 @@ RaceDto createRaceDto({
   String place = '',
   double distance = 0.0,
   Duration expectedDuration = const Duration(),
-  RunStatusDto status = const RunStatusPendingDto(),
+  ActivityStatusDto status = const ActivityStatusPendingDto(),
 }) =>
     RaceDto(
       id: id,

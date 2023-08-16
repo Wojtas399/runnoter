@@ -4,21 +4,21 @@ class WorkoutPreviewState extends BlocState<WorkoutPreviewState> {
   final DateTime? date;
   final String? workoutName;
   final List<WorkoutStage>? stages;
-  final RunStatus? runStatus;
+  final ActivityStatus? activityStatus;
 
   const WorkoutPreviewState({
     required super.status,
     this.date,
     this.workoutName,
     this.stages,
-    this.runStatus,
+    this.activityStatus,
   });
 
   bool get areDataLoaded =>
       date != null &&
       workoutName != null &&
       stages != null &&
-      runStatus != null;
+      activityStatus != null;
 
   @override
   List<Object?> get props => [
@@ -26,7 +26,7 @@ class WorkoutPreviewState extends BlocState<WorkoutPreviewState> {
         date,
         workoutName,
         stages,
-        runStatus,
+        activityStatus,
       ];
 
   @override
@@ -35,14 +35,14 @@ class WorkoutPreviewState extends BlocState<WorkoutPreviewState> {
     DateTime? date,
     String? workoutName,
     List<WorkoutStage>? stages,
-    RunStatus? runStatus,
+    ActivityStatus? activityStatus,
   }) {
     return WorkoutPreviewState(
       status: status ?? const BlocStatusComplete(),
       date: date ?? this.date,
       workoutName: workoutName ?? this.workoutName,
       stages: stages ?? this.stages,
-      runStatus: runStatus ?? this.runStatus,
+      activityStatus: activityStatus ?? this.activityStatus,
     );
   }
 }

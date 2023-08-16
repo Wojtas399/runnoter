@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../domain/additional_model/run_status.dart';
+import '../../domain/additional_model/activity_status.dart';
 import '../extension/context_extensions.dart';
 import '../extension/double_extensions.dart';
 import '../extension/string_extensions.dart';
+import '../formatter/activity_status_formatter.dart';
 import '../formatter/distance_unit_formatter.dart';
 import '../formatter/duration_formatter.dart';
 import '../formatter/mood_rate_formatter.dart';
 import '../formatter/pace_formatter.dart';
-import '../formatter/run_status_formatter.dart';
 import 'content_with_label_component.dart';
 import 'gap/gap_components.dart';
 import 'gap/gap_horizontal_components.dart';
@@ -17,30 +17,30 @@ import 'nullable_text_component.dart';
 import 'text/body_text_components.dart';
 import 'text/label_text_components.dart';
 
-class RunStatusInfo extends StatelessWidget {
-  final RunStatus runStatus;
+class ActivityStatusInfo extends StatelessWidget {
+  final ActivityStatus activityStatus;
 
-  const RunStatusInfo({
+  const ActivityStatusInfo({
     super.key,
-    required this.runStatus,
+    required this.activityStatus,
   });
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        _RunStatusName(runStatus),
-        if (runStatus is RunStatusWithParams)
-          _RunStats(runStatus as RunStatusWithParams),
+        _ActivityStatusName(activityStatus),
+        if (activityStatus is ActivityStatusWithParams)
+          _ActivityStats(activityStatus as ActivityStatusWithParams),
       ],
     );
   }
 }
 
-class _RunStatusName extends StatelessWidget {
-  final RunStatus status;
+class _ActivityStatusName extends StatelessWidget {
+  final ActivityStatus status;
 
-  const _RunStatusName(this.status);
+  const _ActivityStatusName(this.status);
 
   @override
   Widget build(BuildContext context) {
@@ -61,10 +61,10 @@ class _RunStatusName extends StatelessWidget {
   }
 }
 
-class _RunStats extends StatelessWidget {
-  final RunStatusWithParams params;
+class _ActivityStats extends StatelessWidget {
+  final ActivityStatusWithParams params;
 
-  const _RunStats(this.params);
+  const _ActivityStats(this.params);
 
   @override
   Widget build(BuildContext context) {
@@ -81,12 +81,12 @@ class _RunStats extends StatelessWidget {
           ),
           const Gap16(),
           ContentWithLabel(
-            label: Str.of(context).runStatusMoodRate,
+            label: Str.of(context).activityStatusMoodRate,
             content: NullableText(params.moodRate.toUIFormat(context)),
           ),
           const Gap16(),
           ContentWithLabel(
-            label: Str.of(context).runStatusComment,
+            label: Str.of(context).activityStatusComment,
             content: NullableText(params.comment),
           ),
         ],
@@ -126,7 +126,7 @@ class _Stats extends StatelessWidget {
               if (duration != null)
                 Expanded(
                   child: _StatParam(
-                    label: str.runStatusDuration,
+                    label: str.activityStatusDuration,
                     value: duration!.toUIFormat(),
                   ),
                 ),
@@ -139,14 +139,14 @@ class _Stats extends StatelessWidget {
             children: [
               Expanded(
                 child: _StatParam(
-                  label: str.runStatusAvgPace,
+                  label: str.activityStatusAvgPace,
                   value: avgPace.toUIFormat(context),
                 ),
               ),
               const VerticalDivider(),
               Expanded(
                 child: _StatParam(
-                  label: str.runStatusAvgHeartRate,
+                  label: str.activityStatusAvgHeartRate,
                   value: '$avgHeartRate ${str.heartRateUnit}',
                 ),
               ),
@@ -174,7 +174,7 @@ class _CoveredDistance extends StatelessWidget {
         .trimZeros();
 
     return _StatParam(
-      label: Str.of(context).runStatusCoveredDistance,
+      label: Str.of(context).activityStatusCoveredDistance,
       value: '$coveredDistanceStr${context.distanceUnit.toUIShortFormat()}',
     );
   }

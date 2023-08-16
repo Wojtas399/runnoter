@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:runnoter/domain/additional_model/activity_status.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
-import 'package:runnoter/domain/additional_model/run_status.dart';
 import 'package:runnoter/domain/additional_model/workout_stage.dart';
 import 'package:runnoter/domain/bloc/workout_preview/workout_preview_bloc.dart';
 
@@ -22,7 +22,7 @@ void main() {
         date: DateTime(2023),
         workoutName: 'workout name',
         stages: [],
-        runStatus: const RunStatusPending(),
+        activityStatus: const ActivityStatusPending(),
       );
 
       expect(state.areDataLoaded, true);
@@ -37,7 +37,7 @@ void main() {
       state = state.copyWith(
         workoutName: 'workout name',
         stages: [],
-        runStatus: const RunStatusPending(),
+        activityStatus: const ActivityStatusPending(),
       );
 
       expect(state.areDataLoaded, false);
@@ -52,7 +52,7 @@ void main() {
       state = state.copyWith(
         date: DateTime(2023),
         stages: [],
-        runStatus: const RunStatusPending(),
+        activityStatus: const ActivityStatusPending(),
       );
 
       expect(state.areDataLoaded, false);
@@ -67,7 +67,7 @@ void main() {
       state = state.copyWith(
         date: DateTime(2023),
         workoutName: 'workout name',
-        runStatus: const RunStatusPending(),
+        activityStatus: const ActivityStatusPending(),
       );
 
       expect(state.areDataLoaded, false);
@@ -76,7 +76,7 @@ void main() {
 
   test(
     'are data loaded, '
-    'run status is null, '
+    'activity status is null, '
     'should be false',
     () {
       state = state.copyWith(
@@ -151,15 +151,15 @@ void main() {
   );
 
   test(
-    'copy with run status',
+    'copy with activity status',
     () {
-      const RunStatus expectedRunStatus = RunStatusPending();
+      const ActivityStatus expectedActivityStatus = ActivityStatusPending();
 
-      state = state.copyWith(runStatus: expectedRunStatus);
+      state = state.copyWith(activityStatus: expectedActivityStatus);
       final state2 = state.copyWith();
 
-      expect(state.runStatus, expectedRunStatus);
-      expect(state2.runStatus, expectedRunStatus);
+      expect(state.activityStatus, expectedActivityStatus);
+      expect(state2.activityStatus, expectedActivityStatus);
     },
   );
 }

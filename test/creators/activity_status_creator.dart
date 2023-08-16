@@ -1,13 +1,13 @@
-import 'package:runnoter/domain/additional_model/run_status.dart';
+import 'package:runnoter/domain/additional_model/activity_status.dart';
 
-RunStatusDone createRunStatusDone({
+ActivityStatusDone createActivityStatusDone({
   double coveredDistanceInKm = 0.0,
   Pace avgPace = const Pace(minutes: 0, seconds: 0),
   int avgHeartRate = 1,
   MoodRate moodRate = MoodRate.mr1,
   String? comment,
 }) =>
-    RunStatusDone(
+    ActivityStatusDone(
       coveredDistanceInKm: coveredDistanceInKm,
       avgPace: avgPace,
       avgHeartRate: avgHeartRate,
@@ -15,14 +15,14 @@ RunStatusDone createRunStatusDone({
       comment: comment,
     );
 
-RunStatusAborted createRunStatusAborted({
+ActivityStatusAborted createActivityStatusAborted({
   double coveredDistanceInKm = 0.0,
   Pace avgPace = const Pace(minutes: 0, seconds: 0),
   int avgHeartRate = 1,
   MoodRate moodRate = MoodRate.mr1,
   String? comment,
 }) =>
-    RunStatusAborted(
+    ActivityStatusAborted(
       coveredDistanceInKm: coveredDistanceInKm,
       avgPace: avgPace,
       avgHeartRate: avgHeartRate,

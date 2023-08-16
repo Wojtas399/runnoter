@@ -2,27 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/bloc/run_status_creator/run_status_creator_bloc.dart';
+import '../../../domain/bloc/activity_status_creator/activity_status_creator_bloc.dart';
 import '../../component/big_button_component.dart';
 import '../../component/body/medium_body_component.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/padding/paddings_24.dart';
 import '../../service/dialog_service.dart';
-import 'run_status_creator_params_form.dart';
-import 'run_status_creator_status_type.dart';
+import 'activity_status_creator_params_form.dart';
+import 'activity_status_creator_status_type.dart';
 
-class RunStatusCreatorContent extends StatelessWidget {
-  const RunStatusCreatorContent({super.key});
+class ActivityStatusCreatorContent extends StatelessWidget {
+  const ActivityStatusCreatorContent({super.key});
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async => await askForConfirmationToLeave(
-        areUnsavedChanges: context.read<RunStatusCreatorBloc>().state.canSubmit,
+        areUnsavedChanges:
+            context.read<ActivityStatusCreatorBloc>().state.canSubmit,
       ),
       child: Scaffold(
         appBar: AppBar(
-          title: Text(Str.of(context).runStatusCreatorScreenTitle),
+          title: Text(Str.of(context).activityStatus),
           centerTitle: true,
         ),
         body: const SafeArea(
@@ -31,7 +32,7 @@ class RunStatusCreatorContent extends StatelessWidget {
               child: Paddings24(
                 child: Column(
                   children: [
-                    RunStatusCreatorStatusType(),
+                    ActivityStatusCreatorStatusType(),
                     Gap24(),
                     _Form(),
                     Gap24(),
@@ -52,13 +53,13 @@ class _Form extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final RunStatusType? runStatusType = context.select(
-      (RunStatusCreatorBloc bloc) => bloc.state.runStatusType,
+    final ActivityStatusType? activityStatusType = context.select(
+      (ActivityStatusCreatorBloc bloc) => bloc.state.activityStatusType,
     );
 
-    return runStatusType == RunStatusType.done ||
-            runStatusType == RunStatusType.aborted
-        ? const RunStatusCreatorParamsForm()
+    return activityStatusType == ActivityStatusType.done ||
+            activityStatusType == ActivityStatusType.aborted
+        ? const ActivityStatusCreatorParamsForm()
         : const SizedBox();
   }
 }
@@ -69,7 +70,7 @@ class _SubmitButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool isDisabled = context.select(
-      (RunStatusCreatorBloc bloc) => !bloc.state.canSubmit,
+      (ActivityStatusCreatorBloc bloc) => !bloc.state.canSubmit,
     );
 
     return BigButton(
@@ -80,8 +81,8 @@ class _SubmitButton extends StatelessWidget {
   }
 
   void _onPressed(BuildContext context) {
-    context.read<RunStatusCreatorBloc>().add(
-          const RunStatusCreatorEventSubmit(),
+    context.read<ActivityStatusCreatorBloc>().add(
+          const ActivityStatusCreatorEventSubmit(),
         );
   }
 }

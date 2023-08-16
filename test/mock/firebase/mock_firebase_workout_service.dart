@@ -1,12 +1,12 @@
 import 'package:firebase/firebase.dart';
 import 'package:mocktail/mocktail.dart';
 
-class _FakeRunStatusDto extends Fake implements RunStatusDto {}
+class _FakeActivityStatusDto extends Fake implements ActivityStatusDto {}
 
 class MockFirebaseWorkoutService extends Mock
     implements FirebaseWorkoutService {
   MockFirebaseWorkoutService() {
-    registerFallbackValue(_FakeRunStatusDto());
+    registerFallbackValue(_FakeActivityStatusDto());
   }
 
   void mockLoadWorkoutsByDateRange({

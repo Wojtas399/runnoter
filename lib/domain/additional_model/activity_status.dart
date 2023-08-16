@@ -1,11 +1,10 @@
 import 'package:equatable/equatable.dart';
 
-//TODO: Change the name to ActivityStatus
-sealed class RunStatus extends Equatable {
-  const RunStatus();
+sealed class ActivityStatus extends Equatable {
+  const ActivityStatus();
 }
 
-sealed class RunStatusWithParams extends RunStatus {
+sealed class ActivityStatusWithParams extends ActivityStatus {
   final double coveredDistanceInKm;
   final Pace avgPace;
   final int avgHeartRate;
@@ -13,7 +12,7 @@ sealed class RunStatusWithParams extends RunStatus {
   final Duration? duration;
   final String? comment;
 
-  const RunStatusWithParams({
+  const ActivityStatusWithParams({
     required this.coveredDistanceInKm,
     required this.avgPace,
     required this.avgHeartRate,
@@ -34,15 +33,15 @@ sealed class RunStatusWithParams extends RunStatus {
       ];
 }
 
-class RunStatusPending extends RunStatus {
-  const RunStatusPending();
+class ActivityStatusPending extends ActivityStatus {
+  const ActivityStatusPending();
 
   @override
   List<Object> get props => [];
 }
 
-class RunStatusDone extends RunStatusWithParams {
-  const RunStatusDone({
+class ActivityStatusDone extends ActivityStatusWithParams {
+  const ActivityStatusDone({
     required super.coveredDistanceInKm,
     required super.avgPace,
     required super.avgHeartRate,
@@ -52,8 +51,8 @@ class RunStatusDone extends RunStatusWithParams {
   });
 }
 
-class RunStatusAborted extends RunStatusWithParams {
-  const RunStatusAborted({
+class ActivityStatusAborted extends ActivityStatusWithParams {
+  const ActivityStatusAborted({
     required super.coveredDistanceInKm,
     required super.avgPace,
     required super.avgHeartRate,
@@ -63,8 +62,8 @@ class RunStatusAborted extends RunStatusWithParams {
   });
 }
 
-class RunStatusUndone extends RunStatus {
-  const RunStatusUndone();
+class ActivityStatusUndone extends ActivityStatus {
+  const ActivityStatusUndone();
 
   @override
   List<Object?> get props => [];
@@ -81,10 +80,7 @@ class Pace extends Equatable {
         assert(seconds >= 0 && seconds <= 59);
 
   @override
-  List<Object> get props => [
-        minutes,
-        seconds,
-      ];
+  List<Object> get props => [minutes, seconds];
 }
 
 enum MoodRate {

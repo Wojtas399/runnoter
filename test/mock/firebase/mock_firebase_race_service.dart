@@ -3,12 +3,12 @@ import 'package:mocktail/mocktail.dart';
 
 class _FakeDuration extends Fake implements Duration {}
 
-class _FakeRunStatusDto extends Fake implements RunStatusDto {}
+class _FakeActivityStatusDto extends Fake implements ActivityStatusDto {}
 
 class MockFirebaseRaceService extends Mock implements FirebaseRaceService {
   MockFirebaseRaceService() {
     registerFallbackValue(_FakeDuration());
-    registerFallbackValue(_FakeRunStatusDto());
+    registerFallbackValue(_FakeActivityStatusDto());
   }
 
   void mockLoadRaceById({

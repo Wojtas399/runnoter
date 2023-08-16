@@ -2,8 +2,8 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:runnoter/domain/additional_model/activity_status.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
-import 'package:runnoter/domain/additional_model/run_status.dart';
 import 'package:runnoter/domain/additional_model/workout_stage.dart';
 import 'package:runnoter/domain/bloc/workout_preview/workout_preview_bloc.dart';
 import 'package:runnoter/domain/repository/workout_repository.dart';
@@ -24,7 +24,7 @@ void main() {
     DateTime? date,
     String? workoutName,
     List<WorkoutStage>? stages,
-    RunStatus? runStatus,
+    ActivityStatus? activityStatus,
   }) =>
       WorkoutPreviewBloc(
         workoutId: workoutId,
@@ -33,7 +33,7 @@ void main() {
           date: date,
           workoutName: workoutName,
           stages: stages,
-          runStatus: runStatus,
+          activityStatus: activityStatus,
         ),
       );
 
@@ -42,14 +42,14 @@ void main() {
     DateTime? date,
     String? workoutName,
     List<WorkoutStage>? stages,
-    RunStatus? runStatus,
+    ActivityStatus? activityStatus,
   }) =>
       WorkoutPreviewState(
         status: status,
         date: date,
         workoutName: workoutName,
         stages: stages,
-        runStatus: runStatus,
+        activityStatus: activityStatus,
       );
 
   setUpAll(() {
@@ -95,7 +95,7 @@ void main() {
           id: workoutId,
           date: DateTime(2023),
           stages: [],
-          status: const RunStatusPending(),
+          status: const ActivityStatusPending(),
           name: 'workout name',
         ),
       );
@@ -106,7 +106,7 @@ void main() {
         status: const BlocStatusComplete(),
         date: DateTime(2023),
         stages: [],
-        runStatus: const RunStatusPending(),
+        activityStatus: const ActivityStatusPending(),
         workoutName: 'workout name',
       ),
     ],

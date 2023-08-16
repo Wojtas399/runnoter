@@ -1,11 +1,11 @@
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/domain/additional_model/run_status.dart';
+import 'package:runnoter/domain/additional_model/activity_status.dart';
 import 'package:runnoter/domain/entity/workout.dart';
 import 'package:runnoter/domain/repository/workout_repository.dart';
 
 class MockWorkoutRepository extends Mock implements WorkoutRepository {
   MockWorkoutRepository() {
-    registerFallbackValue(const RunStatusPending());
+    registerFallbackValue(const ActivityStatusPending());
   }
 
   void mockGetWorkoutsByDateRange({

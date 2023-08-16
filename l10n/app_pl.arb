@@ -322,45 +322,17 @@
   "@workoutStageCreatorJoggingDistance": {
     "description": "Jogging distance"
   },
-  "@__________RUN_STATUS_CREATOR__________": {},
-  "runStatusCreatorScreenTitle": "Status",
-  "@runStatusCreatorScreenTitle": {
-    "description": "Title of status creator screen"
-  },
-  "runStatusCreatorCoveredDistance": "Pokonany dystans",
-  "@runStatusCreatorCoveredDistance": {
-    "description": "Label of covered distance"
-  },
-  "runStatusCreatorDuration": "Czas",
-  "@runStatusCreatorDuration": {
-    "description": "Label of duration"
-  },
-  "runStatusCreatorMood": "Samopoczucie",
-  "@runStatusCreatorMood": {
-    "description": "Label of mood"
-  },
-  "runStatusCreatorAveragePace": "Średnia prędkość",
-  "@runStatusCreatorAveragePace": {
-    "description": "Label of average pace"
-  },
-  "runStatusCreatorMinutes": "Minuty",
-  "@runStatusCreatorMinutes": {
+  "@__________ACTIVITY_STATUS_CREATOR__________": {},
+  "activityStatusCreatorMinutes": "Minuty",
+  "@activityStatusCreatorMinutes": {
     "description": "Label of minutes"
   },
-  "runStatusCreatorSeconds": "Sekundy",
-  "@runStatusCreatorSeconds": {
+  "activityStatusCreatorSeconds": "Sekundy",
+  "@activityStatusCreatorSeconds": {
     "description": "Label of seconds"
   },
-  "runStatusCreatorAverageHeartRate": "Średnie tętno",
-  "@runStatusCreatorAverageHeartRate": {
-    "description": "Label of average heart rate"
-  },
-  "runStatusCreatorComment": "Uwagi",
-  "@runStatusCreatorComment": {
-    "description": "Label of comment"
-  },
-  "runStatusCreatorSavedStatusMessage": "Pomyślnie zaktualizowano status",
-  "@runStatusCreatorSavedStatusMessage": {
+  "activityStatusCreatorSavedStatusMessage": "Pomyślnie zaktualizowano status",
+  "@activityStatusCreatorSavedStatusMessage": {
     "description": "Info about successfully saved status"
   },
   "@__________DAY_PREVIEW__________": {},
@@ -866,57 +838,57 @@
   "@personsSearchUserAlreadyHasCoachInfoMessage": {
     "description": "Message of the information about user who already has a coach"
   },
-  "@__________RUN_STATUS_PARAMS__________": {},
-  "runStatus": "Status",
-  "@runStatus": {
-    "description": "Label of run status"
+  "@__________ACTIVITY_STATUS_PARAMS__________": {},
+  "activityStatus": "Status",
+  "@activityStatus": {
+    "description": "Label of activity status"
   },
-  "runStatusCoveredDistance": "Pokonany dystans",
-  "@runStatusCoveredDistance": {
-    "description": "Label of the covered distance of run status"
+  "activityStatusCoveredDistance": "Pokonany dystans",
+  "@activityStatusCoveredDistance": {
+    "description": "Label of the covered distance of activity status"
   },
-  "runStatusDuration": "Czas",
-  "@runStatusDuration": {
-    "description": "Label of the duration of run status"
+  "activityStatusDuration": "Czas",
+  "@activityStatusDuration": {
+    "description": "Label of the duration of activity status"
   },
-  "runStatusMoodRate": "Samopoczucie",
-  "@runStatusMoodRate": {
-    "description": "Label of the mood rate of run status"
+  "activityStatusMoodRate": "Samopoczucie",
+  "@activityStatusMoodRate": {
+    "description": "Label of the mood rate of activity status"
   },
-  "runStatusAvgPace": "Średnie tempo",
-  "@runStatusAvgPace": {
-    "description": "Label of the average pace of run status"
+  "activityStatusAvgPace": "Średnie tempo",
+  "@activityStatusAvgPace": {
+    "description": "Label of the average pace of activity status"
   },
-  "runStatusAvgHeartRate": "Średnie tętno",
-  "@runStatusAvgHeartRate": {
-    "description": "Label of the average heart rate of run status"
+  "activityStatusAvgHeartRate": "Średnie tętno",
+  "@activityStatusAvgHeartRate": {
+    "description": "Label of the average heart rate of activity status"
   },
-  "runStatusComment": "Uwagi",
-  "@runStatusComment": {
-    "description": "Label of the comment of run status"
+  "activityStatusComment": "Uwagi",
+  "@activityStatusComment": {
+    "description": "Label of the comment of activity status"
   },
-  "runStatusEditStatus": "Edytuj status",
-  "@runStatusEditStatus": {
+  "activityStatusEditStatus": "Edytuj status",
+  "@activityStatusEditStatus": {
     "description": "Label of the button to edit status"
   },
-  "runStatusFinish": "Zakończ",
-  "@runStatusFinish": {
-    "description": "Label of the button to finish run"
+  "activityStatusFinish": "Zakończ",
+  "@activityStatusFinish": {
+    "description": "Label of the button to finish activity"
   },
-  "runStatusPending": "Oczekujący",
-  "@runStatusPending": {
+  "activityStatusPending": "Oczekujący",
+  "@activityStatusPending": {
     "description": "Type of workout status called pending"
   },
-  "runStatusDone": "Wykonany",
-  "@runStatusDone": {
+  "activityStatusDone": "Wykonany",
+  "@activityStatusDone": {
     "description": "Type of workout status called done"
   },
-  "runStatusAborted": "Przerwany",
-  "@runStatusAborted": {
+  "activityStatusAborted": "Przerwany",
+  "@activityStatusAborted": {
     "description": "Type of workout status called aborted"
   },
-  "runStatusUndone": "Niewykonany",
-  "@runStatusUndone": {
+  "activityStatusUndone": "Niewykonany",
+  "@activityStatusUndone": {
     "description": "Type of workout status called undone"
   },
   "@__________ACCOUNT_TYPES__________": {},

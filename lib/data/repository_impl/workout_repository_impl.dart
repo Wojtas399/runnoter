@@ -3,12 +3,12 @@ import 'package:firebase/firebase.dart';
 
 import '../../common/date_service.dart';
 import '../../dependency_injection.dart';
-import '../../domain/additional_model/run_status.dart';
+import '../../domain/additional_model/activity_status.dart';
 import '../../domain/additional_model/state_repository.dart';
 import '../../domain/additional_model/workout_stage.dart';
 import '../../domain/entity/workout.dart';
 import '../../domain/repository/workout_repository.dart';
-import '../mapper/run_status_mapper.dart';
+import '../mapper/activity_status_mapper.dart';
 import '../mapper/workout_mapper.dart';
 import '../mapper/workout_stage_mapper.dart';
 
@@ -89,14 +89,14 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
     required String userId,
     required String workoutName,
     required DateTime date,
-    required RunStatus status,
+    required ActivityStatus status,
     required List<WorkoutStage> stages,
   }) async {
     final WorkoutDto? workoutDto = await _firebaseWorkoutService.addWorkout(
       userId: userId,
       workoutName: workoutName,
       date: date,
-      status: mapRunStatusToDto(status),
+      status: mapActivityStatusToDto(status),
       stages: stages.map(mapWorkoutStageToFirebase).toList(),
     );
     if (workoutDto != null) {
@@ -111,7 +111,7 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
     required String userId,
     DateTime? date,
     String? workoutName,
-    RunStatus? status,
+    ActivityStatus? status,
     List<WorkoutStage>? stages,
   }) async {
     final WorkoutDto? updatedWorkoutDto =
@@ -120,7 +120,7 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
       userId: userId,
       date: date,
       workoutName: workoutName,
-      status: status != null ? mapRunStatusToDto(status) : null,
+      status: status != null ? mapActivityStatusToDto(status) : null,
       stages: stages?.map(mapWorkoutStageToFirebase).toList(),
     );
     if (updatedWorkoutDto != null) {

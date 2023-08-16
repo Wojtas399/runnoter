@@ -3,9 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/additional_model/run_status.dart';
+import '../../../domain/additional_model/activity_status.dart';
 import '../../../domain/additional_model/settings.dart';
-import '../../../domain/bloc/run_status_creator/run_status_creator_bloc.dart';
+import '../../../domain/bloc/activity_status_creator/activity_status_creator_bloc.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/text/label_text_components.dart';
 import '../../component/text/title_text_components.dart';
@@ -15,8 +15,8 @@ import '../../formatter/minutes_or_seconds_input_formatter.dart';
 import '../../formatter/pace_unit_formatter.dart';
 import '../../service/pace_unit_service.dart';
 
-class RunStatusCreatorAvgPace extends StatelessWidget {
-  const RunStatusCreatorAvgPace({super.key});
+class ActivityStatusCreatorAvgPace extends StatelessWidget {
+  const ActivityStatusCreatorAvgPace({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +42,8 @@ class _AvgPaceDistanceState extends State<_AvgPaceDistance> {
 
   @override
   void initState() {
-    final Pace? avgPace = context.read<RunStatusCreatorBloc>().state.avgPace;
+    final Pace? avgPace =
+        context.read<ActivityStatusCreatorBloc>().state.avgPace;
     if (avgPace != null) {
       final ConvertedPace convertedPace = context.convertPaceFromDefaultUnit(
         avgPace,
@@ -66,7 +67,7 @@ class _AvgPaceDistanceState extends State<_AvgPaceDistance> {
     return TextField(
       decoration: InputDecoration(
         label: Text(
-          '${Str.of(context).runStatusCreatorAveragePace} [${context.paceUnit.toUIFormat()}]',
+          '${Str.of(context).activityStatusAvgPace} [${context.paceUnit.toUIFormat()}]',
         ),
       ),
       controller: _controller,
@@ -82,8 +83,8 @@ class _AvgPaceDistanceState extends State<_AvgPaceDistance> {
     final double distance = double.tryParse(_controller.text) ?? 0;
     if (distance == 0) {
       const Pace pace = Pace(minutes: 0, seconds: 0);
-      context.read<RunStatusCreatorBloc>().add(
-            const RunStatusCreatorEventAvgPaceChanged(avgPace: pace),
+      context.read<ActivityStatusCreatorBloc>().add(
+            const ActivityStatusCreatorEventAvgPaceChanged(avgPace: pace),
           );
       return;
     }
@@ -95,8 +96,8 @@ class _AvgPaceDistanceState extends State<_AvgPaceDistance> {
     }
     if (convertedPace != null) {
       final Pace pace = context.convertPaceToDefaultUnit(convertedPace);
-      context.read<RunStatusCreatorBloc>().add(
-            RunStatusCreatorEventAvgPaceChanged(avgPace: pace),
+      context.read<ActivityStatusCreatorBloc>().add(
+            ActivityStatusCreatorEventAvgPaceChanged(avgPace: pace),
           );
     }
   }
@@ -115,7 +116,8 @@ class _AvgPaceTimeState extends State<_AvgPaceTime> {
 
   @override
   void initState() {
-    final Pace? avgPace = context.read<RunStatusCreatorBloc>().state.avgPace;
+    final Pace? avgPace =
+        context.read<ActivityStatusCreatorBloc>().state.avgPace;
     if (avgPace != null) {
       final ConvertedPace convertedPace = context.convertPaceFromDefaultUnit(
         avgPace,
@@ -143,18 +145,18 @@ class _AvgPaceTimeState extends State<_AvgPaceTime> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         LabelLarge(
-          '${Str.of(context).runStatusCreatorAveragePace} [${context.paceUnit.toUIFormat()}]',
+          '${Str.of(context).activityStatusAvgPace} [${context.paceUnit.toUIFormat()}]',
         ),
         const Gap16(),
         Row(
           children: [
             _AveragePaceField(
-              label: Str.of(context).runStatusCreatorMinutes,
+              label: Str.of(context).activityStatusCreatorMinutes,
               controller: _minutesController,
             ),
             const TitleLarge(':'),
             _AveragePaceField(
-              label: Str.of(context).runStatusCreatorSeconds,
+              label: Str.of(context).activityStatusCreatorSeconds,
               controller: _secondsController,
             ),
           ],
@@ -180,8 +182,8 @@ class _AvgPaceTimeState extends State<_AvgPaceTime> {
     }
     if (convertedPace != null) {
       final Pace pace = context.convertPaceToDefaultUnit(convertedPace);
-      context.read<RunStatusCreatorBloc>().add(
-            RunStatusCreatorEventAvgPaceChanged(avgPace: pace),
+      context.read<ActivityStatusCreatorBloc>().add(
+            ActivityStatusCreatorEventAvgPaceChanged(avgPace: pace),
           );
     }
   }

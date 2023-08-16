@@ -3,8 +3,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/common/date_service.dart';
+import 'package:runnoter/domain/additional_model/activity_status.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
-import 'package:runnoter/domain/additional_model/run_status.dart';
 import 'package:runnoter/domain/additional_model/workout_stage.dart';
 import 'package:runnoter/domain/bloc/workout_creator/workout_creator_bloc.dart';
 import 'package:runnoter/domain/entity/workout.dart';
@@ -384,7 +384,7 @@ void main() {
           userId: loggedUserId,
           workoutName: 'workout 1',
           date: DateTime(2023, 2, 2),
-          status: const RunStatusPending(),
+          status: const ActivityStatusPending(),
           stages: const [
             WorkoutStageCardio(distanceInKm: 4, maxHeartRate: 150),
             WorkoutStageZone3(distanceInKm: 2, maxHeartRate: 180),

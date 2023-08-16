@@ -1,27 +1,29 @@
 import 'package:firebase/firebase.dart' as firebase;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:runnoter/data/mapper/run_status_mapper.dart';
-import 'package:runnoter/domain/additional_model/run_status.dart';
+import 'package:runnoter/data/mapper/activity_status_mapper.dart';
+import 'package:runnoter/domain/additional_model/activity_status.dart';
 
 void main() {
   test(
-    'map run status from dto, '
+    'map activity status from dto, '
     'pending status dto model should be mapped to domain pending status model',
     () {
-      const firebase.RunStatusDto statusDto = firebase.RunStatusPendingDto();
-      const RunStatusPending expectedStatus = RunStatusPending();
+      const firebase.ActivityStatusDto statusDto =
+          firebase.ActivityStatusPendingDto();
+      const ActivityStatusPending expectedStatus = ActivityStatusPending();
 
-      final RunStatus status = mapRunStatusFromDto(statusDto);
+      final ActivityStatus status = mapActivityStatusFromDto(statusDto);
 
       expect(status, expectedStatus);
     },
   );
 
   test(
-    'map run status from dto, '
+    'map activity status from dto, '
     'done status dto model should be mapped to domain done status model',
     () {
-      final firebase.RunStatusDto statusDto = firebase.RunStatusDoneDto(
+      final firebase.ActivityStatusDto statusDto =
+          firebase.ActivityStatusDoneDto(
         coveredDistanceInKm: 10.0,
         avgPaceDto: const firebase.PaceDto(minutes: 5, seconds: 50),
         avgHeartRate: 146,
@@ -29,7 +31,7 @@ void main() {
         duration: const Duration(seconds: 3),
         comment: 'comment',
       );
-      const RunStatusDone expectedStatus = RunStatusDone(
+      const ActivityStatusDone expectedStatus = ActivityStatusDone(
         coveredDistanceInKm: 10.0,
         avgPace: Pace(minutes: 5, seconds: 50),
         avgHeartRate: 146,
@@ -38,17 +40,18 @@ void main() {
         comment: 'comment',
       );
 
-      final RunStatus status = mapRunStatusFromDto(statusDto);
+      final ActivityStatus status = mapActivityStatusFromDto(statusDto);
 
       expect(status, expectedStatus);
     },
   );
 
   test(
-    'map run status from dto, '
+    'map activity status from dto, '
     'aborted status dto model should be mapped to domain aborted status model',
     () {
-      final firebase.RunStatusDto statusDto = firebase.RunStatusAbortedDto(
+      final firebase.ActivityStatusDto statusDto =
+          firebase.ActivityStatusAbortedDto(
         coveredDistanceInKm: 10.0,
         avgPaceDto: const firebase.PaceDto(minutes: 5, seconds: 50),
         avgHeartRate: 146,
@@ -56,7 +59,7 @@ void main() {
         duration: const Duration(seconds: 3),
         comment: 'comment',
       );
-      const RunStatusAborted expectedStatus = RunStatusAborted(
+      const ActivityStatusAborted expectedStatus = ActivityStatusAborted(
         coveredDistanceInKm: 10.0,
         avgPace: Pace(minutes: 5, seconds: 50),
         avgHeartRate: 146,
@@ -65,43 +68,45 @@ void main() {
         comment: 'comment',
       );
 
-      final RunStatus status = mapRunStatusFromDto(statusDto);
+      final ActivityStatus status = mapActivityStatusFromDto(statusDto);
 
       expect(status, expectedStatus);
     },
   );
 
   test(
-    'map run status from dto, '
+    'map activity status from dto, '
     'undone status dto model should be mapped to domain undone status model',
     () {
-      const firebase.RunStatusDto statusDto = firebase.RunStatusUndoneDto();
-      const RunStatusUndone expectedStatus = RunStatusUndone();
+      const firebase.ActivityStatusDto statusDto =
+          firebase.ActivityStatusUndoneDto();
+      const ActivityStatusUndone expectedStatus = ActivityStatusUndone();
 
-      final RunStatus status = mapRunStatusFromDto(statusDto);
+      final ActivityStatus status = mapActivityStatusFromDto(statusDto);
 
       expect(status, expectedStatus);
     },
   );
 
   test(
-    'map run status to dto, '
+    'map activity status to dto, '
     'pending status should be mapped to pending status dto',
     () {
-      const RunStatusPending status = RunStatusPending();
-      const firebase.RunStatusDto expectedDto = firebase.RunStatusPendingDto();
+      const ActivityStatusPending status = ActivityStatusPending();
+      const firebase.ActivityStatusDto expectedDto =
+          firebase.ActivityStatusPendingDto();
 
-      final dto = mapRunStatusToDto(status);
+      final dto = mapActivityStatusToDto(status);
 
       expect(dto, expectedDto);
     },
   );
 
   test(
-    'map run status to dto, '
+    'map activity status to dto, '
     'done status should be mapped to done status dto',
     () {
-      const RunStatusDone status = RunStatusDone(
+      const ActivityStatusDone status = ActivityStatusDone(
         coveredDistanceInKm: 10.0,
         avgPace: Pace(minutes: 5, seconds: 50),
         avgHeartRate: 146,
@@ -109,7 +114,8 @@ void main() {
         duration: Duration(seconds: 3),
         comment: 'comment',
       );
-      final firebase.RunStatusDto expectedDto = firebase.RunStatusDoneDto(
+      final firebase.ActivityStatusDto expectedDto =
+          firebase.ActivityStatusDoneDto(
         coveredDistanceInKm: 10.0,
         avgPaceDto: const firebase.PaceDto(minutes: 5, seconds: 50),
         avgHeartRate: 146,
@@ -118,17 +124,17 @@ void main() {
         comment: 'comment',
       );
 
-      final dto = mapRunStatusToDto(status);
+      final dto = mapActivityStatusToDto(status);
 
       expect(dto, expectedDto);
     },
   );
 
   test(
-    'map run status to dto, '
+    'map activity status to dto, '
     'aborted status should be mapped to aborted status dto',
     () {
-      const RunStatusAborted status = RunStatusAborted(
+      const ActivityStatusAborted status = ActivityStatusAborted(
         coveredDistanceInKm: 10.0,
         avgPace: Pace(minutes: 5, seconds: 50),
         avgHeartRate: 146,
@@ -136,7 +142,8 @@ void main() {
         duration: Duration(seconds: 3),
         comment: 'comment',
       );
-      final firebase.RunStatusDto expectedDto = firebase.RunStatusAbortedDto(
+      final firebase.ActivityStatusDto expectedDto =
+          firebase.ActivityStatusAbortedDto(
         coveredDistanceInKm: 10.0,
         avgPaceDto: const firebase.PaceDto(minutes: 5, seconds: 50),
         avgHeartRate: 146,
@@ -145,20 +152,21 @@ void main() {
         comment: 'comment',
       );
 
-      final dto = mapRunStatusToDto(status);
+      final dto = mapActivityStatusToDto(status);
 
       expect(dto, expectedDto);
     },
   );
 
   test(
-    'map run status to dto, '
+    'map activity status to dto, '
     'undone status should be mapped to undone status dto',
     () {
-      const RunStatusUndone status = RunStatusUndone();
-      const firebase.RunStatusDto expectedDto = firebase.RunStatusUndoneDto();
+      const ActivityStatusUndone status = ActivityStatusUndone();
+      const firebase.ActivityStatusDto expectedDto =
+          firebase.ActivityStatusUndoneDto();
 
-      final dto = mapRunStatusToDto(status);
+      final dto = mapActivityStatusToDto(status);
 
       expect(dto, expectedDto);
     },

@@ -2,13 +2,13 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/domain/additional_model/run_status.dart';
+import 'package:runnoter/domain/additional_model/activity_status.dart';
 import 'package:runnoter/domain/cubit/mileage_cubit.dart';
 import 'package:runnoter/domain/repository/workout_repository.dart';
 import 'package:runnoter/domain/service/auth_service.dart';
 
+import '../../creators/activity_status_creator.dart';
 import '../../creators/chart_month_creator.dart';
-import '../../creators/run_status_creator.dart';
 import '../../creators/workout_creator.dart';
 import '../../mock/domain/repository/mock_workout_repository.dart';
 import '../../mock/domain/service/mock_auth_service.dart';
@@ -51,39 +51,39 @@ void main() {
         allWorkouts: [
           createWorkout(
             date: DateTime(2022, 6, 16),
-            status: createRunStatusAborted(coveredDistanceInKm: 8),
+            status: createActivityStatusAborted(coveredDistanceInKm: 8),
           ),
           createWorkout(
             date: DateTime(2022, 6, 18),
-            status: createRunStatusDone(coveredDistanceInKm: 7),
+            status: createActivityStatusDone(coveredDistanceInKm: 7),
           ),
           createWorkout(
             date: DateTime(2022, 7, 20),
-            status: const RunStatusPending(),
+            status: const ActivityStatusPending(),
           ),
           createWorkout(
             date: DateTime(2023, 3, 16),
-            status: const RunStatusUndone(),
+            status: const ActivityStatusUndone(),
           ),
           createWorkout(
             date: DateTime(2023, 5, 18),
-            status: createRunStatusDone(coveredDistanceInKm: 5),
+            status: createActivityStatusDone(coveredDistanceInKm: 5),
           ),
           createWorkout(
             date: DateTime(2023, 5, 20),
-            status: createRunStatusDone(coveredDistanceInKm: 6),
+            status: createActivityStatusDone(coveredDistanceInKm: 6),
           ),
           createWorkout(
             date: DateTime(2023, 5, 16),
-            status: createRunStatusAborted(coveredDistanceInKm: 8),
+            status: createActivityStatusAborted(coveredDistanceInKm: 8),
           ),
           createWorkout(
             date: DateTime(2023, 7, 18),
-            status: createRunStatusDone(coveredDistanceInKm: 8),
+            status: createActivityStatusDone(coveredDistanceInKm: 8),
           ),
           createWorkout(
             date: DateTime(2023, 7, 20),
-            status: createRunStatusAborted(coveredDistanceInKm: 10),
+            status: createActivityStatusAborted(coveredDistanceInKm: 10),
           ),
         ],
       );

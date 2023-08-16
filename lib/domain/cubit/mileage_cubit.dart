@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../dependency_injection.dart';
-import '../additional_model/run_status.dart';
+import '../additional_model/activity_status.dart';
 import '../entity/workout.dart';
 import '../repository/workout_repository.dart';
 import '../service/auth_service.dart';
@@ -92,10 +92,8 @@ class MileageCubit extends Cubit<List<ChartYear>?> {
   }
 
   double _calculateWorkoutDistance(Workout workout) {
-    final RunStatus status = workout.status;
-    if (status is RunStatusWithParams) {
-      return status.coveredDistanceInKm;
-    }
+    final ActivityStatus status = workout.status;
+    if (status is ActivityStatusWithParams) return status.coveredDistanceInKm;
     return 0.0;
   }
 }

@@ -1,5 +1,5 @@
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/domain/additional_model/run_status.dart';
+import 'package:runnoter/domain/additional_model/activity_status.dart';
 import 'package:runnoter/domain/entity/race.dart';
 import 'package:runnoter/domain/repository/race_repository.dart';
 
@@ -8,7 +8,7 @@ class _FakeDuration extends Fake implements Duration {}
 class MockRaceRepository extends Mock implements RaceRepository {
   MockRaceRepository() {
     registerFallbackValue(_FakeDuration());
-    registerFallbackValue(const RunStatusPending());
+    registerFallbackValue(const ActivityStatusPending());
   }
 
   void mockGetRaceById({

@@ -2,10 +2,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../../dependency_injection.dart';
+import '../../additional_model/activity_status.dart';
 import '../../additional_model/bloc_state.dart';
 import '../../additional_model/bloc_status.dart';
 import '../../additional_model/bloc_with_status.dart';
-import '../../additional_model/run_status.dart';
 import '../../entity/race.dart';
 import '../../repository/race_repository.dart';
 import '../../service/auth_service.dart';
@@ -150,7 +150,7 @@ class RaceCreatorBloc extends BlocWithStatus<RaceCreatorEvent, RaceCreatorState,
       place: state.place!,
       distance: state.distance!,
       expectedDuration: expectedDuration,
-      status: const RunStatusPending(),
+      status: const ActivityStatusPending(),
     );
     emitCompleteStatus(emit, info: RaceCreatorBlocInfo.raceAdded);
   }

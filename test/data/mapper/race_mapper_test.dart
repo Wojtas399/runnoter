@@ -1,7 +1,7 @@
 import 'package:firebase/firebase.dart' as firebase;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/data/mapper/race_mapper.dart';
-import 'package:runnoter/domain/additional_model/run_status.dart';
+import 'package:runnoter/domain/additional_model/activity_status.dart';
 import 'package:runnoter/domain/entity/race.dart';
 
 void main() {
@@ -24,7 +24,7 @@ void main() {
     place: place,
     distance: distance,
     expectedDuration: expectedDuration,
-    status: const RunStatusDone(
+    status: const ActivityStatusDone(
       coveredDistanceInKm: 5.0,
       avgPace: Pace(minutes: 5, seconds: 45),
       avgHeartRate: 145,
@@ -40,7 +40,7 @@ void main() {
     place: place,
     distance: distance,
     expectedDuration: expectedDuration,
-    statusDto: firebase.RunStatusDoneDto(
+    statusDto: firebase.ActivityStatusDoneDto(
       coveredDistanceInKm: 5.0,
       avgPaceDto: const firebase.PaceDto(minutes: 5, seconds: 45),
       avgHeartRate: 145,

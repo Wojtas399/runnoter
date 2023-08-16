@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/additional_model/run_status.dart';
+import '../../../domain/additional_model/activity_status.dart';
 import '../../../domain/additional_model/workout_stage.dart';
-import '../../../domain/bloc/run_status_creator/run_status_creator_bloc.dart';
+import '../../../domain/bloc/activity_status_creator/activity_status_creator_bloc.dart';
 import '../../../domain/bloc/workout_preview/workout_preview_bloc.dart';
+import '../../component/activity_status_info_component.dart';
 import '../../component/big_button_component.dart';
 import '../../component/content_with_label_component.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/nullable_text_component.dart';
-import '../../component/run_status_info_component.dart';
 import '../../component/text/title_text_components.dart';
 import '../../config/navigation/router.dart';
 import '../../extension/context_extensions.dart';
@@ -52,13 +52,13 @@ class WorkoutPreviewWorkoutInfo extends StatelessWidget {
             ),
             gap,
             ContentWithLabel(
-              label: str.runStatus,
-              content: const _RunStatus(),
+              label: str.activityStatus,
+              content: const _ActivityStatus(),
             ),
           ],
         ),
         const Gap32(),
-        const _RunStatusButton(),
+        const _ActivityStatusButton(),
       ],
     );
   }
@@ -147,32 +147,32 @@ class _WorkoutDistance extends StatelessWidget {
   }
 }
 
-class _RunStatus extends StatelessWidget {
-  const _RunStatus();
+class _ActivityStatus extends StatelessWidget {
+  const _ActivityStatus();
 
   @override
   Widget build(BuildContext context) {
-    final RunStatus? runStatus = context.select(
-      (WorkoutPreviewBloc bloc) => bloc.state.runStatus,
+    final ActivityStatus? activityStatus = context.select(
+      (WorkoutPreviewBloc bloc) => bloc.state.activityStatus,
     );
 
-    return runStatus == null
+    return activityStatus == null
         ? const NullableText(null)
-        : RunStatusInfo(runStatus: runStatus);
+        : ActivityStatusInfo(activityStatus: activityStatus);
   }
 }
 
-class _RunStatusButton extends StatelessWidget {
-  const _RunStatusButton();
+class _ActivityStatusButton extends StatelessWidget {
+  const _ActivityStatusButton();
 
   @override
   Widget build(BuildContext context) {
-    final RunStatus? runStatus = context.select(
-      (WorkoutPreviewBloc bloc) => bloc.state.runStatus,
+    final ActivityStatus? activityStatus = context.select(
+      (WorkoutPreviewBloc bloc) => bloc.state.activityStatus,
     );
-    String label = Str.of(context).runStatusEditStatus;
-    if (runStatus is RunStatusPending) {
-      label = Str.of(context).runStatusFinish;
+    String label = Str.of(context).activityStatusEditStatus;
+    if (activityStatus is ActivityStatusPending) {
+      label = Str.of(context).activityStatusFinish;
     }
 
     return BigButton(
@@ -185,8 +185,8 @@ class _RunStatusButton extends StatelessWidget {
     final String? workoutId = context.read<WorkoutPreviewBloc>().workoutId;
     if (workoutId != null) {
       navigateTo(
-        RunStatusCreatorRoute(
-          entityType: RunStatusCreatorEntityType.workout.name,
+        ActivityStatusCreatorRoute(
+          entityType: ActivityStatusCreatorEntityType.workout.name,
           entityId: workoutId,
         ),
       );

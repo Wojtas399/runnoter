@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
 export 'model/activities_settings_dto.dart';
+export 'model/activity_status_dto.dart';
 export 'model/appearance_settings_dto.dart';
 export 'model/auth_provider.dart';
 export 'model/blood_parameter.dart';
@@ -14,7 +15,6 @@ export 'model/firebase_exception.dart';
 export 'model/health_measurement_dto.dart';
 export 'model/pace_dto.dart';
 export 'model/race_dto.dart';
-export 'model/run_status_dto.dart';
 export 'model/user_dto.dart';
 export 'model/workout_dto.dart';
 export 'model/workout_stage_dto.dart';

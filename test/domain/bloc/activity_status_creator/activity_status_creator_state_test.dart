@@ -1,24 +1,24 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:runnoter/domain/additional_model/activity_status.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
-import 'package:runnoter/domain/additional_model/run_status.dart';
-import 'package:runnoter/domain/bloc/run_status_creator/run_status_creator_bloc.dart';
+import 'package:runnoter/domain/bloc/activity_status_creator/activity_status_creator_bloc.dart';
 
 void main() {
-  late RunStatusCreatorState state;
+  late ActivityStatusCreatorState state;
 
   setUp(() {
-    state = const RunStatusCreatorState(
+    state = const ActivityStatusCreatorState(
       status: BlocStatusInitial(),
     );
   });
 
   test(
     'can submit, '
-    'run status type is null, '
+    'activity status type is null, '
     'should be false',
     () {
       state = state.copyWith(
-        runStatusType: null,
+        activityStatusType: null,
         coveredDistanceInKm: 10,
         moodRate: MoodRate.mr8,
         avgPace: const Pace(minutes: 5, seconds: 30),
@@ -31,11 +31,11 @@ void main() {
 
   test(
     'can submit, '
-    'run status type is set as pending, '
+    'activity status type is set as pending, '
     'should be true',
     () {
       state = state.copyWith(
-        runStatusType: RunStatusType.pending,
+        activityStatusType: ActivityStatusType.pending,
       );
 
       expect(state.canSubmit, true);
@@ -44,11 +44,11 @@ void main() {
 
   test(
     'can submit, '
-    'run status type is set as undone, '
+    'activity status type is set as undone, '
     'should be true',
     () {
       state = state.copyWith(
-        runStatusType: RunStatusType.undone,
+        activityStatusType: ActivityStatusType.undone,
       );
 
       expect(state.canSubmit, true);
@@ -61,7 +61,7 @@ void main() {
     'should be false',
     () {
       state = state.copyWith(
-        runStatusType: RunStatusType.done,
+        activityStatusType: ActivityStatusType.done,
         moodRate: MoodRate.mr8,
         avgPace: const Pace(minutes: 5, seconds: 30),
         avgHeartRate: 150,
@@ -77,7 +77,7 @@ void main() {
     'should be false',
     () {
       state = state.copyWith(
-        runStatusType: RunStatusType.done,
+        activityStatusType: ActivityStatusType.done,
         coveredDistanceInKm: 0,
         moodRate: MoodRate.mr8,
         avgPace: const Pace(minutes: 5, seconds: 30),
@@ -94,7 +94,7 @@ void main() {
     'should be false',
     () {
       state = state.copyWith(
-        runStatusType: RunStatusType.done,
+        activityStatusType: ActivityStatusType.done,
         coveredDistanceInKm: 10.0,
         duration: const Duration(),
         moodRate: MoodRate.mr8,
@@ -112,7 +112,7 @@ void main() {
     'should be false',
     () {
       state = state.copyWith(
-        runStatusType: RunStatusType.done,
+        activityStatusType: ActivityStatusType.done,
         coveredDistanceInKm: 10,
         avgPace: const Pace(minutes: 5, seconds: 30),
         avgHeartRate: 150,
@@ -128,7 +128,7 @@ void main() {
     'should be false',
     () {
       state = state.copyWith(
-        runStatusType: RunStatusType.done,
+        activityStatusType: ActivityStatusType.done,
         coveredDistanceInKm: 10,
         moodRate: MoodRate.mr8,
         avgHeartRate: 150,
@@ -144,7 +144,7 @@ void main() {
     'should be false',
     () {
       state = state.copyWith(
-        runStatusType: RunStatusType.done,
+        activityStatusType: ActivityStatusType.done,
         coveredDistanceInKm: 10,
         moodRate: MoodRate.mr8,
         avgPace: const Pace(minutes: 0, seconds: 0),
@@ -161,7 +161,7 @@ void main() {
     'should be false',
     () {
       state = state.copyWith(
-        runStatusType: RunStatusType.done,
+        activityStatusType: ActivityStatusType.done,
         coveredDistanceInKm: 10,
         moodRate: MoodRate.mr8,
         avgPace: const Pace(minutes: 5, seconds: 30),
@@ -177,7 +177,7 @@ void main() {
     'should be false',
     () {
       state = state.copyWith(
-        runStatusType: RunStatusType.done,
+        activityStatusType: ActivityStatusType.done,
         coveredDistanceInKm: 10,
         moodRate: MoodRate.mr8,
         avgPace: const Pace(minutes: 5, seconds: 30),
@@ -194,7 +194,7 @@ void main() {
     'should be true',
     () {
       state = state.copyWith(
-        runStatusType: RunStatusType.done,
+        activityStatusType: ActivityStatusType.done,
         coveredDistanceInKm: 10,
         moodRate: MoodRate.mr8,
         avgPace: const Pace(minutes: 5, seconds: 30),
@@ -207,12 +207,12 @@ void main() {
 
   test(
     'can submit, '
-    'run status type does not match to original run status, '
+    'activity status type does not match to original activity status, '
     'should be true',
     () {
       state = state.copyWith(
-        originalRunStatus: const RunStatusPending(),
-        runStatusType: RunStatusType.done,
+        originalActivityStatus: const ActivityStatusPending(),
+        activityStatusType: ActivityStatusType.done,
         coveredDistanceInKm: 10,
         duration: const Duration(seconds: 10),
         avgPace: const Pace(minutes: 6, seconds: 10),
@@ -227,12 +227,12 @@ void main() {
 
   test(
     'can submit, '
-    'original run status contains run stats, '
-    'all params are the same as params set in original run status, '
+    'original activity status contains activity stats, '
+    'all params are the same as params set in original activity status, '
     'should be false',
     () {
       state = state.copyWith(
-        originalRunStatus: const RunStatusDone(
+        originalActivityStatus: const ActivityStatusDone(
           coveredDistanceInKm: 10,
           duration: Duration(seconds: 10),
           avgPace: Pace(minutes: 6, seconds: 10),
@@ -240,7 +240,7 @@ void main() {
           moodRate: MoodRate.mr8,
           comment: 'comment',
         ),
-        runStatusType: RunStatusType.done,
+        activityStatusType: ActivityStatusType.done,
         coveredDistanceInKm: 10,
         duration: const Duration(seconds: 10),
         avgPace: const Pace(minutes: 6, seconds: 10),
@@ -255,12 +255,12 @@ void main() {
 
   test(
     'can submit, '
-    'original run status contains run stats, '
+    'original activity status contains activity stats, '
     'covered distance is different than original, '
     'should be true',
     () {
       state = state.copyWith(
-        originalRunStatus: const RunStatusDone(
+        originalActivityStatus: const ActivityStatusDone(
           coveredDistanceInKm: 10,
           duration: Duration(seconds: 10),
           avgPace: Pace(minutes: 6, seconds: 10),
@@ -268,7 +268,7 @@ void main() {
           moodRate: MoodRate.mr8,
           comment: 'comment',
         ),
-        runStatusType: RunStatusType.done,
+        activityStatusType: ActivityStatusType.done,
         coveredDistanceInKm: 12,
         duration: const Duration(seconds: 10),
         avgPace: const Pace(minutes: 6, seconds: 10),
@@ -283,12 +283,12 @@ void main() {
 
   test(
     'can submit, '
-    'original run status contains run stats, '
+    'original activity status contains activity stats, '
     'duration is different than original, '
     'should be true',
     () {
       state = state.copyWith(
-        originalRunStatus: const RunStatusDone(
+        originalActivityStatus: const ActivityStatusDone(
           coveredDistanceInKm: 10,
           duration: Duration(seconds: 10),
           avgPace: Pace(minutes: 6, seconds: 10),
@@ -296,7 +296,7 @@ void main() {
           moodRate: MoodRate.mr8,
           comment: 'comment',
         ),
-        runStatusType: RunStatusType.done,
+        activityStatusType: ActivityStatusType.done,
         coveredDistanceInKm: 12,
         duration: const Duration(seconds: 15),
         avgPace: const Pace(minutes: 6, seconds: 10),
@@ -311,12 +311,12 @@ void main() {
 
   test(
     'can submit, '
-    'original run status contains run stats, '
+    'original activity status contains activity stats, '
     'average pace is different than original, '
     'should be true',
     () {
       state = state.copyWith(
-        originalRunStatus: const RunStatusDone(
+        originalActivityStatus: const ActivityStatusDone(
           coveredDistanceInKm: 10,
           duration: Duration(seconds: 10),
           avgPace: Pace(minutes: 6, seconds: 10),
@@ -324,7 +324,7 @@ void main() {
           moodRate: MoodRate.mr8,
           comment: 'comment',
         ),
-        runStatusType: RunStatusType.done,
+        activityStatusType: ActivityStatusType.done,
         coveredDistanceInKm: 10,
         duration: const Duration(seconds: 10),
         avgPace: const Pace(minutes: 5, seconds: 10),
@@ -339,12 +339,12 @@ void main() {
 
   test(
     'can submit, '
-    'original run status contains run stats, '
+    'original activity status contains activity stats, '
     'average heart rate is different than original, '
     'should be true',
     () {
       state = state.copyWith(
-        originalRunStatus: const RunStatusDone(
+        originalActivityStatus: const ActivityStatusDone(
           coveredDistanceInKm: 10,
           duration: Duration(seconds: 10),
           avgPace: Pace(minutes: 6, seconds: 10),
@@ -352,7 +352,7 @@ void main() {
           moodRate: MoodRate.mr8,
           comment: 'comment',
         ),
-        runStatusType: RunStatusType.done,
+        activityStatusType: ActivityStatusType.done,
         coveredDistanceInKm: 10,
         duration: const Duration(seconds: 10),
         avgPace: const Pace(minutes: 6, seconds: 10),
@@ -367,12 +367,12 @@ void main() {
 
   test(
     'can submit, '
-    'original run status contains run stats, '
+    'original activity status contains activity stats, '
     'mood rate is different than original, '
     'should be true',
     () {
       state = state.copyWith(
-        originalRunStatus: const RunStatusDone(
+        originalActivityStatus: const ActivityStatusDone(
           coveredDistanceInKm: 10,
           duration: Duration(seconds: 10),
           avgPace: Pace(minutes: 6, seconds: 10),
@@ -380,7 +380,7 @@ void main() {
           moodRate: MoodRate.mr8,
           comment: 'comment',
         ),
-        runStatusType: RunStatusType.done,
+        activityStatusType: ActivityStatusType.done,
         coveredDistanceInKm: 10,
         duration: const Duration(seconds: 10),
         avgPace: const Pace(minutes: 6, seconds: 10),
@@ -395,12 +395,12 @@ void main() {
 
   test(
     'can submit, '
-    'original run status contains run stats, '
+    'original activity status contains activity stats, '
     'comment is different than original, '
     'should be true',
     () {
       state = state.copyWith(
-        originalRunStatus: const RunStatusDone(
+        originalActivityStatus: const ActivityStatusDone(
           coveredDistanceInKm: 10,
           duration: Duration(seconds: 10),
           avgPace: Pace(minutes: 6, seconds: 10),
@@ -408,7 +408,7 @@ void main() {
           moodRate: MoodRate.mr8,
           comment: 'comment',
         ),
-        runStatusType: RunStatusType.done,
+        activityStatusType: ActivityStatusType.done,
         coveredDistanceInKm: 10,
         duration: const Duration(seconds: 10),
         avgPace: const Pace(minutes: 6, seconds: 10),
@@ -435,9 +435,9 @@ void main() {
   );
 
   test(
-    'copy with original run status',
+    'copy with original activity status',
     () {
-      const RunStatus expectedOriginalRunStatus = RunStatusDone(
+      const ActivityStatus expectedOriginalActivityStatus = ActivityStatusDone(
         coveredDistanceInKm: 10,
         avgPace: Pace(minutes: 6, seconds: 10),
         avgHeartRate: 150,
@@ -445,24 +445,26 @@ void main() {
         comment: 'comment',
       );
 
-      state = state.copyWith(originalRunStatus: expectedOriginalRunStatus);
+      state = state.copyWith(
+          originalActivityStatus: expectedOriginalActivityStatus);
       final state2 = state.copyWith();
 
-      expect(state.originalRunStatus, expectedOriginalRunStatus);
-      expect(state2.originalRunStatus, expectedOriginalRunStatus);
+      expect(state.originalActivityStatus, expectedOriginalActivityStatus);
+      expect(state2.originalActivityStatus, expectedOriginalActivityStatus);
     },
   );
 
   test(
-    'copy with run status type',
+    'copy with activity status type',
     () {
-      const RunStatusType expectedRunStatusType = RunStatusType.pending;
+      const ActivityStatusType expectedActivityStatusType =
+          ActivityStatusType.pending;
 
-      state = state.copyWith(runStatusType: expectedRunStatusType);
+      state = state.copyWith(activityStatusType: expectedActivityStatusType);
       final state2 = state.copyWith();
 
-      expect(state.runStatusType, expectedRunStatusType);
-      expect(state2.runStatusType, expectedRunStatusType);
+      expect(state.activityStatusType, expectedActivityStatusType);
+      expect(state2.activityStatusType, expectedActivityStatusType);
     },
   );
 

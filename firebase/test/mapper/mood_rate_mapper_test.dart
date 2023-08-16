@@ -1,5 +1,5 @@
 import 'package:firebase/mapper/mood_rate_mapper.dart';
-import 'package:firebase/model/run_status_dto.dart';
+import 'package:firebase/model/activity_status_dto.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

@@ -8,8 +8,8 @@ import '../../component/responsive_layout_component.dart';
 import '../../component/text/label_text_components.dart';
 import '../../component/text/title_text_components.dart';
 import '../../config/navigation/router.dart';
+import '../../formatter/activity_status_formatter.dart';
 import '../../formatter/date_formatter.dart';
-import '../../formatter/run_status_formatter.dart';
 import '../../service/navigator_service.dart';
 
 class RacesList extends StatelessWidget {
