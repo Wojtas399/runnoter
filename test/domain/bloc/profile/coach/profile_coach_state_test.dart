@@ -77,4 +77,17 @@ void main() {
       expect(state2.coach, expectedCoach);
     },
   );
+
+  test(
+    'copy with setCoachAsNull',
+    () {
+      final Person coach = createPerson(id: 'c1');
+
+      state = state.copyWith(coach: coach);
+      final state2 = state.copyWith(setCoachAsNull: true);
+
+      expect(state.coach, coach);
+      expect(state2.coach, null);
+    },
+  );
 }

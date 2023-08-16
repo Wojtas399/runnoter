@@ -9,14 +9,12 @@ import 'package:runnoter/domain/additional_model/coaching_request.dart';
 import 'package:runnoter/domain/bloc/clients/clients_bloc.dart';
 import 'package:runnoter/domain/entity/person.dart';
 import 'package:runnoter/domain/repository/person_repository.dart';
-import 'package:runnoter/domain/repository/user_repository.dart';
 import 'package:runnoter/domain/service/auth_service.dart';
 import 'package:runnoter/domain/service/coaching_request_service.dart';
 
 import '../../../creators/coaching_request_creator.dart';
 import '../../../creators/person_creator.dart';
 import '../../../mock/domain/repository/mock_person_repository.dart';
-import '../../../mock/domain/repository/mock_user_repository.dart';
 import '../../../mock/domain/service/mock_auth_service.dart';
 import '../../../mock/domain/service/mock_coaching_request_service.dart';
 
@@ -24,7 +22,6 @@ void main() {
   final authService = MockAuthService();
   final coachingRequestService = MockCoachingRequestService();
   final personRepository = MockPersonRepository();
-  final userRepository = MockUserRepository();
   const String loggedUserId = 'u1';
 
   setUpAll(() {
@@ -33,14 +30,12 @@ void main() {
       () => coachingRequestService,
     );
     GetIt.I.registerSingleton<PersonRepository>(personRepository);
-    GetIt.I.registerSingleton<UserRepository>(userRepository);
   });
 
   tearDown(() {
     reset(authService);
     reset(coachingRequestService);
     reset(personRepository);
-    reset(userRepository);
   });
 
   group(
@@ -209,7 +204,7 @@ void main() {
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
       coachingRequestService.mockUpdateCoachingRequest();
-      userRepository.mockUpdateUser();
+      personRepository.mockUpdateCoachIdOfPerson();
     },
     act: (bloc) => bloc.add(const ClientsEventAcceptRequest(requestId: 'r1')),
     expect: () => [
@@ -251,8 +246,8 @@ void main() {
         ),
       ).called(1);
       verify(
-        () => userRepository.updateUser(
-          userId: 'p1',
+        () => personRepository.updateCoachIdOfPerson(
+          personId: 'p1',
           coachId: loggedUserId,
         ),
       ).called(1);

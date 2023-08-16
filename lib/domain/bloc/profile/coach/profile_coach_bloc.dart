@@ -68,7 +68,7 @@ class ProfileCoachBloc extends BlocWithStatus<ProfileCoachEvent,
         } else {
           add(const ProfileCoachEventRemoveRequestsListener());
         }
-        return state.copyWith(coach: coach);
+        return state.copyWith(coach: coach, setCoachAsNull: coach == null);
       },
     );
   }

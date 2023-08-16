@@ -9,7 +9,6 @@ import '../../additional_model/bloc_with_status.dart';
 import '../../additional_model/coaching_request.dart';
 import '../../entity/person.dart';
 import '../../repository/person_repository.dart';
-import '../../repository/user_repository.dart';
 import '../../service/auth_service.dart';
 import '../../service/coaching_request_service.dart';
 
@@ -21,14 +20,12 @@ class ClientsBloc extends BlocWithStatus<ClientsEvent, ClientsState,
   final AuthService _authService;
   final CoachingRequestService _coachingRequestService;
   final PersonRepository _personRepository;
-  final UserRepository _userRepository;
 
   ClientsBloc({
     ClientsState state = const ClientsState(status: BlocStatusInitial()),
   })  : _authService = getIt<AuthService>(),
         _coachingRequestService = getIt<CoachingRequestService>(),
         _personRepository = getIt<PersonRepository>(),
-        _userRepository = getIt<UserRepository>(),
         super(state) {
     on<ClientsEventInitializeRequests>(_initializeRequests);
     on<ClientsEventInitializeClients>(_initializeClients);
@@ -87,7 +84,10 @@ class ClientsBloc extends BlocWithStatus<ClientsEvent, ClientsState,
         .firstWhere((req) => req.id == event.requestId)
         .personToDisplay
         .id;
-    await _userRepository.updateUser(userId: senderId, coachId: loggedUserId);
+    await _personRepository.updateCoachIdOfPerson(
+      personId: senderId,
+      coachId: loggedUserId,
+    );
     await _coachingRequestService.updateCoachingRequest(
       requestId: event.requestId,
       isAccepted: true,

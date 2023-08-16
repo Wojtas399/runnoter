@@ -26,13 +26,14 @@ class ProfileCoachState extends BlocState<ProfileCoachState> {
     List<CoachingRequestDetails>? sentCoachingRequests,
     List<CoachingRequestDetails>? receivedCoachingRequests,
     Person? coach,
+    bool setCoachAsNull = false,
   }) =>
       ProfileCoachState(
         status: status ?? const BlocStatusComplete(),
         sentCoachingRequests: sentCoachingRequests ?? this.sentCoachingRequests,
         receivedCoachingRequests:
             receivedCoachingRequests ?? this.receivedCoachingRequests,
-        coach: coach ?? this.coach,
+        coach: setCoachAsNull ? null : coach ?? this.coach,
       );
 }
 
