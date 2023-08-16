@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc_concurrency/bloc_concurrency.dart';
+import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -26,9 +27,7 @@ class ProfileCoachBloc extends BlocWithStatus<ProfileCoachEvent,
   final UserRepository _userRepository;
   final PersonRepository _personRepository;
   final CoachingRequestService _coachingRequestService;
-  StreamSubscription<
-          (List<CoachingRequestShort>?, List<CoachingRequestShort>?)>?
-      _requestsListener;
+  StreamSubscription<_ListenedRequests?>? _requestsListener;
 
   ProfileCoachBloc({
     ProfileCoachState state = const ProfileCoachState(
@@ -45,7 +44,6 @@ class ProfileCoachBloc extends BlocWithStatus<ProfileCoachEvent,
     );
     on<ProfileCoachEventInitializeRequestsListener>(
       _initializeRequestsListener,
-      transformer: restartable(),
     );
     on<ProfileCoachEventRemoveRequestsListener>(_removeRequestsListener);
     on<ProfileCoachEventRequestsUpdated>(_requestsUpdated);
@@ -83,12 +81,15 @@ class ProfileCoachBloc extends BlocWithStatus<ProfileCoachEvent,
     Emitter<ProfileCoachState> emit,
   ) {
     _requestsListener ??= _authService.loggedUserId$
-        .whereNotNull()
-        .switchMap(_getSentAndReceivedCoachingRequests)
+        .switchMap(
+          (String? loggedUserId) => loggedUserId == null
+              ? Stream.value(null)
+              : _getSentAndReceivedCoachingRequests(loggedUserId),
+        )
         .listen(
-          (requests) => add(ProfileCoachEventRequestsUpdated(
-            sentRequests: requests.$1,
-            receivedRequests: requests.$2,
+          (_ListenedRequests? requests) => add(ProfileCoachEventRequestsUpdated(
+            sentRequests: requests?.sentRequests,
+            receivedRequests: requests?.receivedRequests,
           )),
         );
   }
@@ -180,13 +181,17 @@ class ProfileCoachBloc extends BlocWithStatus<ProfileCoachEvent,
             : Stream.value(null),
       );
 
-  Stream<(List<CoachingRequestShort>?, List<CoachingRequestShort>?)>
-      _getSentAndReceivedCoachingRequests(String loggedUserId) =>
-          Rx.combineLatest2(
-            _getSentCoachingRequests(loggedUserId),
-            _getReceivedCoachingRequests(loggedUserId),
-            (sentReqs, receivedReqs) => (sentReqs, receivedReqs),
-          );
+  Stream<_ListenedRequests> _getSentAndReceivedCoachingRequests(
+    String loggedUserId,
+  ) =>
+      Rx.combineLatest2(
+        _getSentCoachingRequests(loggedUserId),
+        _getReceivedCoachingRequests(loggedUserId),
+        (sentRequests, receivedRequests) => _ListenedRequests(
+          sentRequests: sentRequests,
+          receivedRequests: receivedRequests,
+        ),
+      );
 
   Stream<List<CoachingRequestShort>?> _getSentCoachingRequests(
     String loggedUserId,
@@ -269,4 +274,17 @@ enum ProfileCoachBlocInfo {
   requestDeleted,
   requestUndid,
   coachDeleted,
+}
+
+class _ListenedRequests extends Equatable {
+  final List<CoachingRequestShort>? sentRequests;
+  final List<CoachingRequestShort>? receivedRequests;
+
+  const _ListenedRequests({
+    required this.sentRequests,
+    required this.receivedRequests,
+  });
+
+  @override
+  List<Object?> get props => [sentRequests, receivedRequests];
 }
