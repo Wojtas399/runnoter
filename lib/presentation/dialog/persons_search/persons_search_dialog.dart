@@ -39,21 +39,10 @@ class _BlocListener extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocWithStatusListener<PersonsSearchBloc, PersonsSearchState,
-        PersonsSearchBlocInfo, PersonsSearchBlocError>(
-      onInfo: (PersonsSearchBlocInfo info) => _manageInfo(context, info),
+        dynamic, PersonsSearchBlocError>(
       onError: (PersonsSearchBlocError error) => _manageError(context, error),
       child: child,
     );
-  }
-
-  void _manageInfo(BuildContext context, PersonsSearchBlocInfo info) {
-    switch (info) {
-      case PersonsSearchBlocInfo.requestSent:
-        showSnackbarMessage(
-          Str.of(context).personsSearchSuccessfullySentInvitation,
-        );
-        break;
-    }
   }
 
   Future<void> _manageError(

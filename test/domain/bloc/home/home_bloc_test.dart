@@ -233,41 +233,17 @@ void main() {
   );
 
   blocTest(
-    'delete accepted coaching requests, '
-    'logged user does not exist, '
-    'should finish event call',
+    'delete coaching request, '
+    "should call coaching request service's method to delete request",
     build: () => HomeBloc(),
-    setUp: () => authService.mockGetLoggedUserId(),
-    act: (bloc) => bloc.add(const HomeEventDeleteAcceptedCoachingRequests()),
+    setUp: () => coachingRequestService.mockDeleteCoachingRequest(),
+    act: (bloc) => bloc.add(
+      const HomeEventDeleteCoachingRequest(requestId: 'r1'),
+    ),
     expect: () => [],
-    verify: (_) {
-      verify(() => authService.loggedUserId$).called(1);
-      verifyNever(
-        () => coachingRequestService.deleteAcceptedCoachingRequestsBySenderId(
-          senderId: loggedUserId,
-        ),
-      );
-    },
-  );
-
-  blocTest(
-    'delete accepted coaching requests, '
-    "should call coaching request service's method to delete all accepted requests sent by logged user",
-    build: () => HomeBloc(),
-    setUp: () {
-      authService.mockGetLoggedUserId(userId: loggedUserId);
-      coachingRequestService.mockDeleteAcceptedCoachingRequestsBySenderId();
-    },
-    act: (bloc) => bloc.add(const HomeEventDeleteAcceptedCoachingRequests()),
-    expect: () => [],
-    verify: (_) {
-      verify(() => authService.loggedUserId$).called(1);
-      verify(
-        () => coachingRequestService.deleteAcceptedCoachingRequestsBySenderId(
-          senderId: loggedUserId,
-        ),
-      ).called(1);
-    },
+    verify: (_) => verify(
+      () => coachingRequestService.deleteCoachingRequest(requestId: 'r1'),
+    ).called(1),
   );
 
   blocTest(

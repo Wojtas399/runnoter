@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -38,9 +39,13 @@ class ProfileCoachBloc extends BlocWithStatus<ProfileCoachEvent,
         _personRepository = getIt<PersonRepository>(),
         _coachingRequestService = getIt<CoachingRequestService>(),
         super(state) {
-    on<ProfileCoachEventInitializeCoachListener>(_initializeCoachListener);
+    on<ProfileCoachEventInitializeCoachListener>(
+      _initializeCoachListener,
+      transformer: restartable(),
+    );
     on<ProfileCoachEventInitializeRequestsListener>(
       _initializeRequestsListener,
+      transformer: restartable(),
     );
     on<ProfileCoachEventRemoveRequestsListener>(_removeRequestsListener);
     on<ProfileCoachEventRequestsUpdated>(_requestsUpdated);

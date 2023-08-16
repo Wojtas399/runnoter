@@ -18,7 +18,7 @@ part 'persons_search_event.dart';
 part 'persons_search_state.dart';
 
 class PersonsSearchBloc extends BlocWithStatus<PersonsSearchEvent,
-    PersonsSearchState, PersonsSearchBlocInfo, PersonsSearchBlocError> {
+    PersonsSearchState, dynamic, PersonsSearchBlocError> {
   final AuthService _authService;
   final PersonRepository _personRepository;
   final CoachingRequestService _coachingRequestService;
@@ -127,7 +127,7 @@ class PersonsSearchBloc extends BlocWithStatus<PersonsSearchEvent,
         direction: requestDirection,
         isAccepted: false,
       );
-      emitCompleteStatus(emit, info: PersonsSearchBlocInfo.requestSent);
+      emitCompleteStatus(emit);
     } on CoachingRequestException catch (exception) {
       if (exception.code == CoachingRequestExceptionCode.userAlreadyHasCoach) {
         emitErrorStatus(emit, PersonsSearchBlocError.userAlreadyHasCoach);
@@ -174,8 +174,6 @@ class PersonsSearchBloc extends BlocWithStatus<PersonsSearchEvent,
     }
   }
 }
-
-enum PersonsSearchBlocInfo { requestSent }
 
 enum PersonsSearchBlocError { userAlreadyHasCoach }
 

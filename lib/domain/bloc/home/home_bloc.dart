@@ -37,9 +37,7 @@ class HomeBloc
         _personRepository = getIt<PersonRepository>(),
         super(state) {
     on<HomeEventInitialize>(_initialize, transformer: restartable());
-    on<HomeEventDeleteAcceptedCoachingRequests>(
-      _deleteAcceptedCoachingRequests,
-    );
+    on<HomeEventDeleteCoachingRequest>(_deleteCoachingRequest);
     on<HomeEventSignOut>(_signOut);
   }
 
@@ -81,16 +79,13 @@ class HomeBloc
     );
   }
 
-  Future<void> _deleteAcceptedCoachingRequests(
-    HomeEventDeleteAcceptedCoachingRequests event,
+  Future<void> _deleteCoachingRequest(
+    HomeEventDeleteCoachingRequest event,
     Emitter<HomeState> emit,
   ) async {
-    final String? loggedUserId = await _authService.loggedUserId$.first;
-    if (loggedUserId != null) {
-      await _coachingRequestService.deleteAcceptedCoachingRequestsBySenderId(
-        senderId: loggedUserId,
-      );
-    }
+    await _coachingRequestService.deleteCoachingRequest(
+      requestId: event.requestId,
+    );
   }
 
   Future<void> _signOut(

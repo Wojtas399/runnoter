@@ -15,7 +15,7 @@ bool _isLoadingDialogOpened = false;
 
 void showLoadingDialog() {
   final BuildContext? context = getIt<AppRouter>().navigatorKey.currentContext;
-  if (context != null) {
+  if (!_isLoadingDialogOpened && context != null) {
     _isLoadingDialogOpened = true;
     showDialog(
       context: context,

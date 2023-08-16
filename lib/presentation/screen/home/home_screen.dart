@@ -134,10 +134,10 @@ class _BlocListener extends StatelessWidget {
           showCloseIcon: true,
           duration: const Duration(seconds: 6),
         );
+        context.read<HomeBloc>().add(
+              HomeEventDeleteCoachingRequest(requestId: request.id),
+            );
       }
-      context.read<HomeBloc>().add(
-            const HomeEventDeleteAcceptedCoachingRequests(),
-          );
     }
   }
 
@@ -153,6 +153,9 @@ class _BlocListener extends StatelessWidget {
         showCloseIcon: true,
         duration: const Duration(seconds: 6),
       );
+      context.read<HomeBloc>().add(
+            HomeEventDeleteCoachingRequest(requestId: request.id),
+          );
     }
   }
 }
