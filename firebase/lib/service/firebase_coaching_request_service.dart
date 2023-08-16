@@ -68,29 +68,17 @@ class FirebaseCoachingRequestService {
     await getCoachingRequestsRef().doc(requestId).delete();
   }
 
-  Future<void> deleteAcceptedCoachingRequestsBySenderId({
-    required String senderId,
-  }) async {
-    final snapshot = await getCoachingRequestsRef()
-        .where(senderIdField, isEqualTo: senderId)
-        .where(isAcceptedField, isEqualTo: true)
-        .get();
+  Future<void> deleteCoachingRequestsByUserId({required String userId}) async {
     final batch = FirebaseFirestore.instance.batch();
-    for (final request in snapshot.docs) {
+    final requestsRef = getCoachingRequestsRef();
+    final sentRequestsSnapshot =
+        await requestsRef.where(senderIdField, isEqualTo: userId).get();
+    final receivedRequestsSnapshot =
+        await requestsRef.where(receiverIdField, isEqualTo: userId).get();
+    for (final request in sentRequestsSnapshot.docs) {
       batch.delete(request.reference);
     }
-    await batch.commit();
-  }
-
-  Future<void> deleteUnacceptedCoachingRequestsByReceiverId({
-    required String receiverId,
-  }) async {
-    final snapshot = await getCoachingRequestsRef()
-        .where(receiverIdField, isEqualTo: receiverId)
-        .where(isAcceptedField, isEqualTo: false)
-        .get();
-    final batch = FirebaseFirestore.instance.batch();
-    for (final request in snapshot.docs) {
+    for (final request in receivedRequestsSnapshot.docs) {
       batch.delete(request.reference);
     }
     await batch.commit();

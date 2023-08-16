@@ -57,18 +57,10 @@ class MockFirebaseCoachingRequestService extends Mock
     ).thenAnswer((_) => Future.value());
   }
 
-  void mockDeleteAcceptedCoachingRequestsBySenderId() {
+  void mockDeleteCoachingRequestsByUserId() {
     when(
-      () => deleteAcceptedCoachingRequestsBySenderId(
-        senderId: any(named: 'senderId'),
-      ),
-    ).thenAnswer((_) => Future.value());
-  }
-
-  void mockDeleteUnacceptedCoachingRequestsByReceiverId() {
-    when(
-      () => deleteUnacceptedCoachingRequestsByReceiverId(
-        receiverId: any(named: 'receiverId'),
+      () => deleteCoachingRequestsByUserId(
+        userId: any(named: 'userId'),
       ),
     ).thenAnswer((_) => Future.value());
   }

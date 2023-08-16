@@ -24,4 +24,6 @@ abstract interface class CoachingRequestService {
   });
 
   Future<void> deleteCoachingRequest({required String requestId});
+
+  Future<void> deleteCoachingRequestsByUserId({required String userId});
 }
