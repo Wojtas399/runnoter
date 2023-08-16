@@ -13,8 +13,8 @@ import '../../../../domain/service/auth_service.dart';
 import '../../../dependency_injection.dart';
 import '../../additional_model/bloc_state.dart';
 import '../../additional_model/coaching_request.dart';
+import '../../additional_model/coaching_request_short.dart';
 import '../../additional_model/settings.dart';
-import '../../entity/person.dart';
 import '../../entity/user.dart';
 import '../../repository/person_repository.dart';
 import '../../service/coaching_request_service.dart';
@@ -53,17 +53,17 @@ class HomeBloc
       (String? loggedUserId) => loggedUserId != null
           ? Rx.combineLatest3(
               _userRepository.getUserById(userId: loggedUserId),
-              _getNewClients(loggedUserId),
-              _getNewCoach(loggedUserId),
+              _getAcceptedClientRequests(loggedUserId),
+              _getAcceptedCoachRequest(loggedUserId),
               (
                 User? loggedUserData,
-                List<Person> newClients,
-                Person? newCoach,
+                List<CoachingRequestShort> acceptedClientRequests,
+                CoachingRequestShort? acceptedCoachRequest,
               ) =>
                   HomeBlocListenedParams(
                 loggedUserData: loggedUserData,
-                newClients: newClients,
-                newCoach: newCoach,
+                acceptedClientRequests: acceptedClientRequests,
+                acceptedCoachRequest: acceptedCoachRequest,
               ),
             )
           : Stream.value(null),
@@ -75,8 +75,8 @@ class HomeBloc
         accountType: params?.loggedUserData?.accountType,
         loggedUserName: params?.loggedUserData?.name,
         appSettings: params?.loggedUserData?.settings,
-        newClients: params?.newClients,
-        newCoach: params?.newCoach,
+        acceptedClientRequests: params?.acceptedClientRequests,
+        acceptedCoachRequest: params?.acceptedCoachRequest,
       ),
     );
   }
@@ -102,7 +102,9 @@ class HomeBloc
     emitCompleteStatus(emit, info: HomeBlocInfo.userSignedOut);
   }
 
-  Stream<List<Person>> _getNewClients(String loggedUserId) =>
+  Stream<List<CoachingRequestShort>> _getAcceptedClientRequests(
+    String loggedUserId,
+  ) =>
       _coachingRequestService
           .getCoachingRequestsBySenderId(
             senderId: loggedUserId,
@@ -110,28 +112,44 @@ class HomeBloc
           )
           .map((requests) => requests.where((req) => req.isAccepted))
           .map(
-            (acceptedRequests) => acceptedRequests.map(
-              (req) => _personRepository
-                  .getPersonById(personId: req.receiverId)
-                  .whereNotNull(),
-            ),
+            (acceptedReqs) => acceptedReqs.map(_convertToCoachingRequestShort),
           )
           .switchMap(
             (streams) => streams.isEmpty
                 ? Stream.value([])
-                : Rx.combineLatest(streams, (newClients) => newClients),
+                : Rx.combineLatest(
+                    streams,
+                    (acceptedClientRequests) => acceptedClientRequests,
+                  ),
           );
 
-  Stream<Person?> _getNewCoach(String loggedUserId) => _coachingRequestService
-      .getCoachingRequestsBySenderId(
-        senderId: loggedUserId,
-        direction: CoachingRequestDirection.clientToCoach,
-      )
-      .map((requests) => requests.firstWhereOrNull((req) => req.isAccepted))
-      .switchMap(
-        (CoachingRequest? acceptedReq) => acceptedReq != null
-            ? _personRepository.getPersonById(personId: acceptedReq.receiverId)
-            : Stream.value(null),
+  Stream<CoachingRequestShort?> _getAcceptedCoachRequest(
+    String loggedUserId,
+  ) =>
+      _coachingRequestService
+          .getCoachingRequestsBySenderId(
+            senderId: loggedUserId,
+            direction: CoachingRequestDirection.clientToCoach,
+          )
+          .map((requests) => requests.firstWhereOrNull((req) => req.isAccepted))
+          .switchMap(
+            (CoachingRequest? acceptedReq) => acceptedReq != null
+                ? _convertToCoachingRequestShort(acceptedReq)
+                : Stream.value(null),
+          );
+
+  Stream<CoachingRequestShort> _convertToCoachingRequestShort(
+    CoachingRequest request,
+  ) =>
+      Rx.combineLatest2(
+        Stream.value(request.id),
+        _personRepository
+            .getPersonById(personId: request.receiverId)
+            .whereNotNull(),
+        (reqId, receiver) => CoachingRequestShort(
+          id: reqId,
+          personToDisplay: receiver,
+        ),
       );
 }
 
@@ -139,15 +157,19 @@ enum HomeBlocInfo { userSignedOut }
 
 class HomeBlocListenedParams extends Equatable {
   final User? loggedUserData;
-  final List<Person> newClients;
-  final Person? newCoach;
+  final List<CoachingRequestShort> acceptedClientRequests;
+  final CoachingRequestShort? acceptedCoachRequest;
 
   const HomeBlocListenedParams({
     required this.loggedUserData,
-    required this.newClients,
-    required this.newCoach,
+    required this.acceptedClientRequests,
+    required this.acceptedCoachRequest,
   });
 
   @override
-  List<Object?> get props => [loggedUserData, newClients, newCoach];
+  List<Object?> get props => [
+        loggedUserData,
+        acceptedClientRequests,
+        acceptedCoachRequest,
+      ];
 }

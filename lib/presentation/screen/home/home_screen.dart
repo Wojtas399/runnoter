@@ -5,9 +5,9 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../dependency_injection.dart';
 import '../../../domain/additional_model/bloc_status.dart';
+import '../../../domain/additional_model/coaching_request_short.dart';
 import '../../../domain/additional_model/settings.dart' as settings;
 import '../../../domain/bloc/home/home_bloc.dart';
-import '../../../domain/entity/person.dart';
 import '../../component/bloc_with_status_listener_component.dart';
 import '../../config/navigation/router.dart';
 import '../../dialog/required_data_completion/required_data_completion_dialog.dart';
@@ -81,8 +81,8 @@ class _BlocListener extends StatelessWidget {
       context.read<DistanceUnitService>().changeUnit(appSettings.distanceUnit);
       context.read<PaceUnitService>().changeUnit(appSettings.paceUnit);
     }
-    _manageNewClients(context, state.newClients);
-    _manageNewCoach(context, state.newCoach);
+    _manageAcceptedClientRequests(context, state.acceptedClientRequests);
+    _manageAcceptedCoachRequest(context, state.acceptedCoachRequest);
   }
 
   void _manageThemeMode(
@@ -121,11 +121,16 @@ class _BlocListener extends StatelessWidget {
     }
   }
 
-  void _manageNewClients(BuildContext context, List<Person> newClients) {
-    if (newClients.isNotEmpty) {
-      for (final client in newClients) {
+  void _manageAcceptedClientRequests(
+    BuildContext context,
+    List<CoachingRequestShort> acceptedClientRequests,
+  ) {
+    if (acceptedClientRequests.isNotEmpty) {
+      for (final request in acceptedClientRequests) {
         showSnackbarMessage(
-          Str.of(context).homeNewClientInfo(client.toFullNameWithEmail()),
+          Str.of(context).homeNewClientInfo(
+            request.personToDisplay.toFullNameWithEmail(),
+          ),
           showCloseIcon: true,
           duration: const Duration(seconds: 6),
         );
@@ -136,10 +141,15 @@ class _BlocListener extends StatelessWidget {
     }
   }
 
-  void _manageNewCoach(BuildContext context, Person? newCoach) {
-    if (newCoach != null) {
+  void _manageAcceptedCoachRequest(
+    BuildContext context,
+    CoachingRequestShort? request,
+  ) {
+    if (request != null) {
       showSnackbarMessage(
-        Str.of(context).homeNewCoachInfo(newCoach.toFullNameWithEmail()),
+        Str.of(context).homeNewCoachInfo(
+          request.personToDisplay.toFullNameWithEmail(),
+        ),
         showCloseIcon: true,
         duration: const Duration(seconds: 6),
       );

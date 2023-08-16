@@ -6,6 +6,7 @@ import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/additional_model/coaching_request.dart';
+import 'package:runnoter/domain/additional_model/coaching_request_short.dart';
 import 'package:runnoter/domain/additional_model/settings.dart';
 import 'package:runnoter/domain/bloc/home/home_bloc.dart';
 import 'package:runnoter/domain/entity/person.dart';
@@ -104,15 +105,19 @@ void main() {
           isAccepted: false,
         ),
       ];
-      StreamController<User?> loggedUserData$ = StreamController()
+      final StreamController<User?> loggedUserData$ = StreamController()
         ..add(loggedUserData);
       final StreamController<List<CoachingRequest>> clientsRequests$ =
           StreamController()..add(requestsSentToClients);
       final StreamController<List<CoachingRequest>> coachesRequests$ =
           StreamController()..add(requestsSentToCoaches);
+      final List<CoachingRequestShort> acceptedClientRequests = [
+        CoachingRequestShort(id: 'r2', personToDisplay: client1),
+        CoachingRequestShort(id: 'r3', personToDisplay: client2),
+      ];
 
       blocTest(
-        "should set listener of logged user's data, new clients and new coach",
+        "should set listener of logged user's data, accepted client requests and accepted coach request",
         build: () => HomeBloc(),
         setUp: () {
           authService.mockGetLoggedUserId(userId: loggedUserId);
@@ -155,29 +160,32 @@ void main() {
             accountType: loggedUserData.accountType,
             loggedUserName: loggedUserData.name,
             appSettings: loggedUserData.settings,
-            newClients: [client1, client2],
-            newCoach: coach,
+            acceptedClientRequests: acceptedClientRequests,
+            acceptedCoachRequest: CoachingRequestShort(
+              id: 'r4',
+              personToDisplay: coach,
+            ),
           ),
           HomeState(
             status: const BlocStatusComplete(),
             accountType: loggedUserData.accountType,
             loggedUserName: loggedUserData.name,
             appSettings: loggedUserData.settings,
-            newClients: [client1, client2],
+            acceptedClientRequests: acceptedClientRequests,
           ),
           HomeState(
             status: const BlocStatusComplete(),
             accountType: loggedUserData.accountType,
             loggedUserName: loggedUserData.name,
             appSettings: loggedUserData.settings,
-            newClients: const [],
+            acceptedClientRequests: const [],
           ),
           HomeState(
             status: const BlocStatusComplete(),
             accountType: updatedLoggedUserData.accountType,
             loggedUserName: updatedLoggedUserData.name,
             appSettings: updatedLoggedUserData.settings,
-            newClients: const [],
+            acceptedClientRequests: const [],
           ),
         ],
         verify: (_) {

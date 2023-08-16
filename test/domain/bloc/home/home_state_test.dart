@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
+import 'package:runnoter/domain/additional_model/coaching_request_short.dart';
 import 'package:runnoter/domain/additional_model/settings.dart';
 import 'package:runnoter/domain/bloc/home/home_bloc.dart';
-import 'package:runnoter/domain/entity/person.dart';
 import 'package:runnoter/domain/entity/user.dart';
 
 import '../../../creators/person_creator.dart';
@@ -74,31 +74,39 @@ void main() {
   );
 
   test(
-    'copy with newClients',
+    'copy with acceptedClientRequests',
     () {
-      final List<Person> expectedNewClients = [
-        createPerson(id: 'u1'),
-        createPerson(id: 'u2'),
+      final List<CoachingRequestShort> expectedAcceptedClientRequests = [
+        CoachingRequestShort(id: 'r1', personToDisplay: createPerson(id: 'u1')),
+        CoachingRequestShort(id: 'r2', personToDisplay: createPerson(id: 'u2')),
       ];
 
-      state = state.copyWith(newClients: expectedNewClients);
+      state = state.copyWith(
+        acceptedClientRequests: expectedAcceptedClientRequests,
+      );
       final state2 = state.copyWith();
 
-      expect(state.newClients, expectedNewClients);
-      expect(state2.newClients, expectedNewClients);
+      expect(state.acceptedClientRequests, expectedAcceptedClientRequests);
+      expect(state2.acceptedClientRequests, const []);
     },
   );
 
   test(
-    'copy with newCoach',
+    'copy with acceptedCoachRequest',
     () {
-      final Person expectedCoach = createPerson(id: 'p1');
+      final CoachingRequestShort expectedAcceptedCoachRequest =
+          CoachingRequestShort(
+        id: 'r1',
+        personToDisplay: createPerson(id: 'p1'),
+      );
 
-      state = state.copyWith(newCoach: expectedCoach);
+      state = state.copyWith(
+        acceptedCoachRequest: expectedAcceptedCoachRequest,
+      );
       final state2 = state.copyWith();
 
-      expect(state.newCoach, expectedCoach);
-      expect(state2.newCoach, null);
+      expect(state.acceptedCoachRequest, expectedAcceptedCoachRequest);
+      expect(state2.acceptedCoachRequest, null);
     },
   );
 }
