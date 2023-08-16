@@ -463,7 +463,6 @@ void main() {
   blocTest(
     'accept request, '
     "should call coaching request service's method to update request with isAccepted param set as true, "
-    "should call coaching request service's method to delete another requests received by logged user, "
     "should call user repository's method to update logged user with new coach id",
     build: () => ProfileCoachBloc(
       state: ProfileCoachState(
@@ -483,7 +482,6 @@ void main() {
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
       coachingRequestService.mockUpdateCoachingRequest();
-      coachingRequestService.mockDeleteUnacceptedCoachingRequestsByReceiverId();
       userRepository.mockUpdateUser();
     },
     act: (bloc) => bloc.add(
@@ -525,12 +523,6 @@ void main() {
         () => coachingRequestService.updateCoachingRequest(
           requestId: 'r1',
           isAccepted: true,
-        ),
-      ).called(1);
-      verify(
-        () =>
-            coachingRequestService.deleteUnacceptedCoachingRequestsByReceiverId(
-          receiverId: loggedUserId,
         ),
       ).called(1);
       verify(
