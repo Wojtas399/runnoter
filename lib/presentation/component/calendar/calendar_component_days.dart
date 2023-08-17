@@ -1,7 +1,11 @@
-part of 'calendar_component.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class _Days extends StatelessWidget {
-  const _Days();
+import '../text/body_text_components.dart';
+import 'calendar_component_cubit.dart';
+
+class CalendarComponentDays extends StatelessWidget {
+  const CalendarComponentDays({super.key});
 
   @override
   Widget build(BuildContext context) {

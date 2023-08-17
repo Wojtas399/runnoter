@@ -1,7 +1,8 @@
-part of 'calendar_component.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class _DayLabels extends StatelessWidget {
-  const _DayLabels();
+class CalendarComponentDayLabels extends StatelessWidget {
+  const CalendarComponentDayLabels({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -20,11 +21,7 @@ class _DayLabels extends StatelessWidget {
       children: [
         const Divider(),
         Row(
-          children: dayShortLabels
-              .map(
-                (String label) => _DayLabel(label),
-              )
-              .toList(),
+          children: dayShortLabels.map((label) => _DayLabel(label)).toList(),
         ),
         const Divider(),
       ],

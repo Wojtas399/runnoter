@@ -1191,6 +1191,8 @@
   "accept": "Akceptuj",
   "undo": "Cofnij",
   "message": "Wiadomość",
+  "week": "Tydzień",
+  "month": "Miesiąc",
   "sentRequests": "Wysłane prośby",
   "receivedRequests": "Otrzymane prośby",
   "noSentRequests": "Brak wysłanych próśb",

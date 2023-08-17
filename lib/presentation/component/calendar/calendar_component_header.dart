@@ -1,7 +1,11 @@
-part of 'calendar_component.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class _Header extends StatelessWidget {
-  const _Header();
+import 'calendar_component_cubit.dart';
+
+class CalendarComponentHeader extends StatelessWidget {
+  const CalendarComponentHeader({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -31,13 +35,12 @@ class _Month extends StatelessWidget {
       (CalendarComponentCubit cubit) => cubit.state.displayingYear,
     );
 
-    if (displayingMonth == null) {
-      return const SizedBox();
-    }
-    return Text(
-      '${_getMonthName(context, displayingMonth)} $displayingYear',
-      style: Theme.of(context).textTheme.titleMedium,
-    );
+    return displayingMonth == null
+        ? const SizedBox()
+        : Text(
+            '${_getMonthName(context, displayingMonth)} $displayingYear',
+            style: Theme.of(context).textTheme.titleMedium,
+          );
   }
 
   String _getMonthName(BuildContext context, int month) {
@@ -84,9 +87,7 @@ class _NextMonthButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return IconButton(
-      onPressed: () {
-        _onPressed(context);
-      },
+      onPressed: () => _onPressed(context),
       icon: const Icon(Icons.chevron_right),
     );
   }

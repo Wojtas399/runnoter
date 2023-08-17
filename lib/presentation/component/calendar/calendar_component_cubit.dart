@@ -5,19 +5,27 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../common/date_service.dart';
 import '../../../dependency_injection.dart';
 
+enum CalendarComponentDateRange { week, month }
+
 class CalendarComponentCubit extends Cubit<CalendarComponentState> {
   final DateService _dateService;
   List<CalendarDayActivity> _activities = [];
 
-  CalendarComponentCubit()
-      : _dateService = getIt<DateService>(),
+  CalendarComponentCubit({
+    CalendarComponentDateRange? dateRange,
+  })  : _dateService = getIt<DateService>(),
         super(
           CalendarComponentState(
+            dateRange: dateRange,
             displayingMonth: getIt<DateService>().getToday().month,
             displayingYear: getIt<DateService>().getToday().year,
             weeks: null,
           ),
         );
+
+  void changeDateRange(CalendarComponentDateRange dateRange) {
+    emit(state.copyWith(dateRange: dateRange));
+  }
 
   void updateState({
     DateTime? date,
@@ -34,9 +42,7 @@ class CalendarComponentCubit extends Cubit<CalendarComponentState> {
   }
 
   void previousMonth() {
-    if (state.displayingMonth == null || state.displayingYear == null) {
-      return;
-    }
+    if (state.displayingMonth == null || state.displayingYear == null) return;
     final DateTime dateOfFirstDayInPreviousMonth = DateTime(
       state.displayingYear!,
       state.displayingMonth! - 1,
@@ -45,9 +51,7 @@ class CalendarComponentCubit extends Cubit<CalendarComponentState> {
   }
 
   void nextMonth() {
-    if (state.displayingMonth == null || state.displayingYear == null) {
-      return;
-    }
+    if (state.displayingMonth == null || state.displayingYear == null) return;
     final DateTime dateOfFirstDayInNextMonth = DateTime(
       state.displayingYear!,
       state.displayingMonth! + 1,
@@ -109,12 +113,14 @@ class CalendarComponentCubit extends Cubit<CalendarComponentState> {
 }
 
 class CalendarComponentState extends Equatable {
+  final CalendarComponentDateRange? dateRange;
   final int? displayingMonth;
   final int? displayingYear;
   final List<CalendarWeek>? weeks;
   final DateTime? pressedDate;
 
   const CalendarComponentState({
+    this.dateRange,
     required this.displayingMonth,
     required this.displayingYear,
     required this.weeks,
@@ -123,6 +129,7 @@ class CalendarComponentState extends Equatable {
 
   @override
   List<Object?> get props => [
+        dateRange,
         displayingMonth,
         displayingYear,
         weeks,
@@ -130,12 +137,14 @@ class CalendarComponentState extends Equatable {
       ];
 
   CalendarComponentState copyWith({
+    CalendarComponentDateRange? dateRange,
     int? displayingMonth,
     int? displayingYear,
     List<CalendarWeek>? weeks,
     DateTime? pressedDate,
   }) =>
       CalendarComponentState(
+        dateRange: dateRange ?? this.dateRange,
         displayingMonth: displayingMonth ?? this.displayingMonth,
         displayingYear: displayingYear ?? this.displayingYear,
         weeks: weeks ?? this.weeks,
@@ -146,14 +155,10 @@ class CalendarComponentState extends Equatable {
 class CalendarWeek extends Equatable {
   final List<CalendarDay> days;
 
-  const CalendarWeek({
-    required this.days,
-  });
+  const CalendarWeek({required this.days});
 
   @override
-  List<Object?> get props => [
-        days,
-      ];
+  List<Object?> get props => [days];
 }
 
 class CalendarDay extends Equatable {
@@ -170,26 +175,15 @@ class CalendarDay extends Equatable {
   });
 
   @override
-  List<Object?> get props => [
-        date,
-        isDisabled,
-        isTodayDay,
-        activities,
-      ];
+  List<Object?> get props => [date, isDisabled, isTodayDay, activities];
 }
 
 class CalendarDayActivity extends Equatable {
   final DateTime date;
   final Color color;
 
-  const CalendarDayActivity({
-    required this.date,
-    required this.color,
-  });
+  const CalendarDayActivity({required this.date, required this.color});
 
   @override
-  List<Object?> get props => [
-        date,
-        color,
-      ];
+  List<Object?> get props => [date, color];
 }
