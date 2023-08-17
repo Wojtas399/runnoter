@@ -107,21 +107,18 @@ class AppRouter extends _$AppRouter {
               page: ActivityStatusCreatorRoute.page,
               path: 'activity-status-creator/:entityType/:entityId',
             ),
-          ],
-        ),
-        AutoRoute(
-          page: ClientBaseRoute.page,
-          path: '/client',
-          children: [
             AutoRoute(
               page: ClientRoute.page,
-              path: '',
+              path: 'client/:clientId',
               children: [
-                RedirectRoute(path: '', redirectTo: 'calendar'),
+                RedirectRoute(path: '', redirectTo: 'activities'),
                 AutoRoute(
-                  page: ClientCalendarRoute.page,
-                  path: 'calendar',
-                  title: (context, _) => Str.of(context).calendarTitle,
+                  page: ClientActivitiesRoute.page,
+                  path: 'activities',
+                ),
+                AutoRoute(
+                  page: ClientStatsRoute.page,
+                  path: 'statistics',
                 ),
               ],
             ),

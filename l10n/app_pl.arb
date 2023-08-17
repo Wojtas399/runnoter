@@ -838,6 +838,16 @@
   "@personsSearchUserAlreadyHasCoachInfoMessage": {
     "description": "Message of the information about user who already has a coach"
   },
+  "@__________CLIENT_WORKOUTS__________": {},
+  "clientWorkoutsTitle": "Treningi",
+  "@clientWorkoutsTitle": {
+    "description": "Title of the client workouts screen"
+  },
+  "@__________CLIENT_STATS__________": {},
+  "clientStatsTitle": "Statystyki",
+  "@clientStatsTitle": {
+    "description": "Title of the client stats screen"
+  },
   "@__________ACTIVITY_STATUS_PARAMS__________": {},
   "activityStatus": "Status",
   "@activityStatus": {

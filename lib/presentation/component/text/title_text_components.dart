@@ -5,6 +5,8 @@ class TitleLarge extends StatelessWidget {
   final FontWeight? fontWeight;
   final Color? color;
   final TextAlign? textAlign;
+  final TextOverflow? overflow;
+  final int? maxLines;
 
   const TitleLarge(
     this.data, {
@@ -12,6 +14,8 @@ class TitleLarge extends StatelessWidget {
     this.fontWeight,
     this.color,
     this.textAlign,
+    this.overflow,
+    this.maxLines,
   });
 
   @override
@@ -23,6 +27,8 @@ class TitleLarge extends StatelessWidget {
             color: color,
           ),
       textAlign: textAlign,
+      overflow: overflow,
+      maxLines: maxLines,
     );
   }
 }
