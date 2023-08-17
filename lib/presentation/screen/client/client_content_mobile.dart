@@ -6,6 +6,7 @@ import '../../../domain/bloc/client/client_bloc.dart';
 import '../../component/body/medium_body_component.dart';
 import '../../component/text/title_text_components.dart';
 import '../../config/navigation/router.dart';
+import 'client_details.dart';
 
 class ClientContentMobile extends StatefulWidget {
   const ClientContentMobile({super.key});
@@ -39,12 +40,7 @@ class _State extends State<ClientContentMobile> {
                       pinned: true,
                       backgroundColor: Theme.of(context).colorScheme.primary,
                       foregroundColor: Theme.of(context).canvasColor,
-                      actions: [
-                        IconButton(
-                          onPressed: () {},
-                          icon: const Icon(Icons.info),
-                        ),
-                      ],
+                      actions: const [ClientDetailsIcon()],
                       flexibleSpace: const _FlexibleAppBar(),
                     ),
                     SliverPersistentHeader(

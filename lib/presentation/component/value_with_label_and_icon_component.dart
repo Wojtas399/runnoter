@@ -23,10 +23,11 @@ class ValueWithLabelAndIcon extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Material(
+      color: Colors.transparent,
       child: InkWell(
         borderRadius: BorderRadius.circular(100),
         onTap: onPressed,
-        child: Padding(
+        child: Container(
           padding: EdgeInsets.symmetric(
             horizontal: 16,
             vertical: label != null ? 8 : 20,

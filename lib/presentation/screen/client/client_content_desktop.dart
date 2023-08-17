@@ -8,6 +8,7 @@ import '../../component/gap/gap_components.dart';
 import '../../component/gap/gap_horizontal_components.dart';
 import '../../component/text/title_text_components.dart';
 import '../../config/navigation/router.dart';
+import 'client_details.dart';
 
 class ClientContentDesktop extends StatelessWidget {
   const ClientContentDesktop({super.key});
@@ -25,13 +26,7 @@ class ClientContentDesktop extends StatelessWidget {
         backgroundColor: bckColor,
         centerTitle: true,
         title: const _AppBarTitle(),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.info),
-          ),
-          const GapHorizontal16(),
-        ],
+        actions: const [ClientDetailsIcon(), GapHorizontal16()],
       ),
       body: SafeArea(
         child: AutoTabsRouter(
