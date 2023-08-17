@@ -1,6 +1,4 @@
-import '../../additional_model/bloc_state.dart';
-import '../../additional_model/bloc_status.dart';
-import '../../entity/user.dart';
+part of 'client_bloc.dart';
 
 class ClientState extends BlocState<ClientState> {
   final Gender? gender;

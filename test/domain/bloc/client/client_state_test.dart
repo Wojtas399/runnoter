@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
-import 'package:runnoter/domain/bloc/client/client_state.dart';
+import 'package:runnoter/domain/bloc/client/client_bloc.dart';
 import 'package:runnoter/domain/entity/user.dart';
 
 void main() {
