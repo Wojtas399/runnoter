@@ -6,11 +6,14 @@ import '../../../domain/bloc/clients/clients_bloc.dart';
 import '../../../domain/entity/person.dart';
 import '../../component/empty_content_info_component.dart';
 import '../../component/gap/gap_components.dart';
+import '../../component/gap/gap_horizontal_components.dart';
 import '../../component/loading_info_component.dart';
 import '../../component/text/title_text_components.dart';
+import '../../config/navigation/router.dart';
 import '../../extension/context_extensions.dart';
 import '../../extension/gender_extensions.dart';
 import '../../service/dialog_service.dart';
+import '../../service/navigator_service.dart';
 
 class ClientsList extends StatelessWidget {
   const ClientsList({super.key});
@@ -74,17 +77,34 @@ class _ClientItem extends StatelessWidget {
       contentPadding: EdgeInsets.symmetric(
         horizontal: context.isMobileSize ? 16 : 0,
       ),
-      trailing: IconButton(
-        onPressed: () => _onDeleteClientPressed(context),
-        icon: Icon(
-          Icons.person_remove,
-          color: Theme.of(context).colorScheme.error,
-        ),
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          IconButton(
+            onPressed: () => _onShowProfile(),
+            icon: Icon(
+              Icons.assignment_ind,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+          ),
+          if (!context.isMobileSize) const GapHorizontal8(),
+          IconButton(
+            onPressed: () => _onDeleteClient(context),
+            icon: Icon(
+              Icons.person_remove,
+              color: Theme.of(context).colorScheme.error,
+            ),
+          ),
+        ],
       ),
     );
   }
 
-  Future<void> _onDeleteClientPressed(BuildContext context) async {
+  void _onShowProfile() {
+    navigateTo(ClientRoute(clientId: 'c1'));
+  }
+
+  Future<void> _onDeleteClient(BuildContext context) async {
     final ClientsBloc bloc = context.read<ClientsBloc>();
     final bool isDeletionConfirmed =
         await _askForClientDeletionConfirmation(context);

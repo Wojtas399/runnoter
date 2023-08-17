@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../screen/client/client_base.dart';
 import '../../screen/home/home_base.dart';
 import '../../screen/screens.dart';
 
@@ -105,6 +106,24 @@ class AppRouter extends _$AppRouter {
             AutoRoute(
               page: ActivityStatusCreatorRoute.page,
               path: 'activity-status-creator/:entityType/:entityId',
+            ),
+          ],
+        ),
+        AutoRoute(
+          page: ClientBaseRoute.page,
+          path: '/client',
+          children: [
+            AutoRoute(
+              page: ClientRoute.page,
+              path: '',
+              children: [
+                RedirectRoute(path: '', redirectTo: 'calendar'),
+                AutoRoute(
+                  page: ClientCalendarRoute.page,
+                  path: 'calendar',
+                  title: (context, _) => Str.of(context).calendarTitle,
+                ),
+              ],
             ),
           ],
         ),
