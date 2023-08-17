@@ -101,7 +101,7 @@ class _ClientItem extends StatelessWidget {
   }
 
   void _onShowProfile() {
-    navigateTo(ClientRoute(clientId: 'c1'));
+    navigateTo(ClientRoute(clientId: clientInfo.id));
   }
 
   Future<void> _onDeleteClient(BuildContext context) async {

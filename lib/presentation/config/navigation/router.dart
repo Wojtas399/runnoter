@@ -2,7 +2,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../screen/client/client_base.dart';
 import '../../screen/home/home_base.dart';
 import '../../screen/screens.dart';
 

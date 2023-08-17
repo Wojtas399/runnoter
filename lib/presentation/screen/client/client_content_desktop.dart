@@ -1,7 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../../domain/bloc/client/client_bloc.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/gap/gap_horizontal_components.dart';
 import '../../component/text/title_text_components.dart';
@@ -22,10 +24,7 @@ class ClientContentDesktop extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: bckColor,
         centerTitle: true,
-        title: TitleLarge(
-          'Wojtas Piekielny',
-          color: Theme.of(context).colorScheme.primary,
-        ),
+        title: const _AppBarTitle(),
         actions: [
           IconButton(
             onPressed: () {},
@@ -58,6 +57,26 @@ class ClientContentDesktop extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class _AppBarTitle extends StatelessWidget {
+  const _AppBarTitle();
+
+  @override
+  Widget build(BuildContext context) {
+    final String? fullName = context.select(
+      (ClientBloc bloc) => bloc.state.name == null || bloc.state.surname == null
+          ? null
+          : '${bloc.state.name} ${bloc.state.surname}',
+    );
+
+    return fullName == null
+        ? CircularProgressIndicator(color: Theme.of(context).canvasColor)
+        : TitleLarge(
+            fullName,
+            color: Theme.of(context).colorScheme.primary,
+          );
   }
 }
 

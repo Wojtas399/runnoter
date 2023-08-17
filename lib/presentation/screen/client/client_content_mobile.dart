@@ -1,6 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../domain/bloc/client/client_bloc.dart';
 import '../../component/body/medium_body_component.dart';
 import '../../component/text/title_text_components.dart';
 import '../../config/navigation/router.dart';
@@ -93,11 +95,7 @@ class _FlexibleAppBar extends StatelessWidget {
             top: MediaQuery.of(context).viewPadding.top,
             bottom: 16.0,
           ),
-          title: TitleLarge(
-            "Wojtas Piekielny",
-            textAlign: TextAlign.center,
-            color: Theme.of(context).canvasColor,
-            overflow: TextOverflow.ellipsis,
+          title: _AppBarTitle(
             maxLines: appBarHeight > kToolbarHeight + 24 ? 2 : 1,
           ),
         );
@@ -131,4 +129,29 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
 
   @override
   bool shouldRebuild(_SliverAppBarDelegate oldDelegate) => false;
+}
+
+class _AppBarTitle extends StatelessWidget {
+  final int? maxLines;
+
+  const _AppBarTitle({this.maxLines});
+
+  @override
+  Widget build(BuildContext context) {
+    final String? fullName = context.select(
+      (ClientBloc bloc) => bloc.state.name == null || bloc.state.surname == null
+          ? null
+          : '${bloc.state.name} ${bloc.state.surname}',
+    );
+
+    return fullName == null
+        ? CircularProgressIndicator(color: Theme.of(context).canvasColor)
+        : TitleLarge(
+            fullName,
+            textAlign: TextAlign.center,
+            color: Theme.of(context).canvasColor,
+            overflow: TextOverflow.ellipsis,
+            maxLines: maxLines,
+          );
+  }
 }
