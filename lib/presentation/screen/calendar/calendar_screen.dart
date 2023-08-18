@@ -55,6 +55,10 @@ class _CalendarState extends State<_Calendar> {
     return Calendar(
       workouts: [...?state.workouts],
       races: [...?state.races],
+      onWorkoutPressed: _navigateToWorkout,
+      onRacePressed: _navigateToRace,
+      onAddWorkout: _navigateToWorkoutCreator,
+      onAddRace: _navigateToRaceCreator,
       onDateRangeChanged: (DateTime firstDay, DateTime lastDay) =>
           _onDateRangeChanged(context, firstDay, lastDay),
       onDayPressed: (DateTime date) => _onDayPressed(context, date),
@@ -78,25 +82,33 @@ class _CalendarState extends State<_Calendar> {
     if (action == null) return;
     switch (action) {
       case DayPreviewDialogActionAddWorkout():
-        navigateTo(
-          WorkoutCreatorRoute(date: action.date.toPathFormat()),
-        );
+        _navigateToWorkoutCreator(action.date);
         break;
       case DayPreviewDialogActionAddRace():
-        navigateTo(
-          RaceCreatorRoute(dateStr: action.date.toPathFormat()),
-        );
+        _navigateToRaceCreator(action.date);
         break;
       case DayPreviewDialogActionShowWorkout():
-        navigateTo(
-          WorkoutPreviewRoute(workoutId: action.workoutId),
-        );
+        _navigateToWorkout(action.workoutId);
         break;
       case DayPreviewDialogActionShowRace():
-        navigateTo(
-          RacePreviewRoute(raceId: action.raceId),
-        );
+        _navigateToRace(action.raceId);
         break;
     }
+  }
+
+  void _navigateToWorkout(String workoutId) {
+    navigateTo(WorkoutPreviewRoute(workoutId: workoutId));
+  }
+
+  void _navigateToRace(String raceId) {
+    navigateTo(RacePreviewRoute(raceId: raceId));
+  }
+
+  void _navigateToWorkoutCreator(DateTime date) {
+    navigateTo(WorkoutCreatorRoute(date: date.toPathFormat()));
+  }
+
+  void _navigateToRaceCreator(DateTime date) {
+    navigateTo(RaceCreatorRoute(dateStr: date.toPathFormat()));
   }
 }
