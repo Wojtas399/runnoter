@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../domain/entity/race.dart';
+import '../../../domain/entity/workout.dart';
 import '../gap/gap_components.dart';
 import 'bloc/calendar_component_bloc.dart';
+import 'calendar_component__month.dart';
 import 'calendar_component_date.dart';
-import 'calendar_component_day_labels.dart';
-import 'calendar_component_days.dart';
+import 'calendar_component_week.dart';
 
 class Calendar extends StatelessWidget {
-  final List<CalendarDayActivity> activities;
+  final List<Workout> workouts;
+  final List<Race> races;
   final DateRangeType? dateRangeType;
   final Function(
     DateTime firstDisplayingDate,
@@ -18,7 +21,8 @@ class Calendar extends StatelessWidget {
 
   const Calendar({
     super.key,
-    required this.activities,
+    required this.workouts,
+    required this.races,
     this.dateRangeType,
     this.onMonthChanged,
     this.onDayPressed,
@@ -37,7 +41,8 @@ class Calendar extends StatelessWidget {
         onMonthChanged: onMonthChanged,
         onDayPressed: onDayPressed,
         child: _Content(
-          activities: activities,
+          workouts: workouts,
+          races: races,
           showDateRangeButtons: dateRangeType == null,
         ),
       ),
@@ -93,21 +98,24 @@ class _BlocListener extends StatelessWidget {
 }
 
 class _Content extends StatelessWidget {
-  final List<CalendarDayActivity>? activities;
+  final List<Workout> workouts;
+  final List<Race> races;
   final bool showDateRangeButtons;
 
   const _Content({
-    required this.activities,
+    required this.workouts,
+    required this.races,
     this.showDateRangeButtons = false,
   });
 
   @override
   Widget build(BuildContext context) {
-    if (activities != null) {
-      context.read<CalendarComponentBloc>().add(
-            CalendarComponentEventActivitiesUpdated(activities: activities!),
-          );
-    }
+    context.read<CalendarComponentBloc>().add(
+          CalendarComponentEventActivitiesUpdated(
+            workouts: workouts,
+            races: races,
+          ),
+        );
     final DateRange? dateRange = context.select(
       (CalendarComponentBloc bloc) => bloc.state.dateRange,
     );
@@ -117,33 +125,10 @@ class _Content extends StatelessWidget {
         if (showDateRangeButtons) const CalendarComponentDate(),
         const Gap8(),
         switch (dateRange) {
-          DateRangeWeek() => const _WeekContent(),
-          DateRangeMonth() => const _MonthContent(),
+          DateRangeWeek() => const CalendarComponentWeek(),
+          DateRangeMonth() => const CalendarComponentMonth(),
           null => const CircularProgressIndicator(),
         }
-      ],
-    );
-  }
-}
-
-class _WeekContent extends StatelessWidget {
-  const _WeekContent();
-
-  @override
-  Widget build(BuildContext context) {
-    return Text('Week content');
-  }
-}
-
-class _MonthContent extends StatelessWidget {
-  const _MonthContent();
-
-  @override
-  Widget build(BuildContext context) {
-    return const Column(
-      children: [
-        CalendarComponentDayLabels(),
-        CalendarComponentDays(),
       ],
     );
   }

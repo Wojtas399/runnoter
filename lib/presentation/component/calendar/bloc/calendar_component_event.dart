@@ -17,9 +17,13 @@ class CalendarComponentEventChangeDateRange extends CalendarComponentEvent {
 }
 
 class CalendarComponentEventActivitiesUpdated extends CalendarComponentEvent {
-  final List<CalendarDayActivity> activities;
+  final List<Workout> workouts;
+  final List<Race> races;
 
-  const CalendarComponentEventActivitiesUpdated({required this.activities});
+  const CalendarComponentEventActivitiesUpdated({
+    required this.workouts,
+    required this.races,
+  });
 }
 
 class CalendarComponentEventPreviousDateRange extends CalendarComponentEvent {

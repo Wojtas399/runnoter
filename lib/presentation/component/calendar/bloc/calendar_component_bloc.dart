@@ -1,9 +1,10 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../common/date_service.dart';
 import '../../../../dependency_injection.dart';
+import '../../../../domain/entity/race.dart';
+import '../../../../domain/entity/workout.dart';
 
 part 'calendar_component_event.dart';
 part 'calendar_component_state.dart';
@@ -11,7 +12,8 @@ part 'calendar_component_state.dart';
 class CalendarComponentBloc
     extends Bloc<CalendarComponentEvent, CalendarComponentState> {
   final DateService _dateService;
-  List<CalendarDayActivity> _activities = [];
+  List<Workout> _workouts = [];
+  List<Race> _races = [];
 
   CalendarComponentBloc()
       : _dateService = getIt<DateService>(),
@@ -81,7 +83,8 @@ class CalendarComponentBloc
     CalendarComponentEventActivitiesUpdated event,
     Emitter<CalendarComponentState> emit,
   ) {
-    _activities = [...event.activities];
+    _workouts = [...event.workouts];
+    _races = [...event.races];
     emit(state.copyWith(
       weeks: state.dateRange != null ? _createWeeks(state.dateRange!) : null,
     ));
@@ -198,11 +201,18 @@ class CalendarComponentBloc
         isDisabled:
             dateRange is DateRangeMonth ? date.month != dateRange.month : false,
         isTodayDay: _dateService.areDatesTheSame(date, todayDate),
-        activities: [..._activities]
-            .where(
-              (activity) => _dateService.areDatesTheSame(activity.date, date),
-            )
-            .toList(),
+        workouts: [
+          ..._workouts
+              .where(
+                (workout) => _dateService.areDatesTheSame(workout.date, date),
+              )
+              .toList(),
+        ],
+        races: [
+          ..._races
+              .where((race) => _dateService.areDatesTheSame(race.date, date))
+              .toList(),
+        ],
       );
       daysFromWeek.add(newCalendarDay);
       date = date.add(

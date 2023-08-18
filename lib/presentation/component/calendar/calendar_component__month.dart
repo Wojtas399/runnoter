@@ -1,8 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class CalendarComponentDayLabels extends StatelessWidget {
-  const CalendarComponentDayLabels({super.key});
+import 'calendar_component_month_days.dart';
+
+class CalendarComponentMonth extends StatelessWidget {
+  const CalendarComponentMonth({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Column(
+      children: [
+        _DayLabels(),
+        CalendarComponentMonthDays(),
+      ],
+    );
+  }
+}
+
+class _DayLabels extends StatelessWidget {
+  const _DayLabels();
 
   @override
   Widget build(BuildContext context) {

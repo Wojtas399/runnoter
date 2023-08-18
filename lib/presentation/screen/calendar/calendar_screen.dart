@@ -3,10 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/cubit/calendar_cubit.dart';
-import '../../../domain/entity/race.dart';
-import '../../../domain/entity/workout.dart';
 import '../../component/body/big_body_component.dart';
-import '../../component/calendar/bloc/calendar_component_bloc.dart';
 import '../../component/calendar/calendar_component.dart';
 import '../../component/card_body_component.dart';
 import '../../component/padding/paddings_24.dart';
@@ -14,7 +11,6 @@ import '../../component/responsive_layout_component.dart';
 import '../../config/navigation/router.dart';
 import '../../dialog/day_preview/day_preview_dialog.dart';
 import '../../dialog/day_preview/day_preview_dialog_actions.dart';
-import '../../formatter/activity_status_formatter.dart';
 import '../../formatter/date_formatter.dart';
 import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
@@ -57,20 +53,8 @@ class _CalendarState extends State<_Calendar> {
     );
 
     return Calendar(
-      activities: [
-        ...?state.workouts?.map(
-          (Workout workout) => CalendarDayActivity(
-            date: workout.date,
-            color: workout.status.toColor(context),
-          ),
-        ),
-        ...?state.races?.map(
-          (Race race) => CalendarDayActivity(
-            date: race.date,
-            color: Theme.of(context).colorScheme.primary,
-          ),
-        ),
-      ],
+      workouts: [...?state.workouts],
+      races: [...?state.races],
       onMonthChanged: (
         DateTime firstDisplayingDate,
         DateTime lastDisplayingDate,

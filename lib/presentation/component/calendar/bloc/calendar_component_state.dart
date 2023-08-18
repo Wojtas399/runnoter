@@ -62,25 +62,17 @@ class CalendarDay extends Equatable {
   final DateTime date;
   final bool isDisabled;
   final bool isTodayDay;
-  final List<CalendarDayActivity> activities;
+  final List<Workout> workouts;
+  final List<Race> races;
 
   const CalendarDay({
     required this.date,
     required this.isDisabled,
     required this.isTodayDay,
-    this.activities = const [],
+    this.workouts = const [],
+    this.races = const [],
   });
 
   @override
-  List<Object?> get props => [date, isDisabled, isTodayDay, activities];
-}
-
-class CalendarDayActivity extends Equatable {
-  final DateTime date;
-  final Color color;
-
-  const CalendarDayActivity({required this.date, required this.color});
-
-  @override
-  List<Object?> get props => [date, color];
+  List<Object?> get props => [date, isDisabled, isTodayDay, workouts, races];
 }

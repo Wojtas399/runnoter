@@ -9,6 +9,6 @@ class ClientActivitiesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Calendar(activities: []);
+    return const Calendar(workouts: [], races: []);
   }
 }

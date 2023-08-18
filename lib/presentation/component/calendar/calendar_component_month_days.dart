@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../domain/entity/race.dart';
+import '../../../domain/entity/workout.dart';
+import '../../formatter/activity_status_formatter.dart';
 import '../text/body_text_components.dart';
 import 'bloc/calendar_component_bloc.dart';
 
-class CalendarComponentDays extends StatelessWidget {
-  const CalendarComponentDays({super.key});
+class CalendarComponentMonthDays extends StatelessWidget {
+  const CalendarComponentMonthDays({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -20,19 +23,19 @@ class CalendarComponentDays extends StatelessWidget {
               width: 0.4,
               color: Theme.of(context).colorScheme.outline,
             ),
-            children: weeks
-                .map(
-                  (CalendarWeek week) => TableRow(
-                    children: week.days
-                        .map(
-                          (CalendarDay day) => TableCell(
-                            child: _DayItem(day: day),
-                          ),
-                        )
-                        .toList(),
-                  ),
-                )
-                .toList(),
+            children: [
+              ...weeks.map(
+                (CalendarWeek week) => TableRow(
+                  children: [
+                    ...week.days.map(
+                      (CalendarDay day) => TableCell(
+                        child: _DayItem(day: day),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           );
   }
 }
@@ -40,9 +43,7 @@ class CalendarComponentDays extends StatelessWidget {
 class _DayItem extends StatelessWidget {
   final CalendarDay day;
 
-  const _DayItem({
-    required this.day,
-  });
+  const _DayItem({required this.day});
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +65,7 @@ class _DayItem extends StatelessWidget {
                   number: day.date.day,
                   isMarkedAsToday: day.isTodayDay,
                 ),
-                _Activities(activities: day.activities),
+                _Activities(workouts: day.workouts, races: day.races),
               ],
             ),
           ),
@@ -84,10 +85,7 @@ class _DayNumber extends StatelessWidget {
   final int number;
   final bool isMarkedAsToday;
 
-  const _DayNumber({
-    required this.number,
-    required this.isMarkedAsToday,
-  });
+  const _DayNumber({required this.number, required this.isMarkedAsToday});
 
   @override
   Widget build(BuildContext context) {
@@ -108,22 +106,21 @@ class _DayNumber extends StatelessWidget {
 }
 
 class _Activities extends StatelessWidget {
-  final List<CalendarDayActivity> activities;
+  final List<Workout> workouts;
+  final List<Race> races;
 
-  const _Activities({
-    required this.activities,
-  });
+  const _Activities({required this.workouts, required this.races});
 
   @override
   Widget build(BuildContext context) {
-    List<CalendarDayActivity> maxThreeActivitiesToDisplay = activities.sublist(
+    final int maxNumberOfWorkoutsToDisplay = races.isEmpty ? 3 : 2;
+    final List<Workout> workoutsToDisplay = workouts.sublist(
       0,
-      activities.length > 3
-          ? 2
-          : activities.length == 3
-              ? 3
-              : activities.length,
+      workouts.length > maxNumberOfWorkoutsToDisplay
+          ? maxNumberOfWorkoutsToDisplay - 1
+          : workouts.length,
     );
+    final int numberOfActivities = workouts.length + races.length;
 
     return Expanded(
       child: Padding(
@@ -131,23 +128,38 @@ class _Activities extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            ...maxThreeActivitiesToDisplay
-                .map(
-                  (activity) => Padding(
-                    padding: const EdgeInsets.only(bottom: 4),
-                    child: Container(
-                      width: double.infinity,
-                      height: 12,
-                      decoration: BoxDecoration(
-                        color: activity.color,
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                    ),
-                  ),
-                )
-                .toList(),
-            if (activities.length > 3) BodySmall('+${activities.length - 2}'),
+            if (races.isNotEmpty)
+              _ActivityItem(
+                color: Theme.of(context).colorScheme.primary,
+              ),
+            ...workoutsToDisplay.map(
+              (workout) => _ActivityItem(
+                color: workout.status.toColor(context),
+              ),
+            ),
+            if (numberOfActivities > 3) BodySmall('+${numberOfActivities - 2}'),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ActivityItem extends StatelessWidget {
+  final Color color;
+
+  const _ActivityItem({required this.color});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 4),
+      child: Container(
+        width: double.infinity,
+        height: 12,
+        decoration: BoxDecoration(
+          color: color,
+          borderRadius: BorderRadius.circular(16),
         ),
       ),
     );
