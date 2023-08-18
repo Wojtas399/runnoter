@@ -48,7 +48,6 @@ class Calendar extends StatelessWidget {
         child: _Content(
           workouts: workouts,
           races: races,
-          showDateRangeTypeButtons: dateRangeType == null,
           onWorkoutPressed: onWorkoutPressed,
           onRacePressed: onRacePressed,
           onAddWorkout: onAddWorkout,
@@ -106,7 +105,6 @@ class _BlocListener extends StatelessWidget {
 class _Content extends StatelessWidget {
   final List<Workout> workouts;
   final List<Race> races;
-  final bool showDateRangeTypeButtons;
   final Function(String workoutId)? onWorkoutPressed;
   final Function(String raceId)? onRacePressed;
   final Function(DateTime date)? onAddWorkout;
@@ -115,7 +113,6 @@ class _Content extends StatelessWidget {
   const _Content({
     required this.workouts,
     required this.races,
-    this.showDateRangeTypeButtons = false,
     this.onWorkoutPressed,
     this.onRacePressed,
     this.onAddWorkout,
@@ -136,9 +133,7 @@ class _Content extends StatelessWidget {
 
     return Column(
       children: [
-        CalendarComponentDate(
-          showDateRangeTypeButtons: showDateRangeTypeButtons,
-        ),
+        const CalendarComponentDate(),
         const Gap8(),
         switch (dateRange) {
           DateRangeWeek() => CalendarComponentWeek(

@@ -10,22 +10,18 @@ import '../text/title_text_components.dart';
 import 'bloc/calendar_component_bloc.dart';
 
 class CalendarComponentDate extends StatelessWidget {
-  final bool showDateRangeTypeButtons;
-
-  const CalendarComponentDate({
-    super.key,
-    this.showDateRangeTypeButtons = false,
-  });
+  const CalendarComponentDate({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return Container(
       padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: Column(
+      constraints: const BoxConstraints(maxWidth: 600),
+      child: const Column(
         children: [
-          if (showDateRangeTypeButtons) const _DateRangeSelection(),
-          const Gap16(),
-          const Row(
+          _DateRangeSelection(),
+          Gap16(),
+          Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               _PreviousDateRangeBtn(),
