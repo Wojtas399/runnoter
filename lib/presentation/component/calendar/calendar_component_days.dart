@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../text/body_text_components.dart';
-import 'calendar_component_cubit.dart';
+import 'bloc/calendar_component_bloc.dart';
 
 class CalendarComponentDays extends StatelessWidget {
   const CalendarComponentDays({super.key});
@@ -10,31 +10,30 @@ class CalendarComponentDays extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<CalendarWeek>? weeks = context.select(
-      (CalendarComponentCubit cubit) => cubit.state.weeks,
+      (CalendarComponentBloc bloc) => bloc.state.weeks,
     );
 
-    if (weeks == null) {
-      return const SizedBox();
-    }
-    return Table(
-      border: TableBorder.all(
-        width: 0.4,
-        color: Theme.of(context).colorScheme.outline,
-      ),
-      children: weeks
-          .map(
-            (CalendarWeek week) => TableRow(
-              children: week.days
-                  .map(
-                    (CalendarDay day) => TableCell(
-                      child: _DayItem(day: day),
-                    ),
-                  )
-                  .toList(),
+    return weeks == null
+        ? const SizedBox()
+        : Table(
+            border: TableBorder.all(
+              width: 0.4,
+              color: Theme.of(context).colorScheme.outline,
             ),
-          )
-          .toList(),
-    );
+            children: weeks
+                .map(
+                  (CalendarWeek week) => TableRow(
+                    children: week.days
+                        .map(
+                          (CalendarDay day) => TableCell(
+                            child: _DayItem(day: day),
+                          ),
+                        )
+                        .toList(),
+                  ),
+                )
+                .toList(),
+          );
   }
 }
 
@@ -75,7 +74,9 @@ class _DayItem extends StatelessWidget {
   }
 
   void _onPressed(BuildContext context) {
-    context.read<CalendarComponentCubit>().onDayPressed(day.date);
+    context.read<CalendarComponentBloc>().add(
+          CalendarComponentEventOnDayPressed(date: day.date),
+        );
   }
 }
 

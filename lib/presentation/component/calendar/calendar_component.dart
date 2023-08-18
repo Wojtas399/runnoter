@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../gap/gap_components.dart';
-import '../gap/gap_horizontal_components.dart';
-import 'calendar_component_cubit.dart';
+import 'bloc/calendar_component_bloc.dart';
+import 'calendar_component_date.dart';
 import 'calendar_component_day_labels.dart';
 import 'calendar_component_days.dart';
-import 'calendar_component_header.dart';
 
 class Calendar extends StatelessWidget {
   final List<CalendarDayActivity> activities;
-  final CalendarComponentDateRange? oneRangeType;
+  final DateRangeType? dateRangeType;
   final Function(
     DateTime firstDisplayingDate,
     DateTime lastDisplayingDate,
@@ -21,7 +19,7 @@ class Calendar extends StatelessWidget {
   const Calendar({
     super.key,
     required this.activities,
-    this.oneRangeType,
+    this.dateRangeType,
     this.onMonthChanged,
     this.onDayPressed,
   });
@@ -29,19 +27,25 @@ class Calendar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => CalendarComponentCubit(
-        dateRange: oneRangeType ?? CalendarComponentDateRange.week,
-      ),
-      child: _CubitListener(
+      create: (_) => CalendarComponentBloc()
+        ..add(
+          CalendarComponentEventInitialize(
+            dateRangeType: dateRangeType ?? DateRangeType.week,
+          ),
+        ),
+      child: _BlocListener(
         onMonthChanged: onMonthChanged,
         onDayPressed: onDayPressed,
-        child: _Content(activities: activities, oneRangeType: oneRangeType),
+        child: _Content(
+          activities: activities,
+          showDateRangeButtons: dateRangeType == null,
+        ),
       ),
     );
   }
 }
 
-class _CubitListener extends StatelessWidget {
+class _BlocListener extends StatelessWidget {
   final Function(
     DateTime firstDisplayingDate,
     DateTime lastDisplayingDate,
@@ -49,7 +53,7 @@ class _CubitListener extends StatelessWidget {
   final Function(DateTime date)? onDayPressed;
   final Widget child;
 
-  const _CubitListener({
+  const _BlocListener({
     required this.onMonthChanged,
     required this.onDayPressed,
     required this.child,
@@ -57,12 +61,11 @@ class _CubitListener extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<CalendarComponentCubit, CalendarComponentState>(
+    return BlocListener<CalendarComponentBloc, CalendarComponentState>(
       listenWhen: (previousState, currentState) =>
           currentState.pressedDate != null ||
           previousState.weeks == null ||
-          previousState.displayingMonth != currentState.displayingMonth ||
-          previousState.displayingYear != currentState.displayingYear,
+          previousState.dateRange != currentState.dateRange,
       listener: (_, CalendarComponentState state) {
         if (state.pressedDate != null) {
           _emitPressedDay(context, state.pressedDate!);
@@ -85,34 +88,37 @@ class _CubitListener extends StatelessWidget {
   void _emitPressedDay(BuildContext context, DateTime pressedDate) {
     if (onDayPressed != null) {
       onDayPressed!(pressedDate);
-      context.read<CalendarComponentCubit>().cleanPressedDay();
     }
   }
 }
 
 class _Content extends StatelessWidget {
   final List<CalendarDayActivity>? activities;
-  final CalendarComponentDateRange? oneRangeType;
+  final bool showDateRangeButtons;
 
   const _Content({
     required this.activities,
-    required this.oneRangeType,
+    this.showDateRangeButtons = false,
   });
 
   @override
   Widget build(BuildContext context) {
-    context.read<CalendarComponentCubit>().updateState(activities: activities);
-    final CalendarComponentDateRange? dateRange = context.select(
-      (CalendarComponentCubit cubit) => cubit.state.dateRange,
+    if (activities != null) {
+      context.read<CalendarComponentBloc>().add(
+            CalendarComponentEventActivitiesUpdated(activities: activities!),
+          );
+    }
+    final DateRange? dateRange = context.select(
+      (CalendarComponentBloc bloc) => bloc.state.dateRange,
     );
 
     return Column(
       children: [
-        if (oneRangeType == null) const _DateRange(),
+        if (showDateRangeButtons) const CalendarComponentDate(),
         const Gap8(),
         switch (dateRange) {
-          CalendarComponentDateRange.week => const _WeekContent(),
-          CalendarComponentDateRange.month => const _MonthContent(),
+          DateRangeWeek() => const _WeekContent(),
+          DateRangeMonth() => const _MonthContent(),
           null => const CircularProgressIndicator(),
         }
       ],
@@ -136,81 +142,9 @@ class _MonthContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Column(
       children: [
-        CalendarComponentHeader(),
-        Gap8(),
         CalendarComponentDayLabels(),
         CalendarComponentDays(),
       ],
     );
-  }
-}
-
-class _DateRange extends StatelessWidget {
-  const _DateRange();
-
-  @override
-  Widget build(BuildContext context) {
-    final CalendarComponentDateRange? dateRange = context.select(
-      (CalendarComponentCubit cubit) => cubit.state.dateRange,
-    );
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: Row(
-        children: [
-          Expanded(
-            child: _DateRangeButton(
-              isSelected: dateRange == CalendarComponentDateRange.week,
-              onPressed: () => _onDateRangeChanged(
-                context,
-                CalendarComponentDateRange.week,
-              ),
-              label: Str.of(context).week,
-            ),
-          ),
-          const GapHorizontal16(),
-          Expanded(
-            child: _DateRangeButton(
-              isSelected: dateRange == CalendarComponentDateRange.month,
-              onPressed: () => _onDateRangeChanged(
-                context,
-                CalendarComponentDateRange.month,
-              ),
-              label: Str.of(context).month,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _onDateRangeChanged(
-      BuildContext context, CalendarComponentDateRange dateRange) {
-    context.read<CalendarComponentCubit>().changeDateRange(dateRange);
-  }
-}
-
-class _DateRangeButton extends StatelessWidget {
-  final String label;
-  final bool isSelected;
-  final VoidCallback onPressed;
-
-  const _DateRangeButton({
-    required this.label,
-    required this.isSelected,
-    required this.onPressed,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return isSelected
-        ? FilledButton(
-            onPressed: onPressed,
-            child: Text(label),
-          )
-        : OutlinedButton(
-            onPressed: onPressed,
-            child: Text(label),
-          );
   }
 }
