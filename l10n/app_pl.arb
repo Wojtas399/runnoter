@@ -1193,6 +1193,7 @@
   "message": "Wiadomość",
   "week": "Tydzień",
   "month": "Miesiąc",
+  "currentWeek": "Obecny tydzień",
   "sentRequests": "Wysłane prośby",
   "receivedRequests": "Otrzymane prośby",
   "noSentRequests": "Brak wysłanych próśb",

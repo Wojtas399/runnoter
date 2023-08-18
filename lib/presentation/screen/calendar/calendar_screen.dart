@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/cubit/calendar_cubit.dart';
 import '../../component/body/big_body_component.dart';
-import '../../component/calendar/bloc/calendar_component_bloc.dart';
 import '../../component/calendar/calendar_component.dart';
 import '../../component/card_body_component.dart';
 import '../../component/padding/paddings_24.dart';
@@ -54,7 +53,6 @@ class _CalendarState extends State<_Calendar> {
     );
 
     return Calendar(
-      dateRangeType: DateRangeType.month,
       workouts: [...?state.workouts],
       races: [...?state.races],
       onDateRangeChanged: (DateTime firstDay, DateTime lastDay) =>

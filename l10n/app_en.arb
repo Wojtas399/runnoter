@@ -351,6 +351,7 @@
   "message": "Message",
   "week": "Week",
   "month": "Month",
+  "currentWeek": "Current week",
   "sentRequests": "Sent requests",
   "receivedRequests": "Received requests",
   "noSentRequests": "No sent requests",

@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../../common/date_service.dart';
 import '../../formatter/date_formatter.dart';
+import '../gap/gap_components.dart';
 import '../gap/gap_horizontal_components.dart';
+import '../text/title_text_components.dart';
 import 'bloc/calendar_component_bloc.dart';
 
 class CalendarComponentDate extends StatelessWidget {
@@ -21,6 +24,7 @@ class CalendarComponentDate extends StatelessWidget {
       child: Column(
         children: [
           if (showDateRangeTypeButtons) const _DateRangeSelection(),
+          const Gap16(),
           const Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -44,30 +48,27 @@ class _DateRangeSelection extends StatelessWidget {
       (CalendarComponentBloc bloc) => bloc.state.dateRange,
     );
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: Row(
-        children: [
-          Expanded(
-            child: _DateRangeButton(
-              isSelected: dateRange is DateRangeWeek,
-              onPressed: () => _onDateRangeChanged(context, DateRangeType.week),
-              label: Str.of(context).week,
-            ),
+    return Row(
+      children: [
+        Expanded(
+          child: _DateRangeButton(
+            isSelected: dateRange is DateRangeWeek,
+            onPressed: () => _onDateRangeChanged(context, DateRangeType.week),
+            label: Str.of(context).week,
           ),
-          const GapHorizontal16(),
-          Expanded(
-            child: _DateRangeButton(
-              isSelected: dateRange is DateRangeMonth,
-              onPressed: () => _onDateRangeChanged(
-                context,
-                DateRangeType.month,
-              ),
-              label: Str.of(context).month,
+        ),
+        const GapHorizontal16(),
+        Expanded(
+          child: _DateRangeButton(
+            isSelected: dateRange is DateRangeMonth,
+            onPressed: () => _onDateRangeChanged(
+              context,
+              DateRangeType.month,
             ),
+            label: Str.of(context).month,
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -121,20 +122,27 @@ class _DateRange extends StatelessWidget {
 }
 
 class _Week extends StatelessWidget {
+  final DateService _dateService = DateService();
   final DateRangeWeek weekDateRange;
 
-  const _Week(this.weekDateRange);
+  _Week(this.weekDateRange);
 
   @override
   Widget build(BuildContext context) {
-    final DateTime lastDayOfTheWeek = weekDateRange.firstDayOfTheWeek.add(
+    final DateTime today = _dateService.getToday();
+    final DateTime firstDayOfTheWeek = weekDateRange.firstDayOfTheWeek;
+    final DateTime lastDayOfTheWeek = firstDayOfTheWeek.add(
       const Duration(days: 6),
     );
+    String text =
+        '${firstDayOfTheWeek.toDateWithDots()} - ${lastDayOfTheWeek.toDateWithDots()}';
+    if (_dateService.isDateFromRange(
+      date: today,
+      startDate: firstDayOfTheWeek,
+      endDate: lastDayOfTheWeek,
+    )) text = Str.of(context).currentWeek;
 
-    return Text(
-      '${weekDateRange.firstDayOfTheWeek.toDateWithDots()} - ${lastDayOfTheWeek.toDateWithDots()}',
-      style: Theme.of(context).textTheme.titleMedium,
-    );
+    return TitleMedium(text);
   }
 }
 
@@ -145,9 +153,8 @@ class _Month extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
+    return TitleMedium(
       '${_getMonthName(context, monthDateRange.month)} ${monthDateRange.year}',
-      style: Theme.of(context).textTheme.titleMedium,
     );
   }
 
