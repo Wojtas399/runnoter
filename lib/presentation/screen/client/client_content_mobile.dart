@@ -25,46 +25,40 @@ class _State extends State<ClientContentMobile> {
             ClientActivitiesRoute(),
             ClientStatsRoute(),
           ],
-          builder: (context, child) {
-            final tabsRouter = AutoTabsRouter.of(context);
-
-            return DefaultTabController(
-              length: 4,
-              child: NestedScrollView(
-                headerSliverBuilder: (BuildContext context, _) {
-                  return [
-                    SliverAppBar(
-                      scrolledUnderElevation: 0.0,
-                      expandedHeight: 125,
-                      floating: false,
-                      pinned: true,
-                      backgroundColor: Theme.of(context).colorScheme.primary,
-                      foregroundColor: Theme.of(context).canvasColor,
-                      actions: const [ClientDetailsIcon()],
-                      flexibleSpace: const _FlexibleAppBar(),
+          builder: (context, child) => DefaultTabController(
+            length: 4,
+            child: NestedScrollView(
+              headerSliverBuilder: (BuildContext context, _) => [
+                SliverAppBar(
+                  scrolledUnderElevation: 0.0,
+                  expandedHeight: 125,
+                  floating: false,
+                  pinned: true,
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                  foregroundColor: Theme.of(context).canvasColor,
+                  actions: const [ClientDetailsIcon()],
+                  flexibleSpace: const _FlexibleAppBar(),
+                ),
+                SliverPersistentHeader(
+                  delegate: _SliverAppBarDelegate(
+                    TabBar(
+                      onTap: (int tabIndex) {
+                        AutoTabsRouter.of(context).setActiveIndex(tabIndex);
+                      },
+                      tabs: const [
+                        Tab(icon: Icon(Icons.event_note)),
+                        Tab(icon: Icon(Icons.bar_chart)),
+                        Tab(icon: Icon(Icons.emoji_events)),
+                        Tab(icon: Icon(Icons.water_drop)),
+                      ],
                     ),
-                    SliverPersistentHeader(
-                      delegate: _SliverAppBarDelegate(
-                        TabBar(
-                          onTap: (int tabIndex) {
-                            tabsRouter.setActiveIndex(tabIndex);
-                          },
-                          tabs: const [
-                            Tab(icon: Icon(Icons.event_note)),
-                            Tab(icon: Icon(Icons.bar_chart)),
-                            Tab(icon: Icon(Icons.emoji_events)),
-                            Tab(icon: Icon(Icons.water_drop)),
-                          ],
-                        ),
-                      ),
-                      pinned: true,
-                    ),
-                  ];
-                },
-                body: child,
-              ),
-            );
-          },
+                  ),
+                  pinned: true,
+                ),
+              ],
+              body: child,
+            ),
+          ),
         ),
       ),
     );
