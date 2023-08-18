@@ -13,10 +13,11 @@ class Calendar extends StatelessWidget {
   final List<Workout> workouts;
   final List<Race> races;
   final DateRangeType? dateRangeType;
-  final Function(
-    DateTime firstDisplayingDate,
-    DateTime lastDisplayingDate,
-  )? onMonthChanged;
+  final Function(DateTime firstDay, DateTime lastDay)? onDateRangeChanged;
+  final Function(String workoutId)? onWorkoutPressed;
+  final Function(String raceId)? onRacePressed;
+  final Function(DateTime date)? onAddWorkout;
+  final Function(DateTime date)? onAddRace;
   final Function(DateTime date)? onDayPressed;
 
   const Calendar({
@@ -24,7 +25,11 @@ class Calendar extends StatelessWidget {
     required this.workouts,
     required this.races,
     this.dateRangeType,
-    this.onMonthChanged,
+    this.onDateRangeChanged,
+    this.onWorkoutPressed,
+    this.onRacePressed,
+    this.onAddWorkout,
+    this.onAddRace,
     this.onDayPressed,
   });
 
@@ -38,12 +43,16 @@ class Calendar extends StatelessWidget {
           ),
         ),
       child: _BlocListener(
-        onMonthChanged: onMonthChanged,
+        onDateRangeChanged: onDateRangeChanged,
         onDayPressed: onDayPressed,
         child: _Content(
           workouts: workouts,
           races: races,
           showDateRangeButtons: dateRangeType == null,
+          onWorkoutPressed: onWorkoutPressed,
+          onRacePressed: onRacePressed,
+          onAddWorkout: onAddWorkout,
+          onAddRace: onAddRace,
         ),
       ),
     );
@@ -51,15 +60,12 @@ class Calendar extends StatelessWidget {
 }
 
 class _BlocListener extends StatelessWidget {
-  final Function(
-    DateTime firstDisplayingDate,
-    DateTime lastDisplayingDate,
-  )? onMonthChanged;
+  final Function(DateTime firstDay, DateTime latDay)? onDateRangeChanged;
   final Function(DateTime date)? onDayPressed;
   final Widget child;
 
   const _BlocListener({
-    required this.onMonthChanged,
+    required this.onDateRangeChanged,
     required this.onDayPressed,
     required this.child,
   });
@@ -75,18 +81,18 @@ class _BlocListener extends StatelessWidget {
         if (state.pressedDate != null) {
           _emitPressedDay(context, state.pressedDate!);
         } else {
-          _emitNewMonth(state);
+          _emitNewDateRange(state);
         }
       },
       child: child,
     );
   }
 
-  void _emitNewMonth(CalendarComponentState state) {
-    if (onMonthChanged != null && state.weeks != null) {
-      final DateTime firstDisplayingDate = state.weeks!.first.days.first.date;
-      final DateTime lastDisplayingDate = state.weeks!.last.days.last.date;
-      onMonthChanged!(firstDisplayingDate, lastDisplayingDate);
+  void _emitNewDateRange(CalendarComponentState state) {
+    if (onDateRangeChanged != null && state.weeks != null) {
+      final DateTime firstDay = state.weeks!.first.days.first.date;
+      final DateTime lastDay = state.weeks!.last.days.last.date;
+      onDateRangeChanged!(firstDay, lastDay);
     }
   }
 
@@ -101,11 +107,19 @@ class _Content extends StatelessWidget {
   final List<Workout> workouts;
   final List<Race> races;
   final bool showDateRangeButtons;
+  final Function(String workoutId)? onWorkoutPressed;
+  final Function(String raceId)? onRacePressed;
+  final Function(DateTime date)? onAddWorkout;
+  final Function(DateTime date)? onAddRace;
 
   const _Content({
     required this.workouts,
     required this.races,
     this.showDateRangeButtons = false,
+    this.onWorkoutPressed,
+    this.onRacePressed,
+    this.onAddWorkout,
+    this.onAddRace,
   });
 
   @override
@@ -125,11 +139,32 @@ class _Content extends StatelessWidget {
         if (showDateRangeButtons) const CalendarComponentDate(),
         const Gap8(),
         switch (dateRange) {
-          DateRangeWeek() => const CalendarComponentWeek(),
+          DateRangeWeek() => CalendarComponentWeek(
+              onWorkoutPressed: _onWorkoutPressed,
+              onRacePressed: _onRacePressed,
+              onAddWorkout: _onAddWorkout,
+              onAddRace: _onAddRace,
+            ),
           DateRangeMonth() => const CalendarComponentMonth(),
           null => const CircularProgressIndicator(),
         }
       ],
     );
+  }
+
+  void _onWorkoutPressed(String workoutId) {
+    if (onWorkoutPressed != null) onWorkoutPressed!(workoutId);
+  }
+
+  void _onRacePressed(String raceId) {
+    if (onRacePressed != null) onRacePressed!(raceId);
+  }
+
+  void _onAddWorkout(DateTime date) {
+    if (onAddWorkout != null) onAddWorkout!(date);
+  }
+
+  void _onAddRace(DateTime date) {
+    if (onAddRace != null) onAddRace!(date);
   }
 }

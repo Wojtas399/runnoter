@@ -55,26 +55,20 @@ class _CalendarState extends State<_Calendar> {
     return Calendar(
       workouts: [...?state.workouts],
       races: [...?state.races],
-      onMonthChanged: (
-        DateTime firstDisplayingDate,
-        DateTime lastDisplayingDate,
-      ) {
-        _onMonthChanged(context, firstDisplayingDate, lastDisplayingDate);
-      },
-      onDayPressed: (DateTime date) {
-        _onDayPressed(context, date);
-      },
+      onDateRangeChanged: (DateTime firstDay, DateTime lastDay) =>
+          _onDateRangeChanged(context, firstDay, lastDay),
+      onDayPressed: (DateTime date) => _onDayPressed(context, date),
     );
   }
 
-  void _onMonthChanged(
+  void _onDateRangeChanged(
     BuildContext context,
-    DateTime firstDisplayingDate,
-    DateTime lastDisplayingDate,
+    DateTime firstDay,
+    DateTime lastDay,
   ) {
     context.read<CalendarCubit>().monthChanged(
-          firstDisplayingDate: firstDisplayingDate,
-          lastDisplayingDate: lastDisplayingDate,
+          firstDay: firstDay,
+          lastDay: lastDay,
         );
   }
 

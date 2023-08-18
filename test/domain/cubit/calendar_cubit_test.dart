@@ -51,8 +51,8 @@ void main() {
       );
     },
     act: (cubit) => cubit.monthChanged(
-      firstDisplayingDate: DateTime(2023, 1, 1),
-      lastDisplayingDate: DateTime(2023, 1, 31),
+      firstDay: DateTime(2023, 1, 1),
+      lastDay: DateTime(2023, 1, 31),
     ),
     expect: () => [
       CalendarState(
