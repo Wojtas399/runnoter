@@ -13,13 +13,14 @@ class MockRaceRepository extends Mock implements RaceRepository {
 
   void mockGetRaceById({
     Race? race,
+    Stream<Race?>? raceStream,
   }) {
     when(
       () => getRaceById(
         raceId: any(named: 'raceId'),
         userId: any(named: 'userId'),
       ),
-    ).thenAnswer((invocation) => Stream.value(race));
+    ).thenAnswer((_) => raceStream ?? Stream.value(race));
   }
 
   void mockGetRacesByDateRange({
@@ -32,7 +33,7 @@ class MockRaceRepository extends Mock implements RaceRepository {
         startDate: any(named: 'startDate'),
         endDate: any(named: 'endDate'),
       ),
-    ).thenAnswer((invocation) => racesStream ?? Stream.value(races));
+    ).thenAnswer((_) => racesStream ?? Stream.value(races));
   }
 
   void mockGetRacesByDate({
@@ -43,7 +44,7 @@ class MockRaceRepository extends Mock implements RaceRepository {
         date: any(named: 'date'),
         userId: any(named: 'userId'),
       ),
-    ).thenAnswer((invocation) => Stream.value(races));
+    ).thenAnswer((_) => Stream.value(races));
   }
 
   void mockGetAllRaces({
@@ -53,7 +54,7 @@ class MockRaceRepository extends Mock implements RaceRepository {
       () => getAllRaces(
         userId: any(named: 'userId'),
       ),
-    ).thenAnswer((invocation) => Stream.value(races));
+    ).thenAnswer((_) => Stream.value(races));
   }
 
   void mockAddNewRace() {
@@ -67,7 +68,7 @@ class MockRaceRepository extends Mock implements RaceRepository {
         expectedDuration: any(named: 'expectedDuration'),
         status: any(named: 'status'),
       ),
-    ).thenAnswer((invocation) => Future.value());
+    ).thenAnswer((_) => Future.value());
   }
 
   void mockUpdateRace() {
@@ -83,7 +84,7 @@ class MockRaceRepository extends Mock implements RaceRepository {
         setDurationAsNull: any(named: 'setDurationAsNull'),
         status: any(named: 'status'),
       ),
-    ).thenAnswer((invocation) => Future.value());
+    ).thenAnswer((_) => Future.value());
   }
 
   void mockDeleteRace() {
@@ -100,6 +101,6 @@ class MockRaceRepository extends Mock implements RaceRepository {
       () => deleteAllUserRaces(
         userId: any(named: 'userId'),
       ),
-    ).thenAnswer((invocation) => Future.value());
+    ).thenAnswer((_) => Future.value());
   }
 }

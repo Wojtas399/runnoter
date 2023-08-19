@@ -106,8 +106,12 @@ class _CalendarState extends State<_Calendar> {
     ));
   }
 
-  void _navigateToRace(String raceId) {
-    navigateTo(RacePreviewRoute(raceId: raceId));
+  Future<void> _navigateToRace(String raceId) async {
+    final String? loggedUserId = await getIt<AuthService>().loggedUserId$.first;
+    navigateTo(RacePreviewRoute(
+      userId: loggedUserId,
+      raceId: raceId,
+    ));
   }
 
   void _navigateToWorkoutCreator(DateTime date) {

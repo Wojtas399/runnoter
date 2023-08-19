@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../../../dependency_injection.dart';
 import '../../../domain/cubit/races_cubit.dart';
 import '../../../domain/entity/race.dart';
+import '../../../domain/service/auth_service.dart';
 import '../../component/card_body_component.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/responsive_layout_component.dart';
@@ -101,9 +103,11 @@ class _RaceItem extends StatelessWidget {
     );
   }
 
-  void _onPressed() {
-    navigateTo(
-      RacePreviewRoute(raceId: race.id),
-    );
+  Future<void> _onPressed() async {
+    final String? loggedUserId = await getIt<AuthService>().loggedUserId$.first;
+    navigateTo(RacePreviewRoute(
+      userId: loggedUserId,
+      raceId: race.id,
+    ));
   }
 }

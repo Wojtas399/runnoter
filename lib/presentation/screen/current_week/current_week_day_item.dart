@@ -68,10 +68,12 @@ class CurrentWeekDayItem extends StatelessWidget {
     ));
   }
 
-  void _onRacePressed(String raceId) {
-    navigateTo(
-      RacePreviewRoute(raceId: raceId),
-    );
+  Future<void> _onRacePressed(String raceId) async {
+    final String? loggedUserId = await getIt<AuthService>().loggedUserId$.first;
+    navigateTo(RacePreviewRoute(
+      userId: loggedUserId,
+      raceId: raceId,
+    ));
   }
 }
 
