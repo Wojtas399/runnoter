@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/bloc/client/client_bloc.dart';
-import '../../component/body/medium_body_component.dart';
+import '../../component/gap/gap_horizontal_components.dart';
 import '../../component/text/title_text_components.dart';
 import '../../config/navigation/router.dart';
 import 'client_details.dart';
@@ -18,113 +18,47 @@ class ClientContentMobile extends StatefulWidget {
 class _State extends State<ClientContentMobile> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: MediumBody(
-        child: AutoTabsRouter(
-          routes: const [
-            ClientCalendarRoute(),
-            ClientStatsRoute(),
-          ],
-          builder: (context, child) => DefaultTabController(
-            length: 4,
-            child: NestedScrollView(
-              headerSliverBuilder: (BuildContext context, _) => [
-                SliverAppBar(
-                  scrolledUnderElevation: 0.0,
-                  expandedHeight: 125,
-                  floating: false,
-                  pinned: true,
-                  backgroundColor: Theme.of(context).colorScheme.primary,
-                  foregroundColor: Theme.of(context).canvasColor,
-                  actions: const [ClientDetailsIcon()],
-                  flexibleSpace: const _FlexibleAppBar(),
-                ),
-                SliverPersistentHeader(
-                  delegate: _SliverAppBarDelegate(
-                    TabBar(
-                      onTap: (int tabIndex) {
-                        AutoTabsRouter.of(context).setActiveIndex(tabIndex);
-                      },
-                      tabs: const [
-                        Tab(icon: Icon(Icons.event_note)),
-                        Tab(icon: Icon(Icons.bar_chart)),
-                        Tab(icon: Icon(Icons.emoji_events)),
-                        Tab(icon: Icon(Icons.water_drop)),
-                      ],
-                    ),
-                  ),
-                  pinned: true,
-                ),
+    return AutoTabsRouter(
+      routes: const [
+        ClientCalendarRoute(),
+        ClientStatsRoute(),
+      ],
+      builder: (context, child) => DefaultTabController(
+        length: 4,
+        child: Scaffold(
+          appBar: AppBar(
+            backgroundColor: Theme.of(context).colorScheme.primary,
+            foregroundColor: Theme.of(context).canvasColor,
+            centerTitle: true,
+            title: const _AppBarTitle(),
+            actions: const [ClientDetailsIcon(), GapHorizontal8()],
+            bottom: TabBar(
+              labelColor: Theme.of(context).colorScheme.inversePrimary,
+              unselectedLabelColor: Theme.of(context)
+                  .colorScheme
+                  .outlineVariant
+                  .withOpacity(0.75),
+              indicatorColor: Theme.of(context).colorScheme.inversePrimary,
+              onTap: (int tabIndex) {
+                AutoTabsRouter.of(context).setActiveIndex(tabIndex);
+              },
+              tabs: const [
+                Tab(icon: Icon(Icons.event_note)),
+                Tab(icon: Icon(Icons.bar_chart)),
+                Tab(icon: Icon(Icons.emoji_events)),
+                Tab(icon: Icon(Icons.water_drop)),
               ],
-              body: child,
             ),
           ),
+          body: SafeArea(child: child),
         ),
       ),
     );
   }
 }
 
-class _FlexibleAppBar extends StatelessWidget {
-  const _FlexibleAppBar();
-
-  @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (_, constraints) {
-        final double statusBarHeight = MediaQuery.of(context).viewPadding.top;
-        final appBarHeight = constraints.biggest.height - statusBarHeight;
-        final double horizontalPadding = 3200 / appBarHeight;
-
-        return FlexibleSpaceBar(
-          centerTitle: true,
-          expandedTitleScale: 1.4,
-          titlePadding: EdgeInsetsDirectional.only(
-            start: horizontalPadding,
-            end: horizontalPadding,
-            top: MediaQuery.of(context).viewPadding.top,
-            bottom: 16.0,
-          ),
-          title: _AppBarTitle(
-            maxLines: appBarHeight > kToolbarHeight + 24 ? 2 : 1,
-          ),
-        );
-      },
-    );
-  }
-}
-
-class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
-  _SliverAppBarDelegate(this._tabBar);
-
-  final TabBar _tabBar;
-
-  @override
-  double get minExtent => _tabBar.preferredSize.height;
-
-  @override
-  double get maxExtent => _tabBar.preferredSize.height;
-
-  @override
-  Widget build(
-    BuildContext context,
-    double shrinkOffset,
-    bool overlapsContent,
-  ) {
-    return Container(
-      color: Theme.of(context).colorScheme.background,
-      child: _tabBar,
-    );
-  }
-
-  @override
-  bool shouldRebuild(_SliverAppBarDelegate oldDelegate) => false;
-}
-
 class _AppBarTitle extends StatelessWidget {
-  final int? maxLines;
-
-  const _AppBarTitle({this.maxLines});
+  const _AppBarTitle();
 
   @override
   Widget build(BuildContext context) {
@@ -141,7 +75,6 @@ class _AppBarTitle extends StatelessWidget {
             textAlign: TextAlign.center,
             color: Theme.of(context).canvasColor,
             overflow: TextOverflow.ellipsis,
-            maxLines: maxLines,
           );
   }
 }

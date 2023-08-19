@@ -22,9 +22,11 @@ class ClientCalendarScreen extends StatelessWidget {
       create: (_) => ClientCalendarCubit(
         clientId: context.read<ClientBloc>().clientId,
       ),
-      child: const Padding(
-        padding: EdgeInsets.all(16),
-        child: _Calendar(),
+      child: const SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.all(16),
+          child: _Calendar(),
+        ),
       ),
     );
   }
