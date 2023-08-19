@@ -89,7 +89,10 @@ class _CalendarState extends State<_Calendar> {
   }
 
   void _navigateToRaceCreator(DateTime date) {
-    navigateTo(RaceCreatorRoute(dateStr: date.toPathFormat()));
+    navigateTo(RaceCreatorRoute(
+      userId: context.read<ClientBloc>().clientId,
+      dateStr: date.toPathFormat(),
+    ));
   }
 
   Future<void> _onDayPressed(BuildContext context, DateTime date) async {

@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../../dependency_injection.dart';
 import '../../../domain/additional_model/coaching_request.dart';
 import '../../../domain/bloc/home/home_bloc.dart';
 import '../../../domain/entity/user.dart';
+import '../../../domain/service/auth_service.dart';
 import '../../config/navigation/router.dart';
 import '../../dialog/persons_search/persons_search_dialog.dart';
 import '../../extension/context_extensions.dart';
@@ -204,11 +206,13 @@ class _State extends State<HomeContent> {
           currentPage.name == RacesRoute.name ||
           currentPage.name == ClientsRoute.name);
 
-  void _onFloatingActionButtonPressed(RouteData currentPage) {
+  Future<void> _onFloatingActionButtonPressed(RouteData currentPage) async {
     if (currentPage.name == BloodTestsRoute.name) {
       navigateTo(BloodTestCreatorRoute());
     } else if (currentPage.name == RacesRoute.name) {
-      navigateTo(RaceCreatorRoute());
+      final String? loggedUserId =
+          await getIt<AuthService>().loggedUserId$.first;
+      navigateTo(RaceCreatorRoute(userId: loggedUserId));
     } else if (currentPage.name == ClientsRoute.name) {
       showDialogDependingOnScreenSize(const PersonsSearchDialog(
         requestDirection: CoachingRequestDirection.coachToClient,

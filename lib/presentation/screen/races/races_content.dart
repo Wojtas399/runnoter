@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../../dependency_injection.dart';
 import '../../../domain/cubit/races_cubit.dart';
+import '../../../domain/service/auth_service.dart';
 import '../../component/big_button_component.dart';
 import '../../component/body/medium_body_component.dart';
 import '../../component/empty_content_info_component.dart';
@@ -57,10 +59,15 @@ class _AddRaceButton extends StatelessWidget {
       children: [
         BigButton(
           label: Str.of(context).racesAddNewRace,
-          onPressed: () => navigateTo(RaceCreatorRoute()),
+          onPressed: _onPressed,
         ),
       ],
     );
+  }
+
+  Future<void> _onPressed() async {
+    final String? loggedUserId = await getIt<AuthService>().loggedUserId$.first;
+    navigateTo(RaceCreatorRoute(userId: loggedUserId));
   }
 }
 

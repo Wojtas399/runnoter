@@ -74,10 +74,10 @@ void main() {
         status: const ActivityStatusUndone(),
         name: 'updated workout name',
       );
-      final StreamController<Workout?> workout$ = StreamController();
+      final StreamController<Workout?> workout$ = StreamController()
+        ..add(workout);
 
       blocTest(
-        'initialize, '
         'should set listener of workout matching to given id',
         build: () => createBloc(workoutId: workoutId),
         setUp: () => workoutRepository.mockGetWorkoutById(

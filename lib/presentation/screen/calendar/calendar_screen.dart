@@ -114,11 +114,19 @@ class _CalendarState extends State<_Calendar> {
     ));
   }
 
-  void _navigateToWorkoutCreator(DateTime date) {
-    navigateTo(WorkoutCreatorRoute(date: date.toPathFormat()));
+  Future<void> _navigateToWorkoutCreator(DateTime date) async {
+    final String? loggedUserId = await getIt<AuthService>().loggedUserId$.first;
+    navigateTo(WorkoutCreatorRoute(
+      userId: loggedUserId,
+      date: date.toPathFormat(),
+    ));
   }
 
-  void _navigateToRaceCreator(DateTime date) {
-    navigateTo(RaceCreatorRoute(dateStr: date.toPathFormat()));
+  Future<void> _navigateToRaceCreator(DateTime date) async {
+    final String? loggedUserId = await getIt<AuthService>().loggedUserId$.first;
+    navigateTo(RaceCreatorRoute(
+      userId: loggedUserId,
+      dateStr: date.toPathFormat(),
+    ));
   }
 }

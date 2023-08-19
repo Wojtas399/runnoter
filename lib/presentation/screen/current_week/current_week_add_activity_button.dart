@@ -53,25 +53,20 @@ class CurrentWeekAddActivityButton extends StatelessWidget {
     _ActivityType activityType,
   ) async {
     final String dateStr = date.toPathFormat();
+    final String? loggedUserId = await getIt<AuthService>().loggedUserId$.first;
     switch (activityType) {
       case _ActivityType.workout:
         navigateTo(
-          WorkoutCreatorRoute(
-            userId: await getIt<AuthService>().loggedUserId$.first,
-            date: dateStr,
-          ),
+          WorkoutCreatorRoute(userId: loggedUserId, date: dateStr),
         );
         break;
       case _ActivityType.race:
         navigateTo(
-          RaceCreatorRoute(dateStr: dateStr),
+          RaceCreatorRoute(userId: loggedUserId, dateStr: dateStr),
         );
         break;
     }
   }
 }
 
-enum _ActivityType {
-  workout,
-  race,
-}
+enum _ActivityType { workout, race }

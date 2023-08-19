@@ -1,5 +1,4 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rxdart/rxdart.dart';
 
 import '../../../dependency_injection.dart';
 import '../../additional_model/activity_status.dart';
@@ -8,23 +7,23 @@ import '../../additional_model/bloc_status.dart';
 import '../../additional_model/bloc_with_status.dart';
 import '../../entity/race.dart';
 import '../../repository/race_repository.dart';
-import '../../service/auth_service.dart';
 
 part 'race_creator_event.dart';
 part 'race_creator_state.dart';
 
 class RaceCreatorBloc extends BlocWithStatus<RaceCreatorEvent, RaceCreatorState,
     RaceCreatorBlocInfo, dynamic> {
+  final String _userId;
   final String? raceId;
-  final AuthService _authService;
   final RaceRepository _raceRepository;
 
   RaceCreatorBloc({
+    required String userId,
     this.raceId,
     RaceCreatorState state = const RaceCreatorState(
       status: BlocStatusInitial(),
     ),
-  })  : _authService = getIt<AuthService>(),
+  })  : _userId = userId,
         _raceRepository = getIt<RaceRepository>(),
         super(state) {
     on<RaceCreatorEventInitialize>(_initialize);
@@ -48,13 +47,10 @@ class RaceCreatorBloc extends BlocWithStatus<RaceCreatorEvent, RaceCreatorState,
       ));
       return;
     }
-    final Stream<Race?> race$ =
-        _authService.loggedUserId$.whereNotNull().switchMap(
-              (String loggedUserId) => _raceRepository.getRaceById(
-                raceId: raceId!,
-                userId: loggedUserId,
-              ),
-            );
+    final Stream<Race?> race$ = _raceRepository.getRaceById(
+      raceId: raceId!,
+      userId: _userId,
+    );
     await for (final race in race$) {
       emit(state.copyWith(
         status: const BlocStatusComplete<RaceCreatorBlocInfo>(),
@@ -121,30 +117,24 @@ class RaceCreatorBloc extends BlocWithStatus<RaceCreatorEvent, RaceCreatorState,
     if (!state.canSubmit) {
       return;
     }
-    final String? loggedUserId = await _authService.loggedUserId$.first;
-    if (loggedUserId == null) {
-      emitNoLoggedUserStatus(emit);
-      return;
-    }
     emitLoadingStatus(emit);
     Duration? expectedDuration = state.expectedDuration;
     if (expectedDuration != null && expectedDuration.inSeconds == 0) {
       expectedDuration = null;
     }
     if (state.race == null) {
-      await _addNewRace(emit, loggedUserId, expectedDuration);
+      await _addNewRace(emit, expectedDuration);
     } else {
-      await _updateRace(emit, loggedUserId, expectedDuration);
+      await _updateRace(emit, expectedDuration);
     }
   }
 
   Future<void> _addNewRace(
     Emitter<RaceCreatorState> emit,
-    String loggedUserId,
     Duration? expectedDuration,
   ) async {
     await _raceRepository.addNewRace(
-      userId: loggedUserId,
+      userId: _userId,
       name: state.name!,
       date: state.date!,
       place: state.place!,
@@ -157,12 +147,11 @@ class RaceCreatorBloc extends BlocWithStatus<RaceCreatorEvent, RaceCreatorState,
 
   Future<void> _updateRace(
     Emitter<RaceCreatorState> emit,
-    String loggedUserId,
     Duration? expectedDuration,
   ) async {
     await _raceRepository.updateRace(
       raceId: state.race!.id,
-      userId: loggedUserId,
+      userId: _userId,
       name: state.name!,
       date: state.date!,
       place: state.place!,
