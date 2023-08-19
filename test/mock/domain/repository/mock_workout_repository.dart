@@ -10,6 +10,7 @@ class MockWorkoutRepository extends Mock implements WorkoutRepository {
 
   void mockGetWorkoutsByDateRange({
     List<Workout>? workouts,
+    Stream<List<Workout>?>? workoutsStream,
   }) {
     when(
       () => getWorkoutsByDateRange(
@@ -17,7 +18,7 @@ class MockWorkoutRepository extends Mock implements WorkoutRepository {
         startDate: any(named: 'startDate'),
         endDate: any(named: 'endDate'),
       ),
-    ).thenAnswer((invocation) => Stream.value(workouts));
+    ).thenAnswer((invocation) => workoutsStream ?? Stream.value(workouts));
   }
 
   void mockGetWorkoutById({

@@ -67,12 +67,12 @@ class _CalendarState extends State<_Calendar> {
 
   void _onDateRangeChanged(
     BuildContext context,
-    DateTime firstDay,
-    DateTime lastDay,
+    DateTime startDay,
+    DateTime endDay,
   ) {
-    context.read<CalendarCubit>().monthChanged(
-          firstDay: firstDay,
-          lastDay: lastDay,
+    context.read<CalendarCubit>().dateRangeChanged(
+          startDay: startDay,
+          endDay: endDay,
         );
   }
 

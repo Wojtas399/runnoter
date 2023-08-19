@@ -24,6 +24,7 @@ class MockRaceRepository extends Mock implements RaceRepository {
 
   void mockGetRacesByDateRange({
     List<Race>? races,
+    Stream<List<Race>?>? racesStream,
   }) {
     when(
       () => getRacesByDateRange(
@@ -31,7 +32,7 @@ class MockRaceRepository extends Mock implements RaceRepository {
         startDate: any(named: 'startDate'),
         endDate: any(named: 'endDate'),
       ),
-    ).thenAnswer((invocation) => Stream.value(races));
+    ).thenAnswer((invocation) => racesStream ?? Stream.value(races));
   }
 
   void mockGetRacesByDate({

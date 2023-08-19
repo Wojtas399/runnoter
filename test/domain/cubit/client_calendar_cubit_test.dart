@@ -4,33 +4,28 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/domain/cubit/calendar_cubit.dart';
+import 'package:runnoter/domain/cubit/client_calendar_cubit.dart';
 import 'package:runnoter/domain/entity/race.dart';
 import 'package:runnoter/domain/entity/workout.dart';
 import 'package:runnoter/domain/repository/race_repository.dart';
 import 'package:runnoter/domain/repository/workout_repository.dart';
-import 'package:runnoter/domain/service/auth_service.dart';
 
 import '../../creators/race_creator.dart';
 import '../../creators/workout_creator.dart';
 import '../../mock/domain/repository/mock_race_repository.dart';
 import '../../mock/domain/repository/mock_workout_repository.dart';
-import '../../mock/domain/service/mock_auth_service.dart';
 
 void main() {
-  final authService = MockAuthService();
   final workoutRepository = MockWorkoutRepository();
   final raceRepository = MockRaceRepository();
-  const String loggedUserId = 'u1';
+  const String clientId = 'c1';
 
   setUpAll(() {
-    GetIt.I.registerFactory<AuthService>(() => authService);
     GetIt.I.registerSingleton<WorkoutRepository>(workoutRepository);
     GetIt.I.registerSingleton<RaceRepository>(raceRepository);
   });
 
   tearDown(() {
-    reset(authService);
     reset(workoutRepository);
     reset(raceRepository);
   });
@@ -63,9 +58,8 @@ void main() {
 
       blocTest(
         'should set listener of workouts and races from date range',
-        build: () => CalendarCubit(),
+        build: () => ClientCalendarCubit(clientId: clientId),
         setUp: () {
-          authService.mockGetLoggedUserId(userId: loggedUserId);
           workoutRepository.mockGetWorkoutsByDateRange(
             workoutsStream: workouts$.stream,
           );
@@ -78,24 +72,23 @@ void main() {
           races$.add(updatedRaces);
         },
         expect: () => [
-          CalendarState(workouts: workouts, races: races),
-          CalendarState(workouts: updatedWorkouts, races: races),
-          CalendarState(workouts: updatedWorkouts, races: updatedRaces),
+          ClientCalendarState(workouts: workouts, races: races),
+          ClientCalendarState(workouts: updatedWorkouts, races: races),
+          ClientCalendarState(workouts: updatedWorkouts, races: updatedRaces),
         ],
         verify: (_) {
-          verify(() => authService.loggedUserId$).called(1);
           verify(
             () => workoutRepository.getWorkoutsByDateRange(
               startDate: startDay,
               endDate: endDay,
-              userId: loggedUserId,
+              userId: clientId,
             ),
           ).called(1);
           verify(
             () => raceRepository.getRacesByDateRange(
               startDate: startDay,
               endDate: endDay,
-              userId: loggedUserId,
+              userId: clientId,
             ),
           ).called(1);
         },

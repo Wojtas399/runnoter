@@ -15,7 +15,7 @@ class CalendarCubit extends Cubit<CalendarState> {
   final AuthService _authService;
   final WorkoutRepository _workoutRepository;
   final RaceRepository _raceRepository;
-  StreamSubscription? _listener;
+  StreamSubscription<(List<Workout>?, List<Race>?)>? _activitiesListener;
 
   CalendarCubit({
     CalendarState state = const CalendarState(),
@@ -30,19 +30,19 @@ class CalendarCubit extends Cubit<CalendarState> {
     return super.close();
   }
 
-  void monthChanged({
-    required final DateTime firstDay,
-    required final DateTime lastDay,
+  void dateRangeChanged({
+    required final DateTime startDay,
+    required final DateTime endDay,
   }) {
     _disposeListener();
-    _setWorkoutsAndRacesListener(firstDay, lastDay);
+    _setWorkoutsAndRacesListener(startDay, endDay);
   }
 
   void _setWorkoutsAndRacesListener(
     DateTime startDate,
     DateTime endDate,
   ) {
-    _listener ??= _authService.loggedUserId$
+    _activitiesListener ??= _authService.loggedUserId$
         .whereType<String>()
         .switchMap(
           (String loggedUserId) => Rx.combineLatest2(
@@ -72,8 +72,8 @@ class CalendarCubit extends Cubit<CalendarState> {
   }
 
   void _disposeListener() {
-    _listener?.cancel();
-    _listener = null;
+    _activitiesListener?.cancel();
+    _activitiesListener = null;
   }
 }
 
@@ -81,14 +81,8 @@ class CalendarState extends Equatable {
   final List<Workout>? workouts;
   final List<Race>? races;
 
-  const CalendarState({
-    this.workouts,
-    this.races,
-  });
+  const CalendarState({this.workouts, this.races});
 
   @override
-  List<Object?> get props => [
-        workouts,
-        races,
-      ];
+  List<Object?> get props => [workouts, races];
 }
