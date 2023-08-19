@@ -30,9 +30,14 @@ class ClientCalendarScreen extends StatelessWidget {
   }
 }
 
-class _Calendar extends StatelessWidget {
+class _Calendar extends StatefulWidget {
   const _Calendar();
 
+  @override
+  State<StatefulWidget> createState() => _CalendarState();
+}
+
+class _CalendarState extends State<_Calendar> {
   @override
   Widget build(BuildContext context) {
     final ClientCalendarState activities = context.select(
@@ -42,12 +47,20 @@ class _Calendar extends StatelessWidget {
     return Calendar(
       workouts: [...?activities.workouts],
       races: [...?activities.races],
+      onDateRangeChanged: _dateRangeChanged,
       onWorkoutPressed: _navigateToWorkout,
       onRacePressed: _navigateToRace,
       onAddWorkout: _navigateToWorkoutCreator,
       onAddRace: _navigateToRaceCreator,
       onDayPressed: (DateTime date) => _onDayPressed(context, date),
     );
+  }
+
+  void _dateRangeChanged(DateTime startDate, DateTime endDate) {
+    context.read<ClientCalendarCubit>().dateRangeChanged(
+          startDate: startDate,
+          endDate: endDate,
+        );
   }
 
   void _navigateToWorkout(String workoutId) {
@@ -59,7 +72,12 @@ class _Calendar extends StatelessWidget {
   }
 
   void _navigateToWorkoutCreator(DateTime date) {
-    navigateTo(WorkoutCreatorRoute(date: date.toPathFormat()));
+    navigateTo(
+      WorkoutCreatorRoute(
+        userId: context.read<ClientBloc>().clientId,
+        date: date.toPathFormat(),
+      ),
+    );
   }
 
   void _navigateToRaceCreator(DateTime date) {

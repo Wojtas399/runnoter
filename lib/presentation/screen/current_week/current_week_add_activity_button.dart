@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../../dependency_injection.dart';
+import '../../../domain/service/auth_service.dart';
 import '../../component/gap/gap_horizontal_components.dart';
 import '../../config/navigation/router.dart';
 import '../../formatter/date_formatter.dart';
@@ -46,12 +48,18 @@ class CurrentWeekAddActivityButton extends StatelessWidget {
     );
   }
 
-  void _onSelected(BuildContext context, _ActivityType activityType) {
+  Future<void> _onSelected(
+    BuildContext context,
+    _ActivityType activityType,
+  ) async {
     final String dateStr = date.toPathFormat();
     switch (activityType) {
       case _ActivityType.workout:
         navigateTo(
-          WorkoutCreatorRoute(date: dateStr),
+          WorkoutCreatorRoute(
+            userId: await getIt<AuthService>().loggedUserId$.first,
+            date: dateStr,
+          ),
         );
         break;
       case _ActivityType.race:

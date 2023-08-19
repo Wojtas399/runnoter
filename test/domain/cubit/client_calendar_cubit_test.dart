@@ -53,8 +53,8 @@ void main() {
         ..add(workouts);
       final StreamController<List<Race>> races$ = StreamController()
         ..add(races);
-      final DateTime startDay = DateTime(2023, 2);
-      final DateTime endDay = DateTime(2023, 3);
+      final DateTime startDate = DateTime(2023, 2);
+      final DateTime endDate = DateTime(2023, 3);
 
       blocTest(
         'should set listener of workouts and races from date range',
@@ -66,7 +66,7 @@ void main() {
           raceRepository.mockGetRacesByDateRange(racesStream: races$.stream);
         },
         act: (cubit) async {
-          cubit.dateRangeChanged(startDay: startDay, endDay: endDay);
+          cubit.dateRangeChanged(startDate: startDate, endDate: endDate);
           await cubit.stream.first;
           workouts$.add(updatedWorkouts);
           races$.add(updatedRaces);
@@ -79,15 +79,15 @@ void main() {
         verify: (_) {
           verify(
             () => workoutRepository.getWorkoutsByDateRange(
-              startDate: startDay,
-              endDate: endDay,
+              startDate: startDate,
+              endDate: endDate,
               userId: clientId,
             ),
           ).called(1);
           verify(
             () => raceRepository.getRacesByDateRange(
-              startDate: startDay,
-              endDate: endDay,
+              startDate: startDate,
+              endDate: endDate,
               userId: clientId,
             ),
           ).called(1);

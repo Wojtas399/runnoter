@@ -12,11 +12,13 @@ import 'workout_creator_content.dart';
 
 @RoutePage()
 class WorkoutCreatorScreen extends StatelessWidget {
+  final String? userId;
   final String? date;
   final String? workoutId;
 
   const WorkoutCreatorScreen({
     super.key,
+    @PathParam('userId') this.userId,
     @PathParam('date') this.date,
     @PathParam('workoutId') this.workoutId,
   });
@@ -25,6 +27,7 @@ class WorkoutCreatorScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final DateTime? date = this.date?.toDateTime();
     return _BlocProvider(
+      userId: userId,
       date: date,
       workoutId: workoutId,
       child: const _BlocListener(
@@ -35,11 +38,13 @@ class WorkoutCreatorScreen extends StatelessWidget {
 }
 
 class _BlocProvider extends StatelessWidget {
+  final String? userId;
   final DateTime? date;
   final String? workoutId;
   final Widget child;
 
   const _BlocProvider({
+    required this.userId,
     required this.date,
     required this.workoutId,
     required this.child,
@@ -47,13 +52,16 @@ class _BlocProvider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (BuildContext context) => WorkoutCreatorBloc(
-        date: date,
-        workoutId: workoutId,
-      )..add(const WorkoutCreatorEventInitialize()),
-      child: child,
-    );
+    return userId != null
+        ? BlocProvider(
+            create: (BuildContext context) => WorkoutCreatorBloc(
+              userId: userId!,
+              date: date,
+              workoutId: workoutId,
+            )..add(const WorkoutCreatorEventInitialize()),
+            child: child,
+          )
+        : const Text('User not found');
   }
 }
 

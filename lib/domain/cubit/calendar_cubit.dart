@@ -31,11 +31,11 @@ class CalendarCubit extends Cubit<CalendarState> {
   }
 
   void dateRangeChanged({
-    required final DateTime startDay,
-    required final DateTime endDay,
+    required final DateTime startDate,
+    required final DateTime endDate,
   }) {
     _disposeListener();
-    _setWorkoutsAndRacesListener(startDay, endDay);
+    _setWorkoutsAndRacesListener(startDate, endDate);
   }
 
   void _setWorkoutsAndRacesListener(

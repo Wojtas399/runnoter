@@ -13,7 +13,7 @@ class Calendar extends StatelessWidget {
   final List<Workout> workouts;
   final List<Race> races;
   final DateRangeType? dateRangeType;
-  final Function(DateTime firstDay, DateTime lastDay)? onDateRangeChanged;
+  final Function(DateTime startDate, DateTime endDate)? onDateRangeChanged;
   final Function(String workoutId)? onWorkoutPressed;
   final Function(String raceId)? onRacePressed;
   final Function(DateTime date)? onAddWorkout;
@@ -59,7 +59,7 @@ class Calendar extends StatelessWidget {
 }
 
 class _BlocListener extends StatelessWidget {
-  final Function(DateTime firstDay, DateTime latDay)? onDateRangeChanged;
+  final Function(DateTime startDate, DateTime endDate)? onDateRangeChanged;
   final Function(DateTime date)? onDayPressed;
   final Widget child;
 
@@ -89,9 +89,9 @@ class _BlocListener extends StatelessWidget {
 
   void _emitNewDateRange(CalendarComponentState state) {
     if (onDateRangeChanged != null && state.weeks != null) {
-      final DateTime firstDay = state.weeks!.first.days.first.date;
-      final DateTime lastDay = state.weeks!.last.days.last.date;
-      onDateRangeChanged!(firstDay, lastDay);
+      final DateTime startDate = state.weeks!.first.days.first.date;
+      final DateTime endDate = state.weeks!.last.days.last.date;
+      onDateRangeChanged!(startDate, endDate);
     }
   }
 
