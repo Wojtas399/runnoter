@@ -1139,6 +1139,14 @@
   "@unknownErrorDialogMessage": {
     "description": "Message of the dialog about unknown exception"
   },
+  "pageNotFoundTitle": "Nie znaleziono strony",
+  "@pageNotFoundTitle": {
+    "description": "Title of page not found exception"
+  },
+  "pageNotFoundMessage": "Strona, której szukasz nie istnieje",
+  "@pageNotFoundMessage": {
+    "description": "Message of page not found exception"
+  },
   "@__________CONFIRMATION_DIALOG_MESSAGES__________": {},
   "leavePageConfirmationDialogTitle": "Opuść stronę",
   "@leavePageConfirmationDialogTitle": {

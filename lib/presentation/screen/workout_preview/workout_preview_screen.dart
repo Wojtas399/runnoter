@@ -5,28 +5,35 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/bloc/workout_preview/workout_preview_bloc.dart';
 import '../../component/bloc_with_status_listener_component.dart';
+import '../../component/page_not_found_component.dart';
 import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
 import 'workout_preview_content.dart';
 
 @RoutePage()
 class WorkoutPreviewScreen extends StatelessWidget {
+  final String? userId;
   final String? workoutId;
 
   const WorkoutPreviewScreen({
     super.key,
+    @PathParam('userId') this.userId,
     @PathParam('workoutId') this.workoutId,
   });
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => WorkoutPreviewBloc(workoutId: workoutId)
-        ..add(const WorkoutPreviewEventInitialize()),
-      child: const _BlocListener(
-        child: WorkoutPreviewContent(),
-      ),
-    );
+    return userId == null
+        ? const PageNotFound()
+        : BlocProvider(
+            create: (_) => WorkoutPreviewBloc(
+              userId: userId!,
+              workoutId: workoutId,
+            )..add(const WorkoutPreviewEventInitialize()),
+            child: const _BlocListener(
+              child: WorkoutPreviewContent(),
+            ),
+          );
   }
 }
 

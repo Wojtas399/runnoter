@@ -18,18 +18,19 @@ class MockWorkoutRepository extends Mock implements WorkoutRepository {
         startDate: any(named: 'startDate'),
         endDate: any(named: 'endDate'),
       ),
-    ).thenAnswer((invocation) => workoutsStream ?? Stream.value(workouts));
+    ).thenAnswer((_) => workoutsStream ?? Stream.value(workouts));
   }
 
   void mockGetWorkoutById({
     Workout? workout,
+    Stream<Workout?>? workoutStream,
   }) {
     when(
       () => getWorkoutById(
         workoutId: any(named: 'workoutId'),
         userId: any(named: 'userId'),
       ),
-    ).thenAnswer((invocation) => Stream.value(workout));
+    ).thenAnswer((_) => workoutStream ?? Stream.value(workout));
   }
 
   void mockGetWorkoutsByDate({
@@ -40,7 +41,7 @@ class MockWorkoutRepository extends Mock implements WorkoutRepository {
         userId: any(named: 'userId'),
         date: any(named: 'date'),
       ),
-    ).thenAnswer((invocation) => Stream.value(workouts));
+    ).thenAnswer((_) => Stream.value(workouts));
   }
 
   void mockGetAllWorkouts({
@@ -50,7 +51,7 @@ class MockWorkoutRepository extends Mock implements WorkoutRepository {
       () => getAllWorkouts(
         userId: any(named: 'userId'),
       ),
-    ).thenAnswer((invocation) => Stream.value(allWorkouts));
+    ).thenAnswer((_) => Stream.value(allWorkouts));
   }
 
   void mockAddWorkout() {
@@ -62,7 +63,7 @@ class MockWorkoutRepository extends Mock implements WorkoutRepository {
         status: any(named: 'status'),
         stages: any(named: 'stages'),
       ),
-    ).thenAnswer((invocation) => Future.value());
+    ).thenAnswer((_) => Future.value());
   }
 
   void mockUpdateWorkout() {
@@ -75,7 +76,7 @@ class MockWorkoutRepository extends Mock implements WorkoutRepository {
         status: any(named: 'status'),
         stages: any(named: 'stages'),
       ),
-    ).thenAnswer((invocation) => Future.value());
+    ).thenAnswer((_) => Future.value());
   }
 
   void mockDeleteWorkout() {
@@ -84,7 +85,7 @@ class MockWorkoutRepository extends Mock implements WorkoutRepository {
         userId: any(named: 'userId'),
         workoutId: any(named: 'workoutId'),
       ),
-    ).thenAnswer((invocation) => Future.value());
+    ).thenAnswer((_) => Future.value());
   }
 
   void mockDeleteAllUserWorkouts() {
@@ -92,6 +93,6 @@ class MockWorkoutRepository extends Mock implements WorkoutRepository {
       () => deleteAllUserWorkouts(
         userId: any(named: 'userId'),
       ),
-    ).thenAnswer((invocation) => Future.value());
+    ).thenAnswer((_) => Future.value());
   }
 }

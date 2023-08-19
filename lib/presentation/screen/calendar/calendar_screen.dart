@@ -2,7 +2,9 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../dependency_injection.dart';
 import '../../../domain/cubit/calendar_cubit.dart';
+import '../../../domain/service/auth_service.dart';
 import '../../component/body/big_body_component.dart';
 import '../../component/calendar/calendar_component.dart';
 import '../../component/card_body_component.dart';
@@ -96,8 +98,12 @@ class _CalendarState extends State<_Calendar> {
     }
   }
 
-  void _navigateToWorkout(String workoutId) {
-    navigateTo(WorkoutPreviewRoute(workoutId: workoutId));
+  Future<void> _navigateToWorkout(String workoutId) async {
+    final String? loggedUserId = await getIt<AuthService>().loggedUserId$.first;
+    navigateTo(WorkoutPreviewRoute(
+      userId: loggedUserId,
+      workoutId: workoutId,
+    ));
   }
 
   void _navigateToRace(String raceId) {

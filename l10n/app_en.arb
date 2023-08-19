@@ -315,6 +315,11 @@
   "userMismatchDialogMessage": "Authentication attempt failed, because credentials do not match the account you are currently signed in.",
   "unknownErrorDialogTitle": "Unknown error",
   "unknownErrorDialogMessage": "An unknown error occurred",
+  "pageNotFoundTitle": "Page not found",
+  "pageNotFoundMessage": "The page you are looking for doesn't exist",
+  "@pageNotFoundMessage": {
+    "description": "Message of page not found exception"
+  },
   "@__________CONFIRMATION_DIALOG_MESSAGES__________": {},
   "leavePageConfirmationDialogTitle": "Leave page",
   "leavePageConfirmationDialogMessage": "Are you sure you want to leave this page?",

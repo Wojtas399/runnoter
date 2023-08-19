@@ -66,7 +66,10 @@ class _CalendarState extends State<_Calendar> {
   }
 
   void _navigateToWorkout(String workoutId) {
-    navigateTo(WorkoutPreviewRoute(workoutId: workoutId));
+    navigateTo(WorkoutPreviewRoute(
+      userId: context.read<ClientBloc>().clientId,
+      workoutId: workoutId,
+    ));
   }
 
   void _navigateToRace(String raceId) {

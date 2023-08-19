@@ -5,6 +5,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/bloc/workout_creator/workout_creator_bloc.dart';
 import '../../component/bloc_with_status_listener_component.dart';
+import '../../component/page_not_found_component.dart';
 import '../../extension/string_extensions.dart';
 import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
@@ -26,42 +27,18 @@ class WorkoutCreatorScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final DateTime? date = this.date?.toDateTime();
-    return _BlocProvider(
-      userId: userId,
-      date: date,
-      workoutId: workoutId,
-      child: const _BlocListener(
-        child: WorkoutCreatorContent(),
-      ),
-    );
-  }
-}
-
-class _BlocProvider extends StatelessWidget {
-  final String? userId;
-  final DateTime? date;
-  final String? workoutId;
-  final Widget child;
-
-  const _BlocProvider({
-    required this.userId,
-    required this.date,
-    required this.workoutId,
-    required this.child,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return userId != null
-        ? BlocProvider(
-            create: (BuildContext context) => WorkoutCreatorBloc(
+    return userId == null
+        ? const PageNotFound()
+        : BlocProvider(
+            create: (_) => WorkoutCreatorBloc(
               userId: userId!,
               date: date,
               workoutId: workoutId,
             )..add(const WorkoutCreatorEventInitialize()),
-            child: child,
-          )
-        : const Text('User not found');
+            child: const _BlocListener(
+              child: WorkoutCreatorContent(),
+            ),
+          );
   }
 }
 

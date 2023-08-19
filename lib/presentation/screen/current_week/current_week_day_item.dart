@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../../../dependency_injection.dart';
 import '../../../domain/cubit/current_week_cubit.dart';
+import '../../../domain/service/auth_service.dart';
 import '../../component/activity_item_component.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/shimmer_container.dart';
@@ -58,10 +60,12 @@ class CurrentWeekDayItem extends StatelessWidget {
     );
   }
 
-  void _onWorkoutPressed(String workoutId) {
-    navigateTo(
-      WorkoutPreviewRoute(workoutId: workoutId),
-    );
+  Future<void> _onWorkoutPressed(String workoutId) async {
+    final String? loggedUserId = await getIt<AuthService>().loggedUserId$.first;
+    navigateTo(WorkoutPreviewRoute(
+      userId: loggedUserId,
+      workoutId: workoutId,
+    ));
   }
 
   void _onRacePressed(String raceId) {
