@@ -22,7 +22,7 @@ class _State extends State<ClientContentMobile> {
       body: MediumBody(
         child: AutoTabsRouter(
           routes: const [
-            ClientActivitiesRoute(),
+            ClientCalendarRoute(),
             ClientStatsRoute(),
           ],
           builder: (context, child) => DefaultTabController(

@@ -110,10 +110,10 @@ class AppRouter extends _$AppRouter {
               page: ClientRoute.page,
               path: 'client/:clientId',
               children: [
-                RedirectRoute(path: '', redirectTo: 'activities'),
+                RedirectRoute(path: '', redirectTo: 'calendar'),
                 AutoRoute(
-                  page: ClientActivitiesRoute.page,
-                  path: 'activities',
+                  page: ClientCalendarRoute.page,
+                  path: 'calendar',
                 ),
                 AutoRoute(
                   page: ClientStatsRoute.page,

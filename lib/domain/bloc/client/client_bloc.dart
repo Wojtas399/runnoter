@@ -14,16 +14,15 @@ part 'client_state.dart';
 
 class ClientBloc
     extends BlocWithStatus<ClientEvent, ClientState, dynamic, dynamic> {
-  final String _clientId;
+  final String clientId;
   final PersonRepository _personRepository;
 
   ClientBloc({
-    required String clientId,
+    required this.clientId,
     ClientState state = const ClientState(
       status: BlocStatusInitial(),
     ),
-  })  : _clientId = clientId,
-        _personRepository = getIt<PersonRepository>(),
+  })  : _personRepository = getIt<PersonRepository>(),
         super(state) {
     on<ClientEventInitialize>(_initialize, transformer: restartable());
   }
@@ -33,7 +32,7 @@ class ClientBloc
     Emitter<ClientState> emit,
   ) async {
     final Stream<Person?> client$ =
-        _personRepository.getPersonById(personId: _clientId);
+        _personRepository.getPersonById(personId: clientId);
     await emit.forEach(
       client$,
       onData: (Person? client) => state.copyWith(

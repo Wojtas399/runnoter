@@ -102,7 +102,7 @@ class _BlocListener extends StatelessWidget {
   }
 }
 
-class _Content extends StatelessWidget {
+class _Content extends StatefulWidget {
   final List<Workout> workouts;
   final List<Race> races;
   final Function(String workoutId)? onWorkoutPressed;
@@ -120,13 +120,23 @@ class _Content extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  State<StatefulWidget> createState() => _ContentState();
+}
+
+class _ContentState extends State<_Content> {
+  @override
+  void didUpdateWidget(covariant _Content oldWidget) {
     context.read<CalendarComponentBloc>().add(
           CalendarComponentEventActivitiesUpdated(
-            workouts: workouts,
-            races: races,
+            workouts: widget.workouts,
+            races: widget.races,
           ),
         );
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final DateRange? dateRange = context.select(
       (CalendarComponentBloc bloc) => bloc.state.dateRange,
     );
@@ -150,18 +160,18 @@ class _Content extends StatelessWidget {
   }
 
   void _onWorkoutPressed(String workoutId) {
-    if (onWorkoutPressed != null) onWorkoutPressed!(workoutId);
+    if (widget.onWorkoutPressed != null) widget.onWorkoutPressed!(workoutId);
   }
 
   void _onRacePressed(String raceId) {
-    if (onRacePressed != null) onRacePressed!(raceId);
+    if (widget.onRacePressed != null) widget.onRacePressed!(raceId);
   }
 
   void _onAddWorkout(DateTime date) {
-    if (onAddWorkout != null) onAddWorkout!(date);
+    if (widget.onAddWorkout != null) widget.onAddWorkout!(date);
   }
 
   void _onAddRace(DateTime date) {
-    if (onAddRace != null) onAddRace!(date);
+    if (widget.onAddRace != null) widget.onAddRace!(date);
   }
 }

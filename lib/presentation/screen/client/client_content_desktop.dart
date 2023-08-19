@@ -31,7 +31,7 @@ class ClientContentDesktop extends StatelessWidget {
       body: SafeArea(
         child: AutoTabsRouter(
           routes: const [
-            ClientActivitiesRoute(),
+            ClientCalendarRoute(),
             ClientStatsRoute(),
           ],
           builder: (BuildContext context, Widget child) {

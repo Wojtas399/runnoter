@@ -1,6 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../domain/bloc/client/client_bloc.dart';
+import '../../../domain/cubit/client_calendar_cubit.dart';
 import '../../component/calendar/calendar_component.dart';
 import '../../config/navigation/router.dart';
 import '../../dialog/day_preview/day_preview_dialog.dart';
@@ -10,22 +13,40 @@ import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
 
 @RoutePage()
-class ClientActivitiesScreen extends StatelessWidget {
-  const ClientActivitiesScreen({super.key});
+class ClientCalendarScreen extends StatelessWidget {
+  const ClientCalendarScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Calendar(
-        workouts: const [],
-        races: const [],
-        onWorkoutPressed: _navigateToWorkout,
-        onRacePressed: _navigateToRace,
-        onAddWorkout: _navigateToWorkoutCreator,
-        onAddRace: _navigateToRaceCreator,
-        onDayPressed: (DateTime date) => _onDayPressed(context, date),
+    return BlocProvider(
+      create: (_) => ClientCalendarCubit(
+        clientId: context.read<ClientBloc>().clientId,
       ),
+      child: const Padding(
+        padding: EdgeInsets.all(16),
+        child: _Calendar(),
+      ),
+    );
+  }
+}
+
+class _Calendar extends StatelessWidget {
+  const _Calendar();
+
+  @override
+  Widget build(BuildContext context) {
+    final ClientCalendarState activities = context.select(
+      (ClientCalendarCubit cubit) => cubit.state,
+    );
+
+    return Calendar(
+      workouts: [...?activities.workouts],
+      races: [...?activities.races],
+      onWorkoutPressed: _navigateToWorkout,
+      onRacePressed: _navigateToRace,
+      onAddWorkout: _navigateToWorkoutCreator,
+      onAddRace: _navigateToRaceCreator,
+      onDayPressed: (DateTime date) => _onDayPressed(context, date),
     );
   }
 
