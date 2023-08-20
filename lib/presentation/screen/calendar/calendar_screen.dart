@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../dependency_injection.dart';
+import '../../../domain/additional_model/activities.dart';
 import '../../../domain/cubit/calendar_cubit.dart';
 import '../../../domain/service/auth_service.dart';
 import '../../component/body/big_body_component.dart';
@@ -50,13 +51,13 @@ class _Calendar extends StatefulWidget {
 class _CalendarState extends State<_Calendar> {
   @override
   Widget build(BuildContext context) {
-    final CalendarState state = context.select(
+    final Activities activities = context.select(
       (CalendarCubit cubit) => cubit.state,
     );
 
     return Calendar(
-      workouts: [...?state.workouts],
-      races: [...?state.races],
+      workouts: [...?activities.workouts],
+      races: [...?activities.races],
       onWorkoutPressed: _navigateToWorkout,
       onRacePressed: _navigateToRace,
       onAddWorkout: _navigateToWorkoutCreator,

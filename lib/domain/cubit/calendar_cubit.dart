@@ -1,28 +1,28 @@
 import 'dart:async';
 
-import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../dependency_injection.dart';
+import '../additional_model/activities.dart';
 import '../entity/race.dart';
 import '../entity/workout.dart';
 import '../repository/race_repository.dart';
 import '../repository/workout_repository.dart';
 import '../service/auth_service.dart';
 
-class CalendarCubit extends Cubit<CalendarState> {
+class CalendarCubit extends Cubit<Activities> {
   final AuthService _authService;
   final WorkoutRepository _workoutRepository;
   final RaceRepository _raceRepository;
   StreamSubscription<(List<Workout>?, List<Race>?)>? _activitiesListener;
 
   CalendarCubit({
-    CalendarState state = const CalendarState(),
+    Activities activities = const Activities(),
   })  : _authService = getIt<AuthService>(),
         _workoutRepository = getIt<WorkoutRepository>(),
         _raceRepository = getIt<RaceRepository>(),
-        super(state);
+        super(activities);
 
   @override
   Future<void> close() {
@@ -56,18 +56,13 @@ class CalendarCubit extends Cubit<CalendarState> {
               startDate: startDate,
               endDate: endDate,
             ),
-            (
-              List<Workout>? workouts,
-              List<Race>? races,
-            ) =>
-                (workouts, races),
+            (List<Workout>? workouts, List<Race>? races) => (workouts, races),
           ),
         )
         .listen(
-          ((List<Workout>?, List<Race>?) params) => emit(CalendarState(
-            workouts: params.$1,
-            races: params.$2,
-          )),
+          ((List<Workout>?, List<Race>?) params) => emit(
+            Activities(workouts: params.$1, races: params.$2),
+          ),
         );
   }
 
@@ -75,14 +70,4 @@ class CalendarCubit extends Cubit<CalendarState> {
     _activitiesListener?.cancel();
     _activitiesListener = null;
   }
-}
-
-class CalendarState extends Equatable {
-  final List<Workout>? workouts;
-  final List<Race>? races;
-
-  const CalendarState({this.workouts, this.races});
-
-  @override
-  List<Object?> get props => [workouts, races];
 }

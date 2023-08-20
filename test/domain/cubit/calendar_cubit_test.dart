@@ -4,6 +4,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:runnoter/domain/additional_model/activities.dart';
 import 'package:runnoter/domain/cubit/calendar_cubit.dart';
 import 'package:runnoter/domain/entity/race.dart';
 import 'package:runnoter/domain/entity/workout.dart';
@@ -78,9 +79,9 @@ void main() {
           races$.add(updatedRaces);
         },
         expect: () => [
-          CalendarState(workouts: workouts, races: races),
-          CalendarState(workouts: updatedWorkouts, races: races),
-          CalendarState(workouts: updatedWorkouts, races: updatedRaces),
+          Activities(workouts: workouts, races: races),
+          Activities(workouts: updatedWorkouts, races: races),
+          Activities(workouts: updatedWorkouts, races: updatedRaces),
         ],
         verify: (_) {
           verify(() => authService.loggedUserId$).called(1);
