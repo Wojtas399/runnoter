@@ -28,6 +28,19 @@ void main() {
   );
 
   test(
+    'copy with canEditRaceStatus',
+    () {
+      const bool expected = false;
+
+      state = state.copyWith(canEditRaceStatus: expected);
+      final state2 = state.copyWith();
+
+      expect(state.canEditRaceStatus, expected);
+      expect(state2.canEditRaceStatus, expected);
+    },
+  );
+
+  test(
     'copy with race',
     () {
       final Race expectedRace =

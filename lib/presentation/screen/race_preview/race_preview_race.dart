@@ -3,22 +3,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/additional_model/activity_status.dart';
-import '../../../domain/bloc/activity_status_creator/activity_status_creator_bloc.dart';
 import '../../../domain/bloc/race_preview/race_preview_bloc.dart';
 import '../../component/activity_status_info_component.dart';
-import '../../component/big_button_component.dart';
 import '../../component/content_with_label_component.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/nullable_text_component.dart';
 import '../../component/text/title_text_components.dart';
-import '../../config/navigation/router.dart';
 import '../../extension/context_extensions.dart';
 import '../../extension/double_extensions.dart';
 import '../../extension/string_extensions.dart';
 import '../../formatter/date_formatter.dart';
 import '../../formatter/distance_unit_formatter.dart';
 import '../../formatter/duration_formatter.dart';
-import '../../service/navigator_service.dart';
 import 'race_preview_actions.dart';
 
 class RacePreviewRaceInfo extends StatelessWidget {
@@ -30,41 +26,34 @@ class RacePreviewRaceInfo extends StatelessWidget {
     const Widget gap = Gap16();
 
     return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const _Header(),
-            gap,
-            ContentWithLabel(
-              label: str.date,
-              content: const _RaceDate(),
-            ),
-            gap,
-            ContentWithLabel(
-              label: str.racePlace,
-              content: const _Place(),
-            ),
-            gap,
-            ContentWithLabel(
-              label: str.raceDistance,
-              content: const _Distance(),
-            ),
-            gap,
-            ContentWithLabel(
-              label: str.raceExpectedDuration,
-              content: const _ExpectedDuration(),
-            ),
-            gap,
-            ContentWithLabel(
-              label: str.activityStatus,
-              content: const _ActivityStatus(),
-            ),
-          ],
+        const _Header(),
+        gap,
+        ContentWithLabel(
+          label: str.date,
+          content: const _RaceDate(),
         ),
-        const Gap32(),
-        const _FinishRaceButton(),
+        gap,
+        ContentWithLabel(
+          label: str.racePlace,
+          content: const _Place(),
+        ),
+        gap,
+        ContentWithLabel(
+          label: str.raceDistance,
+          content: const _Distance(),
+        ),
+        gap,
+        ContentWithLabel(
+          label: str.raceExpectedDuration,
+          content: const _ExpectedDuration(),
+        ),
+        gap,
+        ContentWithLabel(
+          label: str.activityStatus,
+          content: const _ActivityStatus(),
+        ),
       ],
     );
   }
@@ -171,34 +160,5 @@ class _ActivityStatus extends StatelessWidget {
     return activityStatus == null
         ? const NullableText(null)
         : ActivityStatusInfo(activityStatus: activityStatus);
-  }
-}
-
-class _FinishRaceButton extends StatelessWidget {
-  const _FinishRaceButton();
-
-  @override
-  Widget build(BuildContext context) {
-    final ActivityStatus? activityStatus = context.select(
-      (RacePreviewBloc bloc) => bloc.state.race?.status,
-    );
-    return BigButton(
-      label: activityStatus is ActivityStatusPending
-          ? Str.of(context).activityStatusFinish
-          : Str.of(context).activityStatusEditStatus,
-      onPressed: () {
-        _onPressed(context);
-      },
-    );
-  }
-
-  void _onPressed(BuildContext context) {
-    final String? raceId = context.read<RacePreviewBloc>().state.race?.id;
-    if (raceId != null) {
-      navigateTo(ActivityStatusCreatorRoute(
-        entityType: ActivityStatusCreatorEntityType.race.name,
-        entityId: raceId,
-      ));
-    }
   }
 }

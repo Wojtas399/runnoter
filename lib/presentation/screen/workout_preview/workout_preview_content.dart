@@ -30,7 +30,7 @@ class WorkoutPreviewContent extends StatelessWidget {
               child: Column(
                 children: [
                   _WorkoutInfo(),
-                  _ActivityStatusButton(),
+                  _WorkoutStatusButton(),
                 ],
               ),
             ),
@@ -77,8 +77,8 @@ class _WorkoutInfo extends StatelessWidget {
   }
 }
 
-class _ActivityStatusButton extends StatelessWidget {
-  const _ActivityStatusButton();
+class _WorkoutStatusButton extends StatelessWidget {
+  const _WorkoutStatusButton();
 
   @override
   Widget build(BuildContext context) {
