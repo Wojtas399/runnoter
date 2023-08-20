@@ -103,6 +103,19 @@ void main() {
   );
 
   test(
+    'copy with canEditWorkoutStatus',
+    () {
+      const bool expected = false;
+
+      state = state.copyWith(canEditWorkoutStatus: expected);
+      final state2 = state.copyWith();
+
+      expect(state.canEditWorkoutStatus, expected);
+      expect(state2.canEditWorkoutStatus, expected);
+    },
+  );
+
+  test(
     'copy with date',
     () {
       final DateTime expectedDate = DateTime(2023, 1, 10);
@@ -116,7 +129,7 @@ void main() {
   );
 
   test(
-    'copy with workout name',
+    'copy with workoutName',
     () {
       const String expectedWorkoutName = 'workout name';
 
@@ -151,7 +164,7 @@ void main() {
   );
 
   test(
-    'copy with activity status',
+    'copy with activityStatus',
     () {
       const ActivityStatus expectedActivityStatus = ActivityStatusPending();
 

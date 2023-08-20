@@ -29,6 +29,7 @@ class WorkoutPreviewWorkoutActions extends StatelessWidget {
     if (date != null && workoutId != null) {
       navigateTo(
         WorkoutCreatorRoute(
+          userId: bloc.userId,
           date: date.toPathFormat(),
           workoutId: workoutId,
         ),

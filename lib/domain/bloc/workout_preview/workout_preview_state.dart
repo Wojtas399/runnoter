@@ -1,6 +1,7 @@
 part of 'workout_preview_bloc.dart';
 
 class WorkoutPreviewState extends BlocState<WorkoutPreviewState> {
+  final bool canEditWorkoutStatus;
   final DateTime? date;
   final String? workoutName;
   final List<WorkoutStage>? stages;
@@ -8,6 +9,7 @@ class WorkoutPreviewState extends BlocState<WorkoutPreviewState> {
 
   const WorkoutPreviewState({
     required super.status,
+    this.canEditWorkoutStatus = true,
     this.date,
     this.workoutName,
     this.stages,
@@ -23,6 +25,7 @@ class WorkoutPreviewState extends BlocState<WorkoutPreviewState> {
   @override
   List<Object?> get props => [
         status,
+        canEditWorkoutStatus,
         date,
         workoutName,
         stages,
@@ -32,6 +35,7 @@ class WorkoutPreviewState extends BlocState<WorkoutPreviewState> {
   @override
   WorkoutPreviewState copyWith({
     BlocStatus? status,
+    bool? canEditWorkoutStatus,
     DateTime? date,
     String? workoutName,
     List<WorkoutStage>? stages,
@@ -39,6 +43,7 @@ class WorkoutPreviewState extends BlocState<WorkoutPreviewState> {
   }) {
     return WorkoutPreviewState(
       status: status ?? const BlocStatusComplete(),
+      canEditWorkoutStatus: canEditWorkoutStatus ?? this.canEditWorkoutStatus,
       date: date ?? this.date,
       workoutName: workoutName ?? this.workoutName,
       stages: stages ?? this.stages,

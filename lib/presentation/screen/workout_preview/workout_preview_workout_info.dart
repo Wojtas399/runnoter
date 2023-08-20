@@ -4,20 +4,16 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/additional_model/activity_status.dart';
 import '../../../domain/additional_model/workout_stage.dart';
-import '../../../domain/bloc/activity_status_creator/activity_status_creator_bloc.dart';
 import '../../../domain/bloc/workout_preview/workout_preview_bloc.dart';
 import '../../component/activity_status_info_component.dart';
-import '../../component/big_button_component.dart';
 import '../../component/content_with_label_component.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/nullable_text_component.dart';
 import '../../component/text/title_text_components.dart';
-import '../../config/navigation/router.dart';
 import '../../extension/context_extensions.dart';
 import '../../formatter/date_formatter.dart';
 import '../../formatter/list_of_workout_stages_formatter.dart';
 import '../../formatter/workout_stage_formatter.dart';
-import '../../service/navigator_service.dart';
 import 'workout_preview_actions.dart';
 
 class WorkoutPreviewWorkoutInfo extends StatelessWidget {
@@ -29,36 +25,29 @@ class WorkoutPreviewWorkoutInfo extends StatelessWidget {
     const Widget gap = Gap16();
 
     return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const _Header(),
-            gap,
-            ContentWithLabel(
-              label: str.date,
-              content: const _WorkoutDate(),
-            ),
-            gap,
-            ContentWithLabel(
-              label: str.workoutPreviewWorkoutStages,
-              content: const _WorkoutStages(),
-            ),
-            gap,
-            ContentWithLabel(
-              label: str.workoutPreviewTotalDistance,
-              content: const _WorkoutDistance(),
-            ),
-            gap,
-            ContentWithLabel(
-              label: str.activityStatus,
-              content: const _ActivityStatus(),
-            ),
-          ],
+        const _Header(),
+        gap,
+        ContentWithLabel(
+          label: str.date,
+          content: const _WorkoutDate(),
         ),
-        const Gap32(),
-        const _ActivityStatusButton(),
+        gap,
+        ContentWithLabel(
+          label: str.workoutPreviewWorkoutStages,
+          content: const _WorkoutStages(),
+        ),
+        gap,
+        ContentWithLabel(
+          label: str.workoutPreviewTotalDistance,
+          content: const _WorkoutDistance(),
+        ),
+        gap,
+        ContentWithLabel(
+          label: str.activityStatus,
+          content: const _ActivityStatus(),
+        ),
       ],
     );
   }
@@ -159,37 +148,5 @@ class _ActivityStatus extends StatelessWidget {
     return activityStatus == null
         ? const NullableText(null)
         : ActivityStatusInfo(activityStatus: activityStatus);
-  }
-}
-
-class _ActivityStatusButton extends StatelessWidget {
-  const _ActivityStatusButton();
-
-  @override
-  Widget build(BuildContext context) {
-    final ActivityStatus? activityStatus = context.select(
-      (WorkoutPreviewBloc bloc) => bloc.state.activityStatus,
-    );
-    String label = Str.of(context).activityStatusEditStatus;
-    if (activityStatus is ActivityStatusPending) {
-      label = Str.of(context).activityStatusFinish;
-    }
-
-    return BigButton(
-      label: label,
-      onPressed: () => _onPressed(context),
-    );
-  }
-
-  void _onPressed(BuildContext context) {
-    final String? workoutId = context.read<WorkoutPreviewBloc>().workoutId;
-    if (workoutId != null) {
-      navigateTo(
-        ActivityStatusCreatorRoute(
-          entityType: ActivityStatusCreatorEntityType.workout.name,
-          entityId: workoutId,
-        ),
-      );
-    }
   }
 }
