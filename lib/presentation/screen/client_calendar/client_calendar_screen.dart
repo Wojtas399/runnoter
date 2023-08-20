@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../domain/additional_model/activities.dart';
 import '../../../domain/bloc/client/client_bloc.dart';
 import '../../../domain/cubit/client_calendar_cubit.dart';
 import '../../component/calendar/calendar_component.dart';
@@ -42,7 +43,7 @@ class _Calendar extends StatefulWidget {
 class _CalendarState extends State<_Calendar> {
   @override
   Widget build(BuildContext context) {
-    final ClientCalendarState activities = context.select(
+    final Activities activities = context.select(
       (ClientCalendarCubit cubit) => cubit.state,
     );
 

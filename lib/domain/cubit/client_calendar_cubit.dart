@@ -1,16 +1,16 @@
 import 'dart:async';
 
-import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../dependency_injection.dart';
+import '../additional_model/activities.dart';
 import '../entity/race.dart';
 import '../entity/workout.dart';
 import '../repository/race_repository.dart';
 import '../repository/workout_repository.dart';
 
-class ClientCalendarCubit extends Cubit<ClientCalendarState> {
+class ClientCalendarCubit extends Cubit<Activities> {
   final WorkoutRepository _workoutRepository;
   final RaceRepository _raceRepository;
   final String _clientId;
@@ -18,11 +18,11 @@ class ClientCalendarCubit extends Cubit<ClientCalendarState> {
 
   ClientCalendarCubit({
     required String clientId,
-    ClientCalendarState state = const ClientCalendarState(),
+    Activities activities = const Activities(),
   })  : _clientId = clientId,
         _workoutRepository = getIt<WorkoutRepository>(),
         _raceRepository = getIt<RaceRepository>(),
-        super(state);
+        super(activities);
 
   @override
   Future<void> close() {
@@ -52,10 +52,9 @@ class ClientCalendarCubit extends Cubit<ClientCalendarState> {
       ),
       (List<Workout>? workouts, List<Race>? races) => (workouts, races),
     ).listen(
-      ((List<Workout>?, List<Race>?) params) => emit(ClientCalendarState(
-        workouts: params.$1,
-        races: params.$2,
-      )),
+      ((List<Workout>?, List<Race>?) params) => emit(
+        Activities(workouts: params.$1, races: params.$2),
+      ),
     );
   }
 
@@ -63,14 +62,4 @@ class ClientCalendarCubit extends Cubit<ClientCalendarState> {
     _activitiesListener?.cancel();
     _activitiesListener = null;
   }
-}
-
-class ClientCalendarState extends Equatable {
-  final List<Workout>? workouts;
-  final List<Race>? races;
-
-  const ClientCalendarState({this.workouts, this.races});
-
-  @override
-  List<Object?> get props => [workouts, races];
 }
