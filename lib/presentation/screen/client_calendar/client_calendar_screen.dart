@@ -97,7 +97,9 @@ class _CalendarState extends State<_Calendar> {
 
   Future<void> _onDayPressed(BuildContext context, DateTime date) async {
     final DayPreviewDialogAction? action =
-        await showDialogDependingOnScreenSize(DayPreviewDialog(date: date));
+        await showDialogDependingOnScreenSize(
+      DayPreviewDialog(userId: context.read<ClientBloc>().clientId, date: date),
+    );
     if (action == null) return;
     switch (action) {
       case DayPreviewDialogActionAddWorkout():

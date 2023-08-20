@@ -13,17 +13,19 @@ import 'day_preview_activities_content.dart';
 import 'day_preview_dialog_actions.dart';
 
 class DayPreviewDialog extends StatelessWidget {
+  final String userId;
   final DateTime date;
 
   const DayPreviewDialog({
     super.key,
+    required this.userId,
     required this.date,
   });
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => DayPreviewCubit(date: date)..initialize(),
+      create: (_) => DayPreviewCubit(userId: userId, date: date)..initialize(),
       child: const ResponsiveLayout(
         mobileBody: _FullScreenDialog(),
         desktopBody: _NormalDialog(),

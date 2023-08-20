@@ -1,33 +1,33 @@
 import 'dart:async';
 
-import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../common/date_service.dart';
 import '../../dependency_injection.dart';
+import '../additional_model/activities.dart';
 import '../entity/race.dart';
 import '../entity/workout.dart';
 import '../repository/race_repository.dart';
 import '../repository/workout_repository.dart';
-import '../service/auth_service.dart';
 
-class DayPreviewCubit extends Cubit<DayPreviewState> {
+class DayPreviewCubit extends Cubit<Activities> {
+  final String _userId;
   final DateTime date;
-  final AuthService _authService;
   final WorkoutRepository _workoutRepository;
   final RaceRepository _raceRepository;
   final DateService _dateService;
   StreamSubscription? _listener;
 
   DayPreviewCubit({
+    required String userId,
     required this.date,
-    DayPreviewState state = const DayPreviewState(),
-  })  : _authService = getIt<AuthService>(),
+    Activities activities = const Activities(),
+  })  : _userId = userId,
         _workoutRepository = getIt<WorkoutRepository>(),
         _raceRepository = getIt<RaceRepository>(),
         _dateService = getIt<DateService>(),
-        super(state);
+        super(activities);
 
   @override
   Future<void> close() {
@@ -43,48 +43,14 @@ class DayPreviewCubit extends Cubit<DayPreviewState> {
       (state.races != null && state.races!.isNotEmpty);
 
   void initialize() {
-    _listener ??= _authService.loggedUserId$
-        .whereNotNull()
-        .switchMap(
-          (String loggedUserId) => Rx.combineLatest2(
-            _workoutRepository.getWorkoutsByDate(
-              date: date,
-              userId: loggedUserId,
-            ),
-            _raceRepository.getRacesByDate(
-              date: date,
-              userId: loggedUserId,
-            ),
-            (
-              List<Workout>? workouts,
-              List<Race>? races,
-            ) =>
-                (workouts, races),
-          ),
-        )
-        .listen(
-          ((List<Workout>?, List<Race>?) params) => emit(
-            DayPreviewState(
-              workouts: params.$1,
-              races: params.$2,
-            ),
-          ),
-        );
+    _listener ??= Rx.combineLatest2(
+      _workoutRepository.getWorkoutsByDate(date: date, userId: _userId),
+      _raceRepository.getRacesByDate(date: date, userId: _userId),
+      (List<Workout>? workouts, List<Race>? races) => (workouts, races),
+    ).listen(
+      ((List<Workout>?, List<Race>?) activities) => emit(
+        Activities(workouts: activities.$1, races: activities.$2),
+      ),
+    );
   }
-}
-
-class DayPreviewState extends Equatable {
-  final List<Workout>? workouts;
-  final List<Race>? races;
-
-  const DayPreviewState({
-    this.workouts,
-    this.races,
-  });
-
-  @override
-  List<Object?> get props => [
-        workouts,
-        races,
-      ];
 }

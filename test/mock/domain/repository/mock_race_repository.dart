@@ -38,13 +38,14 @@ class MockRaceRepository extends Mock implements RaceRepository {
 
   void mockGetRacesByDate({
     List<Race>? races,
+    Stream<List<Race>?>? racesStream,
   }) {
     when(
       () => getRacesByDate(
         date: any(named: 'date'),
         userId: any(named: 'userId'),
       ),
-    ).thenAnswer((_) => Stream.value(races));
+    ).thenAnswer((_) => racesStream ?? Stream.value(races));
   }
 
   void mockGetAllRaces({

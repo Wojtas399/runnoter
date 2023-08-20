@@ -1,51 +1,47 @@
+import 'dart:async';
+
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/common/date_service.dart';
+import 'package:runnoter/domain/additional_model/activities.dart';
 import 'package:runnoter/domain/cubit/day_preview_cubit.dart';
 import 'package:runnoter/domain/entity/race.dart';
 import 'package:runnoter/domain/entity/workout.dart';
 import 'package:runnoter/domain/repository/race_repository.dart';
 import 'package:runnoter/domain/repository/workout_repository.dart';
-import 'package:runnoter/domain/service/auth_service.dart';
 
 import '../../creators/race_creator.dart';
 import '../../creators/workout_creator.dart';
 import '../../mock/common/mock_date_service.dart';
 import '../../mock/domain/repository/mock_race_repository.dart';
 import '../../mock/domain/repository/mock_workout_repository.dart';
-import '../../mock/domain/service/mock_auth_service.dart';
 
 void main() {
-  final authService = MockAuthService();
   final workoutRepository = MockWorkoutRepository();
   final raceRepository = MockRaceRepository();
   final dateService = MockDateService();
   final DateTime date = DateTime(2023, 4, 10);
-  const String loggedUserId = 'u1';
+  const String userId = 'u1';
 
   DayPreviewCubit createCubit({
     List<Workout>? workouts,
     List<Race>? races,
   }) =>
       DayPreviewCubit(
+        userId: userId,
         date: date,
-        state: DayPreviewState(
-          workouts: workouts,
-          races: races,
-        ),
+        activities: Activities(workouts: workouts, races: races),
       );
 
   setUpAll(() {
     GetIt.I.registerFactory<DateService>(() => dateService);
-    GetIt.I.registerFactory<AuthService>(() => authService);
     GetIt.I.registerSingleton<WorkoutRepository>(workoutRepository);
     GetIt.I.registerSingleton<RaceRepository>(raceRepository);
   });
 
   tearDown(() {
-    reset(authService);
     reset(workoutRepository);
     reset(raceRepository);
     reset(dateService);
@@ -162,65 +158,55 @@ void main() {
     },
   );
 
-  blocTest(
-    'initialize, '
-    'logged user does not exist, '
-    'should do nothing',
-    build: () => createCubit(),
-    setUp: () => authService.mockGetLoggedUserId(),
-    act: (cubit) => cubit.initialize(),
-    expect: () => [],
-    verify: (_) => verify(
-      () => authService.loggedUserId$,
-    ).called(1),
-  );
+  group(
+    'initialize',
+    () {
+      final List<Workout> workouts = [
+        createWorkout(id: 'w1'),
+        createWorkout(id: 'w2'),
+      ];
+      final List<Race> races = [createRace(id: 'r1'), createRace(id: 'r2')];
+      final StreamController<List<Workout>?> workouts$ = StreamController()
+        ..add(workouts);
+      final StreamController<List<Race>?> races$ = StreamController()
+        ..add(races);
 
-  blocTest(
-    'initialize, '
-    'should set listener of workouts and races from given date belonging to logged user',
-    build: () => createCubit(),
-    setUp: () {
-      authService.mockGetLoggedUserId(userId: loggedUserId);
-      workoutRepository.mockGetWorkoutsByDate(
-        workouts: [
-          createWorkout(id: 'w1', userId: loggedUserId),
-          createWorkout(id: 'w2', userId: loggedUserId),
+      blocTest(
+        'should set listener of workouts and races from given date belonging to user',
+        build: () => createCubit(),
+        setUp: () {
+          workoutRepository.mockGetWorkoutsByDate(
+            workoutsStream: workouts$.stream,
+          );
+          raceRepository.mockGetRacesByDate(racesStream: races$.stream);
+        },
+        act: (cubit) async {
+          cubit.initialize();
+          await cubit.stream.first;
+          workouts$.add([]);
+          await cubit.stream.first;
+          races$.add([]);
+        },
+        expect: () => [
+          Activities(workouts: workouts, races: races),
+          Activities(workouts: const [], races: races),
+          const Activities(workouts: [], races: []),
         ],
+        verify: (_) {
+          verify(
+            () => workoutRepository.getWorkoutsByDate(
+              date: date,
+              userId: userId,
+            ),
+          ).called(1);
+          verify(
+            () => raceRepository.getRacesByDate(
+              date: date,
+              userId: userId,
+            ),
+          ).called(1);
+        },
       );
-      raceRepository.mockGetRacesByDate(
-        races: [
-          createRace(id: 'c1', userId: loggedUserId),
-        ],
-      );
-    },
-    act: (cubit) => cubit.initialize(),
-    expect: () => [
-      DayPreviewState(
-        workouts: [
-          createWorkout(id: 'w1', userId: loggedUserId),
-          createWorkout(id: 'w2', userId: loggedUserId),
-        ],
-        races: [
-          createRace(id: 'c1', userId: loggedUserId),
-        ],
-      ),
-    ],
-    verify: (_) {
-      verify(
-        () => authService.loggedUserId$,
-      ).called(1);
-      verify(
-        () => workoutRepository.getWorkoutsByDate(
-          date: date,
-          userId: loggedUserId,
-        ),
-      ).called(1);
-      verify(
-        () => raceRepository.getRacesByDate(
-          date: date,
-          userId: loggedUserId,
-        ),
-      ).called(1);
     },
   );
 }

@@ -35,13 +35,14 @@ class MockWorkoutRepository extends Mock implements WorkoutRepository {
 
   void mockGetWorkoutsByDate({
     List<Workout>? workouts,
+    Stream<List<Workout>?>? workoutsStream,
   }) {
     when(
       () => getWorkoutsByDate(
         userId: any(named: 'userId'),
         date: any(named: 'date'),
       ),
-    ).thenAnswer((_) => Stream.value(workouts));
+    ).thenAnswer((_) => workoutsStream ?? Stream.value(workouts));
   }
 
   void mockGetAllWorkouts({

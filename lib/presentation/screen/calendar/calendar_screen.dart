@@ -79,8 +79,7 @@ class _CalendarState extends State<_Calendar> {
   }
 
   Future<void> _onDayPressed(BuildContext context, DateTime date) async {
-    final DayPreviewDialogAction? action =
-        await showDialogDependingOnScreenSize(DayPreviewDialog(date: date));
+    final DayPreviewDialogAction? action = await _askForDayAction(date);
     if (action == null) return;
     switch (action) {
       case DayPreviewDialogActionAddWorkout():
@@ -128,5 +127,13 @@ class _CalendarState extends State<_Calendar> {
       userId: loggedUserId,
       dateStr: date.toPathFormat(),
     ));
+  }
+
+  Future<DayPreviewDialogAction?> _askForDayAction(DateTime date) async {
+    final String? loggedUserId = await getIt<AuthService>().loggedUserId$.first;
+    if (loggedUserId == null) return null;
+    return await showDialogDependingOnScreenSize(
+      DayPreviewDialog(userId: loggedUserId, date: date),
+    );
   }
 }
