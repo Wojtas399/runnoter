@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../common/date_service.dart';
 import '../../../../dependency_injection.dart';
 import '../../../../domain/additional_model/calendar_date_range_data.dart';
+import '../../../../domain/additional_model/calendar_week_day.dart';
 import '../../../../domain/entity/health_measurement.dart';
 import '../../../../domain/entity/race.dart';
 import '../../../../domain/entity/workout.dart';
@@ -149,7 +150,7 @@ class CalendarComponentBloc
       DateRangeMonth() => 6,
     };
     for (int weekNumber = 1; weekNumber <= numberOfWeeks; weekNumber++) {
-      final List<CalendarDay> daysFromWeek =
+      final List<CalendarWeekDay> daysFromWeek =
           _createDaysFromWeek(date, dateRange);
       weeks.add(
         CalendarWeek(days: daysFromWeek),
@@ -183,22 +184,23 @@ class CalendarComponentBloc
     );
   }
 
-  List<CalendarDay> _createDaysFromWeek(
+  List<CalendarWeekDay> _createDaysFromWeek(
     final DateTime firstDayOfTheWeek,
     final DateRange dateRange,
   ) {
-    final List<CalendarDay> daysFromWeek = [];
+    final List<CalendarWeekDay> daysFromWeek = [];
     final DateTime todayDate = _dateService.getToday();
     DateTime date = firstDayOfTheWeek;
     for (int weekDayNumber = 1; weekDayNumber <= 7; weekDayNumber++) {
-      final CalendarDay newCalendarDay = _createDay(date, todayDate, dateRange);
-      daysFromWeek.add(newCalendarDay);
+      final CalendarWeekDay newCalendarWeekDay =
+          _createDay(date, todayDate, dateRange);
+      daysFromWeek.add(newCalendarWeekDay);
       date = date.add(const Duration(days: 1));
     }
     return daysFromWeek;
   }
 
-  CalendarDay _createDay(
+  CalendarWeekDay _createDay(
     DateTime date,
     DateTime todayDate,
     DateRange dateRange,
@@ -219,7 +221,7 @@ class CalendarComponentBloc
           .where((race) => _dateService.areDatesTheSame(race.date, date))
           .toList(),
     ];
-    return CalendarDay(
+    return CalendarWeekDay(
       date: date,
       isDisabled:
           dateRange is DateRangeMonth ? date.month != dateRange.month : false,

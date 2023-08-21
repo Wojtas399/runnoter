@@ -46,38 +46,10 @@ class DateRangeMonth extends DateRange {
 }
 
 class CalendarWeek extends Equatable {
-  final List<CalendarDay> days;
+  final List<CalendarWeekDay> days;
 
   const CalendarWeek({required this.days});
 
   @override
   List<Object?> get props => [days];
-}
-
-class CalendarDay extends Equatable {
-  final DateTime date;
-  final bool isDisabled;
-  final bool isTodayDay;
-  final HealthMeasurement? healthMeasurement;
-  final List<Workout> workouts;
-  final List<Race> races;
-
-  const CalendarDay({
-    required this.date,
-    required this.isDisabled,
-    required this.isTodayDay,
-    this.healthMeasurement,
-    this.workouts = const [],
-    this.races = const [],
-  });
-
-  @override
-  List<Object?> get props => [
-        date,
-        isDisabled,
-        isTodayDay,
-        healthMeasurement,
-        workouts,
-        races,
-      ];
 }

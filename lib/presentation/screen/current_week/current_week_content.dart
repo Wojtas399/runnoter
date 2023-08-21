@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../domain/additional_model/calendar_week_day.dart';
 import '../../../domain/cubit/current_week_cubit.dart';
 import '../../component/body/big_body_component.dart';
 import '../../component/card_body_component.dart';
@@ -9,8 +10,8 @@ import '../../component/gap/gap_horizontal_components.dart';
 import '../../component/padding/paddings_24.dart';
 import '../../component/responsive_layout_component.dart';
 import '../../component/shimmer.dart';
+import '../../component/week_day_item_component.dart';
 import '../../extension/widgets_list_extensions.dart';
-import 'current_week_day_item.dart';
 import 'current_week_stats.dart';
 
 class CurrentWeekContent extends StatelessWidget {
@@ -89,15 +90,16 @@ class _ListOfDays extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<Day>? days = context.select(
+    final List<CalendarWeekDay>? days = context.select(
       (CurrentWeekCubit cubit) => cubit.state,
     );
 
     return Column(
       children: <Widget>[
         if (days == null)
-          for (int i = 0; i < 7; i++) const CurrentWeekDayItemShimmer(),
-        if (days != null) ...days.map((day) => CurrentWeekDayItem(day: day)),
+          for (int i = 0; i < 7; i++) const WeekDayItemShimmer(),
+        if (days != null)
+          ...days.map((CalendarWeekDay day) => WeekDayItem(day: day)),
       ].addSeparator(const Divider(height: 16)),
     );
   }

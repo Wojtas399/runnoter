@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../domain/additional_model/calendar_week_day.dart';
 import '../../../domain/cubit/calendar_date_range_data_cubit.dart';
 import '../../../domain/entity/race.dart';
 import '../../../domain/entity/workout.dart';
@@ -35,7 +36,7 @@ class CalendarComponentMonthDays extends StatelessWidget {
                 (CalendarWeek week) => TableRow(
                   children: [
                     ...week.days.map(
-                      (CalendarDay day) => TableCell(
+                      (CalendarWeekDay day) => TableCell(
                         child: _DayItem(day: day),
                       ),
                     ),
@@ -48,7 +49,7 @@ class CalendarComponentMonthDays extends StatelessWidget {
 }
 
 class _DayItem extends StatelessWidget {
-  final CalendarDay day;
+  final CalendarWeekDay day;
 
   const _DayItem({required this.day});
 

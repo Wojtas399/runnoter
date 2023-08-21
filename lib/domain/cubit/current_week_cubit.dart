@@ -1,20 +1,20 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
-import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../common/date_service.dart';
 import '../../common/workout_stage_service.dart';
 import '../../dependency_injection.dart';
+import '../additional_model/calendar_week_day.dart';
 import '../entity/race.dart';
 import '../entity/workout.dart';
 import '../repository/race_repository.dart';
 import '../repository/workout_repository.dart';
 import '../service/auth_service.dart';
 
-class CurrentWeekCubit extends Cubit<List<Day>?> {
+class CurrentWeekCubit extends Cubit<List<CalendarWeekDay>?> {
   final DateService _dateService;
   final AuthService _authService;
   final WorkoutRepository _workoutRepository;
@@ -22,21 +22,22 @@ class CurrentWeekCubit extends Cubit<List<Day>?> {
   StreamSubscription? _listener;
 
   CurrentWeekCubit({
-    List<Day>? days,
+    List<CalendarWeekDay>? days,
   })  : _dateService = getIt<DateService>(),
         _authService = getIt<AuthService>(),
         _workoutRepository = getIt<WorkoutRepository>(),
         _raceRepository = getIt<RaceRepository>(),
         super(days);
 
-  int? get numberOfActivities =>
-      state?.map((Day day) => day.workouts.length + day.races.length).sum;
+  int? get numberOfActivities => state
+      ?.map((CalendarWeekDay day) => day.workouts.length + day.races.length)
+      .sum;
 
   double? get scheduledTotalDistance =>
-      state?.map(_calculateScheduledTotalDayDistance).sum;
+      state?.map(_calculateScheduledTotalCalendarWeekDayDistance).sum;
 
   double? get coveredTotalDistance =>
-      state?.map(_calculateCoveredTotalDayDistance).sum;
+      state?.map(_calculateCoveredTotalCalendarWeekDayDistance).sum;
 
   @override
   Future<void> close() {
@@ -74,11 +75,11 @@ class CurrentWeekCubit extends Cubit<List<Day>?> {
     final List<Race> racesFromWeek = [...?params.$2];
     final DateTime today = _dateService.getToday();
     final List<DateTime> datesFromWeek = _dateService.getDaysFromWeek(today);
-    final List<Day> days = datesFromWeek
+    final List<CalendarWeekDay> days = datesFromWeek
         .map(
-          (DateTime date) => Day(
+          (DateTime date) => CalendarWeekDay(
             date: date,
-            isToday: date == today,
+            isTodayDay: date == today,
             workouts: workoutsFromWeek
                 .where(
                   (workout) => _dateService.areDatesTheSame(workout.date, date),
@@ -93,7 +94,7 @@ class CurrentWeekCubit extends Cubit<List<Day>?> {
     emit(days);
   }
 
-  double _calculateScheduledTotalDayDistance(Day day) {
+  double _calculateScheduledTotalCalendarWeekDayDistance(CalendarWeekDay day) {
     final double workoutsDistance = day.workouts
         .map(
           (workout) => workout.stages.map(calculateDistanceOfWorkoutStage).sum,
@@ -104,33 +105,11 @@ class CurrentWeekCubit extends Cubit<List<Day>?> {
     return workoutsDistance + racesDistance;
   }
 
-  double _calculateCoveredTotalDayDistance(Day day) {
+  double _calculateCoveredTotalCalendarWeekDayDistance(CalendarWeekDay day) {
     final double workoutsCoveredDistance =
         day.workouts.map((workout) => workout.coveredDistance).sum;
     final double racesCoveredDistance =
         day.races.map((race) => race.coveredDistance).sum;
     return workoutsCoveredDistance + racesCoveredDistance;
   }
-}
-
-class Day extends Equatable {
-  final DateTime date;
-  final bool isToday;
-  final List<Workout> workouts;
-  final List<Race> races;
-
-  const Day({
-    required this.date,
-    required this.isToday,
-    this.workouts = const [],
-    this.races = const [],
-  });
-
-  @override
-  List<Object?> get props => [
-        date,
-        isToday,
-        workouts,
-        races,
-      ];
 }

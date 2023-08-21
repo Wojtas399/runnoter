@@ -4,6 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/common/date_service.dart';
 import 'package:runnoter/domain/additional_model/activity_status.dart';
+import 'package:runnoter/domain/additional_model/calendar_week_day.dart';
 import 'package:runnoter/domain/additional_model/workout_stage.dart';
 import 'package:runnoter/domain/cubit/current_week_cubit.dart';
 import 'package:runnoter/domain/repository/race_repository.dart';
@@ -44,11 +45,11 @@ void main() {
     'should sum activities from all days',
     build: () => CurrentWeekCubit(
       days: [
-        Day(date: DateTime(2023, 4, 3), isToday: false),
-        Day(date: DateTime(2023, 4, 4), isToday: false),
-        Day(
+        CalendarWeekDay(date: DateTime(2023, 4, 3), isTodayDay: false),
+        CalendarWeekDay(date: DateTime(2023, 4, 4), isTodayDay: false),
+        CalendarWeekDay(
           date: DateTime(2023, 4, 5),
-          isToday: true,
+          isTodayDay: true,
           workouts: [
             createWorkout(
               id: 'w1',
@@ -66,9 +67,9 @@ void main() {
             ),
           ],
         ),
-        Day(
+        CalendarWeekDay(
           date: DateTime(2023, 4, 6),
-          isToday: false,
+          isTodayDay: false,
           races: [
             createRace(
               id: 'c2',
@@ -76,9 +77,9 @@ void main() {
             ),
           ],
         ),
-        Day(
+        CalendarWeekDay(
           date: DateTime(2023, 4, 7),
-          isToday: false,
+          isTodayDay: false,
           workouts: [
             createWorkout(
               id: 'w2',
@@ -86,8 +87,8 @@ void main() {
             )
           ],
         ),
-        Day(date: DateTime(2023, 4, 8), isToday: false),
-        Day(date: DateTime(2023, 4, 9), isToday: false),
+        CalendarWeekDay(date: DateTime(2023, 4, 8), isTodayDay: false),
+        CalendarWeekDay(date: DateTime(2023, 4, 9), isTodayDay: false),
       ],
     ),
     verify: (bloc) => expect(bloc.numberOfActivities, 5),
@@ -98,11 +99,11 @@ void main() {
     'should sum distance of all activities from all days',
     build: () => CurrentWeekCubit(
       days: [
-        Day(date: DateTime(2023, 4, 3), isToday: false),
-        Day(date: DateTime(2023, 4, 4), isToday: false),
-        Day(
+        CalendarWeekDay(date: DateTime(2023, 4, 3), isTodayDay: false),
+        CalendarWeekDay(date: DateTime(2023, 4, 4), isTodayDay: false),
+        CalendarWeekDay(
           date: DateTime(2023, 4, 5),
-          isToday: true,
+          isTodayDay: true,
           workouts: [
             createWorkout(
               id: 'w1',
@@ -133,9 +134,9 @@ void main() {
             ),
           ],
         ),
-        Day(
+        CalendarWeekDay(
           date: DateTime(2023, 4, 6),
-          isToday: false,
+          isTodayDay: false,
           races: [
             createRace(
               id: 'c2',
@@ -144,9 +145,9 @@ void main() {
             ),
           ],
         ),
-        Day(
+        CalendarWeekDay(
           date: DateTime(2023, 4, 7),
-          isToday: false,
+          isTodayDay: false,
           workouts: [
             createWorkout(
               id: 'w2',
@@ -162,8 +163,8 @@ void main() {
             )
           ],
         ),
-        Day(date: DateTime(2023, 4, 8), isToday: false),
-        Day(date: DateTime(2023, 4, 9), isToday: false),
+        CalendarWeekDay(date: DateTime(2023, 4, 8), isTodayDay: false),
+        CalendarWeekDay(date: DateTime(2023, 4, 9), isTodayDay: false),
       ],
     ),
     verify: (bloc) => expect(bloc.scheduledTotalDistance, 24.7),
@@ -174,11 +175,11 @@ void main() {
     'should sum distance of covered distance of all activities from all days',
     build: () => CurrentWeekCubit(
       days: [
-        Day(date: DateTime(2023, 4, 3), isToday: false),
-        Day(date: DateTime(2023, 4, 4), isToday: false),
-        Day(
+        CalendarWeekDay(date: DateTime(2023, 4, 3), isTodayDay: false),
+        CalendarWeekDay(date: DateTime(2023, 4, 4), isTodayDay: false),
+        CalendarWeekDay(
           date: DateTime(2023, 4, 5),
-          isToday: true,
+          isTodayDay: true,
           workouts: [
             createWorkout(
               id: 'w1',
@@ -199,9 +200,9 @@ void main() {
             ),
           ],
         ),
-        Day(
+        CalendarWeekDay(
           date: DateTime(2023, 4, 6),
-          isToday: false,
+          isTodayDay: false,
           races: [
             createRace(
               id: 'c2',
@@ -210,9 +211,9 @@ void main() {
             ),
           ],
         ),
-        Day(
+        CalendarWeekDay(
           date: DateTime(2023, 4, 7),
-          isToday: false,
+          isTodayDay: false,
           workouts: [
             createWorkout(
               id: 'w2',
@@ -221,8 +222,8 @@ void main() {
             )
           ],
         ),
-        Day(date: DateTime(2023, 4, 8), isToday: false),
-        Day(date: DateTime(2023, 4, 9), isToday: false),
+        CalendarWeekDay(date: DateTime(2023, 4, 8), isTodayDay: false),
+        CalendarWeekDay(date: DateTime(2023, 4, 9), isTodayDay: false),
       ],
     ),
     verify: (bloc) => expect(bloc.coveredTotalDistance, 17.7),
@@ -284,11 +285,11 @@ void main() {
     act: (cubit) => cubit.initialize(),
     expect: () => [
       [
-        Day(date: DateTime(2023, 4, 3), isToday: false),
-        Day(date: DateTime(2023, 4, 4), isToday: false),
-        Day(
+        CalendarWeekDay(date: DateTime(2023, 4, 3), isTodayDay: false),
+        CalendarWeekDay(date: DateTime(2023, 4, 4), isTodayDay: false),
+        CalendarWeekDay(
           date: DateTime(2023, 4, 5),
-          isToday: true,
+          isTodayDay: true,
           workouts: [
             createWorkout(
               id: 'w1',
@@ -306,9 +307,9 @@ void main() {
             ),
           ],
         ),
-        Day(
+        CalendarWeekDay(
           date: DateTime(2023, 4, 6),
-          isToday: false,
+          isTodayDay: false,
           races: [
             createRace(
               id: 'c2',
@@ -316,9 +317,9 @@ void main() {
             ),
           ],
         ),
-        Day(
+        CalendarWeekDay(
           date: DateTime(2023, 4, 7),
-          isToday: false,
+          isTodayDay: false,
           workouts: [
             createWorkout(
               id: 'w2',
@@ -326,8 +327,8 @@ void main() {
             )
           ],
         ),
-        Day(date: DateTime(2023, 4, 8), isToday: false),
-        Day(date: DateTime(2023, 4, 9), isToday: false),
+        CalendarWeekDay(date: DateTime(2023, 4, 8), isTodayDay: false),
+        CalendarWeekDay(date: DateTime(2023, 4, 9), isTodayDay: false),
       ]
     ],
     verify: (_) {
