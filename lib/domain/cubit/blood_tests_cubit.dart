@@ -33,7 +33,7 @@ class BloodTestsCubit extends Cubit<List<BloodTestsFromYear>?> {
   void _onBloodTestsChanged(final List<BloodTest>? bloodTests) {
     if (bloodTests == null) return;
     final groupedAndSortedTests = _groupBloodTests(bloodTests);
-    groupedAndSortedTests.sort((t1, t2) => t1.year < t2.year ? -1 : 1);
+    groupedAndSortedTests.sort((t1, t2) => t2.year < t1.year ? -1 : 1);
     for (final testsFromYear in groupedAndSortedTests) {
       testsFromYear.elements.sort((t1, t2) => t2.date.compareTo(t1.date));
     }

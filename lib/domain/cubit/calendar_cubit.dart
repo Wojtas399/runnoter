@@ -4,25 +4,32 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../dependency_injection.dart';
-import '../additional_model/activities.dart';
+import '../additional_model/calendar_date_range_data.dart';
+import '../entity/health_measurement.dart';
 import '../entity/race.dart';
 import '../entity/workout.dart';
+import '../repository/health_measurement_repository.dart';
 import '../repository/race_repository.dart';
 import '../repository/workout_repository.dart';
 import '../service/auth_service.dart';
 
-class CalendarCubit extends Cubit<Activities> {
+class CalendarCubit extends Cubit<CalendarDateRangeData> {
   final AuthService _authService;
+  final HealthMeasurementRepository _healthMeasurementRepository;
   final WorkoutRepository _workoutRepository;
   final RaceRepository _raceRepository;
-  StreamSubscription<(List<Workout>?, List<Race>?)>? _activitiesListener;
+  StreamSubscription<CalendarDateRangeData>? _listener;
 
-  CalendarCubit({
-    Activities activities = const Activities(),
-  })  : _authService = getIt<AuthService>(),
+  CalendarCubit()
+      : _authService = getIt<AuthService>(),
+        _healthMeasurementRepository = getIt<HealthMeasurementRepository>(),
         _workoutRepository = getIt<WorkoutRepository>(),
         _raceRepository = getIt<RaceRepository>(),
-        super(activities);
+        super(const CalendarDateRangeData(
+          healthMeasurements: [],
+          workouts: [],
+          races: [],
+        ));
 
   @override
   Future<void> close() {
@@ -42,10 +49,15 @@ class CalendarCubit extends Cubit<Activities> {
     DateTime startDate,
     DateTime endDate,
   ) {
-    _activitiesListener ??= _authService.loggedUserId$
+    _listener ??= _authService.loggedUserId$
         .whereType<String>()
         .switchMap(
-          (String loggedUserId) => Rx.combineLatest2(
+          (String loggedUserId) => Rx.combineLatest3(
+            _healthMeasurementRepository.getMeasurementsByDateRange(
+              startDate: startDate,
+              endDate: endDate,
+              userId: loggedUserId,
+            ),
             _workoutRepository.getWorkoutsByDateRange(
               startDate: startDate,
               endDate: endDate,
@@ -56,18 +68,23 @@ class CalendarCubit extends Cubit<Activities> {
               startDate: startDate,
               endDate: endDate,
             ),
-            (List<Workout>? workouts, List<Race>? races) => (workouts, races),
+            (
+              List<HealthMeasurement>? healthMeasurements,
+              List<Workout>? workouts,
+              List<Race>? races,
+            ) =>
+                CalendarDateRangeData(
+              healthMeasurements: [...?healthMeasurements],
+              workouts: [...?workouts],
+              races: [...?races],
+            ),
           ),
         )
-        .listen(
-          ((List<Workout>?, List<Race>?) params) => emit(
-            Activities(workouts: params.$1, races: params.$2),
-          ),
-        );
+        .listen((CalendarDateRangeData dateRangeData) => emit(dateRangeData));
   }
 
   void _disposeListener() {
-    _activitiesListener?.cancel();
-    _activitiesListener = null;
+    _listener?.cancel();
+    _listener = null;
   }
 }

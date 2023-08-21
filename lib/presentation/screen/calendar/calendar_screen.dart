@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../dependency_injection.dart';
-import '../../../domain/additional_model/activities.dart';
 import '../../../domain/additional_model/calendar_date_range_data.dart';
 import '../../../domain/cubit/calendar_cubit.dart';
 import '../../../domain/service/auth_service.dart';
@@ -51,16 +50,12 @@ class _Calendar extends StatefulWidget {
 class _CalendarState extends State<_Calendar> {
   @override
   Widget build(BuildContext context) {
-    final Activities activities = context.select(
+    final CalendarDateRangeData dateRangeData = context.select(
       (CalendarCubit cubit) => cubit.state,
     );
 
     return Calendar(
-      dateRangeData: CalendarDateRangeData(
-        healthMeasurements: const [],
-        workouts: [...?activities.workouts],
-        races: [...?activities.races],
-      ),
+      dateRangeData: dateRangeData,
       onWorkoutPressed: _navigateToWorkout,
       onRacePressed: _navigateToRace,
       onAddWorkout: _navigateToWorkoutCreator,

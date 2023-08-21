@@ -48,7 +48,7 @@ void main() {
         },
         expect: () => [
           [
-            BloodTestsFromYear(year: 2023, elements: [tests.first, tests[2]]),
+            BloodTestsFromYear(year: 2023, elements: [tests[2], tests.first]),
             BloodTestsFromYear(year: 2022, elements: [tests[1]]),
             BloodTestsFromYear(year: 2021, elements: [tests.last]),
           ],

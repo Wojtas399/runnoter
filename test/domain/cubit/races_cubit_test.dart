@@ -46,11 +46,11 @@ void main() {
         },
         expect: () => [
           [
-            RacesFromYear(year: 2023, elements: [races[1], races[2]]),
+            RacesFromYear(year: 2023, elements: [races[2], races[1]]),
             RacesFromYear(year: 2022, elements: [races.first, races.last]),
           ],
           [
-            RacesFromYear(year: 2023, elements: [races[1], races[2]]),
+            RacesFromYear(year: 2023, elements: [races[2], races[1]]),
           ],
         ],
         verify: (_) => verify(

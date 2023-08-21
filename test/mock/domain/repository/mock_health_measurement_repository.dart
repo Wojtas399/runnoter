@@ -18,11 +18,12 @@ class MockHealthMeasurementRepository extends Mock
         date: any(named: 'date'),
         userId: any(named: 'userId'),
       ),
-    ).thenAnswer((invocation) => Stream.value(measurement));
+    ).thenAnswer((_) => Stream.value(measurement));
   }
 
   void mockGetMeasurementsByDateRange({
     List<HealthMeasurement>? measurements,
+    Stream<List<HealthMeasurement>?>? measurementsStream,
   }) {
     when(
       () => getMeasurementsByDateRange(
@@ -30,7 +31,7 @@ class MockHealthMeasurementRepository extends Mock
         endDate: any(named: 'endDate'),
         userId: any(named: 'userId'),
       ),
-    ).thenAnswer((invocation) => Stream.value(measurements));
+    ).thenAnswer((_) => measurementsStream ?? Stream.value(measurements));
   }
 
   void mockGetAllMeasurements({
@@ -40,7 +41,7 @@ class MockHealthMeasurementRepository extends Mock
       () => getAllMeasurements(
         userId: any(named: 'userId'),
       ),
-    ).thenAnswer((invocation) => Stream.value(measurements));
+    ).thenAnswer((_) => Stream.value(measurements));
   }
 
   void mockDoesMeasurementFromDateExist({
@@ -51,7 +52,7 @@ class MockHealthMeasurementRepository extends Mock
         userId: any(named: 'userId'),
         date: any(named: 'date'),
       ),
-    ).thenAnswer((invocation) => Future.value(expected));
+    ).thenAnswer((_) => Future.value(expected));
   }
 
   void mockAddMeasurement() {
@@ -59,7 +60,7 @@ class MockHealthMeasurementRepository extends Mock
       () => addMeasurement(
         measurement: any(named: 'measurement'),
       ),
-    ).thenAnswer((invocation) => Future.value());
+    ).thenAnswer((_) => Future.value());
   }
 
   void mockUpdateMeasurement() {
@@ -70,7 +71,7 @@ class MockHealthMeasurementRepository extends Mock
         restingHeartRate: any(named: 'restingHeartRate'),
         fastingWeight: any(named: 'fastingWeight'),
       ),
-    ).thenAnswer((invocation) => Future.value());
+    ).thenAnswer((_) => Future.value());
   }
 
   void mockDeleteMeasurement() {
@@ -79,7 +80,7 @@ class MockHealthMeasurementRepository extends Mock
         userId: any(named: 'userId'),
         date: any(named: 'date'),
       ),
-    ).thenAnswer((invocation) => Future.value());
+    ).thenAnswer((_) => Future.value());
   }
 
   void mockDeleteAllUserMeasurements() {
@@ -87,6 +88,6 @@ class MockHealthMeasurementRepository extends Mock
       () => deleteAllUserMeasurements(
         userId: any(named: 'userId'),
       ),
-    ).thenAnswer((invocation) => Future.value());
+    ).thenAnswer((_) => Future.value());
   }
 }
