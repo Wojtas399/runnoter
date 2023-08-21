@@ -22,6 +22,7 @@ class _State extends State<ClientContentMobile> {
       routes: const [
         ClientCalendarRoute(),
         ClientStatsRoute(),
+        ClientBloodTestsRoute(),
       ],
       builder: (context, child) => DefaultTabController(
         length: 4,

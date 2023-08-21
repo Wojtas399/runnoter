@@ -33,6 +33,7 @@ class ClientContentDesktop extends StatelessWidget {
           routes: const [
             ClientCalendarRoute(),
             ClientStatsRoute(),
+            ClientBloodTestsRoute(),
           ],
           builder: (BuildContext context, Widget child) {
             final tabsRouter = AutoTabsRouter.of(context);
