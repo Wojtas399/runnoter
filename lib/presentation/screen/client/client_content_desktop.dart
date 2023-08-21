@@ -1,4 +1,3 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -7,11 +6,19 @@ import '../../../domain/bloc/client/client_bloc.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/gap/gap_horizontal_components.dart';
 import '../../component/text/title_text_components.dart';
-import '../../config/navigation/router.dart';
 import 'client_details.dart';
 
 class ClientContentDesktop extends StatelessWidget {
-  const ClientContentDesktop({super.key});
+  final int activePageIndex;
+  final Function(int pageIndex) onPageChanged;
+  final Widget child;
+
+  const ClientContentDesktop({
+    super.key,
+    required this.activePageIndex,
+    required this.onPageChanged,
+    required this.child,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -29,27 +36,14 @@ class ClientContentDesktop extends StatelessWidget {
         actions: const [ClientDetailsIcon(), GapHorizontal16()],
       ),
       body: SafeArea(
-        child: AutoTabsRouter(
-          routes: const [
-            ClientCalendarRoute(),
-            ClientStatsRoute(),
-            ClientBloodTestsRoute(),
+        child: Row(
+          children: [
+            _Drawer(
+              activePageIndex: activePageIndex,
+              onPageChanged: onPageChanged,
+            ),
+            Expanded(child: child),
           ],
-          builder: (BuildContext context, Widget child) {
-            final tabsRouter = AutoTabsRouter.of(context);
-
-            return Row(
-              children: [
-                _Drawer(
-                  activeIndex: tabsRouter.activeIndex,
-                  onDestinationSelected: (int destinationIndex) {
-                    tabsRouter.setActiveIndex(destinationIndex);
-                  },
-                ),
-                Expanded(child: child),
-              ],
-            );
-          },
         ),
       ),
     );
@@ -77,19 +71,19 @@ class _AppBarTitle extends StatelessWidget {
 }
 
 class _Drawer extends StatelessWidget {
-  final int activeIndex;
-  final Function(int destinationIndex) onDestinationSelected;
+  final int activePageIndex;
+  final Function(int destinationIndex) onPageChanged;
 
   const _Drawer({
-    required this.activeIndex,
-    required this.onDestinationSelected,
+    required this.activePageIndex,
+    required this.onPageChanged,
   });
 
   @override
   Widget build(BuildContext context) {
     return NavigationDrawer(
-      selectedIndex: activeIndex,
-      onDestinationSelected: onDestinationSelected,
+      selectedIndex: activePageIndex,
+      onDestinationSelected: onPageChanged,
       children: [
         const Gap32(),
         NavigationDrawerDestination(
