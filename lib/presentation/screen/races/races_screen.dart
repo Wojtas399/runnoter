@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 
 import '../../../dependency_injection.dart';
 import '../../../domain/service/auth_service.dart';
+import '../../common_feature/races/races.dart';
 import '../../component/page_not_found_component.dart';
-import '../../component/races/races_component.dart';
 
 @RoutePage()
 class RacesScreen extends StatelessWidget {
