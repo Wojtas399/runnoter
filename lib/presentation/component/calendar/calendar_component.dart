@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/additional_model/calendar_date_range_data.dart';
-import '../card_body_component.dart';
 import '../gap/gap_components.dart';
-import '../responsive_layout_component.dart';
 import 'bloc/calendar_component_bloc.dart';
 import 'calendar_component__month.dart';
 import 'calendar_component_date.dart';
@@ -34,21 +32,15 @@ class CalendarComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => CalendarComponentBloc()
-        ..add(CalendarComponentEventInitialize(
-          dateRangeType: dateRangeType ?? DateRangeType.week,
-        )),
-      child: _BlocListener(
-        onDateRangeChanged: onDateRangeChanged,
-        child: _Content(
-          dateRangeData: dateRangeData,
-          onWorkoutPressed: onWorkoutPressed,
-          onRacePressed: onRacePressed,
-          onMonthDayPressed: onMonthDayPressed,
-          onAddWorkout: onAddWorkout,
-          onAddRace: onAddRace,
-        ),
+    return _BlocListener(
+      onDateRangeChanged: onDateRangeChanged,
+      child: _Content(
+        dateRangeData: dateRangeData,
+        onWorkoutPressed: onWorkoutPressed,
+        onRacePressed: onRacePressed,
+        onMonthDayPressed: onMonthDayPressed,
+        onAddWorkout: onAddWorkout,
+        onAddRace: onAddRace,
       ),
     );
   }
@@ -116,44 +108,6 @@ class _ContentState extends State<_Content> {
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveLayout(
-      mobileBody: _Calendar(
-        onWorkoutPressed: widget.onWorkoutPressed,
-        onRacePressed: widget.onRacePressed,
-        onAddWorkout: widget.onAddWorkout,
-        onAddRace: widget.onAddRace,
-        onMonthDayPressed: widget.onMonthDayPressed,
-      ),
-      desktopBody: CardBody(
-        child: _Calendar(
-          onWorkoutPressed: widget.onWorkoutPressed,
-          onRacePressed: widget.onRacePressed,
-          onAddWorkout: widget.onAddWorkout,
-          onAddRace: widget.onAddRace,
-          onMonthDayPressed: widget.onMonthDayPressed,
-        ),
-      ),
-    );
-  }
-}
-
-class _Calendar extends StatelessWidget {
-  final Function(String workoutId) onWorkoutPressed;
-  final Function(String raceId) onRacePressed;
-  final Function(DateTime date) onAddWorkout;
-  final Function(DateTime date) onAddRace;
-  final Function(DateTime date) onMonthDayPressed;
-
-  const _Calendar({
-    required this.onWorkoutPressed,
-    required this.onRacePressed,
-    required this.onAddWorkout,
-    required this.onAddRace,
-    required this.onMonthDayPressed,
-  });
-
-  @override
-  Widget build(BuildContext context) {
     final DateRange? dateRange = context.select(
       (CalendarComponentBloc bloc) => bloc.state.dateRange,
     );
@@ -164,13 +118,13 @@ class _Calendar extends StatelessWidget {
         const Gap8(),
         switch (dateRange) {
           DateRangeWeek() => CalendarComponentWeek(
-              onWorkoutPressed: onWorkoutPressed,
-              onRacePressed: onRacePressed,
-              onAddWorkout: onAddWorkout,
-              onAddRace: onAddRace,
+              onWorkoutPressed: widget.onWorkoutPressed,
+              onRacePressed: widget.onRacePressed,
+              onAddWorkout: widget.onAddWorkout,
+              onAddRace: widget.onAddRace,
             ),
           DateRangeMonth() => CalendarComponentMonth(
-              onMonthDayPressed: onMonthDayPressed,
+              onMonthDayPressed: widget.onMonthDayPressed,
             ),
           null => const CircularProgressIndicator(),
         }
