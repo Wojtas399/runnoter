@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/additional_model/activities.dart';
+import '../../../domain/additional_model/calendar_date_range_data.dart';
 import '../../../domain/bloc/client/client_bloc.dart';
 import '../../../domain/cubit/client_calendar_cubit.dart';
 import '../../component/body/big_body_component.dart';
@@ -56,9 +57,11 @@ class _CalendarState extends State<_Calendar> {
     );
 
     return Calendar(
-      healthMeasurements: [],
-      workouts: [...?activities.workouts],
-      races: [...?activities.races],
+      dateRangeData: CalendarDateRangeData(
+        healthMeasurements: const [],
+        workouts: [...?activities.workouts],
+        races: [...?activities.races],
+      ),
       onDateRangeChanged: _dateRangeChanged,
       onWorkoutPressed: _navigateToWorkout,
       onRacePressed: _navigateToRace,

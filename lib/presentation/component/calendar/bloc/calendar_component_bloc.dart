@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../common/date_service.dart';
 import '../../../../dependency_injection.dart';
+import '../../../../domain/additional_model/calendar_date_range_data.dart';
 import '../../../../domain/entity/health_measurement.dart';
 import '../../../../domain/entity/race.dart';
 import '../../../../domain/entity/workout.dart';
@@ -14,18 +15,18 @@ part 'calendar_component_state.dart';
 class CalendarComponentBloc
     extends Bloc<CalendarComponentEvent, CalendarComponentState> {
   final DateService _dateService;
-  List<HealthMeasurement> _healthMeasurements = [];
-  List<Workout> _workouts = [];
-  List<Race> _races = [];
+  CalendarDateRangeData _dateRangeData = const CalendarDateRangeData(
+    healthMeasurements: [],
+    workouts: [],
+    races: [],
+  );
 
   CalendarComponentBloc()
       : _dateService = getIt<DateService>(),
         super(const CalendarComponentState()) {
     on<CalendarComponentEventInitialize>(_initialize);
     on<CalendarComponentEventChangeDateRange>(_changeDateRange);
-    on<CalendarComponentEventActivitiesAndHealthMeasurementsUpdated>(
-      _activitiesAndHealthMeasurementsUpdated,
-    );
+    on<CalendarComponentEventDateRangeDataUpdated>(_dateRangeDataUpdated);
     on<CalendarComponentEventPreviousDateRange>(_previousDateRange);
     on<CalendarComponentEventNextDateRange>(_nextDateRange);
     on<CalendarComponentEventOnDayPressed>(_onDayPressed);
@@ -84,13 +85,11 @@ class CalendarComponentBloc
     ));
   }
 
-  void _activitiesAndHealthMeasurementsUpdated(
-    CalendarComponentEventActivitiesAndHealthMeasurementsUpdated event,
+  void _dateRangeDataUpdated(
+    CalendarComponentEventDateRangeDataUpdated event,
     Emitter<CalendarComponentState> emit,
   ) {
-    _healthMeasurements = [...event.healthMeasurements];
-    _workouts = [...event.workouts];
-    _races = [...event.races];
+    _dateRangeData = event.data;
     emit(state.copyWith(
       weeks: state.dateRange != null ? _createWeeks(state.dateRange!) : null,
     ));
@@ -215,18 +214,18 @@ class CalendarComponentBloc
     DateRange dateRange,
   ) {
     final HealthMeasurement? healthMeasurement =
-        _healthMeasurements.firstWhereOrNull(
+        _dateRangeData.healthMeasurements.firstWhereOrNull(
       (measurement) => _dateService.areDatesTheSame(measurement.date, date),
     );
     final List<Workout> workoutsFromDay = [
-      ..._workouts
+      ..._dateRangeData.workouts
           .where(
             (workout) => _dateService.areDatesTheSame(workout.date, date),
           )
           .toList(),
     ];
     final List<Race> racesFromDay = [
-      ..._races
+      ..._dateRangeData.races
           .where((race) => _dateService.areDatesTheSame(race.date, date))
           .toList(),
     ];

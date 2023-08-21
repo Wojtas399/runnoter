@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/entity/health_measurement.dart';
-import '../../../domain/entity/race.dart';
-import '../../../domain/entity/workout.dart';
+import '../../../domain/additional_model/calendar_date_range_data.dart';
 import '../gap/gap_components.dart';
 import 'bloc/calendar_component_bloc.dart';
 import 'calendar_component__month.dart';
@@ -11,9 +9,7 @@ import 'calendar_component_date.dart';
 import 'calendar_component_week.dart';
 
 class Calendar extends StatelessWidget {
-  final List<HealthMeasurement> healthMeasurements;
-  final List<Workout> workouts;
-  final List<Race> races;
+  final CalendarDateRangeData dateRangeData;
   final DateRangeType? dateRangeType;
   final Function(DateTime startDate, DateTime endDate)? onDateRangeChanged;
   final Function(String workoutId)? onWorkoutPressed;
@@ -24,9 +20,7 @@ class Calendar extends StatelessWidget {
 
   const Calendar({
     super.key,
-    required this.healthMeasurements,
-    required this.workouts,
-    required this.races,
+    required this.dateRangeData,
     this.dateRangeType,
     this.onDateRangeChanged,
     this.onWorkoutPressed,
@@ -49,9 +43,7 @@ class Calendar extends StatelessWidget {
         onDateRangeChanged: onDateRangeChanged,
         onMonthDayPressed: onMonthDayPressed,
         child: _Content(
-          healthMeasurements: healthMeasurements,
-          workouts: workouts,
-          races: races,
+          dateRangeData: dateRangeData,
           onWorkoutPressed: onWorkoutPressed,
           onRacePressed: onRacePressed,
           onAddWorkout: onAddWorkout,
@@ -105,18 +97,14 @@ class _BlocListener extends StatelessWidget {
 }
 
 class _Content extends StatefulWidget {
-  final List<HealthMeasurement> healthMeasurements;
-  final List<Workout> workouts;
-  final List<Race> races;
+  final CalendarDateRangeData dateRangeData;
   final Function(String workoutId)? onWorkoutPressed;
   final Function(String raceId)? onRacePressed;
   final Function(DateTime date)? onAddWorkout;
   final Function(DateTime date)? onAddRace;
 
   const _Content({
-    required this.healthMeasurements,
-    required this.workouts,
-    required this.races,
+    required this.dateRangeData,
     this.onWorkoutPressed,
     this.onRacePressed,
     this.onAddWorkout,
@@ -131,10 +119,8 @@ class _ContentState extends State<_Content> {
   @override
   void didUpdateWidget(covariant _Content oldWidget) {
     context.read<CalendarComponentBloc>().add(
-          CalendarComponentEventActivitiesAndHealthMeasurementsUpdated(
-            healthMeasurements: widget.healthMeasurements,
-            workouts: widget.workouts,
-            races: widget.races,
+          CalendarComponentEventDateRangeDataUpdated(
+            data: widget.dateRangeData,
           ),
         );
     super.didUpdateWidget(oldWidget);
