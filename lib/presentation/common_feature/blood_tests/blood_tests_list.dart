@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 
 import '../../../domain/cubit/blood_tests_cubit.dart';
 import '../../../domain/entity/blood_test.dart';
+import '../../component/card_body_component.dart';
+import '../../component/gap/gap_components.dart';
+import '../../component/responsive_layout_component.dart';
+import '../../component/text/title_text_components.dart';
 import '../../config/navigation/router.dart';
 import '../../formatter/date_formatter.dart';
 import '../../service/navigator_service.dart';
-import '../card_body_component.dart';
-import '../gap/gap_components.dart';
-import '../responsive_layout_component.dart';
-import '../text/title_text_components.dart';
 
 class BloodTestsList extends StatelessWidget {
   final List<BloodTestsFromYear> bloodTestsSortedByYear;

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/bloc/client/client_bloc.dart';
-import '../../component/blood_tests/blood_tests_component.dart';
+import '../../common_feature/blood_tests/blood_tests.dart';
 
 @RoutePage()
 class ClientBloodTestsScreen extends StatelessWidget {

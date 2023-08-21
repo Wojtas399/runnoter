@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../../dependency_injection.dart';
 import '../../../domain/service/auth_service.dart';
-import '../../component/blood_tests/blood_tests_component.dart';
+import '../../common_feature/blood_tests/blood_tests.dart';
 import '../../component/page_not_found_component.dart';
 
 @RoutePage()
