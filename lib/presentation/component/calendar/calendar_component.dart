@@ -1,10 +1,7 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/additional_model/calendar_date_range_data.dart';
-import '../../../domain/cubit/calendar_date_range_data_cubit.dart';
 import '../body/big_body_component.dart';
 import '../card_body_component.dart';
 import '../gap/gap_components.dart';
@@ -17,11 +14,23 @@ import 'calendar_component_week.dart';
 
 class CalendarComponent extends StatelessWidget {
   final DateRangeType? dateRangeType;
+  final CalendarDateRangeData dateRangeData;
+  final Function(String workoutId) onWorkoutPressed;
+  final Function(String raceId) onRacePressed;
+  final Function(DateTime date) onAddWorkout;
+  final Function(DateTime date) onAddRace;
+  final Function(DateTime date) onMonthDayPressed;
   final Function(DateTime startDate, DateTime endDate) onDateRangeChanged;
 
   const CalendarComponent({
     super.key,
     this.dateRangeType,
+    required this.dateRangeData,
+    required this.onWorkoutPressed,
+    required this.onRacePressed,
+    required this.onAddWorkout,
+    required this.onAddRace,
+    required this.onMonthDayPressed,
     required this.onDateRangeChanged,
   });
 
@@ -34,7 +43,14 @@ class CalendarComponent extends StatelessWidget {
         )),
       child: _BlocListener(
         onDateRangeChanged: onDateRangeChanged,
-        child: const _Content(),
+        child: _Content(
+          dateRangeData: dateRangeData,
+          onWorkoutPressed: onWorkoutPressed,
+          onRacePressed: onRacePressed,
+          onMonthDayPressed: onMonthDayPressed,
+          onAddWorkout: onAddWorkout,
+          onAddRace: onAddRace,
+        ),
       ),
     );
   }
@@ -69,44 +85,57 @@ class _BlocListener extends StatelessWidget {
 }
 
 class _Content extends StatefulWidget {
-  const _Content();
+  final CalendarDateRangeData dateRangeData;
+  final Function(String workoutId) onWorkoutPressed;
+  final Function(String raceId) onRacePressed;
+  final Function(DateTime date) onAddWorkout;
+  final Function(DateTime date) onAddRace;
+  final Function(DateTime date) onMonthDayPressed;
+
+  const _Content({
+    required this.dateRangeData,
+    required this.onWorkoutPressed,
+    required this.onRacePressed,
+    required this.onAddWorkout,
+    required this.onAddRace,
+    required this.onMonthDayPressed,
+  });
 
   @override
   State<StatefulWidget> createState() => _ContentState();
 }
 
 class _ContentState extends State<_Content> {
-  StreamSubscription<CalendarDateRangeData>? _dateRangeDataListener;
-
   @override
-  void initState() {
-    _dateRangeDataListener ??=
-        context.read<CalendarDateRangeDataCubit>().stream.listen(
-      (dateRangeData) {
-        context.read<CalendarComponentBloc>().add(
-              CalendarComponentEventDateRangeDataUpdated(data: dateRangeData),
-            );
-      },
-    );
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _dateRangeDataListener?.cancel();
-    _dateRangeDataListener = null;
-    super.dispose();
+  void didUpdateWidget(covariant _Content oldWidget) {
+    context.read<CalendarComponentBloc>().add(
+          CalendarComponentEventDateRangeDataUpdated(
+              data: widget.dateRangeData),
+        );
+    super.didUpdateWidget(oldWidget);
   }
 
   @override
   Widget build(BuildContext context) {
-    return const SingleChildScrollView(
+    return SingleChildScrollView(
       child: BigBody(
         child: Paddings24(
           child: ResponsiveLayout(
-            mobileBody: _Calendar(),
+            mobileBody: _Calendar(
+              onWorkoutPressed: widget.onWorkoutPressed,
+              onRacePressed: widget.onRacePressed,
+              onMonthDayPressed: widget.onMonthDayPressed,
+              onAddWorkout: widget.onAddWorkout,
+              onAddRace: widget.onAddRace,
+            ),
             desktopBody: CardBody(
-              child: _Calendar(),
+              child: _Calendar(
+                onWorkoutPressed: widget.onWorkoutPressed,
+                onRacePressed: widget.onRacePressed,
+                onMonthDayPressed: widget.onMonthDayPressed,
+                onAddWorkout: widget.onAddWorkout,
+                onAddRace: widget.onAddRace,
+              ),
             ),
           ),
         ),
@@ -116,7 +145,19 @@ class _ContentState extends State<_Content> {
 }
 
 class _Calendar extends StatelessWidget {
-  const _Calendar();
+  final Function(String workoutId) onWorkoutPressed;
+  final Function(String raceId) onRacePressed;
+  final Function(DateTime date) onAddWorkout;
+  final Function(DateTime date) onAddRace;
+  final Function(DateTime date) onMonthDayPressed;
+
+  const _Calendar({
+    required this.onWorkoutPressed,
+    required this.onRacePressed,
+    required this.onAddWorkout,
+    required this.onAddRace,
+    required this.onMonthDayPressed,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -129,8 +170,15 @@ class _Calendar extends StatelessWidget {
         const CalendarComponentDate(),
         const Gap8(),
         switch (dateRange) {
-          DateRangeWeek() => const CalendarComponentWeek(),
-          DateRangeMonth() => const CalendarComponentMonth(),
+          DateRangeWeek() => CalendarComponentWeek(
+              onWorkoutPressed: onWorkoutPressed,
+              onRacePressed: onRacePressed,
+              onAddWorkout: onAddWorkout,
+              onAddRace: onAddRace,
+            ),
+          DateRangeMonth() => CalendarComponentMonth(
+              onMonthDayPressed: onMonthDayPressed,
+            ),
           null => const CircularProgressIndicator(),
         }
       ],
