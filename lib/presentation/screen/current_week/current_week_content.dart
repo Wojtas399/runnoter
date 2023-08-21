@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../dependency_injection.dart';
 import '../../../domain/additional_model/calendar_week_day.dart';
 import '../../../domain/cubit/current_week_cubit.dart';
+import '../../../domain/service/auth_service.dart';
 import '../../component/body/big_body_component.dart';
 import '../../component/card_body_component.dart';
 import '../../component/gap/gap_components.dart';
@@ -11,7 +13,10 @@ import '../../component/padding/paddings_24.dart';
 import '../../component/responsive_layout_component.dart';
 import '../../component/shimmer.dart';
 import '../../component/week_day_item_component.dart';
+import '../../config/navigation/router.dart';
 import '../../extension/widgets_list_extensions.dart';
+import '../../formatter/date_formatter.dart';
+import '../../service/navigator_service.dart';
 import 'current_week_stats.dart';
 
 class CurrentWeekContent extends StatelessWidget {
@@ -99,8 +104,48 @@ class _ListOfDays extends StatelessWidget {
         if (days == null)
           for (int i = 0; i < 7; i++) const WeekDayItemShimmer(),
         if (days != null)
-          ...days.map((CalendarWeekDay day) => WeekDayItem(day: day)),
+          ...days.map(
+            (CalendarWeekDay day) => WeekDayItem(
+              day: day,
+              onWorkoutPressed: _navigateToWorkoutPreview,
+              onRacePressed: _navigateToRacePreview,
+              onAddWorkout: () => _navigateToWorkoutCreator(day.date),
+              onAddRace: () => _navigateToRaceCreator(day.date),
+            ),
+          ),
       ].addSeparator(const Divider(height: 16)),
     );
+  }
+
+  Future<void> _navigateToWorkoutPreview(String workoutId) async {
+    final String? loggedUserId = await getIt<AuthService>().loggedUserId$.first;
+    navigateTo(WorkoutPreviewRoute(
+      userId: loggedUserId,
+      workoutId: workoutId,
+    ));
+  }
+
+  Future<void> _navigateToRacePreview(String raceId) async {
+    final String? loggedUserId = await getIt<AuthService>().loggedUserId$.first;
+    navigateTo(RacePreviewRoute(
+      userId: loggedUserId,
+      raceId: raceId,
+    ));
+  }
+
+  Future<void> _navigateToWorkoutCreator(DateTime date) async {
+    final String? loggedUserId = await getIt<AuthService>().loggedUserId$.first;
+    navigateTo(WorkoutCreatorRoute(
+      userId: loggedUserId,
+      dateStr: date.toPathFormat(),
+    ));
+  }
+
+  Future<void> _navigateToRaceCreator(DateTime date) async {
+    final String? loggedUserId = await getIt<AuthService>().loggedUserId$.first;
+    navigateTo(RaceCreatorRoute(
+      userId: loggedUserId,
+      dateStr: date.toPathFormat(),
+    ));
   }
 }
