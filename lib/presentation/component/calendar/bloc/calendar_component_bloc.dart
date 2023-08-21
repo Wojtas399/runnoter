@@ -1,8 +1,10 @@
+import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../common/date_service.dart';
 import '../../../../dependency_injection.dart';
+import '../../../../domain/entity/health_measurement.dart';
 import '../../../../domain/entity/race.dart';
 import '../../../../domain/entity/workout.dart';
 
@@ -12,6 +14,7 @@ part 'calendar_component_state.dart';
 class CalendarComponentBloc
     extends Bloc<CalendarComponentEvent, CalendarComponentState> {
   final DateService _dateService;
+  List<HealthMeasurement> _healthMeasurements = [];
   List<Workout> _workouts = [];
   List<Race> _races = [];
 
@@ -20,7 +23,9 @@ class CalendarComponentBloc
         super(const CalendarComponentState()) {
     on<CalendarComponentEventInitialize>(_initialize);
     on<CalendarComponentEventChangeDateRange>(_changeDateRange);
-    on<CalendarComponentEventActivitiesUpdated>(_activitiesUpdated);
+    on<CalendarComponentEventActivitiesAndHealthMeasurementsUpdated>(
+      _activitiesAndHealthMeasurementsUpdated,
+    );
     on<CalendarComponentEventPreviousDateRange>(_previousDateRange);
     on<CalendarComponentEventNextDateRange>(_nextDateRange);
     on<CalendarComponentEventOnDayPressed>(_onDayPressed);
@@ -79,10 +84,11 @@ class CalendarComponentBloc
     ));
   }
 
-  void _activitiesUpdated(
-    CalendarComponentEventActivitiesUpdated event,
+  void _activitiesAndHealthMeasurementsUpdated(
+    CalendarComponentEventActivitiesAndHealthMeasurementsUpdated event,
     Emitter<CalendarComponentState> emit,
   ) {
+    _healthMeasurements = [...event.healthMeasurements];
     _workouts = [...event.workouts];
     _races = [...event.races];
     emit(state.copyWith(
@@ -196,30 +202,43 @@ class CalendarComponentBloc
     final DateTime todayDate = _dateService.getToday();
     DateTime date = firstDayOfTheWeek;
     for (int weekDayNumber = 1; weekDayNumber <= 7; weekDayNumber++) {
-      final CalendarDay newCalendarDay = CalendarDay(
-        date: date,
-        isDisabled:
-            dateRange is DateRangeMonth ? date.month != dateRange.month : false,
-        isTodayDay: _dateService.areDatesTheSame(date, todayDate),
-        workouts: [
-          ..._workouts
-              .where(
-                (workout) => _dateService.areDatesTheSame(workout.date, date),
-              )
-              .toList(),
-        ],
-        races: [
-          ..._races
-              .where((race) => _dateService.areDatesTheSame(race.date, date))
-              .toList(),
-        ],
-      );
+      final CalendarDay newCalendarDay = _createDay(date, todayDate, dateRange);
       daysFromWeek.add(newCalendarDay);
-      date = date.add(
-        const Duration(days: 1),
-      );
+      date = date.add(const Duration(days: 1));
     }
     return daysFromWeek;
+  }
+
+  CalendarDay _createDay(
+    DateTime date,
+    DateTime todayDate,
+    DateRange dateRange,
+  ) {
+    final HealthMeasurement? healthMeasurement =
+        _healthMeasurements.firstWhereOrNull(
+      (measurement) => _dateService.areDatesTheSame(measurement.date, date),
+    );
+    final List<Workout> workoutsFromDay = [
+      ..._workouts
+          .where(
+            (workout) => _dateService.areDatesTheSame(workout.date, date),
+          )
+          .toList(),
+    ];
+    final List<Race> racesFromDay = [
+      ..._races
+          .where((race) => _dateService.areDatesTheSame(race.date, date))
+          .toList(),
+    ];
+    return CalendarDay(
+      date: date,
+      isDisabled:
+          dateRange is DateRangeMonth ? date.month != dateRange.month : false,
+      isTodayDay: _dateService.areDatesTheSame(date, todayDate),
+      healthMeasurement: healthMeasurement,
+      workouts: workoutsFromDay,
+      races: racesFromDay,
+    );
   }
 }
 

@@ -21,7 +21,6 @@ class HealthContent extends StatelessWidget {
       child: BigBody(
         child: ResponsiveLayout(
           mobileBody: _MobileContent(),
-          tabletBody: _DesktopContent(),
           desktopBody: _DesktopContent(),
         ),
       ),

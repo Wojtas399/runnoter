@@ -16,11 +16,14 @@ class CalendarComponentEventChangeDateRange extends CalendarComponentEvent {
   const CalendarComponentEventChangeDateRange({required this.dateRangeType});
 }
 
-class CalendarComponentEventActivitiesUpdated extends CalendarComponentEvent {
+class CalendarComponentEventActivitiesAndHealthMeasurementsUpdated
+    extends CalendarComponentEvent {
+  final List<HealthMeasurement> healthMeasurements;
   final List<Workout> workouts;
   final List<Race> races;
 
-  const CalendarComponentEventActivitiesUpdated({
+  const CalendarComponentEventActivitiesAndHealthMeasurementsUpdated({
+    required this.healthMeasurements,
     required this.workouts,
     required this.races,
   });

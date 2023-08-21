@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../domain/entity/health_measurement.dart';
 import '../../../domain/entity/race.dart';
 import '../../../domain/entity/workout.dart';
 import '../gap/gap_components.dart';
@@ -10,6 +11,7 @@ import 'calendar_component_date.dart';
 import 'calendar_component_week.dart';
 
 class Calendar extends StatelessWidget {
+  final List<HealthMeasurement> healthMeasurements;
   final List<Workout> workouts;
   final List<Race> races;
   final DateRangeType? dateRangeType;
@@ -18,10 +20,11 @@ class Calendar extends StatelessWidget {
   final Function(String raceId)? onRacePressed;
   final Function(DateTime date)? onAddWorkout;
   final Function(DateTime date)? onAddRace;
-  final Function(DateTime date)? onDayPressed;
+  final Function(DateTime date)? onMonthDayPressed;
 
   const Calendar({
     super.key,
+    required this.healthMeasurements,
     required this.workouts,
     required this.races,
     this.dateRangeType,
@@ -30,7 +33,7 @@ class Calendar extends StatelessWidget {
     this.onRacePressed,
     this.onAddWorkout,
     this.onAddRace,
-    this.onDayPressed,
+    this.onMonthDayPressed,
   });
 
   @override
@@ -44,8 +47,9 @@ class Calendar extends StatelessWidget {
         ),
       child: _BlocListener(
         onDateRangeChanged: onDateRangeChanged,
-        onDayPressed: onDayPressed,
+        onMonthDayPressed: onMonthDayPressed,
         child: _Content(
+          healthMeasurements: healthMeasurements,
           workouts: workouts,
           races: races,
           onWorkoutPressed: onWorkoutPressed,
@@ -60,12 +64,12 @@ class Calendar extends StatelessWidget {
 
 class _BlocListener extends StatelessWidget {
   final Function(DateTime startDate, DateTime endDate)? onDateRangeChanged;
-  final Function(DateTime date)? onDayPressed;
+  final Function(DateTime date)? onMonthDayPressed;
   final Widget child;
 
   const _BlocListener({
     required this.onDateRangeChanged,
-    required this.onDayPressed,
+    required this.onMonthDayPressed,
     required this.child,
   });
 
@@ -78,7 +82,7 @@ class _BlocListener extends StatelessWidget {
           previousState.dateRange != currentState.dateRange,
       listener: (_, CalendarComponentState state) {
         if (state.pressedDate != null) {
-          _emitPressedDay(context, state.pressedDate!);
+          _emitPressedMonthDay(context, state.pressedDate!);
         } else {
           _emitNewDateRange(state);
         }
@@ -95,14 +99,13 @@ class _BlocListener extends StatelessWidget {
     }
   }
 
-  void _emitPressedDay(BuildContext context, DateTime pressedDate) {
-    if (onDayPressed != null) {
-      onDayPressed!(pressedDate);
-    }
+  void _emitPressedMonthDay(BuildContext context, DateTime pressedDate) {
+    if (onMonthDayPressed != null) onMonthDayPressed!(pressedDate);
   }
 }
 
 class _Content extends StatefulWidget {
+  final List<HealthMeasurement> healthMeasurements;
   final List<Workout> workouts;
   final List<Race> races;
   final Function(String workoutId)? onWorkoutPressed;
@@ -111,6 +114,7 @@ class _Content extends StatefulWidget {
   final Function(DateTime date)? onAddRace;
 
   const _Content({
+    required this.healthMeasurements,
     required this.workouts,
     required this.races,
     this.onWorkoutPressed,
@@ -127,7 +131,8 @@ class _ContentState extends State<_Content> {
   @override
   void didUpdateWidget(covariant _Content oldWidget) {
     context.read<CalendarComponentBloc>().add(
-          CalendarComponentEventActivitiesUpdated(
+          CalendarComponentEventActivitiesAndHealthMeasurementsUpdated(
+            healthMeasurements: widget.healthMeasurements,
             workouts: widget.workouts,
             races: widget.races,
           ),

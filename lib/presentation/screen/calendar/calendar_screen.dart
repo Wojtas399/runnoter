@@ -55,6 +55,7 @@ class _CalendarState extends State<_Calendar> {
     );
 
     return Calendar(
+      healthMeasurements: const [],
       workouts: [...?activities.workouts],
       races: [...?activities.races],
       onWorkoutPressed: _navigateToWorkout,
@@ -63,7 +64,7 @@ class _CalendarState extends State<_Calendar> {
       onAddRace: _navigateToRaceCreator,
       onDateRangeChanged: (DateTime firstDay, DateTime lastDay) =>
           _onDateRangeChanged(context, firstDay, lastDay),
-      onDayPressed: (DateTime date) => _onDayPressed(context, date),
+      onMonthDayPressed: (DateTime date) => _onMonthDayPressed(context, date),
     );
   }
 
@@ -78,7 +79,7 @@ class _CalendarState extends State<_Calendar> {
         );
   }
 
-  Future<void> _onDayPressed(BuildContext context, DateTime date) async {
+  Future<void> _onMonthDayPressed(BuildContext context, DateTime date) async {
     final DayPreviewDialogAction? action = await _askForDayAction(date);
     if (action == null) return;
     switch (action) {

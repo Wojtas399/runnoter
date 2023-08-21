@@ -86,7 +86,7 @@ class _DayItem extends StatelessWidget {
             ],
           ),
           const Gap8(),
-          const CalendarComponentHealthData(),
+          CalendarComponentHealthData(healthMeasurement: day.healthMeasurement),
           const Gap8(),
           if (day.workouts.isNotEmpty || day.races.isNotEmpty) ...[
             const Gap16(),
