@@ -5,7 +5,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../domain/additional_model/activities.dart';
 import '../../../domain/bloc/client/client_bloc.dart';
 import '../../../domain/cubit/client_calendar_cubit.dart';
+import '../../component/body/big_body_component.dart';
 import '../../component/calendar/calendar_component.dart';
+import '../../component/card_body_component.dart';
+import '../../component/padding/paddings_24.dart';
+import '../../component/responsive_layout_component.dart';
 import '../../config/navigation/router.dart';
 import '../../dialog/day_preview/day_preview_dialog.dart';
 import '../../dialog/day_preview/day_preview_dialog_actions.dart';
@@ -24,9 +28,13 @@ class ClientCalendarScreen extends StatelessWidget {
         clientId: context.read<ClientBloc>().clientId,
       ),
       child: const SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.all(16),
-          child: _Calendar(),
+        child: BigBody(
+          child: Paddings24(
+            child: ResponsiveLayout(
+              mobileBody: _Calendar(),
+              desktopBody: CardBody(child: _Calendar()),
+            ),
+          ),
         ),
       ),
     );

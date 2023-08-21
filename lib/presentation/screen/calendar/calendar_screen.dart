@@ -31,7 +31,6 @@ class CalendarScreen extends StatelessWidget {
           child: Paddings24(
             child: ResponsiveLayout(
               mobileBody: _Calendar(),
-              tabletBody: CardBody(child: _Calendar()),
               desktopBody: CardBody(child: _Calendar()),
             ),
           ),
