@@ -11,17 +11,18 @@ class MockBloodTestRepository extends Mock implements BloodTestRepository {
         bloodTestId: any(named: 'bloodTestId'),
         userId: any(named: 'userId'),
       ),
-    ).thenAnswer((invocation) => Stream.value(bloodTest));
+    ).thenAnswer((_) => Stream.value(bloodTest));
   }
 
   void mockGetAllTests({
     List<BloodTest>? tests,
+    Stream<List<BloodTest>?>? testsStream,
   }) {
     when(
       () => getAllTests(
         userId: any(named: 'userId'),
       ),
-    ).thenAnswer((invocation) => Stream.value(tests));
+    ).thenAnswer((_) => testsStream ?? Stream.value(tests));
   }
 
   void mockAddNewTest() {
@@ -31,7 +32,7 @@ class MockBloodTestRepository extends Mock implements BloodTestRepository {
         date: any(named: 'date'),
         parameterResults: any(named: 'parameterResults'),
       ),
-    ).thenAnswer((invocation) => Future.value());
+    ).thenAnswer((_) => Future.value());
   }
 
   void mockUpdateTest() {
@@ -42,7 +43,7 @@ class MockBloodTestRepository extends Mock implements BloodTestRepository {
         date: any(named: 'date'),
         parameterResults: any(named: 'parameterResults'),
       ),
-    ).thenAnswer((invocation) => Future.value());
+    ).thenAnswer((_) => Future.value());
   }
 
   void mockDeleteTest() {
@@ -51,7 +52,7 @@ class MockBloodTestRepository extends Mock implements BloodTestRepository {
         bloodTestId: any(named: 'bloodTestId'),
         userId: any(named: 'userId'),
       ),
-    ).thenAnswer((invocation) => Future.value());
+    ).thenAnswer((_) => Future.value());
   }
 
   void mockDeleteAllUserTests() {
@@ -59,6 +60,6 @@ class MockBloodTestRepository extends Mock implements BloodTestRepository {
       () => deleteAllUserTests(
         userId: any(named: 'userId'),
       ),
-    ).thenAnswer((invocation) => Future.value());
+    ).thenAnswer((_) => Future.value());
   }
 }
