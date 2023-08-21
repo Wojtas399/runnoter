@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../../dependency_injection.dart';
 import '../../../domain/service/auth_service.dart';
-import '../../component/calendar/calendar_component.dart';
+import '../../common_feature/calendar/calendar.dart';
 import '../../component/page_not_found_component.dart';
 
 @RoutePage()

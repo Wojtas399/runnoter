@@ -15,35 +15,36 @@ import 'calendar_component__month.dart';
 import 'calendar_component_date.dart';
 import 'calendar_component_week.dart';
 
-class Calendar extends StatelessWidget {
-  final String userId;
+class CalendarComponent extends StatelessWidget {
   final DateRangeType? dateRangeType;
+  final Function(DateTime startDate, DateTime endDate) onDateRangeChanged;
 
-  const Calendar({super.key, required this.userId, this.dateRangeType});
+  const CalendarComponent({
+    super.key,
+    this.dateRangeType,
+    required this.onDateRangeChanged,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(create: (_) => CalendarDateRangeDataCubit(userId: userId)),
-        BlocProvider(
-          create: (_) => CalendarComponentBloc()
-            ..add(CalendarComponentEventInitialize(
-              dateRangeType: dateRangeType ?? DateRangeType.week,
-            )),
-        ),
-      ],
-      child: const _BlocListener(
-        child: _Content(),
+    return BlocProvider(
+      create: (_) => CalendarComponentBloc()
+        ..add(CalendarComponentEventInitialize(
+          dateRangeType: dateRangeType ?? DateRangeType.week,
+        )),
+      child: _BlocListener(
+        onDateRangeChanged: onDateRangeChanged,
+        child: const _Content(),
       ),
     );
   }
 }
 
 class _BlocListener extends StatelessWidget {
+  final Function(DateTime startDate, DateTime endDate) onDateRangeChanged;
   final Widget child;
 
-  const _BlocListener({required this.child});
+  const _BlocListener({required this.onDateRangeChanged, required this.child});
 
   @override
   Widget build(BuildContext context) {
@@ -51,22 +52,18 @@ class _BlocListener extends StatelessWidget {
       listenWhen: (previousState, currentState) =>
           previousState.weeks == null ||
           previousState.dateRange != currentState.dateRange,
-      listener: _loadNewDateRangeData,
+      listener: (_, CalendarComponentState state) {
+        _emitNewDateRange(state);
+      },
       child: child,
     );
   }
 
-  void _loadNewDateRangeData(
-    BuildContext context,
-    CalendarComponentState state,
-  ) {
+  void _emitNewDateRange(CalendarComponentState state) {
     if (state.weeks != null) {
       final DateTime startDate = state.weeks!.first.days.first.date;
       final DateTime endDate = state.weeks!.last.days.last.date;
-      context.read<CalendarDateRangeDataCubit>().dateRangeChanged(
-            startDate: startDate,
-            endDate: endDate,
-          );
+      onDateRangeChanged(startDate, endDate);
     }
   }
 }
