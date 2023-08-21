@@ -10,6 +10,7 @@ import '../gap/gap_horizontal_components.dart';
 import '../shimmer_container.dart';
 import '../text/title_text_components.dart';
 import 'bloc/calendar_component_bloc.dart';
+import 'calendar_component_health_data.dart';
 
 class CalendarComponentWeek extends StatelessWidget {
   final Function(String workoutId) onWorkoutPressed;
@@ -84,8 +85,11 @@ class _DayItem extends StatelessWidget {
               ),
             ],
           ),
+          const Gap8(),
+          const CalendarComponentHealthData(),
+          const Gap8(),
           if (day.workouts.isNotEmpty || day.races.isNotEmpty) ...[
-            const Gap8(),
+            const Gap16(),
             ...day.workouts.map(
               (workout) => ActivityItem(
                 activity: workout,
