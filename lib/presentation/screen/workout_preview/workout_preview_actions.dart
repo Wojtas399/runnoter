@@ -30,7 +30,7 @@ class WorkoutPreviewWorkoutActions extends StatelessWidget {
       navigateTo(
         WorkoutCreatorRoute(
           userId: bloc.userId,
-          date: date.toPathFormat(),
+          dateStr: date.toPathFormat(),
           workoutId: workoutId,
         ),
       );

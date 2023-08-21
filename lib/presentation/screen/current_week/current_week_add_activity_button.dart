@@ -57,7 +57,7 @@ class CurrentWeekAddActivityButton extends StatelessWidget {
     switch (activityType) {
       case _ActivityType.workout:
         navigateTo(
-          WorkoutCreatorRoute(userId: loggedUserId, date: dateStr),
+          WorkoutCreatorRoute(userId: loggedUserId, dateStr: dateStr),
         );
         break;
       case _ActivityType.race:

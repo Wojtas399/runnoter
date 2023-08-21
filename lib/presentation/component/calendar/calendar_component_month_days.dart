@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../domain/cubit/calendar_date_range_data_cubit.dart';
 import '../../../domain/entity/race.dart';
 import '../../../domain/entity/workout.dart';
+import '../../config/navigation/router.dart';
+import '../../dialog/day_preview/day_preview_dialog.dart';
+import '../../dialog/day_preview/day_preview_dialog_actions.dart';
 import '../../formatter/activity_status_formatter.dart';
+import '../../formatter/date_formatter.dart';
+import '../../service/dialog_service.dart';
+import '../../service/navigator_service.dart';
 import '../text/body_text_components.dart';
 import 'bloc/calendar_component_bloc.dart';
 
@@ -74,10 +81,39 @@ class _DayItem extends StatelessWidget {
     );
   }
 
-  void _onPressed(BuildContext context) {
-    context.read<CalendarComponentBloc>().add(
-          CalendarComponentEventOnDayPressed(date: day.date),
-        );
+  Future<void> _onPressed(BuildContext context) async {
+    final String userId = context.read<CalendarDateRangeDataCubit>().userId;
+    final DayPreviewDialogAction? action =
+        await showDialogDependingOnScreenSize(
+      DayPreviewDialog(userId: userId, date: day.date),
+    );
+    if (action == null) return;
+    switch (action) {
+      case DayPreviewDialogActionAddWorkout():
+        navigateTo(WorkoutCreatorRoute(
+          userId: userId,
+          dateStr: action.date.toPathFormat(),
+        ));
+        break;
+      case DayPreviewDialogActionAddRace():
+        navigateTo(RaceCreatorRoute(
+          userId: userId,
+          dateStr: action.date.toPathFormat(),
+        ));
+        break;
+      case DayPreviewDialogActionShowWorkout():
+        navigateTo(WorkoutPreviewRoute(
+          userId: userId,
+          workoutId: action.workoutId,
+        ));
+        break;
+      case DayPreviewDialogActionShowRace():
+        navigateTo(RacePreviewRoute(
+          userId: userId,
+          raceId: action.raceId,
+        ));
+        break;
+    }
   }
 }
 

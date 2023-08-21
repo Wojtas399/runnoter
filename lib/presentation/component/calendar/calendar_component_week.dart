@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../../domain/cubit/calendar_date_range_data_cubit.dart';
+import '../../config/navigation/router.dart';
 import '../../extension/widgets_list_extensions.dart';
 import '../../formatter/date_formatter.dart';
+import '../../service/navigator_service.dart';
 import '../activity_item_component.dart';
 import '../gap/gap_components.dart';
 import '../gap/gap_horizontal_components.dart';
@@ -13,18 +16,7 @@ import 'bloc/calendar_component_bloc.dart';
 import 'calendar_component_health_data.dart';
 
 class CalendarComponentWeek extends StatelessWidget {
-  final Function(String workoutId) onWorkoutPressed;
-  final Function(String raceId) onRacePressed;
-  final Function(DateTime date) onAddWorkout;
-  final Function(DateTime date) onAddRace;
-
-  const CalendarComponentWeek({
-    super.key,
-    required this.onWorkoutPressed,
-    required this.onRacePressed,
-    required this.onAddWorkout,
-    required this.onAddRace,
-  });
+  const CalendarComponentWeek({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -37,16 +29,7 @@ class CalendarComponentWeek extends StatelessWidget {
       children: <Widget>[
         if (week == null)
           for (int i = 0; i < 7; i++) const CurrentWeekDayItemShimmer(),
-        if (week != null)
-          ...week.days.map(
-            (day) => _DayItem(
-              day: day,
-              onWorkoutPressed: onWorkoutPressed,
-              onRacePressed: onRacePressed,
-              onAddWorkout: () => onAddWorkout(day.date),
-              onAddRace: () => onAddRace(day.date),
-            ),
-          ),
+        if (week != null) ...week.days.map((day) => _DayItem(day)),
       ].addSeparator(const Divider()),
     );
   }
@@ -54,18 +37,8 @@ class CalendarComponentWeek extends StatelessWidget {
 
 class _DayItem extends StatelessWidget {
   final CalendarDay day;
-  final Function(String workoutId) onWorkoutPressed;
-  final Function(String raceId) onRacePressed;
-  final VoidCallback onAddWorkout;
-  final VoidCallback onAddRace;
 
-  const _DayItem({
-    required this.day,
-    required this.onWorkoutPressed,
-    required this.onRacePressed,
-    required this.onAddWorkout,
-    required this.onAddRace,
-  });
+  const _DayItem(this.day);
 
   @override
   Widget build(BuildContext context) {
@@ -80,8 +53,8 @@ class _DayItem extends StatelessWidget {
             children: [
               _Date(date: day.date, isToday: day.isTodayDay),
               _AddActivityButton(
-                onAddWorkout: onAddWorkout,
-                onAddRace: onAddRace,
+                onAddWorkout: () => _navigateToWorkoutCreator(context),
+                onAddRace: () => _navigateToRaceCreator(context),
               ),
             ],
           ),
@@ -90,22 +63,50 @@ class _DayItem extends StatelessWidget {
           const Gap8(),
           if (day.workouts.isNotEmpty || day.races.isNotEmpty) ...[
             const Gap16(),
-            ...day.workouts.map(
-              (workout) => ActivityItem(
-                activity: workout,
-                onPressed: () => onWorkoutPressed(workout.id),
-              ),
-            ),
             ...day.races.map(
               (race) => ActivityItem(
                 activity: race,
-                onPressed: () => onRacePressed(race.id),
+                onPressed: () => _navigateToRacePreview(context, race.id),
+              ),
+            ),
+            ...day.workouts.map(
+              (workout) => ActivityItem(
+                activity: workout,
+                onPressed: () => _navigateToWorkoutPreview(context, workout.id),
               ),
             ),
           ],
         ],
       ),
     );
+  }
+
+  void _navigateToWorkoutPreview(BuildContext context, String workoutId) {
+    navigateTo(WorkoutPreviewRoute(
+      userId: context.read<CalendarDateRangeDataCubit>().userId,
+      workoutId: workoutId,
+    ));
+  }
+
+  void _navigateToRacePreview(BuildContext context, String raceId) {
+    navigateTo(RacePreviewRoute(
+      userId: context.read<CalendarDateRangeDataCubit>().userId,
+      raceId: raceId,
+    ));
+  }
+
+  void _navigateToWorkoutCreator(BuildContext context) {
+    navigateTo(WorkoutCreatorRoute(
+      userId: context.read<CalendarDateRangeDataCubit>().userId,
+      dateStr: day.date.toPathFormat(),
+    ));
+  }
+
+  void _navigateToRaceCreator(BuildContext context) {
+    navigateTo(RaceCreatorRoute(
+      userId: context.read<CalendarDateRangeDataCubit>().userId,
+      dateStr: day.date.toPathFormat(),
+    ));
   }
 }
 

@@ -14,19 +14,19 @@ import 'workout_creator_content.dart';
 @RoutePage()
 class WorkoutCreatorScreen extends StatelessWidget {
   final String? userId;
-  final String? date;
+  final String? dateStr;
   final String? workoutId;
 
   const WorkoutCreatorScreen({
     super.key,
     @PathParam('userId') this.userId,
-    @PathParam('date') this.date,
+    @PathParam('dateStr') this.dateStr,
     @PathParam('workoutId') this.workoutId,
   });
 
   @override
   Widget build(BuildContext context) {
-    final DateTime? date = this.date?.toDateTime();
+    final DateTime? date = dateStr?.toDateTime();
     return userId == null
         ? const PageNotFound()
         : BlocProvider(

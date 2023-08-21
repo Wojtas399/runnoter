@@ -3,26 +3,22 @@ part of 'calendar_component_bloc.dart';
 class CalendarComponentState extends Equatable {
   final DateRange? dateRange;
   final List<CalendarWeek>? weeks;
-  final DateTime? pressedDate;
 
   const CalendarComponentState({
     this.dateRange,
     this.weeks,
-    this.pressedDate,
   });
 
   @override
-  List<Object?> get props => [dateRange, weeks, pressedDate];
+  List<Object?> get props => [dateRange, weeks];
 
   CalendarComponentState copyWith({
     DateRange? dateRange,
     List<CalendarWeek>? weeks,
-    DateTime? pressedDate,
   }) =>
       CalendarComponentState(
         dateRange: dateRange ?? this.dateRange,
         weeks: weeks ?? this.weeks,
-        pressedDate: pressedDate,
       );
 }
 

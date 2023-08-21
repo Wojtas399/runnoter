@@ -29,7 +29,6 @@ class CalendarComponentBloc
     on<CalendarComponentEventDateRangeDataUpdated>(_dateRangeDataUpdated);
     on<CalendarComponentEventPreviousDateRange>(_previousDateRange);
     on<CalendarComponentEventNextDateRange>(_nextDateRange);
-    on<CalendarComponentEventOnDayPressed>(_onDayPressed);
   }
 
   void _initialize(
@@ -135,15 +134,6 @@ class CalendarComponentBloc
         weeks: _createWeeks(newDateRange),
       ));
     }
-  }
-
-  void _onDayPressed(
-    CalendarComponentEventOnDayPressed event,
-    Emitter<CalendarComponentState> emit,
-  ) {
-    emit(state.copyWith(
-      pressedDate: event.date,
-    ));
   }
 
   List<CalendarWeek> _createWeeks(final DateRange dateRange) {

@@ -30,9 +30,3 @@ class CalendarComponentEventPreviousDateRange extends CalendarComponentEvent {
 class CalendarComponentEventNextDateRange extends CalendarComponentEvent {
   const CalendarComponentEventNextDateRange();
 }
-
-class CalendarComponentEventOnDayPressed extends CalendarComponentEvent {
-  final DateTime date;
-
-  const CalendarComponentEventOnDayPressed({required this.date});
-}

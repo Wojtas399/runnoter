@@ -5,14 +5,13 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/additional_model/calendar_date_range_data.dart';
-import 'package:runnoter/domain/cubit/calendar_cubit.dart';
+import 'package:runnoter/domain/cubit/calendar_date_range_data_cubit.dart';
 import 'package:runnoter/domain/entity/health_measurement.dart';
 import 'package:runnoter/domain/entity/race.dart';
 import 'package:runnoter/domain/entity/workout.dart';
 import 'package:runnoter/domain/repository/health_measurement_repository.dart';
 import 'package:runnoter/domain/repository/race_repository.dart';
 import 'package:runnoter/domain/repository/workout_repository.dart';
-import 'package:runnoter/domain/service/auth_service.dart';
 
 import '../../creators/health_measurement_creator.dart';
 import '../../creators/race_creator.dart';
@@ -20,17 +19,14 @@ import '../../creators/workout_creator.dart';
 import '../../mock/domain/repository/mock_health_measurement_repository.dart';
 import '../../mock/domain/repository/mock_race_repository.dart';
 import '../../mock/domain/repository/mock_workout_repository.dart';
-import '../../mock/domain/service/mock_auth_service.dart';
 
 void main() {
-  final authService = MockAuthService();
   final healthMeasurementRepository = MockHealthMeasurementRepository();
   final workoutRepository = MockWorkoutRepository();
   final raceRepository = MockRaceRepository();
-  const String loggedUserId = 'u1';
+  const String userId = 'u1';
 
   setUpAll(() {
-    GetIt.I.registerFactory<AuthService>(() => authService);
     GetIt.I.registerSingleton<HealthMeasurementRepository>(
       healthMeasurementRepository,
     );
@@ -39,7 +35,6 @@ void main() {
   });
 
   tearDown(() {
-    reset(authService);
     reset(healthMeasurementRepository);
     reset(workoutRepository);
     reset(raceRepository);
@@ -79,9 +74,8 @@ void main() {
 
       blocTest(
         'should set listener of health measurements, workouts and races from date range',
-        build: () => CalendarCubit(),
+        build: () => CalendarDateRangeDataCubit(userId: userId),
         setUp: () {
-          authService.mockGetLoggedUserId(userId: loggedUserId);
           healthMeasurementRepository.mockGetMeasurementsByDateRange(
             measurementsStream: healthMeasurements$.stream,
           );
@@ -120,26 +114,25 @@ void main() {
           ),
         ],
         verify: (_) {
-          verify(() => authService.loggedUserId$).called(1);
           verify(
             () => healthMeasurementRepository.getMeasurementsByDateRange(
               startDate: startDate,
               endDate: endDate,
-              userId: loggedUserId,
+              userId: userId,
             ),
           ).called(1);
           verify(
             () => workoutRepository.getWorkoutsByDateRange(
               startDate: startDate,
               endDate: endDate,
-              userId: loggedUserId,
+              userId: userId,
             ),
           ).called(1);
           verify(
             () => raceRepository.getRacesByDateRange(
               startDate: startDate,
               endDate: endDate,
-              userId: loggedUserId,
+              userId: userId,
             ),
           ).called(1);
         },
