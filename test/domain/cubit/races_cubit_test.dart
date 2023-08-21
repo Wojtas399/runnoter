@@ -27,32 +27,16 @@ void main() {
     'initialize',
     () {
       final List<Race> races = [
-        createRace(
-          id: 'c2',
-          userId: userId,
-          date: DateTime(2022, 4, 20),
-        ),
-        createRace(
-          id: 'c1',
-          userId: userId,
-          date: DateTime(2023, 5, 10),
-        ),
-        createRace(
-          id: 'c3',
-          userId: userId,
-          date: DateTime(2023, 6, 30),
-        ),
-        createRace(
-          id: 'c4',
-          userId: userId,
-          date: DateTime(2022, 3, 30),
-        ),
+        createRace(id: 'c2', date: DateTime(2022, 4, 20)),
+        createRace(id: 'c1', date: DateTime(2023, 5, 10)),
+        createRace(id: 'c3', date: DateTime(2023, 6, 30)),
+        createRace(id: 'c4', date: DateTime(2022, 3, 30)),
       ];
       final StreamController<List<Race>?> races$ = StreamController()
         ..add(races);
 
       blocTest(
-        'should set listener of races belonging to logged user and should sort races by date',
+        'should set listener of races and should group and sort races by date',
         build: () => RacesCubit(userId: userId),
         setUp: () => raceRepository.mockGetAllRaces(racesStream: races$.stream),
         act: (cubit) async {
@@ -62,11 +46,11 @@ void main() {
         },
         expect: () => [
           [
-            RacesFromYear(year: 2023, races: [races[1], races[2]]),
-            RacesFromYear(year: 2022, races: [races.first, races.last]),
+            RacesFromYear(year: 2023, elements: [races[1], races[2]]),
+            RacesFromYear(year: 2022, elements: [races.first, races.last]),
           ],
           [
-            RacesFromYear(year: 2023, races: [races[1], races[2]]),
+            RacesFromYear(year: 2023, elements: [races[1], races[2]]),
           ],
         ],
         verify: (_) => verify(

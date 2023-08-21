@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../dependency_injection.dart';
+import '../additional_model/elements_from_year.dart';
 import '../entity/blood_test.dart';
 import '../repository/blood_test_repository.dart';
 
@@ -30,41 +30,35 @@ class BloodTestsCubit extends Cubit<List<BloodTestsFromYear>?> {
         .listen(_onBloodTestsChanged);
   }
 
-  void _onBloodTestsChanged(List<BloodTest>? bloodTests) {
-    final segregatedTests = _segregateBloodTests(bloodTests);
-    if (segregatedTests == null) return;
-    for (final testsFromYear in segregatedTests) {
-      testsFromYear.bloodTests.sort((t1, t2) => t2.date.compareTo(t1.date));
+  void _onBloodTestsChanged(final List<BloodTest>? bloodTests) {
+    if (bloodTests == null) return;
+    final groupedAndSortedTests = _groupBloodTests(bloodTests);
+    groupedAndSortedTests.sort((t1, t2) => t1.year < t2.year ? -1 : 1);
+    for (final testsFromYear in groupedAndSortedTests) {
+      testsFromYear.elements.sort((t1, t2) => t2.date.compareTo(t1.date));
     }
-    emit(segregatedTests);
+    emit(groupedAndSortedTests);
   }
 
-  List<BloodTestsFromYear>? _segregateBloodTests(List<BloodTest>? bloodTests) {
-    if (bloodTests == null) return null;
-    final List<BloodTestsFromYear> segregatedTests = [];
+  List<BloodTestsFromYear> _groupBloodTests(List<BloodTest> bloodTests) {
+    final List<BloodTestsFromYear> groupedTests = [];
     for (final test in bloodTests) {
       final int year = test.date.year;
-      final int yearIndex = segregatedTests.indexWhere(
+      final int yearIndex = groupedTests.indexWhere(
         (element) => element.year == year,
       );
       if (yearIndex >= 0) {
-        segregatedTests[yearIndex].bloodTests.add(test);
+        groupedTests[yearIndex].elements.add(test);
       } else {
-        segregatedTests.add(
-          BloodTestsFromYear(year: year, bloodTests: [test]),
+        groupedTests.add(
+          BloodTestsFromYear(year: year, elements: [test]),
         );
       }
     }
-    return segregatedTests;
+    return groupedTests;
   }
 }
 
-class BloodTestsFromYear extends Equatable {
-  final int year;
-  final List<BloodTest> bloodTests;
-
-  const BloodTestsFromYear({required this.year, required this.bloodTests});
-
-  @override
-  List<Object?> get props => [year, bloodTests];
+class BloodTestsFromYear extends ElementsFromYear<BloodTest> {
+  const BloodTestsFromYear({required super.year, required super.elements});
 }

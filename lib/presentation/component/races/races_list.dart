@@ -57,7 +57,7 @@ class _RacesFromYear extends StatelessWidget {
       children: [
         TitleLarge(racesFromYear.year.toString()),
         const Gap16(),
-        ...racesFromYear.races.map(
+        ...racesFromYear.elements.map(
           (Race race) => _RaceItem(race: race),
         ),
       ],

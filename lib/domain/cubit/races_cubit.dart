@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../dependency_injection.dart';
+import '../additional_model/elements_from_year.dart';
 import '../entity/race.dart';
 import '../repository/race_repository.dart';
 
@@ -29,41 +29,35 @@ class RacesCubit extends Cubit<List<RacesFromYear>?> {
         _raceRepository.getAllRaces(userId: _userId).listen(_onRacesChanged);
   }
 
-  void _onRacesChanged(List<Race>? races) {
+  void _onRacesChanged(final List<Race>? races) {
     if (races == null) return;
-    final groupedRaces = _groupRaces(races);
-    groupedRaces.sort((g1, g2) => g2.year < g1.year ? -1 : 1);
-    for (final racesFromYear in groupedRaces) {
-      racesFromYear.races.sort((r1, r2) => r2.date.compareTo(r1.date));
+    final groupedAndSortedRaces = _groupRaces(races);
+    groupedAndSortedRaces.sort((g1, g2) => g2.year < g1.year ? -1 : 1);
+    for (final racesFromYear in groupedAndSortedRaces) {
+      racesFromYear.elements.sort((r1, r2) => r2.date.compareTo(r1.date));
     }
-    emit(groupedRaces);
+    emit(groupedAndSortedRaces);
   }
 
   List<RacesFromYear> _groupRaces(List<Race> races) {
-    final List<RacesFromYear> segregatedRaces = [];
+    final List<RacesFromYear> groupedRaces = [];
     for (final race in races) {
       final int year = race.date.year;
-      final int yearIndex = segregatedRaces.indexWhere(
+      final int yearIndex = groupedRaces.indexWhere(
         (element) => element.year == year,
       );
       if (yearIndex >= 0) {
-        segregatedRaces[yearIndex].races.add(race);
+        groupedRaces[yearIndex].elements.add(race);
       } else {
-        segregatedRaces.add(
-          RacesFromYear(year: year, races: [race]),
+        groupedRaces.add(
+          RacesFromYear(year: year, elements: [race]),
         );
       }
     }
-    return segregatedRaces;
+    return groupedRaces;
   }
 }
 
-class RacesFromYear extends Equatable {
-  final int year;
-  final List<Race> races;
-
-  const RacesFromYear({required this.year, required this.races});
-
-  @override
-  List<Object?> get props => [year, races];
+class RacesFromYear extends ElementsFromYear<Race> {
+  const RacesFromYear({required super.year, required super.elements});
 }

@@ -36,8 +36,7 @@ void main() {
         ..add(tests);
 
       blocTest(
-        'should set listener of blood tests grouped by year and '
-        'should sort them by date',
+        'should set listener of blood tests and should group and sort races by date',
         build: () => BloodTestsCubit(userId: userId),
         setUp: () => bloodTestRepository.mockGetAllTests(
           testsStream: tests$.stream,
@@ -49,12 +48,12 @@ void main() {
         },
         expect: () => [
           [
-            BloodTestsFromYear(year: 2023, bloodTests: [tests.first, tests[2]]),
-            BloodTestsFromYear(year: 2022, bloodTests: [tests[1]]),
-            BloodTestsFromYear(year: 2021, bloodTests: [tests.last]),
+            BloodTestsFromYear(year: 2023, elements: [tests.first, tests[2]]),
+            BloodTestsFromYear(year: 2022, elements: [tests[1]]),
+            BloodTestsFromYear(year: 2021, elements: [tests.last]),
           ],
           [
-            BloodTestsFromYear(year: 2022, bloodTests: [tests[1]]),
+            BloodTestsFromYear(year: 2022, elements: [tests[1]]),
           ],
         ],
         verify: (_) => verify(

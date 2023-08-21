@@ -53,7 +53,7 @@ class _TestsFromYear extends StatelessWidget {
       children: [
         TitleLarge(testsFromYear.year.toString()),
         const Gap16(),
-        ...testsFromYear.bloodTests.map(
+        ...testsFromYear.elements.map(
           (BloodTest test) => _TestItem(bloodTest: test),
         ),
       ],
