@@ -3,8 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/additional_model/calendar_date_range_data.dart';
 import '../../../domain/cubit/calendar_date_range_data_cubit.dart';
+import '../../component/body/big_body_component.dart';
 import '../../component/calendar/bloc/calendar_component_bloc.dart';
 import '../../component/calendar/calendar_component.dart';
+import '../../component/padding/paddings_24.dart';
 import '../../config/navigation/router.dart';
 import '../../dialog/day_preview/day_preview_dialog.dart';
 import '../../dialog/day_preview/day_preview_dialog_actions.dart';
@@ -21,21 +23,47 @@ class Calendar extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => CalendarDateRangeDataCubit(userId: userId),
-      child: BlocBuilder<CalendarDateRangeDataCubit, CalendarDateRangeData>(
-        builder: (context, dateRangeData) {
-          return CalendarComponent(
-            dateRangeType: DateRangeType.month,
-            dateRangeData: dateRangeData,
-            onDateRangeChanged: (DateTime startDate, DateTime endDate) =>
-                _onDateRangeChanged(context, startDate, endDate),
-            onMonthDayPressed: (DateTime date) =>
-                _onMonthDayPressed(context, date),
-            onWorkoutPressed: _navigateToWorkoutPreview,
-            onRacePressed: _navigateToRacePreview,
-            onAddWorkout: _navigateToWorkoutCreator,
-            onAddRace: _navigateToRaceCreator,
-          );
-        },
+      child: const SingleChildScrollView(
+        child: BigBody(
+          child: Paddings24(
+            child: _Calendar(),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _Calendar extends StatelessWidget {
+  const _Calendar();
+
+  @override
+  Widget build(BuildContext context) {
+    final CalendarDateRangeData dateRangeData = context.select(
+      (CalendarDateRangeDataCubit cubit) => cubit.state,
+    );
+
+    return CalendarComponent(
+      dateRangeType: DateRangeType.month,
+      dateRangeData: dateRangeData,
+      onDateRangeChanged: (DateTime startDate, DateTime endDate) =>
+          _onDateRangeChanged(context, startDate, endDate),
+      onMonthDayPressed: (DateTime date) => _onMonthDayPressed(context, date),
+      onWorkoutPressed: (String workoutId) => _navigateToWorkoutPreview(
+        context.read<CalendarDateRangeDataCubit>().userId,
+        workoutId,
+      ),
+      onRacePressed: (String raceId) => _navigateToRacePreview(
+        context.read<CalendarDateRangeDataCubit>().userId,
+        raceId,
+      ),
+      onAddWorkout: (DateTime date) => _navigateToWorkoutCreator(
+        context.read<CalendarDateRangeDataCubit>().userId,
+        date,
+      ),
+      onAddRace: (DateTime date) => _navigateToRaceCreator(
+        context.read<CalendarDateRangeDataCubit>().userId,
+        date,
       ),
     );
   }
@@ -52,6 +80,7 @@ class Calendar extends StatelessWidget {
   }
 
   Future<void> _onMonthDayPressed(BuildContext context, DateTime date) async {
+    final String userId = context.read<CalendarDateRangeDataCubit>().userId;
     final DayPreviewDialogAction? action =
         await showDialogDependingOnScreenSize(
       DayPreviewDialog(userId: userId, date: date),
@@ -59,42 +88,42 @@ class Calendar extends StatelessWidget {
     if (action == null) return;
     switch (action) {
       case DayPreviewDialogActionAddWorkout():
-        _navigateToWorkoutCreator(action.date);
+        _navigateToWorkoutCreator(userId, action.date);
         break;
       case DayPreviewDialogActionAddRace():
-        _navigateToRaceCreator(action.date);
+        _navigateToRaceCreator(userId, action.date);
         break;
       case DayPreviewDialogActionShowWorkout():
-        _navigateToWorkoutPreview(action.workoutId);
+        _navigateToWorkoutPreview(userId, action.workoutId);
         break;
       case DayPreviewDialogActionShowRace():
-        _navigateToRacePreview(action.raceId);
+        _navigateToRacePreview(userId, action.raceId);
         break;
     }
   }
 
-  void _navigateToWorkoutPreview(String workoutId) {
+  void _navigateToWorkoutPreview(String userId, String workoutId) {
     navigateTo(WorkoutPreviewRoute(
       userId: userId,
       workoutId: workoutId,
     ));
   }
 
-  void _navigateToRacePreview(String raceId) {
+  void _navigateToRacePreview(String userId, String raceId) {
     navigateTo(RacePreviewRoute(
       userId: userId,
       raceId: raceId,
     ));
   }
 
-  void _navigateToWorkoutCreator(DateTime date) {
+  void _navigateToWorkoutCreator(String userId, DateTime date) {
     navigateTo(WorkoutCreatorRoute(
       userId: userId,
       dateStr: date.toPathFormat(),
     ));
   }
 
-  void _navigateToRaceCreator(DateTime date) {
+  void _navigateToRaceCreator(String userId, DateTime date) {
     navigateTo(RaceCreatorRoute(
       userId: userId,
       dateStr: date.toPathFormat(),

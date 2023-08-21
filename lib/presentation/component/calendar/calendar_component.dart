@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/additional_model/calendar_date_range_data.dart';
-import '../body/big_body_component.dart';
 import '../card_body_component.dart';
 import '../gap/gap_components.dart';
-import '../padding/paddings_24.dart';
 import '../responsive_layout_component.dart';
 import 'bloc/calendar_component_bloc.dart';
 import 'calendar_component__month.dart';
@@ -110,34 +108,29 @@ class _ContentState extends State<_Content> {
   void didUpdateWidget(covariant _Content oldWidget) {
     context.read<CalendarComponentBloc>().add(
           CalendarComponentEventDateRangeDataUpdated(
-              data: widget.dateRangeData),
+            data: widget.dateRangeData,
+          ),
         );
     super.didUpdateWidget(oldWidget);
   }
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: BigBody(
-        child: Paddings24(
-          child: ResponsiveLayout(
-            mobileBody: _Calendar(
-              onWorkoutPressed: widget.onWorkoutPressed,
-              onRacePressed: widget.onRacePressed,
-              onMonthDayPressed: widget.onMonthDayPressed,
-              onAddWorkout: widget.onAddWorkout,
-              onAddRace: widget.onAddRace,
-            ),
-            desktopBody: CardBody(
-              child: _Calendar(
-                onWorkoutPressed: widget.onWorkoutPressed,
-                onRacePressed: widget.onRacePressed,
-                onMonthDayPressed: widget.onMonthDayPressed,
-                onAddWorkout: widget.onAddWorkout,
-                onAddRace: widget.onAddRace,
-              ),
-            ),
-          ),
+    return ResponsiveLayout(
+      mobileBody: _Calendar(
+        onWorkoutPressed: widget.onWorkoutPressed,
+        onRacePressed: widget.onRacePressed,
+        onAddWorkout: widget.onAddWorkout,
+        onAddRace: widget.onAddRace,
+        onMonthDayPressed: widget.onMonthDayPressed,
+      ),
+      desktopBody: CardBody(
+        child: _Calendar(
+          onWorkoutPressed: widget.onWorkoutPressed,
+          onRacePressed: widget.onRacePressed,
+          onAddWorkout: widget.onAddWorkout,
+          onAddRace: widget.onAddRace,
+          onMonthDayPressed: widget.onMonthDayPressed,
         ),
       ),
     );
