@@ -1,9 +1,10 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/cubit/races_cubit.dart';
-import 'races_content.dart';
+import '../../../dependency_injection.dart';
+import '../../../domain/service/auth_service.dart';
+import '../../component/page_not_found_component.dart';
+import '../../component/races/races_component.dart';
 
 @RoutePage()
 class RacesScreen extends StatelessWidget {
@@ -13,11 +14,16 @@ class RacesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => RacesCubit()..initialize(),
-      child: const SafeArea(
-        child: RacesContent(),
-      ),
+    return StreamBuilder(
+      stream: getIt<AuthService>().loggedUserId$,
+      builder: (_, AsyncSnapshot<String?> snapshot) {
+        final String? loggedUserId = snapshot.data;
+
+        return switch (loggedUserId) {
+          null => const PageNotFound(),
+          String() => Races(userId: loggedUserId),
+        };
+      },
     );
   }
 }

@@ -50,12 +50,13 @@ class MockRaceRepository extends Mock implements RaceRepository {
 
   void mockGetAllRaces({
     List<Race>? races,
+    Stream<List<Race>?>? racesStream,
   }) {
     when(
       () => getAllRaces(
         userId: any(named: 'userId'),
       ),
-    ).thenAnswer((_) => Stream.value(races));
+    ).thenAnswer((_) => racesStream ?? Stream.value(races));
   }
 
   void mockAddNewRace() {

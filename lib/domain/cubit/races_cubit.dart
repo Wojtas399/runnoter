@@ -2,20 +2,18 @@ import 'dart:async';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rxdart/rxdart.dart';
 
 import '../../dependency_injection.dart';
 import '../entity/race.dart';
 import '../repository/race_repository.dart';
-import '../service/auth_service.dart';
 
 class RacesCubit extends Cubit<List<RacesFromYear>?> {
-  final AuthService _authService;
+  final String _userId;
   final RaceRepository _raceRepository;
   StreamSubscription<List<Race>?>? _racesListener;
 
-  RacesCubit()
-      : _authService = getIt<AuthService>(),
+  RacesCubit({required String userId})
+      : _userId = userId,
         _raceRepository = getIt<RaceRepository>(),
         super(null);
 
@@ -27,14 +25,8 @@ class RacesCubit extends Cubit<List<RacesFromYear>?> {
   }
 
   void initialize() {
-    _racesListener ??= _authService.loggedUserId$
-        .whereNotNull()
-        .switchMap(
-          (String loggedUserId) => _raceRepository.getAllRaces(
-            userId: loggedUserId,
-          ),
-        )
-        .listen(_onRacesChanged);
+    _racesListener ??=
+        _raceRepository.getAllRaces(userId: _userId).listen(_onRacesChanged);
   }
 
   void _onRacesChanged(List<Race>? races) {
@@ -70,14 +62,8 @@ class RacesFromYear extends Equatable {
   final int year;
   final List<Race> races;
 
-  const RacesFromYear({
-    required this.year,
-    required this.races,
-  });
+  const RacesFromYear({required this.year, required this.races});
 
   @override
-  List<Object?> get props => [
-        year,
-        races,
-      ];
+  List<Object?> get props => [year, races];
 }
