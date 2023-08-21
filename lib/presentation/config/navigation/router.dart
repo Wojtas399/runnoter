@@ -120,6 +120,10 @@ class AppRouter extends _$AppRouter {
                   path: 'statistics',
                 ),
                 AutoRoute(
+                  page: ClientRacesRoute.page,
+                  path: 'races',
+                ),
+                AutoRoute(
                   page: ClientBloodTestsRoute.page,
                   path: 'blood-tests',
                 ),

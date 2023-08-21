@@ -15,6 +15,7 @@ class ClientContent extends StatelessWidget {
       routes: const [
         ClientCalendarRoute(),
         ClientStatsRoute(),
+        ClientRacesRoute(),
         ClientBloodTestsRoute(),
       ],
       builder: (context, child) {

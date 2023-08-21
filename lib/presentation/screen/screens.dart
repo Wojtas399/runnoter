@@ -6,6 +6,7 @@ export 'calendar/calendar_screen.dart';
 export 'client/client_screen.dart';
 export 'client_blood_tests/client_blood_tests.dart';
 export 'client_calendar/client_calendar_screen.dart';
+export 'client_races/client_races_screen.dart';
 export 'client_stats/client_stats_screen.dart';
 export 'clients/clients_screen.dart';
 export 'current_week/current_week_screen.dart';
