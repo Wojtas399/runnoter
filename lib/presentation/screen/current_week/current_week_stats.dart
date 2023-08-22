@@ -196,7 +196,7 @@ class _StatsParamShimmer extends StatelessWidget {
           height: 16,
         ),
         Gap16(),
-        ShimmerContainer(width: 40, height: 16)
+        ShimmerContainer(width: 60, height: 16)
       ],
     );
   }

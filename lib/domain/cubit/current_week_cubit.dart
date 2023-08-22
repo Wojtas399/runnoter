@@ -34,7 +34,7 @@ class CurrentWeekCubit extends Cubit<CalendarDateRangeData?> {
         super(dateRangeData);
 
   int? get numberOfActivities =>
-      (state?.workouts.length ?? 0) + (state?.races.length ?? 0);
+      state == null ? null : state!.workouts.length + state!.races.length;
 
   double? get scheduledTotalDistance => _calculateScheduledTotalDistance();
 
@@ -85,8 +85,8 @@ class CurrentWeekCubit extends Cubit<CalendarDateRangeData?> {
         .listen((CalendarDateRangeData dateRangeData) => emit(dateRangeData));
   }
 
-  double _calculateScheduledTotalDistance() {
-    if (state == null) return 0;
+  double? _calculateScheduledTotalDistance() {
+    if (state == null) return null;
     final double workoutsDistance = state!.workouts
         .map(
           (workout) => workout.stages.map(calculateDistanceOfWorkoutStage).sum,
@@ -97,8 +97,8 @@ class CurrentWeekCubit extends Cubit<CalendarDateRangeData?> {
     return workoutsDistance + racesDistance;
   }
 
-  double _calculateCoveredTotalDistance() {
-    if (state == null) return 0;
+  double? _calculateCoveredTotalDistance() {
+    if (state == null) return null;
     final double workoutsCoveredDistance =
         state!.workouts.map((workout) => workout.coveredDistance).sum;
     final double racesCoveredDistance =
