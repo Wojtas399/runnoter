@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
-import 'package:runnoter/domain/bloc/day_preview/day_preview_state.dart';
+import 'package:runnoter/domain/bloc/day_preview/day_preview_bloc.dart';
 import 'package:runnoter/domain/entity/health_measurement.dart';
 import 'package:runnoter/domain/entity/race.dart';
 import 'package:runnoter/domain/entity/workout.dart';
@@ -30,6 +30,19 @@ void main() {
   );
 
   test(
+    'copy with isPastDay',
+    () {
+      const bool expected = true;
+
+      state = state.copyWith(isPastDay: expected);
+      final state2 = state.copyWith();
+
+      expect(state.isPastDay, expected);
+      expect(state2.isPastDay, expected);
+    },
+  );
+
+  test(
     'copy with healthMeasurement',
     () {
       final HealthMeasurement expected = createHealthMeasurement(
@@ -41,6 +54,21 @@ void main() {
 
       expect(state.healthMeasurement, expected);
       expect(state2.healthMeasurement, expected);
+    },
+  );
+
+  test(
+    'copy with healthMeasurementAsNull',
+    () {
+      final HealthMeasurement expected = createHealthMeasurement(
+        date: DateTime(2023),
+      );
+
+      state = state.copyWith(healthMeasurement: expected);
+      final state2 = state.copyWith(healthMeasurementAsNull: true);
+
+      expect(state.healthMeasurement, expected);
+      expect(state2.healthMeasurement, null);
     },
   );
 
