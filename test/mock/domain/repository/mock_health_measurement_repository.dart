@@ -12,13 +12,14 @@ class MockHealthMeasurementRepository extends Mock
 
   void mockGetMeasurementByDate({
     HealthMeasurement? measurement,
+    Stream<HealthMeasurement?>? measurementStream,
   }) {
     when(
       () => getMeasurementByDate(
         date: any(named: 'date'),
         userId: any(named: 'userId'),
       ),
-    ).thenAnswer((_) => Stream.value(measurement));
+    ).thenAnswer((_) => measurementStream ?? Stream.value(measurement));
   }
 
   void mockGetMeasurementsByDateRange({

@@ -17,33 +17,38 @@ class DayPreviewActivities extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final DayPreviewCubit cubit = context.watch<DayPreviewCubit>();
+    final bool isPastDate = context.select(
+      (DayPreviewCubit cubit) => cubit.isPastDate,
+    );
+    final List<Workout>? workouts = context.select(
+      (DayPreviewCubit cubit) => cubit.state?.workouts,
+    );
+    final List<Race>? races = context.select(
+      (DayPreviewCubit cubit) => cubit.state?.races,
+    );
 
-    if (cubit.state.workouts == null && cubit.state.workouts == null) {
+    if (workouts == null && races == null) {
       return const Center(
         child: Paddings24(
           child: LoadingInfo(),
         ),
       );
-    } else if (cubit.areThereActivities) {
-      return SingleChildScrollView(
+    } else if (workouts?.isEmpty == true && races?.isEmpty == true) {
+      final str = Str.of(context);
+      return Center(
         child: Paddings24(
-          child: _Activities(
-            workouts: cubit.state.workouts,
-            races: cubit.state.races,
+          child: EmptyContentInfo(
+            title: str.dayPreviewNoActivitiesTitle,
+            subtitle: isPastDate
+                ? str.dayPreviewNoActivitiesMessagePastDay
+                : str.dayPreviewNoActivitiesMessageFutureDay,
           ),
         ),
       );
     }
-    final str = Str.of(context);
-    return Center(
+    return SingleChildScrollView(
       child: Paddings24(
-        child: EmptyContentInfo(
-          title: str.dayPreviewNoActivitiesTitle,
-          subtitle: cubit.isPastDate
-              ? str.dayPreviewNoActivitiesMessagePastDay
-              : str.dayPreviewNoActivitiesMessageFutureDay,
-        ),
+        child: _Activities(workouts: workouts, races: races),
       ),
     );
   }
