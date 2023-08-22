@@ -60,24 +60,6 @@ void main() {
   );
 
   test(
-    'get days from week, '
-    'should return all days from week which includes given day',
-    () {
-      final DateTime day = DateTime(2023, 4, 6);
-      final List<DateTime> expectedDays = [];
-      for (int i = 3; i <= 9; i++) {
-        expectedDays.add(
-          DateTime(2023, 4, i),
-        );
-      }
-
-      final List<DateTime> days = service.getDaysFromWeek(day);
-
-      expect(days, expectedDays);
-    },
-  );
-
-  test(
     'is date from range, '
     'date is from range, '
     'should return true',

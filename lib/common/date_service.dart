@@ -27,21 +27,6 @@ class DateService {
     );
   }
 
-  List<DateTime> getDaysFromWeek(DateTime date) {
-    final DateTime firstDateOfTheWeek = getFirstDayOfTheWeek(date);
-    final List<DateTime> datesFromWeek = [firstDateOfTheWeek];
-    DateTime currentDate = firstDateOfTheWeek;
-    for (int i = 0; i < 6; i++) {
-      currentDate = _getDate(
-        currentDate.add(
-          const Duration(days: 1),
-        ),
-      );
-      datesFromWeek.add(currentDate);
-    }
-    return datesFromWeek;
-  }
-
   bool isDateFromRange({
     required DateTime date,
     required DateTime startDate,

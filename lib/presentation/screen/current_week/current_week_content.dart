@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../dependency_injection.dart';
+import '../../../domain/additional_model/calendar_date_range_data.dart';
 import '../../../domain/additional_model/calendar_week_day.dart';
 import '../../../domain/cubit/current_week_cubit.dart';
 import '../../../domain/service/auth_service.dart';
 import '../../component/body/big_body_component.dart';
+import '../../component/calendar/bloc/calendar_component_bloc.dart';
 import '../../component/card_body_component.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/gap/gap_horizontal_components.dart';
@@ -49,7 +51,7 @@ class _MobileContent extends StatelessWidget {
       children: [
         CurrentWeekMobileStats(),
         Gap32(),
-        _ListOfDays(),
+        _CurrentWeekDays(),
       ],
     );
   }
@@ -64,7 +66,7 @@ class _TabletContent extends StatelessWidget {
       children: [
         CurrentWeekTabletStats(),
         GapHorizontal32(),
-        CardBody(child: _ListOfDays()),
+        CardBody(child: _CurrentWeekDays()),
       ],
     );
   }
@@ -80,7 +82,7 @@ class _DesktopContent extends StatelessWidget {
       children: [
         Expanded(
           child: CardBody(
-            child: _ListOfDays(),
+            child: _CurrentWeekDays(),
           ),
         ),
         GapHorizontal16(),
@@ -90,21 +92,25 @@ class _DesktopContent extends StatelessWidget {
   }
 }
 
-class _ListOfDays extends StatelessWidget {
-  const _ListOfDays();
+class _CurrentWeekDays extends StatelessWidget {
+  const _CurrentWeekDays();
 
   @override
   Widget build(BuildContext context) {
-    final List<CalendarWeekDay>? days = context.select(
+    final CalendarDateRangeData? dateRangeData = context.select(
       (CurrentWeekCubit cubit) => cubit.state,
+    );
+    final CalendarWeek? currentWeek = context.select(
+      (CalendarComponentBloc bloc) =>
+          bloc.state.weeks?.isNotEmpty == true ? bloc.state.weeks!.first : null,
     );
 
     return Column(
       children: <Widget>[
-        if (days == null)
+        if (dateRangeData == null || currentWeek == null)
           for (int i = 0; i < 7; i++) const WeekDayItemShimmer(),
-        if (days != null)
-          ...days.map(
+        if (dateRangeData != null && currentWeek != null)
+          ...currentWeek.days.map(
             (CalendarWeekDay day) => WeekDayItem(
               day: day,
               onWorkoutPressed: _navigateToWorkoutPreview,

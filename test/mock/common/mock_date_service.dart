@@ -45,14 +45,6 @@ class MockDateService extends Mock implements DateService {
     ).thenReturn(date);
   }
 
-  void mockGetDaysFromWeek({
-    required List<DateTime> dates,
-  }) {
-    when(
-      () => getDaysFromWeek(any()),
-    ).thenReturn(dates);
-  }
-
   void mockIsDateFromRange({
     required bool expected,
   }) {
