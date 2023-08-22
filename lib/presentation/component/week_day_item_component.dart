@@ -2,16 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../domain/additional_model/calendar_week_day.dart';
-import '../../domain/entity/health_measurement.dart';
 import '../../domain/entity/race.dart';
 import '../../domain/entity/workout.dart';
 import '../formatter/date_formatter.dart';
 import 'activity_item_component.dart';
 import 'gap/gap_components.dart';
 import 'gap/gap_horizontal_components.dart';
-import 'nullable_text_component.dart';
+import 'health_measurement_info_component.dart';
 import 'text/body_text_components.dart';
-import 'text/label_text_components.dart';
 import 'text/title_text_components.dart';
 
 class WeekDayItem extends StatelessWidget {
@@ -47,7 +45,7 @@ class WeekDayItem extends StatelessWidget {
             onAddRace: onAddRace,
           ),
           const Gap8(),
-          _HealthData(healthMeasurement: day.healthMeasurement),
+          HealthMeasurementInfo(healthMeasurement: day.healthMeasurement),
           const Gap8(),
           _Activities(
             workouts: day.workouts,
@@ -100,41 +98,6 @@ class _Header extends StatelessWidget {
             onAddRace: onAddRace,
           ),
       ],
-    );
-  }
-}
-
-class _HealthData extends StatelessWidget {
-  final HealthMeasurement? healthMeasurement;
-
-  const _HealthData({this.healthMeasurement});
-
-  @override
-  Widget build(BuildContext context) {
-    final str = Str.of(context);
-
-    return IntrinsicHeight(
-      child: Row(
-        children: [
-          Expanded(
-            child: _ValueWithLabel(
-              label: str.healthRestingHeartRate,
-              value: healthMeasurement != null
-                  ? '${healthMeasurement!.restingHeartRate} ${str.heartRateUnit}'
-                  : null,
-            ),
-          ),
-          const VerticalDivider(),
-          Expanded(
-            child: _ValueWithLabel(
-              label: Str.of(context).healthFastingWeight,
-              value: healthMeasurement != null
-                  ? '${healthMeasurement!.fastingWeight} kg'
-                  : null,
-            ),
-          )
-        ],
-      ),
     );
   }
 }
@@ -285,21 +248,3 @@ class _MoreButton extends StatelessWidget {
 }
 
 enum _MoreButtonAction { editHealthMeasurement, addWorkout, addRace }
-
-class _ValueWithLabel extends StatelessWidget {
-  final String label;
-  final String? value;
-
-  const _ValueWithLabel({required this.label, this.value});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        LabelMedium(label),
-        const Gap8(),
-        NullableText(value),
-      ],
-    );
-  }
-}

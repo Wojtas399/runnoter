@@ -7,7 +7,7 @@ import '../../../domain/entity/health_measurement.dart';
 import '../../component/big_button_component.dart';
 import '../../component/edit_delete_popup_menu_component.dart';
 import '../../component/gap/gap_components.dart';
-import '../../component/text/label_text_components.dart';
+import '../../component/health_measurement_info_component.dart';
 import '../../component/text/title_text_components.dart';
 import '../../dialog/health_measurement_creator/health_measurement_creator_dialog.dart';
 import '../../extension/context_extensions.dart';
@@ -86,60 +86,7 @@ class _TodayMeasurement extends StatelessWidget {
 
     return thisHealthMeasurement == null
         ? const _AddMeasurementButton()
-        : _MeasurementData(measurement: thisHealthMeasurement);
-  }
-}
-
-class _MeasurementData extends StatelessWidget {
-  final HealthMeasurement measurement;
-
-  const _MeasurementData({required this.measurement});
-
-  @override
-  Widget build(BuildContext context) {
-    final str = Str.of(context);
-
-    return IntrinsicHeight(
-      child: Row(
-        children: [
-          Expanded(
-            child: _Param(
-              label: str.healthRestingHeartRate,
-              value: '${measurement.restingHeartRate} ${str.heartRateUnit}',
-            ),
-          ),
-          const VerticalDivider(),
-          Expanded(
-            child: _Param(
-              label: str.healthFastingWeight,
-              value: '${measurement.fastingWeight} kg',
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _Param extends StatelessWidget {
-  final String label;
-  final String value;
-
-  const _Param({
-    required this.label,
-    required this.value,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        LabelMedium(label),
-        const SizedBox(height: 4),
-        Text(value),
-      ],
-    );
+        : HealthMeasurementInfo(healthMeasurement: thisHealthMeasurement);
   }
 }
 
