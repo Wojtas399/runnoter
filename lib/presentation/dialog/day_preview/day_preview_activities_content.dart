@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/cubit/day_preview_cubit.dart';
+import '../../../domain/bloc/day_preview/day_preview_bloc.dart';
 import '../../../domain/entity/race.dart';
 import '../../../domain/entity/workout.dart';
 import '../../component/activity_item_component.dart';
@@ -18,10 +18,10 @@ class DayPreviewActivities extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<Workout>? workouts = context.select(
-      (DayPreviewCubit cubit) => cubit.state?.workouts,
+      (DayPreviewBloc bloc) => bloc.state.workouts,
     );
     final List<Race>? races = context.select(
-      (DayPreviewCubit cubit) => cubit.state?.races,
+      (DayPreviewBloc bloc) => bloc.state.races,
     );
 
     if (workouts == null && races == null) {
@@ -37,13 +37,13 @@ class DayPreviewActivities extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         ...?workouts?.map(
-          (workout) => ActivityItem(
+          (Workout workout) => ActivityItem(
             activity: workout,
             onPressed: () => _onWorkoutPressed(workout.id),
           ),
         ),
         ...?races?.map(
-          (race) => ActivityItem(
+          (Race race) => ActivityItem(
             activity: race,
             onPressed: () => _onRacePressed(race.id),
           ),
@@ -71,7 +71,7 @@ class _NoActivitiesInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool isPastDate = context.select(
-      (DayPreviewCubit cubit) => cubit.isPastDate,
+      (DayPreviewBloc bloc) => bloc.state.isPastDate,
     );
     final str = Str.of(context);
 

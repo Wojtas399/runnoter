@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
-import '../../../domain/cubit/day_preview_cubit.dart';
+import '../../../domain/bloc/day_preview/day_preview_bloc.dart';
 import '../../component/gap/gap_horizontal_components.dart';
 import '../../extension/context_extensions.dart';
 import '../../service/navigator_service.dart';
@@ -64,7 +64,7 @@ class DayPreviewAddActivityButton extends StatelessWidget {
   void _addWorkout(BuildContext context) {
     popRoute(
       result: DayPreviewDialogActionAddWorkout(
-        date: context.read<DayPreviewCubit>().date,
+        date: context.read<DayPreviewBloc>().date,
       ),
     );
   }
@@ -72,7 +72,7 @@ class DayPreviewAddActivityButton extends StatelessWidget {
   void _addRace(BuildContext context) {
     popRoute(
       result: DayPreviewDialogActionAddRace(
-        date: context.read<DayPreviewCubit>().date,
+        date: context.read<DayPreviewBloc>().date,
       ),
     );
   }

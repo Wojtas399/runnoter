@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/cubit/day_preview_cubit.dart';
+import '../../../domain/bloc/day_preview/day_preview_bloc.dart';
 import '../../../domain/entity/health_measurement.dart';
+import '../../component/bloc_with_status_listener_component.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/health_measurement_info_component.dart';
 import '../../component/padding/paddings_24.dart';
@@ -20,19 +21,19 @@ class DayPreviewDialog extends StatelessWidget {
   final String userId;
   final DateTime date;
 
-  const DayPreviewDialog({
-    super.key,
-    required this.userId,
-    required this.date,
-  });
+  const DayPreviewDialog({super.key, required this.userId, required this.date});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => DayPreviewCubit(userId: userId, date: date)..initialize(),
-      child: const ResponsiveLayout(
-        mobileBody: _FullScreenDialog(),
-        desktopBody: _NormalDialog(),
+      create: (_) => DayPreviewBloc(userId: userId, date: date)
+        ..add(const DayPreviewEventInitialize()),
+      child: const BlocWithStatusListener<DayPreviewBloc, DayPreviewState,
+          dynamic, dynamic>(
+        child: ResponsiveLayout(
+          mobileBody: _FullScreenDialog(),
+          desktopBody: _NormalDialog(),
+        ),
       ),
     );
   }
@@ -126,7 +127,7 @@ class _Title extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final DateTime date = context.read<DayPreviewCubit>().date;
+    final DateTime date = context.read<DayPreviewBloc>().date;
 
     return Text('${Str.of(context).day} ${date.toDateWithDots()}');
   }
@@ -138,7 +139,7 @@ class _HealthMeasurement extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final HealthMeasurement? measurement = context.select(
-      (DayPreviewCubit cubit) => cubit.state?.healthMeasurement,
+      (DayPreviewBloc bloc) => bloc.state.healthMeasurement,
     );
 
     return Column(
@@ -177,7 +178,7 @@ class _HealthMeasurement extends StatelessWidget {
 
   Future<void> _onEdit(BuildContext context) async {
     await showDialogDependingOnScreenSize(HealthMeasurementCreatorDialog(
-      date: context.read<DayPreviewCubit>().date,
+      date: context.read<DayPreviewBloc>().date,
     ));
   }
 

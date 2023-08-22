@@ -70,7 +70,7 @@ void main() {
 
       blocTest(
         'date is from the past, '
-        'should set isPastDay as true and '
+        'should set isPastDate as true and '
         'should set listener of health measurement, workouts and races from given date',
         build: () => createBloc(),
         setUp: () {
@@ -94,28 +94,28 @@ void main() {
         expect: () => [
           DayPreviewState(
             status: const BlocStatusComplete(),
-            isPastDay: true,
+            isPastDate: true,
             healthMeasurement: healthMeasurement,
             workouts: workouts,
             races: races,
           ),
           DayPreviewState(
             status: const BlocStatusComplete(),
-            isPastDay: true,
+            isPastDate: true,
             healthMeasurement: null,
             workouts: workouts,
             races: races,
           ),
           DayPreviewState(
             status: const BlocStatusComplete(),
-            isPastDay: true,
+            isPastDate: true,
             healthMeasurement: null,
             workouts: const [],
             races: races,
           ),
           const DayPreviewState(
             status: BlocStatusComplete(),
-            isPastDay: true,
+            isPastDate: true,
             healthMeasurement: null,
             workouts: [],
             races: [],
@@ -145,7 +145,7 @@ void main() {
 
       blocTest(
         'date is not from the past, '
-        'should set isPastDay as false and '
+        'should set isPastDate as false and '
         'should set listener of health measurement, workouts and races from given date',
         build: () => createBloc(),
         setUp: () {
@@ -160,7 +160,7 @@ void main() {
         expect: () => [
           DayPreviewState(
             status: const BlocStatusComplete(),
-            isPastDay: false,
+            isPastDate: false,
             healthMeasurement: healthMeasurement,
             workouts: workouts,
             races: races,
@@ -201,8 +201,7 @@ void main() {
 
   blocTest(
     'remove health measurement, '
-    "should call health measurement repository's method to delete measurement and "
-    'should emit DayPreviewBlocInfo.healthMeasurementDeleted',
+    "should call health measurement repository's method to delete measurement and ",
     build: () => createBloc(
       state: DayPreviewState(
         status: const BlocStatusInitial(),
@@ -217,9 +216,7 @@ void main() {
         healthMeasurement: createHealthMeasurement(date: date),
       ),
       DayPreviewState(
-        status: const BlocStatusComplete<DayPreviewBlocInfo>(
-          info: DayPreviewBlocInfo.healthMeasurementDeleted,
-        ),
+        status: const BlocStatusComplete(),
         healthMeasurement: createHealthMeasurement(date: date),
       ),
     ],

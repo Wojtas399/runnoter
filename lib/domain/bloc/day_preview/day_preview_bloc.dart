@@ -18,8 +18,8 @@ import '../../repository/workout_repository.dart';
 part 'day_preview_event.dart';
 part 'day_preview_state.dart';
 
-class DayPreviewBloc extends BlocWithStatus<DayPreviewEvent, DayPreviewState,
-    DayPreviewBlocInfo, dynamic> {
+class DayPreviewBloc
+    extends BlocWithStatus<DayPreviewEvent, DayPreviewState, dynamic, dynamic> {
   final HealthMeasurementRepository _healthMeasurementRepository;
   final WorkoutRepository _workoutRepository;
   final RaceRepository _raceRepository;
@@ -45,7 +45,7 @@ class DayPreviewBloc extends BlocWithStatus<DayPreviewEvent, DayPreviewState,
     DayPreviewEventInitialize event,
     Emitter<DayPreviewState> emit,
   ) async {
-    final bool isPastDay = date.isBefore(_dateService.getToday());
+    final bool isPastDate = date.isBefore(_dateService.getToday());
     final Stream<_ListenedParams> stream$ = Rx.combineLatest3(
       _healthMeasurementRepository.getMeasurementByDate(
         date: date,
@@ -67,7 +67,7 @@ class DayPreviewBloc extends BlocWithStatus<DayPreviewEvent, DayPreviewState,
     await emit.forEach(
       stream$,
       onData: (_ListenedParams params) => state.copyWith(
-        isPastDay: isPastDay,
+        isPastDate: isPastDate,
         healthMeasurement: params.healthMeasurement,
         healthMeasurementAsNull: params.healthMeasurement == null,
         workouts: params.workouts,
@@ -86,11 +86,9 @@ class DayPreviewBloc extends BlocWithStatus<DayPreviewEvent, DayPreviewState,
       userId: _userId,
       date: state.healthMeasurement!.date,
     );
-    emitCompleteStatus(emit, info: DayPreviewBlocInfo.healthMeasurementDeleted);
+    emitCompleteStatus(emit);
   }
 }
-
-enum DayPreviewBlocInfo { healthMeasurementDeleted }
 
 class _ListenedParams extends Equatable {
   final HealthMeasurement? healthMeasurement;

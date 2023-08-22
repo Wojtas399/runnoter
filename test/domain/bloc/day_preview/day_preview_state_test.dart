@@ -30,15 +30,15 @@ void main() {
   );
 
   test(
-    'copy with isPastDay',
+    'copy with isPastDate',
     () {
       const bool expected = true;
 
-      state = state.copyWith(isPastDay: expected);
+      state = state.copyWith(isPastDate: expected);
       final state2 = state.copyWith();
 
-      expect(state.isPastDay, expected);
-      expect(state2.isPastDay, expected);
+      expect(state.isPastDate, expected);
+      expect(state2.isPastDate, expected);
     },
   );
 

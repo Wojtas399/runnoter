@@ -405,10 +405,6 @@
   "@healthShowAllMeasurementsButton": {
     "description": "Label of the button to show all measurements"
   },
-  "healthSuccessfullyDeletedMeasurement": "Pomyślnie usunięto pomiar",
-  "@healthSuccessfullyDeletedMeasurement": {
-    "description": "Message of successfully deleted measurement"
-  },
   "@__________HEALTH_MEASUREMENT_CREATOR__________": {},
   "healthMeasurementCreatorScreenTitle": "Pomiar zdrowia",
   "@healthMeasurementCreatorScreenTitle": {
@@ -1224,6 +1220,10 @@
   "successfullyDeletedRequest": "Pomyślnie usunięto prośbę",
   "@successfullyDeletedRequest": {
     "description": "Message to inform that request has been successfully deleted"
+  },
+  "successfullyDeletedMeasurement": "Pomyślnie usunięto pomiar",
+  "@successfullyDeletedMeasurement": {
+    "description": "Message of successfully deleted measurement"
   },
   "@__________VALIDATOR_MESSAGES__________": {},
   "requiredFieldMessage": "To pole jest wymagane",

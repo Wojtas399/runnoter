@@ -43,7 +43,7 @@ class _BlocListener extends StatelessWidget {
 
   void _manageInfo(BuildContext context, HealthBlocInfo info) {
     if (info == HealthBlocInfo.healthMeasurementDeleted) {
-      showSnackbarMessage(Str.of(context).healthSuccessfullyDeletedMeasurement);
+      showSnackbarMessage(Str.of(context).successfullyDeletedRequest);
     }
   }
 }
