@@ -336,6 +336,14 @@
     "description": "Info about successfully saved status"
   },
   "@__________DAY_PREVIEW__________": {},
+  "dayPreviewHealthMeasurement": "Pomiar zdrowia",
+  "@dayPreviewHealthMeasurement": {
+    "description": "Label of health measurement section"
+  },
+  "dayPreviewActivities": "Aktywności",
+  "@dayPreviewActivities": {
+    "description": "Label of activities section"
+  },
   "dayPreviewNoActivitiesTitle": "Brak aktywności",
   "@dayPreviewNoActivitiesTitle": {
     "description": "Title of the information about no activities"

@@ -90,6 +90,8 @@
   "activityStatusCreatorSeconds": "Seconds",
   "activityStatusCreatorSavedStatusMessage": "Successfully updated status",
   "@__________DAY_PREVIEW__________": {},
+  "dayPreviewHealthMeasurement": "Health measurement",
+  "dayPreviewActivities": "Activities",
   "dayPreviewNoActivitiesTitle": "No activities",
   "dayPreviewNoActivitiesMessagePastDay": "You didn't have any scheduled activities that day",
   "dayPreviewNoActivitiesMessageFutureDay": "You don't have any scheduled activities this day",

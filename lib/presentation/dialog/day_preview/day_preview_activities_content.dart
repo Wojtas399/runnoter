@@ -17,9 +17,6 @@ class DayPreviewActivities extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool isPastDate = context.select(
-      (DayPreviewCubit cubit) => cubit.isPastDate,
-    );
     final List<Workout>? workouts = context.select(
       (DayPreviewCubit cubit) => cubit.state?.workouts,
     );
@@ -34,37 +31,8 @@ class DayPreviewActivities extends StatelessWidget {
         ),
       );
     } else if (workouts?.isEmpty == true && races?.isEmpty == true) {
-      final str = Str.of(context);
-      return Center(
-        child: Paddings24(
-          child: EmptyContentInfo(
-            title: str.dayPreviewNoActivitiesTitle,
-            subtitle: isPastDate
-                ? str.dayPreviewNoActivitiesMessagePastDay
-                : str.dayPreviewNoActivitiesMessageFutureDay,
-          ),
-        ),
-      );
+      return const _NoActivitiesInfo();
     }
-    return SingleChildScrollView(
-      child: Paddings24(
-        child: _Activities(workouts: workouts, races: races),
-      ),
-    );
-  }
-}
-
-class _Activities extends StatelessWidget {
-  final List<Workout>? workouts;
-  final List<Race>? races;
-
-  const _Activities({
-    required this.workouts,
-    required this.races,
-  });
-
-  @override
-  Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -93,6 +61,29 @@ class _Activities extends StatelessWidget {
   void _onRacePressed(String raceId) {
     popRoute(
       result: DayPreviewDialogActionShowRace(raceId: raceId),
+    );
+  }
+}
+
+class _NoActivitiesInfo extends StatelessWidget {
+  const _NoActivitiesInfo();
+
+  @override
+  Widget build(BuildContext context) {
+    final bool isPastDate = context.select(
+      (DayPreviewCubit cubit) => cubit.isPastDate,
+    );
+    final str = Str.of(context);
+
+    return Center(
+      child: Paddings24(
+        child: EmptyContentInfo(
+          title: str.dayPreviewNoActivitiesTitle,
+          subtitle: isPastDate
+              ? str.dayPreviewNoActivitiesMessagePastDay
+              : str.dayPreviewNoActivitiesMessageFutureDay,
+        ),
+      ),
     );
   }
 }

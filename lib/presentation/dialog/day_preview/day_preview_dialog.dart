@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 import '../../../domain/cubit/day_preview_cubit.dart';
+import '../../../domain/entity/health_measurement.dart';
 import '../../component/gap/gap_components.dart';
+import '../../component/health_measurement_info_component.dart';
+import '../../component/padding/paddings_24.dart';
 import '../../component/responsive_layout_component.dart';
-import '../../extension/context_extensions.dart';
+import '../../component/text/title_text_components.dart';
 import '../../formatter/date_formatter.dart';
+import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
+import '../health_measurement_creator/health_measurement_creator_dialog.dart';
 import 'day_preview_activities_content.dart';
-import 'day_preview_dialog_actions.dart';
+import 'day_preview_add_activity_button.dart';
 
 class DayPreviewDialog extends StatelessWidget {
   final String userId;
@@ -40,17 +44,23 @@ class _NormalDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final str = Str.of(context);
+    const gap = Gap24();
 
     return AlertDialog(
       title: const _Title(),
-      content: const SizedBox(
-        width: 400,
+      content: SizedBox(
+        width: 500,
         child: SingleChildScrollView(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _Actions(),
-              Gap16(),
-              DayPreviewActivities(),
+              const _HealthMeasurement(),
+              gap,
+              TitleMedium(Str.of(context).dayPreviewActivities),
+              gap,
+              const DayPreviewAddActivityButton(),
+              gap,
+              const DayPreviewActivities(),
             ],
           ),
         ),
@@ -70,11 +80,26 @@ class _FullScreenDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      appBar: _AppBar(),
-      floatingActionButton: _Actions(),
+    const gap = Gap24();
+
+    return Scaffold(
+      appBar: const _AppBar(),
+      floatingActionButton: const DayPreviewAddActivityButton(),
       body: SafeArea(
-        child: DayPreviewActivities(),
+        child: SingleChildScrollView(
+          child: Paddings24(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const _HealthMeasurement(),
+                gap,
+                TitleMedium(Str.of(context).dayPreviewActivities),
+                gap,
+                const DayPreviewActivities(),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -107,71 +132,56 @@ class _Title extends StatelessWidget {
   }
 }
 
-class _Actions extends StatelessWidget {
-  const _Actions();
+class _HealthMeasurement extends StatelessWidget {
+  const _HealthMeasurement();
 
   @override
   Widget build(BuildContext context) {
-    final str = Str.of(context);
+    final HealthMeasurement? measurement = context.select(
+      (DayPreviewCubit cubit) => cubit.state?.healthMeasurement,
+    );
 
-    if (context.isMobileSize) {
-      return SpeedDial(
-        icon: Icons.add,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(16)),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            TitleMedium(Str.of(context).dayPreviewHealthMeasurement),
+            Row(
+              children: [
+                IconButton(
+                  onPressed: () => _onEdit(context),
+                  icon: Icon(
+                    Icons.edit_outlined,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                ),
+                if (measurement != null)
+                  IconButton(
+                    onPressed: () => _onDelete(measurement.date),
+                    icon: Icon(
+                      Icons.delete_outline,
+                      color: Theme.of(context).colorScheme.error,
+                    ),
+                  ),
+              ],
+            ),
+          ],
         ),
-        spacing: 16,
-        childMargin: EdgeInsets.zero,
-        childPadding: const EdgeInsets.all(8.0),
-        children: [
-          SpeedDialChild(
-            child: const Icon(Icons.emoji_events),
-            label: str.race,
-            onTap: () => _addRace(context),
-          ),
-          SpeedDialChild(
-            child: const Icon(Icons.directions_run_outlined),
-            label: str.workout,
-            onTap: () => _addWorkout(context),
-          ),
-        ],
-      );
-    }
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: Row(
-        children: [
-          Expanded(
-            child: FilledButton(
-              onPressed: () => _addWorkout(context),
-              child: Text('${str.add} ${str.workout}'),
-            ),
-          ),
-          const Gap24(),
-          Expanded(
-            child: FilledButton(
-              onPressed: () => _addRace(context),
-              child: Text('${str.add} ${str.race}'),
-            ),
-          ),
-        ],
-      ),
+        const Gap16(),
+        HealthMeasurementInfo(healthMeasurement: measurement),
+      ],
     );
   }
 
-  void _addWorkout(BuildContext context) {
-    popRoute(
-      result: DayPreviewDialogActionAddWorkout(
-        date: context.read<DayPreviewCubit>().date,
-      ),
-    );
+  Future<void> _onEdit(BuildContext context) async {
+    await showDialogDependingOnScreenSize(HealthMeasurementCreatorDialog(
+      date: context.read<DayPreviewCubit>().date,
+    ));
   }
 
-  void _addRace(BuildContext context) {
-    popRoute(
-      result: DayPreviewDialogActionAddRace(
-        date: context.read<DayPreviewCubit>().date,
-      ),
-    );
+  void _onDelete(DateTime date) {
+    //TODO
   }
 }
