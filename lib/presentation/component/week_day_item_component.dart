@@ -3,11 +3,14 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../domain/additional_model/calendar_week_day.dart';
 import '../../domain/entity/health_measurement.dart';
+import '../../domain/entity/race.dart';
+import '../../domain/entity/workout.dart';
 import '../formatter/date_formatter.dart';
 import 'activity_item_component.dart';
 import 'gap/gap_components.dart';
 import 'gap/gap_horizontal_components.dart';
 import 'nullable_text_component.dart';
+import 'text/body_text_components.dart';
 import 'text/label_text_components.dart';
 import 'text/title_text_components.dart';
 
@@ -34,35 +37,21 @@ class WeekDayItem extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              _Date(date: day.date, isToday: day.isTodayDay),
-              _AddActivityButton(
-                onAddWorkout: () => _onAddWorkout(),
-                onAddRace: () => _onAddRace(),
-              ),
-            ],
+          _Header(
+            date: day.date,
+            isToday: day.isTodayDay,
+            onAddWorkout: _onAddWorkout,
+            onAddRace: _onAddRace,
           ),
           const Gap8(),
           _HealthData(healthMeasurement: day.healthMeasurement),
           const Gap8(),
-          if (day.workouts.isNotEmpty || day.races.isNotEmpty) ...[
-            const Gap16(),
-            ...day.races.map(
-              (race) => ActivityItem(
-                activity: race,
-                onPressed: () => _onRacePressed(race.id),
-              ),
-            ),
-            ...day.workouts.map(
-              (workout) => ActivityItem(
-                activity: workout,
-                onPressed: () => _onWorkoutPressed(workout.id),
-              ),
-            ),
-          ],
+          _Activities(
+            workouts: day.workouts,
+            races: day.races,
+            onWorkoutPressed: _onWorkoutPressed,
+            onRacePressed: _onRacePressed,
+          ),
         ],
       ),
     );
@@ -85,29 +74,31 @@ class WeekDayItem extends StatelessWidget {
   }
 }
 
-class _Date extends StatelessWidget {
+class _Header extends StatelessWidget {
   final DateTime date;
   final bool isToday;
+  final VoidCallback onAddWorkout;
+  final VoidCallback onAddRace;
 
-  const _Date({
+  const _Header({
     required this.date,
     required this.isToday,
+    required this.onAddWorkout,
+    required this.onAddRace,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: isToday
-            ? Theme.of(context).colorScheme.primary
-            : Colors.transparent,
-        borderRadius: BorderRadius.circular(100),
-      ),
-      child: TitleMedium(
-        date.toFullDate(context),
-        color: isToday ? Theme.of(context).canvasColor : null,
-      ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        _Date(date: date, isToday: isToday),
+        _AddActivityButton(
+          onAddWorkout: onAddWorkout,
+          onAddRace: onAddRace,
+        ),
+      ],
     );
   }
 }
@@ -147,20 +138,76 @@ class _HealthData extends StatelessWidget {
   }
 }
 
-class _ValueWithLabel extends StatelessWidget {
-  final String label;
-  final String? value;
+class _Activities extends StatelessWidget {
+  final List<Workout> workouts;
+  final List<Race> races;
+  final Function(String workoutId) onWorkoutPressed;
+  final Function(String raceId) onRacePressed;
 
-  const _ValueWithLabel({required this.label, this.value});
+  const _Activities({
+    required this.workouts,
+    required this.races,
+    required this.onWorkoutPressed,
+    required this.onRacePressed,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        LabelMedium(label),
-        const Gap8(),
-        NullableText(value),
+        if (workouts.isNotEmpty || races.isNotEmpty) ...[
+          const Gap16(),
+          ...races.map(
+            (race) => ActivityItem(
+              activity: race,
+              onPressed: () => onRacePressed(race.id),
+            ),
+          ),
+          ...workouts.map(
+            (workout) => ActivityItem(
+              activity: workout,
+              onPressed: () => onWorkoutPressed(workout.id),
+            ),
+          ),
+        ],
+        if (workouts.isEmpty && races.isEmpty) ...[
+          const Gap16(),
+          Center(
+            child: BodyLarge(
+              Str.of(context).dayPreviewNoActivitiesTitle,
+              color: Theme.of(context).colorScheme.outline,
+            ),
+          ),
+          const Gap16(),
+        ]
       ],
+    );
+  }
+}
+
+class _Date extends StatelessWidget {
+  final DateTime date;
+  final bool isToday;
+
+  const _Date({
+    required this.date,
+    required this.isToday,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: isToday
+            ? Theme.of(context).colorScheme.primary
+            : Colors.transparent,
+        borderRadius: BorderRadius.circular(100),
+      ),
+      child: TitleMedium(
+        date.toFullDate(context),
+        color: isToday ? Theme.of(context).canvasColor : null,
+      ),
     );
   }
 }
@@ -219,3 +266,21 @@ class _AddActivityButton extends StatelessWidget {
 }
 
 enum _ActivityType { workout, race }
+
+class _ValueWithLabel extends StatelessWidget {
+  final String label;
+  final String? value;
+
+  const _ValueWithLabel({required this.label, this.value});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        LabelMedium(label),
+        const Gap8(),
+        NullableText(value),
+      ],
+    );
+  }
+}

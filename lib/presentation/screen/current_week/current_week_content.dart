@@ -14,12 +14,12 @@ import '../../component/gap/gap_horizontal_components.dart';
 import '../../component/padding/paddings_24.dart';
 import '../../component/responsive_layout_component.dart';
 import '../../component/shimmer/shimmer.dart';
-import '../../component/shimmer/week_day_item_shimmer.dart';
 import '../../component/week_day_item_component.dart';
 import '../../config/navigation/router.dart';
 import '../../extension/widgets_list_extensions.dart';
 import '../../formatter/date_formatter.dart';
 import '../../service/navigator_service.dart';
+import 'current_week_day_item_shimmer.dart';
 import 'current_week_stats.dart';
 
 class CurrentWeekContent extends StatelessWidget {
@@ -109,7 +109,7 @@ class _CurrentWeekDays extends StatelessWidget {
     return Column(
       children: <Widget>[
         if (dateRangeData == null || currentWeek == null)
-          for (int i = 0; i < 7; i++) const WeekDayItemShimmer(),
+          for (int i = 0; i < 7; i++) const CurrentWeekDayItemShimmer(),
         if (dateRangeData != null && currentWeek != null)
           ...currentWeek.days.map(
             (CalendarWeekDay day) => WeekDayItem(
