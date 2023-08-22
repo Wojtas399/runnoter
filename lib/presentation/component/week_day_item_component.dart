@@ -18,6 +18,7 @@ class WeekDayItem extends StatelessWidget {
   final CalendarWeekDay day;
   final Function(String workoutId)? onWorkoutPressed;
   final Function(String raceId)? onRacePressed;
+  final VoidCallback? onEditHealthMeasurement;
   final VoidCallback? onAddWorkout;
   final VoidCallback? onAddRace;
 
@@ -26,6 +27,7 @@ class WeekDayItem extends StatelessWidget {
     required this.day,
     this.onWorkoutPressed,
     this.onRacePressed,
+    this.onEditHealthMeasurement,
     this.onAddWorkout,
     this.onAddRace,
   });
@@ -40,8 +42,9 @@ class WeekDayItem extends StatelessWidget {
           _Header(
             date: day.date,
             isToday: day.isTodayDay,
-            onAddWorkout: _onAddWorkout,
-            onAddRace: _onAddRace,
+            onEditHealthMeasurement: onEditHealthMeasurement,
+            onAddWorkout: onAddWorkout,
+            onAddRace: onAddRace,
           ),
           const Gap8(),
           _HealthData(healthMeasurement: day.healthMeasurement),
@@ -64,27 +67,21 @@ class WeekDayItem extends StatelessWidget {
   void _onRacePressed(String raceId) {
     if (onRacePressed != null) onRacePressed!(raceId);
   }
-
-  void _onAddWorkout() {
-    if (onAddWorkout != null) onAddWorkout!();
-  }
-
-  void _onAddRace() {
-    if (onAddRace != null) onAddRace!();
-  }
 }
 
 class _Header extends StatelessWidget {
   final DateTime date;
   final bool isToday;
-  final VoidCallback onAddWorkout;
-  final VoidCallback onAddRace;
+  final VoidCallback? onEditHealthMeasurement;
+  final VoidCallback? onAddWorkout;
+  final VoidCallback? onAddRace;
 
   const _Header({
     required this.date,
     required this.isToday,
-    required this.onAddWorkout,
-    required this.onAddRace,
+    this.onEditHealthMeasurement,
+    this.onAddWorkout,
+    this.onAddRace,
   });
 
   @override
@@ -94,10 +91,14 @@ class _Header extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         _Date(date: date, isToday: isToday),
-        _AddActivityButton(
-          onAddWorkout: onAddWorkout,
-          onAddRace: onAddRace,
-        ),
+        if (onEditHealthMeasurement != null ||
+            onAddWorkout != null ||
+            onAddRace != null)
+          _MoreButton(
+            onEditHealthMeasurement: onEditHealthMeasurement,
+            onAddWorkout: onAddWorkout,
+            onAddRace: onAddRace,
+          ),
       ],
     );
   }
@@ -212,60 +213,78 @@ class _Date extends StatelessWidget {
   }
 }
 
-class _AddActivityButton extends StatelessWidget {
-  final VoidCallback onAddWorkout;
-  final VoidCallback onAddRace;
+class _MoreButton extends StatelessWidget {
+  final VoidCallback? onEditHealthMeasurement;
+  final VoidCallback? onAddWorkout;
+  final VoidCallback? onAddRace;
 
-  const _AddActivityButton({
-    required this.onAddWorkout,
-    required this.onAddRace,
+  const _MoreButton({
+    this.onEditHealthMeasurement,
+    this.onAddWorkout,
+    this.onAddRace,
   });
 
   @override
   Widget build(BuildContext context) {
     final str = Str.of(context);
 
-    return PopupMenuButton<_ActivityType>(
-      icon: const Icon(Icons.add),
+    return PopupMenuButton<_MoreButtonAction>(
+      icon: const Icon(Icons.more_horiz),
       onSelected: _onSelected,
       itemBuilder: (_) => [
-        PopupMenuItem(
-          value: _ActivityType.workout,
-          child: Row(
-            children: [
-              const Icon(Icons.directions_run),
-              const GapHorizontal8(),
-              Text(str.workout),
-            ],
+        if (onEditHealthMeasurement != null)
+          PopupMenuItem(
+            value: _MoreButtonAction.editHealthMeasurement,
+            child: Row(
+              children: [
+                const Icon(Icons.health_and_safety),
+                const GapHorizontal8(),
+                Text(str.editHealthMeasurement),
+              ],
+            ),
           ),
-        ),
-        PopupMenuItem(
-          value: _ActivityType.race,
-          child: Row(
-            children: [
-              const Icon(Icons.emoji_events),
-              const GapHorizontal8(),
-              Text(str.race),
-            ],
+        if (onAddWorkout != null)
+          PopupMenuItem(
+            value: _MoreButtonAction.addWorkout,
+            child: Row(
+              children: [
+                const Icon(Icons.directions_run),
+                const GapHorizontal8(),
+                Text(str.addWorkout),
+              ],
+            ),
           ),
-        ),
+        if (onAddRace != null)
+          PopupMenuItem(
+            value: _MoreButtonAction.addRace,
+            child: Row(
+              children: [
+                const Icon(Icons.emoji_events),
+                const GapHorizontal8(),
+                Text(str.addRace),
+              ],
+            ),
+          ),
       ],
     );
   }
 
-  void _onSelected(_ActivityType activityType) {
-    switch (activityType) {
-      case _ActivityType.workout:
-        onAddWorkout();
+  void _onSelected(_MoreButtonAction option) {
+    switch (option) {
+      case _MoreButtonAction.editHealthMeasurement:
+        onEditHealthMeasurement!();
         break;
-      case _ActivityType.race:
-        onAddRace();
+      case _MoreButtonAction.addWorkout:
+        onAddWorkout!();
+        break;
+      case _MoreButtonAction.addRace:
+        onAddRace!();
         break;
     }
   }
 }
 
-enum _ActivityType { workout, race }
+enum _MoreButtonAction { editHealthMeasurement, addWorkout, addRace }
 
 class _ValueWithLabel extends StatelessWidget {
   final String label;

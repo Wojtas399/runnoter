@@ -13,8 +13,9 @@ class CalendarComponent extends StatelessWidget {
   final CalendarDateRangeData dateRangeData;
   final Function(String workoutId) onWorkoutPressed;
   final Function(String raceId) onRacePressed;
-  final Function(DateTime date) onAddWorkout;
-  final Function(DateTime date) onAddRace;
+  final Function(DateTime date)? onEditHealthMeasurement;
+  final Function(DateTime date)? onAddWorkout;
+  final Function(DateTime date)? onAddRace;
   final Function(DateTime date) onMonthDayPressed;
   final Function(DateTime startDate, DateTime endDate) onDateRangeChanged;
 
@@ -24,8 +25,9 @@ class CalendarComponent extends StatelessWidget {
     required this.dateRangeData,
     required this.onWorkoutPressed,
     required this.onRacePressed,
-    required this.onAddWorkout,
-    required this.onAddRace,
+    this.onEditHealthMeasurement,
+    this.onAddWorkout,
+    this.onAddRace,
     required this.onMonthDayPressed,
     required this.onDateRangeChanged,
   });
@@ -39,6 +41,7 @@ class CalendarComponent extends StatelessWidget {
         onWorkoutPressed: onWorkoutPressed,
         onRacePressed: onRacePressed,
         onMonthDayPressed: onMonthDayPressed,
+        onEditHealthMeasurement: onEditHealthMeasurement,
         onAddWorkout: onAddWorkout,
         onAddRace: onAddRace,
       ),
@@ -78,16 +81,18 @@ class _Content extends StatefulWidget {
   final CalendarDateRangeData dateRangeData;
   final Function(String workoutId) onWorkoutPressed;
   final Function(String raceId) onRacePressed;
-  final Function(DateTime date) onAddWorkout;
-  final Function(DateTime date) onAddRace;
+  final Function(DateTime date)? onEditHealthMeasurement;
+  final Function(DateTime date)? onAddWorkout;
+  final Function(DateTime date)? onAddRace;
   final Function(DateTime date) onMonthDayPressed;
 
   const _Content({
     required this.dateRangeData,
     required this.onWorkoutPressed,
     required this.onRacePressed,
-    required this.onAddWorkout,
-    required this.onAddRace,
+    this.onEditHealthMeasurement,
+    this.onAddWorkout,
+    this.onAddRace,
     required this.onMonthDayPressed,
   });
 
@@ -120,6 +125,7 @@ class _ContentState extends State<_Content> {
           DateRangeWeek() => CalendarComponentWeek(
               onWorkoutPressed: widget.onWorkoutPressed,
               onRacePressed: widget.onRacePressed,
+              onEditHealthMeasurement: widget.onEditHealthMeasurement,
               onAddWorkout: widget.onAddWorkout,
               onAddRace: widget.onAddRace,
             ),

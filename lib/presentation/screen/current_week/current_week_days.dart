@@ -11,8 +11,10 @@ import '../../component/gap/gap_components.dart';
 import '../../component/shimmer/shimmer_container.dart';
 import '../../component/week_day_item_component.dart';
 import '../../config/navigation/router.dart';
+import '../../dialog/health_measurement_creator/health_measurement_creator_dialog.dart';
 import '../../extension/widgets_list_extensions.dart';
 import '../../formatter/date_formatter.dart';
+import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
 
 class CurrentWeekDays extends StatelessWidget {
@@ -38,6 +40,8 @@ class CurrentWeekDays extends StatelessWidget {
               day: day,
               onWorkoutPressed: _navigateToWorkoutPreview,
               onRacePressed: _navigateToRacePreview,
+              onEditHealthMeasurement: () =>
+                  _openHealthMeasurementCreator(day.date),
               onAddWorkout: () => _navigateToWorkoutCreator(day.date),
               onAddRace: () => _navigateToRaceCreator(day.date),
             ),
@@ -60,6 +64,12 @@ class CurrentWeekDays extends StatelessWidget {
       userId: loggedUserId,
       raceId: raceId,
     ));
+  }
+
+  Future<void> _openHealthMeasurementCreator(DateTime date) async {
+    await showDialogDependingOnScreenSize(
+      HealthMeasurementCreatorDialog(date: date),
+    );
   }
 
   Future<void> _navigateToWorkoutCreator(DateTime date) async {

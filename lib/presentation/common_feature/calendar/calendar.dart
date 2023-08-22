@@ -12,14 +12,20 @@ import '../../component/responsive_layout_component.dart';
 import '../../config/navigation/router.dart';
 import '../../dialog/day_preview/day_preview_dialog.dart';
 import '../../dialog/day_preview/day_preview_dialog_actions.dart';
+import '../../dialog/health_measurement_creator/health_measurement_creator_dialog.dart';
 import '../../formatter/date_formatter.dart';
 import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
 
 class Calendar extends StatelessWidget {
   final String userId;
+  final bool canEditHealthMeasurement;
 
-  const Calendar({super.key, required this.userId});
+  const Calendar({
+    super.key,
+    required this.userId,
+    this.canEditHealthMeasurement = true,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -35,13 +41,17 @@ class Calendar extends StatelessWidget {
             ),
         ),
       ],
-      child: const SingleChildScrollView(
+      child: SingleChildScrollView(
         child: BigBody(
           child: Paddings24(
             child: ResponsiveLayout(
-              mobileBody: _Calendar(),
+              mobileBody: _Calendar(
+                canEditHealthMeasurement: canEditHealthMeasurement,
+              ),
               desktopBody: CardBody(
-                child: _Calendar(),
+                child: _Calendar(
+                  canEditHealthMeasurement: canEditHealthMeasurement,
+                ),
               ),
             ),
           ),
@@ -52,7 +62,9 @@ class Calendar extends StatelessWidget {
 }
 
 class _Calendar extends StatelessWidget {
-  const _Calendar();
+  final bool canEditHealthMeasurement;
+
+  const _Calendar({required this.canEditHealthMeasurement});
 
   @override
   Widget build(BuildContext context) {
@@ -74,6 +86,8 @@ class _Calendar extends StatelessWidget {
         context.read<CalendarDateRangeDataCubit>().userId,
         raceId,
       ),
+      onEditHealthMeasurement:
+          canEditHealthMeasurement ? _openHealthMeasurementCreator : null,
       onAddWorkout: (DateTime date) => _navigateToWorkoutCreator(
         context.read<CalendarDateRangeDataCubit>().userId,
         date,
@@ -131,6 +145,12 @@ class _Calendar extends StatelessWidget {
       userId: userId,
       raceId: raceId,
     ));
+  }
+
+  Future<void> _openHealthMeasurementCreator(DateTime date) async {
+    await showDialogDependingOnScreenSize(
+      HealthMeasurementCreatorDialog(date: date),
+    );
   }
 
   void _navigateToWorkoutCreator(String userId, DateTime date) {

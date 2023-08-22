@@ -9,15 +9,17 @@ import 'bloc/calendar_component_bloc.dart';
 class CalendarComponentWeek extends StatelessWidget {
   final Function(String workoutId) onWorkoutPressed;
   final Function(String raceId) onRacePressed;
-  final Function(DateTime date) onAddWorkout;
-  final Function(DateTime date) onAddRace;
+  final Function(DateTime date)? onEditHealthMeasurement;
+  final Function(DateTime date)? onAddWorkout;
+  final Function(DateTime date)? onAddRace;
 
   const CalendarComponentWeek({
     super.key,
     required this.onWorkoutPressed,
     required this.onRacePressed,
-    required this.onAddWorkout,
-    required this.onAddRace,
+    this.onEditHealthMeasurement,
+    this.onAddWorkout,
+    this.onAddRace,
   });
 
   @override
@@ -34,8 +36,12 @@ class CalendarComponentWeek extends StatelessWidget {
             day: day,
             onWorkoutPressed: onWorkoutPressed,
             onRacePressed: onRacePressed,
-            onAddWorkout: () => onAddWorkout(day.date),
-            onAddRace: () => onAddRace(day.date),
+            onEditHealthMeasurement: onEditHealthMeasurement != null
+                ? () => onEditHealthMeasurement!(day.date)
+                : null,
+            onAddWorkout:
+                onAddWorkout != null ? () => onAddWorkout!(day.date) : null,
+            onAddRace: onAddRace != null ? () => onAddRace!(day.date) : null,
           ),
         ),
       ].addSeparator(const Divider()),

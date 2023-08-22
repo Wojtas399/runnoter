@@ -11,6 +11,9 @@ class ClientCalendarScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Calendar(userId: context.read<ClientBloc>().clientId);
+    return Calendar(
+      userId: context.read<ClientBloc>().clientId,
+      canEditHealthMeasurement: false,
+    );
   }
 }
