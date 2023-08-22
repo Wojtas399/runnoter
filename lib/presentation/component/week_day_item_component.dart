@@ -8,7 +8,6 @@ import 'activity_item_component.dart';
 import 'gap/gap_components.dart';
 import 'gap/gap_horizontal_components.dart';
 import 'nullable_text_component.dart';
-import 'shimmer_container.dart';
 import 'text/label_text_components.dart';
 import 'text/title_text_components.dart';
 
@@ -83,25 +82,6 @@ class WeekDayItem extends StatelessWidget {
 
   void _onAddRace() {
     if (onAddRace != null) onAddRace!();
-  }
-}
-
-class WeekDayItemShimmer extends StatelessWidget {
-  const WeekDayItemShimmer({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.all(4),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ShimmerContainer(height: 24, width: 150),
-          Gap8(),
-          ShimmerContainer(height: 48, width: double.infinity),
-        ],
-      ),
-    );
   }
 }
 
