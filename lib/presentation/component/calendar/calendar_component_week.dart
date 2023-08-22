@@ -7,20 +7,7 @@ import '../week_day_item_component.dart';
 import 'bloc/calendar_component_bloc.dart';
 
 class CalendarComponentWeek extends StatelessWidget {
-  final Function(String workoutId) onWorkoutPressed;
-  final Function(String raceId) onRacePressed;
-  final Function(DateTime date)? onEditHealthMeasurement;
-  final Function(DateTime date)? onAddWorkout;
-  final Function(DateTime date)? onAddRace;
-
-  const CalendarComponentWeek({
-    super.key,
-    required this.onWorkoutPressed,
-    required this.onRacePressed,
-    this.onEditHealthMeasurement,
-    this.onAddWorkout,
-    this.onAddRace,
-  });
+  const CalendarComponentWeek({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -34,17 +21,14 @@ class CalendarComponentWeek extends StatelessWidget {
         ...?week?.days.map(
           (CalendarWeekDay day) => WeekDayItem(
             day: day,
-            onWorkoutPressed: onWorkoutPressed,
-            onRacePressed: onRacePressed,
-            onEditHealthMeasurement: onEditHealthMeasurement != null
-                ? () => onEditHealthMeasurement!(day.date)
-                : null,
-            onAddWorkout:
-                onAddWorkout != null ? () => onAddWorkout!(day.date) : null,
-            onAddRace: onAddRace != null ? () => onAddRace!(day.date) : null,
+            onPressed: () => _onDayPressed(context, day.date),
           ),
         ),
       ].addSeparator(const Divider()),
     );
+  }
+
+  void _onDayPressed(BuildContext context, DateTime date) {
+    //TODO
   }
 }

@@ -4,16 +4,14 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'calendar_component_month_days.dart';
 
 class CalendarComponentMonth extends StatelessWidget {
-  final Function(DateTime date) onMonthDayPressed;
-
-  const CalendarComponentMonth({super.key, required this.onMonthDayPressed});
+  const CalendarComponentMonth({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return const Column(
       children: [
-        const _DayLabels(),
-        CalendarComponentMonthDays(onMonthDayPressed: onMonthDayPressed),
+        _DayLabels(),
+        CalendarComponentMonthDays(),
       ],
     );
   }

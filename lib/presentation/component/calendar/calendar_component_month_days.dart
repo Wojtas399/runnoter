@@ -9,12 +9,7 @@ import '../text/body_text_components.dart';
 import 'bloc/calendar_component_bloc.dart';
 
 class CalendarComponentMonthDays extends StatelessWidget {
-  final Function(DateTime date) onMonthDayPressed;
-
-  const CalendarComponentMonthDays({
-    super.key,
-    required this.onMonthDayPressed,
-  });
+  const CalendarComponentMonthDays({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -35,10 +30,7 @@ class CalendarComponentMonthDays extends StatelessWidget {
                   children: [
                     ...week.days.map(
                       (CalendarWeekDay day) => TableCell(
-                        child: _DayItem(
-                          day: day,
-                          onMonthDayPressed: () => onMonthDayPressed(day.date),
-                        ),
+                        child: _DayItem(day),
                       ),
                     ),
                   ],
@@ -51,9 +43,8 @@ class CalendarComponentMonthDays extends StatelessWidget {
 
 class _DayItem extends StatelessWidget {
   final CalendarWeekDay day;
-  final VoidCallback onMonthDayPressed;
 
-  const _DayItem({required this.day, required this.onMonthDayPressed});
+  const _DayItem(this.day);
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +55,7 @@ class _DayItem extends StatelessWidget {
             ? Theme.of(context).colorScheme.outline.withOpacity(0.20)
             : null,
         child: InkWell(
-          onTap: day.isDisabled ? null : onMonthDayPressed,
+          onTap: day.isDisabled ? null : () => _onPressed(context),
           child: SizedBox(
             width: double.infinity,
             height: 80,
@@ -82,6 +73,10 @@ class _DayItem extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void _onPressed(BuildContext context) {
+    //TODO
   }
 }
 

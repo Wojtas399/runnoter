@@ -12,7 +12,6 @@ import '../../component/responsive_layout_component.dart';
 import '../../config/navigation/router.dart';
 import '../../dialog/day_preview/day_preview_dialog.dart';
 import '../../dialog/day_preview/day_preview_dialog_actions.dart';
-import '../../dialog/health_measurement_creator/health_measurement_creator_dialog.dart';
 import '../../formatter/date_formatter.dart';
 import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
@@ -77,25 +76,7 @@ class _Calendar extends StatelessWidget {
       dateRangeData: dateRangeData,
       onDateRangeChanged: (DateTime startDate, DateTime endDate) =>
           _onDateRangeChanged(context, startDate, endDate),
-      onMonthDayPressed: (DateTime date) => _onMonthDayPressed(context, date),
-      onWorkoutPressed: (String workoutId) => _navigateToWorkoutPreview(
-        context.read<CalendarDateRangeDataCubit>().userId,
-        workoutId,
-      ),
-      onRacePressed: (String raceId) => _navigateToRacePreview(
-        context.read<CalendarDateRangeDataCubit>().userId,
-        raceId,
-      ),
-      onEditHealthMeasurement:
-          canEditHealthMeasurement ? _openHealthMeasurementCreator : null,
-      onAddWorkout: (DateTime date) => _navigateToWorkoutCreator(
-        context.read<CalendarDateRangeDataCubit>().userId,
-        date,
-      ),
-      onAddRace: (DateTime date) => _navigateToRaceCreator(
-        context.read<CalendarDateRangeDataCubit>().userId,
-        date,
-      ),
+      onDayPressed: (DateTime date) => _onDayPressed(context, date),
     );
   }
 
@@ -110,7 +91,7 @@ class _Calendar extends StatelessWidget {
         );
   }
 
-  Future<void> _onMonthDayPressed(BuildContext context, DateTime date) async {
+  Future<void> _onDayPressed(BuildContext context, DateTime date) async {
     final String userId = context.read<CalendarDateRangeDataCubit>().userId;
     final DayPreviewDialogAction? action =
         await showDialogDependingOnScreenSize(
@@ -119,51 +100,25 @@ class _Calendar extends StatelessWidget {
     if (action == null) return;
     switch (action) {
       case DayPreviewDialogActionAddWorkout():
-        _navigateToWorkoutCreator(userId, action.date);
+        navigateTo(WorkoutCreatorRoute(
+          userId: userId,
+          dateStr: action.date.toPathFormat(),
+        ));
         break;
       case DayPreviewDialogActionAddRace():
-        _navigateToRaceCreator(userId, action.date);
+        navigateTo(RaceCreatorRoute(
+          userId: userId,
+          dateStr: action.date.toPathFormat(),
+        ));
         break;
       case DayPreviewDialogActionShowWorkout():
-        _navigateToWorkoutPreview(userId, action.workoutId);
+        navigateTo(
+          WorkoutPreviewRoute(userId: userId, workoutId: action.workoutId),
+        );
         break;
       case DayPreviewDialogActionShowRace():
-        _navigateToRacePreview(userId, action.raceId);
+        navigateTo(RacePreviewRoute(userId: userId, raceId: action.raceId));
         break;
     }
-  }
-
-  void _navigateToWorkoutPreview(String userId, String workoutId) {
-    navigateTo(WorkoutPreviewRoute(
-      userId: userId,
-      workoutId: workoutId,
-    ));
-  }
-
-  void _navigateToRacePreview(String userId, String raceId) {
-    navigateTo(RacePreviewRoute(
-      userId: userId,
-      raceId: raceId,
-    ));
-  }
-
-  Future<void> _openHealthMeasurementCreator(DateTime date) async {
-    await showDialogDependingOnScreenSize(
-      HealthMeasurementCreatorDialog(date: date),
-    );
-  }
-
-  void _navigateToWorkoutCreator(String userId, DateTime date) {
-    navigateTo(WorkoutCreatorRoute(
-      userId: userId,
-      dateStr: date.toPathFormat(),
-    ));
-  }
-
-  void _navigateToRaceCreator(String userId, DateTime date) {
-    navigateTo(RaceCreatorRoute(
-      userId: userId,
-      dateStr: date.toPathFormat(),
-    ));
   }
 }

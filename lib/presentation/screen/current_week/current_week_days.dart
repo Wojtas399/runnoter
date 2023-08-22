@@ -11,7 +11,8 @@ import '../../component/gap/gap_components.dart';
 import '../../component/shimmer/shimmer_container.dart';
 import '../../component/week_day_item_component.dart';
 import '../../config/navigation/router.dart';
-import '../../dialog/health_measurement_creator/health_measurement_creator_dialog.dart';
+import '../../dialog/day_preview/day_preview_dialog.dart';
+import '../../dialog/day_preview/day_preview_dialog_actions.dart';
 import '../../extension/widgets_list_extensions.dart';
 import '../../formatter/date_formatter.dart';
 import '../../service/dialog_service.dart';
@@ -38,54 +39,47 @@ class CurrentWeekDays extends StatelessWidget {
           ...currentWeek.days.map(
             (CalendarWeekDay day) => WeekDayItem(
               day: day,
-              onWorkoutPressed: _navigateToWorkoutPreview,
-              onRacePressed: _navigateToRacePreview,
-              onEditHealthMeasurement: () =>
-                  _openHealthMeasurementCreator(day.date),
-              onAddWorkout: () => _navigateToWorkoutCreator(day.date),
-              onAddRace: () => _navigateToRaceCreator(day.date),
+              onPressed: () => _onDayPressed(context, day.date),
             ),
           ),
       ].addSeparator(const Divider(height: 16)),
     );
   }
 
-  Future<void> _navigateToWorkoutPreview(String workoutId) async {
+  Future<void> _onDayPressed(BuildContext context, DateTime date) async {
     final String? loggedUserId = await getIt<AuthService>().loggedUserId$.first;
-    navigateTo(WorkoutPreviewRoute(
-      userId: loggedUserId,
-      workoutId: workoutId,
-    ));
-  }
-
-  Future<void> _navigateToRacePreview(String raceId) async {
-    final String? loggedUserId = await getIt<AuthService>().loggedUserId$.first;
-    navigateTo(RacePreviewRoute(
-      userId: loggedUserId,
-      raceId: raceId,
-    ));
-  }
-
-  Future<void> _openHealthMeasurementCreator(DateTime date) async {
-    await showDialogDependingOnScreenSize(
-      HealthMeasurementCreatorDialog(date: date),
+    if (loggedUserId == null) return;
+    final DayPreviewDialogAction? action =
+        await showDialogDependingOnScreenSize(
+      DayPreviewDialog(userId: loggedUserId, date: date),
     );
-  }
-
-  Future<void> _navigateToWorkoutCreator(DateTime date) async {
-    final String? loggedUserId = await getIt<AuthService>().loggedUserId$.first;
-    navigateTo(WorkoutCreatorRoute(
-      userId: loggedUserId,
-      dateStr: date.toPathFormat(),
-    ));
-  }
-
-  Future<void> _navigateToRaceCreator(DateTime date) async {
-    final String? loggedUserId = await getIt<AuthService>().loggedUserId$.first;
-    navigateTo(RaceCreatorRoute(
-      userId: loggedUserId,
-      dateStr: date.toPathFormat(),
-    ));
+    if (action == null) return;
+    switch (action) {
+      case DayPreviewDialogActionAddWorkout():
+        navigateTo(WorkoutCreatorRoute(
+          userId: loggedUserId,
+          dateStr: action.date.toPathFormat(),
+        ));
+        break;
+      case DayPreviewDialogActionAddRace():
+        navigateTo(RaceCreatorRoute(
+          userId: loggedUserId,
+          dateStr: action.date.toPathFormat(),
+        ));
+        break;
+      case DayPreviewDialogActionShowWorkout():
+        navigateTo(WorkoutPreviewRoute(
+          userId: loggedUserId,
+          workoutId: action.workoutId,
+        ));
+        break;
+      case DayPreviewDialogActionShowRace():
+        navigateTo(RacePreviewRoute(
+          userId: loggedUserId,
+          raceId: action.raceId,
+        ));
+        break;
+    }
   }
 }
 
@@ -127,7 +121,7 @@ class _HealthDataShimmer extends StatelessWidget {
               ],
             ),
           ),
-          const VerticalDivider(),
+          VerticalDivider(),
           Expanded(
             child: Column(
               children: [

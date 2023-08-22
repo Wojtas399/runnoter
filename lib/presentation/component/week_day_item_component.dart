@@ -1,103 +1,44 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 import '../../domain/additional_model/calendar_week_day.dart';
+import '../../domain/entity/activity.dart';
 import '../../domain/entity/race.dart';
 import '../../domain/entity/workout.dart';
+import '../formatter/activity_status_formatter.dart';
 import '../formatter/date_formatter.dart';
-import 'activity_item_component.dart';
+import '../formatter/list_of_workout_stages_formatter.dart';
 import 'gap/gap_components.dart';
 import 'gap/gap_horizontal_components.dart';
 import 'health_measurement_info_component.dart';
 import 'text/body_text_components.dart';
+import 'text/label_text_components.dart';
 import 'text/title_text_components.dart';
 
 class WeekDayItem extends StatelessWidget {
   final CalendarWeekDay day;
-  final Function(String workoutId)? onWorkoutPressed;
-  final Function(String raceId)? onRacePressed;
-  final VoidCallback? onEditHealthMeasurement;
-  final VoidCallback? onAddWorkout;
-  final VoidCallback? onAddRace;
+  final VoidCallback? onPressed;
 
-  const WeekDayItem({
-    super.key,
-    required this.day,
-    this.onWorkoutPressed,
-    this.onRacePressed,
-    this.onEditHealthMeasurement,
-    this.onAddWorkout,
-    this.onAddRace,
-  });
+  const WeekDayItem({super.key, required this.day, this.onPressed});
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 4),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _Header(
-            date: day.date,
-            isToday: day.isTodayDay,
-            onEditHealthMeasurement: onEditHealthMeasurement,
-            onAddWorkout: onAddWorkout,
-            onAddRace: onAddRace,
-          ),
-          const Gap8(),
-          HealthMeasurementInfo(healthMeasurement: day.healthMeasurement),
-          const Gap8(),
-          _Activities(
-            workouts: day.workouts,
-            races: day.races,
-            onWorkoutPressed: _onWorkoutPressed,
-            onRacePressed: _onRacePressed,
-          ),
-        ],
+    return InkWell(
+      onTap: onPressed,
+      child: Padding(
+        padding: const EdgeInsets.all(4),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _Date(date: day.date, isToday: day.isTodayDay),
+            const Gap16(),
+            HealthMeasurementInfo(healthMeasurement: day.healthMeasurement),
+            const Gap16(),
+            _Activities(workouts: day.workouts, races: day.races),
+          ],
+        ),
       ),
-    );
-  }
-
-  void _onWorkoutPressed(String workoutId) {
-    if (onWorkoutPressed != null) onWorkoutPressed!(workoutId);
-  }
-
-  void _onRacePressed(String raceId) {
-    if (onRacePressed != null) onRacePressed!(raceId);
-  }
-}
-
-class _Header extends StatelessWidget {
-  final DateTime date;
-  final bool isToday;
-  final VoidCallback? onEditHealthMeasurement;
-  final VoidCallback? onAddWorkout;
-  final VoidCallback? onAddRace;
-
-  const _Header({
-    required this.date,
-    required this.isToday,
-    this.onEditHealthMeasurement,
-    this.onAddWorkout,
-    this.onAddRace,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        _Date(date: date, isToday: isToday),
-        if (onEditHealthMeasurement != null ||
-            onAddWorkout != null ||
-            onAddRace != null)
-          _MoreButton(
-            onEditHealthMeasurement: onEditHealthMeasurement,
-            onAddWorkout: onAddWorkout,
-            onAddRace: onAddRace,
-          ),
-      ],
     );
   }
 }
@@ -105,37 +46,19 @@ class _Header extends StatelessWidget {
 class _Activities extends StatelessWidget {
   final List<Workout> workouts;
   final List<Race> races;
-  final Function(String workoutId) onWorkoutPressed;
-  final Function(String raceId) onRacePressed;
 
-  const _Activities({
-    required this.workouts,
-    required this.races,
-    required this.onWorkoutPressed,
-    required this.onRacePressed,
-  });
+  const _Activities({required this.workouts, required this.races});
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         if (workouts.isNotEmpty || races.isNotEmpty) ...[
-          const Gap16(),
-          ...races.map(
-            (race) => ActivityItem(
-              activity: race,
-              onPressed: () => onRacePressed(race.id),
-            ),
-          ),
-          ...workouts.map(
-            (workout) => ActivityItem(
-              activity: workout,
-              onPressed: () => onWorkoutPressed(workout.id),
-            ),
-          ),
+          ...races.map((Race race) => _ActivityItem(race)),
+          ...workouts.map((Workout workout) => _ActivityItem(workout)),
         ],
         if (workouts.isEmpty && races.isEmpty) ...[
-          const Gap16(),
+          const Gap8(),
           Center(
             child: BodyLarge(
               Str.of(context).dayPreviewNoActivitiesTitle,
@@ -153,10 +76,7 @@ class _Date extends StatelessWidget {
   final DateTime date;
   final bool isToday;
 
-  const _Date({
-    required this.date,
-    required this.isToday,
-  });
+  const _Date({required this.date, required this.isToday});
 
   @override
   Widget build(BuildContext context) {
@@ -176,75 +96,70 @@ class _Date extends StatelessWidget {
   }
 }
 
-class _MoreButton extends StatelessWidget {
-  final VoidCallback? onEditHealthMeasurement;
-  final VoidCallback? onAddWorkout;
-  final VoidCallback? onAddRace;
+class _ActivityItem extends StatelessWidget {
+  final Activity activity;
 
-  const _MoreButton({
-    this.onEditHealthMeasurement,
-    this.onAddWorkout,
-    this.onAddRace,
-  });
+  const _ActivityItem(this.activity);
 
   @override
   Widget build(BuildContext context) {
-    final str = Str.of(context);
-
-    return PopupMenuButton<_MoreButtonAction>(
-      icon: const Icon(Icons.more_horiz),
-      onSelected: _onSelected,
-      itemBuilder: (_) => [
-        if (onEditHealthMeasurement != null)
-          PopupMenuItem(
-            value: _MoreButtonAction.editHealthMeasurement,
-            child: Row(
-              children: [
-                const Icon(Icons.health_and_safety),
-                const GapHorizontal8(),
-                Text(str.editHealthMeasurement),
-              ],
-            ),
+    return ListTile(
+      contentPadding: const EdgeInsets.only(right: 8),
+      title: _ActivityDescription(activity: activity),
+      leading: Icon(MdiIcons.circleMedium),
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (activity is Race) ...[
+            const _RaceMark(),
+            const GapHorizontal8(),
+          ],
+          Icon(
+            activity.status.toIcon(),
+            color: activity.status.toColor(context),
           ),
-        if (onAddWorkout != null)
-          PopupMenuItem(
-            value: _MoreButtonAction.addWorkout,
-            child: Row(
-              children: [
-                const Icon(Icons.directions_run),
-                const GapHorizontal8(),
-                Text(str.addWorkout),
-              ],
-            ),
-          ),
-        if (onAddRace != null)
-          PopupMenuItem(
-            value: _MoreButtonAction.addRace,
-            child: Row(
-              children: [
-                const Icon(Icons.emoji_events),
-                const GapHorizontal8(),
-                Text(str.addRace),
-              ],
-            ),
-          ),
-      ],
+        ],
+      ),
     );
-  }
-
-  void _onSelected(_MoreButtonAction option) {
-    switch (option) {
-      case _MoreButtonAction.editHealthMeasurement:
-        onEditHealthMeasurement!();
-        break;
-      case _MoreButtonAction.addWorkout:
-        onAddWorkout!();
-        break;
-      case _MoreButtonAction.addRace:
-        onAddRace!();
-        break;
-    }
   }
 }
 
-enum _MoreButtonAction { editHealthMeasurement, addWorkout, addRace }
+class _ActivityDescription extends StatelessWidget {
+  final Activity activity;
+
+  const _ActivityDescription({required this.activity});
+
+  @override
+  Widget build(BuildContext context) {
+    final Activity activity = this.activity;
+    String label = activity.name;
+    if (activity is Workout) {
+      final String totalDistance = activity.stages.toUITotalDistance(context);
+      if (!(totalDistance.substring(0, 3) == '0.0')) {
+        label += ' ($totalDistance)';
+      }
+    }
+
+    return BodyMedium(label);
+  }
+}
+
+class _RaceMark extends StatelessWidget {
+  const _RaceMark();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.primary,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      margin: const EdgeInsets.only(right: 8),
+      child: LabelMedium(
+        Str.of(context).race,
+        color: Theme.of(context).canvasColor,
+      ),
+    );
+  }
+}
