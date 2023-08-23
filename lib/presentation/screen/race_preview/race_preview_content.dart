@@ -98,9 +98,11 @@ class _RaceStatusButton extends StatelessWidget {
   }
 
   void _onPressed(BuildContext context) {
+    final racePreviewBloc = context.read<RacePreviewBloc>();
     navigateTo(ActivityStatusCreatorRoute(
-      entityType: ActivityStatusCreatorEntityType.race.name,
-      entityId: context.read<RacePreviewBloc>().raceId,
+      userId: racePreviewBloc.userId,
+      activityType: ActivityType.race.name,
+      activityId: racePreviewBloc.raceId,
     ));
   }
 }

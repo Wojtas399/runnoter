@@ -1,42 +1,39 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rxdart/rxdart.dart';
 
 import '../../../../domain/additional_model/bloc_state.dart';
 import '../../../../domain/additional_model/bloc_status.dart';
 import '../../../../domain/additional_model/bloc_with_status.dart';
 import '../../../dependency_injection.dart';
 import '../../additional_model/activity_status.dart';
+import '../../entity/race.dart';
+import '../../entity/workout.dart';
 import '../../repository/race_repository.dart';
 import '../../repository/workout_repository.dart';
-import '../../service/auth_service.dart';
 
 part 'activity_status_creator_event.dart';
 part 'activity_status_creator_state.dart';
 
-enum ActivityStatusCreatorEntityType {
-  workout,
-  race,
-}
+enum ActivityType { workout, race }
 
 class ActivityStatusCreatorBloc extends BlocWithStatus<
     ActivityStatusCreatorEvent,
     ActivityStatusCreatorState,
     ActivityStatusCreatorBlocInfo,
     dynamic> {
-  final AuthService _authService;
   final WorkoutRepository _workoutRepository;
   final RaceRepository _raceRepository;
-  final ActivityStatusCreatorEntityType? entityType;
-  final String? entityId;
+  final String userId;
+  final ActivityType activityType;
+  final String activityId;
 
   ActivityStatusCreatorBloc({
-    required this.entityType,
-    required this.entityId,
+    required this.userId,
+    required this.activityType,
+    required this.activityId,
     ActivityStatusCreatorState state = const ActivityStatusCreatorState(
       status: BlocStatusInitial(),
     ),
-  })  : _authService = getIt<AuthService>(),
-        _workoutRepository = getIt<WorkoutRepository>(),
+  })  : _workoutRepository = getIt<WorkoutRepository>(),
         _raceRepository = getIt<RaceRepository>(),
         super(state) {
     on<ActivityStatusCreatorEventInitialize>(_initialize);
@@ -57,7 +54,6 @@ class ActivityStatusCreatorBloc extends BlocWithStatus<
     ActivityStatusCreatorEventInitialize event,
     Emitter<ActivityStatusCreatorState> emit,
   ) async {
-    if (entityType == null || entityId == null) return;
     final Stream<ActivityStatus?> activityStatus$ = _getActivityStatus();
     await for (final activityStatus in activityStatus$) {
       if (activityStatus == null) return;
@@ -147,50 +143,41 @@ class ActivityStatusCreatorBloc extends BlocWithStatus<
     ActivityStatusCreatorEventSubmit event,
     Emitter<ActivityStatusCreatorState> emit,
   ) async {
-    if (!state.canSubmit || entityType == null || entityId == null) return;
-    final String? loggedUserId = await _authService.loggedUserId$.first;
-    if (loggedUserId == null) {
-      emitNoLoggedUserStatus(emit);
-      return;
-    }
+    if (!state.canSubmit) return;
     final ActivityStatus status = _createStatus();
     emitLoadingStatus(emit);
-    await switch (entityType!) {
-      ActivityStatusCreatorEntityType.workout =>
-        _workoutRepository.updateWorkout(
-          workoutId: entityId!,
-          userId: loggedUserId,
+    await switch (activityType) {
+      ActivityType.workout => _workoutRepository.updateWorkout(
+          workoutId: activityId,
+          userId: userId,
           status: status,
         ),
-      ActivityStatusCreatorEntityType.race => _raceRepository.updateRace(
-          raceId: entityId!,
-          userId: loggedUserId,
+      ActivityType.race => _raceRepository.updateRace(
+          raceId: activityId,
+          userId: userId,
           status: status,
         ),
     };
-    emitCompleteStatus(emit,
-        info: ActivityStatusCreatorBlocInfo.activityStatusSaved);
+    emitCompleteStatus(
+      emit,
+      info: ActivityStatusCreatorBlocInfo.activityStatusSaved,
+    );
   }
 
-  Stream<ActivityStatus?> _getActivityStatus() =>
-      _authService.loggedUserId$.whereType<String>().switchMap(
-            (String loggedUserId) => switch (entityType!) {
-              ActivityStatusCreatorEntityType.workout =>
-                _getWorkoutActivityStatus(loggedUserId),
-              ActivityStatusCreatorEntityType.race =>
-                _getRaceActivityStatus(loggedUserId),
-            },
-          );
+  Stream<ActivityStatus?> _getActivityStatus() => switch (activityType) {
+        ActivityType.workout => _getWorkoutActivityStatus(userId),
+        ActivityType.race => _getRaceActivityStatus(userId),
+      };
 
-  Stream<ActivityStatus?> _getWorkoutActivityStatus(String loggedUserId) =>
+  Stream<ActivityStatus?> _getWorkoutActivityStatus(String userId) =>
       _workoutRepository
-          .getWorkoutById(workoutId: entityId!, userId: loggedUserId)
-          .map((workout) => workout?.status);
+          .getWorkoutById(workoutId: activityId, userId: userId)
+          .map((Workout? workout) => workout?.status);
 
-  Stream<ActivityStatus?> _getRaceActivityStatus(String loggedUserId) =>
+  Stream<ActivityStatus?> _getRaceActivityStatus(String userId) =>
       _raceRepository
-          .getRaceById(raceId: entityId!, userId: loggedUserId)
-          .map((race) => race?.status);
+          .getRaceById(raceId: activityId, userId: userId)
+          .map((Race? race) => race?.status);
 
   ActivityStatusType _getActivityStatusType(ActivityStatus activityStatus) =>
       switch (activityStatus) {

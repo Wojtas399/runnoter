@@ -5,33 +5,37 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/bloc/activity_status_creator/activity_status_creator_bloc.dart';
 import '../../component/bloc_with_status_listener_component.dart';
+import '../../component/page_not_found_component.dart';
 import '../../service/dialog_service.dart';
 import 'activity_status_creator_content.dart';
 
 @RoutePage()
 class ActivityStatusCreatorScreen extends StatelessWidget {
-  final String? entityType;
-  final String? entityId;
+  final String? userId;
+  final String? activityType;
+  final String? activityId;
 
   const ActivityStatusCreatorScreen({
     super.key,
-    @PathParam('entityType') this.entityType,
-    @PathParam('entityId') this.entityId,
+    @PathParam('userId') this.userId,
+    @PathParam('activityType') this.activityType,
+    @PathParam('activityId') this.activityId,
   });
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => ActivityStatusCreatorBloc(
-        entityType: entityType != null
-            ? ActivityStatusCreatorEntityType.values.byName(entityType!)
-            : null,
-        entityId: entityId,
-      )..add(const ActivityStatusCreatorEventInitialize()),
-      child: const _BlocListener(
-        child: ActivityStatusCreatorContent(),
-      ),
-    );
+    return userId != null && activityType != null && activityId != null
+        ? BlocProvider(
+            create: (_) => ActivityStatusCreatorBloc(
+              userId: userId!,
+              activityType: ActivityType.values.byName(activityType!),
+              activityId: activityId!,
+            )..add(const ActivityStatusCreatorEventInitialize()),
+            child: const _BlocListener(
+              child: ActivityStatusCreatorContent(),
+            ),
+          )
+        : const PageNotFound();
   }
 }
 

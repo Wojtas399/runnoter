@@ -105,14 +105,14 @@ class _WorkoutStatusButton extends StatelessWidget {
   }
 
   void _onPressed(BuildContext context) {
-    final String? workoutId = context.read<WorkoutPreviewBloc>().workoutId;
+    final workoutPreviewBloc = context.read<WorkoutPreviewBloc>();
+    final String? workoutId = workoutPreviewBloc.workoutId;
     if (workoutId != null) {
-      navigateTo(
-        ActivityStatusCreatorRoute(
-          entityType: ActivityStatusCreatorEntityType.workout.name,
-          entityId: workoutId,
-        ),
-      );
+      navigateTo(ActivityStatusCreatorRoute(
+        userId: workoutPreviewBloc.userId,
+        activityType: ActivityType.workout.name,
+        activityId: workoutId,
+      ));
     }
   }
 }

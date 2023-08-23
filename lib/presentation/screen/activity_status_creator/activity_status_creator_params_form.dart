@@ -20,20 +20,14 @@ class ActivityStatusCreatorParamsForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ActivityStatusCreatorEntityType? entityType =
-        context.read<ActivityStatusCreatorBloc>().entityType;
+    final ActivityType activityType =
+        context.read<ActivityStatusCreatorBloc>().activityType;
     const Widget gap = Gap24();
 
     return Column(
       children: [
         const _CoveredDistance(),
-        if (entityType == ActivityStatusCreatorEntityType.race)
-          const Column(
-            children: [
-              gap,
-              _Duration(),
-            ],
-          ),
+        if (activityType == ActivityType.race) ...[gap, const _Duration()],
         gap,
         const _MoodRate(),
         gap,

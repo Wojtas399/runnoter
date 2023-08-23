@@ -76,19 +76,19 @@ class AppRouter extends _$AppRouter {
             ),
             AutoRoute(
               page: WorkoutPreviewRoute.page,
-              path: 'workout-preview/:workoutId',
+              path: 'workout-preview/:userId/:workoutId',
             ),
             AutoRoute(
               page: WorkoutCreatorRoute.page,
-              path: 'workout-creator/:date/:workoutId',
+              path: 'workout-creator/:userId/:dateStr/:workoutId',
             ),
             AutoRoute(
               page: RacePreviewRoute.page,
-              path: 'race-preview/:raceId',
+              path: 'race-preview/:userId/:raceId',
             ),
             AutoRoute(
               page: RaceCreatorRoute.page,
-              path: 'race-creator/:dateStr/:raceId',
+              path: 'race-creator/:userId/:dateStr/:raceId',
             ),
             AutoRoute(
               page: HealthMeasurementsRoute.page,
@@ -104,7 +104,7 @@ class AppRouter extends _$AppRouter {
             ),
             AutoRoute(
               page: ActivityStatusCreatorRoute.page,
-              path: 'activity-status-creator/:entityType/:entityId',
+              path: 'activity-status-creator/:userId/:activityType/:activityId',
             ),
             AutoRoute(
               page: ClientRoute.page,

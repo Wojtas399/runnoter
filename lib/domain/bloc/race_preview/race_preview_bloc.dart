@@ -17,17 +17,16 @@ part 'race_preview_state.dart';
 class RacePreviewBloc extends BlocWithStatus<RacePreviewEvent, RacePreviewState,
     RacePreviewBlocInfo, dynamic> {
   final RaceRepository _raceRepository;
-  final String _userId;
+  final String userId;
   final String raceId;
 
   RacePreviewBloc({
-    required String userId,
+    required this.userId,
     required this.raceId,
     RacePreviewState state = const RacePreviewState(
       status: BlocStatusInitial(),
     ),
-  })  : _userId = userId,
-        _raceRepository = getIt<RaceRepository>(),
+  })  : _raceRepository = getIt<RaceRepository>(),
         super(state) {
     on<RacePreviewEventInitialize>(_initialize, transformer: restartable());
     on<RacePreviewEventDeleteRace>(_deleteRace);
@@ -37,10 +36,8 @@ class RacePreviewBloc extends BlocWithStatus<RacePreviewEvent, RacePreviewState,
     RacePreviewEventInitialize event,
     Emitter<RacePreviewState> emit,
   ) async {
-    final Stream<Race?> race$ = _raceRepository.getRaceById(
-      raceId: raceId,
-      userId: _userId,
-    );
+    final Stream<Race?> race$ =
+        _raceRepository.getRaceById(raceId: raceId, userId: userId);
     await emit.forEach(
       race$,
       onData: (Race? race) => state.copyWith(
@@ -59,7 +56,7 @@ class RacePreviewBloc extends BlocWithStatus<RacePreviewEvent, RacePreviewState,
     Emitter<RacePreviewState> emit,
   ) async {
     emitLoadingStatus(emit);
-    await _raceRepository.deleteRace(raceId: raceId, userId: _userId);
+    await _raceRepository.deleteRace(raceId: raceId, userId: userId);
     emitCompleteStatus(emit, info: RacePreviewBlocInfo.raceDeleted);
   }
 }
