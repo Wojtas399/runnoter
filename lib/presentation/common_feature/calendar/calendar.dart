@@ -18,11 +18,13 @@ import '../../service/navigator_service.dart';
 
 class Calendar extends StatelessWidget {
   final String userId;
+  final DateRangeType initialDateRangeType;
   final bool canEditHealthMeasurement;
 
   const Calendar({
     super.key,
     required this.userId,
+    this.initialDateRangeType = DateRangeType.month,
     this.canEditHealthMeasurement = true,
   });
 
@@ -33,11 +35,9 @@ class Calendar extends StatelessWidget {
         BlocProvider(create: (_) => CalendarDateRangeDataCubit(userId: userId)),
         BlocProvider(
           create: (_) => CalendarComponentBloc()
-            ..add(
-              const CalendarComponentEventInitialize(
-                dateRangeType: DateRangeType.month,
-              ),
-            ),
+            ..add(CalendarComponentEventInitialize(
+              dateRangeType: initialDateRangeType,
+            )),
         ),
       ],
       child: SingleChildScrollView(
