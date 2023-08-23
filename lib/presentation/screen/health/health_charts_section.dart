@@ -7,7 +7,6 @@ import '../../../domain/service/health_chart_service.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/gap/gap_horizontal_components.dart';
 import '../../component/text/title_text_components.dart';
-import '../../extension/context_extensions.dart';
 import '../../formatter/date_formatter.dart';
 import 'health_charts.dart';
 
@@ -17,10 +16,7 @@ class HealthChartsSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(
-        bottom: 24,
-        right: context.isMobileSize ? 16 : 0,
-      ),
+      padding: const EdgeInsets.only(bottom: 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

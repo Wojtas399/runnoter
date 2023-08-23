@@ -39,7 +39,7 @@ class _MobileContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Padding(
-      padding: EdgeInsets.fromLTRB(24, 16, 8, 24),
+      padding: EdgeInsets.fromLTRB(24, 16, 24, 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -63,9 +63,13 @@ class _DesktopContent extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CardBody(child: _TodayMeasurement()),
+          CardBody(
+            child: _TodayMeasurement(),
+          ),
           Gap16(),
-          CardBody(child: HealthChartsSection()),
+          CardBody(
+            child: HealthChartsSection(),
+          ),
           Gap16(),
           _ShowAllMeasurementsButton(),
         ],
