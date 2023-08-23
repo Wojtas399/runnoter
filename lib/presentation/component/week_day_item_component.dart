@@ -24,19 +24,21 @@ class WeekDayItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onPressed,
-      child: Padding(
-        padding: const EdgeInsets.all(4),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _Date(date: day.date, isToday: day.isTodayDay),
-            const Gap16(),
-            HealthMeasurementInfo(healthMeasurement: day.healthMeasurement),
-            const Gap16(),
-            _Activities(workouts: day.workouts, races: day.races),
-          ],
+    return Material(
+      child: InkWell(
+        onTap: onPressed,
+        child: Padding(
+          padding: const EdgeInsets.all(4),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _Date(date: day.date, isToday: day.isTodayDay),
+              const Gap16(),
+              HealthMeasurementInfo(healthMeasurement: day.healthMeasurement),
+              const Gap16(),
+              _Activities(workouts: day.workouts, races: day.races),
+            ],
+          ),
         ),
       ),
     );
