@@ -14,7 +14,7 @@ void main() {
   });
 
   test(
-    'are data loaded, '
+    'is workout loaded, '
     'all params are not null, '
     'should be true',
     () {
@@ -25,12 +25,12 @@ void main() {
         activityStatus: const ActivityStatusPending(),
       );
 
-      expect(state.areDataLoaded, true);
+      expect(state.isWorkoutLoaded, true);
     },
   );
 
   test(
-    'are data loaded, '
+    'is workout loaded, '
     'date is null, '
     'should be false',
     () {
@@ -40,12 +40,12 @@ void main() {
         activityStatus: const ActivityStatusPending(),
       );
 
-      expect(state.areDataLoaded, false);
+      expect(state.isWorkoutLoaded, false);
     },
   );
 
   test(
-    'are data loaded, '
+    'is workout loaded, '
     'workout name is null, '
     'should be false',
     () {
@@ -55,12 +55,12 @@ void main() {
         activityStatus: const ActivityStatusPending(),
       );
 
-      expect(state.areDataLoaded, false);
+      expect(state.isWorkoutLoaded, false);
     },
   );
 
   test(
-    'are data loaded, '
+    'is workout loaded, '
     'stages are null, '
     'should be false',
     () {
@@ -70,12 +70,12 @@ void main() {
         activityStatus: const ActivityStatusPending(),
       );
 
-      expect(state.areDataLoaded, false);
+      expect(state.isWorkoutLoaded, false);
     },
   );
 
   test(
-    'are data loaded, '
+    'is workout loaded, '
     'activity status is null, '
     'should be false',
     () {
@@ -85,66 +85,53 @@ void main() {
         stages: [],
       );
 
-      expect(state.areDataLoaded, false);
+      expect(state.isWorkoutLoaded, false);
     },
   );
 
   test(
     'copy with status',
     () {
-      const BlocStatus expectedBlocStatus = BlocStatusLoading();
+      const BlocStatus expected = BlocStatusLoading();
 
-      state = state.copyWith(status: expectedBlocStatus);
+      state = state.copyWith(status: expected);
       final state2 = state.copyWith();
 
-      expect(state.status, expectedBlocStatus);
+      expect(state.status, expected);
       expect(state2.status, const BlocStatusComplete());
-    },
-  );
-
-  test(
-    'copy with canEditWorkoutStatus',
-    () {
-      const bool expected = false;
-
-      state = state.copyWith(canEditWorkoutStatus: expected);
-      final state2 = state.copyWith();
-
-      expect(state.canEditWorkoutStatus, expected);
-      expect(state2.canEditWorkoutStatus, expected);
     },
   );
 
   test(
     'copy with date',
     () {
-      final DateTime expectedDate = DateTime(2023, 1, 10);
+      final DateTime expected = DateTime(2023, 1, 10);
 
-      state = state.copyWith(date: expectedDate);
+      state = state.copyWith(date: expected);
       final state2 = state.copyWith();
 
-      expect(state.date, expectedDate);
-      expect(state2.date, expectedDate);
+      expect(state.date, expected);
+      expect(state2.date, expected);
     },
   );
 
   test(
     'copy with workoutName',
     () {
-      const String expectedWorkoutName = 'workout name';
+      const String expected = 'workout name';
 
-      state = state.copyWith(workoutName: expectedWorkoutName);
+      state = state.copyWith(workoutName: expected);
       final state2 = state.copyWith();
 
-      expect(state.workoutName, expectedWorkoutName);
-      expect(state2.workoutName, expectedWorkoutName);
+      expect(state.workoutName, expected);
+      expect(state2.workoutName, expected);
     },
   );
 
   test(
     'copy with stages',
     () {
-      const List<WorkoutStage> expectedStages = [
+      const List<WorkoutStage> expected = [
         WorkoutStageCardio(
           distanceInKm: 2,
           maxHeartRate: 150,
@@ -155,24 +142,24 @@ void main() {
         ),
       ];
 
-      state = state.copyWith(stages: expectedStages);
+      state = state.copyWith(stages: expected);
       final state2 = state.copyWith();
 
-      expect(state.stages, expectedStages);
-      expect(state2.stages, expectedStages);
+      expect(state.stages, expected);
+      expect(state2.stages, expected);
     },
   );
 
   test(
     'copy with activityStatus',
     () {
-      const ActivityStatus expectedActivityStatus = ActivityStatusPending();
+      const ActivityStatus expected = ActivityStatusPending();
 
-      state = state.copyWith(activityStatus: expectedActivityStatus);
+      state = state.copyWith(activityStatus: expected);
       final state2 = state.copyWith();
 
-      expect(state.activityStatus, expectedActivityStatus);
-      expect(state2.activityStatus, expectedActivityStatus);
+      expect(state.activityStatus, expected);
+      expect(state2.activityStatus, expected);
     },
   );
 }

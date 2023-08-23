@@ -67,11 +67,11 @@ class _WorkoutInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool areDataLoaded = context.select(
-      (WorkoutPreviewBloc bloc) => bloc.state.areDataLoaded,
+    final bool isWorkoutLoaded = context.select(
+      (WorkoutPreviewBloc bloc) => bloc.state.isWorkoutLoaded,
     );
 
-    return areDataLoaded
+    return isWorkoutLoaded
         ? const WorkoutPreviewWorkoutInfo()
         : const LoadingInfo();
   }
@@ -82,9 +82,6 @@ class _WorkoutStatusButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool canEditActivityStatus = context.select(
-      (WorkoutPreviewBloc bloc) => bloc.state.canEditWorkoutStatus,
-    );
     final ActivityStatus? activityStatus = context.select(
       (WorkoutPreviewBloc bloc) => bloc.state.activityStatus,
     );
@@ -93,26 +90,21 @@ class _WorkoutStatusButton extends StatelessWidget {
       label = Str.of(context).activityStatusFinish;
     }
 
-    return canEditActivityStatus
-        ? Padding(
-            padding: const EdgeInsets.only(top: 32),
-            child: BigButton(
-              label: label,
-              onPressed: () => _onPressed(context),
-            ),
-          )
-        : const SizedBox();
+    return Padding(
+      padding: const EdgeInsets.only(top: 32),
+      child: BigButton(
+        label: label,
+        onPressed: () => _onPressed(context),
+      ),
+    );
   }
 
   void _onPressed(BuildContext context) {
     final workoutPreviewBloc = context.read<WorkoutPreviewBloc>();
-    final String? workoutId = workoutPreviewBloc.workoutId;
-    if (workoutId != null) {
-      navigateTo(ActivityStatusCreatorRoute(
-        userId: workoutPreviewBloc.userId,
-        activityType: ActivityType.workout.name,
-        activityId: workoutId,
-      ));
-    }
+    navigateTo(ActivityStatusCreatorRoute(
+      userId: workoutPreviewBloc.userId,
+      activityType: ActivityType.workout.name,
+      activityId: workoutPreviewBloc.workoutId,
+    ));
   }
 }

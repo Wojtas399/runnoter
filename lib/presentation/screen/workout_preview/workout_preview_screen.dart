@@ -23,17 +23,17 @@ class WorkoutPreviewScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return userId == null
-        ? const PageNotFound()
-        : BlocProvider(
+    return userId != null && workoutId != null
+        ? BlocProvider(
             create: (_) => WorkoutPreviewBloc(
               userId: userId!,
-              workoutId: workoutId,
+              workoutId: workoutId!,
             )..add(const WorkoutPreviewEventInitialize()),
             child: const _BlocListener(
               child: WorkoutPreviewContent(),
             ),
-          );
+          )
+        : const PageNotFound();
   }
 }
 

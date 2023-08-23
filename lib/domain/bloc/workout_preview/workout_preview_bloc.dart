@@ -11,7 +11,6 @@ import '../../../../domain/repository/workout_repository.dart';
 import '../../../dependency_injection.dart';
 import '../../additional_model/activity_status.dart';
 import '../../additional_model/workout_stage.dart';
-import '../../service/auth_service.dart';
 
 part 'workout_preview_event.dart';
 part 'workout_preview_state.dart';
@@ -19,8 +18,7 @@ part 'workout_preview_state.dart';
 class WorkoutPreviewBloc extends BlocWithStatus<WorkoutPreviewEvent,
     WorkoutPreviewState, WorkoutPreviewBlocInfo, dynamic> {
   final String userId;
-  final String? workoutId;
-  final AuthService _authService;
+  final String workoutId;
   final WorkoutRepository _workoutRepository;
 
   WorkoutPreviewBloc({
@@ -29,8 +27,7 @@ class WorkoutPreviewBloc extends BlocWithStatus<WorkoutPreviewEvent,
     WorkoutPreviewState state = const WorkoutPreviewState(
       status: BlocStatusInitial(),
     ),
-  })  : _authService = getIt<AuthService>(),
-        _workoutRepository = getIt<WorkoutRepository>(),
+  })  : _workoutRepository = getIt<WorkoutRepository>(),
         super(state) {
     on<WorkoutPreviewEventInitialize>(_initialize, transformer: restartable());
     on<WorkoutPreviewEventDeleteWorkout>(_deleteWorkout);
@@ -40,16 +37,13 @@ class WorkoutPreviewBloc extends BlocWithStatus<WorkoutPreviewEvent,
     WorkoutPreviewEventInitialize event,
     Emitter<WorkoutPreviewState> emit,
   ) async {
-    if (workoutId == null) return;
-    final String? loggedUserId = await _authService.loggedUserId$.first;
     final Stream<Workout?> workout$ = _workoutRepository.getWorkoutById(
       userId: userId,
-      workoutId: workoutId!,
+      workoutId: workoutId,
     );
     await emit.forEach(
       workout$,
       onData: (Workout? workout) => state.copyWith(
-        canEditWorkoutStatus: userId == loggedUserId,
         date: workout?.date,
         workoutName: workout?.name,
         stages: workout?.stages,
@@ -62,16 +56,13 @@ class WorkoutPreviewBloc extends BlocWithStatus<WorkoutPreviewEvent,
     WorkoutPreviewEventDeleteWorkout event,
     Emitter<WorkoutPreviewState> emit,
   ) async {
-    if (workoutId == null) return;
     emitLoadingStatus(emit);
     await _workoutRepository.deleteWorkout(
       userId: userId,
-      workoutId: workoutId!,
+      workoutId: workoutId,
     );
     emitCompleteStatus(emit, info: WorkoutPreviewBlocInfo.workoutDeleted);
   }
 }
 
-enum WorkoutPreviewBlocInfo {
-  workoutDeleted,
-}
+enum WorkoutPreviewBlocInfo { workoutDeleted }
