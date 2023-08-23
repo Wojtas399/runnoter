@@ -10,10 +10,12 @@ class CalendarComponentEventInitialize extends CalendarComponentEvent {
   const CalendarComponentEventInitialize({required this.dateRangeType});
 }
 
-class CalendarComponentEventChangeDateRange extends CalendarComponentEvent {
+class CalendarComponentEventChangeDateRangeType extends CalendarComponentEvent {
   final DateRangeType dateRangeType;
 
-  const CalendarComponentEventChangeDateRange({required this.dateRangeType});
+  const CalendarComponentEventChangeDateRangeType({
+    required this.dateRangeType,
+  });
 }
 
 class CalendarComponentEventDateRangeDataUpdated
@@ -29,4 +31,10 @@ class CalendarComponentEventPreviousDateRange extends CalendarComponentEvent {
 
 class CalendarComponentEventNextDateRange extends CalendarComponentEvent {
   const CalendarComponentEventNextDateRange();
+}
+
+class CalendarComponentEventDayPressed extends CalendarComponentEvent {
+  final DateTime date;
+
+  const CalendarComponentEventDayPressed({required this.date});
 }

@@ -24,40 +24,33 @@ class CalendarComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _BlocListener(
-      onDateRangeChanged: onDateRangeChanged,
-      child: _Content(
-        dateRangeData: dateRangeData,
-      ),
-    );
-  }
-}
-
-class _BlocListener extends StatelessWidget {
-  final Function(DateTime startDate, DateTime endDate) onDateRangeChanged;
-  final Widget child;
-
-  const _BlocListener({required this.onDateRangeChanged, required this.child});
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocListener<CalendarComponentBloc, CalendarComponentState>(
-      listenWhen: (previousState, currentState) =>
-          previousState.weeks == null ||
-          previousState.dateRange != currentState.dateRange,
-      listener: (_, CalendarComponentState state) {
-        _emitNewDateRange(state);
-      },
-      child: child,
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<CalendarComponentBloc, CalendarComponentState>(
+          listenWhen: (previousState, currentState) =>
+              previousState.dateRange != currentState.dateRange &&
+              currentState.weeks != null,
+          listener: _emitNewDateRange,
+        ),
+        BlocListener<CalendarComponentBloc, CalendarComponentState>(
+          listenWhen: (previousState, currentState) =>
+              currentState.pressedDay != null &&
+              previousState.pressedDay != currentState.pressedDay,
+          listener: _emitPressedDay,
+        ),
+      ],
+      child: _Content(dateRangeData: dateRangeData),
     );
   }
 
-  void _emitNewDateRange(CalendarComponentState state) {
-    if (state.weeks != null) {
-      final DateTime startDate = state.weeks!.first.days.first.date;
-      final DateTime endDate = state.weeks!.last.days.last.date;
-      onDateRangeChanged(startDate, endDate);
-    }
+  void _emitNewDateRange(BuildContext context, CalendarComponentState state) {
+    final DateTime startDate = state.weeks!.first.days.first.date;
+    final DateTime endDate = state.weeks!.last.days.last.date;
+    onDateRangeChanged(startDate, endDate);
+  }
+
+  void _emitPressedDay(BuildContext context, CalendarComponentState state) {
+    if (onDayPressed != null) onDayPressed!(state.pressedDay!);
   }
 }
 

@@ -29,6 +29,8 @@ class CalendarComponentWeek extends StatelessWidget {
   }
 
   void _onDayPressed(BuildContext context, DateTime date) {
-    //TODO
+    context.read<CalendarComponentBloc>().add(
+          CalendarComponentEventDayPressed(date: date),
+        );
   }
 }

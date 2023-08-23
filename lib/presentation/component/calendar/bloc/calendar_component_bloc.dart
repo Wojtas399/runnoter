@@ -26,10 +26,11 @@ class CalendarComponentBloc
       : _dateService = getIt<DateService>(),
         super(const CalendarComponentState()) {
     on<CalendarComponentEventInitialize>(_initialize);
-    on<CalendarComponentEventChangeDateRange>(_changeDateRange);
+    on<CalendarComponentEventChangeDateRangeType>(_changeDateRangeType);
     on<CalendarComponentEventDateRangeDataUpdated>(_dateRangeDataUpdated);
     on<CalendarComponentEventPreviousDateRange>(_previousDateRange);
     on<CalendarComponentEventNextDateRange>(_nextDateRange);
+    on<CalendarComponentEventDayPressed>(_dayPressed);
   }
 
   void _initialize(
@@ -54,8 +55,8 @@ class CalendarComponentBloc
     ));
   }
 
-  void _changeDateRange(
-    CalendarComponentEventChangeDateRange event,
+  void _changeDateRangeType(
+    CalendarComponentEventChangeDateRangeType event,
     Emitter<CalendarComponentState> emit,
   ) {
     final DateRange? currentDateRange = state.dateRange;
@@ -135,6 +136,13 @@ class CalendarComponentBloc
         weeks: _createWeeks(newDateRange),
       ));
     }
+  }
+
+  void _dayPressed(
+    CalendarComponentEventDayPressed event,
+    Emitter<CalendarComponentState> emit,
+  ) {
+    emit(state.copyWith(pressedDay: event.date));
   }
 
   List<CalendarWeek> _createWeeks(final DateRange dateRange) {

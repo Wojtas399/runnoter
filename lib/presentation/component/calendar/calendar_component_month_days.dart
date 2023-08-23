@@ -76,7 +76,9 @@ class _DayItem extends StatelessWidget {
   }
 
   void _onPressed(BuildContext context) {
-    //TODO
+    context.read<CalendarComponentBloc>().add(
+          CalendarComponentEventDayPressed(date: day.date),
+        );
   }
 }
 

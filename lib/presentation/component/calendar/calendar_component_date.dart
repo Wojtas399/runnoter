@@ -70,7 +70,9 @@ class _DateRangeSelection extends StatelessWidget {
 
   void _onDateRangeChanged(BuildContext context, DateRangeType dateRangeType) {
     context.read<CalendarComponentBloc>().add(
-          CalendarComponentEventChangeDateRange(dateRangeType: dateRangeType),
+          CalendarComponentEventChangeDateRangeType(
+            dateRangeType: dateRangeType,
+          ),
         );
   }
 }
