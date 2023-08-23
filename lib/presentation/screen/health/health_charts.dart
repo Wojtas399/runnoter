@@ -18,11 +18,11 @@ class HealthCharts extends StatelessWidget {
     final str = Str.of(context);
     return Column(
       children: [
-        LabelLarge(str.healthRestingHeartRate),
+        LabelLarge(str.restingHeartRate),
         const Gap8(),
         const _RestingHeartRateChart(),
         const Gap16(),
-        LabelLarge(str.healthFastingWeight),
+        LabelLarge(str.fastingWeight),
         const Gap8(),
         const _FastingWeightChart(),
       ],

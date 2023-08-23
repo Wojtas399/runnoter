@@ -167,38 +167,12 @@ class _HealthMeasurement extends StatelessWidget {
       (DayPreviewBloc bloc) => bloc.state.healthMeasurement,
     );
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            TitleMedium(Str.of(context).dayPreviewHealthMeasurement),
-            if (canModify)
-              Row(
-                children: [
-                  IconButton(
-                    onPressed: () => _onEdit(context),
-                    icon: Icon(
-                      Icons.edit_outlined,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                  ),
-                  if (measurement != null)
-                    IconButton(
-                      onPressed: () => _onDelete(context),
-                      icon: Icon(
-                        Icons.delete_outline,
-                        color: Theme.of(context).colorScheme.error,
-                      ),
-                    ),
-                ],
-              ),
-          ],
-        ),
-        if (canModify) const SizedBox(height: 4) else const Gap16(),
-        HealthMeasurementInfo(healthMeasurement: measurement),
-      ],
+    return HealthMeasurementInfo(
+      label: Str.of(context).dayPreviewHealthMeasurement,
+      healthMeasurement: measurement,
+      displayBigButtonIfHealthMeasurementIsNull: true,
+      onEdit: canModify ? () => _onEdit(context) : null,
+      onDelete: canModify ? () => _onDelete(context) : null,
     );
   }
 

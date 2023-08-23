@@ -93,7 +93,7 @@ class _RestingHeartRateState extends State<_RestingHeartRate> {
   Widget build(BuildContext context) {
     final str = Str.of(context);
     return FormTextField(
-      label: '${str.healthRestingHeartRate} [${str.heartRateUnit}]',
+      label: '${str.restingHeartRate} [${str.heartRateUnit}]',
       keyboardType: TextInputType.number,
       maxLength: 3,
       isRequired: true,
@@ -147,7 +147,7 @@ class _FastingWeightState extends State<_FastingWeight> {
   @override
   Widget build(BuildContext context) {
     return FormTextField(
-      label: '${Str.of(context).healthFastingWeight} [kg]',
+      label: '${Str.of(context).fastingWeight} [kg]',
       keyboardType: const TextInputType.numberWithOptions(decimal: true),
       maxLength: 6,
       isRequired: true,
