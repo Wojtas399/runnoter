@@ -8,13 +8,12 @@ import '../entity/blood_test.dart';
 import '../repository/blood_test_repository.dart';
 
 class BloodTestsCubit extends Cubit<List<BloodTestsFromYear>?> {
-  final String _userId;
+  final String userId;
   final BloodTestRepository _bloodTestRepository;
   StreamSubscription<List<BloodTest>?>? _bloodTestsListener;
 
-  BloodTestsCubit({required String userId})
-      : _userId = userId,
-        _bloodTestRepository = getIt<BloodTestRepository>(),
+  BloodTestsCubit({required this.userId})
+      : _bloodTestRepository = getIt<BloodTestRepository>(),
         super(null);
 
   @override
@@ -26,7 +25,7 @@ class BloodTestsCubit extends Cubit<List<BloodTestsFromYear>?> {
 
   void initialize() {
     _bloodTestsListener ??= _bloodTestRepository
-        .getAllTests(userId: _userId)
+        .getAllTests(userId: userId)
         .listen(_onBloodTestsChanged);
   }
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/cubit/blood_tests_cubit.dart';
 import '../../../domain/entity/blood_test.dart';
@@ -74,7 +75,7 @@ class _TestItem extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.only(bottom: 16),
       child: ElevatedButton(
-        onPressed: _onPressed,
+        onPressed: () => _onPressed(context),
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: TitleMedium(bloodTest.date.toDateWithDots()),
@@ -83,9 +84,10 @@ class _TestItem extends StatelessWidget {
     );
   }
 
-  void _onPressed() {
-    navigateTo(
-      BloodTestPreviewRoute(bloodTestId: bloodTest.id),
-    );
+  void _onPressed(BuildContext context) {
+    navigateTo(BloodTestPreviewRoute(
+      userId: context.read<BloodTestsCubit>().userId,
+      bloodTestId: bloodTest.id,
+    ));
   }
 }

@@ -6,32 +6,31 @@ import 'package:rxdart/rxdart.dart';
 
 import '../../../../domain/entity/blood_test.dart';
 import '../../../../domain/repository/blood_test_repository.dart';
-import '../../../../domain/service/auth_service.dart';
 import '../../../dependency_injection.dart';
 import '../../additional_model/bloc_state.dart';
 import '../../additional_model/bloc_status.dart';
 import '../../additional_model/bloc_with_status.dart';
 import '../../additional_model/blood_parameter.dart';
 import '../../entity/user.dart';
-import '../../use_case/get_logged_user_gender_use_case.dart';
+import '../../repository/user_repository.dart';
 
 part 'blood_test_preview_event.dart';
 part 'blood_test_preview_state.dart';
 
 class BloodTestPreviewBloc extends BlocWithStatus<BloodTestPreviewEvent,
     BloodTestPreviewState, BloodTestPreviewBlocInfo, dynamic> {
-  final AuthService _authService;
-  final GetLoggedUserGenderUseCase _getLoggedUserGenderUseCase;
+  final UserRepository _userRepository;
   final BloodTestRepository _bloodTestRepository;
-  final String? bloodTestId;
+  final String userId;
+  final String bloodTestId;
 
   BloodTestPreviewBloc({
+    required this.userId,
     required this.bloodTestId,
     BloodTestPreviewState state = const BloodTestPreviewState(
       status: BlocStatusInitial(),
     ),
-  })  : _authService = getIt<AuthService>(),
-        _getLoggedUserGenderUseCase = getIt<GetLoggedUserGenderUseCase>(),
+  })  : _userRepository = getIt<UserRepository>(),
         _bloodTestRepository = getIt<BloodTestRepository>(),
         super(state) {
     on<BloodTestPreviewEventInitialize>(
@@ -45,10 +44,15 @@ class BloodTestPreviewBloc extends BlocWithStatus<BloodTestPreviewEvent,
     BloodTestPreviewEventInitialize event,
     Emitter<BloodTestPreviewState> emit,
   ) async {
-    if (bloodTestId == null) return;
     final Stream<(Gender, BloodTest?)> stream$ = Rx.combineLatest2(
-      _getLoggedUserGenderUseCase.execute(),
-      _getBloodTest(),
+      _userRepository
+          .getUserById(userId: userId)
+          .whereNotNull()
+          .map((User user) => user.gender),
+      _bloodTestRepository.getTestById(
+        bloodTestId: bloodTestId,
+        userId: userId,
+      ),
       (Gender gender, BloodTest? bloodTest) => (gender, bloodTest),
     );
     await emit.forEach(
@@ -65,32 +69,16 @@ class BloodTestPreviewBloc extends BlocWithStatus<BloodTestPreviewEvent,
     BloodTestPreviewEventDeleteTest event,
     Emitter<BloodTestPreviewState> emit,
   ) async {
-    if (bloodTestId == null) return;
-    final String? loggedUserId = await _authService.loggedUserId$.first;
-    if (loggedUserId == null) {
-      emitNoLoggedUserStatus(emit);
-      return;
-    }
     emitLoadingStatus(emit);
     await _bloodTestRepository.deleteTest(
-      bloodTestId: bloodTestId!,
-      userId: loggedUserId,
+      bloodTestId: bloodTestId,
+      userId: userId,
     );
     emitCompleteStatus(
       emit,
       info: BloodTestPreviewBlocInfo.bloodTestDeleted,
     );
   }
-
-  Stream<BloodTest?> _getBloodTest() =>
-      _authService.loggedUserId$.whereNotNull().switchMap(
-            (String loggedUserId) => _bloodTestRepository.getTestById(
-              bloodTestId: bloodTestId!,
-              userId: loggedUserId,
-            ),
-          );
 }
 
-enum BloodTestPreviewBlocInfo {
-  bloodTestDeleted,
-}
+enum BloodTestPreviewBlocInfo { bloodTestDeleted }

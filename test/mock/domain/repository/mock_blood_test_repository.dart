@@ -5,13 +5,14 @@ import 'package:runnoter/domain/repository/blood_test_repository.dart';
 class MockBloodTestRepository extends Mock implements BloodTestRepository {
   void mockGetTestById({
     BloodTest? bloodTest,
+    Stream<BloodTest?>? bloodTestStream,
   }) {
     when(
       () => getTestById(
         bloodTestId: any(named: 'bloodTestId'),
         userId: any(named: 'userId'),
       ),
-    ).thenAnswer((_) => Stream.value(bloodTest));
+    ).thenAnswer((_) => bloodTestStream ?? Stream.value(bloodTest));
   }
 
   void mockGetAllTests({

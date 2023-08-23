@@ -8,6 +8,7 @@ import '../../../domain/entity/user.dart';
 import '../../component/blood_parameter_results_list_component.dart';
 import '../../component/body/medium_body_component.dart';
 import '../../component/gap/gap_horizontal_components.dart';
+import '../../component/loading_info_component.dart';
 import '../../component/text/title_text_components.dart';
 import '../../extension/context_extensions.dart';
 import '../../formatter/date_formatter.dart';
@@ -103,7 +104,7 @@ class _Results extends StatelessWidget {
     );
 
     return gender == null
-        ? const CircularProgressIndicator()
+        ? const LoadingInfo()
         : BloodParameterResultsList(
             gender: gender,
             parameterResults: parameterResults,
