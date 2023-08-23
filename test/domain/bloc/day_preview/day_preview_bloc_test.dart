@@ -13,6 +13,7 @@ import 'package:runnoter/domain/entity/workout.dart';
 import 'package:runnoter/domain/repository/health_measurement_repository.dart';
 import 'package:runnoter/domain/repository/race_repository.dart';
 import 'package:runnoter/domain/repository/workout_repository.dart';
+import 'package:runnoter/domain/service/auth_service.dart';
 
 import '../../../creators/health_measurement_creator.dart';
 import '../../../creators/race_creator.dart';
@@ -21,8 +22,10 @@ import '../../../mock/common/mock_date_service.dart';
 import '../../../mock/domain/repository/mock_health_measurement_repository.dart';
 import '../../../mock/domain/repository/mock_race_repository.dart';
 import '../../../mock/domain/repository/mock_workout_repository.dart';
+import '../../../mock/domain/service/mock_auth_service.dart';
 
 void main() {
+  final authService = MockAuthService();
   final healthMeasurementRepository = MockHealthMeasurementRepository();
   final workoutRepository = MockWorkoutRepository();
   final raceRepository = MockRaceRepository();
@@ -36,6 +39,7 @@ void main() {
       DayPreviewBloc(userId: userId, date: date, state: state);
 
   setUpAll(() {
+    GetIt.I.registerFactory<AuthService>(() => authService);
     GetIt.I.registerSingleton<HealthMeasurementRepository>(
       healthMeasurementRepository,
     );
@@ -45,6 +49,7 @@ void main() {
   });
 
   tearDown(() {
+    reset(authService);
     reset(healthMeasurementRepository);
     reset(workoutRepository);
     reset(raceRepository);
@@ -52,7 +57,7 @@ void main() {
   });
 
   group(
-    'initialize listener',
+    'initialize',
     () {
       final HealthMeasurement healthMeasurement =
           createHealthMeasurement(date: date);
@@ -69,11 +74,26 @@ void main() {
         ..add(races);
 
       blocTest(
+        'logged user does not exist, '
+        'should emit no logged user status',
+        build: () => createBloc(),
+        setUp: () => authService.mockGetLoggedUserId(),
+        act: (bloc) => bloc.add(const DayPreviewEventInitialize()),
+        expect: () => [
+          const DayPreviewState(status: BlocStatusNoLoggedUser()),
+        ],
+        verify: (_) => verify(() => authService.loggedUserId$).called(1),
+      );
+
+      blocTest(
         'date is from the past, '
+        'user id is equal to logged user id, '
         'should set isPastDate as true and '
+        'should set canModifyHealthMeasurement as true and '
         'should set listener of health measurement, workouts and races from given date',
         build: () => createBloc(),
         setUp: () {
+          authService.mockGetLoggedUserId(userId: userId);
           dateService.mockGetToday(
             todayDate: date.add(const Duration(days: 2)),
           );
@@ -95,6 +115,7 @@ void main() {
           DayPreviewState(
             status: const BlocStatusComplete(),
             isPastDate: true,
+            canModifyHealthMeasurement: true,
             healthMeasurement: healthMeasurement,
             workouts: workouts,
             races: races,
@@ -102,6 +123,7 @@ void main() {
           DayPreviewState(
             status: const BlocStatusComplete(),
             isPastDate: true,
+            canModifyHealthMeasurement: true,
             healthMeasurement: null,
             workouts: workouts,
             races: races,
@@ -109,6 +131,7 @@ void main() {
           DayPreviewState(
             status: const BlocStatusComplete(),
             isPastDate: true,
+            canModifyHealthMeasurement: true,
             healthMeasurement: null,
             workouts: const [],
             races: races,
@@ -116,12 +139,14 @@ void main() {
           const DayPreviewState(
             status: BlocStatusComplete(),
             isPastDate: true,
+            canModifyHealthMeasurement: true,
             healthMeasurement: null,
             workouts: [],
             races: [],
           ),
         ],
         verify: (_) {
+          verify(() => authService.loggedUserId$).called(1);
           verify(
             () => healthMeasurementRepository.getMeasurementByDate(
               date: date,
@@ -145,10 +170,13 @@ void main() {
 
       blocTest(
         'date is not from the past, '
+        'user id is not equal to logged user id, '
         'should set isPastDate as false and '
+        'should set canModifyHealthMeasurement as false and '
         'should set listener of health measurement, workouts and races from given date',
         build: () => createBloc(),
         setUp: () {
+          authService.mockGetLoggedUserId(userId: 'u2');
           dateService.mockGetToday(todayDate: date);
           healthMeasurementRepository.mockGetMeasurementByDate(
             measurement: healthMeasurement,
@@ -161,12 +189,14 @@ void main() {
           DayPreviewState(
             status: const BlocStatusComplete(),
             isPastDate: false,
+            canModifyHealthMeasurement: false,
             healthMeasurement: healthMeasurement,
             workouts: workouts,
             races: races,
           ),
         ],
         verify: (_) {
+          verify(() => authService.loggedUserId$).called(1);
           verify(
             () => healthMeasurementRepository.getMeasurementByDate(
               date: date,

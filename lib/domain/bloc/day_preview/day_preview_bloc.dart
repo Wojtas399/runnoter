@@ -14,12 +14,14 @@ import '../../entity/workout.dart';
 import '../../repository/health_measurement_repository.dart';
 import '../../repository/race_repository.dart';
 import '../../repository/workout_repository.dart';
+import '../../service/auth_service.dart';
 
 part 'day_preview_event.dart';
 part 'day_preview_state.dart';
 
 class DayPreviewBloc
     extends BlocWithStatus<DayPreviewEvent, DayPreviewState, dynamic, dynamic> {
+  final AuthService _authService;
   final HealthMeasurementRepository _healthMeasurementRepository;
   final WorkoutRepository _workoutRepository;
   final RaceRepository _raceRepository;
@@ -31,7 +33,8 @@ class DayPreviewBloc
     required String userId,
     required this.date,
     DayPreviewState state = const DayPreviewState(status: BlocStatusInitial()),
-  })  : _healthMeasurementRepository = getIt<HealthMeasurementRepository>(),
+  })  : _authService = getIt<AuthService>(),
+        _healthMeasurementRepository = getIt<HealthMeasurementRepository>(),
         _workoutRepository = getIt<WorkoutRepository>(),
         _raceRepository = getIt<RaceRepository>(),
         _dateService = getIt<DateService>(),
@@ -45,6 +48,11 @@ class DayPreviewBloc
     DayPreviewEventInitialize event,
     Emitter<DayPreviewState> emit,
   ) async {
+    final String? loggedUserId = await _authService.loggedUserId$.first;
+    if (loggedUserId == null) {
+      emitNoLoggedUserStatus(emit);
+      return;
+    }
     final bool isPastDate = date.isBefore(_dateService.getToday());
     final Stream<_ListenedParams> stream$ = Rx.combineLatest3(
       _healthMeasurementRepository.getMeasurementByDate(
@@ -68,6 +76,7 @@ class DayPreviewBloc
       stream$,
       onData: (_ListenedParams params) => state.copyWith(
         isPastDate: isPastDate,
+        canModifyHealthMeasurement: _userId == loggedUserId,
         healthMeasurement: params.healthMeasurement,
         healthMeasurementAsNull: params.healthMeasurement == null,
         workouts: params.workouts,

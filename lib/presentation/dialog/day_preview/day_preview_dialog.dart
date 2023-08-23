@@ -7,7 +7,6 @@ import '../../../domain/entity/health_measurement.dart';
 import '../../component/bloc_with_status_listener_component.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/health_measurement_info_component.dart';
-import '../../component/padding/paddings_24.dart';
 import '../../component/responsive_layout_component.dart';
 import '../../component/text/title_text_components.dart';
 import '../../formatter/date_formatter.dart';
@@ -88,7 +87,7 @@ class _FullScreenDialog extends StatelessWidget {
       floatingActionButton: const DayPreviewAddActivityButton(),
       body: SafeArea(
         child: SingleChildScrollView(
-          child: Paddings24(
+          child: _BodyPadding(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -122,6 +121,29 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 }
 
+class _BodyPadding extends StatelessWidget {
+  final Widget child;
+
+  const _BodyPadding({required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    final bool canModifyHealthMeasurement = context.select(
+      (DayPreviewBloc bloc) => bloc.state.canModifyHealthMeasurement,
+    );
+
+    return Padding(
+      padding: EdgeInsets.fromLTRB(
+        24,
+        canModifyHealthMeasurement ? 12 : 24,
+        24,
+        24,
+      ),
+      child: child,
+    );
+  }
+}
+
 class _Title extends StatelessWidget {
   const _Title();
 
@@ -138,6 +160,9 @@ class _HealthMeasurement extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool canModify = context.select(
+      (DayPreviewBloc bloc) => bloc.state.canModifyHealthMeasurement,
+    );
     final HealthMeasurement? measurement = context.select(
       (DayPreviewBloc bloc) => bloc.state.healthMeasurement,
     );
@@ -149,28 +174,29 @@ class _HealthMeasurement extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             TitleMedium(Str.of(context).dayPreviewHealthMeasurement),
-            Row(
-              children: [
-                IconButton(
-                  onPressed: () => _onEdit(context),
-                  icon: Icon(
-                    Icons.edit_outlined,
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-                ),
-                if (measurement != null)
+            if (canModify)
+              Row(
+                children: [
                   IconButton(
-                    onPressed: () => _onDelete(measurement.date),
+                    onPressed: () => _onEdit(context),
                     icon: Icon(
-                      Icons.delete_outline,
-                      color: Theme.of(context).colorScheme.error,
+                      Icons.edit_outlined,
+                      color: Theme.of(context).colorScheme.primary,
                     ),
                   ),
-              ],
-            ),
+                  if (measurement != null)
+                    IconButton(
+                      onPressed: () => _onDelete(context),
+                      icon: Icon(
+                        Icons.delete_outline,
+                        color: Theme.of(context).colorScheme.error,
+                      ),
+                    ),
+                ],
+              ),
           ],
         ),
-        const Gap16(),
+        if (canModify) const SizedBox(height: 4) else const Gap16(),
         HealthMeasurementInfo(healthMeasurement: measurement),
       ],
     );
@@ -182,7 +208,9 @@ class _HealthMeasurement extends StatelessWidget {
     ));
   }
 
-  void _onDelete(DateTime date) {
-    //TODO
+  void _onDelete(BuildContext context) {
+    context.read<DayPreviewBloc>().add(
+          const DayPreviewEventRemoveHealthMeasurement(),
+        );
   }
 }

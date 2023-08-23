@@ -43,6 +43,19 @@ void main() {
   );
 
   test(
+    'copy with canModifyHealthMeasurement',
+    () {
+      const bool expected = false;
+
+      state = state.copyWith(canModifyHealthMeasurement: expected);
+      final state2 = state.copyWith();
+
+      expect(state.canModifyHealthMeasurement, expected);
+      expect(state2.canModifyHealthMeasurement, expected);
+    },
+  );
+
+  test(
     'copy with healthMeasurement',
     () {
       final HealthMeasurement expected = createHealthMeasurement(

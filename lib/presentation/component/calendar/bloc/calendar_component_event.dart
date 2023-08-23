@@ -38,3 +38,7 @@ class CalendarComponentEventDayPressed extends CalendarComponentEvent {
 
   const CalendarComponentEventDayPressed({required this.date});
 }
+
+class CalendarComponentEventResetPressedDay extends CalendarComponentEvent {
+  const CalendarComponentEventResetPressedDay();
+}

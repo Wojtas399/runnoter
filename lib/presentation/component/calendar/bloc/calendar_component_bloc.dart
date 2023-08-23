@@ -31,6 +31,7 @@ class CalendarComponentBloc
     on<CalendarComponentEventPreviousDateRange>(_previousDateRange);
     on<CalendarComponentEventNextDateRange>(_nextDateRange);
     on<CalendarComponentEventDayPressed>(_dayPressed);
+    on<CalendarComponentEventResetPressedDay>(_resetPressedDay);
   }
 
   void _initialize(
@@ -143,6 +144,13 @@ class CalendarComponentBloc
     Emitter<CalendarComponentState> emit,
   ) {
     emit(state.copyWith(pressedDay: event.date));
+  }
+
+  void _resetPressedDay(
+    CalendarComponentEventResetPressedDay event,
+    Emitter<CalendarComponentState> emit,
+  ) {
+    emit(state.copyWith(pressedDay: null));
   }
 
   List<CalendarWeek> _createWeeks(final DateRange dateRange) {

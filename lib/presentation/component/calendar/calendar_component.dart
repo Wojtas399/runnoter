@@ -34,8 +34,7 @@ class CalendarComponent extends StatelessWidget {
         ),
         BlocListener<CalendarComponentBloc, CalendarComponentState>(
           listenWhen: (previousState, currentState) =>
-              currentState.pressedDay != null &&
-              previousState.pressedDay != currentState.pressedDay,
+              currentState.pressedDay != null,
           listener: _emitPressedDay,
         ),
       ],
@@ -51,6 +50,9 @@ class CalendarComponent extends StatelessWidget {
 
   void _emitPressedDay(BuildContext context, CalendarComponentState state) {
     if (onDayPressed != null) onDayPressed!(state.pressedDay!);
+    context.read<CalendarComponentBloc>().add(
+          const CalendarComponentEventResetPressedDay(),
+        );
   }
 }
 
