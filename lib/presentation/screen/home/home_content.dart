@@ -207,11 +207,10 @@ class _State extends State<HomeContent> {
           currentPage.name == ClientsRoute.name);
 
   Future<void> _onFloatingActionButtonPressed(RouteData currentPage) async {
+    final String? loggedUserId = await getIt<AuthService>().loggedUserId$.first;
     if (currentPage.name == BloodTestsRoute.name) {
-      navigateTo(BloodTestCreatorRoute());
+      navigateTo(BloodTestCreatorRoute(userId: loggedUserId));
     } else if (currentPage.name == RacesRoute.name) {
-      final String? loggedUserId =
-          await getIt<AuthService>().loggedUserId$.first;
       navigateTo(RaceCreatorRoute(userId: loggedUserId));
     } else if (currentPage.name == ClientsRoute.name) {
       showDialogDependingOnScreenSize(const PersonsSearchDialog(

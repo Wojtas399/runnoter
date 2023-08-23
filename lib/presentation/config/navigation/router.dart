@@ -96,7 +96,7 @@ class AppRouter extends _$AppRouter {
             ),
             AutoRoute(
               page: BloodTestCreatorRoute.page,
-              path: 'blood-test-creator/:bloodTestId',
+              path: 'blood-test-creator/:userId/:bloodTestId',
             ),
             AutoRoute(
               page: BloodTestPreviewRoute.page,

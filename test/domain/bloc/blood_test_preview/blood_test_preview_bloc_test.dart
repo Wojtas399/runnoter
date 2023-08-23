@@ -94,6 +94,12 @@ void main() {
           ),
           BloodTestPreviewState(
             status: const BlocStatusComplete(),
+            date: bloodTest.date,
+            gender: updatedUser.gender,
+            parameterResults: bloodTest.parameterResults,
+          ),
+          BloodTestPreviewState(
+            status: const BlocStatusComplete(),
             date: updatedBloodTest.date,
             gender: updatedUser.gender,
             parameterResults: updatedBloodTest.parameterResults,

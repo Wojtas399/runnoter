@@ -57,7 +57,11 @@ class _AddBloodTestButton extends StatelessWidget {
       children: [
         BigButton(
           label: Str.of(context).bloodTestsAddNewBloodTest,
-          onPressed: () => navigateTo(BloodTestCreatorRoute()),
+          onPressed: () => navigateTo(
+            BloodTestCreatorRoute(
+              userId: context.read<BloodTestsCubit>().userId,
+            ),
+          ),
         ),
       ],
     );

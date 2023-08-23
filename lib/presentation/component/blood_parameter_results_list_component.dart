@@ -393,7 +393,10 @@ class _EditableParameterValueState extends State<_EditableParameterValue> {
   @override
   Widget build(BuildContext context) {
     return TextField(
-      decoration: const InputDecoration(contentPadding: EdgeInsets.all(12)),
+      decoration: const InputDecoration(
+        contentPadding: EdgeInsets.all(12),
+        counterText: '',
+      ),
       maxLines: 1,
       keyboardType: const TextInputType.numberWithOptions(decimal: true),
       maxLength: 10,

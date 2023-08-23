@@ -26,13 +26,11 @@ class BloodTestPreviewActions extends StatelessWidget {
   }
 
   void _editTest(BuildContext context) {
-    final String? bloodTestId =
-        context.read<BloodTestPreviewBloc>().bloodTestId;
-    if (bloodTestId != null) {
-      navigateTo(
-        BloodTestCreatorRoute(bloodTestId: bloodTestId),
-      );
-    }
+    final bloodTestPreviewBloc = context.read<BloodTestPreviewBloc>();
+    navigateTo(BloodTestCreatorRoute(
+      userId: bloodTestPreviewBloc.userId,
+      bloodTestId: bloodTestPreviewBloc.bloodTestId,
+    ));
   }
 
   Future<void> _deleteTest(BuildContext context) async {
