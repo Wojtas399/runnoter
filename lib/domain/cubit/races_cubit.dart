@@ -8,13 +8,12 @@ import '../entity/race.dart';
 import '../repository/race_repository.dart';
 
 class RacesCubit extends Cubit<List<RacesFromYear>?> {
-  final String _userId;
+  final String userId;
   final RaceRepository _raceRepository;
   StreamSubscription<List<Race>?>? _racesListener;
 
-  RacesCubit({required String userId})
-      : _userId = userId,
-        _raceRepository = getIt<RaceRepository>(),
+  RacesCubit({required this.userId})
+      : _raceRepository = getIt<RaceRepository>(),
         super(null);
 
   @override
@@ -26,7 +25,7 @@ class RacesCubit extends Cubit<List<RacesFromYear>?> {
 
   void initialize() {
     _racesListener ??=
-        _raceRepository.getAllRaces(userId: _userId).listen(_onRacesChanged);
+        _raceRepository.getAllRaces(userId: userId).listen(_onRacesChanged);
   }
 
   void _onRacesChanged(final List<Race>? races) {

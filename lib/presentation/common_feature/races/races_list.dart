@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../dependency_injection.dart';
 import '../../../domain/cubit/races_cubit.dart';
 import '../../../domain/entity/race.dart';
-import '../../../domain/service/auth_service.dart';
 import '../../component/card_body_component.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/responsive_layout_component.dart';
@@ -82,7 +81,7 @@ class _RaceItem extends StatelessWidget {
             const EdgeInsets.symmetric(vertical: 16, horizontal: 32),
           ),
         ),
-        onPressed: _onPressed,
+        onPressed: () => _onPressed(context),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -103,10 +102,9 @@ class _RaceItem extends StatelessWidget {
     );
   }
 
-  Future<void> _onPressed() async {
-    final String? loggedUserId = await getIt<AuthService>().loggedUserId$.first;
+  void _onPressed(BuildContext context) {
     navigateTo(RacePreviewRoute(
-      userId: loggedUserId,
+      userId: context.read<RacesCubit>().userId,
       raceId: race.id,
     ));
   }

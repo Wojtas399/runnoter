@@ -9,14 +9,12 @@ import '../../additional_model/bloc_status.dart';
 import '../../additional_model/bloc_with_status.dart';
 import '../../entity/race.dart';
 import '../../repository/race_repository.dart';
-import '../../service/auth_service.dart';
 
 part 'race_preview_event.dart';
 part 'race_preview_state.dart';
 
 class RacePreviewBloc extends BlocWithStatus<RacePreviewEvent, RacePreviewState,
     RacePreviewBlocInfo, dynamic> {
-  final AuthService _authService;
   final RaceRepository _raceRepository;
   final String _userId;
   final String? raceId;
@@ -28,7 +26,6 @@ class RacePreviewBloc extends BlocWithStatus<RacePreviewEvent, RacePreviewState,
       status: BlocStatusInitial(),
     ),
   })  : _userId = userId,
-        _authService = getIt<AuthService>(),
         _raceRepository = getIt<RaceRepository>(),
         super(state) {
     on<RacePreviewEventInitialize>(_initialize, transformer: restartable());
@@ -40,17 +37,13 @@ class RacePreviewBloc extends BlocWithStatus<RacePreviewEvent, RacePreviewState,
     Emitter<RacePreviewState> emit,
   ) async {
     if (raceId == null) return;
-    final String? loggedUserId = await _authService.loggedUserId$.first;
     final Stream<Race?> race$ = _raceRepository.getRaceById(
       raceId: raceId!,
       userId: _userId,
     );
     await emit.forEach(
       race$,
-      onData: (Race? race) => state.copyWith(
-        canEditRaceStatus: _userId == loggedUserId,
-        race: race,
-      ),
+      onData: (Race? race) => state.copyWith(race: race),
     );
   }
 

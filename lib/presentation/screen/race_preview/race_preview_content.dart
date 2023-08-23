@@ -81,9 +81,6 @@ class _RaceStatusButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool canEditRaceStatus = context.select(
-      (RacePreviewBloc bloc) => bloc.state.canEditRaceStatus,
-    );
     final ActivityStatus? activityStatus = context.select(
       (RacePreviewBloc bloc) => bloc.state.race?.status,
     );
@@ -92,15 +89,13 @@ class _RaceStatusButton extends StatelessWidget {
       label = Str.of(context).activityStatusFinish;
     }
 
-    return canEditRaceStatus
-        ? Padding(
-            padding: const EdgeInsets.only(top: 32),
-            child: BigButton(
-              label: label,
-              onPressed: () => _onPressed(context),
-            ),
-          )
-        : const SizedBox();
+    return Padding(
+      padding: const EdgeInsets.only(top: 32),
+      child: BigButton(
+        label: label,
+        onPressed: () => _onPressed(context),
+      ),
+    );
   }
 
   void _onPressed(BuildContext context) {
