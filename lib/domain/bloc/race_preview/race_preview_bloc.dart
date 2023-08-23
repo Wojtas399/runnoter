@@ -4,6 +4,7 @@ import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../dependency_injection.dart';
+import '../../additional_model/activity_status.dart';
 import '../../additional_model/bloc_state.dart';
 import '../../additional_model/bloc_status.dart';
 import '../../additional_model/bloc_with_status.dart';
@@ -17,7 +18,7 @@ class RacePreviewBloc extends BlocWithStatus<RacePreviewEvent, RacePreviewState,
     RacePreviewBlocInfo, dynamic> {
   final RaceRepository _raceRepository;
   final String _userId;
-  final String? raceId;
+  final String raceId;
 
   RacePreviewBloc({
     required String userId,
@@ -36,14 +37,20 @@ class RacePreviewBloc extends BlocWithStatus<RacePreviewEvent, RacePreviewState,
     RacePreviewEventInitialize event,
     Emitter<RacePreviewState> emit,
   ) async {
-    if (raceId == null) return;
     final Stream<Race?> race$ = _raceRepository.getRaceById(
-      raceId: raceId!,
+      raceId: raceId,
       userId: _userId,
     );
     await emit.forEach(
       race$,
-      onData: (Race? race) => state.copyWith(race: race),
+      onData: (Race? race) => state.copyWith(
+        name: race?.name,
+        date: race?.date,
+        place: race?.place,
+        distance: race?.distance,
+        expectedDuration: race?.expectedDuration,
+        raceStatus: race?.status,
+      ),
     );
   }
 
@@ -51,8 +58,6 @@ class RacePreviewBloc extends BlocWithStatus<RacePreviewEvent, RacePreviewState,
     RacePreviewEventDeleteRace event,
     Emitter<RacePreviewState> emit,
   ) async {
-    final String? raceId = state.race?.id;
-    if (raceId == null) return;
     emitLoadingStatus(emit);
     await _raceRepository.deleteRace(raceId: raceId, userId: _userId);
     emitCompleteStatus(emit, info: RacePreviewBlocInfo.raceDeleted);

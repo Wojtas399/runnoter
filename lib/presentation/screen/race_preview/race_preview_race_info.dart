@@ -80,7 +80,7 @@ class _RaceName extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final String? raceName = context.select(
-      (RacePreviewBloc bloc) => bloc.state.race?.name,
+      (RacePreviewBloc bloc) => bloc.state.name,
     );
 
     return TitleLarge(raceName ?? '--');
@@ -93,7 +93,7 @@ class _RaceDate extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final DateTime? date = context.select(
-      (RacePreviewBloc bloc) => bloc.state.race?.date,
+      (RacePreviewBloc bloc) => bloc.state.date,
     );
 
     return NullableText(date?.toFullDate(context));
@@ -106,7 +106,7 @@ class _Place extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final String? place = context.select(
-      (RacePreviewBloc bloc) => bloc.state.race?.place,
+      (RacePreviewBloc bloc) => bloc.state.place,
     );
 
     return NullableText(place);
@@ -119,7 +119,7 @@ class _Distance extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final double? distance = context.select(
-      (RacePreviewBloc bloc) => bloc.state.race?.distance,
+      (RacePreviewBloc bloc) => bloc.state.distance,
     );
     String? distanceStr;
     if (distance != null) {
@@ -141,7 +141,7 @@ class _ExpectedDuration extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Duration? expectedDuration = context.select(
-      (RacePreviewBloc bloc) => bloc.state.race?.expectedDuration,
+      (RacePreviewBloc bloc) => bloc.state.expectedDuration,
     );
 
     return NullableText(expectedDuration?.toUIFormat());
@@ -153,12 +153,12 @@ class _ActivityStatus extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ActivityStatus? activityStatus = context.select(
-      (RacePreviewBloc bloc) => bloc.state.race?.status,
+    final ActivityStatus? raceStatus = context.select(
+      (RacePreviewBloc bloc) => bloc.state.raceStatus,
     );
 
-    return activityStatus == null
+    return raceStatus == null
         ? const NullableText(null)
-        : ActivityStatusInfo(activityStatus: activityStatus);
+        : ActivityStatusInfo(activityStatus: raceStatus);
   }
 }

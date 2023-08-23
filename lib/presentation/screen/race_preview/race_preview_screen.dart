@@ -23,10 +23,10 @@ class RacePreviewScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return userId == null
+    return userId == null || raceId == null
         ? const PageNotFound()
         : BlocProvider(
-            create: (_) => RacePreviewBloc(userId: userId!, raceId: raceId)
+            create: (_) => RacePreviewBloc(userId: userId!, raceId: raceId!)
               ..add(const RacePreviewEventInitialize()),
             child: const _BlocListener(
               child: RacePreviewContent(),

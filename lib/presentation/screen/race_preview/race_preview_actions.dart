@@ -22,12 +22,9 @@ class RacePreviewActions extends StatelessWidget {
   }
 
   void _editRace(BuildContext context) {
-    final String? raceId = context.read<RacePreviewBloc>().state.race?.id;
-    if (raceId != null) {
-      navigateTo(
-        RaceCreatorRoute(raceId: raceId),
-      );
-    }
+    navigateTo(RaceCreatorRoute(
+      raceId: context.read<RacePreviewBloc>().raceId,
+    ));
   }
 
   Future<void> _deleteRace(BuildContext context) async {

@@ -1,23 +1,58 @@
 part of 'race_preview_bloc.dart';
 
 class RacePreviewState extends BlocState<RacePreviewState> {
-  final Race? race;
+  final String? name;
+  final DateTime? date;
+  final String? place;
+  final double? distance;
+  final Duration? expectedDuration;
+  final ActivityStatus? raceStatus;
 
   const RacePreviewState({
     required super.status,
-    this.race,
+    this.name,
+    this.date,
+    this.place,
+    this.distance,
+    this.expectedDuration,
+    this.raceStatus,
   });
 
   @override
-  List<Object?> get props => [status, race];
+  List<Object?> get props => [
+        status,
+        name,
+        date,
+        place,
+        distance,
+        expectedDuration,
+        raceStatus,
+      ];
+
+  bool get isRaceLoaded =>
+      name != null &&
+      date != null &&
+      place != null &&
+      distance != null &&
+      raceStatus != null;
 
   @override
   RacePreviewState copyWith({
-    BlocStatus? status,
-    Race? race,
+    final BlocStatus? status,
+    final String? name,
+    final DateTime? date,
+    final String? place,
+    final double? distance,
+    final Duration? expectedDuration,
+    final ActivityStatus? raceStatus,
   }) =>
       RacePreviewState(
         status: status ?? const BlocStatusComplete(),
-        race: race ?? this.race,
+        name: name ?? this.name,
+        date: date ?? this.date,
+        place: place ?? this.place,
+        distance: distance ?? this.distance,
+        expectedDuration: expectedDuration ?? this.expectedDuration,
+        raceStatus: raceStatus ?? this.raceStatus,
       );
 }
