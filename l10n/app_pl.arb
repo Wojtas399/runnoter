@@ -827,11 +827,6 @@
   "@clientDetailsTitle": {
     "description": "Title of the client details section"
   },
-  "@__________CLIENT_WORKOUTS__________": {},
-  "clientWorkoutsTitle": "Treningi",
-  "@clientWorkoutsTitle": {
-    "description": "Title of the client workouts screen"
-  },
   "@__________CLIENT_STATS__________": {},
   "clientStatsTitle": "Statystyki",
   "@clientStatsTitle": {

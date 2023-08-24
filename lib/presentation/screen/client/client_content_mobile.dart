@@ -81,7 +81,7 @@ class _TabBar extends StatelessWidget implements PreferredSizeWidget {
       onTap: onPageChanged,
       labelStyle: Theme.of(context).textTheme.labelSmall,
       tabs: [
-        Tab(icon: const Icon(Icons.event_note), text: str.clientWorkoutsTitle),
+        Tab(icon: const Icon(Icons.event_note), text: str.calendarTitle),
         Tab(icon: const Icon(Icons.bar_chart), text: str.clientStatsTitle),
         Tab(icon: const Icon(Icons.emoji_events), text: str.racesTitle),
         Tab(icon: const Icon(Icons.water_drop), text: str.bloodTestsTitle),

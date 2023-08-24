@@ -6,6 +6,7 @@ import '../../../domain/bloc/client/client_bloc.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/gap/gap_horizontal_components.dart';
 import '../../component/text/title_text_components.dart';
+import '../../extension/context_extensions.dart';
 import 'client_details.dart';
 
 class ClientContentDesktop extends StatelessWidget {
@@ -38,10 +39,17 @@ class ClientContentDesktop extends StatelessWidget {
       body: SafeArea(
         child: Row(
           children: [
-            _Drawer(
-              activePageIndex: activePageIndex,
-              onPageChanged: onPageChanged,
-            ),
+            if (context.isDesktopSize)
+              _Drawer(
+                activePageIndex: activePageIndex,
+                onPageChanged: onPageChanged,
+              ),
+            if (context.isTabletSize)
+              _Rail(
+                activePageIndex: activePageIndex,
+                backgroundColor: bckColor,
+                onPageChanged: onPageChanged,
+              ),
             Expanded(child: child),
           ],
         ),
@@ -74,10 +82,7 @@ class _Drawer extends StatelessWidget {
   final int activePageIndex;
   final Function(int destinationIndex) onPageChanged;
 
-  const _Drawer({
-    required this.activePageIndex,
-    required this.onPageChanged,
-  });
+  const _Drawer({required this.activePageIndex, required this.onPageChanged});
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +94,7 @@ class _Drawer extends StatelessWidget {
         NavigationDrawerDestination(
           icon: const Icon(Icons.event_note_outlined),
           selectedIcon: const Icon(Icons.event_note),
-          label: Text(Str.of(context).clientWorkoutsTitle),
+          label: Text(Str.of(context).calendarTitle),
         ),
         NavigationDrawerDestination(
           icon: const Icon(Icons.analytics_outlined),
@@ -102,6 +107,51 @@ class _Drawer extends StatelessWidget {
           label: Text(Str.of(context).racesTitle),
         ),
         NavigationDrawerDestination(
+          icon: const Icon(Icons.water_drop_outlined),
+          selectedIcon: const Icon(Icons.water_drop),
+          label: Text(Str.of(context).bloodTestsTitle),
+        ),
+      ],
+    );
+  }
+}
+
+class _Rail extends StatelessWidget {
+  final int activePageIndex;
+  final Color backgroundColor;
+  final Function(int destinationIndex) onPageChanged;
+
+  const _Rail({
+    required this.activePageIndex,
+    required this.backgroundColor,
+    required this.onPageChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return NavigationRail(
+      labelType: NavigationRailLabelType.all,
+      selectedIndex: activePageIndex,
+      onDestinationSelected: onPageChanged,
+      backgroundColor: backgroundColor,
+      groupAlignment: -0.90,
+      destinations: [
+        NavigationRailDestination(
+          icon: const Icon(Icons.event_note_outlined),
+          selectedIcon: const Icon(Icons.event_note),
+          label: Text(Str.of(context).calendarTitle),
+        ),
+        NavigationRailDestination(
+          icon: const Icon(Icons.analytics_outlined),
+          selectedIcon: const Icon(Icons.analytics),
+          label: Text(Str.of(context).clientStatsTitle),
+        ),
+        NavigationRailDestination(
+          icon: const Icon(Icons.emoji_events_outlined),
+          selectedIcon: const Icon(Icons.emoji_events),
+          label: Text(Str.of(context).racesTitle),
+        ),
+        NavigationRailDestination(
           icon: const Icon(Icons.water_drop_outlined),
           selectedIcon: const Icon(Icons.water_drop),
           label: Text(Str.of(context).bloodTestsTitle),

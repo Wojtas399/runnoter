@@ -225,8 +225,6 @@
   "personsSearchUserAlreadyHasCoachInfoMessage": "It seems that this user recently started working with a coach. For this reason you cannot send a coaching request.",
   "@__________CLIENT_DETAILS__________": {},
   "clientDetailsTitle": "Client details",
-  "@__________CLIENT_WORKOUTS__________": {},
-  "clientWorkoutsTitle": "Workouts",
   "@__________CLIENT_STATS__________": {},
   "clientStatsTitle": "Statistics",
   "@__________ACTIVITY_STATUS_PARAMS__________": {},
