@@ -27,6 +27,10 @@ class DateService {
     );
   }
 
+  DateTime getFirstDayOfTheYear(int year) => DateTime(year);
+
+  DateTime getLastDayOfTheYear(int year) => DateTime(year, 12, 31);
+
   bool isDateFromRange({
     required DateTime date,
     required DateTime startDate,

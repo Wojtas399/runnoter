@@ -32,7 +32,7 @@ void main() {
 
   test(
     'get first day of the month, '
-    'should return first day of the month which includes given day',
+    'should return first day of given month',
     () {
       const int month = 4;
       const int year = 2023;
@@ -47,7 +47,7 @@ void main() {
 
   test(
     'get last day of the month, '
-    'should return last day of the month which includes given date',
+    'should return last day of given month',
     () {
       const int month = 4;
       const int year = 2023;
@@ -56,6 +56,32 @@ void main() {
       final DateTime lastDayOfMonth = service.getLastDayOfTheMonth(month, year);
 
       expect(lastDayOfMonth, expectedDay);
+    },
+  );
+
+  test(
+    'get first day of the year, '
+    'should return first day of given year',
+    () {
+      const int year = 2023;
+      final DateTime expectedDay = DateTime(2023, 1, 1);
+
+      final DateTime firstDayOfTheYear = service.getFirstDayOfTheYear(year);
+
+      expect(firstDayOfTheYear, expectedDay);
+    },
+  );
+
+  test(
+    'get last day of the year, '
+    'should return last day of given year',
+    () {
+      const int year = 2023;
+      final DateTime expectedDay = DateTime(2023, 12, 31);
+
+      final DateTime lastDayOfTheYear = service.getLastDayOfTheYear(year);
+
+      expect(lastDayOfTheYear, expectedDay);
     },
   );
 
