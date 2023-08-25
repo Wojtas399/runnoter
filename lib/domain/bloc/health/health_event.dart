@@ -4,44 +4,34 @@ abstract class HealthEvent {
   const HealthEvent();
 }
 
-class HealthEventInitialize extends HealthEvent {
-  const HealthEventInitialize();
+class HealthEventInitializeTodayMeasurementListener extends HealthEvent {
+  const HealthEventInitializeTodayMeasurementListener();
 }
 
-class HealthEventMeasurementsFromDateRangeUpdated extends HealthEvent {
-  final List<HealthMeasurement>? measurements;
-
-  const HealthEventMeasurementsFromDateRangeUpdated({
-    required this.measurements,
-  });
+class HealthEventInitializeChartDateRangeListener extends HealthEvent {
+  const HealthEventInitializeChartDateRangeListener();
 }
 
-class HealthEventAddTodayMeasurement extends HealthEvent {
-  final int restingHeartRate;
-  final double fastingWeight;
+class HealthEventChartDateRangeUpdated extends HealthEvent {
+  final ChartDateRangeState chartDateRange;
 
-  const HealthEventAddTodayMeasurement({
-    required this.restingHeartRate,
-    required this.fastingWeight,
-  });
+  const HealthEventChartDateRangeUpdated({required this.chartDateRange});
 }
 
 class HealthEventDeleteTodayMeasurement extends HealthEvent {
   const HealthEventDeleteTodayMeasurement();
 }
 
-class HealthEventChangeChartRangeType extends HealthEvent {
-  final ChartRange chartRangeType;
+class HealthEventChangeChartDateRangeType extends HealthEvent {
+  final DateRangeType dateRangeType;
 
-  const HealthEventChangeChartRangeType({
-    required this.chartRangeType,
-  });
+  const HealthEventChangeChartDateRangeType({required this.dateRangeType});
 }
 
-class HealthEventPreviousChartRange extends HealthEvent {
-  const HealthEventPreviousChartRange();
+class HealthEventPreviousChartDateRange extends HealthEvent {
+  const HealthEventPreviousChartDateRange();
 }
 
-class HealthEventNextChartRange extends HealthEvent {
-  const HealthEventNextChartRange();
+class HealthEventNextChartDateRange extends HealthEvent {
+  const HealthEventNextChartDateRange();
 }

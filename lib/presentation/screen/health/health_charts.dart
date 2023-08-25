@@ -4,7 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 import '../../../domain/bloc/health/health_bloc.dart';
-import '../../../domain/service/health_chart_service.dart';
+import '../../../domain/cubit/chart_date_range_cubit.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/text/label_text_components.dart';
 import '../../formatter/date_formatter.dart';
@@ -35,16 +35,11 @@ class _RestingHeartRateChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ChartRange chartRange = context.select(
-      (HealthBloc bloc) => bloc.state.chartRange,
-    );
     final List<HealthChartPoint>? points = context.select(
       (HealthBloc bloc) => bloc.state.restingHeartRatePoints,
     );
 
-    return points != null
-        ? _LineChart(points: points, chartRange: chartRange)
-        : const SizedBox();
+    return points != null ? _LineChart(points: points) : const SizedBox();
   }
 }
 
@@ -53,67 +48,61 @@ class _FastingWeightChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ChartRange chartRange = context.select(
-      (HealthBloc bloc) => bloc.state.chartRange,
-    );
     final List<HealthChartPoint>? points = context.select(
       (HealthBloc bloc) => bloc.state.fastingWeightPoints,
     );
 
-    if (points != null) {
-      return _LineChart(
-        points: points,
-        chartRange: chartRange,
-      );
-    }
-    return const SizedBox();
+    return points != null ? _LineChart(points: points) : const SizedBox();
   }
 }
 
 class _LineChart extends StatelessWidget {
   final List<HealthChartPoint> points;
-  final ChartRange chartRange;
 
-  const _LineChart({
-    required this.points,
-    required this.chartRange,
-  });
+  const _LineChart({required this.points});
 
   @override
   Widget build(BuildContext context) {
-    return SfCartesianChart(
-      primaryXAxis: CategoryAxis(
-        interval: switch (chartRange) {
-          ChartRange.week => 1,
-          ChartRange.month => 7,
-          ChartRange.year => 1,
-        },
-      ),
-      series: <LineSeries<HealthChartPoint, String>>[
-        LineSeries<HealthChartPoint, String>(
-          dataSource: points,
-          xValueMapper: (HealthChartPoint point, _) =>
-              _mapDateToLabel(context, point.date, chartRange),
-          yValueMapper: (HealthChartPoint point, _) => point.value,
-          color: Theme.of(context).colorScheme.primary,
-          markerSettings: MarkerSettings(
-            isVisible: true,
-            color: Theme.of(context).colorScheme.primary,
-            borderColor: Theme.of(context).colorScheme.primary,
-          ),
-        ),
-      ],
+    final DateRangeType? dateRangeType = context.select(
+      (HealthBloc bloc) => bloc.state.dateRangeType,
     );
+
+    return dateRangeType == null
+        ? const CircularProgressIndicator()
+        : SfCartesianChart(
+            primaryXAxis: CategoryAxis(
+              interval: switch (dateRangeType) {
+                DateRangeType.week => 1,
+                DateRangeType.month => 7,
+                DateRangeType.year => 1,
+              },
+            ),
+            series: <LineSeries<HealthChartPoint, String>>[
+              LineSeries<HealthChartPoint, String>(
+                dataSource: points,
+                xValueMapper: (HealthChartPoint point, _) =>
+                    _mapDateToLabel(context, point.date, dateRangeType),
+                yValueMapper: (HealthChartPoint point, _) => point.value,
+                color: Theme.of(context).colorScheme.primary,
+                markerSettings: MarkerSettings(
+                  isVisible: true,
+                  color: Theme.of(context).colorScheme.primary,
+                  borderColor: Theme.of(context).colorScheme.primary,
+                ),
+              ),
+            ],
+          );
   }
 
   String _mapDateToLabel(
     BuildContext context,
     DateTime date,
-    ChartRange chartRange,
+    DateRangeType dateRangeType,
   ) =>
-      switch (chartRange) {
-        ChartRange.week => date.toDayAbbreviation(context),
-        ChartRange.month => '${twoDigits(date.day)}.${twoDigits(date.month)}',
-        ChartRange.year => date.toMonthAbbreviation(context),
+      switch (dateRangeType) {
+        DateRangeType.week => date.toDayAbbreviation(context),
+        DateRangeType.month =>
+          '${twoDigits(date.day)}.${twoDigits(date.month)}',
+        DateRangeType.year => date.toMonthAbbreviation(context),
       };
 }

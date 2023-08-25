@@ -2,18 +2,16 @@ part of 'health_bloc.dart';
 
 class HealthState extends BlocState {
   final HealthMeasurement? todayMeasurement;
-  final ChartRange chartRange;
-  final DateTime? chartStartDate;
-  final DateTime? chartEndDate;
+  final DateRangeType? dateRangeType;
+  final DateRange? dateRange;
   final List<HealthChartPoint>? restingHeartRatePoints;
   final List<HealthChartPoint>? fastingWeightPoints;
 
   const HealthState({
     required super.status,
     this.todayMeasurement,
-    required this.chartRange,
-    this.chartStartDate,
-    this.chartEndDate,
+    this.dateRangeType,
+    this.dateRange,
     this.restingHeartRatePoints,
     this.fastingWeightPoints,
   });
@@ -22,9 +20,8 @@ class HealthState extends BlocState {
   List<Object?> get props => [
         status,
         todayMeasurement,
-        chartRange,
-        chartStartDate,
-        chartEndDate,
+        dateRangeType,
+        dateRange,
         restingHeartRatePoints,
         fastingWeightPoints,
       ];
@@ -34,9 +31,8 @@ class HealthState extends BlocState {
     BlocStatus? status,
     HealthMeasurement? todayMeasurement,
     bool removedTodayMeasurement = false,
-    ChartRange? chartRange,
-    DateTime? chartStartDate,
-    DateTime? chartEndDate,
+    DateRangeType? dateRangeType,
+    DateRange? dateRange,
     List<HealthChartPoint>? restingHeartRatePoints,
     List<HealthChartPoint>? fastingWeightPoints,
   }) =>
@@ -45,11 +41,20 @@ class HealthState extends BlocState {
         todayMeasurement: removedTodayMeasurement
             ? null
             : todayMeasurement ?? this.todayMeasurement,
-        chartRange: chartRange ?? this.chartRange,
-        chartStartDate: chartStartDate ?? this.chartStartDate,
-        chartEndDate: chartEndDate ?? this.chartEndDate,
+        dateRangeType: dateRangeType ?? this.dateRangeType,
+        dateRange: dateRange ?? this.dateRange,
         restingHeartRatePoints:
             restingHeartRatePoints ?? this.restingHeartRatePoints,
         fastingWeightPoints: fastingWeightPoints ?? this.fastingWeightPoints,
       );
+}
+
+class HealthChartPoint extends Equatable {
+  final DateTime date;
+  final num? value;
+
+  const HealthChartPoint({required this.date, required this.value});
+
+  @override
+  List<Object?> get props => [date, value];
 }

@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/bloc/health/health_bloc.dart';
-import '../../../domain/service/health_chart_service.dart';
+import '../../../domain/cubit/chart_date_range_cubit.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/gap/gap_horizontal_components.dart';
 import '../../component/text/title_text_components.dart';
@@ -54,8 +54,8 @@ class _ChartRangeType extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ChartRange chartRange = context.select(
-      (HealthBloc bloc) => bloc.state.chartRange,
+    final DateRangeType? dateRangeType = context.select(
+      (HealthBloc bloc) => bloc.state.dateRangeType,
     );
     const Widget gap = GapHorizontal16();
 
@@ -64,34 +64,28 @@ class _ChartRangeType extends StatelessWidget {
       children: [
         _ChartRangeTypeButton(
           label: Str.of(context).healthChartRangeWeek,
-          isSelected: chartRange == ChartRange.week,
-          onPressed: () {
-            _onButtonPressed(context, ChartRange.week);
-          },
+          isSelected: dateRangeType == DateRangeType.week,
+          onPressed: () => _onPressed(context, DateRangeType.week),
         ),
         gap,
         _ChartRangeTypeButton(
           label: Str.of(context).healthChartRangeMonth,
-          isSelected: chartRange == ChartRange.month,
-          onPressed: () {
-            _onButtonPressed(context, ChartRange.month);
-          },
+          isSelected: dateRangeType == DateRangeType.month,
+          onPressed: () => _onPressed(context, DateRangeType.month),
         ),
         gap,
         _ChartRangeTypeButton(
           label: Str.of(context).healthChartRangeYear,
-          isSelected: chartRange == ChartRange.year,
-          onPressed: () {
-            _onButtonPressed(context, ChartRange.year);
-          },
+          isSelected: dateRangeType == DateRangeType.year,
+          onPressed: () => _onPressed(context, DateRangeType.year),
         ),
       ],
     );
   }
 
-  void _onButtonPressed(BuildContext context, ChartRange chartRange) {
+  void _onPressed(BuildContext context, DateRangeType dateRangeType) {
     context.read<HealthBloc>().add(
-          HealthEventChangeChartRangeType(chartRangeType: chartRange),
+          HealthEventChangeChartDateRangeType(dateRangeType: dateRangeType),
         );
   }
 }
@@ -157,7 +151,7 @@ class _PreviousRangeButton extends StatelessWidget {
 
   void _onPressed(BuildContext context) {
     context.read<HealthBloc>().add(
-          const HealthEventPreviousChartRange(),
+          const HealthEventPreviousChartDateRange(),
         );
   }
 }
@@ -175,27 +169,29 @@ class _CurrentRangeLabel extends StatelessWidget {
 
     final DateTime startDate = chartPoints.first.date;
     final DateTime endDate = chartPoints.last.date;
-    final ChartRange chartRange = context.select(
-      (HealthBloc bloc) => bloc.state.chartRange,
+    final DateRangeType? dateRangeType = context.select(
+      (HealthBloc bloc) => bloc.state.dateRangeType,
     );
 
-    return TitleMedium(
-      _createLabel(context, startDate, endDate, chartRange),
-    );
+    return dateRangeType == null
+        ? const SizedBox()
+        : TitleMedium(
+            _createLabel(context, startDate, endDate, dateRangeType),
+          );
   }
 
   String _createLabel(
     BuildContext context,
     DateTime startDate,
     DateTime endDate,
-    ChartRange chartRange,
+    DateRangeType dateRangeType,
   ) =>
-      switch (chartRange) {
-        ChartRange.week =>
+      switch (dateRangeType) {
+        DateRangeType.week =>
           '${startDate.toDateWithDots()} - ${endDate.toDateWithDots()}',
-        ChartRange.month =>
+        DateRangeType.month =>
           '${startDate.toMonthName(context)} ${startDate.year}',
-        ChartRange.year => '${startDate.year}',
+        DateRangeType.year => '${startDate.year}',
       };
 }
 
@@ -214,7 +210,7 @@ class _NextRangeButton extends StatelessWidget {
 
   void _onPressed(BuildContext context) {
     context.read<HealthBloc>().add(
-          const HealthEventNextChartRange(),
+          const HealthEventNextChartDateRange(),
         );
   }
 }
