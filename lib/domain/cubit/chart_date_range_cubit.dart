@@ -4,142 +4,149 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../common/date_service.dart';
 import '../../dependency_injection.dart';
 
-class ChartDateRangeCubit extends Cubit<ChartDateRange?> {
+class ChartDateRangeCubit extends Cubit<ChartDateRangeState> {
   final DateService _dateService;
 
-  ChartDateRangeCubit({ChartDateRange? initialDateRange})
-      : _dateService = getIt<DateService>(),
-        super(initialDateRange);
+  ChartDateRangeCubit({
+    ChartDateRangeState initialState = const ChartDateRangeState(
+      dateRangeType: DateRangeType.week,
+    ),
+  })  : _dateService = getIt<DateService>(),
+        super(initialState);
 
-  void setWeekDateRange() {
+  void initializeNewDateRangeType(DateRangeType dateRangeType) {
     final DateTime today = _dateService.getToday();
-    final ChartDateRangeWeek weekDateRange = ChartDateRangeWeek(
-      firstDateOfTheWeek: _dateService.getFirstDayOfTheWeek(today),
-      lastDateOfTheWeek: _dateService.getLastDayOfTheWeek(today),
-    );
-    emit(weekDateRange);
-  }
-
-  void setMonthDateRange() {
-    final DateTime today = _dateService.getToday();
-    final ChartDateRangeMonth monthDateRange = ChartDateRangeMonth(
-      month: today.month,
-      year: today.year,
-    );
-    emit(monthDateRange);
-  }
-
-  void setYearDateRange() {
-    final DateTime today = _dateService.getToday();
-    final ChartDateRangeYear yearDateRange = ChartDateRangeYear(
-      year: today.year,
-    );
-    emit(yearDateRange);
+    final DateRange newDateRange = switch (dateRangeType) {
+      DateRangeType.week => DateRange(
+          startDate: _dateService.getFirstDayOfTheWeek(today),
+          endDate: _dateService.getLastDayOfTheWeek(today),
+        ),
+      DateRangeType.month => DateRange(
+          startDate:
+              _dateService.getFirstDayOfTheMonth(today.month, today.year),
+          endDate: _dateService.getLastDayOfTheMonth(today.month, today.year),
+        ),
+      DateRangeType.year => DateRange(
+          startDate: _dateService.getFirstDayOfTheYear(today.year),
+          endDate: _dateService.getLastDayOfTheYear(today.year),
+        ),
+    };
+    emit(state.copyWith(
+      dateRangeType: dateRangeType,
+      dateRange: newDateRange,
+    ));
   }
 
   void nextDateRange() {
-    final ChartDateRange? currentDateRange = state;
+    final DateRange? currentDateRange = state.dateRange;
     if (currentDateRange == null) return;
-    final ChartDateRange newDateRange = switch (currentDateRange) {
-      ChartDateRangeWeek() => _calculateNextWeek(),
-      ChartDateRangeMonth() => _calculateNextMonth(),
-      ChartDateRangeYear() => ChartDateRangeYear(
-          year: currentDateRange.year + 1,
-        ),
+    final DateRange newDateRange = switch (state.dateRangeType) {
+      DateRangeType.week => _calculateDateRangeOfNextWeek(),
+      DateRangeType.month => _calculateDateRangeOfNextMonth(),
+      DateRangeType.year => _calculateDateRangeOfNextYear(),
     };
-    emit(newDateRange);
+    emit(state.copyWith(dateRange: newDateRange));
   }
 
   void previousDateRange() {
-    final ChartDateRange? currentDateRange = state;
+    final DateRange? currentDateRange = state.dateRange;
     if (currentDateRange == null) return;
-    final ChartDateRange newDateRange = switch (currentDateRange) {
-      ChartDateRangeWeek() => _calculatePreviousWeek(),
-      ChartDateRangeMonth() => _calculatePreviousMonth(),
-      ChartDateRangeYear() => ChartDateRangeYear(
-          year: currentDateRange.year - 1,
-        ),
+    final DateRange newDateRange = switch (state.dateRangeType) {
+      DateRangeType.week => _calculateDateRangeOfPreviousWeek(),
+      DateRangeType.month => _calculateDateRangeOfPreviousMonth(),
+      DateRangeType.year => _calculateDateRangeOfPreviousYear(),
     };
-    emit(newDateRange);
+    emit(state.copyWith(dateRange: newDateRange));
   }
 
-  ChartDateRangeWeek _calculateNextWeek() {
-    final ChartDateRangeWeek currentWeek = state as ChartDateRangeWeek;
-    return ChartDateRangeWeek(
-      firstDateOfTheWeek: currentWeek.firstDateOfTheWeek.add(
-        const Duration(days: 7),
-      ),
-      lastDateOfTheWeek: currentWeek.lastDateOfTheWeek.add(
-        const Duration(days: 7),
+  DateRange _calculateDateRangeOfNextWeek() {
+    final DateRange currentDateRange = state.dateRange!;
+    return DateRange(
+      startDate: currentDateRange.startDate.add(const Duration(days: 7)),
+      endDate: currentDateRange.endDate.add(const Duration(days: 7)),
+    );
+  }
+
+  DateRange _calculateDateRangeOfPreviousWeek() {
+    final DateRange currentDateRange = state.dateRange!;
+    return DateRange(
+      startDate: currentDateRange.startDate.subtract(const Duration(days: 7)),
+      endDate: currentDateRange.endDate.subtract(const Duration(days: 7)),
+    );
+  }
+
+  DateRange _calculateDateRangeOfNextMonth() {
+    final int currentMonth = (state.dateRange!).startDate.month;
+    final int currentYear = (state.dateRange!).startDate.year;
+    final DateTime firstDayOfNextMonth =
+        DateTime(currentYear, currentMonth + 1);
+    return DateRange(
+      startDate: firstDayOfNextMonth,
+      endDate: _dateService.getLastDayOfTheMonth(
+        firstDayOfNextMonth.month,
+        firstDayOfNextMonth.year,
       ),
     );
   }
 
-  ChartDateRangeWeek _calculatePreviousWeek() {
-    final ChartDateRangeWeek currentWeek = state as ChartDateRangeWeek;
-    return ChartDateRangeWeek(
-      firstDateOfTheWeek: currentWeek.firstDateOfTheWeek.subtract(
-        const Duration(days: 7),
-      ),
-      lastDateOfTheWeek: currentWeek.lastDateOfTheWeek.subtract(
-        const Duration(days: 7),
+  DateRange _calculateDateRangeOfPreviousMonth() {
+    final int currentMonth = (state.dateRange!).startDate.month;
+    final int currentYear = (state.dateRange!).startDate.year;
+    final DateTime firstDayOfPreviousMonth =
+        DateTime(currentYear, currentMonth - 1);
+    return DateRange(
+      startDate: firstDayOfPreviousMonth,
+      endDate: _dateService.getLastDayOfTheMonth(
+        firstDayOfPreviousMonth.month,
+        firstDayOfPreviousMonth.year,
       ),
     );
   }
 
-  ChartDateRangeMonth _calculateNextMonth() {
-    final ChartDateRangeMonth currentMonth = state as ChartDateRangeMonth;
-    final DateTime nextMonthDate =
-        DateTime(currentMonth.year, currentMonth.month + 1);
-    return ChartDateRangeMonth(
-      month: nextMonthDate.month,
-      year: nextMonthDate.year,
+  DateRange _calculateDateRangeOfNextYear() {
+    final int nextYear = (state.dateRange!).startDate.year + 1;
+    return DateRange(
+      startDate: _dateService.getFirstDayOfTheYear(nextYear),
+      endDate: _dateService.getLastDayOfTheYear(nextYear),
     );
   }
 
-  ChartDateRangeMonth _calculatePreviousMonth() {
-    final ChartDateRangeMonth currentMonth = state as ChartDateRangeMonth;
-    final DateTime previousMonthDate =
-        DateTime(currentMonth.year, currentMonth.month - 1);
-    return ChartDateRangeMonth(
-      month: previousMonthDate.month,
-      year: previousMonthDate.year,
+  DateRange _calculateDateRangeOfPreviousYear() {
+    final int previousYear = (state.dateRange!).startDate.year - 1;
+    return DateRange(
+      startDate: _dateService.getFirstDayOfTheYear(previousYear),
+      endDate: _dateService.getLastDayOfTheYear(previousYear),
     );
   }
 }
 
-sealed class ChartDateRange extends Equatable {
-  const ChartDateRange();
-}
+class ChartDateRangeState extends Equatable {
+  final DateRangeType dateRangeType;
+  final DateRange? dateRange;
 
-class ChartDateRangeWeek extends ChartDateRange {
-  final DateTime firstDateOfTheWeek;
-  final DateTime lastDateOfTheWeek;
-
-  const ChartDateRangeWeek({
-    required this.firstDateOfTheWeek,
-    required this.lastDateOfTheWeek,
-  });
+  const ChartDateRangeState({required this.dateRangeType, this.dateRange});
 
   @override
-  List<Object?> get props => [firstDateOfTheWeek, lastDateOfTheWeek];
+  List<Object?> get props => [dateRangeType, dateRange];
+
+  ChartDateRangeState copyWith({
+    DateRangeType? dateRangeType,
+    DateRange? dateRange,
+  }) =>
+      ChartDateRangeState(
+        dateRangeType: dateRangeType ?? this.dateRangeType,
+        dateRange: dateRange ?? this.dateRange,
+      );
 }
 
-class ChartDateRangeMonth extends ChartDateRange {
-  final int month;
-  final int year;
+enum DateRangeType { week, month, year }
 
-  const ChartDateRangeMonth({required this.month, required this.year});
+class DateRange extends Equatable {
+  final DateTime startDate;
+  final DateTime endDate;
 
-  @override
-  List<Object?> get props => [month, year];
-}
-
-class ChartDateRangeYear extends ChartDateRange {
-  final int year;
-
-  const ChartDateRangeYear({required this.year});
+  const DateRange({required this.startDate, required this.endDate});
 
   @override
-  List<Object?> get props => [year];
+  List<Object?> get props => [startDate, endDate];
 }
