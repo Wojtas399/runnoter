@@ -14,7 +14,6 @@ import 'package:runnoter/domain/entity/race.dart';
 import 'package:runnoter/domain/entity/workout.dart';
 import 'package:runnoter/domain/repository/race_repository.dart';
 import 'package:runnoter/domain/repository/workout_repository.dart';
-import 'package:runnoter/domain/service/auth_service.dart';
 
 import '../../../creators/activity_status_creator.dart';
 import '../../../creators/race_creator.dart';
@@ -23,18 +22,17 @@ import '../../../mock/common/mock_date_service.dart';
 import '../../../mock/domain/cubit/mock_chart_date_range_cubit.dart';
 import '../../../mock/domain/repository/mock_race_repository.dart';
 import '../../../mock/domain/repository/mock_workout_repository.dart';
-import '../../../mock/domain/service/mock_auth_service.dart';
 
 void main() {
-  final authService = MockAuthService();
   final workoutRepository = MockWorkoutRepository();
   final raceRepository = MockRaceRepository();
   final chartDateRangeCubit = MockChartDateRangeCubit();
   final dateService = MockDateService();
-  const String loggedUserId = 'u1';
+  const String userId = 'u1';
+
+  MileageBloc createBloc() => MileageBloc(userId: userId);
 
   setUpAll(() {
-    GetIt.I.registerFactory<AuthService>(() => authService);
     GetIt.I.registerSingleton<WorkoutRepository>(workoutRepository);
     GetIt.I.registerSingleton<RaceRepository>(raceRepository);
     GetIt.I.registerFactory<ChartDateRangeCubit>(() => chartDateRangeCubit);
@@ -42,7 +40,6 @@ void main() {
   });
 
   tearDown(() {
-    reset(authService);
     reset(workoutRepository);
     reset(raceRepository);
     reset(chartDateRangeCubit);
@@ -80,12 +77,11 @@ void main() {
       blocTest(
         "should set listener of chart date range cubit's state and "
         'should initialize chart date range cubit with year date range type',
-        build: () => MileageBloc(),
+        build: () => createBloc(),
         setUp: () {
           chartDateRangeCubit.mockStream(
             expectedStream: chartDateRange$.stream,
           );
-          authService.mockGetLoggedUserId(userId: loggedUserId);
           workoutRepository.mockGetWorkoutsByDateRange();
           raceRepository.mockGetRacesByDateRange();
           dateService.mockAreDatesTheSame(expected: false);
@@ -218,9 +214,8 @@ void main() {
       blocTest(
         'should set listener of workouts and races from the week and '
         'should calculate mileage for all days from week',
-        build: () => MileageBloc(),
+        build: () => createBloc(),
         setUp: () {
-          authService.mockGetLoggedUserId(userId: loggedUserId);
           workoutRepository.mockGetWorkoutsByDateRange(
             workoutsStream: workouts$.stream,
           );
@@ -283,14 +278,14 @@ void main() {
             () => workoutRepository.getWorkoutsByDateRange(
               startDate: startDate,
               endDate: endDate,
-              userId: loggedUserId,
+              userId: userId,
             ),
           ).called(1);
           verify(
             () => raceRepository.getRacesByDateRange(
               startDate: startDate,
               endDate: endDate,
-              userId: loggedUserId,
+              userId: userId,
             ),
           ).called(1);
         },
@@ -376,9 +371,8 @@ void main() {
       blocTest(
         'should set listener of workouts and races from the year and '
         'should calculate mileage for all months from the year',
-        build: () => MileageBloc(),
+        build: () => createBloc(),
         setUp: () {
-          authService.mockGetLoggedUserId(userId: loggedUserId);
           workoutRepository.mockGetWorkoutsByDateRange(
             workoutsStream: workouts$.stream,
           );
@@ -421,14 +415,14 @@ void main() {
             () => workoutRepository.getWorkoutsByDateRange(
               startDate: startDate,
               endDate: endDate,
-              userId: loggedUserId,
+              userId: userId,
             ),
           ).called(1);
           verify(
             () => raceRepository.getRacesByDateRange(
               startDate: startDate,
               endDate: endDate,
-              userId: loggedUserId,
+              userId: userId,
             ),
           ).called(1);
         },
@@ -440,7 +434,7 @@ void main() {
     'chart date range updated, '
     'month, '
     'should do nothing',
-    build: () => MileageBloc(),
+    build: () => createBloc(),
     act: (bloc) => bloc.add(
       MileageEventChartDateRangeUpdated(
         chartDateRange: ChartDateRangeState(
@@ -459,7 +453,7 @@ void main() {
     'chart date range updated, '
     'date range is null, '
     'should do nothing',
-    build: () => MileageBloc(),
+    build: () => createBloc(),
     act: (bloc) => bloc.add(
       const MileageEventChartDateRangeUpdated(
         chartDateRange: ChartDateRangeState(
@@ -475,7 +469,7 @@ void main() {
     'change date range type, '
     'week, '
     "should call chart date range cubit's method to initialize new date range type",
-    build: () => MileageBloc(),
+    build: () => createBloc(),
     act: (bloc) => bloc.add(
       const MileageEventChangeDateRangeType(dateRangeType: DateRangeType.week),
     ),
@@ -488,7 +482,7 @@ void main() {
     'change date range type, '
     'month, '
     "should not call chart date range cubit's method to initialize new date range type",
-    build: () => MileageBloc(),
+    build: () => createBloc(),
     act: (bloc) => bloc.add(
       const MileageEventChangeDateRangeType(dateRangeType: DateRangeType.month),
     ),
@@ -501,7 +495,7 @@ void main() {
     'change date range type, '
     'year, '
     "should call chart date range cubit's method to initialize new date range type",
-    build: () => MileageBloc(),
+    build: () => createBloc(),
     act: (bloc) => bloc.add(
       const MileageEventChangeDateRangeType(dateRangeType: DateRangeType.year),
     ),
@@ -513,7 +507,7 @@ void main() {
   blocTest(
     'previous date range, '
     "should call chart date range cubit's method to set previous date range",
-    build: () => MileageBloc(),
+    build: () => createBloc(),
     act: (bloc) => bloc.add(const MileageEventPreviousDateRange()),
     verify: (_) => verify(chartDateRangeCubit.previousDateRange).called(1),
   );
@@ -521,7 +515,7 @@ void main() {
   blocTest(
     'next date range, '
     "should call chart date range cubit's method to set next date range",
-    build: () => MileageBloc(),
+    build: () => createBloc(),
     act: (bloc) => bloc.add(const MileageEventNextDateRange()),
     verify: (_) => verify(chartDateRangeCubit.nextDateRange).called(1),
   );

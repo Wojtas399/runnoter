@@ -17,14 +17,13 @@ import '../../entity/race.dart';
 import '../../entity/workout.dart';
 import '../../repository/race_repository.dart';
 import '../../repository/workout_repository.dart';
-import '../../service/auth_service.dart';
 
 part 'mileage_event.dart';
 part 'mileage_state.dart';
 
 class MileageBloc
     extends BlocWithStatus<MileageEvent, MileageState, dynamic, dynamic> {
-  final AuthService _authService;
+  final String _userId;
   final WorkoutRepository _workoutRepository;
   final RaceRepository _raceRepository;
   final ChartDateRangeCubit _chartDateRangeCubit;
@@ -32,10 +31,11 @@ class MileageBloc
   StreamSubscription<ChartDateRangeState>? _chartDateRangeListener;
 
   MileageBloc({
+    required String userId,
     MileageState initialState = const MileageState(
       status: BlocStatusInitial(),
     ),
-  })  : _authService = getIt<AuthService>(),
+  })  : _userId = userId,
         _workoutRepository = getIt<WorkoutRepository>(),
         _raceRepository = getIt<RaceRepository>(),
         _chartDateRangeCubit = getIt<ChartDateRangeCubit>(),
@@ -77,25 +77,22 @@ class MileageBloc
     final DateRangeType dateRangeType = event.chartDateRange.dateRangeType;
     final DateRange? dateRange = event.chartDateRange.dateRange;
     if (dateRange == null || dateRangeType == DateRangeType.month) return;
-    final Stream<_Activities> stream$ =
-        _authService.loggedUserId$.whereNotNull().switchMap(
-              (String loggedUserId) => Rx.combineLatest2(
-                _workoutRepository.getWorkoutsByDateRange(
-                  startDate: dateRange.startDate,
-                  endDate: dateRange.endDate,
-                  userId: loggedUserId,
-                ),
-                _raceRepository.getRacesByDateRange(
-                  startDate: dateRange.startDate,
-                  endDate: dateRange.endDate,
-                  userId: loggedUserId,
-                ),
-                (List<Workout>? workouts, List<Race>? races) => _Activities(
-                  workouts: [...?workouts],
-                  races: [...?races],
-                ),
-              ),
-            );
+    final Stream<_Activities> stream$ = Rx.combineLatest2(
+      _workoutRepository.getWorkoutsByDateRange(
+        startDate: dateRange.startDate,
+        endDate: dateRange.endDate,
+        userId: _userId,
+      ),
+      _raceRepository.getRacesByDateRange(
+        startDate: dateRange.startDate,
+        endDate: dateRange.endDate,
+        userId: _userId,
+      ),
+      (List<Workout>? workouts, List<Race>? races) => _Activities(
+        workouts: [...?workouts],
+        races: [...?races],
+      ),
+    );
     await emit.forEach(
       stream$,
       onData: (_Activities activities) => state.copyWith(
