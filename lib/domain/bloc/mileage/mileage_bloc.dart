@@ -67,6 +67,7 @@ class MileageBloc
         MileageEventChartDateRangeUpdated(chartDateRange: chartDateRange),
       ),
     );
+    _chartDateRangeCubit.initializeNewDateRangeType(DateRangeType.year);
   }
 
   Future<void> _chartDateRangeUpdated(

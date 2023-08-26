@@ -78,7 +78,8 @@ void main() {
       );
 
       blocTest(
-        "should set listener of chart date range cubit's state",
+        "should set listener of chart date range cubit's state and "
+        'should initialize chart date range cubit with year date range type',
         build: () => MileageBloc(),
         setUp: () {
           chartDateRangeCubit.mockStream(
@@ -108,7 +109,14 @@ void main() {
             mileageChartPoints: expectedUpdatedPoints,
           ),
         ],
-        verify: (_) => verify(() => chartDateRangeCubit.stream).called(1),
+        verify: (_) {
+          verify(() => chartDateRangeCubit.stream).called(1);
+          verify(
+            () => chartDateRangeCubit.initializeNewDateRangeType(
+              DateRangeType.year,
+            ),
+          ).called(1);
+        },
       );
     },
   );
