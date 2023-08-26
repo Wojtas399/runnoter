@@ -5,8 +5,10 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 
 import '../../../domain/bloc/health/health_bloc.dart';
 import '../../../domain/cubit/chart_date_range_cubit.dart';
+import '../../component/date_range_header_component.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/text/label_text_components.dart';
+import '../../component/text/title_text_components.dart';
 import '../../formatter/date_formatter.dart';
 import '../../service/utils.dart';
 
@@ -15,7 +17,71 @@ class HealthCharts extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          TitleMedium(Str.of(context).healthSummaryOfMeasurements),
+          const Gap16(),
+          const _ChartRangeSelection(),
+          const Gap8(),
+          const _Charts(),
+        ],
+      ),
+    );
+  }
+}
+
+class _ChartRangeSelection extends StatelessWidget {
+  const _ChartRangeSelection();
+
+  @override
+  Widget build(BuildContext context) {
+    final DateRangeType? dateRangeType = context.select(
+      (HealthBloc bloc) => bloc.state.dateRangeType,
+    );
+    final DateRange? dateRange = context.select(
+      (HealthBloc bloc) => bloc.state.dateRange,
+    );
+    return dateRangeType != null && dateRange != null
+        ? DateRangeHeader(
+            selectedDateRangeType: dateRangeType,
+            dateRange: dateRange,
+            onWeekSelected: () =>
+                _changeDateRangeType(context, DateRangeType.week),
+            onMonthSelected: () =>
+                _changeDateRangeType(context, DateRangeType.month),
+            onYearSelected: () =>
+                _changeDateRangeType(context, DateRangeType.year),
+            onPreviousRangePressed: () => _previousDateRange(context),
+            onNextRangePressed: () => _nextDateRange(context),
+          )
+        : const SizedBox();
+  }
+
+  void _changeDateRangeType(BuildContext context, DateRangeType dateRangeType) {
+    context.read<HealthBloc>().add(
+          HealthEventChangeChartDateRangeType(dateRangeType: dateRangeType),
+        );
+  }
+
+  void _previousDateRange(BuildContext context) {
+    context.read<HealthBloc>().add(const HealthEventPreviousChartDateRange());
+  }
+
+  void _nextDateRange(BuildContext context) {
+    context.read<HealthBloc>().add(const HealthEventNextChartDateRange());
+  }
+}
+
+class _Charts extends StatelessWidget {
+  const _Charts();
+
+  @override
+  Widget build(BuildContext context) {
     final str = Str.of(context);
+
     return Column(
       children: [
         LabelLarge(str.restingHeartRate),

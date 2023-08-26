@@ -15,7 +15,7 @@ import '../../config/navigation/router.dart';
 import '../../dialog/health_measurement_creator/health_measurement_creator_dialog.dart';
 import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
-import 'health_charts_section.dart';
+import 'health_charts.dart';
 
 class HealthContent extends StatelessWidget {
   const HealthContent({super.key});
@@ -45,7 +45,7 @@ class _MobileContent extends StatelessWidget {
         children: [
           _TodayMeasurement(),
           Gap24(),
-          HealthChartsSection(),
+          HealthCharts(),
           Gap24(),
           _ShowAllMeasurementsButton(),
         ],
@@ -68,7 +68,7 @@ class _DesktopContent extends StatelessWidget {
           ),
           Gap16(),
           CardBody(
-            child: HealthChartsSection(),
+            child: HealthCharts(),
           ),
           Gap16(),
           _ShowAllMeasurementsButton(),

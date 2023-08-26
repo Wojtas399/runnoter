@@ -31,17 +31,16 @@ class DateRangeHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
       constraints: const BoxConstraints(maxWidth: 600),
       child: Column(
         children: [
-          _DateRangeSelection(
+          _DateRangeTypeSelection(
             selectedDateRangeType: selectedDateRangeType,
             onWeekSelected: onWeekSelected,
             onMonthSelected: onMonthSelected,
             onYearSelected: onYearSelected,
           ),
-          const Gap16(),
+          const Gap8(),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -65,13 +64,13 @@ class DateRangeHeader extends StatelessWidget {
   }
 }
 
-class _DateRangeSelection extends StatelessWidget {
+class _DateRangeTypeSelection extends StatelessWidget {
   final DateRangeType selectedDateRangeType;
   final VoidCallback? onWeekSelected;
   final VoidCallback? onMonthSelected;
   final VoidCallback? onYearSelected;
 
-  const _DateRangeSelection({
+  const _DateRangeTypeSelection({
     required this.selectedDateRangeType,
     this.onWeekSelected,
     this.onMonthSelected,

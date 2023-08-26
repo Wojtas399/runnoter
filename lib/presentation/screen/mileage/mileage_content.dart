@@ -56,11 +56,14 @@ class _CommonContent extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        _DateRange(
-          dateRangeType: state.dateRangeType!,
-          dateRange: state.dateRange!,
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: _DateRange(
+            dateRangeType: state.dateRangeType!,
+            dateRange: state.dateRange!,
+          ),
         ),
-        const Gap16(),
+        const Gap8(),
         _Chart(
           dateRangeType: state.dateRangeType!,
           chartPoints: state.mileageChartPoints!,
