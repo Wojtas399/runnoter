@@ -18,13 +18,13 @@ import '../../service/navigator_service.dart';
 
 class Calendar extends StatelessWidget {
   final String userId;
-  final DateRangeType initialDateRangeType;
+  final CalendarDateRangeType initialDateRangeType;
   final bool canEditHealthMeasurement;
 
   const Calendar({
     super.key,
     required this.userId,
-    this.initialDateRangeType = DateRangeType.month,
+    this.initialDateRangeType = CalendarDateRangeType.month,
     this.canEditHealthMeasurement = true,
   });
 
@@ -72,7 +72,7 @@ class _Calendar extends StatelessWidget {
     );
 
     return CalendarComponent(
-      dateRangeType: DateRangeType.month,
+      dateRangeType: CalendarDateRangeType.month,
       dateRangeData: dateRangeData,
       onDateRangeChanged: (DateTime startDate, DateTime endDate) =>
           _onDateRangeChanged(context, startDate, endDate),

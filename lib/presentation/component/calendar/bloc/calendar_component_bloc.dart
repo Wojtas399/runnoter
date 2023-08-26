@@ -39,15 +39,16 @@ class CalendarComponentBloc
     Emitter<CalendarComponentState> emit,
   ) {
     final DateTime today = _dateService.getToday();
-    DateRange? dateRange;
+    CalendarDateRange? dateRange;
     switch (event.dateRangeType) {
-      case DateRangeType.week:
-        dateRange = DateRangeWeek(
+      case CalendarDateRangeType.week:
+        dateRange = CalendarDateRangeWeek(
           firstDayOfTheWeek: _dateService.getFirstDayOfTheWeek(today),
         );
         break;
-      case DateRangeType.month:
-        dateRange = DateRangeMonth(month: today.month, year: today.year);
+      case CalendarDateRangeType.month:
+        dateRange =
+            CalendarDateRangeMonth(month: today.month, year: today.year);
         break;
     }
     emit(state.copyWith(
@@ -60,21 +61,21 @@ class CalendarComponentBloc
     CalendarComponentEventChangeDateRangeType event,
     Emitter<CalendarComponentState> emit,
   ) {
-    final DateRange? currentDateRange = state.dateRange;
-    DateRange? newDateRange;
+    final CalendarDateRange? currentDateRange = state.dateRange;
+    CalendarDateRange? newDateRange;
     switch (event.dateRangeType) {
-      case DateRangeType.week:
-        if (currentDateRange is DateRangeMonth) {
-          newDateRange = DateRangeWeek(
+      case CalendarDateRangeType.week:
+        if (currentDateRange is CalendarDateRangeMonth) {
+          newDateRange = CalendarDateRangeWeek(
             firstDayOfTheWeek: _dateService.getFirstDayOfTheWeek(
               DateTime(currentDateRange.year, currentDateRange.month),
             ),
           );
         }
         break;
-      case DateRangeType.month:
-        if (currentDateRange is DateRangeWeek) {
-          newDateRange = DateRangeMonth(
+      case CalendarDateRangeType.month:
+        if (currentDateRange is CalendarDateRangeWeek) {
+          newDateRange = CalendarDateRangeMonth(
             month: currentDateRange.firstDayOfTheWeek.month,
             year: currentDateRange.firstDayOfTheWeek.year,
           );
@@ -101,15 +102,16 @@ class CalendarComponentBloc
     CalendarComponentEventPreviousDateRange event,
     Emitter<CalendarComponentState> emit,
   ) {
-    final DateRange? currentDateRange = state.dateRange;
+    final CalendarDateRange? currentDateRange = state.dateRange;
     if (currentDateRange != null) {
-      final DateRange newDateRange = switch (currentDateRange) {
-        DateRangeWeek() => DateRangeWeek(
+      final CalendarDateRange newDateRange = switch (currentDateRange) {
+        CalendarDateRangeWeek() => CalendarDateRangeWeek(
             firstDayOfTheWeek: currentDateRange.firstDayOfTheWeek.subtract(
               const Duration(days: 7),
             ),
           ),
-        DateRangeMonth() => _getPreviousMonthDateRange(currentDateRange),
+        CalendarDateRangeMonth() =>
+          _getPreviousMonthDateRange(currentDateRange),
       };
       emit(state.copyWith(
         dateRange: newDateRange,
@@ -122,15 +124,15 @@ class CalendarComponentBloc
     CalendarComponentEventNextDateRange event,
     Emitter<CalendarComponentState> emit,
   ) {
-    final DateRange? currentDateRange = state.dateRange;
+    final CalendarDateRange? currentDateRange = state.dateRange;
     if (currentDateRange != null) {
-      final DateRange newDateRange = switch (currentDateRange) {
-        DateRangeWeek() => DateRangeWeek(
+      final CalendarDateRange newDateRange = switch (currentDateRange) {
+        CalendarDateRangeWeek() => CalendarDateRangeWeek(
             firstDayOfTheWeek: currentDateRange.firstDayOfTheWeek.add(
               const Duration(days: 7),
             ),
           ),
-        DateRangeMonth() => _getNextMonthDateRange(currentDateRange),
+        CalendarDateRangeMonth() => _getNextMonthDateRange(currentDateRange),
       };
       emit(state.copyWith(
         dateRange: newDateRange,
@@ -153,17 +155,17 @@ class CalendarComponentBloc
     emit(state.copyWith(pressedDay: null));
   }
 
-  List<CalendarWeek> _createWeeks(final DateRange dateRange) {
+  List<CalendarWeek> _createWeeks(final CalendarDateRange dateRange) {
     List<CalendarWeek> weeks = [];
     DateTime date = switch (dateRange) {
-      DateRangeWeek() => dateRange.firstDayOfTheWeek,
-      DateRangeMonth() => _dateService.getFirstDayOfTheWeek(
+      CalendarDateRangeWeek() => dateRange.firstDayOfTheWeek,
+      CalendarDateRangeMonth() => _dateService.getFirstDayOfTheWeek(
           DateTime(dateRange.year, dateRange.month),
         ),
     };
     final int numberOfWeeks = switch (dateRange) {
-      DateRangeWeek() => 1,
-      DateRangeMonth() => 6,
+      CalendarDateRangeWeek() => 1,
+      CalendarDateRangeMonth() => 6,
     };
     for (int weekNumber = 1; weekNumber <= numberOfWeeks; weekNumber++) {
       final List<CalendarWeekDay> daysFromWeek =
@@ -176,25 +178,27 @@ class CalendarComponentBloc
     return weeks;
   }
 
-  DateRangeMonth _getPreviousMonthDateRange(
-    DateRangeMonth currentMonthDateRange,
+  CalendarDateRangeMonth _getPreviousMonthDateRange(
+    CalendarDateRangeMonth currentMonthDateRange,
   ) {
     final DateTime firstDayOfPreviousMonth = DateTime(
       currentMonthDateRange.year,
       currentMonthDateRange.month - 1,
     );
-    return DateRangeMonth(
+    return CalendarDateRangeMonth(
       month: firstDayOfPreviousMonth.month,
       year: firstDayOfPreviousMonth.year,
     );
   }
 
-  DateRangeMonth _getNextMonthDateRange(DateRangeMonth currentMonthDateRange) {
+  CalendarDateRangeMonth _getNextMonthDateRange(
+    CalendarDateRangeMonth currentMonthDateRange,
+  ) {
     final DateTime firstDayOfPreviousMonth = DateTime(
       currentMonthDateRange.year,
       currentMonthDateRange.month + 1,
     );
-    return DateRangeMonth(
+    return CalendarDateRangeMonth(
       month: firstDayOfPreviousMonth.month,
       year: firstDayOfPreviousMonth.year,
     );
@@ -202,7 +206,7 @@ class CalendarComponentBloc
 
   List<CalendarWeekDay> _createDaysFromWeek(
     final DateTime firstDayOfTheWeek,
-    final DateRange dateRange,
+    final CalendarDateRange dateRange,
   ) {
     final List<CalendarWeekDay> daysFromWeek = [];
     final DateTime todayDate = _dateService.getToday();
@@ -219,7 +223,7 @@ class CalendarComponentBloc
   CalendarWeekDay _createDay(
     DateTime date,
     DateTime todayDate,
-    DateRange dateRange,
+    CalendarDateRange dateRange,
   ) {
     final HealthMeasurement? healthMeasurement =
         _dateRangeData.healthMeasurements.firstWhereOrNull(
@@ -239,8 +243,9 @@ class CalendarComponentBloc
     ];
     return CalendarWeekDay(
       date: date,
-      isDisabled:
-          dateRange is DateRangeMonth ? date.month != dateRange.month : false,
+      isDisabled: dateRange is CalendarDateRangeMonth
+          ? date.month != dateRange.month
+          : false,
       isTodayDay: _dateService.areDatesTheSame(date, todayDate),
       healthMeasurement: healthMeasurement,
       workouts: workoutsFromDay,
@@ -249,4 +254,4 @@ class CalendarComponentBloc
   }
 }
 
-enum DateRangeType { week, month }
+enum CalendarDateRangeType { week, month }

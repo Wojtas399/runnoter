@@ -9,7 +9,7 @@ import 'calendar_component_date.dart';
 import 'calendar_component_week.dart';
 
 class CalendarComponent extends StatelessWidget {
-  final DateRangeType? dateRangeType;
+  final CalendarDateRangeType? dateRangeType;
   final CalendarDateRangeData dateRangeData;
   final Function(DateTime date)? onDayPressed;
   final Function(DateTime startDate, DateTime endDate) onDateRangeChanged;
@@ -78,7 +78,7 @@ class _ContentState extends State<_Content> {
 
   @override
   Widget build(BuildContext context) {
-    final DateRange? dateRange = context.select(
+    final CalendarDateRange? dateRange = context.select(
       (CalendarComponentBloc bloc) => bloc.state.dateRange,
     );
 
@@ -87,8 +87,8 @@ class _ContentState extends State<_Content> {
         const CalendarComponentDate(),
         const Gap8(),
         switch (dateRange) {
-          DateRangeWeek() => const CalendarComponentWeek(),
-          DateRangeMonth() => const CalendarComponentMonth(),
+          CalendarDateRangeWeek() => const CalendarComponentWeek(),
+          CalendarDateRangeMonth() => const CalendarComponentMonth(),
           null => const CircularProgressIndicator(),
         }
       ],

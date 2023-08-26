@@ -5,13 +5,13 @@ abstract class CalendarComponentEvent {
 }
 
 class CalendarComponentEventInitialize extends CalendarComponentEvent {
-  final DateRangeType dateRangeType;
+  final CalendarDateRangeType dateRangeType;
 
   const CalendarComponentEventInitialize({required this.dateRangeType});
 }
 
 class CalendarComponentEventChangeDateRangeType extends CalendarComponentEvent {
-  final DateRangeType dateRangeType;
+  final CalendarDateRangeType dateRangeType;
 
   const CalendarComponentEventChangeDateRangeType({
     required this.dateRangeType,

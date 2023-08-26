@@ -40,7 +40,7 @@ class _DateRangeSelection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final DateRange? dateRange = context.select(
+    final CalendarDateRange? dateRange = context.select(
       (CalendarComponentBloc bloc) => bloc.state.dateRange,
     );
 
@@ -48,18 +48,21 @@ class _DateRangeSelection extends StatelessWidget {
       children: [
         Expanded(
           child: _DateRangeButton(
-            isSelected: dateRange is DateRangeWeek,
-            onPressed: () => _onDateRangeChanged(context, DateRangeType.week),
+            isSelected: dateRange is CalendarDateRangeWeek,
+            onPressed: () => _onDateRangeChanged(
+              context,
+              CalendarDateRangeType.week,
+            ),
             label: Str.of(context).week,
           ),
         ),
         const GapHorizontal16(),
         Expanded(
           child: _DateRangeButton(
-            isSelected: dateRange is DateRangeMonth,
+            isSelected: dateRange is CalendarDateRangeMonth,
             onPressed: () => _onDateRangeChanged(
               context,
-              DateRangeType.month,
+              CalendarDateRangeType.month,
             ),
             label: Str.of(context).month,
           ),
@@ -68,7 +71,10 @@ class _DateRangeSelection extends StatelessWidget {
     );
   }
 
-  void _onDateRangeChanged(BuildContext context, DateRangeType dateRangeType) {
+  void _onDateRangeChanged(
+    BuildContext context,
+    CalendarDateRangeType dateRangeType,
+  ) {
     context.read<CalendarComponentBloc>().add(
           CalendarComponentEventChangeDateRangeType(
             dateRangeType: dateRangeType,
@@ -107,13 +113,13 @@ class _DateRange extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final DateRange? dateRange = context.select(
+    final CalendarDateRange? dateRange = context.select(
       (CalendarComponentBloc bloc) => bloc.state.dateRange,
     );
 
     return switch (dateRange) {
-      DateRangeWeek() => _Week(dateRange),
-      DateRangeMonth() => _Month(dateRange),
+      CalendarDateRangeWeek() => _Week(dateRange),
+      CalendarDateRangeMonth() => _Month(dateRange),
       null => const CircularProgressIndicator(),
     };
   }
@@ -121,7 +127,7 @@ class _DateRange extends StatelessWidget {
 
 class _Week extends StatelessWidget {
   final DateService _dateService = DateService();
-  final DateRangeWeek weekDateRange;
+  final CalendarDateRangeWeek weekDateRange;
 
   _Week(this.weekDateRange);
 
@@ -145,7 +151,7 @@ class _Week extends StatelessWidget {
 }
 
 class _Month extends StatelessWidget {
-  final DateRangeMonth monthDateRange;
+  final CalendarDateRangeMonth monthDateRange;
 
   const _Month(this.monthDateRange);
 

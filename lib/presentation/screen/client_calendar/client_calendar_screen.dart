@@ -14,7 +14,7 @@ class ClientCalendarScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Calendar(
       userId: context.read<ClientBloc>().clientId,
-      initialDateRangeType: DateRangeType.week,
+      initialDateRangeType: CalendarDateRangeType.week,
       canEditHealthMeasurement: false,
     );
   }

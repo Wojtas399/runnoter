@@ -20,7 +20,7 @@ class CurrentWeekScreen extends StatelessWidget {
           create: (_) => CalendarComponentBloc()
             ..add(
               const CalendarComponentEventInitialize(
-                dateRangeType: DateRangeType.week,
+                dateRangeType: CalendarDateRangeType.week,
               ),
             ),
         ),
