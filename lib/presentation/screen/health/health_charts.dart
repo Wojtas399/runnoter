@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
-import '../../../domain/bloc/health/health_bloc.dart';
+import '../../../domain/bloc/health_stats/health_stats_bloc.dart';
 import '../../../domain/cubit/chart_date_range_cubit.dart';
 import '../../component/date_range_header_component.dart';
 import '../../component/gap/gap_components.dart';
@@ -39,10 +39,10 @@ class _ChartRangeSelection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final DateRangeType? dateRangeType = context.select(
-      (HealthBloc bloc) => bloc.state.dateRangeType,
+      (HealthStatsBloc bloc) => bloc.state.dateRangeType,
     );
     final DateRange? dateRange = context.select(
-      (HealthBloc bloc) => bloc.state.dateRange,
+      (HealthStatsBloc bloc) => bloc.state.dateRange,
     );
     return dateRangeType != null && dateRange != null
         ? DateRangeHeader(
@@ -61,17 +61,23 @@ class _ChartRangeSelection extends StatelessWidget {
   }
 
   void _changeDateRangeType(BuildContext context, DateRangeType dateRangeType) {
-    context.read<HealthBloc>().add(
-          HealthEventChangeChartDateRangeType(dateRangeType: dateRangeType),
+    context.read<HealthStatsBloc>().add(
+          HealthStatsEventChangeChartDateRangeType(
+            dateRangeType: dateRangeType,
+          ),
         );
   }
 
   void _previousDateRange(BuildContext context) {
-    context.read<HealthBloc>().add(const HealthEventPreviousChartDateRange());
+    context.read<HealthStatsBloc>().add(
+          const HealthStatsEventPreviousChartDateRange(),
+        );
   }
 
   void _nextDateRange(BuildContext context) {
-    context.read<HealthBloc>().add(const HealthEventNextChartDateRange());
+    context.read<HealthStatsBloc>().add(
+          const HealthStatsEventNextChartDateRange(),
+        );
   }
 }
 
@@ -101,8 +107,8 @@ class _RestingHeartRateChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<HealthChartPoint>? points = context.select(
-      (HealthBloc bloc) => bloc.state.restingHeartRatePoints,
+    final List<HealthStatsChartPoint>? points = context.select(
+      (HealthStatsBloc bloc) => bloc.state.restingHeartRatePoints,
     );
 
     return points != null ? _LineChart(points: points) : const SizedBox();
@@ -114,8 +120,8 @@ class _FastingWeightChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<HealthChartPoint>? points = context.select(
-      (HealthBloc bloc) => bloc.state.fastingWeightPoints,
+    final List<HealthStatsChartPoint>? points = context.select(
+      (HealthStatsBloc bloc) => bloc.state.fastingWeightPoints,
     );
 
     return points != null ? _LineChart(points: points) : const SizedBox();
@@ -123,14 +129,14 @@ class _FastingWeightChart extends StatelessWidget {
 }
 
 class _LineChart extends StatelessWidget {
-  final List<HealthChartPoint> points;
+  final List<HealthStatsChartPoint> points;
 
   const _LineChart({required this.points});
 
   @override
   Widget build(BuildContext context) {
     final DateRangeType? dateRangeType = context.select(
-      (HealthBloc bloc) => bloc.state.dateRangeType,
+      (HealthStatsBloc bloc) => bloc.state.dateRangeType,
     );
 
     return dateRangeType == null
@@ -143,12 +149,12 @@ class _LineChart extends StatelessWidget {
                 DateRangeType.year => 1,
               },
             ),
-            series: <LineSeries<HealthChartPoint, String>>[
-              LineSeries<HealthChartPoint, String>(
+            series: <LineSeries<HealthStatsChartPoint, String>>[
+              LineSeries<HealthStatsChartPoint, String>(
                 dataSource: points,
-                xValueMapper: (HealthChartPoint point, _) =>
+                xValueMapper: (HealthStatsChartPoint point, _) =>
                     _mapDateToLabel(context, point.date, dateRangeType),
-                yValueMapper: (HealthChartPoint point, _) => point.value,
+                yValueMapper: (HealthStatsChartPoint point, _) => point.value,
                 color: Theme.of(context).colorScheme.primary,
                 markerSettings: MarkerSettings(
                   isVisible: true,

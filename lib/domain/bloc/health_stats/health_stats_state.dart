@@ -1,12 +1,12 @@
-part of 'health_bloc.dart';
+part of 'health_stats_bloc.dart';
 
-class HealthState extends BlocState {
+class HealthStatsState extends BlocState {
   final DateRangeType? dateRangeType;
   final DateRange? dateRange;
-  final List<HealthChartPoint>? restingHeartRatePoints;
-  final List<HealthChartPoint>? fastingWeightPoints;
+  final List<HealthStatsChartPoint>? restingHeartRatePoints;
+  final List<HealthStatsChartPoint>? fastingWeightPoints;
 
-  const HealthState({
+  const HealthStatsState({
     required super.status,
     this.dateRangeType,
     this.dateRange,
@@ -24,14 +24,14 @@ class HealthState extends BlocState {
       ];
 
   @override
-  HealthState copyWith({
+  HealthStatsState copyWith({
     BlocStatus? status,
     DateRangeType? dateRangeType,
     DateRange? dateRange,
-    List<HealthChartPoint>? restingHeartRatePoints,
-    List<HealthChartPoint>? fastingWeightPoints,
+    List<HealthStatsChartPoint>? restingHeartRatePoints,
+    List<HealthStatsChartPoint>? fastingWeightPoints,
   }) =>
-      HealthState(
+      HealthStatsState(
         status: status ?? const BlocStatusComplete(),
         dateRangeType: dateRangeType ?? this.dateRangeType,
         dateRange: dateRange ?? this.dateRange,
@@ -41,11 +41,11 @@ class HealthState extends BlocState {
       );
 }
 
-class HealthChartPoint extends Equatable {
+class HealthStatsChartPoint extends Equatable {
   final DateTime date;
   final num? value;
 
-  const HealthChartPoint({required this.date, required this.value});
+  const HealthStatsChartPoint({required this.date, required this.value});
 
   @override
   List<Object?> get props => [date, value];

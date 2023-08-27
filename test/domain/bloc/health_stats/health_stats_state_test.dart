@@ -1,12 +1,14 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
-import 'package:runnoter/domain/bloc/health/health_bloc.dart';
+import 'package:runnoter/domain/bloc/health_stats/health_stats_bloc.dart';
 import 'package:runnoter/domain/cubit/chart_date_range_cubit.dart';
 
 void main() {
-  late HealthState state;
+  late HealthStatsState state;
 
-  HealthState createState() => const HealthState(status: BlocStatusInitial());
+  HealthStatsState createState() => const HealthStatsState(
+        status: BlocStatusInitial(),
+      );
 
   setUp(() {
     state = createState();
@@ -57,9 +59,9 @@ void main() {
   test(
     'copy with restingHeartRatePoints',
     () {
-      final List<HealthChartPoint> expected = [
-        HealthChartPoint(date: DateTime(2023, 1, 10), value: 1),
-        HealthChartPoint(date: DateTime(2023, 1, 11), value: 2),
+      final List<HealthStatsChartPoint> expected = [
+        HealthStatsChartPoint(date: DateTime(2023, 1, 10), value: 1),
+        HealthStatsChartPoint(date: DateTime(2023, 1, 11), value: 2),
       ];
 
       state = state.copyWith(restingHeartRatePoints: expected);
@@ -73,9 +75,9 @@ void main() {
   test(
     'copy with fastingWeightPoints',
     () {
-      final List<HealthChartPoint> expected = [
-        HealthChartPoint(date: DateTime(2023, 1, 10), value: 1),
-        HealthChartPoint(date: DateTime(2023, 1, 11), value: 2),
+      final List<HealthStatsChartPoint> expected = [
+        HealthStatsChartPoint(date: DateTime(2023, 1, 10), value: 1),
+        HealthStatsChartPoint(date: DateTime(2023, 1, 11), value: 2),
       ];
 
       state = state.copyWith(fastingWeightPoints: expected);

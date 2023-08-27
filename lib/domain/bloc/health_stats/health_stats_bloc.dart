@@ -16,19 +16,19 @@ import '../../../../domain/service/auth_service.dart';
 import '../../../dependency_injection.dart';
 import '../../cubit/chart_date_range_cubit.dart';
 
-part 'health_event.dart';
-part 'health_state.dart';
+part 'health_stats_event.dart';
+part 'health_stats_state.dart';
 
-class HealthBloc
-    extends BlocWithStatus<HealthEvent, HealthState, dynamic, dynamic> {
+class HealthStatsBloc extends BlocWithStatus<HealthStatsEvent, HealthStatsState,
+    dynamic, dynamic> {
   final DateService _dateService;
   final AuthService _authService;
   final HealthMeasurementRepository _healthMeasurementRepository;
   final ChartDateRangeCubit _chartDateRangeCubit;
   StreamSubscription<ChartDateRangeState>? _chartDateRangeListener;
 
-  HealthBloc({
-    HealthState state = const HealthState(
+  HealthStatsBloc({
+    HealthStatsState state = const HealthStatsState(
       status: BlocStatusInitial(),
     ),
   })  : _dateService = getIt<DateService>(),
@@ -36,17 +36,17 @@ class HealthBloc
         _healthMeasurementRepository = getIt<HealthMeasurementRepository>(),
         _chartDateRangeCubit = getIt<ChartDateRangeCubit>(),
         super(state) {
-    on<HealthEventChartDateRangeUpdated>(
+    on<HealthStatsEventChartDateRangeUpdated>(
       _chartDateRangeUpdated,
       transformer: restartable(),
     );
-    on<HealthEventInitializeChartDateRangeListener>(
+    on<HealthStatsEventInitializeChartDateRangeListener>(
       _initializeChartDateRangeListener,
       transformer: restartable(),
     );
-    on<HealthEventChangeChartDateRangeType>(_changeChartDateRangeType);
-    on<HealthEventPreviousChartDateRange>(_previousChartDateRange);
-    on<HealthEventNextChartDateRange>(_nextChartDateRange);
+    on<HealthStatsEventChangeChartDateRangeType>(_changeChartDateRangeType);
+    on<HealthStatsEventPreviousChartDateRange>(_previousChartDateRange);
+    on<HealthStatsEventNextChartDateRange>(_nextChartDateRange);
   }
 
   @override
@@ -56,21 +56,21 @@ class HealthBloc
   }
 
   void _initializeChartDateRangeListener(
-    HealthEventInitializeChartDateRangeListener event,
-    Emitter<HealthState> emit,
+    HealthStatsEventInitializeChartDateRangeListener event,
+    Emitter<HealthStatsState> emit,
   ) {
     _disposeChartDateRangeListener();
     _chartDateRangeListener ??= _chartDateRangeCubit.stream.listen(
       (ChartDateRangeState chartDateRange) => add(
-        HealthEventChartDateRangeUpdated(chartDateRange: chartDateRange),
+        HealthStatsEventChartDateRangeUpdated(chartDateRange: chartDateRange),
       ),
     );
     _chartDateRangeCubit.initializeNewDateRangeType(DateRangeType.week);
   }
 
   Future<void> _chartDateRangeUpdated(
-    HealthEventChartDateRangeUpdated event,
-    Emitter<HealthState> emit,
+    HealthStatsEventChartDateRangeUpdated event,
+    Emitter<HealthStatsState> emit,
   ) async {
     final DateRange? dateRange = event.chartDateRange.dateRange;
     if (dateRange == null) return;
@@ -101,22 +101,22 @@ class HealthBloc
   }
 
   void _changeChartDateRangeType(
-    HealthEventChangeChartDateRangeType event,
-    Emitter<HealthState> emit,
+    HealthStatsEventChangeChartDateRangeType event,
+    Emitter<HealthStatsState> emit,
   ) {
     _chartDateRangeCubit.initializeNewDateRangeType(event.dateRangeType);
   }
 
   void _previousChartDateRange(
-    HealthEventPreviousChartDateRange event,
-    Emitter<HealthState> emit,
+    HealthStatsEventPreviousChartDateRange event,
+    Emitter<HealthStatsState> emit,
   ) {
     _chartDateRangeCubit.previousDateRange();
   }
 
   void _nextChartDateRange(
-    HealthEventNextChartDateRange event,
-    Emitter<HealthState> emit,
+    HealthStatsEventNextChartDateRange event,
+    Emitter<HealthStatsState> emit,
   ) {
     _chartDateRangeCubit.nextDateRange();
   }
@@ -132,11 +132,11 @@ class HealthBloc
       final HealthMeasurement? foundMeasurement = measurements.firstWhereOrNull(
         (mes) => _dateService.areDatesTheSame(mes.date, counterDate),
       );
-      pointsOfCharts.restingHeartRatePoints.add(HealthChartPoint(
+      pointsOfCharts.restingHeartRatePoints.add(HealthStatsChartPoint(
         date: counterDate,
         value: foundMeasurement?.restingHeartRate,
       ));
-      pointsOfCharts.fastingWeightPoints.add(HealthChartPoint(
+      pointsOfCharts.fastingWeightPoints.add(HealthStatsChartPoint(
         date: counterDate,
         value: foundMeasurement?.fastingWeight,
       ));
@@ -165,10 +165,10 @@ class HealthBloc
             .average;
       }
       pointsOfCharts.restingHeartRatePoints.add(
-        HealthChartPoint(date: counterDate, value: avgRestingHeartRate),
+        HealthStatsChartPoint(date: counterDate, value: avgRestingHeartRate),
       );
       pointsOfCharts.fastingWeightPoints.add(
-        HealthChartPoint(date: counterDate, value: avgFastingWeight),
+        HealthStatsChartPoint(date: counterDate, value: avgFastingWeight),
       );
       counterDate = DateTime(counterDate.year, counterDate.month + 1);
     }
@@ -182,8 +182,8 @@ class HealthBloc
 }
 
 class _ListenedPointsOfCharts extends Equatable {
-  final List<HealthChartPoint> restingHeartRatePoints = [];
-  final List<HealthChartPoint> fastingWeightPoints = [];
+  final List<HealthStatsChartPoint> restingHeartRatePoints = [];
+  final List<HealthStatsChartPoint> fastingWeightPoints = [];
 
   @override
   List<Object?> get props => [restingHeartRatePoints, fastingWeightPoints];

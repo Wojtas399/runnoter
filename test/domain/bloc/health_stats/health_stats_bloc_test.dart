@@ -6,7 +6,7 @@ import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/common/date_service.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
-import 'package:runnoter/domain/bloc/health/health_bloc.dart';
+import 'package:runnoter/domain/bloc/health_stats/health_stats_bloc.dart';
 import 'package:runnoter/domain/cubit/chart_date_range_cubit.dart';
 import 'package:runnoter/domain/entity/health_measurement.dart';
 import 'package:runnoter/domain/repository/health_measurement_repository.dart';
@@ -60,16 +60,16 @@ void main() {
       );
       final StreamController<ChartDateRangeState> chartDateRange$ =
           StreamController()..add(chartDateRange);
-      final expectedPoints = List<HealthChartPoint>.generate(
+      final expectedPoints = List<HealthStatsChartPoint>.generate(
         7,
-        (index) => HealthChartPoint(
+        (index) => HealthStatsChartPoint(
           date: DateTime(2023, 8, 21 + index),
           value: null,
         ),
       );
-      final expectedUpdatedPoints = List<HealthChartPoint>.generate(
+      final expectedUpdatedPoints = List<HealthStatsChartPoint>.generate(
         31,
-        (index) => HealthChartPoint(
+        (index) => HealthStatsChartPoint(
           date: DateTime(2023, 8, 1 + index),
           value: null,
         ),
@@ -78,7 +78,7 @@ void main() {
       blocTest(
         'should call chart date range method to initialize date range with week type and '
         'should set listener of chart date range state',
-        build: () => HealthBloc(),
+        build: () => HealthStatsBloc(),
         setUp: () {
           chartDateRangeCubit.mockStream(
             expectedStream: chartDateRange$.stream,
@@ -100,12 +100,12 @@ void main() {
           ).thenReturn(true);
         },
         act: (bloc) async {
-          bloc.add(const HealthEventInitializeChartDateRangeListener());
+          bloc.add(const HealthStatsEventInitializeChartDateRangeListener());
           await bloc.stream.first;
           chartDateRange$.add(updatedChartDateRange);
         },
         expect: () => [
-          HealthState(
+          HealthStatsState(
             status: const BlocStatusComplete(),
             dateRangeType: DateRangeType.week,
             dateRange: DateRange(
@@ -115,7 +115,7 @@ void main() {
             restingHeartRatePoints: expectedPoints,
             fastingWeightPoints: expectedPoints,
           ),
-          HealthState(
+          HealthStatsState(
             status: const BlocStatusComplete(),
             dateRangeType: DateRangeType.month,
             dateRange: DateRange(
@@ -161,26 +161,26 @@ void main() {
           fastingWeight: 62.5,
         ),
       ];
-      final List<HealthChartPoint> expectedRestingHeartRatePoints = [
-        HealthChartPoint(date: startDate, value: null),
-        HealthChartPoint(date: DateTime(2023, 5, 9), value: 51),
-        HealthChartPoint(date: DateTime(2023, 5, 10), value: 53),
-        HealthChartPoint(date: DateTime(2023, 5, 11), value: null),
-        HealthChartPoint(date: endDate, value: 52),
+      final List<HealthStatsChartPoint> expectedRestingHeartRatePoints = [
+        HealthStatsChartPoint(date: startDate, value: null),
+        HealthStatsChartPoint(date: DateTime(2023, 5, 9), value: 51),
+        HealthStatsChartPoint(date: DateTime(2023, 5, 10), value: 53),
+        HealthStatsChartPoint(date: DateTime(2023, 5, 11), value: null),
+        HealthStatsChartPoint(date: endDate, value: 52),
       ];
-      final List<HealthChartPoint> expectedFastingWeightPoints = [
-        HealthChartPoint(date: startDate, value: null),
-        HealthChartPoint(date: DateTime(2023, 5, 9), value: 60.5),
-        HealthChartPoint(date: DateTime(2023, 5, 10), value: 64.0),
-        HealthChartPoint(date: DateTime(2023, 5, 11), value: null),
-        HealthChartPoint(date: endDate, value: 62.5),
+      final List<HealthStatsChartPoint> expectedFastingWeightPoints = [
+        HealthStatsChartPoint(date: startDate, value: null),
+        HealthStatsChartPoint(date: DateTime(2023, 5, 9), value: 60.5),
+        HealthStatsChartPoint(date: DateTime(2023, 5, 10), value: 64.0),
+        HealthStatsChartPoint(date: DateTime(2023, 5, 11), value: null),
+        HealthStatsChartPoint(date: endDate, value: 62.5),
       ];
-      final List<HealthChartPoint> expectedUpdatedPoints = [
-        HealthChartPoint(date: startDate, value: null),
-        HealthChartPoint(date: DateTime(2023, 5, 9), value: null),
-        HealthChartPoint(date: DateTime(2023, 5, 10), value: null),
-        HealthChartPoint(date: DateTime(2023, 5, 11), value: null),
-        HealthChartPoint(date: endDate, value: null),
+      final List<HealthStatsChartPoint> expectedUpdatedPoints = [
+        HealthStatsChartPoint(date: startDate, value: null),
+        HealthStatsChartPoint(date: DateTime(2023, 5, 9), value: null),
+        HealthStatsChartPoint(date: DateTime(2023, 5, 10), value: null),
+        HealthStatsChartPoint(date: DateTime(2023, 5, 11), value: null),
+        HealthStatsChartPoint(date: endDate, value: null),
       ];
       final StreamController<List<HealthMeasurement>> healthMeasurements$ =
           StreamController()..add(healthMeasurements);
@@ -188,7 +188,7 @@ void main() {
       blocTest(
         'should set listener of health measurements from given date range and '
         'should create points of all days of the week',
-        build: () => HealthBloc(),
+        build: () => HealthStatsBloc(),
         setUp: () {
           authService.mockGetLoggedUserId(userId: loggedUserId);
           healthMeasurementRepository.mockGetMeasurementsByDateRange(
@@ -222,7 +222,7 @@ void main() {
         },
         act: (bloc) {
           bloc.add(
-            HealthEventChartDateRangeUpdated(
+            HealthStatsEventChartDateRangeUpdated(
               chartDateRange: ChartDateRangeState(
                 dateRangeType: DateRangeType.week,
                 dateRange: DateRange(startDate: startDate, endDate: endDate),
@@ -232,14 +232,14 @@ void main() {
           healthMeasurements$.add([]);
         },
         expect: () => [
-          HealthState(
+          HealthStatsState(
             status: const BlocStatusComplete(),
             dateRangeType: DateRangeType.week,
             dateRange: DateRange(startDate: startDate, endDate: endDate),
             restingHeartRatePoints: expectedRestingHeartRatePoints,
             fastingWeightPoints: expectedFastingWeightPoints,
           ),
-          HealthState(
+          HealthStatsState(
             status: const BlocStatusComplete(),
             dateRangeType: DateRangeType.week,
             dateRange: DateRange(startDate: startDate, endDate: endDate),
@@ -281,9 +281,10 @@ void main() {
           fastingWeight: 62.5,
         ),
       ];
-      final expectedRestingHeartRatePoints = List<HealthChartPoint>.generate(
+      final expectedRestingHeartRatePoints =
+          List<HealthStatsChartPoint>.generate(
         31,
-        (index) => HealthChartPoint(
+        (index) => HealthStatsChartPoint(
           date: DateTime(2023, 5, index + 1),
           value: switch (index) {
             8 => 51,
@@ -293,9 +294,9 @@ void main() {
           },
         ),
       );
-      final expectedFastingWeightPoints = List<HealthChartPoint>.generate(
+      final expectedFastingWeightPoints = List<HealthStatsChartPoint>.generate(
         31,
-        (index) => HealthChartPoint(
+        (index) => HealthStatsChartPoint(
           date: DateTime(2023, 5, index + 1),
           value: switch (index) {
             8 => 60.5,
@@ -305,10 +306,10 @@ void main() {
           },
         ),
       );
-      final List<HealthChartPoint> expectedUpdatedPoints =
-          List<HealthChartPoint>.generate(
+      final List<HealthStatsChartPoint> expectedUpdatedPoints =
+          List<HealthStatsChartPoint>.generate(
         31,
-        (index) => HealthChartPoint(
+        (index) => HealthStatsChartPoint(
           date: DateTime(2023, 5, index + 1),
           value: null,
         ),
@@ -319,7 +320,7 @@ void main() {
       blocTest(
         'should set listener of health measurements from given date range and '
         'should create points of all days of the month',
-        build: () => HealthBloc(),
+        build: () => HealthStatsBloc(),
         setUp: () {
           authService.mockGetLoggedUserId(userId: loggedUserId);
           healthMeasurementRepository.mockGetMeasurementsByDateRange(
@@ -353,7 +354,7 @@ void main() {
         },
         act: (bloc) {
           bloc.add(
-            HealthEventChartDateRangeUpdated(
+            HealthStatsEventChartDateRangeUpdated(
               chartDateRange: ChartDateRangeState(
                 dateRangeType: DateRangeType.month,
                 dateRange: DateRange(startDate: startDate, endDate: endDate),
@@ -363,14 +364,14 @@ void main() {
           healthMeasurements$.add([]);
         },
         expect: () => [
-          HealthState(
+          HealthStatsState(
             status: const BlocStatusComplete(),
             dateRangeType: DateRangeType.month,
             dateRange: DateRange(startDate: startDate, endDate: endDate),
             restingHeartRatePoints: expectedRestingHeartRatePoints,
             fastingWeightPoints: expectedFastingWeightPoints,
           ),
-          HealthState(
+          HealthStatsState(
             status: const BlocStatusComplete(),
             dateRangeType: DateRangeType.month,
             dateRange: DateRange(startDate: startDate, endDate: endDate),
@@ -427,9 +428,10 @@ void main() {
           fastingWeight: 60.5,
         ),
       ];
-      final expectedRestingHeartRatePoints = List<HealthChartPoint>.generate(
+      final expectedRestingHeartRatePoints =
+          List<HealthStatsChartPoint>.generate(
         12,
-        (index) => HealthChartPoint(
+        (index) => HealthStatsChartPoint(
           date: DateTime(2023, index + 1),
           value: switch (index) {
             3 => (49 + 51 + 50) / 3,
@@ -438,9 +440,9 @@ void main() {
           },
         ),
       );
-      final expectedFastingWeightPoints = List<HealthChartPoint>.generate(
+      final expectedFastingWeightPoints = List<HealthStatsChartPoint>.generate(
         12,
-        (index) => HealthChartPoint(
+        (index) => HealthStatsChartPoint(
           date: DateTime(2023, index + 1),
           value: switch (index) {
             3 => (58.5 + 62 + 60.5) / 3,
@@ -449,9 +451,9 @@ void main() {
           },
         ),
       );
-      final expectedUpdatedPoints = List<HealthChartPoint>.generate(
+      final expectedUpdatedPoints = List<HealthStatsChartPoint>.generate(
         12,
-        (index) => HealthChartPoint(
+        (index) => HealthStatsChartPoint(
           date: DateTime(2023, index + 1),
           value: null,
         ),
@@ -462,7 +464,7 @@ void main() {
       blocTest(
         'should set listener of health measurements from given date range and '
         'should create points of all months of the year with average values',
-        build: () => HealthBloc(),
+        build: () => HealthStatsBloc(),
         setUp: () {
           authService.mockGetLoggedUserId(userId: loggedUserId);
           healthMeasurementRepository.mockGetMeasurementsByDateRange(
@@ -472,7 +474,7 @@ void main() {
         },
         act: (bloc) {
           bloc.add(
-            HealthEventChartDateRangeUpdated(
+            HealthStatsEventChartDateRangeUpdated(
               chartDateRange: ChartDateRangeState(
                 dateRangeType: DateRangeType.year,
                 dateRange: DateRange(startDate: startDate, endDate: endDate),
@@ -482,14 +484,14 @@ void main() {
           healthMeasurements$.add([]);
         },
         expect: () => [
-          HealthState(
+          HealthStatsState(
             status: const BlocStatusComplete(),
             dateRangeType: DateRangeType.year,
             dateRange: DateRange(startDate: startDate, endDate: endDate),
             restingHeartRatePoints: expectedRestingHeartRatePoints,
             fastingWeightPoints: expectedFastingWeightPoints,
           ),
-          HealthState(
+          HealthStatsState(
             status: const BlocStatusComplete(),
             dateRangeType: DateRangeType.year,
             dateRange: DateRange(startDate: startDate, endDate: endDate),
@@ -511,8 +513,8 @@ void main() {
   blocTest(
     'change chart date range type, '
     "should call chart date range cubit's method to initialize new date range type",
-    build: () => HealthBloc(),
-    act: (bloc) => bloc.add(const HealthEventChangeChartDateRangeType(
+    build: () => HealthStatsBloc(),
+    act: (bloc) => bloc.add(const HealthStatsEventChangeChartDateRangeType(
       dateRangeType: DateRangeType.month,
     )),
     expect: () => [],
@@ -524,8 +526,8 @@ void main() {
   blocTest(
     'previous chart range, '
     "should call chart date range cubit's method to set previous date range",
-    build: () => HealthBloc(),
-    act: (bloc) => bloc.add(const HealthEventPreviousChartDateRange()),
+    build: () => HealthStatsBloc(),
+    act: (bloc) => bloc.add(const HealthStatsEventPreviousChartDateRange()),
     expect: () => [],
     verify: (_) => verify(chartDateRangeCubit.previousDateRange).called(1),
   );
@@ -533,8 +535,8 @@ void main() {
   blocTest(
     'next chart range, '
     "should call chart date range cubit's method to set next date range",
-    build: () => HealthBloc(),
-    act: (bloc) => bloc.add(const HealthEventNextChartDateRange()),
+    build: () => HealthStatsBloc(),
+    act: (bloc) => bloc.add(const HealthStatsEventNextChartDateRange()),
     expect: () => [],
     verify: (_) => verify(chartDateRangeCubit.nextDateRange).called(1),
   );
