@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/bloc/health/health_bloc.dart';
+import '../../../domain/cubit/today_measurement_cubit.dart';
 import '../../component/bloc_with_status_listener_component.dart';
 import '../../service/dialog_service.dart';
 import 'health_content.dart';
@@ -14,10 +15,14 @@ class HealthScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => HealthBloc()
-        ..add(const HealthEventInitializeTodayMeasurementListener())
-        ..add(const HealthEventInitializeChartDateRangeListener()),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => TodayMeasurementCubit()..initialize()),
+        BlocProvider(
+          create: (_) => HealthBloc()
+            ..add(const HealthEventInitializeChartDateRangeListener()),
+        )
+      ],
       child: const _BlocListener(
         child: HealthContent(),
       ),

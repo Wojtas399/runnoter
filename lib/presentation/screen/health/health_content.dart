@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/bloc/health/health_bloc.dart';
+import '../../../domain/cubit/today_measurement_cubit.dart';
 import '../../../domain/entity/health_measurement.dart';
 import '../../component/big_button_component.dart';
 import '../../component/body/big_body_component.dart';
@@ -84,7 +84,7 @@ class _TodayMeasurement extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final HealthMeasurement? todayMeasurement = context.select(
-      (HealthBloc bloc) => bloc.state.todayMeasurement,
+      (TodayMeasurementCubit cubit) => cubit.state,
     );
 
     return HealthMeasurementInfo(
@@ -103,7 +103,7 @@ class _TodayMeasurement extends StatelessWidget {
   }
 
   Future<void> _onDelete(BuildContext context) async {
-    final bloc = context.read<HealthBloc>();
+    final todayMeasurementCubit = context.read<TodayMeasurementCubit>();
     final str = Str.of(context);
     final bool isConfirmed = await askForConfirmation(
       title: Text(str.deleteHealthMeasurementConfirmationDialogTitle),
@@ -112,7 +112,9 @@ class _TodayMeasurement extends StatelessWidget {
       confirmButtonColor: Theme.of(context).colorScheme.error,
     );
     if (isConfirmed) {
-      bloc.add(const HealthEventDeleteTodayMeasurement());
+      showLoadingDialog();
+      await todayMeasurementCubit.deleteTodayMeasurement();
+      showSnackbarMessage(str.successfullyDeletedMeasurement);
     }
   }
 }
