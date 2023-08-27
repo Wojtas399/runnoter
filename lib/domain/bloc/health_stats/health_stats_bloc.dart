@@ -4,38 +4,31 @@ import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rxdart/rxdart.dart';
 
 import '../../../../common/date_service.dart';
-import '../../../../domain/additional_model/bloc_state.dart';
-import '../../../../domain/additional_model/bloc_status.dart';
-import '../../../../domain/additional_model/bloc_with_status.dart';
 import '../../../../domain/entity/health_measurement.dart';
 import '../../../../domain/repository/health_measurement_repository.dart';
-import '../../../../domain/service/auth_service.dart';
 import '../../../dependency_injection.dart';
 import '../../cubit/chart_date_range_cubit.dart';
 
 part 'health_stats_event.dart';
 part 'health_stats_state.dart';
 
-class HealthStatsBloc extends BlocWithStatus<HealthStatsEvent, HealthStatsState,
-    dynamic, dynamic> {
+class HealthStatsBloc extends Bloc<HealthStatsEvent, HealthStatsState> {
+  final String _userId;
   final DateService _dateService;
-  final AuthService _authService;
   final HealthMeasurementRepository _healthMeasurementRepository;
   final ChartDateRangeCubit _chartDateRangeCubit;
   StreamSubscription<ChartDateRangeState>? _chartDateRangeListener;
 
   HealthStatsBloc({
-    HealthStatsState state = const HealthStatsState(
-      status: BlocStatusInitial(),
-    ),
-  })  : _dateService = getIt<DateService>(),
-        _authService = getIt<AuthService>(),
+    required String userId,
+    HealthStatsState initialState = const HealthStatsState(),
+  })  : _userId = userId,
+        _dateService = getIt<DateService>(),
         _healthMeasurementRepository = getIt<HealthMeasurementRepository>(),
         _chartDateRangeCubit = getIt<ChartDateRangeCubit>(),
-        super(state) {
+        super(initialState) {
     on<HealthStatsEventChartDateRangeUpdated>(
       _chartDateRangeUpdated,
       transformer: restartable(),
@@ -74,14 +67,11 @@ class HealthStatsBloc extends BlocWithStatus<HealthStatsEvent, HealthStatsState,
   ) async {
     final DateRange? dateRange = event.chartDateRange.dateRange;
     if (dateRange == null) return;
-    final Stream<List<HealthMeasurement>> stream$ = _authService.loggedUserId$
-        .whereNotNull()
-        .switchMap(
-          (userId) => _healthMeasurementRepository.getMeasurementsByDateRange(
-            startDate: dateRange.startDate,
-            endDate: dateRange.endDate,
-            userId: userId,
-          ),
+    final Stream<List<HealthMeasurement>> stream$ = _healthMeasurementRepository
+        .getMeasurementsByDateRange(
+          startDate: dateRange.startDate,
+          endDate: dateRange.endDate,
+          userId: _userId,
         )
         .map((List<HealthMeasurement>? measurements) => [...?measurements]);
     await emit.forEach(

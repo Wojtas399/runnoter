@@ -5,29 +5,26 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/common/date_service.dart';
-import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/bloc/health_stats/health_stats_bloc.dart';
 import 'package:runnoter/domain/cubit/chart_date_range_cubit.dart';
 import 'package:runnoter/domain/entity/health_measurement.dart';
 import 'package:runnoter/domain/repository/health_measurement_repository.dart';
-import 'package:runnoter/domain/service/auth_service.dart';
 
 import '../../../creators/health_measurement_creator.dart';
 import '../../../mock/common/mock_date_service.dart';
 import '../../../mock/domain/cubit/mock_chart_date_range_cubit.dart';
 import '../../../mock/domain/repository/mock_health_measurement_repository.dart';
-import '../../../mock/domain/service/mock_auth_service.dart';
 
 void main() {
   final dateService = MockDateService();
-  final authService = MockAuthService();
   final healthMeasurementRepository = MockHealthMeasurementRepository();
   final chartDateRangeCubit = MockChartDateRangeCubit();
-  const String loggedUserId = 'u1';
+  const String userId = 'u1';
+
+  HealthStatsBloc createBloc() => HealthStatsBloc(userId: userId);
 
   setUpAll(() {
     GetIt.I.registerFactory<DateService>(() => dateService);
-    GetIt.I.registerFactory<AuthService>(() => authService);
     GetIt.I.registerSingleton<HealthMeasurementRepository>(
       healthMeasurementRepository,
     );
@@ -36,7 +33,6 @@ void main() {
 
   tearDown(() {
     reset(dateService);
-    reset(authService);
     reset(healthMeasurementRepository);
     reset(chartDateRangeCubit);
   });
@@ -78,12 +74,11 @@ void main() {
       blocTest(
         'should call chart date range method to initialize date range with week type and '
         'should set listener of chart date range state',
-        build: () => HealthStatsBloc(),
+        build: () => createBloc(),
         setUp: () {
           chartDateRangeCubit.mockStream(
             expectedStream: chartDateRange$.stream,
           );
-          authService.mockGetLoggedUserId(userId: loggedUserId);
           healthMeasurementRepository.mockGetMeasurementsByDateRange();
           dateService.mockAreDatesTheSame(expected: false);
           when(
@@ -106,7 +101,6 @@ void main() {
         },
         expect: () => [
           HealthStatsState(
-            status: const BlocStatusComplete(),
             dateRangeType: DateRangeType.week,
             dateRange: DateRange(
               startDate: DateTime(2023, 8, 21),
@@ -116,7 +110,6 @@ void main() {
             fastingWeightPoints: expectedPoints,
           ),
           HealthStatsState(
-            status: const BlocStatusComplete(),
             dateRangeType: DateRangeType.month,
             dateRange: DateRange(
               startDate: DateTime(2023, 8),
@@ -188,9 +181,8 @@ void main() {
       blocTest(
         'should set listener of health measurements from given date range and '
         'should create points of all days of the week',
-        build: () => HealthStatsBloc(),
+        build: () => createBloc(),
         setUp: () {
-          authService.mockGetLoggedUserId(userId: loggedUserId);
           healthMeasurementRepository.mockGetMeasurementsByDateRange(
             measurementsStream: healthMeasurements$.stream,
           );
@@ -233,14 +225,12 @@ void main() {
         },
         expect: () => [
           HealthStatsState(
-            status: const BlocStatusComplete(),
             dateRangeType: DateRangeType.week,
             dateRange: DateRange(startDate: startDate, endDate: endDate),
             restingHeartRatePoints: expectedRestingHeartRatePoints,
             fastingWeightPoints: expectedFastingWeightPoints,
           ),
           HealthStatsState(
-            status: const BlocStatusComplete(),
             dateRangeType: DateRangeType.week,
             dateRange: DateRange(startDate: startDate, endDate: endDate),
             restingHeartRatePoints: expectedUpdatedPoints,
@@ -251,7 +241,7 @@ void main() {
           () => healthMeasurementRepository.getMeasurementsByDateRange(
             startDate: startDate,
             endDate: endDate,
-            userId: loggedUserId,
+            userId: userId,
           ),
         ).called(1),
       );
@@ -320,9 +310,8 @@ void main() {
       blocTest(
         'should set listener of health measurements from given date range and '
         'should create points of all days of the month',
-        build: () => HealthStatsBloc(),
+        build: () => createBloc(),
         setUp: () {
-          authService.mockGetLoggedUserId(userId: loggedUserId);
           healthMeasurementRepository.mockGetMeasurementsByDateRange(
             measurementsStream: healthMeasurements$.stream,
           );
@@ -365,14 +354,12 @@ void main() {
         },
         expect: () => [
           HealthStatsState(
-            status: const BlocStatusComplete(),
             dateRangeType: DateRangeType.month,
             dateRange: DateRange(startDate: startDate, endDate: endDate),
             restingHeartRatePoints: expectedRestingHeartRatePoints,
             fastingWeightPoints: expectedFastingWeightPoints,
           ),
           HealthStatsState(
-            status: const BlocStatusComplete(),
             dateRangeType: DateRangeType.month,
             dateRange: DateRange(startDate: startDate, endDate: endDate),
             restingHeartRatePoints: expectedUpdatedPoints,
@@ -383,7 +370,7 @@ void main() {
           () => healthMeasurementRepository.getMeasurementsByDateRange(
             startDate: startDate,
             endDate: endDate,
-            userId: loggedUserId,
+            userId: userId,
           ),
         ).called(1),
       );
@@ -464,9 +451,8 @@ void main() {
       blocTest(
         'should set listener of health measurements from given date range and '
         'should create points of all months of the year with average values',
-        build: () => HealthStatsBloc(),
+        build: () => createBloc(),
         setUp: () {
-          authService.mockGetLoggedUserId(userId: loggedUserId);
           healthMeasurementRepository.mockGetMeasurementsByDateRange(
             measurementsStream: healthMeasurements$.stream,
           );
@@ -485,14 +471,12 @@ void main() {
         },
         expect: () => [
           HealthStatsState(
-            status: const BlocStatusComplete(),
             dateRangeType: DateRangeType.year,
             dateRange: DateRange(startDate: startDate, endDate: endDate),
             restingHeartRatePoints: expectedRestingHeartRatePoints,
             fastingWeightPoints: expectedFastingWeightPoints,
           ),
           HealthStatsState(
-            status: const BlocStatusComplete(),
             dateRangeType: DateRangeType.year,
             dateRange: DateRange(startDate: startDate, endDate: endDate),
             restingHeartRatePoints: expectedUpdatedPoints,
@@ -503,7 +487,7 @@ void main() {
           () => healthMeasurementRepository.getMeasurementsByDateRange(
             startDate: startDate,
             endDate: endDate,
-            userId: loggedUserId,
+            userId: userId,
           ),
         ).called(1),
       );
@@ -513,7 +497,7 @@ void main() {
   blocTest(
     'change chart date range type, '
     "should call chart date range cubit's method to initialize new date range type",
-    build: () => HealthStatsBloc(),
+    build: () => createBloc(),
     act: (bloc) => bloc.add(const HealthStatsEventChangeChartDateRangeType(
       dateRangeType: DateRangeType.month,
     )),
@@ -526,7 +510,7 @@ void main() {
   blocTest(
     'previous chart range, '
     "should call chart date range cubit's method to set previous date range",
-    build: () => HealthStatsBloc(),
+    build: () => createBloc(),
     act: (bloc) => bloc.add(const HealthStatsEventPreviousChartDateRange()),
     expect: () => [],
     verify: (_) => verify(chartDateRangeCubit.previousDateRange).called(1),
@@ -535,7 +519,7 @@ void main() {
   blocTest(
     'next chart range, '
     "should call chart date range cubit's method to set next date range",
-    build: () => HealthStatsBloc(),
+    build: () => createBloc(),
     act: (bloc) => bloc.add(const HealthStatsEventNextChartDateRange()),
     expect: () => [],
     verify: (_) => verify(chartDateRangeCubit.nextDateRange).called(1),

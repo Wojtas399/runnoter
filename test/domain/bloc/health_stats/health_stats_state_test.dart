@@ -1,31 +1,13 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/bloc/health_stats/health_stats_bloc.dart';
 import 'package:runnoter/domain/cubit/chart_date_range_cubit.dart';
 
 void main() {
   late HealthStatsState state;
 
-  HealthStatsState createState() => const HealthStatsState(
-        status: BlocStatusInitial(),
-      );
-
   setUp(() {
-    state = createState();
+    state = const HealthStatsState();
   });
-
-  test(
-    'copy with status',
-    () {
-      const BlocStatus expected = BlocStatusLoading();
-
-      state = state.copyWith(status: expected);
-      final state2 = state.copyWith();
-
-      expect(state.status, expected);
-      expect(state2.status, const BlocStatusComplete());
-    },
-  );
 
   test(
     'copy with dateRangeType',
