@@ -12,6 +12,7 @@ import '../../component/card_body_component.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/responsive_layout_component.dart';
 import '../../dialog/persons_search/persons_search_dialog.dart';
+import '../../extension/context_extensions.dart';
 import '../../service/dialog_service.dart';
 import 'clients_list.dart';
 import 'clients_requests.dart';
@@ -24,13 +25,14 @@ class ClientsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => ClientsBloc()..add(const ClientsEventInitialize()),
-      child: const _BlocListener(
+      child: _BlocListener(
         child: SingleChildScrollView(
           child: MediumBody(
             child: Padding(
-              //TODO: Adjust paddings to web view
-              padding: EdgeInsets.only(top: 8, bottom: 24),
-              child: ResponsiveLayout(
+              padding: context.isMobileSize
+                  ? const EdgeInsets.only(top: 8, bottom: 24)
+                  : const EdgeInsets.all(24),
+              child: const ResponsiveLayout(
                 mobileBody: _MobileContent(),
                 desktopBody: _DesktopContent(),
               ),
