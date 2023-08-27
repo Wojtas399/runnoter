@@ -27,9 +27,7 @@ class HealthScreen extends StatelessWidget {
                   ),
                   BlocProvider(
                     create: (_) => HealthStatsBloc(userId: loggedUserId)
-                      ..add(
-                        const HealthStatsEventInitializeChartDateRangeListener(),
-                      ),
+                      ..add(const HealthStatsEventInitialize()),
                   )
                 ],
                 child: const HealthContent(),

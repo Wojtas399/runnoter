@@ -10,6 +10,7 @@ import '../../component/empty_content_info_component.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/loading_info_component.dart';
 import '../../component/padding/paddings_24.dart';
+import '../../component/text/title_text_components.dart';
 import '../../extension/context_extensions.dart';
 import '../../formatter/date_formatter.dart';
 import '../../formatter/distance_unit_formatter.dart';
@@ -27,15 +28,20 @@ class ClientStatsMileage extends StatelessWidget {
     } else if (state.mileageChartPoints!.isEmpty) {
       return const _NoDataInfo();
     }
+
+    final String label = Str.of(context).mileageTitle;
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: _DateRange(
-            dateRangeType: state.dateRangeType!,
-            dateRange: state.dateRange!,
-          ),
+        Row(
+          children: [
+            if (context.isMobileSize) TitleMedium(label) else TitleLarge(label),
+          ],
+        ),
+        const Gap24(),
+        _DateRange(
+          dateRangeType: state.dateRangeType!,
+          dateRange: state.dateRange!,
         ),
         const Gap8(),
         _Chart(

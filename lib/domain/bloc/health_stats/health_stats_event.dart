@@ -4,9 +4,8 @@ abstract class HealthStatsEvent {
   const HealthStatsEvent();
 }
 
-class HealthStatsEventInitializeChartDateRangeListener
-    extends HealthStatsEvent {
-  const HealthStatsEventInitializeChartDateRangeListener();
+class HealthStatsEventInitialize extends HealthStatsEvent {
+  const HealthStatsEventInitialize();
 }
 
 class HealthStatsEventChartDateRangeUpdated extends HealthStatsEvent {

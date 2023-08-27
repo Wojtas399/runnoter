@@ -29,12 +29,9 @@ class HealthStatsBloc extends Bloc<HealthStatsEvent, HealthStatsState> {
         _healthMeasurementRepository = getIt<HealthMeasurementRepository>(),
         _chartDateRangeCubit = getIt<ChartDateRangeCubit>(),
         super(initialState) {
+    on<HealthStatsEventInitialize>(_initialize);
     on<HealthStatsEventChartDateRangeUpdated>(
       _chartDateRangeUpdated,
-      transformer: restartable(),
-    );
-    on<HealthStatsEventInitializeChartDateRangeListener>(
-      _initializeChartDateRangeListener,
       transformer: restartable(),
     );
     on<HealthStatsEventChangeChartDateRangeType>(_changeChartDateRangeType);
@@ -48,8 +45,8 @@ class HealthStatsBloc extends Bloc<HealthStatsEvent, HealthStatsState> {
     return super.close();
   }
 
-  void _initializeChartDateRangeListener(
-    HealthStatsEventInitializeChartDateRangeListener event,
+  void _initialize(
+    HealthStatsEventInitialize event,
     Emitter<HealthStatsState> emit,
   ) {
     _disposeChartDateRangeListener();

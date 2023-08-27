@@ -832,6 +832,10 @@
   "@clientStatsTitle": {
     "description": "Title of the client stats screen"
   },
+  "clientStatsHealthMeasurements": "Pomiary zdrowia",
+  "@clientStatsHealthMeasurements": {
+    "description": "Label of health measurements stats"
+  },
   "@__________ACTIVITY_STATUS_PARAMS__________": {},
   "activityStatus": "Status",
   "@activityStatus": {

@@ -30,7 +30,7 @@ class DateRangeHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return ConstrainedBox(
       constraints: const BoxConstraints(maxWidth: 600),
       child: Column(
         children: [

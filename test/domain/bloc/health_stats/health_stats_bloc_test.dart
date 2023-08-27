@@ -38,7 +38,7 @@ void main() {
   });
 
   group(
-    'initialize chart date range listener',
+    'initialize',
     () {
       final ChartDateRangeState chartDateRange = ChartDateRangeState(
         dateRangeType: DateRangeType.week,
@@ -95,7 +95,7 @@ void main() {
           ).thenReturn(true);
         },
         act: (bloc) async {
-          bloc.add(const HealthStatsEventInitializeChartDateRangeListener());
+          bloc.add(const HealthStatsEventInitialize());
           await bloc.stream.first;
           chartDateRange$.add(updatedChartDateRange);
         },

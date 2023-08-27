@@ -28,6 +28,7 @@ class ClientsScreen extends StatelessWidget {
         child: SingleChildScrollView(
           child: MediumBody(
             child: Padding(
+              //TODO: Adjust paddings to web view
               padding: EdgeInsets.only(top: 8, bottom: 24),
               child: ResponsiveLayout(
                 mobileBody: _MobileContent(),
