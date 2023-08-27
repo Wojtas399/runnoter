@@ -20,9 +20,12 @@ class HealthCharts extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 24),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          TitleMedium(Str.of(context).healthSummaryOfMeasurements),
+          Row(
+            children: [
+              TitleMedium(Str.of(context).healthSummaryOfMeasurements),
+            ],
+          ),
           const Gap16(),
           const _ChartRangeSelection(),
           const Gap8(),
