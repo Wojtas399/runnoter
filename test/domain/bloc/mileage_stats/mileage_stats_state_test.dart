@@ -1,26 +1,12 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:runnoter/domain/additional_model/bloc_status.dart';
-import 'package:runnoter/domain/bloc/mileage/mileage_bloc.dart';
+import 'package:runnoter/domain/bloc/mileage_stats/mileage_stats_bloc.dart';
 import 'package:runnoter/domain/cubit/chart_date_range_cubit.dart';
 
 void main() {
-  late MileageState state;
+  late MileageStatsState state;
 
   setUp(
-    () => state = const MileageState(status: BlocStatusInitial()),
-  );
-
-  test(
-    'copy with status',
-    () {
-      const BlocStatus expected = BlocStatusLoading();
-
-      state = state.copyWith(status: expected);
-      final state2 = state.copyWith();
-
-      expect(state.status, expected);
-      expect(state2.status, const BlocStatusComplete());
-    },
+    () => state = const MileageStatsState(),
   );
 
   test(
@@ -55,9 +41,9 @@ void main() {
   test(
     'copy with mileages',
     () {
-      final List<MileageChartPoint> expected = [
-        MileageChartPoint(date: DateTime(2023, 8, 21), mileage: 12),
-        MileageChartPoint(date: DateTime(2023, 8, 22), mileage: 20),
+      final List<MileageStatsChartPoint> expected = [
+        MileageStatsChartPoint(date: DateTime(2023, 8, 21), mileage: 12),
+        MileageStatsChartPoint(date: DateTime(2023, 8, 22), mileage: 20),
       ];
 
       state = state.copyWith(mileageChartPoints: expected);

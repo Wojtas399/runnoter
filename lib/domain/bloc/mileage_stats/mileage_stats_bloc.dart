@@ -8,9 +8,6 @@ import 'package:rxdart/rxdart.dart';
 import '../../../common/date_service.dart';
 import '../../../dependency_injection.dart';
 import '../../additional_model/activity_status.dart';
-import '../../additional_model/bloc_state.dart';
-import '../../additional_model/bloc_status.dart';
-import '../../additional_model/bloc_with_status.dart';
 import '../../cubit/chart_date_range_cubit.dart';
 import '../../entity/activity.dart';
 import '../../entity/race.dart';
@@ -18,11 +15,10 @@ import '../../entity/workout.dart';
 import '../../repository/race_repository.dart';
 import '../../repository/workout_repository.dart';
 
-part 'mileage_event.dart';
-part 'mileage_state.dart';
+part 'mileage_stats_event.dart';
+part 'mileage_stats_state.dart';
 
-class MileageBloc
-    extends BlocWithStatus<MileageEvent, MileageState, dynamic, dynamic> {
+class MileageStatsBloc extends Bloc<MileageStatsEvent, MileageStatsState> {
   final String _userId;
   final WorkoutRepository _workoutRepository;
   final RaceRepository _raceRepository;
@@ -30,25 +26,23 @@ class MileageBloc
   final DateService _dateService;
   StreamSubscription<ChartDateRangeState>? _chartDateRangeListener;
 
-  MileageBloc({
+  MileageStatsBloc({
     required String userId,
-    MileageState initialState = const MileageState(
-      status: BlocStatusInitial(),
-    ),
+    MileageStatsState initialState = const MileageStatsState(),
   })  : _userId = userId,
         _workoutRepository = getIt<WorkoutRepository>(),
         _raceRepository = getIt<RaceRepository>(),
         _chartDateRangeCubit = getIt<ChartDateRangeCubit>(),
         _dateService = getIt<DateService>(),
         super(initialState) {
-    on<MileageEventInitialize>(_initialize);
-    on<MileageEventChartDateRangeUpdated>(
+    on<MileageStatsEventInitialize>(_initialize);
+    on<MileageStatsEventChartDateRangeUpdated>(
       _chartDateRangeUpdated,
       transformer: restartable(),
     );
-    on<MileageEventChangeDateRangeType>(_changeDateRangeType);
-    on<MileageEventPreviousDateRange>(_previousDateRange);
-    on<MileageEventNextDateRange>(_nextDateRange);
+    on<MileageStatsEventChangeDateRangeType>(_changeDateRangeType);
+    on<MileageStatsEventPreviousDateRange>(_previousDateRange);
+    on<MileageStatsEventNextDateRange>(_nextDateRange);
   }
 
   @override
@@ -58,21 +52,21 @@ class MileageBloc
   }
 
   void _initialize(
-    MileageEventInitialize event,
-    Emitter<MileageState> emit,
+    MileageStatsEventInitialize event,
+    Emitter<MileageStatsState> emit,
   ) {
     _disposeChartDateRangeListener();
     _chartDateRangeListener ??= _chartDateRangeCubit.stream.listen(
       (ChartDateRangeState chartDateRange) => add(
-        MileageEventChartDateRangeUpdated(chartDateRange: chartDateRange),
+        MileageStatsEventChartDateRangeUpdated(chartDateRange: chartDateRange),
       ),
     );
     _chartDateRangeCubit.initializeNewDateRangeType(DateRangeType.year);
   }
 
   Future<void> _chartDateRangeUpdated(
-    MileageEventChartDateRangeUpdated event,
-    Emitter<MileageState> emit,
+    MileageStatsEventChartDateRangeUpdated event,
+    Emitter<MileageStatsState> emit,
   ) async {
     final DateRangeType dateRangeType = event.chartDateRange.dateRangeType;
     final DateRange? dateRange = event.chartDateRange.dateRange;
@@ -106,32 +100,32 @@ class MileageBloc
   }
 
   void _changeDateRangeType(
-    MileageEventChangeDateRangeType event,
-    Emitter<MileageState> emit,
+    MileageStatsEventChangeDateRangeType event,
+    Emitter<MileageStatsState> emit,
   ) {
     if (event.dateRangeType == DateRangeType.month) return;
     _chartDateRangeCubit.initializeNewDateRangeType(event.dateRangeType);
   }
 
   void _previousDateRange(
-    MileageEventPreviousDateRange event,
-    Emitter<MileageState> emit,
+    MileageStatsEventPreviousDateRange event,
+    Emitter<MileageStatsState> emit,
   ) {
     _chartDateRangeCubit.previousDateRange();
   }
 
   void _nextDateRange(
-    MileageEventNextDateRange event,
-    Emitter<MileageState> emit,
+    MileageStatsEventNextDateRange event,
+    Emitter<MileageStatsState> emit,
   ) {
     _chartDateRangeCubit.nextDateRange();
   }
 
-  List<MileageChartPoint> _createPointsForEachWeekDay(
+  List<MileageStatsChartPoint> _createPointsForEachWeekDay(
     DateRange dateRange,
     _Activities activities,
   ) =>
-      List<MileageChartPoint>.generate(
+      List<MileageStatsChartPoint>.generate(
         7,
         (index) {
           final DateTime date = DateTime(
@@ -150,18 +144,18 @@ class MileageBloc
               _sumCoveredDistancesOfActivities(workoutsFromDay);
           final double racesCoveredDistance =
               _sumCoveredDistancesOfActivities(racesFromDay);
-          return MileageChartPoint(
+          return MileageStatsChartPoint(
             date: date,
             mileage: workoutsCoveredDistance + racesCoveredDistance,
           );
         },
       );
 
-  List<MileageChartPoint> _createPointsForEachMonth(
+  List<MileageStatsChartPoint> _createPointsForEachMonth(
     final int year,
     final _Activities activities,
   ) =>
-      List<MileageChartPoint>.generate(
+      List<MileageStatsChartPoint>.generate(
         12,
         (index) {
           final DateTime date = DateTime(year, 1 + index);
@@ -173,7 +167,7 @@ class MileageBloc
               _sumCoveredDistancesOfActivities(workoutsFromMonth);
           final double racesCoveredDistance =
               _sumCoveredDistancesOfActivities(racesFromMonth);
-          return MileageChartPoint(
+          return MileageStatsChartPoint(
             date: date,
             mileage: workoutsCoveredDistance + racesCoveredDistance,
           );

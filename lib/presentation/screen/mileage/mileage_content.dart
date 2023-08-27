@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
-import '../../../domain/bloc/mileage/mileage_bloc.dart';
+import '../../../domain/bloc/mileage_stats/mileage_stats_bloc.dart';
 import '../../../domain/cubit/chart_date_range_cubit.dart';
 import '../../component/body/big_body_component.dart';
 import '../../component/card_body_component.dart';
@@ -45,7 +45,7 @@ class _CommonContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final MileageState state = context.watch<MileageBloc>().state;
+    final MileageStatsState state = context.watch<MileageStatsBloc>().state;
     if (state.dateRangeType == null ||
         state.dateRange == null ||
         state.mileageChartPoints == null) {
@@ -107,23 +107,27 @@ class _DateRange extends StatelessWidget {
   }
 
   void _changeDateRangeType(BuildContext context, DateRangeType dateRangeType) {
-    context.read<MileageBloc>().add(
-          MileageEventChangeDateRangeType(dateRangeType: dateRangeType),
+    context.read<MileageStatsBloc>().add(
+          MileageStatsEventChangeDateRangeType(dateRangeType: dateRangeType),
         );
   }
 
   void _onPreviousRangePressed(BuildContext context) {
-    context.read<MileageBloc>().add(const MileageEventPreviousDateRange());
+    context.read<MileageStatsBloc>().add(
+          const MileageStatsEventPreviousDateRange(),
+        );
   }
 
   void _onNextRangePressed(BuildContext context) {
-    context.read<MileageBloc>().add(const MileageEventNextDateRange());
+    context.read<MileageStatsBloc>().add(
+          const MileageStatsEventNextDateRange(),
+        );
   }
 }
 
 class _Chart extends StatelessWidget {
   final DateRangeType dateRangeType;
-  final List<MileageChartPoint> chartPoints;
+  final List<MileageStatsChartPoint> chartPoints;
 
   const _Chart({required this.dateRangeType, required this.chartPoints});
 
@@ -138,19 +142,19 @@ class _Chart extends StatelessWidget {
           textStyle: Theme.of(context).textTheme.labelSmall,
         ),
       ),
-      series: <ColumnSeries<MileageChartPoint, String>>[
+      series: <ColumnSeries<MileageStatsChartPoint, String>>[
         ColumnSeries(
           dataSource: chartPoints,
-          xValueMapper: (MileageChartPoint point, _) =>
+          xValueMapper: (MileageStatsChartPoint point, _) =>
               _createXLabel(context, point),
-          yValueMapper: (MileageChartPoint point, _) =>
+          yValueMapper: (MileageStatsChartPoint point, _) =>
               context.convertDistanceFromDefaultUnit(point.mileage),
         ),
       ],
     );
   }
 
-  String _createXLabel(BuildContext context, MileageChartPoint point) =>
+  String _createXLabel(BuildContext context, MileageStatsChartPoint point) =>
       switch (dateRangeType) {
         DateRangeType.week => point.date.toDayAbbreviation(context),
         DateRangeType.month => '',

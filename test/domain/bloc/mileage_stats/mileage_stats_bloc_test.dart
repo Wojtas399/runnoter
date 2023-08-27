@@ -6,9 +6,8 @@ import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/common/date_service.dart';
 import 'package:runnoter/domain/additional_model/activity_status.dart';
-import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/additional_model/workout_stage.dart';
-import 'package:runnoter/domain/bloc/mileage/mileage_bloc.dart';
+import 'package:runnoter/domain/bloc/mileage_stats/mileage_stats_bloc.dart';
 import 'package:runnoter/domain/cubit/chart_date_range_cubit.dart';
 import 'package:runnoter/domain/entity/race.dart';
 import 'package:runnoter/domain/entity/workout.dart';
@@ -30,7 +29,7 @@ void main() {
   final dateService = MockDateService();
   const String userId = 'u1';
 
-  MileageBloc createBloc() => MileageBloc(userId: userId);
+  MileageStatsBloc createBloc() => MileageStatsBloc(userId: userId);
 
   setUpAll(() {
     GetIt.I.registerSingleton<WorkoutRepository>(workoutRepository);
@@ -65,13 +64,19 @@ void main() {
       );
       final StreamController<ChartDateRangeState> chartDateRange$ =
           StreamController()..add(chartDateRange);
-      final expectedPoints = List<MileageChartPoint>.generate(
+      final expectedPoints = List<MileageStatsChartPoint>.generate(
         7,
-        (i) => MileageChartPoint(date: DateTime(2023, 8, 21 + i), mileage: 0.0),
+        (i) => MileageStatsChartPoint(
+          date: DateTime(2023, 8, 21 + i),
+          mileage: 0.0,
+        ),
       );
-      final expectedUpdatedPoints = List<MileageChartPoint>.generate(
+      final expectedUpdatedPoints = List<MileageStatsChartPoint>.generate(
         12,
-        (i) => MileageChartPoint(date: DateTime(2023, 1 + i), mileage: 0.0),
+        (i) => MileageStatsChartPoint(
+          date: DateTime(2023, 1 + i),
+          mileage: 0.0,
+        ),
       );
 
       blocTest(
@@ -87,19 +92,17 @@ void main() {
           dateService.mockAreDatesTheSame(expected: false);
         },
         act: (bloc) async {
-          bloc.add(const MileageEventInitialize());
+          bloc.add(const MileageStatsEventInitialize());
           await bloc.stream.first;
           chartDateRange$.add(updatedChartDateRange);
         },
         expect: () => [
-          MileageState(
-            status: const BlocStatusComplete(),
+          MileageStatsState(
             dateRangeType: chartDateRange.dateRangeType,
             dateRange: chartDateRange.dateRange,
             mileageChartPoints: expectedPoints,
           ),
-          MileageState(
-            status: const BlocStatusComplete(),
+          MileageStatsState(
             dateRangeType: updatedChartDateRange.dateRangeType,
             dateRange: updatedChartDateRange.dateRange,
             mileageChartPoints: expectedUpdatedPoints,
@@ -183,9 +186,9 @@ void main() {
         ..add(workouts);
       final StreamController<List<Race>> races$ = StreamController()
         ..add(races);
-      final expectedMileageChartPoints = List<MileageChartPoint>.generate(
+      final expectedMileageChartPoints = List<MileageStatsChartPoint>.generate(
         7,
-        (index) => MileageChartPoint(
+        (index) => MileageStatsChartPoint(
           date: DateTime(2023, 8, 21 + index),
           mileage: switch (21 + index) {
             21 => 12,
@@ -196,16 +199,18 @@ void main() {
           },
         ),
       );
-      final secondExpectedMileageChartPoints = List<MileageChartPoint>.generate(
+      final secondExpectedMileageChartPoints =
+          List<MileageStatsChartPoint>.generate(
         7,
-        (index) => MileageChartPoint(
+        (index) => MileageStatsChartPoint(
           date: DateTime(2023, 8, 21 + index),
           mileage: switch (21 + index) { 27 => 21, int() => 0 },
         ),
       );
-      final thirdExpectedMileageChartPoints = List<MileageChartPoint>.generate(
+      final thirdExpectedMileageChartPoints =
+          List<MileageStatsChartPoint>.generate(
         7,
-        (index) => MileageChartPoint(
+        (index) => MileageStatsChartPoint(
           date: DateTime(2023, 8, 21 + index),
           mileage: 0,
         ),
@@ -242,7 +247,7 @@ void main() {
         },
         act: (bloc) async {
           bloc.add(
-            MileageEventChartDateRangeUpdated(
+            MileageStatsEventChartDateRangeUpdated(
               chartDateRange: ChartDateRangeState(
                 dateRangeType: DateRangeType.week,
                 dateRange: DateRange(startDate: startDate, endDate: endDate),
@@ -254,20 +259,17 @@ void main() {
           races$.add([]);
         },
         expect: () => [
-          MileageState(
-            status: const BlocStatusComplete(),
+          MileageStatsState(
             dateRangeType: DateRangeType.week,
             dateRange: DateRange(startDate: startDate, endDate: endDate),
             mileageChartPoints: expectedMileageChartPoints,
           ),
-          MileageState(
-            status: const BlocStatusComplete(),
+          MileageStatsState(
             dateRangeType: DateRangeType.week,
             dateRange: DateRange(startDate: startDate, endDate: endDate),
             mileageChartPoints: secondExpectedMileageChartPoints,
           ),
-          MileageState(
-            status: const BlocStatusComplete(),
+          MileageStatsState(
             dateRangeType: DateRangeType.week,
             dateRange: DateRange(startDate: startDate, endDate: endDate),
             mileageChartPoints: thirdExpectedMileageChartPoints,
@@ -342,9 +344,9 @@ void main() {
         ..add(workouts);
       final StreamController<List<Race>> races$ = StreamController()
         ..add(races);
-      final expectedMileageChartPoints = List<MileageChartPoint>.generate(
+      final expectedMileageChartPoints = List<MileageStatsChartPoint>.generate(
         12,
-        (index) => MileageChartPoint(
+        (index) => MileageStatsChartPoint(
           date: DateTime(2023, 1 + index),
           mileage: switch (1 + index) {
             1 => 15,
@@ -355,17 +357,21 @@ void main() {
           },
         ),
       );
-      final secondExpectedMileageChartPoints = List<MileageChartPoint>.generate(
+      final secondExpectedMileageChartPoints =
+          List<MileageStatsChartPoint>.generate(
         12,
-        (index) => MileageChartPoint(
+        (index) => MileageStatsChartPoint(
           date: DateTime(2023, 1 + index),
           mileage: switch (1 + index) { 4 => 21, 8 => 15, int() => 0 },
         ),
       );
-      final thirdExpectedMileageChartPoints = List<MileageChartPoint>.generate(
+      final thirdExpectedMileageChartPoints =
+          List<MileageStatsChartPoint>.generate(
         12,
-        (index) =>
-            MileageChartPoint(date: DateTime(2023, 1 + index), mileage: 0),
+        (index) => MileageStatsChartPoint(
+          date: DateTime(2023, 1 + index),
+          mileage: 0,
+        ),
       );
 
       blocTest(
@@ -380,7 +386,7 @@ void main() {
         },
         act: (bloc) {
           bloc.add(
-            MileageEventChartDateRangeUpdated(
+            MileageStatsEventChartDateRangeUpdated(
               chartDateRange: ChartDateRangeState(
                 dateRangeType: DateRangeType.year,
                 dateRange: DateRange(startDate: startDate, endDate: endDate),
@@ -391,20 +397,17 @@ void main() {
           races$.add([]);
         },
         expect: () => [
-          MileageState(
-            status: const BlocStatusComplete(),
+          MileageStatsState(
             dateRangeType: DateRangeType.year,
             dateRange: DateRange(startDate: startDate, endDate: endDate),
             mileageChartPoints: expectedMileageChartPoints,
           ),
-          MileageState(
-            status: const BlocStatusComplete(),
+          MileageStatsState(
             dateRangeType: DateRangeType.year,
             dateRange: DateRange(startDate: startDate, endDate: endDate),
             mileageChartPoints: secondExpectedMileageChartPoints,
           ),
-          MileageState(
-            status: const BlocStatusComplete(),
+          MileageStatsState(
             dateRangeType: DateRangeType.year,
             dateRange: DateRange(startDate: startDate, endDate: endDate),
             mileageChartPoints: thirdExpectedMileageChartPoints,
@@ -436,7 +439,7 @@ void main() {
     'should do nothing',
     build: () => createBloc(),
     act: (bloc) => bloc.add(
-      MileageEventChartDateRangeUpdated(
+      MileageStatsEventChartDateRangeUpdated(
         chartDateRange: ChartDateRangeState(
           dateRangeType: DateRangeType.month,
           dateRange: DateRange(
@@ -455,7 +458,7 @@ void main() {
     'should do nothing',
     build: () => createBloc(),
     act: (bloc) => bloc.add(
-      const MileageEventChartDateRangeUpdated(
+      const MileageStatsEventChartDateRangeUpdated(
         chartDateRange: ChartDateRangeState(
           dateRangeType: DateRangeType.week,
           dateRange: null,
@@ -471,7 +474,9 @@ void main() {
     "should call chart date range cubit's method to initialize new date range type",
     build: () => createBloc(),
     act: (bloc) => bloc.add(
-      const MileageEventChangeDateRangeType(dateRangeType: DateRangeType.week),
+      const MileageStatsEventChangeDateRangeType(
+        dateRangeType: DateRangeType.week,
+      ),
     ),
     verify: (_) => verify(
       () => chartDateRangeCubit.initializeNewDateRangeType(DateRangeType.week),
@@ -484,7 +489,9 @@ void main() {
     "should not call chart date range cubit's method to initialize new date range type",
     build: () => createBloc(),
     act: (bloc) => bloc.add(
-      const MileageEventChangeDateRangeType(dateRangeType: DateRangeType.month),
+      const MileageStatsEventChangeDateRangeType(
+        dateRangeType: DateRangeType.month,
+      ),
     ),
     verify: (_) => verifyNever(
       () => chartDateRangeCubit.initializeNewDateRangeType(DateRangeType.month),
@@ -497,7 +504,9 @@ void main() {
     "should call chart date range cubit's method to initialize new date range type",
     build: () => createBloc(),
     act: (bloc) => bloc.add(
-      const MileageEventChangeDateRangeType(dateRangeType: DateRangeType.year),
+      const MileageStatsEventChangeDateRangeType(
+        dateRangeType: DateRangeType.year,
+      ),
     ),
     verify: (_) => verify(
       () => chartDateRangeCubit.initializeNewDateRangeType(DateRangeType.year),
@@ -508,7 +517,7 @@ void main() {
     'previous date range, '
     "should call chart date range cubit's method to set previous date range",
     build: () => createBloc(),
-    act: (bloc) => bloc.add(const MileageEventPreviousDateRange()),
+    act: (bloc) => bloc.add(const MileageStatsEventPreviousDateRange()),
     verify: (_) => verify(chartDateRangeCubit.previousDateRange).called(1),
   );
 
@@ -516,7 +525,7 @@ void main() {
     'next date range, '
     "should call chart date range cubit's method to set next date range",
     build: () => createBloc(),
-    act: (bloc) => bloc.add(const MileageEventNextDateRange()),
+    act: (bloc) => bloc.add(const MileageStatsEventNextDateRange()),
     verify: (_) => verify(chartDateRangeCubit.nextDateRange).called(1),
   );
 }

@@ -1,12 +1,11 @@
-part of 'mileage_bloc.dart';
+part of 'mileage_stats_bloc.dart';
 
-class MileageState extends BlocState {
+class MileageStatsState extends Equatable {
   final DateRangeType? dateRangeType;
   final DateRange? dateRange;
-  final List<MileageChartPoint>? mileageChartPoints;
+  final List<MileageStatsChartPoint>? mileageChartPoints;
 
-  const MileageState({
-    required super.status,
+  const MileageStatsState({
     this.dateRangeType,
     this.dateRange,
     this.mileageChartPoints,
@@ -14,32 +13,28 @@ class MileageState extends BlocState {
 
   @override
   List<Object?> get props => [
-        status,
         dateRangeType,
         dateRange,
         mileageChartPoints,
       ];
 
-  @override
-  MileageState copyWith({
-    BlocStatus? status,
+  MileageStatsState copyWith({
     DateRangeType? dateRangeType,
     DateRange? dateRange,
-    List<MileageChartPoint>? mileageChartPoints,
+    List<MileageStatsChartPoint>? mileageChartPoints,
   }) =>
-      MileageState(
-        status: status ?? const BlocStatusComplete(),
+      MileageStatsState(
         dateRangeType: dateRangeType ?? this.dateRangeType,
         dateRange: dateRange ?? this.dateRange,
         mileageChartPoints: mileageChartPoints ?? this.mileageChartPoints,
       );
 }
 
-class MileageChartPoint extends Equatable {
+class MileageStatsChartPoint extends Equatable {
   final DateTime date;
   final double mileage;
 
-  const MileageChartPoint({required this.date, required this.mileage});
+  const MileageStatsChartPoint({required this.date, required this.mileage});
 
   @override
   List<Object?> get props => [date, mileage];

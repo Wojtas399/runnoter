@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../dependency_injection.dart';
-import '../../../domain/bloc/mileage/mileage_bloc.dart';
+import '../../../domain/bloc/mileage_stats/mileage_stats_bloc.dart';
 import '../../../domain/service/auth_service.dart';
 import '../../component/page_not_found_component.dart';
 import 'mileage_content.dart';
@@ -20,8 +20,8 @@ class MileageScreen extends StatelessWidget {
         final String? loggedUserId = snapshot.data;
         return loggedUserId != null
             ? BlocProvider(
-                create: (_) => MileageBloc(userId: loggedUserId)
-                  ..add(const MileageEventInitialize()),
+                create: (_) => MileageStatsBloc(userId: loggedUserId)
+                  ..add(const MileageStatsEventInitialize()),
                 child: const MileageContent(),
               )
             : const PageNotFound();
