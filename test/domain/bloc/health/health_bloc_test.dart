@@ -42,60 +42,6 @@ void main() {
   });
 
   group(
-    'initialize today measurement listener',
-    () {
-      final DateTime today = DateTime(2023, 5, 8);
-      final HealthMeasurement measurement = createHealthMeasurement(
-        date: today,
-        restingHeartRate: 48,
-        fastingWeight: 77,
-      );
-      final HealthMeasurement updatedMeasurement = createHealthMeasurement(
-        date: today,
-        restingHeartRate: 50,
-        fastingWeight: 77.5,
-      );
-      final StreamController<HealthMeasurement> measurement$ =
-          StreamController()..add(measurement);
-
-      blocTest(
-        'should set listener of today measurement',
-        build: () => HealthBloc(),
-        setUp: () {
-          dateService.mockGetToday(todayDate: today);
-          authService.mockGetLoggedUserId(userId: loggedUserId);
-          healthMeasurementRepository.mockGetMeasurementByDate(
-            measurementStream: measurement$.stream,
-          );
-        },
-        act: (bloc) {
-          bloc.add(const HealthEventInitializeTodayMeasurementListener());
-          measurement$.add(updatedMeasurement);
-        },
-        expect: () => [
-          HealthState(
-            status: const BlocStatusComplete(),
-            todayMeasurement: measurement,
-          ),
-          HealthState(
-            status: const BlocStatusComplete(),
-            todayMeasurement: updatedMeasurement,
-          ),
-        ],
-        verify: (_) {
-          verify(() => authService.loggedUserId$).called(1);
-          verify(
-            () => healthMeasurementRepository.getMeasurementByDate(
-              date: today,
-              userId: loggedUserId,
-            ),
-          ).called(1);
-        },
-      );
-    },
-  );
-
-  group(
     'initialize chart date range listener',
     () {
       final ChartDateRangeState chartDateRange = ChartDateRangeState(
@@ -559,35 +505,6 @@ void main() {
           ),
         ).called(1),
       );
-    },
-  );
-
-  blocTest(
-    'delete today measurement, '
-    'should call method from health measurement repository responsible for deleting measurement with today date',
-    build: () => HealthBloc(),
-    setUp: () {
-      authService.mockGetLoggedUserId(userId: loggedUserId);
-      healthMeasurementRepository.mockDeleteMeasurement();
-      dateService.mockGetToday(todayDate: DateTime(2023, 5, 12));
-    },
-    act: (bloc) => bloc.add(const HealthEventDeleteTodayMeasurement()),
-    expect: () => [
-      const HealthState(status: BlocStatusLoading()),
-      const HealthState(
-        status: BlocStatusComplete<HealthBlocInfo>(
-          info: HealthBlocInfo.healthMeasurementDeleted,
-        ),
-      ),
-    ],
-    verify: (_) {
-      verify(() => authService.loggedUserId$).called(1);
-      verify(
-        () => healthMeasurementRepository.deleteMeasurement(
-          userId: loggedUserId,
-          date: DateTime(2023, 5, 12),
-        ),
-      ).called(1);
     },
   );
 

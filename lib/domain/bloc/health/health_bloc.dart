@@ -20,7 +20,7 @@ part 'health_event.dart';
 part 'health_state.dart';
 
 class HealthBloc
-    extends BlocWithStatus<HealthEvent, HealthState, HealthBlocInfo, dynamic> {
+    extends BlocWithStatus<HealthEvent, HealthState, dynamic, dynamic> {
   final DateService _dateService;
   final AuthService _authService;
   final HealthMeasurementRepository _healthMeasurementRepository;
@@ -36,10 +36,6 @@ class HealthBloc
         _healthMeasurementRepository = getIt<HealthMeasurementRepository>(),
         _chartDateRangeCubit = getIt<ChartDateRangeCubit>(),
         super(state) {
-    on<HealthEventInitializeTodayMeasurementListener>(
-      _initializeTodayMeasurementListener,
-      transformer: restartable(),
-    );
     on<HealthEventChartDateRangeUpdated>(
       _chartDateRangeUpdated,
       transformer: restartable(),
@@ -48,7 +44,6 @@ class HealthBloc
       _initializeChartDateRangeListener,
       transformer: restartable(),
     );
-    on<HealthEventDeleteTodayMeasurement>(_deleteTodayMeasurement);
     on<HealthEventChangeChartDateRangeType>(_changeChartDateRangeType);
     on<HealthEventPreviousChartDateRange>(_previousChartDateRange);
     on<HealthEventNextChartDateRange>(_nextChartDateRange);
@@ -58,26 +53,6 @@ class HealthBloc
   Future<void> close() {
     _disposeChartDateRangeListener();
     return super.close();
-  }
-
-  Future<void> _initializeTodayMeasurementListener(
-    HealthEventInitializeTodayMeasurementListener event,
-    Emitter<HealthState> emit,
-  ) async {
-    final Stream<HealthMeasurement?> measurement$ =
-        _authService.loggedUserId$.whereNotNull().switchMap(
-              (userId) => _healthMeasurementRepository.getMeasurementByDate(
-                date: _dateService.getToday(),
-                userId: userId,
-              ),
-            );
-    await emit.forEach(
-      measurement$,
-      onData: (HealthMeasurement? measurement) => state.copyWith(
-        todayMeasurement: measurement,
-        removedTodayMeasurement: measurement == null,
-      ),
-    );
   }
 
   void _initializeChartDateRangeListener(
@@ -123,20 +98,6 @@ class HealthBloc
         );
       },
     );
-  }
-
-  Future<void> _deleteTodayMeasurement(
-    HealthEventDeleteTodayMeasurement event,
-    Emitter<HealthState> emit,
-  ) async {
-    final String? loggedUserId = await _authService.loggedUserId$.first;
-    if (loggedUserId == null) return;
-    emitLoadingStatus(emit);
-    await _healthMeasurementRepository.deleteMeasurement(
-      userId: loggedUserId,
-      date: _dateService.getToday(),
-    );
-    emitCompleteStatus(emit, info: HealthBlocInfo.healthMeasurementDeleted);
   }
 
   void _changeChartDateRangeType(
@@ -219,8 +180,6 @@ class HealthBloc
     _chartDateRangeListener = null;
   }
 }
-
-enum HealthBlocInfo { healthMeasurementAdded, healthMeasurementDeleted }
 
 class _ListenedPointsOfCharts extends Equatable {
   final List<HealthChartPoint> restingHeartRatePoints = [];

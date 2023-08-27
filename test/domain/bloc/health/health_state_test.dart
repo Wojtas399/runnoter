@@ -2,7 +2,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/bloc/health/health_bloc.dart';
 import 'package:runnoter/domain/cubit/chart_date_range_cubit.dart';
-import 'package:runnoter/domain/entity/health_measurement.dart';
 
 void main() {
   late HealthState state;
@@ -23,24 +22,6 @@ void main() {
 
       expect(state.status, expected);
       expect(state2.status, const BlocStatusComplete());
-    },
-  );
-
-  test(
-    'copy with todayMeasurement',
-    () {
-      final HealthMeasurement expected = HealthMeasurement(
-        userId: 'u1',
-        date: DateTime(2023, 1, 10),
-        restingHeartRate: 50,
-        fastingWeight: 80.2,
-      );
-
-      state = state.copyWith(todayMeasurement: expected);
-      final state2 = state.copyWith();
-
-      expect(state.todayMeasurement, expected);
-      expect(state2.todayMeasurement, expected);
     },
   );
 
@@ -70,24 +51,6 @@ void main() {
 
       expect(state.dateRange, expected);
       expect(state2.dateRange, expected);
-    },
-  );
-
-  test(
-    'copy with removedTodayMeasurement',
-    () {
-      final HealthMeasurement expected = HealthMeasurement(
-        userId: 'u1',
-        date: DateTime(2023, 1, 10),
-        restingHeartRate: 50,
-        fastingWeight: 80.2,
-      );
-
-      state = state.copyWith(todayMeasurement: expected);
-      final state2 = state.copyWith(removedTodayMeasurement: true);
-
-      expect(state.todayMeasurement, expected);
-      expect(state2.todayMeasurement, null);
     },
   );
 

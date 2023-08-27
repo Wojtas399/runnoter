@@ -1,7 +1,6 @@
 part of 'health_bloc.dart';
 
 class HealthState extends BlocState {
-  final HealthMeasurement? todayMeasurement;
   final DateRangeType? dateRangeType;
   final DateRange? dateRange;
   final List<HealthChartPoint>? restingHeartRatePoints;
@@ -9,7 +8,6 @@ class HealthState extends BlocState {
 
   const HealthState({
     required super.status,
-    this.todayMeasurement,
     this.dateRangeType,
     this.dateRange,
     this.restingHeartRatePoints,
@@ -19,7 +17,6 @@ class HealthState extends BlocState {
   @override
   List<Object?> get props => [
         status,
-        todayMeasurement,
         dateRangeType,
         dateRange,
         restingHeartRatePoints,
@@ -29,8 +26,6 @@ class HealthState extends BlocState {
   @override
   HealthState copyWith({
     BlocStatus? status,
-    HealthMeasurement? todayMeasurement,
-    bool removedTodayMeasurement = false,
     DateRangeType? dateRangeType,
     DateRange? dateRange,
     List<HealthChartPoint>? restingHeartRatePoints,
@@ -38,9 +33,6 @@ class HealthState extends BlocState {
   }) =>
       HealthState(
         status: status ?? const BlocStatusComplete(),
-        todayMeasurement: removedTodayMeasurement
-            ? null
-            : todayMeasurement ?? this.todayMeasurement,
         dateRangeType: dateRangeType ?? this.dateRangeType,
         dateRange: dateRange ?? this.dateRange,
         restingHeartRatePoints:

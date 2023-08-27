@@ -4,10 +4,6 @@ abstract class HealthEvent {
   const HealthEvent();
 }
 
-class HealthEventInitializeTodayMeasurementListener extends HealthEvent {
-  const HealthEventInitializeTodayMeasurementListener();
-}
-
 class HealthEventInitializeChartDateRangeListener extends HealthEvent {
   const HealthEventInitializeChartDateRangeListener();
 }
@@ -16,10 +12,6 @@ class HealthEventChartDateRangeUpdated extends HealthEvent {
   final ChartDateRangeState chartDateRange;
 
   const HealthEventChartDateRangeUpdated({required this.chartDateRange});
-}
-
-class HealthEventDeleteTodayMeasurement extends HealthEvent {
-  const HealthEventDeleteTodayMeasurement();
 }
 
 class HealthEventChangeChartDateRangeType extends HealthEvent {
