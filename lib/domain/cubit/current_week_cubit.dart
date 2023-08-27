@@ -7,7 +7,7 @@ import 'package:rxdart/rxdart.dart';
 import '../../common/date_service.dart';
 import '../../common/workout_stage_service.dart';
 import '../../dependency_injection.dart';
-import '../additional_model/calendar_date_range_data.dart';
+import '../additional_model/calendar_user_data.dart';
 import '../entity/health_measurement.dart';
 import '../entity/race.dart';
 import '../entity/workout.dart';
@@ -16,16 +16,16 @@ import '../repository/race_repository.dart';
 import '../repository/workout_repository.dart';
 import '../service/auth_service.dart';
 
-class CurrentWeekCubit extends Cubit<CalendarDateRangeData?> {
+class CurrentWeekCubit extends Cubit<CalendarUserData?> {
   final DateService _dateService;
   final AuthService _authService;
   final HealthMeasurementRepository _healthMeasurementRepository;
   final WorkoutRepository _workoutRepository;
   final RaceRepository _raceRepository;
-  StreamSubscription<CalendarDateRangeData>? _dateRangeDataListener;
+  StreamSubscription<CalendarUserData>? _dateRangeDataListener;
 
   CurrentWeekCubit({
-    CalendarDateRangeData? dateRangeData,
+    CalendarUserData? dateRangeData,
   })  : _dateService = getIt<DateService>(),
         _authService = getIt<AuthService>(),
         _healthMeasurementRepository = getIt<HealthMeasurementRepository>(),
@@ -75,14 +75,14 @@ class CurrentWeekCubit extends Cubit<CalendarDateRangeData?> {
               List<Workout>? workouts,
               List<Race>? races,
             ) =>
-                CalendarDateRangeData(
+                CalendarUserData(
               healthMeasurements: [...?healthMeasurements],
               workouts: [...?workouts],
               races: [...?races],
             ),
           ),
         )
-        .listen((CalendarDateRangeData dateRangeData) => emit(dateRangeData));
+        .listen((CalendarUserData dateRangeData) => emit(dateRangeData));
   }
 
   double? _calculateScheduledTotalDistance() {

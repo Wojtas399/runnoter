@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../common/date_service.dart';
 import '../../../../dependency_injection.dart';
-import '../../../../domain/additional_model/calendar_date_range_data.dart';
+import '../../../../domain/additional_model/calendar_user_data.dart';
 import '../../../../domain/additional_model/calendar_week_day.dart';
 import '../../../../domain/entity/health_measurement.dart';
 import '../../../../domain/entity/race.dart';
@@ -16,7 +16,7 @@ part 'calendar_component_state.dart';
 class CalendarComponentBloc
     extends Bloc<CalendarComponentEvent, CalendarComponentState> {
   final DateService _dateService;
-  CalendarDateRangeData _dateRangeData = const CalendarDateRangeData(
+  CalendarUserData _dateRangeData = const CalendarUserData(
     healthMeasurements: [],
     workouts: [],
     races: [],

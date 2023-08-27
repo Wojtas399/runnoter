@@ -2,7 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/additional_model/calendar_date_range_data.dart';
+import '../../../domain/additional_model/calendar_user_data.dart';
 import '../../../domain/cubit/current_week_cubit.dart';
 import '../../component/calendar/bloc/calendar_component_bloc.dart';
 import 'current_week_content.dart';
@@ -39,11 +39,13 @@ class _CurrentWeekCubitListener extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<CurrentWeekCubit, CalendarDateRangeData?>(
-      listener: (BuildContext context, CalendarDateRangeData? dateRangeData) {
-        if (dateRangeData != null) {
+    return BlocListener<CurrentWeekCubit, CalendarUserData?>(
+      listener: (BuildContext context, CalendarUserData? calendarUserdata) {
+        if (calendarUserdata != null) {
           context.read<CalendarComponentBloc>().add(
-                CalendarComponentEventDateRangeDataUpdated(data: dateRangeData),
+                CalendarComponentEventDateRangeDataUpdated(
+                  data: calendarUserdata,
+                ),
               );
         }
       },

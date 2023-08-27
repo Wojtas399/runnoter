@@ -6,7 +6,7 @@ import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/common/date_service.dart';
 import 'package:runnoter/domain/additional_model/activity_status.dart';
-import 'package:runnoter/domain/additional_model/calendar_date_range_data.dart';
+import 'package:runnoter/domain/additional_model/calendar_user_data.dart';
 import 'package:runnoter/domain/additional_model/workout_stage.dart';
 import 'package:runnoter/domain/cubit/current_week_cubit.dart';
 import 'package:runnoter/domain/entity/health_measurement.dart';
@@ -57,7 +57,7 @@ void main() {
     'number of activities, '
     'should sum all activities',
     build: () => CurrentWeekCubit(
-      dateRangeData: CalendarDateRangeData(
+      dateRangeData: CalendarUserData(
         healthMeasurements: const [],
         workouts: [
           createWorkout(id: 'w1'),
@@ -74,7 +74,7 @@ void main() {
     'scheduled total distance, '
     'should sum distance of all activities',
     build: () => CurrentWeekCubit(
-      dateRangeData: CalendarDateRangeData(
+      dateRangeData: CalendarUserData(
         healthMeasurements: const [],
         workouts: [
           createWorkout(
@@ -114,7 +114,7 @@ void main() {
     'covered total distance, '
     'should sum covered distance of all activities',
     build: () => CurrentWeekCubit(
-      dateRangeData: CalendarDateRangeData(
+      dateRangeData: CalendarUserData(
         healthMeasurements: const [],
         workouts: [
           createWorkout(
@@ -187,22 +187,22 @@ void main() {
           races$.add([]);
         },
         expect: () => [
-          CalendarDateRangeData(
+          CalendarUserData(
             healthMeasurements: healthMeasurements,
             workouts: workouts,
             races: races,
           ),
-          CalendarDateRangeData(
+          CalendarUserData(
             healthMeasurements: const [],
             workouts: workouts,
             races: races,
           ),
-          CalendarDateRangeData(
+          CalendarUserData(
             healthMeasurements: const [],
             workouts: const [],
             races: races,
           ),
-          const CalendarDateRangeData(
+          const CalendarUserData(
             healthMeasurements: [],
             workouts: [],
             races: [],

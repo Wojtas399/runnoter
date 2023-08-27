@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/additional_model/calendar_date_range_data.dart';
-import '../../../domain/cubit/calendar_date_range_data_cubit.dart';
+import '../../../domain/additional_model/calendar_user_data.dart';
+import '../../../domain/cubit/calendar_user_data_cubit.dart';
 import '../../component/body/big_body_component.dart';
 import '../../component/calendar/bloc/calendar_component_bloc.dart';
 import '../../component/calendar/calendar_component.dart';
 import '../../component/card_body_component.dart';
+import '../../component/loading_info_component.dart';
 import '../../component/padding/paddings_24.dart';
 import '../../component/responsive_layout_component.dart';
 import '../../config/navigation/router.dart';
@@ -32,7 +33,7 @@ class Calendar extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (_) => CalendarDateRangeDataCubit(userId: userId)),
+        BlocProvider(create: (_) => CalendarUserDataCubit(userId: userId)),
         BlocProvider(
           create: (_) => CalendarComponentBloc()
             ..add(CalendarComponentEventInitialize(
@@ -67,17 +68,19 @@ class _Calendar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final CalendarDateRangeData dateRangeData = context.select(
-      (CalendarDateRangeDataCubit cubit) => cubit.state,
+    final CalendarUserData? calendarUserData = context.select(
+      (CalendarUserDataCubit cubit) => cubit.state,
     );
 
-    return CalendarComponent(
-      dateRangeType: CalendarDateRangeType.month,
-      dateRangeData: dateRangeData,
-      onDateRangeChanged: (DateTime startDate, DateTime endDate) =>
-          _onDateRangeChanged(context, startDate, endDate),
-      onDayPressed: (DateTime date) => _onDayPressed(context, date),
-    );
+    return calendarUserData != null
+        ? CalendarComponent(
+            dateRangeType: CalendarDateRangeType.month,
+            calendarUserData: calendarUserData,
+            onDateRangeChanged: (DateTime startDate, DateTime endDate) =>
+                _onDateRangeChanged(context, startDate, endDate),
+            onDayPressed: (DateTime date) => _onDayPressed(context, date),
+          )
+        : const LoadingInfo();
   }
 
   void _onDateRangeChanged(
@@ -85,14 +88,14 @@ class _Calendar extends StatelessWidget {
     DateTime startDate,
     DateTime endDate,
   ) {
-    context.read<CalendarDateRangeDataCubit>().dateRangeChanged(
+    context.read<CalendarUserDataCubit>().dateRangeChanged(
           startDate: startDate,
           endDate: endDate,
         );
   }
 
   Future<void> _onDayPressed(BuildContext context, DateTime date) async {
-    final String userId = context.read<CalendarDateRangeDataCubit>().userId;
+    final String userId = context.read<CalendarUserDataCubit>().userId;
     final DayPreviewDialogAction? action =
         await showDialogDependingOnScreenSize(
       DayPreviewDialog(userId: userId, date: date),

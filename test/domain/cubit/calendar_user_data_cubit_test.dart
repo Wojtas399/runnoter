@@ -4,8 +4,10 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/domain/additional_model/calendar_date_range_data.dart';
-import 'package:runnoter/domain/cubit/calendar_date_range_data_cubit.dart';
+import 'package:runnoter/domain/additional_model/activity_status.dart';
+import 'package:runnoter/domain/additional_model/calendar_user_data.dart';
+import 'package:runnoter/domain/additional_model/workout_stage.dart';
+import 'package:runnoter/domain/cubit/calendar_user_data_cubit.dart';
 import 'package:runnoter/domain/entity/health_measurement.dart';
 import 'package:runnoter/domain/entity/race.dart';
 import 'package:runnoter/domain/entity/workout.dart';
@@ -13,6 +15,7 @@ import 'package:runnoter/domain/repository/health_measurement_repository.dart';
 import 'package:runnoter/domain/repository/race_repository.dart';
 import 'package:runnoter/domain/repository/workout_repository.dart';
 
+import '../../creators/activity_status_creator.dart';
 import '../../creators/health_measurement_creator.dart';
 import '../../creators/race_creator.dart';
 import '../../creators/workout_creator.dart';
@@ -39,6 +42,95 @@ void main() {
     reset(workoutRepository);
     reset(raceRepository);
   });
+
+  blocTest(
+    'number of activities, '
+    'should sum all activities',
+    build: () => CalendarUserDataCubit(
+      userId: userId,
+      initialDateRangeData: CalendarUserData(
+        healthMeasurements: const [],
+        workouts: [
+          createWorkout(id: 'w1'),
+          createWorkout(id: 'w3'),
+          createWorkout(id: 'w2')
+        ],
+        races: [createRace(id: 'c1'), createRace(id: 'c2')],
+      ),
+    ),
+    verify: (bloc) => expect(bloc.numberOfActivities, 5),
+  );
+
+  blocTest(
+    'scheduled total distance, '
+    'should sum distance of all activities',
+    build: () => CalendarUserDataCubit(
+      userId: userId,
+      initialDateRangeData: CalendarUserData(
+        healthMeasurements: const [],
+        workouts: [
+          createWorkout(
+            id: 'w1',
+            stages: [
+              const WorkoutStageCardio(distanceInKm: 5.2, maxHeartRate: 150),
+            ],
+          ),
+          createWorkout(
+            id: 'w3',
+            stages: [
+              const WorkoutStageCardio(distanceInKm: 2.5, maxHeartRate: 150),
+            ],
+          ),
+          createWorkout(
+            id: 'w2',
+            stages: [
+              const WorkoutStageHillRepeats(
+                amountOfSeries: 10,
+                seriesDistanceInMeters: 200,
+                walkingDistanceInMeters: 100,
+                joggingDistanceInMeters: 200,
+              ),
+            ],
+          )
+        ],
+        races: [
+          createRace(id: 'c1', distance: 10.0),
+          createRace(id: 'c2', distance: 2.0),
+        ],
+      ),
+    ),
+    verify: (bloc) => expect(bloc.scheduledTotalDistance, 24.7),
+  );
+
+  blocTest(
+    'covered total distance, '
+    'should sum covered distance of all activities',
+    build: () => CalendarUserDataCubit(
+      userId: userId,
+      initialDateRangeData: CalendarUserData(
+        healthMeasurements: const [],
+        workouts: [
+          createWorkout(
+            id: 'w1',
+            status: createActivityStatusDone(coveredDistanceInKm: 5.2),
+          ),
+          createWorkout(
+            id: 'w3',
+            status: createActivityStatusAborted(coveredDistanceInKm: 2.5),
+          ),
+          createWorkout(id: 'w2', status: const ActivityStatusPending())
+        ],
+        races: [
+          createRace(
+            id: 'c1',
+            status: createActivityStatusDone(coveredDistanceInKm: 10.0),
+          ),
+          createRace(id: 'c2', status: const ActivityStatusUndone()),
+        ],
+      ),
+    ),
+    verify: (bloc) => expect(bloc.coveredTotalDistance, 17.7),
+  );
 
   group(
     'date range changed',
@@ -74,7 +166,7 @@ void main() {
 
       blocTest(
         'should set listener of health measurements, workouts and races from date range',
-        build: () => CalendarDateRangeDataCubit(userId: userId),
+        build: () => CalendarUserDataCubit(userId: userId),
         setUp: () {
           healthMeasurementRepository.mockGetMeasurementsByDateRange(
             measurementsStream: healthMeasurements$.stream,
@@ -92,22 +184,22 @@ void main() {
           races$.add(updatedRaces);
         },
         expect: () => [
-          CalendarDateRangeData(
+          CalendarUserData(
             healthMeasurements: healthMeasurements,
             workouts: workouts,
             races: races,
           ),
-          CalendarDateRangeData(
+          CalendarUserData(
             healthMeasurements: const [],
             workouts: workouts,
             races: races,
           ),
-          CalendarDateRangeData(
+          CalendarUserData(
             healthMeasurements: const [],
             workouts: updatedWorkouts,
             races: races,
           ),
-          CalendarDateRangeData(
+          CalendarUserData(
             healthMeasurements: const [],
             workouts: updatedWorkouts,
             races: updatedRaces,

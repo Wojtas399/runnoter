@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/additional_model/calendar_date_range_data.dart';
+import '../../../domain/additional_model/calendar_user_data.dart';
 import '../gap/gap_components.dart';
 import 'bloc/calendar_component_bloc.dart';
 import 'calendar_component__month.dart';
@@ -10,14 +10,14 @@ import 'calendar_component_week.dart';
 
 class CalendarComponent extends StatelessWidget {
   final CalendarDateRangeType? dateRangeType;
-  final CalendarDateRangeData dateRangeData;
+  final CalendarUserData calendarUserData;
   final Function(DateTime date)? onDayPressed;
   final Function(DateTime startDate, DateTime endDate) onDateRangeChanged;
 
   const CalendarComponent({
     super.key,
     this.dateRangeType,
-    required this.dateRangeData,
+    required this.calendarUserData,
     required this.onDayPressed,
     required this.onDateRangeChanged,
   });
@@ -38,7 +38,7 @@ class CalendarComponent extends StatelessWidget {
           listener: _emitPressedDay,
         ),
       ],
-      child: _Content(dateRangeData: dateRangeData),
+      child: _Content(calendarUserData: calendarUserData),
     );
   }
 
@@ -57,9 +57,9 @@ class CalendarComponent extends StatelessWidget {
 }
 
 class _Content extends StatefulWidget {
-  final CalendarDateRangeData dateRangeData;
+  final CalendarUserData calendarUserData;
 
-  const _Content({required this.dateRangeData});
+  const _Content({required this.calendarUserData});
 
   @override
   State<StatefulWidget> createState() => _ContentState();
@@ -70,7 +70,7 @@ class _ContentState extends State<_Content> {
   void didUpdateWidget(covariant _Content oldWidget) {
     context.read<CalendarComponentBloc>().add(
           CalendarComponentEventDateRangeDataUpdated(
-            data: widget.dateRangeData,
+            data: widget.calendarUserData,
           ),
         );
     super.didUpdateWidget(oldWidget);

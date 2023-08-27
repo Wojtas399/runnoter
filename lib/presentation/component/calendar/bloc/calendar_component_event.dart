@@ -20,7 +20,7 @@ class CalendarComponentEventChangeDateRangeType extends CalendarComponentEvent {
 
 class CalendarComponentEventDateRangeDataUpdated
     extends CalendarComponentEvent {
-  final CalendarDateRangeData data;
+  final CalendarUserData data;
 
   const CalendarComponentEventDateRangeDataUpdated({required this.data});
 }

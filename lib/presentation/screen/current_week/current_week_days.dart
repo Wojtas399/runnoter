@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../dependency_injection.dart';
-import '../../../domain/additional_model/calendar_date_range_data.dart';
+import '../../../domain/additional_model/calendar_user_data.dart';
 import '../../../domain/additional_model/calendar_week_day.dart';
 import '../../../domain/cubit/current_week_cubit.dart';
 import '../../../domain/service/auth_service.dart';
@@ -23,7 +23,7 @@ class CurrentWeekDays extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final CalendarDateRangeData? dateRangeData = context.select(
+    final CalendarUserData? calendarUserData = context.select(
       (CurrentWeekCubit cubit) => cubit.state,
     );
     final CalendarWeek? currentWeek = context.select(
@@ -33,9 +33,9 @@ class CurrentWeekDays extends StatelessWidget {
 
     return Column(
       children: <Widget>[
-        if (dateRangeData == null || currentWeek == null)
+        if (calendarUserData == null || currentWeek == null)
           for (int i = 0; i < 7; i++) const _DayItemShimmer(),
-        if (dateRangeData != null && currentWeek != null)
+        if (calendarUserData != null && currentWeek != null)
           ...currentWeek.days.map(
             (CalendarWeekDay day) => WeekDayItem(
               day: day,
