@@ -7,6 +7,7 @@ import '../../../domain/bloc/health_stats/health_stats_bloc.dart';
 import '../../../domain/cubit/chart_date_range_cubit.dart';
 import '../../component/date_range_header_component.dart';
 import '../../component/gap/gap_components.dart';
+import '../../component/loading_info_component.dart';
 import '../../component/text/label_text_components.dart';
 import '../../component/text/title_text_components.dart';
 import '../../extension/context_extensions.dart';
@@ -28,39 +29,45 @@ class ClientStatsHealth extends StatelessWidget {
           ],
         ),
         const Gap24(),
-        const _ChartRangeSelection(),
-        const Gap16(),
-        const _Charts(),
+        BlocBuilder<HealthStatsBloc, HealthStatsState>(
+          builder: (BuildContext context, HealthStatsState state) {
+            if (state.dateRangeType == null ||
+                state.dateRange == null ||
+                state.restingHeartRatePoints == null ||
+                state.fastingWeightPoints == null) {
+              return const LoadingInfo();
+            }
+            return const Column(
+              children: [_DateRange(), Gap16(), _Charts()],
+            );
+          },
+        ),
       ],
     );
   }
 }
 
-class _ChartRangeSelection extends StatelessWidget {
-  const _ChartRangeSelection();
+class _DateRange extends StatelessWidget {
+  const _DateRange();
 
   @override
   Widget build(BuildContext context) {
-    final DateRangeType? dateRangeType = context.select(
-      (HealthStatsBloc bloc) => bloc.state.dateRangeType,
+    final DateRangeType dateRangeType = context.select(
+      (HealthStatsBloc bloc) => bloc.state.dateRangeType!,
     );
-    final DateRange? dateRange = context.select(
-      (HealthStatsBloc bloc) => bloc.state.dateRange,
+    final DateRange dateRange = context.select(
+      (HealthStatsBloc bloc) => bloc.state.dateRange!,
     );
-    return dateRangeType != null && dateRange != null
-        ? DateRangeHeader(
-            selectedDateRangeType: dateRangeType,
-            dateRange: dateRange,
-            onWeekSelected: () =>
-                _changeDateRangeType(context, DateRangeType.week),
-            onMonthSelected: () =>
-                _changeDateRangeType(context, DateRangeType.month),
-            onYearSelected: () =>
-                _changeDateRangeType(context, DateRangeType.year),
-            onPreviousRangePressed: () => _previousDateRange(context),
-            onNextRangePressed: () => _nextDateRange(context),
-          )
-        : const SizedBox();
+
+    return DateRangeHeader(
+      selectedDateRangeType: dateRangeType,
+      dateRange: dateRange,
+      onWeekSelected: () => _changeDateRangeType(context, DateRangeType.week),
+      onMonthSelected: () => _changeDateRangeType(context, DateRangeType.month),
+      onYearSelected: () => _changeDateRangeType(context, DateRangeType.year),
+      onPreviousRangePressed: () => _previousDateRange(context),
+      onNextRangePressed: () => _nextDateRange(context),
+    );
   }
 
   void _changeDateRangeType(BuildContext context, DateRangeType dateRangeType) {
@@ -110,17 +117,15 @@ class _RestingHeartRateChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<HealthStatsChartPoint>? points = context.select(
-      (HealthStatsBloc bloc) => bloc.state.restingHeartRatePoints,
+    final List<HealthStatsChartPoint> points = context.select(
+      (HealthStatsBloc bloc) => bloc.state.restingHeartRatePoints!,
     );
 
-    return points != null
-        ? _LineChart(
-            yAxisLabel:
-                '${Str.of(context).restingHeartRate} [${Str.of(context).heartRateUnit}]',
-            points: points,
-          )
-        : const SizedBox();
+    return _LineChart(
+      yAxisLabel:
+          '${Str.of(context).restingHeartRate} [${Str.of(context).heartRateUnit}]',
+      points: points,
+    );
   }
 }
 
@@ -129,16 +134,14 @@ class _FastingWeightChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<HealthStatsChartPoint>? points = context.select(
-      (HealthStatsBloc bloc) => bloc.state.fastingWeightPoints,
+    final List<HealthStatsChartPoint> points = context.select(
+      (HealthStatsBloc bloc) => bloc.state.fastingWeightPoints!,
     );
 
-    return points != null
-        ? _LineChart(
-            yAxisLabel: '${Str.of(context).fastingWeight} [kg]',
-            points: points,
-          )
-        : const SizedBox();
+    return _LineChart(
+      yAxisLabel: '${Str.of(context).fastingWeight} [kg]',
+      points: points,
+    );
   }
 }
 
@@ -150,41 +153,39 @@ class _LineChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final DateRangeType? dateRangeType = context.select(
-      (HealthStatsBloc bloc) => bloc.state.dateRangeType,
+    final DateRangeType dateRangeType = context.select(
+      (HealthStatsBloc bloc) => bloc.state.dateRangeType!,
     );
 
-    return dateRangeType == null
-        ? const CircularProgressIndicator()
-        : SfCartesianChart(
-            primaryXAxis: CategoryAxis(
-              interval: switch (dateRangeType) {
-                DateRangeType.week => 1,
-                DateRangeType.month => 7,
-                DateRangeType.year => 1,
-              },
-            ),
-            primaryYAxis: NumericAxis(
-              title: AxisTitle(
-                text: yAxisLabel,
-                textStyle: Theme.of(context).textTheme.labelSmall,
-              ),
-            ),
-            series: <LineSeries<HealthStatsChartPoint, String>>[
-              LineSeries<HealthStatsChartPoint, String>(
-                dataSource: points,
-                xValueMapper: (HealthStatsChartPoint point, _) =>
-                    _mapDateToLabel(context, point.date, dateRangeType),
-                yValueMapper: (HealthStatsChartPoint point, _) => point.value,
-                color: Theme.of(context).colorScheme.primary,
-                markerSettings: MarkerSettings(
-                  isVisible: true,
-                  color: Theme.of(context).colorScheme.primary,
-                  borderColor: Theme.of(context).colorScheme.primary,
-                ),
-              ),
-            ],
-          );
+    return SfCartesianChart(
+      primaryXAxis: CategoryAxis(
+        interval: switch (dateRangeType) {
+          DateRangeType.week => 1,
+          DateRangeType.month => 7,
+          DateRangeType.year => 1,
+        },
+      ),
+      primaryYAxis: NumericAxis(
+        title: AxisTitle(
+          text: yAxisLabel,
+          textStyle: Theme.of(context).textTheme.labelSmall,
+        ),
+      ),
+      series: <LineSeries<HealthStatsChartPoint, String>>[
+        LineSeries<HealthStatsChartPoint, String>(
+          dataSource: points,
+          xValueMapper: (HealthStatsChartPoint point, _) =>
+              _mapDateToLabel(context, point.date, dateRangeType),
+          yValueMapper: (HealthStatsChartPoint point, _) => point.value,
+          color: Theme.of(context).colorScheme.primary,
+          markerSettings: MarkerSettings(
+            isVisible: true,
+            color: Theme.of(context).colorScheme.primary,
+            borderColor: Theme.of(context).colorScheme.primary,
+          ),
+        ),
+      ],
+    );
   }
 
   String _mapDateToLabel(
