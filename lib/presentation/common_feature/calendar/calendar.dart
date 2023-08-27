@@ -7,7 +7,6 @@ import '../../component/body/big_body_component.dart';
 import '../../component/calendar/bloc/calendar_component_bloc.dart';
 import '../../component/calendar/calendar_component.dart';
 import '../../component/card_body_component.dart';
-import '../../component/loading_info_component.dart';
 import '../../component/padding/paddings_24.dart';
 import '../../component/responsive_layout_component.dart';
 import '../../config/navigation/router.dart';
@@ -72,15 +71,13 @@ class _Calendar extends StatelessWidget {
       (CalendarUserDataCubit cubit) => cubit.state,
     );
 
-    return calendarUserData != null
-        ? CalendarComponent(
-            dateRangeType: CalendarDateRangeType.month,
-            calendarUserData: calendarUserData,
-            onDateRangeChanged: (DateTime startDate, DateTime endDate) =>
-                _onDateRangeChanged(context, startDate, endDate),
-            onDayPressed: (DateTime date) => _onDayPressed(context, date),
-          )
-        : const LoadingInfo();
+    return CalendarComponent(
+      dateRangeType: CalendarDateRangeType.month,
+      calendarUserData: calendarUserData,
+      onDateRangeChanged: (DateTime startDate, DateTime endDate) =>
+          _onDateRangeChanged(context, startDate, endDate),
+      onDayPressed: (DateTime date) => _onDayPressed(context, date),
+    );
   }
 
   void _onDateRangeChanged(

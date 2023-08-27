@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/additional_model/calendar_user_data.dart';
 import '../gap/gap_components.dart';
+import '../loading_info_component.dart';
 import 'bloc/calendar_component_bloc.dart';
 import 'calendar_component__month.dart';
 import 'calendar_component_date.dart';
@@ -10,14 +11,14 @@ import 'calendar_component_week.dart';
 
 class CalendarComponent extends StatelessWidget {
   final CalendarDateRangeType? dateRangeType;
-  final CalendarUserData calendarUserData;
+  final CalendarUserData? calendarUserData;
   final Function(DateTime date)? onDayPressed;
   final Function(DateTime startDate, DateTime endDate) onDateRangeChanged;
 
   const CalendarComponent({
     super.key,
     this.dateRangeType,
-    required this.calendarUserData,
+    this.calendarUserData,
     required this.onDayPressed,
     required this.onDateRangeChanged,
   });
@@ -57,9 +58,9 @@ class CalendarComponent extends StatelessWidget {
 }
 
 class _Content extends StatefulWidget {
-  final CalendarUserData calendarUserData;
+  final CalendarUserData? calendarUserData;
 
-  const _Content({required this.calendarUserData});
+  const _Content({this.calendarUserData});
 
   @override
   State<StatefulWidget> createState() => _ContentState();
@@ -68,11 +69,13 @@ class _Content extends StatefulWidget {
 class _ContentState extends State<_Content> {
   @override
   void didUpdateWidget(covariant _Content oldWidget) {
-    context.read<CalendarComponentBloc>().add(
-          CalendarComponentEventDateRangeDataUpdated(
-            data: widget.calendarUserData,
-          ),
-        );
+    if (widget.calendarUserData != null) {
+      context.read<CalendarComponentBloc>().add(
+            CalendarComponentEventDateRangeDataUpdated(
+              data: widget.calendarUserData!,
+            ),
+          );
+    }
     super.didUpdateWidget(oldWidget);
   }
 
@@ -86,11 +89,15 @@ class _ContentState extends State<_Content> {
       children: [
         const CalendarComponentDate(),
         const Gap8(),
-        switch (dateRange) {
-          CalendarDateRangeWeek() => const CalendarComponentWeek(),
-          CalendarDateRangeMonth() => const CalendarComponentMonth(),
-          null => const CircularProgressIndicator(),
-        }
+        if (widget.calendarUserData == null)
+          //TODO Calendar shimmer will be better
+          const LoadingInfo()
+        else
+          switch (dateRange) {
+            CalendarDateRangeWeek() => const CalendarComponentWeek(),
+            CalendarDateRangeMonth() => const CalendarComponentMonth(),
+            null => const CircularProgressIndicator(),
+          }
       ],
     );
   }

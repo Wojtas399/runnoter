@@ -23,11 +23,11 @@ class CalendarUserDataCubit extends Cubit<CalendarUserData?> {
 
   CalendarUserDataCubit({
     required this.userId,
-    CalendarUserData? initialDateRangeData,
+    CalendarUserData? initialUserData,
   })  : _healthMeasurementRepository = getIt<HealthMeasurementRepository>(),
         _workoutRepository = getIt<WorkoutRepository>(),
         _raceRepository = getIt<RaceRepository>(),
-        super(initialDateRangeData);
+        super(initialUserData);
 
   int? get numberOfActivities =>
       state == null ? null : state!.workouts.length + state!.races.length;
@@ -46,6 +46,7 @@ class CalendarUserDataCubit extends Cubit<CalendarUserData?> {
     required final DateTime startDate,
     required final DateTime endDate,
   }) {
+    emit(null);
     _disposeListener();
     _setDataListener(startDate, endDate);
   }

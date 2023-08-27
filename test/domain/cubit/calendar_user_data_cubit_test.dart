@@ -48,7 +48,7 @@ void main() {
     'should sum all activities',
     build: () => CalendarUserDataCubit(
       userId: userId,
-      initialDateRangeData: CalendarUserData(
+      initialUserData: CalendarUserData(
         healthMeasurements: const [],
         workouts: [
           createWorkout(id: 'w1'),
@@ -66,7 +66,7 @@ void main() {
     'should sum distance of all activities',
     build: () => CalendarUserDataCubit(
       userId: userId,
-      initialDateRangeData: CalendarUserData(
+      initialUserData: CalendarUserData(
         healthMeasurements: const [],
         workouts: [
           createWorkout(
@@ -107,7 +107,7 @@ void main() {
     'should sum covered distance of all activities',
     build: () => CalendarUserDataCubit(
       userId: userId,
-      initialDateRangeData: CalendarUserData(
+      initialUserData: CalendarUserData(
         healthMeasurements: const [],
         workouts: [
           createWorkout(
@@ -165,8 +165,16 @@ void main() {
       final DateTime endDate = DateTime(2023, 3);
 
       blocTest(
+        'should clean current state and '
         'should set listener of health measurements, workouts and races from date range',
-        build: () => CalendarUserDataCubit(userId: userId),
+        build: () => CalendarUserDataCubit(
+          userId: userId,
+          initialUserData: const CalendarUserData(
+            healthMeasurements: [],
+            workouts: [],
+            races: [],
+          ),
+        ),
         setUp: () {
           healthMeasurementRepository.mockGetMeasurementsByDateRange(
             measurementsStream: healthMeasurements$.stream,
@@ -184,6 +192,7 @@ void main() {
           races$.add(updatedRaces);
         },
         expect: () => [
+          null,
           CalendarUserData(
             healthMeasurements: healthMeasurements,
             workouts: workouts,
