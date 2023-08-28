@@ -16,7 +16,6 @@ import '../../repository/race_repository.dart';
 import '../../repository/workout_repository.dart';
 
 part 'mileage_stats_event.dart';
-
 part 'mileage_stats_state.dart';
 
 class MileageStatsBloc extends Bloc<MileageStatsEvent, MileageStatsState> {
@@ -52,7 +51,6 @@ class MileageStatsBloc extends Bloc<MileageStatsEvent, MileageStatsState> {
     return super.close();
   }
 
-  //TODO: You can combine RxDart functions instead of using two listeners
   void _initialize(
     MileageStatsEventInitialize event,
     Emitter<MileageStatsState> emit,

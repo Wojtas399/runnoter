@@ -45,7 +45,6 @@ class HealthStatsBloc extends Bloc<HealthStatsEvent, HealthStatsState> {
     return super.close();
   }
 
-  //TODO: you can combine RxDart functions to create only one listener instead of 2
   void _initialize(
     HealthStatsEventInitialize event,
     Emitter<HealthStatsState> emit,
