@@ -162,6 +162,61 @@ void main() {
   );
 
   test(
+    'is today, '
+    'year, month and day are the same as in today date, '
+    'should be true',
+    () {
+      final DateTime date = DateTime.now();
+
+      final bool result = service.isToday(date);
+
+      expect(result, true);
+    },
+  );
+
+  test(
+    'is today, '
+    'month is different than the month of today date, '
+    'should be false',
+    () {
+      final DateTime today = DateTime.now();
+      final DateTime date = DateTime(today.year, today.month + 1, today.day);
+
+      final bool result = service.isToday(date);
+
+      expect(result, false);
+    },
+  );
+
+  test(
+    'is today, '
+    'day is different than the day of today date, '
+    'should be false',
+    () {
+      final DateTime today = DateTime.now();
+      final DateTime date = DateTime(today.year, today.month, today.day + 1);
+
+      final bool result = service.isToday(date);
+
+      expect(result, false);
+    },
+  );
+
+  test(
+    'is today, '
+    'year is different than the year of today date, '
+    'should be false',
+    () {
+      final DateTime today = DateTime.now();
+      final DateTime date = DateTime(today.year + 1, today.month, today.day);
+
+      final bool result = service.isToday(date);
+
+      expect(result, false);
+    },
+  );
+
+  test(
     'are dates the same, '
     'year, month and day are the same, '
     'should be true',
