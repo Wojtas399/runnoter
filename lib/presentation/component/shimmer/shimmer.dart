@@ -66,7 +66,8 @@ class ShimmerState extends State<Shimmer> with SingleTickerProviderStateMixin {
   bool get isSized =>
       (context.findRenderObject() as RenderBox?)?.hasSize ?? false;
 
-  Size get size => (context.findRenderObject() as RenderBox).size;
+  Size get size =>
+      (context.findRenderObject() as RenderBox?)?.size ?? Size.zero;
 
   Listenable get shimmerChanges => _shimmerController;
 

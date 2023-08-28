@@ -7,14 +7,18 @@ import '../../component/body/big_body_component.dart';
 import '../../component/calendar/bloc/calendar_component_bloc.dart';
 import '../../component/calendar/calendar_component.dart';
 import '../../component/card_body_component.dart';
+import '../../component/gap/gap_components.dart';
+import '../../component/gap/gap_horizontal_components.dart';
 import '../../component/padding/paddings_24.dart';
 import '../../component/responsive_layout_component.dart';
+import '../../component/shimmer/shimmer.dart';
 import '../../config/navigation/router.dart';
 import '../../dialog/day_preview/day_preview_dialog.dart';
 import '../../dialog/day_preview/day_preview_dialog_actions.dart';
 import '../../formatter/date_formatter.dart';
 import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
+import 'calendar_stats.dart';
 
 class Calendar extends StatelessWidget {
   final String userId;
@@ -40,17 +44,14 @@ class Calendar extends StatelessWidget {
             )),
         ),
       ],
-      child: SingleChildScrollView(
+      child: const SingleChildScrollView(
         child: BigBody(
           child: Paddings24(
-            child: ResponsiveLayout(
-              mobileBody: _Calendar(
-                canEditHealthMeasurement: canEditHealthMeasurement,
-              ),
-              desktopBody: CardBody(
-                child: _Calendar(
-                  canEditHealthMeasurement: canEditHealthMeasurement,
-                ),
+            child: Shimmer(
+              child: ResponsiveLayout(
+                mobileBody: _MobileContent(),
+                tabletBody: _TabletContent(),
+                desktopBody: _DesktopContent(),
               ),
             ),
           ),
@@ -60,10 +61,58 @@ class Calendar extends StatelessWidget {
   }
 }
 
-class _Calendar extends StatelessWidget {
-  final bool canEditHealthMeasurement;
+class _MobileContent extends StatelessWidget {
+  const _MobileContent();
 
-  const _Calendar({required this.canEditHealthMeasurement});
+  @override
+  Widget build(BuildContext context) {
+    return const Column(
+      children: [
+        CalendarMobileStats(),
+        Gap32(),
+        _Calendar(),
+      ],
+    );
+  }
+}
+
+class _TabletContent extends StatelessWidget {
+  const _TabletContent();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Column(
+      children: [
+        CalendarTabletStats(),
+        GapHorizontal32(),
+        CardBody(child: _Calendar()),
+      ],
+    );
+  }
+}
+
+class _DesktopContent extends StatelessWidget {
+  const _DesktopContent();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: CardBody(
+            child: _Calendar(),
+          ),
+        ),
+        GapHorizontal16(),
+        CalendarDesktopStats(),
+      ],
+    );
+  }
+}
+
+class _Calendar extends StatelessWidget {
+  const _Calendar();
 
   @override
   Widget build(BuildContext context) {
