@@ -4,9 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../dependency_injection.dart';
 import '../../../domain/additional_model/calendar_user_data.dart';
 import '../../../domain/additional_model/calendar_week_day.dart';
+import '../../../domain/bloc/calendar/calendar_bloc.dart';
 import '../../../domain/cubit/current_week_cubit.dart';
 import '../../../domain/service/auth_service.dart';
-import '../../component/calendar/bloc/calendar_component_bloc.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/shimmer/shimmer_container.dart';
 import '../../component/week_day_item_component.dart';
@@ -27,7 +27,7 @@ class CurrentWeekDays extends StatelessWidget {
       (CurrentWeekCubit cubit) => cubit.state,
     );
     final CalendarWeek? currentWeek = context.select(
-      (CalendarComponentBloc bloc) =>
+      (CalendarBloc bloc) =>
           bloc.state.weeks?.isNotEmpty == true ? bloc.state.weeks!.first : null,
     );
 

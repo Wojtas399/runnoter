@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/additional_model/calendar_user_data.dart';
+import '../../../domain/bloc/calendar/calendar_bloc.dart';
 import '../../../domain/cubit/calendar_user_data_cubit.dart';
 import '../../../domain/cubit/date_range_manager_cubit.dart';
 import '../../component/body/big_body_component.dart';
-import '../../component/calendar/bloc/calendar_component_bloc.dart';
 import '../../component/calendar/calendar_component.dart';
 import '../../component/card_body_component.dart';
 import '../../component/gap/gap_components.dart';
@@ -39,10 +39,8 @@ class Calendar extends StatelessWidget {
       providers: [
         BlocProvider(create: (_) => CalendarUserDataCubit(userId: userId)),
         BlocProvider(
-          create: (_) => CalendarComponentBloc()
-            ..add(CalendarComponentEventInitialize(
-              dateRangeType: initialDateRangeType,
-            )),
+          create: (_) => CalendarBloc()
+            ..add(CalendarEventInitialize(dateRangeType: initialDateRangeType)),
         ),
       ],
       child: const SingleChildScrollView(

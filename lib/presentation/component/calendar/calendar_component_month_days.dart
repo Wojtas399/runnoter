@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/additional_model/calendar_week_day.dart';
+import '../../../domain/bloc/calendar/calendar_bloc.dart';
 import '../../../domain/entity/race.dart';
 import '../../../domain/entity/workout.dart';
 import '../../formatter/activity_status_formatter.dart';
 import '../shimmer/shimmer_container.dart';
 import '../text/body_text_components.dart';
-import 'bloc/calendar_component_bloc.dart';
 
 class CalendarComponentMonthDays extends StatelessWidget {
   const CalendarComponentMonthDays({super.key});
@@ -15,10 +15,10 @@ class CalendarComponentMonthDays extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool areUserDataLoaded = context.select(
-      (CalendarComponentBloc bloc) => bloc.state.areUserDataLoaded,
+      (CalendarBloc bloc) => bloc.state.areUserDataLoaded,
     );
     final List<CalendarWeek>? weeks = context.select(
-      (CalendarComponentBloc bloc) => bloc.state.weeks,
+      (CalendarBloc bloc) => bloc.state.weeks,
     );
 
     return Table(
@@ -112,9 +112,7 @@ class _DayItem extends StatelessWidget {
   }
 
   void _onPressed(BuildContext context) {
-    context.read<CalendarComponentBloc>().add(
-          CalendarComponentEventDayPressed(date: day.date),
-        );
+    context.read<CalendarBloc>().add(CalendarEventDayPressed(date: day.date));
   }
 }
 

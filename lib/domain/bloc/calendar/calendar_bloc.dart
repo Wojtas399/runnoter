@@ -12,36 +12,35 @@ import '../../../../domain/entity/health_measurement.dart';
 import '../../../../domain/entity/race.dart';
 import '../../../../domain/entity/workout.dart';
 
-part 'calendar_component_event.dart';
-part 'calendar_component_state.dart';
+part 'calendar_event.dart';
+part 'calendar_state.dart';
 
-class CalendarComponentBloc
-    extends Bloc<CalendarComponentEvent, CalendarComponentState> {
+class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
   final DateRangeManagerCubit _dateRangeManager;
   final DateService _dateService;
   CalendarUserData? _calendarUserData;
 
-  CalendarComponentBloc()
+  CalendarBloc()
       : _dateRangeManager = getIt<DateRangeManagerCubit>(),
         _dateService = getIt<DateService>(),
         super(
-          const CalendarComponentState(dateRangeType: DateRangeType.week),
+          const CalendarState(dateRangeType: DateRangeType.week),
         ) {
-    on<CalendarComponentEventInitialize>(
+    on<CalendarEventInitialize>(
       _initialize,
       transformer: restartable(),
     );
-    on<CalendarComponentEventChangeDateRangeType>(_changeDateRangeType);
-    on<CalendarComponentEventUserDataUpdated>(_userDataUpdated);
-    on<CalendarComponentEventPreviousDateRange>(_previousDateRange);
-    on<CalendarComponentEventNextDateRange>(_nextDateRange);
-    on<CalendarComponentEventDayPressed>(_dayPressed);
-    on<CalendarComponentEventResetPressedDay>(_resetPressedDay);
+    on<CalendarEventChangeDateRangeType>(_changeDateRangeType);
+    on<CalendarEventUserDataUpdated>(_userDataUpdated);
+    on<CalendarEventPreviousDateRange>(_previousDateRange);
+    on<CalendarEventNextDateRange>(_nextDateRange);
+    on<CalendarEventDayPressed>(_dayPressed);
+    on<CalendarEventResetPressedDay>(_resetPressedDay);
   }
 
   Future<void> _initialize(
-    CalendarComponentEventInitialize event,
-    Emitter<CalendarComponentState> emit,
+    CalendarEventInitialize event,
+    Emitter<CalendarState> emit,
   ) async {
     if (event.dateRangeType == DateRangeType.year) return;
     _dateRangeManager.initializeNewDateRangeType(event.dateRangeType);
@@ -76,15 +75,15 @@ class CalendarComponentBloc
   }
 
   void _changeDateRangeType(
-    CalendarComponentEventChangeDateRangeType event,
-    Emitter<CalendarComponentState> emit,
+    CalendarEventChangeDateRangeType event,
+    Emitter<CalendarState> emit,
   ) {
     _dateRangeManager.changeDateRangeType(event.dateRangeType);
   }
 
   void _userDataUpdated(
-    CalendarComponentEventUserDataUpdated event,
-    Emitter<CalendarComponentState> emit,
+    CalendarEventUserDataUpdated event,
+    Emitter<CalendarState> emit,
   ) {
     _calendarUserData = event.userData;
     emit(state.copyWith(
@@ -99,29 +98,29 @@ class CalendarComponentBloc
   }
 
   void _previousDateRange(
-    CalendarComponentEventPreviousDateRange event,
-    Emitter<CalendarComponentState> emit,
+    CalendarEventPreviousDateRange event,
+    Emitter<CalendarState> emit,
   ) {
     _dateRangeManager.previousDateRange();
   }
 
   void _nextDateRange(
-    CalendarComponentEventNextDateRange event,
-    Emitter<CalendarComponentState> emit,
+    CalendarEventNextDateRange event,
+    Emitter<CalendarState> emit,
   ) {
     _dateRangeManager.nextDateRange();
   }
 
   void _dayPressed(
-    CalendarComponentEventDayPressed event,
-    Emitter<CalendarComponentState> emit,
+    CalendarEventDayPressed event,
+    Emitter<CalendarState> emit,
   ) {
     emit(state.copyWith(pressedDay: event.date));
   }
 
   void _resetPressedDay(
-    CalendarComponentEventResetPressedDay event,
-    Emitter<CalendarComponentState> emit,
+    CalendarEventResetPressedDay event,
+    Emitter<CalendarState> emit,
   ) {
     emit(state.copyWith(pressedDay: null));
   }

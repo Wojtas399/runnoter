@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../domain/bloc/calendar/calendar_bloc.dart';
 import '../../../domain/cubit/date_range_manager_cubit.dart';
 import '../date_range_header_component.dart';
-import 'bloc/calendar_component_bloc.dart';
 
 class CalendarComponentDate extends StatelessWidget {
   const CalendarComponentDate({super.key});
@@ -11,10 +11,10 @@ class CalendarComponentDate extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final DateRangeType dateRangeType = context.select(
-      (CalendarComponentBloc bloc) => bloc.state.dateRangeType,
+      (CalendarBloc bloc) => bloc.state.dateRangeType,
     );
     final DateRange? dateRange = context.select(
-      (CalendarComponentBloc bloc) => bloc.state.dateRange,
+      (CalendarBloc bloc) => bloc.state.dateRange,
     );
 
     return dateRange != null
@@ -35,21 +35,16 @@ class CalendarComponentDate extends StatelessWidget {
     BuildContext context,
     DateRangeType dateRangeType,
   ) {
-    context.read<CalendarComponentBloc>().add(
-          CalendarComponentEventChangeDateRangeType(
-              dateRangeType: dateRangeType),
+    context.read<CalendarBloc>().add(
+          CalendarEventChangeDateRangeType(dateRangeType: dateRangeType),
         );
   }
 
   void _onPreviousDateRange(BuildContext context) {
-    context
-        .read<CalendarComponentBloc>()
-        .add(const CalendarComponentEventPreviousDateRange());
+    context.read<CalendarBloc>().add(const CalendarEventPreviousDateRange());
   }
 
   void _onNextDateRange(BuildContext context) {
-    context
-        .read<CalendarComponentBloc>()
-        .add(const CalendarComponentEventNextDateRange());
+    context.read<CalendarBloc>().add(const CalendarEventNextDateRange());
   }
 }

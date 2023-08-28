@@ -1,13 +1,13 @@
-part of 'calendar_component_bloc.dart';
+part of 'calendar_bloc.dart';
 
-class CalendarComponentState extends Equatable {
+class CalendarState extends Equatable {
   final DateRangeType dateRangeType;
   final DateRange? dateRange;
   final bool areUserDataLoaded;
   final List<CalendarWeek>? weeks;
   final DateTime? pressedDay;
 
-  const CalendarComponentState({
+  const CalendarState({
     required this.dateRangeType,
     this.dateRange,
     this.areUserDataLoaded = false,
@@ -24,14 +24,14 @@ class CalendarComponentState extends Equatable {
         pressedDay,
       ];
 
-  CalendarComponentState copyWith({
+  CalendarState copyWith({
     DateRangeType? dateRangeType,
     DateRange? dateRange,
     bool? areUserDataLoaded,
     List<CalendarWeek>? weeks,
     DateTime? pressedDay,
   }) =>
-      CalendarComponentState(
+      CalendarState(
         dateRangeType: dateRangeType ?? this.dateRangeType,
         dateRange: dateRange ?? this.dateRange,
         areUserDataLoaded: areUserDataLoaded ?? this.areUserDataLoaded,

@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/additional_model/calendar_user_data.dart';
+import '../../../domain/bloc/calendar/calendar_bloc.dart';
 import '../../../domain/cubit/current_week_cubit.dart';
 import '../../../domain/cubit/date_range_manager_cubit.dart';
-import '../../component/calendar/bloc/calendar_component_bloc.dart';
 import 'current_week_content.dart';
 
 @RoutePage()
@@ -18,11 +18,9 @@ class CurrentWeekScreen extends StatelessWidget {
       providers: [
         BlocProvider(create: (_) => CurrentWeekCubit()..initialize()),
         BlocProvider(
-          create: (_) => CalendarComponentBloc()
+          create: (_) => CalendarBloc()
             ..add(
-              const CalendarComponentEventInitialize(
-                dateRangeType: DateRangeType.week,
-              ),
+              const CalendarEventInitialize(dateRangeType: DateRangeType.week),
             ),
         ),
       ],
@@ -43,10 +41,8 @@ class _CurrentWeekCubitListener extends StatelessWidget {
     return BlocListener<CurrentWeekCubit, CalendarUserData?>(
       listener: (BuildContext context, CalendarUserData? calendarUserData) {
         if (calendarUserData != null) {
-          context.read<CalendarComponentBloc>().add(
-                CalendarComponentEventUserDataUpdated(
-                  userData: calendarUserData,
-                ),
+          context.read<CalendarBloc>().add(
+                CalendarEventUserDataUpdated(userData: calendarUserData),
               );
         }
       },

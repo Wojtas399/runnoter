@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/additional_model/calendar_week_day.dart';
+import '../../../domain/bloc/calendar/calendar_bloc.dart';
 import '../../extension/widgets_list_extensions.dart';
 import '../gap/gap_components.dart';
 import '../shimmer/shimmer_container.dart';
 import '../week_day_item_component.dart';
-import 'bloc/calendar_component_bloc.dart';
 
 class CalendarComponentWeek extends StatelessWidget {
   const CalendarComponentWeek({super.key});
@@ -14,10 +14,10 @@ class CalendarComponentWeek extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool areUserDataLoaded = context.select(
-      (CalendarComponentBloc bloc) => bloc.state.areUserDataLoaded,
+      (CalendarBloc bloc) => bloc.state.areUserDataLoaded,
     );
     final CalendarWeek? week = context.select(
-      (CalendarComponentBloc bloc) =>
+      (CalendarBloc bloc) =>
           bloc.state.weeks?.isNotEmpty == true ? bloc.state.weeks!.first : null,
     );
 
@@ -37,9 +37,7 @@ class CalendarComponentWeek extends StatelessWidget {
   }
 
   void _onDayPressed(BuildContext context, DateTime date) {
-    context.read<CalendarComponentBloc>().add(
-          CalendarComponentEventDayPressed(date: date),
-        );
+    context.read<CalendarBloc>().add(CalendarEventDayPressed(date: date));
   }
 }
 
