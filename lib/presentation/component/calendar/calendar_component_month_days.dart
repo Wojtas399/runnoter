@@ -5,6 +5,7 @@ import '../../../domain/additional_model/calendar_week_day.dart';
 import '../../../domain/entity/race.dart';
 import '../../../domain/entity/workout.dart';
 import '../../formatter/activity_status_formatter.dart';
+import '../shimmer/shimmer_container.dart';
 import '../text/body_text_components.dart';
 import 'bloc/calendar_component_bloc.dart';
 
@@ -13,31 +14,66 @@ class CalendarComponentMonthDays extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool areUserDataLoaded = context.select(
+      (CalendarComponentBloc bloc) => bloc.state.areUserDataLoaded,
+    );
     final List<CalendarWeek>? weeks = context.select(
       (CalendarComponentBloc bloc) => bloc.state.weeks,
     );
 
-    return weeks == null
-        ? const SizedBox()
-        : Table(
-            border: TableBorder.all(
-              width: 0.4,
-              color: Theme.of(context).colorScheme.outline,
+    return Table(
+      border: TableBorder.all(
+        width: 0.4,
+        color: Theme.of(context).colorScheme.outline,
+      ),
+      children: [
+        if (!areUserDataLoaded || weeks == null)
+          for (int weekNumber = 0; weekNumber < 7; weekNumber++)
+            TableRow(
+              children: [
+                for (int dayIndex = 0; dayIndex < 7; dayIndex++)
+                  const _DayItemShimmer(),
+              ],
             ),
-            children: [
-              ...weeks.map(
-                (CalendarWeek week) => TableRow(
-                  children: [
-                    ...week.days.map(
-                      (CalendarWeekDay day) => TableCell(
-                        child: _DayItem(day),
-                      ),
-                    ),
-                  ],
+        if (areUserDataLoaded && weeks != null)
+          ...weeks.map(
+            (CalendarWeek week) => TableRow(
+              children: [
+                ...week.days.map(
+                  (CalendarWeekDay day) => TableCell(
+                    child: _DayItem(day),
+                  ),
                 ),
-              ),
-            ],
-          );
+              ],
+            ),
+          ),
+      ],
+    );
+  }
+}
+
+class _DayItemShimmer extends StatelessWidget {
+  const _DayItemShimmer();
+
+  @override
+  Widget build(BuildContext context) {
+    return const SizedBox(
+      width: double.infinity,
+      height: 80,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.all(4),
+            child: ShimmerContainer(width: 14, height: 16),
+          ),
+          Padding(
+            padding: EdgeInsets.all(4),
+            child: ShimmerContainer(width: double.infinity, height: 12),
+          ),
+        ],
+      ),
+    );
   }
 }
 

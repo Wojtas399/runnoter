@@ -19,11 +19,7 @@ class CalendarComponentBloc
     extends Bloc<CalendarComponentEvent, CalendarComponentState> {
   final DateRangeManagerCubit _dateRangeManager;
   final DateService _dateService;
-  CalendarUserData _dateRangeData = const CalendarUserData(
-    healthMeasurements: [],
-    workouts: [],
-    races: [],
-  );
+  CalendarUserData? _calendarUserData;
 
   CalendarComponentBloc()
       : _dateRangeManager = getIt<DateRangeManagerCubit>(),
@@ -36,7 +32,7 @@ class CalendarComponentBloc
       transformer: restartable(),
     );
     on<CalendarComponentEventChangeDateRangeType>(_changeDateRangeType);
-    on<CalendarComponentEventDateRangeDataUpdated>(_dateRangeDataUpdated);
+    on<CalendarComponentEventUserDataUpdated>(_userDataUpdated);
     on<CalendarComponentEventPreviousDateRange>(_previousDateRange);
     on<CalendarComponentEventNextDateRange>(_nextDateRange);
     on<CalendarComponentEventDayPressed>(_dayPressed);
@@ -49,11 +45,13 @@ class CalendarComponentBloc
   ) async {
     if (event.dateRangeType == DateRangeType.year) return;
     _dateRangeManager.initializeNewDateRangeType(event.dateRangeType);
-    final DateRangeType initialDateRangeType = _dateRangeManager.state.dateRangeType;
+    final DateRangeType initialDateRangeType =
+        _dateRangeManager.state.dateRangeType;
     final DateRange? initialDateRange = _dateRangeManager.state.dateRange;
     emit(state.copyWith(
       dateRangeType: initialDateRangeType,
       dateRange: initialDateRange,
+      areUserDataLoaded: false,
       weeks: initialDateRange != null
           ? _createWeeks(
               dateRangeType: initialDateRangeType,
@@ -61,12 +59,12 @@ class CalendarComponentBloc
             )
           : null,
     ));
-    final Stream<DateRangeManagerState> dateRange$ = _dateRangeManager.stream;
     await emit.forEach(
-      dateRange$,
+      _dateRangeManager.stream,
       onData: (DateRangeManagerState dateRangeManagerState) => state.copyWith(
         dateRangeType: dateRangeManagerState.dateRangeType,
         dateRange: dateRangeManagerState.dateRange,
+        areUserDataLoaded: false,
         weeks: dateRangeManagerState.dateRange != null
             ? _createWeeks(
                 dateRangeType: dateRangeManagerState.dateRangeType,
@@ -84,12 +82,13 @@ class CalendarComponentBloc
     _dateRangeManager.changeDateRangeType(event.dateRangeType);
   }
 
-  void _dateRangeDataUpdated(
-    CalendarComponentEventDateRangeDataUpdated event,
+  void _userDataUpdated(
+    CalendarComponentEventUserDataUpdated event,
     Emitter<CalendarComponentState> emit,
   ) {
-    _dateRangeData = event.data;
+    _calendarUserData = event.userData;
     emit(state.copyWith(
+      areUserDataLoaded: true,
       weeks: state.dateRange != null
           ? _createWeeks(
               dateRangeType: state.dateRangeType,
@@ -170,18 +169,16 @@ class CalendarComponentBloc
     required final bool isDisabled,
   }) {
     final HealthMeasurement? healthMeasurement =
-        _dateRangeData.healthMeasurements.firstWhereOrNull(
+        _calendarUserData?.healthMeasurements.firstWhereOrNull(
       (measurement) => _dateService.areDatesTheSame(measurement.date, date),
     );
     final List<Workout> workoutsFromDay = [
-      ..._dateRangeData.workouts
-          .where(
-            (workout) => _dateService.areDatesTheSame(workout.date, date),
-          )
+      ...?_calendarUserData?.workouts
+          .where((workout) => _dateService.areDatesTheSame(workout.date, date))
           .toList(),
     ];
     final List<Race> racesFromDay = [
-      ..._dateRangeData.races
+      ...?_calendarUserData?.races
           .where((race) => _dateService.areDatesTheSame(race.date, date))
           .toList(),
     ];

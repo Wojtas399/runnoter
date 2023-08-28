@@ -46,7 +46,6 @@ class CalendarUserDataCubit extends Cubit<CalendarUserData?> {
     required final DateTime startDate,
     required final DateTime endDate,
   }) {
-    emit(null);
     _disposeListener();
     _setDataListener(startDate, endDate);
   }

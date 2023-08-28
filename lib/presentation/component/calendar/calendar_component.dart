@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../domain/additional_model/calendar_user_data.dart';
 import '../../../domain/cubit/date_range_manager_cubit.dart';
 import '../gap/gap_components.dart';
-import '../loading_info_component.dart';
 import 'bloc/calendar_component_bloc.dart';
 import 'calendar_component__month.dart';
 import 'calendar_component_date.dart';
@@ -72,8 +71,8 @@ class _ContentState extends State<_Content> {
   void didUpdateWidget(covariant _Content oldWidget) {
     if (widget.calendarUserData != null) {
       context.read<CalendarComponentBloc>().add(
-            CalendarComponentEventDateRangeDataUpdated(
-              data: widget.calendarUserData!,
+            CalendarComponentEventUserDataUpdated(
+              userData: widget.calendarUserData!,
             ),
           );
     }
@@ -90,10 +89,7 @@ class _ContentState extends State<_Content> {
       children: [
         const CalendarComponentDate(),
         const Gap8(),
-        if (widget.calendarUserData == null)
-          //TODO Calendar shimmer will be better
-          const LoadingInfo()
-        else if (dateRangeType == DateRangeType.week)
+        if (dateRangeType == DateRangeType.week)
           const CalendarComponentWeek()
         else if (dateRangeType == DateRangeType.month)
           const CalendarComponentMonth(),

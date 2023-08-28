@@ -41,11 +41,11 @@ class _CurrentWeekCubitListener extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocListener<CurrentWeekCubit, CalendarUserData?>(
-      listener: (BuildContext context, CalendarUserData? calendarUserdata) {
-        if (calendarUserdata != null) {
+      listener: (BuildContext context, CalendarUserData? calendarUserData) {
+        if (calendarUserData != null) {
           context.read<CalendarComponentBloc>().add(
-                CalendarComponentEventDateRangeDataUpdated(
-                  data: calendarUserdata,
+                CalendarComponentEventUserDataUpdated(
+                  userData: calendarUserData,
                 ),
               );
         }
