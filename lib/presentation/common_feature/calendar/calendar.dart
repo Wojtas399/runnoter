@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/additional_model/calendar_user_data.dart';
 import '../../../domain/cubit/calendar_user_data_cubit.dart';
+import '../../../domain/cubit/chart_date_range_cubit.dart';
 import '../../component/body/big_body_component.dart';
 import '../../component/calendar/bloc/calendar_component_bloc.dart';
 import '../../component/calendar/calendar_component.dart';
@@ -22,13 +23,13 @@ import 'calendar_stats.dart';
 
 class Calendar extends StatelessWidget {
   final String userId;
-  final CalendarDateRangeType initialDateRangeType;
+  final DateRangeType initialDateRangeType;
   final bool canEditHealthMeasurement;
 
   const Calendar({
     super.key,
     required this.userId,
-    this.initialDateRangeType = CalendarDateRangeType.month,
+    this.initialDateRangeType = DateRangeType.month,
     this.canEditHealthMeasurement = true,
   });
 
@@ -121,7 +122,7 @@ class _Calendar extends StatelessWidget {
     );
 
     return CalendarComponent(
-      dateRangeType: CalendarDateRangeType.month,
+      dateRangeType: DateRangeType.month,
       calendarUserData: calendarUserData,
       onDateRangeChanged: (DateTime startDate, DateTime endDate) =>
           _onDateRangeChanged(context, startDate, endDate),

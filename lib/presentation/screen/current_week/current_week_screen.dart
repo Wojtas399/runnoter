@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/additional_model/calendar_user_data.dart';
+import '../../../domain/cubit/chart_date_range_cubit.dart';
 import '../../../domain/cubit/current_week_cubit.dart';
 import '../../component/calendar/bloc/calendar_component_bloc.dart';
 import 'current_week_content.dart';
@@ -20,7 +21,7 @@ class CurrentWeekScreen extends StatelessWidget {
           create: (_) => CalendarComponentBloc()
             ..add(
               const CalendarComponentEventInitialize(
-                dateRangeType: CalendarDateRangeType.week,
+                dateRangeType: DateRangeType.week,
               ),
             ),
         ),

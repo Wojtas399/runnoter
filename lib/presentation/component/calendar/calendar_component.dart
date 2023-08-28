@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/additional_model/calendar_user_data.dart';
+import '../../../domain/cubit/chart_date_range_cubit.dart';
 import '../gap/gap_components.dart';
 import '../loading_info_component.dart';
 import 'bloc/calendar_component_bloc.dart';
@@ -10,7 +11,7 @@ import 'calendar_component_date.dart';
 import 'calendar_component_week.dart';
 
 class CalendarComponent extends StatelessWidget {
-  final CalendarDateRangeType? dateRangeType;
+  final DateRangeType? dateRangeType;
   final CalendarUserData? calendarUserData;
   final Function(DateTime date)? onDayPressed;
   final Function(DateTime startDate, DateTime endDate) onDateRangeChanged;
@@ -81,8 +82,8 @@ class _ContentState extends State<_Content> {
 
   @override
   Widget build(BuildContext context) {
-    final CalendarDateRange? dateRange = context.select(
-      (CalendarComponentBloc bloc) => bloc.state.dateRange,
+    final DateRangeType? dateRangeType = context.select(
+      (CalendarComponentBloc bloc) => bloc.state.dateRangeType,
     );
 
     return Column(
@@ -92,12 +93,10 @@ class _ContentState extends State<_Content> {
         if (widget.calendarUserData == null)
           //TODO Calendar shimmer will be better
           const LoadingInfo()
-        else
-          switch (dateRange) {
-            CalendarDateRangeWeek() => const CalendarComponentWeek(),
-            CalendarDateRangeMonth() => const CalendarComponentMonth(),
-            null => const CircularProgressIndicator(),
-          }
+        else if (dateRangeType == DateRangeType.week)
+          const CalendarComponentWeek()
+        else if (dateRangeType == DateRangeType.month)
+          const CalendarComponentMonth(),
       ],
     );
   }
