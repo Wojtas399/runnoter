@@ -87,6 +87,212 @@ void main() {
   );
 
   blocTest(
+    'change date range type, '
+    'week to month, '
+    'should set date range of the month got from end date',
+    build: () => ChartDateRangeCubit(
+      initialState: ChartDateRangeState(
+        dateRangeType: DateRangeType.week,
+        dateRange: DateRange(
+          startDate: DateTime(2023, 8, 28),
+          endDate: DateTime(2023, 9, 3),
+        ),
+      ),
+    ),
+    setUp: () {
+      dateService.mockGetFirstDayOfTheMonth(date: DateTime(2023, 9));
+      dateService.mockGetLastDayOfTheMonth(date: DateTime(2023, 9, 30));
+    },
+    act: (cubit) => cubit.changeDateRangeType(DateRangeType.month),
+    expect: () => [
+      ChartDateRangeState(
+        dateRangeType: DateRangeType.month,
+        dateRange: DateRange(
+          startDate: DateTime(2023, 9),
+          endDate: DateTime(2023, 9, 30),
+        ),
+      ),
+    ],
+    verify: (_) {
+      verify(() => dateService.getFirstDayOfTheMonth(9, 2023)).called(1);
+      verify(() => dateService.getLastDayOfTheMonth(9, 2023)).called(1);
+    },
+  );
+
+  blocTest(
+    'change date range type, '
+    'week to year, '
+    'should set date range of the year got from end date',
+    build: () => ChartDateRangeCubit(
+      initialState: ChartDateRangeState(
+        dateRangeType: DateRangeType.week,
+        dateRange: DateRange(
+          startDate: DateTime(2022, 1, 26),
+          endDate: DateTime(2023, 1, 1),
+        ),
+      ),
+    ),
+    setUp: () {
+      dateService.mockGetFirstDayOfTheYear(date: DateTime(2023, 1, 1));
+      dateService.mockGetLastDayOfTheYear(date: DateTime(2023, 12, 31));
+    },
+    act: (cubit) => cubit.changeDateRangeType(DateRangeType.year),
+    expect: () => [
+      ChartDateRangeState(
+        dateRangeType: DateRangeType.year,
+        dateRange: DateRange(
+          startDate: DateTime(2023, 1, 1),
+          endDate: DateTime(2023, 12, 31),
+        ),
+      ),
+    ],
+    verify: (_) {
+      verify(() => dateService.getFirstDayOfTheYear(2023)).called(1);
+      verify(() => dateService.getLastDayOfTheYear(2023)).called(1);
+    },
+  );
+
+  blocTest(
+    'change date range type, '
+    'month to week, '
+    'should set date range of the first week of the month got from start date',
+    build: () => ChartDateRangeCubit(
+      initialState: ChartDateRangeState(
+        dateRangeType: DateRangeType.month,
+        dateRange: DateRange(
+          startDate: DateTime(2023, 8, 1),
+          endDate: DateTime(2023, 8, 31),
+        ),
+      ),
+    ),
+    setUp: () {
+      dateService.mockGetFirstDayOfTheWeek(date: DateTime(2023, 7, 31));
+      dateService.mockGetLastDayOfTheWeek(date: DateTime(2023, 8, 6));
+    },
+    act: (cubit) => cubit.changeDateRangeType(DateRangeType.week),
+    expect: () => [
+      ChartDateRangeState(
+        dateRangeType: DateRangeType.week,
+        dateRange: DateRange(
+          startDate: DateTime(2023, 7, 31),
+          endDate: DateTime(2023, 8, 6),
+        ),
+      ),
+    ],
+    verify: (_) {
+      verify(
+        () => dateService.getFirstDayOfTheWeek(DateTime(2023, 8, 1)),
+      ).called(1);
+      verify(
+        () => dateService.getLastDayOfTheWeek(DateTime(2023, 8, 1)),
+      ).called(1);
+    },
+  );
+
+  blocTest(
+    'change date range type, '
+    'month to year, '
+    'should set date range of the year got from start date',
+    build: () => ChartDateRangeCubit(
+      initialState: ChartDateRangeState(
+        dateRangeType: DateRangeType.month,
+        dateRange: DateRange(
+          startDate: DateTime(2023, 8, 1),
+          endDate: DateTime(2023, 8, 31),
+        ),
+      ),
+    ),
+    setUp: () {
+      dateService.mockGetFirstDayOfTheYear(date: DateTime(2023, 1, 1));
+      dateService.mockGetLastDayOfTheYear(date: DateTime(2023, 12, 31));
+    },
+    act: (cubit) => cubit.changeDateRangeType(DateRangeType.year),
+    expect: () => [
+      ChartDateRangeState(
+        dateRangeType: DateRangeType.year,
+        dateRange: DateRange(
+          startDate: DateTime(2023, 1, 1),
+          endDate: DateTime(2023, 12, 31),
+        ),
+      ),
+    ],
+    verify: (_) {
+      verify(() => dateService.getFirstDayOfTheYear(2023)).called(1);
+      verify(() => dateService.getLastDayOfTheYear(2023)).called(1);
+    },
+  );
+
+  blocTest(
+    'change date range type, '
+    'year to week, '
+    'should set date range of the first week of the year',
+    build: () => ChartDateRangeCubit(
+      initialState: ChartDateRangeState(
+        dateRangeType: DateRangeType.year,
+        dateRange: DateRange(
+          startDate: DateTime(2023, 1, 1),
+          endDate: DateTime(2023, 12, 31),
+        ),
+      ),
+    ),
+    setUp: () {
+      dateService.mockGetFirstDayOfTheWeek(date: DateTime(2022, 12, 26));
+      dateService.mockGetLastDayOfTheWeek(date: DateTime(2023, 1, 1));
+    },
+    act: (cubit) => cubit.changeDateRangeType(DateRangeType.week),
+    expect: () => [
+      ChartDateRangeState(
+        dateRangeType: DateRangeType.week,
+        dateRange: DateRange(
+          startDate: DateTime(2022, 12, 26),
+          endDate: DateTime(2023, 1, 1),
+        ),
+      ),
+    ],
+    verify: (_) {
+      verify(
+        () => dateService.getFirstDayOfTheWeek(DateTime(2023, 1, 1)),
+      ).called(1);
+      verify(
+        () => dateService.getLastDayOfTheWeek(DateTime(2023, 1, 1)),
+      ).called(1);
+    },
+  );
+
+  blocTest(
+    'change date range type, '
+    'year to month, '
+    'should set date range of the first month of the year',
+    build: () => ChartDateRangeCubit(
+      initialState: ChartDateRangeState(
+        dateRangeType: DateRangeType.year,
+        dateRange: DateRange(
+          startDate: DateTime(2023, 1, 1),
+          endDate: DateTime(2023, 12, 31),
+        ),
+      ),
+    ),
+    setUp: () {
+      dateService.mockGetFirstDayOfTheMonth(date: DateTime(2023, 1, 1));
+      dateService.mockGetLastDayOfTheMonth(date: DateTime(2023, 1, 31));
+    },
+    act: (cubit) => cubit.changeDateRangeType(DateRangeType.month),
+    expect: () => [
+      ChartDateRangeState(
+        dateRangeType: DateRangeType.month,
+        dateRange: DateRange(
+          startDate: DateTime(2023, 1, 1),
+          endDate: DateTime(2023, 1, 31),
+        ),
+      ),
+    ],
+    verify: (_) {
+      verify(() => dateService.getFirstDayOfTheMonth(1, 2023)).called(1);
+      verify(() => dateService.getLastDayOfTheMonth(1, 2023)).called(1);
+    },
+  );
+
+  blocTest(
     'next date range, '
     'current date range is null, '
     'should do nothing',
