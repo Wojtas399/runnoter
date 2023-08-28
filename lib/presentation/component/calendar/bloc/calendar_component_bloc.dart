@@ -7,7 +7,7 @@ import '../../../../common/date_service.dart';
 import '../../../../dependency_injection.dart';
 import '../../../../domain/additional_model/calendar_user_data.dart';
 import '../../../../domain/additional_model/calendar_week_day.dart';
-import '../../../../domain/cubit/chart_date_range_cubit.dart';
+import '../../../../domain/cubit/date_range_manager_cubit.dart';
 import '../../../../domain/entity/health_measurement.dart';
 import '../../../../domain/entity/race.dart';
 import '../../../../domain/entity/workout.dart';
@@ -17,7 +17,7 @@ part 'calendar_component_state.dart';
 
 class CalendarComponentBloc
     extends Bloc<CalendarComponentEvent, CalendarComponentState> {
-  final ChartDateRangeCubit _dateRangeCubit;
+  final DateRangeManagerCubit _dateRangeManager;
   final DateService _dateService;
   CalendarUserData _dateRangeData = const CalendarUserData(
     healthMeasurements: [],
@@ -26,7 +26,7 @@ class CalendarComponentBloc
   );
 
   CalendarComponentBloc()
-      : _dateRangeCubit = getIt<ChartDateRangeCubit>(),
+      : _dateRangeManager = getIt<DateRangeManagerCubit>(),
         _dateService = getIt<DateService>(),
         super(
           const CalendarComponentState(dateRangeType: DateRangeType.week),
@@ -48,28 +48,29 @@ class CalendarComponentBloc
     Emitter<CalendarComponentState> emit,
   ) async {
     if (event.dateRangeType == DateRangeType.year) return;
-    _dateRangeCubit.initializeNewDateRangeType(event.dateRangeType);
-    final ChartDateRangeState initialDateRangeState = _dateRangeCubit.state;
+    _dateRangeManager.initializeNewDateRangeType(event.dateRangeType);
+    final DateRangeType initialDateRangeType = _dateRangeManager.state.dateRangeType;
+    final DateRange? initialDateRange = _dateRangeManager.state.dateRange;
     emit(state.copyWith(
-      dateRangeType: initialDateRangeState.dateRangeType,
-      dateRange: initialDateRangeState.dateRange,
-      weeks: initialDateRangeState.dateRange != null
+      dateRangeType: initialDateRangeType,
+      dateRange: initialDateRange,
+      weeks: initialDateRange != null
           ? _createWeeks(
-              dateRangeType: initialDateRangeState.dateRangeType,
-              dateRange: initialDateRangeState.dateRange!,
+              dateRangeType: initialDateRangeType,
+              dateRange: initialDateRange,
             )
           : null,
     ));
-    final Stream<ChartDateRangeState> dateRange$ = _dateRangeCubit.stream;
+    final Stream<DateRangeManagerState> dateRange$ = _dateRangeManager.stream;
     await emit.forEach(
       dateRange$,
-      onData: (ChartDateRangeState dateRangeState) => state.copyWith(
-        dateRangeType: dateRangeState.dateRangeType,
-        dateRange: dateRangeState.dateRange,
-        weeks: dateRangeState.dateRange != null
+      onData: (DateRangeManagerState dateRangeManagerState) => state.copyWith(
+        dateRangeType: dateRangeManagerState.dateRangeType,
+        dateRange: dateRangeManagerState.dateRange,
+        weeks: dateRangeManagerState.dateRange != null
             ? _createWeeks(
-                dateRangeType: dateRangeState.dateRangeType,
-                dateRange: dateRangeState.dateRange!,
+                dateRangeType: dateRangeManagerState.dateRangeType,
+                dateRange: dateRangeManagerState.dateRange!,
               )
             : null,
       ),
@@ -80,7 +81,7 @@ class CalendarComponentBloc
     CalendarComponentEventChangeDateRangeType event,
     Emitter<CalendarComponentState> emit,
   ) {
-    _dateRangeCubit.changeDateRangeType(event.dateRangeType);
+    _dateRangeManager.changeDateRangeType(event.dateRangeType);
   }
 
   void _dateRangeDataUpdated(
@@ -102,14 +103,14 @@ class CalendarComponentBloc
     CalendarComponentEventPreviousDateRange event,
     Emitter<CalendarComponentState> emit,
   ) {
-    _dateRangeCubit.previousDateRange();
+    _dateRangeManager.previousDateRange();
   }
 
   void _nextDateRange(
     CalendarComponentEventNextDateRange event,
     Emitter<CalendarComponentState> emit,
   ) {
-    _dateRangeCubit.nextDateRange();
+    _dateRangeManager.nextDateRange();
   }
 
   void _dayPressed(

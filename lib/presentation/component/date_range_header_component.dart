@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../common/date_service.dart';
-import '../../domain/cubit/chart_date_range_cubit.dart';
+import '../../domain/cubit/date_range_manager_cubit.dart';
 import '../extension/context_extensions.dart';
 import '../formatter/date_formatter.dart';
 import 'gap/gap_components.dart';

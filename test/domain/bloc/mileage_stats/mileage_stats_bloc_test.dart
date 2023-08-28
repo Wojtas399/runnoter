@@ -8,7 +8,7 @@ import 'package:runnoter/common/date_service.dart';
 import 'package:runnoter/domain/additional_model/activity_status.dart';
 import 'package:runnoter/domain/additional_model/workout_stage.dart';
 import 'package:runnoter/domain/bloc/mileage_stats/mileage_stats_bloc.dart';
-import 'package:runnoter/domain/cubit/chart_date_range_cubit.dart';
+import 'package:runnoter/domain/cubit/date_range_manager_cubit.dart';
 import 'package:runnoter/domain/entity/race.dart';
 import 'package:runnoter/domain/entity/workout.dart';
 import 'package:runnoter/domain/repository/race_repository.dart';
@@ -18,14 +18,14 @@ import '../../../creators/activity_status_creator.dart';
 import '../../../creators/race_creator.dart';
 import '../../../creators/workout_creator.dart';
 import '../../../mock/common/mock_date_service.dart';
-import '../../../mock/domain/cubit/mock_chart_date_range_cubit.dart';
+import '../../../mock/domain/cubit/mock_date_range_manager_cubit.dart';
 import '../../../mock/domain/repository/mock_race_repository.dart';
 import '../../../mock/domain/repository/mock_workout_repository.dart';
 
 void main() {
   final workoutRepository = MockWorkoutRepository();
   final raceRepository = MockRaceRepository();
-  final chartDateRangeCubit = MockChartDateRangeCubit();
+  final dateRangeManagerCubit = MockDateRangeManagerCubit();
   final dateService = MockDateService();
   const String userId = 'u1';
 
@@ -34,36 +34,37 @@ void main() {
   setUpAll(() {
     GetIt.I.registerSingleton<WorkoutRepository>(workoutRepository);
     GetIt.I.registerSingleton<RaceRepository>(raceRepository);
-    GetIt.I.registerFactory<ChartDateRangeCubit>(() => chartDateRangeCubit);
+    GetIt.I.registerFactory<DateRangeManagerCubit>(() => dateRangeManagerCubit);
     GetIt.I.registerFactory<DateService>(() => dateService);
   });
 
   tearDown(() {
     reset(workoutRepository);
     reset(raceRepository);
-    reset(chartDateRangeCubit);
+    reset(dateRangeManagerCubit);
     reset(dateService);
   });
 
   group(
     'initialize',
     () {
-      final ChartDateRangeState chartDateRange = ChartDateRangeState(
+      final DateRangeManagerState dateRangeManagerState = DateRangeManagerState(
         dateRangeType: DateRangeType.week,
         dateRange: DateRange(
           startDate: DateTime(2023, 8, 21),
           endDate: DateTime(2023, 8, 27),
         ),
       );
-      final ChartDateRangeState updatedChartDateRange = ChartDateRangeState(
+      final DateRangeManagerState updatedDateRangeManagerState =
+          DateRangeManagerState(
         dateRangeType: DateRangeType.year,
         dateRange: DateRange(
           startDate: DateTime(2023, 1, 1),
           endDate: DateTime(2023, 12, 31),
         ),
       );
-      final StreamController<ChartDateRangeState> chartDateRange$ =
-          StreamController()..add(chartDateRange);
+      final StreamController<DateRangeManagerState> dateRangeManagerState$ =
+          StreamController()..add(dateRangeManagerState);
       final expectedPoints = List<MileageStatsChartPoint>.generate(
         7,
         (i) => MileageStatsChartPoint(
@@ -84,8 +85,8 @@ void main() {
         'should initialize chart date range cubit with year date range type',
         build: () => createBloc(),
         setUp: () {
-          chartDateRangeCubit.mockStream(
-            expectedStream: chartDateRange$.stream,
+          dateRangeManagerCubit.mockStream(
+            expectedStream: dateRangeManagerState$.stream,
           );
           workoutRepository.mockGetWorkoutsByDateRange();
           raceRepository.mockGetRacesByDateRange();
@@ -94,24 +95,24 @@ void main() {
         act: (bloc) async {
           bloc.add(const MileageStatsEventInitialize());
           await bloc.stream.first;
-          chartDateRange$.add(updatedChartDateRange);
+          dateRangeManagerState$.add(updatedDateRangeManagerState);
         },
         expect: () => [
           MileageStatsState(
-            dateRangeType: chartDateRange.dateRangeType,
-            dateRange: chartDateRange.dateRange,
+            dateRangeType: dateRangeManagerState.dateRangeType,
+            dateRange: dateRangeManagerState.dateRange,
             mileageChartPoints: expectedPoints,
           ),
           MileageStatsState(
-            dateRangeType: updatedChartDateRange.dateRangeType,
-            dateRange: updatedChartDateRange.dateRange,
+            dateRangeType: updatedDateRangeManagerState.dateRangeType,
+            dateRange: updatedDateRangeManagerState.dateRange,
             mileageChartPoints: expectedUpdatedPoints,
           ),
         ],
         verify: (_) {
-          verify(() => chartDateRangeCubit.stream).called(1);
+          verify(() => dateRangeManagerCubit.stream).called(1);
           verify(
-            () => chartDateRangeCubit.initializeNewDateRangeType(
+            () => dateRangeManagerCubit.initializeNewDateRangeType(
               DateRangeType.year,
             ),
           ).called(1);
@@ -248,7 +249,7 @@ void main() {
         act: (bloc) async {
           bloc.add(
             MileageStatsEventChartDateRangeUpdated(
-              chartDateRange: ChartDateRangeState(
+              dateRangeManagerState: DateRangeManagerState(
                 dateRangeType: DateRangeType.week,
                 dateRange: DateRange(startDate: startDate, endDate: endDate),
               ),
@@ -387,7 +388,7 @@ void main() {
         act: (bloc) {
           bloc.add(
             MileageStatsEventChartDateRangeUpdated(
-              chartDateRange: ChartDateRangeState(
+              dateRangeManagerState: DateRangeManagerState(
                 dateRangeType: DateRangeType.year,
                 dateRange: DateRange(startDate: startDate, endDate: endDate),
               ),
@@ -440,7 +441,7 @@ void main() {
     build: () => createBloc(),
     act: (bloc) => bloc.add(
       MileageStatsEventChartDateRangeUpdated(
-        chartDateRange: ChartDateRangeState(
+        dateRangeManagerState: DateRangeManagerState(
           dateRangeType: DateRangeType.month,
           dateRange: DateRange(
             startDate: DateTime(2023, 1, 1),
@@ -459,7 +460,7 @@ void main() {
     build: () => createBloc(),
     act: (bloc) => bloc.add(
       const MileageStatsEventChartDateRangeUpdated(
-        chartDateRange: ChartDateRangeState(
+        dateRangeManagerState: DateRangeManagerState(
           dateRangeType: DateRangeType.week,
           dateRange: null,
         ),
@@ -479,7 +480,9 @@ void main() {
       ),
     ),
     verify: (_) => verify(
-      () => chartDateRangeCubit.initializeNewDateRangeType(DateRangeType.week),
+      () => dateRangeManagerCubit.initializeNewDateRangeType(
+        DateRangeType.week,
+      ),
     ).called(1),
   );
 
@@ -494,7 +497,9 @@ void main() {
       ),
     ),
     verify: (_) => verifyNever(
-      () => chartDateRangeCubit.initializeNewDateRangeType(DateRangeType.month),
+      () => dateRangeManagerCubit.initializeNewDateRangeType(
+        DateRangeType.month,
+      ),
     ),
   );
 
@@ -509,7 +514,9 @@ void main() {
       ),
     ),
     verify: (_) => verify(
-      () => chartDateRangeCubit.initializeNewDateRangeType(DateRangeType.year),
+      () => dateRangeManagerCubit.initializeNewDateRangeType(
+        DateRangeType.year,
+      ),
     ).called(1),
   );
 
@@ -518,7 +525,7 @@ void main() {
     "should call chart date range cubit's method to set previous date range",
     build: () => createBloc(),
     act: (bloc) => bloc.add(const MileageStatsEventPreviousDateRange()),
-    verify: (_) => verify(chartDateRangeCubit.previousDateRange).called(1),
+    verify: (_) => verify(dateRangeManagerCubit.previousDateRange).called(1),
   );
 
   blocTest(
@@ -526,6 +533,6 @@ void main() {
     "should call chart date range cubit's method to set next date range",
     build: () => createBloc(),
     act: (bloc) => bloc.add(const MileageStatsEventNextDateRange()),
-    verify: (_) => verify(chartDateRangeCubit.nextDateRange).called(1),
+    verify: (_) => verify(dateRangeManagerCubit.nextDateRange).called(1),
   );
 }

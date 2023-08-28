@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/additional_model/calendar_user_data.dart';
 import '../../../domain/cubit/calendar_user_data_cubit.dart';
-import '../../../domain/cubit/chart_date_range_cubit.dart';
+import '../../../domain/cubit/date_range_manager_cubit.dart';
 import '../../component/body/big_body_component.dart';
 import '../../component/calendar/bloc/calendar_component_bloc.dart';
 import '../../component/calendar/calendar_component.dart';

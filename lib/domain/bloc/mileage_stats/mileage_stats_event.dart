@@ -9,9 +9,11 @@ class MileageStatsEventInitialize extends MileageStatsEvent {
 }
 
 class MileageStatsEventChartDateRangeUpdated extends MileageStatsEvent {
-  final ChartDateRangeState chartDateRange;
+  final DateRangeManagerState dateRangeManagerState;
 
-  const MileageStatsEventChartDateRangeUpdated({required this.chartDateRange});
+  const MileageStatsEventChartDateRangeUpdated({
+    required this.dateRangeManagerState,
+  });
 }
 
 class MileageStatsEventChangeDateRangeType extends MileageStatsEvent {

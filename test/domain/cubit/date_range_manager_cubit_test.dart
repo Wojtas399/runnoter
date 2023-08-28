@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/common/date_service.dart';
-import 'package:runnoter/domain/cubit/chart_date_range_cubit.dart';
+import 'package:runnoter/domain/cubit/date_range_manager_cubit.dart';
 
 import '../../mock/common/mock_date_service.dart';
 
@@ -27,14 +27,14 @@ void main() {
     'initialize new date range type, '
     'week, '
     'should emit date range of current week',
-    build: () => ChartDateRangeCubit(),
+    build: () => DateRangeManagerCubit(),
     setUp: () {
       dateService.mockGetFirstDayOfTheWeek(date: DateTime(2023, 8, 21));
       dateService.mockGetLastDayOfTheWeek(date: DateTime(2023, 8, 27));
     },
     act: (cubit) => cubit.initializeNewDateRangeType(DateRangeType.week),
     expect: () => [
-      ChartDateRangeState(
+      DateRangeManagerState(
         dateRangeType: DateRangeType.week,
         dateRange: DateRange(
           startDate: DateTime(2023, 8, 21),
@@ -48,14 +48,14 @@ void main() {
     'initialize new date range type, '
     'month, '
     'should emit date range of current month',
-    build: () => ChartDateRangeCubit(),
+    build: () => DateRangeManagerCubit(),
     setUp: () {
       dateService.mockGetFirstDayOfTheMonth(date: DateTime(2023, 8));
       dateService.mockGetLastDayOfTheMonth(date: DateTime(2023, 8, 31));
     },
     act: (cubit) => cubit.initializeNewDateRangeType(DateRangeType.month),
     expect: () => [
-      ChartDateRangeState(
+      DateRangeManagerState(
         dateRangeType: DateRangeType.month,
         dateRange: DateRange(
           startDate: DateTime(2023, 8),
@@ -69,14 +69,14 @@ void main() {
     'initialize new date range type, '
     'year, '
     'should emit date range of current year',
-    build: () => ChartDateRangeCubit(),
+    build: () => DateRangeManagerCubit(),
     setUp: () {
       dateService.mockGetFirstDayOfTheYear(date: DateTime(2023));
       dateService.mockGetLastDayOfTheYear(date: DateTime(2023, 12, 31));
     },
     act: (cubit) => cubit.initializeNewDateRangeType(DateRangeType.year),
     expect: () => [
-      ChartDateRangeState(
+      DateRangeManagerState(
         dateRangeType: DateRangeType.year,
         dateRange: DateRange(
           startDate: DateTime(2023),
@@ -90,8 +90,8 @@ void main() {
     'change date range type, '
     'week to month, '
     'should set date range of the month got from end date',
-    build: () => ChartDateRangeCubit(
-      initialState: ChartDateRangeState(
+    build: () => DateRangeManagerCubit(
+      initialState: DateRangeManagerState(
         dateRangeType: DateRangeType.week,
         dateRange: DateRange(
           startDate: DateTime(2023, 8, 28),
@@ -105,7 +105,7 @@ void main() {
     },
     act: (cubit) => cubit.changeDateRangeType(DateRangeType.month),
     expect: () => [
-      ChartDateRangeState(
+      DateRangeManagerState(
         dateRangeType: DateRangeType.month,
         dateRange: DateRange(
           startDate: DateTime(2023, 9),
@@ -123,8 +123,8 @@ void main() {
     'change date range type, '
     'week to year, '
     'should set date range of the year got from end date',
-    build: () => ChartDateRangeCubit(
-      initialState: ChartDateRangeState(
+    build: () => DateRangeManagerCubit(
+      initialState: DateRangeManagerState(
         dateRangeType: DateRangeType.week,
         dateRange: DateRange(
           startDate: DateTime(2022, 1, 26),
@@ -138,7 +138,7 @@ void main() {
     },
     act: (cubit) => cubit.changeDateRangeType(DateRangeType.year),
     expect: () => [
-      ChartDateRangeState(
+      DateRangeManagerState(
         dateRangeType: DateRangeType.year,
         dateRange: DateRange(
           startDate: DateTime(2023, 1, 1),
@@ -156,8 +156,8 @@ void main() {
     'change date range type, '
     'month to week, '
     'should set date range of the first week of the month got from start date',
-    build: () => ChartDateRangeCubit(
-      initialState: ChartDateRangeState(
+    build: () => DateRangeManagerCubit(
+      initialState: DateRangeManagerState(
         dateRangeType: DateRangeType.month,
         dateRange: DateRange(
           startDate: DateTime(2023, 8, 1),
@@ -171,7 +171,7 @@ void main() {
     },
     act: (cubit) => cubit.changeDateRangeType(DateRangeType.week),
     expect: () => [
-      ChartDateRangeState(
+      DateRangeManagerState(
         dateRangeType: DateRangeType.week,
         dateRange: DateRange(
           startDate: DateTime(2023, 7, 31),
@@ -193,8 +193,8 @@ void main() {
     'change date range type, '
     'month to year, '
     'should set date range of the year got from start date',
-    build: () => ChartDateRangeCubit(
-      initialState: ChartDateRangeState(
+    build: () => DateRangeManagerCubit(
+      initialState: DateRangeManagerState(
         dateRangeType: DateRangeType.month,
         dateRange: DateRange(
           startDate: DateTime(2023, 8, 1),
@@ -208,7 +208,7 @@ void main() {
     },
     act: (cubit) => cubit.changeDateRangeType(DateRangeType.year),
     expect: () => [
-      ChartDateRangeState(
+      DateRangeManagerState(
         dateRangeType: DateRangeType.year,
         dateRange: DateRange(
           startDate: DateTime(2023, 1, 1),
@@ -226,8 +226,8 @@ void main() {
     'change date range type, '
     'year to week, '
     'should set date range of the first week of the year',
-    build: () => ChartDateRangeCubit(
-      initialState: ChartDateRangeState(
+    build: () => DateRangeManagerCubit(
+      initialState: DateRangeManagerState(
         dateRangeType: DateRangeType.year,
         dateRange: DateRange(
           startDate: DateTime(2023, 1, 1),
@@ -241,7 +241,7 @@ void main() {
     },
     act: (cubit) => cubit.changeDateRangeType(DateRangeType.week),
     expect: () => [
-      ChartDateRangeState(
+      DateRangeManagerState(
         dateRangeType: DateRangeType.week,
         dateRange: DateRange(
           startDate: DateTime(2022, 12, 26),
@@ -263,8 +263,8 @@ void main() {
     'change date range type, '
     'year to month, '
     'should set date range of the first month of the year',
-    build: () => ChartDateRangeCubit(
-      initialState: ChartDateRangeState(
+    build: () => DateRangeManagerCubit(
+      initialState: DateRangeManagerState(
         dateRangeType: DateRangeType.year,
         dateRange: DateRange(
           startDate: DateTime(2023, 1, 1),
@@ -278,7 +278,7 @@ void main() {
     },
     act: (cubit) => cubit.changeDateRangeType(DateRangeType.month),
     expect: () => [
-      ChartDateRangeState(
+      DateRangeManagerState(
         dateRangeType: DateRangeType.month,
         dateRange: DateRange(
           startDate: DateTime(2023, 1, 1),
@@ -296,7 +296,7 @@ void main() {
     'next date range, '
     'current date range is null, '
     'should do nothing',
-    build: () => ChartDateRangeCubit(),
+    build: () => DateRangeManagerCubit(),
     act: (cubit) => cubit.nextDateRange(),
     expect: () => [],
   );
@@ -305,8 +305,8 @@ void main() {
     'next date range, '
     'week, '
     'should emit date range of next week',
-    build: () => ChartDateRangeCubit(
-      initialState: ChartDateRangeState(
+    build: () => DateRangeManagerCubit(
+      initialState: DateRangeManagerState(
         dateRangeType: DateRangeType.week,
         dateRange: DateRange(
           startDate: DateTime(2023, 8, 21),
@@ -316,7 +316,7 @@ void main() {
     ),
     act: (cubit) => cubit.nextDateRange(),
     expect: () => [
-      ChartDateRangeState(
+      DateRangeManagerState(
         dateRangeType: DateRangeType.week,
         dateRange: DateRange(
           startDate: DateTime(2023, 8, 28),
@@ -330,8 +330,8 @@ void main() {
     'next date range, '
     'month, '
     'should emit date range of next month',
-    build: () => ChartDateRangeCubit(
-      initialState: ChartDateRangeState(
+    build: () => DateRangeManagerCubit(
+      initialState: DateRangeManagerState(
         dateRangeType: DateRangeType.month,
         dateRange: DateRange(
           startDate: DateTime(2023, 8),
@@ -344,7 +344,7 @@ void main() {
     ),
     act: (cubit) => cubit.nextDateRange(),
     expect: () => [
-      ChartDateRangeState(
+      DateRangeManagerState(
         dateRangeType: DateRangeType.month,
         dateRange: DateRange(
           startDate: DateTime(2023, 9),
@@ -358,8 +358,8 @@ void main() {
     'next date range, '
     'year, '
     'should emit date range of next year',
-    build: () => ChartDateRangeCubit(
-      initialState: ChartDateRangeState(
+    build: () => DateRangeManagerCubit(
+      initialState: DateRangeManagerState(
         dateRangeType: DateRangeType.year,
         dateRange: DateRange(
           startDate: DateTime(2023),
@@ -373,7 +373,7 @@ void main() {
     },
     act: (cubit) => cubit.nextDateRange(),
     expect: () => [
-      ChartDateRangeState(
+      DateRangeManagerState(
         dateRangeType: DateRangeType.year,
         dateRange: DateRange(
           startDate: DateTime(2024),
@@ -387,7 +387,7 @@ void main() {
     'previous date range, '
     'current date range is null, '
     'should do nothing',
-    build: () => ChartDateRangeCubit(),
+    build: () => DateRangeManagerCubit(),
     act: (cubit) => cubit.previousDateRange(),
     expect: () => [],
   );
@@ -396,8 +396,8 @@ void main() {
     'previous date range, '
     'week, '
     'should emit date range of previous week',
-    build: () => ChartDateRangeCubit(
-      initialState: ChartDateRangeState(
+    build: () => DateRangeManagerCubit(
+      initialState: DateRangeManagerState(
         dateRangeType: DateRangeType.week,
         dateRange: DateRange(
           startDate: DateTime(2023, 8, 21),
@@ -407,7 +407,7 @@ void main() {
     ),
     act: (cubit) => cubit.previousDateRange(),
     expect: () => [
-      ChartDateRangeState(
+      DateRangeManagerState(
         dateRangeType: DateRangeType.week,
         dateRange: DateRange(
           startDate: DateTime(2023, 8, 14),
@@ -421,8 +421,8 @@ void main() {
     'previous date range, '
     'month, '
     'should emit date range of previous month',
-    build: () => ChartDateRangeCubit(
-      initialState: ChartDateRangeState(
+    build: () => DateRangeManagerCubit(
+      initialState: DateRangeManagerState(
         dateRangeType: DateRangeType.month,
         dateRange: DateRange(
           startDate: DateTime(2023, 8),
@@ -435,7 +435,7 @@ void main() {
     ),
     act: (cubit) => cubit.previousDateRange(),
     expect: () => [
-      ChartDateRangeState(
+      DateRangeManagerState(
         dateRangeType: DateRangeType.month,
         dateRange: DateRange(
           startDate: DateTime(2023, 7),
@@ -449,8 +449,8 @@ void main() {
     'previous date range, '
     'year, '
     'should emit date range of previous year',
-    build: () => ChartDateRangeCubit(
-      initialState: ChartDateRangeState(
+    build: () => DateRangeManagerCubit(
+      initialState: DateRangeManagerState(
         dateRangeType: DateRangeType.year,
         dateRange: DateRange(
           startDate: DateTime(2023),
@@ -464,7 +464,7 @@ void main() {
     },
     act: (cubit) => cubit.previousDateRange(),
     expect: () => [
-      ChartDateRangeState(
+      DateRangeManagerState(
         dateRangeType: DateRangeType.year,
         dateRange: DateRange(
           startDate: DateTime(2022),

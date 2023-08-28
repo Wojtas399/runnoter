@@ -8,7 +8,7 @@ import 'package:rxdart/rxdart.dart';
 import '../../../common/date_service.dart';
 import '../../../dependency_injection.dart';
 import '../../additional_model/activity_status.dart';
-import '../../cubit/chart_date_range_cubit.dart';
+import '../../cubit/date_range_manager_cubit.dart';
 import '../../entity/activity.dart';
 import '../../entity/race.dart';
 import '../../entity/workout.dart';
@@ -16,15 +16,16 @@ import '../../repository/race_repository.dart';
 import '../../repository/workout_repository.dart';
 
 part 'mileage_stats_event.dart';
+
 part 'mileage_stats_state.dart';
 
 class MileageStatsBloc extends Bloc<MileageStatsEvent, MileageStatsState> {
   final String _userId;
   final WorkoutRepository _workoutRepository;
   final RaceRepository _raceRepository;
-  final ChartDateRangeCubit _chartDateRangeCubit;
+  final DateRangeManagerCubit _dateRangeManagerCubit;
   final DateService _dateService;
-  StreamSubscription<ChartDateRangeState>? _chartDateRangeListener;
+  StreamSubscription<DateRangeManagerState>? _dateRangeManagerListener;
 
   MileageStatsBloc({
     required String userId,
@@ -32,7 +33,7 @@ class MileageStatsBloc extends Bloc<MileageStatsEvent, MileageStatsState> {
   })  : _userId = userId,
         _workoutRepository = getIt<WorkoutRepository>(),
         _raceRepository = getIt<RaceRepository>(),
-        _chartDateRangeCubit = getIt<ChartDateRangeCubit>(),
+        _dateRangeManagerCubit = getIt<DateRangeManagerCubit>(),
         _dateService = getIt<DateService>(),
         super(initialState) {
     on<MileageStatsEventInitialize>(_initialize);
@@ -51,25 +52,29 @@ class MileageStatsBloc extends Bloc<MileageStatsEvent, MileageStatsState> {
     return super.close();
   }
 
+  //TODO: You can combine RxDart functions instead of using two listeners
   void _initialize(
     MileageStatsEventInitialize event,
     Emitter<MileageStatsState> emit,
   ) {
     _disposeChartDateRangeListener();
-    _chartDateRangeListener ??= _chartDateRangeCubit.stream.listen(
-      (ChartDateRangeState chartDateRange) => add(
-        MileageStatsEventChartDateRangeUpdated(chartDateRange: chartDateRange),
+    _dateRangeManagerListener ??= _dateRangeManagerCubit.stream.listen(
+      (DateRangeManagerState dateRangeManagerState) => add(
+        MileageStatsEventChartDateRangeUpdated(
+          dateRangeManagerState: dateRangeManagerState,
+        ),
       ),
     );
-    _chartDateRangeCubit.initializeNewDateRangeType(DateRangeType.year);
+    _dateRangeManagerCubit.initializeNewDateRangeType(DateRangeType.year);
   }
 
   Future<void> _chartDateRangeUpdated(
     MileageStatsEventChartDateRangeUpdated event,
     Emitter<MileageStatsState> emit,
   ) async {
-    final DateRangeType dateRangeType = event.chartDateRange.dateRangeType;
-    final DateRange? dateRange = event.chartDateRange.dateRange;
+    final DateRangeType dateRangeType =
+        event.dateRangeManagerState.dateRangeType;
+    final DateRange? dateRange = event.dateRangeManagerState.dateRange;
     if (dateRange == null || dateRangeType == DateRangeType.month) return;
     final Stream<_Activities> stream$ = Rx.combineLatest2(
       _workoutRepository.getWorkoutsByDateRange(
@@ -104,21 +109,21 @@ class MileageStatsBloc extends Bloc<MileageStatsEvent, MileageStatsState> {
     Emitter<MileageStatsState> emit,
   ) {
     if (event.dateRangeType == DateRangeType.month) return;
-    _chartDateRangeCubit.initializeNewDateRangeType(event.dateRangeType);
+    _dateRangeManagerCubit.initializeNewDateRangeType(event.dateRangeType);
   }
 
   void _previousDateRange(
     MileageStatsEventPreviousDateRange event,
     Emitter<MileageStatsState> emit,
   ) {
-    _chartDateRangeCubit.previousDateRange();
+    _dateRangeManagerCubit.previousDateRange();
   }
 
   void _nextDateRange(
     MileageStatsEventNextDateRange event,
     Emitter<MileageStatsState> emit,
   ) {
-    _chartDateRangeCubit.nextDateRange();
+    _dateRangeManagerCubit.nextDateRange();
   }
 
   List<MileageStatsChartPoint> _createPointsForEachWeekDay(
@@ -188,8 +193,8 @@ class MileageStatsBloc extends Bloc<MileageStatsEvent, MileageStatsState> {
   }
 
   void _disposeChartDateRangeListener() {
-    _chartDateRangeListener?.cancel();
-    _chartDateRangeListener = null;
+    _dateRangeManagerListener?.cancel();
+    _dateRangeManagerListener = null;
   }
 }
 

@@ -10,7 +10,7 @@ import 'data/repository_impl/user_repository_impl.dart';
 import 'data/repository_impl/workout_repository_impl.dart';
 import 'data/service_impl/auth_service_impl.dart';
 import 'data/service_impl/coaching_request_service_impl.dart';
-import 'domain/cubit/chart_date_range_cubit.dart';
+import 'domain/cubit/date_range_manager_cubit.dart';
 import 'domain/repository/blood_test_repository.dart';
 import 'domain/repository/health_measurement_repository.dart';
 import 'domain/repository/person_repository.dart';
@@ -64,7 +64,7 @@ void _registerServices() {
   getIt.registerFactory<CoachingRequestService>(
     () => CoachingRequestServiceImpl(),
   );
-  getIt.registerFactory(() => ChartDateRangeCubit());
+  getIt.registerFactory(() => DateRangeManagerCubit());
 }
 
 void _registerRepositories() {

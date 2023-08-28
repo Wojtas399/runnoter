@@ -4,7 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 import '../../../domain/bloc/health_stats/health_stats_bloc.dart';
-import '../../../domain/cubit/chart_date_range_cubit.dart';
+import '../../../domain/cubit/date_range_manager_cubit.dart';
 import '../../component/date_range_header_component.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/loading_info_component.dart';

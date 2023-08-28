@@ -6,19 +6,19 @@ import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/common/date_service.dart';
 import 'package:runnoter/domain/bloc/health_stats/health_stats_bloc.dart';
-import 'package:runnoter/domain/cubit/chart_date_range_cubit.dart';
+import 'package:runnoter/domain/cubit/date_range_manager_cubit.dart';
 import 'package:runnoter/domain/entity/health_measurement.dart';
 import 'package:runnoter/domain/repository/health_measurement_repository.dart';
 
 import '../../../creators/health_measurement_creator.dart';
 import '../../../mock/common/mock_date_service.dart';
-import '../../../mock/domain/cubit/mock_chart_date_range_cubit.dart';
+import '../../../mock/domain/cubit/mock_date_range_manager_cubit.dart';
 import '../../../mock/domain/repository/mock_health_measurement_repository.dart';
 
 void main() {
   final dateService = MockDateService();
   final healthMeasurementRepository = MockHealthMeasurementRepository();
-  final chartDateRangeCubit = MockChartDateRangeCubit();
+  final dateRangeManagerCubit = MockDateRangeManagerCubit();
   const String userId = 'u1';
 
   HealthStatsBloc createBloc() => HealthStatsBloc(userId: userId);
@@ -28,34 +28,35 @@ void main() {
     GetIt.I.registerSingleton<HealthMeasurementRepository>(
       healthMeasurementRepository,
     );
-    GetIt.I.registerFactory<ChartDateRangeCubit>(() => chartDateRangeCubit);
+    GetIt.I.registerFactory<DateRangeManagerCubit>(() => dateRangeManagerCubit);
   });
 
   tearDown(() {
     reset(dateService);
     reset(healthMeasurementRepository);
-    reset(chartDateRangeCubit);
+    reset(dateRangeManagerCubit);
   });
 
   group(
     'initialize',
     () {
-      final ChartDateRangeState chartDateRange = ChartDateRangeState(
+      final DateRangeManagerState dateRangeManagerState = DateRangeManagerState(
         dateRangeType: DateRangeType.week,
         dateRange: DateRange(
           startDate: DateTime(2023, 8, 21),
           endDate: DateTime(2023, 8, 27),
         ),
       );
-      final ChartDateRangeState updatedChartDateRange = ChartDateRangeState(
+      final DateRangeManagerState updatedDateRangeManagerState =
+          DateRangeManagerState(
         dateRangeType: DateRangeType.month,
         dateRange: DateRange(
           startDate: DateTime(2023, 8),
           endDate: DateTime(2023, 8, 31),
         ),
       );
-      final StreamController<ChartDateRangeState> chartDateRange$ =
-          StreamController()..add(chartDateRange);
+      final StreamController<DateRangeManagerState> dateRangeManagerState$ =
+          StreamController()..add(dateRangeManagerState);
       final expectedPoints = List<HealthStatsChartPoint>.generate(
         7,
         (index) => HealthStatsChartPoint(
@@ -76,8 +77,8 @@ void main() {
         'should set listener of chart date range state',
         build: () => createBloc(),
         setUp: () {
-          chartDateRangeCubit.mockStream(
-            expectedStream: chartDateRange$.stream,
+          dateRangeManagerCubit.mockStream(
+            expectedStream: dateRangeManagerState$.stream,
           );
           healthMeasurementRepository.mockGetMeasurementsByDateRange();
           dateService.mockAreDatesTheSame(expected: false);
@@ -97,7 +98,7 @@ void main() {
         act: (bloc) async {
           bloc.add(const HealthStatsEventInitialize());
           await bloc.stream.first;
-          chartDateRange$.add(updatedChartDateRange);
+          dateRangeManagerState$.add(updatedDateRangeManagerState);
         },
         expect: () => [
           HealthStatsState(
@@ -121,11 +122,11 @@ void main() {
         ],
         verify: (_) {
           verify(
-            () => chartDateRangeCubit.initializeNewDateRangeType(
+            () => dateRangeManagerCubit.initializeNewDateRangeType(
               DateRangeType.week,
             ),
           ).called(1);
-          verify(() => chartDateRangeCubit.stream).called(1);
+          verify(() => dateRangeManagerCubit.stream).called(1);
         },
       );
     },
@@ -215,7 +216,7 @@ void main() {
         act: (bloc) {
           bloc.add(
             HealthStatsEventChartDateRangeUpdated(
-              chartDateRange: ChartDateRangeState(
+              dateRangeManagerState: DateRangeManagerState(
                 dateRangeType: DateRangeType.week,
                 dateRange: DateRange(startDate: startDate, endDate: endDate),
               ),
@@ -344,7 +345,7 @@ void main() {
         act: (bloc) {
           bloc.add(
             HealthStatsEventChartDateRangeUpdated(
-              chartDateRange: ChartDateRangeState(
+              dateRangeManagerState: DateRangeManagerState(
                 dateRangeType: DateRangeType.month,
                 dateRange: DateRange(startDate: startDate, endDate: endDate),
               ),
@@ -461,7 +462,7 @@ void main() {
         act: (bloc) {
           bloc.add(
             HealthStatsEventChartDateRangeUpdated(
-              chartDateRange: ChartDateRangeState(
+              dateRangeManagerState: DateRangeManagerState(
                 dateRangeType: DateRangeType.year,
                 dateRange: DateRange(startDate: startDate, endDate: endDate),
               ),
@@ -503,7 +504,8 @@ void main() {
     )),
     expect: () => [],
     verify: (_) => verify(
-      () => chartDateRangeCubit.initializeNewDateRangeType(DateRangeType.month),
+      () =>
+          dateRangeManagerCubit.initializeNewDateRangeType(DateRangeType.month),
     ).called(1),
   );
 
@@ -513,7 +515,7 @@ void main() {
     build: () => createBloc(),
     act: (bloc) => bloc.add(const HealthStatsEventPreviousChartDateRange()),
     expect: () => [],
-    verify: (_) => verify(chartDateRangeCubit.previousDateRange).called(1),
+    verify: (_) => verify(dateRangeManagerCubit.previousDateRange).called(1),
   );
 
   blocTest(
@@ -522,6 +524,6 @@ void main() {
     build: () => createBloc(),
     act: (bloc) => bloc.add(const HealthStatsEventNextChartDateRange()),
     expect: () => [],
-    verify: (_) => verify(chartDateRangeCubit.nextDateRange).called(1),
+    verify: (_) => verify(dateRangeManagerCubit.nextDateRange).called(1),
   );
 }

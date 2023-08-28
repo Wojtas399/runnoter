@@ -9,9 +9,11 @@ class HealthStatsEventInitialize extends HealthStatsEvent {
 }
 
 class HealthStatsEventChartDateRangeUpdated extends HealthStatsEvent {
-  final ChartDateRangeState chartDateRange;
+  final DateRangeManagerState dateRangeManagerState;
 
-  const HealthStatsEventChartDateRangeUpdated({required this.chartDateRange});
+  const HealthStatsEventChartDateRangeUpdated({
+    required this.dateRangeManagerState,
+  });
 }
 
 class HealthStatsEventChangeChartDateRangeType extends HealthStatsEvent {

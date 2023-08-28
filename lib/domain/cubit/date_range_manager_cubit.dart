@@ -4,11 +4,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../common/date_service.dart';
 import '../../dependency_injection.dart';
 
-class ChartDateRangeCubit extends Cubit<ChartDateRangeState> {
+class DateRangeManagerCubit extends Cubit<DateRangeManagerState> {
   final DateService _dateService;
 
-  ChartDateRangeCubit({
-    ChartDateRangeState initialState = const ChartDateRangeState(
+  DateRangeManagerCubit({
+    DateRangeManagerState initialState = const DateRangeManagerState(
       dateRangeType: DateRangeType.week,
     ),
   })  : _dateService = getIt<DateService>(),
@@ -152,20 +152,20 @@ class ChartDateRangeCubit extends Cubit<ChartDateRangeState> {
   }
 }
 
-class ChartDateRangeState extends Equatable {
+class DateRangeManagerState extends Equatable {
   final DateRangeType dateRangeType;
   final DateRange? dateRange;
 
-  const ChartDateRangeState({required this.dateRangeType, this.dateRange});
+  const DateRangeManagerState({required this.dateRangeType, this.dateRange});
 
   @override
   List<Object?> get props => [dateRangeType, dateRange];
 
-  ChartDateRangeState copyWith({
+  DateRangeManagerState copyWith({
     DateRangeType? dateRangeType,
     DateRange? dateRange,
   }) =>
-      ChartDateRangeState(
+      DateRangeManagerState(
         dateRangeType: dateRangeType ?? this.dateRangeType,
         dateRange: dateRange ?? this.dateRange,
       );

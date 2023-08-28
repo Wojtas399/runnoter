@@ -9,7 +9,7 @@ import '../../../../common/date_service.dart';
 import '../../../../domain/entity/health_measurement.dart';
 import '../../../../domain/repository/health_measurement_repository.dart';
 import '../../../dependency_injection.dart';
-import '../../cubit/chart_date_range_cubit.dart';
+import '../../cubit/date_range_manager_cubit.dart';
 
 part 'health_stats_event.dart';
 part 'health_stats_state.dart';
@@ -18,8 +18,8 @@ class HealthStatsBloc extends Bloc<HealthStatsEvent, HealthStatsState> {
   final String _userId;
   final DateService _dateService;
   final HealthMeasurementRepository _healthMeasurementRepository;
-  final ChartDateRangeCubit _chartDateRangeCubit;
-  StreamSubscription<ChartDateRangeState>? _chartDateRangeListener;
+  final DateRangeManagerCubit _dateRangeManagerCubit;
+  StreamSubscription<DateRangeManagerState>? _dateRangeManagerListener;
 
   HealthStatsBloc({
     required String userId,
@@ -27,7 +27,7 @@ class HealthStatsBloc extends Bloc<HealthStatsEvent, HealthStatsState> {
   })  : _userId = userId,
         _dateService = getIt<DateService>(),
         _healthMeasurementRepository = getIt<HealthMeasurementRepository>(),
-        _chartDateRangeCubit = getIt<ChartDateRangeCubit>(),
+        _dateRangeManagerCubit = getIt<DateRangeManagerCubit>(),
         super(initialState) {
     on<HealthStatsEventInitialize>(_initialize);
     on<HealthStatsEventChartDateRangeUpdated>(
@@ -45,24 +45,27 @@ class HealthStatsBloc extends Bloc<HealthStatsEvent, HealthStatsState> {
     return super.close();
   }
 
+  //TODO: you can combine RxDart functions to create only one listener instead of 2
   void _initialize(
     HealthStatsEventInitialize event,
     Emitter<HealthStatsState> emit,
   ) {
     _disposeChartDateRangeListener();
-    _chartDateRangeListener ??= _chartDateRangeCubit.stream.listen(
-      (ChartDateRangeState chartDateRange) => add(
-        HealthStatsEventChartDateRangeUpdated(chartDateRange: chartDateRange),
+    _dateRangeManagerListener ??= _dateRangeManagerCubit.stream.listen(
+      (DateRangeManagerState dateRangeManagerState) => add(
+        HealthStatsEventChartDateRangeUpdated(
+          dateRangeManagerState: dateRangeManagerState,
+        ),
       ),
     );
-    _chartDateRangeCubit.initializeNewDateRangeType(DateRangeType.week);
+    _dateRangeManagerCubit.initializeNewDateRangeType(DateRangeType.week);
   }
 
   Future<void> _chartDateRangeUpdated(
     HealthStatsEventChartDateRangeUpdated event,
     Emitter<HealthStatsState> emit,
   ) async {
-    final DateRange? dateRange = event.chartDateRange.dateRange;
+    final DateRange? dateRange = event.dateRangeManagerState.dateRange;
     if (dateRange == null) return;
     final Stream<List<HealthMeasurement>> stream$ = _healthMeasurementRepository
         .getMeasurementsByDateRange(
@@ -74,11 +77,12 @@ class HealthStatsBloc extends Bloc<HealthStatsEvent, HealthStatsState> {
     await emit.forEach(
       stream$,
       onData: (List<HealthMeasurement> measurements) {
-        final points = event.chartDateRange.dateRangeType == DateRangeType.year
+        final points = event.dateRangeManagerState.dateRangeType ==
+                DateRangeType.year
             ? _createPointsForEachMonth(dateRange.startDate.year, measurements)
             : _createPointsForEachDay(dateRange, measurements);
         return state.copyWith(
-          dateRangeType: event.chartDateRange.dateRangeType,
+          dateRangeType: event.dateRangeManagerState.dateRangeType,
           dateRange: dateRange,
           restingHeartRatePoints: points.restingHeartRatePoints,
           fastingWeightPoints: points.fastingWeightPoints,
@@ -91,21 +95,21 @@ class HealthStatsBloc extends Bloc<HealthStatsEvent, HealthStatsState> {
     HealthStatsEventChangeChartDateRangeType event,
     Emitter<HealthStatsState> emit,
   ) {
-    _chartDateRangeCubit.initializeNewDateRangeType(event.dateRangeType);
+    _dateRangeManagerCubit.initializeNewDateRangeType(event.dateRangeType);
   }
 
   void _previousChartDateRange(
     HealthStatsEventPreviousChartDateRange event,
     Emitter<HealthStatsState> emit,
   ) {
-    _chartDateRangeCubit.previousDateRange();
+    _dateRangeManagerCubit.previousDateRange();
   }
 
   void _nextChartDateRange(
     HealthStatsEventNextChartDateRange event,
     Emitter<HealthStatsState> emit,
   ) {
-    _chartDateRangeCubit.nextDateRange();
+    _dateRangeManagerCubit.nextDateRange();
   }
 
   _ListenedPointsOfCharts _createPointsForEachDay(
@@ -163,8 +167,8 @@ class HealthStatsBloc extends Bloc<HealthStatsEvent, HealthStatsState> {
   }
 
   void _disposeChartDateRangeListener() {
-    _chartDateRangeListener?.cancel();
-    _chartDateRangeListener = null;
+    _dateRangeManagerListener?.cancel();
+    _dateRangeManagerListener = null;
   }
 }
 

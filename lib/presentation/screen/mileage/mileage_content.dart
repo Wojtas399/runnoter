@@ -4,7 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 import '../../../domain/bloc/mileage_stats/mileage_stats_bloc.dart';
-import '../../../domain/cubit/chart_date_range_cubit.dart';
+import '../../../domain/cubit/date_range_manager_cubit.dart';
 import '../../component/body/big_body_component.dart';
 import '../../component/card_body_component.dart';
 import '../../component/date_range_header_component.dart';
