@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
 import '../../../dependency_injection.dart';
+import '../../../domain/cubit/date_range_manager_cubit.dart';
 import '../../../domain/service/auth_service.dart';
 import '../../common_feature/calendar/calendar.dart';
 import '../../component/page_not_found_component.dart';
@@ -19,7 +20,10 @@ class CalendarScreen extends StatelessWidget {
 
         return switch (loggedUserId) {
           null => const PageNotFound(),
-          String() => Calendar(userId: loggedUserId),
+          String() => Calendar(
+              userId: loggedUserId,
+              initialDateRangeType: DateRangeType.week,
+            ),
         };
       },
     );

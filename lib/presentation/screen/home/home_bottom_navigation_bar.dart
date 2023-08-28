@@ -20,11 +20,6 @@ class HomeBottomNavigationBar extends StatelessWidget {
       selectedIndex: selectedIndex,
       destinations: [
         NavigationDestination(
-          icon: const Icon(Icons.date_range_outlined),
-          selectedIcon: const Icon(Icons.date_range),
-          label: str.currentWeekTitle,
-        ),
-        NavigationDestination(
           icon: const Icon(Icons.calendar_month_outlined),
           selectedIcon: const Icon(Icons.calendar_month),
           label: str.calendarTitle,

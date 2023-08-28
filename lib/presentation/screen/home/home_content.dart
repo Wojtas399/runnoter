@@ -38,7 +38,6 @@ class _State extends State<HomeContent> {
       (HomeBloc bloc) => bloc.state.accountType,
     );
     final List<PageRouteInfo> routes = [
-      const CurrentWeekRoute(),
       const CalendarRoute(),
       const HealthRoute(),
       const MileageRoute(),
@@ -196,7 +195,6 @@ class _State extends State<HomeContent> {
   }
 
   bool _isHomePage(RouteData routeData) =>
-      routeData.name == CurrentWeekRoute.name ||
       routeData.name == CalendarRoute.name ||
       routeData.name == HealthRoute.name;
 

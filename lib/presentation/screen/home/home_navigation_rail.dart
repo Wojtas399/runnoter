@@ -42,11 +42,6 @@ class HomeNavigationRail extends StatelessWidget {
       ),
       destinations: [
         NavigationRailDestination(
-          icon: const Icon(Icons.date_range_outlined),
-          selectedIcon: const Icon(Icons.date_range),
-          label: Text(str.currentWeekTitle),
-        ),
-        NavigationRailDestination(
           icon: const Icon(Icons.calendar_month_outlined),
           selectedIcon: const Icon(Icons.calendar_month),
           label: Text(str.calendarTitle),

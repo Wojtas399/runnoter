@@ -9,7 +9,6 @@ export 'client_calendar/client_calendar_screen.dart';
 export 'client_races/client_races_screen.dart';
 export 'client_stats/client_stats_screen.dart';
 export 'clients/clients_screen.dart';
-export 'current_week/current_week_screen.dart';
 export 'forgot_password/forgot_password_screen.dart';
 export 'health/health_screen.dart';
 export 'health_measurements/health_measurements_screen.dart';

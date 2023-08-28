@@ -58,8 +58,8 @@ class CalendarDesktopStats extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             _NumberOfActivities(),
-            // _ScheduledDistance(),
-            // _CoveredDistance(),
+            _ScheduledDistance(),
+            _CoveredDistance(),
           ],
         ),
       );
@@ -75,7 +75,7 @@ class _NumberOfActivities extends StatelessWidget {
     );
 
     return _ResponsiveStatsParam(
-      label: Str.of(context).currentWeekNumberOfActivities,
+      label: Str.of(context).calendarNumberOfActivities,
       value: numberOfActivities?.toString(),
     );
   }
@@ -97,7 +97,7 @@ class _ScheduledDistance extends StatelessWidget {
     }
 
     return _ResponsiveStatsParam(
-      label: Str.of(context).currentWeekScheduledDistance,
+      label: Str.of(context).calendarScheduledDistance,
       value: value,
     );
   }
@@ -119,7 +119,7 @@ class _CoveredDistance extends StatelessWidget {
     }
 
     return _ResponsiveStatsParam(
-      label: Str.of(context).currentWeekCoveredDistance,
+      label: Str.of(context).calendarCoveredDistance,
       value: value,
     );
   }

@@ -31,12 +31,7 @@ class AppRouter extends _$AppRouter {
               page: HomeRoute.page,
               path: '',
               children: [
-                RedirectRoute(path: '', redirectTo: 'current-week'),
-                AutoRoute(
-                  page: CurrentWeekRoute.page,
-                  path: 'current-week',
-                  title: (context, _) => Str.of(context).currentWeekTitle,
-                ),
+                RedirectRoute(path: '', redirectTo: 'calendar'),
                 AutoRoute(
                   page: CalendarRoute.page,
                   path: 'calendar',

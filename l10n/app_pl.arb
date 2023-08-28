@@ -189,31 +189,22 @@
       }
     }
   },
-  "@__________CURRENT_WEEK__________": {},
-  "currentWeekTitle": "Obecny tydzień",
-  "@currentWeekTitle": {
-    "description": "Title of current week screen"
-  },
-  "currentWeekNumberOfActivities": "Ilość aktywności",
-  "@currentWeekNumberOfActivities": {
-    "description": "Label of number of activities statistic"
-  },
-  "currentWeekScheduledDistance": "Zaplanowany dystans",
-  "@currentWeekScheduledDistance": {
-    "description": "Label of scheduled distance statistic"
-  },
-  "currentWeekCoveredDistance": "Pokonany dystans",
-  "@currentWeekCoveredDistance": {
-    "description": "Label of covered distance statistic"
-  },
-  "currentWeekActivityActionSheetTitle": "Wybierz rodzaj aktywności do dodania",
-  "@currentWeekActivityActionSheetTitle": {
-    "description": "Title of action sheet with type of activities to add"
-  },
   "@__________CALENDAR__________": {},
   "calendarTitle": "Kalendarz",
   "@calendarTitle": {
     "description": "Title of calendar screen"
+  },
+  "calendarNumberOfActivities": "Ilość aktywności",
+  "@calendarNumberOfActivities": {
+    "description": "Label of number of activities statistic"
+  },
+  "calendarScheduledDistance": "Zaplanowany dystans",
+  "@calendarScheduledDistance": {
+    "description": "Label of scheduled distance statistic"
+  },
+  "calendarCoveredDistance": "Pokonany dystans",
+  "@calendarCoveredDistance": {
+    "description": "Label of covered distance statistic"
   },
   "@__________WORKOUT_PREVIEW__________": {},
   "workoutPreviewTitle": "Trening",

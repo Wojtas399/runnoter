@@ -38,12 +38,6 @@ class HomeNavigationDrawer extends StatelessWidget {
           ),
         if (!context.isMobileSize)
           NavigationDrawerDestination(
-            icon: const Icon(Icons.date_range_outlined),
-            selectedIcon: const Icon(Icons.date_range),
-            label: Text(str.currentWeekTitle),
-          ),
-        if (!context.isMobileSize)
-          NavigationDrawerDestination(
             icon: const Icon(Icons.calendar_month_outlined),
             selectedIcon: const Icon(Icons.calendar_month),
             label: Text(str.calendarTitle),
