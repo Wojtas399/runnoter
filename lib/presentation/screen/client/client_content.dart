@@ -1,15 +1,11 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/bloc/client/client_bloc.dart';
 import '../../component/gap/gap_components.dart';
-import '../../component/gap/gap_horizontal_components.dart';
-import '../../component/text/title_text_components.dart';
 import '../../config/navigation/router.dart';
 import '../../extension/context_extensions.dart';
-import 'client_details.dart';
+import 'client_app_bar.dart';
 
 class ClientContent extends StatelessWidget {
   const ClientContent({super.key});
@@ -35,23 +31,16 @@ class ClientContent extends StatelessWidget {
           length: context.isMobileSize ? 4 : 0,
           child: Scaffold(
             backgroundColor: context.isMobileSize ? null : bckColor,
-            appBar: AppBar(
-              backgroundColor:
-                  context.isMobileSize ? theme.colorScheme.primary : bckColor,
-              foregroundColor: context.isMobileSize ? theme.canvasColor : null,
-              centerTitle: true,
-              title: const _AppBarTitle(),
-              actions: [
-                const ClientDetailsIcon(),
-                if (context.isMobileSize)
-                  const GapHorizontal8()
-                else
-                  const GapHorizontal16(),
-              ],
-              bottom: context.isMobileSize
-                  ? _TabBar(onPageChanged: tabsRouter.setActiveIndex)
-                  : null,
-            ),
+            appBar: (context.isMobileSize
+                    ? ClientMobileAppBar(currentPage: tabsRouter.current)
+                    : ClientDesktopAppBar(backgroundColor: bckColor))
+                as PreferredSizeWidget,
+            bottomNavigationBar: context.isMobileSize
+                ? _BottomNavigation(
+                    selectedIndex: tabsRouter.activeIndex,
+                    onDestinationSelected: tabsRouter.setActiveIndex,
+                  )
+                : null,
             body: SafeArea(
               child: Row(
                 children: [
@@ -77,55 +66,41 @@ class ClientContent extends StatelessWidget {
   }
 }
 
-class _AppBarTitle extends StatelessWidget {
-  const _AppBarTitle();
+class _BottomNavigation extends StatelessWidget {
+  final int selectedIndex;
+  final Function(int index) onDestinationSelected;
+
+  const _BottomNavigation({
+    required this.selectedIndex,
+    required this.onDestinationSelected,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final String? fullName = context.select(
-      (ClientBloc bloc) => bloc.state.name == null || bloc.state.surname == null
-          ? null
-          : '${bloc.state.name} ${bloc.state.surname}',
-    );
-    final theme = Theme.of(context);
-
-    return fullName == null
-        ? CircularProgressIndicator(color: theme.canvasColor)
-        : TitleLarge(
-            fullName,
-            textAlign: context.isMobileSize ? TextAlign.center : null,
-            overflow: context.isMobileSize ? TextOverflow.ellipsis : null,
-            color: context.isMobileSize
-                ? theme.canvasColor
-                : theme.colorScheme.primary,
-          );
-  }
-}
-
-class _TabBar extends StatelessWidget implements PreferredSizeWidget {
-  final Function(int pageIndex) onPageChanged;
-
-  const _TabBar({required this.onPageChanged});
-
-  @override
-  Size get preferredSize => const Size.fromHeight(72);
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final str = Str.of(context);
-
-    return TabBar(
-      labelColor: colorScheme.inversePrimary,
-      unselectedLabelColor: colorScheme.outlineVariant.withOpacity(0.75),
-      indicatorColor: colorScheme.inversePrimary,
-      onTap: onPageChanged,
-      labelStyle: Theme.of(context).textTheme.labelSmall,
-      tabs: [
-        Tab(icon: const Icon(Icons.event_note), text: str.calendarTitle),
-        Tab(icon: const Icon(Icons.bar_chart), text: str.clientStatsTitle),
-        Tab(icon: const Icon(Icons.emoji_events), text: str.racesTitle),
-        Tab(icon: const Icon(Icons.water_drop), text: str.bloodTestsTitle),
+    return NavigationBar(
+      selectedIndex: selectedIndex,
+      onDestinationSelected: onDestinationSelected,
+      destinations: [
+        NavigationDestination(
+          icon: const Icon(Icons.event_note_outlined),
+          selectedIcon: const Icon(Icons.event_note),
+          label: Str.of(context).calendarTitle,
+        ),
+        NavigationDestination(
+          icon: const Icon(Icons.analytics_outlined),
+          selectedIcon: const Icon(Icons.analytics),
+          label: Str.of(context).clientStatsTitle,
+        ),
+        NavigationDestination(
+          icon: const Icon(Icons.emoji_events_outlined),
+          selectedIcon: const Icon(Icons.emoji_events),
+          label: Str.of(context).racesTitle,
+        ),
+        NavigationDestination(
+          icon: const Icon(Icons.water_drop_outlined),
+          selectedIcon: const Icon(Icons.water_drop),
+          label: Str.of(context).bloodTestsTitle,
+        ),
       ],
     );
   }
