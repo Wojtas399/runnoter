@@ -7,7 +7,9 @@ import '../../../dependency_injection.dart';
 import '../../../domain/additional_model/bloc_status.dart';
 import '../../../domain/additional_model/coaching_request_short.dart';
 import '../../../domain/additional_model/settings.dart' as settings;
+import '../../../domain/bloc/calendar/calendar_bloc.dart';
 import '../../../domain/bloc/home/home_bloc.dart';
+import '../../../domain/cubit/date_range_manager_cubit.dart';
 import '../../component/bloc_with_status_listener_component.dart';
 import '../../config/navigation/router.dart';
 import '../../dialog/required_data_completion/required_data_completion_dialog.dart';
@@ -26,21 +28,29 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => HomeBloc()..add(const HomeEventInitialize()),
-      child: const _BlocListener(
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (_) => HomeBloc()..add(const HomeEventInitialize()),
+        ),
+        BlocProvider(
+          create: (_) => CalendarBloc()
+            ..add(
+              const CalendarEventInitialize(dateRangeType: DateRangeType.week),
+            ),
+        ),
+      ],
+      child: const _HomeBlocListener(
         child: HomeContent(),
       ),
     );
   }
 }
 
-class _BlocListener extends StatelessWidget {
+class _HomeBlocListener extends StatelessWidget {
   final Widget child;
 
-  const _BlocListener({
-    required this.child,
-  });
+  const _HomeBlocListener({required this.child});
 
   @override
   Widget build(BuildContext context) {

@@ -59,13 +59,21 @@ class _State extends State<HomeContent> {
 
         return Scaffold(
           backgroundColor: bckColor,
-          appBar: HomeAppBar(
-            backgroundColor: bckColor,
-            onMenuPressed: _onMenuAppBarPressed,
-            onAvatarPressed: () => tabsRouter.setActiveIndex(
-              numberOfAllPages - 1,
-            ),
-          ),
+          appBar: (context.isMobileSize
+              ? HomeMobileAppBar(
+                  currentPage: currentPage,
+                  onMenuPressed: _onMenuAppBarPressed,
+                  onAvatarPressed: () => tabsRouter.setActiveIndex(
+                    numberOfAllPages - 1,
+                  ),
+                )
+              : HomeDesktopAppBar(
+                  backgroundColor: bckColor,
+                  onMenuPressed: _onMenuAppBarPressed,
+                  onAvatarPressed: () => tabsRouter.setActiveIndex(
+                    numberOfAllPages - 1,
+                  ),
+                )) as PreferredSizeWidget,
           drawer: context.isMobileSize
               ? HomeNavigationDrawer(
                   selectedIndex: tabsRouter.activeIndex,

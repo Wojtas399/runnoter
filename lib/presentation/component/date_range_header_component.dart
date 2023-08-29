@@ -4,6 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../common/date_service.dart';
 import '../../domain/cubit/date_range_manager_cubit.dart';
 import '../extension/context_extensions.dart';
+import '../extension/widgets_list_extensions.dart';
 import '../formatter/date_formatter.dart';
 import 'gap/gap_components.dart';
 import 'gap/gap_horizontal_components.dart';
@@ -81,7 +82,7 @@ class _DateRangeTypeSelection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      children: [
+      children: <Widget>[
         if (onWeekSelected != null)
           Expanded(
             child: _DateRangeButton(
@@ -90,7 +91,6 @@ class _DateRangeTypeSelection extends StatelessWidget {
               label: Str.of(context).week,
             ),
           ),
-        const GapHorizontal16(),
         if (onMonthSelected != null)
           Expanded(
             child: _DateRangeButton(
@@ -99,7 +99,6 @@ class _DateRangeTypeSelection extends StatelessWidget {
               label: Str.of(context).month,
             ),
           ),
-        const GapHorizontal16(),
         if (onYearSelected != null)
           Expanded(
             child: _DateRangeButton(
@@ -108,7 +107,7 @@ class _DateRangeTypeSelection extends StatelessWidget {
               label: Str.of(context).year,
             ),
           ),
-      ],
+      ].addSeparator(const GapHorizontal16()),
     );
   }
 

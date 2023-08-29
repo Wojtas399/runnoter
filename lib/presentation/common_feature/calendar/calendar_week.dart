@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../domain/additional_model/calendar_user_data.dart';
 import '../../../domain/additional_model/week_day.dart';
 import '../../../domain/bloc/calendar/calendar_bloc.dart';
 import '../../../domain/cubit/calendar_user_data_cubit.dart';
@@ -14,8 +15,8 @@ class CalendarWeek extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool areUserDataLoaded = context.select(
-      (CalendarUserDataCubit cubit) => cubit.state != null,
+    final CalendarUserData? userData = context.select(
+      (CalendarUserDataCubit cubit) => cubit.state,
     );
     final Week? week = context.select(
       (CalendarBloc bloc) =>
@@ -24,9 +25,9 @@ class CalendarWeek extends StatelessWidget {
 
     return Column(
       children: <Widget>[
-        if (areUserDataLoaded == false || week == null)
+        if (userData == null || week == null)
           for (int i = 0; i < 7; i++) const _DayItemShimmer(),
-        if (areUserDataLoaded && week != null)
+        if (userData != null && week != null)
           ...week.days.map(
             (WeekDay day) => CalendarWeekDayItem(
               day: day,

@@ -43,12 +43,14 @@ class CalendarUserDataCubit extends Cubit<CalendarUserData?> {
   }
 
   void dateRangeChanged({
-    required final DateTime startDate,
-    required final DateTime endDate,
+    required final DateTime? startDate,
+    required final DateTime? endDate,
   }) {
     emit(null);
     _disposeListener();
-    _setDataListener(startDate, endDate);
+    if (startDate != null && endDate != null) {
+      _setDataListener(startDate, endDate);
+    }
   }
 
   void _setDataListener(DateTime startDate, DateTime endDate) {

@@ -7,6 +7,7 @@ import '../../../domain/cubit/calendar_user_data_cubit.dart';
 import '../../../domain/cubit/date_range_manager_cubit.dart';
 import '../../component/body/big_body_component.dart';
 import '../../component/card_body_component.dart';
+import '../../component/date_range_header_component.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/gap/gap_horizontal_components.dart';
 import '../../component/padding/paddings_24.dart';
@@ -18,7 +19,6 @@ import '../../dialog/day_preview/day_preview_dialog_actions.dart';
 import '../../formatter/date_formatter.dart';
 import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
-import 'calendar_date.dart';
 import 'calendar_month.dart';
 import 'calendar_stats.dart';
 import 'calendar_week.dart';
@@ -37,14 +37,14 @@ class Calendar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(create: (_) => CalendarUserDataCubit(userId: userId)),
-        BlocProvider(
-          create: (_) => CalendarBloc()
-            ..add(CalendarEventInitialize(dateRangeType: initialDateRangeType)),
+    final List<Week>? calendarWeeks = context.read<CalendarBloc>().state.weeks;
+
+    return BlocProvider(
+      create: (_) => CalendarUserDataCubit(userId: userId)
+        ..dateRangeChanged(
+          startDate: calendarWeeks?.first.days.first.date,
+          endDate: calendarWeeks?.last.days.last.date,
         ),
-      ],
       child: const _BlocsListener(
         child: SingleChildScrollView(
           child: BigBody(
@@ -156,7 +156,7 @@ class _MobileContent extends StatelessWidget {
       children: [
         CalendarMobileStats(),
         Gap32(),
-        _Calendar(),
+        _CalendarBody(),
       ],
     );
   }
@@ -169,9 +169,11 @@ class _TabletContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Column(
       children: [
+        _DateRange(),
+        Gap24(),
         CalendarTabletStats(),
-        GapHorizontal32(),
-        CardBody(child: _Calendar()),
+        Gap16(),
+        CardBody(child: _CalendarBody()),
       ],
     );
   }
@@ -182,23 +184,77 @@ class _DesktopContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return const Column(
       children: [
-        Expanded(
-          child: CardBody(
-            child: _Calendar(),
-          ),
+        _DateRange(),
+        Gap24(),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: CardBody(
+                child: _CalendarBody(),
+              ),
+            ),
+            GapHorizontal16(),
+            CalendarDesktopStats(),
+          ],
         ),
-        GapHorizontal16(),
-        CalendarDesktopStats(),
       ],
     );
   }
 }
 
-class _Calendar extends StatelessWidget {
-  const _Calendar();
+class _DateRange extends StatelessWidget {
+  const _DateRange();
+
+  @override
+  Widget build(BuildContext context) {
+    final DateRangeType dateRangeType = context.select(
+      (CalendarBloc bloc) => bloc.state.dateRangeType,
+    );
+    final DateRange? dateRange = context.select(
+      (CalendarBloc bloc) => bloc.state.dateRange,
+    );
+
+    return dateRange != null
+        ? DateRangeHeader(
+            selectedDateRangeType: dateRangeType,
+            dateRange: dateRange,
+            onWeekSelected: () =>
+                _onDateRangeTypeChanged(context, DateRangeType.week),
+            onMonthSelected: () =>
+                _onDateRangeTypeChanged(context, DateRangeType.month),
+            onPreviousRangePressed: () => _onPreviousDateRange(context),
+            onNextRangePressed: () => _onNextDateRange(context),
+          )
+        : const SizedBox();
+  }
+
+  void _onDateRangeTypeChanged(
+    BuildContext context,
+    DateRangeType dateRangeType,
+  ) {
+    context.read<CalendarBloc>().add(
+          CalendarEventChangeDateRangeType(dateRangeType: dateRangeType),
+        );
+  }
+
+  void _onPreviousDateRange(BuildContext context) {
+    context.read<CalendarBloc>().add(
+          const CalendarEventPreviousDateRange(),
+        );
+  }
+
+  void _onNextDateRange(BuildContext context) {
+    context.read<CalendarBloc>().add(
+          const CalendarEventNextDateRange(),
+        );
+  }
+}
+
+class _CalendarBody extends StatelessWidget {
+  const _CalendarBody();
 
   @override
   Widget build(BuildContext context) {
@@ -208,8 +264,6 @@ class _Calendar extends StatelessWidget {
 
     return Column(
       children: [
-        const CalendarDate(),
-        const Gap8(),
         if (dateRangeType == DateRangeType.week)
           const CalendarWeek()
         else if (dateRangeType == DateRangeType.month)
