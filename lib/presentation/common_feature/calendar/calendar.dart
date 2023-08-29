@@ -48,13 +48,11 @@ class Calendar extends StatelessWidget {
       child: const _BlocsListener(
         child: SingleChildScrollView(
           child: BigBody(
-            child: Paddings24(
-              child: Shimmer(
-                child: ResponsiveLayout(
-                  mobileBody: _MobileContent(),
-                  tabletBody: _TabletContent(),
-                  desktopBody: _DesktopContent(),
-                ),
+            child: Shimmer(
+              child: ResponsiveLayout(
+                mobileBody: _MobileContent(),
+                tabletBody: _TabletContent(),
+                desktopBody: _DesktopContent(),
               ),
             ),
           ),
@@ -152,12 +150,15 @@ class _MobileContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
-      children: [
-        CalendarMobileStats(),
-        Gap32(),
-        _CalendarBody(),
-      ],
+    return const Padding(
+      padding: EdgeInsets.fromLTRB(24, 8, 24, 24),
+      child: Column(
+        children: [
+          CalendarMobileStats(),
+          Gap32(),
+          _CalendarBody(),
+        ],
+      ),
     );
   }
 }
@@ -167,14 +168,16 @@ class _TabletContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
-      children: [
-        _DateRange(),
-        Gap24(),
-        CalendarTabletStats(),
-        Gap16(),
-        CardBody(child: _CalendarBody()),
-      ],
+    return const Paddings24(
+      child: Column(
+        children: [
+          _DateRange(),
+          Gap24(),
+          CalendarTabletStats(),
+          Gap16(),
+          CardBody(child: _CalendarBody()),
+        ],
+      ),
     );
   }
 }
@@ -184,23 +187,25 @@ class _DesktopContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
-      children: [
-        _DateRange(),
-        Gap24(),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: CardBody(
-                child: _CalendarBody(),
+    return const Paddings24(
+      child: Column(
+        children: [
+          _DateRange(),
+          Gap24(),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: CardBody(
+                  child: _CalendarBody(),
+                ),
               ),
-            ),
-            GapHorizontal16(),
-            CalendarDesktopStats(),
-          ],
-        ),
-      ],
+              GapHorizontal16(),
+              CalendarDesktopStats(),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
