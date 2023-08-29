@@ -14,7 +14,6 @@ import '../../extension/context_extensions.dart';
 import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
 import 'home_app_bar.dart';
-import 'home_bottom_navigation_bar.dart';
 import 'home_navigation_drawer.dart';
 import 'home_navigation_rail.dart';
 
@@ -28,8 +27,6 @@ class HomeContent extends StatefulWidget {
 }
 
 class _State extends State<HomeContent> {
-  final int numberOfBottomNavPages = 3;
-  int _bottomNavSelectedIndex = 0;
   _NavigationType _navigationType = _NavigationType.drawer;
 
   @override
@@ -53,14 +50,6 @@ class _State extends State<HomeContent> {
       builder: (context, child) {
         final tabsRouter = AutoTabsRouter.of(context);
         final RouteData currentPage = tabsRouter.current;
-        final int activeIndex = tabsRouter.activeIndex;
-        final int? mobileDrawerActiveIndex = activeIndex < numberOfAllPages - 1
-            ? activeIndex < numberOfBottomNavPages
-                ? 0
-                : activeIndex - 2
-            : null;
-        final int? desktopDrawerActiveIndex =
-            activeIndex < numberOfAllPages - 1 ? activeIndex : null;
         final Color? bckColor = context.isMobileSize
             ? null
             : Color.alphaBlend(
@@ -79,19 +68,12 @@ class _State extends State<HomeContent> {
           ),
           drawer: context.isMobileSize
               ? HomeNavigationDrawer(
-                  selectedIndex: mobileDrawerActiveIndex,
-                  onPageSelected: (int pageIndex) => _onSidePageSelected(
+                  selectedIndex: tabsRouter.activeIndex,
+                  onPageSelected: (int pageIndex) => _onPageSelected(
                     pageIndex,
                     tabsRouter,
                     numberOfAllPages,
                   ),
-                )
-              : null,
-          bottomNavigationBar: context.isMobileSize && _isHomePage(currentPage)
-              ? HomeBottomNavigationBar(
-                  selectedIndex: _bottomNavSelectedIndex,
-                  onPageSelected: (int pageIndex) =>
-                      _onBottomPageSelected(pageIndex, tabsRouter),
                 )
               : null,
           floatingActionButton: _isFloatingButtonRequired(context, currentPage)
@@ -106,17 +88,17 @@ class _State extends State<HomeContent> {
                 if (context.isDesktopSize)
                   switch (_navigationType) {
                     _NavigationType.drawer => HomeNavigationDrawer(
-                        selectedIndex: desktopDrawerActiveIndex,
-                        onPageSelected: (int pageIndex) => _onSidePageSelected(
+                        selectedIndex: tabsRouter.activeIndex,
+                        onPageSelected: (int pageIndex) => _onPageSelected(
                           pageIndex,
                           tabsRouter,
                           numberOfAllPages,
                         ),
                       ),
                     _NavigationType.rail => HomeNavigationRail(
-                        selectedIndex: desktopDrawerActiveIndex,
+                        selectedIndex: tabsRouter.activeIndex,
                         backgroundColor: bckColor,
-                        onPageSelected: (int pageIndex) => _onSidePageSelected(
+                        onPageSelected: (int pageIndex) => _onPageSelected(
                           pageIndex,
                           tabsRouter,
                           numberOfAllPages,
@@ -125,9 +107,9 @@ class _State extends State<HomeContent> {
                   },
                 if (context.isTabletSize)
                   HomeNavigationRail(
-                    selectedIndex: desktopDrawerActiveIndex,
+                    selectedIndex: tabsRouter.activeIndex,
                     backgroundColor: bckColor,
-                    onPageSelected: (int pageIndex) => _onSidePageSelected(
+                    onPageSelected: (int pageIndex) => _onPageSelected(
                       pageIndex,
                       tabsRouter,
                       numberOfAllPages,
@@ -151,33 +133,16 @@ class _State extends State<HomeContent> {
     });
   }
 
-  Future<void> _onSidePageSelected(
+  Future<void> _onPageSelected(
     int pageIndex,
     TabsRouter tabsRouter,
     int numberOfAllPages,
   ) async {
-    if (context.isMobileSize) {
-      if (pageIndex == numberOfAllPages - 3) {
-        await _signOut(context);
-      } else if (pageIndex == 0) {
-        tabsRouter.setActiveIndex(_bottomNavSelectedIndex);
-      } else {
-        tabsRouter.setActiveIndex(pageIndex + 2);
-      }
+    if (pageIndex == numberOfAllPages - 1) {
+      await _signOut(context);
     } else {
-      if (pageIndex == numberOfAllPages - 1) {
-        await _signOut(context);
-      } else {
-        tabsRouter.setActiveIndex(pageIndex);
-      }
+      tabsRouter.setActiveIndex(pageIndex);
     }
-  }
-
-  void _onBottomPageSelected(int pageIndex, TabsRouter tabsRouter) {
-    tabsRouter.setActiveIndex(pageIndex);
-    setState(() {
-      _bottomNavSelectedIndex = pageIndex;
-    });
   }
 
   Future<void> _signOut(BuildContext context) async {
@@ -193,10 +158,6 @@ class _State extends State<HomeContent> {
       bloc.add(const HomeEventSignOut());
     }
   }
-
-  bool _isHomePage(RouteData routeData) =>
-      routeData.name == CalendarRoute.name ||
-      routeData.name == HealthRoute.name;
 
   bool _isFloatingButtonRequired(BuildContext context, RouteData currentPage) =>
       context.isMobileSize &&

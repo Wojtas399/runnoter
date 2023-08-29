@@ -30,24 +30,16 @@ class HomeNavigationDrawer extends StatelessWidget {
       children: [
         const Gap32(),
         if (context.isMobileSize) const _AppLogo(),
-        if (context.isMobileSize)
-          NavigationDrawerDestination(
-            icon: const Icon(Icons.home_outlined),
-            selectedIcon: const Icon(Icons.home),
-            label: Text(str.homeTitle),
-          ),
-        if (!context.isMobileSize)
-          NavigationDrawerDestination(
-            icon: const Icon(Icons.calendar_month_outlined),
-            selectedIcon: const Icon(Icons.calendar_month),
-            label: Text(str.calendarTitle),
-          ),
-        if (!context.isMobileSize)
-          NavigationDrawerDestination(
-            icon: const Icon(Icons.health_and_safety_outlined),
-            selectedIcon: const Icon(Icons.health_and_safety),
-            label: Text(str.healthTitle),
-          ),
+        NavigationDrawerDestination(
+          icon: const Icon(Icons.calendar_month_outlined),
+          selectedIcon: const Icon(Icons.calendar_month),
+          label: Text(str.calendarTitle),
+        ),
+        NavigationDrawerDestination(
+          icon: const Icon(Icons.health_and_safety_outlined),
+          selectedIcon: const Icon(Icons.health_and_safety),
+          label: Text(str.healthTitle),
+        ),
         NavigationDrawerDestination(
           icon: const Icon(Icons.insert_chart_outlined),
           selectedIcon: const Icon(Icons.insert_chart),
