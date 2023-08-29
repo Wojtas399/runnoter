@@ -25,8 +25,8 @@ class WorkoutPreviewWorkoutActions extends StatelessWidget {
   void _editWorkout(BuildContext context) {
     final WorkoutPreviewBloc bloc = context.read<WorkoutPreviewBloc>();
     final DateTime? date = bloc.state.date;
-    final String? workoutId = bloc.workoutId;
-    if (date != null && workoutId != null) {
+    final String workoutId = bloc.workoutId;
+    if (date != null) {
       navigateTo(
         WorkoutCreatorRoute(
           userId: bloc.userId,
