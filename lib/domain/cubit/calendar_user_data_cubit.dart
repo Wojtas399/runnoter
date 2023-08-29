@@ -19,7 +19,7 @@ class CalendarUserDataCubit extends Cubit<CalendarUserData?> {
   final HealthMeasurementRepository _healthMeasurementRepository;
   final WorkoutRepository _workoutRepository;
   final RaceRepository _raceRepository;
-  StreamSubscription<CalendarUserData>? _listener;
+  StreamSubscription<CalendarUserData?>? _listener;
 
   CalendarUserDataCubit({
     required this.userId,
@@ -46,7 +46,6 @@ class CalendarUserDataCubit extends Cubit<CalendarUserData?> {
     required final DateTime? startDate,
     required final DateTime? endDate,
   }) {
-    emit(null);
     _disposeListener();
     if (startDate != null && endDate != null) {
       _setDataListener(startDate, endDate);
@@ -80,7 +79,7 @@ class CalendarUserDataCubit extends Cubit<CalendarUserData?> {
         workouts: [...?workouts],
         races: [...?races],
       ),
-    ).listen((CalendarUserData dateRangeData) => emit(dateRangeData));
+    ).listen((CalendarUserData? userData) => emit(userData));
   }
 
   void _disposeListener() {

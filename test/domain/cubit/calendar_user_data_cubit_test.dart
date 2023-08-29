@@ -165,16 +165,8 @@ void main() {
       final DateTime endDate = DateTime(2023, 3);
 
       blocTest(
-        'should clean current state and '
         'should set listener of health measurements, workouts and races from date range',
-        build: () => CalendarUserDataCubit(
-          userId: userId,
-          initialUserData: const CalendarUserData(
-            healthMeasurements: [],
-            workouts: [],
-            races: [],
-          ),
-        ),
+        build: () => CalendarUserDataCubit(userId: userId),
         setUp: () {
           healthMeasurementRepository.mockGetMeasurementsByDateRange(
             measurementsStream: healthMeasurements$.stream,
@@ -192,7 +184,6 @@ void main() {
           races$.add(updatedRaces);
         },
         expect: () => [
-          null,
           CalendarUserData(
             healthMeasurements: healthMeasurements,
             workouts: workouts,
