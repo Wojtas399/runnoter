@@ -30,8 +30,10 @@ class MileageContent extends StatelessWidget {
       desktopBody: Column(
         children: [
           BigBody(
-            child: CardBody(
-              child: _CommonContent(),
+            child: Paddings24(
+              child: CardBody(
+                child: _CommonContent(),
+              ),
             ),
           ),
         ],
