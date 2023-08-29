@@ -3,10 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/additional_model/week_day.dart';
 import '../../../domain/bloc/calendar/calendar_bloc.dart';
-import '../../../domain/cubit/calendar_user_data_cubit.dart';
 import '../../../domain/entity/race.dart';
 import '../../../domain/entity/workout.dart';
-import '../../component/shimmer/shimmer_container.dart';
 import '../../component/text/body_text_components.dart';
 import '../../formatter/activity_status_formatter.dart';
 
@@ -15,9 +13,6 @@ class CalendarMonthDays extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool areUserDataLoaded = context.select(
-      (CalendarUserDataCubit cubit) => cubit.state != null,
-    );
     final List<Week>? weeks = context.select(
       (CalendarBloc bloc) => bloc.state.weeks,
     );
@@ -28,52 +23,18 @@ class CalendarMonthDays extends StatelessWidget {
         color: Theme.of(context).colorScheme.outline,
       ),
       children: [
-        if (!areUserDataLoaded || weeks == null)
-          for (int weekNumber = 0; weekNumber < 7; weekNumber++)
-            TableRow(
-              children: [
-                for (int dayIndex = 0; dayIndex < 7; dayIndex++)
-                  const _DayItemShimmer(),
-              ],
-            ),
-        if (areUserDataLoaded && weeks != null)
-          ...weeks.map(
-            (Week week) => TableRow(
-              children: [
-                ...week.days.map(
-                  (WeekDay day) => TableCell(
-                    child: _DayItem(day),
-                  ),
+        ...?weeks?.map(
+          (Week week) => TableRow(
+            children: [
+              ...week.days.map(
+                (WeekDay day) => TableCell(
+                  child: _DayItem(day),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
+        ),
       ],
-    );
-  }
-}
-
-class _DayItemShimmer extends StatelessWidget {
-  const _DayItemShimmer();
-
-  @override
-  Widget build(BuildContext context) {
-    return const SizedBox(
-      width: double.infinity,
-      height: 80,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: EdgeInsets.all(4),
-            child: ShimmerContainer(width: 14, height: 16),
-          ),
-          Padding(
-            padding: EdgeInsets.all(4),
-            child: ShimmerContainer(width: double.infinity, height: 12),
-          ),
-        ],
-      ),
     );
   }
 }
