@@ -1,9 +1,9 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../common/date_service.dart';
 import '../../domain/cubit/date_range_manager_cubit.dart';
-import '../extension/context_extensions.dart';
 import '../extension/widgets_list_extensions.dart';
 import '../formatter/date_formatter.dart';
 import 'gap/gap_components.dart';
@@ -42,7 +42,7 @@ class DateRangeHeader extends StatelessWidget {
             onMonthSelected: onMonthSelected,
             onYearSelected: onYearSelected,
           ),
-          if (context.isMobileSize) const Gap8() else const Gap16(),
+          if (kIsWeb) const Gap16() else const Gap8(),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
