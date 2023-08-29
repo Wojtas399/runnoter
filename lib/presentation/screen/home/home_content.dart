@@ -56,6 +56,9 @@ class _State extends State<HomeContent> {
                 Theme.of(context).colorScheme.primary.withOpacity(0.05),
                 Theme.of(context).colorScheme.surface,
               );
+        final int? activeIndex = tabsRouter.activeIndex < routes.length - 1
+            ? tabsRouter.activeIndex
+            : null;
 
         return Scaffold(
           backgroundColor: bckColor,
@@ -76,7 +79,7 @@ class _State extends State<HomeContent> {
                 )) as PreferredSizeWidget,
           drawer: context.isMobileSize
               ? HomeNavigationDrawer(
-                  selectedIndex: tabsRouter.activeIndex,
+                  selectedIndex: activeIndex,
                   onPageSelected: (int pageIndex) => _onPageSelected(
                     pageIndex,
                     tabsRouter,
@@ -96,7 +99,7 @@ class _State extends State<HomeContent> {
                 if (context.isDesktopSize)
                   switch (_navigationType) {
                     _NavigationType.drawer => HomeNavigationDrawer(
-                        selectedIndex: tabsRouter.activeIndex,
+                        selectedIndex: activeIndex,
                         onPageSelected: (int pageIndex) => _onPageSelected(
                           pageIndex,
                           tabsRouter,
@@ -104,7 +107,7 @@ class _State extends State<HomeContent> {
                         ),
                       ),
                     _NavigationType.rail => HomeNavigationRail(
-                        selectedIndex: tabsRouter.activeIndex,
+                        selectedIndex: activeIndex,
                         backgroundColor: bckColor,
                         onPageSelected: (int pageIndex) => _onPageSelected(
                           pageIndex,
@@ -115,7 +118,7 @@ class _State extends State<HomeContent> {
                   },
                 if (context.isTabletSize)
                   HomeNavigationRail(
-                    selectedIndex: tabsRouter.activeIndex,
+                    selectedIndex: activeIndex,
                     backgroundColor: bckColor,
                     onPageSelected: (int pageIndex) => _onPageSelected(
                       pageIndex,
