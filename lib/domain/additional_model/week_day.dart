@@ -4,7 +4,7 @@ import '../entity/health_measurement.dart';
 import '../entity/race.dart';
 import '../entity/workout.dart';
 
-class CalendarWeekDay extends Equatable {
+class WeekDay extends Equatable {
   final DateTime date;
   final bool isDisabled;
   final bool isTodayDay;
@@ -12,7 +12,7 @@ class CalendarWeekDay extends Equatable {
   final List<Workout> workouts;
   final List<Race> races;
 
-  const CalendarWeekDay({
+  const WeekDay({
     required this.date,
     this.isDisabled = false,
     this.isTodayDay = false,

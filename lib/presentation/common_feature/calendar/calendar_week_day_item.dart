@@ -2,25 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
-import '../../domain/additional_model/calendar_week_day.dart';
-import '../../domain/entity/activity.dart';
-import '../../domain/entity/race.dart';
-import '../../domain/entity/workout.dart';
-import '../formatter/activity_status_formatter.dart';
-import '../formatter/date_formatter.dart';
-import '../formatter/list_of_workout_stages_formatter.dart';
-import 'gap/gap_components.dart';
-import 'gap/gap_horizontal_components.dart';
-import 'health_measurement_info_component.dart';
-import 'text/body_text_components.dart';
-import 'text/label_text_components.dart';
-import 'text/title_text_components.dart';
+import '../../../domain/additional_model/week_day.dart';
+import '../../../domain/entity/activity.dart';
+import '../../../domain/entity/race.dart';
+import '../../../domain/entity/workout.dart';
+import '../../component/gap/gap_components.dart';
+import '../../component/gap/gap_horizontal_components.dart';
+import '../../component/health_measurement_info_component.dart';
+import '../../component/text/body_text_components.dart';
+import '../../component/text/label_text_components.dart';
+import '../../component/text/title_text_components.dart';
+import '../../formatter/activity_status_formatter.dart';
+import '../../formatter/date_formatter.dart';
+import '../../formatter/list_of_workout_stages_formatter.dart';
 
-class WeekDayItem extends StatelessWidget {
-  final CalendarWeekDay day;
+class CalendarWeekDayItem extends StatelessWidget {
+  final WeekDay day;
   final VoidCallback? onPressed;
 
-  const WeekDayItem({super.key, required this.day, this.onPressed});
+  const CalendarWeekDayItem({super.key, required this.day, this.onPressed});
 
   @override
   Widget build(BuildContext context) {

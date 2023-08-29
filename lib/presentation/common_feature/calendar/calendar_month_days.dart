@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/additional_model/calendar_week_day.dart';
+import '../../../domain/additional_model/week_day.dart';
 import '../../../domain/bloc/calendar/calendar_bloc.dart';
+import '../../../domain/cubit/calendar_user_data_cubit.dart';
 import '../../../domain/entity/race.dart';
 import '../../../domain/entity/workout.dart';
+import '../../component/shimmer/shimmer_container.dart';
+import '../../component/text/body_text_components.dart';
 import '../../formatter/activity_status_formatter.dart';
-import '../shimmer/shimmer_container.dart';
-import '../text/body_text_components.dart';
 
-class CalendarComponentMonthDays extends StatelessWidget {
-  const CalendarComponentMonthDays({super.key});
+class CalendarMonthDays extends StatelessWidget {
+  const CalendarMonthDays({super.key});
 
   @override
   Widget build(BuildContext context) {
     final bool areUserDataLoaded = context.select(
-      (CalendarBloc bloc) => bloc.state.areUserDataLoaded,
+      (CalendarUserDataCubit cubit) => cubit.state != null,
     );
-    final List<CalendarWeek>? weeks = context.select(
+    final List<Week>? weeks = context.select(
       (CalendarBloc bloc) => bloc.state.weeks,
     );
 
@@ -37,10 +38,10 @@ class CalendarComponentMonthDays extends StatelessWidget {
             ),
         if (areUserDataLoaded && weeks != null)
           ...weeks.map(
-            (CalendarWeek week) => TableRow(
+            (Week week) => TableRow(
               children: [
                 ...week.days.map(
-                  (CalendarWeekDay day) => TableCell(
+                  (WeekDay day) => TableCell(
                     child: _DayItem(day),
                   ),
                 ),
@@ -78,7 +79,7 @@ class _DayItemShimmer extends StatelessWidget {
 }
 
 class _DayItem extends StatelessWidget {
-  final CalendarWeekDay day;
+  final WeekDay day;
 
   const _DayItem(this.day);
 

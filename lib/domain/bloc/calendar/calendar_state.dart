@@ -3,14 +3,12 @@ part of 'calendar_bloc.dart';
 class CalendarState extends Equatable {
   final DateRangeType dateRangeType;
   final DateRange? dateRange;
-  final bool areUserDataLoaded;
-  final List<CalendarWeek>? weeks;
+  final List<Week>? weeks;
   final DateTime? pressedDay;
 
   const CalendarState({
     required this.dateRangeType,
     this.dateRange,
-    this.areUserDataLoaded = false,
     this.weeks,
     this.pressedDay,
   });
@@ -19,7 +17,6 @@ class CalendarState extends Equatable {
   List<Object?> get props => [
         dateRangeType,
         dateRange,
-        areUserDataLoaded,
         weeks,
         pressedDay,
       ];
@@ -27,23 +24,21 @@ class CalendarState extends Equatable {
   CalendarState copyWith({
     DateRangeType? dateRangeType,
     DateRange? dateRange,
-    bool? areUserDataLoaded,
-    List<CalendarWeek>? weeks,
+    List<Week>? weeks,
     DateTime? pressedDay,
   }) =>
       CalendarState(
         dateRangeType: dateRangeType ?? this.dateRangeType,
         dateRange: dateRange ?? this.dateRange,
-        areUserDataLoaded: areUserDataLoaded ?? this.areUserDataLoaded,
         weeks: weeks ?? this.weeks,
         pressedDay: pressedDay,
       );
 }
 
-class CalendarWeek extends Equatable {
-  final List<CalendarWeekDay> days;
+class Week extends Equatable {
+  final List<WeekDay> days;
 
-  const CalendarWeek({required this.days});
+  const Week({required this.days});
 
   @override
   List<Object?> get props => [days];

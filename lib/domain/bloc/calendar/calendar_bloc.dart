@@ -6,11 +6,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../common/date_service.dart';
 import '../../../../dependency_injection.dart';
 import '../../../../domain/additional_model/calendar_user_data.dart';
-import '../../../../domain/additional_model/calendar_week_day.dart';
 import '../../../../domain/cubit/date_range_manager_cubit.dart';
 import '../../../../domain/entity/health_measurement.dart';
 import '../../../../domain/entity/race.dart';
 import '../../../../domain/entity/workout.dart';
+import '../../additional_model/week_day.dart';
 
 part 'calendar_event.dart';
 part 'calendar_state.dart';
@@ -50,7 +50,6 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
     emit(state.copyWith(
       dateRangeType: initialDateRangeType,
       dateRange: initialDateRange,
-      areUserDataLoaded: false,
       weeks: initialDateRange != null
           ? _createWeeks(
               dateRangeType: initialDateRangeType,
@@ -63,7 +62,6 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
       onData: (DateRangeManagerState dateRangeManagerState) => state.copyWith(
         dateRangeType: dateRangeManagerState.dateRangeType,
         dateRange: dateRangeManagerState.dateRange,
-        areUserDataLoaded: false,
         weeks: dateRangeManagerState.dateRange != null
             ? _createWeeks(
                 dateRangeType: dateRangeManagerState.dateRangeType,
@@ -87,7 +85,6 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
   ) {
     _calendarUserData = event.userData;
     emit(state.copyWith(
-      areUserDataLoaded: true,
       weeks: state.dateRange != null
           ? _createWeeks(
               dateRangeType: state.dateRangeType,
@@ -125,45 +122,45 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
     emit(state.copyWith(pressedDay: null));
   }
 
-  List<CalendarWeek> _createWeeks({
+  List<Week> _createWeeks({
     required final DateRangeType dateRangeType,
     required final DateRange dateRange,
   }) {
     if (dateRangeType == DateRangeType.year) return [];
-    List<CalendarWeek> weeks = [];
+    List<Week> weeks = [];
     DateTime counterDate = dateRangeType == DateRangeType.week
         ? dateRange.startDate
         : _dateService.getFirstDayOfTheWeek(dateRange.startDate);
     final int numberOfWeeks = dateRangeType == DateRangeType.week ? 1 : 6;
     for (int weekNumber = 1; weekNumber <= numberOfWeeks; weekNumber++) {
-      final List<CalendarWeekDay> daysFromWeek = _createDaysFromWeek(
+      final List<WeekDay> daysFromWeek = _createDaysFromWeek(
         firstDayOfTheWeek: counterDate,
         displayingMonth: dateRange.startDate.month,
       );
-      weeks.add(CalendarWeek(days: daysFromWeek));
+      weeks.add(Week(days: daysFromWeek));
       counterDate = counterDate.add(const Duration(days: 7));
     }
     return weeks;
   }
 
-  List<CalendarWeekDay> _createDaysFromWeek({
+  List<WeekDay> _createDaysFromWeek({
     required final DateTime firstDayOfTheWeek,
     required final int displayingMonth,
   }) {
-    final List<CalendarWeekDay> daysFromWeek = [];
+    final List<WeekDay> daysFromWeek = [];
     DateTime date = firstDayOfTheWeek;
     for (int weekDayNumber = 1; weekDayNumber <= 7; weekDayNumber++) {
-      final CalendarWeekDay newCalendarWeekDay = _createDay(
+      final WeekDay newWeekDay = _createDay(
         date: date,
         isDisabled: date.month != displayingMonth,
       );
-      daysFromWeek.add(newCalendarWeekDay);
+      daysFromWeek.add(newWeekDay);
       date = date.add(const Duration(days: 1));
     }
     return daysFromWeek;
   }
 
-  CalendarWeekDay _createDay({
+  WeekDay _createDay({
     required final DateTime date,
     required final bool isDisabled,
   }) {
@@ -181,7 +178,7 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
           .where((race) => _dateService.areDatesTheSame(race.date, date))
           .toList(),
     ];
-    return CalendarWeekDay(
+    return WeekDay(
       date: date,
       isDisabled: isDisabled,
       isTodayDay: _dateService.isToday(date),

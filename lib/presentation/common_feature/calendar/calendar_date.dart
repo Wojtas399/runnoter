@@ -3,10 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/bloc/calendar/calendar_bloc.dart';
 import '../../../domain/cubit/date_range_manager_cubit.dart';
-import '../date_range_header_component.dart';
+import '../../component/date_range_header_component.dart';
 
-class CalendarComponentDate extends StatelessWidget {
-  const CalendarComponentDate({super.key});
+class CalendarDate extends StatelessWidget {
+  const CalendarDate({super.key});
 
   @override
   Widget build(BuildContext context) {

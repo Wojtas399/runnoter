@@ -6,7 +6,6 @@ import '../../../domain/bloc/calendar/calendar_bloc.dart';
 import '../../../domain/cubit/calendar_user_data_cubit.dart';
 import '../../../domain/cubit/date_range_manager_cubit.dart';
 import '../../component/body/big_body_component.dart';
-import '../../component/calendar/calendar_component.dart';
 import '../../component/card_body_component.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/gap/gap_horizontal_components.dart';
@@ -19,7 +18,10 @@ import '../../dialog/day_preview/day_preview_dialog_actions.dart';
 import '../../formatter/date_formatter.dart';
 import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
+import 'calendar_date.dart';
+import 'calendar_month.dart';
 import 'calendar_stats.dart';
+import 'calendar_week.dart';
 
 class Calendar extends StatelessWidget {
   final String userId;
@@ -43,20 +45,105 @@ class Calendar extends StatelessWidget {
             ..add(CalendarEventInitialize(dateRangeType: initialDateRangeType)),
         ),
       ],
-      child: const SingleChildScrollView(
-        child: BigBody(
-          child: Paddings24(
-            child: Shimmer(
-              child: ResponsiveLayout(
-                mobileBody: _MobileContent(),
-                tabletBody: _TabletContent(),
-                desktopBody: _DesktopContent(),
+      child: const _BlocsListener(
+        child: SingleChildScrollView(
+          child: BigBody(
+            child: Paddings24(
+              child: Shimmer(
+                child: ResponsiveLayout(
+                  mobileBody: _MobileContent(),
+                  tabletBody: _TabletContent(),
+                  desktopBody: _DesktopContent(),
+                ),
               ),
             ),
           ),
         ),
       ),
     );
+  }
+}
+
+class _BlocsListener extends StatelessWidget {
+  final Widget child;
+
+  const _BlocsListener({required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<CalendarBloc, CalendarState>(
+          listenWhen: (previousState, currentState) =>
+              previousState.dateRange != currentState.dateRange &&
+              currentState.weeks != null,
+          listener: _onDateRangeChanged,
+        ),
+        BlocListener<CalendarBloc, CalendarState>(
+          listenWhen: (previousState, currentState) =>
+              currentState.pressedDay != null,
+          listener: _onDayPressed,
+        ),
+        BlocListener<CalendarUserDataCubit, CalendarUserData?>(
+          listenWhen: (previousState, currentState) => currentState != null,
+          listener: _onUserDataChanged,
+        ),
+      ],
+      child: child,
+    );
+  }
+
+  void _onDateRangeChanged(BuildContext context, CalendarState state) {
+    final DateTime startDate = state.weeks!.first.days.first.date;
+    final DateTime endDate = state.weeks!.last.days.last.date;
+    context.read<CalendarUserDataCubit>().dateRangeChanged(
+          startDate: startDate,
+          endDate: endDate,
+        );
+  }
+
+  void _onDayPressed(BuildContext context, CalendarState state) {
+    _manageDayPreview(context, state.pressedDay!);
+    context.read<CalendarBloc>().add(
+          const CalendarEventResetPressedDay(),
+        );
+  }
+
+  void _onUserDataChanged(BuildContext context, CalendarUserData? userData) {
+    context.read<CalendarBloc>().add(
+          CalendarEventUserDataUpdated(userData: userData!),
+        );
+  }
+
+  Future<void> _manageDayPreview(BuildContext context, DateTime date) async {
+    final String userId = context.read<CalendarUserDataCubit>().userId;
+    final DayPreviewDialogAction? action =
+        await showDialogDependingOnScreenSize(
+      DayPreviewDialog(userId: userId, date: date),
+    );
+    if (action == null) return;
+    switch (action) {
+      case DayPreviewDialogActionAddWorkout():
+        navigateTo(WorkoutCreatorRoute(
+          userId: userId,
+          dateStr: action.date.toPathFormat(),
+        ));
+        break;
+      case DayPreviewDialogActionAddRace():
+        navigateTo(RaceCreatorRoute(
+          userId: userId,
+          dateStr: action.date.toPathFormat(),
+        ));
+        break;
+      case DayPreviewDialogActionShowWorkout():
+        navigateTo(
+          WorkoutPreviewRoute(userId: userId, workoutId: action.workoutId),
+        );
+        break;
+      case DayPreviewDialogActionShowRace():
+        navigateTo(RacePreviewRoute(userId: userId, raceId: action.raceId));
+        break;
+    }
   }
 }
 
@@ -115,58 +202,19 @@ class _Calendar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final CalendarUserData? calendarUserData = context.select(
-      (CalendarUserDataCubit cubit) => cubit.state,
+    final DateRangeType? dateRangeType = context.select(
+      (CalendarBloc bloc) => bloc.state.dateRangeType,
     );
 
-    return CalendarComponent(
-      dateRangeType: DateRangeType.month,
-      calendarUserData: calendarUserData,
-      onDateRangeChanged: (DateTime startDate, DateTime endDate) =>
-          _onDateRangeChanged(context, startDate, endDate),
-      onDayPressed: (DateTime date) => _onDayPressed(context, date),
+    return Column(
+      children: [
+        const CalendarDate(),
+        const Gap8(),
+        if (dateRangeType == DateRangeType.week)
+          const CalendarWeek()
+        else if (dateRangeType == DateRangeType.month)
+          const CalendarMonth(),
+      ],
     );
-  }
-
-  void _onDateRangeChanged(
-    BuildContext context,
-    DateTime startDate,
-    DateTime endDate,
-  ) {
-    context.read<CalendarUserDataCubit>().dateRangeChanged(
-          startDate: startDate,
-          endDate: endDate,
-        );
-  }
-
-  Future<void> _onDayPressed(BuildContext context, DateTime date) async {
-    final String userId = context.read<CalendarUserDataCubit>().userId;
-    final DayPreviewDialogAction? action =
-        await showDialogDependingOnScreenSize(
-      DayPreviewDialog(userId: userId, date: date),
-    );
-    if (action == null) return;
-    switch (action) {
-      case DayPreviewDialogActionAddWorkout():
-        navigateTo(WorkoutCreatorRoute(
-          userId: userId,
-          dateStr: action.date.toPathFormat(),
-        ));
-        break;
-      case DayPreviewDialogActionAddRace():
-        navigateTo(RaceCreatorRoute(
-          userId: userId,
-          dateStr: action.date.toPathFormat(),
-        ));
-        break;
-      case DayPreviewDialogActionShowWorkout():
-        navigateTo(
-          WorkoutPreviewRoute(userId: userId, workoutId: action.workoutId),
-        );
-        break;
-      case DayPreviewDialogActionShowRace():
-        navigateTo(RacePreviewRoute(userId: userId, raceId: action.raceId));
-        break;
-    }
   }
 }
