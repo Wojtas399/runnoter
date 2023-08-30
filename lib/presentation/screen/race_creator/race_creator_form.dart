@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../../domain/additional_model/bloc_status.dart';
 import '../../../domain/bloc/race_creator/race_creator_bloc.dart';
+import '../../component/duration_input_component.dart';
 import '../../component/form_text_field_component.dart';
 import '../../component/gap/gap_components.dart';
 import '../../extension/context_extensions.dart';
@@ -12,7 +14,6 @@ import '../../formatter/decimal_text_input_formatter.dart';
 import '../../formatter/distance_unit_formatter.dart';
 import '../../service/utils.dart';
 import 'race_creator_date.dart';
-import 'race_creator_expected_duration.dart';
 
 class RaceCreatorForm extends StatelessWidget {
   const RaceCreatorForm({super.key});
@@ -32,7 +33,7 @@ class RaceCreatorForm extends StatelessWidget {
         gap,
         _RaceDistance(),
         gap,
-        RaceCreatorExpectedDuration(),
+        _ExpectedDuration(),
       ],
     );
   }
@@ -69,7 +70,9 @@ class _RaceNameState extends State<_RaceName> {
       controller: _controller,
       isRequired: true,
       maxLength: 100,
+      maxLines: 1,
       onTapOutside: (_) => unfocusInputs(),
+      onSubmitted: (_) => _onSubmitted(context),
     );
   }
 
@@ -110,7 +113,9 @@ class _RacePlaceState extends State<_RacePlace> {
       label: Str.of(context).racePlace,
       isRequired: true,
       maxLength: 100,
+      maxLines: 1,
       controller: _controller,
+      onSubmitted: (_) => _onSubmitted(context),
     );
   }
 
@@ -159,10 +164,12 @@ class _RaceDistanceState extends State<_RaceDistance> {
       controller: _controller,
       isRequired: true,
       maxLength: 7,
+      maxLines: 1,
       inputFormatters: [
         DecimalTextInputFormatter(decimalRange: 3),
       ],
       keyboardType: const TextInputType.numberWithOptions(decimal: true),
+      onSubmitted: (_) => _onSubmitted(context),
     );
   }
 
@@ -175,5 +182,44 @@ class _RaceDistanceState extends State<_RaceDistance> {
                 : 0,
           ),
         );
+  }
+}
+
+class _ExpectedDuration extends StatelessWidget {
+  const _ExpectedDuration();
+
+  @override
+  Widget build(BuildContext context) {
+    final Duration? duration = context.select(
+      (RaceCreatorBloc bloc) => bloc.state.expectedDuration,
+    );
+    final BlocStatus? blocStatus = context.select(
+      (RaceCreatorBloc bloc) => bloc.state.status,
+    );
+
+    return blocStatus is BlocStatusInitial
+        ? const SizedBox()
+        : DurationInput(
+            label: Str.of(context).raceExpectedDuration,
+            initialDuration: duration,
+            onDurationChanged: (Duration duration) =>
+                _onChanged(context, duration),
+            onSubmitted: () => _onSubmitted(context),
+          );
+  }
+
+  void _onChanged(BuildContext context, Duration duration) {
+    context.read<RaceCreatorBloc>().add(
+          RaceCreatorEventExpectedDurationChanged(
+            expectedDuration: duration,
+          ),
+        );
+  }
+}
+
+void _onSubmitted(BuildContext context) {
+  final bloc = context.read<RaceCreatorBloc>();
+  if (bloc.state.canSubmit) {
+    bloc.add(const RaceCreatorEventSubmit());
   }
 }

@@ -126,6 +126,8 @@ class _NormalDialog extends StatelessWidget {
           isRequired: isValueRequired,
           controller: textController,
           validator: validator,
+          maxLines: 1,
+          onSubmitted: (_) => onSaveButtonPressed(),
         ),
       ),
       actions: [
@@ -196,7 +198,9 @@ class _FullScreenDialog extends StatelessWidget {
                   isRequired: isValueRequired,
                   controller: textController,
                   validator: validator,
+                  maxLines: 1,
                   onTapOutside: (_) => unfocusInputs(),
+                  onSubmitted: (_) => onSaveButtonPressed(),
                 ),
               ],
             ),

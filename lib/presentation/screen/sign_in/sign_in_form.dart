@@ -37,8 +37,11 @@ class _Email extends StatelessWidget {
         label: Text(Str.of(context).email),
         prefixIcon: const Icon(Icons.email),
       ),
+      keyboardType: TextInputType.emailAddress,
+      textInputAction: TextInputAction.done,
       onChanged: (String? value) => _onChanged(value, context),
       onTapOutside: (_) => unfocusInputs(),
+      onSubmitted: (_) => _onSubmitted(context),
     );
   }
 
@@ -47,6 +50,13 @@ class _Email extends StatelessWidget {
       context.read<SignInBloc>().add(
             SignInEventEmailChanged(email: value),
           );
+    }
+  }
+
+  void _onSubmitted(BuildContext context) {
+    final SignInBloc signInBloc = context.read<SignInBloc>();
+    if (!signInBloc.state.isButtonDisabled) {
+      signInBloc.add(const SignInEventSubmit());
     }
   }
 }
@@ -61,6 +71,7 @@ class _Password extends StatelessWidget {
       children: [
         PasswordTextFieldComponent(
           onChanged: (String? value) => _onChanged(value, context),
+          onSubmitted: (_) => _onSubmitted(context),
         ),
         const Gap8(),
         MouseRegion(
@@ -79,6 +90,13 @@ class _Password extends StatelessWidget {
       context.read<SignInBloc>().add(
             SignInEventPasswordChanged(password: value),
           );
+    }
+  }
+
+  void _onSubmitted(BuildContext context) {
+    final SignInBloc signInBloc = context.read<SignInBloc>();
+    if (!signInBloc.state.isButtonDisabled) {
+      signInBloc.add(const SignInEventSubmit());
     }
   }
 

@@ -67,6 +67,7 @@ class _DistanceState extends State<_Distance> {
       ],
       controller: _controller,
       onTapOutside: (_) => unfocusInputs(),
+      onSubmitted: (_) => _onSubmitted(context),
     );
   }
 
@@ -126,6 +127,7 @@ class _MaxHeartRateState extends State<_MaxHeartRate> {
         FilteringTextInputFormatter.digitsOnly,
       ],
       controller: _controller,
+      onSubmitted: (_) => _onSubmitted(context),
     );
   }
 
@@ -143,5 +145,12 @@ class _MaxHeartRateState extends State<_MaxHeartRate> {
             ),
           );
     }
+  }
+}
+
+void _onSubmitted(BuildContext context) {
+  final bloc = context.read<WorkoutStageCreatorBloc>();
+  if (!bloc.state.isSubmitButtonDisabled) {
+    bloc.add(const WorkoutStageCreatorEventSubmit());
   }
 }

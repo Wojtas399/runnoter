@@ -13,15 +13,25 @@ class ReauthenticationPassword extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool canSubmit = context.select(
+      (ReauthenticationBloc bloc) =>
+          bloc.state.password != null &&
+          bloc.state.password?.isNotEmpty == true &&
+          bloc.state.status is! BlocStatusLoading,
+    );
+
     return Column(
       children: [
         PasswordTextFieldComponent(
           onChanged: (String? password) =>
               _onPasswordChanged(context, password),
           onTapOutside: (_) => unfocusInputs(),
+          onSubmitted: (_) => canSubmit ? _onSubmit(context) : null,
         ),
         const Gap16(),
-        const _PasswordSubmitButton(),
+        _PasswordSubmitButton(
+          onPressed: canSubmit ? () => _onSubmit(context) : null,
+        ),
       ],
     );
   }
@@ -31,28 +41,30 @@ class ReauthenticationPassword extends StatelessWidget {
           ReauthenticationEventPasswordChanged(password: password),
         );
   }
+
+  void _onSubmit(BuildContext context) {
+    context.read<ReauthenticationBloc>().add(
+          const ReauthenticationEventUsePassword(),
+        );
+  }
 }
 
 class _PasswordSubmitButton extends StatelessWidget {
-  const _PasswordSubmitButton();
+  final VoidCallback? onPressed;
+
+  const _PasswordSubmitButton({this.onPressed});
 
   @override
   Widget build(BuildContext context) {
     final BlocStatus blocStatus = context.select(
       (ReauthenticationBloc bloc) => bloc.state.status,
     );
-    final bool isDisabled = context.select(
-      (ReauthenticationBloc bloc) =>
-          bloc.state.password == null ||
-          bloc.state.password?.isEmpty == true ||
-          bloc.state.status is BlocStatusLoading,
-    );
 
     return SizedBox(
       width: double.infinity,
       height: 40,
       child: FilledButton(
-        onPressed: isDisabled ? null : () => _submit(context),
+        onPressed: onPressed,
         child: blocStatus is BlocStatusLoading &&
                 blocStatus.loadingInfo ==
                     ReauthenticationBlocLoadingInfo
@@ -65,11 +77,5 @@ class _PasswordSubmitButton extends StatelessWidget {
             : Text(Str.of(context).reauthenticationAuthenticate),
       ),
     );
-  }
-
-  void _submit(BuildContext context) {
-    context.read<ReauthenticationBloc>().add(
-          const ReauthenticationEventUsePassword(),
-        );
   }
 }

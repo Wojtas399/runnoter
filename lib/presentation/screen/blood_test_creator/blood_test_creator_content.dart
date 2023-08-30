@@ -106,6 +106,7 @@ class _ParametersSection extends StatelessWidget {
               double? value,
             ) =>
                 _onValueChanged(context, parameter, value),
+            onSubmitted: () => _onSubmitted(context),
           );
   }
 
@@ -120,5 +121,12 @@ class _ParametersSection extends StatelessWidget {
             value: value,
           ),
         );
+  }
+
+  void _onSubmitted(BuildContext context) {
+    final bloc = context.read<BloodTestCreatorBloc>();
+    if (bloc.state.canSubmit) {
+      bloc.add(const BloodTestCreatorEventSubmit());
+    }
   }
 }

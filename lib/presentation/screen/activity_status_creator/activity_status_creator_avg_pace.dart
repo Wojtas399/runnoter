@@ -73,10 +73,12 @@ class _AvgPaceDistanceState extends State<_AvgPaceDistance> {
       ),
       controller: _controller,
       keyboardType: TextInputType.number,
+      textInputAction: TextInputAction.done,
       maxLength: 5,
       inputFormatters: [
         DecimalTextInputFormatter(decimalRange: 2),
       ],
+      onSubmitted: (_) => _onSubmitted(context),
     );
   }
 
@@ -194,10 +196,7 @@ class _AveragePaceField extends StatelessWidget {
   final String label;
   final TextEditingController? controller;
 
-  const _AveragePaceField({
-    required this.label,
-    this.controller,
-  });
+  const _AveragePaceField({required this.label, this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -215,12 +214,21 @@ class _AveragePaceField extends StatelessWidget {
           controller: controller,
           maxLength: 2,
           keyboardType: TextInputType.number,
+          textInputAction: TextInputAction.done,
           inputFormatters: [
             FilteringTextInputFormatter.digitsOnly,
             MinutesOrSecondsInputFormatter(),
           ],
+          onSubmitted: (_) => _onSubmitted(context),
         ),
       ),
     );
+  }
+}
+
+void _onSubmitted(BuildContext context) {
+  final bloc = context.read<ActivityStatusCreatorBloc>();
+  if (bloc.state.canSubmit) {
+    bloc.add(const ActivityStatusCreatorEventSubmit());
   }
 }

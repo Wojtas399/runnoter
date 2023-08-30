@@ -10,12 +10,14 @@ class DurationInput extends StatefulWidget {
   final String label;
   final Duration? initialDuration;
   final Function(Duration duration)? onDurationChanged;
+  final VoidCallback? onSubmitted;
 
   const DurationInput({
     super.key,
     required this.label,
     this.initialDuration,
     this.onDurationChanged,
+    this.onSubmitted,
   });
 
   @override
@@ -60,16 +62,19 @@ class _State extends State<DurationInput> {
               label: Str.of(context).durationHoursShort,
               isHourField: true,
               controller: _hoursController,
+              onSubmitted: widget.onSubmitted,
             ),
             const _TimeSeparator(),
             _DurationField(
               label: Str.of(context).durationMinutesShort,
               controller: _minutesController,
+              onSubmitted: widget.onSubmitted,
             ),
             const _TimeSeparator(),
             _DurationField(
               label: Str.of(context).durationSecondsShort,
               controller: _secondsController,
+              onSubmitted: widget.onSubmitted,
             ),
           ],
         ),
@@ -105,11 +110,13 @@ class _DurationField extends StatelessWidget {
   final String label;
   final bool isHourField;
   final TextEditingController controller;
+  final VoidCallback? onSubmitted;
 
   const _DurationField({
     required this.label,
     this.isHourField = false,
     required this.controller,
+    this.onSubmitted,
   });
 
   @override
@@ -129,6 +136,7 @@ class _DurationField extends StatelessWidget {
           if (!isHourField) MinutesOrSecondsInputFormatter(),
         ],
         controller: controller,
+        onSubmitted: (_) => onSubmitted != null ? onSubmitted!() : null,
       ),
     );
   }

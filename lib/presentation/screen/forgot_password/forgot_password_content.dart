@@ -65,9 +65,12 @@ class _Email extends StatelessWidget {
     return FormTextField(
       isRequired: true,
       label: Str.of(context).email,
+      keyboardType: TextInputType.emailAddress,
+      textInputAction: TextInputAction.done,
       icon: Icons.email,
       onChanged: (String? value) => _onChanged(value, context),
       onTapOutside: (_) => unfocusInputs(),
+      onSubmitted: (_) => _onSubmitted(context),
     );
   }
 
@@ -75,6 +78,13 @@ class _Email extends StatelessWidget {
     context.read<ForgotPasswordBloc>().add(
           ForgotPasswordEventEmailChanged(email: value ?? ''),
         );
+  }
+
+  void _onSubmitted(BuildContext context) {
+    final bloc = context.read<ForgotPasswordBloc>();
+    if (!bloc.state.isSubmitButtonDisabled) {
+      bloc.add(const ForgotPasswordEventSubmit());
+    }
   }
 }
 

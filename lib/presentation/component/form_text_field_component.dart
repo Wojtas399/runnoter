@@ -11,10 +11,12 @@ class FormTextField extends StatelessWidget {
   final bool displayCounterText;
   final int? maxLines;
   final TextInputType? keyboardType;
+  final TextInputAction? textInputAction;
   final List<TextInputFormatter>? inputFormatters;
   final TextEditingController? controller;
   final Function(String? value)? onChanged;
   final Function(PointerDownEvent event)? onTapOutside;
+  final Function(String value)? onSubmitted;
   final String? Function(String? value)? validator;
 
   const FormTextField({
@@ -27,10 +29,12 @@ class FormTextField extends StatelessWidget {
     this.displayCounterText = false,
     this.maxLines,
     this.keyboardType,
+    this.textInputAction,
     this.inputFormatters,
     this.controller,
     this.onChanged,
     this.onTapOutside,
+    this.onSubmitted,
     this.validator,
   });
 
@@ -49,8 +53,10 @@ class FormTextField extends StatelessWidget {
       validator: (String? value) => _validate(value, context),
       inputFormatters: inputFormatters,
       keyboardType: keyboardType,
+      textInputAction: textInputAction,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       onTapOutside: onTapOutside,
+      onFieldSubmitted: onSubmitted,
     );
   }
 
