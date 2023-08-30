@@ -84,6 +84,8 @@ class _CoveredDistanceState extends State<_CoveredDistance> {
       ],
       controller: _controller,
       onTapOutside: (_) => unfocusInputs(),
+      textInputAction: TextInputAction.done,
+      onSubmitted: (_) => _onSubmitted(context),
     );
   }
 
@@ -112,6 +114,7 @@ class _Duration extends StatelessWidget {
       label: Str.of(context).activityStatusDuration,
       initialDuration: duration,
       onDurationChanged: (Duration? duration) => _onChanged(context, duration),
+      onSubmitted: () => _onSubmitted(context),
     );
   }
 
@@ -202,10 +205,12 @@ class _AvgHeartRateState extends State<_AvgHeartRate> {
       keyboardType: TextInputType.number,
       isRequired: true,
       requireHigherThan0: true,
+      textInputAction: TextInputAction.done,
       inputFormatters: [
         FilteringTextInputFormatter.digitsOnly,
       ],
       controller: _controller,
+      onSubmitted: (_) => _onSubmitted(context),
     );
   }
 
@@ -250,8 +255,10 @@ class _CommentState extends State<_Comment> {
       maxLength: 100,
       maxLines: null,
       keyboardType: TextInputType.multiline,
+      textInputAction: TextInputAction.done,
       displayCounterText: true,
       controller: _controller,
+      onSubmitted: (_) => _onSubmitted(context),
     );
   }
 
@@ -261,5 +268,12 @@ class _CommentState extends State<_Comment> {
             comment: _controller.text,
           ),
         );
+  }
+}
+
+void _onSubmitted(BuildContext context) {
+  final bloc = context.read<ActivityStatusCreatorBloc>();
+  if (bloc.state.canSubmit) {
+    bloc.add(const ActivityStatusCreatorEventSubmit());
   }
 }
