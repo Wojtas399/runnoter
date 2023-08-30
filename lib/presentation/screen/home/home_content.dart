@@ -9,7 +9,7 @@ import '../../config/navigation/router.dart';
 import '../../extension/context_extensions.dart';
 import '../../service/dialog_service.dart';
 import 'home_app_bar.dart';
-import 'home_floating_action_button.dart';
+import 'home_fab.dart';
 import 'home_navigation_drawer.dart';
 import 'home_navigation_rail.dart';
 
@@ -84,9 +84,8 @@ class _State extends State<HomeContent> {
                   ),
                 )
               : null,
-          floatingActionButton: context.isMobileSize
-              ? HomeFloatingActionButton(currentRoute: currentRoute)
-              : null,
+          floatingActionButton:
+              context.isMobileSize ? HomeFAB(currentRoute: currentRoute) : null,
           body: SafeArea(
             child: Row(
               children: [

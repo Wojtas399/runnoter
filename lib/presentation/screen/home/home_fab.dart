@@ -14,11 +14,11 @@ import '../../extension/context_extensions.dart';
 import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
 
-class HomeFloatingActionButton extends StatelessWidget {
+class HomeFAB extends StatelessWidget {
   final _buttonKey = GlobalKey();
   final RouteData currentRoute;
 
-  HomeFloatingActionButton({super.key, required this.currentRoute});
+  HomeFAB({super.key, required this.currentRoute});
 
   bool get _isSpeedDialRequired =>
       currentRoute.name == CalendarRoute.name ||
@@ -68,11 +68,11 @@ class HomeFloatingActionButton extends StatelessWidget {
   }
 }
 
-class HomeExtendedFloatingActionButton extends StatelessWidget {
+class HomeExtendedFAB extends StatelessWidget {
   final _buttonKey = GlobalKey();
   final RouteData currentRoute;
 
-  HomeExtendedFloatingActionButton({super.key, required this.currentRoute});
+  HomeExtendedFAB({super.key, required this.currentRoute});
 
   @override
   Widget build(BuildContext context) {

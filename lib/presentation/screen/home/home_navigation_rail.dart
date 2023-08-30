@@ -7,7 +7,7 @@ import '../../../domain/bloc/home/home_bloc.dart';
 import '../../../domain/entity/user.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/text/label_text_components.dart';
-import 'home_floating_action_button.dart';
+import 'home_fab.dart';
 
 class HomeNavigationRail extends StatelessWidget {
   final int? selectedIndex;
@@ -34,7 +34,7 @@ class HomeNavigationRail extends StatelessWidget {
       labelType: NavigationRailLabelType.all,
       backgroundColor: backgroundColor,
       groupAlignment: -0.90,
-      leading: HomeFloatingActionButton(currentRoute: currentRoute),
+      leading: HomeFAB(currentRoute: currentRoute),
       trailing: Column(
         children: [
           const Gap32(),

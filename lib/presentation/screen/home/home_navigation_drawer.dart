@@ -7,7 +7,7 @@ import '../../../domain/bloc/home/home_bloc.dart';
 import '../../../domain/entity/user.dart';
 import '../../component/gap/gap_components.dart';
 import '../../extension/context_extensions.dart';
-import 'home_floating_action_button.dart';
+import 'home_fab.dart';
 
 class HomeNavigationDrawer extends StatelessWidget {
   final int? selectedIndex;
@@ -36,7 +36,7 @@ class HomeNavigationDrawer extends StatelessWidget {
           const Gap16(),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: HomeExtendedFloatingActionButton(currentRoute: currentRoute),
+            child: HomeExtendedFAB(currentRoute: currentRoute),
           ),
           const Gap24(),
         ] else
