@@ -68,6 +68,7 @@ class _AmountOfSeriesState extends State<_AmountOfSeries> {
       ],
       controller: _controller,
       onTapOutside: (_) => unfocusInputs(),
+      onSubmitted: (_) => _onSubmitted(context),
     );
   }
 
@@ -129,6 +130,7 @@ class _SeriesDistanceState extends State<_SeriesDistance> {
         FilteringTextInputFormatter.digitsOnly,
       ],
       controller: _controller,
+      onSubmitted: (_) => _onSubmitted(context),
     );
   }
 
@@ -189,6 +191,7 @@ class _WalkingDistanceState extends State<_WalkingDistance> {
         FilteringTextInputFormatter.digitsOnly,
       ],
       controller: _controller,
+      onSubmitted: (_) => _onSubmitted(context),
     );
   }
 
@@ -249,6 +252,7 @@ class _JoggingDistanceState extends State<_JoggingDistance> {
         FilteringTextInputFormatter.digitsOnly,
       ],
       controller: _controller,
+      onSubmitted: (_) => _onSubmitted(context),
     );
   }
 
@@ -266,5 +270,12 @@ class _JoggingDistanceState extends State<_JoggingDistance> {
             ),
           );
     }
+  }
+}
+
+void _onSubmitted(BuildContext context) {
+  final bloc = context.read<WorkoutStageCreatorBloc>();
+  if (!bloc.state.isSubmitButtonDisabled) {
+    bloc.add(const WorkoutStageCreatorEventSubmit());
   }
 }
