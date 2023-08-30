@@ -5,6 +5,7 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 import '../../../domain/bloc/day_preview/day_preview_bloc.dart';
 import '../../component/gap/gap_horizontal_components.dart';
+import '../../component/material_3_speed_dial_component.dart';
 import '../../extension/context_extensions.dart';
 import '../../service/navigator_service.dart';
 import 'day_preview_dialog_actions.dart';
@@ -17,14 +18,8 @@ class DayPreviewAddActivityButton extends StatelessWidget {
     final str = Str.of(context);
 
     if (context.isMobileSize) {
-      return SpeedDial(
+      return Material3SpeedDial(
         icon: Icons.add,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(16)),
-        ),
-        spacing: 16,
-        childMargin: EdgeInsets.zero,
-        childPadding: const EdgeInsets.all(8.0),
         children: [
           SpeedDialChild(
             child: const Icon(Icons.emoji_events),
