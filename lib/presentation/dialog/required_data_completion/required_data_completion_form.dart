@@ -101,8 +101,10 @@ class _Name extends StatelessWidget {
       icon: Icons.person,
       label: str.name,
       isRequired: true,
+      textInputAction: TextInputAction.done,
       onChanged: (String? value) => _onChanged(value, context),
       onTapOutside: (_) => unfocusInputs(),
+      onSubmitted: (_) => _onSubmitted(context),
       validator: (_) => !isValid ? str.invalidNameOrSurnameMessage : null,
     );
   }
@@ -128,7 +130,9 @@ class _Surname extends StatelessWidget {
       icon: Icons.person,
       label: str.surname,
       isRequired: true,
+      textInputAction: TextInputAction.done,
       onChanged: (String? value) => _onChanged(value, context),
+      onSubmitted: (_) => _onSubmitted(context),
       validator: (_) => !isValid ? str.invalidNameOrSurnameMessage : null,
     );
   }
@@ -137,5 +141,12 @@ class _Surname extends StatelessWidget {
     context.read<RequiredDataCompletionBloc>().add(
           RequiredDataCompletionEventSurnameChanged(surname: value ?? ''),
         );
+  }
+}
+
+void _onSubmitted(BuildContext context) {
+  final bloc = context.read<RequiredDataCompletionBloc>();
+  if (bloc.state.canSubmit) {
+    bloc.add(const RequiredDataCompletionEventSubmit());
   }
 }
