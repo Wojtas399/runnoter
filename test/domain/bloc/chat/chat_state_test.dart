@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
-import 'package:runnoter/domain/bloc/chat/chat_state.dart';
-import 'package:runnoter/domain/entity/chat.dart';
+import 'package:runnoter/domain/bloc/chat/chat_bloc.dart';
+import 'package:runnoter/domain/entity/message.dart';
 
 import '../../../creators/message_creator.dart';
 

@@ -1,6 +1,4 @@
-import '../../additional_model/bloc_state.dart';
-import '../../additional_model/bloc_status.dart';
-import '../../entity/chat.dart';
+part of 'chat_bloc.dart';
 
 class ChatState extends BlocState<ChatState> {
   final String? senderFullName;
