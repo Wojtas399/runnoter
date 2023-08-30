@@ -78,9 +78,9 @@ class _IdentitiesBlocListenerState extends State<_IdentitiesBlocListener>
     BuildContext context,
     ProfileIdentitiesBlocInfo info,
   ) async {
+    final str = Str.of(context);
     switch (info) {
       case ProfileIdentitiesBlocInfo.dataSaved:
-        final str = Str.of(context);
         await popRoute();
         showSnackbarMessage(str.profileSuccessfullySavedDataMessage);
         break;
@@ -93,9 +93,8 @@ class _IdentitiesBlocListenerState extends State<_IdentitiesBlocListener>
         if (mounted) await _showEmailVerificationMessage(context);
       case ProfileIdentitiesBlocInfo.accountDeleted:
         await showMessageDialog(
-          title: Str.of(context).profileSuccessfullyDeletedAccountDialogTitle,
-          message:
-              Str.of(context).profileSuccessfullyDeletedAccountDialogMessage,
+          title: str.profileSuccessfullyDeletedAccountDialogTitle,
+          message: str.profileSuccessfullyDeletedAccountDialogMessage,
         );
         navigateAndRemoveUntil(const SignInRoute());
         break;
