@@ -5,10 +5,7 @@ import '../../domain/repository/message_repository.dart';
 class MessageRepositoryImpl extends StateRepository
     implements MessageRepository {
   @override
-  Stream<List<Message>?> getMessagesForChat({
-    required String chatId,
-    required int page,
-  }) {
+  Stream<List<Message>?> getMessagesForChat({required String chatId}) {
     // TODO: implement getMessagesForChat
     throw UnimplementedError();
   }

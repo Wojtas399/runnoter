@@ -10,7 +10,6 @@ class MockMessageRepository extends Mock implements MessageRepository {
     when(
       () => getMessagesForChat(
         chatId: any(named: 'chatId'),
-        page: any(named: 'page'),
       ),
     ).thenAnswer((_) => messagesStream ?? Stream.value(messages));
   }
