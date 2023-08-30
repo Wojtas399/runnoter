@@ -11,6 +11,7 @@ import '../../component/gap/gap_horizontal_components.dart';
 import '../../component/text/title_text_components.dart';
 import '../../config/navigation/router.dart';
 import '../../extension/context_extensions.dart';
+import '../../service/navigator_service.dart';
 import 'client_details.dart';
 
 class ClientMobileAppBar extends StatelessWidget
@@ -57,9 +58,19 @@ class ClientDesktopAppBar extends StatelessWidget
       backgroundColor: backgroundColor,
       foregroundColor: Theme.of(context).colorScheme.primary,
       centerTitle: true,
+      leading: BackButton(
+        onPressed: () => _onBackButtonPressed(context),
+      ),
       title: const _AppBarTitle(),
       actions: const [ClientDetailsIcon(), GapHorizontal16()],
     );
+  }
+
+  Future<void> _onBackButtonPressed(BuildContext context) async {
+    final bool isPopped = await Navigator.of(context).maybePop();
+    if (!isPopped) {
+      navigateTo(const HomeRoute());
+    }
   }
 }
 
