@@ -21,6 +21,7 @@ class BloodParameterResultsList extends StatelessWidget {
   final bool isEditMode;
   final Function(BloodParameter bloodParameter, double? value)?
       onParameterValueChanged;
+  final VoidCallback? onSubmitted;
 
   const BloodParameterResultsList({
     super.key,
@@ -28,6 +29,7 @@ class BloodParameterResultsList extends StatelessWidget {
     this.parameterResults,
     this.isEditMode = false,
     this.onParameterValueChanged,
+    this.onSubmitted,
   });
 
   @override
@@ -46,6 +48,7 @@ class BloodParameterResultsList extends StatelessWidget {
             ),
             isEditMode: isEditMode,
             onParameterValueChanged: onParameterValueChanged,
+            onSubmitted: onSubmitted,
           ),
         ),
         SliverPadding(
@@ -60,6 +63,7 @@ class BloodParameterResultsList extends StatelessWidget {
             ),
             isEditMode: isEditMode,
             onParameterValueChanged: onParameterValueChanged,
+            onSubmitted: onSubmitted,
           ),
         ),
       ],
@@ -101,6 +105,7 @@ class _SectionParameters extends SliverStickyHeader {
     required List<_BloodParameterWithValue> parametersWithValues,
     required bool isEditMode,
     Function(BloodParameter parameter, double? value)? onParameterValueChanged,
+    final VoidCallback? onSubmitted,
   }) =>
       _SectionParameters(
         header: Container(
@@ -125,6 +130,7 @@ class _SectionParameters extends SliverStickyHeader {
               parametersWithValues: parametersWithValues,
               isEditMode: isEditMode,
               onParameterValueChanged: onParameterValueChanged,
+              onSubmitted: onSubmitted,
             ),
             childCount: 1,
           ),
@@ -194,6 +200,7 @@ class _ParamsTable extends StatelessWidget {
   final bool isEditMode;
   final Function(BloodParameter parameter, double? value)?
       onParameterValueChanged;
+  final VoidCallback? onSubmitted;
 
   const _ParamsTable({
     required this.isFirstTable,
@@ -201,6 +208,7 @@ class _ParamsTable extends StatelessWidget {
     required this.parametersWithValues,
     required this.isEditMode,
     this.onParameterValueChanged,
+    this.onSubmitted,
   });
 
   @override
@@ -232,6 +240,7 @@ class _ParamsTable extends StatelessWidget {
                   );
                 }
               },
+              onSubmitted: onSubmitted,
             ),
           )
           .toList(),
@@ -251,6 +260,7 @@ class _ParameterRow extends TableRow {
     required _BloodParameterWithValue parameterWithValue,
     required bool isEditMode,
     required Function(double? value) onValueChanged,
+    final VoidCallback? onSubmitted,
   }) {
     final BloodParameter parameter = parameterWithValue.bloodParameter;
     final double? value = parameterWithValue.value;
@@ -276,6 +286,7 @@ class _ParameterRow extends TableRow {
               : true,
           isEditMode: isEditMode,
           onValueChanged: onValueChanged,
+          onSubmitted: onSubmitted,
         ),
       ],
     );
@@ -345,6 +356,7 @@ class _ResultCell extends TableCell {
     required bool isEditMode,
     double padding = 12,
     Function(double? value)? onValueChanged,
+    VoidCallback? onSubmitted,
   }) : this(
           child: Padding(
             padding: EdgeInsets.all(padding),
@@ -353,6 +365,7 @@ class _ResultCell extends TableCell {
                     isFirstRow: isFirstRow,
                     initialValue: parameterValue,
                     onValueChanged: onValueChanged,
+                    onSubmitted: onSubmitted,
                   )
                 : NullableText(
                     parameterValue?.toString(),
@@ -369,11 +382,13 @@ class _EditableParameterValue extends StatefulWidget {
   final bool isFirstRow;
   final double? initialValue;
   final Function(double? value)? onValueChanged;
+  final VoidCallback? onSubmitted;
 
   const _EditableParameterValue({
     required this.isFirstRow,
     this.initialValue,
     this.onValueChanged,
+    this.onSubmitted,
   });
 
   @override
@@ -413,6 +428,8 @@ class _EditableParameterValueState extends State<_EditableParameterValue> {
         }
       },
       onTapOutside: widget.isFirstRow ? (_) => unfocusInputs() : null,
+      onSubmitted: (_) =>
+          widget.onSubmitted != null ? widget.onSubmitted!() : null,
     );
   }
 }
