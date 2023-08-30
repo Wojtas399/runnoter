@@ -4,10 +4,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/bloc/workout_stage_creator/workout_stage_creator_bloc.dart';
-import '../../component/text_field_component.dart';
+import '../../component/form_text_field_component.dart';
+import '../../component/gap/gap_components.dart';
 import '../../extension/context_extensions.dart';
 import '../../formatter/decimal_text_input_formatter.dart';
 import '../../formatter/distance_unit_formatter.dart';
+import '../../service/utils.dart';
 
 class WorkoutStageCreatorDistanceStageForm extends StatelessWidget {
   const WorkoutStageCreatorDistanceStageForm({super.key});
@@ -17,7 +19,7 @@ class WorkoutStageCreatorDistanceStageForm extends StatelessWidget {
     return const Column(
       children: [
         _Distance(),
-        SizedBox(height: 16),
+        Gap16(),
         _MaxHeartRate(),
       ],
     );
@@ -54,7 +56,7 @@ class _DistanceState extends State<_Distance> {
 
   @override
   Widget build(BuildContext context) {
-    return TextFieldComponent(
+    return FormTextField(
       label:
           '${Str.of(context).workoutStageCreatorDistance} [${context.distanceUnit.toUIShortFormat()}]',
       keyboardType: const TextInputType.numberWithOptions(decimal: true),
@@ -64,6 +66,7 @@ class _DistanceState extends State<_Distance> {
         DecimalTextInputFormatter(decimalRange: 2),
       ],
       controller: _controller,
+      onTapOutside: (_) => unfocusInputs(),
     );
   }
 
@@ -114,7 +117,7 @@ class _MaxHeartRateState extends State<_MaxHeartRate> {
 
   @override
   Widget build(BuildContext context) {
-    return TextFieldComponent(
+    return FormTextField(
       label: Str.of(context).workoutStageCreatorMaxHeartRate,
       keyboardType: TextInputType.number,
       maxLength: 3,

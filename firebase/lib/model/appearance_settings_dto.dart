@@ -21,10 +21,10 @@ class AppearanceSettingsDto extends Equatable {
         language,
       ];
 
-  AppearanceSettingsDto.fromJson(
-    String userId,
-    Map<String, dynamic>? json,
-  ) : this(
+  AppearanceSettingsDto.fromJson({
+    required String userId,
+    required Map<String, dynamic>? json,
+  }) : this(
           userId: userId,
           themeMode: mapThemeModeFromStringToEnum(
             json?[_AppearanceSettingsFields.themeMode.name],

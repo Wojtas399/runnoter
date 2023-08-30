@@ -22,20 +22,17 @@ class RacePreviewActions extends StatelessWidget {
   }
 
   void _editRace(BuildContext context) {
-    final String? raceId = context.read<RacePreviewBloc>().state.race?.id;
-    if (raceId != null) {
-      navigateTo(
-        RaceCreatorRoute(raceId: raceId),
-      );
-    }
+    navigateTo(RaceCreatorRoute(
+      raceId: context.read<RacePreviewBloc>().raceId,
+    ));
   }
 
   Future<void> _deleteRace(BuildContext context) async {
     final RacePreviewBloc bloc = context.read<RacePreviewBloc>();
     final str = Str.of(context);
     final bool confirmed = await askForConfirmation(
-      title: str.racePreviewDeletionConfirmationTitle,
-      message: str.racePreviewDeletionConfirmationMessage,
+      title: Text(str.racePreviewDeletionConfirmationTitle),
+      content: Text(str.racePreviewDeletionConfirmationMessage),
       confirmButtonLabel: str.delete,
       confirmButtonColor: Theme.of(context).colorScheme.error,
     );

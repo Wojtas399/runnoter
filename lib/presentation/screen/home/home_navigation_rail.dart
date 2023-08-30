@@ -1,31 +1,43 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../../domain/bloc/home/home_bloc.dart';
+import '../../../domain/entity/user.dart';
+import '../../component/gap/gap_components.dart';
 import '../../component/text/label_text_components.dart';
+import 'home_fab.dart';
 
 class HomeNavigationRail extends StatelessWidget {
   final int? selectedIndex;
+  final RouteData currentRoute;
   final Color? backgroundColor;
   final Function(int index) onPageSelected;
 
   const HomeNavigationRail({
     super.key,
     required this.selectedIndex,
+    required this.currentRoute,
     required this.backgroundColor,
     required this.onPageSelected,
   });
 
   @override
   Widget build(BuildContext context) {
+    final AccountType? accountType = context.select(
+      (HomeBloc bloc) => bloc.state.accountType,
+    );
     final str = Str.of(context);
 
     return NavigationRail(
       labelType: NavigationRailLabelType.all,
       backgroundColor: backgroundColor,
       groupAlignment: -0.90,
+      leading: HomeFAB(currentRoute: currentRoute),
       trailing: Column(
         children: [
-          const SizedBox(height: 32),
+          const Gap32(),
           IconButton(
             onPressed: () => onPageSelected(7),
             icon: const Icon(Icons.logout_outlined),
@@ -34,11 +46,6 @@ class HomeNavigationRail extends StatelessWidget {
         ],
       ),
       destinations: [
-        NavigationRailDestination(
-          icon: const Icon(Icons.date_range_outlined),
-          selectedIcon: const Icon(Icons.date_range),
-          label: Text(str.currentWeekTitle),
-        ),
         NavigationRailDestination(
           icon: const Icon(Icons.calendar_month_outlined),
           selectedIcon: const Icon(Icons.calendar_month),
@@ -64,6 +71,12 @@ class HomeNavigationRail extends StatelessWidget {
           selectedIcon: const Icon(Icons.emoji_events),
           label: Text(str.racesTitle),
         ),
+        if (accountType == AccountType.coach)
+          NavigationRailDestination(
+            icon: const Icon(Icons.groups_outlined),
+            selectedIcon: const Icon(Icons.groups),
+            label: Text(str.clientsTitle),
+          ),
       ],
       selectedIndex: selectedIndex,
       onDestinationSelected: onPageSelected,

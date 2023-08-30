@@ -5,6 +5,7 @@ class PasswordTextFieldComponent extends StatefulWidget {
   final String? label;
   final bool isRequired;
   final Function(String? value)? onChanged;
+  final Function(PointerDownEvent event)? onTapOutside;
   final TextEditingController? controller;
   final String? Function(String? value)? validator;
 
@@ -13,6 +14,7 @@ class PasswordTextFieldComponent extends StatefulWidget {
     this.label,
     this.isRequired = false,
     this.onChanged,
+    this.onTapOutside,
     this.controller,
     this.validator,
   });
@@ -50,6 +52,7 @@ class _State extends State<PasswordTextFieldComponent> {
         ),
       ),
       onChanged: widget.onChanged,
+      onTapOutside: widget.onTapOutside,
       controller: widget.controller,
       validator: (String? value) {
         return _validate(value, context);

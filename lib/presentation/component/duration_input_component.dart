@@ -3,8 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../formatter/minutes_or_seconds_input_formatter.dart';
+import 'gap/gap_components.dart';
 import 'text/title_text_components.dart';
-import 'text_field_component.dart';
 
 class DurationInput extends StatefulWidget {
   final String label;
@@ -53,7 +53,7 @@ class _State extends State<DurationInput> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         TitleMedium(widget.label),
-        const SizedBox(height: 8),
+        const Gap8(),
         Row(
           children: [
             _DurationField(
@@ -115,9 +115,12 @@ class _DurationField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: TextFieldComponent(
-        label: label,
-        isLabelCentered: true,
+      child: TextField(
+        decoration: InputDecoration(
+          label: Center(
+            child: Text(label),
+          ),
+        ),
         textAlign: TextAlign.center,
         maxLength: 2,
         keyboardType: TextInputType.number,

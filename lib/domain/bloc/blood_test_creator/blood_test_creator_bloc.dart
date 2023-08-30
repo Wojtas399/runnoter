@@ -1,35 +1,34 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
-import '../../../../domain/entity/blood_parameter.dart';
 import '../../../../domain/entity/blood_test.dart';
 import '../../../../domain/repository/blood_test_repository.dart';
-import '../../../../domain/service/auth_service.dart';
 import '../../../dependency_injection.dart';
 import '../../additional_model/bloc_state.dart';
 import '../../additional_model/bloc_status.dart';
 import '../../additional_model/bloc_with_status.dart';
+import '../../additional_model/blood_parameter.dart';
 import '../../entity/user.dart';
+import '../../repository/user_repository.dart';
 import '../../service/list_service.dart';
-import '../../use_case/get_logged_user_gender_use_case.dart';
 
 part 'blood_test_creator_event.dart';
 part 'blood_test_creator_state.dart';
 
 class BloodTestCreatorBloc extends BlocWithStatus<BloodTestCreatorEvent,
     BloodTestCreatorState, BloodTestCreatorBlocInfo, dynamic> {
-  final AuthService _authService;
-  final GetLoggedUserGenderUseCase _getLoggedUserGenderUseCase;
+  final UserRepository _userRepository;
   final BloodTestRepository _bloodTestRepository;
+  final String userId;
   final String? bloodTestId;
 
   BloodTestCreatorBloc({
-    required this.bloodTestId,
+    required this.userId,
+    this.bloodTestId,
     BloodTestCreatorState state = const BloodTestCreatorState(
       status: BlocStatusInitial(),
     ),
-  })  : _authService = getIt<AuthService>(),
-        _getLoggedUserGenderUseCase = getIt.get<GetLoggedUserGenderUseCase>(),
+  })  : _userRepository = getIt.get<UserRepository>(),
         _bloodTestRepository = getIt<BloodTestRepository>(),
         super(state) {
     on<BloodTestCreatorEventInitialize>(_initialize);
@@ -43,7 +42,7 @@ class BloodTestCreatorBloc extends BlocWithStatus<BloodTestCreatorEvent,
     Emitter<BloodTestCreatorState> emit,
   ) async {
     if (bloodTestId == null) {
-      await for (final gender in _getLoggedUserGenderUseCase.execute()) {
+      await for (final gender in _getUserGender()) {
         emit(state.copyWith(
           gender: gender,
         ));
@@ -51,8 +50,11 @@ class BloodTestCreatorBloc extends BlocWithStatus<BloodTestCreatorEvent,
       }
     }
     final Stream<(Gender, BloodTest?)> stream$ = Rx.combineLatest2(
-      _getLoggedUserGenderUseCase.execute(),
-      _getBloodTest(),
+      _getUserGender(),
+      _bloodTestRepository.getTestById(
+        bloodTestId: bloodTestId!,
+        userId: userId,
+      ),
       (Gender gender, BloodTest? bloodTest) => (gender, bloodTest),
     );
     await for (final params in stream$) {
@@ -111,26 +113,20 @@ class BloodTestCreatorBloc extends BlocWithStatus<BloodTestCreatorEvent,
     Emitter<BloodTestCreatorState> emit,
   ) async {
     if (!state.canSubmit) return;
-    final String? loggedUserId = await _authService.loggedUserId$.first;
-    if (loggedUserId == null) {
-      emitNoLoggedUserStatus(emit);
-      return;
-    }
     emitLoadingStatus(emit);
     if (state.bloodTest != null) {
-      await _updateTest(loggedUserId, emit);
+      await _tryToUpdateTest();
+      emitCompleteStatus(emit, info: BloodTestCreatorBlocInfo.bloodTestUpdated);
     } else {
-      await _addTest(loggedUserId, emit);
+      await _tryToAddTest();
+      emitCompleteStatus(emit, info: BloodTestCreatorBlocInfo.bloodTestAdded);
     }
   }
 
-  Stream<BloodTest?> _getBloodTest() =>
-      _authService.loggedUserId$.whereType<String>().switchMap(
-            (String loggedUserId) => _bloodTestRepository.getTestById(
-              bloodTestId: bloodTestId!,
-              userId: loggedUserId,
-            ),
-          );
+  Stream<Gender> _getUserGender() => _userRepository
+      .getUserById(userId: userId)
+      .whereNotNull()
+      .map((User user) => user.gender);
 
   int _findParameterIndex(BloodParameter parameter) =>
       state.parameterResults?.indexWhere(
@@ -138,39 +134,22 @@ class BloodTestCreatorBloc extends BlocWithStatus<BloodTestCreatorEvent,
       ) ??
       -1;
 
-  Future<void> _updateTest(
-    String loggedUserId,
-    Emitter<BloodTestCreatorState> emit,
-  ) async {
+  Future<void> _tryToUpdateTest() async {
     await _bloodTestRepository.updateTest(
       bloodTestId: state.bloodTest!.id,
-      userId: loggedUserId,
+      userId: userId,
       date: state.date!,
       parameterResults: state.parameterResults!,
     );
-    emitCompleteStatus(
-      emit,
-      info: BloodTestCreatorBlocInfo.bloodTestUpdated,
-    );
   }
 
-  Future<void> _addTest(
-    String loggedUserId,
-    Emitter<BloodTestCreatorState> emit,
-  ) async {
+  Future<void> _tryToAddTest() async {
     await _bloodTestRepository.addNewTest(
-      userId: loggedUserId,
+      userId: userId,
       date: state.date!,
       parameterResults: state.parameterResults!,
-    );
-    emitCompleteStatus(
-      emit,
-      info: BloodTestCreatorBlocInfo.bloodTestAdded,
     );
   }
 }
 
-enum BloodTestCreatorBlocInfo {
-  bloodTestAdded,
-  bloodTestUpdated,
-}
+enum BloodTestCreatorBlocInfo { bloodTestAdded, bloodTestUpdated }

@@ -25,10 +25,20 @@ class RequiredDataCompletionBloc extends BlocWithStatus<
   })  : _authService = getIt<AuthService>(),
         _addUserDataUseCase = getIt<AddUserDataUseCase>(),
         super(state) {
+    on<RequiredDataCompletionEventAccountTypeChanged>(_accountTypeChanged);
     on<RequiredDataCompletionEventGenderChanged>(_genderChanged);
     on<RequiredDataCompletionEventNameChanged>(_nameChanged);
     on<RequiredDataCompletionEventSurnameChanged>(_surnameChanged);
     on<RequiredDataCompletionEventSubmit>(_submit);
+  }
+
+  void _accountTypeChanged(
+    RequiredDataCompletionEventAccountTypeChanged event,
+    Emitter<RequiredDataCompletionState> emit,
+  ) {
+    emit(state.copyWith(
+      accountType: event.accountType,
+    ));
   }
 
   void _genderChanged(
@@ -65,15 +75,18 @@ class RequiredDataCompletionBloc extends BlocWithStatus<
     if (!state.canSubmit) return;
     emitLoadingStatus(emit);
     final String? loggedUserId = await _authService.loggedUserId$.first;
-    if (loggedUserId == null) {
+    final String? loggedUserEmail = await _authService.loggedUserEmail$.first;
+    if (loggedUserId == null || loggedUserEmail == null) {
       emitNoLoggedUserStatus(emit);
       return;
     }
     await _addUserDataUseCase.execute(
       userId: loggedUserId,
+      email: loggedUserEmail,
       name: state.name,
       surname: state.surname,
       gender: state.gender,
+      accountType: state.accountType,
     );
     emitCompleteStatus(
       emit,
@@ -82,6 +95,4 @@ class RequiredDataCompletionBloc extends BlocWithStatus<
   }
 }
 
-enum RequiredDataCompletionBlocInfo {
-  userDataAdded,
-}
+enum RequiredDataCompletionBlocInfo { userDataAdded }

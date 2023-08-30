@@ -32,7 +32,7 @@ void main() {
 
   test(
     'get first day of the month, '
-    'should return first day of the month which includes given day',
+    'should return first day of given month',
     () {
       const int month = 4;
       const int year = 2023;
@@ -47,7 +47,7 @@ void main() {
 
   test(
     'get last day of the month, '
-    'should return last day of the month which includes given date',
+    'should return last day of given month',
     () {
       const int month = 4;
       const int year = 2023;
@@ -60,20 +60,28 @@ void main() {
   );
 
   test(
-    'get days from week, '
-    'should return all days from week which includes given day',
+    'get first day of the year, '
+    'should return first day of given year',
     () {
-      final DateTime day = DateTime(2023, 4, 6);
-      final List<DateTime> expectedDays = [];
-      for (int i = 3; i <= 9; i++) {
-        expectedDays.add(
-          DateTime(2023, 4, i),
-        );
-      }
+      const int year = 2023;
+      final DateTime expectedDay = DateTime(2023, 1, 1);
 
-      final List<DateTime> days = service.getDaysFromWeek(day);
+      final DateTime firstDayOfTheYear = service.getFirstDayOfTheYear(year);
 
-      expect(days, expectedDays);
+      expect(firstDayOfTheYear, expectedDay);
+    },
+  );
+
+  test(
+    'get last day of the year, '
+    'should return last day of given year',
+    () {
+      const int year = 2023;
+      final DateTime expectedDay = DateTime(2023, 12, 31);
+
+      final DateTime lastDayOfTheYear = service.getLastDayOfTheYear(year);
+
+      expect(lastDayOfTheYear, expectedDay);
     },
   );
 
@@ -148,6 +156,61 @@ void main() {
         startDate: startDate,
         endDate: endDate,
       );
+
+      expect(result, false);
+    },
+  );
+
+  test(
+    'is today, '
+    'year, month and day are the same as in today date, '
+    'should be true',
+    () {
+      final DateTime date = DateTime.now();
+
+      final bool result = service.isToday(date);
+
+      expect(result, true);
+    },
+  );
+
+  test(
+    'is today, '
+    'month is different than the month of today date, '
+    'should be false',
+    () {
+      final DateTime today = DateTime.now();
+      final DateTime date = DateTime(today.year, today.month + 1, today.day);
+
+      final bool result = service.isToday(date);
+
+      expect(result, false);
+    },
+  );
+
+  test(
+    'is today, '
+    'day is different than the day of today date, '
+    'should be false',
+    () {
+      final DateTime today = DateTime.now();
+      final DateTime date = DateTime(today.year, today.month, today.day + 1);
+
+      final bool result = service.isToday(date);
+
+      expect(result, false);
+    },
+  );
+
+  test(
+    'is today, '
+    'year is different than the year of today date, '
+    'should be false',
+    () {
+      final DateTime today = DateTime.now();
+      final DateTime date = DateTime(today.year + 1, today.month, today.day);
+
+      final bool result = service.isToday(date);
 
       expect(result, false);
     },

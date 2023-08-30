@@ -64,7 +64,7 @@ class FirebaseWorkoutService {
     required String userId,
     required String workoutName,
     required DateTime date,
-    required RunStatusDto status,
+    required ActivityStatusDto status,
     required List<WorkoutStageDto> stages,
   }) async {
     final workoutRef = getWorkoutsRef(userId).doc();
@@ -86,7 +86,7 @@ class FirebaseWorkoutService {
     required String userId,
     DateTime? date,
     String? workoutName,
-    RunStatusDto? status,
+    ActivityStatusDto? status,
     List<WorkoutStageDto>? stages,
   }) async {
     final workoutRef = getWorkoutsRef(userId).doc(workoutId);

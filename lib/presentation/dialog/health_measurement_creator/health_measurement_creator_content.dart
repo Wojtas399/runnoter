@@ -5,13 +5,13 @@ import 'package:get_it/get_it.dart';
 
 import '../../../domain/additional_model/bloc_status.dart';
 import '../../../domain/bloc/health_measurement_creator/health_measurement_creator_bloc.dart';
+import '../../component/gap/gap_horizontal_components.dart';
 import '../../component/loading_info_component.dart';
 import '../../component/padding/paddings_24.dart';
 import '../../component/responsive_layout_component.dart';
 import '../../component/text/label_text_components.dart';
 import '../../config/body_sizes.dart';
 import '../../service/navigator_service.dart';
-import '../../service/utils.dart';
 import 'health_measurement_creator_form.dart';
 
 class HealthMeasurementCreatorContent extends StatelessWidget {
@@ -33,12 +33,9 @@ class _NormalDialogContent extends StatelessWidget {
 
     return AlertDialog(
       title: Text(str.healthMeasurementCreatorScreenTitle),
-      content: GestureDetector(
-        onTap: unfocusInputs,
-        child: SizedBox(
-          width: GetIt.I.get<BodySizes>().smallBodyWidth,
-          child: const _Form(),
-        ),
+      content: SizedBox(
+        width: GetIt.I.get<BodySizes>().smallBodyWidth,
+        child: const _Form(),
       ),
       actions: [
         TextButton(
@@ -65,15 +62,12 @@ class _FullScreenDialogContent extends StatelessWidget {
         leading: const CloseButton(),
         actions: const [
           _SubmitButton(),
-          SizedBox(width: 16),
+          GapHorizontal16(),
         ],
       ),
-      body: SafeArea(
-        child: GestureDetector(
-          onTap: unfocusInputs,
-          child: const Paddings24(
-            child: _Form(),
-          ),
+      body: const SafeArea(
+        child: Paddings24(
+          child: _Form(),
         ),
       ),
     );
@@ -112,7 +106,6 @@ class _SubmitButton extends StatelessWidget {
   }
 
   void _onPressed(BuildContext context) {
-    unfocusInputs();
     context.read<HealthMeasurementCreatorBloc>().add(
           const HealthMeasurementCreatorEventSubmit(),
         );

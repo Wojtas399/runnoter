@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/bloc/email_verification/email_verification_cubit.dart';
+import '../../../domain/cubit/email_verification_cubit.dart';
+import '../../component/gap/gap_components.dart';
 import '../../component/padding/paddings_24.dart';
 import '../../component/responsive_layout_component.dart';
 import '../../component/text/body_text_components.dart';
 import '../../component/text/title_text_components.dart';
+import '../../config/navigation/router.dart';
 import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
 
@@ -78,8 +80,6 @@ class _EmailVerificationInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final str = Str.of(context);
-    const gapSmall = SizedBox(height: 16);
-    const gapBig = SizedBox(height: 40);
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -89,30 +89,33 @@ class _EmailVerificationInfo extends StatelessWidget {
           color: Theme.of(context).colorScheme.outlineVariant,
           size: 120,
         ),
-        gapBig,
+        const Gap40(),
         TitleLarge(
           str.emailVerificationTitle,
           fontWeight: FontWeight.bold,
         ),
-        gapSmall,
+        const Gap16(),
         BodyMedium(
           str.emailVerificationMessage,
           textAlign: TextAlign.center,
         ),
-        gapSmall,
+        const Gap16(),
         const _Email(),
-        gapSmall,
+        const Gap16(),
         BodyMedium(
           str.emailVerificationInstruction,
           textAlign: TextAlign.center,
         ),
-        gapBig,
+        const Gap40(),
         const _ResendEmailVerificationButton(),
-        gapSmall,
+        const Gap16(),
         MouseRegion(
           cursor: SystemMouseCursors.click,
           child: GestureDetector(
-            onTap: popUntilRoot,
+            onTap: () {
+              popRoute();
+              navigateAndRemoveUntil(const SignInRoute());
+            },
             child: BodyMedium(
               str.emailVerificationBackToLogin,
               color: Theme.of(context).colorScheme.outline,

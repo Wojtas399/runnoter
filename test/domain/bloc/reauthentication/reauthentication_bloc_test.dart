@@ -2,10 +2,10 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:runnoter/domain/additional_model/auth_provider.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/additional_model/custom_exception.dart';
 import 'package:runnoter/domain/bloc/reauthentication/reauthentication_bloc.dart';
-import 'package:runnoter/domain/entity/auth_provider.dart';
 import 'package:runnoter/domain/service/auth_service.dart';
 
 import '../../../mock/domain/service/mock_auth_service.dart';
@@ -14,7 +14,7 @@ void main() {
   final authService = MockAuthService();
 
   setUpAll(() {
-    GetIt.I.registerLazySingleton<AuthService>(() => authService);
+    GetIt.I.registerFactory<AuthService>(() => authService);
   });
 
   tearDown(() {

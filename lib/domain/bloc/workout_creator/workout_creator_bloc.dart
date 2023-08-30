@@ -1,18 +1,16 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rxdart/rxdart.dart';
 
 import '../../../../domain/additional_model/bloc_state.dart';
 import '../../../../domain/additional_model/bloc_status.dart';
 import '../../../../domain/additional_model/bloc_with_status.dart';
-import '../../../../domain/entity/run_status.dart';
 import '../../../../domain/entity/workout.dart';
-import '../../../../domain/entity/workout_stage.dart';
 import '../../../../domain/repository/workout_repository.dart';
-import '../../../../domain/service/auth_service.dart';
 import '../../../common/date_service.dart';
 import '../../../dependency_injection.dart';
+import '../../additional_model/activity_status.dart';
+import '../../additional_model/workout_stage.dart';
 import '../../service/list_service.dart';
 
 part 'workout_creator_event.dart';
@@ -20,19 +18,19 @@ part 'workout_creator_state.dart';
 
 class WorkoutCreatorBloc extends BlocWithStatus<WorkoutCreatorEvent,
     WorkoutCreatorState, WorkoutCreatorBlocInfo, dynamic> {
-  final AuthService _authService;
   final WorkoutRepository _workoutRepository;
+  final String userId;
   final String? workoutId;
 
   WorkoutCreatorBloc({
+    required this.userId,
     this.workoutId,
     BlocStatus status = const BlocStatusInitial(),
     DateTime? date,
     Workout? workout,
     String? workoutName,
     List<WorkoutStage> stages = const [],
-  })  : _authService = getIt<AuthService>(),
-        _workoutRepository = getIt<WorkoutRepository>(),
+  })  : _workoutRepository = getIt<WorkoutRepository>(),
         super(
           WorkoutCreatorState(
             dateService: getIt<DateService>(),
@@ -65,7 +63,10 @@ class WorkoutCreatorBloc extends BlocWithStatus<WorkoutCreatorEvent,
       ));
       return;
     }
-    final Stream<Workout?> workout$ = _getWorkoutById(workoutId!);
+    final Stream<Workout?> workout$ = _workoutRepository.getWorkoutById(
+      workoutId: workoutId!,
+      userId: userId,
+    );
     await for (final workout in workout$) {
       emit(state.copyWith(
         status: const BlocStatusComplete<WorkoutCreatorBlocInfo>(
@@ -151,40 +152,27 @@ class WorkoutCreatorBloc extends BlocWithStatus<WorkoutCreatorEvent,
     Emitter<WorkoutCreatorState> emit,
   ) async {
     if (!state.canSubmit) return;
-    final String? loggedUserId = await _authService.loggedUserId$.first;
-    if (loggedUserId == null) {
-      emitNoLoggedUserStatus(emit);
-      return;
-    }
     emitLoadingStatus(emit);
     if (state.workout != null) {
-      await _updateWorkout(loggedUserId);
+      await _updateWorkout();
       emitCompleteStatus(emit, info: WorkoutCreatorBlocInfo.workoutUpdated);
     } else if (state.date != null) {
-      await _addWorkout(loggedUserId);
+      await _addWorkout();
       emitCompleteStatus(emit, info: WorkoutCreatorBlocInfo.workoutAdded);
     }
   }
 
-  Stream<Workout?> _getWorkoutById(String workoutId) =>
-      _authService.loggedUserId$.whereNotNull().switchMap(
-            (String loggedUserId) => _workoutRepository.getWorkoutById(
-              workoutId: workoutId,
-              userId: loggedUserId,
-            ),
-          );
-
-  Future<void> _addWorkout(String userId) async {
+  Future<void> _addWorkout() async {
     await _workoutRepository.addWorkout(
       userId: userId,
       workoutName: state.workoutName!,
       date: state.date!,
-      status: const RunStatusPending(),
+      status: const ActivityStatusPending(),
       stages: state.stages,
     );
   }
 
-  Future<void> _updateWorkout(String userId) async {
+  Future<void> _updateWorkout() async {
     await _workoutRepository.updateWorkout(
       workoutId: state.workout!.id,
       userId: userId,

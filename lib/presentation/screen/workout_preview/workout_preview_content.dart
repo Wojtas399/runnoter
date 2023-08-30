@@ -2,13 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../../domain/additional_model/activity_status.dart';
+import '../../../domain/bloc/activity_status_creator/activity_status_creator_bloc.dart';
 import '../../../domain/bloc/workout_preview/workout_preview_bloc.dart';
+import '../../component/big_button_component.dart';
 import '../../component/body/medium_body_component.dart';
+import '../../component/gap/gap_horizontal_components.dart';
 import '../../component/loading_info_component.dart';
 import '../../component/padding/paddings_24.dart';
+import '../../config/navigation/router.dart';
 import '../../extension/context_extensions.dart';
+import '../../service/navigator_service.dart';
 import 'workout_preview_actions.dart';
-import 'workout_preview_workout.dart';
+import 'workout_preview_workout_info.dart';
 
 class WorkoutPreviewContent extends StatelessWidget {
   const WorkoutPreviewContent({super.key});
@@ -21,7 +27,12 @@ class WorkoutPreviewContent extends StatelessWidget {
         child: SingleChildScrollView(
           child: MediumBody(
             child: Paddings24(
-              child: _WorkoutInfo(),
+              child: Column(
+                children: [
+                  _WorkoutInfo(),
+                  _WorkoutStatusButton(),
+                ],
+              ),
             ),
           ),
         ),
@@ -44,7 +55,7 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
       actions: context.isMobileSize
           ? const [
               WorkoutPreviewWorkoutActions(),
-              SizedBox(width: 8),
+              GapHorizontal8(),
             ]
           : null,
     );
@@ -56,12 +67,44 @@ class _WorkoutInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool areDataLoaded = context.select(
-      (WorkoutPreviewBloc bloc) => bloc.state.areDataLoaded,
+    final bool isWorkoutLoaded = context.select(
+      (WorkoutPreviewBloc bloc) => bloc.state.isWorkoutLoaded,
     );
 
-    return areDataLoaded
+    return isWorkoutLoaded
         ? const WorkoutPreviewWorkoutInfo()
         : const LoadingInfo();
+  }
+}
+
+class _WorkoutStatusButton extends StatelessWidget {
+  const _WorkoutStatusButton();
+
+  @override
+  Widget build(BuildContext context) {
+    final ActivityStatus? activityStatus = context.select(
+      (WorkoutPreviewBloc bloc) => bloc.state.activityStatus,
+    );
+    String label = Str.of(context).activityStatusEditStatus;
+    if (activityStatus is ActivityStatusPending) {
+      label = Str.of(context).activityStatusFinish;
+    }
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 32),
+      child: BigButton(
+        label: label,
+        onPressed: () => _onPressed(context),
+      ),
+    );
+  }
+
+  void _onPressed(BuildContext context) {
+    final workoutPreviewBloc = context.read<WorkoutPreviewBloc>();
+    navigateTo(ActivityStatusCreatorRoute(
+      userId: workoutPreviewBloc.userId,
+      activityType: ActivityType.workout.name,
+      activityId: workoutPreviewBloc.workoutId,
+    ));
   }
 }

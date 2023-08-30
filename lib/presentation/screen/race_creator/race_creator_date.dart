@@ -4,6 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/bloc/race_creator/race_creator_bloc.dart';
 import '../../component/date_selector_component.dart';
+import '../../component/gap/gap_components.dart';
 import '../../component/text/title_text_components.dart';
 
 class RaceCreatorDate extends StatelessWidget {
@@ -15,7 +16,7 @@ class RaceCreatorDate extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         TitleMedium(Str.of(context).date),
-        const SizedBox(height: 8),
+        const Gap8(),
         const _RaceDateValue(),
       ],
     );

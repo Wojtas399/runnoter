@@ -20,8 +20,10 @@ void main() {
         language: language,
       );
 
-      final AppearanceSettingsDto dto =
-          AppearanceSettingsDto.fromJson(userId, json);
+      final AppearanceSettingsDto dto = AppearanceSettingsDto.fromJson(
+        userId: userId,
+        json: json,
+      );
 
       expect(dto, expectedDto);
     },

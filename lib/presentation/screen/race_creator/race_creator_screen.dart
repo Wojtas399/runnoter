@@ -5,6 +5,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/bloc/race_creator/race_creator_bloc.dart';
 import '../../component/bloc_with_status_listener_component.dart';
+import '../../component/page_not_found_component.dart';
 import '../../extension/string_extensions.dart';
 import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
@@ -12,11 +13,13 @@ import 'race_creator_content.dart';
 
 @RoutePage()
 class RaceCreatorScreen extends StatelessWidget {
+  final String? userId;
   final String? dateStr;
   final String? raceId;
 
   const RaceCreatorScreen({
     super.key,
+    @PathParam('userId') this.userId,
     @PathParam('dateStr') this.dateStr,
     @PathParam('raceId') this.raceId,
   });
@@ -25,13 +28,15 @@ class RaceCreatorScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final DateTime? date = dateStr?.toDateTime();
 
-    return BlocProvider(
-      create: (_) => RaceCreatorBloc(raceId: raceId)
-        ..add(RaceCreatorEventInitialize(date: date)),
-      child: const _BlocListener(
-        child: RaceCreatorContent(),
-      ),
-    );
+    return userId == null
+        ? const PageNotFound()
+        : BlocProvider(
+            create: (_) => RaceCreatorBloc(userId: userId!, raceId: raceId)
+              ..add(RaceCreatorEventInitialize(date: date)),
+            child: const _BlocListener(
+              child: RaceCreatorContent(),
+            ),
+          );
   }
 }
 

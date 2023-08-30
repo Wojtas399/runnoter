@@ -6,10 +6,11 @@ import '../../../domain/bloc/sign_up/sign_up_bloc.dart';
 import '../../component/app_bar_with_logo.dart';
 import '../../component/big_button_component.dart';
 import '../../component/body/small_body_component.dart';
+import '../../component/gap/gap_components.dart';
+import '../../component/padding/paddings_24.dart';
 import '../../component/text/body_text_components.dart';
 import '../../component/text/headline_text_components.dart';
 import '../../service/navigator_service.dart';
-import '../../service/utils.dart';
 import 'sign_up_form.dart';
 
 class SignUpContent extends StatelessWidget {
@@ -17,27 +18,22 @@ class SignUpContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const AppBarWithLogo(),
+    return const Scaffold(
+      appBar: AppBarWithLogo(),
       body: SafeArea(
         child: SingleChildScrollView(
-          child: GestureDetector(
-            onTap: unfocusInputs,
-            child: SmallBody(
-              child: Container(
-                color: Colors.transparent,
-                padding: const EdgeInsets.all(24),
-                child: const Column(
-                  children: [
-                    _FormHeader(),
-                    SizedBox(height: 24),
-                    SignUpForm(),
-                    SizedBox(height: 32),
-                    _SubmitButton(),
-                    SizedBox(height: 16),
-                    _GoToSignInOption(),
-                  ],
-                ),
+          child: SmallBody(
+            child: Paddings24(
+              child: Column(
+                children: [
+                  _FormHeader(),
+                  Gap24(),
+                  SignUpForm(),
+                  Gap32(),
+                  _SubmitButton(),
+                  Gap16(),
+                  _GoToSignInOption(),
+                ],
               ),
             ),
           ),
@@ -76,7 +72,6 @@ class _SubmitButton extends StatelessWidget {
   }
 
   void _onPressed(BuildContext context) {
-    unfocusInputs();
     context.read<SignUpBloc>().add(
           const SignUpEventSubmit(),
         );

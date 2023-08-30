@@ -1,8 +1,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../domain/entity/run_status.dart';
-import '../../domain/entity/settings.dart';
+import '../../domain/additional_model/activity_status.dart';
+import '../../domain/additional_model/settings.dart';
 import '../extension/double_extensions.dart';
 
 class PaceUnitService extends Cubit<PaceUnit> {

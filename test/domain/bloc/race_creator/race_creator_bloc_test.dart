@@ -2,21 +2,18 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:runnoter/domain/additional_model/activity_status.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/bloc/race_creator/race_creator_bloc.dart';
 import 'package:runnoter/domain/entity/race.dart';
-import 'package:runnoter/domain/entity/run_status.dart';
 import 'package:runnoter/domain/repository/race_repository.dart';
-import 'package:runnoter/domain/service/auth_service.dart';
 
 import '../../../creators/race_creator.dart';
 import '../../../mock/domain/repository/mock_race_repository.dart';
-import '../../../mock/domain/service/mock_auth_service.dart';
 
 void main() {
-  final authService = MockAuthService();
   final raceRepository = MockRaceRepository();
-  const String loggedUserId = 'u1';
+  const String userId = 'u1';
 
   RaceCreatorBloc createBloc({
     String? raceId,
@@ -28,6 +25,7 @@ void main() {
     Duration? expectedDuration,
   }) =>
       RaceCreatorBloc(
+        userId: userId,
         raceId: raceId,
         state: RaceCreatorState(
           status: const BlocStatusInitial(),
@@ -60,12 +58,10 @@ void main() {
       );
 
   setUpAll(() {
-    GetIt.I.registerSingleton<AuthService>(authService);
     GetIt.I.registerSingleton<RaceRepository>(raceRepository);
   });
 
   tearDown(() {
-    reset(authService);
     reset(raceRepository);
   });
 
@@ -87,43 +83,28 @@ void main() {
 
   blocTest(
     'initialize, '
-    'logged user does not exist, '
-    'should do nothing',
+    'race id is not null, '
+    'should load race matching to given id from repository and '
+    'should update all relevant params in state',
     build: () => createBloc(raceId: 'r1'),
-    setUp: () => authService.mockGetLoggedUserId(),
-    act: (bloc) => bloc.add(const RaceCreatorEventInitialize()),
-    expect: () => [],
-    verify: (_) => verify(
-      () => authService.loggedUserId$,
-    ).called(1),
-  );
-
-  blocTest(
-    'initialize, '
-    'race id is not null'
-    'should load race matching to given id from repository and should update all relevant params in state',
-    build: () => createBloc(raceId: 'r1'),
-    setUp: () {
-      authService.mockGetLoggedUserId(userId: loggedUserId);
-      raceRepository.mockGetRaceById(
-        race: createRace(
-          id: 'r1',
-          userId: loggedUserId,
-          name: 'name',
-          date: DateTime(2023, 6, 10),
-          place: 'place',
-          distance: 21,
-          expectedDuration: const Duration(hours: 2),
-        ),
-      );
-    },
+    setUp: () => raceRepository.mockGetRaceById(
+      race: createRace(
+        id: 'r1',
+        userId: userId,
+        name: 'name',
+        date: DateTime(2023, 6, 10),
+        place: 'place',
+        distance: 21,
+        expectedDuration: const Duration(hours: 2),
+      ),
+    ),
     act: (bloc) => bloc.add(const RaceCreatorEventInitialize()),
     expect: () => [
       createState(
         status: const BlocStatusComplete<RaceCreatorBlocInfo>(),
         race: createRace(
           id: 'r1',
-          userId: loggedUserId,
+          userId: userId,
           name: 'name',
           date: DateTime(2023, 6, 10),
           place: 'place',
@@ -137,17 +118,9 @@ void main() {
         expectedDuration: const Duration(hours: 2),
       ),
     ],
-    verify: (_) {
-      verify(
-        () => authService.loggedUserId$,
-      ).called(1);
-      verify(
-        () => raceRepository.getRaceById(
-          raceId: 'r1',
-          userId: loggedUserId,
-        ),
-      ).called(1);
-    },
+    verify: (_) => verify(
+      () => raceRepository.getRaceById(raceId: 'r1', userId: userId),
+    ).called(1),
   );
 
   blocTest(
@@ -259,8 +232,9 @@ void main() {
 
   blocTest(
     'submit, '
-    'logged user does not exist, '
-    'should emit no logged user bloc status',
+    'add mode, '
+    'should call method from race repository to add new race with pending status and '
+    'should emit info that race has been added',
     build: () => createBloc(
       name: 'race name',
       date: DateTime(2023, 6, 2),
@@ -268,11 +242,21 @@ void main() {
       distance: 21,
       expectedDuration: const Duration(hours: 1, minutes: 45, seconds: 20),
     ),
-    setUp: () => authService.mockGetLoggedUserId(),
+    setUp: () => raceRepository.mockAddNewRace(),
     act: (bloc) => bloc.add(const RaceCreatorEventSubmit()),
     expect: () => [
       createState(
-        status: const BlocStatusNoLoggedUser(),
+        status: const BlocStatusLoading(),
+        name: 'race name',
+        date: DateTime(2023, 6, 2),
+        place: 'New York',
+        distance: 21,
+        expectedDuration: const Duration(hours: 1, minutes: 45, seconds: 20),
+      ),
+      createState(
+        status: const BlocStatusComplete<RaceCreatorBlocInfo>(
+          info: RaceCreatorBlocInfo.raceAdded,
+        ),
         name: 'race name',
         date: DateTime(2023, 6, 2),
         place: 'New York',
@@ -281,69 +265,24 @@ void main() {
       ),
     ],
     verify: (_) => verify(
-      () => authService.loggedUserId$,
+      () => raceRepository.addNewRace(
+        userId: 'u1',
+        name: 'race name',
+        date: DateTime(2023, 6, 2),
+        place: 'New York',
+        distance: 21,
+        expectedDuration: const Duration(hours: 1, minutes: 45, seconds: 20),
+        status: const ActivityStatusPending(),
+      ),
     ).called(1),
   );
 
   blocTest(
     'submit, '
-    'add mode'
-    'should call method from race repository to add new race with pending status and should emit info that race has been added',
-    build: () => createBloc(
-      name: 'race name',
-      date: DateTime(2023, 6, 2),
-      place: 'New York',
-      distance: 21,
-      expectedDuration: const Duration(hours: 1, minutes: 45, seconds: 20),
-    ),
-    setUp: () {
-      authService.mockGetLoggedUserId(userId: 'u1');
-      raceRepository.mockAddNewRace();
-    },
-    act: (bloc) => bloc.add(const RaceCreatorEventSubmit()),
-    expect: () => [
-      createState(
-        status: const BlocStatusLoading(),
-        name: 'race name',
-        date: DateTime(2023, 6, 2),
-        place: 'New York',
-        distance: 21,
-        expectedDuration: const Duration(hours: 1, minutes: 45, seconds: 20),
-      ),
-      createState(
-        status: const BlocStatusComplete<RaceCreatorBlocInfo>(
-          info: RaceCreatorBlocInfo.raceAdded,
-        ),
-        name: 'race name',
-        date: DateTime(2023, 6, 2),
-        place: 'New York',
-        distance: 21,
-        expectedDuration: const Duration(hours: 1, minutes: 45, seconds: 20),
-      ),
-    ],
-    verify: (_) {
-      verify(
-        () => authService.loggedUserId$,
-      ).called(1);
-      verify(
-        () => raceRepository.addNewRace(
-          userId: 'u1',
-          name: 'race name',
-          date: DateTime(2023, 6, 2),
-          place: 'New York',
-          distance: 21,
-          expectedDuration: const Duration(hours: 1, minutes: 45, seconds: 20),
-          status: const RunStatusPending(),
-        ),
-      ).called(1);
-    },
-  );
-
-  blocTest(
-    'submit, '
     'add mode, '
-    'duration is 0'
-    'should call method from race repository to add new race with duration set as null and pending status and should emit info that race has been added',
+    'duration is 0, '
+    'should call method from race repository to add new race with duration set as null and pending status and '
+    'should emit info that race has been added',
     build: () => createBloc(
       name: 'race name',
       date: DateTime(2023, 6, 2),
@@ -351,10 +290,7 @@ void main() {
       distance: 21,
       expectedDuration: const Duration(),
     ),
-    setUp: () {
-      authService.mockGetLoggedUserId(userId: 'u1');
-      raceRepository.mockAddNewRace();
-    },
+    setUp: () => raceRepository.mockAddNewRace(),
     act: (bloc) => bloc.add(const RaceCreatorEventSubmit()),
     expect: () => [
       createState(
@@ -376,28 +312,24 @@ void main() {
         expectedDuration: const Duration(),
       ),
     ],
-    verify: (_) {
-      verify(
-        () => authService.loggedUserId$,
-      ).called(1);
-      verify(
-        () => raceRepository.addNewRace(
-          userId: 'u1',
-          name: 'race name',
-          date: DateTime(2023, 6, 2),
-          place: 'New York',
-          distance: 21,
-          expectedDuration: null,
-          status: const RunStatusPending(),
-        ),
-      ).called(1);
-    },
+    verify: (_) => verify(
+      () => raceRepository.addNewRace(
+        userId: 'u1',
+        name: 'race name',
+        date: DateTime(2023, 6, 2),
+        place: 'New York',
+        distance: 21,
+        expectedDuration: null,
+        status: const ActivityStatusPending(),
+      ),
+    ).called(1),
   );
 
   blocTest(
     'submit, '
     'edit mode, '
-    'should call method from race repository to update race and should emit info that race has been updated',
+    'should call method from race repository to update race and '
+    'should emit info that race has been updated',
     build: () => createBloc(
       race: createRace(id: 'c1'),
       name: 'race name',
@@ -406,10 +338,7 @@ void main() {
       distance: 21,
       expectedDuration: const Duration(hours: 1, minutes: 45, seconds: 20),
     ),
-    setUp: () {
-      authService.mockGetLoggedUserId(userId: 'u1');
-      raceRepository.mockUpdateRace();
-    },
+    setUp: () => raceRepository.mockUpdateRace(),
     act: (bloc) => bloc.add(const RaceCreatorEventSubmit()),
     expect: () => [
       createState(
@@ -433,29 +362,25 @@ void main() {
         expectedDuration: const Duration(hours: 1, minutes: 45, seconds: 20),
       ),
     ],
-    verify: (_) {
-      verify(
-        () => authService.loggedUserId$,
-      ).called(1);
-      verify(
-        () => raceRepository.updateRace(
-          raceId: 'c1',
-          userId: 'u1',
-          name: 'race name',
-          date: DateTime(2023, 6, 2),
-          place: 'New York',
-          distance: 21,
-          expectedDuration: const Duration(hours: 1, minutes: 45, seconds: 20),
-        ),
-      ).called(1);
-    },
+    verify: (_) => verify(
+      () => raceRepository.updateRace(
+        raceId: 'c1',
+        userId: 'u1',
+        name: 'race name',
+        date: DateTime(2023, 6, 2),
+        place: 'New York',
+        distance: 21,
+        expectedDuration: const Duration(hours: 1, minutes: 45, seconds: 20),
+      ),
+    ).called(1),
   );
 
   blocTest(
     'submit, '
     'edit mode, '
-    'duration is 0'
-    'should call method from race repository to update race with duration set as null and should emit info that race has been updated',
+    'duration is 0, '
+    'should call method from race repository to update race with duration set as null and '
+    'should emit info that race has been updated',
     build: () => createBloc(
       race: createRace(id: 'c1'),
       name: 'race name',
@@ -464,10 +389,7 @@ void main() {
       distance: 21,
       expectedDuration: const Duration(),
     ),
-    setUp: () {
-      authService.mockGetLoggedUserId(userId: 'u1');
-      raceRepository.mockUpdateRace();
-    },
+    setUp: () => raceRepository.mockUpdateRace(),
     act: (bloc) => bloc.add(const RaceCreatorEventSubmit()),
     expect: () => [
       createState(
@@ -491,22 +413,17 @@ void main() {
         expectedDuration: const Duration(),
       ),
     ],
-    verify: (_) {
-      verify(
-        () => authService.loggedUserId$,
-      ).called(1);
-      verify(
-        () => raceRepository.updateRace(
-          raceId: 'c1',
-          userId: 'u1',
-          name: 'race name',
-          date: DateTime(2023, 6, 2),
-          place: 'New York',
-          distance: 21,
-          expectedDuration: null,
-          setDurationAsNull: true,
-        ),
-      ).called(1);
-    },
+    verify: (_) => verify(
+      () => raceRepository.updateRace(
+        raceId: 'c1',
+        userId: 'u1',
+        name: 'race name',
+        date: DateTime(2023, 6, 2),
+        place: 'New York',
+        distance: 21,
+        expectedDuration: null,
+        setDurationAsNull: true,
+      ),
+    ).called(1),
   );
 }

@@ -1,159 +1,113 @@
+import 'dart:async';
+
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:runnoter/domain/additional_model/activity_status.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/bloc/race_preview/race_preview_bloc.dart';
 import 'package:runnoter/domain/entity/race.dart';
 import 'package:runnoter/domain/repository/race_repository.dart';
-import 'package:runnoter/domain/service/auth_service.dart';
 
 import '../../../creators/race_creator.dart';
 import '../../../mock/domain/repository/mock_race_repository.dart';
-import '../../../mock/domain/service/mock_auth_service.dart';
 
 void main() {
-  final authService = MockAuthService();
   final raceRepository = MockRaceRepository();
-  const String loggedUserId = 'u1';
+  const String userId = 'u1';
   const String raceId = 'r1';
 
-  RacePreviewBloc createBloc({
-    String? raceId,
-    Race? race,
-  }) =>
-      RacePreviewBloc(
+  RacePreviewBloc createBloc() => RacePreviewBloc(
+        userId: userId,
         raceId: raceId,
-        state: RacePreviewState(
-          status: const BlocStatusInitial(),
-          race: race,
-        ),
-      );
-
-  RacePreviewState createState({
-    BlocStatus status = const BlocStatusInitial(),
-    Race? race,
-  }) =>
-      RacePreviewState(
-        status: status,
-        race: race,
+        state: const RacePreviewState(status: BlocStatusInitial()),
       );
 
   setUpAll(() {
-    GetIt.I.registerSingleton<AuthService>(authService);
     GetIt.I.registerSingleton<RaceRepository>(raceRepository);
   });
 
   tearDown(() {
-    reset(authService);
     reset(raceRepository);
   });
 
-  blocTest(
-    'initialize, '
-    'race id is null, '
-    'should do nothing',
-    build: () => createBloc(),
-    act: (bloc) => bloc.add(const RacePreviewEventInitialize()),
-    expect: () => [],
-  );
+  group(
+    'initialize',
+    () {
+      final Race race = createRace(
+        id: 'r1',
+        name: 'race',
+        date: DateTime(2023, 1, 2),
+        place: 'place',
+        distance: 21,
+        expectedDuration: const Duration(hours: 1),
+        status: const ActivityStatusPending(),
+      );
+      final Race updatedRace = createRace(
+        id: 'r1',
+        name: 'updated race',
+        date: DateTime(2023, 2, 1),
+        place: 'update place name',
+        distance: 21.5,
+        expectedDuration: const Duration(hours: 1, minutes: 30),
+        status: const ActivityStatusUndone(),
+      );
+      final StreamController<Race?> race$ = StreamController()..add(race);
 
-  blocTest(
-    'initialize, '
-    'should set listener of race matching to given id',
-    build: () => createBloc(raceId: raceId),
-    setUp: () {
-      authService.mockGetLoggedUserId(userId: 'u1');
-      raceRepository.mockGetRaceById(
-        race: createRace(
-          id: raceId,
-          userId: loggedUserId,
-          name: 'race 1',
-        ),
+      blocTest(
+        'should set listener of race matching to given id',
+        build: () => createBloc(),
+        setUp: () => raceRepository.mockGetRaceById(raceStream: race$.stream),
+        act: (bloc) async {
+          bloc.add(const RacePreviewEventInitialize());
+          await bloc.stream.first;
+          race$.add(updatedRace);
+        },
+        expect: () => [
+          RacePreviewState(
+            status: const BlocStatusComplete(),
+            name: race.name,
+            date: race.date,
+            place: race.place,
+            distance: race.distance,
+            expectedDuration: race.expectedDuration,
+            raceStatus: race.status,
+          ),
+          RacePreviewState(
+            status: const BlocStatusComplete(),
+            name: updatedRace.name,
+            date: updatedRace.date,
+            place: updatedRace.place,
+            distance: updatedRace.distance,
+            expectedDuration: updatedRace.expectedDuration,
+            raceStatus: updatedRace.status,
+          ),
+        ],
+        verify: (_) => verify(
+          () => raceRepository.getRaceById(raceId: raceId, userId: userId),
+        ).called(1),
       );
     },
-    act: (bloc) => bloc.add(const RacePreviewEventInitialize()),
-    expect: () => [
-      createState(
-        status: const BlocStatusComplete(),
-        race: createRace(
-          id: raceId,
-          userId: loggedUserId,
-          name: 'race 1',
-        ),
-      ),
-    ],
-    verify: (_) {
-      verify(
-        () => authService.loggedUserId$,
-      ).called(1);
-      verify(
-        () => raceRepository.getRaceById(
-          raceId: raceId,
-          userId: loggedUserId,
-        ),
-      ).called(1);
-    },
   );
 
   blocTest(
     'delete race, '
-    'race is null, '
-    'should do nothing',
+    'should call method from race repository to delete race, '
+    'should emit info that race has been deleted',
     build: () => createBloc(),
-    act: (bloc) => bloc.add(const RacePreviewEventDeleteRace()),
-    expect: () => [],
-  );
-
-  blocTest(
-    'delete race, '
-    'logged user does not exist, '
-    'should emit no logged user status',
-    build: () => createBloc(race: createRace(id: 'c1')),
-    setUp: () => authService.mockGetLoggedUserId(),
+    setUp: () => raceRepository.mockDeleteRace(),
     act: (bloc) => bloc.add(const RacePreviewEventDeleteRace()),
     expect: () => [
-      createState(
-        status: const BlocStatusNoLoggedUser(),
-        race: createRace(id: 'c1'),
+      const RacePreviewState(status: BlocStatusLoading()),
+      const RacePreviewState(
+        status: BlocStatusComplete<RacePreviewBlocInfo>(
+          info: RacePreviewBlocInfo.raceDeleted,
+        ),
       ),
     ],
     verify: (_) => verify(
-      () => authService.loggedUserId$,
+      () => raceRepository.deleteRace(raceId: raceId, userId: userId),
     ).called(1),
-  );
-
-  blocTest(
-    'delete race, '
-    'should call method from race repository to delete race and should emit info that race has been deleted',
-    build: () => createBloc(race: createRace(id: 'c1')),
-    setUp: () {
-      authService.mockGetLoggedUserId(userId: 'u1');
-      raceRepository.mockDeleteRace();
-    },
-    act: (bloc) => bloc.add(const RacePreviewEventDeleteRace()),
-    expect: () => [
-      createState(
-        status: const BlocStatusLoading(),
-        race: createRace(id: 'c1'),
-      ),
-      createState(
-        status: const BlocStatusComplete<RacePreviewBlocInfo>(
-          info: RacePreviewBlocInfo.raceDeleted,
-        ),
-        race: createRace(id: 'c1'),
-      ),
-    ],
-    verify: (_) {
-      verify(
-        () => authService.loggedUserId$,
-      ).called(1);
-      verify(
-        () => raceRepository.deleteRace(
-          raceId: 'c1',
-          userId: 'u1',
-        ),
-      ).called(1);
-    },
   );
 }

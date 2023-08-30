@@ -168,6 +168,32 @@ void main() {
   );
 
   test(
+    'copy with account type',
+    () {
+      const AccountType expectedAccountType = AccountType.coach;
+
+      state = state.copyWith(accountType: expectedAccountType);
+      final state2 = state.copyWith();
+
+      expect(state.accountType, expectedAccountType);
+      expect(state2.accountType, expectedAccountType);
+    },
+  );
+
+  test(
+    'copy with gender',
+    () {
+      const Gender expectedGender = Gender.female;
+
+      state = state.copyWith(gender: expectedGender);
+      final state2 = state.copyWith();
+
+      expect(state.gender, expectedGender);
+      expect(state2.gender, expectedGender);
+    },
+  );
+
+  test(
     'copy with name',
     () {
       const String expectedName = 'Jack';

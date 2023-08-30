@@ -14,32 +14,32 @@ enum AuthExceptionCode {
 class AuthException extends CustomException {
   final AuthExceptionCode code;
 
-  const AuthException({
-    required this.code,
-  });
+  const AuthException({required this.code});
 
   @override
-  List<Object?> get props => [
-        code,
-      ];
+  List<Object?> get props => [code];
 }
 
-enum NetworkExceptionCode {
-  requestFailed,
-  tooManyRequests,
-}
+enum NetworkExceptionCode { requestFailed, tooManyRequests }
 
 class NetworkException extends CustomException {
   final NetworkExceptionCode code;
 
-  const NetworkException({
-    required this.code,
-  });
+  const NetworkException({required this.code});
 
   @override
-  List<Object?> get props => [
-        code,
-      ];
+  List<Object?> get props => [code];
+}
+
+enum CoachingRequestExceptionCode { userAlreadyHasCoach }
+
+class CoachingRequestException extends CustomException {
+  final CoachingRequestExceptionCode code;
+
+  const CoachingRequestException({required this.code});
+
+  @override
+  List<Object?> get props => [code];
 }
 
 class UnknownException extends CustomException {

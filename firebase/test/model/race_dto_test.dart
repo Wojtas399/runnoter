@@ -15,7 +15,7 @@ void main() {
     seconds: 30,
   );
   const String expectedDurationStr = '2:45:30';
-  final RunStatusDto statusDto = RunStatusDoneDto(
+  final ActivityStatusDto statusDto = ActivityStatusDoneDto(
     coveredDistanceInKm: 42,
     avgPaceDto: const PaceDto(
       minutes: 4,

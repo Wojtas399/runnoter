@@ -3,12 +3,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/bloc/race_creator/race_creator_bloc.dart';
-import '../../component/text_field_component.dart';
+import '../../component/form_text_field_component.dart';
+import '../../component/gap/gap_components.dart';
 import '../../extension/context_extensions.dart';
 import '../../extension/double_extensions.dart';
 import '../../extension/string_extensions.dart';
 import '../../formatter/decimal_text_input_formatter.dart';
 import '../../formatter/distance_unit_formatter.dart';
+import '../../service/utils.dart';
 import 'race_creator_date.dart';
 import 'race_creator_expected_duration.dart';
 
@@ -17,7 +19,7 @@ class RaceCreatorForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const Widget gap = SizedBox(height: 24);
+    const Widget gap = Gap24();
 
     return const Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -62,11 +64,12 @@ class _RaceNameState extends State<_RaceName> {
 
   @override
   Widget build(BuildContext context) {
-    return TextFieldComponent(
+    return FormTextField(
       label: Str.of(context).raceName,
       controller: _controller,
       isRequired: true,
       maxLength: 100,
+      onTapOutside: (_) => unfocusInputs(),
     );
   }
 
@@ -103,7 +106,7 @@ class _RacePlaceState extends State<_RacePlace> {
 
   @override
   Widget build(BuildContext context) {
-    return TextFieldComponent(
+    return FormTextField(
       label: Str.of(context).racePlace,
       isRequired: true,
       maxLength: 100,
@@ -150,7 +153,7 @@ class _RaceDistanceState extends State<_RaceDistance> {
 
   @override
   Widget build(BuildContext context) {
-    return TextFieldComponent(
+    return FormTextField(
       label:
           '${Str.of(context).raceDistance} [${context.distanceUnit.toUIShortFormat()}]',
       controller: _controller,

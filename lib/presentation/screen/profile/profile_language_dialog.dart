@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../../domain/additional_model/settings.dart';
 import '../../../domain/bloc/profile/settings/profile_settings_bloc.dart';
-import '../../../domain/entity/settings.dart';
+import '../../component/gap/gap_components.dart';
 import '../../component/responsive_layout_component.dart';
 import '../../component/text/body_text_components.dart';
 import '../../formatter/settings_formatter.dart';
@@ -36,9 +37,9 @@ class _NormalDialog extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             _Header(),
-            SizedBox(height: 16),
+            Gap16(),
             _OptionsToSelect(),
-            SizedBox(height: 16),
+            Gap16(),
             _SystemLanguageDescription(),
           ],
         ),
@@ -70,9 +71,9 @@ class _FullScreenDialog extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _Header(),
-              SizedBox(height: 16),
+              Gap16(),
               _OptionsToSelect(),
-              SizedBox(height: 16),
+              Gap16(),
               _SystemLanguageDescription(),
             ],
           ),

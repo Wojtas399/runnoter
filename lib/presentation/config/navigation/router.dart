@@ -31,12 +31,7 @@ class AppRouter extends _$AppRouter {
               page: HomeRoute.page,
               path: '',
               children: [
-                RedirectRoute(path: '', redirectTo: 'current-week'),
-                AutoRoute(
-                  page: CurrentWeekRoute.page,
-                  path: 'current-week',
-                  title: (context, _) => Str.of(context).currentWeekTitle,
-                ),
+                RedirectRoute(path: '', redirectTo: 'calendar'),
                 AutoRoute(
                   page: CalendarRoute.page,
                   path: 'calendar',
@@ -67,23 +62,28 @@ class AppRouter extends _$AppRouter {
                   path: 'profile',
                   title: (context, _) => Str.of(context).profileTitle,
                 ),
+                AutoRoute(
+                  page: ClientsRoute.page,
+                  path: 'clients',
+                  title: (context, _) => Str.of(context).clientsTitle,
+                ),
               ],
             ),
             AutoRoute(
               page: WorkoutPreviewRoute.page,
-              path: 'workout-preview/:workoutId',
+              path: 'workout-preview/:userId/:workoutId',
             ),
             AutoRoute(
               page: WorkoutCreatorRoute.page,
-              path: 'workout-creator/:date/:workoutId',
+              path: 'workout-creator/:userId/:dateStr/:workoutId',
             ),
             AutoRoute(
               page: RacePreviewRoute.page,
-              path: 'race-preview/:raceId',
+              path: 'race-preview/:userId/:raceId',
             ),
             AutoRoute(
               page: RaceCreatorRoute.page,
-              path: 'race-creator/:dateStr/:raceId',
+              path: 'race-creator/:userId/:dateStr/:raceId',
             ),
             AutoRoute(
               page: HealthMeasurementsRoute.page,
@@ -91,15 +91,38 @@ class AppRouter extends _$AppRouter {
             ),
             AutoRoute(
               page: BloodTestCreatorRoute.page,
-              path: 'blood-test-creator/:bloodTestId',
+              path: 'blood-test-creator/:userId/:bloodTestId',
             ),
             AutoRoute(
               page: BloodTestPreviewRoute.page,
-              path: 'blood-test-preview/:bloodTestId',
+              path: 'blood-test-preview/:userId/:bloodTestId',
             ),
             AutoRoute(
-              page: RunStatusCreatorRoute.page,
-              path: 'run-status-creator/:entityType/:entityId',
+              page: ActivityStatusCreatorRoute.page,
+              path: 'activity-status-creator/:userId/:activityType/:activityId',
+            ),
+            AutoRoute(
+              page: ClientRoute.page,
+              path: 'client/:clientId',
+              children: [
+                RedirectRoute(path: '', redirectTo: 'calendar'),
+                AutoRoute(
+                  page: ClientCalendarRoute.page,
+                  path: 'calendar',
+                ),
+                AutoRoute(
+                  page: ClientStatsRoute.page,
+                  path: 'statistics',
+                ),
+                AutoRoute(
+                  page: ClientRacesRoute.page,
+                  path: 'races',
+                ),
+                AutoRoute(
+                  page: ClientBloodTestsRoute.page,
+                  path: 'blood-tests',
+                ),
+              ],
             ),
           ],
         ),

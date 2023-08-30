@@ -14,7 +14,7 @@ void main() {
   final userRepository = MockUserRepository();
 
   setUpAll(() {
-    GetIt.I.registerSingleton<AuthService>(authService);
+    GetIt.I.registerFactory<AuthService>(() => authService);
     GetIt.I.registerSingleton<UserRepository>(userRepository);
   });
 

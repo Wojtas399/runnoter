@@ -1,47 +1,49 @@
 import 'package:firebase/firebase.dart' as firebase;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/data/mapper/user_mapper.dart';
-import 'package:runnoter/domain/entity/settings.dart';
+import 'package:runnoter/domain/additional_model/settings.dart';
 import 'package:runnoter/domain/entity/user.dart';
 
 void main() {
+  const String userId = 'u1';
+  const firebase.Gender firebaseGender = firebase.Gender.male;
+  const Gender gender = Gender.male;
+  const String name = 'name';
+  const String surname = 'surname';
+  const String email = 'email@example.com';
+  const String coachId = 'c1';
+  const Settings settings = Settings(
+    themeMode: ThemeMode.dark,
+    language: Language.english,
+    distanceUnit: DistanceUnit.kilometers,
+    paceUnit: PaceUnit.minutesPerKilometer,
+  );
+
   test(
-    'map user from dto',
+    'map user from dto, '
+    'should map firebase dto model to domain model',
     () {
       const userDto = firebase.UserDto(
-        id: 'u1',
-        gender: firebase.Gender.male,
-        name: 'name',
-        surname: 'surname',
-      );
-      const appearanceSettingsDto = firebase.AppearanceSettingsDto(
-        userId: 'u1',
-        themeMode: firebase.ThemeMode.dark,
-        language: firebase.Language.english,
-      );
-      const workoutSettingsDto = firebase.WorkoutSettingsDto(
-        userId: 'u1',
-        distanceUnit: firebase.DistanceUnit.kilometers,
-        paceUnit: firebase.PaceUnit.minutesPerKilometer,
+        id: userId,
+        accountType: firebase.AccountType.runner,
+        gender: firebaseGender,
+        name: name,
+        surname: surname,
+        email: email,
+        coachId: coachId,
       );
       const User expectedUser = User(
-        id: 'u1',
-        gender: Gender.male,
-        name: 'name',
-        surname: 'surname',
-        settings: Settings(
-          themeMode: ThemeMode.dark,
-          language: Language.english,
-          distanceUnit: DistanceUnit.kilometers,
-          paceUnit: PaceUnit.minutesPerKilometer,
-        ),
+        id: userId,
+        accountType: AccountType.runner,
+        gender: gender,
+        name: name,
+        surname: surname,
+        email: email,
+        settings: settings,
+        coachId: coachId,
       );
 
-      final User user = mapUserFromDto(
-        userDto: userDto,
-        appearanceSettingsDto: appearanceSettingsDto,
-        workoutSettingsDto: workoutSettingsDto,
-      );
+      final User user = mapUserFromDto(userDto: userDto, settings: settings);
 
       expect(user, expectedUser);
     },

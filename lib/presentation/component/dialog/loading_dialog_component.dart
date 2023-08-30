@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../gap/gap_components.dart';
+
 class LoadingDialog extends StatelessWidget {
   const LoadingDialog({
     super.key,
@@ -19,7 +21,7 @@ class LoadingDialog extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           const CircularProgressIndicator(),
-          const SizedBox(height: 16),
+          const Gap16(),
           Text(
             '${Str.of(context).loading}...',
           ),

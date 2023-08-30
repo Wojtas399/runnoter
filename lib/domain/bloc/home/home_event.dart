@@ -8,6 +8,12 @@ class HomeEventInitialize extends HomeEvent {
   const HomeEventInitialize();
 }
 
+class HomeEventDeleteCoachingRequest extends HomeEvent {
+  final String requestId;
+
+  const HomeEventDeleteCoachingRequest({required this.requestId});
+}
+
 class HomeEventSignOut extends HomeEvent {
   const HomeEventSignOut();
 }

@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../../domain/additional_model/blood_parameter.dart';
 import '../../../domain/bloc/blood_test_preview/blood_test_preview_bloc.dart';
-import '../../../domain/entity/blood_parameter.dart';
 import '../../../domain/entity/user.dart';
 import '../../component/blood_parameter_results_list_component.dart';
 import '../../component/body/medium_body_component.dart';
+import '../../component/gap/gap_horizontal_components.dart';
+import '../../component/loading_info_component.dart';
 import '../../component/text/title_text_components.dart';
 import '../../extension/context_extensions.dart';
 import '../../formatter/date_formatter.dart';
@@ -51,7 +53,7 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
       actions: context.isMobileSize
           ? const [
               BloodTestPreviewActions(),
-              SizedBox(width: 8),
+              GapHorizontal8(),
             ]
           : null,
     );
@@ -102,7 +104,7 @@ class _Results extends StatelessWidget {
     );
 
     return gender == null
-        ? const CircularProgressIndicator()
+        ? const LoadingInfo()
         : BloodParameterResultsList(
             gender: gender,
             parameterResults: parameterResults,

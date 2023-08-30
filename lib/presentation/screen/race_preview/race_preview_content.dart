@@ -2,14 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../../domain/additional_model/activity_status.dart';
+import '../../../domain/bloc/activity_status_creator/activity_status_creator_bloc.dart';
 import '../../../domain/bloc/race_preview/race_preview_bloc.dart';
-import '../../../domain/entity/race.dart';
+import '../../component/big_button_component.dart';
 import '../../component/body/medium_body_component.dart';
 import '../../component/loading_info_component.dart';
 import '../../component/padding/paddings_24.dart';
+import '../../config/navigation/router.dart';
 import '../../extension/context_extensions.dart';
+import '../../service/navigator_service.dart';
 import 'race_preview_actions.dart';
-import 'race_preview_race.dart';
+import 'race_preview_race_info.dart';
 
 class RacePreviewContent extends StatelessWidget {
   const RacePreviewContent({super.key});
@@ -22,7 +26,12 @@ class RacePreviewContent extends StatelessWidget {
         child: SingleChildScrollView(
           child: MediumBody(
             child: Paddings24(
-              child: _RaceInfo(),
+              child: Column(
+                children: [
+                  _RaceInfo(),
+                  _RaceStatusButton(),
+                ],
+              ),
             ),
           ),
         ),
@@ -58,10 +67,42 @@ class _RaceInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Race? race = context.select(
-      (RacePreviewBloc bloc) => bloc.state.race,
+    final bool isRaceLoaded = context.select(
+      (RacePreviewBloc bloc) => bloc.state.isRaceLoaded,
     );
 
-    return race == null ? const LoadingInfo() : const RacePreviewRaceInfo();
+    return isRaceLoaded ? const RacePreviewRaceInfo() : const LoadingInfo();
+  }
+}
+
+class _RaceStatusButton extends StatelessWidget {
+  const _RaceStatusButton();
+
+  @override
+  Widget build(BuildContext context) {
+    final ActivityStatus? raceStatus = context.select(
+      (RacePreviewBloc bloc) => bloc.state.raceStatus,
+    );
+    String label = Str.of(context).activityStatusEditStatus;
+    if (raceStatus is ActivityStatusPending) {
+      label = Str.of(context).activityStatusFinish;
+    }
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 32),
+      child: BigButton(
+        label: label,
+        onPressed: () => _onPressed(context),
+      ),
+    );
+  }
+
+  void _onPressed(BuildContext context) {
+    final racePreviewBloc = context.read<RacePreviewBloc>();
+    navigateTo(ActivityStatusCreatorRoute(
+      userId: racePreviewBloc.userId,
+      activityType: ActivityType.race.name,
+      activityId: racePreviewBloc.raceId,
+    ));
   }
 }

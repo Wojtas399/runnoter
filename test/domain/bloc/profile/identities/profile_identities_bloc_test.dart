@@ -8,18 +8,22 @@ import 'package:runnoter/domain/bloc/profile/identities/profile_identities_bloc.
 import 'package:runnoter/domain/entity/user.dart';
 import 'package:runnoter/domain/repository/blood_test_repository.dart';
 import 'package:runnoter/domain/repository/health_measurement_repository.dart';
+import 'package:runnoter/domain/repository/person_repository.dart';
 import 'package:runnoter/domain/repository/race_repository.dart';
 import 'package:runnoter/domain/repository/user_repository.dart';
 import 'package:runnoter/domain/repository/workout_repository.dart';
 import 'package:runnoter/domain/service/auth_service.dart';
+import 'package:runnoter/domain/service/coaching_request_service.dart';
 
 import '../../../../creators/user_creator.dart';
 import '../../../../mock/domain/repository/mock_blood_test_repository.dart';
 import '../../../../mock/domain/repository/mock_health_measurement_repository.dart';
+import '../../../../mock/domain/repository/mock_person_repository.dart';
 import '../../../../mock/domain/repository/mock_race_repository.dart';
 import '../../../../mock/domain/repository/mock_user_repository.dart';
 import '../../../../mock/domain/repository/mock_workout_repository.dart';
 import '../../../../mock/domain/service/mock_auth_service.dart';
+import '../../../../mock/domain/service/mock_coaching_request_service.dart';
 
 void main() {
   final authService = MockAuthService();
@@ -28,10 +32,12 @@ void main() {
   final healthMeasurementRepository = MockHealthMeasurementRepository();
   final bloodTestRepository = MockBloodTestRepository();
   final raceRepository = MockRaceRepository();
+  final coachingRequestService = MockCoachingRequestService();
+  final personRepository = MockPersonRepository();
   const String loggedUserId = 'u1';
 
   setUpAll(() {
-    GetIt.I.registerSingleton<AuthService>(authService);
+    GetIt.I.registerFactory<AuthService>(() => authService);
     GetIt.I.registerSingleton<UserRepository>(userRepository);
     GetIt.I.registerSingleton<WorkoutRepository>(workoutRepository);
     GetIt.I.registerSingleton<HealthMeasurementRepository>(
@@ -39,6 +45,10 @@ void main() {
     );
     GetIt.I.registerSingleton<BloodTestRepository>(bloodTestRepository);
     GetIt.I.registerSingleton<RaceRepository>(raceRepository);
+    GetIt.I.registerFactory<CoachingRequestService>(
+      () => coachingRequestService,
+    );
+    GetIt.I.registerSingleton<PersonRepository>(personRepository);
   });
 
   tearDown(() {
@@ -61,6 +71,7 @@ void main() {
       userRepository.mockGetUserById(
         user: createUser(
           id: loggedUserId,
+          accountType: AccountType.coach,
           gender: Gender.female,
           name: 'name',
           surname: 'surname',
@@ -71,6 +82,7 @@ void main() {
     expect: () => [
       const ProfileIdentitiesState(
         status: BlocStatusComplete(),
+        accountType: AccountType.coach,
         gender: Gender.female,
         username: 'name',
         surname: 'surname',
@@ -92,7 +104,7 @@ void main() {
     build: () => ProfileIdentitiesBloc(),
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
-      userRepository.mockUpdateUserIdentities();
+      userRepository.mockUpdateUser();
     },
     act: (bloc) => bloc.add(const ProfileIdentitiesEventUpdateGender(
       gender: Gender.female,
@@ -106,7 +118,7 @@ void main() {
     verify: (_) {
       verify(() => authService.loggedUserId$).called(1);
       verify(
-        () => userRepository.updateUserIdentities(
+        () => userRepository.updateUser(
           userId: loggedUserId,
           gender: Gender.female,
         ),
@@ -116,7 +128,7 @@ void main() {
 
   blocTest(
     'update gender, '
-    'method from user repository to update identities throws exception, '
+    'method from user repository to update user throws exception, '
     'should set previous gender',
     build: () => ProfileIdentitiesBloc(
       state: const ProfileIdentitiesState(
@@ -126,7 +138,7 @@ void main() {
     ),
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
-      userRepository.mockUpdateUserIdentities(throwable: 'Exception...');
+      userRepository.mockUpdateUser(throwable: 'Exception...');
     },
     act: (bloc) => bloc.add(const ProfileIdentitiesEventUpdateGender(
       gender: Gender.female,
@@ -144,7 +156,7 @@ void main() {
     verify: (_) {
       verify(() => authService.loggedUserId$).called(1);
       verify(
-        () => userRepository.updateUserIdentities(
+        () => userRepository.updateUser(
           userId: loggedUserId,
           gender: Gender.female,
         ),
@@ -189,7 +201,7 @@ void main() {
     build: () => ProfileIdentitiesBloc(),
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
-      userRepository.mockUpdateUserIdentities();
+      userRepository.mockUpdateUser();
     },
     act: (bloc) => bloc.add(const ProfileIdentitiesEventUpdateUsername(
       username: 'new username',
@@ -204,7 +216,7 @@ void main() {
     verify: (_) {
       verify(() => authService.loggedUserId$).called(1);
       verify(
-        () => userRepository.updateUserIdentities(
+        () => userRepository.updateUser(
           userId: loggedUserId,
           name: 'new username',
         ),
@@ -233,7 +245,7 @@ void main() {
     build: () => ProfileIdentitiesBloc(),
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
-      userRepository.mockUpdateUserIdentities();
+      userRepository.mockUpdateUser();
     },
     act: (bloc) => bloc.add(const ProfileIdentitiesEventUpdateSurname(
       surname: 'new surname',
@@ -248,7 +260,7 @@ void main() {
     verify: (_) {
       verify(() => authService.loggedUserId$).called(1);
       verify(
-        () => userRepository.updateUserIdentities(
+        () => userRepository.updateUser(
           userId: loggedUserId,
           surname: 'new surname',
         ),
@@ -273,11 +285,28 @@ void main() {
 
   blocTest(
     'update email, '
-    'should call method from auth service to update email and to send email verification and should emit emailChanged info',
+    'logged user id is null, '
+    'should emit no logged user status',
+    build: () => ProfileIdentitiesBloc(),
+    setUp: () => authService.mockGetLoggedUserId(),
+    act: (bloc) => bloc.add(const ProfileIdentitiesEventUpdateEmail(
+      newEmail: 'email@example.com',
+    )),
+    expect: () => [
+      const ProfileIdentitiesState(status: BlocStatusNoLoggedUser()),
+    ],
+    verify: (_) => verify(() => authService.loggedUserId$).called(1),
+  );
+
+  blocTest(
+    'update email, '
+    'should call methods from auth service to update email and to send email verification and method from user repository to update user data with new email',
     build: () => ProfileIdentitiesBloc(),
     setUp: () {
+      authService.mockGetLoggedUserId(userId: loggedUserId);
       authService.mockUpdateEmail();
       authService.mockSendEmailVerification();
+      userRepository.mockUpdateUser();
     },
     act: (bloc) => bloc.add(const ProfileIdentitiesEventUpdateEmail(
       newEmail: 'email@example.com',
@@ -291,10 +320,17 @@ void main() {
       ),
     ],
     verify: (_) {
+      verify(() => authService.loggedUserId$).called(1);
       verify(
         () => authService.updateEmail(newEmail: 'email@example.com'),
       ).called(1);
       verify(authService.sendEmailVerification).called(1);
+      verify(
+        () => userRepository.updateUser(
+          userId: loggedUserId,
+          email: 'email@example.com',
+        ),
+      ).called(1);
     },
   );
 
@@ -303,11 +339,14 @@ void main() {
     'auth exception with email already in use code, '
     'should emit error status with email already in use error',
     build: () => ProfileIdentitiesBloc(),
-    setUp: () => authService.mockUpdateEmail(
-      throwable: const AuthException(
-        code: AuthExceptionCode.emailAlreadyInUse,
-      ),
-    ),
+    setUp: () {
+      authService.mockGetLoggedUserId(userId: loggedUserId);
+      authService.mockUpdateEmail(
+        throwable: const AuthException(
+          code: AuthExceptionCode.emailAlreadyInUse,
+        ),
+      );
+    },
     act: (bloc) => bloc.add(const ProfileIdentitiesEventUpdateEmail(
       newEmail: 'email@example.com',
     )),
@@ -319,9 +358,12 @@ void main() {
         ),
       ),
     ],
-    verify: (_) => verify(
-      () => authService.updateEmail(newEmail: 'email@example.com'),
-    ).called(1),
+    verify: (_) {
+      verify(() => authService.loggedUserId$).called(1);
+      verify(
+        () => authService.updateEmail(newEmail: 'email@example.com'),
+      ).called(1);
+    },
   );
 
   blocTest(
@@ -329,11 +371,14 @@ void main() {
     'network exception with request failed code, '
     'should emit network request failed status',
     build: () => ProfileIdentitiesBloc(),
-    setUp: () => authService.mockUpdateEmail(
-      throwable: const NetworkException(
-        code: NetworkExceptionCode.requestFailed,
-      ),
-    ),
+    setUp: () {
+      authService.mockGetLoggedUserId(userId: loggedUserId);
+      authService.mockUpdateEmail(
+        throwable: const NetworkException(
+          code: NetworkExceptionCode.requestFailed,
+        ),
+      );
+    },
     act: (bloc) => bloc.add(const ProfileIdentitiesEventUpdateEmail(
       newEmail: 'email@example.com',
     )),
@@ -341,9 +386,12 @@ void main() {
       const ProfileIdentitiesState(status: BlocStatusLoading()),
       const ProfileIdentitiesState(status: BlocStatusNoInternetConnection()),
     ],
-    verify: (_) => verify(
-      () => authService.updateEmail(newEmail: 'email@example.com'),
-    ).called(1),
+    verify: (_) {
+      verify(() => authService.loggedUserId$).called(1);
+      verify(
+        () => authService.updateEmail(newEmail: 'email@example.com'),
+      ).called(1);
+    },
   );
 
   blocTest(
@@ -351,9 +399,12 @@ void main() {
     'unknown exception, '
     'should emit unknown error status and should rethrow exception',
     build: () => ProfileIdentitiesBloc(),
-    setUp: () => authService.mockUpdateEmail(
-      throwable: const UnknownException(message: 'unknown exception message'),
-    ),
+    setUp: () {
+      authService.mockGetLoggedUserId(userId: loggedUserId);
+      authService.mockUpdateEmail(
+        throwable: const UnknownException(message: 'unknown exception message'),
+      );
+    },
     act: (bloc) => bloc.add(const ProfileIdentitiesEventUpdateEmail(
       newEmail: 'email@example.com',
     )),
@@ -362,9 +413,12 @@ void main() {
       const ProfileIdentitiesState(status: BlocStatusUnknownError()),
     ],
     errors: () => ['unknown exception message'],
-    verify: (_) => verify(
-      () => authService.updateEmail(newEmail: 'email@example.com'),
-    ).called(1),
+    verify: (_) {
+      verify(() => authService.loggedUserId$).called(1);
+      verify(
+        () => authService.updateEmail(newEmail: 'email@example.com'),
+      ).called(1);
+    },
   );
 
   blocTest(
@@ -474,6 +528,8 @@ void main() {
       healthMeasurementRepository.mockDeleteAllUserMeasurements();
       bloodTestRepository.mockDeleteAllUserTests();
       raceRepository.mockDeleteAllUserRaces();
+      coachingRequestService.mockDeleteCoachingRequestsByUserId();
+      personRepository.mockRemoveCoachIdInAllMatchingPersons();
     },
     act: (bloc) => bloc.add(const ProfileIdentitiesEventDeleteAccount()),
     expect: () => [
@@ -500,6 +556,16 @@ void main() {
         () => raceRepository.deleteAllUserRaces(userId: loggedUserId),
       ).called(1);
       verify(() => userRepository.deleteUser(userId: loggedUserId)).called(1);
+      verify(
+        () => coachingRequestService.deleteCoachingRequestsByUserId(
+          userId: loggedUserId,
+        ),
+      ).called(1);
+      verify(
+        () => personRepository.removeCoachIdInAllMatchingPersons(
+          coachId: loggedUserId,
+        ),
+      ).called(1);
       verify(() => authService.deleteAccount()).called(1);
     },
   );

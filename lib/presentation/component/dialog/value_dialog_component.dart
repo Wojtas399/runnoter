@@ -3,9 +3,10 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../service/navigator_service.dart';
 import '../../service/utils.dart';
+import '../form_text_field_component.dart';
+import '../gap/gap_horizontal_components.dart';
 import '../responsive_layout_component.dart';
 import '../text/label_text_components.dart';
-import '../text_field_component.dart';
 
 class ValueDialogComponent extends StatefulWidget {
   final String title;
@@ -117,17 +118,14 @@ class _NormalDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text(title),
-      content: GestureDetector(
-        onTap: unfocusInputs,
-        child: SizedBox(
-          width: 400,
-          child: TextFieldComponent(
-            label: label,
-            icon: textFieldIcon,
-            isRequired: isValueRequired,
-            controller: textController,
-            validator: validator,
-          ),
+      content: SizedBox(
+        width: 400,
+        child: FormTextField(
+          label: label,
+          icon: textFieldIcon,
+          isRequired: isValueRequired,
+          controller: textController,
+          validator: validator,
         ),
       ),
       actions: [
@@ -183,26 +181,24 @@ class _FullScreenDialog extends StatelessWidget {
               onPressed: isSaveButtonDisabled ? null : onSaveButtonPressed,
               child: Text(Str.of(context).save),
             ),
-            const SizedBox(width: 16),
+            const GapHorizontal16(),
           ],
         ),
         body: SafeArea(
-          child: GestureDetector(
-            onTap: unfocusInputs,
-            child: Container(
-              padding: const EdgeInsets.all(24),
-              color: Colors.transparent,
-              child: Column(
-                children: [
-                  TextFieldComponent(
-                    label: label,
-                    icon: textFieldIcon,
-                    isRequired: isValueRequired,
-                    controller: textController,
-                    validator: validator,
-                  ),
-                ],
-              ),
+          child: Container(
+            padding: const EdgeInsets.all(24),
+            color: Colors.transparent,
+            child: Column(
+              children: [
+                FormTextField(
+                  label: label,
+                  icon: textFieldIcon,
+                  isRequired: isValueRequired,
+                  controller: textController,
+                  validator: validator,
+                  onTapOutside: (_) => unfocusInputs(),
+                ),
+              ],
             ),
           ),
         ),

@@ -4,14 +4,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/bloc/workout_stage_creator/workout_stage_creator_bloc.dart';
-import '../../component/text_field_component.dart';
+import '../../component/form_text_field_component.dart';
+import '../../component/gap/gap_components.dart';
+import '../../service/utils.dart';
 
 class WorkoutStageCreatorSeriesStageForm extends StatelessWidget {
   const WorkoutStageCreatorSeriesStageForm({super.key});
 
   @override
   Widget build(BuildContext context) {
-    const Widget gap = SizedBox(height: 16);
+    const Widget gap = Gap16();
+
     return const Column(
       children: [
         _AmountOfSeries(),
@@ -55,7 +58,7 @@ class _AmountOfSeriesState extends State<_AmountOfSeries> {
 
   @override
   Widget build(BuildContext context) {
-    return TextFieldComponent(
+    return FormTextField(
       label: Str.of(context).workoutStageCreatorAmountOfSeries,
       keyboardType: TextInputType.number,
       maxLength: 2,
@@ -64,6 +67,7 @@ class _AmountOfSeriesState extends State<_AmountOfSeries> {
         FilteringTextInputFormatter.digitsOnly,
       ],
       controller: _controller,
+      onTapOutside: (_) => unfocusInputs(),
     );
   }
 
@@ -116,7 +120,7 @@ class _SeriesDistanceState extends State<_SeriesDistance> {
 
   @override
   Widget build(BuildContext context) {
-    return TextFieldComponent(
+    return FormTextField(
       label: '${Str.of(context).workoutStageCreatorSeriesDistance} [m]',
       keyboardType: TextInputType.number,
       maxLength: 6,
@@ -177,7 +181,7 @@ class _WalkingDistanceState extends State<_WalkingDistance> {
 
   @override
   Widget build(BuildContext context) {
-    return TextFieldComponent(
+    return FormTextField(
       label: '${Str.of(context).workoutStageCreatorWalkingDistance} [m]',
       keyboardType: TextInputType.number,
       maxLength: 6,
@@ -237,7 +241,7 @@ class _JoggingDistanceState extends State<_JoggingDistance> {
 
   @override
   Widget build(BuildContext context) {
-    return TextFieldComponent(
+    return FormTextField(
       label: '${Str.of(context).workoutStageCreatorJoggingDistance} [m]',
       keyboardType: TextInputType.number,
       maxLength: 6,

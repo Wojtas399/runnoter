@@ -1,12 +1,12 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/bloc/health/health_bloc.dart';
-import '../../../domain/service/health_chart_service.dart';
-import '../../component/bloc_with_status_listener_component.dart';
-import '../../service/dialog_service.dart';
+import '../../../dependency_injection.dart';
+import '../../../domain/bloc/health_stats/health_stats_bloc.dart';
+import '../../../domain/cubit/today_measurement_cubit.dart';
+import '../../../domain/service/auth_service.dart';
+import '../../component/page_not_found_component.dart';
 import 'health_content.dart';
 
 @RoutePage()
@@ -15,35 +15,25 @@ class HealthScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => HealthBloc(chartService: HealthChartService())
-        ..add(const HealthEventInitialize()),
-      child: const _BlocListener(
-        child: HealthContent(),
-      ),
+    return StreamBuilder(
+      stream: getIt<AuthService>().loggedUserId$,
+      builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
+        final String? loggedUserId = snapshot.data;
+        return loggedUserId != null
+            ? MultiBlocProvider(
+                providers: [
+                  BlocProvider(
+                    create: (_) => TodayMeasurementCubit()..initialize(),
+                  ),
+                  BlocProvider(
+                    create: (_) => HealthStatsBloc(userId: loggedUserId)
+                      ..add(const HealthStatsEventInitialize()),
+                  )
+                ],
+                child: const HealthContent(),
+              )
+            : const PageNotFound();
+      },
     );
-  }
-}
-
-class _BlocListener extends StatelessWidget {
-  final Widget child;
-
-  const _BlocListener({
-    required this.child,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocWithStatusListener<HealthBloc, HealthState, HealthBlocInfo,
-        dynamic>(
-      onInfo: (HealthBlocInfo info) => _manageInfo(context, info),
-      child: child,
-    );
-  }
-
-  void _manageInfo(BuildContext context, HealthBlocInfo info) {
-    if (info == HealthBlocInfo.healthMeasurementDeleted) {
-      showSnackbarMessage(Str.of(context).healthSuccessfullyDeletedMeasurement);
-    }
   }
 }

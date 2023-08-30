@@ -5,28 +5,35 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/bloc/blood_test_creator/blood_test_creator_bloc.dart';
 import '../../component/bloc_with_status_listener_component.dart';
+import '../../component/page_not_found_component.dart';
 import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
 import 'blood_test_creator_content.dart';
 
 @RoutePage()
 class BloodTestCreatorScreen extends StatelessWidget {
+  final String? userId;
   final String? bloodTestId;
 
   const BloodTestCreatorScreen({
     super.key,
+    @PathParam('userId') this.userId,
     @PathParam('bloodTestId') this.bloodTestId,
   });
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => BloodTestCreatorBloc(bloodTestId: bloodTestId)
-        ..add(const BloodTestCreatorEventInitialize()),
-      child: const _BlocListener(
-        child: BloodTestCreatorContent(),
-      ),
-    );
+    return userId != null
+        ? BlocProvider(
+            create: (_) => BloodTestCreatorBloc(
+              userId: userId!,
+              bloodTestId: bloodTestId,
+            )..add(const BloodTestCreatorEventInitialize()),
+            child: const _BlocListener(
+              child: BloodTestCreatorContent(),
+            ),
+          )
+        : const PageNotFound();
   }
 }
 

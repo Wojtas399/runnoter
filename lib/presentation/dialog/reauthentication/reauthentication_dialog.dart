@@ -4,6 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/bloc/reauthentication/reauthentication_bloc.dart';
 import '../../component/bloc_with_status_listener_component.dart';
+import '../../component/gap/gap_components.dart';
 import '../../component/text/title_text_components.dart';
 import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
@@ -26,7 +27,7 @@ class ReauthenticationBottomSheet extends StatelessWidget {
                 child: Column(
                   children: [
                     TitleLarge(Str.of(context).reauthenticationTitle),
-                    const SizedBox(height: 16),
+                    const Gap16(),
                     const ReauthenticationForm(),
                   ],
                 ),

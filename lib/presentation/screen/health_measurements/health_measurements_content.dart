@@ -96,7 +96,7 @@ class _Header extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(8),
                   child: LabelLarge(
-                    str.healthRestingHeartRate,
+                    str.restingHeartRate,
                     textAlign: TextAlign.center,
                     fontWeight: fontWeight,
                   ),
@@ -107,7 +107,7 @@ class _Header extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(8),
                   child: LabelLarge(
-                    str.healthFastingWeight,
+                    str.fastingWeight,
                     textAlign: TextAlign.center,
                     fontWeight: fontWeight,
                   ),

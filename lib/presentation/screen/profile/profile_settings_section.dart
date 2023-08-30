@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../../domain/additional_model/settings.dart' as settings;
 import '../../../domain/bloc/profile/settings/profile_settings_bloc.dart';
-import '../../../domain/entity/settings.dart' as settings;
+import '../../component/gap/gap_components.dart';
 import '../../component/text/title_text_components.dart';
 import '../../component/value_with_label_and_icon_component.dart';
 import '../../formatter/distance_unit_formatter.dart';
@@ -20,7 +21,7 @@ class ProfileSettingsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const Widget gap = SizedBox(height: 8);
+    const Widget gap = Gap8();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -29,7 +30,7 @@ class ProfileSettingsSection extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 8),
           child: TitleLarge(Str.of(context).profileSettings),
         ),
-        const SizedBox(height: 16),
+        const Gap16(),
         const _Theme(),
         gap,
         const _Language(),

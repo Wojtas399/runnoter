@@ -5,8 +5,8 @@ import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/common/date_service.dart';
 import 'package:runnoter/data/repository_impl/race_repository_impl.dart';
+import 'package:runnoter/domain/additional_model/activity_status.dart';
 import 'package:runnoter/domain/entity/race.dart';
-import 'package:runnoter/domain/entity/run_status.dart';
 
 import '../../creators/race_creator.dart';
 import '../../creators/race_dto_creator.dart';
@@ -322,8 +322,8 @@ void main() {
         minutes: 30,
         seconds: 21,
       );
-      const RunStatus status = RunStatusPending();
-      const RunStatusDto statusDto = RunStatusPendingDto();
+      const ActivityStatus status = ActivityStatusPending();
+      const ActivityStatusDto statusDto = ActivityStatusPendingDto();
       final Race addedRace = Race(
         id: raceId,
         userId: userId,
@@ -404,8 +404,8 @@ void main() {
         minutes: 30,
         seconds: 20,
       );
-      const RunStatus newStatus = RunStatusPending();
-      const RunStatusDto newStatusDto = RunStatusPendingDto();
+      const ActivityStatus newStatus = ActivityStatusPending();
+      const ActivityStatusDto newStatusDto = ActivityStatusPendingDto();
       final List<Race> existingRaces = [
         createRace(id: raceId, userId: userId),
         createRace(id: 'c2', userId: 'u2'),

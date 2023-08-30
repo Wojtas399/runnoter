@@ -41,7 +41,7 @@ class _BlocListener extends StatelessWidget {
   ) {
     switch (info) {
       case RequiredDataCompletionBlocInfo.userDataAdded:
-        popRoute();
+        popRoute(result: true);
         break;
     }
   }

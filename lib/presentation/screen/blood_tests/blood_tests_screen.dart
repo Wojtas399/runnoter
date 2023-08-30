@@ -1,9 +1,10 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/bloc/blood_tests/blood_tests_cubit.dart';
-import 'blood_tests_content.dart';
+import '../../../dependency_injection.dart';
+import '../../../domain/service/auth_service.dart';
+import '../../common_feature/blood_tests/blood_tests.dart';
+import '../../component/page_not_found_component.dart';
 
 @RoutePage()
 class BloodTestsScreen extends StatelessWidget {
@@ -11,9 +12,16 @@ class BloodTestsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => BloodTestsCubit()..initialize(),
-      child: const BloodTestsContent(),
+    return StreamBuilder(
+      stream: getIt<AuthService>().loggedUserId$,
+      builder: (context, AsyncSnapshot<String?> snapshot) {
+        final String? loggedUserId = snapshot.data;
+
+        return switch (loggedUserId) {
+          null => const PageNotFound(),
+          String() => BloodTests(userId: loggedUserId),
+        };
+      },
     );
   }
 }

@@ -2,10 +2,12 @@ import 'package:collection/collection.dart';
 import 'package:firebase/firebase.dart' as firebase;
 
 import '../../dependency_injection.dart';
+import '../../domain/additional_model/settings.dart' as settings;
+import '../../domain/additional_model/settings.dart';
 import '../../domain/additional_model/state_repository.dart';
-import '../../domain/entity/settings.dart' as settings;
 import '../../domain/entity/user.dart';
 import '../../domain/repository/user_repository.dart';
+import '../mapper/account_type_mapper.dart';
 import '../mapper/gender_mapper.dart';
 import '../mapper/settings_mapper.dart';
 import '../mapper/user_mapper.dart';
@@ -26,9 +28,7 @@ class UserRepositoryImpl extends StateRepository<User>
         super(initialData: initialState);
 
   @override
-  Stream<User?> getUserById({
-    required String userId,
-  }) async* {
+  Stream<User?> getUserById({required String userId}) async* {
     await for (final users in dataStream$) {
       User? user = users?.firstWhereOrNull(
         (User? user) => user?.id == userId,
@@ -39,57 +39,73 @@ class UserRepositoryImpl extends StateRepository<User>
   }
 
   @override
-  Future<void> addUser({
-    required User user,
-  }) async {
-    await _dbUserService.addUserPersonalData(
+  Future<void> addUser({required User user}) async {
+    final firebase.UserDto? userDto = await _dbUserService.addUserData(
       userDto: firebase.UserDto(
         id: user.id,
+        accountType: mapAccountTypeToDto(user.accountType),
         gender: mapGenderToDto(user.gender),
         name: user.name,
         surname: user.surname,
+        email: user.email,
+        coachId: user.coachId,
       ),
     );
-    await _dbAppearanceSettingsService.addSettings(
+    final appearanceSettingsDto =
+        await _dbAppearanceSettingsService.addSettings(
       appearanceSettingsDto: firebase.AppearanceSettingsDto(
         userId: user.id,
         themeMode: mapThemeModeToDb(user.settings.themeMode),
         language: mapLanguageToDb(user.settings.language),
       ),
     );
-    await _dbActivitiesSettingsService.addSettings(
-      workoutSettingsDto: firebase.WorkoutSettingsDto(
+    final activitiesSettingsDto =
+        await _dbActivitiesSettingsService.addSettings(
+      activitiesSettingsDto: firebase.ActivitiesSettingsDto(
         userId: user.id,
         distanceUnit: mapDistanceUnitToDb(user.settings.distanceUnit),
         paceUnit: mapPaceUnitToDb(user.settings.paceUnit),
       ),
     );
-    addEntity(user);
+    if (userDto == null ||
+        appearanceSettingsDto == null ||
+        activitiesSettingsDto == null) return;
+    final Settings settings = mapSettingsFromDto(
+      appearanceSettingsDto: appearanceSettingsDto,
+      activitiesSettingsDto: activitiesSettingsDto,
+    );
+    final User addedUser = mapUserFromDto(userDto: userDto, settings: settings);
+    addEntity(addedUser);
   }
 
   @override
-  Future<void> updateUserIdentities({
+  Future<void> updateUser({
     required String userId,
+    AccountType? accountType,
     Gender? gender,
     String? name,
     String? surname,
+    String? email,
+    String? coachId,
+    bool coachIdAsNull = false,
   }) async {
     final Stream<User?> user$ = getUserById(userId: userId);
     await for (final user in user$) {
       if (user == null) return;
-      final firebase.UserDto? updatedUserDto =
-          await _dbUserService.updateUserData(
+      final updatedUserDto = await _dbUserService.updateUserData(
         userId: userId,
+        accountType:
+            accountType != null ? mapAccountTypeToDto(accountType) : null,
         gender: gender != null ? mapGenderToDto(gender) : null,
         name: name,
         surname: surname,
+        email: email,
+        coachId: coachId,
+        coachIdAsNull: coachIdAsNull,
       );
       if (updatedUserDto == null) return;
-      final User updatedUser = User(
-        id: userId,
-        gender: mapGenderFromDto(updatedUserDto.gender),
-        name: updatedUserDto.name,
-        surname: updatedUserDto.surname,
+      final User updatedUser = mapUserFromDto(
+        userDto: updatedUserDto,
         settings: user.settings,
       );
       updateEntity(updatedUser);
@@ -109,16 +125,17 @@ class UserRepositoryImpl extends StateRepository<User>
     await for (final user in user$) {
       if (user == null) return;
       firebase.AppearanceSettingsDto? newAppearanceSettingsDto;
-      firebase.WorkoutSettingsDto? newWorkoutSettingsDto;
+      firebase.ActivitiesSettingsDto? newActivitiesSettingsDto;
       if (themeMode != null || language != null) {
         newAppearanceSettingsDto =
             await _updateAppearanceSettings(userId, themeMode, language);
       }
       if (distanceUnit != null || paceUnit != null) {
-        newWorkoutSettingsDto =
-            await _updateWorkoutSettings(userId, distanceUnit, paceUnit);
+        newActivitiesSettingsDto =
+            await _updateActivitiesSettings(userId, distanceUnit, paceUnit);
       }
-      if (newAppearanceSettingsDto == null && newWorkoutSettingsDto == null) {
+      if (newAppearanceSettingsDto == null &&
+          newActivitiesSettingsDto == null) {
         return;
       }
       final settings.Settings updatedSettings = settings.Settings(
@@ -128,23 +145,31 @@ class UserRepositoryImpl extends StateRepository<User>
         language: newAppearanceSettingsDto != null
             ? mapLanguageFromDb(newAppearanceSettingsDto.language)
             : user.settings.language,
-        distanceUnit: newWorkoutSettingsDto != null
-            ? mapDistanceUnitFromDb(newWorkoutSettingsDto.distanceUnit)
+        distanceUnit: newActivitiesSettingsDto != null
+            ? mapDistanceUnitFromDb(newActivitiesSettingsDto.distanceUnit)
             : user.settings.distanceUnit,
-        paceUnit: newWorkoutSettingsDto != null
-            ? mapPaceUnitFromDb(newWorkoutSettingsDto.paceUnit)
+        paceUnit: newActivitiesSettingsDto != null
+            ? mapPaceUnitFromDb(newActivitiesSettingsDto.paceUnit)
             : user.settings.paceUnit,
       );
       final User updatedUser = User(
         id: user.id,
+        accountType: user.accountType,
         gender: user.gender,
         name: user.name,
         surname: user.surname,
+        email: user.email,
         settings: updatedSettings,
+        coachId: user.coachId,
       );
       updateEntity(updatedUser);
       return;
     }
+  }
+
+  @override
+  Future<void> refreshUserById({required String userId}) async {
+    await _loadUserFromDb(userId);
   }
 
   @override
@@ -160,20 +185,24 @@ class UserRepositoryImpl extends StateRepository<User>
   Future<User?> _loadUserFromDb(String userId) async {
     final userDto = await _dbUserService.loadUserById(userId: userId);
     if (userDto == null) return null;
+    final Settings settings = await _loadUserSettingsFromDb(userId);
+    final User user = mapUserFromDto(userDto: userDto, settings: settings);
+    addEntity(user);
+    return user;
+  }
+
+  Future<Settings> _loadUserSettingsFromDb(String userId) async {
     final firebase.AppearanceSettingsDto? appearanceSettingsDto =
         await _dbAppearanceSettingsService.loadSettingsByUserId(userId: userId);
-    final firebase.WorkoutSettingsDto? workoutSettingsDto =
+    final firebase.ActivitiesSettingsDto? activitiesSettingsDto =
         await _dbActivitiesSettingsService.loadSettingsByUserId(userId: userId);
-    if (appearanceSettingsDto != null && workoutSettingsDto != null) {
-      final User user = mapUserFromDto(
-        userDto: userDto,
-        appearanceSettingsDto: appearanceSettingsDto,
-        workoutSettingsDto: workoutSettingsDto,
-      );
-      addEntity(user);
-      return user;
+    if (appearanceSettingsDto == null || activitiesSettingsDto == null) {
+      throw '[UserRepository] Cannot load user settings';
     }
-    return null;
+    return mapSettingsFromDto(
+      appearanceSettingsDto: appearanceSettingsDto,
+      activitiesSettingsDto: activitiesSettingsDto,
+    );
   }
 
   Future<firebase.AppearanceSettingsDto?> _updateAppearanceSettings(
@@ -187,7 +216,7 @@ class UserRepositoryImpl extends StateRepository<User>
         language: language != null ? mapLanguageToDb(language) : null,
       );
 
-  Future<firebase.WorkoutSettingsDto?> _updateWorkoutSettings(
+  Future<firebase.ActivitiesSettingsDto?> _updateActivitiesSettings(
     String userId,
     settings.DistanceUnit? distanceUnit,
     settings.PaceUnit? paceUnit,

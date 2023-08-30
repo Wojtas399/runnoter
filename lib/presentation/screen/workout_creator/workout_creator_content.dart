@@ -8,9 +8,10 @@ import '../../../domain/entity/workout.dart';
 import '../../component/big_button_component.dart';
 import '../../component/body/medium_body_component.dart';
 import '../../component/date_selector_component.dart';
+import '../../component/form_text_field_component.dart';
+import '../../component/gap/gap_components.dart';
 import '../../component/loading_info_component.dart';
 import '../../component/text/title_text_components.dart';
-import '../../component/text_field_component.dart';
 import '../../service/dialog_service.dart';
 import '../../service/utils.dart';
 import 'workout_creator_workout_stages.dart';
@@ -21,13 +22,9 @@ class WorkoutCreatorContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () async {
-        final bool confirmationToLeave = await askForConfirmationToLeave(
-          areUnsavedChanges: context.read<WorkoutCreatorBloc>().state.canSubmit,
-        );
-        if (confirmationToLeave) unfocusInputs();
-        return confirmationToLeave;
-      },
+      onWillPop: () async => await askForConfirmationToLeave(
+        areUnsavedChanges: context.read<WorkoutCreatorBloc>().state.canSubmit,
+      ),
       child: Scaffold(
         appBar: AppBar(
           title: const _AppBarTitle(),
@@ -35,14 +32,11 @@ class WorkoutCreatorContent extends StatelessWidget {
         ),
         body: SafeArea(
           child: SingleChildScrollView(
-            child: GestureDetector(
-              onTap: unfocusInputs,
-              child: MediumBody(
-                child: Container(
-                  color: Colors.transparent,
-                  padding: const EdgeInsets.all(24),
-                  child: const _Form(),
-                ),
+            child: MediumBody(
+              child: Container(
+                color: Colors.transparent,
+                padding: const EdgeInsets.all(24),
+                child: const _Form(),
               ),
             ),
           ),
@@ -82,11 +76,11 @@ class _Form extends StatelessWidget {
         : const Column(
             children: [
               _Date(),
-              SizedBox(height: 24),
+              Gap24(),
               _WorkoutName(),
-              SizedBox(height: 24),
+              Gap24(),
               WorkoutCreatorWorkoutStages(),
-              SizedBox(height: 40),
+              Gap40(),
               _SubmitButton(),
             ],
           );
@@ -102,7 +96,7 @@ class _Date extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         TitleMedium(Str.of(context).date),
-        const SizedBox(height: 8),
+        const Gap8(),
         const _DateValue(),
       ],
     );
@@ -158,11 +152,12 @@ class _WorkoutNameState extends State<_WorkoutName> {
 
   @override
   Widget build(BuildContext context) {
-    return TextFieldComponent(
+    return FormTextField(
       label: Str.of(context).workoutCreatorWorkoutName,
       isRequired: true,
       controller: _controller,
       maxLength: 100,
+      onTapOutside: (_) => unfocusInputs(),
     );
   }
 

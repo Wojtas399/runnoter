@@ -1,4 +1,4 @@
-import '../domain/entity/workout_stage.dart';
+import '../domain/additional_model/workout_stage.dart';
 
 double calculateDistanceOfWorkoutStage(WorkoutStage stage) {
   if (stage is DistanceWorkoutStage) {

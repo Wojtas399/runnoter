@@ -1,31 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
-import '../../../domain/bloc/day_preview/day_preview_cubit.dart';
+import '../../../domain/bloc/day_preview/day_preview_bloc.dart';
+import '../../../domain/entity/health_measurement.dart';
+import '../../component/bloc_with_status_listener_component.dart';
+import '../../component/gap/gap_components.dart';
+import '../../component/health_measurement_info_component.dart';
 import '../../component/responsive_layout_component.dart';
-import '../../extension/context_extensions.dart';
+import '../../component/text/title_text_components.dart';
 import '../../formatter/date_formatter.dart';
+import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
+import '../health_measurement_creator/health_measurement_creator_dialog.dart';
 import 'day_preview_activities_content.dart';
-import 'day_preview_dialog_actions.dart';
+import 'day_preview_add_activity_button.dart';
 
 class DayPreviewDialog extends StatelessWidget {
+  final String userId;
   final DateTime date;
 
-  const DayPreviewDialog({
-    super.key,
-    required this.date,
-  });
+  const DayPreviewDialog({super.key, required this.userId, required this.date});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => DayPreviewCubit(date: date)..initialize(),
-      child: const ResponsiveLayout(
-        mobileBody: _FullScreenDialog(),
-        desktopBody: _NormalDialog(),
+      create: (_) => DayPreviewBloc(userId: userId, date: date)
+        ..add(const DayPreviewEventInitialize()),
+      child: const BlocWithStatusListener<DayPreviewBloc, DayPreviewState,
+          dynamic, dynamic>(
+        child: ResponsiveLayout(
+          mobileBody: _FullScreenDialog(),
+          desktopBody: _NormalDialog(),
+        ),
       ),
     );
   }
@@ -37,17 +44,23 @@ class _NormalDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final str = Str.of(context);
+    const gap = Gap24();
 
     return AlertDialog(
       title: const _Title(),
-      content: const SizedBox(
-        width: 400,
+      content: SizedBox(
+        width: 500,
         child: SingleChildScrollView(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _Actions(),
-              SizedBox(height: 16),
-              DayPreviewActivities(),
+              const _HealthMeasurement(),
+              gap,
+              TitleMedium(Str.of(context).dayPreviewActivities),
+              gap,
+              const DayPreviewAddActivityButton(),
+              gap,
+              const DayPreviewActivities(),
             ],
           ),
         ),
@@ -67,11 +80,26 @@ class _FullScreenDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      appBar: _AppBar(),
-      floatingActionButton: _Actions(),
+    const gap = Gap24();
+
+    return Scaffold(
+      appBar: const _AppBar(),
+      floatingActionButton: const DayPreviewAddActivityButton(),
       body: SafeArea(
-        child: DayPreviewActivities(),
+        child: SingleChildScrollView(
+          child: _BodyPadding(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const _HealthMeasurement(),
+                gap,
+                TitleMedium(Str.of(context).dayPreviewActivities),
+                gap,
+                const DayPreviewActivities(),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -93,82 +121,70 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 }
 
+class _BodyPadding extends StatelessWidget {
+  final Widget child;
+
+  const _BodyPadding({required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    final bool canModifyHealthMeasurement = context.select(
+      (DayPreviewBloc bloc) => bloc.state.canModifyHealthMeasurement,
+    );
+
+    return Padding(
+      padding: EdgeInsets.fromLTRB(
+        24,
+        canModifyHealthMeasurement ? 12 : 24,
+        24,
+        24,
+      ),
+      child: child,
+    );
+  }
+}
+
 class _Title extends StatelessWidget {
   const _Title();
 
   @override
   Widget build(BuildContext context) {
-    final DateTime date = context.read<DayPreviewCubit>().date;
+    final DateTime date = context.read<DayPreviewBloc>().date;
 
     return Text('${Str.of(context).day} ${date.toDateWithDots()}');
   }
 }
 
-class _Actions extends StatelessWidget {
-  const _Actions();
+class _HealthMeasurement extends StatelessWidget {
+  const _HealthMeasurement();
 
   @override
   Widget build(BuildContext context) {
-    final str = Str.of(context);
+    final bool canModify = context.select(
+      (DayPreviewBloc bloc) => bloc.state.canModifyHealthMeasurement,
+    );
+    final HealthMeasurement? measurement = context.select(
+      (DayPreviewBloc bloc) => bloc.state.healthMeasurement,
+    );
 
-    if (context.isMobileSize) {
-      return SpeedDial(
-        icon: Icons.add,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(16)),
-        ),
-        spacing: 16,
-        childMargin: EdgeInsets.zero,
-        childPadding: const EdgeInsets.all(8.0),
-        children: [
-          SpeedDialChild(
-            child: const Icon(Icons.emoji_events),
-            label: str.race,
-            onTap: () => _addRace(context),
-          ),
-          SpeedDialChild(
-            child: const Icon(Icons.directions_run_outlined),
-            label: str.workout,
-            onTap: () => _addWorkout(context),
-          ),
-        ],
-      );
-    }
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: Row(
-        children: [
-          Expanded(
-            child: FilledButton(
-              onPressed: () => _addWorkout(context),
-              child: Text('${str.add} ${str.workout}'),
-            ),
-          ),
-          const SizedBox(width: 24),
-          Expanded(
-            child: FilledButton(
-              onPressed: () => _addRace(context),
-              child: Text('${str.add} ${str.race}'),
-            ),
-          ),
-        ],
-      ),
+    return HealthMeasurementInfo(
+      label: Str.of(context).healthMeasurement,
+      healthMeasurement: measurement,
+      displayBigButtonIfHealthMeasurementIsNull: true,
+      onEdit: canModify ? () => _onEdit(context) : null,
+      onDelete: canModify ? () => _onDelete(context) : null,
     );
   }
 
-  void _addWorkout(BuildContext context) {
-    popRoute(
-      result: DayPreviewDialogActionAddWorkout(
-        date: context.read<DayPreviewCubit>().date,
-      ),
-    );
+  Future<void> _onEdit(BuildContext context) async {
+    await showDialogDependingOnScreenSize(HealthMeasurementCreatorDialog(
+      date: context.read<DayPreviewBloc>().date,
+    ));
   }
 
-  void _addRace(BuildContext context) {
-    popRoute(
-      result: DayPreviewDialogActionAddRace(
-        date: context.read<DayPreviewCubit>().date,
-      ),
-    );
+  void _onDelete(BuildContext context) {
+    context.read<DayPreviewBloc>().add(
+          const DayPreviewEventRemoveHealthMeasurement(),
+        );
   }
 }

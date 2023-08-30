@@ -1,6 +1,6 @@
 import 'package:mocktail/mocktail.dart';
+import 'package:runnoter/domain/additional_model/activity_status.dart';
 import 'package:runnoter/domain/entity/race.dart';
-import 'package:runnoter/domain/entity/run_status.dart';
 import 'package:runnoter/domain/repository/race_repository.dart';
 
 class _FakeDuration extends Fake implements Duration {}
@@ -8,22 +8,24 @@ class _FakeDuration extends Fake implements Duration {}
 class MockRaceRepository extends Mock implements RaceRepository {
   MockRaceRepository() {
     registerFallbackValue(_FakeDuration());
-    registerFallbackValue(const RunStatusPending());
+    registerFallbackValue(const ActivityStatusPending());
   }
 
   void mockGetRaceById({
     Race? race,
+    Stream<Race?>? raceStream,
   }) {
     when(
       () => getRaceById(
         raceId: any(named: 'raceId'),
         userId: any(named: 'userId'),
       ),
-    ).thenAnswer((invocation) => Stream.value(race));
+    ).thenAnswer((_) => raceStream ?? Stream.value(race));
   }
 
   void mockGetRacesByDateRange({
     List<Race>? races,
+    Stream<List<Race>?>? racesStream,
   }) {
     when(
       () => getRacesByDateRange(
@@ -31,28 +33,30 @@ class MockRaceRepository extends Mock implements RaceRepository {
         startDate: any(named: 'startDate'),
         endDate: any(named: 'endDate'),
       ),
-    ).thenAnswer((invocation) => Stream.value(races));
+    ).thenAnswer((_) => racesStream ?? Stream.value(races));
   }
 
   void mockGetRacesByDate({
     List<Race>? races,
+    Stream<List<Race>?>? racesStream,
   }) {
     when(
       () => getRacesByDate(
         date: any(named: 'date'),
         userId: any(named: 'userId'),
       ),
-    ).thenAnswer((invocation) => Stream.value(races));
+    ).thenAnswer((_) => racesStream ?? Stream.value(races));
   }
 
   void mockGetAllRaces({
     List<Race>? races,
+    Stream<List<Race>?>? racesStream,
   }) {
     when(
       () => getAllRaces(
         userId: any(named: 'userId'),
       ),
-    ).thenAnswer((invocation) => Stream.value(races));
+    ).thenAnswer((_) => racesStream ?? Stream.value(races));
   }
 
   void mockAddNewRace() {
@@ -66,7 +70,7 @@ class MockRaceRepository extends Mock implements RaceRepository {
         expectedDuration: any(named: 'expectedDuration'),
         status: any(named: 'status'),
       ),
-    ).thenAnswer((invocation) => Future.value());
+    ).thenAnswer((_) => Future.value());
   }
 
   void mockUpdateRace() {
@@ -82,7 +86,7 @@ class MockRaceRepository extends Mock implements RaceRepository {
         setDurationAsNull: any(named: 'setDurationAsNull'),
         status: any(named: 'status'),
       ),
-    ).thenAnswer((invocation) => Future.value());
+    ).thenAnswer((_) => Future.value());
   }
 
   void mockDeleteRace() {
@@ -99,6 +103,6 @@ class MockRaceRepository extends Mock implements RaceRepository {
       () => deleteAllUserRaces(
         userId: any(named: 'userId'),
       ),
-    ).thenAnswer((invocation) => Future.value());
+    ).thenAnswer((_) => Future.value());
   }
 }

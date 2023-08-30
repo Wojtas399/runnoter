@@ -1,16 +1,16 @@
 import 'package:firebase/firebase.dart' as db;
 
-import '../../domain/entity/settings.dart';
+import '../../domain/additional_model/settings.dart';
 
 Settings mapSettingsFromDto({
   required db.AppearanceSettingsDto appearanceSettingsDto,
-  required db.WorkoutSettingsDto workoutSettingsDto,
+  required db.ActivitiesSettingsDto activitiesSettingsDto,
 }) {
   return Settings(
     themeMode: mapThemeModeFromDb(appearanceSettingsDto.themeMode),
     language: mapLanguageFromDb(appearanceSettingsDto.language),
-    distanceUnit: mapDistanceUnitFromDb(workoutSettingsDto.distanceUnit),
-    paceUnit: mapPaceUnitFromDb(workoutSettingsDto.paceUnit),
+    distanceUnit: mapDistanceUnitFromDb(activitiesSettingsDto.distanceUnit),
+    paceUnit: mapPaceUnitFromDb(activitiesSettingsDto.paceUnit),
   );
 }
 

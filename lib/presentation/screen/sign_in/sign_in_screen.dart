@@ -100,20 +100,28 @@ class _BlocListener extends StatelessWidget {
 
   Future<void> _manageNewUser(BuildContext context) async {
     final SignInBloc bloc = context.read<SignInBloc>();
-    final bool wantToCreateAccount = await askForConfirmation(
-      title: Str.of(context).signInCreateNewAccountConfirmationDialogTitle,
-      message: Str.of(context).signInCreateNewAccountConfirmationDialogMessage,
-      confirmButtonLabel: Str.of(context).create,
+    final bool wantToCreateAccount =
+        await _askForConfirmationToCreateAccount(context);
+    if (wantToCreateAccount) {
+      final bool hasDataBeenAdded = await showDialogDependingOnScreenSize(
+        const RequiredDataCompletionDialog(),
+      );
+      if (hasDataBeenAdded) {
+        await showDialogDependingOnScreenSize(const EmailVerificationDialog());
+        return;
+      }
+    }
+    bloc.add(const SignInEventDeleteRecentlyCreatedAccount());
+  }
+
+  Future<bool> _askForConfirmationToCreateAccount(BuildContext context) async {
+    final str = Str.of(context);
+    return await askForConfirmation(
+      title: Text(str.signInCreateNewAccountConfirmationDialogTitle),
+      content: Text(str.signInCreateNewAccountConfirmationDialogMessage),
+      confirmButtonLabel: str.create,
+      displayConfirmationButtonAsFilled: true,
       barrierDismissible: false,
     );
-    if (wantToCreateAccount) {
-      await showDialogDependingOnScreenSize(
-        const RequiredDataCompletionDialog(),
-        barrierDismissible: false,
-      );
-      navigateAndRemoveUntil(const HomeRoute());
-    } else {
-      bloc.add(const SignInEventDeleteRecentlyCreatedAccount());
-    }
   }
 }

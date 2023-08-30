@@ -15,7 +15,7 @@ bool _isLoadingDialogOpened = false;
 
 void showLoadingDialog() {
   final BuildContext? context = getIt<AppRouter>().navigatorKey.currentContext;
-  if (context != null) {
+  if (!_isLoadingDialogOpened && context != null) {
     _isLoadingDialogOpened = true;
     showDialog(
       context: context,
@@ -47,11 +47,17 @@ Future<void> showMessageDialog({
   );
 }
 
-void showSnackbarMessage(String message) {
+void showSnackbarMessage(
+  String message, {
+  bool showCloseIcon = false,
+  Duration duration = const Duration(seconds: 4),
+}) {
   final BuildContext? context = getIt<AppRouter>().navigatorKey.currentContext;
   if (context != null) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
+        showCloseIcon: showCloseIcon,
+        duration: duration,
         content: Text(message),
       ),
     );
@@ -76,22 +82,24 @@ void hideSnackbar() {
 }
 
 Future<bool> askForConfirmation({
-  required String title,
-  required String message,
+  required Widget title,
+  required Widget content,
   String? confirmButtonLabel,
   String? cancelButtonLabel,
   Color? confirmButtonColor,
   Color? cancelButtonColor,
+  bool displayConfirmationButtonAsFilled = false,
   bool barrierDismissible = true,
 }) async =>
     await showAlertDialog(
       ConfirmationDialogComponent(
         title: title,
-        message: message,
+        content: content,
         confirmButtonLabel: confirmButtonLabel,
         cancelButtonLabel: cancelButtonLabel,
         confirmButtonColor: confirmButtonColor,
         cancelButtonColor: cancelButtonColor,
+        displayConfirmationButtonAsFilled: displayConfirmationButtonAsFilled,
       ),
       barrierDismissible: barrierDismissible,
     ) ==
@@ -104,11 +112,13 @@ Future<bool> askForConfirmationToLeave({
   if (context != null) {
     final str = Str.of(context);
     return await askForConfirmation(
-      title: str.leavePageConfirmationDialogTitle,
-      message: switch (areUnsavedChanges) {
-        true => str.leavePageWithUnsavedChangesConfirmationDialogMessage,
-        false => str.leavePageConfirmationDialogMessage,
-      },
+      title: Text(str.leavePageConfirmationDialogTitle),
+      content: Text(
+        switch (areUnsavedChanges) {
+          true => str.leavePageWithUnsavedChangesConfirmationDialogMessage,
+          false => str.leavePageConfirmationDialogMessage,
+        },
+      ),
       confirmButtonLabel: str.leave,
     );
   }

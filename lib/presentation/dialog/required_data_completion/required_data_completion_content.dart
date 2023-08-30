@@ -3,8 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/bloc/required_data_completion/required_data_completion_bloc.dart';
+import '../../component/gap/gap_components.dart';
+import '../../component/gap/gap_horizontal_components.dart';
 import '../../component/responsive_layout_component.dart';
-import '../../service/utils.dart';
+import '../../service/navigator_service.dart';
 import 'required_data_completion_form.dart';
 
 class RequiredDataCompletionContent extends StatelessWidget {
@@ -30,7 +32,13 @@ class _NormalDialog extends StatelessWidget {
         width: 400,
         child: _Content(),
       ),
-      actions: const [_SubmitButton()],
+      actions: [
+        TextButton(
+          onPressed: () => popRoute(result: false),
+          child: Text(Str.of(context).cancel),
+        ),
+        const _SubmitButton(),
+      ],
     );
   }
 }
@@ -42,26 +50,23 @@ class _FullScreenDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
+        leading: CloseButton(onPressed: () => popRoute(result: false)),
         title: Text(Str.of(context).requiredDataCompletionTitle),
         actions: const [
           _SubmitButton(),
-          SizedBox(width: 8),
+          GapHorizontal8(),
         ],
       ),
       body: LayoutBuilder(builder: (_, BoxConstraints constraints) {
         return SingleChildScrollView(
-          child: GestureDetector(
-            onTap: unfocusInputs,
-            child: Container(
-              constraints: constraints.copyWith(
-                minHeight: constraints.maxHeight,
-                maxHeight: double.infinity,
-              ),
-              padding: const EdgeInsets.all(24),
-              color: Colors.transparent,
-              child: const _Content(),
+          child: Container(
+            constraints: constraints.copyWith(
+              minHeight: constraints.maxHeight,
+              maxHeight: double.infinity,
             ),
+            padding: const EdgeInsets.all(24),
+            color: Colors.transparent,
+            child: const _Content(),
           ),
         );
       }),
@@ -78,7 +83,7 @@ class _Content extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Text(Str.of(context).requiredDataCompletionMessage),
-        const SizedBox(height: 16),
+        const Gap24(),
         const RequiredDataCompletionForm(),
       ],
     );

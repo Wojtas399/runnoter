@@ -1,7 +1,7 @@
 import 'package:firebase/firebase.dart' as db;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/data/mapper/settings_mapper.dart';
-import 'package:runnoter/domain/entity/settings.dart';
+import 'package:runnoter/domain/additional_model/settings.dart';
 
 void main() {
   test(

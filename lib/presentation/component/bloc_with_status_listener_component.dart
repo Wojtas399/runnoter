@@ -44,8 +44,8 @@ class BlocWithStatusListener<Bloc extends StateStreamable<State>,
   }
 
   void _manageBlocStatus(BlocStatus blocStatus, BuildContext context) {
-    if (blocStatus is BlocStatusLoading) {
-      if (showDialogOnLoading) showLoadingDialog();
+    if (blocStatus is BlocStatusLoading && showDialogOnLoading) {
+      showLoadingDialog();
     } else {
       closeLoadingDialog();
       if (blocStatus is BlocStatusComplete) {

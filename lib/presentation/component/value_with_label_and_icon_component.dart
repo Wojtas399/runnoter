@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'gap/gap_horizontal_components.dart';
+
 class ValueWithLabelAndIcon extends StatelessWidget {
   final String value;
   final String? label;
@@ -21,10 +23,11 @@ class ValueWithLabelAndIcon extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Material(
+      color: Colors.transparent,
       child: InkWell(
         borderRadius: BorderRadius.circular(100),
         onTap: onPressed,
-        child: Padding(
+        child: Container(
           padding: EdgeInsets.symmetric(
             horizontal: 16,
             vertical: label != null ? 8 : 20,
@@ -36,7 +39,7 @@ class ValueWithLabelAndIcon extends StatelessWidget {
                   iconData,
                   color: color ?? theme.colorScheme.onSurfaceVariant,
                 ),
-              if (iconData != null) const SizedBox(width: 16),
+              if (iconData != null) const GapHorizontal16(),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,

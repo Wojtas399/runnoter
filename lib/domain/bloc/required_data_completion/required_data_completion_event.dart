@@ -4,6 +4,15 @@ class RequiredDataCompletionEvent {
   const RequiredDataCompletionEvent();
 }
 
+class RequiredDataCompletionEventAccountTypeChanged
+    extends RequiredDataCompletionEvent {
+  final AccountType accountType;
+
+  const RequiredDataCompletionEventAccountTypeChanged({
+    required this.accountType,
+  });
+}
+
 class RequiredDataCompletionEventGenderChanged
     extends RequiredDataCompletionEvent {
   final Gender gender;

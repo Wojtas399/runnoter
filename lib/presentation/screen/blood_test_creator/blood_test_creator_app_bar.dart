@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/bloc/blood_test_creator/blood_test_creator_bloc.dart';
-import '../../service/utils.dart';
+import '../../component/gap/gap_horizontal_components.dart';
 
 class BloodTestCreatorAppBar extends StatelessWidget
     implements PreferredSizeWidget {
@@ -19,7 +19,7 @@ class BloodTestCreatorAppBar extends StatelessWidget
       title: const _AppBarTitle(),
       actions: const [
         _SubmitButton(),
-        SizedBox(width: 16),
+        GapHorizontal16(),
       ],
     );
   }
@@ -62,7 +62,6 @@ class _SubmitButton extends StatelessWidget {
   }
 
   void _onPressed(BuildContext context) {
-    unfocusInputs();
     context.read<BloodTestCreatorBloc>().add(
           const BloodTestCreatorEventSubmit(),
         );

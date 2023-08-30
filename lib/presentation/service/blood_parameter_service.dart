@@ -1,4 +1,4 @@
-import '../../domain/entity/blood_parameter.dart';
+import '../../domain/additional_model/blood_parameter.dart';
 import '../../domain/entity/user.dart';
 
 bool isParameterValueWithinNorm({

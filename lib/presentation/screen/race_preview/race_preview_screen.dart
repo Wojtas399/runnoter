@@ -5,45 +5,46 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/bloc/race_preview/race_preview_bloc.dart';
 import '../../component/bloc_with_status_listener_component.dart';
+import '../../component/page_not_found_component.dart';
 import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
 import 'race_preview_content.dart';
 
 @RoutePage()
 class RacePreviewScreen extends StatelessWidget {
+  final String? userId;
   final String? raceId;
 
   const RacePreviewScreen({
     super.key,
+    @PathParam('userId') this.userId,
     @PathParam('raceId') this.raceId,
   });
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => RacePreviewBloc(raceId: raceId)
-        ..add(const RacePreviewEventInitialize()),
-      child: const _BlocListener(
-        child: RacePreviewContent(),
-      ),
-    );
+    return userId == null || raceId == null
+        ? const PageNotFound()
+        : BlocProvider(
+            create: (_) => RacePreviewBloc(userId: userId!, raceId: raceId!)
+              ..add(const RacePreviewEventInitialize()),
+            child: const _BlocListener(
+              child: RacePreviewContent(),
+            ),
+          );
   }
 }
 
 class _BlocListener extends StatelessWidget {
   final Widget child;
 
-  const _BlocListener({
-    required this.child,
-  });
+  const _BlocListener({required this.child});
 
   @override
   Widget build(BuildContext context) {
     return BlocWithStatusListener<RacePreviewBloc, RacePreviewState,
         RacePreviewBlocInfo, dynamic>(
-      onInfo: (RacePreviewBlocInfo info) {
-        _manageInfo(context, info);
-      },
+      onInfo: (RacePreviewBlocInfo info) => _manageInfo(context, info),
       child: child,
     );
   }

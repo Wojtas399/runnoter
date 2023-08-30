@@ -4,18 +4,23 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/bloc/sign_up/sign_up_bloc.dart';
 import '../../../domain/entity/user.dart';
+import '../../component/form_text_field_component.dart';
+import '../../component/gap/gap_components.dart';
 import '../../component/password_text_field_component.dart';
-import '../../component/text_field_component.dart';
+import '../../component/two_options_component.dart';
+import '../../service/utils.dart';
 
 class SignUpForm extends StatelessWidget {
   const SignUpForm({super.key});
 
   @override
   Widget build(BuildContext context) {
-    const gap = SizedBox(height: 24);
+    const gap = Gap24();
 
     return const Column(
       children: [
+        _AccountType(),
+        Gap16(),
         _Gender(),
         gap,
         _Name(),
@@ -32,6 +37,34 @@ class SignUpForm extends StatelessWidget {
   }
 }
 
+class _AccountType extends StatelessWidget {
+  const _AccountType();
+
+  @override
+  Widget build(BuildContext context) {
+    final str = Str.of(context);
+    final AccountType? selectedAccountType = context.select(
+      (SignUpBloc bloc) => bloc.state.accountType,
+    );
+
+    return selectedAccountType == null
+        ? const SizedBox()
+        : TwoOptions<AccountType>(
+            label: str.accountType,
+            selectedValue: selectedAccountType,
+            option1: OptionParams(label: str.runner, value: AccountType.runner),
+            option2: OptionParams(label: str.coach, value: AccountType.coach),
+            onChanged: (accountType) => _onChanged(context, accountType),
+          );
+  }
+
+  void _onChanged(BuildContext context, AccountType accountType) {
+    context.read<SignUpBloc>().add(
+          SignUpEventAccountTypeChanged(accountType: accountType),
+        );
+  }
+}
+
 class _Gender extends StatelessWidget {
   const _Gender();
 
@@ -42,42 +75,21 @@ class _Gender extends StatelessWidget {
       (SignUpBloc bloc) => bloc.state.gender,
     );
 
-    return Row(
-      children: [
-        Expanded(
-          child: ListTile(
-            contentPadding: const EdgeInsets.symmetric(horizontal: 4),
-            title: Text(str.male),
-            leading: Radio(
-              value: Gender.male,
-              groupValue: selectedGender,
-              onChanged: (Gender? gender) => _onGenderChanged(context, gender),
-            ),
-            onTap: () => _onGenderChanged(context, Gender.male),
-          ),
-        ),
-        Expanded(
-          child: ListTile(
-            contentPadding: const EdgeInsets.symmetric(horizontal: 4),
-            title: Text(str.female),
-            leading: Radio(
-              value: Gender.female,
-              groupValue: selectedGender,
-              onChanged: (Gender? gender) => _onGenderChanged(context, gender),
-            ),
-            onTap: () => _onGenderChanged(context, Gender.female),
-          ),
-        ),
-      ],
-    );
+    return selectedGender == null
+        ? const SizedBox()
+        : TwoOptions<Gender>(
+            label: str.gender,
+            selectedValue: selectedGender,
+            option1: OptionParams(label: str.male, value: Gender.male),
+            option2: OptionParams(label: str.female, value: Gender.female),
+            onChanged: (gender) => _onChanged(context, gender),
+          );
   }
 
-  void _onGenderChanged(BuildContext context, Gender? gender) {
-    if (gender != null) {
-      context.read<SignUpBloc>().add(
-            SignUpEventGenderChanged(gender: gender),
-          );
-    }
+  void _onChanged(BuildContext context, Gender gender) {
+    context.read<SignUpBloc>().add(
+          SignUpEventGenderChanged(gender: gender),
+        );
   }
 }
 
@@ -91,11 +103,12 @@ class _Name extends StatelessWidget {
     );
     final str = Str.of(context);
 
-    return TextFieldComponent(
+    return FormTextField(
       icon: Icons.person,
       label: str.name,
       isRequired: true,
       onChanged: (String? value) => _onChanged(value, context),
+      onTapOutside: (_) => unfocusInputs(),
       validator: (_) => !isValid ? str.invalidNameOrSurnameMessage : null,
     );
   }
@@ -117,7 +130,7 @@ class _Surname extends StatelessWidget {
     );
     final str = Str.of(context);
 
-    return TextFieldComponent(
+    return FormTextField(
       icon: Icons.person,
       label: str.surname,
       isRequired: true,
@@ -143,7 +156,7 @@ class _Email extends StatelessWidget {
     );
     final str = Str.of(context);
 
-    return TextFieldComponent(
+    return FormTextField(
       icon: Icons.email,
       label: str.email,
       isRequired: true,

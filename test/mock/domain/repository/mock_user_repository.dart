@@ -11,12 +11,13 @@ class MockUserRepository extends Mock implements UserRepository {
 
   void mockGetUserById({
     User? user,
+    Stream<User?>? userStream,
   }) {
     when(
       () => getUserById(
         userId: any(named: 'userId'),
       ),
-    ).thenAnswer((_) => Stream.value(user));
+    ).thenAnswer((_) => userStream ?? Stream.value(user));
   }
 
   void mockAddUser() {
@@ -27,24 +28,28 @@ class MockUserRepository extends Mock implements UserRepository {
     ).thenAnswer((_) => Future.value());
   }
 
-  void mockUpdateUserIdentities({
-    Object? throwable,
-  }) {
+  void mockUpdateUser({Object? throwable}) {
     if (throwable != null) {
-      when(_updateUserIdentitiesCall).thenThrow(throwable);
+      when(_updateUserCall).thenThrow(throwable);
     } else {
-      when(_updateUserIdentitiesCall).thenAnswer((_) => Future.value());
+      when(_updateUserCall).thenAnswer((_) => Future.value());
     }
   }
 
-  void mockUpdateUserSettings({
-    Object? throwable,
-  }) {
+  void mockUpdateUserSettings({Object? throwable}) {
     if (throwable != null) {
       when(_updateUserSettingsCall).thenThrow(throwable);
     } else {
       when(_updateUserSettingsCall).thenAnswer((_) => Future.value());
     }
+  }
+
+  void mockRefreshUserById() {
+    when(
+      () => refreshUserById(
+        userId: any(named: 'userId'),
+      ),
+    ).thenAnswer((_) => Future.value());
   }
 
   void mockDeleteUser() {
@@ -55,11 +60,15 @@ class MockUserRepository extends Mock implements UserRepository {
     ).thenAnswer((invocation) => Future.value());
   }
 
-  Future<void> _updateUserIdentitiesCall() => updateUserIdentities(
+  Future<void> _updateUserCall() => updateUser(
         userId: any(named: 'userId'),
+        accountType: any(named: 'accountType'),
         gender: any(named: 'gender'),
         name: any(named: 'name'),
         surname: any(named: 'surname'),
+        email: any(named: 'email'),
+        coachId: any(named: 'coachId'),
+        coachIdAsNull: any(named: 'coachIdAsNull'),
       );
 
   Future<void> _updateUserSettingsCall() => updateUserSettings(

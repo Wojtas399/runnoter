@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../../domain/bloc/profile/coach/profile_coach_bloc.dart';
 import '../../../domain/bloc/profile/identities/profile_identities_bloc.dart';
 import '../../../domain/bloc/profile/settings/profile_settings_bloc.dart';
 import '../../component/bloc_with_status_listener_component.dart';
@@ -17,13 +18,23 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => ProfileIdentitiesBloc()
-        ..add(const ProfileIdentitiesEventInitialize()),
-      child: BlocProvider(
-        create: (_) =>
-            ProfileSettingsBloc()..add(const ProfileSettingsEventInitialize()),
-        child: const _IdentitiesBlocListener(
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (_) => ProfileIdentitiesBloc()
+            ..add(const ProfileIdentitiesEventInitialize()),
+        ),
+        BlocProvider(
+          create: (_) => ProfileCoachBloc()
+            ..add(const ProfileCoachEventInitializeCoachListener()),
+        ),
+        BlocProvider(
+          create: (_) => ProfileSettingsBloc()
+            ..add(const ProfileSettingsEventInitialize()),
+        ),
+      ],
+      child: const _IdentitiesBlocListener(
+        child: _CoachBlocListener(
           child: ProfileContent(),
         ),
       ),
@@ -67,9 +78,9 @@ class _IdentitiesBlocListenerState extends State<_IdentitiesBlocListener>
     BuildContext context,
     ProfileIdentitiesBlocInfo info,
   ) async {
+    final str = Str.of(context);
     switch (info) {
       case ProfileIdentitiesBlocInfo.dataSaved:
-        final str = Str.of(context);
         await popRoute();
         showSnackbarMessage(str.profileSuccessfullySavedDataMessage);
         break;
@@ -82,9 +93,8 @@ class _IdentitiesBlocListenerState extends State<_IdentitiesBlocListener>
         if (mounted) await _showEmailVerificationMessage(context);
       case ProfileIdentitiesBlocInfo.accountDeleted:
         await showMessageDialog(
-          title: Str.of(context).profileSuccessfullyDeletedAccountDialogTitle,
-          message:
-              Str.of(context).profileSuccessfullyDeletedAccountDialogMessage,
+          title: str.profileSuccessfullyDeletedAccountDialogTitle,
+          message: str.profileSuccessfullyDeletedAccountDialogMessage,
         );
         navigateAndRemoveUntil(const SignInRoute());
         break;
@@ -112,5 +122,40 @@ class _IdentitiesBlocListenerState extends State<_IdentitiesBlocListener>
       message:
           '${str.emailVerificationMessage} $email. ${str.emailVerificationInstruction}',
     );
+  }
+}
+
+class _CoachBlocListener extends StatelessWidget {
+  final Widget child;
+
+  const _CoachBlocListener({required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocWithStatusListener<ProfileCoachBloc, ProfileCoachState,
+        ProfileCoachBlocInfo, dynamic>(
+      onInfo: (ProfileCoachBlocInfo info) => _manageInfo(context, info),
+      child: child,
+    );
+  }
+
+  void _manageInfo(BuildContext context, ProfileCoachBlocInfo info) {
+    final str = Str.of(context);
+    switch (info) {
+      case ProfileCoachBlocInfo.requestAccepted:
+        showSnackbarMessage(str.successfullyAcceptedRequest);
+        break;
+      case ProfileCoachBlocInfo.requestDeleted:
+        showSnackbarMessage(str.successfullyDeletedRequest);
+        break;
+      case ProfileCoachBlocInfo.requestUndid:
+        showSnackbarMessage(str.successfullyUndidRequest);
+        break;
+      case ProfileCoachBlocInfo.coachDeleted:
+        showSnackbarMessage(
+          str.profileSuccessfullyFinishedCooperationWithCoach,
+        );
+        break;
+    }
   }
 }

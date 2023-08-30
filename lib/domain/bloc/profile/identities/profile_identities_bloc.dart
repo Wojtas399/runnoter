@@ -15,8 +15,10 @@ import '../../../additional_model/bloc_state.dart';
 import '../../../additional_model/custom_exception.dart';
 import '../../../repository/blood_test_repository.dart';
 import '../../../repository/health_measurement_repository.dart';
+import '../../../repository/person_repository.dart';
 import '../../../repository/race_repository.dart';
 import '../../../repository/workout_repository.dart';
+import '../../../service/coaching_request_service.dart';
 
 part 'profile_identities_event.dart';
 part 'profile_identities_state.dart';
@@ -32,6 +34,8 @@ class ProfileIdentitiesBloc extends BlocWithStatus<
   final HealthMeasurementRepository _healthMeasurementRepository;
   final BloodTestRepository _bloodTestRepository;
   final RaceRepository _raceRepository;
+  final CoachingRequestService _coachingRequestService;
+  final PersonRepository _personRepository;
 
   ProfileIdentitiesBloc({
     ProfileIdentitiesState state = const ProfileIdentitiesState(
@@ -43,6 +47,8 @@ class ProfileIdentitiesBloc extends BlocWithStatus<
         _healthMeasurementRepository = getIt<HealthMeasurementRepository>(),
         _bloodTestRepository = getIt<BloodTestRepository>(),
         _raceRepository = getIt<RaceRepository>(),
+        _coachingRequestService = getIt<CoachingRequestService>(),
+        _personRepository = getIt<PersonRepository>(),
         super(state) {
     on<ProfileIdentitiesEventInitialize>(
       _initialize,
@@ -81,6 +87,7 @@ class ProfileIdentitiesBloc extends BlocWithStatus<
     await emit.forEach(
       stream$,
       onData: (ProfileIdentitiesBlocListenedParams params) => state.copyWith(
+        accountType: params.loggedUserData?.accountType,
         gender: params.loggedUserData?.gender,
         username: params.loggedUserData?.name,
         surname: params.loggedUserData?.surname,
@@ -105,7 +112,7 @@ class ProfileIdentitiesBloc extends BlocWithStatus<
       gender: event.gender,
     ));
     try {
-      await _userRepository.updateUserIdentities(
+      await _userRepository.updateUser(
         userId: loggedUserId,
         gender: event.gender,
       );
@@ -126,7 +133,7 @@ class ProfileIdentitiesBloc extends BlocWithStatus<
       return;
     }
     emitLoadingStatus(emit);
-    await _userRepository.updateUserIdentities(
+    await _userRepository.updateUser(
       userId: loggedUserId,
       name: event.username,
     );
@@ -143,7 +150,7 @@ class ProfileIdentitiesBloc extends BlocWithStatus<
       return;
     }
     emitLoadingStatus(emit);
-    await _userRepository.updateUserIdentities(
+    await _userRepository.updateUser(
       userId: loggedUserId,
       surname: event.surname,
     );
@@ -154,16 +161,23 @@ class ProfileIdentitiesBloc extends BlocWithStatus<
     ProfileIdentitiesEventUpdateEmail event,
     Emitter<ProfileIdentitiesState> emit,
   ) async {
+    final String? loggedUserId = await _authService.loggedUserId$.first;
+    if (loggedUserId == null) {
+      emitNoLoggedUserStatus(emit);
+      return;
+    }
     emitLoadingStatus(emit);
     try {
       await _authService.updateEmail(newEmail: event.newEmail);
       await _authService.sendEmailVerification();
+      await _userRepository.updateUser(
+        userId: loggedUserId,
+        email: event.newEmail,
+      );
       emitCompleteStatus(emit, info: ProfileIdentitiesBlocInfo.emailChanged);
     } on AuthException catch (authException) {
-      final ProfileIdentitiesBlocError? error =
-          _mapAuthExceptionCodeToBlocError(authException.code);
-      if (error != null) {
-        emitErrorStatus(emit, error);
+      if (authException.code == AuthExceptionCode.emailAlreadyInUse) {
+        emitErrorStatus(emit, ProfileIdentitiesBlocError.emailAlreadyInUse);
       } else {
         emitUnknownErrorStatus(emit);
         rethrow;
@@ -251,15 +265,6 @@ class ProfileIdentitiesBloc extends BlocWithStatus<
         );
   }
 
-  ProfileIdentitiesBlocError? _mapAuthExceptionCodeToBlocError(
-    AuthExceptionCode authExceptionCode,
-  ) {
-    if (authExceptionCode == AuthExceptionCode.emailAlreadyInUse) {
-      return ProfileIdentitiesBlocError.emailAlreadyInUse;
-    }
-    return null;
-  }
-
   Future<void> _deleteAllLoggedUserData(String loggedUserId) async {
     await _workoutRepository.deleteAllUserWorkouts(userId: loggedUserId);
     await _healthMeasurementRepository.deleteAllUserMeasurements(
@@ -268,6 +273,12 @@ class ProfileIdentitiesBloc extends BlocWithStatus<
     await _bloodTestRepository.deleteAllUserTests(userId: loggedUserId);
     await _raceRepository.deleteAllUserRaces(userId: loggedUserId);
     await _userRepository.deleteUser(userId: loggedUserId);
+    await _coachingRequestService.deleteCoachingRequestsByUserId(
+      userId: loggedUserId,
+    );
+    await _personRepository.removeCoachIdInAllMatchingPersons(
+      coachId: loggedUserId,
+    );
   }
 }
 

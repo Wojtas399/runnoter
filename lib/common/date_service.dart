@@ -27,20 +27,9 @@ class DateService {
     );
   }
 
-  List<DateTime> getDaysFromWeek(DateTime date) {
-    final DateTime firstDateOfTheWeek = getFirstDayOfTheWeek(date);
-    final List<DateTime> datesFromWeek = [firstDateOfTheWeek];
-    DateTime currentDate = firstDateOfTheWeek;
-    for (int i = 0; i < 6; i++) {
-      currentDate = _getDate(
-        currentDate.add(
-          const Duration(days: 1),
-        ),
-      );
-      datesFromWeek.add(currentDate);
-    }
-    return datesFromWeek;
-  }
+  DateTime getFirstDayOfTheYear(int year) => DateTime(year);
+
+  DateTime getLastDayOfTheYear(int year) => DateTime(year, 12, 31);
 
   bool isDateFromRange({
     required DateTime date,
@@ -50,6 +39,11 @@ class DateService {
       areDatesTheSame(date, startDate) ||
       areDatesTheSame(date, endDate) ||
       (date.isAfter(startDate) && date.isBefore(endDate));
+
+  bool isToday(DateTime date) {
+    final DateTime today = getToday();
+    return areDatesTheSame(date, today);
+  }
 
   bool areDatesTheSame(DateTime date1, DateTime date2) {
     return date1.year == date2.year &&

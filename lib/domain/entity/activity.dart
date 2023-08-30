@@ -1,11 +1,11 @@
+import '../additional_model/activity_status.dart';
 import 'entity.dart';
-import 'run_status.dart';
 
 abstract class Activity extends Entity {
   final String userId;
   final DateTime date;
   final String name;
-  final RunStatus status;
+  final ActivityStatus status;
 
   const Activity({
     required super.id,
@@ -16,16 +16,12 @@ abstract class Activity extends Entity {
   });
 
   double get coveredDistance {
-    final RunStatus status = this.status;
-    return status is RunStatusWithParams ? status.coveredDistanceInKm : 0.0;
+    final ActivityStatus status = this.status;
+    return status is ActivityStatusWithParams
+        ? status.coveredDistanceInKm
+        : 0.0;
   }
 
   @override
-  List<Object?> get props => [
-        id,
-        userId,
-        date,
-        name,
-        status,
-      ];
+  List<Object?> get props => [id, userId, date, name, status];
 }

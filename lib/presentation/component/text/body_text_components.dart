@@ -3,11 +3,15 @@ import 'package:flutter/material.dart';
 class BodyLarge extends StatelessWidget {
   final String data;
   final FontWeight? fontWeight;
+  final Color? color;
+  final TextAlign? textAlign;
 
   const BodyLarge(
     this.data, {
     super.key,
     this.fontWeight,
+    this.color,
+    this.textAlign,
   });
 
   @override
@@ -16,7 +20,9 @@ class BodyLarge extends StatelessWidget {
       data,
       style: Theme.of(context).textTheme.bodyLarge?.copyWith(
             fontWeight: fontWeight,
+            color: color,
           ),
+      textAlign: textAlign,
     );
   }
 }

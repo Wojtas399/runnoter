@@ -5,25 +5,25 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/bloc/health_measurement_creator/health_measurement_creator_bloc.dart';
 import '../../component/date_selector_component.dart';
+import '../../component/form_text_field_component.dart';
+import '../../component/gap/gap_components.dart';
 import '../../component/text/title_text_components.dart';
-import '../../component/text_field_component.dart';
 import '../../formatter/decimal_text_input_formatter.dart';
+import '../../service/utils.dart';
 
 class HealthMeasurementCreatorForm extends StatelessWidget {
   const HealthMeasurementCreatorForm({super.key});
 
   @override
   Widget build(BuildContext context) {
-    const Widget gap = SizedBox(height: 24);
-
     return const Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
         _Date(),
-        gap,
+        Gap24(),
         _RestingHeartRate(),
-        gap,
+        Gap24(),
         _FastingWeight(),
       ],
     );
@@ -42,7 +42,7 @@ class _Date extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         TitleMedium(Str.of(context).date),
-        const SizedBox(height: 8),
+        const Gap8(),
         DateSelector(
           date: date,
           lastDate: DateTime.now(),
@@ -92,8 +92,8 @@ class _RestingHeartRateState extends State<_RestingHeartRate> {
   @override
   Widget build(BuildContext context) {
     final str = Str.of(context);
-    return TextFieldComponent(
-      label: '${str.healthRestingHeartRate} [${str.heartRateUnit}]',
+    return FormTextField(
+      label: '${str.restingHeartRate} [${str.heartRateUnit}]',
       keyboardType: TextInputType.number,
       maxLength: 3,
       isRequired: true,
@@ -102,6 +102,7 @@ class _RestingHeartRateState extends State<_RestingHeartRate> {
         FilteringTextInputFormatter.digitsOnly,
       ],
       controller: _controller,
+      onTapOutside: (_) => unfocusInputs(),
     );
   }
 
@@ -145,8 +146,8 @@ class _FastingWeightState extends State<_FastingWeight> {
 
   @override
   Widget build(BuildContext context) {
-    return TextFieldComponent(
-      label: '${Str.of(context).healthFastingWeight} [kg]',
+    return FormTextField(
+      label: '${Str.of(context).fastingWeight} [kg]',
       keyboardType: const TextInputType.numberWithOptions(decimal: true),
       maxLength: 6,
       isRequired: true,

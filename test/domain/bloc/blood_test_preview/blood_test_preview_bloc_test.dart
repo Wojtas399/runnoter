@@ -1,90 +1,47 @@
+import 'dart:async';
+
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
+import 'package:runnoter/domain/additional_model/blood_parameter.dart';
 import 'package:runnoter/domain/bloc/blood_test_preview/blood_test_preview_bloc.dart';
-import 'package:runnoter/domain/entity/blood_parameter.dart';
+import 'package:runnoter/domain/entity/blood_test.dart';
 import 'package:runnoter/domain/entity/user.dart';
 import 'package:runnoter/domain/repository/blood_test_repository.dart';
-import 'package:runnoter/domain/service/auth_service.dart';
-import 'package:runnoter/domain/use_case/get_logged_user_gender_use_case.dart';
+import 'package:runnoter/domain/repository/user_repository.dart';
 
 import '../../../creators/blood_test_creator.dart';
+import '../../../creators/user_creator.dart';
 import '../../../mock/domain/repository/mock_blood_test_repository.dart';
-import '../../../mock/domain/service/mock_auth_service.dart';
-import '../../../mock/domain/use_case/mock_get_logged_user_gender_use_case.dart';
+import '../../../mock/domain/repository/mock_user_repository.dart';
 
 void main() {
-  final authService = MockAuthService();
-  final getLoggedUserGenderUseCase = MockGetLoggedUserGenderUseCase();
+  final userRepository = MockUserRepository();
   final bloodTestRepository = MockBloodTestRepository();
-  const String loggedUserId = 'u1';
+  const String userId = 'u1';
   const String bloodTestId = 'b1';
 
-  BloodTestPreviewBloc createBloc({
-    String? bloodTestId,
-  }) =>
-      BloodTestPreviewBloc(
-        bloodTestId: bloodTestId,
-        state: const BloodTestPreviewState(
-          status: BlocStatusInitial(),
-        ),
-      );
+  BloodTestPreviewBloc createBloc() =>
+      BloodTestPreviewBloc(userId: userId, bloodTestId: bloodTestId);
 
   setUpAll(() {
-    GetIt.I.registerSingleton<AuthService>(authService);
-    GetIt.I.registerFactory<GetLoggedUserGenderUseCase>(
-      () => getLoggedUserGenderUseCase,
-    );
+    GetIt.I.registerFactory<UserRepository>(() => userRepository);
     GetIt.I.registerSingleton<BloodTestRepository>(bloodTestRepository);
   });
 
   tearDown(() {
-    reset(authService);
-    reset(getLoggedUserGenderUseCase);
+    reset(userRepository);
     reset(bloodTestRepository);
   });
 
-  blocTest(
-    'initialize, '
-    'blood test is null, '
-    'should do nothing',
-    build: () => createBloc(),
-    act: (bloc) => bloc.add(const BloodTestPreviewEventInitialize()),
-    expect: () => [],
-  );
-
-  blocTest(
-    'initialize, '
-    "should set listener of logged user's gender and blood test matching to given id",
-    build: () => createBloc(bloodTestId: bloodTestId),
-    setUp: () {
-      authService.mockGetLoggedUserId(userId: loggedUserId);
-      getLoggedUserGenderUseCase.mock(gender: Gender.male);
-      bloodTestRepository.mockGetTestById(
-        bloodTest: createBloodTest(
-          id: 'br1',
-          date: DateTime(2023, 5, 1),
-          parameterResults: const [
-            BloodParameterResult(
-              parameter: BloodParameter.wbc,
-              value: 4.45,
-            ),
-            BloodParameterResult(
-              parameter: BloodParameter.cpk,
-              value: 300,
-            ),
-          ],
-        ),
-      );
-    },
-    act: (bloc) => bloc.add(const BloodTestPreviewEventInitialize()),
-    expect: () => [
-      BloodTestPreviewState(
-        status: const BlocStatusComplete(),
+  group(
+    'initialize',
+    () {
+      final User user = createUser(gender: Gender.male);
+      final BloodTest bloodTest = createBloodTest(
         date: DateTime(2023, 5, 1),
-        gender: Gender.male,
         parameterResults: const [
           BloodParameterResult(
             parameter: BloodParameter.wbc,
@@ -95,79 +52,92 @@ void main() {
             value: 300,
           ),
         ],
-      ),
-    ],
-    verify: (_) {
-      verify(
-        () => authService.loggedUserId$,
-      ).called(1);
-      verify(
-        () => getLoggedUserGenderUseCase.execute(),
-      ).called(1);
-      verify(
-        () => bloodTestRepository.getTestById(
-          bloodTestId: bloodTestId,
-          userId: loggedUserId,
-        ),
-      ).called(1);
+      );
+      final User updatedUser = createUser(gender: Gender.female);
+      final BloodTest updatedBloodTest = createBloodTest(
+        date: DateTime(2023, 5, 3),
+        parameterResults: const [
+          BloodParameterResult(
+            parameter: BloodParameter.wbc,
+            value: 4.40,
+          ),
+          BloodParameterResult(
+            parameter: BloodParameter.cpk,
+            value: 295,
+          ),
+        ],
+      );
+      final StreamController<User> user$ = StreamController()..add(user);
+      final StreamController<BloodTest> bloodTest$ = StreamController()
+        ..add(bloodTest);
+
+      blocTest(
+        "should set listener of user's gender and blood test matching to given test id",
+        build: () => createBloc(),
+        setUp: () {
+          userRepository.mockGetUserById(userStream: user$.stream);
+          bloodTestRepository.mockGetTestById(
+            bloodTestStream: bloodTest$.stream,
+          );
+        },
+        act: (bloc) {
+          bloc.add(const BloodTestPreviewEventInitialize());
+          user$.add(updatedUser);
+          bloodTest$.add(updatedBloodTest);
+        },
+        expect: () => [
+          BloodTestPreviewState(
+            status: const BlocStatusComplete(),
+            date: bloodTest.date,
+            gender: user.gender,
+            parameterResults: bloodTest.parameterResults,
+          ),
+          BloodTestPreviewState(
+            status: const BlocStatusComplete(),
+            date: bloodTest.date,
+            gender: updatedUser.gender,
+            parameterResults: bloodTest.parameterResults,
+          ),
+          BloodTestPreviewState(
+            status: const BlocStatusComplete(),
+            date: updatedBloodTest.date,
+            gender: updatedUser.gender,
+            parameterResults: updatedBloodTest.parameterResults,
+          ),
+        ],
+        verify: (_) {
+          verify(() => userRepository.getUserById(userId: userId)).called(1);
+          verify(
+            () => bloodTestRepository.getTestById(
+              bloodTestId: bloodTestId,
+              userId: userId,
+            ),
+          ).called(1);
+        },
+      );
     },
   );
 
   blocTest(
     'delete test, '
-    'blood test id is null, '
-    'should do nothing',
+    'should call method from blood test repository to delete blood test and '
+    'should emit info that blood test has been deleted',
     build: () => createBloc(),
-    act: (bloc) => bloc.add(const BloodTestPreviewEventDeleteTest()),
-    expect: () => [],
-  );
-
-  blocTest(
-    'delete test, '
-    'logged user does not exist, '
-    'should emit no logged user info',
-    build: () => createBloc(bloodTestId: bloodTestId),
-    setUp: () => authService.mockGetLoggedUserId(),
+    setUp: () => bloodTestRepository.mockDeleteTest(),
     act: (bloc) => bloc.add(const BloodTestPreviewEventDeleteTest()),
     expect: () => [
-      const BloodTestPreviewState(
-        status: BlocStatusNoLoggedUser(),
-      ),
-    ],
-    verify: (_) => verify(
-      () => authService.loggedUserId$,
-    ).called(1),
-  );
-
-  blocTest(
-    'delete test, '
-    'should call method from blood test repository to delete blood test and should emit info that blood test has been deleted',
-    build: () => createBloc(bloodTestId: bloodTestId),
-    setUp: () {
-      authService.mockGetLoggedUserId(userId: 'u1');
-      bloodTestRepository.mockDeleteTest();
-    },
-    act: (bloc) => bloc.add(const BloodTestPreviewEventDeleteTest()),
-    expect: () => [
-      const BloodTestPreviewState(
-        status: BlocStatusLoading(),
-      ),
+      const BloodTestPreviewState(status: BlocStatusLoading()),
       const BloodTestPreviewState(
         status: BlocStatusComplete<BloodTestPreviewBlocInfo>(
           info: BloodTestPreviewBlocInfo.bloodTestDeleted,
         ),
       ),
     ],
-    verify: (_) {
-      verify(
-        () => authService.loggedUserId$,
-      ).called(1);
-      verify(
-        () => bloodTestRepository.deleteTest(
-          bloodTestId: bloodTestId,
-          userId: loggedUserId,
-        ),
-      ).called(1);
-    },
+    verify: (_) => verify(
+      () => bloodTestRepository.deleteTest(
+        bloodTestId: bloodTestId,
+        userId: userId,
+      ),
+    ).called(1),
   );
 }

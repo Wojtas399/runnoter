@@ -6,9 +6,10 @@ import '../../../domain/bloc/forgot_password/forgot_password_bloc.dart';
 import '../../component/app_bar_with_logo.dart';
 import '../../component/big_button_component.dart';
 import '../../component/body/small_body_component.dart';
+import '../../component/form_text_field_component.dart';
+import '../../component/gap/gap_components.dart';
 import '../../component/padding/paddings_24.dart';
 import '../../component/text/headline_text_components.dart';
-import '../../component/text_field_component.dart';
 import '../../service/utils.dart';
 
 class ForgotPasswordContent extends StatelessWidget {
@@ -16,22 +17,19 @@ class ForgotPasswordContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const AppBarWithLogo(),
+    return const Scaffold(
+      appBar: AppBarWithLogo(),
       body: SafeArea(
-        child: GestureDetector(
-          onTap: unfocusInputs,
-          child: const SmallBody(
-            child: Paddings24(
-              child: Column(
-                children: [
-                  _Header(),
-                  SizedBox(height: 32),
-                  _Email(),
-                  SizedBox(height: 32),
-                  _SubmitButton(),
-                ],
-              ),
+        child: SmallBody(
+          child: Paddings24(
+            child: Column(
+              children: [
+                _Header(),
+                Gap32(),
+                _Email(),
+                Gap32(),
+                _SubmitButton(),
+              ],
             ),
           ),
         ),
@@ -52,7 +50,7 @@ class _Header extends StatelessWidget {
           Str.of(context).forgotPasswordTitle,
           fontWeight: FontWeight.bold,
         ),
-        const SizedBox(height: 8),
+        const Gap8(),
         Text(Str.of(context).forgotPasswordMessage)
       ],
     );
@@ -64,13 +62,12 @@ class _Email extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextFieldComponent(
+    return FormTextField(
       isRequired: true,
       label: Str.of(context).email,
       icon: Icons.email,
-      onChanged: (String? value) {
-        _onChanged(value, context);
-      },
+      onChanged: (String? value) => _onChanged(value, context),
+      onTapOutside: (_) => unfocusInputs(),
     );
   }
 
@@ -100,7 +97,6 @@ class _SubmitButton extends StatelessWidget {
   }
 
   void _onPressed(BuildContext context) {
-    unfocusInputs();
     context.read<ForgotPasswordBloc>().add(
           const ForgotPasswordEventSubmit(),
         );

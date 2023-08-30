@@ -143,6 +143,15 @@
   "@forgotPasswordUserNotFoundDialogMessage": {
     "description": "Message of the dialog to inform that user does not exist"
   },
+  "@__________REQUIRED_DATA_COMPLETION__________": {},
+  "requiredDataCompletionTitle": "Wymagane dane",
+  "@requiredDataCompletionTitle": {
+    "description": "Title of required data completion screen"
+  },
+  "requiredDataCompletionMessage": "Dokończ tworzenie konta podając swoje dane osobowe. Są one niezbędne do prawidłowego działania aplikacji.",
+  "@requiredDataCompletionMessage": {
+    "description": "Message to information about required data completion"
+  },
   "@__________HOME__________": {},
   "homeTitle": "Strona główna",
   "@homeTitle": {
@@ -160,40 +169,42 @@
   "@homeSignOutConfirmationDialogMessage": {
     "description": "Message of the dialog to confirm sign out"
   },
-  "@__________REQUIRED_DATA_COMPLETION__________": {},
-  "requiredDataCompletionTitle": "Wymagane dane",
-  "@requiredDataCompletionTitle": {
-    "description": "Title of required data completion screen"
+  "homeNewClientInfo": "Użytkownik {user} zaakceptował twoją prośbę o trenowanie",
+  "@homeNewClientInfo": {
+    "description": "",
+    "placeholders": {
+      "user": {
+        "type": "String",
+        "example": "Jack Unknown"
+      }
+    }
   },
-  "requiredDataCompletionMessage": "Dokończ tworzenie konta podając swoje dane osobowe. Są one niezbędne do prawidłowego działania aplikacji.",
-  "@requiredDataCompletionMessage": {
-    "description": "Message to information about required data completion"
-  },
-  "@__________CURRENT_WEEK__________": {},
-  "currentWeekTitle": "Obecny tydzień",
-  "@currentWeekTitle": {
-    "description": "Title of current week screen"
-  },
-  "currentWeekNumberOfActivities": "Ilość aktywności",
-  "@currentWeekNumberOfActivities": {
-    "description": "Label of number of activities statistic"
-  },
-  "currentWeekScheduledDistance": "Zaplanowany dystans",
-  "@currentWeekScheduledDistance": {
-    "description": "Label of scheduled distance statistic"
-  },
-  "currentWeekCoveredDistance": "Pokonany dystans",
-  "@currentWeekCoveredDistance": {
-    "description": "Label of covered distance statistic"
-  },
-  "currentWeekActivityActionSheetTitle": "Wybierz rodzaj aktywności do dodania",
-  "@currentWeekActivityActionSheetTitle": {
-    "description": "Title of action sheet with type of activities to add"
+  "homeNewCoachInfo": "Użytkownik {user} zgodził się zostać twoim trenerem",
+  "@homeNewCoachInfo": {
+    "description": "",
+    "placeholders": {
+      "user": {
+        "type": "String",
+        "example": "Jack Unknown"
+      }
+    }
   },
   "@__________CALENDAR__________": {},
   "calendarTitle": "Kalendarz",
   "@calendarTitle": {
     "description": "Title of calendar screen"
+  },
+  "calendarNumberOfActivities": "Ilość aktywności",
+  "@calendarNumberOfActivities": {
+    "description": "Label of number of activities statistic"
+  },
+  "calendarScheduledDistance": "Zaplanowany dystans",
+  "@calendarScheduledDistance": {
+    "description": "Label of scheduled distance statistic"
+  },
+  "calendarCoveredDistance": "Pokonany dystans",
+  "@calendarCoveredDistance": {
+    "description": "Label of covered distance statistic"
   },
   "@__________WORKOUT_PREVIEW__________": {},
   "workoutPreviewTitle": "Trening",
@@ -302,48 +313,24 @@
   "@workoutStageCreatorJoggingDistance": {
     "description": "Jogging distance"
   },
-  "@__________RUN_STATUS_CREATOR__________": {},
-  "runStatusCreatorScreenTitle": "Status",
-  "@runStatusCreatorScreenTitle": {
-    "description": "Title of status creator screen"
-  },
-  "runStatusCreatorCoveredDistance": "Pokonany dystans",
-  "@runStatusCreatorCoveredDistance": {
-    "description": "Label of covered distance"
-  },
-  "runStatusCreatorDuration": "Czas",
-  "@runStatusCreatorDuration": {
-    "description": "Label of duration"
-  },
-  "runStatusCreatorMood": "Samopoczucie",
-  "@runStatusCreatorMood": {
-    "description": "Label of mood"
-  },
-  "runStatusCreatorAveragePace": "Średnia prędkość",
-  "@runStatusCreatorAveragePace": {
-    "description": "Label of average pace"
-  },
-  "runStatusCreatorMinutes": "Minuty",
-  "@runStatusCreatorMinutes": {
+  "@__________ACTIVITY_STATUS_CREATOR__________": {},
+  "activityStatusCreatorMinutes": "Minuty",
+  "@activityStatusCreatorMinutes": {
     "description": "Label of minutes"
   },
-  "runStatusCreatorSeconds": "Sekundy",
-  "@runStatusCreatorSeconds": {
+  "activityStatusCreatorSeconds": "Sekundy",
+  "@activityStatusCreatorSeconds": {
     "description": "Label of seconds"
   },
-  "runStatusCreatorAverageHeartRate": "Średnie tętno",
-  "@runStatusCreatorAverageHeartRate": {
-    "description": "Label of average heart rate"
-  },
-  "runStatusCreatorComment": "Uwagi",
-  "@runStatusCreatorComment": {
-    "description": "Label of comment"
-  },
-  "runStatusCreatorSavedStatusMessage": "Pomyślnie zaktualizowano status",
-  "@runStatusCreatorSavedStatusMessage": {
+  "activityStatusCreatorSavedStatusMessage": "Pomyślnie zaktualizowano status",
+  "@activityStatusCreatorSavedStatusMessage": {
     "description": "Info about successfully saved status"
   },
   "@__________DAY_PREVIEW__________": {},
+  "dayPreviewActivities": "Aktywności",
+  "@dayPreviewActivities": {
+    "description": "Label of activities section"
+  },
   "dayPreviewNoActivitiesTitle": "Brak aktywności",
   "@dayPreviewNoActivitiesTitle": {
     "description": "Title of the information about no activities"
@@ -365,26 +352,6 @@
   "@healthTodayMeasurement": {
     "description": "Label of today measurement"
   },
-  "healthAddTodayMeasurementButton": "Dodaj pomiar",
-  "@healthAddTodayMeasurementButton": {
-    "description": "Label of the button to add today measurement"
-  },
-  "healthDeleteTodayMeasurementConfirmationDialogTitle": "Usuń dzisiejszy pomiar",
-  "@healthDeleteTodayMeasurementConfirmationDialogTitle": {
-    "description": "Title of the dialog to confirm today's measurement deletion"
-  },
-  "healthDeleteTodayMeasurementConfirmationDialogMessage": "Czy na pewno chcesz usunąć dzisiejszy pomiar?",
-  "@healthDeleteTodayMeasurementConfirmationDialogMessage": {
-    "description": "Message of the dialog to confirm today's measurement deletion"
-  },
-  "healthRestingHeartRate": "Tętno spoczynkowe",
-  "@healthRestingHeartRate": {
-    "description": "Label of resting heart rate"
-  },
-  "healthFastingWeight": "Waga na czczo",
-  "@healthFastingWeight": {
-    "description": "Label of fasting weight"
-  },
   "healthSummaryOfMeasurements": "Zestawienie pomiarów",
   "@healthSummaryOfMeasurements": {
     "description": "Label of summary of measurements"
@@ -404,10 +371,6 @@
   "healthShowAllMeasurementsButton": "Pokaż wszystkie pomiary",
   "@healthShowAllMeasurementsButton": {
     "description": "Label of the button to show all measurements"
-  },
-  "healthSuccessfullyDeletedMeasurement": "Pomyślnie usunięto pomiar",
-  "@healthSuccessfullyDeletedMeasurement": {
-    "description": "Message of successfully deleted measurement"
   },
   "@__________HEALTH_MEASUREMENT_CREATOR__________": {},
   "healthMeasurementCreatorScreenTitle": "Pomiar zdrowia",
@@ -462,9 +425,13 @@
   "@profileTitle": {
     "description": "Title of profile screen"
   },
-  "profileUserData": "Dane użytkownika",
+  "profileUserData": "Dane osobowe",
   "@profileUserData": {
-    "description": "Title of the user data section"
+    "description": "Title of the personal data section"
+  },
+  "profileCoach": "Trener",
+  "@profileCoach": {
+    "description": "Title of the coach section"
   },
   "profileSettings": "Ustawienia",
   "@profileSettings": {
@@ -537,6 +504,30 @@
   "profileSuccessfullyDeletedAccountDialogMessage": "Twoje konto zostało pomyślnie usunięte. Jeśli chcesz ponownie skorzystać z aplikacji, musisz założyć nowe konto.",
   "@profileSuccessfullyDeletedAccountDialogMessage": {
     "description": "Message of the dialog to inform that the account has been deleted"
+  },
+  "profileNoCoachTitle": "Brak trenera",
+  "@profileNoCoachTitle": {
+    "description": "Title of the info about no coach"
+  },
+  "profileNoCoachMessage": "Nie masz żadnego trenera. Musisz zaakceptować prośbę od trenera lub znaleźć go samodzielnie.",
+  "@profileNoCoachMessage": {
+    "description": "Message of the info about no coach"
+  },
+  "profileFindCoach": "Znajdź trenera",
+  "@profileFindCoach": {
+    "description": "Label of the button to find a coach"
+  },
+  "profileFinishCooperationWithCoachDialogTitle": "Usuń trenera",
+  "@profileFinishCooperationWithCoachDialogTitle": {
+    "description": "Title of the dialog to confirm finishing cooperation with coach"
+  },
+  "profileFinishCooperationWithCoachDialogMessage": "Czy na pewno chcesz zakończyć współpracę ze swoim trenerem? Trener utraci dostęp do twoich danych treningowych, wyścigowych oraz zdrowotnych.",
+  "@profileFinishCooperationWithCoachDialogMessage": {
+    "description": "Message of the dialog to confirm finishing cooperation with coach"
+  },
+  "profileSuccessfullyFinishedCooperationWithCoach": "Pomyślnie zakończono współpracę z trenerem",
+  "@profileSuccessfullyFinishedCooperationWithCoach": {
+    "description": "Message to inform about finished cooperation with a coach"
   },
   "@__________RE_AUTHENTICATION__________": {},
   "reauthenticationTitle": "Uwierzytelnienie",
@@ -728,59 +719,186 @@
   "@raceExpectedDuration": {
     "description": "Label of race expected duration"
   },
-  "@__________RUN_STATUS_PARAMS__________": {},
-  "runStatus": "Status",
-  "@runStatus": {
-    "description": "Label of run status"
+  "@__________CLIENTS__________": {},
+  "clientsTitle": "Klienci",
+  "@clientsTitle": {
+    "description": "Title of clients screen"
   },
-  "runStatusCoveredDistance": "Pokonany dystans",
-  "@runStatusCoveredDistance": {
-    "description": "Label of the covered distance of run status"
+  "clientsSearchUsers": "Szukaj użytkowników",
+  "@clientsSearchUser": {
+    "description": "Label of the button to search user"
   },
-  "runStatusDuration": "Czas",
-  "@runStatusDuration": {
-    "description": "Label of the duration of run status"
+  "clientsMessage": "Wiadomość",
+  "@clientsMessage": {
+    "description": "Label of the button to send message"
   },
-  "runStatusMoodRate": "Samopoczucie",
-  "@runStatusMoodRate": {
-    "description": "Label of the mood rate of run status"
+  "clientsDeleteClientConfirmationDialogTitle": "Usuń klienta",
+  "@clientsDeleteClientConfirmationDialogTitle": {
+    "description": "Title of the dialog to confirm client deletion"
   },
-  "runStatusAvgPace": "Średnie tempo",
-  "@runStatusAvgPace": {
-    "description": "Label of the average pace of run status"
+  "clientsDeleteClientConfirmationDialogAreYouSure": "Czy na pewno chcesz zakończyć trenowanie ",
+  "@clientsDeleteClientConfirmationDialogAreYouSure": {
+    "description": "Message to ask if user surely want to finish coaching client"
   },
-  "runStatusAvgHeartRate": "Średnie tętno",
-  "@runStatusAvgHeartRate": {
-    "description": "Label of the average heart rate of run status"
+  "clientsDeleteClientConfirmationDialogInfoAboutAccessLoss": "Utracisz dostęp do danych treningowych, wyścigowych oraz zdrowotnych tego użytkownika.",
+  "@clientsDeleteClientConfirmationDialogInfoAboutAccessLoss": {
+    "description": "Message to info user about data access loss"
   },
-  "runStatusComment": "Uwagi",
-  "@runStatusComment": {
-    "description": "Label of the comment of run status"
+  "clientsSuccessfullyDeletedClient": "Pomyślnie usunięto klienta",
+  "@clientsSuccessfullyDeletedClient": {
+    "description": "Message of successfully deleted client"
   },
-  "runStatusEditStatus": "Edytuj status",
-  "@runStatusEditStatus": {
+  "clientsNoClientsTitle": "Brak klientów",
+  "@clientsNoClientsTitle": {
+    "description": "Title of the info about the lack of clients"
+  },
+  "clientsNoClientsMessage": "Dodaj klientów, aby mieć możliwość przeglądania tej listy",
+  "@clientsNoClientsMessage": {
+    "description": "Message of the info about the lack of races"
+  },
+  "@__________PERSONS_SEARCH__________": {},
+  "coachesSearchTitle": "Szukaj trenerów",
+  "@coachesSearchTitle": {
+    "description": "Title of coaches search screen"
+  },
+  "usersSearchTitle": "Szukaj użytkowników",
+  "@usersSearchTitle": {
+    "description": "Title of users search screen"
+  },
+  "coachesSearchInstruction": "Wprowadź tekst, aby wyszukać trenerów",
+  "@coachesSearchInstruction": {
+    "description": "Instruction to search coaches"
+  },
+  "usersSearchInstruction": "Wprowadź tekst, aby wyszukać użytkowników",
+  "@usersSearchInstruction": {
+    "description": "Instruction to search users"
+  },
+  "coachesSearchNoResultsInfo": "Brak pasujących trenerów",
+  "@coachesSearchNoResultsInfo": {
+    "description": "Info about no matching coaches"
+  },
+  "usersSearchNoResultsInfo": "Brak pasujących użytkowników",
+  "@usersSearchNoResultsInfo": {
+    "description": "Info about no matching users"
+  },
+  "coachesSearchSendInvitationConfirmationDialogTitle": "Dodaj trenera",
+  "@coachesSearchSendInvitationConfirmationDialogTitle": {
+    "description": "Title of dialog to confirm to send invitation to coach"
+  },
+  "usersSearchSendInvitationConfirmationDialogTitle": "Dodaj klienta",
+  "@usersSearchSendInvitationConfirmationDialogTitle": {
+    "description": "Title of dialog to confirm to send invitation to client"
+  },
+  "coachesSearchSendInvitationConfirmationDialogMessage": "Aby wybrana osoba została twoim trenerem, musi ona zatwierdzić prośbę o trenowanie. Wówczas zostaną jej udostępnione twoje dane treningowe, wyścigowe oraz zdrowotne. Czy chcesz wysłać taką prośbę do użytkownika ",
+  "@coachesSearchSendInvitationConfirmationDialogMessage": {
+    "description": "Message of the dialog to confirm to send invitation"
+  },
+  "usersSearchSendInvitationConfirmationDialogMessage": "Aby zostać trenerem wybranej osoby, musi ona zatwierdzić prośbę o udostępnienie swojego profilu. Czy chcesz wysłać taką prośbę do użytkownika ",
+  "@usersSearchSendInvitationConfirmationDialogMessage": {
+    "description": "Message of the dialog to confirm to send invitation"
+  },
+  "personsSearchSuccessfullySentRequest": "Pomyślnie wysłano prośbę",
+  "@personsSearchSuccessfullySentRequest": {
+    "description": "Message about successfully sent invitation"
+  },
+  "personsSearchUserAlreadyHasCoachInfoTitle": "Użytkownik ma już trenera",
+  "@personsSearchUserAlreadyHasCoachInfoTitle": {
+    "description": "Title of the information about user who already has a coach"
+  },
+  "personsSearchUserAlreadyHasCoachInfoMessage": "Wygląda na to, że ten użytkownik rozpoczął niedawno współpracę z trenerem. Z tego powodu nie możesz mu wysłać prośby.",
+  "@personsSearchUserAlreadyHasCoachInfoMessage": {
+    "description": "Message of the information about user who already has a coach"
+  },
+  "@__________CLIENT_DETAILS__________": {},
+  "clientDetailsTitle": "Szczegóły klienta",
+  "@clientDetailsTitle": {
+    "description": "Title of the client details section"
+  },
+  "@__________CLIENT_STATS__________": {},
+  "clientStatsTitle": "Statystyki",
+  "@clientStatsTitle": {
+    "description": "Title of the client stats screen"
+  },
+  "clientStatsMileage": "Kilometraż",
+  "@clientStatsMileage": {
+    "description": "Label of mileage stats"
+  },
+  "clientStatsHealthMeasurements": "Pomiary zdrowia",
+  "@clientStatsHealthMeasurements": {
+    "description": "Label of health measurements stats"
+  },
+  "@__________ACTIVITY_STATUS_PARAMS__________": {},
+  "activityStatus": "Status",
+  "@activityStatus": {
+    "description": "Label of activity status"
+  },
+  "activityStatusCoveredDistance": "Pokonany dystans",
+  "@activityStatusCoveredDistance": {
+    "description": "Label of the covered distance of activity status"
+  },
+  "activityStatusDuration": "Czas",
+  "@activityStatusDuration": {
+    "description": "Label of the duration of activity status"
+  },
+  "activityStatusMoodRate": "Samopoczucie",
+  "@activityStatusMoodRate": {
+    "description": "Label of the mood rate of activity status"
+  },
+  "activityStatusAvgPace": "Średnie tempo",
+  "@activityStatusAvgPace": {
+    "description": "Label of the average pace of activity status"
+  },
+  "activityStatusAvgHeartRate": "Średnie tętno",
+  "@activityStatusAvgHeartRate": {
+    "description": "Label of the average heart rate of activity status"
+  },
+  "activityStatusComment": "Uwagi",
+  "@activityStatusComment": {
+    "description": "Label of the comment of activity status"
+  },
+  "activityStatusEditStatus": "Edytuj status",
+  "@activityStatusEditStatus": {
     "description": "Label of the button to edit status"
   },
-  "runStatusFinish": "Zakończ",
-  "@runStatusFinish": {
-    "description": "Label of the button to finish run"
+  "activityStatusFinish": "Zakończ",
+  "@activityStatusFinish": {
+    "description": "Label of the button to finish activity"
   },
-  "runStatusPending": "Oczekujący",
-  "@runStatusPending": {
+  "activityStatusPending": "Oczekujący",
+  "@activityStatusPending": {
     "description": "Type of workout status called pending"
   },
-  "runStatusDone": "Wykonany",
-  "@runStatusDone": {
+  "activityStatusDone": "Wykonany",
+  "@activityStatusDone": {
     "description": "Type of workout status called done"
   },
-  "runStatusAborted": "Przerwany",
-  "@runStatusAborted": {
+  "activityStatusAborted": "Przerwany",
+  "@activityStatusAborted": {
     "description": "Type of workout status called aborted"
   },
-  "runStatusUndone": "Niewykonany",
-  "@runStatusUndone": {
+  "activityStatusUndone": "Niewykonany",
+  "@activityStatusUndone": {
     "description": "Type of workout status called undone"
   },
+  "@__________HEALTH_MEASUREMENT__________": {},
+  "restingHeartRate": "Tętno spoczynkowe",
+  "fastingWeight": "Waga na czczo",
+  "addHealthMeasurement": "Dodaj pomiar zdrowia",
+  "@addHealthMeasurement": {
+    "description": "Label of the button to add health measurement"
+  },
+  "deleteHealthMeasurementConfirmationDialogTitle": "Usuń pomiar",
+  "@deleteHealthMeasurementConfirmationDialogTitle": {
+    "description": "Title of the dialog to confirm health measurement deletion"
+  },
+  "deleteHealthMeasurementConfirmationDialogMessage": "Czy na pewno chcesz usunąć ten pomiar zdrowia?",
+  "@deleteHealthMeasurementConfirmationDialogMessage": {
+    "description": "Message of the dialog to confirm health measurement deletion"
+  },
+  "@__________ACCOUNT_TYPES__________": {},
+  "accountType": "Rola",
+  "runner": "Biegacz",
+  "coach": "Trener",
   "@__________GENDERS__________": {},
   "gender": "Płeć",
   "male": "Mężczyzna",
@@ -1010,6 +1128,14 @@
   "@unknownErrorDialogMessage": {
     "description": "Message of the dialog about unknown exception"
   },
+  "pageNotFoundTitle": "Nie znaleziono strony",
+  "@pageNotFoundTitle": {
+    "description": "Title of page not found exception"
+  },
+  "pageNotFoundMessage": "Strona, której szukasz nie istnieje",
+  "@pageNotFoundMessage": {
+    "description": "Message of page not found exception"
+  },
   "@__________CONFIRMATION_DIALOG_MESSAGES__________": {},
   "leavePageConfirmationDialogTitle": "Opuść stronę",
   "@leavePageConfirmationDialogTitle": {
@@ -1023,6 +1149,18 @@
   "@leavePageWithUnsavedChangesConfirmationDialogMessage": {
     "description": "Message of the dialog to confirm leaving page without saving changes"
   },
+  "undoRequestConfirmationDialogTitle": "Cofnij prośbę",
+  "@undoRequestConfirmationDialogTitle": {
+    "description": "Title of the dialog to confirm to undo request"
+  },
+  "undoRequestConfirmationDialogMessage": "Czy na pewno chcesz cofnąć prośbę wysłaną do ",
+  "@undoRequestConfirmationDialogMessage": {
+    "description": "Message of the dialog to confirm to undo request"
+  },
+  "successfullyUndidRequest": "Pomyślnie cofnięto wysłaną prośbę",
+  "@successfullyUndidRequest": {
+    "description": "Message of successfully undid sent message"
+  },
   "@__________COMMON__________": {},
   "name": "Imię",
   "surname": "Nazwisko",
@@ -1030,6 +1168,7 @@
   "password": "Hasło",
   "passwordConfirmation": "Potwierdź hasło",
   "date": "Data",
+  "healthMeasurement": "Pomiar zdrowia",
   "workout": "Trening",
   "race": "Wyścig",
   "day": "Dzień",
@@ -1046,6 +1185,33 @@
   "add": "Dodaj",
   "leave": "Opuść",
   "create": "Utwórz",
+  "submit": "Wyślij",
+  "accept": "Akceptuj",
+  "undo": "Cofnij",
+  "message": "Wiadomość",
+  "week": "Tydzień",
+  "month": "Miesiąc",
+  "year": "Rok",
+  "currentWeek": "Obecny tydzień",
+  "editHealthMeasurement": "Edytuj pomiar zdrowia",
+  "addWorkout": "Dodaj trening",
+  "addRace": "Dodaj wyścig",
+  "sentRequests": "Wysłane prośby",
+  "receivedRequests": "Otrzymane prośby",
+  "noSentRequests": "Brak wysłanych próśb",
+  "noReceivedRequests": "Brak otrzymanych próśb",
+  "successfullyAcceptedRequest": "Pomyślnie zaakceptowano prośbę",
+  "@successfullyAcceptedRequest": {
+    "description": "Message to inform that request has been successfully accepted"
+  },
+  "successfullyDeletedRequest": "Pomyślnie usunięto prośbę",
+  "@successfullyDeletedRequest": {
+    "description": "Message to inform that request has been successfully deleted"
+  },
+  "successfullyDeletedMeasurement": "Pomyślnie usunięto pomiar",
+  "@successfullyDeletedMeasurement": {
+    "description": "Message of successfully deleted measurement"
+  },
   "@__________VALIDATOR_MESSAGES__________": {},
   "requiredFieldMessage": "To pole jest wymagane",
   "@requiredFieldMessage": {

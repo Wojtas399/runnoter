@@ -3,10 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/bloc/profile/identities/profile_identities_bloc.dart';
+import '../../component/form_text_field_component.dart';
+import '../../component/gap/gap_components.dart';
+import '../../component/gap/gap_horizontal_components.dart';
+import '../../component/padding/paddings_24.dart';
 import '../../component/responsive_layout_component.dart';
 import '../../component/text/body_text_components.dart';
 import '../../component/text/label_text_components.dart';
-import '../../component/text_field_component.dart';
 import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
 import '../../service/utils.dart';
@@ -72,7 +75,6 @@ class _State extends State<ProfileEmailDialog> {
   }
 
   Future<void> _onSaveButtonPressed(BuildContext context) async {
-    unfocusInputs();
     final bloc = context.read<ProfileIdentitiesBloc>();
     final bool reauthenticated = await askForReauthentication();
     if (reauthenticated) {
@@ -152,19 +154,14 @@ class _FullScreenDialog extends StatelessWidget {
             onPressed: isSaveButtonDisabled ? null : onSaveButtonPressed,
             child: Text(str.save),
           ),
-          const SizedBox(width: 16),
+          const GapHorizontal16(),
         ],
       ),
       body: SafeArea(
-        child: GestureDetector(
-          onTap: unfocusInputs,
-          child: Container(
-            padding: const EdgeInsets.all(24),
-            color: Colors.transparent,
-            child: _Form(
-              emailController: emailController,
-              emailValidator: emailValidator,
-            ),
+        child: Paddings24(
+          child: _Form(
+            emailController: emailController,
+            emailValidator: emailValidator,
           ),
         ),
       ),
@@ -191,20 +188,21 @@ class _Form extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        TextFieldComponent(
+        FormTextField(
           label: str.email,
           isRequired: true,
           controller: emailController,
           validator: emailValidator,
           icon: Icons.email,
+          onTapOutside: (_) => unfocusInputs(),
         ),
-        const SizedBox(height: 24),
+        const Gap24(),
         BodyMedium(
           str.profileChangeEmailDialogMessage,
           color: Theme.of(context).colorScheme.outline,
         ),
         if (isEmailVerified == false) ...[
-          const SizedBox(height: 24),
+          const Gap24(),
           OutlinedButton(
             onPressed: () => _resendEmailVerification(context),
             child: Text(str.profileResendEmailVerification),

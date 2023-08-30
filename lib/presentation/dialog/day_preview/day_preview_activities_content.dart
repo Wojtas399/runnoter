@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/bloc/day_preview/day_preview_cubit.dart';
+import '../../../domain/bloc/day_preview/day_preview_bloc.dart';
 import '../../../domain/entity/race.dart';
 import '../../../domain/entity/workout.dart';
 import '../../component/activity_item_component.dart';
@@ -17,60 +17,33 @@ class DayPreviewActivities extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final DayPreviewCubit cubit = context.watch<DayPreviewCubit>();
+    final List<Workout>? workouts = context.select(
+      (DayPreviewBloc bloc) => bloc.state.workouts,
+    );
+    final List<Race>? races = context.select(
+      (DayPreviewBloc bloc) => bloc.state.races,
+    );
 
-    if (cubit.state.workouts == null && cubit.state.workouts == null) {
+    if (workouts == null && races == null) {
       return const Center(
         child: Paddings24(
           child: LoadingInfo(),
         ),
       );
-    } else if (cubit.areThereActivities) {
-      return SingleChildScrollView(
-        child: Paddings24(
-          child: _Activities(
-            workouts: cubit.state.workouts,
-            races: cubit.state.races,
-          ),
-        ),
-      );
+    } else if (workouts?.isEmpty == true && races?.isEmpty == true) {
+      return const _NoActivitiesInfo();
     }
-    final str = Str.of(context);
-    return Center(
-      child: Paddings24(
-        child: EmptyContentInfo(
-          title: str.dayPreviewNoActivitiesTitle,
-          subtitle: cubit.isPastDate
-              ? str.dayPreviewNoActivitiesMessagePastDay
-              : str.dayPreviewNoActivitiesMessageFutureDay,
-        ),
-      ),
-    );
-  }
-}
-
-class _Activities extends StatelessWidget {
-  final List<Workout>? workouts;
-  final List<Race>? races;
-
-  const _Activities({
-    required this.workouts,
-    required this.races,
-  });
-
-  @override
-  Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         ...?workouts?.map(
-          (workout) => ActivityItem(
+          (Workout workout) => ActivityItem(
             activity: workout,
             onPressed: () => _onWorkoutPressed(workout.id),
           ),
         ),
         ...?races?.map(
-          (race) => ActivityItem(
+          (Race race) => ActivityItem(
             activity: race,
             onPressed: () => _onRacePressed(race.id),
           ),
@@ -88,6 +61,29 @@ class _Activities extends StatelessWidget {
   void _onRacePressed(String raceId) {
     popRoute(
       result: DayPreviewDialogActionShowRace(raceId: raceId),
+    );
+  }
+}
+
+class _NoActivitiesInfo extends StatelessWidget {
+  const _NoActivitiesInfo();
+
+  @override
+  Widget build(BuildContext context) {
+    final bool isPastDate = context.select(
+      (DayPreviewBloc bloc) => bloc.state.isPastDate,
+    );
+    final str = Str.of(context);
+
+    return Center(
+      child: Paddings24(
+        child: EmptyContentInfo(
+          title: str.dayPreviewNoActivitiesTitle,
+          subtitle: isPastDate
+              ? str.dayPreviewNoActivitiesMessagePastDay
+              : str.dayPreviewNoActivitiesMessageFutureDay,
+        ),
+      ),
     );
   }
 }
