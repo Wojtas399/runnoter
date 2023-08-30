@@ -15,6 +15,7 @@ class FormTextField extends StatelessWidget {
   final TextEditingController? controller;
   final Function(String? value)? onChanged;
   final Function(PointerDownEvent event)? onTapOutside;
+  final Function(String value)? onSubmitted;
   final String? Function(String? value)? validator;
 
   const FormTextField({
@@ -31,6 +32,7 @@ class FormTextField extends StatelessWidget {
     this.controller,
     this.onChanged,
     this.onTapOutside,
+    this.onSubmitted,
     this.validator,
   });
 
@@ -51,6 +53,7 @@ class FormTextField extends StatelessWidget {
       keyboardType: keyboardType,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       onTapOutside: onTapOutside,
+      onFieldSubmitted: onSubmitted,
     );
   }
 

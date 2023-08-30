@@ -109,6 +109,7 @@ class _Name extends StatelessWidget {
       isRequired: true,
       onChanged: (String? value) => _onChanged(value, context),
       onTapOutside: (_) => unfocusInputs(),
+      onSubmitted: (_) => _onFormSubmitted(context),
       validator: (_) => !isValid ? str.invalidNameOrSurnameMessage : null,
     );
   }
@@ -135,6 +136,7 @@ class _Surname extends StatelessWidget {
       label: str.surname,
       isRequired: true,
       onChanged: (String? value) => _onChanged(value, context),
+      onSubmitted: (_) => _onFormSubmitted(context),
       validator: (_) => !isValid ? str.invalidNameOrSurnameMessage : null,
     );
   }
@@ -160,7 +162,9 @@ class _Email extends StatelessWidget {
       icon: Icons.email,
       label: str.email,
       isRequired: true,
+      keyboardType: TextInputType.emailAddress,
       onChanged: (String? value) => _onChanged(value, context),
+      onSubmitted: (_) => _onFormSubmitted(context),
       validator: (_) => !isValid ? str.invalidEmailMessage : null,
     );
   }
@@ -184,6 +188,7 @@ class _Password extends StatelessWidget {
     return PasswordTextFieldComponent(
       isRequired: true,
       onChanged: (String? value) => _onChanged(value, context),
+      onSubmitted: (_) => _onFormSubmitted(context),
       validator: (_) =>
           !isValid ? Str.of(context).invalidPasswordMessage : null,
     );
@@ -209,6 +214,7 @@ class _PasswordConfirmation extends StatelessWidget {
       label: Str.of(context).passwordConfirmation,
       isRequired: true,
       onChanged: (String? value) => _onChanged(value, context),
+      onSubmitted: (_) => _onFormSubmitted(context),
       validator: (_) =>
           !isValid ? Str.of(context).invalidPasswordConfirmationMessage : null,
     );
@@ -220,5 +226,12 @@ class _PasswordConfirmation extends StatelessWidget {
             passwordConfirmation: value ?? '',
           ),
         );
+  }
+}
+
+void _onFormSubmitted(BuildContext context) {
+  final SignUpBloc bloc = context.read<SignUpBloc>();
+  if (!bloc.state.isSubmitButtonDisabled) {
+    bloc.add(const SignUpEventSubmit());
   }
 }
