@@ -327,10 +327,6 @@
     "description": "Info about successfully saved status"
   },
   "@__________DAY_PREVIEW__________": {},
-  "dayPreviewHealthMeasurement": "Pomiar zdrowia",
-  "@dayPreviewHealthMeasurement": {
-    "description": "Label of health measurement section"
-  },
   "dayPreviewActivities": "Aktywności",
   "@dayPreviewActivities": {
     "description": "Label of activities section"
@@ -1172,6 +1168,7 @@
   "password": "Hasło",
   "passwordConfirmation": "Potwierdź hasło",
   "date": "Data",
+  "healthMeasurement": "Pomiar zdrowia",
   "workout": "Trening",
   "race": "Wyścig",
   "day": "Dzień",

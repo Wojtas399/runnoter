@@ -14,20 +14,20 @@ import '../../config/navigation/router.dart';
 import '../../extension/context_extensions.dart';
 
 class HomeMobileAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final RouteData currentPage;
+  final RouteData currentRoute;
   final VoidCallback onMenuPressed;
   final VoidCallback onAvatarPressed;
 
   const HomeMobileAppBar({
     super.key,
-    required this.currentPage,
+    required this.currentRoute,
     required this.onMenuPressed,
     required this.onAvatarPressed,
   });
 
   @override
   Size get preferredSize => Size.fromHeight(
-        currentPage.name == CalendarRoute.name
+        currentRoute.name == CalendarRoute.name
             ? kIsWeb
                 ? 160
                 : 180
@@ -46,7 +46,7 @@ class HomeMobileAppBar extends StatelessWidget implements PreferredSizeWidget {
           child: _Avatar(onPressed: onAvatarPressed),
         ),
       ],
-      bottom: currentPage.name == CalendarRoute.name
+      bottom: currentRoute.name == CalendarRoute.name
           ? _MobileDateRangeHeader()
           : null,
     );

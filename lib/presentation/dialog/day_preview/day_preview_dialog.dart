@@ -168,7 +168,7 @@ class _HealthMeasurement extends StatelessWidget {
     );
 
     return HealthMeasurementInfo(
-      label: Str.of(context).dayPreviewHealthMeasurement,
+      label: Str.of(context).healthMeasurement,
       healthMeasurement: measurement,
       displayBigButtonIfHealthMeasurementIsNull: true,
       onEdit: canModify ? () => _onEdit(context) : null,

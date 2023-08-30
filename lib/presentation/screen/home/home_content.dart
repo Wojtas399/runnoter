@@ -3,17 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../dependency_injection.dart';
-import '../../../domain/additional_model/coaching_request.dart';
 import '../../../domain/bloc/home/home_bloc.dart';
 import '../../../domain/entity/user.dart';
-import '../../../domain/service/auth_service.dart';
 import '../../config/navigation/router.dart';
-import '../../dialog/persons_search/persons_search_dialog.dart';
 import '../../extension/context_extensions.dart';
 import '../../service/dialog_service.dart';
-import '../../service/navigator_service.dart';
 import 'home_app_bar.dart';
+import 'home_floating_action_button.dart';
 import 'home_navigation_drawer.dart';
 import 'home_navigation_rail.dart';
 
@@ -49,7 +45,7 @@ class _State extends State<HomeContent> {
       routes: routes,
       builder: (context, child) {
         final tabsRouter = AutoTabsRouter.of(context);
-        final RouteData currentPage = tabsRouter.current;
+        final RouteData currentRoute = tabsRouter.current;
         final Color? bckColor = context.isMobileSize
             ? null
             : Color.alphaBlend(
@@ -64,7 +60,7 @@ class _State extends State<HomeContent> {
           backgroundColor: bckColor,
           appBar: (context.isMobileSize
               ? HomeMobileAppBar(
-                  currentPage: currentPage,
+                  currentRoute: currentRoute,
                   onMenuPressed: _onMenuAppBarPressed,
                   onAvatarPressed: () => tabsRouter.setActiveIndex(
                     numberOfAllPages - 1,
@@ -80,6 +76,7 @@ class _State extends State<HomeContent> {
           drawer: context.isMobileSize
               ? HomeNavigationDrawer(
                   selectedIndex: activeIndex,
+                  currentRoute: currentRoute,
                   onPageSelected: (int pageIndex) => _onPageSelected(
                     pageIndex,
                     tabsRouter,
@@ -87,11 +84,8 @@ class _State extends State<HomeContent> {
                   ),
                 )
               : null,
-          floatingActionButton: _isFloatingButtonRequired(context, currentPage)
-              ? FloatingActionButton(
-                  onPressed: () => _onFloatingActionButtonPressed(currentPage),
-                  child: const Icon(Icons.add),
-                )
+          floatingActionButton: context.isMobileSize
+              ? HomeFloatingActionButton(currentRoute: currentRoute)
               : null,
           body: SafeArea(
             child: Row(
@@ -100,6 +94,7 @@ class _State extends State<HomeContent> {
                   switch (_navigationType) {
                     _NavigationType.drawer => HomeNavigationDrawer(
                         selectedIndex: activeIndex,
+                        currentRoute: currentRoute,
                         onPageSelected: (int pageIndex) => _onPageSelected(
                           pageIndex,
                           tabsRouter,
@@ -108,6 +103,7 @@ class _State extends State<HomeContent> {
                       ),
                     _NavigationType.rail => HomeNavigationRail(
                         selectedIndex: activeIndex,
+                        currentRoute: currentRoute,
                         backgroundColor: bckColor,
                         onPageSelected: (int pageIndex) => _onPageSelected(
                           pageIndex,
@@ -119,6 +115,7 @@ class _State extends State<HomeContent> {
                 if (context.isTabletSize)
                   HomeNavigationRail(
                     selectedIndex: activeIndex,
+                    currentRoute: currentRoute,
                     backgroundColor: bckColor,
                     onPageSelected: (int pageIndex) => _onPageSelected(
                       pageIndex,
@@ -167,25 +164,6 @@ class _State extends State<HomeContent> {
     );
     if (confirmed == true) {
       bloc.add(const HomeEventSignOut());
-    }
-  }
-
-  bool _isFloatingButtonRequired(BuildContext context, RouteData currentPage) =>
-      context.isMobileSize &&
-      (currentPage.name == BloodTestsRoute.name ||
-          currentPage.name == RacesRoute.name ||
-          currentPage.name == ClientsRoute.name);
-
-  Future<void> _onFloatingActionButtonPressed(RouteData currentPage) async {
-    final String? loggedUserId = await getIt<AuthService>().loggedUserId$.first;
-    if (currentPage.name == BloodTestsRoute.name) {
-      navigateTo(BloodTestCreatorRoute(userId: loggedUserId));
-    } else if (currentPage.name == RacesRoute.name) {
-      navigateTo(RaceCreatorRoute(userId: loggedUserId));
-    } else if (currentPage.name == ClientsRoute.name) {
-      showDialogDependingOnScreenSize(const PersonsSearchDialog(
-        requestDirection: CoachingRequestDirection.coachToClient,
-      ));
     }
   }
 }

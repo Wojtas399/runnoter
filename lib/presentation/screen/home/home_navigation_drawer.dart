@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -6,14 +7,17 @@ import '../../../domain/bloc/home/home_bloc.dart';
 import '../../../domain/entity/user.dart';
 import '../../component/gap/gap_components.dart';
 import '../../extension/context_extensions.dart';
+import 'home_floating_action_button.dart';
 
 class HomeNavigationDrawer extends StatelessWidget {
   final int? selectedIndex;
+  final RouteData currentRoute;
   final Function(int pageIndex) onPageSelected;
 
   const HomeNavigationDrawer({
     super.key,
     required this.selectedIndex,
+    required this.currentRoute,
     required this.onPageSelected,
   });
 
@@ -28,7 +32,15 @@ class HomeNavigationDrawer extends StatelessWidget {
       selectedIndex: selectedIndex,
       onDestinationSelected: onPageSelected,
       children: [
-        const Gap32(),
+        if (context.isDesktopSize) ...[
+          const Gap16(),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: HomeExtendedFloatingActionButton(currentRoute: currentRoute),
+          ),
+          const Gap24(),
+        ] else
+          const Gap32(),
         if (context.isMobileSize) const _AppLogo(),
         NavigationDrawerDestination(
           icon: const Icon(Icons.calendar_month_outlined),

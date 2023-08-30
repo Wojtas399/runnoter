@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -6,15 +7,18 @@ import '../../../domain/bloc/home/home_bloc.dart';
 import '../../../domain/entity/user.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/text/label_text_components.dart';
+import 'home_floating_action_button.dart';
 
 class HomeNavigationRail extends StatelessWidget {
   final int? selectedIndex;
+  final RouteData currentRoute;
   final Color? backgroundColor;
   final Function(int index) onPageSelected;
 
   const HomeNavigationRail({
     super.key,
     required this.selectedIndex,
+    required this.currentRoute,
     required this.backgroundColor,
     required this.onPageSelected,
   });
@@ -30,6 +34,7 @@ class HomeNavigationRail extends StatelessWidget {
       labelType: NavigationRailLabelType.all,
       backgroundColor: backgroundColor,
       groupAlignment: -0.90,
+      leading: HomeFloatingActionButton(currentRoute: currentRoute),
       trailing: Column(
         children: [
           const Gap32(),
