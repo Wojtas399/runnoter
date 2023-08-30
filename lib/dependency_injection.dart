@@ -3,6 +3,7 @@ import 'package:get_it/get_it.dart';
 
 import 'common/date_service.dart';
 import 'data/repository_impl/blood_test_repository_impl.dart';
+import 'data/repository_impl/chat_repository_impl.dart';
 import 'data/repository_impl/health_measurement_repository_impl.dart';
 import 'data/repository_impl/person_repository_impl.dart';
 import 'data/repository_impl/race_repository_impl.dart';
@@ -12,6 +13,7 @@ import 'data/service_impl/auth_service_impl.dart';
 import 'data/service_impl/coaching_request_service_impl.dart';
 import 'domain/cubit/date_range_manager_cubit.dart';
 import 'domain/repository/blood_test_repository.dart';
+import 'domain/repository/chat_repository.dart';
 import 'domain/repository/health_measurement_repository.dart';
 import 'domain/repository/person_repository.dart';
 import 'domain/repository/race_repository.dart';
@@ -45,6 +47,7 @@ void resetGetItRepositories() {
   getIt.resetLazySingleton<HealthMeasurementRepository>();
   getIt.resetLazySingleton<BloodTestRepository>();
   getIt.resetLazySingleton<RaceRepository>();
+  getIt.resetLazySingleton<ChatRepository>();
 }
 
 void _registerFirebaseServices() {
@@ -78,6 +81,7 @@ void _registerRepositories() {
     () => BloodTestRepositoryImpl(),
   );
   getIt.registerLazySingleton<RaceRepository>(() => RaceRepositoryImpl());
+  getIt.registerLazySingleton<ChatRepository>(() => ChatRepositoryImpl());
 }
 
 void _registerUseCases() {
