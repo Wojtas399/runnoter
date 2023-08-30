@@ -82,11 +82,6 @@ class ForgotPasswordBloc extends BlocWithStatus<ForgotPasswordEvent,
   }
 }
 
-enum ForgotPasswordBlocInfo {
-  emailSubmitted,
-}
+enum ForgotPasswordBlocInfo { emailSubmitted }
 
-enum ForgotPasswordBlocError {
-  invalidEmail,
-  userNotFound,
-}
+enum ForgotPasswordBlocError { invalidEmail, userNotFound }
