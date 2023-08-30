@@ -6,6 +6,7 @@ import '../../component/gap/gap_components.dart';
 import '../../config/navigation/router.dart';
 import '../../extension/context_extensions.dart';
 import 'client_app_bar.dart';
+import 'client_fab.dart';
 
 class ClientContent extends StatelessWidget {
   const ClientContent({super.key});
@@ -41,17 +42,22 @@ class ClientContent extends StatelessWidget {
                     onDestinationSelected: tabsRouter.setActiveIndex,
                   )
                 : null,
+            floatingActionButton: context.isMobileSize
+                ? ClientFAB(currentRoute: tabsRouter.current)
+                : null,
             body: SafeArea(
               child: Row(
                 children: [
                   if (context.isDesktopSize)
                     _Drawer(
                       activePageIndex: tabsRouter.activeIndex,
+                      currentRoute: tabsRouter.current,
                       onPageChanged: tabsRouter.setActiveIndex,
                     ),
                   if (context.isTabletSize)
                     _Rail(
                       activePageIndex: tabsRouter.activeIndex,
+                      currentRoute: tabsRouter.current,
                       backgroundColor: bckColor,
                       onPageChanged: tabsRouter.setActiveIndex,
                     ),
@@ -108,9 +114,14 @@ class _BottomNavigation extends StatelessWidget {
 
 class _Drawer extends StatelessWidget {
   final int activePageIndex;
+  final RouteData currentRoute;
   final Function(int destinationIndex) onPageChanged;
 
-  const _Drawer({required this.activePageIndex, required this.onPageChanged});
+  const _Drawer({
+    required this.activePageIndex,
+    required this.currentRoute,
+    required this.onPageChanged,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -120,7 +131,15 @@ class _Drawer extends StatelessWidget {
       selectedIndex: activePageIndex,
       onDestinationSelected: onPageChanged,
       children: [
-        const Gap32(),
+        if (context.isDesktopSize) ...[
+          const Gap16(),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: ClientExtendedFAB(currentRoute: currentRoute),
+          ),
+          const Gap24(),
+        ] else
+          const Gap32(),
         NavigationDrawerDestination(
           icon: const Icon(Icons.event_note_outlined),
           selectedIcon: const Icon(Icons.event_note),
@@ -148,11 +167,13 @@ class _Drawer extends StatelessWidget {
 
 class _Rail extends StatelessWidget {
   final int activePageIndex;
+  final RouteData currentRoute;
   final Color backgroundColor;
   final Function(int destinationIndex) onPageChanged;
 
   const _Rail({
     required this.activePageIndex,
+    required this.currentRoute,
     required this.backgroundColor,
     required this.onPageChanged,
   });
@@ -167,6 +188,7 @@ class _Rail extends StatelessWidget {
       onDestinationSelected: onPageChanged,
       backgroundColor: backgroundColor,
       groupAlignment: -0.90,
+      leading: ClientFAB(currentRoute: currentRoute),
       destinations: [
         NavigationRailDestination(
           icon: const Icon(Icons.event_note_outlined),
