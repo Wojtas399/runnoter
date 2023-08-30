@@ -75,6 +75,7 @@ class _State extends State<ProfileEmailDialog> {
   }
 
   Future<void> _onSave(BuildContext context) async {
+    if (_isSaveButtonDisabled) return;
     final bloc = context.read<ProfileIdentitiesBloc>();
     final bool reauthenticated = await askForReauthentication();
     if (reauthenticated) {
@@ -109,7 +110,7 @@ class _NormalDialog extends StatelessWidget {
         child: _Form(
           emailController: emailController,
           emailValidator: emailValidator,
-          onSave: isSaveButtonDisabled ? null : onSave,
+          onSave: onSave,
         ),
       ),
       actions: [
@@ -163,7 +164,7 @@ class _FullScreenDialog extends StatelessWidget {
           child: _Form(
             emailController: emailController,
             emailValidator: emailValidator,
-            onSave: isSaveButtonDisabled ? null : onSave,
+            onSave: onSave,
           ),
         ),
       ),
@@ -174,7 +175,7 @@ class _FullScreenDialog extends StatelessWidget {
 class _Form extends StatelessWidget {
   final TextEditingController emailController;
   final String? Function(String? value) emailValidator;
-  final VoidCallback? onSave;
+  final VoidCallback onSave;
 
   const _Form({
     required this.emailController,
@@ -201,7 +202,7 @@ class _Form extends StatelessWidget {
           maxLines: 1,
           keyboardType: TextInputType.emailAddress,
           onTapOutside: (_) => unfocusInputs(),
-          onSubmitted: (_) => onSave != null ? onSave!() : null,
+          onSubmitted: (_) => onSave(),
         ),
         const Gap24(),
         BodyMedium(

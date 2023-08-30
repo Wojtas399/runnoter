@@ -51,7 +51,7 @@ class _State extends State<ProfilePasswordDialog> {
         isSaveButtonDisabled: _isSaveButtonDisabled,
         passwordValidator: _validatePassword,
         passwordConfirmationValidator: _validatePasswordConfirmation,
-        onSaveButtonPressed: () => _onSaveButtonPressed(context),
+        onSave: () => _onSave(context),
       ),
       desktopBody: _NormalDialog(
         passwordController: _passwordController,
@@ -59,7 +59,7 @@ class _State extends State<ProfilePasswordDialog> {
         isSaveButtonDisabled: _isSaveButtonDisabled,
         passwordValidator: _validatePassword,
         passwordConfirmationValidator: _validatePasswordConfirmation,
-        onSaveButtonPressed: () => _onSaveButtonPressed(context),
+        onSave: () => _onSave(context),
       ),
     );
   }
@@ -85,7 +85,8 @@ class _State extends State<ProfilePasswordDialog> {
           ? Str.of(context).invalidPasswordConfirmationMessage
           : null;
 
-  Future<void> _onSaveButtonPressed(BuildContext context) async {
+  Future<void> _onSave(BuildContext context) async {
+    if (_isSaveButtonDisabled) return;
     final bloc = context.read<ProfileIdentitiesBloc>();
     final bool reauthenticated = await askForReauthentication();
     if (reauthenticated) {
@@ -104,7 +105,7 @@ class _NormalDialog extends StatelessWidget {
   final bool isSaveButtonDisabled;
   final String? Function(String? value) passwordValidator;
   final String? Function(String? value) passwordConfirmationValidator;
-  final VoidCallback onSaveButtonPressed;
+  final VoidCallback onSave;
 
   const _NormalDialog({
     required this.passwordController,
@@ -112,7 +113,7 @@ class _NormalDialog extends StatelessWidget {
     required this.isSaveButtonDisabled,
     required this.passwordValidator,
     required this.passwordConfirmationValidator,
-    required this.onSaveButtonPressed,
+    required this.onSave,
   });
 
   @override
@@ -123,23 +124,12 @@ class _NormalDialog extends StatelessWidget {
       title: Text(str.profileNewPasswordDialogTitle),
       content: SizedBox(
         width: 400,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            PasswordTextFieldComponent(
-              label: str.profileNewPasswordDialogNewPassword,
-              isRequired: true,
-              controller: passwordController,
-              validator: passwordValidator,
-            ),
-            const Gap24(),
-            PasswordTextFieldComponent(
-              label: str.profileNewPasswordDialogNewPasswordConfirmation,
-              isRequired: true,
-              controller: passwordConfirmationController,
-              validator: passwordConfirmationValidator,
-            ),
-          ],
+        child: _Form(
+          passwordController: passwordController,
+          passwordConfirmationController: passwordConfirmationController,
+          passwordValidator: passwordValidator,
+          passwordConfirmationValidator: passwordConfirmationValidator,
+          onSave: onSave,
         ),
       ),
       actions: [
@@ -151,7 +141,7 @@ class _NormalDialog extends StatelessWidget {
           ),
         ),
         FilledButton(
-          onPressed: isSaveButtonDisabled ? null : onSaveButtonPressed,
+          onPressed: isSaveButtonDisabled ? null : onSave,
           child: Text(str.save),
         ),
       ],
@@ -165,7 +155,7 @@ class _FullScreenDialog extends StatelessWidget {
   final bool isSaveButtonDisabled;
   final String? Function(String? value) passwordValidator;
   final String? Function(String? value) passwordConfirmationValidator;
-  final VoidCallback onSaveButtonPressed;
+  final VoidCallback onSave;
 
   const _FullScreenDialog({
     required this.passwordController,
@@ -173,7 +163,7 @@ class _FullScreenDialog extends StatelessWidget {
     required this.isSaveButtonDisabled,
     required this.passwordValidator,
     required this.passwordConfirmationValidator,
-    required this.onSaveButtonPressed,
+    required this.onSave,
   });
 
   @override
@@ -186,7 +176,7 @@ class _FullScreenDialog extends StatelessWidget {
         leading: const CloseButton(),
         actions: [
           FilledButton(
-            onPressed: isSaveButtonDisabled ? null : onSaveButtonPressed,
+            onPressed: isSaveButtonDisabled ? null : onSave,
             child: Text(str.save),
           ),
           const GapHorizontal16(),
@@ -194,26 +184,58 @@ class _FullScreenDialog extends StatelessWidget {
       ),
       body: SafeArea(
         child: Paddings24(
-          child: Column(
-            children: [
-              PasswordTextFieldComponent(
-                label: str.profileNewPasswordDialogNewPassword,
-                isRequired: true,
-                controller: passwordController,
-                validator: passwordValidator,
-                onTapOutside: (_) => unfocusInputs(),
-              ),
-              const Gap24(),
-              PasswordTextFieldComponent(
-                label: str.profileNewPasswordDialogNewPasswordConfirmation,
-                isRequired: true,
-                controller: passwordConfirmationController,
-                validator: passwordConfirmationValidator,
-              ),
-            ],
+          child: _Form(
+            passwordController: passwordController,
+            passwordConfirmationController: passwordConfirmationController,
+            passwordValidator: passwordValidator,
+            passwordConfirmationValidator: passwordConfirmationValidator,
+            onSave: onSave,
           ),
         ),
       ),
+    );
+  }
+}
+
+class _Form extends StatelessWidget {
+  final TextEditingController passwordController;
+  final TextEditingController passwordConfirmationController;
+  final String? Function(String? value) passwordValidator;
+  final String? Function(String? value) passwordConfirmationValidator;
+  final VoidCallback onSave;
+
+  const _Form({
+    required this.passwordController,
+    required this.passwordConfirmationController,
+    required this.passwordValidator,
+    required this.passwordConfirmationValidator,
+    required this.onSave,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final str = Str.of(context);
+
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        PasswordTextFieldComponent(
+          label: str.profileNewPasswordDialogNewPassword,
+          isRequired: true,
+          controller: passwordController,
+          validator: passwordValidator,
+          onTapOutside: (_) => unfocusInputs(),
+          onSubmitted: (_) => onSave(),
+        ),
+        const Gap24(),
+        PasswordTextFieldComponent(
+          label: str.profileNewPasswordDialogNewPasswordConfirmation,
+          isRequired: true,
+          controller: passwordConfirmationController,
+          validator: passwordConfirmationValidator,
+          onSubmitted: (_) => onSave(),
+        ),
+      ],
     );
   }
 }
