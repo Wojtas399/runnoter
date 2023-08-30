@@ -157,7 +157,9 @@ class _WorkoutNameState extends State<_WorkoutName> {
       isRequired: true,
       controller: _controller,
       maxLength: 100,
+      textInputAction: TextInputAction.done,
       onTapOutside: (_) => unfocusInputs(),
+      onSubmitted: (_) => _onSubmitted(context),
     );
   }
 
@@ -165,6 +167,13 @@ class _WorkoutNameState extends State<_WorkoutName> {
     context.read<WorkoutCreatorBloc>().add(
           WorkoutCreatorEventWorkoutNameChanged(workoutName: _controller.text),
         );
+  }
+
+  void _onSubmitted(BuildContext context) {
+    final bloc = context.read<WorkoutCreatorBloc>();
+    if (bloc.state.canSubmit) {
+      bloc.add(const WorkoutCreatorEventSubmit());
+    }
   }
 }
 
