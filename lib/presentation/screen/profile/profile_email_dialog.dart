@@ -46,13 +46,13 @@ class _State extends State<ProfileEmailDialog> {
     return ResponsiveLayout(
       mobileBody: _FullScreenDialog(
         isSaveButtonDisabled: _isSaveButtonDisabled,
-        onSaveButtonPressed: () => _onSaveButtonPressed(context),
+        onSave: () => _onSave(context),
         emailController: _emailController,
         emailValidator: _validateEmail,
       ),
       desktopBody: _NormalDialog(
         isSaveButtonDisabled: _isSaveButtonDisabled,
-        onSaveButtonPressed: () => _onSaveButtonPressed(context),
+        onSave: () => _onSave(context),
         emailController: _emailController,
         emailValidator: _validateEmail,
       ),
@@ -74,7 +74,7 @@ class _State extends State<ProfileEmailDialog> {
     return null;
   }
 
-  Future<void> _onSaveButtonPressed(BuildContext context) async {
+  Future<void> _onSave(BuildContext context) async {
     final bloc = context.read<ProfileIdentitiesBloc>();
     final bool reauthenticated = await askForReauthentication();
     if (reauthenticated) {
@@ -87,13 +87,13 @@ class _State extends State<ProfileEmailDialog> {
 
 class _NormalDialog extends StatelessWidget {
   final bool isSaveButtonDisabled;
-  final VoidCallback onSaveButtonPressed;
+  final VoidCallback onSave;
   final TextEditingController emailController;
   final String? Function(String? value) emailValidator;
 
   const _NormalDialog({
     required this.isSaveButtonDisabled,
-    required this.onSaveButtonPressed,
+    required this.onSave,
     required this.emailController,
     required this.emailValidator,
   });
@@ -109,6 +109,7 @@ class _NormalDialog extends StatelessWidget {
         child: _Form(
           emailController: emailController,
           emailValidator: emailValidator,
+          onSave: isSaveButtonDisabled ? null : onSave,
         ),
       ),
       actions: [
@@ -120,7 +121,7 @@ class _NormalDialog extends StatelessWidget {
           ),
         ),
         FilledButton(
-          onPressed: isSaveButtonDisabled ? null : onSaveButtonPressed,
+          onPressed: isSaveButtonDisabled ? null : onSave,
           child: Text(str.save),
         ),
       ],
@@ -130,13 +131,13 @@ class _NormalDialog extends StatelessWidget {
 
 class _FullScreenDialog extends StatelessWidget {
   final bool isSaveButtonDisabled;
-  final VoidCallback onSaveButtonPressed;
+  final VoidCallback onSave;
   final TextEditingController emailController;
   final String? Function(String? value) emailValidator;
 
   const _FullScreenDialog({
     required this.isSaveButtonDisabled,
-    required this.onSaveButtonPressed,
+    required this.onSave,
     required this.emailController,
     required this.emailValidator,
   });
@@ -151,7 +152,7 @@ class _FullScreenDialog extends StatelessWidget {
         leading: const CloseButton(),
         actions: [
           FilledButton(
-            onPressed: isSaveButtonDisabled ? null : onSaveButtonPressed,
+            onPressed: isSaveButtonDisabled ? null : onSave,
             child: Text(str.save),
           ),
           const GapHorizontal16(),
@@ -162,6 +163,7 @@ class _FullScreenDialog extends StatelessWidget {
           child: _Form(
             emailController: emailController,
             emailValidator: emailValidator,
+            onSave: isSaveButtonDisabled ? null : onSave,
           ),
         ),
       ),
@@ -172,10 +174,12 @@ class _FullScreenDialog extends StatelessWidget {
 class _Form extends StatelessWidget {
   final TextEditingController emailController;
   final String? Function(String? value) emailValidator;
+  final VoidCallback? onSave;
 
   const _Form({
     required this.emailController,
     required this.emailValidator,
+    required this.onSave,
   });
 
   @override
@@ -194,7 +198,10 @@ class _Form extends StatelessWidget {
           controller: emailController,
           validator: emailValidator,
           icon: Icons.email,
+          maxLines: 1,
+          keyboardType: TextInputType.emailAddress,
           onTapOutside: (_) => unfocusInputs(),
+          onSubmitted: (_) => onSave != null ? onSave!() : null,
         ),
         const Gap24(),
         BodyMedium(
