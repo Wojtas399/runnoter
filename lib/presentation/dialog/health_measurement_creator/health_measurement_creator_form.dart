@@ -46,9 +46,7 @@ class _Date extends StatelessWidget {
         DateSelector(
           date: date,
           lastDate: DateTime.now(),
-          onDateSelected: (DateTime date) {
-            _onDateSelected(context, date);
-          },
+          onDateSelected: (DateTime date) => _onDateSelected(context, date),
         ),
       ],
     );
@@ -103,6 +101,7 @@ class _RestingHeartRateState extends State<_RestingHeartRate> {
       ],
       controller: _controller,
       onTapOutside: (_) => unfocusInputs(),
+      onSubmitted: (_) => _onSubmitted(context),
     );
   }
 
@@ -156,6 +155,7 @@ class _FastingWeightState extends State<_FastingWeight> {
         DecimalTextInputFormatter(decimalRange: 2),
       ],
       controller: _controller,
+      onSubmitted: (_) => _onSubmitted(context),
     );
   }
 
@@ -166,5 +166,12 @@ class _FastingWeightState extends State<_FastingWeight> {
             fastingWeight: fastingWeight,
           ),
         );
+  }
+}
+
+void _onSubmitted(BuildContext context) {
+  final bloc = context.read<HealthMeasurementCreatorBloc>();
+  if (bloc.state.canSubmit) {
+    bloc.add(const HealthMeasurementCreatorEventSubmit());
   }
 }
