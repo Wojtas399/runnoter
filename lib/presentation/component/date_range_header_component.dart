@@ -137,15 +137,18 @@ class _DateRangeButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return isSelected
-        ? FilledButton(
-            onPressed: onPressed,
-            child: Text(label),
-          )
-        : OutlinedButton(
-            onPressed: onPressed,
-            child: Text(label),
-          );
+    return SizedBox(
+      height: 40,
+      child: isSelected
+          ? FilledButton(
+              onPressed: onPressed,
+              child: Text(label),
+            )
+          : OutlinedButton(
+              onPressed: onPressed,
+              child: Text(label),
+            ),
+    );
   }
 }
 

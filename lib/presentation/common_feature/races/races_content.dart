@@ -2,18 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../dependency_injection.dart';
 import '../../../domain/cubit/races_cubit.dart';
-import '../../../domain/service/auth_service.dart';
-import '../../component/big_button_component.dart';
 import '../../component/body/medium_body_component.dart';
 import '../../component/empty_content_info_component.dart';
-import '../../component/gap/gap_components.dart';
 import '../../component/loading_info_component.dart';
 import '../../component/padding/paddings_24.dart';
-import '../../component/responsive_layout_component.dart';
-import '../../config/navigation/router.dart';
-import '../../service/navigator_service.dart';
 import 'races_list.dart';
 
 class RacesContent extends StatelessWidget {
@@ -23,51 +16,9 @@ class RacesContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MediumBody(
       child: Paddings24(
-        child: ResponsiveLayout(
-          mobileBody: _Races(),
-          desktopBody: _DesktopContent(),
-        ),
+        child: _Races(),
       ),
     );
-  }
-}
-
-class _DesktopContent extends StatelessWidget {
-  const _DesktopContent();
-
-  @override
-  Widget build(BuildContext context) {
-    return const Column(
-      children: [
-        _AddRaceButton(),
-        Gap24(),
-        Expanded(
-          child: _Races(),
-        ),
-      ],
-    );
-  }
-}
-
-class _AddRaceButton extends StatelessWidget {
-  const _AddRaceButton();
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        BigButton(
-          label: Str.of(context).racesAddNewRace,
-          onPressed: _onPressed,
-        ),
-      ],
-    );
-  }
-
-  Future<void> _onPressed() async {
-    final String? loggedUserId = await getIt<AuthService>().loggedUserId$.first;
-    navigateTo(RaceCreatorRoute(userId: loggedUserId));
   }
 }
 
