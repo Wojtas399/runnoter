@@ -19,12 +19,16 @@ class MockFirebaseChatService extends Mock implements FirebaseChatService {
     ).thenAnswer((invocation) => Future.value(chatDto));
   }
 
-  void mockAddNewChat({ChatDto? addedChatDto}) {
-    when(
-      () => addNewChat(
+  void mockAddNewChat({ChatDto? addedChatDto, Object? throwable}) {
+    if (throwable != null) {
+      when(_addNewChatCall).thenThrow(throwable);
+    } else {
+      when(_addNewChatCall).thenAnswer((_) => Future.value(addedChatDto));
+    }
+  }
+
+  Future<ChatDto?> _addNewChatCall() => addNewChat(
         user1Id: any(named: 'user1Id'),
         user2Id: any(named: 'user2Id'),
-      ),
-    ).thenAnswer((_) => Future.value(addedChatDto));
-  }
+      );
 }

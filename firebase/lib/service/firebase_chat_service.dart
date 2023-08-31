@@ -1,5 +1,5 @@
+import '../firebase.dart';
 import '../firebase_collections.dart';
-import '../model/chat_dto.dart';
 import '../utils/utils.dart';
 
 class FirebaseChatService {
@@ -24,10 +24,18 @@ class FirebaseChatService {
     required String user1Id,
     required String user2Id,
   }) async {
-    final chatRef = getChatsRef().doc();
-    final newChatDto = ChatDto(id: '', user1Id: user1Id, user2Id: user2Id);
-    await asyncOrSyncCall(() => chatRef.set(newChatDto));
-    final snapshot = await chatRef.get();
-    return snapshot.data();
+    final ChatDto? existingChat =
+        await loadChatByUsers(user1Id: user1Id, user2Id: user2Id);
+    if (existingChat != null) {
+      throw const FirebaseChatException(
+        code: FirebaseChatExceptionCode.chatAlreadyExists,
+      );
+    } else {
+      final chatRef = getChatsRef().doc();
+      final newChatDto = ChatDto(id: '', user1Id: user1Id, user2Id: user2Id);
+      await asyncOrSyncCall(() => chatRef.set(newChatDto));
+      final snapshot = await chatRef.get();
+      return snapshot.data();
+    }
   }
 }

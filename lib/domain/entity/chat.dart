@@ -8,7 +8,7 @@ class Chat extends Entity {
     required super.id,
     required this.user1Id,
     required this.user2Id,
-  });
+  }) : assert(user1Id != user2Id);
 
   @override
   List<Object?> get props => [id, user1Id, user2Id];

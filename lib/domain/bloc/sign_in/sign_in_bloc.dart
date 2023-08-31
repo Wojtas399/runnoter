@@ -94,9 +94,8 @@ class SignInBloc extends BlocWithStatus<SignInEvent, SignInState,
       if (networkException.code == NetworkExceptionCode.requestFailed) {
         emitNoInternetConnectionStatus(emit);
       }
-    } on UnknownException catch (unknownException) {
-      emitUnknownErrorStatus(emit);
-      throw unknownException.message;
+    } on UnknownException catch (_) {
+      rethrow;
     }
   }
 

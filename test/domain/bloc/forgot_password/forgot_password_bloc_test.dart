@@ -165,9 +165,7 @@ void main() {
     'should emit unknown error status and throw exception message',
     build: () => createBloc(email: email),
     setUp: () => authService.mockSendPasswordResetEmail(
-      throwable: const UnknownException(
-        message: 'unknown exception message',
-      ),
+      throwable: const UnknownException(message: 'unknown exception message'),
     ),
     act: (bloc) => bloc.add(const ForgotPasswordEventSubmit()),
     expect: () => [
@@ -180,7 +178,9 @@ void main() {
         email: email,
       ),
     ],
-    errors: () => ['unknown exception message'],
+    errors: () => [
+      const UnknownException(message: 'unknown exception message'),
+    ],
     verify: (_) => verify(
       () => authService.sendPasswordResetEmail(email: email),
     ).called(1),

@@ -58,9 +58,9 @@ class ForgotPasswordBloc extends BlocWithStatus<ForgotPasswordEvent,
       if (networkException.code == NetworkExceptionCode.requestFailed) {
         emitNoInternetConnectionStatus(emit);
       }
-    } on UnknownException catch (unknownException) {
+    } on UnknownException catch (_) {
       emitUnknownErrorStatus(emit);
-      throw unknownException.message;
+      rethrow;
     }
   }
 

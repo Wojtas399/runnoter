@@ -1,7 +1,13 @@
 import 'package:equatable/equatable.dart';
 
-abstract class CustomException extends Equatable {
-  const CustomException();
+abstract class CustomException<T> extends Equatable {
+  final T code;
+  final String? message;
+
+  const CustomException({required this.code, this.message});
+
+  @override
+  List<Object?> get props => [code, message];
 }
 
 enum AuthExceptionCode {
@@ -11,46 +17,29 @@ enum AuthExceptionCode {
   emailAlreadyInUse,
 }
 
-class AuthException extends CustomException {
-  final AuthExceptionCode code;
-
-  const AuthException({required this.code});
-
-  @override
-  List<Object?> get props => [code];
+class AuthException extends CustomException<AuthExceptionCode> {
+  const AuthException({required super.code});
 }
 
 enum NetworkExceptionCode { requestFailed, tooManyRequests }
 
-class NetworkException extends CustomException {
-  final NetworkExceptionCode code;
-
-  const NetworkException({required this.code});
-
-  @override
-  List<Object?> get props => [code];
+class NetworkException extends CustomException<NetworkExceptionCode> {
+  const NetworkException({required super.code});
 }
 
 enum CoachingRequestExceptionCode { userAlreadyHasCoach }
 
-class CoachingRequestException extends CustomException {
-  final CoachingRequestExceptionCode code;
+class CoachingRequestException
+    extends CustomException<CoachingRequestExceptionCode> {
+  const CoachingRequestException({required super.code});
+}
 
-  const CoachingRequestException({required this.code});
+enum ChatExceptionCode { chatAlreadyExists }
 
-  @override
-  List<Object?> get props => [code];
+class ChatException extends CustomException<ChatExceptionCode> {
+  const ChatException({required super.code});
 }
 
 class UnknownException extends CustomException {
-  final String message;
-
-  const UnknownException({
-    required this.message,
-  });
-
-  @override
-  List<Object?> get props => [
-        message,
-      ];
+  const UnknownException({required super.message}) : super(code: null);
 }
