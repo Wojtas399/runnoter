@@ -12,23 +12,23 @@ import '../../entity/person.dart';
 import '../../repository/chat_repository.dart';
 import '../../repository/message_repository.dart';
 import '../../repository/person_repository.dart';
+import '../../service/auth_service.dart';
 
 part 'chat_event.dart';
 part 'chat_state.dart';
 
 class ChatBloc extends BlocWithStatus<ChatEvent, ChatState, dynamic, dynamic> {
-  final String _senderId;
-  final String _recipientId;
+  final String _chatId;
+  final AuthService _authService;
   final ChatRepository _chatRepository;
   final MessageRepository _messageRepository;
   final PersonRepository _personRepository;
 
   ChatBloc({
-    required String senderId,
-    required String recipientId,
+    required String chatId,
     ChatState initialState = const ChatState(status: BlocStatusInitial()),
-  })  : _senderId = senderId,
-        _recipientId = recipientId,
+  })  : _chatId = chatId,
+        _authService = getIt<AuthService>(),
         _chatRepository = getIt<ChatRepository>(),
         _messageRepository = getIt<MessageRepository>(),
         _personRepository = getIt<PersonRepository>(),
@@ -40,24 +40,38 @@ class ChatBloc extends BlocWithStatus<ChatEvent, ChatState, dynamic, dynamic> {
     ChatEventInitialize event,
     Emitter<ChatState> emit,
   ) async {
-    final Person? sender =
-        await _personRepository.getPersonById(personId: _senderId).first;
-    final Person? recipient =
-        await _personRepository.getPersonById(personId: _recipientId).first;
-    if (sender == null || recipient == null) return;
-    final Stream<List<Message>?> messages$ = _chatRepository
-        .getChatByUsers(user1Id: _senderId, user2Id: _recipientId)
-        .whereNotNull()
-        .switchMap(
-          (Chat chat) => _messageRepository.getMessagesForChat(chatId: chat.id),
-        );
+    final String? loggedUserId = await _authService.loggedUserId$.first;
+    if (loggedUserId == null) return;
+    final Chat chat =
+        await _chatRepository.getChatById(chatId: _chatId).whereNotNull().first;
+    final (Person, Person) persons =
+        await _loadPersonsById(chat.user1Id, chat.user2Id);
+    final Person sender =
+        persons.$1.id == loggedUserId ? persons.$1 : persons.$2;
+    final Person recipient =
+        persons.$1.id != loggedUserId ? persons.$1 : persons.$2;
     await emit.forEach(
-      messages$,
+      _messageRepository.getMessagesForChat(chatId: _chatId),
       onData: (List<Message>? messages) => state.copyWith(
         senderFullName: '${sender.name} ${sender.surname}',
         recipientFullName: '${recipient.name} ${recipient.surname}',
         messages: messages,
       ),
     );
+  }
+
+  Future<(Person, Person)> _loadPersonsById(
+    String person1Id,
+    String person2Id,
+  ) async {
+    final Stream<(Person, Person)> persons$ = Rx.combineLatest2(
+      _personRepository.getPersonById(personId: person1Id).whereNotNull(),
+      _personRepository.getPersonById(personId: person2Id).whereNotNull(),
+      (Person person1, Person person2) => (person1, person2),
+    );
+    await for (final persons in persons$) {
+      return persons;
+    }
+    throw '[CHAT BLOC] Cannot load persons';
   }
 }
