@@ -13,6 +13,7 @@ import '../../entity/person.dart';
 import '../../repository/person_repository.dart';
 import '../../service/auth_service.dart';
 import '../../service/coaching_request_service.dart';
+import '../../use_case/load_chat_id_use_case.dart';
 
 part 'clients_event.dart';
 part 'clients_state.dart';
@@ -22,16 +23,19 @@ class ClientsBloc extends BlocWithStatus<ClientsEvent, ClientsState,
   final AuthService _authService;
   final CoachingRequestService _coachingRequestService;
   final PersonRepository _personRepository;
+  final LoadChatIdUseCase _loadChatIdUseCase;
 
   ClientsBloc({
     ClientsState state = const ClientsState(status: BlocStatusInitial()),
   })  : _authService = getIt<AuthService>(),
         _coachingRequestService = getIt<CoachingRequestService>(),
         _personRepository = getIt<PersonRepository>(),
+        _loadChatIdUseCase = getIt<LoadChatIdUseCase>(),
         super(state) {
     on<ClientsEventInitialize>(_initialize, transformer: restartable());
     on<ClientsEventAcceptRequest>(_acceptRequest);
     on<ClientsEventDeleteRequest>(_deleteRequest);
+    on<ClientsEventOpenChatWithClient>(_openChatWithClient);
     on<ClientsEventDeleteClient>(_deleteClient);
   }
 
@@ -101,6 +105,20 @@ class ClientsBloc extends BlocWithStatus<ClientsEvent, ClientsState,
       requestId: event.requestId,
     );
     emitCompleteStatus(emit, info: ClientsBlocInfo.requestDeleted);
+  }
+
+  Future<void> _openChatWithClient(
+    ClientsEventOpenChatWithClient event,
+    Emitter<ClientsState> emit,
+  ) async {
+    final String? loggedUserId = await _authService.loggedUserId$.first;
+    if (loggedUserId == null) return;
+    emitLoadingStatus(emit);
+    final String? chatId = await _loadChatIdUseCase.execute(
+      user1Id: loggedUserId,
+      user2Id: event.clientId,
+    );
+    emit(state.copyWith(selectedChatId: chatId));
   }
 
   Future<void> _deleteClient(

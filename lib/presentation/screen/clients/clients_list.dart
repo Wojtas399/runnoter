@@ -11,7 +11,7 @@ import '../../component/loading_info_component.dart';
 import '../../component/text/title_text_components.dart';
 import '../../config/navigation/router.dart';
 import '../../extension/context_extensions.dart';
-import '../../extension/gender_extensions.dart';
+import '../../extension/widgets_list_extensions.dart';
 import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
 
@@ -73,31 +73,35 @@ class _ClientItem extends StatelessWidget {
     return ListTile(
       title: Text('${clientInfo.name} ${clientInfo.surname}'),
       subtitle: Text(clientInfo.email),
-      leading: Icon(clientInfo.gender.toIconData()),
       contentPadding: EdgeInsets.symmetric(
         horizontal: context.isMobileSize ? 16 : 0,
       ),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
-        children: [
+        children: <Widget>[
           IconButton(
-            onPressed: () => _onShowProfile(),
-            icon: Icon(
-              Icons.assignment_ind,
-              color: Theme.of(context).colorScheme.primary,
-            ),
+            onPressed: () => _onOpenChat(context),
+            icon: const Icon(Icons.message),
           ),
-          if (!context.isMobileSize) const GapHorizontal8(),
+          IconButton(
+            onPressed: _onShowProfile,
+            icon: const Icon(Icons.assignment_ind),
+          ),
           IconButton(
             onPressed: () => _onDeleteClient(context),
-            icon: Icon(
-              Icons.person_remove,
-              color: Theme.of(context).colorScheme.error,
-            ),
+            icon: const Icon(Icons.person_remove),
           ),
-        ],
+        ].addSeparator(
+          !context.isMobileSize ? const GapHorizontal8() : const SizedBox(),
+        ),
       ),
     );
+  }
+
+  void _onOpenChat(BuildContext context) {
+    context.read<ClientsBloc>().add(
+          ClientsEventOpenChatWithClient(clientId: clientInfo.id),
+        );
   }
 
   void _onShowProfile() {

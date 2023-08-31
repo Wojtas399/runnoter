@@ -14,22 +14,24 @@ void main() {
   );
 
   test(
-    'copy with status',
+    'copy with status, '
+    'should assign complete status if new value has not been passed',
     () {
-      const BlocStatus expectedStatus = BlocStatusLoading();
+      const BlocStatus expected = BlocStatusLoading();
 
-      state = state.copyWith(status: expectedStatus);
+      state = state.copyWith(status: expected);
       final state2 = state.copyWith();
 
-      expect(state.status, expectedStatus);
+      expect(state.status, expected);
       expect(state2.status, const BlocStatusComplete());
     },
   );
 
   test(
-    'copy with sentRequests',
+    'copy with sentRequests, '
+    'should copy current value if new value has not been passed',
     () {
-      final List<CoachingRequestShort> expectedSentRequests = [
+      final List<CoachingRequestShort> expected = [
         CoachingRequestShort(
           id: 'r1',
           personToDisplay: createPerson(id: 'p1'),
@@ -40,18 +42,19 @@ void main() {
         ),
       ];
 
-      state = state.copyWith(sentRequests: expectedSentRequests);
+      state = state.copyWith(sentRequests: expected);
       final state2 = state.copyWith();
 
-      expect(state.sentRequests, expectedSentRequests);
-      expect(state2.sentRequests, expectedSentRequests);
+      expect(state.sentRequests, expected);
+      expect(state2.sentRequests, expected);
     },
   );
 
   test(
-    'copy with receivedRequests',
+    'copy with receivedRequests, '
+    'should copy current value if new value has not been passed',
     () {
-      final List<CoachingRequestShort> expectedReceivedRequests = [
+      final List<CoachingRequestShort> expected = [
         CoachingRequestShort(
           id: 'r1',
           personToDisplay: createPerson(id: 'p1'),
@@ -62,27 +65,42 @@ void main() {
         ),
       ];
 
-      state = state.copyWith(receivedRequests: expectedReceivedRequests);
+      state = state.copyWith(receivedRequests: expected);
       final state2 = state.copyWith();
 
-      expect(state.receivedRequests, expectedReceivedRequests);
-      expect(state2.receivedRequests, expectedReceivedRequests);
+      expect(state.receivedRequests, expected);
+      expect(state2.receivedRequests, expected);
     },
   );
 
   test(
-    'copy with clients',
+    'copy with clients, '
+    'should copy current value if new value has not been passed',
     () {
-      final List<Person> expectedClients = [
+      final List<Person> expected = [
         createPerson(id: 'p1'),
         createPerson(id: 'p2'),
       ];
 
-      state = state.copyWith(clients: expectedClients);
+      state = state.copyWith(clients: expected);
       final state2 = state.copyWith();
 
-      expect(state.clients, expectedClients);
-      expect(state2.clients, expectedClients);
+      expect(state.clients, expected);
+      expect(state2.clients, expected);
+    },
+  );
+
+  test(
+    'copy with selectedChatId, '
+    'should assign null if new value has not been passed',
+    () {
+      const String expected = 'c1';
+
+      state = state.copyWith(selectedChatId: expected);
+      final state2 = state.copyWith();
+
+      expect(state.selectedChatId, expected);
+      expect(state2.selectedChatId, null);
     },
   );
 }

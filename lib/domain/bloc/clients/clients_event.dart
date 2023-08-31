@@ -20,6 +20,12 @@ class ClientsEventDeleteRequest extends ClientsEvent {
   const ClientsEventDeleteRequest({required this.requestId});
 }
 
+class ClientsEventOpenChatWithClient extends ClientsEvent {
+  final String clientId;
+
+  const ClientsEventOpenChatWithClient({required this.clientId});
+}
+
 class ClientsEventDeleteClient extends ClientsEvent {
   final String clientId;
 
