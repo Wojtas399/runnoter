@@ -102,6 +102,10 @@ class AppRouter extends _$AppRouter {
               path: 'activity-status-creator/:userId/:activityType/:activityId',
             ),
             AutoRoute(
+              page: ChatRoute.page,
+              path: 'chat/:chatId',
+            ),
+            AutoRoute(
               page: ClientRoute.page,
               path: 'client/:clientId',
               children: [

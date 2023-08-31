@@ -3,6 +3,7 @@ export 'blood_test_creator/blood_test_creator_screen.dart';
 export 'blood_test_preview/blood_test_preview_screen.dart';
 export 'blood_tests/blood_tests_screen.dart';
 export 'calendar/calendar_screen.dart';
+export 'chat/chat_screen.dart';
 export 'client/client_screen.dart';
 export 'client_blood_tests/client_blood_tests.dart';
 export 'client_calendar/client_calendar_screen.dart';
