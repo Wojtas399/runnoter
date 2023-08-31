@@ -20,7 +20,7 @@ void main() {
         user2Id: user2Id,
       );
 
-      final ChatDto chatDto = ChatDto.fromJson(id: id, json: json);
+      final ChatDto chatDto = ChatDto.fromJson(chatId: id, json: json);
 
       expect(chatDto, expectedChatDto);
     },

@@ -23,7 +23,7 @@ class MessageDto extends Equatable {
           chatId: json?[_chatIdField],
           senderId: json?[_senderIdField],
           content: json?[_contentField],
-          dateTime: DateTime.fromMillisecondsSinceEpoch(json?[_timestampField]),
+          dateTime: DateTime.fromMillisecondsSinceEpoch(json?[timestampField]),
         );
 
   @override
@@ -33,11 +33,11 @@ class MessageDto extends Equatable {
         _chatIdField: chatId,
         _senderIdField: senderId,
         _contentField: content,
-        _timestampField: dateTime.millisecondsSinceEpoch,
+        timestampField: dateTime.millisecondsSinceEpoch,
       };
 }
 
 const String _chatIdField = 'chatId';
 const String _senderIdField = 'senderId';
 const String _contentField = 'content';
-const String _timestampField = 'timestamp';
+const String timestampField = 'timestamp';

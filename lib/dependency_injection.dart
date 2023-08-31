@@ -64,6 +64,7 @@ void _registerFirebaseServices() {
   getIt.registerFactory(() => FirebaseRaceService());
   getIt.registerFactory(() => FirebaseCoachingRequestService());
   getIt.registerFactory(() => FirebaseChatService());
+  getIt.registerFactory(() => FirebaseMessageService());
 }
 
 void _registerServices() {

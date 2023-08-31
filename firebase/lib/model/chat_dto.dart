@@ -12,10 +12,10 @@ class ChatDto extends Equatable {
   }) : assert(user1Id != user2Id);
 
   ChatDto.fromJson({
-    required String id,
+    required String chatId,
     required Map<String, dynamic>? json,
   }) : this(
-          id: id,
+          id: chatId,
           user1Id: json?[user1IdField],
           user2Id: json?[user2IdField],
         );
