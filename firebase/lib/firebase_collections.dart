@@ -107,3 +107,12 @@ CollectionReference<CoachingRequestDto> getCoachingRequestsRef() =>
           ),
           toFirestore: (coachingRequestDto, _) => coachingRequestDto.toJson(),
         );
+
+CollectionReference<ChatDto> getChatsRef() =>
+    FirebaseFirestore.instance.collection('Chats').withConverter<ChatDto>(
+          fromFirestore: (snapshot, _) => ChatDto.fromJson(
+            id: snapshot.id,
+            json: snapshot.data(),
+          ),
+          toFirestore: (chatDto, _) => chatDto.toJson(),
+        );

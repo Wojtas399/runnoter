@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../firebase_collections.dart';
 import '../mapper/coaching_request_direction_mapper.dart';
 import '../model/coaching_request_dto.dart';
+import '../utils/utils.dart';
 
 class FirebaseCoachingRequestService {
   Stream<List<CoachingRequestDto>> getCoachingRequestsBySenderId({
@@ -50,22 +51,26 @@ class FirebaseCoachingRequestService {
       direction: direction,
       isAccepted: isAccepted,
     );
-    await getCoachingRequestsRef().add(invitationDto);
+    await asyncOrSyncCall(() => getCoachingRequestsRef().add(invitationDto));
   }
 
   Future<void> updateCoachingRequest({
     required String requestId,
     required bool isAccepted,
   }) async {
-    await getCoachingRequestsRef().doc(requestId).update(
-      {
-        isAcceptedField: isAccepted,
-      },
+    await asyncOrSyncCall(
+      () => getCoachingRequestsRef().doc(requestId).update(
+        {
+          isAcceptedField: isAccepted,
+        },
+      ),
     );
   }
 
   Future<void> deleteCoachingRequest({required String requestId}) async {
-    await getCoachingRequestsRef().doc(requestId).delete();
+    await asyncOrSyncCall(
+      () => getCoachingRequestsRef().doc(requestId).delete(),
+    );
   }
 
   Future<void> deleteCoachingRequestsByUserId({required String userId}) async {
@@ -81,6 +86,6 @@ class FirebaseCoachingRequestService {
     for (final request in receivedRequestsSnapshot.docs) {
       batch.delete(request.reference);
     }
-    await batch.commit();
+    await asyncOrSyncCall(() => batch.commit());
   }
 }
