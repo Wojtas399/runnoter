@@ -1,3 +1,5 @@
+import 'package:collection/collection.dart';
+
 import '../firebase.dart';
 import '../firebase_collections.dart';
 import '../utils/utils.dart';
@@ -12,12 +14,19 @@ class FirebaseChatService {
     required String user1Id,
     required String user2Id,
   }) async {
-    final snapshot = await getChatsRef()
-        .where(user1Id, whereIn: [user1Id, user2Id])
-        .where(user2Id, whereIn: [user1Id, user2Id])
-        .limit(1)
-        .get();
-    return snapshot.docs.isEmpty ? null : snapshot.docs.first.data();
+    final snapshotOfChatsWithUser1 = await getChatsRef()
+        .where(user1IdField, whereIn: [user1Id, user2Id]).get();
+    final snapshotOfChatsWithUser2 = await getChatsRef()
+        .where(user2IdField, whereIn: [user1Id, user2Id]).get();
+    return [
+      ...snapshotOfChatsWithUser1.docs.map((doc) => doc.data()),
+      ...snapshotOfChatsWithUser2.docs.map((doc) => doc.data()),
+    ].firstWhereOrNull(
+      (ChatDto chat) {
+        final List<String> userIds = [user1Id, user2Id];
+        return userIds.contains(chat.user1Id) && userIds.contains(chat.user2Id);
+      },
+    );
   }
 
   Future<ChatDto?> addNewChat({
