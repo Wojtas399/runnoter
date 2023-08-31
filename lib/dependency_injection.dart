@@ -24,7 +24,6 @@ import 'domain/repository/workout_repository.dart';
 import 'domain/service/auth_service.dart';
 import 'domain/service/coaching_request_service.dart';
 import 'domain/use_case/add_user_data_use_case.dart';
-import 'domain/use_case/get_logged_user_gender_use_case.dart';
 import 'presentation/config/body_sizes.dart';
 import 'presentation/config/navigation/router.dart';
 import 'presentation/config/screen_sizes.dart';
@@ -89,6 +88,5 @@ void _registerRepositories() {
 }
 
 void _registerUseCases() {
-  getIt.registerFactory(() => GetLoggedUserGenderUseCase());
   getIt.registerFactory(() => AddUserDataUseCase());
 }
