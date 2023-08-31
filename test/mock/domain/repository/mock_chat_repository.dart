@@ -9,21 +9,21 @@ class MockChatRepository extends Mock implements ChatRepository {
     ).thenAnswer((_) => chatStream ?? Stream.value(chat));
   }
 
-  void mockDoUsersHaveChat({required bool expected}) {
+  void mockFindChatIdForUsers({String? chatId}) {
     when(
-      () => doUsersHaveChat(
+      () => findChatIdByUsers(
         user1Id: any(named: 'user1Id'),
         user2Id: any(named: 'user2Id'),
       ),
-    ).thenAnswer((_) => Future.value(expected));
+    ).thenAnswer((_) => Future.value(chatId));
   }
 
-  void mockCreateChatForUsers() {
+  void mockCreateChatForUsers({String? chatId}) {
     when(
       () => createChatForUsers(
         user1Id: any(named: 'user1Id'),
         user2Id: any(named: 'user2Id'),
       ),
-    ).thenAnswer((_) => Future.value());
+    ).thenAnswer((_) => Future.value(chatId));
   }
 }

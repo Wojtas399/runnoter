@@ -9,7 +9,7 @@ class ChatRepositoryImpl implements ChatRepository {
   }
 
   @override
-  Future<bool> doUsersHaveChat({
+  Future<String?> findChatIdByUsers({
     required String user1Id,
     required String user2Id,
   }) {
@@ -18,7 +18,7 @@ class ChatRepositoryImpl implements ChatRepository {
   }
 
   @override
-  Future<void> createChatForUsers({
+  Future<String?> createChatForUsers({
     required String user1Id,
     required String user2Id,
   }) {
