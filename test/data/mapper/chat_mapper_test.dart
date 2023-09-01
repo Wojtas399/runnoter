@@ -23,7 +23,7 @@ void main() {
         user2Id: user2Id,
       );
 
-      final Chat chat = mapChatFromDto(chatDto: chatDto);
+      final Chat chat = mapChatFromDto(chatDto);
 
       expect(chat, expectedChat);
     },

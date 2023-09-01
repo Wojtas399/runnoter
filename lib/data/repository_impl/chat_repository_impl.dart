@@ -54,7 +54,7 @@ class ChatRepositoryImpl extends StateRepository<Chat>
         user2Id: user2Id,
       );
       if (chatDto == null) return null;
-      final Chat chat = mapChatFromDto(chatDto: chatDto);
+      final Chat chat = mapChatFromDto(chatDto);
       addEntity(chat);
       return chat.id;
     } on FirebaseException catch (exception) {
@@ -65,7 +65,7 @@ class ChatRepositoryImpl extends StateRepository<Chat>
   Future<Chat?> _loadChatByIdFromDb(String chatId) async {
     final chatDto = await _firebaseChatService.loadChatById(chatId: chatId);
     if (chatDto == null) return null;
-    final Chat chat = mapChatFromDto(chatDto: chatDto);
+    final Chat chat = mapChatFromDto(chatDto);
     addEntity(chat);
     return chat;
   }
@@ -76,7 +76,7 @@ class ChatRepositoryImpl extends StateRepository<Chat>
       user2Id: user2Id,
     );
     if (chatDto == null) return null;
-    final Chat chat = mapChatFromDto(chatDto: chatDto);
+    final Chat chat = mapChatFromDto(chatDto);
     addEntity(chat);
     return chat;
   }

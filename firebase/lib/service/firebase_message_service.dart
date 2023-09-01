@@ -4,9 +4,9 @@ import '../firebase.dart';
 import '../firebase_collections.dart';
 
 class FirebaseMessageService {
-  Future<List<MessageDto>?> loadMessagesForChat({
+  Future<List<MessageDto>> loadMessagesForChat({
     required String chatId,
-    required String? lastVisibleMessageId,
+    String? lastVisibleMessageId,
   }) async {
     final messagesRef = getMessagesRef(chatId).orderBy(timestampField);
     Query<MessageDto> query = messagesRef.limit(20);

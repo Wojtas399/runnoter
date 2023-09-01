@@ -1,13 +1,13 @@
-import 'package:runnoter/domain/entity/message.dart';
+import 'package:firebase/firebase.dart';
 
-Message createMessage({
+MessageDto createMessageDto({
   String id = '',
   String chatId = '',
   String senderId = '',
   String content = '',
   DateTime? dateTime,
 }) =>
-    Message(
+    MessageDto(
       id: id,
       chatId: chatId,
       senderId: senderId,
