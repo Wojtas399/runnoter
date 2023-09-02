@@ -40,4 +40,23 @@ class FirebaseMessageService {
     final messagesSnapshot = await query.get();
     return messagesSnapshot.docs.map((snapshot) => snapshot.data()).toList();
   }
+
+  Future<MessageDto?> addMessageToChat({
+    required String chatId,
+    required String senderId,
+    required String content,
+    required DateTime dateTime,
+  }) async {
+    final messageRef = getMessagesRef(chatId).doc();
+    final messageDto = MessageDto(
+      id: '',
+      chatId: chatId,
+      senderId: senderId,
+      content: content,
+      dateTime: dateTime,
+    );
+    await messageRef.set(messageDto);
+    final docSnapshot = await messageRef.get();
+    return docSnapshot.data();
+  }
 }

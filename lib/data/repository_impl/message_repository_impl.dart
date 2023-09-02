@@ -44,6 +44,25 @@ class MessageRepositoryImpl extends StateRepository<Message>
         );
   }
 
+  @override
+  Future<void> addMessageToChat({
+    required String chatId,
+    required String senderId,
+    required String content,
+    required DateTime dateTime,
+  }) async {
+    final addedMessageDto = await _firebaseMessageService.addMessageToChat(
+      chatId: chatId,
+      senderId: senderId,
+      content: content,
+      dateTime: dateTime,
+    );
+    if (addedMessageDto != null) {
+      final Message addedMessage = mapMessageFromDto(addedMessageDto);
+      addEntity(addedMessage);
+    }
+  }
+
   Future<void> _loadLatestMessagesForChatFromDb(String chatId) async {
     final messageDtos =
         await _firebaseMessageService.loadMessagesForChat(chatId: chatId);

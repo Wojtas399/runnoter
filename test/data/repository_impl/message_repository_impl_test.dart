@@ -102,4 +102,61 @@ void main() {
       );
     },
   );
+
+  test(
+    'add message to chat, '
+    "should call firebase message service's method to add message to chat and "
+    'should add this new message to repo',
+    () async {
+      const String messageId = 'm3';
+      const String chatId = 'c1';
+      const String senderId = 's1';
+      const String content = 'message';
+      final DateTime dateTime = DateTime(2023, 1, 1);
+      final MessageDto addedMessageDto = MessageDto(
+        id: messageId,
+        chatId: chatId,
+        senderId: senderId,
+        content: content,
+        dateTime: dateTime,
+      );
+      final Message addedMessage = Message(
+        id: messageId,
+        chatId: chatId,
+        senderId: senderId,
+        content: content,
+        dateTime: dateTime,
+      );
+      final List<Message> existingMessages = [
+        createMessage(id: 'm1'),
+        createMessage(id: 'm2'),
+      ];
+      firebaseMessageService.mockAddMessageToChat(
+        addedMessageDto: addedMessageDto,
+      );
+      repository = MessageRepositoryImpl(initialData: existingMessages);
+
+      await repository.addMessageToChat(
+        chatId: chatId,
+        senderId: senderId,
+        content: content,
+        dateTime: dateTime,
+      );
+
+      expect(
+        repository.dataStream$,
+        emitsInOrder([
+          [...existingMessages, addedMessage],
+        ]),
+      );
+      verify(
+        () => firebaseMessageService.addMessageToChat(
+          chatId: chatId,
+          senderId: senderId,
+          content: content,
+          dateTime: dateTime,
+        ),
+      ).called(1);
+    },
+  );
 }

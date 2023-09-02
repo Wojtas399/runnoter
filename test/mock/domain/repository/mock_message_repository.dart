@@ -13,4 +13,15 @@ class MockMessageRepository extends Mock implements MessageRepository {
       ),
     ).thenAnswer((_) => messagesStream ?? Stream.value(messages));
   }
+
+  void mockAddMessageToChat() {
+    when(
+      () => addMessageToChat(
+        chatId: any(named: 'chatId'),
+        senderId: any(named: 'senderId'),
+        content: any(named: 'content'),
+        dateTime: any(named: 'dateTime'),
+      ),
+    ).thenAnswer((_) => Future.value());
+  }
 }
