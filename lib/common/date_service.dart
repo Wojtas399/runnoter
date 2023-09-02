@@ -4,6 +4,10 @@ class DateService {
     return DateTime(now.year, now.month, now.day);
   }
 
+  DateTime getNow() {
+    return DateTime.now();
+  }
+
   DateTime getFirstDayOfTheWeek(DateTime date) {
     final int daysToFirstDayOfTheWeek = date.weekday - 1;
     return _getDate(date.subtract(
