@@ -4,6 +4,25 @@ import '../firebase.dart';
 import '../firebase_collections.dart';
 
 class FirebaseMessageService {
+  Stream<List<MessageDto>?> getAddedMessagesForChat({required String chatId}) {
+    bool isFirstQuery = true;
+    return getMessagesRef(chatId).snapshots().map(
+      (QuerySnapshot<MessageDto> snapshot) {
+        if (isFirstQuery) {
+          isFirstQuery = false;
+          return null;
+        } else {
+          return snapshot.docChanges
+              .where((docChange) =>
+                  docChange.type == DocumentChangeType.added &&
+                  docChange.doc.data() != null)
+              .map((docChange) => docChange.doc.data()!)
+              .toList();
+        }
+      },
+    );
+  }
+
   Future<List<MessageDto>> loadMessagesForChat({
     required String chatId,
     String? lastVisibleMessageId,

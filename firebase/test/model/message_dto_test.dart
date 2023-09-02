@@ -13,7 +13,6 @@ void main() {
     'should map json to dto model',
     () {
       final Map<String, dynamic> json = {
-        'chatId': chatId,
         'senderId': senderId,
         'content': content,
         'timestamp': dateTime.millisecondsSinceEpoch,
@@ -26,7 +25,11 @@ void main() {
         dateTime: dateTime,
       );
 
-      final MessageDto dto = MessageDto.fromJson(messageId: id, json: json);
+      final MessageDto dto = MessageDto.fromJson(
+        messageId: id,
+        chatId: chatId,
+        json: json,
+      );
 
       expect(dto, expectedDto);
     },
@@ -44,7 +47,6 @@ void main() {
         dateTime: dateTime,
       );
       final Map<String, dynamic> expectedJson = {
-        'chatId': chatId,
         'senderId': senderId,
         'content': content,
         'timestamp': dateTime.millisecondsSinceEpoch,

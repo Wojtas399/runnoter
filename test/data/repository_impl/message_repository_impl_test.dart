@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase/firebase.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
@@ -28,8 +30,8 @@ void main() {
   test(
     'get messages for chat, '
     'should load latest messages from db, add them to repo and '
-    'should emit all messages with matching chat id',
-    () {
+    'should listen and emit all existing and newly added messages with matching chat id',
+    () async {
       const String chatId = 'c1';
       final List<Message> existingMessages = [
         createMessage(id: 'm1', chatId: chatId),
@@ -44,18 +46,44 @@ void main() {
         createMessage(id: 'm4', chatId: chatId),
         createMessage(id: 'm5', chatId: chatId),
       ];
+      final MessageDto firstAddedMessageDto =
+          createMessageDto(id: 'm6', chatId: chatId);
+      final MessageDto secondAddedMessageDto =
+          createMessageDto(id: 'm7', chatId: chatId);
+      final Message firstAddedMessage = createMessage(id: 'm6', chatId: chatId);
+      final Message secondAddedMessage =
+          createMessage(id: 'm7', chatId: chatId);
+      final StreamController<List<MessageDto>> addedMessages$ =
+          StreamController()..add([]);
       firebaseMessageService.mockLoadMessagesForChat(
         messageDtos: loadedMessageDtos,
+      );
+      firebaseMessageService.mockGetAddedMessagesForChat(
+        addedMessageDtosStream: addedMessages$.stream,
       );
       repository = MessageRepositoryImpl(initialData: existingMessages);
 
       final Stream<List<Message>?> messages$ =
           repository.getMessagesForChat(chatId: chatId);
+      addedMessages$.add([firstAddedMessageDto]);
+      addedMessages$.add([secondAddedMessageDto]);
 
       expect(
         messages$,
         emitsInOrder([
-          [existingMessages.first, existingMessages.last, ...loadedMessages],
+          [
+            existingMessages.first,
+            existingMessages.last,
+            ...loadedMessages,
+            firstAddedMessage,
+          ],
+          [
+            existingMessages.first,
+            existingMessages.last,
+            ...loadedMessages,
+            firstAddedMessage,
+            secondAddedMessage,
+          ],
         ]),
       );
       expect(
@@ -63,6 +91,13 @@ void main() {
         emitsInOrder([
           existingMessages,
           [...existingMessages, ...loadedMessages],
+          [...existingMessages, ...loadedMessages, firstAddedMessage],
+          [
+            ...existingMessages,
+            ...loadedMessages,
+            firstAddedMessage,
+            secondAddedMessage,
+          ],
         ]),
       );
     },

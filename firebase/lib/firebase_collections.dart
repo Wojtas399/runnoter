@@ -125,6 +125,7 @@ CollectionReference<MessageDto> getMessagesRef(String chatId) =>
         .withConverter<MessageDto>(
           fromFirestore: (snapshot, _) => MessageDto.fromJson(
             messageId: snapshot.id,
+            chatId: chatId,
             json: snapshot.data(),
           ),
           toFirestore: (messageDto, _) => messageDto.toJson(),

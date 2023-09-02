@@ -17,10 +17,11 @@ class MessageDto extends Equatable {
 
   MessageDto.fromJson({
     required String messageId,
+    required String chatId,
     required Map<String, dynamic>? json,
   }) : this(
           id: messageId,
-          chatId: json?[_chatIdField],
+          chatId: chatId,
           senderId: json?[_senderIdField],
           content: json?[_contentField],
           dateTime: DateTime.fromMillisecondsSinceEpoch(json?[timestampField]),
@@ -30,14 +31,12 @@ class MessageDto extends Equatable {
   List<Object?> get props => [id, chatId, senderId, content, dateTime];
 
   Map<String, dynamic> toJson() => {
-        _chatIdField: chatId,
         _senderIdField: senderId,
         _contentField: content,
         timestampField: dateTime.millisecondsSinceEpoch,
       };
 }
 
-const String _chatIdField = 'chatId';
 const String _senderIdField = 'senderId';
 const String _contentField = 'content';
 const String timestampField = 'timestamp';

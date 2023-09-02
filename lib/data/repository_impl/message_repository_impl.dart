@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:firebase/firebase.dart';
+import 'package:rxdart/rxdart.dart';
 
 import '../../dependency_injection.dart';
 import '../../domain/additional_model/state_repository.dart';
@@ -14,13 +17,31 @@ class MessageRepositoryImpl extends StateRepository<Message>
       : _firebaseMessageService = getIt<FirebaseMessageService>();
 
   @override
-  Stream<List<Message>?> getMessagesForChat({required String chatId}) async* {
-    await _loadLatestMessagesForChatFromDb(chatId);
-    await for (final messages in dataStream$) {
-      yield messages
-          ?.where((Message message) => message.chatId == chatId)
-          .toList();
-    }
+  Stream<List<Message>> getMessagesForChat({required String chatId}) {
+    final StreamController<bool> canEmit$ = StreamController()..add(false);
+    _loadLatestMessagesForChatFromDb(chatId).then((_) => canEmit$.add(true));
+    StreamSubscription<List<MessageDto>?>? newMessagesListener;
+    return canEmit$.stream
+        .switchMap(
+          (bool canEmit) {
+            return canEmit ? _getMessagesFromChat(chatId) : Stream.value(null);
+          },
+        )
+        .whereNotNull()
+        .doOnListen(
+          () {
+            newMessagesListener ??= _firebaseMessageService
+                .getAddedMessagesForChat(chatId: chatId)
+                .whereNotNull()
+                .listen(_manageNewMessages);
+          },
+        )
+        .doOnCancel(
+          () {
+            newMessagesListener?.cancel();
+            newMessagesListener = null;
+          },
+        );
   }
 
   Future<void> _loadLatestMessagesForChatFromDb(String chatId) async {
@@ -28,5 +49,19 @@ class MessageRepositoryImpl extends StateRepository<Message>
         await _firebaseMessageService.loadMessagesForChat(chatId: chatId);
     final List<Message> messages = messageDtos.map(mapMessageFromDto).toList();
     addOrUpdateEntities(messages);
+  }
+
+  Stream<List<Message>?> _getMessagesFromChat(String chatId) => dataStream$.map(
+        (List<Message>? messages) => messages
+            ?.where((Message message) => message.chatId == chatId)
+            .toList(),
+      );
+
+  void _manageNewMessages(List<MessageDto> messageDtos) {
+    if (messageDtos.isNotEmpty) {
+      final List<Message> messages =
+          messageDtos.map(mapMessageFromDto).toList();
+      addOrUpdateEntities(messages);
+    }
   }
 }
