@@ -2,6 +2,7 @@ import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
+import '../../../common/date_service.dart';
 import '../../../dependency_injection.dart';
 import '../../additional_model/bloc_state.dart';
 import '../../additional_model/bloc_status.dart';
@@ -17,12 +18,14 @@ import '../../service/auth_service.dart';
 part 'chat_event.dart';
 part 'chat_state.dart';
 
-class ChatBloc extends BlocWithStatus<ChatEvent, ChatState, dynamic, dynamic> {
+class ChatBloc
+    extends BlocWithStatus<ChatEvent, ChatState, ChatBlocInfo, dynamic> {
   final String _chatId;
   final AuthService _authService;
   final ChatRepository _chatRepository;
   final MessageRepository _messageRepository;
   final PersonRepository _personRepository;
+  final DateService _dateService;
 
   ChatBloc({
     required String chatId,
@@ -32,8 +35,10 @@ class ChatBloc extends BlocWithStatus<ChatEvent, ChatState, dynamic, dynamic> {
         _chatRepository = getIt<ChatRepository>(),
         _messageRepository = getIt<MessageRepository>(),
         _personRepository = getIt<PersonRepository>(),
+        _dateService = getIt<DateService>(),
         super(initialState) {
     on<ChatEventInitialize>(_initialize, transformer: restartable());
+    on<ChatEventSentMessage>(_sentMessage);
   }
 
   Future<void> _initialize(
@@ -61,6 +66,22 @@ class ChatBloc extends BlocWithStatus<ChatEvent, ChatState, dynamic, dynamic> {
     );
   }
 
+  Future<void> _sentMessage(
+    ChatEventSentMessage event,
+    Emitter<ChatState> emit,
+  ) async {
+    if (state.loggedUserId == null) return;
+    final DateTime now = _dateService.getNow();
+    emitLoadingStatus(emit);
+    await _messageRepository.addMessageToChat(
+      chatId: _chatId,
+      senderId: state.loggedUserId!,
+      content: event.message,
+      dateTime: now,
+    );
+    emitCompleteStatus(emit, info: ChatBlocInfo.messageSent);
+  }
+
   Future<(Person, Person)> _loadPersonsById(
     String person1Id,
     String person2Id,
@@ -76,3 +97,5 @@ class ChatBloc extends BlocWithStatus<ChatEvent, ChatState, dynamic, dynamic> {
     throw '[CHAT BLOC] Cannot load persons';
   }
 }
+
+enum ChatBlocInfo { messageSent }

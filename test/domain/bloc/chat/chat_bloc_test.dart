@@ -4,6 +4,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:runnoter/common/date_service.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/bloc/chat/chat_bloc.dart';
 import 'package:runnoter/domain/entity/chat.dart';
@@ -16,6 +17,7 @@ import 'package:runnoter/domain/service/auth_service.dart';
 
 import '../../../creators/message_creator.dart';
 import '../../../creators/person_creator.dart';
+import '../../../mock/common/mock_date_service.dart';
 import '../../../mock/domain/repository/mock_chat_repository.dart';
 import '../../../mock/domain/repository/mock_message_repository.dart';
 import '../../../mock/domain/repository/mock_person_repository.dart';
@@ -26,16 +28,27 @@ void main() {
   final chatRepository = MockChatRepository();
   final messageRepository = MockMessageRepository();
   final personRepository = MockPersonRepository();
+  final dateService = MockDateService();
   const String chatId = 'c1';
   const String loggedUserId = 'u1';
 
-  ChatBloc createBloc() => ChatBloc(chatId: chatId);
+  ChatBloc createBloc({
+    String? loggedUserId,
+  }) =>
+      ChatBloc(
+        chatId: chatId,
+        initialState: ChatState(
+          status: const BlocStatusInitial(),
+          loggedUserId: loggedUserId,
+        ),
+      );
 
   setUpAll(() {
     GetIt.I.registerFactory<AuthService>(() => authService);
     GetIt.I.registerSingleton<ChatRepository>(chatRepository);
     GetIt.I.registerSingleton<MessageRepository>(messageRepository);
     GetIt.I.registerSingleton<PersonRepository>(personRepository);
+    GetIt.I.registerFactory<DateService>(() => dateService);
   });
 
   tearDown(() {
@@ -43,6 +56,7 @@ void main() {
     reset(chatRepository);
     reset(messageRepository);
     reset(personRepository);
+    reset(dateService);
   });
 
   group(
@@ -132,5 +146,43 @@ void main() {
     setUp: () => authService.mockGetLoggedUserId(),
     act: (bloc) => bloc.add(const ChatEventInitialize()),
     expect: () => [],
+  );
+
+  blocTest(
+    'sent message, '
+    'logged user in state is null, '
+    'should do nothing',
+    build: () => createBloc(),
+    act: (bloc) => bloc.add(const ChatEventSentMessage(message: 'message')),
+    expect: () => [],
+  );
+
+  blocTest(
+    'sent message, '
+    "should call message repository's method to add new message with current dateTime and "
+    'should emit messageSent info',
+    build: () => createBloc(loggedUserId: loggedUserId),
+    setUp: () {
+      dateService.mockGetNow(now: DateTime(2023, 1, 1, 12, 30));
+      messageRepository.mockAddMessageToChat();
+    },
+    act: (bloc) => bloc.add(const ChatEventSentMessage(message: 'message')),
+    expect: () => [
+      const ChatState(status: BlocStatusLoading(), loggedUserId: loggedUserId),
+      const ChatState(
+        status: BlocStatusComplete<ChatBlocInfo>(
+          info: ChatBlocInfo.messageSent,
+        ),
+        loggedUserId: loggedUserId,
+      ),
+    ],
+    verify: (_) => verify(
+      () => messageRepository.addMessageToChat(
+        chatId: chatId,
+        senderId: loggedUserId,
+        content: 'message',
+        dateTime: DateTime(2023, 1, 1, 12, 30),
+      ),
+    ).called(1),
   );
 }
