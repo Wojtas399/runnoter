@@ -70,7 +70,7 @@ void main() {
         ..add(messages);
 
       blocTest(
-        'should load full names of sender and recipient and '
+        'should load logged user id, full names of sender and recipient and '
         'should set listener of messages',
         build: () => createBloc(),
         setUp: () {
@@ -95,12 +95,14 @@ void main() {
         expect: () => [
           ChatState(
             status: const BlocStatusComplete(),
+            loggedUserId: loggedUserId,
             senderFullName: '${sender.name} ${sender.surname}',
             recipientFullName: '${recipient.name} ${recipient.surname}',
             messages: messages,
           ),
           ChatState(
             status: const BlocStatusComplete(),
+            loggedUserId: loggedUserId,
             senderFullName: '${sender.name} ${sender.surname}',
             recipientFullName: '${recipient.name} ${recipient.surname}',
             messages: updatedMessages,

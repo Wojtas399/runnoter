@@ -13,7 +13,8 @@ void main() {
   );
 
   test(
-    'copy with status',
+    'copy with status, '
+    'should assign complete status if new value is null',
     () {
       const BlocStatus expected = BlocStatusLoading();
 
@@ -26,7 +27,22 @@ void main() {
   );
 
   test(
-    'copy with senderFullName',
+    'copy with loggedUserId, '
+    'should copy current value if new value is null',
+    () {
+      const String expected = 'u1';
+
+      state = state.copyWith(loggedUserId: expected);
+      final state2 = state.copyWith();
+
+      expect(state.loggedUserId, expected);
+      expect(state2.loggedUserId, expected);
+    },
+  );
+
+  test(
+    'copy with senderFullName, '
+    'should copy current value if new value is null',
     () {
       const String expected = 'sender full name';
 
@@ -39,7 +55,8 @@ void main() {
   );
 
   test(
-    'copy with recipientFullName',
+    'copy with recipientFullName, '
+    'should copy current value if new value is null',
     () {
       const String expected = 'recipient full name';
 
@@ -52,7 +69,8 @@ void main() {
   );
 
   test(
-    'copy with messages',
+    'copy with messages, '
+    'should copy current value if new value is null',
     () {
       final List<Message> expected = [
         createMessage(id: 'm1'),

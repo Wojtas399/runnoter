@@ -53,6 +53,7 @@ class ChatBloc extends BlocWithStatus<ChatEvent, ChatState, dynamic, dynamic> {
     await emit.forEach(
       _messageRepository.getMessagesForChat(chatId: _chatId),
       onData: (List<Message>? messages) => state.copyWith(
+        loggedUserId: loggedUserId,
         senderFullName: '${sender.name} ${sender.surname}',
         recipientFullName: '${recipient.name} ${recipient.surname}',
         messages: messages,
