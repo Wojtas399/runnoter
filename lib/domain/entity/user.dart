@@ -11,6 +11,7 @@ class User extends Entity {
   final String name;
   final String surname;
   final String email;
+  final DateTime dateOfBirth;
   final Settings settings;
   final String? coachId;
 
@@ -21,6 +22,7 @@ class User extends Entity {
     required this.name,
     required this.surname,
     required this.email,
+    required this.dateOfBirth,
     required this.settings,
     this.coachId,
   });
@@ -32,6 +34,7 @@ class User extends Entity {
         name,
         surname,
         email,
+        dateOfBirth,
         settings,
         coachId,
       ];

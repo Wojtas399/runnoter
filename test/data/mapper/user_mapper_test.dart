@@ -32,13 +32,14 @@ void main() {
         email: email,
         coachId: coachId,
       );
-      const User expectedUser = User(
+      final User expectedUser = User(
         id: userId,
         accountType: AccountType.runner,
         gender: gender,
         name: name,
         surname: surname,
         email: email,
+        dateOfBirth: DateTime(2023), //TODO: Implement date of birth
         settings: settings,
         coachId: coachId,
       );

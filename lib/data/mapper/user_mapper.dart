@@ -13,6 +13,7 @@ User mapUserFromDto({required UserDto userDto, required Settings settings}) =>
       name: userDto.name,
       surname: userDto.surname,
       email: userDto.email,
+      dateOfBirth: DateTime(2023), //TODO
       settings: settings,
       coachId: userDto.coachId,
     );

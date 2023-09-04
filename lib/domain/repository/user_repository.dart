@@ -13,6 +13,7 @@ abstract class UserRepository {
     String? name,
     String? surname,
     String? email,
+    DateTime? dateOfBirth,
     String? coachId,
     bool coachIdAsNull = false,
   });

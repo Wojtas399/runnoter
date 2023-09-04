@@ -136,6 +136,7 @@ class SignUpBloc extends BlocWithStatus<SignUpEvent, SignUpState,
       name: state.name,
       surname: state.surname,
       email: state.email,
+      dateOfBirth: DateTime(2023), //TODO: Implement date of birth
     );
   }
 }

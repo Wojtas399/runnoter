@@ -86,12 +86,14 @@ class UserRepositoryImpl extends StateRepository<User>
     String? name,
     String? surname,
     String? email,
+    DateTime? dateOfBirth,
     String? coachId,
     bool coachIdAsNull = false,
   }) async {
     final Stream<User?> user$ = getUserById(userId: userId);
     await for (final user in user$) {
       if (user == null) return;
+      //TODO: add dateOfBirth param
       final updatedUserDto = await _dbUserService.updateUserData(
         userId: userId,
         accountType:
@@ -159,6 +161,7 @@ class UserRepositoryImpl extends StateRepository<User>
         name: user.name,
         surname: user.surname,
         email: user.email,
+        dateOfBirth: user.dateOfBirth,
         settings: updatedSettings,
         coachId: user.coachId,
       );

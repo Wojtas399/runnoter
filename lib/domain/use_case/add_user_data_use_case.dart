@@ -15,6 +15,7 @@ class AddUserDataUseCase {
     required String name,
     required String surname,
     required String email,
+    required DateTime dateOfBirth,
   }) async {
     const Settings defaultSettings = Settings(
       themeMode: ThemeMode.system,
@@ -29,6 +30,7 @@ class AddUserDataUseCase {
       name: name,
       surname: surname,
       email: email,
+      dateOfBirth: dateOfBirth,
       settings: defaultSettings,
     );
     await _userRepository.addUser(user: userData);

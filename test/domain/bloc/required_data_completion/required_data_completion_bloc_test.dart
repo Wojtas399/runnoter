@@ -212,6 +212,7 @@ void main() {
           name: name,
           surname: surname,
           email: email,
+          dateOfBirth: DateTime(2023), //TODO: Implement date of birth
         ),
       ).called(1);
     },

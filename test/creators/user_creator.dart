@@ -10,6 +10,7 @@ User createUser({
   String name = '',
   String surname = '',
   String email = '',
+  DateTime? dateOfBirth,
   Settings? settings,
   String? coachId,
 }) =>
@@ -20,6 +21,7 @@ User createUser({
       name: name,
       surname: surname,
       email: email,
+      dateOfBirth: dateOfBirth ?? DateTime(2023),
       settings: settings ?? createSettings(),
       coachId: coachId,
     );

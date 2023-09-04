@@ -87,6 +87,7 @@ class RequiredDataCompletionBloc extends BlocWithStatus<
       surname: state.surname,
       gender: state.gender,
       accountType: state.accountType,
+      dateOfBirth: DateTime(2023), //TODO: Implement date of birth
     );
     emitCompleteStatus(
       emit,
