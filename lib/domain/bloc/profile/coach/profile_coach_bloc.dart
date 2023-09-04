@@ -17,6 +17,7 @@ import '../../../repository/person_repository.dart';
 import '../../../repository/user_repository.dart';
 import '../../../service/auth_service.dart';
 import '../../../service/coaching_request_service.dart';
+import '../../../use_case/load_chat_id_use_case.dart';
 
 part 'profile_coach_event.dart';
 part 'profile_coach_state.dart';
@@ -27,17 +28,19 @@ class ProfileCoachBloc extends BlocWithStatus<ProfileCoachEvent,
   final UserRepository _userRepository;
   final PersonRepository _personRepository;
   final CoachingRequestService _coachingRequestService;
+  final LoadChatIdUseCase _loadChatIdUseCase;
   StreamSubscription<_ListenedRequests?>? _requestsListener;
 
   ProfileCoachBloc({
-    ProfileCoachState state = const ProfileCoachState(
+    ProfileCoachState initialState = const ProfileCoachState(
       status: BlocStatusInitial(),
     ),
   })  : _authService = getIt<AuthService>(),
         _userRepository = getIt<UserRepository>(),
         _personRepository = getIt<PersonRepository>(),
         _coachingRequestService = getIt<CoachingRequestService>(),
-        super(state) {
+        _loadChatIdUseCase = getIt<LoadChatIdUseCase>(),
+        super(initialState) {
     on<ProfileCoachEventInitializeCoachListener>(
       _initializeCoachListener,
       transformer: restartable(),
@@ -49,6 +52,7 @@ class ProfileCoachBloc extends BlocWithStatus<ProfileCoachEvent,
     on<ProfileCoachEventRequestsUpdated>(_requestsUpdated);
     on<ProfileCoachEventAcceptRequest>(_acceptRequest);
     on<ProfileCoachEventDeleteRequest>(_deleteRequest);
+    on<ProfileCoachEventOpenChat>(_openChat);
     on<ProfileCoachEventDeleteCoach>(_deleteCoach);
   }
 
@@ -152,6 +156,24 @@ class ProfileCoachBloc extends BlocWithStatus<ProfileCoachEvent,
           ProfileCoachBlocInfo.requestDeleted,
       },
     );
+  }
+
+  Future<void> _openChat(
+    ProfileCoachEventOpenChat event,
+    Emitter<ProfileCoachState> emit,
+  ) async {
+    final String? coachId = state.coach?.id;
+    if (coachId == null) return;
+    final String? loggedUserId = await _authService.loggedUserId$.first;
+    if (loggedUserId == null) return;
+    emitLoadingStatus(emit);
+    final String? chatId = await _loadChatIdUseCase.execute(
+      user1Id: loggedUserId,
+      user2Id: coachId,
+    );
+    emit(state.copyWith(
+      idOfChatWithCoach: chatId,
+    ));
   }
 
   Future<void> _deleteCoach(
