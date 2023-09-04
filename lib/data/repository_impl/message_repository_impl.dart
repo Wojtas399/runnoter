@@ -45,6 +45,17 @@ class MessageRepositoryImpl extends StateRepository<Message>
   }
 
   @override
+  Future<void> loadOlderMessagesForChat({
+    required String chatId,
+    required String lastVisibleMessageId,
+  }) async {
+    await _loadLatestMessagesForChatFromDb(
+      chatId,
+      lastVisibleMessageId: lastVisibleMessageId,
+    );
+  }
+
+  @override
   Future<void> addMessageToChat({
     required String chatId,
     required String senderId,
@@ -63,9 +74,14 @@ class MessageRepositoryImpl extends StateRepository<Message>
     }
   }
 
-  Future<void> _loadLatestMessagesForChatFromDb(String chatId) async {
-    final messageDtos =
-        await _firebaseMessageService.loadMessagesForChat(chatId: chatId);
+  Future<void> _loadLatestMessagesForChatFromDb(
+    String chatId, {
+    String? lastVisibleMessageId,
+  }) async {
+    final messageDtos = await _firebaseMessageService.loadMessagesForChat(
+      chatId: chatId,
+      lastVisibleMessageId: lastVisibleMessageId,
+    );
     final List<Message> messages = messageDtos.map(mapMessageFromDto).toList();
     addOrUpdateEntities(messages);
   }

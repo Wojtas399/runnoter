@@ -104,6 +104,50 @@ void main() {
   );
 
   test(
+    'load older messages for chat, '
+    "should call firebase message service's method to load older messages and "
+    'should add loaded messages to repo',
+    () async {
+      const String chatId = 'c1';
+      const String lastVisibleMessageId = 'm1';
+      final List<Message> existingMessages = [
+        createMessage(id: 'm1'),
+        createMessage(id: 'm2'),
+      ];
+      final List<MessageDto> loadedMessageDtos = [
+        createMessageDto(id: 'm3'),
+        createMessageDto(id: 'm4'),
+      ];
+      final List<Message> loadedMessages = [
+        createMessage(id: 'm3'),
+        createMessage(id: 'm4'),
+      ];
+      repository = MessageRepositoryImpl(initialData: existingMessages);
+      firebaseMessageService.mockLoadMessagesForChat(
+        messageDtos: loadedMessageDtos,
+      );
+
+      await repository.loadOlderMessagesForChat(
+        chatId: chatId,
+        lastVisibleMessageId: lastVisibleMessageId,
+      );
+
+      expect(
+        repository.dataStream$,
+        emitsInOrder([
+          [...existingMessages, ...loadedMessages],
+        ]),
+      );
+      verify(
+        () => firebaseMessageService.loadMessagesForChat(
+          chatId: chatId,
+          lastVisibleMessageId: lastVisibleMessageId,
+        ),
+      ).called(1);
+    },
+  );
+
+  test(
     'add message to chat, '
     "should call firebase message service's method to add message to chat and "
     'should add this new message to repo',
