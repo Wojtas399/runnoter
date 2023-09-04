@@ -210,6 +210,7 @@ void main() {
       const ChatState(
         status: BlocStatusLoading(),
         loggedUserId: loggedUserId,
+        messageToSend: 'message',
       ),
       const ChatState(
         status: BlocStatusComplete<ChatBlocInfo>(

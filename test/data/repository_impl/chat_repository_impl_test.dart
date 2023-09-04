@@ -26,7 +26,7 @@ void main() {
 
   test(
     'get chat by id, '
-    'chat exist in repo, '
+    'chat exists in repo, '
     'should emit chat from repo',
     () {
       final Chat expectedChat = createChat(id: 'c1');

@@ -16,14 +16,16 @@ class ChatRepositoryImpl extends StateRepository<Chat>
       : _firebaseChatService = getIt<FirebaseChatService>();
 
   @override
-  Stream<Chat?> getChatById({required String chatId}) async* {
-    await for (final chats in dataStream$) {
-      Chat? foundChat = chats?.firstWhereOrNull(
-        (Chat chat) => chat.id == chatId,
-      );
-      foundChat ??= await _loadChatByIdFromDb(chatId);
-      yield foundChat;
-    }
+  Stream<Chat?> getChatById({required String chatId}) {
+    return dataStream$
+        .map(
+          (List<Chat>? chats) => chats?.firstWhereOrNull(
+            (Chat chat) => chat.id == chatId,
+          ),
+        )
+        .asyncMap(
+          (Chat? chat) async => chat ?? await _loadChatByIdFromDb(chatId),
+        );
   }
 
   @override

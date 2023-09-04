@@ -50,12 +50,16 @@ class ChatBloc
     if (loggedUserId == null) return;
     final Chat chat =
         await _chatRepository.getChatById(chatId: _chatId).whereNotNull().first;
-    final (Person, Person) persons =
-        await _loadPersonsById(chat.user1Id, chat.user2Id);
-    final Person sender =
-        persons.$1.id == loggedUserId ? persons.$1 : persons.$2;
-    final Person recipient =
-        persons.$1.id != loggedUserId ? persons.$1 : persons.$2;
+    final Person sender = await _personRepository
+        .getPersonById(personId: loggedUserId)
+        .whereNotNull()
+        .first;
+    final Person recipient = await _personRepository
+        .getPersonById(
+          personId: chat.user1Id == loggedUserId ? chat.user2Id : chat.user1Id,
+        )
+        .whereNotNull()
+        .first;
     await emit.forEach(
       _messageRepository.getMessagesForChat(chatId: _chatId),
       onData: (List<Message> messages) {
@@ -101,21 +105,6 @@ class ChatBloc
       ),
       messageToSendAsNull: true,
     ));
-  }
-
-  Future<(Person, Person)> _loadPersonsById(
-    String person1Id,
-    String person2Id,
-  ) async {
-    final Stream<(Person, Person)> persons$ = Rx.combineLatest2(
-      _personRepository.getPersonById(personId: person1Id).whereNotNull(),
-      _personRepository.getPersonById(personId: person2Id).whereNotNull(),
-      (Person person1, Person person2) => (person1, person2),
-    );
-    await for (final persons in persons$) {
-      return persons;
-    }
-    throw '[CHAT BLOC] Cannot load persons';
   }
 }
 
