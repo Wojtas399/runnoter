@@ -13,6 +13,61 @@ void main() {
   );
 
   test(
+    'can submit message, '
+    'logged user id is null, '
+    'should be false',
+    () {
+      state = state.copyWith(messageToSend: 'message');
+
+      expect(state.canSubmitMessage, false);
+    },
+  );
+
+  test(
+    'can submit message, '
+    'logged user id empty string, '
+    'should be false',
+    () {
+      state = state.copyWith(loggedUserId: '', messageToSend: 'message');
+
+      expect(state.canSubmitMessage, false);
+    },
+  );
+
+  test(
+    'can submit message, '
+    'message to send is null, '
+    'should be false',
+    () {
+      state = state.copyWith(loggedUserId: 'u1');
+
+      expect(state.canSubmitMessage, false);
+    },
+  );
+
+  test(
+    'can submit message, '
+    'message to send is empty string, '
+    'should be false',
+    () {
+      state = state.copyWith(loggedUserId: 'u1', messageToSend: '');
+
+      expect(state.canSubmitMessage, false);
+    },
+  );
+
+  test(
+    'can submit message, '
+    'logged user id and message to send are not empty string, '
+    'should be true',
+    () {
+      state = state.copyWith(loggedUserId: 'u1', messageToSend: 'message');
+
+      expect(state.canSubmitMessage, true);
+    },
+  );
+
+  test(
     'copy with status, '
     'should assign complete status if new value is null',
     () {
@@ -82,6 +137,34 @@ void main() {
 
       expect(state.messages, expected);
       expect(state2.messages, expected);
+    },
+  );
+
+  test(
+    'copy with messageToSend, '
+    'should copy current value if new value is null',
+    () {
+      const String expected = 'message';
+
+      state = state.copyWith(messageToSend: expected);
+      final state2 = state.copyWith();
+
+      expect(state.messageToSend, expected);
+      expect(state2.messageToSend, expected);
+    },
+  );
+
+  test(
+    'copy with messageToSendAsNull, '
+    'should set value of messageToSend as null if set to true',
+    () {
+      const String messageToSend = 'message';
+
+      state = state.copyWith(messageToSend: messageToSend);
+      final state2 = state.copyWith(messageToSendAsNull: true);
+
+      expect(state.messageToSend, messageToSend);
+      expect(state2.messageToSend, null);
     },
   );
 }

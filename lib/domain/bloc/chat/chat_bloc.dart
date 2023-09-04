@@ -38,7 +38,8 @@ class ChatBloc
         _dateService = getIt<DateService>(),
         super(initialState) {
     on<ChatEventInitialize>(_initialize, transformer: restartable());
-    on<ChatEventSentMessage>(_sentMessage);
+    on<ChatEventMessageChanged>(_messageChanged);
+    on<ChatEventSubmitMessage>(_submitMessage);
   }
 
   Future<void> _initialize(
@@ -57,29 +58,49 @@ class ChatBloc
         persons.$1.id != loggedUserId ? persons.$1 : persons.$2;
     await emit.forEach(
       _messageRepository.getMessagesForChat(chatId: _chatId),
-      onData: (List<Message>? messages) => state.copyWith(
-        loggedUserId: loggedUserId,
-        senderFullName: '${sender.name} ${sender.surname}',
-        recipientFullName: '${recipient.name} ${recipient.surname}',
-        messages: messages,
-      ),
+      onData: (List<Message> messages) {
+        final List<Message> sortedMessages = [...messages];
+        sortedMessages.sort(
+          (m1, m2) => m1.dateTime.isBefore(m2.dateTime) ? 1 : -1,
+        );
+        return state.copyWith(
+          loggedUserId: loggedUserId,
+          senderFullName: '${sender.name} ${sender.surname}',
+          recipientFullName: '${recipient.name} ${recipient.surname}',
+          messages: sortedMessages,
+        );
+      },
     );
   }
 
-  Future<void> _sentMessage(
-    ChatEventSentMessage event,
+  void _messageChanged(
+    ChatEventMessageChanged event,
     Emitter<ChatState> emit,
   ) async {
-    if (state.loggedUserId == null) return;
+    emit(state.copyWith(
+      messageToSend: event.message,
+    ));
+  }
+
+  Future<void> _submitMessage(
+    ChatEventSubmitMessage event,
+    Emitter<ChatState> emit,
+  ) async {
+    if (!state.canSubmitMessage) return;
     final DateTime now = _dateService.getNow();
     emitLoadingStatus(emit);
     await _messageRepository.addMessageToChat(
       chatId: _chatId,
       senderId: state.loggedUserId!,
-      content: event.message,
+      content: state.messageToSend!,
       dateTime: now,
     );
-    emitCompleteStatus(emit, info: ChatBlocInfo.messageSent);
+    emit(state.copyWith(
+      status: const BlocStatusComplete<ChatBlocInfo>(
+        info: ChatBlocInfo.messageSent,
+      ),
+      messageToSendAsNull: true,
+    ));
   }
 
   Future<(Person, Person)> _loadPersonsById(

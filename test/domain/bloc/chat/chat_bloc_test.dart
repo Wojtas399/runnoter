@@ -34,12 +34,14 @@ void main() {
 
   ChatBloc createBloc({
     String? loggedUserId,
+    String? messageToSend,
   }) =>
       ChatBloc(
         chatId: chatId,
         initialState: ChatState(
           status: const BlocStatusInitial(),
           loggedUserId: loggedUserId,
+          messageToSend: messageToSend,
         ),
       );
 
@@ -73,19 +75,25 @@ void main() {
         surname: 'recipinsky',
       );
       final List<Message> messages = [
-        createMessage(content: 'message 1'),
-        createMessage(content: 'message 2'),
+        createMessage(content: 'message 1', dateTime: DateTime(2023, 1, 10)),
+        createMessage(content: 'message 2', dateTime: DateTime(2023, 1, 5)),
       ];
       final List<Message> updatedMessages = [
-        createMessage(content: 'updated message 1'),
-        createMessage(content: 'updated message 2'),
+        createMessage(
+          content: 'updated message 1',
+          dateTime: DateTime(2023, 1, 2),
+        ),
+        createMessage(
+          content: 'updated message 2',
+          dateTime: DateTime(2023, 1, 5),
+        ),
       ];
       final StreamController<List<Message>> messages$ = StreamController()
         ..add(messages);
 
       blocTest(
         'should load logged user id, full names of sender and recipient and '
-        'should set listener of messages',
+        'should set listener of messages and should sort messages by date before emitting them',
         build: () => createBloc(),
         setUp: () {
           authService.mockGetLoggedUserId(userId: loggedUserId);
@@ -119,7 +127,7 @@ void main() {
             loggedUserId: loggedUserId,
             senderFullName: '${sender.name} ${sender.surname}',
             recipientFullName: '${recipient.name} ${recipient.surname}',
-            messages: updatedMessages,
+            messages: updatedMessages.reversed.toList(),
           ),
         ],
         verify: (_) {
@@ -142,33 +150,67 @@ void main() {
     'initialize, '
     'logged user does not exist, '
     'should do nothing',
-    build: () => createBloc(),
+    build: () => createBloc(messageToSend: 'message to send'),
     setUp: () => authService.mockGetLoggedUserId(),
     act: (bloc) => bloc.add(const ChatEventInitialize()),
     expect: () => [],
   );
 
   blocTest(
-    'sent message, '
-    'logged user in state is null, '
-    'should do nothing',
+    'message changed, '
+    'should update message to send in state',
     build: () => createBloc(),
-    act: (bloc) => bloc.add(const ChatEventSentMessage(message: 'message')),
+    act: (bloc) => bloc.add(const ChatEventMessageChanged(message: 'message')),
+    expect: () => [
+      const ChatState(status: BlocStatusComplete(), messageToSend: 'message'),
+    ],
+  );
+
+  blocTest(
+    'submit message, '
+    'logged user does not exist, '
+    'should do nothing',
+    build: () => createBloc(messageToSend: 'message'),
+    act: (bloc) => bloc.add(const ChatEventSubmitMessage()),
     expect: () => [],
   );
 
   blocTest(
-    'sent message, '
-    "should call message repository's method to add new message with current dateTime and "
-    'should emit messageSent info',
+    'submit message, '
+    'message to send is null, '
+    'should do nothing',
     build: () => createBloc(loggedUserId: loggedUserId),
+    act: (bloc) => bloc.add(const ChatEventSubmitMessage()),
+    expect: () => [],
+  );
+
+  blocTest(
+    'submit message, '
+    'message to send is empty string, '
+    'should do nothing',
+    build: () => createBloc(loggedUserId: loggedUserId, messageToSend: ''),
+    act: (bloc) => bloc.add(const ChatEventSubmitMessage()),
+    expect: () => [],
+  );
+
+  blocTest(
+    'submit message, '
+    "should call message repository's method to add new message with current dateTime and "
+    'should emit messageSent info and should set messageToSend as null',
+    build: () => createBloc(
+      loggedUserId: loggedUserId,
+      messageToSend: 'message',
+    ),
     setUp: () {
       dateService.mockGetNow(now: DateTime(2023, 1, 1, 12, 30));
       messageRepository.mockAddMessageToChat();
     },
-    act: (bloc) => bloc.add(const ChatEventSentMessage(message: 'message')),
+    act: (bloc) => bloc.add(const ChatEventSubmitMessage()),
     expect: () => [
-      const ChatState(status: BlocStatusLoading(), loggedUserId: loggedUserId),
+      const ChatState(
+        status: BlocStatusLoading(),
+        loggedUserId: loggedUserId,
+      ),
       const ChatState(
         status: BlocStatusComplete<ChatBlocInfo>(
           info: ChatBlocInfo.messageSent,

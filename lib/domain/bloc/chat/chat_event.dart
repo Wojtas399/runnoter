@@ -8,8 +8,12 @@ class ChatEventInitialize extends ChatEvent {
   const ChatEventInitialize();
 }
 
-class ChatEventSentMessage extends ChatEvent {
+class ChatEventMessageChanged extends ChatEvent {
   final String message;
 
-  const ChatEventSentMessage({required this.message});
+  const ChatEventMessageChanged({required this.message});
+}
+
+class ChatEventSubmitMessage extends ChatEvent {
+  const ChatEventSubmitMessage();
 }
