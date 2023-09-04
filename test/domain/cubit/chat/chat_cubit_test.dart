@@ -198,7 +198,7 @@ void main() {
   blocTest(
     'submit message, '
     "should call message repository's method to add new message with current dateTime and "
-    'should emit messageSent info and should set messageToSend as null',
+    'should set messageToSend as null',
     build: () => createCubit(
       loggedUserId: loggedUserId,
       messageToSend: 'message',
@@ -215,9 +215,7 @@ void main() {
         messageToSend: 'message',
       ),
       const ChatState(
-        status: BlocStatusComplete<ChatCubitInfo>(
-          info: ChatCubitInfo.messageSent,
-        ),
+        status: BlocStatusComplete(),
         loggedUserId: loggedUserId,
       ),
     ],

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../../domain/additional_model/bloc_status.dart';
 import '../../../domain/cubit/chat/chat_cubit.dart';
 import '../../component/body/big_body_component.dart';
 import '../../component/gap/gap_horizontal_components.dart';
@@ -71,16 +72,19 @@ class _BottomPart extends StatelessWidget {
             ),
           ),
           const GapHorizontal8(),
-          _SubmitButton(
-            onPressed: () => _onSubmit(context),
+          SizedBox(
+            width: 40,
+            child: _SubmitButton(
+              onPressed: () => _onSubmit(context),
+            ),
           ),
         ],
       ),
     );
   }
 
-  void _onSubmit(BuildContext context) {
-    context.read<ChatCubit>().submitMessage();
+  Future<void> _onSubmit(BuildContext context) async {
+    await context.read<ChatCubit>().submitMessage();
     _messageController.clear();
   }
 }
@@ -109,6 +113,10 @@ class _MessageInputState extends State<_MessageInput> {
 
   @override
   Widget build(BuildContext context) {
+    final BlocStatus blocStatus = context.select(
+      (ChatCubit cubit) => cubit.state.status,
+    );
+
     return TextField(
       decoration: InputDecoration(
         hintText: Str.of(context).chatWriteMessage,
@@ -122,6 +130,7 @@ class _MessageInputState extends State<_MessageInput> {
         counterText: '',
         suffixText: '$_messageLength/100',
       ),
+      enabled: blocStatus is! BlocStatusLoading,
       maxLength: 100,
       textInputAction: TextInputAction.send,
       controller: widget.messageController,
@@ -145,14 +154,22 @@ class _SubmitButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final BlocStatus blocStatus = context.select(
+      (ChatCubit cubit) => cubit.state.status,
+    );
     final bool canSubmit = context.select(
       (ChatCubit cubit) => cubit.state.canSubmitMessage,
     );
 
-    return IconButton(
-      color: Theme.of(context).colorScheme.primary,
-      onPressed: canSubmit ? onPressed : null,
-      icon: const Icon(Icons.send),
-    );
+    return blocStatus is BlocStatusLoading
+        ? Transform.scale(
+            scale: 0.7,
+            child: const CircularProgressIndicator(),
+          )
+        : IconButton(
+            color: Theme.of(context).colorScheme.primary,
+            onPressed: canSubmit ? onPressed : null,
+            icon: const Icon(Icons.send),
+          );
   }
 }

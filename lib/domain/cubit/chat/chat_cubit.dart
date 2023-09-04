@@ -93,9 +93,7 @@ class ChatCubit extends Cubit<ChatState> {
       dateTime: now,
     );
     emit(state.copyWith(
-      status: const BlocStatusComplete<ChatCubitInfo>(
-        info: ChatCubitInfo.messageSent,
-      ),
+      status: const BlocStatusComplete(),
       messageToSendAsNull: true,
     ));
   }
@@ -110,5 +108,3 @@ class ChatCubit extends Cubit<ChatState> {
     );
   }
 }
-
-enum ChatCubitInfo { messageSent }

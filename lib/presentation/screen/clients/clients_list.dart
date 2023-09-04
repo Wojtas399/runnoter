@@ -81,15 +81,15 @@ class _ClientItem extends StatelessWidget {
         children: <Widget>[
           IconButton(
             onPressed: () => _onOpenChat(context),
-            icon: const Icon(Icons.message),
+            icon: const Icon(Icons.message_outlined),
           ),
           IconButton(
             onPressed: _onShowProfile,
-            icon: const Icon(Icons.assignment_ind),
+            icon: const Icon(Icons.assignment_ind_outlined),
           ),
           IconButton(
             onPressed: () => _onDeleteClient(context),
-            icon: const Icon(Icons.person_remove),
+            icon: const Icon(Icons.person_remove_outlined),
           ),
         ].addSeparator(
           !context.isMobileSize ? const GapHorizontal8() : const SizedBox(),
