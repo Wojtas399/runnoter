@@ -225,6 +225,8 @@
   "clientStatsTitle": "Statistics",
   "clientStatsMileage": "Mileage",
   "clientStatsHealthMeasurements": "Health measurements",
+  "@__________CHAT__________": {},
+  "chatWriteMessage": "Write message...",
   "@__________ACTIVITY_STATUS_PARAMS__________": {},
   "activityStatus": "Status",
   "activityStatusCoveredDistance": "Covered distance",

@@ -827,6 +827,11 @@
   "@clientStatsHealthMeasurements": {
     "description": "Label of health measurements stats"
   },
+  "@__________CHAT__________": {},
+  "chatWriteMessage": "Napisz wiadomość...",
+  "@chatWriteMessage": {
+    "description": "Hint text of message input"
+  },
   "@__________ACTIVITY_STATUS_PARAMS__________": {},
   "activityStatus": "Status",
   "@activityStatus": {

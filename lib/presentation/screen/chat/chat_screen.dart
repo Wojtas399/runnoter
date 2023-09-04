@@ -1,5 +1,10 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../../domain/bloc/chat/chat_bloc.dart';
+import '../../component/page_not_found_component.dart';
+import 'chat_content.dart';
 
 @RoutePage()
 class ChatScreen extends StatelessWidget {
@@ -9,8 +14,14 @@ class ChatScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Chat screen')),
-    );
+    return chatId != null
+        ? BlocProvider(
+            create: (_) => ChatBloc(chatId: chatId!)
+              ..add(
+                const ChatEventInitialize(),
+              ),
+            child: const ChatContent(),
+          )
+        : const PageNotFound();
   }
 }
