@@ -14,6 +14,7 @@ import '../../repository/chat_repository.dart';
 import '../../repository/message_repository.dart';
 import '../../repository/person_repository.dart';
 import '../../service/auth_service.dart';
+import '../../service/connectivity_service.dart';
 
 part 'chat_state.dart';
 
@@ -24,6 +25,7 @@ class ChatCubit extends Cubit<ChatState> {
   final MessageRepository _messageRepository;
   final PersonRepository _personRepository;
   final DateService _dateService;
+  final ConnectivityService _connectivityService;
   StreamSubscription<List<Message>>? _messagesListener;
 
   ChatCubit({
@@ -35,6 +37,7 @@ class ChatCubit extends Cubit<ChatState> {
         _messageRepository = getIt<MessageRepository>(),
         _personRepository = getIt<PersonRepository>(),
         _dateService = getIt<DateService>(),
+        _connectivityService = getIt<ConnectivityService>(),
         super(initialState);
 
   @override
@@ -84,18 +87,26 @@ class ChatCubit extends Cubit<ChatState> {
 
   Future<void> submitMessage() async {
     if (!state.canSubmitMessage) return;
-    final DateTime now = _dateService.getNow();
-    emit(state.copyWith(status: const BlocStatusLoading()));
-    await _messageRepository.addMessageToChat(
-      chatId: _chatId,
-      senderId: state.loggedUserId!,
-      content: state.messageToSend!,
-      dateTime: now,
-    );
-    emit(state.copyWith(
-      status: const BlocStatusComplete(),
-      messageToSendAsNull: true,
-    ));
+    if (await _connectivityService.hasDeviceInternetConnection()) {
+      final DateTime now = _dateService.getNow();
+      emit(state.copyWith(status: const BlocStatusLoading()));
+      await _messageRepository.addMessageToChat(
+        chatId: _chatId,
+        senderId: state.loggedUserId!,
+        content: state.messageToSend!,
+        dateTime: now,
+      );
+      emit(state.copyWith(
+        status: const BlocStatusComplete(),
+        messageToSendAsNull: true,
+      ));
+    } else {
+      emit(state.copyWith(
+        status: const BlocStatusError<ChatCubitError>(
+          error: ChatCubitError.noInternetConnection,
+        ),
+      ));
+    }
   }
 
   Future<void> loadOlderMessages() async {
@@ -108,3 +119,5 @@ class ChatCubit extends Cubit<ChatState> {
     );
   }
 }
+
+enum ChatCubitError { noInternetConnection }

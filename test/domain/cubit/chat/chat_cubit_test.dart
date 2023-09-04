@@ -14,6 +14,7 @@ import 'package:runnoter/domain/repository/chat_repository.dart';
 import 'package:runnoter/domain/repository/message_repository.dart';
 import 'package:runnoter/domain/repository/person_repository.dart';
 import 'package:runnoter/domain/service/auth_service.dart';
+import 'package:runnoter/domain/service/connectivity_service.dart';
 
 import '../../../creators/message_creator.dart';
 import '../../../creators/person_creator.dart';
@@ -22,6 +23,7 @@ import '../../../mock/domain/repository/mock_chat_repository.dart';
 import '../../../mock/domain/repository/mock_message_repository.dart';
 import '../../../mock/domain/repository/mock_person_repository.dart';
 import '../../../mock/domain/service/mock_auth_service.dart';
+import '../../../mock/domain/service/mock_connectivity_service.dart';
 
 void main() {
   final authService = MockAuthService();
@@ -29,6 +31,7 @@ void main() {
   final messageRepository = MockMessageRepository();
   final personRepository = MockPersonRepository();
   final dateService = MockDateService();
+  final connectivityService = MockConnectivityService();
   const String chatId = 'c1';
   const String loggedUserId = 'u1';
 
@@ -53,6 +56,7 @@ void main() {
     GetIt.I.registerSingleton<MessageRepository>(messageRepository);
     GetIt.I.registerSingleton<PersonRepository>(personRepository);
     GetIt.I.registerFactory<DateService>(() => dateService);
+    GetIt.I.registerFactory<ConnectivityService>(() => connectivityService);
   });
 
   tearDown(() {
@@ -61,6 +65,7 @@ void main() {
     reset(messageRepository);
     reset(personRepository);
     reset(dateService);
+    reset(connectivityService);
   });
 
   group(
@@ -112,8 +117,8 @@ void main() {
             messagesStream: messages$.stream,
           );
         },
-        act: (bloc) {
-          bloc.initialize();
+        act: (cubit) {
+          cubit.initialize();
           messages$.add(updatedMessages);
         },
         expect: () => [
@@ -154,7 +159,7 @@ void main() {
     'should do nothing',
     build: () => createCubit(messageToSend: 'message to send'),
     setUp: () => authService.mockGetLoggedUserId(),
-    act: (bloc) => bloc.initialize(),
+    act: (cubit) => cubit.initialize(),
     expect: () => [],
   );
 
@@ -162,7 +167,7 @@ void main() {
     'message changed, '
     'should update message to send in state',
     build: () => createCubit(),
-    act: (bloc) => bloc.messageChanged('message'),
+    act: (cubit) => cubit.messageChanged('message'),
     expect: () => [
       const ChatState(status: BlocStatusComplete(), messageToSend: 'message'),
     ],
@@ -173,7 +178,7 @@ void main() {
     'logged user does not exist, '
     'should do nothing',
     build: () => createCubit(messageToSend: 'message'),
-    act: (bloc) => bloc.submitMessage(),
+    act: (cubit) => cubit.submitMessage(),
     expect: () => [],
   );
 
@@ -182,7 +187,7 @@ void main() {
     'message to send is null, '
     'should do nothing',
     build: () => createCubit(loggedUserId: loggedUserId),
-    act: (bloc) => bloc.submitMessage(),
+    act: (cubit) => cubit.submitMessage(),
     expect: () => [],
   );
 
@@ -191,8 +196,34 @@ void main() {
     'message to send is empty string, '
     'should do nothing',
     build: () => createCubit(loggedUserId: loggedUserId, messageToSend: ''),
-    act: (bloc) => bloc.submitMessage(),
+    act: (cubit) => cubit.submitMessage(),
     expect: () => [],
+  );
+
+  blocTest(
+    'submit message, '
+    'no internet connection, '
+    'should emit noInternetConnection error',
+    build: () => createCubit(
+      loggedUserId: loggedUserId,
+      messageToSend: 'message',
+    ),
+    setUp: () => connectivityService.mockHasDeviceInternetConnection(
+      hasConnection: false,
+    ),
+    act: (cubit) => cubit.submitMessage(),
+    expect: () => [
+      const ChatState(
+        status: BlocStatusError<ChatCubitError>(
+          error: ChatCubitError.noInternetConnection,
+        ),
+        loggedUserId: loggedUserId,
+        messageToSend: 'message',
+      ),
+    ],
+    verify: (_) => verify(
+      () => connectivityService.hasDeviceInternetConnection(),
+    ).called(1),
   );
 
   blocTest(
@@ -204,10 +235,11 @@ void main() {
       messageToSend: 'message',
     ),
     setUp: () {
+      connectivityService.mockHasDeviceInternetConnection(hasConnection: true);
       dateService.mockGetNow(now: DateTime(2023, 1, 1, 12, 30));
       messageRepository.mockAddMessageToChat();
     },
-    act: (bloc) => bloc.submitMessage(),
+    act: (cubit) => cubit.submitMessage(),
     expect: () => [
       const ChatState(
         status: BlocStatusLoading(),
@@ -240,7 +272,7 @@ void main() {
       ],
     ),
     setUp: () => messageRepository.mockLoadOlderMessagesForChat(),
-    act: (bloc) => bloc.loadOlderMessages(),
+    act: (cubit) => cubit.loadOlderMessages(),
     expect: () => [],
     verify: (_) => verify(
       () => messageRepository.loadOlderMessagesForChat(
