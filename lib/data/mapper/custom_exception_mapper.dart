@@ -5,17 +5,20 @@ import '../../domain/additional_model/custom_exception.dart';
 CustomException mapExceptionFromFirebase(
   FirebaseException firebaseException,
 ) =>
-    switch (firebaseException) {
+    (switch (firebaseException) {
       FirebaseAuthException() => AuthException(
           code: _mapAuthExceptionCodeFromFirebase(firebaseException.code),
         ),
       FirebaseNetworkException() => NetworkException(
           code: _mapNetworkExceptionCodeFromFirebase(firebaseException.code),
         ),
+      FirebaseChatException() => ChatException(
+          code: _mapChatExceptionCodeFromFirebase(firebaseException.code),
+        ),
       FirebaseUnknownException() => UnknownException(
           message: firebaseException.message,
         ),
-    };
+    }) as CustomException;
 
 AuthExceptionCode _mapAuthExceptionCodeFromFirebase(
   FirebaseAuthExceptionCode firebaseAuthExceptionCode,
@@ -37,4 +40,12 @@ NetworkExceptionCode _mapNetworkExceptionCodeFromFirebase(
         NetworkExceptionCode.requestFailed,
       FirebaseNetworkExceptionCode.tooManyRequests =>
         NetworkExceptionCode.tooManyRequests,
+    };
+
+ChatExceptionCode _mapChatExceptionCodeFromFirebase(
+  FirebaseChatExceptionCode firebaseChatExceptionCode,
+) =>
+    switch (firebaseChatExceptionCode) {
+      FirebaseChatExceptionCode.chatAlreadyExists =>
+        ChatExceptionCode.chatAlreadyExists,
     };

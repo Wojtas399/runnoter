@@ -338,7 +338,9 @@ void main() {
         password: password,
       ),
     ],
-    errors: () => ['unknown exception message'],
+    errors: () => [
+      const UnknownException(message: 'unknown exception message'),
+    ],
     verify: (_) => verify(
       () => authService.signIn(email: email, password: password),
     ).called(1),

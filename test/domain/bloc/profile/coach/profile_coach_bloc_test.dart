@@ -13,6 +13,7 @@ import 'package:runnoter/domain/repository/person_repository.dart';
 import 'package:runnoter/domain/repository/user_repository.dart';
 import 'package:runnoter/domain/service/auth_service.dart';
 import 'package:runnoter/domain/service/coaching_request_service.dart';
+import 'package:runnoter/domain/use_case/load_chat_id_use_case.dart';
 
 import '../../../../creators/coaching_request_creator.dart';
 import '../../../../creators/person_creator.dart';
@@ -21,12 +22,14 @@ import '../../../../mock/domain/repository/mock_person_repository.dart';
 import '../../../../mock/domain/repository/mock_user_repository.dart';
 import '../../../../mock/domain/service/mock_auth_service.dart';
 import '../../../../mock/domain/service/mock_coaching_request_service.dart';
+import '../../../../mock/domain/use_case/mock_load_chat_id_use_case.dart';
 
 void main() {
   final authService = MockAuthService();
   final userRepository = MockUserRepository();
   final personRepository = MockPersonRepository();
   final coachingRequestService = MockCoachingRequestService();
+  final loadChatIdUseCase = MockLoadChatIdUseCase();
   const String loggedUserId = 'u1';
 
   setUpAll(() {
@@ -36,6 +39,7 @@ void main() {
     GetIt.I.registerFactory<CoachingRequestService>(
       () => coachingRequestService,
     );
+    GetIt.I.registerFactory<LoadChatIdUseCase>(() => loadChatIdUseCase);
   });
 
   tearDown(() {
@@ -43,6 +47,7 @@ void main() {
     reset(userRepository);
     reset(personRepository);
     reset(coachingRequestService);
+    reset(loadChatIdUseCase);
   });
 
   blocTest(
@@ -424,7 +429,7 @@ void main() {
     'logged user does not exist, '
     'should emit no logged user info',
     build: () => ProfileCoachBloc(
-      state: ProfileCoachState(
+      initialState: ProfileCoachState(
         status: const BlocStatusComplete(),
         receivedRequests: [
           CoachingRequestShort(
@@ -465,7 +470,7 @@ void main() {
     "should call coaching request service's method to update request with isAccepted param set as true, "
     "should call user repository's method to update logged user with new coach id",
     build: () => ProfileCoachBloc(
-      state: ProfileCoachState(
+      initialState: ProfileCoachState(
         status: const BlocStatusComplete(),
         receivedRequests: [
           CoachingRequestShort(
@@ -594,6 +599,58 @@ void main() {
       const ProfileCoachState(status: BlocStatusNoLoggedUser()),
     ],
     verify: (_) => verify(() => authService.loggedUserId$).called(1),
+  );
+
+  blocTest(
+    'open chat, '
+    'coach does not exist, '
+    'should do nothing',
+    build: () => ProfileCoachBloc(),
+    setUp: () => authService.mockGetLoggedUserId(userId: loggedUserId),
+    act: (bloc) => bloc.add(const ProfileCoachEventOpenChat()),
+    expect: () => [],
+  );
+
+  blocTest(
+    'open chat, '
+    'logged user does not exist, '
+    'should do nothing',
+    build: () => ProfileCoachBloc(
+      initialState: ProfileCoachState(
+        status: const BlocStatusInitial(),
+        coach: createPerson(id: 'p1'),
+      ),
+    ),
+    setUp: () => authService.mockGetLoggedUserId(),
+    act: (bloc) => bloc.add(const ProfileCoachEventOpenChat()),
+    expect: () => [],
+  );
+
+  blocTest(
+    'open chat, '
+    'should call use case to load chat id and should emit loaded chat id',
+    build: () => ProfileCoachBloc(
+      initialState: ProfileCoachState(
+        status: const BlocStatusInitial(),
+        coach: createPerson(id: 'p1'),
+      ),
+    ),
+    setUp: () {
+      authService.mockGetLoggedUserId(userId: loggedUserId);
+      loadChatIdUseCase.mock(chatId: 'c1');
+    },
+    act: (bloc) => bloc.add(const ProfileCoachEventOpenChat()),
+    expect: () => [
+      ProfileCoachState(
+        status: const BlocStatusLoading(),
+        coach: createPerson(id: 'p1'),
+      ),
+      ProfileCoachState(
+        status: const BlocStatusComplete(),
+        coach: createPerson(id: 'p1'),
+        idOfChatWithCoach: 'c1',
+      ),
+    ],
   );
 
   blocTest(

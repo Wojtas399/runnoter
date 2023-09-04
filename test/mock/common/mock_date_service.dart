@@ -6,6 +6,10 @@ class MockDateService extends Mock implements DateService {
     when(() => getToday()).thenReturn(todayDate);
   }
 
+  void mockGetNow({required DateTime now}) {
+    when(() => getNow()).thenReturn(now);
+  }
+
   void mockGetFirstDayOfTheWeek({required DateTime date}) {
     when(() => getFirstDayOfTheWeek(any())).thenReturn(date);
   }

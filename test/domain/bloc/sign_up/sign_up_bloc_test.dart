@@ -327,9 +327,7 @@ void main() {
       ),
     ),
     setUp: () => authService.mockSignUp(
-      throwable: const UnknownException(
-        message: 'unknown exception message',
-      ),
+      throwable: const UnknownException(message: 'unknown exception message'),
     ),
     act: (bloc) => bloc.add(const SignUpEventSubmit()),
     expect: () => [
@@ -354,7 +352,9 @@ void main() {
         passwordConfirmation: password,
       ),
     ],
-    errors: () => ['unknown exception message'],
+    errors: () => [
+      const UnknownException(message: 'unknown exception message'),
+    ],
     verify: (_) => verify(
       () => authService.signUp(email: email, password: password),
     ).called(1),

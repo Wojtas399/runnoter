@@ -42,6 +42,10 @@ class ProfileCoachEventDeleteRequest extends ProfileCoachEvent {
   });
 }
 
+class ProfileCoachEventOpenChat extends ProfileCoachEvent {
+  const ProfileCoachEventOpenChat();
+}
+
 class ProfileCoachEventDeleteCoach extends ProfileCoachEvent {
   const ProfileCoachEventDeleteCoach();
 }

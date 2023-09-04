@@ -9,8 +9,10 @@ import '../../component/body/medium_body_component.dart';
 import '../../component/card_body_component.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/responsive_layout_component.dart';
+import '../../config/navigation/router.dart';
 import '../../extension/context_extensions.dart';
 import '../../service/dialog_service.dart';
+import '../../service/navigator_service.dart';
 import 'clients_list.dart';
 import 'clients_requests.dart';
 
@@ -51,6 +53,7 @@ class _BlocListener extends StatelessWidget {
     return BlocWithStatusListener<ClientsBloc, ClientsState, ClientsBlocInfo,
         dynamic>(
       onInfo: (ClientsBlocInfo info) => _manageInfo(context, info),
+      onStateChanged: _manageState,
       child: child,
     );
   }
@@ -66,6 +69,12 @@ class _BlocListener extends StatelessWidget {
       case ClientsBlocInfo.clientDeleted:
         showSnackbarMessage(str.clientsSuccessfullyDeletedClient);
         break;
+    }
+  }
+
+  void _manageState(ClientsState state) {
+    if (state.selectedChatId != null) {
+      navigateTo(ChatRoute(chatId: state.selectedChatId));
     }
   }
 }

@@ -120,6 +120,25 @@ void main() {
 
   test(
     'map exception from firebase, '
+    'FirebaseChatException with chatAlreadyExists code should be mapped to ChatException with chatAlreadyExists code',
+    () {
+      const FirebaseException firebaseException = FirebaseChatException(
+        code: FirebaseChatExceptionCode.chatAlreadyExists,
+      );
+      const CustomException expectedException = ChatException(
+        code: ChatExceptionCode.chatAlreadyExists,
+      );
+
+      final CustomException exception = mapExceptionFromFirebase(
+        firebaseException,
+      );
+
+      expect(exception, expectedException);
+    },
+  );
+
+  test(
+    'map exception from firebase, '
     'FirebaseUnknownException should be mapped to UnknownException',
     () {
       const FirebaseException firebaseException = FirebaseUnknownException(

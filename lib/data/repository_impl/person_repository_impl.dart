@@ -17,14 +17,17 @@ class PersonRepositoryImpl extends StateRepository<Person>
       : _firebaseUserService = getIt<firebase.FirebaseUserService>();
 
   @override
-  Stream<Person?> getPersonById({required String personId}) async* {
-    await for (final persons in dataStream$) {
-      Person? person = persons?.firstWhereOrNull(
-        (Person p) => p.id == personId,
-      );
-      person ??= await _loadPersonByIdFromDb(personId);
-      yield person;
-    }
+  Stream<Person?> getPersonById({required String personId}) {
+    return dataStream$
+        .map(
+          (List<Person>? persons) => persons?.firstWhereOrNull(
+            (Person p) => p.id == personId,
+          ),
+        )
+        .asyncMap(
+          (Person? person) async =>
+              person ?? await _loadPersonByIdFromDb(personId),
+        );
   }
 
   @override

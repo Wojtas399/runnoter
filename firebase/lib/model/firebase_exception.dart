@@ -1,56 +1,41 @@
 import 'package:equatable/equatable.dart';
 
-sealed class FirebaseException extends Equatable {
-  const FirebaseException();
+sealed class FirebaseException<T> extends Equatable {
+  final T code;
+  final String? message;
+
+  const FirebaseException({required this.code, this.message});
+
+  @override
+  List<Object?> get props => [code, message];
 }
 
 enum FirebaseAuthExceptionCode {
   invalidEmail,
   userNotFound,
   wrongPassword,
-  emailAlreadyInUse,
+  emailAlreadyInUse
 }
 
-class FirebaseAuthException extends FirebaseException {
-  final FirebaseAuthExceptionCode code;
-
-  const FirebaseAuthException({
-    required this.code,
-  });
-
-  @override
-  List<Object?> get props => [
-        code,
-      ];
+class FirebaseAuthException
+    extends FirebaseException<FirebaseAuthExceptionCode> {
+  const FirebaseAuthException({required super.code});
 }
 
-enum FirebaseNetworkExceptionCode {
-  requestFailed,
-  tooManyRequests,
+enum FirebaseChatExceptionCode { chatAlreadyExists }
+
+class FirebaseChatException
+    extends FirebaseException<FirebaseChatExceptionCode> {
+  const FirebaseChatException({required super.code});
 }
 
-class FirebaseNetworkException extends FirebaseException {
-  final FirebaseNetworkExceptionCode code;
+enum FirebaseNetworkExceptionCode { requestFailed, tooManyRequests }
 
-  const FirebaseNetworkException({
-    required this.code,
-  });
-
-  @override
-  List<Object?> get props => [
-        code,
-      ];
+class FirebaseNetworkException
+    extends FirebaseException<FirebaseNetworkExceptionCode> {
+  const FirebaseNetworkException({required super.code});
 }
 
 class FirebaseUnknownException extends FirebaseException {
-  final String message;
-
-  const FirebaseUnknownException({
-    required this.message,
-  });
-
-  @override
-  List<Object?> get props => [
-        message,
-      ];
+  const FirebaseUnknownException({required super.message}) : super(code: null);
 }

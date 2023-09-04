@@ -12,17 +12,20 @@ import 'package:runnoter/domain/entity/person.dart';
 import 'package:runnoter/domain/repository/person_repository.dart';
 import 'package:runnoter/domain/service/auth_service.dart';
 import 'package:runnoter/domain/service/coaching_request_service.dart';
+import 'package:runnoter/domain/use_case/load_chat_id_use_case.dart';
 
 import '../../../creators/coaching_request_creator.dart';
 import '../../../creators/person_creator.dart';
 import '../../../mock/domain/repository/mock_person_repository.dart';
 import '../../../mock/domain/service/mock_auth_service.dart';
 import '../../../mock/domain/service/mock_coaching_request_service.dart';
+import '../../../mock/domain/use_case/mock_load_chat_id_use_case.dart';
 
 void main() {
   final authService = MockAuthService();
   final coachingRequestService = MockCoachingRequestService();
   final personRepository = MockPersonRepository();
+  final loadChatIdUseCase = MockLoadChatIdUseCase();
   const String loggedUserId = 'u1';
 
   setUpAll(() {
@@ -31,12 +34,14 @@ void main() {
       () => coachingRequestService,
     );
     GetIt.I.registerSingleton<PersonRepository>(personRepository);
+    GetIt.I.registerFactory<LoadChatIdUseCase>(() => loadChatIdUseCase);
   });
 
   tearDown(() {
     reset(authService);
     reset(coachingRequestService);
     reset(personRepository);
+    reset(loadChatIdUseCase);
   });
 
   group(
@@ -252,6 +257,26 @@ void main() {
     ],
     verify: (_) => verify(
       () => coachingRequestService.deleteCoachingRequest(requestId: 'r1'),
+    ).called(1),
+  );
+
+  blocTest(
+    'open chat with client, '
+    'should call use case to load chat id and should emit loaded id',
+    build: () => ClientsBloc(),
+    setUp: () {
+      authService.mockGetLoggedUserId(userId: loggedUserId);
+      loadChatIdUseCase.mock(chatId: 'c1');
+    },
+    act: (bloc) => bloc.add(
+      const ClientsEventOpenChatWithClient(clientId: 'cl1'),
+    ),
+    expect: () => [
+      const ClientsState(status: BlocStatusLoading()),
+      const ClientsState(status: BlocStatusComplete(), selectedChatId: 'c1'),
+    ],
+    verify: (_) => verify(
+      () => loadChatIdUseCase.execute(user1Id: loggedUserId, user2Id: 'cl1'),
     ).called(1),
   );
 

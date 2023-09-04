@@ -412,7 +412,9 @@ void main() {
       const ProfileIdentitiesState(status: BlocStatusLoading()),
       const ProfileIdentitiesState(status: BlocStatusUnknownError()),
     ],
-    errors: () => ['unknown exception message'],
+    errors: () => [
+      const UnknownException(message: 'unknown exception message'),
+    ],
     verify: (_) {
       verify(() => authService.loggedUserId$).called(1);
       verify(
@@ -497,7 +499,9 @@ void main() {
       const ProfileIdentitiesState(status: BlocStatusLoading()),
       const ProfileIdentitiesState(status: BlocStatusUnknownError()),
     ],
-    errors: () => ['unknown exception message'],
+    errors: () => [
+      const UnknownException(message: 'unknown exception message'),
+    ],
     verify: (_) => verify(
       () => authService.updatePassword(newPassword: 'newPassword'),
     ).called(1),
@@ -635,7 +639,9 @@ void main() {
       const ProfileIdentitiesState(status: BlocStatusLoading()),
       const ProfileIdentitiesState(status: BlocStatusUnknownError()),
     ],
-    errors: () => ['unknown exception message'],
+    errors: () => [
+      const UnknownException(message: 'unknown exception message'),
+    ],
     verify: (_) {
       verify(() => authService.loggedUserId$).called(1);
       verify(
