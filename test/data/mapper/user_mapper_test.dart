@@ -11,6 +11,7 @@ void main() {
   const String name = 'name';
   const String surname = 'surname';
   const String email = 'email@example.com';
+  final DateTime dateOfBirth = DateTime(2023, 1, 10);
   const String coachId = 'c1';
   const Settings settings = Settings(
     themeMode: ThemeMode.dark,
@@ -21,15 +22,16 @@ void main() {
 
   test(
     'map user from dto, '
-    'should map firebase dto model to domain model',
+    'should map dto model to domain model',
     () {
-      const userDto = firebase.UserDto(
+      final firebase.UserDto userDto = firebase.UserDto(
         id: userId,
         accountType: firebase.AccountType.runner,
         gender: firebaseGender,
         name: name,
         surname: surname,
         email: email,
+        dateOfBirth: dateOfBirth,
         coachId: coachId,
       );
       final User expectedUser = User(
@@ -39,7 +41,7 @@ void main() {
         name: name,
         surname: surname,
         email: email,
-        dateOfBirth: DateTime(2023), //TODO: Implement date of birth
+        dateOfBirth: dateOfBirth,
         settings: settings,
         coachId: coachId,
       );
@@ -47,6 +49,38 @@ void main() {
       final User user = mapUserFromDto(userDto: userDto, settings: settings);
 
       expect(user, expectedUser);
+    },
+  );
+
+  test(
+    'map user to dto, '
+    'should map domain model to dto model',
+    () {
+      final User user = User(
+        id: userId,
+        accountType: AccountType.runner,
+        gender: gender,
+        name: name,
+        surname: surname,
+        email: email,
+        dateOfBirth: dateOfBirth,
+        settings: settings,
+        coachId: coachId,
+      );
+      final firebase.UserDto expectedUserDto = firebase.UserDto(
+        id: userId,
+        accountType: firebase.AccountType.runner,
+        gender: firebaseGender,
+        name: name,
+        surname: surname,
+        email: email,
+        dateOfBirth: dateOfBirth,
+        coachId: coachId,
+      );
+
+      final firebase.UserDto userDto = mapUserToDto(user: user);
+
+      expect(userDto, expectedUserDto);
     },
   );
 }

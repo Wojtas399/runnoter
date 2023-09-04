@@ -8,6 +8,8 @@ void main() {
   const String name = 'Jack';
   const String surname = 'Gadovsky';
   const String email = 'email@example.com';
+  final DateTime dateOfBirth = DateTime(2023, 1, 10);
+  const String dateOfBirthStr = '2023-01-10';
   const String coachId = 'c1';
 
   test(
@@ -20,15 +22,17 @@ void main() {
         'name': name,
         'surname': surname,
         'email': email,
+        'dateOfBirth': dateOfBirthStr,
         'coachId': coachId,
       };
-      const UserDto expectedDto = UserDto(
+      final UserDto expectedDto = UserDto(
         id: id,
         accountType: accountType,
         gender: gender,
         name: name,
         surname: surname,
         email: email,
+        dateOfBirth: dateOfBirth,
         coachId: coachId,
       );
 
@@ -42,13 +46,14 @@ void main() {
     'to json, '
     'should map dto model to json',
     () {
-      const UserDto dto = UserDto(
+      final UserDto dto = UserDto(
         id: id,
         accountType: accountType,
         gender: gender,
         name: name,
         surname: surname,
         email: email,
+        dateOfBirth: dateOfBirth,
         coachId: coachId,
       );
       final Map<String, dynamic> expectedJson = {
@@ -57,6 +62,7 @@ void main() {
         'name': name,
         'surname': surname,
         'email': email,
+        'dateOfBirth': dateOfBirthStr,
         'coachId': coachId,
       };
 
@@ -76,6 +82,7 @@ void main() {
         'name': name,
         'surname': surname,
         'email': email,
+        'dateOfBirth': dateOfBirthStr,
         'coachId': coachId,
       };
 
@@ -84,6 +91,7 @@ void main() {
         name: name,
         surname: surname,
         email: email,
+        dateOfBirth: dateOfBirth,
         coachId: coachId,
       );
 
@@ -101,6 +109,7 @@ void main() {
         'name': name,
         'surname': surname,
         'email': email,
+        'dateOfBirth': dateOfBirthStr,
         'coachId': coachId,
       };
 
@@ -109,6 +118,7 @@ void main() {
         name: name,
         surname: surname,
         email: email,
+        dateOfBirth: dateOfBirth,
         coachId: coachId,
       );
 
@@ -126,6 +136,7 @@ void main() {
         'gender': gender.name,
         'surname': surname,
         'email': email,
+        'dateOfBirth': dateOfBirthStr,
         'coachId': coachId,
       };
 
@@ -134,6 +145,7 @@ void main() {
         gender: gender,
         surname: surname,
         email: email,
+        dateOfBirth: dateOfBirth,
         coachId: coachId,
       );
 
@@ -151,6 +163,7 @@ void main() {
         'gender': gender.name,
         'name': name,
         'email': email,
+        'dateOfBirth': dateOfBirthStr,
         'coachId': coachId,
       };
 
@@ -159,6 +172,7 @@ void main() {
         gender: gender,
         name: name,
         email: email,
+        dateOfBirth: dateOfBirth,
         coachId: coachId,
       );
 
@@ -176,6 +190,7 @@ void main() {
         'gender': gender.name,
         'name': name,
         'surname': surname,
+        'dateOfBirth': dateOfBirthStr,
         'coachId': coachId,
       };
 
@@ -184,6 +199,34 @@ void main() {
         gender: gender,
         name: name,
         surname: surname,
+        dateOfBirth: dateOfBirth,
+        coachId: coachId,
+      );
+
+      expect(json, expectedJson);
+    },
+  );
+
+  test(
+    'create json to update, '
+    'dateOfBirth is null, '
+    'should not include dateOfBirth in json',
+    () {
+      final Map<String, dynamic> expectedJson = {
+        'accountType': accountType.name,
+        'gender': gender.name,
+        'name': name,
+        'surname': surname,
+        'email': email,
+        'coachId': coachId,
+      };
+
+      final Map<String, dynamic> json = createUserJsonToUpdate(
+        accountType: accountType,
+        gender: gender,
+        name: name,
+        surname: surname,
+        email: email,
         coachId: coachId,
       );
 
@@ -202,6 +245,7 @@ void main() {
         'name': name,
         'surname': surname,
         'email': email,
+        'dateOfBirth': dateOfBirthStr,
       };
 
       final Map<String, dynamic> json = createUserJsonToUpdate(
@@ -210,6 +254,7 @@ void main() {
         name: name,
         surname: surname,
         email: email,
+        dateOfBirth: dateOfBirth,
       );
 
       expect(json, expectedJson);
@@ -227,6 +272,7 @@ void main() {
         'name': name,
         'surname': surname,
         'email': email,
+        'dateOfBirth': dateOfBirthStr,
         'coachId': null,
       };
 
@@ -236,6 +282,7 @@ void main() {
         name: name,
         surname: surname,
         email: email,
+        dateOfBirth: dateOfBirth,
         coachId: coachId,
         coachIdAsNull: true,
       );

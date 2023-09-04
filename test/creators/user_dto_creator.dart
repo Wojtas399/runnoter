@@ -7,6 +7,7 @@ UserDto createUserDto({
   String name = '',
   String surname = '',
   String email = '',
+  DateTime? dateOfBirth,
   String? coachId,
 }) =>
     UserDto(
@@ -16,5 +17,6 @@ UserDto createUserDto({
       name: name,
       surname: surname,
       email: email,
+      dateOfBirth: dateOfBirth ?? DateTime(2023),
       coachId: coachId,
     );

@@ -41,15 +41,7 @@ class UserRepositoryImpl extends StateRepository<User>
   @override
   Future<void> addUser({required User user}) async {
     final firebase.UserDto? userDto = await _dbUserService.addUserData(
-      userDto: firebase.UserDto(
-        id: user.id,
-        accountType: mapAccountTypeToDto(user.accountType),
-        gender: mapGenderToDto(user.gender),
-        name: user.name,
-        surname: user.surname,
-        email: user.email,
-        coachId: user.coachId,
-      ),
+      userDto: mapUserToDto(user: user),
     );
     final appearanceSettingsDto =
         await _dbAppearanceSettingsService.addSettings(
@@ -93,7 +85,6 @@ class UserRepositoryImpl extends StateRepository<User>
     final Stream<User?> user$ = getUserById(userId: userId);
     await for (final user in user$) {
       if (user == null) return;
-      //TODO: add dateOfBirth param
       final updatedUserDto = await _dbUserService.updateUserData(
         userId: userId,
         accountType:
@@ -102,6 +93,7 @@ class UserRepositoryImpl extends StateRepository<User>
         name: name,
         surname: surname,
         email: email,
+        dateOfBirth: dateOfBirth,
         coachId: coachId,
         coachIdAsNull: coachIdAsNull,
       );
