@@ -6,7 +6,7 @@ import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/common/date_service.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
-import 'package:runnoter/domain/bloc/chat/chat_bloc.dart';
+import 'package:runnoter/domain/cubit/chat/chat_cubit.dart';
 import 'package:runnoter/domain/entity/chat.dart';
 import 'package:runnoter/domain/entity/message.dart';
 import 'package:runnoter/domain/entity/person.dart';
@@ -32,15 +32,17 @@ void main() {
   const String chatId = 'c1';
   const String loggedUserId = 'u1';
 
-  ChatBloc createBloc({
+  ChatCubit createCubit({
     String? loggedUserId,
+    List<Message>? messagesFromLatest,
     String? messageToSend,
   }) =>
-      ChatBloc(
+      ChatCubit(
         chatId: chatId,
         initialState: ChatState(
           status: const BlocStatusInitial(),
           loggedUserId: loggedUserId,
+          messagesFromLatest: messagesFromLatest,
           messageToSend: messageToSend,
         ),
       );
@@ -93,8 +95,8 @@ void main() {
 
       blocTest(
         'should load logged user id, full names of sender and recipient and '
-        'should set listener of messages and should sort messages by date before emitting them',
-        build: () => createBloc(),
+        'should set listener of messages and should sort messages ascending by date before emitting them',
+        build: () => createCubit(),
         setUp: () {
           authService.mockGetLoggedUserId(userId: loggedUserId);
           chatRepository.mockGetChatById(
@@ -111,7 +113,7 @@ void main() {
           );
         },
         act: (bloc) {
-          bloc.add(const ChatEventInitialize());
+          bloc.initialize();
           messages$.add(updatedMessages);
         },
         expect: () => [
@@ -120,14 +122,14 @@ void main() {
             loggedUserId: loggedUserId,
             senderFullName: '${sender.name} ${sender.surname}',
             recipientFullName: '${recipient.name} ${recipient.surname}',
-            messages: messages,
+            messagesFromLatest: messages,
           ),
           ChatState(
             status: const BlocStatusComplete(),
             loggedUserId: loggedUserId,
             senderFullName: '${sender.name} ${sender.surname}',
             recipientFullName: '${recipient.name} ${recipient.surname}',
-            messages: updatedMessages.reversed.toList(),
+            messagesFromLatest: updatedMessages.reversed.toList(),
           ),
         ],
         verify: (_) {
@@ -150,17 +152,17 @@ void main() {
     'initialize, '
     'logged user does not exist, '
     'should do nothing',
-    build: () => createBloc(messageToSend: 'message to send'),
+    build: () => createCubit(messageToSend: 'message to send'),
     setUp: () => authService.mockGetLoggedUserId(),
-    act: (bloc) => bloc.add(const ChatEventInitialize()),
+    act: (bloc) => bloc.initialize(),
     expect: () => [],
   );
 
   blocTest(
     'message changed, '
     'should update message to send in state',
-    build: () => createBloc(),
-    act: (bloc) => bloc.add(const ChatEventMessageChanged(message: 'message')),
+    build: () => createCubit(),
+    act: (bloc) => bloc.messageChanged('message'),
     expect: () => [
       const ChatState(status: BlocStatusComplete(), messageToSend: 'message'),
     ],
@@ -170,8 +172,8 @@ void main() {
     'submit message, '
     'logged user does not exist, '
     'should do nothing',
-    build: () => createBloc(messageToSend: 'message'),
-    act: (bloc) => bloc.add(const ChatEventSubmitMessage()),
+    build: () => createCubit(messageToSend: 'message'),
+    act: (bloc) => bloc.submitMessage(),
     expect: () => [],
   );
 
@@ -179,8 +181,8 @@ void main() {
     'submit message, '
     'message to send is null, '
     'should do nothing',
-    build: () => createBloc(loggedUserId: loggedUserId),
-    act: (bloc) => bloc.add(const ChatEventSubmitMessage()),
+    build: () => createCubit(loggedUserId: loggedUserId),
+    act: (bloc) => bloc.submitMessage(),
     expect: () => [],
   );
 
@@ -188,8 +190,8 @@ void main() {
     'submit message, '
     'message to send is empty string, '
     'should do nothing',
-    build: () => createBloc(loggedUserId: loggedUserId, messageToSend: ''),
-    act: (bloc) => bloc.add(const ChatEventSubmitMessage()),
+    build: () => createCubit(loggedUserId: loggedUserId, messageToSend: ''),
+    act: (bloc) => bloc.submitMessage(),
     expect: () => [],
   );
 
@@ -197,7 +199,7 @@ void main() {
     'submit message, '
     "should call message repository's method to add new message with current dateTime and "
     'should emit messageSent info and should set messageToSend as null',
-    build: () => createBloc(
+    build: () => createCubit(
       loggedUserId: loggedUserId,
       messageToSend: 'message',
     ),
@@ -205,7 +207,7 @@ void main() {
       dateService.mockGetNow(now: DateTime(2023, 1, 1, 12, 30));
       messageRepository.mockAddMessageToChat();
     },
-    act: (bloc) => bloc.add(const ChatEventSubmitMessage()),
+    act: (bloc) => bloc.submitMessage(),
     expect: () => [
       const ChatState(
         status: BlocStatusLoading(),
@@ -213,8 +215,8 @@ void main() {
         messageToSend: 'message',
       ),
       const ChatState(
-        status: BlocStatusComplete<ChatBlocInfo>(
-          info: ChatBlocInfo.messageSent,
+        status: BlocStatusComplete<ChatCubitInfo>(
+          info: ChatCubitInfo.messageSent,
         ),
         loggedUserId: loggedUserId,
       ),
@@ -225,6 +227,27 @@ void main() {
         senderId: loggedUserId,
         content: 'message',
         dateTime: DateTime(2023, 1, 1, 12, 30),
+      ),
+    ).called(1),
+  );
+
+  blocTest(
+    'load older messages, '
+    "should call message repository's method to load older messages with id of the oldest message in state",
+    build: () => createCubit(
+      messagesFromLatest: [
+        createMessage(id: 'm1', dateTime: DateTime(2023, 1, 2)),
+        createMessage(id: 'm2', dateTime: DateTime(2023, 1, 5)),
+        createMessage(id: 'm3', dateTime: DateTime(2023, 1, 10)),
+      ],
+    ),
+    setUp: () => messageRepository.mockLoadOlderMessagesForChat(),
+    act: (bloc) => bloc.loadOlderMessages(),
+    expect: () => [],
+    verify: (_) => verify(
+      () => messageRepository.loadOlderMessagesForChat(
+        chatId: chatId,
+        lastVisibleMessageId: 'm3',
       ),
     ).called(1),
   );

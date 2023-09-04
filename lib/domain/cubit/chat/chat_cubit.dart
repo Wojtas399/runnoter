@@ -1,4 +1,5 @@
-import 'package:bloc_concurrency/bloc_concurrency.dart';
+import 'dart:async';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -6,7 +7,6 @@ import '../../../common/date_service.dart';
 import '../../../dependency_injection.dart';
 import '../../additional_model/bloc_state.dart';
 import '../../additional_model/bloc_status.dart';
-import '../../additional_model/bloc_with_status.dart';
 import '../../entity/chat.dart';
 import '../../entity/message.dart';
 import '../../entity/person.dart';
@@ -15,19 +15,18 @@ import '../../repository/message_repository.dart';
 import '../../repository/person_repository.dart';
 import '../../service/auth_service.dart';
 
-part 'chat_event.dart';
 part 'chat_state.dart';
 
-class ChatBloc
-    extends BlocWithStatus<ChatEvent, ChatState, ChatBlocInfo, dynamic> {
+class ChatCubit extends Cubit<ChatState> {
   final String _chatId;
   final AuthService _authService;
   final ChatRepository _chatRepository;
   final MessageRepository _messageRepository;
   final PersonRepository _personRepository;
   final DateService _dateService;
+  StreamSubscription<List<Message>>? _messagesListener;
 
-  ChatBloc({
+  ChatCubit({
     required String chatId,
     ChatState initialState = const ChatState(status: BlocStatusInitial()),
   })  : _chatId = chatId,
@@ -36,16 +35,16 @@ class ChatBloc
         _messageRepository = getIt<MessageRepository>(),
         _personRepository = getIt<PersonRepository>(),
         _dateService = getIt<DateService>(),
-        super(initialState) {
-    on<ChatEventInitialize>(_initialize, transformer: restartable());
-    on<ChatEventMessageChanged>(_messageChanged);
-    on<ChatEventSubmitMessage>(_submitMessage);
+        super(initialState);
+
+  @override
+  Future<void> close() {
+    _messagesListener?.cancel();
+    _messagesListener = null;
+    return super.close();
   }
 
-  Future<void> _initialize(
-    ChatEventInitialize event,
-    Emitter<ChatState> emit,
-  ) async {
+  Future<void> initialize() async {
     final String? loggedUserId = await _authService.loggedUserId$.first;
     if (loggedUserId == null) return;
     final Chat chat =
@@ -60,39 +59,33 @@ class ChatBloc
         )
         .whereNotNull()
         .first;
-    await emit.forEach(
-      _messageRepository.getMessagesForChat(chatId: _chatId),
-      onData: (List<Message> messages) {
+    _messagesListener ??=
+        _messageRepository.getMessagesForChat(chatId: _chatId).listen(
+      (List<Message> messages) {
         final List<Message> sortedMessages = [...messages];
         sortedMessages.sort(
           (m1, m2) => m1.dateTime.isBefore(m2.dateTime) ? 1 : -1,
         );
-        return state.copyWith(
+        emit(state.copyWith(
           loggedUserId: loggedUserId,
           senderFullName: '${sender.name} ${sender.surname}',
           recipientFullName: '${recipient.name} ${recipient.surname}',
-          messages: sortedMessages,
-        );
+          messagesFromLatest: sortedMessages,
+        ));
       },
     );
   }
 
-  void _messageChanged(
-    ChatEventMessageChanged event,
-    Emitter<ChatState> emit,
-  ) async {
+  void messageChanged(String message) async {
     emit(state.copyWith(
-      messageToSend: event.message,
+      messageToSend: message,
     ));
   }
 
-  Future<void> _submitMessage(
-    ChatEventSubmitMessage event,
-    Emitter<ChatState> emit,
-  ) async {
+  Future<void> submitMessage() async {
     if (!state.canSubmitMessage) return;
     final DateTime now = _dateService.getNow();
-    emitLoadingStatus(emit);
+    emit(state.copyWith(status: const BlocStatusLoading()));
     await _messageRepository.addMessageToChat(
       chatId: _chatId,
       senderId: state.loggedUserId!,
@@ -100,12 +93,22 @@ class ChatBloc
       dateTime: now,
     );
     emit(state.copyWith(
-      status: const BlocStatusComplete<ChatBlocInfo>(
-        info: ChatBlocInfo.messageSent,
+      status: const BlocStatusComplete<ChatCubitInfo>(
+        info: ChatCubitInfo.messageSent,
       ),
       messageToSendAsNull: true,
     ));
   }
+
+  Future<void> loadOlderMessages() async {
+    final List<Message>? messages = state.messagesFromLatest;
+    if (messages == null || messages.isEmpty) return;
+    final String lastVisibleMessageId = messages.last.id;
+    await _messageRepository.loadOlderMessagesForChat(
+      chatId: _chatId,
+      lastVisibleMessageId: lastVisibleMessageId,
+    );
+  }
 }
 
-enum ChatBlocInfo { messageSent }
+enum ChatCubitInfo { messageSent }

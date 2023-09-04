@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/bloc/chat/chat_bloc.dart';
+import '../../../domain/cubit/chat/chat_cubit.dart';
 import '../../../domain/entity/message.dart';
 import '../../component/loading_info_component.dart';
 import '../../component/text/body_text_components.dart';
@@ -12,10 +12,10 @@ class ChatMessages extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final String? loggedUserId = context.select(
-      (ChatBloc bloc) => bloc.state.loggedUserId,
+      (ChatCubit cubit) => cubit.state.loggedUserId,
     );
     final List<Message>? messages = context.select(
-      (ChatBloc bloc) => bloc.state.messages,
+      (ChatCubit cubit) => cubit.state.messagesFromLatest,
     );
 
     return messages == null || loggedUserId == null

@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
-import 'package:runnoter/domain/bloc/chat/chat_bloc.dart';
+import 'package:runnoter/domain/cubit/chat/chat_cubit.dart';
 import 'package:runnoter/domain/entity/message.dart';
 
 import '../../../creators/message_creator.dart';
@@ -124,7 +124,7 @@ void main() {
   );
 
   test(
-    'copy with messages, '
+    'copy with messagesFromLatest, '
     'should copy current value if new value is null',
     () {
       final List<Message> expected = [
@@ -132,11 +132,11 @@ void main() {
         createMessage(id: 'm2'),
       ];
 
-      state = state.copyWith(messages: expected);
+      state = state.copyWith(messagesFromLatest: expected);
       final state2 = state.copyWith();
 
-      expect(state.messages, expected);
-      expect(state2.messages, expected);
+      expect(state.messagesFromLatest, expected);
+      expect(state2.messagesFromLatest, expected);
     },
   );
 

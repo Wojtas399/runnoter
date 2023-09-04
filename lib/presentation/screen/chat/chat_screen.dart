@@ -2,7 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/bloc/chat/chat_bloc.dart';
+import '../../../domain/cubit/chat/chat_cubit.dart';
 import '../../component/page_not_found_component.dart';
 import 'chat_content.dart';
 
@@ -16,10 +16,7 @@ class ChatScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return chatId != null
         ? BlocProvider(
-            create: (_) => ChatBloc(chatId: chatId!)
-              ..add(
-                const ChatEventInitialize(),
-              ),
+            create: (_) => ChatCubit(chatId: chatId!)..initialize(),
             child: const ChatContent(),
           )
         : const PageNotFound();

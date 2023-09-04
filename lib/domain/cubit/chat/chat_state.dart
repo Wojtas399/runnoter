@@ -1,10 +1,10 @@
-part of 'chat_bloc.dart';
+part of 'chat_cubit.dart';
 
 class ChatState extends BlocState<ChatState> {
   final String? loggedUserId;
   final String? senderFullName;
   final String? recipientFullName;
-  final List<Message>? messages;
+  final List<Message>? messagesFromLatest;
   final String? messageToSend;
 
   const ChatState({
@@ -12,7 +12,7 @@ class ChatState extends BlocState<ChatState> {
     this.loggedUserId,
     this.senderFullName,
     this.recipientFullName,
-    this.messages,
+    this.messagesFromLatest,
     this.messageToSend,
   });
 
@@ -22,7 +22,7 @@ class ChatState extends BlocState<ChatState> {
         loggedUserId,
         senderFullName,
         recipientFullName,
-        messages,
+        messagesFromLatest,
         messageToSend,
       ];
 
@@ -35,7 +35,7 @@ class ChatState extends BlocState<ChatState> {
     String? loggedUserId,
     String? senderFullName,
     String? recipientFullName,
-    List<Message>? messages,
+    List<Message>? messagesFromLatest,
     String? messageToSend,
     bool messageToSendAsNull = false,
   }) =>
@@ -44,7 +44,7 @@ class ChatState extends BlocState<ChatState> {
         loggedUserId: loggedUserId ?? this.loggedUserId,
         senderFullName: senderFullName ?? this.senderFullName,
         recipientFullName: recipientFullName ?? this.recipientFullName,
-        messages: messages ?? this.messages,
+        messagesFromLatest: messagesFromLatest ?? this.messagesFromLatest,
         messageToSend:
             messageToSendAsNull ? null : messageToSend ?? this.messageToSend,
       );

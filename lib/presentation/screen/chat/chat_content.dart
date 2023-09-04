@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/bloc/chat/chat_bloc.dart';
+import '../../../domain/cubit/chat/chat_cubit.dart';
 import '../../component/body/big_body_component.dart';
 import '../../component/gap/gap_horizontal_components.dart';
 import '../../component/nullable_text_component.dart';
@@ -23,13 +23,17 @@ class ChatContent extends StatelessWidget {
       ),
       body: SafeArea(
         child: BigBody(
-          child: Column(
-            children: [
-              const Expanded(
-                child: ChatMessages(),
-              ),
-              _BottomPart(),
-            ],
+          child: RefreshIndicator(
+            onRefresh: () async =>
+                await context.read<ChatCubit>().loadOlderMessages(),
+            child: Column(
+              children: [
+                const Expanded(
+                  child: ChatMessages(),
+                ),
+                _BottomPart(),
+              ],
+            ),
           ),
         ),
       ),
@@ -43,7 +47,7 @@ class _RecipientFullName extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final String? recipientFullName = context.select(
-      (ChatBloc bloc) => bloc.state.recipientFullName,
+      (ChatCubit cubit) => cubit.state.recipientFullName,
     );
 
     return NullableText(recipientFullName);
@@ -76,7 +80,7 @@ class _BottomPart extends StatelessWidget {
   }
 
   void _onSubmit(BuildContext context) {
-    context.read<ChatBloc>().add(const ChatEventSubmitMessage());
+    context.read<ChatCubit>().submitMessage();
     _messageController.clear();
   }
 }
@@ -127,9 +131,7 @@ class _MessageInputState extends State<_MessageInput> {
   }
 
   void _onChanged() {
-    context.read<ChatBloc>().add(
-          ChatEventMessageChanged(message: widget.messageController.text),
-        );
+    context.read<ChatCubit>().messageChanged(widget.messageController.text);
     setState(() {
       _messageLength = widget.messageController.text.length;
     });
@@ -144,7 +146,7 @@ class _SubmitButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool canSubmit = context.select(
-      (ChatBloc bloc) => bloc.state.canSubmitMessage,
+      (ChatCubit cubit) => cubit.state.canSubmitMessage,
     );
 
     return IconButton(

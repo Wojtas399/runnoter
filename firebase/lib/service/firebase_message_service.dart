@@ -27,15 +27,15 @@ class FirebaseMessageService {
     required String chatId,
     String? lastVisibleMessageId,
   }) async {
-    final messagesRef = getMessagesRef(chatId).orderBy(timestampField);
+    final messagesRef = getMessagesRef(chatId).orderBy(
+      timestampField,
+      descending: true,
+    );
     Query<MessageDto> query = messagesRef.limit(20);
     if (lastVisibleMessageId != null) {
-      final lastVisibleMessageSnapshot =
+      final messageSnapshot =
           await getMessagesRef(chatId).doc(lastVisibleMessageId).get();
-      final lastVisibleMessageDto = lastVisibleMessageSnapshot.data();
-      if (lastVisibleMessageDto != null) {
-        query = messagesRef.startAfter([lastVisibleMessageDto]).limit(20);
-      }
+      query = messagesRef.startAfterDocument(messageSnapshot).limit(20);
     }
     final messagesSnapshot = await query.get();
     return messagesSnapshot.docs.map((snapshot) => snapshot.data()).toList();
