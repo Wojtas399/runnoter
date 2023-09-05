@@ -331,6 +331,7 @@
   "name": "Name",
   "surname": "Surname",
   "email": "Email",
+  "dateOfBirth": "Date of birth",
   "password": "Password",
   "passwordConfirmation": "Password confirmation",
   "date": "Date",

@@ -4,6 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/cubit/sign_up/sign_up_cubit.dart';
 import '../../../domain/entity/user.dart';
+import '../../component/date_of_birth_picker_component.dart';
 import '../../component/form_text_field_component.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/password_text_field_component.dart';
@@ -28,6 +29,8 @@ class SignUpForm extends StatelessWidget {
         _Surname(),
         gap,
         _Email(),
+        gap,
+        _DateOfBirth(),
         gap,
         _Password(),
         gap,
@@ -142,6 +145,17 @@ class _Email extends StatelessWidget {
       onChanged: context.read<SignUpCubit>().emailChanged,
       onSubmitted: (_) => _onFormSubmitted(context),
       validator: (_) => !isValid ? str.invalidEmailMessage : null,
+    );
+  }
+}
+
+class _DateOfBirth extends StatelessWidget {
+  const _DateOfBirth();
+
+  @override
+  Widget build(BuildContext context) {
+    return DateOfBirthPicker(
+      onDateSelected: context.read<SignUpCubit>().dateOfBirthChanged,
     );
   }
 }

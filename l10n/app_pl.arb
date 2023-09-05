@@ -1170,6 +1170,7 @@
   "name": "Imię",
   "surname": "Nazwisko",
   "email": "Email",
+  "dateOfBirth": "Data urodzenia",
   "password": "Hasło",
   "passwordConfirmation": "Potwierdź hasło",
   "date": "Data",
