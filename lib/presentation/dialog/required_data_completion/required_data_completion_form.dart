@@ -4,6 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/cubit/required_data_completion/required_data_completion_cubit.dart';
 import '../../../domain/entity/user.dart';
+import '../../component/date_of_birth_picker_component.dart';
 import '../../component/form_text_field_component.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/two_options_component.dart';
@@ -24,6 +25,8 @@ class RequiredDataCompletionForm extends StatelessWidget {
         _Name(),
         Gap24(),
         _Surname(),
+        Gap24(),
+        _DateOfBirth(),
       ],
     );
   }
@@ -116,6 +119,18 @@ class _Surname extends StatelessWidget {
       onChanged: context.read<RequiredDataCompletionCubit>().surnameChanged,
       onSubmitted: (_) => _onSubmitted(context),
       validator: (_) => !isValid ? str.invalidNameOrSurnameMessage : null,
+    );
+  }
+}
+
+class _DateOfBirth extends StatelessWidget {
+  const _DateOfBirth();
+
+  @override
+  Widget build(BuildContext context) {
+    return DateOfBirthPicker(
+      onDateSelected:
+          context.read<RequiredDataCompletionCubit>().dateOfBirthChanged,
     );
   }
 }
