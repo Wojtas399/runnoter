@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
-import 'package:runnoter/domain/bloc/sign_up/sign_up_bloc.dart';
+import 'package:runnoter/domain/cubit/sign_up/sign_up_cubit.dart';
 import 'package:runnoter/domain/entity/user.dart';
 
 void main() {
@@ -47,8 +47,84 @@ void main() {
   );
 
   test(
-    'is submit button disabled, '
+    'can submit, '
     'all params are valid, '
+    'should be true',
+    () {
+      state = state.copyWith(
+        gender: Gender.male,
+        name: 'Jack',
+        surname: 'Obvsky',
+        email: 'jack@example.com',
+        dateOfBirth: DateTime(2023, 1, 10),
+        password: 'Password123!',
+        passwordConfirmation: 'Password123!',
+      );
+
+      expect(state.canSubmit, true);
+    },
+  );
+
+  test(
+    'can submit, '
+    'name is invalid, '
+    'should be false',
+    () {
+      state = state.copyWith(
+        gender: Gender.male,
+        name: 'J',
+        surname: 'Obvsky',
+        email: 'jack@example.com',
+        dateOfBirth: DateTime(2023, 1, 10),
+        password: 'Password123!',
+        passwordConfirmation: 'Password123!',
+      );
+
+      expect(state.canSubmit, false);
+    },
+  );
+
+  test(
+    'can submit, '
+    'surname is invalid, '
+    'should be false',
+    () {
+      state = state.copyWith(
+        gender: Gender.male,
+        name: 'Jack',
+        surname: 'O',
+        email: 'jack@example.com',
+        dateOfBirth: DateTime(2023, 1, 10),
+        password: 'Password123!',
+        passwordConfirmation: 'Password123!',
+      );
+
+      expect(state.canSubmit, false);
+    },
+  );
+
+  test(
+    'can submit, '
+    'email is invalid, '
+    'should be false',
+    () {
+      state = state.copyWith(
+        gender: Gender.male,
+        name: 'Jack',
+        surname: 'Obvsky',
+        email: 'jackexample.com',
+        dateOfBirth: DateTime(2023, 1, 10),
+        password: 'Password123!',
+        passwordConfirmation: 'Password123!',
+      );
+
+      expect(state.canSubmit, false);
+    },
+  );
+
+  test(
+    'can submit, '
+    'date of birth is null, '
     'should be false',
     () {
       state = state.copyWith(
@@ -60,102 +136,51 @@ void main() {
         passwordConfirmation: 'Password123!',
       );
 
-      expect(state.isSubmitButtonDisabled, false);
+      expect(state.canSubmit, false);
     },
   );
 
   test(
-    'is submit button disabled, '
-    'name is invalid, '
-    'should be true',
-    () {
-      state = state.copyWith(
-        gender: Gender.male,
-        name: 'J',
-        surname: 'Obvsky',
-        email: 'jack@example.com',
-        password: 'Password123!',
-        passwordConfirmation: 'Password123!',
-      );
-
-      expect(state.isSubmitButtonDisabled, true);
-    },
-  );
-
-  test(
-    'is submit button disabled, '
-    'surname is invalid, '
-    'should be true',
-    () {
-      state = state.copyWith(
-        gender: Gender.male,
-        name: 'Jack',
-        surname: 'O',
-        email: 'jack@example.com',
-        password: 'Password123!',
-        passwordConfirmation: 'Password123!',
-      );
-
-      expect(state.isSubmitButtonDisabled, true);
-    },
-  );
-
-  test(
-    'is submit button disabled, '
-    'email is invalid, '
-    'should be true',
-    () {
-      state = state.copyWith(
-        gender: Gender.male,
-        name: 'Jack',
-        surname: 'Obvsky',
-        email: 'jackexample.com',
-        password: 'Password123!',
-        passwordConfirmation: 'Password123!',
-      );
-
-      expect(state.isSubmitButtonDisabled, true);
-    },
-  );
-
-  test(
-    'is submit button disabled, '
+    'can submit, '
     'password is invalid, '
-    'should be true',
+    'should be false',
     () {
       state = state.copyWith(
         gender: Gender.male,
         name: 'Jack',
         surname: 'Obvsky',
         email: 'jack@example.com',
+        dateOfBirth: DateTime(2023, 1, 10),
         password: 'Password123',
         passwordConfirmation: 'Password123!',
       );
 
-      expect(state.isSubmitButtonDisabled, true);
+      expect(state.canSubmit, false);
     },
   );
 
   test(
-    'is submit button disabled, '
+    'can submit, '
     'password confirmation is invalid, '
-    'should be true',
+    'should be false',
     () {
       state = state.copyWith(
         gender: Gender.male,
         name: 'Jack',
         surname: 'Obvsky',
         email: 'jack@example.com',
+        dateOfBirth: DateTime(2023, 1, 10),
         password: 'Password123!',
         passwordConfirmation: 'Password123',
       );
 
-      expect(state.isSubmitButtonDisabled, true);
+      expect(state.canSubmit, false);
     },
   );
 
   test(
-    'copy with status',
+    'copy with status, '
+    'should set complete status if new value is null',
     () {
       const BlocStatus expectedStatus = BlocStatusLoading();
 
@@ -168,7 +193,8 @@ void main() {
   );
 
   test(
-    'copy with account type',
+    'copy with account type, '
+    'should copy current value if new value is null',
     () {
       const AccountType expectedAccountType = AccountType.coach;
 
@@ -181,7 +207,8 @@ void main() {
   );
 
   test(
-    'copy with gender',
+    'copy with gender, '
+    'should copy current value if new value is null',
     () {
       const Gender expectedGender = Gender.female;
 
@@ -194,7 +221,8 @@ void main() {
   );
 
   test(
-    'copy with name',
+    'copy with name, '
+    'should copy current value if new value is null',
     () {
       const String expectedName = 'Jack';
 
@@ -207,7 +235,8 @@ void main() {
   );
 
   test(
-    'copy with surname',
+    'copy with surname, '
+    'should copy current value if new value is null',
     () {
       const String expectedSurname = 'Sparrowsky';
 
@@ -220,7 +249,8 @@ void main() {
   );
 
   test(
-    'copy with email',
+    'copy with email, '
+    'should copy current value if new value is null',
     () {
       const String expectedEmail = 'jack@example.com';
 
@@ -233,7 +263,22 @@ void main() {
   );
 
   test(
-    'copy with password',
+    'copy with dateOfBirth, '
+    'should copy current value if new value is null',
+    () {
+      final DateTime expected = DateTime(2023, 1, 10);
+
+      state = state.copyWith(dateOfBirth: expected);
+      final state2 = state.copyWith();
+
+      expect(state.dateOfBirth, expected);
+      expect(state2.dateOfBirth, expected);
+    },
+  );
+
+  test(
+    'copy with password, '
+    'should copy current value if new value is null',
     () {
       const String expectedPassword = 'password123';
 
@@ -246,7 +291,8 @@ void main() {
   );
 
   test(
-    'copy with password confirmation',
+    'copy with password confirmation, '
+    'should copy current value if new value is null',
     () {
       const String expectedPasswordConfirmation = 'password321';
 

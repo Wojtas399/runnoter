@@ -1,11 +1,12 @@
-part of 'sign_up_bloc.dart';
+part of 'sign_up_cubit.dart';
 
-class SignUpState extends BlocState {
+class SignUpState extends CubitState {
   final AccountType accountType;
   final Gender gender;
   final String name;
   final String surname;
   final String email;
+  final DateTime? dateOfBirth;
   final String password;
   final String passwordConfirmation;
 
@@ -16,6 +17,7 @@ class SignUpState extends BlocState {
     this.name = '',
     this.surname = '',
     this.email = '',
+    this.dateOfBirth,
     this.password = '',
     this.passwordConfirmation = '',
   });
@@ -28,6 +30,7 @@ class SignUpState extends BlocState {
         name,
         surname,
         email,
+        dateOfBirth,
         password,
         passwordConfirmation,
       ];
@@ -42,7 +45,7 @@ class SignUpState extends BlocState {
 
   bool get isPasswordConfirmationValid => password == passwordConfirmation;
 
-  bool get isSubmitButtonDisabled => !_areAllParamsValid();
+  bool get canSubmit => _areAllParamsValid();
 
   @override
   SignUpState copyWith({
@@ -52,6 +55,7 @@ class SignUpState extends BlocState {
     String? name,
     String? surname,
     String? email,
+    DateTime? dateOfBirth,
     String? password,
     String? passwordConfirmation,
   }) {
@@ -62,16 +66,17 @@ class SignUpState extends BlocState {
       name: name ?? this.name,
       surname: surname ?? this.surname,
       email: email ?? this.email,
+      dateOfBirth: dateOfBirth ?? this.dateOfBirth,
       password: password ?? this.password,
       passwordConfirmation: passwordConfirmation ?? this.passwordConfirmation,
     );
   }
 
-  bool _areAllParamsValid() {
-    return isNameValid &&
-        isSurnameValid &&
-        isEmailValid &&
-        isPasswordValid &&
-        isPasswordConfirmationValid;
-  }
+  bool _areAllParamsValid() =>
+      isNameValid &&
+      isSurnameValid &&
+      isEmailValid &&
+      dateOfBirth != null &&
+      isPasswordValid &&
+      isPasswordConfirmationValid;
 }

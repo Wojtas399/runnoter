@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/bloc/sign_up/sign_up_bloc.dart';
-import '../../component/bloc_with_status_listener_component.dart';
+import '../../../domain/cubit/sign_up/sign_up_cubit.dart';
+import '../../component/cubit_with_status_listener_component.dart';
 import '../../dialog/email_verification/email_verification_dialog.dart';
 import '../../service/dialog_service.dart';
 import 'sign_up_content.dart';
@@ -16,7 +16,7 @@ class SignUpScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => SignUpBloc(),
+      create: (_) => SignUpCubit(),
       child: const _BlocListener(
         child: SignUpContent(),
       ),
@@ -33,28 +33,28 @@ class _BlocListener extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocWithStatusListener<SignUpBloc, SignUpState, SignUpBlocInfo,
-        SignUpBlocError>(
+    return CubitWithStatusListener<SignUpCubit, SignUpState, SignUpCubitInfo,
+        SignUpCubitError>(
       onInfo: _manageInfo,
-      onError: (SignUpBlocError error) => _manageError(error, context),
+      onError: (SignUpCubitError error) => _manageError(error, context),
       child: child,
     );
   }
 
-  Future<void> _manageInfo(SignUpBlocInfo info) async {
+  Future<void> _manageInfo(SignUpCubitInfo info) async {
     switch (info) {
-      case SignUpBlocInfo.signedUp:
+      case SignUpCubitInfo.signedUp:
         showDialogDependingOnScreenSize(const EmailVerificationDialog());
         break;
     }
   }
 
   Future<void> _manageError(
-    SignUpBlocError error,
+    SignUpCubitError error,
     BuildContext context,
   ) async {
     switch (error) {
-      case SignUpBlocError.emailAlreadyInUse:
+      case SignUpCubitError.emailAlreadyInUse:
         await showMessageDialog(
           title: Str.of(context).signUpAlreadyTakenEmailDialogTitle,
           message: Str.of(context).signUpAlreadyTakenEmailDialogMessage,

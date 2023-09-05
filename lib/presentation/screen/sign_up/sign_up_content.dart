@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/bloc/sign_up/sign_up_bloc.dart';
+import '../../../domain/cubit/sign_up/sign_up_cubit.dart';
 import '../../component/app_bar_with_logo.dart';
 import '../../component/big_button_component.dart';
 import '../../component/body/small_body_component.dart';
@@ -60,21 +60,15 @@ class _SubmitButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool isDisabled = context.select(
-      (SignUpBloc bloc) => bloc.state.isSubmitButtonDisabled,
+    final bool canSubmit = context.select(
+      (SignUpCubit cubit) => cubit.state.canSubmit,
     );
 
     return BigButton(
       label: Str.of(context).signUpButtonLabel,
-      isDisabled: isDisabled,
-      onPressed: () => _onPressed(context),
+      isDisabled: !canSubmit,
+      onPressed: context.read<SignUpCubit>().submit,
     );
-  }
-
-  void _onPressed(BuildContext context) {
-    context.read<SignUpBloc>().add(
-          const SignUpEventSubmit(),
-        );
   }
 }
 
