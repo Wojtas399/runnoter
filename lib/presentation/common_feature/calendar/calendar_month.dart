@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../extension/context_extensions.dart';
+import '../../formatter/date_formatter.dart';
 import 'calendar_month_days.dart';
 
 class CalendarMonth extends StatelessWidget {
@@ -22,22 +23,22 @@ class _DayLabels extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final str = Str.of(context);
-    final List<String> dayShortLabels = [
-      str.mondayShort,
-      str.tuesdayShort,
-      str.wednesdayShort,
-      str.thursdayShort,
-      str.fridayShort,
-      str.saturdayShort,
-      str.sundayShort,
-    ];
+    final List<DateTime> daysOfWeek = List<DateTime>.generate(
+      7,
+      (index) => DateTime(2023, 9, 4 + index),
+    );
 
     return Column(
       children: [
         const Divider(),
         Row(
-          children: dayShortLabels.map((label) => _DayLabel(label)).toList(),
+          children: daysOfWeek
+              .map(
+                (DateTime date) => _DayLabel(
+                  date.toDayAbbreviation(context.languageCode),
+                ),
+              )
+              .toList(),
         ),
         const Divider(),
       ],

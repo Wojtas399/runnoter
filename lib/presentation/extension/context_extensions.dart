@@ -6,10 +6,14 @@ import '../../domain/additional_model/activity_status.dart';
 import '../../domain/additional_model/settings.dart';
 import '../config/screen_sizes.dart';
 import '../service/distance_unit_service.dart';
+import '../service/language_service.dart';
 import '../service/pace_unit_service.dart';
 
 extension ContextExtensions on BuildContext {
   Size get _screenSize => MediaQuery.of(this).size;
+
+  String? get languageCode =>
+      select((LanguageService service) => service.state).locale?.languageCode;
 
   bool get isMobileSize =>
       _screenSize.width <= GetIt.I.get<ScreenSizes>().maxMobileWidth;

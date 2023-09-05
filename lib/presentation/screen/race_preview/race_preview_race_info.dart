@@ -96,7 +96,7 @@ class _RaceDate extends StatelessWidget {
       (RacePreviewBloc bloc) => bloc.state.date,
     );
 
-    return NullableText(date?.toFullDate(context));
+    return NullableText(date?.toFullDate(context.languageCode));
   }
 }
 

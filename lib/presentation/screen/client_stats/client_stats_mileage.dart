@@ -124,10 +124,12 @@ class _Chart extends StatelessWidget {
     BuildContext context,
     DateRangeType dateRangeType,
     MileageStatsChartPoint point,
-  ) =>
-      switch (dateRangeType) {
-        DateRangeType.week => point.date.toDayAbbreviation(context),
-        DateRangeType.month => '',
-        DateRangeType.year => point.date.toMonthAbbreviation(context),
-      };
+  ) {
+    final String? languageCode = context.languageCode;
+    return switch (dateRangeType) {
+      DateRangeType.week => point.date.toDayAbbreviation(languageCode),
+      DateRangeType.month => '',
+      DateRangeType.year => point.date.toMonthAbbreviation(languageCode),
+    };
+  }
 }

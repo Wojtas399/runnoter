@@ -148,7 +148,7 @@ class _Chart extends StatelessWidget {
         ColumnSeries(
           dataSource: chartPoints,
           xValueMapper: (MileageStatsChartPoint point, _) =>
-              _createXLabel(context, point),
+              _createXLabel(context.languageCode, point),
           yValueMapper: (MileageStatsChartPoint point, _) =>
               context.convertDistanceFromDefaultUnit(point.mileage),
         ),
@@ -156,10 +156,10 @@ class _Chart extends StatelessWidget {
     );
   }
 
-  String _createXLabel(BuildContext context, MileageStatsChartPoint point) =>
+  String _createXLabel(String? languageCode, MileageStatsChartPoint point) =>
       switch (dateRangeType) {
-        DateRangeType.week => point.date.toDayAbbreviation(context),
+        DateRangeType.week => point.date.toDayAbbreviation(languageCode),
         DateRangeType.month => '',
-        DateRangeType.year => point.date.toMonthAbbreviation(context),
+        DateRangeType.year => point.date.toMonthAbbreviation(languageCode),
       };
 }
