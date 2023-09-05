@@ -1,11 +1,12 @@
-part of 'required_data_completion_bloc.dart';
+part of 'required_data_completion_cubit.dart';
 
 class RequiredDataCompletionState
-    extends BlocState<RequiredDataCompletionState> {
+    extends CubitState<RequiredDataCompletionState> {
   final AccountType accountType;
   final Gender gender;
   final String name;
   final String surname;
+  final DateTime? dateOfBirth;
 
   const RequiredDataCompletionState({
     super.status = const BlocStatusInitial(),
@@ -13,6 +14,7 @@ class RequiredDataCompletionState
     this.gender = Gender.male,
     this.name = '',
     this.surname = '',
+    this.dateOfBirth,
   });
 
   @override
@@ -22,7 +24,7 @@ class RequiredDataCompletionState
 
   bool get isSurnameValid => validator.isNameOrSurnameValid(surname);
 
-  bool get canSubmit => isNameValid && isSurnameValid;
+  bool get canSubmit => isNameValid && isSurnameValid && dateOfBirth != null;
 
   @override
   RequiredDataCompletionState copyWith({
@@ -31,6 +33,7 @@ class RequiredDataCompletionState
     Gender? gender,
     String? name,
     String? surname,
+    DateTime? dateOfBirth,
   }) =>
       RequiredDataCompletionState(
         status: status ?? const BlocStatusComplete(),
@@ -38,5 +41,6 @@ class RequiredDataCompletionState
         gender: gender ?? this.gender,
         name: name ?? this.name,
         surname: surname ?? this.surname,
+        dateOfBirth: dateOfBirth ?? this.dateOfBirth,
       );
 }

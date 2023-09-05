@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
-import 'package:runnoter/domain/bloc/required_data_completion/required_data_completion_bloc.dart';
+import 'package:runnoter/domain/cubit/required_data_completion/required_data_completion_cubit.dart';
 import 'package:runnoter/domain/entity/user.dart';
 
 void main() {
@@ -21,6 +21,7 @@ void main() {
           gender: Gender.male,
           name: '',
           surname: '',
+          dateOfBirth: null,
         ),
       );
     },
@@ -35,6 +36,7 @@ void main() {
         gender: Gender.male,
         name: '',
         surname: 'Erl',
+        dateOfBirth: DateTime(2023, 1, 10),
       );
 
       expect(state.canSubmit, false);
@@ -50,6 +52,7 @@ void main() {
         gender: Gender.male,
         name: 'Jack',
         surname: '',
+        dateOfBirth: DateTime(2023, 1, 10),
       );
 
       expect(state.canSubmit, false);
@@ -65,6 +68,7 @@ void main() {
         gender: Gender.male,
         name: 'J',
         surname: 'Erl',
+        dateOfBirth: DateTime(2023, 1, 10),
       );
 
       expect(state.canSubmit, false);
@@ -80,6 +84,7 @@ void main() {
         gender: Gender.male,
         name: 'Jack',
         surname: 'E',
+        dateOfBirth: DateTime(2023, 1, 10),
       );
 
       expect(state.canSubmit, false);
@@ -88,13 +93,30 @@ void main() {
 
   test(
     'can submit, '
-    'name and surname are valid, '
+    'dateOfBirth is null, '
+    'should be false',
+    () {
+      state = state.copyWith(
+        gender: Gender.male,
+        name: 'Jack',
+        surname: 'Erl',
+        dateOfBirth: null,
+      );
+
+      expect(state.canSubmit, false);
+    },
+  );
+
+  test(
+    'can submit, '
+    'name and surname are valid and dateOfBirth is not null, '
     'should be true',
     () {
       state = state.copyWith(
         gender: Gender.male,
         name: 'Jack',
         surname: 'Erl',
+        dateOfBirth: DateTime(2023, 1, 10),
       );
 
       expect(state.canSubmit, true);
@@ -102,7 +124,8 @@ void main() {
   );
 
   test(
-    'copy with status',
+    'copy with status, '
+    'should set complete status if new value is null',
     () {
       const BlocStatus expectedStatus = BlocStatusLoading();
 
@@ -115,7 +138,8 @@ void main() {
   );
 
   test(
-    'copy with account type',
+    'copy with account type, '
+    'should copy current value if new value is null',
     () {
       const AccountType expectedAccountType = AccountType.coach;
 
@@ -128,7 +152,8 @@ void main() {
   );
 
   test(
-    'copy with gender',
+    'copy with gender, '
+    'should copy current value if new value is null',
     () {
       const Gender expectedGender = Gender.female;
 
@@ -141,7 +166,8 @@ void main() {
   );
 
   test(
-    'copy with name',
+    'copy with name, '
+    'should copy current value if new value is null',
     () {
       const String expectedName = 'Jack';
 
@@ -154,7 +180,8 @@ void main() {
   );
 
   test(
-    'copy with surname',
+    'copy with surname, '
+    'should copy current value if new value is null',
     () {
       const String expectedSurname = 'Erl';
 
@@ -163,6 +190,20 @@ void main() {
 
       expect(state.surname, expectedSurname);
       expect(state2.surname, expectedSurname);
+    },
+  );
+
+  test(
+    'copy with dateOfBirth, '
+    'should copy current value if new value is null',
+    () {
+      final DateTime expected = DateTime(2023, 1, 10);
+
+      state = state.copyWith(dateOfBirth: expected);
+      final state2 = state.copyWith();
+
+      expect(state.dateOfBirth, expected);
+      expect(state2.dateOfBirth, expected);
     },
   );
 }

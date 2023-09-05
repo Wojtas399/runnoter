@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
-import 'package:runnoter/domain/bloc/required_data_completion/required_data_completion_bloc.dart';
+import 'package:runnoter/domain/cubit/required_data_completion/required_data_completion_cubit.dart';
 import 'package:runnoter/domain/entity/user.dart';
 import 'package:runnoter/domain/service/auth_service.dart';
 import 'package:runnoter/domain/use_case/add_user_data_use_case.dart';
@@ -20,6 +20,7 @@ void main() {
   const Gender gender = Gender.female;
   const String name = 'name';
   const String surname = 'surname';
+  final DateTime dateOfBirth = DateTime(2023, 1, 10);
 
   setUpAll(() {
     GetIt.I.registerFactory<AuthService>(() => authService);
@@ -34,10 +35,8 @@ void main() {
   blocTest(
     'account type changed, '
     'should update account type in state',
-    build: () => RequiredDataCompletionBloc(),
-    act: (bloc) => bloc.add(const RequiredDataCompletionEventAccountTypeChanged(
-      accountType: accountType,
-    )),
+    build: () => RequiredDataCompletionCubit(),
+    act: (cubit) => cubit.accountTypeChanged(accountType),
     expect: () => [
       const RequiredDataCompletionState(
         status: BlocStatusComplete(),
@@ -49,10 +48,8 @@ void main() {
   blocTest(
     'gender changed, '
     'should update gender in state',
-    build: () => RequiredDataCompletionBloc(),
-    act: (bloc) => bloc.add(const RequiredDataCompletionEventGenderChanged(
-      gender: gender,
-    )),
+    build: () => RequiredDataCompletionCubit(),
+    act: (cubit) => cubit.genderChanged(gender),
     expect: () => [
       const RequiredDataCompletionState(
         status: BlocStatusComplete(),
@@ -64,10 +61,8 @@ void main() {
   blocTest(
     'name changed, '
     'should update name in state',
-    build: () => RequiredDataCompletionBloc(),
-    act: (bloc) => bloc.add(const RequiredDataCompletionEventNameChanged(
-      name: name,
-    )),
+    build: () => RequiredDataCompletionCubit(),
+    act: (cubit) => cubit.nameChanged(name),
     expect: () => [
       const RequiredDataCompletionState(
         status: BlocStatusComplete(),
@@ -79,10 +74,8 @@ void main() {
   blocTest(
     'surname changed, '
     'should update surname in state',
-    build: () => RequiredDataCompletionBloc(),
-    act: (bloc) => bloc.add(const RequiredDataCompletionEventSurnameChanged(
-      surname: surname,
-    )),
+    build: () => RequiredDataCompletionCubit(),
+    act: (cubit) => cubit.surnameChanged(surname),
     expect: () => [
       const RequiredDataCompletionState(
         status: BlocStatusComplete(),
@@ -92,11 +85,24 @@ void main() {
   );
 
   blocTest(
+    'date of birth changed, '
+    'should update dateOfBirth in state',
+    build: () => RequiredDataCompletionCubit(),
+    act: (cubit) => cubit.dateOfBirthChanged(dateOfBirth),
+    expect: () => [
+      RequiredDataCompletionState(
+        status: const BlocStatusComplete(),
+        dateOfBirth: dateOfBirth,
+      ),
+    ],
+  );
+
+  blocTest(
     'submit, '
     'data are invalid, '
     'should do nothing',
-    build: () => RequiredDataCompletionBloc(),
-    act: (bloc) => bloc.add(const RequiredDataCompletionEventSubmit()),
+    build: () => RequiredDataCompletionCubit(),
+    act: (cubit) => cubit.submit(),
     expect: () => [],
   );
 
@@ -104,27 +110,30 @@ void main() {
     'submit, '
     'logged user id is null, '
     'should emit no logged user status',
-    build: () => RequiredDataCompletionBloc(
-      state: const RequiredDataCompletionState(
+    build: () => RequiredDataCompletionCubit(
+      initialState: RequiredDataCompletionState(
         name: name,
         surname: surname,
+        dateOfBirth: dateOfBirth,
       ),
     ),
     setUp: () {
       authService.mockGetLoggedUserId();
       authService.mockGetLoggedUserEmail(userEmail: email);
     },
-    act: (bloc) => bloc.add(const RequiredDataCompletionEventSubmit()),
+    act: (cubit) => cubit.submit(),
     expect: () => [
-      const RequiredDataCompletionState(
-        status: BlocStatusLoading(),
+      RequiredDataCompletionState(
+        status: const BlocStatusLoading(),
         name: name,
         surname: surname,
+        dateOfBirth: dateOfBirth,
       ),
-      const RequiredDataCompletionState(
-        status: BlocStatusNoLoggedUser(),
+      RequiredDataCompletionState(
+        status: const BlocStatusNoLoggedUser(),
         name: name,
         surname: surname,
+        dateOfBirth: dateOfBirth,
       ),
     ],
     verify: (_) {
@@ -137,27 +146,30 @@ void main() {
     'submit, '
     'logged user email is null, '
     'should emit no logged user status',
-    build: () => RequiredDataCompletionBloc(
-      state: const RequiredDataCompletionState(
+    build: () => RequiredDataCompletionCubit(
+      initialState: RequiredDataCompletionState(
         name: name,
         surname: surname,
+        dateOfBirth: dateOfBirth,
       ),
     ),
     setUp: () {
       authService.mockGetLoggedUserId(userId: userId);
       authService.mockGetLoggedUserEmail();
     },
-    act: (bloc) => bloc.add(const RequiredDataCompletionEventSubmit()),
+    act: (cubit) => cubit.submit(),
     expect: () => [
-      const RequiredDataCompletionState(
-        status: BlocStatusLoading(),
+      RequiredDataCompletionState(
+        status: const BlocStatusLoading(),
         name: name,
         surname: surname,
+        dateOfBirth: dateOfBirth,
       ),
-      const RequiredDataCompletionState(
-        status: BlocStatusNoLoggedUser(),
+      RequiredDataCompletionState(
+        status: const BlocStatusNoLoggedUser(),
         name: name,
         surname: surname,
+        dateOfBirth: dateOfBirth,
       ),
     ],
     verify: (_) {
@@ -169,12 +181,13 @@ void main() {
   blocTest(
     'submit, '
     "should call use case to add user data and should emit info that user's data has been added",
-    build: () => RequiredDataCompletionBloc(
-      state: const RequiredDataCompletionState(
+    build: () => RequiredDataCompletionCubit(
+      initialState: RequiredDataCompletionState(
         accountType: accountType,
         gender: gender,
         name: name,
         surname: surname,
+        dateOfBirth: dateOfBirth,
       ),
     ),
     setUp: () {
@@ -182,23 +195,25 @@ void main() {
       authService.mockGetLoggedUserEmail(userEmail: email);
       addUserDataUseCase.mock();
     },
-    act: (bloc) => bloc.add(const RequiredDataCompletionEventSubmit()),
+    act: (cubit) => cubit.submit(),
     expect: () => [
-      const RequiredDataCompletionState(
-        status: BlocStatusLoading(),
+      RequiredDataCompletionState(
+        status: const BlocStatusLoading(),
         accountType: accountType,
         gender: gender,
         name: name,
         surname: surname,
+        dateOfBirth: dateOfBirth,
       ),
-      const RequiredDataCompletionState(
-        status: BlocStatusComplete<RequiredDataCompletionBlocInfo>(
-          info: RequiredDataCompletionBlocInfo.userDataAdded,
+      RequiredDataCompletionState(
+        status: const BlocStatusComplete<RequiredDataCompletionCubitInfo>(
+          info: RequiredDataCompletionCubitInfo.userDataAdded,
         ),
         accountType: accountType,
         gender: gender,
         name: name,
         surname: surname,
+        dateOfBirth: dateOfBirth,
       ),
     ],
     verify: (_) {
@@ -212,7 +227,7 @@ void main() {
           name: name,
           surname: surname,
           email: email,
-          dateOfBirth: DateTime(2023), //TODO: Implement date of birth
+          dateOfBirth: dateOfBirth,
         ),
       ).called(1);
     },

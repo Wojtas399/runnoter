@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/bloc/required_data_completion/required_data_completion_bloc.dart';
+import '../../../domain/cubit/required_data_completion/required_data_completion_cubit.dart';
 import '../../../domain/entity/user.dart';
 import '../../component/form_text_field_component.dart';
 import '../../component/gap/gap_components.dart';
@@ -36,7 +36,7 @@ class _AccountType extends StatelessWidget {
   Widget build(BuildContext context) {
     final str = Str.of(context);
     final AccountType? selectedAccountType = context.select(
-      (RequiredDataCompletionBloc bloc) => bloc.state.accountType,
+      (RequiredDataCompletionCubit cubit) => cubit.state.accountType,
     );
 
     return selectedAccountType == null
@@ -46,16 +46,9 @@ class _AccountType extends StatelessWidget {
             selectedValue: selectedAccountType,
             option1: OptionParams(label: str.runner, value: AccountType.runner),
             option2: OptionParams(label: str.coach, value: AccountType.coach),
-            onChanged: (accountType) => _onChanged(context, accountType),
+            onChanged:
+                context.read<RequiredDataCompletionCubit>().accountTypeChanged,
           );
-  }
-
-  void _onChanged(BuildContext context, AccountType accountType) {
-    context.read<RequiredDataCompletionBloc>().add(
-          RequiredDataCompletionEventAccountTypeChanged(
-            accountType: accountType,
-          ),
-        );
   }
 }
 
@@ -66,7 +59,7 @@ class _Gender extends StatelessWidget {
   Widget build(BuildContext context) {
     final str = Str.of(context);
     final Gender? selectedGender = context.select(
-      (RequiredDataCompletionBloc bloc) => bloc.state.gender,
+      (RequiredDataCompletionCubit cubit) => cubit.state.gender,
     );
 
     return selectedGender == null
@@ -76,14 +69,9 @@ class _Gender extends StatelessWidget {
             selectedValue: selectedGender,
             option1: OptionParams(label: str.male, value: Gender.male),
             option2: OptionParams(label: str.female, value: Gender.female),
-            onChanged: (gender) => _onChanged(context, gender),
+            onChanged:
+                context.read<RequiredDataCompletionCubit>().genderChanged,
           );
-  }
-
-  void _onChanged(BuildContext context, Gender gender) {
-    context.read<RequiredDataCompletionBloc>().add(
-          RequiredDataCompletionEventGenderChanged(gender: gender),
-        );
   }
 }
 
@@ -93,7 +81,7 @@ class _Name extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool isValid = context.select(
-      (RequiredDataCompletionBloc bloc) => bloc.state.isNameValid,
+      (RequiredDataCompletionCubit cubit) => cubit.state.isNameValid,
     );
     final str = Str.of(context);
 
@@ -102,17 +90,11 @@ class _Name extends StatelessWidget {
       label: str.name,
       isRequired: true,
       textInputAction: TextInputAction.done,
-      onChanged: (String? value) => _onChanged(value, context),
+      onChanged: context.read<RequiredDataCompletionCubit>().nameChanged,
       onTapOutside: (_) => unfocusInputs(),
       onSubmitted: (_) => _onSubmitted(context),
       validator: (_) => !isValid ? str.invalidNameOrSurnameMessage : null,
     );
-  }
-
-  void _onChanged(String? value, BuildContext context) {
-    context.read<RequiredDataCompletionBloc>().add(
-          RequiredDataCompletionEventNameChanged(name: value ?? ''),
-        );
   }
 }
 
@@ -122,7 +104,7 @@ class _Surname extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool isValid = context.select(
-      (RequiredDataCompletionBloc bloc) => bloc.state.isSurnameValid,
+      (RequiredDataCompletionCubit cubit) => cubit.state.isSurnameValid,
     );
     final str = Str.of(context);
 
@@ -131,22 +113,14 @@ class _Surname extends StatelessWidget {
       label: str.surname,
       isRequired: true,
       textInputAction: TextInputAction.done,
-      onChanged: (String? value) => _onChanged(value, context),
+      onChanged: context.read<RequiredDataCompletionCubit>().surnameChanged,
       onSubmitted: (_) => _onSubmitted(context),
       validator: (_) => !isValid ? str.invalidNameOrSurnameMessage : null,
     );
   }
-
-  void _onChanged(String? value, BuildContext context) {
-    context.read<RequiredDataCompletionBloc>().add(
-          RequiredDataCompletionEventSurnameChanged(surname: value ?? ''),
-        );
-  }
 }
 
 void _onSubmitted(BuildContext context) {
-  final bloc = context.read<RequiredDataCompletionBloc>();
-  if (bloc.state.canSubmit) {
-    bloc.add(const RequiredDataCompletionEventSubmit());
-  }
+  final cubit = context.read<RequiredDataCompletionCubit>();
+  if (cubit.state.canSubmit) cubit.submit();
 }
