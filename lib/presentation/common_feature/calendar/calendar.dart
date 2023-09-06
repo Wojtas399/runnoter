@@ -151,7 +151,7 @@ class _MobileContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Padding(
-      padding: EdgeInsets.fromLTRB(24, 8, 24, 24),
+      padding: EdgeInsets.fromLTRB(24, 8, 24, 144),
       child: Column(
         children: [
           CalendarMobileStats(),

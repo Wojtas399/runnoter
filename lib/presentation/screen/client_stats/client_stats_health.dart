@@ -152,6 +152,7 @@ class _LineChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final String? languageCode = context.languageCode;
     final DateRangeType dateRangeType = context.select(
       (HealthStatsBloc bloc) => bloc.state.dateRangeType!,
     );
@@ -174,7 +175,7 @@ class _LineChart extends StatelessWidget {
         LineSeries<HealthStatsChartPoint, String>(
           dataSource: points,
           xValueMapper: (HealthStatsChartPoint point, _) =>
-              _mapDateToLabel(context.languageCode, point.date, dateRangeType),
+              _mapDateToLabel(languageCode, point.date, dateRangeType),
           yValueMapper: (HealthStatsChartPoint point, _) => point.value,
           color: Theme.of(context).colorScheme.primary,
           markerSettings: MarkerSettings(

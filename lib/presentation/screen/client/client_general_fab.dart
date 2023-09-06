@@ -7,14 +7,13 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import '../../../domain/cubit/client/client_cubit.dart';
 import '../../component/material_3_speed_dial_component.dart';
 import '../../config/navigation/router.dart';
-import '../../extension/context_extensions.dart';
 import '../../service/navigator_service.dart';
 
-class ClientFAB extends StatelessWidget {
+class ClientMobileGeneralFAB extends StatelessWidget {
   final _buttonKey = GlobalKey();
   final RouteData currentRoute;
 
-  ClientFAB({super.key, required this.currentRoute});
+  ClientMobileGeneralFAB({super.key, required this.currentRoute});
 
   bool get _isSpeedDialRequired =>
       currentRoute.name == ClientCalendarRoute.name ||
@@ -22,9 +21,12 @@ class ClientFAB extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return context.isMobileSize && _isSpeedDialRequired
+    return _isSpeedDialRequired
         ? Material3SpeedDial(
             icon: Icons.add,
+            label: Text(
+              _getLabel(Str.of(context), currentRoute),
+            ),
             children: [
               SpeedDialChild(
                 child: const Icon(Icons.emoji_events),
@@ -44,56 +46,52 @@ class ClientFAB extends StatelessWidget {
               ),
             ],
           )
-        : FloatingActionButton(
+        : FloatingActionButton.extended(
             key: _buttonKey,
-            onPressed: () => _onDefaultButtonPressed(context),
-            child: const Icon(Icons.add),
+            onPressed: () => _onPressed(context, _buttonKey, currentRoute),
+            icon: const Icon(Icons.add),
+            label: Text(
+              _getLabel(Str.of(context), currentRoute),
+            ),
           );
-  }
-
-  Future<void> _onDefaultButtonPressed(BuildContext context) async {
-    final String clientId = context.read<ClientCubit>().clientId;
-    final _EntityToAdd? entityToAdd =
-        await _askForEntityToAdd(context, _buttonKey, currentRoute);
-    if (entityToAdd != null) {
-      await _manageEntityToAdd(entityToAdd, clientId);
-    }
   }
 }
 
-class ClientExtendedFAB extends StatelessWidget {
+class ClientRailGeneralFAB extends StatelessWidget {
   final _buttonKey = GlobalKey();
   final RouteData currentRoute;
 
-  ClientExtendedFAB({super.key, required this.currentRoute});
+  ClientRailGeneralFAB({super.key, required this.currentRoute});
 
   @override
   Widget build(BuildContext context) {
-    return FloatingActionButton.extended(
+    return FloatingActionButton(
       key: _buttonKey,
-      onPressed: () => _onPressed(context),
-      icon: const Icon(Icons.add),
-      label: Text(_getLabel(Str.of(context))),
+      onPressed: () => _onPressed(context, _buttonKey, currentRoute),
+      child: const Icon(Icons.add),
     );
   }
+}
 
-  Future<void> _onPressed(BuildContext context) async {
-    final String clientId = context.read<ClientCubit>().clientId;
-    final _EntityToAdd? entityToAdd =
-        await _askForEntityToAdd(context, _buttonKey, currentRoute);
-    if (entityToAdd != null) {
-      await _manageEntityToAdd(entityToAdd, clientId);
-    }
-  }
+class ClientDrawerGeneralFAB extends StatelessWidget {
+  final _buttonKey = GlobalKey();
+  final RouteData currentRoute;
 
-  String _getLabel(Str str) {
-    final String currentRouteName = currentRoute.name;
-    if (currentRouteName == ClientBloodTestsRoute.name) {
-      return str.bloodTestsAddNewBloodTest;
-    } else if (currentRouteName == ClientRacesRoute.name) {
-      return str.racesAddNewRace;
-    }
-    return str.add;
+  ClientDrawerGeneralFAB({super.key, required this.currentRoute});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: FloatingActionButton.extended(
+        key: _buttonKey,
+        onPressed: () => _onPressed(context, _buttonKey, currentRoute),
+        icon: const Icon(Icons.add),
+        label: Text(
+          _getLabel(Str.of(context), currentRoute),
+        ),
+      ),
+    );
   }
 }
 
@@ -119,6 +117,29 @@ Future<void> _manageEntityToAdd(
         BloodTestCreatorRoute(userId: clientId),
       );
       break;
+  }
+}
+
+String _getLabel(Str str, RouteData currentRoute) {
+  final String currentRouteName = currentRoute.name;
+  if (currentRouteName == ClientBloodTestsRoute.name) {
+    return str.bloodTestsAddNewBloodTest;
+  } else if (currentRouteName == ClientRacesRoute.name) {
+    return str.racesAddNewRace;
+  }
+  return str.add;
+}
+
+Future<void> _onPressed(
+  BuildContext context,
+  GlobalKey buttonKey,
+  RouteData currentRoute,
+) async {
+  final String clientId = context.read<ClientCubit>().clientId;
+  final _EntityToAdd? entityToAdd =
+      await _askForEntityToAdd(context, buttonKey, currentRoute);
+  if (entityToAdd != null) {
+    await _manageEntityToAdd(entityToAdd, clientId);
   }
 }
 

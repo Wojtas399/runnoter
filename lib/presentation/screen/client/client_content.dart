@@ -6,7 +6,8 @@ import '../../component/gap/gap_components.dart';
 import '../../config/navigation/router.dart';
 import '../../extension/context_extensions.dart';
 import 'client_app_bar.dart';
-import 'client_fab.dart';
+import 'client_general_fab.dart';
+import 'client_message_fab.dart';
 
 class ClientContent extends StatelessWidget {
   const ClientContent({super.key});
@@ -43,7 +44,15 @@ class ClientContent extends StatelessWidget {
                   )
                 : null,
             floatingActionButton: context.isMobileSize
-                ? ClientFAB(currentRoute: tabsRouter.current)
+                ? Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      const ClientMobileMessageFAB(),
+                      const Gap16(),
+                      ClientMobileGeneralFAB(currentRoute: tabsRouter.current),
+                    ],
+                  )
                 : null,
             body: SafeArea(
               child: Row(
@@ -131,15 +140,11 @@ class _Drawer extends StatelessWidget {
       selectedIndex: activePageIndex,
       onDestinationSelected: onPageChanged,
       children: [
-        if (context.isDesktopSize) ...[
-          const Gap16(),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: ClientExtendedFAB(currentRoute: currentRoute),
-          ),
-          const Gap24(),
-        ] else
-          const Gap32(),
+        const Gap16(),
+        ClientDrawerGeneralFAB(currentRoute: currentRoute),
+        const Gap24(),
+        const ClientDrawerMessageFAB(),
+        const Gap24(),
         NavigationDrawerDestination(
           icon: const Icon(Icons.event_note_outlined),
           selectedIcon: const Icon(Icons.event_note),
@@ -188,7 +193,13 @@ class _Rail extends StatelessWidget {
       onDestinationSelected: onPageChanged,
       backgroundColor: backgroundColor,
       groupAlignment: -0.90,
-      leading: ClientFAB(currentRoute: currentRoute),
+      leading: Column(
+        children: [
+          ClientRailGeneralFAB(currentRoute: currentRoute),
+          const Gap24(),
+          const ClientRailMessageFAB(),
+        ],
+      ),
       destinations: [
         NavigationRailDestination(
           icon: const Icon(Icons.event_note_outlined),

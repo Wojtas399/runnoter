@@ -92,6 +92,7 @@ class _Chart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final String? languageCode = context.languageCode;
     final DateRangeType dateRangeType = context.select(
       (MileageStatsBloc bloc) => bloc.state.dateRangeType!,
     );
@@ -112,7 +113,7 @@ class _Chart extends StatelessWidget {
         ColumnSeries(
           dataSource: chartPoints,
           xValueMapper: (MileageStatsChartPoint point, _) =>
-              _createXLabel(context, dateRangeType, point),
+              _createXLabel(languageCode, dateRangeType, point),
           yValueMapper: (MileageStatsChartPoint point, _) =>
               context.convertDistanceFromDefaultUnit(point.mileage),
         ),
@@ -121,15 +122,13 @@ class _Chart extends StatelessWidget {
   }
 
   String _createXLabel(
-    BuildContext context,
+    String? languageCode,
     DateRangeType dateRangeType,
     MileageStatsChartPoint point,
-  ) {
-    final String? languageCode = context.languageCode;
-    return switch (dateRangeType) {
-      DateRangeType.week => point.date.toDayAbbreviation(languageCode),
-      DateRangeType.month => '',
-      DateRangeType.year => point.date.toMonthAbbreviation(languageCode),
-    };
-  }
+  ) =>
+      switch (dateRangeType) {
+        DateRangeType.week => point.date.toDayAbbreviation(languageCode),
+        DateRangeType.year => point.date.toMonthAbbreviation(languageCode),
+        _ => '',
+      };
 }
