@@ -6,6 +6,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../domain/bloc/home/home_bloc.dart';
 import '../../../domain/entity/user.dart';
 import '../../component/gap/gap_components.dart';
+import '../../config/navigation/router.dart';
 import '../../extension/context_extensions.dart';
 import 'home_fab.dart';
 
@@ -32,7 +33,8 @@ class HomeNavigationDrawer extends StatelessWidget {
       selectedIndex: selectedIndex,
       onDestinationSelected: onPageSelected,
       children: [
-        if (context.isDesktopSize) ...[
+        if (context.isDesktopSize &&
+            currentRoute.name != ProfileRoute.name) ...[
           const Gap16(),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),

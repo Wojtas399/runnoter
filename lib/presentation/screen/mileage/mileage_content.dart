@@ -135,6 +135,8 @@ class _Chart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final String? languageCode = context.languageCode;
+
     return SfCartesianChart(
       primaryXAxis: CategoryAxis(interval: 1),
       primaryYAxis: NumericAxis(
@@ -148,7 +150,7 @@ class _Chart extends StatelessWidget {
         ColumnSeries(
           dataSource: chartPoints,
           xValueMapper: (MileageStatsChartPoint point, _) =>
-              _createXLabel(context.languageCode, point),
+              _createXLabel(languageCode, point),
           yValueMapper: (MileageStatsChartPoint point, _) =>
               context.convertDistanceFromDefaultUnit(point.mileage),
         ),
