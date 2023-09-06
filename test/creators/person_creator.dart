@@ -18,6 +18,6 @@ Person createPerson({
       name: name,
       surname: surname,
       email: email,
-      dateOfBirth: DateTime(2023),
+      dateOfBirth: dateOfBirth ?? DateTime(2023),
       coachId: coachId,
     );
