@@ -68,9 +68,9 @@ class _RequestsListState extends State<_RequestsList> {
     return ExpansionPanelList(
       elevation: 0,
       expandedHeaderPadding: const EdgeInsets.all(0),
-      expansionCallback: (int index, bool isExpanded) {
+      expansionCallback: (int index, _) {
         setState(() {
-          _isExpanded = !isExpanded;
+          _isExpanded = !_isExpanded;
         });
       },
       children: [
