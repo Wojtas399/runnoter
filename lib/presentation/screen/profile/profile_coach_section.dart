@@ -7,12 +7,15 @@ import '../../../domain/additional_model/coaching_request_short.dart';
 import '../../../domain/cubit/profile/coach/profile_coach_cubit.dart';
 import '../../../domain/entity/person.dart';
 import '../../component/gap/gap_components.dart';
+import '../../component/nullable_text_component.dart';
 import '../../component/text/body_text_components.dart';
 import '../../component/text/title_text_components.dart';
+import '../../config/navigation/router.dart';
 import '../../dialog/person_details/person_details_dialog.dart';
 import '../../dialog/persons_search/persons_search_dialog.dart';
 import '../../formatter/person_formatter.dart';
 import '../../service/dialog_service.dart';
+import '../../service/navigator_service.dart';
 
 class ProfileCoachSection extends StatelessWidget {
   const ProfileCoachSection({super.key});
@@ -27,10 +30,23 @@ class ProfileCoachSection extends StatelessWidget {
         children: [
           TitleLarge(Str.of(context).profileCoach),
           const Gap16(),
-          const _Coach(),
+          const _Content(),
         ],
       ),
     );
+  }
+}
+
+class _Content extends StatelessWidget {
+  const _Content();
+
+  @override
+  Widget build(BuildContext context) {
+    final bool doesCoachExist = context.select(
+      (ProfileCoachCubit cubit) => cubit.state.doesCoachExist,
+    );
+
+    return doesCoachExist ? const _Coach() : const _NoCoachContent();
   }
 }
 
@@ -39,38 +55,46 @@ class _Coach extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Person? coach = context.select(
-      (ProfileCoachCubit cubit) => cubit.state.coach,
+    final String? coachFullName = context.select(
+      (ProfileCoachCubit cubit) => cubit.state.coachFullName,
+    );
+    final String? coachEmail = context.select(
+      (ProfileCoachCubit cubit) => cubit.state.coachEmail,
     );
 
-    return coach == null
-        ? const _NoCoachContent()
-        : ListTile(
-            contentPadding: const EdgeInsets.only(left: 8),
-            title: Text('${coach.name} ${coach.surname}'),
-            subtitle: Text(coach.email),
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                IconButton(
-                  onPressed: context.read<ProfileCoachCubit>().openChat,
-                  icon: const Icon(Icons.chat_outlined),
-                ),
-                IconButton(
-                  onPressed: () => _onShowDetails(context),
-                  icon: const Icon(Icons.info_outline),
-                ),
-                IconButton(
-                  onPressed: () => _onDelete(context),
-                  icon: const Icon(Icons.person_remove_outlined),
-                ),
-              ],
-            ),
-          );
+    return ListTile(
+      contentPadding: const EdgeInsets.only(left: 8),
+      title: NullableText(coachFullName),
+      subtitle: NullableText(coachEmail),
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          IconButton(
+            onPressed: () => _onOpenChat(context),
+            icon: const Icon(Icons.chat_outlined),
+          ),
+          IconButton(
+            onPressed: () => _onShowDetails(context),
+            icon: const Icon(Icons.info_outline),
+          ),
+          IconButton(
+            onPressed: () => _onDelete(context),
+            icon: const Icon(Icons.person_remove_outlined),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _onOpenChat(BuildContext context) async {
+    showLoadingDialog();
+    final String? chatId = await context.read<ProfileCoachCubit>().loadChatId();
+    closeLoadingDialog();
+    navigateTo(ChatRoute(chatId: chatId));
   }
 
   void _onShowDetails(BuildContext context) {
-    final String? coachId = context.read<ProfileCoachCubit>().state.coach?.id;
+    final String? coachId = context.read<ProfileCoachCubit>().state.coachId;
     if (coachId != null) {
       showDialogDependingOnScreenSize(
         PersonDetailsDialog(

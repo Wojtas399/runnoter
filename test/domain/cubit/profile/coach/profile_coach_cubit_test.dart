@@ -97,14 +97,12 @@ void main() {
         expect: () => [
           ProfileCoachState(
             status: const BlocStatusComplete(),
-            coach: expectedCoach,
             coachId: expectedCoach.id,
             coachFullName: '${expectedCoach.name} ${expectedCoach.surname}',
             coachEmail: expectedCoach.email,
           ),
           ProfileCoachState(
             status: const BlocStatusComplete(),
-            coach: expectedUpdatedCoach,
             coachId: expectedUpdatedCoach.id,
             coachFullName:
                 '${expectedUpdatedCoach.name} ${expectedUpdatedCoach.surname}',
@@ -590,55 +588,56 @@ void main() {
     },
   );
 
-  blocTest(
-    'open chat, '
-    'coach does not exist, '
-    'should do nothing',
-    build: () => ProfileCoachCubit(),
-    setUp: () => authService.mockGetLoggedUserId(userId: loggedUserId),
-    act: (bloc) => bloc.openChat(),
-    expect: () => [],
-  );
+  test(
+    'load chat id, '
+    'coach id does not exist, '
+    'should return null',
+    () async {
+      authService.mockGetLoggedUserId();
+      final cubit = ProfileCoachCubit();
 
-  blocTest(
-    'open chat, '
-    'logged user does not exist, '
-    'should do nothing',
-    build: () => ProfileCoachCubit(
-      initialState: ProfileCoachState(
-        status: const BlocStatusInitial(),
-        coach: createPerson(id: 'p1'),
-      ),
-    ),
-    setUp: () => authService.mockGetLoggedUserId(),
-    act: (bloc) => bloc.openChat(),
-    expect: () => [],
-  );
+      final String? chatId = await cubit.loadChatId();
 
-  blocTest(
-    'open chat, '
-    'should call use case to load chat id and should emit loaded chat id',
-    build: () => ProfileCoachCubit(
-      initialState: ProfileCoachState(
-        status: const BlocStatusInitial(),
-        coach: createPerson(id: 'p1'),
-      ),
-    ),
-    setUp: () {
-      authService.mockGetLoggedUserId(userId: loggedUserId);
-      loadChatIdUseCase.mock(chatId: 'c1');
+      expect(chatId, null);
     },
-    act: (bloc) => bloc.openChat(),
-    expect: () => [
-      ProfileCoachState(
-        status: const BlocStatusLoading(),
-        coach: createPerson(id: 'p1'),
-      ),
-      ProfileCoachState(
-        status: const BlocStatusComplete(),
-        coach: createPerson(id: 'p1'),
-        idOfChatWithCoach: 'c1',
-      ),
-    ],
+  );
+
+  test(
+    'load chat id, '
+    'logged user does not exist, '
+    'should return null',
+    () async {
+      authService.mockGetLoggedUserId();
+      final cubit = ProfileCoachCubit(
+        initialState: const ProfileCoachState(
+          status: BlocStatusInitial(),
+          coachId: 'c1',
+        ),
+      );
+
+      final String? chatId = await cubit.loadChatId();
+
+      expect(chatId, null);
+    },
+  );
+
+  test(
+    'load chat id, '
+    'should call use case to load chat id and return loaded chat id',
+    () async {
+      const String expectedChatId = 'c1';
+      authService.mockGetLoggedUserId(userId: loggedUserId);
+      loadChatIdUseCase.mock(chatId: expectedChatId);
+      final cubit = ProfileCoachCubit(
+        initialState: const ProfileCoachState(
+          status: BlocStatusInitial(),
+          coachId: 'c1',
+        ),
+      );
+
+      final String? chatId = await cubit.loadChatId();
+
+      expect(chatId, expectedChatId);
+    },
   );
 }

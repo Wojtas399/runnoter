@@ -130,7 +130,6 @@ class _CoachCubitListener extends StatelessWidget {
     return CubitWithStatusListener<ProfileCoachCubit, ProfileCoachState,
         ProfileCoachCubitInfo, dynamic>(
       onInfo: (ProfileCoachCubitInfo info) => _manageInfo(context, info),
-      onStateChanged: _manageState,
       child: child,
     );
   }
@@ -152,12 +151,6 @@ class _CoachCubitListener extends StatelessWidget {
           str.profileSuccessfullyFinishedCooperationWithCoach,
         );
         break;
-    }
-  }
-
-  void _manageState(ProfileCoachState state) {
-    if (state.idOfChatWithCoach != null) {
-      navigateTo(ChatRoute(chatId: state.idOfChatWithCoach));
     }
   }
 }

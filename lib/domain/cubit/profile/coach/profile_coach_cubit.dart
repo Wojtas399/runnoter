@@ -57,7 +57,6 @@ class ProfileCoachCubit
         removeRequestsListener();
       }
       emit(state.copyWith(
-        coach: coach,
         coachId: coach?.id,
         coachFullName: coach != null ? '${coach.name} ${coach.surname}' : null,
         coachEmail: coach?.email,
@@ -122,19 +121,15 @@ class ProfileCoachCubit
     );
   }
 
-  Future<void> openChat() async {
-    final String? coachId = state.coach?.id;
-    if (coachId == null) return;
+  Future<String?> loadChatId() async {
+    final String? coachId = state.coachId;
+    if (coachId == null) return null;
     final String? loggedUserId = await _authService.loggedUserId$.first;
-    if (loggedUserId == null) return;
-    emitLoadingStatus();
-    final String? chatId = await _loadChatIdUseCase.execute(
+    if (loggedUserId == null) return null;
+    return await _loadChatIdUseCase.execute(
       user1Id: loggedUserId,
       user2Id: coachId,
     );
-    emit(state.copyWith(
-      idOfChatWithCoach: chatId,
-    ));
   }
 
   Future<void> deleteCoach() async {
@@ -253,7 +248,7 @@ enum ProfileCoachCubitInfo {
   requestAccepted,
   requestDeleted,
   requestUndid,
-  coachDeleted,
+  coachDeleted
 }
 
 class _ListenedRequests extends Equatable {

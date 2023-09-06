@@ -2,7 +2,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/additional_model/coaching_request_short.dart';
 import 'package:runnoter/domain/cubit/profile/coach/profile_coach_cubit.dart';
-import 'package:runnoter/domain/entity/person.dart';
 
 import '../../../../creators/person_creator.dart';
 
@@ -123,20 +122,6 @@ void main() {
   );
 
   test(
-    'copy with coach, '
-    'should copy current value if new value is null',
-    () {
-      final Person expected = createPerson(id: 'c1');
-
-      state = state.copyWith(coach: expected);
-      final state2 = state.copyWith();
-
-      expect(state.coach, expected);
-      expect(state2.coach, expected);
-    },
-  );
-
-  test(
     'copy with coachId, '
     'should copy current value if new value is null',
     () {
@@ -199,20 +184,6 @@ void main() {
       expect(state2.coachId, null);
       expect(state2.coachFullName, null);
       expect(state2.coachEmail, null);
-    },
-  );
-
-  test(
-    'copy with idOfChatWithCoach, '
-    'should copy current value if new value is null',
-    () {
-      const String expected = 'c1';
-
-      state = state.copyWith(idOfChatWithCoach: expected);
-      final state2 = state.copyWith();
-
-      expect(state.idOfChatWithCoach, expected);
-      expect(state2.idOfChatWithCoach, expected);
     },
   );
 }
