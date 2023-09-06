@@ -63,9 +63,9 @@ void main() {
         setUp: () => personRepository.mockGetPersonById(
           personStream: client$.stream,
         ),
-        act: (bloc) async {
-          bloc.initialize();
-          await bloc.stream.first;
+        act: (cubit) async {
+          cubit.initialize();
+          await cubit.stream.first;
           client$.add(updatedClient);
         },
         expect: () => [

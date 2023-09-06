@@ -59,7 +59,7 @@ class _Coach extends StatelessWidget {
                 const GapHorizontal8(),
                 IconButton(
                   onPressed: () => _onDelete(context),
-                  icon: const Icon(Icons.delete_outlined),
+                  icon: const Icon(Icons.person_remove_outlined),
                 ),
               ],
             ),
