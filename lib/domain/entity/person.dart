@@ -7,6 +7,7 @@ class Person extends Entity {
   final String name;
   final String surname;
   final String email;
+  final DateTime? dateOfBirth;
   final String? coachId;
 
   const Person({
@@ -16,6 +17,7 @@ class Person extends Entity {
     required this.name,
     required this.surname,
     required this.email,
+    required this.dateOfBirth,
     this.coachId,
   });
 
@@ -27,6 +29,7 @@ class Person extends Entity {
         name,
         surname,
         email,
+        dateOfBirth,
         coachId,
       ];
 }

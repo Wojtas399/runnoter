@@ -8,6 +8,7 @@ Person createPerson({
   String name = '',
   String surname = '',
   String email = '',
+  DateTime? dateOfBirth,
   String? coachId,
 }) =>
     Person(
@@ -17,5 +18,6 @@ Person createPerson({
       name: name,
       surname: surname,
       email: email,
+      dateOfBirth: DateTime(2023),
       coachId: coachId,
     );

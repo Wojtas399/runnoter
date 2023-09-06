@@ -67,6 +67,7 @@ void main() {
         name: loadedUserDto.name,
         surname: loadedUserDto.surname,
         email: loadedUserDto.email,
+        dateOfBirth: DateTime(2023), //TODO: Implement date of birth
         coachId: loadedUserDto.coachId,
       );
       repository = PersonRepositoryImpl(initialData: existingPersons);

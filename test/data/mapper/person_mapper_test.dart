@@ -30,13 +30,14 @@ void main() {
         email: email,
         coachId: coachId,
       );
-      const Person expectedPerson = Person(
+      final Person expectedPerson = Person(
         id: id,
         accountType: accountType,
         gender: gender,
         name: name,
         surname: surname,
         email: email,
+        dateOfBirth: DateTime(2023), //TODO: Implement date of birth
         coachId: coachId,
       );
 
