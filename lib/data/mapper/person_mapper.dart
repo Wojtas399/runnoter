@@ -11,6 +11,6 @@ Person mapPersonFromUserDto(UserDto userDto) => Person(
       name: userDto.name,
       surname: userDto.surname,
       email: userDto.email,
-      dateOfBirth: DateTime(2023), //TODO: Implement date of birth
+      dateOfBirth: userDto.dateOfBirth,
       coachId: userDto.coachId,
     );

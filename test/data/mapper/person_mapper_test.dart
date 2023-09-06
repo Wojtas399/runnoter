@@ -15,6 +15,7 @@ void main() {
   const String name = 'name';
   const String surname = 'surname';
   const String email = 'email@example.com';
+  final DateTime dateOfBirth = DateTime(2003, 1, 10);
   const String coachId = 'c1';
 
   test(
@@ -28,6 +29,7 @@ void main() {
         name: name,
         surname: surname,
         email: email,
+        dateOfBirth: dateOfBirth,
         coachId: coachId,
       );
       final Person expectedPerson = Person(
@@ -37,7 +39,7 @@ void main() {
         name: name,
         surname: surname,
         email: email,
-        dateOfBirth: DateTime(2023), //TODO: Implement date of birth
+        dateOfBirth: dateOfBirth,
         coachId: coachId,
       );
 
