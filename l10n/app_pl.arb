@@ -805,10 +805,14 @@
   "@personsSearchUserAlreadyHasCoachInfoMessage": {
     "description": "Message of the information about user who already has a coach"
   },
-  "@__________CLIENT_DETAILS__________": {},
-  "clientDetailsTitle": "Szczegóły klienta",
-  "@clientDetailsTitle": {
-    "description": "Title of the client details section"
+  "@__________PERSON_DETAILS__________": {},
+  "personCoachDetailsTitle": "Szczegóły trenera",
+  "@personCoachDetailsTitle": {
+    "description": "Title of the coach details dialog"
+  },
+  "personClientDetailsTitle": "Szczegóły klient",
+  "@personClientDetailsTitle": {
+    "description": "Title of the client details dialog"
   },
   "@__________CLIENT_STATS__________": {},
   "clientStatsTitle": "Statystyki",

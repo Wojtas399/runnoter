@@ -3,58 +3,55 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
-import '../../../domain/cubit/client/client_cubit.dart';
+import '../../../domain/cubit/person_details/person_details_cubit.dart';
 import '../../../domain/entity/user.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/responsive_layout_component.dart';
 import '../../component/value_with_label_and_icon_component.dart';
-import '../../extension/gender_extensions.dart';
 import '../../formatter/date_formatter.dart';
-import '../../service/dialog_service.dart';
+import '../../formatter/gender_formatter.dart';
 import '../../service/navigator_service.dart';
 
-class ClientDetailsIcon extends StatelessWidget {
-  const ClientDetailsIcon({super.key});
+enum PersonType { coach, client }
+
+class PersonDetailsDialog extends StatelessWidget {
+  final String personId;
+  final PersonType personType;
+
+  const PersonDetailsDialog({
+    super.key,
+    required this.personId,
+    required this.personType,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return IconButton(
-      onPressed: () => _onPressed(context),
-      icon: const Icon(Icons.info),
-    );
-  }
+    final String dialogTitle = switch (personType) {
+      PersonType.coach => Str.of(context).personCoachDetailsTitle,
+      PersonType.client => Str.of(context).personClientDetailsTitle,
+    };
 
-  void _onPressed(BuildContext context) {
-    showDialogDependingOnScreenSize(
-      BlocProvider.value(
-        value: context.read<ClientCubit>(),
-        child: const _Dialog(),
+    return BlocProvider(
+      create: (_) => PersonDetailsCubit(personId: personId)..initialize(),
+      child: ResponsiveLayout(
+        mobileBody: _FullScreenDialog(dialogTitle: dialogTitle),
+        desktopBody: _NormalDialog(dialogTitle: dialogTitle),
       ),
     );
   }
 }
 
-class _Dialog extends StatelessWidget {
-  const _Dialog();
-
-  @override
-  Widget build(BuildContext context) {
-    return const ResponsiveLayout(
-      mobileBody: _FullScreenDialog(),
-      desktopBody: _NormalDialog(),
-    );
-  }
-}
-
 class _FullScreenDialog extends StatelessWidget {
-  const _FullScreenDialog();
+  final String dialogTitle;
+
+  const _FullScreenDialog({required this.dialogTitle});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text(Str.of(context).clientDetailsTitle),
+        title: Text(dialogTitle),
         leading: const CloseButton(),
       ),
       body: const Padding(
@@ -66,12 +63,14 @@ class _FullScreenDialog extends StatelessWidget {
 }
 
 class _NormalDialog extends StatelessWidget {
-  const _NormalDialog();
+  final String dialogTitle;
+
+  const _NormalDialog({required this.dialogTitle});
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(Str.of(context).clientDetailsTitle),
+      title: Text(dialogTitle),
       contentPadding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
       content: const SizedBox(
         width: 500,
@@ -117,7 +116,7 @@ class _Gender extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Gender? gender = context.select(
-      (ClientCubit cubit) => cubit.state.gender,
+      (PersonDetailsCubit cubit) => cubit.state.gender,
     );
 
     return ValueWithLabelAndIcon(
@@ -134,7 +133,7 @@ class _Name extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final String? name = context.select(
-      (ClientCubit cubit) => cubit.state.name,
+      (PersonDetailsCubit cubit) => cubit.state.name,
     );
 
     return ValueWithLabelAndIcon(
@@ -151,7 +150,7 @@ class _Surname extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final String? surname = context.select(
-      (ClientCubit cubit) => cubit.state.surname,
+      (PersonDetailsCubit cubit) => cubit.state.surname,
     );
 
     return ValueWithLabelAndIcon(
@@ -168,7 +167,7 @@ class _DateOfBirth extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final DateTime? dateOfBirth = context.select(
-      (ClientCubit cubit) => cubit.state.dateOfBirth,
+      (PersonDetailsCubit cubit) => cubit.state.dateOfBirth,
     );
 
     return ValueWithLabelAndIcon(
@@ -185,7 +184,7 @@ class _Email extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final String? email = context.select(
-      (ClientCubit cubit) => cubit.state.email,
+      (PersonDetailsCubit cubit) => cubit.state.email,
     );
 
     return ValueWithLabelAndIcon(

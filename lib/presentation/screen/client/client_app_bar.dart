@@ -10,9 +10,10 @@ import '../../component/date_range_header_component.dart';
 import '../../component/gap/gap_horizontal_components.dart';
 import '../../component/text/title_text_components.dart';
 import '../../config/navigation/router.dart';
+import '../../dialog/person_details/person_details_dialog.dart';
 import '../../extension/context_extensions.dart';
+import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
-import 'client_details.dart';
 
 class ClientMobileAppBar extends StatelessWidget
     implements PreferredSizeWidget {
@@ -35,7 +36,7 @@ class ClientMobileAppBar extends StatelessWidget
       foregroundColor: Theme.of(context).colorScheme.primary,
       centerTitle: true,
       title: const _AppBarTitle(),
-      actions: const [ClientDetailsIcon(), GapHorizontal8()],
+      actions: const [_DetailsIcon(), GapHorizontal8()],
       bottom: currentPage.name == ClientCalendarRoute.name
           ? _MobileDateRangeHeader()
           : null,
@@ -62,7 +63,7 @@ class ClientDesktopAppBar extends StatelessWidget
         onPressed: () => _onBackButtonPressed(context),
       ),
       title: const _AppBarTitle(),
-      actions: const [ClientDetailsIcon(), GapHorizontal16()],
+      actions: const [_DetailsIcon(), GapHorizontal16()],
     );
   }
 
@@ -148,5 +149,26 @@ class _MobileDateRangeHeader extends StatelessWidget
     context.read<CalendarBloc>().add(
           const CalendarEventNextDateRange(),
         );
+  }
+}
+
+class _DetailsIcon extends StatelessWidget {
+  const _DetailsIcon();
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      onPressed: () => _onPressed(context),
+      icon: const Icon(Icons.info),
+    );
+  }
+
+  void _onPressed(BuildContext context) {
+    showDialogDependingOnScreenSize(
+      PersonDetailsDialog(
+        personId: context.read<ClientCubit>().clientId,
+        personType: PersonType.client,
+      ),
+    );
   }
 }

@@ -52,10 +52,6 @@ class ChatCubit extends Cubit<ChatState> {
     if (loggedUserId == null) return;
     final Chat chat =
         await _chatRepository.getChatById(chatId: _chatId).whereNotNull().first;
-    final Person sender = await _personRepository
-        .getPersonById(personId: loggedUserId)
-        .whereNotNull()
-        .first;
     final Person recipient = await _personRepository
         .getPersonById(
           personId: chat.user1Id == loggedUserId ? chat.user2Id : chat.user1Id,
@@ -71,7 +67,7 @@ class ChatCubit extends Cubit<ChatState> {
         );
         emit(state.copyWith(
           loggedUserId: loggedUserId,
-          senderFullName: '${sender.name} ${sender.surname}',
+          recipientId: recipient.id,
           recipientFullName: '${recipient.name} ${recipient.surname}',
           messagesFromLatest: sortedMessages,
         ));

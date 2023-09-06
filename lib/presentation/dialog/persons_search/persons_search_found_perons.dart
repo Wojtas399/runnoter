@@ -9,7 +9,7 @@ import '../../../domain/entity/person.dart';
 import '../../component/empty_content_info_component.dart';
 import '../../component/loading_info_component.dart';
 import '../../component/padding/paddings_24.dart';
-import '../../extension/gender_extensions.dart';
+import '../../formatter/gender_formatter.dart';
 import '../../formatter/person_formatter.dart';
 import '../../service/dialog_service.dart';
 

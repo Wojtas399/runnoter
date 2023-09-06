@@ -96,16 +96,16 @@ void main() {
   );
 
   test(
-    'copy with senderFullName, '
+    'copy with recipientId, '
     'should copy current value if new value is null',
     () {
-      const String expected = 'sender full name';
+      const String expected = 'r1';
 
-      state = state.copyWith(senderFullName: expected);
+      state = state.copyWith(recipientId: expected);
       final state2 = state.copyWith();
 
-      expect(state.senderFullName, expected);
-      expect(state2.senderFullName, expected);
+      expect(state.recipientId, expected);
+      expect(state2.recipientId, expected);
     },
   );
 
