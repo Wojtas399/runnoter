@@ -70,18 +70,12 @@ void main() {
         },
         expect: () => [
           ClientState(
-            gender: client.gender,
             name: client.name,
             surname: client.surname,
-            email: client.email,
-            dateOfBirth: client.dateOfBirth,
           ),
           ClientState(
-            gender: updatedClient.gender,
             name: updatedClient.name,
             surname: updatedClient.surname,
-            email: updatedClient.email,
-            dateOfBirth: updatedClient.dateOfBirth,
           ),
         ],
         verify: (_) => verify(

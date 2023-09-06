@@ -1,26 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/domain/cubit/client/client_cubit.dart';
-import 'package:runnoter/domain/entity/user.dart';
 
 void main() {
   late ClientState state;
 
   setUp(
     () => state = const ClientState(),
-  );
-
-  test(
-    'copy with gender, '
-    'should copy current value if new value is null',
-    () {
-      const Gender expected = Gender.male;
-
-      state = state.copyWith(gender: expected);
-      final state2 = state.copyWith();
-
-      expect(state.gender, expected);
-      expect(state2.gender, expected);
-    },
   );
 
   test(
@@ -48,34 +33,6 @@ void main() {
 
       expect(state.surname, expected);
       expect(state2.surname, expected);
-    },
-  );
-
-  test(
-    'copy with email, '
-    'should copy current value if new value is null',
-    () {
-      const String expected = 'email@example.com';
-
-      state = state.copyWith(email: expected);
-      final state2 = state.copyWith();
-
-      expect(state.email, expected);
-      expect(state2.email, expected);
-    },
-  );
-
-  test(
-    'copy with dateOfBirth, '
-    'should copy current value if new value is null',
-    () {
-      final DateTime expected = DateTime(2003, 1, 10);
-
-      state = state.copyWith(dateOfBirth: expected);
-      final state2 = state.copyWith();
-
-      expect(state.dateOfBirth, expected);
-      expect(state2.dateOfBirth, expected);
     },
   );
 }
