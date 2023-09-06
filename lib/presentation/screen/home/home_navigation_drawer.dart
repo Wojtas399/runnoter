@@ -38,7 +38,7 @@ class HomeNavigationDrawer extends StatelessWidget {
           const Gap16(),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: HomeExtendedFAB(currentRoute: currentRoute),
+            child: HomeDrawerFAB(currentRoute: currentRoute),
           ),
           const Gap24(),
         ] else

@@ -36,7 +36,7 @@ class HomeNavigationRail extends StatelessWidget {
       backgroundColor: backgroundColor,
       groupAlignment: -0.90,
       leading: currentRoute.name != ProfileRoute.name
-          ? HomeFAB(currentRoute: currentRoute)
+          ? HomeRailFAB(currentRoute: currentRoute)
           : null,
       trailing: Column(
         children: [

@@ -123,9 +123,9 @@ Future<void> _manageEntityToAdd(
 String _getLabel(Str str, RouteData currentRoute) {
   final String currentRouteName = currentRoute.name;
   if (currentRouteName == ClientBloodTestsRoute.name) {
-    return str.bloodTestsAddNewBloodTest;
+    return str.addBloodTest;
   } else if (currentRouteName == ClientRacesRoute.name) {
-    return str.racesAddNewRace;
+    return str.addRace;
   }
   return str.add;
 }

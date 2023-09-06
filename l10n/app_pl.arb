@@ -580,10 +580,6 @@
   "@bloodTestsTitle": {
     "description": "Title of blood tests screen"
   },
-  "bloodTestsAddNewBloodTest": "Dodaj nowe badanie",
-  "@bloodTestAddNewBloodTest": {
-    "description": "Label of the button to add new results"
-  },
   "bloodTestsNoTestsTitle": "Brak badań krwi",
   "@bloodTestsNoTestsTitle": {
     "description": "Title of the info about the lack of blood readings"
@@ -676,10 +672,6 @@
   "racesTitle": "Wyścigi",
   "@racesTitle": {
     "description": "Title of races screen"
-  },
-  "racesAddNewRace": "Dodaj nowy wyścig",
-  "@racesAddNewRace": {
-    "description": "Label of the button to add new race"
   },
   "racesNoRacesTitle": "Brak zawodów",
   "@racesNoRacesTitle": {
@@ -892,10 +884,6 @@
   "@__________HEALTH_MEASUREMENT__________": {},
   "restingHeartRate": "Tętno spoczynkowe",
   "fastingWeight": "Waga na czczo",
-  "addHealthMeasurement": "Dodaj pomiar zdrowia",
-  "@addHealthMeasurement": {
-    "description": "Label of the button to add health measurement"
-  },
   "deleteHealthMeasurementConfirmationDialogTitle": "Usuń pomiar",
   "@deleteHealthMeasurementConfirmationDialogTitle": {
     "description": "Title of the dialog to confirm health measurement deletion"
@@ -1205,6 +1193,8 @@
   "currentWeek": "Obecny tydzień",
   "editHealthMeasurement": "Edytuj pomiar zdrowia",
   "addWorkout": "Dodaj trening",
+  "addHealthMeasurement": "Dodaj pomiar",
+  "addBloodTest": "Dodaj badanie",
   "addRace": "Dodaj wyścig",
   "sentRequests": "Wysłane prośby",
   "receivedRequests": "Otrzymane prośby",

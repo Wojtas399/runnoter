@@ -86,7 +86,7 @@ class _State extends State<HomeContent> {
               : null,
           floatingActionButton:
               context.isMobileSize && currentRoute.name != ProfileRoute.name
-                  ? HomeFAB(currentRoute: currentRoute)
+                  ? HomeMobileFAB(currentRoute: currentRoute)
                   : null,
           body: SafeArea(
             child: Row(
