@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../../domain/cubit/client/client_cubit.dart';
 import '../../config/navigation/router.dart';
+import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
 
 class ClientMobileMessageFAB extends StatelessWidget {
@@ -55,8 +58,9 @@ class _SmallFAB extends StatelessWidget {
   }
 }
 
-void _onPressed(BuildContext context) {
-  navigateTo(
-    ChatRoute(chatId: 'c1'), //TODO: Read chat it from client cubit
-  );
+Future<void> _onPressed(BuildContext context) async {
+  showLoadingDialog();
+  final String? chatId = await context.read<ClientCubit>().loadChatId();
+  closeLoadingDialog();
+  navigateTo(ChatRoute(chatId: chatId));
 }

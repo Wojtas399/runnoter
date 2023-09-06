@@ -1,5 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/cubit/client/client_cubit.dart';
 import 'package:runnoter/domain/entity/user.dart';
 
@@ -7,21 +6,7 @@ void main() {
   late ClientState state;
 
   setUp(
-    () => state = const ClientState(status: BlocStatusInitial()),
-  );
-
-  test(
-    'copy with status, '
-    'should set complete status if new value is null',
-    () {
-      const BlocStatus expected = BlocStatusComplete();
-
-      state = state.copyWith(status: expected);
-      final state2 = state.copyWith();
-
-      expect(state.status, expected);
-      expect(state2.status, const BlocStatusComplete());
-    },
+    () => state = const ClientState(),
   );
 
   test(
