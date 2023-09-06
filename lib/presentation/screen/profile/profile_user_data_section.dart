@@ -97,17 +97,15 @@ class _Name extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String? username = context.select(
-      (ProfileIdentitiesCubit cubit) => cubit.state.username,
+    final String? name = context.select(
+      (ProfileIdentitiesCubit cubit) => cubit.state.name,
     );
 
     return ValueWithLabelAndIcon(
       iconData: Icons.person_outline_rounded,
       label: Str.of(context).name,
-      value: username ?? '',
-      onPressed: () {
-        _onPressed(context);
-      },
+      value: name ?? '',
+      onPressed: () => _onPressed(context),
     );
   }
 
@@ -123,7 +121,7 @@ class _Name extends StatelessWidget {
       title: str.profileNewUsernameDialogTitle,
       label: str.name,
       textFieldIcon: Icons.person_rounded,
-      value: context.read<ProfileIdentitiesCubit>().state.username,
+      value: context.read<ProfileIdentitiesCubit>().state.name,
       isValueRequired: true,
       validator: (String? value) {
         if (value != null && !isNameOrSurnameValid(value)) {

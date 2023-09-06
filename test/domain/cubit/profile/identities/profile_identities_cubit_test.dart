@@ -75,18 +75,20 @@ void main() {
           gender: Gender.female,
           name: 'name',
           surname: 'surname',
+          dateOfBirth: DateTime(2023, 1, 11),
         ),
       );
     },
     act: (cubit) => cubit.initialize(),
     expect: () => [
-      const ProfileIdentitiesState(
-        status: BlocStatusComplete(),
+      ProfileIdentitiesState(
+        status: const BlocStatusComplete(),
         accountType: AccountType.coach,
         gender: Gender.female,
-        username: 'name',
+        name: 'name',
         surname: 'surname',
         email: 'email@example.com',
+        dateOfBirth: DateTime(2023, 1, 11),
         isEmailVerified: true,
       ),
     ],
@@ -241,7 +243,8 @@ void main() {
       const ProfileIdentitiesState(status: BlocStatusLoading()),
       const ProfileIdentitiesState(
         status: BlocStatusComplete<ProfileIdentitiesCubitInfo>(
-            info: ProfileIdentitiesCubitInfo.dataSaved),
+          info: ProfileIdentitiesCubitInfo.dataSaved,
+        ),
       ),
     ],
     verify: (_) {
@@ -262,6 +265,48 @@ void main() {
     build: () => ProfileIdentitiesCubit(),
     setUp: () => authService.mockGetLoggedUserId(),
     act: (cubit) => cubit.updateSurname('new surname'),
+    expect: () => [
+      const ProfileIdentitiesState(status: BlocStatusNoLoggedUser()),
+    ],
+    verify: (_) => verify(() => authService.loggedUserId$).called(1),
+  );
+
+  blocTest(
+    'update date of birth, '
+    'should call method from user repository to update user and '
+    'should emit info that data have been saved',
+    build: () => ProfileIdentitiesCubit(),
+    setUp: () {
+      authService.mockGetLoggedUserId(userId: loggedUserId);
+      userRepository.mockUpdateUser();
+    },
+    act: (cubit) => cubit.updateDateOfBirth(DateTime(2023, 1, 11)),
+    expect: () => [
+      const ProfileIdentitiesState(status: BlocStatusLoading()),
+      const ProfileIdentitiesState(
+        status: BlocStatusComplete<ProfileIdentitiesCubitInfo>(
+          info: ProfileIdentitiesCubitInfo.dataSaved,
+        ),
+      ),
+    ],
+    verify: (_) {
+      verify(() => authService.loggedUserId$).called(1);
+      verify(
+        () => userRepository.updateUser(
+          userId: loggedUserId,
+          dateOfBirth: DateTime(2023, 1, 11),
+        ),
+      ).called(1);
+    },
+  );
+
+  blocTest(
+    'update date of birth, '
+    'logged user does not exist, '
+    'should emit no logged user status',
+    build: () => ProfileIdentitiesCubit(),
+    setUp: () => authService.mockGetLoggedUserId(),
+    act: (cubit) => cubit.updateDateOfBirth(DateTime(2023, 1, 11)),
     expect: () => [
       const ProfileIdentitiesState(status: BlocStatusNoLoggedUser()),
     ],

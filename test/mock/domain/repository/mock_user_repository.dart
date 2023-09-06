@@ -67,6 +67,7 @@ class MockUserRepository extends Mock implements UserRepository {
         name: any(named: 'name'),
         surname: any(named: 'surname'),
         email: any(named: 'email'),
+        dateOfBirth: any(named: 'dateOfBirth'),
         coachId: any(named: 'coachId'),
         coachIdAsNull: any(named: 'coachIdAsNull'),
       );

@@ -72,9 +72,10 @@ class ProfileIdentitiesCubit extends CubitWithStatus<ProfileIdentitiesState,
       (ProfileIdentitiesCubitListenedParams params) => emit(state.copyWith(
         accountType: params.loggedUserData?.accountType,
         gender: params.loggedUserData?.gender,
-        username: params.loggedUserData?.name,
+        name: params.loggedUserData?.name,
         surname: params.loggedUserData?.surname,
         email: params.loggedUserEmail,
+        dateOfBirth: params.loggedUserData?.dateOfBirth,
         isEmailVerified: params.isEmailVerified,
       )),
     );
@@ -115,6 +116,20 @@ class ProfileIdentitiesCubit extends CubitWithStatus<ProfileIdentitiesState,
     }
     emitLoadingStatus();
     await _userRepository.updateUser(userId: loggedUserId, surname: surname);
+    emitCompleteStatus(info: ProfileIdentitiesCubitInfo.dataSaved);
+  }
+
+  Future<void> updateDateOfBirth(DateTime dateOfBirth) async {
+    final String? loggedUserId = await _authService.loggedUserId$.first;
+    if (loggedUserId == null) {
+      emitNoLoggedUserStatus();
+      return;
+    }
+    emitLoadingStatus();
+    await _userRepository.updateUser(
+      userId: loggedUserId,
+      dateOfBirth: dateOfBirth,
+    );
     emitCompleteStatus(info: ProfileIdentitiesCubitInfo.dataSaved);
   }
 
