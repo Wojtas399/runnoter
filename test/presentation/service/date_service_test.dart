@@ -271,4 +271,18 @@ void main() {
       expect(result, false);
     },
   );
+
+  test(
+    'calculate age, '
+    'should return the difference from current year to the year from given date',
+    () {
+      final DateTime now = DateTime.now();
+      final DateTime date = DateTime(2001);
+      final int expectedAge = now.year - date.year;
+
+      final int age = service.calculateAge(date);
+
+      expect(age, expectedAge);
+    },
+  );
 }
