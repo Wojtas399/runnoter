@@ -5,7 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
-import 'package:runnoter/domain/bloc/client/client_bloc.dart';
+import 'package:runnoter/domain/cubit/client/client_cubit.dart';
 import 'package:runnoter/domain/entity/person.dart';
 import 'package:runnoter/domain/entity/user.dart';
 import 'package:runnoter/domain/repository/person_repository.dart';
@@ -46,12 +46,12 @@ void main() {
 
       blocTest(
         'should set listener of client',
-        build: () => ClientBloc(clientId: clientId),
+        build: () => ClientCubit(clientId: clientId),
         setUp: () => personRepository.mockGetPersonById(
           personStream: client$.stream,
         ),
         act: (bloc) async {
-          bloc.add(const ClientEventInitialize());
+          bloc.initialize();
           await bloc.stream.first;
           client$.add(updatedClient);
         },

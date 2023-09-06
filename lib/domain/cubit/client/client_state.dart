@@ -1,6 +1,6 @@
-part of 'client_bloc.dart';
+part of 'client_cubit.dart';
 
-class ClientState extends BlocState<ClientState> {
+class ClientState extends CubitState<ClientState> {
   final Gender? gender;
   final String? name;
   final String? surname;

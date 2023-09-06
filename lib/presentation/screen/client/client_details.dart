@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
-import '../../../domain/bloc/client/client_bloc.dart';
+import '../../../domain/cubit/client/client_cubit.dart';
 import '../../../domain/entity/user.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/responsive_layout_component.dart';
@@ -26,7 +26,7 @@ class ClientDetailsIcon extends StatelessWidget {
   void _onPressed(BuildContext context) {
     showDialogDependingOnScreenSize(
       BlocProvider.value(
-        value: context.read<ClientBloc>(),
+        value: context.read<ClientCubit>(),
         child: const _Dialog(),
       ),
     );
@@ -114,7 +114,7 @@ class _Gender extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Gender? gender = context.select(
-      (ClientBloc bloc) => bloc.state.gender,
+      (ClientCubit cubit) => cubit.state.gender,
     );
 
     return ValueWithLabelAndIcon(
@@ -130,7 +130,9 @@ class _Name extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String? name = context.select((ClientBloc bloc) => bloc.state.name);
+    final String? name = context.select(
+      (ClientCubit cubit) => cubit.state.name,
+    );
 
     return ValueWithLabelAndIcon(
       iconData: Icons.person_outline_rounded,
@@ -146,7 +148,7 @@ class _Surname extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final String? surname = context.select(
-      (ClientBloc bloc) => bloc.state.surname,
+      (ClientCubit cubit) => cubit.state.surname,
     );
 
     return ValueWithLabelAndIcon(
@@ -163,7 +165,7 @@ class _Email extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final String? email = context.select(
-      (ClientBloc bloc) => bloc.state.email,
+      (ClientCubit cubit) => cubit.state.email,
     );
 
     return ValueWithLabelAndIcon(

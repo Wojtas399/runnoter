@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
-import '../../../domain/bloc/client/client_bloc.dart';
+import '../../../domain/cubit/client/client_cubit.dart';
 import '../../component/material_3_speed_dial_component.dart';
 import '../../config/navigation/router.dart';
 import '../../extension/context_extensions.dart';
@@ -31,7 +31,7 @@ class ClientFAB extends StatelessWidget {
                 label: Str.of(context).race,
                 onTap: () => _manageEntityToAdd(
                   _EntityToAdd.race,
-                  context.read<ClientBloc>().clientId,
+                  context.read<ClientCubit>().clientId,
                 ),
               ),
               SpeedDialChild(
@@ -39,7 +39,7 @@ class ClientFAB extends StatelessWidget {
                 label: Str.of(context).workout,
                 onTap: () => _manageEntityToAdd(
                   _EntityToAdd.workout,
-                  context.read<ClientBloc>().clientId,
+                  context.read<ClientCubit>().clientId,
                 ),
               ),
             ],
@@ -52,7 +52,7 @@ class ClientFAB extends StatelessWidget {
   }
 
   Future<void> _onDefaultButtonPressed(BuildContext context) async {
-    final String clientId = context.read<ClientBloc>().clientId;
+    final String clientId = context.read<ClientCubit>().clientId;
     final _EntityToAdd? entityToAdd =
         await _askForEntityToAdd(context, _buttonKey, currentRoute);
     if (entityToAdd != null) {
@@ -78,7 +78,7 @@ class ClientExtendedFAB extends StatelessWidget {
   }
 
   Future<void> _onPressed(BuildContext context) async {
-    final String clientId = context.read<ClientBloc>().clientId;
+    final String clientId = context.read<ClientCubit>().clientId;
     final _EntityToAdd? entityToAdd =
         await _askForEntityToAdd(context, _buttonKey, currentRoute);
     if (entityToAdd != null) {

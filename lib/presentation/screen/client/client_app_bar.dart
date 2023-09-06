@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/bloc/calendar/calendar_bloc.dart';
-import '../../../domain/bloc/client/client_bloc.dart';
+import '../../../domain/cubit/client/client_cubit.dart';
 import '../../../domain/cubit/date_range_manager_cubit.dart';
 import '../../component/date_range_header_component.dart';
 import '../../component/gap/gap_horizontal_components.dart';
@@ -80,9 +80,10 @@ class _AppBarTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final String? fullName = context.select(
-      (ClientBloc bloc) => bloc.state.name == null || bloc.state.surname == null
-          ? null
-          : '${bloc.state.name} ${bloc.state.surname}',
+      (ClientCubit cubit) =>
+          cubit.state.name == null || cubit.state.surname == null
+              ? null
+              : '${cubit.state.name} ${cubit.state.surname}',
     );
 
     return fullName == null

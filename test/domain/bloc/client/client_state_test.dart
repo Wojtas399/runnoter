@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
-import 'package:runnoter/domain/bloc/client/client_bloc.dart';
+import 'package:runnoter/domain/cubit/client/client_cubit.dart';
 import 'package:runnoter/domain/entity/user.dart';
 
 void main() {
@@ -11,7 +11,8 @@ void main() {
   );
 
   test(
-    'copy with status',
+    'copy with status, '
+    'should set complete status if new value is null',
     () {
       const BlocStatus expectedStatus = BlocStatusComplete();
 
@@ -24,7 +25,8 @@ void main() {
   );
 
   test(
-    'copy with gender',
+    'copy with gender, '
+    'should copy current value if new value is null',
     () {
       const Gender expectedGender = Gender.male;
 
@@ -37,7 +39,8 @@ void main() {
   );
 
   test(
-    'copy with name',
+    'copy with name, '
+    'should copy current value if new value is null',
     () {
       const String expectedName = 'name';
 
@@ -50,7 +53,8 @@ void main() {
   );
 
   test(
-    'copy with surname',
+    'copy with surname, '
+    'should copy current value if new value is null',
     () {
       const String expectedSurname = 'surname';
 
@@ -63,7 +67,8 @@ void main() {
   );
 
   test(
-    'copy with email',
+    'copy with email, '
+    'should copy current value if new value is null',
     () {
       const String expectedEmail = 'email@example.com';
 
