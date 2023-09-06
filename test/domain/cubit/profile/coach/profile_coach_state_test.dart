@@ -14,15 +14,72 @@ void main() {
   );
 
   test(
+    'does coach exist, '
+    'coach id, full name and email are not null, '
+    'should be true',
+    () {
+      state = state.copyWith(
+        coachId: 'c1',
+        coachFullName: 'full name',
+        coachEmail: 'email',
+      );
+
+      expect(state.doesCoachExist, true);
+    },
+  );
+
+  test(
+    'does coach exist, '
+    'coach id is null, '
+    'should be false',
+    () {
+      state = state.copyWith(
+        coachFullName: 'full name',
+        coachEmail: 'email',
+      );
+
+      expect(state.doesCoachExist, false);
+    },
+  );
+
+  test(
+    'does coach exist, '
+    'coach full name is null, '
+    'should be false',
+    () {
+      state = state.copyWith(
+        coachId: 'c1',
+        coachEmail: 'email',
+      );
+
+      expect(state.doesCoachExist, false);
+    },
+  );
+
+  test(
+    'does coach exist, '
+    'coach email is null, '
+    'should be false',
+    () {
+      state = state.copyWith(
+        coachId: 'c1',
+        coachFullName: 'full name',
+      );
+
+      expect(state.doesCoachExist, false);
+    },
+  );
+
+  test(
     'copy with status, '
     'should set complete status if new value is null',
     () {
-      const BlocStatus expectedStatus = BlocStatusLoading();
+      const BlocStatus expected = BlocStatusLoading();
 
-      state = state.copyWith(status: expectedStatus);
+      state = state.copyWith(status: expected);
       final state2 = state.copyWith();
 
-      expect(state.status, expectedStatus);
+      expect(state.status, expected);
       expect(state2.status, const BlocStatusComplete());
     },
   );
@@ -31,18 +88,18 @@ void main() {
     'copy with sentRequests, '
     'should copy current value if new value is null',
     () {
-      final List<CoachingRequestShort> expectedSentRequests = [
+      final List<CoachingRequestShort> expected = [
         CoachingRequestShort(
           id: 'r1',
           personToDisplay: createPerson(id: 'u1'),
         ),
       ];
 
-      state = state.copyWith(sentRequests: expectedSentRequests);
+      state = state.copyWith(sentRequests: expected);
       final state2 = state.copyWith();
 
-      expect(state.sentRequests, expectedSentRequests);
-      expect(state2.sentRequests, expectedSentRequests);
+      expect(state.sentRequests, expected);
+      expect(state2.sentRequests, expected);
     },
   );
 
@@ -50,18 +107,18 @@ void main() {
     'copy with receivedRequests, '
     'should copy current value if new value is null',
     () {
-      final List<CoachingRequestShort> expectedReceivedRequests = [
+      final List<CoachingRequestShort> expected = [
         CoachingRequestShort(
           id: 'r1',
           personToDisplay: createPerson(id: 'u1'),
         ),
       ];
 
-      state = state.copyWith(receivedRequests: expectedReceivedRequests);
+      state = state.copyWith(receivedRequests: expected);
       final state2 = state.copyWith();
 
-      expect(state.receivedRequests, expectedReceivedRequests);
-      expect(state2.receivedRequests, expectedReceivedRequests);
+      expect(state.receivedRequests, expected);
+      expect(state2.receivedRequests, expected);
     },
   );
 
@@ -69,27 +126,79 @@ void main() {
     'copy with coach, '
     'should copy current value if new value is null',
     () {
-      final Person expectedCoach = createPerson(id: 'c1');
+      final Person expected = createPerson(id: 'c1');
 
-      state = state.copyWith(coach: expectedCoach);
+      state = state.copyWith(coach: expected);
       final state2 = state.copyWith();
 
-      expect(state.coach, expectedCoach);
-      expect(state2.coach, expectedCoach);
+      expect(state.coach, expected);
+      expect(state2.coach, expected);
     },
   );
 
   test(
-    'copy with setCoachAsNull, '
-    'should set coach as null if set to true',
+    'copy with coachId, '
+    'should copy current value if new value is null',
     () {
-      final Person coach = createPerson(id: 'c1');
+      const String expected = 'c1';
 
-      state = state.copyWith(coach: coach);
-      final state2 = state.copyWith(setCoachAsNull: true);
+      state = state.copyWith(coachId: expected);
+      final state2 = state.copyWith();
 
-      expect(state.coach, coach);
-      expect(state2.coach, null);
+      expect(state.coachId, expected);
+      expect(state2.coachId, expected);
+    },
+  );
+
+  test(
+    'copy with coachFullName, '
+    'should copy current value if new value is null',
+    () {
+      const String expected = 'coach full name';
+
+      state = state.copyWith(coachFullName: expected);
+      final state2 = state.copyWith();
+
+      expect(state.coachFullName, expected);
+      expect(state2.coachFullName, expected);
+    },
+  );
+
+  test(
+    'copy with coachEmail, '
+    'should copy current value if new value is null',
+    () {
+      const String expected = 'email@example.com';
+
+      state = state.copyWith(coachEmail: expected);
+      final state2 = state.copyWith();
+
+      expect(state.coachEmail, expected);
+      expect(state2.coachEmail, expected);
+    },
+  );
+
+  test(
+    'copy with deletedCoachParams, '
+    'should set coach id, full name and email as null if set to true',
+    () {
+      const String coachId = 'c1';
+      const String coachFullName = 'full name';
+      const String coachEmail = 'email';
+
+      state = state.copyWith(
+        coachId: coachId,
+        coachFullName: coachFullName,
+        coachEmail: coachEmail,
+      );
+      final state2 = state.copyWith(deletedCoachParams: true);
+
+      expect(state.coachId, coachId);
+      expect(state.coachFullName, coachFullName);
+      expect(state.coachEmail, coachEmail);
+      expect(state2.coachId, null);
+      expect(state2.coachFullName, null);
+      expect(state2.coachEmail, null);
     },
   );
 

@@ -65,13 +65,22 @@ void main() {
     'initialize coach listener, '
     'coach is not null',
     () {
-      final Person expectedCoach = createPerson(id: 'c1', name: 'name');
-      final Person expectedUpdatedCoach = createPerson(id: 'c1', name: 'na');
+      final Person expectedCoach = createPerson(
+        id: 'c1',
+        name: 'name',
+        surname: 'surname',
+        email: 'email',
+      );
+      final Person expectedUpdatedCoach = createPerson(
+        id: 'c1',
+        name: 'na',
+        surname: 'su',
+        email: 'em',
+      );
       final StreamController<Person?> coach$ = StreamController()
         ..add(expectedCoach);
 
       blocTest(
-        'coach is not null, '
         'should set listener of coach',
         build: () => ProfileCoachCubit(),
         setUp: () {
@@ -89,10 +98,17 @@ void main() {
           ProfileCoachState(
             status: const BlocStatusComplete(),
             coach: expectedCoach,
+            coachId: expectedCoach.id,
+            coachFullName: '${expectedCoach.name} ${expectedCoach.surname}',
+            coachEmail: expectedCoach.email,
           ),
           ProfileCoachState(
             status: const BlocStatusComplete(),
             coach: expectedUpdatedCoach,
+            coachId: expectedUpdatedCoach.id,
+            coachFullName:
+                '${expectedUpdatedCoach.name} ${expectedUpdatedCoach.surname}',
+            coachEmail: expectedUpdatedCoach.email,
           ),
         ],
         verify: (_) {

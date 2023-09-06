@@ -58,7 +58,10 @@ class ProfileCoachCubit
       }
       emit(state.copyWith(
         coach: coach,
-        setCoachAsNull: coach == null,
+        coachId: coach?.id,
+        coachFullName: coach != null ? '${coach.name} ${coach.surname}' : null,
+        coachEmail: coach?.email,
+        deletedCoachParams: coach == null,
       ));
     });
   }
