@@ -7,9 +7,9 @@ import '../../../domain/additional_model/coaching_request_short.dart';
 import '../../../domain/bloc/profile/coach/profile_coach_bloc.dart';
 import '../../../domain/entity/person.dart';
 import '../../component/gap/gap_components.dart';
-import '../../component/gap/gap_horizontal_components.dart';
 import '../../component/text/body_text_components.dart';
 import '../../component/text/title_text_components.dart';
+import '../../dialog/person_details/person_details_dialog.dart';
 import '../../dialog/persons_search/persons_search_dialog.dart';
 import '../../formatter/person_formatter.dart';
 import '../../service/dialog_service.dart';
@@ -56,7 +56,10 @@ class _Coach extends StatelessWidget {
                   onPressed: () => _onOpenChat(context),
                   icon: const Icon(Icons.chat_outlined),
                 ),
-                const GapHorizontal8(),
+                IconButton(
+                  onPressed: () => _onShowDetails(context),
+                  icon: const Icon(Icons.info_outline),
+                ),
                 IconButton(
                   onPressed: () => _onDelete(context),
                   icon: const Icon(Icons.person_remove_outlined),
@@ -70,6 +73,18 @@ class _Coach extends StatelessWidget {
     context.read<ProfileCoachBloc>().add(
           const ProfileCoachEventOpenChat(),
         );
+  }
+
+  void _onShowDetails(BuildContext context) {
+    final String? coachId = context.read<ProfileCoachBloc>().state.coach?.id;
+    if (coachId != null) {
+      showDialogDependingOnScreenSize(
+        PersonDetailsDialog(
+          personId: coachId,
+          personType: PersonType.coach,
+        ),
+      );
+    }
   }
 
   Future<void> _onDelete(BuildContext context) async {

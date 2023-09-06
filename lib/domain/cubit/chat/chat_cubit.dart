@@ -67,7 +67,6 @@ class ChatCubit extends Cubit<ChatState> {
         );
         emit(state.copyWith(
           loggedUserId: loggedUserId,
-          recipientId: recipient.id,
           recipientFullName: '${recipient.name} ${recipient.surname}',
           messagesFromLatest: sortedMessages,
         ));

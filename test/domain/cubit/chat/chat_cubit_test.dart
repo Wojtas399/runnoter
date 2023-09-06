@@ -119,14 +119,12 @@ void main() {
           ChatState(
             status: const BlocStatusComplete(),
             loggedUserId: loggedUserId,
-            recipientId: recipient.id,
             recipientFullName: '${recipient.name} ${recipient.surname}',
             messagesFromLatest: messages,
           ),
           ChatState(
             status: const BlocStatusComplete(),
             loggedUserId: loggedUserId,
-            recipientId: recipient.id,
             recipientFullName: '${recipient.name} ${recipient.surname}',
             messagesFromLatest: updatedMessages.reversed.toList(),
           ),
