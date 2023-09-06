@@ -9,6 +9,7 @@ import '../../component/gap/gap_components.dart';
 import '../../component/responsive_layout_component.dart';
 import '../../component/value_with_label_and_icon_component.dart';
 import '../../extension/gender_extensions.dart';
+import '../../formatter/date_formatter.dart';
 import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
 
@@ -102,6 +103,8 @@ class _ClientDetails extends StatelessWidget {
         gap,
         _Surname(),
         gap,
+        _DateOfBirth(),
+        gap,
         _Email(),
       ],
     );
@@ -155,6 +158,23 @@ class _Surname extends StatelessWidget {
       iconData: Icons.person_outline_rounded,
       label: Str.of(context).surname,
       value: surname ?? '',
+    );
+  }
+}
+
+class _DateOfBirth extends StatelessWidget {
+  const _DateOfBirth();
+
+  @override
+  Widget build(BuildContext context) {
+    final DateTime? dateOfBirth = context.select(
+      (ClientCubit cubit) => cubit.state.dateOfBirth,
+    );
+
+    return ValueWithLabelAndIcon(
+      iconData: Icons.cake_outlined,
+      label: Str.of(context).dateOfBirth,
+      value: dateOfBirth?.toDateWithDots() ?? '',
     );
   }
 }

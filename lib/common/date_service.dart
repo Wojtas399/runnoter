@@ -55,7 +55,5 @@ class DateService {
         date1.day == date2.day;
   }
 
-  int calculateAge(DateTime date) => DateTime.now().year - date.year;
-
   DateTime _getDate(DateTime d) => DateTime(d.year, d.month, d.day);
 }

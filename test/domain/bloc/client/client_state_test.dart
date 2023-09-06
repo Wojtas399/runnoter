@@ -81,16 +81,16 @@ void main() {
   );
 
   test(
-    'copy with age, '
+    'copy with dateOfBirth, '
     'should copy current value if new value is null',
     () {
-      const int expected = 30;
+      final DateTime expected = DateTime(2003, 1, 10);
 
-      state = state.copyWith(age: expected);
+      state = state.copyWith(dateOfBirth: expected);
       final state2 = state.copyWith();
 
-      expect(state.age, expected);
-      expect(state2.age, expected);
+      expect(state.dateOfBirth, expected);
+      expect(state2.dateOfBirth, expected);
     },
   );
 }

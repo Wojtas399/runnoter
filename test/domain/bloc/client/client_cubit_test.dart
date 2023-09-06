@@ -54,17 +54,9 @@ void main() {
       blocTest(
         'should set listener of client',
         build: () => ClientCubit(clientId: clientId),
-        setUp: () {
-          personRepository.mockGetPersonById(
-            personStream: client$.stream,
-          );
-          when(
-            () => dateService.calculateAge(DateTime(2001, 1, 10)),
-          ).thenReturn(22);
-          when(
-            () => dateService.calculateAge(DateTime(2002, 1, 10)),
-          ).thenReturn(21);
-        },
+        setUp: () => personRepository.mockGetPersonById(
+          personStream: client$.stream,
+        ),
         act: (bloc) async {
           bloc.initialize();
           await bloc.stream.first;
@@ -77,7 +69,7 @@ void main() {
             name: client.name,
             surname: client.surname,
             email: client.email,
-            age: 22,
+            dateOfBirth: client.dateOfBirth,
           ),
           ClientState(
             status: const BlocStatusComplete(),
@@ -85,7 +77,7 @@ void main() {
             name: updatedClient.name,
             surname: updatedClient.surname,
             email: updatedClient.email,
-            age: 21,
+            dateOfBirth: updatedClient.dateOfBirth,
           ),
         ],
         verify: (_) => verify(

@@ -5,7 +5,7 @@ class ClientState extends CubitState<ClientState> {
   final String? name;
   final String? surname;
   final String? email;
-  final int? age;
+  final DateTime? dateOfBirth;
 
   const ClientState({
     required super.status,
@@ -13,11 +13,11 @@ class ClientState extends CubitState<ClientState> {
     this.name,
     this.surname,
     this.email,
-    this.age,
+    this.dateOfBirth,
   });
 
   @override
-  List<Object?> get props => [status, gender, name, surname, age];
+  List<Object?> get props => [status, gender, name, surname, dateOfBirth];
 
   @override
   ClientState copyWith({
@@ -26,7 +26,7 @@ class ClientState extends CubitState<ClientState> {
     String? name,
     String? surname,
     String? email,
-    int? age,
+    DateTime? dateOfBirth,
   }) =>
       ClientState(
         status: status ?? const BlocStatusComplete(),
@@ -34,6 +34,6 @@ class ClientState extends CubitState<ClientState> {
         name: name ?? this.name,
         surname: surname ?? this.surname,
         email: email ?? this.email,
-        age: age ?? this.age,
+        dateOfBirth: dateOfBirth ?? this.dateOfBirth,
       );
 }
