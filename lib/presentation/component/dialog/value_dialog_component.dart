@@ -170,40 +170,38 @@ class _FullScreenDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Dialog.fullscreen(
-      child: Scaffold(
-        appBar: AppBar(
-          leading: const IconButton(
-            onPressed: popRoute,
-            icon: Icon(Icons.close),
-          ),
-          title: Text(title),
-          actions: [
-            FilledButton(
-              onPressed: isSaveButtonDisabled ? null : onSaveButtonPressed,
-              child: Text(Str.of(context).save),
-            ),
-            const GapHorizontal16(),
-          ],
+    return Scaffold(
+      appBar: AppBar(
+        leading: const IconButton(
+          onPressed: popRoute,
+          icon: Icon(Icons.close),
         ),
-        body: SafeArea(
-          child: Container(
-            padding: const EdgeInsets.all(24),
-            color: Colors.transparent,
-            child: Column(
-              children: [
-                FormTextField(
-                  label: label,
-                  icon: textFieldIcon,
-                  isRequired: isValueRequired,
-                  controller: textController,
-                  validator: validator,
-                  maxLines: 1,
-                  onTapOutside: (_) => unfocusInputs(),
-                  onSubmitted: (_) => onSaveButtonPressed(),
-                ),
-              ],
-            ),
+        title: Text(title),
+        actions: [
+          FilledButton(
+            onPressed: isSaveButtonDisabled ? null : onSaveButtonPressed,
+            child: Text(Str.of(context).save),
+          ),
+          const GapHorizontal16(),
+        ],
+      ),
+      body: SafeArea(
+        child: Container(
+          padding: const EdgeInsets.all(24),
+          color: Colors.transparent,
+          child: Column(
+            children: [
+              FormTextField(
+                label: label,
+                icon: textFieldIcon,
+                isRequired: isValueRequired,
+                controller: textController,
+                validator: validator,
+                maxLines: 1,
+                onTapOutside: (_) => unfocusInputs(),
+                onSubmitted: (_) => onSaveButtonPressed(),
+              ),
+            ],
           ),
         ),
       ),

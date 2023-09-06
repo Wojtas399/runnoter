@@ -465,6 +465,10 @@
   "@profileChangeEmailDialogMessage": {
     "description": "Message of the dialog to change email"
   },
+  "profileChangeDateOfBirthDialogTitle": "Zmień datę urodzenia",
+  "@profileChangeDateOfBirthDialogTitle": {
+    "description": "Title of the dialog to change date of birth"
+  },
   "profileNewPasswordDialogTitle": "Zmień hasło",
   "@profileNewPasswordDialogTitle": {
     "description": "Title of the dialog to update password"

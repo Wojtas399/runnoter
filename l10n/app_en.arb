@@ -124,6 +124,7 @@
   "profileNewSurnameDialogTitle": "Change surname",
   "profileChangeEmailDialogTitle": "Change email",
   "profileChangeEmailDialogMessage": "You will receive a verification message to confirm your new email address.",
+  "profileChangeDateOfBirthDialogTitle": "Change date of birth",
   "profileNewPasswordDialogTitle": "Change password",
   "profileNewPasswordDialogNewPassword": "New password",
   "profileNewPasswordDialogNewPasswordConfirmation": "New password confirmation",

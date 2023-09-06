@@ -129,7 +129,7 @@ class _DateOfBirth extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DateOfBirthPicker(
-      onDateSelected:
+      onDatePicked:
           context.read<RequiredDataCompletionCubit>().dateOfBirthChanged,
     );
   }

@@ -10,8 +10,10 @@ import '../../component/text/title_text_components.dart';
 import '../../component/value_with_label_and_icon_component.dart';
 import '../../extension/account_type_extensions.dart';
 import '../../extension/gender_extensions.dart';
+import '../../formatter/date_formatter.dart';
 import '../../service/dialog_service.dart';
 import '../../service/validation_service.dart';
+import 'profile_date_of_birth_dialog.dart';
 import 'profile_email_dialog.dart';
 import 'profile_gender_dialog.dart';
 import 'profile_password_dialog.dart';
@@ -38,6 +40,8 @@ class ProfileUserDataSection extends StatelessWidget {
         const _Name(),
         gap,
         const _Surname(),
+        gap,
+        const _DateOfBirth(),
         gap,
         const _Email(),
         gap,
@@ -172,6 +176,38 @@ class _Surname extends StatelessWidget {
       },
     );
   }
+}
+
+class _DateOfBirth extends StatelessWidget {
+  const _DateOfBirth();
+
+  @override
+  Widget build(BuildContext context) {
+    final DateTime? dateOfBirth = context.select(
+      (ProfileIdentitiesCubit cubit) => cubit.state.dateOfBirth,
+    );
+
+    return ValueWithLabelAndIcon(
+      iconData: Icons.cake_outlined,
+      label: Str.of(context).dateOfBirth,
+      value: dateOfBirth?.toDateWithDots() ?? '',
+      onPressed: () => _onPressed(context),
+    );
+  }
+
+  Future<void> _onPressed(BuildContext context) async {
+    final ProfileIdentitiesCubit cubit = context.read<ProfileIdentitiesCubit>();
+    final DateTime? newDateOfBirth = await _askForNewDateOfBirth(context);
+    if (newDateOfBirth != null) cubit.updateDateOfBirth(newDateOfBirth);
+  }
+
+  Future<DateTime?> _askForNewDateOfBirth(BuildContext context) async =>
+      await showDialogDependingOnScreenSize(
+        BlocProvider<ProfileIdentitiesCubit>.value(
+          value: context.read<ProfileIdentitiesCubit>(),
+          child: const ProfileDateOfBirthDialog(),
+        ),
+      );
 }
 
 class _Email extends StatelessWidget {

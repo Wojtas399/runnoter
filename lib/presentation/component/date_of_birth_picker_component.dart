@@ -3,16 +3,30 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 
 class DateOfBirthPicker extends StatefulWidget {
-  final Function(DateTime date) onDateSelected;
+  final DateTime? initialDateOfBirth;
+  final Function(DateTime date) onDatePicked;
 
-  const DateOfBirthPicker({super.key, required this.onDateSelected});
+  const DateOfBirthPicker({
+    super.key,
+    this.initialDateOfBirth,
+    required this.onDatePicked,
+  });
 
   @override
   State<StatefulWidget> createState() => _State();
 }
 
 class _State extends State<DateOfBirthPicker> {
+  final DateFormat _dateFormat = DateFormat('dd.MM.yyyy');
   final TextEditingController _controller = TextEditingController();
+
+  @override
+  void initState() {
+    if (widget.initialDateOfBirth != null) {
+      _controller.text = _dateFormat.format(widget.initialDateOfBirth!);
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,14 +48,13 @@ class _State extends State<DateOfBirthPicker> {
     final DateTime? pickedDate = await showDatePicker(
       context: context,
       initialDate: _controller.text.isNotEmpty
-          ? DateFormat('dd.MM.yyyy').parse(_controller.text)
+          ? _dateFormat.parse(_controller.text)
           : lastDate,
       firstDate: DateTime.fromMillisecondsSinceEpoch(1),
       lastDate: lastDate,
     );
     if (pickedDate == null) return;
-    String formattedDate = DateFormat('dd.MM.yyyy').format(pickedDate);
-    _controller.text = formattedDate;
-    widget.onDateSelected(pickedDate);
+    _controller.text = _dateFormat.format(pickedDate);
+    widget.onDatePicked(pickedDate);
   }
 }
