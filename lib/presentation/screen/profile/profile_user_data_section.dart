@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
-import '../../../domain/bloc/profile/identities/profile_identities_bloc.dart';
+import '../../../domain/cubit/profile/identities/profile_identities_cubit.dart';
 import '../../../domain/entity/user.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/text/title_text_components.dart';
@@ -55,7 +55,7 @@ class _AccountType extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AccountType? accountType = context.select(
-      (ProfileIdentitiesBloc bloc) => bloc.state.accountType,
+      (ProfileIdentitiesCubit cubit) => cubit.state.accountType,
     );
 
     return ValueWithLabelAndIcon(
@@ -72,7 +72,7 @@ class _Gender extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Gender? gender = context.select(
-      (ProfileIdentitiesBloc bloc) => bloc.state.gender,
+      (ProfileIdentitiesCubit cubit) => cubit.state.gender,
     );
 
     return ValueWithLabelAndIcon(
@@ -86,7 +86,7 @@ class _Gender extends StatelessWidget {
   Future<void> _onPressed(BuildContext context) async =>
       showDialogDependingOnScreenSize(
         BlocProvider.value(
-          value: context.read<ProfileIdentitiesBloc>(),
+          value: context.read<ProfileIdentitiesCubit>(),
           child: const ProfileGenderDialog(),
         ),
       );
@@ -98,7 +98,7 @@ class _Name extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final String? username = context.select(
-      (ProfileIdentitiesBloc bloc) => bloc.state.username,
+      (ProfileIdentitiesCubit cubit) => cubit.state.username,
     );
 
     return ValueWithLabelAndIcon(
@@ -112,15 +112,9 @@ class _Name extends StatelessWidget {
   }
 
   Future<void> _onPressed(BuildContext context) async {
-    final ProfileIdentitiesBloc bloc = context.read<ProfileIdentitiesBloc>();
+    final ProfileIdentitiesCubit cubit = context.read<ProfileIdentitiesCubit>();
     final String? newName = await _askForNewUsername(context);
-    if (newName != null) {
-      bloc.add(
-        ProfileIdentitiesEventUpdateUsername(
-          username: newName,
-        ),
-      );
-    }
+    if (newName != null) cubit.updateName(newName);
   }
 
   Future<String?> _askForNewUsername(BuildContext context) async {
@@ -129,7 +123,7 @@ class _Name extends StatelessWidget {
       title: str.profileNewUsernameDialogTitle,
       label: str.name,
       textFieldIcon: Icons.person_rounded,
-      value: context.read<ProfileIdentitiesBloc>().state.username,
+      value: context.read<ProfileIdentitiesCubit>().state.username,
       isValueRequired: true,
       validator: (String? value) {
         if (value != null && !isNameOrSurnameValid(value)) {
@@ -147,29 +141,21 @@ class _Surname extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final String? surname = context.select(
-      (ProfileIdentitiesBloc bloc) => bloc.state.surname,
+      (ProfileIdentitiesCubit cubit) => cubit.state.surname,
     );
 
     return ValueWithLabelAndIcon(
       iconData: Icons.person_outline_rounded,
       label: Str.of(context).surname,
       value: surname ?? '',
-      onPressed: () {
-        _onPressed(context);
-      },
+      onPressed: () => _onPressed(context),
     );
   }
 
   Future<void> _onPressed(BuildContext context) async {
-    final ProfileIdentitiesBloc bloc = context.read<ProfileIdentitiesBloc>();
+    final ProfileIdentitiesCubit cubit = context.read<ProfileIdentitiesCubit>();
     final String? newSurname = await _askForNewSurname(context);
-    if (newSurname != null) {
-      bloc.add(
-        ProfileIdentitiesEventUpdateSurname(
-          surname: newSurname,
-        ),
-      );
-    }
+    if (newSurname != null) cubit.updateSurname(newSurname);
   }
 
   Future<String?> _askForNewSurname(BuildContext context) async {
@@ -178,7 +164,7 @@ class _Surname extends StatelessWidget {
       title: str.profileNewSurnameDialogTitle,
       label: str.surname,
       textFieldIcon: Icons.person_rounded,
-      value: context.read<ProfileIdentitiesBloc>().state.surname,
+      value: context.read<ProfileIdentitiesCubit>().state.surname,
       isValueRequired: true,
       validator: (String? value) {
         if (value != null && !isNameOrSurnameValid(value)) {
@@ -196,10 +182,10 @@ class _Email extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final String? email = context.select(
-      (ProfileIdentitiesBloc bloc) => bloc.state.email,
+      (ProfileIdentitiesCubit cubit) => cubit.state.email,
     );
     final bool? isEmailVerified = context.select(
-      (ProfileIdentitiesBloc bloc) => bloc.state.isEmailVerified,
+      (ProfileIdentitiesCubit cubit) => cubit.state.isEmailVerified,
     );
     String? value = email;
     if (isEmailVerified == false && value != null) {
@@ -216,8 +202,8 @@ class _Email extends StatelessWidget {
 
   Future<void> _onPressed(BuildContext context) async =>
       await showDialogDependingOnScreenSize(
-        BlocProvider<ProfileIdentitiesBloc>.value(
-          value: context.read<ProfileIdentitiesBloc>(),
+        BlocProvider<ProfileIdentitiesCubit>.value(
+          value: context.read<ProfileIdentitiesCubit>(),
           child: const ProfileEmailDialog(),
         ),
       );
@@ -231,16 +217,14 @@ class _ChangePassword extends StatelessWidget {
     return ValueWithLabelAndIcon(
       iconData: Icons.lock_outline,
       value: Str.of(context).profileChangePassword,
-      onPressed: () {
-        _onPressed(context);
-      },
+      onPressed: () => _onPressed(context),
     );
   }
 
   Future<void> _onPressed(BuildContext context) async =>
       showDialogDependingOnScreenSize(
         BlocProvider.value(
-          value: context.read<ProfileIdentitiesBloc>(),
+          value: context.read<ProfileIdentitiesCubit>(),
           child: const ProfilePasswordDialog(),
         ),
       );
@@ -275,9 +259,7 @@ class _DeleteAccountState extends State<_DeleteAccount> {
     if (!confirmed) return;
     final bool reauthenticated = await askForReauthentication();
     if (reauthenticated && mounted) {
-      context.read<ProfileIdentitiesBloc>().add(
-            const ProfileIdentitiesEventDeleteAccount(),
-          );
+      context.read<ProfileIdentitiesCubit>().deleteAccount();
     }
   }
 }

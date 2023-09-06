@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/bloc/profile/identities/profile_identities_bloc.dart';
+import '../../../domain/cubit/profile/identities/profile_identities_cubit.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/gap/gap_horizontal_components.dart';
 import '../../component/padding/paddings_24.dart';
@@ -87,15 +87,9 @@ class _State extends State<ProfilePasswordDialog> {
 
   Future<void> _onSave(BuildContext context) async {
     if (_isSaveButtonDisabled) return;
-    final bloc = context.read<ProfileIdentitiesBloc>();
+    final cubit = context.read<ProfileIdentitiesCubit>();
     final bool reauthenticated = await askForReauthentication();
-    if (reauthenticated) {
-      bloc.add(
-        ProfileIdentitiesEventUpdatePassword(
-          newPassword: _passwordController.text,
-        ),
-      );
-    }
+    if (reauthenticated) cubit.updatePassword(_passwordController.text);
   }
 }
 

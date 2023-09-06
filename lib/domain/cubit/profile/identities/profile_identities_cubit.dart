@@ -1,17 +1,15 @@
 import 'dart:async';
 
-import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../../../../domain/additional_model/bloc_status.dart';
-import '../../../../../domain/additional_model/bloc_with_status.dart';
 import '../../../../../domain/entity/user.dart';
 import '../../../../../domain/repository/user_repository.dart';
 import '../../../../../domain/service/auth_service.dart';
 import '../../../../dependency_injection.dart';
-import '../../../additional_model/bloc_state.dart';
+import '../../../additional_model/cubit_state.dart';
+import '../../../additional_model/cubit_with_status.dart';
 import '../../../additional_model/custom_exception.dart';
 import '../../../repository/blood_test_repository.dart';
 import '../../../repository/health_measurement_repository.dart';
@@ -20,14 +18,10 @@ import '../../../repository/race_repository.dart';
 import '../../../repository/workout_repository.dart';
 import '../../../service/coaching_request_service.dart';
 
-part 'profile_identities_event.dart';
 part 'profile_identities_state.dart';
 
-class ProfileIdentitiesBloc extends BlocWithStatus<
-    ProfileIdentitiesEvent,
-    ProfileIdentitiesState,
-    ProfileIdentitiesBlocInfo,
-    ProfileIdentitiesBlocError> {
+class ProfileIdentitiesCubit extends CubitWithStatus<ProfileIdentitiesState,
+    ProfileIdentitiesCubitInfo, ProfileIdentitiesCubitError> {
   final AuthService _authService;
   final UserRepository _userRepository;
   final WorkoutRepository _workoutRepository;
@@ -36,8 +30,9 @@ class ProfileIdentitiesBloc extends BlocWithStatus<
   final RaceRepository _raceRepository;
   final CoachingRequestService _coachingRequestService;
   final PersonRepository _personRepository;
+  StreamSubscription<ProfileIdentitiesCubitListenedParams>? _listener;
 
-  ProfileIdentitiesBloc({
+  ProfileIdentitiesCubit({
     ProfileIdentitiesState state = const ProfileIdentitiesState(
       status: BlocStatusInitial(),
     ),
@@ -49,27 +44,17 @@ class ProfileIdentitiesBloc extends BlocWithStatus<
         _raceRepository = getIt<RaceRepository>(),
         _coachingRequestService = getIt<CoachingRequestService>(),
         _personRepository = getIt<PersonRepository>(),
-        super(state) {
-    on<ProfileIdentitiesEventInitialize>(
-      _initialize,
-      transformer: restartable(),
-    );
-    on<ProfileIdentitiesEventUpdateGender>(_updateGender);
-    on<ProfileIdentitiesEventUpdateUsername>(_updateUsername);
-    on<ProfileIdentitiesEventUpdateSurname>(_updateSurname);
-    on<ProfileIdentitiesEventUpdateEmail>(_updateEmail);
-    on<ProfileIdentitiesEventSendEmailVerification>(_sendEmailVerification);
-    on<ProfileIdentitiesEventUpdatePassword>(_updatePassword);
-    on<ProfileIdentitiesEventDeleteAccount>(_deleteAccount);
-    on<ProfileIdentitiesEventReloadLoggedUser>(_reloadLoggedUser);
+        super(state);
+
+  @override
+  Future<void> close() {
+    _listener?.cancel();
+    _listener = null;
+    return super.close();
   }
 
-  Future<void> _initialize(
-    ProfileIdentitiesEventInitialize event,
-    Emitter<ProfileIdentitiesState> emit,
-  ) async {
-    final Stream<ProfileIdentitiesBlocListenedParams> stream$ =
-        Rx.combineLatest3(
+  Future<void> initialize() async {
+    _listener ??= Rx.combineLatest3(
       _authService.loggedUserEmail$,
       _authService.hasLoggedUserVerifiedEmail$,
       _loggedUserData$,
@@ -78,183 +63,138 @@ class ProfileIdentitiesBloc extends BlocWithStatus<
         bool? hasLoggedUserVerifiedEmail,
         User? loggedUserData,
       ) =>
-          ProfileIdentitiesBlocListenedParams(
+          ProfileIdentitiesCubitListenedParams(
         loggedUserEmail: loggedUserEmail,
         isEmailVerified: hasLoggedUserVerifiedEmail,
         loggedUserData: loggedUserData,
       ),
-    );
-    await emit.forEach(
-      stream$,
-      onData: (ProfileIdentitiesBlocListenedParams params) => state.copyWith(
+    ).listen(
+      (ProfileIdentitiesCubitListenedParams params) => emit(state.copyWith(
         accountType: params.loggedUserData?.accountType,
         gender: params.loggedUserData?.gender,
         username: params.loggedUserData?.name,
         surname: params.loggedUserData?.surname,
         email: params.loggedUserEmail,
         isEmailVerified: params.isEmailVerified,
-      ),
+      )),
     );
   }
 
-  Future<void> _updateGender(
-    ProfileIdentitiesEventUpdateGender event,
-    Emitter<ProfileIdentitiesState> emit,
-  ) async {
+  Future<void> updateGender(Gender gender) async {
     final Gender? previousGender = state.gender;
-    if (event.gender == previousGender) return;
+    if (gender == previousGender) return;
     final String? loggedUserId = await _authService.loggedUserId$.first;
     if (loggedUserId == null) {
-      emitNoLoggedUserStatus(emit);
+      emitNoLoggedUserStatus();
       return;
     }
-    emit(state.copyWith(
-      gender: event.gender,
-    ));
+    emit(state.copyWith(gender: gender));
     try {
-      await _userRepository.updateUser(
-        userId: loggedUserId,
-        gender: event.gender,
-      );
+      await _userRepository.updateUser(userId: loggedUserId, gender: gender);
     } catch (_) {
-      emit(state.copyWith(
-        gender: previousGender,
-      ));
+      emit(state.copyWith(gender: previousGender));
     }
   }
 
-  Future<void> _updateUsername(
-    ProfileIdentitiesEventUpdateUsername event,
-    Emitter<ProfileIdentitiesState> emit,
-  ) async {
+  Future<void> updateName(String username) async {
     final String? loggedUserId = await _authService.loggedUserId$.first;
     if (loggedUserId == null) {
-      emitNoLoggedUserStatus(emit);
+      emitNoLoggedUserStatus();
       return;
     }
-    emitLoadingStatus(emit);
-    await _userRepository.updateUser(
-      userId: loggedUserId,
-      name: event.username,
-    );
-    emitCompleteStatus(emit, info: ProfileIdentitiesBlocInfo.dataSaved);
+    emitLoadingStatus();
+    await _userRepository.updateUser(userId: loggedUserId, name: username);
+    emitCompleteStatus(info: ProfileIdentitiesCubitInfo.dataSaved);
   }
 
-  Future<void> _updateSurname(
-    ProfileIdentitiesEventUpdateSurname event,
-    Emitter<ProfileIdentitiesState> emit,
-  ) async {
+  Future<void> updateSurname(String surname) async {
     final String? loggedUserId = await _authService.loggedUserId$.first;
     if (loggedUserId == null) {
-      emitNoLoggedUserStatus(emit);
+      emitNoLoggedUserStatus();
       return;
     }
-    emitLoadingStatus(emit);
-    await _userRepository.updateUser(
-      userId: loggedUserId,
-      surname: event.surname,
-    );
-    emitCompleteStatus(emit, info: ProfileIdentitiesBlocInfo.dataSaved);
+    emitLoadingStatus();
+    await _userRepository.updateUser(userId: loggedUserId, surname: surname);
+    emitCompleteStatus(info: ProfileIdentitiesCubitInfo.dataSaved);
   }
 
-  Future<void> _updateEmail(
-    ProfileIdentitiesEventUpdateEmail event,
-    Emitter<ProfileIdentitiesState> emit,
-  ) async {
+  Future<void> updateEmail(String email) async {
     final String? loggedUserId = await _authService.loggedUserId$.first;
     if (loggedUserId == null) {
-      emitNoLoggedUserStatus(emit);
+      emitNoLoggedUserStatus();
       return;
     }
-    emitLoadingStatus(emit);
+    emitLoadingStatus();
     try {
-      await _authService.updateEmail(newEmail: event.newEmail);
+      await _authService.updateEmail(newEmail: email);
       await _authService.sendEmailVerification();
-      await _userRepository.updateUser(
-        userId: loggedUserId,
-        email: event.newEmail,
-      );
-      emitCompleteStatus(emit, info: ProfileIdentitiesBlocInfo.emailChanged);
+      await _userRepository.updateUser(userId: loggedUserId, email: email);
+      emitCompleteStatus(info: ProfileIdentitiesCubitInfo.emailChanged);
     } on AuthException catch (authException) {
       if (authException.code == AuthExceptionCode.emailAlreadyInUse) {
-        emitErrorStatus(emit, ProfileIdentitiesBlocError.emailAlreadyInUse);
+        emitErrorStatus(ProfileIdentitiesCubitError.emailAlreadyInUse);
       } else {
-        emitUnknownErrorStatus(emit);
+        emitUnknownErrorStatus();
         rethrow;
       }
     } on NetworkException catch (networkException) {
       if (networkException.code == NetworkExceptionCode.requestFailed) {
-        emitNoInternetConnectionStatus(emit);
+        emitNoInternetConnectionStatus();
       }
     } on UnknownException catch (_) {
-      emitUnknownErrorStatus(emit);
+      emitUnknownErrorStatus();
       rethrow;
     }
   }
 
-  Future<void> _sendEmailVerification(
-    ProfileIdentitiesEventSendEmailVerification event,
-    Emitter<ProfileIdentitiesState> emit,
-  ) async {
-    emitLoadingStatus(emit);
+  Future<void> sendEmailVerification() async {
+    emitLoadingStatus();
     await _authService.sendEmailVerification();
-    emitCompleteStatus(
-      emit,
-      info: ProfileIdentitiesBlocInfo.emailVerificationSent,
-    );
+    emitCompleteStatus(info: ProfileIdentitiesCubitInfo.emailVerificationSent);
   }
 
-  Future<void> _updatePassword(
-    ProfileIdentitiesEventUpdatePassword event,
-    Emitter<ProfileIdentitiesState> emit,
-  ) async {
-    emitLoadingStatus(emit);
+  Future<void> updatePassword(String newPassword) async {
+    emitLoadingStatus();
     try {
-      await _authService.updatePassword(newPassword: event.newPassword);
-      emitCompleteStatus(emit, info: ProfileIdentitiesBlocInfo.dataSaved);
+      await _authService.updatePassword(newPassword: newPassword);
+      emitCompleteStatus(info: ProfileIdentitiesCubitInfo.dataSaved);
     } on NetworkException catch (networkException) {
       if (networkException.code == NetworkExceptionCode.requestFailed) {
-        emitNoInternetConnectionStatus(emit);
+        emitNoInternetConnectionStatus();
       }
     } on UnknownException catch (_) {
-      emitUnknownErrorStatus(emit);
+      emitUnknownErrorStatus();
       rethrow;
     }
   }
 
-  Future<void> _deleteAccount(
-    ProfileIdentitiesEventDeleteAccount event,
-    Emitter<ProfileIdentitiesState> emit,
-  ) async {
+  Future<void> deleteAccount() async {
     final String? loggedUserId = await _authService.loggedUserId$.first;
     if (loggedUserId == null) {
-      emitNoLoggedUserStatus(emit);
+      emitNoLoggedUserStatus();
       return;
     }
-    emitLoadingStatus(emit);
+    emitLoadingStatus();
     try {
       await _deleteAllLoggedUserData(loggedUserId);
       await _authService.deleteAccount();
-      emitCompleteStatus(emit, info: ProfileIdentitiesBlocInfo.accountDeleted);
+      emitCompleteStatus(info: ProfileIdentitiesCubitInfo.accountDeleted);
     } on NetworkException catch (networkException) {
       if (networkException.code == NetworkExceptionCode.requestFailed) {
-        emitNoInternetConnectionStatus(emit);
+        emitNoInternetConnectionStatus();
       }
     } on UnknownException catch (_) {
-      emitUnknownErrorStatus(emit);
+      emitUnknownErrorStatus();
       rethrow;
     }
   }
 
-  Future<void> _reloadLoggedUser(
-    ProfileIdentitiesEventReloadLoggedUser event,
-    Emitter<ProfileIdentitiesState> emit,
-  ) async {
+  Future<void> reloadLoggedUser() async {
     try {
       await _authService.reloadLoggedUser();
     } on NetworkException catch (networkException) {
       if (networkException.code == NetworkExceptionCode.requestFailed) {
-        emitNoInternetConnectionStatus(emit);
+        emitNoInternetConnectionStatus();
       }
     }
   }
@@ -282,12 +222,12 @@ class ProfileIdentitiesBloc extends BlocWithStatus<
   }
 }
 
-class ProfileIdentitiesBlocListenedParams extends Equatable {
+class ProfileIdentitiesCubitListenedParams extends Equatable {
   final String? loggedUserEmail;
   final bool? isEmailVerified;
   final User? loggedUserData;
 
-  const ProfileIdentitiesBlocListenedParams({
+  const ProfileIdentitiesCubitListenedParams({
     required this.loggedUserEmail,
     required this.isEmailVerified,
     required this.loggedUserData,
@@ -297,11 +237,11 @@ class ProfileIdentitiesBlocListenedParams extends Equatable {
   List<Object?> get props => [loggedUserEmail, isEmailVerified, loggedUserData];
 }
 
-enum ProfileIdentitiesBlocInfo {
+enum ProfileIdentitiesCubitInfo {
   dataSaved,
   emailChanged,
   emailVerificationSent,
   accountDeleted,
 }
 
-enum ProfileIdentitiesBlocError { emailAlreadyInUse }
+enum ProfileIdentitiesCubitError { emailAlreadyInUse }

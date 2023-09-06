@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/bloc/profile/identities/profile_identities_bloc.dart';
+import '../../../domain/cubit/profile/identities/profile_identities_cubit.dart';
 import '../../component/body/medium_body_component.dart';
 import '../../component/card_body_component.dart';
 import '../../component/gap/gap_components.dart';
@@ -16,7 +16,8 @@ class ProfileContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
-      onRefresh: () async => _onRefresh(context),
+      onRefresh: () async =>
+          await context.read<ProfileIdentitiesCubit>().reloadLoggedUser(),
       child: const SingleChildScrollView(
         child: MediumBody(
           child: Padding(
@@ -30,12 +31,6 @@ class ProfileContent extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  void _onRefresh(BuildContext context) {
-    context.read<ProfileIdentitiesBloc>().add(
-          const ProfileIdentitiesEventReloadLoggedUser(),
-        );
   }
 }
 

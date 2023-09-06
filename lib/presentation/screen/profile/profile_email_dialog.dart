@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/bloc/profile/identities/profile_identities_bloc.dart';
+import '../../../domain/cubit/profile/identities/profile_identities_cubit.dart';
 import '../../component/form_text_field_component.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/gap/gap_horizontal_components.dart';
@@ -29,7 +29,7 @@ class _State extends State<ProfileEmailDialog> {
 
   @override
   void initState() {
-    _originalEmail = context.read<ProfileIdentitiesBloc>().state.email ?? '';
+    _originalEmail = context.read<ProfileIdentitiesCubit>().state.email ?? '';
     _emailController.text = _originalEmail ?? '';
     _emailController.addListener(_checkValuesCorrectness);
     super.initState();
@@ -76,13 +76,9 @@ class _State extends State<ProfileEmailDialog> {
 
   Future<void> _onSave(BuildContext context) async {
     if (_isSaveButtonDisabled) return;
-    final bloc = context.read<ProfileIdentitiesBloc>();
+    final cubit = context.read<ProfileIdentitiesCubit>();
     final bool reauthenticated = await askForReauthentication();
-    if (reauthenticated) {
-      bloc.add(
-        ProfileIdentitiesEventUpdateEmail(newEmail: _emailController.text),
-      );
-    }
+    if (reauthenticated) cubit.updateEmail(_emailController.text);
   }
 }
 
@@ -187,7 +183,7 @@ class _Form extends StatelessWidget {
   Widget build(BuildContext context) {
     final str = Str.of(context);
     final bool? isEmailVerified = context.select(
-      (ProfileIdentitiesBloc bloc) => bloc.state.isEmailVerified,
+      (ProfileIdentitiesCubit bloc) => bloc.state.isEmailVerified,
     );
 
     return Column(
@@ -212,17 +208,12 @@ class _Form extends StatelessWidget {
         if (isEmailVerified == false) ...[
           const Gap24(),
           OutlinedButton(
-            onPressed: () => _resendEmailVerification(context),
+            onPressed:
+                context.read<ProfileIdentitiesCubit>().sendEmailVerification,
             child: Text(str.profileResendEmailVerification),
           ),
         ],
       ],
     );
-  }
-
-  void _resendEmailVerification(BuildContext context) {
-    context.read<ProfileIdentitiesBloc>().add(
-          const ProfileIdentitiesEventSendEmailVerification(),
-        );
   }
 }

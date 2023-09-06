@@ -1,6 +1,6 @@
-part of 'profile_identities_bloc.dart';
+part of 'profile_identities_cubit.dart';
 
-class ProfileIdentitiesState extends BlocState {
+class ProfileIdentitiesState extends CubitState {
   final AccountType? accountType;
   final Gender? gender;
   final String? username;

@@ -4,7 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/additional_model/custom_exception.dart';
-import 'package:runnoter/domain/bloc/profile/identities/profile_identities_bloc.dart';
+import 'package:runnoter/domain/cubit/profile/identities/profile_identities_cubit.dart';
 import 'package:runnoter/domain/entity/user.dart';
 import 'package:runnoter/domain/repository/blood_test_repository.dart';
 import 'package:runnoter/domain/repository/health_measurement_repository.dart';
@@ -63,7 +63,7 @@ void main() {
   blocTest(
     'initialize, '
     'should set listener of logged user email, email verification status and data',
-    build: () => ProfileIdentitiesBloc(),
+    build: () => ProfileIdentitiesCubit(),
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
       authService.mockHasLoggedUserVerifiedEmail(expected: true);
@@ -78,7 +78,7 @@ void main() {
         ),
       );
     },
-    act: (bloc) => bloc.add(const ProfileIdentitiesEventInitialize()),
+    act: (cubit) => cubit.initialize(),
     expect: () => [
       const ProfileIdentitiesState(
         status: BlocStatusComplete(),
@@ -101,14 +101,12 @@ void main() {
   blocTest(
     'update gender, '
     "should update gender in state and should call method from user repository to update user's data with new gender",
-    build: () => ProfileIdentitiesBloc(),
+    build: () => ProfileIdentitiesCubit(),
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
       userRepository.mockUpdateUser();
     },
-    act: (bloc) => bloc.add(const ProfileIdentitiesEventUpdateGender(
-      gender: Gender.female,
-    )),
+    act: (cubit) => cubit.updateGender(Gender.female),
     expect: () => [
       const ProfileIdentitiesState(
         status: BlocStatusComplete(),
@@ -130,7 +128,7 @@ void main() {
     'update gender, '
     'method from user repository to update user throws exception, '
     'should set previous gender',
-    build: () => ProfileIdentitiesBloc(
+    build: () => ProfileIdentitiesCubit(
       state: const ProfileIdentitiesState(
         status: BlocStatusInitial(),
         gender: Gender.male,
@@ -140,9 +138,7 @@ void main() {
       authService.mockGetLoggedUserId(userId: loggedUserId);
       userRepository.mockUpdateUser(throwable: 'Exception...');
     },
-    act: (bloc) => bloc.add(const ProfileIdentitiesEventUpdateGender(
-      gender: Gender.female,
-    )),
+    act: (cubit) => cubit.updateGender(Gender.female),
     expect: () => [
       const ProfileIdentitiesState(
         status: BlocStatusComplete(),
@@ -168,11 +164,9 @@ void main() {
     'update gender, '
     'logged user does not exist, '
     'should emit no logged user info',
-    build: () => ProfileIdentitiesBloc(),
+    build: () => ProfileIdentitiesCubit(),
     setUp: () => authService.mockGetLoggedUserId(),
-    act: (bloc) => bloc.add(const ProfileIdentitiesEventUpdateGender(
-      gender: Gender.female,
-    )),
+    act: (cubit) => cubit.updateGender(Gender.female),
     expect: () => [
       const ProfileIdentitiesState(status: BlocStatusNoLoggedUser()),
     ],
@@ -183,34 +177,31 @@ void main() {
     'update gender, '
     'new gender is the same as current gender, '
     'should do nothing',
-    build: () => ProfileIdentitiesBloc(
+    build: () => ProfileIdentitiesCubit(
       state: const ProfileIdentitiesState(
         status: BlocStatusInitial(),
         gender: Gender.male,
       ),
     ),
-    act: (bloc) => bloc.add(const ProfileIdentitiesEventUpdateGender(
-      gender: Gender.male,
-    )),
+    act: (cubit) => cubit.updateGender(Gender.male),
     expect: () => [],
   );
 
   blocTest(
-    'update username, '
+    'update name, '
     'should call method from user repository to update user and should emit info that data have been saved',
-    build: () => ProfileIdentitiesBloc(),
+    build: () => ProfileIdentitiesCubit(),
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
       userRepository.mockUpdateUser();
     },
-    act: (bloc) => bloc.add(const ProfileIdentitiesEventUpdateUsername(
-      username: 'new username',
-    )),
+    act: (cubit) => cubit.updateName('new name'),
     expect: () => [
       const ProfileIdentitiesState(status: BlocStatusLoading()),
       const ProfileIdentitiesState(
-        status: BlocStatusComplete<ProfileIdentitiesBlocInfo>(
-            info: ProfileIdentitiesBlocInfo.dataSaved),
+        status: BlocStatusComplete<ProfileIdentitiesCubitInfo>(
+          info: ProfileIdentitiesCubitInfo.dataSaved,
+        ),
       ),
     ],
     verify: (_) {
@@ -218,21 +209,19 @@ void main() {
       verify(
         () => userRepository.updateUser(
           userId: loggedUserId,
-          name: 'new username',
+          name: 'new name',
         ),
       ).called(1);
     },
   );
 
   blocTest(
-    'update username, '
+    'update name, '
     'logged user does not exist, '
     'should emit no logged user status',
-    build: () => ProfileIdentitiesBloc(),
+    build: () => ProfileIdentitiesCubit(),
     setUp: () => authService.mockGetLoggedUserId(),
-    act: (bloc) => bloc.add(const ProfileIdentitiesEventUpdateUsername(
-      username: 'new username',
-    )),
+    act: (cubit) => cubit.updateName('new name'),
     expect: () => [
       const ProfileIdentitiesState(status: BlocStatusNoLoggedUser()),
     ],
@@ -242,19 +231,17 @@ void main() {
   blocTest(
     'update surname, '
     'should call method from user repository to update user and should emit info that data have been saved',
-    build: () => ProfileIdentitiesBloc(),
+    build: () => ProfileIdentitiesCubit(),
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
       userRepository.mockUpdateUser();
     },
-    act: (bloc) => bloc.add(const ProfileIdentitiesEventUpdateSurname(
-      surname: 'new surname',
-    )),
+    act: (cubit) => cubit.updateSurname('new surname'),
     expect: () => [
       const ProfileIdentitiesState(status: BlocStatusLoading()),
       const ProfileIdentitiesState(
-        status: BlocStatusComplete<ProfileIdentitiesBlocInfo>(
-            info: ProfileIdentitiesBlocInfo.dataSaved),
+        status: BlocStatusComplete<ProfileIdentitiesCubitInfo>(
+            info: ProfileIdentitiesCubitInfo.dataSaved),
       ),
     ],
     verify: (_) {
@@ -272,11 +259,9 @@ void main() {
     'update surname, '
     'logged user does not exist, '
     'should emit no logged user status',
-    build: () => ProfileIdentitiesBloc(),
+    build: () => ProfileIdentitiesCubit(),
     setUp: () => authService.mockGetLoggedUserId(),
-    act: (bloc) => bloc.add(const ProfileIdentitiesEventUpdateSurname(
-      surname: 'new surname',
-    )),
+    act: (cubit) => cubit.updateSurname('new surname'),
     expect: () => [
       const ProfileIdentitiesState(status: BlocStatusNoLoggedUser()),
     ],
@@ -287,11 +272,9 @@ void main() {
     'update email, '
     'logged user id is null, '
     'should emit no logged user status',
-    build: () => ProfileIdentitiesBloc(),
+    build: () => ProfileIdentitiesCubit(),
     setUp: () => authService.mockGetLoggedUserId(),
-    act: (bloc) => bloc.add(const ProfileIdentitiesEventUpdateEmail(
-      newEmail: 'email@example.com',
-    )),
+    act: (cubit) => cubit.updateEmail('email@example.com'),
     expect: () => [
       const ProfileIdentitiesState(status: BlocStatusNoLoggedUser()),
     ],
@@ -301,21 +284,19 @@ void main() {
   blocTest(
     'update email, '
     'should call methods from auth service to update email and to send email verification and method from user repository to update user data with new email',
-    build: () => ProfileIdentitiesBloc(),
+    build: () => ProfileIdentitiesCubit(),
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
       authService.mockUpdateEmail();
       authService.mockSendEmailVerification();
       userRepository.mockUpdateUser();
     },
-    act: (bloc) => bloc.add(const ProfileIdentitiesEventUpdateEmail(
-      newEmail: 'email@example.com',
-    )),
+    act: (cubit) => cubit.updateEmail('email@example.com'),
     expect: () => [
       const ProfileIdentitiesState(status: BlocStatusLoading()),
       const ProfileIdentitiesState(
-        status: BlocStatusComplete<ProfileIdentitiesBlocInfo>(
-          info: ProfileIdentitiesBlocInfo.emailChanged,
+        status: BlocStatusComplete<ProfileIdentitiesCubitInfo>(
+          info: ProfileIdentitiesCubitInfo.emailChanged,
         ),
       ),
     ],
@@ -338,7 +319,7 @@ void main() {
     'update email, '
     'auth exception with email already in use code, '
     'should emit error status with email already in use error',
-    build: () => ProfileIdentitiesBloc(),
+    build: () => ProfileIdentitiesCubit(),
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
       authService.mockUpdateEmail(
@@ -347,14 +328,12 @@ void main() {
         ),
       );
     },
-    act: (bloc) => bloc.add(const ProfileIdentitiesEventUpdateEmail(
-      newEmail: 'email@example.com',
-    )),
+    act: (cubit) => cubit.updateEmail('email@example.com'),
     expect: () => [
       const ProfileIdentitiesState(status: BlocStatusLoading()),
       const ProfileIdentitiesState(
-        status: BlocStatusError<ProfileIdentitiesBlocError>(
-          error: ProfileIdentitiesBlocError.emailAlreadyInUse,
+        status: BlocStatusError<ProfileIdentitiesCubitError>(
+          error: ProfileIdentitiesCubitError.emailAlreadyInUse,
         ),
       ),
     ],
@@ -370,7 +349,7 @@ void main() {
     'update email, '
     'network exception with request failed code, '
     'should emit network request failed status',
-    build: () => ProfileIdentitiesBloc(),
+    build: () => ProfileIdentitiesCubit(),
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
       authService.mockUpdateEmail(
@@ -379,9 +358,7 @@ void main() {
         ),
       );
     },
-    act: (bloc) => bloc.add(const ProfileIdentitiesEventUpdateEmail(
-      newEmail: 'email@example.com',
-    )),
+    act: (cubit) => cubit.updateEmail('email@example.com'),
     expect: () => [
       const ProfileIdentitiesState(status: BlocStatusLoading()),
       const ProfileIdentitiesState(status: BlocStatusNoInternetConnection()),
@@ -398,16 +375,14 @@ void main() {
     'update email, '
     'unknown exception, '
     'should emit unknown error status and should rethrow exception',
-    build: () => ProfileIdentitiesBloc(),
+    build: () => ProfileIdentitiesCubit(),
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
       authService.mockUpdateEmail(
         throwable: const UnknownException(message: 'unknown exception message'),
       );
     },
-    act: (bloc) => bloc.add(const ProfileIdentitiesEventUpdateEmail(
-      newEmail: 'email@example.com',
-    )),
+    act: (cubit) => cubit.updateEmail('email@example.com'),
     expect: () => [
       const ProfileIdentitiesState(status: BlocStatusLoading()),
       const ProfileIdentitiesState(status: BlocStatusUnknownError()),
@@ -426,16 +401,14 @@ void main() {
   blocTest(
     'send email verification, '
     "should call auth service's method to send email verification and should emit emailVerificationSent info",
-    build: () => ProfileIdentitiesBloc(),
+    build: () => ProfileIdentitiesCubit(),
     setUp: () => authService.mockSendEmailVerification(),
-    act: (bloc) => bloc.add(
-      const ProfileIdentitiesEventSendEmailVerification(),
-    ),
+    act: (cubit) => cubit.sendEmailVerification(),
     expect: () => [
       const ProfileIdentitiesState(status: BlocStatusLoading()),
       const ProfileIdentitiesState(
-        status: BlocStatusComplete<ProfileIdentitiesBlocInfo>(
-          info: ProfileIdentitiesBlocInfo.emailVerificationSent,
+        status: BlocStatusComplete<ProfileIdentitiesCubitInfo>(
+          info: ProfileIdentitiesCubitInfo.emailVerificationSent,
         ),
       ),
     ],
@@ -445,16 +418,14 @@ void main() {
   blocTest(
     'update password, '
     'should call method from auth service to update password and should emit info that data have been saved',
-    build: () => ProfileIdentitiesBloc(),
+    build: () => ProfileIdentitiesCubit(),
     setUp: () => authService.mockUpdatePassword(),
-    act: (bloc) => bloc.add(const ProfileIdentitiesEventUpdatePassword(
-      newPassword: 'newPassword',
-    )),
+    act: (cubit) => cubit.updatePassword('newPassword'),
     expect: () => [
       const ProfileIdentitiesState(status: BlocStatusLoading()),
       const ProfileIdentitiesState(
-        status: BlocStatusComplete<ProfileIdentitiesBlocInfo>(
-            info: ProfileIdentitiesBlocInfo.dataSaved),
+        status: BlocStatusComplete<ProfileIdentitiesCubitInfo>(
+            info: ProfileIdentitiesCubitInfo.dataSaved),
       ),
     ],
     verify: (_) => verify(
@@ -466,15 +437,13 @@ void main() {
     'update password, '
     'network exception with request failed code, '
     'should emit network request failed status',
-    build: () => ProfileIdentitiesBloc(),
+    build: () => ProfileIdentitiesCubit(),
     setUp: () => authService.mockUpdatePassword(
       throwable: const NetworkException(
         code: NetworkExceptionCode.requestFailed,
       ),
     ),
-    act: (bloc) => bloc.add(const ProfileIdentitiesEventUpdatePassword(
-      newPassword: 'newPassword',
-    )),
+    act: (cubit) => cubit.updatePassword('newPassword'),
     expect: () => [
       const ProfileIdentitiesState(status: BlocStatusLoading()),
       const ProfileIdentitiesState(status: BlocStatusNoInternetConnection()),
@@ -488,13 +457,11 @@ void main() {
     'update password, '
     'unknown exception, '
     'should emit unknown error status',
-    build: () => ProfileIdentitiesBloc(),
+    build: () => ProfileIdentitiesCubit(),
     setUp: () => authService.mockUpdatePassword(
       throwable: const UnknownException(message: 'unknown exception message'),
     ),
-    act: (bloc) => bloc.add(const ProfileIdentitiesEventUpdatePassword(
-      newPassword: 'newPassword',
-    )),
+    act: (cubit) => cubit.updatePassword('newPassword'),
     expect: () => [
       const ProfileIdentitiesState(status: BlocStatusLoading()),
       const ProfileIdentitiesState(status: BlocStatusUnknownError()),
@@ -511,9 +478,9 @@ void main() {
     'delete account, '
     'logged user does not exist, '
     'should emit no logged user status',
-    build: () => ProfileIdentitiesBloc(),
+    build: () => ProfileIdentitiesCubit(),
     setUp: () => authService.mockGetLoggedUserId(),
-    act: (bloc) => bloc.add(const ProfileIdentitiesEventDeleteAccount()),
+    act: (cubit) => cubit.deleteAccount(),
     expect: () => [
       const ProfileIdentitiesState(status: BlocStatusNoLoggedUser()),
     ],
@@ -523,7 +490,7 @@ void main() {
   blocTest(
     'delete account, '
     'should call methods to delete user data and account and should emit info that account has been deleted',
-    build: () => ProfileIdentitiesBloc(),
+    build: () => ProfileIdentitiesCubit(),
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
       authService.mockDeleteAccount();
@@ -535,12 +502,12 @@ void main() {
       coachingRequestService.mockDeleteCoachingRequestsByUserId();
       personRepository.mockRemoveCoachIdInAllMatchingPersons();
     },
-    act: (bloc) => bloc.add(const ProfileIdentitiesEventDeleteAccount()),
+    act: (cubit) => cubit.deleteAccount(),
     expect: () => [
       const ProfileIdentitiesState(status: BlocStatusLoading()),
       const ProfileIdentitiesState(
-        status: BlocStatusComplete<ProfileIdentitiesBlocInfo>(
-          info: ProfileIdentitiesBlocInfo.accountDeleted,
+        status: BlocStatusComplete<ProfileIdentitiesCubitInfo>(
+          info: ProfileIdentitiesCubitInfo.accountDeleted,
         ),
       ),
     ],
@@ -578,7 +545,7 @@ void main() {
     'delete account, '
     'network exception with request failed code, '
     'should emit network request failed code',
-    build: () => ProfileIdentitiesBloc(),
+    build: () => ProfileIdentitiesCubit(),
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
       userRepository.mockDeleteUser();
@@ -592,7 +559,7 @@ void main() {
         ),
       );
     },
-    act: (bloc) => bloc.add(const ProfileIdentitiesEventDeleteAccount()),
+    act: (cubit) => cubit.deleteAccount(),
     expect: () => [
       const ProfileIdentitiesState(status: BlocStatusLoading()),
       const ProfileIdentitiesState(status: BlocStatusNoInternetConnection()),
@@ -622,7 +589,7 @@ void main() {
     'delete account, '
     'unknown exception, '
     'should emit unknown error status and throw exception message',
-    build: () => ProfileIdentitiesBloc(),
+    build: () => ProfileIdentitiesCubit(),
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
       workoutRepository.mockDeleteAllUserWorkouts();
@@ -634,7 +601,7 @@ void main() {
         throwable: const UnknownException(message: 'unknown exception message'),
       );
     },
-    act: (bloc) => bloc.add(const ProfileIdentitiesEventDeleteAccount()),
+    act: (cubit) => cubit.deleteAccount(),
     expect: () => [
       const ProfileIdentitiesState(status: BlocStatusLoading()),
       const ProfileIdentitiesState(status: BlocStatusUnknownError()),
@@ -654,9 +621,9 @@ void main() {
   blocTest(
     'reload logged user, '
     "should call auth service's method to reload logged user",
-    build: () => ProfileIdentitiesBloc(),
+    build: () => ProfileIdentitiesCubit(),
     setUp: () => authService.mockReloadLoggedUser(),
-    act: (bloc) => bloc.add(const ProfileIdentitiesEventReloadLoggedUser()),
+    act: (cubit) => cubit.reloadLoggedUser(),
     expect: () => [],
     verify: (_) => verify(authService.reloadLoggedUser).called(1),
   );
@@ -665,13 +632,13 @@ void main() {
     'reload logged user, '
     'network exception with requestFailed code, '
     'should emit no internet connection status',
-    build: () => ProfileIdentitiesBloc(),
+    build: () => ProfileIdentitiesCubit(),
     setUp: () => authService.mockReloadLoggedUser(
       throwable: const NetworkException(
         code: NetworkExceptionCode.requestFailed,
       ),
     ),
-    act: (bloc) => bloc.add(const ProfileIdentitiesEventReloadLoggedUser()),
+    act: (cubit) => cubit.reloadLoggedUser(),
     expect: () => [
       const ProfileIdentitiesState(status: BlocStatusNoInternetConnection()),
     ],
