@@ -3,10 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/bloc/profile/coach/profile_coach_bloc.dart';
 import '../../../domain/bloc/profile/settings/profile_settings_bloc.dart';
+import '../../../domain/cubit/profile/coach/profile_coach_cubit.dart';
 import '../../../domain/cubit/profile/identities/profile_identities_cubit.dart';
-import '../../component/bloc_with_status_listener_component.dart';
 import '../../component/cubit_with_status_listener_component.dart';
 import '../../config/navigation/router.dart';
 import '../../service/dialog_service.dart';
@@ -23,8 +22,7 @@ class ProfileScreen extends StatelessWidget {
       providers: [
         BlocProvider(create: (_) => ProfileIdentitiesCubit()..initialize()),
         BlocProvider(
-          create: (_) => ProfileCoachBloc()
-            ..add(const ProfileCoachEventInitializeCoachListener()),
+          create: (_) => ProfileCoachCubit()..initializeCoachListener(),
         ),
         BlocProvider(
           create: (_) => ProfileSettingsBloc()
@@ -32,7 +30,7 @@ class ProfileScreen extends StatelessWidget {
         ),
       ],
       child: const _IdentitiesCubitListener(
-        child: _CoachBlocListener(
+        child: _CoachCubitListener(
           child: ProfileContent(),
         ),
       ),
@@ -122,34 +120,34 @@ class _IdentitiesCubitListenerState extends State<_IdentitiesCubitListener>
   }
 }
 
-class _CoachBlocListener extends StatelessWidget {
+class _CoachCubitListener extends StatelessWidget {
   final Widget child;
 
-  const _CoachBlocListener({required this.child});
+  const _CoachCubitListener({required this.child});
 
   @override
   Widget build(BuildContext context) {
-    return BlocWithStatusListener<ProfileCoachBloc, ProfileCoachState,
-        ProfileCoachBlocInfo, dynamic>(
-      onInfo: (ProfileCoachBlocInfo info) => _manageInfo(context, info),
+    return CubitWithStatusListener<ProfileCoachCubit, ProfileCoachState,
+        ProfileCoachCubitInfo, dynamic>(
+      onInfo: (ProfileCoachCubitInfo info) => _manageInfo(context, info),
       onStateChanged: _manageState,
       child: child,
     );
   }
 
-  void _manageInfo(BuildContext context, ProfileCoachBlocInfo info) {
+  void _manageInfo(BuildContext context, ProfileCoachCubitInfo info) {
     final str = Str.of(context);
     switch (info) {
-      case ProfileCoachBlocInfo.requestAccepted:
+      case ProfileCoachCubitInfo.requestAccepted:
         showSnackbarMessage(str.successfullyAcceptedRequest);
         break;
-      case ProfileCoachBlocInfo.requestDeleted:
+      case ProfileCoachCubitInfo.requestDeleted:
         showSnackbarMessage(str.successfullyDeletedRequest);
         break;
-      case ProfileCoachBlocInfo.requestUndid:
+      case ProfileCoachCubitInfo.requestUndid:
         showSnackbarMessage(str.successfullyUndidRequest);
         break;
-      case ProfileCoachBlocInfo.coachDeleted:
+      case ProfileCoachCubitInfo.coachDeleted:
         showSnackbarMessage(
           str.profileSuccessfullyFinishedCooperationWithCoach,
         );

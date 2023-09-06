@@ -1,6 +1,6 @@
-part of 'profile_coach_bloc.dart';
+part of 'profile_coach_cubit.dart';
 
-class ProfileCoachState extends BlocState<ProfileCoachState> {
+class ProfileCoachState extends CubitState<ProfileCoachState> {
   final List<CoachingRequestShort>? sentRequests;
   final List<CoachingRequestShort>? receivedRequests;
   final Person? coach;

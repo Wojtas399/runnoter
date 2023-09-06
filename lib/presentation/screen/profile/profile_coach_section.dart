@@ -4,7 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/additional_model/coaching_request.dart';
 import '../../../domain/additional_model/coaching_request_short.dart';
-import '../../../domain/bloc/profile/coach/profile_coach_bloc.dart';
+import '../../../domain/cubit/profile/coach/profile_coach_cubit.dart';
 import '../../../domain/entity/person.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/text/body_text_components.dart';
@@ -40,7 +40,7 @@ class _Coach extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Person? coach = context.select(
-      (ProfileCoachBloc bloc) => bloc.state.coach,
+      (ProfileCoachCubit cubit) => cubit.state.coach,
     );
 
     return coach == null
@@ -53,7 +53,7 @@ class _Coach extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 IconButton(
-                  onPressed: () => _onOpenChat(context),
+                  onPressed: context.read<ProfileCoachCubit>().openChat,
                   icon: const Icon(Icons.chat_outlined),
                 ),
                 IconButton(
@@ -69,14 +69,8 @@ class _Coach extends StatelessWidget {
           );
   }
 
-  void _onOpenChat(BuildContext context) {
-    context.read<ProfileCoachBloc>().add(
-          const ProfileCoachEventOpenChat(),
-        );
-  }
-
   void _onShowDetails(BuildContext context) {
-    final String? coachId = context.read<ProfileCoachBloc>().state.coach?.id;
+    final String? coachId = context.read<ProfileCoachCubit>().state.coach?.id;
     if (coachId != null) {
       showDialogDependingOnScreenSize(
         PersonDetailsDialog(
@@ -88,12 +82,10 @@ class _Coach extends StatelessWidget {
   }
 
   Future<void> _onDelete(BuildContext context) async {
-    final ProfileCoachBloc bloc = context.read<ProfileCoachBloc>();
+    final ProfileCoachCubit cubit = context.read<ProfileCoachCubit>();
     final bool isDeletionConfirmed =
         await _askForCoachDeletionConfirmation(context);
-    if (isDeletionConfirmed) {
-      bloc.add(const ProfileCoachEventDeleteCoach());
-    }
+    if (isDeletionConfirmed) cubit.deleteCoach();
   }
 
   Future<bool> _askForCoachDeletionConfirmation(BuildContext context) async =>
@@ -168,7 +160,7 @@ class _SentCoachingRequests extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<CoachingRequestShort>? requests = context.select(
-      (ProfileCoachBloc bloc) => bloc.state.sentRequests,
+      (ProfileCoachCubit cubit) => cubit.state.sentRequests,
     );
 
     return _RequestsList(
@@ -184,7 +176,7 @@ class _ReceivedCoachingRequests extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<CoachingRequestShort>? requests = context.select(
-      (ProfileCoachBloc bloc) => bloc.state.receivedRequests,
+      (ProfileCoachCubit cubit) => cubit.state.receivedRequests,
     );
 
     return _RequestsList(
@@ -280,22 +272,20 @@ class _CoachingRequestItem extends StatelessWidget {
   }
 
   void _onAccept(BuildContext context) {
-    context.read<ProfileCoachBloc>().add(
-          ProfileCoachEventAcceptRequest(requestId: request.id),
-        );
+    context.read<ProfileCoachCubit>().acceptRequest(request.id);
   }
 
   Future<void> _onDelete(BuildContext context) async {
     bool isDeletionAccepted = true;
-    final bloc = context.read<ProfileCoachBloc>();
+    final cubit = context.read<ProfileCoachCubit>();
     if (requestDirection == CoachingRequestDirection.clientToCoach) {
       isDeletionAccepted = await _askForRequestDeletionConfirmation(context);
     }
     if (isDeletionAccepted) {
-      bloc.add(ProfileCoachEventDeleteRequest(
+      cubit.deleteRequest(
         requestId: request.id,
         requestDirection: requestDirection,
-      ));
+      );
     }
   }
 

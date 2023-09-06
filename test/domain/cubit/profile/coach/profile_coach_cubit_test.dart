@@ -7,7 +7,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/additional_model/coaching_request.dart';
 import 'package:runnoter/domain/additional_model/coaching_request_short.dart';
-import 'package:runnoter/domain/bloc/profile/coach/profile_coach_bloc.dart';
+import 'package:runnoter/domain/cubit/profile/coach/profile_coach_cubit.dart';
 import 'package:runnoter/domain/entity/person.dart';
 import 'package:runnoter/domain/repository/person_repository.dart';
 import 'package:runnoter/domain/repository/user_repository.dart';
@@ -54,9 +54,9 @@ void main() {
     'initialize coach listener, '
     'logged user does not exist, '
     'should do nothing',
-    build: () => ProfileCoachBloc(),
+    build: () => ProfileCoachCubit(),
     setUp: () => authService.mockGetLoggedUserId(),
-    act: (bloc) => bloc.add(const ProfileCoachEventInitializeCoachListener()),
+    act: (bloc) => bloc.initializeCoachListener(),
     expect: () => [],
     verify: (_) => verify(() => authService.loggedUserId$).called(1),
   );
@@ -73,7 +73,7 @@ void main() {
       blocTest(
         'coach is not null, '
         'should set listener of coach',
-        build: () => ProfileCoachBloc(),
+        build: () => ProfileCoachCubit(),
         setUp: () {
           authService.mockGetLoggedUserId(userId: loggedUserId);
           userRepository.mockGetUserById(
@@ -82,7 +82,7 @@ void main() {
           personRepository.mockGetPersonById(personStream: coach$.stream);
         },
         act: (bloc) {
-          bloc.add(const ProfileCoachEventInitializeCoachListener());
+          bloc.initializeCoachListener();
           coach$.add(expectedUpdatedCoach);
         },
         expect: () => [
@@ -133,7 +133,7 @@ void main() {
 
       blocTest(
         'should set listener of sent and received requests',
-        build: () => ProfileCoachBloc(),
+        build: () => ProfileCoachCubit(),
         setUp: () {
           authService.mockGetLoggedUserId(userId: loggedUserId);
           userRepository.mockGetUserById(user: createUser(coachId: null));
@@ -151,7 +151,7 @@ void main() {
           ).thenAnswer((_) => Stream.value(person2));
         },
         act: (bloc) async {
-          bloc.add(const ProfileCoachEventInitializeCoachListener());
+          bloc.initializeCoachListener();
           sentRequests$.add([]);
           receivedRequests$.add([]);
         },
@@ -225,7 +225,7 @@ void main() {
 
       blocTest(
         'should set listener of sent and received coaching requests',
-        build: () => ProfileCoachBloc(),
+        build: () => ProfileCoachCubit(),
         setUp: () {
           authService.mockGetLoggedUserId(userId: loggedUserId);
           when(
@@ -248,7 +248,7 @@ void main() {
           ).thenAnswer((_) => Stream.value(person2));
         },
         act: (bloc) async {
-          bloc.add(const ProfileCoachEventInitializeRequestsListener());
+          bloc.initializeRequestsListener();
           sentRequests$.add([]);
           receivedRequests$.add([]);
         },
@@ -312,7 +312,7 @@ void main() {
 
       blocTest(
         'should remove listener of sent and received coaching requests',
-        build: () => ProfileCoachBloc(),
+        build: () => ProfileCoachCubit(),
         setUp: () {
           authService.mockGetLoggedUserId(userId: loggedUserId);
           when(
@@ -335,9 +335,9 @@ void main() {
           ).thenAnswer((_) => Stream.value(person2));
         },
         act: (bloc) async {
-          bloc.add(const ProfileCoachEventInitializeRequestsListener());
+          bloc.initializeRequestsListener();
           await bloc.stream.first;
-          bloc.add(const ProfileCoachEventRemoveRequestsListener());
+          bloc.removeRequestsListener();
           sentRequests$.add([]);
           receivedRequests$.add([]);
         },
@@ -378,57 +378,10 @@ void main() {
   );
 
   blocTest(
-    'requests updated, '
-    'should update sent and received coaching requests in state',
-    build: () => ProfileCoachBloc(),
-    act: (bloc) => bloc.add(
-      ProfileCoachEventRequestsUpdated(
-        sentRequests: [
-          CoachingRequestShort(
-            id: 'r1',
-            personToDisplay: createPerson(id: 'u1', name: 'name1'),
-          ),
-          CoachingRequestShort(
-            id: 'r3',
-            personToDisplay: createPerson(id: 'u3', name: 'name3'),
-          ),
-        ],
-        receivedRequests: [
-          CoachingRequestShort(
-            id: 'r2',
-            personToDisplay: createPerson(id: 'u2', name: 'name2'),
-          ),
-        ],
-      ),
-    ),
-    expect: () => [
-      ProfileCoachState(
-        status: const BlocStatusComplete(),
-        sentRequests: [
-          CoachingRequestShort(
-            id: 'r1',
-            personToDisplay: createPerson(id: 'u1', name: 'name1'),
-          ),
-          CoachingRequestShort(
-            id: 'r3',
-            personToDisplay: createPerson(id: 'u3', name: 'name3'),
-          ),
-        ],
-        receivedRequests: [
-          CoachingRequestShort(
-            id: 'r2',
-            personToDisplay: createPerson(id: 'u2', name: 'name2'),
-          ),
-        ],
-      ),
-    ],
-  );
-
-  blocTest(
     'accept request, '
     'logged user does not exist, '
     'should emit no logged user info',
-    build: () => ProfileCoachBloc(
+    build: () => ProfileCoachCubit(
       initialState: ProfileCoachState(
         status: const BlocStatusComplete(),
         receivedRequests: [
@@ -444,9 +397,7 @@ void main() {
       ),
     ),
     setUp: () => authService.mockGetLoggedUserId(),
-    act: (bloc) => bloc.add(
-      const ProfileCoachEventAcceptRequest(requestId: 'r1'),
-    ),
+    act: (bloc) => bloc.acceptRequest('r1'),
     expect: () => [
       ProfileCoachState(
         status: const BlocStatusNoLoggedUser(),
@@ -469,7 +420,7 @@ void main() {
     'accept request, '
     "should call coaching request service's method to update request with isAccepted param set as true, "
     "should call user repository's method to update logged user with new coach id",
-    build: () => ProfileCoachBloc(
+    build: () => ProfileCoachCubit(
       initialState: ProfileCoachState(
         status: const BlocStatusComplete(),
         receivedRequests: [
@@ -489,9 +440,7 @@ void main() {
       coachingRequestService.mockUpdateCoachingRequest();
       userRepository.mockUpdateUser();
     },
-    act: (bloc) => bloc.add(
-      const ProfileCoachEventAcceptRequest(requestId: 'r1'),
-    ),
+    act: (bloc) => bloc.acceptRequest('r1'),
     expect: () => [
       ProfileCoachState(
         status: const BlocStatusLoading(),
@@ -507,8 +456,8 @@ void main() {
         ],
       ),
       ProfileCoachState(
-        status: const BlocStatusComplete<ProfileCoachBlocInfo>(
-          info: ProfileCoachBlocInfo.requestAccepted,
+        status: const BlocStatusComplete<ProfileCoachCubitInfo>(
+          info: ProfileCoachCubitInfo.requestAccepted,
         ),
         receivedRequests: [
           CoachingRequestShort(
@@ -541,19 +490,17 @@ void main() {
     'coach to client'
     "should call coaching request service's method to delete request, "
     'should emit requestDeleted info',
-    build: () => ProfileCoachBloc(),
+    build: () => ProfileCoachCubit(),
     setUp: () => coachingRequestService.mockDeleteCoachingRequest(),
-    act: (bloc) => bloc.add(
-      const ProfileCoachEventDeleteRequest(
-        requestId: 'r1',
-        requestDirection: CoachingRequestDirection.coachToClient,
-      ),
+    act: (bloc) => bloc.deleteRequest(
+      requestId: 'r1',
+      requestDirection: CoachingRequestDirection.coachToClient,
     ),
     expect: () => [
       const ProfileCoachState(status: BlocStatusLoading()),
       const ProfileCoachState(
-        status: BlocStatusComplete<ProfileCoachBlocInfo>(
-          info: ProfileCoachBlocInfo.requestDeleted,
+        status: BlocStatusComplete<ProfileCoachCubitInfo>(
+          info: ProfileCoachCubitInfo.requestDeleted,
         ),
       ),
     ],
@@ -567,19 +514,17 @@ void main() {
     'client to coach'
     "should call coaching request service's method to delete request, "
     'should emit requestUndid info',
-    build: () => ProfileCoachBloc(),
+    build: () => ProfileCoachCubit(),
     setUp: () => coachingRequestService.mockDeleteCoachingRequest(),
-    act: (bloc) => bloc.add(
-      const ProfileCoachEventDeleteRequest(
-        requestId: 'r1',
-        requestDirection: CoachingRequestDirection.clientToCoach,
-      ),
+    act: (bloc) => bloc.deleteRequest(
+      requestId: 'r1',
+      requestDirection: CoachingRequestDirection.clientToCoach,
     ),
     expect: () => [
       const ProfileCoachState(status: BlocStatusLoading()),
       const ProfileCoachState(
-        status: BlocStatusComplete<ProfileCoachBlocInfo>(
-          info: ProfileCoachBlocInfo.requestUndid,
+        status: BlocStatusComplete<ProfileCoachCubitInfo>(
+          info: ProfileCoachCubitInfo.requestUndid,
         ),
       ),
     ],
@@ -592,9 +537,9 @@ void main() {
     'delete coach, '
     'logged user does not exist, '
     'should emit no logged user status',
-    build: () => ProfileCoachBloc(),
+    build: () => ProfileCoachCubit(),
     setUp: () => authService.mockGetLoggedUserId(),
-    act: (bloc) => bloc.add(const ProfileCoachEventDeleteCoach()),
+    act: (bloc) => bloc.deleteCoach(),
     expect: () => [
       const ProfileCoachState(status: BlocStatusNoLoggedUser()),
     ],
@@ -602,71 +547,19 @@ void main() {
   );
 
   blocTest(
-    'open chat, '
-    'coach does not exist, '
-    'should do nothing',
-    build: () => ProfileCoachBloc(),
-    setUp: () => authService.mockGetLoggedUserId(userId: loggedUserId),
-    act: (bloc) => bloc.add(const ProfileCoachEventOpenChat()),
-    expect: () => [],
-  );
-
-  blocTest(
-    'open chat, '
-    'logged user does not exist, '
-    'should do nothing',
-    build: () => ProfileCoachBloc(
-      initialState: ProfileCoachState(
-        status: const BlocStatusInitial(),
-        coach: createPerson(id: 'p1'),
-      ),
-    ),
-    setUp: () => authService.mockGetLoggedUserId(),
-    act: (bloc) => bloc.add(const ProfileCoachEventOpenChat()),
-    expect: () => [],
-  );
-
-  blocTest(
-    'open chat, '
-    'should call use case to load chat id and should emit loaded chat id',
-    build: () => ProfileCoachBloc(
-      initialState: ProfileCoachState(
-        status: const BlocStatusInitial(),
-        coach: createPerson(id: 'p1'),
-      ),
-    ),
-    setUp: () {
-      authService.mockGetLoggedUserId(userId: loggedUserId);
-      loadChatIdUseCase.mock(chatId: 'c1');
-    },
-    act: (bloc) => bloc.add(const ProfileCoachEventOpenChat()),
-    expect: () => [
-      ProfileCoachState(
-        status: const BlocStatusLoading(),
-        coach: createPerson(id: 'p1'),
-      ),
-      ProfileCoachState(
-        status: const BlocStatusComplete(),
-        coach: createPerson(id: 'p1'),
-        idOfChatWithCoach: 'c1',
-      ),
-    ],
-  );
-
-  blocTest(
     'delete coach, '
     "should call user repository's method to update user with coach id set as null and should emit coachDeleted info",
-    build: () => ProfileCoachBloc(),
+    build: () => ProfileCoachCubit(),
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
       userRepository.mockUpdateUser();
     },
-    act: (bloc) => bloc.add(const ProfileCoachEventDeleteCoach()),
+    act: (bloc) => bloc.deleteCoach(),
     expect: () => [
       const ProfileCoachState(status: BlocStatusLoading()),
       const ProfileCoachState(
-        status: BlocStatusComplete<ProfileCoachBlocInfo>(
-          info: ProfileCoachBlocInfo.coachDeleted,
+        status: BlocStatusComplete<ProfileCoachCubitInfo>(
+          info: ProfileCoachCubitInfo.coachDeleted,
         ),
       ),
     ],
@@ -679,5 +572,57 @@ void main() {
         ),
       ).called(1);
     },
+  );
+
+  blocTest(
+    'open chat, '
+    'coach does not exist, '
+    'should do nothing',
+    build: () => ProfileCoachCubit(),
+    setUp: () => authService.mockGetLoggedUserId(userId: loggedUserId),
+    act: (bloc) => bloc.openChat(),
+    expect: () => [],
+  );
+
+  blocTest(
+    'open chat, '
+    'logged user does not exist, '
+    'should do nothing',
+    build: () => ProfileCoachCubit(
+      initialState: ProfileCoachState(
+        status: const BlocStatusInitial(),
+        coach: createPerson(id: 'p1'),
+      ),
+    ),
+    setUp: () => authService.mockGetLoggedUserId(),
+    act: (bloc) => bloc.openChat(),
+    expect: () => [],
+  );
+
+  blocTest(
+    'open chat, '
+    'should call use case to load chat id and should emit loaded chat id',
+    build: () => ProfileCoachCubit(
+      initialState: ProfileCoachState(
+        status: const BlocStatusInitial(),
+        coach: createPerson(id: 'p1'),
+      ),
+    ),
+    setUp: () {
+      authService.mockGetLoggedUserId(userId: loggedUserId);
+      loadChatIdUseCase.mock(chatId: 'c1');
+    },
+    act: (bloc) => bloc.openChat(),
+    expect: () => [
+      ProfileCoachState(
+        status: const BlocStatusLoading(),
+        coach: createPerson(id: 'p1'),
+      ),
+      ProfileCoachState(
+        status: const BlocStatusComplete(),
+        coach: createPerson(id: 'p1'),
+        idOfChatWithCoach: 'c1',
+      ),
+    ],
   );
 }

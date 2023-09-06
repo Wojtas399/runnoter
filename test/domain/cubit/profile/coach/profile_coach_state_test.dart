@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/additional_model/coaching_request_short.dart';
-import 'package:runnoter/domain/bloc/profile/coach/profile_coach_bloc.dart';
+import 'package:runnoter/domain/cubit/profile/coach/profile_coach_cubit.dart';
 import 'package:runnoter/domain/entity/person.dart';
 
 import '../../../../creators/person_creator.dart';

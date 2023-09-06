@@ -1,16 +1,14 @@
 import 'dart:async';
 
-import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../../../dependency_injection.dart';
-import '../../../additional_model/bloc_state.dart';
 import '../../../additional_model/bloc_status.dart';
-import '../../../additional_model/bloc_with_status.dart';
 import '../../../additional_model/coaching_request.dart';
 import '../../../additional_model/coaching_request_short.dart';
+import '../../../additional_model/cubit_state.dart';
+import '../../../additional_model/cubit_with_status.dart';
 import '../../../entity/person.dart';
 import '../../../entity/user.dart';
 import '../../../repository/person_repository.dart';
@@ -19,19 +17,19 @@ import '../../../service/auth_service.dart';
 import '../../../service/coaching_request_service.dart';
 import '../../../use_case/load_chat_id_use_case.dart';
 
-part 'profile_coach_event.dart';
 part 'profile_coach_state.dart';
 
-class ProfileCoachBloc extends BlocWithStatus<ProfileCoachEvent,
-    ProfileCoachState, ProfileCoachBlocInfo, dynamic> {
+class ProfileCoachCubit
+    extends CubitWithStatus<ProfileCoachState, ProfileCoachCubitInfo, dynamic> {
   final AuthService _authService;
   final UserRepository _userRepository;
   final PersonRepository _personRepository;
   final CoachingRequestService _coachingRequestService;
   final LoadChatIdUseCase _loadChatIdUseCase;
+  StreamSubscription<Person?>? _coachListener;
   StreamSubscription<_ListenedRequests?>? _requestsListener;
 
-  ProfileCoachBloc({
+  ProfileCoachCubit({
     ProfileCoachState initialState = const ProfileCoachState(
       status: BlocStatusInitial(),
     ),
@@ -40,50 +38,32 @@ class ProfileCoachBloc extends BlocWithStatus<ProfileCoachEvent,
         _personRepository = getIt<PersonRepository>(),
         _coachingRequestService = getIt<CoachingRequestService>(),
         _loadChatIdUseCase = getIt<LoadChatIdUseCase>(),
-        super(initialState) {
-    on<ProfileCoachEventInitializeCoachListener>(
-      _initializeCoachListener,
-      transformer: restartable(),
-    );
-    on<ProfileCoachEventInitializeRequestsListener>(
-      _initializeRequestsListener,
-    );
-    on<ProfileCoachEventRemoveRequestsListener>(_removeRequestsListener);
-    on<ProfileCoachEventRequestsUpdated>(_requestsUpdated);
-    on<ProfileCoachEventAcceptRequest>(_acceptRequest);
-    on<ProfileCoachEventDeleteRequest>(_deleteRequest);
-    on<ProfileCoachEventOpenChat>(_openChat);
-    on<ProfileCoachEventDeleteCoach>(_deleteCoach);
-  }
+        super(initialState);
 
   @override
   Future<void> close() {
+    _coachListener?.cancel();
+    _coachListener = null;
     _requestsListener?.cancel();
     _requestsListener = null;
     return super.close();
   }
 
-  Future<void> _initializeCoachListener(
-    ProfileCoachEventInitializeCoachListener event,
-    Emitter<ProfileCoachState> emit,
-  ) async {
-    await emit.forEach(
-      _getCoach(),
-      onData: (Person? coach) {
-        if (coach == null) {
-          add(const ProfileCoachEventInitializeRequestsListener());
-        } else {
-          add(const ProfileCoachEventRemoveRequestsListener());
-        }
-        return state.copyWith(coach: coach, setCoachAsNull: coach == null);
-      },
-    );
+  Future<void> initializeCoachListener() async {
+    _getCoach().listen((Person? coach) {
+      if (coach == null) {
+        initializeRequestsListener();
+      } else {
+        removeRequestsListener();
+      }
+      emit(state.copyWith(
+        coach: coach,
+        setCoachAsNull: coach == null,
+      ));
+    });
   }
 
-  void _initializeRequestsListener(
-    ProfileCoachEventInitializeRequestsListener event,
-    Emitter<ProfileCoachState> emit,
-  ) {
+  void initializeRequestsListener() {
     _requestsListener ??= _authService.loggedUserId$
         .switchMap(
           (String? loggedUserId) => loggedUserId == null
@@ -91,82 +71,60 @@ class ProfileCoachBloc extends BlocWithStatus<ProfileCoachEvent,
               : _getSentAndReceivedCoachingRequests(loggedUserId),
         )
         .listen(
-          (_ListenedRequests? requests) => add(ProfileCoachEventRequestsUpdated(
+          (_ListenedRequests? requests) => emit(state.copyWith(
             sentRequests: requests?.sentRequests,
             receivedRequests: requests?.receivedRequests,
           )),
         );
   }
 
-  void _removeRequestsListener(
-    ProfileCoachEventRemoveRequestsListener event,
-    Emitter<ProfileCoachState> emit,
-  ) {
+  void removeRequestsListener() {
     _requestsListener?.cancel();
     _requestsListener = null;
   }
 
-  void _requestsUpdated(
-    ProfileCoachEventRequestsUpdated event,
-    Emitter<ProfileCoachState> emit,
-  ) {
-    emit(state.copyWith(
-      sentRequests: event.sentRequests,
-      receivedRequests: event.receivedRequests,
-    ));
-  }
-
-  Future<void> _acceptRequest(
-    ProfileCoachEventAcceptRequest event,
-    Emitter<ProfileCoachState> emit,
-  ) async {
+  Future<void> acceptRequest(String requestId) async {
     if (state.receivedRequests == null) return;
     final String? loggedUserId = await _authService.loggedUserId$.first;
     if (loggedUserId == null) {
-      emitNoLoggedUserStatus(emit);
+      emitNoLoggedUserStatus();
       return;
     }
-    emitLoadingStatus(emit);
+    emitLoadingStatus();
     final String senderId = state.receivedRequests!
-        .firstWhere((request) => request.id == event.requestId)
+        .firstWhere((request) => request.id == requestId)
         .personToDisplay
         .id;
     await _userRepository.updateUser(userId: loggedUserId, coachId: senderId);
     await _coachingRequestService.updateCoachingRequest(
-      requestId: event.requestId,
+      requestId: requestId,
       isAccepted: true,
     );
-    emitCompleteStatus(emit, info: ProfileCoachBlocInfo.requestAccepted);
+    emitCompleteStatus(info: ProfileCoachCubitInfo.requestAccepted);
   }
 
-  Future<void> _deleteRequest(
-    ProfileCoachEventDeleteRequest event,
-    Emitter<ProfileCoachState> emit,
-  ) async {
-    emitLoadingStatus(emit);
-    await _coachingRequestService.deleteCoachingRequest(
-      requestId: event.requestId,
-    );
+  Future<void> deleteRequest({
+    required String requestId,
+    required CoachingRequestDirection requestDirection,
+  }) async {
+    emitLoadingStatus();
+    await _coachingRequestService.deleteCoachingRequest(requestId: requestId);
     emitCompleteStatus(
-      emit,
-      info: switch (event.requestDirection) {
+      info: switch (requestDirection) {
         CoachingRequestDirection.clientToCoach =>
-          ProfileCoachBlocInfo.requestUndid,
+          ProfileCoachCubitInfo.requestUndid,
         CoachingRequestDirection.coachToClient =>
-          ProfileCoachBlocInfo.requestDeleted,
+          ProfileCoachCubitInfo.requestDeleted,
       },
     );
   }
 
-  Future<void> _openChat(
-    ProfileCoachEventOpenChat event,
-    Emitter<ProfileCoachState> emit,
-  ) async {
+  Future<void> openChat() async {
     final String? coachId = state.coach?.id;
     if (coachId == null) return;
     final String? loggedUserId = await _authService.loggedUserId$.first;
     if (loggedUserId == null) return;
-    emitLoadingStatus(emit);
+    emitLoadingStatus();
     final String? chatId = await _loadChatIdUseCase.execute(
       user1Id: loggedUserId,
       user2Id: coachId,
@@ -176,18 +134,15 @@ class ProfileCoachBloc extends BlocWithStatus<ProfileCoachEvent,
     ));
   }
 
-  Future<void> _deleteCoach(
-    ProfileCoachEventDeleteCoach event,
-    Emitter<ProfileCoachState> emit,
-  ) async {
+  Future<void> deleteCoach() async {
     final String? loggedUserId = await _authService.loggedUserId$.first;
     if (loggedUserId == null) {
-      emitNoLoggedUserStatus(emit);
+      emitNoLoggedUserStatus();
       return;
     }
-    emitLoadingStatus(emit);
+    emitLoadingStatus();
     await _userRepository.updateUser(userId: loggedUserId, coachIdAsNull: true);
-    emitCompleteStatus(emit, info: ProfileCoachBlocInfo.coachDeleted);
+    emitCompleteStatus(info: ProfileCoachCubitInfo.coachDeleted);
   }
 
   Stream<Person?> _getCoach() => _authService.loggedUserId$
@@ -291,7 +246,7 @@ class ProfileCoachBloc extends BlocWithStatus<ProfileCoachEvent,
             );
 }
 
-enum ProfileCoachBlocInfo {
+enum ProfileCoachCubitInfo {
   requestAccepted,
   requestDeleted,
   requestUndid,
