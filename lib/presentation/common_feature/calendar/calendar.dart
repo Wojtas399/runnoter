@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/additional_model/calendar_user_data.dart';
-import '../../../domain/bloc/calendar/calendar_bloc.dart';
+import '../../../domain/cubit/calendar/calendar_cubit.dart';
 import '../../../domain/cubit/calendar_user_data_cubit.dart';
 import '../../../domain/cubit/date_range_manager_cubit.dart';
 import '../../component/body/big_body_component.dart';
@@ -37,7 +37,7 @@ class Calendar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<Week>? calendarWeeks = context.read<CalendarBloc>().state.weeks;
+    final List<Week>? calendarWeeks = context.read<CalendarCubit>().state.weeks;
 
     return BlocProvider(
       create: (_) => CalendarUserDataCubit(userId: userId)
@@ -71,13 +71,13 @@ class _BlocsListener extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocListener(
       listeners: [
-        BlocListener<CalendarBloc, CalendarState>(
+        BlocListener<CalendarCubit, CalendarState>(
           listenWhen: (previousState, currentState) =>
               previousState.dateRange != currentState.dateRange &&
               currentState.weeks != null,
           listener: _onDateRangeChanged,
         ),
-        BlocListener<CalendarBloc, CalendarState>(
+        BlocListener<CalendarCubit, CalendarState>(
           listenWhen: (previousState, currentState) =>
               currentState.pressedDay != null,
           listener: _onDayPressed,
@@ -102,15 +102,11 @@ class _BlocsListener extends StatelessWidget {
 
   void _onDayPressed(BuildContext context, CalendarState state) {
     _manageDayPreview(context, state.pressedDay!);
-    context.read<CalendarBloc>().add(
-          const CalendarEventResetPressedDay(),
-        );
+    context.read<CalendarCubit>().resetPressedDay();
   }
 
   void _onUserDataChanged(BuildContext context, CalendarUserData? userData) {
-    context.read<CalendarBloc>().add(
-          CalendarEventUserDataUpdated(userData: userData!),
-        );
+    context.read<CalendarCubit>().userDataUpdated(userData!);
   }
 
   Future<void> _manageDayPreview(BuildContext context, DateTime date) async {
@@ -216,45 +212,27 @@ class _DateRange extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final DateRangeType dateRangeType = context.select(
-      (CalendarBloc bloc) => bloc.state.dateRangeType,
+      (CalendarCubit cubit) => cubit.state.dateRangeType,
     );
     final DateRange? dateRange = context.select(
-      (CalendarBloc bloc) => bloc.state.dateRange,
+      (CalendarCubit cubit) => cubit.state.dateRange,
     );
 
     return dateRange != null
         ? DateRangeHeader(
             selectedDateRangeType: dateRangeType,
             dateRange: dateRange,
-            onWeekSelected: () =>
-                _onDateRangeTypeChanged(context, DateRangeType.week),
-            onMonthSelected: () =>
-                _onDateRangeTypeChanged(context, DateRangeType.month),
-            onPreviousRangePressed: () => _onPreviousDateRange(context),
-            onNextRangePressed: () => _onNextDateRange(context),
+            onWeekSelected: () => context
+                .read<CalendarCubit>()
+                .changeDateRangeType(DateRangeType.week),
+            onMonthSelected: () => context
+                .read<CalendarCubit>()
+                .changeDateRangeType(DateRangeType.month),
+            onPreviousRangePressed:
+                context.read<CalendarCubit>().previousDateRange,
+            onNextRangePressed: context.read<CalendarCubit>().nextDateRange,
           )
         : const SizedBox();
-  }
-
-  void _onDateRangeTypeChanged(
-    BuildContext context,
-    DateRangeType dateRangeType,
-  ) {
-    context.read<CalendarBloc>().add(
-          CalendarEventChangeDateRangeType(dateRangeType: dateRangeType),
-        );
-  }
-
-  void _onPreviousDateRange(BuildContext context) {
-    context.read<CalendarBloc>().add(
-          const CalendarEventPreviousDateRange(),
-        );
-  }
-
-  void _onNextDateRange(BuildContext context) {
-    context.read<CalendarBloc>().add(
-          const CalendarEventNextDateRange(),
-        );
   }
 }
 
@@ -264,7 +242,7 @@ class _CalendarBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final DateRangeType? dateRangeType = context.select(
-      (CalendarBloc bloc) => bloc.state.dateRangeType,
+      (CalendarCubit cubit) => cubit.state.dateRangeType,
     );
 
     return Column(

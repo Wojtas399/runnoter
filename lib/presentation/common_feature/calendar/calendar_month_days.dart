@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/additional_model/week_day.dart';
-import '../../../domain/bloc/calendar/calendar_bloc.dart';
+import '../../../domain/cubit/calendar/calendar_cubit.dart';
 import '../../../domain/entity/race.dart';
 import '../../../domain/entity/workout.dart';
 import '../../component/text/body_text_components.dart';
@@ -14,7 +14,7 @@ class CalendarMonthDays extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<Week>? weeks = context.select(
-      (CalendarBloc bloc) => bloc.state.weeks,
+      (CalendarCubit cubit) => cubit.state.weeks,
     );
 
     return Table(
@@ -53,7 +53,9 @@ class _DayItem extends StatelessWidget {
             ? Theme.of(context).colorScheme.outline.withOpacity(0.20)
             : null,
         child: InkWell(
-          onTap: day.isDisabled ? null : () => _onPressed(context),
+          onTap: day.isDisabled
+              ? null
+              : () => context.read<CalendarCubit>().dayPressed(day.date),
           child: SizedBox(
             width: double.infinity,
             height: 80,
@@ -71,10 +73,6 @@ class _DayItem extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  void _onPressed(BuildContext context) {
-    context.read<CalendarBloc>().add(CalendarEventDayPressed(date: day.date));
   }
 }
 

@@ -1,4 +1,5 @@
-import 'package:bloc_concurrency/bloc_concurrency.dart';
+import 'dart:async';
+
 import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,38 +13,29 @@ import '../../../../domain/entity/race.dart';
 import '../../../../domain/entity/workout.dart';
 import '../../additional_model/week_day.dart';
 
-part 'calendar_event.dart';
 part 'calendar_state.dart';
 
-class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
+class CalendarCubit extends Cubit<CalendarState> {
   final DateRangeManagerCubit _dateRangeManager;
   final DateService _dateService;
   CalendarUserData? _calendarUserData;
+  StreamSubscription<DateRangeManagerState>? _dateRangeListener;
 
-  CalendarBloc()
+  CalendarCubit()
       : _dateRangeManager = getIt<DateRangeManagerCubit>(),
         _dateService = getIt<DateService>(),
-        super(
-          const CalendarState(dateRangeType: DateRangeType.week),
-        ) {
-    on<CalendarEventInitialize>(
-      _initialize,
-      transformer: restartable(),
-    );
-    on<CalendarEventChangeDateRangeType>(_changeDateRangeType);
-    on<CalendarEventUserDataUpdated>(_userDataUpdated);
-    on<CalendarEventPreviousDateRange>(_previousDateRange);
-    on<CalendarEventNextDateRange>(_nextDateRange);
-    on<CalendarEventDayPressed>(_dayPressed);
-    on<CalendarEventResetPressedDay>(_resetPressedDay);
+        super(const CalendarState(dateRangeType: DateRangeType.week));
+
+  @override
+  Future<void> close() {
+    _dateRangeListener?.cancel();
+    _dateRangeListener = null;
+    return super.close();
   }
 
-  Future<void> _initialize(
-    CalendarEventInitialize event,
-    Emitter<CalendarState> emit,
-  ) async {
-    if (event.dateRangeType == DateRangeType.year) return;
-    _dateRangeManager.initializeNewDateRangeType(event.dateRangeType);
+  Future<void> initialize(DateRangeType dateRangeType) async {
+    if (dateRangeType == DateRangeType.year) return;
+    _dateRangeManager.initializeNewDateRangeType(dateRangeType);
     final DateRangeType initialDateRangeType =
         _dateRangeManager.state.dateRangeType;
     final DateRange? initialDateRange = _dateRangeManager.state.dateRange;
@@ -57,9 +49,8 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
             )
           : null,
     ));
-    await emit.forEach(
-      _dateRangeManager.stream,
-      onData: (DateRangeManagerState dateRangeManagerState) => state.copyWith(
+    _dateRangeListener ??= _dateRangeManager.stream.listen(
+      (DateRangeManagerState dateRangeManagerState) => emit(state.copyWith(
         dateRangeType: dateRangeManagerState.dateRangeType,
         dateRange: dateRangeManagerState.dateRange,
         weeks: dateRangeManagerState.dateRange != null
@@ -68,22 +59,16 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
                 dateRange: dateRangeManagerState.dateRange!,
               )
             : null,
-      ),
+      )),
     );
   }
 
-  void _changeDateRangeType(
-    CalendarEventChangeDateRangeType event,
-    Emitter<CalendarState> emit,
-  ) {
-    _dateRangeManager.changeDateRangeType(event.dateRangeType);
+  void changeDateRangeType(DateRangeType dateRangeType) {
+    _dateRangeManager.changeDateRangeType(dateRangeType);
   }
 
-  void _userDataUpdated(
-    CalendarEventUserDataUpdated event,
-    Emitter<CalendarState> emit,
-  ) {
-    _calendarUserData = event.userData;
+  void userDataUpdated(CalendarUserData userData) {
+    _calendarUserData = userData;
     emit(state.copyWith(
       weeks: state.dateRange != null
           ? _createWeeks(
@@ -94,31 +79,19 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
     ));
   }
 
-  void _previousDateRange(
-    CalendarEventPreviousDateRange event,
-    Emitter<CalendarState> emit,
-  ) {
+  void previousDateRange() {
     _dateRangeManager.previousDateRange();
   }
 
-  void _nextDateRange(
-    CalendarEventNextDateRange event,
-    Emitter<CalendarState> emit,
-  ) {
+  void nextDateRange() {
     _dateRangeManager.nextDateRange();
   }
 
-  void _dayPressed(
-    CalendarEventDayPressed event,
-    Emitter<CalendarState> emit,
-  ) {
-    emit(state.copyWith(pressedDay: event.date));
+  void dayPressed(DateTime date) {
+    emit(state.copyWith(pressedDay: date));
   }
 
-  void _resetPressedDay(
-    CalendarEventResetPressedDay event,
-    Emitter<CalendarState> emit,
-  ) {
+  void resetPressedDay() {
     emit(state.copyWith(pressedDay: null));
   }
 

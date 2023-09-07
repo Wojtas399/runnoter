@@ -1,4 +1,4 @@
-part of 'calendar_bloc.dart';
+part of 'calendar_cubit.dart';
 
 class CalendarState extends Equatable {
   final DateRangeType dateRangeType;

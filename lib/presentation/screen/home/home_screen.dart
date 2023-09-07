@@ -7,7 +7,7 @@ import '../../../dependency_injection.dart';
 import '../../../domain/additional_model/bloc_status.dart';
 import '../../../domain/additional_model/coaching_request_short.dart';
 import '../../../domain/additional_model/settings.dart' as settings;
-import '../../../domain/bloc/calendar/calendar_bloc.dart';
+import '../../../domain/cubit/calendar/calendar_cubit.dart';
 import '../../../domain/cubit/date_range_manager_cubit.dart';
 import '../../../domain/cubit/home/home_cubit.dart';
 import '../../component/cubit_with_status_listener_component.dart';
@@ -34,10 +34,7 @@ class HomeScreen extends StatelessWidget {
           create: (_) => HomeCubit()..initialize(),
         ),
         BlocProvider(
-          create: (_) => CalendarBloc()
-            ..add(
-              const CalendarEventInitialize(dateRangeType: DateRangeType.week),
-            ),
+          create: (_) => CalendarCubit()..initialize(DateRangeType.week),
         ),
       ],
       child: const _HomeCubitListener(

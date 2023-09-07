@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/additional_model/calendar_user_data.dart';
 import '../../../domain/additional_model/week_day.dart';
-import '../../../domain/bloc/calendar/calendar_bloc.dart';
+import '../../../domain/cubit/calendar/calendar_cubit.dart';
 import '../../../domain/cubit/calendar_user_data_cubit.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/shimmer/shimmer_container.dart';
@@ -19,8 +19,9 @@ class CalendarWeek extends StatelessWidget {
       (CalendarUserDataCubit cubit) => cubit.state,
     );
     final Week? week = context.select(
-      (CalendarBloc bloc) =>
-          bloc.state.weeks?.isNotEmpty == true ? bloc.state.weeks!.first : null,
+      (CalendarCubit cubit) => cubit.state.weeks?.isNotEmpty == true
+          ? cubit.state.weeks!.first
+          : null,
     );
 
     return Column(
@@ -31,15 +32,12 @@ class CalendarWeek extends StatelessWidget {
           ...week.days.map(
             (WeekDay day) => CalendarWeekDayItem(
               day: day,
-              onPressed: () => _onDayPressed(context, day.date),
+              onPressed: () =>
+                  context.read<CalendarCubit>().dayPressed(day.date),
             ),
           ),
       ].addSeparator(const Divider()),
     );
-  }
-
-  void _onDayPressed(BuildContext context, DateTime date) {
-    context.read<CalendarBloc>().add(CalendarEventDayPressed(date: date));
   }
 }
 
