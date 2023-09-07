@@ -1,4 +1,4 @@
-part of 'mileage_stats_bloc.dart';
+part of 'mileage_stats_cubit.dart';
 
 class MileageStatsState extends Equatable {
   final DateRangeType? dateRangeType;
@@ -12,11 +12,7 @@ class MileageStatsState extends Equatable {
   });
 
   @override
-  List<Object?> get props => [
-        dateRangeType,
-        dateRange,
-        mileageChartPoints,
-      ];
+  List<Object?> get props => [dateRangeType, dateRange, mileageChartPoints];
 
   MileageStatsState copyWith({
     DateRangeType? dateRangeType,

@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
-import '../../../domain/bloc/mileage_stats/mileage_stats_bloc.dart';
 import '../../../domain/cubit/date_range_manager_cubit.dart';
+import '../../../domain/cubit/mileage_stats/mileage_stats_cubit.dart';
 import '../../component/body/big_body_component.dart';
 import '../../component/card_body_component.dart';
 import '../../component/date_range_header_component.dart';
@@ -47,7 +47,7 @@ class _CommonContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final MileageStatsState state = context.watch<MileageStatsBloc>().state;
+    final MileageStatsState state = context.watch<MileageStatsCubit>().state;
     if (state.dateRangeType == null ||
         state.dateRange == null ||
         state.mileageChartPoints == null) {
@@ -98,32 +98,18 @@ class _DateRange extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final mileageStatsCubit = context.read<MileageStatsCubit>();
+
     return DateRangeHeader(
       selectedDateRangeType: dateRangeType,
       dateRange: dateRange,
-      onWeekSelected: () => _changeDateRangeType(context, DateRangeType.week),
-      onYearSelected: () => _changeDateRangeType(context, DateRangeType.year),
-      onPreviousRangePressed: () => _onPreviousRangePressed(context),
-      onNextRangePressed: () => _onNextRangePressed(context),
+      onWeekSelected: () =>
+          mileageStatsCubit.changeDateRangeType(DateRangeType.week),
+      onYearSelected: () =>
+          mileageStatsCubit.changeDateRangeType(DateRangeType.year),
+      onPreviousRangePressed: mileageStatsCubit.previousDateRange,
+      onNextRangePressed: mileageStatsCubit.nextDateRange,
     );
-  }
-
-  void _changeDateRangeType(BuildContext context, DateRangeType dateRangeType) {
-    context.read<MileageStatsBloc>().add(
-          MileageStatsEventChangeDateRangeType(dateRangeType: dateRangeType),
-        );
-  }
-
-  void _onPreviousRangePressed(BuildContext context) {
-    context.read<MileageStatsBloc>().add(
-          const MileageStatsEventPreviousDateRange(),
-        );
-  }
-
-  void _onNextRangePressed(BuildContext context) {
-    context.read<MileageStatsBloc>().add(
-          const MileageStatsEventNextDateRange(),
-        );
   }
 }
 

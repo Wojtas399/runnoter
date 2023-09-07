@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
@@ -15,18 +14,18 @@ import '../../entity/workout.dart';
 import '../../repository/race_repository.dart';
 import '../../repository/workout_repository.dart';
 
-part 'mileage_stats_event.dart';
 part 'mileage_stats_state.dart';
 
-class MileageStatsBloc extends Bloc<MileageStatsEvent, MileageStatsState> {
+class MileageStatsCubit extends Cubit<MileageStatsState> {
   final String _userId;
   final WorkoutRepository _workoutRepository;
   final RaceRepository _raceRepository;
   final DateRangeManagerCubit _dateRangeManagerCubit;
   final DateService _dateService;
   StreamSubscription<DateRangeManagerState>? _dateRangeManagerListener;
+  StreamSubscription<_Activities>? _activitiesListener;
 
-  MileageStatsBloc({
+  MileageStatsCubit({
     required String userId,
     MileageStatsState initialState = const MileageStatsState(),
   })  : _userId = userId,
@@ -34,47 +33,41 @@ class MileageStatsBloc extends Bloc<MileageStatsEvent, MileageStatsState> {
         _raceRepository = getIt<RaceRepository>(),
         _dateRangeManagerCubit = getIt<DateRangeManagerCubit>(),
         _dateService = getIt<DateService>(),
-        super(initialState) {
-    on<MileageStatsEventInitialize>(_initialize);
-    on<MileageStatsEventChartDateRangeUpdated>(
-      _chartDateRangeUpdated,
-      transformer: restartable(),
-    );
-    on<MileageStatsEventChangeDateRangeType>(_changeDateRangeType);
-    on<MileageStatsEventPreviousDateRange>(_previousDateRange);
-    on<MileageStatsEventNextDateRange>(_nextDateRange);
-  }
+        super(initialState);
 
   @override
   Future<void> close() {
     _disposeChartDateRangeListener();
+    _disposeActivitiesListener();
     return super.close();
   }
 
-  void _initialize(
-    MileageStatsEventInitialize event,
-    Emitter<MileageStatsState> emit,
-  ) {
+  void initialize() {
     _disposeChartDateRangeListener();
-    _dateRangeManagerListener ??= _dateRangeManagerCubit.stream.listen(
-      (DateRangeManagerState dateRangeManagerState) => add(
-        MileageStatsEventChartDateRangeUpdated(
-          dateRangeManagerState: dateRangeManagerState,
-        ),
-      ),
-    );
+    _dateRangeManagerListener ??=
+        _dateRangeManagerCubit.stream.listen(_dateRangeUpdated);
     _dateRangeManagerCubit.initializeNewDateRangeType(DateRangeType.year);
   }
 
-  Future<void> _chartDateRangeUpdated(
-    MileageStatsEventChartDateRangeUpdated event,
-    Emitter<MileageStatsState> emit,
-  ) async {
-    final DateRangeType dateRangeType =
-        event.dateRangeManagerState.dateRangeType;
-    final DateRange? dateRange = event.dateRangeManagerState.dateRange;
+  void changeDateRangeType(DateRangeType dateRangeType) {
+    if (dateRangeType == DateRangeType.month) return;
+    _dateRangeManagerCubit.initializeNewDateRangeType(dateRangeType);
+  }
+
+  void previousDateRange() {
+    _dateRangeManagerCubit.previousDateRange();
+  }
+
+  void nextDateRange() {
+    _dateRangeManagerCubit.nextDateRange();
+  }
+
+  void _dateRangeUpdated(DateRangeManagerState dateRangeManagerState) {
+    final DateRangeType dateRangeType = dateRangeManagerState.dateRangeType;
+    final DateRange? dateRange = dateRangeManagerState.dateRange;
     if (dateRange == null || dateRangeType == DateRangeType.month) return;
-    final Stream<_Activities> stream$ = Rx.combineLatest2(
+    _disposeActivitiesListener();
+    _activitiesListener ??= Rx.combineLatest2(
       _workoutRepository.getWorkoutsByDateRange(
         startDate: dateRange.startDate,
         endDate: dateRange.endDate,
@@ -89,39 +82,15 @@ class MileageStatsBloc extends Bloc<MileageStatsEvent, MileageStatsState> {
         workouts: [...?workouts],
         races: [...?races],
       ),
-    );
-    await emit.forEach(
-      stream$,
-      onData: (_Activities activities) => state.copyWith(
+    ).listen(
+      (_Activities activities) => emit(state.copyWith(
         dateRangeType: dateRangeType,
         dateRange: dateRange,
         mileageChartPoints: dateRangeType == DateRangeType.week
             ? _createPointsForEachWeekDay(dateRange, activities)
             : _createPointsForEachMonth(dateRange.startDate.year, activities),
-      ),
+      )),
     );
-  }
-
-  void _changeDateRangeType(
-    MileageStatsEventChangeDateRangeType event,
-    Emitter<MileageStatsState> emit,
-  ) {
-    if (event.dateRangeType == DateRangeType.month) return;
-    _dateRangeManagerCubit.initializeNewDateRangeType(event.dateRangeType);
-  }
-
-  void _previousDateRange(
-    MileageStatsEventPreviousDateRange event,
-    Emitter<MileageStatsState> emit,
-  ) {
-    _dateRangeManagerCubit.previousDateRange();
-  }
-
-  void _nextDateRange(
-    MileageStatsEventNextDateRange event,
-    Emitter<MileageStatsState> emit,
-  ) {
-    _dateRangeManagerCubit.nextDateRange();
   }
 
   List<MileageStatsChartPoint> _createPointsForEachWeekDay(
@@ -193,6 +162,11 @@ class MileageStatsBloc extends Bloc<MileageStatsEvent, MileageStatsState> {
   void _disposeChartDateRangeListener() {
     _dateRangeManagerListener?.cancel();
     _dateRangeManagerListener = null;
+  }
+
+  void _disposeActivitiesListener() {
+    _activitiesListener?.cancel();
+    _activitiesListener = null;
   }
 }
 

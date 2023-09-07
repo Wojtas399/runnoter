@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:runnoter/domain/bloc/mileage_stats/mileage_stats_bloc.dart';
 import 'package:runnoter/domain/cubit/date_range_manager_cubit.dart';
+import 'package:runnoter/domain/cubit/mileage_stats/mileage_stats_cubit.dart';
 
 void main() {
   late MileageStatsState state;
@@ -10,7 +10,8 @@ void main() {
   );
 
   test(
-    'copy with dateRangeType',
+    'copy with dateRangeType, '
+    'should copy current value if new value is null',
     () {
       const DateRangeType expected = DateRangeType.month;
 
@@ -23,7 +24,8 @@ void main() {
   );
 
   test(
-    'copy with dateRange',
+    'copy with dateRange, '
+    'should copy current value if new value is null',
     () {
       final DateRange expected = DateRange(
         startDate: DateTime(2023, 8, 21),
@@ -39,7 +41,8 @@ void main() {
   );
 
   test(
-    'copy with mileages',
+    'copy with mileages, '
+    'should copy current value if new value is null',
     () {
       final List<MileageStatsChartPoint> expected = [
         MileageStatsChartPoint(date: DateTime(2023, 8, 21), mileage: 12),
