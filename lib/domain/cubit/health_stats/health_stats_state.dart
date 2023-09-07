@@ -1,4 +1,4 @@
-part of 'health_stats_bloc.dart';
+part of 'health_stats_cubit.dart';
 
 class HealthStatsState extends Equatable {
   final DateRangeType? dateRangeType;
