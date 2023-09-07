@@ -1,13 +1,12 @@
-part of 'profile_settings_bloc.dart';
+part of 'profile_settings_cubit.dart';
 
-class ProfileSettingsState extends BlocState {
+class ProfileSettingsState extends Equatable {
   final ThemeMode? themeMode;
   final Language? language;
   final DistanceUnit? distanceUnit;
   final PaceUnit? paceUnit;
 
   const ProfileSettingsState({
-    required super.status,
     this.themeMode,
     this.language,
     this.distanceUnit,
@@ -15,23 +14,15 @@ class ProfileSettingsState extends BlocState {
   });
 
   @override
-  List<Object?> get props => [
-        themeMode,
-        language,
-        distanceUnit,
-        paceUnit,
-      ];
+  List<Object?> get props => [themeMode, language, distanceUnit, paceUnit];
 
-  @override
   ProfileSettingsState copyWith({
-    BlocStatus? status,
     ThemeMode? themeMode,
     Language? language,
     DistanceUnit? distanceUnit,
     PaceUnit? paceUnit,
   }) {
     return ProfileSettingsState(
-      status: status ?? const BlocStatusComplete(),
       themeMode: themeMode ?? this.themeMode,
       language: language ?? this.language,
       distanceUnit: distanceUnit ?? this.distanceUnit,

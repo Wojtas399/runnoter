@@ -2,9 +2,8 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/additional_model/settings.dart';
-import 'package:runnoter/domain/bloc/profile/settings/profile_settings_bloc.dart';
+import 'package:runnoter/domain/cubit/profile/settings/profile_settings_cubit.dart';
 import 'package:runnoter/domain/repository/user_repository.dart';
 import 'package:runnoter/domain/service/auth_service.dart';
 
@@ -18,37 +17,6 @@ void main() {
   final userRepository = MockUserRepository();
   const String loggedUserId = 'u1';
 
-  ProfileSettingsBloc createBloc({
-    ThemeMode? themeMode,
-    Language? language,
-    DistanceUnit? distanceUnit,
-    PaceUnit? paceUnit,
-  }) =>
-      ProfileSettingsBloc(
-        state: ProfileSettingsState(
-          status: const BlocStatusInitial(),
-          themeMode: themeMode,
-          language: language,
-          distanceUnit: distanceUnit,
-          paceUnit: paceUnit,
-        ),
-      );
-
-  ProfileSettingsState createState({
-    BlocStatus status = const BlocStatusInitial(),
-    ThemeMode? themeMode,
-    Language? language,
-    DistanceUnit? distanceUnit,
-    PaceUnit? paceUnit,
-  }) =>
-      ProfileSettingsState(
-        status: status,
-        themeMode: themeMode,
-        language: language,
-        distanceUnit: distanceUnit,
-        paceUnit: paceUnit,
-      );
-
   setUpAll(() {
     GetIt.I.registerFactory<AuthService>(() => authService);
     GetIt.I.registerSingleton<UserRepository>(userRepository);
@@ -61,8 +29,8 @@ void main() {
 
   blocTest(
     'initialize, '
-    'should set listener of logged user',
-    build: () => createBloc(),
+    'should set listener of logged user settings',
+    build: () => ProfileSettingsCubit(),
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
       userRepository.mockGetUserById(
@@ -76,10 +44,9 @@ void main() {
         ),
       );
     },
-    act: (bloc) => bloc.add(const ProfileSettingsEventInitialize()),
+    act: (cubit) => cubit.initialize(),
     expect: () => [
-      createState(
-        status: const BlocStatusComplete(),
+      const ProfileSettingsState(
         themeMode: ThemeMode.dark,
         language: Language.english,
         distanceUnit: DistanceUnit.kilometers,
@@ -99,19 +66,14 @@ void main() {
   blocTest(
     'update theme mode, '
     "should update theme mode in state and should call method from user repository to update user's settings with new theme mode",
-    build: () => createBloc(),
+    build: () => ProfileSettingsCubit(),
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
       userRepository.mockUpdateUserSettings();
     },
-    act: (bloc) => bloc.add(const ProfileSettingsEventUpdateThemeMode(
-      newThemeMode: ThemeMode.system,
-    )),
+    act: (cubit) => cubit.updateThemeMode(ThemeMode.system),
     expect: () => [
-      createState(
-        status: const BlocStatusComplete(),
-        themeMode: ThemeMode.system,
-      ),
+      const ProfileSettingsState(themeMode: ThemeMode.system),
     ],
     verify: (_) {
       verify(
@@ -130,23 +92,17 @@ void main() {
     'update theme mode, '
     'method from user repository to update settings throws exception, '
     'should set previous theme mode',
-    build: () => createBloc(themeMode: ThemeMode.dark),
+    build: () => ProfileSettingsCubit(
+      initialState: const ProfileSettingsState(themeMode: ThemeMode.dark),
+    ),
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
       userRepository.mockUpdateUserSettings(throwable: 'Exception...');
     },
-    act: (bloc) => bloc.add(const ProfileSettingsEventUpdateThemeMode(
-      newThemeMode: ThemeMode.system,
-    )),
+    act: (cubit) => cubit.updateThemeMode(ThemeMode.system),
     expect: () => [
-      createState(
-        status: const BlocStatusComplete(),
-        themeMode: ThemeMode.system,
-      ),
-      createState(
-        status: const BlocStatusComplete(),
-        themeMode: ThemeMode.dark,
-      ),
+      const ProfileSettingsState(themeMode: ThemeMode.system),
+      const ProfileSettingsState(themeMode: ThemeMode.dark),
     ],
     verify: (_) {
       verify(
@@ -164,17 +120,11 @@ void main() {
   blocTest(
     'update theme mode, '
     'logged user does not exist, '
-    'should emit no logged user info',
-    build: () => createBloc(),
+    'should do nothing',
+    build: () => ProfileSettingsCubit(),
     setUp: () => authService.mockGetLoggedUserId(),
-    act: (bloc) => bloc.add(const ProfileSettingsEventUpdateThemeMode(
-      newThemeMode: ThemeMode.system,
-    )),
-    expect: () => [
-      createState(
-        status: const BlocStatusNoLoggedUser(),
-      ),
-    ],
+    act: (cubit) => cubit.updateThemeMode(ThemeMode.system),
+    expect: () => [],
     verify: (_) {
       verify(
         () => authService.loggedUserId$,
@@ -192,10 +142,10 @@ void main() {
     'update theme mode, '
     'new theme mode is the same as current theme mode, '
     'should do nothing',
-    build: () => createBloc(themeMode: ThemeMode.system),
-    act: (bloc) => bloc.add(const ProfileSettingsEventUpdateThemeMode(
-      newThemeMode: ThemeMode.system,
-    )),
+    build: () => ProfileSettingsCubit(
+      initialState: const ProfileSettingsState(themeMode: ThemeMode.system),
+    ),
+    act: (cubit) => cubit.updateThemeMode(ThemeMode.system),
     expect: () => [],
     verify: (_) {
       verifyNever(
@@ -213,19 +163,14 @@ void main() {
   blocTest(
     'update language, '
     "should update language in state and should call method from user repository to update user's settings with new language",
-    build: () => createBloc(),
+    build: () => ProfileSettingsCubit(),
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
       userRepository.mockUpdateUserSettings();
     },
-    act: (bloc) => bloc.add(const ProfileSettingsEventUpdateLanguage(
-      newLanguage: Language.english,
-    )),
+    act: (cubit) => cubit.updateLanguage(Language.english),
     expect: () => [
-      createState(
-        status: const BlocStatusComplete(),
-        language: Language.english,
-      ),
+      const ProfileSettingsState(language: Language.english),
     ],
     verify: (_) {
       verify(
@@ -244,23 +189,17 @@ void main() {
     'update language, '
     "method from user repository to update user's settings throws exception, "
     'should set previous language',
-    build: () => createBloc(language: Language.polish),
+    build: () => ProfileSettingsCubit(
+      initialState: const ProfileSettingsState(language: Language.polish),
+    ),
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
       userRepository.mockUpdateUserSettings(throwable: 'Exception...');
     },
-    act: (bloc) => bloc.add(const ProfileSettingsEventUpdateLanguage(
-      newLanguage: Language.english,
-    )),
+    act: (cubit) => cubit.updateLanguage(Language.english),
     expect: () => [
-      createState(
-        status: const BlocStatusComplete(),
-        language: Language.english,
-      ),
-      createState(
-        status: const BlocStatusComplete(),
-        language: Language.polish,
-      ),
+      const ProfileSettingsState(language: Language.english),
+      const ProfileSettingsState(language: Language.polish),
     ],
     verify: (_) {
       verify(
@@ -278,17 +217,11 @@ void main() {
   blocTest(
     'update language, '
     'logged user does not exist, '
-    'should emit no logged user info',
-    build: () => createBloc(),
+    'should do nothing',
+    build: () => ProfileSettingsCubit(),
     setUp: () => authService.mockGetLoggedUserId(),
-    act: (bloc) => bloc.add(const ProfileSettingsEventUpdateLanguage(
-      newLanguage: Language.english,
-    )),
-    expect: () => [
-      createState(
-        status: const BlocStatusNoLoggedUser(),
-      ),
-    ],
+    act: (cubit) => cubit.updateLanguage(Language.english),
+    expect: () => [],
     verify: (_) {
       verify(
         () => authService.loggedUserId$,
@@ -306,10 +239,10 @@ void main() {
     'update language, '
     'new language is the same as current language, '
     'should do nothing',
-    build: () => createBloc(language: Language.english),
-    act: (bloc) => bloc.add(const ProfileSettingsEventUpdateLanguage(
-      newLanguage: Language.english,
-    )),
+    build: () => ProfileSettingsCubit(
+      initialState: const ProfileSettingsState(language: Language.english),
+    ),
+    act: (cubit) => cubit.updateLanguage(Language.english),
     expect: () => [],
     verify: (_) {
       verifyNever(
@@ -327,19 +260,14 @@ void main() {
   blocTest(
     'update distance unit, '
     "should update distance unit in state and should call method from user repository to update user's settings with new distance unit",
-    build: () => createBloc(),
+    build: () => ProfileSettingsCubit(),
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
       userRepository.mockUpdateUserSettings();
     },
-    act: (bloc) => bloc.add(const ProfileSettingsEventUpdateDistanceUnit(
-      newDistanceUnit: DistanceUnit.miles,
-    )),
+    act: (cubit) => cubit.updateDistanceUnit(DistanceUnit.miles),
     expect: () => [
-      createState(
-        status: const BlocStatusComplete(),
-        distanceUnit: DistanceUnit.miles,
-      ),
+      const ProfileSettingsState(distanceUnit: DistanceUnit.miles),
     ],
     verify: (_) {
       verify(
@@ -358,23 +286,19 @@ void main() {
     'update distance unit, '
     'method from user repository to update settings throws exception, '
     'should set previous distance unit',
-    build: () => createBloc(distanceUnit: DistanceUnit.kilometers),
+    build: () => ProfileSettingsCubit(
+      initialState: const ProfileSettingsState(
+        distanceUnit: DistanceUnit.kilometers,
+      ),
+    ),
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
       userRepository.mockUpdateUserSettings(throwable: 'Exception...');
     },
-    act: (bloc) => bloc.add(const ProfileSettingsEventUpdateDistanceUnit(
-      newDistanceUnit: DistanceUnit.miles,
-    )),
+    act: (cubit) => cubit.updateDistanceUnit(DistanceUnit.miles),
     expect: () => [
-      createState(
-        status: const BlocStatusComplete(),
-        distanceUnit: DistanceUnit.miles,
-      ),
-      createState(
-        status: const BlocStatusComplete(),
-        distanceUnit: DistanceUnit.kilometers,
-      ),
+      const ProfileSettingsState(distanceUnit: DistanceUnit.miles),
+      const ProfileSettingsState(distanceUnit: DistanceUnit.kilometers),
     ],
     verify: (_) {
       verify(
@@ -392,17 +316,11 @@ void main() {
   blocTest(
     'update distance unit, '
     'logged user does not exist, '
-    'should emit no logged user info',
-    build: () => createBloc(),
+    'should do nothing',
+    build: () => ProfileSettingsCubit(),
     setUp: () => authService.mockGetLoggedUserId(),
-    act: (bloc) => bloc.add(const ProfileSettingsEventUpdateDistanceUnit(
-      newDistanceUnit: DistanceUnit.miles,
-    )),
-    expect: () => [
-      createState(
-        status: const BlocStatusNoLoggedUser(),
-      ),
-    ],
+    act: (cubit) => cubit.updateDistanceUnit(DistanceUnit.miles),
+    expect: () => [],
     verify: (_) {
       verify(
         () => authService.loggedUserId$,
@@ -420,10 +338,12 @@ void main() {
     'update distance unit, '
     'new distance unit is the same as current distance unit, '
     'should do nothing',
-    build: () => createBloc(distanceUnit: DistanceUnit.miles),
-    act: (bloc) => bloc.add(const ProfileSettingsEventUpdateDistanceUnit(
-      newDistanceUnit: DistanceUnit.miles,
-    )),
+    build: () => ProfileSettingsCubit(
+      initialState: const ProfileSettingsState(
+        distanceUnit: DistanceUnit.miles,
+      ),
+    ),
+    act: (cubit) => cubit.updateDistanceUnit(DistanceUnit.miles),
     expect: () => [],
     verify: (_) {
       verifyNever(
@@ -441,19 +361,14 @@ void main() {
   blocTest(
     'update pace unit, '
     "should update pace unit in state and should call method from user repository to update user's settings with new pace unit",
-    build: () => createBloc(),
+    build: () => ProfileSettingsCubit(),
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
       userRepository.mockUpdateUserSettings();
     },
-    act: (bloc) => bloc.add(const ProfileSettingsEventUpdatePaceUnit(
-      newPaceUnit: PaceUnit.kilometersPerHour,
-    )),
+    act: (cubit) => cubit.updatePaceUnit(PaceUnit.kilometersPerHour),
     expect: () => [
-      createState(
-        status: const BlocStatusComplete(),
-        paceUnit: PaceUnit.kilometersPerHour,
-      ),
+      const ProfileSettingsState(paceUnit: PaceUnit.kilometersPerHour),
     ],
     verify: (_) {
       verify(
@@ -472,23 +387,17 @@ void main() {
     'update pace unit, '
     'method from user repository to update settings throws exception, '
     'should set previous pace unit',
-    build: () => createBloc(paceUnit: PaceUnit.milesPerHour),
+    build: () => ProfileSettingsCubit(
+      initialState: const ProfileSettingsState(paceUnit: PaceUnit.milesPerHour),
+    ),
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
       userRepository.mockUpdateUserSettings(throwable: 'Exception...');
     },
-    act: (bloc) => bloc.add(const ProfileSettingsEventUpdatePaceUnit(
-      newPaceUnit: PaceUnit.kilometersPerHour,
-    )),
+    act: (cubit) => cubit.updatePaceUnit(PaceUnit.kilometersPerHour),
     expect: () => [
-      createState(
-        status: const BlocStatusComplete(),
-        paceUnit: PaceUnit.kilometersPerHour,
-      ),
-      createState(
-        status: const BlocStatusComplete(),
-        paceUnit: PaceUnit.milesPerHour,
-      ),
+      const ProfileSettingsState(paceUnit: PaceUnit.kilometersPerHour),
+      const ProfileSettingsState(paceUnit: PaceUnit.milesPerHour),
     ],
     verify: (_) {
       verify(
@@ -506,17 +415,11 @@ void main() {
   blocTest(
     'update pace unit, '
     'logged user does not exist, '
-    'should emit no logged user info',
-    build: () => createBloc(),
+    'should do nothing',
+    build: () => ProfileSettingsCubit(),
     setUp: () => authService.mockGetLoggedUserId(),
-    act: (bloc) => bloc.add(const ProfileSettingsEventUpdatePaceUnit(
-      newPaceUnit: PaceUnit.kilometersPerHour,
-    )),
-    expect: () => [
-      createState(
-        status: const BlocStatusNoLoggedUser(),
-      ),
-    ],
+    act: (cubit) => cubit.updatePaceUnit(PaceUnit.kilometersPerHour),
+    expect: () => [],
     verify: (_) {
       verify(
         () => authService.loggedUserId$,
@@ -534,10 +437,12 @@ void main() {
     'update pace unit, '
     'new pace unit is the same as current pace unit, '
     'should do nothing',
-    build: () => createBloc(paceUnit: PaceUnit.kilometersPerHour),
-    act: (bloc) => bloc.add(const ProfileSettingsEventUpdatePaceUnit(
-      newPaceUnit: PaceUnit.kilometersPerHour,
-    )),
+    build: () => ProfileSettingsCubit(
+      initialState: const ProfileSettingsState(
+        paceUnit: PaceUnit.kilometersPerHour,
+      ),
+    ),
+    act: (cubit) => cubit.updatePaceUnit(PaceUnit.kilometersPerHour),
     expect: () => [],
     verify: (_) {
       verifyNever(

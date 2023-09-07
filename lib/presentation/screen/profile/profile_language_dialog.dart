@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/additional_model/settings.dart';
-import '../../../domain/bloc/profile/settings/profile_settings_bloc.dart';
+import '../../../domain/cubit/profile/settings/profile_settings_cubit.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/responsive_layout_component.dart';
 import '../../component/text/body_text_components.dart';
@@ -101,7 +101,7 @@ class _OptionsToSelect extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Language? selectedLanguage = context.select(
-      (ProfileSettingsBloc bloc) => bloc.state.language,
+      (ProfileSettingsCubit cubit) => cubit.state.language,
     );
 
     return Column(
@@ -111,24 +111,11 @@ class _OptionsToSelect extends StatelessWidget {
               title: Text(language.toUIFormat(context)),
               value: language,
               groupValue: selectedLanguage,
-              onChanged: (Language? language) {
-                _onLanguageChanged(context, language);
-              },
+              onChanged: context.read<ProfileSettingsCubit>().updateLanguage,
             ),
           )
           .toList(),
     );
-  }
-
-  void _onLanguageChanged(
-    BuildContext context,
-    Language? newLanguage,
-  ) {
-    if (newLanguage != null) {
-      context.read<ProfileSettingsBloc>().add(
-            ProfileSettingsEventUpdateLanguage(newLanguage: newLanguage),
-          );
-    }
   }
 }
 

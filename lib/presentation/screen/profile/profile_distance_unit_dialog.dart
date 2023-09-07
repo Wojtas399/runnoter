@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/additional_model/settings.dart';
-import '../../../domain/bloc/profile/settings/profile_settings_bloc.dart';
+import '../../../domain/cubit/profile/settings/profile_settings_cubit.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/responsive_layout_component.dart';
 import '../../component/text/body_text_components.dart';
@@ -97,7 +97,7 @@ class _OptionsToSelect extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final DistanceUnit? selectedDistanceUnit = context.select(
-      (ProfileSettingsBloc bloc) => bloc.state.distanceUnit,
+      (ProfileSettingsCubit cubit) => cubit.state.distanceUnit,
     );
 
     return Column(
@@ -107,25 +107,11 @@ class _OptionsToSelect extends StatelessWidget {
               title: Text(distanceUnit.toUIFullFormat(context)),
               value: distanceUnit,
               groupValue: selectedDistanceUnit,
-              onChanged: (DistanceUnit? distanceUnit) {
-                _onDistanceUnitChanged(context, distanceUnit);
-              },
+              onChanged:
+                  context.read<ProfileSettingsCubit>().updateDistanceUnit,
             ),
           )
           .toList(),
     );
-  }
-
-  void _onDistanceUnitChanged(
-    BuildContext context,
-    DistanceUnit? newDistanceUnit,
-  ) {
-    if (newDistanceUnit != null) {
-      context.read<ProfileSettingsBloc>().add(
-            ProfileSettingsEventUpdateDistanceUnit(
-              newDistanceUnit: newDistanceUnit,
-            ),
-          );
-    }
   }
 }

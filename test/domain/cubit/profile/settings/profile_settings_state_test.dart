@@ -1,36 +1,17 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/additional_model/settings.dart';
-import 'package:runnoter/domain/bloc/profile/settings/profile_settings_bloc.dart';
+import 'package:runnoter/domain/cubit/profile/settings/profile_settings_cubit.dart';
 
 void main() {
   late ProfileSettingsState state;
 
   setUp(() {
-    state = const ProfileSettingsState(
-      status: BlocStatusInitial(),
-      themeMode: null,
-      language: null,
-      distanceUnit: null,
-      paceUnit: null,
-    );
+    state = const ProfileSettingsState();
   });
 
   test(
-    'copy with status',
-    () {
-      const BlocStatus expectedStatus = BlocStatusLoading();
-
-      state = state.copyWith(status: expectedStatus);
-      final state2 = state.copyWith();
-
-      expect(state.status, expectedStatus);
-      expect(state2.status, const BlocStatusComplete());
-    },
-  );
-
-  test(
-    'copy with theme mode',
+    'copy with theme mode, '
+    'should copy current value if new value is null',
     () {
       const ThemeMode expectedThemeMode = ThemeMode.dark;
 
@@ -43,7 +24,8 @@ void main() {
   );
 
   test(
-    'copy with language',
+    'copy with language, '
+    'should copy current value if new value is null',
     () {
       const Language expectedLanguage = Language.english;
 
@@ -56,7 +38,8 @@ void main() {
   );
 
   test(
-    'copy with distance unit',
+    'copy with distance unit, '
+    'should copy current value if new value is null',
     () {
       const DistanceUnit expectedDistanceUnit = DistanceUnit.kilometers;
 
@@ -69,7 +52,8 @@ void main() {
   );
 
   test(
-    'copy with pace unit',
+    'copy with pace unit, '
+    'should copy current value if new value is null',
     () {
       const PaceUnit expectedPaceUnit = PaceUnit.minutesPerKilometer;
 
