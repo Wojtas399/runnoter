@@ -1,15 +1,12 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
-import 'package:runnoter/domain/bloc/forgot_password/forgot_password_bloc.dart';
+import 'package:runnoter/domain/cubit/forgot_password/forgot_password_cubit.dart';
 
 void main() {
   late ForgotPasswordState state;
 
   setUp(() {
-    state = const ForgotPasswordState(
-      status: BlocStatusInitial(),
-      email: '',
-    );
+    state = const ForgotPasswordState(status: BlocStatusInitial());
   });
 
   test(

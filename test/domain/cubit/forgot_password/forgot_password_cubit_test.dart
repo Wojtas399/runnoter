@@ -4,7 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/additional_model/custom_exception.dart';
-import 'package:runnoter/domain/bloc/forgot_password/forgot_password_bloc.dart';
+import 'package:runnoter/domain/cubit/forgot_password/forgot_password_cubit.dart';
 import 'package:runnoter/domain/service/auth_service.dart';
 
 import '../../../mock/domain/service/mock_auth_service.dart';
@@ -12,24 +12,6 @@ import '../../../mock/domain/service/mock_auth_service.dart';
 void main() {
   final authService = MockAuthService();
   const String email = 'email@example.com';
-
-  ForgotPasswordBloc createBloc({
-    String email = '',
-  }) {
-    return ForgotPasswordBloc(
-      email: email,
-    );
-  }
-
-  ForgotPasswordState createState({
-    BlocStatus status = const BlocStatusInitial(),
-    String email = '',
-  }) {
-    return ForgotPasswordState(
-      status: status,
-      email: email,
-    );
-  }
 
   setUpAll(() {
     GetIt.I.registerFactory<AuthService>(() => authService);
@@ -42,13 +24,11 @@ void main() {
   blocTest(
     'email changed, '
     'should update email in state',
-    build: () => createBloc(),
-    act: (bloc) => bloc.add(const ForgotPasswordEventEmailChanged(
-      email: email,
-    )),
+    build: () => ForgotPasswordCubit(),
+    act: (cubit) => cubit.emailChanged(email),
     expect: () => [
-      createState(
-        status: const BlocStatusComplete(),
+      const ForgotPasswordState(
+        status: BlocStatusComplete(),
         email: email,
       ),
     ],
@@ -57,17 +37,22 @@ void main() {
   blocTest(
     'submit, '
     'should call auth service method to send password reset email and should emit complete status with email submitted info',
-    build: () => createBloc(email: email),
-    setUp: () => authService.mockSendPasswordResetEmail(),
-    act: (bloc) => bloc.add(const ForgotPasswordEventSubmit()),
-    expect: () => [
-      createState(
-        status: const BlocStatusLoading(),
+    build: () => ForgotPasswordCubit(
+      initialState: const ForgotPasswordState(
+        status: BlocStatusInitial(),
         email: email,
       ),
-      createState(
-        status: const BlocStatusComplete<ForgotPasswordBlocInfo>(
-          info: ForgotPasswordBlocInfo.emailSubmitted,
+    ),
+    setUp: () => authService.mockSendPasswordResetEmail(),
+    act: (cubit) => cubit.submit(),
+    expect: () => [
+      const ForgotPasswordState(
+        status: BlocStatusLoading(),
+        email: email,
+      ),
+      const ForgotPasswordState(
+        status: BlocStatusComplete<ForgotPasswordCubitInfo>(
+          info: ForgotPasswordCubitInfo.emailSubmitted,
         ),
         email: email,
       ),
@@ -81,21 +66,26 @@ void main() {
     'submit, '
     'auth exception with invalid email code, '
     'should emit error status with invalid email error',
-    build: () => createBloc(email: email),
+    build: () => ForgotPasswordCubit(
+      initialState: const ForgotPasswordState(
+        status: BlocStatusInitial(),
+        email: email,
+      ),
+    ),
     setUp: () => authService.mockSendPasswordResetEmail(
       throwable: const AuthException(
         code: AuthExceptionCode.invalidEmail,
       ),
     ),
-    act: (bloc) => bloc.add(const ForgotPasswordEventSubmit()),
+    act: (cubit) => cubit.submit(),
     expect: () => [
-      createState(
-        status: const BlocStatusLoading(),
+      const ForgotPasswordState(
+        status: BlocStatusLoading(),
         email: email,
       ),
-      createState(
-        status: const BlocStatusError<ForgotPasswordBlocError>(
-          error: ForgotPasswordBlocError.invalidEmail,
+      const ForgotPasswordState(
+        status: BlocStatusError<ForgotPasswordCubitError>(
+          error: ForgotPasswordCubitError.invalidEmail,
         ),
         email: email,
       ),
@@ -109,21 +99,26 @@ void main() {
     'submit, '
     'auth exception with user not found code, '
     'should emit error status with user not found error',
-    build: () => createBloc(email: email),
+    build: () => ForgotPasswordCubit(
+      initialState: const ForgotPasswordState(
+        status: BlocStatusInitial(),
+        email: email,
+      ),
+    ),
     setUp: () => authService.mockSendPasswordResetEmail(
       throwable: const AuthException(
         code: AuthExceptionCode.userNotFound,
       ),
     ),
-    act: (bloc) => bloc.add(const ForgotPasswordEventSubmit()),
+    act: (cubit) => cubit.submit(),
     expect: () => [
-      createState(
-        status: const BlocStatusLoading(),
+      const ForgotPasswordState(
+        status: BlocStatusLoading(),
         email: email,
       ),
-      createState(
-        status: const BlocStatusError<ForgotPasswordBlocError>(
-          error: ForgotPasswordBlocError.userNotFound,
+      const ForgotPasswordState(
+        status: BlocStatusError<ForgotPasswordCubitError>(
+          error: ForgotPasswordCubitError.userNotFound,
         ),
         email: email,
       ),
@@ -137,20 +132,25 @@ void main() {
     'submit, '
     'network exception with request failed code, '
     'should emit network request failed status',
-    build: () => createBloc(email: email),
+    build: () => ForgotPasswordCubit(
+      initialState: const ForgotPasswordState(
+        status: BlocStatusInitial(),
+        email: email,
+      ),
+    ),
     setUp: () => authService.mockSendPasswordResetEmail(
       throwable: const NetworkException(
         code: NetworkExceptionCode.requestFailed,
       ),
     ),
-    act: (bloc) => bloc.add(const ForgotPasswordEventSubmit()),
+    act: (cubit) => cubit.submit(),
     expect: () => [
-      createState(
-        status: const BlocStatusLoading(),
+      const ForgotPasswordState(
+        status: BlocStatusLoading(),
         email: email,
       ),
-      createState(
-        status: const BlocStatusNoInternetConnection(),
+      const ForgotPasswordState(
+        status: BlocStatusNoInternetConnection(),
         email: email,
       ),
     ],
@@ -163,18 +163,23 @@ void main() {
     'submit, '
     'unknown exception, '
     'should emit unknown error status and throw exception message',
-    build: () => createBloc(email: email),
+    build: () => ForgotPasswordCubit(
+      initialState: const ForgotPasswordState(
+        status: BlocStatusInitial(),
+        email: email,
+      ),
+    ),
     setUp: () => authService.mockSendPasswordResetEmail(
       throwable: const UnknownException(message: 'unknown exception message'),
     ),
-    act: (bloc) => bloc.add(const ForgotPasswordEventSubmit()),
+    act: (cubit) => cubit.submit(),
     expect: () => [
-      createState(
-        status: const BlocStatusLoading(),
+      const ForgotPasswordState(
+        status: BlocStatusLoading(),
         email: email,
       ),
-      createState(
-        status: const BlocStatusUnknownError(),
+      const ForgotPasswordState(
+        status: BlocStatusUnknownError(),
         email: email,
       ),
     ],
