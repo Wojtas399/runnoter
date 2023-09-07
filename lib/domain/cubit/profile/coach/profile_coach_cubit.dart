@@ -50,7 +50,7 @@ class ProfileCoachCubit
   }
 
   Future<void> initializeCoachListener() async {
-    _getCoach().listen((Person? coach) {
+    _coachListener ??= _getCoach().listen((Person? coach) {
       if (coach == null) {
         initializeRequestsListener();
       } else {
