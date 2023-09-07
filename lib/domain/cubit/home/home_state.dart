@@ -1,6 +1,6 @@
-part of 'home_bloc.dart';
+part of 'home_cubit.dart';
 
-class HomeState extends BlocState<HomeState> {
+class HomeState extends CubitState<HomeState> {
   final AccountType? accountType;
   final String? loggedUserName;
   final Settings? appSettings;

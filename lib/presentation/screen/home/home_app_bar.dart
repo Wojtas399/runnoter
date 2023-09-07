@@ -5,8 +5,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 
 import '../../../domain/bloc/calendar/calendar_bloc.dart';
-import '../../../domain/bloc/home/home_bloc.dart';
 import '../../../domain/cubit/date_range_manager_cubit.dart';
+import '../../../domain/cubit/home/home_cubit.dart';
 import '../../component/date_range_header_component.dart';
 import '../../component/gap/gap_horizontal_components.dart';
 import '../../component/nullable_text_component.dart';
@@ -128,7 +128,7 @@ class _Avatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final String? loggedUserName = context.select(
-      (HomeBloc bloc) => bloc.state.loggedUserName,
+      (HomeCubit cubit) => cubit.state.loggedUserName,
     );
     return IconButton(
       onPressed: onPressed,

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/bloc/home/home_bloc.dart';
+import '../../../domain/cubit/home/home_cubit.dart';
 import '../../../domain/entity/user.dart';
 import '../../config/navigation/router.dart';
 import '../../extension/context_extensions.dart';
@@ -28,7 +28,7 @@ class _State extends State<HomeContent> {
   @override
   Widget build(BuildContext context) {
     final AccountType? accountType = context.select(
-      (HomeBloc bloc) => bloc.state.accountType,
+      (HomeCubit cubit) => cubit.state.accountType,
     );
     final List<PageRouteInfo> routes = [
       const CalendarRoute(),
@@ -155,7 +155,7 @@ class _State extends State<HomeContent> {
   }
 
   Future<void> _signOut(BuildContext context) async {
-    final HomeBloc bloc = context.read<HomeBloc>();
+    final HomeCubit cubit = context.read<HomeCubit>();
     final str = Str.of(context);
     final bool confirmed = await askForConfirmation(
       title: Text(str.homeSignOutConfirmationDialogTitle),
@@ -163,8 +163,6 @@ class _State extends State<HomeContent> {
       confirmButtonLabel: str.homeSignOut,
       displayConfirmationButtonAsFilled: true,
     );
-    if (confirmed == true) {
-      bloc.add(const HomeEventSignOut());
-    }
+    if (confirmed == true) cubit.signOut();
   }
 }

@@ -1,100 +1,90 @@
 import 'dart:async';
 
-import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../../../domain/additional_model/bloc_status.dart';
-import '../../../../domain/additional_model/bloc_with_status.dart';
 import '../../../../domain/repository/user_repository.dart';
 import '../../../../domain/service/auth_service.dart';
 import '../../../dependency_injection.dart';
-import '../../additional_model/bloc_state.dart';
 import '../../additional_model/coaching_request.dart';
 import '../../additional_model/coaching_request_short.dart';
+import '../../additional_model/cubit_state.dart';
+import '../../additional_model/cubit_with_status.dart';
 import '../../additional_model/settings.dart';
 import '../../entity/user.dart';
 import '../../repository/person_repository.dart';
 import '../../service/coaching_request_service.dart';
 
-part 'home_event.dart';
 part 'home_state.dart';
 
-class HomeBloc
-    extends BlocWithStatus<HomeEvent, HomeState, HomeBlocInfo, dynamic> {
+class HomeCubit extends CubitWithStatus<HomeState, HomeCubitInfo, dynamic> {
   final AuthService _authService;
   final UserRepository _userRepository;
   final CoachingRequestService _coachingRequestService;
   final PersonRepository _personRepository;
+  StreamSubscription<HomeCubitListenedParams?>? _listener;
 
-  HomeBloc({
-    HomeState state = const HomeState(status: BlocStatusInitial()),
+  HomeCubit({
+    HomeState initialState = const HomeState(status: BlocStatusInitial()),
   })  : _authService = getIt<AuthService>(),
         _userRepository = getIt<UserRepository>(),
         _coachingRequestService = getIt<CoachingRequestService>(),
         _personRepository = getIt<PersonRepository>(),
-        super(state) {
-    on<HomeEventInitialize>(_initialize, transformer: restartable());
-    on<HomeEventDeleteCoachingRequest>(_deleteCoachingRequest);
-    on<HomeEventSignOut>(_signOut);
+        super(initialState);
+
+  @override
+  Future<void> close() {
+    _listener?.cancel();
+    _listener = null;
+    return super.close();
   }
 
-  Future<void> _initialize(
-    HomeEventInitialize event,
-    Emitter<HomeState> emit,
-  ) async {
-    emitLoadingStatus(emit);
-    final Stream<HomeBlocListenedParams?> stream$ =
-        _authService.loggedUserId$.switchMap(
-      (String? loggedUserId) => loggedUserId != null
-          ? Rx.combineLatest3(
-              _userRepository.getUserById(userId: loggedUserId),
-              _getAcceptedClientRequests(loggedUserId),
-              _getAcceptedCoachRequest(loggedUserId),
-              (
-                User? loggedUserData,
-                List<CoachingRequestShort> acceptedClientRequests,
-                CoachingRequestShort? acceptedCoachRequest,
-              ) =>
-                  HomeBlocListenedParams(
-                loggedUserData: loggedUserData,
-                acceptedClientRequests: acceptedClientRequests,
-                acceptedCoachRequest: acceptedCoachRequest,
-              ),
-            )
-          : Stream.value(null),
-    );
-    await emit.forEach(
-      stream$,
-      onData: (HomeBlocListenedParams? params) => state.copyWith(
-        status: params == null ? const BlocStatusNoLoggedUser() : null,
-        accountType: params?.loggedUserData?.accountType,
-        loggedUserName: params?.loggedUserData?.name,
-        appSettings: params?.loggedUserData?.settings,
-        acceptedClientRequests: params?.acceptedClientRequests,
-        acceptedCoachRequest: params?.acceptedCoachRequest,
-      ),
-    );
+  Future<void> initialize() async {
+    emitLoadingStatus();
+    _listener ??= _authService.loggedUserId$
+        .switchMap(
+          (String? loggedUserId) => loggedUserId != null
+              ? Rx.combineLatest3(
+                  _userRepository.getUserById(userId: loggedUserId),
+                  _getAcceptedClientRequests(loggedUserId),
+                  _getAcceptedCoachRequest(loggedUserId),
+                  (
+                    User? loggedUserData,
+                    List<CoachingRequestShort> acceptedClientRequests,
+                    CoachingRequestShort? acceptedCoachRequest,
+                  ) =>
+                      HomeCubitListenedParams(
+                    loggedUserData: loggedUserData,
+                    acceptedClientRequests: acceptedClientRequests,
+                    acceptedCoachRequest: acceptedCoachRequest,
+                  ),
+                )
+              : Stream.value(null),
+        )
+        .listen(
+          (HomeCubitListenedParams? params) => emit(
+            state.copyWith(
+              status: params == null ? const BlocStatusNoLoggedUser() : null,
+              accountType: params?.loggedUserData?.accountType,
+              loggedUserName: params?.loggedUserData?.name,
+              appSettings: params?.loggedUserData?.settings,
+              acceptedClientRequests: params?.acceptedClientRequests,
+              acceptedCoachRequest: params?.acceptedCoachRequest,
+            ),
+          ),
+        );
   }
 
-  Future<void> _deleteCoachingRequest(
-    HomeEventDeleteCoachingRequest event,
-    Emitter<HomeState> emit,
-  ) async {
-    await _coachingRequestService.deleteCoachingRequest(
-      requestId: event.requestId,
-    );
+  Future<void> deleteCoachingRequest(String requestId) async {
+    await _coachingRequestService.deleteCoachingRequest(requestId: requestId);
   }
 
-  Future<void> _signOut(
-    HomeEventSignOut event,
-    Emitter<HomeState> emit,
-  ) async {
-    emitLoadingStatus(emit);
+  Future<void> signOut() async {
+    emitLoadingStatus();
     await _authService.signOut();
-    emitCompleteStatus(emit, info: HomeBlocInfo.userSignedOut);
+    emitCompleteStatus(info: HomeCubitInfo.userSignedOut);
   }
 
   Stream<List<CoachingRequestShort>> _getAcceptedClientRequests(
@@ -160,14 +150,14 @@ class HomeBloc
       );
 }
 
-enum HomeBlocInfo { userSignedOut }
+enum HomeCubitInfo { userSignedOut }
 
-class HomeBlocListenedParams extends Equatable {
+class HomeCubitListenedParams extends Equatable {
   final User? loggedUserData;
   final List<CoachingRequestShort> acceptedClientRequests;
   final CoachingRequestShort? acceptedCoachRequest;
 
-  const HomeBlocListenedParams({
+  const HomeCubitListenedParams({
     required this.loggedUserData,
     required this.acceptedClientRequests,
     required this.acceptedCoachRequest,

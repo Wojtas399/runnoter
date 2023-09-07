@@ -1,6 +1,6 @@
 part of 'forgot_password_cubit.dart';
 
-class ForgotPasswordState extends CubitState {
+class ForgotPasswordState extends CubitState<ForgotPasswordState> {
   final String email;
 
   const ForgotPasswordState({required super.status, this.email = ''});

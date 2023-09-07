@@ -8,7 +8,7 @@ import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/additional_model/coaching_request.dart';
 import 'package:runnoter/domain/additional_model/coaching_request_short.dart';
 import 'package:runnoter/domain/additional_model/settings.dart';
-import 'package:runnoter/domain/bloc/home/home_bloc.dart';
+import 'package:runnoter/domain/cubit/home/home_cubit.dart';
 import 'package:runnoter/domain/entity/person.dart';
 import 'package:runnoter/domain/entity/user.dart';
 import 'package:runnoter/domain/repository/person_repository.dart';
@@ -118,7 +118,7 @@ void main() {
 
       blocTest(
         "should set listener of logged user's data, accepted client requests and accepted coach request",
-        build: () => HomeBloc(),
+        build: () => HomeCubit(),
         setUp: () {
           authService.mockGetLoggedUserId(userId: loggedUserId);
           userRepository.mockGetUserById(userStream: loggedUserData$.stream);
@@ -146,13 +146,13 @@ void main() {
             () => personRepository.getPersonById(personId: coach.id),
           ).thenAnswer((_) => Stream.value(coach));
         },
-        act: (bloc) async {
-          bloc.add(const HomeEventInitialize());
-          await bloc.stream.first;
+        act: (cubit) async {
+          cubit.initialize();
+          await cubit.stream.first;
           coachesRequests$.add([]);
-          await bloc.stream.first;
+          await cubit.stream.first;
           clientsRequests$.add([]);
-          await bloc.stream.first;
+          await cubit.stream.first;
           loggedUserData$.add(updatedLoggedUserData);
         },
         expect: () => [
@@ -230,9 +230,9 @@ void main() {
       blocTest(
         'logged user does not exist, '
         'should emit no logged user status',
-        build: () => HomeBloc(),
+        build: () => HomeCubit(),
         setUp: () => authService.mockGetLoggedUserId(),
-        act: (bloc) => bloc.add(const HomeEventInitialize()),
+        act: (cubit) => cubit.initialize(),
         expect: () => [
           const HomeState(status: BlocStatusLoading()),
           const HomeState(status: BlocStatusNoLoggedUser()),
@@ -245,11 +245,9 @@ void main() {
   blocTest(
     'delete coaching request, '
     "should call coaching request service's method to delete request",
-    build: () => HomeBloc(),
+    build: () => HomeCubit(),
     setUp: () => coachingRequestService.mockDeleteCoachingRequest(),
-    act: (bloc) => bloc.add(
-      const HomeEventDeleteCoachingRequest(requestId: 'r1'),
-    ),
+    act: (cubit) => cubit.deleteCoachingRequest('r1'),
     expect: () => [],
     verify: (_) => verify(
       () => coachingRequestService.deleteCoachingRequest(requestId: 'r1'),
@@ -259,13 +257,13 @@ void main() {
   blocTest(
     'sign out, '
     'should call auth service method to sign out and should emit signed out info',
-    build: () => HomeBloc(),
+    build: () => HomeCubit(),
     setUp: () => authService.mockSignOut(),
-    act: (bloc) => bloc.add(const HomeEventSignOut()),
+    act: (cubit) => cubit.signOut(),
     expect: () => [
       const HomeState(status: BlocStatusLoading()),
       const HomeState(
-        status: BlocStatusComplete(info: HomeBlocInfo.userSignedOut),
+        status: BlocStatusComplete(info: HomeCubitInfo.userSignedOut),
       ),
     ],
     verify: (_) => verify(authService.signOut).called(1),

@@ -1,6 +1,6 @@
 part of 'sign_in_cubit.dart';
 
-class SignInState extends CubitState {
+class SignInState extends CubitState<SignInState> {
   final String email;
   final String password;
 

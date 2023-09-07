@@ -8,9 +8,9 @@ import '../../../domain/additional_model/bloc_status.dart';
 import '../../../domain/additional_model/coaching_request_short.dart';
 import '../../../domain/additional_model/settings.dart' as settings;
 import '../../../domain/bloc/calendar/calendar_bloc.dart';
-import '../../../domain/bloc/home/home_bloc.dart';
 import '../../../domain/cubit/date_range_manager_cubit.dart';
-import '../../component/bloc_with_status_listener_component.dart';
+import '../../../domain/cubit/home/home_cubit.dart';
+import '../../component/cubit_with_status_listener_component.dart';
 import '../../config/navigation/router.dart';
 import '../../dialog/required_data_completion/required_data_completion_dialog.dart';
 import '../../formatter/person_formatter.dart';
@@ -31,7 +31,7 @@ class HomeScreen extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (_) => HomeBloc()..add(const HomeEventInitialize()),
+          create: (_) => HomeCubit()..initialize(),
         ),
         BlocProvider(
           create: (_) => CalendarBloc()
@@ -40,30 +40,31 @@ class HomeScreen extends StatelessWidget {
             ),
         ),
       ],
-      child: const _HomeBlocListener(
+      child: const _HomeCubitListener(
         child: HomeContent(),
       ),
     );
   }
 }
 
-class _HomeBlocListener extends StatelessWidget {
+class _HomeCubitListener extends StatelessWidget {
   final Widget child;
 
-  const _HomeBlocListener({required this.child});
+  const _HomeCubitListener({required this.child});
 
   @override
   Widget build(BuildContext context) {
-    return BlocWithStatusListener<HomeBloc, HomeState, HomeBlocInfo, dynamic>(
+    return CubitWithStatusListener<HomeCubit, HomeState, HomeCubitInfo,
+        dynamic>(
       child: child,
-      onInfo: (HomeBlocInfo info) => _manageInfo(context, info),
+      onInfo: (HomeCubitInfo info) => _manageInfo(context, info),
       onStateChanged: (HomeState state) => _manageStateChanges(context, state),
     );
   }
 
-  void _manageInfo(BuildContext context, HomeBlocInfo info) {
+  void _manageInfo(BuildContext context, HomeCubitInfo info) {
     switch (info) {
-      case HomeBlocInfo.userSignedOut:
+      case HomeCubitInfo.userSignedOut:
         context.read<ThemeService>().changeTheme(ThemeMode.system);
         navigateAndRemoveUntil(const SignInRoute());
         resetGetItRepositories();
@@ -144,9 +145,7 @@ class _HomeBlocListener extends StatelessWidget {
           showCloseIcon: true,
           duration: const Duration(seconds: 6),
         );
-        context.read<HomeBloc>().add(
-              HomeEventDeleteCoachingRequest(requestId: request.id),
-            );
+        context.read<HomeCubit>().deleteCoachingRequest(request.id);
       }
     }
   }
@@ -163,9 +162,7 @@ class _HomeBlocListener extends StatelessWidget {
         showCloseIcon: true,
         duration: const Duration(seconds: 6),
       );
-      context.read<HomeBloc>().add(
-            HomeEventDeleteCoachingRequest(requestId: request.id),
-          );
+      context.read<HomeCubit>().deleteCoachingRequest(request.id);
     }
   }
 }

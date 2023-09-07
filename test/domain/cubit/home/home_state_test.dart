@@ -2,7 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/additional_model/coaching_request_short.dart';
 import 'package:runnoter/domain/additional_model/settings.dart';
-import 'package:runnoter/domain/bloc/home/home_bloc.dart';
+import 'package:runnoter/domain/cubit/home/home_cubit.dart';
 import 'package:runnoter/domain/entity/user.dart';
 
 import '../../../creators/person_creator.dart';
@@ -11,9 +11,7 @@ void main() {
   late HomeState state;
 
   setUp(() {
-    state = const HomeState(
-      status: BlocStatusInitial(),
-    );
+    state = const HomeState(status: BlocStatusInitial());
   });
 
   test(
