@@ -1,88 +1,76 @@
-import 'package:bloc_concurrency/bloc_concurrency.dart';
+import 'dart:async';
+
 import 'package:equatable/equatable.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../../dependency_injection.dart';
-import '../../additional_model/bloc_state.dart';
 import '../../additional_model/bloc_status.dart';
-import '../../additional_model/bloc_with_status.dart';
 import '../../additional_model/coaching_request.dart';
 import '../../additional_model/coaching_request_short.dart';
+import '../../additional_model/cubit_state.dart';
+import '../../additional_model/cubit_with_status.dart';
 import '../../entity/person.dart';
 import '../../repository/person_repository.dart';
 import '../../service/auth_service.dart';
 import '../../service/coaching_request_service.dart';
 import '../../use_case/load_chat_id_use_case.dart';
 
-part 'clients_event.dart';
 part 'clients_state.dart';
 
-class ClientsBloc extends BlocWithStatus<ClientsEvent, ClientsState,
-    ClientsBlocInfo, dynamic> {
+class ClientsCubit
+    extends CubitWithStatus<ClientsState, ClientsCubitInfo, dynamic> {
   final AuthService _authService;
   final CoachingRequestService _coachingRequestService;
   final PersonRepository _personRepository;
   final LoadChatIdUseCase _loadChatIdUseCase;
+  StreamSubscription<_ListenedParams>? _listener;
 
-  ClientsBloc({
-    ClientsState state = const ClientsState(status: BlocStatusInitial()),
+  ClientsCubit({
+    ClientsState initialState = const ClientsState(status: BlocStatusInitial()),
   })  : _authService = getIt<AuthService>(),
         _coachingRequestService = getIt<CoachingRequestService>(),
         _personRepository = getIt<PersonRepository>(),
         _loadChatIdUseCase = getIt<LoadChatIdUseCase>(),
-        super(state) {
-    on<ClientsEventInitialize>(_initialize, transformer: restartable());
-    on<ClientsEventAcceptRequest>(_acceptRequest);
-    on<ClientsEventDeleteRequest>(_deleteRequest);
-    on<ClientsEventOpenChatWithClient>(_openChatWithClient);
-    on<ClientsEventDeleteClient>(_deleteClient);
+        super(initialState);
+
+  Future<void> initialize() async {
+    _listener ??= _authService.loggedUserId$
+        .whereNotNull()
+        .switchMap(
+          (String loggedUserId) => Rx.combineLatest3(
+            _getSentRequests(loggedUserId),
+            _getReceivedRequests(loggedUserId),
+            _getClients(loggedUserId),
+            (
+              List<CoachingRequestShort> sentRequests,
+              List<CoachingRequestShort> receivedRequests,
+              List<Person> clients,
+            ) =>
+                _ListenedParams(
+              sentRequests: sentRequests,
+              receivedRequests: receivedRequests,
+              clients: clients,
+            ),
+          ),
+        )
+        .listen(
+          (_ListenedParams params) => emit(state.copyWith(
+            sentRequests: params.sentRequests,
+            receivedRequests: params.receivedRequests,
+            clients: params.clients,
+          )),
+        );
   }
 
-  Future<void> _initialize(
-    ClientsEventInitialize event,
-    Emitter<ClientsState> emit,
-  ) async {
-    final Stream<_ListenedParams> stream$ =
-        _authService.loggedUserId$.whereNotNull().switchMap(
-              (String loggedUserId) => Rx.combineLatest3(
-                _getSentRequests(loggedUserId),
-                _getReceivedRequests(loggedUserId),
-                _getClients(loggedUserId),
-                (
-                  List<CoachingRequestShort> sentRequests,
-                  List<CoachingRequestShort> receivedRequests,
-                  List<Person> clients,
-                ) =>
-                    _ListenedParams(
-                  sentRequests: sentRequests,
-                  receivedRequests: receivedRequests,
-                  clients: clients,
-                ),
-              ),
-            );
-    await emit.forEach(
-      stream$,
-      onData: (_ListenedParams params) => state.copyWith(
-        sentRequests: params.sentRequests,
-        receivedRequests: params.receivedRequests,
-        clients: params.clients,
-      ),
-    );
-  }
-
-  Future<void> _acceptRequest(
-    ClientsEventAcceptRequest event,
-    Emitter<ClientsState> emit,
-  ) async {
+  Future<void> acceptRequest(String requestId) async {
     final String? loggedUserId = await _authService.loggedUserId$.first;
     if (loggedUserId == null) {
-      emitNoLoggedUserStatus(emit);
+      emitNoLoggedUserStatus();
       return;
     }
-    emitLoadingStatus(emit);
+    emitLoadingStatus();
     final String senderId = state.receivedRequests!
-        .firstWhere((req) => req.id == event.requestId)
+        .firstWhere((req) => req.id == requestId)
         .personToDisplay
         .id;
     await _personRepository.updateCoachIdOfPerson(
@@ -90,47 +78,36 @@ class ClientsBloc extends BlocWithStatus<ClientsEvent, ClientsState,
       coachId: loggedUserId,
     );
     await _coachingRequestService.updateCoachingRequest(
-      requestId: event.requestId,
+      requestId: requestId,
       isAccepted: true,
     );
-    emitCompleteStatus(emit, info: ClientsBlocInfo.requestAccepted);
+    emitCompleteStatus(info: ClientsCubitInfo.requestAccepted);
   }
 
-  Future<void> _deleteRequest(
-    ClientsEventDeleteRequest event,
-    Emitter<ClientsState> emit,
-  ) async {
-    emitLoadingStatus(emit);
-    await _coachingRequestService.deleteCoachingRequest(
-      requestId: event.requestId,
-    );
-    emitCompleteStatus(emit, info: ClientsBlocInfo.requestDeleted);
+  Future<void> deleteRequest(String requestId) async {
+    emitLoadingStatus();
+    await _coachingRequestService.deleteCoachingRequest(requestId: requestId);
+    emitCompleteStatus(info: ClientsCubitInfo.requestDeleted);
   }
 
-  Future<void> _openChatWithClient(
-    ClientsEventOpenChatWithClient event,
-    Emitter<ClientsState> emit,
-  ) async {
+  Future<void> openChatWithClient(String clientId) async {
     final String? loggedUserId = await _authService.loggedUserId$.first;
     if (loggedUserId == null) return;
-    emitLoadingStatus(emit);
+    emitLoadingStatus();
     final String? chatId = await _loadChatIdUseCase.execute(
       user1Id: loggedUserId,
-      user2Id: event.clientId,
+      user2Id: clientId,
     );
     emit(state.copyWith(selectedChatId: chatId));
   }
 
-  Future<void> _deleteClient(
-    ClientsEventDeleteClient event,
-    Emitter<ClientsState> emit,
-  ) async {
-    emitLoadingStatus(emit);
+  Future<void> deleteClient(String clientId) async {
+    emitLoadingStatus();
     await _personRepository.updateCoachIdOfPerson(
-      personId: event.clientId,
+      personId: clientId,
       coachId: null,
     );
-    emitCompleteStatus(emit, info: ClientsBlocInfo.clientDeleted);
+    emitCompleteStatus(info: ClientsCubitInfo.clientDeleted);
   }
 
   Stream<List<Person>> _getClients(String loggedUserId) => _personRepository
@@ -197,7 +174,7 @@ class ClientsBloc extends BlocWithStatus<ClientsEvent, ClientsState,
             );
 }
 
-enum ClientsBlocInfo { requestAccepted, requestDeleted, clientDeleted }
+enum ClientsCubitInfo { requestAccepted, requestDeleted, clientDeleted }
 
 class _ListenedParams extends Equatable {
   final List<CoachingRequestShort> sentRequests;

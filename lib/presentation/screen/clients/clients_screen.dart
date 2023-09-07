@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/bloc/clients/clients_bloc.dart';
-import '../../component/bloc_with_status_listener_component.dart';
+import '../../../domain/cubit/clients/clients_cubit.dart';
 import '../../component/body/medium_body_component.dart';
 import '../../component/card_body_component.dart';
+import '../../component/cubit_with_status_listener_component.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/responsive_layout_component.dart';
 import '../../config/navigation/router.dart';
@@ -23,7 +23,7 @@ class ClientsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => ClientsBloc()..add(const ClientsEventInitialize()),
+      create: (_) => ClientsCubit()..initialize(),
       child: _BlocListener(
         child: SingleChildScrollView(
           child: MediumBody(
@@ -50,23 +50,23 @@ class _BlocListener extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocWithStatusListener<ClientsBloc, ClientsState, ClientsBlocInfo,
+    return CubitWithStatusListener<ClientsCubit, ClientsState, ClientsCubitInfo,
         dynamic>(
-      onInfo: (ClientsBlocInfo info) => _manageInfo(context, info),
+      onInfo: (ClientsCubitInfo info) => _manageInfo(context, info),
       onStateChanged: _manageState,
       child: child,
     );
   }
 
-  void _manageInfo(BuildContext context, ClientsBlocInfo info) {
+  void _manageInfo(BuildContext context, ClientsCubitInfo info) {
     final str = Str.of(context);
     switch (info) {
-      case ClientsBlocInfo.requestAccepted:
+      case ClientsCubitInfo.requestAccepted:
         showSnackbarMessage(str.successfullyAcceptedRequest);
-      case ClientsBlocInfo.requestDeleted:
+      case ClientsCubitInfo.requestDeleted:
         showSnackbarMessage(str.successfullyUndidRequest);
         break;
-      case ClientsBlocInfo.clientDeleted:
+      case ClientsCubitInfo.clientDeleted:
         showSnackbarMessage(str.clientsSuccessfullyDeletedClient);
         break;
     }

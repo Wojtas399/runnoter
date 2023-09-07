@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/additional_model/coaching_request_short.dart';
-import '../../../domain/bloc/clients/clients_bloc.dart';
+import '../../../domain/cubit/clients/clients_cubit.dart';
 import '../../../domain/entity/person.dart';
 import '../../component/text/body_text_components.dart';
 import '../../component/text/title_text_components.dart';
@@ -19,7 +19,7 @@ class ClientsSentRequests extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<CoachingRequestShort>? requests = context.select(
-      (ClientsBloc bloc) => bloc.state.sentRequests,
+      (ClientsCubit cubit) => cubit.state.sentRequests,
     );
 
     return _RequestsList(
@@ -35,7 +35,7 @@ class ClientsReceivedRequests extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<CoachingRequestShort>? requests = context.select(
-      (ClientsBloc bloc) => bloc.state.receivedRequests,
+      (ClientsCubit cubit) => cubit.state.receivedRequests,
     );
 
     return _RequestsList(
@@ -182,7 +182,8 @@ class _RequestItem extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               IconButton(
-                onPressed: () => _onAccept(context),
+                onPressed: () =>
+                    context.read<ClientsCubit>().acceptRequest(request.id),
                 icon: Icon(
                   Icons.check,
                   color: Theme.of(context).colorScheme.primary,
@@ -201,21 +202,13 @@ class _RequestItem extends StatelessWidget {
     );
   }
 
-  void _onAccept(BuildContext context) {
-    context.read<ClientsBloc>().add(
-          ClientsEventAcceptRequest(requestId: request.id),
-        );
-  }
-
   Future<void> _onDelete(BuildContext context) async {
-    final ClientsBloc bloc = context.read<ClientsBloc>();
+    final ClientsCubit cubit = context.read<ClientsCubit>();
     bool isDeletionConfirmed = true;
     if (requestDirection == CoachingRequestDirection.coachToClient) {
       isDeletionConfirmed = await _askForRequestDeletionConfirmation(context);
     }
-    if (isDeletionConfirmed) {
-      bloc.add(ClientsEventDeleteRequest(requestId: request.id));
-    }
+    if (isDeletionConfirmed) cubit.deleteRequest(request.id);
   }
 
   Future<bool> _askForRequestDeletionConfirmation(

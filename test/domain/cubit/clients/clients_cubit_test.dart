@@ -7,7 +7,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/additional_model/coaching_request.dart';
 import 'package:runnoter/domain/additional_model/coaching_request_short.dart';
-import 'package:runnoter/domain/bloc/clients/clients_bloc.dart';
+import 'package:runnoter/domain/cubit/clients/clients_cubit.dart';
 import 'package:runnoter/domain/entity/person.dart';
 import 'package:runnoter/domain/repository/person_repository.dart';
 import 'package:runnoter/domain/service/auth_service.dart';
@@ -73,7 +73,7 @@ void main() {
 
       blocTest(
         'should set listener of clients, sent requests and received requests',
-        build: () => ClientsBloc(),
+        build: () => ClientsCubit(),
         setUp: () {
           authService.mockGetLoggedUserId(userId: loggedUserId);
           coachingRequestService.mockGetCoachingRequestsBySenderId(
@@ -93,7 +93,7 @@ void main() {
           );
         },
         act: (bloc) async {
-          bloc.add(const ClientsEventInitialize());
+          bloc.initialize();
           await bloc.stream.first;
           sentRequests$.add([]);
           await bloc.stream.first;
@@ -160,9 +160,9 @@ void main() {
     'accept request, '
     'logged user does not exist, '
     'should emit no logged user status',
-    build: () => ClientsBloc(),
+    build: () => ClientsCubit(),
     setUp: () => authService.mockGetLoggedUserId(),
-    act: (bloc) => bloc.add(const ClientsEventAcceptRequest(requestId: 'r1')),
+    act: (bloc) => bloc.acceptRequest('r1'),
     expect: () => [
       const ClientsState(status: BlocStatusNoLoggedUser()),
     ],
@@ -173,8 +173,8 @@ void main() {
     'accept request, '
     "should call coaching request service's method to update request with isAccepted param set as true, "
     "should assign logged user's id to coach id of request's sender",
-    build: () => ClientsBloc(
-      state: ClientsState(
+    build: () => ClientsCubit(
+      initialState: ClientsState(
         status: const BlocStatusComplete(),
         receivedRequests: [
           CoachingRequestShort(
@@ -193,7 +193,7 @@ void main() {
       coachingRequestService.mockUpdateCoachingRequest();
       personRepository.mockUpdateCoachIdOfPerson();
     },
-    act: (bloc) => bloc.add(const ClientsEventAcceptRequest(requestId: 'r1')),
+    act: (bloc) => bloc.acceptRequest('r1'),
     expect: () => [
       ClientsState(
         status: const BlocStatusLoading(),
@@ -209,8 +209,8 @@ void main() {
         ],
       ),
       ClientsState(
-        status: const BlocStatusComplete<ClientsBlocInfo>(
-          info: ClientsBlocInfo.requestAccepted,
+        status: const BlocStatusComplete<ClientsCubitInfo>(
+          info: ClientsCubitInfo.requestAccepted,
         ),
         receivedRequests: [
           CoachingRequestShort(
@@ -244,14 +244,14 @@ void main() {
   blocTest(
     'delete request, '
     "should call coaching request service's method to delete request and should emit requestDeleted info",
-    build: () => ClientsBloc(),
+    build: () => ClientsCubit(),
     setUp: () => coachingRequestService.mockDeleteCoachingRequest(),
-    act: (bloc) => bloc.add(const ClientsEventDeleteRequest(requestId: 'r1')),
+    act: (bloc) => bloc.deleteRequest('r1'),
     expect: () => [
       const ClientsState(status: BlocStatusLoading()),
       const ClientsState(
-        status: BlocStatusComplete<ClientsBlocInfo>(
-          info: ClientsBlocInfo.requestDeleted,
+        status: BlocStatusComplete<ClientsCubitInfo>(
+          info: ClientsCubitInfo.requestDeleted,
         ),
       ),
     ],
@@ -263,14 +263,12 @@ void main() {
   blocTest(
     'open chat with client, '
     'should call use case to load chat id and should emit loaded id',
-    build: () => ClientsBloc(),
+    build: () => ClientsCubit(),
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
       loadChatIdUseCase.mock(chatId: 'c1');
     },
-    act: (bloc) => bloc.add(
-      const ClientsEventOpenChatWithClient(clientId: 'cl1'),
-    ),
+    act: (bloc) => bloc.openChatWithClient('cl1'),
     expect: () => [
       const ClientsState(status: BlocStatusLoading()),
       const ClientsState(status: BlocStatusComplete(), selectedChatId: 'c1'),
@@ -283,14 +281,14 @@ void main() {
   blocTest(
     'delete client, '
     "should call person repository's method to update person with coachId set as null and should emit clientDeleted info",
-    build: () => ClientsBloc(),
+    build: () => ClientsCubit(),
     setUp: () => personRepository.mockUpdateCoachIdOfPerson(),
-    act: (bloc) => bloc.add(const ClientsEventDeleteClient(clientId: 'c1')),
+    act: (bloc) => bloc.deleteClient('c1'),
     expect: () => [
       const ClientsState(status: BlocStatusLoading()),
       const ClientsState(
-        status: BlocStatusComplete<ClientsBlocInfo>(
-          info: ClientsBlocInfo.clientDeleted,
+        status: BlocStatusComplete<ClientsCubitInfo>(
+          info: ClientsCubitInfo.clientDeleted,
         ),
       ),
     ],
