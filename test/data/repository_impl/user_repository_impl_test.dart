@@ -64,14 +64,14 @@ void main() {
     'user does not exist in state, '
     'should emit user loaded from remote db',
     () {
-      const userDto = db.UserDto(
-        id: userId,
-        accountType: db.AccountType.coach,
-        gender: db.Gender.male,
-        name: 'name',
-        surname: 'surname',
-        email: 'email@example.com',
-      );
+      final userDto = db.UserDto(
+          id: userId,
+          accountType: db.AccountType.coach,
+          gender: db.Gender.male,
+          name: 'name',
+          surname: 'surname',
+          email: 'email@example.com',
+          dateOfBirth: DateTime(2023));
       const appearanceSettingsDto = db.AppearanceSettingsDto(
         userId: userId,
         themeMode: db.ThemeMode.light,
@@ -151,13 +151,14 @@ void main() {
         settings: settings,
         coachId: coachId,
       );
-      const db.UserDto addedUserDto = db.UserDto(
+      final db.UserDto addedUserDto = db.UserDto(
         id: userId,
         accountType: dbAccountType,
         gender: dbGender,
         name: name,
         surname: surname,
         email: email,
+        dateOfBirth: DateTime(2023),
         coachId: coachId,
       );
       final User addedUser = createUser(
@@ -184,13 +185,14 @@ void main() {
       expect(await user$.first, addedUser);
       verify(
         () => dbUserService.addUserData(
-          userDto: const db.UserDto(
+          userDto: db.UserDto(
             id: userId,
             accountType: dbAccountType,
             gender: dbGender,
             name: name,
             surname: surname,
             email: email,
+            dateOfBirth: DateTime(2023),
             coachId: coachId,
           ),
         ),
@@ -308,13 +310,14 @@ void main() {
         settings: userSettings,
         coachId: 'c1',
       );
-      const updatedUserDto = db.UserDto(
+      final updatedUserDto = db.UserDto(
         id: userId,
         accountType: newDbAccountType,
         gender: newDbGender,
         name: newName,
         surname: newSurname,
         email: newEmail,
+        dateOfBirth: DateTime(2023),
         coachId: newCoachId,
       );
       final User expectedUpdatedUser = createUser(

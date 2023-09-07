@@ -4,6 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../common/date_service.dart';
 import '../../domain/cubit/date_range_manager_cubit.dart';
+import '../extension/context_extensions.dart';
 import '../extension/widgets_list_extensions.dart';
 import '../formatter/date_formatter.dart';
 import 'gap/gap_components.dart';
@@ -208,22 +209,6 @@ class _Month extends StatelessWidget {
     return TitleMedium('${_getMonthName(context, month)} $year');
   }
 
-  String _getMonthName(BuildContext context, int month) {
-    final str = Str.of(context);
-    final List<String> monthLabels = [
-      str.january,
-      str.february,
-      str.march,
-      str.april,
-      str.may,
-      str.june,
-      str.july,
-      str.august,
-      str.september,
-      str.october,
-      str.november,
-      str.december,
-    ];
-    return monthLabels[month - 1];
-  }
+  String _getMonthName(BuildContext context, int month) =>
+      DateTime(DateTime.now().year, month).toMonth(context.languageCode);
 }

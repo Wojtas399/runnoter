@@ -4,7 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 class PasswordTextFieldComponent extends StatefulWidget {
   final String? label;
   final bool isRequired;
-  final Function(String? value)? onChanged;
+  final Function(String value)? onChanged;
   final Function(PointerDownEvent event)? onTapOutside;
   final Function(String value)? onSubmitted;
   final TextEditingController? controller;

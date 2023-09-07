@@ -50,6 +50,7 @@ class MockFirebaseUserService extends Mock implements FirebaseUserService {
         name: any(named: 'name'),
         surname: any(named: 'surname'),
         email: any(named: 'email'),
+        dateOfBirth: any(named: 'dateOfBirth'),
         coachId: any(named: 'coachId'),
         coachIdAsNull: any(named: 'coachIdAsNull'),
       ),

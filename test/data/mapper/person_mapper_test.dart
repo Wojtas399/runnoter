@@ -15,6 +15,7 @@ void main() {
   const String name = 'name';
   const String surname = 'surname';
   const String email = 'email@example.com';
+  final DateTime dateOfBirth = DateTime(2003, 1, 10);
   const String coachId = 'c1';
 
   test(
@@ -28,15 +29,17 @@ void main() {
         name: name,
         surname: surname,
         email: email,
+        dateOfBirth: dateOfBirth,
         coachId: coachId,
       );
-      const Person expectedPerson = Person(
+      final Person expectedPerson = Person(
         id: id,
         accountType: accountType,
         gender: gender,
         name: name,
         surname: surname,
         email: email,
+        dateOfBirth: dateOfBirth,
         coachId: coachId,
       );
 

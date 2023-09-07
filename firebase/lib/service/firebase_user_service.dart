@@ -58,6 +58,7 @@ class FirebaseUserService {
     String? name,
     String? surname,
     String? email,
+    DateTime? dateOfBirth,
     String? coachId,
     bool coachIdAsNull = false,
   }) async {
@@ -68,6 +69,7 @@ class FirebaseUserService {
       name: name,
       surname: surname,
       email: email,
+      dateOfBirth: dateOfBirth,
       coachId: coachId,
       coachIdAsNull: coachIdAsNull,
     );

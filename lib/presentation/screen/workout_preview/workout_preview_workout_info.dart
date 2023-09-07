@@ -90,7 +90,7 @@ class _WorkoutDate extends StatelessWidget {
       (WorkoutPreviewBloc bloc) => bloc.state.date,
     );
 
-    return NullableText(date?.toFullDate(context));
+    return NullableText(date?.toFullDate(context.languageCode));
   }
 }
 

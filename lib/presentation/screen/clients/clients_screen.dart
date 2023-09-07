@@ -29,7 +29,7 @@ class ClientsScreen extends StatelessWidget {
           child: MediumBody(
             child: Padding(
               padding: context.isMobileSize
-                  ? const EdgeInsets.only(top: 8, bottom: 24)
+                  ? const EdgeInsets.only(top: 8, bottom: 144)
                   : const EdgeInsets.all(24),
               child: const ResponsiveLayout(
                 mobileBody: _MobileContent(),

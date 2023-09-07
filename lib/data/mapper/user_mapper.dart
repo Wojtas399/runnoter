@@ -13,6 +13,18 @@ User mapUserFromDto({required UserDto userDto, required Settings settings}) =>
       name: userDto.name,
       surname: userDto.surname,
       email: userDto.email,
+      dateOfBirth: userDto.dateOfBirth,
       settings: settings,
       coachId: userDto.coachId,
+    );
+
+UserDto mapUserToDto({required User user}) => UserDto(
+      id: user.id,
+      accountType: mapAccountTypeToDto(user.accountType),
+      gender: mapGenderToDto(user.gender),
+      name: user.name,
+      surname: user.surname,
+      email: user.email,
+      dateOfBirth: user.dateOfBirth,
+      coachId: user.coachId,
     );

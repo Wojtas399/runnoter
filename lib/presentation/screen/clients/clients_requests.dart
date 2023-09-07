@@ -9,7 +9,7 @@ import '../../../domain/entity/person.dart';
 import '../../component/text/body_text_components.dart';
 import '../../component/text/title_text_components.dart';
 import '../../extension/context_extensions.dart';
-import '../../extension/gender_extensions.dart';
+import '../../formatter/gender_formatter.dart';
 import '../../formatter/person_formatter.dart';
 import '../../service/dialog_service.dart';
 
@@ -68,9 +68,9 @@ class _RequestsListState extends State<_RequestsList> {
     return ExpansionPanelList(
       elevation: 0,
       expandedHeaderPadding: const EdgeInsets.all(0),
-      expansionCallback: (int index, bool isExpanded) {
+      expansionCallback: (int index, _) {
         setState(() {
-          _isExpanded = !isExpanded;
+          _isExpanded = !_isExpanded;
         });
       },
       children: [

@@ -27,7 +27,8 @@ class _MobileContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Paddings24(
+    return const Padding(
+      padding: EdgeInsets.fromLTRB(24, 24, 24, 144),
       child: Column(
         children: [
           ClientStatsMileage(),

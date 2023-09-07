@@ -7,6 +7,7 @@ import '../../../domain/bloc/home/home_bloc.dart';
 import '../../../domain/entity/user.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/text/label_text_components.dart';
+import '../../config/navigation/router.dart';
 import 'home_fab.dart';
 
 class HomeNavigationRail extends StatelessWidget {
@@ -34,7 +35,9 @@ class HomeNavigationRail extends StatelessWidget {
       labelType: NavigationRailLabelType.all,
       backgroundColor: backgroundColor,
       groupAlignment: -0.90,
-      leading: HomeFAB(currentRoute: currentRoute),
+      leading: currentRoute.name != ProfileRoute.name
+          ? HomeRailFAB(currentRoute: currentRoute)
+          : null,
       trailing: Column(
         children: [
           const Gap32(),

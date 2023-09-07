@@ -10,15 +10,14 @@ import '../../component/material_3_speed_dial_component.dart';
 import '../../config/navigation/router.dart';
 import '../../dialog/health_measurement_creator/health_measurement_creator_dialog.dart';
 import '../../dialog/persons_search/persons_search_dialog.dart';
-import '../../extension/context_extensions.dart';
 import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
 
-class HomeFAB extends StatelessWidget {
+class HomeMobileFAB extends StatelessWidget {
   final _buttonKey = GlobalKey();
   final RouteData currentRoute;
 
-  HomeFAB({super.key, required this.currentRoute});
+  HomeMobileFAB({super.key, required this.currentRoute});
 
   bool get _isSpeedDialRequired =>
       currentRoute.name == CalendarRoute.name ||
@@ -26,9 +25,10 @@ class HomeFAB extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return context.isMobileSize && _isSpeedDialRequired
+    return _isSpeedDialRequired
         ? Material3SpeedDial(
             icon: Icons.add,
+            label: Text(_getLabel(Str.of(context), currentRoute)),
             children: [
               SpeedDialChild(
                 child: const Icon(Icons.emoji_events),
@@ -50,66 +50,81 @@ class HomeFAB extends StatelessWidget {
                 ),
             ],
           )
-        : FloatingActionButton(
+        : FloatingActionButton.extended(
             key: _buttonKey,
-            onPressed: () => _onDefaultButtonPressed(context),
-            child: Icon(
+            onPressed: () => _onPressed(context, _buttonKey, currentRoute),
+            icon: Icon(
               currentRoute.name == ClientsRoute.name ? Icons.search : Icons.add,
             ),
+            label: Text(_getLabel(Str.of(context), currentRoute)),
           );
-  }
-
-  Future<void> _onDefaultButtonPressed(BuildContext context) async {
-    final _EntityToAdd? entityToAdd =
-        await _askForEntityToAdd(context, _buttonKey, currentRoute);
-    if (entityToAdd != null) {
-      await _manageEntityToAdd(entityToAdd);
-    }
   }
 }
 
-class HomeExtendedFAB extends StatelessWidget {
+class HomeRailFAB extends StatelessWidget {
   final _buttonKey = GlobalKey();
   final RouteData currentRoute;
 
-  HomeExtendedFAB({super.key, required this.currentRoute});
+  HomeRailFAB({super.key, required this.currentRoute});
+
+  @override
+  Widget build(BuildContext context) {
+    return FloatingActionButton(
+      key: _buttonKey,
+      onPressed: () => _onPressed(context, _buttonKey, currentRoute),
+      child: Icon(
+        currentRoute.name == ClientsRoute.name ? Icons.search : Icons.add,
+      ),
+    );
+  }
+}
+
+class HomeDrawerFAB extends StatelessWidget {
+  final _buttonKey = GlobalKey();
+  final RouteData currentRoute;
+
+  HomeDrawerFAB({super.key, required this.currentRoute});
 
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton.extended(
       key: _buttonKey,
-      onPressed: () => _onPressed(context),
+      onPressed: () => _onPressed(context, _buttonKey, currentRoute),
       icon: Icon(
         currentRoute.name == ClientsRoute.name ? Icons.search : Icons.add,
       ),
-      label: Text(_getLabel(Str.of(context))),
+      label: Text(_getLabel(Str.of(context), currentRoute)),
     );
-  }
-
-  Future<void> _onPressed(BuildContext context) async {
-    final _EntityToAdd? entityToAdd =
-        await _askForEntityToAdd(context, _buttonKey, currentRoute);
-    if (entityToAdd != null) {
-      await _manageEntityToAdd(entityToAdd);
-    }
-  }
-
-  String _getLabel(Str str) {
-    final String currentRouteName = currentRoute.name;
-    if (currentRouteName == HealthRoute.name) {
-      return str.addHealthMeasurement;
-    } else if (currentRouteName == BloodTestsRoute.name) {
-      return str.bloodTestsAddNewBloodTest;
-    } else if (currentRouteName == RacesRoute.name) {
-      return str.racesAddNewRace;
-    } else if (currentRouteName == ClientsRoute.name) {
-      return str.clientsSearchUsers;
-    }
-    return str.add;
   }
 }
 
 enum _EntityToAdd { healthMeasurement, workout, race, bloodTest, client }
+
+String _getLabel(Str str, RouteData currentRoute) {
+  final String currentRouteName = currentRoute.name;
+  if (currentRouteName == HealthRoute.name) {
+    return str.addHealthMeasurement;
+  } else if (currentRouteName == BloodTestsRoute.name) {
+    return str.addBloodTest;
+  } else if (currentRouteName == RacesRoute.name) {
+    return str.addRace;
+  } else if (currentRouteName == ClientsRoute.name) {
+    return str.clientsSearchUsers;
+  }
+  return str.add;
+}
+
+Future<void> _onPressed(
+  BuildContext context,
+  GlobalKey buttonKey,
+  RouteData currentRoute,
+) async {
+  final _EntityToAdd? entityToAdd =
+      await _askForEntityToAdd(context, buttonKey, currentRoute);
+  if (entityToAdd != null) {
+    await _manageEntityToAdd(entityToAdd);
+  }
+}
 
 Future<void> _manageEntityToAdd(_EntityToAdd entityToAdd) async {
   final String? loggedUserId = await getIt<AuthService>().loggedUserId$.first;

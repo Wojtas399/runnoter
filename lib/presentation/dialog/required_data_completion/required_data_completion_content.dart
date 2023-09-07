@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/bloc/required_data_completion/required_data_completion_bloc.dart';
+import '../../../domain/cubit/required_data_completion/required_data_completion_cubit.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/gap/gap_horizontal_components.dart';
 import '../../component/responsive_layout_component.dart';
@@ -96,18 +96,14 @@ class _SubmitButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool isDisabled = context.select(
-      (RequiredDataCompletionBloc bloc) => !bloc.state.canSubmit,
+      (RequiredDataCompletionCubit cubit) => !cubit.state.canSubmit,
     );
 
     return FilledButton(
-      onPressed: isDisabled ? null : () => _onPressed(context),
+      onPressed: isDisabled
+          ? null
+          : context.read<RequiredDataCompletionCubit>().submit,
       child: Text(Str.of(context).save),
     );
-  }
-
-  void _onPressed(BuildContext context) {
-    context.read<RequiredDataCompletionBloc>().add(
-          const RequiredDataCompletionEventSubmit(),
-        );
   }
 }

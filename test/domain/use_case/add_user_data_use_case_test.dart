@@ -16,6 +16,7 @@ void main() {
   const String name = 'Jack';
   const String surname = 'Novsky';
   const String email = 'email@example.com';
+  final DateTime dateOfBirth = DateTime(2023, 1, 10);
   const defaultSettings = Settings(
     themeMode: ThemeMode.system,
     language: Language.english,
@@ -31,13 +32,14 @@ void main() {
     'should call method from user repository to add new user with clientIds param set as empty array',
     () async {
       final useCase = AddUserDataUseCase();
-      const User user = User(
+      final User user = User(
         id: userId,
         accountType: accountType,
         gender: gender,
         name: name,
         surname: surname,
         email: email,
+        dateOfBirth: dateOfBirth,
         settings: defaultSettings,
       );
       userRepository.mockAddUser();
@@ -48,6 +50,7 @@ void main() {
         name: name,
         surname: surname,
         email: email,
+        dateOfBirth: dateOfBirth,
         gender: gender,
       );
 

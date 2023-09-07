@@ -11,5 +11,6 @@ Person mapPersonFromUserDto(UserDto userDto) => Person(
       name: userDto.name,
       surname: userDto.surname,
       email: userDto.email,
+      dateOfBirth: userDto.dateOfBirth,
       coachId: userDto.coachId,
     );

@@ -2,7 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/bloc/client/client_bloc.dart';
+import '../../../domain/cubit/client/client_cubit.dart';
 import '../../common_feature/races/races.dart';
 
 @RoutePage()
@@ -11,6 +11,6 @@ class ClientRacesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Races(userId: context.read<ClientBloc>().clientId);
+    return Races(userId: context.read<ClientCubit>().clientId);
   }
 }

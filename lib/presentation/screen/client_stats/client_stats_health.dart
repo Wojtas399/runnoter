@@ -12,7 +12,6 @@ import '../../component/text/label_text_components.dart';
 import '../../component/text/title_text_components.dart';
 import '../../extension/context_extensions.dart';
 import '../../formatter/date_formatter.dart';
-import '../../service/utils.dart';
 
 class ClientStatsHealth extends StatelessWidget {
   const ClientStatsHealth({super.key});
@@ -153,6 +152,7 @@ class _LineChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final String? languageCode = context.languageCode;
     final DateRangeType dateRangeType = context.select(
       (HealthStatsBloc bloc) => bloc.state.dateRangeType!,
     );
@@ -175,7 +175,7 @@ class _LineChart extends StatelessWidget {
         LineSeries<HealthStatsChartPoint, String>(
           dataSource: points,
           xValueMapper: (HealthStatsChartPoint point, _) =>
-              _mapDateToLabel(context, point.date, dateRangeType),
+              _mapDateToLabel(languageCode, point.date, dateRangeType),
           yValueMapper: (HealthStatsChartPoint point, _) => point.value,
           color: Theme.of(context).colorScheme.primary,
           markerSettings: MarkerSettings(
@@ -189,14 +189,13 @@ class _LineChart extends StatelessWidget {
   }
 
   String _mapDateToLabel(
-    BuildContext context,
+    String? languageCode,
     DateTime date,
     DateRangeType dateRangeType,
   ) =>
       switch (dateRangeType) {
-        DateRangeType.week => date.toDayAbbreviation(context),
-        DateRangeType.month =>
-          '${twoDigits(date.day)}.${twoDigits(date.month)}',
-        DateRangeType.year => date.toMonthAbbreviation(context),
+        DateRangeType.week => date.toDayAbbreviation(languageCode),
+        DateRangeType.month => date.toDayWithMonth(),
+        DateRangeType.year => date.toMonthAbbreviation(languageCode),
       };
 }

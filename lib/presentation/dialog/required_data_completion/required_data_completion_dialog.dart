@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/bloc/required_data_completion/required_data_completion_bloc.dart';
-import '../../component/bloc_with_status_listener_component.dart';
+import '../../../domain/cubit/required_data_completion/required_data_completion_cubit.dart';
+import '../../component/cubit_with_status_listener_component.dart';
 import '../../service/navigator_service.dart';
 import 'required_data_completion_content.dart';
 
@@ -12,24 +12,24 @@ class RequiredDataCompletionDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => RequiredDataCompletionBloc(),
-      child: const _BlocListener(
+      create: (_) => RequiredDataCompletionCubit(),
+      child: const _CubitListener(
         child: RequiredDataCompletionContent(),
       ),
     );
   }
 }
 
-class _BlocListener extends StatelessWidget {
+class _CubitListener extends StatelessWidget {
   final Widget child;
 
-  const _BlocListener({required this.child});
+  const _CubitListener({required this.child});
 
   @override
   Widget build(BuildContext context) {
-    return BlocWithStatusListener<RequiredDataCompletionBloc,
-        RequiredDataCompletionState, RequiredDataCompletionBlocInfo, dynamic>(
-      onInfo: (RequiredDataCompletionBlocInfo info) =>
+    return CubitWithStatusListener<RequiredDataCompletionCubit,
+        RequiredDataCompletionState, RequiredDataCompletionCubitInfo, dynamic>(
+      onInfo: (RequiredDataCompletionCubitInfo info) =>
           _manageBlocInfo(context, info),
       child: child,
     );
@@ -37,10 +37,10 @@ class _BlocListener extends StatelessWidget {
 
   void _manageBlocInfo(
     BuildContext context,
-    RequiredDataCompletionBlocInfo info,
+    RequiredDataCompletionCubitInfo info,
   ) {
     switch (info) {
-      case RequiredDataCompletionBlocInfo.userDataAdded:
+      case RequiredDataCompletionCubitInfo.userDataAdded:
         popRoute(result: true);
         break;
     }

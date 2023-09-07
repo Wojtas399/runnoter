@@ -71,11 +71,6 @@ void main() {
   group(
     'initialize',
     () {
-      final Person sender = createPerson(
-        id: loggedUserId,
-        name: 'sender',
-        surname: 'senderski',
-      );
       final Person recipient = createPerson(
         id: 'r1',
         name: 'recipient',
@@ -99,20 +94,19 @@ void main() {
         ..add(messages);
 
       blocTest(
-        'should load logged user id, full names of sender and recipient and '
+        'should load logged user id and recipient, '
         'should set listener of messages and should sort messages ascending by date before emitting them',
         build: () => createCubit(),
         setUp: () {
           authService.mockGetLoggedUserId(userId: loggedUserId);
           chatRepository.mockGetChatById(
-            chat: Chat(id: chatId, user1Id: recipient.id, user2Id: sender.id),
+            chat: Chat(
+              id: chatId,
+              user1Id: recipient.id,
+              user2Id: loggedUserId,
+            ),
           );
-          when(
-            () => personRepository.getPersonById(personId: sender.id),
-          ).thenAnswer((_) => Stream.value(sender));
-          when(
-            () => personRepository.getPersonById(personId: recipient.id),
-          ).thenAnswer((_) => Stream.value(recipient));
+          personRepository.mockGetPersonById(person: recipient);
           messageRepository.mockGetMessagesForChat(
             messagesStream: messages$.stream,
           );
@@ -125,23 +119,18 @@ void main() {
           ChatState(
             status: const BlocStatusComplete(),
             loggedUserId: loggedUserId,
-            senderFullName: '${sender.name} ${sender.surname}',
             recipientFullName: '${recipient.name} ${recipient.surname}',
             messagesFromLatest: messages,
           ),
           ChatState(
             status: const BlocStatusComplete(),
             loggedUserId: loggedUserId,
-            senderFullName: '${sender.name} ${sender.surname}',
             recipientFullName: '${recipient.name} ${recipient.surname}',
             messagesFromLatest: updatedMessages.reversed.toList(),
           ),
         ],
         verify: (_) {
           verify(() => chatRepository.getChatById(chatId: chatId)).called(1);
-          verify(
-            () => personRepository.getPersonById(personId: sender.id),
-          ).called(1);
           verify(
             () => personRepository.getPersonById(personId: recipient.id),
           ).called(1);

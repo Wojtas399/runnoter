@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/bloc/profile/identities/profile_identities_bloc.dart';
+import '../../../domain/cubit/profile/identities/profile_identities_cubit.dart';
 import '../../../domain/entity/user.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/responsive_layout_component.dart';
@@ -96,7 +96,7 @@ class _OptionsToSelect extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Gender? selectedGender = context.select(
-      (ProfileIdentitiesBloc bloc) => bloc.state.gender,
+      (ProfileIdentitiesCubit cubit) => cubit.state.gender,
     );
     final str = Str.of(context);
 
@@ -120,9 +120,7 @@ class _OptionsToSelect extends StatelessWidget {
 
   void _onGenderChanged(BuildContext context, Gender? newGender) {
     if (newGender != null) {
-      context.read<ProfileIdentitiesBloc>().add(
-            ProfileIdentitiesEventUpdateGender(gender: newGender),
-          );
+      context.read<ProfileIdentitiesCubit>().updateGender(newGender);
     }
   }
 }

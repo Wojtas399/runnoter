@@ -222,9 +222,7 @@ Future<T?> showFullScreenDialog<T>(Widget dialog) async {
   return await showGeneralDialog<T?>(
     context: context,
     barrierColor: Colors.transparent,
-    pageBuilder: (_, a1, a2) => Dialog.fullscreen(
-      child: dialog,
-    ),
+    pageBuilder: (_, a1, a2) => Dialog.fullscreen(child: dialog),
     transitionBuilder: (BuildContext context, anim1, anim2, child) {
       return SlideToTopAnim(
         animation: anim1,

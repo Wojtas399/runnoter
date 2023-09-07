@@ -127,6 +127,7 @@ class _DurationField extends StatelessWidget {
           label: Center(
             child: Text(label),
           ),
+          counterText: '',
         ),
         textAlign: TextAlign.center,
         maxLength: 2,

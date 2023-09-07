@@ -465,6 +465,10 @@
   "@profileChangeEmailDialogMessage": {
     "description": "Message of the dialog to change email"
   },
+  "profileChangeDateOfBirthDialogTitle": "Zmień datę urodzenia",
+  "@profileChangeDateOfBirthDialogTitle": {
+    "description": "Title of the dialog to change date of birth"
+  },
   "profileNewPasswordDialogTitle": "Zmień hasło",
   "@profileNewPasswordDialogTitle": {
     "description": "Title of the dialog to update password"
@@ -576,10 +580,6 @@
   "@bloodTestsTitle": {
     "description": "Title of blood tests screen"
   },
-  "bloodTestsAddNewBloodTest": "Dodaj nowe badanie",
-  "@bloodTestAddNewBloodTest": {
-    "description": "Label of the button to add new results"
-  },
   "bloodTestsNoTestsTitle": "Brak badań krwi",
   "@bloodTestsNoTestsTitle": {
     "description": "Title of the info about the lack of blood readings"
@@ -672,10 +672,6 @@
   "racesTitle": "Wyścigi",
   "@racesTitle": {
     "description": "Title of races screen"
-  },
-  "racesAddNewRace": "Dodaj nowy wyścig",
-  "@racesAddNewRace": {
-    "description": "Label of the button to add new race"
   },
   "racesNoRacesTitle": "Brak zawodów",
   "@racesNoRacesTitle": {
@@ -809,10 +805,14 @@
   "@personsSearchUserAlreadyHasCoachInfoMessage": {
     "description": "Message of the information about user who already has a coach"
   },
-  "@__________CLIENT_DETAILS__________": {},
-  "clientDetailsTitle": "Szczegóły klienta",
-  "@clientDetailsTitle": {
-    "description": "Title of the client details section"
+  "@__________PERSON_DETAILS__________": {},
+  "personCoachDetailsTitle": "Szczegóły trenera",
+  "@personCoachDetailsTitle": {
+    "description": "Title of the coach details dialog"
+  },
+  "personClientDetailsTitle": "Szczegóły klient",
+  "@personClientDetailsTitle": {
+    "description": "Title of the client details dialog"
   },
   "@__________CLIENT_STATS__________": {},
   "clientStatsTitle": "Statystyki",
@@ -888,10 +888,6 @@
   "@__________HEALTH_MEASUREMENT__________": {},
   "restingHeartRate": "Tętno spoczynkowe",
   "fastingWeight": "Waga na czczo",
-  "addHealthMeasurement": "Dodaj pomiar zdrowia",
-  "@addHealthMeasurement": {
-    "description": "Label of the button to add health measurement"
-  },
   "deleteHealthMeasurementConfirmationDialogTitle": "Usuń pomiar",
   "@deleteHealthMeasurementConfirmationDialogTitle": {
     "description": "Title of the dialog to confirm health measurement deletion"
@@ -1170,6 +1166,7 @@
   "name": "Imię",
   "surname": "Nazwisko",
   "email": "Email",
+  "dateOfBirth": "Data urodzenia",
   "password": "Hasło",
   "passwordConfirmation": "Potwierdź hasło",
   "date": "Data",
@@ -1200,6 +1197,8 @@
   "currentWeek": "Obecny tydzień",
   "editHealthMeasurement": "Edytuj pomiar zdrowia",
   "addWorkout": "Dodaj trening",
+  "addHealthMeasurement": "Dodaj pomiar",
+  "addBloodTest": "Dodaj badanie",
   "addRace": "Dodaj wyścig",
   "sentRequests": "Wysłane prośby",
   "receivedRequests": "Otrzymane prośby",
@@ -1241,132 +1240,6 @@
   "invalidPasswordConfirmationMessage": "Hasła nie są jednakowe",
   "@invalidPasswordConfirmationMessage": {
     "description": "Message about invalid password confirmation"
-  },
-  "@__________MONTHS__________": {},
-  "january": "Styczeń",
-  "@january": {
-    "description": "January"
-  },
-  "february": "Luty",
-  "@february": {
-    "description": "February"
-  },
-  "march": "Marzec",
-  "@march": {
-    "description": "March"
-  },
-  "april": "Kwiecień",
-  "@april": {
-    "description": "April"
-  },
-  "may": "Maj",
-  "@may": {
-    "description": "May"
-  },
-  "june": "Czerwiec",
-  "@june": {
-    "description": "June"
-  },
-  "july": "Lipiec",
-  "@july": {
-    "description": "July"
-  },
-  "august": "Sierpień",
-  "@august": {
-    "description": "August"
-  },
-  "september": "Wrzesień",
-  "@september": {
-    "description": "September"
-  },
-  "october": "Październik",
-  "@october": {
-    "description": "October"
-  },
-  "november": "Listopad",
-  "@november": {
-    "description": "November"
-  },
-  "december": "Grudzień",
-  "@december": {
-    "description": "December"
-  },
-  "januaryShort": "Sty",
-  "@januaryShort": {
-    "description": "Abbreviation of January"
-  },
-  "februaryShort": "Lut",
-  "@februaryShor": {
-    "description": "Abbreviation of February"
-  },
-  "marchShort": "Mar",
-  "@marchShort": {
-    "description": "Abbreviation of March"
-  },
-  "aprilShort": "Kwi",
-  "@aprilShort": {
-    "description": "Abbreviation of April"
-  },
-  "mayShort": "Maj",
-  "@mayShort": {
-    "description": "Abbreviation of May"
-  },
-  "juneShort": "Cze",
-  "@juneShort": {
-    "description": "Abbreviation of June"
-  },
-  "julyShort": "Lip",
-  "@julyShort": {
-    "description": "Abbreviation of July"
-  },
-  "augustShort": "Sie",
-  "@augustShort": {
-    "description": "Abbreviation of August"
-  },
-  "septemberShort": "Wrz",
-  "@septemberShort": {
-    "description": "Abbreviation of September"
-  },
-  "octoberShort": "Paź",
-  "@octoberShort": {
-    "description": "Abbreviation of October"
-  },
-  "novemberShort": "Lis",
-  "@novemberShort": {
-    "description": "Abbreviation of November"
-  },
-  "decemberShort": "Gru",
-  "@decemberShort": {
-    "description": "Abbreviation of December"
-  },
-  "@__________DAYS__________": {},
-  "mondayShort": "Pon.",
-  "@mondayShort": {
-    "description": "Abbreviation of monday"
-  },
-  "tuesdayShort": "Wt.",
-  "@tuesdayShort": {
-    "description": "Abbreviation of tuesday"
-  },
-  "wednesdayShort": "Śr.",
-  "@wednesdayShort": {
-    "description": "Abbreviation of wednesday"
-  },
-  "thursdayShort": "Czw.",
-  "@thursdayShort": {
-    "description": "Abbreviation of thursday"
-  },
-  "fridayShort": "Pt.",
-  "@fridayShort": {
-    "description": "Abbreviation of friday"
-  },
-  "saturdayShort": "Sob.",
-  "@saturdayShort": {
-    "description": "Abbreviation of saturday"
-  },
-  "sundayShort": "Niedz.",
-  "@sundayShort": {
-    "description": "Abbreviation of sunday"
   },
   "@__________BLOOD_PARAMS__________": {},
   "bloodParamWBC": "WBC",

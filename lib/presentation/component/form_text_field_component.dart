@@ -14,7 +14,7 @@ class FormTextField extends StatelessWidget {
   final TextInputAction? textInputAction;
   final List<TextInputFormatter>? inputFormatters;
   final TextEditingController? controller;
-  final Function(String? value)? onChanged;
+  final Function(String value)? onChanged;
   final Function(PointerDownEvent event)? onTapOutside;
   final Function(String value)? onSubmitted;
   final String? Function(String? value)? validator;

@@ -87,7 +87,7 @@ class _Date extends StatelessWidget {
       (BloodTestPreviewBloc bloc) => bloc.state.date,
     );
 
-    return TitleLarge(date?.toFullDate(context) ?? '--');
+    return TitleLarge(date?.toFullDate(context.languageCode) ?? '--');
   }
 }
 

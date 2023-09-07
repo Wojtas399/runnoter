@@ -58,6 +58,7 @@ void main() {
         name: 'name1',
         surname: 'surname1',
         email: 'email1@example.com',
+        dateOfBirth: DateTime(2003, 1, 10),
         coachId: 'c1',
       );
       final Person expectedPerson = Person(
@@ -67,6 +68,7 @@ void main() {
         name: loadedUserDto.name,
         surname: loadedUserDto.surname,
         email: loadedUserDto.email,
+        dateOfBirth: loadedUserDto.dateOfBirth,
         coachId: loadedUserDto.coachId,
       );
       repository = PersonRepositoryImpl(initialData: existingPersons);

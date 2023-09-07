@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 import '../mapper/account_type_mapper.dart';
+import '../mapper/date_mapper.dart';
 import '../mapper/gender_mapper.dart';
 
 enum AccountType { runner, coach }
@@ -14,6 +15,7 @@ class UserDto extends Equatable {
   final String name;
   final String surname;
   final String email;
+  final DateTime dateOfBirth;
   final String? coachId;
 
   const UserDto({
@@ -23,6 +25,7 @@ class UserDto extends Equatable {
     required this.name,
     required this.surname,
     required this.email,
+    required this.dateOfBirth,
     this.coachId,
   });
 
@@ -34,6 +37,7 @@ class UserDto extends Equatable {
         name,
         surname,
         email,
+        dateOfBirth,
         coachId,
       ];
 
@@ -47,6 +51,7 @@ class UserDto extends Equatable {
           name: json?[nameField],
           surname: json?[surnameField],
           email: json?[emailField],
+          dateOfBirth: mapDateTimeFromString(json?[dateOfBirthField]),
           coachId: json?[coachIdField],
         );
 
@@ -56,6 +61,7 @@ class UserDto extends Equatable {
         nameField: name,
         surnameField: surname,
         emailField: email,
+        dateOfBirthField: mapDateTimeToString(dateOfBirth),
         coachIdField: coachId,
       };
 }
@@ -66,6 +72,7 @@ Map<String, dynamic> createUserJsonToUpdate({
   String? name,
   String? surname,
   String? email,
+  DateTime? dateOfBirth,
   String? coachId,
   bool coachIdAsNull = false,
 }) =>
@@ -76,6 +83,8 @@ Map<String, dynamic> createUserJsonToUpdate({
       if (name != null) nameField: name,
       if (surname != null) surnameField: surname,
       if (email != null) emailField: email,
+      if (dateOfBirth != null)
+        dateOfBirthField: mapDateTimeToString(dateOfBirth),
       if (coachIdAsNull)
         coachIdField: null
       else if (coachId != null)
@@ -87,4 +96,5 @@ const String _genderField = 'gender';
 const String nameField = 'name';
 const String surnameField = 'surname';
 const String emailField = 'email';
+const String dateOfBirthField = 'dateOfBirth';
 const String coachIdField = 'coachId';

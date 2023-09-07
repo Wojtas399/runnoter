@@ -1,77 +1,38 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:runnoter/domain/additional_model/bloc_status.dart';
-import 'package:runnoter/domain/bloc/client/client_bloc.dart';
-import 'package:runnoter/domain/entity/user.dart';
+import 'package:runnoter/domain/cubit/client/client_cubit.dart';
 
 void main() {
   late ClientState state;
 
   setUp(
-    () => state = const ClientState(status: BlocStatusInitial()),
+    () => state = const ClientState(),
   );
 
   test(
-    'copy with status',
+    'copy with name, '
+    'should copy current value if new value is null',
     () {
-      const BlocStatus expectedStatus = BlocStatusComplete();
+      const String expected = 'name';
 
-      state = state.copyWith(status: expectedStatus);
+      state = state.copyWith(name: expected);
       final state2 = state.copyWith();
 
-      expect(state.status, expectedStatus);
-      expect(state2.status, const BlocStatusComplete());
+      expect(state.name, expected);
+      expect(state2.name, expected);
     },
   );
 
   test(
-    'copy with gender',
+    'copy with surname, '
+    'should copy current value if new value is null',
     () {
-      const Gender expectedGender = Gender.male;
+      const String expected = 'surname';
 
-      state = state.copyWith(gender: expectedGender);
+      state = state.copyWith(surname: expected);
       final state2 = state.copyWith();
 
-      expect(state.gender, expectedGender);
-      expect(state2.gender, expectedGender);
-    },
-  );
-
-  test(
-    'copy with name',
-    () {
-      const String expectedName = 'name';
-
-      state = state.copyWith(name: expectedName);
-      final state2 = state.copyWith();
-
-      expect(state.name, expectedName);
-      expect(state2.name, expectedName);
-    },
-  );
-
-  test(
-    'copy with surname',
-    () {
-      const String expectedSurname = 'surname';
-
-      state = state.copyWith(surname: expectedSurname);
-      final state2 = state.copyWith();
-
-      expect(state.surname, expectedSurname);
-      expect(state2.surname, expectedSurname);
-    },
-  );
-
-  test(
-    'copy with email',
-    () {
-      const String expectedEmail = 'email@example.com';
-
-      state = state.copyWith(email: expectedEmail);
-      final state2 = state.copyWith();
-
-      expect(state.email, expectedEmail);
-      expect(state2.email, expectedEmail);
+      expect(state.surname, expected);
+      expect(state2.surname, expected);
     },
   );
 }
