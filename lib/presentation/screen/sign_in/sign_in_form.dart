@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/bloc/sign_in/sign_in_bloc.dart';
+import '../../../domain/cubit/sign_in/sign_in_cubit.dart';
 import '../../component/big_button_component.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/password_text_field_component.dart';
@@ -39,25 +39,15 @@ class _Email extends StatelessWidget {
       ),
       keyboardType: TextInputType.emailAddress,
       textInputAction: TextInputAction.done,
-      onChanged: (String? value) => _onChanged(value, context),
+      onChanged: context.read<SignInCubit>().emailChanged,
       onTapOutside: (_) => unfocusInputs(),
       onSubmitted: (_) => _onSubmitted(context),
     );
   }
 
-  void _onChanged(String? value, BuildContext context) {
-    if (value != null) {
-      context.read<SignInBloc>().add(
-            SignInEventEmailChanged(email: value),
-          );
-    }
-  }
-
   void _onSubmitted(BuildContext context) {
-    final SignInBloc signInBloc = context.read<SignInBloc>();
-    if (!signInBloc.state.isButtonDisabled) {
-      signInBloc.add(const SignInEventSubmit());
-    }
+    final SignInCubit cubit = context.read<SignInCubit>();
+    if (!cubit.state.isButtonDisabled) cubit.submit();
   }
 }
 
@@ -70,7 +60,7 @@ class _Password extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         PasswordTextFieldComponent(
-          onChanged: (String? value) => _onChanged(value, context),
+          onChanged: context.read<SignInCubit>().passwordChanged,
           onSubmitted: (_) => _onSubmitted(context),
         ),
         const Gap8(),
@@ -85,19 +75,9 @@ class _Password extends StatelessWidget {
     );
   }
 
-  void _onChanged(String? value, BuildContext context) {
-    if (value != null) {
-      context.read<SignInBloc>().add(
-            SignInEventPasswordChanged(password: value),
-          );
-    }
-  }
-
   void _onSubmitted(BuildContext context) {
-    final SignInBloc signInBloc = context.read<SignInBloc>();
-    if (!signInBloc.state.isButtonDisabled) {
-      signInBloc.add(const SignInEventSubmit());
-    }
+    final SignInCubit cubit = context.read<SignInCubit>();
+    if (!cubit.state.isButtonDisabled) cubit.submit();
   }
 
   void _onForgotPasswordSelected() {
@@ -111,19 +91,13 @@ class _SubmitButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool isButtonDisabled = context.select(
-      (SignInBloc bloc) => bloc.state.isButtonDisabled,
+      (SignInCubit bloc) => bloc.state.isButtonDisabled,
     );
 
     return BigButton(
       label: Str.of(context).signInButtonLabel,
       isDisabled: isButtonDisabled,
-      onPressed: () {
-        _onPressed(context);
-      },
+      onPressed: context.read<SignInCubit>().submit,
     );
-  }
-
-  void _onPressed(BuildContext context) {
-    context.read<SignInBloc>().add(const SignInEventSubmit());
   }
 }

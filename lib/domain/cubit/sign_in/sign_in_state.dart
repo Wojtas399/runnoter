@@ -1,6 +1,6 @@
-part of 'sign_in_bloc.dart';
+part of 'sign_in_cubit.dart';
 
-class SignInState extends BlocState {
+class SignInState extends CubitState {
   final String email;
   final String password;
 
@@ -11,11 +11,7 @@ class SignInState extends BlocState {
   });
 
   @override
-  List<Object?> get props => [
-        status,
-        email,
-        password,
-      ];
+  List<Object?> get props => [status, email, password];
 
   bool get isButtonDisabled => email.isEmpty || password.isEmpty;
 
@@ -24,11 +20,10 @@ class SignInState extends BlocState {
     BlocStatus? status,
     String? email,
     String? password,
-  }) {
-    return SignInState(
-      status: status ?? const BlocStatusComplete(),
-      email: email ?? this.email,
-      password: password ?? this.password,
-    );
-  }
+  }) =>
+      SignInState(
+        status: status ?? const BlocStatusComplete(),
+        email: email ?? this.email,
+        password: password ?? this.password,
+      );
 }

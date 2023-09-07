@@ -4,7 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/additional_model/custom_exception.dart';
-import 'package:runnoter/domain/bloc/sign_in/sign_in_bloc.dart';
+import 'package:runnoter/domain/cubit/sign_in/sign_in_cubit.dart';
 import 'package:runnoter/domain/repository/user_repository.dart';
 import 'package:runnoter/domain/service/auth_service.dart';
 
@@ -33,17 +33,17 @@ void main() {
     'initialize, '
     'logged user exists and has verified email, '
     'should emit complete status with signed in info',
-    build: () => SignInBloc(),
+    build: () => SignInCubit(),
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
       authService.mockHasLoggedUserVerifiedEmail(expected: true);
     },
-    act: (bloc) => bloc.add(const SignInEventInitialize()),
+    act: (cubit) => cubit.initialize(),
     expect: () => [
       const SignInState(status: BlocStatusLoading()),
       const SignInState(
-        status: BlocStatusComplete<SignInBlocInfo>(
-          info: SignInBlocInfo.signedIn,
+        status: BlocStatusComplete<SignInCubitInfo>(
+          info: SignInCubitInfo.signedIn,
         ),
       ),
     ],
@@ -57,15 +57,15 @@ void main() {
     'initialize, '
     'logged user exists and has unverified email, '
     'should emit complete status without any info',
-    build: () => SignInBloc(),
+    build: () => SignInCubit(),
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
       authService.mockHasLoggedUserVerifiedEmail(expected: false);
     },
-    act: (bloc) => bloc.add(const SignInEventInitialize()),
+    act: (cubit) => cubit.initialize(),
     expect: () => [
       const SignInState(status: BlocStatusLoading()),
-      const SignInState(status: BlocStatusComplete<SignInBlocInfo>()),
+      const SignInState(status: BlocStatusComplete<SignInCubitInfo>()),
     ],
     verify: (_) {
       verify(() => authService.loggedUserId$).called(1);
@@ -77,12 +77,12 @@ void main() {
     'initialize, '
     'logged user does not exist, '
     'should emit complete status without any info',
-    build: () => SignInBloc(),
+    build: () => SignInCubit(),
     setUp: () => authService.mockGetLoggedUserId(),
-    act: (bloc) => bloc.add(const SignInEventInitialize()),
+    act: (cubit) => cubit.initialize(),
     expect: () => [
       const SignInState(status: BlocStatusLoading()),
-      const SignInState(status: BlocStatusComplete<SignInBlocInfo>()),
+      const SignInState(status: BlocStatusComplete<SignInCubitInfo>()),
     ],
     verify: (_) => verify(() => authService.loggedUserId$).called(1),
   );
@@ -90,8 +90,8 @@ void main() {
   blocTest(
     'email changed, '
     'should update email in state',
-    build: () => SignInBloc(),
-    act: (bloc) => bloc.add(const SignInEventEmailChanged(email: email)),
+    build: () => SignInCubit(),
+    act: (cubit) => cubit.emailChanged(email),
     expect: () => [
       const SignInState(status: BlocStatusComplete(), email: email),
     ],
@@ -100,10 +100,8 @@ void main() {
   blocTest(
     'password changed, '
     'should update password in state',
-    build: () => SignInBloc(),
-    act: (bloc) => bloc.add(const SignInEventPasswordChanged(
-      password: password,
-    )),
+    build: () => SignInCubit(),
+    act: (cubit) => cubit.passwordChanged(password),
     expect: () => [
       const SignInState(status: BlocStatusComplete(), password: password),
     ],
@@ -113,12 +111,18 @@ void main() {
     'submit, '
     'logged user does not exist, '
     'should emit complete status without any info',
-    build: () => SignInBloc(email: email, password: password),
+    build: () => SignInCubit(
+      initialState: const SignInState(
+        status: BlocStatusInitial(),
+        email: email,
+        password: password,
+      ),
+    ),
     setUp: () {
       authService.mockSignIn();
       authService.mockHasLoggedUserVerifiedEmail();
     },
-    act: (bloc) => bloc.add(const SignInEventSubmit()),
+    act: (cubit) => cubit.submit(),
     expect: () => [
       const SignInState(
         status: BlocStatusLoading(),
@@ -126,7 +130,7 @@ void main() {
         password: password,
       ),
       const SignInState(
-        status: BlocStatusComplete<SignInBlocInfo>(),
+        status: BlocStatusComplete<SignInCubitInfo>(),
         email: email,
         password: password,
       ),
@@ -143,12 +147,18 @@ void main() {
     'submit, '
     'user has verified email, '
     'should emit complete status with signed in info',
-    build: () => SignInBloc(email: email, password: password),
+    build: () => SignInCubit(
+      initialState: const SignInState(
+        status: BlocStatusInitial(),
+        email: email,
+        password: password,
+      ),
+    ),
     setUp: () {
       authService.mockSignIn();
       authService.mockHasLoggedUserVerifiedEmail(expected: true);
     },
-    act: (bloc) => bloc.add(const SignInEventSubmit()),
+    act: (cubit) => cubit.submit(),
     expect: () => [
       const SignInState(
         status: BlocStatusLoading(),
@@ -156,8 +166,8 @@ void main() {
         password: password,
       ),
       const SignInState(
-        status: BlocStatusComplete<SignInBlocInfo>(
-          info: SignInBlocInfo.signedIn,
+        status: BlocStatusComplete<SignInCubitInfo>(
+          info: SignInCubitInfo.signedIn,
         ),
         email: email,
         password: password,
@@ -175,13 +185,19 @@ void main() {
     'submit, '
     'user has not verified email, '
     "should emit error status with unverified email error and should call auth service's method to send email verification",
-    build: () => SignInBloc(email: email, password: password),
+    build: () => SignInCubit(
+      initialState: const SignInState(
+        status: BlocStatusInitial(),
+        email: email,
+        password: password,
+      ),
+    ),
     setUp: () {
       authService.mockSignIn();
       authService.mockHasLoggedUserVerifiedEmail(expected: false);
       authService.mockSendEmailVerification();
     },
-    act: (bloc) => bloc.add(const SignInEventSubmit()),
+    act: (cubit) => cubit.submit(),
     expect: () => [
       const SignInState(
         status: BlocStatusLoading(),
@@ -189,8 +205,8 @@ void main() {
         password: password,
       ),
       const SignInState(
-        status: BlocStatusError<SignInBlocError>(
-          error: SignInBlocError.unverifiedEmail,
+        status: BlocStatusError<SignInCubitError>(
+          error: SignInCubitError.unverifiedEmail,
         ),
         email: email,
         password: password,
@@ -209,11 +225,17 @@ void main() {
     'submit, '
     'auth exception with invalid email code, '
     'should emit error status with invalid email error',
-    build: () => SignInBloc(email: email, password: password),
+    build: () => SignInCubit(
+      initialState: const SignInState(
+        status: BlocStatusInitial(),
+        email: email,
+        password: password,
+      ),
+    ),
     setUp: () => authService.mockSignIn(
       throwable: const AuthException(code: AuthExceptionCode.invalidEmail),
     ),
-    act: (bloc) => bloc.add(const SignInEventSubmit()),
+    act: (cubit) => cubit.submit(),
     expect: () => [
       const SignInState(
         status: BlocStatusLoading(),
@@ -221,8 +243,8 @@ void main() {
         password: password,
       ),
       const SignInState(
-        status: BlocStatusError<SignInBlocError>(
-          error: SignInBlocError.invalidEmail,
+        status: BlocStatusError<SignInCubitError>(
+          error: SignInCubitError.invalidEmail,
         ),
         email: email,
         password: password,
@@ -237,11 +259,17 @@ void main() {
     'submit, '
     'auth exception with user not found code, '
     'should emit error status with user not found error',
-    build: () => SignInBloc(email: email, password: password),
+    build: () => SignInCubit(
+      initialState: const SignInState(
+        status: BlocStatusInitial(),
+        email: email,
+        password: password,
+      ),
+    ),
     setUp: () => authService.mockSignIn(
       throwable: const AuthException(code: AuthExceptionCode.userNotFound),
     ),
-    act: (bloc) => bloc.add(const SignInEventSubmit()),
+    act: (cubit) => cubit.submit(),
     expect: () => [
       const SignInState(
         status: BlocStatusLoading(),
@@ -249,8 +277,8 @@ void main() {
         password: password,
       ),
       const SignInState(
-        status: BlocStatusError<SignInBlocError>(
-          error: SignInBlocError.userNotFound,
+        status: BlocStatusError<SignInCubitError>(
+          error: SignInCubitError.userNotFound,
         ),
         email: email,
         password: password,
@@ -265,11 +293,17 @@ void main() {
     'submit, '
     'auth exception with wrong password code, '
     'should emit error status with wrong password error',
-    build: () => SignInBloc(email: email, password: password),
+    build: () => SignInCubit(
+      initialState: const SignInState(
+        status: BlocStatusInitial(),
+        email: email,
+        password: password,
+      ),
+    ),
     setUp: () => authService.mockSignIn(
       throwable: const AuthException(code: AuthExceptionCode.wrongPassword),
     ),
-    act: (bloc) => bloc.add(const SignInEventSubmit()),
+    act: (cubit) => cubit.submit(),
     expect: () => [
       const SignInState(
         status: BlocStatusLoading(),
@@ -277,8 +311,8 @@ void main() {
         password: password,
       ),
       const SignInState(
-        status: BlocStatusError<SignInBlocError>(
-          error: SignInBlocError.wrongPassword,
+        status: BlocStatusError<SignInCubitError>(
+          error: SignInCubitError.wrongPassword,
         ),
         email: email,
         password: password,
@@ -293,13 +327,19 @@ void main() {
     'submit, '
     'network exception with request failed code, '
     'should emit network request failed status',
-    build: () => SignInBloc(email: email, password: password),
+    build: () => SignInCubit(
+      initialState: const SignInState(
+        status: BlocStatusInitial(),
+        email: email,
+        password: password,
+      ),
+    ),
     setUp: () => authService.mockSignIn(
       throwable: const NetworkException(
         code: NetworkExceptionCode.requestFailed,
       ),
     ),
-    act: (bloc) => bloc.add(const SignInEventSubmit()),
+    act: (cubit) => cubit.submit(),
     expect: () => [
       const SignInState(
         status: BlocStatusLoading(),
@@ -321,11 +361,17 @@ void main() {
     'submit, '
     'unknown exception, '
     'should emit unknown error status',
-    build: () => SignInBloc(email: email, password: password),
+    build: () => SignInCubit(
+      initialState: const SignInState(
+        status: BlocStatusInitial(),
+        email: email,
+        password: password,
+      ),
+    ),
     setUp: () => authService.mockSignIn(
       throwable: const UnknownException(message: 'unknown exception message'),
     ),
-    act: (bloc) => bloc.add(const SignInEventSubmit()),
+    act: (cubit) => cubit.submit(),
     expect: () => [
       const SignInState(
         status: BlocStatusLoading(),
@@ -350,8 +396,14 @@ void main() {
     'submit, '
     'email is empty, '
     'should do nothing',
-    build: () => SignInBloc(email: '', password: password),
-    act: (bloc) => bloc.add(const SignInEventSubmit()),
+    build: () => SignInCubit(
+      initialState: const SignInState(
+        status: BlocStatusInitial(),
+        email: '',
+        password: password,
+      ),
+    ),
+    act: (cubit) => cubit.submit(),
     expect: () => [],
     verify: (_) => verifyNever(
       () => authService.signIn(
@@ -365,8 +417,14 @@ void main() {
     'submit, '
     'password is empty, '
     'should do nothing',
-    build: () => SignInBloc(email: email, password: ''),
-    act: (bloc) => bloc.add(const SignInEventSubmit()),
+    build: () => SignInCubit(
+      initialState: const SignInState(
+        status: BlocStatusInitial(),
+        email: email,
+        password: '',
+      ),
+    ),
+    act: (cubit) => cubit.submit(),
     expect: () => [],
     verify: (_) => verifyNever(
       () => authService.signIn(
@@ -380,18 +438,18 @@ void main() {
     'sign in with google, '
     'existing user with verified email, '
     'should emit complete status with signed in info',
-    build: () => SignInBloc(),
+    build: () => SignInCubit(),
     setUp: () {
       authService.mockSignInWithGoogle(userId: 'u1');
       userRepository.mockGetUserById(user: createUser(id: 'u1'));
       authService.mockHasLoggedUserVerifiedEmail(expected: true);
     },
-    act: (bloc) => bloc.add(const SignInEventSignInWithGoogle()),
+    act: (cubit) => cubit.signInWithGoogle(),
     expect: () => [
       const SignInState(status: BlocStatusLoading()),
       const SignInState(
-        status: BlocStatusComplete<SignInBlocInfo>(
-          info: SignInBlocInfo.signedIn,
+        status: BlocStatusComplete<SignInCubitInfo>(
+          info: SignInCubitInfo.signedIn,
         ),
       ),
     ],
@@ -406,19 +464,19 @@ void main() {
     'sign in with google, '
     'existing user with unverified email, '
     "should emit error status with unverified email error and should call auth service's method to send email verification",
-    build: () => SignInBloc(),
+    build: () => SignInCubit(),
     setUp: () {
       authService.mockSignInWithGoogle(userId: 'u1');
       userRepository.mockGetUserById(user: createUser(id: 'u1'));
       authService.mockHasLoggedUserVerifiedEmail(expected: false);
       authService.mockSendEmailVerification();
     },
-    act: (bloc) => bloc.add(const SignInEventSignInWithGoogle()),
+    act: (cubit) => cubit.signInWithGoogle(),
     expect: () => [
       const SignInState(status: BlocStatusLoading()),
       const SignInState(
-        status: BlocStatusError<SignInBlocError>(
-          error: SignInBlocError.unverifiedEmail,
+        status: BlocStatusError<SignInCubitError>(
+          error: SignInCubitError.unverifiedEmail,
         ),
       ),
     ],
@@ -434,17 +492,17 @@ void main() {
     'sign in with google, '
     'new user, '
     'should emit complete status with new signed in user info',
-    build: () => SignInBloc(),
+    build: () => SignInCubit(),
     setUp: () {
       authService.mockSignInWithGoogle(userId: 'u1');
       userRepository.mockGetUserById();
     },
-    act: (bloc) => bloc.add(const SignInEventSignInWithGoogle()),
+    act: (cubit) => cubit.signInWithGoogle(),
     expect: () => [
       const SignInState(status: BlocStatusLoading()),
       const SignInState(
-        status: BlocStatusComplete<SignInBlocInfo>(
-          info: SignInBlocInfo.newSignedInUser,
+        status: BlocStatusComplete<SignInCubitInfo>(
+          info: SignInCubitInfo.newSignedInUser,
         ),
       ),
     ],
@@ -458,12 +516,12 @@ void main() {
     'sign in with google, '
     'there is no signed in user, '
     'should emit complete status without info',
-    build: () => SignInBloc(),
+    build: () => SignInCubit(),
     setUp: () => authService.mockSignInWithGoogle(),
-    act: (bloc) => bloc.add(const SignInEventSignInWithGoogle()),
+    act: (cubit) => cubit.signInWithGoogle(),
     expect: () => [
       const SignInState(status: BlocStatusLoading()),
-      const SignInState(status: BlocStatusComplete<SignInBlocInfo>()),
+      const SignInState(status: BlocStatusComplete<SignInCubitInfo>()),
     ],
     verify: (_) => verify(authService.signInWithGoogle).called(1),
   );
@@ -472,13 +530,13 @@ void main() {
     'sign in with google, '
     'network exception with requestFailed code'
     'should emit network request failed status',
-    build: () => SignInBloc(),
+    build: () => SignInCubit(),
     setUp: () => authService.mockSignInWithGoogle(
       throwable: const NetworkException(
         code: NetworkExceptionCode.requestFailed,
       ),
     ),
-    act: (bloc) => bloc.add(const SignInEventSignInWithGoogle()),
+    act: (cubit) => cubit.signInWithGoogle(),
     expect: () => [
       const SignInState(status: BlocStatusLoading()),
       const SignInState(status: BlocStatusNoInternetConnection()),
@@ -490,18 +548,18 @@ void main() {
     'sign in with facebook, '
     'existing user with verified email, '
     'should emit complete status with signed in info',
-    build: () => SignInBloc(),
+    build: () => SignInCubit(),
     setUp: () {
       authService.mockSignInWithFacebook(userId: 'u1');
       userRepository.mockGetUserById(user: createUser(id: 'u1'));
       authService.mockHasLoggedUserVerifiedEmail(expected: true);
     },
-    act: (bloc) => bloc.add(const SignInEventSignInWithFacebook()),
+    act: (cubit) => cubit.signInWithFacebook(),
     expect: () => [
       const SignInState(status: BlocStatusLoading()),
       const SignInState(
-        status: BlocStatusComplete<SignInBlocInfo>(
-          info: SignInBlocInfo.signedIn,
+        status: BlocStatusComplete<SignInCubitInfo>(
+          info: SignInCubitInfo.signedIn,
         ),
       ),
     ],
@@ -516,19 +574,19 @@ void main() {
     'sign in with facebook, '
     'existing user with unverified email, '
     "should emit error status with unverified email error and should call auth service's method to send email verification",
-    build: () => SignInBloc(),
+    build: () => SignInCubit(),
     setUp: () {
       authService.mockSignInWithFacebook(userId: 'u1');
       userRepository.mockGetUserById(user: createUser(id: 'u1'));
       authService.mockHasLoggedUserVerifiedEmail(expected: false);
       authService.mockSendEmailVerification();
     },
-    act: (bloc) => bloc.add(const SignInEventSignInWithFacebook()),
+    act: (cubit) => cubit.signInWithFacebook(),
     expect: () => [
       const SignInState(status: BlocStatusLoading()),
       const SignInState(
-        status: BlocStatusError<SignInBlocError>(
-          error: SignInBlocError.unverifiedEmail,
+        status: BlocStatusError<SignInCubitError>(
+          error: SignInCubitError.unverifiedEmail,
         ),
       ),
     ],
@@ -544,17 +602,17 @@ void main() {
     'sign in with facebook, '
     'new user, '
     'should emit complete status with new signed in user info',
-    build: () => SignInBloc(),
+    build: () => SignInCubit(),
     setUp: () {
       authService.mockSignInWithFacebook(userId: 'u1');
       userRepository.mockGetUserById();
     },
-    act: (bloc) => bloc.add(const SignInEventSignInWithFacebook()),
+    act: (cubit) => cubit.signInWithFacebook(),
     expect: () => [
       const SignInState(status: BlocStatusLoading()),
       const SignInState(
-        status: BlocStatusComplete<SignInBlocInfo>(
-          info: SignInBlocInfo.newSignedInUser,
+        status: BlocStatusComplete<SignInCubitInfo>(
+          info: SignInCubitInfo.newSignedInUser,
         ),
       ),
     ],
@@ -568,12 +626,12 @@ void main() {
     'sign in with facebook, '
     'there is no signed in user, '
     'should emit complete status without info',
-    build: () => SignInBloc(),
+    build: () => SignInCubit(),
     setUp: () => authService.mockSignInWithFacebook(),
-    act: (bloc) => bloc.add(const SignInEventSignInWithFacebook()),
+    act: (cubit) => cubit.signInWithFacebook(),
     expect: () => [
       const SignInState(status: BlocStatusLoading()),
-      const SignInState(status: BlocStatusComplete<SignInBlocInfo>()),
+      const SignInState(status: BlocStatusComplete<SignInCubitInfo>()),
     ],
     verify: (_) => verify(authService.signInWithFacebook).called(1),
   );
@@ -582,13 +640,13 @@ void main() {
     'sign in with facebook, '
     'network exception with requestFailed code'
     'should emit network request failed status',
-    build: () => SignInBloc(),
+    build: () => SignInCubit(),
     setUp: () => authService.mockSignInWithFacebook(
       throwable: const NetworkException(
         code: NetworkExceptionCode.requestFailed,
       ),
     ),
-    act: (bloc) => bloc.add(const SignInEventSignInWithFacebook()),
+    act: (cubit) => cubit.signInWithFacebook(),
     expect: () => [
       const SignInState(status: BlocStatusLoading()),
       const SignInState(status: BlocStatusNoInternetConnection()),
@@ -599,12 +657,12 @@ void main() {
   blocTest(
     'delete recently created account, '
     'should call auth service method to delete logged user and should emit complete status',
-    build: () => SignInBloc(),
+    build: () => SignInCubit(),
     setUp: () => authService.mockDeleteAccount(),
-    act: (bloc) => bloc.add(const SignInEventDeleteRecentlyCreatedAccount()),
+    act: (cubit) => cubit.deleteRecentlyCreatedAccount(),
     expect: () => [
       const SignInState(status: BlocStatusLoading()),
-      const SignInState(status: BlocStatusComplete<SignInBlocInfo>()),
+      const SignInState(status: BlocStatusComplete<SignInCubitInfo>()),
     ],
     verify: (_) => verify(authService.deleteAccount).called(1),
   );
@@ -612,12 +670,12 @@ void main() {
   blocTest(
     'delete recently created account, '
     'should call auth service method to delete logged user and should emit complete status',
-    build: () => SignInBloc(),
+    build: () => SignInCubit(),
     setUp: () => authService.mockDeleteAccount(),
-    act: (bloc) => bloc.add(const SignInEventDeleteRecentlyCreatedAccount()),
+    act: (cubit) => cubit.deleteRecentlyCreatedAccount(),
     expect: () => [
       const SignInState(status: BlocStatusLoading()),
-      const SignInState(status: BlocStatusComplete<SignInBlocInfo>()),
+      const SignInState(status: BlocStatusComplete<SignInCubitInfo>()),
     ],
     verify: (_) => verify(authService.deleteAccount).called(1),
   );
