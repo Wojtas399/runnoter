@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/additional_model/workout_stage.dart';
-import '../../../domain/bloc/workout_creator/workout_creator_bloc.dart';
+import '../../../domain/cubit/workout_creator/workout_creator_cubit.dart';
 import '../../component/edit_delete_popup_menu_component.dart';
 import '../../component/text/body_text_components.dart';
 import '../../dialog/workout_stage_creator/workout_stage_creator_dialog.dart';
@@ -63,39 +63,30 @@ class _WorkoutStageActions extends StatelessWidget {
   final int stageIndex;
   final WorkoutStage stage;
 
-  const _WorkoutStageActions({
-    required this.stageIndex,
-    required this.stage,
-  });
+  const _WorkoutStageActions({required this.stageIndex, required this.stage});
 
   @override
   Widget build(BuildContext context) {
     return EditDeleteActions(
       displayAsPopupMenu: context.isMobileSize,
       onEditSelected: () => _editWorkoutStage(context),
-      onDeleteSelected: () => _deleteWorkoutStage(context),
+      onDeleteSelected: () => context
+          .read<WorkoutCreatorCubit>()
+          .deleteWorkoutStageAtIndex(stageIndex),
     );
   }
 
   Future<void> _editWorkoutStage(BuildContext context) async {
-    final bloc = context.read<WorkoutCreatorBloc>();
+    final cubit = context.read<WorkoutCreatorCubit>();
     final WorkoutStage? updatedWorkoutStage =
         await showDialogDependingOnScreenSize(
       WorkoutStageCreatorDialog(stage: stage),
     );
     if (updatedWorkoutStage != null) {
-      bloc.add(
-        WorkoutCreatorEventWorkoutStageUpdated(
-          stageIndex: stageIndex,
-          workoutStage: updatedWorkoutStage,
-        ),
+      cubit.updateWorkoutStageAtIndex(
+        stageIndex: stageIndex,
+        updatedStage: updatedWorkoutStage,
       );
     }
-  }
-
-  void _deleteWorkoutStage(BuildContext context) {
-    context.read<WorkoutCreatorBloc>().add(
-          WorkoutCreatorEventDeleteWorkoutStage(index: stageIndex),
-        );
   }
 }

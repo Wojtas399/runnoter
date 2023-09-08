@@ -6,7 +6,7 @@ import 'package:runnoter/common/date_service.dart';
 import 'package:runnoter/domain/additional_model/activity_status.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/additional_model/workout_stage.dart';
-import 'package:runnoter/domain/bloc/workout_creator/workout_creator_bloc.dart';
+import 'package:runnoter/domain/cubit/workout_creator/workout_creator_cubit.dart';
 import 'package:runnoter/domain/entity/workout.dart';
 import 'package:runnoter/domain/repository/workout_repository.dart';
 
@@ -20,14 +20,14 @@ void main() {
   const String userId = 'u1';
   const String workoutId = 'w1';
 
-  WorkoutCreatorBloc createBloc({
+  WorkoutCreatorCubit createCubit({
     String? workoutId,
     DateTime? date,
     Workout? workout,
     String? workoutName,
     List<WorkoutStage> stages = const [],
   }) =>
-      WorkoutCreatorBloc(
+      WorkoutCreatorCubit(
         userId: userId,
         workoutId: workoutId,
         date: date,
@@ -66,10 +66,12 @@ void main() {
     'initialize, '
     'workout id is null, '
     'should emit complete status',
-    build: () => createBloc(),
-    act: (bloc) => bloc.add(const WorkoutCreatorEventInitialize()),
+    build: () => createCubit(),
+    act: (cubit) => cubit.initialize(),
     expect: () => [
-      createState(status: const BlocStatusComplete()),
+      createState(
+        status: const BlocStatusComplete(),
+      ),
     ],
   );
 
@@ -78,7 +80,7 @@ void main() {
     'workout id is not null, '
     'should load workout matching to given id, '
     'should emit updated date, workout, workout name and stages',
-    build: () => createBloc(workoutId: workoutId),
+    build: () => createCubit(workoutId: workoutId),
     setUp: () => workoutRepository.mockGetWorkoutById(
       workout: createWorkout(
         id: workoutId,
@@ -89,12 +91,10 @@ void main() {
         ],
       ),
     ),
-    act: (bloc) => bloc.add(const WorkoutCreatorEventInitialize()),
+    act: (cubit) => cubit.initialize(),
     expect: () => [
       createState(
-        status: const BlocStatusComplete<WorkoutCreatorBlocInfo>(
-          info: WorkoutCreatorBlocInfo.editModeInitialized,
-        ),
+        status: const BlocStatusComplete(),
         date: DateTime(2023, 2, 4),
         workout: createWorkout(
           id: workoutId,
@@ -121,10 +121,8 @@ void main() {
   blocTest(
     'date changed, '
     'should update date in state',
-    build: () => createBloc(),
-    act: (bloc) => bloc.add(WorkoutCreatorEventDateChanged(
-      date: DateTime(2023, 2, 2),
-    )),
+    build: () => createCubit(),
+    act: (cubit) => cubit.dateChanged(DateTime(2023, 2, 2)),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
@@ -136,10 +134,8 @@ void main() {
   blocTest(
     'workout name changed, '
     'should update workout name in state',
-    build: () => createBloc(),
-    act: (bloc) => bloc.add(const WorkoutCreatorEventWorkoutNameChanged(
-      workoutName: 'new workout name',
-    )),
+    build: () => createCubit(),
+    act: (cubit) => cubit.workoutNameChanged('new workout name'),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
@@ -151,14 +147,14 @@ void main() {
   blocTest(
     'workout stage added, '
     'should add workout stage to existing stages',
-    build: () => createBloc(
+    build: () => createCubit(
       stages: const [
         WorkoutStageCardio(distanceInKm: 2, maxHeartRate: 150),
       ],
     ),
-    act: (bloc) => bloc.add(const WorkoutCreatorEventWorkoutStageAdded(
-      workoutStage: WorkoutStageZone2(distanceInKm: 5, maxHeartRate: 165),
-    )),
+    act: (cubit) => cubit.workoutStageAdded(
+      const WorkoutStageZone2(distanceInKm: 5, maxHeartRate: 165),
+    ),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
@@ -171,46 +167,46 @@ void main() {
   );
 
   blocTest(
-    'workout stage updated, '
+    'update workout stage at index, '
     'list of stages is empty, '
     'should do nothing',
-    build: () => createBloc(stages: const []),
-    act: (bloc) => bloc.add(const WorkoutCreatorEventWorkoutStageUpdated(
+    build: () => createCubit(stages: const []),
+    act: (cubit) => cubit.updateWorkoutStageAtIndex(
       stageIndex: 1,
-      workoutStage: WorkoutStageZone2(distanceInKm: 7, maxHeartRate: 160),
-    )),
+      updatedStage: const WorkoutStageZone2(distanceInKm: 7, maxHeartRate: 160),
+    ),
     expect: () => [],
   );
 
   blocTest(
-    'workout stage updated, '
+    'update workout stage at index, '
     'length of list of stages is lower than given stage index, '
     'should do nothing',
-    build: () => createBloc(
+    build: () => createCubit(
       stages: const [
         WorkoutStageCardio(distanceInKm: 2, maxHeartRate: 150),
       ],
     ),
-    act: (bloc) => bloc.add(const WorkoutCreatorEventWorkoutStageUpdated(
+    act: (cubit) => cubit.updateWorkoutStageAtIndex(
       stageIndex: 1,
-      workoutStage: WorkoutStageZone2(distanceInKm: 7, maxHeartRate: 160),
-    )),
+      updatedStage: const WorkoutStageZone2(distanceInKm: 7, maxHeartRate: 160),
+    ),
     expect: () => [],
   );
 
   blocTest(
-    'workout stage updated, '
+    'update workout stage at index, '
     'should update workout stage at given index',
-    build: () => createBloc(
+    build: () => createCubit(
       stages: const [
         WorkoutStageCardio(distanceInKm: 2, maxHeartRate: 150),
         WorkoutStageZone2(distanceInKm: 5, maxHeartRate: 165),
       ],
     ),
-    act: (bloc) => bloc.add(const WorkoutCreatorEventWorkoutStageUpdated(
+    act: (cubit) => cubit.updateWorkoutStageAtIndex(
       stageIndex: 1,
-      workoutStage: WorkoutStageZone2(distanceInKm: 7, maxHeartRate: 160),
-    )),
+      updatedStage: const WorkoutStageZone2(distanceInKm: 7, maxHeartRate: 160),
+    ),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
@@ -225,7 +221,7 @@ void main() {
   blocTest(
     'workout stages order changed, '
     'should update list of workout stages in state',
-    build: () => createBloc(
+    build: () => createCubit(
       stages: const [
         WorkoutStageCardio(distanceInKm: 1, maxHeartRate: 150),
         WorkoutStageZone2(distanceInKm: 3, maxHeartRate: 165),
@@ -233,14 +229,14 @@ void main() {
         WorkoutStageZone3(distanceInKm: 2, maxHeartRate: 180),
       ],
     ),
-    act: (bloc) => bloc.add(const WorkoutCreatorEventWorkoutStagesOrderChanged(
-      workoutStages: [
+    act: (cubit) => cubit.workoutStagesOrderChanged(
+      const [
         WorkoutStageCardio(distanceInKm: 3, maxHeartRate: 150),
         WorkoutStageZone3(distanceInKm: 2, maxHeartRate: 180),
         WorkoutStageCardio(distanceInKm: 1, maxHeartRate: 150),
         WorkoutStageZone2(distanceInKm: 3, maxHeartRate: 165),
       ],
-    )),
+    ),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
@@ -255,17 +251,15 @@ void main() {
   );
 
   blocTest(
-    'delete workout stage, '
+    'delete workout stage at index, '
     'should delete workout stage by its index',
-    build: () => createBloc(
+    build: () => createCubit(
       stages: const [
         WorkoutStageZone2(distanceInKm: 5, maxHeartRate: 165),
         WorkoutStageCardio(distanceInKm: 15, maxHeartRate: 150),
       ],
     ),
-    act: (bloc) => bloc.add(const WorkoutCreatorEventDeleteWorkoutStage(
-      index: 0,
-    )),
+    act: (cubit) => cubit.deleteWorkoutStageAtIndex(0),
     expect: () => [
       createState(
         status: const BlocStatusComplete(),
@@ -280,14 +274,14 @@ void main() {
     'submit, '
     'workout name is not set, '
     'should finish event call',
-    build: () => createBloc(
+    build: () => createCubit(
       date: DateTime(2023, 2, 2),
       stages: const [
         WorkoutStageCardio(distanceInKm: 4, maxHeartRate: 150),
         WorkoutStageZone3(distanceInKm: 2, maxHeartRate: 180),
       ],
     ),
-    act: (bloc) => bloc.add(const WorkoutCreatorEventSubmit()),
+    act: (cubit) => cubit.submit(),
     expect: () => [],
   );
 
@@ -295,11 +289,11 @@ void main() {
     'submit, '
     'list of workout stage is empty, '
     'should finish event call',
-    build: () => createBloc(
+    build: () => createCubit(
       date: DateTime(2023, 2, 2),
       workoutName: 'workout 1',
     ),
-    act: (bloc) => bloc.add(const WorkoutCreatorEventSubmit()),
+    act: (cubit) => cubit.submit(),
     expect: () => [],
   );
 
@@ -308,7 +302,7 @@ void main() {
     'workout is null, '
     "should call workout repository's method to add workout with pending status, '"
     'should emit info that workout has been added',
-    build: () => createBloc(
+    build: () => createCubit(
       date: DateTime(2023, 2, 2),
       workoutName: 'workout 1',
       stages: const [
@@ -317,7 +311,7 @@ void main() {
       ],
     ),
     setUp: () => workoutRepository.mockAddWorkout(),
-    act: (bloc) => bloc.add(const WorkoutCreatorEventSubmit()),
+    act: (cubit) => cubit.submit(),
     expect: () => [
       createState(
         status: const BlocStatusLoading(),
@@ -329,8 +323,8 @@ void main() {
         ],
       ),
       createState(
-        status: const BlocStatusComplete<WorkoutCreatorBlocInfo>(
-          info: WorkoutCreatorBlocInfo.workoutAdded,
+        status: const BlocStatusComplete<WorkoutCreatorCubitInfo>(
+          info: WorkoutCreatorCubitInfo.workoutAdded,
         ),
         date: DateTime(2023, 2, 2),
         workoutName: 'workout 1',
@@ -359,7 +353,7 @@ void main() {
     'workout is not null, '
     "should call workout repository's method to update workout, '"
     'should emit info that workout has been updated',
-    build: () => createBloc(
+    build: () => createCubit(
       workoutId: workoutId,
       date: DateTime(2023, 2, 2),
       workout: createWorkout(
@@ -380,7 +374,7 @@ void main() {
       dateService.mockAreDatesTheSame(expected: false);
       workoutRepository.mockUpdateWorkout();
     },
-    act: (bloc) => bloc.add(const WorkoutCreatorEventSubmit()),
+    act: (cubit) => cubit.submit(),
     expect: () => [
       createState(
         status: const BlocStatusLoading(),
@@ -400,8 +394,8 @@ void main() {
         ],
       ),
       createState(
-        status: const BlocStatusComplete<WorkoutCreatorBlocInfo>(
-          info: WorkoutCreatorBlocInfo.workoutUpdated,
+        status: const BlocStatusComplete<WorkoutCreatorCubitInfo>(
+          info: WorkoutCreatorCubitInfo.workoutUpdated,
         ),
         date: DateTime(2023, 2, 2),
         workout: createWorkout(

@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/additional_model/bloc_status.dart';
-import '../../../domain/bloc/workout_creator/workout_creator_bloc.dart';
+import '../../../domain/cubit/workout_creator/workout_creator_cubit.dart';
 import '../../../domain/entity/workout.dart';
 import '../../component/big_button_component.dart';
 import '../../component/body/medium_body_component.dart';
@@ -23,7 +23,7 @@ class WorkoutCreatorContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async => await askForConfirmationToLeave(
-        areUnsavedChanges: context.read<WorkoutCreatorBloc>().state.canSubmit,
+        areUnsavedChanges: context.read<WorkoutCreatorCubit>().state.canSubmit,
       ),
       child: Scaffold(
         appBar: AppBar(
@@ -52,7 +52,7 @@ class _AppBarTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Workout? workout = context.select(
-      (WorkoutCreatorBloc bloc) => bloc.state.workout,
+      (WorkoutCreatorCubit cubit) => cubit.state.workout,
     );
     return Text(
       workout == null
@@ -68,7 +68,7 @@ class _Form extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final BlocStatus blocStatus = context.select(
-      (WorkoutCreatorBloc bloc) => bloc.state.status,
+      (WorkoutCreatorCubit cubit) => cubit.state.status,
     );
 
     return blocStatus is BlocStatusInitial
@@ -109,19 +109,13 @@ class _DateValue extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final DateTime? date = context.select(
-      (WorkoutCreatorBloc bloc) => bloc.state.date,
+      (WorkoutCreatorCubit cubit) => cubit.state.date,
     );
 
     return DateSelector(
       date: date,
-      onDateSelected: (DateTime date) => _onDateSelected(context, date),
+      onDateSelected: context.read<WorkoutCreatorCubit>().dateChanged,
     );
-  }
-
-  void _onDateSelected(BuildContext context, DateTime date) {
-    context.read<WorkoutCreatorBloc>().add(
-          WorkoutCreatorEventDateChanged(date: date),
-        );
   }
 }
 
@@ -138,7 +132,7 @@ class _WorkoutNameState extends State<_WorkoutName> {
   @override
   void initState() {
     final String? workoutName =
-        context.read<WorkoutCreatorBloc>().state.workoutName;
+        context.read<WorkoutCreatorCubit>().state.workoutName;
     if (workoutName != null) _controller.text = workoutName;
     _controller.addListener(_onChanged);
     super.initState();
@@ -164,16 +158,12 @@ class _WorkoutNameState extends State<_WorkoutName> {
   }
 
   void _onChanged() {
-    context.read<WorkoutCreatorBloc>().add(
-          WorkoutCreatorEventWorkoutNameChanged(workoutName: _controller.text),
-        );
+    context.read<WorkoutCreatorCubit>().workoutNameChanged(_controller.text);
   }
 
   void _onSubmitted(BuildContext context) {
-    final bloc = context.read<WorkoutCreatorBloc>();
-    if (bloc.state.canSubmit) {
-      bloc.add(const WorkoutCreatorEventSubmit());
-    }
+    final cubit = context.read<WorkoutCreatorCubit>();
+    if (cubit.state.canSubmit) cubit.submit();
   }
 }
 
@@ -183,10 +173,10 @@ class _SubmitButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Workout? workout = context.select(
-      (WorkoutCreatorBloc bloc) => bloc.state.workout,
+      (WorkoutCreatorCubit cubit) => cubit.state.workout,
     );
     final bool isDisabled = context.select(
-      (WorkoutCreatorBloc bloc) => !bloc.state.canSubmit,
+      (WorkoutCreatorCubit cubit) => !cubit.state.canSubmit,
     );
 
     return BigButton(
@@ -194,11 +184,7 @@ class _SubmitButton extends StatelessWidget {
           ? Str.of(context).workoutCreatorEditWorkoutButton
           : Str.of(context).workoutCreatorCreateWorkoutButton,
       isDisabled: isDisabled,
-      onPressed: () => _onPressed(context),
+      onPressed: context.read<WorkoutCreatorCubit>().submit,
     );
-  }
-
-  void _onPressed(BuildContext context) {
-    context.read<WorkoutCreatorBloc>().add(const WorkoutCreatorEventSubmit());
   }
 }

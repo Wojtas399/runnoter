@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/bloc/workout_creator/workout_creator_bloc.dart';
-import '../../component/bloc_with_status_listener_component.dart';
+import '../../../domain/cubit/workout_creator/workout_creator_cubit.dart';
+import '../../component/cubit_with_status_listener_component.dart';
 import '../../component/page_not_found_component.dart';
 import '../../extension/string_extensions.dart';
 import '../../service/dialog_service.dart';
@@ -30,44 +30,38 @@ class WorkoutCreatorScreen extends StatelessWidget {
     return userId == null
         ? const PageNotFound()
         : BlocProvider(
-            create: (_) => WorkoutCreatorBloc(
+            create: (_) => WorkoutCreatorCubit(
               userId: userId!,
               date: date,
               workoutId: workoutId,
-            )..add(const WorkoutCreatorEventInitialize()),
-            child: const _BlocListener(
+            )..initialize(),
+            child: const _CubitListener(
               child: WorkoutCreatorContent(),
             ),
           );
   }
 }
 
-class _BlocListener extends StatelessWidget {
+class _CubitListener extends StatelessWidget {
   final Widget child;
 
-  const _BlocListener({
-    required this.child,
-  });
+  const _CubitListener({required this.child});
 
   @override
   Widget build(BuildContext context) {
-    return BlocWithStatusListener<WorkoutCreatorBloc, WorkoutCreatorState,
-        WorkoutCreatorBlocInfo, dynamic>(
-      onInfo: (WorkoutCreatorBlocInfo info) {
-        _manageInfo(context, info);
-      },
+    return CubitWithStatusListener<WorkoutCreatorCubit, WorkoutCreatorState,
+        WorkoutCreatorCubitInfo, dynamic>(
+      onInfo: (WorkoutCreatorCubitInfo info) => _manageInfo(context, info),
       child: child,
     );
   }
 
-  void _manageInfo(BuildContext context, WorkoutCreatorBlocInfo info) {
+  void _manageInfo(BuildContext context, WorkoutCreatorCubitInfo info) {
     switch (info) {
-      case WorkoutCreatorBlocInfo.editModeInitialized:
-        break;
-      case WorkoutCreatorBlocInfo.workoutAdded:
+      case WorkoutCreatorCubitInfo.workoutAdded:
         _onWorkoutAddedInfo(context);
         break;
-      case WorkoutCreatorBlocInfo.workoutUpdated:
+      case WorkoutCreatorCubitInfo.workoutUpdated:
         _onWorkoutUpdatedInfo(context);
         break;
     }

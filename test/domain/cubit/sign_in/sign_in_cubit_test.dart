@@ -65,7 +65,7 @@ void main() {
     act: (cubit) => cubit.initialize(),
     expect: () => [
       const SignInState(status: BlocStatusLoading()),
-      const SignInState(status: BlocStatusComplete<SignInCubitInfo>()),
+      const SignInState(status: BlocStatusComplete()),
     ],
     verify: (_) {
       verify(() => authService.loggedUserId$).called(1);
@@ -82,7 +82,7 @@ void main() {
     act: (cubit) => cubit.initialize(),
     expect: () => [
       const SignInState(status: BlocStatusLoading()),
-      const SignInState(status: BlocStatusComplete<SignInCubitInfo>()),
+      const SignInState(status: BlocStatusComplete()),
     ],
     verify: (_) => verify(() => authService.loggedUserId$).called(1),
   );
@@ -109,7 +109,7 @@ void main() {
 
   blocTest(
     'submit, '
-    'logged user does not exist, '
+    'logged user has not been found, '
     'should emit complete status without any info',
     build: () => SignInCubit(
       initialState: const SignInState(
@@ -130,7 +130,7 @@ void main() {
         password: password,
       ),
       const SignInState(
-        status: BlocStatusComplete<SignInCubitInfo>(),
+        status: BlocStatusComplete(),
         email: email,
         password: password,
       ),
@@ -514,14 +514,14 @@ void main() {
 
   blocTest(
     'sign in with google, '
-    'there is no signed in user, '
+    'signed in user has not been found, '
     'should emit complete status without info',
     build: () => SignInCubit(),
     setUp: () => authService.mockSignInWithGoogle(),
     act: (cubit) => cubit.signInWithGoogle(),
     expect: () => [
       const SignInState(status: BlocStatusLoading()),
-      const SignInState(status: BlocStatusComplete<SignInCubitInfo>()),
+      const SignInState(status: BlocStatusComplete()),
     ],
     verify: (_) => verify(authService.signInWithGoogle).called(1),
   );
@@ -624,14 +624,14 @@ void main() {
 
   blocTest(
     'sign in with facebook, '
-    'there is no signed in user, '
+    'signed in user has not been found, '
     'should emit complete status without info',
     build: () => SignInCubit(),
     setUp: () => authService.mockSignInWithFacebook(),
     act: (cubit) => cubit.signInWithFacebook(),
     expect: () => [
       const SignInState(status: BlocStatusLoading()),
-      const SignInState(status: BlocStatusComplete<SignInCubitInfo>()),
+      const SignInState(status: BlocStatusComplete()),
     ],
     verify: (_) => verify(authService.signInWithFacebook).called(1),
   );
@@ -662,20 +662,7 @@ void main() {
     act: (cubit) => cubit.deleteRecentlyCreatedAccount(),
     expect: () => [
       const SignInState(status: BlocStatusLoading()),
-      const SignInState(status: BlocStatusComplete<SignInCubitInfo>()),
-    ],
-    verify: (_) => verify(authService.deleteAccount).called(1),
-  );
-
-  blocTest(
-    'delete recently created account, '
-    'should call auth service method to delete logged user and should emit complete status',
-    build: () => SignInCubit(),
-    setUp: () => authService.mockDeleteAccount(),
-    act: (cubit) => cubit.deleteRecentlyCreatedAccount(),
-    expect: () => [
-      const SignInState(status: BlocStatusLoading()),
-      const SignInState(status: BlocStatusComplete<SignInCubitInfo>()),
+      const SignInState(status: BlocStatusComplete()),
     ],
     verify: (_) => verify(authService.deleteAccount).called(1),
   );

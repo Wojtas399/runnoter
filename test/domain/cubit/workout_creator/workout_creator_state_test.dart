@@ -2,7 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/additional_model/workout_stage.dart';
-import 'package:runnoter/domain/bloc/workout_creator/workout_creator_bloc.dart';
+import 'package:runnoter/domain/cubit/workout_creator/workout_creator_cubit.dart';
 import 'package:runnoter/domain/entity/workout.dart';
 
 import '../../../creators/workout_creator.dart';
@@ -271,7 +271,8 @@ void main() {
   );
 
   test(
-    'copy with status',
+    'copy with status, '
+    'should set complete status if new value is null',
     () {
       const BlocStatus expectedStatus = BlocStatusInitial();
 
@@ -284,7 +285,8 @@ void main() {
   );
 
   test(
-    'copy with date',
+    'copy with date, '
+    'should copy current value if new value is null',
     () {
       final DateTime expectedDate = DateTime(2023);
 
@@ -297,7 +299,8 @@ void main() {
   );
 
   test(
-    'copy with workout',
+    'copy with workout, '
+    'should copy current value if new value is null',
     () {
       final Workout expectedWorkout = createWorkout(id: 'w1');
 
@@ -310,7 +313,8 @@ void main() {
   );
 
   test(
-    'copy with workout name',
+    'copy with workout name, '
+    'should copy current value if new value is null',
     () {
       const String expectedName = 'workoutName';
 

@@ -14,9 +14,9 @@ abstract class CubitWithStatus<State extends CubitState, Info, Error>
   }
 
   void emitCompleteStatus({Info? info}) {
-    emit(state.copyWith(
-      status: BlocStatusComplete<Info>(info: info),
-    ));
+    BlocStatus status = const BlocStatusComplete();
+    if (info != null) status = BlocStatusComplete<Info>(info: info);
+    emit(state.copyWith(status: status));
   }
 
   void emitErrorStatus(Error error) {

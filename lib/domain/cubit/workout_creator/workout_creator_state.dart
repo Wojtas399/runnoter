@@ -1,6 +1,6 @@
-part of 'workout_creator_bloc.dart';
+part of 'workout_creator_cubit.dart';
 
-class WorkoutCreatorState extends BlocState<WorkoutCreatorState> {
+class WorkoutCreatorState extends CubitState<WorkoutCreatorState> {
   final DateService _dateService;
   final DateTime? date;
   final Workout? workout;
