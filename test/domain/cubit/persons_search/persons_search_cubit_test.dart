@@ -5,7 +5,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/additional_model/coaching_request.dart';
 import 'package:runnoter/domain/additional_model/custom_exception.dart';
-import 'package:runnoter/domain/bloc/persons_search/persons_search_bloc.dart';
+import 'package:runnoter/domain/cubit/persons_search/persons_search_cubit.dart';
 import 'package:runnoter/domain/entity/user.dart';
 import 'package:runnoter/domain/repository/person_repository.dart';
 import 'package:runnoter/domain/service/auth_service.dart';
@@ -41,11 +41,11 @@ void main() {
     'initialize, '
     'logged user does not exist, '
     'should do nothing',
-    build: () => PersonsSearchBloc(
+    build: () => PersonsSearchCubit(
       requestDirection: CoachingRequestDirection.coachToClient,
     ),
     setUp: () => authService.mockGetLoggedUserId(),
-    act: (bloc) => bloc.add(const PersonsSearchEventInitialize()),
+    act: (cubit) => cubit.initialize(),
     expect: () => [],
     verify: (_) => verify(() => authService.loggedUserId$).called(1),
   );
@@ -55,7 +55,7 @@ void main() {
     'coach to client direction, '
     'found persons do not exist, '
     'should only emit client ids and invited persons ids',
-    build: () => PersonsSearchBloc(
+    build: () => PersonsSearchCubit(
       requestDirection: CoachingRequestDirection.coachToClient,
     ),
     setUp: () {
@@ -71,7 +71,7 @@ void main() {
         ],
       );
     },
-    act: (bloc) => bloc.add(const PersonsSearchEventInitialize()),
+    act: (cubit) => cubit.initialize(),
     expect: () => [
       const PersonsSearchState(
         status: BlocStatusComplete(),
@@ -98,9 +98,9 @@ void main() {
     'coach to client direction, '
     'found persons exist, '
     'should emit client ids, ids of invited persons and updated found persons',
-    build: () => PersonsSearchBloc(
+    build: () => PersonsSearchCubit(
       requestDirection: CoachingRequestDirection.coachToClient,
-      state: PersonsSearchState(
+      initialState: PersonsSearchState(
         status: const BlocStatusComplete(),
         foundPersons: [
           FoundPerson(
@@ -127,7 +127,7 @@ void main() {
         ],
       );
     },
-    act: (bloc) => bloc.add(const PersonsSearchEventInitialize()),
+    act: (cubit) => cubit.initialize(),
     expect: () => [
       PersonsSearchState(
         status: const BlocStatusComplete(),
@@ -164,7 +164,7 @@ void main() {
     'coach to client direction, '
     'found persons do not exist, '
     'should only emit client ids and invited persons ids',
-    build: () => PersonsSearchBloc(
+    build: () => PersonsSearchCubit(
       requestDirection: CoachingRequestDirection.clientToCoach,
     ),
     setUp: () {
@@ -180,7 +180,7 @@ void main() {
         ],
       );
     },
-    act: (bloc) => bloc.add(const PersonsSearchEventInitialize()),
+    act: (cubit) => cubit.initialize(),
     expect: () => [
       const PersonsSearchState(
         status: BlocStatusComplete(),
@@ -207,9 +207,9 @@ void main() {
     'client to coach direction, '
     'found persons exist, '
     'should emit client ids, ids of invited persons and updated found persons',
-    build: () => PersonsSearchBloc(
+    build: () => PersonsSearchCubit(
       requestDirection: CoachingRequestDirection.clientToCoach,
-      state: PersonsSearchState(
+      initialState: PersonsSearchState(
         status: const BlocStatusComplete(),
         foundPersons: [
           FoundPerson(
@@ -236,7 +236,7 @@ void main() {
         ],
       );
     },
-    act: (bloc) => bloc.add(const PersonsSearchEventInitialize()),
+    act: (cubit) => cubit.initialize(),
     expect: () => [
       PersonsSearchState(
         status: const BlocStatusComplete(),
@@ -272,17 +272,15 @@ void main() {
     'search, '
     'search query is empty string, '
     'should set found persons as null',
-    build: () => PersonsSearchBloc(
+    build: () => PersonsSearchCubit(
       requestDirection: CoachingRequestDirection.coachToClient,
-      state: const PersonsSearchState(
+      initialState: const PersonsSearchState(
         status: BlocStatusComplete(),
         searchQuery: 'sea',
         foundPersons: [],
       ),
     ),
-    act: (bloc) => bloc.add(const PersonsSearchEventSearch(
-      searchQuery: '',
-    )),
+    act: (cubit) => cubit.search(''),
     expect: () => [
       const PersonsSearchState(
         status: BlocStatusComplete(),
@@ -296,9 +294,9 @@ void main() {
     'search, '
     'coach to client request direction, '
     "should call person repository's method to search persons and should update found persons in state",
-    build: () => PersonsSearchBloc(
+    build: () => PersonsSearchCubit(
       requestDirection: CoachingRequestDirection.coachToClient,
-      state: const PersonsSearchState(
+      initialState: const PersonsSearchState(
         status: BlocStatusComplete(),
         clientIds: ['u12'],
         invitedPersonIds: ['u2'],
@@ -322,7 +320,7 @@ void main() {
         ),
       ],
     ),
-    act: (bloc) => bloc.add(const PersonsSearchEventSearch(searchQuery: 'sea')),
+    act: (cubit) => cubit.search('sea'),
     expect: () => [
       const PersonsSearchState(
         status: BlocStatusLoading(),
@@ -373,9 +371,9 @@ void main() {
     'search, '
     'client to coach request direction, '
     "should call person repository's method to search persons and should update found persons in state",
-    build: () => PersonsSearchBloc(
+    build: () => PersonsSearchCubit(
       requestDirection: CoachingRequestDirection.clientToCoach,
-      state: const PersonsSearchState(
+      initialState: const PersonsSearchState(
         status: BlocStatusComplete(),
         clientIds: ['u12'],
         invitedPersonIds: ['u2'],
@@ -389,7 +387,7 @@ void main() {
         createPerson(id: 'u4', name: 'na4', surname: 'su4', coachId: 'c1'),
       ],
     ),
-    act: (bloc) => bloc.add(const PersonsSearchEventSearch(searchQuery: 'sea')),
+    act: (cubit) => cubit.search('sea'),
     expect: () => [
       const PersonsSearchState(
         status: BlocStatusLoading(),
@@ -448,13 +446,11 @@ void main() {
     'invite person, '
     'logged user does not exist, '
     'should emit no logged user status',
-    build: () => PersonsSearchBloc(
+    build: () => PersonsSearchCubit(
       requestDirection: CoachingRequestDirection.coachToClient,
     ),
     setUp: () => authService.mockGetLoggedUserId(),
-    act: (bloc) => bloc.add(const PersonsSearchEventInvitePerson(
-      personId: 'u2',
-    )),
+    act: (cubit) => cubit.invitePerson('u2'),
     expect: () => [
       const PersonsSearchState(status: BlocStatusNoLoggedUser()),
     ],
@@ -465,22 +461,20 @@ void main() {
     'invite person, '
     'coach to client, '
     "should call coaching request repository's method to add request with given person id set as receiver id, coachToClient direction and pending invitation status",
-    build: () => PersonsSearchBloc(
+    build: () => PersonsSearchCubit(
       requestDirection: CoachingRequestDirection.coachToClient,
-      state: const PersonsSearchState(status: BlocStatusComplete()),
+      initialState: const PersonsSearchState(status: BlocStatusComplete()),
     ),
     setUp: () {
       authService.mockGetLoggedUserId(userId: 'u1');
       coachingRequestService.mockAddCoachingRequest();
     },
-    act: (bloc) => bloc.add(const PersonsSearchEventInvitePerson(
-      personId: 'u2',
-    )),
+    act: (cubit) => cubit.invitePerson('u2'),
     expect: () => [
       const PersonsSearchState(status: BlocStatusLoading()),
       const PersonsSearchState(
-        status: BlocStatusComplete<PersonsSearchBlocInfo>(
-          info: PersonsSearchBlocInfo.requestSent,
+        status: BlocStatusComplete<PersonsSearchCubitInfo>(
+          info: PersonsSearchCubitInfo.requestSent,
         ),
       ),
     ],
@@ -501,22 +495,20 @@ void main() {
     'invite person, '
     'client to coach, '
     "should call coaching request repository's method to add request with given person id set as receiver id, clientToCoach direction and pending invitation status",
-    build: () => PersonsSearchBloc(
+    build: () => PersonsSearchCubit(
       requestDirection: CoachingRequestDirection.clientToCoach,
-      state: const PersonsSearchState(status: BlocStatusComplete()),
+      initialState: const PersonsSearchState(status: BlocStatusComplete()),
     ),
     setUp: () {
       authService.mockGetLoggedUserId(userId: 'u1');
       coachingRequestService.mockAddCoachingRequest();
     },
-    act: (bloc) => bloc.add(const PersonsSearchEventInvitePerson(
-      personId: 'u2',
-    )),
+    act: (cubit) => cubit.invitePerson('u2'),
     expect: () => [
       const PersonsSearchState(status: BlocStatusLoading()),
       const PersonsSearchState(
-        status: BlocStatusComplete<PersonsSearchBlocInfo>(
-          info: PersonsSearchBlocInfo.requestSent,
+        status: BlocStatusComplete<PersonsSearchCubitInfo>(
+          info: PersonsSearchCubitInfo.requestSent,
         ),
       ),
     ],
@@ -537,9 +529,9 @@ void main() {
     'invite user, '
     'CoachingRequestException with userAlreadyHasCoach code, '
     'should emit error status with userAlreadyHasCoach error',
-    build: () => PersonsSearchBloc(
+    build: () => PersonsSearchCubit(
       requestDirection: CoachingRequestDirection.coachToClient,
-      state: const PersonsSearchState(status: BlocStatusComplete()),
+      initialState: const PersonsSearchState(status: BlocStatusComplete()),
     ),
     setUp: () {
       authService.mockGetLoggedUserId(userId: 'u1');
@@ -549,14 +541,12 @@ void main() {
         ),
       );
     },
-    act: (bloc) => bloc.add(const PersonsSearchEventInvitePerson(
-      personId: 'u2',
-    )),
+    act: (cubit) => cubit.invitePerson('u2'),
     expect: () => [
       const PersonsSearchState(status: BlocStatusLoading()),
       const PersonsSearchState(
-        status: BlocStatusError<PersonsSearchBlocError>(
-          error: PersonsSearchBlocError.userAlreadyHasCoach,
+        status: BlocStatusError<PersonsSearchCubitError>(
+          error: PersonsSearchCubitError.userAlreadyHasCoach,
         ),
       ),
     ],

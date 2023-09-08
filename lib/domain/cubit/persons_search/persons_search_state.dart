@@ -1,6 +1,6 @@
-part of 'persons_search_bloc.dart';
+part of 'persons_search_cubit.dart';
 
-class PersonsSearchState extends BlocState<PersonsSearchState> {
+class PersonsSearchState extends CubitState<PersonsSearchState> {
   final String searchQuery;
   final List<String> clientIds;
   final List<String> invitedPersonIds;

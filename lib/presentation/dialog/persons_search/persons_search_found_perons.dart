@@ -4,7 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/additional_model/bloc_status.dart';
 import '../../../domain/additional_model/coaching_request.dart';
-import '../../../domain/bloc/persons_search/persons_search_bloc.dart';
+import '../../../domain/cubit/persons_search/persons_search_cubit.dart';
 import '../../../domain/entity/person.dart';
 import '../../component/empty_content_info_component.dart';
 import '../../component/loading_info_component.dart';
@@ -19,10 +19,10 @@ class PersonsSearchFoundPersons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final BlocStatus blocStatus = context.select(
-      (PersonsSearchBloc bloc) => bloc.state.status,
+      (PersonsSearchCubit cubit) => cubit.state.status,
     );
     final List<FoundPerson>? foundUsers = context.select(
-      (PersonsSearchBloc bloc) => bloc.state.foundPersons,
+      (PersonsSearchCubit cubit) => cubit.state.foundPersons,
     );
 
     return blocStatus is BlocStatusLoading
@@ -69,11 +69,9 @@ class _UserItem extends StatelessWidget {
   }
 
   Future<void> _inviteUser(BuildContext context) async {
-    final PersonsSearchBloc bloc = context.read<PersonsSearchBloc>();
+    final PersonsSearchCubit cubit = context.read<PersonsSearchCubit>();
     final bool confirmed = await _askForConfirmationToSendInvitation(context);
-    if (confirmed) {
-      bloc.add(PersonsSearchEventInvitePerson(personId: foundUser.info.id));
-    }
+    if (confirmed) cubit.invitePerson(foundUser.info.id);
   }
 
   Future<bool> _askForConfirmationToSendInvitation(
@@ -82,7 +80,7 @@ class _UserItem extends StatelessWidget {
     final str = Str.of(context);
     final TextStyle? textStyle = Theme.of(context).textTheme.bodyMedium;
     final CoachingRequestDirection requestDirection =
-        context.read<PersonsSearchBloc>().requestDirection;
+        context.read<PersonsSearchCubit>().requestDirection;
     final String dialogTitle = switch (requestDirection) {
       CoachingRequestDirection.clientToCoach =>
         str.coachesSearchSendInvitationConfirmationDialogTitle,
@@ -122,7 +120,7 @@ class _EmptySearchQueryInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final CoachingRequestDirection requestDirection =
-        context.read<PersonsSearchBloc>().requestDirection;
+        context.read<PersonsSearchCubit>().requestDirection;
     final str = Str.of(context);
     final String title = switch (requestDirection) {
       CoachingRequestDirection.coachToClient => str.usersSearchInstruction,
@@ -141,7 +139,7 @@ class _NoResultsInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final CoachingRequestDirection requestDirection =
-        context.read<PersonsSearchBloc>().requestDirection;
+        context.read<PersonsSearchCubit>().requestDirection;
     final str = Str.of(context);
     final String title = switch (requestDirection) {
       CoachingRequestDirection.clientToCoach => str.coachesSearchNoResultsInfo,
