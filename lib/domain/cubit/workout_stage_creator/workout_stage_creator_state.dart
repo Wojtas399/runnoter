@@ -1,29 +1,27 @@
-part of 'workout_stage_creator_bloc.dart';
+part of 'workout_stage_creator_cubit.dart';
 
-class WorkoutStageCreatorState extends BlocState<WorkoutStageCreatorState> {
+class WorkoutStageCreatorState extends Equatable {
   final WorkoutStageType? originalStageType;
   final WorkoutStageType? stageType;
   final WorkoutStageCreatorDistanceForm distanceForm;
   final WorkoutStageCreatorSeriesForm seriesForm;
-  final WorkoutStage? stageToSubmit;
+  final WorkoutStage? stageToAdd;
 
   const WorkoutStageCreatorState({
-    required super.status,
     this.originalStageType,
     this.stageType,
     this.distanceForm = const WorkoutStageCreatorDistanceForm(),
     this.seriesForm = const WorkoutStageCreatorSeriesForm(),
-    this.stageToSubmit,
+    this.stageToAdd,
   });
 
   @override
   List<Object?> get props => [
-        status,
         originalStageType,
         stageType,
         distanceForm,
         seriesForm,
-        stageToSubmit,
+        stageToAdd,
       ];
 
   bool get isEditMode =>
@@ -47,22 +45,19 @@ class WorkoutStageCreatorState extends BlocState<WorkoutStageCreatorState> {
       stageType == WorkoutStageType.hillRepeats ||
       stageType == WorkoutStageType.rhythms;
 
-  @override
   WorkoutStageCreatorState copyWith({
-    BlocStatus? status,
     WorkoutStageType? originalStageType,
     WorkoutStageType? stageType,
     WorkoutStageCreatorDistanceForm? distanceForm,
     WorkoutStageCreatorSeriesForm? seriesForm,
-    WorkoutStage? stageToSubmit,
+    WorkoutStage? stageToAdd,
   }) =>
       WorkoutStageCreatorState(
-        status: status ?? const BlocStatusComplete(),
         originalStageType: originalStageType ?? this.originalStageType,
         stageType: stageType ?? this.stageType,
         distanceForm: distanceForm ?? this.distanceForm,
         seriesForm: seriesForm ?? this.seriesForm,
-        stageToSubmit: stageToSubmit,
+        stageToAdd: stageToAdd,
       );
 }
 
@@ -74,10 +69,4 @@ abstract class WorkoutStageCreatorForm extends Equatable {
   WorkoutStageCreatorForm copyWith();
 }
 
-enum WorkoutStageType {
-  cardio,
-  zone2,
-  zone3,
-  hillRepeats,
-  rhythms,
-}
+enum WorkoutStageType { cardio, zone2, zone3, hillRepeats, rhythms }

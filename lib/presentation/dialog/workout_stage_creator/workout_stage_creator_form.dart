@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/bloc/workout_stage_creator/workout_stage_creator_bloc.dart';
+import '../../../domain/cubit/workout_stage_creator/workout_stage_creator_cubit.dart';
 import 'workout_stage_creator_distance_form.dart';
 import 'workout_stage_creator_series_form.dart';
 
@@ -27,7 +27,7 @@ class _WorkoutStageType extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final WorkoutStageType? stageType = context.select(
-      (WorkoutStageCreatorBloc bloc) => bloc.state.stageType,
+      (WorkoutStageCreatorCubit cubit) => cubit.state.stageType,
     );
 
     return Padding(
@@ -47,8 +47,7 @@ class _WorkoutStageType extends StatelessWidget {
             ),
           ),
         ],
-        onChanged: (WorkoutStageType? stage) =>
-            _onWorkoutStageChanged(context, stage),
+        onChanged: context.read<WorkoutStageCreatorCubit>().stageTypeChanged,
       ),
     );
   }
@@ -58,31 +57,13 @@ class _WorkoutStageType extends StatelessWidget {
     WorkoutStageType stage,
   ) {
     final str = Str.of(context);
-    switch (stage) {
-      case WorkoutStageType.cardio:
-        return str.workoutStageCardio;
-      case WorkoutStageType.zone2:
-        return str.workoutStageZone2;
-      case WorkoutStageType.zone3:
-        return str.workoutStageZone3;
-      case WorkoutStageType.hillRepeats:
-        return str.workoutStageHillRepeats;
-      case WorkoutStageType.rhythms:
-        return str.workoutStageRhythms;
-    }
-  }
-
-  void _onWorkoutStageChanged(
-    BuildContext context,
-    WorkoutStageType? stageType,
-  ) {
-    if (stageType != null) {
-      context.read<WorkoutStageCreatorBloc>().add(
-            WorkoutStageCreatorEventStageTypeChanged(
-              stageType: stageType,
-            ),
-          );
-    }
+    return switch (stage) {
+      WorkoutStageType.cardio => str.workoutStageCardio,
+      WorkoutStageType.zone2 => str.workoutStageZone2,
+      WorkoutStageType.zone3 => str.workoutStageZone3,
+      WorkoutStageType.hillRepeats => str.workoutStageHillRepeats,
+      WorkoutStageType.rhythms => str.workoutStageRhythms,
+    };
   }
 }
 
@@ -92,10 +73,10 @@ class _MatchingForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool isDistanceStage = context.select(
-      (WorkoutStageCreatorBloc bloc) => bloc.state.isDistanceStage,
+      (WorkoutStageCreatorCubit cubit) => cubit.state.isDistanceStage,
     );
     final bool isSeriesStage = context.select(
-      (WorkoutStageCreatorBloc bloc) => bloc.state.isSeriesStage,
+      (WorkoutStageCreatorCubit cubit) => cubit.state.isSeriesStage,
     );
 
     if (isDistanceStage) {

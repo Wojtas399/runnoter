@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/domain/additional_model/workout_stage.dart';
-import 'package:runnoter/domain/bloc/workout_stage_creator/workout_stage_creator_bloc.dart';
+import 'package:runnoter/domain/cubit/workout_stage_creator/workout_stage_creator_cubit.dart';
 
 void main() {
   late WorkoutStageCreatorSeriesForm form;
@@ -15,21 +15,6 @@ void main() {
     joggingDistanceInMeters: joggingDistanceInMeters,
   );
 
-  WorkoutStageCreatorSeriesForm createForm({
-    SeriesWorkoutStage? originalStage,
-    int? amountOfSeries,
-    int? seriesDistanceInMeters,
-    int? walkingDistanceInMeters,
-    int? joggingDistanceInMeters,
-  }) =>
-      WorkoutStageCreatorSeriesForm(
-        originalStage: originalStage,
-        amountOfSeries: amountOfSeries,
-        seriesDistanceInMeters: seriesDistanceInMeters,
-        walkingDistanceInMeters: walkingDistanceInMeters,
-        joggingDistanceInMeters: joggingDistanceInMeters,
-      );
-
   test(
     'is submit button disabled, '
     'amount of series is higher than 0, '
@@ -37,7 +22,7 @@ void main() {
     'walking distance is higher than 0, '
     'should be false',
     () {
-      form = createForm(
+      form = const WorkoutStageCreatorSeriesForm(
         amountOfSeries: amountOfSeries,
         seriesDistanceInMeters: seriesDistanceInMeters,
         walkingDistanceInMeters: walkingDistanceInMeters,
@@ -54,7 +39,7 @@ void main() {
     'break jogging distance is higher than 0, '
     'should be false',
     () {
-      form = createForm(
+      form = const WorkoutStageCreatorSeriesForm(
         amountOfSeries: amountOfSeries,
         seriesDistanceInMeters: seriesDistanceInMeters,
         joggingDistanceInMeters: joggingDistanceInMeters,
@@ -69,7 +54,7 @@ void main() {
     'amount of series is null, '
     'should be true',
     () {
-      form = createForm(
+      form = const WorkoutStageCreatorSeriesForm(
         seriesDistanceInMeters: seriesDistanceInMeters,
         joggingDistanceInMeters: joggingDistanceInMeters,
       );
@@ -83,7 +68,7 @@ void main() {
     'amount of series is equal to 0, '
     'should be true',
     () {
-      form = createForm(
+      form = const WorkoutStageCreatorSeriesForm(
         amountOfSeries: 0,
         seriesDistanceInMeters: seriesDistanceInMeters,
         joggingDistanceInMeters: joggingDistanceInMeters,
@@ -98,7 +83,7 @@ void main() {
     'amount of series is lower than 0, '
     'should be true',
     () {
-      form = createForm(
+      form = const WorkoutStageCreatorSeriesForm(
         amountOfSeries: -10,
         seriesDistanceInMeters: seriesDistanceInMeters,
         joggingDistanceInMeters: joggingDistanceInMeters,
@@ -113,7 +98,7 @@ void main() {
     'series distance in meters is null, '
     'should be true',
     () {
-      form = createForm(
+      form = const WorkoutStageCreatorSeriesForm(
         amountOfSeries: amountOfSeries,
         joggingDistanceInMeters: joggingDistanceInMeters,
       );
@@ -127,7 +112,7 @@ void main() {
     'series distance in meters is equal to 0, '
     'should be true',
     () {
-      form = createForm(
+      form = const WorkoutStageCreatorSeriesForm(
         amountOfSeries: 0,
         seriesDistanceInMeters: seriesDistanceInMeters,
         joggingDistanceInMeters: joggingDistanceInMeters,
@@ -142,7 +127,7 @@ void main() {
     'series distance in meters is lower than 0, '
     'should be true',
     () {
-      form = createForm(
+      form = const WorkoutStageCreatorSeriesForm(
         amountOfSeries: -100,
         seriesDistanceInMeters: seriesDistanceInMeters,
         joggingDistanceInMeters: joggingDistanceInMeters,
@@ -157,7 +142,7 @@ void main() {
     'walking and jogging distances are 0, '
     'should be true',
     () {
-      form = createForm(
+      form = const WorkoutStageCreatorSeriesForm(
         amountOfSeries: amountOfSeries,
         seriesDistanceInMeters: seriesDistanceInMeters,
         walkingDistanceInMeters: 0,
@@ -173,7 +158,7 @@ void main() {
     'walking distance is equal to 0 and jogging distance is higher than 0, '
     'should be false',
     () {
-      form = createForm(
+      form = const WorkoutStageCreatorSeriesForm(
         amountOfSeries: amountOfSeries,
         seriesDistanceInMeters: seriesDistanceInMeters,
         walkingDistanceInMeters: 0,
@@ -189,7 +174,7 @@ void main() {
     'walking distance is higher than 0 and jogging distance is equal to 0, '
     'should be false',
     () {
-      form = createForm(
+      form = const WorkoutStageCreatorSeriesForm(
         amountOfSeries: amountOfSeries,
         seriesDistanceInMeters: seriesDistanceInMeters,
         walkingDistanceInMeters: walkingDistanceInMeters,
@@ -205,7 +190,7 @@ void main() {
     'walking distance is lower than 0, '
     'should be true',
     () {
-      form = createForm(
+      form = const WorkoutStageCreatorSeriesForm(
         amountOfSeries: amountOfSeries,
         seriesDistanceInMeters: seriesDistanceInMeters,
         walkingDistanceInMeters: -20,
@@ -221,7 +206,7 @@ void main() {
     'jogging distance is lower than 0, '
     'should be true',
     () {
-      form = createForm(
+      form = const WorkoutStageCreatorSeriesForm(
         amountOfSeries: amountOfSeries,
         seriesDistanceInMeters: seriesDistanceInMeters,
         walkingDistanceInMeters: walkingDistanceInMeters,
@@ -237,7 +222,7 @@ void main() {
     'amount of series is different than original, '
     'should be false',
     () {
-      form = createForm(
+      form = const WorkoutStageCreatorSeriesForm(
         originalStage: originalStage,
         amountOfSeries: amountOfSeries + 2,
         seriesDistanceInMeters: seriesDistanceInMeters,
@@ -254,7 +239,7 @@ void main() {
     'series distance in meters is different than original, '
     'should be false',
     () {
-      form = createForm(
+      form = const WorkoutStageCreatorSeriesForm(
         originalStage: originalStage,
         amountOfSeries: amountOfSeries,
         seriesDistanceInMeters: seriesDistanceInMeters + 50,
@@ -271,7 +256,7 @@ void main() {
     'walking distance is different than original, '
     'should be false',
     () {
-      form = createForm(
+      form = const WorkoutStageCreatorSeriesForm(
         originalStage: originalStage,
         amountOfSeries: amountOfSeries,
         seriesDistanceInMeters: seriesDistanceInMeters,
@@ -288,7 +273,7 @@ void main() {
     'jogging distance is different than original, '
     'should be false',
     () {
-      form = createForm(
+      form = const WorkoutStageCreatorSeriesForm(
         originalStage: originalStage,
         amountOfSeries: amountOfSeries,
         seriesDistanceInMeters: seriesDistanceInMeters,
@@ -305,7 +290,7 @@ void main() {
     'all data are same as original, '
     'should be true',
     () {
-      form = createForm(
+      form = const WorkoutStageCreatorSeriesForm(
         originalStage: originalStage,
         amountOfSeries: amountOfSeries,
         seriesDistanceInMeters: seriesDistanceInMeters,
@@ -318,72 +303,60 @@ void main() {
   );
 
   test(
-    'copy with amount of series',
+    'copy with amount of series, '
+    'should copy current value if new value is null',
     () {
-      const int expectedAmountOfSeries = 10;
+      const int expected = 10;
 
-      form = form.copyWith(amountOfSeries: expectedAmountOfSeries);
+      form = form.copyWith(amountOfSeries: expected);
       final form2 = form.copyWith();
 
-      expect(form.amountOfSeries, expectedAmountOfSeries);
-      expect(form2.amountOfSeries, expectedAmountOfSeries);
+      expect(form.amountOfSeries, expected);
+      expect(form2.amountOfSeries, expected);
     },
   );
 
   test(
-    'copy with series distance in meters',
+    'copy with series distance in meters, '
+    'should copy current value if new value is null',
     () {
-      const int expectedSeriesDistanceInMeters = 100;
+      const int expected = 100;
 
       form = form.copyWith(
-        seriesDistanceInMeters: expectedSeriesDistanceInMeters,
+        seriesDistanceInMeters: expected,
       );
       final form2 = form.copyWith();
 
-      expect(form.seriesDistanceInMeters, expectedSeriesDistanceInMeters);
-      expect(form2.seriesDistanceInMeters, expectedSeriesDistanceInMeters);
+      expect(form.seriesDistanceInMeters, expected);
+      expect(form2.seriesDistanceInMeters, expected);
     },
   );
 
   test(
-    'copy with walking distance in meters',
+    'copy with walking distance in meters, '
+    'should copy current value if new value is null',
     () {
-      const int expectedWalkingDistanceInMeters = 20;
+      const int expected = 20;
 
-      form = form.copyWith(
-        walkingDistanceInMeters: expectedWalkingDistanceInMeters,
-      );
+      form = form.copyWith(walkingDistanceInMeters: expected);
       final form2 = form.copyWith();
 
-      expect(
-        form.walkingDistanceInMeters,
-        expectedWalkingDistanceInMeters,
-      );
-      expect(
-        form2.walkingDistanceInMeters,
-        expectedWalkingDistanceInMeters,
-      );
+      expect(form.walkingDistanceInMeters, expected);
+      expect(form2.walkingDistanceInMeters, expected);
     },
   );
 
   test(
-    'copy with jogging distance in meters',
+    'copy with jogging distance in meters, '
+    'should copy current value if new value is null',
     () {
-      const int expectedJoggingDistanceInMeters = 80;
+      const int expected = 80;
 
-      form = form.copyWith(
-        joggingDistanceInMeters: expectedJoggingDistanceInMeters,
-      );
+      form = form.copyWith(joggingDistanceInMeters: expected);
       final form2 = form.copyWith();
 
-      expect(
-        form.joggingDistanceInMeters,
-        expectedJoggingDistanceInMeters,
-      );
-      expect(
-        form2.joggingDistanceInMeters,
-        expectedJoggingDistanceInMeters,
-      );
+      expect(form.joggingDistanceInMeters, expected);
+      expect(form2.joggingDistanceInMeters, expected);
     },
   );
 }

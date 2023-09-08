@@ -1,41 +1,22 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../additional_model/bloc_state.dart';
-import '../../additional_model/bloc_status.dart';
 import '../../additional_model/workout_stage.dart';
 
 part 'workout_stage_creator_distance_form.dart';
-part 'workout_stage_creator_event.dart';
 part 'workout_stage_creator_series_form.dart';
 part 'workout_stage_creator_state.dart';
 
-class WorkoutStageCreatorBloc
-    extends Bloc<WorkoutStageCreatorEvent, WorkoutStageCreatorState> {
+class WorkoutStageCreatorCubit extends Cubit<WorkoutStageCreatorState> {
   final WorkoutStage? _originalStage;
 
-  WorkoutStageCreatorBloc({
-    required WorkoutStage? originalStage,
-    WorkoutStageCreatorState state = const WorkoutStageCreatorState(
-      status: BlocStatusInitial(),
-    ),
+  WorkoutStageCreatorCubit({
+    WorkoutStage? originalStage,
+    WorkoutStageCreatorState initialState = const WorkoutStageCreatorState(),
   })  : _originalStage = originalStage,
-        super(state) {
-    on<WorkoutStageCreatorEventInitialize>(_initialize);
-    on<WorkoutStageCreatorEventStageTypeChanged>(_stageTypeChanged);
-    on<WorkoutStageCreatorEventDistanceChanged>(_distanceChanged);
-    on<WorkoutStageCreatorEventMaxHeartRateChanged>(_maxHeartRateChanged);
-    on<WorkoutStageCreatorEventAmountOfSeriesChanged>(_amountOfSeriesChanged);
-    on<WorkoutStageCreatorEventSeriesDistanceChanged>(_seriesDistanceChanged);
-    on<WorkoutStageCreatorEventWalkingDistanceChanged>(_walkingDistanceChanged);
-    on<WorkoutStageCreatorEventJoggingDistanceChanged>(_joggingDistanceChanged);
-    on<WorkoutStageCreatorEventSubmit>(_submit);
-  }
+        super(initialState);
 
-  void _initialize(
-    WorkoutStageCreatorEventInitialize event,
-    Emitter<WorkoutStageCreatorState> emit,
-  ) {
+  void initialize() {
     if (_originalStage == null) return;
     if (_originalStage is DistanceWorkoutStage) {
       final distanceStage = _originalStage as DistanceWorkoutStage;
@@ -66,85 +47,53 @@ class WorkoutStageCreatorBloc
     }
   }
 
-  void _stageTypeChanged(
-    WorkoutStageCreatorEventStageTypeChanged event,
-    Emitter<WorkoutStageCreatorState> emit,
-  ) {
+  void stageTypeChanged(WorkoutStageType? workoutStageType) {
+    emit(state.copyWith(stageType: workoutStageType));
+  }
+
+  void distanceChanged(double distanceInKm) {
     emit(state.copyWith(
-      stageType: event.stageType,
+      distanceForm: state.distanceForm.copyWith(distanceInKm: distanceInKm),
     ));
   }
 
-  void _distanceChanged(
-    WorkoutStageCreatorEventDistanceChanged event,
-    Emitter<WorkoutStageCreatorState> emit,
-  ) {
+  void maxHeartRateChanged(int maxHeartRate) {
     emit(state.copyWith(
-      distanceForm: state.distanceForm.copyWith(
-        distanceInKm: event.distanceInKm,
-      ),
+      distanceForm: state.distanceForm.copyWith(maxHeartRate: maxHeartRate),
     ));
   }
 
-  void _maxHeartRateChanged(
-    WorkoutStageCreatorEventMaxHeartRateChanged event,
-    Emitter<WorkoutStageCreatorState> emit,
-  ) {
+  void amountOfSeriesChanged(int amountOfSeries) {
     emit(state.copyWith(
-      distanceForm: state.distanceForm.copyWith(
-        maxHeartRate: event.maxHeartRate,
-      ),
+      seriesForm: state.seriesForm.copyWith(amountOfSeries: amountOfSeries),
     ));
   }
 
-  void _amountOfSeriesChanged(
-    WorkoutStageCreatorEventAmountOfSeriesChanged event,
-    Emitter<WorkoutStageCreatorState> emit,
-  ) {
+  void seriesDistanceChanged(int seriesDistanceInMeters) {
     emit(state.copyWith(
       seriesForm: state.seriesForm.copyWith(
-        amountOfSeries: event.amountOfSeries,
+        seriesDistanceInMeters: seriesDistanceInMeters,
       ),
     ));
   }
 
-  void _seriesDistanceChanged(
-    WorkoutStageCreatorEventSeriesDistanceChanged event,
-    Emitter<WorkoutStageCreatorState> emit,
-  ) {
+  void walkingDistanceChanged(int walkingDistanceInMeters) {
     emit(state.copyWith(
       seriesForm: state.seriesForm.copyWith(
-        seriesDistanceInMeters: event.seriesDistanceInMeters,
+        walkingDistanceInMeters: walkingDistanceInMeters,
       ),
     ));
   }
 
-  void _walkingDistanceChanged(
-    WorkoutStageCreatorEventWalkingDistanceChanged event,
-    Emitter<WorkoutStageCreatorState> emit,
-  ) {
+  void joggingDistanceChanged(int joggingDistanceInMeters) {
     emit(state.copyWith(
       seriesForm: state.seriesForm.copyWith(
-        walkingDistanceInMeters: event.walkingDistanceInMeters,
+        joggingDistanceInMeters: joggingDistanceInMeters,
       ),
     ));
   }
 
-  void _joggingDistanceChanged(
-    WorkoutStageCreatorEventJoggingDistanceChanged event,
-    Emitter<WorkoutStageCreatorState> emit,
-  ) {
-    emit(state.copyWith(
-      seriesForm: state.seriesForm.copyWith(
-        joggingDistanceInMeters: event.joggingDistanceInMeters,
-      ),
-    ));
-  }
-
-  void _submit(
-    WorkoutStageCreatorEventSubmit event,
-    Emitter<WorkoutStageCreatorState> emit,
-  ) {
+  void submit() {
     WorkoutStage? workoutStage;
     if (state.isDistanceStage) {
       workoutStage = _mapDistanceFormToWorkoutStage();
@@ -152,9 +101,7 @@ class WorkoutStageCreatorBloc
       workoutStage = _mapSeriesFormToWorkoutStage();
     }
     if (workoutStage != null) {
-      emit(state.copyWith(
-        stageToSubmit: workoutStage,
-      ));
+      emit(state.copyWith(stageToAdd: workoutStage));
     }
   }
 

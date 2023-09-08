@@ -1,4 +1,4 @@
-part of 'workout_stage_creator_bloc.dart';
+part of 'workout_stage_creator_cubit.dart';
 
 class WorkoutStageCreatorDistanceForm extends WorkoutStageCreatorForm {
   final DistanceWorkoutStage? originalStage;

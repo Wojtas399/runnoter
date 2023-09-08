@@ -1,32 +1,12 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/additional_model/workout_stage.dart';
-import 'package:runnoter/domain/bloc/workout_stage_creator/workout_stage_creator_bloc.dart';
+import 'package:runnoter/domain/cubit/workout_stage_creator/workout_stage_creator_cubit.dart';
 
 void main() {
   late WorkoutStageCreatorState state;
 
-  WorkoutStageCreatorState createState({
-    BlocStatus status = const BlocStatusInitial(),
-    WorkoutStageType? originalStageType,
-    WorkoutStageType? stageType,
-    WorkoutStageCreatorDistanceForm distanceForm =
-        const WorkoutStageCreatorDistanceForm(),
-    WorkoutStageCreatorSeriesForm seriesForm =
-        const WorkoutStageCreatorSeriesForm(),
-    WorkoutStage? stageToSubmit,
-  }) =>
-      WorkoutStageCreatorState(
-        status: status,
-        originalStageType: originalStageType,
-        stageType: stageType,
-        distanceForm: distanceForm,
-        seriesForm: seriesForm,
-        stageToSubmit: stageToSubmit,
-      );
-
   setUp(
-    () => state = createState(),
+    () => state = const WorkoutStageCreatorState(),
   );
 
   test(
@@ -81,7 +61,13 @@ void main() {
     'stage type is null, '
     'should be true',
     () {
-      final state = createState();
+      state = state.copyWith(
+        stageType: null,
+        distanceForm: const WorkoutStageCreatorDistanceForm(
+          distanceInKm: 10,
+          maxHeartRate: 150,
+        ),
+      );
 
       expect(state.isSubmitButtonDisabled, true);
     },
@@ -92,7 +78,7 @@ void main() {
     'stage type is same as original, '
     'should be true',
     () {
-      final state = createState(
+      state = state.copyWith(
         originalStageType: WorkoutStageType.zone2,
         stageType: WorkoutStageType.zone2,
       );
@@ -106,7 +92,7 @@ void main() {
     'original stage type is not null and stage type is different original, '
     'should be false',
     () {
-      final state = createState(
+      state = state.copyWith(
         originalStageType: WorkoutStageType.zone2,
         stageType: WorkoutStageType.zone3,
         distanceForm: const WorkoutStageCreatorDistanceForm(
@@ -135,7 +121,7 @@ void main() {
         maxHeartRate: 140,
       );
 
-      final state = createState(
+      state = state.copyWith(
         originalStageType: stageType,
         stageType: stageType,
         distanceForm: distanceForm,
@@ -157,7 +143,7 @@ void main() {
         maxHeartRate: 140,
       );
 
-      final state = createState(
+      state = state.copyWith(
         originalStageType: stageType,
         stageType: stageType,
         distanceForm: distanceForm,
@@ -181,7 +167,7 @@ void main() {
         joggingDistanceInMeters: 80,
       );
 
-      final state = createState(
+      state = state.copyWith(
         originalStageType: stageType,
         stageType: stageType,
         seriesForm: seriesForm,
@@ -205,7 +191,7 @@ void main() {
         joggingDistanceInMeters: 80,
       );
 
-      final state = createState(
+      state = state.copyWith(
         originalStageType: stageType,
         stageType: stageType,
         seriesForm: seriesForm,
@@ -326,48 +312,38 @@ void main() {
   );
 
   test(
-    'copy with status',
+    'copy with originalStageType, '
+    'should copy current value if new value is null',
     () {
-      const BlocStatus expectedStatus = BlocStatusLoading();
+      const WorkoutStageType expected = WorkoutStageType.rhythms;
 
-      state = state.copyWith(status: expectedStatus);
+      state = state.copyWith(originalStageType: expected);
       final state2 = state.copyWith();
 
-      expect(state.status, expectedStatus);
-      expect(state2.status, const BlocStatusComplete());
+      expect(state.originalStageType, expected);
+      expect(state2.originalStageType, expected);
     },
   );
 
   test(
-    'copy with original stage type',
+    'copy with stageType, '
+    'should copy current value if new value is null',
     () {
-      const WorkoutStageType expectedStageType = WorkoutStageType.rhythms;
+      const WorkoutStageType expected = WorkoutStageType.hillRepeats;
 
-      state = state.copyWith(originalStageType: expectedStageType);
+      state = state.copyWith(stageType: expected);
       final state2 = state.copyWith();
 
-      expect(state.originalStageType, expectedStageType);
-      expect(state2.originalStageType, expectedStageType);
+      expect(state.stageType, expected);
+      expect(state2.stageType, expected);
     },
   );
 
   test(
-    'copy with stage type',
+    'copy with distanceForm, '
+    'should copy current value if new value is null',
     () {
-      const WorkoutStageType expectedStageType = WorkoutStageType.hillRepeats;
-
-      state = state.copyWith(stageType: expectedStageType);
-      final state2 = state.copyWith();
-
-      expect(state.stageType, expectedStageType);
-      expect(state2.stageType, expectedStageType);
-    },
-  );
-
-  test(
-    'copy with distance form',
-    () {
-      const expectedDistanceForm = WorkoutStageCreatorDistanceForm(
+      const expected = WorkoutStageCreatorDistanceForm(
         originalStage: WorkoutStageZone2(
           distanceInKm: 5,
           maxHeartRate: 165,
@@ -376,18 +352,19 @@ void main() {
         maxHeartRate: 165,
       );
 
-      state = state.copyWith(distanceForm: expectedDistanceForm);
+      state = state.copyWith(distanceForm: expected);
       final state2 = state.copyWith();
 
-      expect(state.distanceForm, expectedDistanceForm);
-      expect(state2.distanceForm, expectedDistanceForm);
+      expect(state.distanceForm, expected);
+      expect(state2.distanceForm, expected);
     },
   );
 
   test(
-    'copy with series form',
+    'copy with seriesForm, '
+    'should copy current value if new value is null',
     () {
-      const expectedSeriesForm = WorkoutStageCreatorSeriesForm(
+      const expected = WorkoutStageCreatorSeriesForm(
         originalStage: WorkoutStageRhythms(
           amountOfSeries: 10,
           seriesDistanceInMeters: 100,
@@ -400,27 +377,28 @@ void main() {
         joggingDistanceInMeters: 80,
       );
 
-      state = state.copyWith(seriesForm: expectedSeriesForm);
+      state = state.copyWith(seriesForm: expected);
       final state2 = state.copyWith();
 
-      expect(state.seriesForm, expectedSeriesForm);
-      expect(state2.seriesForm, expectedSeriesForm);
+      expect(state.seriesForm, expected);
+      expect(state2.seriesForm, expected);
     },
   );
 
   test(
-    'copy with stage to submit',
+    'copy with stageToAdd, '
+    'should copy current value if new value is null',
     () {
-      const WorkoutStage expectedStageToSubmit = WorkoutStageCardio(
+      const WorkoutStage expected = WorkoutStageCardio(
         distanceInKm: 10.0,
         maxHeartRate: 150,
       );
 
-      state = state.copyWith(stageToSubmit: expectedStageToSubmit);
+      state = state.copyWith(stageToAdd: expected);
       final state2 = state.copyWith();
 
-      expect(state.stageToSubmit, expectedStageToSubmit);
-      expect(state2.stageToSubmit, null);
+      expect(state.stageToAdd, expected);
+      expect(state2.stageToAdd, null);
     },
   );
 }
