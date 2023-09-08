@@ -1,15 +1,12 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/domain/additional_model/activity_status.dart';
-import 'package:runnoter/domain/additional_model/bloc_status.dart';
-import 'package:runnoter/domain/bloc/race_preview/race_preview_bloc.dart';
+import 'package:runnoter/domain/cubit/race_preview/race_preview_cubit.dart';
 
 void main() {
   late RacePreviewState state;
 
   setUp(
-    () => state = const RacePreviewState(
-      status: BlocStatusInitial(),
-    ),
+    () => state = const RacePreviewState(),
   );
 
   test(
@@ -110,20 +107,8 @@ void main() {
   );
 
   test(
-    'copy with status',
-    () {
-      const BlocStatus expectedStatus = BlocStatusLoading();
-
-      state = state.copyWith(status: expectedStatus);
-      final state2 = state.copyWith();
-
-      expect(state.status, expectedStatus);
-      expect(state2.status, const BlocStatusComplete());
-    },
-  );
-
-  test(
-    'copy with name',
+    'copy with name, '
+    'should copy current value if new value is null',
     () {
       const String expected = 'race name';
 
@@ -136,7 +121,8 @@ void main() {
   );
 
   test(
-    'copy with date',
+    'copy with date, '
+    'should copy current value if new value is null',
     () {
       final DateTime expected = DateTime(2023, 1, 2);
 
@@ -149,7 +135,8 @@ void main() {
   );
 
   test(
-    'copy with place',
+    'copy with place, '
+    'should copy current value if new value is null',
     () {
       const String expected = 'place name';
 
@@ -162,7 +149,8 @@ void main() {
   );
 
   test(
-    'copy with distance',
+    'copy with distance, '
+    'should copy current value if new value is null',
     () {
       const double expected = 21;
 
@@ -175,7 +163,8 @@ void main() {
   );
 
   test(
-    'copy with expectedDuration',
+    'copy with expectedDuration, '
+    'should copy current value if new value is null',
     () {
       const Duration expected = Duration(hours: 1, minutes: 30);
 
@@ -188,7 +177,8 @@ void main() {
   );
 
   test(
-    'copy with raceStatus',
+    'copy with raceStatus, '
+    'should copy current value if new value is null',
     () {
       const ActivityStatus expected = ActivityStatusPending();
 

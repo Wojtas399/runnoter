@@ -1,6 +1,6 @@
-part of 'race_preview_bloc.dart';
+part of 'race_preview_cubit.dart';
 
-class RacePreviewState extends BlocState<RacePreviewState> {
+class RacePreviewState extends Equatable {
   final String? name;
   final DateTime? date;
   final String? place;
@@ -9,7 +9,6 @@ class RacePreviewState extends BlocState<RacePreviewState> {
   final ActivityStatus? raceStatus;
 
   const RacePreviewState({
-    required super.status,
     this.name,
     this.date,
     this.place,
@@ -20,7 +19,6 @@ class RacePreviewState extends BlocState<RacePreviewState> {
 
   @override
   List<Object?> get props => [
-        status,
         name,
         date,
         place,
@@ -36,9 +34,7 @@ class RacePreviewState extends BlocState<RacePreviewState> {
       distance != null &&
       raceStatus != null;
 
-  @override
   RacePreviewState copyWith({
-    final BlocStatus? status,
     final String? name,
     final DateTime? date,
     final String? place,
@@ -47,7 +43,6 @@ class RacePreviewState extends BlocState<RacePreviewState> {
     final ActivityStatus? raceStatus,
   }) =>
       RacePreviewState(
-        status: status ?? const BlocStatusComplete(),
         name: name ?? this.name,
         date: date ?? this.date,
         place: place ?? this.place,

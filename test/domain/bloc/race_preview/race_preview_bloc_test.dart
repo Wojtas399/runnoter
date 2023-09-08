@@ -5,8 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/additional_model/activity_status.dart';
-import 'package:runnoter/domain/additional_model/bloc_status.dart';
-import 'package:runnoter/domain/bloc/race_preview/race_preview_bloc.dart';
+import 'package:runnoter/domain/cubit/race_preview/race_preview_cubit.dart';
 import 'package:runnoter/domain/entity/race.dart';
 import 'package:runnoter/domain/repository/race_repository.dart';
 
@@ -18,10 +17,10 @@ void main() {
   const String userId = 'u1';
   const String raceId = 'r1';
 
-  RacePreviewBloc createBloc() => RacePreviewBloc(
+  RacePreviewCubit createBloc() => RacePreviewCubit(
         userId: userId,
         raceId: raceId,
-        state: const RacePreviewState(status: BlocStatusInitial()),
+        initialState: const RacePreviewState(),
       );
 
   setUpAll(() {
@@ -59,14 +58,12 @@ void main() {
         'should set listener of race matching to given id',
         build: () => createBloc(),
         setUp: () => raceRepository.mockGetRaceById(raceStream: race$.stream),
-        act: (bloc) async {
-          bloc.add(const RacePreviewEventInitialize());
-          await bloc.stream.first;
+        act: (bloc) {
+          bloc.initialize();
           race$.add(updatedRace);
         },
         expect: () => [
           RacePreviewState(
-            status: const BlocStatusComplete(),
             name: race.name,
             date: race.date,
             place: race.place,
@@ -75,7 +72,6 @@ void main() {
             raceStatus: race.status,
           ),
           RacePreviewState(
-            status: const BlocStatusComplete(),
             name: updatedRace.name,
             date: updatedRace.date,
             place: updatedRace.place,
@@ -97,15 +93,8 @@ void main() {
     'should emit info that race has been deleted',
     build: () => createBloc(),
     setUp: () => raceRepository.mockDeleteRace(),
-    act: (bloc) => bloc.add(const RacePreviewEventDeleteRace()),
-    expect: () => [
-      const RacePreviewState(status: BlocStatusLoading()),
-      const RacePreviewState(
-        status: BlocStatusComplete<RacePreviewBlocInfo>(
-          info: RacePreviewBlocInfo.raceDeleted,
-        ),
-      ),
-    ],
+    act: (bloc) => bloc.deleteRace(),
+    expect: () => [],
     verify: (_) => verify(
       () => raceRepository.deleteRace(raceId: raceId, userId: userId),
     ).called(1),

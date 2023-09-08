@@ -40,23 +40,23 @@ class WorkoutPreviewWorkoutActions extends StatelessWidget {
   Future<void> _deleteWorkout(BuildContext context) async {
     final WorkoutPreviewCubit cubit = context.read<WorkoutPreviewCubit>();
     final str = Str.of(context);
-    final bool confirmed =
-        await _askForWorkoutDeletionConfirmation(context, str);
+    final bool confirmed = await _askForWorkoutDeletionConfirmation(context);
     if (confirmed == true) {
       showLoadingDialog();
       await cubit.deleteWorkout();
+      closeLoadingDialog();
+      navigateBack();
       showSnackbarMessage(str.workoutPreviewDeletedWorkoutMessage);
     }
   }
 
-  Future<bool> _askForWorkoutDeletionConfirmation(
-    BuildContext context,
-    Str str,
-  ) async =>
-      await askForConfirmation(
-        title: Text(str.workoutPreviewDeletionConfirmationTitle),
-        content: Text(str.workoutPreviewDeletionConfirmationMessage),
-        confirmButtonLabel: str.delete,
-        confirmButtonColor: Theme.of(context).colorScheme.error,
-      );
+  Future<bool> _askForWorkoutDeletionConfirmation(BuildContext context) async {
+    final str = Str.of(context);
+    return await askForConfirmation(
+      title: Text(str.workoutPreviewDeletionConfirmationTitle),
+      content: Text(str.workoutPreviewDeletionConfirmationMessage),
+      confirmButtonLabel: str.delete,
+      confirmButtonColor: Theme.of(context).colorScheme.error,
+    );
+  }
 }
