@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:runnoter/domain/additional_model/bloc_status.dart';
-import 'package:runnoter/domain/bloc/day_preview/day_preview_bloc.dart';
+import 'package:runnoter/domain/cubit/day_preview/day_preview_cubit.dart';
 import 'package:runnoter/domain/entity/health_measurement.dart';
 import 'package:runnoter/domain/entity/race.dart';
 import 'package:runnoter/domain/entity/workout.dart';
@@ -13,24 +12,12 @@ void main() {
   late DayPreviewState state;
 
   setUp(
-    () => state = const DayPreviewState(status: BlocStatusInitial()),
+    () => state = const DayPreviewState(),
   );
 
   test(
-    'copy with status',
-    () {
-      const BlocStatus expected = BlocStatusLoading();
-
-      state = state.copyWith(status: expected);
-      final state2 = state.copyWith();
-
-      expect(state.status, expected);
-      expect(state2.status, const BlocStatusComplete());
-    },
-  );
-
-  test(
-    'copy with isPastDate',
+    'copy with isPastDate, '
+    'should copy current value if new value is null',
     () {
       const bool expected = true;
 
@@ -43,7 +30,8 @@ void main() {
   );
 
   test(
-    'copy with canModifyHealthMeasurement',
+    'copy with canModifyHealthMeasurement, '
+    'should copy current value if new value is null',
     () {
       const bool expected = false;
 
@@ -56,7 +44,8 @@ void main() {
   );
 
   test(
-    'copy with healthMeasurement',
+    'copy with healthMeasurement, '
+    'should copy current value if new value is null',
     () {
       final HealthMeasurement expected = createHealthMeasurement(
         date: DateTime(2023),
@@ -71,7 +60,8 @@ void main() {
   );
 
   test(
-    'copy with healthMeasurementAsNull',
+    'copy with healthMeasurementAsNull, '
+    'should set healthMeasurement as null if set to true',
     () {
       final HealthMeasurement expected = createHealthMeasurement(
         date: DateTime(2023),
@@ -86,7 +76,8 @@ void main() {
   );
 
   test(
-    'copy with workouts',
+    'copy with workouts, '
+    'should copy current value if new value is null',
     () {
       final List<Workout> expected = [
         createWorkout(id: 'w1'),
@@ -102,7 +93,8 @@ void main() {
   );
 
   test(
-    'copy with races',
+    'copy with races, '
+    'should copy current value if new value is null',
     () {
       final List<Race> expected = [createRace(id: 'r1'), createRace(id: 'r2')];
 

@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/bloc/day_preview/day_preview_bloc.dart';
+import '../../../domain/cubit/day_preview/day_preview_cubit.dart';
 import '../../../domain/entity/health_measurement.dart';
-import '../../component/bloc_with_status_listener_component.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/health_measurement_info_component.dart';
 import '../../component/responsive_layout_component.dart';
@@ -25,14 +24,10 @@ class DayPreviewDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => DayPreviewBloc(userId: userId, date: date)
-        ..add(const DayPreviewEventInitialize()),
-      child: const BlocWithStatusListener<DayPreviewBloc, DayPreviewState,
-          dynamic, dynamic>(
-        child: ResponsiveLayout(
-          mobileBody: _FullScreenDialog(),
-          desktopBody: _NormalDialog(),
-        ),
+      create: (_) => DayPreviewCubit(userId: userId, date: date)..initialize(),
+      child: const ResponsiveLayout(
+        mobileBody: _FullScreenDialog(),
+        desktopBody: _NormalDialog(),
       ),
     );
   }
@@ -129,7 +124,7 @@ class _BodyPadding extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool canModifyHealthMeasurement = context.select(
-      (DayPreviewBloc bloc) => bloc.state.canModifyHealthMeasurement,
+      (DayPreviewCubit cubit) => cubit.state.canModifyHealthMeasurement,
     );
 
     return Padding(
@@ -149,7 +144,7 @@ class _Title extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final DateTime date = context.read<DayPreviewBloc>().date;
+    final DateTime date = context.read<DayPreviewCubit>().date;
 
     return Text('${Str.of(context).day} ${date.toDateWithDots()}');
   }
@@ -161,10 +156,10 @@ class _HealthMeasurement extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool canModify = context.select(
-      (DayPreviewBloc bloc) => bloc.state.canModifyHealthMeasurement,
+      (DayPreviewCubit cubit) => cubit.state.canModifyHealthMeasurement,
     );
     final HealthMeasurement? measurement = context.select(
-      (DayPreviewBloc bloc) => bloc.state.healthMeasurement,
+      (DayPreviewCubit cubit) => cubit.state.healthMeasurement,
     );
 
     return HealthMeasurementInfo(
@@ -172,19 +167,19 @@ class _HealthMeasurement extends StatelessWidget {
       healthMeasurement: measurement,
       displayBigButtonIfHealthMeasurementIsNull: true,
       onEdit: canModify ? () => _onEdit(context) : null,
-      onDelete: canModify ? () => _onDelete(context) : null,
+      onDelete: canModify ? () => _onRemove(context) : null,
     );
   }
 
   Future<void> _onEdit(BuildContext context) async {
     await showDialogDependingOnScreenSize(HealthMeasurementCreatorDialog(
-      date: context.read<DayPreviewBloc>().date,
+      date: context.read<DayPreviewCubit>().date,
     ));
   }
 
-  void _onDelete(BuildContext context) {
-    context.read<DayPreviewBloc>().add(
-          const DayPreviewEventRemoveHealthMeasurement(),
-        );
+  Future<void> _onRemove(BuildContext context) async {
+    showLoadingDialog();
+    await context.read<DayPreviewCubit>().removeHealthMeasurement();
+    closeLoadingDialog();
   }
 }

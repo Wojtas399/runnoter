@@ -1,6 +1,6 @@
-part of 'day_preview_bloc.dart';
+part of 'day_preview_cubit.dart';
 
-class DayPreviewState extends BlocState<DayPreviewState> {
+class DayPreviewState extends Equatable {
   final bool isPastDate;
   final bool canModifyHealthMeasurement;
   final HealthMeasurement? healthMeasurement;
@@ -8,7 +8,6 @@ class DayPreviewState extends BlocState<DayPreviewState> {
   final List<Race>? races;
 
   const DayPreviewState({
-    required super.status,
     this.isPastDate = false,
     this.canModifyHealthMeasurement = true,
     this.healthMeasurement,
@@ -18,7 +17,6 @@ class DayPreviewState extends BlocState<DayPreviewState> {
 
   @override
   List<Object?> get props => [
-        status,
         isPastDate,
         canModifyHealthMeasurement,
         healthMeasurement,
@@ -26,9 +24,7 @@ class DayPreviewState extends BlocState<DayPreviewState> {
         races,
       ];
 
-  @override
   DayPreviewState copyWith({
-    BlocStatus? status,
     bool? isPastDate,
     bool? canModifyHealthMeasurement,
     HealthMeasurement? healthMeasurement,
@@ -37,7 +33,6 @@ class DayPreviewState extends BlocState<DayPreviewState> {
     List<Race>? races,
   }) =>
       DayPreviewState(
-        status: status ?? const BlocStatusComplete(),
         isPastDate: isPastDate ?? this.isPastDate,
         canModifyHealthMeasurement:
             canModifyHealthMeasurement ?? this.canModifyHealthMeasurement,

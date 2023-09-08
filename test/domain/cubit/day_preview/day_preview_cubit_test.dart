@@ -5,8 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/common/date_service.dart';
-import 'package:runnoter/domain/additional_model/bloc_status.dart';
-import 'package:runnoter/domain/bloc/day_preview/day_preview_bloc.dart';
+import 'package:runnoter/domain/cubit/day_preview/day_preview_cubit.dart';
 import 'package:runnoter/domain/entity/health_measurement.dart';
 import 'package:runnoter/domain/entity/race.dart';
 import 'package:runnoter/domain/entity/workout.dart';
@@ -33,10 +32,10 @@ void main() {
   const String userId = 'u1';
   final DateTime date = DateTime(2023, 2, 2);
 
-  DayPreviewBloc createBloc({
-    DayPreviewState state = const DayPreviewState(status: BlocStatusInitial()),
+  DayPreviewCubit createCubit({
+    DayPreviewState initialState = const DayPreviewState(),
   }) =>
-      DayPreviewBloc(userId: userId, date: date, state: state);
+      DayPreviewCubit(userId: userId, date: date, initialState: initialState);
 
   setUpAll(() {
     GetIt.I.registerFactory<AuthService>(() => authService);
@@ -75,13 +74,11 @@ void main() {
 
       blocTest(
         'logged user does not exist, '
-        'should emit no logged user status',
-        build: () => createBloc(),
+        'should do nothing',
+        build: () => createCubit(),
         setUp: () => authService.mockGetLoggedUserId(),
-        act: (bloc) => bloc.add(const DayPreviewEventInitialize()),
-        expect: () => [
-          const DayPreviewState(status: BlocStatusNoLoggedUser()),
-        ],
+        act: (bloc) => bloc.initialize(),
+        expect: () => [],
         verify: (_) => verify(() => authService.loggedUserId$).called(1),
       );
 
@@ -91,7 +88,7 @@ void main() {
         'should set isPastDate as true and '
         'should set canModifyHealthMeasurement as true and '
         'should set listener of health measurement, workouts and races from given date',
-        build: () => createBloc(),
+        build: () => createCubit(),
         setUp: () {
           authService.mockGetLoggedUserId(userId: userId);
           dateService.mockGetToday(
@@ -106,14 +103,13 @@ void main() {
           raceRepository.mockGetRacesByDate(racesStream: races$.stream);
         },
         act: (bloc) async {
-          bloc.add(const DayPreviewEventInitialize());
+          bloc.initialize();
           healthMeasurement$.add(null);
           workouts$.add([]);
           races$.add([]);
         },
         expect: () => [
           DayPreviewState(
-            status: const BlocStatusComplete(),
             isPastDate: true,
             canModifyHealthMeasurement: true,
             healthMeasurement: healthMeasurement,
@@ -121,7 +117,6 @@ void main() {
             races: races,
           ),
           DayPreviewState(
-            status: const BlocStatusComplete(),
             isPastDate: true,
             canModifyHealthMeasurement: true,
             healthMeasurement: null,
@@ -129,7 +124,6 @@ void main() {
             races: races,
           ),
           DayPreviewState(
-            status: const BlocStatusComplete(),
             isPastDate: true,
             canModifyHealthMeasurement: true,
             healthMeasurement: null,
@@ -137,7 +131,6 @@ void main() {
             races: races,
           ),
           const DayPreviewState(
-            status: BlocStatusComplete(),
             isPastDate: true,
             canModifyHealthMeasurement: true,
             healthMeasurement: null,
@@ -174,7 +167,7 @@ void main() {
         'should set isPastDate as false and '
         'should set canModifyHealthMeasurement as false and '
         'should set listener of health measurement, workouts and races from given date',
-        build: () => createBloc(),
+        build: () => createCubit(),
         setUp: () {
           authService.mockGetLoggedUserId(userId: 'u2');
           dateService.mockGetToday(todayDate: date);
@@ -184,10 +177,9 @@ void main() {
           workoutRepository.mockGetWorkoutsByDate(workouts: workouts);
           raceRepository.mockGetRacesByDate(races: races);
         },
-        act: (bloc) => bloc.add(const DayPreviewEventInitialize()),
+        act: (bloc) => bloc.initialize(),
         expect: () => [
           DayPreviewState(
-            status: const BlocStatusComplete(),
             isPastDate: false,
             canModifyHealthMeasurement: false,
             healthMeasurement: healthMeasurement,
@@ -224,32 +216,22 @@ void main() {
     'remove health measurement, '
     'health measurement is null, '
     'should do nothing',
-    build: () => createBloc(),
-    act: (bloc) => bloc.add(const DayPreviewEventRemoveHealthMeasurement()),
+    build: () => createCubit(),
+    act: (bloc) => bloc.removeHealthMeasurement(),
     expect: () => [],
   );
 
   blocTest(
     'remove health measurement, '
-    "should call health measurement repository's method to delete measurement and ",
-    build: () => createBloc(
-      state: DayPreviewState(
-        status: const BlocStatusInitial(),
+    "should call health measurement repository's method to delete measurement",
+    build: () => createCubit(
+      initialState: DayPreviewState(
         healthMeasurement: createHealthMeasurement(date: date),
       ),
     ),
     setUp: () => healthMeasurementRepository.mockDeleteMeasurement(),
-    act: (bloc) => bloc.add(const DayPreviewEventRemoveHealthMeasurement()),
-    expect: () => [
-      DayPreviewState(
-        status: const BlocStatusLoading(),
-        healthMeasurement: createHealthMeasurement(date: date),
-      ),
-      DayPreviewState(
-        status: const BlocStatusComplete(),
-        healthMeasurement: createHealthMeasurement(date: date),
-      ),
-    ],
+    act: (bloc) => bloc.removeHealthMeasurement(),
+    expect: () => [],
     verify: (_) => verify(
       () => healthMeasurementRepository.deleteMeasurement(
         userId: userId,

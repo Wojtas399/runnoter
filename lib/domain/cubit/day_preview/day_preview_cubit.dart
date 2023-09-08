@@ -1,13 +1,11 @@
-import 'package:bloc_concurrency/bloc_concurrency.dart';
+import 'dart:async';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../../common/date_service.dart';
 import '../../../dependency_injection.dart';
-import '../../additional_model/bloc_state.dart';
-import '../../additional_model/bloc_status.dart';
-import '../../additional_model/bloc_with_status.dart';
 import '../../entity/health_measurement.dart';
 import '../../entity/race.dart';
 import '../../entity/workout.dart';
@@ -16,11 +14,9 @@ import '../../repository/race_repository.dart';
 import '../../repository/workout_repository.dart';
 import '../../service/auth_service.dart';
 
-part 'day_preview_event.dart';
 part 'day_preview_state.dart';
 
-class DayPreviewBloc
-    extends BlocWithStatus<DayPreviewEvent, DayPreviewState, dynamic, dynamic> {
+class DayPreviewCubit extends Cubit<DayPreviewState> {
   final AuthService _authService;
   final HealthMeasurementRepository _healthMeasurementRepository;
   final WorkoutRepository _workoutRepository;
@@ -28,33 +24,32 @@ class DayPreviewBloc
   final DateService _dateService;
   final String _userId;
   final DateTime date;
+  StreamSubscription<_ListenedParams>? _listener;
 
-  DayPreviewBloc({
+  DayPreviewCubit({
     required String userId,
     required this.date,
-    DayPreviewState state = const DayPreviewState(status: BlocStatusInitial()),
+    DayPreviewState initialState = const DayPreviewState(),
   })  : _authService = getIt<AuthService>(),
         _healthMeasurementRepository = getIt<HealthMeasurementRepository>(),
         _workoutRepository = getIt<WorkoutRepository>(),
         _raceRepository = getIt<RaceRepository>(),
         _dateService = getIt<DateService>(),
         _userId = userId,
-        super(state) {
-    on<DayPreviewEventInitialize>(_initialize, transformer: restartable());
-    on<DayPreviewEventRemoveHealthMeasurement>(_removeHealthMeasurement);
+        super(initialState);
+
+  @override
+  Future<void> close() {
+    _listener?.cancel();
+    _listener = null;
+    return super.close();
   }
 
-  Future<void> _initialize(
-    DayPreviewEventInitialize event,
-    Emitter<DayPreviewState> emit,
-  ) async {
+  Future<void> initialize() async {
     final String? loggedUserId = await _authService.loggedUserId$.first;
-    if (loggedUserId == null) {
-      emitNoLoggedUserStatus(emit);
-      return;
-    }
+    if (loggedUserId == null) return;
     final bool isPastDate = date.isBefore(_dateService.getToday());
-    final Stream<_ListenedParams> stream$ = Rx.combineLatest3(
+    _listener ??= Rx.combineLatest3(
       _healthMeasurementRepository.getMeasurementByDate(
         date: date,
         userId: _userId,
@@ -71,31 +66,24 @@ class DayPreviewBloc
         workouts: workouts,
         races: races,
       ),
-    );
-    await emit.forEach(
-      stream$,
-      onData: (_ListenedParams params) => state.copyWith(
+    ).listen(
+      (_ListenedParams params) => emit(state.copyWith(
         isPastDate: isPastDate,
         canModifyHealthMeasurement: _userId == loggedUserId,
         healthMeasurement: params.healthMeasurement,
         healthMeasurementAsNull: params.healthMeasurement == null,
         workouts: params.workouts,
         races: params.races,
-      ),
+      )),
     );
   }
 
-  Future<void> _removeHealthMeasurement(
-    DayPreviewEventRemoveHealthMeasurement event,
-    Emitter<DayPreviewState> emit,
-  ) async {
+  Future<void> removeHealthMeasurement() async {
     if (state.healthMeasurement == null) return;
-    emitLoadingStatus(emit);
     await _healthMeasurementRepository.deleteMeasurement(
       userId: _userId,
       date: state.healthMeasurement!.date,
     );
-    emitCompleteStatus(emit);
   }
 }
 
