@@ -4,9 +4,8 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/additional_model/blood_parameter.dart';
-import 'package:runnoter/domain/bloc/blood_test_preview/blood_test_preview_bloc.dart';
+import 'package:runnoter/domain/cubit/blood_test_preview/blood_test_preview_cubit.dart';
 import 'package:runnoter/domain/entity/blood_test.dart';
 import 'package:runnoter/domain/entity/user.dart';
 import 'package:runnoter/domain/repository/blood_test_repository.dart';
@@ -23,8 +22,8 @@ void main() {
   const String userId = 'u1';
   const String bloodTestId = 'b1';
 
-  BloodTestPreviewBloc createBloc() =>
-      BloodTestPreviewBloc(userId: userId, bloodTestId: bloodTestId);
+  BloodTestPreviewCubit createCubit() =>
+      BloodTestPreviewCubit(userId: userId, bloodTestId: bloodTestId);
 
   setUpAll(() {
     GetIt.I.registerFactory<UserRepository>(() => userRepository);
@@ -73,33 +72,30 @@ void main() {
 
       blocTest(
         "should set listener of user's gender and blood test matching to given test id",
-        build: () => createBloc(),
+        build: () => createCubit(),
         setUp: () {
           userRepository.mockGetUserById(userStream: user$.stream);
           bloodTestRepository.mockGetTestById(
             bloodTestStream: bloodTest$.stream,
           );
         },
-        act: (bloc) {
-          bloc.add(const BloodTestPreviewEventInitialize());
+        act: (cubit) {
+          cubit.initialize();
           user$.add(updatedUser);
           bloodTest$.add(updatedBloodTest);
         },
         expect: () => [
           BloodTestPreviewState(
-            status: const BlocStatusComplete(),
             date: bloodTest.date,
             gender: user.gender,
             parameterResults: bloodTest.parameterResults,
           ),
           BloodTestPreviewState(
-            status: const BlocStatusComplete(),
             date: bloodTest.date,
             gender: updatedUser.gender,
             parameterResults: bloodTest.parameterResults,
           ),
           BloodTestPreviewState(
-            status: const BlocStatusComplete(),
             date: updatedBloodTest.date,
             gender: updatedUser.gender,
             parameterResults: updatedBloodTest.parameterResults,
@@ -120,19 +116,11 @@ void main() {
 
   blocTest(
     'delete test, '
-    'should call method from blood test repository to delete blood test and '
-    'should emit info that blood test has been deleted',
-    build: () => createBloc(),
+    'should call method from blood test repository to delete blood test',
+    build: () => createCubit(),
     setUp: () => bloodTestRepository.mockDeleteTest(),
-    act: (bloc) => bloc.add(const BloodTestPreviewEventDeleteTest()),
-    expect: () => [
-      const BloodTestPreviewState(status: BlocStatusLoading()),
-      const BloodTestPreviewState(
-        status: BlocStatusComplete<BloodTestPreviewBlocInfo>(
-          info: BloodTestPreviewBlocInfo.bloodTestDeleted,
-        ),
-      ),
-    ],
+    act: (cubit) => cubit.deleteTest(),
+    expect: () => [],
     verify: (_) => verify(
       () => bloodTestRepository.deleteTest(
         bloodTestId: bloodTestId,

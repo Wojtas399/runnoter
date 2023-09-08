@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/additional_model/blood_parameter.dart';
-import '../../../domain/bloc/blood_test_preview/blood_test_preview_bloc.dart';
+import '../../../domain/cubit/blood_test_preview/blood_test_preview_cubit.dart';
 import '../../../domain/entity/user.dart';
 import '../../component/blood_parameter_results_list_component.dart';
 import '../../component/body/medium_body_component.dart';
@@ -84,7 +84,7 @@ class _Date extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final DateTime? date = context.select(
-      (BloodTestPreviewBloc bloc) => bloc.state.date,
+      (BloodTestPreviewCubit cubit) => cubit.state.date,
     );
 
     return TitleLarge(date?.toFullDate(context.languageCode) ?? '--');
@@ -97,10 +97,10 @@ class _Results extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Gender? gender = context.select(
-      (BloodTestPreviewBloc bloc) => bloc.state.gender,
+      (BloodTestPreviewCubit cubit) => cubit.state.gender,
     );
     final List<BloodParameterResult>? parameterResults = context.select(
-      (BloodTestPreviewBloc bloc) => bloc.state.parameterResults,
+      (BloodTestPreviewCubit cubit) => cubit.state.parameterResults,
     );
 
     return gender == null
