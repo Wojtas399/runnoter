@@ -5,7 +5,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/additional_model/auth_provider.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/additional_model/custom_exception.dart';
-import 'package:runnoter/domain/bloc/reauthentication/reauthentication_bloc.dart';
+import 'package:runnoter/domain/cubit/reauthentication/reauthentication_cubit.dart';
 import 'package:runnoter/domain/service/auth_service.dart';
 
 import '../../../mock/domain/service/mock_auth_service.dart';
@@ -24,10 +24,8 @@ void main() {
   blocTest(
     'password changed, '
     'should update password in state',
-    build: () => ReauthenticationBloc(),
-    act: (bloc) => bloc.add(const ReauthenticationEventPasswordChanged(
-      password: 'passwd1122',
-    )),
+    build: () => ReauthenticationCubit(),
+    act: (cubit) => cubit.passwordChanged('passwd1122'),
     expect: () => [
       const ReauthenticationState(
         status: BlocStatusComplete(),
@@ -40,8 +38,8 @@ void main() {
     'use password, '
     'password is null, '
     'should do nothing',
-    build: () => ReauthenticationBloc(),
-    act: (bloc) => bloc.add(const ReauthenticationEventUsePassword()),
+    build: () => ReauthenticationCubit(),
+    act: (cubit) => cubit.usePassword(),
     expect: () => [],
   );
 
@@ -49,13 +47,13 @@ void main() {
     'use password, '
     'password is empty string, '
     'should do nothing',
-    build: () => ReauthenticationBloc(
-      state: const ReauthenticationState(
+    build: () => ReauthenticationCubit(
+      initialState: const ReauthenticationState(
         status: BlocStatusComplete(),
         password: '',
       ),
     ),
-    act: (bloc) => bloc.add(const ReauthenticationEventUsePassword()),
+    act: (cubit) => cubit.usePassword(),
     expect: () => [],
   );
 
@@ -63,8 +61,8 @@ void main() {
     'use password, '
     'confirmed, '
     'should emit complete status with userConfirmed info',
-    build: () => ReauthenticationBloc(
-      state: const ReauthenticationState(
+    build: () => ReauthenticationCubit(
+      initialState: const ReauthenticationState(
         status: BlocStatusComplete(),
         password: 'passwd',
       ),
@@ -72,18 +70,18 @@ void main() {
     setUp: () => authService.mockReauthenticate(
       reauthenticationStatus: ReauthenticationStatus.confirmed,
     ),
-    act: (bloc) => bloc.add(const ReauthenticationEventUsePassword()),
+    act: (cubit) => cubit.usePassword(),
     expect: () => [
       const ReauthenticationState(
-        status: BlocStatusLoading<ReauthenticationBlocLoadingInfo>(
+        status: BlocStatusLoading<ReauthenticationCubitLoadingInfo>(
           loadingInfo:
-              ReauthenticationBlocLoadingInfo.passwordReauthenticationLoading,
+              ReauthenticationCubitLoadingInfo.passwordReauthenticationLoading,
         ),
         password: 'passwd',
       ),
       const ReauthenticationState(
-        status: BlocStatusComplete<ReauthenticationBlocInfo>(
-          info: ReauthenticationBlocInfo.userConfirmed,
+        status: BlocStatusComplete<ReauthenticationCubitInfo>(
+          info: ReauthenticationCubitInfo.userConfirmed,
         ),
         password: 'passwd',
       ),
@@ -99,8 +97,8 @@ void main() {
     'use password, '
     'cancelled, '
     'should emit complete status without any info',
-    build: () => ReauthenticationBloc(
-      state: const ReauthenticationState(
+    build: () => ReauthenticationCubit(
+      initialState: const ReauthenticationState(
         status: BlocStatusComplete(),
         password: 'passwd',
       ),
@@ -108,17 +106,17 @@ void main() {
     setUp: () => authService.mockReauthenticate(
       reauthenticationStatus: ReauthenticationStatus.cancelled,
     ),
-    act: (bloc) => bloc.add(const ReauthenticationEventUsePassword()),
+    act: (cubit) => cubit.usePassword(),
     expect: () => [
       const ReauthenticationState(
-        status: BlocStatusLoading<ReauthenticationBlocLoadingInfo>(
+        status: BlocStatusLoading<ReauthenticationCubitLoadingInfo>(
           loadingInfo:
-              ReauthenticationBlocLoadingInfo.passwordReauthenticationLoading,
+              ReauthenticationCubitLoadingInfo.passwordReauthenticationLoading,
         ),
         password: 'passwd',
       ),
       const ReauthenticationState(
-        status: BlocStatusComplete<ReauthenticationBlocInfo>(),
+        status: BlocStatusComplete(),
         password: 'passwd',
       ),
     ],
@@ -133,8 +131,8 @@ void main() {
     'use password, '
     'auth exception with wrongPassword code, '
     'should emit error status with wrongPassword error',
-    build: () => ReauthenticationBloc(
-      state: const ReauthenticationState(
+    build: () => ReauthenticationCubit(
+      initialState: const ReauthenticationState(
         status: BlocStatusComplete(),
         password: 'passwd',
       ),
@@ -142,18 +140,18 @@ void main() {
     setUp: () => authService.mockReauthenticate(
       throwable: const AuthException(code: AuthExceptionCode.wrongPassword),
     ),
-    act: (bloc) => bloc.add(const ReauthenticationEventUsePassword()),
+    act: (cubit) => cubit.usePassword(),
     expect: () => [
       const ReauthenticationState(
-        status: BlocStatusLoading<ReauthenticationBlocLoadingInfo>(
+        status: BlocStatusLoading<ReauthenticationCubitLoadingInfo>(
           loadingInfo:
-              ReauthenticationBlocLoadingInfo.passwordReauthenticationLoading,
+              ReauthenticationCubitLoadingInfo.passwordReauthenticationLoading,
         ),
         password: 'passwd',
       ),
       const ReauthenticationState(
-        status: BlocStatusError<ReauthenticationBlocError>(
-          error: ReauthenticationBlocError.wrongPassword,
+        status: BlocStatusError<ReauthenticationCubitError>(
+          error: ReauthenticationCubitError.wrongPassword,
         ),
         password: 'passwd',
       ),
@@ -169,8 +167,8 @@ void main() {
     'use password, '
     'network exception with requestFailed code, '
     'should emit no internet connection status',
-    build: () => ReauthenticationBloc(
-      state: const ReauthenticationState(
+    build: () => ReauthenticationCubit(
+      initialState: const ReauthenticationState(
         status: BlocStatusComplete(),
         password: 'passwd',
       ),
@@ -180,12 +178,12 @@ void main() {
         code: NetworkExceptionCode.requestFailed,
       ),
     ),
-    act: (bloc) => bloc.add(const ReauthenticationEventUsePassword()),
+    act: (cubit) => cubit.usePassword(),
     expect: () => [
       const ReauthenticationState(
-        status: BlocStatusLoading<ReauthenticationBlocLoadingInfo>(
+        status: BlocStatusLoading<ReauthenticationCubitLoadingInfo>(
           loadingInfo:
-              ReauthenticationBlocLoadingInfo.passwordReauthenticationLoading,
+              ReauthenticationCubitLoadingInfo.passwordReauthenticationLoading,
         ),
         password: 'passwd',
       ),
@@ -203,23 +201,23 @@ void main() {
 
   blocTest(
     'use google, '
-    'confirmed'
+    'confirmed, '
     'should emit complete status with userConfirmed info',
-    build: () => ReauthenticationBloc(),
+    build: () => ReauthenticationCubit(),
     setUp: () => authService.mockReauthenticate(
       reauthenticationStatus: ReauthenticationStatus.confirmed,
     ),
-    act: (bloc) => bloc.add(const ReauthenticationEventUseGoogle()),
+    act: (cubit) => cubit.useGoogle(),
     expect: () => [
       const ReauthenticationState(
-        status: BlocStatusLoading<ReauthenticationBlocLoadingInfo>(
+        status: BlocStatusLoading<ReauthenticationCubitLoadingInfo>(
           loadingInfo:
-              ReauthenticationBlocLoadingInfo.googleReauthenticationLoading,
+              ReauthenticationCubitLoadingInfo.googleReauthenticationLoading,
         ),
       ),
       const ReauthenticationState(
-        status: BlocStatusComplete<ReauthenticationBlocInfo>(
-          info: ReauthenticationBlocInfo.userConfirmed,
+        status: BlocStatusComplete<ReauthenticationCubitInfo>(
+          info: ReauthenticationCubitInfo.userConfirmed,
         ),
       ),
     ],
@@ -232,23 +230,21 @@ void main() {
 
   blocTest(
     'use google, '
-    'cancelled'
+    'cancelled, '
     'should emit complete status without any info',
-    build: () => ReauthenticationBloc(),
+    build: () => ReauthenticationCubit(),
     setUp: () => authService.mockReauthenticate(
       reauthenticationStatus: ReauthenticationStatus.cancelled,
     ),
-    act: (bloc) => bloc.add(const ReauthenticationEventUseGoogle()),
+    act: (cubit) => cubit.useGoogle(),
     expect: () => [
       const ReauthenticationState(
-        status: BlocStatusLoading<ReauthenticationBlocLoadingInfo>(
+        status: BlocStatusLoading<ReauthenticationCubitLoadingInfo>(
           loadingInfo:
-              ReauthenticationBlocLoadingInfo.googleReauthenticationLoading,
+              ReauthenticationCubitLoadingInfo.googleReauthenticationLoading,
         ),
       ),
-      const ReauthenticationState(
-        status: BlocStatusComplete<ReauthenticationBlocInfo>(),
-      ),
+      const ReauthenticationState(status: BlocStatusComplete()),
     ],
     verify: (_) => verify(
       () => authService.reauthenticate(
@@ -261,21 +257,21 @@ void main() {
     'use google, '
     'user mismatch, '
     'should emit error status with userMismatch error',
-    build: () => ReauthenticationBloc(),
+    build: () => ReauthenticationCubit(),
     setUp: () => authService.mockReauthenticate(
       reauthenticationStatus: ReauthenticationStatus.userMismatch,
     ),
-    act: (bloc) => bloc.add(const ReauthenticationEventUseGoogle()),
+    act: (cubit) => cubit.useGoogle(),
     expect: () => [
       const ReauthenticationState(
-        status: BlocStatusLoading<ReauthenticationBlocLoadingInfo>(
+        status: BlocStatusLoading<ReauthenticationCubitLoadingInfo>(
           loadingInfo:
-              ReauthenticationBlocLoadingInfo.googleReauthenticationLoading,
+              ReauthenticationCubitLoadingInfo.googleReauthenticationLoading,
         ),
       ),
       const ReauthenticationState(
-        status: BlocStatusError<ReauthenticationBlocError>(
-          error: ReauthenticationBlocError.userMismatch,
+        status: BlocStatusError<ReauthenticationCubitError>(
+          error: ReauthenticationCubitError.userMismatch,
         ),
       ),
     ],
@@ -290,18 +286,18 @@ void main() {
     'use google, '
     'network exception with requestFailed code, '
     'should emit no internet connection status',
-    build: () => ReauthenticationBloc(),
+    build: () => ReauthenticationCubit(),
     setUp: () => authService.mockReauthenticate(
       throwable: const NetworkException(
         code: NetworkExceptionCode.requestFailed,
       ),
     ),
-    act: (bloc) => bloc.add(const ReauthenticationEventUseGoogle()),
+    act: (cubit) => cubit.useGoogle(),
     expect: () => [
       const ReauthenticationState(
-        status: BlocStatusLoading<ReauthenticationBlocLoadingInfo>(
+        status: BlocStatusLoading<ReauthenticationCubitLoadingInfo>(
           loadingInfo:
-              ReauthenticationBlocLoadingInfo.googleReauthenticationLoading,
+              ReauthenticationCubitLoadingInfo.googleReauthenticationLoading,
         ),
       ),
       const ReauthenticationState(status: BlocStatusNoInternetConnection()),
@@ -315,23 +311,23 @@ void main() {
 
   blocTest(
     'use facebook, '
-    'confirmed'
+    'confirmed, '
     'should emit complete status with userConfirmed info',
-    build: () => ReauthenticationBloc(),
+    build: () => ReauthenticationCubit(),
     setUp: () => authService.mockReauthenticate(
       reauthenticationStatus: ReauthenticationStatus.confirmed,
     ),
-    act: (bloc) => bloc.add(const ReauthenticationEventUseFacebook()),
+    act: (cubit) => cubit.useFacebook(),
     expect: () => [
       const ReauthenticationState(
-        status: BlocStatusLoading<ReauthenticationBlocLoadingInfo>(
+        status: BlocStatusLoading<ReauthenticationCubitLoadingInfo>(
           loadingInfo:
-              ReauthenticationBlocLoadingInfo.facebookReauthenticationLoading,
+              ReauthenticationCubitLoadingInfo.facebookReauthenticationLoading,
         ),
       ),
       const ReauthenticationState(
-        status: BlocStatusComplete<ReauthenticationBlocInfo>(
-          info: ReauthenticationBlocInfo.userConfirmed,
+        status: BlocStatusComplete<ReauthenticationCubitInfo>(
+          info: ReauthenticationCubitInfo.userConfirmed,
         ),
       ),
     ],
@@ -344,23 +340,21 @@ void main() {
 
   blocTest(
     'use facebook, '
-    'cancelled'
+    'cancelled, '
     'should emit complete status without any info',
-    build: () => ReauthenticationBloc(),
+    build: () => ReauthenticationCubit(),
     setUp: () => authService.mockReauthenticate(
       reauthenticationStatus: ReauthenticationStatus.cancelled,
     ),
-    act: (bloc) => bloc.add(const ReauthenticationEventUseFacebook()),
+    act: (cubit) => cubit.useFacebook(),
     expect: () => [
       const ReauthenticationState(
-        status: BlocStatusLoading<ReauthenticationBlocLoadingInfo>(
+        status: BlocStatusLoading<ReauthenticationCubitLoadingInfo>(
           loadingInfo:
-              ReauthenticationBlocLoadingInfo.facebookReauthenticationLoading,
+              ReauthenticationCubitLoadingInfo.facebookReauthenticationLoading,
         ),
       ),
-      const ReauthenticationState(
-        status: BlocStatusComplete<ReauthenticationBlocInfo>(),
-      ),
+      const ReauthenticationState(status: BlocStatusComplete()),
     ],
     verify: (_) => verify(
       () => authService.reauthenticate(
@@ -373,21 +367,21 @@ void main() {
     'use facebook, '
     'user mismatch, '
     'should emit error status with userMismatch error',
-    build: () => ReauthenticationBloc(),
+    build: () => ReauthenticationCubit(),
     setUp: () => authService.mockReauthenticate(
       reauthenticationStatus: ReauthenticationStatus.userMismatch,
     ),
-    act: (bloc) => bloc.add(const ReauthenticationEventUseFacebook()),
+    act: (cubit) => cubit.useFacebook(),
     expect: () => [
       const ReauthenticationState(
-        status: BlocStatusLoading<ReauthenticationBlocLoadingInfo>(
+        status: BlocStatusLoading<ReauthenticationCubitLoadingInfo>(
           loadingInfo:
-              ReauthenticationBlocLoadingInfo.facebookReauthenticationLoading,
+              ReauthenticationCubitLoadingInfo.facebookReauthenticationLoading,
         ),
       ),
       const ReauthenticationState(
-        status: BlocStatusError<ReauthenticationBlocError>(
-          error: ReauthenticationBlocError.userMismatch,
+        status: BlocStatusError<ReauthenticationCubitError>(
+          error: ReauthenticationCubitError.userMismatch,
         ),
       ),
     ],
@@ -402,18 +396,18 @@ void main() {
     'use facebook, '
     'network exception with requestFailed code, '
     'should emit no internet connection status',
-    build: () => ReauthenticationBloc(),
+    build: () => ReauthenticationCubit(),
     setUp: () => authService.mockReauthenticate(
       throwable: const NetworkException(
         code: NetworkExceptionCode.requestFailed,
       ),
     ),
-    act: (bloc) => bloc.add(const ReauthenticationEventUseFacebook()),
+    act: (cubit) => cubit.useFacebook(),
     expect: () => [
       const ReauthenticationState(
-        status: BlocStatusLoading<ReauthenticationBlocLoadingInfo>(
+        status: BlocStatusLoading<ReauthenticationCubitLoadingInfo>(
           loadingInfo:
-              ReauthenticationBlocLoadingInfo.facebookReauthenticationLoading,
+              ReauthenticationCubitLoadingInfo.facebookReauthenticationLoading,
         ),
       ),
       const ReauthenticationState(status: BlocStatusNoInternetConnection()),

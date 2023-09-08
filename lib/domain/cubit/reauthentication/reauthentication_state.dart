@@ -1,6 +1,6 @@
-part of 'reauthentication_bloc.dart';
+part of 'reauthentication_cubit.dart';
 
-class ReauthenticationState extends BlocState<ReauthenticationState> {
+class ReauthenticationState extends CubitState<ReauthenticationState> {
   final String? password;
 
   const ReauthenticationState({required super.status, this.password});

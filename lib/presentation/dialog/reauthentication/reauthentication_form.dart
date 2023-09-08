@@ -4,7 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/svg.dart';
 
 import '../../../domain/additional_model/bloc_status.dart';
-import '../../../domain/bloc/reauthentication/reauthentication_bloc.dart';
+import '../../../domain/cubit/reauthentication/reauthentication_cubit.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/gap/gap_horizontal_components.dart';
 import '../../component/text/body_text_components.dart';
@@ -62,23 +62,17 @@ class _GoogleAuthentication extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final BlocStatus blocStatus = context.select(
-      (ReauthenticationBloc bloc) => bloc.state.status,
+      (ReauthenticationCubit cubit) => cubit.state.status,
     );
 
     return _SocialAuthenticationButton(
       svgIconPath: 'assets/google_icon.svg',
       isLoading: blocStatus is BlocStatusLoading &&
           blocStatus.loadingInfo ==
-              ReauthenticationBlocLoadingInfo.googleReauthenticationLoading,
+              ReauthenticationCubitLoadingInfo.googleReauthenticationLoading,
       isDisabled: blocStatus is BlocStatusLoading,
-      onPressed: () => _authenticateWithGoogle(context),
+      onPressed: context.read<ReauthenticationCubit>().useGoogle,
     );
-  }
-
-  void _authenticateWithGoogle(BuildContext context) {
-    context.read<ReauthenticationBloc>().add(
-          const ReauthenticationEventUseGoogle(),
-        );
   }
 }
 
@@ -88,23 +82,17 @@ class _FacebookAuthentication extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final BlocStatus blocStatus = context.select(
-      (ReauthenticationBloc bloc) => bloc.state.status,
+      (ReauthenticationCubit cubit) => cubit.state.status,
     );
 
     return _SocialAuthenticationButton(
       svgIconPath: 'assets/facebook_icon.svg',
       isLoading: blocStatus is BlocStatusLoading &&
           blocStatus.loadingInfo ==
-              ReauthenticationBlocLoadingInfo.facebookReauthenticationLoading,
+              ReauthenticationCubitLoadingInfo.facebookReauthenticationLoading,
       isDisabled: blocStatus is BlocStatusLoading,
-      onPressed: () => _authenticateWithFacebook(context),
+      onPressed: context.read<ReauthenticationCubit>().useFacebook,
     );
-  }
-
-  void _authenticateWithFacebook(BuildContext context) {
-    context.read<ReauthenticationBloc>().add(
-          const ReauthenticationEventUseFacebook(),
-        );
   }
 }
 

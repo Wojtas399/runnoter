@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/additional_model/bloc_status.dart';
-import '../../../domain/bloc/reauthentication/reauthentication_bloc.dart';
+import '../../../domain/cubit/reauthentication/reauthentication_cubit.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/password_text_field_component.dart';
 import '../../service/utils.dart';
@@ -14,38 +14,29 @@ class ReauthenticationPassword extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool canSubmit = context.select(
-      (ReauthenticationBloc bloc) =>
-          bloc.state.password != null &&
-          bloc.state.password?.isNotEmpty == true &&
-          bloc.state.status is! BlocStatusLoading,
+      (ReauthenticationCubit cubit) =>
+          cubit.state.password != null &&
+          cubit.state.password?.isNotEmpty == true &&
+          cubit.state.status is! BlocStatusLoading,
     );
 
     return Column(
       children: [
         PasswordTextFieldComponent(
-          onChanged: (String? password) =>
-              _onPasswordChanged(context, password),
+          onChanged: context.read<ReauthenticationCubit>().passwordChanged,
           onTapOutside: (_) => unfocusInputs(),
-          onSubmitted: (_) => canSubmit ? _onSubmit(context) : null,
+          onSubmitted: (_) => canSubmit
+              ? context.read<ReauthenticationCubit>().usePassword
+              : null,
         ),
         const Gap16(),
         _PasswordSubmitButton(
-          onPressed: canSubmit ? () => _onSubmit(context) : null,
+          onPressed: canSubmit
+              ? context.read<ReauthenticationCubit>().usePassword
+              : null,
         ),
       ],
     );
-  }
-
-  void _onPasswordChanged(BuildContext context, String? password) {
-    context.read<ReauthenticationBloc>().add(
-          ReauthenticationEventPasswordChanged(password: password),
-        );
-  }
-
-  void _onSubmit(BuildContext context) {
-    context.read<ReauthenticationBloc>().add(
-          const ReauthenticationEventUsePassword(),
-        );
   }
 }
 
@@ -57,7 +48,7 @@ class _PasswordSubmitButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final BlocStatus blocStatus = context.select(
-      (ReauthenticationBloc bloc) => bloc.state.status,
+      (ReauthenticationCubit cubit) => cubit.state.status,
     );
 
     return SizedBox(
@@ -67,7 +58,7 @@ class _PasswordSubmitButton extends StatelessWidget {
         onPressed: onPressed,
         child: blocStatus is BlocStatusLoading &&
                 blocStatus.loadingInfo ==
-                    ReauthenticationBlocLoadingInfo
+                    ReauthenticationCubitLoadingInfo
                         .passwordReauthenticationLoading
             ? const SizedBox(
                 height: 24,
