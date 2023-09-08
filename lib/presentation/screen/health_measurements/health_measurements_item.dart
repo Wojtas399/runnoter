@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/bloc/health_measurements/health_measurements_bloc.dart';
+import '../../../domain/cubit/health_measurements_cubit.dart';
 import '../../../domain/entity/health_measurement.dart';
 import '../../component/edit_delete_popup_menu_component.dart';
 import '../../component/text/body_text_components.dart';
@@ -91,9 +91,23 @@ class _MeasurementActions extends StatelessWidget {
       );
 
   Future<void> _deleteMeasurement(BuildContext context) async {
-    final bloc = context.read<HealthMeasurementsBloc>();
+    final cubit = context.read<HealthMeasurementsCubit>();
     final str = Str.of(context);
-    final bool confirmation = await askForConfirmation(
+    final bool isDeletionConfirmed =
+        await _askForMeasurementDeletionConfirmation(context);
+    if (isDeletionConfirmed == true) {
+      showLoadingDialog();
+      await cubit.deleteMeasurement(measurementDate);
+      closeLoadingDialog();
+      showSnackbarMessage(str.healthMeasurementsDeletedMeasurementMessage);
+    }
+  }
+
+  Future<bool> _askForMeasurementDeletionConfirmation(
+    BuildContext context,
+  ) async {
+    final str = Str.of(context);
+    return await askForConfirmation(
       title: Text(
         str.healthMeasurementsDeleteMeasurementConfirmationDialogTitle,
       ),
@@ -103,11 +117,7 @@ class _MeasurementActions extends StatelessWidget {
         ),
       ),
       confirmButtonLabel: str.delete,
+      confirmButtonColor: Theme.of(context).colorScheme.error,
     );
-    if (confirmation == true) {
-      bloc.add(
-        HealthMeasurementsEventDeleteMeasurement(date: measurementDate),
-      );
-    }
   }
 }

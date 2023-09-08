@@ -2,29 +2,18 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/domain/additional_model/bloc_status.dart';
-import 'package:runnoter/domain/bloc/health_measurements/health_measurements_bloc.dart';
-import 'package:runnoter/domain/entity/health_measurement.dart';
+import 'package:runnoter/domain/cubit/health_measurements_cubit.dart';
 import 'package:runnoter/domain/repository/health_measurement_repository.dart';
 import 'package:runnoter/domain/service/auth_service.dart';
 
-import '../../../creators/health_measurement_creator.dart';
-import '../../../mock/domain/repository/mock_health_measurement_repository.dart';
-import '../../../mock/domain/service/mock_auth_service.dart';
+import '../../creators/health_measurement_creator.dart';
+import '../../mock/domain/repository/mock_health_measurement_repository.dart';
+import '../../mock/domain/service/mock_auth_service.dart';
 
 void main() {
   final authService = MockAuthService();
   final healthMeasurementRepository = MockHealthMeasurementRepository();
   const String loggedUserId = 'u1';
-
-  HealthMeasurementsState createState({
-    BlocStatus status = const BlocStatusInitial(),
-    List<HealthMeasurement>? measurements,
-  }) =>
-      HealthMeasurementsState(
-        status: status,
-        measurements: measurements,
-      );
 
   setUpAll(() {
     GetIt.I.registerFactory<AuthService>(() => authService);
@@ -41,7 +30,7 @@ void main() {
   blocTest(
     'initialize, '
     'should set listener of all measurements and should sort measurements in descending order by date',
-    build: () => HealthMeasurementsBloc(),
+    build: () => HealthMeasurementsCubit(),
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
       healthMeasurementRepository.mockGetAllMeasurements(
@@ -53,17 +42,14 @@ void main() {
         ],
       );
     },
-    act: (bloc) => bloc.add(const HealthMeasurementsEventInitialize()),
+    act: (cubit) => cubit.initialize(),
     expect: () => [
-      createState(
-        status: const BlocStatusComplete(),
-        measurements: [
-          createHealthMeasurement(date: DateTime(2023, 2, 14)),
-          createHealthMeasurement(date: DateTime(2023, 2, 11)),
-          createHealthMeasurement(date: DateTime(2023, 2, 10)),
-          createHealthMeasurement(date: DateTime(2023, 2, 8)),
-        ],
-      ),
+      [
+        createHealthMeasurement(date: DateTime(2023, 2, 14)),
+        createHealthMeasurement(date: DateTime(2023, 2, 11)),
+        createHealthMeasurement(date: DateTime(2023, 2, 10)),
+        createHealthMeasurement(date: DateTime(2023, 2, 8)),
+      ],
     ],
     verify: (_) {
       verify(
@@ -80,17 +66,11 @@ void main() {
   blocTest(
     'delete measurement, '
     'logged user does not exist, '
-    'should emit no logged user bloc status',
-    build: () => HealthMeasurementsBloc(),
+    'should do nothing',
+    build: () => HealthMeasurementsCubit(),
     setUp: () => authService.mockGetLoggedUserId(),
-    act: (bloc) => bloc.add(HealthMeasurementsEventDeleteMeasurement(
-      date: DateTime(2023, 5, 14),
-    )),
-    expect: () => [
-      createState(
-        status: const BlocStatusNoLoggedUser(),
-      ),
-    ],
+    act: (cubit) => cubit.deleteMeasurement(DateTime(2023, 5, 14)),
+    expect: () => [],
     verify: (_) => verify(
       () => authService.loggedUserId$,
     ).called(1),
@@ -98,25 +78,14 @@ void main() {
 
   blocTest(
     'delete measurement, '
-    'should call method from health measurement repository to delete measurement and should emit bloc info about deleted measurement',
-    build: () => HealthMeasurementsBloc(),
+    'should call method from health measurement repository to delete measurement',
+    build: () => HealthMeasurementsCubit(),
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
       healthMeasurementRepository.mockDeleteMeasurement();
     },
-    act: (bloc) => bloc.add(HealthMeasurementsEventDeleteMeasurement(
-      date: DateTime(2023, 5, 14),
-    )),
-    expect: () => [
-      createState(
-        status: const BlocStatusLoading(),
-      ),
-      createState(
-        status: const BlocStatusComplete<HealthMeasurementsBlocInfo>(
-          info: HealthMeasurementsBlocInfo.measurementDeleted,
-        ),
-      ),
-    ],
+    act: (cubit) => cubit.deleteMeasurement(DateTime(2023, 5, 14)),
+    expect: () => [],
     verify: (_) {
       verify(
         () => authService.loggedUserId$,
