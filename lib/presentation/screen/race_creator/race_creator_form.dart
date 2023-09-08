@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/additional_model/bloc_status.dart';
-import '../../../domain/bloc/race_creator/race_creator_bloc.dart';
+import '../../../domain/cubit/race_creator/race_creator_cubit.dart';
 import '../../component/duration_input_component.dart';
 import '../../component/form_text_field_component.dart';
 import '../../component/gap/gap_components.dart';
@@ -51,7 +51,7 @@ class _RaceNameState extends State<_RaceName> {
 
   @override
   void initState() {
-    final String? name = context.read<RaceCreatorBloc>().state.name;
+    final String? name = context.read<RaceCreatorCubit>().state.name;
     if (name != null) _controller.text = name;
     _controller.addListener(_onChanged);
     super.initState();
@@ -77,9 +77,7 @@ class _RaceNameState extends State<_RaceName> {
   }
 
   void _onChanged() {
-    context.read<RaceCreatorBloc>().add(
-          RaceCreatorEventNameChanged(name: _controller.text),
-        );
+    context.read<RaceCreatorCubit>().nameChanged(_controller.text);
   }
 }
 
@@ -95,7 +93,7 @@ class _RacePlaceState extends State<_RacePlace> {
 
   @override
   void initState() {
-    final String? place = context.read<RaceCreatorBloc>().state.place;
+    final String? place = context.read<RaceCreatorCubit>().state.place;
     if (place != null) _controller.text = place;
     _controller.addListener(_onChanged);
     super.initState();
@@ -120,9 +118,7 @@ class _RacePlaceState extends State<_RacePlace> {
   }
 
   void _onChanged() {
-    context.read<RaceCreatorBloc>().add(
-          RaceCreatorEventPlaceChanged(place: _controller.text),
-        );
+    context.read<RaceCreatorCubit>().placeChanged(_controller.text);
   }
 }
 
@@ -138,7 +134,7 @@ class _RaceDistanceState extends State<_RaceDistance> {
 
   @override
   void initState() {
-    final double? distance = context.read<RaceCreatorBloc>().state.distance;
+    final double? distance = context.read<RaceCreatorCubit>().state.distance;
     if (distance != null) {
       _controller.text = context
           .convertDistanceFromDefaultUnit(distance)
@@ -174,13 +170,9 @@ class _RaceDistanceState extends State<_RaceDistance> {
   }
 
   void _onChanged() {
-    final double? distance = double.tryParse(_controller.text);
-    context.read<RaceCreatorBloc>().add(
-          RaceCreatorEventDistanceChanged(
-            distance: distance != null
-                ? context.convertDistanceToDefaultUnit(distance)
-                : 0,
-          ),
+    final double distance = double.tryParse(_controller.text) ?? 0;
+    context.read<RaceCreatorCubit>().distanceChanged(
+          context.convertDistanceToDefaultUnit(distance),
         );
   }
 }
@@ -191,10 +183,10 @@ class _ExpectedDuration extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Duration? duration = context.select(
-      (RaceCreatorBloc bloc) => bloc.state.expectedDuration,
+      (RaceCreatorCubit cubit) => cubit.state.expectedDuration,
     );
     final BlocStatus? blocStatus = context.select(
-      (RaceCreatorBloc bloc) => bloc.state.status,
+      (RaceCreatorCubit cubit) => cubit.state.status,
     );
 
     return blocStatus is BlocStatusInitial
@@ -202,24 +194,14 @@ class _ExpectedDuration extends StatelessWidget {
         : DurationInput(
             label: Str.of(context).raceExpectedDuration,
             initialDuration: duration,
-            onDurationChanged: (Duration duration) =>
-                _onChanged(context, duration),
+            onDurationChanged:
+                context.read<RaceCreatorCubit>().expectedDurationChanged,
             onSubmitted: () => _onSubmitted(context),
           );
-  }
-
-  void _onChanged(BuildContext context, Duration duration) {
-    context.read<RaceCreatorBloc>().add(
-          RaceCreatorEventExpectedDurationChanged(
-            expectedDuration: duration,
-          ),
-        );
   }
 }
 
 void _onSubmitted(BuildContext context) {
-  final bloc = context.read<RaceCreatorBloc>();
-  if (bloc.state.canSubmit) {
-    bloc.add(const RaceCreatorEventSubmit());
-  }
+  final cubit = context.read<RaceCreatorCubit>();
+  if (cubit.state.canSubmit) cubit.submit();
 }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/bloc/race_creator/race_creator_bloc.dart';
+import '../../../domain/cubit/race_creator/race_creator_cubit.dart';
 import '../../component/date_selector_component.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/text/title_text_components.dart';
@@ -29,18 +29,12 @@ class _RaceDateValue extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final DateTime? date = context.select(
-      (RaceCreatorBloc bloc) => bloc.state.date,
+      (RaceCreatorCubit cubit) => cubit.state.date,
     );
 
     return DateSelector(
       date: date,
-      onDateSelected: (DateTime date) => _onDateSelected(context, date),
+      onDateSelected: context.read<RaceCreatorCubit>().dateChanged,
     );
-  }
-
-  void _onDateSelected(BuildContext context, DateTime date) {
-    context.read<RaceCreatorBloc>().add(
-          RaceCreatorEventDateChanged(date: date),
-        );
   }
 }

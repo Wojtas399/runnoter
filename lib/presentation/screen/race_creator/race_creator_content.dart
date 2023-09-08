@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/additional_model/bloc_status.dart';
-import '../../../domain/bloc/race_creator/race_creator_bloc.dart';
+import '../../../domain/cubit/race_creator/race_creator_cubit.dart';
 import '../../../domain/entity/race.dart';
 import '../../component/big_button_component.dart';
 import '../../component/body/medium_body_component.dart';
@@ -20,7 +20,7 @@ class RaceCreatorContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async => await askForConfirmationToLeave(
-        areUnsavedChanges: context.read<RaceCreatorBloc>().state.canSubmit,
+        areUnsavedChanges: context.read<RaceCreatorCubit>().state.canSubmit,
       ),
       child: Scaffold(
         appBar: AppBar(
@@ -47,7 +47,7 @@ class _AppBarTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Race? race = context.select(
-      (RaceCreatorBloc bloc) => bloc.state.race,
+      (RaceCreatorCubit cubit) => cubit.state.race,
     );
     String title = Str.of(context).raceCreatorNewRaceTitle;
     if (race != null) {
@@ -63,7 +63,7 @@ class _Form extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final BlocStatus blocStatus = context.select(
-      (RaceCreatorBloc bloc) => bloc.state.status,
+      (RaceCreatorCubit cubit) => cubit.state.status,
     );
 
     return blocStatus is BlocStatusInitial
@@ -84,22 +84,16 @@ class _SubmitButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool isEditMode = context.select(
-      (RaceCreatorBloc bloc) => bloc.state.race != null,
+      (RaceCreatorCubit cubit) => cubit.state.race != null,
     );
     final bool isDisabled = context.select(
-      (RaceCreatorBloc bloc) => !bloc.state.canSubmit,
+      (RaceCreatorCubit cubit) => !cubit.state.canSubmit,
     );
 
     return BigButton(
       label: isEditMode ? Str.of(context).save : Str.of(context).add,
       isDisabled: isDisabled,
-      onPressed: () => _onPressed(context),
+      onPressed: context.read<RaceCreatorCubit>().submit,
     );
-  }
-
-  void _onPressed(BuildContext context) {
-    context.read<RaceCreatorBloc>().add(
-          const RaceCreatorEventSubmit(),
-        );
   }
 }

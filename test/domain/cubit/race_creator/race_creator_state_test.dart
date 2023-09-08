@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
-import 'package:runnoter/domain/bloc/race_creator/race_creator_bloc.dart';
+import 'package:runnoter/domain/cubit/race_creator/race_creator_cubit.dart';
 import 'package:runnoter/domain/entity/race.dart';
 
 import '../../../creators/race_creator.dart';
@@ -9,9 +9,7 @@ void main() {
   late RaceCreatorState state;
 
   setUp(
-    () => state = const RaceCreatorState(
-      status: BlocStatusInitial(),
-    ),
+    () => state = const RaceCreatorState(status: BlocStatusInitial()),
   );
 
   test(
@@ -288,7 +286,8 @@ void main() {
   );
 
   test(
-    'copy with status',
+    'copy with status, '
+    'should set complete status if new status is null',
     () {
       const BlocStatus expectedStatus = BlocStatusLoading();
 
@@ -301,84 +300,90 @@ void main() {
   );
 
   test(
-    'copy with race',
+    'copy with race, '
+    'should copy current value if new value is null',
     () {
-      final Race expectedRace = createRace(id: 'c1');
+      final Race expected = createRace(id: 'c1');
 
-      state = state.copyWith(race: expectedRace);
+      state = state.copyWith(race: expected);
       final state2 = state.copyWith();
 
-      expect(state.race, expectedRace);
-      expect(state2.race, expectedRace);
+      expect(state.race, expected);
+      expect(state2.race, expected);
     },
   );
 
   test(
-    'copy with name',
+    'copy with name, '
+    'should copy current value if new value is null',
     () {
-      const String expectedName = 'name 1';
+      const String expected = 'name 1';
 
-      state = state.copyWith(name: expectedName);
+      state = state.copyWith(name: expected);
       final state2 = state.copyWith();
 
-      expect(state.name, expectedName);
-      expect(state2.name, expectedName);
+      expect(state.name, expected);
+      expect(state2.name, expected);
     },
   );
 
   test(
-    'copy with date',
+    'copy with date, '
+    'should copy current value if new value is null',
     () {
-      final DateTime expectedDate = DateTime(2023, 5, 10);
+      final DateTime expected = DateTime(2023, 5, 10);
 
-      state = state.copyWith(date: expectedDate);
+      state = state.copyWith(date: expected);
       final state2 = state.copyWith();
 
-      expect(state.date, expectedDate);
-      expect(state2.date, expectedDate);
+      expect(state.date, expected);
+      expect(state2.date, expected);
     },
   );
 
   test(
-    'copy with place',
+    'copy with place, '
+    'should copy current value if new value is null',
     () {
-      const String expectedPlace = 'place 1';
+      const String expected = 'place 1';
 
-      state = state.copyWith(place: expectedPlace);
+      state = state.copyWith(place: expected);
       final state2 = state.copyWith();
 
-      expect(state.place, expectedPlace);
-      expect(state2.place, expectedPlace);
+      expect(state.place, expected);
+      expect(state2.place, expected);
     },
   );
 
   test(
-    'copy with distance',
+    'copy with distance, '
+    'should copy current value if new value is null',
     () {
-      const double expectedDistance = 10;
+      const double expected = 10;
 
-      state = state.copyWith(distance: expectedDistance);
+      state = state.copyWith(distance: expected);
       final state2 = state.copyWith();
 
-      expect(state.distance, expectedDistance);
-      expect(state2.distance, expectedDistance);
+      expect(state.distance, expected);
+      expect(state2.distance, expected);
     },
   );
 
   test(
-    'copy with expected duration',
+    'copy with expectedDuration, '
+    'should copy current value if new value is null',
     () {
-      const Duration expectedDuration = Duration(
+      const Duration expected = Duration(
         hours: 1,
         minutes: 45,
         seconds: 20,
       );
 
-      state = state.copyWith(expectedDuration: expectedDuration);
+      state = state.copyWith(expectedDuration: expected);
       final state2 = state.copyWith();
 
-      expect(state.expectedDuration, expectedDuration);
-      expect(state2.expectedDuration, expectedDuration);
+      expect(state.expectedDuration, expected);
+      expect(state2.expectedDuration, expected);
     },
   );
 }

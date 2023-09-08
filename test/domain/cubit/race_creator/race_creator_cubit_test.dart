@@ -4,7 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/additional_model/activity_status.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
-import 'package:runnoter/domain/bloc/race_creator/race_creator_bloc.dart';
+import 'package:runnoter/domain/cubit/race_creator/race_creator_cubit.dart';
 import 'package:runnoter/domain/entity/race.dart';
 import 'package:runnoter/domain/repository/race_repository.dart';
 
@@ -15,7 +15,7 @@ void main() {
   final raceRepository = MockRaceRepository();
   const String userId = 'u1';
 
-  RaceCreatorBloc createBloc({
+  RaceCreatorCubit createCubit({
     String? raceId,
     Race? race,
     String? name,
@@ -24,10 +24,10 @@ void main() {
     double? distance,
     Duration? expectedDuration,
   }) =>
-      RaceCreatorBloc(
+      RaceCreatorCubit(
         userId: userId,
         raceId: raceId,
-        state: RaceCreatorState(
+        initialState: RaceCreatorState(
           status: const BlocStatusInitial(),
           race: race,
           name: name,
@@ -36,25 +36,6 @@ void main() {
           distance: distance,
           expectedDuration: expectedDuration,
         ),
-      );
-
-  RaceCreatorState createState({
-    BlocStatus status = const BlocStatusInitial(),
-    Race? race,
-    String? name,
-    DateTime? date,
-    String? place,
-    double? distance,
-    Duration? expectedDuration,
-  }) =>
-      RaceCreatorState(
-        status: status,
-        race: race,
-        name: name,
-        date: date,
-        place: place,
-        distance: distance,
-        expectedDuration: expectedDuration,
       );
 
   setUpAll(() {
@@ -69,12 +50,10 @@ void main() {
     'initialize, '
     'race id is null, '
     'should only emit given date',
-    build: () => createBloc(),
-    act: (bloc) => bloc.add(RaceCreatorEventInitialize(
-      date: DateTime(2023, 1, 10),
-    )),
+    build: () => createCubit(),
+    act: (cubit) => cubit.initialize(DateTime(2023, 1, 10)),
     expect: () => [
-      createState(
+      RaceCreatorState(
         status: const BlocStatusComplete(),
         date: DateTime(2023, 1, 10),
       ),
@@ -86,7 +65,7 @@ void main() {
     'race id is not null, '
     'should load race matching to given id from repository and '
     'should update all relevant params in state',
-    build: () => createBloc(raceId: 'r1'),
+    build: () => createCubit(raceId: 'r1'),
     setUp: () => raceRepository.mockGetRaceById(
       race: createRace(
         id: 'r1',
@@ -98,10 +77,10 @@ void main() {
         expectedDuration: const Duration(hours: 2),
       ),
     ),
-    act: (bloc) => bloc.add(const RaceCreatorEventInitialize()),
+    act: (cubit) => cubit.initialize(null),
     expect: () => [
-      createState(
-        status: const BlocStatusComplete<RaceCreatorBlocInfo>(),
+      RaceCreatorState(
+        status: const BlocStatusComplete<RaceCreatorCubitInfo>(),
         race: createRace(
           id: 'r1',
           userId: userId,
@@ -126,13 +105,11 @@ void main() {
   blocTest(
     'name changed, '
     'should update name in state',
-    build: () => createBloc(),
-    act: (bloc) => bloc.add(const RaceCreatorEventNameChanged(
-      name: 'race name',
-    )),
+    build: () => createCubit(),
+    act: (cubit) => cubit.nameChanged('race name'),
     expect: () => [
-      createState(
-        status: const BlocStatusComplete(),
+      const RaceCreatorState(
+        status: BlocStatusComplete(),
         name: 'race name',
       ),
     ],
@@ -141,12 +118,10 @@ void main() {
   blocTest(
     'date changed, '
     'should update date in state',
-    build: () => createBloc(),
-    act: (bloc) => bloc.add(RaceCreatorEventDateChanged(
-      date: DateTime(2023, 6, 2),
-    )),
+    build: () => createCubit(),
+    act: (cubit) => cubit.dateChanged(DateTime(2023, 6, 2)),
     expect: () => [
-      createState(
+      RaceCreatorState(
         status: const BlocStatusComplete(),
         date: DateTime(2023, 6, 2),
       ),
@@ -156,13 +131,11 @@ void main() {
   blocTest(
     'place changed, '
     'should update place in state',
-    build: () => createBloc(),
-    act: (bloc) => bloc.add(const RaceCreatorEventPlaceChanged(
-      place: 'race place',
-    )),
+    build: () => createCubit(),
+    act: (cubit) => cubit.placeChanged('race place'),
     expect: () => [
-      createState(
-        status: const BlocStatusComplete(),
+      const RaceCreatorState(
+        status: BlocStatusComplete(),
         place: 'race place',
       ),
     ],
@@ -171,13 +144,11 @@ void main() {
   blocTest(
     'distance changed, '
     'should update distance in state',
-    build: () => createBloc(),
-    act: (bloc) => bloc.add(const RaceCreatorEventDistanceChanged(
-      distance: 21,
-    )),
+    build: () => createCubit(),
+    act: (cubit) => cubit.distanceChanged(21),
     expect: () => [
-      createState(
-        status: const BlocStatusComplete(),
+      const RaceCreatorState(
+        status: BlocStatusComplete(),
         distance: 21,
       ),
     ],
@@ -186,14 +157,14 @@ void main() {
   blocTest(
     'expected duration changed, '
     'should update duration in state',
-    build: () => createBloc(),
-    act: (bloc) => bloc.add(const RaceCreatorEventExpectedDurationChanged(
-      expectedDuration: Duration(hours: 1, minutes: 45, seconds: 20),
-    )),
+    build: () => createCubit(),
+    act: (cubit) => cubit.expectedDurationChanged(
+      const Duration(hours: 1, minutes: 45, seconds: 20),
+    ),
     expect: () => [
-      createState(
-        status: const BlocStatusComplete(),
-        expectedDuration: const Duration(hours: 1, minutes: 45, seconds: 20),
+      const RaceCreatorState(
+        status: BlocStatusComplete(),
+        expectedDuration: Duration(hours: 1, minutes: 45, seconds: 20),
       ),
     ],
   );
@@ -202,8 +173,8 @@ void main() {
     'submit, '
     'data are invalid, '
     'should do nothing',
-    build: () => createBloc(),
-    act: (bloc) => bloc.add(const RaceCreatorEventSubmit()),
+    build: () => createCubit(),
+    act: (cubit) => cubit.submit(),
     expect: () => [],
   );
 
@@ -211,7 +182,7 @@ void main() {
     'submit, '
     'race params are same as original, '
     'should do nothing',
-    build: () => createBloc(
+    build: () => createCubit(
       race: createRace(
         id: 'c1',
         name: 'name',
@@ -226,7 +197,7 @@ void main() {
       distance: 21,
       expectedDuration: const Duration(hours: 1),
     ),
-    act: (bloc) => bloc.add(const RaceCreatorEventSubmit()),
+    act: (cubit) => cubit.submit(),
     expect: () => [],
   );
 
@@ -235,7 +206,7 @@ void main() {
     'add mode, '
     'should call method from race repository to add new race with pending status and '
     'should emit info that race has been added',
-    build: () => createBloc(
+    build: () => createCubit(
       name: 'race name',
       date: DateTime(2023, 6, 2),
       place: 'New York',
@@ -243,9 +214,9 @@ void main() {
       expectedDuration: const Duration(hours: 1, minutes: 45, seconds: 20),
     ),
     setUp: () => raceRepository.mockAddNewRace(),
-    act: (bloc) => bloc.add(const RaceCreatorEventSubmit()),
+    act: (cubit) => cubit.submit(),
     expect: () => [
-      createState(
+      RaceCreatorState(
         status: const BlocStatusLoading(),
         name: 'race name',
         date: DateTime(2023, 6, 2),
@@ -253,9 +224,9 @@ void main() {
         distance: 21,
         expectedDuration: const Duration(hours: 1, minutes: 45, seconds: 20),
       ),
-      createState(
-        status: const BlocStatusComplete<RaceCreatorBlocInfo>(
-          info: RaceCreatorBlocInfo.raceAdded,
+      RaceCreatorState(
+        status: const BlocStatusComplete<RaceCreatorCubitInfo>(
+          info: RaceCreatorCubitInfo.raceAdded,
         ),
         name: 'race name',
         date: DateTime(2023, 6, 2),
@@ -283,7 +254,7 @@ void main() {
     'duration is 0, '
     'should call method from race repository to add new race with duration set as null and pending status and '
     'should emit info that race has been added',
-    build: () => createBloc(
+    build: () => createCubit(
       name: 'race name',
       date: DateTime(2023, 6, 2),
       place: 'New York',
@@ -291,9 +262,9 @@ void main() {
       expectedDuration: const Duration(),
     ),
     setUp: () => raceRepository.mockAddNewRace(),
-    act: (bloc) => bloc.add(const RaceCreatorEventSubmit()),
+    act: (cubit) => cubit.submit(),
     expect: () => [
-      createState(
+      RaceCreatorState(
         status: const BlocStatusLoading(),
         name: 'race name',
         date: DateTime(2023, 6, 2),
@@ -301,9 +272,9 @@ void main() {
         distance: 21,
         expectedDuration: const Duration(),
       ),
-      createState(
-        status: const BlocStatusComplete<RaceCreatorBlocInfo>(
-          info: RaceCreatorBlocInfo.raceAdded,
+      RaceCreatorState(
+        status: const BlocStatusComplete<RaceCreatorCubitInfo>(
+          info: RaceCreatorCubitInfo.raceAdded,
         ),
         name: 'race name',
         date: DateTime(2023, 6, 2),
@@ -330,7 +301,7 @@ void main() {
     'edit mode, '
     'should call method from race repository to update race and '
     'should emit info that race has been updated',
-    build: () => createBloc(
+    build: () => createCubit(
       race: createRace(id: 'c1'),
       name: 'race name',
       date: DateTime(2023, 6, 2),
@@ -339,9 +310,9 @@ void main() {
       expectedDuration: const Duration(hours: 1, minutes: 45, seconds: 20),
     ),
     setUp: () => raceRepository.mockUpdateRace(),
-    act: (bloc) => bloc.add(const RaceCreatorEventSubmit()),
+    act: (cubit) => cubit.submit(),
     expect: () => [
-      createState(
+      RaceCreatorState(
         status: const BlocStatusLoading(),
         race: createRace(id: 'c1'),
         name: 'race name',
@@ -350,9 +321,9 @@ void main() {
         distance: 21,
         expectedDuration: const Duration(hours: 1, minutes: 45, seconds: 20),
       ),
-      createState(
-        status: const BlocStatusComplete<RaceCreatorBlocInfo>(
-          info: RaceCreatorBlocInfo.raceUpdated,
+      RaceCreatorState(
+        status: const BlocStatusComplete<RaceCreatorCubitInfo>(
+          info: RaceCreatorCubitInfo.raceUpdated,
         ),
         race: createRace(id: 'c1'),
         name: 'race name',
@@ -381,7 +352,7 @@ void main() {
     'duration is 0, '
     'should call method from race repository to update race with duration set as null and '
     'should emit info that race has been updated',
-    build: () => createBloc(
+    build: () => createCubit(
       race: createRace(id: 'c1'),
       name: 'race name',
       date: DateTime(2023, 6, 2),
@@ -390,9 +361,9 @@ void main() {
       expectedDuration: const Duration(),
     ),
     setUp: () => raceRepository.mockUpdateRace(),
-    act: (bloc) => bloc.add(const RaceCreatorEventSubmit()),
+    act: (cubit) => cubit.submit(),
     expect: () => [
-      createState(
+      RaceCreatorState(
         status: const BlocStatusLoading(),
         race: createRace(id: 'c1'),
         name: 'race name',
@@ -401,9 +372,9 @@ void main() {
         distance: 21,
         expectedDuration: const Duration(),
       ),
-      createState(
-        status: const BlocStatusComplete<RaceCreatorBlocInfo>(
-          info: RaceCreatorBlocInfo.raceUpdated,
+      RaceCreatorState(
+        status: const BlocStatusComplete<RaceCreatorCubitInfo>(
+          info: RaceCreatorCubitInfo.raceUpdated,
         ),
         race: createRace(id: 'c1'),
         name: 'race name',

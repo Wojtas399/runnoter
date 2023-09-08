@@ -1,6 +1,6 @@
-part of 'race_creator_bloc.dart';
+part of 'race_creator_cubit.dart';
 
-class RaceCreatorState extends BlocState<RaceCreatorState> {
+class RaceCreatorState extends CubitState<RaceCreatorState> {
   final Race? race;
   final String? name;
   final DateTime? date;
