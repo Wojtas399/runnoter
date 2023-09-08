@@ -4,7 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/additional_model/activity_status.dart';
 import '../../../domain/bloc/activity_status_creator/activity_status_creator_bloc.dart';
-import '../../../domain/bloc/workout_preview/workout_preview_bloc.dart';
+import '../../../domain/cubit/workout_preview/workout_preview_cubit.dart';
 import '../../component/big_button_component.dart';
 import '../../component/body/medium_body_component.dart';
 import '../../component/gap/gap_horizontal_components.dart';
@@ -68,7 +68,7 @@ class _WorkoutInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool isWorkoutLoaded = context.select(
-      (WorkoutPreviewBloc bloc) => bloc.state.isWorkoutLoaded,
+      (WorkoutPreviewCubit cubit) => cubit.state.isWorkoutLoaded,
     );
 
     return isWorkoutLoaded
@@ -83,7 +83,7 @@ class _WorkoutStatusButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ActivityStatus? activityStatus = context.select(
-      (WorkoutPreviewBloc bloc) => bloc.state.activityStatus,
+      (WorkoutPreviewCubit cubit) => cubit.state.activityStatus,
     );
     String label = Str.of(context).activityStatusEditStatus;
     if (activityStatus is ActivityStatusPending) {
@@ -100,11 +100,11 @@ class _WorkoutStatusButton extends StatelessWidget {
   }
 
   void _onPressed(BuildContext context) {
-    final workoutPreviewBloc = context.read<WorkoutPreviewBloc>();
+    final workoutPreviewCubit = context.read<WorkoutPreviewCubit>();
     navigateTo(ActivityStatusCreatorRoute(
-      userId: workoutPreviewBloc.userId,
+      userId: workoutPreviewCubit.userId,
       activityType: ActivityType.workout.name,
-      activityId: workoutPreviewBloc.workoutId,
+      activityId: workoutPreviewCubit.workoutId,
     ));
   }
 }

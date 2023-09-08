@@ -5,8 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/additional_model/activity_status.dart';
-import 'package:runnoter/domain/additional_model/bloc_status.dart';
-import 'package:runnoter/domain/bloc/workout_preview/workout_preview_bloc.dart';
+import 'package:runnoter/domain/cubit/workout_preview/workout_preview_cubit.dart';
 import 'package:runnoter/domain/entity/workout.dart';
 import 'package:runnoter/domain/repository/workout_repository.dart';
 
@@ -18,8 +17,8 @@ void main() {
   const String userId = 'u1';
   const String workoutId = 'w1';
 
-  WorkoutPreviewBloc createBloc() =>
-      WorkoutPreviewBloc(userId: userId, workoutId: workoutId);
+  WorkoutPreviewCubit createCubit() =>
+      WorkoutPreviewCubit(userId: userId, workoutId: workoutId);
 
   setUpAll(() {
     GetIt.I.registerSingleton<WorkoutRepository>(workoutRepository);
@@ -51,25 +50,22 @@ void main() {
 
       blocTest(
         'should set listener of workout matching to given id',
-        build: () => createBloc(),
+        build: () => createCubit(),
         setUp: () => workoutRepository.mockGetWorkoutById(
           workoutStream: workout$.stream,
         ),
-        act: (bloc) async {
-          bloc.add(const WorkoutPreviewEventInitialize());
-          await bloc.stream.first;
+        act: (bloc) {
+          bloc.initialize();
           workout$.add(updatedWorkout);
         },
         expect: () => [
           WorkoutPreviewState(
-            status: const BlocStatusComplete(),
             date: workout.date,
             stages: workout.stages,
             activityStatus: workout.status,
             workoutName: workout.name,
           ),
           WorkoutPreviewState(
-            status: const BlocStatusComplete(),
             date: updatedWorkout.date,
             stages: updatedWorkout.stages,
             activityStatus: updatedWorkout.status,
@@ -88,19 +84,11 @@ void main() {
 
   blocTest(
     'delete workout, '
-    'should call method from workout repository to delete workout, '
-    'should emit info that workout has been deleted',
-    build: () => createBloc(),
+    "should call workout repository's method to delete workout",
+    build: () => createCubit(),
     setUp: () => workoutRepository.mockDeleteWorkout(),
-    act: (bloc) => bloc.add(const WorkoutPreviewEventDeleteWorkout()),
-    expect: () => [
-      const WorkoutPreviewState(status: BlocStatusLoading()),
-      const WorkoutPreviewState(
-        status: BlocStatusComplete<WorkoutPreviewBlocInfo>(
-          info: WorkoutPreviewBlocInfo.workoutDeleted,
-        ),
-      ),
-    ],
+    act: (bloc) => bloc.deleteWorkout(),
+    expect: () => [],
     verify: (_) => verify(
       () => workoutRepository.deleteWorkout(
         userId: userId,

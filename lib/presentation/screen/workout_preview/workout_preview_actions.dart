@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/bloc/workout_preview/workout_preview_bloc.dart';
+import '../../../domain/cubit/workout_preview/workout_preview_cubit.dart';
 import '../../component/edit_delete_popup_menu_component.dart';
 import '../../config/navigation/router.dart';
 import '../../extension/context_extensions.dart';
@@ -23,13 +23,13 @@ class WorkoutPreviewWorkoutActions extends StatelessWidget {
   }
 
   void _editWorkout(BuildContext context) {
-    final WorkoutPreviewBloc bloc = context.read<WorkoutPreviewBloc>();
-    final DateTime? date = bloc.state.date;
-    final String workoutId = bloc.workoutId;
+    final WorkoutPreviewCubit cubit = context.read<WorkoutPreviewCubit>();
+    final DateTime? date = cubit.state.date;
+    final String workoutId = cubit.workoutId;
     if (date != null) {
       navigateTo(
         WorkoutCreatorRoute(
-          userId: bloc.userId,
+          userId: cubit.userId,
           dateStr: date.toPathFormat(),
           workoutId: workoutId,
         ),
@@ -38,16 +38,25 @@ class WorkoutPreviewWorkoutActions extends StatelessWidget {
   }
 
   Future<void> _deleteWorkout(BuildContext context) async {
-    final WorkoutPreviewBloc bloc = context.read<WorkoutPreviewBloc>();
+    final WorkoutPreviewCubit cubit = context.read<WorkoutPreviewCubit>();
     final str = Str.of(context);
-    final bool confirmed = await askForConfirmation(
-      title: Text(str.workoutPreviewDeletionConfirmationTitle),
-      content: Text(str.workoutPreviewDeletionConfirmationMessage),
-      confirmButtonLabel: str.delete,
-      confirmButtonColor: Theme.of(context).colorScheme.error,
-    );
+    final bool confirmed =
+        await _askForWorkoutDeletionConfirmation(context, str);
     if (confirmed == true) {
-      bloc.add(const WorkoutPreviewEventDeleteWorkout());
+      showLoadingDialog();
+      await cubit.deleteWorkout();
+      showSnackbarMessage(str.workoutPreviewDeletedWorkoutMessage);
     }
   }
+
+  Future<bool> _askForWorkoutDeletionConfirmation(
+    BuildContext context,
+    Str str,
+  ) async =>
+      await askForConfirmation(
+        title: Text(str.workoutPreviewDeletionConfirmationTitle),
+        content: Text(str.workoutPreviewDeletionConfirmationMessage),
+        confirmButtonLabel: str.delete,
+        confirmButtonColor: Theme.of(context).colorScheme.error,
+      );
 }

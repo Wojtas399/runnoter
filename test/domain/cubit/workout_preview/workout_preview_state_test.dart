@@ -1,16 +1,13 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/domain/additional_model/activity_status.dart';
-import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/additional_model/workout_stage.dart';
-import 'package:runnoter/domain/bloc/workout_preview/workout_preview_bloc.dart';
+import 'package:runnoter/domain/cubit/workout_preview/workout_preview_cubit.dart';
 
 void main() {
   late WorkoutPreviewState state;
 
   setUp(() {
-    state = const WorkoutPreviewState(
-      status: BlocStatusInitial(),
-    );
+    state = const WorkoutPreviewState();
   });
 
   test(
@@ -90,20 +87,8 @@ void main() {
   );
 
   test(
-    'copy with status',
-    () {
-      const BlocStatus expected = BlocStatusLoading();
-
-      state = state.copyWith(status: expected);
-      final state2 = state.copyWith();
-
-      expect(state.status, expected);
-      expect(state2.status, const BlocStatusComplete());
-    },
-  );
-
-  test(
-    'copy with date',
+    'copy with date, '
+    'should copy current value if new value is null',
     () {
       final DateTime expected = DateTime(2023, 1, 10);
 
@@ -116,7 +101,8 @@ void main() {
   );
 
   test(
-    'copy with workoutName',
+    'copy with workoutName, '
+    'should copy current value if new value is null',
     () {
       const String expected = 'workout name';
 
@@ -129,7 +115,8 @@ void main() {
   );
 
   test(
-    'copy with stages',
+    'copy with stages, '
+    'should copy current value if new value is null',
     () {
       const List<WorkoutStage> expected = [
         WorkoutStageCardio(
@@ -151,7 +138,8 @@ void main() {
   );
 
   test(
-    'copy with activityStatus',
+    'copy with activityStatus, '
+    'should copy current value if new value is null',
     () {
       const ActivityStatus expected = ActivityStatusPending();
 
