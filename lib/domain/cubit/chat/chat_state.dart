@@ -1,6 +1,6 @@
 part of 'chat_cubit.dart';
 
-class ChatState extends BlocState<ChatState> {
+class ChatState extends CubitState<ChatState> {
   final String? loggedUserId;
   final String? recipientFullName;
   final List<Message>? messagesFromLatest;
