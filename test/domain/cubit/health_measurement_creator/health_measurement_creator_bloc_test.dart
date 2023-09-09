@@ -4,7 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/common/date_service.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
-import 'package:runnoter/domain/bloc/health_measurement_creator/health_measurement_creator_bloc.dart';
+import 'package:runnoter/domain/cubit/health_measurement_creator/health_measurement_creator_cubit.dart';
 import 'package:runnoter/domain/entity/health_measurement.dart';
 import 'package:runnoter/domain/repository/health_measurement_repository.dart';
 import 'package:runnoter/domain/service/auth_service.dart';
@@ -19,22 +19,6 @@ void main() {
   final authService = MockAuthService();
   final healthMeasurementRepository = MockHealthMeasurementRepository();
   const String loggedUserId = 'u1';
-
-  HealthMeasurementCreatorState createState({
-    BlocStatus status = const BlocStatusInitial(),
-    HealthMeasurement? measurement,
-    DateTime? date,
-    int? restingHeartRate,
-    double? fastingWeight,
-  }) =>
-      HealthMeasurementCreatorState(
-        dateService: dateService,
-        status: status,
-        measurement: measurement,
-        date: date,
-        restingHeartRate: restingHeartRate,
-        fastingWeight: fastingWeight,
-      );
 
   setUpAll(() {
     GetIt.I.registerFactory<DateService>(() => dateService);
@@ -60,20 +44,19 @@ void main() {
     'initialize, '
     'date is null, '
     'should emit complete status',
-    build: () => HealthMeasurementCreatorBloc(),
-    act: (bloc) => bloc.add(const HealthMeasurementCreatorEventInitialize()),
+    build: () => HealthMeasurementCreatorCubit(),
+    act: (cubit) => cubit.initialize(null),
     expect: () => [
-      createState(
-        status: const BlocStatusComplete<HealthMeasurementCreatorBlocInfo>(),
-      ),
+      HealthMeasurementCreatorState(status: const BlocStatusComplete()),
     ],
   );
 
   blocTest(
     'initialize, '
     'date is not null, '
-    'should load health measurement from repository and should emit loaded measurement, date, resting heart rate and fasting weight',
-    build: () => HealthMeasurementCreatorBloc(date: DateTime(2023, 5, 10)),
+    'should load health measurement from repository and '
+    'should emit loaded measurement, date, resting heart rate and fasting weight',
+    build: () => HealthMeasurementCreatorCubit(),
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
       healthMeasurementRepository.mockGetMeasurementByDate(
@@ -84,9 +67,9 @@ void main() {
         ),
       );
     },
-    act: (bloc) => bloc.add(const HealthMeasurementCreatorEventInitialize()),
+    act: (cubit) => cubit.initialize(DateTime(2023, 5, 10)),
     expect: () => [
-      createState(
+      HealthMeasurementCreatorState(
         status: const BlocStatusComplete(),
         measurement: createHealthMeasurement(
           date: DateTime(2023, 5, 10),
@@ -114,12 +97,10 @@ void main() {
   blocTest(
     'date changed, '
     'should update date in state',
-    build: () => HealthMeasurementCreatorBloc(),
-    act: (bloc) => bloc.add(HealthMeasurementCreatorEventDateChanged(
-      date: DateTime(2023, 2, 10),
-    )),
+    build: () => HealthMeasurementCreatorCubit(),
+    act: (cubit) => cubit.dateChanged(DateTime(2023, 2, 10)),
     expect: () => [
-      createState(
+      HealthMeasurementCreatorState(
         status: const BlocStatusComplete(),
         date: DateTime(2023, 2, 10),
       )
@@ -129,14 +110,10 @@ void main() {
   blocTest(
     'resting heart rate changed, '
     'should update resting heart rate in state',
-    build: () => HealthMeasurementCreatorBloc(),
-    act: (bloc) => bloc.add(
-      const HealthMeasurementCreatorEventRestingHeartRateChanged(
-        restingHeartRate: 50,
-      ),
-    ),
+    build: () => HealthMeasurementCreatorCubit(),
+    act: (cubit) => cubit.restingHeartRateChanged(50),
     expect: () => [
-      createState(
+      HealthMeasurementCreatorState(
         status: const BlocStatusComplete(),
         restingHeartRate: 50,
       ),
@@ -146,14 +123,10 @@ void main() {
   blocTest(
     'fasting weight changed, '
     'should update fasting weight in state',
-    build: () => HealthMeasurementCreatorBloc(),
-    act: (bloc) => bloc.add(
-      const HealthMeasurementCreatorEventFastingWeightChanged(
-        fastingWeight: 61.5,
-      ),
-    ),
+    build: () => HealthMeasurementCreatorCubit(),
+    act: (cubit) => cubit.fastingWeightChanged(61.5),
     expect: () => [
-      createState(
+      HealthMeasurementCreatorState(
         status: const BlocStatusComplete(),
         fastingWeight: 61.5,
       ),
@@ -164,11 +137,13 @@ void main() {
     'submit, '
     'params are invalid, '
     'should do nothing',
-    build: () => HealthMeasurementCreatorBloc(
+    build: () => HealthMeasurementCreatorCubit(
+        initialState: HealthMeasurementCreatorState(
+      status: const BlocStatusComplete(),
       restingHeartRate: null,
       fastingWeight: 0,
-    ),
-    act: (bloc) => bloc.add(const HealthMeasurementCreatorEventSubmit()),
+    )),
+    act: (cubit) => cubit.submit(),
     expect: () => [],
   );
 
@@ -176,15 +151,18 @@ void main() {
     'submit, '
     'logged user does not exist, '
     'should emit no logged user bloc status',
-    build: () => HealthMeasurementCreatorBloc(
-      date: DateTime(2023, 5, 10),
-      restingHeartRate: 50,
-      fastingWeight: 65.2,
+    build: () => HealthMeasurementCreatorCubit(
+      initialState: HealthMeasurementCreatorState(
+        status: const BlocStatusComplete(),
+        date: DateTime(2023, 5, 10),
+        restingHeartRate: 50,
+        fastingWeight: 65.2,
+      ),
     ),
     setUp: () => authService.mockGetLoggedUserId(),
-    act: (bloc) => bloc.add(const HealthMeasurementCreatorEventSubmit()),
+    act: (cubit) => cubit.submit(),
     expect: () => [
-      createState(
+      HealthMeasurementCreatorState(
         status: const BlocStatusNoLoggedUser(),
         date: DateTime(2023, 5, 10),
         restingHeartRate: 50,
@@ -199,11 +177,14 @@ void main() {
   blocTest(
     'submit, '
     'measurement with selected date has already been added, '
-    'should emit info that measurement with selected date has already been added',
-    build: () => HealthMeasurementCreatorBloc(
-      date: DateTime(2023, 5, 10),
-      restingHeartRate: 50,
-      fastingWeight: 65.2,
+    'should emit error status with measurementWithSelectedDateAlreadyExist error',
+    build: () => HealthMeasurementCreatorCubit(
+      initialState: HealthMeasurementCreatorState(
+        status: const BlocStatusComplete(),
+        date: DateTime(2023, 5, 10),
+        restingHeartRate: 50,
+        fastingWeight: 65.2,
+      ),
     ),
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
@@ -211,17 +192,17 @@ void main() {
         expected: true,
       );
     },
-    act: (bloc) => bloc.add(const HealthMeasurementCreatorEventSubmit()),
+    act: (cubit) => cubit.submit(),
     expect: () => [
-      createState(
+      HealthMeasurementCreatorState(
         status: const BlocStatusLoading(),
         date: DateTime(2023, 5, 10),
         restingHeartRate: 50,
         fastingWeight: 65.2,
       ),
-      createState(
-        status: const BlocStatusError<HealthMeasurementCreatorBlocError>(
-          error: HealthMeasurementCreatorBlocError
+      HealthMeasurementCreatorState(
+        status: const BlocStatusError<HealthMeasurementCreatorCubitError>(
+          error: HealthMeasurementCreatorCubitError
               .measurementWithSelectedDateAlreadyExist,
         ),
         date: DateTime(2023, 5, 10),
@@ -245,11 +226,15 @@ void main() {
   blocTest(
     'submit, '
     'measurement is null, '
-    'should call repo method to add new measurement and should emit info about added measurement',
-    build: () => HealthMeasurementCreatorBloc(
-      date: DateTime(2023, 5, 12),
-      restingHeartRate: 50,
-      fastingWeight: 65.2,
+    'should call repo method to add new measurement and '
+    'should emit complete status with measurementAdded info',
+    build: () => HealthMeasurementCreatorCubit(
+      initialState: HealthMeasurementCreatorState(
+        status: const BlocStatusComplete(),
+        date: DateTime(2023, 5, 12),
+        restingHeartRate: 50,
+        fastingWeight: 65.2,
+      ),
     ),
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
@@ -258,17 +243,17 @@ void main() {
       );
       healthMeasurementRepository.mockAddMeasurement();
     },
-    act: (bloc) => bloc.add(const HealthMeasurementCreatorEventSubmit()),
+    act: (cubit) => cubit.submit(),
     expect: () => [
-      createState(
+      HealthMeasurementCreatorState(
         status: const BlocStatusLoading(),
         date: DateTime(2023, 5, 12),
         restingHeartRate: 50,
         fastingWeight: 65.2,
       ),
-      createState(
-        status: const BlocStatusComplete<HealthMeasurementCreatorBlocInfo>(
-          info: HealthMeasurementCreatorBlocInfo.measurementAdded,
+      HealthMeasurementCreatorState(
+        status: const BlocStatusComplete<HealthMeasurementCreatorCubitInfo>(
+          info: HealthMeasurementCreatorCubitInfo.measurementAdded,
         ),
         date: DateTime(2023, 5, 12),
         restingHeartRate: 50,
@@ -302,25 +287,29 @@ void main() {
     'submit, '
     'measurement is not null, '
     'date is same as original, '
-    'should call repo method to update measurement and should emit info about updated measurement',
-    build: () => HealthMeasurementCreatorBloc(
-      measurement: createHealthMeasurement(
+    'should call repo method to update measurement and '
+    'should emit complete status with measurementUpdated info',
+    build: () => HealthMeasurementCreatorCubit(
+      initialState: HealthMeasurementCreatorState(
+        status: const BlocStatusComplete(),
+        measurement: createHealthMeasurement(
+          date: DateTime(2023, 5, 10),
+          restingHeartRate: 50,
+          fastingWeight: 61.5,
+        ),
         date: DateTime(2023, 5, 10),
-        restingHeartRate: 50,
-        fastingWeight: 61.5,
+        restingHeartRate: 52,
+        fastingWeight: 65.2,
       ),
-      date: DateTime(2023, 5, 10),
-      restingHeartRate: 52,
-      fastingWeight: 65.2,
     ),
     setUp: () {
       dateService.mockAreDatesTheSame(expected: true);
       authService.mockGetLoggedUserId(userId: loggedUserId);
       healthMeasurementRepository.mockUpdateMeasurement();
     },
-    act: (bloc) => bloc.add(const HealthMeasurementCreatorEventSubmit()),
+    act: (cubit) => cubit.submit(),
     expect: () => [
-      createState(
+      HealthMeasurementCreatorState(
         status: const BlocStatusLoading(),
         measurement: createHealthMeasurement(
           date: DateTime(2023, 5, 10),
@@ -331,9 +320,9 @@ void main() {
         restingHeartRate: 52,
         fastingWeight: 65.2,
       ),
-      createState(
-        status: const BlocStatusComplete<HealthMeasurementCreatorBlocInfo>(
-          info: HealthMeasurementCreatorBlocInfo.measurementUpdated,
+      HealthMeasurementCreatorState(
+        status: const BlocStatusComplete<HealthMeasurementCreatorCubitInfo>(
+          info: HealthMeasurementCreatorCubitInfo.measurementUpdated,
         ),
         measurement: createHealthMeasurement(
           date: DateTime(2023, 5, 10),
@@ -364,16 +353,21 @@ void main() {
     'submit, '
     'measurement is not null, '
     'date is different than original, '
-    'should call repo method to add measurement with new date and to delete measurement with old date and should emit info about updated measurement',
-    build: () => HealthMeasurementCreatorBloc(
-      measurement: createHealthMeasurement(
-        date: DateTime(2023, 5, 10),
-        restingHeartRate: 50,
-        fastingWeight: 61.5,
+    'should call repo method to add measurement with new date and '
+    'should call repo method to delete measurement with old date and '
+    'should emit complete status with measurementUpdated info',
+    build: () => HealthMeasurementCreatorCubit(
+      initialState: HealthMeasurementCreatorState(
+        status: const BlocStatusComplete(),
+        measurement: createHealthMeasurement(
+          date: DateTime(2023, 5, 10),
+          restingHeartRate: 50,
+          fastingWeight: 61.5,
+        ),
+        date: DateTime(2023, 5, 8),
+        restingHeartRate: 52,
+        fastingWeight: 65.2,
       ),
-      date: DateTime(2023, 5, 8),
-      restingHeartRate: 52,
-      fastingWeight: 65.2,
     ),
     setUp: () {
       dateService.mockAreDatesTheSame(expected: false);
@@ -384,9 +378,9 @@ void main() {
       healthMeasurementRepository.mockAddMeasurement();
       healthMeasurementRepository.mockDeleteMeasurement();
     },
-    act: (bloc) => bloc.add(const HealthMeasurementCreatorEventSubmit()),
+    act: (cubit) => cubit.submit(),
     expect: () => [
-      createState(
+      HealthMeasurementCreatorState(
         status: const BlocStatusLoading(),
         measurement: createHealthMeasurement(
           date: DateTime(2023, 5, 10),
@@ -397,9 +391,9 @@ void main() {
         restingHeartRate: 52,
         fastingWeight: 65.2,
       ),
-      createState(
-        status: const BlocStatusComplete<HealthMeasurementCreatorBlocInfo>(
-          info: HealthMeasurementCreatorBlocInfo.measurementUpdated,
+      HealthMeasurementCreatorState(
+        status: const BlocStatusComplete<HealthMeasurementCreatorCubitInfo>(
+          info: HealthMeasurementCreatorCubitInfo.measurementUpdated,
         ),
         measurement: createHealthMeasurement(
           date: DateTime(2023, 5, 10),

@@ -1,7 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:runnoter/common/date_service.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
-import 'package:runnoter/domain/bloc/health_measurement_creator/health_measurement_creator_bloc.dart';
+import 'package:runnoter/domain/cubit/health_measurement_creator/health_measurement_creator_cubit.dart';
 import 'package:runnoter/domain/entity/health_measurement.dart';
 
 import '../../../creators/health_measurement_creator.dart';
@@ -12,22 +14,12 @@ void main() {
   late HealthMeasurementCreatorState state;
   final DateTime todayDate = DateTime(2023, 2, 10);
 
-  HealthMeasurementCreatorState createState({
-    BlocStatus status = const BlocStatusInitial(),
-    HealthMeasurement? measurement,
-    int? restingHeartRate,
-    double? fastingWeight,
-  }) =>
-      HealthMeasurementCreatorState(
-        dateService: dateService,
-        status: status,
-        measurement: measurement,
-        restingHeartRate: restingHeartRate,
-        fastingWeight: fastingWeight,
-      );
+  setUpAll(() {
+    GetIt.I.registerFactory<DateService>(() => dateService);
+  });
 
   setUp(() {
-    state = createState();
+    state = HealthMeasurementCreatorState(status: const BlocStatusInitial());
     dateService.mockGetToday(todayDate: todayDate);
     dateService.mockAreDatesTheSame(expected: false);
   });
@@ -220,70 +212,75 @@ void main() {
   );
 
   test(
-    'copy with date',
+    'copy with date, '
+    'should copy current value if new value is null',
     () {
-      final DateTime expectedDate = DateTime(2023, 2, 20);
+      final DateTime expected = DateTime(2023, 2, 20);
 
-      state = state.copyWith(date: expectedDate);
+      state = state.copyWith(date: expected);
       final state2 = state.copyWith();
 
-      expect(state.date, expectedDate);
-      expect(state2.date, expectedDate);
+      expect(state.date, expected);
+      expect(state2.date, expected);
     },
   );
 
   test(
-    'copy with status',
+    'copy with status, '
+    'should set complete status if new status is null',
     () {
-      const BlocStatus expectedStatus = BlocStatusLoading();
+      const BlocStatus expected = BlocStatusLoading();
 
-      state = state.copyWith(status: expectedStatus);
+      state = state.copyWith(status: expected);
       final state2 = state.copyWith();
 
-      expect(state.status, expectedStatus);
+      expect(state.status, expected);
       expect(state2.status, const BlocStatusComplete());
     },
   );
 
   test(
-    'copy with measurement',
+    'copy with measurement, '
+    'should copy current value if new value is null',
     () {
-      final HealthMeasurement expectedMeasurement = createHealthMeasurement(
+      final HealthMeasurement expected = createHealthMeasurement(
         userId: 'u1',
         date: DateTime(2023, 2, 10),
       );
 
-      state = state.copyWith(measurement: expectedMeasurement);
+      state = state.copyWith(measurement: expected);
       final state2 = state.copyWith();
 
-      expect(state.measurement, expectedMeasurement);
-      expect(state2.measurement, expectedMeasurement);
+      expect(state.measurement, expected);
+      expect(state2.measurement, expected);
     },
   );
 
   test(
-    'copy with resting heart rate',
+    'copy with restingHeartRate, '
+    'should copy current value if new value is null',
     () {
-      const int expectedRestingHeartRate = 50;
+      const int expected = 50;
 
-      state = state.copyWith(restingHeartRate: expectedRestingHeartRate);
+      state = state.copyWith(restingHeartRate: expected);
       final state2 = state.copyWith();
 
-      expect(state.restingHeartRate, expectedRestingHeartRate);
-      expect(state2.restingHeartRate, expectedRestingHeartRate);
+      expect(state.restingHeartRate, expected);
+      expect(state2.restingHeartRate, expected);
     },
   );
 
   test(
-    'copy with fasting weight',
+    'copy with fastingWeight, '
+    'should copy current value if new value is null',
     () {
-      const double expectedFastingWeight = 61.5;
+      const double expected = 61.5;
 
-      state = state.copyWith(fastingWeight: expectedFastingWeight);
+      state = state.copyWith(fastingWeight: expected);
       final state2 = state.copyWith();
 
-      expect(state.fastingWeight, expectedFastingWeight);
-      expect(state2.fastingWeight, expectedFastingWeight);
+      expect(state.fastingWeight, expected);
+      expect(state2.fastingWeight, expected);
     },
   );
 }

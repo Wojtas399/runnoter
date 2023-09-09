@@ -1,21 +1,20 @@
-part of 'health_measurement_creator_bloc.dart';
+part of 'health_measurement_creator_cubit.dart';
 
 class HealthMeasurementCreatorState
-    extends BlocState<HealthMeasurementCreatorState> {
+    extends CubitState<HealthMeasurementCreatorState> {
   final DateService _dateService;
   final HealthMeasurement? measurement;
   final DateTime? date;
   final int? restingHeartRate;
   final double? fastingWeight;
 
-  const HealthMeasurementCreatorState({
-    required DateService dateService,
+  HealthMeasurementCreatorState({
     required super.status,
     this.measurement,
     this.date,
     this.restingHeartRate,
     this.fastingWeight,
-  }) : _dateService = dateService;
+  }) : _dateService = getIt<DateService>();
 
   @override
   List<Object?> get props => [
@@ -55,7 +54,6 @@ class HealthMeasurementCreatorState
     double? fastingWeight,
   }) =>
       HealthMeasurementCreatorState(
-        dateService: _dateService,
         status: status ?? const BlocStatusComplete(),
         measurement: measurement ?? this.measurement,
         date: date ?? this.date,
