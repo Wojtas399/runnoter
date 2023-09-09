@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/additional_model/blood_parameter.dart';
-import 'package:runnoter/domain/bloc/blood_test_creator/blood_test_creator_bloc.dart';
+import 'package:runnoter/domain/cubit/blood_test_creator/blood_test_creator_cubit.dart';
 import 'package:runnoter/domain/entity/blood_test.dart';
 import 'package:runnoter/domain/entity/user.dart';
 
@@ -12,30 +12,10 @@ void main() {
   final BloodTest bloodTest = createBloodTest(
     date: DateTime(2023, 5, 20),
     parameterResults: const [
-      BloodParameterResult(
-        parameter: BloodParameter.wbc,
-        value: 4.45,
-      ),
-      BloodParameterResult(
-        parameter: BloodParameter.cpk,
-        value: 300,
-      ),
+      BloodParameterResult(parameter: BloodParameter.wbc, value: 4.45),
+      BloodParameterResult(parameter: BloodParameter.cpk, value: 300),
     ],
   );
-
-  BloodTestCreatorState createState({
-    Gender? gender,
-    BloodTest? bloodTest,
-    DateTime? date,
-    List<BloodParameterResult>? parameterResults,
-  }) =>
-      BloodTestCreatorState(
-        status: const BlocStatusInitial(),
-        gender: gender,
-        bloodTest: bloodTest,
-        date: date,
-        parameterResults: parameterResults,
-      );
 
   setUp(
     () => state = const BloodTestCreatorState(
@@ -48,7 +28,7 @@ void main() {
     'gender is null, '
     'should be false',
     () {
-      state = createState(
+      state = state.copyWith(
         bloodTest: bloodTest,
         date: bloodTest.date,
         parameterResults: const [
@@ -68,7 +48,7 @@ void main() {
     'date is null, '
     'should be false',
     () {
-      state = createState(
+      state = state.copyWith(
         gender: Gender.male,
         bloodTest: bloodTest,
         parameterResults: const [
@@ -88,7 +68,7 @@ void main() {
     'date is same as original, '
     'should be false',
     () {
-      state = createState(
+      state = state.copyWith(
         gender: Gender.male,
         bloodTest: bloodTest,
         date: bloodTest.date,
@@ -104,7 +84,7 @@ void main() {
     'parameter results are null, '
     'should be false',
     () {
-      state = createState(
+      state = state.copyWith(
         gender: Gender.male,
         bloodTest: bloodTest,
         date: DateTime(2023, 5, 12),
@@ -120,7 +100,7 @@ void main() {
     'list of parameter results is empty, '
     'should be false',
     () {
-      state = createState(
+      state = state.copyWith(
         gender: Gender.male,
         bloodTest: bloodTest,
         date: DateTime(2023, 5, 20),
@@ -136,7 +116,7 @@ void main() {
     'parameter results are same as original, '
     'should be false',
     () {
-      state = createState(
+      state = state.copyWith(
         gender: Gender.male,
         bloodTest: bloodTest,
         date: DateTime(2023, 5, 20),
@@ -152,7 +132,7 @@ void main() {
     'date and parameter results are valid and date is different than original, '
     'should be true',
     () {
-      state = createState(
+      state = state.copyWith(
         gender: Gender.male,
         bloodTest: bloodTest,
         date: DateTime(2023, 5, 12),
@@ -168,7 +148,7 @@ void main() {
     'date and parameter results are valid and parameterResults are different than original, '
     'should be true',
     () {
-      state = createState(
+      state = state.copyWith(
         gender: Gender.male,
         bloodTest: bloodTest,
         date: bloodTest.date,
@@ -189,75 +169,80 @@ void main() {
   );
 
   test(
-    'copy with status',
+    'copy with status, '
+    'should set complete status if new status is null',
     () {
-      const BlocStatus expectedStatus = BlocStatusLoading();
+      const BlocStatus expected = BlocStatusLoading();
 
-      state = state.copyWith(status: expectedStatus);
+      state = state.copyWith(status: expected);
       final state2 = state.copyWith();
 
-      expect(state.status, expectedStatus);
+      expect(state.status, expected);
       expect(state2.status, const BlocStatusComplete());
     },
   );
 
   test(
-    'copy with gender',
+    'copy with gender, '
+    'should copy current value if new value is null',
     () {
-      const Gender expectedGender = Gender.male;
+      const Gender expected = Gender.male;
 
-      state = state.copyWith(gender: expectedGender);
+      state = state.copyWith(gender: expected);
       final state2 = state.copyWith();
 
-      expect(state.gender, expectedGender);
-      expect(state2.gender, expectedGender);
+      expect(state.gender, expected);
+      expect(state2.gender, expected);
     },
   );
 
   test(
-    'copy with blood test',
+    'copy with bloodTest, '
+    'should copy current value if new value is null',
     () {
-      final BloodTest expectedBloodTest = createBloodTest(
+      final BloodTest expected = createBloodTest(
         id: 'bt1',
         userId: 'u1',
       );
 
-      state = state.copyWith(bloodTest: expectedBloodTest);
+      state = state.copyWith(bloodTest: expected);
       final state2 = state.copyWith();
 
-      expect(state.bloodTest, expectedBloodTest);
-      expect(state2.bloodTest, expectedBloodTest);
+      expect(state.bloodTest, expected);
+      expect(state2.bloodTest, expected);
     },
   );
 
   test(
-    'copy with date',
+    'copy with date, '
+    'should copy current value if new value is null',
     () {
-      final DateTime expectedDate = DateTime(2023, 5, 20);
+      final DateTime expected = DateTime(2023, 5, 20);
 
-      state = state.copyWith(date: expectedDate);
+      state = state.copyWith(date: expected);
       final state2 = state.copyWith();
 
-      expect(state.date, expectedDate);
-      expect(state2.date, expectedDate);
+      expect(state.date, expected);
+      expect(state2.date, expected);
     },
   );
 
   test(
-    'copy with parameter results',
+    'copy with parameterResults, '
+    'should copy current value if new value is null',
     () {
-      const List<BloodParameterResult> expectedParameterResults = [
+      const List<BloodParameterResult> expected = [
         BloodParameterResult(
           parameter: BloodParameter.wbc,
           value: 4.45,
         ),
       ];
 
-      state = state.copyWith(parameterResults: expectedParameterResults);
+      state = state.copyWith(parameterResults: expected);
       final state2 = state.copyWith();
 
-      expect(state.parameterResults, expectedParameterResults);
-      expect(state2.parameterResults, expectedParameterResults);
+      expect(state.parameterResults, expected);
+      expect(state2.parameterResults, expected);
     },
   );
 }

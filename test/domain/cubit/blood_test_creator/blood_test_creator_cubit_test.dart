@@ -4,7 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
 import 'package:runnoter/domain/additional_model/blood_parameter.dart';
-import 'package:runnoter/domain/bloc/blood_test_creator/blood_test_creator_bloc.dart';
+import 'package:runnoter/domain/cubit/blood_test_creator/blood_test_creator_cubit.dart';
 import 'package:runnoter/domain/entity/blood_test.dart';
 import 'package:runnoter/domain/entity/user.dart';
 import 'package:runnoter/domain/repository/blood_test_repository.dart';
@@ -21,17 +21,17 @@ void main() {
   const String userId = 'u1';
   const String bloodTestId = 'b1';
 
-  BloodTestCreatorBloc createBloc({
+  BloodTestCreatorCubit createCubit({
     String? bloodTestId,
     Gender? gender,
     BloodTest? bloodTest,
     DateTime? date,
     List<BloodParameterResult>? parameterResults,
   }) =>
-      BloodTestCreatorBloc(
+      BloodTestCreatorCubit(
         userId: userId,
         bloodTestId: bloodTestId,
-        state: BloodTestCreatorState(
+        initialState: BloodTestCreatorState(
           status: const BlocStatusInitial(),
           gender: gender,
           bloodTest: bloodTest,
@@ -52,8 +52,9 @@ void main() {
 
   blocTest(
     'initialize, '
-    "should load user's gender and blood test and should update all params in state",
-    build: () => createBloc(bloodTestId: bloodTestId),
+    "should load user's gender and blood test and "
+    'should update all params in state',
+    build: () => createCubit(bloodTestId: bloodTestId),
     setUp: () {
       userRepository.mockGetUserById(user: createUser(gender: Gender.male));
       bloodTestRepository.mockGetTestById(
@@ -68,7 +69,7 @@ void main() {
         ),
       );
     },
-    act: (bloc) => bloc.add(const BloodTestCreatorEventInitialize()),
+    act: (cubit) => cubit.initialize(),
     expect: () => [
       BloodTestCreatorState(
         status: const BlocStatusComplete(),
@@ -106,11 +107,11 @@ void main() {
     'initialize, '
     'blood test id is null, '
     "should only load user's gender",
-    build: () => createBloc(),
+    build: () => createCubit(),
     setUp: () => userRepository.mockGetUserById(
       user: createUser(gender: Gender.male),
     ),
-    act: (bloc) => bloc.add(const BloodTestCreatorEventInitialize()),
+    act: (cubit) => cubit.initialize(),
     expect: () => [
       const BloodTestCreatorState(
         status: BlocStatusComplete(),
@@ -125,10 +126,8 @@ void main() {
   blocTest(
     'date changed, '
     'should update date in state',
-    build: () => createBloc(),
-    act: (bloc) => bloc.add(BloodTestCreatorEventDateChanged(
-      date: DateTime(2023, 5, 20),
-    )),
+    build: () => createCubit(),
+    act: (cubit) => cubit.dateChanged(DateTime(2023, 5, 20)),
     expect: () => [
       BloodTestCreatorState(
         status: const BlocStatusComplete(),
@@ -138,10 +137,10 @@ void main() {
   );
 
   blocTest(
-    'parameter result changed, '
+    'parameter value changed, '
     'parameter exists in state, '
     'should update parameter value',
-    build: () => createBloc(
+    build: () => createCubit(
       parameterResults: const [
         BloodParameterResult(
           parameter: BloodParameter.wbc,
@@ -153,10 +152,10 @@ void main() {
         ),
       ],
     ),
-    act: (bloc) => bloc.add(const BloodTestCreatorEventParameterResultChanged(
+    act: (cubit) => cubit.parameterValueChanged(
       parameter: BloodParameter.wbc,
       value: 4.45,
-    )),
+    ),
     expect: () => [
       const BloodTestCreatorState(
         status: BlocStatusComplete(),
@@ -175,10 +174,10 @@ void main() {
   );
 
   blocTest(
-    'parameter result changed, '
+    'parameter value changed, '
     'parameter exists in state and its new value is null, '
     'should remove parameter from list of parameter results',
-    build: () => createBloc(
+    build: () => createCubit(
       parameterResults: const [
         BloodParameterResult(
           parameter: BloodParameter.wbc,
@@ -190,10 +189,10 @@ void main() {
         ),
       ],
     ),
-    act: (bloc) => bloc.add(const BloodTestCreatorEventParameterResultChanged(
+    act: (cubit) => cubit.parameterValueChanged(
       parameter: BloodParameter.wbc,
       value: null,
-    )),
+    ),
     expect: () => [
       const BloodTestCreatorState(
         status: BlocStatusComplete(),
@@ -208,10 +207,10 @@ void main() {
   );
 
   blocTest(
-    'parameter result changed, '
+    'parameter value changed, '
     'parameter does not exist in state, '
     'should add parameter to list',
-    build: () => createBloc(
+    build: () => createCubit(
       parameterResults: const [
         BloodParameterResult(
           parameter: BloodParameter.wbc,
@@ -219,10 +218,10 @@ void main() {
         ),
       ],
     ),
-    act: (bloc) => bloc.add(const BloodTestCreatorEventParameterResultChanged(
+    act: (cubit) => cubit.parameterValueChanged(
       parameter: BloodParameter.sodium,
       value: 140,
-    )),
+    ),
     expect: () => [
       const BloodTestCreatorState(
         status: BlocStatusComplete(),
@@ -244,8 +243,8 @@ void main() {
     'submit, '
     'data are invalid, '
     'should finish event call',
-    build: () => createBloc(),
-    act: (bloc) => bloc.add(const BloodTestCreatorEventSubmit()),
+    build: () => createCubit(),
+    act: (cubit) => cubit.submit(),
     expect: () => [],
   );
 
@@ -253,8 +252,8 @@ void main() {
     'submit, '
     'blood test in state is null, '
     'should call method from blood test repository to add new blood test and '
-    'should emit info that new test has been added',
-    build: () => createBloc(
+    'should emit complete status with bloodTestAdded info',
+    build: () => createCubit(
       gender: Gender.male,
       date: DateTime(2023, 5, 20),
       parameterResults: const [
@@ -269,7 +268,7 @@ void main() {
       ],
     ),
     setUp: () => bloodTestRepository.mockAddNewTest(),
-    act: (bloc) => bloc.add(const BloodTestCreatorEventSubmit()),
+    act: (cubit) => cubit.submit(),
     expect: () => [
       BloodTestCreatorState(
         status: const BlocStatusLoading(),
@@ -287,8 +286,8 @@ void main() {
         ],
       ),
       BloodTestCreatorState(
-        status: const BlocStatusComplete<BloodTestCreatorBlocInfo>(
-          info: BloodTestCreatorBlocInfo.bloodTestAdded,
+        status: const BlocStatusComplete<BloodTestCreatorCubitInfo>(
+          info: BloodTestCreatorCubitInfo.bloodTestAdded,
         ),
         gender: Gender.male,
         date: DateTime(2023, 5, 20),
@@ -326,8 +325,8 @@ void main() {
     'submit, '
     'blood test in state is not null, '
     'should call method from blood test repository to update blood test and '
-    'should emit info that new test has been updated',
-    build: () => createBloc(
+    'should emit complete status with blood test updated info',
+    build: () => createCubit(
       gender: Gender.male,
       bloodTest: createBloodTest(
         id: bloodTestId,
@@ -352,7 +351,7 @@ void main() {
       ],
     ),
     setUp: () => bloodTestRepository.mockUpdateTest(),
-    act: (bloc) => bloc.add(const BloodTestCreatorEventSubmit()),
+    act: (cubit) => cubit.submit(),
     expect: () => [
       BloodTestCreatorState(
         status: const BlocStatusLoading(),
@@ -380,8 +379,8 @@ void main() {
         ],
       ),
       BloodTestCreatorState(
-        status: const BlocStatusComplete<BloodTestCreatorBlocInfo>(
-          info: BloodTestCreatorBlocInfo.bloodTestUpdated,
+        status: const BlocStatusComplete<BloodTestCreatorCubitInfo>(
+          info: BloodTestCreatorCubitInfo.bloodTestUpdated,
         ),
         gender: Gender.male,
         bloodTest: createBloodTest(

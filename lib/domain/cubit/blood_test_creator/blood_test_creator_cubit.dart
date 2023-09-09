@@ -1,51 +1,39 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../../../domain/entity/blood_test.dart';
 import '../../../../domain/repository/blood_test_repository.dart';
 import '../../../dependency_injection.dart';
-import '../../additional_model/bloc_state.dart';
 import '../../additional_model/bloc_status.dart';
-import '../../additional_model/bloc_with_status.dart';
 import '../../additional_model/blood_parameter.dart';
+import '../../additional_model/cubit_state.dart';
+import '../../additional_model/cubit_with_status.dart';
 import '../../entity/user.dart';
 import '../../repository/user_repository.dart';
 import '../../service/list_service.dart';
 
-part 'blood_test_creator_event.dart';
 part 'blood_test_creator_state.dart';
 
-class BloodTestCreatorBloc extends BlocWithStatus<BloodTestCreatorEvent,
-    BloodTestCreatorState, BloodTestCreatorBlocInfo, dynamic> {
+class BloodTestCreatorCubit extends CubitWithStatus<BloodTestCreatorState,
+    BloodTestCreatorCubitInfo, dynamic> {
   final UserRepository _userRepository;
   final BloodTestRepository _bloodTestRepository;
   final String userId;
   final String? bloodTestId;
 
-  BloodTestCreatorBloc({
+  BloodTestCreatorCubit({
     required this.userId,
     this.bloodTestId,
-    BloodTestCreatorState state = const BloodTestCreatorState(
+    BloodTestCreatorState initialState = const BloodTestCreatorState(
       status: BlocStatusInitial(),
     ),
   })  : _userRepository = getIt.get<UserRepository>(),
         _bloodTestRepository = getIt<BloodTestRepository>(),
-        super(state) {
-    on<BloodTestCreatorEventInitialize>(_initialize);
-    on<BloodTestCreatorEventDateChanged>(_dateChanged);
-    on<BloodTestCreatorEventParameterResultChanged>(_parameterValueChanged);
-    on<BloodTestCreatorEventSubmit>(_submit);
-  }
+        super(initialState);
 
-  Future<void> _initialize(
-    BloodTestCreatorEventInitialize event,
-    Emitter<BloodTestCreatorState> emit,
-  ) async {
+  Future<void> initialize() async {
     if (bloodTestId == null) {
       await for (final gender in _getUserGender()) {
-        emit(state.copyWith(
-          gender: gender,
-        ));
+        emit(state.copyWith(gender: gender));
         return;
       }
     }
@@ -72,26 +60,21 @@ class BloodTestCreatorBloc extends BlocWithStatus<BloodTestCreatorEvent,
     }
   }
 
-  void _dateChanged(
-    BloodTestCreatorEventDateChanged event,
-    Emitter<BloodTestCreatorState> emit,
-  ) {
-    emit(state.copyWith(
-      date: event.date,
-    ));
+  void dateChanged(DateTime date) {
+    emit(state.copyWith(date: date));
   }
 
-  void _parameterValueChanged(
-    BloodTestCreatorEventParameterResultChanged event,
-    Emitter<BloodTestCreatorState> emit,
-  ) {
-    final int parameterIndex = _findParameterIndex(event.parameter);
+  void parameterValueChanged({
+    required BloodParameter parameter,
+    double? value,
+  }) {
+    final int parameterIndex = _findParameterIndex(parameter);
     final updatedParameterResults = [...?state.parameterResults];
     BloodParameterResult? parameterResult;
-    if (event.value != null) {
+    if (value != null) {
       parameterResult = BloodParameterResult(
-        parameter: event.parameter,
-        value: event.value!,
+        parameter: parameter,
+        value: value,
       );
     }
     if (parameterIndex >= 0) {
@@ -108,18 +91,15 @@ class BloodTestCreatorBloc extends BlocWithStatus<BloodTestCreatorEvent,
     ));
   }
 
-  Future<void> _submit(
-    BloodTestCreatorEventSubmit event,
-    Emitter<BloodTestCreatorState> emit,
-  ) async {
+  Future<void> submit() async {
     if (!state.canSubmit) return;
-    emitLoadingStatus(emit);
+    emitLoadingStatus();
     if (state.bloodTest != null) {
       await _tryToUpdateTest();
-      emitCompleteStatus(emit, info: BloodTestCreatorBlocInfo.bloodTestUpdated);
+      emitCompleteStatus(info: BloodTestCreatorCubitInfo.bloodTestUpdated);
     } else {
       await _tryToAddTest();
-      emitCompleteStatus(emit, info: BloodTestCreatorBlocInfo.bloodTestAdded);
+      emitCompleteStatus(info: BloodTestCreatorCubitInfo.bloodTestAdded);
     }
   }
 
@@ -152,4 +132,4 @@ class BloodTestCreatorBloc extends BlocWithStatus<BloodTestCreatorEvent,
   }
 }
 
-enum BloodTestCreatorBlocInfo { bloodTestAdded, bloodTestUpdated }
+enum BloodTestCreatorCubitInfo { bloodTestAdded, bloodTestUpdated }

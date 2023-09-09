@@ -1,6 +1,6 @@
-part of 'blood_test_creator_bloc.dart';
+part of 'blood_test_creator_cubit.dart';
 
-class BloodTestCreatorState extends BlocState<BloodTestCreatorState> {
+class BloodTestCreatorState extends CubitState<BloodTestCreatorState> {
   final Gender? gender;
   final BloodTest? bloodTest;
   final DateTime? date;
