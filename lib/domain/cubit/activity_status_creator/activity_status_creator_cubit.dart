@@ -1,59 +1,37 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../../../domain/additional_model/bloc_state.dart';
 import '../../../../domain/additional_model/bloc_status.dart';
-import '../../../../domain/additional_model/bloc_with_status.dart';
 import '../../../dependency_injection.dart';
 import '../../additional_model/activity_status.dart';
+import '../../additional_model/cubit_state.dart';
+import '../../additional_model/cubit_with_status.dart';
 import '../../entity/race.dart';
 import '../../entity/workout.dart';
 import '../../repository/race_repository.dart';
 import '../../repository/workout_repository.dart';
 
-part 'activity_status_creator_event.dart';
 part 'activity_status_creator_state.dart';
 
 enum ActivityType { workout, race }
 
-class ActivityStatusCreatorBloc extends BlocWithStatus<
-    ActivityStatusCreatorEvent,
-    ActivityStatusCreatorState,
-    ActivityStatusCreatorBlocInfo,
-    dynamic> {
+class ActivityStatusCreatorCubit extends CubitWithStatus<
+    ActivityStatusCreatorState, ActivityStatusCreatorCubitInfo, dynamic> {
   final WorkoutRepository _workoutRepository;
   final RaceRepository _raceRepository;
   final String userId;
   final ActivityType activityType;
   final String activityId;
 
-  ActivityStatusCreatorBloc({
+  ActivityStatusCreatorCubit({
     required this.userId,
     required this.activityType,
     required this.activityId,
-    ActivityStatusCreatorState state = const ActivityStatusCreatorState(
+    ActivityStatusCreatorState initialState = const ActivityStatusCreatorState(
       status: BlocStatusInitial(),
     ),
   })  : _workoutRepository = getIt<WorkoutRepository>(),
         _raceRepository = getIt<RaceRepository>(),
-        super(state) {
-    on<ActivityStatusCreatorEventInitialize>(_initialize);
-    on<ActivityStatusCreatorEventActivityStatusTypeChanged>(
-        _activityStatusTypeChanged);
-    on<ActivityStatusCreatorEventCoveredDistanceInKmChanged>(
-      _coveredDistanceInKmChanged,
-    );
-    on<ActivityStatusCreatorEventDurationChanged>(_durationChanged);
-    on<ActivityStatusCreatorEventMoodRateChanged>(_moodRateChanged);
-    on<ActivityStatusCreatorEventAvgPaceChanged>(_avgPaceChanged);
-    on<ActivityStatusCreatorEventAvgHeartRateChanged>(_avgHeartRateChanged);
-    on<ActivityStatusCreatorEventCommentChanged>(_commentChanged);
-    on<ActivityStatusCreatorEventSubmit>(_submit);
-  }
+        super(initialState);
 
-  Future<void> _initialize(
-    ActivityStatusCreatorEventInitialize event,
-    Emitter<ActivityStatusCreatorState> emit,
-  ) async {
+  Future<void> initialize() async {
     final Stream<ActivityStatus?> activityStatus$ = _getActivityStatus();
     await for (final activityStatus in activityStatus$) {
       if (activityStatus == null) return;
@@ -76,76 +54,38 @@ class ActivityStatusCreatorBloc extends BlocWithStatus<
     }
   }
 
-  void _activityStatusTypeChanged(
-    ActivityStatusCreatorEventActivityStatusTypeChanged event,
-    Emitter<ActivityStatusCreatorState> emit,
-  ) {
-    emit(state.copyWith(
-      activityStatusType: event.activityStatusType,
-    ));
+  void activityStatusTypeChanged(ActivityStatusType? activityStatusType) {
+    emit(state.copyWith(activityStatusType: activityStatusType));
   }
 
-  void _coveredDistanceInKmChanged(
-    ActivityStatusCreatorEventCoveredDistanceInKmChanged event,
-    Emitter<ActivityStatusCreatorState> emit,
-  ) {
-    emit(state.copyWith(
-      coveredDistanceInKm: event.coveredDistanceInKm,
-    ));
+  void coveredDistanceInKmChanged(double? coveredDistanceInKm) {
+    emit(state.copyWith(coveredDistanceInKm: coveredDistanceInKm));
   }
 
-  void _durationChanged(
-    ActivityStatusCreatorEventDurationChanged event,
-    Emitter<ActivityStatusCreatorState> emit,
-  ) {
-    emit(state.copyWith(
-      duration: event.duration,
-    ));
+  void durationChanged(Duration? duration) {
+    emit(state.copyWith(duration: duration));
   }
 
-  void _moodRateChanged(
-    ActivityStatusCreatorEventMoodRateChanged event,
-    Emitter<ActivityStatusCreatorState> emit,
-  ) {
-    emit(state.copyWith(
-      moodRate: event.moodRate,
-    ));
+  void moodRateChanged(MoodRate? moodRate) {
+    emit(state.copyWith(moodRate: moodRate));
   }
 
-  void _avgPaceChanged(
-    ActivityStatusCreatorEventAvgPaceChanged event,
-    Emitter<ActivityStatusCreatorState> emit,
-  ) {
-    emit(state.copyWith(
-      avgPace: event.avgPace,
-    ));
+  void avgPaceChanged(Pace? avgPace) {
+    emit(state.copyWith(avgPace: avgPace));
   }
 
-  void _avgHeartRateChanged(
-    ActivityStatusCreatorEventAvgHeartRateChanged event,
-    Emitter<ActivityStatusCreatorState> emit,
-  ) {
-    emit(state.copyWith(
-      avgHeartRate: event.averageHeartRate,
-    ));
+  void avgHeartRateChanged(int? avgHeartRate) {
+    emit(state.copyWith(avgHeartRate: avgHeartRate));
   }
 
-  void _commentChanged(
-    ActivityStatusCreatorEventCommentChanged event,
-    Emitter<ActivityStatusCreatorState> emit,
-  ) {
-    emit(state.copyWith(
-      comment: event.comment,
-    ));
+  void commentChanged(String? comment) {
+    emit(state.copyWith(comment: comment));
   }
 
-  Future<void> _submit(
-    ActivityStatusCreatorEventSubmit event,
-    Emitter<ActivityStatusCreatorState> emit,
-  ) async {
+  Future<void> submit() async {
     if (!state.canSubmit) return;
     final ActivityStatus status = _createStatus();
-    emitLoadingStatus(emit);
+    emitLoadingStatus();
     await switch (activityType) {
       ActivityType.workout => _workoutRepository.updateWorkout(
           workoutId: activityId,
@@ -159,8 +99,7 @@ class ActivityStatusCreatorBloc extends BlocWithStatus<
         ),
     };
     emitCompleteStatus(
-      emit,
-      info: ActivityStatusCreatorBlocInfo.activityStatusSaved,
+      info: ActivityStatusCreatorCubitInfo.activityStatusSaved,
     );
   }
 
@@ -209,4 +148,4 @@ class ActivityStatusCreatorBloc extends BlocWithStatus<
       };
 }
 
-enum ActivityStatusCreatorBlocInfo { activityStatusSaved }
+enum ActivityStatusCreatorCubitInfo { activityStatusSaved }

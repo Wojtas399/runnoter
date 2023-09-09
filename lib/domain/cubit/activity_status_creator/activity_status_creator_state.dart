@@ -1,6 +1,7 @@
-part of 'activity_status_creator_bloc.dart';
+part of 'activity_status_creator_cubit.dart';
 
-class ActivityStatusCreatorState extends BlocState<ActivityStatusCreatorState> {
+class ActivityStatusCreatorState
+    extends CubitState<ActivityStatusCreatorState> {
   final ActivityStatus? originalActivityStatus;
   final ActivityStatusType? activityStatusType;
   final double? coveredDistanceInKm;
@@ -111,9 +112,4 @@ class ActivityStatusCreatorState extends BlocState<ActivityStatusCreatorState> {
   }
 }
 
-enum ActivityStatusType {
-  pending,
-  done,
-  aborted,
-  undone,
-}
+enum ActivityStatusType { pending, done, aborted, undone }

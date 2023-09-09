@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/domain/additional_model/activity_status.dart';
 import 'package:runnoter/domain/additional_model/bloc_status.dart';
-import 'package:runnoter/domain/bloc/activity_status_creator/activity_status_creator_bloc.dart';
+import 'package:runnoter/domain/cubit/activity_status_creator/activity_status_creator_cubit.dart';
 
 void main() {
   late ActivityStatusCreatorState state;
@@ -422,22 +422,24 @@ void main() {
   );
 
   test(
-    'copy with status',
+    'copy with status, '
+    'should set complete status if new status is null',
     () {
-      const BlocStatus expectedStatus = BlocStatusLoading();
+      const BlocStatus expected = BlocStatusLoading();
 
-      state = state.copyWith(status: expectedStatus);
+      state = state.copyWith(status: expected);
       final state2 = state.copyWith();
 
-      expect(state.status, expectedStatus);
+      expect(state.status, expected);
       expect(state2.status, const BlocStatusComplete());
     },
   );
 
   test(
-    'copy with original activity status',
+    'copy with original activity status, '
+    'should copy current value if new value is null',
     () {
-      const ActivityStatus expectedOriginalActivityStatus = ActivityStatusDone(
+      const ActivityStatus expected = ActivityStatusDone(
         coveredDistanceInKm: 10,
         avgPace: Pace(minutes: 6, seconds: 10),
         avgHeartRate: 150,
@@ -445,104 +447,109 @@ void main() {
         comment: 'comment',
       );
 
-      state = state.copyWith(
-          originalActivityStatus: expectedOriginalActivityStatus);
+      state = state.copyWith(originalActivityStatus: expected);
       final state2 = state.copyWith();
 
-      expect(state.originalActivityStatus, expectedOriginalActivityStatus);
-      expect(state2.originalActivityStatus, expectedOriginalActivityStatus);
+      expect(state.originalActivityStatus, expected);
+      expect(state2.originalActivityStatus, expected);
     },
   );
 
   test(
-    'copy with activity status type',
+    'copy with activity status type, '
+    'should copy current value if new value is null',
     () {
-      const ActivityStatusType expectedActivityStatusType =
-          ActivityStatusType.pending;
+      const ActivityStatusType expected = ActivityStatusType.pending;
 
-      state = state.copyWith(activityStatusType: expectedActivityStatusType);
+      state = state.copyWith(activityStatusType: expected);
       final state2 = state.copyWith();
 
-      expect(state.activityStatusType, expectedActivityStatusType);
-      expect(state2.activityStatusType, expectedActivityStatusType);
+      expect(state.activityStatusType, expected);
+      expect(state2.activityStatusType, expected);
     },
   );
 
   test(
-    'copy with covered distance in km',
+    'copy with covered distance in km, '
+    'should copy current value if new value is null',
     () {
-      const double expectedCoveredDistanceInKm = 10.0;
+      const double expected = 10.0;
 
-      state = state.copyWith(coveredDistanceInKm: expectedCoveredDistanceInKm);
+      state = state.copyWith(coveredDistanceInKm: expected);
       final state2 = state.copyWith();
 
-      expect(state.coveredDistanceInKm, expectedCoveredDistanceInKm);
-      expect(state2.coveredDistanceInKm, expectedCoveredDistanceInKm);
+      expect(state.coveredDistanceInKm, expected);
+      expect(state2.coveredDistanceInKm, expected);
     },
   );
 
   test(
-    'copy with duration',
+    'copy with duration, '
+    'should copy current value if new value is null',
     () {
-      const Duration expectedDuration = Duration(seconds: 10);
+      const Duration expected = Duration(seconds: 10);
 
-      state = state.copyWith(duration: expectedDuration);
+      state = state.copyWith(duration: expected);
       final state2 = state.copyWith();
 
-      expect(state.duration, expectedDuration);
-      expect(state2.duration, expectedDuration);
+      expect(state.duration, expected);
+      expect(state2.duration, expected);
     },
   );
 
   test(
-    'copy with mood rate',
+    'copy with mood rate, '
+    'should copy current value if new value is null',
     () {
-      const MoodRate expectedMoodRate = MoodRate.mr8;
+      const MoodRate expected = MoodRate.mr8;
 
-      state = state.copyWith(moodRate: expectedMoodRate);
+      state = state.copyWith(moodRate: expected);
       final state2 = state.copyWith();
 
-      expect(state.moodRate, expectedMoodRate);
-      expect(state2.moodRate, expectedMoodRate);
+      expect(state.moodRate, expected);
+      expect(state2.moodRate, expected);
     },
   );
 
   test(
-    'copy with average pace',
+    'copy with average pace, '
+    'should copy current value if new value is null',
     () {
-      const Pace expectedAvgPace = Pace(minutes: 5, seconds: 45);
+      const Pace expected = Pace(minutes: 5, seconds: 45);
 
-      state = state.copyWith(avgPace: expectedAvgPace);
+      state = state.copyWith(avgPace: expected);
       final state2 = state.copyWith();
 
-      expect(state.avgPace, expectedAvgPace);
-      expect(state2.avgPace, expectedAvgPace);
+      expect(state.avgPace, expected);
+      expect(state2.avgPace, expected);
     },
   );
 
   test(
-    'copy with average heart rate',
+    'copy with average heart rate, '
+    'should copy current value if new value is null',
     () {
-      const int expectedAverageHeartRate = 150;
+      const int expected = 150;
 
-      state = state.copyWith(avgHeartRate: expectedAverageHeartRate);
+      state = state.copyWith(avgHeartRate: expected);
       final state2 = state.copyWith();
 
-      expect(state.avgHeartRate, expectedAverageHeartRate);
-      expect(state2.avgHeartRate, expectedAverageHeartRate);
+      expect(state.avgHeartRate, expected);
+      expect(state2.avgHeartRate, expected);
     },
   );
 
   test(
-    'copy with comment',
+    'copy with comment, '
+    'should copy current value if new value is null',
     () {
-      const String expectedComment = 'comment';
+      const String expected = 'comment';
 
-      state = state.copyWith(comment: expectedComment);
+      state = state.copyWith(comment: expected);
       final state2 = state.copyWith();
 
-      expect(state.comment, expectedComment);
-      expect(state2.comment, expectedComment);
+      expect(state.comment, expected);
+      expect(state2.comment, expected);
     },
   );
 }

@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/bloc/activity_status_creator/activity_status_creator_bloc.dart';
-import '../../component/bloc_with_status_listener_component.dart';
+import '../../../domain/cubit/activity_status_creator/activity_status_creator_cubit.dart';
+import '../../component/cubit_with_status_listener_component.dart';
 import '../../component/page_not_found_component.dart';
 import '../../service/dialog_service.dart';
 import 'activity_status_creator_content.dart';
@@ -26,12 +26,12 @@ class ActivityStatusCreatorScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return userId != null && activityType != null && activityId != null
         ? BlocProvider(
-            create: (_) => ActivityStatusCreatorBloc(
+            create: (_) => ActivityStatusCreatorCubit(
               userId: userId!,
               activityType: ActivityType.values.byName(activityType!),
               activityId: activityId!,
-            )..add(const ActivityStatusCreatorEventInitialize()),
-            child: const _BlocListener(
+            )..initialize(),
+            child: const _CubitListener(
               child: ActivityStatusCreatorContent(),
             ),
           )
@@ -39,26 +39,24 @@ class ActivityStatusCreatorScreen extends StatelessWidget {
   }
 }
 
-class _BlocListener extends StatelessWidget {
+class _CubitListener extends StatelessWidget {
   final Widget child;
 
-  const _BlocListener({
-    required this.child,
-  });
+  const _CubitListener({required this.child});
 
   @override
   Widget build(BuildContext context) {
-    return BlocWithStatusListener<ActivityStatusCreatorBloc,
-        ActivityStatusCreatorState, ActivityStatusCreatorBlocInfo, dynamic>(
-      onInfo: (ActivityStatusCreatorBlocInfo info) =>
+    return CubitWithStatusListener<ActivityStatusCreatorCubit,
+        ActivityStatusCreatorState, ActivityStatusCreatorCubitInfo, dynamic>(
+      onInfo: (ActivityStatusCreatorCubitInfo info) =>
           _manageInfo(context, info),
       child: child,
     );
   }
 
-  void _manageInfo(BuildContext context, ActivityStatusCreatorBlocInfo info) {
+  void _manageInfo(BuildContext context, ActivityStatusCreatorCubitInfo info) {
     switch (info) {
-      case ActivityStatusCreatorBlocInfo.activityStatusSaved:
+      case ActivityStatusCreatorCubitInfo.activityStatusSaved:
         context.back();
         showSnackbarMessage(
             Str.of(context).activityStatusCreatorSavedStatusMessage);
