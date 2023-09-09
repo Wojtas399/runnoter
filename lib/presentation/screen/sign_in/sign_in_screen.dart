@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/bloc/sign_in/sign_in_bloc.dart';
-import '../../component/bloc_with_status_listener_component.dart';
+import '../../../domain/cubit/sign_in/sign_in_cubit.dart';
+import '../../component/cubit_with_status_listener_component.dart';
 import '../../config/navigation/router.dart';
 import '../../dialog/email_verification/email_verification_dialog.dart';
 import '../../dialog/required_data_completion/required_data_completion_dialog.dart';
@@ -36,8 +36,7 @@ class _BlocProvider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (BuildContext context) =>
-          SignInBloc()..add(const SignInEventInitialize()),
+      create: (BuildContext context) => SignInCubit()..initialize(),
       child: child,
     );
   }
@@ -52,44 +51,45 @@ class _BlocListener extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocWithStatusListener<SignInBloc, SignInState, SignInBlocInfo,
-        SignInBlocError>(
-      onInfo: (SignInBlocInfo info) => _manageInfo(context, info),
-      onError: (SignInBlocError error) => _manageError(error, context),
+    return CubitWithStatusListener<SignInCubit, SignInState, SignInCubitInfo,
+        SignInCubitError>(
+      onInfo: (SignInCubitInfo info) => _manageInfo(context, info),
+      onError: (SignInCubitError error) => _manageError(error, context),
       child: child,
     );
   }
 
-  Future<void> _manageInfo(BuildContext context, SignInBlocInfo info) async {
+  Future<void> _manageInfo(BuildContext context, SignInCubitInfo info) async {
     switch (info) {
-      case SignInBlocInfo.signedIn:
+      case SignInCubitInfo.signedIn:
         navigateAndRemoveUntil(const HomeRoute());
         break;
-      case SignInBlocInfo.newSignedInUser:
+      case SignInCubitInfo.newSignedInUser:
         await _manageNewUser(context);
         break;
     }
   }
 
-  Future<void> _manageError(SignInBlocError error, BuildContext context) async {
+  Future<void> _manageError(
+      SignInCubitError error, BuildContext context) async {
     final str = Str.of(context);
     switch (error) {
-      case SignInBlocError.invalidEmail:
+      case SignInCubitError.invalidEmail:
         await showMessageDialog(
           title: str.signInInvalidEmailDialogTitle,
           message: str.signInInvalidEmailDialogMessage,
         );
         break;
-      case SignInBlocError.unverifiedEmail:
+      case SignInCubitError.unverifiedEmail:
         showDialogDependingOnScreenSize(const EmailVerificationDialog());
         break;
-      case SignInBlocError.userNotFound:
+      case SignInCubitError.userNotFound:
         await showMessageDialog(
           title: str.signInUserNotFoundDialogTitle,
           message: '${str.signInUserNotFoundDialogMessage}...',
         );
         break;
-      case SignInBlocError.wrongPassword:
+      case SignInCubitError.wrongPassword:
         await showMessageDialog(
           title: str.signInWrongPasswordDialogTitle,
           message: str.signInWrongPasswordDialogMessage,
@@ -99,7 +99,7 @@ class _BlocListener extends StatelessWidget {
   }
 
   Future<void> _manageNewUser(BuildContext context) async {
-    final SignInBloc bloc = context.read<SignInBloc>();
+    final SignInCubit cubit = context.read<SignInCubit>();
     final bool wantToCreateAccount =
         await _askForConfirmationToCreateAccount(context);
     if (wantToCreateAccount) {
@@ -111,7 +111,7 @@ class _BlocListener extends StatelessWidget {
         return;
       }
     }
-    bloc.add(const SignInEventDeleteRecentlyCreatedAccount());
+    cubit.deleteRecentlyCreatedAccount();
   }
 
   Future<bool> _askForConfirmationToCreateAccount(BuildContext context) async {

@@ -1,12 +1,12 @@
 import 'dart:async';
 
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../../common/date_service.dart';
 import '../../../dependency_injection.dart';
-import '../../additional_model/bloc_state.dart';
-import '../../additional_model/bloc_status.dart';
+import '../../additional_model/cubit_status.dart';
+import '../../additional_model/cubit_state.dart';
+import '../../additional_model/cubit_with_status.dart';
 import '../../entity/chat.dart';
 import '../../entity/message.dart';
 import '../../entity/person.dart';
@@ -18,7 +18,7 @@ import '../../service/connectivity_service.dart';
 
 part 'chat_state.dart';
 
-class ChatCubit extends Cubit<ChatState> {
+class ChatCubit extends CubitWithStatus<ChatState, dynamic, ChatCubitError> {
   final String _chatId;
   final AuthService _authService;
   final ChatRepository _chatRepository;
@@ -30,7 +30,7 @@ class ChatCubit extends Cubit<ChatState> {
 
   ChatCubit({
     required String chatId,
-    ChatState initialState = const ChatState(status: BlocStatusInitial()),
+    ChatState initialState = const ChatState(status: CubitStatusInitial()),
   })  : _chatId = chatId,
         _authService = getIt<AuthService>(),
         _chatRepository = getIt<ChatRepository>(),
@@ -84,7 +84,7 @@ class ChatCubit extends Cubit<ChatState> {
     if (!state.canSubmitMessage) return;
     if (await _connectivityService.hasDeviceInternetConnection()) {
       final DateTime now = _dateService.getNow();
-      emit(state.copyWith(status: const BlocStatusLoading()));
+      emitLoadingStatus();
       await _messageRepository.addMessageToChat(
         chatId: _chatId,
         senderId: state.loggedUserId!,
@@ -92,12 +92,12 @@ class ChatCubit extends Cubit<ChatState> {
         dateTime: now,
       );
       emit(state.copyWith(
-        status: const BlocStatusComplete(),
+        status: const CubitStatusComplete(),
         messageToSendAsNull: true,
       ));
     } else {
       emit(state.copyWith(
-        status: const BlocStatusError<ChatCubitError>(
+        status: const CubitStatusError<ChatCubitError>(
           error: ChatCubitError.noInternetConnection,
         ),
       ));

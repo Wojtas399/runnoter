@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/bloc/clients/clients_bloc.dart';
+import '../../../domain/cubit/clients/clients_cubit.dart';
 import '../../../domain/entity/person.dart';
 import '../../component/empty_content_info_component.dart';
 import '../../component/gap/gap_components.dart';
@@ -46,7 +46,7 @@ class _Content extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<Person>? clients = context.select(
-      (ClientsBloc bloc) => bloc.state.clients,
+      (ClientsCubit cubit) => cubit.state.clients,
     );
 
     return switch (clients) {
@@ -80,7 +80,8 @@ class _ClientItem extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           IconButton(
-            onPressed: () => _onOpenChat(context),
+            onPressed: () =>
+                context.read<ClientsCubit>().openChatWithClient(clientInfo.id),
             icon: const Icon(Icons.message_outlined),
           ),
           IconButton(
@@ -98,23 +99,15 @@ class _ClientItem extends StatelessWidget {
     );
   }
 
-  void _onOpenChat(BuildContext context) {
-    context.read<ClientsBloc>().add(
-          ClientsEventOpenChatWithClient(clientId: clientInfo.id),
-        );
-  }
-
   void _onShowProfile() {
     navigateTo(ClientRoute(clientId: clientInfo.id));
   }
 
   Future<void> _onDeleteClient(BuildContext context) async {
-    final ClientsBloc bloc = context.read<ClientsBloc>();
+    final ClientsCubit cubit = context.read<ClientsCubit>();
     final bool isDeletionConfirmed =
         await _askForClientDeletionConfirmation(context);
-    if (isDeletionConfirmed) {
-      bloc.add(ClientsEventDeleteClient(clientId: clientInfo.id));
-    }
+    if (isDeletionConfirmed) cubit.deleteClient(clientInfo.id);
   }
 
   Future<bool> _askForClientDeletionConfirmation(BuildContext context) async {

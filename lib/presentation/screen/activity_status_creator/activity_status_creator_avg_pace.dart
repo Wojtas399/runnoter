@@ -5,7 +5,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/additional_model/activity_status.dart';
 import '../../../domain/additional_model/settings.dart';
-import '../../../domain/bloc/activity_status_creator/activity_status_creator_bloc.dart';
+import '../../../domain/cubit/activity_status_creator/activity_status_creator_cubit.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/text/label_text_components.dart';
 import '../../component/text/title_text_components.dart';
@@ -43,7 +43,7 @@ class _AvgPaceDistanceState extends State<_AvgPaceDistance> {
   @override
   void initState() {
     final Pace? avgPace =
-        context.read<ActivityStatusCreatorBloc>().state.avgPace;
+        context.read<ActivityStatusCreatorCubit>().state.avgPace;
     if (avgPace != null) {
       final ConvertedPace convertedPace = context.convertPaceFromDefaultUnit(
         avgPace,
@@ -85,23 +85,19 @@ class _AvgPaceDistanceState extends State<_AvgPaceDistance> {
   void _onChanged() {
     final double distance = double.tryParse(_controller.text) ?? 0;
     if (distance == 0) {
-      const Pace pace = Pace(minutes: 0, seconds: 0);
-      context.read<ActivityStatusCreatorBloc>().add(
-            const ActivityStatusCreatorEventAvgPaceChanged(avgPace: pace),
-          );
+      const Pace avgPace = Pace(minutes: 0, seconds: 0);
+      context.read<ActivityStatusCreatorCubit>().avgPaceChanged(avgPace);
       return;
     }
-    ConvertedPace? convertedPace;
+    ConvertedPace? convertedAvgPace;
     if (context.paceUnit == PaceUnit.kilometersPerHour) {
-      convertedPace = ConvertedPaceKilometersPerHour(distance: distance);
+      convertedAvgPace = ConvertedPaceKilometersPerHour(distance: distance);
     } else if (context.paceUnit == PaceUnit.milesPerHour) {
-      convertedPace = ConvertedPaceMilesPerHour(distance: distance);
+      convertedAvgPace = ConvertedPaceMilesPerHour(distance: distance);
     }
-    if (convertedPace != null) {
-      final Pace pace = context.convertPaceToDefaultUnit(convertedPace);
-      context.read<ActivityStatusCreatorBloc>().add(
-            ActivityStatusCreatorEventAvgPaceChanged(avgPace: pace),
-          );
+    if (convertedAvgPace != null) {
+      final Pace avgPace = context.convertPaceToDefaultUnit(convertedAvgPace);
+      context.read<ActivityStatusCreatorCubit>().avgPaceChanged(avgPace);
     }
   }
 }
@@ -120,7 +116,7 @@ class _AvgPaceTimeState extends State<_AvgPaceTime> {
   @override
   void initState() {
     final Pace? avgPace =
-        context.read<ActivityStatusCreatorBloc>().state.avgPace;
+        context.read<ActivityStatusCreatorCubit>().state.avgPace;
     if (avgPace != null) {
       final ConvertedPace convertedPace = context.convertPaceFromDefaultUnit(
         avgPace,
@@ -171,23 +167,21 @@ class _AvgPaceTimeState extends State<_AvgPaceTime> {
   void _onPaceChanged() {
     final int minutes = int.tryParse(_minutesController.text) ?? 0;
     final int seconds = int.tryParse(_secondsController.text) ?? 0;
-    ConvertedPace? convertedPace;
+    ConvertedPace? convertedAvgPace;
     if (context.paceUnit == PaceUnit.minutesPerKilometer) {
-      convertedPace = ConvertedPaceMinutesPerKilometer(
+      convertedAvgPace = ConvertedPaceMinutesPerKilometer(
         minutes: minutes,
         seconds: seconds,
       );
     } else if (context.paceUnit == PaceUnit.minutesPerMile) {
-      convertedPace = ConvertedPaceMinutesPerMile(
+      convertedAvgPace = ConvertedPaceMinutesPerMile(
         minutes: minutes,
         seconds: seconds,
       );
     }
-    if (convertedPace != null) {
-      final Pace pace = context.convertPaceToDefaultUnit(convertedPace);
-      context.read<ActivityStatusCreatorBloc>().add(
-            ActivityStatusCreatorEventAvgPaceChanged(avgPace: pace),
-          );
+    if (convertedAvgPace != null) {
+      final Pace avgPace = context.convertPaceToDefaultUnit(convertedAvgPace);
+      context.read<ActivityStatusCreatorCubit>().avgPaceChanged(avgPace);
     }
   }
 }
@@ -227,8 +221,6 @@ class _AveragePaceField extends StatelessWidget {
 }
 
 void _onSubmitted(BuildContext context) {
-  final bloc = context.read<ActivityStatusCreatorBloc>();
-  if (bloc.state.canSubmit) {
-    bloc.add(const ActivityStatusCreatorEventSubmit());
-  }
+  final cubit = context.read<ActivityStatusCreatorCubit>();
+  if (cubit.state.canSubmit) cubit.submit();
 }

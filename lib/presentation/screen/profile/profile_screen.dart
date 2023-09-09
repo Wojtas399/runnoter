@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/bloc/profile/settings/profile_settings_bloc.dart';
 import '../../../domain/cubit/profile/coach/profile_coach_cubit.dart';
 import '../../../domain/cubit/profile/identities/profile_identities_cubit.dart';
+import '../../../domain/cubit/profile/settings/profile_settings_cubit.dart';
 import '../../component/cubit_with_status_listener_component.dart';
 import '../../config/navigation/router.dart';
 import '../../service/dialog_service.dart';
@@ -24,10 +24,7 @@ class ProfileScreen extends StatelessWidget {
         BlocProvider(
           create: (_) => ProfileCoachCubit()..initializeCoachListener(),
         ),
-        BlocProvider(
-          create: (_) => ProfileSettingsBloc()
-            ..add(const ProfileSettingsEventInitialize()),
-        ),
+        BlocProvider(create: (_) => ProfileSettingsCubit()..initialize()),
       ],
       child: const _IdentitiesCubitListener(
         child: _CoachCubitListener(

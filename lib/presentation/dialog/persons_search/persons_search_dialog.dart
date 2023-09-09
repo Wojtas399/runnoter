@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/additional_model/coaching_request.dart';
-import '../../../domain/bloc/persons_search/persons_search_bloc.dart';
-import '../../component/bloc_with_status_listener_component.dart';
+import '../../../domain/cubit/persons_search/persons_search_cubit.dart';
+import '../../component/cubit_with_status_listener_component.dart';
 import '../../component/responsive_layout_component.dart';
 import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
@@ -19,9 +19,10 @@ class PersonsSearchDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => PersonsSearchBloc(requestDirection: requestDirection)
-        ..add(const PersonsSearchEventInitialize()),
-      child: const _BlocListener(
+      create: (_) => PersonsSearchCubit(
+        requestDirection: requestDirection,
+      )..initialize(),
+      child: const _CubitListener(
         child: ResponsiveLayout(
           mobileBody: _FullScreenDialog(),
           desktopBody: _NormalDialog(),
@@ -31,48 +32,43 @@ class PersonsSearchDialog extends StatelessWidget {
   }
 }
 
-class _BlocListener extends StatelessWidget {
+class _CubitListener extends StatelessWidget {
   final Widget child;
 
-  const _BlocListener({required this.child});
+  const _CubitListener({required this.child});
 
   @override
   Widget build(BuildContext context) {
-    return BlocWithStatusListener<PersonsSearchBloc, PersonsSearchState,
-        PersonsSearchBlocInfo, PersonsSearchBlocError>(
-      onInfo: (PersonsSearchBlocInfo info) => _manageInfo(context, info),
-      onError: (PersonsSearchBlocError error) => _manageError(context, error),
+    return CubitWithStatusListener<PersonsSearchCubit, PersonsSearchState,
+        PersonsSearchCubitInfo, PersonsSearchCubitError>(
+      onInfo: (PersonsSearchCubitInfo info) => _manageInfo(context, info),
+      onError: (PersonsSearchCubitError error) => _manageError(context, error),
       child: child,
     );
   }
 
-  void _manageInfo(
-    BuildContext context,
-    PersonsSearchBlocInfo info,
-  ) {
+  void _manageInfo(BuildContext context, PersonsSearchCubitInfo info) {
     switch (info) {
-      case PersonsSearchBlocInfo.requestSent:
+      case PersonsSearchCubitInfo.requestSent:
         popRoute();
         showSnackbarMessage(
           Str.of(context).personsSearchSuccessfullySentRequest,
         );
-        break;
     }
   }
 
   Future<void> _manageError(
     BuildContext context,
-    PersonsSearchBlocError error,
+    PersonsSearchCubitError error,
   ) async {
     switch (error) {
-      case PersonsSearchBlocError.userAlreadyHasCoach:
-        final bloc = context.read<PersonsSearchBloc>();
+      case PersonsSearchCubitError.userAlreadyHasCoach:
+        final bloc = context.read<PersonsSearchCubit>();
         await showMessageDialog(
           title: Str.of(context).personsSearchUserAlreadyHasCoachInfoTitle,
           message: Str.of(context).personsSearchUserAlreadyHasCoachInfoMessage,
         );
-        bloc.add(PersonsSearchEventSearch(searchQuery: bloc.state.searchQuery));
-        break;
+        bloc.search(bloc.state.searchQuery);
     }
   }
 }
@@ -122,7 +118,7 @@ class _DialogTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final CoachingRequestDirection requestDirection =
-        context.read<PersonsSearchBloc>().requestDirection;
+        context.read<PersonsSearchCubit>().requestDirection;
     final str = Str.of(context);
     final String title = switch (requestDirection) {
       CoachingRequestDirection.clientToCoach => str.coachesSearchTitle,

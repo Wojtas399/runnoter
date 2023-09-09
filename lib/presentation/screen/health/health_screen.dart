@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../dependency_injection.dart';
-import '../../../domain/bloc/health_stats/health_stats_bloc.dart';
+import '../../../domain/cubit/health_stats/health_stats_cubit.dart';
 import '../../../domain/cubit/today_measurement_cubit.dart';
 import '../../../domain/service/auth_service.dart';
 import '../../component/page_not_found_component.dart';
@@ -26,8 +26,8 @@ class HealthScreen extends StatelessWidget {
                     create: (_) => TodayMeasurementCubit()..initialize(),
                   ),
                   BlocProvider(
-                    create: (_) => HealthStatsBloc(userId: loggedUserId)
-                      ..add(const HealthStatsEventInitialize()),
+                    create: (_) =>
+                        HealthStatsCubit(userId: loggedUserId)..initialize(),
                   )
                 ],
                 child: const HealthContent(),

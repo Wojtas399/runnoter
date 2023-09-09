@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get_it/get_it.dart';
 
-import '../../../domain/additional_model/bloc_status.dart';
-import '../../../domain/bloc/health_measurement_creator/health_measurement_creator_bloc.dart';
+import '../../../domain/additional_model/cubit_status.dart';
+import '../../../domain/cubit/health_measurement_creator/health_measurement_creator_cubit.dart';
 import '../../component/gap/gap_horizontal_components.dart';
 import '../../component/loading_info_component.dart';
 import '../../component/padding/paddings_24.dart';
@@ -79,11 +79,11 @@ class _Form extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final BlocStatus blocStatus = context.select(
-      (HealthMeasurementCreatorBloc bloc) => bloc.state.status,
+    final CubitStatus cubitStatus = context.select(
+      (HealthMeasurementCreatorCubit cubit) => cubit.state.status,
     );
 
-    return blocStatus is BlocStatusInitial
+    return cubitStatus is CubitStatusInitial
         ? const LoadingInfo()
         : const HealthMeasurementCreatorForm();
   }
@@ -95,19 +95,15 @@ class _SubmitButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool isDisabled = context.select(
-      (HealthMeasurementCreatorBloc bloc) => !bloc.state.canSubmit,
+      (HealthMeasurementCreatorCubit cubit) => cubit.state.canSubmit,
     );
     final String label = Str.of(context).save;
 
     return FilledButton(
-      onPressed: isDisabled ? null : () => _onPressed(context),
+      onPressed: isDisabled
+          ? null
+          : context.read<HealthMeasurementCreatorCubit>().submit,
       child: Text(label),
     );
-  }
-
-  void _onPressed(BuildContext context) {
-    context.read<HealthMeasurementCreatorBloc>().add(
-          const HealthMeasurementCreatorEventSubmit(),
-        );
   }
 }

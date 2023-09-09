@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/additional_model/blood_parameter.dart';
-import '../../../domain/bloc/blood_test_creator/blood_test_creator_bloc.dart';
+import '../../../domain/cubit/blood_test_creator/blood_test_creator_cubit.dart';
 import '../../../domain/entity/user.dart';
 import '../../component/blood_parameter_results_list_component.dart';
 import '../../component/body/medium_body_component.dart';
@@ -21,7 +21,8 @@ class BloodTestCreatorContent extends StatelessWidget {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async => await askForConfirmationToLeave(
-        areUnsavedChanges: context.read<BloodTestCreatorBloc>().state.canSubmit,
+        areUnsavedChanges:
+            context.read<BloodTestCreatorCubit>().state.canSubmit,
       ),
       child: const Scaffold(
         appBar: BloodTestCreatorAppBar(),
@@ -66,20 +67,14 @@ class _DateValue extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final DateTime? date = context.select(
-      (BloodTestCreatorBloc bloc) => bloc.state.date,
+      (BloodTestCreatorCubit cubit) => cubit.state.date,
     );
 
     return DateSelector(
       date: date,
       lastDate: DateTime.now(),
-      onDateSelected: (DateTime date) => _onDateSelected(context, date),
+      onDateSelected: context.read<BloodTestCreatorCubit>().dateChanged,
     );
-  }
-
-  void _onDateSelected(BuildContext context, DateTime date) {
-    context.read<BloodTestCreatorBloc>().add(
-          BloodTestCreatorEventDateChanged(date: date),
-        );
   }
 }
 
@@ -89,10 +84,10 @@ class _ParametersSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Gender? gender = context.select(
-      (BloodTestCreatorBloc bloc) => bloc.state.gender,
+      (BloodTestCreatorCubit cubit) => cubit.state.gender,
     );
     final List<BloodParameterResult>? parameterResults = context.select(
-      (BloodTestCreatorBloc bloc) => bloc.state.parameterResults,
+      (BloodTestCreatorCubit cubit) => cubit.state.parameterResults,
     );
 
     return gender == null
@@ -105,28 +100,16 @@ class _ParametersSection extends StatelessWidget {
               BloodParameter parameter,
               double? value,
             ) =>
-                _onValueChanged(context, parameter, value),
+                context.read<BloodTestCreatorCubit>().parameterValueChanged(
+                      parameter: parameter,
+                      value: value,
+                    ),
             onSubmitted: () => _onSubmitted(context),
           );
   }
 
-  void _onValueChanged(
-    BuildContext context,
-    BloodParameter parameter,
-    double? value,
-  ) {
-    context.read<BloodTestCreatorBloc>().add(
-          BloodTestCreatorEventParameterResultChanged(
-            parameter: parameter,
-            value: value,
-          ),
-        );
-  }
-
   void _onSubmitted(BuildContext context) {
-    final bloc = context.read<BloodTestCreatorBloc>();
-    if (bloc.state.canSubmit) {
-      bloc.add(const BloodTestCreatorEventSubmit());
-    }
+    final cubit = context.read<BloodTestCreatorCubit>();
+    if (cubit.state.canSubmit) cubit.submit();
   }
 }

@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/bloc/workout_stage_creator/workout_stage_creator_bloc.dart';
+import '../../../domain/cubit/workout_stage_creator/workout_stage_creator_cubit.dart';
 import '../../component/form_text_field_component.dart';
 import '../../component/gap/gap_components.dart';
 import '../../extension/context_extensions.dart';
@@ -38,8 +38,11 @@ class _DistanceState extends State<_Distance> {
 
   @override
   void initState() {
-    final double? distanceInKm =
-        context.read<WorkoutStageCreatorBloc>().state.distanceForm.distanceInKm;
+    final double? distanceInKm = context
+        .read<WorkoutStageCreatorCubit>()
+        .state
+        .distanceForm
+        .distanceInKm;
     if (distanceInKm != null) {
       _controller.text =
           context.convertDistanceFromDefaultUnit(distanceInKm).toString();
@@ -80,11 +83,9 @@ class _DistanceState extends State<_Distance> {
     }
     if (distance != null) {
       final convertedDistance = context.convertDistanceToDefaultUnit(distance);
-      context.read<WorkoutStageCreatorBloc>().add(
-            WorkoutStageCreatorEventDistanceChanged(
-              distanceInKm: convertedDistance,
-            ),
-          );
+      context
+          .read<WorkoutStageCreatorCubit>()
+          .distanceChanged(convertedDistance);
     }
   }
 }
@@ -101,8 +102,11 @@ class _MaxHeartRateState extends State<_MaxHeartRate> {
 
   @override
   void initState() {
-    final int? maxHeartRate =
-        context.read<WorkoutStageCreatorBloc>().state.distanceForm.maxHeartRate;
+    final int? maxHeartRate = context
+        .read<WorkoutStageCreatorCubit>()
+        .state
+        .distanceForm
+        .maxHeartRate;
     if (maxHeartRate != null) {
       _controller.text = maxHeartRate.toString();
     }
@@ -139,18 +143,14 @@ class _MaxHeartRateState extends State<_MaxHeartRate> {
       maxHeartRate = int.tryParse(_controller.text);
     }
     if (maxHeartRate != null) {
-      context.read<WorkoutStageCreatorBloc>().add(
-            WorkoutStageCreatorEventMaxHeartRateChanged(
-              maxHeartRate: maxHeartRate,
-            ),
-          );
+      context
+          .read<WorkoutStageCreatorCubit>()
+          .maxHeartRateChanged(maxHeartRate);
     }
   }
 }
 
 void _onSubmitted(BuildContext context) {
-  final bloc = context.read<WorkoutStageCreatorBloc>();
-  if (!bloc.state.isSubmitButtonDisabled) {
-    bloc.add(const WorkoutStageCreatorEventSubmit());
-  }
+  final bloc = context.read<WorkoutStageCreatorCubit>();
+  if (!bloc.state.isSubmitButtonDisabled) bloc.submit();
 }

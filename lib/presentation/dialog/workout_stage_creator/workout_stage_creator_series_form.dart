@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/bloc/workout_stage_creator/workout_stage_creator_bloc.dart';
+import '../../../domain/cubit/workout_stage_creator/workout_stage_creator_cubit.dart';
 import '../../component/form_text_field_component.dart';
 import '../../component/gap/gap_components.dart';
 import '../../service/utils.dart';
@@ -41,8 +41,11 @@ class _AmountOfSeriesState extends State<_AmountOfSeries> {
 
   @override
   void initState() {
-    final int? amountOfSeries =
-        context.read<WorkoutStageCreatorBloc>().state.seriesForm.amountOfSeries;
+    final int? amountOfSeries = context
+        .read<WorkoutStageCreatorCubit>()
+        .state
+        .seriesForm
+        .amountOfSeries;
     if (amountOfSeries != null) {
       _controller.text = amountOfSeries.toString();
     }
@@ -80,11 +83,9 @@ class _AmountOfSeriesState extends State<_AmountOfSeries> {
       amountOfSeries = int.tryParse(_controller.text);
     }
     if (amountOfSeries != null) {
-      context.read<WorkoutStageCreatorBloc>().add(
-            WorkoutStageCreatorEventAmountOfSeriesChanged(
-              amountOfSeries: amountOfSeries,
-            ),
-          );
+      context
+          .read<WorkoutStageCreatorCubit>()
+          .amountOfSeriesChanged(amountOfSeries);
     }
   }
 }
@@ -102,7 +103,7 @@ class _SeriesDistanceState extends State<_SeriesDistance> {
   @override
   void initState() {
     final int? seriesDistanceInMeters = context
-        .read<WorkoutStageCreatorBloc>()
+        .read<WorkoutStageCreatorCubit>()
         .state
         .seriesForm
         .seriesDistanceInMeters;
@@ -142,11 +143,9 @@ class _SeriesDistanceState extends State<_SeriesDistance> {
       seriesDistance = int.tryParse(_controller.text);
     }
     if (seriesDistance != null) {
-      context.read<WorkoutStageCreatorBloc>().add(
-            WorkoutStageCreatorEventSeriesDistanceChanged(
-              seriesDistanceInMeters: seriesDistance,
-            ),
-          );
+      context
+          .read<WorkoutStageCreatorCubit>()
+          .seriesDistanceChanged(seriesDistance);
     }
   }
 }
@@ -164,7 +163,7 @@ class _WalkingDistanceState extends State<_WalkingDistance> {
   @override
   void initState() {
     final int? walkingDistanceInMeters = context
-        .read<WorkoutStageCreatorBloc>()
+        .read<WorkoutStageCreatorCubit>()
         .state
         .seriesForm
         .walkingDistanceInMeters;
@@ -203,11 +202,9 @@ class _WalkingDistanceState extends State<_WalkingDistance> {
       walkingDistance = int.tryParse(_controller.text);
     }
     if (walkingDistance != null) {
-      context.read<WorkoutStageCreatorBloc>().add(
-            WorkoutStageCreatorEventWalkingDistanceChanged(
-              walkingDistanceInMeters: walkingDistance,
-            ),
-          );
+      context
+          .read<WorkoutStageCreatorCubit>()
+          .walkingDistanceChanged(walkingDistance);
     }
   }
 }
@@ -225,7 +222,7 @@ class _JoggingDistanceState extends State<_JoggingDistance> {
   @override
   void initState() {
     final int? joggingDistanceInMeters = context
-        .read<WorkoutStageCreatorBloc>()
+        .read<WorkoutStageCreatorCubit>()
         .state
         .seriesForm
         .joggingDistanceInMeters;
@@ -264,18 +261,14 @@ class _JoggingDistanceState extends State<_JoggingDistance> {
       joggingDistance = int.tryParse(_controller.text);
     }
     if (joggingDistance != null) {
-      context.read<WorkoutStageCreatorBloc>().add(
-            WorkoutStageCreatorEventJoggingDistanceChanged(
-              joggingDistanceInMeters: joggingDistance,
-            ),
-          );
+      context
+          .read<WorkoutStageCreatorCubit>()
+          .joggingDistanceChanged(joggingDistance);
     }
   }
 }
 
 void _onSubmitted(BuildContext context) {
-  final bloc = context.read<WorkoutStageCreatorBloc>();
-  if (!bloc.state.isSubmitButtonDisabled) {
-    bloc.add(const WorkoutStageCreatorEventSubmit());
-  }
+  final cubit = context.read<WorkoutStageCreatorCubit>();
+  if (!cubit.state.isSubmitButtonDisabled) cubit.submit();
 }

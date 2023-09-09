@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/additional_model/activity_status.dart';
-import '../../../domain/bloc/activity_status_creator/activity_status_creator_bloc.dart';
+import '../../../domain/cubit/activity_status_creator/activity_status_creator_cubit.dart';
 import '../../component/duration_input_component.dart';
 import '../../component/form_text_field_component.dart';
 import '../../component/gap/gap_components.dart';
@@ -21,7 +21,7 @@ class ActivityStatusCreatorParamsForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ActivityType activityType =
-        context.read<ActivityStatusCreatorBloc>().activityType;
+        context.read<ActivityStatusCreatorCubit>().activityType;
     const Widget gap = Gap24();
 
     return Column(
@@ -54,7 +54,7 @@ class _CoveredDistanceState extends State<_CoveredDistance> {
   @override
   void initState() {
     final double? coveredDistanceInKm =
-        context.read<ActivityStatusCreatorBloc>().state.coveredDistanceInKm;
+        context.read<ActivityStatusCreatorCubit>().state.coveredDistanceInKm;
     if (coveredDistanceInKm != null) {
       _controller.text = context
           .convertDistanceFromDefaultUnit(coveredDistanceInKm)
@@ -91,13 +91,11 @@ class _CoveredDistanceState extends State<_CoveredDistance> {
 
   void _onChanged() {
     final double coveredDistance = double.tryParse(_controller.text) ?? 0;
-    final double convertedCoveredDistance =
+    final double distanceInDefaultUnit =
         context.convertDistanceToDefaultUnit(coveredDistance);
-    context.read<ActivityStatusCreatorBloc>().add(
-          ActivityStatusCreatorEventCoveredDistanceInKmChanged(
-            coveredDistanceInKm: convertedCoveredDistance,
-          ),
-        );
+    context
+        .read<ActivityStatusCreatorCubit>()
+        .coveredDistanceInKmChanged(distanceInDefaultUnit);
   }
 }
 
@@ -107,21 +105,16 @@ class _Duration extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Duration? duration = context.select(
-      (ActivityStatusCreatorBloc bloc) => bloc.state.duration,
+      (ActivityStatusCreatorCubit cubit) => cubit.state.duration,
     );
 
     return DurationInput(
       label: Str.of(context).activityStatusDuration,
       initialDuration: duration,
-      onDurationChanged: (Duration? duration) => _onChanged(context, duration),
+      onDurationChanged:
+          context.read<ActivityStatusCreatorCubit>().durationChanged,
       onSubmitted: () => _onSubmitted(context),
     );
-  }
-
-  void _onChanged(BuildContext context, Duration? duration) {
-    context.read<ActivityStatusCreatorBloc>().add(
-          ActivityStatusCreatorEventDurationChanged(duration: duration),
-        );
   }
 }
 
@@ -131,7 +124,7 @@ class _MoodRate extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final MoodRate? moodRate = context.select(
-      (ActivityStatusCreatorBloc bloc) => bloc.state.moodRate,
+      (ActivityStatusCreatorCubit cubit) => cubit.state.moodRate,
     );
 
     return DropdownButtonFormField(
@@ -159,16 +152,8 @@ class _MoodRate extends StatelessWidget {
             ),
           )
           .toList(),
-      onChanged: (MoodRate? moodRate) => _onChanged(context, moodRate),
+      onChanged: context.read<ActivityStatusCreatorCubit>().moodRateChanged,
     );
-  }
-
-  void _onChanged(BuildContext context, MoodRate? moodRate) {
-    context.read<ActivityStatusCreatorBloc>().add(
-          ActivityStatusCreatorEventMoodRateChanged(
-            moodRate: moodRate,
-          ),
-        );
   }
 }
 
@@ -185,7 +170,7 @@ class _AvgHeartRateState extends State<_AvgHeartRate> {
   @override
   void initState() {
     final int? avgHeartRate =
-        context.read<ActivityStatusCreatorBloc>().state.avgHeartRate;
+        context.read<ActivityStatusCreatorCubit>().state.avgHeartRate;
     if (avgHeartRate != null) _controller.text = avgHeartRate.toString();
     _controller.addListener(_onChanged);
     super.initState();
@@ -215,12 +200,10 @@ class _AvgHeartRateState extends State<_AvgHeartRate> {
   }
 
   void _onChanged() {
-    final int averageHeartRate = int.tryParse(_controller.text) ?? 0;
-    context.read<ActivityStatusCreatorBloc>().add(
-          ActivityStatusCreatorEventAvgHeartRateChanged(
-            averageHeartRate: averageHeartRate,
-          ),
-        );
+    final int avgHeartRate = int.tryParse(_controller.text) ?? 0;
+    context
+        .read<ActivityStatusCreatorCubit>()
+        .avgHeartRateChanged(avgHeartRate);
   }
 }
 
@@ -237,7 +220,7 @@ class _CommentState extends State<_Comment> {
   @override
   void initState() {
     _controller.text =
-        context.read<ActivityStatusCreatorBloc>().state.comment ?? '';
+        context.read<ActivityStatusCreatorCubit>().state.comment ?? '';
     _controller.addListener(_onChanged);
     super.initState();
   }
@@ -263,17 +246,11 @@ class _CommentState extends State<_Comment> {
   }
 
   void _onChanged() {
-    context.read<ActivityStatusCreatorBloc>().add(
-          ActivityStatusCreatorEventCommentChanged(
-            comment: _controller.text,
-          ),
-        );
+    context.read<ActivityStatusCreatorCubit>().commentChanged(_controller.text);
   }
 }
 
 void _onSubmitted(BuildContext context) {
-  final bloc = context.read<ActivityStatusCreatorBloc>();
-  if (bloc.state.canSubmit) {
-    bloc.add(const ActivityStatusCreatorEventSubmit());
-  }
+  final cubit = context.read<ActivityStatusCreatorCubit>();
+  if (cubit.state.canSubmit) cubit.submit();
 }

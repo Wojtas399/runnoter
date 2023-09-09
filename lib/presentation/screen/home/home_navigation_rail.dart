@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/bloc/home/home_bloc.dart';
+import '../../../domain/cubit/home/home_cubit.dart';
 import '../../../domain/entity/user.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/text/label_text_components.dart';
@@ -27,7 +27,7 @@ class HomeNavigationRail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AccountType? accountType = context.select(
-      (HomeBloc bloc) => bloc.state.accountType,
+      (HomeCubit cubit) => cubit.state.accountType,
     );
     final str = Str.of(context);
 

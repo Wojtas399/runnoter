@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/bloc/forgot_password/forgot_password_bloc.dart';
-import '../../component/bloc_with_status_listener_component.dart';
+import '../../../domain/cubit/forgot_password/forgot_password_cubit.dart';
+import '../../component/cubit_with_status_listener_component.dart';
 import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
 import 'forgot_password_content.dart';
@@ -33,7 +33,7 @@ class _BlocProvider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => ForgotPasswordBloc(),
+      create: (_) => ForgotPasswordCubit(),
       child: child,
     );
   }
@@ -48,24 +48,24 @@ class _BlocListener extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocWithStatusListener<ForgotPasswordBloc, ForgotPasswordState,
-        ForgotPasswordBlocInfo, ForgotPasswordBlocError>(
-      onInfo: (ForgotPasswordBlocInfo info) {
+    return CubitWithStatusListener<ForgotPasswordCubit, ForgotPasswordState,
+        ForgotPasswordCubitInfo, ForgotPasswordCubitError>(
+      onInfo: (ForgotPasswordCubitInfo info) {
         _manageCompleteStatus(info, context);
       },
       child: child,
-      onError: (ForgotPasswordBlocError error) {
+      onError: (ForgotPasswordCubitError error) {
         _manageErrorStatus(error, context);
       },
     );
   }
 
   Future<void> _manageCompleteStatus(
-    ForgotPasswordBlocInfo info,
+    ForgotPasswordCubitInfo info,
     BuildContext context,
   ) async {
     switch (info) {
-      case ForgotPasswordBlocInfo.emailSubmitted:
+      case ForgotPasswordCubitInfo.emailSubmitted:
         await _showMessageAboutSubmittedEmail(context);
         navigateBack();
         break;
@@ -73,14 +73,14 @@ class _BlocListener extends StatelessWidget {
   }
 
   void _manageErrorStatus(
-    ForgotPasswordBlocError error,
+    ForgotPasswordCubitError error,
     BuildContext context,
   ) {
     switch (error) {
-      case ForgotPasswordBlocError.invalidEmail:
+      case ForgotPasswordCubitError.invalidEmail:
         _showMessageAboutInvalidEmail(context);
         break;
-      case ForgotPasswordBlocError.userNotFound:
+      case ForgotPasswordCubitError.userNotFound:
         _showMessageAboutNotFoundedUser(context);
         break;
     }

@@ -1,6 +1,6 @@
 part of 'chat_cubit.dart';
 
-class ChatState extends BlocState<ChatState> {
+class ChatState extends CubitState<ChatState> {
   final String? loggedUserId;
   final String? recipientFullName;
   final List<Message>? messagesFromLatest;
@@ -28,7 +28,7 @@ class ChatState extends BlocState<ChatState> {
 
   @override
   ChatState copyWith({
-    BlocStatus? status,
+    CubitStatus? status,
     String? loggedUserId,
     String? recipientFullName,
     List<Message>? messagesFromLatest,
@@ -36,7 +36,7 @@ class ChatState extends BlocState<ChatState> {
     bool messageToSendAsNull = false,
   }) =>
       ChatState(
-        status: status ?? const BlocStatusComplete(),
+        status: status ?? const CubitStatusComplete(),
         loggedUserId: loggedUserId ?? this.loggedUserId,
         recipientFullName: recipientFullName ?? this.recipientFullName,
         messagesFromLatest: messagesFromLatest ?? this.messagesFromLatest,

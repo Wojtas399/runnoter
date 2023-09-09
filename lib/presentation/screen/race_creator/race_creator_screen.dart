@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/bloc/race_creator/race_creator_bloc.dart';
-import '../../component/bloc_with_status_listener_component.dart';
+import '../../../domain/cubit/race_creator/race_creator_cubit.dart';
+import '../../component/cubit_with_status_listener_component.dart';
 import '../../component/page_not_found_component.dart';
 import '../../extension/string_extensions.dart';
 import '../../service/dialog_service.dart';
@@ -31,38 +31,34 @@ class RaceCreatorScreen extends StatelessWidget {
     return userId == null
         ? const PageNotFound()
         : BlocProvider(
-            create: (_) => RaceCreatorBloc(userId: userId!, raceId: raceId)
-              ..add(RaceCreatorEventInitialize(date: date)),
-            child: const _BlocListener(
+            create: (_) => RaceCreatorCubit(userId: userId!, raceId: raceId)
+              ..initialize(date),
+            child: const _CubitListener(
               child: RaceCreatorContent(),
             ),
           );
   }
 }
 
-class _BlocListener extends StatelessWidget {
+class _CubitListener extends StatelessWidget {
   final Widget child;
 
-  const _BlocListener({
-    required this.child,
-  });
+  const _CubitListener({required this.child});
 
   @override
   Widget build(BuildContext context) {
-    return BlocWithStatusListener<RaceCreatorBloc, RaceCreatorState,
-        RaceCreatorBlocInfo, dynamic>(
-      onInfo: (RaceCreatorBlocInfo info) {
-        _manageInfo(context, info);
-      },
+    return CubitWithStatusListener<RaceCreatorCubit, RaceCreatorState,
+        RaceCreatorCubitInfo, dynamic>(
+      onInfo: (RaceCreatorCubitInfo info) => _manageInfo(context, info),
       child: child,
     );
   }
 
-  void _manageInfo(BuildContext context, RaceCreatorBlocInfo info) {
-    if (info == RaceCreatorBlocInfo.raceAdded) {
+  void _manageInfo(BuildContext context, RaceCreatorCubitInfo info) {
+    if (info == RaceCreatorCubitInfo.raceAdded) {
       navigateBack();
       showSnackbarMessage(Str.of(context).raceCreatorAddedRaceMessage);
-    } else if (info == RaceCreatorBlocInfo.raceUpdated) {
+    } else if (info == RaceCreatorCubitInfo.raceUpdated) {
       navigateBack();
       showSnackbarMessage(Str.of(context).raceCreatorUpdatedRaceMessage);
     }

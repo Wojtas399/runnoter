@@ -4,7 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/additional_model/activity_status.dart';
 import '../../../domain/additional_model/workout_stage.dart';
-import '../../../domain/bloc/workout_preview/workout_preview_bloc.dart';
+import '../../../domain/cubit/workout_preview/workout_preview_cubit.dart';
 import '../../component/activity_status_info_component.dart';
 import '../../component/content_with_label_component.dart';
 import '../../component/gap/gap_components.dart';
@@ -74,7 +74,7 @@ class _WorkoutName extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final String? name = context.select(
-      (WorkoutPreviewBloc bloc) => bloc.state.workoutName,
+      (WorkoutPreviewCubit cubit) => cubit.state.workoutName,
     );
 
     return TitleLarge(name ?? '');
@@ -87,7 +87,7 @@ class _WorkoutDate extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final DateTime? date = context.select(
-      (WorkoutPreviewBloc bloc) => bloc.state.date,
+      (WorkoutPreviewCubit cubit) => cubit.state.date,
     );
 
     return NullableText(date?.toFullDate(context.languageCode));
@@ -100,7 +100,7 @@ class _WorkoutStages extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<WorkoutStage>? stages = context.select(
-      (WorkoutPreviewBloc bloc) => bloc.state.stages,
+      (WorkoutPreviewCubit cubit) => cubit.state.stages,
     );
 
     return stages == null
@@ -129,7 +129,7 @@ class _WorkoutDistance extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<WorkoutStage>? stages = context.select(
-      (WorkoutPreviewBloc bloc) => bloc.state.stages,
+      (WorkoutPreviewCubit cubit) => cubit.state.stages,
     );
 
     return NullableText(stages?.toUIDetailedTotalDistance(context));
@@ -142,7 +142,7 @@ class _ActivityStatus extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ActivityStatus? activityStatus = context.select(
-      (WorkoutPreviewBloc bloc) => bloc.state.activityStatus,
+      (WorkoutPreviewCubit cubit) => cubit.state.activityStatus,
     );
 
     return activityStatus == null

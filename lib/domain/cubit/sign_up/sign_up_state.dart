@@ -1,6 +1,6 @@
 part of 'sign_up_cubit.dart';
 
-class SignUpState extends CubitState {
+class SignUpState extends CubitState<SignUpState> {
   final AccountType accountType;
   final Gender gender;
   final String name;
@@ -49,7 +49,7 @@ class SignUpState extends CubitState {
 
   @override
   SignUpState copyWith({
-    BlocStatus? status,
+    CubitStatus? status,
     AccountType? accountType,
     Gender? gender,
     String? name,
@@ -60,7 +60,7 @@ class SignUpState extends CubitState {
     String? passwordConfirmation,
   }) {
     return SignUpState(
-      status: status ?? const BlocStatusComplete(),
+      status: status ?? const CubitStatusComplete(),
       accountType: accountType ?? this.accountType,
       gender: gender ?? this.gender,
       name: name ?? this.name,

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/bloc/race_preview/race_preview_bloc.dart';
+import '../../../domain/cubit/race_preview/race_preview_cubit.dart';
 import '../../component/edit_delete_popup_menu_component.dart';
 import '../../config/navigation/router.dart';
 import '../../extension/context_extensions.dart';
@@ -23,21 +23,30 @@ class RacePreviewActions extends StatelessWidget {
 
   void _editRace(BuildContext context) {
     navigateTo(RaceCreatorRoute(
-      raceId: context.read<RacePreviewBloc>().raceId,
+      raceId: context.read<RacePreviewCubit>().raceId,
     ));
   }
 
   Future<void> _deleteRace(BuildContext context) async {
-    final RacePreviewBloc bloc = context.read<RacePreviewBloc>();
+    final RacePreviewCubit cubit = context.read<RacePreviewCubit>();
     final str = Str.of(context);
-    final bool confirmed = await askForConfirmation(
+    final bool confirmed = await _askForRaceDeletionConfirmation(context);
+    if (confirmed == true) {
+      showLoadingDialog();
+      await cubit.deleteRace();
+      closeLoadingDialog();
+      navigateBack();
+      showSnackbarMessage(str.racePreviewDeletedRaceMessage);
+    }
+  }
+
+  Future<bool> _askForRaceDeletionConfirmation(BuildContext context) async {
+    final str = Str.of(context);
+    return await askForConfirmation(
       title: Text(str.racePreviewDeletionConfirmationTitle),
       content: Text(str.racePreviewDeletionConfirmationMessage),
       confirmButtonLabel: str.delete,
       confirmButtonColor: Theme.of(context).colorScheme.error,
     );
-    if (confirmed == true) {
-      bloc.add(const RacePreviewEventDeleteRace());
-    }
   }
 }

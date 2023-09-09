@@ -5,7 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/common/date_service.dart';
-import 'package:runnoter/domain/additional_model/bloc_status.dart';
+import 'package:runnoter/domain/additional_model/cubit_status.dart';
 import 'package:runnoter/domain/cubit/chat/chat_cubit.dart';
 import 'package:runnoter/domain/entity/chat.dart';
 import 'package:runnoter/domain/entity/message.dart';
@@ -43,7 +43,7 @@ void main() {
       ChatCubit(
         chatId: chatId,
         initialState: ChatState(
-          status: const BlocStatusInitial(),
+          status: const CubitStatusInitial(),
           loggedUserId: loggedUserId,
           messagesFromLatest: messagesFromLatest,
           messageToSend: messageToSend,
@@ -117,13 +117,13 @@ void main() {
         },
         expect: () => [
           ChatState(
-            status: const BlocStatusComplete(),
+            status: const CubitStatusComplete(),
             loggedUserId: loggedUserId,
             recipientFullName: '${recipient.name} ${recipient.surname}',
             messagesFromLatest: messages,
           ),
           ChatState(
-            status: const BlocStatusComplete(),
+            status: const CubitStatusComplete(),
             loggedUserId: loggedUserId,
             recipientFullName: '${recipient.name} ${recipient.surname}',
             messagesFromLatest: updatedMessages.reversed.toList(),
@@ -158,7 +158,7 @@ void main() {
     build: () => createCubit(),
     act: (cubit) => cubit.messageChanged('message'),
     expect: () => [
-      const ChatState(status: BlocStatusComplete(), messageToSend: 'message'),
+      const ChatState(status: CubitStatusComplete(), messageToSend: 'message'),
     ],
   );
 
@@ -203,7 +203,7 @@ void main() {
     act: (cubit) => cubit.submitMessage(),
     expect: () => [
       const ChatState(
-        status: BlocStatusError<ChatCubitError>(
+        status: CubitStatusError<ChatCubitError>(
           error: ChatCubitError.noInternetConnection,
         ),
         loggedUserId: loggedUserId,
@@ -231,12 +231,12 @@ void main() {
     act: (cubit) => cubit.submitMessage(),
     expect: () => [
       const ChatState(
-        status: BlocStatusLoading(),
+        status: CubitStatusLoading(),
         loggedUserId: loggedUserId,
         messageToSend: 'message',
       ),
       const ChatState(
-        status: BlocStatusComplete(),
+        status: CubitStatusComplete(),
         loggedUserId: loggedUserId,
       ),
     ],

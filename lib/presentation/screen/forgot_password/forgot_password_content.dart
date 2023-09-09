@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/bloc/forgot_password/forgot_password_bloc.dart';
+import '../../../domain/cubit/forgot_password/forgot_password_cubit.dart';
 import '../../component/app_bar_with_logo.dart';
 import '../../component/big_button_component.dart';
 import '../../component/body/small_body_component.dart';
@@ -68,23 +68,15 @@ class _Email extends StatelessWidget {
       keyboardType: TextInputType.emailAddress,
       textInputAction: TextInputAction.done,
       icon: Icons.email,
-      onChanged: (String? value) => _onChanged(value, context),
+      onChanged: context.read<ForgotPasswordCubit>().emailChanged,
       onTapOutside: (_) => unfocusInputs(),
       onSubmitted: (_) => _onSubmitted(context),
     );
   }
 
-  void _onChanged(String? value, BuildContext context) {
-    context.read<ForgotPasswordBloc>().add(
-          ForgotPasswordEventEmailChanged(email: value ?? ''),
-        );
-  }
-
   void _onSubmitted(BuildContext context) {
-    final bloc = context.read<ForgotPasswordBloc>();
-    if (!bloc.state.isSubmitButtonDisabled) {
-      bloc.add(const ForgotPasswordEventSubmit());
-    }
+    final cubit = context.read<ForgotPasswordCubit>();
+    if (!cubit.state.isSubmitButtonDisabled) cubit.submit();
   }
 }
 
@@ -94,21 +86,13 @@ class _SubmitButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool isDisabled = context.select(
-      (ForgotPasswordBloc bloc) => bloc.state.isSubmitButtonDisabled,
+      (ForgotPasswordCubit cubit) => cubit.state.isSubmitButtonDisabled,
     );
 
     return BigButton(
       label: Str.of(context).forgotPasswordSubmitButtonLabel,
       isDisabled: isDisabled,
-      onPressed: () {
-        _onPressed(context);
-      },
+      onPressed: context.read<ForgotPasswordCubit>().submit,
     );
-  }
-
-  void _onPressed(BuildContext context) {
-    context.read<ForgotPasswordBloc>().add(
-          const ForgotPasswordEventSubmit(),
-        );
   }
 }

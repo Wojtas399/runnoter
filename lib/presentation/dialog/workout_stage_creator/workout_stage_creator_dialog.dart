@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/additional_model/workout_stage.dart';
-import '../../../domain/bloc/workout_stage_creator/workout_stage_creator_bloc.dart';
+import '../../../domain/cubit/workout_stage_creator/workout_stage_creator_cubit.dart';
 import '../../service/navigator_service.dart';
 import 'workout_stage_creator_content.dart';
 
@@ -15,7 +15,7 @@ class WorkoutStageCreatorDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return _BlocProvider(
       stage: stage,
-      child: const _BlocListener(
+      child: const _CubitListener(
         child: WorkoutStageCreatorContent(),
       ),
     );
@@ -26,38 +26,30 @@ class _BlocProvider extends StatelessWidget {
   final WorkoutStage? stage;
   final Widget child;
 
-  const _BlocProvider({
-    required this.stage,
-    required this.child,
-  });
+  const _BlocProvider({required this.stage, required this.child});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => WorkoutStageCreatorBloc(
+      create: (_) => WorkoutStageCreatorCubit(
         originalStage: stage,
-      )..add(
-          const WorkoutStageCreatorEventInitialize(),
-        ),
+      )..initialize(),
       child: child,
     );
   }
 }
 
-class _BlocListener extends StatelessWidget {
+class _CubitListener extends StatelessWidget {
   final Widget child;
 
-  const _BlocListener({
-    required this.child,
-  });
+  const _CubitListener({required this.child});
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<WorkoutStageCreatorBloc, WorkoutStageCreatorState>(
-      listener: (BuildContext context, WorkoutStageCreatorState state) {
-        if (state.stageToSubmit != null) {
-          popRoute(result: state.stageToSubmit);
-        }
+    return BlocListener<WorkoutStageCreatorCubit, WorkoutStageCreatorState>(
+      listenWhen: (_, currentState) => currentState.stageToAdd != null,
+      listener: (_, WorkoutStageCreatorState state) {
+        popRoute(result: state.stageToAdd);
       },
       child: child,
     );

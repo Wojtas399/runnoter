@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/bloc/reauthentication/reauthentication_bloc.dart';
-import '../../component/bloc_with_status_listener_component.dart';
+import '../../../domain/cubit/reauthentication/reauthentication_cubit.dart';
+import '../../component/cubit_with_status_listener_component.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/text/title_text_components.dart';
 import '../../service/dialog_service.dart';
@@ -16,8 +16,8 @@ class ReauthenticationBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => ReauthenticationBloc(),
-      child: _BlocListener(
+      create: (_) => ReauthenticationCubit(),
+      child: _CubitListener(
         child: SafeArea(
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -54,8 +54,8 @@ class ReauthenticationDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => ReauthenticationBloc(),
-      child: _BlocListener(
+      create: (_) => ReauthenticationCubit(),
+      child: _CubitListener(
         child: AlertDialog(
           title: Text(Str.of(context).reauthenticationTitle),
           content: const SizedBox(
@@ -74,44 +74,44 @@ class ReauthenticationDialog extends StatelessWidget {
   }
 }
 
-class _BlocListener extends StatelessWidget {
+class _CubitListener extends StatelessWidget {
   final Widget child;
 
-  const _BlocListener({required this.child});
+  const _CubitListener({required this.child});
 
   @override
   Widget build(BuildContext context) {
-    return BlocWithStatusListener<ReauthenticationBloc, ReauthenticationState,
-        ReauthenticationBlocInfo, ReauthenticationBlocError>(
+    return CubitWithStatusListener<ReauthenticationCubit, ReauthenticationState,
+        ReauthenticationCubitInfo, ReauthenticationCubitError>(
       showDialogOnLoading: false,
-      onInfo: (ReauthenticationBlocInfo info) => _manageInfo(info, context),
-      onError: (ReauthenticationBlocError error) =>
+      onInfo: (ReauthenticationCubitInfo info) => _manageInfo(info, context),
+      onError: (ReauthenticationCubitError error) =>
           _manageError(error, context),
       child: child,
     );
   }
 
-  void _manageInfo(ReauthenticationBlocInfo info, BuildContext context) {
+  void _manageInfo(ReauthenticationCubitInfo info, BuildContext context) {
     switch (info) {
-      case ReauthenticationBlocInfo.userConfirmed:
+      case ReauthenticationCubitInfo.userConfirmed:
         popRoute(result: true);
         break;
     }
   }
 
   Future<void> _manageError(
-    ReauthenticationBlocError error,
+    ReauthenticationCubitError error,
     BuildContext context,
   ) async {
     final str = Str.of(context);
     switch (error) {
-      case ReauthenticationBlocError.wrongPassword:
+      case ReauthenticationCubitError.wrongPassword:
         await showMessageDialog(
           title: str.reauthenticationWrongPasswordDialogTitle,
           message: str.reauthenticationWrongPasswordDialogMessage,
         );
         break;
-      case ReauthenticationBlocError.userMismatch:
+      case ReauthenticationCubitError.userMismatch:
         await showMessageDialog(
           title: str.userMismatchDialogTitle,
           message: str.userMismatchDialogMessage,

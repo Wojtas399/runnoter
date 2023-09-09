@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/bloc/workout_stage_creator/workout_stage_creator_bloc.dart';
+import '../../../domain/cubit/workout_stage_creator/workout_stage_creator_cubit.dart';
 import '../../component/gap/gap_horizontal_components.dart';
 import '../../component/responsive_layout_component.dart';
 import '../../service/navigator_service.dart';
@@ -85,8 +85,9 @@ class _DialogTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool isEditMode = context.select(
-      (WorkoutStageCreatorBloc bloc) => bloc.state.isEditMode,
+      (WorkoutStageCreatorCubit cubit) => cubit.state.isEditMode,
     );
+
     return Text(
       isEditMode
           ? Str.of(context).workoutStageCreatorScreenTitleEditMode
@@ -101,24 +102,20 @@ class _SaveButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool isEditMode = context.select(
-      (WorkoutStageCreatorBloc bloc) => bloc.state.isEditMode,
+      (WorkoutStageCreatorCubit cubit) => cubit.state.isEditMode,
     );
     final bool isButtonDisabled = context.select(
-      (WorkoutStageCreatorBloc bloc) => bloc.state.isSubmitButtonDisabled,
+      (WorkoutStageCreatorCubit cubit) => cubit.state.isSubmitButtonDisabled,
     );
     final Widget label = Text(
       isEditMode ? Str.of(context).save : Str.of(context).add,
     );
 
     return FilledButton(
-      onPressed: isButtonDisabled ? null : () => _onPressed(context),
+      onPressed: isButtonDisabled
+          ? null
+          : context.read<WorkoutStageCreatorCubit>().submit,
       child: label,
     );
-  }
-
-  void _onPressed(BuildContext context) {
-    context.read<WorkoutStageCreatorBloc>().add(
-          const WorkoutStageCreatorEventSubmit(),
-        );
   }
 }

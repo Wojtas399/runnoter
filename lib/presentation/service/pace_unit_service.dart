@@ -92,29 +92,19 @@ sealed class ConvertedPaceTime extends ConvertedPace {
   final int minutes;
   final int seconds;
 
-  const ConvertedPaceTime({
-    required this.minutes,
-    required this.seconds,
-  });
+  const ConvertedPaceTime({required this.minutes, required this.seconds});
 
   @override
-  List<Object?> get props => [
-        minutes,
-        seconds,
-      ];
+  List<Object?> get props => [minutes, seconds];
 }
 
 sealed class ConvertedPaceDistance extends ConvertedPace {
   final double distance;
 
-  const ConvertedPaceDistance({
-    required this.distance,
-  });
+  const ConvertedPaceDistance({required this.distance});
 
   @override
-  List<Object?> get props => [
-        distance,
-      ];
+  List<Object?> get props => [distance];
 }
 
 class ConvertedPaceMinutesPerKilometer extends ConvertedPaceTime {
@@ -132,13 +122,9 @@ class ConvertedPaceMinutesPerMile extends ConvertedPaceTime {
 }
 
 class ConvertedPaceKilometersPerHour extends ConvertedPaceDistance {
-  const ConvertedPaceKilometersPerHour({
-    required super.distance,
-  });
+  const ConvertedPaceKilometersPerHour({required super.distance});
 }
 
 class ConvertedPaceMilesPerHour extends ConvertedPaceDistance {
-  const ConvertedPaceMilesPerHour({
-    required super.distance,
-  });
+  const ConvertedPaceMilesPerHour({required super.distance});
 }

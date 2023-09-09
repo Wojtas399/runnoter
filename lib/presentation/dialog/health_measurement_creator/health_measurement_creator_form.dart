@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/bloc/health_measurement_creator/health_measurement_creator_bloc.dart';
+import '../../../domain/cubit/health_measurement_creator/health_measurement_creator_cubit.dart';
 import '../../component/date_selector_component.dart';
 import '../../component/form_text_field_component.dart';
 import '../../component/gap/gap_components.dart';
@@ -36,7 +36,7 @@ class _Date extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final DateTime? date = context.select(
-      (HealthMeasurementCreatorBloc bloc) => bloc.state.date,
+      (HealthMeasurementCreatorCubit cubit) => cubit.state.date,
     );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -46,16 +46,11 @@ class _Date extends StatelessWidget {
         DateSelector(
           date: date,
           lastDate: DateTime.now(),
-          onDateSelected: (DateTime date) => _onDateSelected(context, date),
+          onDateSelected:
+              context.read<HealthMeasurementCreatorCubit>().dateChanged,
         ),
       ],
     );
-  }
-
-  void _onDateSelected(BuildContext context, DateTime date) {
-    context.read<HealthMeasurementCreatorBloc>().add(
-          HealthMeasurementCreatorEventDateChanged(date: date),
-        );
   }
 }
 
@@ -72,7 +67,7 @@ class _RestingHeartRateState extends State<_RestingHeartRate> {
   @override
   void initState() {
     _controller.text = context
-            .read<HealthMeasurementCreatorBloc>()
+            .read<HealthMeasurementCreatorCubit>()
             .state
             .restingHeartRate
             ?.toString() ??
@@ -107,11 +102,9 @@ class _RestingHeartRateState extends State<_RestingHeartRate> {
 
   void _onChanged() {
     final int restingHeartRate = int.tryParse(_controller.text) ?? 0;
-    context.read<HealthMeasurementCreatorBloc>().add(
-          HealthMeasurementCreatorEventRestingHeartRateChanged(
-            restingHeartRate: restingHeartRate,
-          ),
-        );
+    context
+        .read<HealthMeasurementCreatorCubit>()
+        .restingHeartRateChanged(restingHeartRate);
   }
 }
 
@@ -128,7 +121,7 @@ class _FastingWeightState extends State<_FastingWeight> {
   @override
   void initState() {
     _controller.text = context
-            .read<HealthMeasurementCreatorBloc>()
+            .read<HealthMeasurementCreatorCubit>()
             .state
             .fastingWeight
             ?.toString() ??
@@ -161,17 +154,13 @@ class _FastingWeightState extends State<_FastingWeight> {
 
   void _onChanged() {
     final double fastingWeight = double.tryParse(_controller.text) ?? 0;
-    context.read<HealthMeasurementCreatorBloc>().add(
-          HealthMeasurementCreatorEventFastingWeightChanged(
-            fastingWeight: fastingWeight,
-          ),
-        );
+    context
+        .read<HealthMeasurementCreatorCubit>()
+        .fastingWeightChanged(fastingWeight);
   }
 }
 
 void _onSubmitted(BuildContext context) {
-  final bloc = context.read<HealthMeasurementCreatorBloc>();
-  if (bloc.state.canSubmit) {
-    bloc.add(const HealthMeasurementCreatorEventSubmit());
-  }
+  final cubit = context.read<HealthMeasurementCreatorCubit>();
+  if (cubit.state.canSubmit) cubit.submit();
 }

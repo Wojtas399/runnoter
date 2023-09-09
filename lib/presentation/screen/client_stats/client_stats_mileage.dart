@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
-import '../../../domain/bloc/mileage_stats/mileage_stats_bloc.dart';
 import '../../../domain/cubit/date_range_manager_cubit.dart';
+import '../../../domain/cubit/mileage_stats/mileage_stats_cubit.dart';
 import '../../component/date_range_header_component.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/loading_info_component.dart';
@@ -28,7 +28,7 @@ class ClientStatsMileage extends StatelessWidget {
           ],
         ),
         const Gap24(),
-        BlocBuilder<MileageStatsBloc, MileageStatsState>(
+        BlocBuilder<MileageStatsCubit, MileageStatsState>(
           builder: (_, MileageStatsState state) {
             if (state.dateRangeType == null ||
                 state.dateRange == null ||
@@ -52,38 +52,23 @@ class _DateRange extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final DateRangeType dateRangeType = context.select(
-      (MileageStatsBloc bloc) => bloc.state.dateRangeType!,
+      (MileageStatsCubit cubit) => cubit.state.dateRangeType!,
     );
     final DateRange dateRange = context.select(
-      (MileageStatsBloc bloc) => bloc.state.dateRange!,
+      (MileageStatsCubit cubit) => cubit.state.dateRange!,
     );
+    final mileageStatsCubit = context.read<MileageStatsCubit>();
 
     return DateRangeHeader(
       selectedDateRangeType: dateRangeType,
       dateRange: dateRange,
-      onWeekSelected: () => _changeDateRangeType(context, DateRangeType.week),
-      onYearSelected: () => _changeDateRangeType(context, DateRangeType.year),
-      onPreviousRangePressed: () => _onPreviousRangePressed(context),
-      onNextRangePressed: () => _onNextRangePressed(context),
+      onWeekSelected: () =>
+          mileageStatsCubit.changeDateRangeType(DateRangeType.week),
+      onYearSelected: () =>
+          mileageStatsCubit.changeDateRangeType(DateRangeType.year),
+      onPreviousRangePressed: mileageStatsCubit.previousDateRange,
+      onNextRangePressed: mileageStatsCubit.nextDateRange,
     );
-  }
-
-  void _changeDateRangeType(BuildContext context, DateRangeType dateRangeType) {
-    context.read<MileageStatsBloc>().add(
-          MileageStatsEventChangeDateRangeType(dateRangeType: dateRangeType),
-        );
-  }
-
-  void _onPreviousRangePressed(BuildContext context) {
-    context.read<MileageStatsBloc>().add(
-          const MileageStatsEventPreviousDateRange(),
-        );
-  }
-
-  void _onNextRangePressed(BuildContext context) {
-    context.read<MileageStatsBloc>().add(
-          const MileageStatsEventNextDateRange(),
-        );
   }
 }
 
@@ -94,10 +79,10 @@ class _Chart extends StatelessWidget {
   Widget build(BuildContext context) {
     final String? languageCode = context.languageCode;
     final DateRangeType dateRangeType = context.select(
-      (MileageStatsBloc bloc) => bloc.state.dateRangeType!,
+      (MileageStatsCubit cubit) => cubit.state.dateRangeType!,
     );
     final List<MileageStatsChartPoint> chartPoints = context.select(
-      (MileageStatsBloc bloc) => bloc.state.mileageChartPoints!,
+      (MileageStatsCubit cubit) => cubit.state.mileageChartPoints!,
     );
 
     return SfCartesianChart(

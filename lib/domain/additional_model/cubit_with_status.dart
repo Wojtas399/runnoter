@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'bloc_status.dart';
+import 'cubit_status.dart';
 import 'cubit_state.dart';
 
 abstract class CubitWithStatus<State extends CubitState, Info, Error>
@@ -9,37 +9,37 @@ abstract class CubitWithStatus<State extends CubitState, Info, Error>
 
   void emitLoadingStatus<T>({T? loadingInfo}) {
     emit(state.copyWith(
-      status: BlocStatusLoading<T>(loadingInfo: loadingInfo),
+      status: CubitStatusLoading<T>(loadingInfo: loadingInfo),
     ));
   }
 
   void emitCompleteStatus({Info? info}) {
-    emit(state.copyWith(
-      status: BlocStatusComplete<Info>(info: info),
-    ));
+    CubitStatus status = const CubitStatusComplete();
+    if (info != null) status = CubitStatusComplete<Info>(info: info);
+    emit(state.copyWith(status: status));
   }
 
   void emitErrorStatus(Error error) {
     emit(state.copyWith(
-      status: BlocStatusError<Error>(error: error),
+      status: CubitStatusError<Error>(error: error),
     ));
   }
 
   void emitUnknownErrorStatus() {
     emit(state.copyWith(
-      status: const BlocStatusUnknownError(),
+      status: const CubitStatusUnknownError(),
     ));
   }
 
   void emitNoInternetConnectionStatus() {
     emit(state.copyWith(
-      status: const BlocStatusNoInternetConnection(),
+      status: const CubitStatusNoInternetConnection(),
     ));
   }
 
   void emitNoLoggedUserStatus() {
     emit(state.copyWith(
-      status: const BlocStatusNoLoggedUser(),
+      status: const CubitStatusNoLoggedUser(),
     ));
   }
 }

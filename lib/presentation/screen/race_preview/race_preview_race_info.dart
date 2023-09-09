@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/additional_model/activity_status.dart';
-import '../../../domain/bloc/race_preview/race_preview_bloc.dart';
+import '../../../domain/cubit/race_preview/race_preview_cubit.dart';
 import '../../component/activity_status_info_component.dart';
 import '../../component/content_with_label_component.dart';
 import '../../component/gap/gap_components.dart';
@@ -80,7 +80,7 @@ class _RaceName extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final String? raceName = context.select(
-      (RacePreviewBloc bloc) => bloc.state.name,
+      (RacePreviewCubit cubit) => cubit.state.name,
     );
 
     return TitleLarge(raceName ?? '--');
@@ -93,7 +93,7 @@ class _RaceDate extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final DateTime? date = context.select(
-      (RacePreviewBloc bloc) => bloc.state.date,
+      (RacePreviewCubit cubit) => cubit.state.date,
     );
 
     return NullableText(date?.toFullDate(context.languageCode));
@@ -106,7 +106,7 @@ class _Place extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final String? place = context.select(
-      (RacePreviewBloc bloc) => bloc.state.place,
+      (RacePreviewCubit cubit) => cubit.state.place,
     );
 
     return NullableText(place);
@@ -119,7 +119,7 @@ class _Distance extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final double? distance = context.select(
-      (RacePreviewBloc bloc) => bloc.state.distance,
+      (RacePreviewCubit cubit) => cubit.state.distance,
     );
     String? distanceStr;
     if (distance != null) {
@@ -141,7 +141,7 @@ class _ExpectedDuration extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Duration? expectedDuration = context.select(
-      (RacePreviewBloc bloc) => bloc.state.expectedDuration,
+      (RacePreviewCubit cubit) => cubit.state.expectedDuration,
     );
 
     return NullableText(expectedDuration?.toUIFormat());
@@ -154,7 +154,7 @@ class _ActivityStatus extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ActivityStatus? raceStatus = context.select(
-      (RacePreviewBloc bloc) => bloc.state.raceStatus,
+      (RacePreviewCubit cubit) => cubit.state.raceStatus,
     );
 
     return raceStatus == null

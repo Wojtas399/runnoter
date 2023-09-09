@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 
-import '../../../domain/bloc/calendar/calendar_bloc.dart';
-import '../../../domain/bloc/home/home_bloc.dart';
+import '../../../domain/cubit/calendar/calendar_cubit.dart';
 import '../../../domain/cubit/date_range_manager_cubit.dart';
+import '../../../domain/cubit/home/home_cubit.dart';
 import '../../component/date_range_header_component.dart';
 import '../../component/gap/gap_horizontal_components.dart';
 import '../../component/nullable_text_component.dart';
@@ -128,7 +128,7 @@ class _Avatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final String? loggedUserName = context.select(
-      (HomeBloc bloc) => bloc.state.loggedUserName,
+      (HomeCubit cubit) => cubit.state.loggedUserName,
     );
     return IconButton(
       onPressed: onPressed,
@@ -149,10 +149,10 @@ class _MobileDateRangeHeader extends StatelessWidget
   @override
   Widget build(BuildContext context) {
     final DateRangeType dateRangeType = context.select(
-      (CalendarBloc bloc) => bloc.state.dateRangeType,
+      (CalendarCubit cubit) => cubit.state.dateRangeType,
     );
     final DateRange? dateRange = context.select(
-      (CalendarBloc bloc) => bloc.state.dateRange,
+      (CalendarCubit cubit) => cubit.state.dateRange,
     );
 
     return dateRange != null
@@ -161,35 +161,17 @@ class _MobileDateRangeHeader extends StatelessWidget
             child: DateRangeHeader(
               selectedDateRangeType: dateRangeType,
               dateRange: dateRange,
-              onWeekSelected: () =>
-                  _onDateRangeTypeChanged(context, DateRangeType.week),
-              onMonthSelected: () =>
-                  _onDateRangeTypeChanged(context, DateRangeType.month),
-              onPreviousRangePressed: () => _onPreviousDateRange(context),
-              onNextRangePressed: () => _onNextDateRange(context),
+              onWeekSelected: () => context
+                  .read<CalendarCubit>()
+                  .changeDateRangeType(DateRangeType.week),
+              onMonthSelected: () => context
+                  .read<CalendarCubit>()
+                  .changeDateRangeType(DateRangeType.month),
+              onPreviousRangePressed:
+                  context.read<CalendarCubit>().previousDateRange,
+              onNextRangePressed: context.read<CalendarCubit>().nextDateRange,
             ),
           )
         : const SizedBox();
-  }
-
-  void _onDateRangeTypeChanged(
-    BuildContext context,
-    DateRangeType dateRangeType,
-  ) {
-    context.read<CalendarBloc>().add(
-          CalendarEventChangeDateRangeType(dateRangeType: dateRangeType),
-        );
-  }
-
-  void _onPreviousDateRange(BuildContext context) {
-    context.read<CalendarBloc>().add(
-          const CalendarEventPreviousDateRange(),
-        );
-  }
-
-  void _onNextDateRange(BuildContext context) {
-    context.read<CalendarBloc>().add(
-          const CalendarEventNextDateRange(),
-        );
   }
 }

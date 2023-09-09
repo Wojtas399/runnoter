@@ -31,7 +31,7 @@ class ProfileCoachState extends CubitState<ProfileCoachState> {
 
   @override
   ProfileCoachState copyWith({
-    BlocStatus? status,
+    CubitStatus? status,
     List<CoachingRequestShort>? sentRequests,
     List<CoachingRequestShort>? receivedRequests,
     String? coachId,
@@ -40,7 +40,7 @@ class ProfileCoachState extends CubitState<ProfileCoachState> {
     bool deletedCoachParams = false,
   }) =>
       ProfileCoachState(
-        status: status ?? const BlocStatusComplete(),
+        status: status ?? const CubitStatusComplete(),
         sentRequests: sentRequests ?? this.sentRequests,
         receivedRequests: receivedRequests ?? this.receivedRequests,
         coachId: deletedCoachParams ? null : coachId ?? this.coachId,

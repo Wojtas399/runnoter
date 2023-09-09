@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/additional_model/workout_stage.dart';
-import '../../../domain/bloc/workout_creator/workout_creator_bloc.dart';
+import '../../../domain/cubit/workout_creator/workout_creator_cubit.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/text/body_text_components.dart';
 import '../../component/text/label_text_components.dart';
@@ -38,7 +38,7 @@ class _WorkoutStagesList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<WorkoutStage> stages = context.select(
-      (WorkoutCreatorBloc bloc) => bloc.state.stages,
+      (WorkoutCreatorCubit cubit) => cubit.state.stages,
     );
 
     if (stages.isEmpty) return const _NoWorkoutStagesInfo();
@@ -132,9 +132,7 @@ class _ReorderableWorkoutStagesState extends State<_ReorderableWorkoutStages> {
       final WorkoutStage stage = _stages.removeAt(oldIndex);
       _stages.insert(newIndex, stage);
     });
-    context.read<WorkoutCreatorBloc>().add(
-          WorkoutCreatorEventWorkoutStagesOrderChanged(workoutStages: _stages),
-        );
+    context.read<WorkoutCreatorCubit>().workoutStagesOrderChanged(_stages);
   }
 }
 
@@ -160,16 +158,10 @@ class _AddStageButton extends StatelessWidget {
   }
 
   Future<void> _onPressed(BuildContext context) async {
-    final WorkoutCreatorBloc bloc = context.read<WorkoutCreatorBloc>();
+    final WorkoutCreatorCubit cubit = context.read<WorkoutCreatorCubit>();
     final WorkoutStage? workoutStage = await showDialogDependingOnScreenSize(
       const WorkoutStageCreatorDialog(),
     );
-    if (workoutStage != null) {
-      bloc.add(
-        WorkoutCreatorEventWorkoutStageAdded(
-          workoutStage: workoutStage,
-        ),
-      );
-    }
+    if (workoutStage != null) cubit.workoutStageAdded(workoutStage);
   }
 }

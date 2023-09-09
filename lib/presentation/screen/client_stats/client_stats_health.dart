@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
-import '../../../domain/bloc/health_stats/health_stats_bloc.dart';
 import '../../../domain/cubit/date_range_manager_cubit.dart';
+import '../../../domain/cubit/health_stats/health_stats_cubit.dart';
 import '../../component/date_range_header_component.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/loading_info_component.dart';
@@ -28,7 +28,7 @@ class ClientStatsHealth extends StatelessWidget {
           ],
         ),
         const Gap24(),
-        BlocBuilder<HealthStatsBloc, HealthStatsState>(
+        BlocBuilder<HealthStatsCubit, HealthStatsState>(
           builder: (BuildContext context, HealthStatsState state) {
             if (state.dateRangeType == null ||
                 state.dateRange == null ||
@@ -52,41 +52,25 @@ class _DateRange extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final DateRangeType dateRangeType = context.select(
-      (HealthStatsBloc bloc) => bloc.state.dateRangeType!,
+      (HealthStatsCubit cubit) => cubit.state.dateRangeType!,
     );
     final DateRange dateRange = context.select(
-      (HealthStatsBloc bloc) => bloc.state.dateRange!,
+      (HealthStatsCubit cubit) => cubit.state.dateRange!,
     );
+    final HealthStatsCubit healthStatsCubit = context.read<HealthStatsCubit>();
 
     return DateRangeHeader(
       selectedDateRangeType: dateRangeType,
       dateRange: dateRange,
-      onWeekSelected: () => _changeDateRangeType(context, DateRangeType.week),
-      onMonthSelected: () => _changeDateRangeType(context, DateRangeType.month),
-      onYearSelected: () => _changeDateRangeType(context, DateRangeType.year),
-      onPreviousRangePressed: () => _previousDateRange(context),
-      onNextRangePressed: () => _nextDateRange(context),
+      onWeekSelected: () =>
+          healthStatsCubit.changeChartDateRangeType(DateRangeType.week),
+      onMonthSelected: () =>
+          healthStatsCubit.changeChartDateRangeType(DateRangeType.month),
+      onYearSelected: () =>
+          healthStatsCubit.changeChartDateRangeType(DateRangeType.year),
+      onPreviousRangePressed: healthStatsCubit.previousChartDateRange,
+      onNextRangePressed: healthStatsCubit.nextChartDateRange,
     );
-  }
-
-  void _changeDateRangeType(BuildContext context, DateRangeType dateRangeType) {
-    context.read<HealthStatsBloc>().add(
-          HealthStatsEventChangeChartDateRangeType(
-            dateRangeType: dateRangeType,
-          ),
-        );
-  }
-
-  void _previousDateRange(BuildContext context) {
-    context.read<HealthStatsBloc>().add(
-          const HealthStatsEventPreviousChartDateRange(),
-        );
-  }
-
-  void _nextDateRange(BuildContext context) {
-    context.read<HealthStatsBloc>().add(
-          const HealthStatsEventNextChartDateRange(),
-        );
   }
 }
 
@@ -117,7 +101,7 @@ class _RestingHeartRateChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<HealthStatsChartPoint> points = context.select(
-      (HealthStatsBloc bloc) => bloc.state.restingHeartRatePoints!,
+      (HealthStatsCubit cubit) => cubit.state.restingHeartRatePoints!,
     );
 
     return _LineChart(
@@ -134,7 +118,7 @@ class _FastingWeightChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<HealthStatsChartPoint> points = context.select(
-      (HealthStatsBloc bloc) => bloc.state.fastingWeightPoints!,
+      (HealthStatsCubit cubit) => cubit.state.fastingWeightPoints!,
     );
 
     return _LineChart(
@@ -154,7 +138,7 @@ class _LineChart extends StatelessWidget {
   Widget build(BuildContext context) {
     final String? languageCode = context.languageCode;
     final DateRangeType dateRangeType = context.select(
-      (HealthStatsBloc bloc) => bloc.state.dateRangeType!,
+      (HealthStatsCubit cubit) => cubit.state.dateRangeType!,
     );
 
     return SfCartesianChart(

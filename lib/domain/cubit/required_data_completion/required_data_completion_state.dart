@@ -9,7 +9,7 @@ class RequiredDataCompletionState
   final DateTime? dateOfBirth;
 
   const RequiredDataCompletionState({
-    super.status = const BlocStatusInitial(),
+    super.status = const CubitStatusInitial(),
     this.accountType = AccountType.runner,
     this.gender = Gender.male,
     this.name = '',
@@ -28,7 +28,7 @@ class RequiredDataCompletionState
 
   @override
   RequiredDataCompletionState copyWith({
-    BlocStatus? status,
+    CubitStatus? status,
     AccountType? accountType,
     Gender? gender,
     String? name,
@@ -36,7 +36,7 @@ class RequiredDataCompletionState
     DateTime? dateOfBirth,
   }) =>
       RequiredDataCompletionState(
-        status: status ?? const BlocStatusComplete(),
+        status: status ?? const CubitStatusComplete(),
         accountType: accountType ?? this.accountType,
         gender: gender ?? this.gender,
         name: name ?? this.name,

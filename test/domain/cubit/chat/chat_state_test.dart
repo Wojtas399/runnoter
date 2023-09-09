@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:runnoter/domain/additional_model/bloc_status.dart';
+import 'package:runnoter/domain/additional_model/cubit_status.dart';
 import 'package:runnoter/domain/cubit/chat/chat_cubit.dart';
 import 'package:runnoter/domain/entity/message.dart';
 
@@ -9,7 +9,7 @@ void main() {
   late ChatState state;
 
   setUp(
-    () => state = const ChatState(status: BlocStatusInitial()),
+    () => state = const ChatState(status: CubitStatusInitial()),
   );
 
   test(
@@ -71,13 +71,13 @@ void main() {
     'copy with status, '
     'should assign complete status if new value is null',
     () {
-      const BlocStatus expected = BlocStatusLoading();
+      const CubitStatus expected = CubitStatusLoading();
 
       state = state.copyWith(status: expected);
       final state2 = state.copyWith();
 
       expect(state.status, expected);
-      expect(state2.status, const BlocStatusComplete());
+      expect(state2.status, const CubitStatusComplete());
     },
   );
 

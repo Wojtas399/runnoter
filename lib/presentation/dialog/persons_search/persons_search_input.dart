@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/bloc/persons_search/persons_search_bloc.dart';
+import '../../../domain/cubit/persons_search/persons_search_cubit.dart';
 import '../../service/utils.dart';
 
 class PersonsSearchInput extends StatefulWidget {
@@ -64,8 +64,6 @@ class _State extends State<PersonsSearchInput> {
   }
 
   void _onSubmitted(BuildContext context) {
-    context.read<PersonsSearchBloc>().add(
-          PersonsSearchEventSearch(searchQuery: _controller.text),
-        );
+    context.read<PersonsSearchCubit>().search(_controller.text);
   }
 }

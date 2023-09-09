@@ -1,6 +1,6 @@
 part of 'profile_identities_cubit.dart';
 
-class ProfileIdentitiesState extends CubitState {
+class ProfileIdentitiesState extends CubitState<ProfileIdentitiesState> {
   final AccountType? accountType;
   final Gender? gender;
   final String? name;
@@ -34,7 +34,7 @@ class ProfileIdentitiesState extends CubitState {
 
   @override
   ProfileIdentitiesState copyWith({
-    BlocStatus? status,
+    CubitStatus? status,
     AccountType? accountType,
     Gender? gender,
     String? name,
@@ -44,7 +44,7 @@ class ProfileIdentitiesState extends CubitState {
     bool? isEmailVerified,
   }) =>
       ProfileIdentitiesState(
-        status: status ?? const BlocStatusComplete(),
+        status: status ?? const CubitStatusComplete(),
         accountType: accountType ?? this.accountType,
         gender: gender ?? this.gender,
         name: name ?? this.name,

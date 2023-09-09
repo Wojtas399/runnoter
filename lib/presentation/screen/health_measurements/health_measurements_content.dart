@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/bloc/health_measurements/health_measurements_bloc.dart';
+import '../../../domain/cubit/health_measurements_cubit.dart';
 import '../../../domain/entity/health_measurement.dart';
 import '../../component/body/medium_body_component.dart';
 import '../../component/empty_content_info_component.dart';
@@ -54,7 +54,7 @@ class _Body extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<HealthMeasurement>? measurements = context.select(
-      (HealthMeasurementsBloc bloc) => bloc.state.measurements,
+      (HealthMeasurementsCubit cubit) => cubit.state,
     );
 
     return switch (measurements) {
@@ -126,9 +126,7 @@ class _Header extends StatelessWidget {
 class _Measurements extends StatelessWidget {
   final List<HealthMeasurement> measurements;
 
-  const _Measurements({
-    required this.measurements,
-  });
+  const _Measurements({required this.measurements});
 
   @override
   Widget build(BuildContext context) {

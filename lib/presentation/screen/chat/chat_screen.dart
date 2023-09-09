@@ -2,7 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/additional_model/bloc_status.dart';
+import '../../../domain/additional_model/cubit_status.dart';
 import '../../../domain/cubit/chat/chat_cubit.dart';
 import '../../component/page_not_found_component.dart';
 import '../../service/dialog_service.dart';
@@ -36,9 +36,9 @@ class _CubitListener extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocListener<ChatCubit, ChatState>(
       listener: (context, state) {
-        final BlocStatus blocStatus = state.status;
-        if (blocStatus is BlocStatusError) {
-          _manageError(context, blocStatus.error);
+        final CubitStatus cubitStatus = state.status;
+        if (cubitStatus is CubitStatusError) {
+          _manageError(context, cubitStatus.error);
         }
       },
       child: child,

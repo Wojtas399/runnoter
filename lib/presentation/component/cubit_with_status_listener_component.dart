@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../domain/additional_model/bloc_status.dart';
 import '../../domain/additional_model/cubit_state.dart';
+import '../../domain/additional_model/cubit_status.dart';
 import '../config/navigation/router.dart';
 import '../service/dialog_service.dart';
 import '../service/navigator_service.dart';
@@ -29,7 +29,7 @@ class CubitWithStatusListener<Cubit extends StateStreamable<State>,
   Widget build(BuildContext context) {
     return BlocListener<Cubit, State>(
       listener: (BuildContext context, State state) {
-        _manageBlocStatus(state.status, context);
+        _manageCubitStatus(state.status, context);
         _emitStateChange(state);
       },
       child: child,
@@ -43,20 +43,20 @@ class CubitWithStatusListener<Cubit extends StateStreamable<State>,
     }
   }
 
-  void _manageBlocStatus(BlocStatus blocStatus, BuildContext context) {
-    if (blocStatus is BlocStatusLoading && showDialogOnLoading) {
+  void _manageCubitStatus(CubitStatus cubitStatus, BuildContext context) {
+    if (cubitStatus is CubitStatusLoading && showDialogOnLoading) {
       showLoadingDialog();
     } else {
       closeLoadingDialog();
-      if (blocStatus is BlocStatusComplete) {
-        _manageCompleteStatus(blocStatus, context);
-      } else if (blocStatus is BlocStatusError) {
-        _manageErrorStatus(blocStatus, context);
-      } else if (blocStatus is BlocStatusUnknownError) {
+      if (cubitStatus is CubitStatusComplete) {
+        _manageCompleteStatus(cubitStatus, context);
+      } else if (cubitStatus is CubitStatusError) {
+        _manageErrorStatus(cubitStatus, context);
+      } else if (cubitStatus is CubitStatusUnknownError) {
         _showUnknownErrorMessage(context);
-      } else if (blocStatus is BlocStatusNoInternetConnection) {
+      } else if (cubitStatus is CubitStatusNoInternetConnection) {
         showNoInternetConnectionMessage();
-      } else if (blocStatus is BlocStatusNoLoggedUser) {
+      } else if (cubitStatus is CubitStatusNoLoggedUser) {
         _showNoLoggedUserMessage(context);
         navigateAndRemoveUntil(const SignInRoute());
       }
@@ -64,7 +64,7 @@ class CubitWithStatusListener<Cubit extends StateStreamable<State>,
   }
 
   void _manageCompleteStatus(
-    BlocStatusComplete completeStatus,
+    CubitStatusComplete completeStatus,
     BuildContext context,
   ) {
     final Info? info = completeStatus.info;
@@ -74,10 +74,7 @@ class CubitWithStatusListener<Cubit extends StateStreamable<State>,
     }
   }
 
-  void _manageErrorStatus(
-    BlocStatusError errorStatus,
-    BuildContext context,
-  ) {
+  void _manageErrorStatus(CubitStatusError errorStatus, BuildContext context) {
     final Error? error = errorStatus.error;
     final Function(Error error)? onError = this.onError;
     if (error != null && onError != null) {

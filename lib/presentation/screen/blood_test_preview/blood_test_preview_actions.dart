@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/bloc/blood_test_preview/blood_test_preview_bloc.dart';
+import '../../../domain/cubit/blood_test_preview/blood_test_preview_cubit.dart';
 import '../../component/edit_delete_popup_menu_component.dart';
 import '../../config/navigation/router.dart';
 import '../../extension/context_extensions.dart';
@@ -16,36 +16,40 @@ class BloodTestPreviewActions extends StatelessWidget {
   Widget build(BuildContext context) {
     return EditDeleteActions(
       displayAsPopupMenu: context.isMobileSize,
-      onEditSelected: () {
-        _editTest(context);
-      },
-      onDeleteSelected: () {
-        _deleteTest(context);
-      },
+      onEditSelected: () => _editTest(context),
+      onDeleteSelected: () => _deleteTest(context),
     );
   }
 
   void _editTest(BuildContext context) {
-    final bloodTestPreviewBloc = context.read<BloodTestPreviewBloc>();
+    final bloodTestPreviewCubit = context.read<BloodTestPreviewCubit>();
     navigateTo(BloodTestCreatorRoute(
-      userId: bloodTestPreviewBloc.userId,
-      bloodTestId: bloodTestPreviewBloc.bloodTestId,
+      userId: bloodTestPreviewCubit.userId,
+      bloodTestId: bloodTestPreviewCubit.bloodTestId,
     ));
   }
 
   Future<void> _deleteTest(BuildContext context) async {
-    final BloodTestPreviewBloc bloc = context.read<BloodTestPreviewBloc>();
+    final BloodTestPreviewCubit cubit = context.read<BloodTestPreviewCubit>();
     final str = Str.of(context);
-    final bool confirmed = await askForConfirmation(
+    final bool isDeletionConfirmed =
+        await _askForTestDeletionConfirmation(context);
+    if (isDeletionConfirmed == true) {
+      showLoadingDialog();
+      await cubit.deleteTest();
+      closeLoadingDialog();
+      navigateBack();
+      showSnackbarMessage(str.bloodTestPreviewDeletedTestMessage);
+    }
+  }
+
+  Future<bool> _askForTestDeletionConfirmation(BuildContext context) async {
+    final str = Str.of(context);
+    return await askForConfirmation(
       title: Text(str.bloodTestPreviewDeleteTestTitle),
       content: Text(str.bloodTestPreviewDeleteTestMessage),
       confirmButtonLabel: str.delete,
       confirmButtonColor: Theme.of(context).colorScheme.error,
     );
-    if (confirmed == true) {
-      bloc.add(
-        const BloodTestPreviewEventDeleteTest(),
-      );
-    }
   }
 }

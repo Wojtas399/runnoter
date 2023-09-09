@@ -14,34 +14,18 @@ class Settings extends Equatable {
   });
 
   @override
-  List<Object> get props => [
-        themeMode,
-        language,
-        distanceUnit,
-        paceUnit,
-      ];
+  List<Object> get props => [themeMode, language, distanceUnit, paceUnit];
 }
 
-enum ThemeMode {
-  dark,
-  light,
-  system,
-}
+enum ThemeMode { dark, light, system }
 
-enum Language {
-  polish,
-  english,
-  system,
-}
+enum Language { polish, english, system }
 
-enum DistanceUnit {
-  kilometers,
-  miles,
-}
+enum DistanceUnit { kilometers, miles }
 
 enum PaceUnit {
   minutesPerKilometer,
   minutesPerMile,
   kilometersPerHour,
-  milesPerHour,
+  milesPerHour
 }

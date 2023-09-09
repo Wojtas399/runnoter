@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/additional_model/settings.dart' as settings;
-import '../../../domain/bloc/profile/settings/profile_settings_bloc.dart';
+import '../../../domain/cubit/profile/settings/profile_settings_cubit.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/text/title_text_components.dart';
 import '../../component/value_with_label_and_icon_component.dart';
@@ -49,7 +49,7 @@ class _Theme extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final settings.ThemeMode? themeMode = context.select(
-      (ProfileSettingsBloc bloc) => bloc.state.themeMode,
+      (ProfileSettingsCubit cubit) => cubit.state.themeMode,
     );
 
     return ValueWithLabelAndIcon(
@@ -63,7 +63,7 @@ class _Theme extends StatelessWidget {
   Future<void> _onPressed(BuildContext context) async =>
       await showDialogDependingOnScreenSize(
         BlocProvider.value(
-          value: context.read<ProfileSettingsBloc>(),
+          value: context.read<ProfileSettingsCubit>(),
           child: const ProfileThemeModeDialog(),
         ),
       );
@@ -75,7 +75,7 @@ class _Language extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final settings.Language? language = context.select(
-      (ProfileSettingsBloc bloc) => bloc.state.language,
+      (ProfileSettingsCubit cubit) => cubit.state.language,
     );
 
     return ValueWithLabelAndIcon(
@@ -91,7 +91,7 @@ class _Language extends StatelessWidget {
   Future<void> _onPressed(BuildContext context) async =>
       await showDialogDependingOnScreenSize(
         BlocProvider.value(
-          value: context.read<ProfileSettingsBloc>(),
+          value: context.read<ProfileSettingsCubit>(),
           child: const ProfileLanguageDialog(),
         ),
       );
@@ -103,7 +103,7 @@ class _DistanceUnit extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final settings.DistanceUnit? distanceUnit = context.select(
-      (ProfileSettingsBloc bloc) => bloc.state.distanceUnit,
+      (ProfileSettingsCubit cubit) => cubit.state.distanceUnit,
     );
 
     return ValueWithLabelAndIcon(
@@ -119,7 +119,7 @@ class _DistanceUnit extends StatelessWidget {
   Future<void> _onPressed(BuildContext context) async =>
       await showDialogDependingOnScreenSize(
         BlocProvider.value(
-          value: context.read<ProfileSettingsBloc>(),
+          value: context.read<ProfileSettingsCubit>(),
           child: const ProfileDistanceUnitDialog(),
         ),
       );
@@ -131,7 +131,7 @@ class _PaceUnit extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final settings.PaceUnit? paceUnit = context.select(
-      (ProfileSettingsBloc bloc) => bloc.state.paceUnit,
+      (ProfileSettingsCubit cubit) => cubit.state.paceUnit,
     );
 
     return ValueWithLabelAndIcon(
@@ -147,7 +147,7 @@ class _PaceUnit extends StatelessWidget {
   Future<void> _onPressed(BuildContext context) async =>
       await showDialogDependingOnScreenSize(
         BlocProvider.value(
-          value: context.read<ProfileSettingsBloc>(),
+          value: context.read<ProfileSettingsCubit>(),
           child: const ProfilePaceUnitDialog(),
         ),
       );

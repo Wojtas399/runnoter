@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/additional_model/activity_status.dart';
-import '../../../domain/bloc/activity_status_creator/activity_status_creator_bloc.dart';
-import '../../../domain/bloc/race_preview/race_preview_bloc.dart';
+import '../../../domain/cubit/activity_status_creator/activity_status_creator_cubit.dart';
+import '../../../domain/cubit/race_preview/race_preview_cubit.dart';
 import '../../component/big_button_component.dart';
 import '../../component/body/medium_body_component.dart';
 import '../../component/loading_info_component.dart';
@@ -68,7 +68,7 @@ class _RaceInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool isRaceLoaded = context.select(
-      (RacePreviewBloc bloc) => bloc.state.isRaceLoaded,
+      (RacePreviewCubit cubit) => cubit.state.isRaceLoaded,
     );
 
     return isRaceLoaded ? const RacePreviewRaceInfo() : const LoadingInfo();
@@ -81,7 +81,7 @@ class _RaceStatusButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ActivityStatus? raceStatus = context.select(
-      (RacePreviewBloc bloc) => bloc.state.raceStatus,
+      (RacePreviewCubit cubit) => cubit.state.raceStatus,
     );
     String label = Str.of(context).activityStatusEditStatus;
     if (raceStatus is ActivityStatusPending) {
@@ -98,11 +98,11 @@ class _RaceStatusButton extends StatelessWidget {
   }
 
   void _onPressed(BuildContext context) {
-    final racePreviewBloc = context.read<RacePreviewBloc>();
+    final racePreviewCubit = context.read<RacePreviewCubit>();
     navigateTo(ActivityStatusCreatorRoute(
-      userId: racePreviewBloc.userId,
+      userId: racePreviewCubit.userId,
       activityType: ActivityType.race.name,
-      activityId: racePreviewBloc.raceId,
+      activityId: racePreviewCubit.raceId,
     ));
   }
 }

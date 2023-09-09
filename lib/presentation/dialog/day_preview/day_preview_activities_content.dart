@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/bloc/day_preview/day_preview_bloc.dart';
+import '../../../domain/cubit/day_preview/day_preview_cubit.dart';
 import '../../../domain/entity/race.dart';
 import '../../../domain/entity/workout.dart';
 import '../../component/activity_item_component.dart';
@@ -18,10 +18,10 @@ class DayPreviewActivities extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<Workout>? workouts = context.select(
-      (DayPreviewBloc bloc) => bloc.state.workouts,
+      (DayPreviewCubit cubit) => cubit.state.workouts,
     );
     final List<Race>? races = context.select(
-      (DayPreviewBloc bloc) => bloc.state.races,
+      (DayPreviewCubit cubit) => cubit.state.races,
     );
 
     if (workouts == null && races == null) {
@@ -71,7 +71,7 @@ class _NoActivitiesInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool isPastDate = context.select(
-      (DayPreviewBloc bloc) => bloc.state.isPastDate,
+      (DayPreviewCubit cubit) => cubit.state.isPastDate,
     );
     final str = Str.of(context);
 
