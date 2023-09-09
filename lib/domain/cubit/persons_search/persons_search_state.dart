@@ -25,7 +25,7 @@ class PersonsSearchState extends CubitState<PersonsSearchState> {
 
   @override
   PersonsSearchState copyWith({
-    BlocStatus? status,
+    CubitStatus? status,
     String? searchQuery,
     List<String>? clientIds,
     List<String>? invitedPersonIds,
@@ -33,7 +33,7 @@ class PersonsSearchState extends CubitState<PersonsSearchState> {
     bool setFoundPersonsAsNull = false,
   }) =>
       PersonsSearchState(
-        status: status ?? const BlocStatusComplete(),
+        status: status ?? const CubitStatusComplete(),
         searchQuery: searchQuery ?? this.searchQuery,
         clientIds: clientIds ?? this.clientIds,
         invitedPersonIds: invitedPersonIds ?? this.invitedPersonIds,

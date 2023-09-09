@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:equatable/equatable.dart';
 import 'package:rxdart/rxdart.dart';
 
-import '../../../../../domain/additional_model/bloc_status.dart';
+import '../../../../../domain/additional_model/cubit_status.dart';
 import '../../../../../domain/entity/user.dart';
 import '../../../../../domain/repository/user_repository.dart';
 import '../../../../../domain/service/auth_service.dart';
@@ -34,7 +34,7 @@ class ProfileIdentitiesCubit extends CubitWithStatus<ProfileIdentitiesState,
 
   ProfileIdentitiesCubit({
     ProfileIdentitiesState state = const ProfileIdentitiesState(
-      status: BlocStatusInitial(),
+      status: CubitStatusInitial(),
     ),
   })  : _authService = getIt<AuthService>(),
         _userRepository = getIt<UserRepository>(),

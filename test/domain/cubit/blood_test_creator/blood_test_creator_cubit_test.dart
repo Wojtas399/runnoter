@@ -2,7 +2,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/domain/additional_model/bloc_status.dart';
+import 'package:runnoter/domain/additional_model/cubit_status.dart';
 import 'package:runnoter/domain/additional_model/blood_parameter.dart';
 import 'package:runnoter/domain/cubit/blood_test_creator/blood_test_creator_cubit.dart';
 import 'package:runnoter/domain/entity/blood_test.dart';
@@ -32,7 +32,7 @@ void main() {
         userId: userId,
         bloodTestId: bloodTestId,
         initialState: BloodTestCreatorState(
-          status: const BlocStatusInitial(),
+          status: const CubitStatusInitial(),
           gender: gender,
           bloodTest: bloodTest,
           date: date,
@@ -72,7 +72,7 @@ void main() {
     act: (cubit) => cubit.initialize(),
     expect: () => [
       BloodTestCreatorState(
-        status: const BlocStatusComplete(),
+        status: const CubitStatusComplete(),
         gender: Gender.male,
         bloodTest: createBloodTest(
           date: DateTime(2023, 5, 10),
@@ -114,7 +114,7 @@ void main() {
     act: (cubit) => cubit.initialize(),
     expect: () => [
       const BloodTestCreatorState(
-        status: BlocStatusComplete(),
+        status: CubitStatusComplete(),
         gender: Gender.male,
       ),
     ],
@@ -130,7 +130,7 @@ void main() {
     act: (cubit) => cubit.dateChanged(DateTime(2023, 5, 20)),
     expect: () => [
       BloodTestCreatorState(
-        status: const BlocStatusComplete(),
+        status: const CubitStatusComplete(),
         date: DateTime(2023, 5, 20),
       ),
     ],
@@ -158,7 +158,7 @@ void main() {
     ),
     expect: () => [
       const BloodTestCreatorState(
-        status: BlocStatusComplete(),
+        status: CubitStatusComplete(),
         parameterResults: [
           BloodParameterResult(
             parameter: BloodParameter.wbc,
@@ -195,7 +195,7 @@ void main() {
     ),
     expect: () => [
       const BloodTestCreatorState(
-        status: BlocStatusComplete(),
+        status: CubitStatusComplete(),
         parameterResults: [
           BloodParameterResult(
             parameter: BloodParameter.sodium,
@@ -224,7 +224,7 @@ void main() {
     ),
     expect: () => [
       const BloodTestCreatorState(
-        status: BlocStatusComplete(),
+        status: CubitStatusComplete(),
         parameterResults: [
           BloodParameterResult(
             parameter: BloodParameter.wbc,
@@ -271,7 +271,7 @@ void main() {
     act: (cubit) => cubit.submit(),
     expect: () => [
       BloodTestCreatorState(
-        status: const BlocStatusLoading(),
+        status: const CubitStatusLoading(),
         gender: Gender.male,
         date: DateTime(2023, 5, 20),
         parameterResults: const [
@@ -286,7 +286,7 @@ void main() {
         ],
       ),
       BloodTestCreatorState(
-        status: const BlocStatusComplete<BloodTestCreatorCubitInfo>(
+        status: const CubitStatusComplete<BloodTestCreatorCubitInfo>(
           info: BloodTestCreatorCubitInfo.bloodTestAdded,
         ),
         gender: Gender.male,
@@ -354,7 +354,7 @@ void main() {
     act: (cubit) => cubit.submit(),
     expect: () => [
       BloodTestCreatorState(
-        status: const BlocStatusLoading(),
+        status: const CubitStatusLoading(),
         gender: Gender.male,
         bloodTest: createBloodTest(
           id: bloodTestId,
@@ -379,7 +379,7 @@ void main() {
         ],
       ),
       BloodTestCreatorState(
-        status: const BlocStatusComplete<BloodTestCreatorCubitInfo>(
+        status: const CubitStatusComplete<BloodTestCreatorCubitInfo>(
           info: BloodTestCreatorCubitInfo.bloodTestUpdated,
         ),
         gender: Gender.male,

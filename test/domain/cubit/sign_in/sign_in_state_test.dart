@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:runnoter/domain/additional_model/bloc_status.dart';
+import 'package:runnoter/domain/additional_model/cubit_status.dart';
 import 'package:runnoter/domain/cubit/sign_in/sign_in_cubit.dart';
 
 void main() {
@@ -7,7 +7,7 @@ void main() {
 
   setUp(() {
     state = const SignInState(
-      status: BlocStatusInitial(),
+      status: CubitStatusInitial(),
       email: '',
       password: '',
     );
@@ -50,13 +50,13 @@ void main() {
   test(
     'copy with status',
     () {
-      const expectedStatus = BlocStatusLoading();
+      const expectedStatus = CubitStatusLoading();
 
       state = state.copyWith(status: expectedStatus);
       final state2 = state.copyWith();
 
       expect(state.status, expectedStatus);
-      expect(state2.status, const BlocStatusComplete());
+      expect(state2.status, const CubitStatusComplete());
     },
   );
 

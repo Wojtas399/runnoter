@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/common/date_service.dart';
-import 'package:runnoter/domain/additional_model/bloc_status.dart';
+import 'package:runnoter/domain/additional_model/cubit_status.dart';
 import 'package:runnoter/domain/cubit/health_measurement_creator/health_measurement_creator_cubit.dart';
 import 'package:runnoter/domain/entity/health_measurement.dart';
 import 'package:runnoter/domain/repository/health_measurement_repository.dart';
@@ -47,7 +47,7 @@ void main() {
     build: () => HealthMeasurementCreatorCubit(),
     act: (cubit) => cubit.initialize(null),
     expect: () => [
-      HealthMeasurementCreatorState(status: const BlocStatusComplete()),
+      HealthMeasurementCreatorState(status: const CubitStatusComplete()),
     ],
   );
 
@@ -70,7 +70,7 @@ void main() {
     act: (cubit) => cubit.initialize(DateTime(2023, 5, 10)),
     expect: () => [
       HealthMeasurementCreatorState(
-        status: const BlocStatusComplete(),
+        status: const CubitStatusComplete(),
         measurement: createHealthMeasurement(
           date: DateTime(2023, 5, 10),
           restingHeartRate: 50,
@@ -101,7 +101,7 @@ void main() {
     act: (cubit) => cubit.dateChanged(DateTime(2023, 2, 10)),
     expect: () => [
       HealthMeasurementCreatorState(
-        status: const BlocStatusComplete(),
+        status: const CubitStatusComplete(),
         date: DateTime(2023, 2, 10),
       )
     ],
@@ -114,7 +114,7 @@ void main() {
     act: (cubit) => cubit.restingHeartRateChanged(50),
     expect: () => [
       HealthMeasurementCreatorState(
-        status: const BlocStatusComplete(),
+        status: const CubitStatusComplete(),
         restingHeartRate: 50,
       ),
     ],
@@ -127,7 +127,7 @@ void main() {
     act: (cubit) => cubit.fastingWeightChanged(61.5),
     expect: () => [
       HealthMeasurementCreatorState(
-        status: const BlocStatusComplete(),
+        status: const CubitStatusComplete(),
         fastingWeight: 61.5,
       ),
     ],
@@ -139,7 +139,7 @@ void main() {
     'should do nothing',
     build: () => HealthMeasurementCreatorCubit(
         initialState: HealthMeasurementCreatorState(
-      status: const BlocStatusComplete(),
+      status: const CubitStatusComplete(),
       restingHeartRate: null,
       fastingWeight: 0,
     )),
@@ -153,7 +153,7 @@ void main() {
     'should emit no logged user bloc status',
     build: () => HealthMeasurementCreatorCubit(
       initialState: HealthMeasurementCreatorState(
-        status: const BlocStatusComplete(),
+        status: const CubitStatusComplete(),
         date: DateTime(2023, 5, 10),
         restingHeartRate: 50,
         fastingWeight: 65.2,
@@ -163,7 +163,7 @@ void main() {
     act: (cubit) => cubit.submit(),
     expect: () => [
       HealthMeasurementCreatorState(
-        status: const BlocStatusNoLoggedUser(),
+        status: const CubitStatusNoLoggedUser(),
         date: DateTime(2023, 5, 10),
         restingHeartRate: 50,
         fastingWeight: 65.2,
@@ -180,7 +180,7 @@ void main() {
     'should emit error status with measurementWithSelectedDateAlreadyExist error',
     build: () => HealthMeasurementCreatorCubit(
       initialState: HealthMeasurementCreatorState(
-        status: const BlocStatusComplete(),
+        status: const CubitStatusComplete(),
         date: DateTime(2023, 5, 10),
         restingHeartRate: 50,
         fastingWeight: 65.2,
@@ -195,13 +195,13 @@ void main() {
     act: (cubit) => cubit.submit(),
     expect: () => [
       HealthMeasurementCreatorState(
-        status: const BlocStatusLoading(),
+        status: const CubitStatusLoading(),
         date: DateTime(2023, 5, 10),
         restingHeartRate: 50,
         fastingWeight: 65.2,
       ),
       HealthMeasurementCreatorState(
-        status: const BlocStatusError<HealthMeasurementCreatorCubitError>(
+        status: const CubitStatusError<HealthMeasurementCreatorCubitError>(
           error: HealthMeasurementCreatorCubitError
               .measurementWithSelectedDateAlreadyExist,
         ),
@@ -230,7 +230,7 @@ void main() {
     'should emit complete status with measurementAdded info',
     build: () => HealthMeasurementCreatorCubit(
       initialState: HealthMeasurementCreatorState(
-        status: const BlocStatusComplete(),
+        status: const CubitStatusComplete(),
         date: DateTime(2023, 5, 12),
         restingHeartRate: 50,
         fastingWeight: 65.2,
@@ -246,13 +246,13 @@ void main() {
     act: (cubit) => cubit.submit(),
     expect: () => [
       HealthMeasurementCreatorState(
-        status: const BlocStatusLoading(),
+        status: const CubitStatusLoading(),
         date: DateTime(2023, 5, 12),
         restingHeartRate: 50,
         fastingWeight: 65.2,
       ),
       HealthMeasurementCreatorState(
-        status: const BlocStatusComplete<HealthMeasurementCreatorCubitInfo>(
+        status: const CubitStatusComplete<HealthMeasurementCreatorCubitInfo>(
           info: HealthMeasurementCreatorCubitInfo.measurementAdded,
         ),
         date: DateTime(2023, 5, 12),
@@ -291,7 +291,7 @@ void main() {
     'should emit complete status with measurementUpdated info',
     build: () => HealthMeasurementCreatorCubit(
       initialState: HealthMeasurementCreatorState(
-        status: const BlocStatusComplete(),
+        status: const CubitStatusComplete(),
         measurement: createHealthMeasurement(
           date: DateTime(2023, 5, 10),
           restingHeartRate: 50,
@@ -310,7 +310,7 @@ void main() {
     act: (cubit) => cubit.submit(),
     expect: () => [
       HealthMeasurementCreatorState(
-        status: const BlocStatusLoading(),
+        status: const CubitStatusLoading(),
         measurement: createHealthMeasurement(
           date: DateTime(2023, 5, 10),
           restingHeartRate: 50,
@@ -321,7 +321,7 @@ void main() {
         fastingWeight: 65.2,
       ),
       HealthMeasurementCreatorState(
-        status: const BlocStatusComplete<HealthMeasurementCreatorCubitInfo>(
+        status: const CubitStatusComplete<HealthMeasurementCreatorCubitInfo>(
           info: HealthMeasurementCreatorCubitInfo.measurementUpdated,
         ),
         measurement: createHealthMeasurement(
@@ -358,7 +358,7 @@ void main() {
     'should emit complete status with measurementUpdated info',
     build: () => HealthMeasurementCreatorCubit(
       initialState: HealthMeasurementCreatorState(
-        status: const BlocStatusComplete(),
+        status: const CubitStatusComplete(),
         measurement: createHealthMeasurement(
           date: DateTime(2023, 5, 10),
           restingHeartRate: 50,
@@ -381,7 +381,7 @@ void main() {
     act: (cubit) => cubit.submit(),
     expect: () => [
       HealthMeasurementCreatorState(
-        status: const BlocStatusLoading(),
+        status: const CubitStatusLoading(),
         measurement: createHealthMeasurement(
           date: DateTime(2023, 5, 10),
           restingHeartRate: 50,
@@ -392,7 +392,7 @@ void main() {
         fastingWeight: 65.2,
       ),
       HealthMeasurementCreatorState(
-        status: const BlocStatusComplete<HealthMeasurementCreatorCubitInfo>(
+        status: const CubitStatusComplete<HealthMeasurementCreatorCubitInfo>(
           info: HealthMeasurementCreatorCubitInfo.measurementUpdated,
         ),
         measurement: createHealthMeasurement(

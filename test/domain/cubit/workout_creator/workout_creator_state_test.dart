@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/domain/additional_model/bloc_status.dart';
+import 'package:runnoter/domain/additional_model/cubit_status.dart';
 import 'package:runnoter/domain/additional_model/workout_stage.dart';
 import 'package:runnoter/domain/cubit/workout_creator/workout_creator_cubit.dart';
 import 'package:runnoter/domain/entity/workout.dart';
@@ -15,7 +15,7 @@ void main() {
   setUp(() {
     state = WorkoutCreatorState(
       dateService: dateService,
-      status: const BlocStatusInitial(),
+      status: const CubitStatusInitial(),
       stages: const [],
     );
     dateService.mockAreDatesTheSame(expected: true);
@@ -31,7 +31,7 @@ void main() {
     'should be false',
     () {
       state = state.copyWith(
-        status: const BlocStatusComplete(),
+        status: const CubitStatusComplete(),
         workoutName: 'workout name',
         stages: const [
           WorkoutStageCardio(
@@ -51,7 +51,7 @@ void main() {
     'should be false',
     () {
       state = state.copyWith(
-        status: const BlocStatusComplete(),
+        status: const CubitStatusComplete(),
         date: DateTime(2023),
         stages: const [
           WorkoutStageCardio(
@@ -71,7 +71,7 @@ void main() {
     'should be false',
     () {
       state = state.copyWith(
-        status: const BlocStatusComplete(),
+        status: const CubitStatusComplete(),
         date: DateTime(2023),
         workoutName: '',
         stages: const [
@@ -92,7 +92,7 @@ void main() {
     'should be false',
     () {
       state = state.copyWith(
-        status: const BlocStatusComplete(),
+        status: const CubitStatusComplete(),
         date: DateTime(2023),
         workoutName: 'workout name',
         stages: const [],
@@ -110,7 +110,7 @@ void main() {
     'should be false',
     () {
       state = state.copyWith(
-        status: const BlocStatusComplete(),
+        status: const CubitStatusComplete(),
         date: DateTime(2023),
         workout: createWorkout(
           name: 'workout name',
@@ -150,7 +150,7 @@ void main() {
     'should be true',
     () {
       state = state.copyWith(
-        status: const BlocStatusComplete(),
+        status: const CubitStatusComplete(),
         date: DateTime(2023),
         workoutName: 'workout name',
         stages: const [
@@ -173,7 +173,7 @@ void main() {
     () {
       dateService.mockAreDatesTheSame(expected: false);
       state = state.copyWith(
-        status: const BlocStatusComplete(),
+        status: const CubitStatusComplete(),
         date: DateTime(2023, 2, 1),
         workout: createWorkout(
           date: DateTime(2023),
@@ -205,7 +205,7 @@ void main() {
     'should be true',
     () {
       state = state.copyWith(
-        status: const BlocStatusComplete(),
+        status: const CubitStatusComplete(),
         date: DateTime(2023),
         workout: createWorkout(
           date: DateTime(2023),
@@ -237,7 +237,7 @@ void main() {
     'should be true',
     () {
       state = state.copyWith(
-        status: const BlocStatusComplete(),
+        status: const CubitStatusComplete(),
         date: DateTime(2023),
         workout: createWorkout(
           date: DateTime(2023),
@@ -274,13 +274,13 @@ void main() {
     'copy with status, '
     'should set complete status if new value is null',
     () {
-      const BlocStatus expectedStatus = BlocStatusInitial();
+      const CubitStatus expectedStatus = CubitStatusInitial();
 
       state = state.copyWith(status: expectedStatus);
       final state2 = state.copyWith();
 
       expect(state.status, expectedStatus);
-      expect(state2.status, const BlocStatusComplete());
+      expect(state2.status, const CubitStatusComplete());
     },
   );
 

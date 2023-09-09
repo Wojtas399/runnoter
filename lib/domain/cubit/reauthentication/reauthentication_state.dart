@@ -10,11 +10,11 @@ class ReauthenticationState extends CubitState<ReauthenticationState> {
 
   @override
   ReauthenticationState copyWith({
-    BlocStatus? status,
+    CubitStatus? status,
     String? password,
   }) =>
       ReauthenticationState(
-        status: status ?? const BlocStatusComplete(),
+        status: status ?? const CubitStatusComplete(),
         password: password ?? this.password,
       );
 }

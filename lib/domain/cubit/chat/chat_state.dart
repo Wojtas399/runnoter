@@ -28,7 +28,7 @@ class ChatState extends CubitState<ChatState> {
 
   @override
   ChatState copyWith({
-    BlocStatus? status,
+    CubitStatus? status,
     String? loggedUserId,
     String? recipientFullName,
     List<Message>? messagesFromLatest,
@@ -36,7 +36,7 @@ class ChatState extends CubitState<ChatState> {
     bool messageToSendAsNull = false,
   }) =>
       ChatState(
-        status: status ?? const BlocStatusComplete(),
+        status: status ?? const CubitStatusComplete(),
         loggedUserId: loggedUserId ?? this.loggedUserId,
         recipientFullName: recipientFullName ?? this.recipientFullName,
         messagesFromLatest: messagesFromLatest ?? this.messagesFromLatest,

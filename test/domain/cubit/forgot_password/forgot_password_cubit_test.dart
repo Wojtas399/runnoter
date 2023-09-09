@@ -2,7 +2,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/domain/additional_model/bloc_status.dart';
+import 'package:runnoter/domain/additional_model/cubit_status.dart';
 import 'package:runnoter/domain/additional_model/custom_exception.dart';
 import 'package:runnoter/domain/cubit/forgot_password/forgot_password_cubit.dart';
 import 'package:runnoter/domain/service/auth_service.dart';
@@ -28,7 +28,7 @@ void main() {
     act: (cubit) => cubit.emailChanged(email),
     expect: () => [
       const ForgotPasswordState(
-        status: BlocStatusComplete(),
+        status: CubitStatusComplete(),
         email: email,
       ),
     ],
@@ -39,7 +39,7 @@ void main() {
     'should call auth service method to send password reset email and should emit complete status with email submitted info',
     build: () => ForgotPasswordCubit(
       initialState: const ForgotPasswordState(
-        status: BlocStatusInitial(),
+        status: CubitStatusInitial(),
         email: email,
       ),
     ),
@@ -47,11 +47,11 @@ void main() {
     act: (cubit) => cubit.submit(),
     expect: () => [
       const ForgotPasswordState(
-        status: BlocStatusLoading(),
+        status: CubitStatusLoading(),
         email: email,
       ),
       const ForgotPasswordState(
-        status: BlocStatusComplete<ForgotPasswordCubitInfo>(
+        status: CubitStatusComplete<ForgotPasswordCubitInfo>(
           info: ForgotPasswordCubitInfo.emailSubmitted,
         ),
         email: email,
@@ -68,7 +68,7 @@ void main() {
     'should emit error status with invalid email error',
     build: () => ForgotPasswordCubit(
       initialState: const ForgotPasswordState(
-        status: BlocStatusInitial(),
+        status: CubitStatusInitial(),
         email: email,
       ),
     ),
@@ -80,11 +80,11 @@ void main() {
     act: (cubit) => cubit.submit(),
     expect: () => [
       const ForgotPasswordState(
-        status: BlocStatusLoading(),
+        status: CubitStatusLoading(),
         email: email,
       ),
       const ForgotPasswordState(
-        status: BlocStatusError<ForgotPasswordCubitError>(
+        status: CubitStatusError<ForgotPasswordCubitError>(
           error: ForgotPasswordCubitError.invalidEmail,
         ),
         email: email,
@@ -101,7 +101,7 @@ void main() {
     'should emit error status with user not found error',
     build: () => ForgotPasswordCubit(
       initialState: const ForgotPasswordState(
-        status: BlocStatusInitial(),
+        status: CubitStatusInitial(),
         email: email,
       ),
     ),
@@ -113,11 +113,11 @@ void main() {
     act: (cubit) => cubit.submit(),
     expect: () => [
       const ForgotPasswordState(
-        status: BlocStatusLoading(),
+        status: CubitStatusLoading(),
         email: email,
       ),
       const ForgotPasswordState(
-        status: BlocStatusError<ForgotPasswordCubitError>(
+        status: CubitStatusError<ForgotPasswordCubitError>(
           error: ForgotPasswordCubitError.userNotFound,
         ),
         email: email,
@@ -134,7 +134,7 @@ void main() {
     'should emit network request failed status',
     build: () => ForgotPasswordCubit(
       initialState: const ForgotPasswordState(
-        status: BlocStatusInitial(),
+        status: CubitStatusInitial(),
         email: email,
       ),
     ),
@@ -146,11 +146,11 @@ void main() {
     act: (cubit) => cubit.submit(),
     expect: () => [
       const ForgotPasswordState(
-        status: BlocStatusLoading(),
+        status: CubitStatusLoading(),
         email: email,
       ),
       const ForgotPasswordState(
-        status: BlocStatusNoInternetConnection(),
+        status: CubitStatusNoInternetConnection(),
         email: email,
       ),
     ],
@@ -165,7 +165,7 @@ void main() {
     'should emit unknown error status and throw exception message',
     build: () => ForgotPasswordCubit(
       initialState: const ForgotPasswordState(
-        status: BlocStatusInitial(),
+        status: CubitStatusInitial(),
         email: email,
       ),
     ),
@@ -175,11 +175,11 @@ void main() {
     act: (cubit) => cubit.submit(),
     expect: () => [
       const ForgotPasswordState(
-        status: BlocStatusLoading(),
+        status: CubitStatusLoading(),
         email: email,
       ),
       const ForgotPasswordState(
-        status: BlocStatusUnknownError(),
+        status: CubitStatusUnknownError(),
         email: email,
       ),
     ],

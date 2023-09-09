@@ -2,7 +2,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/domain/additional_model/bloc_status.dart';
+import 'package:runnoter/domain/additional_model/cubit_status.dart';
 import 'package:runnoter/domain/additional_model/custom_exception.dart';
 import 'package:runnoter/domain/cubit/sign_up/sign_up_cubit.dart';
 import 'package:runnoter/domain/entity/user.dart';
@@ -40,7 +40,7 @@ void main() {
     act: (cubit) => cubit.accountTypeChanged(accountType),
     expect: () => [
       const SignUpState(
-        status: BlocStatusComplete(),
+        status: CubitStatusComplete(),
         accountType: accountType,
       ),
     ],
@@ -53,7 +53,7 @@ void main() {
     act: (cubit) => cubit.genderChanged(gender),
     expect: () => [
       const SignUpState(
-        status: BlocStatusComplete(),
+        status: CubitStatusComplete(),
         gender: gender,
       ),
     ],
@@ -66,7 +66,7 @@ void main() {
     act: (cubit) => cubit.nameChanged(name),
     expect: () => [
       const SignUpState(
-        status: BlocStatusComplete(),
+        status: CubitStatusComplete(),
         name: name,
       ),
     ],
@@ -79,7 +79,7 @@ void main() {
     act: (cubit) => cubit.surnameChanged(surname),
     expect: () => [
       const SignUpState(
-        status: BlocStatusComplete(),
+        status: CubitStatusComplete(),
         surname: surname,
       ),
     ],
@@ -92,7 +92,7 @@ void main() {
     act: (cubit) => cubit.emailChanged(email),
     expect: () => [
       const SignUpState(
-        status: BlocStatusComplete(),
+        status: CubitStatusComplete(),
         email: email,
       ),
     ],
@@ -105,7 +105,7 @@ void main() {
     act: (cubit) => cubit.dateOfBirthChanged(dateOfBirth),
     expect: () => [
       SignUpState(
-        status: const BlocStatusComplete(),
+        status: const CubitStatusComplete(),
         dateOfBirth: dateOfBirth,
       ),
     ],
@@ -118,7 +118,7 @@ void main() {
     act: (cubit) => cubit.passwordChanged(password),
     expect: () => [
       const SignUpState(
-        status: BlocStatusComplete(),
+        status: CubitStatusComplete(),
         password: password,
       ),
     ],
@@ -131,7 +131,7 @@ void main() {
     act: (cubit) => cubit.passwordConfirmationChanged(password),
     expect: () => [
       const SignUpState(
-        status: BlocStatusComplete(),
+        status: CubitStatusComplete(),
         passwordConfirmation: password,
       ),
     ],
@@ -143,7 +143,7 @@ void main() {
     'should do nothing',
     build: () => SignUpCubit(
       initialState: SignUpState(
-        status: const BlocStatusInitial(),
+        status: const CubitStatusInitial(),
         accountType: accountType,
         gender: gender,
         name: name,
@@ -162,7 +162,7 @@ void main() {
     "should call auth service's method to sign up, use case to add user data, auth service's method to send email verification and should emit complete status with signed up info",
     build: () => SignUpCubit(
       initialState: SignUpState(
-        status: const BlocStatusInitial(),
+        status: const CubitStatusInitial(),
         accountType: accountType,
         gender: gender,
         name: name,
@@ -181,7 +181,7 @@ void main() {
     act: (bloc) => bloc.submit(),
     expect: () => [
       SignUpState(
-        status: const BlocStatusLoading(),
+        status: const CubitStatusLoading(),
         accountType: accountType,
         gender: gender,
         name: name,
@@ -192,7 +192,7 @@ void main() {
         passwordConfirmation: password,
       ),
       SignUpState(
-        status: const BlocStatusComplete<SignUpCubitInfo>(
+        status: const CubitStatusComplete<SignUpCubitInfo>(
           info: SignUpCubitInfo.signedUp,
         ),
         accountType: accountType,
@@ -230,7 +230,7 @@ void main() {
     'should emit error status with email already in use error',
     build: () => SignUpCubit(
       initialState: SignUpState(
-        status: const BlocStatusInitial(),
+        status: const CubitStatusInitial(),
         accountType: accountType,
         gender: gender,
         name: name,
@@ -249,7 +249,7 @@ void main() {
     act: (bloc) => bloc.submit(),
     expect: () => [
       SignUpState(
-        status: const BlocStatusLoading(),
+        status: const CubitStatusLoading(),
         accountType: accountType,
         gender: gender,
         name: name,
@@ -260,7 +260,7 @@ void main() {
         passwordConfirmation: password,
       ),
       SignUpState(
-        status: const BlocStatusError<SignUpCubitError>(
+        status: const CubitStatusError<SignUpCubitError>(
           error: SignUpCubitError.emailAlreadyInUse,
         ),
         accountType: accountType,
@@ -284,7 +284,7 @@ void main() {
     'should emit network request failed status',
     build: () => SignUpCubit(
       initialState: SignUpState(
-        status: const BlocStatusInitial(),
+        status: const CubitStatusInitial(),
         accountType: accountType,
         gender: gender,
         name: name,
@@ -303,7 +303,7 @@ void main() {
     act: (cubit) => cubit.submit(),
     expect: () => [
       SignUpState(
-        status: const BlocStatusLoading(),
+        status: const CubitStatusLoading(),
         accountType: accountType,
         gender: gender,
         name: name,
@@ -314,7 +314,7 @@ void main() {
         passwordConfirmation: password,
       ),
       SignUpState(
-        status: const BlocStatusNoInternetConnection(),
+        status: const CubitStatusNoInternetConnection(),
         accountType: accountType,
         gender: gender,
         name: name,
@@ -336,7 +336,7 @@ void main() {
     'should emit error status with unknown error',
     build: () => SignUpCubit(
       initialState: SignUpState(
-        status: const BlocStatusInitial(),
+        status: const CubitStatusInitial(),
         accountType: accountType,
         gender: gender,
         name: name,
@@ -353,7 +353,7 @@ void main() {
     act: (cubit) => cubit.submit(),
     expect: () => [
       SignUpState(
-        status: const BlocStatusLoading(),
+        status: const CubitStatusLoading(),
         accountType: accountType,
         gender: gender,
         name: name,
@@ -364,7 +364,7 @@ void main() {
         passwordConfirmation: password,
       ),
       SignUpState(
-        status: const BlocStatusUnknownError(),
+        status: const CubitStatusUnknownError(),
         accountType: accountType,
         gender: gender,
         name: name,

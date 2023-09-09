@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/additional_model/activity_status.dart';
-import 'package:runnoter/domain/additional_model/bloc_status.dart';
+import 'package:runnoter/domain/additional_model/cubit_status.dart';
 import 'package:runnoter/domain/cubit/race_creator/race_creator_cubit.dart';
 import 'package:runnoter/domain/entity/race.dart';
 import 'package:runnoter/domain/repository/race_repository.dart';
@@ -28,7 +28,7 @@ void main() {
         userId: userId,
         raceId: raceId,
         initialState: RaceCreatorState(
-          status: const BlocStatusInitial(),
+          status: const CubitStatusInitial(),
           race: race,
           name: name,
           date: date,
@@ -54,7 +54,7 @@ void main() {
     act: (cubit) => cubit.initialize(DateTime(2023, 1, 10)),
     expect: () => [
       RaceCreatorState(
-        status: const BlocStatusComplete(),
+        status: const CubitStatusComplete(),
         date: DateTime(2023, 1, 10),
       ),
     ],
@@ -80,7 +80,7 @@ void main() {
     act: (cubit) => cubit.initialize(null),
     expect: () => [
       RaceCreatorState(
-        status: const BlocStatusComplete<RaceCreatorCubitInfo>(),
+        status: const CubitStatusComplete<RaceCreatorCubitInfo>(),
         race: createRace(
           id: 'r1',
           userId: userId,
@@ -109,7 +109,7 @@ void main() {
     act: (cubit) => cubit.nameChanged('race name'),
     expect: () => [
       const RaceCreatorState(
-        status: BlocStatusComplete(),
+        status: CubitStatusComplete(),
         name: 'race name',
       ),
     ],
@@ -122,7 +122,7 @@ void main() {
     act: (cubit) => cubit.dateChanged(DateTime(2023, 6, 2)),
     expect: () => [
       RaceCreatorState(
-        status: const BlocStatusComplete(),
+        status: const CubitStatusComplete(),
         date: DateTime(2023, 6, 2),
       ),
     ],
@@ -135,7 +135,7 @@ void main() {
     act: (cubit) => cubit.placeChanged('race place'),
     expect: () => [
       const RaceCreatorState(
-        status: BlocStatusComplete(),
+        status: CubitStatusComplete(),
         place: 'race place',
       ),
     ],
@@ -148,7 +148,7 @@ void main() {
     act: (cubit) => cubit.distanceChanged(21),
     expect: () => [
       const RaceCreatorState(
-        status: BlocStatusComplete(),
+        status: CubitStatusComplete(),
         distance: 21,
       ),
     ],
@@ -163,7 +163,7 @@ void main() {
     ),
     expect: () => [
       const RaceCreatorState(
-        status: BlocStatusComplete(),
+        status: CubitStatusComplete(),
         expectedDuration: Duration(hours: 1, minutes: 45, seconds: 20),
       ),
     ],
@@ -217,7 +217,7 @@ void main() {
     act: (cubit) => cubit.submit(),
     expect: () => [
       RaceCreatorState(
-        status: const BlocStatusLoading(),
+        status: const CubitStatusLoading(),
         name: 'race name',
         date: DateTime(2023, 6, 2),
         place: 'New York',
@@ -225,7 +225,7 @@ void main() {
         expectedDuration: const Duration(hours: 1, minutes: 45, seconds: 20),
       ),
       RaceCreatorState(
-        status: const BlocStatusComplete<RaceCreatorCubitInfo>(
+        status: const CubitStatusComplete<RaceCreatorCubitInfo>(
           info: RaceCreatorCubitInfo.raceAdded,
         ),
         name: 'race name',
@@ -265,7 +265,7 @@ void main() {
     act: (cubit) => cubit.submit(),
     expect: () => [
       RaceCreatorState(
-        status: const BlocStatusLoading(),
+        status: const CubitStatusLoading(),
         name: 'race name',
         date: DateTime(2023, 6, 2),
         place: 'New York',
@@ -273,7 +273,7 @@ void main() {
         expectedDuration: const Duration(),
       ),
       RaceCreatorState(
-        status: const BlocStatusComplete<RaceCreatorCubitInfo>(
+        status: const CubitStatusComplete<RaceCreatorCubitInfo>(
           info: RaceCreatorCubitInfo.raceAdded,
         ),
         name: 'race name',
@@ -313,7 +313,7 @@ void main() {
     act: (cubit) => cubit.submit(),
     expect: () => [
       RaceCreatorState(
-        status: const BlocStatusLoading(),
+        status: const CubitStatusLoading(),
         race: createRace(id: 'c1'),
         name: 'race name',
         date: DateTime(2023, 6, 2),
@@ -322,7 +322,7 @@ void main() {
         expectedDuration: const Duration(hours: 1, minutes: 45, seconds: 20),
       ),
       RaceCreatorState(
-        status: const BlocStatusComplete<RaceCreatorCubitInfo>(
+        status: const CubitStatusComplete<RaceCreatorCubitInfo>(
           info: RaceCreatorCubitInfo.raceUpdated,
         ),
         race: createRace(id: 'c1'),
@@ -364,7 +364,7 @@ void main() {
     act: (cubit) => cubit.submit(),
     expect: () => [
       RaceCreatorState(
-        status: const BlocStatusLoading(),
+        status: const CubitStatusLoading(),
         race: createRace(id: 'c1'),
         name: 'race name',
         date: DateTime(2023, 6, 2),
@@ -373,7 +373,7 @@ void main() {
         expectedDuration: const Duration(),
       ),
       RaceCreatorState(
-        status: const BlocStatusComplete<RaceCreatorCubitInfo>(
+        status: const CubitStatusComplete<RaceCreatorCubitInfo>(
           info: RaceCreatorCubitInfo.raceUpdated,
         ),
         race: createRace(id: 'c1'),

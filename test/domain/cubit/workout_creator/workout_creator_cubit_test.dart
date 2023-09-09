@@ -4,7 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/common/date_service.dart';
 import 'package:runnoter/domain/additional_model/activity_status.dart';
-import 'package:runnoter/domain/additional_model/bloc_status.dart';
+import 'package:runnoter/domain/additional_model/cubit_status.dart';
 import 'package:runnoter/domain/additional_model/workout_stage.dart';
 import 'package:runnoter/domain/cubit/workout_creator/workout_creator_cubit.dart';
 import 'package:runnoter/domain/entity/workout.dart';
@@ -37,7 +37,7 @@ void main() {
       );
 
   WorkoutCreatorState createState({
-    BlocStatus status = const BlocStatusInitial(),
+    CubitStatus status = const CubitStatusInitial(),
     DateTime? date,
     Workout? workout,
     String? workoutName,
@@ -70,7 +70,7 @@ void main() {
     act: (cubit) => cubit.initialize(),
     expect: () => [
       createState(
-        status: const BlocStatusComplete(),
+        status: const CubitStatusComplete(),
       ),
     ],
   );
@@ -94,7 +94,7 @@ void main() {
     act: (cubit) => cubit.initialize(),
     expect: () => [
       createState(
-        status: const BlocStatusComplete(),
+        status: const CubitStatusComplete(),
         date: DateTime(2023, 2, 4),
         workout: createWorkout(
           id: workoutId,
@@ -125,7 +125,7 @@ void main() {
     act: (cubit) => cubit.dateChanged(DateTime(2023, 2, 2)),
     expect: () => [
       createState(
-        status: const BlocStatusComplete(),
+        status: const CubitStatusComplete(),
         date: DateTime(2023, 2, 2),
       ),
     ],
@@ -138,7 +138,7 @@ void main() {
     act: (cubit) => cubit.workoutNameChanged('new workout name'),
     expect: () => [
       createState(
-        status: const BlocStatusComplete(),
+        status: const CubitStatusComplete(),
         workoutName: 'new workout name',
       ),
     ],
@@ -157,7 +157,7 @@ void main() {
     ),
     expect: () => [
       createState(
-        status: const BlocStatusComplete(),
+        status: const CubitStatusComplete(),
         stages: const [
           WorkoutStageCardio(distanceInKm: 2, maxHeartRate: 150),
           WorkoutStageZone2(distanceInKm: 5, maxHeartRate: 165),
@@ -209,7 +209,7 @@ void main() {
     ),
     expect: () => [
       createState(
-        status: const BlocStatusComplete(),
+        status: const CubitStatusComplete(),
         stages: const [
           WorkoutStageCardio(distanceInKm: 2, maxHeartRate: 150),
           WorkoutStageZone2(distanceInKm: 7, maxHeartRate: 160),
@@ -239,7 +239,7 @@ void main() {
     ),
     expect: () => [
       createState(
-        status: const BlocStatusComplete(),
+        status: const CubitStatusComplete(),
         stages: const [
           WorkoutStageCardio(distanceInKm: 3, maxHeartRate: 150),
           WorkoutStageZone3(distanceInKm: 2, maxHeartRate: 180),
@@ -262,7 +262,7 @@ void main() {
     act: (cubit) => cubit.deleteWorkoutStageAtIndex(0),
     expect: () => [
       createState(
-        status: const BlocStatusComplete(),
+        status: const CubitStatusComplete(),
         stages: const [
           WorkoutStageCardio(distanceInKm: 15, maxHeartRate: 150),
         ],
@@ -314,7 +314,7 @@ void main() {
     act: (cubit) => cubit.submit(),
     expect: () => [
       createState(
-        status: const BlocStatusLoading(),
+        status: const CubitStatusLoading(),
         date: DateTime(2023, 2, 2),
         workoutName: 'workout 1',
         stages: const [
@@ -323,7 +323,7 @@ void main() {
         ],
       ),
       createState(
-        status: const BlocStatusComplete<WorkoutCreatorCubitInfo>(
+        status: const CubitStatusComplete<WorkoutCreatorCubitInfo>(
           info: WorkoutCreatorCubitInfo.workoutAdded,
         ),
         date: DateTime(2023, 2, 2),
@@ -377,7 +377,7 @@ void main() {
     act: (cubit) => cubit.submit(),
     expect: () => [
       createState(
-        status: const BlocStatusLoading(),
+        status: const CubitStatusLoading(),
         date: DateTime(2023, 2, 2),
         workout: createWorkout(
           id: workoutId,
@@ -394,7 +394,7 @@ void main() {
         ],
       ),
       createState(
-        status: const BlocStatusComplete<WorkoutCreatorCubitInfo>(
+        status: const CubitStatusComplete<WorkoutCreatorCubitInfo>(
           info: WorkoutCreatorCubitInfo.workoutUpdated,
         ),
         date: DateTime(2023, 2, 2),

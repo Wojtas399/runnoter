@@ -4,7 +4,7 @@ import 'package:equatable/equatable.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../../../dependency_injection.dart';
-import '../../../additional_model/bloc_status.dart';
+import '../../../additional_model/cubit_status.dart';
 import '../../../additional_model/coaching_request.dart';
 import '../../../additional_model/coaching_request_short.dart';
 import '../../../additional_model/cubit_state.dart';
@@ -31,7 +31,7 @@ class ProfileCoachCubit
 
   ProfileCoachCubit({
     ProfileCoachState initialState = const ProfileCoachState(
-      status: BlocStatusInitial(),
+      status: CubitStatusInitial(),
     ),
   })  : _authService = getIt<AuthService>(),
         _userRepository = getIt<UserRepository>(),

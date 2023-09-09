@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/additional_model/bloc_status.dart';
+import '../../../domain/additional_model/cubit_status.dart';
 import '../../../domain/cubit/race_creator/race_creator_cubit.dart';
 import '../../component/duration_input_component.dart';
 import '../../component/form_text_field_component.dart';
@@ -185,11 +185,11 @@ class _ExpectedDuration extends StatelessWidget {
     final Duration? duration = context.select(
       (RaceCreatorCubit cubit) => cubit.state.expectedDuration,
     );
-    final BlocStatus? blocStatus = context.select(
+    final CubitStatus? cubitStatus = context.select(
       (RaceCreatorCubit cubit) => cubit.state.status,
     );
 
-    return blocStatus is BlocStatusInitial
+    return cubitStatus is CubitStatusInitial
         ? const SizedBox()
         : DurationInput(
             label: Str.of(context).raceExpectedDuration,

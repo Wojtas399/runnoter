@@ -51,7 +51,7 @@ class RaceCreatorState extends CubitState<RaceCreatorState> {
 
   @override
   RaceCreatorState copyWith({
-    BlocStatus? status,
+    CubitStatus? status,
     Race? race,
     String? name,
     DateTime? date,
@@ -60,7 +60,7 @@ class RaceCreatorState extends CubitState<RaceCreatorState> {
     Duration? expectedDuration,
   }) =>
       RaceCreatorState(
-        status: status ?? const BlocStatusComplete(),
+        status: status ?? const CubitStatusComplete(),
         race: race ?? this.race,
         name: name ?? this.name,
         date: date ?? this.date,

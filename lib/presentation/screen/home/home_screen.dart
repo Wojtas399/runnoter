@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../dependency_injection.dart';
-import '../../../domain/additional_model/bloc_status.dart';
+import '../../../domain/additional_model/cubit_status.dart';
 import '../../../domain/additional_model/coaching_request_short.dart';
 import '../../../domain/additional_model/settings.dart' as settings;
 import '../../../domain/cubit/calendar/calendar_cubit.dart';
@@ -73,7 +73,7 @@ class _HomeCubitListener extends StatelessWidget {
     BuildContext context,
     HomeState state,
   ) {
-    if (state.status is BlocStatusComplete &&
+    if (state.status is CubitStatusComplete &&
         state.loggedUserName == null &&
         state.appSettings == null) {
       showDialogDependingOnScreenSize(

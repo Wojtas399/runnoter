@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import '../../../../domain/additional_model/bloc_status.dart';
+import '../../../../domain/additional_model/cubit_status.dart';
 import '../../../../domain/entity/workout.dart';
 import '../../../../domain/repository/workout_repository.dart';
 import '../../../common/date_service.dart';
@@ -22,7 +22,7 @@ class WorkoutCreatorCubit extends CubitWithStatus<WorkoutCreatorState,
   WorkoutCreatorCubit({
     required this.userId,
     this.workoutId,
-    BlocStatus status = const BlocStatusInitial(),
+    CubitStatus status = const CubitStatusInitial(),
     DateTime? date,
     Workout? workout,
     String? workoutName,

@@ -47,14 +47,14 @@ class HealthMeasurementCreatorState
 
   @override
   copyWith({
-    BlocStatus? status,
+    CubitStatus? status,
     HealthMeasurement? measurement,
     DateTime? date,
     int? restingHeartRate,
     double? fastingWeight,
   }) =>
       HealthMeasurementCreatorState(
-        status: status ?? const BlocStatusComplete(),
+        status: status ?? const CubitStatusComplete(),
         measurement: measurement ?? this.measurement,
         date: date ?? this.date,
         restingHeartRate: restingHeartRate ?? this.restingHeartRate,

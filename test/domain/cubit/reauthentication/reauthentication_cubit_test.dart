@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/additional_model/auth_provider.dart';
-import 'package:runnoter/domain/additional_model/bloc_status.dart';
+import 'package:runnoter/domain/additional_model/cubit_status.dart';
 import 'package:runnoter/domain/additional_model/custom_exception.dart';
 import 'package:runnoter/domain/cubit/reauthentication/reauthentication_cubit.dart';
 import 'package:runnoter/domain/service/auth_service.dart';
@@ -28,7 +28,7 @@ void main() {
     act: (cubit) => cubit.passwordChanged('passwd1122'),
     expect: () => [
       const ReauthenticationState(
-        status: BlocStatusComplete(),
+        status: CubitStatusComplete(),
         password: 'passwd1122',
       )
     ],
@@ -49,7 +49,7 @@ void main() {
     'should do nothing',
     build: () => ReauthenticationCubit(
       initialState: const ReauthenticationState(
-        status: BlocStatusComplete(),
+        status: CubitStatusComplete(),
         password: '',
       ),
     ),
@@ -63,7 +63,7 @@ void main() {
     'should emit complete status with userConfirmed info',
     build: () => ReauthenticationCubit(
       initialState: const ReauthenticationState(
-        status: BlocStatusComplete(),
+        status: CubitStatusComplete(),
         password: 'passwd',
       ),
     ),
@@ -73,14 +73,14 @@ void main() {
     act: (cubit) => cubit.usePassword(),
     expect: () => [
       const ReauthenticationState(
-        status: BlocStatusLoading<ReauthenticationCubitLoadingInfo>(
+        status: CubitStatusLoading<ReauthenticationCubitLoadingInfo>(
           loadingInfo:
               ReauthenticationCubitLoadingInfo.passwordReauthenticationLoading,
         ),
         password: 'passwd',
       ),
       const ReauthenticationState(
-        status: BlocStatusComplete<ReauthenticationCubitInfo>(
+        status: CubitStatusComplete<ReauthenticationCubitInfo>(
           info: ReauthenticationCubitInfo.userConfirmed,
         ),
         password: 'passwd',
@@ -99,7 +99,7 @@ void main() {
     'should emit complete status without any info',
     build: () => ReauthenticationCubit(
       initialState: const ReauthenticationState(
-        status: BlocStatusComplete(),
+        status: CubitStatusComplete(),
         password: 'passwd',
       ),
     ),
@@ -109,14 +109,14 @@ void main() {
     act: (cubit) => cubit.usePassword(),
     expect: () => [
       const ReauthenticationState(
-        status: BlocStatusLoading<ReauthenticationCubitLoadingInfo>(
+        status: CubitStatusLoading<ReauthenticationCubitLoadingInfo>(
           loadingInfo:
               ReauthenticationCubitLoadingInfo.passwordReauthenticationLoading,
         ),
         password: 'passwd',
       ),
       const ReauthenticationState(
-        status: BlocStatusComplete(),
+        status: CubitStatusComplete(),
         password: 'passwd',
       ),
     ],
@@ -133,7 +133,7 @@ void main() {
     'should emit error status with wrongPassword error',
     build: () => ReauthenticationCubit(
       initialState: const ReauthenticationState(
-        status: BlocStatusComplete(),
+        status: CubitStatusComplete(),
         password: 'passwd',
       ),
     ),
@@ -143,14 +143,14 @@ void main() {
     act: (cubit) => cubit.usePassword(),
     expect: () => [
       const ReauthenticationState(
-        status: BlocStatusLoading<ReauthenticationCubitLoadingInfo>(
+        status: CubitStatusLoading<ReauthenticationCubitLoadingInfo>(
           loadingInfo:
               ReauthenticationCubitLoadingInfo.passwordReauthenticationLoading,
         ),
         password: 'passwd',
       ),
       const ReauthenticationState(
-        status: BlocStatusError<ReauthenticationCubitError>(
+        status: CubitStatusError<ReauthenticationCubitError>(
           error: ReauthenticationCubitError.wrongPassword,
         ),
         password: 'passwd',
@@ -169,7 +169,7 @@ void main() {
     'should emit no internet connection status',
     build: () => ReauthenticationCubit(
       initialState: const ReauthenticationState(
-        status: BlocStatusComplete(),
+        status: CubitStatusComplete(),
         password: 'passwd',
       ),
     ),
@@ -181,14 +181,14 @@ void main() {
     act: (cubit) => cubit.usePassword(),
     expect: () => [
       const ReauthenticationState(
-        status: BlocStatusLoading<ReauthenticationCubitLoadingInfo>(
+        status: CubitStatusLoading<ReauthenticationCubitLoadingInfo>(
           loadingInfo:
               ReauthenticationCubitLoadingInfo.passwordReauthenticationLoading,
         ),
         password: 'passwd',
       ),
       const ReauthenticationState(
-        status: BlocStatusNoInternetConnection(),
+        status: CubitStatusNoInternetConnection(),
         password: 'passwd',
       ),
     ],
@@ -210,13 +210,13 @@ void main() {
     act: (cubit) => cubit.useGoogle(),
     expect: () => [
       const ReauthenticationState(
-        status: BlocStatusLoading<ReauthenticationCubitLoadingInfo>(
+        status: CubitStatusLoading<ReauthenticationCubitLoadingInfo>(
           loadingInfo:
               ReauthenticationCubitLoadingInfo.googleReauthenticationLoading,
         ),
       ),
       const ReauthenticationState(
-        status: BlocStatusComplete<ReauthenticationCubitInfo>(
+        status: CubitStatusComplete<ReauthenticationCubitInfo>(
           info: ReauthenticationCubitInfo.userConfirmed,
         ),
       ),
@@ -239,12 +239,12 @@ void main() {
     act: (cubit) => cubit.useGoogle(),
     expect: () => [
       const ReauthenticationState(
-        status: BlocStatusLoading<ReauthenticationCubitLoadingInfo>(
+        status: CubitStatusLoading<ReauthenticationCubitLoadingInfo>(
           loadingInfo:
               ReauthenticationCubitLoadingInfo.googleReauthenticationLoading,
         ),
       ),
-      const ReauthenticationState(status: BlocStatusComplete()),
+      const ReauthenticationState(status: CubitStatusComplete()),
     ],
     verify: (_) => verify(
       () => authService.reauthenticate(
@@ -264,13 +264,13 @@ void main() {
     act: (cubit) => cubit.useGoogle(),
     expect: () => [
       const ReauthenticationState(
-        status: BlocStatusLoading<ReauthenticationCubitLoadingInfo>(
+        status: CubitStatusLoading<ReauthenticationCubitLoadingInfo>(
           loadingInfo:
               ReauthenticationCubitLoadingInfo.googleReauthenticationLoading,
         ),
       ),
       const ReauthenticationState(
-        status: BlocStatusError<ReauthenticationCubitError>(
+        status: CubitStatusError<ReauthenticationCubitError>(
           error: ReauthenticationCubitError.userMismatch,
         ),
       ),
@@ -295,12 +295,12 @@ void main() {
     act: (cubit) => cubit.useGoogle(),
     expect: () => [
       const ReauthenticationState(
-        status: BlocStatusLoading<ReauthenticationCubitLoadingInfo>(
+        status: CubitStatusLoading<ReauthenticationCubitLoadingInfo>(
           loadingInfo:
               ReauthenticationCubitLoadingInfo.googleReauthenticationLoading,
         ),
       ),
-      const ReauthenticationState(status: BlocStatusNoInternetConnection()),
+      const ReauthenticationState(status: CubitStatusNoInternetConnection()),
     ],
     verify: (_) => verify(
       () => authService.reauthenticate(
@@ -320,13 +320,13 @@ void main() {
     act: (cubit) => cubit.useFacebook(),
     expect: () => [
       const ReauthenticationState(
-        status: BlocStatusLoading<ReauthenticationCubitLoadingInfo>(
+        status: CubitStatusLoading<ReauthenticationCubitLoadingInfo>(
           loadingInfo:
               ReauthenticationCubitLoadingInfo.facebookReauthenticationLoading,
         ),
       ),
       const ReauthenticationState(
-        status: BlocStatusComplete<ReauthenticationCubitInfo>(
+        status: CubitStatusComplete<ReauthenticationCubitInfo>(
           info: ReauthenticationCubitInfo.userConfirmed,
         ),
       ),
@@ -349,12 +349,12 @@ void main() {
     act: (cubit) => cubit.useFacebook(),
     expect: () => [
       const ReauthenticationState(
-        status: BlocStatusLoading<ReauthenticationCubitLoadingInfo>(
+        status: CubitStatusLoading<ReauthenticationCubitLoadingInfo>(
           loadingInfo:
               ReauthenticationCubitLoadingInfo.facebookReauthenticationLoading,
         ),
       ),
-      const ReauthenticationState(status: BlocStatusComplete()),
+      const ReauthenticationState(status: CubitStatusComplete()),
     ],
     verify: (_) => verify(
       () => authService.reauthenticate(
@@ -374,13 +374,13 @@ void main() {
     act: (cubit) => cubit.useFacebook(),
     expect: () => [
       const ReauthenticationState(
-        status: BlocStatusLoading<ReauthenticationCubitLoadingInfo>(
+        status: CubitStatusLoading<ReauthenticationCubitLoadingInfo>(
           loadingInfo:
               ReauthenticationCubitLoadingInfo.facebookReauthenticationLoading,
         ),
       ),
       const ReauthenticationState(
-        status: BlocStatusError<ReauthenticationCubitError>(
+        status: CubitStatusError<ReauthenticationCubitError>(
           error: ReauthenticationCubitError.userMismatch,
         ),
       ),
@@ -405,12 +405,12 @@ void main() {
     act: (cubit) => cubit.useFacebook(),
     expect: () => [
       const ReauthenticationState(
-        status: BlocStatusLoading<ReauthenticationCubitLoadingInfo>(
+        status: CubitStatusLoading<ReauthenticationCubitLoadingInfo>(
           loadingInfo:
               ReauthenticationCubitLoadingInfo.facebookReauthenticationLoading,
         ),
       ),
-      const ReauthenticationState(status: BlocStatusNoInternetConnection()),
+      const ReauthenticationState(status: CubitStatusNoInternetConnection()),
     ],
     verify: (_) => verify(
       () => authService.reauthenticate(

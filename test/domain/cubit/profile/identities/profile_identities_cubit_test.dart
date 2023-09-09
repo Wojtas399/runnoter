@@ -2,7 +2,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/domain/additional_model/bloc_status.dart';
+import 'package:runnoter/domain/additional_model/cubit_status.dart';
 import 'package:runnoter/domain/additional_model/custom_exception.dart';
 import 'package:runnoter/domain/cubit/profile/identities/profile_identities_cubit.dart';
 import 'package:runnoter/domain/entity/user.dart';
@@ -82,7 +82,7 @@ void main() {
     act: (cubit) => cubit.initialize(),
     expect: () => [
       ProfileIdentitiesState(
-        status: const BlocStatusComplete(),
+        status: const CubitStatusComplete(),
         accountType: AccountType.coach,
         gender: Gender.female,
         name: 'name',
@@ -111,7 +111,7 @@ void main() {
     act: (cubit) => cubit.updateGender(Gender.female),
     expect: () => [
       const ProfileIdentitiesState(
-        status: BlocStatusComplete(),
+        status: CubitStatusComplete(),
         gender: Gender.female,
       ),
     ],
@@ -132,7 +132,7 @@ void main() {
     'should set previous gender',
     build: () => ProfileIdentitiesCubit(
       state: const ProfileIdentitiesState(
-        status: BlocStatusInitial(),
+        status: CubitStatusInitial(),
         gender: Gender.male,
       ),
     ),
@@ -143,11 +143,11 @@ void main() {
     act: (cubit) => cubit.updateGender(Gender.female),
     expect: () => [
       const ProfileIdentitiesState(
-        status: BlocStatusComplete(),
+        status: CubitStatusComplete(),
         gender: Gender.female,
       ),
       const ProfileIdentitiesState(
-        status: BlocStatusComplete(),
+        status: CubitStatusComplete(),
         gender: Gender.male,
       ),
     ],
@@ -170,7 +170,7 @@ void main() {
     setUp: () => authService.mockGetLoggedUserId(),
     act: (cubit) => cubit.updateGender(Gender.female),
     expect: () => [
-      const ProfileIdentitiesState(status: BlocStatusNoLoggedUser()),
+      const ProfileIdentitiesState(status: CubitStatusNoLoggedUser()),
     ],
     verify: (_) => verify(() => authService.loggedUserId$).called(1),
   );
@@ -181,7 +181,7 @@ void main() {
     'should do nothing',
     build: () => ProfileIdentitiesCubit(
       state: const ProfileIdentitiesState(
-        status: BlocStatusInitial(),
+        status: CubitStatusInitial(),
         gender: Gender.male,
       ),
     ),
@@ -199,9 +199,9 @@ void main() {
     },
     act: (cubit) => cubit.updateName('new name'),
     expect: () => [
-      const ProfileIdentitiesState(status: BlocStatusLoading()),
+      const ProfileIdentitiesState(status: CubitStatusLoading()),
       const ProfileIdentitiesState(
-        status: BlocStatusComplete<ProfileIdentitiesCubitInfo>(
+        status: CubitStatusComplete<ProfileIdentitiesCubitInfo>(
           info: ProfileIdentitiesCubitInfo.dataSaved,
         ),
       ),
@@ -225,7 +225,7 @@ void main() {
     setUp: () => authService.mockGetLoggedUserId(),
     act: (cubit) => cubit.updateName('new name'),
     expect: () => [
-      const ProfileIdentitiesState(status: BlocStatusNoLoggedUser()),
+      const ProfileIdentitiesState(status: CubitStatusNoLoggedUser()),
     ],
     verify: (_) => verify(() => authService.loggedUserId$).called(1),
   );
@@ -240,9 +240,9 @@ void main() {
     },
     act: (cubit) => cubit.updateSurname('new surname'),
     expect: () => [
-      const ProfileIdentitiesState(status: BlocStatusLoading()),
+      const ProfileIdentitiesState(status: CubitStatusLoading()),
       const ProfileIdentitiesState(
-        status: BlocStatusComplete<ProfileIdentitiesCubitInfo>(
+        status: CubitStatusComplete<ProfileIdentitiesCubitInfo>(
           info: ProfileIdentitiesCubitInfo.dataSaved,
         ),
       ),
@@ -266,7 +266,7 @@ void main() {
     setUp: () => authService.mockGetLoggedUserId(),
     act: (cubit) => cubit.updateSurname('new surname'),
     expect: () => [
-      const ProfileIdentitiesState(status: BlocStatusNoLoggedUser()),
+      const ProfileIdentitiesState(status: CubitStatusNoLoggedUser()),
     ],
     verify: (_) => verify(() => authService.loggedUserId$).called(1),
   );
@@ -282,9 +282,9 @@ void main() {
     },
     act: (cubit) => cubit.updateDateOfBirth(DateTime(2023, 1, 11)),
     expect: () => [
-      const ProfileIdentitiesState(status: BlocStatusLoading()),
+      const ProfileIdentitiesState(status: CubitStatusLoading()),
       const ProfileIdentitiesState(
-        status: BlocStatusComplete<ProfileIdentitiesCubitInfo>(
+        status: CubitStatusComplete<ProfileIdentitiesCubitInfo>(
           info: ProfileIdentitiesCubitInfo.dataSaved,
         ),
       ),
@@ -308,7 +308,7 @@ void main() {
     setUp: () => authService.mockGetLoggedUserId(),
     act: (cubit) => cubit.updateDateOfBirth(DateTime(2023, 1, 11)),
     expect: () => [
-      const ProfileIdentitiesState(status: BlocStatusNoLoggedUser()),
+      const ProfileIdentitiesState(status: CubitStatusNoLoggedUser()),
     ],
     verify: (_) => verify(() => authService.loggedUserId$).called(1),
   );
@@ -321,7 +321,7 @@ void main() {
     setUp: () => authService.mockGetLoggedUserId(),
     act: (cubit) => cubit.updateEmail('email@example.com'),
     expect: () => [
-      const ProfileIdentitiesState(status: BlocStatusNoLoggedUser()),
+      const ProfileIdentitiesState(status: CubitStatusNoLoggedUser()),
     ],
     verify: (_) => verify(() => authService.loggedUserId$).called(1),
   );
@@ -338,9 +338,9 @@ void main() {
     },
     act: (cubit) => cubit.updateEmail('email@example.com'),
     expect: () => [
-      const ProfileIdentitiesState(status: BlocStatusLoading()),
+      const ProfileIdentitiesState(status: CubitStatusLoading()),
       const ProfileIdentitiesState(
-        status: BlocStatusComplete<ProfileIdentitiesCubitInfo>(
+        status: CubitStatusComplete<ProfileIdentitiesCubitInfo>(
           info: ProfileIdentitiesCubitInfo.emailChanged,
         ),
       ),
@@ -375,9 +375,9 @@ void main() {
     },
     act: (cubit) => cubit.updateEmail('email@example.com'),
     expect: () => [
-      const ProfileIdentitiesState(status: BlocStatusLoading()),
+      const ProfileIdentitiesState(status: CubitStatusLoading()),
       const ProfileIdentitiesState(
-        status: BlocStatusError<ProfileIdentitiesCubitError>(
+        status: CubitStatusError<ProfileIdentitiesCubitError>(
           error: ProfileIdentitiesCubitError.emailAlreadyInUse,
         ),
       ),
@@ -405,8 +405,8 @@ void main() {
     },
     act: (cubit) => cubit.updateEmail('email@example.com'),
     expect: () => [
-      const ProfileIdentitiesState(status: BlocStatusLoading()),
-      const ProfileIdentitiesState(status: BlocStatusNoInternetConnection()),
+      const ProfileIdentitiesState(status: CubitStatusLoading()),
+      const ProfileIdentitiesState(status: CubitStatusNoInternetConnection()),
     ],
     verify: (_) {
       verify(() => authService.loggedUserId$).called(1);
@@ -429,8 +429,8 @@ void main() {
     },
     act: (cubit) => cubit.updateEmail('email@example.com'),
     expect: () => [
-      const ProfileIdentitiesState(status: BlocStatusLoading()),
-      const ProfileIdentitiesState(status: BlocStatusUnknownError()),
+      const ProfileIdentitiesState(status: CubitStatusLoading()),
+      const ProfileIdentitiesState(status: CubitStatusUnknownError()),
     ],
     errors: () => [
       const UnknownException(message: 'unknown exception message'),
@@ -450,9 +450,9 @@ void main() {
     setUp: () => authService.mockSendEmailVerification(),
     act: (cubit) => cubit.sendEmailVerification(),
     expect: () => [
-      const ProfileIdentitiesState(status: BlocStatusLoading()),
+      const ProfileIdentitiesState(status: CubitStatusLoading()),
       const ProfileIdentitiesState(
-        status: BlocStatusComplete<ProfileIdentitiesCubitInfo>(
+        status: CubitStatusComplete<ProfileIdentitiesCubitInfo>(
           info: ProfileIdentitiesCubitInfo.emailVerificationSent,
         ),
       ),
@@ -467,9 +467,9 @@ void main() {
     setUp: () => authService.mockUpdatePassword(),
     act: (cubit) => cubit.updatePassword('newPassword'),
     expect: () => [
-      const ProfileIdentitiesState(status: BlocStatusLoading()),
+      const ProfileIdentitiesState(status: CubitStatusLoading()),
       const ProfileIdentitiesState(
-        status: BlocStatusComplete<ProfileIdentitiesCubitInfo>(
+        status: CubitStatusComplete<ProfileIdentitiesCubitInfo>(
             info: ProfileIdentitiesCubitInfo.dataSaved),
       ),
     ],
@@ -490,8 +490,8 @@ void main() {
     ),
     act: (cubit) => cubit.updatePassword('newPassword'),
     expect: () => [
-      const ProfileIdentitiesState(status: BlocStatusLoading()),
-      const ProfileIdentitiesState(status: BlocStatusNoInternetConnection()),
+      const ProfileIdentitiesState(status: CubitStatusLoading()),
+      const ProfileIdentitiesState(status: CubitStatusNoInternetConnection()),
     ],
     verify: (_) => verify(
       () => authService.updatePassword(newPassword: 'newPassword'),
@@ -508,8 +508,8 @@ void main() {
     ),
     act: (cubit) => cubit.updatePassword('newPassword'),
     expect: () => [
-      const ProfileIdentitiesState(status: BlocStatusLoading()),
-      const ProfileIdentitiesState(status: BlocStatusUnknownError()),
+      const ProfileIdentitiesState(status: CubitStatusLoading()),
+      const ProfileIdentitiesState(status: CubitStatusUnknownError()),
     ],
     errors: () => [
       const UnknownException(message: 'unknown exception message'),
@@ -527,7 +527,7 @@ void main() {
     setUp: () => authService.mockGetLoggedUserId(),
     act: (cubit) => cubit.deleteAccount(),
     expect: () => [
-      const ProfileIdentitiesState(status: BlocStatusNoLoggedUser()),
+      const ProfileIdentitiesState(status: CubitStatusNoLoggedUser()),
     ],
     verify: (_) => verify(() => authService.loggedUserId$).called(1),
   );
@@ -549,9 +549,9 @@ void main() {
     },
     act: (cubit) => cubit.deleteAccount(),
     expect: () => [
-      const ProfileIdentitiesState(status: BlocStatusLoading()),
+      const ProfileIdentitiesState(status: CubitStatusLoading()),
       const ProfileIdentitiesState(
-        status: BlocStatusComplete<ProfileIdentitiesCubitInfo>(
+        status: CubitStatusComplete<ProfileIdentitiesCubitInfo>(
           info: ProfileIdentitiesCubitInfo.accountDeleted,
         ),
       ),
@@ -606,8 +606,8 @@ void main() {
     },
     act: (cubit) => cubit.deleteAccount(),
     expect: () => [
-      const ProfileIdentitiesState(status: BlocStatusLoading()),
-      const ProfileIdentitiesState(status: BlocStatusNoInternetConnection()),
+      const ProfileIdentitiesState(status: CubitStatusLoading()),
+      const ProfileIdentitiesState(status: CubitStatusNoInternetConnection()),
     ],
     verify: (_) {
       verify(() => authService.loggedUserId$).called(1);
@@ -648,8 +648,8 @@ void main() {
     },
     act: (cubit) => cubit.deleteAccount(),
     expect: () => [
-      const ProfileIdentitiesState(status: BlocStatusLoading()),
-      const ProfileIdentitiesState(status: BlocStatusUnknownError()),
+      const ProfileIdentitiesState(status: CubitStatusLoading()),
+      const ProfileIdentitiesState(status: CubitStatusUnknownError()),
     ],
     errors: () => [
       const UnknownException(message: 'unknown exception message'),
@@ -685,7 +685,7 @@ void main() {
     ),
     act: (cubit) => cubit.reloadLoggedUser(),
     expect: () => [
-      const ProfileIdentitiesState(status: BlocStatusNoInternetConnection()),
+      const ProfileIdentitiesState(status: CubitStatusNoInternetConnection()),
     ],
     verify: (_) => verify(authService.reloadLoggedUser).called(1),
   );

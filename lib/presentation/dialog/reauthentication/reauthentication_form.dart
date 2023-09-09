@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/svg.dart';
 
-import '../../../domain/additional_model/bloc_status.dart';
+import '../../../domain/additional_model/cubit_status.dart';
 import '../../../domain/cubit/reauthentication/reauthentication_cubit.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/gap/gap_horizontal_components.dart';
@@ -61,16 +61,16 @@ class _GoogleAuthentication extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final BlocStatus blocStatus = context.select(
+    final CubitStatus cubitStatus = context.select(
       (ReauthenticationCubit cubit) => cubit.state.status,
     );
 
     return _SocialAuthenticationButton(
       svgIconPath: 'assets/google_icon.svg',
-      isLoading: blocStatus is BlocStatusLoading &&
-          blocStatus.loadingInfo ==
+      isLoading: cubitStatus is CubitStatusLoading &&
+          cubitStatus.loadingInfo ==
               ReauthenticationCubitLoadingInfo.googleReauthenticationLoading,
-      isDisabled: blocStatus is BlocStatusLoading,
+      isDisabled: cubitStatus is CubitStatusLoading,
       onPressed: context.read<ReauthenticationCubit>().useGoogle,
     );
   }
@@ -81,16 +81,16 @@ class _FacebookAuthentication extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final BlocStatus blocStatus = context.select(
+    final CubitStatus cubitStatus = context.select(
       (ReauthenticationCubit cubit) => cubit.state.status,
     );
 
     return _SocialAuthenticationButton(
       svgIconPath: 'assets/facebook_icon.svg',
-      isLoading: blocStatus is BlocStatusLoading &&
-          blocStatus.loadingInfo ==
+      isLoading: cubitStatus is CubitStatusLoading &&
+          cubitStatus.loadingInfo ==
               ReauthenticationCubitLoadingInfo.facebookReauthenticationLoading,
-      isDisabled: blocStatus is BlocStatusLoading,
+      isDisabled: cubitStatus is CubitStatusLoading,
       onPressed: context.read<ReauthenticationCubit>().useFacebook,
     );
   }

@@ -4,7 +4,7 @@ import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
 import 'package:rxdart/rxdart.dart';
 
-import '../../../../domain/additional_model/bloc_status.dart';
+import '../../../../domain/additional_model/cubit_status.dart';
 import '../../../../domain/repository/user_repository.dart';
 import '../../../../domain/service/auth_service.dart';
 import '../../../dependency_injection.dart';
@@ -27,7 +27,7 @@ class HomeCubit extends CubitWithStatus<HomeState, HomeCubitInfo, dynamic> {
   StreamSubscription<HomeCubitListenedParams?>? _listener;
 
   HomeCubit({
-    HomeState initialState = const HomeState(status: BlocStatusInitial()),
+    HomeState initialState = const HomeState(status: CubitStatusInitial()),
   })  : _authService = getIt<AuthService>(),
         _userRepository = getIt<UserRepository>(),
         _coachingRequestService = getIt<CoachingRequestService>(),
@@ -66,7 +66,7 @@ class HomeCubit extends CubitWithStatus<HomeState, HomeCubitInfo, dynamic> {
         .listen(
           (HomeCubitListenedParams? params) => emit(
             state.copyWith(
-              status: params == null ? const BlocStatusNoLoggedUser() : null,
+              status: params == null ? const CubitStatusNoLoggedUser() : null,
               accountType: params?.loggedUserData?.accountType,
               loggedUserName: params?.loggedUserData?.name,
               appSettings: params?.loggedUserData?.settings,

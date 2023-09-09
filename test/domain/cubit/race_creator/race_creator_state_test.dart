@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:runnoter/domain/additional_model/bloc_status.dart';
+import 'package:runnoter/domain/additional_model/cubit_status.dart';
 import 'package:runnoter/domain/cubit/race_creator/race_creator_cubit.dart';
 import 'package:runnoter/domain/entity/race.dart';
 
@@ -9,7 +9,7 @@ void main() {
   late RaceCreatorState state;
 
   setUp(
-    () => state = const RaceCreatorState(status: BlocStatusInitial()),
+    () => state = const RaceCreatorState(status: CubitStatusInitial()),
   );
 
   test(
@@ -289,13 +289,13 @@ void main() {
     'copy with status, '
     'should set complete status if new status is null',
     () {
-      const BlocStatus expectedStatus = BlocStatusLoading();
+      const CubitStatus expectedStatus = CubitStatusLoading();
 
       state = state.copyWith(status: expectedStatus);
       final state2 = state.copyWith();
 
       expect(state.status, expectedStatus);
-      expect(state2.status, const BlocStatusComplete());
+      expect(state2.status, const CubitStatusComplete());
     },
   );
 

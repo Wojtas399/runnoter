@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:runnoter/domain/additional_model/bloc_status.dart';
+import 'package:runnoter/domain/additional_model/cubit_status.dart';
 import 'package:runnoter/domain/additional_model/coaching_request_short.dart';
 import 'package:runnoter/domain/cubit/clients/clients_cubit.dart';
 import 'package:runnoter/domain/entity/person.dart';
@@ -10,20 +10,20 @@ void main() {
   late ClientsState state;
 
   setUp(
-    () => state = const ClientsState(status: BlocStatusInitial()),
+    () => state = const ClientsState(status: CubitStatusInitial()),
   );
 
   test(
     'copy with status, '
     'should assign complete status if new value has not been passed',
     () {
-      const BlocStatus expected = BlocStatusLoading();
+      const CubitStatus expected = CubitStatusLoading();
 
       state = state.copyWith(status: expected);
       final state2 = state.copyWith();
 
       expect(state.status, expected);
-      expect(state2.status, const BlocStatusComplete());
+      expect(state2.status, const CubitStatusComplete());
     },
   );
 

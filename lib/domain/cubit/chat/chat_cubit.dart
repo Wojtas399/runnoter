@@ -4,7 +4,7 @@ import 'package:rxdart/rxdart.dart';
 
 import '../../../common/date_service.dart';
 import '../../../dependency_injection.dart';
-import '../../additional_model/bloc_status.dart';
+import '../../additional_model/cubit_status.dart';
 import '../../additional_model/cubit_state.dart';
 import '../../additional_model/cubit_with_status.dart';
 import '../../entity/chat.dart';
@@ -30,7 +30,7 @@ class ChatCubit extends CubitWithStatus<ChatState, dynamic, ChatCubitError> {
 
   ChatCubit({
     required String chatId,
-    ChatState initialState = const ChatState(status: BlocStatusInitial()),
+    ChatState initialState = const ChatState(status: CubitStatusInitial()),
   })  : _chatId = chatId,
         _authService = getIt<AuthService>(),
         _chatRepository = getIt<ChatRepository>(),
@@ -92,12 +92,12 @@ class ChatCubit extends CubitWithStatus<ChatState, dynamic, ChatCubitError> {
         dateTime: now,
       );
       emit(state.copyWith(
-        status: const BlocStatusComplete(),
+        status: const CubitStatusComplete(),
         messageToSendAsNull: true,
       ));
     } else {
       emit(state.copyWith(
-        status: const BlocStatusError<ChatCubitError>(
+        status: const CubitStatusError<ChatCubitError>(
           error: ChatCubitError.noInternetConnection,
         ),
       ));

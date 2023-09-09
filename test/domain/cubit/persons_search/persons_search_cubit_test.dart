@@ -2,7 +2,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/domain/additional_model/bloc_status.dart';
+import 'package:runnoter/domain/additional_model/cubit_status.dart';
 import 'package:runnoter/domain/additional_model/coaching_request.dart';
 import 'package:runnoter/domain/additional_model/custom_exception.dart';
 import 'package:runnoter/domain/cubit/persons_search/persons_search_cubit.dart';
@@ -74,7 +74,7 @@ void main() {
     act: (cubit) => cubit.initialize(),
     expect: () => [
       const PersonsSearchState(
-        status: BlocStatusComplete(),
+        status: CubitStatusComplete(),
         clientIds: ['u2', 'u3', 'u5'],
         invitedPersonIds: ['u4'],
       ),
@@ -101,7 +101,7 @@ void main() {
     build: () => PersonsSearchCubit(
       requestDirection: CoachingRequestDirection.coachToClient,
       initialState: PersonsSearchState(
-        status: const BlocStatusComplete(),
+        status: const CubitStatusComplete(),
         foundPersons: [
           FoundPerson(
             info: createPerson(id: 'u2'),
@@ -130,7 +130,7 @@ void main() {
     act: (cubit) => cubit.initialize(),
     expect: () => [
       PersonsSearchState(
-        status: const BlocStatusComplete(),
+        status: const CubitStatusComplete(),
         clientIds: const ['u2', 'u3', 'u5'],
         invitedPersonIds: const ['u4'],
         foundPersons: [
@@ -183,7 +183,7 @@ void main() {
     act: (cubit) => cubit.initialize(),
     expect: () => [
       const PersonsSearchState(
-        status: BlocStatusComplete(),
+        status: CubitStatusComplete(),
         clientIds: ['u2', 'u3', 'u5'],
         invitedPersonIds: ['u4'],
       ),
@@ -210,7 +210,7 @@ void main() {
     build: () => PersonsSearchCubit(
       requestDirection: CoachingRequestDirection.clientToCoach,
       initialState: PersonsSearchState(
-        status: const BlocStatusComplete(),
+        status: const CubitStatusComplete(),
         foundPersons: [
           FoundPerson(
             info: createPerson(id: 'u2'),
@@ -239,7 +239,7 @@ void main() {
     act: (cubit) => cubit.initialize(),
     expect: () => [
       PersonsSearchState(
-        status: const BlocStatusComplete(),
+        status: const CubitStatusComplete(),
         clientIds: const ['u2', 'u3', 'u5'],
         invitedPersonIds: const ['u4'],
         foundPersons: [
@@ -275,7 +275,7 @@ void main() {
     build: () => PersonsSearchCubit(
       requestDirection: CoachingRequestDirection.coachToClient,
       initialState: const PersonsSearchState(
-        status: BlocStatusComplete(),
+        status: CubitStatusComplete(),
         searchQuery: 'sea',
         foundPersons: [],
       ),
@@ -283,7 +283,7 @@ void main() {
     act: (cubit) => cubit.search(''),
     expect: () => [
       const PersonsSearchState(
-        status: BlocStatusComplete(),
+        status: CubitStatusComplete(),
         searchQuery: '',
         foundPersons: null,
       ),
@@ -297,7 +297,7 @@ void main() {
     build: () => PersonsSearchCubit(
       requestDirection: CoachingRequestDirection.coachToClient,
       initialState: const PersonsSearchState(
-        status: BlocStatusComplete(),
+        status: CubitStatusComplete(),
         clientIds: ['u12'],
         invitedPersonIds: ['u2'],
       ),
@@ -323,12 +323,12 @@ void main() {
     act: (cubit) => cubit.search('sea'),
     expect: () => [
       const PersonsSearchState(
-        status: BlocStatusLoading(),
+        status: CubitStatusLoading(),
         clientIds: ['u12'],
         invitedPersonIds: ['u2'],
       ),
       PersonsSearchState(
-        status: const BlocStatusComplete(),
+        status: const CubitStatusComplete(),
         searchQuery: 'sea',
         clientIds: const ['u12'],
         invitedPersonIds: const ['u2'],
@@ -374,7 +374,7 @@ void main() {
     build: () => PersonsSearchCubit(
       requestDirection: CoachingRequestDirection.clientToCoach,
       initialState: const PersonsSearchState(
-        status: BlocStatusComplete(),
+        status: CubitStatusComplete(),
         clientIds: ['u12'],
         invitedPersonIds: ['u2'],
       ),
@@ -390,12 +390,12 @@ void main() {
     act: (cubit) => cubit.search('sea'),
     expect: () => [
       const PersonsSearchState(
-        status: BlocStatusLoading(),
+        status: CubitStatusLoading(),
         clientIds: ['u12'],
         invitedPersonIds: ['u2'],
       ),
       PersonsSearchState(
-        status: const BlocStatusComplete(),
+        status: const CubitStatusComplete(),
         searchQuery: 'sea',
         clientIds: const ['u12'],
         invitedPersonIds: const ['u2'],
@@ -452,7 +452,7 @@ void main() {
     setUp: () => authService.mockGetLoggedUserId(),
     act: (cubit) => cubit.invitePerson('u2'),
     expect: () => [
-      const PersonsSearchState(status: BlocStatusNoLoggedUser()),
+      const PersonsSearchState(status: CubitStatusNoLoggedUser()),
     ],
     verify: (_) => verify(() => authService.loggedUserId$).called(1),
   );
@@ -463,7 +463,7 @@ void main() {
     "should call coaching request repository's method to add request with given person id set as receiver id, coachToClient direction and pending invitation status",
     build: () => PersonsSearchCubit(
       requestDirection: CoachingRequestDirection.coachToClient,
-      initialState: const PersonsSearchState(status: BlocStatusComplete()),
+      initialState: const PersonsSearchState(status: CubitStatusComplete()),
     ),
     setUp: () {
       authService.mockGetLoggedUserId(userId: 'u1');
@@ -471,9 +471,9 @@ void main() {
     },
     act: (cubit) => cubit.invitePerson('u2'),
     expect: () => [
-      const PersonsSearchState(status: BlocStatusLoading()),
+      const PersonsSearchState(status: CubitStatusLoading()),
       const PersonsSearchState(
-        status: BlocStatusComplete<PersonsSearchCubitInfo>(
+        status: CubitStatusComplete<PersonsSearchCubitInfo>(
           info: PersonsSearchCubitInfo.requestSent,
         ),
       ),
@@ -497,7 +497,7 @@ void main() {
     "should call coaching request repository's method to add request with given person id set as receiver id, clientToCoach direction and pending invitation status",
     build: () => PersonsSearchCubit(
       requestDirection: CoachingRequestDirection.clientToCoach,
-      initialState: const PersonsSearchState(status: BlocStatusComplete()),
+      initialState: const PersonsSearchState(status: CubitStatusComplete()),
     ),
     setUp: () {
       authService.mockGetLoggedUserId(userId: 'u1');
@@ -505,9 +505,9 @@ void main() {
     },
     act: (cubit) => cubit.invitePerson('u2'),
     expect: () => [
-      const PersonsSearchState(status: BlocStatusLoading()),
+      const PersonsSearchState(status: CubitStatusLoading()),
       const PersonsSearchState(
-        status: BlocStatusComplete<PersonsSearchCubitInfo>(
+        status: CubitStatusComplete<PersonsSearchCubitInfo>(
           info: PersonsSearchCubitInfo.requestSent,
         ),
       ),
@@ -531,7 +531,7 @@ void main() {
     'should emit error status with userAlreadyHasCoach error',
     build: () => PersonsSearchCubit(
       requestDirection: CoachingRequestDirection.coachToClient,
-      initialState: const PersonsSearchState(status: BlocStatusComplete()),
+      initialState: const PersonsSearchState(status: CubitStatusComplete()),
     ),
     setUp: () {
       authService.mockGetLoggedUserId(userId: 'u1');
@@ -543,9 +543,9 @@ void main() {
     },
     act: (cubit) => cubit.invitePerson('u2'),
     expect: () => [
-      const PersonsSearchState(status: BlocStatusLoading()),
+      const PersonsSearchState(status: CubitStatusLoading()),
       const PersonsSearchState(
-        status: BlocStatusError<PersonsSearchCubitError>(
+        status: CubitStatusError<PersonsSearchCubitError>(
           error: PersonsSearchCubitError.userAlreadyHasCoach,
         ),
       ),

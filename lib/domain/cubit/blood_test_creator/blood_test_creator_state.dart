@@ -43,14 +43,14 @@ class BloodTestCreatorState extends CubitState<BloodTestCreatorState> {
 
   @override
   BloodTestCreatorState copyWith({
-    BlocStatus? status,
+    CubitStatus? status,
     Gender? gender,
     BloodTest? bloodTest,
     DateTime? date,
     List<BloodParameterResult>? parameterResults,
   }) =>
       BloodTestCreatorState(
-        status: status ?? const BlocStatusComplete(),
+        status: status ?? const CubitStatusComplete(),
         gender: gender ?? this.gender,
         bloodTest: bloodTest ?? this.bloodTest,
         date: date ?? this.date,

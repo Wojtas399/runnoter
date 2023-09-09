@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/additional_model/bloc_status.dart';
+import '../../../domain/additional_model/cubit_status.dart';
 import '../../../domain/cubit/workout_creator/workout_creator_cubit.dart';
 import '../../../domain/entity/workout.dart';
 import '../../component/big_button_component.dart';
@@ -67,11 +67,11 @@ class _Form extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final BlocStatus blocStatus = context.select(
+    final CubitStatus cubitStatus = context.select(
       (WorkoutCreatorCubit cubit) => cubit.state.status,
     );
 
-    return blocStatus is BlocStatusInitial
+    return cubitStatus is CubitStatusInitial
         ? const LoadingInfo()
         : const Column(
             children: [

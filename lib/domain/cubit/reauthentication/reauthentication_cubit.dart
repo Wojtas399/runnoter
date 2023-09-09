@@ -1,6 +1,6 @@
 import '../../../dependency_injection.dart';
 import '../../additional_model/auth_provider.dart';
-import '../../additional_model/bloc_status.dart';
+import '../../additional_model/cubit_status.dart';
 import '../../additional_model/cubit_state.dart';
 import '../../additional_model/cubit_with_status.dart';
 import '../../additional_model/custom_exception.dart';
@@ -14,7 +14,7 @@ class ReauthenticationCubit extends CubitWithStatus<ReauthenticationState,
 
   ReauthenticationCubit({
     ReauthenticationState initialState = const ReauthenticationState(
-      status: BlocStatusInitial(),
+      status: CubitStatusInitial(),
     ),
   })  : _authService = getIt<AuthService>(),
         super(initialState);

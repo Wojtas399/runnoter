@@ -4,7 +4,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/domain/additional_model/bloc_status.dart';
+import 'package:runnoter/domain/additional_model/cubit_status.dart';
 import 'package:runnoter/domain/additional_model/coaching_request.dart';
 import 'package:runnoter/domain/additional_model/coaching_request_short.dart';
 import 'package:runnoter/domain/cubit/profile/coach/profile_coach_cubit.dart';
@@ -96,13 +96,13 @@ void main() {
         },
         expect: () => [
           ProfileCoachState(
-            status: const BlocStatusComplete(),
+            status: const CubitStatusComplete(),
             coachId: expectedCoach.id,
             coachFullName: '${expectedCoach.name} ${expectedCoach.surname}',
             coachEmail: expectedCoach.email,
           ),
           ProfileCoachState(
-            status: const BlocStatusComplete(),
+            status: const CubitStatusComplete(),
             coachId: expectedUpdatedCoach.id,
             coachFullName:
                 '${expectedUpdatedCoach.name} ${expectedUpdatedCoach.surname}',
@@ -170,19 +170,19 @@ void main() {
           receivedRequests$.add([]);
         },
         expect: () => [
-          const ProfileCoachState(status: BlocStatusComplete()),
+          const ProfileCoachState(status: CubitStatusComplete()),
           ProfileCoachState(
-            status: const BlocStatusComplete(),
+            status: const CubitStatusComplete(),
             sentRequests: sentRequestDetails,
             receivedRequests: receivedRequestDetails,
           ),
           ProfileCoachState(
-            status: const BlocStatusComplete(),
+            status: const CubitStatusComplete(),
             sentRequests: const [],
             receivedRequests: receivedRequestDetails,
           ),
           const ProfileCoachState(
-            status: BlocStatusComplete(),
+            status: CubitStatusComplete(),
             sentRequests: [],
             receivedRequests: [],
           ),
@@ -268,17 +268,17 @@ void main() {
         },
         expect: () => [
           ProfileCoachState(
-            status: const BlocStatusComplete(),
+            status: const CubitStatusComplete(),
             sentRequests: sentRequestDetails,
             receivedRequests: receivedRequestDetails,
           ),
           ProfileCoachState(
-            status: const BlocStatusComplete(),
+            status: const CubitStatusComplete(),
             sentRequests: const [],
             receivedRequests: receivedRequestDetails,
           ),
           const ProfileCoachState(
-            status: BlocStatusComplete(),
+            status: CubitStatusComplete(),
             sentRequests: [],
             receivedRequests: [],
           ),
@@ -357,7 +357,7 @@ void main() {
         },
         expect: () => [
           ProfileCoachState(
-            status: const BlocStatusComplete(),
+            status: const CubitStatusComplete(),
             sentRequests: [
               CoachingRequestShort(id: 'r1', personToDisplay: person1),
             ],
@@ -397,7 +397,7 @@ void main() {
     'should emit no logged user info',
     build: () => ProfileCoachCubit(
       initialState: ProfileCoachState(
-        status: const BlocStatusComplete(),
+        status: const CubitStatusComplete(),
         receivedRequests: [
           CoachingRequestShort(
             id: 'r2',
@@ -414,7 +414,7 @@ void main() {
     act: (bloc) => bloc.acceptRequest('r1'),
     expect: () => [
       ProfileCoachState(
-        status: const BlocStatusNoLoggedUser(),
+        status: const CubitStatusNoLoggedUser(),
         receivedRequests: [
           CoachingRequestShort(
             id: 'r2',
@@ -436,7 +436,7 @@ void main() {
     "should call user repository's method to update logged user with new coach id",
     build: () => ProfileCoachCubit(
       initialState: ProfileCoachState(
-        status: const BlocStatusComplete(),
+        status: const CubitStatusComplete(),
         receivedRequests: [
           CoachingRequestShort(
             id: 'r2',
@@ -457,7 +457,7 @@ void main() {
     act: (bloc) => bloc.acceptRequest('r1'),
     expect: () => [
       ProfileCoachState(
-        status: const BlocStatusLoading(),
+        status: const CubitStatusLoading(),
         receivedRequests: [
           CoachingRequestShort(
             id: 'r2',
@@ -470,7 +470,7 @@ void main() {
         ],
       ),
       ProfileCoachState(
-        status: const BlocStatusComplete<ProfileCoachCubitInfo>(
+        status: const CubitStatusComplete<ProfileCoachCubitInfo>(
           info: ProfileCoachCubitInfo.requestAccepted,
         ),
         receivedRequests: [
@@ -511,9 +511,9 @@ void main() {
       requestDirection: CoachingRequestDirection.coachToClient,
     ),
     expect: () => [
-      const ProfileCoachState(status: BlocStatusLoading()),
+      const ProfileCoachState(status: CubitStatusLoading()),
       const ProfileCoachState(
-        status: BlocStatusComplete<ProfileCoachCubitInfo>(
+        status: CubitStatusComplete<ProfileCoachCubitInfo>(
           info: ProfileCoachCubitInfo.requestDeleted,
         ),
       ),
@@ -535,9 +535,9 @@ void main() {
       requestDirection: CoachingRequestDirection.clientToCoach,
     ),
     expect: () => [
-      const ProfileCoachState(status: BlocStatusLoading()),
+      const ProfileCoachState(status: CubitStatusLoading()),
       const ProfileCoachState(
-        status: BlocStatusComplete<ProfileCoachCubitInfo>(
+        status: CubitStatusComplete<ProfileCoachCubitInfo>(
           info: ProfileCoachCubitInfo.requestUndid,
         ),
       ),
@@ -555,7 +555,7 @@ void main() {
     setUp: () => authService.mockGetLoggedUserId(),
     act: (bloc) => bloc.deleteCoach(),
     expect: () => [
-      const ProfileCoachState(status: BlocStatusNoLoggedUser()),
+      const ProfileCoachState(status: CubitStatusNoLoggedUser()),
     ],
     verify: (_) => verify(() => authService.loggedUserId$).called(1),
   );
@@ -570,9 +570,9 @@ void main() {
     },
     act: (bloc) => bloc.deleteCoach(),
     expect: () => [
-      const ProfileCoachState(status: BlocStatusLoading()),
+      const ProfileCoachState(status: CubitStatusLoading()),
       const ProfileCoachState(
-        status: BlocStatusComplete<ProfileCoachCubitInfo>(
+        status: CubitStatusComplete<ProfileCoachCubitInfo>(
           info: ProfileCoachCubitInfo.coachDeleted,
         ),
       ),
@@ -610,7 +610,7 @@ void main() {
       authService.mockGetLoggedUserId();
       final cubit = ProfileCoachCubit(
         initialState: const ProfileCoachState(
-          status: BlocStatusInitial(),
+          status: CubitStatusInitial(),
           coachId: 'c1',
         ),
       );
@@ -630,7 +630,7 @@ void main() {
       loadChatIdUseCase.mock(chatId: expectedChatId);
       final cubit = ProfileCoachCubit(
         initialState: const ProfileCoachState(
-          status: BlocStatusInitial(),
+          status: CubitStatusInitial(),
           coachId: 'c1',
         ),
       );

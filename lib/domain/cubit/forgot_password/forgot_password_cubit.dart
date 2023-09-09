@@ -1,4 +1,4 @@
-import '../../../../domain/additional_model/bloc_status.dart';
+import '../../../../domain/additional_model/cubit_status.dart';
 import '../../../../domain/service/auth_service.dart';
 import '../../../dependency_injection.dart';
 import '../../additional_model/cubit_state.dart';
@@ -13,7 +13,7 @@ class ForgotPasswordCubit extends CubitWithStatus<ForgotPasswordState,
 
   ForgotPasswordCubit({
     ForgotPasswordState initialState = const ForgotPasswordState(
-      status: BlocStatusInitial(),
+      status: CubitStatusInitial(),
     ),
   })  : _authService = getIt<AuthService>(),
         super(initialState);

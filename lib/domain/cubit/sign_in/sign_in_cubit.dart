@@ -1,4 +1,4 @@
-import '../../../../domain/additional_model/bloc_status.dart';
+import '../../../../domain/additional_model/cubit_status.dart';
 import '../../../../domain/service/auth_service.dart';
 import '../../../dependency_injection.dart';
 import '../../additional_model/cubit_state.dart';
@@ -15,7 +15,7 @@ class SignInCubit
   final UserRepository _userRepository;
 
   SignInCubit({
-    SignInState initialState = const SignInState(status: BlocStatusInitial()),
+    SignInState initialState = const SignInState(status: CubitStatusInitial()),
   })  : _authService = getIt<AuthService>(),
         _userRepository = getIt<UserRepository>(),
         super(initialState);

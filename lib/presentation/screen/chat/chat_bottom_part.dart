@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/additional_model/bloc_status.dart';
+import '../../../domain/additional_model/cubit_status.dart';
 import '../../../domain/cubit/chat/chat_cubit.dart';
 import '../../component/gap/gap_horizontal_components.dart';
 import '../../service/utils.dart';
@@ -67,7 +67,7 @@ class _MessageInputState extends State<_MessageInput> {
 
   @override
   Widget build(BuildContext context) {
-    final BlocStatus blocStatus = context.select(
+    final CubitStatus cubitStatus = context.select(
       (ChatCubit cubit) => cubit.state.status,
     );
 
@@ -84,7 +84,7 @@ class _MessageInputState extends State<_MessageInput> {
         counterText: '',
         suffixText: '$_messageLength/100',
       ),
-      enabled: blocStatus is! BlocStatusLoading,
+      enabled: cubitStatus is! CubitStatusLoading,
       maxLength: 100,
       textInputAction: TextInputAction.send,
       controller: widget.messageController,
@@ -108,14 +108,14 @@ class _SubmitButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final BlocStatus blocStatus = context.select(
+    final CubitStatus cubitStatus = context.select(
       (ChatCubit cubit) => cubit.state.status,
     );
     final bool canSubmit = context.select(
       (ChatCubit cubit) => cubit.state.canSubmitMessage,
     );
 
-    return blocStatus is BlocStatusLoading
+    return cubitStatus is CubitStatusLoading
         ? Transform.scale(
             scale: 0.7,
             child: const CircularProgressIndicator(),

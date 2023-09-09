@@ -17,12 +17,12 @@ class SignInState extends CubitState<SignInState> {
 
   @override
   SignInState copyWith({
-    BlocStatus? status,
+    CubitStatus? status,
     String? email,
     String? password,
   }) =>
       SignInState(
-        status: status ?? const BlocStatusComplete(),
+        status: status ?? const CubitStatusComplete(),
         email: email ?? this.email,
         password: password ?? this.password,
       );

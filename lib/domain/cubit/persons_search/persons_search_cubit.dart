@@ -4,7 +4,7 @@ import 'package:equatable/equatable.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../../dependency_injection.dart';
-import '../../additional_model/bloc_status.dart';
+import '../../additional_model/cubit_status.dart';
 import '../../additional_model/coaching_request.dart';
 import '../../additional_model/cubit_state.dart';
 import '../../additional_model/cubit_with_status.dart';
@@ -28,7 +28,7 @@ class PersonsSearchCubit extends CubitWithStatus<PersonsSearchState,
   PersonsSearchCubit({
     required this.requestDirection,
     PersonsSearchState initialState = const PersonsSearchState(
-      status: BlocStatusInitial(),
+      status: CubitStatusInitial(),
     ),
   })  : _authService = getIt<AuthService>(),
         _personRepository = getIt<PersonRepository>(),
@@ -85,7 +85,7 @@ class PersonsSearchCubit extends CubitWithStatus<PersonsSearchState,
   Future<void> search(String searchQuery) async {
     if (searchQuery.isEmpty) {
       emit(state.copyWith(
-        status: const BlocStatusComplete(),
+        status: const CubitStatusComplete(),
         searchQuery: searchQuery,
         setFoundPersonsAsNull: true,
       ));

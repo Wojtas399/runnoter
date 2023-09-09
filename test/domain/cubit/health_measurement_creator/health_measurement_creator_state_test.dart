@@ -2,7 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/common/date_service.dart';
-import 'package:runnoter/domain/additional_model/bloc_status.dart';
+import 'package:runnoter/domain/additional_model/cubit_status.dart';
 import 'package:runnoter/domain/cubit/health_measurement_creator/health_measurement_creator_cubit.dart';
 import 'package:runnoter/domain/entity/health_measurement.dart';
 
@@ -19,7 +19,7 @@ void main() {
   });
 
   setUp(() {
-    state = HealthMeasurementCreatorState(status: const BlocStatusInitial());
+    state = HealthMeasurementCreatorState(status: const CubitStatusInitial());
     dateService.mockGetToday(todayDate: todayDate);
     dateService.mockAreDatesTheSame(expected: false);
   });
@@ -229,13 +229,13 @@ void main() {
     'copy with status, '
     'should set complete status if new status is null',
     () {
-      const BlocStatus expected = BlocStatusLoading();
+      const CubitStatus expected = CubitStatusLoading();
 
       state = state.copyWith(status: expected);
       final state2 = state.copyWith();
 
       expect(state.status, expected);
-      expect(state2.status, const BlocStatusComplete());
+      expect(state2.status, const CubitStatusComplete());
     },
   );
 

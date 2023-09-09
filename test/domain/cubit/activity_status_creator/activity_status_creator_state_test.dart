@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/domain/additional_model/activity_status.dart';
-import 'package:runnoter/domain/additional_model/bloc_status.dart';
+import 'package:runnoter/domain/additional_model/cubit_status.dart';
 import 'package:runnoter/domain/cubit/activity_status_creator/activity_status_creator_cubit.dart';
 
 void main() {
@@ -8,7 +8,7 @@ void main() {
 
   setUp(() {
     state = const ActivityStatusCreatorState(
-      status: BlocStatusInitial(),
+      status: CubitStatusInitial(),
     );
   });
 
@@ -425,13 +425,13 @@ void main() {
     'copy with status, '
     'should set complete status if new status is null',
     () {
-      const BlocStatus expected = BlocStatusLoading();
+      const CubitStatus expected = CubitStatusLoading();
 
       state = state.copyWith(status: expected);
       final state2 = state.copyWith();
 
       expect(state.status, expected);
-      expect(state2.status, const BlocStatusComplete());
+      expect(state2.status, const CubitStatusComplete());
     },
   );
 

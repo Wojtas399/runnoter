@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/additional_model/bloc_status.dart';
+import '../../../domain/additional_model/cubit_status.dart';
 import '../../../domain/cubit/reauthentication/reauthentication_cubit.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/password_text_field_component.dart';
@@ -17,7 +17,7 @@ class ReauthenticationPassword extends StatelessWidget {
       (ReauthenticationCubit cubit) =>
           cubit.state.password != null &&
           cubit.state.password?.isNotEmpty == true &&
-          cubit.state.status is! BlocStatusLoading,
+          cubit.state.status is! CubitStatusLoading,
     );
 
     return Column(
@@ -47,7 +47,7 @@ class _PasswordSubmitButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final BlocStatus blocStatus = context.select(
+    final CubitStatus cubitStatus = context.select(
       (ReauthenticationCubit cubit) => cubit.state.status,
     );
 
@@ -56,8 +56,8 @@ class _PasswordSubmitButton extends StatelessWidget {
       height: 40,
       child: FilledButton(
         onPressed: onPressed,
-        child: blocStatus is BlocStatusLoading &&
-                blocStatus.loadingInfo ==
+        child: cubitStatus is CubitStatusLoading &&
+                cubitStatus.loadingInfo ==
                     ReauthenticationCubitLoadingInfo
                         .passwordReauthenticationLoading
             ? const SizedBox(

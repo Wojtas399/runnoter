@@ -4,7 +4,7 @@ import 'package:equatable/equatable.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../../dependency_injection.dart';
-import '../../additional_model/bloc_status.dart';
+import '../../additional_model/cubit_status.dart';
 import '../../additional_model/coaching_request.dart';
 import '../../additional_model/coaching_request_short.dart';
 import '../../additional_model/cubit_state.dart';
@@ -26,7 +26,8 @@ class ClientsCubit
   StreamSubscription<_ListenedParams>? _listener;
 
   ClientsCubit({
-    ClientsState initialState = const ClientsState(status: BlocStatusInitial()),
+    ClientsState initialState =
+        const ClientsState(status: CubitStatusInitial()),
   })  : _authService = getIt<AuthService>(),
         _coachingRequestService = getIt<CoachingRequestService>(),
         _personRepository = getIt<PersonRepository>(),

@@ -1,12 +1,12 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:runnoter/domain/additional_model/bloc_status.dart';
+import 'package:runnoter/domain/additional_model/cubit_status.dart';
 import 'package:runnoter/domain/cubit/forgot_password/forgot_password_cubit.dart';
 
 void main() {
   late ForgotPasswordState state;
 
   setUp(() {
-    state = const ForgotPasswordState(status: BlocStatusInitial());
+    state = const ForgotPasswordState(status: CubitStatusInitial());
   });
 
   test(
@@ -32,13 +32,13 @@ void main() {
   test(
     'copy with status',
     () {
-      const BlocStatus expectedStatus = BlocStatusLoading();
+      const CubitStatus expectedStatus = CubitStatusLoading();
 
       state = state.copyWith(status: expectedStatus);
       final state2 = state.copyWith();
 
       expect(state.status, expectedStatus);
-      expect(state2.status, const BlocStatusComplete());
+      expect(state2.status, const CubitStatusComplete());
     },
   );
 

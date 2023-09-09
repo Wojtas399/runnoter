@@ -3,7 +3,7 @@ import 'package:rxdart/rxdart.dart';
 import '../../../../domain/entity/blood_test.dart';
 import '../../../../domain/repository/blood_test_repository.dart';
 import '../../../dependency_injection.dart';
-import '../../additional_model/bloc_status.dart';
+import '../../additional_model/cubit_status.dart';
 import '../../additional_model/blood_parameter.dart';
 import '../../additional_model/cubit_state.dart';
 import '../../additional_model/cubit_with_status.dart';
@@ -24,7 +24,7 @@ class BloodTestCreatorCubit extends CubitWithStatus<BloodTestCreatorState,
     required this.userId,
     this.bloodTestId,
     BloodTestCreatorState initialState = const BloodTestCreatorState(
-      status: BlocStatusInitial(),
+      status: CubitStatusInitial(),
     ),
   })  : _userRepository = getIt.get<UserRepository>(),
         _bloodTestRepository = getIt<BloodTestRepository>(),

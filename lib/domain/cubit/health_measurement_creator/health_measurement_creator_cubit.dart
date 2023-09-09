@@ -1,7 +1,7 @@
 import 'package:rxdart/rxdart.dart';
 
 import '../../../../common/date_service.dart';
-import '../../../../domain/additional_model/bloc_status.dart';
+import '../../../../domain/additional_model/cubit_status.dart';
 import '../../../../domain/entity/health_measurement.dart';
 import '../../../../domain/repository/health_measurement_repository.dart';
 import '../../../../domain/service/auth_service.dart';
@@ -24,7 +24,7 @@ class HealthMeasurementCreatorCubit extends CubitWithStatus<
         _healthMeasurementRepository = getIt<HealthMeasurementRepository>(),
         super(
           initialState ??
-              HealthMeasurementCreatorState(status: const BlocStatusInitial()),
+              HealthMeasurementCreatorState(status: const CubitStatusInitial()),
         );
 
   Future<void> initialize(DateTime? date) async {

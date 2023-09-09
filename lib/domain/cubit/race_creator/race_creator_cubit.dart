@@ -1,6 +1,6 @@
 import '../../../dependency_injection.dart';
 import '../../additional_model/activity_status.dart';
-import '../../additional_model/bloc_status.dart';
+import '../../additional_model/cubit_status.dart';
 import '../../additional_model/cubit_state.dart';
 import '../../additional_model/cubit_with_status.dart';
 import '../../entity/race.dart';
@@ -18,7 +18,7 @@ class RaceCreatorCubit
     required String userId,
     this.raceId,
     RaceCreatorState initialState = const RaceCreatorState(
-      status: BlocStatusInitial(),
+      status: CubitStatusInitial(),
     ),
   })  : _userId = userId,
         _raceRepository = getIt<RaceRepository>(),
@@ -35,7 +35,7 @@ class RaceCreatorCubit
     );
     await for (final race in race$) {
       emit(state.copyWith(
-        status: const BlocStatusComplete<RaceCreatorCubitInfo>(),
+        status: const CubitStatusComplete<RaceCreatorCubitInfo>(),
         race: race,
         name: race?.name,
         date: race?.date,

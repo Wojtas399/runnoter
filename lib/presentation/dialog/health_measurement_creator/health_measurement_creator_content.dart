@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get_it/get_it.dart';
 
-import '../../../domain/additional_model/bloc_status.dart';
+import '../../../domain/additional_model/cubit_status.dart';
 import '../../../domain/cubit/health_measurement_creator/health_measurement_creator_cubit.dart';
 import '../../component/gap/gap_horizontal_components.dart';
 import '../../component/loading_info_component.dart';
@@ -79,11 +79,11 @@ class _Form extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final BlocStatus blocStatus = context.select(
+    final CubitStatus cubitStatus = context.select(
       (HealthMeasurementCreatorCubit cubit) => cubit.state.status,
     );
 
-    return blocStatus is BlocStatusInitial
+    return cubitStatus is CubitStatusInitial
         ? const LoadingInfo()
         : const HealthMeasurementCreatorForm();
   }

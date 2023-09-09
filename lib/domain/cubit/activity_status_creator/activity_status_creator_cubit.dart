@@ -1,4 +1,4 @@
-import '../../../../domain/additional_model/bloc_status.dart';
+import '../../../../domain/additional_model/cubit_status.dart';
 import '../../../dependency_injection.dart';
 import '../../additional_model/activity_status.dart';
 import '../../additional_model/cubit_state.dart';
@@ -25,7 +25,7 @@ class ActivityStatusCreatorCubit extends CubitWithStatus<
     required this.activityType,
     required this.activityId,
     ActivityStatusCreatorState initialState = const ActivityStatusCreatorState(
-      status: BlocStatusInitial(),
+      status: CubitStatusInitial(),
     ),
   })  : _workoutRepository = getIt<WorkoutRepository>(),
         _raceRepository = getIt<RaceRepository>(),

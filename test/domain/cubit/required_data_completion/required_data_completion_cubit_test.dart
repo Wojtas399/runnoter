@@ -2,7 +2,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/domain/additional_model/bloc_status.dart';
+import 'package:runnoter/domain/additional_model/cubit_status.dart';
 import 'package:runnoter/domain/cubit/required_data_completion/required_data_completion_cubit.dart';
 import 'package:runnoter/domain/entity/user.dart';
 import 'package:runnoter/domain/service/auth_service.dart';
@@ -39,7 +39,7 @@ void main() {
     act: (cubit) => cubit.accountTypeChanged(accountType),
     expect: () => [
       const RequiredDataCompletionState(
-        status: BlocStatusComplete(),
+        status: CubitStatusComplete(),
         accountType: accountType,
       ),
     ],
@@ -52,7 +52,7 @@ void main() {
     act: (cubit) => cubit.genderChanged(gender),
     expect: () => [
       const RequiredDataCompletionState(
-        status: BlocStatusComplete(),
+        status: CubitStatusComplete(),
         gender: gender,
       ),
     ],
@@ -65,7 +65,7 @@ void main() {
     act: (cubit) => cubit.nameChanged(name),
     expect: () => [
       const RequiredDataCompletionState(
-        status: BlocStatusComplete(),
+        status: CubitStatusComplete(),
         name: name,
       ),
     ],
@@ -78,7 +78,7 @@ void main() {
     act: (cubit) => cubit.surnameChanged(surname),
     expect: () => [
       const RequiredDataCompletionState(
-        status: BlocStatusComplete(),
+        status: CubitStatusComplete(),
         surname: surname,
       ),
     ],
@@ -91,7 +91,7 @@ void main() {
     act: (cubit) => cubit.dateOfBirthChanged(dateOfBirth),
     expect: () => [
       RequiredDataCompletionState(
-        status: const BlocStatusComplete(),
+        status: const CubitStatusComplete(),
         dateOfBirth: dateOfBirth,
       ),
     ],
@@ -124,13 +124,13 @@ void main() {
     act: (cubit) => cubit.submit(),
     expect: () => [
       RequiredDataCompletionState(
-        status: const BlocStatusLoading(),
+        status: const CubitStatusLoading(),
         name: name,
         surname: surname,
         dateOfBirth: dateOfBirth,
       ),
       RequiredDataCompletionState(
-        status: const BlocStatusNoLoggedUser(),
+        status: const CubitStatusNoLoggedUser(),
         name: name,
         surname: surname,
         dateOfBirth: dateOfBirth,
@@ -160,13 +160,13 @@ void main() {
     act: (cubit) => cubit.submit(),
     expect: () => [
       RequiredDataCompletionState(
-        status: const BlocStatusLoading(),
+        status: const CubitStatusLoading(),
         name: name,
         surname: surname,
         dateOfBirth: dateOfBirth,
       ),
       RequiredDataCompletionState(
-        status: const BlocStatusNoLoggedUser(),
+        status: const CubitStatusNoLoggedUser(),
         name: name,
         surname: surname,
         dateOfBirth: dateOfBirth,
@@ -198,7 +198,7 @@ void main() {
     act: (cubit) => cubit.submit(),
     expect: () => [
       RequiredDataCompletionState(
-        status: const BlocStatusLoading(),
+        status: const CubitStatusLoading(),
         accountType: accountType,
         gender: gender,
         name: name,
@@ -206,7 +206,7 @@ void main() {
         dateOfBirth: dateOfBirth,
       ),
       RequiredDataCompletionState(
-        status: const BlocStatusComplete<RequiredDataCompletionCubitInfo>(
+        status: const CubitStatusComplete<RequiredDataCompletionCubitInfo>(
           info: RequiredDataCompletionCubitInfo.userDataAdded,
         ),
         accountType: accountType,

@@ -28,7 +28,7 @@ class HomeState extends CubitState<HomeState> {
 
   @override
   HomeState copyWith({
-    BlocStatus? status,
+    CubitStatus? status,
     AccountType? accountType,
     String? loggedUserName,
     Settings? appSettings,
@@ -36,7 +36,7 @@ class HomeState extends CubitState<HomeState> {
     CoachingRequestShort? acceptedCoachRequest,
   }) =>
       HomeState(
-        status: status ?? const BlocStatusComplete(),
+        status: status ?? const CubitStatusComplete(),
         accountType: accountType ?? this.accountType,
         loggedUserName: loggedUserName ?? this.loggedUserName,
         appSettings: appSettings ?? this.appSettings,

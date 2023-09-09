@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:runnoter/domain/additional_model/bloc_status.dart';
+import 'package:runnoter/domain/additional_model/cubit_status.dart';
 import 'package:runnoter/domain/additional_model/coaching_request_short.dart';
 import 'package:runnoter/domain/cubit/profile/coach/profile_coach_cubit.dart';
 
@@ -9,7 +9,7 @@ void main() {
   late ProfileCoachState state;
 
   setUp(
-    () => state = const ProfileCoachState(status: BlocStatusInitial()),
+    () => state = const ProfileCoachState(status: CubitStatusInitial()),
   );
 
   test(
@@ -73,13 +73,13 @@ void main() {
     'copy with status, '
     'should set complete status if new value is null',
     () {
-      const BlocStatus expected = BlocStatusLoading();
+      const CubitStatus expected = CubitStatusLoading();
 
       state = state.copyWith(status: expected);
       final state2 = state.copyWith();
 
       expect(state.status, expected);
-      expect(state2.status, const BlocStatusComplete());
+      expect(state2.status, const CubitStatusComplete());
     },
   );
 

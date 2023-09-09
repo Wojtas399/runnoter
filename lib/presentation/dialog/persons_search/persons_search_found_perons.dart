@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/additional_model/bloc_status.dart';
 import '../../../domain/additional_model/coaching_request.dart';
+import '../../../domain/additional_model/cubit_status.dart';
 import '../../../domain/cubit/persons_search/persons_search_cubit.dart';
 import '../../../domain/entity/person.dart';
 import '../../component/empty_content_info_component.dart';
@@ -18,14 +18,14 @@ class PersonsSearchFoundPersons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final BlocStatus blocStatus = context.select(
+    final CubitStatus cubitStatus = context.select(
       (PersonsSearchCubit cubit) => cubit.state.status,
     );
     final List<FoundPerson>? foundUsers = context.select(
       (PersonsSearchCubit cubit) => cubit.state.foundPersons,
     );
 
-    return blocStatus is BlocStatusLoading
+    return cubitStatus is CubitStatusLoading
         ? LoadingInfo(loadingText: Str.of(context).loading)
         : switch (foundUsers) {
             null => const _EmptySearchQueryInfo(),

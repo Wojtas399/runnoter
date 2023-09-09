@@ -25,14 +25,14 @@ class ClientsState extends CubitState<ClientsState> {
 
   @override
   ClientsState copyWith({
-    BlocStatus? status,
+    CubitStatus? status,
     List<CoachingRequestShort>? sentRequests,
     List<CoachingRequestShort>? receivedRequests,
     List<Person>? clients,
     String? selectedChatId,
   }) =>
       ClientsState(
-        status: status ?? const BlocStatusComplete(),
+        status: status ?? const CubitStatusComplete(),
         sentRequests: sentRequests ?? this.sentRequests,
         receivedRequests: receivedRequests ?? this.receivedRequests,
         clients: clients ?? this.clients,

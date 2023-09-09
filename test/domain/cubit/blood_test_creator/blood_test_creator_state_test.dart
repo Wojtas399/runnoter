@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:runnoter/domain/additional_model/bloc_status.dart';
+import 'package:runnoter/domain/additional_model/cubit_status.dart';
 import 'package:runnoter/domain/additional_model/blood_parameter.dart';
 import 'package:runnoter/domain/cubit/blood_test_creator/blood_test_creator_cubit.dart';
 import 'package:runnoter/domain/entity/blood_test.dart';
@@ -19,7 +19,7 @@ void main() {
 
   setUp(
     () => state = const BloodTestCreatorState(
-      status: BlocStatusInitial(),
+      status: CubitStatusInitial(),
     ),
   );
 
@@ -172,13 +172,13 @@ void main() {
     'copy with status, '
     'should set complete status if new status is null',
     () {
-      const BlocStatus expected = BlocStatusLoading();
+      const CubitStatus expected = CubitStatusLoading();
 
       state = state.copyWith(status: expected);
       final state2 = state.copyWith();
 
       expect(state.status, expected);
-      expect(state2.status, const BlocStatusComplete());
+      expect(state2.status, const CubitStatusComplete());
     },
   );
 

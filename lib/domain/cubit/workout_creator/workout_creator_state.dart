@@ -36,7 +36,7 @@ class WorkoutCreatorState extends CubitState<WorkoutCreatorState> {
 
   @override
   WorkoutCreatorState copyWith({
-    BlocStatus? status,
+    CubitStatus? status,
     DateTime? date,
     Workout? workout,
     String? workoutName,
@@ -44,7 +44,7 @@ class WorkoutCreatorState extends CubitState<WorkoutCreatorState> {
   }) {
     return WorkoutCreatorState(
       dateService: _dateService,
-      status: status ?? const BlocStatusComplete(),
+      status: status ?? const CubitStatusComplete(),
       date: date ?? this.date,
       workout: workout ?? this.workout,
       workoutName: workoutName ?? this.workoutName,

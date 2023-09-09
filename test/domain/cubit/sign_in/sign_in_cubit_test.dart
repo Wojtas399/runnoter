@@ -2,7 +2,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/domain/additional_model/bloc_status.dart';
+import 'package:runnoter/domain/additional_model/cubit_status.dart';
 import 'package:runnoter/domain/additional_model/custom_exception.dart';
 import 'package:runnoter/domain/cubit/sign_in/sign_in_cubit.dart';
 import 'package:runnoter/domain/repository/user_repository.dart';
@@ -40,9 +40,9 @@ void main() {
     },
     act: (cubit) => cubit.initialize(),
     expect: () => [
-      const SignInState(status: BlocStatusLoading()),
+      const SignInState(status: CubitStatusLoading()),
       const SignInState(
-        status: BlocStatusComplete<SignInCubitInfo>(
+        status: CubitStatusComplete<SignInCubitInfo>(
           info: SignInCubitInfo.signedIn,
         ),
       ),
@@ -64,8 +64,8 @@ void main() {
     },
     act: (cubit) => cubit.initialize(),
     expect: () => [
-      const SignInState(status: BlocStatusLoading()),
-      const SignInState(status: BlocStatusComplete()),
+      const SignInState(status: CubitStatusLoading()),
+      const SignInState(status: CubitStatusComplete()),
     ],
     verify: (_) {
       verify(() => authService.loggedUserId$).called(1);
@@ -81,8 +81,8 @@ void main() {
     setUp: () => authService.mockGetLoggedUserId(),
     act: (cubit) => cubit.initialize(),
     expect: () => [
-      const SignInState(status: BlocStatusLoading()),
-      const SignInState(status: BlocStatusComplete()),
+      const SignInState(status: CubitStatusLoading()),
+      const SignInState(status: CubitStatusComplete()),
     ],
     verify: (_) => verify(() => authService.loggedUserId$).called(1),
   );
@@ -93,7 +93,7 @@ void main() {
     build: () => SignInCubit(),
     act: (cubit) => cubit.emailChanged(email),
     expect: () => [
-      const SignInState(status: BlocStatusComplete(), email: email),
+      const SignInState(status: CubitStatusComplete(), email: email),
     ],
   );
 
@@ -103,7 +103,7 @@ void main() {
     build: () => SignInCubit(),
     act: (cubit) => cubit.passwordChanged(password),
     expect: () => [
-      const SignInState(status: BlocStatusComplete(), password: password),
+      const SignInState(status: CubitStatusComplete(), password: password),
     ],
   );
 
@@ -113,7 +113,7 @@ void main() {
     'should emit complete status without any info',
     build: () => SignInCubit(
       initialState: const SignInState(
-        status: BlocStatusInitial(),
+        status: CubitStatusInitial(),
         email: email,
         password: password,
       ),
@@ -125,12 +125,12 @@ void main() {
     act: (cubit) => cubit.submit(),
     expect: () => [
       const SignInState(
-        status: BlocStatusLoading(),
+        status: CubitStatusLoading(),
         email: email,
         password: password,
       ),
       const SignInState(
-        status: BlocStatusComplete(),
+        status: CubitStatusComplete(),
         email: email,
         password: password,
       ),
@@ -149,7 +149,7 @@ void main() {
     'should emit complete status with signed in info',
     build: () => SignInCubit(
       initialState: const SignInState(
-        status: BlocStatusInitial(),
+        status: CubitStatusInitial(),
         email: email,
         password: password,
       ),
@@ -161,12 +161,12 @@ void main() {
     act: (cubit) => cubit.submit(),
     expect: () => [
       const SignInState(
-        status: BlocStatusLoading(),
+        status: CubitStatusLoading(),
         email: email,
         password: password,
       ),
       const SignInState(
-        status: BlocStatusComplete<SignInCubitInfo>(
+        status: CubitStatusComplete<SignInCubitInfo>(
           info: SignInCubitInfo.signedIn,
         ),
         email: email,
@@ -187,7 +187,7 @@ void main() {
     "should emit error status with unverified email error and should call auth service's method to send email verification",
     build: () => SignInCubit(
       initialState: const SignInState(
-        status: BlocStatusInitial(),
+        status: CubitStatusInitial(),
         email: email,
         password: password,
       ),
@@ -200,12 +200,12 @@ void main() {
     act: (cubit) => cubit.submit(),
     expect: () => [
       const SignInState(
-        status: BlocStatusLoading(),
+        status: CubitStatusLoading(),
         email: email,
         password: password,
       ),
       const SignInState(
-        status: BlocStatusError<SignInCubitError>(
+        status: CubitStatusError<SignInCubitError>(
           error: SignInCubitError.unverifiedEmail,
         ),
         email: email,
@@ -227,7 +227,7 @@ void main() {
     'should emit error status with invalid email error',
     build: () => SignInCubit(
       initialState: const SignInState(
-        status: BlocStatusInitial(),
+        status: CubitStatusInitial(),
         email: email,
         password: password,
       ),
@@ -238,12 +238,12 @@ void main() {
     act: (cubit) => cubit.submit(),
     expect: () => [
       const SignInState(
-        status: BlocStatusLoading(),
+        status: CubitStatusLoading(),
         email: email,
         password: password,
       ),
       const SignInState(
-        status: BlocStatusError<SignInCubitError>(
+        status: CubitStatusError<SignInCubitError>(
           error: SignInCubitError.invalidEmail,
         ),
         email: email,
@@ -261,7 +261,7 @@ void main() {
     'should emit error status with user not found error',
     build: () => SignInCubit(
       initialState: const SignInState(
-        status: BlocStatusInitial(),
+        status: CubitStatusInitial(),
         email: email,
         password: password,
       ),
@@ -272,12 +272,12 @@ void main() {
     act: (cubit) => cubit.submit(),
     expect: () => [
       const SignInState(
-        status: BlocStatusLoading(),
+        status: CubitStatusLoading(),
         email: email,
         password: password,
       ),
       const SignInState(
-        status: BlocStatusError<SignInCubitError>(
+        status: CubitStatusError<SignInCubitError>(
           error: SignInCubitError.userNotFound,
         ),
         email: email,
@@ -295,7 +295,7 @@ void main() {
     'should emit error status with wrong password error',
     build: () => SignInCubit(
       initialState: const SignInState(
-        status: BlocStatusInitial(),
+        status: CubitStatusInitial(),
         email: email,
         password: password,
       ),
@@ -306,12 +306,12 @@ void main() {
     act: (cubit) => cubit.submit(),
     expect: () => [
       const SignInState(
-        status: BlocStatusLoading(),
+        status: CubitStatusLoading(),
         email: email,
         password: password,
       ),
       const SignInState(
-        status: BlocStatusError<SignInCubitError>(
+        status: CubitStatusError<SignInCubitError>(
           error: SignInCubitError.wrongPassword,
         ),
         email: email,
@@ -329,7 +329,7 @@ void main() {
     'should emit network request failed status',
     build: () => SignInCubit(
       initialState: const SignInState(
-        status: BlocStatusInitial(),
+        status: CubitStatusInitial(),
         email: email,
         password: password,
       ),
@@ -342,12 +342,12 @@ void main() {
     act: (cubit) => cubit.submit(),
     expect: () => [
       const SignInState(
-        status: BlocStatusLoading(),
+        status: CubitStatusLoading(),
         email: email,
         password: password,
       ),
       const SignInState(
-        status: BlocStatusNoInternetConnection(),
+        status: CubitStatusNoInternetConnection(),
         email: email,
         password: password,
       ),
@@ -363,7 +363,7 @@ void main() {
     'should emit unknown error status',
     build: () => SignInCubit(
       initialState: const SignInState(
-        status: BlocStatusInitial(),
+        status: CubitStatusInitial(),
         email: email,
         password: password,
       ),
@@ -374,12 +374,12 @@ void main() {
     act: (cubit) => cubit.submit(),
     expect: () => [
       const SignInState(
-        status: BlocStatusLoading(),
+        status: CubitStatusLoading(),
         email: email,
         password: password,
       ),
       const SignInState(
-        status: BlocStatusUnknownError(),
+        status: CubitStatusUnknownError(),
         email: email,
         password: password,
       ),
@@ -398,7 +398,7 @@ void main() {
     'should do nothing',
     build: () => SignInCubit(
       initialState: const SignInState(
-        status: BlocStatusInitial(),
+        status: CubitStatusInitial(),
         email: '',
         password: password,
       ),
@@ -419,7 +419,7 @@ void main() {
     'should do nothing',
     build: () => SignInCubit(
       initialState: const SignInState(
-        status: BlocStatusInitial(),
+        status: CubitStatusInitial(),
         email: email,
         password: '',
       ),
@@ -446,9 +446,9 @@ void main() {
     },
     act: (cubit) => cubit.signInWithGoogle(),
     expect: () => [
-      const SignInState(status: BlocStatusLoading()),
+      const SignInState(status: CubitStatusLoading()),
       const SignInState(
-        status: BlocStatusComplete<SignInCubitInfo>(
+        status: CubitStatusComplete<SignInCubitInfo>(
           info: SignInCubitInfo.signedIn,
         ),
       ),
@@ -473,9 +473,9 @@ void main() {
     },
     act: (cubit) => cubit.signInWithGoogle(),
     expect: () => [
-      const SignInState(status: BlocStatusLoading()),
+      const SignInState(status: CubitStatusLoading()),
       const SignInState(
-        status: BlocStatusError<SignInCubitError>(
+        status: CubitStatusError<SignInCubitError>(
           error: SignInCubitError.unverifiedEmail,
         ),
       ),
@@ -499,9 +499,9 @@ void main() {
     },
     act: (cubit) => cubit.signInWithGoogle(),
     expect: () => [
-      const SignInState(status: BlocStatusLoading()),
+      const SignInState(status: CubitStatusLoading()),
       const SignInState(
-        status: BlocStatusComplete<SignInCubitInfo>(
+        status: CubitStatusComplete<SignInCubitInfo>(
           info: SignInCubitInfo.newSignedInUser,
         ),
       ),
@@ -520,8 +520,8 @@ void main() {
     setUp: () => authService.mockSignInWithGoogle(),
     act: (cubit) => cubit.signInWithGoogle(),
     expect: () => [
-      const SignInState(status: BlocStatusLoading()),
-      const SignInState(status: BlocStatusComplete()),
+      const SignInState(status: CubitStatusLoading()),
+      const SignInState(status: CubitStatusComplete()),
     ],
     verify: (_) => verify(authService.signInWithGoogle).called(1),
   );
@@ -538,8 +538,8 @@ void main() {
     ),
     act: (cubit) => cubit.signInWithGoogle(),
     expect: () => [
-      const SignInState(status: BlocStatusLoading()),
-      const SignInState(status: BlocStatusNoInternetConnection()),
+      const SignInState(status: CubitStatusLoading()),
+      const SignInState(status: CubitStatusNoInternetConnection()),
     ],
     verify: (_) => verify(authService.signInWithGoogle).called(1),
   );
@@ -556,9 +556,9 @@ void main() {
     },
     act: (cubit) => cubit.signInWithFacebook(),
     expect: () => [
-      const SignInState(status: BlocStatusLoading()),
+      const SignInState(status: CubitStatusLoading()),
       const SignInState(
-        status: BlocStatusComplete<SignInCubitInfo>(
+        status: CubitStatusComplete<SignInCubitInfo>(
           info: SignInCubitInfo.signedIn,
         ),
       ),
@@ -583,9 +583,9 @@ void main() {
     },
     act: (cubit) => cubit.signInWithFacebook(),
     expect: () => [
-      const SignInState(status: BlocStatusLoading()),
+      const SignInState(status: CubitStatusLoading()),
       const SignInState(
-        status: BlocStatusError<SignInCubitError>(
+        status: CubitStatusError<SignInCubitError>(
           error: SignInCubitError.unverifiedEmail,
         ),
       ),
@@ -609,9 +609,9 @@ void main() {
     },
     act: (cubit) => cubit.signInWithFacebook(),
     expect: () => [
-      const SignInState(status: BlocStatusLoading()),
+      const SignInState(status: CubitStatusLoading()),
       const SignInState(
-        status: BlocStatusComplete<SignInCubitInfo>(
+        status: CubitStatusComplete<SignInCubitInfo>(
           info: SignInCubitInfo.newSignedInUser,
         ),
       ),
@@ -630,8 +630,8 @@ void main() {
     setUp: () => authService.mockSignInWithFacebook(),
     act: (cubit) => cubit.signInWithFacebook(),
     expect: () => [
-      const SignInState(status: BlocStatusLoading()),
-      const SignInState(status: BlocStatusComplete()),
+      const SignInState(status: CubitStatusLoading()),
+      const SignInState(status: CubitStatusComplete()),
     ],
     verify: (_) => verify(authService.signInWithFacebook).called(1),
   );
@@ -648,8 +648,8 @@ void main() {
     ),
     act: (cubit) => cubit.signInWithFacebook(),
     expect: () => [
-      const SignInState(status: BlocStatusLoading()),
-      const SignInState(status: BlocStatusNoInternetConnection()),
+      const SignInState(status: CubitStatusLoading()),
+      const SignInState(status: CubitStatusNoInternetConnection()),
     ],
     verify: (_) => verify(authService.signInWithFacebook).called(1),
   );
@@ -661,8 +661,8 @@ void main() {
     setUp: () => authService.mockDeleteAccount(),
     act: (cubit) => cubit.deleteRecentlyCreatedAccount(),
     expect: () => [
-      const SignInState(status: BlocStatusLoading()),
-      const SignInState(status: BlocStatusComplete()),
+      const SignInState(status: CubitStatusLoading()),
+      const SignInState(status: CubitStatusComplete()),
     ],
     verify: (_) => verify(authService.deleteAccount).called(1),
   );

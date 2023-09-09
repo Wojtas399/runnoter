@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/additional_model/activity_status.dart';
-import 'package:runnoter/domain/additional_model/bloc_status.dart';
+import 'package:runnoter/domain/additional_model/cubit_status.dart';
 import 'package:runnoter/domain/cubit/activity_status_creator/activity_status_creator_cubit.dart';
 import 'package:runnoter/domain/repository/race_repository.dart';
 import 'package:runnoter/domain/repository/workout_repository.dart';
@@ -34,7 +34,7 @@ void main() {
         activityType: activityType,
         activityId: activityId,
         initialState: ActivityStatusCreatorState(
-          status: const BlocStatusInitial(),
+          status: const CubitStatusInitial(),
           activityStatusType: activityStatusType,
           coveredDistanceInKm: coveredDistanceInKm,
           duration: duration,
@@ -78,7 +78,7 @@ void main() {
     act: (cubit) => cubit.initialize(),
     expect: () => [
       const ActivityStatusCreatorState(
-        status: BlocStatusComplete(),
+        status: CubitStatusComplete(),
         originalActivityStatus: ActivityStatusDone(
           coveredDistanceInKm: 10,
           duration: Duration(seconds: 2),
@@ -117,7 +117,7 @@ void main() {
     act: (cubit) => cubit.initialize(),
     expect: () => [
       const ActivityStatusCreatorState(
-        status: BlocStatusComplete(),
+        status: CubitStatusComplete(),
         originalActivityStatus: ActivityStatusPending(),
         activityStatusType: ActivityStatusType.done,
       ),
@@ -143,7 +143,7 @@ void main() {
     act: (cubit) => cubit.initialize(),
     expect: () => [
       const ActivityStatusCreatorState(
-        status: BlocStatusComplete(),
+        status: CubitStatusComplete(),
         originalActivityStatus: ActivityStatusUndone(),
         activityStatusType: ActivityStatusType.undone,
       ),
@@ -178,7 +178,7 @@ void main() {
     act: (cubit) => cubit.initialize(),
     expect: () => [
       const ActivityStatusCreatorState(
-        status: BlocStatusComplete(),
+        status: CubitStatusComplete(),
         originalActivityStatus: ActivityStatusDone(
           coveredDistanceInKm: 10,
           duration: Duration(seconds: 2),
@@ -214,7 +214,7 @@ void main() {
     act: (cubit) => cubit.initialize(),
     expect: () => [
       const ActivityStatusCreatorState(
-        status: BlocStatusComplete(),
+        status: CubitStatusComplete(),
         originalActivityStatus: ActivityStatusPending(),
         activityStatusType: ActivityStatusType.done,
       ),
@@ -237,7 +237,7 @@ void main() {
     act: (cubit) => cubit.initialize(),
     expect: () => [
       const ActivityStatusCreatorState(
-        status: BlocStatusComplete(),
+        status: CubitStatusComplete(),
         originalActivityStatus: ActivityStatusUndone(),
         activityStatusType: ActivityStatusType.undone,
       ),
@@ -254,7 +254,7 @@ void main() {
     act: (cubit) => cubit.activityStatusTypeChanged(ActivityStatusType.done),
     expect: () => [
       const ActivityStatusCreatorState(
-        status: BlocStatusComplete(),
+        status: CubitStatusComplete(),
         activityStatusType: ActivityStatusType.done,
       ),
     ],
@@ -267,7 +267,7 @@ void main() {
     act: (cubit) => cubit.coveredDistanceInKmChanged(10),
     expect: () => [
       const ActivityStatusCreatorState(
-        status: BlocStatusComplete(),
+        status: CubitStatusComplete(),
         coveredDistanceInKm: 10,
       ),
     ],
@@ -280,7 +280,7 @@ void main() {
     act: (cubit) => cubit.durationChanged(const Duration(seconds: 3)),
     expect: () => [
       const ActivityStatusCreatorState(
-        status: BlocStatusComplete(),
+        status: CubitStatusComplete(),
         duration: Duration(seconds: 3),
       ),
     ],
@@ -293,7 +293,7 @@ void main() {
     act: (cubit) => cubit.moodRateChanged(MoodRate.mr8),
     expect: () => [
       const ActivityStatusCreatorState(
-        status: BlocStatusComplete(),
+        status: CubitStatusComplete(),
         moodRate: MoodRate.mr8,
       ),
     ],
@@ -306,7 +306,7 @@ void main() {
     act: (cubit) => cubit.avgPaceChanged(const Pace(minutes: 6, seconds: 10)),
     expect: () => [
       const ActivityStatusCreatorState(
-        status: BlocStatusComplete(),
+        status: CubitStatusComplete(),
         avgPace: Pace(minutes: 6, seconds: 10),
       ),
     ],
@@ -319,7 +319,7 @@ void main() {
     act: (cubit) => cubit.avgHeartRateChanged(150),
     expect: () => [
       const ActivityStatusCreatorState(
-        status: BlocStatusComplete(),
+        status: CubitStatusComplete(),
         avgHeartRate: 150,
       ),
     ],
@@ -331,7 +331,7 @@ void main() {
     act: (cubit) => cubit.commentChanged('comment'),
     expect: () => [
       const ActivityStatusCreatorState(
-        status: BlocStatusComplete(),
+        status: CubitStatusComplete(),
         comment: 'comment',
       ),
     ],
@@ -347,11 +347,11 @@ void main() {
     act: (cubit) => cubit.submit(),
     expect: () => [
       const ActivityStatusCreatorState(
-        status: BlocStatusLoading(),
+        status: CubitStatusLoading(),
         activityStatusType: ActivityStatusType.pending,
       ),
       const ActivityStatusCreatorState(
-        status: BlocStatusComplete<ActivityStatusCreatorCubitInfo>(
+        status: CubitStatusComplete<ActivityStatusCreatorCubitInfo>(
           info: ActivityStatusCreatorCubitInfo.activityStatusSaved,
         ),
         activityStatusType: ActivityStatusType.pending,
@@ -379,11 +379,11 @@ void main() {
     act: (cubit) => cubit.submit(),
     expect: () => [
       const ActivityStatusCreatorState(
-        status: BlocStatusLoading(),
+        status: CubitStatusLoading(),
         activityStatusType: ActivityStatusType.pending,
       ),
       const ActivityStatusCreatorState(
-        status: BlocStatusComplete<ActivityStatusCreatorCubitInfo>(
+        status: CubitStatusComplete<ActivityStatusCreatorCubitInfo>(
           info: ActivityStatusCreatorCubitInfo.activityStatusSaved,
         ),
         activityStatusType: ActivityStatusType.pending,
@@ -416,7 +416,7 @@ void main() {
     act: (cubit) => cubit.submit(),
     expect: () => [
       const ActivityStatusCreatorState(
-        status: BlocStatusLoading(),
+        status: CubitStatusLoading(),
         activityStatusType: ActivityStatusType.done,
         coveredDistanceInKm: 10,
         duration: Duration(seconds: 3),
@@ -426,7 +426,7 @@ void main() {
         comment: 'comment',
       ),
       const ActivityStatusCreatorState(
-        status: BlocStatusComplete<ActivityStatusCreatorCubitInfo>(
+        status: CubitStatusComplete<ActivityStatusCreatorCubitInfo>(
           info: ActivityStatusCreatorCubitInfo.activityStatusSaved,
         ),
         activityStatusType: ActivityStatusType.done,
@@ -473,7 +473,7 @@ void main() {
     act: (cubit) => cubit.submit(),
     expect: () => [
       const ActivityStatusCreatorState(
-        status: BlocStatusLoading(),
+        status: CubitStatusLoading(),
         activityStatusType: ActivityStatusType.done,
         coveredDistanceInKm: 10,
         duration: Duration(seconds: 3),
@@ -483,7 +483,7 @@ void main() {
         comment: 'comment',
       ),
       const ActivityStatusCreatorState(
-        status: BlocStatusComplete<ActivityStatusCreatorCubitInfo>(
+        status: CubitStatusComplete<ActivityStatusCreatorCubitInfo>(
           info: ActivityStatusCreatorCubitInfo.activityStatusSaved,
         ),
         activityStatusType: ActivityStatusType.done,
@@ -529,7 +529,7 @@ void main() {
     act: (cubit) => cubit.submit(),
     expect: () => [
       const ActivityStatusCreatorState(
-        status: BlocStatusLoading(),
+        status: CubitStatusLoading(),
         activityStatusType: ActivityStatusType.aborted,
         coveredDistanceInKm: 10,
         duration: Duration(seconds: 3),
@@ -539,7 +539,7 @@ void main() {
         comment: 'comment',
       ),
       const ActivityStatusCreatorState(
-        status: BlocStatusComplete<ActivityStatusCreatorCubitInfo>(
+        status: CubitStatusComplete<ActivityStatusCreatorCubitInfo>(
           info: ActivityStatusCreatorCubitInfo.activityStatusSaved,
         ),
         activityStatusType: ActivityStatusType.aborted,
@@ -586,7 +586,7 @@ void main() {
     act: (cubit) => cubit.submit(),
     expect: () => [
       const ActivityStatusCreatorState(
-        status: BlocStatusLoading(),
+        status: CubitStatusLoading(),
         activityStatusType: ActivityStatusType.aborted,
         coveredDistanceInKm: 10,
         duration: Duration(seconds: 3),
@@ -596,7 +596,7 @@ void main() {
         comment: 'comment',
       ),
       const ActivityStatusCreatorState(
-        status: BlocStatusComplete<ActivityStatusCreatorCubitInfo>(
+        status: CubitStatusComplete<ActivityStatusCreatorCubitInfo>(
           info: ActivityStatusCreatorCubitInfo.activityStatusSaved,
         ),
         activityStatusType: ActivityStatusType.aborted,
@@ -634,11 +634,11 @@ void main() {
     act: (cubit) => cubit.submit(),
     expect: () => [
       const ActivityStatusCreatorState(
-        status: BlocStatusLoading(),
+        status: CubitStatusLoading(),
         activityStatusType: ActivityStatusType.undone,
       ),
       const ActivityStatusCreatorState(
-        status: BlocStatusComplete<ActivityStatusCreatorCubitInfo>(
+        status: CubitStatusComplete<ActivityStatusCreatorCubitInfo>(
           info: ActivityStatusCreatorCubitInfo.activityStatusSaved,
         ),
         activityStatusType: ActivityStatusType.undone,
@@ -666,11 +666,11 @@ void main() {
     act: (cubit) => cubit.submit(),
     expect: () => [
       const ActivityStatusCreatorState(
-        status: BlocStatusLoading(),
+        status: CubitStatusLoading(),
         activityStatusType: ActivityStatusType.undone,
       ),
       const ActivityStatusCreatorState(
-        status: BlocStatusComplete<ActivityStatusCreatorCubitInfo>(
+        status: CubitStatusComplete<ActivityStatusCreatorCubitInfo>(
           info: ActivityStatusCreatorCubitInfo.activityStatusSaved,
         ),
         activityStatusType: ActivityStatusType.undone,

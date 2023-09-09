@@ -12,11 +12,11 @@ class ForgotPasswordState extends CubitState<ForgotPasswordState> {
 
   @override
   ForgotPasswordState copyWith({
-    BlocStatus? status,
+    CubitStatus? status,
     String? email,
   }) =>
       ForgotPasswordState(
-        status: status ?? const BlocStatusComplete(),
+        status: status ?? const CubitStatusComplete(),
         email: email ?? this.email,
       );
 }

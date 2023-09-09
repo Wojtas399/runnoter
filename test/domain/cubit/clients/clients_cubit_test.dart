@@ -4,7 +4,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/domain/additional_model/bloc_status.dart';
+import 'package:runnoter/domain/additional_model/cubit_status.dart';
 import 'package:runnoter/domain/additional_model/coaching_request.dart';
 import 'package:runnoter/domain/additional_model/coaching_request_short.dart';
 import 'package:runnoter/domain/cubit/clients/clients_cubit.dart';
@@ -103,24 +103,24 @@ void main() {
         },
         expect: () => [
           ClientsState(
-            status: const BlocStatusComplete(),
+            status: const CubitStatusComplete(),
             sentRequests: shortSentRequests,
             receivedRequests: shortReceivedRequests,
             clients: clients,
           ),
           ClientsState(
-              status: const BlocStatusComplete(),
+              status: const CubitStatusComplete(),
               sentRequests: const [],
               receivedRequests: shortReceivedRequests,
               clients: clients),
           ClientsState(
-            status: const BlocStatusComplete(),
+            status: const CubitStatusComplete(),
             sentRequests: const [],
             receivedRequests: const [],
             clients: clients,
           ),
           ClientsState(
-            status: const BlocStatusComplete(),
+            status: const CubitStatusComplete(),
             sentRequests: const [],
             receivedRequests: const [],
             clients: updatedClients,
@@ -164,7 +164,7 @@ void main() {
     setUp: () => authService.mockGetLoggedUserId(),
     act: (bloc) => bloc.acceptRequest('r1'),
     expect: () => [
-      const ClientsState(status: BlocStatusNoLoggedUser()),
+      const ClientsState(status: CubitStatusNoLoggedUser()),
     ],
     verify: (_) => verify(() => authService.loggedUserId$).called(1),
   );
@@ -175,7 +175,7 @@ void main() {
     "should assign logged user's id to coach id of request's sender",
     build: () => ClientsCubit(
       initialState: ClientsState(
-        status: const BlocStatusComplete(),
+        status: const CubitStatusComplete(),
         receivedRequests: [
           CoachingRequestShort(
             id: 'r1',
@@ -196,7 +196,7 @@ void main() {
     act: (bloc) => bloc.acceptRequest('r1'),
     expect: () => [
       ClientsState(
-        status: const BlocStatusLoading(),
+        status: const CubitStatusLoading(),
         receivedRequests: [
           CoachingRequestShort(
             id: 'r1',
@@ -209,7 +209,7 @@ void main() {
         ],
       ),
       ClientsState(
-        status: const BlocStatusComplete<ClientsCubitInfo>(
+        status: const CubitStatusComplete<ClientsCubitInfo>(
           info: ClientsCubitInfo.requestAccepted,
         ),
         receivedRequests: [
@@ -248,9 +248,9 @@ void main() {
     setUp: () => coachingRequestService.mockDeleteCoachingRequest(),
     act: (bloc) => bloc.deleteRequest('r1'),
     expect: () => [
-      const ClientsState(status: BlocStatusLoading()),
+      const ClientsState(status: CubitStatusLoading()),
       const ClientsState(
-        status: BlocStatusComplete<ClientsCubitInfo>(
+        status: CubitStatusComplete<ClientsCubitInfo>(
           info: ClientsCubitInfo.requestDeleted,
         ),
       ),
@@ -270,8 +270,8 @@ void main() {
     },
     act: (bloc) => bloc.openChatWithClient('cl1'),
     expect: () => [
-      const ClientsState(status: BlocStatusLoading()),
-      const ClientsState(status: BlocStatusComplete(), selectedChatId: 'c1'),
+      const ClientsState(status: CubitStatusLoading()),
+      const ClientsState(status: CubitStatusComplete(), selectedChatId: 'c1'),
     ],
     verify: (_) => verify(
       () => loadChatIdUseCase.execute(user1Id: loggedUserId, user2Id: 'cl1'),
@@ -285,9 +285,9 @@ void main() {
     setUp: () => personRepository.mockUpdateCoachIdOfPerson(),
     act: (bloc) => bloc.deleteClient('c1'),
     expect: () => [
-      const ClientsState(status: BlocStatusLoading()),
+      const ClientsState(status: CubitStatusLoading()),
       const ClientsState(
-        status: BlocStatusComplete<ClientsCubitInfo>(
+        status: CubitStatusComplete<ClientsCubitInfo>(
           info: ClientsCubitInfo.clientDeleted,
         ),
       ),

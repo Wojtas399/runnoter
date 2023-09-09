@@ -72,7 +72,7 @@ class ActivityStatusCreatorState
 
   @override
   ActivityStatusCreatorState copyWith({
-    BlocStatus? status,
+    CubitStatus? status,
     ActivityStatus? originalActivityStatus,
     ActivityStatusType? activityStatusType,
     double? coveredDistanceInKm,
@@ -83,7 +83,7 @@ class ActivityStatusCreatorState
     String? comment,
   }) =>
       ActivityStatusCreatorState(
-        status: status ?? const BlocStatusComplete(),
+        status: status ?? const CubitStatusComplete(),
         originalActivityStatus:
             originalActivityStatus ?? this.originalActivityStatus,
         activityStatusType: activityStatusType ?? this.activityStatusType,

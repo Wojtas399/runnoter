@@ -4,7 +4,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/domain/additional_model/bloc_status.dart';
+import 'package:runnoter/domain/additional_model/cubit_status.dart';
 import 'package:runnoter/domain/additional_model/coaching_request.dart';
 import 'package:runnoter/domain/additional_model/coaching_request_short.dart';
 import 'package:runnoter/domain/additional_model/settings.dart';
@@ -156,9 +156,9 @@ void main() {
           loggedUserData$.add(updatedLoggedUserData);
         },
         expect: () => [
-          const HomeState(status: BlocStatusLoading()),
+          const HomeState(status: CubitStatusLoading()),
           HomeState(
-            status: const BlocStatusComplete(),
+            status: const CubitStatusComplete(),
             accountType: loggedUserData.accountType,
             loggedUserName: loggedUserData.name,
             appSettings: loggedUserData.settings,
@@ -169,21 +169,21 @@ void main() {
             ),
           ),
           HomeState(
-            status: const BlocStatusComplete(),
+            status: const CubitStatusComplete(),
             accountType: loggedUserData.accountType,
             loggedUserName: loggedUserData.name,
             appSettings: loggedUserData.settings,
             acceptedClientRequests: acceptedClientRequests,
           ),
           HomeState(
-            status: const BlocStatusComplete(),
+            status: const CubitStatusComplete(),
             accountType: loggedUserData.accountType,
             loggedUserName: loggedUserData.name,
             appSettings: loggedUserData.settings,
             acceptedClientRequests: const [],
           ),
           HomeState(
-            status: const BlocStatusComplete(),
+            status: const CubitStatusComplete(),
             accountType: updatedLoggedUserData.accountType,
             loggedUserName: updatedLoggedUserData.name,
             appSettings: updatedLoggedUserData.settings,
@@ -234,8 +234,8 @@ void main() {
         setUp: () => authService.mockGetLoggedUserId(),
         act: (cubit) => cubit.initialize(),
         expect: () => [
-          const HomeState(status: BlocStatusLoading()),
-          const HomeState(status: BlocStatusNoLoggedUser()),
+          const HomeState(status: CubitStatusLoading()),
+          const HomeState(status: CubitStatusNoLoggedUser()),
         ],
         verify: (_) => verify(() => authService.loggedUserId$).called(1),
       );
@@ -261,9 +261,9 @@ void main() {
     setUp: () => authService.mockSignOut(),
     act: (cubit) => cubit.signOut(),
     expect: () => [
-      const HomeState(status: BlocStatusLoading()),
+      const HomeState(status: CubitStatusLoading()),
       const HomeState(
-        status: BlocStatusComplete(info: HomeCubitInfo.userSignedOut),
+        status: CubitStatusComplete(info: HomeCubitInfo.userSignedOut),
       ),
     ],
     verify: (_) => verify(authService.signOut).called(1),
