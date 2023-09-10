@@ -4,6 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../screen/home/home_base.dart';
 import '../../screen/screens.dart';
+import '../auth_guard.dart';
 
 part 'router.gr.dart';
 
@@ -26,6 +27,7 @@ class AppRouter extends _$AppRouter {
         AutoRoute(
           page: HomeBaseRoute.page,
           path: '/home',
+          guards: [AuthGuard()],
           children: [
             AutoRoute(
               page: HomeRoute.page,
