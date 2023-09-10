@@ -15,36 +15,19 @@ class ForgotPasswordScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const _BlocProvider(
-      child: _BlocListener(
+    return BlocProvider(
+      create: (_) => ForgotPasswordCubit(),
+      child: const _CubitListener(
         child: ForgotPasswordContent(),
       ),
     );
   }
 }
 
-class _BlocProvider extends StatelessWidget {
+class _CubitListener extends StatelessWidget {
   final Widget child;
 
-  const _BlocProvider({
-    required this.child,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => ForgotPasswordCubit(),
-      child: child,
-    );
-  }
-}
-
-class _BlocListener extends StatelessWidget {
-  final Widget child;
-
-  const _BlocListener({
-    required this.child,
-  });
+  const _CubitListener({required this.child});
 
   @override
   Widget build(BuildContext context) {

@@ -13,28 +13,13 @@ class WorkoutStageCreatorDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _BlocProvider(
-      stage: stage,
-      child: const _CubitListener(
-        child: WorkoutStageCreatorContent(),
-      ),
-    );
-  }
-}
-
-class _BlocProvider extends StatelessWidget {
-  final WorkoutStage? stage;
-  final Widget child;
-
-  const _BlocProvider({required this.stage, required this.child});
-
-  @override
-  Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => WorkoutStageCreatorCubit(
         originalStage: stage,
       )..initialize(),
-      child: child,
+      child: const _CubitListener(
+        child: WorkoutStageCreatorContent(),
+      ),
     );
   }
 }

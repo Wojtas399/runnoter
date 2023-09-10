@@ -24,7 +24,7 @@ class ClientsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => ClientsCubit()..initialize(),
-      child: _BlocListener(
+      child: _CubitListener(
         child: SingleChildScrollView(
           child: MediumBody(
             child: Padding(
@@ -43,10 +43,10 @@ class ClientsScreen extends StatelessWidget {
   }
 }
 
-class _BlocListener extends StatelessWidget {
+class _CubitListener extends StatelessWidget {
   final Widget child;
 
-  const _BlocListener({required this.child});
+  const _CubitListener({required this.child});
 
   @override
   Widget build(BuildContext context) {

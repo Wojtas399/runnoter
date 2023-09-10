@@ -4,8 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../dependency_injection.dart';
-import '../../../domain/additional_model/cubit_status.dart';
 import '../../../domain/additional_model/coaching_request_short.dart';
+import '../../../domain/additional_model/cubit_status.dart';
 import '../../../domain/additional_model/settings.dart' as settings;
 import '../../../domain/cubit/calendar/calendar_cubit.dart';
 import '../../../domain/cubit/date_range_manager_cubit.dart';
@@ -37,17 +37,17 @@ class HomeScreen extends StatelessWidget {
           create: (_) => CalendarCubit()..initialize(DateRangeType.week),
         ),
       ],
-      child: const _HomeCubitListener(
+      child: const _CubitListener(
         child: HomeContent(),
       ),
     );
   }
 }
 
-class _HomeCubitListener extends StatelessWidget {
+class _CubitListener extends StatelessWidget {
   final Widget child;
 
-  const _HomeCubitListener({required this.child});
+  const _CubitListener({required this.child});
 
   @override
   Widget build(BuildContext context) {
