@@ -29,6 +29,7 @@ export 'service/firebase_coaching_request_service.dart';
 export 'service/firebase_health_measurement_service.dart';
 export 'service/firebase_message_service.dart';
 export 'service/firebase_race_service.dart';
+export 'service/firebase_storage_service.dart';
 export 'service/firebase_user_service.dart';
 export 'service/firebase_workout_service.dart';
 
