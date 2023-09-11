@@ -185,7 +185,7 @@ void main() {
         chatId: chatId,
         senderId: senderId,
         dateTime: dateTime,
-        content: text,
+        text: text,
       );
 
       expect(

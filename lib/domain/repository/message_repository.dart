@@ -11,7 +11,8 @@ abstract interface class MessageRepository {
   Future<void> addMessageToChat({
     required String chatId,
     required String senderId,
-    required String content,
     required DateTime dateTime,
+    String? text,
+    List<MessageImage> images = const [],
   });
 }

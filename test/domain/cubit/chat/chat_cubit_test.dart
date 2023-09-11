@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -39,6 +40,7 @@ void main() {
     String? loggedUserId,
     List<Message>? messagesFromLatest,
     String? messageToSend,
+    List<Uint8List> imagesToSend = const [],
   }) =>
       ChatCubit(
         chatId: chatId,
@@ -47,6 +49,7 @@ void main() {
           loggedUserId: loggedUserId,
           messagesFromLatest: messagesFromLatest,
           messageToSend: messageToSend,
+          imagesToSend: imagesToSend,
         ),
       );
 
@@ -163,28 +166,25 @@ void main() {
   );
 
   blocTest(
+    'images to send added, '
+    'should add new images to list',
+    build: () => createCubit(
+      imagesToSend: [Uint8List(1)],
+    ),
+    act: (cubit) => cubit.imagesToSendAdded([Uint8List(2), Uint8List(3)]),
+    expect: () => [
+      ChatState(
+        status: const CubitStatusComplete(),
+        imagesToSend: [Uint8List(1), Uint8List(2), Uint8List(3)],
+      ),
+    ],
+  );
+
+  blocTest(
     'submit message, '
     'logged user does not exist, '
     'should do nothing',
     build: () => createCubit(messageToSend: 'message'),
-    act: (cubit) => cubit.submitMessage(),
-    expect: () => [],
-  );
-
-  blocTest(
-    'submit message, '
-    'message to send is null, '
-    'should do nothing',
-    build: () => createCubit(loggedUserId: loggedUserId),
-    act: (cubit) => cubit.submitMessage(),
-    expect: () => [],
-  );
-
-  blocTest(
-    'submit message, '
-    'message to send is empty string, '
-    'should do nothing',
-    build: () => createCubit(loggedUserId: loggedUserId, messageToSend: ''),
     act: (cubit) => cubit.submitMessage(),
     expect: () => [],
   );
@@ -203,9 +203,7 @@ void main() {
     act: (cubit) => cubit.submitMessage(),
     expect: () => [
       const ChatState(
-        status: CubitStatusError<ChatCubitError>(
-          error: ChatCubitError.noInternetConnection,
-        ),
+        status: CubitStatusNoInternetConnection(),
         loggedUserId: loggedUserId,
         messageToSend: 'message',
       ),
@@ -218,10 +216,11 @@ void main() {
   blocTest(
     'submit message, '
     "should call message repository's method to add new message with current dateTime and "
-    'should set messageToSend as null',
+    'should set messageToSend as null and imagesToSend as empty array',
     build: () => createCubit(
       loggedUserId: loggedUserId,
       messageToSend: 'message',
+      imagesToSend: [Uint8List(1), Uint8List(2)],
     ),
     setUp: () {
       connectivityService.mockHasDeviceInternetConnection(hasConnection: true);
@@ -230,22 +229,29 @@ void main() {
     },
     act: (cubit) => cubit.submitMessage(),
     expect: () => [
-      const ChatState(
-        status: CubitStatusLoading(),
+      ChatState(
+        status: const CubitStatusLoading(),
         loggedUserId: loggedUserId,
         messageToSend: 'message',
+        imagesToSend: [Uint8List(1), Uint8List(2)],
       ),
       const ChatState(
         status: CubitStatusComplete(),
         loggedUserId: loggedUserId,
+        messageToSend: null,
+        imagesToSend: [],
       ),
     ],
     verify: (_) => verify(
       () => messageRepository.addMessageToChat(
         chatId: chatId,
         senderId: loggedUserId,
-        content: 'message',
         dateTime: DateTime(2023, 1, 1, 12, 30),
+        text: 'message',
+        images: [
+          MessageImage(order: 1, data: Uint8List(1)),
+          MessageImage(order: 2, data: Uint8List(2)),
+        ],
       ),
     ).called(1),
   );

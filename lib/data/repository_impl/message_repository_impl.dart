@@ -59,13 +59,14 @@ class MessageRepositoryImpl extends StateRepository<Message>
   Future<void> addMessageToChat({
     required String chatId,
     required String senderId,
-    required String content,
     required DateTime dateTime,
+    String? text,
+    List<MessageImage> images = const [],
   }) async {
     final addedMessageDto = await _firebaseMessageService.addMessageToChat(
       chatId: chatId,
       senderId: senderId,
-      text: content,
+      text: text,
       dateTime: dateTime,
     );
     if (addedMessageDto != null) {

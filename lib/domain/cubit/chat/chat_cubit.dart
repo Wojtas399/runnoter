@@ -19,7 +19,7 @@ import '../../service/connectivity_service.dart';
 
 part 'chat_state.dart';
 
-class ChatCubit extends CubitWithStatus<ChatState, dynamic, ChatCubitError> {
+class ChatCubit extends CubitWithStatus<ChatState, dynamic, dynamic> {
   final String _chatId;
   final AuthService _authService;
   final ChatRepository _chatRepository;
@@ -75,10 +75,14 @@ class ChatCubit extends CubitWithStatus<ChatState, dynamic, ChatCubitError> {
     );
   }
 
-  void messageChanged(String message) async {
-    emit(state.copyWith(
-      messageToSend: message,
-    ));
+  void messageChanged(String message) {
+    emit(state.copyWith(messageToSend: message));
+  }
+
+  void imagesToSendAdded(List<Uint8List> newImagesToSend) {
+    final List<Uint8List> updatedImagesToSend = [...state.imagesToSend];
+    updatedImagesToSend.addAll(newImagesToSend);
+    emit(state.copyWith(imagesToSend: updatedImagesToSend));
   }
 
   Future<void> submitMessage() async {
@@ -89,19 +93,23 @@ class ChatCubit extends CubitWithStatus<ChatState, dynamic, ChatCubitError> {
       await _messageRepository.addMessageToChat(
         chatId: _chatId,
         senderId: state.loggedUserId!,
-        content: state.messageToSend!,
         dateTime: now,
+        text: state.messageToSend!,
+        images: state.imagesToSend
+            .asMap()
+            .entries
+            .map(
+              (entry) => MessageImage(order: entry.key + 1, data: entry.value),
+            )
+            .toList(),
       );
       emit(state.copyWith(
         status: const CubitStatusComplete(),
         messageToSendAsNull: true,
+        imagesToSend: [],
       ));
     } else {
-      emit(state.copyWith(
-        status: const CubitStatusError<ChatCubitError>(
-          error: ChatCubitError.noInternetConnection,
-        ),
-      ));
+      emitNoInternetConnectionStatus();
     }
   }
 
@@ -115,5 +123,3 @@ class ChatCubit extends CubitWithStatus<ChatState, dynamic, ChatCubitError> {
     );
   }
 }
-
-enum ChatCubitError { noInternetConnection }
