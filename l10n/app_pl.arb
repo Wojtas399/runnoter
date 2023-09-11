@@ -832,6 +832,14 @@
   "@chatWriteMessage": {
     "description": "Hint text of message input"
   },
+  "chatPickImagesFromGallery": "Wybierz zdjęcia z galerii",
+  "@chatPickImagesFromGallery": {
+    "description": "Label of the action to pick images from gallery"
+  },
+  "chatCapturePhotoFromCamera": "Zrób zdjęcia aparatem",
+  "@chatCapturePhotoFromCamera": {
+    "description": "Label of the action to captura a photo from camera"
+  },
   "@__________ACTIVITY_STATUS_PARAMS__________": {},
   "activityStatus": "Status",
   "@activityStatus": {

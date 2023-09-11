@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../dependency_injection.dart';
+import '../component/dialog/actions_dialog_component.dart';
 import '../component/dialog/confirmation_dialog_component.dart';
 import '../component/dialog/loading_dialog_component.dart';
 import '../component/dialog/message_dialog_component.dart';
@@ -143,6 +144,18 @@ Future<String?> askForValue({
       isValueRequired: isValueRequired,
       validator: validator,
     ),
+  );
+}
+
+Future<T?> askForAction<T>({
+  required List<ActionsDialogItem> actions,
+}) async {
+  final BuildContext? context = getIt<AppRouter>().navigatorKey.currentContext;
+  if (context == null) return null;
+  hideSnackbar();
+  return await showModalBottomSheet(
+    context: context,
+    builder: (BuildContext context) => ActionsDialog(actions: actions),
   );
 }
 

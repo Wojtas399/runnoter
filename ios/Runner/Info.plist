@@ -56,5 +56,11 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Pick images from gallery for chat</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Capture a photo from camera for chat</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Capture audio for videos</string>
 </dict>
 </plist>

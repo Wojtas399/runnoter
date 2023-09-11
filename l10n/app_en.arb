@@ -227,6 +227,8 @@
   "clientStatsHealthMeasurements": "Health measurements",
   "@__________CHAT__________": {},
   "chatWriteMessage": "Write message...",
+  "chatPickImagesFromGallery": "Pick images from gallery",
+  "chatCapturePhotoFromCamera": "Capture a photo from camera",
   "@__________ACTIVITY_STATUS_PARAMS__________": {},
   "activityStatus": "Status",
   "activityStatusCoveredDistance": "Covered distance",
