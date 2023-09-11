@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/domain/additional_model/cubit_status.dart';
 import 'package:runnoter/domain/cubit/chat/chat_cubit.dart';
@@ -17,7 +19,10 @@ void main() {
     'logged user id is null, '
     'should be false',
     () {
-      state = state.copyWith(messageToSend: 'message');
+      state = state.copyWith(
+        messageToSend: 'message',
+        imagesToSend: [Uint8List(1)],
+      );
 
       expect(state.canSubmitMessage, false);
     },
@@ -28,7 +33,11 @@ void main() {
     'logged user id empty string, '
     'should be false',
     () {
-      state = state.copyWith(loggedUserId: '', messageToSend: 'message');
+      state = state.copyWith(
+        loggedUserId: '',
+        messageToSend: 'message',
+        imagesToSend: [Uint8List(1)],
+      );
 
       expect(state.canSubmitMessage, false);
     },
@@ -36,7 +45,7 @@ void main() {
 
   test(
     'can submit message, '
-    'message to send is null, '
+    'message to send is null and there are no images to send, '
     'should be false',
     () {
       state = state.copyWith(loggedUserId: 'u1');
@@ -47,21 +56,27 @@ void main() {
 
   test(
     'can submit message, '
-    'message to send is empty string, '
-    'should be false',
+    'logged user id is not null and message to send is not null and not empty'
+    'should be true',
     () {
-      state = state.copyWith(loggedUserId: 'u1', messageToSend: '');
+      state = state.copyWith(
+        loggedUserId: 'u1',
+        messageToSend: 'message',
+      );
 
-      expect(state.canSubmitMessage, false);
+      expect(state.canSubmitMessage, true);
     },
   );
 
   test(
     'can submit message, '
-    'logged user id and message to send are not empty string, '
+    'logged user id is not null and there are images to send'
     'should be true',
     () {
-      state = state.copyWith(loggedUserId: 'u1', messageToSend: 'message');
+      state = state.copyWith(
+        loggedUserId: 'u1',
+        imagesToSend: [Uint8List(1)],
+      );
 
       expect(state.canSubmitMessage, true);
     },
@@ -69,6 +84,7 @@ void main() {
 
   test(
     'copy with status, '
+    'should set new status or '
     'should assign complete status if new value is null',
     () {
       const CubitStatus expected = CubitStatusLoading();
@@ -83,6 +99,7 @@ void main() {
 
   test(
     'copy with loggedUserId, '
+    'should set new value or '
     'should copy current value if new value is null',
     () {
       const String expected = 'u1';
@@ -97,6 +114,7 @@ void main() {
 
   test(
     'copy with recipientFullName, '
+    'should set new value or '
     'should copy current value if new value is null',
     () {
       const String expected = 'recipient full name';
@@ -111,6 +129,7 @@ void main() {
 
   test(
     'copy with messagesFromLatest, '
+    'should set new value or '
     'should copy current value if new value is null',
     () {
       final List<Message> expected = [
@@ -128,6 +147,7 @@ void main() {
 
   test(
     'copy with messageToSend, '
+    'should set new value or '
     'should copy current value if new value is null',
     () {
       const String expected = 'message';
@@ -151,6 +171,21 @@ void main() {
 
       expect(state.messageToSend, messageToSend);
       expect(state2.messageToSend, null);
+    },
+  );
+
+  test(
+    'copy with imagesToSend, '
+    'should set new value or '
+    'should copy current value if new value is null',
+    () {
+      final List<Uint8List> expected = [Uint8List(1), Uint8List(2)];
+
+      state = state.copyWith(imagesToSend: expected);
+      final state2 = state.copyWith();
+
+      expect(state.imagesToSend, expected);
+      expect(state2.imagesToSend, expected);
     },
   );
 }
