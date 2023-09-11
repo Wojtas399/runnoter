@@ -1,12 +1,21 @@
 import 'package:firebase/model/message_dto.dart';
+import 'package:firebase/model/message_image_dto.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   const String id = 'm1';
   const String chatId = 'c1';
   const String senderId = 's1';
-  const String content = 'message';
   final DateTime dateTime = DateTime(2023, 8, 31, 20, 20);
+  const String text = 'message';
+  const List<MessageImageDto> imageDtos = [
+    MessageImageDto(order: 1, fileName: 'file1.jpg'),
+    MessageImageDto(order: 2, fileName: 'file2.jpg'),
+  ];
+  final List<Map<String, dynamic>> imageJsons = [
+    {'order': 1, 'fileName': 'file1.jpg'},
+    {'order': 2, 'fileName': 'file2.jpg'},
+  ];
 
   test(
     'from json, '
@@ -14,15 +23,17 @@ void main() {
     () {
       final Map<String, dynamic> json = {
         'senderId': senderId,
-        'content': content,
         'timestamp': dateTime.millisecondsSinceEpoch,
+        'text': text,
+        'images': imageJsons,
       };
       final MessageDto expectedDto = MessageDto(
         id: id,
         chatId: chatId,
         senderId: senderId,
-        content: content,
         dateTime: dateTime,
+        text: text,
+        images: imageDtos,
       );
 
       final MessageDto dto = MessageDto.fromJson(
@@ -43,13 +54,15 @@ void main() {
         id: id,
         chatId: chatId,
         senderId: senderId,
-        content: content,
         dateTime: dateTime,
+        text: text,
+        images: imageDtos,
       );
       final Map<String, dynamic> expectedJson = {
         'senderId': senderId,
-        'content': content,
         'timestamp': dateTime.millisecondsSinceEpoch,
+        'text': text,
+        'images': imageJsons,
       };
 
       final Map<String, dynamic> json = dto.toJson();

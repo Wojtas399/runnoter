@@ -155,22 +155,23 @@ void main() {
       const String messageId = 'm3';
       const String chatId = 'c1';
       const String senderId = 's1';
-      const String content = 'message';
       final DateTime dateTime = DateTime(2023, 1, 1);
+      const String text = 'message';
       final MessageDto addedMessageDto = MessageDto(
         id: messageId,
         chatId: chatId,
         senderId: senderId,
-        content: content,
         dateTime: dateTime,
+        text: text,
       );
       final Message addedMessage = Message(
         id: messageId,
         chatId: chatId,
         senderId: senderId,
-        content: content,
         dateTime: dateTime,
+        text: text,
       );
+      //TODO: Add images
       final List<Message> existingMessages = [
         createMessage(id: 'm1'),
         createMessage(id: 'm2'),
@@ -183,8 +184,8 @@ void main() {
       await repository.addMessageToChat(
         chatId: chatId,
         senderId: senderId,
-        content: content,
         dateTime: dateTime,
+        content: text,
       );
 
       expect(
@@ -197,8 +198,8 @@ void main() {
         () => firebaseMessageService.addMessageToChat(
           chatId: chatId,
           senderId: senderId,
-          content: content,
           dateTime: dateTime,
+          text: text,
         ),
       ).called(1);
     },

@@ -44,16 +44,18 @@ class FirebaseMessageService {
   Future<MessageDto?> addMessageToChat({
     required String chatId,
     required String senderId,
-    required String content,
     required DateTime dateTime,
+    String? text,
+    List<MessageImageDto> images = const [],
   }) async {
     final messageRef = getMessagesRef(chatId).doc();
     final messageDto = MessageDto(
       id: '',
       chatId: chatId,
       senderId: senderId,
-      content: content,
       dateTime: dateTime,
+      text: text,
+      images: images,
     );
     await messageRef.set(messageDto);
     final docSnapshot = await messageRef.get();

@@ -28,7 +28,8 @@ class ChatMessages extends StatelessWidget {
               final Message message = messages[index];
               return _Message(
                 isSender: loggedUserId == message.senderId,
-                message: message.content,
+                message:
+                    '', //TODO: Add message item which contains text and images
               );
             },
           );

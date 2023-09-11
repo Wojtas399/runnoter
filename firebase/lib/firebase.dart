@@ -15,6 +15,7 @@ export 'model/coaching_request_dto.dart';
 export 'model/firebase_exception.dart';
 export 'model/health_measurement_dto.dart';
 export 'model/message_dto.dart';
+export 'model/message_image_dto.dart';
 export 'model/pace_dto.dart';
 export 'model/race_dto.dart';
 export 'model/user_dto.dart';

@@ -7,8 +7,8 @@ void main() {
   const String id = 'id';
   const String chatId = 'c1';
   const String senderId = 's1';
-  const String content = 'content';
   final DateTime dateTime = DateTime(2023, 9, 1);
+  const String text = 'text';
 
   test(
     'map message from dto, '
@@ -18,16 +18,17 @@ void main() {
         id: id,
         chatId: chatId,
         senderId: senderId,
-        content: content,
         dateTime: dateTime,
+        text: text,
       );
       final Message expectedMessage = Message(
         id: id,
         chatId: chatId,
         senderId: senderId,
-        content: content,
         dateTime: dateTime,
+        text: text,
       );
+      //TODO: Add images mapping
 
       final Message message = mapMessageFromDto(dto);
 

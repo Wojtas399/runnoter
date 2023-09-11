@@ -77,16 +77,16 @@ void main() {
         surname: 'recipinsky',
       );
       final List<Message> messages = [
-        createMessage(content: 'message 1', dateTime: DateTime(2023, 1, 10)),
-        createMessage(content: 'message 2', dateTime: DateTime(2023, 1, 5)),
+        createMessage(text: 'message 1', dateTime: DateTime(2023, 1, 10)),
+        createMessage(text: 'message 2', dateTime: DateTime(2023, 1, 5)),
       ];
       final List<Message> updatedMessages = [
         createMessage(
-          content: 'updated message 1',
+          text: 'updated message 1',
           dateTime: DateTime(2023, 1, 2),
         ),
         createMessage(
-          content: 'updated message 2',
+          text: 'updated message 2',
           dateTime: DateTime(2023, 1, 5),
         ),
       ];

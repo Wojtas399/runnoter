@@ -6,6 +6,7 @@ Message mapMessageFromDto(MessageDto messageDto) => Message(
       id: messageDto.id,
       chatId: messageDto.chatId,
       senderId: messageDto.senderId,
-      content: messageDto.content,
       dateTime: messageDto.dateTime,
+      text: messageDto.text,
+      //TODO: Add images mapping
     );

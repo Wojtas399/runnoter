@@ -65,7 +65,7 @@ class MessageRepositoryImpl extends StateRepository<Message>
     final addedMessageDto = await _firebaseMessageService.addMessageToChat(
       chatId: chatId,
       senderId: senderId,
-      content: content,
+      text: content,
       dateTime: dateTime,
     );
     if (addedMessageDto != null) {

@@ -28,8 +28,9 @@ class MockFirebaseMessageService extends Mock
       () => addMessageToChat(
         chatId: any(named: 'chatId'),
         senderId: any(named: 'senderId'),
-        content: any(named: 'content'),
         dateTime: any(named: 'dateTime'),
+        text: any(named: 'text'),
+        images: any(named: 'images'),
       ),
     ).thenAnswer((_) => Future.value(addedMessageDto));
   }
