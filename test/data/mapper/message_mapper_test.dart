@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:firebase/firebase.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/data/mapper/message_mapper.dart';
@@ -9,6 +11,10 @@ void main() {
   const String senderId = 's1';
   final DateTime dateTime = DateTime(2023, 9, 1);
   const String text = 'text';
+  final List<MessageImage> images = [
+    MessageImage(order: 1, data: Uint8List(1)),
+    MessageImage(order: 2, data: Uint8List(2)),
+  ];
 
   test(
     'map message from dto, '
@@ -27,10 +33,10 @@ void main() {
         senderId: senderId,
         dateTime: dateTime,
         text: text,
+        images: images,
       );
-      //TODO: Add images mapping
 
-      final Message message = mapMessageFromDto(dto);
+      final Message message = mapMessageFromDto(dto, images);
 
       expect(message, expectedMessage);
     },

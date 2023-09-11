@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:firebase/firebase.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -10,14 +11,19 @@ import 'package:runnoter/domain/entity/message.dart';
 import '../../creators/message_creator.dart';
 import '../../creators/message_dto_creator.dart';
 import '../../mock/firebase/mock_firebase_message_service.dart';
+import '../../mock/firebase/mock_firebase_storage_service.dart';
 
 void main() {
   final firebaseMessageService = MockFirebaseMessageService();
+  final firebaseStorageService = MockFirebaseStorageService();
   late MessageRepositoryImpl repository;
 
   setUpAll(() {
     GetIt.I.registerFactory<FirebaseMessageService>(
       () => firebaseMessageService,
+    );
+    GetIt.I.registerFactory<FirebaseStorageService>(
+      () => firebaseStorageService,
     );
   });
 
@@ -25,6 +31,7 @@ void main() {
 
   tearDown(() {
     reset(firebaseMessageService);
+    reset(firebaseStorageService);
   });
 
   test(
@@ -39,20 +46,40 @@ void main() {
         createMessage(id: 'm3', chatId: chatId),
       ];
       final List<MessageDto> loadedMessageDtos = [
-        createMessageDto(id: 'm4', chatId: chatId),
+        createMessageDto(
+          id: 'm4',
+          chatId: chatId,
+          images: const [
+            MessageImageDto(order: 1, fileName: 'file1.jpg'),
+            MessageImageDto(order: 2, fileName: 'file2.jpg'),
+          ],
+        ),
         createMessageDto(id: 'm5', chatId: chatId),
       ];
       final List<Message> loadedMessages = [
-        createMessage(id: 'm4', chatId: chatId),
+        createMessage(
+          id: 'm4',
+          chatId: chatId,
+          images: [
+            MessageImage(order: 1, data: Uint8List(1)),
+            MessageImage(order: 2, data: Uint8List(2)),
+          ],
+        ),
         createMessage(id: 'm5', chatId: chatId),
       ];
       final MessageDto firstAddedMessageDto =
           createMessageDto(id: 'm6', chatId: chatId);
-      final MessageDto secondAddedMessageDto =
-          createMessageDto(id: 'm7', chatId: chatId);
+      final MessageDto secondAddedMessageDto = createMessageDto(
+        id: 'm7',
+        chatId: chatId,
+        images: const [MessageImageDto(order: 1, fileName: 'file3.jpg')],
+      );
       final Message firstAddedMessage = createMessage(id: 'm6', chatId: chatId);
-      final Message secondAddedMessage =
-          createMessage(id: 'm7', chatId: chatId);
+      final Message secondAddedMessage = createMessage(
+        id: 'm7',
+        chatId: chatId,
+        images: [MessageImage(order: 1, data: Uint8List(3))],
+      );
       final StreamController<List<MessageDto>> addedMessages$ =
           StreamController()..add([]);
       firebaseMessageService.mockLoadMessagesForChat(
@@ -61,6 +88,24 @@ void main() {
       firebaseMessageService.mockGetAddedMessagesForChat(
         addedMessageDtosStream: addedMessages$.stream,
       );
+      when(
+        () => firebaseStorageService.loadChatImage(
+          chatId: chatId,
+          imageFileName: 'file1.jpg',
+        ),
+      ).thenAnswer((_) => Future.value(Uint8List(1)));
+      when(
+        () => firebaseStorageService.loadChatImage(
+          chatId: chatId,
+          imageFileName: 'file2.jpg',
+        ),
+      ).thenAnswer((_) => Future.value(Uint8List(2)));
+      when(
+        () => firebaseStorageService.loadChatImage(
+          chatId: chatId,
+          imageFileName: 'file3.jpg',
+        ),
+      ).thenAnswer((_) => Future.value(Uint8List(3)));
       repository = MessageRepositoryImpl(initialData: existingMessages);
 
       final Stream<List<Message>?> messages$ =
@@ -71,6 +116,7 @@ void main() {
       expect(
         messages$,
         emitsInOrder([
+          [existingMessages.first, existingMessages.last, ...loadedMessages],
           [
             existingMessages.first,
             existingMessages.last,
@@ -111,21 +157,30 @@ void main() {
       const String chatId = 'c1';
       const String lastVisibleMessageId = 'm1';
       final List<Message> existingMessages = [
-        createMessage(id: 'm1'),
-        createMessage(id: 'm2'),
+        createMessage(id: 'm1', chatId: chatId),
+        createMessage(id: 'm2', chatId: chatId),
       ];
       final List<MessageDto> loadedMessageDtos = [
-        createMessageDto(id: 'm3'),
-        createMessageDto(id: 'm4'),
+        createMessageDto(id: 'm3', chatId: chatId),
+        createMessageDto(
+          id: 'm4',
+          chatId: chatId,
+          images: const [MessageImageDto(order: 1, fileName: 'file1.jpg')],
+        ),
       ];
       final List<Message> loadedMessages = [
-        createMessage(id: 'm3'),
-        createMessage(id: 'm4'),
+        createMessage(id: 'm3', chatId: chatId),
+        createMessage(
+          id: 'm4',
+          chatId: chatId,
+          images: [MessageImage(order: 1, data: Uint8List(1))],
+        ),
       ];
-      repository = MessageRepositoryImpl(initialData: existingMessages);
       firebaseMessageService.mockLoadMessagesForChat(
         messageDtos: loadedMessageDtos,
       );
+      firebaseStorageService.mockLoadChatImage(imageData: Uint8List(1));
+      repository = MessageRepositoryImpl(initialData: existingMessages);
 
       await repository.loadOlderMessagesForChat(
         chatId: chatId,
@@ -144,12 +199,19 @@ void main() {
           lastVisibleMessageId: lastVisibleMessageId,
         ),
       ).called(1);
+      verify(
+        () => firebaseStorageService.loadChatImage(
+          chatId: chatId,
+          imageFileName: 'file1.jpg',
+        ),
+      ).called(1);
     },
   );
 
   test(
     'add message to chat, '
-    "should call firebase message service's method to add message to chat and "
+    'should call firebase storage service method to upload images and '
+    'should call firebase message service method to add message to chat and '
     'should add this new message to repo',
     () async {
       const String messageId = 'm3';
@@ -157,12 +219,21 @@ void main() {
       const String senderId = 's1';
       final DateTime dateTime = DateTime(2023, 1, 1);
       const String text = 'message';
+      final List<MessageImage> images = [
+        MessageImage(order: 1, data: Uint8List(1)),
+        MessageImage(order: 2, data: Uint8List(2)),
+      ];
+      const List<MessageImageDto> imageDtos = [
+        MessageImageDto(order: 1, fileName: 'file1.jpg'),
+        MessageImageDto(order: 2, fileName: 'file2.jpg'),
+      ];
       final MessageDto addedMessageDto = MessageDto(
         id: messageId,
         chatId: chatId,
         senderId: senderId,
         dateTime: dateTime,
         text: text,
+        images: imageDtos,
       );
       final Message addedMessage = Message(
         id: messageId,
@@ -170,12 +241,24 @@ void main() {
         senderId: senderId,
         dateTime: dateTime,
         text: text,
+        images: images,
       );
-      //TODO: Add images
       final List<Message> existingMessages = [
         createMessage(id: 'm1'),
         createMessage(id: 'm2'),
       ];
+      when(
+        () => firebaseStorageService.uploadChatImage(
+          chatId: chatId,
+          imageData: Uint8List(1),
+        ),
+      ).thenAnswer((_) => Future.value('file1.jpg'));
+      when(
+        () => firebaseStorageService.uploadChatImage(
+          chatId: chatId,
+          imageData: Uint8List(2),
+        ),
+      ).thenAnswer((_) => Future.value('file2.jpg'));
       firebaseMessageService.mockAddMessageToChat(
         addedMessageDto: addedMessageDto,
       );
@@ -186,6 +269,7 @@ void main() {
         senderId: senderId,
         dateTime: dateTime,
         text: text,
+        images: images,
       );
 
       expect(
@@ -195,11 +279,24 @@ void main() {
         ]),
       );
       verify(
+        () => firebaseStorageService.uploadChatImage(
+          chatId: chatId,
+          imageData: Uint8List(1),
+        ),
+      ).called(1);
+      verify(
+        () => firebaseStorageService.uploadChatImage(
+          chatId: chatId,
+          imageData: Uint8List(2),
+        ),
+      ).called(1);
+      verify(
         () => firebaseMessageService.addMessageToChat(
           chatId: chatId,
           senderId: senderId,
           dateTime: dateTime,
           text: text,
+          images: imageDtos,
         ),
       ).called(1);
     },
