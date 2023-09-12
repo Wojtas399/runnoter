@@ -4,11 +4,6 @@ extension DateFormatter on DateTime {
   String toFullDate(String? languageCode) =>
       DateFormat('$_day $_monthName $_year', languageCode).format(this);
 
-  String toDateWithTime(String? languageCode) => DateFormat(
-        '$_abbrWeekDay, $_day $_abbrMonth $_year, $_hour:$_minute',
-        languageCode,
-      ).format(this);
-
   String toTime() => DateFormat('$_hour:$_minute').format(this);
 
   String toDateWithDots() => DateFormat('$_day.$_month.$_year').format(this);
