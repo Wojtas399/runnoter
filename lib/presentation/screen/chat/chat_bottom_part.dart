@@ -21,7 +21,7 @@ class ChatBottomPart extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const Divider(),
+        const Divider(height: 0),
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 16, 8, 24),
           child: Row(

@@ -29,8 +29,8 @@ class MessageDto extends Equatable {
           senderId: json?[_senderIdField],
           dateTime: DateTime.fromMillisecondsSinceEpoch(json?[timestampField]),
           text: json?[_textField],
-          images: (json?[_imagesField] as List<Map<String, dynamic>>)
-              .map(MessageImageDto.fromJson)
+          images: (json?[_imagesField] as List)
+              .map((json) => MessageImageDto.fromJson(json))
               .toList(),
         );
 

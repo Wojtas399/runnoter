@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/cubit/chat/chat_cubit.dart';
+import '../../../domain/entity/message.dart';
 import '../../component/body/big_body_component.dart';
+import '../../component/loading_info_component.dart';
 import '../../component/nullable_text_component.dart';
 import 'chat_bottom_part.dart';
-import 'chat_messages.dart';
+import 'chat_message_item.dart';
 
 class ChatContent extends StatelessWidget {
   const ChatContent({super.key});
@@ -27,7 +29,7 @@ class ChatContent extends StatelessWidget {
             child: Column(
               children: [
                 const Expanded(
-                  child: ChatMessages(),
+                  child: _Messages(),
                 ),
                 ChatBottomPart(),
               ],
@@ -49,5 +51,37 @@ class _RecipientFullName extends StatelessWidget {
     );
 
     return NullableText(recipientFullName);
+  }
+}
+
+class _Messages extends StatelessWidget {
+  const _Messages();
+
+  @override
+  Widget build(BuildContext context) {
+    final String? loggedUserId = context.select(
+      (ChatCubit cubit) => cubit.state.loggedUserId,
+    );
+    final List<Message>? messages = context.select(
+      (ChatCubit cubit) => cubit.state.messagesFromLatest,
+    );
+
+    return messages == null || loggedUserId == null
+        ? const LoadingInfo()
+        : ListView.builder(
+            reverse: true,
+            padding: const EdgeInsets.all(16),
+            itemCount: messages.length,
+            itemBuilder: (context, index) {
+              final Message message = messages[index];
+
+              return ChatMessageItem(
+                isSender: loggedUserId == message.senderId,
+                text: message.text,
+                images: message.images,
+                dateTime: message.dateTime,
+              );
+            },
+          );
   }
 }
