@@ -39,7 +39,13 @@ class ChatBottomPart extends StatelessWidget {
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const _ImageButton(),
+                          const Padding(
+                            padding: EdgeInsets.only(
+                              left: kIsWeb ? 8 : 0,
+                              top: kIsWeb ? 4 : 0,
+                            ),
+                            child: _ImageButton(),
+                          ),
                           Expanded(
                             child: _MessageInput(
                               messageController: _messageController,
@@ -52,8 +58,11 @@ class ChatBottomPart extends StatelessWidget {
                   ),
                 ),
               ),
-              _SubmitButton(
-                onPressed: () => _onSubmit(context),
+              Padding(
+                padding: const EdgeInsets.only(bottom: kIsWeb ? 4 : 0),
+                child: _SubmitButton(
+                  onPressed: () => _onSubmit(context),
+                ),
               ),
             ],
           ),
@@ -144,6 +153,7 @@ class _MessageInput extends StatelessWidget {
     final CubitStatus cubitStatus = context.select(
       (ChatCubit cubit) => cubit.state.status,
     );
+    const double contentPadding = kIsWeb ? 16 : 8;
 
     return ConstrainedBox(
       constraints: const BoxConstraints(maxHeight: 200),
@@ -155,11 +165,16 @@ class _MessageInput extends StatelessWidget {
           disabledBorder: border,
           errorBorder: border,
           hintText: Str.of(context).chatWriteMessage,
-          contentPadding: const EdgeInsets.fromLTRB(0, 8, 16, 8),
+          contentPadding: const EdgeInsets.fromLTRB(
+            kIsWeb ? 8 : 0,
+            contentPadding,
+            contentPadding,
+            contentPadding,
+          ),
           counterText: '',
         ),
         enabled: cubitStatus is! CubitStatusLoading,
-        maxLength: 400,
+        maxLength: 500,
         maxLines: null,
         textInputAction: TextInputAction.send,
         controller: messageController,
