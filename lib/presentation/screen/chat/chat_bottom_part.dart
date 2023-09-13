@@ -149,7 +149,6 @@ class _MessageInput extends StatelessWidget {
       constraints: const BoxConstraints(maxHeight: 200),
       child: TextField(
         decoration: InputDecoration(
-          filled: true,
           border: border,
           focusedBorder: border,
           enabledBorder: border,

@@ -72,35 +72,42 @@ class _Messages extends StatelessWidget {
       (ChatCubit cubit) => cubit.state.messagesFromLatest,
     );
 
-    return messages == null || loggedUserId == null
+    return messages == null || messages.isEmpty || loggedUserId == null
         ? const LoadingInfo()
-        : ListView.separated(
-            reverse: true,
-            padding: const EdgeInsets.all(16),
-            itemCount: messages.length + 1,
-            separatorBuilder: (_, int itemIndex) {
-              if (itemIndex >= messages.length - 1) return const SizedBox();
-              final Message currentMessage = messages[itemIndex];
-              final Message nextMessage = messages[itemIndex + 1];
-              final bool areDifferentDays = !_dateService.areDaysTheSame(
-                currentMessage.dateTime,
-                nextMessage.dateTime,
-              );
-              return areDifferentDays
-                  ? _DaySeparator(date: currentMessage.dateTime)
-                  : const SizedBox();
-            },
-            itemBuilder: (_, int messageIndex) {
-              if (messageIndex == messages.length) {
-                final Message previousMessage = messages[messageIndex - 1];
-                return _DaySeparator(date: previousMessage.dateTime);
-              }
-              final Message currentMessage = messages[messageIndex];
-              return ChatMessageItem(
-                isSender: loggedUserId == currentMessage.senderId,
-                text: currentMessage.text,
-                images: currentMessage.images,
-                dateTime: currentMessage.dateTime,
+        : LayoutBuilder(
+            builder: (context, constraints) {
+              final double maxMessageWidth = constraints.maxWidth * 0.6;
+
+              return ListView.separated(
+                reverse: true,
+                padding: const EdgeInsets.all(16),
+                itemCount: messages.length + 1,
+                separatorBuilder: (_, int itemIndex) {
+                  if (itemIndex >= messages.length - 1) return const SizedBox();
+                  final Message currentMessage = messages[itemIndex];
+                  final Message nextMessage = messages[itemIndex + 1];
+                  final bool areDifferentDays = !_dateService.areDaysTheSame(
+                    currentMessage.dateTime,
+                    nextMessage.dateTime,
+                  );
+                  return areDifferentDays
+                      ? _DaySeparator(date: currentMessage.dateTime)
+                      : const SizedBox();
+                },
+                itemBuilder: (_, int messageIndex) {
+                  if (messageIndex == messages.length) {
+                    final Message previousMessage = messages[messageIndex - 1];
+                    return _DaySeparator(date: previousMessage.dateTime);
+                  }
+                  final Message currentMessage = messages[messageIndex];
+                  return ChatMessageItem(
+                    maxWidth: maxMessageWidth,
+                    isSender: loggedUserId == currentMessage.senderId,
+                    text: currentMessage.text,
+                    images: currentMessage.images,
+                    dateTime: currentMessage.dateTime,
+                  );
+                },
               );
             },
           );

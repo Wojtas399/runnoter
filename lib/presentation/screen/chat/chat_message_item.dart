@@ -8,6 +8,7 @@ import '../../extension/widgets_list_extensions.dart';
 import '../../formatter/date_formatter.dart';
 
 class ChatMessageItem extends StatelessWidget {
+  final double maxWidth;
   final bool isSender;
   final String? text;
   final List<MessageImage> images;
@@ -15,6 +16,7 @@ class ChatMessageItem extends StatelessWidget {
 
   const ChatMessageItem({
     super.key,
+    required this.maxWidth,
     required this.isSender,
     required this.text,
     required this.images,
@@ -44,6 +46,7 @@ class ChatMessageItem extends StatelessWidget {
                 color:
                     isSender ? colorScheme.primary : colorScheme.surfaceVariant,
                 child: _MessageContent(
+                  maxWidth: maxWidth,
                   isSender: isSender,
                   text: text,
                   images: images,
@@ -57,12 +60,14 @@ class ChatMessageItem extends StatelessWidget {
 }
 
 class _MessageContent extends StatelessWidget {
+  final double maxWidth;
   final bool isSender;
   final String? text;
   final List<MessageImage> images;
   final DateTime dateTime;
 
   const _MessageContent({
+    required this.maxWidth,
     required this.isSender,
     required this.text,
     required this.images,
@@ -71,11 +76,10 @@ class _MessageContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const double maxMessageWidth = 280;
     const double cardPadding = 12;
 
     return Container(
-      constraints: const BoxConstraints(maxWidth: maxMessageWidth),
+      constraints: BoxConstraints(maxWidth: maxWidth),
       padding: const EdgeInsets.all(cardPadding),
       child: IntrinsicWidth(
         child: Column(
@@ -86,7 +90,7 @@ class _MessageContent extends StatelessWidget {
               _Images(
                 images: images,
                 doesTextExist: text != null,
-                maxMessageWidth: maxMessageWidth,
+                maxMessageWidth: maxWidth,
                 cardPadding: cardPadding,
                 isSender: isSender,
               ),
@@ -151,8 +155,8 @@ class _Images extends StatelessWidget {
             int imagesInRow = currentRow == numberOfAllRows
                 ? numberOfImagesInLastRow
                 : maxImagesInRow;
-            final double? width = imagesInRow == 1
-                ? null
+            final double width = imagesInRow == 1
+                ? double.infinity
                 : (maxMessageWidth - 2 * cardPadding) / imagesInRow;
             final double? height = imagesInRow == 1 ? null : 90;
 
