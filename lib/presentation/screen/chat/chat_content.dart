@@ -1,19 +1,16 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'dart:async';
 
-import '../../../common/date_service.dart';
-import '../../../dependency_injection.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rxdart/rxdart.dart';
+
 import '../../../domain/cubit/chat/chat_cubit.dart';
-import '../../../domain/entity/message.dart';
 import '../../component/body/big_body_component.dart';
-import '../../component/gap/gap_horizontal_components.dart';
-import '../../component/loading_info_component.dart';
 import '../../component/nullable_text_component.dart';
-import '../../component/text/label_text_components.dart';
-import '../../extension/context_extensions.dart';
-import '../../formatter/date_formatter.dart';
 import 'chat_bottom_part.dart';
-import 'chat_message_item.dart';
+import 'chat_messages.dart';
 
 class ChatContent extends StatelessWidget {
   const ChatContent({super.key});
@@ -27,20 +24,9 @@ class ChatContent extends StatelessWidget {
         centerTitle: true,
         title: const _RecipientFullName(),
       ),
-      body: SafeArea(
+      body: const SafeArea(
         child: BigBody(
-          child: RefreshIndicator(
-            onRefresh: () async =>
-                await context.read<ChatCubit>().loadOlderMessages(),
-            child: Column(
-              children: [
-                Expanded(
-                  child: _Messages(),
-                ),
-                ChatBottomPart(),
-              ],
-            ),
-          ),
+          child: kIsWeb ? _ScrollRefresherContent() : _DragRefresherContent(),
         ),
       ),
     );
@@ -60,80 +46,145 @@ class _RecipientFullName extends StatelessWidget {
   }
 }
 
-class _Messages extends StatelessWidget {
-  final DateService _dateService = getIt<DateService>();
+class _DragRefresherContent extends StatelessWidget {
+  const _DragRefresherContent();
 
   @override
   Widget build(BuildContext context) {
-    final String? loggedUserId = context.select(
-      (ChatCubit cubit) => cubit.state.loggedUserId,
+    return RefreshIndicator(
+      onRefresh: () async =>
+          await context.read<ChatCubit>().loadOlderMessages(),
+      child: Column(
+        children: [
+          Expanded(
+            child: ChatMessages(),
+          ),
+          ChatBottomPart(),
+        ],
+      ),
     );
-    final List<Message>? messages = context.select(
-      (ChatCubit cubit) => cubit.state.messagesFromLatest,
-    );
-
-    return messages == null || messages.isEmpty || loggedUserId == null
-        ? const LoadingInfo()
-        : LayoutBuilder(
-            builder: (context, constraints) {
-              final double maxMessageWidth = constraints.maxWidth * 0.6;
-
-              return ListView.separated(
-                reverse: true,
-                padding: const EdgeInsets.all(16),
-                itemCount: messages.length + 1,
-                separatorBuilder: (_, int itemIndex) {
-                  if (itemIndex >= messages.length - 1) return const SizedBox();
-                  final Message currentMessage = messages[itemIndex];
-                  final Message nextMessage = messages[itemIndex + 1];
-                  final bool areDifferentDays = !_dateService.areDaysTheSame(
-                    currentMessage.dateTime,
-                    nextMessage.dateTime,
-                  );
-                  return areDifferentDays
-                      ? _DaySeparator(date: currentMessage.dateTime)
-                      : const SizedBox();
-                },
-                itemBuilder: (_, int messageIndex) {
-                  if (messageIndex == messages.length) {
-                    final Message previousMessage = messages[messageIndex - 1];
-                    return _DaySeparator(date: previousMessage.dateTime);
-                  }
-                  final Message currentMessage = messages[messageIndex];
-                  return ChatMessageItem(
-                    maxWidth: maxMessageWidth,
-                    isSender: loggedUserId == currentMessage.senderId,
-                    text: currentMessage.text,
-                    images: currentMessage.images,
-                    dateTime: currentMessage.dateTime,
-                  );
-                },
-              );
-            },
-          );
   }
 }
 
-class _DaySeparator extends StatelessWidget {
-  final DateTime date;
+class _ScrollRefresherContent extends StatefulWidget {
+  const _ScrollRefresherContent();
 
-  const _DaySeparator({required this.date});
+  @override
+  State<StatefulWidget> createState() => _ScrollRefresherContentState();
+}
+
+class _ScrollRefresherContentState extends State<_ScrollRefresherContent> {
+  StreamSubscription<int>? _numberOfMessagesListener;
+  final ScrollController _scrollController = ScrollController();
+  int _numberOfMessages = 0;
+  bool _isLoading = false;
+  bool _isEndOfList = false;
+
+  @override
+  void initState() {
+    _numberOfMessagesListener ??= context
+        .read<ChatCubit>()
+        .stream
+        .map((ChatState chatState) => chatState.messagesFromLatest?.length)
+        .whereNotNull()
+        .listen(
+          (int newNumberOfMessages) => setState(() {
+            _isEndOfList = _numberOfMessages == newNumberOfMessages;
+            _numberOfMessages = newNumberOfMessages;
+          }),
+        );
+    _scrollController.addListener(_onScrollPositionChanged);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _numberOfMessagesListener?.cancel();
+    _numberOfMessagesListener = null;
+    _scrollController.removeListener(_onScrollPositionChanged);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    const Widget divider = Expanded(
-      child: Divider(height: 80),
-    );
-    const Widget gap = GapHorizontal16();
-
-    return Row(
+    return Stack(
       children: [
-        divider,
-        gap,
-        LabelLarge(date.toFullDate(context.languageCode)),
-        gap,
-        divider,
+        Column(
+          children: [
+            Expanded(
+              child: ChatMessages(scrollController: _scrollController),
+            ),
+            ChatBottomPart(),
+          ],
+        ),
+        _WebRefreshIndicator(isLoading: _isLoading),
       ],
+    );
+  }
+
+  Future<void> _onScrollPositionChanged() async {
+    final ScrollPosition scrollPosition = _scrollController.position;
+    final bool isUpScrolling =
+        scrollPosition.userScrollDirection == ScrollDirection.reverse;
+    if (!_isEndOfList &&
+        !_isLoading &&
+        isUpScrolling &&
+        scrollPosition.extentAfter < 100) {
+      setState(() {
+        _isLoading = true;
+      });
+      await context.read<ChatCubit>().loadOlderMessages();
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+}
+
+class _WebRefreshIndicator extends StatefulWidget {
+  final bool isLoading;
+
+  const _WebRefreshIndicator({required this.isLoading});
+
+  @override
+  State<StatefulWidget> createState() => _WebRefreshIndicatorState();
+}
+
+class _WebRefreshIndicatorState extends State<_WebRefreshIndicator> {
+  double yPosition = -50;
+
+  @override
+  void didUpdateWidget(covariant _WebRefreshIndicator oldWidget) {
+    setState(() {
+      yPosition = widget.isLoading ? 25 : -50;
+    });
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedPositioned(
+      top: yPosition,
+      left: 0,
+      right: 0,
+      duration: const Duration(milliseconds: 200),
+      curve: Curves.easeInOut,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Card(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(100),
+            ),
+            child: Container(
+              padding: const EdgeInsets.all(8),
+              width: 40,
+              height: 40,
+              child: const CircularProgressIndicator(strokeWidth: 3),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
