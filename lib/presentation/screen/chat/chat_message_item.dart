@@ -138,12 +138,9 @@ class _Images extends StatelessWidget {
 
     return Container(
       clipBehavior: Clip.hardEdge,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.only(
-          topLeft: borderRadius,
-          topRight: borderRadius,
-          bottomLeft: doesTextExist ? Radius.zero : borderRadius,
-        ),
+      decoration: const BoxDecoration(
+        borderRadius:
+            BorderRadius.only(topLeft: borderRadius, topRight: borderRadius),
       ),
       child: Wrap(
         alignment: isSender ? WrapAlignment.end : WrapAlignment.start,

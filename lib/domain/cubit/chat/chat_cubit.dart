@@ -79,9 +79,16 @@ class ChatCubit extends CubitWithStatus<ChatState, dynamic, dynamic> {
     emit(state.copyWith(messageToSend: message));
   }
 
-  void imagesToSendAdded(List<Uint8List> newImagesToSend) {
+  void addImagesToSend(List<Uint8List> newImagesToSend) {
     final List<Uint8List> updatedImagesToSend = [...state.imagesToSend];
     updatedImagesToSend.addAll(newImagesToSend);
+    emit(state.copyWith(imagesToSend: updatedImagesToSend));
+  }
+
+  void deleteImageToSend(int imageIndex) {
+    if (imageIndex < 0 || imageIndex >= state.imagesToSend.length) return;
+    final List<Uint8List> updatedImagesToSend = [...state.imagesToSend];
+    updatedImagesToSend.removeAt(imageIndex);
     emit(state.copyWith(imagesToSend: updatedImagesToSend));
   }
 

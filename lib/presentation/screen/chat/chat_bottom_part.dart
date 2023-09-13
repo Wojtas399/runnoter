@@ -10,7 +10,7 @@ import '../../component/dialog/actions_dialog_component.dart';
 import '../../service/dialog_service.dart';
 import '../../service/image_service.dart';
 import '../../service/utils.dart';
-import 'chat_message_images.dart';
+import 'chat_message_input_images.dart';
 
 class ChatBottomPart extends StatelessWidget {
   final TextEditingController _messageController = TextEditingController();
@@ -35,7 +35,7 @@ class ChatBottomPart extends StatelessWidget {
                   ),
                   child: Column(
                     children: [
-                      const ChatMessageImages(),
+                      const ChatMessageInputImages(),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -114,13 +114,13 @@ class _ImageButtonState extends State<_ImageButton> {
   Future<void> _pickImagesFromGallery() async {
     final ChatCubit chatCubit = context.read<ChatCubit>();
     final List<Uint8List> images = await pickMultipleImages();
-    if (images.isNotEmpty) chatCubit.imagesToSendAdded(images);
+    if (images.isNotEmpty) chatCubit.addImagesToSend(images);
   }
 
   Future<void> _capturePhotoFromCamera() async {
     final ChatCubit chatCubit = context.read<ChatCubit>();
     final Uint8List? image = await capturePhoto();
-    if (image != null) chatCubit.imagesToSendAdded([image]);
+    if (image != null) chatCubit.addImagesToSend([image]);
   }
 }
 

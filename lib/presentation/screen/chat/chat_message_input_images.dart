@@ -6,8 +6,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../domain/cubit/chat/chat_cubit.dart';
 import '../../component/gap/gap_horizontal_components.dart';
 
-class ChatMessageImages extends StatelessWidget {
-  const ChatMessageImages({super.key});
+class ChatMessageInputImages extends StatelessWidget {
+  const ChatMessageInputImages({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -23,8 +23,11 @@ class ChatMessageImages extends StatelessWidget {
               physics: const _StartAtTheEndScrollPhysics(),
               scrollDirection: Axis.horizontal,
               itemCount: images.length,
-              separatorBuilder: (_, int itemIndex) => const GapHorizontal8(),
-              itemBuilder: (_, int itemIndex) => _ImageItem(images[itemIndex]),
+              separatorBuilder: (_, int index) => const GapHorizontal8(),
+              itemBuilder: (_, int imageIndex) => _ImageItem(
+                imageIndex: imageIndex,
+                imageData: images[imageIndex],
+              ),
             ),
           )
         : const SizedBox();
@@ -32,9 +35,10 @@ class ChatMessageImages extends StatelessWidget {
 }
 
 class _ImageItem extends StatelessWidget {
+  final int imageIndex;
   final Uint8List imageData;
 
-  const _ImageItem(this.imageData);
+  const _ImageItem({required this.imageIndex, required this.imageData});
 
   @override
   Widget build(BuildContext context) {
@@ -49,10 +53,13 @@ class _ImageItem extends StatelessWidget {
             child: Image.memory(imageData),
           ),
         ),
-        const Positioned(
+        Positioned(
           right: 0,
           top: 0,
-          child: _DeleteButton(),
+          child: _DeleteButton(
+            onPressed: () =>
+                context.read<ChatCubit>().deleteImageToSend(imageIndex),
+          ),
         ),
       ],
     );
@@ -60,7 +67,9 @@ class _ImageItem extends StatelessWidget {
 }
 
 class _DeleteButton extends StatelessWidget {
-  const _DeleteButton();
+  final VoidCallback onPressed;
+
+  const _DeleteButton({required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -71,9 +80,7 @@ class _DeleteButton extends StatelessWidget {
         style: FilledButton.styleFrom(
           padding: EdgeInsets.zero,
         ),
-        onPressed: () {
-          //TODO
-        },
+        onPressed: onPressed,
         child: const Icon(Icons.delete_outlined, size: 18),
       ),
     );

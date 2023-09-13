@@ -166,16 +166,42 @@ void main() {
   );
 
   blocTest(
-    'images to send added, '
+    'add images to send, '
     'should add new images to list',
     build: () => createCubit(
       imagesToSend: [Uint8List(1)],
     ),
-    act: (cubit) => cubit.imagesToSendAdded([Uint8List(2), Uint8List(3)]),
+    act: (cubit) => cubit.addImagesToSend([Uint8List(2), Uint8List(3)]),
     expect: () => [
       ChatState(
         status: const CubitStatusComplete(),
         imagesToSend: [Uint8List(1), Uint8List(2), Uint8List(3)],
+      ),
+    ],
+  );
+
+  blocTest(
+    'delete image to send, '
+    'index does not match to list indexes, '
+    'should do nothing',
+    build: () => createCubit(
+      imagesToSend: [Uint8List(1), Uint8List(2), Uint8List(3)],
+    ),
+    act: (cubit) => cubit.deleteImageToSend(3),
+    expect: () => [],
+  );
+
+  blocTest(
+    'delete image to send, '
+    'should delete image from list at given index',
+    build: () => createCubit(
+      imagesToSend: [Uint8List(1), Uint8List(2), Uint8List(3)],
+    ),
+    act: (cubit) => cubit.deleteImageToSend(1),
+    expect: () => [
+      ChatState(
+        status: const CubitStatusComplete(),
+        imagesToSend: [Uint8List(1), Uint8List(3)],
       ),
     ],
   );
