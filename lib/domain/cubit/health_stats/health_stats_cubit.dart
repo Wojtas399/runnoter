@@ -89,9 +89,9 @@ class HealthStatsCubit extends Cubit<HealthStatsState> {
     DateTime counterDate = dateRange.startDate;
     final dayAfterEndDay = dateRange.endDate.add(const Duration(days: 1));
     final pointsOfCharts = _ListenedPointsOfCharts();
-    while (!_dateService.areDatesTheSame(counterDate, dayAfterEndDay)) {
+    while (!_dateService.areDaysTheSame(counterDate, dayAfterEndDay)) {
       final HealthMeasurement? foundMeasurement = measurements.firstWhereOrNull(
-        (mes) => _dateService.areDatesTheSame(mes.date, counterDate),
+        (mes) => _dateService.areDaysTheSame(mes.date, counterDate),
       );
       pointsOfCharts.restingHeartRatePoints.add(HealthStatsChartPoint(
         date: counterDate,

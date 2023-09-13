@@ -70,7 +70,7 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
           ?.where(
             (workout) =>
                 workout.userId == userId &&
-                _dateService.areDatesTheSame(workout.date, date),
+                _dateService.areDaysTheSame(workout.date, date),
           )
           .toList();
     }

@@ -242,7 +242,7 @@ void main() {
       ];
       dateService.mockAreDatesTheSame(expected: false);
       when(
-        () => dateService.areDatesTheSame(date, date),
+        () => dateService.areDaysTheSame(date, date),
       ).thenReturn(true);
       firebaseRaceService.mockLoadRacesByDate(
         raceDtos: loadedRaceDtos,

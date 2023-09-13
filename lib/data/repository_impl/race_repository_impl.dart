@@ -67,7 +67,7 @@ class RaceRepositoryImpl extends StateRepository<Race>
           ?.where(
             (race) =>
                 race.userId == userId &&
-                _dateService.areDatesTheSame(race.date, date),
+                _dateService.areDaysTheSame(race.date, date),
           )
           .toList();
     }

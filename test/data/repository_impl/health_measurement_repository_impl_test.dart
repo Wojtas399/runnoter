@@ -56,10 +56,10 @@ void main() {
         ],
       );
       when(
-        () => dateService.areDatesTheSame(DateTime(2023, 2, 10), date),
+        () => dateService.areDaysTheSame(DateTime(2023, 2, 10), date),
       ).thenReturn(false);
       when(
-        () => dateService.areDatesTheSame(date, date),
+        () => dateService.areDaysTheSame(date, date),
       ).thenReturn(true);
 
       final Stream<HealthMeasurement?> measurement$ =
@@ -111,10 +111,10 @@ void main() {
         ],
       );
       when(
-        () => dateService.areDatesTheSame(DateTime(2023, 2, 10), date),
+        () => dateService.areDaysTheSame(DateTime(2023, 2, 10), date),
       ).thenReturn(false);
       when(
-        () => dateService.areDatesTheSame(date, date),
+        () => dateService.areDaysTheSame(date, date),
       ).thenReturn(true);
 
       final Stream<HealthMeasurement?> measurement$ =
@@ -528,7 +528,7 @@ void main() {
       ];
       dateService.mockAreDatesTheSame(expected: false);
       when(
-        () => dateService.areDatesTheSame(date, date),
+        () => dateService.areDaysTheSame(date, date),
       ).thenReturn(true);
       firebaseHealthMeasurementService.mockDeleteMeasurement();
       repository = HealthMeasurementRepositoryImpl(

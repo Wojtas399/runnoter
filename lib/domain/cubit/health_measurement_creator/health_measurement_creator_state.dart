@@ -37,7 +37,7 @@ class HealthMeasurementCreatorState
     }
     final todayDate = _dateService.getToday();
     return date!.isBefore(todayDate) ||
-        _dateService.areDatesTheSame(date!, todayDate);
+        _dateService.areDaysTheSame(date!, todayDate);
   }
 
   bool get _isRestingHeartRateValid =>
@@ -65,7 +65,7 @@ class HealthMeasurementCreatorState
     bool areDatesDifferent = true;
     if (date != null && measurement != null) {
       areDatesDifferent =
-          !_dateService.areDatesTheSame(date!, measurement!.date);
+          !_dateService.areDaysTheSame(date!, measurement!.date);
     }
     return areDatesDifferent ||
         restingHeartRate != measurement?.restingHeartRate ||

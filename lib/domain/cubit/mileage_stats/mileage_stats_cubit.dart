@@ -107,10 +107,10 @@ class MileageStatsCubit extends Cubit<MileageStatsState> {
           );
           final workoutsFromDay = activities.workouts.where(
             (Workout workout) =>
-                _dateService.areDatesTheSame(workout.date, date),
+                _dateService.areDaysTheSame(workout.date, date),
           );
           final racesFromDay = activities.races.where(
-            (Race race) => _dateService.areDatesTheSame(race.date, date),
+            (Race race) => _dateService.areDaysTheSame(race.date, date),
           );
           final double workoutsCoveredDistance =
               _sumCoveredDistancesOfActivities(workoutsFromDay);

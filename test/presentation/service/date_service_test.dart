@@ -217,56 +217,56 @@ void main() {
   );
 
   test(
-    'are dates the same, '
+    'are days the same, '
     'year, month and day are the same, '
     'should be true',
     () {
       final DateTime date1 = DateTime(2023, 2, 2, 10, 30);
       final DateTime date2 = DateTime(2023, 2, 2, 11, 25);
 
-      final bool result = service.areDatesTheSame(date1, date2);
+      final bool result = service.areDaysTheSame(date1, date2);
 
       expect(result, true);
     },
   );
 
   test(
-    'are dates the same, '
+    'are days the same, '
     'years are different, '
     'should be false',
     () {
       final DateTime date1 = DateTime(2022, 2, 2, 10, 30);
       final DateTime date2 = DateTime(2023, 2, 2, 11, 25);
 
-      final bool result = service.areDatesTheSame(date1, date2);
+      final bool result = service.areDaysTheSame(date1, date2);
 
       expect(result, false);
     },
   );
 
   test(
-    'are dates the same, '
+    'are days the same, '
     'months are different, '
     'should be false',
     () {
       final DateTime date1 = DateTime(2023, 4, 2, 10, 30);
       final DateTime date2 = DateTime(2023, 2, 2, 11, 25);
 
-      final bool result = service.areDatesTheSame(date1, date2);
+      final bool result = service.areDaysTheSame(date1, date2);
 
       expect(result, false);
     },
   );
 
   test(
-    'are dates the same, '
+    'are days the same, '
     'days are different, '
     'should be false',
     () {
       final DateTime date1 = DateTime(2023, 2, 20, 10, 30);
       final DateTime date2 = DateTime(2023, 2, 2, 11, 25);
 
-      final bool result = service.areDatesTheSame(date1, date2);
+      final bool result = service.areDaysTheSame(date1, date2);
 
       expect(result, false);
     },

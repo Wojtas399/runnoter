@@ -139,16 +139,16 @@ class CalendarCubit extends Cubit<CalendarState> {
   }) {
     final HealthMeasurement? healthMeasurement =
         _calendarUserData?.healthMeasurements.firstWhereOrNull(
-      (measurement) => _dateService.areDatesTheSame(measurement.date, date),
+      (measurement) => _dateService.areDaysTheSame(measurement.date, date),
     );
     final List<Workout> workoutsFromDay = [
       ...?_calendarUserData?.workouts
-          .where((workout) => _dateService.areDatesTheSame(workout.date, date))
+          .where((workout) => _dateService.areDaysTheSame(workout.date, date))
           .toList(),
     ];
     final List<Race> racesFromDay = [
       ...?_calendarUserData?.races
-          .where((race) => _dateService.areDatesTheSame(race.date, date))
+          .where((race) => _dateService.areDaysTheSame(race.date, date))
           .toList(),
     ];
     return WeekDay(
