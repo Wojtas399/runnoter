@@ -101,7 +101,7 @@ class ChatCubit extends CubitWithStatus<ChatState, dynamic, dynamic> {
         chatId: _chatId,
         senderId: state.loggedUserId!,
         dateTime: now,
-        text: state.messageToSend!,
+        text: state.messageToSend,
         images: state.imagesToSend
             .asMap()
             .entries
