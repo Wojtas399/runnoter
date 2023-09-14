@@ -275,8 +275,8 @@ void main() {
         dateTime: DateTime(2023, 1, 1, 12, 30),
         text: 'message',
         images: [
-          MessageImage(order: 1, bytes: Uint8List(1)),
-          MessageImage(order: 2, bytes: Uint8List(2)),
+          MessageImage(id: '', order: 1, bytes: Uint8List(1)),
+          MessageImage(id: '', order: 2, bytes: Uint8List(2)),
         ],
       ),
     ).called(1),

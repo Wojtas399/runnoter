@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:typed_data';
 
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -11,6 +10,7 @@ import 'package:runnoter/domain/entity/message.dart';
 import 'package:runnoter/domain/repository/message_repository.dart';
 
 import '../../../creators/message_creator.dart';
+import '../../../creators/message_image_creator.dart';
 import '../../../mock/domain/repository/mock_message_repository.dart';
 
 void main() {
@@ -32,14 +32,14 @@ void main() {
         createMessage(
           id: 'm1',
           images: [
-            MessageImage(order: 2, bytes: Uint8List(2)),
-            MessageImage(order: 1, bytes: Uint8List(1)),
+            createMessageImage(id: 'i2', order: 2),
+            createMessageImage(id: 'i1', order: 1),
           ],
         ),
         createMessage(
           id: 'm2',
           images: [
-            MessageImage(order: 1, bytes: Uint8List(3)),
+            createMessageImage(id: 'i3', order: 1),
           ],
         ),
         createMessage(id: 'm3'),
@@ -48,23 +48,23 @@ void main() {
         createMessage(
           id: 'm1',
           images: [
-            MessageImage(order: 2, bytes: Uint8List(2)),
-            MessageImage(order: 1, bytes: Uint8List(1)),
+            createMessageImage(id: 'i2', order: 2),
+            createMessageImage(id: 'i1', order: 1),
           ],
         ),
         createMessage(
           id: 'm2',
           images: [
-            MessageImage(order: 1, bytes: Uint8List(3)),
+            createMessageImage(id: 'i3', order: 1),
           ],
         ),
         createMessage(id: 'm3'),
         createMessage(
           id: 'm4',
           images: [
-            MessageImage(order: 3, bytes: Uint8List(6)),
-            MessageImage(order: 1, bytes: Uint8List(4)),
-            MessageImage(order: 2, bytes: Uint8List(5)),
+            createMessageImage(id: 'i6', order: 3),
+            createMessageImage(id: 'i4', order: 1),
+            createMessageImage(id: 'i5', order: 2),
           ],
         ),
       ];
@@ -85,16 +85,20 @@ void main() {
         },
         expect: () => [
           ChatGalleryState(
-            images: [Uint8List(1), Uint8List(2), Uint8List(3)],
+            images: [
+              createMessageImage(id: 'i1', order: 1),
+              createMessageImage(id: 'i2', order: 2),
+              createMessageImage(id: 'i3', order: 3),
+            ],
           ),
           ChatGalleryState(
             images: [
-              Uint8List(1),
-              Uint8List(2),
-              Uint8List(3),
-              Uint8List(4),
-              Uint8List(5),
-              Uint8List(6),
+              createMessageImage(id: 'i1', order: 1),
+              createMessageImage(id: 'i2', order: 2),
+              createMessageImage(id: 'i3', order: 3),
+              createMessageImage(id: 'i4', order: 4),
+              createMessageImage(id: 'i5', order: 5),
+              createMessageImage(id: 'i6', order: 6),
             ],
           ),
         ],
@@ -107,38 +111,32 @@ void main() {
     'images do not exist, '
     'should do nothing',
     build: () => ChatGalleryCubit(chatId: chatId),
-    act: (cubit) => cubit.imageSelected(2),
+    act: (cubit) => cubit.imageSelected('i2'),
     expect: () => [],
   );
 
   blocTest(
     'image selected, '
-    'given index is out of list range, '
-    'should do nothing',
+    'should assign image selected by id to selectedImage param',
     build: () => ChatGalleryCubit(
       chatId: chatId,
       initialState: ChatGalleryState(
-        images: [Uint8List(1), Uint8List(2), Uint8List(3)],
+        images: [
+          createMessageImage(id: 'i1', order: 1),
+          createMessageImage(id: 'i2', order: 2),
+          createMessageImage(id: 'i3', order: 3),
+        ],
       ),
     ),
-    act: (cubit) => cubit.imageSelected(4),
-    expect: () => [],
-  );
-
-  blocTest(
-    'image selected, '
-    'should assign  image at given index to selectedImage param',
-    build: () => ChatGalleryCubit(
-      chatId: chatId,
-      initialState: ChatGalleryState(
-        images: [Uint8List(1), Uint8List(2), Uint8List(3)],
-      ),
-    ),
-    act: (cubit) => cubit.imageSelected(1),
+    act: (cubit) => cubit.imageSelected('i2'),
     expect: () => [
       ChatGalleryState(
-        images: [Uint8List(1), Uint8List(2), Uint8List(3)],
-        selectedImage: Uint8List(2),
+        images: [
+          createMessageImage(id: 'i1', order: 1),
+          createMessageImage(id: 'i2', order: 2),
+          createMessageImage(id: 'i3', order: 3),
+        ],
+        selectedImage: createMessageImage(id: 'i2', order: 2),
       ),
     ],
   );

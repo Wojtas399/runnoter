@@ -1,10 +1,10 @@
-import 'dart:typed_data';
-
 import 'package:equatable/equatable.dart';
 
+import '../../entity/message.dart';
+
 class ChatGalleryState extends Equatable {
-  final List<Uint8List>? images;
-  final Uint8List? selectedImage;
+  final List<MessageImage>? images;
+  final MessageImage? selectedImage;
 
   const ChatGalleryState({this.images, this.selectedImage});
 
@@ -12,8 +12,8 @@ class ChatGalleryState extends Equatable {
   List<Object?> get props => [images, selectedImage];
 
   ChatGalleryState copyWith({
-    List<Uint8List>? images,
-    Uint8List? selectedImage,
+    List<MessageImage>? images,
+    MessageImage? selectedImage,
   }) =>
       ChatGalleryState(
         images: images ?? this.images,

@@ -20,7 +20,7 @@ import '../../service/connectivity_service.dart';
 part 'chat_state.dart';
 
 class ChatCubit extends CubitWithStatus<ChatState, dynamic, dynamic> {
-  final String _chatId;
+  final String chatId;
   final AuthService _authService;
   final ChatRepository _chatRepository;
   final MessageRepository _messageRepository;
@@ -30,10 +30,9 @@ class ChatCubit extends CubitWithStatus<ChatState, dynamic, dynamic> {
   StreamSubscription<List<Message>>? _messagesListener;
 
   ChatCubit({
-    required String chatId,
+    required this.chatId,
     ChatState initialState = const ChatState(status: CubitStatusInitial()),
-  })  : _chatId = chatId,
-        _authService = getIt<AuthService>(),
+  })  : _authService = getIt<AuthService>(),
         _chatRepository = getIt<ChatRepository>(),
         _messageRepository = getIt<MessageRepository>(),
         _personRepository = getIt<PersonRepository>(),
@@ -52,7 +51,7 @@ class ChatCubit extends CubitWithStatus<ChatState, dynamic, dynamic> {
     final String? loggedUserId = await _authService.loggedUserId$.first;
     if (loggedUserId == null) return;
     final Chat chat =
-        await _chatRepository.getChatById(chatId: _chatId).whereNotNull().first;
+        await _chatRepository.getChatById(chatId: chatId).whereNotNull().first;
     final Person recipient = await _personRepository
         .getPersonById(
           personId: chat.user1Id == loggedUserId ? chat.user2Id : chat.user1Id,
@@ -60,7 +59,7 @@ class ChatCubit extends CubitWithStatus<ChatState, dynamic, dynamic> {
         .whereNotNull()
         .first;
     _messagesListener ??=
-        _messageRepository.getMessagesForChat(chatId: _chatId).listen(
+        _messageRepository.getMessagesForChat(chatId: chatId).listen(
       (List<Message> messages) {
         final List<Message> sortedMessages = [...messages];
         sortedMessages.sort(
@@ -98,7 +97,7 @@ class ChatCubit extends CubitWithStatus<ChatState, dynamic, dynamic> {
       final DateTime now = _dateService.getNow();
       emitLoadingStatus();
       await _messageRepository.addMessageToChat(
-        chatId: _chatId,
+        chatId: chatId,
         senderId: state.loggedUserId!,
         dateTime: now,
         text: state.messageToSend,
@@ -106,7 +105,11 @@ class ChatCubit extends CubitWithStatus<ChatState, dynamic, dynamic> {
             .asMap()
             .entries
             .map(
-              (entry) => MessageImage(order: entry.key + 1, bytes: entry.value),
+              (entry) => MessageImage(
+                id: '',
+                order: entry.key + 1,
+                bytes: entry.value,
+              ),
             )
             .toList(),
       );
@@ -125,7 +128,7 @@ class ChatCubit extends CubitWithStatus<ChatState, dynamic, dynamic> {
     if (messages == null || messages.isEmpty) return;
     final String lastVisibleMessageId = messages.last.id;
     await _messageRepository.loadOlderMessagesForChat(
-      chatId: _chatId,
+      chatId: chatId,
       lastVisibleMessageId: lastVisibleMessageId,
     );
   }
