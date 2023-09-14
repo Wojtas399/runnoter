@@ -26,11 +26,11 @@ class Message extends Entity {
 
 class MessageImage extends Equatable {
   final int order;
-  final Uint8List data;
+  final Uint8List bytes;
 
-  const MessageImage({required this.order, required this.data})
+  const MessageImage({required this.order, required this.bytes})
       : assert(order > 0);
 
   @override
-  List<Object?> get props => [order, data];
+  List<Object?> get props => [order, bytes];
 }

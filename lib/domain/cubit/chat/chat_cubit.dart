@@ -106,7 +106,7 @@ class ChatCubit extends CubitWithStatus<ChatState, dynamic, dynamic> {
             .asMap()
             .entries
             .map(
-              (entry) => MessageImage(order: entry.key + 1, data: entry.value),
+              (entry) => MessageImage(order: entry.key + 1, bytes: entry.value),
             )
             .toList(),
       );

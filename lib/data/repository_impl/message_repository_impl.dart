@@ -115,13 +115,13 @@ class MessageRepositoryImpl extends StateRepository<Message>
   Future<Message> _loadImagesFromDbForMessage(MessageDto messageDto) async {
     final List<MessageImage> loadedImages = [];
     for (final imageDto in messageDto.images) {
-      final Uint8List? imageData = await _dbStorageService.loadChatImage(
+      final Uint8List? imageBytes = await _dbStorageService.loadChatImage(
         chatId: messageDto.chatId,
         imageFileName: imageDto.fileName,
       );
-      if (imageData != null) {
+      if (imageBytes != null) {
         loadedImages.add(
-          MessageImage(order: imageDto.order, data: imageData),
+          MessageImage(order: imageDto.order, bytes: imageBytes),
         );
       }
     }
@@ -136,7 +136,7 @@ class MessageRepositoryImpl extends StateRepository<Message>
     for (final image in images) {
       final String? imageFileName = await _dbStorageService.uploadChatImage(
         chatId: chatId,
-        imageData: image.data,
+        imageBytes: image.bytes,
       );
       if (imageFileName != null) {
         uploadedImages.add(

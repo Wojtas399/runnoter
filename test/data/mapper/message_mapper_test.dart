@@ -12,8 +12,8 @@ void main() {
   final DateTime dateTime = DateTime(2023, 9, 1);
   const String text = 'text';
   final List<MessageImage> images = [
-    MessageImage(order: 1, data: Uint8List(1)),
-    MessageImage(order: 2, data: Uint8List(2)),
+    MessageImage(order: 1, bytes: Uint8List(1)),
+    MessageImage(order: 2, bytes: Uint8List(2)),
   ];
 
   test(

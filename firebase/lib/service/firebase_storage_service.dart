@@ -19,14 +19,14 @@ class FirebaseStorageService {
 
   Future<String?> uploadChatImage({
     required String chatId,
-    required Uint8List imageData,
+    required Uint8List imageBytes,
   }) async {
     const uuid = Uuid();
     final imageFileName = '${uuid.v4()}.jpg';
     final String imagePath = _createPathForChatImage(chatId, imageFileName);
     final imageRef = _storageRef.child(imagePath);
     try {
-      await imageRef.putData(imageData);
+      await imageRef.putData(imageBytes);
       return imageFileName;
     } catch (_) {
       return null;

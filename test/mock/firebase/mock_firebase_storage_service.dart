@@ -18,7 +18,7 @@ class MockFirebaseStorageService extends Mock
     when(
       () => uploadChatImage(
         chatId: any(named: 'chatId'),
-        imageData: any(named: 'imageData'),
+        imageBytes: any(named: 'imageBytes'),
       ),
     ).thenAnswer((_) => Future.value(imageFileName));
   }

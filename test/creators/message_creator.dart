@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:runnoter/domain/entity/message.dart';
 
 Message createMessage({
@@ -18,6 +16,3 @@ Message createMessage({
       text: text ?? (images.isEmpty ? '' : null),
       images: images,
     );
-
-MessageImage createMessageImage({int order = 1, Uint8List? data}) =>
-    MessageImage(order: order, data: data ?? Uint8List(1));

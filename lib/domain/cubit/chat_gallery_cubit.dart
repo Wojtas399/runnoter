@@ -44,6 +44,6 @@ class ChatGalleryCubit extends Cubit<List<Uint8List>?> {
   List<Uint8List> _sortMessageImagesByOrderAndExtractBytes(Message message) {
     final List<MessageImage> sortedImages = [...message.images];
     sortedImages.sortBy<num>((MessageImage image) => image.order);
-    return sortedImages.map((image) => image.data).toList();
+    return sortedImages.map((image) => image.bytes).toList();
   }
 }

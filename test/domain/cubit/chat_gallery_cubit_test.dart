@@ -31,14 +31,14 @@ void main() {
         createMessage(
           id: 'm1',
           images: [
-            MessageImage(order: 2, data: Uint8List(2)),
-            MessageImage(order: 1, data: Uint8List(1)),
+            MessageImage(order: 2, bytes: Uint8List(2)),
+            MessageImage(order: 1, bytes: Uint8List(1)),
           ],
         ),
         createMessage(
           id: 'm2',
           images: [
-            MessageImage(order: 1, data: Uint8List(3)),
+            MessageImage(order: 1, bytes: Uint8List(3)),
           ],
         ),
         createMessage(id: 'm3'),
@@ -47,23 +47,23 @@ void main() {
         createMessage(
           id: 'm1',
           images: [
-            MessageImage(order: 2, data: Uint8List(2)),
-            MessageImage(order: 1, data: Uint8List(1)),
+            MessageImage(order: 2, bytes: Uint8List(2)),
+            MessageImage(order: 1, bytes: Uint8List(1)),
           ],
         ),
         createMessage(
           id: 'm2',
           images: [
-            MessageImage(order: 1, data: Uint8List(3)),
+            MessageImage(order: 1, bytes: Uint8List(3)),
           ],
         ),
         createMessage(id: 'm3'),
         createMessage(
           id: 'm4',
           images: [
-            MessageImage(order: 3, data: Uint8List(6)),
-            MessageImage(order: 1, data: Uint8List(4)),
-            MessageImage(order: 2, data: Uint8List(5)),
+            MessageImage(order: 3, bytes: Uint8List(6)),
+            MessageImage(order: 1, bytes: Uint8List(4)),
+            MessageImage(order: 2, bytes: Uint8List(5)),
           ],
         ),
       ];
@@ -71,7 +71,7 @@ void main() {
         ..add(messages);
 
       blocTest(
-        'should set listener of images data from chat messages sorted in appropriate order',
+        'should set listener of images bytes from chat messages sorted in appropriate order',
         build: () => ChatGalleryCubit(chatId: chatId),
         setUp: () {
           messageRepository.mockGetMessagesForChat(

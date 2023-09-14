@@ -61,8 +61,8 @@ void main() {
           id: 'm4',
           chatId: chatId,
           images: [
-            MessageImage(order: 1, data: Uint8List(1)),
-            MessageImage(order: 2, data: Uint8List(2)),
+            MessageImage(order: 1, bytes: Uint8List(1)),
+            MessageImage(order: 2, bytes: Uint8List(2)),
           ],
         ),
         createMessage(id: 'm5', chatId: chatId),
@@ -78,7 +78,7 @@ void main() {
       final Message secondAddedMessage = createMessage(
         id: 'm7',
         chatId: chatId,
-        images: [MessageImage(order: 1, data: Uint8List(3))],
+        images: [MessageImage(order: 1, bytes: Uint8List(3))],
       );
       final StreamController<List<MessageDto>> addedMessages$ =
           StreamController()..add([]);
@@ -173,7 +173,7 @@ void main() {
         createMessage(
           id: 'm4',
           chatId: chatId,
-          images: [MessageImage(order: 1, data: Uint8List(1))],
+          images: [MessageImage(order: 1, bytes: Uint8List(1))],
         ),
       ];
       firebaseMessageService.mockLoadMessagesForChat(
@@ -212,7 +212,7 @@ void main() {
     'add message to chat, '
     'should call firebase storage service method to upload images and '
     'should call firebase message service method to add message to chat and '
-    'should add this new message to repo',
+    'should add new message to repo',
     () async {
       const String messageId = 'm3';
       const String chatId = 'c1';
@@ -220,8 +220,8 @@ void main() {
       final DateTime dateTime = DateTime(2023, 1, 1);
       const String text = 'message';
       final List<MessageImage> images = [
-        MessageImage(order: 1, data: Uint8List(1)),
-        MessageImage(order: 2, data: Uint8List(2)),
+        MessageImage(order: 1, bytes: Uint8List(1)),
+        MessageImage(order: 2, bytes: Uint8List(2)),
       ];
       const List<MessageImageDto> imageDtos = [
         MessageImageDto(order: 1, fileName: 'file1.jpg'),
@@ -250,13 +250,13 @@ void main() {
       when(
         () => firebaseStorageService.uploadChatImage(
           chatId: chatId,
-          imageData: Uint8List(1),
+          imageBytes: Uint8List(1),
         ),
       ).thenAnswer((_) => Future.value('file1.jpg'));
       when(
         () => firebaseStorageService.uploadChatImage(
           chatId: chatId,
-          imageData: Uint8List(2),
+          imageBytes: Uint8List(2),
         ),
       ).thenAnswer((_) => Future.value('file2.jpg'));
       firebaseMessageService.mockAddMessageToChat(
@@ -281,13 +281,13 @@ void main() {
       verify(
         () => firebaseStorageService.uploadChatImage(
           chatId: chatId,
-          imageData: Uint8List(1),
+          imageBytes: Uint8List(1),
         ),
       ).called(1);
       verify(
         () => firebaseStorageService.uploadChatImage(
           chatId: chatId,
-          imageData: Uint8List(2),
+          imageBytes: Uint8List(2),
         ),
       ).called(1);
       verify(
