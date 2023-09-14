@@ -229,6 +229,8 @@
   "chatWriteMessage": "Write message...",
   "chatPickImagesFromGallery": "Pick images from gallery",
   "chatCapturePhotoFromCamera": "Capture a photo from camera",
+  "chatNoMessagesInfoTitle": "There are no messages yet",
+  "chatNoMessagesInfoMessage": "Send first message to start the conversation",
   "@__________ACTIVITY_STATUS_PARAMS__________": {},
   "activityStatus": "Status",
   "activityStatusCoveredDistance": "Covered distance",

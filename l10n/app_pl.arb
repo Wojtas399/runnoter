@@ -840,6 +840,14 @@
   "@chatCapturePhotoFromCamera": {
     "description": "Label of the action to captura a photo from camera"
   },
+  "chatNoMessagesInfoTitle": "Nie ma jeszcze żadnych wiadomości",
+  "@chatNoMessagesInfoTitle": {
+    "description": "Title of the info about no messages"
+  },
+  "chatNoMessagesInfoMessage": "Wyślij pierwszą wiadomość, aby rozpocząć konwersację",
+  "@chatNoMessagesInfoMessage": {
+    "description": "Message of the info about no messages"
+  },
   "@__________ACTIVITY_STATUS_PARAMS__________": {},
   "activityStatus": "Status",
   "@activityStatus": {
