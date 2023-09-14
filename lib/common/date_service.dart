@@ -4,9 +4,9 @@ class DateService {
     return DateTime(now.year, now.month, now.day);
   }
 
-  DateTime getNow() {
-    return DateTime.now();
-  }
+  DateTime getYesterday() => getToday().subtract(const Duration(days: 1));
+
+  DateTime getNow() => DateTime.now();
 
   DateTime getFirstDayOfTheWeek(DateTime date) {
     final int daysToFirstDayOfTheWeek = date.weekday - 1;

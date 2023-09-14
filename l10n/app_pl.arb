@@ -1210,6 +1210,8 @@
   "week": "Tydzień",
   "month": "Miesiąc",
   "year": "Rok",
+  "today": "Dzisiaj",
+  "yesterday": "Wczoraj",
   "currentWeek": "Obecny tydzień",
   "editHealthMeasurement": "Edytuj pomiar zdrowia",
   "addWorkout": "Dodaj trening",

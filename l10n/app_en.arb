@@ -362,6 +362,8 @@
   "week": "Week",
   "month": "Month",
   "year": "Year",
+  "today": "Today",
+  "yesterday": "Yesterday",
   "currentWeek": "Current week",
   "editHealthMeasurement": "Edit health measurement",
   "addWorkout": "Add workout",

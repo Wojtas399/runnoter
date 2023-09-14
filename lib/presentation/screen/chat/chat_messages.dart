@@ -87,9 +87,10 @@ class ChatMessages extends StatelessWidget {
 }
 
 class _DaySeparator extends StatelessWidget {
+  final DateService _dateService = getIt<DateService>();
   final DateTime date;
 
-  const _DaySeparator({required this.date});
+  _DaySeparator({required this.date});
 
   @override
   Widget build(BuildContext context) {
@@ -102,10 +103,20 @@ class _DaySeparator extends StatelessWidget {
       children: [
         divider,
         gap,
-        LabelLarge(date.toFullDate(context.languageCode)),
+        LabelLarge(_createLabel(context)),
         gap,
         divider,
       ],
     );
+  }
+
+  String _createLabel(BuildContext context) {
+    if (_dateService.isToday(date)) {
+      return Str.of(context).today;
+    }
+    if (_dateService.areDaysTheSame(date, _dateService.getYesterday())) {
+      return Str.of(context).yesterday;
+    }
+    return date.toFullDate(context.languageCode);
   }
 }
