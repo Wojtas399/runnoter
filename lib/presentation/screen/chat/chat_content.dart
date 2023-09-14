@@ -24,9 +24,16 @@ class ChatContent extends StatelessWidget {
         centerTitle: true,
         title: const _RecipientFullName(),
       ),
-      body: const SafeArea(
+      body: SafeArea(
         child: BigBody(
-          child: kIsWeb ? _ScrollRefresherContent() : _DragRefresherContent(),
+          child: Column(
+            children: [
+              const Expanded(
+                child: kIsWeb ? _ScrollableMessages() : _DraggableMessages(),
+              ),
+              ChatBottomPart(),
+            ],
+          ),
         ),
       ),
     );
@@ -46,37 +53,29 @@ class _RecipientFullName extends StatelessWidget {
   }
 }
 
-class _DragRefresherContent extends StatelessWidget {
-  const _DragRefresherContent();
+class _DraggableMessages extends StatelessWidget {
+  const _DraggableMessages();
 
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: () async =>
           await context.read<ChatCubit>().loadOlderMessages(),
-      child: Column(
-        children: [
-          Expanded(
-            child: ChatMessages(),
-          ),
-          ChatBottomPart(),
-        ],
-      ),
+      child: ChatMessages(),
     );
   }
 }
 
-class _ScrollRefresherContent extends StatefulWidget {
-  const _ScrollRefresherContent();
+class _ScrollableMessages extends StatefulWidget {
+  const _ScrollableMessages();
 
   @override
-  State<StatefulWidget> createState() => _ScrollRefresherContentState();
+  State<StatefulWidget> createState() => _ScrollableMessagesState();
 }
 
-class _ScrollRefresherContentState extends State<_ScrollRefresherContent> {
+class _ScrollableMessagesState extends State<_ScrollableMessages> {
   StreamSubscription<int>? _numberOfMessagesListener;
   final ScrollController _scrollController = ScrollController();
-  int _numberOfMessages = 0;
   bool _isLoading = false;
   bool _isEndOfList = false;
 
@@ -87,10 +86,10 @@ class _ScrollRefresherContentState extends State<_ScrollRefresherContent> {
         .stream
         .map((ChatState chatState) => chatState.messagesFromLatest?.length)
         .whereNotNull()
+        .distinct()
         .listen(
-          (int newNumberOfMessages) => setState(() {
-            _isEndOfList = _numberOfMessages == newNumberOfMessages;
-            _numberOfMessages = newNumberOfMessages;
+          (_) => setState(() {
+            _isEndOfList = false;
           }),
         );
     _scrollController.addListener(_onScrollPositionChanged);
@@ -109,14 +108,7 @@ class _ScrollRefresherContentState extends State<_ScrollRefresherContent> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Column(
-          children: [
-            Expanded(
-              child: ChatMessages(scrollController: _scrollController),
-            ),
-            ChatBottomPart(),
-          ],
-        ),
+        ChatMessages(scrollController: _scrollController),
         _WebRefreshIndicator(isLoading: _isLoading),
       ],
     );
@@ -129,12 +121,13 @@ class _ScrollRefresherContentState extends State<_ScrollRefresherContent> {
     if (!_isEndOfList &&
         !_isLoading &&
         isUpScrolling &&
-        scrollPosition.extentAfter < 100) {
+        scrollPosition.extentAfter < 10) {
       setState(() {
         _isLoading = true;
       });
       await context.read<ChatCubit>().loadOlderMessages();
       setState(() {
+        _isEndOfList = true;
         _isLoading = false;
       });
     }
