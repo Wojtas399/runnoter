@@ -2,20 +2,20 @@ import 'package:firebase/model/message_image_dto.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
+  const String id = 'i1';
   const int order = 1;
-  const String fileName = 'img.jpg';
 
   test(
     'from json, '
     'should map json to dto model',
     () {
       final Map<String, dynamic> json = {
+        'id': id,
         'order': order,
-        'fileName': fileName,
       };
       const MessageImageDto expectedDto = MessageImageDto(
+        id: id,
         order: order,
-        fileName: fileName,
       );
 
       final MessageImageDto dto = MessageImageDto.fromJson(json);
@@ -29,12 +29,12 @@ void main() {
     'should map dto model to json',
     () {
       const MessageImageDto dto = MessageImageDto(
+        id: id,
         order: order,
-        fileName: fileName,
       );
       final Map<String, dynamic> expectedJson = {
+        'id': id,
         'order': order,
-        'fileName': fileName,
       };
 
       final Map<String, dynamic> json = dto.toJson();

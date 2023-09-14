@@ -9,12 +9,12 @@ void main() {
   final DateTime dateTime = DateTime(2023, 8, 31, 20, 20);
   const String text = 'message';
   const List<MessageImageDto> imageDtos = [
-    MessageImageDto(order: 1, fileName: 'file1.jpg'),
-    MessageImageDto(order: 2, fileName: 'file2.jpg'),
+    MessageImageDto(id: 'i1', order: 1),
+    MessageImageDto(id: 'i2', order: 2),
   ];
   final List<Map<String, dynamic>> imageJsons = [
-    {'order': 1, 'fileName': 'file1.jpg'},
-    {'order': 2, 'fileName': 'file2.jpg'},
+    {'id': 'i1', 'order': 1},
+    {'id': 'i2', 'order': 2},
   ];
 
   test(

@@ -117,11 +117,15 @@ class MessageRepositoryImpl extends StateRepository<Message>
     for (final imageDto in messageDto.images) {
       final Uint8List? imageBytes = await _dbStorageService.loadChatImage(
         chatId: messageDto.chatId,
-        imageFileName: imageDto.fileName,
+        imageId: imageDto.id,
       );
       if (imageBytes != null) {
         loadedImages.add(
-          MessageImage(order: imageDto.order, bytes: imageBytes),
+          MessageImage(
+            id: imageDto.id,
+            order: imageDto.order,
+            bytes: imageBytes,
+          ),
         );
       }
     }
@@ -134,14 +138,12 @@ class MessageRepositoryImpl extends StateRepository<Message>
   ) async {
     final List<MessageImageDto> uploadedImages = [];
     for (final image in images) {
-      final String? imageFileName = await _dbStorageService.uploadChatImage(
+      final String? imageId = await _dbStorageService.uploadChatImage(
         chatId: chatId,
         imageBytes: image.bytes,
       );
-      if (imageFileName != null) {
-        uploadedImages.add(
-          MessageImageDto(order: image.order, fileName: imageFileName),
-        );
+      if (imageId != null) {
+        uploadedImages.add(MessageImageDto(id: imageId, order: image.order));
       }
     }
     return uploadedImages;

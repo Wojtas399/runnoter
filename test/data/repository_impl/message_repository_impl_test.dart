@@ -50,8 +50,8 @@ void main() {
           id: 'm4',
           chatId: chatId,
           images: const [
-            MessageImageDto(order: 1, fileName: 'file1.jpg'),
-            MessageImageDto(order: 2, fileName: 'file2.jpg'),
+            MessageImageDto(id: 'i1', order: 1),
+            MessageImageDto(id: 'i2', order: 2),
           ],
         ),
         createMessageDto(id: 'm5', chatId: chatId),
@@ -61,8 +61,8 @@ void main() {
           id: 'm4',
           chatId: chatId,
           images: [
-            MessageImage(order: 1, bytes: Uint8List(1)),
-            MessageImage(order: 2, bytes: Uint8List(2)),
+            MessageImage(id: 'i1', order: 1, bytes: Uint8List(1)),
+            MessageImage(id: 'i2', order: 2, bytes: Uint8List(2)),
           ],
         ),
         createMessage(id: 'm5', chatId: chatId),
@@ -72,13 +72,13 @@ void main() {
       final MessageDto secondAddedMessageDto = createMessageDto(
         id: 'm7',
         chatId: chatId,
-        images: const [MessageImageDto(order: 1, fileName: 'file3.jpg')],
+        images: const [MessageImageDto(id: 'i3', order: 1)],
       );
       final Message firstAddedMessage = createMessage(id: 'm6', chatId: chatId);
       final Message secondAddedMessage = createMessage(
         id: 'm7',
         chatId: chatId,
-        images: [MessageImage(order: 1, bytes: Uint8List(3))],
+        images: [MessageImage(id: 'i3', order: 1, bytes: Uint8List(3))],
       );
       final StreamController<List<MessageDto>> addedMessages$ =
           StreamController()..add([]);
@@ -91,19 +91,19 @@ void main() {
       when(
         () => firebaseStorageService.loadChatImage(
           chatId: chatId,
-          imageFileName: 'file1.jpg',
+          imageId: 'i1',
         ),
       ).thenAnswer((_) => Future.value(Uint8List(1)));
       when(
         () => firebaseStorageService.loadChatImage(
           chatId: chatId,
-          imageFileName: 'file2.jpg',
+          imageId: 'i2',
         ),
       ).thenAnswer((_) => Future.value(Uint8List(2)));
       when(
         () => firebaseStorageService.loadChatImage(
           chatId: chatId,
-          imageFileName: 'file3.jpg',
+          imageId: 'i3',
         ),
       ).thenAnswer((_) => Future.value(Uint8List(3)));
       repository = MessageRepositoryImpl(initialData: existingMessages);
@@ -165,7 +165,7 @@ void main() {
         createMessageDto(
           id: 'm4',
           chatId: chatId,
-          images: const [MessageImageDto(order: 1, fileName: 'file1.jpg')],
+          images: const [MessageImageDto(id: 'i1', order: 1)],
         ),
       ];
       final List<Message> loadedMessages = [
@@ -173,7 +173,7 @@ void main() {
         createMessage(
           id: 'm4',
           chatId: chatId,
-          images: [MessageImage(order: 1, bytes: Uint8List(1))],
+          images: [MessageImage(id: 'i1', order: 1, bytes: Uint8List(1))],
         ),
       ];
       firebaseMessageService.mockLoadMessagesForChat(
@@ -202,7 +202,7 @@ void main() {
       verify(
         () => firebaseStorageService.loadChatImage(
           chatId: chatId,
-          imageFileName: 'file1.jpg',
+          imageId: 'i1',
         ),
       ).called(1);
     },
@@ -220,12 +220,18 @@ void main() {
       final DateTime dateTime = DateTime(2023, 1, 1);
       const String text = 'message';
       final List<MessageImage> images = [
-        MessageImage(order: 1, bytes: Uint8List(1)),
-        MessageImage(order: 2, bytes: Uint8List(2)),
+        MessageImage(id: 'i1', order: 1, bytes: Uint8List(1)),
+        MessageImage(id: 'i2', order: 2, bytes: Uint8List(2)),
       ];
       const List<MessageImageDto> imageDtos = [
-        MessageImageDto(order: 1, fileName: 'file1.jpg'),
-        MessageImageDto(order: 2, fileName: 'file2.jpg'),
+        MessageImageDto(
+          id: 'i1',
+          order: 1,
+        ),
+        MessageImageDto(
+          id: 'i2',
+          order: 2,
+        ),
       ];
       final MessageDto addedMessageDto = MessageDto(
         id: messageId,

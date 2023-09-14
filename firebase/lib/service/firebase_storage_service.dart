@@ -10,9 +10,9 @@ class FirebaseStorageService {
 
   Future<Uint8List?> loadChatImage({
     required String chatId,
-    required String imageFileName,
+    required String imageId,
   }) async {
-    final String imagePath = _createPathForChatImage(chatId, imageFileName);
+    final String imagePath = _createPathForChatImage(chatId, imageId);
     final imageRef = _storageRef.child(imagePath);
     return await imageRef.getData();
   }
@@ -22,17 +22,17 @@ class FirebaseStorageService {
     required Uint8List imageBytes,
   }) async {
     const uuid = Uuid();
-    final imageFileName = '${uuid.v4()}.jpg';
-    final String imagePath = _createPathForChatImage(chatId, imageFileName);
+    final imageId = uuid.v4();
+    final String imagePath = _createPathForChatImage(chatId, imageId);
     final imageRef = _storageRef.child(imagePath);
     try {
       await imageRef.putData(imageBytes);
-      return imageFileName;
+      return imageId;
     } catch (_) {
       return null;
     }
   }
 
   String _createPathForChatImage(String chatId, String imageFileName) =>
-      'ChatImages/$chatId/$imageFileName';
+      'ChatImages/$chatId/$imageFileName.jpg';
 }
