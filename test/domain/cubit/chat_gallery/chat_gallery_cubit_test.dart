@@ -5,12 +5,13 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/domain/cubit/chat_gallery_cubit.dart';
+import 'package:runnoter/domain/cubit/chat_gallery/chat_gallery_cubit.dart';
+import 'package:runnoter/domain/cubit/chat_gallery/chat_gallery_state.dart';
 import 'package:runnoter/domain/entity/message.dart';
 import 'package:runnoter/domain/repository/message_repository.dart';
 
-import '../../creators/message_creator.dart';
-import '../../mock/domain/repository/mock_message_repository.dart';
+import '../../../creators/message_creator.dart';
+import '../../../mock/domain/repository/mock_message_repository.dart';
 
 void main() {
   final messageRepository = MockMessageRepository();
@@ -83,17 +84,62 @@ void main() {
           messages$.add(updatedMessages);
         },
         expect: () => [
-          [Uint8List(1), Uint8List(2), Uint8List(3)],
-          [
-            Uint8List(1),
-            Uint8List(2),
-            Uint8List(3),
-            Uint8List(4),
-            Uint8List(5),
-            Uint8List(6),
-          ],
+          ChatGalleryState(
+            images: [Uint8List(1), Uint8List(2), Uint8List(3)],
+          ),
+          ChatGalleryState(
+            images: [
+              Uint8List(1),
+              Uint8List(2),
+              Uint8List(3),
+              Uint8List(4),
+              Uint8List(5),
+              Uint8List(6),
+            ],
+          ),
         ],
       );
     },
+  );
+
+  blocTest(
+    'image selected, '
+    'images do not exist, '
+    'should do nothing',
+    build: () => ChatGalleryCubit(chatId: chatId),
+    act: (cubit) => cubit.imageSelected(2),
+    expect: () => [],
+  );
+
+  blocTest(
+    'image selected, '
+    'given index is out of list range, '
+    'should do nothing',
+    build: () => ChatGalleryCubit(
+      chatId: chatId,
+      initialState: ChatGalleryState(
+        images: [Uint8List(1), Uint8List(2), Uint8List(3)],
+      ),
+    ),
+    act: (cubit) => cubit.imageSelected(4),
+    expect: () => [],
+  );
+
+  blocTest(
+    'image selected, '
+    'should assign  image at given index to selectedImage param',
+    build: () => ChatGalleryCubit(
+      chatId: chatId,
+      initialState: ChatGalleryState(
+        images: [Uint8List(1), Uint8List(2), Uint8List(3)],
+      ),
+    ),
+    act: (cubit) => cubit.imageSelected(1),
+    expect: () => [
+      ChatGalleryState(
+        images: [Uint8List(1), Uint8List(2), Uint8List(3)],
+        selectedImage: Uint8List(2),
+      ),
+    ],
   );
 }
