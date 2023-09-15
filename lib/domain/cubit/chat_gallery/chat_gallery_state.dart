@@ -11,6 +11,18 @@ class ChatGalleryState extends Equatable {
   @override
   List<Object?> get props => [images, selectedImage];
 
+  bool get isSelectedImageFirstOne {
+    if (images == null || selectedImage == null) return false;
+    final int selectedImageIndex = images!.indexOf(selectedImage!);
+    return selectedImageIndex == 0;
+  }
+
+  bool get isSelectedImageLastOne {
+    if (images == null || selectedImage == null) return false;
+    final int selectedImageIndex = images!.indexOf(selectedImage!);
+    return selectedImageIndex == images!.length - 1;
+  }
+
   ChatGalleryState copyWith({
     List<MessageImage>? images,
     MessageImage? selectedImage,

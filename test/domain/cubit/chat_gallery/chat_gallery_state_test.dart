@@ -10,6 +10,132 @@ void main() {
   setUp(() => state = const ChatGalleryState());
 
   test(
+    'is selected image first one, '
+    'images list is empty, '
+    'should be false',
+    () {
+      state = state.copyWith(
+        selectedImage: createMessageImage(id: 'i1'),
+      );
+
+      expect(state.isSelectedImageFirstOne, false);
+    },
+  );
+
+  test(
+    'is selected image first one, '
+    'selected image is null, '
+    'should be false',
+    () {
+      state = state.copyWith(
+        images: [
+          createMessageImage(id: 'i1'),
+          createMessageImage(id: 'i2'),
+        ],
+      );
+
+      expect(state.isSelectedImageFirstOne, false);
+    },
+  );
+
+  test(
+    'is selected image first one, '
+    'selected image is not first in the list of images, '
+    'should be false',
+    () {
+      state = state.copyWith(
+        images: [
+          createMessageImage(id: 'i1'),
+          createMessageImage(id: 'i2'),
+        ],
+        selectedImage: createMessageImage(id: 'i2'),
+      );
+
+      expect(state.isSelectedImageFirstOne, false);
+    },
+  );
+
+  test(
+    'is selected image first one, '
+    'selected image is first in the list of images, '
+    'should be true',
+    () {
+      state = state.copyWith(
+        images: [
+          createMessageImage(id: 'i1'),
+          createMessageImage(id: 'i2'),
+        ],
+        selectedImage: createMessageImage(id: 'i1'),
+      );
+
+      expect(state.isSelectedImageFirstOne, true);
+    },
+  );
+
+  test(
+    'is selected image last one, '
+    'images list is empty, '
+    'should be false',
+    () {
+      state = state.copyWith(
+        selectedImage: createMessageImage(id: 'i1'),
+      );
+
+      expect(state.isSelectedImageLastOne, false);
+    },
+  );
+
+  test(
+    'is selected image last one, '
+    'selected image is null, '
+    'should be false',
+    () {
+      state = state.copyWith(
+        images: [
+          createMessageImage(id: 'i1'),
+          createMessageImage(id: 'i2'),
+        ],
+      );
+
+      expect(state.isSelectedImageLastOne, false);
+    },
+  );
+
+  test(
+    'is selected image last one, '
+    'selected image is not last in the list of images, '
+    'should be false',
+    () {
+      state = state.copyWith(
+        images: [
+          createMessageImage(id: 'i1'),
+          createMessageImage(id: 'i2'),
+        ],
+        selectedImage: createMessageImage(id: 'i1'),
+      );
+
+      expect(state.isSelectedImageLastOne, false);
+    },
+  );
+
+  test(
+    'is selected image last one, '
+    'selected image is last in the list of images, '
+    'should be true',
+    () {
+      state = state.copyWith(
+        images: [
+          createMessageImage(id: 'i1'),
+          createMessageImage(id: 'i2'),
+        ],
+        selectedImage: createMessageImage(id: 'i2'),
+      );
+
+      expect(state.isSelectedImageLastOne, true);
+    },
+  );
+
+  test(
     'copy with images, '
     'should set new value or should copy current value if new value is null',
     () {
