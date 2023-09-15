@@ -74,10 +74,6 @@ class _State extends State<ChatImagePreviewSelectedImage> {
     final int page = state.images!.indexWhere(
       (image) => image.id == state.selectedImage!.id,
     );
-    _pageController.animateToPage(
-      page,
-      duration: const Duration(milliseconds: 500),
-      curve: Curves.easeInOut,
-    );
+    _pageController.jumpToPage(page);
   }
 }
