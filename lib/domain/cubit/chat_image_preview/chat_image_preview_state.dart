@@ -1,12 +1,10 @@
-import 'package:equatable/equatable.dart';
+part of 'chat_image_preview_cubit.dart';
 
-import '../../entity/message.dart';
-
-class ChatGalleryState extends Equatable {
+class ChatImagePreviewState extends Equatable {
   final List<MessageImage>? images;
   final MessageImage? selectedImage;
 
-  const ChatGalleryState({this.images, this.selectedImage});
+  const ChatImagePreviewState({this.images, this.selectedImage});
 
   @override
   List<Object?> get props => [images, selectedImage];
@@ -23,11 +21,11 @@ class ChatGalleryState extends Equatable {
     return selectedImageIndex == images!.length - 1;
   }
 
-  ChatGalleryState copyWith({
+  ChatImagePreviewState copyWith({
     List<MessageImage>? images,
     MessageImage? selectedImage,
   }) =>
-      ChatGalleryState(
+      ChatImagePreviewState(
         images: images ?? this.images,
         selectedImage: selectedImage ?? this.selectedImage,
       );

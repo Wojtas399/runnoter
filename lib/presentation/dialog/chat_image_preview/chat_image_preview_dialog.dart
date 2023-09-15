@@ -2,8 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/cubit/chat_gallery/chat_gallery_cubit.dart';
-import '../../../domain/cubit/chat_gallery/chat_gallery_state.dart';
+import '../../../domain/cubit/chat_image_preview/chat_image_preview_cubit.dart';
 import '../../../domain/entity/message.dart';
 import '../../component/loading_info_component.dart';
 import 'chat_image_preview_all_images.dart';
@@ -22,9 +21,9 @@ class ChatImagePreviewDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => ChatGalleryCubit(
+      create: (_) => ChatImagePreviewCubit(
         chatId: chatId,
-        initialState: ChatGalleryState(selectedImage: selectedImage),
+        initialState: ChatImagePreviewState(selectedImage: selectedImage),
       )..initialize(),
       child: const _Content(),
     );
@@ -58,7 +57,8 @@ class _ImagesContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ChatGalleryState cubitState = context.watch<ChatGalleryCubit>().state;
+    final ChatImagePreviewState cubitState =
+        context.watch<ChatImagePreviewCubit>().state;
 
     return cubitState.images == null && cubitState.selectedImage != null
         ? const LoadingInfo(textColor: Colors.white)
@@ -92,7 +92,7 @@ class _PreviousImageButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool isDisabled = context.select(
-      (ChatGalleryCubit cubit) => cubit.state.isSelectedImageFirstOne,
+      (ChatImagePreviewCubit cubit) => cubit.state.isSelectedImageFirstOne,
     );
 
     return Padding(
@@ -100,8 +100,9 @@ class _PreviousImageButton extends StatelessWidget {
       child: IconButton(
         color: Colors.white,
         disabledColor: Colors.white.withOpacity(0.5),
-        onPressed:
-            isDisabled ? null : context.read<ChatGalleryCubit>().previousImage,
+        onPressed: isDisabled
+            ? null
+            : context.read<ChatImagePreviewCubit>().previousImage,
         icon: const Icon(Icons.arrow_back_ios),
       ),
     );
@@ -114,7 +115,7 @@ class _NextImageButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool isDisabled = context.select(
-      (ChatGalleryCubit cubit) => cubit.state.isSelectedImageLastOne,
+      (ChatImagePreviewCubit cubit) => cubit.state.isSelectedImageLastOne,
     );
 
     return Padding(
@@ -123,7 +124,7 @@ class _NextImageButton extends StatelessWidget {
         color: Colors.white,
         disabledColor: Colors.white.withOpacity(0.5),
         onPressed:
-            isDisabled ? null : context.read<ChatGalleryCubit>().nextImage,
+            isDisabled ? null : context.read<ChatImagePreviewCubit>().nextImage,
         icon: const Icon(Icons.arrow_forward_ios),
       ),
     );

@@ -1,13 +1,13 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:runnoter/domain/cubit/chat_gallery/chat_gallery_state.dart';
+import 'package:runnoter/domain/cubit/chat_image_preview/chat_image_preview_cubit.dart';
 import 'package:runnoter/domain/entity/message.dart';
 
 import '../../../creators/message_image_creator.dart';
 
 void main() {
-  late ChatGalleryState state;
+  late ChatImagePreviewState state;
 
-  setUp(() => state = const ChatGalleryState());
+  setUp(() => state = const ChatImagePreviewState());
 
   test(
     'is selected image first one, '

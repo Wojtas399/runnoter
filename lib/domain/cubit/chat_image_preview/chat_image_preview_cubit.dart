@@ -1,21 +1,23 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
+import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../dependency_injection.dart';
 import '../../entity/message.dart';
 import '../../repository/message_repository.dart';
-import 'chat_gallery_state.dart';
 
-class ChatGalleryCubit extends Cubit<ChatGalleryState> {
+part 'chat_image_preview_state.dart';
+
+class ChatImagePreviewCubit extends Cubit<ChatImagePreviewState> {
   final MessageRepository _messageRepository;
   final String _chatId;
   StreamSubscription<List<MessageImage>?>? _imagesListener;
 
-  ChatGalleryCubit({
+  ChatImagePreviewCubit({
     required String chatId,
-    ChatGalleryState initialState = const ChatGalleryState(),
+    ChatImagePreviewState initialState = const ChatImagePreviewState(),
   })  : _messageRepository = getIt<MessageRepository>(),
         _chatId = chatId,
         super(initialState);

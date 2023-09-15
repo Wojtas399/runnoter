@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/cubit/chat_gallery/chat_gallery_cubit.dart';
-import '../../../domain/cubit/chat_gallery/chat_gallery_state.dart';
+import '../../../domain/cubit/chat_image_preview/chat_image_preview_cubit.dart';
 import '../../../domain/entity/message.dart';
 
 class ChatImagePreviewAllImages extends StatelessWidget {
@@ -10,7 +9,8 @@ class ChatImagePreviewAllImages extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ChatGalleryState cubitState = context.watch<ChatGalleryCubit>().state;
+    final ChatImagePreviewState cubitState =
+        context.watch<ChatImagePreviewCubit>().state;
     final List<MessageImage> images = cubitState.images!;
 
     return ListView.builder(
@@ -48,7 +48,8 @@ class _Image extends StatelessWidget {
     return MouseRegion(
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
-        onTap: () => context.read<ChatGalleryCubit>().imageSelected(image.id),
+        onTap: () =>
+            context.read<ChatImagePreviewCubit>().imageSelected(image.id),
         child: Opacity(
           opacity: isSelected ? 1 : 0.5,
           child: Padding(
