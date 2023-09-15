@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -165,7 +166,11 @@ class _Images extends StatelessWidget {
             final double width = imagesInRow == 1
                 ? double.infinity
                 : (maxMessageWidth - 2 * cardPadding) / imagesInRow;
-            final double? height = imagesInRow == 1 ? null : 90;
+            final double? height = imagesInRow == 1
+                ? null
+                : kIsWeb
+                    ? 210
+                    : 90;
 
             return MouseRegion(
               cursor: SystemMouseCursors.click,
