@@ -6,11 +6,9 @@ import 'text/title_text_components.dart';
 
 class LoadingInfo extends StatelessWidget {
   final String? loadingText;
+  final Color? textColor;
 
-  const LoadingInfo({
-    super.key,
-    this.loadingText,
-  });
+  const LoadingInfo({super.key, this.loadingText, this.textColor});
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +21,7 @@ class LoadingInfo extends StatelessWidget {
         children: [
           const CircularProgressIndicator(),
           const Gap16(),
-          TitleSmall(loadingText),
+          TitleSmall(loadingText, color: textColor),
         ],
       ),
     );

@@ -1,0 +1,131 @@
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../../domain/cubit/chat_gallery/chat_gallery_cubit.dart';
+import '../../../domain/cubit/chat_gallery/chat_gallery_state.dart';
+import '../../../domain/entity/message.dart';
+import '../../component/loading_info_component.dart';
+import 'chat_image_preview_all_images.dart';
+import 'chat_image_preview_gallery.dart';
+
+class ChatImagePreviewDialog extends StatelessWidget {
+  final String chatId;
+  final MessageImage selectedImage;
+
+  const ChatImagePreviewDialog({
+    super.key,
+    required this.chatId,
+    required this.selectedImage,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (_) => ChatGalleryCubit(
+        chatId: chatId,
+        initialState: ChatGalleryState(selectedImage: selectedImage),
+      )..initialize(),
+      child: const _Content(),
+    );
+  }
+}
+
+class _Content extends StatelessWidget {
+  const _Content();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        foregroundColor: Colors.white,
+        leading: const CloseButton(),
+      ),
+      body: const SafeArea(
+        child: Padding(
+          padding: EdgeInsets.only(bottom: 16),
+          child: _ImagesContent(),
+        ),
+      ),
+    );
+  }
+}
+
+class _ImagesContent extends StatelessWidget {
+  const _ImagesContent();
+
+  @override
+  Widget build(BuildContext context) {
+    final ChatGalleryState cubitState = context.watch<ChatGalleryCubit>().state;
+
+    return cubitState.images == null && cubitState.selectedImage != null
+        ? const LoadingInfo(textColor: Colors.white)
+        : const Column(
+            children: [
+              Expanded(
+                child: kIsWeb
+                    ? Row(
+                        children: [
+                          _PreviousImageButton(),
+                          Expanded(
+                            child: ChatImagePreviewSelectedImage(),
+                          ),
+                          _NextImageButton()
+                        ],
+                      )
+                    : ChatImagePreviewSelectedImage(),
+              ),
+              SizedBox(
+                height: 75,
+                child: ChatImagePreviewAllImages(),
+              ),
+            ],
+          );
+  }
+}
+
+class _PreviousImageButton extends StatelessWidget {
+  const _PreviousImageButton();
+
+  @override
+  Widget build(BuildContext context) {
+    final bool isDisabled = context.select(
+      (ChatGalleryCubit cubit) => cubit.state.isSelectedImageFirstOne,
+    );
+
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: IconButton(
+        color: Colors.white,
+        disabledColor: Colors.white.withOpacity(0.5),
+        onPressed:
+            isDisabled ? null : context.read<ChatGalleryCubit>().previousImage,
+        icon: const Icon(Icons.arrow_back_ios),
+      ),
+    );
+  }
+}
+
+class _NextImageButton extends StatelessWidget {
+  const _NextImageButton();
+
+  @override
+  Widget build(BuildContext context) {
+    final bool isDisabled = context.select(
+      (ChatGalleryCubit cubit) => cubit.state.isSelectedImageLastOne,
+    );
+
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: IconButton(
+        color: Colors.white,
+        disabledColor: Colors.white.withOpacity(0.5),
+        onPressed:
+            isDisabled ? null : context.read<ChatGalleryCubit>().nextImage,
+        icon: const Icon(Icons.arrow_forward_ios),
+      ),
+    );
+  }
+}

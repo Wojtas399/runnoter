@@ -258,13 +258,13 @@ void main() {
           chatId: chatId,
           imageBytes: Uint8List(1),
         ),
-      ).thenAnswer((_) => Future.value('file1.jpg'));
+      ).thenAnswer((_) => Future.value('i1'));
       when(
         () => firebaseStorageService.uploadChatImage(
           chatId: chatId,
           imageBytes: Uint8List(2),
         ),
-      ).thenAnswer((_) => Future.value('file2.jpg'));
+      ).thenAnswer((_) => Future.value('i2'));
       firebaseMessageService.mockAddMessageToChat(
         addedMessageDto: addedMessageDto,
       );

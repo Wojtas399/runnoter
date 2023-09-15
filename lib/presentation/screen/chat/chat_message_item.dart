@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../domain/cubit/chat/chat_cubit.dart';
 import '../../../domain/entity/message.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/text/body_text_components.dart';
 import '../../component/text/label_text_components.dart';
+import '../../dialog/chat_image_preview/chat_image_preview_dialog.dart';
 import '../../extension/widgets_list_extensions.dart';
 import '../../formatter/date_formatter.dart';
+import '../../service/dialog_service.dart';
 
 class ChatMessageItem extends StatelessWidget {
   final double maxWidth;
@@ -163,18 +167,33 @@ class _Images extends StatelessWidget {
                 : (maxMessageWidth - 2 * cardPadding) / imagesInRow;
             final double? height = imagesInRow == 1 ? null : 90;
 
-            return Container(
-              width: width,
-              height: height,
-              constraints: const BoxConstraints(maxHeight: 400),
-              padding: EdgeInsets.only(
-                right: imageIndex < imagesInRow - 1 ? 8 : 0,
-                bottom: currentRow != numberOfAllRows ? 8 : 0,
+            return MouseRegion(
+              cursor: SystemMouseCursors.click,
+              child: GestureDetector(
+                onTap: () => _onTap(context, image),
+                child: Container(
+                  width: width,
+                  height: height,
+                  constraints: const BoxConstraints(maxHeight: 400),
+                  padding: EdgeInsets.only(
+                    right: imageIndex < imagesInRow - 1 ? 8 : 0,
+                    bottom: currentRow != numberOfAllRows ? 8 : 0,
+                  ),
+                  child: Image.memory(image.bytes, fit: BoxFit.cover),
+                ),
               ),
-              child: Image.memory(image.bytes, fit: BoxFit.cover),
             );
           },
         ),
+      ),
+    );
+  }
+
+  void _onTap(BuildContext context, MessageImage image) {
+    showFullScreenDialog(
+      ChatImagePreviewDialog(
+        chatId: context.read<ChatCubit>().chatId,
+        selectedImage: image,
       ),
     );
   }
