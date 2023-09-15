@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/cubit/chat/chat_cubit.dart';
-import '../../../domain/entity/message.dart';
+import '../../../domain/entity/message_image.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/text/body_text_components.dart';
 import '../../component/text/label_text_components.dart';

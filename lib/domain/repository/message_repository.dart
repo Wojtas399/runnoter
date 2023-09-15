@@ -8,11 +8,10 @@ abstract interface class MessageRepository {
     required String lastVisibleMessageId,
   });
 
-  Future<void> addMessageToChat({
+  Future<String?> addMessageToChat({
     required String chatId,
     required String senderId,
     required DateTime dateTime,
     String? text,
-    List<MessageImage> images = const [],
   });
 }

@@ -96,22 +96,12 @@ class ChatCubit extends CubitWithStatus<ChatState, dynamic, dynamic> {
     if (await _connectivityService.hasDeviceInternetConnection()) {
       final DateTime now = _dateService.getNow();
       emitLoadingStatus();
+      //TODO: Add images to repo
       await _messageRepository.addMessageToChat(
         chatId: chatId,
         senderId: state.loggedUserId!,
         dateTime: now,
         text: state.messageToSend,
-        images: state.imagesToSend
-            .asMap()
-            .entries
-            .map(
-              (entry) => MessageImage(
-                id: '',
-                order: entry.key + 1,
-                bytes: entry.value,
-              ),
-            )
-            .toList(),
       );
       emit(state.copyWith(
         status: const CubitStatusComplete(),

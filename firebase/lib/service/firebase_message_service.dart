@@ -46,7 +46,6 @@ class FirebaseMessageService {
     required String senderId,
     required DateTime dateTime,
     String? text,
-    List<MessageImageDto> images = const [],
   }) async {
     final messageRef = getMessagesRef(chatId).doc();
     final messageDto = MessageDto(
@@ -55,7 +54,6 @@ class FirebaseMessageService {
       senderId: senderId,
       dateTime: dateTime,
       text: text,
-      images: images,
     );
     await messageRef.set(messageDto);
     final docSnapshot = await messageRef.get();

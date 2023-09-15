@@ -30,7 +30,6 @@ class MockMessageRepository extends Mock implements MessageRepository {
         senderId: any(named: 'senderId'),
         dateTime: any(named: 'dateTime'),
         text: any(named: 'text'),
-        images: any(named: 'images'),
       ),
     ).thenAnswer((_) => Future.value());
   }

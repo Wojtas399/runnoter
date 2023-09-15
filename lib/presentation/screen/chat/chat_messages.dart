@@ -75,7 +75,7 @@ class ChatMessages extends StatelessWidget {
                         maxWidth: maxMessageWidth,
                         isSender: loggedUserId == currentMessage.senderId,
                         text: currentMessage.text,
-                        images: currentMessage.images,
+                        images: const [], //TODO
                         dateTime: currentMessage.dateTime,
                       );
                     },

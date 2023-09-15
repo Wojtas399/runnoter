@@ -28,44 +28,15 @@ void main() {
     'initialize',
     () {
       final List<Message> messages = [
-        createMessage(
-          id: 'm1',
-          images: [
-            createMessageImage(id: 'i2', order: 2),
-            createMessageImage(id: 'i1', order: 1),
-          ],
-        ),
-        createMessage(
-          id: 'm2',
-          images: [
-            createMessageImage(id: 'i3', order: 1),
-          ],
-        ),
+        createMessage(id: 'm1'),
+        createMessage(id: 'm2'),
         createMessage(id: 'm3'),
       ];
       final List<Message> updatedMessages = [
-        createMessage(
-          id: 'm1',
-          images: [
-            createMessageImage(id: 'i2', order: 2),
-            createMessageImage(id: 'i1', order: 1),
-          ],
-        ),
-        createMessage(
-          id: 'm2',
-          images: [
-            createMessageImage(id: 'i3', order: 1),
-          ],
-        ),
+        createMessage(id: 'm1'),
+        createMessage(id: 'm2'),
         createMessage(id: 'm3'),
-        createMessage(
-          id: 'm4',
-          images: [
-            createMessageImage(id: 'i6', order: 3),
-            createMessageImage(id: 'i4', order: 1),
-            createMessageImage(id: 'i5', order: 2),
-          ],
-        ),
+        createMessage(id: 'm4'),
       ];
       final StreamController<List<Message>> messages$ = StreamController()
         ..add(messages);
@@ -83,22 +54,8 @@ void main() {
           messages$.add(updatedMessages);
         },
         expect: () => [
-          ChatImagePreviewState(
-            images: [
-              createMessageImage(id: 'i1', order: 1),
-              createMessageImage(id: 'i2', order: 2),
-              createMessageImage(id: 'i3', order: 1),
-            ],
-          ),
-          ChatImagePreviewState(
-            images: [
-              createMessageImage(id: 'i1', order: 1),
-              createMessageImage(id: 'i2', order: 2),
-              createMessageImage(id: 'i3', order: 1),
-              createMessageImage(id: 'i4', order: 1),
-              createMessageImage(id: 'i5', order: 2),
-              createMessageImage(id: 'i6', order: 3),
-            ],
+          const ChatImagePreviewState(
+            images: [],
           ),
         ],
       );

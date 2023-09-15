@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:typed_data';
 
 import 'package:firebase/firebase.dart';
 import 'package:rxdart/rxdart.dart';
@@ -13,11 +12,9 @@ import '../mapper/message_mapper.dart';
 class MessageRepositoryImpl extends StateRepository<Message>
     implements MessageRepository {
   final FirebaseMessageService _dbMessageService;
-  final FirebaseStorageService _dbStorageService;
 
   MessageRepositoryImpl({super.initialData})
-      : _dbMessageService = getIt<FirebaseMessageService>(),
-        _dbStorageService = getIt<FirebaseStorageService>();
+      : _dbMessageService = getIt<FirebaseMessageService>();
 
   @override
   Stream<List<Message>> getMessagesForChat({required String chatId}) {
@@ -59,26 +56,24 @@ class MessageRepositoryImpl extends StateRepository<Message>
   }
 
   @override
-  Future<void> addMessageToChat({
+  Future<String?> addMessageToChat({
     required String chatId,
     required String senderId,
     required DateTime dateTime,
     String? text,
-    List<MessageImage> images = const [],
   }) async {
-    final List<MessageImageDto> uploadedImages =
-        await _uploadImagesToDb(chatId, images);
     final addedMessageDto = await _dbMessageService.addMessageToChat(
       chatId: chatId,
       senderId: senderId,
       dateTime: dateTime,
       text: text,
-      images: uploadedImages,
     );
     if (addedMessageDto != null) {
-      final Message addedMessage = mapMessageFromDto(addedMessageDto, images);
+      final Message addedMessage = mapMessageFromDto(addedMessageDto);
       addEntity(addedMessage);
+      return addedMessageDto.id;
     }
+    return null;
   }
 
   Future<void> _loadLatestMessagesForChatFromDb(
@@ -107,45 +102,8 @@ class MessageRepositoryImpl extends StateRepository<Message>
   Future<List<Message>> _mapMessagesFromDtos(List<MessageDto> dtos) async {
     final List<Message> messages = [];
     for (final messageDto in dtos) {
-      messages.add(await _loadImagesFromDbForMessage(messageDto));
+      messages.add(mapMessageFromDto(messageDto));
     }
     return messages;
-  }
-
-  Future<Message> _loadImagesFromDbForMessage(MessageDto messageDto) async {
-    final List<MessageImage> loadedImages = [];
-    for (final imageDto in messageDto.images) {
-      final Uint8List? imageBytes = await _dbStorageService.loadChatImage(
-        chatId: messageDto.chatId,
-        imageId: imageDto.id,
-      );
-      if (imageBytes != null) {
-        loadedImages.add(
-          MessageImage(
-            id: imageDto.id,
-            order: imageDto.order,
-            bytes: imageBytes,
-          ),
-        );
-      }
-    }
-    return mapMessageFromDto(messageDto, loadedImages);
-  }
-
-  Future<List<MessageImageDto>> _uploadImagesToDb(
-    String chatId,
-    List<MessageImage> images,
-  ) async {
-    final List<MessageImageDto> uploadedImages = [];
-    for (final image in images) {
-      final String? imageId = await _dbStorageService.uploadChatImage(
-        chatId: chatId,
-        imageBytes: image.bytes,
-      );
-      if (imageId != null) {
-        uploadedImages.add(MessageImageDto(id: imageId, order: image.order));
-      }
-    }
-    return uploadedImages;
   }
 }

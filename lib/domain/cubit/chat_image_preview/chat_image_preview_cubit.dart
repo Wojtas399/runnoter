@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../dependency_injection.dart';
 import '../../entity/message.dart';
+import '../../entity/message_image.dart';
 import '../../repository/message_repository.dart';
 
 part 'chat_image_preview_state.dart';
@@ -70,7 +71,8 @@ class ChatImagePreviewCubit extends Cubit<ChatImagePreviewState> {
   }
 
   List<MessageImage> _sortMessageImagesByOrder(Message message) {
-    final List<MessageImage> sortedImages = [...message.images];
+    //TODO
+    final List<MessageImage> sortedImages = [];
     sortedImages.sortBy<num>((MessageImage image) => image.order);
     return sortedImages;
   }
