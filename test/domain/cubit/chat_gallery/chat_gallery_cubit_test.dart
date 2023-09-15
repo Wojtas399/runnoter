@@ -88,17 +88,17 @@ void main() {
             images: [
               createMessageImage(id: 'i1', order: 1),
               createMessageImage(id: 'i2', order: 2),
-              createMessageImage(id: 'i3', order: 3),
+              createMessageImage(id: 'i3', order: 1),
             ],
           ),
           ChatGalleryState(
             images: [
               createMessageImage(id: 'i1', order: 1),
               createMessageImage(id: 'i2', order: 2),
-              createMessageImage(id: 'i3', order: 3),
-              createMessageImage(id: 'i4', order: 4),
-              createMessageImage(id: 'i5', order: 5),
-              createMessageImage(id: 'i6', order: 6),
+              createMessageImage(id: 'i3', order: 1),
+              createMessageImage(id: 'i4', order: 1),
+              createMessageImage(id: 'i5', order: 2),
+              createMessageImage(id: 'i6', order: 3),
             ],
           ),
         ],
@@ -137,6 +137,130 @@ void main() {
           createMessageImage(id: 'i3', order: 3),
         ],
         selectedImage: createMessageImage(id: 'i2', order: 2),
+      ),
+    ],
+  );
+
+  blocTest(
+    'previous image, '
+    'images do not exist, '
+    'should do nothing',
+    build: () => ChatGalleryCubit(
+      chatId: chatId,
+      initialState: ChatGalleryState(
+        selectedImage: createMessageImage(id: 'i1'),
+      ),
+    ),
+    act: (cubit) => cubit.previousImage(),
+    expect: () => [],
+  );
+
+  blocTest(
+    'previous image, '
+    'selected image does not exist, '
+    'should do nothing',
+    build: () => ChatGalleryCubit(
+      chatId: chatId,
+      initialState: ChatGalleryState(
+        images: [createMessageImage(id: 'i1'), createMessageImage(id: 'i2')],
+      ),
+    ),
+    act: (cubit) => cubit.previousImage(),
+    expect: () => [],
+  );
+
+  blocTest(
+    'previous image, '
+    'selected image is first in the list, '
+    'should do nothing',
+    build: () => ChatGalleryCubit(
+      chatId: chatId,
+      initialState: ChatGalleryState(
+        images: [createMessageImage(id: 'i1'), createMessageImage(id: 'i2')],
+        selectedImage: createMessageImage(id: 'i1'),
+      ),
+    ),
+    act: (cubit) => cubit.previousImage(),
+    expect: () => [],
+  );
+
+  blocTest(
+    'previous image, '
+    'should assign previous image in the list to selectedImage param',
+    build: () => ChatGalleryCubit(
+      chatId: chatId,
+      initialState: ChatGalleryState(
+        images: [createMessageImage(id: 'i1'), createMessageImage(id: 'i2')],
+        selectedImage: createMessageImage(id: 'i2'),
+      ),
+    ),
+    act: (cubit) => cubit.previousImage(),
+    expect: () => [
+      ChatGalleryState(
+        images: [createMessageImage(id: 'i1'), createMessageImage(id: 'i2')],
+        selectedImage: createMessageImage(id: 'i1'),
+      ),
+    ],
+  );
+
+  blocTest(
+    'next image, '
+    'images do not exist, '
+    'should do nothing',
+    build: () => ChatGalleryCubit(
+      chatId: chatId,
+      initialState: ChatGalleryState(
+        selectedImage: createMessageImage(id: 'i1'),
+      ),
+    ),
+    act: (cubit) => cubit.nextImage(),
+    expect: () => [],
+  );
+
+  blocTest(
+    'next image, '
+    'selected image does not exist, '
+    'should do nothing',
+    build: () => ChatGalleryCubit(
+      chatId: chatId,
+      initialState: ChatGalleryState(
+        images: [createMessageImage(id: 'i1'), createMessageImage(id: 'i2')],
+      ),
+    ),
+    act: (cubit) => cubit.nextImage(),
+    expect: () => [],
+  );
+
+  blocTest(
+    'next image, '
+    'selected image is last in the list, '
+    'should do nothing',
+    build: () => ChatGalleryCubit(
+      chatId: chatId,
+      initialState: ChatGalleryState(
+        images: [createMessageImage(id: 'i1'), createMessageImage(id: 'i2')],
+        selectedImage: createMessageImage(id: 'i2'),
+      ),
+    ),
+    act: (cubit) => cubit.nextImage(),
+    expect: () => [],
+  );
+
+  blocTest(
+    'next image, '
+    'should assign next image in the list to selectedImage param',
+    build: () => ChatGalleryCubit(
+      chatId: chatId,
+      initialState: ChatGalleryState(
+        images: [createMessageImage(id: 'i1'), createMessageImage(id: 'i2')],
+        selectedImage: createMessageImage(id: 'i1'),
+      ),
+    ),
+    act: (cubit) => cubit.nextImage(),
+    expect: () => [
+      ChatGalleryState(
+        images: [createMessageImage(id: 'i1'), createMessageImage(id: 'i2')],
+        selectedImage: createMessageImage(id: 'i2'),
       ),
     ],
   );

@@ -42,6 +42,26 @@ class ChatGalleryCubit extends Cubit<ChatGalleryState> {
     ));
   }
 
+  void previousImage() {
+    if (state.images == null || state.selectedImage == null) return;
+    final int selectedImageIndex = state.images!.indexOf(state.selectedImage!);
+    if (selectedImageIndex > 0) {
+      emit(state.copyWith(
+        selectedImage: state.images![selectedImageIndex - 1],
+      ));
+    }
+  }
+
+  void nextImage() {
+    if (state.images == null || state.selectedImage == null) return;
+    final int selectedImageIndex = state.images!.indexOf(state.selectedImage!);
+    if (selectedImageIndex < state.images!.length - 1) {
+      emit(state.copyWith(
+        selectedImage: state.images![selectedImageIndex + 1],
+      ));
+    }
+  }
+
   List<MessageImage> _extractSortedImagesFromMessages(List<Message> messages) {
     final imagesFromMessages = messages.map(_sortMessageImagesByOrder);
     return [for (final messageImages in imagesFromMessages) ...messageImages];
