@@ -97,7 +97,7 @@ class ChatCubit extends CubitWithStatus<ChatState, dynamic, dynamic> {
       final DateTime now = _dateService.getNow();
       emitLoadingStatus();
       //TODO: Add images to repo
-      await _messageRepository.addMessageToChat(
+      await _messageRepository.addMessage(
         chatId: chatId,
         senderId: state.loggedUserId!,
         dateTime: now,

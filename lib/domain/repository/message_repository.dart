@@ -8,7 +8,7 @@ abstract interface class MessageRepository {
     required String lastVisibleMessageId,
   });
 
-  Future<String?> addMessageToChat({
+  Future<String?> addMessage({
     required String chatId,
     required String senderId,
     required DateTime dateTime,

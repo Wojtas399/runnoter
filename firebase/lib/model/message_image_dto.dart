@@ -6,7 +6,7 @@ class MessageImageDto extends Equatable {
 
   const MessageImageDto({required this.id, required this.order});
 
-  MessageImageDto.fromJson(Map<String, dynamic>? json)
+  MessageImageDto.fromJson(final Map<String, dynamic>? json)
       : this(
           id: json?[_idField],
           order: json?[_orderField],

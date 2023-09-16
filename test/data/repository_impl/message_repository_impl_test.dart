@@ -34,25 +34,26 @@ void main() {
     () async {
       const String chatId = 'c1';
       final List<Message> existingMessages = [
-        createMessage(id: 'm1', chatId: chatId),
-        createMessage(id: 'm2', chatId: 'c2'),
-        createMessage(id: 'm3', chatId: chatId),
+        createMessage(id: 'm1', chatId: chatId, text: 'text1'),
+        createMessage(id: 'm2', chatId: 'c2', text: 'text2'),
+        createMessage(id: 'm3', chatId: chatId, text: 'text3'),
       ];
       final List<MessageDto> loadedMessageDtos = [
-        createMessageDto(id: 'm4', chatId: chatId),
-        createMessageDto(id: 'm5', chatId: chatId),
+        createMessageDto(id: 'm4', chatId: chatId, text: 'text4'),
+        createMessageDto(id: 'm5', chatId: chatId, text: 'text5'),
       ];
       final List<Message> loadedMessages = [
-        createMessage(id: 'm4', chatId: chatId),
-        createMessage(id: 'm5', chatId: chatId),
+        createMessage(id: 'm4', chatId: chatId, text: 'text4'),
+        createMessage(id: 'm5', chatId: chatId, text: 'text5'),
       ];
       final MessageDto firstAddedMessageDto =
-          createMessageDto(id: 'm6', chatId: chatId);
+          createMessageDto(id: 'm6', chatId: chatId, text: 'text6');
       final MessageDto secondAddedMessageDto =
-          createMessageDto(id: 'm7', chatId: chatId);
-      final Message firstAddedMessage = createMessage(id: 'm6', chatId: chatId);
+          createMessageDto(id: 'm7', chatId: chatId, text: 'text7');
+      final Message firstAddedMessage =
+          createMessage(id: 'm6', chatId: chatId, text: 'text6');
       final Message secondAddedMessage =
-          createMessage(id: 'm7', chatId: chatId);
+          createMessage(id: 'm7', chatId: chatId, text: 'text7');
       final StreamController<List<MessageDto>> addedMessages$ =
           StreamController()..add([]);
       firebaseMessageService.mockLoadMessagesForChat(
@@ -112,16 +113,16 @@ void main() {
       const String chatId = 'c1';
       const String lastVisibleMessageId = 'm1';
       final List<Message> existingMessages = [
-        createMessage(id: 'm1', chatId: chatId),
-        createMessage(id: 'm2', chatId: chatId),
+        createMessage(id: 'm1', chatId: chatId, text: 'text1'),
+        createMessage(id: 'm2', chatId: chatId, text: 'text2'),
       ];
       final List<MessageDto> loadedMessageDtos = [
-        createMessageDto(id: 'm3', chatId: chatId),
-        createMessageDto(id: 'm4', chatId: chatId),
+        createMessageDto(id: 'm3', chatId: chatId, text: 'text3'),
+        createMessageDto(id: 'm4', chatId: chatId, text: 'text4'),
       ];
       final List<Message> loadedMessages = [
-        createMessage(id: 'm3', chatId: chatId),
-        createMessage(id: 'm4', chatId: chatId),
+        createMessage(id: 'm3', chatId: chatId, text: 'text3'),
+        createMessage(id: 'm4', chatId: chatId, text: 'text4'),
       ];
       firebaseMessageService.mockLoadMessagesForChat(
         messageDtos: loadedMessageDtos,
@@ -149,7 +150,7 @@ void main() {
   );
 
   test(
-    'add message to chat, '
+    'add message, '
     'should call firebase storage service method to upload images and '
     'should call firebase message service method to add message to chat and '
     'should add new message to repo',
@@ -177,12 +178,10 @@ void main() {
         createMessage(id: 'm1'),
         createMessage(id: 'm2'),
       ];
-      firebaseMessageService.mockAddMessageToChat(
-        addedMessageDto: addedMessageDto,
-      );
+      firebaseMessageService.mockAddMessage(addedMessageDto: addedMessageDto);
       repository = MessageRepositoryImpl(initialData: existingMessages);
 
-      await repository.addMessageToChat(
+      await repository.addMessage(
         chatId: chatId,
         senderId: senderId,
         dateTime: dateTime,
@@ -196,7 +195,7 @@ void main() {
         ]),
       );
       verify(
-        () => firebaseMessageService.addMessageToChat(
+        () => firebaseMessageService.addMessage(
           chatId: chatId,
           senderId: senderId,
           dateTime: dateTime,

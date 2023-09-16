@@ -9,14 +9,8 @@ void main() {
     'from json, '
     'should map json to dto model',
     () {
-      final Map<String, dynamic> json = {
-        'id': id,
-        'order': order,
-      };
-      const MessageImageDto expectedDto = MessageImageDto(
-        id: id,
-        order: order,
-      );
+      final Map<String, dynamic> json = {'id': id, 'order': order};
+      const MessageImageDto expectedDto = MessageImageDto(id: id, order: order);
 
       final MessageImageDto dto = MessageImageDto.fromJson(json);
 
@@ -28,14 +22,8 @@ void main() {
     'to json, '
     'should map dto model to json',
     () {
-      const MessageImageDto dto = MessageImageDto(
-        id: id,
-        order: order,
-      );
-      final Map<String, dynamic> expectedJson = {
-        'id': id,
-        'order': order,
-      };
+      const MessageImageDto dto = MessageImageDto(id: id, order: order);
+      final Map<String, dynamic> expectedJson = {'id': id, 'order': order};
 
       final Map<String, dynamic> json = dto.toJson();
 

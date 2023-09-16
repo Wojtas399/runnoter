@@ -8,22 +8,22 @@ class FirebaseStorageService {
 
   FirebaseStorageService() : _storageRef = FirebaseStorage.instance.ref();
 
-  Future<Uint8List?> loadChatImage({
-    required String chatId,
+  Future<Uint8List?> loadMessageImage({
+    required String messageId,
     required String imageId,
   }) async {
-    final String imagePath = _createPathForChatImage(chatId, imageId);
+    final String imagePath = _createPathForMessageImage(messageId, imageId);
     final imageRef = _storageRef.child(imagePath);
     return await imageRef.getData();
   }
 
-  Future<String?> uploadChatImage({
-    required String chatId,
+  Future<String?> uploadMessageImage({
+    required String messageId,
     required Uint8List imageBytes,
   }) async {
     const uuid = Uuid();
     final imageId = uuid.v4();
-    final String imagePath = _createPathForChatImage(chatId, imageId);
+    final String imagePath = _createPathForMessageImage(messageId, imageId);
     final imageRef = _storageRef.child(imagePath);
     try {
       await imageRef.putData(imageBytes);
@@ -33,6 +33,6 @@ class FirebaseStorageService {
     }
   }
 
-  String _createPathForChatImage(String chatId, String imageFileName) =>
-      'ChatImages/$chatId/$imageFileName.jpg';
+  String _createPathForMessageImage(String messageId, String imageId) =>
+      'MessageImages/$messageId/$imageId.jpg';
 }

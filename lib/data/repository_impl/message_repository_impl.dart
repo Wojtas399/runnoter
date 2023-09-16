@@ -56,13 +56,13 @@ class MessageRepositoryImpl extends StateRepository<Message>
   }
 
   @override
-  Future<String?> addMessageToChat({
+  Future<String?> addMessage({
     required String chatId,
     required String senderId,
     required DateTime dateTime,
     String? text,
   }) async {
-    final addedMessageDto = await _dbMessageService.addMessageToChat(
+    final addedMessageDto = await _dbMessageService.addMessage(
       chatId: chatId,
       senderId: senderId,
       dateTime: dateTime,

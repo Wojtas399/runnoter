@@ -14,18 +14,43 @@ class MockFirebaseMessageService extends Mock
     );
   }
 
+  void mockLoadMessageById({MessageDto? messageDto}) {
+    when(
+      () => loadMessageById(
+        messageId: any(named: 'messageId'),
+      ),
+    ).thenAnswer((_) => Future.value(messageDto));
+  }
+
+  void mockLoadMessageContainingImage({MessageDto? messageDto}) {
+    when(
+      () => loadMessageContainingImage(
+        imageId: any(named: 'imageId'),
+      ),
+    ).thenAnswer((_) => Future.value(messageDto));
+  }
+
   void mockLoadMessagesForChat({List<MessageDto>? messageDtos}) {
     when(
       () => loadMessagesForChat(
         chatId: any(named: 'chatId'),
         lastVisibleMessageId: any(named: 'lastVisibleMessageId'),
       ),
-    ).thenAnswer((invocation) => Future.value(messageDtos));
+    ).thenAnswer((_) => Future.value(messageDtos));
   }
 
-  void mockAddMessageToChat({MessageDto? addedMessageDto}) {
+  void mockLoadMessagesWithImagesForChat({List<MessageDto>? messageDtos}) {
     when(
-      () => addMessageToChat(
+      () => loadMessagesWithImagesForChat(
+        chatId: any(named: 'chatId'),
+        lastVisibleMessageId: any(named: 'lastVisibleMessageId'),
+      ),
+    ).thenAnswer((_) => Future.value(messageDtos));
+  }
+
+  void mockAddMessage({MessageDto? addedMessageDto}) {
+    when(
+      () => addMessage(
         chatId: any(named: 'chatId'),
         senderId: any(named: 'senderId'),
         dateTime: any(named: 'dateTime'),

@@ -251,7 +251,7 @@ void main() {
     setUp: () {
       connectivityService.mockHasDeviceInternetConnection(hasConnection: true);
       dateService.mockGetNow(now: DateTime(2023, 1, 1, 12, 30));
-      messageRepository.mockAddMessageToChat();
+      messageRepository.mockAddMessage();
     },
     act: (cubit) => cubit.submitMessage(),
     expect: () => [
@@ -269,7 +269,7 @@ void main() {
       ),
     ],
     verify: (_) => verify(
-      () => messageRepository.addMessageToChat(
+      () => messageRepository.addMessage(
         chatId: chatId,
         senderId: loggedUserId,
         dateTime: DateTime(2023, 1, 1, 12, 30),
