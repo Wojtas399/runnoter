@@ -3,79 +3,97 @@ import 'dart:typed_data';
 import 'package:firebase/firebase.dart';
 
 import '../../dependency_injection.dart';
+import '../../domain/additional_model/custom_exception.dart';
 import '../../domain/entity/message_image.dart';
 import '../../domain/repository/message_image_repository.dart';
 import '../mapper/message_image_mapper.dart';
 
 class MessageImageRepositoryImpl implements MessageImageRepository {
   final FirebaseMessageService _dbMessageService;
+  final FirebaseMessageImageService _dbMessageImageService;
   final FirebaseStorageService _dbStorageService;
 
   MessageImageRepositoryImpl()
       : _dbMessageService = getIt<FirebaseMessageService>(),
+        _dbMessageImageService = getIt<FirebaseMessageImageService>(),
         _dbStorageService = getIt<FirebaseStorageService>();
 
   @override
-  Future<List<MessageImage>?> loadImagesByMessageId({
+  Future<List<MessageImage>> loadImagesByMessageId({
     required final String messageId,
   }) async {
     final MessageDto? messageDto =
         await _dbMessageService.loadMessageById(messageId: messageId);
-    return messageDto == null
-        ? null
-        : await _loadImagesForMessageDto(messageDto);
+    if (messageDto == null) return [];
+    final List<MessageImageDto> imageDtos =
+        await _dbMessageImageService.loadMessageImagesByMessageId(
+      chatId: messageDto.chatId,
+      messageId: messageId,
+    );
+    return await _loadImagesFromStorageForDtos(imageDtos);
   }
 
   @override
   Future<List<MessageImage>> loadImagesForChat({
-    required String chatId,
-    String? lastVisibleImageId,
+    required final String chatId,
+    final String? lastVisibleImageId,
   }) async {
-    String? idOfMessageContainingImage;
-    if (lastVisibleImageId != null) {
-      final MessageDto? messageContainingImage = await _dbMessageService
-          .loadMessageContainingImage(imageId: lastVisibleImageId);
-      idOfMessageContainingImage = messageContainingImage?.id;
-    }
-    final List<MessageDto> messageWithImagesDtos =
-        await _dbMessageService.loadMessagesWithImagesForChat(
+    final List<MessageImageDto> imageDtos =
+        await _dbMessageImageService.loadMessageImagesForChat(
       chatId: chatId,
-      lastVisibleMessageId: idOfMessageContainingImage,
+      lastVisibleImageId: lastVisibleImageId,
     );
-    final List<MessageImage> images = [];
-    for (final messageDto in messageWithImagesDtos) {
-      final List<MessageImage> messageImages =
-          await _loadImagesForMessageDto(messageDto);
-      images.addAll(messageImages);
-    }
-    return images;
+    return await _loadImagesFromStorageForDtos(imageDtos);
   }
 
   @override
-  Future<String?> addImage({
+  Future<void> addImagesInOrderToMessage({
     required final String messageId,
-    required final Uint8List imageBytes,
-  }) async =>
-      await _dbStorageService.uploadMessageImage(
+    required final List<Uint8List> bytesOfImages,
+  }) async {
+    final MessageDto? messageDto =
+        await _dbMessageService.loadMessageById(messageId: messageId);
+    if (messageDto == null) {
+      throw const MessageImageException(
+        code: MessageImageExceptionCode.messageNotFound,
+      );
+    }
+    final List<MessageImageDto> imageDtos = [];
+    int order = 1;
+    for (final imageBytes in bytesOfImages) {
+      final String? imageId = await _dbStorageService.uploadMessageImage(
         messageId: messageId,
         imageBytes: imageBytes,
       );
+      if (imageId != null) {
+        imageDtos.add(MessageImageDto(
+          id: imageId,
+          messageId: messageId,
+          sendDateTime: messageDto.dateTime,
+          order: order,
+        ));
+        order++;
+      }
+    }
+    await _dbMessageImageService.addMessageImagesToChat(
+      chatId: messageDto.chatId,
+      imageDtos: imageDtos,
+    );
+  }
 
-  Future<List<MessageImage>> _loadImagesForMessageDto(
-    final MessageDto messageDto,
+  Future<List<MessageImage>> _loadImagesFromStorageForDtos(
+    final List<MessageImageDto> imageDtos,
   ) async {
     final List<MessageImage> images = [];
-    for (final imageDto in messageDto.images) {
+    for (final imageDto in imageDtos) {
       final Uint8List? imageBytes = await _dbStorageService.loadMessageImage(
-        messageId: messageDto.id,
         imageId: imageDto.id,
+        messageId: imageDto.messageId,
       );
       if (imageBytes != null) {
-        images.add(mapMessageImageFromDto(
-          messageImageDto: imageDto,
-          messageId: messageDto.id,
-          bytes: imageBytes,
-        ));
+        images.add(
+          mapMessageImageFromDto(messageImageDto: imageDto, bytes: imageBytes),
+        );
       }
     }
     return images;

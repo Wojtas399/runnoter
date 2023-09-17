@@ -125,3 +125,15 @@ CollectionReference<MessageDto> getMessagesRef() =>
           ),
           toFirestore: (messageDto, _) => messageDto.toJson(),
         );
+
+CollectionReference<MessageImageDto> getMessageImagesRef(String chatId) =>
+    getChatsRef()
+        .doc(chatId)
+        .collection('Images')
+        .withConverter<MessageImageDto>(
+          fromFirestore: (snapshot, _) => MessageImageDto.fromJson(
+            messageImageId: snapshot.id,
+            json: snapshot.data(),
+          ),
+          toFirestore: (messageImageDto, _) => messageImageDto.toJson(),
+        );

@@ -5,6 +5,7 @@ import 'common/date_service.dart';
 import 'data/repository_impl/blood_test_repository_impl.dart';
 import 'data/repository_impl/chat_repository_impl.dart';
 import 'data/repository_impl/health_measurement_repository_impl.dart';
+import 'data/repository_impl/message_image_repository_impl.dart';
 import 'data/repository_impl/message_repository_impl.dart';
 import 'data/repository_impl/person_repository_impl.dart';
 import 'data/repository_impl/race_repository_impl.dart';
@@ -16,6 +17,7 @@ import 'domain/cubit/date_range_manager_cubit.dart';
 import 'domain/repository/blood_test_repository.dart';
 import 'domain/repository/chat_repository.dart';
 import 'domain/repository/health_measurement_repository.dart';
+import 'domain/repository/message_image_repository.dart';
 import 'domain/repository/message_repository.dart';
 import 'domain/repository/person_repository.dart';
 import 'domain/repository/race_repository.dart';
@@ -91,6 +93,9 @@ void _registerRepositories() {
   getIt.registerLazySingleton<RaceRepository>(() => RaceRepositoryImpl());
   getIt.registerLazySingleton<ChatRepository>(() => ChatRepositoryImpl());
   getIt.registerLazySingleton<MessageRepository>(() => MessageRepositoryImpl());
+  getIt.registerLazySingleton<MessageImageRepository>(
+    () => MessageImageRepositoryImpl(),
+  );
 }
 
 void _registerUseCases() {

@@ -40,6 +40,12 @@ class ChatException extends CustomException<ChatExceptionCode> {
   const ChatException({required super.code});
 }
 
+enum MessageImageExceptionCode { messageNotFound }
+
+class MessageImageException extends CustomException<MessageImageExceptionCode> {
+  const MessageImageException({required super.code});
+}
+
 class UnknownException extends CustomException {
   const UnknownException({required super.message}) : super(code: null);
 }

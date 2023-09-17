@@ -28,6 +28,7 @@ export 'service/firebase_blood_test_service.dart';
 export 'service/firebase_chat_service.dart';
 export 'service/firebase_coaching_request_service.dart';
 export 'service/firebase_health_measurement_service.dart';
+export 'service/firebase_message_image_service.dart';
 export 'service/firebase_message_service.dart';
 export 'service/firebase_race_service.dart';
 export 'service/firebase_storage_service.dart';

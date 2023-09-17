@@ -2,13 +2,26 @@ import 'package:equatable/equatable.dart';
 
 class MessageImageDto extends Equatable {
   final String id;
+  final String messageId;
+  final DateTime sendDateTime;
   final int order;
 
-  const MessageImageDto({required this.id, required this.order});
+  const MessageImageDto({
+    required this.id,
+    required this.messageId,
+    required this.sendDateTime,
+    required this.order,
+  });
 
-  MessageImageDto.fromJson(final Map<String, dynamic>? json)
-      : this(
-          id: json?[_idField],
+  MessageImageDto.fromJson({
+    required final String messageImageId,
+    required final Map<String, dynamic>? json,
+  }) : this(
+          id: messageImageId,
+          messageId: json?[messageIdField],
+          sendDateTime: DateTime.fromMillisecondsSinceEpoch(
+            json?[sendTimestampField],
+          ),
           order: json?[_orderField],
         );
 
@@ -16,10 +29,12 @@ class MessageImageDto extends Equatable {
   List<Object?> get props => [id, order];
 
   Map<String, dynamic> toJson() => {
-        _idField: id,
+        messageIdField: messageId,
+        sendTimestampField: sendDateTime.millisecondsSinceEpoch,
         _orderField: order,
       };
 }
 
-const String _idField = 'id';
+const String messageIdField = 'messageId';
+const String sendTimestampField = 'sendTimestamp';
 const String _orderField = 'order';

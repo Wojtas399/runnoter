@@ -36,16 +36,6 @@ class FirebaseMessageService {
     return docSnapshot.data();
   }
 
-  Future<MessageDto?> loadMessageContainingImage({
-    required final String imageId,
-  }) async {
-    final querySnapshot = await getMessagesRef()
-        .where(imagesField, arrayContains: {'id': imageId})
-        .limit(1)
-        .get();
-    return querySnapshot.docs.isEmpty ? null : querySnapshot.docs.first.data();
-  }
-
   Future<List<MessageDto>> loadMessagesForChat({
     required final String chatId,
     final String? lastVisibleMessageId,
@@ -53,20 +43,6 @@ class FirebaseMessageService {
     final Query<MessageDto> query = getMessagesRef()
         .where(chatIdField, isEqualTo: chatId)
         .orderBy(timestampField, descending: true);
-    return await _loadLimitedImagesByQuery(
-      query: query,
-      lastVisibleMessageId: lastVisibleMessageId,
-    );
-  }
-
-  Future<List<MessageDto>> loadMessagesWithImagesForChat({
-    required final String chatId,
-    final String? lastVisibleMessageId,
-  }) async {
-    final Query<MessageDto> query = getMessagesRef()
-        .where(chatIdField, isEqualTo: chatId)
-        .where(imagesField, isNotEqualTo: []).orderBy(timestampField,
-            descending: true);
     return await _loadLimitedImagesByQuery(
       query: query,
       lastVisibleMessageId: lastVisibleMessageId,

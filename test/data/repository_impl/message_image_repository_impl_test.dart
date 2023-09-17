@@ -5,19 +5,26 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/data/repository_impl/message_image_repository_impl.dart';
+import 'package:runnoter/domain/additional_model/custom_exception.dart';
 import 'package:runnoter/domain/entity/message_image.dart';
 
 import '../../creators/message_dto_creator.dart';
+import '../../creators/message_image_dto_creator.dart';
+import '../../mock/firebase/mock_firebase_message_image_service.dart';
 import '../../mock/firebase/mock_firebase_message_service.dart';
 import '../../mock/firebase/mock_firebase_storage_service.dart';
 
 void main() {
   final dbMessageService = MockFirebaseMessageService();
+  final dbMessageImageService = MockFirebaseMessageImageService();
   final dbStorageService = MockFirebaseStorageService();
   late MessageImageRepositoryImpl repository;
 
   setUpAll(() {
     GetIt.I.registerFactory<FirebaseMessageService>(() => dbMessageService);
+    GetIt.I.registerFactory<FirebaseMessageImageService>(
+      () => dbMessageImageService,
+    );
     GetIt.I.registerFactory<FirebaseStorageService>(() => dbStorageService);
   });
 
@@ -25,22 +32,23 @@ void main() {
 
   tearDown(() {
     reset(dbMessageService);
+    reset(dbMessageImageService);
     reset(dbStorageService);
   });
 
   test(
     'load images by message id, '
     'message does not exist, '
-    'should return null',
+    'should return empty array',
     () async {
       const String messageId = 'm1';
       dbMessageService.mockLoadMessageById();
 
-      final List<MessageImage>? images = await repository.loadImagesByMessageId(
+      final List<MessageImage> images = await repository.loadImagesByMessageId(
         messageId: messageId,
       );
 
-      expect(images, null);
+      expect(images, const []);
     },
   );
 
@@ -49,14 +57,25 @@ void main() {
     'should load and return all images from message',
     () async {
       const String messageId = 'm1';
+      const String chatId = 'c1';
       final MessageDto messageDto = createMessageDto(
         id: messageId,
-        dateTime: DateTime(2023),
-        images: const [
-          MessageImageDto(id: 'i1', order: 1),
-          MessageImageDto(id: 'i2', order: 2),
-        ],
+        chatId: chatId,
       );
+      final List<MessageImageDto> messageImageDtos = [
+        MessageImageDto(
+          id: 'i1',
+          messageId: messageId,
+          sendDateTime: DateTime(2023, 1, 10),
+          order: 1,
+        ),
+        MessageImageDto(
+          id: 'i2',
+          messageId: messageId,
+          sendDateTime: DateTime(2023, 1, 12),
+          order: 2,
+        ),
+      ];
       final List<MessageImage> expectedImages = [
         MessageImage(
           id: 'i1',
@@ -72,6 +91,9 @@ void main() {
         ),
       ];
       dbMessageService.mockLoadMessageById(messageDto: messageDto);
+      dbMessageImageService.mockLoadMessageImagesByMessageId(
+        messageImageDtos: messageImageDtos,
+      );
       when(
         () => dbStorageService.loadMessageImage(
           messageId: messageId,
@@ -85,7 +107,7 @@ void main() {
         ),
       ).thenAnswer((_) => Future.value(Uint8List(2)));
 
-      final List<MessageImage>? images = await repository.loadImagesByMessageId(
+      final List<MessageImage> images = await repository.loadImagesByMessageId(
         messageId: messageId,
       );
 
@@ -114,35 +136,13 @@ void main() {
     () async {
       const String chatId = 'c1';
       const String lastVisibleImageId = 'i0';
-      final MessageDto lastVisibleMessageDto = createMessageDto(id: 'm0');
-      final List<MessageDto> messageDtos = [
-        createMessageDto(
-          id: 'm1',
-          chatId: chatId,
-          dateTime: DateTime(2023, 1, 1),
-          images: const [
-            MessageImageDto(id: 'i1', order: 1),
-            MessageImageDto(id: 'i2', order: 2),
-          ],
-        ),
-        createMessageDto(
-          id: 'm2',
-          chatId: chatId,
-          dateTime: DateTime(2023, 1, 10),
-          images: const [
-            MessageImageDto(id: 'i3', order: 1),
-          ],
-        ),
-        createMessageDto(
-          id: 'm3',
-          chatId: chatId,
-          dateTime: DateTime(2023, 1, 20),
-          images: const [
-            MessageImageDto(id: 'i4', order: 1),
-            MessageImageDto(id: 'i5', order: 2),
-            MessageImageDto(id: 'i6', order: 3),
-          ],
-        ),
+      final List<MessageImageDto> messageImageDtos = [
+        createMessageImageDto(id: 'i1', messageId: 'm1', order: 1),
+        createMessageImageDto(id: 'i2', messageId: 'm1', order: 2),
+        createMessageImageDto(id: 'i3', messageId: 'm2', order: 1),
+        createMessageImageDto(id: 'i4', messageId: 'm3', order: 1),
+        createMessageImageDto(id: 'i5', messageId: 'm3', order: 2),
+        createMessageImageDto(id: 'i6', messageId: 'm3', order: 3),
       ];
       final List<MessageImage> expectedImages = [
         MessageImage(id: 'i1', messageId: 'm1', order: 1, bytes: Uint8List(1)),
@@ -152,11 +152,8 @@ void main() {
         MessageImage(id: 'i5', messageId: 'm3', order: 2, bytes: Uint8List(5)),
         MessageImage(id: 'i6', messageId: 'm3', order: 3, bytes: Uint8List(6)),
       ];
-      dbMessageService.mockLoadMessageContainingImage(
-        messageDto: lastVisibleMessageDto,
-      );
-      dbMessageService.mockLoadMessagesWithImagesForChat(
-        messageDtos: messageDtos,
+      dbMessageImageService.mockLoadMessageImagesForChat(
+        messageImageDtos: messageImageDtos,
       );
       when(
         () => dbStorageService.loadMessageImage(messageId: 'm1', imageId: 'i1'),
@@ -184,33 +181,130 @@ void main() {
 
       expect(images, expectedImages);
       verify(
-        () => dbMessageService.loadMessagesWithImagesForChat(
+        () => dbMessageImageService.loadMessageImagesForChat(
           chatId: chatId,
-          lastVisibleMessageId: lastVisibleMessageDto.id,
+          lastVisibleImageId: lastVisibleImageId,
         ),
       ).called(1);
     },
   );
 
   test(
-    'add image, '
-    'should upload image to db and return its id',
+    'add images in order to message, '
+    'message does not exist, '
+    'should throw message image exception with messageNotFound code',
     () async {
       const String messageId = 'm1';
-      final Uint8List imageBytes = Uint8List(1);
-      const String expectedImageId = 'i1';
-      dbStorageService.mockUploadMessageImage(imageId: expectedImageId);
+      final List<Uint8List> bytesOfImages = [
+        Uint8List(1),
+        Uint8List(2),
+        Uint8List(3),
+      ];
+      dbMessageService.mockLoadMessageById();
 
-      final String? imageId = await repository.addImage(
+      Object? exception;
+      try {
+        await repository.addImagesInOrderToMessage(
+          messageId: messageId,
+          bytesOfImages: bytesOfImages,
+        );
+      } catch (e) {
+        exception = e;
+      }
+
+      expect(
+        exception,
+        const MessageImageException(
+          code: MessageImageExceptionCode.messageNotFound,
+        ),
+      );
+    },
+  );
+
+  test(
+    'add images in order to message, '
+    'should call db storage service method to upload images and '
+    'should call db message image service method to add images to chat',
+    () async {
+      const String messageId = 'm1';
+      final List<Uint8List> bytesOfImages = [
+        Uint8List(1),
+        Uint8List(2),
+        Uint8List(3),
+      ];
+      final MessageDto messageDto = createMessageDto(
+        id: messageId,
+        chatId: 'c1',
+        dateTime: DateTime(2023, 1, 10),
+      );
+      final List<MessageImageDto> imageDtos = [
+        MessageImageDto(
+          id: 'i1',
+          messageId: messageId,
+          sendDateTime: DateTime(2023, 1, 10),
+          order: 1,
+        ),
+        MessageImageDto(
+          id: 'i2',
+          messageId: messageId,
+          sendDateTime: DateTime(2023, 1, 10),
+          order: 2,
+        ),
+        MessageImageDto(
+          id: 'i3',
+          messageId: messageId,
+          sendDateTime: DateTime(2023, 1, 10),
+          order: 3,
+        ),
+      ];
+      dbMessageService.mockLoadMessageById(messageDto: messageDto);
+      when(
+        () => dbStorageService.uploadMessageImage(
+          messageId: messageId,
+          imageBytes: bytesOfImages.first,
+        ),
+      ).thenAnswer((_) => Future.value('i1'));
+      when(
+        () => dbStorageService.uploadMessageImage(
+          messageId: messageId,
+          imageBytes: bytesOfImages[1],
+        ),
+      ).thenAnswer((_) => Future.value('i2'));
+      when(
+        () => dbStorageService.uploadMessageImage(
+          messageId: messageId,
+          imageBytes: bytesOfImages.last,
+        ),
+      ).thenAnswer((_) => Future.value('i3'));
+      dbMessageImageService.mockAddMessageImagesToChat();
+
+      await repository.addImagesInOrderToMessage(
         messageId: messageId,
-        imageBytes: imageBytes,
+        bytesOfImages: bytesOfImages,
       );
 
-      expect(imageId, expectedImageId);
       verify(
         () => dbStorageService.uploadMessageImage(
           messageId: messageId,
-          imageBytes: imageBytes,
+          imageBytes: bytesOfImages.first,
+        ),
+      ).called(1);
+      verify(
+        () => dbStorageService.uploadMessageImage(
+          messageId: messageId,
+          imageBytes: bytesOfImages[1],
+        ),
+      ).called(1);
+      verify(
+        () => dbStorageService.uploadMessageImage(
+          messageId: messageId,
+          imageBytes: bytesOfImages.last,
+        ),
+      ).called(1);
+      verify(
+        () => dbMessageImageService.addMessageImagesToChat(
+          chatId: messageDto.chatId,
+          imageDtos: imageDtos,
         ),
       ).called(1);
     },

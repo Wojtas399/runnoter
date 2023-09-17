@@ -8,14 +8,17 @@ import 'package:runnoter/domain/entity/message_image.dart';
 void main() {
   const messageImageId = 'i1';
   const int order = 1;
+  final DateTime sendDateTime = DateTime(2023, 1, 10);
   const String messageId = 'm1';
   final Uint8List bytes = Uint8List(1);
 
   test(
     'map message image from dto',
     () {
-      const MessageImageDto messageImageDto = MessageImageDto(
+      final MessageImageDto messageImageDto = MessageImageDto(
         id: messageImageId,
+        messageId: messageId,
+        sendDateTime: sendDateTime,
         order: order,
       );
       final MessageImage expectedMessageImage = MessageImage(
@@ -27,7 +30,6 @@ void main() {
 
       final MessageImage messageImage = mapMessageImageFromDto(
         messageImageDto: messageImageDto,
-        messageId: messageId,
         bytes: bytes,
       );
 

@@ -3,7 +3,7 @@ import 'dart:typed_data';
 import '../entity/message_image.dart';
 
 abstract interface class MessageImageRepository {
-  Future<List<MessageImage>?> loadImagesByMessageId({
+  Future<List<MessageImage>> loadImagesByMessageId({
     required final String messageId,
   });
 
@@ -12,8 +12,8 @@ abstract interface class MessageImageRepository {
     final String? lastVisibleImageId,
   });
 
-  Future<String?> addImage({
+  Future<void> addImagesInOrderToMessage({
     required final String messageId,
-    required final Uint8List imageBytes,
+    required final List<Uint8List> bytesOfImages,
   });
 }
