@@ -10,8 +10,10 @@ import 'package:runnoter/domain/additional_model/cubit_status.dart';
 import 'package:runnoter/domain/cubit/chat/chat_cubit.dart';
 import 'package:runnoter/domain/entity/chat.dart';
 import 'package:runnoter/domain/entity/message.dart';
+import 'package:runnoter/domain/entity/message_image.dart';
 import 'package:runnoter/domain/entity/person.dart';
 import 'package:runnoter/domain/repository/chat_repository.dart';
+import 'package:runnoter/domain/repository/message_image_repository.dart';
 import 'package:runnoter/domain/repository/message_repository.dart';
 import 'package:runnoter/domain/repository/person_repository.dart';
 import 'package:runnoter/domain/service/auth_service.dart';
@@ -21,6 +23,7 @@ import '../../../creators/message_creator.dart';
 import '../../../creators/person_creator.dart';
 import '../../../mock/common/mock_date_service.dart';
 import '../../../mock/domain/repository/mock_chat_repository.dart';
+import '../../../mock/domain/repository/mock_message_image_repository.dart';
 import '../../../mock/domain/repository/mock_message_repository.dart';
 import '../../../mock/domain/repository/mock_person_repository.dart';
 import '../../../mock/domain/service/mock_auth_service.dart';
@@ -30,6 +33,7 @@ void main() {
   final authService = MockAuthService();
   final chatRepository = MockChatRepository();
   final messageRepository = MockMessageRepository();
+  final messageImageRepository = MockMessageImageRepository();
   final personRepository = MockPersonRepository();
   final dateService = MockDateService();
   final connectivityService = MockConnectivityService();
@@ -38,7 +42,7 @@ void main() {
 
   ChatCubit createCubit({
     String? loggedUserId,
-    List<Message>? messagesFromLatest,
+    List<ChatMessage>? messagesFromLatest,
     String? messageToSend,
     List<Uint8List> imagesToSend = const [],
   }) =>
@@ -57,6 +61,7 @@ void main() {
     GetIt.I.registerFactory<AuthService>(() => authService);
     GetIt.I.registerSingleton<ChatRepository>(chatRepository);
     GetIt.I.registerSingleton<MessageRepository>(messageRepository);
+    GetIt.I.registerSingleton<MessageImageRepository>(messageImageRepository);
     GetIt.I.registerSingleton<PersonRepository>(personRepository);
     GetIt.I.registerFactory<DateService>(() => dateService);
     GetIt.I.registerFactory<ConnectivityService>(() => connectivityService);
@@ -66,6 +71,7 @@ void main() {
     reset(authService);
     reset(chatRepository);
     reset(messageRepository);
+    reset(messageImageRepository);
     reset(personRepository);
     reset(dateService);
     reset(connectivityService);
@@ -80,17 +86,67 @@ void main() {
         surname: 'recipinsky',
       );
       final List<Message> messages = [
-        createMessage(text: 'message 1', dateTime: DateTime(2023, 1, 10)),
-        createMessage(text: 'message 2', dateTime: DateTime(2023, 1, 5)),
+        createMessage(
+          id: 'm1',
+          text: 'message 1',
+          senderId: 'u1',
+          dateTime: DateTime(2023, 1, 10),
+        ),
+        createMessage(
+          id: 'm2',
+          text: 'message 2',
+          senderId: 'u2',
+          dateTime: DateTime(2023, 1, 5),
+        ),
       ];
       final List<Message> updatedMessages = [
         createMessage(
+          id: 'm1',
           text: 'updated message 1',
+          senderId: 'u1',
           dateTime: DateTime(2023, 1, 2),
         ),
         createMessage(
+          id: 'm2',
+          senderId: 'u2',
           text: 'updated message 2',
           dateTime: DateTime(2023, 1, 5),
+        ),
+      ];
+      final List<MessageImage> m1MessageImages = [
+        MessageImage(id: 'i1', messageId: 'm1', order: 1, bytes: Uint8List(1)),
+        MessageImage(id: 'i2', messageId: 'm2', order: 2, bytes: Uint8List(2)),
+      ];
+      final List<ChatMessage> expectedChatMessages = [
+        ChatMessage(
+          id: 'm1',
+          senderId: 'u1',
+          sendDateTime: DateTime(2023, 1, 10),
+          text: 'message 1',
+          images: m1MessageImages,
+        ),
+        ChatMessage(
+          id: 'm2',
+          senderId: 'u2',
+          sendDateTime: DateTime(2023, 1, 5),
+          text: 'message 2',
+          images: const [],
+        ),
+      ];
+      final List<ChatMessage> expectedUpdatedChatMessages = [
+        ChatMessage(
+          id: 'm2',
+          senderId: 'u2',
+          sendDateTime: DateTime(2023, 1, 5),
+          text: 'updated message 2',
+          images: const [],
+        ),
+        ChatMessage(
+          id: 'm1',
+          senderId: 'u1',
+          sendDateTime: DateTime(2023, 1, 2),
+          text: 'updated message 1',
+          images: m1MessageImages,
         ),
       ];
       final StreamController<List<Message>> messages$ = StreamController()
@@ -113,6 +169,12 @@ void main() {
           messageRepository.mockGetMessagesForChat(
             messagesStream: messages$.stream,
           );
+          when(
+            () => messageImageRepository.loadImagesByMessageId(messageId: 'm1'),
+          ).thenAnswer((_) => Future.value(m1MessageImages));
+          when(
+            () => messageImageRepository.loadImagesByMessageId(messageId: 'm2'),
+          ).thenAnswer((_) => Future.value(const []));
         },
         act: (cubit) {
           cubit.initialize();
@@ -123,13 +185,13 @@ void main() {
             status: const CubitStatusComplete(),
             loggedUserId: loggedUserId,
             recipientFullName: '${recipient.name} ${recipient.surname}',
-            messagesFromLatest: messages,
+            messagesFromLatest: expectedChatMessages,
           ),
           ChatState(
             status: const CubitStatusComplete(),
             loggedUserId: loggedUserId,
             recipientFullName: '${recipient.name} ${recipient.surname}',
-            messagesFromLatest: updatedMessages.reversed.toList(),
+            messagesFromLatest: expectedUpdatedChatMessages,
           ),
         ],
         verify: (_) {
@@ -241,7 +303,8 @@ void main() {
 
   blocTest(
     'submit message, '
-    "should call message repository's method to add new message with current dateTime and "
+    'should call message repository method to add new message with current dateTime and '
+    'should call message image repository to add images to message and '
     'should set messageToSend as null and imagesToSend as empty array',
     build: () => createCubit(
       loggedUserId: loggedUserId,
@@ -251,7 +314,8 @@ void main() {
     setUp: () {
       connectivityService.mockHasDeviceInternetConnection(hasConnection: true);
       dateService.mockGetNow(now: DateTime(2023, 1, 1, 12, 30));
-      messageRepository.mockAddMessage();
+      messageRepository.mockAddMessage(addedMessageId: 'm1');
+      messageImageRepository.mockAddImagesInOrderToMessage();
     },
     act: (cubit) => cubit.submitMessage(),
     expect: () => [
@@ -268,14 +332,22 @@ void main() {
         imagesToSend: [],
       ),
     ],
-    verify: (_) => verify(
-      () => messageRepository.addMessage(
-        chatId: chatId,
-        senderId: loggedUserId,
-        dateTime: DateTime(2023, 1, 1, 12, 30),
-        text: 'message',
-      ),
-    ).called(1),
+    verify: (_) {
+      verify(
+        () => messageRepository.addMessage(
+          chatId: chatId,
+          senderId: loggedUserId,
+          dateTime: DateTime(2023, 1, 1, 12, 30),
+          text: 'message',
+        ),
+      ).called(1);
+      verify(
+        () => messageImageRepository.addImagesInOrderToMessage(
+          messageId: 'm1',
+          bytesOfImages: [Uint8List(1), Uint8List(2)],
+        ),
+      ).called(1);
+    },
   );
 
   blocTest(
@@ -283,9 +355,21 @@ void main() {
     "should call message repository's method to load older messages with id of the oldest message in state",
     build: () => createCubit(
       messagesFromLatest: [
-        createMessage(id: 'm1', dateTime: DateTime(2023, 1, 2)),
-        createMessage(id: 'm2', dateTime: DateTime(2023, 1, 5)),
-        createMessage(id: 'm3', dateTime: DateTime(2023, 1, 10)),
+        ChatMessage(
+          id: 'm1',
+          senderId: 'u1',
+          sendDateTime: DateTime(2023, 1, 2),
+        ),
+        ChatMessage(
+          id: 'm2',
+          senderId: 'u2',
+          sendDateTime: DateTime(2023, 1, 5),
+        ),
+        ChatMessage(
+          id: 'm3',
+          senderId: 'u1',
+          sendDateTime: DateTime(2023, 1, 10),
+        ),
       ],
     ),
     setUp: () => messageRepository.mockLoadOlderMessagesForChat(),

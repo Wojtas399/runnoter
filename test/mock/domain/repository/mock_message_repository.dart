@@ -23,7 +23,7 @@ class MockMessageRepository extends Mock implements MessageRepository {
     ).thenAnswer((_) => Future.value());
   }
 
-  void mockAddMessage() {
+  void mockAddMessage({String? addedMessageId}) {
     when(
       () => addMessage(
         chatId: any(named: 'chatId'),
@@ -31,6 +31,6 @@ class MockMessageRepository extends Mock implements MessageRepository {
         dateTime: any(named: 'dateTime'),
         text: any(named: 'text'),
       ),
-    ).thenAnswer((_) => Future.value());
+    ).thenAnswer((_) => Future.value(addedMessageId));
   }
 }

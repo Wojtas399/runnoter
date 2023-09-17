@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:typed_data';
 
+import 'package:equatable/equatable.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../../common/date_service.dart';
@@ -10,8 +11,10 @@ import '../../additional_model/cubit_status.dart';
 import '../../additional_model/cubit_with_status.dart';
 import '../../entity/chat.dart';
 import '../../entity/message.dart';
+import '../../entity/message_image.dart';
 import '../../entity/person.dart';
 import '../../repository/chat_repository.dart';
+import '../../repository/message_image_repository.dart';
 import '../../repository/message_repository.dart';
 import '../../repository/person_repository.dart';
 import '../../service/auth_service.dart';
@@ -24,6 +27,7 @@ class ChatCubit extends CubitWithStatus<ChatState, dynamic, dynamic> {
   final AuthService _authService;
   final ChatRepository _chatRepository;
   final MessageRepository _messageRepository;
+  final MessageImageRepository _messageImageRepository;
   final PersonRepository _personRepository;
   final DateService _dateService;
   final ConnectivityService _connectivityService;
@@ -35,6 +39,7 @@ class ChatCubit extends CubitWithStatus<ChatState, dynamic, dynamic> {
   })  : _authService = getIt<AuthService>(),
         _chatRepository = getIt<ChatRepository>(),
         _messageRepository = getIt<MessageRepository>(),
+        _messageImageRepository = getIt<MessageImageRepository>(),
         _personRepository = getIt<PersonRepository>(),
         _dateService = getIt<DateService>(),
         _connectivityService = getIt<ConnectivityService>(),
@@ -50,25 +55,17 @@ class ChatCubit extends CubitWithStatus<ChatState, dynamic, dynamic> {
   Future<void> initialize() async {
     final String? loggedUserId = await _authService.loggedUserId$.first;
     if (loggedUserId == null) return;
-    final Chat chat =
-        await _chatRepository.getChatById(chatId: chatId).whereNotNull().first;
-    final Person recipient = await _personRepository
-        .getPersonById(
-          personId: chat.user1Id == loggedUserId ? chat.user2Id : chat.user1Id,
-        )
-        .whereNotNull()
-        .first;
+    final String recipientFullName = await _loadRecipientFullName(loggedUserId);
     _messagesListener ??=
         _messageRepository.getMessagesForChat(chatId: chatId).listen(
-      (List<Message> messages) {
-        final List<Message> sortedMessages = [...messages];
-        sortedMessages.sort(
-          (m1, m2) => m1.dateTime.isBefore(m2.dateTime) ? 1 : -1,
-        );
+      (List<Message> messages) async {
+        final List<ChatMessage> chatMessages =
+            await _combineMessagesWithImages(messages);
         emit(state.copyWith(
           loggedUserId: loggedUserId,
-          recipientFullName: '${recipient.name} ${recipient.surname}',
-          messagesFromLatest: sortedMessages,
+          recipientFullName: recipientFullName,
+          messagesFromLatest:
+              _sortChatMessagesAscendingBySendDateTime(chatMessages),
         ));
       },
     );
@@ -96,13 +93,18 @@ class ChatCubit extends CubitWithStatus<ChatState, dynamic, dynamic> {
     if (await _connectivityService.hasDeviceInternetConnection()) {
       final DateTime now = _dateService.getNow();
       emitLoadingStatus();
-      //TODO: Add images to repo
-      await _messageRepository.addMessage(
+      final String? messageId = await _messageRepository.addMessage(
         chatId: chatId,
         senderId: state.loggedUserId!,
         dateTime: now,
         text: state.messageToSend,
       );
+      if (messageId != null) {
+        await _messageImageRepository.addImagesInOrderToMessage(
+          messageId: messageId,
+          bytesOfImages: state.imagesToSend,
+        );
+      }
       emit(state.copyWith(
         status: const CubitStatusComplete(),
         messageToSendAsNull: true,
@@ -114,12 +116,54 @@ class ChatCubit extends CubitWithStatus<ChatState, dynamic, dynamic> {
   }
 
   Future<void> loadOlderMessages() async {
-    final List<Message>? messages = state.messagesFromLatest;
+    final List<ChatMessage>? messages = state.messagesFromLatest;
     if (messages == null || messages.isEmpty) return;
     final String lastVisibleMessageId = messages.last.id;
     await _messageRepository.loadOlderMessagesForChat(
       chatId: chatId,
       lastVisibleMessageId: lastVisibleMessageId,
     );
+  }
+
+  Future<String> _loadRecipientFullName(String loggedUserId) async {
+    final Chat chat =
+        await _chatRepository.getChatById(chatId: chatId).whereNotNull().first;
+    final String recipientId =
+        chat.user1Id == loggedUserId ? chat.user2Id : chat.user1Id;
+    final Person recipient = await _personRepository
+        .getPersonById(personId: recipientId)
+        .whereNotNull()
+        .first;
+    return '${recipient.name} ${recipient.surname}';
+  }
+
+  Future<List<ChatMessage>> _combineMessagesWithImages(
+    List<Message> messages,
+  ) async {
+    final List<ChatMessage> chatMessages = [];
+    for (final message in messages) {
+      final List<MessageImage> images =
+          await _messageImageRepository.loadImagesByMessageId(
+        messageId: message.id,
+      );
+      chatMessages.add(ChatMessage(
+        id: message.id,
+        senderId: message.senderId,
+        sendDateTime: message.dateTime,
+        text: message.text,
+        images: images,
+      ));
+    }
+    return chatMessages;
+  }
+
+  List<ChatMessage> _sortChatMessagesAscendingBySendDateTime(
+    List<ChatMessage> chatMessages,
+  ) {
+    final List<ChatMessage> sortedChatMessages = [...chatMessages];
+    sortedChatMessages.sort(
+      (msg1, msg2) => msg1.sendDateTime.isBefore(msg2.sendDateTime) ? 1 : -1,
+    );
+    return sortedChatMessages;
   }
 }

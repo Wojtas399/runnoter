@@ -5,7 +5,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../common/date_service.dart';
 import '../../../dependency_injection.dart';
 import '../../../domain/cubit/chat/chat_cubit.dart';
-import '../../../domain/entity/message.dart';
 import '../../component/empty_content_info_component.dart';
 import '../../component/gap/gap_horizontal_components.dart';
 import '../../component/loading_info_component.dart';
@@ -26,7 +25,7 @@ class ChatMessages extends StatelessWidget {
     final String? loggedUserId = context.select(
       (ChatCubit cubit) => cubit.state.loggedUserId,
     );
-    final List<Message>? messages = context.select(
+    final List<ChatMessage>? messages = context.select(
       (ChatCubit cubit) => cubit.state.messagesFromLatest,
     );
 
@@ -53,30 +52,29 @@ class ChatMessages extends StatelessWidget {
                       if (itemIndex >= messages.length - 1) {
                         return const SizedBox();
                       }
-                      final Message currentMessage = messages[itemIndex];
-                      final Message nextMessage = messages[itemIndex + 1];
+                      final ChatMessage currentMsg = messages[itemIndex];
+                      final ChatMessage nextMsg = messages[itemIndex + 1];
                       final bool areDifferentDays =
                           !_dateService.areDaysTheSame(
-                        currentMessage.dateTime,
-                        nextMessage.dateTime,
+                        currentMsg.sendDateTime,
+                        nextMsg.sendDateTime,
                       );
                       return areDifferentDays
-                          ? _DaySeparator(date: currentMessage.dateTime)
+                          ? _DaySeparator(date: currentMsg.sendDateTime)
                           : const SizedBox();
                     },
                     itemBuilder: (_, int messageIndex) {
                       if (messageIndex == messages.length) {
-                        final Message previousMessage =
-                            messages[messageIndex - 1];
-                        return _DaySeparator(date: previousMessage.dateTime);
+                        final previousMsg = messages[messageIndex - 1];
+                        return _DaySeparator(date: previousMsg.sendDateTime);
                       }
-                      final Message currentMessage = messages[messageIndex];
+                      final currentMsg = messages[messageIndex];
                       return ChatMessageItem(
                         maxWidth: maxMessageWidth,
-                        isSender: loggedUserId == currentMessage.senderId,
-                        text: currentMessage.text,
-                        images: const [], //TODO
-                        dateTime: currentMessage.dateTime,
+                        isSender: loggedUserId == currentMsg.senderId,
+                        text: currentMsg.text,
+                        images: currentMsg.images,
+                        dateTime: currentMsg.sendDateTime,
                       );
                     },
                   );

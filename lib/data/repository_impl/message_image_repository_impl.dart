@@ -46,6 +46,7 @@ class MessageImageRepositoryImpl implements MessageImageRepository {
     return await _loadImagesFromStorageForDtos(imageDtos);
   }
 
+  //TODO: Should throw exception when list is empty
   @override
   Future<void> addImagesInOrderToMessage({
     required final String messageId,

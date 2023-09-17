@@ -3,9 +3,6 @@ import 'dart:typed_data';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/domain/additional_model/cubit_status.dart';
 import 'package:runnoter/domain/cubit/chat/chat_cubit.dart';
-import 'package:runnoter/domain/entity/message.dart';
-
-import '../../../creators/message_creator.dart';
 
 void main() {
   late ChatState state;
@@ -132,9 +129,17 @@ void main() {
     'should set new value or '
     'should copy current value if new value is null',
     () {
-      final List<Message> expected = [
-        createMessage(id: 'm1'),
-        createMessage(id: 'm2'),
+      final List<ChatMessage> expected = [
+        ChatMessage(
+          id: 'm1',
+          senderId: 'u1',
+          sendDateTime: DateTime(2023, 1, 1),
+        ),
+        ChatMessage(
+          id: 'm2',
+          senderId: 'u2',
+          sendDateTime: DateTime(2023, 1, 2),
+        ),
       ];
 
       state = state.copyWith(messagesFromLatest: expected);
