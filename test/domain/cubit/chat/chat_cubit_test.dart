@@ -303,6 +303,46 @@ void main() {
 
   blocTest(
     'submit message, '
+    'there are no images to send, '
+    'should call message repository method to add new message with current dateTime and '
+    'should set messageToSend as null',
+    build: () => createCubit(
+      loggedUserId: loggedUserId,
+      messageToSend: 'message',
+      imagesToSend: [],
+    ),
+    setUp: () {
+      connectivityService.mockHasDeviceInternetConnection(hasConnection: true);
+      dateService.mockGetNow(now: DateTime(2023, 1, 1, 12, 30));
+      messageRepository.mockAddMessage(addedMessageId: 'm1');
+    },
+    act: (cubit) => cubit.submitMessage(),
+    expect: () => [
+      const ChatState(
+        status: CubitStatusLoading(),
+        loggedUserId: loggedUserId,
+        messageToSend: 'message',
+        imagesToSend: [],
+      ),
+      const ChatState(
+        status: CubitStatusComplete(),
+        loggedUserId: loggedUserId,
+        messageToSend: null,
+        imagesToSend: [],
+      ),
+    ],
+    verify: (_) => verify(
+      () => messageRepository.addMessage(
+        chatId: chatId,
+        senderId: loggedUserId,
+        dateTime: DateTime(2023, 1, 1, 12, 30),
+        text: 'message',
+      ),
+    ).called(1),
+  );
+
+  blocTest(
+    'submit message, '
     'should call message repository method to add new message with current dateTime and '
     'should call message image repository to add images to message and '
     'should set messageToSend as null and imagesToSend as empty array',

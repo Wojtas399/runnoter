@@ -99,7 +99,7 @@ class ChatCubit extends CubitWithStatus<ChatState, dynamic, dynamic> {
         dateTime: now,
         text: state.messageToSend,
       );
-      if (messageId != null) {
+      if (messageId != null && state.imagesToSend.isNotEmpty) {
         await _messageImageRepository.addImagesInOrderToMessage(
           messageId: messageId,
           bytesOfImages: state.imagesToSend,

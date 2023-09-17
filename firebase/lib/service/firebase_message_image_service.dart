@@ -38,7 +38,7 @@ class FirebaseMessageImageService {
   }) async {
     final messageImagesRef = getMessageImagesRef(chatId);
     for (final dto in imageDtos) {
-      await messageImagesRef.add(dto);
+      await messageImagesRef.doc(dto.id).set(dto);
     }
   }
 }
