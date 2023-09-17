@@ -191,6 +191,34 @@ void main() {
 
   test(
     'add images in order to message, '
+    'list of image bytes is empty, '
+    'should throw message image exception with listOfImageBytesIsEmpty code',
+    () async {
+      const String messageId = 'm1';
+      final List<Uint8List> bytesOfImages = [];
+      dbMessageService.mockLoadMessageById();
+
+      Object? exception;
+      try {
+        await repository.addImagesInOrderToMessage(
+          messageId: messageId,
+          bytesOfImages: bytesOfImages,
+        );
+      } catch (e) {
+        exception = e;
+      }
+
+      expect(
+        exception,
+        const MessageImageException(
+          code: MessageImageExceptionCode.listOfImageBytesIsEmpty,
+        ),
+      );
+    },
+  );
+
+  test(
+    'add images in order to message, '
     'message does not exist, '
     'should throw message image exception with messageNotFound code',
     () async {

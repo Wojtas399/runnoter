@@ -71,7 +71,6 @@ class ChatImagePreviewCubit extends Cubit<ChatImagePreviewState> {
   }
 
   List<MessageImage> _sortMessageImagesByOrder(Message message) {
-    //TODO
     final List<MessageImage> sortedImages = [];
     sortedImages.sortBy<num>((MessageImage image) => image.order);
     return sortedImages;

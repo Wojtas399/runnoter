@@ -46,12 +46,16 @@ class MessageImageRepositoryImpl implements MessageImageRepository {
     return await _loadImagesFromStorageForDtos(imageDtos);
   }
 
-  //TODO: Should throw exception when list is empty
   @override
   Future<void> addImagesInOrderToMessage({
     required final String messageId,
     required final List<Uint8List> bytesOfImages,
   }) async {
+    if (bytesOfImages.isEmpty) {
+      throw const MessageImageException(
+        code: MessageImageExceptionCode.listOfImageBytesIsEmpty,
+      );
+    }
     final MessageDto? messageDto =
         await _dbMessageService.loadMessageById(messageId: messageId);
     if (messageDto == null) {
