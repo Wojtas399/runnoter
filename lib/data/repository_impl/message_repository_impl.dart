@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:firebase/firebase.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -18,8 +19,10 @@ class MessageRepositoryImpl extends StateRepository<Message>
 
   @override
   Future<Message?> loadMessageById({required String messageId}) async {
-    //TODO
-    throw UnimplementedError();
+    Message? foundMessage = await dataStream$
+        .map((msgs) => msgs?.firstWhereOrNull((msg) => msg.id == messageId))
+        .first;
+    return foundMessage ?? await _loadMessageByIdFromDb(messageId);
   }
 
   @override
@@ -80,6 +83,15 @@ class MessageRepositoryImpl extends StateRepository<Message>
       return addedMessageDto.id;
     }
     return null;
+  }
+
+  Future<Message?> _loadMessageByIdFromDb(String messageId) async {
+    final MessageDto? messageDto =
+        await _dbMessageService.loadMessageById(messageId: messageId);
+    if (messageDto == null) return null;
+    final Message message = mapMessageFromDto(messageDto);
+    addEntity(message);
+    return message;
   }
 
   Future<void> _loadLatestMessagesForChatFromDb(

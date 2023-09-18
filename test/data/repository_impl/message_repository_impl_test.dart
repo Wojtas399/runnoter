@@ -12,20 +12,67 @@ import '../../creators/message_dto_creator.dart';
 import '../../mock/firebase/mock_firebase_message_service.dart';
 
 void main() {
-  final firebaseMessageService = MockFirebaseMessageService();
+  final dbMessageService = MockFirebaseMessageService();
   late MessageRepositoryImpl repository;
 
   setUpAll(() {
-    GetIt.I.registerFactory<FirebaseMessageService>(
-      () => firebaseMessageService,
-    );
+    GetIt.I.registerFactory<FirebaseMessageService>(() => dbMessageService);
   });
 
   setUp(() => repository = MessageRepositoryImpl());
 
   tearDown(() {
-    reset(firebaseMessageService);
+    reset(dbMessageService);
   });
+
+  test(
+    'load message by id, '
+    'message exists in repo, '
+    'should return message from repo',
+    () async {
+      final Message expectedMessage = createMessage(id: 'm3');
+      final List<Message> existingMessages = [
+        createMessage(id: 'm1'),
+        createMessage(id: 'm2'),
+        expectedMessage,
+        createMessage(id: 'm4'),
+      ];
+      repository = MessageRepositoryImpl(initialData: existingMessages);
+
+      final Message? message =
+          await repository.loadMessageById(messageId: 'm3');
+
+      expect(message, expectedMessage);
+    },
+  );
+
+  test(
+    'load message by id, '
+    'message does not exist in repo, '
+    'should load message from db add it to repo and return it',
+    () async {
+      final MessageDto expectedMessageDto = createMessageDto(id: 'm3');
+      final Message expectedMessage = createMessage(id: 'm3');
+      final List<Message> existingMessages = [
+        createMessage(id: 'm1'),
+        createMessage(id: 'm2'),
+        createMessage(id: 'm4'),
+      ];
+      dbMessageService.mockLoadMessageById(messageDto: expectedMessageDto);
+      repository = MessageRepositoryImpl(initialData: existingMessages);
+
+      final Message? message =
+          await repository.loadMessageById(messageId: 'm3');
+
+      expect(message, expectedMessage);
+      expect(
+        repository.dataStream$,
+        emitsInOrder([
+          [...existingMessages, expectedMessage]
+        ]),
+      );
+    },
+  );
 
   test(
     'get messages for chat, '
@@ -56,10 +103,10 @@ void main() {
           createMessage(id: 'm7', chatId: chatId, text: 'text7');
       final StreamController<List<MessageDto>> addedMessages$ =
           StreamController()..add([]);
-      firebaseMessageService.mockLoadMessagesForChat(
+      dbMessageService.mockLoadMessagesForChat(
         messageDtos: loadedMessageDtos,
       );
-      firebaseMessageService.mockGetAddedMessagesForChat(
+      dbMessageService.mockGetAddedMessagesForChat(
         addedMessageDtosStream: addedMessages$.stream,
       );
       repository = MessageRepositoryImpl(initialData: existingMessages);
@@ -124,7 +171,7 @@ void main() {
         createMessage(id: 'm3', chatId: chatId, text: 'text3'),
         createMessage(id: 'm4', chatId: chatId, text: 'text4'),
       ];
-      firebaseMessageService.mockLoadMessagesForChat(
+      dbMessageService.mockLoadMessagesForChat(
         messageDtos: loadedMessageDtos,
       );
       repository = MessageRepositoryImpl(initialData: existingMessages);
@@ -141,7 +188,7 @@ void main() {
         ]),
       );
       verify(
-        () => firebaseMessageService.loadMessagesForChat(
+        () => dbMessageService.loadMessagesForChat(
           chatId: chatId,
           lastVisibleMessageId: lastVisibleMessageId,
         ),
@@ -178,7 +225,7 @@ void main() {
         createMessage(id: 'm1'),
         createMessage(id: 'm2'),
       ];
-      firebaseMessageService.mockAddMessage(addedMessageDto: addedMessageDto);
+      dbMessageService.mockAddMessage(addedMessageDto: addedMessageDto);
       repository = MessageRepositoryImpl(initialData: existingMessages);
 
       await repository.addMessage(
@@ -195,7 +242,7 @@ void main() {
         ]),
       );
       verify(
-        () => firebaseMessageService.addMessage(
+        () => dbMessageService.addMessage(
           chatId: chatId,
           senderId: senderId,
           dateTime: dateTime,
