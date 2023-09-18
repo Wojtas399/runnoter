@@ -65,6 +65,7 @@ class MessageImageRepositoryImpl extends StateRepository<MessageImage>
       );
     }
     final List<MessageImageDto> imageDtos = [];
+    final List<MessageImage> addedMessageImages = [];
     int order = 1;
     for (final imageBytes in bytesOfImages) {
       final String? imageId = await _dbStorageService.uploadMessageImage(
@@ -78,6 +79,12 @@ class MessageImageRepositoryImpl extends StateRepository<MessageImage>
           sendDateTime: messageDto.dateTime,
           order: order,
         ));
+        addedMessageImages.add(MessageImage(
+          id: imageId,
+          messageId: messageId,
+          order: order,
+          bytes: imageBytes,
+        ));
         order++;
       }
     }
@@ -85,6 +92,7 @@ class MessageImageRepositoryImpl extends StateRepository<MessageImage>
       chatId: messageDto.chatId,
       imageDtos: imageDtos,
     );
+    addOrUpdateEntities(addedMessageImages);
   }
 
   Future<List<MessageImage>> _loadImagesFromDbByMessageId(

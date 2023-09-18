@@ -242,7 +242,8 @@ void main() {
   test(
     'add images in order to message, '
     'should call db storage service method to upload images and '
-    'should call db message image service method to add images to chat',
+    'should call db message image service method to add images to chat and '
+    'should add new message images to repo',
     () async {
       const String messageId = 'm1';
       final List<Uint8List> bytesOfImages = [
@@ -275,6 +276,26 @@ void main() {
           order: 3,
         ),
       ];
+      final List<MessageImage> expectedAddedMessageImages = [
+        MessageImage(
+          id: 'i1',
+          messageId: messageId,
+          order: 1,
+          bytes: Uint8List(1),
+        ),
+        MessageImage(
+          id: 'i2',
+          messageId: messageId,
+          order: 2,
+          bytes: Uint8List(2),
+        ),
+        MessageImage(
+          id: 'i3',
+          messageId: messageId,
+          order: 3,
+          bytes: Uint8List(3),
+        ),
+      ];
       dbMessageService.mockLoadMessageById(messageDto: messageDto);
       when(
         () => dbStorageService.uploadMessageImage(
@@ -301,6 +322,10 @@ void main() {
         bytesOfImages: bytesOfImages,
       );
 
+      expect(
+        repository.dataStream$,
+        emitsInOrder([expectedAddedMessageImages]),
+      );
       verify(
         () => dbStorageService.uploadMessageImage(
           messageId: messageId,
