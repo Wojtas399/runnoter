@@ -1,6 +1,8 @@
 import '../entity/message.dart';
 
 abstract interface class MessageRepository {
+  Future<Message?> loadMessageById({required String messageId});
+
   Stream<List<Message>> getMessagesForChat({required String chatId});
 
   Future<void> loadOlderMessagesForChat({

@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
@@ -8,6 +7,7 @@ import 'package:rxdart/rxdart.dart';
 import '../../../dependency_injection.dart';
 import '../../entity/message.dart';
 import '../../entity/message_image.dart';
+import '../../extensions/message_images_extensions.dart';
 import '../../repository/message_image_repository.dart';
 import '../../repository/message_repository.dart';
 
@@ -91,13 +91,5 @@ class ChatImagePreviewCubit extends Cubit<ChatImagePreviewState> {
   Stream<List<MessageImage>> _getSortedImagesForMessage(Message message) =>
       _messageImageRepository
           .getImagesByMessageId(messageId: message.id)
-          .map(_sortMessageImagesByOrder);
-
-  List<MessageImage> _sortMessageImagesByOrder(
-    List<MessageImage> messageImages,
-  ) {
-    final List<MessageImage> sortedImages = [...messageImages];
-    sortedImages.sortBy<num>((MessageImage image) => image.order);
-    return sortedImages;
-  }
+          .map((messageImages) => messageImages.sortByOrder());
 }

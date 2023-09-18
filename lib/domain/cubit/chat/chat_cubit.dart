@@ -142,6 +142,7 @@ class ChatCubit extends CubitWithStatus<ChatState, dynamic, dynamic> {
     return '${recipient.name} ${recipient.surname}';
   }
 
+  //TODO: Should sort message images by order
   Stream<ChatMessage> _mapMessageToChatMessage(Message message) =>
       _messageImageRepository.getImagesByMessageId(messageId: message.id).map(
             (List<MessageImage> messageImages) => ChatMessage(

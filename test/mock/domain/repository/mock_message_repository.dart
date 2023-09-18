@@ -3,6 +3,14 @@ import 'package:runnoter/domain/entity/message.dart';
 import 'package:runnoter/domain/repository/message_repository.dart';
 
 class MockMessageRepository extends Mock implements MessageRepository {
+  void mockLoadMessageById({Message? message}) {
+    when(
+      () => loadMessageById(
+        messageId: any(named: 'messageId'),
+      ),
+    ).thenAnswer((_) => Future.value(message));
+  }
+
   void mockGetMessagesForChat({
     List<Message> messages = const [],
     Stream<List<Message>>? messagesStream,

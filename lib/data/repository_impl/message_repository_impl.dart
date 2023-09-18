@@ -17,6 +17,12 @@ class MessageRepositoryImpl extends StateRepository<Message>
       : _dbMessageService = getIt<FirebaseMessageService>();
 
   @override
+  Future<Message?> loadMessageById({required String messageId}) async {
+    //TODO
+    throw UnimplementedError();
+  }
+
+  @override
   Stream<List<Message>> getMessagesForChat({required String chatId}) {
     final StreamController<bool> canEmit$ = StreamController()..add(false);
     _loadLatestMessagesForChatFromDb(chatId).then((_) => canEmit$.add(true));
