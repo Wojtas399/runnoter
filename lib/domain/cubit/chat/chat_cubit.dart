@@ -13,6 +13,7 @@ import '../../entity/chat.dart';
 import '../../entity/message.dart';
 import '../../entity/message_image.dart';
 import '../../entity/person.dart';
+import '../../extensions/message_images_extensions.dart';
 import '../../repository/chat_repository.dart';
 import '../../repository/message_image_repository.dart';
 import '../../repository/message_repository.dart';
@@ -142,7 +143,6 @@ class ChatCubit extends CubitWithStatus<ChatState, dynamic, dynamic> {
     return '${recipient.name} ${recipient.surname}';
   }
 
-  //TODO: Should sort message images by order
   Stream<ChatMessage> _mapMessageToChatMessage(Message message) =>
       _messageImageRepository.getImagesByMessageId(messageId: message.id).map(
             (List<MessageImage> messageImages) => ChatMessage(
@@ -150,7 +150,7 @@ class ChatCubit extends CubitWithStatus<ChatState, dynamic, dynamic> {
               senderId: message.senderId,
               sendDateTime: message.dateTime,
               text: message.text,
-              images: messageImages,
+              images: messageImages.sortByOrder(),
             ),
           );
 

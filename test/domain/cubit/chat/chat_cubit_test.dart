@@ -115,8 +115,8 @@ void main() {
         ),
       ];
       final List<MessageImage> m1MessageImages = [
-        MessageImage(id: 'i1', messageId: 'm1', order: 1, bytes: Uint8List(1)),
         MessageImage(id: 'i2', messageId: 'm2', order: 2, bytes: Uint8List(2)),
+        MessageImage(id: 'i1', messageId: 'm1', order: 1, bytes: Uint8List(1)),
       ];
       final StreamController<List<Message>> messages$ = StreamController()
         ..add(messages);
@@ -127,7 +127,9 @@ void main() {
 
       blocTest(
         'should load logged user id and recipient, '
-        'should set listener of messages with images and should sort messages descending by date before emitting them',
+        'should set listener of messages with images and '
+        'should sort messages descending by date and '
+        'should sort images ascending by order',
         build: () => createCubit(),
         setUp: () {
           authService.mockGetLoggedUserId(userId: loggedUserId);
@@ -167,7 +169,20 @@ void main() {
                 senderId: 'u1',
                 sendDateTime: DateTime(2023, 1, 10),
                 text: 'message 1',
-                images: m1MessageImages,
+                images: [
+                  MessageImage(
+                    id: 'i1',
+                    messageId: 'm1',
+                    order: 1,
+                    bytes: Uint8List(1),
+                  ),
+                  MessageImage(
+                    id: 'i2',
+                    messageId: 'm2',
+                    order: 2,
+                    bytes: Uint8List(2),
+                  ),
+                ],
               ),
               ChatMessage(
                 id: 'm2',
@@ -195,7 +210,20 @@ void main() {
                 senderId: 'u1',
                 sendDateTime: DateTime(2023, 1, 2),
                 text: 'updated message 1',
-                images: m1MessageImages,
+                images: [
+                  MessageImage(
+                    id: 'i1',
+                    messageId: 'm1',
+                    order: 1,
+                    bytes: Uint8List(1),
+                  ),
+                  MessageImage(
+                    id: 'i2',
+                    messageId: 'm2',
+                    order: 2,
+                    bytes: Uint8List(2),
+                  ),
+                ],
               ),
             ],
           ),

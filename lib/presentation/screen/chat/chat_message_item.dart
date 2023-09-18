@@ -156,9 +156,7 @@ class _Images extends StatelessWidget {
         children: List.generate(
           numberOfImages,
           (int imageIndex) {
-            final MessageImage image = images.firstWhere(
-              (MessageImage image) => image.order == imageIndex + 1,
-            );
+            final MessageImage image = images[imageIndex];
             final int currentRow = (imageIndex ~/ maxImagesInRow) + 1;
             int imagesInRow = currentRow == numberOfAllRows
                 ? numberOfImagesInLastRow
