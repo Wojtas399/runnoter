@@ -848,6 +848,11 @@
   "@chatNoMessagesInfoMessage": {
     "description": "Message of the info about no messages"
   },
+  "@__________CHAT_GALLERY__________": {},
+  "chatGalleryTitle": "Galeria czatu",
+  "@chatGalleryTitle": {
+    "description": "Title of chat gallery"
+  },
   "@__________ACTIVITY_STATUS_PARAMS__________": {},
   "activityStatus": "Status",
   "@activityStatus": {

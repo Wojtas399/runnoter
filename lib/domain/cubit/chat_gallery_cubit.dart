@@ -8,19 +8,18 @@ import '../repository/message_image_repository.dart';
 import '../repository/message_repository.dart';
 
 class ChatGalleryCubit extends Cubit<List<MessageImage>?> {
-  final String _chatId;
+  final String chatId;
   final MessageImageRepository _messageImageRepository;
   final MessageRepository _messageRepository;
 
-  ChatGalleryCubit({required String chatId})
-      : _chatId = chatId,
-        _messageImageRepository = getIt<MessageImageRepository>(),
+  ChatGalleryCubit({required this.chatId})
+      : _messageImageRepository = getIt<MessageImageRepository>(),
         _messageRepository = getIt<MessageRepository>(),
         super(null);
 
   Future<void> initialize() async {
     final List<MessageImage> images =
-        await _messageImageRepository.loadImagesForChat(chatId: _chatId);
+        await _messageImageRepository.loadImagesForChat(chatId: chatId);
     final List<_MessageImages> imagesGroupedByMessage =
         await _groupImagesByMessage(images);
     final List<_MessageImages> imagesGroupedByMessageAndSortedBySendDateTime =

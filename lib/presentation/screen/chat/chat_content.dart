@@ -1,17 +1,15 @@
-import 'dart:async';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:rxdart/rxdart.dart';
 
 import '../../../domain/cubit/chat/chat_cubit.dart';
+import '../../common_feature/chat_gallery/chat_gallery.dart';
 import '../../component/body/big_body_component.dart';
 import '../../component/gap/gap_horizontal_components.dart';
 import '../../component/nullable_text_component.dart';
+import '../../extension/context_extensions.dart';
+import 'chat_adjustable_list_of_messages.dart';
 import 'chat_bottom_part.dart';
-import 'chat_messages.dart';
 
 class ChatContent extends StatelessWidget {
   const ChatContent({super.key});
@@ -24,26 +22,31 @@ class ChatContent extends StatelessWidget {
         foregroundColor: Theme.of(context).canvasColor,
         centerTitle: true,
         title: const _RecipientFullName(),
-        actions: [
-          IconButton(
-            onPressed: () {
-              //TODO: Navigate to images gallery
-            },
-            icon: const Icon(Icons.photo_library),
-          ),
-          kIsWeb ? const GapHorizontal16() : const GapHorizontal8(),
+        actions: const [
+          _ChatGalleryIcon(),
+          kIsWeb ? GapHorizontal16() : GapHorizontal8(),
         ],
       ),
+      endDrawer: Drawer(
+        width: context.isMobileSize ? double.infinity : 600,
+        child: ChatGallery(chatId: context.read<ChatCubit>().chatId),
+      ),
       body: SafeArea(
-        child: BigBody(
-          child: Column(
-            children: [
-              const Expanded(
-                child: kIsWeb ? _ScrollableMessages() : _DraggableMessages(),
+        child: Row(
+          children: [
+            Expanded(
+              child: BigBody(
+                child: Column(
+                  children: [
+                    const Expanded(
+                      child: ChatAdjustableListOfMessages(),
+                    ),
+                    ChatBottomPart(),
+                  ],
+                ),
               ),
-              ChatBottomPart(),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -63,131 +66,14 @@ class _RecipientFullName extends StatelessWidget {
   }
 }
 
-class _DraggableMessages extends StatelessWidget {
-  const _DraggableMessages();
+class _ChatGalleryIcon extends StatelessWidget {
+  const _ChatGalleryIcon();
 
   @override
   Widget build(BuildContext context) {
-    return RefreshIndicator(
-      onRefresh: () async =>
-          await context.read<ChatCubit>().loadOlderMessages(),
-      child: ChatMessages(),
-    );
-  }
-}
-
-class _ScrollableMessages extends StatefulWidget {
-  const _ScrollableMessages();
-
-  @override
-  State<StatefulWidget> createState() => _ScrollableMessagesState();
-}
-
-class _ScrollableMessagesState extends State<_ScrollableMessages> {
-  StreamSubscription<int>? _numberOfMessagesListener;
-  final ScrollController _scrollController = ScrollController();
-  bool _isLoading = false;
-  bool _isEndOfList = false;
-
-  @override
-  void initState() {
-    _numberOfMessagesListener ??= context
-        .read<ChatCubit>()
-        .stream
-        .map((ChatState chatState) => chatState.messagesFromLatest?.length)
-        .whereNotNull()
-        .distinct()
-        .listen(
-          (_) => setState(() {
-            _isEndOfList = false;
-          }),
-        );
-    _scrollController.addListener(_onScrollPositionChanged);
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _numberOfMessagesListener?.cancel();
-    _numberOfMessagesListener = null;
-    _scrollController.removeListener(_onScrollPositionChanged);
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        ChatMessages(scrollController: _scrollController),
-        _WebRefreshIndicator(isLoading: _isLoading),
-      ],
-    );
-  }
-
-  Future<void> _onScrollPositionChanged() async {
-    final ScrollPosition scrollPosition = _scrollController.position;
-    final bool isUpScrolling =
-        scrollPosition.userScrollDirection == ScrollDirection.reverse;
-    if (!_isEndOfList &&
-        !_isLoading &&
-        isUpScrolling &&
-        scrollPosition.extentAfter < 10) {
-      setState(() {
-        _isLoading = true;
-      });
-      await context.read<ChatCubit>().loadOlderMessages();
-      setState(() {
-        _isEndOfList = true;
-        _isLoading = false;
-      });
-    }
-  }
-}
-
-class _WebRefreshIndicator extends StatefulWidget {
-  final bool isLoading;
-
-  const _WebRefreshIndicator({required this.isLoading});
-
-  @override
-  State<StatefulWidget> createState() => _WebRefreshIndicatorState();
-}
-
-class _WebRefreshIndicatorState extends State<_WebRefreshIndicator> {
-  double yPosition = -50;
-
-  @override
-  void didUpdateWidget(covariant _WebRefreshIndicator oldWidget) {
-    setState(() {
-      yPosition = widget.isLoading ? 25 : -50;
-    });
-    super.didUpdateWidget(oldWidget);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedPositioned(
-      top: yPosition,
-      left: 0,
-      right: 0,
-      duration: const Duration(milliseconds: 200),
-      curve: Curves.easeInOut,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Card(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(100),
-            ),
-            child: Container(
-              padding: const EdgeInsets.all(8),
-              width: 40,
-              height: 40,
-              child: const CircularProgressIndicator(strokeWidth: 3),
-            ),
-          ),
-        ],
-      ),
+    return IconButton(
+      onPressed: Scaffold.of(context).openEndDrawer,
+      icon: const Icon(Icons.photo_library),
     );
   }
 }
