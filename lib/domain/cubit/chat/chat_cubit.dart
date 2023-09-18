@@ -70,7 +70,7 @@ class ChatCubit extends CubitWithStatus<ChatState, dynamic, dynamic> {
           loggedUserId: loggedUserId,
           recipientFullName: recipientFullName,
           messagesFromLatest:
-              _sortChatMessagesAscendingBySendDateTime(chatMessages),
+              _sortChatMessagesDescendingBySendDateTime(chatMessages),
         ));
       },
     );
@@ -153,8 +153,7 @@ class ChatCubit extends CubitWithStatus<ChatState, dynamic, dynamic> {
             ),
           );
 
-  //TODO: Should be descending in name
-  List<ChatMessage> _sortChatMessagesAscendingBySendDateTime(
+  List<ChatMessage> _sortChatMessagesDescendingBySendDateTime(
     List<ChatMessage> chatMessages,
   ) {
     final List<ChatMessage> sortedChatMessages = [...chatMessages];

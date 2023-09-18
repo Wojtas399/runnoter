@@ -127,7 +127,7 @@ void main() {
 
       blocTest(
         'should load logged user id and recipient, '
-        'should set listener of messages with images and should sort messages ascending by date before emitting them',
+        'should set listener of messages with images and should sort messages descending by date before emitting them',
         build: () => createCubit(),
         setUp: () {
           authService.mockGetLoggedUserId(userId: loggedUserId);
