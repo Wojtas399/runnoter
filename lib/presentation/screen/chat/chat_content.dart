@@ -8,6 +8,7 @@ import 'package:rxdart/rxdart.dart';
 
 import '../../../domain/cubit/chat/chat_cubit.dart';
 import '../../component/body/big_body_component.dart';
+import '../../component/gap/gap_horizontal_components.dart';
 import '../../component/nullable_text_component.dart';
 import 'chat_bottom_part.dart';
 import 'chat_messages.dart';
@@ -23,6 +24,15 @@ class ChatContent extends StatelessWidget {
         foregroundColor: Theme.of(context).canvasColor,
         centerTitle: true,
         title: const _RecipientFullName(),
+        actions: [
+          IconButton(
+            onPressed: () {
+              //TODO: Navigate to images gallery
+            },
+            icon: const Icon(Icons.photo_library),
+          ),
+          kIsWeb ? const GapHorizontal16() : const GapHorizontal8(),
+        ],
       ),
       body: SafeArea(
         child: BigBody(
