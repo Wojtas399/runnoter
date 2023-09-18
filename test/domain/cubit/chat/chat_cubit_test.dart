@@ -18,6 +18,7 @@ import 'package:runnoter/domain/repository/message_repository.dart';
 import 'package:runnoter/domain/repository/person_repository.dart';
 import 'package:runnoter/domain/service/auth_service.dart';
 import 'package:runnoter/domain/service/connectivity_service.dart';
+import 'package:rxdart/rxdart.dart';
 
 import '../../../creators/message_creator.dart';
 import '../../../creators/person_creator.dart';
@@ -117,44 +118,16 @@ void main() {
         MessageImage(id: 'i1', messageId: 'm1', order: 1, bytes: Uint8List(1)),
         MessageImage(id: 'i2', messageId: 'm2', order: 2, bytes: Uint8List(2)),
       ];
-      final List<ChatMessage> expectedChatMessages = [
-        ChatMessage(
-          id: 'm1',
-          senderId: 'u1',
-          sendDateTime: DateTime(2023, 1, 10),
-          text: 'message 1',
-          images: m1MessageImages,
-        ),
-        ChatMessage(
-          id: 'm2',
-          senderId: 'u2',
-          sendDateTime: DateTime(2023, 1, 5),
-          text: 'message 2',
-          images: const [],
-        ),
-      ];
-      final List<ChatMessage> expectedUpdatedChatMessages = [
-        ChatMessage(
-          id: 'm2',
-          senderId: 'u2',
-          sendDateTime: DateTime(2023, 1, 5),
-          text: 'updated message 2',
-          images: const [],
-        ),
-        ChatMessage(
-          id: 'm1',
-          senderId: 'u1',
-          sendDateTime: DateTime(2023, 1, 2),
-          text: 'updated message 1',
-          images: m1MessageImages,
-        ),
-      ];
       final StreamController<List<Message>> messages$ = StreamController()
         ..add(messages);
+      final StreamController<List<MessageImage>> m1MessageImages$ =
+          BehaviorSubject.seeded(m1MessageImages);
+      final StreamController<List<MessageImage>> m2MessageImages$ =
+          BehaviorSubject.seeded(const []);
 
       blocTest(
         'should load logged user id and recipient, '
-        'should set listener of messages and should sort messages ascending by date before emitting them',
+        'should set listener of messages with images and should sort messages ascending by date before emitting them',
         build: () => createCubit(),
         setUp: () {
           authService.mockGetLoggedUserId(userId: loggedUserId);
@@ -170,28 +143,82 @@ void main() {
             messagesStream: messages$.stream,
           );
           when(
-            () => messageImageRepository.loadImagesByMessageId(messageId: 'm1'),
-          ).thenAnswer((_) => Future.value(m1MessageImages));
+            () => messageImageRepository.getImagesByMessageId(messageId: 'm1'),
+          ).thenAnswer((_) => m1MessageImages$.stream);
           when(
-            () => messageImageRepository.loadImagesByMessageId(messageId: 'm2'),
-          ).thenAnswer((_) => Future.value(const []));
+            () => messageImageRepository.getImagesByMessageId(messageId: 'm2'),
+          ).thenAnswer((_) => m2MessageImages$.stream);
         },
-        act: (cubit) {
+        act: (cubit) async {
           cubit.initialize();
+          await cubit.stream.first;
           messages$.add(updatedMessages);
+          await cubit.stream.first;
+          m1MessageImages$.add([]);
         },
         expect: () => [
           ChatState(
             status: const CubitStatusComplete(),
             loggedUserId: loggedUserId,
             recipientFullName: '${recipient.name} ${recipient.surname}',
-            messagesFromLatest: expectedChatMessages,
+            messagesFromLatest: [
+              ChatMessage(
+                id: 'm1',
+                senderId: 'u1',
+                sendDateTime: DateTime(2023, 1, 10),
+                text: 'message 1',
+                images: m1MessageImages,
+              ),
+              ChatMessage(
+                id: 'm2',
+                senderId: 'u2',
+                sendDateTime: DateTime(2023, 1, 5),
+                text: 'message 2',
+                images: const [],
+              ),
+            ],
           ),
           ChatState(
             status: const CubitStatusComplete(),
             loggedUserId: loggedUserId,
             recipientFullName: '${recipient.name} ${recipient.surname}',
-            messagesFromLatest: expectedUpdatedChatMessages,
+            messagesFromLatest: [
+              ChatMessage(
+                id: 'm2',
+                senderId: 'u2',
+                sendDateTime: DateTime(2023, 1, 5),
+                text: 'updated message 2',
+                images: const [],
+              ),
+              ChatMessage(
+                id: 'm1',
+                senderId: 'u1',
+                sendDateTime: DateTime(2023, 1, 2),
+                text: 'updated message 1',
+                images: m1MessageImages,
+              ),
+            ],
+          ),
+          ChatState(
+            status: const CubitStatusComplete(),
+            loggedUserId: loggedUserId,
+            recipientFullName: '${recipient.name} ${recipient.surname}',
+            messagesFromLatest: [
+              ChatMessage(
+                id: 'm2',
+                senderId: 'u2',
+                sendDateTime: DateTime(2023, 1, 5),
+                text: 'updated message 2',
+                images: const [],
+              ),
+              ChatMessage(
+                id: 'm1',
+                senderId: 'u1',
+                sendDateTime: DateTime(2023, 1, 2),
+                text: 'updated message 1',
+                images: const [],
+              ),
+            ],
           ),
         ],
         verify: (_) {

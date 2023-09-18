@@ -3,7 +3,7 @@ import 'dart:typed_data';
 import '../entity/message_image.dart';
 
 abstract interface class MessageImageRepository {
-  Future<List<MessageImage>> loadImagesByMessageId({
+  Stream<List<MessageImage>> getImagesByMessageId({
     required final String messageId,
   });
 

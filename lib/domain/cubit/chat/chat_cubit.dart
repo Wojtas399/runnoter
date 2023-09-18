@@ -31,7 +31,7 @@ class ChatCubit extends CubitWithStatus<ChatState, dynamic, dynamic> {
   final PersonRepository _personRepository;
   final DateService _dateService;
   final ConnectivityService _connectivityService;
-  StreamSubscription<List<Message>>? _messagesListener;
+  StreamSubscription<List<ChatMessage>>? _chatMessagesListener;
 
   ChatCubit({
     required this.chatId,
@@ -47,8 +47,8 @@ class ChatCubit extends CubitWithStatus<ChatState, dynamic, dynamic> {
 
   @override
   Future<void> close() {
-    _messagesListener?.cancel();
-    _messagesListener = null;
+    _chatMessagesListener?.cancel();
+    _chatMessagesListener = null;
     return super.close();
   }
 
@@ -56,11 +56,16 @@ class ChatCubit extends CubitWithStatus<ChatState, dynamic, dynamic> {
     final String? loggedUserId = await _authService.loggedUserId$.first;
     if (loggedUserId == null) return;
     final String recipientFullName = await _loadRecipientFullName(loggedUserId);
-    _messagesListener ??=
-        _messageRepository.getMessagesForChat(chatId: chatId).listen(
-      (List<Message> messages) async {
-        final List<ChatMessage> chatMessages =
-            await _combineMessagesWithImages(messages);
+    _chatMessagesListener ??= _messageRepository
+        .getMessagesForChat(chatId: chatId)
+        .switchMap(
+          (List<Message> messages) => Rx.combineLatest(
+            messages.map(_mapMessageToChatMessage),
+            (List<ChatMessage> chatMessages) => chatMessages,
+          ),
+        )
+        .listen(
+      (List<ChatMessage> chatMessages) {
         emit(state.copyWith(
           loggedUserId: loggedUserId,
           recipientFullName: recipientFullName,
@@ -137,25 +142,16 @@ class ChatCubit extends CubitWithStatus<ChatState, dynamic, dynamic> {
     return '${recipient.name} ${recipient.surname}';
   }
 
-  Future<List<ChatMessage>> _combineMessagesWithImages(
-    List<Message> messages,
-  ) async {
-    final List<ChatMessage> chatMessages = [];
-    for (final message in messages) {
-      final List<MessageImage> images =
-          await _messageImageRepository.loadImagesByMessageId(
-        messageId: message.id,
-      );
-      chatMessages.add(ChatMessage(
-        id: message.id,
-        senderId: message.senderId,
-        sendDateTime: message.dateTime,
-        text: message.text,
-        images: images,
-      ));
-    }
-    return chatMessages;
-  }
+  Stream<ChatMessage> _mapMessageToChatMessage(Message message) =>
+      _messageImageRepository.getImagesByMessageId(messageId: message.id).map(
+            (List<MessageImage> messageImages) => ChatMessage(
+              id: message.id,
+              senderId: message.senderId,
+              sendDateTime: message.dateTime,
+              text: message.text,
+              images: messageImages,
+            ),
+          );
 
   List<ChatMessage> _sortChatMessagesAscendingBySendDateTime(
     List<ChatMessage> chatMessages,

@@ -9,6 +9,7 @@ import 'package:runnoter/domain/additional_model/custom_exception.dart';
 import 'package:runnoter/domain/entity/message_image.dart';
 
 import '../../creators/message_dto_creator.dart';
+import '../../creators/message_image_creator.dart';
 import '../../creators/message_image_dto_creator.dart';
 import '../../mock/firebase/mock_firebase_message_image_service.dart';
 import '../../mock/firebase/mock_firebase_message_service.dart';
@@ -37,54 +38,44 @@ void main() {
   });
 
   test(
-    'load images by message id, '
-    'message does not exist, '
-    'should return empty array',
-    () async {
-      const String messageId = 'm1';
-      dbMessageService.mockLoadMessageById();
-
-      final List<MessageImage> images = await repository.loadImagesByMessageId(
-        messageId: messageId,
-      );
-
-      expect(images, const []);
-    },
-  );
-
-  test(
-    'load images by message id, '
-    'should load and return all images from message',
-    () async {
+    'get images by message id, '
+    'should load new images from db, add them to repo and '
+    'should emit all message images with given message id',
+    () {
       const String messageId = 'm1';
       const String chatId = 'c1';
       final MessageDto messageDto = createMessageDto(
         id: messageId,
         chatId: chatId,
       );
-      final List<MessageImageDto> messageImageDtos = [
+      final List<MessageImage> existingMessageImages = [
+        createMessageImage(id: 'i1', messageId: messageId),
+        createMessageImage(id: 'i2', messageId: 'm2'),
+        createMessageImage(id: 'i3', messageId: 'm3'),
+      ];
+      final List<MessageImageDto> loadedMessageImageDtos = [
         MessageImageDto(
-          id: 'i1',
+          id: 'i4',
           messageId: messageId,
           sendDateTime: DateTime(2023, 1, 10),
           order: 1,
         ),
         MessageImageDto(
-          id: 'i2',
+          id: 'i5',
           messageId: messageId,
           sendDateTime: DateTime(2023, 1, 12),
           order: 2,
         ),
       ];
-      final List<MessageImage> expectedImages = [
+      final List<MessageImage> loadedMessageImages = [
         MessageImage(
-          id: 'i1',
+          id: 'i4',
           messageId: messageId,
           order: 1,
           bytes: Uint8List(1),
         ),
         MessageImage(
-          id: 'i2',
+          id: 'i5',
           messageId: messageId,
           order: 2,
           bytes: Uint8List(2),
@@ -92,41 +83,40 @@ void main() {
       ];
       dbMessageService.mockLoadMessageById(messageDto: messageDto);
       dbMessageImageService.mockLoadMessageImagesByMessageId(
-        messageImageDtos: messageImageDtos,
+        messageImageDtos: loadedMessageImageDtos,
       );
       when(
         () => dbStorageService.loadMessageImage(
           messageId: messageId,
-          imageId: 'i1',
+          imageId: 'i4',
         ),
       ).thenAnswer((_) => Future.value(Uint8List(1)));
       when(
         () => dbStorageService.loadMessageImage(
           messageId: messageId,
-          imageId: 'i2',
+          imageId: 'i5',
         ),
       ).thenAnswer((_) => Future.value(Uint8List(2)));
-
-      final List<MessageImage> images = await repository.loadImagesByMessageId(
-        messageId: messageId,
+      repository = MessageImageRepositoryImpl(
+        initialData: existingMessageImages,
       );
 
-      expect(images, expectedImages);
-      verify(
-        () => dbMessageService.loadMessageById(messageId: messageId),
-      ).called(1);
-      verify(
-        () => dbStorageService.loadMessageImage(
-          messageId: messageId,
-          imageId: 'i1',
-        ),
-      ).called(1);
-      verify(
-        () => dbStorageService.loadMessageImage(
-          messageId: messageId,
-          imageId: 'i2',
-        ),
-      ).called(1);
+      final Stream<List<MessageImage>> messageImages$ =
+          repository.getImagesByMessageId(messageId: messageId);
+
+      expect(
+        messageImages$,
+        emitsInOrder([
+          [existingMessageImages.first, ...loadedMessageImages],
+        ]),
+      );
+      expect(
+        repository.dataStream$,
+        emitsInOrder([
+          existingMessageImages,
+          [...existingMessageImages, ...loadedMessageImages]
+        ]),
+      );
     },
   );
 
