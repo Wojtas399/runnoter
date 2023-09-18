@@ -3,16 +3,19 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rxdart/rxdart.dart';
 
 import '../../../dependency_injection.dart';
 import '../../entity/message.dart';
 import '../../entity/message_image.dart';
+import '../../repository/message_image_repository.dart';
 import '../../repository/message_repository.dart';
 
 part 'chat_image_preview_state.dart';
 
 class ChatImagePreviewCubit extends Cubit<ChatImagePreviewState> {
   final MessageRepository _messageRepository;
+  final MessageImageRepository _messageImageRepository;
   final String _chatId;
   StreamSubscription<List<MessageImage>?>? _imagesListener;
 
@@ -20,6 +23,7 @@ class ChatImagePreviewCubit extends Cubit<ChatImagePreviewState> {
     required String chatId,
     ChatImagePreviewState initialState = const ChatImagePreviewState(),
   })  : _messageRepository = getIt<MessageRepository>(),
+        _messageImageRepository = getIt<MessageImageRepository>(),
         _chatId = chatId,
         super(initialState);
 
@@ -32,7 +36,8 @@ class ChatImagePreviewCubit extends Cubit<ChatImagePreviewState> {
   void initialize() {
     _imagesListener ??= _messageRepository
         .getMessagesForChat(chatId: _chatId)
-        .map(_extractSortedImagesFromMessages)
+        .map(_sortMessagesDescendingByDateTime)
+        .switchMap(_getImagesForEachMessage)
         .listen(
           (List<MessageImage> images) => emit(state.copyWith(images: images)),
         );
@@ -65,13 +70,33 @@ class ChatImagePreviewCubit extends Cubit<ChatImagePreviewState> {
     }
   }
 
-  List<MessageImage> _extractSortedImagesFromMessages(List<Message> messages) {
-    final imagesFromMessages = messages.map(_sortMessageImagesByOrder);
-    return [for (final messageImages in imagesFromMessages) ...messageImages];
+  List<Message> _sortMessagesDescendingByDateTime(List<Message> messages) {
+    final List<Message> sortedMessages = [...messages];
+    sortedMessages.sort(
+      (msg1, msg2) => msg1.dateTime.isBefore(msg2.dateTime) ? 1 : -1,
+    );
+    return sortedMessages;
   }
 
-  List<MessageImage> _sortMessageImagesByOrder(Message message) {
-    final List<MessageImage> sortedImages = [];
+  Stream<List<MessageImage>> _getImagesForEachMessage(
+    List<Message> messages,
+  ) =>
+      Rx.combineLatest(
+        messages.map(_getSortedImagesForMessage),
+        (List<List<MessageImage>> imagesForEachMessage) => [
+          for (final messageImages in imagesForEachMessage) ...messageImages,
+        ],
+      );
+
+  Stream<List<MessageImage>> _getSortedImagesForMessage(Message message) =>
+      _messageImageRepository
+          .getImagesByMessageId(messageId: message.id)
+          .map(_sortMessageImagesByOrder);
+
+  List<MessageImage> _sortMessageImagesByOrder(
+    List<MessageImage> messageImages,
+  ) {
+    final List<MessageImage> sortedImages = [...messageImages];
     sortedImages.sortBy<num>((MessageImage image) => image.order);
     return sortedImages;
   }

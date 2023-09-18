@@ -54,6 +54,7 @@ void resetGetItRepositories() {
   getIt.resetLazySingleton<RaceRepository>();
   getIt.resetLazySingleton<ChatRepository>();
   getIt.resetLazySingleton<MessageRepository>();
+  getIt.resetLazySingleton<MessageImageRepository>();
 }
 
 void _registerFirebaseServices() {

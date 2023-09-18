@@ -153,6 +153,7 @@ class ChatCubit extends CubitWithStatus<ChatState, dynamic, dynamic> {
             ),
           );
 
+  //TODO: Should be descending in name
   List<ChatMessage> _sortChatMessagesAscendingBySendDateTime(
     List<ChatMessage> chatMessages,
   ) {
