@@ -13,6 +13,7 @@ import '../../formatter/date_formatter.dart';
 import '../../service/dialog_service.dart';
 
 class ChatMessageItem extends StatelessWidget {
+  final bool isNew;
   final double maxWidth;
   final bool isSender;
   final String? text;
@@ -21,6 +22,7 @@ class ChatMessageItem extends StatelessWidget {
 
   const ChatMessageItem({
     super.key,
+    required this.isNew,
     required this.maxWidth,
     required this.isSender,
     required this.text,
@@ -38,29 +40,102 @@ class ChatMessageItem extends StatelessWidget {
             mainAxisAlignment:
                 isSender ? MainAxisAlignment.end : MainAxisAlignment.start,
             children: [
-              Card(
-                clipBehavior: Clip.hardEdge,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.only(
-                    topLeft: borderRadius,
-                    topRight: borderRadius,
-                    bottomLeft: isSender ? borderRadius : Radius.zero,
-                    bottomRight: isSender ? Radius.zero : borderRadius,
+              _AnimatedBody(
+                shouldRunAnimation: isNew,
+                isSender: isSender,
+                child: Card(
+                  clipBehavior: Clip.hardEdge,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.only(
+                      topLeft: borderRadius,
+                      topRight: borderRadius,
+                      bottomLeft: isSender ? borderRadius : Radius.zero,
+                      bottomRight: isSender ? Radius.zero : borderRadius,
+                    ),
                   ),
-                ),
-                color:
-                    isSender ? colorScheme.primary : colorScheme.surfaceVariant,
-                child: _MessageContent(
-                  maxWidth: maxWidth,
-                  isSender: isSender,
-                  text: text,
-                  images: images,
-                  dateTime: dateTime,
+                  color: isSender
+                      ? colorScheme.primary
+                      : colorScheme.surfaceVariant,
+                  child: _MessageContent(
+                    maxWidth: maxWidth,
+                    isSender: isSender,
+                    text: text,
+                    images: images,
+                    dateTime: dateTime,
+                  ),
                 ),
               ),
             ],
           )
         : const SizedBox();
+  }
+}
+
+class _AnimatedBody extends StatefulWidget {
+  final bool shouldRunAnimation;
+  final bool isSender;
+  final Widget child;
+
+  const _AnimatedBody({
+    required this.shouldRunAnimation,
+    required this.isSender,
+    required this.child,
+  });
+
+  @override
+  State<StatefulWidget> createState() => _AnimatedBodyState();
+}
+
+class _AnimatedBodyState extends State<_AnimatedBody>
+    with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
+  late final AnimationController _animationController;
+  late final Animation<double> _sizeAnimation;
+  late final Animation<double> _scaleAnimation;
+
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 300),
+    )..forward();
+    _sizeAnimation = CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeInOutQuart,
+    );
+    _scaleAnimation = Tween(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _animationController,
+        curve: Curves.easeInOutQuart,
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+
+    return widget.shouldRunAnimation
+        ? SizeTransition(
+            sizeFactor: _sizeAnimation,
+            child: ScaleTransition(
+              scale: _scaleAnimation,
+              alignment: widget.isSender
+                  ? Alignment.bottomRight
+                  : Alignment.bottomLeft,
+              child: widget.child,
+            ),
+          )
+        : widget.child;
   }
 }
 

@@ -43,6 +43,7 @@ class ChatMessages extends StatelessWidget {
                   final double maxMessageWidth = constraints.maxWidth * 0.6;
 
                   return _MessagesList(
+                    messages: messages,
                     scrollController: scrollController,
                     maxMessageWidth: maxMessageWidth,
                   );
@@ -52,72 +53,82 @@ class ChatMessages extends StatelessWidget {
   }
 }
 
-class _MessagesList extends StatelessWidget {
+class _MessagesList extends StatefulWidget {
+  final List<ChatMessage> messages;
   final ScrollController? scrollController;
   final double maxMessageWidth;
+
+  const _MessagesList({
+    required this.messages,
+    this.scrollController,
+    required this.maxMessageWidth,
+  });
+
+  @override
+  State<StatefulWidget> createState() => _MessagesListState();
+}
+
+class _MessagesListState extends State<_MessagesList> {
+  List<ChatMessage> _oldMessages = const [];
   final DateService _dateService = getIt<DateService>();
 
-  _MessagesList({this.scrollController, required this.maxMessageWidth});
+  bool get _isFirstMessageNew => _oldMessages.isNotEmpty
+      ? _oldMessages.first != widget.messages[0]
+      : false;
+
+  @override
+  void didUpdateWidget(covariant _MessagesList oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    setState(() {
+      _oldMessages = oldWidget.messages;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final String loggedUserId = context.select(
       (ChatCubit cubit) => cubit.state.loggedUserId!,
     );
-    final List<ChatMessage> messages = context.select(
-      (ChatCubit cubit) => cubit.state.messagesFromLatest!,
-    );
-    final List<Widget> elements =
-        _createMessagesWithSeparators(messages, loggedUserId);
+    final List<ChatMessage> messages = widget.messages;
+    final int numberOfMessages = messages.length;
 
     return ScrollConfiguration(
       behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
-      child: ListView.builder(
+      child: ListView.separated(
         reverse: true,
         padding: const EdgeInsets.all(16),
-        controller: scrollController,
-        itemCount: elements.length,
-        itemBuilder: (_, int elementIndex) => elements[elementIndex],
+        controller: widget.scrollController,
+        itemCount: numberOfMessages + 1,
+        separatorBuilder: (_, int separatorIndex) {
+          if (separatorIndex >= numberOfMessages - 1) return const SizedBox();
+          final currentMsg = messages[separatorIndex];
+          final ChatMessage nextMsg = messages[separatorIndex + 1];
+          final bool areDifferentDays = !_dateService.areDaysTheSame(
+            currentMsg.sendDateTime,
+            nextMsg.sendDateTime,
+          );
+          return areDifferentDays
+              ? _DaySeparator(date: currentMsg.sendDateTime)
+              : const SizedBox();
+        },
+        itemBuilder: (_, int messageIndex) {
+          if (messageIndex == numberOfMessages) {
+            final previousMsg = messages[messageIndex - 1];
+            return _DaySeparator(date: previousMsg.sendDateTime);
+          }
+          final currentMsg = messages[messageIndex];
+          return ChatMessageItem(
+            key: ValueKey(currentMsg.id),
+            isNew: messageIndex == 0 && _isFirstMessageNew,
+            maxWidth: widget.maxMessageWidth,
+            isSender: loggedUserId == currentMsg.senderId,
+            text: currentMsg.text,
+            images: currentMsg.images,
+            dateTime: currentMsg.sendDateTime,
+          );
+        },
       ),
     );
-  }
-
-  List<Widget> _createMessagesWithSeparators(
-    List<ChatMessage> messages,
-    String loggedUserId,
-  ) {
-    final List<Widget> elements = [];
-    for (int elementIdx = 0; elementIdx < messages.length + 1; elementIdx++) {
-      if (elementIdx == messages.length) {
-        final previousMsg = messages[elementIdx - 1];
-        elements.add(_DaySeparator(date: previousMsg.sendDateTime));
-        continue;
-      }
-      final ChatMessage currentMsg = messages[elementIdx];
-      final ChatMessageItem chatMessageItem = ChatMessageItem(
-        maxWidth: maxMessageWidth,
-        isSender: loggedUserId == currentMsg.senderId,
-        text: currentMsg.text,
-        images: currentMsg.images,
-        dateTime: currentMsg.sendDateTime,
-      );
-      if (elementIdx < messages.length - 1) {
-        final ChatMessage nextMsg = messages[elementIdx + 1];
-        final bool areDifferentDays = !_dateService.areDaysTheSame(
-          currentMsg.sendDateTime,
-          nextMsg.sendDateTime,
-        );
-        if (areDifferentDays) {
-          elements.addAll([
-            chatMessageItem,
-            _DaySeparator(date: currentMsg.sendDateTime),
-          ]);
-          continue;
-        }
-      }
-      elements.add(chatMessageItem);
-    }
-    return elements;
   }
 }
 
