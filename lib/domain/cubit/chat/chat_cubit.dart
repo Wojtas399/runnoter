@@ -112,7 +112,7 @@ class ChatCubit extends CubitWithStatus<ChatState, dynamic, dynamic> {
         );
       }
       emit(state.copyWith(
-        status: const CubitStatusComplete(),
+        status: const CubitStatusLoading(),
         messageToSendAsNull: true,
         imagesToSend: [],
       ));

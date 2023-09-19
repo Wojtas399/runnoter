@@ -380,7 +380,7 @@ void main() {
         imagesToSend: [],
       ),
       const ChatState(
-        status: CubitStatusComplete(),
+        status: CubitStatusLoading(),
         loggedUserId: loggedUserId,
         messageToSend: null,
         imagesToSend: [],
@@ -421,7 +421,7 @@ void main() {
         imagesToSend: [Uint8List(1), Uint8List(2)],
       ),
       const ChatState(
-        status: CubitStatusComplete(),
+        status: CubitStatusLoading(),
         loggedUserId: loggedUserId,
         messageToSend: null,
         imagesToSend: [],
