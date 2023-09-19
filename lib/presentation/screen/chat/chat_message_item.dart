@@ -82,41 +82,35 @@ class _MessageContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const double cardPadding = 12;
+    final ThemeData theme = Theme.of(context);
 
     return Container(
       constraints: BoxConstraints(maxWidth: maxWidth),
       padding: const EdgeInsets.all(cardPadding),
-      child: IntrinsicWidth(
-        child: Column(
-          crossAxisAlignment:
-              isSender ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-          children: [
-            if (images.isNotEmpty)
-              _Images(
-                images: images,
-                doesTextExist: text != null,
-                maxMessageWidth: maxWidth,
-                cardPadding: cardPadding,
-                isSender: isSender,
-              ),
-            if (text?.isNotEmpty == true)
-              BodyMedium(
-                text!,
-                color: isSender ? Theme.of(context).canvasColor : null,
-              ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                LabelSmall(
-                  dateTime.toTime(),
-                  color: isSender
-                      ? Theme.of(context).colorScheme.outlineVariant
-                      : Theme.of(context).colorScheme.outline,
-                ),
-              ],
+      child: Column(
+        crossAxisAlignment:
+            isSender ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+        children: [
+          if (images.isNotEmpty)
+            _Images(
+              images: images,
+              doesTextExist: text != null,
+              maxMessageWidth: maxWidth,
+              cardPadding: cardPadding,
+              isSender: isSender,
             ),
-          ].addSeparator(const Gap8()),
-        ),
+          if (text?.isNotEmpty == true)
+            BodyMedium(
+              text!,
+              color: isSender ? theme.canvasColor : null,
+            ),
+          LabelSmall(
+            dateTime.toTime(),
+            color: isSender
+                ? theme.colorScheme.outlineVariant
+                : theme.colorScheme.outline,
+          ),
+        ].addSeparator(const Gap8()),
       ),
     );
   }
@@ -145,49 +139,53 @@ class _Images extends StatelessWidget {
     final int numberOfImagesInLastRow = numberOfImages % maxImagesInRow;
     const Radius borderRadius = Radius.circular(8);
 
-    return Container(
+    return ClipRRect(
       clipBehavior: Clip.hardEdge,
-      decoration: const BoxDecoration(
-        borderRadius:
-            BorderRadius.only(topLeft: borderRadius, topRight: borderRadius),
+      borderRadius: const BorderRadius.only(
+        topLeft: borderRadius,
+        topRight: borderRadius,
       ),
       child: Wrap(
         alignment: isSender ? WrapAlignment.end : WrapAlignment.start,
-        children: List.generate(
-          numberOfImages,
-          (int imageIndex) {
-            final MessageImage image = images[imageIndex];
-            final int currentRow = (imageIndex ~/ maxImagesInRow) + 1;
+        children: images.asMap().entries.map(
+          (MapEntry<int, MessageImage> entry) {
+            final int currentRow = (entry.key ~/ maxImagesInRow) + 1;
             int imagesInRow = currentRow == numberOfAllRows
                 ? numberOfImagesInLastRow
                 : maxImagesInRow;
-            final double width = imagesInRow == 1
-                ? double.infinity
-                : (maxMessageWidth - 2 * cardPadding) / imagesInRow;
-            final double? height = imagesInRow == 1
-                ? null
-                : kIsWeb
-                    ? 210
-                    : 90;
+            double? width = (maxMessageWidth - 2 * cardPadding) / imagesInRow;
+            double? height = kIsWeb ? 210 : 90;
+            if (imagesInRow == 1) {
+              width = images.length == 1 ? null : double.infinity;
+              height = null;
+            }
 
             return MouseRegion(
               cursor: SystemMouseCursors.click,
               child: GestureDetector(
-                onTap: () => _onTap(context, image),
+                onTap: () => _onTap(context, entry.value),
                 child: Container(
                   width: width,
                   height: height,
                   constraints: const BoxConstraints(maxHeight: 400),
                   padding: EdgeInsets.only(
-                    right: imageIndex < imagesInRow - 1 ? 8 : 0,
+                    right: entry.key < imagesInRow - 1 ? 8 : 0,
                     bottom: currentRow != numberOfAllRows ? 8 : 0,
                   ),
-                  child: Image.memory(image.bytes, fit: BoxFit.cover),
+                  child: Image.memory(
+                    entry.value.bytes,
+                    fit: BoxFit.cover,
+                    frameBuilder: (context, child, frame, _) => frame == 0
+                        ? child
+                        : CircularProgressIndicator(
+                            color: Theme.of(context).canvasColor,
+                          ),
+                  ),
                 ),
               ),
             );
           },
-        ),
+        ).toList(),
       ),
     );
   }

@@ -15,10 +15,9 @@ import '../../formatter/date_formatter.dart';
 import 'chat_message_item.dart';
 
 class ChatMessages extends StatelessWidget {
-  final DateService _dateService = getIt<DateService>();
   final ScrollController? scrollController;
 
-  ChatMessages({super.key, this.scrollController});
+  const ChatMessages({super.key, this.scrollController});
 
   @override
   Widget build(BuildContext context) {
@@ -43,44 +42,82 @@ class ChatMessages extends StatelessWidget {
                 builder: (context, constraints) {
                   final double maxMessageWidth = constraints.maxWidth * 0.6;
 
-                  return ListView.separated(
-                    reverse: true,
-                    padding: const EdgeInsets.all(16),
-                    itemCount: messages.length + 1,
-                    controller: scrollController,
-                    separatorBuilder: (_, int itemIndex) {
-                      if (itemIndex >= messages.length - 1) {
-                        return const SizedBox();
-                      }
-                      final ChatMessage currentMsg = messages[itemIndex];
-                      final ChatMessage nextMsg = messages[itemIndex + 1];
-                      final bool areDifferentDays =
-                          !_dateService.areDaysTheSame(
-                        currentMsg.sendDateTime,
-                        nextMsg.sendDateTime,
-                      );
-                      return areDifferentDays
-                          ? _DaySeparator(date: currentMsg.sendDateTime)
-                          : const SizedBox();
-                    },
-                    itemBuilder: (_, int messageIndex) {
-                      if (messageIndex == messages.length) {
-                        final previousMsg = messages[messageIndex - 1];
-                        return _DaySeparator(date: previousMsg.sendDateTime);
-                      }
-                      final currentMsg = messages[messageIndex];
-                      return ChatMessageItem(
-                        maxWidth: maxMessageWidth,
-                        isSender: loggedUserId == currentMsg.senderId,
-                        text: currentMsg.text,
-                        images: currentMsg.images,
-                        dateTime: currentMsg.sendDateTime,
-                      );
-                    },
+                  return _MessagesList(
+                    scrollController: scrollController,
+                    maxMessageWidth: maxMessageWidth,
                   );
                 },
               ),
           };
+  }
+}
+
+class _MessagesList extends StatelessWidget {
+  final ScrollController? scrollController;
+  final double maxMessageWidth;
+  final DateService _dateService = getIt<DateService>();
+
+  _MessagesList({this.scrollController, required this.maxMessageWidth});
+
+  @override
+  Widget build(BuildContext context) {
+    final String loggedUserId = context.select(
+      (ChatCubit cubit) => cubit.state.loggedUserId!,
+    );
+    final List<ChatMessage> messages = context.select(
+      (ChatCubit cubit) => cubit.state.messagesFromLatest!,
+    );
+    final List<Widget> elements =
+        _createMessagesWithSeparators(messages, loggedUserId);
+
+    return ScrollConfiguration(
+      behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
+      child: ListView.builder(
+        reverse: true,
+        padding: const EdgeInsets.all(16),
+        controller: scrollController,
+        itemCount: elements.length,
+        itemBuilder: (_, int elementIndex) => elements[elementIndex],
+      ),
+    );
+  }
+
+  List<Widget> _createMessagesWithSeparators(
+    List<ChatMessage> messages,
+    String loggedUserId,
+  ) {
+    final List<Widget> elements = [];
+    for (int elementIdx = 0; elementIdx < messages.length + 1; elementIdx++) {
+      if (elementIdx == messages.length) {
+        final previousMsg = messages[elementIdx - 1];
+        elements.add(_DaySeparator(date: previousMsg.sendDateTime));
+        continue;
+      }
+      final ChatMessage currentMsg = messages[elementIdx];
+      final ChatMessageItem chatMessageItem = ChatMessageItem(
+        maxWidth: maxMessageWidth,
+        isSender: loggedUserId == currentMsg.senderId,
+        text: currentMsg.text,
+        images: currentMsg.images,
+        dateTime: currentMsg.sendDateTime,
+      );
+      if (elementIdx < messages.length - 1) {
+        final ChatMessage nextMsg = messages[elementIdx + 1];
+        final bool areDifferentDays = !_dateService.areDaysTheSame(
+          currentMsg.sendDateTime,
+          nextMsg.sendDateTime,
+        );
+        if (areDifferentDays) {
+          elements.addAll([
+            chatMessageItem,
+            _DaySeparator(date: currentMsg.sendDateTime),
+          ]);
+          continue;
+        }
+      }
+      elements.add(chatMessageItem);
+    }
+    return elements;
   }
 }
 
