@@ -7,7 +7,11 @@ abstract interface class MessageImageRepository {
     required final String messageId,
   });
 
-  Future<List<MessageImage>> loadImagesForChat({
+  Stream<List<MessageImage>> getImagesForChat({
+    required final String chatId,
+  });
+
+  Future<void> loadOlderImagesForChat({
     required final String chatId,
     final String? lastVisibleImageId,
   });

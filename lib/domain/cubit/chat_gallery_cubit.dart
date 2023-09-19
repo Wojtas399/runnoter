@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../dependency_injection.dart';
@@ -11,25 +13,31 @@ class ChatGalleryCubit extends Cubit<List<MessageImage>?> {
   final String chatId;
   final MessageImageRepository _messageImageRepository;
   final MessageRepository _messageRepository;
+  StreamSubscription<List<MessageImage>>? _imagesListener;
 
   ChatGalleryCubit({required this.chatId})
       : _messageImageRepository = getIt<MessageImageRepository>(),
         _messageRepository = getIt<MessageRepository>(),
         super(null);
 
-  Future<void> initialize() async {
-    final List<MessageImage> images =
-        await _messageImageRepository.loadImagesForChat(chatId: chatId);
-    final List<_MessageImages> imagesGroupedByMessage =
-        await _groupImagesByMessage(images);
-    final List<_MessageImages> imagesGroupedByMessageAndSortedBySendDateTime =
-        _sortGroupedImagesDescendingBySendDateTime(imagesGroupedByMessage);
-    emit(
-      [
-        for (final group in imagesGroupedByMessageAndSortedBySendDateTime)
-          ...group.images.sortByOrder(),
-      ],
-    );
+  @override
+  Future<void> close() {
+    _imagesListener?.cancel();
+    return super.close();
+  }
+
+  void initialize() {
+    _imagesListener ??= _messageImageRepository
+        .getImagesForChat(chatId: chatId)
+        .asyncMap(_groupImagesByMessage)
+        .map(_sortGroupedImagesDescendingBySendDateTime)
+        .map(
+          (List<_MessageImages> messagesWithImages) => <MessageImage>[
+            for (final messageImages in messagesWithImages)
+              ...messageImages.images.sortByOrder(),
+          ],
+        )
+        .listen(emit);
   }
 
   Future<List<_MessageImages>> _groupImagesByMessage(

@@ -5,22 +5,32 @@ import 'package:runnoter/domain/repository/message_image_repository.dart';
 class MockMessageImageRepository extends Mock
     implements MessageImageRepository {
   void mockGetImagesByMessageId({
-    required Stream<List<MessageImage>> messageImagesStream,
+    required Stream<List<MessageImage>> imagesStream,
   }) {
     when(
       () => getImagesByMessageId(
         messageId: any(named: 'messageId'),
       ),
-    ).thenAnswer((_) => messageImagesStream);
+    ).thenAnswer((_) => imagesStream);
   }
 
-  void mockLoadImagesForChat({required List<MessageImage> images}) {
+  void mockGetImagesForChat({
+    required Stream<List<MessageImage>> imagesStream,
+  }) {
     when(
-      () => loadImagesForChat(
+      () => getImagesForChat(
+        chatId: any(named: 'chatId'),
+      ),
+    ).thenAnswer((_) => imagesStream);
+  }
+
+  void mockLoadOlderImagesForChat() {
+    when(
+      () => loadOlderImagesForChat(
         chatId: any(named: 'chatId'),
         lastVisibleImageId: any(named: 'lastVisibleImageId'),
       ),
-    ).thenAnswer((_) => Future.value(images));
+    ).thenAnswer((_) => Future.value());
   }
 
   void mockAddImagesInOrderToMessage() {

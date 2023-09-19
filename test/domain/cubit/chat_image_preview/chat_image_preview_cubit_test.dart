@@ -76,8 +76,7 @@ void main() {
             messagesStream: messages$.stream,
           );
           messageImageRepository.mockGetImagesByMessageId(
-            messageImagesStream:
-                BehaviorSubject<List<MessageImage>>.seeded([]).stream,
+            imagesStream: BehaviorSubject<List<MessageImage>>.seeded([]).stream,
           );
           when(
             () => messageImageRepository.getImagesByMessageId(messageId: 'm1'),

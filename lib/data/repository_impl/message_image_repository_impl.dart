@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:firebase/firebase.dart';
+import 'package:rxdart/rxdart.dart';
 
 import '../../dependency_injection.dart';
 import '../../domain/additional_model/custom_exception.dart';
@@ -35,16 +37,42 @@ class MessageImageRepositoryImpl extends StateRepository<MessageImage>
   }
 
   @override
-  Future<List<MessageImage>> loadImagesForChat({
+  Stream<List<MessageImage>> getImagesForChat({
+    required final String chatId,
+  }) {
+    final StreamController<bool> canEmit$ = StreamController()..add(false);
+    _loadImagesFromDbForChat(chatId).then((_) => canEmit$.add(true));
+    StreamSubscription<List<MessageImageDto>?>? newImagesListener;
+    return canEmit$.stream
+        .switchMap(
+          (bool canEmit) {
+            return canEmit ? _getImagesFromChat(chatId) : Stream.value(null);
+          },
+        )
+        .whereNotNull()
+        .doOnData(
+          (_) {
+            newImagesListener ??= _dbMessageImageService
+                .getAddedImagesForChat(chatId: chatId)
+                .whereNotNull()
+                .listen(_manageNewImages);
+          },
+        )
+        .doOnCancel(
+          () {
+            newImagesListener?.cancel();
+            newImagesListener = null;
+          },
+        );
+  }
+
+  @override
+  Future<void> loadOlderImagesForChat({
     required final String chatId,
     final String? lastVisibleImageId,
-  }) async {
-    final List<MessageImageDto> imageDtos =
-        await _dbMessageImageService.loadMessageImagesForChat(
-      chatId: chatId,
-      lastVisibleImageId: lastVisibleImageId,
-    );
-    return await _loadImagesFromStorageForDtos(imageDtos);
+  }) {
+    // TODO: implement loadOlderImagesForChat
+    throw UnimplementedError();
   }
 
   @override
@@ -95,12 +123,10 @@ class MessageImageRepositoryImpl extends StateRepository<MessageImage>
     addOrUpdateEntities(addedMessageImages);
   }
 
-  Future<List<MessageImage>> _loadImagesFromDbByMessageId(
-    String messageId,
-  ) async {
+  Future<void> _loadImagesFromDbByMessageId(String messageId) async {
     final MessageDto? messageDto =
         await _dbMessageService.loadMessageById(messageId: messageId);
-    if (messageDto == null) return [];
+    if (messageDto == null) return;
     final List<MessageImageDto> imageDtos =
         await _dbMessageImageService.loadMessageImagesByMessageId(
       chatId: messageDto.chatId,
@@ -109,7 +135,19 @@ class MessageImageRepositoryImpl extends StateRepository<MessageImage>
     final List<MessageImage> images =
         await _loadImagesFromStorageForDtos(imageDtos);
     addOrUpdateEntities(images);
-    return images;
+  }
+
+  Future<void> _loadImagesFromDbForChat(
+    String chatId, {
+    String? lastVisibleImageId,
+  }) async {
+    final imageDtos = await _dbMessageImageService.loadMessageImagesForChat(
+      chatId: chatId,
+      lastVisibleImageId: lastVisibleImageId,
+    );
+    final List<MessageImage> images =
+        await _loadImagesFromStorageForDtos(imageDtos);
+    addOrUpdateEntities(images);
   }
 
   Future<List<MessageImage>> _loadImagesFromStorageForDtos(
@@ -128,5 +166,27 @@ class MessageImageRepositoryImpl extends StateRepository<MessageImage>
       }
     }
     return images;
+  }
+
+  Stream<List<MessageImage>?> _getImagesFromChat(final String chatId) =>
+      dataStream$.asyncMap(
+        (images) async {
+          final List<MessageImage> matchedImages = [];
+          for (final image in [...?images]) {
+            final messageDto = await _dbMessageService.loadMessageById(
+              messageId: image.messageId,
+            );
+            if (messageDto?.chatId == chatId) matchedImages.add(image);
+          }
+          return matchedImages;
+        },
+      );
+
+  Future<void> _manageNewImages(List<MessageImageDto> imageDtos) async {
+    if (imageDtos.isNotEmpty) {
+      final List<MessageImage> images =
+          await _loadImagesFromStorageForDtos(imageDtos);
+      addOrUpdateEntities(images);
+    }
   }
 }

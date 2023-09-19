@@ -4,6 +4,26 @@ import '../firebase_collections.dart';
 import '../model/message_image_dto.dart';
 
 class FirebaseMessageImageService {
+  Stream<List<MessageImageDto>?> getAddedImagesForChat({
+    required final String chatId,
+  }) {
+    bool isFirstQuery = true;
+    return getMessageImagesRef(chatId).snapshots().map(
+      (QuerySnapshot<MessageImageDto> querySnapshot) {
+        if (isFirstQuery) {
+          isFirstQuery = false;
+          return null;
+        }
+        return querySnapshot.docChanges
+            .where((docChange) =>
+                docChange.type == DocumentChangeType.added &&
+                docChange.doc.data() != null)
+            .map((docChange) => docChange.doc.data()!)
+            .toList();
+      },
+    );
+  }
+
   Future<List<MessageImageDto>> loadMessageImagesByMessageId({
     required final String chatId,
     required final String messageId,
@@ -24,7 +44,7 @@ class FirebaseMessageImageService {
     if (lastVisibleImageId != null) {
       final messageImageSnapshot =
           await getMessageImagesRef(chatId).doc(lastVisibleImageId).get();
-      limitedQuery = query.startAfterDocument(messageImageSnapshot).limit(20);
+      limitedQuery = query.startAfterDocument(messageImageSnapshot).limit(50);
     }
     final messageImagesSnapshot = await limitedQuery.get();
     return messageImagesSnapshot.docs

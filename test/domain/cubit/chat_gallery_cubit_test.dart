@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
@@ -34,6 +36,11 @@ void main() {
       final List<MessageImage> images = [
         createMessageImage(id: 'i1', messageId: 'm1', order: 1),
         createMessageImage(id: 'i3', messageId: 'm2', order: 1),
+        createMessageImage(id: 'i2', messageId: 'm1', order: 2),
+      ];
+      final List<MessageImage> updatedImages = [
+        createMessageImage(id: 'i1', messageId: 'm1', order: 1),
+        createMessageImage(id: 'i3', messageId: 'm2', order: 1),
         createMessageImage(id: 'i5', messageId: 'm3', order: 2),
         createMessageImage(id: 'i2', messageId: 'm1', order: 2),
         createMessageImage(id: 'i4', messageId: 'm3', order: 1),
@@ -50,19 +57,28 @@ void main() {
         id: 'm3',
         dateTime: DateTime(2023, 1, 12, 12, 30),
       );
-      final List<MessageImage> expectedMessageImages = [
+      final List<MessageImage> expectedImages = [
+        createMessageImage(id: 'i3', messageId: 'm2', order: 1),
+        createMessageImage(id: 'i1', messageId: 'm1', order: 1),
+        createMessageImage(id: 'i2', messageId: 'm1', order: 2),
+      ];
+      final List<MessageImage> expectedUpdatedImages = [
         createMessageImage(id: 'i4', messageId: 'm3', order: 1),
         createMessageImage(id: 'i5', messageId: 'm3', order: 2),
         createMessageImage(id: 'i3', messageId: 'm2', order: 1),
         createMessageImage(id: 'i1', messageId: 'm1', order: 1),
         createMessageImage(id: 'i2', messageId: 'm1', order: 2),
       ];
+      final StreamController<List<MessageImage>> images$ = StreamController()
+        ..add(images);
 
       blocTest(
-        'should load images for chat and sort them descending by message date time and ascending by order',
+        'should set listener of images for chat and sort them descending by message date time and ascending by order',
         build: () => ChatGalleryCubit(chatId: chatId),
         setUp: () {
-          messageImageRepository.mockLoadImagesForChat(images: images);
+          messageImageRepository.mockGetImagesForChat(
+            imagesStream: images$.stream,
+          );
           when(
             () => messageRepository.loadMessageById(messageId: 'm1'),
           ).thenAnswer((_) => Future.value(m1Message));
@@ -73,9 +89,13 @@ void main() {
             () => messageRepository.loadMessageById(messageId: 'm3'),
           ).thenAnswer((_) => Future.value(m3Message));
         },
-        act: (cubit) => cubit.initialize(),
+        act: (cubit) {
+          cubit.initialize();
+          images$.add(updatedImages);
+        },
         expect: () => [
-          expectedMessageImages,
+          expectedImages,
+          expectedUpdatedImages,
         ],
       );
     },

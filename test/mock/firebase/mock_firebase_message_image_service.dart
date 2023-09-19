@@ -3,6 +3,16 @@ import 'package:mocktail/mocktail.dart';
 
 class MockFirebaseMessageImageService extends Mock
     implements FirebaseMessageImageService {
+  void mockGetAddedImagesForChat({
+    required Stream<List<MessageImageDto>?> imagesStream,
+  }) {
+    when(
+      () => getAddedImagesForChat(
+        chatId: any(named: 'chatId'),
+      ),
+    ).thenAnswer((_) => imagesStream);
+  }
+
   void mockLoadMessageImagesByMessageId({
     required final List<MessageImageDto> messageImageDtos,
   }) {

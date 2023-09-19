@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:firebase/firebase.dart';
@@ -121,61 +122,115 @@ void main() {
   );
 
   test(
-    'load images for chat, '
-    'should load and return images from chat messages',
-    () async {
+    'get images for chat, '
+    'should load new images from db, add them to repo and '
+    'should listen and emit all existing and newly added images with matching with matching chat id',
+    () {
       const String chatId = 'c1';
-      const String lastVisibleImageId = 'i0';
-      final List<MessageImageDto> messageImageDtos = [
-        createMessageImageDto(id: 'i1', messageId: 'm1', order: 1),
-        createMessageImageDto(id: 'i2', messageId: 'm1', order: 2),
-        createMessageImageDto(id: 'i3', messageId: 'm2', order: 1),
-        createMessageImageDto(id: 'i4', messageId: 'm3', order: 1),
-        createMessageImageDto(id: 'i5', messageId: 'm3', order: 2),
-        createMessageImageDto(id: 'i6', messageId: 'm3', order: 3),
+      final List<MessageImage> existingImages = [
+        createMessageImage(id: 'i1', messageId: 'm1', order: 1),
+        createMessageImage(id: 'i2', messageId: 'm2', order: 1),
+        createMessageImage(id: 'i3', messageId: 'm3', order: 1),
       ];
-      final List<MessageImage> expectedImages = [
-        MessageImage(id: 'i1', messageId: 'm1', order: 1, bytes: Uint8List(1)),
-        MessageImage(id: 'i2', messageId: 'm1', order: 2, bytes: Uint8List(2)),
-        MessageImage(id: 'i3', messageId: 'm2', order: 1, bytes: Uint8List(3)),
-        MessageImage(id: 'i4', messageId: 'm3', order: 1, bytes: Uint8List(4)),
-        MessageImage(id: 'i5', messageId: 'm3', order: 2, bytes: Uint8List(5)),
-        MessageImage(id: 'i6', messageId: 'm3', order: 3, bytes: Uint8List(6)),
+      final List<MessageImageDto> loadedImageDtos = [
+        MessageImageDto(
+          id: 'i4',
+          messageId: 'm1',
+          sendDateTime: DateTime(2023, 1, 10),
+          order: 2,
+        ),
+        MessageImageDto(
+          id: 'i5',
+          messageId: 'm4',
+          sendDateTime: DateTime(2023, 1, 12),
+          order: 1,
+        ),
       ];
+      final List<MessageImage> loadedImages = [
+        MessageImage(
+          id: 'i4',
+          messageId: 'm1',
+          order: 2,
+          bytes: Uint8List(1),
+        ),
+        MessageImage(
+          id: 'i5',
+          messageId: 'm4',
+          order: 1,
+          bytes: Uint8List(2),
+        ),
+      ];
+      final MessageImageDto firstAddedImageDto =
+          createMessageImageDto(id: 'i6', messageId: 'm5');
+      final MessageImageDto secondAddedImageDto =
+          createMessageImageDto(id: 'i7', messageId: 'm6');
+      final MessageImage firstAddedImage =
+          createMessageImage(id: 'i6', messageId: 'm5', bytes: Uint8List(3));
+      final MessageImage secondAddedImage =
+          createMessageImage(id: 'i7', messageId: 'm6', bytes: Uint8List(4));
+      final StreamController<List<MessageImageDto>> addedImages$ =
+          StreamController()..add([]);
       dbMessageImageService.mockLoadMessageImagesForChat(
-        messageImageDtos: messageImageDtos,
+        messageImageDtos: loadedImageDtos,
+      );
+      dbMessageImageService.mockGetAddedImagesForChat(
+        imagesStream: addedImages$.stream,
+      );
+      dbMessageService.mockLoadMessageById(
+        messageDto: createMessageDto(chatId: chatId),
       );
       when(
-        () => dbStorageService.loadMessageImage(messageId: 'm1', imageId: 'i1'),
+        () => dbMessageService.loadMessageById(messageId: 'm2'),
+      ).thenAnswer((_) => Future.value(createMessageDto(chatId: 'c2')));
+      when(
+        () => dbMessageService.loadMessageById(messageId: 'm3'),
+      ).thenAnswer((_) => Future.value(createMessageDto(chatId: 'c3')));
+      when(
+        () => dbStorageService.loadMessageImage(messageId: 'm1', imageId: 'i4'),
       ).thenAnswer((_) => Future.value(Uint8List(1)));
       when(
-        () => dbStorageService.loadMessageImage(messageId: 'm1', imageId: 'i2'),
+        () => dbStorageService.loadMessageImage(messageId: 'm4', imageId: 'i5'),
       ).thenAnswer((_) => Future.value(Uint8List(2)));
       when(
-        () => dbStorageService.loadMessageImage(messageId: 'm2', imageId: 'i3'),
+        () => dbStorageService.loadMessageImage(messageId: 'm5', imageId: 'i6'),
       ).thenAnswer((_) => Future.value(Uint8List(3)));
       when(
-        () => dbStorageService.loadMessageImage(messageId: 'm3', imageId: 'i4'),
+        () => dbStorageService.loadMessageImage(messageId: 'm6', imageId: 'i7'),
       ).thenAnswer((_) => Future.value(Uint8List(4)));
-      when(
-        () => dbStorageService.loadMessageImage(messageId: 'm3', imageId: 'i5'),
-      ).thenAnswer((_) => Future.value(Uint8List(5)));
-      when(
-        () => dbStorageService.loadMessageImage(messageId: 'm3', imageId: 'i6'),
-      ).thenAnswer((_) => Future.value(Uint8List(6)));
+      repository = MessageImageRepositoryImpl(initialData: existingImages);
 
-      final List<MessageImage> images = await repository.loadImagesForChat(
-        chatId: chatId,
-        lastVisibleImageId: lastVisibleImageId,
+      final Stream<List<MessageImage>> messageImages$ =
+          repository.getImagesForChat(chatId: chatId);
+      addedImages$.add([firstAddedImageDto]);
+      addedImages$.add([secondAddedImageDto]);
+
+      expect(
+        messageImages$,
+        emitsInOrder([
+          [existingImages.first, ...loadedImages],
+          [existingImages.first, ...loadedImages, firstAddedImage],
+          [
+            existingImages.first,
+            ...loadedImages,
+            firstAddedImage,
+            secondAddedImage,
+          ],
+        ]),
       );
-
-      expect(images, expectedImages);
-      verify(
-        () => dbMessageImageService.loadMessageImagesForChat(
-          chatId: chatId,
-          lastVisibleImageId: lastVisibleImageId,
-        ),
-      ).called(1);
+      expect(
+        repository.dataStream$,
+        emitsInOrder([
+          existingImages,
+          [...existingImages, ...loadedImages],
+          [...existingImages, ...loadedImages, firstAddedImage],
+          [
+            ...existingImages,
+            ...loadedImages,
+            firstAddedImage,
+            secondAddedImage,
+          ],
+        ]),
+      );
     },
   );
 
