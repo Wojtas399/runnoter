@@ -1,10 +1,11 @@
 import 'package:firebase/firebase.dart';
 
 import '../../domain/entity/message.dart';
+import 'message_status_mapper.dart';
 
 Message mapMessageFromDto(MessageDto messageDto) => Message(
       id: messageDto.id,
-      status: MessageStatus.sent, //TODO: Implement message status mapping
+      status: mapMessageStatusFromDto(messageDto.status),
       chatId: messageDto.chatId,
       senderId: messageDto.senderId,
       dateTime: messageDto.dateTime,

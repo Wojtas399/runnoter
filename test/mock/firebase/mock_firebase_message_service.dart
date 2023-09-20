@@ -3,6 +3,10 @@ import 'package:mocktail/mocktail.dart';
 
 class MockFirebaseMessageService extends Mock
     implements FirebaseMessageService {
+  MockFirebaseMessageService() {
+    registerFallbackValue(MessageStatus.sent);
+  }
+
   void mockGetAddedMessagesForChat({
     List<MessageDto>? addedMessageDtos,
     Stream<List<MessageDto>>? addedMessageDtosStream,
@@ -34,6 +38,7 @@ class MockFirebaseMessageService extends Mock
   void mockAddMessage({MessageDto? addedMessageDto}) {
     when(
       () => addMessage(
+        status: any(named: 'status'),
         chatId: any(named: 'chatId'),
         senderId: any(named: 'senderId'),
         dateTime: any(named: 'dateTime'),

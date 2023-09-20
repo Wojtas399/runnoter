@@ -5,7 +5,7 @@ import '../firebase_collections.dart';
 
 class FirebaseMessageService {
   Stream<List<MessageDto>?> getAddedMessagesForChat({
-    required final String chatId,
+    required String chatId,
   }) {
     bool isFirstQuery = true;
     return getMessagesRef()
@@ -29,7 +29,7 @@ class FirebaseMessageService {
   }
 
   Future<MessageDto?> loadMessageById({
-    required final String messageId,
+    required String messageId,
   }) async {
     final messageRef = getMessagesRef().doc(messageId);
     final docSnapshot = await messageRef.get();
@@ -37,7 +37,7 @@ class FirebaseMessageService {
   }
 
   Future<List<MessageDto>> loadMessagesForChat({
-    required final String chatId,
+    required String chatId,
     final String? lastVisibleMessageId,
   }) async {
     final Query<MessageDto> query = getMessagesRef()
@@ -50,14 +50,16 @@ class FirebaseMessageService {
   }
 
   Future<MessageDto?> addMessage({
-    required final String chatId,
-    required final String senderId,
-    required final DateTime dateTime,
+    required MessageStatus status,
+    required String chatId,
+    required String senderId,
+    required DateTime dateTime,
     final String? text,
   }) async {
     final messageRef = getMessagesRef().doc();
     final messageDto = MessageDto(
       id: '',
+      status: status,
       chatId: chatId,
       senderId: senderId,
       dateTime: dateTime,
@@ -69,7 +71,7 @@ class FirebaseMessageService {
   }
 
   Future<List<MessageDto>> _loadLimitedImagesByQuery({
-    required final Query<MessageDto> query,
+    required Query<MessageDto> query,
     final String? lastVisibleMessageId,
   }) async {
     Query<MessageDto> limitedQuery = query.limit(20);

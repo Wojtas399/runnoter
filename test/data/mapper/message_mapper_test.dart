@@ -1,4 +1,4 @@
-import 'package:firebase/firebase.dart';
+import 'package:firebase/firebase.dart' as firebase;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/data/mapper/message_mapper.dart';
 import 'package:runnoter/domain/entity/message.dart';
@@ -14,8 +14,9 @@ void main() {
     'map message from dto, '
     'should map message from dto model to domain model',
     () {
-      final MessageDto dto = MessageDto(
+      final firebase.MessageDto dto = firebase.MessageDto(
         id: id,
+        status: firebase.MessageStatus.read,
         chatId: chatId,
         senderId: senderId,
         dateTime: dateTime,
@@ -23,7 +24,7 @@ void main() {
       );
       final Message expectedMessage = Message(
         id: id,
-        status: MessageStatus.sent, //TODO: Implement message status mapping
+        status: MessageStatus.read,
         chatId: chatId,
         senderId: senderId,
         dateTime: dateTime,

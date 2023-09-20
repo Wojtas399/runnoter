@@ -359,7 +359,7 @@ void main() {
   blocTest(
     'submit message, '
     'there are no images to send, '
-    'should call message repository method to add new message with current dateTime and '
+    'should call message repository method to add new message with current dateTime and sent status and '
     'should set messageToSend as null',
     build: () => createCubit(
       loggedUserId: loggedUserId,
@@ -388,6 +388,7 @@ void main() {
     ],
     verify: (_) => verify(
       () => messageRepository.addMessage(
+        status: MessageStatus.sent,
         chatId: chatId,
         senderId: loggedUserId,
         dateTime: DateTime(2023, 1, 1, 12, 30),
@@ -398,7 +399,7 @@ void main() {
 
   blocTest(
     'submit message, '
-    'should call message repository method to add new message with current dateTime and '
+    'should call message repository method to add new message with current dateTime and sent status and '
     'should call message image repository to add images to message and '
     'should set messageToSend as null and imagesToSend as empty array',
     build: () => createCubit(
@@ -430,6 +431,7 @@ void main() {
     verify: (_) {
       verify(
         () => messageRepository.addMessage(
+          status: MessageStatus.sent,
           chatId: chatId,
           senderId: loggedUserId,
           dateTime: DateTime(2023, 1, 1, 12, 30),

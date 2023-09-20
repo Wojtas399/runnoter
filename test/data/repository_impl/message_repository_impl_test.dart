@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:firebase/firebase.dart';
+import 'package:firebase/firebase.dart' as firebase;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
@@ -16,7 +16,9 @@ void main() {
   late MessageRepositoryImpl repository;
 
   setUpAll(() {
-    GetIt.I.registerFactory<FirebaseMessageService>(() => dbMessageService);
+    GetIt.I.registerFactory<firebase.FirebaseMessageService>(
+      () => dbMessageService,
+    );
   });
 
   setUp(() => repository = MessageRepositoryImpl());
@@ -51,7 +53,7 @@ void main() {
     'message does not exist in repo, '
     'should load message from db add it to repo and return it',
     () async {
-      final MessageDto expectedMessageDto = createMessageDto(id: 'm3');
+      final firebase.MessageDto expectedMessageDto = createMessageDto(id: 'm3');
       final Message expectedMessage = createMessage(id: 'm3');
       final List<Message> existingMessages = [
         createMessage(id: 'm1'),
@@ -85,7 +87,7 @@ void main() {
         createMessage(id: 'm2', chatId: 'c2', text: 'text2'),
         createMessage(id: 'm3', chatId: chatId, text: 'text3'),
       ];
-      final List<MessageDto> loadedMessageDtos = [
+      final List<firebase.MessageDto> loadedMessageDtos = [
         createMessageDto(id: 'm4', chatId: chatId, text: 'text4'),
         createMessageDto(id: 'm5', chatId: chatId, text: 'text5'),
       ];
@@ -93,15 +95,15 @@ void main() {
         createMessage(id: 'm4', chatId: chatId, text: 'text4'),
         createMessage(id: 'm5', chatId: chatId, text: 'text5'),
       ];
-      final MessageDto firstAddedMessageDto =
+      final firebase.MessageDto firstAddedMessageDto =
           createMessageDto(id: 'm6', chatId: chatId, text: 'text6');
-      final MessageDto secondAddedMessageDto =
+      final firebase.MessageDto secondAddedMessageDto =
           createMessageDto(id: 'm7', chatId: chatId, text: 'text7');
       final Message firstAddedMessage =
           createMessage(id: 'm6', chatId: chatId, text: 'text6');
       final Message secondAddedMessage =
           createMessage(id: 'm7', chatId: chatId, text: 'text7');
-      final StreamController<List<MessageDto>> addedMessages$ =
+      final StreamController<List<firebase.MessageDto>> addedMessages$ =
           StreamController()..add([]);
       dbMessageService.mockLoadMessagesForChat(
         messageDtos: loadedMessageDtos,
@@ -163,7 +165,7 @@ void main() {
         createMessage(id: 'm1', chatId: chatId, text: 'text1'),
         createMessage(id: 'm2', chatId: chatId, text: 'text2'),
       ];
-      final List<MessageDto> loadedMessageDtos = [
+      final List<firebase.MessageDto> loadedMessageDtos = [
         createMessageDto(id: 'm3', chatId: chatId, text: 'text3'),
         createMessageDto(id: 'm4', chatId: chatId, text: 'text4'),
       ];
@@ -207,8 +209,9 @@ void main() {
       const String senderId = 's1';
       final DateTime dateTime = DateTime(2023, 1, 1);
       const String text = 'message';
-      final MessageDto addedMessageDto = MessageDto(
+      final firebase.MessageDto addedMessageDto = firebase.MessageDto(
         id: messageId,
+        status: firebase.MessageStatus.sent,
         chatId: chatId,
         senderId: senderId,
         dateTime: dateTime,
@@ -216,7 +219,7 @@ void main() {
       );
       final Message addedMessage = Message(
         id: messageId,
-        status: MessageStatus.sent, //TODO: Implement status mapping
+        status: MessageStatus.sent,
         chatId: chatId,
         senderId: senderId,
         dateTime: dateTime,
@@ -230,6 +233,7 @@ void main() {
       repository = MessageRepositoryImpl(initialData: existingMessages);
 
       await repository.addMessage(
+        status: MessageStatus.sent,
         chatId: chatId,
         senderId: senderId,
         dateTime: dateTime,
@@ -244,6 +248,7 @@ void main() {
       );
       verify(
         () => dbMessageService.addMessage(
+          status: firebase.MessageStatus.sent,
           chatId: chatId,
           senderId: senderId,
           dateTime: dateTime,

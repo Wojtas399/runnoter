@@ -100,6 +100,7 @@ class ChatCubit extends CubitWithStatus<ChatState, dynamic, dynamic> {
       final DateTime now = _dateService.getNow();
       emitLoadingStatus();
       final String? messageId = await _messageRepository.addMessage(
+        status: MessageStatus.sent,
         chatId: chatId,
         senderId: state.loggedUserId!,
         dateTime: now,
