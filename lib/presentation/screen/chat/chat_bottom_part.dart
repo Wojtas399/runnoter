@@ -1,11 +1,16 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../../domain/additional_model/cubit_status.dart';
 import '../../../domain/cubit/chat/chat_cubit.dart';
-import '../../component/gap/gap_horizontal_components.dart';
+import '../../component/dialog/actions_dialog_component.dart';
+import '../../service/dialog_service.dart';
+import '../../service/image_service.dart';
 import '../../service/utils.dart';
+import 'chat_message_input_images.dart';
 
 class ChatBottomPart extends StatelessWidget {
   final TextEditingController _messageController = TextEditingController();
@@ -14,26 +19,55 @@ class ChatBottomPart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Expanded(
-            child: _MessageInput(
-              messageController: _messageController,
-              onSubmitted: () => _onSubmit(context),
-            ),
+    return Column(
+      children: [
+        const Divider(height: 0),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 16, 8, 24),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Expanded(
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.surfaceVariant,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Column(
+                    children: [
+                      const ChatMessageInputImages(),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Padding(
+                            padding: EdgeInsets.only(
+                              left: kIsWeb ? 8 : 0,
+                              top: kIsWeb ? 4 : 0,
+                            ),
+                            child: _ImageButton(),
+                          ),
+                          Expanded(
+                            child: _MessageInput(
+                              messageController: _messageController,
+                              onSubmitted: () => _onSubmit(context),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: kIsWeb ? 4 : 0),
+                child: _SubmitButton(
+                  onPressed: () => _onSubmit(context),
+                ),
+              ),
+            ],
           ),
-          const GapHorizontal8(),
-          SizedBox(
-            width: 40,
-            child: _SubmitButton(
-              onPressed: () => _onSubmit(context),
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -43,7 +77,63 @@ class ChatBottomPart extends StatelessWidget {
   }
 }
 
-class _MessageInput extends StatefulWidget {
+class _ImageButton extends StatefulWidget {
+  const _ImageButton();
+
+  @override
+  State<StatefulWidget> createState() => _ImageButtonState();
+}
+
+class _ImageButtonState extends State<_ImageButton> {
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      onPressed: _onImagePressed,
+      icon: const Icon(Icons.image_outlined),
+    );
+  }
+
+  Future<void> _onImagePressed() async {
+    final ImageSource? imageSource =
+        kIsWeb ? ImageSource.gallery : await _askForImageSource();
+    if (imageSource == null) return;
+    switch (imageSource) {
+      case ImageSource.gallery:
+        await _pickImagesFromGallery();
+      case ImageSource.camera:
+        await _capturePhotoFromCamera();
+    }
+  }
+
+  Future<ImageSource?> _askForImageSource() async => await askForAction(
+        actions: [
+          ActionsDialogItem(
+            icon: const Icon(Icons.photo_library),
+            label: Str.of(context).chatPickImagesFromGallery,
+            value: ImageSource.gallery,
+          ),
+          ActionsDialogItem(
+            icon: const Icon(Icons.camera_alt),
+            label: Str.of(context).chatCapturePhotoFromCamera,
+            value: ImageSource.camera,
+          ),
+        ],
+      );
+
+  Future<void> _pickImagesFromGallery() async {
+    final ChatCubit chatCubit = context.read<ChatCubit>();
+    final List<Uint8List> images = await pickMultipleImages();
+    if (images.isNotEmpty) chatCubit.addImagesToSend(images);
+  }
+
+  Future<void> _capturePhotoFromCamera() async {
+    final ChatCubit chatCubit = context.read<ChatCubit>();
+    final Uint8List? image = await capturePhoto();
+    if (image != null) chatCubit.addImagesToSend([image]);
+  }
+}
+
+class _MessageInput extends StatelessWidget {
   final TextEditingController messageController;
   final VoidCallback onSubmitted;
 
@@ -53,51 +143,46 @@ class _MessageInput extends StatefulWidget {
   });
 
   @override
-  State<StatefulWidget> createState() => _MessageInputState();
-}
-
-class _MessageInputState extends State<_MessageInput> {
-  int _messageLength = 0;
-
-  @override
-  void initState() {
-    widget.messageController.addListener(_onChanged);
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final border = OutlineInputBorder(
+      borderRadius: BorderRadius.circular(100),
+      borderSide: BorderSide(
+        color: Theme.of(context).colorScheme.surfaceVariant,
+      ),
+    );
     final CubitStatus cubitStatus = context.select(
       (ChatCubit cubit) => cubit.state.status,
     );
+    const double contentPadding = kIsWeb ? 16 : 8;
 
-    return TextField(
-      decoration: InputDecoration(
-        hintText: Str.of(context).chatWriteMessage,
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 16,
-          vertical: 8,
+    return ConstrainedBox(
+      constraints: const BoxConstraints(maxHeight: 200),
+      child: TextField(
+        decoration: InputDecoration(
+          border: border,
+          focusedBorder: border,
+          enabledBorder: border,
+          disabledBorder: border,
+          errorBorder: border,
+          hintText: Str.of(context).chatWriteMessage,
+          contentPadding: const EdgeInsets.fromLTRB(
+            kIsWeb ? 8 : 0,
+            contentPadding,
+            contentPadding,
+            contentPadding,
+          ),
+          counterText: '',
         ),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(100),
-        ),
-        counterText: '',
-        suffixText: '$_messageLength/100',
+        enabled: cubitStatus is! CubitStatusLoading,
+        maxLength: 500,
+        maxLines: null,
+        textInputAction: TextInputAction.send,
+        controller: messageController,
+        onChanged: context.read<ChatCubit>().messageChanged,
+        onTapOutside: (_) => unfocusInputs(),
+        onSubmitted: (_) => onSubmitted(),
       ),
-      enabled: cubitStatus is! CubitStatusLoading,
-      maxLength: 100,
-      textInputAction: TextInputAction.send,
-      controller: widget.messageController,
-      onTapOutside: (_) => unfocusInputs(),
-      onSubmitted: (_) => widget.onSubmitted(),
     );
-  }
-
-  void _onChanged() {
-    context.read<ChatCubit>().messageChanged(widget.messageController.text);
-    setState(() {
-      _messageLength = widget.messageController.text.length;
-    });
   }
 }
 
@@ -115,15 +200,21 @@ class _SubmitButton extends StatelessWidget {
       (ChatCubit cubit) => cubit.state.canSubmitMessage,
     );
 
-    return cubitStatus is CubitStatusLoading
-        ? Transform.scale(
-            scale: 0.7,
-            child: const CircularProgressIndicator(),
-          )
-        : IconButton(
-            color: Theme.of(context).colorScheme.primary,
-            onPressed: canSubmit ? onPressed : null,
-            icon: const Icon(Icons.send),
-          );
+    return FilledButton(
+      style: FilledButton.styleFrom(
+        shape: const CircleBorder(),
+        padding: const EdgeInsets.all(kIsWeb ? 16 : 8),
+      ),
+      onPressed:
+          cubitStatus is! CubitStatusLoading && canSubmit ? onPressed : null,
+      child: cubitStatus is CubitStatusLoading
+          ? Container(
+              width: 24,
+              height: 24,
+              padding: const EdgeInsets.all(2),
+              child: const CircularProgressIndicator(strokeWidth: 2),
+            )
+          : const Icon(Icons.send),
+    );
   }
 }

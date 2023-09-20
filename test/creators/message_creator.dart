@@ -4,13 +4,13 @@ Message createMessage({
   String id = '',
   String chatId = '',
   String senderId = '',
-  String content = '',
   DateTime? dateTime,
+  String? text,
 }) =>
     Message(
       id: id,
       chatId: chatId,
       senderId: senderId,
-      content: content,
       dateTime: dateTime ?? DateTime(2023),
+      text: text,
     );

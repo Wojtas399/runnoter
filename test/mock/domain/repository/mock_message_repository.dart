@@ -3,6 +3,14 @@ import 'package:runnoter/domain/entity/message.dart';
 import 'package:runnoter/domain/repository/message_repository.dart';
 
 class MockMessageRepository extends Mock implements MessageRepository {
+  void mockLoadMessageById({Message? message}) {
+    when(
+      () => loadMessageById(
+        messageId: any(named: 'messageId'),
+      ),
+    ).thenAnswer((_) => Future.value(message));
+  }
+
   void mockGetMessagesForChat({
     List<Message> messages = const [],
     Stream<List<Message>>? messagesStream,
@@ -23,14 +31,14 @@ class MockMessageRepository extends Mock implements MessageRepository {
     ).thenAnswer((_) => Future.value());
   }
 
-  void mockAddMessageToChat() {
+  void mockAddMessage({String? addedMessageId}) {
     when(
-      () => addMessageToChat(
+      () => addMessage(
         chatId: any(named: 'chatId'),
         senderId: any(named: 'senderId'),
-        content: any(named: 'content'),
         dateTime: any(named: 'dateTime'),
+        text: any(named: 'text'),
       ),
-    ).thenAnswer((_) => Future.value());
+    ).thenAnswer((_) => Future.value(addedMessageId));
   }
 }

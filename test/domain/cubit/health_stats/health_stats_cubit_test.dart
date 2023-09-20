@@ -83,13 +83,13 @@ void main() {
           healthMeasurementRepository.mockGetMeasurementsByDateRange();
           dateService.mockAreDatesTheSame(expected: false);
           when(
-            () => dateService.areDatesTheSame(
+            () => dateService.areDaysTheSame(
               DateTime(2023, 8, 28),
               DateTime(2023, 8, 28),
             ),
           ).thenReturn(true);
           when(
-            () => dateService.areDatesTheSame(
+            () => dateService.areDaysTheSame(
               DateTime(2023, 9),
               DateTime(2023, 9),
             ),
@@ -195,25 +195,25 @@ void main() {
           );
           dateService.mockAreDatesTheSame(expected: false);
           when(
-            () => dateService.areDatesTheSame(
+            () => dateService.areDaysTheSame(
               DateTime(2023, 5, 9),
               DateTime(2023, 5, 9),
             ),
           ).thenReturn(true);
           when(
-            () => dateService.areDatesTheSame(
+            () => dateService.areDaysTheSame(
               DateTime(2023, 5, 10),
               DateTime(2023, 5, 10),
             ),
           ).thenReturn(true);
           when(
-            () => dateService.areDatesTheSame(
+            () => dateService.areDaysTheSame(
               DateTime(2023, 5, 12),
               DateTime(2023, 5, 12),
             ),
           ).thenReturn(true);
           when(
-            () => dateService.areDatesTheSame(
+            () => dateService.areDaysTheSame(
               DateTime(2023, 5, 13),
               DateTime(2023, 5, 13),
             ),
@@ -324,25 +324,25 @@ void main() {
           );
           dateService.mockAreDatesTheSame(expected: false);
           when(
-            () => dateService.areDatesTheSame(
+            () => dateService.areDaysTheSame(
               DateTime(2023, 5, 9),
               DateTime(2023, 5, 9),
             ),
           ).thenReturn(true);
           when(
-            () => dateService.areDatesTheSame(
+            () => dateService.areDaysTheSame(
               DateTime(2023, 5, 10),
               DateTime(2023, 5, 10),
             ),
           ).thenReturn(true);
           when(
-            () => dateService.areDatesTheSame(
+            () => dateService.areDaysTheSame(
               DateTime(2023, 5, 31),
               DateTime(2023, 5, 31),
             ),
           ).thenReturn(true);
           when(
-            () => dateService.areDatesTheSame(
+            () => dateService.areDaysTheSame(
               DateTime(2023, 6, 1),
               DateTime(2023, 6, 1),
             ),

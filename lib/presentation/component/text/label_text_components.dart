@@ -45,3 +45,22 @@ class LabelMedium extends StatelessWidget {
     );
   }
 }
+
+class LabelSmall extends StatelessWidget {
+  final String data;
+  final Color? color;
+
+  const LabelSmall(
+    this.data, {
+    super.key,
+    this.color,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      data,
+      style: Theme.of(context).textTheme.labelSmall?.copyWith(color: color),
+    );
+  }
+}

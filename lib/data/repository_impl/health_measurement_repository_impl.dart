@@ -29,7 +29,7 @@ class HealthMeasurementRepositoryImpl extends StateRepository<HealthMeasurement>
       HealthMeasurement? measurement = measurements?.firstWhereOrNull(
         (measurement) =>
             measurement.userId == userId &&
-            _dateService.areDatesTheSame(measurement.date, date),
+            _dateService.areDaysTheSame(measurement.date, date),
       );
       measurement ??= await _loadMeasurementByDateFromRemoteDb(date, userId);
       yield measurement;
@@ -80,7 +80,7 @@ class HealthMeasurementRepositoryImpl extends StateRepository<HealthMeasurement>
           (measurements) => measurements?.firstWhereOrNull(
             (measurement) =>
                 measurement.userId == userId &&
-                _dateService.areDatesTheSame(measurement.date, date),
+                _dateService.areDaysTheSame(measurement.date, date),
           ),
         )
         .first;
@@ -145,7 +145,7 @@ class HealthMeasurementRepositoryImpl extends StateRepository<HealthMeasurement>
             (HealthMeasurement? measurement) =>
                 measurement != null &&
                 measurement.userId == userId &&
-                _dateService.areDatesTheSame(measurement.date, date),
+                _dateService.areDaysTheSame(measurement.date, date),
             orElse: () => null,
           ),
         )

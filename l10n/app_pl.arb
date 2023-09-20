@@ -832,6 +832,27 @@
   "@chatWriteMessage": {
     "description": "Hint text of message input"
   },
+  "chatPickImagesFromGallery": "Wybierz zdjęcia z galerii",
+  "@chatPickImagesFromGallery": {
+    "description": "Label of the action to pick images from gallery"
+  },
+  "chatCapturePhotoFromCamera": "Zrób zdjęcia aparatem",
+  "@chatCapturePhotoFromCamera": {
+    "description": "Label of the action to captura a photo from camera"
+  },
+  "chatNoMessagesInfoTitle": "Nie ma jeszcze żadnych wiadomości",
+  "@chatNoMessagesInfoTitle": {
+    "description": "Title of the info about no messages"
+  },
+  "chatNoMessagesInfoMessage": "Wyślij pierwszą wiadomość, aby rozpocząć konwersację",
+  "@chatNoMessagesInfoMessage": {
+    "description": "Message of the info about no messages"
+  },
+  "@__________CHAT_GALLERY__________": {},
+  "chatGalleryTitle": "Galeria czatu",
+  "@chatGalleryTitle": {
+    "description": "Title of chat gallery"
+  },
   "@__________ACTIVITY_STATUS_PARAMS__________": {},
   "activityStatus": "Status",
   "@activityStatus": {
@@ -1194,6 +1215,8 @@
   "week": "Tydzień",
   "month": "Miesiąc",
   "year": "Rok",
+  "today": "Dzisiaj",
+  "yesterday": "Wczoraj",
   "currentWeek": "Obecny tydzień",
   "editHealthMeasurement": "Edytuj pomiar zdrowia",
   "addWorkout": "Dodaj trening",

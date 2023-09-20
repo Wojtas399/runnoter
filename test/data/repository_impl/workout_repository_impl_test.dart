@@ -244,7 +244,7 @@ void main() {
       );
       dateService.mockAreDatesTheSame(expected: true);
       when(
-        () => dateService.areDatesTheSame(DateTime(2023, 1, 10), date),
+        () => dateService.areDaysTheSame(DateTime(2023, 1, 10), date),
       ).thenReturn(false);
       firebaseWorkoutService.mockLoadWorkoutsByDate(
         workoutDtos: [loadedWorkoutDto],

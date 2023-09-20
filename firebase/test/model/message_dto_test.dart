@@ -5,31 +5,28 @@ void main() {
   const String id = 'm1';
   const String chatId = 'c1';
   const String senderId = 's1';
-  const String content = 'message';
   final DateTime dateTime = DateTime(2023, 8, 31, 20, 20);
+  const String text = 'message';
 
   test(
     'from json, '
     'should map json to dto model',
     () {
       final Map<String, dynamic> json = {
+        'chatId': chatId,
         'senderId': senderId,
-        'content': content,
         'timestamp': dateTime.millisecondsSinceEpoch,
+        'text': text,
       };
       final MessageDto expectedDto = MessageDto(
         id: id,
         chatId: chatId,
         senderId: senderId,
-        content: content,
         dateTime: dateTime,
+        text: text,
       );
 
-      final MessageDto dto = MessageDto.fromJson(
-        messageId: id,
-        chatId: chatId,
-        json: json,
-      );
+      final MessageDto dto = MessageDto.fromJson(messageId: id, json: json);
 
       expect(dto, expectedDto);
     },
@@ -43,13 +40,14 @@ void main() {
         id: id,
         chatId: chatId,
         senderId: senderId,
-        content: content,
         dateTime: dateTime,
+        text: text,
       );
       final Map<String, dynamic> expectedJson = {
+        'chatId': chatId,
         'senderId': senderId,
-        'content': content,
         'timestamp': dateTime.millisecondsSinceEpoch,
+        'text': text,
       };
 
       final Map<String, dynamic> json = dto.toJson();

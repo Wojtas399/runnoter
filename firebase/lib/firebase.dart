@@ -15,6 +15,7 @@ export 'model/coaching_request_dto.dart';
 export 'model/firebase_exception.dart';
 export 'model/health_measurement_dto.dart';
 export 'model/message_dto.dart';
+export 'model/message_image_dto.dart';
 export 'model/pace_dto.dart';
 export 'model/race_dto.dart';
 export 'model/user_dto.dart';
@@ -27,8 +28,10 @@ export 'service/firebase_blood_test_service.dart';
 export 'service/firebase_chat_service.dart';
 export 'service/firebase_coaching_request_service.dart';
 export 'service/firebase_health_measurement_service.dart';
+export 'service/firebase_message_image_service.dart';
 export 'service/firebase_message_service.dart';
 export 'service/firebase_race_service.dart';
+export 'service/firebase_storage_service.dart';
 export 'service/firebase_user_service.dart';
 export 'service/firebase_workout_service.dart';
 

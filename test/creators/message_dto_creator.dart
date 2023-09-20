@@ -4,13 +4,13 @@ MessageDto createMessageDto({
   String id = '',
   String chatId = '',
   String senderId = '',
-  String content = '',
   DateTime? dateTime,
+  String? text,
 }) =>
     MessageDto(
       id: id,
       chatId: chatId,
       senderId: senderId,
-      content: content,
       dateTime: dateTime ?? DateTime(2023),
+      text: text,
     );

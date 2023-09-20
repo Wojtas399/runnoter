@@ -1,6 +1,8 @@
 import '../entity/message.dart';
 
 abstract interface class MessageRepository {
+  Future<Message?> loadMessageById({required String messageId});
+
   Stream<List<Message>> getMessagesForChat({required String chatId});
 
   Future<void> loadOlderMessagesForChat({
@@ -8,10 +10,10 @@ abstract interface class MessageRepository {
     required String lastVisibleMessageId,
   });
 
-  Future<void> addMessageToChat({
+  Future<String?> addMessage({
     required String chatId,
     required String senderId,
-    required String content,
     required DateTime dateTime,
+    String? text,
   });
 }

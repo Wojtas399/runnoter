@@ -4,9 +4,9 @@ class DateService {
     return DateTime(now.year, now.month, now.day);
   }
 
-  DateTime getNow() {
-    return DateTime.now();
-  }
+  DateTime getYesterday() => getToday().subtract(const Duration(days: 1));
+
+  DateTime getNow() => DateTime.now();
 
   DateTime getFirstDayOfTheWeek(DateTime date) {
     final int daysToFirstDayOfTheWeek = date.weekday - 1;
@@ -40,16 +40,16 @@ class DateService {
     required DateTime startDate,
     required DateTime endDate,
   }) =>
-      areDatesTheSame(date, startDate) ||
-      areDatesTheSame(date, endDate) ||
+      areDaysTheSame(date, startDate) ||
+      areDaysTheSame(date, endDate) ||
       (date.isAfter(startDate) && date.isBefore(endDate));
 
   bool isToday(DateTime date) {
     final DateTime today = getToday();
-    return areDatesTheSame(date, today);
+    return areDaysTheSame(date, today);
   }
 
-  bool areDatesTheSame(DateTime date1, DateTime date2) {
+  bool areDaysTheSame(DateTime date1, DateTime date2) {
     return date1.year == date2.year &&
         date1.month == date2.month &&
         date1.day == date2.day;

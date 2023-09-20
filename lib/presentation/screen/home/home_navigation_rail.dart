@@ -42,7 +42,9 @@ class HomeNavigationRail extends StatelessWidget {
         children: [
           const Gap32(),
           IconButton(
-            onPressed: () => onPageSelected(7),
+            onPressed: () => onPageSelected(
+              accountType == AccountType.coach ? 6 : 5,
+            ),
             icon: const Icon(Icons.logout_outlined),
           ),
           LabelMedium(Str.of(context).homeSignOut),

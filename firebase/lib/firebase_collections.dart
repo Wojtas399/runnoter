@@ -117,16 +117,23 @@ CollectionReference<ChatDto> getChatsRef() =>
           toFirestore: (chatDto, _) => chatDto.toJson(),
         );
 
-CollectionReference<MessageDto> getMessagesRef(String chatId) =>
-    FirebaseFirestore.instance
-        .collection('Chats')
-        .doc(chatId)
-        .collection('Messages')
-        .withConverter<MessageDto>(
+CollectionReference<MessageDto> getMessagesRef() =>
+    FirebaseFirestore.instance.collection('Messages').withConverter<MessageDto>(
           fromFirestore: (snapshot, _) => MessageDto.fromJson(
             messageId: snapshot.id,
-            chatId: chatId,
             json: snapshot.data(),
           ),
           toFirestore: (messageDto, _) => messageDto.toJson(),
+        );
+
+CollectionReference<MessageImageDto> getMessageImagesRef(String chatId) =>
+    getChatsRef()
+        .doc(chatId)
+        .collection('Images')
+        .withConverter<MessageImageDto>(
+          fromFirestore: (snapshot, _) => MessageImageDto.fromJson(
+            messageImageId: snapshot.id,
+            json: snapshot.data(),
+          ),
+          toFirestore: (messageImageDto, _) => messageImageDto.toJson(),
         );

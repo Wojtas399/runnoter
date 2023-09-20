@@ -1,11 +1,15 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/cubit/chat/chat_cubit.dart';
+import '../../common_feature/chat_gallery/chat_gallery.dart';
 import '../../component/body/big_body_component.dart';
+import '../../component/gap/gap_horizontal_components.dart';
 import '../../component/nullable_text_component.dart';
+import '../../extension/context_extensions.dart';
+import 'chat_adjustable_list_of_messages.dart';
 import 'chat_bottom_part.dart';
-import 'chat_messages.dart';
 
 class ChatContent extends StatelessWidget {
   const ChatContent({super.key});
@@ -18,21 +22,31 @@ class ChatContent extends StatelessWidget {
         foregroundColor: Theme.of(context).canvasColor,
         centerTitle: true,
         title: const _RecipientFullName(),
+        actions: const [
+          _ChatGalleryIcon(),
+          kIsWeb ? GapHorizontal16() : GapHorizontal8(),
+        ],
+      ),
+      endDrawer: Drawer(
+        width: context.isMobileSize ? double.infinity : 600,
+        child: ChatGallery(chatId: context.read<ChatCubit>().chatId),
       ),
       body: SafeArea(
-        child: BigBody(
-          child: RefreshIndicator(
-            onRefresh: () async =>
-                await context.read<ChatCubit>().loadOlderMessages(),
-            child: Column(
-              children: [
-                const Expanded(
-                  child: ChatMessages(),
+        child: Row(
+          children: [
+            Expanded(
+              child: BigBody(
+                child: Column(
+                  children: [
+                    const Expanded(
+                      child: ChatAdjustableListOfMessages(),
+                    ),
+                    ChatBottomPart(),
+                  ],
                 ),
-                ChatBottomPart(),
-              ],
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );
@@ -49,5 +63,17 @@ class _RecipientFullName extends StatelessWidget {
     );
 
     return NullableText(recipientFullName);
+  }
+}
+
+class _ChatGalleryIcon extends StatelessWidget {
+  const _ChatGalleryIcon();
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      onPressed: Scaffold.of(context).openEndDrawer,
+      icon: const Icon(Icons.photo_library),
+    );
   }
 }

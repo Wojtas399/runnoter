@@ -53,7 +53,7 @@ class WorkoutCreatorState extends CubitState<WorkoutCreatorState> {
   }
 
   bool _isDateDifferentThanOriginal() =>
-      !_dateService.areDatesTheSame(date!, workout!.date);
+      !_dateService.areDaysTheSame(date!, workout!.date);
 
   bool _areStagesDifferentThanOriginal() {
     final originalStages = [...?workout?.stages];

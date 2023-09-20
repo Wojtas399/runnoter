@@ -2,20 +2,31 @@ import 'package:intl/intl.dart';
 
 extension DateFormatter on DateTime {
   String toFullDate(String? languageCode) =>
-      DateFormat('dd MMMM yyyy', languageCode).format(this);
+      DateFormat('$_day $_monthName $_year', languageCode).format(this);
 
-  String toDateWithDots() => DateFormat('dd.MM.yyyy').format(this);
+  String toTime() => DateFormat('$_hour:$_minute').format(this);
 
-  String toDayWithMonth() => DateFormat('dd.MM').format(this);
+  String toDateWithDots() => DateFormat('$_day.$_month.$_year').format(this);
 
-  String toPathFormat() => DateFormat('dd-MM-yyyy').format(this);
+  String toDayWithMonth() => DateFormat('$_day.$_month').format(this);
+
+  String toPathFormat() => DateFormat('$_day-$_month-$_year').format(this);
 
   String toDayAbbreviation(String? languageCode) =>
-      DateFormat(DateFormat.ABBR_WEEKDAY, languageCode).format(this);
+      DateFormat(_abbrWeekDay, languageCode).format(this);
 
   String toMonthAbbreviation(String? languageCode) =>
-      DateFormat(DateFormat.ABBR_MONTH, languageCode).format(this);
+      DateFormat(_abbrMonth, languageCode).format(this);
 
   String toMonth(String? languageCode) =>
-      DateFormat(DateFormat.MONTH, languageCode).format(this);
+      DateFormat(_monthName, languageCode).format(this);
 }
+
+const String _hour = 'hh';
+const String _minute = 'mm';
+const String _day = 'dd';
+const String _month = 'MM';
+const String _year = DateFormat.YEAR;
+const String _monthName = DateFormat.MONTH;
+const String _abbrWeekDay = DateFormat.ABBR_WEEKDAY;
+const String _abbrMonth = DateFormat.ABBR_MONTH;

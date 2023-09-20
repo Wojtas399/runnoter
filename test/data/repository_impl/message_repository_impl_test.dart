@@ -12,20 +12,67 @@ import '../../creators/message_dto_creator.dart';
 import '../../mock/firebase/mock_firebase_message_service.dart';
 
 void main() {
-  final firebaseMessageService = MockFirebaseMessageService();
+  final dbMessageService = MockFirebaseMessageService();
   late MessageRepositoryImpl repository;
 
   setUpAll(() {
-    GetIt.I.registerFactory<FirebaseMessageService>(
-      () => firebaseMessageService,
-    );
+    GetIt.I.registerFactory<FirebaseMessageService>(() => dbMessageService);
   });
 
   setUp(() => repository = MessageRepositoryImpl());
 
   tearDown(() {
-    reset(firebaseMessageService);
+    reset(dbMessageService);
   });
+
+  test(
+    'load message by id, '
+    'message exists in repo, '
+    'should return message from repo',
+    () async {
+      final Message expectedMessage = createMessage(id: 'm3');
+      final List<Message> existingMessages = [
+        createMessage(id: 'm1'),
+        createMessage(id: 'm2'),
+        expectedMessage,
+        createMessage(id: 'm4'),
+      ];
+      repository = MessageRepositoryImpl(initialData: existingMessages);
+
+      final Message? message =
+          await repository.loadMessageById(messageId: 'm3');
+
+      expect(message, expectedMessage);
+    },
+  );
+
+  test(
+    'load message by id, '
+    'message does not exist in repo, '
+    'should load message from db add it to repo and return it',
+    () async {
+      final MessageDto expectedMessageDto = createMessageDto(id: 'm3');
+      final Message expectedMessage = createMessage(id: 'm3');
+      final List<Message> existingMessages = [
+        createMessage(id: 'm1'),
+        createMessage(id: 'm2'),
+        createMessage(id: 'm4'),
+      ];
+      dbMessageService.mockLoadMessageById(messageDto: expectedMessageDto);
+      repository = MessageRepositoryImpl(initialData: existingMessages);
+
+      final Message? message =
+          await repository.loadMessageById(messageId: 'm3');
+
+      expect(message, expectedMessage);
+      expect(
+        repository.dataStream$,
+        emitsInOrder([
+          [...existingMessages, expectedMessage]
+        ]),
+      );
+    },
+  );
 
   test(
     'get messages for chat, '
@@ -34,31 +81,32 @@ void main() {
     () async {
       const String chatId = 'c1';
       final List<Message> existingMessages = [
-        createMessage(id: 'm1', chatId: chatId),
-        createMessage(id: 'm2', chatId: 'c2'),
-        createMessage(id: 'm3', chatId: chatId),
+        createMessage(id: 'm1', chatId: chatId, text: 'text1'),
+        createMessage(id: 'm2', chatId: 'c2', text: 'text2'),
+        createMessage(id: 'm3', chatId: chatId, text: 'text3'),
       ];
       final List<MessageDto> loadedMessageDtos = [
-        createMessageDto(id: 'm4', chatId: chatId),
-        createMessageDto(id: 'm5', chatId: chatId),
+        createMessageDto(id: 'm4', chatId: chatId, text: 'text4'),
+        createMessageDto(id: 'm5', chatId: chatId, text: 'text5'),
       ];
       final List<Message> loadedMessages = [
-        createMessage(id: 'm4', chatId: chatId),
-        createMessage(id: 'm5', chatId: chatId),
+        createMessage(id: 'm4', chatId: chatId, text: 'text4'),
+        createMessage(id: 'm5', chatId: chatId, text: 'text5'),
       ];
       final MessageDto firstAddedMessageDto =
-          createMessageDto(id: 'm6', chatId: chatId);
+          createMessageDto(id: 'm6', chatId: chatId, text: 'text6');
       final MessageDto secondAddedMessageDto =
-          createMessageDto(id: 'm7', chatId: chatId);
-      final Message firstAddedMessage = createMessage(id: 'm6', chatId: chatId);
+          createMessageDto(id: 'm7', chatId: chatId, text: 'text7');
+      final Message firstAddedMessage =
+          createMessage(id: 'm6', chatId: chatId, text: 'text6');
       final Message secondAddedMessage =
-          createMessage(id: 'm7', chatId: chatId);
+          createMessage(id: 'm7', chatId: chatId, text: 'text7');
       final StreamController<List<MessageDto>> addedMessages$ =
           StreamController()..add([]);
-      firebaseMessageService.mockLoadMessagesForChat(
+      dbMessageService.mockLoadMessagesForChat(
         messageDtos: loadedMessageDtos,
       );
-      firebaseMessageService.mockGetAddedMessagesForChat(
+      dbMessageService.mockGetAddedMessagesForChat(
         addedMessageDtosStream: addedMessages$.stream,
       );
       repository = MessageRepositoryImpl(initialData: existingMessages);
@@ -71,6 +119,7 @@ void main() {
       expect(
         messages$,
         emitsInOrder([
+          [existingMessages.first, existingMessages.last, ...loadedMessages],
           [
             existingMessages.first,
             existingMessages.last,
@@ -111,21 +160,21 @@ void main() {
       const String chatId = 'c1';
       const String lastVisibleMessageId = 'm1';
       final List<Message> existingMessages = [
-        createMessage(id: 'm1'),
-        createMessage(id: 'm2'),
+        createMessage(id: 'm1', chatId: chatId, text: 'text1'),
+        createMessage(id: 'm2', chatId: chatId, text: 'text2'),
       ];
       final List<MessageDto> loadedMessageDtos = [
-        createMessageDto(id: 'm3'),
-        createMessageDto(id: 'm4'),
+        createMessageDto(id: 'm3', chatId: chatId, text: 'text3'),
+        createMessageDto(id: 'm4', chatId: chatId, text: 'text4'),
       ];
       final List<Message> loadedMessages = [
-        createMessage(id: 'm3'),
-        createMessage(id: 'm4'),
+        createMessage(id: 'm3', chatId: chatId, text: 'text3'),
+        createMessage(id: 'm4', chatId: chatId, text: 'text4'),
       ];
-      repository = MessageRepositoryImpl(initialData: existingMessages);
-      firebaseMessageService.mockLoadMessagesForChat(
+      dbMessageService.mockLoadMessagesForChat(
         messageDtos: loadedMessageDtos,
       );
+      repository = MessageRepositoryImpl(initialData: existingMessages);
 
       await repository.loadOlderMessagesForChat(
         chatId: chatId,
@@ -139,7 +188,7 @@ void main() {
         ]),
       );
       verify(
-        () => firebaseMessageService.loadMessagesForChat(
+        () => dbMessageService.loadMessagesForChat(
           chatId: chatId,
           lastVisibleMessageId: lastVisibleMessageId,
         ),
@@ -148,43 +197,42 @@ void main() {
   );
 
   test(
-    'add message to chat, '
-    "should call firebase message service's method to add message to chat and "
-    'should add this new message to repo',
+    'add message, '
+    'should call firebase storage service method to upload images and '
+    'should call firebase message service method to add message to chat and '
+    'should add new message to repo',
     () async {
       const String messageId = 'm3';
       const String chatId = 'c1';
       const String senderId = 's1';
-      const String content = 'message';
       final DateTime dateTime = DateTime(2023, 1, 1);
+      const String text = 'message';
       final MessageDto addedMessageDto = MessageDto(
         id: messageId,
         chatId: chatId,
         senderId: senderId,
-        content: content,
         dateTime: dateTime,
+        text: text,
       );
       final Message addedMessage = Message(
         id: messageId,
         chatId: chatId,
         senderId: senderId,
-        content: content,
         dateTime: dateTime,
+        text: text,
       );
       final List<Message> existingMessages = [
         createMessage(id: 'm1'),
         createMessage(id: 'm2'),
       ];
-      firebaseMessageService.mockAddMessageToChat(
-        addedMessageDto: addedMessageDto,
-      );
+      dbMessageService.mockAddMessage(addedMessageDto: addedMessageDto);
       repository = MessageRepositoryImpl(initialData: existingMessages);
 
-      await repository.addMessageToChat(
+      await repository.addMessage(
         chatId: chatId,
         senderId: senderId,
-        content: content,
         dateTime: dateTime,
+        text: text,
       );
 
       expect(
@@ -194,11 +242,11 @@ void main() {
         ]),
       );
       verify(
-        () => firebaseMessageService.addMessageToChat(
+        () => dbMessageService.addMessage(
           chatId: chatId,
           senderId: senderId,
-          content: content,
           dateTime: dateTime,
+          text: text,
         ),
       ).called(1);
     },

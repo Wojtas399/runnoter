@@ -3,17 +3,17 @@ import 'entity.dart';
 class Message extends Entity {
   final String chatId;
   final String senderId;
-  final String content;
   final DateTime dateTime;
+  final String? text;
 
   const Message({
     required super.id,
     required this.chatId,
     required this.senderId,
-    required this.content,
     required this.dateTime,
+    this.text,
   });
 
   @override
-  List<Object?> get props => [id, chatId, senderId, content, dateTime];
+  List<Object?> get props => [id, chatId, senderId, dateTime, text];
 }

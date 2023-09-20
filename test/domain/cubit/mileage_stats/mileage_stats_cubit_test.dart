@@ -235,22 +235,22 @@ void main() {
           raceRepository.mockGetRacesByDateRange(racesStream: races$.stream);
           dateService.mockAreDatesTheSame(expected: false);
           when(
-            () => dateService.areDatesTheSame(startDate, startDate),
+            () => dateService.areDaysTheSame(startDate, startDate),
           ).thenReturn(true);
           when(
-            () => dateService.areDatesTheSame(
+            () => dateService.areDaysTheSame(
               DateTime(2023, 8, 23),
               DateTime(2023, 8, 23),
             ),
           ).thenReturn(true);
           when(
-            () => dateService.areDatesTheSame(
+            () => dateService.areDaysTheSame(
               DateTime(2023, 8, 25),
               DateTime(2023, 8, 25),
             ),
           ).thenReturn(true);
           when(
-            () => dateService.areDatesTheSame(endDate, endDate),
+            () => dateService.areDaysTheSame(endDate, endDate),
           ).thenReturn(true);
         },
         act: (bloc) {
