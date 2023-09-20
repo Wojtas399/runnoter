@@ -100,4 +100,59 @@ void main() {
       );
     },
   );
+
+  blocTest(
+    'load older images, '
+    'images list is null, '
+    'should do nothing',
+    build: () => ChatGalleryCubit(chatId: chatId),
+    setUp: () => messageImageRepository.mockLoadOlderImagesForChat(),
+    act: (cubit) => cubit.loadOlderImages(),
+    expect: () => [],
+    verify: (_) => verifyNever(
+      () => messageImageRepository.loadOlderImagesForChat(
+        chatId: chatId,
+        lastVisibleImageId: any(named: 'lastVisibleImageId'),
+      ),
+    ),
+  );
+
+  blocTest(
+    'load older images, '
+    'images list is empty, '
+    'should do nothing',
+    build: () => ChatGalleryCubit(chatId: chatId, initialState: []),
+    setUp: () => messageImageRepository.mockLoadOlderImagesForChat(),
+    act: (cubit) => cubit.loadOlderImages(),
+    expect: () => [],
+    verify: (_) => verifyNever(
+      () => messageImageRepository.loadOlderImagesForChat(
+        chatId: chatId,
+        lastVisibleImageId: any(named: 'lastVisibleImageId'),
+      ),
+    ),
+  );
+
+  blocTest(
+    'load older images, '
+    'should call message image repository method to load older images with '
+    'id of the last image in list assigned to id of the last visible image param',
+    build: () => ChatGalleryCubit(
+      chatId: chatId,
+      initialState: [
+        createMessageImage(id: 'i1'),
+        createMessageImage(id: 'i2'),
+        createMessageImage(id: 'i3'),
+      ],
+    ),
+    setUp: () => messageImageRepository.mockLoadOlderImagesForChat(),
+    act: (cubit) => cubit.loadOlderImages(),
+    expect: () => [],
+    verify: (_) => verify(
+      () => messageImageRepository.loadOlderImagesForChat(
+        chatId: chatId,
+        lastVisibleImageId: 'i3',
+      ),
+    ).called(1),
+  );
 }

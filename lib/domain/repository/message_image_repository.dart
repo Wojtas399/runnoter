@@ -9,7 +9,7 @@ abstract interface class MessageImageRepository {
 
   Future<void> loadOlderImagesForChat({
     required String chatId,
-    String? lastVisibleImageId,
+    required String lastVisibleImageId,
   });
 
   Future<void> addImagesInOrderToMessage({

@@ -15,10 +15,10 @@ class ChatGalleryCubit extends Cubit<List<MessageImage>?> {
   final MessageRepository _messageRepository;
   StreamSubscription<List<MessageImage>>? _imagesListener;
 
-  ChatGalleryCubit({required this.chatId})
+  ChatGalleryCubit({required this.chatId, List<MessageImage>? initialState})
       : _messageImageRepository = getIt<MessageImageRepository>(),
         _messageRepository = getIt<MessageRepository>(),
-        super(null);
+        super(initialState);
 
   @override
   Future<void> close() {
@@ -38,6 +38,15 @@ class ChatGalleryCubit extends Cubit<List<MessageImage>?> {
           ],
         )
         .listen(emit);
+  }
+
+  Future<void> loadOlderImages() async {
+    if (state == null || state!.isEmpty) return;
+    final String lastVisibleImageId = state!.last.id;
+    await _messageImageRepository.loadOlderImagesForChat(
+      chatId: chatId,
+      lastVisibleImageId: lastVisibleImageId,
+    );
   }
 
   Future<List<_MessageImages>> _groupImagesByMessage(

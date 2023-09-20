@@ -58,8 +58,8 @@ class MessageImageRepositoryImpl extends StateRepository<MessageImage>
 
   @override
   Future<void> loadOlderImagesForChat({
-    required final String chatId,
-    final String? lastVisibleImageId,
+    required String chatId,
+    required String lastVisibleImageId,
   }) async {
     await _loadImagesFromDbForChat(
       chatId,

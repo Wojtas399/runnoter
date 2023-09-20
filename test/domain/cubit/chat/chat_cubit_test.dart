@@ -447,7 +447,39 @@ void main() {
 
   blocTest(
     'load older messages, '
-    "should call message repository's method to load older messages with id of the oldest message in state",
+    'messages list is null, '
+    'should do nothing',
+    build: () => createCubit(),
+    setUp: () => messageRepository.mockLoadOlderMessagesForChat(),
+    act: (cubit) => cubit.loadOlderMessages(),
+    expect: () => [],
+    verify: (_) => verifyNever(
+      () => messageRepository.loadOlderMessagesForChat(
+        chatId: chatId,
+        lastVisibleMessageId: any(named: 'lastVisibleMessageId'),
+      ),
+    ),
+  );
+
+  blocTest(
+    'load older messages, '
+    'messages list is empty, '
+    'should do nothing',
+    build: () => createCubit(),
+    setUp: () => messageRepository.mockLoadOlderMessagesForChat(),
+    act: (cubit) => cubit.loadOlderMessages(),
+    expect: () => [],
+    verify: (_) => verifyNever(
+      () => messageRepository.loadOlderMessagesForChat(
+        chatId: chatId,
+        lastVisibleMessageId: any(named: 'lastVisibleMessageId'),
+      ),
+    ),
+  );
+
+  blocTest(
+    'load older messages, '
+    'should call message repository method to load older messages with id of the oldest message in state',
     build: () => createCubit(
       messagesFromLatest: [
         ChatMessage(
