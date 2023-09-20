@@ -11,13 +11,12 @@ import '../mapper/health_measurement_mapper.dart';
 class HealthMeasurementRepositoryImpl extends StateRepository<HealthMeasurement>
     implements HealthMeasurementRepository {
   final DateService _dateService;
-  final FirebaseHealthMeasurementService _firebaseHealthMeasurementService;
+  final FirebaseHealthMeasurementService _dbHealthMeasurementService;
 
   HealthMeasurementRepositoryImpl({
     List<HealthMeasurement>? initialState,
   })  : _dateService = getIt<DateService>(),
-        _firebaseHealthMeasurementService =
-            getIt<FirebaseHealthMeasurementService>(),
+        _dbHealthMeasurementService = getIt<FirebaseHealthMeasurementService>(),
         super(initialData: initialState);
 
   @override
@@ -98,7 +97,7 @@ class HealthMeasurementRepositoryImpl extends StateRepository<HealthMeasurement>
     required HealthMeasurement measurement,
   }) async {
     final HealthMeasurementDto? healthMeasurementDto =
-        await _firebaseHealthMeasurementService.addMeasurement(
+        await _dbHealthMeasurementService.addMeasurement(
       userId: measurement.userId,
       measurementDto: mapHealthMeasurementToFirebase(measurement),
     );
@@ -117,7 +116,7 @@ class HealthMeasurementRepositoryImpl extends StateRepository<HealthMeasurement>
     double? fastingWeight,
   }) async {
     final HealthMeasurementDto? updatedHealthMeasurementDto =
-        await _firebaseHealthMeasurementService.updateMeasurement(
+        await _dbHealthMeasurementService.updateMeasurement(
       userId: userId,
       date: date,
       restingHeartRate: restingHeartRate,
@@ -135,7 +134,7 @@ class HealthMeasurementRepositoryImpl extends StateRepository<HealthMeasurement>
     required String userId,
     required DateTime date,
   }) async {
-    await _firebaseHealthMeasurementService.deleteMeasurement(
+    await _dbHealthMeasurementService.deleteMeasurement(
       userId: userId,
       date: date,
     );
@@ -159,7 +158,7 @@ class HealthMeasurementRepositoryImpl extends StateRepository<HealthMeasurement>
   Future<void> deleteAllUserMeasurements({
     required String userId,
   }) async {
-    await _firebaseHealthMeasurementService.deleteAllUserMeasurements(
+    await _dbHealthMeasurementService.deleteAllUserMeasurements(
       userId: userId,
     );
     final repositoryState = await dataStream$.first;
@@ -177,7 +176,7 @@ class HealthMeasurementRepositoryImpl extends StateRepository<HealthMeasurement>
     String userId,
   ) async {
     final HealthMeasurementDto? measurementDto =
-        await _firebaseHealthMeasurementService.loadMeasurementByDate(
+        await _dbHealthMeasurementService.loadMeasurementByDate(
       userId: userId,
       date: date,
     );
@@ -197,7 +196,7 @@ class HealthMeasurementRepositoryImpl extends StateRepository<HealthMeasurement>
     String userId,
   ) async {
     final List<HealthMeasurementDto>? measurementDtos =
-        await _firebaseHealthMeasurementService.loadMeasurementsByDateRange(
+        await _dbHealthMeasurementService.loadMeasurementsByDateRange(
       startDate: startDate,
       endDate: endDate,
       userId: userId,
@@ -209,7 +208,7 @@ class HealthMeasurementRepositoryImpl extends StateRepository<HealthMeasurement>
 
   Future<void> _loadAllMeasurementsFromRemoteDb(String userId) async {
     final List<HealthMeasurementDto>? measurementDtos =
-        await _firebaseHealthMeasurementService.loadAllMeasurements(
+        await _dbHealthMeasurementService.loadAllMeasurements(
       userId: userId,
     );
     if (measurementDtos != null) {
