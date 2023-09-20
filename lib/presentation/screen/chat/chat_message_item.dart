@@ -18,14 +18,12 @@ import '../../service/dialog_service.dart';
 class ChatMessageItem extends StatelessWidget {
   final bool isNew;
   final double maxWidth;
-  final bool isSender;
   final ChatMessage message;
 
   const ChatMessageItem({
     super.key,
     required this.isNew,
     required this.maxWidth,
-    required this.isSender,
     required this.message,
   });
 
@@ -36,30 +34,31 @@ class ChatMessageItem extends StatelessWidget {
 
     return message.text?.isNotEmpty == true || message.images.isNotEmpty
         ? Row(
-            mainAxisAlignment:
-                isSender ? MainAxisAlignment.end : MainAxisAlignment.start,
+            mainAxisAlignment: message.hasBeenSentByLoggedUser
+                ? MainAxisAlignment.end
+                : MainAxisAlignment.start,
             children: [
               _AnimatedBody(
                 shouldRunAnimation: isNew,
-                isSender: isSender,
+                hasMessageBeenSentByLoggedUser: message.hasBeenSentByLoggedUser,
                 child: Card(
                   clipBehavior: Clip.hardEdge,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.only(
                       topLeft: borderRadius,
                       topRight: borderRadius,
-                      bottomLeft: isSender ? borderRadius : Radius.zero,
-                      bottomRight: isSender ? Radius.zero : borderRadius,
+                      bottomLeft: message.hasBeenSentByLoggedUser
+                          ? borderRadius
+                          : Radius.zero,
+                      bottomRight: message.hasBeenSentByLoggedUser
+                          ? Radius.zero
+                          : borderRadius,
                     ),
                   ),
-                  color: isSender
+                  color: message.hasBeenSentByLoggedUser
                       ? colorScheme.primary
                       : colorScheme.surfaceVariant,
-                  child: _MessageContent(
-                    maxWidth: maxWidth,
-                    isSender: isSender,
-                    message: message,
-                  ),
+                  child: _MessageContent(maxWidth: maxWidth, message: message),
                 ),
               ),
             ],
@@ -70,12 +69,12 @@ class ChatMessageItem extends StatelessWidget {
 
 class _AnimatedBody extends StatefulWidget {
   final bool shouldRunAnimation;
-  final bool isSender;
+  final bool hasMessageBeenSentByLoggedUser;
   final Widget child;
 
   const _AnimatedBody({
     required this.shouldRunAnimation,
-    required this.isSender,
+    required this.hasMessageBeenSentByLoggedUser,
     required this.child,
   });
 
@@ -126,7 +125,7 @@ class _AnimatedBodyState extends State<_AnimatedBody>
             sizeFactor: _sizeAnimation,
             child: ScaleTransition(
               scale: _scaleAnimation,
-              alignment: widget.isSender
+              alignment: widget.hasMessageBeenSentByLoggedUser
                   ? Alignment.bottomRight
                   : Alignment.bottomLeft,
               child: widget.child,
@@ -138,14 +137,9 @@ class _AnimatedBodyState extends State<_AnimatedBody>
 
 class _MessageContent extends StatelessWidget {
   final double maxWidth;
-  final bool isSender;
   final ChatMessage message;
 
-  const _MessageContent({
-    required this.maxWidth,
-    required this.isSender,
-    required this.message,
-  });
+  const _MessageContent({required this.maxWidth, required this.message});
 
   @override
   Widget build(BuildContext context) {
@@ -156,8 +150,9 @@ class _MessageContent extends StatelessWidget {
       constraints: BoxConstraints(maxWidth: maxWidth),
       padding: const EdgeInsets.all(cardPadding),
       child: Column(
-        crossAxisAlignment:
-            isSender ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+        crossAxisAlignment: message.hasBeenSentByLoggedUser
+            ? CrossAxisAlignment.end
+            : CrossAxisAlignment.start,
         children: [
           if (message.images.isNotEmpty)
             _Images(
@@ -165,23 +160,23 @@ class _MessageContent extends StatelessWidget {
               doesTextExist: message.text != null,
               maxMessageWidth: maxWidth,
               cardPadding: cardPadding,
-              isSender: isSender,
+              isSender: message.hasBeenSentByLoggedUser,
             ),
           if (message.text?.isNotEmpty == true)
             BodyMedium(
               message.text!,
-              color: isSender ? theme.canvasColor : null,
+              color: message.hasBeenSentByLoggedUser ? theme.canvasColor : null,
             ),
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               LabelSmall(
                 message.sendDateTime.toTime(),
-                color: isSender
+                color: message.hasBeenSentByLoggedUser
                     ? theme.colorScheme.outlineVariant
                     : theme.colorScheme.outline,
               ),
-              if (isSender) ...[
+              if (message.hasBeenSentByLoggedUser) ...[
                 const GapHorizontal8(),
                 _MessageStatusIcon(status: message.status),
               ],

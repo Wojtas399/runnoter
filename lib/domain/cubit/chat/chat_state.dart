@@ -1,7 +1,6 @@
 part of 'chat_cubit.dart';
 
 class ChatState extends CubitState<ChatState> {
-  final String? loggedUserId;
   final String? recipientFullName;
   final List<ChatMessage>? messagesFromLatest;
   final String? messageToSend;
@@ -9,7 +8,6 @@ class ChatState extends CubitState<ChatState> {
 
   const ChatState({
     required super.status,
-    this.loggedUserId,
     this.recipientFullName,
     this.messagesFromLatest,
     this.messageToSend,
@@ -19,7 +17,6 @@ class ChatState extends CubitState<ChatState> {
   @override
   List<Object?> get props => [
         status,
-        loggedUserId,
         recipientFullName,
         messagesFromLatest,
         messageToSend,
@@ -27,13 +24,11 @@ class ChatState extends CubitState<ChatState> {
       ];
 
   bool get canSubmitMessage =>
-      loggedUserId?.isNotEmpty == true &&
-      (messageToSend?.isNotEmpty == true || imagesToSend.isNotEmpty);
+      messageToSend?.isNotEmpty == true || imagesToSend.isNotEmpty;
 
   @override
   ChatState copyWith({
     CubitStatus? status,
-    String? loggedUserId,
     String? recipientFullName,
     List<ChatMessage>? messagesFromLatest,
     String? messageToSend,
@@ -42,7 +37,6 @@ class ChatState extends CubitState<ChatState> {
   }) =>
       ChatState(
         status: status ?? const CubitStatusComplete(),
-        loggedUserId: loggedUserId ?? this.loggedUserId,
         recipientFullName: recipientFullName ?? this.recipientFullName,
         messagesFromLatest: messagesFromLatest ?? this.messagesFromLatest,
         messageToSend:
@@ -54,7 +48,7 @@ class ChatState extends CubitState<ChatState> {
 class ChatMessage extends Equatable {
   final String id;
   final MessageStatus status;
-  final String senderId; //TODO: Change to isSender parameter
+  final bool hasBeenSentByLoggedUser;
   final DateTime sendDateTime;
   final String? text;
   final List<MessageImage> images;
@@ -62,12 +56,19 @@ class ChatMessage extends Equatable {
   const ChatMessage({
     required this.id,
     required this.status,
-    required this.senderId,
+    required this.hasBeenSentByLoggedUser,
     required this.sendDateTime,
     this.text,
     this.images = const [],
   });
 
   @override
-  List<Object?> get props => [id, status, senderId, sendDateTime, text, images];
+  List<Object?> get props => [
+        id,
+        status,
+        hasBeenSentByLoggedUser,
+        sendDateTime,
+        text,
+        images,
+      ];
 }

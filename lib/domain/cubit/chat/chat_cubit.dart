@@ -61,14 +61,13 @@ class ChatCubit extends CubitWithStatus<ChatState, dynamic, dynamic> {
         .getMessagesForChat(chatId: chatId)
         .switchMap(
           (List<Message> messages) => Rx.combineLatest(
-            messages.map(_mapMessageToChatMessage),
+            messages.map((msg) => _mapMessageToChatMessage(msg, loggedUserId)),
             (List<ChatMessage> chatMessages) => chatMessages,
           ),
         )
         .listen(
       (List<ChatMessage> chatMessages) {
         emit(state.copyWith(
-          loggedUserId: loggedUserId,
           recipientFullName: recipientFullName,
           messagesFromLatest:
               _sortChatMessagesDescendingBySendDateTime(chatMessages),
@@ -96,30 +95,35 @@ class ChatCubit extends CubitWithStatus<ChatState, dynamic, dynamic> {
 
   Future<void> submitMessage() async {
     if (!state.canSubmitMessage) return;
-    if (await _connectivityService.hasDeviceInternetConnection()) {
-      final DateTime now = _dateService.getNow();
-      emitLoadingStatus();
-      final String? messageId = await _messageRepository.addMessage(
-        status: MessageStatus.sent,
-        chatId: chatId,
-        senderId: state.loggedUserId!,
-        dateTime: now,
-        text: state.messageToSend,
-      );
-      if (messageId != null && state.imagesToSend.isNotEmpty) {
-        await _messageImageRepository.addImagesInOrderToMessage(
-          messageId: messageId,
-          bytesOfImages: state.imagesToSend,
-        );
-      }
-      emit(state.copyWith(
-        status: const CubitStatusLoading(),
-        messageToSendAsNull: true,
-        imagesToSend: [],
-      ));
-    } else {
+    if (!(await _connectivityService.hasDeviceInternetConnection())) {
       emitNoInternetConnectionStatus();
+      return;
     }
+    final String? loggedUserId = await _authService.loggedUserId$.first;
+    if (loggedUserId == null) {
+      emitNoLoggedUserStatus();
+      return;
+    }
+    final DateTime now = _dateService.getNow();
+    emitLoadingStatus();
+    final String? messageId = await _messageRepository.addMessage(
+      status: MessageStatus.sent,
+      chatId: chatId,
+      senderId: loggedUserId,
+      dateTime: now,
+      text: state.messageToSend,
+    );
+    if (messageId != null && state.imagesToSend.isNotEmpty) {
+      await _messageImageRepository.addImagesInOrderToMessage(
+        messageId: messageId,
+        bytesOfImages: state.imagesToSend,
+      );
+    }
+    emit(state.copyWith(
+      status: const CubitStatusLoading(),
+      messageToSendAsNull: true,
+      imagesToSend: [],
+    ));
   }
 
   Future<void> loadOlderMessages() async {
@@ -144,12 +148,15 @@ class ChatCubit extends CubitWithStatus<ChatState, dynamic, dynamic> {
     return '${recipient.name} ${recipient.surname}';
   }
 
-  Stream<ChatMessage> _mapMessageToChatMessage(Message message) =>
+  Stream<ChatMessage> _mapMessageToChatMessage(
+    Message message,
+    String loggedUserId,
+  ) =>
       _messageImageRepository.getImagesByMessageId(messageId: message.id).map(
             (List<MessageImage> messageImages) => ChatMessage(
               id: message.id,
               status: message.status,
-              senderId: message.senderId,
+              hasBeenSentByLoggedUser: message.senderId == loggedUserId,
               sendDateTime: message.dateTime,
               text: message.text,
               images: messageImages.sortByOrder(),

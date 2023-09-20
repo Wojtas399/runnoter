@@ -42,7 +42,6 @@ void main() {
   const String loggedUserId = 'u1';
 
   ChatCubit createCubit({
-    String? loggedUserId,
     List<ChatMessage>? messagesFromLatest,
     String? messageToSend,
     List<Uint8List> imagesToSend = const [],
@@ -51,7 +50,6 @@ void main() {
         chatId: chatId,
         initialState: ChatState(
           status: const CubitStatusInitial(),
-          loggedUserId: loggedUserId,
           messagesFromLatest: messagesFromLatest,
           messageToSend: messageToSend,
           imagesToSend: imagesToSend,
@@ -77,6 +75,16 @@ void main() {
     reset(dateService);
     reset(connectivityService);
   });
+
+  blocTest(
+    'initialize, '
+    'logged user does not exist, '
+    'should do nothing',
+    build: () => createCubit(),
+    setUp: () => authService.mockGetLoggedUserId(),
+    act: (cubit) => cubit.initialize(),
+    expect: () => [],
+  );
 
   group(
     'initialize',
@@ -165,13 +173,12 @@ void main() {
         expect: () => [
           ChatState(
             status: const CubitStatusComplete(),
-            loggedUserId: loggedUserId,
             recipientFullName: '${recipient.name} ${recipient.surname}',
             messagesFromLatest: [
               ChatMessage(
                 id: 'm1',
                 status: MessageStatus.sent,
-                senderId: 'u1',
+                hasBeenSentByLoggedUser: true,
                 sendDateTime: DateTime(2023, 1, 10),
                 text: 'message 1',
                 images: [
@@ -192,7 +199,7 @@ void main() {
               ChatMessage(
                 id: 'm2',
                 status: MessageStatus.read,
-                senderId: 'u2',
+                hasBeenSentByLoggedUser: false,
                 sendDateTime: DateTime(2023, 1, 5),
                 text: 'message 2',
                 images: const [],
@@ -201,13 +208,12 @@ void main() {
           ),
           ChatState(
             status: const CubitStatusComplete(),
-            loggedUserId: loggedUserId,
             recipientFullName: '${recipient.name} ${recipient.surname}',
             messagesFromLatest: [
               ChatMessage(
                 id: 'm2',
                 status: MessageStatus.read,
-                senderId: 'u2',
+                hasBeenSentByLoggedUser: false,
                 sendDateTime: DateTime(2023, 1, 5),
                 text: 'updated message 2',
                 images: const [],
@@ -215,7 +221,7 @@ void main() {
               ChatMessage(
                 id: 'm1',
                 status: MessageStatus.read,
-                senderId: 'u1',
+                hasBeenSentByLoggedUser: true,
                 sendDateTime: DateTime(2023, 1, 2),
                 text: 'updated message 1',
                 images: [
@@ -237,13 +243,12 @@ void main() {
           ),
           ChatState(
             status: const CubitStatusComplete(),
-            loggedUserId: loggedUserId,
             recipientFullName: '${recipient.name} ${recipient.surname}',
             messagesFromLatest: [
               ChatMessage(
                 id: 'm2',
                 status: MessageStatus.read,
-                senderId: 'u2',
+                hasBeenSentByLoggedUser: false,
                 sendDateTime: DateTime(2023, 1, 5),
                 text: 'updated message 2',
                 images: const [],
@@ -251,7 +256,7 @@ void main() {
               ChatMessage(
                 id: 'm1',
                 status: MessageStatus.read,
-                senderId: 'u1',
+                hasBeenSentByLoggedUser: true,
                 sendDateTime: DateTime(2023, 1, 2),
                 text: 'updated message 1',
                 images: const [],
@@ -335,21 +340,9 @@ void main() {
 
   blocTest(
     'submit message, '
-    'logged user does not exist, '
-    'should do nothing',
-    build: () => createCubit(messageToSend: 'message'),
-    act: (cubit) => cubit.submitMessage(),
-    expect: () => [],
-  );
-
-  blocTest(
-    'submit message, '
     'no internet connection, '
     'should emit noInternetConnection error',
-    build: () => createCubit(
-      loggedUserId: loggedUserId,
-      messageToSend: 'message',
-    ),
+    build: () => createCubit(messageToSend: 'message'),
     setUp: () => connectivityService.mockHasDeviceInternetConnection(
       hasConnection: false,
     ),
@@ -357,7 +350,6 @@ void main() {
     expect: () => [
       const ChatState(
         status: CubitStatusNoInternetConnection(),
-        loggedUserId: loggedUserId,
         messageToSend: 'message',
       ),
     ],
@@ -368,16 +360,34 @@ void main() {
 
   blocTest(
     'submit message, '
+    'logged user does not exist, '
+    'should emit no logged user status',
+    build: () => createCubit(messageToSend: 'message'),
+    setUp: () {
+      connectivityService.mockHasDeviceInternetConnection(hasConnection: true);
+      authService.mockGetLoggedUserId();
+    },
+    act: (cubit) => cubit.submitMessage(),
+    expect: () => [
+      const ChatState(
+        status: CubitStatusNoLoggedUser(),
+        messageToSend: 'message',
+      ),
+    ],
+  );
+
+  blocTest(
+    'submit message, '
     'there are no images to send, '
     'should call message repository method to add new message with current dateTime and sent status and '
     'should set messageToSend as null',
     build: () => createCubit(
-      loggedUserId: loggedUserId,
       messageToSend: 'message',
       imagesToSend: [],
     ),
     setUp: () {
       connectivityService.mockHasDeviceInternetConnection(hasConnection: true);
+      authService.mockGetLoggedUserId(userId: loggedUserId);
       dateService.mockGetNow(now: DateTime(2023, 1, 1, 12, 30));
       messageRepository.mockAddMessage(addedMessageId: 'm1');
     },
@@ -385,13 +395,11 @@ void main() {
     expect: () => [
       const ChatState(
         status: CubitStatusLoading(),
-        loggedUserId: loggedUserId,
         messageToSend: 'message',
         imagesToSend: [],
       ),
       const ChatState(
         status: CubitStatusLoading(),
-        loggedUserId: loggedUserId,
         messageToSend: null,
         imagesToSend: [],
       ),
@@ -413,12 +421,12 @@ void main() {
     'should call message image repository to add images to message and '
     'should set messageToSend as null and imagesToSend as empty array',
     build: () => createCubit(
-      loggedUserId: loggedUserId,
       messageToSend: 'message',
       imagesToSend: [Uint8List(1), Uint8List(2)],
     ),
     setUp: () {
       connectivityService.mockHasDeviceInternetConnection(hasConnection: true);
+      authService.mockGetLoggedUserId(userId: loggedUserId);
       dateService.mockGetNow(now: DateTime(2023, 1, 1, 12, 30));
       messageRepository.mockAddMessage(addedMessageId: 'm1');
       messageImageRepository.mockAddImagesInOrderToMessage();
@@ -427,13 +435,11 @@ void main() {
     expect: () => [
       ChatState(
         status: const CubitStatusLoading(),
-        loggedUserId: loggedUserId,
         messageToSend: 'message',
         imagesToSend: [Uint8List(1), Uint8List(2)],
       ),
       const ChatState(
         status: CubitStatusLoading(),
-        loggedUserId: loggedUserId,
         messageToSend: null,
         imagesToSend: [],
       ),
@@ -497,19 +503,19 @@ void main() {
         ChatMessage(
           id: 'm1',
           status: MessageStatus.read,
-          senderId: 'u1',
+          hasBeenSentByLoggedUser: true,
           sendDateTime: DateTime(2023, 1, 2),
         ),
         ChatMessage(
           id: 'm2',
           status: MessageStatus.read,
-          senderId: 'u2',
+          hasBeenSentByLoggedUser: false,
           sendDateTime: DateTime(2023, 1, 5),
         ),
         ChatMessage(
           id: 'm3',
           status: MessageStatus.read,
-          senderId: 'u1',
+          hasBeenSentByLoggedUser: true,
           sendDateTime: DateTime(2023, 1, 10),
         ),
       ],

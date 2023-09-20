@@ -21,14 +21,11 @@ class ChatMessages extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String? loggedUserId = context.select(
-      (ChatCubit cubit) => cubit.state.loggedUserId,
-    );
     final List<ChatMessage>? messages = context.select(
       (ChatCubit cubit) => cubit.state.messagesFromLatest,
     );
 
-    return messages == null || loggedUserId == null
+    return messages == null
         ? const LoadingInfo()
         : switch (messages) {
             [] => Paddings24(
@@ -86,9 +83,6 @@ class _MessagesListState extends State<_MessagesList> {
 
   @override
   Widget build(BuildContext context) {
-    final String loggedUserId = context.select(
-      (ChatCubit cubit) => cubit.state.loggedUserId!,
-    );
     final List<ChatMessage> messages = widget.messages;
     final int numberOfMessages = messages.length;
 
@@ -121,7 +115,6 @@ class _MessagesListState extends State<_MessagesList> {
             key: ValueKey(currentMsg.id),
             isNew: messageIndex == 0 && _isFirstMessageNew,
             maxWidth: widget.maxMessageWidth,
-            isSender: loggedUserId == currentMsg.senderId,
             message: currentMsg,
           );
         },
