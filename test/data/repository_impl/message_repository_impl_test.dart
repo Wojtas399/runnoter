@@ -154,7 +154,7 @@ void main() {
 
   test(
     'load older messages for chat, '
-    "should call firebase message service's method to load older messages and "
+    "should call db message service's method to load older messages and "
     'should add loaded messages to repo',
     () async {
       const String chatId = 'c1';
@@ -198,8 +198,8 @@ void main() {
 
   test(
     'add message, '
-    'should call firebase storage service method to upload images and '
-    'should call firebase message service method to add message to chat and '
+    'should call db storage service method to upload images and '
+    'should call db message service method to add message to chat and '
     'should add new message to repo',
     () async {
       const String messageId = 'm3';
@@ -216,6 +216,7 @@ void main() {
       );
       final Message addedMessage = Message(
         id: messageId,
+        status: MessageStatus.sent, //TODO: Implement status mapping
         chatId: chatId,
         senderId: senderId,
         dateTime: dateTime,

@@ -23,6 +23,7 @@ void main() {
       );
       final Message expectedMessage = Message(
         id: id,
+        status: MessageStatus.sent, //TODO: Implement message status mapping
         chatId: chatId,
         senderId: senderId,
         dateTime: dateTime,
