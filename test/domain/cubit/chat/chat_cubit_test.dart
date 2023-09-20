@@ -89,12 +89,14 @@ void main() {
       final List<Message> messages = [
         createMessage(
           id: 'm1',
+          status: MessageStatus.sent,
           text: 'message 1',
           senderId: 'u1',
           dateTime: DateTime(2023, 1, 10),
         ),
         createMessage(
           id: 'm2',
+          status: MessageStatus.read,
           text: 'message 2',
           senderId: 'u2',
           dateTime: DateTime(2023, 1, 5),
@@ -103,12 +105,14 @@ void main() {
       final List<Message> updatedMessages = [
         createMessage(
           id: 'm1',
+          status: MessageStatus.read,
           text: 'updated message 1',
           senderId: 'u1',
           dateTime: DateTime(2023, 1, 2),
         ),
         createMessage(
           id: 'm2',
+          status: MessageStatus.read,
           senderId: 'u2',
           text: 'updated message 2',
           dateTime: DateTime(2023, 1, 5),
@@ -166,6 +170,7 @@ void main() {
             messagesFromLatest: [
               ChatMessage(
                 id: 'm1',
+                status: MessageStatus.sent,
                 senderId: 'u1',
                 sendDateTime: DateTime(2023, 1, 10),
                 text: 'message 1',
@@ -186,6 +191,7 @@ void main() {
               ),
               ChatMessage(
                 id: 'm2',
+                status: MessageStatus.read,
                 senderId: 'u2',
                 sendDateTime: DateTime(2023, 1, 5),
                 text: 'message 2',
@@ -200,6 +206,7 @@ void main() {
             messagesFromLatest: [
               ChatMessage(
                 id: 'm2',
+                status: MessageStatus.read,
                 senderId: 'u2',
                 sendDateTime: DateTime(2023, 1, 5),
                 text: 'updated message 2',
@@ -207,6 +214,7 @@ void main() {
               ),
               ChatMessage(
                 id: 'm1',
+                status: MessageStatus.read,
                 senderId: 'u1',
                 sendDateTime: DateTime(2023, 1, 2),
                 text: 'updated message 1',
@@ -234,6 +242,7 @@ void main() {
             messagesFromLatest: [
               ChatMessage(
                 id: 'm2',
+                status: MessageStatus.read,
                 senderId: 'u2',
                 sendDateTime: DateTime(2023, 1, 5),
                 text: 'updated message 2',
@@ -241,6 +250,7 @@ void main() {
               ),
               ChatMessage(
                 id: 'm1',
+                status: MessageStatus.read,
                 senderId: 'u1',
                 sendDateTime: DateTime(2023, 1, 2),
                 text: 'updated message 1',
@@ -486,16 +496,19 @@ void main() {
       messagesFromLatest: [
         ChatMessage(
           id: 'm1',
+          status: MessageStatus.read,
           senderId: 'u1',
           sendDateTime: DateTime(2023, 1, 2),
         ),
         ChatMessage(
           id: 'm2',
+          status: MessageStatus.read,
           senderId: 'u2',
           sendDateTime: DateTime(2023, 1, 5),
         ),
         ChatMessage(
           id: 'm3',
+          status: MessageStatus.read,
           senderId: 'u1',
           sendDateTime: DateTime(2023, 1, 10),
         ),

@@ -148,6 +148,7 @@ class ChatCubit extends CubitWithStatus<ChatState, dynamic, dynamic> {
       _messageImageRepository.getImagesByMessageId(messageId: message.id).map(
             (List<MessageImage> messageImages) => ChatMessage(
               id: message.id,
+              status: message.status,
               senderId: message.senderId,
               sendDateTime: message.dateTime,
               text: message.text,

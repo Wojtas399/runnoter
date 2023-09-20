@@ -122,9 +122,7 @@ class _MessagesListState extends State<_MessagesList> {
             isNew: messageIndex == 0 && _isFirstMessageNew,
             maxWidth: widget.maxMessageWidth,
             isSender: loggedUserId == currentMsg.senderId,
-            text: currentMsg.text,
-            images: currentMsg.images,
-            dateTime: currentMsg.sendDateTime,
+            message: currentMsg,
           );
         },
       ),

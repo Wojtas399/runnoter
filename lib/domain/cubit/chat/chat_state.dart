@@ -53,13 +53,15 @@ class ChatState extends CubitState<ChatState> {
 
 class ChatMessage extends Equatable {
   final String id;
-  final String senderId;
+  final MessageStatus status;
+  final String senderId; //TODO: Change to isSender parameter
   final DateTime sendDateTime;
   final String? text;
   final List<MessageImage> images;
 
   const ChatMessage({
     required this.id,
+    required this.status,
     required this.senderId,
     required this.sendDateTime,
     this.text,
@@ -67,5 +69,5 @@ class ChatMessage extends Equatable {
   });
 
   @override
-  List<Object?> get props => [id, senderId, sendDateTime, text, images];
+  List<Object?> get props => [id, status, senderId, sendDateTime, text, images];
 }

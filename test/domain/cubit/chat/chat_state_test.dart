@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/domain/additional_model/cubit_status.dart';
 import 'package:runnoter/domain/cubit/chat/chat_cubit.dart';
+import 'package:runnoter/domain/entity/message.dart';
 
 void main() {
   late ChatState state;
@@ -132,11 +133,13 @@ void main() {
       final List<ChatMessage> expected = [
         ChatMessage(
           id: 'm1',
+          status: MessageStatus.read,
           senderId: 'u1',
           sendDateTime: DateTime(2023, 1, 1),
         ),
         ChatMessage(
           id: 'm2',
+          status: MessageStatus.read,
           senderId: 'u2',
           sendDateTime: DateTime(2023, 1, 2),
         ),
