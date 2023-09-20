@@ -235,6 +235,54 @@ void main() {
   );
 
   test(
+    'load older images for chat, '
+    'should load new images from db base on last visible image id and '
+    'should add them to repo',
+    () async {
+      const String chatId = 'c1';
+      const String lastVisibleImageId = 'i0';
+      final List<MessageImage> existingImages = [
+        createMessageImage(id: 'i1', messageId: 'm1'),
+        createMessageImage(id: 'i2', messageId: 'm2'),
+      ];
+      final List<MessageImageDto> loadedImageDtos = [
+        createMessageImageDto(id: 'i3', messageId: 'm3'),
+        createMessageImageDto(id: 'i4', messageId: 'm4'),
+      ];
+      final List<MessageImage> loadedImages = [
+        createMessageImage(id: 'i3', messageId: 'm3', bytes: Uint8List(3)),
+        createMessageImage(id: 'i4', messageId: 'm4', bytes: Uint8List(4)),
+      ];
+      dbMessageImageService.mockLoadMessageImagesForChat(
+        messageImageDtos: loadedImageDtos,
+      );
+      when(
+        () => dbStorageService.loadMessageImage(messageId: 'm3', imageId: 'i3'),
+      ).thenAnswer((_) => Future.value(Uint8List(3)));
+      when(
+        () => dbStorageService.loadMessageImage(messageId: 'm4', imageId: 'i4'),
+      ).thenAnswer((_) => Future.value(Uint8List(4)));
+      repository = MessageImageRepositoryImpl(initialData: existingImages);
+
+      await repository.loadOlderImagesForChat(
+        chatId: chatId,
+        lastVisibleImageId: lastVisibleImageId,
+      );
+
+      expect(
+        repository.dataStream$,
+        emits([...existingImages, ...loadedImages]),
+      );
+      verify(
+        () => dbMessageImageService.loadMessageImagesForChat(
+          chatId: chatId,
+          lastVisibleImageId: lastVisibleImageId,
+        ),
+      ).called(1);
+    },
+  );
+
+  test(
     'add images in order to message, '
     'list of image bytes is empty, '
     'should throw message image exception with listOfImageBytesIsEmpty code',

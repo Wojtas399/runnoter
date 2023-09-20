@@ -24,7 +24,7 @@ class MessageImageRepositoryImpl extends StateRepository<MessageImage>
 
   @override
   Stream<List<MessageImage>> getImagesByMessageId({
-    required final String messageId,
+    required String messageId,
   }) async* {
     await _loadImagesFromDbByMessageId(messageId);
     await for (final messageImages in dataStream$) {
@@ -37,48 +37,40 @@ class MessageImageRepositoryImpl extends StateRepository<MessageImage>
   }
 
   @override
-  Stream<List<MessageImage>> getImagesForChat({
-    required final String chatId,
-  }) {
+  Stream<List<MessageImage>> getImagesForChat({required String chatId}) {
     final StreamController<bool> canEmit$ = StreamController()..add(false);
     _loadImagesFromDbForChat(chatId).then((_) => canEmit$.add(true));
     StreamSubscription<List<MessageImageDto>?>? newImagesListener;
     return canEmit$.stream
         .switchMap(
-          (bool canEmit) {
-            return canEmit ? _getImagesFromChat(chatId) : Stream.value(null);
-          },
+          (bool canEmit) =>
+              canEmit ? _getImagesFromChat(chatId) : Stream.value(null),
         )
         .whereNotNull()
         .doOnData(
-          (_) {
-            newImagesListener ??= _dbMessageImageService
-                .getAddedImagesForChat(chatId: chatId)
-                .whereNotNull()
-                .listen(_manageNewImages);
-          },
+          (_) => newImagesListener ??= _dbMessageImageService
+              .getAddedImagesForChat(chatId: chatId)
+              .whereNotNull()
+              .listen(_manageNewImages),
         )
-        .doOnCancel(
-          () {
-            newImagesListener?.cancel();
-            newImagesListener = null;
-          },
-        );
+        .doOnCancel(() => newImagesListener?.cancel());
   }
 
   @override
   Future<void> loadOlderImagesForChat({
     required final String chatId,
     final String? lastVisibleImageId,
-  }) {
-    // TODO: implement loadOlderImagesForChat
-    throw UnimplementedError();
+  }) async {
+    await _loadImagesFromDbForChat(
+      chatId,
+      lastVisibleImageId: lastVisibleImageId,
+    );
   }
 
   @override
   Future<void> addImagesInOrderToMessage({
-    required final String messageId,
-    required final List<Uint8List> bytesOfImages,
+    required String messageId,
+    required List<Uint8List> bytesOfImages,
   }) async {
     if (bytesOfImages.isEmpty) {
       throw const MessageImageException(
@@ -150,25 +142,7 @@ class MessageImageRepositoryImpl extends StateRepository<MessageImage>
     addOrUpdateEntities(images);
   }
 
-  Future<List<MessageImage>> _loadImagesFromStorageForDtos(
-    final List<MessageImageDto> imageDtos,
-  ) async {
-    final List<MessageImage> images = [];
-    for (final imageDto in imageDtos) {
-      final Uint8List? imageBytes = await _dbStorageService.loadMessageImage(
-        imageId: imageDto.id,
-        messageId: imageDto.messageId,
-      );
-      if (imageBytes != null) {
-        images.add(
-          mapMessageImageFromDto(messageImageDto: imageDto, bytes: imageBytes),
-        );
-      }
-    }
-    return images;
-  }
-
-  Stream<List<MessageImage>?> _getImagesFromChat(final String chatId) =>
+  Stream<List<MessageImage>?> _getImagesFromChat(String chatId) =>
       dataStream$.asyncMap(
         (images) async {
           final List<MessageImage> matchedImages = [];
@@ -188,5 +162,23 @@ class MessageImageRepositoryImpl extends StateRepository<MessageImage>
           await _loadImagesFromStorageForDtos(imageDtos);
       addOrUpdateEntities(images);
     }
+  }
+
+  Future<List<MessageImage>> _loadImagesFromStorageForDtos(
+    List<MessageImageDto> imageDtos,
+  ) async {
+    final List<MessageImage> images = [];
+    for (final imageDto in imageDtos) {
+      final Uint8List? imageBytes = await _dbStorageService.loadMessageImage(
+        imageId: imageDto.id,
+        messageId: imageDto.messageId,
+      );
+      if (imageBytes != null) {
+        images.add(
+          mapMessageImageFromDto(messageImageDto: imageDto, bytes: imageBytes),
+        );
+      }
+    }
+    return images;
   }
 }

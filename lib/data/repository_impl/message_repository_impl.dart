@@ -32,25 +32,17 @@ class MessageRepositoryImpl extends StateRepository<Message>
     StreamSubscription<List<MessageDto>?>? newMessagesListener;
     return canEmit$.stream
         .switchMap(
-          (bool canEmit) {
-            return canEmit ? _getMessagesFromChat(chatId) : Stream.value(null);
-          },
+          (bool canEmit) =>
+              canEmit ? _getMessagesFromChat(chatId) : Stream.value(null),
         )
         .whereNotNull()
         .doOnData(
-          (_) {
-            newMessagesListener ??= _dbMessageService
-                .getAddedMessagesForChat(chatId: chatId)
-                .whereNotNull()
-                .listen(_manageNewMessages);
-          },
+          (_) => newMessagesListener ??= _dbMessageService
+              .getAddedMessagesForChat(chatId: chatId)
+              .whereNotNull()
+              .listen(_manageNewMessages),
         )
-        .doOnCancel(
-          () {
-            newMessagesListener?.cancel();
-            newMessagesListener = null;
-          },
-        );
+        .doOnCancel(() => newMessagesListener?.cancel());
   }
 
   @override
