@@ -4,7 +4,7 @@ import '../firebase.dart';
 import '../firebase_collections.dart';
 
 class FirebaseMessageService {
-  Stream<List<MessageDto>?> getAddedMessagesForChat({
+  Stream<List<MessageDto>?> getAddedOrModifiedMessagesForChat({
     required String chatId,
   }) {
     bool isFirstQuery = true;
@@ -19,7 +19,7 @@ class FirebaseMessageService {
         } else {
           return snapshot.docChanges
               .where((docChange) =>
-                  docChange.type == DocumentChangeType.added &&
+                  docChange.type != DocumentChangeType.removed &&
                   docChange.doc.data() != null)
               .map((docChange) => docChange.doc.data()!)
               .toList();
@@ -28,9 +28,7 @@ class FirebaseMessageService {
     );
   }
 
-  Future<MessageDto?> loadMessageById({
-    required String messageId,
-  }) async {
+  Future<MessageDto?> loadMessageById({required String messageId}) async {
     final messageRef = getMessagesRef().doc(messageId);
     final docSnapshot = await messageRef.get();
     return docSnapshot.data();

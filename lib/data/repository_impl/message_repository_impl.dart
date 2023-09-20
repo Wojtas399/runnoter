@@ -39,9 +39,9 @@ class MessageRepositoryImpl extends StateRepository<Message>
         .whereNotNull()
         .doOnData(
           (_) => newMessagesListener ??= _dbMessageService
-              .getAddedMessagesForChat(chatId: chatId)
+              .getAddedOrModifiedMessagesForChat(chatId: chatId)
               .whereNotNull()
-              .listen(_manageNewMessages),
+              .listen(_manageAddedOrModifiedMessages),
         )
         .doOnCancel(() => newMessagesListener?.cancel());
   }
@@ -105,7 +105,9 @@ class MessageRepositoryImpl extends StateRepository<Message>
         (msgs) => msgs?.where((message) => message.chatId == chatId).toList(),
       );
 
-  Future<void> _manageNewMessages(List<firebase.MessageDto> messageDtos) async {
+  Future<void> _manageAddedOrModifiedMessages(
+    List<firebase.MessageDto> messageDtos,
+  ) async {
     if (messageDtos.isNotEmpty) {
       final List<Message> messages = await _mapMessagesFromDtos(messageDtos);
       addOrUpdateEntities(messages);

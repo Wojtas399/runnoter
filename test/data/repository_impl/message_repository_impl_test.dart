@@ -99,24 +99,34 @@ void main() {
           createMessageDto(id: 'm6', chatId: chatId, text: 'text6');
       final firebase.MessageDto secondAddedMessageDto =
           createMessageDto(id: 'm7', chatId: chatId, text: 'text7');
+      final firebase.MessageDto modifiedMessageDto = createMessageDto(
+        id: 'm1',
+        chatId: chatId,
+        text: 'modified text 1',
+      );
       final Message firstAddedMessage =
           createMessage(id: 'm6', chatId: chatId, text: 'text6');
       final Message secondAddedMessage =
           createMessage(id: 'm7', chatId: chatId, text: 'text7');
-      final StreamController<List<firebase.MessageDto>> addedMessages$ =
-          StreamController()..add([]);
+      final Message modifiedMessage = createMessage(
+        id: 'm1',
+        chatId: chatId,
+        text: 'modified text 1',
+      );
+      final StreamController<List<firebase.MessageDto>>
+          addedOrModifiedMessages$ = StreamController()..add([]);
       dbMessageService.mockLoadMessagesForChat(
         messageDtos: loadedMessageDtos,
       );
-      dbMessageService.mockGetAddedMessagesForChat(
-        addedMessageDtosStream: addedMessages$.stream,
+      dbMessageService.mockGetAddedOrModifiedMessagesForChat(
+        messageDtosStream: addedOrModifiedMessages$.stream,
       );
       repository = MessageRepositoryImpl(initialData: existingMessages);
 
       final Stream<List<Message>?> messages$ =
           repository.getMessagesForChat(chatId: chatId);
-      addedMessages$.add([firstAddedMessageDto]);
-      addedMessages$.add([secondAddedMessageDto]);
+      addedOrModifiedMessages$.add([firstAddedMessageDto]);
+      addedOrModifiedMessages$.add([secondAddedMessageDto, modifiedMessageDto]);
 
       expect(
         messages$,
@@ -129,7 +139,7 @@ void main() {
             firstAddedMessage,
           ],
           [
-            existingMessages.first,
+            modifiedMessage,
             existingMessages.last,
             ...loadedMessages,
             firstAddedMessage,
@@ -144,7 +154,9 @@ void main() {
           [...existingMessages, ...loadedMessages],
           [...existingMessages, ...loadedMessages, firstAddedMessage],
           [
-            ...existingMessages,
+            modifiedMessage,
+            existingMessages[1],
+            existingMessages.last,
             ...loadedMessages,
             firstAddedMessage,
             secondAddedMessage,

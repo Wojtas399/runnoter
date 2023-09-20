@@ -7,14 +7,14 @@ class MockFirebaseMessageService extends Mock
     registerFallbackValue(MessageStatus.sent);
   }
 
-  void mockGetAddedMessagesForChat({
-    List<MessageDto>? addedMessageDtos,
-    Stream<List<MessageDto>>? addedMessageDtosStream,
+  void mockGetAddedOrModifiedMessagesForChat({
+    List<MessageDto>? messageDtos,
+    Stream<List<MessageDto>>? messageDtosStream,
   }) {
     when(
-      () => getAddedMessagesForChat(chatId: any(named: 'chatId')),
+      () => getAddedOrModifiedMessagesForChat(chatId: any(named: 'chatId')),
     ).thenAnswer(
-      (_) => addedMessageDtosStream ?? Stream.value(addedMessageDtos),
+      (_) => messageDtosStream ?? Stream.value(messageDtos),
     );
   }
 
