@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../../domain/cubit/chat/chat_cubit.dart';
+import '../../component/animated_refresh_indicator.dart';
 import 'chat_messages.dart';
 
 class ChatAdjustableListOfMessages extends StatelessWidget {
@@ -26,7 +27,7 @@ class _DraggableMessages extends StatelessWidget {
     return RefreshIndicator(
       onRefresh: () async =>
           await context.read<ChatCubit>().loadOlderMessages(),
-      child: ChatMessages(),
+      child: const ChatMessages(),
     );
   }
 }
@@ -74,7 +75,7 @@ class _ScrollableMessagesState extends State<_ScrollableMessages> {
     return Stack(
       children: [
         ChatMessages(scrollController: _scrollController),
-        _WebRefreshIndicator(isLoading: _isLoading),
+        AnimatedRefreshIndicator(isLoading: _isLoading),
       ],
     );
   }
