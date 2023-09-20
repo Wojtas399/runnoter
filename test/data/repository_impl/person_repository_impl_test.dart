@@ -11,19 +11,19 @@ import '../../creators/user_dto_creator.dart';
 import '../../mock/firebase/mock_firebase_user_service.dart';
 
 void main() {
-  final firebaseUserService = MockFirebaseUserService();
+  final dbUserService = MockFirebaseUserService();
   late PersonRepositoryImpl repository;
 
   setUpAll(() {
     GetIt.I.registerSingleton<firebase.FirebaseUserService>(
-      firebaseUserService,
+      dbUserService,
     );
   });
 
   setUp(() => repository = PersonRepositoryImpl());
 
   tearDown(() {
-    reset(firebaseUserService);
+    reset(dbUserService);
   });
 
   test(
@@ -72,7 +72,7 @@ void main() {
         coachId: loadedUserDto.coachId,
       );
       repository = PersonRepositoryImpl(initialData: existingPersons);
-      firebaseUserService.mockLoadUserById(userDto: loadedUserDto);
+      dbUserService.mockLoadUserById(userDto: loadedUserDto);
 
       final Stream<Person?> person$ = repository.getPersonById(personId: 'u1');
       final Stream<List<Person>?> repositoryState$ = repository.dataStream$;
@@ -107,7 +107,7 @@ void main() {
         createPerson(id: 'u5', coachId: coachId),
         createPerson(id: 'u6', coachId: coachId),
       ];
-      firebaseUserService.mockLoadUsersByCoachId(users: loadedUserDtos);
+      dbUserService.mockLoadUsersByCoachId(users: loadedUserDtos);
       repository = PersonRepositoryImpl(initialData: existingPersons);
 
       final Stream<List<Person>?> persons$ =
@@ -132,7 +132,7 @@ void main() {
 
   test(
     'search for persons, '
-    'should load matching persons from firebase, add them to repository and should return all matching persons from repository',
+    'should load matching persons from db, add them to repository and should return all matching persons from repository',
     () async {
       final List<Person> existingPersons = [
         createPerson(
@@ -190,7 +190,7 @@ void main() {
           email: 'barli@example.com',
         ),
       ];
-      firebaseUserService.mockSearchForUsers(userDtos: loadedUserDtos);
+      dbUserService.mockSearchForUsers(userDtos: loadedUserDtos);
       repository = PersonRepositoryImpl(initialData: existingPersons);
 
       final List<Person> persons = await repository.searchForPersons(
@@ -225,7 +225,7 @@ void main() {
         ),
       );
       verify(
-        () => firebaseUserService.searchForUsers(
+        () => dbUserService.searchForUsers(
           searchQuery: 'li',
           accountType: firebase.AccountType.coach,
         ),
@@ -235,7 +235,7 @@ void main() {
 
   test(
     'update coachId of person, '
-    "should call firebase user service's method to update user with coachId and should update user in state",
+    'should update user in db and in repo with coachId',
     () async {
       const String personId = 'u1';
       const String coachId = 'c1';
@@ -249,7 +249,7 @@ void main() {
       );
       final Person updatedPerson = createPerson(id: personId, coachId: coachId);
       repository = PersonRepositoryImpl(initialData: existingPersons);
-      firebaseUserService.mockUpdateUserData(userDto: updatedUserDto);
+      dbUserService.mockUpdateUserData(userDto: updatedUserDto);
 
       await repository.updateCoachIdOfPerson(
         personId: personId,
@@ -264,7 +264,7 @@ void main() {
         ]),
       );
       verify(
-        () => firebaseUserService.updateUserData(
+        () => dbUserService.updateUserData(
           userId: personId,
           coachId: coachId,
         ),
@@ -275,7 +275,7 @@ void main() {
   test(
     'update coachId of person, '
     'coach id is null, '
-    "should call firebase user service's method to update user with coachIdAsNull set to true and should update user in state",
+    'should call db method to update user with coachIdAsNull set to true and should update user in state',
     () async {
       const String personId = 'u1';
       const String coachId = 'c1';
@@ -289,7 +289,7 @@ void main() {
       );
       final Person updatedPerson = createPerson(id: personId, coachId: null);
       repository = PersonRepositoryImpl(initialData: existingPersons);
-      firebaseUserService.mockUpdateUserData(userDto: updatedUserDto);
+      dbUserService.mockUpdateUserData(userDto: updatedUserDto);
 
       await repository.updateCoachIdOfPerson(personId: personId, coachId: null);
       final Stream<List<Person>?> repoState$ = repository.dataStream$;
@@ -301,7 +301,7 @@ void main() {
         ]),
       );
       verify(
-        () => firebaseUserService.updateUserData(
+        () => dbUserService.updateUserData(
           userId: personId,
           coachIdAsNull: true,
         ),
@@ -328,7 +328,7 @@ void main() {
         createPerson(id: 'u2', name: 'new name2', coachId: coachId),
         createPerson(id: 'u3', name: 'new name3', coachId: coachId),
       ];
-      firebaseUserService.mockLoadUsersByCoachId(users: loadedUserDtos);
+      dbUserService.mockLoadUsersByCoachId(users: loadedUserDtos);
       repository = PersonRepositoryImpl(initialData: existingPersons);
 
       final Stream<List<Person>?> repositoryState$ = repository.dataStream$;
@@ -346,7 +346,7 @@ void main() {
 
   test(
     'remove coach id in all matching users, '
-    "should call firebase user service's method to set coach id as null in all matching users and should update these users in state",
+    'should call db method to set coach id as null in all matching users and should update these users in repo',
     () async {
       const String coachId = 'c1';
       final List<Person> existingPersons = [
@@ -365,7 +365,7 @@ void main() {
         createPerson(id: 'u3', coachId: null),
         existingPersons.last,
       ];
-      firebaseUserService.mockSetCoachIdAsNullInAllMatchingUsers(
+      dbUserService.mockSetCoachIdAsNullInAllMatchingUsers(
         updatedUserDtos: updatedUserDtos,
       );
       repository = PersonRepositoryImpl(initialData: existingPersons);
@@ -375,7 +375,7 @@ void main() {
 
       expect(repoState$, emitsInOrder([updatedUsers]));
       verify(
-        () => firebaseUserService.setCoachIdAsNullInAllMatchingUsers(
+        () => dbUserService.setCoachIdAsNullInAllMatchingUsers(
           coachId: coachId,
         ),
       ).called(1);

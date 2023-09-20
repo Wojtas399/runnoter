@@ -1,5 +1,5 @@
 import 'package:collection/collection.dart';
-import 'package:firebase/firebase.dart' as db;
+import 'package:firebase/firebase.dart' as firebase;
 
 import '../../dependency_injection.dart';
 import '../../domain/additional_model/blood_parameter.dart';
@@ -11,10 +11,10 @@ import '../mapper/blood_test_mapper.dart';
 
 class BloodTestRepositoryImpl extends StateRepository<BloodTest>
     implements BloodTestRepository {
-  final db.FirebaseBloodTestService _dbBloodTestService;
+  final firebase.FirebaseBloodTestService _dbBloodTestService;
 
   BloodTestRepositoryImpl({super.initialData})
-      : _dbBloodTestService = getIt<db.FirebaseBloodTestService>();
+      : _dbBloodTestService = getIt<firebase.FirebaseBloodTestService>();
 
   @override
   Stream<BloodTest?> getTestById({

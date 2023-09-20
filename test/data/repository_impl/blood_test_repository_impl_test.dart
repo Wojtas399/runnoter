@@ -1,4 +1,4 @@
-import 'package:firebase/firebase.dart' as db;
+import 'package:firebase/firebase.dart' as firebase;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
@@ -16,7 +16,7 @@ void main() {
   const String userId = 'u1';
 
   setUpAll(() {
-    GetIt.I.registerFactory<db.FirebaseBloodTestService>(
+    GetIt.I.registerFactory<firebase.FirebaseBloodTestService>(
       () => dbBloodTestService,
     );
   });
@@ -64,7 +64,7 @@ void main() {
     'should load blood test from remote db and emit it',
     () {
       const String bloodTestId = 'bt1';
-      final db.BloodTestDto expectedTestDto = createBloodTestDto(
+      final firebase.BloodTestDto expectedTestDto = createBloodTestDto(
         id: bloodTestId,
         userId: userId,
         date: DateTime(2023, 5, 21),
@@ -105,18 +105,18 @@ void main() {
         createBloodTest(id: 'bt3', userId: userId),
         createBloodTest(id: 'bt4', userId: 'u3'),
       ];
-      final List<db.BloodTestDto> loadedTestsDtos = [
+      final List<firebase.BloodTestDto> loadedTestsDtos = [
         createBloodTestDto(
           id: 'bt5',
           userId: userId,
           date: DateTime(2023, 5, 12),
           parameterResultDtos: const [
-            db.BloodParameterResultDto(
-              parameter: db.BloodParameter.ferritin,
+            firebase.BloodParameterResultDto(
+              parameter: firebase.BloodParameter.ferritin,
               value: 54.1,
             ),
-            db.BloodParameterResultDto(
-              parameter: db.BloodParameter.tp,
+            firebase.BloodParameterResultDto(
+              parameter: firebase.BloodParameter.tp,
               value: 6.5,
             ),
           ],
@@ -126,8 +126,8 @@ void main() {
           userId: userId,
           date: DateTime(2023, 6, 1),
           parameterResultDtos: const [
-            db.BloodParameterResultDto(
-              parameter: db.BloodParameter.sodium,
+            firebase.BloodParameterResultDto(
+              parameter: firebase.BloodParameter.sodium,
               value: 139,
             ),
           ],
@@ -200,13 +200,13 @@ void main() {
           value: 139,
         ),
       ];
-      const List<db.BloodParameterResultDto> parameterResultDtos = [
-        db.BloodParameterResultDto(
-          parameter: db.BloodParameter.wbc,
+      const List<firebase.BloodParameterResultDto> parameterResultDtos = [
+        firebase.BloodParameterResultDto(
+          parameter: firebase.BloodParameter.wbc,
           value: 4.45,
         ),
-        db.BloodParameterResultDto(
-          parameter: db.BloodParameter.sodium,
+        firebase.BloodParameterResultDto(
+          parameter: firebase.BloodParameter.sodium,
           value: 139,
         ),
       ];
@@ -214,7 +214,7 @@ void main() {
         createBloodTest(id: 'bt1', userId: userId),
         createBloodTest(id: 'bt2', userId: 'u2'),
       ];
-      final db.BloodTestDto addedBloodTestDto = createBloodTestDto(
+      final firebase.BloodTestDto addedBloodTestDto = createBloodTestDto(
         id: newTestId,
         date: date,
         userId: userId,
@@ -274,13 +274,14 @@ void main() {
           value: 139,
         ),
       ];
-      const List<db.BloodParameterResultDto> updatedParameterResultDtos = [
-        db.BloodParameterResultDto(
-          parameter: db.BloodParameter.wbc,
+      const List<firebase.BloodParameterResultDto> updatedParameterResultDtos =
+          [
+        firebase.BloodParameterResultDto(
+          parameter: firebase.BloodParameter.wbc,
           value: 4.45,
         ),
-        db.BloodParameterResultDto(
-          parameter: db.BloodParameter.sodium,
+        firebase.BloodParameterResultDto(
+          parameter: firebase.BloodParameter.sodium,
           value: 139,
         ),
       ];
@@ -298,7 +299,7 @@ void main() {
         ),
         createBloodTest(id: 'bt2', userId: 'u2'),
       ];
-      final db.BloodTestDto updatedBloodTestDto = createBloodTestDto(
+      final firebase.BloodTestDto updatedBloodTestDto = createBloodTestDto(
         id: testId,
         date: updatedDate,
         userId: userId,
