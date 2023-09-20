@@ -11,17 +11,17 @@ import '../../creators/chat_dto_creator.dart';
 import '../../mock/firebase/mock_firebase_chat_service.dart';
 
 void main() {
-  final firebaseChatService = MockFirebaseChatService();
+  final dbChatService = MockFirebaseChatService();
   late ChatRepositoryImpl repository;
 
   setUpAll(() {
-    GetIt.I.registerFactory<FirebaseChatService>(() => firebaseChatService);
+    GetIt.I.registerFactory<FirebaseChatService>(() => dbChatService);
   });
 
   setUp(() => repository = ChatRepositoryImpl());
 
   tearDown(() {
-    reset(firebaseChatService);
+    reset(dbChatService);
   });
 
   test(
@@ -61,7 +61,7 @@ void main() {
         createChat(id: 'c3'),
       ];
       final ChatDto loadedChatDto = createChatDto(id: chatId);
-      firebaseChatService.mockLoadChatById(chatDto: loadedChatDto);
+      dbChatService.mockLoadChatById(chatDto: loadedChatDto);
       repository = ChatRepositoryImpl(initialData: existingChats);
 
       final Stream<Chat?> chat$ = repository.getChatById(chatId: chatId);
@@ -128,7 +128,7 @@ void main() {
         user1Id: user2Id,
         user2Id: user1Id,
       );
-      firebaseChatService.mockLoadChatByUsers(chatDto: loadedChatDto);
+      dbChatService.mockLoadChatByUsers(chatDto: loadedChatDto);
       repository = ChatRepositoryImpl(initialData: existingChats);
 
       final String? chatId = await repository.findChatIdByUsers(
@@ -144,7 +144,7 @@ void main() {
         ]),
       );
       verify(
-        () => firebaseChatService.loadChatByUsers(
+        () => dbChatService.loadChatByUsers(
           user1Id: user1Id,
           user2Id: user2Id,
         ),
@@ -154,7 +154,7 @@ void main() {
 
   test(
     'create chat for users, '
-    "should call firebase chat service's method to add new chat, should add this new chat to repo and return its id",
+    'should add new chat to db and to repo and should return its id',
     () async {
       const String expectedChatId = 'c1';
       const String user1Id = 'u1';
@@ -169,7 +169,7 @@ void main() {
         user1Id: user1Id,
         user2Id: user2Id,
       );
-      firebaseChatService.mockAddNewChat(addedChatDto: addedChatDto);
+      dbChatService.mockAddNewChat(addedChatDto: addedChatDto);
 
       final String? chatId = await repository.createChatForUsers(
         user1Id: user1Id,
@@ -184,7 +184,7 @@ void main() {
         ]),
       );
       verify(
-        () => firebaseChatService.addNewChat(
+        () => dbChatService.addNewChat(
           user1Id: user1Id,
           user2Id: user2Id,
         ),
@@ -194,7 +194,7 @@ void main() {
 
   test(
     'create chat for users, '
-    'firebase chat exception with chatAlreadyExists code, '
+    'db chat exception with chatAlreadyExists code, '
     'should throw chat exception with chatAlreadyExists code',
     () async {
       const ChatException expectedChatException = ChatException(
@@ -202,7 +202,7 @@ void main() {
       );
       const String user1Id = 'u1';
       const String user2Id = 'u2';
-      firebaseChatService.mockAddNewChat(
+      dbChatService.mockAddNewChat(
         throwable: const FirebaseChatException(
           code: FirebaseChatExceptionCode.chatAlreadyExists,
         ),
@@ -217,7 +217,7 @@ void main() {
 
       expect(exception, expectedChatException);
       verify(
-        () => firebaseChatService.addNewChat(
+        () => dbChatService.addNewChat(
           user1Id: user1Id,
           user2Id: user2Id,
         ),
