@@ -52,10 +52,7 @@ void main() {
 
       final Stream<User?> user$ = repository.getUserById(userId: userId);
 
-      expect(
-        user$,
-        emitsInOrder([expectedUser]),
-      );
+      expect(user$, emits(expectedUser));
     },
   );
 
@@ -65,13 +62,14 @@ void main() {
     'should emit user loaded from remote db',
     () {
       final userDto = db.UserDto(
-          id: userId,
-          accountType: db.AccountType.coach,
-          gender: db.Gender.male,
-          name: 'name',
-          surname: 'surname',
-          email: 'email@example.com',
-          dateOfBirth: DateTime(2023));
+        id: userId,
+        accountType: db.AccountType.coach,
+        gender: db.Gender.male,
+        name: 'name',
+        surname: 'surname',
+        email: 'email@example.com',
+        dateOfBirth: DateTime(2023),
+      );
       const appearanceSettingsDto = db.AppearanceSettingsDto(
         userId: userId,
         themeMode: db.ThemeMode.light,
@@ -106,10 +104,7 @@ void main() {
 
       final Stream<User?> user$ = repository.getUserById(userId: userId);
 
-      expect(
-        user$,
-        emitsInOrder([expectedUser]),
-      );
+      expect(user$, emits(expectedUser));
     },
   );
 
@@ -589,10 +584,7 @@ void main() {
       final Stream<User?> user$ = repository.getUserById(userId: user.id);
       await repository.deleteUser(userId: user.id);
 
-      expect(
-        user$,
-        emitsInOrder([null]),
-      );
+      expect(user$, emits(null));
       verify(
         () => dbUserService.deleteUserData(userId: user.id),
       ).called(1);

@@ -12,15 +12,14 @@ import '../../mock/firebase/mock_firebase_health_measurement_service.dart';
 
 void main() {
   final dateService = MockDateService();
-  final firebaseHealthMeasurementService =
-      MockFirebaseHealthMeasurementService();
+  final dbHealthMeasurementService = MockFirebaseHealthMeasurementService();
   late HealthMeasurementRepositoryImpl repository;
   const String userId = 'u1';
 
   setUpAll(() {
     GetIt.I.registerFactory<DateService>(() => dateService);
     GetIt.I.registerFactory<FirebaseHealthMeasurementService>(
-      () => firebaseHealthMeasurementService,
+      () => dbHealthMeasurementService,
     );
   });
 
@@ -28,7 +27,7 @@ void main() {
 
   tearDown(() {
     reset(dateService);
-    reset(firebaseHealthMeasurementService);
+    reset(dbHealthMeasurementService);
   });
 
   test(
@@ -80,7 +79,7 @@ void main() {
   test(
     'get measurement by date, '
     'measurement does not exist in repository, '
-    'should load measurement from firebase and should emit loaded measurement',
+    'should load measurement from db and should emit loaded measurement',
     () {
       final DateTime date = DateTime(2023, 2, 9);
       final HealthMeasurement expectedHealthMeasurement = HealthMeasurement(
@@ -95,7 +94,7 @@ void main() {
         restingHeartRate: 50,
         fastingWeight: 50.5,
       );
-      firebaseHealthMeasurementService.mockLoadMeasurementByDate(
+      dbHealthMeasurementService.mockLoadMeasurementByDate(
         healthMeasurementDto: healthMeasurementDto,
       );
       repository = HealthMeasurementRepositoryImpl(
@@ -134,7 +133,7 @@ void main() {
 
   test(
     'get measurements by date range, '
-    'should emit existing and matching measurements, should load new measurements from firebase and should also emit newly loaded measurements',
+    'should emit existing and matching measurements, should load new measurements from db and should also emit newly loaded measurements',
     () {
       final DateTime startDate = DateTime(2023, 1, 1);
       final DateTime endDate = DateTime(2023, 1, 7);
@@ -202,7 +201,7 @@ void main() {
       mockIsDateFromRange(DateTime(2023, 1, 8), false);
       mockIsDateFromRange(DateTime(2023, 1, 5), true);
       mockIsDateFromRange(DateTime(2023, 1, 6), true);
-      firebaseHealthMeasurementService.mockLoadMeasurementsByDateRange(
+      dbHealthMeasurementService.mockLoadMeasurementsByDateRange(
         healthMeasurementDtos: loadedMeasurementDtos,
       );
       repository =
@@ -281,7 +280,7 @@ void main() {
           fastingWeight: 52.8,
         ),
       ];
-      firebaseHealthMeasurementService.mockLoadAllMeasurements(
+      dbHealthMeasurementService.mockLoadAllMeasurements(
         healthMeasurementDtos: loadedMeasurementDtos,
       );
       repository =
@@ -349,7 +348,7 @@ void main() {
         ],
       );
       dateService.mockAreDatesTheSame(expected: false);
-      firebaseHealthMeasurementService.mockLoadMeasurementByDate(
+      dbHealthMeasurementService.mockLoadMeasurementByDate(
         healthMeasurementDto: loadedMeasurementDto,
       );
 
@@ -384,7 +383,7 @@ void main() {
         ],
       );
       dateService.mockAreDatesTheSame(expected: false);
-      firebaseHealthMeasurementService.mockLoadMeasurementByDate();
+      dbHealthMeasurementService.mockLoadMeasurementByDate();
 
       final bool doesMeasurementExist = await repository
           .doesMeasurementFromDateExist(userId: userId, date: date);
@@ -395,7 +394,7 @@ void main() {
 
   test(
     'add measurement, '
-    "should call firebase service's method to add measurement and should add this new measurement to repo state",
+    'should add measurement to db and repo',
     () {
       final DateTime date = DateTime(2023, 2, 9);
       const int restingHeartRate = 55;
@@ -412,7 +411,7 @@ void main() {
         restingHeartRate: restingHeartRate,
         fastingWeight: fastingWeight,
       );
-      firebaseHealthMeasurementService.mockAddMeasurement(
+      dbHealthMeasurementService.mockAddMeasurement(
         addedMeasurementDto: healthMeasurementDto,
       );
       repository = HealthMeasurementRepositoryImpl();
@@ -430,7 +429,7 @@ void main() {
         ),
       );
       verify(
-        () => firebaseHealthMeasurementService.addMeasurement(
+        () => dbHealthMeasurementService.addMeasurement(
           userId: userId,
           measurementDto: healthMeasurementDto,
         ),
@@ -440,7 +439,7 @@ void main() {
 
   test(
     'update measurement, '
-    "should call firebase service's method to update measurement and should update this measurement in repo state",
+    'should update measurement in db and in repo',
     () {
       final DateTime date = DateTime(2023, 2, 9);
       const int newRestingHeartRate = 55;
@@ -470,7 +469,7 @@ void main() {
         restingHeartRate: newRestingHeartRate,
         fastingWeight: newFastingWeight,
       );
-      firebaseHealthMeasurementService.mockUpdateMeasurement(
+      dbHealthMeasurementService.mockUpdateMeasurement(
         updatedMeasurementDto: updatedHealthMeasurementDto,
       );
       repository = HealthMeasurementRepositoryImpl(
@@ -501,7 +500,7 @@ void main() {
         ),
       );
       verify(
-        () => firebaseHealthMeasurementService.updateMeasurement(
+        () => dbHealthMeasurementService.updateMeasurement(
           userId: userId,
           date: date,
           restingHeartRate: newRestingHeartRate,
@@ -513,7 +512,7 @@ void main() {
 
   test(
     'delete measurement, '
-    "should call firebase service's method to delete measurement and should delete this measurement from repo state",
+    'should delete measurement in db and in repo',
     () {
       final DateTime date = DateTime(2023, 2, 9);
       final List<HealthMeasurement> existingMeasurements = [
@@ -530,7 +529,7 @@ void main() {
       when(
         () => dateService.areDaysTheSame(date, date),
       ).thenReturn(true);
-      firebaseHealthMeasurementService.mockDeleteMeasurement();
+      dbHealthMeasurementService.mockDeleteMeasurement();
       repository = HealthMeasurementRepositoryImpl(
         initialState: existingMeasurements,
       );
@@ -556,7 +555,7 @@ void main() {
         ),
       );
       verify(
-        () => firebaseHealthMeasurementService.deleteMeasurement(
+        () => dbHealthMeasurementService.deleteMeasurement(
           userId: userId,
           date: date,
         ),
@@ -566,7 +565,7 @@ void main() {
 
   test(
     'delete all user measurements, '
-    "should call firebase service's method to delete all user measurements and should delete these measurements from repo state",
+    'should delete all user measurements in db and in repo',
     () {
       final List<HealthMeasurement> existingMeasurements = [
         createHealthMeasurement(
@@ -586,7 +585,7 @@ void main() {
           date: DateTime(2023, 2, 12),
         ),
       ];
-      firebaseHealthMeasurementService.mockDeleteAllUserMeasurements(
+      dbHealthMeasurementService.mockDeleteAllUserMeasurements(
         idsOfDeletedMeasurements: ['2023-02-10', '2023-02,12'],
       );
       repository = HealthMeasurementRepositoryImpl(
@@ -609,7 +608,7 @@ void main() {
         ),
       );
       verify(
-        () => firebaseHealthMeasurementService.deleteAllUserMeasurements(
+        () => dbHealthMeasurementService.deleteAllUserMeasurements(
           userId: userId,
         ),
       ).called(1);

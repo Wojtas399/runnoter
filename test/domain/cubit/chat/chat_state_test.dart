@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/domain/additional_model/cubit_status.dart';
 import 'package:runnoter/domain/cubit/chat/chat_cubit.dart';
+import 'package:runnoter/domain/entity/message.dart';
 
 void main() {
   late ChatState state;
@@ -13,39 +14,10 @@ void main() {
 
   test(
     'can submit message, '
-    'logged user id is null, '
-    'should be false',
-    () {
-      state = state.copyWith(
-        messageToSend: 'message',
-        imagesToSend: [Uint8List(1)],
-      );
-
-      expect(state.canSubmitMessage, false);
-    },
-  );
-
-  test(
-    'can submit message, '
-    'logged user id empty string, '
-    'should be false',
-    () {
-      state = state.copyWith(
-        loggedUserId: '',
-        messageToSend: 'message',
-        imagesToSend: [Uint8List(1)],
-      );
-
-      expect(state.canSubmitMessage, false);
-    },
-  );
-
-  test(
-    'can submit message, '
     'message to send is null and there are no images to send, '
     'should be false',
     () {
-      state = state.copyWith(loggedUserId: 'u1');
+      state = state.copyWith();
 
       expect(state.canSubmitMessage, false);
     },
@@ -53,13 +25,10 @@ void main() {
 
   test(
     'can submit message, '
-    'logged user id is not null and message to send is not null and not empty'
+    'message to send is not null and not empty'
     'should be true',
     () {
-      state = state.copyWith(
-        loggedUserId: 'u1',
-        messageToSend: 'message',
-      );
+      state = state.copyWith(messageToSend: 'message');
 
       expect(state.canSubmitMessage, true);
     },
@@ -67,13 +36,10 @@ void main() {
 
   test(
     'can submit message, '
-    'logged user id is not null and there are images to send'
+    'there are images to send'
     'should be true',
     () {
-      state = state.copyWith(
-        loggedUserId: 'u1',
-        imagesToSend: [Uint8List(1)],
-      );
+      state = state.copyWith(imagesToSend: [Uint8List(1)]);
 
       expect(state.canSubmitMessage, true);
     },
@@ -91,21 +57,6 @@ void main() {
 
       expect(state.status, expected);
       expect(state2.status, const CubitStatusComplete());
-    },
-  );
-
-  test(
-    'copy with loggedUserId, '
-    'should set new value or '
-    'should copy current value if new value is null',
-    () {
-      const String expected = 'u1';
-
-      state = state.copyWith(loggedUserId: expected);
-      final state2 = state.copyWith();
-
-      expect(state.loggedUserId, expected);
-      expect(state2.loggedUserId, expected);
     },
   );
 
@@ -132,12 +83,14 @@ void main() {
       final List<ChatMessage> expected = [
         ChatMessage(
           id: 'm1',
-          senderId: 'u1',
+          status: MessageStatus.read,
+          hasBeenSentByLoggedUser: true,
           sendDateTime: DateTime(2023, 1, 1),
         ),
         ChatMessage(
           id: 'm2',
-          senderId: 'u2',
+          status: MessageStatus.read,
+          hasBeenSentByLoggedUser: false,
           sendDateTime: DateTime(2023, 1, 2),
         ),
       ];

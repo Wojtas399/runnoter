@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:firebase/firebase.dart';
+import 'package:firebase/firebase.dart' as firebase;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
@@ -16,7 +16,9 @@ void main() {
   late MessageRepositoryImpl repository;
 
   setUpAll(() {
-    GetIt.I.registerFactory<FirebaseMessageService>(() => dbMessageService);
+    GetIt.I.registerFactory<firebase.FirebaseMessageService>(
+      () => dbMessageService,
+    );
   });
 
   setUp(() => repository = MessageRepositoryImpl());
@@ -51,7 +53,7 @@ void main() {
     'message does not exist in repo, '
     'should load message from db add it to repo and return it',
     () async {
-      final MessageDto expectedMessageDto = createMessageDto(id: 'm3');
+      final firebase.MessageDto expectedMessageDto = createMessageDto(id: 'm3');
       final Message expectedMessage = createMessage(id: 'm3');
       final List<Message> existingMessages = [
         createMessage(id: 'm1'),
@@ -85,7 +87,7 @@ void main() {
         createMessage(id: 'm2', chatId: 'c2', text: 'text2'),
         createMessage(id: 'm3', chatId: chatId, text: 'text3'),
       ];
-      final List<MessageDto> loadedMessageDtos = [
+      final List<firebase.MessageDto> loadedMessageDtos = [
         createMessageDto(id: 'm4', chatId: chatId, text: 'text4'),
         createMessageDto(id: 'm5', chatId: chatId, text: 'text5'),
       ];
@@ -93,28 +95,38 @@ void main() {
         createMessage(id: 'm4', chatId: chatId, text: 'text4'),
         createMessage(id: 'm5', chatId: chatId, text: 'text5'),
       ];
-      final MessageDto firstAddedMessageDto =
+      final firebase.MessageDto firstAddedMessageDto =
           createMessageDto(id: 'm6', chatId: chatId, text: 'text6');
-      final MessageDto secondAddedMessageDto =
+      final firebase.MessageDto secondAddedMessageDto =
           createMessageDto(id: 'm7', chatId: chatId, text: 'text7');
+      final firebase.MessageDto modifiedMessageDto = createMessageDto(
+        id: 'm1',
+        chatId: chatId,
+        text: 'modified text 1',
+      );
       final Message firstAddedMessage =
           createMessage(id: 'm6', chatId: chatId, text: 'text6');
       final Message secondAddedMessage =
           createMessage(id: 'm7', chatId: chatId, text: 'text7');
-      final StreamController<List<MessageDto>> addedMessages$ =
-          StreamController()..add([]);
+      final Message modifiedMessage = createMessage(
+        id: 'm1',
+        chatId: chatId,
+        text: 'modified text 1',
+      );
+      final StreamController<List<firebase.MessageDto>>
+          addedOrModifiedMessages$ = StreamController()..add([]);
       dbMessageService.mockLoadMessagesForChat(
         messageDtos: loadedMessageDtos,
       );
-      dbMessageService.mockGetAddedMessagesForChat(
-        addedMessageDtosStream: addedMessages$.stream,
+      dbMessageService.mockGetAddedOrModifiedMessagesForChat(
+        messageDtosStream: addedOrModifiedMessages$.stream,
       );
       repository = MessageRepositoryImpl(initialData: existingMessages);
 
       final Stream<List<Message>?> messages$ =
           repository.getMessagesForChat(chatId: chatId);
-      addedMessages$.add([firstAddedMessageDto]);
-      addedMessages$.add([secondAddedMessageDto]);
+      addedOrModifiedMessages$.add([firstAddedMessageDto]);
+      addedOrModifiedMessages$.add([secondAddedMessageDto, modifiedMessageDto]);
 
       expect(
         messages$,
@@ -127,7 +139,7 @@ void main() {
             firstAddedMessage,
           ],
           [
-            existingMessages.first,
+            modifiedMessage,
             existingMessages.last,
             ...loadedMessages,
             firstAddedMessage,
@@ -142,7 +154,9 @@ void main() {
           [...existingMessages, ...loadedMessages],
           [...existingMessages, ...loadedMessages, firstAddedMessage],
           [
-            ...existingMessages,
+            modifiedMessage,
+            existingMessages[1],
+            existingMessages.last,
             ...loadedMessages,
             firstAddedMessage,
             secondAddedMessage,
@@ -154,7 +168,7 @@ void main() {
 
   test(
     'load older messages for chat, '
-    "should call firebase message service's method to load older messages and "
+    "should call db message service's method to load older messages and "
     'should add loaded messages to repo',
     () async {
       const String chatId = 'c1';
@@ -163,7 +177,7 @@ void main() {
         createMessage(id: 'm1', chatId: chatId, text: 'text1'),
         createMessage(id: 'm2', chatId: chatId, text: 'text2'),
       ];
-      final List<MessageDto> loadedMessageDtos = [
+      final List<firebase.MessageDto> loadedMessageDtos = [
         createMessageDto(id: 'm3', chatId: chatId, text: 'text3'),
         createMessageDto(id: 'm4', chatId: chatId, text: 'text4'),
       ];
@@ -198,8 +212,8 @@ void main() {
 
   test(
     'add message, '
-    'should call firebase storage service method to upload images and '
-    'should call firebase message service method to add message to chat and '
+    'should call db storage service method to upload images and '
+    'should call db message service method to add message to chat and '
     'should add new message to repo',
     () async {
       const String messageId = 'm3';
@@ -207,8 +221,9 @@ void main() {
       const String senderId = 's1';
       final DateTime dateTime = DateTime(2023, 1, 1);
       const String text = 'message';
-      final MessageDto addedMessageDto = MessageDto(
+      final firebase.MessageDto addedMessageDto = firebase.MessageDto(
         id: messageId,
+        status: firebase.MessageStatus.sent,
         chatId: chatId,
         senderId: senderId,
         dateTime: dateTime,
@@ -216,6 +231,7 @@ void main() {
       );
       final Message addedMessage = Message(
         id: messageId,
+        status: MessageStatus.sent,
         chatId: chatId,
         senderId: senderId,
         dateTime: dateTime,
@@ -229,6 +245,7 @@ void main() {
       repository = MessageRepositoryImpl(initialData: existingMessages);
 
       await repository.addMessage(
+        status: MessageStatus.sent,
         chatId: chatId,
         senderId: senderId,
         dateTime: dateTime,
@@ -243,10 +260,64 @@ void main() {
       );
       verify(
         () => dbMessageService.addMessage(
+          status: firebase.MessageStatus.sent,
           chatId: chatId,
           senderId: senderId,
           dateTime: dateTime,
           text: text,
+        ),
+      ).called(1);
+    },
+  );
+
+  test(
+    'mark messages as read, '
+    'for each message id should call db method to update message status to read and '
+    'should update these messages in repo',
+    () async {
+      final List<Message> existingMessages = [
+        createMessage(id: 'm1', status: MessageStatus.sent),
+        createMessage(id: 'm2', status: MessageStatus.read),
+        createMessage(id: 'm3', status: MessageStatus.sent),
+      ];
+      final firebase.MessageDto firstUpdatedMessageDto =
+          createMessageDto(id: 'm1', status: firebase.MessageStatus.read);
+      final firebase.MessageDto secondUpdatedMessageDto =
+          createMessageDto(id: 'm3', status: firebase.MessageStatus.read);
+      when(
+        () => dbMessageService.updateMessageStatus(
+          messageId: 'm1',
+          status: firebase.MessageStatus.read,
+        ),
+      ).thenAnswer((_) => Future.value(firstUpdatedMessageDto));
+      when(
+        () => dbMessageService.updateMessageStatus(
+          messageId: 'm3',
+          status: firebase.MessageStatus.read,
+        ),
+      ).thenAnswer((_) => Future.value(secondUpdatedMessageDto));
+      repository = MessageRepositoryImpl(initialData: existingMessages);
+
+      await repository.markMessagesAsRead(messageIds: ['m1', 'm3']);
+
+      expect(
+        repository.dataStream$,
+        emits([
+          createMessage(id: 'm1', status: MessageStatus.read),
+          existingMessages[1],
+          createMessage(id: 'm3', status: MessageStatus.read),
+        ]),
+      );
+      verify(
+        () => dbMessageService.updateMessageStatus(
+          messageId: 'm1',
+          status: firebase.MessageStatus.read,
+        ),
+      ).called(1);
+      verify(
+        () => dbMessageService.updateMessageStatus(
+          messageId: 'm3',
+          status: firebase.MessageStatus.read,
         ),
       ).called(1);
     },

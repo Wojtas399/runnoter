@@ -3,6 +3,10 @@ import 'package:runnoter/domain/entity/message.dart';
 import 'package:runnoter/domain/repository/message_repository.dart';
 
 class MockMessageRepository extends Mock implements MessageRepository {
+  MockMessageRepository() {
+    registerFallbackValue(MessageStatus.sent);
+  }
+
   void mockLoadMessageById({Message? message}) {
     when(
       () => loadMessageById(
@@ -34,11 +38,20 @@ class MockMessageRepository extends Mock implements MessageRepository {
   void mockAddMessage({String? addedMessageId}) {
     when(
       () => addMessage(
+        status: any(named: 'status'),
         chatId: any(named: 'chatId'),
         senderId: any(named: 'senderId'),
         dateTime: any(named: 'dateTime'),
         text: any(named: 'text'),
       ),
     ).thenAnswer((_) => Future.value(addedMessageId));
+  }
+
+  void mockMarkMessagesAsRead() {
+    when(
+      () => markMessagesAsRead(
+        messageIds: any(named: 'messageIds'),
+      ),
+    ).thenAnswer((_) => Future.value());
   }
 }

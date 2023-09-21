@@ -1,10 +1,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 import '../../../domain/cubit/chat/chat_cubit.dart';
+import '../../../domain/entity/message.dart';
 import '../../../domain/entity/message_image.dart';
 import '../../component/gap/gap_components.dart';
+import '../../component/gap/gap_horizontal_components.dart';
 import '../../component/text/body_text_components.dart';
 import '../../component/text/label_text_components.dart';
 import '../../dialog/chat_image_preview/chat_image_preview_dialog.dart';
@@ -15,19 +18,13 @@ import '../../service/dialog_service.dart';
 class ChatMessageItem extends StatelessWidget {
   final bool isNew;
   final double maxWidth;
-  final bool isSender;
-  final String? text;
-  final List<MessageImage> images;
-  final DateTime dateTime;
+  final ChatMessage message;
 
   const ChatMessageItem({
     super.key,
     required this.isNew,
     required this.maxWidth,
-    required this.isSender,
-    required this.text,
-    required this.images,
-    required this.dateTime,
+    required this.message,
   });
 
   @override
@@ -35,34 +32,33 @@ class ChatMessageItem extends StatelessWidget {
     const Radius borderRadius = Radius.circular(16);
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
 
-    return text?.isNotEmpty == true || images.isNotEmpty
+    return message.text?.isNotEmpty == true || message.images.isNotEmpty
         ? Row(
-            mainAxisAlignment:
-                isSender ? MainAxisAlignment.end : MainAxisAlignment.start,
+            mainAxisAlignment: message.hasBeenSentByLoggedUser
+                ? MainAxisAlignment.end
+                : MainAxisAlignment.start,
             children: [
               _AnimatedBody(
                 shouldRunAnimation: isNew,
-                isSender: isSender,
+                hasMessageBeenSentByLoggedUser: message.hasBeenSentByLoggedUser,
                 child: Card(
                   clipBehavior: Clip.hardEdge,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.only(
                       topLeft: borderRadius,
                       topRight: borderRadius,
-                      bottomLeft: isSender ? borderRadius : Radius.zero,
-                      bottomRight: isSender ? Radius.zero : borderRadius,
+                      bottomLeft: message.hasBeenSentByLoggedUser
+                          ? borderRadius
+                          : Radius.zero,
+                      bottomRight: message.hasBeenSentByLoggedUser
+                          ? Radius.zero
+                          : borderRadius,
                     ),
                   ),
-                  color: isSender
+                  color: message.hasBeenSentByLoggedUser
                       ? colorScheme.primary
                       : colorScheme.surfaceVariant,
-                  child: _MessageContent(
-                    maxWidth: maxWidth,
-                    isSender: isSender,
-                    text: text,
-                    images: images,
-                    dateTime: dateTime,
-                  ),
+                  child: _MessageContent(maxWidth: maxWidth, message: message),
                 ),
               ),
             ],
@@ -73,12 +69,12 @@ class ChatMessageItem extends StatelessWidget {
 
 class _AnimatedBody extends StatefulWidget {
   final bool shouldRunAnimation;
-  final bool isSender;
+  final bool hasMessageBeenSentByLoggedUser;
   final Widget child;
 
   const _AnimatedBody({
     required this.shouldRunAnimation,
-    required this.isSender,
+    required this.hasMessageBeenSentByLoggedUser,
     required this.child,
   });
 
@@ -129,7 +125,7 @@ class _AnimatedBodyState extends State<_AnimatedBody>
             sizeFactor: _sizeAnimation,
             child: ScaleTransition(
               scale: _scaleAnimation,
-              alignment: widget.isSender
+              alignment: widget.hasMessageBeenSentByLoggedUser
                   ? Alignment.bottomRight
                   : Alignment.bottomLeft,
               child: widget.child,
@@ -141,18 +137,9 @@ class _AnimatedBodyState extends State<_AnimatedBody>
 
 class _MessageContent extends StatelessWidget {
   final double maxWidth;
-  final bool isSender;
-  final String? text;
-  final List<MessageImage> images;
-  final DateTime dateTime;
+  final ChatMessage message;
 
-  const _MessageContent({
-    required this.maxWidth,
-    required this.isSender,
-    required this.text,
-    required this.images,
-    required this.dateTime,
-  });
+  const _MessageContent({required this.maxWidth, required this.message});
 
   @override
   Widget build(BuildContext context) {
@@ -163,27 +150,37 @@ class _MessageContent extends StatelessWidget {
       constraints: BoxConstraints(maxWidth: maxWidth),
       padding: const EdgeInsets.all(cardPadding),
       child: Column(
-        crossAxisAlignment:
-            isSender ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+        crossAxisAlignment: message.hasBeenSentByLoggedUser
+            ? CrossAxisAlignment.end
+            : CrossAxisAlignment.start,
         children: [
-          if (images.isNotEmpty)
+          if (message.images.isNotEmpty)
             _Images(
-              images: images,
-              doesTextExist: text != null,
+              images: message.images,
+              doesTextExist: message.text != null,
               maxMessageWidth: maxWidth,
               cardPadding: cardPadding,
-              isSender: isSender,
+              isSender: message.hasBeenSentByLoggedUser,
             ),
-          if (text?.isNotEmpty == true)
+          if (message.text?.isNotEmpty == true)
             BodyMedium(
-              text!,
-              color: isSender ? theme.canvasColor : null,
+              message.text!,
+              color: message.hasBeenSentByLoggedUser ? theme.canvasColor : null,
             ),
-          LabelSmall(
-            dateTime.toTime(),
-            color: isSender
-                ? theme.colorScheme.outlineVariant
-                : theme.colorScheme.outline,
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              LabelSmall(
+                message.sendDateTime.toTime(),
+                color: message.hasBeenSentByLoggedUser
+                    ? theme.colorScheme.outlineVariant
+                    : theme.colorScheme.outline,
+              ),
+              if (message.hasBeenSentByLoggedUser) ...[
+                const GapHorizontal8(),
+                _MessageStatusIcon(status: message.status),
+              ],
+            ],
           ),
         ].addSeparator(const Gap8()),
       ),
@@ -271,6 +268,27 @@ class _Images extends StatelessWidget {
         chatId: context.read<ChatCubit>().chatId,
         selectedImage: image,
       ),
+    );
+  }
+}
+
+class _MessageStatusIcon extends StatelessWidget {
+  final MessageStatus status;
+
+  const _MessageStatusIcon({required this.status});
+
+  @override
+  Widget build(BuildContext context) {
+    return Icon(
+      switch (status) {
+        MessageStatus.sent => MdiIcons.check,
+        MessageStatus.read => MdiIcons.checkAll,
+      },
+      size: 16,
+      color: switch (status) {
+        MessageStatus.sent => Theme.of(context).colorScheme.outlineVariant,
+        MessageStatus.read => Theme.of(context).colorScheme.primaryContainer,
+      },
     );
   }
 }

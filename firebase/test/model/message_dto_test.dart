@@ -3,6 +3,8 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   const String id = 'm1';
+  const MessageStatus status = MessageStatus.read;
+  const String statusStr = 'read';
   const String chatId = 'c1';
   const String senderId = 's1';
   final DateTime dateTime = DateTime(2023, 8, 31, 20, 20);
@@ -13,6 +15,7 @@ void main() {
     'should map json to dto model',
     () {
       final Map<String, dynamic> json = {
+        'status': statusStr,
         'chatId': chatId,
         'senderId': senderId,
         'timestamp': dateTime.millisecondsSinceEpoch,
@@ -20,6 +23,7 @@ void main() {
       };
       final MessageDto expectedDto = MessageDto(
         id: id,
+        status: status,
         chatId: chatId,
         senderId: senderId,
         dateTime: dateTime,
@@ -38,12 +42,14 @@ void main() {
     () {
       final MessageDto dto = MessageDto(
         id: id,
+        status: status,
         chatId: chatId,
         senderId: senderId,
         dateTime: dateTime,
         text: text,
       );
       final Map<String, dynamic> expectedJson = {
+        'status': statusStr,
         'chatId': chatId,
         'senderId': senderId,
         'timestamp': dateTime.millisecondsSinceEpoch,

@@ -14,12 +14,12 @@ import '../mapper/workout_stage_mapper.dart';
 
 class WorkoutRepositoryImpl extends StateRepository<Workout>
     implements WorkoutRepository {
-  final FirebaseWorkoutService _firebaseWorkoutService;
+  final FirebaseWorkoutService _dbWorkoutService;
   final DateService _dateService;
 
   WorkoutRepositoryImpl({
     List<Workout>? initialState,
-  })  : _firebaseWorkoutService = getIt<FirebaseWorkoutService>(),
+  })  : _dbWorkoutService = getIt<FirebaseWorkoutService>(),
         _dateService = getIt<DateService>(),
         super(initialData: initialState);
 
@@ -92,7 +92,7 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
     required ActivityStatus status,
     required List<WorkoutStage> stages,
   }) async {
-    final WorkoutDto? workoutDto = await _firebaseWorkoutService.addWorkout(
+    final WorkoutDto? workoutDto = await _dbWorkoutService.addWorkout(
       userId: userId,
       workoutName: workoutName,
       date: date,
@@ -114,8 +114,7 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
     ActivityStatus? status,
     List<WorkoutStage>? stages,
   }) async {
-    final WorkoutDto? updatedWorkoutDto =
-        await _firebaseWorkoutService.updateWorkout(
+    final WorkoutDto? updatedWorkoutDto = await _dbWorkoutService.updateWorkout(
       workoutId: workoutId,
       userId: userId,
       date: date,
@@ -134,17 +133,14 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
     required String userId,
     required String workoutId,
   }) async {
-    await _firebaseWorkoutService.deleteWorkout(
-      userId: userId,
-      workoutId: workoutId,
-    );
+    await _dbWorkoutService.deleteWorkout(userId: userId, workoutId: workoutId);
     removeEntity(workoutId);
   }
 
   @override
   Future<void> deleteAllUserWorkouts({required String userId}) async {
     final List<String> idsOfDeletedWorkouts =
-        await _firebaseWorkoutService.deleteAllUserWorkouts(userId: userId);
+        await _dbWorkoutService.deleteAllUserWorkouts(userId: userId);
     removeEntities(idsOfDeletedWorkouts);
   }
 
@@ -154,7 +150,7 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
     String userId,
   ) async {
     final List<WorkoutDto>? workoutDtos =
-        await _firebaseWorkoutService.loadWorkoutsByDateRange(
+        await _dbWorkoutService.loadWorkoutsByDateRange(
       userId: userId,
       startDate: startDate,
       endDate: endDate,
@@ -173,8 +169,7 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
     String workoutId,
     String userId,
   ) async {
-    final WorkoutDto? workoutDto =
-        await _firebaseWorkoutService.loadWorkoutById(
+    final WorkoutDto? workoutDto = await _dbWorkoutService.loadWorkoutById(
       workoutId: workoutId,
       userId: userId,
     );
@@ -188,7 +183,7 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
 
   Future<void> _loadWorkoutsFromRemoteDb(String userId) async {
     final List<WorkoutDto>? workoutDtos =
-        await _firebaseWorkoutService.loadAllWorkouts(userId: userId);
+        await _dbWorkoutService.loadAllWorkouts(userId: userId);
     if (workoutDtos != null) {
       final List<Workout> workouts =
           workoutDtos.map(mapWorkoutFromFirebase).toList();
@@ -200,8 +195,8 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
     String userId,
     DateTime date,
   ) async {
-    final List<WorkoutDto>? workoutDtos = await _firebaseWorkoutService
-        .loadWorkoutsByDate(date: date, userId: userId);
+    final List<WorkoutDto>? workoutDtos =
+        await _dbWorkoutService.loadWorkoutsByDate(date: date, userId: userId);
     if (workoutDtos != null) {
       final List<Workout> workouts =
           workoutDtos.map(mapWorkoutFromFirebase).toList();

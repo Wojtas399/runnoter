@@ -12,12 +12,12 @@ import '../mapper/race_mapper.dart';
 
 class RaceRepositoryImpl extends StateRepository<Race>
     implements RaceRepository {
-  final FirebaseRaceService _firebaseRaceService;
+  final FirebaseRaceService _dbRaceService;
   final DateService _dateService;
 
   RaceRepositoryImpl({
     super.initialData,
-  })  : _firebaseRaceService = getIt<FirebaseRaceService>(),
+  })  : _dbRaceService = getIt<FirebaseRaceService>(),
         _dateService = getIt<DateService>();
 
   @override
@@ -93,7 +93,7 @@ class RaceRepositoryImpl extends StateRepository<Race>
     required Duration? expectedDuration,
     required ActivityStatus status,
   }) async {
-    final RaceDto? addedRaceDto = await _firebaseRaceService.addNewRace(
+    final RaceDto? addedRaceDto = await _dbRaceService.addNewRace(
       userId: userId,
       name: name,
       date: date,
@@ -122,7 +122,7 @@ class RaceRepositoryImpl extends StateRepository<Race>
     bool setDurationAsNull = false,
     ActivityStatus? status,
   }) async {
-    final RaceDto? updatedRaceDto = await _firebaseRaceService.updateRace(
+    final RaceDto? updatedRaceDto = await _dbRaceService.updateRace(
       raceId: raceId,
       userId: userId,
       name: name,
@@ -146,7 +146,7 @@ class RaceRepositoryImpl extends StateRepository<Race>
     required String raceId,
     required String userId,
   }) async {
-    await _firebaseRaceService.deleteRace(
+    await _dbRaceService.deleteRace(
       raceId: raceId,
       userId: userId,
     );
@@ -158,7 +158,7 @@ class RaceRepositoryImpl extends StateRepository<Race>
     required String userId,
   }) async {
     final List<String> idsOfDeletedRaces =
-        await _firebaseRaceService.deleteAllUserRaces(
+        await _dbRaceService.deleteAllUserRaces(
       userId: userId,
     );
     removeEntities(idsOfDeletedRaces);
@@ -168,7 +168,7 @@ class RaceRepositoryImpl extends StateRepository<Race>
     String raceId,
     String userId,
   ) async {
-    final RaceDto? raceDto = await _firebaseRaceService.loadRaceById(
+    final RaceDto? raceDto = await _dbRaceService.loadRaceById(
       raceId: raceId,
       userId: userId,
     );
@@ -185,8 +185,7 @@ class RaceRepositoryImpl extends StateRepository<Race>
     DateTime endDate,
     String userId,
   ) async {
-    final List<RaceDto>? raceDtos =
-        await _firebaseRaceService.loadRacesByDateRange(
+    final List<RaceDto>? raceDtos = await _dbRaceService.loadRacesByDateRange(
       startDate: startDate,
       endDate: endDate,
       userId: userId,
@@ -201,7 +200,7 @@ class RaceRepositoryImpl extends StateRepository<Race>
     DateTime date,
     String userId,
   ) async {
-    final List<RaceDto>? raceDtos = await _firebaseRaceService.loadRacesByDate(
+    final List<RaceDto>? raceDtos = await _dbRaceService.loadRacesByDate(
       date: date,
       userId: userId,
     );
@@ -213,7 +212,7 @@ class RaceRepositoryImpl extends StateRepository<Race>
 
   Future<void> _loadAllRacesFromRemoteDb(String userId) async {
     final List<RaceDto>? raceDtos =
-        await _firebaseRaceService.loadAllRaces(userId: userId);
+        await _dbRaceService.loadAllRaces(userId: userId);
     if (raceDtos != null) {
       final List<Race> races = raceDtos.map(mapRaceFromDto).toList();
       addOrUpdateEntities(races);

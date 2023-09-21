@@ -10,10 +10,10 @@ import '../mapper/custom_exception_mapper.dart';
 
 class ChatRepositoryImpl extends StateRepository<Chat>
     implements ChatRepository {
-  final FirebaseChatService _firebaseChatService;
+  final FirebaseChatService _dbChatService;
 
   ChatRepositoryImpl({super.initialData})
-      : _firebaseChatService = getIt<FirebaseChatService>();
+      : _dbChatService = getIt<FirebaseChatService>();
 
   @override
   Stream<Chat?> getChatById({required String chatId}) {
@@ -51,7 +51,7 @@ class ChatRepositoryImpl extends StateRepository<Chat>
     required String user2Id,
   }) async {
     try {
-      final chatDto = await _firebaseChatService.addNewChat(
+      final chatDto = await _dbChatService.addNewChat(
         user1Id: user1Id,
         user2Id: user2Id,
       );
@@ -65,7 +65,7 @@ class ChatRepositoryImpl extends StateRepository<Chat>
   }
 
   Future<Chat?> _loadChatByIdFromDb(String chatId) async {
-    final chatDto = await _firebaseChatService.loadChatById(chatId: chatId);
+    final chatDto = await _dbChatService.loadChatById(chatId: chatId);
     if (chatDto == null) return null;
     final Chat chat = mapChatFromDto(chatDto);
     addEntity(chat);
@@ -73,7 +73,7 @@ class ChatRepositoryImpl extends StateRepository<Chat>
   }
 
   Future<Chat?> _loadChatByUsersFromDb(String user1Id, String user2Id) async {
-    final chatDto = await _firebaseChatService.loadChatByUsers(
+    final chatDto = await _dbChatService.loadChatByUsers(
       user1Id: user1Id,
       user2Id: user2Id,
     );

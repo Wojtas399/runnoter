@@ -11,11 +11,10 @@ import '../mapper/blood_test_mapper.dart';
 
 class BloodTestRepositoryImpl extends StateRepository<BloodTest>
     implements BloodTestRepository {
-  final firebase.FirebaseBloodTestService _firebaseBloodTestService;
+  final firebase.FirebaseBloodTestService _dbBloodTestService;
 
-  BloodTestRepositoryImpl({
-    super.initialData,
-  }) : _firebaseBloodTestService = getIt<firebase.FirebaseBloodTestService>();
+  BloodTestRepositoryImpl({super.initialData})
+      : _dbBloodTestService = getIt<firebase.FirebaseBloodTestService>();
 
   @override
   Stream<BloodTest?> getTestById({
@@ -47,7 +46,7 @@ class BloodTestRepositoryImpl extends StateRepository<BloodTest>
     required DateTime date,
     required List<BloodParameterResult> parameterResults,
   }) async {
-    final addedBloodTestDto = await _firebaseBloodTestService.addNewTest(
+    final addedBloodTestDto = await _dbBloodTestService.addNewTest(
       userId: userId,
       date: date,
       parameterResultDtos:
@@ -66,7 +65,7 @@ class BloodTestRepositoryImpl extends StateRepository<BloodTest>
     DateTime? date,
     List<BloodParameterResult>? parameterResults,
   }) async {
-    final updatedTestDto = await _firebaseBloodTestService.updateTest(
+    final updatedTestDto = await _dbBloodTestService.updateTest(
       bloodTestId: bloodTestId,
       userId: userId,
       date: date,
@@ -84,7 +83,7 @@ class BloodTestRepositoryImpl extends StateRepository<BloodTest>
     required String bloodTestId,
     required String userId,
   }) async {
-    await _firebaseBloodTestService.deleteTest(
+    await _dbBloodTestService.deleteTest(
       bloodTestId: bloodTestId,
       userId: userId,
     );
@@ -96,7 +95,7 @@ class BloodTestRepositoryImpl extends StateRepository<BloodTest>
     required String userId,
   }) async {
     final List<String> idsOfDeletedTests =
-        await _firebaseBloodTestService.deleteAllUserTests(userId: userId);
+        await _dbBloodTestService.deleteAllUserTests(userId: userId);
     removeEntities(idsOfDeletedTests);
   }
 
@@ -104,7 +103,7 @@ class BloodTestRepositoryImpl extends StateRepository<BloodTest>
     String bloodTestId,
     String userId,
   ) async {
-    final bloodTestDto = await _firebaseBloodTestService.loadTestById(
+    final bloodTestDto = await _dbBloodTestService.loadTestById(
       bloodTestId: bloodTestId,
       userId: userId,
     );
@@ -117,7 +116,7 @@ class BloodTestRepositoryImpl extends StateRepository<BloodTest>
   }
 
   Future<void> _loadTestsFromRemoteDb(String userId) async {
-    final testsDtos = await _firebaseBloodTestService.loadAllTests(
+    final testsDtos = await _dbBloodTestService.loadAllTests(
       userId: userId,
     );
     if (testsDtos != null) {

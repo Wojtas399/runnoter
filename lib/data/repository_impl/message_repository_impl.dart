@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
-import 'package:firebase/firebase.dart';
+import 'package:firebase/firebase.dart' as firebase;
 import 'package:rxdart/rxdart.dart';
 
 import '../../dependency_injection.dart';
@@ -9,13 +9,14 @@ import '../../domain/additional_model/state_repository.dart';
 import '../../domain/entity/message.dart';
 import '../../domain/repository/message_repository.dart';
 import '../mapper/message_mapper.dart';
+import '../mapper/message_status_mapper.dart';
 
 class MessageRepositoryImpl extends StateRepository<Message>
     implements MessageRepository {
-  final FirebaseMessageService _dbMessageService;
+  final firebase.FirebaseMessageService _dbMessageService;
 
   MessageRepositoryImpl({super.initialData})
-      : _dbMessageService = getIt<FirebaseMessageService>();
+      : _dbMessageService = getIt<firebase.FirebaseMessageService>();
 
   @override
   Future<Message?> loadMessageById({required String messageId}) async {
@@ -29,7 +30,7 @@ class MessageRepositoryImpl extends StateRepository<Message>
   Stream<List<Message>> getMessagesForChat({required String chatId}) {
     final StreamController<bool> canEmit$ = StreamController()..add(false);
     _loadLatestMessagesForChatFromDb(chatId).then((_) => canEmit$.add(true));
-    StreamSubscription<List<MessageDto>?>? newMessagesListener;
+    StreamSubscription<List<firebase.MessageDto>?>? newMessagesListener;
     return canEmit$.stream
         .switchMap(
           (bool canEmit) =>
@@ -38,9 +39,9 @@ class MessageRepositoryImpl extends StateRepository<Message>
         .whereNotNull()
         .doOnData(
           (_) => newMessagesListener ??= _dbMessageService
-              .getAddedMessagesForChat(chatId: chatId)
+              .getAddedOrModifiedMessagesForChat(chatId: chatId)
               .whereNotNull()
-              .listen(_manageNewMessages),
+              .listen(_manageAddedOrModifiedMessages),
         )
         .doOnCancel(() => newMessagesListener?.cancel());
   }
@@ -58,12 +59,14 @@ class MessageRepositoryImpl extends StateRepository<Message>
 
   @override
   Future<String?> addMessage({
+    required MessageStatus status,
     required String chatId,
     required String senderId,
     required DateTime dateTime,
     String? text,
   }) async {
     final addedMessageDto = await _dbMessageService.addMessage(
+      status: mapMessageStatusToDto(status),
       chatId: chatId,
       senderId: senderId,
       dateTime: dateTime,
@@ -77,8 +80,23 @@ class MessageRepositoryImpl extends StateRepository<Message>
     return null;
   }
 
+  @override
+  Future<void> markMessagesAsRead({required List<String> messageIds}) async {
+    final List<Message> updatedMessages = [];
+    for (final messageId in messageIds) {
+      final updatedMessageDto = await _dbMessageService.updateMessageStatus(
+        messageId: messageId,
+        status: firebase.MessageStatus.read,
+      );
+      if (updatedMessageDto != null) {
+        updatedMessages.add(mapMessageFromDto(updatedMessageDto));
+      }
+    }
+    if (updatedMessages.isNotEmpty) addOrUpdateEntities(updatedMessages);
+  }
+
   Future<Message?> _loadMessageByIdFromDb(String messageId) async {
-    final MessageDto? messageDto =
+    final firebase.MessageDto? messageDto =
         await _dbMessageService.loadMessageById(messageId: messageId);
     if (messageDto == null) return null;
     final Message message = mapMessageFromDto(messageDto);
@@ -102,14 +120,18 @@ class MessageRepositoryImpl extends StateRepository<Message>
         (msgs) => msgs?.where((message) => message.chatId == chatId).toList(),
       );
 
-  Future<void> _manageNewMessages(List<MessageDto> messageDtos) async {
+  Future<void> _manageAddedOrModifiedMessages(
+    List<firebase.MessageDto> messageDtos,
+  ) async {
     if (messageDtos.isNotEmpty) {
       final List<Message> messages = await _mapMessagesFromDtos(messageDtos);
       addOrUpdateEntities(messages);
     }
   }
 
-  Future<List<Message>> _mapMessagesFromDtos(List<MessageDto> dtos) async {
+  Future<List<Message>> _mapMessagesFromDtos(
+    List<firebase.MessageDto> dtos,
+  ) async {
     final List<Message> messages = [];
     for (final messageDto in dtos) {
       messages.add(mapMessageFromDto(messageDto));

@@ -11,9 +11,12 @@ abstract interface class MessageRepository {
   });
 
   Future<String?> addMessage({
+    required MessageStatus status,
     required String chatId,
     required String senderId,
     required DateTime dateTime,
     String? text,
   });
+
+  Future<void> markMessagesAsRead({required List<String> messageIds});
 }

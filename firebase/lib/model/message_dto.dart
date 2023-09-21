@@ -1,7 +1,10 @@
 import 'package:equatable/equatable.dart';
 
+import '../mapper/message_status_mapper.dart';
+
 class MessageDto extends Equatable {
   final String id;
+  final MessageStatus status;
   final String chatId;
   final String senderId;
   final DateTime dateTime;
@@ -9,6 +12,7 @@ class MessageDto extends Equatable {
 
   const MessageDto({
     required this.id,
+    required this.status,
     required this.chatId,
     required this.senderId,
     required this.dateTime,
@@ -24,6 +28,7 @@ class MessageDto extends Equatable {
     );
     return MessageDto(
       id: messageId,
+      status: mapMessageStatusFromStr(json?[messageStatusField]),
       chatId: json?[chatIdField],
       senderId: json?[_senderIdField],
       dateTime: sendDateTime,
@@ -35,6 +40,7 @@ class MessageDto extends Equatable {
   List<Object?> get props => [id, chatId, senderId, dateTime, text];
 
   Map<String, dynamic> toJson() => {
+        messageStatusField: mapMessageStatusToString(status),
         chatIdField: chatId,
         _senderIdField: senderId,
         timestampField: dateTime.millisecondsSinceEpoch,
@@ -42,6 +48,9 @@ class MessageDto extends Equatable {
       };
 }
 
+enum MessageStatus { sent, read }
+
+const String messageStatusField = 'status';
 const String chatIdField = 'chatId';
 const String _senderIdField = 'senderId';
 const String timestampField = 'timestamp';

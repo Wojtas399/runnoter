@@ -40,6 +40,7 @@ class StateRepository<T extends Entity> {
   }
 
   void addOrUpdateEntities(List<T> entities) {
+    if (entities.isEmpty) return;
     final List<T> updatedData = [...?_dataStream.value];
     final List<String> existingEntityIds = _getIdsOfExistingEntities();
     for (final T entity in entities) {

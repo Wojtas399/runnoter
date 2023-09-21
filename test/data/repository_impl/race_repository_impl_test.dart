@@ -14,18 +14,18 @@ import '../../mock/common/mock_date_service.dart';
 import '../../mock/firebase/mock_firebase_race_service.dart';
 
 void main() {
-  final firebaseRaceService = MockFirebaseRaceService();
+  final dbRaceService = MockFirebaseRaceService();
   final dateService = MockDateService();
   late RaceRepositoryImpl repository;
   const String userId = 'u1';
 
   setUpAll(() {
-    GetIt.I.registerFactory<FirebaseRaceService>(() => firebaseRaceService);
+    GetIt.I.registerFactory<FirebaseRaceService>(() => dbRaceService);
     GetIt.I.registerFactory<DateService>(() => dateService);
   });
 
   tearDown(() {
-    reset(firebaseRaceService);
+    reset(dbRaceService);
     reset(dateService);
   });
 
@@ -35,10 +35,7 @@ void main() {
     'should emit matching race',
     () {
       const String raceId = 'c1';
-      final Race expectedRace = createRace(
-        id: raceId,
-        userId: userId,
-      );
+      final Race expectedRace = createRace(id: raceId, userId: userId);
       final List<Race> existingRaces = [
         expectedRace,
         createRace(id: 'c2', userId: 'u2'),
@@ -52,14 +49,7 @@ void main() {
         userId: userId,
       );
 
-      expect(
-        race$,
-        emitsInOrder(
-          [
-            expectedRace,
-          ],
-        ),
-      );
+      expect(race$, emits(expectedRace));
     },
   );
 
@@ -69,22 +59,14 @@ void main() {
     'should load race from remote db, add it to repository and emit it',
     () {
       const String raceId = 'c1';
-      final RaceDto expectedRaceDto = createRaceDto(
-        id: raceId,
-        userId: userId,
-      );
-      final Race expectedRace = createRace(
-        id: raceId,
-        userId: userId,
-      );
+      final RaceDto expectedRaceDto = createRaceDto(id: raceId, userId: userId);
+      final Race expectedRace = createRace(id: raceId, userId: userId);
       final List<Race> existingRaces = [
         createRace(id: 'c2', userId: 'u2'),
         createRace(id: 'c3', userId: 'u3'),
         createRace(id: 'c4', userId: userId),
       ];
-      firebaseRaceService.mockLoadRaceById(
-        raceDto: expectedRaceDto,
-      );
+      dbRaceService.mockLoadRaceById(raceDto: expectedRaceDto);
       repository = RaceRepositoryImpl(initialData: existingRaces);
 
       final Stream<List<Race>?> repositoryState$ = repository.dataStream$;
@@ -95,24 +77,12 @@ void main() {
 
       expect(
         repositoryState$,
-        emitsInOrder(
-          [
-            existingRaces,
-            [
-              ...existingRaces,
-              expectedRace,
-            ]
-          ],
-        ),
+        emitsInOrder([
+          existingRaces,
+          [...existingRaces, expectedRace]
+        ]),
       );
-      expect(
-        race$,
-        emitsInOrder(
-          [
-            expectedRace,
-          ],
-        ),
-      );
+      expect(race$, emits(expectedRace));
     },
   );
 
@@ -123,42 +93,18 @@ void main() {
       final DateTime startDate = DateTime(2023, 6, 19);
       final DateTime endDate = DateTime(2023, 6, 25);
       final List<Race> existingRaces = [
-        createRace(
-          id: 'c1',
-          userId: userId,
-          date: DateTime(2023, 6, 20),
-        ),
-        createRace(
-          id: 'c2',
-          userId: 'u2',
-          date: DateTime(2023, 6, 20),
-        ),
+        createRace(id: 'c1', userId: userId, date: DateTime(2023, 6, 20)),
+        createRace(id: 'c2', userId: 'u2', date: DateTime(2023, 6, 20)),
         createRace(id: 'c3', userId: 'u3'),
         createRace(id: 'c4', userId: userId),
       ];
       final List<RaceDto> loadedRaceDtos = [
-        createRaceDto(
-          id: 'c5',
-          userId: userId,
-          date: DateTime(2023, 6, 22),
-        ),
-        createRaceDto(
-          id: 'c6',
-          userId: userId,
-          date: DateTime(2023, 6, 23),
-        ),
+        createRaceDto(id: 'c5', userId: userId, date: DateTime(2023, 6, 22)),
+        createRaceDto(id: 'c6', userId: userId, date: DateTime(2023, 6, 23)),
       ];
       final List<Race> loadedRaces = [
-        createRace(
-          id: 'c5',
-          userId: userId,
-          date: DateTime(2023, 6, 22),
-        ),
-        createRace(
-          id: 'c6',
-          userId: userId,
-          date: DateTime(2023, 6, 23),
-        ),
+        createRace(id: 'c5', userId: userId, date: DateTime(2023, 6, 22)),
+        createRace(id: 'c6', userId: userId, date: DateTime(2023, 6, 23)),
       ];
       dateService.mockIsDateFromRange(expected: false);
       when(
@@ -182,9 +128,7 @@ void main() {
           endDate: endDate,
         ),
       ).thenReturn(true);
-      firebaseRaceService.mockLoadRacesByDateRange(
-        raceDtos: loadedRaceDtos,
-      );
+      dbRaceService.mockLoadRacesByDateRange(raceDtos: loadedRaceDtos);
       repository = RaceRepositoryImpl(initialData: existingRaces);
 
       final Stream<List<Race>?> races$ = repository.getRacesByDateRange(
@@ -195,14 +139,7 @@ void main() {
 
       expect(
         races$,
-        emitsInOrder(
-          [
-            [
-              existingRaces.first,
-              ...loadedRaces,
-            ]
-          ],
-        ),
+        emits([existingRaces.first, ...loadedRaces]),
       );
     },
   );
@@ -213,40 +150,20 @@ void main() {
     () {
       final DateTime date = DateTime(2023, 6, 19);
       final List<Race> existingRaces = [
-        createRace(
-          id: 'c1',
-          userId: userId,
-          date: DateTime(2023, 6, 19),
-        ),
-        createRace(
-          id: 'c2',
-          userId: 'u2',
-          date: DateTime(2023, 6, 19),
-        ),
+        createRace(id: 'c1', userId: userId, date: DateTime(2023, 6, 19)),
+        createRace(id: 'c2', userId: 'u2', date: DateTime(2023, 6, 19)),
         createRace(id: 'c3', userId: 'u3'),
         createRace(id: 'c4', userId: userId),
       ];
       final List<RaceDto> loadedRaceDtos = [
-        createRaceDto(
-          id: 'c5',
-          userId: userId,
-          date: DateTime(2023, 6, 19),
-        ),
+        createRaceDto(id: 'c5', userId: userId, date: DateTime(2023, 6, 19)),
       ];
       final List<Race> loadedRaces = [
-        createRace(
-          id: 'c5',
-          userId: userId,
-          date: DateTime(2023, 6, 19),
-        ),
+        createRace(id: 'c5', userId: userId, date: DateTime(2023, 6, 19)),
       ];
       dateService.mockAreDatesTheSame(expected: false);
-      when(
-        () => dateService.areDaysTheSame(date, date),
-      ).thenReturn(true);
-      firebaseRaceService.mockLoadRacesByDate(
-        raceDtos: loadedRaceDtos,
-      );
+      when(() => dateService.areDaysTheSame(date, date)).thenReturn(true);
+      dbRaceService.mockLoadRacesByDate(raceDtos: loadedRaceDtos);
       repository = RaceRepositoryImpl(initialData: existingRaces);
 
       final Stream<List<Race>?> races$ = repository.getRacesByDate(
@@ -256,14 +173,7 @@ void main() {
 
       expect(
         races$,
-        emitsInOrder(
-          [
-            [
-              existingRaces.first,
-              ...loadedRaces,
-            ]
-          ],
-        ),
+        emits([existingRaces.first, ...loadedRaces]),
       );
     },
   );
@@ -286,31 +196,21 @@ void main() {
         createRace(id: 'c5', userId: userId),
         createRace(id: 'c6', userId: userId),
       ];
-      firebaseRaceService.mockLoadAllRaces(
-        raceDtos: loadedRaceDtos,
-      );
+      dbRaceService.mockLoadAllRaces(raceDtos: loadedRaceDtos);
       repository = RaceRepositoryImpl(initialData: existingRaces);
 
       final Stream<List<Race>?> races$ = repository.getAllRaces(userId: userId);
 
       expect(
         races$,
-        emitsInOrder(
-          [
-            [
-              existingRaces.first,
-              existingRaces.last,
-              ...loadedRaces,
-            ]
-          ],
-        ),
+        emits([existingRaces.first, existingRaces.last, ...loadedRaces]),
       );
     },
   );
 
   test(
     'add new race, '
-    'should call method from firebase service to add new race and should add this new race to repository',
+    'should add new race to db and repo',
     () {
       const String raceId = 'c1';
       const String name = 'race 1';
@@ -348,9 +248,7 @@ void main() {
         createRace(id: 'c2', userId: 'u2'),
         createRace(id: 'c3', userId: userId),
       ];
-      firebaseRaceService.mockAddNewRace(
-        addedRaceDto: addedRaceDto,
-      );
+      dbRaceService.mockAddNewRace(addedRaceDto: addedRaceDto);
       repository = RaceRepositoryImpl(initialData: existingRaces);
 
       final Stream<List<Race>?> repositoryState$ = repository.dataStream$;
@@ -366,18 +264,13 @@ void main() {
 
       expect(
         repositoryState$,
-        emitsInOrder(
-          [
-            existingRaces,
-            [
-              ...existingRaces,
-              addedRace,
-            ],
-          ],
-        ),
+        emitsInOrder([
+          existingRaces,
+          [...existingRaces, addedRace],
+        ]),
       );
       verify(
-        () => firebaseRaceService.addNewRace(
+        () => dbRaceService.addNewRace(
           userId: userId,
           name: name,
           date: date,
@@ -392,7 +285,7 @@ void main() {
 
   test(
     'update race, '
-    'should call method from firebase race service to update race and should update this race in repository',
+    'should update race in db and in repo',
     () async {
       const String raceId = 'c1';
       const String newName = 'new race name';
@@ -432,9 +325,7 @@ void main() {
         expectedDuration: newExpectedDuration,
         status: newStatus,
       );
-      firebaseRaceService.mockUpdateRace(
-        updatedRaceDto: updatedRaceDto,
-      );
+      dbRaceService.mockUpdateRace(updatedRaceDto: updatedRaceDto);
       repository = RaceRepositoryImpl(initialData: existingRaces);
 
       final Stream<List<Race>?> repositoryState$ = repository.dataStream$;
@@ -452,17 +343,10 @@ void main() {
 
       expect(
         repositoryState$,
-        emitsInOrder(
-          [
-            [
-              updatedRace,
-              ...existingRaces.slice(1),
-            ]
-          ],
-        ),
+        emits([updatedRace, ...existingRaces.slice(1)]),
       );
       verify(
-        () => firebaseRaceService.updateRace(
+        () => dbRaceService.updateRace(
           raceId: raceId,
           userId: userId,
           name: newName,
@@ -479,7 +363,7 @@ void main() {
 
   test(
     'delete race, '
-    'should call method from firebase race service to delete race and should delete this race from repository',
+    'should delete race in db and in repo',
     () async {
       const String raceId = 'c1';
       final List<Race> existingRaces = [
@@ -488,35 +372,22 @@ void main() {
         createRace(id: 'c3', userId: 'u3'),
         createRace(id: 'c4', userId: userId),
       ];
-      firebaseRaceService.mockDeleteRace();
+      dbRaceService.mockDeleteRace();
       repository = RaceRepositoryImpl(initialData: existingRaces);
 
       final Stream<List<Race>?> repositoryState$ = repository.dataStream$;
-      await repository.deleteRace(
-        raceId: raceId,
-        userId: userId,
-      );
+      await repository.deleteRace(raceId: raceId, userId: userId);
 
-      expect(
-        repositoryState$,
-        emitsInOrder(
-          [
-            existingRaces.slice(1),
-          ],
-        ),
-      );
+      expect(repositoryState$, emits(existingRaces.slice(1)));
       verify(
-        () => firebaseRaceService.deleteRace(
-          raceId: raceId,
-          userId: userId,
-        ),
+        () => dbRaceService.deleteRace(raceId: raceId, userId: userId),
       ).called(1);
     },
   );
 
   test(
     'delete all user races, '
-    'should call method from firebase race service to delete all user races and should delete these races from repository',
+    'should delete all user races in db and in repo',
     () {
       final List<Race> existingRaces = [
         createRace(id: 'c1', userId: userId),
@@ -524,9 +395,7 @@ void main() {
         createRace(id: 'c3', userId: 'u3'),
         createRace(id: 'c4', userId: userId),
       ];
-      firebaseRaceService.mockDeleteAllUserRaces(
-        idsOfDeletedRaces: ['c1', 'c4'],
-      );
+      dbRaceService.mockDeleteAllUserRaces(idsOfDeletedRaces: ['c1', 'c4']);
       repository = RaceRepositoryImpl(initialData: existingRaces);
 
       final Stream<List<Race>?> repositoryState$ = repository.dataStream$;
@@ -534,20 +403,13 @@ void main() {
 
       expect(
         repositoryState$,
-        emitsInOrder(
-          [
-            existingRaces,
-            [
-              existingRaces[1],
-              existingRaces[2],
-            ]
-          ],
-        ),
+        emitsInOrder([
+          existingRaces,
+          [existingRaces[1], existingRaces[2]]
+        ]),
       );
       verify(
-        () => firebaseRaceService.deleteAllUserRaces(
-          userId: userId,
-        ),
+        () => dbRaceService.deleteAllUserRaces(userId: userId),
       ).called(1);
     },
   );

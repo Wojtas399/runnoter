@@ -11,13 +11,13 @@ import '../../creators/blood_test_dto_creator.dart';
 import '../../mock/firebase/mock_firebase_blood_test_service.dart';
 
 void main() {
-  final firebaseBloodTestService = MockFirebaseBloodTestService();
+  final dbBloodTestService = MockFirebaseBloodTestService();
   late BloodTestRepositoryImpl repository;
   const String userId = 'u1';
 
   setUpAll(() {
     GetIt.I.registerFactory<firebase.FirebaseBloodTestService>(
-      () => firebaseBloodTestService,
+      () => dbBloodTestService,
     );
   });
 
@@ -26,7 +26,7 @@ void main() {
   );
 
   tearDown(() {
-    reset(firebaseBloodTestService);
+    reset(dbBloodTestService);
   });
 
   test(
@@ -78,7 +78,7 @@ void main() {
         createBloodTest(id: 'bt2', userId: userId),
         createBloodTest(id: 'bt3', userId: 'u2'),
       ];
-      firebaseBloodTestService.mockLoadTestById(
+      dbBloodTestService.mockLoadTestById(
         bloodTestDto: expectedTestDto,
       );
       repository = BloodTestRepositoryImpl(initialData: existingTests);
@@ -161,7 +161,7 @@ void main() {
           ],
         ),
       ];
-      firebaseBloodTestService.mockLoadAllTests(
+      dbBloodTestService.mockLoadAllTests(
         bloodTestDtos: loadedTestsDtos,
       );
       repository = BloodTestRepositoryImpl(initialData: existingTests);
@@ -179,16 +179,14 @@ void main() {
         ],
       );
       verify(
-        () => firebaseBloodTestService.loadAllTests(
-          userId: userId,
-        ),
+        () => dbBloodTestService.loadAllTests(userId: userId),
       ).called(1);
     },
   );
 
   test(
     'add new test, '
-    'should call method from firebase service to add new test and should add this test to repository',
+    'should call method from db service to add new test and should add this test to repository',
     () {
       const String newTestId = 'bt3';
       final DateTime date = DateTime(2023, 5, 20);
@@ -228,7 +226,7 @@ void main() {
         date: date,
         parameterResults: parameterResults,
       );
-      firebaseBloodTestService.mockAddNewTest(
+      dbBloodTestService.mockAddNewTest(
         addedBloodTestDto: addedBloodTestDto,
       );
       repository = BloodTestRepositoryImpl(initialData: existingTests);
@@ -246,15 +244,12 @@ void main() {
         emitsInOrder(
           [
             existingTests,
-            [
-              ...existingTests,
-              addedBloodTest,
-            ]
+            [...existingTests, addedBloodTest]
           ],
         ),
       );
       verify(
-        () => firebaseBloodTestService.addNewTest(
+        () => dbBloodTestService.addNewTest(
           userId: userId,
           date: date,
           parameterResultDtos: parameterResultDtos,
@@ -265,7 +260,7 @@ void main() {
 
   test(
     'update test, '
-    'should call method from firebase service to update test and should update this test in repository',
+    'should call method from db service to update test and should update this test in repository',
     () {
       const String testId = 'bt1';
       final DateTime updatedDate = DateTime(2023, 5, 20);
@@ -316,7 +311,7 @@ void main() {
         date: updatedDate,
         parameterResults: updatedParameterResults,
       );
-      firebaseBloodTestService.mockUpdateTest(
+      dbBloodTestService.mockUpdateTest(
         updatedBloodTestDto: updatedBloodTestDto,
       );
       repository = BloodTestRepositoryImpl(initialData: existingTests);
@@ -335,15 +330,12 @@ void main() {
         emitsInOrder(
           [
             existingTests,
-            [
-              updatedBloodTest,
-              existingTests[1],
-            ]
+            [updatedBloodTest, existingTests[1]]
           ],
         ),
       );
       verify(
-        () => firebaseBloodTestService.updateTest(
+        () => dbBloodTestService.updateTest(
           bloodTestId: testId,
           userId: userId,
           date: updatedDate,
@@ -355,14 +347,14 @@ void main() {
 
   test(
     'delete test, '
-    'should call method from firebase service to delete delete test and should delete test from repository',
+    'should call method from db service to delete delete test and should delete test from repository',
     () {
       const String bloodTestId = 'bt1';
       final List<BloodTest> existingTests = [
         createBloodTest(id: 'bt1', userId: userId),
         createBloodTest(id: 'bt2', userId: 'u2'),
       ];
-      firebaseBloodTestService.mockDeleteTest();
+      dbBloodTestService.mockDeleteTest();
       repository = BloodTestRepositoryImpl(initialData: existingTests);
 
       final Stream<List<BloodTest>?> repositoryState$ = repository.dataStream$;
@@ -376,14 +368,12 @@ void main() {
         emitsInOrder(
           [
             existingTests,
-            [
-              existingTests[1],
-            ],
+            [existingTests[1]],
           ],
         ),
       );
       verify(
-        () => firebaseBloodTestService.deleteTest(
+        () => dbBloodTestService.deleteTest(
           bloodTestId: bloodTestId,
           userId: userId,
         ),
@@ -393,7 +383,7 @@ void main() {
 
   test(
     'delete all user tests, '
-    'should call method from firebase service to delete all user tests and should delete these tests from repository',
+    'should call method from db service to delete all user tests and should delete these tests from repository',
     () {
       final List<BloodTest> existingTests = [
         createBloodTest(id: 'bt1', userId: userId),
@@ -401,7 +391,7 @@ void main() {
         createBloodTest(id: 'bt3', userId: userId),
         createBloodTest(id: 'bt4', userId: 'u2'),
       ];
-      firebaseBloodTestService.mockDeleteAllUserTests(
+      dbBloodTestService.mockDeleteAllUserTests(
         idsOfDeletedTests: ['bt1', 'bt3'],
       );
       repository = BloodTestRepositoryImpl(initialData: existingTests);
@@ -414,17 +404,12 @@ void main() {
         emitsInOrder(
           [
             existingTests,
-            [
-              existingTests[1],
-              existingTests.last,
-            ],
+            [existingTests[1], existingTests.last],
           ],
         ),
       );
       verify(
-        () => firebaseBloodTestService.deleteAllUserTests(
-          userId: userId,
-        ),
+        () => dbBloodTestService.deleteAllUserTests(userId: userId),
       ).called(1);
     },
   );

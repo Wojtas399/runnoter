@@ -2,6 +2,7 @@ import 'package:runnoter/domain/entity/message.dart';
 
 Message createMessage({
   String id = '',
+  MessageStatus status = MessageStatus.sent,
   String chatId = '',
   String senderId = '',
   DateTime? dateTime,
@@ -9,6 +10,7 @@ Message createMessage({
 }) =>
     Message(
       id: id,
+      status: status,
       chatId: chatId,
       senderId: senderId,
       dateTime: dateTime ?? DateTime(2023),

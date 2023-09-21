@@ -2,10 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../firebase.dart';
 import '../firebase_collections.dart';
+import '../mapper/message_status_mapper.dart';
 
 class FirebaseMessageService {
-  Stream<List<MessageDto>?> getAddedMessagesForChat({
-    required final String chatId,
+  Stream<List<MessageDto>?> getAddedOrModifiedMessagesForChat({
+    required String chatId,
   }) {
     bool isFirstQuery = true;
     return getMessagesRef()
@@ -19,7 +20,7 @@ class FirebaseMessageService {
         } else {
           return snapshot.docChanges
               .where((docChange) =>
-                  docChange.type == DocumentChangeType.added &&
+                  docChange.type != DocumentChangeType.removed &&
                   docChange.doc.data() != null)
               .map((docChange) => docChange.doc.data()!)
               .toList();
@@ -28,16 +29,14 @@ class FirebaseMessageService {
     );
   }
 
-  Future<MessageDto?> loadMessageById({
-    required final String messageId,
-  }) async {
+  Future<MessageDto?> loadMessageById({required String messageId}) async {
     final messageRef = getMessagesRef().doc(messageId);
     final docSnapshot = await messageRef.get();
     return docSnapshot.data();
   }
 
   Future<List<MessageDto>> loadMessagesForChat({
-    required final String chatId,
+    required String chatId,
     final String? lastVisibleMessageId,
   }) async {
     final Query<MessageDto> query = getMessagesRef()
@@ -50,14 +49,16 @@ class FirebaseMessageService {
   }
 
   Future<MessageDto?> addMessage({
-    required final String chatId,
-    required final String senderId,
-    required final DateTime dateTime,
+    required MessageStatus status,
+    required String chatId,
+    required String senderId,
+    required DateTime dateTime,
     final String? text,
   }) async {
     final messageRef = getMessagesRef().doc();
     final messageDto = MessageDto(
       id: '',
+      status: status,
       chatId: chatId,
       senderId: senderId,
       dateTime: dateTime,
@@ -68,8 +69,20 @@ class FirebaseMessageService {
     return docSnapshot.data();
   }
 
+  Future<MessageDto?> updateMessageStatus({
+    required String messageId,
+    required MessageStatus status,
+  }) async {
+    final docRef = getMessagesRef().doc(messageId);
+    await docRef.update({
+      messageStatusField: mapMessageStatusToString(MessageStatus.read),
+    });
+    final doc = await docRef.get();
+    return doc.data();
+  }
+
   Future<List<MessageDto>> _loadLimitedImagesByQuery({
-    required final Query<MessageDto> query,
+    required Query<MessageDto> query,
     final String? lastVisibleMessageId,
   }) async {
     Query<MessageDto> limitedQuery = query.limit(20);

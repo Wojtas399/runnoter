@@ -11,10 +11,10 @@ import '../mapper/person_mapper.dart';
 
 class PersonRepositoryImpl extends StateRepository<Person>
     implements PersonRepository {
-  final firebase.FirebaseUserService _firebaseUserService;
+  final firebase.FirebaseUserService _dbUserService;
 
   PersonRepositoryImpl({super.initialData})
-      : _firebaseUserService = getIt<firebase.FirebaseUserService>();
+      : _dbUserService = getIt<firebase.FirebaseUserService>();
 
   @override
   Stream<Person?> getPersonById({required String personId}) {
@@ -59,7 +59,7 @@ class PersonRepositoryImpl extends StateRepository<Person>
     required String personId,
     required String? coachId,
   }) async {
-    final updatedUserDto = await _firebaseUserService.updateUserData(
+    final updatedUserDto = await _dbUserService.updateUserData(
       userId: personId,
       coachId: coachId,
       coachIdAsNull: coachId == null,
@@ -79,7 +79,7 @@ class PersonRepositoryImpl extends StateRepository<Person>
   Future<void> removeCoachIdInAllMatchingPersons({
     required String coachId,
   }) async {
-    final updatedUserDtos = await _firebaseUserService
+    final updatedUserDtos = await _dbUserService
         .setCoachIdAsNullInAllMatchingUsers(coachId: coachId);
     if (updatedUserDtos.isNotEmpty) {
       final List<Person> updatedPersons =
@@ -89,7 +89,7 @@ class PersonRepositoryImpl extends StateRepository<Person>
   }
 
   Future<Person?> _loadPersonByIdFromDb(String personId) async {
-    final userDto = await _firebaseUserService.loadUserById(userId: personId);
+    final userDto = await _dbUserService.loadUserById(userId: personId);
     if (userDto == null) return null;
     final Person person = mapPersonFromUserDto(userDto);
     addEntity(person);
@@ -97,8 +97,7 @@ class PersonRepositoryImpl extends StateRepository<Person>
   }
 
   Future<void> _loadPersonsByCoachIdFromDb(String coachId) async {
-    final userDtos =
-        await _firebaseUserService.loadUsersByCoachId(coachId: coachId);
+    final userDtos = await _dbUserService.loadUsersByCoachId(coachId: coachId);
     if (userDtos.isEmpty) return;
     final List<Person> persons = userDtos.map(mapPersonFromUserDto).toList();
     addOrUpdateEntities(persons);
@@ -110,7 +109,7 @@ class PersonRepositoryImpl extends StateRepository<Person>
   ) async {
     firebase.AccountType? dtoAccountType;
     if (accountType != null) dtoAccountType = mapAccountTypeToDto(accountType);
-    final foundUserDtos = await _firebaseUserService.searchForUsers(
+    final foundUserDtos = await _dbUserService.searchForUsers(
       searchQuery: searchQuery,
       accountType: dtoAccountType,
     );

@@ -3,14 +3,18 @@ import 'package:mocktail/mocktail.dart';
 
 class MockFirebaseMessageService extends Mock
     implements FirebaseMessageService {
-  void mockGetAddedMessagesForChat({
-    List<MessageDto>? addedMessageDtos,
-    Stream<List<MessageDto>>? addedMessageDtosStream,
+  MockFirebaseMessageService() {
+    registerFallbackValue(MessageStatus.sent);
+  }
+
+  void mockGetAddedOrModifiedMessagesForChat({
+    List<MessageDto>? messageDtos,
+    Stream<List<MessageDto>>? messageDtosStream,
   }) {
     when(
-      () => getAddedMessagesForChat(chatId: any(named: 'chatId')),
+      () => getAddedOrModifiedMessagesForChat(chatId: any(named: 'chatId')),
     ).thenAnswer(
-      (_) => addedMessageDtosStream ?? Stream.value(addedMessageDtos),
+      (_) => messageDtosStream ?? Stream.value(messageDtos),
     );
   }
 
@@ -34,11 +38,21 @@ class MockFirebaseMessageService extends Mock
   void mockAddMessage({MessageDto? addedMessageDto}) {
     when(
       () => addMessage(
+        status: any(named: 'status'),
         chatId: any(named: 'chatId'),
         senderId: any(named: 'senderId'),
         dateTime: any(named: 'dateTime'),
         text: any(named: 'text'),
       ),
     ).thenAnswer((_) => Future.value(addedMessageDto));
+  }
+
+  void mockUpdateMessageStatus({MessageDto? updatedMessage}) {
+    when(
+      () => updateMessageStatus(
+        messageId: any(named: 'messageId'),
+        status: any(named: 'status'),
+      ),
+    ).thenAnswer((_) => Future.value(updatedMessage));
   }
 }
