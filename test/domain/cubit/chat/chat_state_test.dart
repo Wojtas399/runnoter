@@ -76,6 +76,21 @@ void main() {
   );
 
   test(
+    'copy with isRecipientTyping, '
+    'should set new value or '
+    'should copy current value if new value is null',
+    () {
+      const bool expected = true;
+
+      state = state.copyWith(isRecipientTyping: expected);
+      final state2 = state.copyWith();
+
+      expect(state.isRecipientTyping, expected);
+      expect(state2.isRecipientTyping, expected);
+    },
+  );
+
+  test(
     'copy with messagesFromLatest, '
     'should set new value or '
     'should copy current value if new value is null',

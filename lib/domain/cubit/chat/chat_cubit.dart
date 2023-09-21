@@ -32,6 +32,7 @@ class ChatCubit extends CubitWithStatus<ChatState, dynamic, dynamic> {
   final PersonRepository _personRepository;
   final DateService _dateService;
   final ConnectivityService _connectivityService;
+  StreamSubscription<Chat?>? _chatListener;
   StreamSubscription<List<ChatMessage>>? _chatMessagesListener;
 
   ChatCubit({
@@ -48,35 +49,55 @@ class ChatCubit extends CubitWithStatus<ChatState, dynamic, dynamic> {
 
   @override
   Future<void> close() {
+    _chatListener?.cancel();
     _chatMessagesListener?.cancel();
-    _chatMessagesListener = null;
     return super.close();
   }
 
-  Future<void> initialize() async {
-    final String? loggedUserId = await _authService.loggedUserId$.first;
-    if (loggedUserId == null) return;
-    final String recipientFullName = await _loadRecipientFullName(loggedUserId);
-    _chatMessagesListener ??= _messageRepository
-        .getMessagesForChat(chatId: chatId)
+  void initializeChatListener() {
+    _chatListener ??=
+        _chatRepository.getChatById(chatId: chatId).whereNotNull().listen(
+      (Chat chat) async {
+        final String? loggedUserId = await _authService.loggedUserId$.first;
+        final String recipientId =
+            chat.user1Id == loggedUserId ? chat.user2Id : chat.user1Id;
+        emit(state.copyWith(
+          recipientFullName: await _loadRecipientFullName(recipientId),
+          isRecipientTyping: recipientId == chat.user1Id
+              ? chat.isUser1Typing
+              : chat.isUser2Typing,
+        ));
+      },
+    );
+  }
+
+  void initializeMessagesListener() {
+    _chatMessagesListener ??= Rx.combineLatest2(
+      _messageRepository.getMessagesForChat(chatId: chatId),
+      _authService.loggedUserId$.whereNotNull(),
+      (List<Message> messages, String loggedUserId) => (messages, loggedUserId),
+    )
         .doOnData(
-          (messages) => _markUnreadMessagesAsRead(messages, loggedUserId),
+          ((List<Message>, String) data) {
+            _markUnreadMessagesAsRead(messages: data.$1, loggedUserId: data.$2);
+          },
         )
         .switchMap(
-          (List<Message> messages) => Rx.combineLatest(
-            messages.map((msg) => _mapMessageToChatMessage(msg, loggedUserId)),
+          ((List<Message>, String) data) => Rx.combineLatest(
+            data.$1.map(
+              (Message message) => _mapMessageToChatMessage(
+                message: message,
+                loggedUserId: data.$2,
+              ),
+            ),
             (List<ChatMessage> chatMessages) => chatMessages,
           ),
         )
         .listen(
-      (List<ChatMessage> chatMessages) {
-        emit(state.copyWith(
-          recipientFullName: recipientFullName,
-          messagesFromLatest:
-              _sortChatMessagesDescendingBySendDateTime(chatMessages),
-        ));
-      },
-    );
+          (List<ChatMessage> msgs) => emit(state.copyWith(
+            messagesFromLatest: _sortChatMessagesDescendingBySendDateTime(msgs),
+          )),
+        );
   }
 
   void messageChanged(String message) {
@@ -139,11 +160,7 @@ class ChatCubit extends CubitWithStatus<ChatState, dynamic, dynamic> {
     );
   }
 
-  Future<String> _loadRecipientFullName(String loggedUserId) async {
-    final Chat chat =
-        await _chatRepository.getChatById(chatId: chatId).whereNotNull().first;
-    final String recipientId =
-        chat.user1Id == loggedUserId ? chat.user2Id : chat.user1Id;
+  Future<String?> _loadRecipientFullName(String recipientId) async {
     final Person recipient = await _personRepository
         .getPersonById(personId: recipientId)
         .whereNotNull()
@@ -151,10 +168,10 @@ class ChatCubit extends CubitWithStatus<ChatState, dynamic, dynamic> {
     return '${recipient.name} ${recipient.surname}';
   }
 
-  Future<void> _markUnreadMessagesAsRead(
-    List<Message> messages,
-    String loggedUserId,
-  ) async {
+  Future<void> _markUnreadMessagesAsRead({
+    required List<Message> messages,
+    required String loggedUserId,
+  }) async {
     final List<String> idsOfUnreadMessagesSentByInterlocutor = messages
         .where(
           (Message message) =>
@@ -170,10 +187,10 @@ class ChatCubit extends CubitWithStatus<ChatState, dynamic, dynamic> {
     }
   }
 
-  Stream<ChatMessage> _mapMessageToChatMessage(
-    Message message,
-    String loggedUserId,
-  ) =>
+  Stream<ChatMessage> _mapMessageToChatMessage({
+    required Message message,
+    required String loggedUserId,
+  }) =>
       _messageImageRepository.getImagesByMessageId(messageId: message.id).map(
             (List<MessageImage> messageImages) => ChatMessage(
               id: message.id,

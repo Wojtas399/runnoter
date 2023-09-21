@@ -8,6 +8,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/common/date_service.dart';
 import 'package:runnoter/domain/additional_model/cubit_status.dart';
 import 'package:runnoter/domain/cubit/chat/chat_cubit.dart';
+import 'package:runnoter/domain/entity/chat.dart';
 import 'package:runnoter/domain/entity/message.dart';
 import 'package:runnoter/domain/entity/message_image.dart';
 import 'package:runnoter/domain/entity/person.dart';
@@ -76,24 +77,64 @@ void main() {
     reset(connectivityService);
   });
 
-  blocTest(
-    'initialize, '
-    'logged user does not exist, '
-    'should do nothing',
-    build: () => createCubit(),
-    setUp: () => authService.mockGetLoggedUserId(),
-    act: (cubit) => cubit.initialize(),
-    expect: () => [],
+  group(
+    'initialize chat listener',
+    () {
+      final Chat chat = createChat(
+        id: 'c1',
+        user1Id: 'u2',
+        user2Id: loggedUserId,
+      );
+      final Chat updatedChat = createChat(
+        id: 'c1',
+        user1Id: 'u2',
+        user2Id: loggedUserId,
+        isUser1Typing: true,
+        isUser2Typing: false,
+      );
+      final Person recipient = createPerson(
+        id: 'u2',
+        name: 'name',
+        surname: 'surname',
+      );
+      final StreamController<Chat> chat$ = StreamController()..add(chat);
+
+      blocTest(
+        'should set listener of chat and '
+        'should load recipient full name and '
+        'should check if recipient is typing',
+        build: () => createCubit(),
+        setUp: () {
+          authService.mockGetLoggedUserId(userId: loggedUserId);
+          chatRepository.mockGetChatById(chatStream: chat$.stream);
+          personRepository.mockGetPersonById(person: recipient);
+        },
+        act: (cubit) {
+          cubit.initializeChatListener();
+          chat$.add(updatedChat);
+        },
+        expect: () => [
+          const ChatState(
+            status: CubitStatusComplete(),
+            recipientFullName: 'name surname',
+            isRecipientTyping: false,
+          ),
+          const ChatState(
+            status: CubitStatusComplete(),
+            recipientFullName: 'name surname',
+            isRecipientTyping: true,
+          ),
+        ],
+        verify: (_) => verify(
+          () => chatRepository.getChatById(chatId: chatId),
+        ).called(1),
+      );
+    },
   );
 
   group(
-    'initialize',
+    'initialize messages listener',
     () {
-      final Person recipient = createPerson(
-        id: 'r1',
-        name: 'recipient',
-        surname: 'recipinsky',
-      );
       final List<Message> messages = [
         createMessage(
           id: 'm1',
@@ -190,22 +231,13 @@ void main() {
           BehaviorSubject.seeded(m1MessageImages);
 
       blocTest(
-        'should load logged user id and recipient, '
         'should set listener of messages with images, '
-        'should call message repository method to mark messages sent by second user as read, '
+        'should call message repository method to mark messages sent by recipient as read, '
         'should sort messages descending by date and '
         'should sort images ascending by order',
         build: () => createCubit(),
         setUp: () {
           authService.mockGetLoggedUserId(userId: loggedUserId);
-          chatRepository.mockGetChatById(
-            chat: createChat(
-              id: chatId,
-              user1Id: recipient.id,
-              user2Id: loggedUserId,
-            ),
-          );
-          personRepository.mockGetPersonById(person: recipient);
           messageRepository.mockGetMessagesForChat(
             messagesStream: messages$.stream,
           );
@@ -218,7 +250,7 @@ void main() {
           ).thenAnswer((_) => m1MessageImages$.stream);
         },
         act: (cubit) async {
-          cubit.initialize();
+          cubit.initializeMessagesListener();
           await cubit.stream.first;
           messages$.add(updatedMessages);
           await cubit.stream.first;
@@ -227,12 +259,10 @@ void main() {
         expect: () => [
           ChatState(
             status: const CubitStatusComplete(),
-            recipientFullName: '${recipient.name} ${recipient.surname}',
             messagesFromLatest: expectedMessages,
           ),
           ChatState(
             status: const CubitStatusComplete(),
-            recipientFullName: '${recipient.name} ${recipient.surname}',
             messagesFromLatest: [
               expectedMessages.first,
               expectedMessages[1].copyWith(status: MessageStatus.read),
@@ -243,7 +273,6 @@ void main() {
           ),
           ChatState(
             status: const CubitStatusComplete(),
-            recipientFullName: '${recipient.name} ${recipient.surname}',
             messagesFromLatest: [
               expectedMessages.first.copyWith(images: []),
               expectedMessages[1].copyWith(status: MessageStatus.read),
@@ -254,10 +283,6 @@ void main() {
           ),
         ],
         verify: (_) {
-          verify(() => chatRepository.getChatById(chatId: chatId)).called(1);
-          verify(
-            () => personRepository.getPersonById(personId: recipient.id),
-          ).called(1);
           verify(
             () => messageRepository.getMessagesForChat(chatId: 'c1'),
           ).called(1);
@@ -269,16 +294,6 @@ void main() {
         },
       );
     },
-  );
-
-  blocTest(
-    'initialize, '
-    'logged user does not exist, '
-    'should do nothing',
-    build: () => createCubit(messageToSend: 'message to send'),
-    setUp: () => authService.mockGetLoggedUserId(),
-    act: (cubit) => cubit.initialize(),
-    expect: () => [],
   );
 
   blocTest(
