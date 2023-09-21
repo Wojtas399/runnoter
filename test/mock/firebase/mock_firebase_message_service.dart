@@ -46,4 +46,13 @@ class MockFirebaseMessageService extends Mock
       ),
     ).thenAnswer((_) => Future.value(addedMessageDto));
   }
+
+  void mockUpdateMessageStatus({MessageDto? updatedMessage}) {
+    when(
+      () => updateMessageStatus(
+        messageId: any(named: 'messageId'),
+        status: any(named: 'status'),
+      ),
+    ).thenAnswer((_) => Future.value(updatedMessage));
+  }
 }

@@ -28,7 +28,7 @@ class MessageDto extends Equatable {
     );
     return MessageDto(
       id: messageId,
-      status: mapMessageStatusFromStr(json?[_messageStatusField]),
+      status: mapMessageStatusFromStr(json?[messageStatusField]),
       chatId: json?[chatIdField],
       senderId: json?[_senderIdField],
       dateTime: sendDateTime,
@@ -40,7 +40,7 @@ class MessageDto extends Equatable {
   List<Object?> get props => [id, chatId, senderId, dateTime, text];
 
   Map<String, dynamic> toJson() => {
-        _messageStatusField: mapMessageStatusToString(status),
+        messageStatusField: mapMessageStatusToString(status),
         chatIdField: chatId,
         _senderIdField: senderId,
         timestampField: dateTime.millisecondsSinceEpoch,
@@ -50,7 +50,7 @@ class MessageDto extends Equatable {
 
 enum MessageStatus { sent, read }
 
-const String _messageStatusField = 'status';
+const String messageStatusField = 'status';
 const String chatIdField = 'chatId';
 const String _senderIdField = 'senderId';
 const String timestampField = 'timestamp';

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../firebase.dart';
 import '../firebase_collections.dart';
+import '../mapper/message_status_mapper.dart';
 
 class FirebaseMessageService {
   Stream<List<MessageDto>?> getAddedOrModifiedMessagesForChat({
@@ -66,6 +67,18 @@ class FirebaseMessageService {
     await messageRef.set(messageDto);
     final docSnapshot = await messageRef.get();
     return docSnapshot.data();
+  }
+
+  Future<MessageDto?> updateMessageStatus({
+    required String messageId,
+    required MessageStatus status,
+  }) async {
+    final docRef = getMessagesRef().doc(messageId);
+    await docRef.update({
+      messageStatusField: mapMessageStatusToString(MessageStatus.read),
+    });
+    final doc = await docRef.get();
+    return doc.data();
   }
 
   Future<List<MessageDto>> _loadLimitedImagesByQuery({
