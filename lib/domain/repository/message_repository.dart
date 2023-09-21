@@ -17,4 +17,6 @@ abstract interface class MessageRepository {
     required DateTime dateTime,
     String? text,
   });
+
+  Future<void> markMessagesAsRead({required List<String> messageIds});
 }

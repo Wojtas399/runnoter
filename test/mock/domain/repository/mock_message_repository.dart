@@ -46,4 +46,12 @@ class MockMessageRepository extends Mock implements MessageRepository {
       ),
     ).thenAnswer((_) => Future.value(addedMessageId));
   }
+
+  void mockMarkMessagesAsRead() {
+    when(
+      () => markMessagesAsRead(
+        messageIds: any(named: 'messageIds'),
+      ),
+    ).thenAnswer((_) => Future.value());
+  }
 }

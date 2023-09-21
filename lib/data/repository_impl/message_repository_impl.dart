@@ -80,6 +80,12 @@ class MessageRepositoryImpl extends StateRepository<Message>
     return null;
   }
 
+  @override
+  Future<void> markMessagesAsRead({required List<String> messageIds}) async {
+    //TODO
+    throw UnimplementedError();
+  }
+
   Future<Message?> _loadMessageByIdFromDb(String messageId) async {
     final firebase.MessageDto? messageDto =
         await _dbMessageService.loadMessageById(messageId: messageId);
