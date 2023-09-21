@@ -8,7 +8,6 @@ import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/common/date_service.dart';
 import 'package:runnoter/domain/additional_model/cubit_status.dart';
 import 'package:runnoter/domain/cubit/chat/chat_cubit.dart';
-import 'package:runnoter/domain/entity/chat.dart';
 import 'package:runnoter/domain/entity/message.dart';
 import 'package:runnoter/domain/entity/message_image.dart';
 import 'package:runnoter/domain/entity/person.dart';
@@ -20,6 +19,7 @@ import 'package:runnoter/domain/service/auth_service.dart';
 import 'package:runnoter/domain/service/connectivity_service.dart';
 import 'package:rxdart/rxdart.dart';
 
+import '../../../creators/chat_creator.dart';
 import '../../../creators/message_creator.dart';
 import '../../../creators/person_creator.dart';
 import '../../../mock/common/mock_date_service.dart';
@@ -199,7 +199,7 @@ void main() {
         setUp: () {
           authService.mockGetLoggedUserId(userId: loggedUserId);
           chatRepository.mockGetChatById(
-            chat: Chat(
+            chat: createChat(
               id: chatId,
               user1Id: recipient.id,
               user2Id: loggedUserId,

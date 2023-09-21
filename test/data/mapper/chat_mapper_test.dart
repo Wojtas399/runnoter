@@ -21,6 +21,8 @@ void main() {
         id: id,
         user1Id: user1Id,
         user2Id: user2Id,
+        isUser1Typing: false,
+        isUser2Typing: false,
       );
 
       final Chat chat = mapChatFromDto(chatDto);
