@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:collection/collection.dart';
 import 'package:firebase/firebase.dart';
+import 'package:rxdart/rxdart.dart';
 
 import '../../dependency_injection.dart';
 import '../../domain/additional_model/state_repository.dart';
@@ -16,17 +19,13 @@ class ChatRepositoryImpl extends StateRepository<Chat>
       : _dbChatService = getIt<FirebaseChatService>();
 
   @override
-  Stream<Chat?> getChatById({required String chatId}) {
-    return dataStream$
-        .map(
-          (List<Chat>? chats) => chats?.firstWhereOrNull(
-            (Chat chat) => chat.id == chatId,
-          ),
-        )
-        .asyncMap(
-          (Chat? chat) async => chat ?? await _loadChatByIdFromDb(chatId),
-        );
-  }
+  Stream<Chat?> getChatById({required String chatId}) => _dbChatService
+      .getChatById(chatId: chatId)
+      .map(
+        (chatDto) => chatDto != null ? mapChatFromDto(chatDto) : null,
+      )
+      .distinct()
+      .doOnData(_manageChatChanges);
 
   @override
   Future<String?> findChatIdByUsers({
@@ -64,12 +63,13 @@ class ChatRepositoryImpl extends StateRepository<Chat>
     }
   }
 
-  Future<Chat?> _loadChatByIdFromDb(String chatId) async {
-    final chatDto = await _dbChatService.loadChatById(chatId: chatId);
-    if (chatDto == null) return null;
-    final Chat chat = mapChatFromDto(chatDto);
-    addEntity(chat);
-    return chat;
+  void _manageChatChanges(Chat? chat) {
+    if (chat == null) return;
+    if (doesEntityNotExistInState(chat.id)) {
+      addEntity(chat);
+    } else {
+      updateEntity(chat);
+    }
   }
 
   Future<Chat?> _loadChatByUsersFromDb(String user1Id, String user2Id) async {

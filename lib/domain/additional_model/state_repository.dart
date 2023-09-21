@@ -61,11 +61,11 @@ class StateRepository<T extends Entity> {
     final entityIndex = updatedData.indexWhere(
       (T existingEntity) => existingEntity.id == entity.id,
     );
-    if (entityIndex < 0) {
-      return;
+    if (entityIndex < 0) return;
+    if (updatedData[entityIndex] != entity) {
+      updatedData[entityIndex] = entity;
+      _dataStream.add(updatedData);
     }
-    updatedData[entityIndex] = entity;
-    _dataStream.add(updatedData);
   }
 
   void removeEntity(String entityId) {
