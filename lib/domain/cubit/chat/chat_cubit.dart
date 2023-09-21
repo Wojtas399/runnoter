@@ -163,9 +163,11 @@ class ChatCubit extends CubitWithStatus<ChatState, dynamic, dynamic> {
         )
         .map((Message message) => message.id)
         .toList();
-    await _messageRepository.markMessagesAsRead(
-      messageIds: idsOfUnreadMessagesSentByInterlocutor,
-    );
+    if (idsOfUnreadMessagesSentByInterlocutor.isNotEmpty) {
+      await _messageRepository.markMessagesAsRead(
+        messageIds: idsOfUnreadMessagesSentByInterlocutor,
+      );
+    }
   }
 
   Stream<ChatMessage> _mapMessageToChatMessage(

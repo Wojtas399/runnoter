@@ -269,4 +269,57 @@ void main() {
       ).called(1);
     },
   );
+
+  test(
+    'mark messages as read, '
+    'for each message id should call db method to update message status to read and '
+    'should update these messages in repo',
+    () async {
+      final List<Message> existingMessages = [
+        createMessage(id: 'm1', status: MessageStatus.sent),
+        createMessage(id: 'm2', status: MessageStatus.read),
+        createMessage(id: 'm3', status: MessageStatus.sent),
+      ];
+      final firebase.MessageDto firstUpdatedMessageDto =
+          createMessageDto(id: 'm1', status: firebase.MessageStatus.read);
+      final firebase.MessageDto secondUpdatedMessageDto =
+          createMessageDto(id: 'm3', status: firebase.MessageStatus.read);
+      when(
+        () => dbMessageService.updateMessageStatus(
+          messageId: 'm1',
+          status: firebase.MessageStatus.read,
+        ),
+      ).thenAnswer((_) => Future.value(firstUpdatedMessageDto));
+      when(
+        () => dbMessageService.updateMessageStatus(
+          messageId: 'm3',
+          status: firebase.MessageStatus.read,
+        ),
+      ).thenAnswer((_) => Future.value(secondUpdatedMessageDto));
+      repository = MessageRepositoryImpl(initialData: existingMessages);
+
+      await repository.markMessagesAsRead(messageIds: ['m1', 'm3']);
+
+      expect(
+        repository.dataStream$,
+        emits([
+          createMessage(id: 'm1', status: MessageStatus.read),
+          existingMessages[1],
+          createMessage(id: 'm3', status: MessageStatus.read),
+        ]),
+      );
+      verify(
+        () => dbMessageService.updateMessageStatus(
+          messageId: 'm1',
+          status: firebase.MessageStatus.read,
+        ),
+      ).called(1);
+      verify(
+        () => dbMessageService.updateMessageStatus(
+          messageId: 'm3',
+          status: firebase.MessageStatus.read,
+        ),
+      ).called(1);
+    },
+  );
 }

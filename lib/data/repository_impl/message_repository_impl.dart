@@ -82,8 +82,17 @@ class MessageRepositoryImpl extends StateRepository<Message>
 
   @override
   Future<void> markMessagesAsRead({required List<String> messageIds}) async {
-    //TODO
-    throw UnimplementedError();
+    final List<Message> updatedMessages = [];
+    for (final messageId in messageIds) {
+      final updatedMessageDto = await _dbMessageService.updateMessageStatus(
+        messageId: messageId,
+        status: firebase.MessageStatus.read,
+      );
+      if (updatedMessageDto != null) {
+        updatedMessages.add(mapMessageFromDto(updatedMessageDto));
+      }
+    }
+    if (updatedMessages.isNotEmpty) addOrUpdateEntities(updatedMessages);
   }
 
   Future<Message?> _loadMessageByIdFromDb(String messageId) async {
