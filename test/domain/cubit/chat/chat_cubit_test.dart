@@ -99,47 +99,100 @@ void main() {
           id: 'm1',
           status: MessageStatus.sent,
           text: 'message 1',
-          senderId: 'u1',
+          senderId: loggedUserId,
           dateTime: DateTime(2023, 1, 10),
         ),
         createMessage(
           id: 'm2',
-          status: MessageStatus.read,
+          status: MessageStatus.sent,
           text: 'message 2',
           senderId: 'u2',
-          dateTime: DateTime(2023, 1, 5),
+          dateTime: DateTime(2023, 1, 5, 10, 30),
+        ),
+        createMessage(
+          id: 'm3',
+          status: MessageStatus.sent,
+          text: 'message 3',
+          senderId: 'u2',
+          dateTime: DateTime(2023, 1, 5, 9, 30),
+        ),
+        createMessage(
+          id: 'm4',
+          status: MessageStatus.read,
+          text: 'message 4',
+          senderId: 'u2',
+          dateTime: DateTime(2023, 1, 5, 9),
+        ),
+        createMessage(
+          id: 'm5',
+          status: MessageStatus.read,
+          text: 'message 5',
+          senderId: loggedUserId,
+          dateTime: DateTime(2023, 1, 5, 8),
         ),
       ];
       final List<Message> updatedMessages = [
-        createMessage(
-          id: 'm1',
-          status: MessageStatus.read,
-          text: 'updated message 1',
-          senderId: 'u1',
-          dateTime: DateTime(2023, 1, 2),
-        ),
-        createMessage(
-          id: 'm2',
-          status: MessageStatus.read,
-          senderId: 'u2',
-          text: 'updated message 2',
-          dateTime: DateTime(2023, 1, 5),
-        ),
+        messages.first,
+        messages[1].copyWithStatus(MessageStatus.read),
+        messages[2].copyWithStatus(MessageStatus.read),
+        messages[3],
+        messages.last,
       ];
       final List<MessageImage> m1MessageImages = [
         MessageImage(id: 'i2', messageId: 'm2', order: 2, bytes: Uint8List(2)),
         MessageImage(id: 'i1', messageId: 'm1', order: 1, bytes: Uint8List(1)),
       ];
+      final List<ChatMessage> expectedMessages = [
+        ChatMessage(
+          id: 'm1',
+          status: MessageStatus.sent,
+          hasBeenSentByLoggedUser: true,
+          sendDateTime: DateTime(2023, 1, 10),
+          text: 'message 1',
+          images: m1MessageImages.reversed.toList(),
+        ),
+        ChatMessage(
+          id: 'm2',
+          status: MessageStatus.sent,
+          hasBeenSentByLoggedUser: false,
+          sendDateTime: DateTime(2023, 1, 5, 10, 30),
+          text: 'message 2',
+          images: const [],
+        ),
+        ChatMessage(
+          id: 'm3',
+          status: MessageStatus.sent,
+          hasBeenSentByLoggedUser: false,
+          sendDateTime: DateTime(2023, 1, 5, 9, 30),
+          text: 'message 3',
+          images: const [],
+        ),
+        ChatMessage(
+          id: 'm4',
+          status: MessageStatus.read,
+          hasBeenSentByLoggedUser: false,
+          sendDateTime: DateTime(2023, 1, 5, 9),
+          text: 'message 4',
+          images: const [],
+        ),
+        ChatMessage(
+          id: 'm5',
+          status: MessageStatus.read,
+          hasBeenSentByLoggedUser: true,
+          sendDateTime: DateTime(2023, 1, 5, 8),
+          text: 'message 5',
+          images: const [],
+        ),
+      ];
       final StreamController<List<Message>> messages$ = StreamController()
         ..add(messages);
       final StreamController<List<MessageImage>> m1MessageImages$ =
           BehaviorSubject.seeded(m1MessageImages);
-      final StreamController<List<MessageImage>> m2MessageImages$ =
-          BehaviorSubject.seeded(const []);
 
       blocTest(
         'should load logged user id and recipient, '
-        'should set listener of messages with images and '
+        'should set listener of messages with images, '
+        'should call message repository method to mark messages sent by second user as read, '
         'should sort messages descending by date and '
         'should sort images ascending by order',
         build: () => createCubit(),
@@ -156,12 +209,13 @@ void main() {
           messageRepository.mockGetMessagesForChat(
             messagesStream: messages$.stream,
           );
+          messageRepository.mockMarkMessagesAsRead();
+          messageImageRepository.mockGetImagesByMessageId(
+            imagesStream: BehaviorSubject.seeded(const []),
+          );
           when(
             () => messageImageRepository.getImagesByMessageId(messageId: 'm1'),
           ).thenAnswer((_) => m1MessageImages$.stream);
-          when(
-            () => messageImageRepository.getImagesByMessageId(messageId: 'm2'),
-          ).thenAnswer((_) => m2MessageImages$.stream);
         },
         act: (cubit) async {
           cubit.initialize();
@@ -174,93 +228,28 @@ void main() {
           ChatState(
             status: const CubitStatusComplete(),
             recipientFullName: '${recipient.name} ${recipient.surname}',
+            messagesFromLatest: expectedMessages,
+          ),
+          ChatState(
+            status: const CubitStatusComplete(),
+            recipientFullName: '${recipient.name} ${recipient.surname}',
             messagesFromLatest: [
-              ChatMessage(
-                id: 'm1',
-                status: MessageStatus.sent,
-                hasBeenSentByLoggedUser: true,
-                sendDateTime: DateTime(2023, 1, 10),
-                text: 'message 1',
-                images: [
-                  MessageImage(
-                    id: 'i1',
-                    messageId: 'm1',
-                    order: 1,
-                    bytes: Uint8List(1),
-                  ),
-                  MessageImage(
-                    id: 'i2',
-                    messageId: 'm2',
-                    order: 2,
-                    bytes: Uint8List(2),
-                  ),
-                ],
-              ),
-              ChatMessage(
-                id: 'm2',
-                status: MessageStatus.read,
-                hasBeenSentByLoggedUser: false,
-                sendDateTime: DateTime(2023, 1, 5),
-                text: 'message 2',
-                images: const [],
-              ),
+              expectedMessages.first,
+              expectedMessages[1].copyWith(status: MessageStatus.read),
+              expectedMessages[2].copyWith(status: MessageStatus.read),
+              expectedMessages[3],
+              expectedMessages[4],
             ],
           ),
           ChatState(
             status: const CubitStatusComplete(),
             recipientFullName: '${recipient.name} ${recipient.surname}',
             messagesFromLatest: [
-              ChatMessage(
-                id: 'm2',
-                status: MessageStatus.read,
-                hasBeenSentByLoggedUser: false,
-                sendDateTime: DateTime(2023, 1, 5),
-                text: 'updated message 2',
-                images: const [],
-              ),
-              ChatMessage(
-                id: 'm1',
-                status: MessageStatus.read,
-                hasBeenSentByLoggedUser: true,
-                sendDateTime: DateTime(2023, 1, 2),
-                text: 'updated message 1',
-                images: [
-                  MessageImage(
-                    id: 'i1',
-                    messageId: 'm1',
-                    order: 1,
-                    bytes: Uint8List(1),
-                  ),
-                  MessageImage(
-                    id: 'i2',
-                    messageId: 'm2',
-                    order: 2,
-                    bytes: Uint8List(2),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          ChatState(
-            status: const CubitStatusComplete(),
-            recipientFullName: '${recipient.name} ${recipient.surname}',
-            messagesFromLatest: [
-              ChatMessage(
-                id: 'm2',
-                status: MessageStatus.read,
-                hasBeenSentByLoggedUser: false,
-                sendDateTime: DateTime(2023, 1, 5),
-                text: 'updated message 2',
-                images: const [],
-              ),
-              ChatMessage(
-                id: 'm1',
-                status: MessageStatus.read,
-                hasBeenSentByLoggedUser: true,
-                sendDateTime: DateTime(2023, 1, 2),
-                text: 'updated message 1',
-                images: const [],
-              ),
+              expectedMessages.first.copyWith(images: []),
+              expectedMessages[1].copyWith(status: MessageStatus.read),
+              expectedMessages[2].copyWith(status: MessageStatus.read),
+              expectedMessages[3],
+              expectedMessages[4],
             ],
           ),
         ],
@@ -271,6 +260,11 @@ void main() {
           ).called(1);
           verify(
             () => messageRepository.getMessagesForChat(chatId: 'c1'),
+          ).called(1);
+          verify(
+            () => messageRepository.markMessagesAsRead(
+              messageIds: ['m2', 'm3'],
+            ),
           ).called(1);
         },
       );
@@ -530,4 +524,30 @@ void main() {
       ),
     ).called(1),
   );
+}
+
+extension _ChatMessageExtension on ChatMessage {
+  ChatMessage copyWith({
+    MessageStatus? status,
+    List<MessageImage>? images,
+  }) =>
+      ChatMessage(
+        id: id,
+        status: status ?? this.status,
+        hasBeenSentByLoggedUser: hasBeenSentByLoggedUser,
+        sendDateTime: sendDateTime,
+        text: text,
+        images: images ?? this.images,
+      );
+}
+
+extension _MessageExtension on Message {
+  Message copyWithStatus(MessageStatus status) => Message(
+        id: id,
+        status: status,
+        chatId: chatId,
+        senderId: senderId,
+        dateTime: dateTime,
+        text: text,
+      );
 }

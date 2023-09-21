@@ -59,6 +59,9 @@ class ChatCubit extends CubitWithStatus<ChatState, dynamic, dynamic> {
     final String recipientFullName = await _loadRecipientFullName(loggedUserId);
     _chatMessagesListener ??= _messageRepository
         .getMessagesForChat(chatId: chatId)
+        .doOnData(
+          (messages) => _markUnreadMessagesAsRead(messages, loggedUserId),
+        )
         .switchMap(
           (List<Message> messages) => Rx.combineLatest(
             messages.map((msg) => _mapMessageToChatMessage(msg, loggedUserId)),
@@ -146,6 +149,23 @@ class ChatCubit extends CubitWithStatus<ChatState, dynamic, dynamic> {
         .whereNotNull()
         .first;
     return '${recipient.name} ${recipient.surname}';
+  }
+
+  Future<void> _markUnreadMessagesAsRead(
+    List<Message> messages,
+    String loggedUserId,
+  ) async {
+    final List<String> idsOfUnreadMessagesSentByInterlocutor = messages
+        .where(
+          (Message message) =>
+              message.status == MessageStatus.sent &&
+              message.senderId != loggedUserId,
+        )
+        .map((Message message) => message.id)
+        .toList();
+    await _messageRepository.markMessagesAsRead(
+      messageIds: idsOfUnreadMessagesSentByInterlocutor,
+    );
   }
 
   Stream<ChatMessage> _mapMessageToChatMessage(
