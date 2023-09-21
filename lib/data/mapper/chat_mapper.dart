@@ -6,7 +6,6 @@ Chat mapChatFromDto(ChatDto chatDto) => Chat(
       id: chatDto.id,
       user1Id: chatDto.user1Id,
       user2Id: chatDto.user2Id,
-      isUser1Typing: false,
-      isUser2Typing: false,
+      isUser1Typing: chatDto.isUser1Typing,
+      isUser2Typing: chatDto.isUser2Typing,
     );
-//TODO: Implement mapping for users typing status

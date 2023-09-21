@@ -7,6 +7,8 @@ void main() {
   const String id = 'c1';
   const String user1Id = 'u1';
   const String user2Id = 'u2';
+  const bool isUser1Typing = true;
+  const bool isUser2Typing = false;
 
   test(
     'map chat from dto, '
@@ -16,13 +18,15 @@ void main() {
         id: id,
         user1Id: user1Id,
         user2Id: user2Id,
+        isUser1Typing: isUser1Typing,
+        isUser2Typing: isUser2Typing,
       );
       const Chat expectedChat = Chat(
         id: id,
         user1Id: user1Id,
         user2Id: user2Id,
-        isUser1Typing: false,
-        isUser2Typing: false,
+        isUser1Typing: isUser1Typing,
+        isUser2Typing: isUser2Typing,
       );
 
       final Chat chat = mapChatFromDto(chatDto);

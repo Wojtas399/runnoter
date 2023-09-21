@@ -41,7 +41,13 @@ class FirebaseChatService {
       );
     } else {
       final chatRef = getChatsRef().doc();
-      final newChatDto = ChatDto(id: '', user1Id: user1Id, user2Id: user2Id);
+      final newChatDto = ChatDto(
+        id: '',
+        user1Id: user1Id,
+        user2Id: user2Id,
+        isUser1Typing: false,
+        isUser2Typing: false,
+      );
       await asyncOrSyncCall(() => chatRef.set(newChatDto));
       final snapshot = await chatRef.get();
       return snapshot.data();

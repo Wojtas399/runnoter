@@ -5,6 +5,8 @@ void main() {
   const String id = 'c1';
   const String user1Id = 'u1';
   const String user2Id = 'u2';
+  const bool isUser1Typing = false;
+  const bool isUser2Typing = true;
 
   test(
     'from json, '
@@ -13,11 +15,15 @@ void main() {
       final Map<String, dynamic> json = {
         'user1Id': user1Id,
         'user2Id': user2Id,
+        'isUser1Typing': isUser1Typing,
+        'isUser2Typing': isUser2Typing,
       };
       const ChatDto expectedChatDto = ChatDto(
         id: id,
         user1Id: user1Id,
         user2Id: user2Id,
+        isUser1Typing: isUser1Typing,
+        isUser2Typing: isUser2Typing,
       );
 
       final ChatDto chatDto = ChatDto.fromJson(chatId: id, json: json);
@@ -34,10 +40,14 @@ void main() {
         id: id,
         user1Id: user1Id,
         user2Id: user2Id,
+        isUser1Typing: isUser1Typing,
+        isUser2Typing: isUser2Typing,
       );
       final Map<String, dynamic> expectedJson = {
         'user1Id': user1Id,
         'user2Id': user2Id,
+        'isUser1Typing': isUser1Typing,
+        'isUser2Typing': isUser2Typing,
       };
 
       final Map<String, dynamic> json = chatDto.toJson();
