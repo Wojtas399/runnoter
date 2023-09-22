@@ -15,6 +15,6 @@ Chat createChat({
       user2Id: user2Id,
       isUser1Typing: isUser1Typing,
       isUser2Typing: isUser2Typing,
-      user1LastTypingDateTime: user2LastTypingDateTime ?? DateTime(2023),
+      user1LastTypingDateTime: user1LastTypingDateTime ?? DateTime(2023),
       user2LastTypingDateTime: user2LastTypingDateTime ?? DateTime(2023),
     );

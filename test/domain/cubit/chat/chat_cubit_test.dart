@@ -80,17 +80,20 @@ void main() {
   group(
     'initialize chat listener',
     () {
+      final DateTime now = DateTime(2023, 1, 1, 10, 30);
       final Chat chat = createChat(
         id: 'c1',
         user1Id: 'u2',
         user2Id: loggedUserId,
+        user1LastTypingDateTime: now.subtract(const Duration(seconds: 6)),
+        user2LastTypingDateTime: now.subtract(const Duration(seconds: 2)),
       );
       final Chat updatedChat = createChat(
         id: 'c1',
         user1Id: 'u2',
         user2Id: loggedUserId,
-        isUser1Typing: true,
-        isUser2Typing: false,
+        user1LastTypingDateTime: now.subtract(const Duration(seconds: 2)),
+        user2LastTypingDateTime: now.subtract(const Duration(seconds: 6)),
       );
       final Person recipient = createPerson(
         id: 'u2',
@@ -100,19 +103,25 @@ void main() {
       final StreamController<Chat> chat$ = StreamController()..add(chat);
 
       blocTest(
-        'should set listener of chat and '
-        'should load recipient full name and '
-        'should check if recipient is typing',
+        'Should set listener of chat. '
+        'Should load recipient full name. '
+        'Should check if recipient is typing (if last typing date time is '
+        'within 5 seconds of now date should set isRecipientTyping param '
+        'to true else to false).'
+        'If chat is not updated for 5 seconds it should automatically set '
+        'isRecipientTyping param to false.',
         build: () => createCubit(),
         setUp: () {
           authService.mockGetLoggedUserId(userId: loggedUserId);
           chatRepository.mockGetChatById(chatStream: chat$.stream);
+          dateService.mockGetNow(now: now);
           personRepository.mockGetPersonById(person: recipient);
         },
         act: (cubit) {
           cubit.initializeChatListener();
           chat$.add(updatedChat);
         },
+        wait: const Duration(seconds: 6),
         expect: () => [
           const ChatState(
             status: CubitStatusComplete(),
@@ -123,6 +132,11 @@ void main() {
             status: CubitStatusComplete(),
             recipientFullName: 'name surname',
             isRecipientTyping: true,
+          ),
+          const ChatState(
+            status: CubitStatusComplete(),
+            recipientFullName: 'name surname',
+            isRecipientTyping: false,
           ),
         ],
         verify: (_) => verify(
