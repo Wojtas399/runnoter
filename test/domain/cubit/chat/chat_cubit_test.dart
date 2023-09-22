@@ -231,10 +231,9 @@ void main() {
           BehaviorSubject.seeded(m1MessageImages);
 
       blocTest(
-        'should set listener of messages with images, '
-        'should call message repository method to mark messages sent by recipient as read, '
-        'should sort messages descending by date and '
-        'should sort images ascending by order',
+        'Should set listener of messages with images. '
+        'Should call message repository method to mark messages sent by recipient as read. '
+        'Should sort messages descending by date and images ascending by order.',
         build: () => createCubit(),
         setUp: () {
           authService.mockGetLoggedUserId(userId: loggedUserId);
@@ -298,35 +297,36 @@ void main() {
 
   blocTest(
     'message changed, '
-    'should update message to send in state. '
-    'If this method is called first time, it should call chat repository method '
-    'to update chat with logged user typing status set as true. '
-    'After some time of inactivity it should call chat repository method '
-    'to update chat with logged user typing status set as false',
+    'Should update message to send in state. '
+    'Should set interval to 2s to call chat repository method to update chat with '
+    'updated logged user typing date time.'
+    'After some time of inactivity should cancel interval.',
     build: () => createCubit(),
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
       chatRepository.mockGetChatById(
         chat: createChat(user1Id: 'u2', user2Id: loggedUserId),
       );
+      dateService.mockGetNow(now: DateTime(2023));
       chatRepository.mockUpdateChat();
     },
-    act: (cubit) {
+    act: (cubit) async {
       cubit.messageChanged('msg');
+      await Future.delayed(const Duration(seconds: 2));
       cubit.messageChanged('message');
     },
+    wait: const Duration(seconds: 5),
     expect: () => [
       const ChatState(status: CubitStatusComplete(), messageToSend: 'msg'),
       const ChatState(status: CubitStatusComplete(), messageToSend: 'message'),
     ],
-    verify: (_) async {
+    verify: (_) {
       verify(
-        () => chatRepository.updateChat(chatId: chatId, isUser2Typing: true),
-      ).called(1);
-      await Future.delayed(const Duration(seconds: 8));
-      verify(
-        () => chatRepository.updateChat(chatId: chatId, isUser2Typing: false),
-      ).called(1);
+        () => chatRepository.updateChat(
+          chatId: chatId,
+          user2LastTypingDateTime: DateTime(2023),
+        ),
+      ).called(3);
     },
   );
 
@@ -412,13 +412,12 @@ void main() {
   blocTest(
     'submit message, '
     'there are no images to send, '
-    'should call chat repository method update chat with logged user typing status set as false and '
-    'should call message repository method to add new message with current dateTime and sent status and '
-    'should set messageToSend as null',
-    build: () => createCubit(
-      messageToSend: 'message',
-      imagesToSend: [],
-    ),
+    'Should call chat repository method to update chat with logged user typing '
+    'dateTime downgraded by 5 min. '
+    'Should call message repository method to add new message with current '
+    'dateTime and sent status.'
+    'Should set messageToSend as null.',
+    build: () => createCubit(messageToSend: 'message', imagesToSend: []),
     setUp: () {
       connectivityService.mockHasDeviceInternetConnection(hasConnection: true);
       authService.mockGetLoggedUserId(userId: loggedUserId);
@@ -444,7 +443,10 @@ void main() {
     ],
     verify: (_) {
       verify(
-        () => chatRepository.updateChat(chatId: chatId, isUser1Typing: false),
+        () => chatRepository.updateChat(
+          chatId: chatId,
+          user1LastTypingDateTime: DateTime(2023, 1, 1, 12, 25),
+        ),
       ).called(1);
       verify(
         () => messageRepository.addMessage(
@@ -460,10 +462,12 @@ void main() {
 
   blocTest(
     'submit message, '
-    'should call chat repository method update chat with logged user typing status set as false and '
-    'should call message repository method to add new message with current dateTime and sent status and '
-    'should call message image repository to add images to message and '
-    'should set messageToSend as null and imagesToSend as empty array',
+    'Should call chat repository method to update chat with logged user typing '
+    'dateTime downgraded by 5 min. '
+    'Should call message repository method to add new message with current '
+    'dateTime and sent status. '
+    'Should call message image repository to add images to message. '
+    'Should set messageToSend as null and imagesToSend as empty array.',
     build: () => createCubit(
       messageToSend: 'message',
       imagesToSend: [Uint8List(1), Uint8List(2)],
@@ -494,7 +498,10 @@ void main() {
     ],
     verify: (_) {
       verify(
-        () => chatRepository.updateChat(chatId: chatId, isUser1Typing: false),
+        () => chatRepository.updateChat(
+          chatId: chatId,
+          user1LastTypingDateTime: DateTime(2023, 1, 1, 12, 25),
+        ),
       ).called(1);
       verify(
         () => messageRepository.addMessage(

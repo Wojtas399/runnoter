@@ -34,7 +34,8 @@ class ChatCubit extends CubitWithStatus<ChatState, dynamic, dynamic> {
   final ConnectivityService _connectivityService;
   StreamSubscription<Chat?>? _chatListener;
   StreamSubscription<List<ChatMessage>>? _chatMessagesListener;
-  Timer? _typingTimer;
+  Timer? _typingInterval;
+  Timer? _typingInactivityTimer;
 
   ChatCubit({
     required this.chatId,
@@ -49,10 +50,11 @@ class ChatCubit extends CubitWithStatus<ChatState, dynamic, dynamic> {
         super(initialState);
 
   @override
-  Future<void> close() async {
-    await _stopTyping();
+  Future<void> close() {
     _chatListener?.cancel();
     _chatMessagesListener?.cancel();
+    _typingInterval?.cancel();
+    _typingInactivityTimer?.cancel();
     return super.close();
   }
 
@@ -98,9 +100,19 @@ class ChatCubit extends CubitWithStatus<ChatState, dynamic, dynamic> {
 
   void messageChanged(String message) {
     emit(state.copyWith(messageToSend: message));
-    if (_typingTimer == null) _startTyping();
-    _typingTimer?.cancel();
-    _typingTimer = Timer(const Duration(seconds: 3), _stopTyping);
+    _typingInterval ??= Timer.periodic(
+      const Duration(seconds: 2),
+      (_) => _updateLoggedUserTypingDateTime(_dateService.getNow()),
+    );
+    _typingInactivityTimer?.cancel();
+    _typingInactivityTimer = Timer(
+      const Duration(seconds: 4),
+      () {
+        _typingInterval?.cancel();
+        _typingInterval = null;
+        _typingInactivityTimer = null;
+      },
+    );
   }
 
   void addImagesToSend(List<Uint8List> newImagesToSend) {
@@ -129,7 +141,9 @@ class ChatCubit extends CubitWithStatus<ChatState, dynamic, dynamic> {
     }
     final DateTime now = _dateService.getNow();
     emitLoadingStatus();
-    await _stopTyping();
+    final DateTime dateTime5minAgo =
+        _dateService.getNow().subtract(const Duration(minutes: 5));
+    await _updateLoggedUserTypingDateTime(dateTime5minAgo);
     final String? messageId = await _messageRepository.addMessage(
       status: MessageStatus.sent,
       chatId: chatId,
@@ -212,29 +226,15 @@ class ChatCubit extends CubitWithStatus<ChatState, dynamic, dynamic> {
     return sortedChatMessages;
   }
 
-  Future<void> _startTyping() async {
+  Future<void> _updateLoggedUserTypingDateTime(DateTime dateTime) async {
     final String? loggedUserId = await _authService.loggedUserId$.first;
     if (loggedUserId == null) return;
     final Chat? chat = await _chatRepository.getChatById(chatId: chatId).first;
     if (chat == null) return;
     await _chatRepository.updateChat(
       chatId: chatId,
-      isUser1Typing: chat.user1Id == loggedUserId ? true : null,
-      isUser2Typing: chat.user2Id == loggedUserId ? true : null,
+      user1LastTypingDateTime: chat.user1Id == loggedUserId ? dateTime : null,
+      user2LastTypingDateTime: chat.user2Id == loggedUserId ? dateTime : null,
     );
-  }
-
-  Future<void> _stopTyping() async {
-    final String? loggedUserId = await _authService.loggedUserId$.first;
-    if (loggedUserId == null) return;
-    final Chat? chat = await _chatRepository.getChatById(chatId: chatId).first;
-    if (chat == null) return;
-    await _chatRepository.updateChat(
-      chatId: chatId,
-      isUser1Typing: chat.user1Id == loggedUserId ? false : null,
-      isUser2Typing: chat.user2Id == loggedUserId ? false : null,
-    );
-    _typingTimer?.cancel();
-    _typingTimer = null;
   }
 }

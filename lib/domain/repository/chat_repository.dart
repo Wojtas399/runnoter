@@ -17,5 +17,7 @@ abstract interface class ChatRepository {
     required String chatId,
     bool? isUser1Typing,
     bool? isUser2Typing,
+    DateTime? user1LastTypingDateTime,
+    DateTime? user2LastTypingDateTime,
   });
 }
