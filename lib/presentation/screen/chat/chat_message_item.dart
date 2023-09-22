@@ -14,6 +14,7 @@ import '../../dialog/chat_image_preview/chat_image_preview_dialog.dart';
 import '../../extension/widgets_list_extensions.dart';
 import '../../formatter/date_formatter.dart';
 import '../../service/dialog_service.dart';
+import 'chat_message_card.dart';
 
 class ChatMessageItem extends StatelessWidget {
   final bool isNew;
@@ -29,9 +30,6 @@ class ChatMessageItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const Radius borderRadius = Radius.circular(16);
-    final ColorScheme colorScheme = Theme.of(context).colorScheme;
-
     return message.text?.isNotEmpty == true || message.images.isNotEmpty
         ? Row(
             mainAxisAlignment: message.hasBeenSentByLoggedUser
@@ -41,23 +39,9 @@ class ChatMessageItem extends StatelessWidget {
               _AnimatedBody(
                 shouldRunAnimation: isNew,
                 hasMessageBeenSentByLoggedUser: message.hasBeenSentByLoggedUser,
-                child: Card(
-                  clipBehavior: Clip.hardEdge,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.only(
-                      topLeft: borderRadius,
-                      topRight: borderRadius,
-                      bottomLeft: message.hasBeenSentByLoggedUser
-                          ? borderRadius
-                          : Radius.zero,
-                      bottomRight: message.hasBeenSentByLoggedUser
-                          ? Radius.zero
-                          : borderRadius,
-                    ),
-                  ),
-                  color: message.hasBeenSentByLoggedUser
-                      ? colorScheme.primary
-                      : colorScheme.surfaceVariant,
+                child: ChatMessageCard(
+                  hasMessageBeenSentByLoggedUser:
+                      message.hasBeenSentByLoggedUser,
                   child: _MessageContent(maxWidth: maxWidth, message: message),
                 ),
               ),
