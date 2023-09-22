@@ -26,4 +26,14 @@ class MockChatRepository extends Mock implements ChatRepository {
       ),
     ).thenAnswer((_) => Future.value(chatId));
   }
+
+  void mockUpdateChat() {
+    when(
+      () => updateChat(
+        chatId: any(named: 'chatId'),
+        isUser1Typing: any(named: 'isUser1Typing'),
+        isUser2Typing: any(named: 'isUser2Typing'),
+      ),
+    ).thenAnswer((_) => Future.value());
+  }
 }

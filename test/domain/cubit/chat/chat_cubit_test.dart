@@ -298,12 +298,36 @@ void main() {
 
   blocTest(
     'message changed, '
-    'should update message to send in state',
+    'should update message to send in state. '
+    'If this method is called first time, it should call chat repository method '
+    'to update chat with logged user typing status set as true. '
+    'After some time of inactivity it should call chat repository method '
+    'to update chat with logged user typing status set as false',
     build: () => createCubit(),
-    act: (cubit) => cubit.messageChanged('message'),
+    setUp: () {
+      authService.mockGetLoggedUserId(userId: loggedUserId);
+      chatRepository.mockGetChatById(
+        chat: createChat(user1Id: 'u2', user2Id: loggedUserId),
+      );
+      chatRepository.mockUpdateChat();
+    },
+    act: (cubit) {
+      cubit.messageChanged('msg');
+      cubit.messageChanged('message');
+    },
     expect: () => [
+      const ChatState(status: CubitStatusComplete(), messageToSend: 'msg'),
       const ChatState(status: CubitStatusComplete(), messageToSend: 'message'),
     ],
+    verify: (_) async {
+      verify(
+        () => chatRepository.updateChat(chatId: chatId, isUser2Typing: true),
+      ).called(1);
+      await Future.delayed(const Duration(seconds: 8));
+      verify(
+        () => chatRepository.updateChat(chatId: chatId, isUser2Typing: false),
+      ).called(1);
+    },
   );
 
   blocTest(
@@ -388,6 +412,7 @@ void main() {
   blocTest(
     'submit message, '
     'there are no images to send, '
+    'should call chat repository method update chat with logged user typing status set as false and '
     'should call message repository method to add new message with current dateTime and sent status and '
     'should set messageToSend as null',
     build: () => createCubit(
@@ -398,6 +423,10 @@ void main() {
       connectivityService.mockHasDeviceInternetConnection(hasConnection: true);
       authService.mockGetLoggedUserId(userId: loggedUserId);
       dateService.mockGetNow(now: DateTime(2023, 1, 1, 12, 30));
+      chatRepository.mockGetChatById(
+        chat: createChat(user1Id: loggedUserId, user2Id: 'u2'),
+      );
+      chatRepository.mockUpdateChat();
       messageRepository.mockAddMessage(addedMessageId: 'm1');
     },
     act: (cubit) => cubit.submitMessage(),
@@ -413,19 +442,25 @@ void main() {
         imagesToSend: [],
       ),
     ],
-    verify: (_) => verify(
-      () => messageRepository.addMessage(
-        status: MessageStatus.sent,
-        chatId: chatId,
-        senderId: loggedUserId,
-        dateTime: DateTime(2023, 1, 1, 12, 30),
-        text: 'message',
-      ),
-    ).called(1),
+    verify: (_) {
+      verify(
+        () => chatRepository.updateChat(chatId: chatId, isUser1Typing: false),
+      ).called(1);
+      verify(
+        () => messageRepository.addMessage(
+          status: MessageStatus.sent,
+          chatId: chatId,
+          senderId: loggedUserId,
+          dateTime: DateTime(2023, 1, 1, 12, 30),
+          text: 'message',
+        ),
+      ).called(1);
+    },
   );
 
   blocTest(
     'submit message, '
+    'should call chat repository method update chat with logged user typing status set as false and '
     'should call message repository method to add new message with current dateTime and sent status and '
     'should call message image repository to add images to message and '
     'should set messageToSend as null and imagesToSend as empty array',
@@ -437,6 +472,10 @@ void main() {
       connectivityService.mockHasDeviceInternetConnection(hasConnection: true);
       authService.mockGetLoggedUserId(userId: loggedUserId);
       dateService.mockGetNow(now: DateTime(2023, 1, 1, 12, 30));
+      chatRepository.mockGetChatById(
+        chat: createChat(user1Id: loggedUserId, user2Id: 'u2'),
+      );
+      chatRepository.mockUpdateChat();
       messageRepository.mockAddMessage(addedMessageId: 'm1');
       messageImageRepository.mockAddImagesInOrderToMessage();
     },
@@ -454,6 +493,9 @@ void main() {
       ),
     ],
     verify: (_) {
+      verify(
+        () => chatRepository.updateChat(chatId: chatId, isUser1Typing: false),
+      ).called(1);
       verify(
         () => messageRepository.addMessage(
           status: MessageStatus.sent,
