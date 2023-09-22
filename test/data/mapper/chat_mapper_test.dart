@@ -21,12 +21,15 @@ void main() {
         isUser1Typing: isUser1Typing,
         isUser2Typing: isUser2Typing,
       );
-      const Chat expectedChat = Chat(
+      final Chat expectedChat = Chat(
         id: id,
         user1Id: user1Id,
         user2Id: user2Id,
         isUser1Typing: isUser1Typing,
         isUser2Typing: isUser2Typing,
+        user1LastTypingDateTime: DateTime(2023),
+        user2LastTypingDateTime: DateTime(2023),
+        //TODO: Implement last typing date times
       );
 
       final Chat chat = mapChatFromDto(chatDto);

@@ -6,6 +6,8 @@ Chat createChat({
   String user2Id = 'u2',
   bool isUser1Typing = false,
   bool isUser2Typing = false,
+  DateTime? user1LastTypingDateTime,
+  DateTime? user2LastTypingDateTime,
 }) =>
     Chat(
       id: id,
@@ -13,4 +15,6 @@ Chat createChat({
       user2Id: user2Id,
       isUser1Typing: isUser1Typing,
       isUser2Typing: isUser2Typing,
+      user1LastTypingDateTime: user2LastTypingDateTime ?? DateTime(2023),
+      user2LastTypingDateTime: user2LastTypingDateTime ?? DateTime(2023),
     );
