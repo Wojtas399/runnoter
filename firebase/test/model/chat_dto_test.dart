@@ -55,4 +55,38 @@ void main() {
       expect(json, expectedJson);
     },
   );
+
+  test(
+    'create json to update, '
+    'isUser1Typing is null, '
+    'should not include isUser1Typing in json',
+    () {
+      final Map<String, dynamic> expectedJson = {
+        'isUser2Typing': isUser2Typing,
+      };
+
+      final Map<String, dynamic> json = createChatJsonToUpdate(
+        isUser2Typing: isUser2Typing,
+      );
+
+      expect(json, expectedJson);
+    },
+  );
+
+  test(
+    'create json to update, '
+    'isUser2Typing is null, '
+    'should not include isUser2Typing in json',
+    () {
+      final Map<String, dynamic> expectedJson = {
+        'isUser1Typing': isUser1Typing,
+      };
+
+      final Map<String, dynamic> json = createChatJsonToUpdate(
+        isUser1Typing: isUser1Typing,
+      );
+
+      expect(json, expectedJson);
+    },
+  );
 }

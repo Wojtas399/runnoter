@@ -27,6 +27,16 @@ class MockFirebaseChatService extends Mock implements FirebaseChatService {
     }
   }
 
+  void mockUpdateChat({ChatDto? updatedChatDto}) {
+    when(
+      () => updateChat(
+        chatId: any(named: 'chatId'),
+        isUser1Typing: any(named: 'isUser1Typing'),
+        isUser2Typing: any(named: 'isUser2Typing'),
+      ),
+    ).thenAnswer((_) => Future.value(updatedChatDto));
+  }
+
   Future<ChatDto?> _addNewChatCall() => addNewChat(
         user1Id: any(named: 'user1Id'),
         user2Id: any(named: 'user2Id'),

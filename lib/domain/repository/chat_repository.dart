@@ -12,4 +12,10 @@ abstract interface class ChatRepository {
     required String user1Id,
     required String user2Id,
   });
+
+  Future<void> updateChat({
+    required String chatId,
+    bool? isUser1Typing,
+    bool? isUser2Typing,
+  });
 }

@@ -63,6 +63,23 @@ class ChatRepositoryImpl extends StateRepository<Chat>
     }
   }
 
+  @override
+  Future<void> updateChat({
+    required String chatId,
+    bool? isUser1Typing,
+    bool? isUser2Typing,
+  }) async {
+    final ChatDto? updatedChatDto = await _dbChatService.updateChat(
+      chatId: chatId,
+      isUser1Typing: isUser1Typing,
+      isUser2Typing: isUser2Typing,
+    );
+    if (updatedChatDto != null) {
+      final Chat chat = mapChatFromDto(updatedChatDto);
+      updateEntity(chat);
+    }
+  }
+
   void _manageChatChanges(Chat? chat) {
     if (chat == null) return;
     if (doesEntityNotExistInState(chat.id)) {

@@ -53,4 +53,19 @@ class FirebaseChatService {
       return snapshot.data();
     }
   }
+
+  Future<ChatDto?> updateChat({
+    required String chatId,
+    bool? isUser1Typing,
+    bool? isUser2Typing,
+  }) async {
+    final docRef = getChatsRef().doc(chatId);
+    final jsonToUpdate = createChatJsonToUpdate(
+      isUser1Typing: isUser1Typing,
+      isUser2Typing: isUser2Typing,
+    );
+    await docRef.update(jsonToUpdate);
+    final docSnapshot = await docRef.get();
+    return docSnapshot.data();
+  }
 }

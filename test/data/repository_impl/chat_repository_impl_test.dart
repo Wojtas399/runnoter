@@ -210,4 +210,49 @@ void main() {
       ).called(1);
     },
   );
+
+  test(
+    'update chat, '
+    'should update chat in db and in repo',
+    () async {
+      const String chatId = 'c3';
+      const bool isUser1Typing = true;
+      const bool isUser2Typing = false;
+      final List<Chat> existingChats = [
+        createChat(id: 'c1', isUser1Typing: false, isUser2Typing: true),
+        createChat(id: 'c2', isUser1Typing: true, isUser2Typing: false),
+        createChat(id: chatId, isUser1Typing: false, isUser2Typing: false),
+      ];
+      final ChatDto updatedChatDto = createChatDto(
+        id: chatId,
+        isUser1Typing: isUser1Typing,
+        isUser2Typing: isUser2Typing,
+      );
+      final Chat updatedChat = createChat(
+        id: chatId,
+        isUser1Typing: isUser1Typing,
+        isUser2Typing: isUser2Typing,
+      );
+      dbChatService.mockUpdateChat(updatedChatDto: updatedChatDto);
+      repository = ChatRepositoryImpl(initialData: existingChats);
+
+      await repository.updateChat(
+        chatId: chatId,
+        isUser1Typing: isUser1Typing,
+        isUser2Typing: isUser2Typing,
+      );
+
+      expect(
+        repository.dataStream$,
+        emits([existingChats[0], existingChats[1], updatedChat]),
+      );
+      verify(
+        () => dbChatService.updateChat(
+          chatId: chatId,
+          isUser1Typing: isUser1Typing,
+          isUser2Typing: isUser2Typing,
+        ),
+      ).called(1);
+    },
+  );
 }

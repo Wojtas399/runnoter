@@ -37,6 +37,15 @@ class ChatDto extends Equatable {
       };
 }
 
+Map<String, dynamic> createChatJsonToUpdate({
+  bool? isUser1Typing,
+  bool? isUser2Typing,
+}) =>
+    {
+      if (isUser1Typing != null) _isUser1TypingField: isUser1Typing,
+      if (isUser2Typing != null) _isUser2TypingField: isUser2Typing,
+    };
+
 const String user1IdField = 'user1Id';
 const String user2IdField = 'user2Id';
 const String _isUser1TypingField = 'isUser1Typing';
