@@ -19,22 +19,26 @@ class ChatDto extends Equatable {
     this.user2LastTypingDateTime,
   }) : assert(user1Id != user2Id);
 
-  ChatDto.fromJson({
+  factory ChatDto.fromJson({
     required String chatId,
     required Map<String, dynamic>? json,
-  }) : this(
-          id: chatId,
-          user1Id: json?[user1IdField],
-          user2Id: json?[user2IdField],
-          isUser1Typing: json?[_isUser1TypingField],
-          isUser2Typing: json?[_isUser2TypingField],
-          user1LastTypingDateTime: DateTime.fromMillisecondsSinceEpoch(
-            json?[_user1LastTypingTimestampField],
-          ),
-          user2LastTypingDateTime: DateTime.fromMillisecondsSinceEpoch(
-            json?[_user2LastTypingTimestampField],
-          ),
-        );
+  }) {
+    final int? user1LastTypingTimestamp = json?[_user1LastTypingTimestampField];
+    final int? user2LastTypingTimestamp = json?[_user2LastTypingTimestampField];
+    return ChatDto(
+      id: chatId,
+      user1Id: json?[user1IdField],
+      user2Id: json?[user2IdField],
+      isUser1Typing: json?[_isUser1TypingField],
+      isUser2Typing: json?[_isUser2TypingField],
+      user1LastTypingDateTime: user1LastTypingTimestamp != null
+          ? DateTime.fromMillisecondsSinceEpoch(user1LastTypingTimestamp)
+          : null,
+      user2LastTypingDateTime: user2LastTypingTimestamp != null
+          ? DateTime.fromMillisecondsSinceEpoch(user2LastTypingTimestamp)
+          : null,
+    );
+  }
 
   @override
   List<Object?> get props => [

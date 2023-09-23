@@ -8,7 +8,6 @@ Chat mapChatFromDto(ChatDto chatDto) => Chat(
       user2Id: chatDto.user2Id,
       isUser1Typing: chatDto.isUser1Typing,
       isUser2Typing: chatDto.isUser2Typing,
-      user1LastTypingDateTime: DateTime(2023),
-      user2LastTypingDateTime: DateTime(2023),
+      user1LastTypingDateTime: chatDto.user1LastTypingDateTime,
+      user2LastTypingDateTime: chatDto.user2LastTypingDateTime,
     );
-//TODO: Implement last typing date times

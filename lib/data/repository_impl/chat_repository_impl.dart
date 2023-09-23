@@ -75,6 +75,8 @@ class ChatRepositoryImpl extends StateRepository<Chat>
       chatId: chatId,
       isUser1Typing: isUser1Typing,
       isUser2Typing: isUser2Typing,
+      user1LastTypingDateTime: user1LastTypingDateTime,
+      user2LastTypingDateTime: user2LastTypingDateTime,
     );
     if (updatedChatDto != null) {
       final Chat chat = mapChatFromDto(updatedChatDto);

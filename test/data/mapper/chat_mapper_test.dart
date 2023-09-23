@@ -9,17 +9,21 @@ void main() {
   const String user2Id = 'u2';
   const bool isUser1Typing = true;
   const bool isUser2Typing = false;
+  final DateTime user1LastTypingDateTime = DateTime(2023, 1, 10);
+  final DateTime user2LastTypingDateTime = DateTime(2023, 1, 05);
 
   test(
     'map chat from dto, '
     'should map chat dto model to domain chat model',
     () {
-      const ChatDto chatDto = ChatDto(
+      final ChatDto chatDto = ChatDto(
         id: id,
         user1Id: user1Id,
         user2Id: user2Id,
         isUser1Typing: isUser1Typing,
         isUser2Typing: isUser2Typing,
+        user1LastTypingDateTime: user1LastTypingDateTime,
+        user2LastTypingDateTime: user2LastTypingDateTime,
       );
       final Chat expectedChat = Chat(
         id: id,
@@ -27,9 +31,8 @@ void main() {
         user2Id: user2Id,
         isUser1Typing: isUser1Typing,
         isUser2Typing: isUser2Typing,
-        user1LastTypingDateTime: DateTime(2023),
-        user2LastTypingDateTime: DateTime(2023),
-        //TODO: Implement last typing date times
+        user1LastTypingDateTime: user1LastTypingDateTime,
+        user2LastTypingDateTime: user2LastTypingDateTime,
       );
 
       final Chat chat = mapChatFromDto(chatDto);

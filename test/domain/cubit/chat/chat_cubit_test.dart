@@ -340,7 +340,7 @@ void main() {
           chatId: chatId,
           user2LastTypingDateTime: DateTime(2023),
         ),
-      ).called(3);
+      ).called(4);
     },
   );
 

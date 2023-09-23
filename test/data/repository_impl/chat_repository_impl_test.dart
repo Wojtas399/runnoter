@@ -218,6 +218,8 @@ void main() {
       const String chatId = 'c3';
       const bool isUser1Typing = true;
       const bool isUser2Typing = false;
+      final DateTime user1LastTypingDateTime = DateTime(2023, 1, 10);
+      final DateTime user2LastTypingDateTime = DateTime(2023, 1, 05);
       final List<Chat> existingChats = [
         createChat(id: 'c1', isUser1Typing: false, isUser2Typing: true),
         createChat(id: 'c2', isUser1Typing: true, isUser2Typing: false),
@@ -227,11 +229,15 @@ void main() {
         id: chatId,
         isUser1Typing: isUser1Typing,
         isUser2Typing: isUser2Typing,
+        user1LastTypingDateTime: user1LastTypingDateTime,
+        user2LastTypingDateTime: user2LastTypingDateTime,
       );
       final Chat updatedChat = createChat(
         id: chatId,
         isUser1Typing: isUser1Typing,
         isUser2Typing: isUser2Typing,
+        user1LastTypingDateTime: user1LastTypingDateTime,
+        user2LastTypingDateTime: user2LastTypingDateTime,
       );
       dbChatService.mockUpdateChat(updatedChatDto: updatedChatDto);
       repository = ChatRepositoryImpl(initialData: existingChats);
@@ -240,6 +246,8 @@ void main() {
         chatId: chatId,
         isUser1Typing: isUser1Typing,
         isUser2Typing: isUser2Typing,
+        user1LastTypingDateTime: user1LastTypingDateTime,
+        user2LastTypingDateTime: user2LastTypingDateTime,
       );
 
       expect(
@@ -251,6 +259,8 @@ void main() {
           chatId: chatId,
           isUser1Typing: isUser1Typing,
           isUser2Typing: isUser2Typing,
+          user1LastTypingDateTime: user1LastTypingDateTime,
+          user2LastTypingDateTime: user2LastTypingDateTime,
         ),
       ).called(1);
     },

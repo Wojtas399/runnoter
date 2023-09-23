@@ -104,10 +104,13 @@ class ChatCubit extends CubitWithStatus<ChatState, dynamic, dynamic> {
 
   void messageChanged(String message) {
     emit(state.copyWith(messageToSend: message));
-    _typingInterval ??= Timer.periodic(
-      const Duration(seconds: 2),
-      (_) => _updateLoggedUserTypingDateTime(_dateService.getNow()),
-    );
+    if (_typingInterval == null) {
+      _updateLoggedUserTypingDateTime(_dateService.getNow());
+      _typingInterval = Timer.periodic(
+        const Duration(seconds: 2),
+        (_) => _updateLoggedUserTypingDateTime(_dateService.getNow()),
+      );
+    }
     _typingInactivityTimer?.cancel();
     _typingInactivityTimer = Timer(
       const Duration(seconds: 4),
