@@ -33,6 +33,8 @@ class MockFirebaseChatService extends Mock implements FirebaseChatService {
         chatId: any(named: 'chatId'),
         isUser1Typing: any(named: 'isUser1Typing'),
         isUser2Typing: any(named: 'isUser2Typing'),
+        user1LastTypingDateTime: any(named: 'user1LastTypingDateTime'),
+        user2LastTypingDateTime: any(named: 'user2LastTypingDateTime'),
       ),
     ).thenAnswer((_) => Future.value(updatedChatDto));
   }

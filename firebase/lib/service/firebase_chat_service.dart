@@ -58,11 +58,15 @@ class FirebaseChatService {
     required String chatId,
     bool? isUser1Typing,
     bool? isUser2Typing,
+    DateTime? user1LastTypingDateTime,
+    DateTime? user2LastTypingDateTime,
   }) async {
     final docRef = getChatsRef().doc(chatId);
     final jsonToUpdate = createChatJsonToUpdate(
       isUser1Typing: isUser1Typing,
       isUser2Typing: isUser2Typing,
+      user1LastTypingDateTime: user1LastTypingDateTime,
+      user2LastTypingDateTime: user2LastTypingDateTime,
     );
     await docRef.update(jsonToUpdate);
     final docSnapshot = await docRef.get();
