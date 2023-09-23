@@ -41,13 +41,7 @@ class FirebaseChatService {
       );
     } else {
       final chatRef = getChatsRef().doc();
-      final newChatDto = ChatDto(
-        id: '',
-        user1Id: user1Id,
-        user2Id: user2Id,
-        isUser1Typing: false,
-        isUser2Typing: false,
-      );
+      final newChatDto = ChatDto(id: '', user1Id: user1Id, user2Id: user2Id);
       await asyncOrSyncCall(() => chatRef.set(newChatDto));
       final snapshot = await chatRef.get();
       return snapshot.data();
@@ -56,15 +50,11 @@ class FirebaseChatService {
 
   Future<ChatDto?> updateChat({
     required String chatId,
-    bool? isUser1Typing,
-    bool? isUser2Typing,
     DateTime? user1LastTypingDateTime,
     DateTime? user2LastTypingDateTime,
   }) async {
     final docRef = getChatsRef().doc(chatId);
     final jsonToUpdate = createChatJsonToUpdate(
-      isUser1Typing: isUser1Typing,
-      isUser2Typing: isUser2Typing,
       user1LastTypingDateTime: user1LastTypingDateTime,
       user2LastTypingDateTime: user2LastTypingDateTime,
     );

@@ -15,8 +15,6 @@ abstract interface class ChatRepository {
 
   Future<void> updateChat({
     required String chatId,
-    bool? isUser1Typing,
-    bool? isUser2Typing,
     DateTime? user1LastTypingDateTime,
     DateTime? user2LastTypingDateTime,
   });

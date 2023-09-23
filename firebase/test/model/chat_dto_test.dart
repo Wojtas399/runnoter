@@ -5,8 +5,6 @@ void main() {
   const String id = 'c1';
   const String user1Id = 'u1';
   const String user2Id = 'u2';
-  const bool isUser1Typing = false;
-  const bool isUser2Typing = true;
   final DateTime user1LastTypingDateTime = DateTime(2023, 1, 10);
   final DateTime user2LastTypingDateTime = DateTime(2023, 1, 8);
   final int user1LastTypingTimestamp =
@@ -21,8 +19,6 @@ void main() {
       final Map<String, dynamic> json = {
         'user1Id': user1Id,
         'user2Id': user2Id,
-        'isUser1Typing': isUser1Typing,
-        'isUser2Typing': isUser2Typing,
         'user1LastTypingTimestamp': user1LastTypingTimestamp,
         'user2LastTypingTimestamp': user2LastTypingTimestamp,
       };
@@ -30,8 +26,6 @@ void main() {
         id: id,
         user1Id: user1Id,
         user2Id: user2Id,
-        isUser1Typing: isUser1Typing,
-        isUser2Typing: isUser2Typing,
         user1LastTypingDateTime: user1LastTypingDateTime,
         user2LastTypingDateTime: user2LastTypingDateTime,
       );
@@ -50,16 +44,12 @@ void main() {
         id: id,
         user1Id: user1Id,
         user2Id: user2Id,
-        isUser1Typing: isUser1Typing,
-        isUser2Typing: isUser2Typing,
         user1LastTypingDateTime: user1LastTypingDateTime,
         user2LastTypingDateTime: user2LastTypingDateTime,
       );
       final Map<String, dynamic> expectedJson = {
         'user1Id': user1Id,
         'user2Id': user2Id,
-        'isUser1Typing': isUser1Typing,
-        'isUser2Typing': isUser2Typing,
         'user1LastTypingTimestamp': user1LastTypingTimestamp,
         'user2LastTypingTimestamp': user2LastTypingTimestamp,
       };
@@ -72,60 +62,14 @@ void main() {
 
   test(
     'create json to update, '
-    'isUser1Typing is null, '
-    'should not include isUser1Typing in json',
-    () {
-      final Map<String, dynamic> expectedJson = {
-        'isUser2Typing': isUser2Typing,
-        'user1LastTypingTimestamp': user1LastTypingTimestamp,
-        'user2LastTypingTimestamp': user2LastTypingTimestamp,
-      };
-
-      final Map<String, dynamic> json = createChatJsonToUpdate(
-        isUser2Typing: isUser2Typing,
-        user1LastTypingDateTime: user1LastTypingDateTime,
-        user2LastTypingDateTime: user2LastTypingDateTime,
-      );
-
-      expect(json, expectedJson);
-    },
-  );
-
-  test(
-    'create json to update, '
-    'isUser2Typing is null, '
-    'should not include isUser2Typing in json',
-    () {
-      final Map<String, dynamic> expectedJson = {
-        'isUser1Typing': isUser1Typing,
-        'user1LastTypingTimestamp': user1LastTypingTimestamp,
-        'user2LastTypingTimestamp': user2LastTypingTimestamp,
-      };
-
-      final Map<String, dynamic> json = createChatJsonToUpdate(
-        isUser1Typing: isUser1Typing,
-        user1LastTypingDateTime: user1LastTypingDateTime,
-        user2LastTypingDateTime: user2LastTypingDateTime,
-      );
-
-      expect(json, expectedJson);
-    },
-  );
-
-  test(
-    'create json to update, '
     'user1LastTypingDateTime is null, '
     'should not include user1LastTypingTimestamp in json',
     () {
       final Map<String, dynamic> expectedJson = {
-        'isUser1Typing': isUser1Typing,
-        'isUser2Typing': isUser2Typing,
         'user2LastTypingTimestamp': user2LastTypingTimestamp,
       };
 
       final Map<String, dynamic> json = createChatJsonToUpdate(
-        isUser1Typing: isUser1Typing,
-        isUser2Typing: isUser2Typing,
         user2LastTypingDateTime: user2LastTypingDateTime,
       );
 
@@ -139,14 +83,10 @@ void main() {
     'should not include user2LastTypingTimestamp in json',
     () {
       final Map<String, dynamic> expectedJson = {
-        'isUser1Typing': isUser1Typing,
-        'isUser2Typing': isUser2Typing,
         'user1LastTypingTimestamp': user1LastTypingTimestamp,
       };
 
       final Map<String, dynamic> json = createChatJsonToUpdate(
-        isUser1Typing: isUser1Typing,
-        isUser2Typing: isUser2Typing,
         user1LastTypingDateTime: user1LastTypingDateTime,
       );
 

@@ -66,15 +66,11 @@ class ChatRepositoryImpl extends StateRepository<Chat>
   @override
   Future<void> updateChat({
     required String chatId,
-    bool? isUser1Typing,
-    bool? isUser2Typing,
     DateTime? user1LastTypingDateTime,
     DateTime? user2LastTypingDateTime,
   }) async {
     final ChatDto? updatedChatDto = await _dbChatService.updateChat(
       chatId: chatId,
-      isUser1Typing: isUser1Typing,
-      isUser2Typing: isUser2Typing,
       user1LastTypingDateTime: user1LastTypingDateTime,
       user2LastTypingDateTime: user2LastTypingDateTime,
     );

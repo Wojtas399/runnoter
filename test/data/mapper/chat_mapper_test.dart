@@ -7,8 +7,6 @@ void main() {
   const String id = 'c1';
   const String user1Id = 'u1';
   const String user2Id = 'u2';
-  const bool isUser1Typing = true;
-  const bool isUser2Typing = false;
   final DateTime user1LastTypingDateTime = DateTime(2023, 1, 10);
   final DateTime user2LastTypingDateTime = DateTime(2023, 1, 05);
 
@@ -20,8 +18,6 @@ void main() {
         id: id,
         user1Id: user1Id,
         user2Id: user2Id,
-        isUser1Typing: isUser1Typing,
-        isUser2Typing: isUser2Typing,
         user1LastTypingDateTime: user1LastTypingDateTime,
         user2LastTypingDateTime: user2LastTypingDateTime,
       );
@@ -29,8 +25,6 @@ void main() {
         id: id,
         user1Id: user1Id,
         user2Id: user2Id,
-        isUser1Typing: isUser1Typing,
-        isUser2Typing: isUser2Typing,
         user1LastTypingDateTime: user1LastTypingDateTime,
         user2LastTypingDateTime: user2LastTypingDateTime,
       );

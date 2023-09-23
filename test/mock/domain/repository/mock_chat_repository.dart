@@ -31,8 +31,6 @@ class MockChatRepository extends Mock implements ChatRepository {
     when(
       () => updateChat(
         chatId: any(named: 'chatId'),
-        isUser1Typing: any(named: 'isUser1Typing'),
-        isUser2Typing: any(named: 'isUser2Typing'),
         user1LastTypingDateTime: any(named: 'user1LastTypingDateTime'),
         user2LastTypingDateTime: any(named: 'user2LastTypingDateTime'),
       ),
