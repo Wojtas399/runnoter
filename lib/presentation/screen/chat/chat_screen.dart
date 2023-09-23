@@ -17,7 +17,9 @@ class ChatScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return chatId != null
         ? BlocProvider(
-            create: (_) => ChatCubit(chatId: chatId!)..initialize(),
+            create: (_) => ChatCubit(chatId: chatId!)
+              ..initializeChatListener()
+              ..initializeMessagesListener(),
             child: const CubitWithStatusListener<ChatCubit, ChatState, dynamic,
                 dynamic>(
               showDialogOnLoading: false,

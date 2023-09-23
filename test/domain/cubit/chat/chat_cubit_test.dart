@@ -20,6 +20,7 @@ import 'package:runnoter/domain/service/auth_service.dart';
 import 'package:runnoter/domain/service/connectivity_service.dart';
 import 'package:rxdart/rxdart.dart';
 
+import '../../../creators/chat_creator.dart';
 import '../../../creators/message_creator.dart';
 import '../../../creators/person_creator.dart';
 import '../../../mock/common/mock_date_service.dart';
@@ -76,24 +77,78 @@ void main() {
     reset(connectivityService);
   });
 
-  blocTest(
-    'initialize, '
-    'logged user does not exist, '
-    'should do nothing',
-    build: () => createCubit(),
-    setUp: () => authService.mockGetLoggedUserId(),
-    act: (cubit) => cubit.initialize(),
-    expect: () => [],
+  group(
+    'initialize chat listener',
+    () {
+      final DateTime now = DateTime(2023, 1, 1, 10, 30);
+      final Chat chat = createChat(
+        id: 'c1',
+        user1Id: 'u2',
+        user2Id: loggedUserId,
+        user1LastTypingDateTime: now.subtract(const Duration(seconds: 6)),
+        user2LastTypingDateTime: now.subtract(const Duration(seconds: 2)),
+      );
+      final Chat updatedChat = createChat(
+        id: 'c1',
+        user1Id: 'u2',
+        user2Id: loggedUserId,
+        user1LastTypingDateTime: now.subtract(const Duration(seconds: 2)),
+        user2LastTypingDateTime: now.subtract(const Duration(seconds: 6)),
+      );
+      final Person recipient = createPerson(
+        id: 'u2',
+        name: 'name',
+        surname: 'surname',
+      );
+      final StreamController<Chat> chat$ = StreamController()..add(chat);
+
+      blocTest(
+        'Should set listener of chat. '
+        'Should load recipient full name. '
+        'Should check if recipient is typing (if last typing date time is '
+        'within 5 seconds of now date should set isRecipientTyping param '
+        'to true else to false).'
+        'If chat is not updated for 5 seconds it should automatically set '
+        'isRecipientTyping param to false.',
+        build: () => createCubit(),
+        setUp: () {
+          authService.mockGetLoggedUserId(userId: loggedUserId);
+          chatRepository.mockGetChatById(chatStream: chat$.stream);
+          dateService.mockGetNow(now: now);
+          personRepository.mockGetPersonById(person: recipient);
+        },
+        act: (cubit) {
+          cubit.initializeChatListener();
+          chat$.add(updatedChat);
+        },
+        wait: const Duration(seconds: 6),
+        expect: () => [
+          const ChatState(
+            status: CubitStatusComplete(),
+            recipientFullName: 'name surname',
+            isRecipientTyping: false,
+          ),
+          const ChatState(
+            status: CubitStatusComplete(),
+            recipientFullName: 'name surname',
+            isRecipientTyping: true,
+          ),
+          const ChatState(
+            status: CubitStatusComplete(),
+            recipientFullName: 'name surname',
+            isRecipientTyping: false,
+          ),
+        ],
+        verify: (_) => verify(
+          () => chatRepository.getChatById(chatId: chatId),
+        ).called(1),
+      );
+    },
   );
 
   group(
-    'initialize',
+    'initialize messages listener',
     () {
-      final Person recipient = createPerson(
-        id: 'r1',
-        name: 'recipient',
-        surname: 'recipinsky',
-      );
       final List<Message> messages = [
         createMessage(
           id: 'm1',
@@ -190,22 +245,12 @@ void main() {
           BehaviorSubject.seeded(m1MessageImages);
 
       blocTest(
-        'should load logged user id and recipient, '
-        'should set listener of messages with images, '
-        'should call message repository method to mark messages sent by second user as read, '
-        'should sort messages descending by date and '
-        'should sort images ascending by order',
+        'Should set listener of messages with images. '
+        'Should call message repository method to mark messages sent by recipient as read. '
+        'Should sort messages descending by date and images ascending by order.',
         build: () => createCubit(),
         setUp: () {
           authService.mockGetLoggedUserId(userId: loggedUserId);
-          chatRepository.mockGetChatById(
-            chat: Chat(
-              id: chatId,
-              user1Id: recipient.id,
-              user2Id: loggedUserId,
-            ),
-          );
-          personRepository.mockGetPersonById(person: recipient);
           messageRepository.mockGetMessagesForChat(
             messagesStream: messages$.stream,
           );
@@ -218,7 +263,7 @@ void main() {
           ).thenAnswer((_) => m1MessageImages$.stream);
         },
         act: (cubit) async {
-          cubit.initialize();
+          cubit.initializeMessagesListener();
           await cubit.stream.first;
           messages$.add(updatedMessages);
           await cubit.stream.first;
@@ -227,12 +272,10 @@ void main() {
         expect: () => [
           ChatState(
             status: const CubitStatusComplete(),
-            recipientFullName: '${recipient.name} ${recipient.surname}',
             messagesFromLatest: expectedMessages,
           ),
           ChatState(
             status: const CubitStatusComplete(),
-            recipientFullName: '${recipient.name} ${recipient.surname}',
             messagesFromLatest: [
               expectedMessages.first,
               expectedMessages[1].copyWith(status: MessageStatus.read),
@@ -243,7 +286,6 @@ void main() {
           ),
           ChatState(
             status: const CubitStatusComplete(),
-            recipientFullName: '${recipient.name} ${recipient.surname}',
             messagesFromLatest: [
               expectedMessages.first.copyWith(images: []),
               expectedMessages[1].copyWith(status: MessageStatus.read),
@@ -254,10 +296,6 @@ void main() {
           ),
         ],
         verify: (_) {
-          verify(() => chatRepository.getChatById(chatId: chatId)).called(1);
-          verify(
-            () => personRepository.getPersonById(personId: recipient.id),
-          ).called(1);
           verify(
             () => messageRepository.getMessagesForChat(chatId: 'c1'),
           ).called(1);
@@ -272,23 +310,38 @@ void main() {
   );
 
   blocTest(
-    'initialize, '
-    'logged user does not exist, '
-    'should do nothing',
-    build: () => createCubit(messageToSend: 'message to send'),
-    setUp: () => authService.mockGetLoggedUserId(),
-    act: (cubit) => cubit.initialize(),
-    expect: () => [],
-  );
-
-  blocTest(
     'message changed, '
-    'should update message to send in state',
+    'Should update message to send in state. '
+    'Should set interval to 2s to call chat repository method to update chat with '
+    'updated logged user typing date time.'
+    'After some time of inactivity should cancel interval.',
     build: () => createCubit(),
-    act: (cubit) => cubit.messageChanged('message'),
+    setUp: () {
+      authService.mockGetLoggedUserId(userId: loggedUserId);
+      chatRepository.mockGetChatById(
+        chat: createChat(user1Id: 'u2', user2Id: loggedUserId),
+      );
+      dateService.mockGetNow(now: DateTime(2023));
+      chatRepository.mockUpdateChat();
+    },
+    act: (cubit) async {
+      cubit.messageChanged('msg');
+      await Future.delayed(const Duration(seconds: 2));
+      cubit.messageChanged('message');
+    },
+    wait: const Duration(seconds: 5),
     expect: () => [
+      const ChatState(status: CubitStatusComplete(), messageToSend: 'msg'),
       const ChatState(status: CubitStatusComplete(), messageToSend: 'message'),
     ],
+    verify: (_) {
+      verify(
+        () => chatRepository.updateChat(
+          chatId: chatId,
+          user2LastTypingDateTime: DateTime(2023),
+        ),
+      ).called(4);
+    },
   );
 
   blocTest(
@@ -373,16 +426,20 @@ void main() {
   blocTest(
     'submit message, '
     'there are no images to send, '
-    'should call message repository method to add new message with current dateTime and sent status and '
-    'should set messageToSend as null',
-    build: () => createCubit(
-      messageToSend: 'message',
-      imagesToSend: [],
-    ),
+    'Should call chat repository method to update chat with logged user typing '
+    'dateTime downgraded by 5 min. '
+    'Should call message repository method to add new message with current '
+    'dateTime and sent status.'
+    'Should set messageToSend as null.',
+    build: () => createCubit(messageToSend: 'message', imagesToSend: []),
     setUp: () {
       connectivityService.mockHasDeviceInternetConnection(hasConnection: true);
       authService.mockGetLoggedUserId(userId: loggedUserId);
       dateService.mockGetNow(now: DateTime(2023, 1, 1, 12, 30));
+      chatRepository.mockGetChatById(
+        chat: createChat(user1Id: loggedUserId, user2Id: 'u2'),
+      );
+      chatRepository.mockUpdateChat();
       messageRepository.mockAddMessage(addedMessageId: 'm1');
     },
     act: (cubit) => cubit.submitMessage(),
@@ -398,22 +455,33 @@ void main() {
         imagesToSend: [],
       ),
     ],
-    verify: (_) => verify(
-      () => messageRepository.addMessage(
-        status: MessageStatus.sent,
-        chatId: chatId,
-        senderId: loggedUserId,
-        dateTime: DateTime(2023, 1, 1, 12, 30),
-        text: 'message',
-      ),
-    ).called(1),
+    verify: (_) {
+      verify(
+        () => chatRepository.updateChat(
+          chatId: chatId,
+          user1LastTypingDateTime: DateTime(2023, 1, 1, 12, 25),
+        ),
+      ).called(1);
+      verify(
+        () => messageRepository.addMessage(
+          status: MessageStatus.sent,
+          chatId: chatId,
+          senderId: loggedUserId,
+          dateTime: DateTime(2023, 1, 1, 12, 30),
+          text: 'message',
+        ),
+      ).called(1);
+    },
   );
 
   blocTest(
     'submit message, '
-    'should call message repository method to add new message with current dateTime and sent status and '
-    'should call message image repository to add images to message and '
-    'should set messageToSend as null and imagesToSend as empty array',
+    'Should call chat repository method to update chat with logged user typing '
+    'dateTime downgraded by 5 min. '
+    'Should call message repository method to add new message with current '
+    'dateTime and sent status. '
+    'Should call message image repository to add images to message. '
+    'Should set messageToSend as null and imagesToSend as empty array.',
     build: () => createCubit(
       messageToSend: 'message',
       imagesToSend: [Uint8List(1), Uint8List(2)],
@@ -422,6 +490,10 @@ void main() {
       connectivityService.mockHasDeviceInternetConnection(hasConnection: true);
       authService.mockGetLoggedUserId(userId: loggedUserId);
       dateService.mockGetNow(now: DateTime(2023, 1, 1, 12, 30));
+      chatRepository.mockGetChatById(
+        chat: createChat(user1Id: loggedUserId, user2Id: 'u2'),
+      );
+      chatRepository.mockUpdateChat();
       messageRepository.mockAddMessage(addedMessageId: 'm1');
       messageImageRepository.mockAddImagesInOrderToMessage();
     },
@@ -439,6 +511,12 @@ void main() {
       ),
     ],
     verify: (_) {
+      verify(
+        () => chatRepository.updateChat(
+          chatId: chatId,
+          user1LastTypingDateTime: DateTime(2023, 1, 1, 12, 25),
+        ),
+      ).called(1);
       verify(
         () => messageRepository.addMessage(
           status: MessageStatus.sent,

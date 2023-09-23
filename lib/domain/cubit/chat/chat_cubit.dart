@@ -32,7 +32,11 @@ class ChatCubit extends CubitWithStatus<ChatState, dynamic, dynamic> {
   final PersonRepository _personRepository;
   final DateService _dateService;
   final ConnectivityService _connectivityService;
+  StreamSubscription<Chat?>? _chatListener;
   StreamSubscription<List<ChatMessage>>? _chatMessagesListener;
+  Timer? _recipientTypingTimer;
+  Timer? _typingInterval;
+  Timer? _typingInactivityTimer;
 
   ChatCubit({
     required this.chatId,
@@ -48,15 +52,36 @@ class ChatCubit extends CubitWithStatus<ChatState, dynamic, dynamic> {
 
   @override
   Future<void> close() {
+    _chatListener?.cancel();
     _chatMessagesListener?.cancel();
-    _chatMessagesListener = null;
+    _recipientTypingTimer?.cancel();
+    _typingInterval?.cancel();
+    _typingInactivityTimer?.cancel();
     return super.close();
   }
 
-  Future<void> initialize() async {
+  Future<void> initializeChatListener() async {
+    final String? loggedUserId = await _authService.loggedUserId$.first;
+    _chatListener ??=
+        _chatRepository.getChatById(chatId: chatId).whereNotNull().listen(
+      (Chat chat) async {
+        _resetRecipientTypingTimer();
+        final (String?, int?) recipientData =
+            await _getRecipientData(chat, loggedUserId);
+        final int? secondsToLastRecipientTypingDateTime = recipientData.$2;
+        emit(state.copyWith(
+          recipientFullName: recipientData.$1,
+          isRecipientTyping: secondsToLastRecipientTypingDateTime != null
+              ? secondsToLastRecipientTypingDateTime <= 5
+              : null,
+        ));
+      },
+    );
+  }
+
+  Future<void> initializeMessagesListener() async {
     final String? loggedUserId = await _authService.loggedUserId$.first;
     if (loggedUserId == null) return;
-    final String recipientFullName = await _loadRecipientFullName(loggedUserId);
     _chatMessagesListener ??= _messageRepository
         .getMessagesForChat(chatId: chatId)
         .doOnData(
@@ -64,23 +89,31 @@ class ChatCubit extends CubitWithStatus<ChatState, dynamic, dynamic> {
         )
         .switchMap(
           (List<Message> messages) => Rx.combineLatest(
-            messages.map((msg) => _mapMessageToChatMessage(msg, loggedUserId)),
+            messages.map(
+              (message) => _mapMessageToChatMessage(message, loggedUserId),
+            ),
             (List<ChatMessage> chatMessages) => chatMessages,
           ),
         )
         .listen(
-      (List<ChatMessage> chatMessages) {
-        emit(state.copyWith(
-          recipientFullName: recipientFullName,
-          messagesFromLatest:
-              _sortChatMessagesDescendingBySendDateTime(chatMessages),
-        ));
-      },
-    );
+          (List<ChatMessage> msgs) => emit(state.copyWith(
+            messagesFromLatest: _sortChatMessagesDescendingBySendDateTime(msgs),
+          )),
+        );
   }
 
   void messageChanged(String message) {
     emit(state.copyWith(messageToSend: message));
+    if (_typingInterval == null) {
+      _updateLoggedUserTypingDateTime(_dateService.getNow());
+      _typingInterval = Timer.periodic(
+        const Duration(seconds: 2),
+        (_) => _updateLoggedUserTypingDateTime(_dateService.getNow()),
+      );
+    }
+    _typingInactivityTimer?.cancel();
+    _typingInactivityTimer =
+        Timer(const Duration(seconds: 4), _cleanTypingTimers);
   }
 
   void addImagesToSend(List<Uint8List> newImagesToSend) {
@@ -109,6 +142,10 @@ class ChatCubit extends CubitWithStatus<ChatState, dynamic, dynamic> {
     }
     final DateTime now = _dateService.getNow();
     emitLoadingStatus();
+    final DateTime dateTime5minAgo =
+        _dateService.getNow().subtract(const Duration(minutes: 5));
+    await _updateLoggedUserTypingDateTime(dateTime5minAgo);
+    _cleanTypingTimers();
     final String? messageId = await _messageRepository.addMessage(
       status: MessageStatus.sent,
       chatId: chatId,
@@ -139,16 +176,36 @@ class ChatCubit extends CubitWithStatus<ChatState, dynamic, dynamic> {
     );
   }
 
-  Future<String> _loadRecipientFullName(String loggedUserId) async {
-    final Chat chat =
-        await _chatRepository.getChatById(chatId: chatId).whereNotNull().first;
-    final String recipientId =
-        chat.user1Id == loggedUserId ? chat.user2Id : chat.user1Id;
+  void _resetRecipientTypingTimer() {
+    _recipientTypingTimer?.cancel();
+    _recipientTypingTimer = Timer(
+      const Duration(seconds: 5),
+      () => emit(state.copyWith(isRecipientTyping: false)),
+    );
+  }
+
+  Future<(String?, int?)> _getRecipientData(
+    Chat chat,
+    String? loggedUserId,
+  ) async {
+    final (String, DateTime?) recipientData = chat.user1Id == loggedUserId
+        ? (chat.user2Id, chat.user2LastTypingDateTime)
+        : (chat.user1Id, chat.user1LastTypingDateTime);
+    final String recipientId = recipientData.$1;
+    final DateTime? recipientLastTypingDateTime = recipientData.$2;
     final Person recipient = await _personRepository
         .getPersonById(personId: recipientId)
         .whereNotNull()
         .first;
-    return '${recipient.name} ${recipient.surname}';
+    final String recipientFullName = '${recipient.name} ${recipient.surname}';
+    final int? secondsToLastRecipientTypingDateTime =
+        recipientLastTypingDateTime != null
+            ? _dateService
+                .getNow()
+                .difference(recipientLastTypingDateTime)
+                .inSeconds
+            : null;
+    return (recipientFullName, secondsToLastRecipientTypingDateTime);
   }
 
   Future<void> _markUnreadMessagesAsRead(
@@ -193,5 +250,24 @@ class ChatCubit extends CubitWithStatus<ChatState, dynamic, dynamic> {
       (msg1, msg2) => msg1.sendDateTime.isBefore(msg2.sendDateTime) ? 1 : -1,
     );
     return sortedChatMessages;
+  }
+
+  Future<void> _updateLoggedUserTypingDateTime(DateTime dateTime) async {
+    final String? loggedUserId = await _authService.loggedUserId$.first;
+    if (loggedUserId == null) return;
+    final Chat? chat = await _chatRepository.getChatById(chatId: chatId).first;
+    if (chat == null) return;
+    await _chatRepository.updateChat(
+      chatId: chatId,
+      user1LastTypingDateTime: chat.user1Id == loggedUserId ? dateTime : null,
+      user2LastTypingDateTime: chat.user2Id == loggedUserId ? dateTime : null,
+    );
+  }
+
+  void _cleanTypingTimers() {
+    _typingInterval?.cancel();
+    _typingInactivityTimer?.cancel();
+    _typingInterval = null;
+    _typingInactivityTimer = null;
   }
 }

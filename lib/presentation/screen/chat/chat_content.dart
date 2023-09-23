@@ -10,6 +10,7 @@ import '../../component/nullable_text_component.dart';
 import '../../extension/context_extensions.dart';
 import 'chat_adjustable_list_of_messages.dart';
 import 'chat_bottom_part.dart';
+import 'chat_typing_indicator.dart';
 
 class ChatContent extends StatelessWidget {
   const ChatContent({super.key});
@@ -41,6 +42,13 @@ class ChatContent extends StatelessWidget {
                     const Expanded(
                       child: ChatAdjustableListOfMessages(),
                     ),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
+                      child: _TypingIndicator(),
+                    ),
                     ChatBottomPart(),
                   ],
                 ),
@@ -63,6 +71,19 @@ class _RecipientFullName extends StatelessWidget {
     );
 
     return NullableText(recipientFullName);
+  }
+}
+
+class _TypingIndicator extends StatelessWidget {
+  const _TypingIndicator();
+
+  @override
+  Widget build(BuildContext context) {
+    final bool isRecipientTyping = context.select(
+      (ChatCubit cubit) => cubit.state.isRecipientTyping,
+    );
+
+    return ChatTypingIndicator(showIndicator: isRecipientTyping);
   }
 }
 

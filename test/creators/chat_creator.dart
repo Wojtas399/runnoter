@@ -4,5 +4,13 @@ Chat createChat({
   String id = '',
   String user1Id = 'u1',
   String user2Id = 'u2',
+  DateTime? user1LastTypingDateTime,
+  DateTime? user2LastTypingDateTime,
 }) =>
-    Chat(id: id, user1Id: user1Id, user2Id: user2Id);
+    Chat(
+      id: id,
+      user1Id: user1Id,
+      user2Id: user2Id,
+      user1LastTypingDateTime: user1LastTypingDateTime,
+      user2LastTypingDateTime: user2LastTypingDateTime,
+    );

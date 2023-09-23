@@ -2,12 +2,12 @@ import 'package:firebase/firebase.dart';
 import 'package:mocktail/mocktail.dart';
 
 class MockFirebaseChatService extends Mock implements FirebaseChatService {
-  void mockLoadChatById({ChatDto? chatDto}) {
+  void mockGetChatById({required Stream<ChatDto?> chatDtoStream}) {
     when(
-      () => loadChatById(
+      () => getChatById(
         chatId: any(named: 'chatId'),
       ),
-    ).thenAnswer((_) => Future.value(chatDto));
+    ).thenAnswer((_) => chatDtoStream);
   }
 
   void mockLoadChatByUsers({ChatDto? chatDto}) {
@@ -25,6 +25,16 @@ class MockFirebaseChatService extends Mock implements FirebaseChatService {
     } else {
       when(_addNewChatCall).thenAnswer((_) => Future.value(addedChatDto));
     }
+  }
+
+  void mockUpdateChat({ChatDto? updatedChatDto}) {
+    when(
+      () => updateChat(
+        chatId: any(named: 'chatId'),
+        user1LastTypingDateTime: any(named: 'user1LastTypingDateTime'),
+        user2LastTypingDateTime: any(named: 'user2LastTypingDateTime'),
+      ),
+    ).thenAnswer((_) => Future.value(updatedChatDto));
   }
 
   Future<ChatDto?> _addNewChatCall() => addNewChat(

@@ -5,10 +5,10 @@ import '../firebase_collections.dart';
 import '../utils/utils.dart';
 
 class FirebaseChatService {
-  Future<ChatDto?> loadChatById({required String chatId}) async {
-    final snapshot = await getChatsRef().doc(chatId).get();
-    return snapshot.data();
-  }
+  Stream<ChatDto?> getChatById({required String chatId}) => getChatsRef()
+      .doc(chatId)
+      .snapshots()
+      .map((docSnapshot) => docSnapshot.data());
 
   Future<ChatDto?> loadChatByUsers({
     required String user1Id,
@@ -46,5 +46,20 @@ class FirebaseChatService {
       final snapshot = await chatRef.get();
       return snapshot.data();
     }
+  }
+
+  Future<ChatDto?> updateChat({
+    required String chatId,
+    DateTime? user1LastTypingDateTime,
+    DateTime? user2LastTypingDateTime,
+  }) async {
+    final docRef = getChatsRef().doc(chatId);
+    final jsonToUpdate = createChatJsonToUpdate(
+      user1LastTypingDateTime: user1LastTypingDateTime,
+      user2LastTypingDateTime: user2LastTypingDateTime,
+    );
+    await docRef.update(jsonToUpdate);
+    final docSnapshot = await docRef.get();
+    return docSnapshot.data();
   }
 }

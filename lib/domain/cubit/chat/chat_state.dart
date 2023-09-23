@@ -2,6 +2,7 @@ part of 'chat_cubit.dart';
 
 class ChatState extends CubitState<ChatState> {
   final String? recipientFullName;
+  final bool isRecipientTyping;
   final List<ChatMessage>? messagesFromLatest;
   final String? messageToSend;
   final List<Uint8List> imagesToSend;
@@ -9,6 +10,7 @@ class ChatState extends CubitState<ChatState> {
   const ChatState({
     required super.status,
     this.recipientFullName,
+    this.isRecipientTyping = false,
     this.messagesFromLatest,
     this.messageToSend,
     this.imagesToSend = const [],
@@ -18,6 +20,7 @@ class ChatState extends CubitState<ChatState> {
   List<Object?> get props => [
         status,
         recipientFullName,
+        isRecipientTyping,
         messagesFromLatest,
         messageToSend,
         imagesToSend,
@@ -30,6 +33,7 @@ class ChatState extends CubitState<ChatState> {
   ChatState copyWith({
     CubitStatus? status,
     String? recipientFullName,
+    bool? isRecipientTyping,
     List<ChatMessage>? messagesFromLatest,
     String? messageToSend,
     bool messageToSendAsNull = false,
@@ -38,6 +42,7 @@ class ChatState extends CubitState<ChatState> {
       ChatState(
         status: status ?? const CubitStatusComplete(),
         recipientFullName: recipientFullName ?? this.recipientFullName,
+        isRecipientTyping: isRecipientTyping ?? this.isRecipientTyping,
         messagesFromLatest: messagesFromLatest ?? this.messagesFromLatest,
         messageToSend:
             messageToSendAsNull ? null : messageToSend ?? this.messageToSend,

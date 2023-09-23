@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase/firebase.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
@@ -26,57 +28,41 @@ void main() {
 
   test(
     'get chat by id, '
-    'chat exists in repo, '
-    'should emit chat from repo',
-    () {
-      final Chat expectedChat = createChat(id: 'c1');
-      final List<Chat> existingChats = [
-        expectedChat,
-        createChat(id: 'c2'),
-        createChat(id: 'c3'),
-      ];
-      repository = ChatRepositoryImpl(initialData: existingChats);
-
-      final Stream<Chat?> chat$ =
-          repository.getChatById(chatId: expectedChat.id);
-
-      expect(
-        chat$,
-        emitsInOrder([
-          expectedChat,
-        ]),
-      );
-    },
-  );
-
-  test(
-    'get chat by id, '
-    'chat does not exist in repo, '
-    'should load chat from db, add it to repo and emit it',
+    'should set listener of db chat and should update matching chat in repo',
     () {
       const String chatId = 'c1';
-      final Chat expectedChat = createChat(id: chatId);
+      final ChatDto chatDto =
+          createChatDto(id: chatId, user1Id: 'u1', user2Id: 'u2');
+      final ChatDto updatedChatDto =
+          createChatDto(id: chatId, user1Id: 'u2', user2Id: 'u1');
+      final Chat expectedChat =
+          createChat(id: chatId, user1Id: 'u1', user2Id: 'u2');
+      final Chat expectedUpdatedChat =
+          createChat(id: chatId, user1Id: 'u2', user2Id: 'u1');
       final List<Chat> existingChats = [
         createChat(id: 'c2'),
         createChat(id: 'c3'),
       ];
-      final ChatDto loadedChatDto = createChatDto(id: chatId);
-      dbChatService.mockLoadChatById(chatDto: loadedChatDto);
+      final StreamController<ChatDto?> chatDto$ = StreamController()
+        ..add(chatDto);
+      dbChatService.mockGetChatById(chatDtoStream: chatDto$.stream);
       repository = ChatRepositoryImpl(initialData: existingChats);
 
       final Stream<Chat?> chat$ = repository.getChatById(chatId: chatId);
+      chatDto$.add(updatedChatDto);
 
       expect(
         chat$,
-        emitsInOrder([
-          expectedChat,
-        ]),
+        emitsInOrder(
+          [expectedChat, expectedUpdatedChat],
+        ),
       );
       expect(
         repository.dataStream$,
         emitsInOrder([
           existingChats,
-          [...existingChats, expectedChat]
+          [...existingChats, expectedChat],
+          [...existingChats, expectedUpdatedChat],
         ]),
       );
     },
@@ -220,6 +206,51 @@ void main() {
         () => dbChatService.addNewChat(
           user1Id: user1Id,
           user2Id: user2Id,
+        ),
+      ).called(1);
+    },
+  );
+
+  test(
+    'update chat, '
+    'should update chat in db and in repo',
+    () async {
+      const String chatId = 'c3';
+      final DateTime user1LastTypingDateTime = DateTime(2023, 1, 10);
+      final DateTime user2LastTypingDateTime = DateTime(2023, 1, 05);
+      final List<Chat> existingChats = [
+        createChat(id: 'c1'),
+        createChat(id: 'c2'),
+        createChat(id: chatId),
+      ];
+      final ChatDto updatedChatDto = createChatDto(
+        id: chatId,
+        user1LastTypingDateTime: user1LastTypingDateTime,
+        user2LastTypingDateTime: user2LastTypingDateTime,
+      );
+      final Chat updatedChat = createChat(
+        id: chatId,
+        user1LastTypingDateTime: user1LastTypingDateTime,
+        user2LastTypingDateTime: user2LastTypingDateTime,
+      );
+      dbChatService.mockUpdateChat(updatedChatDto: updatedChatDto);
+      repository = ChatRepositoryImpl(initialData: existingChats);
+
+      await repository.updateChat(
+        chatId: chatId,
+        user1LastTypingDateTime: user1LastTypingDateTime,
+        user2LastTypingDateTime: user2LastTypingDateTime,
+      );
+
+      expect(
+        repository.dataStream$,
+        emits([existingChats[0], existingChats[1], updatedChat]),
+      );
+      verify(
+        () => dbChatService.updateChat(
+          chatId: chatId,
+          user1LastTypingDateTime: user1LastTypingDateTime,
+          user2LastTypingDateTime: user2LastTypingDateTime,
         ),
       ).called(1);
     },
