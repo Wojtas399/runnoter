@@ -5,8 +5,8 @@ class Chat extends Entity {
   final String user2Id;
   final bool isUser1Typing;
   final bool isUser2Typing;
-  final DateTime user1LastTypingDateTime;
-  final DateTime user2LastTypingDateTime;
+  final DateTime? user1LastTypingDateTime;
+  final DateTime? user2LastTypingDateTime;
 
   const Chat({
     required super.id,
@@ -14,8 +14,8 @@ class Chat extends Entity {
     required this.user2Id,
     required this.isUser1Typing,
     required this.isUser2Typing,
-    required this.user1LastTypingDateTime,
-    required this.user2LastTypingDateTime,
+    this.user1LastTypingDateTime,
+    this.user2LastTypingDateTime,
   }) : assert(user1Id != user2Id);
 
   @override

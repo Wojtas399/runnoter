@@ -66,12 +66,14 @@ class ChatCubit extends CubitWithStatus<ChatState, dynamic, dynamic> {
         _chatRepository.getChatById(chatId: chatId).whereNotNull().listen(
       (Chat chat) async {
         _resetRecipientTypingTimer();
-        final (String?, int) recipientData =
+        final (String?, int?) recipientData =
             await _getRecipientData(chat, loggedUserId);
-        final int minutesToLastRecipientTypingDateTime = recipientData.$2;
+        final int? minutesToLastRecipientTypingDateTime = recipientData.$2;
         emit(state.copyWith(
           recipientFullName: recipientData.$1,
-          isRecipientTyping: minutesToLastRecipientTypingDateTime <= 5,
+          isRecipientTyping: minutesToLastRecipientTypingDateTime != null
+              ? minutesToLastRecipientTypingDateTime <= 5
+              : null,
         ));
       },
     );
@@ -184,22 +186,27 @@ class ChatCubit extends CubitWithStatus<ChatState, dynamic, dynamic> {
     );
   }
 
-  Future<(String?, int)> _getRecipientData(
+  Future<(String?, int?)> _getRecipientData(
     Chat chat,
     String? loggedUserId,
   ) async {
-    final (String, DateTime) recipientData = chat.user1Id == loggedUserId
+    final (String, DateTime?) recipientData = chat.user1Id == loggedUserId
         ? (chat.user2Id, chat.user2LastTypingDateTime)
         : (chat.user1Id, chat.user1LastTypingDateTime);
     final String recipientId = recipientData.$1;
-    final DateTime recipientLastTypingDateTime = recipientData.$2;
+    final DateTime? recipientLastTypingDateTime = recipientData.$2;
     final Person recipient = await _personRepository
         .getPersonById(personId: recipientId)
         .whereNotNull()
         .first;
     final String recipientFullName = '${recipient.name} ${recipient.surname}';
-    final int minutesToLastRecipientTypingDateTime =
-        _dateService.getNow().difference(recipientLastTypingDateTime).inSeconds;
+    final int? minutesToLastRecipientTypingDateTime =
+        recipientLastTypingDateTime != null
+            ? _dateService
+                .getNow()
+                .difference(recipientLastTypingDateTime)
+                .inSeconds
+            : null;
     return (recipientFullName, minutesToLastRecipientTypingDateTime);
   }
 

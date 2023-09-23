@@ -37,7 +37,15 @@ class ChatDto extends Equatable {
         );
 
   @override
-  List<Object?> get props => [id, user1Id, user2Id];
+  List<Object?> get props => [
+        id,
+        user1Id,
+        user2Id,
+        isUser1Typing,
+        isUser2Typing,
+        user1LastTypingDateTime,
+        user2LastTypingDateTime,
+      ];
 
   Map<String, dynamic> toJson() => {
         user1IdField: user1Id,
