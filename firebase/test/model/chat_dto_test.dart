@@ -7,6 +7,12 @@ void main() {
   const String user2Id = 'u2';
   const bool isUser1Typing = false;
   const bool isUser2Typing = true;
+  final DateTime user1LastTypingDateTime = DateTime(2023, 1, 10);
+  final DateTime user2LastTypingDateTime = DateTime(2023, 1, 8);
+  final int user1LastTypingTimestamp =
+      user1LastTypingDateTime.millisecondsSinceEpoch;
+  final int user2LastTypingTimestamp =
+      user2LastTypingDateTime.millisecondsSinceEpoch;
 
   test(
     'from json, '
@@ -17,13 +23,17 @@ void main() {
         'user2Id': user2Id,
         'isUser1Typing': isUser1Typing,
         'isUser2Typing': isUser2Typing,
+        'user1LastTypingTimestamp': user1LastTypingTimestamp,
+        'user2LastTypingTimestamp': user2LastTypingTimestamp,
       };
-      const ChatDto expectedChatDto = ChatDto(
+      final ChatDto expectedChatDto = ChatDto(
         id: id,
         user1Id: user1Id,
         user2Id: user2Id,
         isUser1Typing: isUser1Typing,
         isUser2Typing: isUser2Typing,
+        user1LastTypingDateTime: user1LastTypingDateTime,
+        user2LastTypingDateTime: user2LastTypingDateTime,
       );
 
       final ChatDto chatDto = ChatDto.fromJson(chatId: id, json: json);
@@ -36,18 +46,22 @@ void main() {
     'to json, '
     'should map dto to json',
     () {
-      const ChatDto chatDto = ChatDto(
+      final ChatDto chatDto = ChatDto(
         id: id,
         user1Id: user1Id,
         user2Id: user2Id,
         isUser1Typing: isUser1Typing,
         isUser2Typing: isUser2Typing,
+        user1LastTypingDateTime: user1LastTypingDateTime,
+        user2LastTypingDateTime: user2LastTypingDateTime,
       );
       final Map<String, dynamic> expectedJson = {
         'user1Id': user1Id,
         'user2Id': user2Id,
         'isUser1Typing': isUser1Typing,
         'isUser2Typing': isUser2Typing,
+        'user1LastTypingTimestamp': user1LastTypingTimestamp,
+        'user2LastTypingTimestamp': user2LastTypingTimestamp,
       };
 
       final Map<String, dynamic> json = chatDto.toJson();
@@ -63,10 +77,14 @@ void main() {
     () {
       final Map<String, dynamic> expectedJson = {
         'isUser2Typing': isUser2Typing,
+        'user1LastTypingTimestamp': user1LastTypingTimestamp,
+        'user2LastTypingTimestamp': user2LastTypingTimestamp,
       };
 
       final Map<String, dynamic> json = createChatJsonToUpdate(
         isUser2Typing: isUser2Typing,
+        user1LastTypingDateTime: user1LastTypingDateTime,
+        user2LastTypingDateTime: user2LastTypingDateTime,
       );
 
       expect(json, expectedJson);
@@ -80,10 +98,56 @@ void main() {
     () {
       final Map<String, dynamic> expectedJson = {
         'isUser1Typing': isUser1Typing,
+        'user1LastTypingTimestamp': user1LastTypingTimestamp,
+        'user2LastTypingTimestamp': user2LastTypingTimestamp,
       };
 
       final Map<String, dynamic> json = createChatJsonToUpdate(
         isUser1Typing: isUser1Typing,
+        user1LastTypingDateTime: user1LastTypingDateTime,
+        user2LastTypingDateTime: user2LastTypingDateTime,
+      );
+
+      expect(json, expectedJson);
+    },
+  );
+
+  test(
+    'create json to update, '
+    'user1LastTypingDateTime is null, '
+    'should not include user1LastTypingTimestamp in json',
+    () {
+      final Map<String, dynamic> expectedJson = {
+        'isUser1Typing': isUser1Typing,
+        'isUser2Typing': isUser2Typing,
+        'user2LastTypingTimestamp': user2LastTypingTimestamp,
+      };
+
+      final Map<String, dynamic> json = createChatJsonToUpdate(
+        isUser1Typing: isUser1Typing,
+        isUser2Typing: isUser2Typing,
+        user2LastTypingDateTime: user2LastTypingDateTime,
+      );
+
+      expect(json, expectedJson);
+    },
+  );
+
+  test(
+    'create json to update, '
+    'user2LastTypingDateTime is null, '
+    'should not include user2LastTypingTimestamp in json',
+    () {
+      final Map<String, dynamic> expectedJson = {
+        'isUser1Typing': isUser1Typing,
+        'isUser2Typing': isUser2Typing,
+        'user1LastTypingTimestamp': user1LastTypingTimestamp,
+      };
+
+      final Map<String, dynamic> json = createChatJsonToUpdate(
+        isUser1Typing: isUser1Typing,
+        isUser2Typing: isUser2Typing,
+        user1LastTypingDateTime: user1LastTypingDateTime,
       );
 
       expect(json, expectedJson);
