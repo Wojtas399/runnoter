@@ -68,11 +68,11 @@ class ChatCubit extends CubitWithStatus<ChatState, dynamic, dynamic> {
         _resetRecipientTypingTimer();
         final (String?, int?) recipientData =
             await _getRecipientData(chat, loggedUserId);
-        final int? minutesToLastRecipientTypingDateTime = recipientData.$2;
+        final int? secondsToLastRecipientTypingDateTime = recipientData.$2;
         emit(state.copyWith(
           recipientFullName: recipientData.$1,
-          isRecipientTyping: minutesToLastRecipientTypingDateTime != null
-              ? minutesToLastRecipientTypingDateTime <= 5
+          isRecipientTyping: secondsToLastRecipientTypingDateTime != null
+              ? secondsToLastRecipientTypingDateTime <= 5
               : null,
         ));
       },
@@ -112,14 +112,8 @@ class ChatCubit extends CubitWithStatus<ChatState, dynamic, dynamic> {
       );
     }
     _typingInactivityTimer?.cancel();
-    _typingInactivityTimer = Timer(
-      const Duration(seconds: 4),
-      () {
-        _typingInterval?.cancel();
-        _typingInterval = null;
-        _typingInactivityTimer = null;
-      },
-    );
+    _typingInactivityTimer =
+        Timer(const Duration(seconds: 4), _cleanTypingTimers);
   }
 
   void addImagesToSend(List<Uint8List> newImagesToSend) {
@@ -151,6 +145,7 @@ class ChatCubit extends CubitWithStatus<ChatState, dynamic, dynamic> {
     final DateTime dateTime5minAgo =
         _dateService.getNow().subtract(const Duration(minutes: 5));
     await _updateLoggedUserTypingDateTime(dateTime5minAgo);
+    _cleanTypingTimers();
     final String? messageId = await _messageRepository.addMessage(
       status: MessageStatus.sent,
       chatId: chatId,
@@ -203,14 +198,14 @@ class ChatCubit extends CubitWithStatus<ChatState, dynamic, dynamic> {
         .whereNotNull()
         .first;
     final String recipientFullName = '${recipient.name} ${recipient.surname}';
-    final int? minutesToLastRecipientTypingDateTime =
+    final int? secondsToLastRecipientTypingDateTime =
         recipientLastTypingDateTime != null
             ? _dateService
                 .getNow()
                 .difference(recipientLastTypingDateTime)
                 .inSeconds
             : null;
-    return (recipientFullName, minutesToLastRecipientTypingDateTime);
+    return (recipientFullName, secondsToLastRecipientTypingDateTime);
   }
 
   Future<void> _markUnreadMessagesAsRead(
@@ -267,5 +262,12 @@ class ChatCubit extends CubitWithStatus<ChatState, dynamic, dynamic> {
       user1LastTypingDateTime: chat.user1Id == loggedUserId ? dateTime : null,
       user2LastTypingDateTime: chat.user2Id == loggedUserId ? dateTime : null,
     );
+  }
+
+  void _cleanTypingTimers() {
+    _typingInterval?.cancel();
+    _typingInactivityTimer?.cancel();
+    _typingInterval = null;
+    _typingInactivityTimer = null;
   }
 }
