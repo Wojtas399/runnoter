@@ -29,6 +29,20 @@ class FirebaseMessageService {
     );
   }
 
+  Stream<bool> areThereUnreadMessagesInChatSentByUser$({
+    required String chatId,
+    required String userId,
+  }) =>
+      getMessagesRef()
+          .where(chatIdField, isEqualTo: chatId)
+          .where(senderIdField, isEqualTo: userId)
+          .where(
+            messageStatusField,
+            isEqualTo: mapMessageStatusToString(MessageStatus.sent),
+          )
+          .snapshots()
+          .map((querySnapshot) => querySnapshot.docs.isNotEmpty);
+
   Future<MessageDto?> loadMessageById({required String messageId}) async {
     final messageRef = getMessagesRef().doc(messageId);
     final docSnapshot = await messageRef.get();
@@ -46,21 +60,6 @@ class FirebaseMessageService {
       query: query,
       lastVisibleMessageId: lastVisibleMessageId,
     );
-  }
-
-  Future<bool> areThereUnreadMessagesInChatSentByUser({
-    required String chatId,
-    required String userId,
-  }) async {
-    final Query<MessageDto> query = getMessagesRef()
-        .where(chatIdField, isEqualTo: chatId)
-        .where(senderIdField, isEqualTo: userId)
-        .where(
-          messageStatusField,
-          isEqualTo: mapMessageStatusToString(MessageStatus.sent),
-        );
-    final querySnapshot = await query.get();
-    return querySnapshot.docs.isNotEmpty;
   }
 
   Future<MessageDto?> addMessage({

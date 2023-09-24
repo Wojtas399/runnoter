@@ -223,7 +223,7 @@ void main() {
   test(
     'doesUserHaveUnreadMessagesInChat, '
     'no one unread message sent by second user exists in repo, '
-    'should search matching messages in db',
+    'should listen to unread messages in db',
     () async {
       const String chatId = 'c1';
       const String userId = 'u1';
@@ -247,26 +247,27 @@ void main() {
           status: MessageStatus.sent,
         ),
       ];
+      final StreamController<bool> expected$ = StreamController()..add(false);
       dbChatService.mockGetChatById(
         chatDtoStream: Stream.value(
           createChatDto(id: 'c1', user1Id: 'u2', user2Id: userId),
         ),
       );
-      dbMessageService.mockAreThereUnreadMessagesInChatSentByUser(
-        expected: true,
+      dbMessageService.mockAreThereUnreadMessagesInChatSentByUser$(
+        expected$: expected$.stream,
       );
       repository = MessageRepositoryImpl(initialData: existingMessages);
 
-      final bool result = await repository
-          .doesUserHaveUnreadMessagesInChat(
-            chatId: chatId,
-            userId: userId,
-          )
-          .first;
+      final Stream<bool> result$ = repository.doesUserHaveUnreadMessagesInChat(
+        chatId: chatId,
+        userId: userId,
+      );
+      expected$.add(true);
 
-      expect(result, true);
+      expect(result$, emitsInOrder([false, true]));
+      await repository.dataStream$.first;
       verify(
-        () => dbMessageService.areThereUnreadMessagesInChatSentByUser(
+        () => dbMessageService.areThereUnreadMessagesInChatSentByUser$(
           chatId: chatId,
           userId: 'u2',
         ),

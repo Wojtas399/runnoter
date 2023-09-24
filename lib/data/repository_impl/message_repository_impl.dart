@@ -68,11 +68,10 @@ class MessageRepositoryImpl extends StateRepository<Message>
                       message.status == MessageStatus.sent,
                 ),
               )
-              .asyncMap(
-                (Message? message) async => message != null
-                    ? true
-                    : await _dbMessageService
-                        .areThereUnreadMessagesInChatSentByUser(
+              .switchMap(
+                (Message? message) => message != null
+                    ? Stream.value(true)
+                    : _dbMessageService.areThereUnreadMessagesInChatSentByUser$(
                         chatId: chatId,
                         userId: senderId,
                       ),
