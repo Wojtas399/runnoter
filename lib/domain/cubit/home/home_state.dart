@@ -6,6 +6,7 @@ class HomeState extends CubitState<HomeState> {
   final Settings? appSettings;
   final List<CoachingRequestShort> acceptedClientRequests;
   final CoachingRequestShort? acceptedCoachRequest;
+  final int? numberOfChatsWithUnreadMessages;
 
   const HomeState({
     required super.status,
@@ -14,6 +15,7 @@ class HomeState extends CubitState<HomeState> {
     this.appSettings,
     this.acceptedClientRequests = const [],
     this.acceptedCoachRequest,
+    this.numberOfChatsWithUnreadMessages,
   });
 
   @override
@@ -24,6 +26,7 @@ class HomeState extends CubitState<HomeState> {
         appSettings,
         acceptedClientRequests,
         acceptedCoachRequest,
+        numberOfChatsWithUnreadMessages,
       ];
 
   @override
@@ -34,6 +37,7 @@ class HomeState extends CubitState<HomeState> {
     Settings? appSettings,
     List<CoachingRequestShort>? acceptedClientRequests,
     CoachingRequestShort? acceptedCoachRequest,
+    int? numberOfChatsWithUnreadMessages,
   }) =>
       HomeState(
         status: status ?? const CubitStatusComplete(),
@@ -42,5 +46,7 @@ class HomeState extends CubitState<HomeState> {
         appSettings: appSettings ?? this.appSettings,
         acceptedClientRequests: acceptedClientRequests ?? const [],
         acceptedCoachRequest: acceptedCoachRequest,
+        numberOfChatsWithUnreadMessages: numberOfChatsWithUnreadMessages ??
+            this.numberOfChatsWithUnreadMessages,
       );
 }

@@ -13,7 +13,10 @@ import '../../additional_model/coaching_request_short.dart';
 import '../../additional_model/cubit_state.dart';
 import '../../additional_model/cubit_with_status.dart';
 import '../../additional_model/settings.dart';
+import '../../entity/chat.dart';
 import '../../entity/user.dart';
+import '../../repository/chat_repository.dart';
+import '../../repository/message_repository.dart';
 import '../../repository/person_repository.dart';
 import '../../service/coaching_request_service.dart';
 
@@ -24,7 +27,9 @@ class HomeCubit extends CubitWithStatus<HomeState, HomeCubitInfo, dynamic> {
   final UserRepository _userRepository;
   final CoachingRequestService _coachingRequestService;
   final PersonRepository _personRepository;
-  StreamSubscription<HomeCubitListenedParams?>? _listener;
+  final ChatRepository _chatRepository;
+  final MessageRepository _messageRepository;
+  StreamSubscription<_ListenedParams?>? _listener;
 
   HomeCubit({
     HomeState initialState = const HomeState(status: CubitStatusInitial()),
@@ -32,6 +37,8 @@ class HomeCubit extends CubitWithStatus<HomeState, HomeCubitInfo, dynamic> {
         _userRepository = getIt<UserRepository>(),
         _coachingRequestService = getIt<CoachingRequestService>(),
         _personRepository = getIt<PersonRepository>(),
+        _chatRepository = getIt<ChatRepository>(),
+        _messageRepository = getIt<MessageRepository>(),
         super(initialState);
 
   @override
@@ -46,25 +53,29 @@ class HomeCubit extends CubitWithStatus<HomeState, HomeCubitInfo, dynamic> {
     _listener ??= _authService.loggedUserId$
         .switchMap(
           (String? loggedUserId) => loggedUserId != null
-              ? Rx.combineLatest3(
+              ? Rx.combineLatest4(
                   _userRepository.getUserById(userId: loggedUserId),
                   _getAcceptedClientRequests(loggedUserId),
                   _getAcceptedCoachRequest(loggedUserId),
+                  _getNumberOfChatsWithUnreadMessages(loggedUserId),
                   (
                     User? loggedUserData,
                     List<CoachingRequestShort> acceptedClientRequests,
                     CoachingRequestShort? acceptedCoachRequest,
+                    int numberOfChatsWithUnreadMessages,
                   ) =>
-                      HomeCubitListenedParams(
+                      _ListenedParams(
                     loggedUserData: loggedUserData,
                     acceptedClientRequests: acceptedClientRequests,
                     acceptedCoachRequest: acceptedCoachRequest,
+                    numberOfChatsWithUnreadMessages:
+                        numberOfChatsWithUnreadMessages,
                   ),
                 )
               : Stream.value(null),
         )
         .listen(
-          (HomeCubitListenedParams? params) => emit(
+          (_ListenedParams? params) => emit(
             state.copyWith(
               status: params == null ? const CubitStatusNoLoggedUser() : null,
               accountType: params?.loggedUserData?.accountType,
@@ -72,6 +83,8 @@ class HomeCubit extends CubitWithStatus<HomeState, HomeCubitInfo, dynamic> {
               appSettings: params?.loggedUserData?.settings,
               acceptedClientRequests: params?.acceptedClientRequests,
               acceptedCoachRequest: params?.acceptedCoachRequest,
+              numberOfChatsWithUnreadMessages:
+                  params?.numberOfChatsWithUnreadMessages,
             ),
           ),
         );
@@ -135,6 +148,21 @@ class HomeCubit extends CubitWithStatus<HomeState, HomeCubitInfo, dynamic> {
                 : Stream.value(null),
           );
 
+  Stream<int> _getNumberOfChatsWithUnreadMessages(String loggedUserId) =>
+      _chatRepository.getChatsContainingUser(userId: loggedUserId).switchMap(
+            (List<Chat> chats) => Rx.combineLatest(
+              chats.map(
+                (chat) => _messageRepository.doesUserHaveUnreadMessagesInChat(
+                  chatId: chat.id,
+                  userId: loggedUserId,
+                ),
+              ),
+              (values) => values
+                  .where((bool hasUnreadMessages) => hasUnreadMessages)
+                  .length,
+            ),
+          );
+
   Stream<CoachingRequestShort> _convertToCoachingRequestShort(
     CoachingRequest request,
   ) =>
@@ -152,15 +180,17 @@ class HomeCubit extends CubitWithStatus<HomeState, HomeCubitInfo, dynamic> {
 
 enum HomeCubitInfo { userSignedOut }
 
-class HomeCubitListenedParams extends Equatable {
+class _ListenedParams extends Equatable {
   final User? loggedUserData;
   final List<CoachingRequestShort> acceptedClientRequests;
   final CoachingRequestShort? acceptedCoachRequest;
+  final int numberOfChatsWithUnreadMessages;
 
-  const HomeCubitListenedParams({
+  const _ListenedParams({
     required this.loggedUserData,
     required this.acceptedClientRequests,
     required this.acceptedCoachRequest,
+    required this.numberOfChatsWithUnreadMessages,
   });
 
   @override
@@ -168,5 +198,6 @@ class HomeCubitListenedParams extends Equatable {
         loggedUserData,
         acceptedClientRequests,
         acceptedCoachRequest,
+        numberOfChatsWithUnreadMessages,
       ];
 }

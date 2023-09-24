@@ -4,22 +4,29 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/domain/additional_model/cubit_status.dart';
 import 'package:runnoter/domain/additional_model/coaching_request.dart';
 import 'package:runnoter/domain/additional_model/coaching_request_short.dart';
+import 'package:runnoter/domain/additional_model/cubit_status.dart';
 import 'package:runnoter/domain/additional_model/settings.dart';
 import 'package:runnoter/domain/cubit/home/home_cubit.dart';
+import 'package:runnoter/domain/entity/chat.dart';
 import 'package:runnoter/domain/entity/person.dart';
 import 'package:runnoter/domain/entity/user.dart';
+import 'package:runnoter/domain/repository/chat_repository.dart';
+import 'package:runnoter/domain/repository/message_repository.dart';
 import 'package:runnoter/domain/repository/person_repository.dart';
 import 'package:runnoter/domain/repository/user_repository.dart';
 import 'package:runnoter/domain/service/auth_service.dart';
 import 'package:runnoter/domain/service/coaching_request_service.dart';
+import 'package:rxdart/rxdart.dart';
 
+import '../../../creators/chat_creator.dart';
 import '../../../creators/coaching_request_creator.dart';
 import '../../../creators/person_creator.dart';
 import '../../../creators/settings_creator.dart';
 import '../../../creators/user_creator.dart';
+import '../../../mock/domain/repository/mock_chat_repository.dart';
+import '../../../mock/domain/repository/mock_message_repository.dart';
 import '../../../mock/domain/repository/mock_person_repository.dart';
 import '../../../mock/domain/repository/mock_user_repository.dart';
 import '../../../mock/domain/service/mock_auth_service.dart';
@@ -30,6 +37,8 @@ void main() {
   final userRepository = MockUserRepository();
   final coachingRequestService = MockCoachingRequestService();
   final personRepository = MockPersonRepository();
+  final chatRepository = MockChatRepository();
+  final messageRepository = MockMessageRepository();
   const String loggedUserId = 'u1';
 
   setUpAll(() {
@@ -39,6 +48,8 @@ void main() {
       () => coachingRequestService,
     );
     GetIt.I.registerSingleton<PersonRepository>(personRepository);
+    GetIt.I.registerSingleton<ChatRepository>(chatRepository);
+    GetIt.I.registerSingleton<MessageRepository>(messageRepository);
   });
 
   tearDown(() {
@@ -46,6 +57,8 @@ void main() {
     reset(userRepository);
     reset(coachingRequestService);
     reset(personRepository);
+    reset(chatRepository);
+    reset(messageRepository);
   });
 
   group(
@@ -105,19 +118,35 @@ void main() {
           isAccepted: false,
         ),
       ];
+      final List<Chat> chats = [createChat(id: 'c1'), createChat(id: 'c2')];
+      final List<Chat> updatedChats = [
+        createChat(id: 'c1'),
+        createChat(id: 'c2'),
+        createChat(id: 'c3'),
+      ];
       final StreamController<User?> loggedUserData$ = StreamController()
         ..add(loggedUserData);
       final StreamController<List<CoachingRequest>> clientsRequests$ =
           StreamController()..add(requestsSentToClients);
       final StreamController<List<CoachingRequest>> coachesRequests$ =
           StreamController()..add(requestsSentToCoaches);
+      final StreamController<List<Chat>> chats$ = StreamController()
+        ..add(chats);
+      final StreamController<bool> doesUserHaveUnreadMessagesInChat1$ =
+          BehaviorSubject.seeded(false);
+      final StreamController<bool> doesUserHaveUnreadMessagesInChat2$ =
+          BehaviorSubject.seeded(true);
+      final StreamController<bool> doesUserHaveUnreadMessagesInChat3$ =
+          BehaviorSubject.seeded(false);
       final List<CoachingRequestShort> acceptedClientRequests = [
         CoachingRequestShort(id: 'r2', personToDisplay: client1),
         CoachingRequestShort(id: 'r3', personToDisplay: client2),
       ];
 
       blocTest(
-        "should set listener of logged user's data, accepted client requests and accepted coach request",
+        'should listen to logged user data, accepted client requests and '
+        'accepted coach request and should listen to number of chats with '
+        'unread received messages',
         build: () => HomeCubit(),
         setUp: () {
           authService.mockGetLoggedUserId(userId: loggedUserId);
@@ -145,6 +174,25 @@ void main() {
           when(
             () => personRepository.getPersonById(personId: coach.id),
           ).thenAnswer((_) => Stream.value(coach));
+          chatRepository.mockGetChatsContainingUser(chatsStream: chats$.stream);
+          when(
+            () => messageRepository.doesUserHaveUnreadMessagesInChat(
+              chatId: 'c1',
+              userId: loggedUserId,
+            ),
+          ).thenAnswer((_) => doesUserHaveUnreadMessagesInChat1$.stream);
+          when(
+            () => messageRepository.doesUserHaveUnreadMessagesInChat(
+              chatId: 'c2',
+              userId: loggedUserId,
+            ),
+          ).thenAnswer((_) => doesUserHaveUnreadMessagesInChat2$.stream);
+          when(
+            () => messageRepository.doesUserHaveUnreadMessagesInChat(
+              chatId: 'c3',
+              userId: loggedUserId,
+            ),
+          ).thenAnswer((_) => doesUserHaveUnreadMessagesInChat3$.stream);
         },
         act: (cubit) async {
           cubit.initialize();
@@ -154,6 +202,11 @@ void main() {
           clientsRequests$.add([]);
           await cubit.stream.first;
           loggedUserData$.add(updatedLoggedUserData);
+          await cubit.stream.first;
+          doesUserHaveUnreadMessagesInChat1$.add(true);
+          await cubit.stream.first;
+          chats$.add(updatedChats);
+          doesUserHaveUnreadMessagesInChat3$.add(true);
         },
         expect: () => [
           const HomeState(status: CubitStatusLoading()),
@@ -167,6 +220,7 @@ void main() {
               id: 'r4',
               personToDisplay: coach,
             ),
+            numberOfChatsWithUnreadMessages: 1,
           ),
           HomeState(
             status: const CubitStatusComplete(),
@@ -174,6 +228,7 @@ void main() {
             loggedUserName: loggedUserData.name,
             appSettings: loggedUserData.settings,
             acceptedClientRequests: acceptedClientRequests,
+            numberOfChatsWithUnreadMessages: 1,
           ),
           HomeState(
             status: const CubitStatusComplete(),
@@ -181,6 +236,7 @@ void main() {
             loggedUserName: loggedUserData.name,
             appSettings: loggedUserData.settings,
             acceptedClientRequests: const [],
+            numberOfChatsWithUnreadMessages: 1,
           ),
           HomeState(
             status: const CubitStatusComplete(),
@@ -188,6 +244,23 @@ void main() {
             loggedUserName: updatedLoggedUserData.name,
             appSettings: updatedLoggedUserData.settings,
             acceptedClientRequests: const [],
+            numberOfChatsWithUnreadMessages: 1,
+          ),
+          HomeState(
+            status: const CubitStatusComplete(),
+            accountType: updatedLoggedUserData.accountType,
+            loggedUserName: updatedLoggedUserData.name,
+            appSettings: updatedLoggedUserData.settings,
+            acceptedClientRequests: const [],
+            numberOfChatsWithUnreadMessages: 2,
+          ),
+          HomeState(
+            status: const CubitStatusComplete(),
+            accountType: updatedLoggedUserData.accountType,
+            loggedUserName: updatedLoggedUserData.name,
+            appSettings: updatedLoggedUserData.settings,
+            acceptedClientRequests: const [],
+            numberOfChatsWithUnreadMessages: 3,
           ),
         ],
         verify: (_) {
@@ -223,6 +296,27 @@ void main() {
           ).called(1);
           verify(
             () => personRepository.getPersonById(personId: coach.id),
+          ).called(1);
+          verify(
+            () => chatRepository.getChatsContainingUser(userId: loggedUserId),
+          ).called(1);
+          verify(
+            () => messageRepository.doesUserHaveUnreadMessagesInChat(
+              chatId: 'c1',
+              userId: loggedUserId,
+            ),
+          ).called(2);
+          verify(
+            () => messageRepository.doesUserHaveUnreadMessagesInChat(
+              chatId: 'c2',
+              userId: loggedUserId,
+            ),
+          ).called(2);
+          verify(
+            () => messageRepository.doesUserHaveUnreadMessagesInChat(
+              chatId: 'c3',
+              userId: loggedUserId,
+            ),
           ).called(1);
         },
       );
