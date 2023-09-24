@@ -78,13 +78,36 @@ class HomeNavigationRail extends StatelessWidget {
         ),
         if (accountType == AccountType.coach)
           NavigationRailDestination(
-            icon: const Icon(Icons.groups_outlined),
-            selectedIcon: const Icon(Icons.groups),
+            icon: const _UnreadClientMessagesBadge(
+              child: Icon(Icons.groups_outlined),
+            ),
+            selectedIcon: const _UnreadClientMessagesBadge(
+              child: Icon(Icons.groups),
+            ),
             label: Text(str.clientsTitle),
           ),
       ],
       selectedIndex: selectedIndex,
       onDestinationSelected: onPageSelected,
+    );
+  }
+}
+
+class _UnreadClientMessagesBadge extends StatelessWidget {
+  final Widget child;
+
+  const _UnreadClientMessagesBadge({required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    final int? numberOfUnreadClientMessages = context.select(
+      (HomeCubit cubit) => cubit.state.idsOfClientsWithAwaitingMessages?.length,
+    );
+
+    return Badge(
+      isLabelVisible: numberOfUnreadClientMessages != null &&
+          numberOfUnreadClientMessages > 0,
+      child: child,
     );
   }
 }

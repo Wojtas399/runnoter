@@ -116,11 +116,10 @@ class _NumberOfUnreadClientMessages extends StatelessWidget {
       (HomeCubit cubit) => cubit.state.idsOfClientsWithAwaitingMessages?.length,
     );
 
-    return numberOfUnreadClientMessages != null &&
-            numberOfUnreadClientMessages > 0
-        ? Badge(
-            label: Text('$numberOfUnreadClientMessages'),
-          )
-        : const SizedBox();
+    return Badge(
+      isLabelVisible: numberOfUnreadClientMessages != null &&
+          numberOfUnreadClientMessages > 0,
+      label: Text('$numberOfUnreadClientMessages'),
+    );
   }
 }

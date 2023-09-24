@@ -151,12 +151,10 @@ class HomeCubit extends CubitWithStatus<HomeState, HomeCubitInfo, dynamic> {
   Stream<List<String>> _getIdsOfClientsWithAwaitingMessages(
     String loggedUserId,
   ) =>
-      _personRepository
-          .getPersonsByCoachId(coachId: loggedUserId)
-          .whereNotNull()
-          .asyncMap(
-        (List<Person> clients) async {
+      _personRepository.getPersonsByCoachId(coachId: loggedUserId).asyncMap(
+        (List<Person>? clients) async {
           final List<Stream<String?>> idsOfClientsWithAwaitingMessages = [];
+          if (clients == null) return idsOfClientsWithAwaitingMessages;
           for (final client in clients) {
             final String? chatId = await _chatRepository.findChatIdByUsers(
               user1Id: loggedUserId,
@@ -176,10 +174,13 @@ class HomeCubit extends CubitWithStatus<HomeState, HomeCubitInfo, dynamic> {
           return idsOfClientsWithAwaitingMessages;
         },
       ).switchMap(
-        (idsOfClientsWithAwaitingMessages$) => Rx.combineLatest(
-          idsOfClientsWithAwaitingMessages$,
-          (values) => values.whereType<String>().toList(),
-        ),
+        (idsOfClientsWithAwaitingMessages$) =>
+            idsOfClientsWithAwaitingMessages$.isEmpty
+                ? Stream.value(const [])
+                : Rx.combineLatest(
+                    idsOfClientsWithAwaitingMessages$,
+                    (values) => values.whereType<String>().toList(),
+                  ),
       );
 
   Stream<CoachingRequestShort> _convertToCoachingRequestShort(
