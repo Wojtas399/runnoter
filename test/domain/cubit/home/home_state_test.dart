@@ -124,4 +124,18 @@ void main() {
       expect(state2.idsOfClientsWithAwaitingMessages, expected);
     },
   );
+
+  test(
+    'copy with areThereUnreadMessagesFromCoach, '
+    'should set new value or should copy current value if new value is null',
+    () {
+      const bool expected = true;
+
+      state = state.copyWith(areThereUnreadMessagesFromCoach: expected);
+      final state2 = state.copyWith();
+
+      expect(state.areThereUnreadMessagesFromCoach, expected);
+      expect(state2.areThereUnreadMessagesFromCoach, expected);
+    },
+  );
 }

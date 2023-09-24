@@ -7,6 +7,7 @@ class HomeState extends CubitState<HomeState> {
   final List<CoachingRequestShort> acceptedClientRequests;
   final CoachingRequestShort? acceptedCoachRequest;
   final List<String>? idsOfClientsWithAwaitingMessages;
+  final bool? areThereUnreadMessagesFromCoach;
 
   const HomeState({
     required super.status,
@@ -16,6 +17,7 @@ class HomeState extends CubitState<HomeState> {
     this.acceptedClientRequests = const [],
     this.acceptedCoachRequest,
     this.idsOfClientsWithAwaitingMessages,
+    this.areThereUnreadMessagesFromCoach,
   });
 
   @override
@@ -27,6 +29,7 @@ class HomeState extends CubitState<HomeState> {
         acceptedClientRequests,
         acceptedCoachRequest,
         idsOfClientsWithAwaitingMessages,
+        areThereUnreadMessagesFromCoach,
       ];
 
   @override
@@ -38,6 +41,7 @@ class HomeState extends CubitState<HomeState> {
     List<CoachingRequestShort>? acceptedClientRequests,
     CoachingRequestShort? acceptedCoachRequest,
     List<String>? idsOfClientsWithAwaitingMessages,
+    bool? areThereUnreadMessagesFromCoach,
   }) =>
       HomeState(
         status: status ?? const CubitStatusComplete(),
@@ -48,5 +52,7 @@ class HomeState extends CubitState<HomeState> {
         acceptedCoachRequest: acceptedCoachRequest,
         idsOfClientsWithAwaitingMessages: idsOfClientsWithAwaitingMessages ??
             this.idsOfClientsWithAwaitingMessages,
+        areThereUnreadMessagesFromCoach: areThereUnreadMessagesFromCoach ??
+            this.areThereUnreadMessagesFromCoach,
       );
 }

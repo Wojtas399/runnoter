@@ -72,6 +72,7 @@ void main() {
           distanceUnit: DistanceUnit.miles,
           paceUnit: PaceUnit.milesPerHour,
         ),
+        coachId: 'coach1',
       );
       final User updatedLoggedUserData = createUser(
         id: loggedUserId,
@@ -83,6 +84,7 @@ void main() {
           distanceUnit: DistanceUnit.kilometers,
           paceUnit: PaceUnit.milesPerHour,
         ),
+        coachId: 'coach1',
       );
       final Person client1 = createPerson(id: 'cl1', name: 'first client');
       final Person client2 = createPerson(id: 'cl2', name: 'second client');
@@ -125,8 +127,8 @@ void main() {
         createPerson(id: 'u3'),
         createPerson(id: 'u4'),
       ];
-      final StreamController<User?> loggedUserData$ = StreamController()
-        ..add(loggedUserData);
+      final StreamController<User?> loggedUserData$ =
+          BehaviorSubject.seeded(loggedUserData);
       final StreamController<List<CoachingRequest>> clientsRequests$ =
           StreamController()..add(requestsSentToClients);
       final StreamController<List<CoachingRequest>> coachesRequests$ =
@@ -138,6 +140,8 @@ void main() {
       final StreamController<bool> doesUserHaveUnreadMessagesInChat2$ =
           BehaviorSubject.seeded(true);
       final StreamController<bool> doesUserHaveUnreadMessagesInChat3$ =
+          BehaviorSubject.seeded(false);
+      final StreamController<bool> doesUserHaveUnreadMessagesInCoachChat$ =
           BehaviorSubject.seeded(false);
       final List<CoachingRequestShort> acceptedClientRequests = [
         CoachingRequestShort(id: 'r2', personToDisplay: client1),
@@ -197,6 +201,12 @@ void main() {
             ),
           ).thenAnswer((_) => Future.value('c3'));
           when(
+            () => chatRepository.findChatIdByUsers(
+              user1Id: loggedUserId,
+              user2Id: 'coach1',
+            ),
+          ).thenAnswer((_) => Future.value('c4'));
+          when(
             () => messageRepository.doesUserHaveUnreadMessagesInChat(
               chatId: 'c1',
               userId: loggedUserId,
@@ -214,6 +224,12 @@ void main() {
               userId: loggedUserId,
             ),
           ).thenAnswer((_) => doesUserHaveUnreadMessagesInChat3$.stream);
+          when(
+            () => messageRepository.doesUserHaveUnreadMessagesInChat(
+              chatId: 'c4',
+              userId: loggedUserId,
+            ),
+          ).thenAnswer((_) => doesUserHaveUnreadMessagesInCoachChat$.stream);
         },
         act: (cubit) async {
           cubit.initialize();
@@ -228,6 +244,8 @@ void main() {
           await cubit.stream.first;
           clients$.add(updatedClients);
           doesUserHaveUnreadMessagesInChat3$.add(true);
+          await cubit.stream.first;
+          doesUserHaveUnreadMessagesInCoachChat$.add(true);
         },
         expect: () => [
           const HomeState(status: CubitStatusLoading()),
@@ -242,6 +260,7 @@ void main() {
               personToDisplay: coach,
             ),
             idsOfClientsWithAwaitingMessages: const ['u3'],
+            areThereUnreadMessagesFromCoach: false,
           ),
           HomeState(
             status: const CubitStatusComplete(),
@@ -250,6 +269,7 @@ void main() {
             appSettings: loggedUserData.settings,
             acceptedClientRequests: acceptedClientRequests,
             idsOfClientsWithAwaitingMessages: const ['u3'],
+            areThereUnreadMessagesFromCoach: false,
           ),
           HomeState(
             status: const CubitStatusComplete(),
@@ -258,6 +278,7 @@ void main() {
             appSettings: loggedUserData.settings,
             acceptedClientRequests: const [],
             idsOfClientsWithAwaitingMessages: const ['u3'],
+            areThereUnreadMessagesFromCoach: false,
           ),
           HomeState(
             status: const CubitStatusComplete(),
@@ -266,6 +287,7 @@ void main() {
             appSettings: updatedLoggedUserData.settings,
             acceptedClientRequests: const [],
             idsOfClientsWithAwaitingMessages: const ['u3'],
+            areThereUnreadMessagesFromCoach: false,
           ),
           HomeState(
             status: const CubitStatusComplete(),
@@ -274,6 +296,7 @@ void main() {
             appSettings: updatedLoggedUserData.settings,
             acceptedClientRequests: const [],
             idsOfClientsWithAwaitingMessages: const ['u2', 'u3'],
+            areThereUnreadMessagesFromCoach: false,
           ),
           HomeState(
             status: const CubitStatusComplete(),
@@ -282,13 +305,23 @@ void main() {
             appSettings: updatedLoggedUserData.settings,
             acceptedClientRequests: const [],
             idsOfClientsWithAwaitingMessages: const ['u2', 'u3', 'u4'],
+            areThereUnreadMessagesFromCoach: false,
+          ),
+          HomeState(
+            status: const CubitStatusComplete(),
+            accountType: updatedLoggedUserData.accountType,
+            loggedUserName: updatedLoggedUserData.name,
+            appSettings: updatedLoggedUserData.settings,
+            acceptedClientRequests: const [],
+            idsOfClientsWithAwaitingMessages: const ['u2', 'u3', 'u4'],
+            areThereUnreadMessagesFromCoach: true,
           ),
         ],
         verify: (_) {
           verify(() => authService.loggedUserId$).called(1);
           verify(
             () => userRepository.getUserById(userId: loggedUserId),
-          ).called(1);
+          ).called(2);
           verify(
             () => personRepository.refreshPersonsByCoachId(
               coachId: loggedUserId,
@@ -339,6 +372,12 @@ void main() {
               userId: loggedUserId,
             ),
           ).called(1);
+          verify(
+            () => messageRepository.doesUserHaveUnreadMessagesInChat(
+              chatId: 'c4',
+              userId: loggedUserId,
+            ),
+          ).called(2);
         },
       );
 
