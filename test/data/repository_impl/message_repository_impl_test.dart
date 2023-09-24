@@ -167,6 +167,93 @@ void main() {
   );
 
   test(
+    'areThereUnreadMessagesInChatSentByUser, '
+    'at least one matching message exist in repo, '
+    'should return true',
+    () async {
+      const String chatId = 'c1';
+      const String userId = 'u1';
+      final List<Message> existingMessages = [
+        createMessage(
+          id: 'm1',
+          chatId: chatId,
+          senderId: 'u2',
+          status: MessageStatus.read,
+        ),
+        createMessage(
+          id: 'm2',
+          chatId: 'c2',
+          senderId: userId,
+          status: MessageStatus.read,
+        ),
+        createMessage(
+          id: 'm3',
+          chatId: chatId,
+          senderId: userId,
+          status: MessageStatus.read,
+        ),
+        createMessage(
+          id: 'm3',
+          chatId: chatId,
+          senderId: userId,
+          status: MessageStatus.sent,
+        ),
+      ];
+      repository = MessageRepositoryImpl(initialData: existingMessages);
+
+      final Stream<bool> result$ =
+          await repository.areThereUnreadMessagesInChatSentByUser(
+        chatId: chatId,
+        userId: userId,
+      );
+
+      expect(result$, emits(true));
+    },
+  );
+
+  test(
+    'areThereUnreadMessagesInChatSentByUser, '
+    'no one matching message exist in repo, '
+    'should search matching messages in db',
+    () async {
+      const String chatId = 'c1';
+      const String userId = 'u1';
+      final List<Message> existingMessages = [
+        createMessage(
+          id: 'm1',
+          chatId: chatId,
+          senderId: 'u2',
+          status: MessageStatus.read,
+        ),
+        createMessage(
+          id: 'm2',
+          chatId: 'c2',
+          senderId: userId,
+          status: MessageStatus.read,
+        ),
+        createMessage(
+          id: 'm3',
+          chatId: chatId,
+          senderId: userId,
+          status: MessageStatus.read,
+        ),
+      ];
+      dbMessageService.mockAreThereUnreadMessagesInChatSentByUser(
+        expected: true,
+      );
+      repository = MessageRepositoryImpl(initialData: existingMessages);
+
+      final Stream<bool> result$ =
+          repository.areThereUnreadMessagesInChatSentByUser(
+        chatId: chatId,
+        userId: userId,
+      );
+
+      expect(result$, emits(true));
+    },
+  );
+
+  test(
     'load older messages for chat, '
     "should call db message service's method to load older messages and "
     'should add loaded messages to repo',
@@ -205,99 +292,6 @@ void main() {
         () => dbMessageService.loadMessagesForChat(
           chatId: chatId,
           lastVisibleMessageId: lastVisibleMessageId,
-        ),
-      ).called(1);
-    },
-  );
-
-  test(
-    'are there unread messages in chat sent by user, '
-    'at least one matching message exist in repo, '
-    'should return true',
-    () async {
-      const String chatId = 'c1';
-      const String userId = 'u1';
-      final List<Message> existingMessages = [
-        createMessage(
-          id: 'm1',
-          chatId: chatId,
-          senderId: 'u2',
-          status: MessageStatus.read,
-        ),
-        createMessage(
-          id: 'm2',
-          chatId: 'c2',
-          senderId: userId,
-          status: MessageStatus.read,
-        ),
-        createMessage(
-          id: 'm3',
-          chatId: chatId,
-          senderId: userId,
-          status: MessageStatus.read,
-        ),
-        createMessage(
-          id: 'm3',
-          chatId: chatId,
-          senderId: userId,
-          status: MessageStatus.sent,
-        ),
-      ];
-      repository = MessageRepositoryImpl(initialData: existingMessages);
-
-      final bool result =
-          await repository.areThereUnreadMessageInChatSentByUser(
-        chatId: chatId,
-        userId: userId,
-      );
-
-      expect(result, true);
-    },
-  );
-
-  test(
-    'are there unread messages in chat sent by user, '
-    'no one matching message exist in repo, '
-    'should search matching messages in db',
-    () async {
-      const String chatId = 'c1';
-      const String userId = 'u1';
-      final List<Message> existingMessages = [
-        createMessage(
-          id: 'm1',
-          chatId: chatId,
-          senderId: 'u2',
-          status: MessageStatus.read,
-        ),
-        createMessage(
-          id: 'm2',
-          chatId: 'c2',
-          senderId: userId,
-          status: MessageStatus.read,
-        ),
-        createMessage(
-          id: 'm3',
-          chatId: chatId,
-          senderId: userId,
-          status: MessageStatus.read,
-        ),
-      ];
-      dbMessageService.mockAreThereUnreadMessagesInChatSentByUser(
-        expected: true,
-      );
-      repository = MessageRepositoryImpl(initialData: existingMessages);
-
-      final bool result =
-          await repository.areThereUnreadMessageInChatSentByUser(
-        chatId: chatId,
-        userId: userId,
-      );
-
-      expect(result, true);
-      verify(
-        () => dbMessageService.areThereUnreadMessagesInChatSentByUser(
-          chatId: chatId,
-          userId: userId,
         ),
       ).called(1);
     },

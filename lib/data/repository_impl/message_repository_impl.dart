@@ -47,6 +47,30 @@ class MessageRepositoryImpl extends StateRepository<Message>
   }
 
   @override
+  Stream<bool> areThereUnreadMessagesInChatSentByUser({
+    required String chatId,
+    required String userId,
+  }) =>
+      dataStream$
+          .map(
+            (List<Message>? messages) => messages?.firstWhereOrNull(
+              (Message message) =>
+                  message.chatId == chatId &&
+                  message.senderId == userId &&
+                  message.status == MessageStatus.sent,
+            ),
+          )
+          .asyncMap(
+            (Message? message) async => message != null
+                ? true
+                : await _dbMessageService
+                    .areThereUnreadMessagesInChatSentByUser(
+                    chatId: chatId,
+                    userId: userId,
+                  ),
+          );
+
+  @override
   Future<void> loadOlderMessagesForChat({
     required String chatId,
     required String lastVisibleMessageId,
@@ -55,29 +79,6 @@ class MessageRepositoryImpl extends StateRepository<Message>
       chatId,
       lastVisibleMessageId: lastVisibleMessageId,
     );
-  }
-
-  @override
-  Future<bool> areThereUnreadMessageInChatSentByUser({
-    required String chatId,
-    required String userId,
-  }) async {
-    final Message? unreadMessageFromRepo = await dataStream$
-        .map(
-          (List<Message>? messages) => messages?.firstWhereOrNull(
-            (Message message) =>
-                message.chatId == chatId &&
-                message.senderId == userId &&
-                message.status == MessageStatus.sent,
-          ),
-        )
-        .first;
-    return unreadMessageFromRepo != null
-        ? true
-        : await _dbMessageService.areThereUnreadMessagesInChatSentByUser(
-            chatId: chatId,
-            userId: userId,
-          );
   }
 
   @override
