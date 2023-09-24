@@ -33,7 +33,7 @@ void main() {
   });
 
   test(
-    'load message by id, '
+    'loadMessageById, '
     'message exists in repo, '
     'should return message from repo',
     () async {
@@ -54,7 +54,7 @@ void main() {
   );
 
   test(
-    'load message by id, '
+    'loadMessageById, '
     'message does not exist in repo, '
     'should load message from db add it to repo and return it',
     () async {
@@ -82,7 +82,7 @@ void main() {
   );
 
   test(
-    'get messages for chat, '
+    'getMessagesForChat, '
     'should load latest messages from db, add them to repo and '
     'should listen and emit all existing and newly added messages with matching chat id',
     () async {
@@ -221,7 +221,7 @@ void main() {
   );
 
   test(
-    'areThereUnreadMessagesInChatSentByUser, '
+    'doesUserHaveUnreadMessagesInChat, '
     'no one unread message sent by second user exists in repo, '
     'should search matching messages in db',
     () async {
@@ -275,7 +275,7 @@ void main() {
   );
 
   test(
-    'load older messages for chat, '
+    'loadOlderMessagesForChat, '
     "should call db message service's method to load older messages and "
     'should add loaded messages to repo',
     () async {
@@ -319,7 +319,7 @@ void main() {
   );
 
   test(
-    'add message, '
+    'addMessage, '
     'should call db storage service method to upload images and '
     'should call db message service method to add message to chat and '
     'should add new message to repo',
@@ -379,7 +379,7 @@ void main() {
   );
 
   test(
-    'mark messages as read, '
+    'markMessagesAsRead, '
     'for each message id should call db method to update message status to read and '
     'should update these messages in repo',
     () async {

@@ -73,7 +73,16 @@ class HomeNavigationDrawer extends StatelessWidget {
           NavigationDrawerDestination(
             icon: const Icon(Icons.groups_outlined),
             selectedIcon: const Icon(Icons.groups),
-            label: Text(str.clientsTitle),
+            label: SizedBox(
+              width: 200,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(str.clientsTitle),
+                  const _NumberOfChatsWithUnreadMessages(),
+                ],
+              ),
+            ),
           ),
         const Gap24(),
         NavigationDrawerDestination(
@@ -95,5 +104,23 @@ class _AppLogo extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 24),
       child: Image.asset('assets/logo.png'),
     );
+  }
+}
+
+class _NumberOfChatsWithUnreadMessages extends StatelessWidget {
+  const _NumberOfChatsWithUnreadMessages();
+
+  @override
+  Widget build(BuildContext context) {
+    final int? numberOfChatsWithUnreadMessages = context.select(
+      (HomeCubit cubit) => cubit.state.numberOfChatsWithUnreadMessages,
+    );
+
+    return numberOfChatsWithUnreadMessages != null &&
+            numberOfChatsWithUnreadMessages > 0
+        ? Badge(
+            label: Text('$numberOfChatsWithUnreadMessages'),
+          )
+        : const SizedBox();
   }
 }
