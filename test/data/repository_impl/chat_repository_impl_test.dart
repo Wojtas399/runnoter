@@ -27,7 +27,7 @@ void main() {
   });
 
   test(
-    'get chat by id, '
+    'getChatById, '
     'should set listener of db chat and should update matching chat in repo',
     () {
       const String chatId = 'c1';
@@ -69,7 +69,50 @@ void main() {
   );
 
   test(
-    'find chat id by users, '
+    'getChatsContainingUser, '
+    'should load chats from db which contain specified user id and '
+    'should add them to repo, '
+    'should emit all chats from repo which contain specified user id',
+    () async {
+      const String userId = 'u1';
+      final List<Chat> existingChats = [
+        createChat(id: 'c1', user1Id: 'u2', user2Id: 'u3'),
+        createChat(id: 'c2', user1Id: 'u2', user2Id: userId),
+        createChat(id: 'c3', user1Id: userId, user2Id: 'u3'),
+        createChat(id: 'c4', user1Id: 'u3', user2Id: 'u4'),
+      ];
+      final List<ChatDto> loadedChatDtos = [
+        createChatDto(id: 'c5', user1Id: userId, user2Id: 'u4'),
+        createChatDto(id: 'c6', user1Id: 'u5', user2Id: userId),
+      ];
+      final List<Chat> loadedChats = [
+        createChat(id: 'c5', user1Id: userId, user2Id: 'u4'),
+        createChat(id: 'c6', user1Id: 'u5', user2Id: userId),
+      ];
+      dbChatService.mockLoadChatsContainingUser(chatDtos: loadedChatDtos);
+      repository = ChatRepositoryImpl(initialData: existingChats);
+
+      Stream<List<Chat>> chats$ =
+          repository.getChatsContainingUser(userId: userId);
+
+      expect(
+        chats$,
+        emits(
+          [existingChats[1], existingChats[2], ...loadedChats],
+        ),
+      );
+      expect(
+        repository.dataStream$,
+        emitsInOrder([
+          existingChats,
+          [...existingChats, ...loadedChats],
+        ]),
+      );
+    },
+  );
+
+  test(
+    'findChatIdByUsers, '
     'chat exist in repo, '
     'should emit id of chat existing in repo',
     () async {
@@ -93,7 +136,7 @@ void main() {
   );
 
   test(
-    'find chat id by users, '
+    'findChatIdByUsers, '
     'chat does not exist in repo, '
     'should load chat from db, add it to repo and return it',
     () async {
@@ -139,7 +182,7 @@ void main() {
   );
 
   test(
-    'create chat for users, '
+    'createChatForUsers, '
     'should add new chat to db and to repo and should return its id',
     () async {
       const String expectedChatId = 'c1';
@@ -179,7 +222,7 @@ void main() {
   );
 
   test(
-    'create chat for users, '
+    'createChatForUsers, '
     'db chat exception with chatAlreadyExists code, '
     'should throw chat exception with chatAlreadyExists code',
     () async {
@@ -212,7 +255,7 @@ void main() {
   );
 
   test(
-    'update chat, '
+    'updateChat, '
     'should update chat in db and in repo',
     () async {
       const String chatId = 'c3';

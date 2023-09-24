@@ -28,6 +28,18 @@ class ChatRepositoryImpl extends StateRepository<Chat>
       .doOnData(_manageChatChanges);
 
   @override
+  Stream<List<Chat>> getChatsContainingUser({required String userId}) async* {
+    await _loadChatsContainingUserFromDb(userId);
+    await for (final chats in dataStream$) {
+      yield [
+        ...?chats?.where(
+          (chat) => chat.user1Id == userId || chat.user2Id == userId,
+        ),
+      ];
+    }
+  }
+
+  @override
   Future<String?> findChatIdByUsers({
     required String user1Id,
     required String user2Id,
@@ -98,5 +110,14 @@ class ChatRepositoryImpl extends StateRepository<Chat>
     final Chat chat = mapChatFromDto(chatDto);
     addEntity(chat);
     return chat;
+  }
+
+  Future<void> _loadChatsContainingUserFromDb(String userId) async {
+    final List<ChatDto> chatDtos =
+        await _dbChatService.loadChatsContainingUser(userId: userId);
+    if (chatDtos.isNotEmpty) {
+      final List<Chat> chats = chatDtos.map(mapChatFromDto).toList();
+      addOrUpdateEntities(chats);
+    }
   }
 }

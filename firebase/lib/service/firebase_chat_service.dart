@@ -10,6 +10,19 @@ class FirebaseChatService {
       .snapshots()
       .map((docSnapshot) => docSnapshot.data());
 
+  Future<List<ChatDto>> loadChatsContainingUser({
+    required String userId,
+  }) async {
+    final snapshotOfChatsWithMatchingUser1 =
+        await getChatsRef().where(user1IdField, isEqualTo: userId).get();
+    final snapshotOfChatsWithMatchingUser2 =
+        await getChatsRef().where(user2IdField, isEqualTo: userId).get();
+    return [
+      ...snapshotOfChatsWithMatchingUser1.docs.map((doc) => doc.data()),
+      ...snapshotOfChatsWithMatchingUser2.docs.map((doc) => doc.data()),
+    ];
+  }
+
   Future<ChatDto?> loadChatByUsers({
     required String user1Id,
     required String user2Id,
