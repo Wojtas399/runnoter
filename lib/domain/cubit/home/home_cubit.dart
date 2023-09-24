@@ -44,7 +44,6 @@ class HomeCubit extends CubitWithStatus<HomeState, HomeCubitInfo, dynamic> {
   @override
   Future<void> close() {
     _listener?.cancel();
-    _listener = null;
     return super.close();
   }
 

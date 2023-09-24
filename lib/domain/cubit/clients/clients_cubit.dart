@@ -4,10 +4,10 @@ import 'package:equatable/equatable.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../../dependency_injection.dart';
-import '../../additional_model/cubit_status.dart';
 import '../../additional_model/coaching_request.dart';
 import '../../additional_model/coaching_request_short.dart';
 import '../../additional_model/cubit_state.dart';
+import '../../additional_model/cubit_status.dart';
 import '../../additional_model/cubit_with_status.dart';
 import '../../entity/person.dart';
 import '../../repository/person_repository.dart';
@@ -33,6 +33,12 @@ class ClientsCubit
         _personRepository = getIt<PersonRepository>(),
         _loadChatIdUseCase = getIt<LoadChatIdUseCase>(),
         super(initialState);
+
+  @override
+  Future<void> close() {
+    _listener?.cancel();
+    return super.close();
+  }
 
   Future<void> initialize() async {
     _listener ??= _authService.loggedUserId$

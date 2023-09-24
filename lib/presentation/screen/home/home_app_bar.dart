@@ -130,12 +130,19 @@ class _Avatar extends StatelessWidget {
     final String? loggedUserName = context.select(
       (HomeCubit cubit) => cubit.state.loggedUserName,
     );
+    final bool? areThereUnreadMessagesFromCoach = context.select(
+      (HomeCubit cubit) => cubit.state.areThereUnreadMessagesFromCoach,
+    );
+
     return IconButton(
       onPressed: onPressed,
       padding: const EdgeInsets.all(0),
-      icon: CircleAvatar(
-        radius: 18,
-        child: Text(loggedUserName?[0] ?? '?'),
+      icon: Badge(
+        isLabelVisible: areThereUnreadMessagesFromCoach == true,
+        child: CircleAvatar(
+          radius: 18,
+          child: Text(loggedUserName?[0] ?? '?'),
+        ),
       ),
     );
   }
