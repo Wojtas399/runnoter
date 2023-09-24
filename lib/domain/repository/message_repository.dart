@@ -10,6 +10,11 @@ abstract interface class MessageRepository {
     required String lastVisibleMessageId,
   });
 
+  Future<bool> areThereUnreadMessageInChatSentByUser({
+    required String chatId,
+    required String userId,
+  });
+
   Future<String?> addMessage({
     required MessageStatus status,
     required String chatId,

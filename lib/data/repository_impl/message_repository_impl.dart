@@ -58,6 +58,29 @@ class MessageRepositoryImpl extends StateRepository<Message>
   }
 
   @override
+  Future<bool> areThereUnreadMessageInChatSentByUser({
+    required String chatId,
+    required String userId,
+  }) async {
+    final Message? unreadMessageFromRepo = await dataStream$
+        .map(
+          (List<Message>? messages) => messages?.firstWhereOrNull(
+            (Message message) =>
+                message.chatId == chatId &&
+                message.senderId == userId &&
+                message.status == MessageStatus.sent,
+          ),
+        )
+        .first;
+    return unreadMessageFromRepo != null
+        ? true
+        : await _dbMessageService.areThereUnreadMessagesInChatSentByUser(
+            chatId: chatId,
+            userId: userId,
+          );
+  }
+
+  @override
   Future<String?> addMessage({
     required MessageStatus status,
     required String chatId,

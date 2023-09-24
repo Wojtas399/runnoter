@@ -48,6 +48,21 @@ class FirebaseMessageService {
     );
   }
 
+  Future<bool> areThereUnreadMessagesInChatSentByUser({
+    required String chatId,
+    required String userId,
+  }) async {
+    final Query<MessageDto> query = getMessagesRef()
+        .where(chatIdField, isEqualTo: chatId)
+        .where(senderIdField, isEqualTo: userId)
+        .where(
+          messageStatusField,
+          isEqualTo: mapMessageStatusToString(MessageStatus.sent),
+        );
+    final querySnapshot = await query.get();
+    return querySnapshot.docs.isNotEmpty;
+  }
+
   Future<MessageDto?> addMessage({
     required MessageStatus status,
     required String chatId,
