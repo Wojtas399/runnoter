@@ -112,16 +112,16 @@ void main() {
   );
 
   test(
-    'copy with numberOfChatsWithUnreadMessages, '
+    'copy with idsOfClientsWithAwaitingMessages, '
     'should set new value or should copy current value if new value is null',
     () {
-      const int expected = 5;
+      const List<String> expected = ['u1', 'u2'];
 
-      state = state.copyWith(numberOfChatsWithUnreadMessages: expected);
+      state = state.copyWith(idsOfClientsWithAwaitingMessages: expected);
       final state2 = state.copyWith();
 
-      expect(state.numberOfChatsWithUnreadMessages, expected);
-      expect(state2.numberOfChatsWithUnreadMessages, expected);
+      expect(state.idsOfClientsWithAwaitingMessages, expected);
+      expect(state2.idsOfClientsWithAwaitingMessages, expected);
     },
   );
 }

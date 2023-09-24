@@ -79,7 +79,7 @@ class HomeNavigationDrawer extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(str.clientsTitle),
-                  const _NumberOfChatsWithUnreadMessages(),
+                  const _NumberOfUnreadClientMessages(),
                 ],
               ),
             ),
@@ -107,19 +107,19 @@ class _AppLogo extends StatelessWidget {
   }
 }
 
-class _NumberOfChatsWithUnreadMessages extends StatelessWidget {
-  const _NumberOfChatsWithUnreadMessages();
+class _NumberOfUnreadClientMessages extends StatelessWidget {
+  const _NumberOfUnreadClientMessages();
 
   @override
   Widget build(BuildContext context) {
-    final int? numberOfChatsWithUnreadMessages = context.select(
-      (HomeCubit cubit) => cubit.state.numberOfChatsWithUnreadMessages,
+    final int? numberOfUnreadClientMessages = context.select(
+      (HomeCubit cubit) => cubit.state.idsOfClientsWithAwaitingMessages?.length,
     );
 
-    return numberOfChatsWithUnreadMessages != null &&
-            numberOfChatsWithUnreadMessages > 0
+    return numberOfUnreadClientMessages != null &&
+            numberOfUnreadClientMessages > 0
         ? Badge(
-            label: Text('$numberOfChatsWithUnreadMessages'),
+            label: Text('$numberOfUnreadClientMessages'),
           )
         : const SizedBox();
   }

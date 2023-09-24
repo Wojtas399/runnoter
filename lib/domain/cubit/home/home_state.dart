@@ -6,7 +6,7 @@ class HomeState extends CubitState<HomeState> {
   final Settings? appSettings;
   final List<CoachingRequestShort> acceptedClientRequests;
   final CoachingRequestShort? acceptedCoachRequest;
-  final int? numberOfChatsWithUnreadMessages;
+  final List<String>? idsOfClientsWithAwaitingMessages;
 
   const HomeState({
     required super.status,
@@ -15,7 +15,7 @@ class HomeState extends CubitState<HomeState> {
     this.appSettings,
     this.acceptedClientRequests = const [],
     this.acceptedCoachRequest,
-    this.numberOfChatsWithUnreadMessages,
+    this.idsOfClientsWithAwaitingMessages,
   });
 
   @override
@@ -26,7 +26,7 @@ class HomeState extends CubitState<HomeState> {
         appSettings,
         acceptedClientRequests,
         acceptedCoachRequest,
-        numberOfChatsWithUnreadMessages,
+        idsOfClientsWithAwaitingMessages,
       ];
 
   @override
@@ -37,7 +37,7 @@ class HomeState extends CubitState<HomeState> {
     Settings? appSettings,
     List<CoachingRequestShort>? acceptedClientRequests,
     CoachingRequestShort? acceptedCoachRequest,
-    int? numberOfChatsWithUnreadMessages,
+    List<String>? idsOfClientsWithAwaitingMessages,
   }) =>
       HomeState(
         status: status ?? const CubitStatusComplete(),
@@ -46,7 +46,7 @@ class HomeState extends CubitState<HomeState> {
         appSettings: appSettings ?? this.appSettings,
         acceptedClientRequests: acceptedClientRequests ?? const [],
         acceptedCoachRequest: acceptedCoachRequest,
-        numberOfChatsWithUnreadMessages: numberOfChatsWithUnreadMessages ??
-            this.numberOfChatsWithUnreadMessages,
+        idsOfClientsWithAwaitingMessages: idsOfClientsWithAwaitingMessages ??
+            this.idsOfClientsWithAwaitingMessages,
       );
 }

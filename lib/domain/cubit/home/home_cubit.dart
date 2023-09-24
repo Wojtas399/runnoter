@@ -13,7 +13,7 @@ import '../../additional_model/coaching_request_short.dart';
 import '../../additional_model/cubit_state.dart';
 import '../../additional_model/cubit_with_status.dart';
 import '../../additional_model/settings.dart';
-import '../../entity/chat.dart';
+import '../../entity/person.dart';
 import '../../entity/user.dart';
 import '../../repository/chat_repository.dart';
 import '../../repository/message_repository.dart';
@@ -57,19 +57,19 @@ class HomeCubit extends CubitWithStatus<HomeState, HomeCubitInfo, dynamic> {
                   _userRepository.getUserById(userId: loggedUserId),
                   _getAcceptedClientRequests(loggedUserId),
                   _getAcceptedCoachRequest(loggedUserId),
-                  _getNumberOfChatsWithUnreadMessages(loggedUserId),
+                  _getIdsOfClientsWithAwaitingMessages(loggedUserId),
                   (
                     User? loggedUserData,
                     List<CoachingRequestShort> acceptedClientRequests,
                     CoachingRequestShort? acceptedCoachRequest,
-                    int numberOfChatsWithUnreadMessages,
+                    List<String> idsOfClientsWithAwaitingMessages,
                   ) =>
                       _ListenedParams(
                     loggedUserData: loggedUserData,
                     acceptedClientRequests: acceptedClientRequests,
                     acceptedCoachRequest: acceptedCoachRequest,
-                    numberOfChatsWithUnreadMessages:
-                        numberOfChatsWithUnreadMessages,
+                    idsOfClientsWithAwaitingMessages:
+                        idsOfClientsWithAwaitingMessages,
                   ),
                 )
               : Stream.value(null),
@@ -83,8 +83,8 @@ class HomeCubit extends CubitWithStatus<HomeState, HomeCubitInfo, dynamic> {
               appSettings: params?.loggedUserData?.settings,
               acceptedClientRequests: params?.acceptedClientRequests,
               acceptedCoachRequest: params?.acceptedCoachRequest,
-              numberOfChatsWithUnreadMessages:
-                  params?.numberOfChatsWithUnreadMessages,
+              idsOfClientsWithAwaitingMessages:
+                  params?.idsOfClientsWithAwaitingMessages,
             ),
           ),
         );
@@ -148,20 +148,39 @@ class HomeCubit extends CubitWithStatus<HomeState, HomeCubitInfo, dynamic> {
                 : Stream.value(null),
           );
 
-  Stream<int> _getNumberOfChatsWithUnreadMessages(String loggedUserId) =>
-      _chatRepository.getChatsContainingUser(userId: loggedUserId).switchMap(
-            (List<Chat> chats) => Rx.combineLatest(
-              chats.map(
-                (chat) => _messageRepository.doesUserHaveUnreadMessagesInChat(
-                  chatId: chat.id,
-                  userId: loggedUserId,
-                ),
-              ),
-              (values) => values
-                  .where((bool hasUnreadMessages) => hasUnreadMessages)
-                  .length,
-            ),
-          );
+  Stream<List<String>> _getIdsOfClientsWithAwaitingMessages(
+    String loggedUserId,
+  ) =>
+      _personRepository
+          .getPersonsByCoachId(coachId: loggedUserId)
+          .whereNotNull()
+          .asyncMap(
+        (List<Person> clients) async {
+          final List<Stream<String?>> idsOfClientsWithAwaitingMessages = [];
+          for (final client in clients) {
+            final String? chatId = await _chatRepository.findChatIdByUsers(
+              user1Id: loggedUserId,
+              user2Id: client.id,
+            );
+            if (chatId != null) {
+              idsOfClientsWithAwaitingMessages.add(
+                _messageRepository
+                    .doesUserHaveUnreadMessagesInChat(
+                      chatId: chatId,
+                      userId: loggedUserId,
+                    )
+                    .map((hasUnreadMsgs) => hasUnreadMsgs ? client.id : null),
+              );
+            }
+          }
+          return idsOfClientsWithAwaitingMessages;
+        },
+      ).switchMap(
+        (idsOfClientsWithAwaitingMessages$) => Rx.combineLatest(
+          idsOfClientsWithAwaitingMessages$,
+          (values) => values.whereType<String>().toList(),
+        ),
+      );
 
   Stream<CoachingRequestShort> _convertToCoachingRequestShort(
     CoachingRequest request,
@@ -184,13 +203,13 @@ class _ListenedParams extends Equatable {
   final User? loggedUserData;
   final List<CoachingRequestShort> acceptedClientRequests;
   final CoachingRequestShort? acceptedCoachRequest;
-  final int numberOfChatsWithUnreadMessages;
+  final List<String> idsOfClientsWithAwaitingMessages;
 
   const _ListenedParams({
     required this.loggedUserData,
     required this.acceptedClientRequests,
     required this.acceptedCoachRequest,
-    required this.numberOfChatsWithUnreadMessages,
+    required this.idsOfClientsWithAwaitingMessages,
   });
 
   @override
@@ -198,6 +217,6 @@ class _ListenedParams extends Equatable {
         loggedUserData,
         acceptedClientRequests,
         acceptedCoachRequest,
-        numberOfChatsWithUnreadMessages,
+        idsOfClientsWithAwaitingMessages,
       ];
 }
