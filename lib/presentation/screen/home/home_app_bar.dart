@@ -40,6 +40,12 @@ class HomeMobileAppBar extends StatelessWidget implements PreferredSizeWidget {
       centerTitle: true,
       automaticallyImplyLeading: true,
       title: NullableText(_getAppBarTitle(context)),
+      leading: IconButton(
+        icon: const _ClientMessagesBadge(
+          child: Icon(Icons.menu),
+        ),
+        onPressed: Scaffold.of(context).openDrawer,
+      ),
       actions: [
         Container(
           margin: const EdgeInsets.only(right: 8),
@@ -121,24 +127,18 @@ class _DesktopLeftPart extends StatelessWidget {
 class _Avatar extends StatelessWidget {
   final VoidCallback onPressed;
 
-  const _Avatar({
-    required this.onPressed,
-  });
+  const _Avatar({required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
     final String? loggedUserName = context.select(
       (HomeCubit cubit) => cubit.state.loggedUserName,
     );
-    final bool? areThereUnreadMessagesFromCoach = context.select(
-      (HomeCubit cubit) => cubit.state.areThereUnreadMessagesFromCoach,
-    );
 
     return IconButton(
       onPressed: onPressed,
       padding: const EdgeInsets.all(0),
-      icon: Badge(
-        isLabelVisible: areThereUnreadMessagesFromCoach == true,
+      icon: _UnreadMessagesBadge(
         child: CircleAvatar(
           radius: 18,
           child: Text(loggedUserName?[0] ?? '?'),
@@ -180,5 +180,42 @@ class _MobileDateRangeHeader extends StatelessWidget
             ),
           )
         : const SizedBox();
+  }
+}
+
+class _ClientMessagesBadge extends StatelessWidget {
+  final Widget child;
+
+  const _ClientMessagesBadge({required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    final int? numberOfUnreadClientMessages = context.select(
+      (HomeCubit cubit) => cubit.state.idsOfClientsWithAwaitingMessages?.length,
+    );
+
+    return Badge(
+      isLabelVisible: numberOfUnreadClientMessages != null &&
+          numberOfUnreadClientMessages > 0,
+      child: child,
+    );
+  }
+}
+
+class _UnreadMessagesBadge extends StatelessWidget {
+  final Widget child;
+
+  const _UnreadMessagesBadge({required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    final bool? areThereUnreadMessagesFromCoach = context.select(
+      (HomeCubit cubit) => cubit.state.areThereUnreadMessagesFromCoach,
+    );
+
+    return Badge(
+      isLabelVisible: areThereUnreadMessagesFromCoach == true,
+      child: child,
+    );
   }
 }
