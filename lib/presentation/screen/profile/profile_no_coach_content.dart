@@ -7,6 +7,7 @@ import '../../../domain/additional_model/coaching_request_short.dart';
 import '../../../domain/cubit/profile/coach/profile_coach_cubit.dart';
 import '../../../domain/entity/person.dart';
 import '../../component/gap/gap_components.dart';
+import '../../component/gap/gap_horizontal_components.dart';
 import '../../component/text/body_text_components.dart';
 import '../../component/text/title_text_components.dart';
 import '../../dialog/persons_search/persons_search_dialog.dart';
@@ -47,8 +48,11 @@ class ProfileNoCoachContent extends StatelessWidget {
         const Gap16(),
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TitleMedium(str.receivedRequests),
+            const GapHorizontal8(),
+            const _ReceivedCoachingRequestsBadge(),
           ],
         ),
         const Gap8(),
@@ -98,6 +102,22 @@ class _ReceivedCoachingRequests extends StatelessWidget {
   }
 }
 
+class _ReceivedCoachingRequestsBadge extends StatelessWidget {
+  const _ReceivedCoachingRequestsBadge();
+
+  @override
+  Widget build(BuildContext context) {
+    final List<CoachingRequestShort>? requests = context.select(
+      (ProfileCoachCubit cubit) => cubit.state.receivedRequests,
+    );
+
+    return Badge(
+      isLabelVisible: requests != null && requests.isNotEmpty,
+      label: Text('${requests?.length}'),
+    );
+  }
+}
+
 class _RequestsList extends StatelessWidget {
   final List<CoachingRequestShort>? requests;
   final CoachingRequestDirection requestDirection;
@@ -126,9 +146,7 @@ class _RequestsList extends StatelessWidget {
             color: Theme.of(context).colorScheme.outline,
           ),
         ),
-      [...] => ListView(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
+      [...] => Column(
           children: ListTile.divideTiles(
             context: context,
             tiles: requests!.map(

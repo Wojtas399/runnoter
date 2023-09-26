@@ -159,9 +159,7 @@ class _RequestsListContent extends StatelessWidget {
             ],
           ),
         ),
-      [...] => ListView(
-          physics: const NeverScrollableScrollPhysics(),
-          shrinkWrap: true,
+      [...] => Column(
           children: ListTile.divideTiles(
             context: context,
             tiles: requests!.map(
