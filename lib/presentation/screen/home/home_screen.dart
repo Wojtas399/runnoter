@@ -32,7 +32,6 @@ class HomeScreen extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => HomeCubit()..initialize()),
-        //TODO: Why cant we move calendar cubit provider to calendar feature
         BlocProvider(
           create: (_) => CalendarCubit()..initialize(DateRangeType.week),
         ),

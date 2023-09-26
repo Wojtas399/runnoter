@@ -25,15 +25,8 @@ import 'calendar_week.dart';
 
 class Calendar extends StatelessWidget {
   final String userId;
-  final DateRangeType initialDateRangeType;
-  final bool canEditHealthMeasurement;
 
-  const Calendar({
-    super.key,
-    required this.userId,
-    this.initialDateRangeType = DateRangeType.month,
-    this.canEditHealthMeasurement = true,
-  });
+  const Calendar({super.key, required this.userId});
 
   @override
   Widget build(BuildContext context) {
