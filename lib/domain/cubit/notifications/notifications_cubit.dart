@@ -48,45 +48,91 @@ class NotificationsCubit extends Cubit<NotificationsState> {
           (loggedUserId) => _userRepository.getUserById(userId: loggedUserId),
         )
         .whereNotNull()
-        .switchMap(_createStreamsAdjustedToUser)
+        .switchMap(
+          (User loggedUser) => Rx.combineLatest2(
+            _createCoachListenedParams(loggedUser),
+            _createClientsListenedParams(loggedUser),
+            (
+              _CoachListenedParams coachParams,
+              _ClientsListenedParams? clientsParams,
+            ) =>
+                state.copyWith(
+              idsOfClientsWithAwaitingMessages:
+                  clientsParams?.idsOfClientsWithAwaitingMessages,
+              areThereUnreadMessagesFromCoach:
+                  coachParams.areThereUnreadMessagesFromCoach,
+              numberOfCoachingRequestsReceivedFromClients:
+                  clientsParams?.numberOfCoachingRequestsReceivedFromClients,
+              numberOfCoachingRequestsReceivedFromCoaches:
+                  coachParams.numberOfCoachingRequestsReceivedFromCoaches,
+            ),
+          ),
+        )
         .listen(emit);
   }
 
-  Stream<NotificationsState> _createStreamsAdjustedToUser(User loggedUser) {
-    Stream<List<String>?> idsOfClientsWithAwaitingMessages$ =
-        Stream.value(null);
-    Stream<bool?> areThereUnreadMessagesFromCoach$ = Stream.value(null);
-    Stream<int?> numberOfCoachingRequestsReceivedFromClients$ =
-        Stream.value(null);
-    if (loggedUser.coachId != null) {
-      areThereUnreadMessagesFromCoach$ = _hasLoggedUserUnreadMessagesFromSender(
-        loggedUserId: loggedUser.id,
-        senderId: loggedUser.coachId!,
+  Stream<_CoachListenedParams> _createCoachListenedParams(User loggedUser) =>
+      loggedUser.coachId != null
+          ? _hasLoggedUserUnreadMessagesFromSender(
+              loggedUserId: loggedUser.id,
+              senderId: loggedUser.coachId!,
+            ).map(
+              (bool val) =>
+                  _CoachListenedParams(areThereUnreadMessagesFromCoach: val),
+            )
+          : _getNumberOfCoachingRequestsReceivedFromCoaches(loggedUser.id).map(
+              (int val) => _CoachListenedParams(
+                numberOfCoachingRequestsReceivedFromCoaches: val,
+              ),
+            );
+
+  Stream<_ClientsListenedParams?> _createClientsListenedParams(
+    User loggedUser,
+  ) =>
+      loggedUser.accountType == AccountType.coach
+          ? Rx.combineLatest2(
+              _getIdsOfClientsWithAwaitingMessages(loggedUser.id),
+              _getNumberOfCoachingRequestsReceivedFromClients(loggedUser.id),
+              (
+                List<String> idsOfClientsWithAwaitingMessages,
+                int numberOfCoachingRequestsReceivedFromClients,
+              ) =>
+                  _ClientsListenedParams(
+                idsOfClientsWithAwaitingMessages:
+                    idsOfClientsWithAwaitingMessages,
+                numberOfCoachingRequestsReceivedFromClients:
+                    numberOfCoachingRequestsReceivedFromClients,
+              ),
+            )
+          : Stream.value(null);
+
+  Stream<int> _getNumberOfCoachingRequestsReceivedFromCoaches(
+    String loggedUserId,
+  ) =>
+      _coachingRequestService
+          .getCoachingRequestsByReceiverId(
+            receiverId: loggedUserId,
+            direction: CoachingRequestDirection.coachToClient,
+          )
+          .map((requests) => requests.where((req) => !req.isAccepted).length);
+
+  Stream<bool> _hasLoggedUserUnreadMessagesFromSender({
+    required String loggedUserId,
+    required String senderId,
+  }) =>
+      Rx.fromCallable(
+        () async => await _chatRepository.findChatIdByUsers(
+          user1Id: loggedUserId,
+          user2Id: senderId,
+        ),
+      ).switchMap(
+        (String? coachChatId) => coachChatId == null
+            ? Stream.value(false)
+            : _messageRepository.doesUserHaveUnreadMessagesInChat(
+                chatId: coachChatId,
+                userId: loggedUserId,
+              ),
       );
-    }
-    if (loggedUser.accountType == AccountType.coach) {
-      idsOfClientsWithAwaitingMessages$ =
-          _getIdsOfClientsWithAwaitingMessages(loggedUser.id);
-      numberOfCoachingRequestsReceivedFromClients$ =
-          _getNumberOfCoachingRequestsReceivedFromClients(loggedUser.id);
-    }
-    return Rx.combineLatest3(
-      idsOfClientsWithAwaitingMessages$,
-      areThereUnreadMessagesFromCoach$,
-      numberOfCoachingRequestsReceivedFromClients$,
-      (
-        List<String>? idsOfClientsWithAwaitingMessages,
-        bool? areThereUnreadMessagesFromCoach,
-        int? numberOfCoachingRequestsReceivedFromClients,
-      ) =>
-          state.copyWith(
-        idsOfClientsWithAwaitingMessages: idsOfClientsWithAwaitingMessages,
-        areThereUnreadMessagesFromCoach: areThereUnreadMessagesFromCoach,
-        numberOfCoachingRequestsReceivedFromClients:
-            numberOfCoachingRequestsReceivedFromClients,
-      ),
-    );
-  }
 
   Stream<List<String>> _getIdsOfClientsWithAwaitingMessages(
     String loggedUserId,
@@ -124,22 +170,36 @@ class NotificationsCubit extends Cubit<NotificationsState> {
             direction: CoachingRequestDirection.clientToCoach,
           )
           .map((requests) => requests.where((req) => !req.isAccepted).length);
+}
 
-  Stream<bool> _hasLoggedUserUnreadMessagesFromSender({
-    required String loggedUserId,
-    required String senderId,
-  }) =>
-      Rx.fromCallable(
-        () async => await _chatRepository.findChatIdByUsers(
-          user1Id: loggedUserId,
-          user2Id: senderId,
-        ),
-      ).switchMap(
-        (String? coachChatId) => coachChatId == null
-            ? Stream.value(false)
-            : _messageRepository.doesUserHaveUnreadMessagesInChat(
-                chatId: coachChatId,
-                userId: loggedUserId,
-              ),
-      );
+class _CoachListenedParams extends Equatable {
+  final bool areThereUnreadMessagesFromCoach;
+  final int numberOfCoachingRequestsReceivedFromCoaches;
+
+  const _CoachListenedParams({
+    this.areThereUnreadMessagesFromCoach = false,
+    this.numberOfCoachingRequestsReceivedFromCoaches = 0,
+  });
+
+  @override
+  List<Object?> get props => [
+        areThereUnreadMessagesFromCoach,
+        numberOfCoachingRequestsReceivedFromCoaches,
+      ];
+}
+
+class _ClientsListenedParams extends Equatable {
+  final List<String> idsOfClientsWithAwaitingMessages;
+  final int numberOfCoachingRequestsReceivedFromClients;
+
+  const _ClientsListenedParams({
+    required this.idsOfClientsWithAwaitingMessages,
+    required this.numberOfCoachingRequestsReceivedFromClients,
+  });
+
+  @override
+  List<Object?> get props => [
+        idsOfClientsWithAwaitingMessages,
+        numberOfCoachingRequestsReceivedFromClients,
+      ];
 }

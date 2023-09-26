@@ -4,11 +4,13 @@ class NotificationsState extends Equatable {
   final List<String> idsOfClientsWithAwaitingMessages;
   final bool areThereUnreadMessagesFromCoach;
   final int numberOfCoachingRequestsReceivedFromClients;
+  final int numberOfCoachingRequestsReceivedFromCoaches;
 
   const NotificationsState({
     this.idsOfClientsWithAwaitingMessages = const [],
     this.areThereUnreadMessagesFromCoach = false,
     this.numberOfCoachingRequestsReceivedFromClients = 0,
+    this.numberOfCoachingRequestsReceivedFromCoaches = 0,
   });
 
   @override
@@ -16,12 +18,14 @@ class NotificationsState extends Equatable {
         idsOfClientsWithAwaitingMessages,
         areThereUnreadMessagesFromCoach,
         numberOfCoachingRequestsReceivedFromClients,
+        numberOfCoachingRequestsReceivedFromCoaches,
       ];
 
   NotificationsState copyWith({
     List<String>? idsOfClientsWithAwaitingMessages,
     bool? areThereUnreadMessagesFromCoach,
     int? numberOfCoachingRequestsReceivedFromClients,
+    int? numberOfCoachingRequestsReceivedFromCoaches,
   }) =>
       NotificationsState(
         idsOfClientsWithAwaitingMessages: idsOfClientsWithAwaitingMessages ??
@@ -31,5 +35,8 @@ class NotificationsState extends Equatable {
         numberOfCoachingRequestsReceivedFromClients:
             numberOfCoachingRequestsReceivedFromClients ??
                 this.numberOfCoachingRequestsReceivedFromClients,
+        numberOfCoachingRequestsReceivedFromCoaches:
+            numberOfCoachingRequestsReceivedFromCoaches ??
+                this.numberOfCoachingRequestsReceivedFromCoaches,
       );
 }

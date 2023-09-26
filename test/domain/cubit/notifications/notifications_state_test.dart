@@ -49,4 +49,20 @@ void main() {
       expect(state2.numberOfCoachingRequestsReceivedFromClients, expected);
     },
   );
+
+  test(
+    'copy with numberOfCoachingRequestsReceivedFromCoaches, '
+    'should set new value or should copy current value if new value is null',
+    () {
+      const int expected = 5;
+
+      state = state.copyWith(
+        numberOfCoachingRequestsReceivedFromCoaches: expected,
+      );
+      final state2 = state.copyWith();
+
+      expect(state.numberOfCoachingRequestsReceivedFromCoaches, expected);
+      expect(state2.numberOfCoachingRequestsReceivedFromCoaches, expected);
+    },
+  );
 }

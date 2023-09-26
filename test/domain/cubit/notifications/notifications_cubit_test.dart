@@ -69,29 +69,61 @@ void main() {
         coachId: 'c1',
       );
       const String coachChatId = 'chat1';
+      final List<CoachingRequest> requestsReceivedFromCoaches = [
+        createCoachingRequest(id: 'r1', isAccepted: false),
+        createCoachingRequest(id: 'r2', isAccepted: true),
+        createCoachingRequest(id: 'r3', isAccepted: false),
+      ];
+      final List<CoachingRequest> updatedRequestsReceivedFromCoaches = [
+        createCoachingRequest(id: 'r1', isAccepted: false),
+        createCoachingRequest(id: 'r2', isAccepted: true),
+        createCoachingRequest(id: 'r3', isAccepted: true),
+        createCoachingRequest(id: 'r4', isAccepted: false),
+        createCoachingRequest(id: 'r5', isAccepted: false),
+      ];
       final StreamController<User> loggedUser$ = StreamController()
         ..add(loggedUser);
       final StreamController<bool> doesUserHaveUnreadMessagesInCoachChat$ =
           BehaviorSubject.seeded(false);
+      final StreamController<List<CoachingRequest>>
+          requestsReceivedFromCoaches$ =
+          BehaviorSubject.seeded(requestsReceivedFromCoaches);
 
       blocTest(
-        'should only listen to unread messages in coach chat',
+        'if user does not have a coach should only listen to unaccepted coaching '
+        'requests received from coaches else should only listen to unread '
+        'messages in coach chat',
         build: () => NotificationsCubit(),
         setUp: () {
           authService.mockGetLoggedUserId(userId: loggedUserId);
           userRepository.mockGetUserById(userStream: loggedUser$.stream);
+          coachingRequestService.mockGetCoachingRequestsByReceiverId(
+            requestsStream: requestsReceivedFromCoaches$.stream,
+          );
           chatRepository.mockFindChatIdForUsers(chatId: coachChatId);
           messageRepository.mockDoesUserHaveUnreadMessagesInChat(
             expected$: doesUserHaveUnreadMessagesInCoachChat$.stream,
           );
         },
-        act: (cubit) {
+        act: (cubit) async {
           cubit.initialize();
+          await cubit.stream.first;
+          requestsReceivedFromCoaches$.add(updatedRequestsReceivedFromCoaches);
+          await cubit.stream.first;
           loggedUser$.add(updatedLoggedUser);
+          await cubit.stream.first;
           doesUserHaveUnreadMessagesInCoachChat$.add(true);
         },
         expect: () => [
-          const NotificationsState(),
+          const NotificationsState(
+            numberOfCoachingRequestsReceivedFromCoaches: 2,
+          ),
+          const NotificationsState(
+            numberOfCoachingRequestsReceivedFromCoaches: 3,
+          ),
+          const NotificationsState(
+            areThereUnreadMessagesFromCoach: false,
+          ),
           const NotificationsState(
             areThereUnreadMessagesFromCoach: true,
           ),
@@ -100,6 +132,12 @@ void main() {
           verify(() => authService.loggedUserId$).called(1);
           verify(
             () => userRepository.getUserById(userId: loggedUserId),
+          ).called(1);
+          verify(
+            () => coachingRequestService.getCoachingRequestsByReceiverId(
+              receiverId: loggedUserId,
+              direction: CoachingRequestDirection.coachToClient,
+            ),
           ).called(1);
           verify(
             () => chatRepository.findChatIdByUsers(
@@ -136,17 +174,29 @@ void main() {
         createPerson(id: 'p1'),
         createPerson(id: 'p2'),
       ];
-      final List<CoachingRequest> requestsReceivedFromClients = [
+      final List<CoachingRequest> requestsReceivedFromCoaches = [
         createCoachingRequest(id: 'r1', isAccepted: false),
         createCoachingRequest(id: 'r2', isAccepted: true),
-        createCoachingRequest(id: 'r3', isAccepted: true),
+        createCoachingRequest(id: 'r3', isAccepted: false),
       ];
-      final List<CoachingRequest> updatedRequestsReceivedFromClients = [
+      final List<CoachingRequest> updatedRequestsReceivedFromCoaches = [
         createCoachingRequest(id: 'r1', isAccepted: false),
         createCoachingRequest(id: 'r2', isAccepted: true),
-        createCoachingRequest(id: 'r3', isAccepted: true),
+        createCoachingRequest(id: 'r3', isAccepted: false),
         createCoachingRequest(id: 'r4', isAccepted: false),
         createCoachingRequest(id: 'r5', isAccepted: false),
+      ];
+      final List<CoachingRequest> requestsReceivedFromClients = [
+        createCoachingRequest(id: 'r11', isAccepted: false),
+        createCoachingRequest(id: 'r12', isAccepted: true),
+        createCoachingRequest(id: 'r13', isAccepted: true),
+      ];
+      final List<CoachingRequest> updatedRequestsReceivedFromClients = [
+        createCoachingRequest(id: 'r11', isAccepted: false),
+        createCoachingRequest(id: 'r12', isAccepted: true),
+        createCoachingRequest(id: 'r13', isAccepted: true),
+        createCoachingRequest(id: 'r14', isAccepted: false),
+        createCoachingRequest(id: 'r15', isAccepted: false),
       ];
       final StreamController<User> loggedUser$ = StreamController()
         ..add(loggedUser);
@@ -158,13 +208,19 @@ void main() {
           BehaviorSubject.seeded(false);
       final StreamController<bool> doesUserHaveUnreadMessagesInCoachChat$ =
           BehaviorSubject.seeded(false);
-      StreamController<List<CoachingRequest>> requestsReceivedFromClients$ =
+      final StreamController<List<CoachingRequest>>
+          requestsReceivedFromCoaches$ =
+          BehaviorSubject.seeded(requestsReceivedFromCoaches);
+      final StreamController<List<CoachingRequest>>
+          requestsReceivedFromClients$ =
           BehaviorSubject.seeded(requestsReceivedFromClients);
 
       blocTest(
         'should listen to ids of clients with awaiting messages, '
-        'should listen whether there are unread messages from coach, '
-        'should listen to number of unaccepted requests received from clients',
+        'if user has a coach should listen whether there are unread messages '
+        'from coach else should listen to number of unaccepted requests received'
+        'from coaches, '
+        'should listen to number of unaccepted requests received from clients, ',
         build: () => NotificationsCubit(),
         setUp: () {
           authService.mockGetLoggedUserId(userId: loggedUserId);
@@ -208,14 +264,26 @@ void main() {
               userId: loggedUserId,
             ),
           ).thenAnswer((_) => doesUserHaveUnreadMessagesInCoachChat$.stream);
-          coachingRequestService.mockGetCoachingRequestsByReceiverId(
-            requestsStream: requestsReceivedFromClients$.stream,
-          );
+          when(
+            () => coachingRequestService.getCoachingRequestsByReceiverId(
+              receiverId: loggedUserId,
+              direction: CoachingRequestDirection.clientToCoach,
+            ),
+          ).thenAnswer((_) => requestsReceivedFromClients$.stream);
+          when(
+            () => coachingRequestService.getCoachingRequestsByReceiverId(
+              receiverId: loggedUserId,
+              direction: CoachingRequestDirection.coachToClient,
+            ),
+          ).thenAnswer((_) => requestsReceivedFromCoaches$.stream);
         },
         act: (cubit) async {
           cubit.initialize();
           await cubit.stream.first;
+          requestsReceivedFromCoaches$.add(updatedRequestsReceivedFromCoaches);
+          await cubit.stream.first;
           loggedUser$.add(updatedLoggedUser);
+          await cubit.stream.first;
           doesUserHaveUnreadMessagesInCoachChat$.add(true);
           await cubit.stream.first;
           doesUserHaveUnreadMessagesInClient1Chat$.add(true);
@@ -230,6 +298,14 @@ void main() {
           doesUserHaveUnreadMessagesInClient1Chat$.add(false);
         },
         expect: () => [
+          const NotificationsState(
+            numberOfCoachingRequestsReceivedFromCoaches: 2,
+            numberOfCoachingRequestsReceivedFromClients: 1,
+          ),
+          const NotificationsState(
+            numberOfCoachingRequestsReceivedFromCoaches: 4,
+            numberOfCoachingRequestsReceivedFromClients: 1,
+          ),
           const NotificationsState(
             numberOfCoachingRequestsReceivedFromClients: 1,
           ),
@@ -267,6 +343,12 @@ void main() {
           verify(() => authService.loggedUserId$).called(1);
           verify(
             () => userRepository.getUserById(userId: loggedUserId),
+          ).called(1);
+          verify(
+            () => coachingRequestService.getCoachingRequestsByReceiverId(
+              receiverId: loggedUserId,
+              direction: CoachingRequestDirection.coachToClient,
+            ),
           ).called(1);
           verify(
             () => personRepository.getPersonsByCoachId(coachId: loggedUserId),
