@@ -24,7 +24,7 @@ class NotificationsCubit extends Cubit<NotificationsState> {
   final PersonRepository _personRepository;
   final ChatRepository _chatRepository;
   final MessageRepository _messageRepository;
-  StreamSubscription<NotificationsState>? _listener;
+  StreamSubscription<NotificationsState?>? _listener;
 
   NotificationsCubit()
       : _authService = getIt<AuthService>(),
@@ -42,33 +42,40 @@ class NotificationsCubit extends Cubit<NotificationsState> {
   }
 
   Future<void> initialize() async {
-    _listener ??= _authService.loggedUserId$
-        .whereNotNull()
-        .switchMap(
-          (loggedUserId) => _userRepository.getUserById(userId: loggedUserId),
-        )
-        .whereNotNull()
-        .switchMap(
-          (User loggedUser) => Rx.combineLatest2(
-            _createCoachListenedParams(loggedUser),
-            _createClientsListenedParams(loggedUser),
-            (
-              _CoachListenedParams coachParams,
-              _ClientsListenedParams? clientsParams,
-            ) =>
-                state.copyWith(
-              idsOfClientsWithAwaitingMessages:
-                  clientsParams?.idsOfClientsWithAwaitingMessages,
-              areThereUnreadMessagesFromCoach:
-                  coachParams.areThereUnreadMessagesFromCoach,
-              numberOfCoachingRequestsReceivedFromClients:
-                  clientsParams?.numberOfCoachingRequestsReceivedFromClients,
-              numberOfCoachingRequestsReceivedFromCoaches:
-                  coachParams.numberOfCoachingRequestsReceivedFromCoaches,
-            ),
-          ),
-        )
-        .listen(emit);
+    _listener ??= _authService.loggedUserId$.switchMap(
+      (String? loggedUserId) {
+        return loggedUserId != null
+            ? _userRepository.getUserById(userId: loggedUserId)
+            : Stream.value(null);
+      },
+    ).switchMap(
+      (User? loggedUser) {
+        return loggedUser != null
+            ? Rx.combineLatest2(
+                _createCoachListenedParams(loggedUser),
+                _createClientsListenedParams(loggedUser),
+                (
+                  _CoachListenedParams coachParams,
+                  _ClientsListenedParams? clientsParams,
+                ) =>
+                    state.copyWith(
+                  idsOfClientsWithAwaitingMessages:
+                      clientsParams?.idsOfClientsWithAwaitingMessages,
+                  areThereUnreadMessagesFromCoach:
+                      coachParams.areThereUnreadMessagesFromCoach,
+                  numberOfCoachingRequestsReceivedFromClients: clientsParams
+                      ?.numberOfCoachingRequestsReceivedFromClients,
+                  numberOfCoachingRequestsReceivedFromCoaches:
+                      coachParams.numberOfCoachingRequestsReceivedFromCoaches,
+                ),
+              )
+            : Stream.value(null);
+      },
+    ).listen(
+      (NotificationsState? state) {
+        if (state != null) emit(state);
+      },
+    );
   }
 
   Stream<_CoachListenedParams> _createCoachListenedParams(User loggedUser) =>
