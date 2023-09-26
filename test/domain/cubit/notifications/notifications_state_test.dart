@@ -1,10 +1,36 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:runnoter/domain/additional_model/coaching_request_short.dart';
 import 'package:runnoter/domain/cubit/notifications/notifications_cubit.dart';
+
+import '../../../creators/person_creator.dart';
 
 void main() {
   late NotificationsState state;
 
   setUp(() => state = const NotificationsState());
+
+  test(
+    'copy with acceptedClientRequests, '
+    'should set new value or should set empty array if new value is null',
+    () {
+      final List<CoachingRequestShort> expected = [
+        CoachingRequestShort(
+          id: 'cr1',
+          personToDisplay: createPerson(id: 'p1'),
+        ),
+        CoachingRequestShort(
+          id: 'cr2',
+          personToDisplay: createPerson(id: 'p2'),
+        ),
+      ];
+
+      state = state.copyWith(acceptedClientRequests: expected);
+      final state2 = state.copyWith();
+
+      expect(state.acceptedClientRequests, expected);
+      expect(state2.acceptedClientRequests, const []);
+    },
+  );
 
   test(
     'copy with idsOfClientsWithAwaitingMessages, '

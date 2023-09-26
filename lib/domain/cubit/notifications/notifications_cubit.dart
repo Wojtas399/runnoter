@@ -6,6 +6,7 @@ import 'package:rxdart/rxdart.dart';
 
 import '../../../dependency_injection.dart';
 import '../../additional_model/coaching_request.dart';
+import '../../additional_model/coaching_request_short.dart';
 import '../../entity/person.dart';
 import '../../entity/user.dart';
 import '../../repository/chat_repository.dart';
