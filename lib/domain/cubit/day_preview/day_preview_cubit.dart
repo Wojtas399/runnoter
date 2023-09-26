@@ -63,8 +63,8 @@ class DayPreviewCubit extends Cubit<DayPreviewState> {
       ) =>
           _ListenedParams(
         healthMeasurement: healthMeasurement,
-        workouts: workouts,
-        races: races,
+        workouts: workouts ?? [],
+        races: races ?? [],
       ),
     ).listen(
       (_ListenedParams params) => emit(state.copyWith(
