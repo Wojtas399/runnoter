@@ -8,6 +8,7 @@ import '../../../domain/entity/user.dart';
 import '../../component/gap/gap_components.dart';
 import '../../config/navigation/router.dart';
 import '../../extension/context_extensions.dart';
+import 'home_clients_notifications_badge.dart';
 import 'home_fab.dart';
 
 class HomeNavigationDrawer extends StatelessWidget {
@@ -79,7 +80,7 @@ class HomeNavigationDrawer extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(str.clientsTitle),
-                  const _NumberOfUnreadClientMessages(),
+                  const HomeClientsNotificationsBadge(),
                 ],
               ),
             ),
@@ -103,23 +104,6 @@ class _AppLogo extends StatelessWidget {
       height: 48,
       margin: const EdgeInsets.only(bottom: 24),
       child: Image.asset('assets/logo.png'),
-    );
-  }
-}
-
-class _NumberOfUnreadClientMessages extends StatelessWidget {
-  const _NumberOfUnreadClientMessages();
-
-  @override
-  Widget build(BuildContext context) {
-    final int? numberOfUnreadClientMessages = context.select(
-      (HomeCubit cubit) => cubit.state.idsOfClientsWithAwaitingMessages?.length,
-    );
-
-    return Badge(
-      isLabelVisible: numberOfUnreadClientMessages != null &&
-          numberOfUnreadClientMessages > 0,
-      label: Text('$numberOfUnreadClientMessages'),
     );
   }
 }

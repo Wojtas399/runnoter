@@ -10,6 +10,7 @@ import '../../../domain/additional_model/settings.dart' as settings;
 import '../../../domain/cubit/calendar/calendar_cubit.dart';
 import '../../../domain/cubit/date_range_manager_cubit.dart';
 import '../../../domain/cubit/home/home_cubit.dart';
+import '../../../domain/cubit/notifications/notifications_cubit.dart';
 import '../../component/cubit_with_status_listener_component.dart';
 import '../../config/navigation/router.dart';
 import '../../dialog/required_data_completion/required_data_completion_dialog.dart';
@@ -30,12 +31,12 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(
-          create: (_) => HomeCubit()..initialize(),
-        ),
+        BlocProvider(create: (_) => HomeCubit()..initialize()),
+        //TODO: Why cant we move calendar cubit provider to calendar feature
         BlocProvider(
           create: (_) => CalendarCubit()..initialize(DateRangeType.week),
         ),
+        BlocProvider(create: (_) => NotificationsCubit()..initialize()),
       ],
       child: const _CubitListener(
         child: HomeContent(),

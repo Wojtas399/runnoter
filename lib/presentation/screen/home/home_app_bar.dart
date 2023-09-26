@@ -7,6 +7,7 @@ import 'package:get_it/get_it.dart';
 import '../../../domain/cubit/calendar/calendar_cubit.dart';
 import '../../../domain/cubit/date_range_manager_cubit.dart';
 import '../../../domain/cubit/home/home_cubit.dart';
+import '../../../domain/cubit/notifications/notifications_cubit.dart';
 import '../../component/date_range_header_component.dart';
 import '../../component/gap/gap_horizontal_components.dart';
 import '../../component/nullable_text_component.dart';
@@ -41,7 +42,7 @@ class HomeMobileAppBar extends StatelessWidget implements PreferredSizeWidget {
       automaticallyImplyLeading: true,
       title: NullableText(_getAppBarTitle(context)),
       leading: IconButton(
-        icon: const _ClientMessagesBadge(
+        icon: const _DrawerBadge(
           child: Icon(Icons.menu),
         ),
         onPressed: Scaffold.of(context).openDrawer,
@@ -138,7 +139,7 @@ class _Avatar extends StatelessWidget {
     return IconButton(
       onPressed: onPressed,
       padding: const EdgeInsets.all(0),
-      icon: _UnreadMessagesBadge(
+      icon: _ProfileBadge(
         child: CircleAvatar(
           radius: 18,
           child: Text(loggedUserName?[0] ?? '?'),
@@ -183,29 +184,35 @@ class _MobileDateRangeHeader extends StatelessWidget
   }
 }
 
-class _ClientMessagesBadge extends StatelessWidget {
+class _DrawerBadge extends StatelessWidget {
   final Widget child;
 
-  const _ClientMessagesBadge({required this.child});
+  const _DrawerBadge({required this.child});
 
   @override
   Widget build(BuildContext context) {
-    final int? numberOfUnreadClientMessages = context.select(
-      (HomeCubit cubit) => cubit.state.idsOfClientsWithAwaitingMessages?.length,
+    final int numberOfUnreadClientMessages = context.select(
+      (HomeCubit cubit) =>
+          cubit.state.idsOfClientsWithAwaitingMessages?.length ?? 0,
     );
+    final int numberOfCoachingRequestsReceivedFromClients = context.select(
+      (NotificationsCubit cubit) =>
+          cubit.state.numberOfCoachingRequestsReceivedFromClients,
+    );
+    final int numberOfNotifications = numberOfUnreadClientMessages +
+        numberOfCoachingRequestsReceivedFromClients;
 
     return Badge(
-      isLabelVisible: numberOfUnreadClientMessages != null &&
-          numberOfUnreadClientMessages > 0,
+      isLabelVisible: numberOfNotifications > 0,
       child: child,
     );
   }
 }
 
-class _UnreadMessagesBadge extends StatelessWidget {
+class _ProfileBadge extends StatelessWidget {
   final Widget child;
 
-  const _UnreadMessagesBadge({required this.child});
+  const _ProfileBadge({required this.child});
 
   @override
   Widget build(BuildContext context) {

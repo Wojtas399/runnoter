@@ -8,6 +8,7 @@ import '../../../domain/entity/user.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/text/label_text_components.dart';
 import '../../config/navigation/router.dart';
+import 'home_clients_notifications_badge.dart';
 import 'home_fab.dart';
 
 class HomeNavigationRail extends StatelessWidget {
@@ -78,10 +79,12 @@ class HomeNavigationRail extends StatelessWidget {
         ),
         if (accountType == AccountType.coach)
           NavigationRailDestination(
-            icon: const _UnreadClientMessagesBadge(
+            icon: const HomeClientsNotificationsBadge(
+              showEmptyBadge: true,
               child: Icon(Icons.groups_outlined),
             ),
-            selectedIcon: const _UnreadClientMessagesBadge(
+            selectedIcon: const HomeClientsNotificationsBadge(
+              showEmptyBadge: true,
               child: Icon(Icons.groups),
             ),
             label: Text(str.clientsTitle),
@@ -89,25 +92,6 @@ class HomeNavigationRail extends StatelessWidget {
       ],
       selectedIndex: selectedIndex,
       onDestinationSelected: onPageSelected,
-    );
-  }
-}
-
-class _UnreadClientMessagesBadge extends StatelessWidget {
-  final Widget child;
-
-  const _UnreadClientMessagesBadge({required this.child});
-
-  @override
-  Widget build(BuildContext context) {
-    final int? numberOfUnreadClientMessages = context.select(
-      (HomeCubit cubit) => cubit.state.idsOfClientsWithAwaitingMessages?.length,
-    );
-
-    return Badge(
-      isLabelVisible: numberOfUnreadClientMessages != null &&
-          numberOfUnreadClientMessages > 0,
-      child: child,
     );
   }
 }

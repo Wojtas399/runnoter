@@ -15,6 +15,8 @@ import '../health_measurement_creator/health_measurement_creator_dialog.dart';
 import 'day_preview_activities_content.dart';
 import 'day_preview_add_activity_button.dart';
 
+//TODO: Activities content is loading infinitely
+
 class DayPreviewDialog extends StatelessWidget {
   final String userId;
   final DateTime date;
