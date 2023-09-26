@@ -110,32 +110,4 @@ void main() {
       expect(state2.acceptedCoachRequest, null);
     },
   );
-
-  test(
-    'copy with idsOfClientsWithAwaitingMessages, '
-    'should set new value or should copy current value if new value is null',
-    () {
-      const List<String> expected = ['u1', 'u2'];
-
-      state = state.copyWith(idsOfClientsWithAwaitingMessages: expected);
-      final state2 = state.copyWith();
-
-      expect(state.idsOfClientsWithAwaitingMessages, expected);
-      expect(state2.idsOfClientsWithAwaitingMessages, expected);
-    },
-  );
-
-  test(
-    'copy with areThereUnreadMessagesFromCoach, '
-    'should set new value or should copy current value if new value is null',
-    () {
-      const bool expected = true;
-
-      state = state.copyWith(areThereUnreadMessagesFromCoach: expected);
-      final state2 = state.copyWith();
-
-      expect(state.areThereUnreadMessagesFromCoach, expected);
-      expect(state2.areThereUnreadMessagesFromCoach, expected);
-    },
-  );
 }

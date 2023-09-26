@@ -13,10 +13,7 @@ import '../../additional_model/coaching_request_short.dart';
 import '../../additional_model/cubit_state.dart';
 import '../../additional_model/cubit_with_status.dart';
 import '../../additional_model/settings.dart';
-import '../../entity/person.dart';
 import '../../entity/user.dart';
-import '../../repository/chat_repository.dart';
-import '../../repository/message_repository.dart';
 import '../../repository/person_repository.dart';
 import '../../service/coaching_request_service.dart';
 
@@ -27,8 +24,6 @@ class HomeCubit extends CubitWithStatus<HomeState, HomeCubitInfo, dynamic> {
   final UserRepository _userRepository;
   final CoachingRequestService _coachingRequestService;
   final PersonRepository _personRepository;
-  final ChatRepository _chatRepository;
-  final MessageRepository _messageRepository;
   StreamSubscription<_ListenedParams?>? _listener;
 
   HomeCubit({
@@ -37,8 +32,6 @@ class HomeCubit extends CubitWithStatus<HomeState, HomeCubitInfo, dynamic> {
         _userRepository = getIt<UserRepository>(),
         _coachingRequestService = getIt<CoachingRequestService>(),
         _personRepository = getIt<PersonRepository>(),
-        _chatRepository = getIt<ChatRepository>(),
-        _messageRepository = getIt<MessageRepository>(),
         super(initialState);
 
   @override
@@ -53,27 +46,19 @@ class HomeCubit extends CubitWithStatus<HomeState, HomeCubitInfo, dynamic> {
         .switchMap(
           (String? loggedUserId) => loggedUserId == null
               ? Stream.value(null)
-              : Rx.combineLatest5(
+              : Rx.combineLatest3(
                   _userRepository.getUserById(userId: loggedUserId),
                   _getAcceptedClientRequests(loggedUserId),
                   _getAcceptedCoachRequest(loggedUserId),
-                  _getIdsOfClientsWithAwaitingMessages(loggedUserId),
-                  _areThereUnreadMessagesFromCoach(loggedUserId),
                   (
                     User? loggedUserData,
                     List<CoachingRequestShort> acceptedClientRequests,
                     CoachingRequestShort? acceptedCoachRequest,
-                    List<String> idsOfClientsWithAwaitingMessages,
-                    bool areThereUnreadMessagesFromCoach,
                   ) =>
                       _ListenedParams(
                     loggedUserData: loggedUserData,
                     acceptedClientRequests: acceptedClientRequests,
                     acceptedCoachRequest: acceptedCoachRequest,
-                    idsOfClientsWithAwaitingMessages:
-                        idsOfClientsWithAwaitingMessages,
-                    areThereUnreadMessagesFromCoach:
-                        areThereUnreadMessagesFromCoach,
                   ),
                 ),
         )
@@ -85,10 +70,6 @@ class HomeCubit extends CubitWithStatus<HomeState, HomeCubitInfo, dynamic> {
             appSettings: params?.loggedUserData?.settings,
             acceptedClientRequests: params?.acceptedClientRequests,
             acceptedCoachRequest: params?.acceptedCoachRequest,
-            idsOfClientsWithAwaitingMessages:
-                params?.idsOfClientsWithAwaitingMessages,
-            areThereUnreadMessagesFromCoach:
-                params?.areThereUnreadMessagesFromCoach,
           )),
         );
   }
@@ -151,46 +132,6 @@ class HomeCubit extends CubitWithStatus<HomeState, HomeCubitInfo, dynamic> {
                 : Stream.value(null),
           );
 
-  Stream<List<String>> _getIdsOfClientsWithAwaitingMessages(
-    String loggedUserId,
-  ) =>
-      _personRepository.getPersonsByCoachId(coachId: loggedUserId).asyncMap(
-        (List<Person>? clients) async {
-          final List<Stream<String?>> idsOfClientsWithAwaitingMessages = [];
-          if (clients == null) return idsOfClientsWithAwaitingMessages;
-          for (final client in clients) {
-            idsOfClientsWithAwaitingMessages.add(
-              _doesRecipientHaveUnreadMessages(
-                recipientId: loggedUserId,
-                senderId: client.id,
-              ).map((hasUnreadMsgs) => hasUnreadMsgs ? client.id : null),
-            );
-          }
-          return idsOfClientsWithAwaitingMessages;
-        },
-      ).switchMap(
-        (List<Stream<String?>> idsOfClientsWithAwaitingMessages) =>
-            idsOfClientsWithAwaitingMessages.isEmpty
-                ? Stream.value(const [])
-                : Rx.combineLatest(
-                    idsOfClientsWithAwaitingMessages,
-                    (values) => values.whereType<String>().toList(),
-                  ),
-      );
-
-  Stream<bool> _areThereUnreadMessagesFromCoach(String loggedUserId) =>
-      _userRepository
-          .getUserById(userId: loggedUserId)
-          .map((User? user) => user?.coachId)
-          .switchMap(
-            (String? coachId) => coachId == null
-                ? Stream.value(false)
-                : _doesRecipientHaveUnreadMessages(
-                    recipientId: loggedUserId,
-                    senderId: coachId,
-                  ),
-          );
-
   Stream<CoachingRequestShort> _convertToCoachingRequestShort(
     CoachingRequest request,
   ) =>
@@ -204,24 +145,6 @@ class HomeCubit extends CubitWithStatus<HomeState, HomeCubitInfo, dynamic> {
           personToDisplay: receiver,
         ),
       );
-
-  Stream<bool> _doesRecipientHaveUnreadMessages({
-    required String recipientId,
-    required String senderId,
-  }) =>
-      Rx.fromCallable(
-        () async => await _chatRepository.findChatIdByUsers(
-          user1Id: recipientId,
-          user2Id: senderId,
-        ),
-      ).switchMap(
-        (String? coachChatId) => coachChatId == null
-            ? Stream.value(false)
-            : _messageRepository.doesUserHaveUnreadMessagesInChat(
-                chatId: coachChatId,
-                userId: recipientId,
-              ),
-      );
 }
 
 enum HomeCubitInfo { userSignedOut }
@@ -230,15 +153,11 @@ class _ListenedParams extends Equatable {
   final User? loggedUserData;
   final List<CoachingRequestShort> acceptedClientRequests;
   final CoachingRequestShort? acceptedCoachRequest;
-  final List<String> idsOfClientsWithAwaitingMessages;
-  final bool areThereUnreadMessagesFromCoach;
 
   const _ListenedParams({
     required this.loggedUserData,
     required this.acceptedClientRequests,
     required this.acceptedCoachRequest,
-    required this.idsOfClientsWithAwaitingMessages,
-    required this.areThereUnreadMessagesFromCoach,
   });
 
   @override
@@ -246,7 +165,5 @@ class _ListenedParams extends Equatable {
         loggedUserData,
         acceptedClientRequests,
         acceptedCoachRequest,
-        idsOfClientsWithAwaitingMessages,
-        areThereUnreadMessagesFromCoach,
       ];
 }

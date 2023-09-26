@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/cubit/home/home_cubit.dart';
 import '../../../domain/cubit/notifications/notifications_cubit.dart';
 
 class HomeClientsNotificationsBadge extends StatelessWidget {
@@ -17,8 +16,8 @@ class HomeClientsNotificationsBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final int numberOfUnreadClientMessages = context.select(
-      (HomeCubit cubit) =>
-          cubit.state.idsOfClientsWithAwaitingMessages?.length ?? 0,
+      (NotificationsCubit cubit) =>
+          cubit.state.idsOfClientsWithAwaitingMessages.length,
     );
     final int numberOfCoachingRequestsReceivedFromClients = context.select(
       (NotificationsCubit cubit) =>

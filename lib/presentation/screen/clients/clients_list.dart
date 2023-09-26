@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/cubit/clients/clients_cubit.dart';
-import '../../../domain/cubit/home/home_cubit.dart';
+import '../../../domain/cubit/notifications/notifications_cubit.dart';
 import '../../../domain/entity/person.dart';
 import '../../component/empty_content_info_component.dart';
 import '../../component/gap/gap_components.dart';
@@ -50,7 +50,8 @@ class _Content extends StatelessWidget {
       (ClientsCubit cubit) => cubit.state.clients,
     );
     final List<String>? idsOfClientsWithAwaitingMessages = context.select(
-      (HomeCubit cubit) => cubit.state.idsOfClientsWithAwaitingMessages,
+      (NotificationsCubit cubit) =>
+          cubit.state.idsOfClientsWithAwaitingMessages,
     );
 
     return switch (clients) {

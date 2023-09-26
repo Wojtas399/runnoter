@@ -11,8 +11,6 @@ import 'package:runnoter/domain/additional_model/settings.dart';
 import 'package:runnoter/domain/cubit/home/home_cubit.dart';
 import 'package:runnoter/domain/entity/person.dart';
 import 'package:runnoter/domain/entity/user.dart';
-import 'package:runnoter/domain/repository/chat_repository.dart';
-import 'package:runnoter/domain/repository/message_repository.dart';
 import 'package:runnoter/domain/repository/person_repository.dart';
 import 'package:runnoter/domain/repository/user_repository.dart';
 import 'package:runnoter/domain/service/auth_service.dart';
@@ -23,8 +21,6 @@ import '../../../creators/coaching_request_creator.dart';
 import '../../../creators/person_creator.dart';
 import '../../../creators/settings_creator.dart';
 import '../../../creators/user_creator.dart';
-import '../../../mock/domain/repository/mock_chat_repository.dart';
-import '../../../mock/domain/repository/mock_message_repository.dart';
 import '../../../mock/domain/repository/mock_person_repository.dart';
 import '../../../mock/domain/repository/mock_user_repository.dart';
 import '../../../mock/domain/service/mock_auth_service.dart';
@@ -35,8 +31,6 @@ void main() {
   final userRepository = MockUserRepository();
   final coachingRequestService = MockCoachingRequestService();
   final personRepository = MockPersonRepository();
-  final chatRepository = MockChatRepository();
-  final messageRepository = MockMessageRepository();
   const String loggedUserId = 'u1';
 
   setUpAll(() {
@@ -46,8 +40,6 @@ void main() {
       () => coachingRequestService,
     );
     GetIt.I.registerSingleton<PersonRepository>(personRepository);
-    GetIt.I.registerSingleton<ChatRepository>(chatRepository);
-    GetIt.I.registerSingleton<MessageRepository>(messageRepository);
   });
 
   tearDown(() {
@@ -55,8 +47,6 @@ void main() {
     reset(userRepository);
     reset(coachingRequestService);
     reset(personRepository);
-    reset(chatRepository);
-    reset(messageRepository);
   });
 
   group(
@@ -118,31 +108,12 @@ void main() {
           isAccepted: false,
         ),
       ];
-      final List<Person> clients = [
-        createPerson(id: 'u2'),
-        createPerson(id: 'u3'),
-      ];
-      final List<Person> updatedClients = [
-        createPerson(id: 'u2'),
-        createPerson(id: 'u3'),
-        createPerson(id: 'u4'),
-      ];
       final StreamController<User?> loggedUserData$ =
           BehaviorSubject.seeded(loggedUserData);
       final StreamController<List<CoachingRequest>> clientsRequests$ =
           StreamController()..add(requestsSentToClients);
       final StreamController<List<CoachingRequest>> coachesRequests$ =
           StreamController()..add(requestsSentToCoaches);
-      final StreamController<List<Person>> clients$ = StreamController()
-        ..add(clients);
-      final StreamController<bool> doesUserHaveUnreadMessagesInChat1$ =
-          BehaviorSubject.seeded(false);
-      final StreamController<bool> doesUserHaveUnreadMessagesInChat2$ =
-          BehaviorSubject.seeded(true);
-      final StreamController<bool> doesUserHaveUnreadMessagesInChat3$ =
-          BehaviorSubject.seeded(false);
-      final StreamController<bool> doesUserHaveUnreadMessagesInCoachChat$ =
-          BehaviorSubject.seeded(false);
       final List<CoachingRequestShort> acceptedClientRequests = [
         CoachingRequestShort(id: 'r2', personToDisplay: client1),
         CoachingRequestShort(id: 'r3', personToDisplay: client2),
@@ -150,8 +121,7 @@ void main() {
 
       blocTest(
         'should listen to logged user data, accepted client requests and '
-        'accepted coach request and should listen to number of chats with '
-        'unread received messages',
+        'accepted coach request',
         build: () => HomeCubit(),
         setUp: () {
           authService.mockGetLoggedUserId(userId: loggedUserId);
@@ -179,57 +149,6 @@ void main() {
           when(
             () => personRepository.getPersonById(personId: coach.id),
           ).thenAnswer((_) => Stream.value(coach));
-          personRepository.mockGetPersonsByCoachId(
-            personsStream: clients$.stream,
-          );
-          when(
-            () => chatRepository.findChatIdByUsers(
-              user1Id: loggedUserId,
-              user2Id: 'u2',
-            ),
-          ).thenAnswer((_) => Future.value('c1'));
-          when(
-            () => chatRepository.findChatIdByUsers(
-              user1Id: loggedUserId,
-              user2Id: 'u3',
-            ),
-          ).thenAnswer((_) => Future.value('c2'));
-          when(
-            () => chatRepository.findChatIdByUsers(
-              user1Id: loggedUserId,
-              user2Id: 'u4',
-            ),
-          ).thenAnswer((_) => Future.value('c3'));
-          when(
-            () => chatRepository.findChatIdByUsers(
-              user1Id: loggedUserId,
-              user2Id: 'coach1',
-            ),
-          ).thenAnswer((_) => Future.value('c4'));
-          when(
-            () => messageRepository.doesUserHaveUnreadMessagesInChat(
-              chatId: 'c1',
-              userId: loggedUserId,
-            ),
-          ).thenAnswer((_) => doesUserHaveUnreadMessagesInChat1$.stream);
-          when(
-            () => messageRepository.doesUserHaveUnreadMessagesInChat(
-              chatId: 'c2',
-              userId: loggedUserId,
-            ),
-          ).thenAnswer((_) => doesUserHaveUnreadMessagesInChat2$.stream);
-          when(
-            () => messageRepository.doesUserHaveUnreadMessagesInChat(
-              chatId: 'c3',
-              userId: loggedUserId,
-            ),
-          ).thenAnswer((_) => doesUserHaveUnreadMessagesInChat3$.stream);
-          when(
-            () => messageRepository.doesUserHaveUnreadMessagesInChat(
-              chatId: 'c4',
-              userId: loggedUserId,
-            ),
-          ).thenAnswer((_) => doesUserHaveUnreadMessagesInCoachChat$.stream);
         },
         act: (cubit) async {
           cubit.initialize();
@@ -239,13 +158,6 @@ void main() {
           clientsRequests$.add([]);
           await cubit.stream.first;
           loggedUserData$.add(updatedLoggedUserData);
-          await cubit.stream.first;
-          doesUserHaveUnreadMessagesInChat1$.add(true);
-          await cubit.stream.first;
-          clients$.add(updatedClients);
-          doesUserHaveUnreadMessagesInChat3$.add(true);
-          await cubit.stream.first;
-          doesUserHaveUnreadMessagesInCoachChat$.add(true);
         },
         expect: () => [
           const HomeState(status: CubitStatusLoading()),
@@ -259,8 +171,6 @@ void main() {
               id: 'r4',
               personToDisplay: coach,
             ),
-            idsOfClientsWithAwaitingMessages: const ['u3'],
-            areThereUnreadMessagesFromCoach: false,
           ),
           HomeState(
             status: const CubitStatusComplete(),
@@ -268,8 +178,6 @@ void main() {
             loggedUserName: loggedUserData.name,
             appSettings: loggedUserData.settings,
             acceptedClientRequests: acceptedClientRequests,
-            idsOfClientsWithAwaitingMessages: const ['u3'],
-            areThereUnreadMessagesFromCoach: false,
           ),
           HomeState(
             status: const CubitStatusComplete(),
@@ -277,8 +185,6 @@ void main() {
             loggedUserName: loggedUserData.name,
             appSettings: loggedUserData.settings,
             acceptedClientRequests: const [],
-            idsOfClientsWithAwaitingMessages: const ['u3'],
-            areThereUnreadMessagesFromCoach: false,
           ),
           HomeState(
             status: const CubitStatusComplete(),
@@ -286,42 +192,13 @@ void main() {
             loggedUserName: updatedLoggedUserData.name,
             appSettings: updatedLoggedUserData.settings,
             acceptedClientRequests: const [],
-            idsOfClientsWithAwaitingMessages: const ['u3'],
-            areThereUnreadMessagesFromCoach: false,
-          ),
-          HomeState(
-            status: const CubitStatusComplete(),
-            accountType: updatedLoggedUserData.accountType,
-            loggedUserName: updatedLoggedUserData.name,
-            appSettings: updatedLoggedUserData.settings,
-            acceptedClientRequests: const [],
-            idsOfClientsWithAwaitingMessages: const ['u2', 'u3'],
-            areThereUnreadMessagesFromCoach: false,
-          ),
-          HomeState(
-            status: const CubitStatusComplete(),
-            accountType: updatedLoggedUserData.accountType,
-            loggedUserName: updatedLoggedUserData.name,
-            appSettings: updatedLoggedUserData.settings,
-            acceptedClientRequests: const [],
-            idsOfClientsWithAwaitingMessages: const ['u2', 'u3', 'u4'],
-            areThereUnreadMessagesFromCoach: false,
-          ),
-          HomeState(
-            status: const CubitStatusComplete(),
-            accountType: updatedLoggedUserData.accountType,
-            loggedUserName: updatedLoggedUserData.name,
-            appSettings: updatedLoggedUserData.settings,
-            acceptedClientRequests: const [],
-            idsOfClientsWithAwaitingMessages: const ['u2', 'u3', 'u4'],
-            areThereUnreadMessagesFromCoach: true,
           ),
         ],
         verify: (_) {
           verify(() => authService.loggedUserId$).called(1);
           verify(
             () => userRepository.getUserById(userId: loggedUserId),
-          ).called(2);
+          ).called(1);
           verify(
             () => personRepository.refreshPersonsByCoachId(
               coachId: loggedUserId,
@@ -351,33 +228,6 @@ void main() {
           verify(
             () => personRepository.getPersonById(personId: coach.id),
           ).called(1);
-          verify(
-            () => personRepository.getPersonsByCoachId(coachId: loggedUserId),
-          ).called(1);
-          verify(
-            () => messageRepository.doesUserHaveUnreadMessagesInChat(
-              chatId: 'c1',
-              userId: loggedUserId,
-            ),
-          ).called(2);
-          verify(
-            () => messageRepository.doesUserHaveUnreadMessagesInChat(
-              chatId: 'c2',
-              userId: loggedUserId,
-            ),
-          ).called(2);
-          verify(
-            () => messageRepository.doesUserHaveUnreadMessagesInChat(
-              chatId: 'c3',
-              userId: loggedUserId,
-            ),
-          ).called(1);
-          verify(
-            () => messageRepository.doesUserHaveUnreadMessagesInChat(
-              chatId: 'c4',
-              userId: loggedUserId,
-            ),
-          ).called(2);
         },
       );
 

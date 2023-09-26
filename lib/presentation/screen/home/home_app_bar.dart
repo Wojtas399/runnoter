@@ -192,8 +192,8 @@ class _DrawerBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final int numberOfUnreadClientMessages = context.select(
-      (HomeCubit cubit) =>
-          cubit.state.idsOfClientsWithAwaitingMessages?.length ?? 0,
+      (NotificationsCubit cubit) =>
+          cubit.state.idsOfClientsWithAwaitingMessages.length,
     );
     final int numberOfCoachingRequestsReceivedFromClients = context.select(
       (NotificationsCubit cubit) =>
@@ -217,7 +217,7 @@ class _ProfileBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool? areThereUnreadMessagesFromCoach = context.select(
-      (HomeCubit cubit) => cubit.state.areThereUnreadMessagesFromCoach,
+      (NotificationsCubit cubit) => cubit.state.areThereUnreadMessagesFromCoach,
     );
 
     return Badge(
