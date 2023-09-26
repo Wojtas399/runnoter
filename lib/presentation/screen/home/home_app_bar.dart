@@ -219,9 +219,14 @@ class _ProfileBadge extends StatelessWidget {
     final bool? areThereUnreadMessagesFromCoach = context.select(
       (NotificationsCubit cubit) => cubit.state.areThereUnreadMessagesFromCoach,
     );
+    final bool areThereCoachingRequestsReceivedFromCoaches = context.select(
+      (NotificationsCubit cubit) =>
+          cubit.state.numberOfCoachingRequestsReceivedFromCoaches > 0,
+    );
 
     return Badge(
-      isLabelVisible: areThereUnreadMessagesFromCoach == true,
+      isLabelVisible: areThereUnreadMessagesFromCoach == true ||
+          areThereCoachingRequestsReceivedFromCoaches,
       child: child,
     );
   }
