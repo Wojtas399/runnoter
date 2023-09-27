@@ -121,18 +121,6 @@ void main() {
   );
 
   blocTest(
-    'delete coaching request, '
-    "should call coaching request service's method to delete request",
-    build: () => HomeCubit(),
-    setUp: () => coachingRequestService.mockDeleteCoachingRequest(),
-    act: (cubit) => cubit.deleteCoachingRequest('r1'),
-    expect: () => [],
-    verify: (_) => verify(
-      () => coachingRequestService.deleteCoachingRequest(requestId: 'r1'),
-    ).called(1),
-  );
-
-  blocTest(
     'sign out, '
     'should call auth service method to sign out and should emit signed out info',
     build: () => HomeCubit(),

@@ -10,21 +10,18 @@ import '../../additional_model/cubit_state.dart';
 import '../../additional_model/cubit_with_status.dart';
 import '../../additional_model/settings.dart';
 import '../../entity/user.dart';
-import '../../service/coaching_request_service.dart';
 
 part 'home_state.dart';
 
 class HomeCubit extends CubitWithStatus<HomeState, HomeCubitInfo, dynamic> {
   final AuthService _authService;
   final UserRepository _userRepository;
-  final CoachingRequestService _coachingRequestService;
   StreamSubscription<User?>? _loggedUserListener;
 
   HomeCubit({
     HomeState initialState = const HomeState(status: CubitStatusInitial()),
   })  : _authService = getIt<AuthService>(),
         _userRepository = getIt<UserRepository>(),
-        _coachingRequestService = getIt<CoachingRequestService>(),
         super(initialState);
 
   @override
@@ -49,11 +46,6 @@ class HomeCubit extends CubitWithStatus<HomeState, HomeCubitInfo, dynamic> {
             appSettings: loggedUser?.settings,
           )),
         );
-  }
-
-  //TODO: Move it to notifications cubit
-  Future<void> deleteCoachingRequest(String requestId) async {
-    await _coachingRequestService.deleteCoachingRequest(requestId: requestId);
   }
 
   Future<void> signOut() async {

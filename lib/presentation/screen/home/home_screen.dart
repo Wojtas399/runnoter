@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/single_child_widget.dart';
 
+import '../../../dependency_injection.dart';
 import '../../../domain/additional_model/coaching_request_short.dart';
 import '../../../domain/additional_model/cubit_status.dart';
 import '../../../domain/additional_model/settings.dart' as settings;
@@ -11,11 +12,14 @@ import '../../../domain/cubit/calendar/calendar_cubit.dart';
 import '../../../domain/cubit/date_range_manager_cubit.dart';
 import '../../../domain/cubit/home/home_cubit.dart';
 import '../../../domain/cubit/notifications/notifications_cubit.dart';
+import '../../component/cubit_with_status_listener_component.dart';
+import '../../config/navigation/router.dart';
 import '../../dialog/required_data_completion/required_data_completion_dialog.dart';
 import '../../formatter/person_formatter.dart';
 import '../../service/dialog_service.dart';
 import '../../service/distance_unit_service.dart';
 import '../../service/language_service.dart';
+import '../../service/navigator_service.dart';
 import '../../service/pace_unit_service.dart';
 import '../../service/theme_service.dart';
 import 'home_content.dart';
@@ -55,10 +59,22 @@ class _HomeCubitListener extends SingleChildStatelessWidget {
 
   @override
   Widget buildWithChild(BuildContext context, Widget? child) {
-    return BlocListener<HomeCubit, HomeState>(
-      listener: _manageStateChanges,
+    return CubitWithStatusListener<HomeCubit, HomeState, HomeCubitInfo,
+        dynamic>(
       child: child,
+      onInfo: (HomeCubitInfo info) => _manageInfo(context, info),
+      onStateChanged: (HomeState state) => _manageStateChanges(context, state),
     );
+  }
+
+  void _manageInfo(BuildContext context, HomeCubitInfo info) {
+    switch (info) {
+      case HomeCubitInfo.userSignedOut:
+        context.read<ThemeService>().changeTheme(ThemeMode.system);
+        navigateAndRemoveUntil(const SignInRoute());
+        resetGetItRepositories();
+        break;
+    }
   }
 
   void _manageStateChanges(BuildContext context, HomeState state) {
