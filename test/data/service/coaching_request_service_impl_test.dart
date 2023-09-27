@@ -11,28 +11,28 @@ import '../../mock/firebase/mock_firebase_coaching_request_service.dart';
 import '../../mock/firebase/mock_firebase_user_service.dart';
 
 void main() {
-  final firebaseCoachingRequestService = MockFirebaseCoachingRequestService();
-  final firebaseUserService = MockFirebaseUserService();
+  final dbCoachingRequestService = MockFirebaseCoachingRequestService();
+  final dbUserService = MockFirebaseUserService();
   late CoachingRequestServiceImpl service;
 
   setUpAll(() {
     GetIt.I.registerFactory<firebase.FirebaseCoachingRequestService>(
-      () => firebaseCoachingRequestService,
+      () => dbCoachingRequestService,
     );
     GetIt.I.registerFactory<firebase.FirebaseUserService>(
-      () => firebaseUserService,
+      () => dbUserService,
     );
     service = CoachingRequestServiceImpl();
   });
 
   tearDown(() {
-    reset(firebaseCoachingRequestService);
-    reset(firebaseUserService);
+    reset(dbCoachingRequestService);
+    reset(dbUserService);
   });
 
   test(
     'get coaching requests by sender id, '
-    'should emit stream from firebase coaching request service to get coaching requests by sender id',
+    'should emit stream from db coaching request service to get coaching requests by sender id',
     () {
       const String senderId = 'u1';
       const List<firebase.CoachingRequestDto> requestDtos = [
@@ -67,7 +67,7 @@ void main() {
           isAccepted: true,
         ),
       ];
-      firebaseCoachingRequestService.mockGetCoachingRequestsBySenderId(
+      dbCoachingRequestService.mockGetCoachingRequestsBySenderId(
         requests: requestDtos,
       );
 
@@ -82,7 +82,7 @@ void main() {
         emitsInOrder([expectedCoachingRequests]),
       );
       verify(
-        () => firebaseCoachingRequestService.getCoachingRequestsBySenderId(
+        () => dbCoachingRequestService.getCoachingRequestsBySenderId(
           senderId: senderId,
           direction: firebase.CoachingRequestDirection.clientToCoach,
         ),
@@ -92,7 +92,7 @@ void main() {
 
   test(
     'get coaching requests by receiver id, '
-    'should emit stream from firebase coaching request service to get coaching requests by receiver id',
+    'should emit stream from db coaching request service to get coaching requests by receiver id',
     () {
       const String receiverId = 'u1';
       const List<firebase.CoachingRequestDto> requestDtos = [
@@ -127,7 +127,7 @@ void main() {
           isAccepted: true,
         ),
       ];
-      firebaseCoachingRequestService.mockGetCoachingRequestsByReceiverId(
+      dbCoachingRequestService.mockGetCoachingRequestsByReceiverId(
         requests: requestDtos,
       );
 
@@ -142,7 +142,7 @@ void main() {
         emitsInOrder([expectedCoachingRequests]),
       );
       verify(
-        () => firebaseCoachingRequestService.getCoachingRequestsByReceiverId(
+        () => dbCoachingRequestService.getCoachingRequestsByReceiverId(
           receiverId: receiverId,
           direction: firebase.CoachingRequestDirection.coachToClient,
         ),
@@ -154,15 +154,15 @@ void main() {
     'add coaching request, '
     'coach to client, '
     'receiver does not have a coach, '
-    "should call firebase coaching request service's method to add coaching request",
+    "should call db coaching request service's method to add coaching request",
     () async {
       const String senderId = 'u1';
       const String receiverId = 'u2';
       const bool isAccepted = false;
-      firebaseUserService.mockLoadUserById(
+      dbUserService.mockLoadUserById(
         userDto: createUserDto(id: receiverId),
       );
-      firebaseCoachingRequestService.mockAddCoachingRequest();
+      dbCoachingRequestService.mockAddCoachingRequest();
 
       await service.addCoachingRequest(
         senderId: senderId,
@@ -172,10 +172,10 @@ void main() {
       );
 
       verify(
-        () => firebaseUserService.loadUserById(userId: receiverId),
+        () => dbUserService.loadUserById(userId: receiverId),
       ).called(1);
       verify(
-        () => firebaseCoachingRequestService.addCoachingRequest(
+        () => dbCoachingRequestService.addCoachingRequest(
           senderId: senderId,
           receiverId: receiverId,
           direction: firebase.CoachingRequestDirection.coachToClient,
@@ -196,10 +196,10 @@ void main() {
       const CustomException expectedException = CoachingRequestException(
         code: CoachingRequestExceptionCode.userAlreadyHasCoach,
       );
-      firebaseUserService.mockLoadUserById(
+      dbUserService.mockLoadUserById(
         userDto: createUserDto(id: receiverId, coachId: 'c1'),
       );
-      firebaseCoachingRequestService.mockAddCoachingRequest();
+      dbCoachingRequestService.mockAddCoachingRequest();
 
       Object? exception;
       try {
@@ -215,7 +215,7 @@ void main() {
 
       expect(exception, expectedException);
       verify(
-        () => firebaseUserService.loadUserById(userId: receiverId),
+        () => dbUserService.loadUserById(userId: receiverId),
       ).called(1);
     },
   );
@@ -223,12 +223,12 @@ void main() {
   test(
     'add coaching request, '
     'client to coach, '
-    "should call firebase coaching request service's method to add coaching request",
+    "should call db coaching request service's method to add coaching request",
     () async {
       const String senderId = 'u1';
       const String receiverId = 'u2';
       const bool isAccepted = false;
-      firebaseCoachingRequestService.mockAddCoachingRequest();
+      dbCoachingRequestService.mockAddCoachingRequest();
 
       await service.addCoachingRequest(
         senderId: senderId,
@@ -238,7 +238,7 @@ void main() {
       );
 
       verify(
-        () => firebaseCoachingRequestService.addCoachingRequest(
+        () => dbCoachingRequestService.addCoachingRequest(
           senderId: senderId,
           receiverId: receiverId,
           direction: firebase.CoachingRequestDirection.clientToCoach,
@@ -250,11 +250,11 @@ void main() {
 
   test(
     'update coaching request, '
-    "should call firebase coaching request service's method to update coaching request",
+    "should call db coaching request service's method to update coaching request",
     () async {
       const String requestId = 'i1';
       const bool isAccepted = true;
-      firebaseCoachingRequestService.mockUpdateCoachingRequest();
+      dbCoachingRequestService.mockUpdateCoachingRequest();
 
       await service.updateCoachingRequest(
         requestId: requestId,
@@ -262,7 +262,7 @@ void main() {
       );
 
       verify(
-        () => firebaseCoachingRequestService.updateCoachingRequest(
+        () => dbCoachingRequestService.updateCoachingRequest(
           requestId: requestId,
           isAccepted: isAccepted,
         ),
@@ -272,15 +272,15 @@ void main() {
 
   test(
     'delete coaching request, '
-    "should call firebase coaching request service's method to delete coaching request",
+    "should call db coaching request service's method to delete coaching request",
     () async {
       const String requestId = 'i1';
-      firebaseCoachingRequestService.mockDeleteCoachingRequest();
+      dbCoachingRequestService.mockDeleteCoachingRequest();
 
       await service.deleteCoachingRequest(requestId: requestId);
 
       verify(
-        () => firebaseCoachingRequestService.deleteCoachingRequest(
+        () => dbCoachingRequestService.deleteCoachingRequest(
           requestId: requestId,
         ),
       ).called(1);
@@ -289,16 +289,39 @@ void main() {
 
   test(
     'delete coaching requests by user id, '
-    "should call firebase coaching request service's method to delete coaching requests by user id",
+    'should call db coaching request service method to delete coaching requests by user id',
     () async {
       const String userId = 'u1';
-      firebaseCoachingRequestService.mockDeleteCoachingRequestsByUserId();
+      dbCoachingRequestService.mockDeleteCoachingRequestsByUserId();
 
       await service.deleteCoachingRequestsByUserId(userId: userId);
 
       verify(
-        () => firebaseCoachingRequestService.deleteCoachingRequestsByUserId(
+        () => dbCoachingRequestService.deleteCoachingRequestsByUserId(
           userId: userId,
+        ),
+      ).called(1);
+    },
+  );
+
+  test(
+    'delete coaching request between users, '
+    'should call db coaching request service method to delete coaching request '
+    'between users',
+    () async {
+      const String user1Id = 'u1';
+      const String user2Id = 'u2';
+      dbCoachingRequestService.mockDeleteCoachingRequestBetweenUsers();
+
+      await service.deleteCoachingRequestBetweenUsers(
+        user1Id: user1Id,
+        user2Id: user2Id,
+      );
+
+      verify(
+        () => dbCoachingRequestService.deleteCoachingRequestBetweenUsers(
+          user1Id: user1Id,
+          user2Id: user2Id,
         ),
       ).called(1);
     },

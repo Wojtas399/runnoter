@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:collection/collection.dart';
 
 import '../firebase_collections.dart';
 import '../mapper/coaching_request_direction_mapper.dart';
@@ -87,5 +88,27 @@ class FirebaseCoachingRequestService {
       batch.delete(request.reference);
     }
     await asyncOrSyncCall(() => batch.commit());
+  }
+
+  Future<void> deleteCoachingRequestBetweenUsers({
+    required String user1Id,
+    required String user2Id,
+  }) async {
+    final List<String> userIds = [user1Id, user2Id];
+    final queryBySenderSnapshot = await getCoachingRequestsRef()
+        .where(senderIdField, whereIn: userIds)
+        .get();
+    final queryByReceiverSnapshot = await getCoachingRequestsRef()
+        .where(receiverIdField, whereIn: userIds)
+        .get();
+    final CoachingRequestDto? foundReq = [
+      ...queryBySenderSnapshot.docs.map((doc) => doc.data()),
+      ...queryByReceiverSnapshot.docs.map((doc) => doc.data()),
+    ].firstWhereOrNull(
+      (CoachingRequestDto reqDto) =>
+          userIds.contains(reqDto.senderId) &&
+          userIds.contains(reqDto.receiverId),
+    );
+    if (foundReq != null) await deleteCoachingRequest(requestId: foundReq.id);
   }
 }
