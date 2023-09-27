@@ -1041,4 +1041,16 @@ void main() {
       );
     },
   );
+
+  blocTest(
+    'delete coaching request, '
+    'should call coaching request service method to delete request',
+    build: () => NotificationsCubit(),
+    setUp: () => coachingRequestService.mockDeleteCoachingRequest(),
+    act: (cubit) => cubit.deleteCoachingRequest('r1'),
+    expect: () => [],
+    verify: (_) => verify(
+      () => coachingRequestService.deleteCoachingRequest(requestId: 'r1'),
+    ).called(1),
+  );
 }

@@ -126,6 +126,10 @@ class NotificationsCubit extends Cubit<NotificationsState> {
     ).listen(emit);
   }
 
+  Future<void> deleteCoachingRequest(String requestId) async {
+    await _coachingRequestService.deleteCoachingRequest(requestId: requestId);
+  }
+
   Stream<User?> _getLoggedUser() => _authService.loggedUserId$.switchMap(
         (String? loggedUserId) => loggedUserId != null
             ? _userRepository.getUserById(userId: loggedUserId)

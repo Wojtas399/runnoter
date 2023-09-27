@@ -140,7 +140,7 @@ class _NotificationsCubitListener extends SingleChildStatelessWidget {
           showCloseIcon: true,
           duration: const Duration(seconds: 6),
         );
-        context.read<HomeCubit>().deleteCoachingRequest(request.id);
+        context.read<NotificationsCubit>().deleteCoachingRequest(request.id);
       }
     }
   }
@@ -157,7 +157,7 @@ class _NotificationsCubitListener extends SingleChildStatelessWidget {
         showCloseIcon: true,
         duration: const Duration(seconds: 6),
       );
-      context.read<HomeCubit>().deleteCoachingRequest(request.id);
+      context.read<NotificationsCubit>().deleteCoachingRequest(request.id);
     }
   }
 }
