@@ -88,4 +88,13 @@ class CoachingRequestServiceImpl implements CoachingRequestService {
       userId: userId,
     );
   }
+
+  @override
+  Future<void> deleteCoachingRequestBetweenUsers({
+    required String user1Id,
+    required String user2Id,
+  }) {
+    // TODO: implement deleteCoachingRequestByUsers
+    throw UnimplementedError();
+  }
 }
