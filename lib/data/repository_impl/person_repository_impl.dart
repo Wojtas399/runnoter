@@ -71,6 +71,11 @@ class PersonRepositoryImpl extends StateRepository<Person>
   }
 
   @override
+  Future<void> refreshPersonById({required String personId}) async {
+    await _loadPersonByIdFromDb(personId);
+  }
+
+  @override
   Future<void> refreshPersonsByCoachId({required String coachId}) async {
     await _loadPersonsByCoachIdFromDb(coachId);
   }
@@ -92,7 +97,11 @@ class PersonRepositoryImpl extends StateRepository<Person>
     final userDto = await _dbUserService.loadUserById(userId: personId);
     if (userDto == null) return null;
     final Person person = mapPersonFromUserDto(userDto);
-    addEntity(person);
+    if (doesEntityNotExistInState(person.id)) {
+      addEntity(person);
+    } else {
+      updateEntity(person);
+    }
     return person;
   }
 
