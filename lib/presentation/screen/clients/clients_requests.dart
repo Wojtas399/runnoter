@@ -6,6 +6,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../domain/additional_model/coaching_request_short.dart';
 import '../../../domain/cubit/clients/clients_cubit.dart';
 import '../../../domain/entity/person.dart';
+import '../../component/gap/gap_horizontal_components.dart';
 import '../../component/text/body_text_components.dart';
 import '../../component/text/title_text_components.dart';
 import '../../extension/context_extensions.dart';
@@ -41,6 +42,7 @@ class ClientsReceivedRequests extends StatelessWidget {
     return _RequestsList(
       requests: requests,
       requestDirection: CoachingRequestDirection.clientToCoach,
+      canShowBadge: true,
     );
   }
 }
@@ -48,10 +50,12 @@ class ClientsReceivedRequests extends StatelessWidget {
 class _RequestsList extends StatefulWidget {
   final List<CoachingRequestShort>? requests;
   final CoachingRequestDirection requestDirection;
+  final bool canShowBadge;
 
   const _RequestsList({
     required this.requests,
     required this.requestDirection,
+    this.canShowBadge = false,
   });
 
   @override
@@ -83,11 +87,25 @@ class _RequestsListState extends State<_RequestsList> {
               right: context.isMobileSize ? 16 : 0,
               top: 8,
             ),
-            child: TitleLarge(
-              switch (widget.requestDirection) {
-                CoachingRequestDirection.coachToClient => str.sentRequests,
-                CoachingRequestDirection.clientToCoach => str.receivedRequests,
-              },
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TitleLarge(
+                  switch (widget.requestDirection) {
+                    CoachingRequestDirection.coachToClient => str.sentRequests,
+                    CoachingRequestDirection.clientToCoach =>
+                      str.receivedRequests,
+                  },
+                ),
+                if (widget.canShowBadge &&
+                    widget.requests != null &&
+                    widget.requests!.isNotEmpty) ...[
+                  const GapHorizontal8(),
+                  Badge(
+                    label: Text('${widget.requests!.length}'),
+                  ),
+                ],
+              ],
             ),
           ),
           body: Padding(
@@ -141,9 +159,7 @@ class _RequestsListContent extends StatelessWidget {
             ],
           ),
         ),
-      [...] => ListView(
-          physics: const NeverScrollableScrollPhysics(),
-          shrinkWrap: true,
+      [...] => Column(
           children: ListTile.divideTiles(
             context: context,
             tiles: requests!.map(

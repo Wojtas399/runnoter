@@ -9,6 +9,16 @@ class MockChatRepository extends Mock implements ChatRepository {
     ).thenAnswer((_) => chatStream ?? Stream.value(chat));
   }
 
+  void mockGetChatsContainingUser({
+    required Stream<List<Chat>> chatsStream,
+  }) {
+    when(
+      () => getChatsContainingUser(
+        userId: any(named: 'userId'),
+      ),
+    ).thenAnswer((_) => chatsStream);
+  }
+
   void mockFindChatIdForUsers({String? chatId}) {
     when(
       () => findChatIdByUsers(

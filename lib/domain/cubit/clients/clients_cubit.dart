@@ -1,13 +1,12 @@
 import 'dart:async';
 
-import 'package:equatable/equatable.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../../dependency_injection.dart';
-import '../../additional_model/cubit_status.dart';
 import '../../additional_model/coaching_request.dart';
 import '../../additional_model/coaching_request_short.dart';
 import '../../additional_model/cubit_state.dart';
+import '../../additional_model/cubit_status.dart';
 import '../../additional_model/cubit_with_status.dart';
 import '../../entity/person.dart';
 import '../../repository/person_repository.dart';
@@ -23,7 +22,7 @@ class ClientsCubit
   final CoachingRequestService _coachingRequestService;
   final PersonRepository _personRepository;
   final LoadChatIdUseCase _loadChatIdUseCase;
-  StreamSubscription<_ListenedParams>? _listener;
+  StreamSubscription<ClientsState>? _listener;
 
   ClientsCubit({
     ClientsState initialState =
@@ -34,33 +33,34 @@ class ClientsCubit
         _loadChatIdUseCase = getIt<LoadChatIdUseCase>(),
         super(initialState);
 
+  @override
+  Future<void> close() {
+    _listener?.cancel();
+    return super.close();
+  }
+
   Future<void> initialize() async {
     _listener ??= _authService.loggedUserId$
-        .whereNotNull()
         .switchMap(
-          (String loggedUserId) => Rx.combineLatest3(
-            _getSentRequests(loggedUserId),
-            _getReceivedRequests(loggedUserId),
-            _getClients(loggedUserId),
-            (
-              List<CoachingRequestShort> sentRequests,
-              List<CoachingRequestShort> receivedRequests,
-              List<Person> clients,
-            ) =>
-                _ListenedParams(
-              sentRequests: sentRequests,
-              receivedRequests: receivedRequests,
-              clients: clients,
-            ),
-          ),
+          (String? loggedUserId) => loggedUserId == null
+              ? Stream.value(state.copyWith())
+              : Rx.combineLatest3(
+                  _getSentRequests(loggedUserId),
+                  _getReceivedRequests(loggedUserId),
+                  _getClients(loggedUserId),
+                  (
+                    List<CoachingRequestShort> sentRequests,
+                    List<CoachingRequestShort> receivedRequests,
+                    List<Person> clients,
+                  ) =>
+                      state.copyWith(
+                    sentRequests: sentRequests,
+                    receivedRequests: receivedRequests,
+                    clients: clients,
+                  ),
+                ),
         )
-        .listen(
-          (_ListenedParams params) => emit(state.copyWith(
-            sentRequests: params.sentRequests,
-            receivedRequests: params.receivedRequests,
-            clients: params.clients,
-          )),
-        );
+        .listen(emit);
   }
 
   Future<void> acceptRequest(String requestId) async {
@@ -103,10 +103,16 @@ class ClientsCubit
   }
 
   Future<void> deleteClient(String clientId) async {
+    final String? loggedUserId = await _authService.loggedUserId$.first;
+    if (loggedUserId == null) return;
     emitLoadingStatus();
     await _personRepository.updateCoachIdOfPerson(
       personId: clientId,
       coachId: null,
+    );
+    await _coachingRequestService.deleteCoachingRequestBetweenUsers(
+      user1Id: loggedUserId,
+      user2Id: clientId,
     );
     emitCompleteStatus(info: ClientsCubitInfo.clientDeleted);
   }
@@ -176,18 +182,3 @@ class ClientsCubit
 }
 
 enum ClientsCubitInfo { requestAccepted, requestDeleted, clientDeleted }
-
-class _ListenedParams extends Equatable {
-  final List<CoachingRequestShort> sentRequests;
-  final List<CoachingRequestShort> receivedRequests;
-  final List<Person> clients;
-
-  const _ListenedParams({
-    required this.sentRequests,
-    required this.receivedRequests,
-    required this.clients,
-  });
-
-  @override
-  List<Object?> get props => [sentRequests, receivedRequests, clients];
-}

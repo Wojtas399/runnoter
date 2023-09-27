@@ -26,6 +26,15 @@ class MockMessageRepository extends Mock implements MessageRepository {
     ).thenAnswer((_) => messagesStream ?? Stream.value(messages));
   }
 
+  void mockDoesUserHaveUnreadMessagesInChat({required Stream<bool> expected$}) {
+    when(
+      () => doesUserHaveUnreadMessagesInChat(
+        chatId: any(named: 'chatId'),
+        userId: any(named: 'userId'),
+      ),
+    ).thenAnswer((_) => expected$);
+  }
+
   void mockLoadOlderMessagesForChat() {
     when(
       () => loadOlderMessagesForChat(

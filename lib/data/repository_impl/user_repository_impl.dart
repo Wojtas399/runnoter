@@ -28,15 +28,13 @@ class UserRepositoryImpl extends StateRepository<User>
         super(initialData: initialState);
 
   @override
-  Stream<User?> getUserById({required String userId}) async* {
-    await for (final users in dataStream$) {
-      User? user = users?.firstWhereOrNull(
-        (User? user) => user?.id == userId,
-      );
-      user ??= await _loadUserFromDb(userId);
-      yield user;
-    }
-  }
+  Stream<User?> getUserById({required String userId}) => dataStream$
+      .map(
+        (List<User>? users) => users?.firstWhereOrNull(
+          (User? user) => user?.id == userId,
+        ),
+      )
+      .asyncMap((User? user) async => user ?? await _loadUserFromDb(userId));
 
   @override
   Future<void> addUser({required User user}) async {

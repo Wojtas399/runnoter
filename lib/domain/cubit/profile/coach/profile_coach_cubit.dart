@@ -1,13 +1,12 @@
 import 'dart:async';
 
-import 'package:equatable/equatable.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../../../dependency_injection.dart';
-import '../../../additional_model/cubit_status.dart';
 import '../../../additional_model/coaching_request.dart';
 import '../../../additional_model/coaching_request_short.dart';
 import '../../../additional_model/cubit_state.dart';
+import '../../../additional_model/cubit_status.dart';
 import '../../../additional_model/cubit_with_status.dart';
 import '../../../entity/person.dart';
 import '../../../entity/user.dart';
@@ -27,7 +26,7 @@ class ProfileCoachCubit
   final CoachingRequestService _coachingRequestService;
   final LoadChatIdUseCase _loadChatIdUseCase;
   StreamSubscription<Person?>? _coachListener;
-  StreamSubscription<_ListenedRequests?>? _requestsListener;
+  StreamSubscription<ProfileCoachState>? _requestsListener;
 
   ProfileCoachCubit({
     ProfileCoachState initialState = const ProfileCoachState(
@@ -43,9 +42,7 @@ class ProfileCoachCubit
   @override
   Future<void> close() {
     _coachListener?.cancel();
-    _coachListener = null;
     _requestsListener?.cancel();
-    _requestsListener = null;
     return super.close();
   }
 
@@ -69,15 +66,17 @@ class ProfileCoachCubit
     _requestsListener ??= _authService.loggedUserId$
         .switchMap(
           (String? loggedUserId) => loggedUserId == null
-              ? Stream.value(null)
-              : _getSentAndReceivedCoachingRequests(loggedUserId),
+              ? Stream.value(state.copyWith())
+              : Rx.combineLatest2(
+                  _getSentCoachingRequests(loggedUserId),
+                  _getReceivedCoachingRequests(loggedUserId),
+                  (sentRequests, receivedRequests) => state.copyWith(
+                    sentRequests: sentRequests,
+                    receivedRequests: receivedRequests,
+                  ),
+                ),
         )
-        .listen(
-          (_ListenedRequests? requests) => emit(state.copyWith(
-            sentRequests: requests?.sentRequests,
-            receivedRequests: requests?.receivedRequests,
-          )),
-        );
+        .listen(emit);
   }
 
   void removeRequestsListener() {
@@ -133,6 +132,7 @@ class ProfileCoachCubit
   }
 
   Future<void> deleteCoach() async {
+    if (state.coachId == null) return;
     final String? loggedUserId = await _authService.loggedUserId$.first;
     if (loggedUserId == null) {
       emitNoLoggedUserStatus();
@@ -140,6 +140,10 @@ class ProfileCoachCubit
     }
     emitLoadingStatus();
     await _userRepository.updateUser(userId: loggedUserId, coachIdAsNull: true);
+    await _coachingRequestService.deleteCoachingRequestBetweenUsers(
+      user1Id: loggedUserId,
+      user2Id: state.coachId!,
+    );
     emitCompleteStatus(info: ProfileCoachCubitInfo.coachDeleted);
   }
 
@@ -154,18 +158,6 @@ class ProfileCoachCubit
         (coachId) => coachId != null
             ? _personRepository.getPersonById(personId: coachId)
             : Stream.value(null),
-      );
-
-  Stream<_ListenedRequests> _getSentAndReceivedCoachingRequests(
-    String loggedUserId,
-  ) =>
-      Rx.combineLatest2(
-        _getSentCoachingRequests(loggedUserId),
-        _getReceivedCoachingRequests(loggedUserId),
-        (sentRequests, receivedRequests) => _ListenedRequests(
-          sentRequests: sentRequests,
-          receivedRequests: receivedRequests,
-        ),
       );
 
   Stream<List<CoachingRequestShort>?> _getSentCoachingRequests(
@@ -249,17 +241,4 @@ enum ProfileCoachCubitInfo {
   requestDeleted,
   requestUndid,
   coachDeleted
-}
-
-class _ListenedRequests extends Equatable {
-  final List<CoachingRequestShort>? sentRequests;
-  final List<CoachingRequestShort>? receivedRequests;
-
-  const _ListenedRequests({
-    required this.sentRequests,
-    required this.receivedRequests,
-  });
-
-  @override
-  List<Object?> get props => [sentRequests, receivedRequests];
 }

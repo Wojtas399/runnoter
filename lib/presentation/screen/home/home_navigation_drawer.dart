@@ -8,6 +8,7 @@ import '../../../domain/entity/user.dart';
 import '../../component/gap/gap_components.dart';
 import '../../config/navigation/router.dart';
 import '../../extension/context_extensions.dart';
+import 'home_clients_notifications_badge.dart';
 import 'home_fab.dart';
 
 class HomeNavigationDrawer extends StatelessWidget {
@@ -73,7 +74,16 @@ class HomeNavigationDrawer extends StatelessWidget {
           NavigationDrawerDestination(
             icon: const Icon(Icons.groups_outlined),
             selectedIcon: const Icon(Icons.groups),
-            label: Text(str.clientsTitle),
+            label: SizedBox(
+              width: 200,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(str.clientsTitle),
+                  const HomeClientsNotificationsBadge(),
+                ],
+              ),
+            ),
           ),
         const Gap24(),
         NavigationDrawerDestination(

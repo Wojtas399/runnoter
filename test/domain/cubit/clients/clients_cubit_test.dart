@@ -4,9 +4,9 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/domain/additional_model/cubit_status.dart';
 import 'package:runnoter/domain/additional_model/coaching_request.dart';
 import 'package:runnoter/domain/additional_model/coaching_request_short.dart';
+import 'package:runnoter/domain/additional_model/cubit_status.dart';
 import 'package:runnoter/domain/cubit/clients/clients_cubit.dart';
 import 'package:runnoter/domain/entity/person.dart';
 import 'package:runnoter/domain/repository/person_repository.dart';
@@ -92,13 +92,13 @@ void main() {
             personsStream: clients$.stream,
           );
         },
-        act: (bloc) async {
-          bloc.initialize();
-          await bloc.stream.first;
+        act: (cubit) async {
+          cubit.initialize();
+          await cubit.stream.first;
           sentRequests$.add([]);
-          await bloc.stream.first;
+          await cubit.stream.first;
           receivedRequests$.add([]);
-          await bloc.stream.first;
+          await cubit.stream.first;
           clients$.add(updatedClients);
         },
         expect: () => [
@@ -162,7 +162,7 @@ void main() {
     'should emit no logged user status',
     build: () => ClientsCubit(),
     setUp: () => authService.mockGetLoggedUserId(),
-    act: (bloc) => bloc.acceptRequest('r1'),
+    act: (cubit) => cubit.acceptRequest('r1'),
     expect: () => [
       const ClientsState(status: CubitStatusNoLoggedUser()),
     ],
@@ -193,7 +193,7 @@ void main() {
       coachingRequestService.mockUpdateCoachingRequest();
       personRepository.mockUpdateCoachIdOfPerson();
     },
-    act: (bloc) => bloc.acceptRequest('r1'),
+    act: (cubit) => cubit.acceptRequest('r1'),
     expect: () => [
       ClientsState(
         status: const CubitStatusLoading(),
@@ -246,7 +246,7 @@ void main() {
     "should call coaching request service's method to delete request and should emit requestDeleted info",
     build: () => ClientsCubit(),
     setUp: () => coachingRequestService.mockDeleteCoachingRequest(),
-    act: (bloc) => bloc.deleteRequest('r1'),
+    act: (cubit) => cubit.deleteRequest('r1'),
     expect: () => [
       const ClientsState(status: CubitStatusLoading()),
       const ClientsState(
@@ -268,7 +268,7 @@ void main() {
       authService.mockGetLoggedUserId(userId: loggedUserId);
       loadChatIdUseCase.mock(chatId: 'c1');
     },
-    act: (bloc) => bloc.openChatWithClient('cl1'),
+    act: (cubit) => cubit.openChatWithClient('cl1'),
     expect: () => [
       const ClientsState(status: CubitStatusLoading()),
       const ClientsState(status: CubitStatusComplete(), selectedChatId: 'c1'),
@@ -280,10 +280,27 @@ void main() {
 
   blocTest(
     'delete client, '
-    "should call person repository's method to update person with coachId set as null and should emit clientDeleted info",
+    'logged user does not exist, '
+    'should do nothing',
     build: () => ClientsCubit(),
-    setUp: () => personRepository.mockUpdateCoachIdOfPerson(),
-    act: (bloc) => bloc.deleteClient('c1'),
+    setUp: () => authService.mockGetLoggedUserId(),
+    act: (cubit) => cubit.deleteClient('c1'),
+    expect: () => [],
+    verify: (_) => verify(() => authService.loggedUserId$).called(1),
+  );
+
+  blocTest(
+    'delete client, '
+    'should call person repository method to update person with coachId set as null, '
+    'should call coaching request service method to delete request between users, '
+    'should emit clientDeleted info',
+    build: () => ClientsCubit(),
+    setUp: () {
+      authService.mockGetLoggedUserId(userId: loggedUserId);
+      personRepository.mockUpdateCoachIdOfPerson();
+      coachingRequestService.mockDeleteCoachingRequestBetweenUsers();
+    },
+    act: (cubit) => cubit.deleteClient('c1'),
     expect: () => [
       const ClientsState(status: CubitStatusLoading()),
       const ClientsState(
@@ -292,11 +309,20 @@ void main() {
         ),
       ),
     ],
-    verify: (_) => verify(
-      () => personRepository.updateCoachIdOfPerson(
-        personId: 'c1',
-        coachId: null,
-      ),
-    ).called(1),
+    verify: (_) {
+      verify(() => authService.loggedUserId$).called(1);
+      verify(
+        () => personRepository.updateCoachIdOfPerson(
+          personId: 'c1',
+          coachId: null,
+        ),
+      ).called(1);
+      verify(
+        () => coachingRequestService.deleteCoachingRequestBetweenUsers(
+          user1Id: loggedUserId,
+          user2Id: 'c1',
+        ),
+      ).called(1);
+    },
   );
 }

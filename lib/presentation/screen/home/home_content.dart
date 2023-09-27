@@ -156,13 +156,17 @@ class _State extends State<HomeContent> {
 
   Future<void> _signOut(BuildContext context) async {
     final HomeCubit cubit = context.read<HomeCubit>();
+    final bool confirmed = await _askForSignOutConfirmation(context);
+    if (confirmed) cubit.signOut();
+  }
+
+  Future<bool> _askForSignOutConfirmation(BuildContext context) async {
     final str = Str.of(context);
-    final bool confirmed = await askForConfirmation(
+    return await askForConfirmation(
       title: Text(str.homeSignOutConfirmationDialogTitle),
       content: Text(str.homeSignOutConfirmationDialogMessage),
       confirmButtonLabel: str.homeSignOut,
       displayConfirmationButtonAsFilled: true,
     );
-    if (confirmed == true) cubit.signOut();
   }
 }

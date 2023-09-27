@@ -8,20 +8,20 @@ import '../mapper/coaching_request_direction_mapper.dart';
 import '../mapper/coaching_request_mapper.dart';
 
 class CoachingRequestServiceImpl implements CoachingRequestService {
-  final firebase.FirebaseCoachingRequestService _firebaseCoachingRequestService;
-  final firebase.FirebaseUserService _firebaseUserService;
+  final firebase.FirebaseCoachingRequestService _dbCoachingRequestService;
+  final firebase.FirebaseUserService _dbUserService;
 
   CoachingRequestServiceImpl()
-      : _firebaseCoachingRequestService =
+      : _dbCoachingRequestService =
             getIt<firebase.FirebaseCoachingRequestService>(),
-        _firebaseUserService = getIt<firebase.FirebaseUserService>();
+        _dbUserService = getIt<firebase.FirebaseUserService>();
 
   @override
   Stream<List<CoachingRequest>> getCoachingRequestsBySenderId({
     required String senderId,
     required CoachingRequestDirection direction,
   }) =>
-      _firebaseCoachingRequestService
+      _dbCoachingRequestService
           .getCoachingRequestsBySenderId(
             senderId: senderId,
             direction: mapCoachingRequestDirectionToDto(direction),
@@ -33,7 +33,7 @@ class CoachingRequestServiceImpl implements CoachingRequestService {
     required String receiverId,
     required CoachingRequestDirection direction,
   }) =>
-      _firebaseCoachingRequestService
+      _dbCoachingRequestService
           .getCoachingRequestsByReceiverId(
             receiverId: receiverId,
             direction: mapCoachingRequestDirectionToDto(direction),
@@ -49,14 +49,14 @@ class CoachingRequestServiceImpl implements CoachingRequestService {
   }) async {
     if (direction == CoachingRequestDirection.coachToClient) {
       final firebase.UserDto? receiverDto =
-          await _firebaseUserService.loadUserById(userId: receiverId);
+          await _dbUserService.loadUserById(userId: receiverId);
       if (receiverDto?.coachId != null) {
         throw const CoachingRequestException(
           code: CoachingRequestExceptionCode.userAlreadyHasCoach,
         );
       }
     }
-    await _firebaseCoachingRequestService.addCoachingRequest(
+    await _dbCoachingRequestService.addCoachingRequest(
       senderId: senderId,
       receiverId: receiverId,
       direction: mapCoachingRequestDirectionToDto(direction),
@@ -69,7 +69,7 @@ class CoachingRequestServiceImpl implements CoachingRequestService {
     required String requestId,
     required bool isAccepted,
   }) async {
-    await _firebaseCoachingRequestService.updateCoachingRequest(
+    await _dbCoachingRequestService.updateCoachingRequest(
       requestId: requestId,
       isAccepted: isAccepted,
     );
@@ -77,15 +77,26 @@ class CoachingRequestServiceImpl implements CoachingRequestService {
 
   @override
   Future<void> deleteCoachingRequest({required String requestId}) async {
-    await _firebaseCoachingRequestService.deleteCoachingRequest(
+    await _dbCoachingRequestService.deleteCoachingRequest(
       requestId: requestId,
     );
   }
 
   @override
   Future<void> deleteCoachingRequestsByUserId({required String userId}) async {
-    await _firebaseCoachingRequestService.deleteCoachingRequestsByUserId(
+    await _dbCoachingRequestService.deleteCoachingRequestsByUserId(
       userId: userId,
+    );
+  }
+
+  @override
+  Future<void> deleteCoachingRequestBetweenUsers({
+    required String user1Id,
+    required String user2Id,
+  }) async {
+    await _dbCoachingRequestService.deleteCoachingRequestBetweenUsers(
+      user1Id: user1Id,
+      user2Id: user2Id,
     );
   }
 }

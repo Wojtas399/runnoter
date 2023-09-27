@@ -10,6 +10,12 @@ class MockFirebaseChatService extends Mock implements FirebaseChatService {
     ).thenAnswer((_) => chatDtoStream);
   }
 
+  void mockLoadChatsContainingUser({required List<ChatDto> chatDtos}) {
+    when(
+      () => loadChatsContainingUser(userId: any(named: 'userId')),
+    ).thenAnswer((_) => Future.value(chatDtos));
+  }
+
   void mockLoadChatByUsers({ChatDto? chatDto}) {
     when(
       () => loadChatByUsers(

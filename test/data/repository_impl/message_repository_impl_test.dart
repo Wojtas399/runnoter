@@ -7,28 +7,33 @@ import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/data/repository_impl/message_repository_impl.dart';
 import 'package:runnoter/domain/entity/message.dart';
 
+import '../../creators/chat_dto_creator.dart';
 import '../../creators/message_creator.dart';
 import '../../creators/message_dto_creator.dart';
+import '../../mock/firebase/mock_firebase_chat_service.dart';
 import '../../mock/firebase/mock_firebase_message_service.dart';
 
 void main() {
   final dbMessageService = MockFirebaseMessageService();
+  final dbChatService = MockFirebaseChatService();
   late MessageRepositoryImpl repository;
 
   setUpAll(() {
     GetIt.I.registerFactory<firebase.FirebaseMessageService>(
       () => dbMessageService,
     );
+    GetIt.I.registerFactory<firebase.FirebaseChatService>(() => dbChatService);
   });
 
   setUp(() => repository = MessageRepositoryImpl());
 
   tearDown(() {
     reset(dbMessageService);
+    reset(dbChatService);
   });
 
   test(
-    'load message by id, '
+    'loadMessageById, '
     'message exists in repo, '
     'should return message from repo',
     () async {
@@ -49,7 +54,7 @@ void main() {
   );
 
   test(
-    'load message by id, '
+    'loadMessageById, '
     'message does not exist in repo, '
     'should load message from db add it to repo and return it',
     () async {
@@ -77,7 +82,7 @@ void main() {
   );
 
   test(
-    'get messages for chat, '
+    'getMessagesForChat, '
     'should load latest messages from db, add them to repo and '
     'should listen and emit all existing and newly added messages with matching chat id',
     () async {
@@ -167,7 +172,111 @@ void main() {
   );
 
   test(
-    'load older messages for chat, '
+    'doesUserHaveUnreadMessagesInChat, '
+    'at least one unread message sent by second user exists in repo, '
+    'should return true',
+    () {
+      const String chatId = 'c1';
+      const String userId = 'u1';
+      final List<Message> existingMessages = [
+        createMessage(
+          id: 'm1',
+          chatId: chatId,
+          senderId: 'u2',
+          status: MessageStatus.read,
+        ),
+        createMessage(
+          id: 'm2',
+          chatId: 'c2',
+          senderId: 'u2',
+          status: MessageStatus.sent,
+        ),
+        createMessage(
+          id: 'm3',
+          chatId: chatId,
+          senderId: userId,
+          status: MessageStatus.sent,
+        ),
+        createMessage(
+          id: 'm3',
+          chatId: chatId,
+          senderId: 'u2',
+          status: MessageStatus.sent,
+        ),
+      ];
+      dbChatService.mockGetChatById(
+        chatDtoStream: Stream.value(
+          createChatDto(id: 'c1', user1Id: 'u2', user2Id: userId),
+        ),
+      );
+      repository = MessageRepositoryImpl(initialData: existingMessages);
+
+      final Stream<bool> result$ = repository.doesUserHaveUnreadMessagesInChat(
+        chatId: chatId,
+        userId: userId,
+      );
+
+      expect(result$, emits(true));
+    },
+  );
+
+  test(
+    'doesUserHaveUnreadMessagesInChat, '
+    'no one unread message sent by second user exists in repo, '
+    'should listen to unread messages in db',
+    () async {
+      const String chatId = 'c1';
+      const String userId = 'u1';
+      final List<Message> existingMessages = [
+        createMessage(
+          id: 'm1',
+          chatId: chatId,
+          senderId: 'u2',
+          status: MessageStatus.read,
+        ),
+        createMessage(
+          id: 'm2',
+          chatId: 'c2',
+          senderId: 'u2',
+          status: MessageStatus.sent,
+        ),
+        createMessage(
+          id: 'm3',
+          chatId: chatId,
+          senderId: userId,
+          status: MessageStatus.sent,
+        ),
+      ];
+      final StreamController<bool> expected$ = StreamController()..add(false);
+      dbChatService.mockGetChatById(
+        chatDtoStream: Stream.value(
+          createChatDto(id: 'c1', user1Id: 'u2', user2Id: userId),
+        ),
+      );
+      dbMessageService.mockAreThereUnreadMessagesInChatSentByUser$(
+        expected$: expected$.stream,
+      );
+      repository = MessageRepositoryImpl(initialData: existingMessages);
+
+      final Stream<bool> result$ = repository.doesUserHaveUnreadMessagesInChat(
+        chatId: chatId,
+        userId: userId,
+      );
+      expected$.add(true);
+
+      expect(result$, emitsInOrder([false, true]));
+      await repository.dataStream$.first;
+      verify(
+        () => dbMessageService.areThereUnreadMessagesInChatSentByUser$(
+          chatId: chatId,
+          userId: 'u2',
+        ),
+      ).called(1);
+    },
+  );
+
+  test(
+    'loadOlderMessagesForChat, '
     "should call db message service's method to load older messages and "
     'should add loaded messages to repo',
     () async {
@@ -211,7 +320,7 @@ void main() {
   );
 
   test(
-    'add message, '
+    'addMessage, '
     'should call db storage service method to upload images and '
     'should call db message service method to add message to chat and '
     'should add new message to repo',
@@ -271,7 +380,7 @@ void main() {
   );
 
   test(
-    'mark messages as read, '
+    'markMessagesAsRead, '
     'for each message id should call db method to update message status to read and '
     'should update these messages in repo',
     () async {

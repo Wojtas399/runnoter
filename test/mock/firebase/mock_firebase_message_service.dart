@@ -35,6 +35,17 @@ class MockFirebaseMessageService extends Mock
     ).thenAnswer((_) => Future.value(messageDtos));
   }
 
+  void mockAreThereUnreadMessagesInChatSentByUser$({
+    required Stream<bool> expected$,
+  }) {
+    when(
+      () => areThereUnreadMessagesInChatSentByUser$(
+        chatId: any(named: 'chatId'),
+        userId: any(named: 'userId'),
+      ),
+    ).thenAnswer((_) => expected$);
+  }
+
   void mockAddMessage({MessageDto? addedMessageDto}) {
     when(
       () => addMessage(

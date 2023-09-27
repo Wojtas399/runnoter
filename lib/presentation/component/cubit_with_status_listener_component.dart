@@ -10,7 +10,7 @@ import '../service/navigator_service.dart';
 
 class CubitWithStatusListener<Cubit extends StateStreamable<State>,
     State extends CubitState, Info, Error> extends StatelessWidget {
-  final Widget child;
+  final Widget? child;
   final bool showDialogOnLoading;
   final void Function(State state)? onStateChanged;
   final void Function(Info info)? onInfo;
@@ -18,7 +18,7 @@ class CubitWithStatusListener<Cubit extends StateStreamable<State>,
 
   const CubitWithStatusListener({
     super.key,
-    required this.child,
+    this.child,
     this.showDialogOnLoading = true,
     this.onStateChanged,
     this.onInfo,

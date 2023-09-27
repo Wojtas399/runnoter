@@ -8,6 +8,7 @@ import '../../../domain/entity/user.dart';
 import '../../component/gap/gap_components.dart';
 import '../../component/text/label_text_components.dart';
 import '../../config/navigation/router.dart';
+import 'home_clients_notifications_badge.dart';
 import 'home_fab.dart';
 
 class HomeNavigationRail extends StatelessWidget {
@@ -78,8 +79,14 @@ class HomeNavigationRail extends StatelessWidget {
         ),
         if (accountType == AccountType.coach)
           NavigationRailDestination(
-            icon: const Icon(Icons.groups_outlined),
-            selectedIcon: const Icon(Icons.groups),
+            icon: const HomeClientsNotificationsBadge(
+              showEmptyBadge: true,
+              child: Icon(Icons.groups_outlined),
+            ),
+            selectedIcon: const HomeClientsNotificationsBadge(
+              showEmptyBadge: true,
+              child: Icon(Icons.groups),
+            ),
             label: Text(str.clientsTitle),
           ),
       ],

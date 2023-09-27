@@ -1,11 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:runnoter/domain/additional_model/cubit_status.dart';
-import 'package:runnoter/domain/additional_model/coaching_request_short.dart';
 import 'package:runnoter/domain/additional_model/settings.dart';
 import 'package:runnoter/domain/cubit/home/home_cubit.dart';
 import 'package:runnoter/domain/entity/user.dart';
-
-import '../../../creators/person_creator.dart';
 
 void main() {
   late HomeState state;
@@ -15,96 +12,63 @@ void main() {
   });
 
   test(
-    'copy with status',
+    'copy with status, '
+    'should set new value or should set complete status if new value is null',
     () {
-      const CubitStatus expectedStatus = CubitStatusLoading();
+      const CubitStatus expected = CubitStatusLoading();
 
-      state = state.copyWith(status: expectedStatus);
+      state = state.copyWith(status: expected);
       final state2 = state.copyWith();
 
-      expect(state.status, expectedStatus);
+      expect(state.status, expected);
       expect(state2.status, const CubitStatusComplete());
     },
   );
 
   test(
-    'copy with accountType',
+    'copy with accountType, '
+    'should set new value or should copy current value if new value is null',
     () {
-      const AccountType expectedAccountType = AccountType.coach;
+      const AccountType expected = AccountType.coach;
 
-      state = state.copyWith(accountType: expectedAccountType);
+      state = state.copyWith(accountType: expected);
       final state2 = state.copyWith();
 
-      expect(state.accountType, expectedAccountType);
-      expect(state2.accountType, expectedAccountType);
+      expect(state.accountType, expected);
+      expect(state2.accountType, expected);
     },
   );
 
   test(
-    'copy with loggedUserName',
+    'copy with loggedUserName, '
+    'should set new value or should copy current value if new value is null',
     () {
-      const String expectedLoggedUserName = 'name';
+      const String expected = 'name';
 
-      state = state.copyWith(loggedUserName: expectedLoggedUserName);
+      state = state.copyWith(loggedUserName: expected);
       final state2 = state.copyWith();
 
-      expect(state.loggedUserName, expectedLoggedUserName);
-      expect(state2.loggedUserName, expectedLoggedUserName);
+      expect(state.loggedUserName, expected);
+      expect(state2.loggedUserName, expected);
     },
   );
 
   test(
-    'copy with appSettings',
+    'copy with appSettings, '
+    'should set new value or should copy current value if new value is null',
     () {
-      const Settings expectedSettings = Settings(
+      const Settings expected = Settings(
         themeMode: ThemeMode.dark,
         language: Language.polish,
         distanceUnit: DistanceUnit.miles,
         paceUnit: PaceUnit.milesPerHour,
       );
 
-      state = state.copyWith(appSettings: expectedSettings);
+      state = state.copyWith(appSettings: expected);
       final state2 = state.copyWith();
 
-      expect(state.appSettings, expectedSettings);
-      expect(state2.appSettings, expectedSettings);
-    },
-  );
-
-  test(
-    'copy with acceptedClientRequests',
-    () {
-      final List<CoachingRequestShort> expectedAcceptedClientRequests = [
-        CoachingRequestShort(id: 'r1', personToDisplay: createPerson(id: 'u1')),
-        CoachingRequestShort(id: 'r2', personToDisplay: createPerson(id: 'u2')),
-      ];
-
-      state = state.copyWith(
-        acceptedClientRequests: expectedAcceptedClientRequests,
-      );
-      final state2 = state.copyWith();
-
-      expect(state.acceptedClientRequests, expectedAcceptedClientRequests);
-      expect(state2.acceptedClientRequests, const []);
-    },
-  );
-
-  test(
-    'copy with acceptedCoachRequest',
-    () {
-      final CoachingRequestShort expectedAcceptedCoachRequest =
-          CoachingRequestShort(
-        id: 'r1',
-        personToDisplay: createPerson(id: 'p1'),
-      );
-
-      state = state.copyWith(
-        acceptedCoachRequest: expectedAcceptedCoachRequest,
-      );
-      final state2 = state.copyWith();
-
-      expect(state.acceptedCoachRequest, expectedAcceptedCoachRequest);
-      expect(state2.acceptedCoachRequest, null);
+      expect(state.appSettings, expected);
+      expect(state2.appSettings, expected);
     },
   );
 }

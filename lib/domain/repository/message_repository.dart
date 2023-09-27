@@ -5,6 +5,11 @@ abstract interface class MessageRepository {
 
   Stream<List<Message>> getMessagesForChat({required String chatId});
 
+  Stream<bool> doesUserHaveUnreadMessagesInChat({
+    required String chatId,
+    required String userId,
+  });
+
   Future<void> loadOlderMessagesForChat({
     required String chatId,
     required String lastVisibleMessageId,

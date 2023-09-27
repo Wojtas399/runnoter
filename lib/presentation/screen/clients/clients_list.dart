@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/cubit/clients/clients_cubit.dart';
+import '../../../domain/cubit/notifications/notifications_cubit.dart';
 import '../../../domain/entity/person.dart';
 import '../../component/empty_content_info_component.dart';
 import '../../component/gap/gap_components.dart';
@@ -48,6 +49,10 @@ class _Content extends StatelessWidget {
     final List<Person>? clients = context.select(
       (ClientsCubit cubit) => cubit.state.clients,
     );
+    final List<String>? idsOfClientsWithAwaitingMessages = context.select(
+      (NotificationsCubit cubit) =>
+          cubit.state.idsOfClientsWithAwaitingMessages,
+    );
 
     return switch (clients) {
       null => const LoadingInfo(),
@@ -56,8 +61,16 @@ class _Content extends StatelessWidget {
           subtitle: Str.of(context).clientsNoClientsMessage,
         ),
       [...] => Column(
-          children:
-              clients.map((Person client) => _ClientItem(client)).toList(),
+          children: clients
+              .map(
+                (Person client) => _ClientItem(
+                  clientInfo: client,
+                  showMessageBadge:
+                      idsOfClientsWithAwaitingMessages?.contains(client.id) ==
+                          true,
+                ),
+              )
+              .toList(),
         ),
     };
   }
@@ -65,8 +78,9 @@ class _Content extends StatelessWidget {
 
 class _ClientItem extends StatelessWidget {
   final Person clientInfo;
+  final bool showMessageBadge;
 
-  const _ClientItem(this.clientInfo);
+  const _ClientItem({required this.clientInfo, required this.showMessageBadge});
 
   @override
   Widget build(BuildContext context) {
@@ -82,7 +96,10 @@ class _ClientItem extends StatelessWidget {
           IconButton(
             onPressed: () =>
                 context.read<ClientsCubit>().openChatWithClient(clientInfo.id),
-            icon: const Icon(Icons.message_outlined),
+            icon: Badge(
+              isLabelVisible: showMessageBadge,
+              child: const Icon(Icons.message_outlined),
+            ),
           ),
           IconButton(
             onPressed: _onShowProfile,

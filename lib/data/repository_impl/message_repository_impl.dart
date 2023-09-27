@@ -14,9 +14,11 @@ import '../mapper/message_status_mapper.dart';
 class MessageRepositoryImpl extends StateRepository<Message>
     implements MessageRepository {
   final firebase.FirebaseMessageService _dbMessageService;
+  final firebase.FirebaseChatService _dbChatService;
 
   MessageRepositoryImpl({super.initialData})
-      : _dbMessageService = getIt<firebase.FirebaseMessageService>();
+      : _dbMessageService = getIt<firebase.FirebaseMessageService>(),
+        _dbChatService = getIt<firebase.FirebaseChatService>();
 
   @override
   Future<Message?> loadMessageById({required String messageId}) async {
@@ -45,6 +47,37 @@ class MessageRepositoryImpl extends StateRepository<Message>
         )
         .doOnCancel(() => newMessagesListener?.cancel());
   }
+
+  @override
+  Stream<bool> doesUserHaveUnreadMessagesInChat({
+    required String chatId,
+    required String userId,
+  }) =>
+      Rx.fromCallable(
+        () async => await _dbChatService.getChatById(chatId: chatId).first,
+      ).whereNotNull().switchMap(
+        (firebase.ChatDto chatDto) {
+          final String senderId =
+              chatDto.user1Id == userId ? chatDto.user2Id : chatDto.user1Id;
+          return dataStream$
+              .map(
+                (List<Message>? messages) => messages?.firstWhereOrNull(
+                  (Message message) =>
+                      message.chatId == chatId &&
+                      message.senderId == senderId &&
+                      message.status == MessageStatus.sent,
+                ),
+              )
+              .switchMap(
+                (Message? message) => message != null
+                    ? Stream.value(true)
+                    : _dbMessageService.areThereUnreadMessagesInChatSentByUser$(
+                        chatId: chatId,
+                        userId: senderId,
+                      ),
+              );
+        },
+      );
 
   @override
   Future<void> loadOlderMessagesForChat({

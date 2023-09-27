@@ -32,8 +32,8 @@ void main() {
         createBloodTest(id: 'br1', date: DateTime(2023, 5, 20)),
         createBloodTest(id: 'br4', date: DateTime(2021, 7, 10)),
       ];
-      final StreamController<List<BloodTest>> tests$ = StreamController()
-        ..add(tests);
+      final StreamController<List<BloodTest>?> tests$ = StreamController()
+        ..add(null);
 
       blocTest(
         'should set listener of blood tests and should group and sort races by date',
@@ -43,10 +43,11 @@ void main() {
         ),
         act: (cubit) async {
           cubit.initialize();
-          await cubit.stream.first;
+          tests$.add(tests);
           tests$.add([tests[1]]);
         },
         expect: () => [
+          [],
           [
             BloodTestsFromYear(year: 2023, elements: [tests[2], tests.first]),
             BloodTestsFromYear(year: 2022, elements: [tests[1]]),
