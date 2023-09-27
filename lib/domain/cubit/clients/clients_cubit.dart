@@ -103,10 +103,16 @@ class ClientsCubit
   }
 
   Future<void> deleteClient(String clientId) async {
+    final String? loggedUserId = await _authService.loggedUserId$.first;
+    if (loggedUserId == null) return;
     emitLoadingStatus();
     await _personRepository.updateCoachIdOfPerson(
       personId: clientId,
       coachId: null,
+    );
+    await _coachingRequestService.deleteCoachingRequestBetweenUsers(
+      user1Id: loggedUserId,
+      user2Id: clientId,
     );
     emitCompleteStatus(info: ClientsCubitInfo.clientDeleted);
   }
