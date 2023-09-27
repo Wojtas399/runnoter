@@ -132,6 +132,7 @@ class ProfileCoachCubit
   }
 
   Future<void> deleteCoach() async {
+    if (state.coachId == null) return;
     final String? loggedUserId = await _authService.loggedUserId$.first;
     if (loggedUserId == null) {
       emitNoLoggedUserStatus();
@@ -139,6 +140,10 @@ class ProfileCoachCubit
     }
     emitLoadingStatus();
     await _userRepository.updateUser(userId: loggedUserId, coachIdAsNull: true);
+    await _coachingRequestService.deleteCoachingRequestBetweenUsers(
+      user1Id: loggedUserId,
+      user2Id: state.coachId!,
+    );
     emitCompleteStatus(info: ProfileCoachCubitInfo.coachDeleted);
   }
 

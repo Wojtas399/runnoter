@@ -4,9 +4,9 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/domain/additional_model/cubit_status.dart';
 import 'package:runnoter/domain/additional_model/coaching_request.dart';
 import 'package:runnoter/domain/additional_model/coaching_request_short.dart';
+import 'package:runnoter/domain/additional_model/cubit_status.dart';
 import 'package:runnoter/domain/cubit/profile/coach/profile_coach_cubit.dart';
 import 'package:runnoter/domain/entity/person.dart';
 import 'package:runnoter/domain/repository/person_repository.dart';
@@ -56,7 +56,7 @@ void main() {
     'should do nothing',
     build: () => ProfileCoachCubit(),
     setUp: () => authService.mockGetLoggedUserId(),
-    act: (bloc) => bloc.initializeCoachListener(),
+    act: (cubit) => cubit.initializeCoachListener(),
     expect: () => [],
     verify: (_) => verify(() => authService.loggedUserId$).called(1),
   );
@@ -90,8 +90,8 @@ void main() {
           );
           personRepository.mockGetPersonById(personStream: coach$.stream);
         },
-        act: (bloc) {
-          bloc.initializeCoachListener();
+        act: (cubit) {
+          cubit.initializeCoachListener();
           coach$.add(expectedUpdatedCoach);
         },
         expect: () => [
@@ -164,8 +164,8 @@ void main() {
             () => personRepository.getPersonById(personId: person2.id),
           ).thenAnswer((_) => Stream.value(person2));
         },
-        act: (bloc) async {
-          bloc.initializeCoachListener();
+        act: (cubit) async {
+          cubit.initializeCoachListener();
           sentRequests$.add([]);
           receivedRequests$.add([]);
         },
@@ -261,8 +261,8 @@ void main() {
             () => personRepository.getPersonById(personId: person2.id),
           ).thenAnswer((_) => Stream.value(person2));
         },
-        act: (bloc) async {
-          bloc.initializeRequestsListener();
+        act: (cubit) async {
+          cubit.initializeRequestsListener();
           sentRequests$.add([]);
           receivedRequests$.add([]);
         },
@@ -348,10 +348,10 @@ void main() {
             () => personRepository.getPersonById(personId: person2.id),
           ).thenAnswer((_) => Stream.value(person2));
         },
-        act: (bloc) async {
-          bloc.initializeRequestsListener();
-          await bloc.stream.first;
-          bloc.removeRequestsListener();
+        act: (cubit) async {
+          cubit.initializeRequestsListener();
+          await cubit.stream.first;
+          cubit.removeRequestsListener();
           sentRequests$.add([]);
           receivedRequests$.add([]);
         },
@@ -411,7 +411,7 @@ void main() {
       ),
     ),
     setUp: () => authService.mockGetLoggedUserId(),
-    act: (bloc) => bloc.acceptRequest('r1'),
+    act: (cubit) => cubit.acceptRequest('r1'),
     expect: () => [
       ProfileCoachState(
         status: const CubitStatusNoLoggedUser(),
@@ -454,7 +454,7 @@ void main() {
       coachingRequestService.mockUpdateCoachingRequest();
       userRepository.mockUpdateUser();
     },
-    act: (bloc) => bloc.acceptRequest('r1'),
+    act: (cubit) => cubit.acceptRequest('r1'),
     expect: () => [
       ProfileCoachState(
         status: const CubitStatusLoading(),
@@ -506,7 +506,7 @@ void main() {
     'should emit requestDeleted info',
     build: () => ProfileCoachCubit(),
     setUp: () => coachingRequestService.mockDeleteCoachingRequest(),
-    act: (bloc) => bloc.deleteRequest(
+    act: (cubit) => cubit.deleteRequest(
       requestId: 'r1',
       requestDirection: CoachingRequestDirection.coachToClient,
     ),
@@ -530,7 +530,7 @@ void main() {
     'should emit requestUndid info',
     build: () => ProfileCoachCubit(),
     setUp: () => coachingRequestService.mockDeleteCoachingRequest(),
-    act: (bloc) => bloc.deleteRequest(
+    act: (cubit) => cubit.deleteRequest(
       requestId: 'r1',
       requestDirection: CoachingRequestDirection.clientToCoach,
     ),
@@ -549,32 +549,58 @@ void main() {
 
   blocTest(
     'delete coach, '
+    'coachId is null, '
+    'should do nothing',
+    build: () => ProfileCoachCubit(),
+    act: (cubit) => cubit.deleteCoach(),
+    expect: () => [],
+  );
+
+  blocTest(
+    'delete coach, '
     'logged user does not exist, '
     'should emit no logged user status',
-    build: () => ProfileCoachCubit(),
+    build: () => ProfileCoachCubit(
+      initialState: const ProfileCoachState(
+        status: CubitStatusComplete(),
+        coachId: 'c1',
+      ),
+    ),
     setUp: () => authService.mockGetLoggedUserId(),
-    act: (bloc) => bloc.deleteCoach(),
+    act: (cubit) => cubit.deleteCoach(),
     expect: () => [
-      const ProfileCoachState(status: CubitStatusNoLoggedUser()),
+      const ProfileCoachState(
+        status: CubitStatusNoLoggedUser(),
+        coachId: 'c1',
+      ),
     ],
     verify: (_) => verify(() => authService.loggedUserId$).called(1),
   );
 
   blocTest(
     'delete coach, '
-    "should call user repository's method to update user with coach id set as null and should emit coachDeleted info",
-    build: () => ProfileCoachCubit(),
+    'should call user repository method to update user with coach id set as null, '
+    'should call coaching request service method to delete request between logged user and coach, '
+    'should emit coachDeleted info',
+    build: () => ProfileCoachCubit(
+      initialState: const ProfileCoachState(
+        status: CubitStatusComplete(),
+        coachId: 'c1',
+      ),
+    ),
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
       userRepository.mockUpdateUser();
+      coachingRequestService.mockDeleteCoachingRequestBetweenUsers();
     },
-    act: (bloc) => bloc.deleteCoach(),
+    act: (cubit) => cubit.deleteCoach(),
     expect: () => [
-      const ProfileCoachState(status: CubitStatusLoading()),
+      const ProfileCoachState(status: CubitStatusLoading(), coachId: 'c1'),
       const ProfileCoachState(
         status: CubitStatusComplete<ProfileCoachCubitInfo>(
           info: ProfileCoachCubitInfo.coachDeleted,
         ),
+        coachId: 'c1',
       ),
     ],
     verify: (_) {
@@ -583,6 +609,12 @@ void main() {
         () => userRepository.updateUser(
           userId: loggedUserId,
           coachIdAsNull: true,
+        ),
+      ).called(1);
+      verify(
+        () => coachingRequestService.deleteCoachingRequestBetweenUsers(
+          user1Id: loggedUserId,
+          user2Id: 'c1',
         ),
       ).called(1);
     },
