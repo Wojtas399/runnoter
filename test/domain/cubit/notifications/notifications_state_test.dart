@@ -33,6 +33,23 @@ void main() {
   );
 
   test(
+    'copy with acceptedCoachReq, '
+    'should set new value or should set null if new value is null',
+    () {
+      final CoachingRequestShort expected = CoachingRequestShort(
+        id: 'cr1',
+        personToDisplay: createPerson(id: 'p1'),
+      );
+
+      state = state.copyWith(acceptedCoachRequest: expected);
+      final state2 = state.copyWith();
+
+      expect(state.acceptedCoachRequest, expected);
+      expect(state2.acceptedCoachRequest, null);
+    },
+  );
+
+  test(
     'copy with idsOfClientsWithAwaitingMessages, '
     'should set new value or should copy current value if new value is null',
     () {
@@ -61,34 +78,34 @@ void main() {
   );
 
   test(
-    'copy with numberOfCoachingRequestsReceivedFromClients, '
+    'copy with numberOfCoachingReqsFromClients, '
     'should set new value or should copy current value if new value is null',
     () {
       const int expected = 5;
 
       state = state.copyWith(
-        numberOfCoachingRequestsReceivedFromClients: expected,
+        numberOfCoachingRequestsFromClients: expected,
       );
       final state2 = state.copyWith();
 
-      expect(state.numberOfCoachingRequestsReceivedFromClients, expected);
-      expect(state2.numberOfCoachingRequestsReceivedFromClients, expected);
+      expect(state.numberOfCoachingRequestsFromClients, expected);
+      expect(state2.numberOfCoachingRequestsFromClients, expected);
     },
   );
 
   test(
-    'copy with numberOfCoachingRequestsReceivedFromCoaches, '
+    'copy with numberOfCoachingReqsFromCoaches, '
     'should set new value or should copy current value if new value is null',
     () {
       const int expected = 5;
 
       state = state.copyWith(
-        numberOfCoachingRequestsReceivedFromCoaches: expected,
+        numberOfCoachingRequestsFromCoaches: expected,
       );
       final state2 = state.copyWith();
 
-      expect(state.numberOfCoachingRequestsReceivedFromCoaches, expected);
-      expect(state2.numberOfCoachingRequestsReceivedFromCoaches, expected);
+      expect(state.numberOfCoachingRequestsFromCoaches, expected);
+      expect(state2.numberOfCoachingRequestsFromCoaches, expected);
     },
   );
 }

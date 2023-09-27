@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
@@ -25,7 +26,9 @@ class NotificationsCubit extends Cubit<NotificationsState> {
   final PersonRepository _personRepository;
   final ChatRepository _chatRepository;
   final MessageRepository _messageRepository;
-  StreamSubscription<NotificationsState?>? _listener;
+  StreamSubscription<NotificationsState>? _acceptedRequestsListener;
+  StreamSubscription<NotificationsState>? _receivedRequestsListener;
+  StreamSubscription<NotificationsState>? _awaitingMessagesListener;
 
   NotificationsCubit()
       : _authService = getIt<AuthService>(),
@@ -38,176 +41,196 @@ class NotificationsCubit extends Cubit<NotificationsState> {
 
   @override
   Future<void> close() {
-    _listener?.cancel();
+    _acceptedRequestsListener?.cancel();
+    _receivedRequestsListener?.cancel();
+    _awaitingMessagesListener?.cancel();
     return super.close();
   }
 
-  Future<void> initialize() async {
-    _listener ??= _authService.loggedUserId$.switchMap(
-      (String? loggedUserId) {
-        return loggedUserId != null
-            ? _userRepository.getUserById(userId: loggedUserId)
-            : Stream.value(null);
-      },
-    ).switchMap(
+  void listenToAcceptedRequests() {
+    _acceptedRequestsListener ??= _getLoggedUser().switchMap(
       (User? loggedUser) {
-        return loggedUser != null
-            ? Rx.combineLatest2(
-                _createCoachListenedParams(loggedUser),
-                _createClientsListenedParams(loggedUser),
+        return loggedUser == null
+            ? Stream.value(state.copyWith())
+            : Rx.combineLatest2(
+                loggedUser.coachId == null
+                    ? _getAcceptedCoachReq(loggedUser.id)
+                    : Stream.value(null),
+                loggedUser.accountType == AccountType.coach
+                    ? _getAcceptedClientReqs(loggedUser.id)
+                    : Stream.value(null),
                 (
-                  _CoachListenedParams coachParams,
-                  _ClientsListenedParams? clientsParams,
+                  CoachingRequestShort? acceptedCoachReq,
+                  List<CoachingRequestShort>? acceptedClientReqs,
                 ) =>
                     state.copyWith(
-                  idsOfClientsWithAwaitingMessages:
-                      clientsParams?.idsOfClientsWithAwaitingMessages,
-                  areThereUnreadMessagesFromCoach:
-                      coachParams.areThereUnreadMessagesFromCoach,
-                  numberOfCoachingRequestsReceivedFromClients: clientsParams
-                      ?.numberOfCoachingRequestsReceivedFromClients,
-                  numberOfCoachingRequestsReceivedFromCoaches:
-                      coachParams.numberOfCoachingRequestsReceivedFromCoaches,
+                  acceptedClientRequests: acceptedClientReqs,
+                  acceptedCoachRequest: acceptedCoachReq,
                 ),
-              )
-            : Stream.value(null);
+              );
       },
-    ).listen(
-      (NotificationsState? state) {
-        if (state != null) emit(state);
-      },
-    );
+    ).listen(emit);
   }
 
-  Stream<_CoachListenedParams> _createCoachListenedParams(User loggedUser) =>
-      loggedUser.coachId != null
-          ? _hasLoggedUserUnreadMessagesFromSender(
-              loggedUserId: loggedUser.id,
-              senderId: loggedUser.coachId!,
-            ).map(
-              (bool val) =>
-                  _CoachListenedParams(areThereUnreadMessagesFromCoach: val),
-            )
-          : _getNumberOfCoachingRequestsReceivedFromCoaches(loggedUser.id).map(
-              (int val) => _CoachListenedParams(
-                numberOfCoachingRequestsReceivedFromCoaches: val,
-              ),
-            );
+  void listenToReceivedRequests() {
+    _receivedRequestsListener ??= _getLoggedUser().switchMap(
+      (User? loggedUser) {
+        return loggedUser == null
+            ? Stream.value(state.copyWith())
+            : Rx.combineLatest2(
+                loggedUser.coachId == null
+                    ? _getNumberOfReqsFromCoaches(loggedUser.id)
+                    : Stream.value(null),
+                loggedUser.accountType == AccountType.coach
+                    ? _getNumberOfReqsFromClients(loggedUser.id)
+                    : Stream.value(null),
+                (
+                  int? numberOfReqsFromCoaches,
+                  int? numberOfReqsFromClients,
+                ) =>
+                    state.copyWith(
+                  numberOfCoachingRequestsFromCoaches: numberOfReqsFromCoaches,
+                  numberOfCoachingRequestsFromClients: numberOfReqsFromClients,
+                ),
+              );
+      },
+    ).listen(emit);
+  }
 
-  Stream<_ClientsListenedParams?> _createClientsListenedParams(
-    User loggedUser,
-  ) =>
-      loggedUser.accountType == AccountType.coach
-          ? Rx.combineLatest2(
-              _getIdsOfClientsWithAwaitingMessages(loggedUser.id),
-              _getNumberOfCoachingRequestsReceivedFromClients(loggedUser.id),
-              (
-                List<String> idsOfClientsWithAwaitingMessages,
-                int numberOfCoachingRequestsReceivedFromClients,
-              ) =>
-                  _ClientsListenedParams(
-                idsOfClientsWithAwaitingMessages:
-                    idsOfClientsWithAwaitingMessages,
-                numberOfCoachingRequestsReceivedFromClients:
-                    numberOfCoachingRequestsReceivedFromClients,
-              ),
-            )
-          : Stream.value(null);
+  void listenToAwaitingMessages() {
+    _awaitingMessagesListener ??= _getLoggedUser().switchMap(
+      (User? loggedUser) {
+        return loggedUser == null
+            ? Stream.value(state.copyWith())
+            : Rx.combineLatest2(
+                loggedUser.coachId != null
+                    ? _hasLoggedUserUnreadMsgsFromSender(
+                        loggedUser.id,
+                        loggedUser.coachId!,
+                      )
+                    : Stream.value(null),
+                loggedUser.accountType == AccountType.coach
+                    ? _getIdsOfClientsWithAwaitingMsgs(loggedUser.id)
+                    : Stream.value(null),
+                (
+                  bool? areThereUnreadMsgsFromCoach,
+                  List<String>? idsOfClientsWithAwaitingMsgs,
+                ) =>
+                    state.copyWith(
+                  areThereUnreadMessagesFromCoach: areThereUnreadMsgsFromCoach,
+                  idsOfClientsWithAwaitingMessages:
+                      idsOfClientsWithAwaitingMsgs,
+                ),
+              );
+      },
+    ).listen(emit);
+  }
 
-  Stream<int> _getNumberOfCoachingRequestsReceivedFromCoaches(
+  Stream<User?> _getLoggedUser() => _authService.loggedUserId$.switchMap(
+        (String? loggedUserId) => loggedUserId != null
+            ? _userRepository.getUserById(userId: loggedUserId)
+            : Stream.value(null),
+      );
+
+  Stream<CoachingRequestShort?> _getAcceptedCoachReq(String loggedUserId) =>
+      _coachingRequestService
+          .getCoachingRequestsBySenderId(
+            senderId: loggedUserId,
+            direction: CoachingRequestDirection.clientToCoach,
+          )
+          .map((reqs) => reqs.firstWhereOrNull((req) => req.isAccepted))
+          .doOnData(
+            (req) => req != null
+                ? _userRepository.refreshUserById(userId: loggedUserId)
+                : null,
+          )
+          .switchMap(
+            (req) => req != null ? _shortenReq(req) : Stream.value(null),
+          );
+
+  Stream<List<CoachingRequestShort>> _getAcceptedClientReqs(
     String loggedUserId,
   ) =>
+      _coachingRequestService
+          .getCoachingRequestsBySenderId(
+            senderId: loggedUserId,
+            direction: CoachingRequestDirection.coachToClient,
+          )
+          .map((reqs) => reqs.where((req) => req.isAccepted))
+          .doOnData(
+            (acceptedReqs) => acceptedReqs.isNotEmpty
+                ? _personRepository.refreshPersonsByCoachId(
+                    coachId: loggedUserId,
+                  )
+                : null,
+          )
+          .map((acceptedReqs) => acceptedReqs.map(_shortenReq))
+          .switchMap(
+            (acceptedReqs$) => acceptedReqs$.isEmpty
+                ? Stream.value([])
+                : Rx.combineLatest(acceptedReqs$, (reqs) => reqs),
+          );
+
+  Stream<int> _getNumberOfReqsFromCoaches(String loggedUserId) =>
       _coachingRequestService
           .getCoachingRequestsByReceiverId(
             receiverId: loggedUserId,
             direction: CoachingRequestDirection.coachToClient,
           )
-          .map((requests) => requests.where((req) => !req.isAccepted).length);
+          .map((reqs) => reqs.where((req) => !req.isAccepted).length);
 
-  Stream<bool> _hasLoggedUserUnreadMessagesFromSender({
-    required String loggedUserId,
-    required String senderId,
-  }) =>
+  Stream<int> _getNumberOfReqsFromClients(String loggedUserId) =>
+      _coachingRequestService
+          .getCoachingRequestsByReceiverId(
+            receiverId: loggedUserId,
+            direction: CoachingRequestDirection.clientToCoach,
+          )
+          .map((reqs) => reqs.where((req) => !req.isAccepted).length);
+
+  Stream<bool> _hasLoggedUserUnreadMsgsFromSender(
+    String loggedUserId,
+    String senderId,
+  ) =>
       Rx.fromCallable(
         () async => await _chatRepository.findChatIdByUsers(
           user1Id: loggedUserId,
           user2Id: senderId,
         ),
       ).switchMap(
-        (String? coachChatId) => coachChatId == null
+        (String? chatId) => chatId == null
             ? Stream.value(false)
             : _messageRepository.doesUserHaveUnreadMessagesInChat(
-                chatId: coachChatId,
+                chatId: chatId,
                 userId: loggedUserId,
               ),
       );
 
-  Stream<List<String>> _getIdsOfClientsWithAwaitingMessages(
-    String loggedUserId,
-  ) =>
+  Stream<List<String>> _getIdsOfClientsWithAwaitingMsgs(String loggedUserId) =>
       _personRepository.getPersonsByCoachId(coachId: loggedUserId).asyncMap(
         (List<Person>? clients) async {
-          final List<Stream<String?>> idsOfClientsWithAwaitingMessages = [];
-          if (clients == null) return idsOfClientsWithAwaitingMessages;
+          final List<Stream<String?>> idsOfClientsWithAwaitingMsgs = [];
+          if (clients == null) return idsOfClientsWithAwaitingMsgs;
           for (final client in clients) {
-            idsOfClientsWithAwaitingMessages.add(
-              _hasLoggedUserUnreadMessagesFromSender(
-                loggedUserId: loggedUserId,
-                senderId: client.id,
-              ).map((hasUnreadMsgs) => hasUnreadMsgs ? client.id : null),
+            idsOfClientsWithAwaitingMsgs.add(
+              _hasLoggedUserUnreadMsgsFromSender(loggedUserId, client.id)
+                  .map((hasUnreadMsgs) => hasUnreadMsgs ? client.id : null),
             );
           }
-          return idsOfClientsWithAwaitingMessages;
+          return idsOfClientsWithAwaitingMsgs;
         },
       ).switchMap(
-        (List<Stream<String?>> idsOfClientsWithAwaitingMessages) =>
-            idsOfClientsWithAwaitingMessages.isEmpty
-                ? Stream.value(const [])
-                : Rx.combineLatest(
-                    idsOfClientsWithAwaitingMessages,
-                    (values) => values.whereType<String>().toList(),
-                  ),
+        (List<Stream<String?>> ids$) => ids$.isEmpty
+            ? Stream.value(const [])
+            : Rx.combineLatest(ids$, (ids) => ids.whereType<String>().toList()),
       );
 
-  Stream<int> _getNumberOfCoachingRequestsReceivedFromClients(
-    String loggedUserId,
-  ) =>
-      _coachingRequestService
-          .getCoachingRequestsByReceiverId(
-            receiverId: loggedUserId,
-            direction: CoachingRequestDirection.clientToCoach,
-          )
-          .map((requests) => requests.where((req) => !req.isAccepted).length);
-}
-
-class _CoachListenedParams extends Equatable {
-  final bool areThereUnreadMessagesFromCoach;
-  final int numberOfCoachingRequestsReceivedFromCoaches;
-
-  const _CoachListenedParams({
-    this.areThereUnreadMessagesFromCoach = false,
-    this.numberOfCoachingRequestsReceivedFromCoaches = 0,
-  });
-
-  @override
-  List<Object?> get props => [
-        areThereUnreadMessagesFromCoach,
-        numberOfCoachingRequestsReceivedFromCoaches,
-      ];
-}
-
-class _ClientsListenedParams extends Equatable {
-  final List<String> idsOfClientsWithAwaitingMessages;
-  final int numberOfCoachingRequestsReceivedFromClients;
-
-  const _ClientsListenedParams({
-    required this.idsOfClientsWithAwaitingMessages,
-    required this.numberOfCoachingRequestsReceivedFromClients,
-  });
-
-  @override
-  List<Object?> get props => [
-        idsOfClientsWithAwaitingMessages,
-        numberOfCoachingRequestsReceivedFromClients,
-      ];
+  Stream<CoachingRequestShort> _shortenReq(CoachingRequest request) =>
+      Rx.combineLatest2(
+        Stream.value(request.id),
+        _personRepository
+            .getPersonById(personId: request.receiverId)
+            .whereNotNull(),
+        (String reqId, Person receiver) =>
+            CoachingRequestShort(id: reqId, personToDisplay: receiver),
+      );
 }

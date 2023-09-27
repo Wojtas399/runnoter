@@ -35,7 +35,12 @@ class HomeScreen extends StatelessWidget {
         BlocProvider(
           create: (_) => CalendarCubit()..initialize(DateRangeType.week),
         ),
-        BlocProvider(create: (_) => NotificationsCubit()..initialize()),
+        BlocProvider(
+          create: (_) => NotificationsCubit()
+            ..listenToAcceptedRequests()
+            ..listenToReceivedRequests()
+            ..listenToAwaitingMessages(),
+        ),
       ],
       child: const _CubitListener(
         child: HomeContent(),

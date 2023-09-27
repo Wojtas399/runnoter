@@ -19,12 +19,12 @@ class HomeClientsNotificationsBadge extends StatelessWidget {
       (NotificationsCubit cubit) =>
           cubit.state.idsOfClientsWithAwaitingMessages.length,
     );
-    final int numberOfCoachingRequestsReceivedFromClients = context.select(
+    final int numberOfCoachingReqsFromClients = context.select(
       (NotificationsCubit cubit) =>
-          cubit.state.numberOfCoachingRequestsReceivedFromClients,
+          cubit.state.numberOfCoachingRequestsFromClients,
     );
-    final int numberOfNotifications = numberOfUnreadClientMessages +
-        numberOfCoachingRequestsReceivedFromClients;
+    final int numberOfNotifications =
+        numberOfUnreadClientMessages + numberOfCoachingReqsFromClients;
 
     return Badge(
       isLabelVisible: numberOfNotifications > 0,

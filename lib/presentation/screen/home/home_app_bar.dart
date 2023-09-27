@@ -195,12 +195,12 @@ class _DrawerBadge extends StatelessWidget {
       (NotificationsCubit cubit) =>
           cubit.state.idsOfClientsWithAwaitingMessages.length,
     );
-    final int numberOfCoachingRequestsReceivedFromClients = context.select(
+    final int numberOfCoachingReqsFromClients = context.select(
       (NotificationsCubit cubit) =>
-          cubit.state.numberOfCoachingRequestsReceivedFromClients,
+          cubit.state.numberOfCoachingRequestsFromClients,
     );
-    final int numberOfNotifications = numberOfUnreadClientMessages +
-        numberOfCoachingRequestsReceivedFromClients;
+    final int numberOfNotifications =
+        numberOfUnreadClientMessages + numberOfCoachingReqsFromClients;
 
     return Badge(
       isLabelVisible: numberOfNotifications > 0,
@@ -219,14 +219,14 @@ class _ProfileBadge extends StatelessWidget {
     final bool? areThereUnreadMessagesFromCoach = context.select(
       (NotificationsCubit cubit) => cubit.state.areThereUnreadMessagesFromCoach,
     );
-    final bool areThereCoachingRequestsReceivedFromCoaches = context.select(
+    final bool areThereCoachingReqsFromCoaches = context.select(
       (NotificationsCubit cubit) =>
-          cubit.state.numberOfCoachingRequestsReceivedFromCoaches > 0,
+          cubit.state.numberOfCoachingRequestsFromCoaches > 0,
     );
 
     return Badge(
       isLabelVisible: areThereUnreadMessagesFromCoach == true ||
-          areThereCoachingRequestsReceivedFromCoaches,
+          areThereCoachingReqsFromCoaches,
       child: child,
     );
   }
