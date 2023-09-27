@@ -157,7 +157,7 @@ void main() {
   );
 
   blocTest(
-    'accept request, '
+    'acceptRequest, '
     'logged user does not exist, '
     'should emit no logged user status',
     build: () => ClientsCubit(),
@@ -170,7 +170,7 @@ void main() {
   );
 
   blocTest(
-    'accept request, '
+    'acceptRequest, '
     "should call coaching request service's method to update request with isAccepted param set as true, "
     "should assign logged user's id to coach id of request's sender",
     build: () => ClientsCubit(
@@ -242,7 +242,7 @@ void main() {
   );
 
   blocTest(
-    'delete request, '
+    'deleteRequest, '
     "should call coaching request service's method to delete request and should emit requestDeleted info",
     build: () => ClientsCubit(),
     setUp: () => coachingRequestService.mockDeleteCoachingRequest(),
@@ -261,7 +261,7 @@ void main() {
   );
 
   blocTest(
-    'open chat with client, '
+    'openChatWithClient, '
     'should call use case to load chat id and should emit loaded id',
     build: () => ClientsCubit(),
     setUp: () {
@@ -279,7 +279,7 @@ void main() {
   );
 
   blocTest(
-    'delete client, '
+    'deleteClient, '
     'logged user does not exist, '
     'should do nothing',
     build: () => ClientsCubit(),
@@ -290,7 +290,7 @@ void main() {
   );
 
   blocTest(
-    'delete client, '
+    'deleteClient, '
     'should call person repository method to update person with coachId set as null, '
     'should call coaching request service method to delete request between users, '
     'should emit clientDeleted info',
@@ -322,6 +322,51 @@ void main() {
           user1Id: loggedUserId,
           user2Id: 'c1',
         ),
+      ).called(1);
+    },
+  );
+
+  blocTest(
+    'refreshClients, '
+    'clients list is null, '
+    'should do nothing',
+    build: () => ClientsCubit(),
+    act: (cubit) => cubit.refreshClients(),
+    expect: () => [],
+  );
+
+  blocTest(
+    'refreshClients, '
+    'clients list is empty, '
+    'should do nothing',
+    build: () => ClientsCubit(
+      initialState: const ClientsState(
+        status: CubitStatusComplete(),
+        clients: [],
+      ),
+    ),
+    act: (cubit) => cubit.refreshClients(),
+    expect: () => [],
+  );
+
+  blocTest(
+    'refreshClients, '
+    'for each client should call person repository method to refresh person',
+    build: () => ClientsCubit(
+      initialState: ClientsState(
+        status: const CubitStatusComplete(),
+        clients: [createPerson(id: 'c1'), createPerson(id: 'c2')],
+      ),
+    ),
+    setUp: () => personRepository.mockRefreshPersonById(),
+    act: (cubit) => cubit.refreshClients(),
+    expect: () => [],
+    verify: (_) {
+      verify(
+        () => personRepository.refreshPersonById(personId: 'c1'),
+      ).called(1);
+      verify(
+        () => personRepository.refreshPersonById(personId: 'c2'),
       ).called(1);
     },
   );

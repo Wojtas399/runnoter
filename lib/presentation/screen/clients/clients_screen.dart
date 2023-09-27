@@ -24,20 +24,8 @@ class ClientsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => ClientsCubit()..initialize(),
-      child: _CubitListener(
-        child: SingleChildScrollView(
-          child: MediumBody(
-            child: Padding(
-              padding: context.isMobileSize
-                  ? const EdgeInsets.only(top: 8, bottom: 144)
-                  : const EdgeInsets.all(24),
-              child: const ResponsiveLayout(
-                mobileBody: _MobileContent(),
-                desktopBody: _DesktopContent(),
-              ),
-            ),
-          ),
-        ),
+      child: const _CubitListener(
+        child: _Content(),
       ),
     );
   }
@@ -76,6 +64,31 @@ class _CubitListener extends StatelessWidget {
     if (state.selectedChatId != null) {
       navigateTo(ChatRoute(chatId: state.selectedChatId));
     }
+  }
+}
+
+class _Content extends StatelessWidget {
+  const _Content();
+
+  @override
+  Widget build(BuildContext context) {
+    return RefreshIndicator(
+      onRefresh: context.read<ClientsCubit>().refreshClients,
+      child: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        child: MediumBody(
+          child: Padding(
+            padding: context.isMobileSize
+                ? const EdgeInsets.only(top: 8, bottom: 144)
+                : const EdgeInsets.all(24),
+            child: const ResponsiveLayout(
+              mobileBody: _MobileContent(),
+              desktopBody: _DesktopContent(),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
 

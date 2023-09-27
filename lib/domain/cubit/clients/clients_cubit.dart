@@ -64,7 +64,7 @@ class ClientsCubit
   }
 
   Future<void> acceptRequest(String requestId) async {
-    final String? loggedUserId = await _authService.loggedUserId$.first;
+    final String? loggedUserId = await _loadLoggedUserId();
     if (loggedUserId == null) {
       emitNoLoggedUserStatus();
       return;
@@ -92,7 +92,7 @@ class ClientsCubit
   }
 
   Future<void> openChatWithClient(String clientId) async {
-    final String? loggedUserId = await _authService.loggedUserId$.first;
+    final String? loggedUserId = await _loadLoggedUserId();
     if (loggedUserId == null) return;
     emitLoadingStatus();
     final String? chatId = await _loadChatIdUseCase.execute(
@@ -103,7 +103,7 @@ class ClientsCubit
   }
 
   Future<void> deleteClient(String clientId) async {
-    final String? loggedUserId = await _authService.loggedUserId$.first;
+    final String? loggedUserId = await _loadLoggedUserId();
     if (loggedUserId == null) return;
     emitLoadingStatus();
     await _personRepository.updateCoachIdOfPerson(
@@ -115,6 +115,14 @@ class ClientsCubit
       user2Id: clientId,
     );
     emitCompleteStatus(info: ClientsCubitInfo.clientDeleted);
+  }
+
+  Future<void> refreshClients() async {
+    if (state.clients?.isNotEmpty == true) {
+      for (final Person client in state.clients!) {
+        await _personRepository.refreshPersonById(personId: client.id);
+      }
+    }
   }
 
   Stream<List<Person>> _getClients(String loggedUserId) => _personRepository
@@ -162,6 +170,9 @@ class ClientsCubit
             ),
           )
           .switchMap(_createShortRequestsFromStreams);
+
+  Future<String?> _loadLoggedUserId() async =>
+      await _authService.loggedUserId$.first;
 
   Stream<List<CoachingRequestShort>> _createShortRequestsFromStreams(
     Iterable<Stream<(String, Person)>> streams,
