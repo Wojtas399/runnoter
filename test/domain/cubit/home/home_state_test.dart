@@ -1,11 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:runnoter/domain/additional_model/coaching_request_short.dart';
 import 'package:runnoter/domain/additional_model/cubit_status.dart';
 import 'package:runnoter/domain/additional_model/settings.dart';
 import 'package:runnoter/domain/cubit/home/home_cubit.dart';
 import 'package:runnoter/domain/entity/user.dart';
-
-import '../../../creators/person_creator.dart';
 
 void main() {
   late HomeState state;
@@ -72,42 +69,6 @@ void main() {
 
       expect(state.appSettings, expected);
       expect(state2.appSettings, expected);
-    },
-  );
-
-  test(
-    'copy with acceptedClientRequests, '
-    'should set new value or should set as empty array if new value is null',
-    () {
-      final List<CoachingRequestShort> expected = [
-        CoachingRequestShort(id: 'r1', personToDisplay: createPerson(id: 'u1')),
-        CoachingRequestShort(id: 'r2', personToDisplay: createPerson(id: 'u2')),
-      ];
-
-      state = state.copyWith(
-        acceptedClientRequests: expected,
-      );
-      final state2 = state.copyWith();
-
-      expect(state.acceptedClientRequests, expected);
-      expect(state2.acceptedClientRequests, const []);
-    },
-  );
-
-  test(
-    'copy with acceptedCoachRequest, '
-    'should set new value',
-    () {
-      final CoachingRequestShort expected = CoachingRequestShort(
-        id: 'r1',
-        personToDisplay: createPerson(id: 'p1'),
-      );
-
-      state = state.copyWith(acceptedCoachRequest: expected);
-      final state2 = state.copyWith();
-
-      expect(state.acceptedCoachRequest, expected);
-      expect(state2.acceptedCoachRequest, null);
     },
   );
 }

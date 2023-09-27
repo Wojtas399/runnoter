@@ -4,24 +4,17 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/domain/additional_model/coaching_request.dart';
-import 'package:runnoter/domain/additional_model/coaching_request_short.dart';
 import 'package:runnoter/domain/additional_model/cubit_status.dart';
 import 'package:runnoter/domain/additional_model/settings.dart';
 import 'package:runnoter/domain/cubit/home/home_cubit.dart';
-import 'package:runnoter/domain/entity/person.dart';
 import 'package:runnoter/domain/entity/user.dart';
-import 'package:runnoter/domain/repository/person_repository.dart';
 import 'package:runnoter/domain/repository/user_repository.dart';
 import 'package:runnoter/domain/service/auth_service.dart';
 import 'package:runnoter/domain/service/coaching_request_service.dart';
 import 'package:rxdart/rxdart.dart';
 
-import '../../../creators/coaching_request_creator.dart';
-import '../../../creators/person_creator.dart';
 import '../../../creators/settings_creator.dart';
 import '../../../creators/user_creator.dart';
-import '../../../mock/domain/repository/mock_person_repository.dart';
 import '../../../mock/domain/repository/mock_user_repository.dart';
 import '../../../mock/domain/service/mock_auth_service.dart';
 import '../../../mock/domain/service/mock_coaching_request_service.dart';
@@ -30,7 +23,6 @@ void main() {
   final authService = MockAuthService();
   final userRepository = MockUserRepository();
   final coachingRequestService = MockCoachingRequestService();
-  final personRepository = MockPersonRepository();
   const String loggedUserId = 'u1';
 
   setUpAll(() {
@@ -39,20 +31,18 @@ void main() {
     GetIt.I.registerFactory<CoachingRequestService>(
       () => coachingRequestService,
     );
-    GetIt.I.registerSingleton<PersonRepository>(personRepository);
   });
 
   tearDown(() {
     reset(authService);
     reset(userRepository);
     reset(coachingRequestService);
-    reset(personRepository);
   });
 
   group(
     'initialize',
     () {
-      final User loggedUserData = createUser(
+      final User loggedUser = createUser(
         id: loggedUserId,
         accountType: AccountType.runner,
         name: 'Jack',
@@ -64,7 +54,7 @@ void main() {
         ),
         coachId: 'coach1',
       );
-      final User updatedLoggedUserData = createUser(
+      final User updatedLoggedUser = createUser(
         id: loggedUserId,
         accountType: AccountType.runner,
         name: 'James',
@@ -76,48 +66,8 @@ void main() {
         ),
         coachId: 'coach1',
       );
-      final Person client1 = createPerson(id: 'cl1', name: 'first client');
-      final Person client2 = createPerson(id: 'cl2', name: 'second client');
-      final Person coach = createPerson(id: 'co1', name: 'coach');
-      final List<CoachingRequest> requestsSentToClients = [
-        createCoachingRequest(
-          id: 'r1',
-          receiverId: 'cl3',
-          isAccepted: false,
-        ),
-        createCoachingRequest(
-          id: 'r2',
-          receiverId: client1.id,
-          isAccepted: true,
-        ),
-        createCoachingRequest(
-          id: 'r3',
-          receiverId: client2.id,
-          isAccepted: true,
-        ),
-      ];
-      final List<CoachingRequest> requestsSentToCoaches = [
-        createCoachingRequest(
-          id: 'r4',
-          receiverId: coach.id,
-          isAccepted: true,
-        ),
-        createCoachingRequest(
-          id: 'r5',
-          receiverId: 'co2',
-          isAccepted: false,
-        ),
-      ];
-      final StreamController<User?> loggedUserData$ =
-          BehaviorSubject.seeded(loggedUserData);
-      final StreamController<List<CoachingRequest>> clientsRequests$ =
-          StreamController()..add(requestsSentToClients);
-      final StreamController<List<CoachingRequest>> coachesRequests$ =
-          StreamController()..add(requestsSentToCoaches);
-      final List<CoachingRequestShort> acceptedClientRequests = [
-        CoachingRequestShort(id: 'r2', personToDisplay: client1),
-        CoachingRequestShort(id: 'r3', personToDisplay: client2),
-      ];
+      final StreamController<User?> loggedUser$ =
+          BehaviorSubject.seeded(loggedUser);
 
       blocTest(
         'should listen to logged user data, accepted client requests and '
@@ -125,108 +75,32 @@ void main() {
         build: () => HomeCubit(),
         setUp: () {
           authService.mockGetLoggedUserId(userId: loggedUserId);
-          userRepository.mockGetUserById(userStream: loggedUserData$.stream);
-          personRepository.mockRefreshPersonsByCoachId();
-          userRepository.mockRefreshUserById();
-          when(
-            () => coachingRequestService.getCoachingRequestsBySenderId(
-              senderId: loggedUserId,
-              direction: CoachingRequestDirection.coachToClient,
-            ),
-          ).thenAnswer((_) => clientsRequests$.stream);
-          when(
-            () => coachingRequestService.getCoachingRequestsBySenderId(
-              senderId: loggedUserId,
-              direction: CoachingRequestDirection.clientToCoach,
-            ),
-          ).thenAnswer((_) => coachesRequests$.stream);
-          when(
-            () => personRepository.getPersonById(personId: client1.id),
-          ).thenAnswer((_) => Stream.value(client1));
-          when(
-            () => personRepository.getPersonById(personId: client2.id),
-          ).thenAnswer((_) => Stream.value(client2));
-          when(
-            () => personRepository.getPersonById(personId: coach.id),
-          ).thenAnswer((_) => Stream.value(coach));
+          userRepository.mockGetUserById(userStream: loggedUser$.stream);
         },
         act: (cubit) async {
           cubit.initialize();
           await cubit.stream.first;
-          coachesRequests$.add([]);
-          await cubit.stream.first;
-          clientsRequests$.add([]);
-          await cubit.stream.first;
-          loggedUserData$.add(updatedLoggedUserData);
+          loggedUser$.add(updatedLoggedUser);
         },
         expect: () => [
           const HomeState(status: CubitStatusLoading()),
           HomeState(
             status: const CubitStatusComplete(),
-            accountType: loggedUserData.accountType,
-            loggedUserName: loggedUserData.name,
-            appSettings: loggedUserData.settings,
-            acceptedClientRequests: acceptedClientRequests,
-            acceptedCoachRequest: CoachingRequestShort(
-              id: 'r4',
-              personToDisplay: coach,
-            ),
+            accountType: loggedUser.accountType,
+            loggedUserName: loggedUser.name,
+            appSettings: loggedUser.settings,
           ),
           HomeState(
             status: const CubitStatusComplete(),
-            accountType: loggedUserData.accountType,
-            loggedUserName: loggedUserData.name,
-            appSettings: loggedUserData.settings,
-            acceptedClientRequests: acceptedClientRequests,
-          ),
-          HomeState(
-            status: const CubitStatusComplete(),
-            accountType: loggedUserData.accountType,
-            loggedUserName: loggedUserData.name,
-            appSettings: loggedUserData.settings,
-            acceptedClientRequests: const [],
-          ),
-          HomeState(
-            status: const CubitStatusComplete(),
-            accountType: updatedLoggedUserData.accountType,
-            loggedUserName: updatedLoggedUserData.name,
-            appSettings: updatedLoggedUserData.settings,
-            acceptedClientRequests: const [],
+            accountType: updatedLoggedUser.accountType,
+            loggedUserName: updatedLoggedUser.name,
+            appSettings: updatedLoggedUser.settings,
           ),
         ],
         verify: (_) {
           verify(() => authService.loggedUserId$).called(1);
           verify(
             () => userRepository.getUserById(userId: loggedUserId),
-          ).called(1);
-          verify(
-            () => personRepository.refreshPersonsByCoachId(
-              coachId: loggedUserId,
-            ),
-          ).called(1);
-          verify(
-            () => userRepository.refreshUserById(userId: loggedUserId),
-          ).called(1);
-          verify(
-            () => coachingRequestService.getCoachingRequestsBySenderId(
-              senderId: loggedUserId,
-              direction: CoachingRequestDirection.coachToClient,
-            ),
-          ).called(1);
-          verify(
-            () => coachingRequestService.getCoachingRequestsBySenderId(
-              senderId: loggedUserId,
-              direction: CoachingRequestDirection.clientToCoach,
-            ),
-          ).called(1);
-          verify(
-            () => personRepository.getPersonById(personId: client1.id),
-          ).called(1);
-          verify(
-            () => personRepository.getPersonById(personId: client2.id),
-          ).called(1);
-          verify(
-            () => personRepository.getPersonById(personId: coach.id),
           ).called(1);
         },
       );
