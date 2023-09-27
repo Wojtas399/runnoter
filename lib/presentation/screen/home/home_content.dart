@@ -3,11 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../../dependency_injection.dart';
 import '../../../domain/cubit/home/home_cubit.dart';
 import '../../../domain/entity/user.dart';
 import '../../config/navigation/router.dart';
 import '../../extension/context_extensions.dart';
 import '../../service/dialog_service.dart';
+import '../../service/navigator_service.dart';
+import '../../service/theme_service.dart';
 import 'home_app_bar.dart';
 import 'home_fab.dart';
 import 'home_navigation_drawer.dart';
@@ -156,13 +159,25 @@ class _State extends State<HomeContent> {
 
   Future<void> _signOut(BuildContext context) async {
     final HomeCubit cubit = context.read<HomeCubit>();
+    final ThemeService themeService = context.read<ThemeService>();
+    final bool confirmed = await _askForSignOutConfirmation(context);
+    if (confirmed == true) {
+      showLoadingDialog();
+      await cubit.signOut();
+      closeLoadingDialog();
+      themeService.changeTheme(ThemeMode.system);
+      navigateAndRemoveUntil(const SignInRoute());
+      resetGetItRepositories();
+    }
+  }
+
+  Future<bool> _askForSignOutConfirmation(BuildContext context) async {
     final str = Str.of(context);
-    final bool confirmed = await askForConfirmation(
+    return await askForConfirmation(
       title: Text(str.homeSignOutConfirmationDialogTitle),
       content: Text(str.homeSignOutConfirmationDialogMessage),
       confirmButtonLabel: str.homeSignOut,
       displayConfirmationButtonAsFilled: true,
     );
-    if (confirmed == true) cubit.signOut();
   }
 }

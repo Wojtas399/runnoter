@@ -2,8 +2,8 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/single_child_widget.dart';
 
-import '../../../dependency_injection.dart';
 import '../../../domain/additional_model/coaching_request_short.dart';
 import '../../../domain/additional_model/cubit_status.dart';
 import '../../../domain/additional_model/settings.dart' as settings;
@@ -11,14 +11,11 @@ import '../../../domain/cubit/calendar/calendar_cubit.dart';
 import '../../../domain/cubit/date_range_manager_cubit.dart';
 import '../../../domain/cubit/home/home_cubit.dart';
 import '../../../domain/cubit/notifications/notifications_cubit.dart';
-import '../../component/cubit_with_status_listener_component.dart';
-import '../../config/navigation/router.dart';
 import '../../dialog/required_data_completion/required_data_completion_dialog.dart';
 import '../../formatter/person_formatter.dart';
 import '../../service/dialog_service.dart';
 import '../../service/distance_unit_service.dart';
 import '../../service/language_service.dart';
-import '../../service/navigator_service.dart';
 import '../../service/pace_unit_service.dart';
 import '../../service/theme_service.dart';
 import 'home_content.dart';
@@ -42,42 +39,29 @@ class HomeScreen extends StatelessWidget {
             ..listenToAwaitingMessages(),
         ),
       ],
-      child: const _CubitListener(
-        child: HomeContent(),
+      child: MultiBlocListener(
+        listeners: const [
+          _HomeCubitListener(),
+          _NotificationsCubitListener(),
+        ],
+        child: const HomeContent(),
       ),
     );
   }
 }
 
-class _CubitListener extends StatelessWidget {
-  final Widget child;
-
-  const _CubitListener({required this.child});
+class _HomeCubitListener extends SingleChildStatelessWidget {
+  const _HomeCubitListener();
 
   @override
-  Widget build(BuildContext context) {
-    return CubitWithStatusListener<HomeCubit, HomeState, HomeCubitInfo,
-        dynamic>(
+  Widget buildWithChild(BuildContext context, Widget? child) {
+    return BlocListener<HomeCubit, HomeState>(
+      listener: _manageStateChanges,
       child: child,
-      onInfo: (HomeCubitInfo info) => _manageInfo(context, info),
-      onStateChanged: (HomeState state) => _manageStateChanges(context, state),
     );
   }
 
-  void _manageInfo(BuildContext context, HomeCubitInfo info) {
-    switch (info) {
-      case HomeCubitInfo.userSignedOut:
-        context.read<ThemeService>().changeTheme(ThemeMode.system);
-        navigateAndRemoveUntil(const SignInRoute());
-        resetGetItRepositories();
-        break;
-    }
-  }
-
-  void _manageStateChanges(
-    BuildContext context,
-    HomeState state,
-  ) {
+  void _manageStateChanges(BuildContext context, HomeState state) {
     if (state.status is CubitStatusComplete &&
         state.loggedUserName == null &&
         state.appSettings == null) {
@@ -94,14 +78,9 @@ class _CubitListener extends StatelessWidget {
       context.read<DistanceUnitService>().changeUnit(appSettings.distanceUnit);
       context.read<PaceUnitService>().changeUnit(appSettings.paceUnit);
     }
-    _manageAcceptedClientRequests(context, state.acceptedClientRequests);
-    _manageAcceptedCoachRequest(context, state.acceptedCoachRequest);
   }
 
-  void _manageThemeMode(
-    BuildContext context,
-    settings.ThemeMode themeMode,
-  ) {
+  void _manageThemeMode(BuildContext context, settings.ThemeMode themeMode) {
     final ThemeService themeService = context.read<ThemeService>();
     switch (themeMode) {
       case settings.ThemeMode.dark:
@@ -116,10 +95,7 @@ class _CubitListener extends StatelessWidget {
     }
   }
 
-  void _manageLanguage(
-    BuildContext context,
-    settings.Language language,
-  ) {
+  void _manageLanguage(BuildContext context, settings.Language language) {
     final LanguageService languageService = context.read<LanguageService>();
     switch (language) {
       case settings.Language.polish:
@@ -132,6 +108,23 @@ class _CubitListener extends StatelessWidget {
         languageService.changeLanguage(AppLanguage.system);
         break;
     }
+  }
+}
+
+class _NotificationsCubitListener extends SingleChildStatelessWidget {
+  const _NotificationsCubitListener();
+
+  @override
+  Widget buildWithChild(BuildContext context, Widget? child) {
+    return BlocListener<NotificationsCubit, NotificationsState>(
+      listener: _manageStateChanges,
+      child: child,
+    );
+  }
+
+  void _manageStateChanges(BuildContext context, NotificationsState state) {
+    _manageAcceptedClientRequests(context, state.acceptedClientRequests);
+    _manageAcceptedCoachRequest(context, state.acceptedCoachRequest);
   }
 
   void _manageAcceptedClientRequests(
