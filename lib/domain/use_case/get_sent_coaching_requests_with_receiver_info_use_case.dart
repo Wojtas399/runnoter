@@ -42,7 +42,11 @@ class GetSentCoachingRequestsWithReceiverInfoUseCase {
             ),
           )
           .map((reqs) => reqs.map(_combineRequestWithReceiverInfo))
-          .switchMap((reqs$) => Rx.combineLatest(reqs$, (reqs) => reqs));
+          .switchMap(
+            (reqs$) => reqs$.isEmpty
+                ? Stream.value([])
+                : Rx.combineLatest(reqs$, (reqs) => reqs),
+          );
 
   Stream<CoachingRequestWithPerson> _combineRequestWithReceiverInfo(
     CoachingRequest req,

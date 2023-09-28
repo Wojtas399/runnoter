@@ -389,4 +389,18 @@ void main() {
       ).called(1);
     },
   );
+
+  test(
+    'should emit empty array if there are no matching requests',
+    () {
+      coachingRequestService.mockGetCoachingRequestsByReceiverId(requests: []);
+
+      final Stream<List<CoachingRequestWithPerson>> requests$ = useCase.execute(
+        receiverId: 'u1',
+        requestDirection: CoachingRequestDirection.coachToClient,
+      );
+
+      expect(requests$, emits([]));
+    },
+  );
 }
