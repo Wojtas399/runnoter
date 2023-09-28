@@ -521,6 +521,14 @@
   "@profileFindCoach": {
     "description": "Label of the button to find a coach"
   },
+  "profileUserNoLongerHasCoachDialogTitle": "Błąd trenera",
+  "@profileUserNoLongerHasCoachDialogTitle": {
+    "description": "Title of the dialog to inform that user no longer has a coach"
+  },
+  "profileUserNoLongerHasCoachDialogMessage": "Wygląda na to, że twój trener zakończył z tobą współpracę. Z tego powodu nie możemy kontynuować wybranej akcji.",
+  "@profileUserNoLongerHasCoachDialogMessage": {
+    "description": "Message of the dialog to inform that user no longer has a coach"
+  },
   "profileFinishCooperationWithCoachDialogTitle": "Usuń trenera",
   "@profileFinishCooperationWithCoachDialogTitle": {
     "description": "Title of the dialog to confirm finishing cooperation with coach"

@@ -138,6 +138,8 @@
   "profileNoCoachTitle": "No coach",
   "profileNoCoachMessage": "You don't have any coach. You have to accept a request from a coach or find a coach by yourself.",
   "profileFindCoach": "Find coach",
+  "profileUserNoLongerHasCoachDialogTitle": "Coach error",
+  "profileUserNoLongerHasCoachDialogMessage": "It seems that your coach finished cooperation with you. For this reason we cannot continue selected action.",
   "profileFinishCooperationWithCoachDialogTitle": "Delete coach",
   "profileFinishCooperationWithCoachDialogMessage": "Are you sure you want to finish cooperation with your coach? The coach will lose access to your workouts, races and health data.",
   "profileSuccessfullyFinishedCooperationWithCoach": "Successfully finished cooperation with a coach",

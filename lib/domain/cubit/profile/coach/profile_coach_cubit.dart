@@ -20,8 +20,8 @@ import '../../../use_case/load_chat_id_use_case.dart';
 
 part 'profile_coach_state.dart';
 
-class ProfileCoachCubit
-    extends CubitWithStatus<ProfileCoachState, ProfileCoachCubitInfo, dynamic> {
+class ProfileCoachCubit extends CubitWithStatus<ProfileCoachState,
+    ProfileCoachCubitInfo, ProfileCoachCubitError> {
   final AuthService _authService;
   final UserRepository _userRepository;
   final PersonRepository _personRepository;
@@ -127,10 +127,13 @@ class ProfileCoachCubit
     if (coachId == null) return null;
     final String? loggedUserId = await _authService.loggedUserId$.first;
     if (loggedUserId == null) return null;
-    return await _loadChatIdUseCase.execute(
+    emitLoadingStatus();
+    final String? chatId = await _loadChatIdUseCase.execute(
       user1Id: loggedUserId,
       user2Id: coachId,
     );
+    emitCompleteStatus();
+    return chatId;
   }
 
   Future<void> deleteCoach() async {
@@ -147,6 +150,22 @@ class ProfileCoachCubit
       user2Id: state.coachId!,
     );
     emitCompleteStatus(info: ProfileCoachCubitInfo.coachDeleted);
+  }
+
+  Future<bool> checkIfStillHasCoach() async {
+    final String? loggedUserId = await _authService.loggedUserId$.first;
+    if (loggedUserId == null) {
+      emitNoLoggedUserStatus();
+      return false;
+    }
+    await _userRepository.refreshUserById(userId: loggedUserId);
+    final User? loggedUser =
+        await _userRepository.getUserById(userId: loggedUserId).first;
+    if (loggedUser?.coachId != null) {
+      return true;
+    }
+    emitErrorStatus(ProfileCoachCubitError.userNoLongerHasCoach);
+    return false;
   }
 
   Stream<User> _getLoggedUser() => _authService.loggedUserId$
@@ -181,3 +200,5 @@ enum ProfileCoachCubitInfo {
   requestUndid,
   coachDeleted
 }
+
+enum ProfileCoachCubitError { userNoLongerHasCoach }

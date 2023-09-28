@@ -366,56 +366,85 @@ void main() {
     ).called(1),
   );
 
-  test(
+  group(
     'loadChatId, '
-    'coach id does not exist, '
-    'should return null',
-    () async {
-      authService.mockGetLoggedUserId();
-      final cubit = ProfileCoachCubit();
+    'coach id does not exist, ',
+    () {
+      String? chatId;
 
-      final String? chatId = await cubit.loadChatId();
-
-      expect(chatId, null);
+      blocTest(
+        'should return null',
+        build: () => ProfileCoachCubit(),
+        act: (cubit) async {
+          chatId = await cubit.loadChatId();
+        },
+        expect: () => [],
+        verify: (_) => expect(chatId, null),
+      );
     },
   );
 
-  test(
+  group(
     'loadChatId, '
-    'logged user does not exist, '
-    'should return null',
-    () async {
-      authService.mockGetLoggedUserId();
-      final cubit = ProfileCoachCubit(
-        initialState: const ProfileCoachState(
-          status: CubitStatusInitial(),
-          coachId: 'c1',
+    'logged user does not exist, ',
+    () {
+      String? chatId;
+
+      blocTest(
+        'should return null',
+        build: () => ProfileCoachCubit(
+          initialState: const ProfileCoachState(
+            status: CubitStatusComplete(),
+            coachId: 'c1',
+          ),
         ),
+        setUp: () => authService.mockGetLoggedUserId(),
+        act: (cubit) async {
+          chatId = await cubit.loadChatId();
+        },
+        verify: (_) {
+          expect(chatId, null);
+          verify(() => authService.loggedUserId$).called(1);
+        },
       );
-
-      final String? chatId = await cubit.loadChatId();
-
-      expect(chatId, null);
     },
   );
 
-  test(
-    'loadChatId, '
-    'should call use case to load chat id and return loaded chat id',
-    () async {
-      const String expectedChatId = 'c1';
-      authService.mockGetLoggedUserId(userId: loggedUserId);
-      loadChatIdUseCase.mock(chatId: expectedChatId);
-      final cubit = ProfileCoachCubit(
-        initialState: const ProfileCoachState(
-          status: CubitStatusInitial(),
-          coachId: 'c1',
+  group(
+    'loadChatId, ',
+    () {
+      String? chatId;
+
+      blocTest(
+        'should call use case to load chat id and should return loaded chat id',
+        build: () => ProfileCoachCubit(
+          initialState: const ProfileCoachState(
+            status: CubitStatusComplete(),
+            coachId: 'c1',
+          ),
         ),
+        setUp: () {
+          authService.mockGetLoggedUserId(userId: loggedUserId);
+          loadChatIdUseCase.mock(chatId: 'chat1');
+        },
+        act: (cubit) async {
+          chatId = await cubit.loadChatId();
+        },
+        expect: () => [
+          const ProfileCoachState(status: CubitStatusLoading(), coachId: 'c1'),
+          const ProfileCoachState(status: CubitStatusComplete(), coachId: 'c1'),
+        ],
+        verify: (_) {
+          expect(chatId, 'chat1');
+          verify(() => authService.loggedUserId$).called(1);
+          verify(
+            () => loadChatIdUseCase.execute(
+              user1Id: loggedUserId,
+              user2Id: 'c1',
+            ),
+          ).called(1);
+        },
       );
-
-      final String? chatId = await cubit.loadChatId();
-
-      expect(chatId, expectedChatId);
     },
   );
 
@@ -489,6 +518,91 @@ void main() {
           user2Id: 'c1',
         ),
       ).called(1);
+    },
+  );
+
+  group(
+    'checkIfStillHasCoach, '
+    'logged user does not exist',
+    () {
+      bool? result;
+
+      blocTest(
+        'should emit no logged user status and should return false',
+        build: () => ProfileCoachCubit(),
+        setUp: () => authService.mockGetLoggedUserId(),
+        act: (cubit) async {
+          result = await cubit.checkIfStillHasCoach();
+        },
+        expect: () => [
+          const ProfileCoachState(status: CubitStatusNoLoggedUser()),
+        ],
+        verify: (_) {
+          expect(result, false);
+          verify(() => authService.loggedUserId$).called(1);
+        },
+      );
+    },
+  );
+
+  group(
+    'checkIfStillHasCoach',
+    () {
+      bool? result;
+
+      blocTest(
+        'should call user repository method to refresh logged user, '
+        'should load logged user from repo, '
+        'if logged user does not have a coach should emit error status with '
+        'userNoLongerHasCoach error and should return false',
+        build: () => ProfileCoachCubit(),
+        setUp: () {
+          authService.mockGetLoggedUserId(userId: loggedUserId);
+          userRepository.mockRefreshUserById();
+          userRepository.mockGetUserById(user: createUser(coachId: null));
+        },
+        act: (cubit) async {
+          result = await cubit.checkIfStillHasCoach();
+        },
+        expect: () => [
+          const ProfileCoachState(
+            status: CubitStatusError<ProfileCoachCubitError>(
+              error: ProfileCoachCubitError.userNoLongerHasCoach,
+            ),
+          ),
+        ],
+        verify: (_) {
+          expect(result, false);
+          verify(() => authService.loggedUserId$).called(1);
+        },
+      );
+    },
+  );
+
+  group(
+    'checkIfStillHasCoach',
+    () {
+      bool? result;
+
+      blocTest(
+        'should call user repository method to refresh logged user, '
+        'should load logged user from repo, '
+        'if logged user has a coach should return true',
+        build: () => ProfileCoachCubit(),
+        setUp: () {
+          authService.mockGetLoggedUserId(userId: loggedUserId);
+          userRepository.mockRefreshUserById();
+          userRepository.mockGetUserById(user: createUser(coachId: 'c1'));
+        },
+        act: (cubit) async {
+          result = await cubit.checkIfStillHasCoach();
+        },
+        expect: () => [],
+        verify: (_) {
+          expect(result, true);
+          verify(() => authService.loggedUserId$).called(1);
+        },
+      );
     },
   );
 }

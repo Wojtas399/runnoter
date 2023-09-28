@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/single_child_widget.dart';
 
 import '../../../domain/cubit/profile/coach/profile_coach_cubit.dart';
 import '../../../domain/cubit/profile/identities/profile_identities_cubit.dart';
@@ -24,25 +25,26 @@ class ProfileScreen extends StatelessWidget {
         BlocProvider(create: (_) => ProfileCoachCubit()..initialize()),
         BlocProvider(create: (_) => ProfileSettingsCubit()..initialize()),
       ],
-      child: const _IdentitiesCubitListener(
-        child: _CoachCubitListener(
-          child: ProfileContent(),
-        ),
+      child: MultiBlocListener(
+        listeners: const [
+          _IdentitiesCubitListener(),
+          _CoachCubitListener(),
+        ],
+        child: const ProfileContent(),
       ),
     );
   }
 }
 
-class _IdentitiesCubitListener extends StatefulWidget {
-  final Widget child;
-
-  const _IdentitiesCubitListener({required this.child});
+class _IdentitiesCubitListener extends SingleChildStatefulWidget {
+  const _IdentitiesCubitListener();
 
   @override
   State<StatefulWidget> createState() => _IdentitiesCubitListenerState();
 }
 
-class _IdentitiesCubitListenerState extends State<_IdentitiesCubitListener>
+class _IdentitiesCubitListenerState
+    extends SingleChildState<_IdentitiesCubitListener>
     with AutoRouteAwareStateMixin {
   @override
   void didChangeTabRoute(TabPageRoute previousRoute) {
@@ -51,16 +53,16 @@ class _IdentitiesCubitListenerState extends State<_IdentitiesCubitListener>
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildWithChild(BuildContext context, Widget? child) {
     return CubitWithStatusListener<
         ProfileIdentitiesCubit,
         ProfileIdentitiesState,
         ProfileIdentitiesCubitInfo,
         ProfileIdentitiesCubitError>(
-      child: widget.child,
       onInfo: (ProfileIdentitiesCubitInfo info) => _manageInfo(context, info),
       onError: (ProfileIdentitiesCubitError error) =>
           _manageError(context, error),
+      child: child,
     );
   }
 
@@ -115,16 +117,15 @@ class _IdentitiesCubitListenerState extends State<_IdentitiesCubitListener>
   }
 }
 
-class _CoachCubitListener extends StatelessWidget {
-  final Widget child;
-
-  const _CoachCubitListener({required this.child});
+class _CoachCubitListener extends SingleChildStatelessWidget {
+  const _CoachCubitListener();
 
   @override
-  Widget build(BuildContext context) {
+  Widget buildWithChild(BuildContext context, Widget? child) {
     return CubitWithStatusListener<ProfileCoachCubit, ProfileCoachState,
-        ProfileCoachCubitInfo, dynamic>(
+        ProfileCoachCubitInfo, ProfileCoachCubitError>(
       onInfo: (ProfileCoachCubitInfo info) => _manageInfo(context, info),
+      onError: (ProfileCoachCubitError error) => _manageError(context, error),
       child: child,
     );
   }
@@ -134,18 +135,25 @@ class _CoachCubitListener extends StatelessWidget {
     switch (info) {
       case ProfileCoachCubitInfo.requestAccepted:
         showSnackbarMessage(str.successfullyAcceptedRequest);
-        break;
       case ProfileCoachCubitInfo.requestDeleted:
         showSnackbarMessage(str.successfullyDeletedRequest);
-        break;
       case ProfileCoachCubitInfo.requestUndid:
         showSnackbarMessage(str.successfullyUndidRequest);
-        break;
       case ProfileCoachCubitInfo.coachDeleted:
         showSnackbarMessage(
           str.profileSuccessfullyFinishedCooperationWithCoach,
         );
-        break;
+    }
+  }
+
+  void _manageError(BuildContext context, ProfileCoachCubitError error) {
+    final str = Str.of(context);
+    switch (error) {
+      case ProfileCoachCubitError.userNoLongerHasCoach:
+        showMessageDialog(
+          title: str.profileUserNoLongerHasCoachDialogTitle,
+          message: str.profileUserNoLongerHasCoachDialogMessage,
+        );
     }
   }
 }
