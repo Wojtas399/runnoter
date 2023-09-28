@@ -728,6 +728,14 @@
   "@clientsMessage": {
     "description": "Label of the button to send message"
   },
+  "clientsClientIsNotClientAnymoreDialogTitle": "Błąd klienta",
+  "@clientsClientIsNotClientAnymoreDialogTitle": {
+    "description": "Title of the dialog to inform that selected client is not a client anymore"
+  },
+  "clientsClientIsNotClientAnymoreDialogMessage": "Wygląda na to, że ten klient zakończył z tobą współpracę. Z tego powodu nie możemy kontynuować wybranej akcji.",
+  "@clientsClientIsNotClientAnymoreDialogMessage": {
+    "description": "Message of the dialog to inform that selected client is not a client anymore"
+  },
   "clientsDeleteClientConfirmationDialogTitle": "Usuń klienta",
   "@clientsDeleteClientConfirmationDialogTitle": {
     "description": "Title of the dialog to confirm client deletion"

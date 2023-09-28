@@ -198,6 +198,8 @@
   "clientsTitle": "Clients",
   "clientsSearchUsers": "Search for users",
   "clientsMessage": "Message",
+  "clientsClientIsNotClientAnymoreDialogTitle": "Client error",
+  "clientsClientIsNotClientAnymoreDialogMessage": "It seems that this client finished cooperation with you. For this reason we cannot continue selected action.",
   "clientsDeleteClientConfirmationDialogTitle": "Delete client",
   "clientsDeleteClientConfirmationDialogAreYouSure": "Are you sure you want to finish coaching ",
   "clientsDeleteClientConfirmationDialogInfoAboutAccessLoss": "You will lose access to training, racing and health data of this user.",

@@ -39,8 +39,9 @@ class _CubitListener extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CubitWithStatusListener<ClientsCubit, ClientsState, ClientsCubitInfo,
-        dynamic>(
+        ClientsCubitError>(
       onInfo: (ClientsCubitInfo info) => _manageInfo(context, info),
+      onError: (ClientsCubitError error) => _manageError(context, error),
       onStateChanged: _manageState,
       child: child,
     );
@@ -53,10 +54,19 @@ class _CubitListener extends StatelessWidget {
         showSnackbarMessage(str.successfullyAcceptedRequest);
       case ClientsCubitInfo.requestDeleted:
         showSnackbarMessage(str.successfullyUndidRequest);
-        break;
       case ClientsCubitInfo.clientDeleted:
         showSnackbarMessage(str.clientsSuccessfullyDeletedClient);
-        break;
+    }
+  }
+
+  void _manageError(BuildContext context, ClientsCubitError error) {
+    final str = Str.of(context);
+    switch (error) {
+      case ClientsCubitError.clientIsNoLongerClient:
+        showMessageDialog(
+          title: str.clientsClientIsNotClientAnymoreDialogTitle,
+          message: str.clientsClientIsNotClientAnymoreDialogMessage,
+        );
     }
   }
 

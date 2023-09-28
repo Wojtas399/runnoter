@@ -94,15 +94,14 @@ class _ClientItem extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           IconButton(
-            onPressed: () =>
-                context.read<ClientsCubit>().openChatWithClient(clientInfo.id),
+            onPressed: () => _onOpenChat(context),
             icon: Badge(
               isLabelVisible: showMessageBadge,
               child: const Icon(Icons.message_outlined),
             ),
           ),
           IconButton(
-            onPressed: _onShowProfile,
+            onPressed: () => _onShowProfile(context),
             icon: const Icon(Icons.assignment_ind_outlined),
           ),
           IconButton(
@@ -116,8 +115,18 @@ class _ClientItem extends StatelessWidget {
     );
   }
 
-  void _onShowProfile() {
-    navigateTo(ClientRoute(clientId: clientInfo.id));
+  Future<void> _onOpenChat(BuildContext context) async {
+    final ClientsCubit cubit = context.read<ClientsCubit>();
+    final bool isClientStillClient =
+        await cubit.checkIfClientIsStillClient(clientInfo.id);
+    if (isClientStillClient) cubit.openChatWithClient(clientInfo.id);
+  }
+
+  Future<void> _onShowProfile(BuildContext context) async {
+    final bool isClientStillClient = await context
+        .read<ClientsCubit>()
+        .checkIfClientIsStillClient(clientInfo.id);
+    if (isClientStillClient) navigateTo(ClientRoute(clientId: clientInfo.id));
   }
 
   Future<void> _onDeleteClient(BuildContext context) async {
