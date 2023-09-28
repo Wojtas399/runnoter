@@ -370,4 +370,105 @@ void main() {
       ).called(1);
     },
   );
+
+  group(
+    'checkIfClientIsStillClient',
+    () {
+      bool? result;
+
+      blocTest(
+        'logged user does not exist, '
+        'should emit no logged user status and return false',
+        build: () => ClientsCubit(),
+        setUp: () => authService.mockGetLoggedUserId(),
+        act: (cubit) async {
+          result = await cubit.checkIfClientIsStillClient('c1');
+        },
+        expect: () => [
+          const ClientsState(status: CubitStatusNoLoggedUser()),
+        ],
+        verify: (_) {
+          expect(result, false);
+          verify(() => authService.loggedUserId$).called(1);
+        },
+      );
+    },
+  );
+
+  group(
+    'checkIfClientIsStillClient',
+    () {
+      bool? result;
+
+      blocTest(
+        'should call person repository method to refresh client, '
+        'should load client from repository, '
+        'if coach id of client is different than logged user id should emit '
+        'error status with clientIsNoLongerClient error and should return false',
+        build: () => ClientsCubit(),
+        setUp: () {
+          authService.mockGetLoggedUserId(userId: loggedUserId);
+          personRepository.mockRefreshPersonById();
+          personRepository.mockGetPersonById(
+            person: createPerson(coachId: 'u2'),
+          );
+        },
+        act: (cubit) async {
+          result = await cubit.checkIfClientIsStillClient('c1');
+        },
+        expect: () => [
+          const ClientsState(
+            status: CubitStatusError(
+              error: ClientsCubitError.clientIsNoLongerClient,
+            ),
+          ),
+        ],
+        verify: (_) {
+          expect(result, false);
+          verify(() => authService.loggedUserId$).called(1);
+          verify(
+            () => personRepository.refreshPersonById(personId: 'c1'),
+          ).called(1);
+          verify(
+            () => personRepository.getPersonById(personId: 'c1'),
+          ).called(1);
+        },
+      );
+    },
+  );
+
+  group(
+    'checkIfClientIsStillClient',
+    () {
+      bool? result;
+
+      blocTest(
+        'should call person repository method to refresh client, '
+        'should load client from repository, '
+        'if coach id of client is equal to logged user id should return true',
+        build: () => ClientsCubit(),
+        setUp: () {
+          authService.mockGetLoggedUserId(userId: loggedUserId);
+          personRepository.mockRefreshPersonById();
+          personRepository.mockGetPersonById(
+            person: createPerson(coachId: loggedUserId),
+          );
+        },
+        act: (cubit) async {
+          result = await cubit.checkIfClientIsStillClient('c1');
+        },
+        expect: () => [],
+        verify: (_) {
+          expect(result, true);
+          verify(() => authService.loggedUserId$).called(1);
+          verify(
+            () => personRepository.refreshPersonById(personId: 'c1'),
+          ).called(1);
+          verify(
+            () => personRepository.getPersonById(personId: 'c1'),
+          ).called(1);
+        },
+      );
+    },
+  );
 }

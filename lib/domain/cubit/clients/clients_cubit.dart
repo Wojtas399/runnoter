@@ -17,7 +17,7 @@ import '../../use_case/load_chat_id_use_case.dart';
 part 'clients_state.dart';
 
 class ClientsCubit
-    extends CubitWithStatus<ClientsState, ClientsCubitInfo, dynamic> {
+    extends CubitWithStatus<ClientsState, ClientsCubitInfo, ClientsCubitError> {
   final AuthService _authService;
   final CoachingRequestService _coachingRequestService;
   final PersonRepository _personRepository;
@@ -125,6 +125,22 @@ class ClientsCubit
     }
   }
 
+  Future<bool> checkIfClientIsStillClient(String clientId) async {
+    final String? loggedUserId = await _loadLoggedUserId();
+    if (loggedUserId == null) {
+      emitNoLoggedUserStatus();
+      return false;
+    }
+    await _personRepository.refreshPersonById(personId: clientId);
+    final Person? client =
+        await _personRepository.getPersonById(personId: clientId).first;
+    if (client?.coachId != loggedUserId) {
+      emitErrorStatus(ClientsCubitError.clientIsNoLongerClient);
+      return false;
+    }
+    return true;
+  }
+
   Stream<List<Person>> _getClients(String loggedUserId) => _personRepository
       .getPersonsByCoachId(coachId: loggedUserId)
       .map((List<Person>? clients) => [...?clients]);
@@ -193,3 +209,5 @@ class ClientsCubit
 }
 
 enum ClientsCubitInfo { requestAccepted, requestDeleted, clientDeleted }
+
+enum ClientsCubitError { clientIsNoLongerClient }
