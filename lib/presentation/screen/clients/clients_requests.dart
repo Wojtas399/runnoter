@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/additional_model/coaching_request_short.dart';
+import '../../../domain/additional_model/coaching_request_with_person.dart';
 import '../../../domain/cubit/clients/clients_cubit.dart';
 import '../../../domain/entity/person.dart';
 import '../../component/gap/gap_horizontal_components.dart';
@@ -19,7 +19,7 @@ class ClientsSentRequests extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<CoachingRequestShort>? requests = context.select(
+    final List<CoachingRequestWithPerson>? requests = context.select(
       (ClientsCubit cubit) => cubit.state.sentRequests,
     );
 
@@ -35,7 +35,7 @@ class ClientsReceivedRequests extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<CoachingRequestShort>? requests = context.select(
+    final List<CoachingRequestWithPerson>? requests = context.select(
       (ClientsCubit cubit) => cubit.state.receivedRequests,
     );
 
@@ -48,7 +48,7 @@ class ClientsReceivedRequests extends StatelessWidget {
 }
 
 class _RequestsList extends StatefulWidget {
-  final List<CoachingRequestShort>? requests;
+  final List<CoachingRequestWithPerson>? requests;
   final CoachingRequestDirection requestDirection;
   final bool canShowBadge;
 
@@ -124,7 +124,7 @@ class _RequestsListState extends State<_RequestsList> {
 }
 
 class _RequestsListContent extends StatelessWidget {
-  final List<CoachingRequestShort>? requests;
+  final List<CoachingRequestWithPerson>? requests;
   final CoachingRequestDirection requestDirection;
 
   const _RequestsListContent({
@@ -172,7 +172,7 @@ class _RequestsListContent extends StatelessWidget {
 }
 
 class _RequestItem extends StatelessWidget {
-  final CoachingRequestShort request;
+  final CoachingRequestWithPerson request;
   final CoachingRequestDirection requestDirection;
 
   const _RequestItem(this.request, this.requestDirection);
@@ -183,9 +183,9 @@ class _RequestItem extends StatelessWidget {
       contentPadding: EdgeInsets.symmetric(
         horizontal: context.isMobileSize ? 8 : 0,
       ),
-      title: Text(request.personToDisplay.toFullName()),
-      subtitle: Text(request.personToDisplay.email),
-      leading: Icon(request.personToDisplay.gender.toIconData()),
+      title: Text(request.person.toFullName()),
+      subtitle: Text(request.person.email),
+      leading: Icon(request.person.gender.toIconData()),
       trailing: switch (requestDirection) {
         CoachingRequestDirection.coachToClient => IconButton(
             onPressed: () => _onDelete(context),
@@ -230,7 +230,7 @@ class _RequestItem extends StatelessWidget {
   Future<bool> _askForRequestDeletionConfirmation(
     BuildContext context,
   ) async {
-    final Person receiver = request.personToDisplay;
+    final Person receiver = request.person;
     final TextStyle? textStyle = Theme.of(context).textTheme.bodyMedium;
     final str = Str.of(context);
 

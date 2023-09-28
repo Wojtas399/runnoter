@@ -5,26 +5,33 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/additional_model/coaching_request.dart';
-import 'package:runnoter/domain/additional_model/coaching_request_short.dart';
+import 'package:runnoter/domain/additional_model/coaching_request_with_person.dart';
 import 'package:runnoter/domain/additional_model/cubit_status.dart';
 import 'package:runnoter/domain/cubit/clients/clients_cubit.dart';
 import 'package:runnoter/domain/entity/person.dart';
 import 'package:runnoter/domain/repository/person_repository.dart';
 import 'package:runnoter/domain/service/auth_service.dart';
 import 'package:runnoter/domain/service/coaching_request_service.dart';
+import 'package:runnoter/domain/use_case/get_received_coaching_requests_with_sender_info_use_case.dart';
+import 'package:runnoter/domain/use_case/get_sent_coaching_requests_with_receiver_info_use_case.dart';
 import 'package:runnoter/domain/use_case/load_chat_id_use_case.dart';
 
-import '../../../creators/coaching_request_creator.dart';
 import '../../../creators/person_creator.dart';
 import '../../../mock/domain/repository/mock_person_repository.dart';
 import '../../../mock/domain/service/mock_auth_service.dart';
 import '../../../mock/domain/service/mock_coaching_request_service.dart';
+import '../../../mock/domain/use_case/mock_get_received_coaching_requests_with_sender_info_use_case.dart';
+import '../../../mock/domain/use_case/mock_get_sent_coaching_requests_with_receiver_info_use_case.dart';
 import '../../../mock/domain/use_case/mock_load_chat_id_use_case.dart';
 
 void main() {
   final authService = MockAuthService();
   final coachingRequestService = MockCoachingRequestService();
   final personRepository = MockPersonRepository();
+  final getSentCoachingRequestsWithReceiverInfoUseCase =
+      MockGetSentCoachingRequestsWithReceiverInfoUseCase();
+  final getReceivedCoachingRequestsWithSenderInfoUseCase =
+      MockGetReceivedCoachingRequestsWithSenderInfoUseCase();
   final loadChatIdUseCase = MockLoadChatIdUseCase();
   const String loggedUserId = 'u1';
 
@@ -35,6 +42,12 @@ void main() {
     );
     GetIt.I.registerSingleton<PersonRepository>(personRepository);
     GetIt.I.registerFactory<LoadChatIdUseCase>(() => loadChatIdUseCase);
+    GetIt.I.registerFactory<GetSentCoachingRequestsWithReceiverInfoUseCase>(
+      () => getSentCoachingRequestsWithReceiverInfoUseCase,
+    );
+    GetIt.I.registerFactory<GetReceivedCoachingRequestsWithSenderInfoUseCase>(
+      () => getReceivedCoachingRequestsWithSenderInfoUseCase,
+    );
   });
 
   tearDown(() {
@@ -42,13 +55,13 @@ void main() {
     reset(coachingRequestService);
     reset(personRepository);
     reset(loadChatIdUseCase);
+    reset(getSentCoachingRequestsWithReceiverInfoUseCase);
+    reset(getReceivedCoachingRequestsWithSenderInfoUseCase);
   });
 
   group(
     'initialize, ',
     () {
-      final Person person1 = createPerson(id: 'p1', name: 'nameFirst');
-      final Person person2 = createPerson(id: 'p2', name: 'nameSecond');
       final List<Person> clients = [
         createPerson(id: 'p1', name: 'first client'),
         createPerson(id: 'p2', name: 'second client'),
@@ -57,37 +70,38 @@ void main() {
         ...clients,
         createPerson(id: 'p3', name: 'third client'),
       ];
-      StreamController<List<CoachingRequest>> sentRequests$ = StreamController()
-        ..add([createCoachingRequest(id: 'r1', receiverId: person1.id)]);
-      StreamController<List<CoachingRequest>> receivedRequests$ =
-          StreamController()
-            ..add([createCoachingRequest(id: 'r2', senderId: person2.id)]);
+      final List<CoachingRequestWithPerson> sentRequests = [
+        CoachingRequestWithPerson(id: 'r1', person: createPerson(id: 'p4')),
+      ];
+      final List<CoachingRequestWithPerson> updatedSentRequests = [
+        ...sentRequests,
+        CoachingRequestWithPerson(id: 'r2', person: createPerson(id: 'p5')),
+      ];
+      final List<CoachingRequestWithPerson> receivedRequests = [
+        CoachingRequestWithPerson(id: 'r3', person: createPerson(id: 'p6')),
+      ];
+      final List<CoachingRequestWithPerson> updatedReceivedRequests = [
+        ...sentRequests,
+        CoachingRequestWithPerson(id: 'r4', person: createPerson(id: 'p7')),
+      ];
+      StreamController<List<CoachingRequestWithPerson>> sentRequests$ =
+          StreamController()..add(sentRequests);
+      StreamController<List<CoachingRequestWithPerson>> receivedRequests$ =
+          StreamController()..add(receivedRequests);
       final StreamController<List<Person>> clients$ = StreamController()
         ..add(clients);
-      final List<CoachingRequestShort> shortSentRequests = [
-        CoachingRequestShort(id: 'r1', personToDisplay: person1),
-      ];
-      final List<CoachingRequestShort> shortReceivedRequests = [
-        CoachingRequestShort(id: 'r2', personToDisplay: person2),
-      ];
 
       blocTest(
         'should set listener of clients, sent requests and received requests',
         build: () => ClientsCubit(),
         setUp: () {
           authService.mockGetLoggedUserId(userId: loggedUserId);
-          coachingRequestService.mockGetCoachingRequestsBySenderId(
-            requestsStream: sentRequests$.stream,
+          getSentCoachingRequestsWithReceiverInfoUseCase.mock(
+            requests$: sentRequests$.stream,
           );
-          coachingRequestService.mockGetCoachingRequestsByReceiverId(
-            requestsStream: receivedRequests$.stream,
+          getReceivedCoachingRequestsWithSenderInfoUseCase.mock(
+            requests$: receivedRequests$.stream,
           );
-          when(
-            () => personRepository.getPersonById(personId: person1.id),
-          ).thenAnswer((_) => Stream.value(person1));
-          when(
-            () => personRepository.getPersonById(personId: person2.id),
-          ).thenAnswer((invocation) => Stream.value(person2));
           personRepository.mockGetPersonsByCoachId(
             personsStream: clients$.stream,
           );
@@ -95,61 +109,55 @@ void main() {
         act: (cubit) async {
           cubit.initialize();
           await cubit.stream.first;
-          sentRequests$.add([]);
+          sentRequests$.add(updatedSentRequests);
           await cubit.stream.first;
-          receivedRequests$.add([]);
+          receivedRequests$.add(updatedReceivedRequests);
           await cubit.stream.first;
           clients$.add(updatedClients);
         },
         expect: () => [
           ClientsState(
             status: const CubitStatusComplete(),
-            sentRequests: shortSentRequests,
-            receivedRequests: shortReceivedRequests,
+            sentRequests: sentRequests,
+            receivedRequests: receivedRequests,
             clients: clients,
           ),
           ClientsState(
               status: const CubitStatusComplete(),
-              sentRequests: const [],
-              receivedRequests: shortReceivedRequests,
+              sentRequests: updatedSentRequests,
+              receivedRequests: receivedRequests,
               clients: clients),
           ClientsState(
             status: const CubitStatusComplete(),
-            sentRequests: const [],
-            receivedRequests: const [],
+            sentRequests: updatedSentRequests,
+            receivedRequests: updatedReceivedRequests,
             clients: clients,
           ),
           ClientsState(
             status: const CubitStatusComplete(),
-            sentRequests: const [],
-            receivedRequests: const [],
+            sentRequests: updatedSentRequests,
+            receivedRequests: updatedReceivedRequests,
             clients: updatedClients,
           ),
         ],
         verify: (_) {
           verify(() => authService.loggedUserId$).called(1);
           verify(
-            () => coachingRequestService.getCoachingRequestsBySenderId(
+            () => getSentCoachingRequestsWithReceiverInfoUseCase.execute(
               senderId: loggedUserId,
-              direction: CoachingRequestDirection.coachToClient,
+              requestDirection: CoachingRequestDirection.coachToClient,
+              requestStatuses: SentCoachingRequestStatuses.onlyUnaccepted,
             ),
           ).called(1);
           verify(
-            () => coachingRequestService.getCoachingRequestsByReceiverId(
+            () => getReceivedCoachingRequestsWithSenderInfoUseCase.execute(
               receiverId: loggedUserId,
-              direction: CoachingRequestDirection.clientToCoach,
+              requestDirection: CoachingRequestDirection.clientToCoach,
+              requestStatuses: ReceivedCoachingRequestStatuses.onlyUnaccepted,
             ),
           ).called(1);
           verify(
-            () => personRepository.getPersonById(personId: person1.id),
-          ).called(1);
-          verify(
-            () => personRepository.getPersonById(personId: person2.id),
-          ).called(1);
-          verify(
-            () => personRepository.getPersonsByCoachId(
-              coachId: loggedUserId,
-            ),
+            () => personRepository.getPersonsByCoachId(coachId: loggedUserId),
           ).called(1);
         },
       );
@@ -177,13 +185,13 @@ void main() {
       initialState: ClientsState(
         status: const CubitStatusComplete(),
         receivedRequests: [
-          CoachingRequestShort(
+          CoachingRequestWithPerson(
             id: 'r1',
-            personToDisplay: createPerson(id: 'p1'),
+            person: createPerson(id: 'p1'),
           ),
-          CoachingRequestShort(
+          CoachingRequestWithPerson(
             id: 'r2',
-            personToDisplay: createPerson(id: 'p2'),
+            person: createPerson(id: 'p2'),
           ),
         ],
       ),
@@ -198,13 +206,13 @@ void main() {
       ClientsState(
         status: const CubitStatusLoading(),
         receivedRequests: [
-          CoachingRequestShort(
+          CoachingRequestWithPerson(
             id: 'r1',
-            personToDisplay: createPerson(id: 'p1'),
+            person: createPerson(id: 'p1'),
           ),
-          CoachingRequestShort(
+          CoachingRequestWithPerson(
             id: 'r2',
-            personToDisplay: createPerson(id: 'p2'),
+            person: createPerson(id: 'p2'),
           ),
         ],
       ),
@@ -213,13 +221,13 @@ void main() {
           info: ClientsCubitInfo.requestAccepted,
         ),
         receivedRequests: [
-          CoachingRequestShort(
+          CoachingRequestWithPerson(
             id: 'r1',
-            personToDisplay: createPerson(id: 'p1'),
+            person: createPerson(id: 'p1'),
           ),
-          CoachingRequestShort(
+          CoachingRequestWithPerson(
             id: 'r2',
-            personToDisplay: createPerson(id: 'p2'),
+            person: createPerson(id: 'p2'),
           ),
         ],
       ),

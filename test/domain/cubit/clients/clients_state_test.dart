@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:runnoter/domain/additional_model/coaching_request_with_person.dart';
 import 'package:runnoter/domain/additional_model/cubit_status.dart';
-import 'package:runnoter/domain/additional_model/coaching_request_short.dart';
 import 'package:runnoter/domain/cubit/clients/clients_cubit.dart';
 import 'package:runnoter/domain/entity/person.dart';
 
@@ -31,14 +31,14 @@ void main() {
     'copy with sentRequests, '
     'should copy current value if new value has not been passed',
     () {
-      final List<CoachingRequestShort> expected = [
-        CoachingRequestShort(
+      final List<CoachingRequestWithPerson> expected = [
+        CoachingRequestWithPerson(
           id: 'r1',
-          personToDisplay: createPerson(id: 'p1'),
+          person: createPerson(id: 'p1'),
         ),
-        CoachingRequestShort(
+        CoachingRequestWithPerson(
           id: 'r2',
-          personToDisplay: createPerson(id: 'p2'),
+          person: createPerson(id: 'p2'),
         ),
       ];
 
@@ -54,14 +54,14 @@ void main() {
     'copy with receivedRequests, '
     'should copy current value if new value has not been passed',
     () {
-      final List<CoachingRequestShort> expected = [
-        CoachingRequestShort(
+      final List<CoachingRequestWithPerson> expected = [
+        CoachingRequestWithPerson(
           id: 'r1',
-          personToDisplay: createPerson(id: 'p1'),
+          person: createPerson(id: 'p1'),
         ),
-        CoachingRequestShort(
+        CoachingRequestWithPerson(
           id: 'r2',
-          personToDisplay: createPerson(id: 'p2'),
+          person: createPerson(id: 'p2'),
         ),
       ];
 
