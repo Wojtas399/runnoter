@@ -21,9 +21,7 @@ class ProfileScreen extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => ProfileIdentitiesCubit()..initialize()),
-        BlocProvider(
-          create: (_) => ProfileCoachCubit()..initializeCoachListener(),
-        ),
+        BlocProvider(create: (_) => ProfileCoachCubit()..initialize()),
         BlocProvider(create: (_) => ProfileSettingsCubit()..initialize()),
       ],
       child: const _IdentitiesCubitListener(

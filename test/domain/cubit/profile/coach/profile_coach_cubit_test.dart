@@ -5,23 +5,28 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/additional_model/coaching_request.dart';
-import 'package:runnoter/domain/additional_model/coaching_request_short.dart';
+import 'package:runnoter/domain/additional_model/coaching_request_with_person.dart';
 import 'package:runnoter/domain/additional_model/cubit_status.dart';
 import 'package:runnoter/domain/cubit/profile/coach/profile_coach_cubit.dart';
 import 'package:runnoter/domain/entity/person.dart';
+import 'package:runnoter/domain/entity/user.dart';
 import 'package:runnoter/domain/repository/person_repository.dart';
 import 'package:runnoter/domain/repository/user_repository.dart';
 import 'package:runnoter/domain/service/auth_service.dart';
 import 'package:runnoter/domain/service/coaching_request_service.dart';
+import 'package:runnoter/domain/use_case/get_received_coaching_requests_with_sender_info_use_case.dart';
+import 'package:runnoter/domain/use_case/get_sent_coaching_requests_with_receiver_info_use_case.dart';
 import 'package:runnoter/domain/use_case/load_chat_id_use_case.dart';
+import 'package:rxdart/rxdart.dart';
 
-import '../../../../creators/coaching_request_creator.dart';
 import '../../../../creators/person_creator.dart';
 import '../../../../creators/user_creator.dart';
 import '../../../../mock/domain/repository/mock_person_repository.dart';
 import '../../../../mock/domain/repository/mock_user_repository.dart';
 import '../../../../mock/domain/service/mock_auth_service.dart';
 import '../../../../mock/domain/service/mock_coaching_request_service.dart';
+import '../../../../mock/domain/use_case/mock_get_received_coaching_requests_with_sender_info_use_case.dart';
+import '../../../../mock/domain/use_case/mock_get_sent_coaching_requests_with_receiver_info_use_case.dart';
 import '../../../../mock/domain/use_case/mock_load_chat_id_use_case.dart';
 
 void main() {
@@ -30,6 +35,10 @@ void main() {
   final personRepository = MockPersonRepository();
   final coachingRequestService = MockCoachingRequestService();
   final loadChatIdUseCase = MockLoadChatIdUseCase();
+  final getSentCoachingRequestsWithReceiverInfoUseCase =
+      MockGetSentCoachingRequestsWithReceiverInfoUseCase();
+  final getReceivedCoachingRequestsWithSenderInfoUseCase =
+      MockGetReceivedCoachingRequestsWithSenderInfoUseCase();
   const String loggedUserId = 'u1';
 
   setUpAll(() {
@@ -40,6 +49,12 @@ void main() {
       () => coachingRequestService,
     );
     GetIt.I.registerFactory<LoadChatIdUseCase>(() => loadChatIdUseCase);
+    GetIt.I.registerFactory<GetSentCoachingRequestsWithReceiverInfoUseCase>(
+      () => getSentCoachingRequestsWithReceiverInfoUseCase,
+    );
+    GetIt.I.registerFactory<GetReceivedCoachingRequestsWithSenderInfoUseCase>(
+      () => getReceivedCoachingRequestsWithSenderInfoUseCase,
+    );
   });
 
   tearDown(() {
@@ -48,364 +63,168 @@ void main() {
     reset(personRepository);
     reset(coachingRequestService);
     reset(loadChatIdUseCase);
+    reset(getSentCoachingRequestsWithReceiverInfoUseCase);
+    reset(getReceivedCoachingRequestsWithSenderInfoUseCase);
   });
 
   blocTest(
-    'initialize coach listener, '
+    'initialize, '
     'logged user does not exist, '
     'should do nothing',
     build: () => ProfileCoachCubit(),
     setUp: () => authService.mockGetLoggedUserId(),
-    act: (cubit) => cubit.initializeCoachListener(),
+    act: (cubit) => cubit.initialize(),
     expect: () => [],
     verify: (_) => verify(() => authService.loggedUserId$).called(1),
   );
 
   group(
-    'initialize coach listener, '
-    'coach is not null',
+    'initialize, ',
     () {
-      final Person expectedCoach = createPerson(
+      final User loggedUser = createUser(id: loggedUserId);
+      final User updatedLoggedUser = createUser(
+        id: loggedUserId,
+        coachId: 'c1',
+      );
+      final Person coach = createPerson(
         id: 'c1',
         name: 'name',
         surname: 'surname',
         email: 'email',
       );
-      final Person expectedUpdatedCoach = createPerson(
+      final Person updatedCoach = createPerson(
         id: 'c1',
         name: 'na',
         surname: 'su',
         email: 'em',
       );
-      final StreamController<Person?> coach$ = StreamController()
-        ..add(expectedCoach);
+      final sentRequests = [
+        CoachingRequestWithPerson(id: 'r1', person: createPerson(id: 'p1')),
+      ];
+      final updatedSentRequests = [
+        ...sentRequests,
+        CoachingRequestWithPerson(id: 'r2', person: createPerson(id: 'p2')),
+      ];
+      final receivedRequests = [
+        CoachingRequestWithPerson(id: 'r3', person: createPerson(id: 'p3')),
+      ];
+      final updatedReceivedRequests = [
+        ...receivedRequests,
+        CoachingRequestWithPerson(id: 'r4', person: createPerson(id: 'p4')),
+      ];
+      final StreamController<User> loggedUser$ = StreamController()
+        ..add(loggedUser);
+      final StreamController<Person?> coach$ = StreamController()..add(coach);
+      final StreamController<List<CoachingRequestWithPerson>> sentRequests$ =
+          BehaviorSubject.seeded(sentRequests);
+      final StreamController<List<CoachingRequestWithPerson>>
+          receivedRequests$ = BehaviorSubject.seeded(receivedRequests);
 
       blocTest(
-        'should set listener of coach',
+        'should listen to logged user data, '
+        'if logged user has a coach should only listen to coach data '
+        'else should only listen to sent and received coaching requests',
         build: () => ProfileCoachCubit(),
         setUp: () {
           authService.mockGetLoggedUserId(userId: loggedUserId);
-          userRepository.mockGetUserById(
-            user: createUser(coachId: expectedCoach.id),
-          );
+          userRepository.mockGetUserById(userStream: loggedUser$.stream);
           personRepository.mockGetPersonById(personStream: coach$.stream);
-        },
-        act: (cubit) {
-          cubit.initializeCoachListener();
-          coach$.add(expectedUpdatedCoach);
-        },
-        expect: () => [
-          ProfileCoachState(
-            status: const CubitStatusComplete(),
-            coachId: expectedCoach.id,
-            coachFullName: '${expectedCoach.name} ${expectedCoach.surname}',
-            coachEmail: expectedCoach.email,
-          ),
-          ProfileCoachState(
-            status: const CubitStatusComplete(),
-            coachId: expectedUpdatedCoach.id,
-            coachFullName:
-                '${expectedUpdatedCoach.name} ${expectedUpdatedCoach.surname}',
-            coachEmail: expectedUpdatedCoach.email,
-          ),
-        ],
-        verify: (_) {
-          verify(() => authService.loggedUserId$).called(1);
-          verify(
-            () => userRepository.getUserById(userId: loggedUserId),
-          ).called(1);
-          verify(
-            () => personRepository.getPersonById(personId: expectedCoach.id),
-          ).called(1);
-        },
-      );
-    },
-  );
-
-  group(
-    'initialize coach listener, '
-    'coach is null',
-    () {
-      final Person person1 = createPerson(id: 'p1');
-      final Person person2 = createPerson(id: 'p2');
-      final sentRequests = [
-        createCoachingRequest(id: 'r1', receiverId: person1.id),
-      ];
-      final receivedRequests = [
-        createCoachingRequest(id: 'r2', senderId: person2.id),
-      ];
-      final sentRequestDetails = [
-        CoachingRequestShort(id: 'r1', personToDisplay: person1),
-      ];
-      final receivedRequestDetails = [
-        CoachingRequestShort(id: 'r2', personToDisplay: person2),
-      ];
-      final StreamController<List<CoachingRequest>> sentRequests$ =
-          StreamController()..add(sentRequests);
-      final StreamController<List<CoachingRequest>> receivedRequests$ =
-          StreamController()..add(receivedRequests);
-
-      blocTest(
-        'should set listener of sent and received requests',
-        build: () => ProfileCoachCubit(),
-        setUp: () {
-          authService.mockGetLoggedUserId(userId: loggedUserId);
-          userRepository.mockGetUserById(user: createUser(coachId: null));
-          coachingRequestService.mockGetCoachingRequestsBySenderId(
-            requestsStream: sentRequests$.stream,
+          getSentCoachingRequestsWithReceiverInfoUseCase.mock(
+            requests$: sentRequests$.stream,
           );
-          coachingRequestService.mockGetCoachingRequestsByReceiverId(
-            requestsStream: receivedRequests$.stream,
+          getReceivedCoachingRequestsWithSenderInfoUseCase.mock(
+            requests$: receivedRequests$.stream,
           );
-          when(
-            () => personRepository.getPersonById(personId: person1.id),
-          ).thenAnswer((_) => Stream.value(person1));
-          when(
-            () => personRepository.getPersonById(personId: person2.id),
-          ).thenAnswer((_) => Stream.value(person2));
         },
         act: (cubit) async {
-          cubit.initializeCoachListener();
-          sentRequests$.add([]);
-          receivedRequests$.add([]);
-        },
-        expect: () => [
-          const ProfileCoachState(status: CubitStatusComplete()),
-          ProfileCoachState(
-            status: const CubitStatusComplete(),
-            sentRequests: sentRequestDetails,
-            receivedRequests: receivedRequestDetails,
-          ),
-          ProfileCoachState(
-            status: const CubitStatusComplete(),
-            sentRequests: const [],
-            receivedRequests: receivedRequestDetails,
-          ),
-          const ProfileCoachState(
-            status: CubitStatusComplete(),
-            sentRequests: [],
-            receivedRequests: [],
-          ),
-        ],
-        verify: (_) {
-          verify(() => authService.loggedUserId$).called(2);
-          verify(
-            () => userRepository.getUserById(userId: loggedUserId),
-          ).called(1);
-          verify(
-            () => coachingRequestService.getCoachingRequestsBySenderId(
-              senderId: loggedUserId,
-              direction: CoachingRequestDirection.clientToCoach,
-            ),
-          ).called(1);
-          verify(
-            () => coachingRequestService.getCoachingRequestsByReceiverId(
-              receiverId: loggedUserId,
-              direction: CoachingRequestDirection.coachToClient,
-            ),
-          ).called(1);
-          verify(
-            () => personRepository.getPersonById(personId: person1.id),
-          ).called(1);
-          verify(
-            () => personRepository.getPersonById(personId: person2.id),
-          ).called(1);
-        },
-      );
-    },
-  );
-
-  group(
-    'initialize requests listener, ',
-    () {
-      final Person person1 = createPerson(id: 'u2');
-      final Person person2 = createPerson(id: 'u3');
-      final sentRequests = [
-        createCoachingRequest(id: 'r1', receiverId: person1.id),
-      ];
-      final receivedRequests = [
-        createCoachingRequest(id: 'r2', senderId: person2.id),
-      ];
-      final sentRequestDetails = [
-        CoachingRequestShort(id: 'r1', personToDisplay: person1),
-      ];
-      final receivedRequestDetails = [
-        CoachingRequestShort(id: 'r2', personToDisplay: person2),
-      ];
-      final StreamController<List<CoachingRequest>> sentRequests$ =
-          StreamController()..add(sentRequests);
-      final StreamController<List<CoachingRequest>> receivedRequests$ =
-          StreamController()..add(receivedRequests);
-
-      blocTest(
-        'should set listener of sent and received coaching requests',
-        build: () => ProfileCoachCubit(),
-        setUp: () {
-          authService.mockGetLoggedUserId(userId: loggedUserId);
-          when(
-            () => coachingRequestService.getCoachingRequestsBySenderId(
-              senderId: loggedUserId,
-              direction: CoachingRequestDirection.clientToCoach,
-            ),
-          ).thenAnswer((_) => sentRequests$.stream);
-          when(
-            () => coachingRequestService.getCoachingRequestsByReceiverId(
-              receiverId: loggedUserId,
-              direction: CoachingRequestDirection.coachToClient,
-            ),
-          ).thenAnswer((_) => receivedRequests$.stream);
-          when(
-            () => personRepository.getPersonById(personId: person1.id),
-          ).thenAnswer((_) => Stream.value(person1));
-          when(
-            () => personRepository.getPersonById(personId: person2.id),
-          ).thenAnswer((_) => Stream.value(person2));
-        },
-        act: (cubit) async {
-          cubit.initializeRequestsListener();
-          sentRequests$.add([]);
-          receivedRequests$.add([]);
-        },
-        expect: () => [
-          ProfileCoachState(
-            status: const CubitStatusComplete(),
-            sentRequests: sentRequestDetails,
-            receivedRequests: receivedRequestDetails,
-          ),
-          ProfileCoachState(
-            status: const CubitStatusComplete(),
-            sentRequests: const [],
-            receivedRequests: receivedRequestDetails,
-          ),
-          const ProfileCoachState(
-            status: CubitStatusComplete(),
-            sentRequests: [],
-            receivedRequests: [],
-          ),
-        ],
-        verify: (_) {
-          verify(() => authService.loggedUserId$).called(1);
-          verify(
-            () => coachingRequestService.getCoachingRequestsBySenderId(
-              senderId: loggedUserId,
-              direction: CoachingRequestDirection.clientToCoach,
-            ),
-          ).called(1);
-          verify(
-            () => coachingRequestService.getCoachingRequestsByReceiverId(
-              receiverId: loggedUserId,
-              direction: CoachingRequestDirection.coachToClient,
-            ),
-          ).called(1);
-          verify(
-            () => personRepository.getPersonById(personId: person1.id),
-          ).called(1);
-          verify(
-            () => personRepository.getPersonById(personId: person2.id),
-          ).called(1);
-        },
-      );
-    },
-  );
-
-  group(
-    'remove requests listener, ',
-    () {
-      final Person person1 = createPerson(id: 'p1');
-      final Person person2 = createPerson(id: 'p2');
-      final sentRequests = [
-        createCoachingRequest(id: 'r1', receiverId: person1.id),
-      ];
-      final receivedRequests = [
-        createCoachingRequest(id: 'r2', senderId: person2.id),
-      ];
-      final StreamController<List<CoachingRequest>> sentRequests$ =
-          StreamController()..add(sentRequests);
-      final StreamController<List<CoachingRequest>> receivedRequests$ =
-          StreamController()..add(receivedRequests);
-
-      blocTest(
-        'should remove listener of sent and received coaching requests',
-        build: () => ProfileCoachCubit(),
-        setUp: () {
-          authService.mockGetLoggedUserId(userId: loggedUserId);
-          when(
-            () => coachingRequestService.getCoachingRequestsBySenderId(
-              senderId: loggedUserId,
-              direction: CoachingRequestDirection.clientToCoach,
-            ),
-          ).thenAnswer((_) => sentRequests$.stream);
-          when(
-            () => coachingRequestService.getCoachingRequestsByReceiverId(
-              receiverId: loggedUserId,
-              direction: CoachingRequestDirection.coachToClient,
-            ),
-          ).thenAnswer((_) => receivedRequests$.stream);
-          when(
-            () => personRepository.getPersonById(personId: person1.id),
-          ).thenAnswer((_) => Stream.value(person1));
-          when(
-            () => personRepository.getPersonById(personId: person2.id),
-          ).thenAnswer((_) => Stream.value(person2));
-        },
-        act: (cubit) async {
-          cubit.initializeRequestsListener();
+          cubit.initialize();
           await cubit.stream.first;
-          cubit.removeRequestsListener();
-          sentRequests$.add([]);
-          receivedRequests$.add([]);
+          sentRequests$.add(updatedSentRequests);
+          await cubit.stream.first;
+          receivedRequests$.add(updatedReceivedRequests);
+          await cubit.stream.first;
+          loggedUser$.add(updatedLoggedUser);
+          await cubit.stream.first;
+          coach$.add(updatedCoach);
+          await cubit.stream.first;
+          loggedUser$.add(loggedUser);
         },
         expect: () => [
           ProfileCoachState(
             status: const CubitStatusComplete(),
-            sentRequests: [
-              CoachingRequestShort(id: 'r1', personToDisplay: person1),
-            ],
-            receivedRequests: [
-              CoachingRequestShort(id: 'r2', personToDisplay: person2),
-            ],
+            sentRequests: sentRequests,
+            receivedRequests: receivedRequests,
+          ),
+          ProfileCoachState(
+            status: const CubitStatusComplete(),
+            sentRequests: updatedSentRequests,
+            receivedRequests: receivedRequests,
+          ),
+          ProfileCoachState(
+            status: const CubitStatusComplete(),
+            sentRequests: updatedSentRequests,
+            receivedRequests: updatedReceivedRequests,
+          ),
+          ProfileCoachState(
+            status: const CubitStatusComplete(),
+            coachId: coach.id,
+            coachFullName: '${coach.name} ${coach.surname}',
+            coachEmail: coach.email,
+          ),
+          ProfileCoachState(
+            status: const CubitStatusComplete(),
+            coachId: updatedCoach.id,
+            coachFullName: '${updatedCoach.name} ${updatedCoach.surname}',
+            coachEmail: updatedCoach.email,
+          ),
+          ProfileCoachState(
+            status: const CubitStatusComplete(),
+            sentRequests: updatedSentRequests,
+            receivedRequests: updatedReceivedRequests,
           ),
         ],
         verify: (_) {
           verify(() => authService.loggedUserId$).called(1);
           verify(
-            () => coachingRequestService.getCoachingRequestsBySenderId(
+            () => userRepository.getUserById(userId: loggedUserId),
+          ).called(1);
+          verify(
+            () => personRepository.getPersonById(personId: 'c1'),
+          ).called(1);
+          verify(
+            () => getSentCoachingRequestsWithReceiverInfoUseCase.execute(
               senderId: loggedUserId,
-              direction: CoachingRequestDirection.clientToCoach,
+              requestDirection: CoachingRequestDirection.clientToCoach,
+              requestStatuses: SentCoachingRequestStatuses.onlyUnaccepted,
             ),
-          ).called(1);
+          ).called(2);
           verify(
-            () => coachingRequestService.getCoachingRequestsByReceiverId(
+            () => getReceivedCoachingRequestsWithSenderInfoUseCase.execute(
               receiverId: loggedUserId,
-              direction: CoachingRequestDirection.coachToClient,
+              requestDirection: CoachingRequestDirection.coachToClient,
+              requestStatuses: ReceivedCoachingRequestStatuses.onlyUnaccepted,
             ),
-          ).called(1);
-          verify(
-            () => personRepository.getPersonById(personId: person1.id),
-          ).called(1);
-          verify(
-            () => personRepository.getPersonById(personId: person2.id),
-          ).called(1);
+          ).called(2);
         },
       );
     },
   );
 
   blocTest(
-    'accept request, '
+    'acceptRequest, '
     'logged user does not exist, '
     'should emit no logged user info',
     build: () => ProfileCoachCubit(
       initialState: ProfileCoachState(
         status: const CubitStatusComplete(),
         receivedRequests: [
-          CoachingRequestShort(
+          CoachingRequestWithPerson(
             id: 'r2',
-            personToDisplay: createPerson(id: 'u2'),
+            person: createPerson(id: 'u2'),
           ),
-          CoachingRequestShort(
+          CoachingRequestWithPerson(
             id: 'r1',
-            personToDisplay: createPerson(id: 'u3'),
+            person: createPerson(id: 'u3'),
           ),
         ],
       ),
@@ -416,13 +235,13 @@ void main() {
       ProfileCoachState(
         status: const CubitStatusNoLoggedUser(),
         receivedRequests: [
-          CoachingRequestShort(
+          CoachingRequestWithPerson(
             id: 'r2',
-            personToDisplay: createPerson(id: 'u2'),
+            person: createPerson(id: 'u2'),
           ),
-          CoachingRequestShort(
+          CoachingRequestWithPerson(
             id: 'r1',
-            personToDisplay: createPerson(id: 'u3'),
+            person: createPerson(id: 'u3'),
           ),
         ],
       ),
@@ -431,20 +250,20 @@ void main() {
   );
 
   blocTest(
-    'accept request, '
+    'acceptRequest, '
     "should call coaching request service's method to update request with isAccepted param set as true, "
     "should call user repository's method to update logged user with new coach id",
     build: () => ProfileCoachCubit(
       initialState: ProfileCoachState(
         status: const CubitStatusComplete(),
         receivedRequests: [
-          CoachingRequestShort(
+          CoachingRequestWithPerson(
             id: 'r2',
-            personToDisplay: createPerson(id: 'u2'),
+            person: createPerson(id: 'u2'),
           ),
-          CoachingRequestShort(
+          CoachingRequestWithPerson(
             id: 'r1',
-            personToDisplay: createPerson(id: 'u3'),
+            person: createPerson(id: 'u3'),
           ),
         ],
       ),
@@ -459,13 +278,13 @@ void main() {
       ProfileCoachState(
         status: const CubitStatusLoading(),
         receivedRequests: [
-          CoachingRequestShort(
+          CoachingRequestWithPerson(
             id: 'r2',
-            personToDisplay: createPerson(id: 'u2'),
+            person: createPerson(id: 'u2'),
           ),
-          CoachingRequestShort(
+          CoachingRequestWithPerson(
             id: 'r1',
-            personToDisplay: createPerson(id: 'u3'),
+            person: createPerson(id: 'u3'),
           ),
         ],
       ),
@@ -474,13 +293,13 @@ void main() {
           info: ProfileCoachCubitInfo.requestAccepted,
         ),
         receivedRequests: [
-          CoachingRequestShort(
+          CoachingRequestWithPerson(
             id: 'r2',
-            personToDisplay: createPerson(id: 'u2'),
+            person: createPerson(id: 'u2'),
           ),
-          CoachingRequestShort(
+          CoachingRequestWithPerson(
             id: 'r1',
-            personToDisplay: createPerson(id: 'u3'),
+            person: createPerson(id: 'u3'),
           ),
         ],
       ),
@@ -500,7 +319,7 @@ void main() {
   );
 
   blocTest(
-    'delete request, '
+    'deleteRequest, '
     'coach to client'
     "should call coaching request service's method to delete request, "
     'should emit requestDeleted info',
@@ -524,7 +343,7 @@ void main() {
   );
 
   blocTest(
-    'delete request, '
+    'deleteRequest, '
     'client to coach'
     "should call coaching request service's method to delete request, "
     'should emit requestUndid info',
@@ -547,8 +366,61 @@ void main() {
     ).called(1),
   );
 
+  test(
+    'loadChatId, '
+    'coach id does not exist, '
+    'should return null',
+    () async {
+      authService.mockGetLoggedUserId();
+      final cubit = ProfileCoachCubit();
+
+      final String? chatId = await cubit.loadChatId();
+
+      expect(chatId, null);
+    },
+  );
+
+  test(
+    'loadChatId, '
+    'logged user does not exist, '
+    'should return null',
+    () async {
+      authService.mockGetLoggedUserId();
+      final cubit = ProfileCoachCubit(
+        initialState: const ProfileCoachState(
+          status: CubitStatusInitial(),
+          coachId: 'c1',
+        ),
+      );
+
+      final String? chatId = await cubit.loadChatId();
+
+      expect(chatId, null);
+    },
+  );
+
+  test(
+    'loadChatId, '
+    'should call use case to load chat id and return loaded chat id',
+    () async {
+      const String expectedChatId = 'c1';
+      authService.mockGetLoggedUserId(userId: loggedUserId);
+      loadChatIdUseCase.mock(chatId: expectedChatId);
+      final cubit = ProfileCoachCubit(
+        initialState: const ProfileCoachState(
+          status: CubitStatusInitial(),
+          coachId: 'c1',
+        ),
+      );
+
+      final String? chatId = await cubit.loadChatId();
+
+      expect(chatId, expectedChatId);
+    },
+  );
+
   blocTest(
-    'delete coach, '
+    'deleteCoach, '
     'coachId is null, '
     'should do nothing',
     build: () => ProfileCoachCubit(),
@@ -557,7 +429,7 @@ void main() {
   );
 
   blocTest(
-    'delete coach, '
+    'deleteCoach, '
     'logged user does not exist, '
     'should emit no logged user status',
     build: () => ProfileCoachCubit(
@@ -578,7 +450,7 @@ void main() {
   );
 
   blocTest(
-    'delete coach, '
+    'deleteCoach, '
     'should call user repository method to update user with coach id set as null, '
     'should call coaching request service method to delete request between logged user and coach, '
     'should emit coachDeleted info',
@@ -617,59 +489,6 @@ void main() {
           user2Id: 'c1',
         ),
       ).called(1);
-    },
-  );
-
-  test(
-    'load chat id, '
-    'coach id does not exist, '
-    'should return null',
-    () async {
-      authService.mockGetLoggedUserId();
-      final cubit = ProfileCoachCubit();
-
-      final String? chatId = await cubit.loadChatId();
-
-      expect(chatId, null);
-    },
-  );
-
-  test(
-    'load chat id, '
-    'logged user does not exist, '
-    'should return null',
-    () async {
-      authService.mockGetLoggedUserId();
-      final cubit = ProfileCoachCubit(
-        initialState: const ProfileCoachState(
-          status: CubitStatusInitial(),
-          coachId: 'c1',
-        ),
-      );
-
-      final String? chatId = await cubit.loadChatId();
-
-      expect(chatId, null);
-    },
-  );
-
-  test(
-    'load chat id, '
-    'should call use case to load chat id and return loaded chat id',
-    () async {
-      const String expectedChatId = 'c1';
-      authService.mockGetLoggedUserId(userId: loggedUserId);
-      loadChatIdUseCase.mock(chatId: expectedChatId);
-      final cubit = ProfileCoachCubit(
-        initialState: const ProfileCoachState(
-          status: CubitStatusInitial(),
-          coachId: 'c1',
-        ),
-      );
-
-      final String? chatId = await cubit.loadChatId();
-
-      expect(chatId, expectedChatId);
     },
   );
 }

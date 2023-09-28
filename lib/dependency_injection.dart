@@ -27,6 +27,8 @@ import 'domain/service/auth_service.dart';
 import 'domain/service/coaching_request_service.dart';
 import 'domain/service/connectivity_service.dart';
 import 'domain/use_case/add_user_data_use_case.dart';
+import 'domain/use_case/get_received_coaching_requests_with_sender_info_use_case.dart';
+import 'domain/use_case/get_sent_coaching_requests_with_receiver_info_use_case.dart';
 import 'domain/use_case/load_chat_id_use_case.dart';
 import 'presentation/config/body_sizes.dart';
 import 'presentation/config/navigation/router.dart';
@@ -103,4 +105,8 @@ void _registerRepositories() {
 void _registerUseCases() {
   getIt.registerFactory(() => AddUserDataUseCase());
   getIt.registerFactory(() => LoadChatIdUseCase());
+  getIt.registerFactory(() => GetSentCoachingRequestsWithReceiverInfoUseCase());
+  getIt.registerFactory(
+    () => GetReceivedCoachingRequestsWithSenderInfoUseCase(),
+  );
 }
