@@ -5,7 +5,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/single_child_widget.dart';
 
 import '../../../dependency_injection.dart';
-import '../../../domain/additional_model/coaching_request_short.dart';
+import '../../../domain/additional_model/coaching_request_with_person.dart';
 import '../../../domain/additional_model/cubit_status.dart';
 import '../../../domain/additional_model/settings.dart' as settings;
 import '../../../domain/cubit/calendar/calendar_cubit.dart';
@@ -145,13 +145,13 @@ class _NotificationsCubitListener extends SingleChildStatelessWidget {
 
   void _manageAcceptedClientRequests(
     BuildContext context,
-    List<CoachingRequestShort> acceptedClientRequests,
+    List<CoachingRequestWithPerson> acceptedClientRequests,
   ) {
     if (acceptedClientRequests.isNotEmpty) {
       for (final request in acceptedClientRequests) {
         showSnackbarMessage(
           Str.of(context).homeNewClientInfo(
-            request.personToDisplay.toFullNameWithEmail(),
+            request.person.toFullNameWithEmail(),
           ),
           showCloseIcon: true,
           duration: const Duration(seconds: 6),
@@ -163,12 +163,12 @@ class _NotificationsCubitListener extends SingleChildStatelessWidget {
 
   void _manageAcceptedCoachRequest(
     BuildContext context,
-    CoachingRequestShort? request,
+    CoachingRequestWithPerson? request,
   ) {
     if (request != null) {
       showSnackbarMessage(
         Str.of(context).homeNewCoachInfo(
-          request.personToDisplay.toFullNameWithEmail(),
+          request.person.toFullNameWithEmail(),
         ),
         showCloseIcon: true,
         duration: const Duration(seconds: 6),

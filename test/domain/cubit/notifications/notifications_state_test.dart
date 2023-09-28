@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:runnoter/domain/additional_model/coaching_request_short.dart';
+import 'package:runnoter/domain/additional_model/coaching_request_with_person.dart';
 import 'package:runnoter/domain/cubit/notifications/notifications_cubit.dart';
 
 import '../../../creators/person_creator.dart';
@@ -13,14 +13,14 @@ void main() {
     'copy with acceptedClientRequests, '
     'should set new value or should set empty array if new value is null',
     () {
-      final List<CoachingRequestShort> expected = [
-        CoachingRequestShort(
+      final List<CoachingRequestWithPerson> expected = [
+        CoachingRequestWithPerson(
           id: 'cr1',
-          personToDisplay: createPerson(id: 'p1'),
+          person: createPerson(id: 'p1'),
         ),
-        CoachingRequestShort(
+        CoachingRequestWithPerson(
           id: 'cr2',
-          personToDisplay: createPerson(id: 'p2'),
+          person: createPerson(id: 'p2'),
         ),
       ];
 
@@ -36,9 +36,9 @@ void main() {
     'copy with acceptedCoachReq, '
     'should set new value or should set null if new value is null',
     () {
-      final CoachingRequestShort expected = CoachingRequestShort(
+      final CoachingRequestWithPerson expected = CoachingRequestWithPerson(
         id: 'cr1',
-        personToDisplay: createPerson(id: 'p1'),
+        person: createPerson(id: 'p1'),
       );
 
       state = state.copyWith(acceptedCoachRequest: expected);

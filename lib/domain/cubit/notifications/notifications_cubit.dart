@@ -1,13 +1,12 @@
 import 'dart:async';
 
-import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../../dependency_injection.dart';
 import '../../additional_model/coaching_request.dart';
-import '../../additional_model/coaching_request_short.dart';
+import '../../additional_model/coaching_request_with_person.dart';
 import '../../entity/person.dart';
 import '../../entity/user.dart';
 import '../../repository/chat_repository.dart';
@@ -16,6 +15,7 @@ import '../../repository/person_repository.dart';
 import '../../repository/user_repository.dart';
 import '../../service/auth_service.dart';
 import '../../service/coaching_request_service.dart';
+import '../../use_case/get_sent_coaching_requests_with_receiver_info_use_case.dart';
 
 part 'notifications_state.dart';
 
@@ -24,6 +24,8 @@ class NotificationsCubit extends Cubit<NotificationsState> {
   final CoachingRequestService _coachingRequestService;
   final UserRepository _userRepository;
   final PersonRepository _personRepository;
+  final GetSentCoachingRequestsWithReceiverInfoUseCase
+      _getSentCoachingRequestsWithReceiverInfoUseCase;
   final ChatRepository _chatRepository;
   final MessageRepository _messageRepository;
   StreamSubscription<NotificationsState>? _acceptedRequestsListener;
@@ -35,6 +37,8 @@ class NotificationsCubit extends Cubit<NotificationsState> {
         _coachingRequestService = getIt<CoachingRequestService>(),
         _userRepository = getIt<UserRepository>(),
         _personRepository = getIt<PersonRepository>(),
+        _getSentCoachingRequestsWithReceiverInfoUseCase =
+            getIt<GetSentCoachingRequestsWithReceiverInfoUseCase>(),
         _chatRepository = getIt<ChatRepository>(),
         _messageRepository = getIt<MessageRepository>(),
         super(const NotificationsState());
@@ -60,8 +64,8 @@ class NotificationsCubit extends Cubit<NotificationsState> {
                     ? _getAcceptedClientReqs(loggedUser.id)
                     : Stream.value(null),
                 (
-                  CoachingRequestShort? acceptedCoachReq,
-                  List<CoachingRequestShort>? acceptedClientReqs,
+                  CoachingRequestWithPerson? acceptedCoachReq,
+                  List<CoachingRequestWithPerson>? acceptedClientReqs,
                 ) =>
                     state.copyWith(
                   acceptedClientRequests: acceptedClientReqs,
@@ -136,43 +140,37 @@ class NotificationsCubit extends Cubit<NotificationsState> {
             : Stream.value(null),
       );
 
-  Stream<CoachingRequestShort?> _getAcceptedCoachReq(String loggedUserId) =>
-      _coachingRequestService
-          .getCoachingRequestsBySenderId(
+  Stream<CoachingRequestWithPerson?> _getAcceptedCoachReq(
+    String loggedUserId,
+  ) =>
+      _getSentCoachingRequestsWithReceiverInfoUseCase
+          .execute(
             senderId: loggedUserId,
-            direction: CoachingRequestDirection.clientToCoach,
+            requestDirection: CoachingRequestDirection.clientToCoach,
+            requestStatuses: SentCoachingRequestStatuses.onlyAccepted,
           )
-          .map((reqs) => reqs.firstWhereOrNull((req) => req.isAccepted))
+          .map((reqs) => reqs.isNotEmpty ? reqs.first : null)
           .doOnData(
             (req) => req != null
                 ? _userRepository.refreshUserById(userId: loggedUserId)
                 : null,
-          )
-          .switchMap(
-            (req) => req != null ? _shortenReq(req) : Stream.value(null),
           );
 
-  Stream<List<CoachingRequestShort>> _getAcceptedClientReqs(
+  Stream<List<CoachingRequestWithPerson>> _getAcceptedClientReqs(
     String loggedUserId,
   ) =>
-      _coachingRequestService
-          .getCoachingRequestsBySenderId(
+      _getSentCoachingRequestsWithReceiverInfoUseCase
+          .execute(
             senderId: loggedUserId,
-            direction: CoachingRequestDirection.coachToClient,
+            requestDirection: CoachingRequestDirection.coachToClient,
+            requestStatuses: SentCoachingRequestStatuses.onlyAccepted,
           )
-          .map((reqs) => reqs.where((req) => req.isAccepted))
           .doOnData(
-            (acceptedReqs) => acceptedReqs.isNotEmpty
+            (reqs) => reqs.isNotEmpty
                 ? _personRepository.refreshPersonsByCoachId(
                     coachId: loggedUserId,
                   )
                 : null,
-          )
-          .map((acceptedReqs) => acceptedReqs.map(_shortenReq))
-          .switchMap(
-            (acceptedReqs$) => acceptedReqs$.isEmpty
-                ? Stream.value([])
-                : Rx.combineLatest(acceptedReqs$, (reqs) => reqs),
           );
 
   Stream<int> _getNumberOfReqsFromCoaches(String loggedUserId) =>
@@ -226,15 +224,5 @@ class NotificationsCubit extends Cubit<NotificationsState> {
         (List<Stream<String?>> ids$) => ids$.isEmpty
             ? Stream.value(const [])
             : Rx.combineLatest(ids$, (ids) => ids.whereType<String>().toList()),
-      );
-
-  Stream<CoachingRequestShort> _shortenReq(CoachingRequest request) =>
-      Rx.combineLatest2(
-        Stream.value(request.id),
-        _personRepository
-            .getPersonById(personId: request.receiverId)
-            .whereNotNull(),
-        (String reqId, Person receiver) =>
-            CoachingRequestShort(id: reqId, personToDisplay: receiver),
       );
 }
