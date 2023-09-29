@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../../component/body/big_body_component.dart';
-import '../../component/card_body_component.dart';
-import '../../component/gap/gap_components.dart';
-import '../../component/padding/paddings_24.dart';
-import '../../component/responsive_layout_component.dart';
+import '../../../component/body/big_body_component.dart';
+import '../../../component/card_body_component.dart';
+import '../../../component/gap/gap_components.dart';
+import '../../../component/padding/paddings_24.dart';
+import '../../../component/responsive_layout_component.dart';
 import 'client_stats_health.dart';
 import 'client_stats_mileage.dart';
 
