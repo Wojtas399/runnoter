@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
 
-import '../config/screen_sizes.dart';
+import '../extension/context_extensions.dart';
 
 class ResponsiveLayout extends StatelessWidget {
   final Widget mobileBody;
@@ -17,13 +16,9 @@ class ResponsiveLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ScreenSizes screenSizes = GetIt.I.get<ScreenSizes>();
-    final int maxMobileWidth = screenSizes.maxMobileWidth;
-    final int maxTabletWidth = screenSizes.maxTabletWidth;
-    final double screenWidth = MediaQuery.of(context).size.width;
-    if (screenWidth <= maxMobileWidth) {
+    if (context.isMobileSize) {
       return mobileBody;
-    } else if (screenWidth <= maxTabletWidth) {
+    } else if (context.isTabletSize) {
       return tabletBody ?? desktopBody;
     } else {
       return desktopBody;

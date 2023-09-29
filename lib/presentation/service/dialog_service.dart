@@ -9,8 +9,8 @@ import '../component/dialog/message_dialog_component.dart';
 import '../component/dialog/value_dialog_component.dart';
 import '../config/animation/slide_to_top_anim.dart';
 import '../config/navigation/router.dart';
-import '../dialog/reauthentication/reauthentication_dialog.dart';
 import '../extension/context_extensions.dart';
+import '../feature/dialog/reauthentication/reauthentication_dialog.dart';
 
 bool _isLoadingDialogOpened = false;
 
