@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/cubit/workout_stage_creator/workout_stage_creator_cubit.dart';
-import '../../component/gap/gap_horizontal_components.dart';
-import '../../component/responsive_layout_component.dart';
-import '../../service/navigator_service.dart';
+import '../../../../domain/cubit/workout_stage_creator/workout_stage_creator_cubit.dart';
+import '../../../component/gap/gap_horizontal_components.dart';
+import '../../../component/responsive_layout_component.dart';
+import '../../../service/navigator_service.dart';
 import 'workout_stage_creator_form.dart';
 
 class WorkoutStageCreatorContent extends StatelessWidget {
