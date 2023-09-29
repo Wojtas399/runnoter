@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../common/date_service.dart';
-import '../../../dependency_injection.dart';
-import '../../../domain/cubit/chat/chat_cubit.dart';
-import '../../component/empty_content_info_component.dart';
-import '../../component/gap/gap_horizontal_components.dart';
-import '../../component/loading_info_component.dart';
-import '../../component/padding/paddings_24.dart';
-import '../../component/text/label_text_components.dart';
-import '../../extension/context_extensions.dart';
-import '../../formatter/date_formatter.dart';
+import '../../../../common/date_service.dart';
+import '../../../../dependency_injection.dart';
+import '../../../../domain/cubit/chat/chat_cubit.dart';
+import '../../../component/empty_content_info_component.dart';
+import '../../../component/gap/gap_horizontal_components.dart';
+import '../../../component/loading_info_component.dart';
+import '../../../component/padding/paddings_24.dart';
+import '../../../component/text/label_text_components.dart';
+import '../../../extension/context_extensions.dart';
+import '../../../formatter/date_formatter.dart';
 import 'chat_message_item.dart';
 
 class ChatMessages extends StatelessWidget {

@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
-import '../../component/gap/gap_horizontal_components.dart';
+import '../../../component/gap/gap_horizontal_components.dart';
 import 'chat_message_card.dart';
 
 class ChatTypingIndicator extends StatefulWidget {

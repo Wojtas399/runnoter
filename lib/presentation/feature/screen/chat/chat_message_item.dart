@@ -3,17 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
-import '../../../domain/cubit/chat/chat_cubit.dart';
-import '../../../domain/entity/message.dart';
-import '../../../domain/entity/message_image.dart';
-import '../../component/gap/gap_components.dart';
-import '../../component/gap/gap_horizontal_components.dart';
-import '../../component/text/body_text_components.dart';
-import '../../component/text/label_text_components.dart';
-import '../../extension/widgets_list_extensions.dart';
-import '../../feature/dialog/chat_image_preview/chat_image_preview_dialog.dart';
-import '../../formatter/date_formatter.dart';
-import '../../service/dialog_service.dart';
+import '../../../../domain/cubit/chat/chat_cubit.dart';
+import '../../../../domain/entity/message.dart';
+import '../../../../domain/entity/message_image.dart';
+import '../../../component/gap/gap_components.dart';
+import '../../../component/gap/gap_horizontal_components.dart';
+import '../../../component/text/body_text_components.dart';
+import '../../../component/text/label_text_components.dart';
+import '../../../extension/widgets_list_extensions.dart';
+import '../../../feature/dialog/chat_image_preview/chat_image_preview_dialog.dart';
+import '../../../formatter/date_formatter.dart';
+import '../../../service/dialog_service.dart';
 import 'chat_message_card.dart';
 
 class ChatMessageItem extends StatelessWidget {
