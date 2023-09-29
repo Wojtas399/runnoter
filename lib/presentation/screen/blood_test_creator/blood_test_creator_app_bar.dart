@@ -47,7 +47,7 @@ class _SubmitButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool isDisabled = context.select(
-      (BloodTestCreatorCubit cubit) => cubit.state.canSubmit,
+      (BloodTestCreatorCubit cubit) => !cubit.state.canSubmit,
     );
     final bool isEditMode = context.select(
       (BloodTestCreatorCubit cubit) => cubit.state.bloodTest != null,
