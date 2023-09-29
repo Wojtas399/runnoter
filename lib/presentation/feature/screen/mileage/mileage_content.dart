@@ -3,19 +3,19 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
-import '../../../domain/cubit/date_range_manager_cubit.dart';
-import '../../../domain/cubit/mileage_stats/mileage_stats_cubit.dart';
-import '../../component/body/big_body_component.dart';
-import '../../component/card_body_component.dart';
-import '../../component/date_range_header_component.dart';
-import '../../component/empty_content_info_component.dart';
-import '../../component/gap/gap_components.dart';
-import '../../component/loading_info_component.dart';
-import '../../component/padding/paddings_24.dart';
-import '../../component/responsive_layout_component.dart';
-import '../../extension/context_extensions.dart';
-import '../../formatter/date_formatter.dart';
-import '../../formatter/distance_unit_formatter.dart';
+import '../../../../domain/cubit/date_range_manager_cubit.dart';
+import '../../../../domain/cubit/mileage_stats/mileage_stats_cubit.dart';
+import '../../../component/body/big_body_component.dart';
+import '../../../component/card_body_component.dart';
+import '../../../component/date_range_header_component.dart';
+import '../../../component/empty_content_info_component.dart';
+import '../../../component/gap/gap_components.dart';
+import '../../../component/loading_info_component.dart';
+import '../../../component/padding/paddings_24.dart';
+import '../../../component/responsive_layout_component.dart';
+import '../../../extension/context_extensions.dart';
+import '../../../formatter/date_formatter.dart';
+import '../../../formatter/distance_unit_formatter.dart';
 
 class MileageContent extends StatelessWidget {
   const MileageContent({super.key});
