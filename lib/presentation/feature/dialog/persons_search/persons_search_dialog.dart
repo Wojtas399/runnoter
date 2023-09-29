@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/additional_model/coaching_request.dart';
-import '../../../domain/cubit/persons_search/persons_search_cubit.dart';
-import '../../component/cubit_with_status_listener_component.dart';
-import '../../component/responsive_layout_component.dart';
-import '../../service/dialog_service.dart';
-import '../../service/navigator_service.dart';
+import '../../../../domain/additional_model/coaching_request.dart';
+import '../../../../domain/cubit/persons_search/persons_search_cubit.dart';
+import '../../../component/cubit_with_status_listener_component.dart';
+import '../../../component/responsive_layout_component.dart';
+import '../../../service/dialog_service.dart';
+import '../../../service/navigator_service.dart';
 import 'persons_search_found_perons.dart';
 import 'persons_search_input.dart';
 

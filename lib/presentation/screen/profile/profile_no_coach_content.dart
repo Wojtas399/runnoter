@@ -10,7 +10,7 @@ import '../../component/gap/gap_components.dart';
 import '../../component/gap/gap_horizontal_components.dart';
 import '../../component/text/body_text_components.dart';
 import '../../component/text/title_text_components.dart';
-import '../../dialog/persons_search/persons_search_dialog.dart';
+import '../../feature/dialog/persons_search/persons_search_dialog.dart';
 import '../../formatter/person_formatter.dart';
 import '../../service/dialog_service.dart';
 
