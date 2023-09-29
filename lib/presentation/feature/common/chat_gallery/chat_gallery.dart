@@ -10,8 +10,8 @@ import '../../../../domain/cubit/chat_gallery_cubit.dart';
 import '../../../../domain/entity/message_image.dart';
 import '../../../component/animated_refresh_indicator.dart';
 import '../../../component/loading_info_component.dart';
-import '../../../dialog/chat_image_preview/chat_image_preview_dialog.dart';
 import '../../../service/dialog_service.dart';
+import '../../dialog/chat_image_preview/chat_image_preview_dialog.dart';
 
 class ChatGallery extends StatelessWidget {
   final String chatId;

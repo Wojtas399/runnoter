@@ -2,9 +2,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/cubit/chat_image_preview/chat_image_preview_cubit.dart';
-import '../../../domain/entity/message_image.dart';
-import '../../component/loading_info_component.dart';
+import '../../../../domain/cubit/chat_image_preview/chat_image_preview_cubit.dart';
+import '../../../../domain/entity/message_image.dart';
+import '../../../component/loading_info_component.dart';
 import 'chat_image_preview_all_images.dart';
 import 'chat_image_preview_gallery.dart';
 
