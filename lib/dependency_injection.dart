@@ -31,13 +31,11 @@ import 'domain/use_case/get_received_coaching_requests_with_sender_info_use_case
 import 'domain/use_case/get_sent_coaching_requests_with_receiver_info_use_case.dart';
 import 'domain/use_case/load_chat_id_use_case.dart';
 import 'presentation/config/navigation/router.dart';
-import 'presentation/config/screen_sizes.dart';
 
 final getIt = GetIt.I;
 
 void setUpGetIt() {
   getIt.registerLazySingleton(() => AppRouter());
-  getIt.registerLazySingleton(() => ScreenSizes());
   getIt.registerFactory(() => DateService());
   _registerFirebaseServices();
   _registerServices();
