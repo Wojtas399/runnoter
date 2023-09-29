@@ -3,17 +3,17 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/additional_model/activity_status.dart';
-import '../../../domain/additional_model/settings.dart';
-import '../../../domain/cubit/activity_status_creator/activity_status_creator_cubit.dart';
-import '../../component/gap/gap_components.dart';
-import '../../component/text/label_text_components.dart';
-import '../../component/text/title_text_components.dart';
-import '../../extension/context_extensions.dart';
-import '../../formatter/decimal_text_input_formatter.dart';
-import '../../formatter/minutes_or_seconds_input_formatter.dart';
-import '../../formatter/pace_unit_formatter.dart';
-import '../../service/pace_unit_service.dart';
+import '../../../../domain/additional_model/activity_status.dart';
+import '../../../../domain/additional_model/settings.dart';
+import '../../../../domain/cubit/activity_status_creator/activity_status_creator_cubit.dart';
+import '../../../component/gap/gap_components.dart';
+import '../../../component/text/label_text_components.dart';
+import '../../../component/text/title_text_components.dart';
+import '../../../extension/context_extensions.dart';
+import '../../../formatter/decimal_text_input_formatter.dart';
+import '../../../formatter/minutes_or_seconds_input_formatter.dart';
+import '../../../formatter/pace_unit_formatter.dart';
+import '../../../service/pace_unit_service.dart';
 
 class ActivityStatusCreatorAvgPace extends StatelessWidget {
   const ActivityStatusCreatorAvgPace({super.key});
