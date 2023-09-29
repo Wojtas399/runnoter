@@ -4,7 +4,9 @@ extension DateFormatter on DateTime {
   String toFullDate(String? languageCode) =>
       DateFormat('$_day $_monthName $_year', languageCode).format(this);
 
-  String toTime() => DateFormat('$_hour:$_minute').format(this);
+  String toTime24() => DateFormat('$_hour24:$_minute').format(this);
+
+  String toTime12() => DateFormat('$_hour12:$_minute').format(this);
 
   String toDateWithDots() => DateFormat('$_day.$_month.$_year').format(this);
 
@@ -22,7 +24,8 @@ extension DateFormatter on DateTime {
       DateFormat(_monthName, languageCode).format(this);
 }
 
-const String _hour = 'hh';
+const String _hour24 = 'HH';
+const String _hour12 = 'hh';
 const String _minute = 'mm';
 const String _day = 'dd';
 const String _month = 'MM';

@@ -46,7 +46,7 @@ class _State extends State<ChatTypingIndicator> with TickerProviderStateMixin {
         curve: Curves.easeInOutQuart,
       ),
     );
-    _showIndicator();
+    if (widget.showIndicator) _showIndicator();
   }
 
   @override
