@@ -84,6 +84,14 @@ class ClientsCubit
         .firstWhere((req) => req.id == requestId)
         .person
         .id;
+    await _personRepository.refreshPersonById(personId: senderId);
+    final Person? client =
+        await _personRepository.getPersonById(personId: senderId).first;
+    if (client == null) return;
+    if (client.coachId != null) {
+      emitErrorStatus(ClientsCubitError.personAlreadyHasCoach);
+      return;
+    }
     await _personRepository.updateCoachIdOfPerson(
       personId: senderId,
       coachId: loggedUserId,
@@ -179,4 +187,4 @@ class ClientsCubit
 
 enum ClientsCubitInfo { requestAccepted, requestDeleted, clientDeleted }
 
-enum ClientsCubitError { clientIsNoLongerClient }
+enum ClientsCubitError { personAlreadyHasCoach, clientIsNoLongerClient }

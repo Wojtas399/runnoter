@@ -62,6 +62,11 @@ class _CubitListener extends StatelessWidget {
   void _manageError(BuildContext context, ClientsCubitError error) {
     final str = Str.of(context);
     switch (error) {
+      case ClientsCubitError.personAlreadyHasCoach:
+        showMessageDialog(
+          title: str.clientsPersonAlreadyHasCoachDialogTitle,
+          message: str.clientsPersonAlreadyHasCoachDialogMessage,
+        );
       case ClientsCubitError.clientIsNoLongerClient:
         showMessageDialog(
           title: str.clientsClientIsNotClientAnymoreDialogTitle,

@@ -179,8 +179,10 @@ void main() {
 
   blocTest(
     'acceptRequest, '
-    "should call coaching request service's method to update request with isAccepted param set as true, "
-    "should assign logged user's id to coach id of request's sender",
+    'should refresh client in repo and load its data, '
+    'if client does not have a coach should call coaching request service method '
+    'to update request with isAccepted param set as true and '
+    "should assign logged user id to coach id of request's sender",
     build: () => ClientsCubit(
       initialState: ClientsState(
         status: const CubitStatusComplete(),
@@ -198,6 +200,8 @@ void main() {
     ),
     setUp: () {
       authService.mockGetLoggedUserId(userId: loggedUserId);
+      personRepository.mockRefreshPersonById();
+      personRepository.mockGetPersonById(person: createPerson(id: 'p1'));
       coachingRequestService.mockUpdateCoachingRequest();
       personRepository.mockUpdateCoachIdOfPerson();
     },
@@ -235,6 +239,10 @@ void main() {
     verify: (_) {
       verify(() => authService.loggedUserId$).called(1);
       verify(
+        () => personRepository.refreshPersonById(personId: 'p1'),
+      ).called(1);
+      verify(() => personRepository.getPersonById(personId: 'p1')).called(1);
+      verify(
         () => coachingRequestService.updateCoachingRequest(
           requestId: 'r1',
           isAccepted: true,
@@ -246,6 +254,73 @@ void main() {
           coachId: loggedUserId,
         ),
       ).called(1);
+    },
+  );
+
+  blocTest(
+    'acceptRequest, '
+    'should refresh client in repo and load its data, '
+    'if client already has a coach should emit error status with '
+    'clientAlreadyHasCoach error',
+    build: () => ClientsCubit(
+      initialState: ClientsState(
+        status: const CubitStatusComplete(),
+        receivedRequests: [
+          CoachingRequestWithPerson(
+            id: 'r1',
+            person: createPerson(id: 'p1'),
+          ),
+          CoachingRequestWithPerson(
+            id: 'r2',
+            person: createPerson(id: 'p2'),
+          ),
+        ],
+      ),
+    ),
+    setUp: () {
+      authService.mockGetLoggedUserId(userId: loggedUserId);
+      personRepository.mockRefreshPersonById();
+      personRepository.mockGetPersonById(
+        person: createPerson(id: 'p1', coachId: 'c1'),
+      );
+    },
+    act: (cubit) => cubit.acceptRequest('r1'),
+    expect: () => [
+      ClientsState(
+        status: const CubitStatusLoading(),
+        receivedRequests: [
+          CoachingRequestWithPerson(
+            id: 'r1',
+            person: createPerson(id: 'p1'),
+          ),
+          CoachingRequestWithPerson(
+            id: 'r2',
+            person: createPerson(id: 'p2'),
+          ),
+        ],
+      ),
+      ClientsState(
+        status: const CubitStatusError<ClientsCubitError>(
+          error: ClientsCubitError.personAlreadyHasCoach,
+        ),
+        receivedRequests: [
+          CoachingRequestWithPerson(
+            id: 'r1',
+            person: createPerson(id: 'p1'),
+          ),
+          CoachingRequestWithPerson(
+            id: 'r2',
+            person: createPerson(id: 'p2'),
+          ),
+        ],
+      ),
+    ],
+    verify: (_) {
+      verify(() => authService.loggedUserId$).called(1);
+      verify(
+        () => personRepository.refreshPersonById(personId: 'p1'),
+      ).called(1);
+      verify(() => personRepository.getPersonById(personId: 'p1')).called(1);
     },
   );
 
