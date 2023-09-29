@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/cubit/client/client_cubit.dart';
-import '../../config/navigation/router.dart';
-import '../../service/dialog_service.dart';
-import '../../service/navigator_service.dart';
+import '../../../../domain/cubit/client/client_cubit.dart';
+import '../../../config/navigation/router.dart';
+import '../../../service/dialog_service.dart';
+import '../../../service/navigator_service.dart';
 
 class ClientMobileMessageFAB extends StatelessWidget {
   const ClientMobileMessageFAB({super.key});
