@@ -1,4 +1,3 @@
-export '../../screen/race_creator/race_creator_screen.dart';
 export '../../screen/race_preview/race_preview_screen.dart';
 export '../../screen/races/races_screen.dart';
 export '../../screen/sign_in/sign_in_screen.dart';
@@ -23,3 +22,4 @@ export '../screen/health_measurements/health_measurements_screen.dart';
 export '../screen/home/home_screen.dart';
 export '../screen/mileage/mileage_screen.dart';
 export '../screen/profile/profile_screen.dart';
+export '../screen/race_creator/race_creator_screen.dart';
