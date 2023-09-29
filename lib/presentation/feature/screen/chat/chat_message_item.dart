@@ -89,7 +89,7 @@ class _MessageContent extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               _SendTime(
-                sendDateTime: message.sendDateTime,
+                sendDateTime: message.dateTime,
                 color: message.hasBeenSentByLoggedUser
                     ? theme.colorScheme.outlineVariant
                     : theme.colorScheme.outline,
