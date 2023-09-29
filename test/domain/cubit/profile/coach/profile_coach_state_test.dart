@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:runnoter/domain/additional_model/coaching_request_with_person.dart';
 import 'package:runnoter/domain/additional_model/cubit_status.dart';
-import 'package:runnoter/domain/additional_model/coaching_request_short.dart';
 import 'package:runnoter/domain/cubit/profile/coach/profile_coach_cubit.dart';
 
 import '../../../../creators/person_creator.dart';
@@ -87,11 +87,8 @@ void main() {
     'copy with sentRequests, '
     'should copy current value if new value is null',
     () {
-      final List<CoachingRequestShort> expected = [
-        CoachingRequestShort(
-          id: 'r1',
-          personToDisplay: createPerson(id: 'u1'),
-        ),
+      final List<CoachingRequestWithPerson> expected = [
+        CoachingRequestWithPerson(id: 'r1', person: createPerson(id: 'u1')),
       ];
 
       state = state.copyWith(sentRequests: expected);
@@ -106,11 +103,8 @@ void main() {
     'copy with receivedRequests, '
     'should copy current value if new value is null',
     () {
-      final List<CoachingRequestShort> expected = [
-        CoachingRequestShort(
-          id: 'r1',
-          personToDisplay: createPerson(id: 'u1'),
-        ),
+      final List<CoachingRequestWithPerson> expected = [
+        CoachingRequestWithPerson(id: 'r1', person: createPerson(id: 'u1')),
       ];
 
       state = state.copyWith(receivedRequests: expected);
@@ -160,6 +154,26 @@ void main() {
 
       expect(state.coachEmail, expected);
       expect(state2.coachEmail, expected);
+    },
+  );
+
+  test(
+    'copy with deletedRequests, '
+    'should set sent requests and received requests as null if set to true',
+    () {
+      final List<CoachingRequestWithPerson> sentRequests = [];
+      final List<CoachingRequestWithPerson> receivedRequests = [];
+
+      state = state.copyWith(
+        sentRequests: sentRequests,
+        receivedRequests: receivedRequests,
+      );
+      final state2 = state.copyWith(deletedRequests: true);
+
+      expect(state.sentRequests, sentRequests);
+      expect(state.receivedRequests, receivedRequests);
+      expect(state2.sentRequests, null);
+      expect(state2.receivedRequests, null);
     },
   );
 

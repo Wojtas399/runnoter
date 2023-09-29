@@ -24,20 +24,8 @@ class ClientsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => ClientsCubit()..initialize(),
-      child: _CubitListener(
-        child: SingleChildScrollView(
-          child: MediumBody(
-            child: Padding(
-              padding: context.isMobileSize
-                  ? const EdgeInsets.only(top: 8, bottom: 144)
-                  : const EdgeInsets.all(24),
-              child: const ResponsiveLayout(
-                mobileBody: _MobileContent(),
-                desktopBody: _DesktopContent(),
-              ),
-            ),
-          ),
-        ),
+      child: const _CubitListener(
+        child: _Content(),
       ),
     );
   }
@@ -51,8 +39,9 @@ class _CubitListener extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CubitWithStatusListener<ClientsCubit, ClientsState, ClientsCubitInfo,
-        dynamic>(
+        ClientsCubitError>(
       onInfo: (ClientsCubitInfo info) => _manageInfo(context, info),
+      onError: (ClientsCubitError error) => _manageError(context, error),
       onStateChanged: _manageState,
       child: child,
     );
@@ -65,10 +54,24 @@ class _CubitListener extends StatelessWidget {
         showSnackbarMessage(str.successfullyAcceptedRequest);
       case ClientsCubitInfo.requestDeleted:
         showSnackbarMessage(str.successfullyUndidRequest);
-        break;
       case ClientsCubitInfo.clientDeleted:
         showSnackbarMessage(str.clientsSuccessfullyDeletedClient);
-        break;
+    }
+  }
+
+  void _manageError(BuildContext context, ClientsCubitError error) {
+    final str = Str.of(context);
+    switch (error) {
+      case ClientsCubitError.personAlreadyHasCoach:
+        showMessageDialog(
+          title: str.clientsPersonAlreadyHasCoachDialogTitle,
+          message: str.clientsPersonAlreadyHasCoachDialogMessage,
+        );
+      case ClientsCubitError.clientIsNoLongerClient:
+        showMessageDialog(
+          title: str.clientsClientIsNotClientAnymoreDialogTitle,
+          message: str.clientsClientIsNotClientAnymoreDialogMessage,
+        );
     }
   }
 
@@ -76,6 +79,31 @@ class _CubitListener extends StatelessWidget {
     if (state.selectedChatId != null) {
       navigateTo(ChatRoute(chatId: state.selectedChatId));
     }
+  }
+}
+
+class _Content extends StatelessWidget {
+  const _Content();
+
+  @override
+  Widget build(BuildContext context) {
+    return RefreshIndicator(
+      onRefresh: context.read<ClientsCubit>().refreshClients,
+      child: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        child: MediumBody(
+          child: Padding(
+            padding: context.isMobileSize
+                ? const EdgeInsets.only(top: 8, bottom: 144)
+                : const EdgeInsets.all(24),
+            child: const ResponsiveLayout(
+              mobileBody: _MobileContent(),
+              desktopBody: _DesktopContent(),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
 

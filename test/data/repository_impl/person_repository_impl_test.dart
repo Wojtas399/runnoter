@@ -27,7 +27,7 @@ void main() {
   });
 
   test(
-    'get person by id, '
+    'getPersonById, '
     'person exists in repository, '
     'should emit matching person from repo',
     () {
@@ -44,7 +44,7 @@ void main() {
   );
 
   test(
-    'get person by id, '
+    'getPersonById, '
     'person does not exist in repository, '
     'should load person from db, add him to repository and emit',
     () {
@@ -89,7 +89,7 @@ void main() {
   );
 
   test(
-    'get persons by coach id, '
+    'getPersonsByCoachId, '
     'should load persons from db, add them to repository and should emit all persons with matching coach id',
     () {
       const String coachId = 'c1';
@@ -131,7 +131,7 @@ void main() {
   );
 
   test(
-    'search for persons, '
+    'searchForPersons, '
     'should load matching persons from db, add them to repository and should return all matching persons from repository',
     () async {
       final List<Person> existingPersons = [
@@ -234,7 +234,7 @@ void main() {
   );
 
   test(
-    'update coachId of person, '
+    'updateCoachIdOfPerson, '
     'should update user in db and in repo with coachId',
     () async {
       const String personId = 'u1';
@@ -273,7 +273,7 @@ void main() {
   );
 
   test(
-    'update coachId of person, '
+    'updateCoachIdOfPerson, '
     'coach id is null, '
     'should call db method to update user with coachIdAsNull set to true and should update user in state',
     () async {
@@ -310,7 +310,74 @@ void main() {
   );
 
   test(
-    'refresh persons by coach id, '
+    'refreshPersonById, '
+    'person does not exist in repo, '
+    'should load person from db and add it to repo',
+    () async {
+      const String personId = 'p1';
+      final List<Person> existingPersons = [
+        createPerson(id: 'p2'),
+        createPerson(id: 'p3')
+      ];
+      final firebase.UserDto loadedUserDto = createUserDto(
+        id: personId,
+        name: 'person',
+        surname: 'surname',
+      );
+      final Person loadedPerson = createPerson(
+        id: personId,
+        name: 'person',
+        surname: 'surname',
+      );
+      dbUserService.mockLoadUserById(userDto: loadedUserDto);
+      repository = PersonRepositoryImpl(initialData: existingPersons);
+
+      await repository.refreshPersonById(personId: personId);
+
+      expect(
+        repository.dataStream$,
+        emits([...existingPersons, loadedPerson]),
+      );
+      verify(() => dbUserService.loadUserById(userId: personId)).called(1);
+    },
+  );
+
+  test(
+    'refreshPersonById, '
+    'person exists in repo, '
+    'should load person from db and update it in repo',
+    () async {
+      const String personId = 'p1';
+      final List<Person> existingPersons = [
+        createPerson(id: personId),
+        createPerson(id: 'p2'),
+        createPerson(id: 'p3')
+      ];
+      final firebase.UserDto loadedUserDto = createUserDto(
+        id: personId,
+        name: 'person',
+        surname: 'surname',
+      );
+      final Person loadedPerson = createPerson(
+        id: personId,
+        name: 'person',
+        surname: 'surname',
+      );
+      dbUserService.mockLoadUserById(userDto: loadedUserDto);
+      repository = PersonRepositoryImpl(initialData: existingPersons);
+
+      await repository.refreshPersonById(personId: personId);
+
+      expect(
+        repository.dataStream$,
+        emits([loadedPerson, existingPersons[1], existingPersons[2]]),
+      );
+      verify(() => dbUserService.loadUserById(userId: personId)).called(1);
+    },
+  );
+
+  test(
+    'refreshPersonsByCoachId, '
     'should load persons by coach id from db and should update them in state',
     () async {
       const String coachId = 'c1';
@@ -345,7 +412,7 @@ void main() {
   );
 
   test(
-    'remove coach id in all matching users, '
+    'removeCoachIdInAllMatchingUsers, '
     'should call db method to set coach id as null in all matching users and should update these users in repo',
     () async {
       const String coachId = 'c1';

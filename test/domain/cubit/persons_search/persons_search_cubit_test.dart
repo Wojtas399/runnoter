@@ -1,30 +1,38 @@
+import 'dart:async';
+
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:runnoter/domain/additional_model/cubit_status.dart';
 import 'package:runnoter/domain/additional_model/coaching_request.dart';
+import 'package:runnoter/domain/additional_model/cubit_status.dart';
 import 'package:runnoter/domain/additional_model/custom_exception.dart';
 import 'package:runnoter/domain/cubit/persons_search/persons_search_cubit.dart';
+import 'package:runnoter/domain/entity/person.dart';
 import 'package:runnoter/domain/entity/user.dart';
 import 'package:runnoter/domain/repository/person_repository.dart';
+import 'package:runnoter/domain/repository/user_repository.dart';
 import 'package:runnoter/domain/service/auth_service.dart';
 import 'package:runnoter/domain/service/coaching_request_service.dart';
 
 import '../../../creators/coaching_request_creator.dart';
 import '../../../creators/person_creator.dart';
+import '../../../creators/user_creator.dart';
 import '../../../mock/domain/repository/mock_person_repository.dart';
+import '../../../mock/domain/repository/mock_user_repository.dart';
 import '../../../mock/domain/service/mock_auth_service.dart';
 import '../../../mock/domain/service/mock_coaching_request_service.dart';
 
 void main() {
   final authService = MockAuthService();
+  final userRepository = MockUserRepository();
   final personRepository = MockPersonRepository();
   final coachingRequestService = MockCoachingRequestService();
   const String loggedUserId = 'u1';
 
   setUpAll(() {
     GetIt.I.registerFactory<AuthService>(() => authService);
+    GetIt.I.registerSingleton<UserRepository>(userRepository);
     GetIt.I.registerSingleton<PersonRepository>(personRepository);
     GetIt.I.registerFactory<CoachingRequestService>(
       () => coachingRequestService,
@@ -33,6 +41,7 @@ void main() {
 
   tearDown(() {
     reset(authService);
+    reset(userRepository);
     reset(personRepository);
     reset(coachingRequestService);
   });
@@ -40,231 +49,411 @@ void main() {
   blocTest(
     'initialize, '
     'logged user does not exist, '
-    'should do nothing',
+    'should not listen to anything',
     build: () => PersonsSearchCubit(
       requestDirection: CoachingRequestDirection.coachToClient,
     ),
     setUp: () => authService.mockGetLoggedUserId(),
     act: (cubit) => cubit.initialize(),
-    expect: () => [],
+    expect: () => [
+      const PersonsSearchState(status: CubitStatusComplete()),
+    ],
     verify: (_) => verify(() => authService.loggedUserId$).called(1),
   );
 
-  blocTest(
+  group(
     'initialize, '
-    'coach to client direction, '
-    'found persons do not exist, '
-    'should only emit client ids and invited persons ids',
-    build: () => PersonsSearchCubit(
-      requestDirection: CoachingRequestDirection.coachToClient,
-    ),
-    setUp: () {
-      authService.mockGetLoggedUserId(userId: loggedUserId);
-      personRepository.mockGetPersonsByCoachId(
-        persons: [createPerson(id: 'u2'), createPerson(id: 'u3')],
+    'coach to client direction, ',
+    () {
+      final User loggedUser = createUser(id: loggedUserId);
+      final User updatedLoggedUser = createUser(
+        id: loggedUserId,
+        coachId: 'p10',
       );
-      coachingRequestService.mockGetCoachingRequestsBySenderId(
-        requests: [
-          createCoachingRequest(receiverId: 'u4', isAccepted: false),
-          createCoachingRequest(receiverId: 'u5', isAccepted: true),
-          createCoachingRequest(receiverId: 'u3', isAccepted: true),
-        ],
-      );
-    },
-    act: (cubit) => cubit.initialize(),
-    expect: () => [
-      const PersonsSearchState(
-        status: CubitStatusComplete(),
-        clientIds: ['u2', 'u3', 'u5'],
-        invitedPersonIds: ['u4'],
-      ),
-    ],
-    verify: (_) {
-      verify(() => authService.loggedUserId$).called(1);
-      verify(
-        () => personRepository.getPersonsByCoachId(coachId: loggedUserId),
-      ).called(1);
-      verify(
-        () => coachingRequestService.getCoachingRequestsBySenderId(
-          senderId: loggedUserId,
-          direction: CoachingRequestDirection.coachToClient,
+      final List<Person> clients = [
+        createPerson(id: 'p1'),
+        createPerson(id: 'p2')
+      ];
+      final List<Person> updatedClients = [
+        createPerson(id: 'p1'),
+        createPerson(id: 'p2'),
+        createPerson(id: 'p3'),
+      ];
+      final List<CoachingRequest> sentRequests = [
+        createCoachingRequest(id: 'cr1', receiverId: 'p4', isAccepted: false),
+        createCoachingRequest(id: 'cr2', receiverId: 'p5', isAccepted: true),
+      ];
+      final List<CoachingRequest> updatedSentRequests = [
+        createCoachingRequest(id: 'cr1', receiverId: 'p4', isAccepted: false),
+        createCoachingRequest(id: 'cr2', receiverId: 'p5', isAccepted: true),
+        createCoachingRequest(id: 'cr3', receiverId: 'p6', isAccepted: false),
+      ];
+      final List<CoachingRequest> receivedRequests = [
+        createCoachingRequest(id: 'cr4', senderId: 'p7', isAccepted: false),
+      ];
+      final List<CoachingRequest> updatedReceivedRequests = [
+        createCoachingRequest(id: 'cr4', senderId: 'p7', isAccepted: false),
+        createCoachingRequest(id: 'cr5', senderId: 'p8', isAccepted: false),
+        createCoachingRequest(id: 'cr6', senderId: 'p9', isAccepted: true),
+      ];
+      final StreamController<User> loggedUser$ = StreamController()
+        ..add(loggedUser);
+      final StreamController<List<Person>> clients$ = StreamController()
+        ..add(clients);
+      final StreamController<List<CoachingRequest>> sentRequests$ =
+          StreamController()..add(sentRequests);
+      final StreamController<List<CoachingRequest>> receivedRequests$ =
+          StreamController()..add(receivedRequests);
+
+      blocTest(
+        'should listen to logged user data, client ids, invitee ids and inviter ids',
+        build: () => PersonsSearchCubit(
+          requestDirection: CoachingRequestDirection.coachToClient,
+          initialState: PersonsSearchState(
+            status: const CubitStatusComplete(),
+            foundPersons: [
+              FoundPerson(
+                info: createPerson(id: 'p1'),
+                relationshipStatus: RelationshipStatus.notInvited,
+              ),
+              FoundPerson(
+                info: createPerson(id: 'p4'),
+                relationshipStatus: RelationshipStatus.notInvited,
+              ),
+              FoundPerson(
+                info: createPerson(id: 'p8'),
+                relationshipStatus: RelationshipStatus.notInvited,
+              ),
+              FoundPerson(
+                info: createPerson(id: 'p9'),
+                relationshipStatus: RelationshipStatus.notInvited,
+              ),
+              FoundPerson(
+                info: createPerson(id: 'p10', coachId: 'c1'),
+                relationshipStatus: RelationshipStatus.notInvited,
+              ),
+            ],
+          ),
         ),
-      ).called(1);
+        setUp: () {
+          authService.mockGetLoggedUserId(userId: loggedUserId);
+          userRepository.mockGetUserById(userStream: loggedUser$.stream);
+          personRepository.mockGetPersonsByCoachId(
+            personsStream: clients$.stream,
+          );
+          coachingRequestService.mockGetCoachingRequestsBySenderId(
+            requestsStream: sentRequests$.stream,
+          );
+          coachingRequestService.mockGetCoachingRequestsByReceiverId(
+            requestsStream: receivedRequests$.stream,
+          );
+        },
+        act: (cubit) async {
+          cubit.initialize();
+          await cubit.stream.first;
+          clients$.add(updatedClients);
+          sentRequests$.add(updatedSentRequests);
+          receivedRequests$.add(updatedReceivedRequests);
+          await cubit.stream.first;
+          loggedUser$.add(updatedLoggedUser);
+        },
+        expect: () => [
+          PersonsSearchState(
+            status: const CubitStatusComplete(),
+            foundPersons: [
+              FoundPerson(
+                info: createPerson(id: 'p1'),
+                relationshipStatus: RelationshipStatus.accepted,
+              ),
+              FoundPerson(
+                info: createPerson(id: 'p4'),
+                relationshipStatus: RelationshipStatus.pending,
+              ),
+              FoundPerson(
+                info: createPerson(id: 'p8'),
+                relationshipStatus: RelationshipStatus.notInvited,
+              ),
+              FoundPerson(
+                info: createPerson(id: 'p9'),
+                relationshipStatus: RelationshipStatus.notInvited,
+              ),
+              FoundPerson(
+                info: createPerson(id: 'p10', coachId: 'c1'),
+                relationshipStatus: RelationshipStatus.alreadyTaken,
+              ),
+            ],
+          ),
+          PersonsSearchState(
+            status: const CubitStatusComplete(),
+            foundPersons: [
+              FoundPerson(
+                info: createPerson(id: 'p1'),
+                relationshipStatus: RelationshipStatus.accepted,
+              ),
+              FoundPerson(
+                info: createPerson(id: 'p4'),
+                relationshipStatus: RelationshipStatus.pending,
+              ),
+              FoundPerson(
+                info: createPerson(id: 'p8'),
+                relationshipStatus: RelationshipStatus.pending,
+              ),
+              FoundPerson(
+                info: createPerson(id: 'p9'),
+                relationshipStatus: RelationshipStatus.accepted,
+              ),
+              FoundPerson(
+                info: createPerson(id: 'p10', coachId: 'c1'),
+                relationshipStatus: RelationshipStatus.alreadyTaken,
+              ),
+            ],
+          ),
+          PersonsSearchState(
+            status: const CubitStatusComplete(),
+            foundPersons: [
+              FoundPerson(
+                info: createPerson(id: 'p1'),
+                relationshipStatus: RelationshipStatus.accepted,
+              ),
+              FoundPerson(
+                info: createPerson(id: 'p4'),
+                relationshipStatus: RelationshipStatus.pending,
+              ),
+              FoundPerson(
+                info: createPerson(id: 'p8'),
+                relationshipStatus: RelationshipStatus.pending,
+              ),
+              FoundPerson(
+                info: createPerson(id: 'p9'),
+                relationshipStatus: RelationshipStatus.accepted,
+              ),
+              FoundPerson(
+                info: createPerson(id: 'p10', coachId: 'c1'),
+                relationshipStatus: RelationshipStatus.accepted,
+              ),
+            ],
+          ),
+        ],
+        verify: (_) {
+          verify(() => authService.loggedUserId$).called(1);
+          verify(
+            () => userRepository.getUserById(userId: loggedUserId),
+          ).called(1);
+          verify(
+            () => personRepository.getPersonsByCoachId(coachId: loggedUserId),
+          ).called(1);
+          verify(
+            () => coachingRequestService.getCoachingRequestsByReceiverId(
+              receiverId: loggedUserId,
+              direction: CoachingRequestDirection.clientToCoach,
+            ),
+          ).called(1);
+          verify(
+            () => coachingRequestService.getCoachingRequestsBySenderId(
+              senderId: loggedUserId,
+              direction: CoachingRequestDirection.coachToClient,
+            ),
+          ).called(1);
+        },
+      );
     },
   );
 
-  blocTest(
+  group(
     'initialize, '
-    'coach to client direction, '
-    'found persons exist, '
-    'should emit client ids, ids of invited persons and updated found persons',
-    build: () => PersonsSearchCubit(
-      requestDirection: CoachingRequestDirection.coachToClient,
-      initialState: PersonsSearchState(
-        status: const CubitStatusComplete(),
-        foundPersons: [
-          FoundPerson(
-            info: createPerson(id: 'u2'),
-            relationshipStatus: RelationshipStatus.pending,
-          ),
-          FoundPerson(
-            info: createPerson(id: 'u4'),
-            relationshipStatus: RelationshipStatus.notInvited,
-          ),
-        ],
-      ),
-    ),
-    setUp: () {
-      authService.mockGetLoggedUserId(userId: loggedUserId);
-      personRepository.mockGetPersonsByCoachId(
-        persons: [createPerson(id: 'u2'), createPerson(id: 'u3')],
+    'client to coach direction, ',
+    () {
+      final User loggedUser = createUser(id: loggedUserId);
+      final User updatedLoggedUser = createUser(
+        id: loggedUserId,
+        coachId: 'p10',
       );
-      coachingRequestService.mockGetCoachingRequestsBySenderId(
-        requests: [
-          createCoachingRequest(receiverId: 'u4', isAccepted: false),
-          createCoachingRequest(receiverId: 'u5', isAccepted: true),
-          createCoachingRequest(receiverId: 'u3', isAccepted: true),
-        ],
-      );
-    },
-    act: (cubit) => cubit.initialize(),
-    expect: () => [
-      PersonsSearchState(
-        status: const CubitStatusComplete(),
-        clientIds: const ['u2', 'u3', 'u5'],
-        invitedPersonIds: const ['u4'],
-        foundPersons: [
-          FoundPerson(
-            info: createPerson(id: 'u2'),
-            relationshipStatus: RelationshipStatus.accepted,
-          ),
-          FoundPerson(
-            info: createPerson(id: 'u4'),
-            relationshipStatus: RelationshipStatus.pending,
-          ),
-        ],
-      ),
-    ],
-    verify: (_) {
-      verify(() => authService.loggedUserId$).called(1);
-      verify(
-        () => personRepository.getPersonsByCoachId(coachId: loggedUserId),
-      ).called(1);
-      verify(
-        () => coachingRequestService.getCoachingRequestsBySenderId(
-          senderId: loggedUserId,
-          direction: CoachingRequestDirection.coachToClient,
-        ),
-      ).called(1);
-    },
-  );
+      final List<Person> clients = [
+        createPerson(id: 'p1'),
+        createPerson(id: 'p2')
+      ];
+      final List<Person> updatedClients = [
+        createPerson(id: 'p1'),
+        createPerson(id: 'p2'),
+        createPerson(id: 'p3'),
+      ];
+      final List<CoachingRequest> sentRequests = [
+        createCoachingRequest(id: 'cr1', receiverId: 'p4', isAccepted: false),
+        createCoachingRequest(id: 'cr2', receiverId: 'p5', isAccepted: true),
+      ];
+      final List<CoachingRequest> updatedSentRequests = [
+        createCoachingRequest(id: 'cr1', receiverId: 'p4', isAccepted: false),
+        createCoachingRequest(id: 'cr2', receiverId: 'p5', isAccepted: true),
+        createCoachingRequest(id: 'cr3', receiverId: 'p6', isAccepted: false),
+      ];
+      final List<CoachingRequest> receivedRequests = [
+        createCoachingRequest(id: 'cr4', senderId: 'p7', isAccepted: false),
+      ];
+      final List<CoachingRequest> updatedReceivedRequests = [
+        createCoachingRequest(id: 'cr4', senderId: 'p7', isAccepted: false),
+        createCoachingRequest(id: 'cr5', senderId: 'p8', isAccepted: false),
+        createCoachingRequest(id: 'cr6', senderId: 'p9', isAccepted: true),
+      ];
+      final StreamController<User> loggedUser$ = StreamController()
+        ..add(loggedUser);
+      final StreamController<List<Person>> clients$ = StreamController()
+        ..add(clients);
+      final StreamController<List<CoachingRequest>> sentRequests$ =
+          StreamController()..add(sentRequests);
+      final StreamController<List<CoachingRequest>> receivedRequests$ =
+          StreamController()..add(receivedRequests);
 
-  blocTest(
-    'initialize, '
-    'coach to client direction, '
-    'found persons do not exist, '
-    'should only emit client ids and invited persons ids',
-    build: () => PersonsSearchCubit(
-      requestDirection: CoachingRequestDirection.clientToCoach,
-    ),
-    setUp: () {
-      authService.mockGetLoggedUserId(userId: loggedUserId);
-      personRepository.mockGetPersonsByCoachId(
-        persons: [createPerson(id: 'u2'), createPerson(id: 'u3')],
-      );
-      coachingRequestService.mockGetCoachingRequestsBySenderId(
-        requests: [
-          createCoachingRequest(receiverId: 'u4', isAccepted: false),
-          createCoachingRequest(receiverId: 'u5', isAccepted: true),
-          createCoachingRequest(receiverId: 'u3', isAccepted: true),
-        ],
-      );
-    },
-    act: (cubit) => cubit.initialize(),
-    expect: () => [
-      const PersonsSearchState(
-        status: CubitStatusComplete(),
-        clientIds: ['u2', 'u3', 'u5'],
-        invitedPersonIds: ['u4'],
-      ),
-    ],
-    verify: (_) {
-      verify(() => authService.loggedUserId$).called(1);
-      verify(
-        () => personRepository.getPersonsByCoachId(coachId: loggedUserId),
-      ).called(1);
-      verify(
-        () => coachingRequestService.getCoachingRequestsBySenderId(
-          senderId: loggedUserId,
-          direction: CoachingRequestDirection.clientToCoach,
+      blocTest(
+        'should listen to logged user data, client ids, invitee ids and inviter ids',
+        build: () => PersonsSearchCubit(
+          requestDirection: CoachingRequestDirection.clientToCoach,
+          initialState: PersonsSearchState(
+            status: const CubitStatusComplete(),
+            foundPersons: [
+              FoundPerson(
+                info: createPerson(id: 'p1'),
+                relationshipStatus: RelationshipStatus.notInvited,
+              ),
+              FoundPerson(
+                info: createPerson(id: 'p4'),
+                relationshipStatus: RelationshipStatus.notInvited,
+              ),
+              FoundPerson(
+                info: createPerson(id: 'p8'),
+                relationshipStatus: RelationshipStatus.notInvited,
+              ),
+              FoundPerson(
+                info: createPerson(id: 'p9'),
+                relationshipStatus: RelationshipStatus.notInvited,
+              ),
+              FoundPerson(
+                info: createPerson(id: 'p10', coachId: 'c1'),
+                relationshipStatus: RelationshipStatus.notInvited,
+              ),
+            ],
+          ),
         ),
-      ).called(1);
-    },
-  );
-
-  blocTest(
-    'initialize, '
-    'client to coach direction, '
-    'found persons exist, '
-    'should emit client ids, ids of invited persons and updated found persons',
-    build: () => PersonsSearchCubit(
-      requestDirection: CoachingRequestDirection.clientToCoach,
-      initialState: PersonsSearchState(
-        status: const CubitStatusComplete(),
-        foundPersons: [
-          FoundPerson(
-            info: createPerson(id: 'u2'),
-            relationshipStatus: RelationshipStatus.pending,
+        setUp: () {
+          authService.mockGetLoggedUserId(userId: loggedUserId);
+          userRepository.mockGetUserById(userStream: loggedUser$.stream);
+          personRepository.mockGetPersonsByCoachId(
+            personsStream: clients$.stream,
+          );
+          coachingRequestService.mockGetCoachingRequestsBySenderId(
+            requestsStream: sentRequests$.stream,
+          );
+          coachingRequestService.mockGetCoachingRequestsByReceiverId(
+            requestsStream: receivedRequests$.stream,
+          );
+        },
+        act: (cubit) async {
+          cubit.initialize();
+          await cubit.stream.first;
+          clients$.add(updatedClients);
+          sentRequests$.add(updatedSentRequests);
+          receivedRequests$.add(updatedReceivedRequests);
+          await cubit.stream.first;
+          loggedUser$.add(updatedLoggedUser);
+        },
+        expect: () => [
+          PersonsSearchState(
+            status: const CubitStatusComplete(),
+            foundPersons: [
+              FoundPerson(
+                info: createPerson(id: 'p1'),
+                relationshipStatus: RelationshipStatus.accepted,
+              ),
+              FoundPerson(
+                info: createPerson(id: 'p4'),
+                relationshipStatus: RelationshipStatus.pending,
+              ),
+              FoundPerson(
+                info: createPerson(id: 'p8'),
+                relationshipStatus: RelationshipStatus.notInvited,
+              ),
+              FoundPerson(
+                info: createPerson(id: 'p9'),
+                relationshipStatus: RelationshipStatus.notInvited,
+              ),
+              FoundPerson(
+                info: createPerson(id: 'p10', coachId: 'c1'),
+                relationshipStatus: RelationshipStatus.notInvited,
+              ),
+            ],
           ),
-          FoundPerson(
-            info: createPerson(id: 'u4', coachId: 'c1'),
-            relationshipStatus: RelationshipStatus.notInvited,
+          PersonsSearchState(
+            status: const CubitStatusComplete(),
+            foundPersons: [
+              FoundPerson(
+                info: createPerson(id: 'p1'),
+                relationshipStatus: RelationshipStatus.accepted,
+              ),
+              FoundPerson(
+                info: createPerson(id: 'p4'),
+                relationshipStatus: RelationshipStatus.pending,
+              ),
+              FoundPerson(
+                info: createPerson(id: 'p8'),
+                relationshipStatus: RelationshipStatus.pending,
+              ),
+              FoundPerson(
+                info: createPerson(id: 'p9'),
+                relationshipStatus: RelationshipStatus.accepted,
+              ),
+              FoundPerson(
+                info: createPerson(id: 'p10', coachId: 'c1'),
+                relationshipStatus: RelationshipStatus.notInvited,
+              ),
+            ],
+          ),
+          PersonsSearchState(
+            status: const CubitStatusComplete(),
+            foundPersons: [
+              FoundPerson(
+                info: createPerson(id: 'p1'),
+                relationshipStatus: RelationshipStatus.accepted,
+              ),
+              FoundPerson(
+                info: createPerson(id: 'p4'),
+                relationshipStatus: RelationshipStatus.pending,
+              ),
+              FoundPerson(
+                info: createPerson(id: 'p8'),
+                relationshipStatus: RelationshipStatus.pending,
+              ),
+              FoundPerson(
+                info: createPerson(id: 'p9'),
+                relationshipStatus: RelationshipStatus.accepted,
+              ),
+              FoundPerson(
+                info: createPerson(id: 'p10', coachId: 'c1'),
+                relationshipStatus: RelationshipStatus.accepted,
+              ),
+            ],
           ),
         ],
-      ),
-    ),
-    setUp: () {
-      authService.mockGetLoggedUserId(userId: loggedUserId);
-      personRepository.mockGetPersonsByCoachId(
-        persons: [createPerson(id: 'u2'), createPerson(id: 'u3')],
+        verify: (_) {
+          verify(() => authService.loggedUserId$).called(1);
+          verify(
+            () => userRepository.getUserById(userId: loggedUserId),
+          ).called(1);
+          verify(
+            () => personRepository.getPersonsByCoachId(coachId: loggedUserId),
+          ).called(1);
+          verify(
+            () => coachingRequestService.getCoachingRequestsByReceiverId(
+              receiverId: loggedUserId,
+              direction: CoachingRequestDirection.coachToClient,
+            ),
+          ).called(1);
+          verify(
+            () => coachingRequestService.getCoachingRequestsBySenderId(
+              senderId: loggedUserId,
+              direction: CoachingRequestDirection.clientToCoach,
+            ),
+          ).called(1);
+        },
       );
-      coachingRequestService.mockGetCoachingRequestsBySenderId(
-        requests: [
-          createCoachingRequest(receiverId: 'u4', isAccepted: false),
-          createCoachingRequest(receiverId: 'u5', isAccepted: true),
-          createCoachingRequest(receiverId: 'u3', isAccepted: true),
-        ],
-      );
-    },
-    act: (cubit) => cubit.initialize(),
-    expect: () => [
-      PersonsSearchState(
-        status: const CubitStatusComplete(),
-        clientIds: const ['u2', 'u3', 'u5'],
-        invitedPersonIds: const ['u4'],
-        foundPersons: [
-          FoundPerson(
-            info: createPerson(id: 'u2'),
-            relationshipStatus: RelationshipStatus.accepted,
-          ),
-          FoundPerson(
-            info: createPerson(id: 'u4', coachId: 'c1'),
-            relationshipStatus: RelationshipStatus.pending,
-          ),
-        ],
-      ),
-    ],
-    verify: (_) {
-      verify(() => authService.loggedUserId$).called(1);
-      verify(
-        () => personRepository.getPersonsByCoachId(coachId: loggedUserId),
-      ).called(1);
-      verify(
-        () => coachingRequestService.getCoachingRequestsBySenderId(
-          senderId: loggedUserId,
-          direction: CoachingRequestDirection.clientToCoach,
-        ),
-      ).called(1);
     },
   );
 
@@ -292,46 +481,50 @@ void main() {
 
   blocTest(
     'search, '
-    'coach to client request direction, '
-    "should call person repository's method to search persons and should update found persons in state",
+    'coach to client direction, '
+    'should call person repository method to search persons and '
+    'should update found persons in state',
     build: () => PersonsSearchCubit(
       requestDirection: CoachingRequestDirection.coachToClient,
-      initialState: const PersonsSearchState(
-        status: CubitStatusComplete(),
-        clientIds: ['u12'],
-        invitedPersonIds: ['u2'],
-      ),
     ),
-    setUp: () => personRepository.mockSearchForPersons(
-      persons: [
-        createPerson(
-          id: 'u12',
-          name: 'na1',
-          surname: 'su1',
-          coachId: loggedUserId,
-        ),
-        createPerson(id: 'u2', name: 'na2', surname: 'su2'),
-        createPerson(id: 'u3', name: 'na3', surname: 'su3'),
-        createPerson(
-          id: 'u4',
-          name: 'na4',
-          surname: 'su4',
-          coachId: 'c1',
-        ),
-      ],
-    ),
-    act: (cubit) => cubit.search('sea'),
+    setUp: () {
+      authService.mockGetLoggedUserId(userId: loggedUserId);
+      userRepository.mockGetUserById(user: createUser(coachId: 'u5'));
+      personRepository.mockGetPersonsByCoachId(
+        persons: [createPerson(id: 'u12')],
+      );
+      coachingRequestService.mockGetCoachingRequestsBySenderId(
+        requests: [createCoachingRequest(receiverId: 'u2', isAccepted: false)],
+      );
+      coachingRequestService.mockGetCoachingRequestsByReceiverId(
+        requests: [createCoachingRequest(senderId: 'u3', isAccepted: false)],
+      );
+      personRepository.mockSearchForPersons(
+        persons: [
+          createPerson(
+            id: 'u12',
+            name: 'na1',
+            surname: 'su1',
+            coachId: loggedUserId,
+          ),
+          createPerson(id: 'u2', name: 'na2', surname: 'su2'),
+          createPerson(id: 'u3', name: 'na3', surname: 'su3'),
+          createPerson(id: 'u4', name: 'na4', surname: 'su4', coachId: 'c1'),
+          createPerson(id: 'u5', name: 'na4', surname: 'su4', coachId: 'c2'),
+        ],
+      );
+    },
+    act: (cubit) async {
+      cubit.initialize();
+      await cubit.stream.first;
+      cubit.search('sea');
+    },
     expect: () => [
-      const PersonsSearchState(
-        status: CubitStatusLoading(),
-        clientIds: ['u12'],
-        invitedPersonIds: ['u2'],
-      ),
+      const PersonsSearchState(status: CubitStatusComplete()),
+      const PersonsSearchState(status: CubitStatusLoading()),
       PersonsSearchState(
         status: const CubitStatusComplete(),
         searchQuery: 'sea',
-        clientIds: const ['u12'],
-        invitedPersonIds: const ['u2'],
         foundPersons: [
           FoundPerson(
             info: createPerson(
@@ -348,7 +541,7 @@ void main() {
           ),
           FoundPerson(
             info: createPerson(id: 'u3', name: 'na3', surname: 'su3'),
-            relationshipStatus: RelationshipStatus.notInvited,
+            relationshipStatus: RelationshipStatus.pending,
           ),
           FoundPerson(
             info: createPerson(
@@ -358,6 +551,15 @@ void main() {
               coachId: 'c1',
             ),
             relationshipStatus: RelationshipStatus.alreadyTaken,
+          ),
+          FoundPerson(
+            info: createPerson(
+              id: 'u5',
+              name: 'na4',
+              surname: 'su4',
+              coachId: 'c2',
+            ),
+            relationshipStatus: RelationshipStatus.accepted,
           ),
         ],
       ),
@@ -369,36 +571,45 @@ void main() {
 
   blocTest(
     'search, '
-    'client to coach request direction, '
-    "should call person repository's method to search persons and should update found persons in state",
+    'client to coach direction, '
+    'should call person repository method to search persons and '
+    'should update found persons in state',
     build: () => PersonsSearchCubit(
       requestDirection: CoachingRequestDirection.clientToCoach,
-      initialState: const PersonsSearchState(
-        status: CubitStatusComplete(),
-        clientIds: ['u12'],
-        invitedPersonIds: ['u2'],
-      ),
     ),
-    setUp: () => personRepository.mockSearchForPersons(
-      persons: [
-        createPerson(id: 'u12', name: 'na1', surname: 'su1'),
-        createPerson(id: 'u2', name: 'na2', surname: 'su2', coachId: 'c1'),
-        createPerson(id: 'u3', name: 'na3', surname: 'su3', coachId: 'c2'),
-        createPerson(id: 'u4', name: 'na4', surname: 'su4', coachId: 'c1'),
-      ],
-    ),
-    act: (cubit) => cubit.search('sea'),
+    setUp: () {
+      authService.mockGetLoggedUserId(userId: loggedUserId);
+      userRepository.mockGetUserById(user: createUser(coachId: 'u5'));
+      personRepository.mockGetPersonsByCoachId(
+        persons: [createPerson(id: 'u12')],
+      );
+      coachingRequestService.mockGetCoachingRequestsBySenderId(
+        requests: [createCoachingRequest(receiverId: 'u2', isAccepted: false)],
+      );
+      coachingRequestService.mockGetCoachingRequestsByReceiverId(
+        requests: [createCoachingRequest(senderId: 'u3', isAccepted: false)],
+      );
+      personRepository.mockSearchForPersons(
+        persons: [
+          createPerson(id: 'u12', name: 'na1', surname: 'su1'),
+          createPerson(id: 'u2', name: 'na2', surname: 'su2', coachId: 'c1'),
+          createPerson(id: 'u3', name: 'na3', surname: 'su3', coachId: 'c2'),
+          createPerson(id: 'u4', name: 'na4', surname: 'su4', coachId: 'c1'),
+          createPerson(id: 'u5', name: 'na4', surname: 'su4', coachId: 'c2'),
+        ],
+      );
+    },
+    act: (cubit) async {
+      cubit.initialize();
+      await cubit.stream.first;
+      cubit.search('sea');
+    },
     expect: () => [
-      const PersonsSearchState(
-        status: CubitStatusLoading(),
-        clientIds: ['u12'],
-        invitedPersonIds: ['u2'],
-      ),
+      const PersonsSearchState(status: CubitStatusComplete()),
+      const PersonsSearchState(status: CubitStatusLoading()),
       PersonsSearchState(
         status: const CubitStatusComplete(),
         searchQuery: 'sea',
-        clientIds: const ['u12'],
-        invitedPersonIds: const ['u2'],
         foundPersons: [
           FoundPerson(
             info: createPerson(id: 'u12', name: 'na1', surname: 'su1'),
@@ -420,7 +631,7 @@ void main() {
               surname: 'su3',
               coachId: 'c2',
             ),
-            relationshipStatus: RelationshipStatus.notInvited,
+            relationshipStatus: RelationshipStatus.pending,
           ),
           FoundPerson(
             info: createPerson(
@@ -430,6 +641,15 @@ void main() {
               coachId: 'c1',
             ),
             relationshipStatus: RelationshipStatus.notInvited,
+          ),
+          FoundPerson(
+            info: createPerson(
+              id: 'u5',
+              name: 'na4',
+              surname: 'su4',
+              coachId: 'c2',
+            ),
+            relationshipStatus: RelationshipStatus.accepted,
           ),
         ],
       ),

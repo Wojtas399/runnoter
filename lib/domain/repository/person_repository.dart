@@ -16,6 +16,8 @@ abstract interface class PersonRepository {
     required String? coachId,
   });
 
+  Future<void> refreshPersonById({required String personId});
+
   Future<void> refreshPersonsByCoachId({required String coachId});
 
   Future<void> removeCoachIdInAllMatchingPersons({required String coachId});

@@ -1,8 +1,8 @@
 part of 'clients_cubit.dart';
 
 class ClientsState extends CubitState<ClientsState> {
-  final List<CoachingRequestShort>? sentRequests;
-  final List<CoachingRequestShort>? receivedRequests;
+  final List<CoachingRequestWithPerson>? sentRequests;
+  final List<CoachingRequestWithPerson>? receivedRequests;
   final List<Person>? clients;
   final String? selectedChatId;
 
@@ -26,8 +26,8 @@ class ClientsState extends CubitState<ClientsState> {
   @override
   ClientsState copyWith({
     CubitStatus? status,
-    List<CoachingRequestShort>? sentRequests,
-    List<CoachingRequestShort>? receivedRequests,
+    List<CoachingRequestWithPerson>? sentRequests,
+    List<CoachingRequestWithPerson>? receivedRequests,
     List<Person>? clients,
     String? selectedChatId,
   }) =>

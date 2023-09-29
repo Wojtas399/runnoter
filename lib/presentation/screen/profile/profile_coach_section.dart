@@ -85,21 +85,25 @@ class _Coach extends StatelessWidget {
   }
 
   Future<void> _onOpenChat(BuildContext context) async {
-    showLoadingDialog();
-    final String? chatId = await context.read<ProfileCoachCubit>().loadChatId();
-    closeLoadingDialog();
-    navigateTo(ChatRoute(chatId: chatId));
+    final ProfileCoachCubit cubit = context.read<ProfileCoachCubit>();
+    final bool hasStillCoach = await cubit.checkIfStillHasCoach();
+    if (hasStillCoach) {
+      final String? chatId = await cubit.loadChatId();
+      navigateTo(ChatRoute(chatId: chatId));
+    }
   }
 
-  void _onShowDetails(BuildContext context) {
-    final String? coachId = context.read<ProfileCoachCubit>().state.coachId;
-    if (coachId != null) {
-      showDialogDependingOnScreenSize(
-        PersonDetailsDialog(
+  Future<void> _onShowDetails(BuildContext context) async {
+    final ProfileCoachCubit cubit = context.read<ProfileCoachCubit>();
+    final bool hasStillCoach = await cubit.checkIfStillHasCoach();
+    if (hasStillCoach) {
+      final String? coachId = cubit.state.coachId;
+      if (coachId != null) {
+        showDialogDependingOnScreenSize(PersonDetailsDialog(
           personId: coachId,
           personType: PersonType.coach,
-        ),
-      );
+        ));
+      }
     }
   }
 

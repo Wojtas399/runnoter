@@ -5,7 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/additional_model/coaching_request.dart';
-import 'package:runnoter/domain/additional_model/coaching_request_short.dart';
+import 'package:runnoter/domain/additional_model/coaching_request_with_person.dart';
 import 'package:runnoter/domain/cubit/notifications/notifications_cubit.dart';
 import 'package:runnoter/domain/entity/person.dart';
 import 'package:runnoter/domain/entity/user.dart';
@@ -15,6 +15,7 @@ import 'package:runnoter/domain/repository/person_repository.dart';
 import 'package:runnoter/domain/repository/user_repository.dart';
 import 'package:runnoter/domain/service/auth_service.dart';
 import 'package:runnoter/domain/service/coaching_request_service.dart';
+import 'package:runnoter/domain/use_case/get_sent_coaching_requests_with_receiver_info_use_case.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../../creators/coaching_request_creator.dart';
@@ -26,12 +27,15 @@ import '../../../mock/domain/repository/mock_person_repository.dart';
 import '../../../mock/domain/repository/mock_user_repository.dart';
 import '../../../mock/domain/service/mock_auth_service.dart';
 import '../../../mock/domain/service/mock_coaching_request_service.dart';
+import '../../../mock/domain/use_case/mock_get_sent_coaching_requests_with_receiver_info_use_case.dart';
 
 void main() {
   final authService = MockAuthService();
   final coachingRequestService = MockCoachingRequestService();
   final userRepository = MockUserRepository();
   final personRepository = MockPersonRepository();
+  final getSentCoachingRequestsWithReceiverInfoUseCase =
+      MockGetSentCoachingRequestsWithReceiverInfoUseCase();
   final chatRepository = MockChatRepository();
   final messageRepository = MockMessageRepository();
   const String loggedUserId = 'u1';
@@ -43,6 +47,9 @@ void main() {
     );
     GetIt.I.registerSingleton<UserRepository>(userRepository);
     GetIt.I.registerSingleton<PersonRepository>(personRepository);
+    GetIt.I.registerFactory<GetSentCoachingRequestsWithReceiverInfoUseCase>(
+      () => getSentCoachingRequestsWithReceiverInfoUseCase,
+    );
     GetIt.I.registerSingleton<ChatRepository>(chatRepository);
     GetIt.I.registerSingleton<MessageRepository>(messageRepository);
   });
@@ -52,6 +59,7 @@ void main() {
     reset(coachingRequestService);
     reset(userRepository);
     reset(personRepository);
+    reset(getSentCoachingRequestsWithReceiverInfoUseCase);
     reset(chatRepository);
     reset(messageRepository);
   });
@@ -95,14 +103,10 @@ void main() {
         id: loggedUserId,
         accountType: AccountType.runner,
       );
-      final Person coach = createPerson(id: 'co1', name: 'coach');
-      final List<CoachingRequest> requestsSentToCoaches = [
-        createCoachingRequest(id: 'r4', receiverId: 'co1', isAccepted: true),
+      final List<CoachingRequestWithPerson> requestsSentToCoaches = [
+        CoachingRequestWithPerson(id: 'r1', person: createPerson(id: 'p1')),
       ];
-      final List<CoachingRequest> updatedRequestsSentToCoaches = [
-        createCoachingRequest(id: 'r5', receiverId: 'co2', isAccepted: false),
-      ];
-      final StreamController<List<CoachingRequest>> coachesRequests$ =
+      final StreamController<List<CoachingRequestWithPerson>> coachesRequests$ =
           StreamController()..add(requestsSentToCoaches);
 
       blocTest(
@@ -112,28 +116,17 @@ void main() {
           authService.mockGetLoggedUserId(userId: loggedUserId);
           userRepository.mockGetUserById(user: loggedUser);
           userRepository.mockRefreshUserById();
-          when(
-            () => coachingRequestService.getCoachingRequestsBySenderId(
-              senderId: loggedUserId,
-              direction: CoachingRequestDirection.clientToCoach,
-            ),
-          ).thenAnswer((_) => coachesRequests$.stream);
-          when(
-            () => personRepository.getPersonById(personId: coach.id),
-          ).thenAnswer((_) => Stream.value(coach));
+          getSentCoachingRequestsWithReceiverInfoUseCase.mock(
+            requests$: coachesRequests$.stream,
+          );
         },
         act: (cubit) async {
           cubit.listenToAcceptedRequests();
           await cubit.stream.first;
-          coachesRequests$.add(updatedRequestsSentToCoaches);
+          coachesRequests$.add(const []);
         },
         expect: () => [
-          NotificationsState(
-            acceptedCoachRequest: CoachingRequestShort(
-              id: 'r4',
-              personToDisplay: coach,
-            ),
-          ),
+          NotificationsState(acceptedCoachRequest: requestsSentToCoaches.first),
           const NotificationsState(acceptedCoachRequest: null),
         ],
         verify: (_) {
@@ -142,9 +135,10 @@ void main() {
             () => userRepository.getUserById(userId: loggedUserId),
           ).called(1);
           verify(
-            () => coachingRequestService.getCoachingRequestsBySenderId(
+            () => getSentCoachingRequestsWithReceiverInfoUseCase.execute(
               senderId: loggedUserId,
-              direction: CoachingRequestDirection.clientToCoach,
+              requestDirection: CoachingRequestDirection.clientToCoach,
+              requestStatuses: SentCoachingRequestStatuses.onlyAccepted,
             ),
           ).called(1);
           verify(
@@ -164,16 +158,11 @@ void main() {
         accountType: AccountType.coach,
         coachId: 'c1',
       );
-      final Person client1 = createPerson(id: 'cl1', name: 'first client');
-      final Person client2 = createPerson(id: 'cl2', name: 'second client');
-      final List<CoachingRequest> requestsSentToClients = [
-        createCoachingRequest(id: 'r1', receiverId: 'cl3', isAccepted: false),
-        createCoachingRequest(id: 'r2', receiverId: 'cl1', isAccepted: true),
+      final List<CoachingRequestWithPerson> requestsSentToClients = [
+        CoachingRequestWithPerson(id: 'r1', person: createPerson(id: 'p1')),
+        CoachingRequestWithPerson(id: 'r2', person: createPerson(id: 'p2')),
       ];
-      final List<CoachingRequest> updatedRequestsSentToClients = [
-        createCoachingRequest(id: 'r3', receiverId: 'cl2', isAccepted: true),
-      ];
-      final StreamController<List<CoachingRequest>> clientsRequests$ =
+      final StreamController<List<CoachingRequestWithPerson>> clientsRequests$ =
           StreamController()..add(requestsSentToClients);
 
       blocTest(
@@ -183,35 +172,26 @@ void main() {
           authService.mockGetLoggedUserId(userId: loggedUserId);
           userRepository.mockGetUserById(user: loggedUser);
           personRepository.mockRefreshPersonsByCoachId();
-          when(
-            () => coachingRequestService.getCoachingRequestsBySenderId(
-              senderId: loggedUserId,
-              direction: CoachingRequestDirection.coachToClient,
-            ),
-          ).thenAnswer((_) => clientsRequests$.stream);
-          when(
-            () => personRepository.getPersonById(personId: client1.id),
-          ).thenAnswer((_) => Stream.value(client1));
-          when(
-            () => personRepository.getPersonById(personId: client2.id),
-          ).thenAnswer((_) => Stream.value(client2));
+          getSentCoachingRequestsWithReceiverInfoUseCase.mock(
+            requests$: clientsRequests$.stream,
+          );
         },
         act: (cubit) async {
           cubit.listenToAcceptedRequests();
           await cubit.stream.first;
-          clientsRequests$.add(updatedRequestsSentToClients);
-          await cubit.stream.first;
-          clientsRequests$.add([]);
+          clientsRequests$.add(const []);
         },
         expect: () => [
           NotificationsState(
             acceptedClientRequests: [
-              CoachingRequestShort(id: 'r2', personToDisplay: client1),
-            ],
-          ),
-          NotificationsState(
-            acceptedClientRequests: [
-              CoachingRequestShort(id: 'r3', personToDisplay: client2),
+              CoachingRequestWithPerson(
+                id: 'r1',
+                person: createPerson(id: 'p1'),
+              ),
+              CoachingRequestWithPerson(
+                id: 'r2',
+                person: createPerson(id: 'p2'),
+              ),
             ],
           ),
           const NotificationsState(acceptedClientRequests: []),
@@ -222,16 +202,16 @@ void main() {
             () => userRepository.getUserById(userId: loggedUserId),
           ).called(1);
           verify(
-            () => coachingRequestService.getCoachingRequestsBySenderId(
-              senderId: loggedUserId,
-              direction: CoachingRequestDirection.coachToClient,
-            ),
+            () => getSentCoachingRequestsWithReceiverInfoUseCase.execute(
+                senderId: loggedUserId,
+                requestDirection: CoachingRequestDirection.coachToClient,
+                requestStatuses: SentCoachingRequestStatuses.onlyAccepted),
           ).called(1);
           verify(
             () => personRepository.refreshPersonsByCoachId(
               coachId: loggedUserId,
             ),
-          ).called(2);
+          ).called(1);
         },
       );
     },
@@ -245,26 +225,23 @@ void main() {
         id: loggedUserId,
         accountType: AccountType.coach,
       );
-      final Person client1 = createPerson(id: 'cl1', name: 'first client');
-      final Person client2 = createPerson(id: 'cl2', name: 'second client');
-      final Person coach = createPerson(id: 'co1', name: 'coach');
-      final List<CoachingRequest> requestsSentToClients = [
-        createCoachingRequest(id: 'r1', receiverId: 'cl3', isAccepted: false),
-        createCoachingRequest(id: 'r2', receiverId: 'cl1', isAccepted: true),
+      final List<CoachingRequestWithPerson> clientRequests = [
+        CoachingRequestWithPerson(id: 'r1', person: createPerson(id: 'p1')),
+        CoachingRequestWithPerson(id: 'r2', person: createPerson(id: 'p2')),
       ];
-      final List<CoachingRequest> updatedRequestsSentToClients = [
-        createCoachingRequest(id: 'r3', receiverId: 'cl2', isAccepted: true),
+      final List<CoachingRequestWithPerson> updatedClientRequests = [
+        CoachingRequestWithPerson(id: 'r3', person: createPerson(id: 'p3')),
       ];
-      final List<CoachingRequest> requestsSentToCoaches = [
-        createCoachingRequest(id: 'r4', receiverId: 'co1', isAccepted: true),
+      final List<CoachingRequestWithPerson> coachRequests = [
+        CoachingRequestWithPerson(id: 'r4', person: createPerson(id: 'p4')),
       ];
-      final List<CoachingRequest> updatedRequestsSentToCoaches = [
-        createCoachingRequest(id: 'r5', receiverId: 'co2', isAccepted: false),
+      final List<CoachingRequestWithPerson> updatedCoachRequests = [
+        CoachingRequestWithPerson(id: 'r5', person: createPerson(id: 'p5')),
       ];
-      final StreamController<List<CoachingRequest>> clientsRequests$ =
-          StreamController()..add(requestsSentToClients);
-      final StreamController<List<CoachingRequest>> coachesRequests$ =
-          StreamController()..add(requestsSentToCoaches);
+      final StreamController<List<CoachingRequestWithPerson>> clientsRequests$ =
+          StreamController()..add(clientRequests);
+      final StreamController<List<CoachingRequestWithPerson>> coachesRequests$ =
+          StreamController()..add(coachRequests);
 
       blocTest(
         'should listen to accepted client requests and coach request',
@@ -275,52 +252,39 @@ void main() {
           personRepository.mockRefreshPersonsByCoachId();
           userRepository.mockRefreshUserById();
           when(
-            () => coachingRequestService.getCoachingRequestsBySenderId(
+            () => getSentCoachingRequestsWithReceiverInfoUseCase.execute(
               senderId: loggedUserId,
-              direction: CoachingRequestDirection.coachToClient,
+              requestDirection: CoachingRequestDirection.coachToClient,
+              requestStatuses: SentCoachingRequestStatuses.onlyAccepted,
             ),
           ).thenAnswer((_) => clientsRequests$.stream);
           when(
-            () => coachingRequestService.getCoachingRequestsBySenderId(
+            () => getSentCoachingRequestsWithReceiverInfoUseCase.execute(
               senderId: loggedUserId,
-              direction: CoachingRequestDirection.clientToCoach,
+              requestDirection: CoachingRequestDirection.clientToCoach,
+              requestStatuses: SentCoachingRequestStatuses.onlyAccepted,
             ),
           ).thenAnswer((_) => coachesRequests$.stream);
-          when(
-            () => personRepository.getPersonById(personId: client1.id),
-          ).thenAnswer((_) => Stream.value(client1));
-          when(
-            () => personRepository.getPersonById(personId: client2.id),
-          ).thenAnswer((_) => Stream.value(client2));
-          when(
-            () => personRepository.getPersonById(personId: coach.id),
-          ).thenAnswer((_) => Stream.value(coach));
         },
         act: (cubit) async {
           cubit.listenToAcceptedRequests();
           await cubit.stream.first;
-          coachesRequests$.add(updatedRequestsSentToCoaches);
-          clientsRequests$.add(updatedRequestsSentToClients);
+          coachesRequests$.add(updatedCoachRequests);
+          await cubit.stream.first;
+          clientsRequests$.add(updatedClientRequests);
         },
         expect: () => [
           NotificationsState(
-            acceptedClientRequests: [
-              CoachingRequestShort(id: 'r2', personToDisplay: client1),
-            ],
-            acceptedCoachRequest: CoachingRequestShort(
-              id: 'r4',
-              personToDisplay: coach,
-            ),
+            acceptedClientRequests: clientRequests,
+            acceptedCoachRequest: coachRequests.first,
           ),
           NotificationsState(
-            acceptedClientRequests: [
-              CoachingRequestShort(id: 'r2', personToDisplay: client1),
-            ],
+            acceptedClientRequests: clientRequests,
+            acceptedCoachRequest: updatedCoachRequests.first,
           ),
           NotificationsState(
-            acceptedClientRequests: [
-              CoachingRequestShort(id: 'r3', personToDisplay: client2),
-            ],
+            acceptedClientRequests: updatedClientRequests,
+            acceptedCoachRequest: updatedCoachRequests.first,
           ),
         ],
         verify: (_) {
@@ -329,20 +293,22 @@ void main() {
             () => userRepository.getUserById(userId: loggedUserId),
           ).called(1);
           verify(
-            () => coachingRequestService.getCoachingRequestsBySenderId(
+            () => getSentCoachingRequestsWithReceiverInfoUseCase.execute(
               senderId: loggedUserId,
-              direction: CoachingRequestDirection.coachToClient,
+              requestDirection: CoachingRequestDirection.coachToClient,
+              requestStatuses: SentCoachingRequestStatuses.onlyAccepted,
             ),
           ).called(1);
           verify(
-            () => coachingRequestService.getCoachingRequestsBySenderId(
+            () => getSentCoachingRequestsWithReceiverInfoUseCase.execute(
               senderId: loggedUserId,
-              direction: CoachingRequestDirection.clientToCoach,
+              requestDirection: CoachingRequestDirection.clientToCoach,
+              requestStatuses: SentCoachingRequestStatuses.onlyAccepted,
             ),
           ).called(1);
           verify(
             () => userRepository.refreshUserById(userId: loggedUserId),
-          ).called(1);
+          ).called(2);
           verify(
             () => personRepository.refreshPersonsByCoachId(
               coachId: loggedUserId,

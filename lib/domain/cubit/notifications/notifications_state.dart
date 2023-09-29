@@ -1,8 +1,8 @@
 part of 'notifications_cubit.dart';
 
 class NotificationsState extends Equatable {
-  final List<CoachingRequestShort> acceptedClientRequests;
-  final CoachingRequestShort? acceptedCoachRequest;
+  final List<CoachingRequestWithPerson> acceptedClientRequests;
+  final CoachingRequestWithPerson? acceptedCoachRequest;
   final List<String> idsOfClientsWithAwaitingMessages;
   final bool areThereUnreadMessagesFromCoach;
   final int numberOfCoachingRequestsFromClients;
@@ -28,8 +28,8 @@ class NotificationsState extends Equatable {
       ];
 
   NotificationsState copyWith({
-    List<CoachingRequestShort>? acceptedClientRequests,
-    CoachingRequestShort? acceptedCoachRequest,
+    List<CoachingRequestWithPerson>? acceptedClientRequests,
+    CoachingRequestWithPerson? acceptedCoachRequest,
     List<String>? idsOfClientsWithAwaitingMessages,
     bool? areThereUnreadMessagesFromCoach,
     int? numberOfCoachingRequestsFromClients,

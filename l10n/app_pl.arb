@@ -521,6 +521,14 @@
   "@profileFindCoach": {
     "description": "Label of the button to find a coach"
   },
+  "profileUserNoLongerHasCoachDialogTitle": "Błąd trenera",
+  "@profileUserNoLongerHasCoachDialogTitle": {
+    "description": "Title of the dialog to inform that user no longer has a coach"
+  },
+  "profileUserNoLongerHasCoachDialogMessage": "Wygląda na to, że twój trener zakończył z tobą współpracę. Z tego powodu nie możemy kontynuować wybranej akcji.",
+  "@profileUserNoLongerHasCoachDialogMessage": {
+    "description": "Message of the dialog to inform that user no longer has a coach"
+  },
   "profileFinishCooperationWithCoachDialogTitle": "Usuń trenera",
   "@profileFinishCooperationWithCoachDialogTitle": {
     "description": "Title of the dialog to confirm finishing cooperation with coach"
@@ -727,6 +735,22 @@
   "clientsMessage": "Wiadomość",
   "@clientsMessage": {
     "description": "Label of the button to send message"
+  },
+  "clientsPersonAlreadyHasCoachDialogTitle": "Osoba posiada już trenera",
+  "@clientsPersonAlreadyHasCoachDialogTitle": {
+    "description": "Title of the dialog to inform that person from selected coaching request already has a coach"
+  },
+  "clientsPersonAlreadyHasCoachDialogMessage": "Wygląda na to, że ta osoba rozpoczęła już współpracę z innym trenerem. Z tego powodu nie możesz zatwierdzić tej prośby o trenowanie.",
+  "@clientsPersonAlreadyHasCoachDialogMessage": {
+    "description": "Message of the dialog to inform that person from selected coaching request already has a coach"
+  },
+  "clientsClientIsNotClientAnymoreDialogTitle": "Błąd klienta",
+  "@clientsClientIsNotClientAnymoreDialogTitle": {
+    "description": "Title of the dialog to inform that selected client is not a client anymore"
+  },
+  "clientsClientIsNotClientAnymoreDialogMessage": "Wygląda na to, że ten klient zakończył z tobą współpracę. Z tego powodu nie możesz kontynuować wybranej akcji.",
+  "@clientsClientIsNotClientAnymoreDialogMessage": {
+    "description": "Message of the dialog to inform that selected client is not a client anymore"
   },
   "clientsDeleteClientConfirmationDialogTitle": "Usuń klienta",
   "@clientsDeleteClientConfirmationDialogTitle": {

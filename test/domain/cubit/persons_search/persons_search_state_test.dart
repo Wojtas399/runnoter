@@ -40,34 +40,6 @@ void main() {
   );
 
   test(
-    'copy with clientIds, '
-    'should copy current value if new value is null',
-    () {
-      const List<String> expected = ['c1', 'c2'];
-
-      state = state.copyWith(clientIds: expected);
-      final state2 = state.copyWith();
-
-      expect(state.clientIds, expected);
-      expect(state2.clientIds, expected);
-    },
-  );
-
-  test(
-    'copy with invitedPersonIds, '
-    'should copy current value if new value is null',
-    () {
-      const List<String> expected = ['c1', 'c2'];
-
-      state = state.copyWith(invitedPersonIds: expected);
-      final state2 = state.copyWith();
-
-      expect(state.invitedPersonIds, expected);
-      expect(state2.invitedPersonIds, expected);
-    },
-  );
-
-  test(
     'copy with foundPersons, '
     'should copy current value if new value is null',
     () {

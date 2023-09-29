@@ -4,7 +4,7 @@ import 'package:rxdart/rxdart.dart';
 
 import '../../../dependency_injection.dart';
 import '../../additional_model/coaching_request.dart';
-import '../../additional_model/coaching_request_short.dart';
+import '../../additional_model/coaching_request_with_person.dart';
 import '../../additional_model/cubit_state.dart';
 import '../../additional_model/cubit_status.dart';
 import '../../additional_model/cubit_with_status.dart';
@@ -12,15 +12,21 @@ import '../../entity/person.dart';
 import '../../repository/person_repository.dart';
 import '../../service/auth_service.dart';
 import '../../service/coaching_request_service.dart';
+import '../../use_case/get_received_coaching_requests_with_sender_info_use_case.dart';
+import '../../use_case/get_sent_coaching_requests_with_receiver_info_use_case.dart';
 import '../../use_case/load_chat_id_use_case.dart';
 
 part 'clients_state.dart';
 
 class ClientsCubit
-    extends CubitWithStatus<ClientsState, ClientsCubitInfo, dynamic> {
+    extends CubitWithStatus<ClientsState, ClientsCubitInfo, ClientsCubitError> {
   final AuthService _authService;
   final CoachingRequestService _coachingRequestService;
   final PersonRepository _personRepository;
+  final GetSentCoachingRequestsWithReceiverInfoUseCase
+      _getSentCoachingRequestsWithReceiverInfoUseCase;
+  final GetReceivedCoachingRequestsWithSenderInfoUseCase
+      _getReceivedCoachingRequestsWithSenderInfoUseCase;
   final LoadChatIdUseCase _loadChatIdUseCase;
   StreamSubscription<ClientsState>? _listener;
 
@@ -30,6 +36,10 @@ class ClientsCubit
   })  : _authService = getIt<AuthService>(),
         _coachingRequestService = getIt<CoachingRequestService>(),
         _personRepository = getIt<PersonRepository>(),
+        _getSentCoachingRequestsWithReceiverInfoUseCase =
+            getIt<GetSentCoachingRequestsWithReceiverInfoUseCase>(),
+        _getReceivedCoachingRequestsWithSenderInfoUseCase =
+            getIt<GetReceivedCoachingRequestsWithSenderInfoUseCase>(),
         _loadChatIdUseCase = getIt<LoadChatIdUseCase>(),
         super(initialState);
 
@@ -49,8 +59,8 @@ class ClientsCubit
                   _getReceivedRequests(loggedUserId),
                   _getClients(loggedUserId),
                   (
-                    List<CoachingRequestShort> sentRequests,
-                    List<CoachingRequestShort> receivedRequests,
+                    List<CoachingRequestWithPerson> sentRequests,
+                    List<CoachingRequestWithPerson> receivedRequests,
                     List<Person> clients,
                   ) =>
                       state.copyWith(
@@ -64,7 +74,7 @@ class ClientsCubit
   }
 
   Future<void> acceptRequest(String requestId) async {
-    final String? loggedUserId = await _authService.loggedUserId$.first;
+    final String? loggedUserId = await _loadLoggedUserId();
     if (loggedUserId == null) {
       emitNoLoggedUserStatus();
       return;
@@ -72,8 +82,16 @@ class ClientsCubit
     emitLoadingStatus();
     final String senderId = state.receivedRequests!
         .firstWhere((req) => req.id == requestId)
-        .personToDisplay
+        .person
         .id;
+    await _personRepository.refreshPersonById(personId: senderId);
+    final Person? client =
+        await _personRepository.getPersonById(personId: senderId).first;
+    if (client == null) return;
+    if (client.coachId != null) {
+      emitErrorStatus(ClientsCubitError.personAlreadyHasCoach);
+      return;
+    }
     await _personRepository.updateCoachIdOfPerson(
       personId: senderId,
       coachId: loggedUserId,
@@ -92,7 +110,7 @@ class ClientsCubit
   }
 
   Future<void> openChatWithClient(String clientId) async {
-    final String? loggedUserId = await _authService.loggedUserId$.first;
+    final String? loggedUserId = await _loadLoggedUserId();
     if (loggedUserId == null) return;
     emitLoadingStatus();
     final String? chatId = await _loadChatIdUseCase.execute(
@@ -103,7 +121,7 @@ class ClientsCubit
   }
 
   Future<void> deleteClient(String clientId) async {
-    final String? loggedUserId = await _authService.loggedUserId$.first;
+    final String? loggedUserId = await _loadLoggedUserId();
     if (loggedUserId == null) return;
     emitLoadingStatus();
     await _personRepository.updateCoachIdOfPerson(
@@ -117,68 +135,56 @@ class ClientsCubit
     emitCompleteStatus(info: ClientsCubitInfo.clientDeleted);
   }
 
+  Future<void> refreshClients() async {
+    if (state.clients?.isNotEmpty == true) {
+      for (final Person client in state.clients!) {
+        await _personRepository.refreshPersonById(personId: client.id);
+      }
+    }
+  }
+
+  Future<bool> checkIfClientIsStillClient(String clientId) async {
+    final String? loggedUserId = await _loadLoggedUserId();
+    if (loggedUserId == null) {
+      emitNoLoggedUserStatus();
+      return false;
+    }
+    await _personRepository.refreshPersonById(personId: clientId);
+    final Person? client =
+        await _personRepository.getPersonById(personId: clientId).first;
+    if (client?.coachId != loggedUserId) {
+      emitErrorStatus(ClientsCubitError.clientIsNoLongerClient);
+      return false;
+    }
+    return true;
+  }
+
   Stream<List<Person>> _getClients(String loggedUserId) => _personRepository
       .getPersonsByCoachId(coachId: loggedUserId)
       .map((List<Person>? clients) => [...?clients]);
 
-  Stream<List<CoachingRequestShort>> _getSentRequests(String loggedUserId) =>
-      _coachingRequestService
-          .getCoachingRequestsBySenderId(
-            senderId: loggedUserId,
-            direction: CoachingRequestDirection.coachToClient,
-          )
-          .map((sentRequests) => sentRequests.where((req) => !req.isAccepted))
-          .map(
-            (pendingSentRequests) => pendingSentRequests.map(
-              (req) => Rx.combineLatest2(
-                Stream.value(req.id),
-                _personRepository
-                    .getPersonById(personId: req.receiverId)
-                    .whereNotNull(),
-                (requestId, receiver) => (requestId, receiver),
-              ),
-            ),
-          )
-          .switchMap(_createShortRequestsFromStreams);
-
-  Stream<List<CoachingRequestShort>> _getReceivedRequests(
+  Stream<List<CoachingRequestWithPerson>> _getSentRequests(
     String loggedUserId,
   ) =>
-      _coachingRequestService
-          .getCoachingRequestsByReceiverId(
-            receiverId: loggedUserId,
-            direction: CoachingRequestDirection.clientToCoach,
-          )
-          .map((requests) => requests.where((req) => !req.isAccepted))
-          .map(
-            (pendingRequests) => pendingRequests.map(
-              (req) => Rx.combineLatest2(
-                Stream.value(req.id),
-                _personRepository
-                    .getPersonById(personId: req.senderId)
-                    .whereNotNull(),
-                (requestId, sender) => (requestId, sender),
-              ),
-            ),
-          )
-          .switchMap(_createShortRequestsFromStreams);
+      _getSentCoachingRequestsWithReceiverInfoUseCase.execute(
+        senderId: loggedUserId,
+        requestDirection: CoachingRequestDirection.coachToClient,
+        requestStatuses: SentCoachingRequestStatuses.onlyUnaccepted,
+      );
 
-  Stream<List<CoachingRequestShort>> _createShortRequestsFromStreams(
-    Iterable<Stream<(String, Person)>> streams,
+  Stream<List<CoachingRequestWithPerson>> _getReceivedRequests(
+    String loggedUserId,
   ) =>
-      streams.isEmpty
-          ? Stream.value([])
-          : Rx.combineLatest(
-              streams,
-              (List<(String, Person)> values) => values
-                  .map(
-                    (req) => CoachingRequestShort(
-                      id: req.$1,
-                      personToDisplay: req.$2,
-                    ),
-                  )
-                  .toList(),
-            );
+      _getReceivedCoachingRequestsWithSenderInfoUseCase.execute(
+        receiverId: loggedUserId,
+        requestDirection: CoachingRequestDirection.clientToCoach,
+        requestStatuses: ReceivedCoachingRequestStatuses.onlyUnaccepted,
+      );
+
+  Future<String?> _loadLoggedUserId() async =>
+      await _authService.loggedUserId$.first;
 }
 
 enum ClientsCubitInfo { requestAccepted, requestDeleted, clientDeleted }
+
+enum ClientsCubitError { personAlreadyHasCoach, clientIsNoLongerClient }
