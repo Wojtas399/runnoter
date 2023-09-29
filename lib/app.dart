@@ -4,14 +4,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
-import 'package:runnoter/presentation/service/distance_unit_service.dart';
-import 'package:runnoter/presentation/service/pace_unit_service.dart';
 import 'package:syncfusion_localizations/syncfusion_localizations.dart';
 
 import 'dependency_injection.dart';
 import 'presentation/config/navigation/router.dart';
 import 'presentation/config/theme.dart';
+import 'presentation/service/distance_unit_service.dart';
 import 'presentation/service/language_service.dart';
+import 'presentation/service/pace_unit_service.dart';
 import 'presentation/service/theme_service.dart';
 
 class App extends StatelessWidget {
