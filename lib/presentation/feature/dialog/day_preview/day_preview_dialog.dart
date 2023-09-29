@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/cubit/day_preview/day_preview_cubit.dart';
-import '../../../domain/entity/health_measurement.dart';
-import '../../component/gap/gap_components.dart';
-import '../../component/health_measurement_info_component.dart';
-import '../../component/responsive_layout_component.dart';
-import '../../component/text/title_text_components.dart';
-import '../../formatter/date_formatter.dart';
-import '../../service/dialog_service.dart';
-import '../../service/navigator_service.dart';
-import '../health_measurement_creator/health_measurement_creator_dialog.dart';
+import '../../../../domain/cubit/day_preview/day_preview_cubit.dart';
+import '../../../../domain/entity/health_measurement.dart';
+import '../../../component/gap/gap_components.dart';
+import '../../../component/health_measurement_info_component.dart';
+import '../../../component/responsive_layout_component.dart';
+import '../../../component/text/title_text_components.dart';
+import '../../../dialog/health_measurement_creator/health_measurement_creator_dialog.dart';
+import '../../../formatter/date_formatter.dart';
+import '../../../service/dialog_service.dart';
+import '../../../service/navigator_service.dart';
 import 'day_preview_activities_content.dart';
 import 'day_preview_add_activity_button.dart';
 

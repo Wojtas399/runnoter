@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/cubit/day_preview/day_preview_cubit.dart';
-import '../../../domain/entity/race.dart';
-import '../../../domain/entity/workout.dart';
-import '../../component/activity_item_component.dart';
-import '../../component/empty_content_info_component.dart';
-import '../../component/loading_info_component.dart';
-import '../../component/padding/paddings_24.dart';
-import '../../service/navigator_service.dart';
+import '../../../../domain/cubit/day_preview/day_preview_cubit.dart';
+import '../../../../domain/entity/race.dart';
+import '../../../../domain/entity/workout.dart';
+import '../../../component/activity_item_component.dart';
+import '../../../component/empty_content_info_component.dart';
+import '../../../component/loading_info_component.dart';
+import '../../../component/padding/paddings_24.dart';
+import '../../../service/navigator_service.dart';
 import 'day_preview_dialog_actions.dart';
 
 class DayPreviewActivities extends StatelessWidget {
