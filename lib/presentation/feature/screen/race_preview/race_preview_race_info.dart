@@ -11,10 +11,10 @@ import '../../../component/nullable_text_component.dart';
 import '../../../component/text/title_text_components.dart';
 import '../../../extension/context_extensions.dart';
 import '../../../extension/double_extensions.dart';
-import '../../../extension/string_extensions.dart';
 import '../../../formatter/date_formatter.dart';
 import '../../../formatter/distance_unit_formatter.dart';
 import '../../../formatter/duration_formatter.dart';
+import '../../../formatter/string_formatter.dart';
 import 'race_preview_actions.dart';
 
 class RacePreviewRaceInfo extends StatelessWidget {

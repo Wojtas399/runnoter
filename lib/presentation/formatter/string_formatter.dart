@@ -8,9 +8,7 @@ extension StringExtensions on String {
     return numAsStr;
   }
 
-  DateTime toDateTime({
-    String separator = '-',
-  }) {
+  DateTime toDateTime({String separator = '-'}) {
     final List<String> dateParts = split(separator);
     final int day = int.parse(dateParts[0]);
     final int month = int.parse(dateParts[1]);

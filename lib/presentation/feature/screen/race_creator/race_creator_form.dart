@@ -9,9 +9,9 @@ import '../../../component/form_text_field_component.dart';
 import '../../../component/gap/gap_components.dart';
 import '../../../extension/context_extensions.dart';
 import '../../../extension/double_extensions.dart';
-import '../../../extension/string_extensions.dart';
 import '../../../formatter/decimal_text_input_formatter.dart';
 import '../../../formatter/distance_unit_formatter.dart';
+import '../../../formatter/string_formatter.dart';
 import '../../../service/utils.dart';
 import 'race_creator_date.dart';
 

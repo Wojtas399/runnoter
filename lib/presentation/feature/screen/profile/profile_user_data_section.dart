@@ -8,7 +8,7 @@ import '../../../../domain/entity/user.dart';
 import '../../../component/gap/gap_components.dart';
 import '../../../component/text/title_text_components.dart';
 import '../../../component/value_with_label_and_icon_component.dart';
-import '../../../extension/account_type_extensions.dart';
+import '../../../formatter/account_type_formatter.dart';
 import '../../../formatter/date_formatter.dart';
 import '../../../formatter/gender_formatter.dart';
 import '../../../service/dialog_service.dart';
