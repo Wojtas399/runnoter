@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/cubit/home/home_cubit.dart';
-import '../../../domain/entity/user.dart';
-import '../../component/gap/gap_components.dart';
-import '../../component/text/label_text_components.dart';
-import '../../config/navigation/router.dart';
+import '../../../../domain/cubit/home/home_cubit.dart';
+import '../../../../domain/entity/user.dart';
+import '../../../component/gap/gap_components.dart';
+import '../../../component/text/label_text_components.dart';
+import '../../../config/navigation/router.dart';
 import 'home_clients_notifications_badge.dart';
 import 'home_fab.dart';
 
