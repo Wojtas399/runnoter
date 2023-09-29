@@ -1,4 +1,3 @@
-export '../../screen/blood_tests/blood_tests_screen.dart';
 export '../../screen/calendar/calendar_screen.dart';
 export '../../screen/chat/chat_screen.dart';
 export '../../screen/client/client_screen.dart';
@@ -23,3 +22,4 @@ export '../../screen/workout_preview/workout_preview_screen.dart';
 export '../screen/activity_status_creator/activity_status_creator_screen.dart';
 export '../screen/blood_test_creator/blood_test_creator_screen.dart';
 export '../screen/blood_test_preview/blood_test_preview_screen.dart';
+export '../screen/blood_tests/blood_tests_screen.dart';
