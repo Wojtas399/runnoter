@@ -149,7 +149,7 @@ class _SubmitButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool isDisabled = context.select(
-      (ActivityStatusCreatorCubit cubit) => cubit.state.canSubmit,
+      (ActivityStatusCreatorCubit cubit) => !cubit.state.canSubmit,
     );
 
     return BigButton(

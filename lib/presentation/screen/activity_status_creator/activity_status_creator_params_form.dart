@@ -235,7 +235,7 @@ class _CommentState extends State<_Comment> {
   Widget build(BuildContext context) {
     return FormTextField(
       label: Str.of(context).activityStatusComment,
-      maxLength: 100,
+      maxLength: 500,
       maxLines: null,
       keyboardType: TextInputType.multiline,
       textInputAction: TextInputAction.done,
