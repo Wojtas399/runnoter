@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/cubit/required_data_completion/required_data_completion_cubit.dart';
-import '../../component/gap/gap_components.dart';
-import '../../component/gap/gap_horizontal_components.dart';
-import '../../component/responsive_layout_component.dart';
-import '../../service/navigator_service.dart';
+import '../../../../domain/cubit/required_data_completion/required_data_completion_cubit.dart';
+import '../../../component/gap/gap_components.dart';
+import '../../../component/gap/gap_horizontal_components.dart';
+import '../../../component/responsive_layout_component.dart';
+import '../../../service/navigator_service.dart';
 import 'required_data_completion_form.dart';
 
 class RequiredDataCompletionContent extends StatelessWidget {

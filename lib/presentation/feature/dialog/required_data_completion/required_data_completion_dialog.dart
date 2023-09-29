@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/cubit/required_data_completion/required_data_completion_cubit.dart';
-import '../../component/cubit_with_status_listener_component.dart';
-import '../../service/navigator_service.dart';
+import '../../../../domain/cubit/required_data_completion/required_data_completion_cubit.dart';
+import '../../../component/cubit_with_status_listener_component.dart';
+import '../../../service/navigator_service.dart';
 import 'required_data_completion_content.dart';
 
 class RequiredDataCompletionDialog extends StatelessWidget {
