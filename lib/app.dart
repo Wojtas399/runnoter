@@ -3,23 +3,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:provider/provider.dart';
+import 'package:runnoter/presentation/service/distance_unit_service.dart';
+import 'package:runnoter/presentation/service/pace_unit_service.dart';
 import 'package:syncfusion_localizations/syncfusion_localizations.dart';
 
 import 'dependency_injection.dart';
 import 'presentation/config/navigation/router.dart';
 import 'presentation/config/theme.dart';
-import 'presentation/provider/services_provider.dart';
 import 'presentation/service/language_service.dart';
 import 'presentation/service/theme_service.dart';
 
 class App extends StatelessWidget {
-  const App({
-    super.key,
-  });
+  const App({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return ServicesProvider(
+    return _ServicesProvider(
       child: BlocBuilder<ThemeService, ThemeMode>(
         builder: (_, ThemeMode themeMode) {
           return BlocBuilder<LanguageService, AppLanguage?>(
@@ -49,6 +49,25 @@ class App extends StatelessWidget {
           );
         },
       ),
+    );
+  }
+}
+
+class _ServicesProvider extends StatelessWidget {
+  final Widget child;
+
+  const _ServicesProvider({required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiProvider(
+      providers: [
+        BlocProvider(create: (_) => LanguageService()),
+        BlocProvider(create: (_) => ThemeService()),
+        BlocProvider(create: (_) => DistanceUnitService()),
+        BlocProvider(create: (_) => PaceUnitService()),
+      ],
+      child: child,
     );
   }
 }
