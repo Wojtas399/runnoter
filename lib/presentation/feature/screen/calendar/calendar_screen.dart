@@ -1,10 +1,10 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
-import '../../../dependency_injection.dart';
-import '../../../domain/service/auth_service.dart';
-import '../../component/page_not_found_component.dart';
-import '../../feature/common/calendar/calendar.dart';
+import '../../../../dependency_injection.dart';
+import '../../../../domain/service/auth_service.dart';
+import '../../../component/page_not_found_component.dart';
+import '../../../feature/common/calendar/calendar.dart';
 
 @RoutePage()
 class CalendarScreen extends StatelessWidget {
