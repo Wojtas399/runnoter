@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/cubit/sign_up/sign_up_cubit.dart';
-import '../../component/cubit_with_status_listener_component.dart';
-import '../../feature/dialog/email_verification/email_verification_dialog.dart';
-import '../../service/dialog_service.dart';
+import '../../../../domain/cubit/sign_up/sign_up_cubit.dart';
+import '../../../component/cubit_with_status_listener_component.dart';
+import '../../../feature/dialog/email_verification/email_verification_dialog.dart';
+import '../../../service/dialog_service.dart';
 import 'sign_up_content.dart';
 
 @RoutePage()
