@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:get_it/get_it.dart';
 
 import '../../../../domain/additional_model/cubit_status.dart';
 import '../../../../domain/cubit/health_measurement_creator/health_measurement_creator_cubit.dart';
@@ -10,7 +9,6 @@ import '../../../component/loading_info_component.dart';
 import '../../../component/padding/paddings_24.dart';
 import '../../../component/responsive_layout_component.dart';
 import '../../../component/text/label_text_components.dart';
-import '../../../config/body_sizes.dart';
 import '../../../service/navigator_service.dart';
 import 'health_measurement_creator_form.dart';
 
@@ -33,9 +31,9 @@ class _NormalDialogContent extends StatelessWidget {
 
     return AlertDialog(
       title: Text(str.healthMeasurementCreatorScreenTitle),
-      content: SizedBox(
-        width: GetIt.I.get<BodySizes>().smallBodyWidth,
-        child: const _Form(),
+      content: const SizedBox(
+        width: 500,
+        child: _Form(),
       ),
       actions: [
         TextButton(
