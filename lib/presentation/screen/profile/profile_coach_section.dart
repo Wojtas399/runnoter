@@ -8,7 +8,7 @@ import '../../component/gap/gap_components.dart';
 import '../../component/nullable_text_component.dart';
 import '../../component/text/title_text_components.dart';
 import '../../config/navigation/router.dart';
-import '../../dialog/person_details/person_details_dialog.dart';
+import '../../feature/dialog/person_details/person_details_dialog.dart';
 import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
 import 'profile_no_coach_content.dart';
