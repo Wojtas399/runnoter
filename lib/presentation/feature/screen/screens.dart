@@ -1,4 +1,3 @@
-export '../../screen/clients/clients_screen.dart';
 export '../../screen/forgot_password/forgot_password_screen.dart';
 export '../../screen/health/health_screen.dart';
 export '../../screen/health_measurements/health_measurements_screen.dart';
@@ -23,3 +22,4 @@ export '../screen/client_blood_tests/client_blood_tests.dart';
 export '../screen/client_calendar/client_calendar_screen.dart';
 export '../screen/client_races/client_races_screen.dart';
 export '../screen/client_stats/client_stats_screen.dart';
+export '../screen/clients/clients_screen.dart';
