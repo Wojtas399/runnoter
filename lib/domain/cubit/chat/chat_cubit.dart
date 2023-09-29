@@ -236,7 +236,7 @@ class ChatCubit extends CubitWithStatus<ChatState, dynamic, dynamic> {
               id: message.id,
               status: message.status,
               hasBeenSentByLoggedUser: message.senderId == loggedUserId,
-              sendDateTime: message.dateTime,
+              dateTime: message.dateTime,
               text: message.text,
               images: messageImages.sortByOrder(),
             ),
@@ -247,7 +247,7 @@ class ChatCubit extends CubitWithStatus<ChatState, dynamic, dynamic> {
   ) {
     final List<ChatMessage> sortedChatMessages = [...chatMessages];
     sortedChatMessages.sort(
-      (msg1, msg2) => msg1.sendDateTime.isBefore(msg2.sendDateTime) ? 1 : -1,
+      (msg1, msg2) => msg1.dateTime.isBefore(msg2.dateTime) ? 1 : -1,
     );
     return sortedChatMessages;
   }

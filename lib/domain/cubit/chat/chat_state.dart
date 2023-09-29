@@ -54,7 +54,7 @@ class ChatMessage extends Equatable {
   final String id;
   final MessageStatus status;
   final bool hasBeenSentByLoggedUser;
-  final DateTime sendDateTime;
+  final DateTime dateTime;
   final String? text;
   final List<MessageImage> images;
 
@@ -62,7 +62,7 @@ class ChatMessage extends Equatable {
     required this.id,
     required this.status,
     required this.hasBeenSentByLoggedUser,
-    required this.sendDateTime,
+    required this.dateTime,
     this.text,
     this.images = const [],
   });
@@ -72,7 +72,7 @@ class ChatMessage extends Equatable {
         id,
         status,
         hasBeenSentByLoggedUser,
-        sendDateTime,
+        dateTime,
         text,
         images,
       ];

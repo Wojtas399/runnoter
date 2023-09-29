@@ -42,13 +42,7 @@ class ChatContent extends StatelessWidget {
                     const Expanded(
                       child: ChatAdjustableListOfMessages(),
                     ),
-                    const Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 8,
-                      ),
-                      child: _TypingIndicator(),
-                    ),
+                    const _TypingIndicator(),
                     ChatBottomPart(),
                   ],
                 ),

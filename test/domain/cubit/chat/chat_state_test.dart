@@ -100,13 +100,13 @@ void main() {
           id: 'm1',
           status: MessageStatus.read,
           hasBeenSentByLoggedUser: true,
-          sendDateTime: DateTime(2023, 1, 1),
+          dateTime: DateTime(2023, 1, 1),
         ),
         ChatMessage(
           id: 'm2',
           status: MessageStatus.read,
           hasBeenSentByLoggedUser: false,
-          sendDateTime: DateTime(2023, 1, 2),
+          dateTime: DateTime(2023, 1, 2),
         ),
       ];
 

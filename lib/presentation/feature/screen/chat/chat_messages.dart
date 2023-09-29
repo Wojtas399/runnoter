@@ -98,17 +98,17 @@ class _MessagesListState extends State<_MessagesList> {
           final currentMsg = messages[separatorIndex];
           final ChatMessage nextMsg = messages[separatorIndex + 1];
           final bool areDifferentDays = !_dateService.areDaysTheSame(
-            currentMsg.sendDateTime,
-            nextMsg.sendDateTime,
+            currentMsg.dateTime,
+            nextMsg.dateTime,
           );
           return areDifferentDays
-              ? _DaySeparator(date: currentMsg.sendDateTime)
+              ? _DaySeparator(date: currentMsg.dateTime)
               : const SizedBox();
         },
         itemBuilder: (_, int messageIndex) {
           if (messageIndex == numberOfMessages) {
             final previousMsg = messages[messageIndex - 1];
-            return _DaySeparator(date: previousMsg.sendDateTime);
+            return _DaySeparator(date: previousMsg.dateTime);
           }
           final currentMsg = messages[messageIndex];
           return ChatMessageItem(

@@ -77,13 +77,16 @@ class _State extends State<ChatTypingIndicator> with TickerProviderStateMixin {
           child: ScaleTransition(
             scale: _scaleAnimation,
             alignment: Alignment.bottomLeft,
-            child: ChatMessageCard(
-              hasMessageBeenSentByLoggedUser: false,
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: _StatusBubble(
-                  repeatingAnimController: _repeatingAnimController,
-                  dotIntervals: _dotIntervals,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: ChatMessageCard(
+                hasMessageBeenSentByLoggedUser: false,
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: _StatusBubble(
+                    repeatingAnimController: _repeatingAnimController,
+                    dotIntervals: _dotIntervals,
+                  ),
                 ),
               ),
             ),

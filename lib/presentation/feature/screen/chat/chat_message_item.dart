@@ -14,6 +14,8 @@ import '../../../extension/widgets_list_extensions.dart';
 import '../../../feature/dialog/chat_image_preview/chat_image_preview_dialog.dart';
 import '../../../formatter/date_formatter.dart';
 import '../../../service/dialog_service.dart';
+import '../../../service/language_service.dart';
+import 'chat_message_animation.dart';
 import 'chat_message_card.dart';
 
 class ChatMessageItem extends StatelessWidget {
@@ -36,7 +38,7 @@ class ChatMessageItem extends StatelessWidget {
                 ? MainAxisAlignment.end
                 : MainAxisAlignment.start,
             children: [
-              _AnimatedBody(
+              ChatMessageAnimation(
                 shouldRunAnimation: isNew,
                 hasMessageBeenSentByLoggedUser: message.hasBeenSentByLoggedUser,
                 child: ChatMessageCard(
@@ -48,74 +50,6 @@ class ChatMessageItem extends StatelessWidget {
             ],
           )
         : const SizedBox();
-  }
-}
-
-class _AnimatedBody extends StatefulWidget {
-  final bool shouldRunAnimation;
-  final bool hasMessageBeenSentByLoggedUser;
-  final Widget child;
-
-  const _AnimatedBody({
-    required this.shouldRunAnimation,
-    required this.hasMessageBeenSentByLoggedUser,
-    required this.child,
-  });
-
-  @override
-  State<StatefulWidget> createState() => _AnimatedBodyState();
-}
-
-class _AnimatedBodyState extends State<_AnimatedBody>
-    with SingleTickerProviderStateMixin, AutomaticKeepAliveClientMixin {
-  late final AnimationController _animationController;
-  late final Animation<double> _sizeAnimation;
-  late final Animation<double> _scaleAnimation;
-
-  @override
-  bool get wantKeepAlive => true;
-
-  @override
-  void initState() {
-    super.initState();
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 300),
-    )..forward();
-    _sizeAnimation = CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeInOutQuart,
-    );
-    _scaleAnimation = Tween(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(
-        parent: _animationController,
-        curve: Curves.easeInOutQuart,
-      ),
-    );
-  }
-
-  @override
-  void dispose() {
-    _animationController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    super.build(context);
-
-    return widget.shouldRunAnimation
-        ? SizeTransition(
-            sizeFactor: _sizeAnimation,
-            child: ScaleTransition(
-              scale: _scaleAnimation,
-              alignment: widget.hasMessageBeenSentByLoggedUser
-                  ? Alignment.bottomRight
-                  : Alignment.bottomLeft,
-              child: widget.child,
-            ),
-          )
-        : widget.child;
   }
 }
 
@@ -154,8 +88,8 @@ class _MessageContent extends StatelessWidget {
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              LabelSmall(
-                message.sendDateTime.toTime(),
+              _SendTime(
+                sendDateTime: message.dateTime,
                 color: message.hasBeenSentByLoggedUser
                     ? theme.colorScheme.outlineVariant
                     : theme.colorScheme.outline,
@@ -252,6 +186,35 @@ class _Images extends StatelessWidget {
         chatId: context.read<ChatCubit>().chatId,
         selectedImage: image,
       ),
+    );
+  }
+}
+
+class _SendTime extends StatelessWidget {
+  final DateTime sendDateTime;
+  final Color color;
+
+  const _SendTime({required this.sendDateTime, required this.color});
+
+  @override
+  Widget build(BuildContext context) {
+    final AppLanguage language = context.select(
+      (LanguageService service) => service.state,
+    );
+    final Locale systemLocale = View.of(context).platformDispatcher.locale;
+    final String time24 = sendDateTime.toTime24();
+    final String time12 = sendDateTime.toTime12();
+
+    return LabelSmall(
+      switch (language) {
+        AppLanguage.polish => time24,
+        AppLanguage.english => time12,
+        AppLanguage.system =>
+          systemLocale.languageCode == AppLanguage.polish.locale?.languageCode
+              ? time24
+              : time12,
+      },
+      color: color,
     );
   }
 }
