@@ -1,10 +1,10 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
-import '../../../dependency_injection.dart';
-import '../../../domain/service/auth_service.dart';
-import '../../component/page_not_found_component.dart';
-import '../../feature/common/races/races.dart';
+import '../../../../dependency_injection.dart';
+import '../../../../domain/service/auth_service.dart';
+import '../../../component/page_not_found_component.dart';
+import '../../../feature/common/races/races.dart';
 
 @RoutePage()
 class RacesScreen extends StatelessWidget {
