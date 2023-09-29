@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 
 import '../../../dependency_injection.dart';
 import '../../../domain/service/auth_service.dart';
-import '../../common_feature/calendar/calendar.dart';
 import '../../component/page_not_found_component.dart';
+import '../../feature/common/calendar/calendar.dart';
 
 @RoutePage()
 class CalendarScreen extends StatelessWidget {

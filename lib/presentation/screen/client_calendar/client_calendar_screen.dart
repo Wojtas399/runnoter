@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/cubit/client/client_cubit.dart';
-import '../../common_feature/calendar/calendar.dart';
+import '../../feature/common/calendar/calendar.dart';
 
 @RoutePage()
 class ClientCalendarScreen extends StatelessWidget {

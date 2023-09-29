@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/additional_model/calendar_user_data.dart';
-import '../../../domain/additional_model/week_day.dart';
-import '../../../domain/cubit/calendar/calendar_cubit.dart';
-import '../../../domain/cubit/calendar_user_data_cubit.dart';
-import '../../component/gap/gap_components.dart';
-import '../../component/shimmer/shimmer_container.dart';
-import '../../extension/widgets_list_extensions.dart';
+import '../../../../domain/additional_model/calendar_user_data.dart';
+import '../../../../domain/additional_model/week_day.dart';
+import '../../../../domain/cubit/calendar/calendar_cubit.dart';
+import '../../../../domain/cubit/calendar_user_data_cubit.dart';
+import '../../../component/gap/gap_components.dart';
+import '../../../component/shimmer/shimmer_container.dart';
+import '../../../extension/widgets_list_extensions.dart';
 import 'calendar_week_day_item.dart';
 
 class CalendarWeek extends StatelessWidget {

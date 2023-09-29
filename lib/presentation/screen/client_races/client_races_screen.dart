@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/cubit/client/client_cubit.dart';
-import '../../common_feature/races/races.dart';
+import '../../feature/common/races/races.dart';
 
 @RoutePage()
 class ClientRacesScreen extends StatelessWidget {

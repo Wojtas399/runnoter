@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../domain/cubit/chat/chat_cubit.dart';
-import '../../common_feature/chat_gallery/chat_gallery.dart';
 import '../../component/body/big_body_component.dart';
 import '../../component/gap/gap_horizontal_components.dart';
 import '../../component/nullable_text_component.dart';
 import '../../extension/context_extensions.dart';
+import '../../feature/common/chat_gallery/chat_gallery.dart';
 import 'chat_adjustable_list_of_messages.dart';
 import 'chat_bottom_part.dart';
 import 'chat_typing_indicator.dart';

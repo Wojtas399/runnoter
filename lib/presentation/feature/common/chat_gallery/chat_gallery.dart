@@ -6,12 +6,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:rxdart/rxdart.dart';
 
-import '../../../domain/cubit/chat_gallery_cubit.dart';
-import '../../../domain/entity/message_image.dart';
-import '../../component/animated_refresh_indicator.dart';
-import '../../component/loading_info_component.dart';
-import '../../dialog/chat_image_preview/chat_image_preview_dialog.dart';
-import '../../service/dialog_service.dart';
+import '../../../../domain/cubit/chat_gallery_cubit.dart';
+import '../../../../domain/entity/message_image.dart';
+import '../../../component/animated_refresh_indicator.dart';
+import '../../../component/loading_info_component.dart';
+import '../../../dialog/chat_image_preview/chat_image_preview_dialog.dart';
+import '../../../service/dialog_service.dart';
 
 class ChatGallery extends StatelessWidget {
   final String chatId;

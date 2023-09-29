@@ -2,21 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/cubit/races_cubit.dart';
-import '../../../domain/entity/race.dart';
-import '../../component/body/medium_body_component.dart';
-import '../../component/card_body_component.dart';
-import '../../component/empty_content_info_component.dart';
-import '../../component/gap/gap_components.dart';
-import '../../component/loading_info_component.dart';
-import '../../component/responsive_layout_component.dart';
-import '../../component/text/label_text_components.dart';
-import '../../component/text/title_text_components.dart';
-import '../../config/navigation/router.dart';
-import '../../extension/context_extensions.dart';
-import '../../formatter/activity_status_formatter.dart';
-import '../../formatter/date_formatter.dart';
-import '../../service/navigator_service.dart';
+import '../../../../domain/cubit/races_cubit.dart';
+import '../../../../domain/entity/race.dart';
+import '../../../component/body/medium_body_component.dart';
+import '../../../component/card_body_component.dart';
+import '../../../component/empty_content_info_component.dart';
+import '../../../component/gap/gap_components.dart';
+import '../../../component/loading_info_component.dart';
+import '../../../component/responsive_layout_component.dart';
+import '../../../component/text/label_text_components.dart';
+import '../../../component/text/title_text_components.dart';
+import '../../../config/navigation/router.dart';
+import '../../../extension/context_extensions.dart';
+import '../../../formatter/activity_status_formatter.dart';
+import '../../../formatter/date_formatter.dart';
+import '../../../service/navigator_service.dart';
 
 class Races extends StatelessWidget {
   final String userId;
