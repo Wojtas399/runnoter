@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/cubit/workout_preview/workout_preview_cubit.dart';
-import '../../component/edit_delete_popup_menu_component.dart';
-import '../../config/navigation/router.dart';
-import '../../extension/context_extensions.dart';
-import '../../formatter/date_formatter.dart';
-import '../../service/dialog_service.dart';
-import '../../service/navigator_service.dart';
+import '../../../../domain/cubit/workout_preview/workout_preview_cubit.dart';
+import '../../../component/edit_delete_popup_menu_component.dart';
+import '../../../config/navigation/router.dart';
+import '../../../extension/context_extensions.dart';
+import '../../../formatter/date_formatter.dart';
+import '../../../service/dialog_service.dart';
+import '../../../service/navigator_service.dart';
 
 class WorkoutPreviewWorkoutActions extends StatelessWidget {
   const WorkoutPreviewWorkoutActions({super.key});

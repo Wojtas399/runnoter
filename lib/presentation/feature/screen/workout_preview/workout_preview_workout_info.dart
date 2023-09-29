@@ -2,18 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/additional_model/activity_status.dart';
-import '../../../domain/additional_model/workout_stage.dart';
-import '../../../domain/cubit/workout_preview/workout_preview_cubit.dart';
-import '../../component/activity_status_info_component.dart';
-import '../../component/content_with_label_component.dart';
-import '../../component/gap/gap_components.dart';
-import '../../component/nullable_text_component.dart';
-import '../../component/text/title_text_components.dart';
-import '../../extension/context_extensions.dart';
-import '../../formatter/date_formatter.dart';
-import '../../formatter/list_of_workout_stages_formatter.dart';
-import '../../formatter/workout_stage_formatter.dart';
+import '../../../../domain/additional_model/activity_status.dart';
+import '../../../../domain/additional_model/workout_stage.dart';
+import '../../../../domain/cubit/workout_preview/workout_preview_cubit.dart';
+import '../../../component/activity_status_info_component.dart';
+import '../../../component/content_with_label_component.dart';
+import '../../../component/gap/gap_components.dart';
+import '../../../component/nullable_text_component.dart';
+import '../../../component/text/title_text_components.dart';
+import '../../../extension/context_extensions.dart';
+import '../../../formatter/date_formatter.dart';
+import '../../../formatter/list_of_workout_stages_formatter.dart';
+import '../../../formatter/workout_stage_formatter.dart';
 import 'workout_preview_actions.dart';
 
 class WorkoutPreviewWorkoutInfo extends StatelessWidget {
