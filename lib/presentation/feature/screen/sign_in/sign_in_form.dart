@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/cubit/sign_in/sign_in_cubit.dart';
-import '../../component/big_button_component.dart';
-import '../../component/gap/gap_components.dart';
-import '../../component/password_text_field_component.dart';
-import '../../config/navigation/router.dart';
-import '../../service/navigator_service.dart';
-import '../../service/utils.dart';
+import '../../../../domain/cubit/sign_in/sign_in_cubit.dart';
+import '../../../component/big_button_component.dart';
+import '../../../component/gap/gap_components.dart';
+import '../../../component/password_text_field_component.dart';
+import '../../../config/navigation/router.dart';
+import '../../../service/navigator_service.dart';
+import '../../../service/utils.dart';
 
 class SignInForm extends StatelessWidget {
   const SignInForm({super.key});

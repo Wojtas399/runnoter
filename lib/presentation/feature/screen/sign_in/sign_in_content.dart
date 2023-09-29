@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../component/body/small_body_component.dart';
-import '../../component/gap/gap_components.dart';
-import '../../component/padding/paddings_24.dart';
-import '../../component/text/headline_text_components.dart';
+import '../../../component/body/small_body_component.dart';
+import '../../../component/gap/gap_components.dart';
+import '../../../component/padding/paddings_24.dart';
+import '../../../component/text/headline_text_components.dart';
 import 'sign_in_alternative_options.dart';
 import 'sign_in_form.dart';
 

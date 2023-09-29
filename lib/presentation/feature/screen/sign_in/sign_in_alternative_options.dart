@@ -3,12 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/svg.dart';
 
-import '../../../domain/cubit/sign_in/sign_in_cubit.dart';
-import '../../component/gap/gap_components.dart';
-import '../../component/gap/gap_horizontal_components.dart';
-import '../../component/text/body_text_components.dart';
-import '../../config/navigation/router.dart';
-import '../../service/navigator_service.dart';
+import '../../../../domain/cubit/sign_in/sign_in_cubit.dart';
+import '../../../component/gap/gap_components.dart';
+import '../../../component/gap/gap_horizontal_components.dart';
+import '../../../component/text/body_text_components.dart';
+import '../../../config/navigation/router.dart';
+import '../../../service/navigator_service.dart';
 
 class SignInAlternativeOptions extends StatelessWidget {
   const SignInAlternativeOptions({super.key});
