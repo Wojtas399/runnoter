@@ -6,8 +6,8 @@ import '../../../domain/cubit/health_measurements_cubit.dart';
 import '../../../domain/entity/health_measurement.dart';
 import '../../component/edit_delete_popup_menu_component.dart';
 import '../../component/text/body_text_components.dart';
-import '../../dialog/health_measurement_creator/health_measurement_creator_dialog.dart';
 import '../../extension/context_extensions.dart';
+import '../../feature/dialog/health_measurement_creator/health_measurement_creator_dialog.dart';
 import '../../formatter/date_formatter.dart';
 import '../../service/dialog_service.dart';
 

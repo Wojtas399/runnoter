@@ -12,7 +12,7 @@ import '../../component/health_measurement_info_component.dart';
 import '../../component/padding/paddings_24.dart';
 import '../../component/responsive_layout_component.dart';
 import '../../config/navigation/router.dart';
-import '../../dialog/health_measurement_creator/health_measurement_creator_dialog.dart';
+import '../../feature/dialog/health_measurement_creator/health_measurement_creator_dialog.dart';
 import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
 import 'health_charts.dart';

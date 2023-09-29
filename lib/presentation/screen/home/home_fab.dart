@@ -8,8 +8,8 @@ import '../../../domain/additional_model/coaching_request.dart';
 import '../../../domain/service/auth_service.dart';
 import '../../component/material_3_speed_dial_component.dart';
 import '../../config/navigation/router.dart';
-import '../../dialog/health_measurement_creator/health_measurement_creator_dialog.dart';
 import '../../dialog/persons_search/persons_search_dialog.dart';
+import '../../feature/dialog/health_measurement_creator/health_measurement_creator_dialog.dart';
 import '../../service/dialog_service.dart';
 import '../../service/navigator_service.dart';
 
