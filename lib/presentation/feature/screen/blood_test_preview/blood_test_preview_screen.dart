@@ -2,8 +2,8 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/cubit/blood_test_preview/blood_test_preview_cubit.dart';
-import '../../component/page_not_found_component.dart';
+import '../../../../domain/cubit/blood_test_preview/blood_test_preview_cubit.dart';
+import '../../../component/page_not_found_component.dart';
 import 'blood_test_preview_content.dart';
 
 @RoutePage()
