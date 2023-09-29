@@ -2,15 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/cubit/profile/identities/profile_identities_cubit.dart';
-import '../../../domain/entity/user.dart';
-import '../../component/gap/gap_components.dart';
-import '../../component/responsive_layout_component.dart';
-import '../../component/text/body_text_components.dart';
-import '../../service/navigator_service.dart';
+import '../../../../domain/additional_model/settings.dart';
+import '../../../../domain/cubit/profile/settings/profile_settings_cubit.dart';
+import '../../../component/gap/gap_components.dart';
+import '../../../component/responsive_layout_component.dart';
+import '../../../component/text/body_text_components.dart';
+import '../../../formatter/pace_unit_formatter.dart';
+import '../../../service/navigator_service.dart';
 
-class ProfileGenderDialog extends StatelessWidget {
-  const ProfileGenderDialog({super.key});
+class ProfilePaceUnitDialog extends StatelessWidget {
+  const ProfilePaceUnitDialog({super.key});
 
   @override
   Widget build(BuildContext context) => const ResponsiveLayout(
@@ -27,7 +28,7 @@ class _NormalDialog extends StatelessWidget {
     final str = Str.of(context);
 
     return AlertDialog(
-      title: Text(str.gender),
+      title: Text(str.paceUnit),
       contentPadding: const EdgeInsets.symmetric(vertical: 24),
       content: const SizedBox(
         width: 500,
@@ -58,7 +59,7 @@ class _FullScreenDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(Str.of(context).gender),
+        title: Text(Str.of(context).paceUnit),
         leading: const CloseButton(),
       ),
       body: const SafeArea(
@@ -85,7 +86,7 @@ class _Header extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: BodyLarge(Str.of(context).genderSelection),
+      child: BodyLarge(Str.of(context).paceUnitSelection),
     );
   }
 }
@@ -95,32 +96,21 @@ class _OptionsToSelect extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Gender? selectedGender = context.select(
-      (ProfileIdentitiesCubit cubit) => cubit.state.gender,
+    final PaceUnit? selectedDistanceUnit = context.select(
+      (ProfileSettingsCubit cubit) => cubit.state.paceUnit,
     );
-    final str = Str.of(context);
 
     return Column(
-      children: [
-        RadioListTile<Gender>(
-          title: Text(str.male),
-          value: Gender.male,
-          groupValue: selectedGender,
-          onChanged: (Gender? gender) => _onGenderChanged(context, gender),
-        ),
-        RadioListTile<Gender>(
-          title: Text(str.female),
-          value: Gender.female,
-          groupValue: selectedGender,
-          onChanged: (Gender? gender) => _onGenderChanged(context, gender),
-        ),
-      ],
+      children: PaceUnit.values
+          .map(
+            (PaceUnit paceUnit) => RadioListTile<PaceUnit>(
+              title: Text(paceUnit.toUIFormat()),
+              value: paceUnit,
+              groupValue: selectedDistanceUnit,
+              onChanged: context.read<ProfileSettingsCubit>().updatePaceUnit,
+            ),
+          )
+          .toList(),
     );
-  }
-
-  void _onGenderChanged(BuildContext context, Gender? newGender) {
-    if (newGender != null) {
-      context.read<ProfileIdentitiesCubit>().updateGender(newGender);
-    }
   }
 }

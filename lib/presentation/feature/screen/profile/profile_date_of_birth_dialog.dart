@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../domain/cubit/profile/identities/profile_identities_cubit.dart';
-import '../../component/date_of_birth_picker_component.dart';
-import '../../component/gap/gap_horizontal_components.dart';
-import '../../component/responsive_layout_component.dart';
-import '../../component/text/label_text_components.dart';
-import '../../service/navigator_service.dart';
+import '../../../../domain/cubit/profile/identities/profile_identities_cubit.dart';
+import '../../../component/date_of_birth_picker_component.dart';
+import '../../../component/gap/gap_horizontal_components.dart';
+import '../../../component/responsive_layout_component.dart';
+import '../../../component/text/label_text_components.dart';
+import '../../../service/navigator_service.dart';
 
 class ProfileDateOfBirthDialog extends StatefulWidget {
   const ProfileDateOfBirthDialog({super.key});

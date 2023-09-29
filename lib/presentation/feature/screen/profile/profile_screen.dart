@@ -4,13 +4,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/single_child_widget.dart';
 
-import '../../../domain/cubit/profile/coach/profile_coach_cubit.dart';
-import '../../../domain/cubit/profile/identities/profile_identities_cubit.dart';
-import '../../../domain/cubit/profile/settings/profile_settings_cubit.dart';
-import '../../component/cubit_with_status_listener_component.dart';
-import '../../config/navigation/router.dart';
-import '../../service/dialog_service.dart';
-import '../../service/navigator_service.dart';
+import '../../../../domain/cubit/profile/coach/profile_coach_cubit.dart';
+import '../../../../domain/cubit/profile/identities/profile_identities_cubit.dart';
+import '../../../../domain/cubit/profile/settings/profile_settings_cubit.dart';
+import '../../../component/cubit_with_status_listener_component.dart';
+import '../../../config/navigation/router.dart';
+import '../../../service/dialog_service.dart';
+import '../../../service/navigator_service.dart';
 import 'profile_content.dart';
 
 @RoutePage()
