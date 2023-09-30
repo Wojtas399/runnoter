@@ -89,20 +89,126 @@ void main() {
         ...sentRequests,
         CoachingRequestWithPerson(id: 'r4', person: createPerson(id: 'p7')),
       ];
-      final StreamController<bool> hasDeviceInternetConnection$ =
-          StreamController()..add(true);
-      final StreamController<List<CoachingRequestWithPerson>> sentRequests$ =
-          StreamController()..add(sentRequests);
-      final StreamController<List<CoachingRequestWithPerson>>
-          receivedRequests$ = StreamController()..add(receivedRequests);
-      final StreamController<List<Person>> clients$ = StreamController()
-        ..add(clients);
+      late StreamController<bool> hasDeviceInternetConnection$;
+      late StreamController<List<CoachingRequestWithPerson>> sentRequests$;
+      late StreamController<List<CoachingRequestWithPerson>> receivedRequests$;
+      late StreamController<List<Person>> clients$;
+
+      setUp(() {
+        hasDeviceInternetConnection$ = StreamController();
+        sentRequests$ = StreamController()..add(sentRequests);
+        receivedRequests$ = StreamController()..add(receivedRequests);
+        clients$ = StreamController()..add(clients);
+      });
 
       blocTest(
+        'should load actual connectivity status and if it is false should emit'
+        'no internet status, '
         'should listen to connectivity status, clients, sent requests and '
         'received requests',
         build: () => ClientsCubit(),
         setUp: () {
+          connectivityService.mockHasDeviceInternetConnection(
+            hasConnection: false,
+          );
+          connectivityService.mockOnConnectivityStatusChanged(
+            hasDeviceInternetConnection$: hasDeviceInternetConnection$.stream,
+          );
+          authService.mockGetLoggedUserId(userId: loggedUserId);
+          getSentCoachingRequestsWithReceiverInfoUseCase.mock(
+            requests$: sentRequests$.stream,
+          );
+          getReceivedCoachingRequestsWithSenderInfoUseCase.mock(
+            requests$: receivedRequests$.stream,
+          );
+          personRepository.mockGetPersonsByCoachId(
+            personsStream: clients$.stream,
+          );
+        },
+        act: (cubit) async {
+          cubit.initialize();
+          await cubit.stream.first;
+          hasDeviceInternetConnection$.add(true);
+          await cubit.stream.first;
+          sentRequests$.add(updatedSentRequests);
+          await cubit.stream.first;
+          receivedRequests$.add(updatedReceivedRequests);
+          await cubit.stream.first;
+          clients$.add(updatedClients);
+          await cubit.stream.first;
+          hasDeviceInternetConnection$.add(false);
+        },
+        expect: () => [
+          const ClientsState(status: CubitStatusNoInternetConnection()),
+          const ClientsState(status: CubitStatusComplete()),
+          ClientsState(
+            status: const CubitStatusComplete(),
+            sentRequests: sentRequests,
+            receivedRequests: receivedRequests,
+            clients: clients,
+          ),
+          ClientsState(
+              status: const CubitStatusComplete(),
+              sentRequests: updatedSentRequests,
+              receivedRequests: receivedRequests,
+              clients: clients),
+          ClientsState(
+            status: const CubitStatusComplete(),
+            sentRequests: updatedSentRequests,
+            receivedRequests: updatedReceivedRequests,
+            clients: clients,
+          ),
+          ClientsState(
+            status: const CubitStatusComplete(),
+            sentRequests: updatedSentRequests,
+            receivedRequests: updatedReceivedRequests,
+            clients: updatedClients,
+          ),
+          ClientsState(
+            status: const CubitStatusNoInternetConnection(),
+            sentRequests: updatedSentRequests,
+            receivedRequests: updatedReceivedRequests,
+            clients: updatedClients,
+          ),
+        ],
+        verify: (_) {
+          verify(
+            () => connectivityService.hasDeviceInternetConnection(),
+          ).called(1);
+          verify(
+            () => connectivityService.onConnectivityStatusChanged(),
+          ).called(1);
+          verify(() => authService.loggedUserId$).called(1);
+          verify(
+            () => getSentCoachingRequestsWithReceiverInfoUseCase.execute(
+              senderId: loggedUserId,
+              requestDirection: CoachingRequestDirection.coachToClient,
+              requestStatuses: SentCoachingRequestStatuses.onlyUnaccepted,
+            ),
+          ).called(1);
+          verify(
+            () => getReceivedCoachingRequestsWithSenderInfoUseCase.execute(
+              receiverId: loggedUserId,
+              requestDirection: CoachingRequestDirection.clientToCoach,
+              requestStatuses: ReceivedCoachingRequestStatuses.onlyUnaccepted,
+            ),
+          ).called(1);
+          verify(
+            () => personRepository.getPersonsByCoachId(coachId: loggedUserId),
+          ).called(1);
+        },
+      );
+
+      blocTest(
+        'should load actual connectivity status and if it is true should not '
+        'emit anything, '
+        'should listen to connectivity status, clients, sent requests and '
+        'received requests',
+        build: () => ClientsCubit(),
+        setUp: () {
+          connectivityService.mockHasDeviceInternetConnection(
+            hasConnection: true,
+          );
           connectivityService.mockOnConnectivityStatusChanged(
             hasDeviceInternetConnection$: hasDeviceInternetConnection$.stream,
           );
@@ -136,10 +242,11 @@ void main() {
             clients: clients,
           ),
           ClientsState(
-              status: const CubitStatusComplete(),
-              sentRequests: updatedSentRequests,
-              receivedRequests: receivedRequests,
-              clients: clients),
+            status: const CubitStatusComplete(),
+            sentRequests: updatedSentRequests,
+            receivedRequests: receivedRequests,
+            clients: clients,
+          ),
           ClientsState(
             status: const CubitStatusComplete(),
             sentRequests: updatedSentRequests,
@@ -160,6 +267,9 @@ void main() {
           ),
         ],
         verify: (_) {
+          verify(
+            () => connectivityService.hasDeviceInternetConnection(),
+          ).called(1);
           verify(
             () => connectivityService.onConnectivityStatusChanged(),
           ).called(1);

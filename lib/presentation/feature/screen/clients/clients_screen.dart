@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../../../domain/additional_model/cubit_status.dart';
 import '../../../../domain/cubit/clients/clients_cubit.dart';
 import '../../../component/body/medium_body_component.dart';
 import '../../../component/card_body_component.dart';
 import '../../../component/cubit_with_status_listener_component.dart';
 import '../../../component/gap/gap_components.dart';
+import '../../../component/page_not_found_component.dart';
 import '../../../component/responsive_layout_component.dart';
 import '../../../config/navigation/router.dart';
 import '../../../extension/context_extensions.dart';
@@ -24,8 +26,15 @@ class ClientsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => ClientsCubit()..initialize(),
-      child: const _CubitListener(
-        child: _Content(),
+      child: _CubitListener(
+        child: BlocSelector<ClientsCubit, ClientsState, CubitStatus>(
+          selector: (ClientsState state) => state.status,
+          builder: (_, CubitStatus cubitStatus) {
+            return cubitStatus is CubitStatusNoInternetConnection
+                ? const PageNotFoundInfo()
+                : const _Content();
+          },
+        ),
       ),
     );
   }
