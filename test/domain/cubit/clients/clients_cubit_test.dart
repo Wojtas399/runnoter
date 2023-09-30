@@ -12,6 +12,7 @@ import 'package:runnoter/domain/entity/person.dart';
 import 'package:runnoter/domain/repository/person_repository.dart';
 import 'package:runnoter/domain/service/auth_service.dart';
 import 'package:runnoter/domain/service/coaching_request_service.dart';
+import 'package:runnoter/domain/service/connectivity_service.dart';
 import 'package:runnoter/domain/use_case/get_received_coaching_requests_with_sender_info_use_case.dart';
 import 'package:runnoter/domain/use_case/get_sent_coaching_requests_with_receiver_info_use_case.dart';
 import 'package:runnoter/domain/use_case/load_chat_id_use_case.dart';
@@ -20,11 +21,13 @@ import '../../../creators/person_creator.dart';
 import '../../../mock/domain/repository/mock_person_repository.dart';
 import '../../../mock/domain/service/mock_auth_service.dart';
 import '../../../mock/domain/service/mock_coaching_request_service.dart';
+import '../../../mock/domain/service/mock_connectivity_service.dart';
 import '../../../mock/domain/use_case/mock_get_received_coaching_requests_with_sender_info_use_case.dart';
 import '../../../mock/domain/use_case/mock_get_sent_coaching_requests_with_receiver_info_use_case.dart';
 import '../../../mock/domain/use_case/mock_load_chat_id_use_case.dart';
 
 void main() {
+  final connectivityService = MockConnectivityService();
   final authService = MockAuthService();
   final coachingRequestService = MockCoachingRequestService();
   final personRepository = MockPersonRepository();
@@ -36,6 +39,7 @@ void main() {
   const String loggedUserId = 'u1';
 
   setUpAll(() {
+    GetIt.I.registerFactory<ConnectivityService>(() => connectivityService);
     GetIt.I.registerFactory<AuthService>(() => authService);
     GetIt.I.registerFactory<CoachingRequestService>(
       () => coachingRequestService,
@@ -51,6 +55,7 @@ void main() {
   });
 
   tearDown(() {
+    reset(connectivityService);
     reset(authService);
     reset(coachingRequestService);
     reset(personRepository);
@@ -84,17 +89,23 @@ void main() {
         ...sentRequests,
         CoachingRequestWithPerson(id: 'r4', person: createPerson(id: 'p7')),
       ];
-      StreamController<List<CoachingRequestWithPerson>> sentRequests$ =
+      final StreamController<bool> hasDeviceInternetConnection$ =
+          StreamController()..add(true);
+      final StreamController<List<CoachingRequestWithPerson>> sentRequests$ =
           StreamController()..add(sentRequests);
-      StreamController<List<CoachingRequestWithPerson>> receivedRequests$ =
-          StreamController()..add(receivedRequests);
+      final StreamController<List<CoachingRequestWithPerson>>
+          receivedRequests$ = StreamController()..add(receivedRequests);
       final StreamController<List<Person>> clients$ = StreamController()
         ..add(clients);
 
       blocTest(
-        'should set listener of clients, sent requests and received requests',
+        'should listen to connectivity status, clients, sent requests and '
+        'received requests',
         build: () => ClientsCubit(),
         setUp: () {
+          connectivityService.mockOnConnectivityStatusChanged(
+            hasDeviceInternetConnection$: hasDeviceInternetConnection$.stream,
+          );
           authService.mockGetLoggedUserId(userId: loggedUserId);
           getSentCoachingRequestsWithReceiverInfoUseCase.mock(
             requests$: sentRequests$.stream,
@@ -114,6 +125,8 @@ void main() {
           receivedRequests$.add(updatedReceivedRequests);
           await cubit.stream.first;
           clients$.add(updatedClients);
+          await cubit.stream.first;
+          hasDeviceInternetConnection$.add(false);
         },
         expect: () => [
           ClientsState(
@@ -139,8 +152,17 @@ void main() {
             receivedRequests: updatedReceivedRequests,
             clients: updatedClients,
           ),
+          ClientsState(
+            status: const CubitStatusNoInternetConnection(),
+            sentRequests: updatedSentRequests,
+            receivedRequests: updatedReceivedRequests,
+            clients: updatedClients,
+          ),
         ],
         verify: (_) {
+          verify(
+            () => connectivityService.onConnectivityStatusChanged(),
+          ).called(1);
           verify(() => authService.loggedUserId$).called(1);
           verify(
             () => getSentCoachingRequestsWithReceiverInfoUseCase.execute(

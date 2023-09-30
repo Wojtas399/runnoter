@@ -40,6 +40,7 @@ class _CubitListener extends StatelessWidget {
   Widget build(BuildContext context) {
     return CubitWithStatusListener<ClientsCubit, ClientsState, ClientsCubitInfo,
         ClientsCubitError>(
+      showDialogOnNoInternetConnection: false,
       onInfo: (ClientsCubitInfo info) => _manageInfo(context, info),
       onError: (ClientsCubitError error) => _manageError(context, error),
       onStateChanged: _manageState,

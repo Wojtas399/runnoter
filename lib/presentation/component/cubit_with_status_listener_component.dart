@@ -12,6 +12,7 @@ class CubitWithStatusListener<Cubit extends StateStreamable<State>,
     State extends CubitState, Info, Error> extends StatelessWidget {
   final Widget? child;
   final bool showDialogOnLoading;
+  final bool showDialogOnNoInternetConnection;
   final void Function(State state)? onStateChanged;
   final void Function(Info info)? onInfo;
   final void Function(Error error)? onError;
@@ -20,6 +21,7 @@ class CubitWithStatusListener<Cubit extends StateStreamable<State>,
     super.key,
     this.child,
     this.showDialogOnLoading = true,
+    this.showDialogOnNoInternetConnection = true,
     this.onStateChanged,
     this.onInfo,
     this.onError,
@@ -55,7 +57,7 @@ class CubitWithStatusListener<Cubit extends StateStreamable<State>,
       } else if (cubitStatus is CubitStatusUnknownError) {
         _showUnknownErrorMessage(context);
       } else if (cubitStatus is CubitStatusNoInternetConnection) {
-        showNoInternetConnectionMessage();
+        if (showDialogOnNoInternetConnection) showNoInternetConnectionMessage();
       } else if (cubitStatus is CubitStatusNoLoggedUser) {
         _showNoLoggedUserMessage(context);
         navigateAndRemoveUntil(const SignInRoute());

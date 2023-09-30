@@ -93,7 +93,7 @@ class _SubmitButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool isDisabled = context.select(
-      (HealthMeasurementCreatorCubit cubit) => cubit.state.canSubmit,
+      (HealthMeasurementCreatorCubit cubit) => !cubit.state.canSubmit,
     );
     final String label = Str.of(context).save;
 
