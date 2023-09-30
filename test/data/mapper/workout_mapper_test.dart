@@ -9,7 +9,7 @@ import '../../creators/workout_creator.dart';
 
 void main() {
   test(
-    'map workout from firebase, '
+    'mapWorkoutFromDto, '
     'should map dto model to entity model',
     () {
       const String id = 'w1';
@@ -78,7 +78,7 @@ void main() {
         ],
       );
 
-      final Workout entity = mapWorkoutFromFirebase(dto);
+      final Workout entity = mapWorkoutFromDto(dto);
 
       expect(entity, expectedEntity);
     },

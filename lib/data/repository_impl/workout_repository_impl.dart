@@ -89,9 +89,8 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
     required DateTime startDate,
     required DateTime endDate,
     required String userId,
-  }) {
-    // TODO: implement refreshWorkoutsByDateRange
-    throw UnimplementedError();
+  }) async {
+    await _loadWorkoutsByDateRangeFromRemoteDb(startDate, endDate, userId);
   }
 
   @override
@@ -110,7 +109,7 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
       stages: stages.map(mapWorkoutStageToFirebase).toList(),
     );
     if (workoutDto != null) {
-      final Workout addedWorkout = mapWorkoutFromFirebase(workoutDto);
+      final Workout addedWorkout = mapWorkoutFromDto(workoutDto);
       addEntity(addedWorkout);
     }
   }
@@ -133,7 +132,7 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
       stages: stages?.map(mapWorkoutStageToFirebase).toList(),
     );
     if (updatedWorkoutDto != null) {
-      final Workout updatedWorkout = mapWorkoutFromFirebase(updatedWorkoutDto);
+      final Workout updatedWorkout = mapWorkoutFromDto(updatedWorkoutDto);
       updateEntity(updatedWorkout);
     }
   }
@@ -159,18 +158,14 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
     DateTime endDate,
     String userId,
   ) async {
-    final List<WorkoutDto>? workoutDtos =
-        await _dbWorkoutService.loadWorkoutsByDateRange(
+    final workoutDtos = await _dbWorkoutService.loadWorkoutsByDateRange(
       userId: userId,
       startDate: startDate,
       endDate: endDate,
     );
     if (workoutDtos != null) {
-      final List<Workout> workouts = workoutDtos
-          .map(
-            (WorkoutDto workoutDto) => mapWorkoutFromFirebase(workoutDto),
-          )
-          .toList();
+      final List<Workout> workouts =
+          workoutDtos.map(mapWorkoutFromDto).toList();
       addOrUpdateEntities(workouts);
     }
   }
@@ -184,7 +179,7 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
       userId: userId,
     );
     if (workoutDto != null) {
-      final Workout workout = mapWorkoutFromFirebase(workoutDto);
+      final Workout workout = mapWorkoutFromDto(workoutDto);
       addEntity(workout);
       return workout;
     }
@@ -196,7 +191,7 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
         await _dbWorkoutService.loadAllWorkouts(userId: userId);
     if (workoutDtos != null) {
       final List<Workout> workouts =
-          workoutDtos.map(mapWorkoutFromFirebase).toList();
+          workoutDtos.map(mapWorkoutFromDto).toList();
       addOrUpdateEntities(workouts);
     }
   }
@@ -209,7 +204,7 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
         await _dbWorkoutService.loadWorkoutsByDate(date: date, userId: userId);
     if (workoutDtos != null) {
       final List<Workout> workouts =
-          workoutDtos.map(mapWorkoutFromFirebase).toList();
+          workoutDtos.map(mapWorkoutFromDto).toList();
       addOrUpdateEntities(workouts);
     }
   }

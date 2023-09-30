@@ -38,7 +38,7 @@ void main() {
   });
 
   test(
-    'get workouts by date range, '
+    'getWorkoutsByDateRange, '
     'should emit workouts existing in state and workouts loaded from remote db',
     () {
       final DateTime startDate = DateTime(2023, 4, 3);
@@ -141,7 +141,7 @@ void main() {
   );
 
   test(
-    'get workout by id, '
+    'getWorkoutById, '
     'workout exists in repository, '
     'should emit workout from repository',
     () {
@@ -174,7 +174,7 @@ void main() {
   );
 
   test(
-    'get workout by id, '
+    'getWorkoutById, '
     'workout does not exist in repository, '
     'should load workout from db, add it to repository and emit it',
     () {
@@ -211,7 +211,7 @@ void main() {
   );
 
   test(
-    'get workouts by date, '
+    'getWorkoutsByDate, '
     'should load workouts from remote db and should emit workouts belonging to given user and matching to given date',
     () {
       final DateTime date = DateTime(2023, 2, 1);
@@ -271,7 +271,7 @@ void main() {
   );
 
   test(
-    'get all workouts, '
+    'getAllWorkouts, '
     'should load workouts from remote db and should emit workouts belonging to given user',
     () {
       final List<Workout> existingWorkouts = [
@@ -346,7 +346,51 @@ void main() {
   );
 
   test(
-    'add workout, '
+    'refreshWorkoutsByDateRange, '
+    'should load workouts by date range from db and '
+    'should add or update them in repo',
+    () async {
+      final DateTime startDate = DateTime(2023, 1, 10);
+      final DateTime endDate = DateTime(2023, 1, 17);
+      final List<Workout> existingWorkouts = [
+        createWorkout(id: 'w1', name: 'workout 1'),
+        createWorkout(id: 'w2'),
+      ];
+      final List<firebase.WorkoutDto> loadedWorkoutDtos = [
+        createWorkoutDto(id: 'w1', name: 'updated workout 1'),
+        createWorkoutDto(id: 'w3'),
+      ];
+      final List<Workout> loadedWorkouts = [
+        createWorkout(id: 'w1', name: 'updated workout 1'),
+        createWorkout(id: 'w3'),
+      ];
+      dbWorkoutService.mockLoadWorkoutsByDateRange(
+        workoutDtos: loadedWorkoutDtos,
+      );
+      repository = WorkoutRepositoryImpl(initialState: existingWorkouts);
+
+      await repository.refreshWorkoutsByDateRange(
+        startDate: startDate,
+        endDate: endDate,
+        userId: userId,
+      );
+
+      expect(
+        repository.dataStream$,
+        emits([loadedWorkouts.first, existingWorkouts[1], loadedWorkouts.last]),
+      );
+      verify(
+        () => dbWorkoutService.loadWorkoutsByDateRange(
+          startDate: startDate,
+          endDate: endDate,
+          userId: userId,
+        ),
+      ).called(1);
+    },
+  );
+
+  test(
+    'addWorkout, '
     'should call method from db service to add workout and should add new workout to repository',
     () async {
       const String id = 'w3';
@@ -420,7 +464,7 @@ void main() {
   );
 
   test(
-    'update workout, '
+    'updateWorkout, '
     'should call method from db service to update workout and should update workout in repository',
     () {
       const String id = 'w1';
@@ -508,7 +552,7 @@ void main() {
   );
 
   test(
-    'update workout, '
+    'updateWorkout, '
     'workout name is null, '
     'should call db method to update workout with workout name set as null',
     () async {
@@ -535,7 +579,7 @@ void main() {
   );
 
   test(
-    'update workout, '
+    'updateWorkout, '
     'workout status is null, '
     'should call db method to update workout with workout status set as null',
     () async {
@@ -562,7 +606,7 @@ void main() {
   );
 
   test(
-    'update workout, '
+    'updateWorkout, '
     'list of stages is null, '
     'should call db method to update workout with stages set as null',
     () async {
@@ -589,7 +633,7 @@ void main() {
   );
 
   test(
-    'delete workout, '
+    'deleteWorkout, '
     'should call method from db service to delete workout and should delete workout from the state of repository',
     () {
       const String id = 'w1';
@@ -628,7 +672,7 @@ void main() {
   );
 
   test(
-    'delete all user workouts, '
+    'deleteAllUserWorkouts, '
     'should call method from db service to delete all user workouts and should delete these workouts from the state of repository',
     () {
       final List<Workout> existingWorkouts = [

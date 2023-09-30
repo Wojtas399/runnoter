@@ -1,8 +1,8 @@
 import 'package:firebase/firebase.dart';
 
 WorkoutDto createWorkoutDto({
-  String id = 'w1',
-  String userId = 'u1',
+  String id = '',
+  String userId = '',
   DateTime? date,
   ActivityStatusDto status = const ActivityStatusPendingDto(),
   String name = '',

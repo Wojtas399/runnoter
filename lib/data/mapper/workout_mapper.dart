@@ -4,7 +4,7 @@ import '../../domain/entity/workout.dart';
 import 'activity_status_mapper.dart';
 import 'workout_stage_mapper.dart';
 
-Workout mapWorkoutFromFirebase(WorkoutDto workoutDto) {
+Workout mapWorkoutFromDto(WorkoutDto workoutDto) {
   return Workout(
     id: workoutDto.id,
     userId: workoutDto.userId,
