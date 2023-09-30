@@ -55,6 +55,16 @@ class MockWorkoutRepository extends Mock implements WorkoutRepository {
     ).thenAnswer((_) => Stream.value(allWorkouts));
   }
 
+  void mockRefreshWorkoutsByDateRange() {
+    when(
+      () => refreshWorkoutsByDateRange(
+        startDate: any(named: 'startDate'),
+        endDate: any(named: 'endDate'),
+        userId: any(named: 'userId'),
+      ),
+    ).thenAnswer((_) => Future.value());
+  }
+
   void mockAddWorkout() {
     when(
       () => addWorkout(

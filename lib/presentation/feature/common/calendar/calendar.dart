@@ -39,17 +39,7 @@ class Calendar extends StatelessWidget {
           endDate: calendarWeeks?.last.days.last.date,
         ),
       child: const _BlocsListener(
-        child: SingleChildScrollView(
-          child: BigBody(
-            child: Shimmer(
-              child: ResponsiveLayout(
-                mobileBody: _MobileContent(),
-                tabletBody: _TabletContent(),
-                desktopBody: _DesktopContent(),
-              ),
-            ),
-          ),
-        ),
+        child: _Content(),
       ),
     );
   }
@@ -130,6 +120,38 @@ class _BlocsListener extends StatelessWidget {
       case DayPreviewDialogActionShowRace():
         navigateTo(RacePreviewRoute(userId: userId, raceId: action.raceId));
         break;
+    }
+  }
+}
+
+class _Content extends StatelessWidget {
+  const _Content();
+
+  @override
+  Widget build(BuildContext context) {
+    return RefreshIndicator(
+      onRefresh: () async => await _onRefresh(context),
+      child: const SingleChildScrollView(
+        child: BigBody(
+          child: Shimmer(
+            child: ResponsiveLayout(
+              mobileBody: _MobileContent(),
+              tabletBody: _TabletContent(),
+              desktopBody: _DesktopContent(),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _onRefresh(BuildContext context) async {
+    final DateRange? dateRange = context.read<CalendarCubit>().state.dateRange;
+    if (dateRange != null) {
+      await context.read<CalendarUserDataCubit>().refresh(
+            startDate: dateRange.startDate,
+            endDate: dateRange.endDate,
+          );
     }
   }
 }

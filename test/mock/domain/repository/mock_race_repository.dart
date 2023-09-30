@@ -59,6 +59,16 @@ class MockRaceRepository extends Mock implements RaceRepository {
     ).thenAnswer((_) => racesStream ?? Stream.value(races));
   }
 
+  void mockRefreshRacesByDateRange() {
+    when(
+      () => refreshRacesByDateRange(
+        startDate: any(named: 'startDate'),
+        endDate: any(named: 'endDate'),
+        userId: any(named: 'userId'),
+      ),
+    ).thenAnswer((_) => Future.value());
+  }
+
   void mockAddNewRace() {
     when(
       () => addNewRace(
