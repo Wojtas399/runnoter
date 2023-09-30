@@ -30,8 +30,7 @@ class ClientsCubit
   final GetReceivedCoachingRequestsWithSenderInfoUseCase
       _getReceivedCoachingRequestsWithSenderInfoUseCase;
   final LoadChatIdUseCase _loadChatIdUseCase;
-  StreamSubscription<bool>? _connectionListener;
-  StreamSubscription<ClientsState>? _dataListener;
+  StreamSubscription<ClientsState>? _listener;
 
   ClientsCubit({
     ClientsState initialState =
@@ -49,35 +48,36 @@ class ClientsCubit
 
   @override
   Future<void> close() {
-    _connectionListener?.cancel();
-    _dataListener?.cancel();
+    _listener?.cancel();
     return super.close();
   }
 
-  Future<void> initialize() async {
-    final bool hasDeviceInternetConnection =
-        await _connectivityService.hasDeviceInternetConnection();
-    if (!hasDeviceInternetConnection) emitNoInternetConnectionStatus();
-    _setConnectionListener();
-    _dataListener ??= _authService.loggedUserId$
+  void initialize() {
+    _listener ??= _connectivityService.connectivityStatus$
         .switchMap(
-          (String? loggedUserId) => loggedUserId == null
-              ? Stream.value(state.copyWith())
-              : Rx.combineLatest3(
-                  _getSentRequests(loggedUserId),
-                  _getReceivedRequests(loggedUserId),
-                  _getClients(loggedUserId),
-                  (
-                    List<CoachingRequestWithPerson> sentRequests,
-                    List<CoachingRequestWithPerson> receivedRequests,
-                    List<Person> clients,
-                  ) =>
-                      state.copyWith(
-                    sentRequests: sentRequests,
-                    receivedRequests: receivedRequests,
-                    clients: clients,
-                  ),
-                ),
+          (bool hasDeviceInternetConnection) => hasDeviceInternetConnection
+              ? _authService.loggedUserId$.switchMap(
+                  (String? loggedUserId) => loggedUserId == null
+                      ? Stream.value(state.copyWith())
+                      : Rx.combineLatest3(
+                          _getSentRequests(loggedUserId),
+                          _getReceivedRequests(loggedUserId),
+                          _getClients(loggedUserId),
+                          (
+                            List<CoachingRequestWithPerson> sentRequests,
+                            List<CoachingRequestWithPerson> receivedRequests,
+                            List<Person> clients,
+                          ) =>
+                              state.copyWith(
+                            sentRequests: sentRequests,
+                            receivedRequests: receivedRequests,
+                            clients: clients,
+                          ),
+                        ),
+                )
+              : Stream.value(state.copyWith(
+                  status: const CubitStatusNoInternetConnection(),
+                )),
         )
         .listen(emit);
   }
@@ -166,17 +166,6 @@ class ClientsCubit
       return false;
     }
     return true;
-  }
-
-  void _setConnectionListener() {
-    _connectionListener ??=
-        _connectivityService.onConnectivityStatusChanged().listen(
-              (bool isInternetConnection) => emit(state.copyWith(
-                status: isInternetConnection
-                    ? const CubitStatusComplete()
-                    : const CubitStatusNoInternetConnection(),
-              )),
-            );
   }
 
   Stream<List<Person>> _getClients(String loggedUserId) => _personRepository

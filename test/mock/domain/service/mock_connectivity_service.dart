@@ -2,11 +2,11 @@ import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/service/connectivity_service.dart';
 
 class MockConnectivityService extends Mock implements ConnectivityService {
-  void mockOnConnectivityStatusChanged({
+  void mockGetConnectivityStatus({
     required Stream<bool> hasDeviceInternetConnection$,
   }) {
     when(
-      () => onConnectivityStatusChanged(),
+      () => connectivityStatus$,
     ).thenAnswer((_) => hasDeviceInternetConnection$);
   }
 
