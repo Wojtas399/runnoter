@@ -21,6 +21,12 @@ abstract class WorkoutRepository {
 
   Stream<List<Workout>?> getAllWorkouts({required String userId});
 
+  Future<void> refreshWorkoutsByDateRange({
+    required DateTime startDate,
+    required DateTime endDate,
+    required String userId,
+  });
+
   Future<void> addWorkout({
     required String userId,
     required String workoutName,

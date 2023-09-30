@@ -84,6 +84,16 @@ class RaceRepositoryImpl extends StateRepository<Race>
   }
 
   @override
+  Future<void> refreshRacesByDateRange({
+    required DateTime startDate,
+    required DateTime endDate,
+    required String userId,
+  }) {
+    // TODO: implement refreshRacesByDateRange
+    throw UnimplementedError();
+  }
+
+  @override
   Future<void> addNewRace({
     required String userId,
     required String name,

@@ -22,6 +22,12 @@ abstract interface class RaceRepository {
     required String userId,
   });
 
+  Future<void> refreshRacesByDateRange({
+    required DateTime startDate,
+    required DateTime endDate,
+    required String userId,
+  });
+
   Future<void> addNewRace({
     required String userId,
     required String name,

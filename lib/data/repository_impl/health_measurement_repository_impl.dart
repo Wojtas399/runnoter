@@ -70,6 +70,16 @@ class HealthMeasurementRepositoryImpl extends StateRepository<HealthMeasurement>
   }
 
   @override
+  Future<void> refreshMeasurementsByDateRange({
+    required DateTime startDate,
+    required DateTime endDate,
+    required String userId,
+  }) {
+    // TODO: implement refreshMeasurementsByDateRange
+    throw UnimplementedError();
+  }
+
+  @override
   Future<bool> doesMeasurementFromDateExist({
     required String userId,
     required DateTime date,

@@ -85,6 +85,16 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
   }
 
   @override
+  Future<void> refreshWorkoutsByDateRange({
+    required DateTime startDate,
+    required DateTime endDate,
+    required String userId,
+  }) {
+    // TODO: implement refreshWorkoutsByDateRange
+    throw UnimplementedError();
+  }
+
+  @override
   Future<void> addWorkout({
     required String userId,
     required String workoutName,
