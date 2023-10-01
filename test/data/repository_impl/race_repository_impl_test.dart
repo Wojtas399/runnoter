@@ -219,19 +219,52 @@ void main() {
     'should add or update them in repo',
     () async {
       final DateTime startDate = DateTime(2023, 1, 10);
-      final DateTime endDate = DateTime(2023, 1, 17);
+      final DateTime endDate = DateTime(2023, 1, 16);
       final List<Race> existingRaces = [
-        createRace(id: 'w1', name: 'workout 1'),
-        createRace(id: 'w2'),
+        createRace(
+          id: 'w1',
+          userId: userId,
+          name: 'first workout',
+          date: DateTime(2023, 1, 11),
+        ),
+        createRace(id: 'w2', userId: userId, date: DateTime(2023, 1, 9)),
+        createRace(id: 'w3', userId: userId, date: DateTime(2023, 1, 18)),
+        createRace(id: 'w4', userId: userId, date: DateTime(2023, 1, 15)),
+        createRace(id: 'w5', userId: 'u2', date: DateTime(2023, 1, 14)),
       ];
       final List<RaceDto> loadedRaceDtos = [
-        createRaceDto(id: 'w1', name: 'updated workout 1'),
-        createRaceDto(id: 'w3'),
+        createRaceDto(
+          id: 'w1',
+          userId: userId,
+          name: 'updated first workout',
+          date: DateTime(2023, 1, 11),
+        ),
+        createRaceDto(id: 'w6', userId: userId, date: DateTime(2023, 1, 13)),
       ];
       final List<Race> loadedRaces = [
-        createRace(id: 'w1', name: 'updated workout 1'),
-        createRace(id: 'w3'),
+        createRace(
+          id: 'w1',
+          userId: userId,
+          name: 'updated first workout',
+          date: DateTime(2023, 1, 11),
+        ),
+        createRace(id: 'w6', userId: userId, date: DateTime(2023, 1, 13)),
       ];
+      dateService.mockIsDateFromRange(expected: true);
+      when(
+        () => dateService.isDateFromRange(
+          date: DateTime(2023, 1, 9),
+          startDate: startDate,
+          endDate: endDate,
+        ),
+      ).thenReturn(false);
+      when(
+        () => dateService.isDateFromRange(
+          date: DateTime(2023, 1, 18),
+          startDate: startDate,
+          endDate: endDate,
+        ),
+      ).thenReturn(false);
       dbRaceService.mockLoadRacesByDateRange(raceDtos: loadedRaceDtos);
       repository = RaceRepositoryImpl(initialData: existingRaces);
 
@@ -243,7 +276,12 @@ void main() {
 
       expect(
         repository.dataStream$,
-        emits([loadedRaces.first, existingRaces[1], loadedRaces.last]),
+        emits([
+          existingRaces[1],
+          existingRaces[2],
+          existingRaces.last,
+          ...loadedRaces,
+        ]),
       );
       verify(
         () => dbRaceService.loadRacesByDateRange(

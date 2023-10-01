@@ -40,7 +40,11 @@ class RaceRepositoryImpl extends StateRepository<Race>
     required DateTime endDate,
     required String userId,
   }) async* {
-    await _loadRacesByDateRangeFromDb(startDate, endDate, userId);
+    final racesLoadedFromDb =
+        await _loadRacesByDateRangeFromDb(startDate, endDate, userId);
+    if (racesLoadedFromDb?.isNotEmpty == true) {
+      addOrUpdateEntities(racesLoadedFromDb!);
+    }
     await for (final races in dataStream$) {
       yield races
           ?.where(
@@ -90,7 +94,22 @@ class RaceRepositoryImpl extends StateRepository<Race>
     required DateTime endDate,
     required String userId,
   }) async {
-    await _loadRacesByDateRangeFromDb(startDate, endDate, userId);
+    final existingRaces = await dataStream$.first;
+    final racesLoadedFromDb =
+        await _loadRacesByDateRangeFromDb(startDate, endDate, userId);
+    final List<Race> updatedRaces = [
+      ...?existingRaces?.where(
+        (race) =>
+            race.userId != userId ||
+            !_dateService.isDateFromRange(
+              date: race.date,
+              startDate: startDate,
+              endDate: endDate,
+            ),
+      ),
+      ...?racesLoadedFromDb,
+    ];
+    setEntities(updatedRaces);
   }
 
   @override
@@ -198,7 +217,7 @@ class RaceRepositoryImpl extends StateRepository<Race>
     return null;
   }
 
-  Future<void> _loadRacesByDateRangeFromDb(
+  Future<List<Race>?> _loadRacesByDateRangeFromDb(
     DateTime startDate,
     DateTime endDate,
     String userId,
@@ -208,10 +227,7 @@ class RaceRepositoryImpl extends StateRepository<Race>
       endDate: endDate,
       userId: userId,
     );
-    if (raceDtos != null) {
-      final List<Race> races = raceDtos.map(mapRaceFromDto).toList();
-      addOrUpdateEntities(races);
-    }
+    return raceDtos?.map(mapRaceFromDto).toList();
   }
 
   Future<void> _loadRacesByDateFromDb(DateTime date, String userId) async {
