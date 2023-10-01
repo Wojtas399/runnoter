@@ -116,7 +116,7 @@ void main() {
         workoutDtos: newlyLoadedWorkoutDtos,
       );
       repository = WorkoutRepositoryImpl(
-        initialState: existingWorkouts,
+        initialData: existingWorkouts,
       );
 
       final Stream<List<Workout>?> workouts$ =
@@ -159,7 +159,7 @@ void main() {
           name: 'workout 2',
         ),
       ];
-      repository = WorkoutRepositoryImpl(initialState: existingWorkouts);
+      repository = WorkoutRepositoryImpl(initialData: existingWorkouts);
 
       final Stream<Workout?> workout$ = repository.getWorkoutById(
         workoutId: id,
@@ -193,7 +193,7 @@ void main() {
           name: 'workout 2',
         ),
       ];
-      repository = WorkoutRepositoryImpl(initialState: existingWorkouts);
+      repository = WorkoutRepositoryImpl(initialData: existingWorkouts);
       dbWorkoutService.mockLoadWorkoutById(
         workoutDto: expectedWorkoutDto,
       );
@@ -249,7 +249,7 @@ void main() {
       dbWorkoutService.mockLoadWorkoutsByDate(
         workoutDtos: [loadedWorkoutDto],
       );
-      repository = WorkoutRepositoryImpl(initialState: existingWorkouts);
+      repository = WorkoutRepositoryImpl(initialData: existingWorkouts);
 
       final Stream<List<Workout>?> workouts$ = repository.getWorkoutsByDate(
         userId: userId,
@@ -330,7 +330,7 @@ void main() {
         workoutDtos: newlyLoadedWorkoutDtos,
       );
       repository = WorkoutRepositoryImpl(
-        initialState: existingWorkouts,
+        initialData: existingWorkouts,
       );
 
       final Stream<List<Workout>?> workouts$ =
@@ -351,23 +351,56 @@ void main() {
     'should add or update them in repo',
     () async {
       final DateTime startDate = DateTime(2023, 1, 10);
-      final DateTime endDate = DateTime(2023, 1, 17);
+      final DateTime endDate = DateTime(2023, 1, 16);
       final List<Workout> existingWorkouts = [
-        createWorkout(id: 'w1', name: 'workout 1'),
-        createWorkout(id: 'w2'),
+        createWorkout(
+          id: 'w1',
+          userId: userId,
+          name: 'first workout',
+          date: DateTime(2023, 1, 11),
+        ),
+        createWorkout(id: 'w2', userId: userId, date: DateTime(2023, 1, 9)),
+        createWorkout(id: 'w3', userId: userId, date: DateTime(2023, 1, 18)),
+        createWorkout(id: 'w4', userId: userId, date: DateTime(2023, 1, 15)),
+        createWorkout(id: 'w5', userId: 'u2', date: DateTime(2023, 1, 14)),
       ];
       final List<firebase.WorkoutDto> loadedWorkoutDtos = [
-        createWorkoutDto(id: 'w1', name: 'updated workout 1'),
-        createWorkoutDto(id: 'w3'),
+        createWorkoutDto(
+          id: 'w1',
+          userId: userId,
+          name: 'updated first workout',
+          date: DateTime(2023, 1, 11),
+        ),
+        createWorkoutDto(id: 'w6', userId: userId, date: DateTime(2023, 1, 13)),
       ];
       final List<Workout> loadedWorkouts = [
-        createWorkout(id: 'w1', name: 'updated workout 1'),
-        createWorkout(id: 'w3'),
+        createWorkout(
+          id: 'w1',
+          userId: userId,
+          name: 'updated first workout',
+          date: DateTime(2023, 1, 11),
+        ),
+        createWorkout(id: 'w6', userId: userId, date: DateTime(2023, 1, 13)),
       ];
+      dateService.mockIsDateFromRange(expected: true);
+      when(
+        () => dateService.isDateFromRange(
+          date: DateTime(2023, 1, 9),
+          startDate: startDate,
+          endDate: endDate,
+        ),
+      ).thenReturn(false);
+      when(
+        () => dateService.isDateFromRange(
+          date: DateTime(2023, 1, 18),
+          startDate: startDate,
+          endDate: endDate,
+        ),
+      ).thenReturn(false);
       dbWorkoutService.mockLoadWorkoutsByDateRange(
         workoutDtos: loadedWorkoutDtos,
       );
-      repository = WorkoutRepositoryImpl(initialState: existingWorkouts);
+      repository = WorkoutRepositoryImpl(initialData: existingWorkouts);
 
       await repository.refreshWorkoutsByDateRange(
         startDate: startDate,
@@ -377,7 +410,12 @@ void main() {
 
       expect(
         repository.dataStream$,
-        emits([loadedWorkouts.first, existingWorkouts[1], loadedWorkouts.last]),
+        emits([
+          existingWorkouts[1],
+          existingWorkouts[2],
+          existingWorkouts.last,
+          ...loadedWorkouts,
+        ]),
       );
       verify(
         () => dbWorkoutService.loadWorkoutsByDateRange(
@@ -437,7 +475,7 @@ void main() {
         stages: stages,
       );
       dbWorkoutService.mockAddWorkout(addedWorkoutDto: addedWorkoutDto);
-      repository = WorkoutRepositoryImpl(initialState: existingWorkouts);
+      repository = WorkoutRepositoryImpl(initialData: existingWorkouts);
 
       await repository.addWorkout(
         userId: userId,
@@ -519,7 +557,7 @@ void main() {
       dbWorkoutService.mockUpdateWorkout(
         updatedWorkoutDto: updatedWorkoutDto,
       );
-      repository = WorkoutRepositoryImpl(initialState: [existingWorkout]);
+      repository = WorkoutRepositoryImpl(initialData: [existingWorkout]);
 
       final Stream<Workout?> workout$ = repository.getWorkoutById(
         workoutId: id,
@@ -641,7 +679,7 @@ void main() {
         createWorkout(id: 'w2', userId: userId),
         createWorkout(id: id, userId: userId),
       ];
-      repository = WorkoutRepositoryImpl(initialState: existingWorkouts);
+      repository = WorkoutRepositoryImpl(initialData: existingWorkouts);
       dbWorkoutService.mockDeleteWorkout();
 
       final Stream<List<Workout>?> repositoryState$ = repository.dataStream$;
@@ -682,7 +720,7 @@ void main() {
         createWorkout(id: 'w3', userId: 'u2'),
         createWorkout(id: 'w4', userId: userId),
       ];
-      repository = WorkoutRepositoryImpl(initialState: existingWorkouts);
+      repository = WorkoutRepositoryImpl(initialData: existingWorkouts);
       dbWorkoutService.mockDeleteAllUserWorkouts(
         idsOfDeletedWorkouts: ['w2', 'w1', 'w4'],
       );

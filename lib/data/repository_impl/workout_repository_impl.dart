@@ -17,11 +17,9 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
   final FirebaseWorkoutService _dbWorkoutService;
   final DateService _dateService;
 
-  WorkoutRepositoryImpl({
-    List<Workout>? initialState,
-  })  : _dbWorkoutService = getIt<FirebaseWorkoutService>(),
-        _dateService = getIt<DateService>(),
-        super(initialData: initialState);
+  WorkoutRepositoryImpl({super.initialData})
+      : _dbWorkoutService = getIt<FirebaseWorkoutService>(),
+        _dateService = getIt<DateService>();
 
   @override
   Stream<List<Workout>?> getWorkoutsByDateRange({
@@ -29,7 +27,11 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
     required DateTime endDate,
     required String userId,
   }) async* {
-    await _loadWorkoutsByDateRangeFromRemoteDb(startDate, endDate, userId);
+    final workoutsLoadedFromDb =
+        await _loadWorkoutsByDateRangeFromDb(startDate, endDate, userId);
+    if (workoutsLoadedFromDb?.isNotEmpty == true) {
+      addOrUpdateEntities(workoutsLoadedFromDb!);
+    }
     await for (final workouts in dataStream$) {
       yield workouts
           ?.where(
@@ -90,7 +92,22 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
     required DateTime endDate,
     required String userId,
   }) async {
-    await _loadWorkoutsByDateRangeFromRemoteDb(startDate, endDate, userId);
+    final existingWorkouts = await dataStream$.first;
+    final workoutsLoadedFromDb =
+        await _loadWorkoutsByDateRangeFromDb(startDate, endDate, userId);
+    final List<Workout> updatedWorkouts = [
+      ...?existingWorkouts?.where(
+        (Workout workout) =>
+            workout.userId != userId ||
+            !_dateService.isDateFromRange(
+              date: workout.date,
+              startDate: startDate,
+              endDate: endDate,
+            ),
+      ),
+      ...?workoutsLoadedFromDb,
+    ];
+    setEntities(updatedWorkouts);
   }
 
   @override
@@ -153,7 +170,7 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
     removeEntities(idsOfDeletedWorkouts);
   }
 
-  Future<void> _loadWorkoutsByDateRangeFromRemoteDb(
+  Future<List<Workout>?> _loadWorkoutsByDateRangeFromDb(
     DateTime startDate,
     DateTime endDate,
     String userId,
@@ -163,11 +180,7 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
       startDate: startDate,
       endDate: endDate,
     );
-    if (workoutDtos != null) {
-      final List<Workout> workouts =
-          workoutDtos.map(mapWorkoutFromDto).toList();
-      addOrUpdateEntities(workouts);
-    }
+    return workoutDtos?.map(mapWorkoutFromDto).toList();
   }
 
   Future<Workout?> _loadWorkoutByIdFromRemoteDb(
