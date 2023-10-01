@@ -93,6 +93,12 @@ class RaceRepositoryImpl extends StateRepository<Race>
   }
 
   @override
+  Future<void> refreshAllRacesByUser({required String userId}) {
+    // TODO: implement refreshAllRacesByUser
+    throw UnimplementedError();
+  }
+
+  @override
   Future<void> addNewRace({
     required String userId,
     required String name,
