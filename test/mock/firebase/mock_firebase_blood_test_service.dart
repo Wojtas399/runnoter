@@ -3,42 +3,32 @@ import 'package:mocktail/mocktail.dart';
 
 class MockFirebaseBloodTestService extends Mock
     implements FirebaseBloodTestService {
-  void mockLoadTestById({
-    BloodTestDto? bloodTestDto,
-  }) {
+  void mockLoadTestById({BloodTestDto? bloodTestDto}) {
     when(
       () => loadTestById(
         bloodTestId: any(named: 'bloodTestId'),
         userId: any(named: 'userId'),
       ),
-    ).thenAnswer((invocation) => Future.value(bloodTestDto));
+    ).thenAnswer((_) => Future.value(bloodTestDto));
   }
 
-  void mockLoadAllTests({
-    List<BloodTestDto>? bloodTestDtos,
-  }) {
+  void mockLoadTestsByUserId({List<BloodTestDto>? bloodTestDtos}) {
     when(
-      () => loadAllTests(
-        userId: any(named: 'userId'),
-      ),
-    ).thenAnswer((invocation) => Future.value(bloodTestDtos));
+      () => loadTestsByUserId(userId: any(named: 'userId')),
+    ).thenAnswer((_) => Future.value(bloodTestDtos));
   }
 
-  void mockAddNewTest({
-    BloodTestDto? addedBloodTestDto,
-  }) {
+  void mockAddNewTest({BloodTestDto? addedBloodTestDto}) {
     when(
       () => addNewTest(
         userId: any(named: 'userId'),
         date: any(named: 'date'),
         parameterResultDtos: any(named: 'parameterResultDtos'),
       ),
-    ).thenAnswer((invocation) => Future.value(addedBloodTestDto));
+    ).thenAnswer((_) => Future.value(addedBloodTestDto));
   }
 
-  void mockUpdateTest({
-    BloodTestDto? updatedBloodTestDto,
-  }) {
+  void mockUpdateTest({BloodTestDto? updatedBloodTestDto}) {
     when(
       () => updateTest(
         bloodTestId: any(named: 'bloodTestId'),
@@ -47,7 +37,7 @@ class MockFirebaseBloodTestService extends Mock
         parameterResultDtos: any(named: 'parameterResultDtos'),
       ),
     ).thenAnswer(
-      (invocation) => Future.value(updatedBloodTestDto),
+      (_) => Future.value(updatedBloodTestDto),
     );
   }
 
@@ -57,16 +47,12 @@ class MockFirebaseBloodTestService extends Mock
         bloodTestId: any(named: 'bloodTestId'),
         userId: any(named: 'userId'),
       ),
-    ).thenAnswer((invocation) => Future.value());
+    ).thenAnswer((_) => Future.value());
   }
 
-  void mockDeleteAllUserTests({
-    required List<String> idsOfDeletedTests,
-  }) {
+  void mockDeleteAllUserTests({required List<String> idsOfDeletedTests}) {
     when(
-      () => deleteAllUserTests(
-        userId: any(named: 'userId'),
-      ),
-    ).thenAnswer((invocation) => Future.value(idsOfDeletedTests));
+      () => deleteAllUserTests(userId: any(named: 'userId')),
+    ).thenAnswer((_) => Future.value(idsOfDeletedTests));
   }
 }

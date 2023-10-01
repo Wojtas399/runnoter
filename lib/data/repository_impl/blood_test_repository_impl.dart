@@ -25,19 +25,22 @@ class BloodTestRepositoryImpl extends StateRepository<BloodTest>
       BloodTest? bloodTest = bloodTests?.firstWhereOrNull(
         (BloodTest test) => test.id == bloodTestId && test.userId == userId,
       );
-      bloodTest ??= await _loadTestByIdFromRemoteDb(bloodTestId, userId);
+      bloodTest ??= await _loadTestByIdFromDb(bloodTestId, userId);
       yield bloodTest;
     }
   }
 
   @override
-  Stream<List<BloodTest>?> getAllTests({
-    required String userId,
-  }) async* {
-    await _loadTestsFromRemoteDb(userId);
+  Stream<List<BloodTest>?> getTestsByUserId({required String userId}) async* {
+    await _loadTestsByUserIdFromDb(userId);
     await for (final readings in dataStream$) {
       yield readings?.where((bloodTest) => bloodTest.userId == userId).toList();
     }
+  }
+
+  @override
+  Future<void> refreshTestsByUserId({required String userId}) async {
+    await _loadTestsByUserIdFromDb(userId);
   }
 
   @override
@@ -91,15 +94,13 @@ class BloodTestRepositoryImpl extends StateRepository<BloodTest>
   }
 
   @override
-  Future<void> deleteAllUserTests({
-    required String userId,
-  }) async {
+  Future<void> deleteAllUserTests({required String userId}) async {
     final List<String> idsOfDeletedTests =
         await _dbBloodTestService.deleteAllUserTests(userId: userId);
     removeEntities(idsOfDeletedTests);
   }
 
-  Future<BloodTest?> _loadTestByIdFromRemoteDb(
+  Future<BloodTest?> _loadTestByIdFromDb(
     String bloodTestId,
     String userId,
   ) async {
@@ -115,8 +116,8 @@ class BloodTestRepositoryImpl extends StateRepository<BloodTest>
     return null;
   }
 
-  Future<void> _loadTestsFromRemoteDb(String userId) async {
-    final testsDtos = await _dbBloodTestService.loadAllTests(
+  Future<void> _loadTestsByUserIdFromDb(String userId) async {
+    final testsDtos = await _dbBloodTestService.loadTestsByUserId(
       userId: userId,
     );
     if (testsDtos != null) {

@@ -7,9 +7,9 @@ abstract interface class BloodTestRepository {
     required String userId,
   });
 
-  Stream<List<BloodTest>?> getAllTests({
-    required String userId,
-  });
+  Stream<List<BloodTest>?> getTestsByUserId({required String userId});
+
+  Future<void> refreshTestsByUserId({required String userId});
 
   Future<void> addNewTest({
     required String userId,
@@ -29,7 +29,5 @@ abstract interface class BloodTestRepository {
     required String userId,
   });
 
-  Future<void> deleteAllUserTests({
-    required String userId,
-  });
+  Future<void> deleteAllUserTests({required String userId});
 }

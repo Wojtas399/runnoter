@@ -13,7 +13,7 @@ class FirebaseBloodTestService {
     return snapshot.data();
   }
 
-  Future<List<BloodTestDto>?> loadAllTests({
+  Future<List<BloodTestDto>?> loadTestsByUserId({
     required String userId,
   }) async {
     final snapshot = await getBloodTestsRef(userId).get();
@@ -71,9 +71,7 @@ class FirebaseBloodTestService {
     );
   }
 
-  Future<List<String>> deleteAllUserTests({
-    required String userId,
-  }) async {
+  Future<List<String>> deleteAllUserTests({required String userId}) async {
     final bloodTestsRef = getBloodTestsRef(userId);
     final snapshot = await bloodTestsRef.get();
     final List<String> idsOfDeletedTests = [];

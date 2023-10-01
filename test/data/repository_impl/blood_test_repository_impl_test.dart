@@ -21,16 +21,14 @@ void main() {
     );
   });
 
-  setUp(
-    () => repository = BloodTestRepositoryImpl(),
-  );
+  setUp(() => repository = BloodTestRepositoryImpl());
 
   tearDown(() {
     reset(dbBloodTestService);
   });
 
   test(
-    'get test by id, '
+    'getTestById, '
     'blood test exists in repository, '
     'should emit existing blood test',
     () {
@@ -59,9 +57,9 @@ void main() {
   );
 
   test(
-    'get test by id, '
+    'getTestById, '
     'blood test does not exist in repository, '
-    'should load blood test from remote db and emit it',
+    'should load blood test from db and emit it',
     () {
       const String bloodTestId = 'bt1';
       final firebase.BloodTestDto expectedTestDto = createBloodTestDto(
@@ -96,8 +94,9 @@ void main() {
   );
 
   test(
-    'get all tests, '
-    'should emit tests existing in repository and should load and emit new tests from remote db',
+    'getTestsByUserId, '
+    'should emit tests existing in repository and '
+    'should load and emit new tests from db',
     () async {
       final List<BloodTest> existingTests = [
         createBloodTest(id: 'bt1', userId: userId),
@@ -161,12 +160,10 @@ void main() {
           ],
         ),
       ];
-      dbBloodTestService.mockLoadAllTests(
-        bloodTestDtos: loadedTestsDtos,
-      );
+      dbBloodTestService.mockLoadTestsByUserId(bloodTestDtos: loadedTestsDtos);
       repository = BloodTestRepositoryImpl(initialData: existingTests);
 
-      final Stream<List<BloodTest>?> tests$ = repository.getAllTests(
+      final Stream<List<BloodTest>?> tests$ = repository.getTestsByUserId(
         userId: userId,
       );
 
@@ -179,14 +176,45 @@ void main() {
         ],
       );
       verify(
-        () => dbBloodTestService.loadAllTests(userId: userId),
+        () => dbBloodTestService.loadTestsByUserId(userId: userId),
       ).called(1);
     },
   );
 
   test(
-    'add new test, '
-    'should call method from db service to add new test and should add this test to repository',
+    'refreshTestsByUserId, '
+    'should load tests by user id from db and should add or update them in repo',
+    () async {
+      final List<BloodTest> existingTests = [
+        createBloodTest(id: 't1', date: DateTime(2023, 1, 10)),
+        createBloodTest(id: 't2', date: DateTime(2023, 2, 10)),
+      ];
+      final List<firebase.BloodTestDto> loadedTestDtos = [
+        createBloodTestDto(id: 't1', date: DateTime(2023, 1, 5)),
+        createBloodTestDto(id: 't3', date: DateTime(2023, 3, 10)),
+      ];
+      final List<BloodTest> loadedTest = [
+        createBloodTest(id: 't1', date: DateTime(2023, 1, 5)),
+        createBloodTest(id: 't3', date: DateTime(2023, 3, 10)),
+      ];
+      dbBloodTestService.mockLoadTestsByUserId(bloodTestDtos: loadedTestDtos);
+      repository = BloodTestRepositoryImpl(initialData: existingTests);
+
+      await repository.refreshTestsByUserId(userId: userId);
+
+      expect(
+        repository.dataStream$,
+        emits([loadedTest.first, existingTests[1], loadedTest.last]),
+      );
+      verify(
+        () => dbBloodTestService.loadTestsByUserId(userId: userId),
+      ).called(1);
+    },
+  );
+
+  test(
+    'addNewTest, '
+    'should add new test to db and repo',
     () {
       const String newTestId = 'bt3';
       final DateTime date = DateTime(2023, 5, 20);
@@ -259,8 +287,8 @@ void main() {
   );
 
   test(
-    'update test, '
-    'should call method from db service to update test and should update this test in repository',
+    'updateTest, '
+    'should update test in db and repo',
     () {
       const String testId = 'bt1';
       final DateTime updatedDate = DateTime(2023, 5, 20);
@@ -346,8 +374,8 @@ void main() {
   );
 
   test(
-    'delete test, '
-    'should call method from db service to delete delete test and should delete test from repository',
+    'deleteTest, '
+    'should delete test from db and repo',
     () {
       const String bloodTestId = 'bt1';
       final List<BloodTest> existingTests = [
@@ -382,8 +410,8 @@ void main() {
   );
 
   test(
-    'delete all user tests, '
-    'should call method from db service to delete all user tests and should delete these tests from repository',
+    'deleteAllUserTests, '
+    'should delete all user tests from db and repo',
     () {
       final List<BloodTest> existingTests = [
         createBloodTest(id: 'bt1', userId: userId),

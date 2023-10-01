@@ -15,14 +15,12 @@ class MockBloodTestRepository extends Mock implements BloodTestRepository {
     ).thenAnswer((_) => bloodTestStream ?? Stream.value(bloodTest));
   }
 
-  void mockGetAllTests({
+  void mockGetTestsByUserId({
     List<BloodTest>? tests,
     Stream<List<BloodTest>?>? testsStream,
   }) {
     when(
-      () => getAllTests(
-        userId: any(named: 'userId'),
-      ),
+      () => getTestsByUserId(userId: any(named: 'userId')),
     ).thenAnswer((_) => testsStream ?? Stream.value(tests));
   }
 
@@ -58,9 +56,7 @@ class MockBloodTestRepository extends Mock implements BloodTestRepository {
 
   void mockDeleteAllUserTests() {
     when(
-      () => deleteAllUserTests(
-        userId: any(named: 'userId'),
-      ),
+      () => deleteAllUserTests(userId: any(named: 'userId')),
     ).thenAnswer((_) => Future.value());
   }
 }

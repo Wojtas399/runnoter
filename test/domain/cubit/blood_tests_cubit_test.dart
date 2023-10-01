@@ -38,7 +38,7 @@ void main() {
       blocTest(
         'should set listener of blood tests and should group and sort races by date',
         build: () => BloodTestsCubit(userId: userId),
-        setUp: () => bloodTestRepository.mockGetAllTests(
+        setUp: () => bloodTestRepository.mockGetTestsByUserId(
           testsStream: tests$.stream,
         ),
         act: (cubit) async {
@@ -58,7 +58,7 @@ void main() {
           ],
         ],
         verify: (_) => verify(
-          () => bloodTestRepository.getAllTests(userId: userId),
+          () => bloodTestRepository.getTestsByUserId(userId: userId),
         ).called(1),
       );
     },
