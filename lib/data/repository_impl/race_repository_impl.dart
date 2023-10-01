@@ -75,7 +75,10 @@ class RaceRepositoryImpl extends StateRepository<Race>
 
   @override
   Stream<List<Race>?> getRacesByUserId({required String userId}) async* {
-    await _loadRacesByUserIdFromDb(userId);
+    final racesLoadedFromDb = await _loadRacesByUserIdFromDb(userId);
+    if (racesLoadedFromDb?.isNotEmpty == true) {
+      addOrUpdateEntities(racesLoadedFromDb!);
+    }
     await for (final races in dataStream$) {
       yield races?.where((race) => race.userId == userId).toList();
     }
@@ -92,7 +95,13 @@ class RaceRepositoryImpl extends StateRepository<Race>
 
   @override
   Future<void> refreshRacesByUserId({required String userId}) async {
-    await _loadRacesByUserIdFromDb(userId);
+    final existingRaces = await dataStream$.first;
+    final userRacesLoadedFromDb = await _loadRacesByUserIdFromDb(userId);
+    final List<Race> updatedRaces = [
+      ...?existingRaces?.where((race) => race.userId != userId),
+      ...?userRacesLoadedFromDb,
+    ];
+    setEntities(updatedRaces);
   }
 
   @override
@@ -216,11 +225,8 @@ class RaceRepositoryImpl extends StateRepository<Race>
     }
   }
 
-  Future<void> _loadRacesByUserIdFromDb(String userId) async {
+  Future<List<Race>?> _loadRacesByUserIdFromDb(String userId) async {
     final raceDtos = await _dbRaceService.loadRacesByUserId(userId: userId);
-    if (raceDtos != null) {
-      final List<Race> races = raceDtos.map(mapRaceFromDto).toList();
-      addOrUpdateEntities(races);
-    }
+    return raceDtos?.map(mapRaceFromDto).toList();
   }
 }

@@ -261,16 +261,17 @@ void main() {
     'should add or update them in repo',
     () async {
       final List<Race> existingRaces = [
-        createRace(id: 'w1', name: 'workout 1'),
-        createRace(id: 'w2'),
+        createRace(id: 'w1', userId: userId, name: 'workout 1'),
+        createRace(id: 'w2', userId: userId),
+        createRace(id: 'w3', userId: 'u2'),
       ];
       final List<RaceDto> loadedRaceDtos = [
         createRaceDto(id: 'w1', name: 'updated workout 1'),
-        createRaceDto(id: 'w3'),
+        createRaceDto(id: 'w4'),
       ];
       final List<Race> loadedRaces = [
         createRace(id: 'w1', name: 'updated workout 1'),
-        createRace(id: 'w3'),
+        createRace(id: 'w4'),
       ];
       dbRaceService.mockLoadRacesByUserId(raceDtos: loadedRaceDtos);
       repository = RaceRepositoryImpl(initialData: existingRaces);
@@ -279,7 +280,7 @@ void main() {
 
       expect(
         repository.dataStream$,
-        emits([loadedRaces.first, existingRaces[1], loadedRaces.last]),
+        emits([existingRaces.last, ...loadedRaces]),
       );
       verify(() => dbRaceService.loadRacesByUserId(userId: userId)).called(1);
     },

@@ -129,8 +129,6 @@ class BloodTestRepositoryImpl extends StateRepository<BloodTest>
     final testsDtos = await _dbBloodTestService.loadTestsByUserId(
       userId: userId,
     );
-    if (testsDtos == null) return null;
-    final List<BloodTest> tests = testsDtos.map(mapBloodTestFromDto).toList();
-    return tests;
+    return testsDtos?.map(mapBloodTestFromDto).toList();
   }
 }
