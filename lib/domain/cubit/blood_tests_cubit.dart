@@ -29,6 +29,11 @@ class BloodTestsCubit extends Cubit<List<BloodTestsFromYear>?> {
         .listen(_onBloodTestsChanged);
   }
 
+  Future<void> refresh() async {
+    //TODO
+    await Future.delayed(const Duration(seconds: 2));
+  }
+
   void _onBloodTestsChanged(final List<BloodTest>? bloodTests) {
     if (bloodTests == null) {
       emit([]);
