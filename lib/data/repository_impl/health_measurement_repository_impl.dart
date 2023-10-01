@@ -14,10 +14,9 @@ class HealthMeasurementRepositoryImpl extends StateRepository<HealthMeasurement>
   final FirebaseHealthMeasurementService _dbHealthMeasurementService;
 
   HealthMeasurementRepositoryImpl({
-    List<HealthMeasurement>? initialState,
+    super.initialData,
   })  : _dateService = getIt<DateService>(),
-        _dbHealthMeasurementService = getIt<FirebaseHealthMeasurementService>(),
-        super(initialData: initialState);
+        _dbHealthMeasurementService = getIt<FirebaseHealthMeasurementService>();
 
   @override
   Stream<HealthMeasurement?> getMeasurementByDate({
@@ -74,9 +73,8 @@ class HealthMeasurementRepositoryImpl extends StateRepository<HealthMeasurement>
     required DateTime startDate,
     required DateTime endDate,
     required String userId,
-  }) {
-    // TODO: implement refreshMeasurementsByDateRange
-    throw UnimplementedError();
+  }) async {
+    await _loadMeasurementsByDateRangeFromRemoteDb(startDate, endDate, userId);
   }
 
   @override
