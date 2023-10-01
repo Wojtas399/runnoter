@@ -11,10 +11,7 @@ class MockRaceRepository extends Mock implements RaceRepository {
     registerFallbackValue(const ActivityStatusPending());
   }
 
-  void mockGetRaceById({
-    Race? race,
-    Stream<Race?>? raceStream,
-  }) {
+  void mockGetRaceById({Race? race, Stream<Race?>? raceStream}) {
     when(
       () => getRaceById(
         raceId: any(named: 'raceId'),
@@ -48,14 +45,12 @@ class MockRaceRepository extends Mock implements RaceRepository {
     ).thenAnswer((_) => racesStream ?? Stream.value(races));
   }
 
-  void mockGetAllRaces({
+  void mockGetRacesByUserId({
     List<Race>? races,
     Stream<List<Race>?>? racesStream,
   }) {
     when(
-      () => getAllRaces(
-        userId: any(named: 'userId'),
-      ),
+      () => getRacesByUserId(userId: any(named: 'userId')),
     ).thenAnswer((_) => racesStream ?? Stream.value(races));
   }
 
@@ -69,9 +64,9 @@ class MockRaceRepository extends Mock implements RaceRepository {
     ).thenAnswer((_) => Future.value());
   }
 
-  void mockRefreshAllRacesByUser() {
+  void mockRefreshRacesByUserId() {
     when(
-      () => refreshAllRacesByUser(userId: any(named: 'userId')),
+      () => refreshRacesByUserId(userId: any(named: 'userId')),
     ).thenAnswer((_) => Future.value());
   }
 

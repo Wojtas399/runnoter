@@ -11,53 +11,41 @@ class MockFirebaseRaceService extends Mock implements FirebaseRaceService {
     registerFallbackValue(_FakeActivityStatusDto());
   }
 
-  void mockLoadRaceById({
-    RaceDto? raceDto,
-  }) {
+  void mockLoadRaceById({RaceDto? raceDto}) {
     when(
       () => loadRaceById(
         raceId: any(named: 'raceId'),
         userId: any(named: 'userId'),
       ),
-    ).thenAnswer((invocation) => Future.value(raceDto));
+    ).thenAnswer((_) => Future.value(raceDto));
   }
 
-  void mockLoadRacesByDateRange({
-    List<RaceDto>? raceDtos,
-  }) {
+  void mockLoadRacesByDateRange({List<RaceDto>? raceDtos}) {
     when(
       () => loadRacesByDateRange(
         startDate: any(named: 'startDate'),
         endDate: any(named: 'endDate'),
         userId: any(named: 'userId'),
       ),
-    ).thenAnswer((invocation) => Future.value(raceDtos));
+    ).thenAnswer((_) => Future.value(raceDtos));
   }
 
-  void mockLoadRacesByDate({
-    List<RaceDto>? raceDtos,
-  }) {
+  void mockLoadRacesByDate({List<RaceDto>? raceDtos}) {
     when(
       () => loadRacesByDate(
         date: any(named: 'date'),
         userId: any(named: 'userId'),
       ),
-    ).thenAnswer((invocation) => Future.value(raceDtos));
+    ).thenAnswer((_) => Future.value(raceDtos));
   }
 
-  void mockLoadAllRaces({
-    List<RaceDto>? raceDtos,
-  }) {
+  void mockLoadRacesByUserId({List<RaceDto>? raceDtos}) {
     when(
-      () => loadAllRaces(
-        userId: any(named: 'userId'),
-      ),
-    ).thenAnswer((invocation) => Future.value(raceDtos));
+      () => loadRacesByUserId(userId: any(named: 'userId')),
+    ).thenAnswer((_) => Future.value(raceDtos));
   }
 
-  void mockAddNewRace({
-    RaceDto? addedRaceDto,
-  }) {
+  void mockAddNewRace({RaceDto? addedRaceDto}) {
     when(
       () => addNewRace(
         userId: any(named: 'userId'),
@@ -68,12 +56,10 @@ class MockFirebaseRaceService extends Mock implements FirebaseRaceService {
         expectedDuration: any(named: 'expectedDuration'),
         statusDto: any(named: 'statusDto'),
       ),
-    ).thenAnswer((invocation) => Future.value(addedRaceDto));
+    ).thenAnswer((_) => Future.value(addedRaceDto));
   }
 
-  void mockUpdateRace({
-    RaceDto? updatedRaceDto,
-  }) {
+  void mockUpdateRace({RaceDto? updatedRaceDto}) {
     when(
       () => updateRace(
         raceId: any(named: 'raceId'),
@@ -86,7 +72,7 @@ class MockFirebaseRaceService extends Mock implements FirebaseRaceService {
         setDurationAsNull: any(named: 'setDurationAsNull'),
         statusDto: any(named: 'statusDto'),
       ),
-    ).thenAnswer((invocation) => Future.value(updatedRaceDto));
+    ).thenAnswer((_) => Future.value(updatedRaceDto));
   }
 
   void mockDeleteRace() {
@@ -95,16 +81,12 @@ class MockFirebaseRaceService extends Mock implements FirebaseRaceService {
         raceId: any(named: 'raceId'),
         userId: any(named: 'userId'),
       ),
-    ).thenAnswer((invocation) => Future.value());
+    ).thenAnswer((_) => Future.value());
   }
 
-  void mockDeleteAllUserRaces({
-    required List<String> idsOfDeletedRaces,
-  }) {
+  void mockDeleteAllUserRaces({required List<String> idsOfDeletedRaces}) {
     when(
-      () => deleteAllUserRaces(
-        userId: any(named: 'userId'),
-      ),
-    ).thenAnswer((invocation) => Future.value(idsOfDeletedRaces));
+      () => deleteAllUserRaces(userId: any(named: 'userId')),
+    ).thenAnswer((_) => Future.value(idsOfDeletedRaces));
   }
 }

@@ -54,9 +54,7 @@ class FirebaseRaceService {
     return snapshot.docs.map((doc) => doc.data()).toList();
   }
 
-  Future<List<RaceDto>?> loadAllRaces({
-    required String userId,
-  }) async {
+  Future<List<RaceDto>?> loadRacesByUserId({required String userId}) async {
     final snapshot = await getRacesRef(userId).get();
     return snapshot.docs.map((docSnapshot) => docSnapshot.data()).toList();
   }
@@ -126,9 +124,7 @@ class FirebaseRaceService {
     );
   }
 
-  Future<List<String>> deleteAllUserRaces({
-    required String userId,
-  }) async {
+  Future<List<String>> deleteAllUserRaces({required String userId}) async {
     final competitionsRef = getRacesRef(userId);
     final WriteBatch batch = FirebaseFirestore.instance.batch();
     final snapshot = await competitionsRef.get();

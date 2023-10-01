@@ -15,7 +15,7 @@ abstract interface class RaceRepository {
     required String userId,
   });
 
-  Stream<List<Race>?> getAllRaces({required String userId});
+  Stream<List<Race>?> getRacesByUserId({required String userId});
 
   Future<void> refreshRacesByDateRange({
     required DateTime startDate,
@@ -23,7 +23,7 @@ abstract interface class RaceRepository {
     required String userId,
   });
 
-  Future<void> refreshAllRacesByUser({required String userId});
+  Future<void> refreshRacesByUserId({required String userId});
 
   Future<void> addNewRace({
     required String userId,

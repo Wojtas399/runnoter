@@ -36,9 +36,11 @@ void main() {
         ..add(races);
 
       blocTest(
-        'should set listener of races and should group and sort races by date',
+        'should listen to all user races and should group and sort races by date',
         build: () => RacesCubit(userId: userId),
-        setUp: () => raceRepository.mockGetAllRaces(racesStream: races$.stream),
+        setUp: () => raceRepository.mockGetRacesByUserId(
+          racesStream: races$.stream,
+        ),
         act: (cubit) async {
           cubit.initialize();
           await cubit.stream.first;
@@ -54,7 +56,7 @@ void main() {
           ],
         ],
         verify: (_) => verify(
-          () => raceRepository.getAllRaces(userId: userId),
+          () => raceRepository.getRacesByUserId(userId: userId),
         ).called(1),
       );
     },
@@ -62,13 +64,13 @@ void main() {
 
   blocTest(
     'refresh, '
-    'should call race repository method to refresh all races by user',
+    'should call race repository method to refresh all user races',
     build: () => RacesCubit(userId: userId),
-    setUp: () => raceRepository.mockRefreshAllRacesByUser(),
+    setUp: () => raceRepository.mockRefreshRacesByUserId(),
     act: (cubit) => cubit.refresh(),
     expect: () => [],
     verify: (_) => verify(
-      () => raceRepository.refreshAllRacesByUser(userId: userId),
+      () => raceRepository.refreshRacesByUserId(userId: userId),
     ).called(1),
   );
 }

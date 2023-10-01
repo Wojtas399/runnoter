@@ -56,7 +56,7 @@ void main() {
   test(
     'getRaceById, '
     'race does not exist in repository, '
-    'should load race from remote db, add it to repository and emit it',
+    'should load race from db, add it to repository and emit it',
     () {
       const String raceId = 'c1';
       final RaceDto expectedRaceDto = createRaceDto(id: raceId, userId: userId);
@@ -88,7 +88,8 @@ void main() {
 
   test(
     'getRacesByDateRange, '
-    'should load all races from date range belonging to user from remote db, should add them to repository and should emit them',
+    'should load all races from date range belonging to user from db, '
+    'should add them to repository and should emit them',
     () {
       final DateTime startDate = DateTime(2023, 6, 19);
       final DateTime endDate = DateTime(2023, 6, 25);
@@ -146,7 +147,8 @@ void main() {
 
   test(
     'getRacesByDate, '
-    'should load all races by date belonging to user from remote db, should add them to repository and should emit them',
+    'should load all races by date belonging to user from db, '
+    'should add them to repository and should emit them',
     () {
       final DateTime date = DateTime(2023, 6, 19);
       final List<Race> existingRaces = [
@@ -179,8 +181,9 @@ void main() {
   );
 
   test(
-    'getAllRaces, '
-    'should load all races belonging to user from remote db, should add them to repository and should emit them',
+    'getRacesByUserId, '
+    'should load all races belonging to user from db, should add them to '
+    'repository and should emit them',
     () {
       final List<Race> existingRaces = [
         createRace(id: 'c1', userId: userId),
@@ -196,10 +199,12 @@ void main() {
         createRace(id: 'c5', userId: userId),
         createRace(id: 'c6', userId: userId),
       ];
-      dbRaceService.mockLoadAllRaces(raceDtos: loadedRaceDtos);
+      dbRaceService.mockLoadRacesByUserId(raceDtos: loadedRaceDtos);
       repository = RaceRepositoryImpl(initialData: existingRaces);
 
-      final Stream<List<Race>?> races$ = repository.getAllRaces(userId: userId);
+      final Stream<List<Race>?> races$ = repository.getRacesByUserId(
+        userId: userId,
+      );
 
       expect(
         races$,
@@ -247,6 +252,36 @@ void main() {
           userId: userId,
         ),
       ).called(1);
+    },
+  );
+
+  test(
+    'refreshRacesByUserId, '
+    'should load races by user id from db and '
+    'should add or update them in repo',
+    () async {
+      final List<Race> existingRaces = [
+        createRace(id: 'w1', name: 'workout 1'),
+        createRace(id: 'w2'),
+      ];
+      final List<RaceDto> loadedRaceDtos = [
+        createRaceDto(id: 'w1', name: 'updated workout 1'),
+        createRaceDto(id: 'w3'),
+      ];
+      final List<Race> loadedRaces = [
+        createRace(id: 'w1', name: 'updated workout 1'),
+        createRace(id: 'w3'),
+      ];
+      dbRaceService.mockLoadRacesByUserId(raceDtos: loadedRaceDtos);
+      repository = RaceRepositoryImpl(initialData: existingRaces);
+
+      await repository.refreshRacesByUserId(userId: userId);
+
+      expect(
+        repository.dataStream$,
+        emits([loadedRaces.first, existingRaces[1], loadedRaces.last]),
+      );
+      verify(() => dbRaceService.loadRacesByUserId(userId: userId)).called(1);
     },
   );
 
