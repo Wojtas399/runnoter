@@ -59,4 +59,16 @@ void main() {
       );
     },
   );
+
+  blocTest(
+    'refresh, '
+    'should call race repository method to refresh all races by user',
+    build: () => RacesCubit(userId: userId),
+    setUp: () => raceRepository.mockRefreshAllRacesByUser(),
+    act: (cubit) => cubit.refresh(),
+    expect: () => [],
+    verify: (_) => verify(
+      () => raceRepository.refreshAllRacesByUser(userId: userId),
+    ).called(1),
+  );
 }

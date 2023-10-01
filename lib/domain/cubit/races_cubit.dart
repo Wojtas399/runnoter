@@ -28,6 +28,10 @@ class RacesCubit extends Cubit<List<RacesFromYear>?> {
         _raceRepository.getAllRaces(userId: userId).listen(_onRacesChanged);
   }
 
+  Future<void> refresh() async {
+    await _raceRepository.refreshAllRacesByUser(userId: userId);
+  }
+
   void _onRacesChanged(final List<Race>? races) {
     if (races == null) return;
     final groupedAndSortedRaces = _groupRaces(races);

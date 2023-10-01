@@ -69,6 +69,12 @@ class MockRaceRepository extends Mock implements RaceRepository {
     ).thenAnswer((_) => Future.value());
   }
 
+  void mockRefreshAllRacesByUser() {
+    when(
+      () => refreshAllRacesByUser(userId: any(named: 'userId')),
+    ).thenAnswer((_) => Future.value());
+  }
+
   void mockAddNewRace() {
     when(
       () => addNewRace(
@@ -110,9 +116,7 @@ class MockRaceRepository extends Mock implements RaceRepository {
 
   void mockDeleteAllUserRaces() {
     when(
-      () => deleteAllUserRaces(
-        userId: any(named: 'userId'),
-      ),
+      () => deleteAllUserRaces(userId: any(named: 'userId')),
     ).thenAnswer((_) => Future.value());
   }
 }
