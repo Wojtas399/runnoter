@@ -63,4 +63,16 @@ void main() {
       );
     },
   );
+
+  blocTest(
+    'refresh, '
+    'should call blood test repository method to refresh tests by user id',
+    build: () => BloodTestsCubit(userId: userId),
+    setUp: () => bloodTestRepository.mockRefreshTestsByUserId(),
+    act: (cubit) => cubit.refresh(),
+    expect: () => [],
+    verify: (_) => verify(
+      () => bloodTestRepository.refreshTestsByUserId(userId: userId),
+    ).called(1),
+  );
 }

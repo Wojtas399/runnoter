@@ -24,6 +24,12 @@ class MockBloodTestRepository extends Mock implements BloodTestRepository {
     ).thenAnswer((_) => testsStream ?? Stream.value(tests));
   }
 
+  void mockRefreshTestsByUserId() {
+    when(
+      () => refreshTestsByUserId(userId: any(named: 'userId')),
+    ).thenAnswer((_) => Future.value());
+  }
+
   void mockAddNewTest() {
     when(
       () => addNewTest(

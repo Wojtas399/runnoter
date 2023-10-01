@@ -30,8 +30,7 @@ class BloodTestsCubit extends Cubit<List<BloodTestsFromYear>?> {
   }
 
   Future<void> refresh() async {
-    //TODO
-    await Future.delayed(const Duration(seconds: 2));
+    await _bloodTestRepository.refreshTestsByUserId(userId: userId);
   }
 
   void _onBloodTestsChanged(final List<BloodTest>? bloodTests) {
