@@ -32,7 +32,10 @@ class BloodTestRepositoryImpl extends StateRepository<BloodTest>
 
   @override
   Stream<List<BloodTest>?> getTestsByUserId({required String userId}) async* {
-    await _loadTestsByUserIdFromDb(userId);
+    final testsLoadedFromDb = await _loadTestsByUserIdFromDb(userId);
+    if (testsLoadedFromDb?.isNotEmpty == true) {
+      addOrUpdateEntities(testsLoadedFromDb!);
+    }
     await for (final readings in dataStream$) {
       yield readings?.where((bloodTest) => bloodTest.userId == userId).toList();
     }
@@ -40,7 +43,13 @@ class BloodTestRepositoryImpl extends StateRepository<BloodTest>
 
   @override
   Future<void> refreshTestsByUserId({required String userId}) async {
-    await _loadTestsByUserIdFromDb(userId);
+    final existingTests = await dataStream$.first;
+    final userTestsLoadedFromDb = await _loadTestsByUserIdFromDb(userId);
+    final List<BloodTest> updatedTests = [
+      ...?existingTests?.where((test) => test.userId != userId),
+      ...?userTestsLoadedFromDb,
+    ];
+    setEntities(updatedTests);
   }
 
   @override
@@ -116,13 +125,12 @@ class BloodTestRepositoryImpl extends StateRepository<BloodTest>
     return null;
   }
 
-  Future<void> _loadTestsByUserIdFromDb(String userId) async {
+  Future<List<BloodTest>?> _loadTestsByUserIdFromDb(String userId) async {
     final testsDtos = await _dbBloodTestService.loadTestsByUserId(
       userId: userId,
     );
-    if (testsDtos != null) {
-      final List<BloodTest> tests = testsDtos.map(mapBloodTestFromDto).toList();
-      addOrUpdateEntities(tests);
-    }
+    if (testsDtos == null) return null;
+    final List<BloodTest> tests = testsDtos.map(mapBloodTestFromDto).toList();
+    return tests;
   }
 }

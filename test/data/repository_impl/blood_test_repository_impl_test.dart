@@ -186,16 +186,41 @@ void main() {
     'should load tests by user id from db and should add or update them in repo',
     () async {
       final List<BloodTest> existingTests = [
-        createBloodTest(id: 't1', date: DateTime(2023, 1, 10)),
-        createBloodTest(id: 't2', date: DateTime(2023, 2, 10)),
+        createBloodTest(
+          id: 't1',
+          userId: userId,
+          date: DateTime(2023, 1, 10),
+        ),
+        createBloodTest(
+          id: 't2',
+          userId: userId,
+          date: DateTime(2023, 2, 10),
+        ),
+        createBloodTest(id: 't3', userId: 'u2'),
       ];
       final List<firebase.BloodTestDto> loadedTestDtos = [
-        createBloodTestDto(id: 't1', date: DateTime(2023, 1, 5)),
-        createBloodTestDto(id: 't3', date: DateTime(2023, 3, 10)),
+        createBloodTestDto(
+          id: 't1',
+          userId: userId,
+          date: DateTime(2023, 1, 5),
+        ),
+        createBloodTestDto(
+          id: 't4',
+          userId: userId,
+          date: DateTime(2023, 3, 10),
+        ),
       ];
-      final List<BloodTest> loadedTest = [
-        createBloodTest(id: 't1', date: DateTime(2023, 1, 5)),
-        createBloodTest(id: 't3', date: DateTime(2023, 3, 10)),
+      final List<BloodTest> loadedTests = [
+        createBloodTest(
+          id: 't1',
+          userId: userId,
+          date: DateTime(2023, 1, 5),
+        ),
+        createBloodTest(
+          id: 't4',
+          userId: userId,
+          date: DateTime(2023, 3, 10),
+        ),
       ];
       dbBloodTestService.mockLoadTestsByUserId(bloodTestDtos: loadedTestDtos);
       repository = BloodTestRepositoryImpl(initialData: existingTests);
@@ -204,7 +229,7 @@ void main() {
 
       expect(
         repository.dataStream$,
-        emits([loadedTest.first, existingTests[1], loadedTest.last]),
+        emits([existingTests.last, ...loadedTests]),
       );
       verify(
         () => dbBloodTestService.loadTestsByUserId(userId: userId),

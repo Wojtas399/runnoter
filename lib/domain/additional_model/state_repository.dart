@@ -25,6 +25,10 @@ class StateRepository<T extends Entity> {
     return true;
   }
 
+  void setEntities(List<T> entities) {
+    _dataStream.add(entities);
+  }
+
   void addEntity(T entity) {
     final List<T> updatedData = [...?_dataStream.value];
     final List<String> idsOfExistingEntities = _getIdsOfExistingEntities();
