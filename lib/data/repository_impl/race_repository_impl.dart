@@ -88,9 +88,8 @@ class RaceRepositoryImpl extends StateRepository<Race>
     required DateTime startDate,
     required DateTime endDate,
     required String userId,
-  }) {
-    // TODO: implement refreshRacesByDateRange
-    throw UnimplementedError();
+  }) async {
+    await _loadRacesByDateRangeFromRemoteDb(startDate, endDate, userId);
   }
 
   @override
