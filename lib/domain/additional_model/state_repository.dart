@@ -18,9 +18,7 @@ class StateRepository<T extends Entity> {
 
   bool doesEntityNotExistInState(String entityId) {
     for (final T entity in [...?_dataStream.value]) {
-      if (entity.id == entityId) {
-        return false;
-      }
+      if (entity.id == entityId) return false;
     }
     return true;
   }
