@@ -133,7 +133,9 @@ void main() {
 
   test(
     'getMeasurementsByDateRange, '
-    'should emit existing and matching measurements, should load new measurements from db and should also emit newly loaded measurements',
+    'should emit existing and matching measurements, '
+    'should load new measurements from db and '
+    'should also emit newly loaded measurements',
     () {
       final DateTime startDate = DateTime(2023, 1, 1);
       final DateTime endDate = DateTime(2023, 1, 7);
@@ -230,7 +232,8 @@ void main() {
 
   test(
     'getAllMeasurements, '
-    'should load new measurements from remote db and should emit measurements belonging to given user',
+    'should load new measurements from db and '
+    'should emit measurements belonging to given user',
     () {
       final List<HealthMeasurement> existingMeasurements = [
         HealthMeasurement(
@@ -309,49 +312,57 @@ void main() {
     'should add or update them in repo',
     () async {
       final DateTime startDate = DateTime(2023, 1, 10);
-      final DateTime endDate = DateTime(2023, 1, 17);
+      final DateTime endDate = DateTime(2023, 1, 16);
       final List<HealthMeasurement> existingMeasurements = [
-        HealthMeasurement(
-          userId: 'u1',
-          date: DateTime(2023, 1, 11),
-          restingHeartRate: 48,
-          fastingWeight: 75,
-        ),
-        HealthMeasurement(
-          userId: 'u1',
-          date: DateTime(2023, 1, 12),
-          restingHeartRate: 50,
-          fastingWeight: 78,
-        ),
+        createHealthMeasurement(userId: userId, date: DateTime(2023, 1, 11)),
+        createHealthMeasurement(userId: userId, date: DateTime(2023, 1, 9)),
+        createHealthMeasurement(userId: userId, date: DateTime(2023, 1, 18)),
+        createHealthMeasurement(userId: userId, date: DateTime(2023, 1, 15)),
+        createHealthMeasurement(userId: 'u2', date: DateTime(2023, 1, 14)),
       ];
       final List<HealthMeasurementDto> loadedMeasurementDtos = [
         HealthMeasurementDto(
-          userId: 'u1',
+          userId: userId,
           date: DateTime(2023, 1, 11),
-          restingHeartRate: 47,
-          fastingWeight: 76,
+          restingHeartRate: 49,
+          fastingWeight: 78,
         ),
         HealthMeasurementDto(
-          userId: 'u1',
+          userId: userId,
           date: DateTime(2023, 1, 13),
-          restingHeartRate: 49,
-          fastingWeight: 76.5,
+          restingHeartRate: 50,
+          fastingWeight: 78.5,
         ),
       ];
-      final List<HealthMeasurement> loadedMeasurements = [
+      final List<HealthMeasurement> loadedWorkouts = [
         HealthMeasurement(
-          userId: 'u1',
+          userId: userId,
           date: DateTime(2023, 1, 11),
-          restingHeartRate: 47,
-          fastingWeight: 76,
+          restingHeartRate: 49,
+          fastingWeight: 78,
         ),
         HealthMeasurement(
-          userId: 'u1',
+          userId: userId,
           date: DateTime(2023, 1, 13),
-          restingHeartRate: 49,
-          fastingWeight: 76.5,
+          restingHeartRate: 50,
+          fastingWeight: 78.5,
         ),
       ];
+      dateService.mockIsDateFromRange(expected: true);
+      when(
+        () => dateService.isDateFromRange(
+          date: DateTime(2023, 1, 9),
+          startDate: startDate,
+          endDate: endDate,
+        ),
+      ).thenReturn(false);
+      when(
+        () => dateService.isDateFromRange(
+          date: DateTime(2023, 1, 18),
+          startDate: startDate,
+          endDate: endDate,
+        ),
+      ).thenReturn(false);
       dbHealthMeasurementService.mockLoadMeasurementsByDateRange(
         healthMeasurementDtos: loadedMeasurementDtos,
       );
@@ -368,9 +379,10 @@ void main() {
       expect(
         repository.dataStream$,
         emits([
-          loadedMeasurements.first,
           existingMeasurements[1],
-          loadedMeasurements.last,
+          existingMeasurements[2],
+          existingMeasurements.last,
+          ...loadedWorkouts,
         ]),
       );
       verify(

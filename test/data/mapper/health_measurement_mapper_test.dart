@@ -22,24 +22,22 @@ void main() {
   );
 
   test(
-    'map health measurement to firebase, '
+    'mapHealthMeasurementToDto, '
     'should map health measurement to dto model',
     () {
-      final HealthMeasurementDto dto = mapHealthMeasurementToFirebase(
-        healthMeasurement,
-      );
+      final HealthMeasurementDto dto =
+          mapHealthMeasurementToDto(healthMeasurement);
 
       expect(dto, healthMeasurementDto);
     },
   );
 
   test(
-    'map health measurement from firebase, '
-    'should map health measurement firebase dto model to domain model',
+    'mapHealthMeasurementFromDto, '
+    'should map health measurement dto model to domain model',
     () {
-      final HealthMeasurement model = mapHealthMeasurementFromFirebase(
-        healthMeasurementDto,
-      );
+      final HealthMeasurement model =
+          mapHealthMeasurementFromDto(healthMeasurementDto);
 
       expect(model, healthMeasurement);
     },
