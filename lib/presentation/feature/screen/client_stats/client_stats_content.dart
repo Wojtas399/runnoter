@@ -13,12 +13,20 @@ class ClientStatsContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const SingleChildScrollView(
-      child: ResponsiveLayout(
-        mobileBody: _MobileContent(),
-        desktopBody: _DesktopContent(),
+    return RefreshIndicator(
+      onRefresh: () async => await _onRefresh(context),
+      child: const SingleChildScrollView(
+        child: ResponsiveLayout(
+          mobileBody: _MobileContent(),
+          desktopBody: _DesktopContent(),
+        ),
       ),
     );
+  }
+
+  Future<void> _onRefresh(BuildContext context) async {
+    //TODO: Should refresh health and mileage cubits.
+    await Future.delayed(const Duration(seconds: 4));
   }
 }
 
@@ -31,9 +39,9 @@ class _MobileContent extends StatelessWidget {
       padding: EdgeInsets.fromLTRB(24, 24, 24, 144),
       child: Column(
         children: [
-          ClientStatsMileage(),
-          Gap16(),
           ClientStatsHealth(),
+          Gap16(),
+          ClientStatsMileage(),
         ],
       ),
     );
@@ -50,11 +58,11 @@ class _DesktopContent extends StatelessWidget {
         child: Column(
           children: [
             CardBody(
-              child: ClientStatsMileage(),
+              child: ClientStatsHealth(),
             ),
             Gap16(),
             CardBody(
-              child: ClientStatsHealth(),
+              child: ClientStatsMileage(),
             ),
           ],
         ),
