@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../firebase.dart';
 import '../firebase_collections.dart';
+import '../mapper/custom_firebase_exception_mapper.dart';
 import '../mapper/date_mapper.dart';
 import '../utils/utils.dart';
 
@@ -21,11 +22,7 @@ class FirebaseWorkoutService {
           isLessThanOrEqualTo: mapDateTimeToString(endDate),
         )
         .get();
-    return snapshot.docs
-        .map(
-          (QueryDocumentSnapshot<WorkoutDto> docSnapshot) => docSnapshot.data(),
-        )
-        .toList();
+    return snapshot.docs.map((docSnapshot) => docSnapshot.data()).toList();
   }
 
   Future<WorkoutDto?> loadWorkoutById({
@@ -53,11 +50,7 @@ class FirebaseWorkoutService {
 
   Future<List<WorkoutDto>?> loadAllWorkouts({required String userId}) async {
     final snapshot = await getWorkoutsRef(userId).get();
-    return snapshot.docs
-        .map(
-          (QueryDocumentSnapshot<WorkoutDto> docSnapshot) => docSnapshot.data(),
-        )
-        .toList();
+    return snapshot.docs.map((docSnapshot) => docSnapshot.data()).toList();
   }
 
   Future<WorkoutDto?> addWorkout({
@@ -89,16 +82,20 @@ class FirebaseWorkoutService {
     ActivityStatusDto? status,
     List<WorkoutStageDto>? stages,
   }) async {
-    final workoutRef = getWorkoutsRef(userId).doc(workoutId);
-    final workoutJsonToUpdate = createWorkoutJsonToUpdate(
-      date: date,
-      workoutName: workoutName,
-      status: status,
-      stages: stages,
-    );
-    await asyncOrSyncCall(() => workoutRef.update(workoutJsonToUpdate));
-    final snapshot = await workoutRef.get();
-    return snapshot.data();
+    try {
+      final workoutRef = getWorkoutsRef(userId).doc(workoutId);
+      final workoutJsonToUpdate = createWorkoutJsonToUpdate(
+        date: date,
+        workoutName: workoutName,
+        status: status,
+        stages: stages,
+      );
+      await asyncOrSyncCall(() => workoutRef.update(workoutJsonToUpdate));
+      final snapshot = await workoutRef.get();
+      return snapshot.data();
+    } on FirebaseException catch (exception) {
+      throw mapFirebaseExceptionFromCodeStr(exception.code);
+    }
   }
 
   Future<void> deleteWorkout({

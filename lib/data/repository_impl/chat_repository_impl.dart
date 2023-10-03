@@ -70,7 +70,7 @@ class ChatRepositoryImpl extends StateRepository<Chat>
       final Chat chat = mapChatFromDto(chatDto);
       addEntity(chat);
       return chat.id;
-    } on FirebaseException catch (exception) {
+    } on CustomFirebaseException catch (exception) {
       throw mapExceptionFromFirebase(exception);
     }
   }

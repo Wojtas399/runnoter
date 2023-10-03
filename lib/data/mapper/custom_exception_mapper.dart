@@ -3,12 +3,13 @@ import 'package:firebase/firebase.dart';
 import '../../domain/additional_model/custom_exception.dart';
 
 CustomException mapExceptionFromFirebase(
-  FirebaseException firebaseException,
+  CustomFirebaseException firebaseException,
 ) =>
     (switch (firebaseException) {
       FirebaseAuthException() => AuthException(
           code: _mapAuthExceptionCodeFromFirebase(firebaseException.code),
         ),
+      FirebaseDbException() => const UnknownException(message: ''), //TODO
       FirebaseNetworkException() => NetworkException(
           code: _mapNetworkExceptionCodeFromFirebase(firebaseException.code),
         ),

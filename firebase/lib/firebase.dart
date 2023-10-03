@@ -12,7 +12,7 @@ export 'model/blood_parameter_result_dto.dart';
 export 'model/blood_test_dto.dart';
 export 'model/chat_dto.dart';
 export 'model/coaching_request_dto.dart';
-export 'model/firebase_exception.dart';
+export 'model/custom_firebase_exception.dart';
 export 'model/health_measurement_dto.dart';
 export 'model/message_dto.dart';
 export 'model/message_image_dto.dart';
