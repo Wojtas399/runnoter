@@ -29,7 +29,13 @@ void main() {
   final dateService = MockDateService();
   const String userId = 'u1';
 
-  MileageStatsCubit createCubit() => MileageStatsCubit(userId: userId);
+  MileageStatsCubit createCubit({
+    DateRange? dateRange,
+  }) =>
+      MileageStatsCubit(
+        userId: userId,
+        initialState: MileageStatsState(dateRange: dateRange),
+      );
 
   setUpAll(() {
     GetIt.I.registerSingleton<WorkoutRepository>(workoutRepository);
@@ -92,9 +98,9 @@ void main() {
           raceRepository.mockGetRacesByDateRange();
           dateService.mockAreDatesTheSame(expected: false);
         },
-        act: (bloc) async {
-          bloc.initialize();
-          await bloc.stream.first;
+        act: (cubit) async {
+          cubit.initialize();
+          await cubit.stream.first;
           dateRangeManagerState$.add(updatedDateRangeManagerState);
         },
         expect: () => [
@@ -253,8 +259,8 @@ void main() {
             () => dateService.areDaysTheSame(endDate, endDate),
           ).thenReturn(true);
         },
-        act: (bloc) {
-          bloc.initialize();
+        act: (cubit) {
+          cubit.initialize();
           workouts$.add([]);
           races$.add([]);
         },
@@ -391,8 +397,8 @@ void main() {
           );
           raceRepository.mockGetRacesByDateRange(racesStream: races$.stream);
         },
-        act: (bloc) {
-          bloc.initialize();
+        act: (cubit) {
+          cubit.initialize();
           workouts$.add([]);
           races$.add([]);
         },
@@ -447,7 +453,7 @@ void main() {
         ),
       ),
     ),
-    act: (bloc) => bloc.initialize(),
+    act: (cubit) => cubit.initialize(),
     expect: () => [],
   );
 
@@ -462,7 +468,7 @@ void main() {
         dateRange: null,
       ),
     ),
-    act: (bloc) => bloc.initialize(),
+    act: (cubit) => cubit.initialize(),
     expect: () => [],
   );
 
@@ -471,7 +477,7 @@ void main() {
     'week, '
     "should call chart date range cubit's method to initialize new date range type",
     build: () => createCubit(),
-    act: (bloc) => bloc.changeDateRangeType(DateRangeType.week),
+    act: (cubit) => cubit.changeDateRangeType(DateRangeType.week),
     verify: (_) => verify(
       () => dateRangeManagerCubit.initializeNewDateRangeType(
         DateRangeType.week,
@@ -484,7 +490,7 @@ void main() {
     'month, '
     "should not call chart date range cubit's method to initialize new date range type",
     build: () => createCubit(),
-    act: (bloc) => bloc.changeDateRangeType(DateRangeType.month),
+    act: (cubit) => cubit.changeDateRangeType(DateRangeType.month),
     verify: (_) => verifyNever(
       () => dateRangeManagerCubit.initializeNewDateRangeType(
         DateRangeType.month,
@@ -497,7 +503,7 @@ void main() {
     'year, '
     "should call chart date range cubit's method to initialize new date range type",
     build: () => createCubit(),
-    act: (bloc) => bloc.changeDateRangeType(DateRangeType.year),
+    act: (cubit) => cubit.changeDateRangeType(DateRangeType.year),
     verify: (_) => verify(
       () => dateRangeManagerCubit.initializeNewDateRangeType(
         DateRangeType.year,
@@ -509,7 +515,7 @@ void main() {
     'previous date range, '
     "should call chart date range cubit's method to set previous date range",
     build: () => createCubit(),
-    act: (bloc) => bloc.previousDateRange(),
+    act: (cubit) => cubit.previousDateRange(),
     verify: (_) => verify(dateRangeManagerCubit.previousDateRange).called(1),
   );
 
@@ -517,7 +523,50 @@ void main() {
     'next date range, '
     "should call chart date range cubit's method to set next date range",
     build: () => createCubit(),
-    act: (bloc) => bloc.nextDateRange(),
+    act: (cubit) => cubit.nextDateRange(),
     verify: (_) => verify(dateRangeManagerCubit.nextDateRange).called(1),
+  );
+
+  blocTest(
+    'refresh, '
+    'if date range is null should do nothing',
+    build: () => createCubit(),
+    act: (cubit) => cubit.refresh(),
+    expect: () => [],
+  );
+
+  blocTest(
+    'refresh, '
+    'date range is not null, '
+    'should call workout repository method to refresh workouts by date range, '
+    'should call race repository method to refresh races by date range',
+    build: () => createCubit(
+      dateRange: DateRange(
+        startDate: DateTime(2023, 1, 10),
+        endDate: DateTime(2023, 1, 16),
+      ),
+    ),
+    setUp: () {
+      workoutRepository.mockRefreshWorkoutsByDateRange();
+      raceRepository.mockRefreshRacesByDateRange();
+    },
+    act: (cubit) => cubit.refresh(),
+    expect: () => [],
+    verify: (_) {
+      verify(
+        () => workoutRepository.refreshWorkoutsByDateRange(
+          startDate: any(named: 'startDate'),
+          endDate: any(named: 'endDate'),
+          userId: userId,
+        ),
+      ).called(1);
+      verify(
+        () => raceRepository.refreshRacesByDateRange(
+          startDate: any(named: 'startDate'),
+          endDate: any(named: 'endDate'),
+          userId: userId,
+        ),
+      ).called(1);
+    },
   );
 }
