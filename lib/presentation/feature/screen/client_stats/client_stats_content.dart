@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../domain/cubit/health_stats/health_stats_cubit.dart';
+import '../../../../domain/cubit/mileage_stats/mileage_stats_cubit.dart';
 import '../../../component/body/big_body_component.dart';
 import '../../../component/card_body_component.dart';
 import '../../../component/gap/gap_components.dart';
@@ -25,8 +28,10 @@ class ClientStatsContent extends StatelessWidget {
   }
 
   Future<void> _onRefresh(BuildContext context) async {
-    //TODO: Should refresh health and mileage cubits.
-    await Future.delayed(const Duration(seconds: 4));
+    final mileageStatsCubit = context.read<MileageStatsCubit>();
+    final healthStatsCubit = context.read<HealthStatsCubit>();
+    await mileageStatsCubit.refresh();
+    await healthStatsCubit.refresh();
   }
 }
 
