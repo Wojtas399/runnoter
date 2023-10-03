@@ -31,7 +31,7 @@ class AuthServiceImpl implements AuthService {
     try {
       await _firebaseAuthService.signIn(email: email, password: password);
     } on firebase.CustomFirebaseException catch (exception) {
-      throw mapExceptionFromFirebase(exception);
+      throw mapExceptionFromDb(exception);
     }
   }
 
@@ -40,7 +40,7 @@ class AuthServiceImpl implements AuthService {
     try {
       return await _firebaseAuthService.signInWithGoogle();
     } on firebase.CustomFirebaseException catch (exception) {
-      throw mapExceptionFromFirebase(exception);
+      throw mapExceptionFromDb(exception);
     }
   }
 
@@ -49,7 +49,7 @@ class AuthServiceImpl implements AuthService {
     try {
       return await _firebaseAuthService.signInWithFacebook();
     } on firebase.CustomFirebaseException catch (exception) {
-      throw mapExceptionFromFirebase(exception);
+      throw mapExceptionFromDb(exception);
     }
   }
 
@@ -64,7 +64,7 @@ class AuthServiceImpl implements AuthService {
         password: password,
       );
     } on firebase.CustomFirebaseException catch (exception) {
-      throw mapExceptionFromFirebase(exception);
+      throw mapExceptionFromDb(exception);
     }
   }
 
@@ -73,7 +73,7 @@ class AuthServiceImpl implements AuthService {
     try {
       await _firebaseAuthService.sendEmailVerification();
     } on firebase.CustomFirebaseException catch (exception) {
-      throw mapExceptionFromFirebase(exception);
+      throw mapExceptionFromDb(exception);
     }
   }
 
@@ -82,7 +82,7 @@ class AuthServiceImpl implements AuthService {
     try {
       await _firebaseAuthService.sendPasswordResetEmail(email: email);
     } on firebase.CustomFirebaseException catch (exception) {
-      throw mapExceptionFromFirebase(exception);
+      throw mapExceptionFromDb(exception);
     }
   }
 
@@ -96,7 +96,7 @@ class AuthServiceImpl implements AuthService {
     try {
       await _firebaseAuthService.updateEmail(newEmail: newEmail);
     } on firebase.CustomFirebaseException catch (exception) {
-      throw mapExceptionFromFirebase(exception);
+      throw mapExceptionFromDb(exception);
     }
   }
 
@@ -105,7 +105,7 @@ class AuthServiceImpl implements AuthService {
     try {
       await _firebaseAuthService.updatePassword(newPassword: newPassword);
     } on firebase.CustomFirebaseException catch (exception) {
-      throw mapExceptionFromFirebase(exception);
+      throw mapExceptionFromDb(exception);
     }
   }
 
@@ -114,7 +114,7 @@ class AuthServiceImpl implements AuthService {
     try {
       await _firebaseAuthService.deleteAccount();
     } on firebase.CustomFirebaseException catch (exception) {
-      throw mapExceptionFromFirebase(exception);
+      throw mapExceptionFromDb(exception);
     }
   }
 
@@ -129,7 +129,7 @@ class AuthServiceImpl implements AuthService {
         firebaseReauthenticationStatus,
       );
     } on firebase.CustomFirebaseException catch (exception) {
-      throw mapExceptionFromFirebase(exception);
+      throw mapExceptionFromDb(exception);
     }
   }
 
@@ -138,7 +138,7 @@ class AuthServiceImpl implements AuthService {
     try {
       await _firebaseAuthService.reloadLoggedUser();
     } on firebase.CustomFirebaseException catch (exception) {
-      throw mapExceptionFromFirebase(exception);
+      throw mapExceptionFromDb(exception);
     }
   }
 }

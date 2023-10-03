@@ -25,8 +25,8 @@ CustomFirebaseException mapFirebaseAuthExceptionFromCodeStr(String codeStr) =>
 
 CustomFirebaseException mapFirebaseExceptionFromCodeStr(String codeStr) =>
     (switch (codeStr) {
-      'not-found' => const FirebaseDbException(
-          code: FirebaseDbExceptionCode.documentNotFound,
+      'not-found' => const FirebaseDocumentException(
+          code: FirebaseDocumentExceptionCode.documentNotFound,
         ),
       'network-request-failed' => const FirebaseNetworkException(
           code: FirebaseNetworkExceptionCode.requestFailed,

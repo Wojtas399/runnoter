@@ -22,18 +22,11 @@ class FirebaseAuthException
   const FirebaseAuthException({required super.code});
 }
 
-enum FirebaseDbExceptionCode { documentNotFound, documentAlreadyExists }
+enum FirebaseDocumentExceptionCode { documentNotFound, documentAlreadyExists }
 
-class FirebaseDbException
-    extends CustomFirebaseException<FirebaseDbExceptionCode> {
-  const FirebaseDbException({required super.code});
-}
-
-enum FirebaseChatExceptionCode { chatAlreadyExists }
-
-class FirebaseChatException
-    extends CustomFirebaseException<FirebaseChatExceptionCode> {
-  const FirebaseChatException({required super.code});
+class FirebaseDocumentException
+    extends CustomFirebaseException<FirebaseDocumentExceptionCode> {
+  const FirebaseDocumentException({required super.code});
 }
 
 enum FirebaseNetworkExceptionCode { requestFailed, tooManyRequests }

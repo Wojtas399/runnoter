@@ -49,8 +49,8 @@ class FirebaseChatService {
     final ChatDto? existingChat =
         await loadChatByUsers(user1Id: user1Id, user2Id: user2Id);
     if (existingChat != null) {
-      throw const FirebaseChatException(
-        code: FirebaseChatExceptionCode.chatAlreadyExists,
+      throw const FirebaseDocumentException(
+        code: FirebaseDocumentExceptionCode.documentAlreadyExists,
       );
     } else {
       final chatRef = getChatsRef().doc();

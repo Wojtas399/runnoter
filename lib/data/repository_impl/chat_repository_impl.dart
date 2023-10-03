@@ -71,7 +71,7 @@ class ChatRepositoryImpl extends StateRepository<Chat>
       addEntity(chat);
       return chat.id;
     } on CustomFirebaseException catch (exception) {
-      throw mapExceptionFromFirebase(exception);
+      throw mapExceptionFromDb(exception);
     }
   }
 

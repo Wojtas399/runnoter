@@ -103,11 +103,12 @@ void main() {
 
   test(
     'mapFirebaseExceptionFromCodeStr, '
-    'document-not-found code should be mapped to FirebaseDbException with documentNotFound code',
+    'document-not-found code should be mapped to FirebaseDocumentException with documentNotFound code',
     () {
       const String codeStr = 'not-found';
-      const CustomFirebaseException expectedException = FirebaseDbException(
-        code: FirebaseDbExceptionCode.documentNotFound,
+      const CustomFirebaseException expectedException =
+          FirebaseDocumentException(
+        code: FirebaseDocumentExceptionCode.documentNotFound,
       );
 
       final CustomFirebaseException exception =
