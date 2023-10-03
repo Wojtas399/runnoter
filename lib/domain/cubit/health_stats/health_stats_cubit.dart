@@ -56,6 +56,16 @@ class HealthStatsCubit extends Cubit<HealthStatsState> {
     _dateRangeManagerCubit.nextDateRange();
   }
 
+  Future<void> refresh() async {
+    final DateRange? dateRange = state.dateRange;
+    if (dateRange == null) return;
+    await _healthMeasurementRepository.refreshMeasurementsByDateRange(
+      startDate: dateRange.startDate,
+      endDate: dateRange.endDate,
+      userId: _userId,
+    );
+  }
+
   void _chartDateRangeUpdated(DateRangeManagerState dateRangeManagerState) {
     final DateRange? dateRange = dateRangeManagerState.dateRange;
     if (dateRange == null) return;
