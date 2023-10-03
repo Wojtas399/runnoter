@@ -242,7 +242,7 @@ void main() {
         userId: userId,
         date: date,
       );
-      dateService.mockAreDatesTheSame(expected: true);
+      dateService.mockAreDaysTheSame(expected: true);
       when(
         () => dateService.areDaysTheSame(DateTime(2023, 1, 10), date),
       ).thenReturn(false);

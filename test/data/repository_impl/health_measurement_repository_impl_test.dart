@@ -406,7 +406,7 @@ void main() {
           createHealthMeasurement(userId: userId, date: date),
         ],
       );
-      dateService.mockAreDatesTheSame(expected: true);
+      dateService.mockAreDaysTheSame(expected: true);
 
       final bool doesMeasurementExist = await repository
           .doesMeasurementFromDateExist(userId: userId, date: date);
@@ -439,7 +439,7 @@ void main() {
           createHealthMeasurement(userId: 'u2', date: date),
         ],
       );
-      dateService.mockAreDatesTheSame(expected: false);
+      dateService.mockAreDaysTheSame(expected: false);
       dbHealthMeasurementService.mockLoadMeasurementByDate(
         healthMeasurementDto: loadedMeasurementDto,
       );
@@ -474,7 +474,7 @@ void main() {
           createHealthMeasurement(userId: 'u2', date: date),
         ],
       );
-      dateService.mockAreDatesTheSame(expected: false);
+      dateService.mockAreDaysTheSame(expected: false);
       dbHealthMeasurementService.mockLoadMeasurementByDate();
 
       final bool doesMeasurementExist = await repository
@@ -617,7 +617,7 @@ void main() {
           date: date,
         ),
       ];
-      dateService.mockAreDatesTheSame(expected: false);
+      dateService.mockAreDaysTheSame(expected: false);
       when(
         () => dateService.areDaysTheSame(date, date),
       ).thenReturn(true);

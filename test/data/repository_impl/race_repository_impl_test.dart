@@ -163,7 +163,7 @@ void main() {
       final List<Race> loadedRaces = [
         createRace(id: 'c5', userId: userId, date: DateTime(2023, 6, 19)),
       ];
-      dateService.mockAreDatesTheSame(expected: false);
+      dateService.mockAreDaysTheSame(expected: false);
       when(() => dateService.areDaysTheSame(date, date)).thenReturn(true);
       dbRaceService.mockLoadRacesByDate(raceDtos: loadedRaceDtos);
       repository = RaceRepositoryImpl(initialData: existingRaces);

@@ -17,11 +17,12 @@ class HealthMeasurementCreatorCubit extends CubitWithStatus<
     HealthMeasurementCreatorCubitError> {
   final AuthService _authService;
   final HealthMeasurementRepository _healthMeasurementRepository;
+  final DateService _dateService;
 
-  HealthMeasurementCreatorCubit({
-    HealthMeasurementCreatorState? initialState,
-  })  : _authService = getIt<AuthService>(),
+  HealthMeasurementCreatorCubit({HealthMeasurementCreatorState? initialState})
+      : _authService = getIt<AuthService>(),
         _healthMeasurementRepository = getIt<HealthMeasurementRepository>(),
+        _dateService = getIt<DateService>(),
         super(
           initialState ??
               HealthMeasurementCreatorState(status: const CubitStatusInitial()),
@@ -71,7 +72,8 @@ class HealthMeasurementCreatorCubit extends CubitWithStatus<
       return;
     }
     emitLoadingStatus();
-    if (state.date == state.measurement?.date) {
+    if (state.measurement != null &&
+        _dateService.areDaysTheSame(state.date!, state.measurement!.date)) {
       await _updateMeasurement(loggedUserId);
       emitCompleteStatus(
         info: HealthMeasurementCreatorCubitInfo.measurementUpdated,

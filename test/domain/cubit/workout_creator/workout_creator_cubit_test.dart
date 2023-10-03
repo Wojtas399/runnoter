@@ -371,7 +371,7 @@ void main() {
       ],
     ),
     setUp: () {
-      dateService.mockAreDatesTheSame(expected: false);
+      dateService.mockAreDaysTheSame(expected: false);
       workoutRepository.mockUpdateWorkout();
     },
     act: (cubit) => cubit.submit(),

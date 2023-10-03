@@ -84,7 +84,7 @@ void main() {
             expectedStream: dateRangeManagerState$.stream,
           );
           healthMeasurementRepository.mockGetMeasurementsByDateRange();
-          dateService.mockAreDatesTheSame(expected: false);
+          dateService.mockAreDaysTheSame(expected: false);
           when(
             () => dateService.areDaysTheSame(
               DateTime(2023, 8, 28),
@@ -196,7 +196,7 @@ void main() {
           healthMeasurementRepository.mockGetMeasurementsByDateRange(
             measurementsStream: healthMeasurements$.stream,
           );
-          dateService.mockAreDatesTheSame(expected: false);
+          dateService.mockAreDaysTheSame(expected: false);
           when(
             () => dateService.areDaysTheSame(
               DateTime(2023, 5, 9),
@@ -325,7 +325,7 @@ void main() {
           dateRangeManagerCubit.mockStream(
             expectedStreamValue: dateRangeManagerState,
           );
-          dateService.mockAreDatesTheSame(expected: false);
+          dateService.mockAreDaysTheSame(expected: false);
           when(
             () => dateService.areDaysTheSame(
               DateTime(2023, 5, 9),

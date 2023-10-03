@@ -96,7 +96,7 @@ void main() {
           );
           workoutRepository.mockGetWorkoutsByDateRange();
           raceRepository.mockGetRacesByDateRange();
-          dateService.mockAreDatesTheSame(expected: false);
+          dateService.mockAreDaysTheSame(expected: false);
         },
         act: (cubit) async {
           cubit.initialize();
@@ -239,7 +239,7 @@ void main() {
             workoutsStream: workouts$.stream,
           );
           raceRepository.mockGetRacesByDateRange(racesStream: races$.stream);
-          dateService.mockAreDatesTheSame(expected: false);
+          dateService.mockAreDaysTheSame(expected: false);
           when(
             () => dateService.areDaysTheSame(startDate, startDate),
           ).thenReturn(true);
