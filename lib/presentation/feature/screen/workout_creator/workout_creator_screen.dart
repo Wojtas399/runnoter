@@ -42,38 +42,56 @@ class WorkoutCreatorScreen extends StatelessWidget {
   }
 }
 
-class _CubitListener extends StatelessWidget {
+class _CubitListener extends StatefulWidget {
   final Widget child;
 
   const _CubitListener({required this.child});
 
   @override
+  State<StatefulWidget> createState() => _CubitListenerState();
+}
+
+class _CubitListenerState extends State<_CubitListener> {
+  @override
   Widget build(BuildContext context) {
     return CubitWithStatusListener<WorkoutCreatorCubit, WorkoutCreatorState,
-        WorkoutCreatorCubitInfo, dynamic>(
+        WorkoutCreatorCubitInfo, WorkoutCreatorCubitError>(
       onInfo: (WorkoutCreatorCubitInfo info) => _manageInfo(context, info),
-      child: child,
+      onError: (WorkoutCreatorCubitError error) => _manageError(context, error),
+      child: widget.child,
     );
   }
 
   void _manageInfo(BuildContext context, WorkoutCreatorCubitInfo info) {
     switch (info) {
       case WorkoutCreatorCubitInfo.workoutAdded:
-        _onWorkoutAddedInfo(context);
-        break;
+        navigateBack();
+        showSnackbarMessage(
+          Str.of(context).workoutCreatorAddedWorkoutMessage,
+        );
       case WorkoutCreatorCubitInfo.workoutUpdated:
-        _onWorkoutUpdatedInfo(context);
-        break;
+        navigateBack();
+        showSnackbarMessage(
+          Str.of(context).workoutCreatorUpdatedWorkoutMessage,
+        );
     }
   }
 
-  void _onWorkoutAddedInfo(BuildContext context) {
-    navigateBack();
-    showSnackbarMessage(Str.of(context).workoutCreatorAddedWorkoutMessage);
-  }
-
-  void _onWorkoutUpdatedInfo(BuildContext context) {
-    navigateBack();
-    showSnackbarMessage(Str.of(context).workoutCreatorUpdatedWorkoutMessage);
+  Future<void> _manageError(
+    BuildContext context,
+    WorkoutCreatorCubitError error,
+  ) async {
+    final str = Str.of(context);
+    switch (error) {
+      case WorkoutCreatorCubitError.workoutNoLongerExists:
+        await showMessageDialog(
+          title: str.workoutCreatorWorkoutNoLongerExistsDialogTitle,
+          message: str.workoutCreatorWorkoutNoLongerExistsDialogMessage,
+        );
+        if (mounted) {
+          context.router.removeLast();
+          context.router.removeLast();
+        }
+    }
   }
 }

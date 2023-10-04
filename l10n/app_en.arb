@@ -72,6 +72,11 @@
   "workoutCreatorEditWorkoutButton": "Update",
   "workoutCreatorAddedWorkoutMessage": "Successfully added workout",
   "workoutCreatorUpdatedWorkoutMessage": "Successfully updated workout",
+  "workoutCreatorWorkoutNoLongerExistsDialogTitle": "Workout no longer exists",
+  "workoutCreatorWorkoutNoLongerExistsDialogMessage": "This workout has been deleted recently, so you can't update it.",
+  "@workoutCreatorWorkoutNoLongerExistsDialogMessage": {
+    "description": "Message of the dialog to inform that workout no longer exists"
+  },
   "@__________WORKOUT_STAGE_CREATOR__________": {},
   "workoutStageCreatorScreenTitleAddMode": "New workout stage",
   "workoutStageCreatorScreenTitleEditMode": "Edit workout stage",
