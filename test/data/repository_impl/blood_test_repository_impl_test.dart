@@ -4,6 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/data/repository_impl/blood_test_repository_impl.dart';
 import 'package:runnoter/domain/additional_model/blood_parameter.dart';
+import 'package:runnoter/domain/additional_model/custom_exception.dart';
 import 'package:runnoter/domain/entity/blood_test.dart';
 
 import '../../creators/blood_test_creator.dart';
@@ -387,6 +388,76 @@ void main() {
           ],
         ),
       );
+      verify(
+        () => dbBloodTestService.updateTest(
+          bloodTestId: testId,
+          userId: userId,
+          date: updatedDate,
+          parameterResultDtos: updatedParameterResultDtos,
+        ),
+      ).called(1);
+    },
+  );
+
+  test(
+    'updateTest, '
+    'db method to update test throws document exception with documentNotFound code, '
+    'should delete blood test from repo and should throw entity exception with '
+    'entityNotFound code',
+    () async {
+      const String testId = 'bt1';
+      final DateTime updatedDate = DateTime(2023, 5, 20);
+      const List<BloodParameterResult> updatedParameterResults = [
+        BloodParameterResult(parameter: BloodParameter.wbc, value: 4.45),
+        BloodParameterResult(parameter: BloodParameter.sodium, value: 139),
+      ];
+      const List<firebase.BloodParameterResultDto> updatedParameterResultDtos =
+          [
+        firebase.BloodParameterResultDto(
+            parameter: firebase.BloodParameter.wbc, value: 4.45),
+        firebase.BloodParameterResultDto(
+          parameter: firebase.BloodParameter.sodium,
+          value: 139,
+        ),
+      ];
+      final List<BloodTest> existingTests = [
+        createBloodTest(
+          id: 'bt1',
+          userId: userId,
+          date: DateTime(2023, 5, 12),
+          parameterResults: const [
+            BloodParameterResult(
+              parameter: BloodParameter.cpk,
+              value: 300,
+            ),
+          ],
+        ),
+        createBloodTest(id: 'bt2', userId: 'u2'),
+      ];
+      dbBloodTestService.mockUpdateTest(
+        throwable: const firebase.FirebaseDocumentException(
+          code: firebase.FirebaseDocumentExceptionCode.documentNotFound,
+        ),
+      );
+      repository = BloodTestRepositoryImpl(initialData: existingTests);
+
+      Object? exception;
+      try {
+        await repository.updateTest(
+          bloodTestId: testId,
+          userId: userId,
+          date: updatedDate,
+          parameterResults: updatedParameterResults,
+        );
+      } catch (e) {
+        exception = e;
+      }
+
+      expect(
+        exception,
+        const EntityException(code: EntityExceptionCode.entityNotFound),
+      );
+      expect(repository.dataStream$, emits([existingTests[1]]));
       verify(
         () => dbBloodTestService.updateTest(
           bloodTestId: testId,

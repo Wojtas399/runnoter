@@ -8,6 +8,7 @@ import '../../domain/entity/blood_test.dart';
 import '../../domain/repository/blood_test_repository.dart';
 import '../mapper/blood_parameter_result_mapper.dart';
 import '../mapper/blood_test_mapper.dart';
+import '../mapper/custom_exception_mapper.dart';
 
 class BloodTestRepositoryImpl extends StateRepository<BloodTest>
     implements BloodTestRepository {
@@ -77,16 +78,24 @@ class BloodTestRepositoryImpl extends StateRepository<BloodTest>
     DateTime? date,
     List<BloodParameterResult>? parameterResults,
   }) async {
-    final updatedTestDto = await _dbBloodTestService.updateTest(
-      bloodTestId: bloodTestId,
-      userId: userId,
-      date: date,
-      parameterResultDtos:
-          parameterResults?.map(mapBloodParameterResultToDto).toList(),
-    );
-    if (updatedTestDto != null) {
-      final BloodTest updatedTest = mapBloodTestFromDto(updatedTestDto);
-      updateEntity(updatedTest);
+    try {
+      final updatedTestDto = await _dbBloodTestService.updateTest(
+        bloodTestId: bloodTestId,
+        userId: userId,
+        date: date,
+        parameterResultDtos:
+            parameterResults?.map(mapBloodParameterResultToDto).toList(),
+      );
+      if (updatedTestDto != null) {
+        final BloodTest updatedTest = mapBloodTestFromDto(updatedTestDto);
+        updateEntity(updatedTest);
+      }
+    } on firebase.FirebaseDocumentException catch (documentException) {
+      if (documentException.code ==
+          firebase.FirebaseDocumentExceptionCode.documentNotFound) {
+        removeEntity(bloodTestId);
+      }
+      throw mapExceptionFromDb(documentException);
     }
   }
 

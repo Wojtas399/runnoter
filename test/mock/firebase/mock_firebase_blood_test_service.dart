@@ -28,17 +28,14 @@ class MockFirebaseBloodTestService extends Mock
     ).thenAnswer((_) => Future.value(addedBloodTestDto));
   }
 
-  void mockUpdateTest({BloodTestDto? updatedBloodTestDto}) {
-    when(
-      () => updateTest(
-        bloodTestId: any(named: 'bloodTestId'),
-        userId: any(named: 'userId'),
-        date: any(named: 'date'),
-        parameterResultDtos: any(named: 'parameterResultDtos'),
-      ),
-    ).thenAnswer(
-      (_) => Future.value(updatedBloodTestDto),
-    );
+  void mockUpdateTest({BloodTestDto? updatedBloodTestDto, Object? throwable}) {
+    if (throwable != null) {
+      when(_updateTestCall).thenThrow(throwable);
+    } else {
+      when(
+        _updateTestCall,
+      ).thenAnswer((_) => Future.value(updatedBloodTestDto));
+    }
   }
 
   void mockDeleteTest() {
@@ -55,4 +52,11 @@ class MockFirebaseBloodTestService extends Mock
       () => deleteAllUserTests(userId: any(named: 'userId')),
     ).thenAnswer((_) => Future.value(idsOfDeletedTests));
   }
+
+  Future<BloodTestDto?> _updateTestCall() => updateTest(
+        bloodTestId: any(named: 'bloodTestId'),
+        userId: any(named: 'userId'),
+        date: any(named: 'date'),
+        parameterResultDtos: any(named: 'parameterResultDtos'),
+      );
 }
