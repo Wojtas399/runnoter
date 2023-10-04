@@ -95,6 +95,12 @@ class FirebaseWorkoutService {
       return snapshot.data();
     } on FirebaseException catch (exception) {
       throw mapFirebaseExceptionFromCodeStr(exception.code);
+    } catch (exception) {
+      if (exception.toString().contains('code=not-found')) {
+        throw mapFirebaseExceptionFromCodeStr('not-found');
+      } else {
+        rethrow;
+      }
     }
   }
 
