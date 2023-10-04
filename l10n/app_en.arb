@@ -187,6 +187,8 @@
   "raceCreatorEditRaceTitle": "Edit race",
   "raceCreatorAddedRaceMessage": "Successfully added new race",
   "raceCreatorUpdatedRaceMessage": "Successfully updated race",
+  "raceCreatorRaceNoLongerExistsDialogTitle": "Race no longer exists",
+  "raceCreatorRaceNoLongerExistsDialogMessage": "This race has been deleted recently, so you can't update it",
   "@__________RACES__________": {},
   "racesTitle": "Races",
   "racesNoRacesTitle": "No races",

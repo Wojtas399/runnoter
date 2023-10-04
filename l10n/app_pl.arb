@@ -684,6 +684,14 @@
   "@raceCreatorUpdatedRaceMessage": {
     "description": "Message to inform that race has been updated"
   },
+  "raceCreatorRaceNoLongerExistsDialogTitle": "Wyścig już nie istnieje",
+  "@raceCreatorRaceNoLongerExistsDialogTitle": {
+    "description": "Title of the dialog to inform that race no longer exists"
+  },
+  "raceCreatorRaceNoLongerExistsDialogMessage": "Ten wyścig został niedawno usunięty, więc nie możesz go edytować",
+  "@raceCreatorRaceNoLongerExistsDialogMessage": {
+    "description": "Message of the dialog to inform that race no longer exists"
+  },
   "@__________RACES__________": {},
   "racesTitle": "Wyścigi",
   "@racesTitle": {

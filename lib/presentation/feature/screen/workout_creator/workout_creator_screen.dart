@@ -56,31 +56,25 @@ class _CubitListenerState extends State<_CubitListener> {
   Widget build(BuildContext context) {
     return CubitWithStatusListener<WorkoutCreatorCubit, WorkoutCreatorState,
         WorkoutCreatorCubitInfo, WorkoutCreatorCubitError>(
-      onInfo: (WorkoutCreatorCubitInfo info) => _manageInfo(context, info),
-      onError: (WorkoutCreatorCubitError error) => _manageError(context, error),
+      onInfo: _manageInfo,
+      onError: _manageError,
       child: widget.child,
     );
   }
 
-  void _manageInfo(BuildContext context, WorkoutCreatorCubitInfo info) {
+  void _manageInfo(WorkoutCreatorCubitInfo info) {
+    final str = Str.of(context);
     switch (info) {
       case WorkoutCreatorCubitInfo.workoutAdded:
         navigateBack();
-        showSnackbarMessage(
-          Str.of(context).workoutCreatorAddedWorkoutMessage,
-        );
+        showSnackbarMessage(str.workoutCreatorAddedWorkoutMessage);
       case WorkoutCreatorCubitInfo.workoutUpdated:
         navigateBack();
-        showSnackbarMessage(
-          Str.of(context).workoutCreatorUpdatedWorkoutMessage,
-        );
+        showSnackbarMessage(str.workoutCreatorUpdatedWorkoutMessage);
     }
   }
 
-  Future<void> _manageError(
-    BuildContext context,
-    WorkoutCreatorCubitError error,
-  ) async {
+  Future<void> _manageError(WorkoutCreatorCubitError error) async {
     final str = Str.of(context);
     switch (error) {
       case WorkoutCreatorCubitError.workoutNoLongerExists:
