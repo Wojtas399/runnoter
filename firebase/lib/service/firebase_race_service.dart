@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../firebase_collections.dart';
+import '../mapper/custom_firebase_exception_mapper.dart';
 import '../mapper/date_mapper.dart';
 import '../model/activity_status_dto.dart';
 import '../model/race_dto.dart';
@@ -97,21 +98,29 @@ class FirebaseRaceService {
     bool setDurationAsNull = false,
     ActivityStatusDto? statusDto,
   }) async {
-    final docRef = getRacesRef(userId).doc(raceId);
-    final Map<String, dynamic> jsonToUpdate = createRaceJsonToUpdate(
-      name: name,
-      date: date,
-      place: place,
-      distance: distance,
-      expectedDuration: expectedDuration,
-      setDurationAsNull: setDurationAsNull,
-      statusDto: statusDto,
-    );
-    await asyncOrSyncCall(
-      () => docRef.update(jsonToUpdate),
-    );
-    final snapshot = await docRef.get();
-    return snapshot.data();
+    try {
+      final docRef = getRacesRef(userId).doc(raceId);
+      final Map<String, dynamic> jsonToUpdate = createRaceJsonToUpdate(
+        name: name,
+        date: date,
+        place: place,
+        distance: distance,
+        expectedDuration: expectedDuration,
+        setDurationAsNull: setDurationAsNull,
+        statusDto: statusDto,
+      );
+      await asyncOrSyncCall(() => docRef.update(jsonToUpdate));
+      final snapshot = await docRef.get();
+      return snapshot.data();
+    } on FirebaseException catch (exception) {
+      throw mapFirebaseExceptionFromCodeStr(exception.code);
+    } catch (exception) {
+      if (exception.toString().contains('code=not-found')) {
+        throw mapFirebaseExceptionFromCodeStr('not-found');
+      } else {
+        rethrow;
+      }
+    }
   }
 
   Future<void> deleteRace({
