@@ -28,12 +28,6 @@ class CoachingRequestException
   const CoachingRequestException({required super.code});
 }
 
-enum ChatExceptionCode { chatAlreadyExists }
-
-class ChatException extends CustomException<ChatExceptionCode> {
-  const ChatException({required super.code});
-}
-
 enum EntityExceptionCode { entityNotFound, entityAlreadyExists }
 
 class EntityException extends CustomException<EntityExceptionCode> {
