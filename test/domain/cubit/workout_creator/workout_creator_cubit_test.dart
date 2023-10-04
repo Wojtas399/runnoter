@@ -5,6 +5,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/common/date_service.dart';
 import 'package:runnoter/domain/additional_model/activity_status.dart';
 import 'package:runnoter/domain/additional_model/cubit_status.dart';
+import 'package:runnoter/domain/additional_model/custom_exception.dart';
 import 'package:runnoter/domain/additional_model/workout_stage.dart';
 import 'package:runnoter/domain/cubit/workout_creator/workout_creator_cubit.dart';
 import 'package:runnoter/domain/entity/workout.dart';
@@ -119,7 +120,7 @@ void main() {
   );
 
   blocTest(
-    'date changed, '
+    'dateChanged, '
     'should update date in state',
     build: () => createCubit(),
     act: (cubit) => cubit.dateChanged(DateTime(2023, 2, 2)),
@@ -132,7 +133,7 @@ void main() {
   );
 
   blocTest(
-    'workout name changed, '
+    'workoutNameChanged, '
     'should update workout name in state',
     build: () => createCubit(),
     act: (cubit) => cubit.workoutNameChanged('new workout name'),
@@ -145,7 +146,7 @@ void main() {
   );
 
   blocTest(
-    'workout stage added, '
+    'workoutStageAdded, '
     'should add workout stage to existing stages',
     build: () => createCubit(
       stages: const [
@@ -167,7 +168,7 @@ void main() {
   );
 
   blocTest(
-    'update workout stage at index, '
+    'updateWorkoutStageAtIndex, '
     'list of stages is empty, '
     'should do nothing',
     build: () => createCubit(stages: const []),
@@ -179,7 +180,7 @@ void main() {
   );
 
   blocTest(
-    'update workout stage at index, '
+    'updateWorkoutStageAtIndex, '
     'length of list of stages is lower than given stage index, '
     'should do nothing',
     build: () => createCubit(
@@ -195,7 +196,7 @@ void main() {
   );
 
   blocTest(
-    'update workout stage at index, '
+    'updateWorkoutStageAtIndex, '
     'should update workout stage at given index',
     build: () => createCubit(
       stages: const [
@@ -219,7 +220,7 @@ void main() {
   );
 
   blocTest(
-    'workout stages order changed, '
+    'workoutStagesOrderChanged, '
     'should update list of workout stages in state',
     build: () => createCubit(
       stages: const [
@@ -251,7 +252,7 @@ void main() {
   );
 
   blocTest(
-    'delete workout stage at index, '
+    'deleteWorkoutStageAtIndex, '
     'should delete workout stage by its index',
     build: () => createCubit(
       stages: const [
@@ -300,7 +301,7 @@ void main() {
   blocTest(
     'submit, '
     'workout is null, '
-    "should call workout repository's method to add workout with pending status, '"
+    'should call workout repository method to add workout with pending status, '
     'should emit info that workout has been added',
     build: () => createCubit(
       date: DateTime(2023, 2, 2),
@@ -351,7 +352,7 @@ void main() {
   blocTest(
     'submit, '
     'workout is not null, '
-    "should call workout repository's method to update workout, '"
+    'should call workout repository method to update workout, '
     'should emit info that workout has been updated',
     build: () => createCubit(
       workoutId: workoutId,
@@ -396,6 +397,90 @@ void main() {
       createState(
         status: const CubitStatusComplete<WorkoutCreatorCubitInfo>(
           info: WorkoutCreatorCubitInfo.workoutUpdated,
+        ),
+        date: DateTime(2023, 2, 2),
+        workout: createWorkout(
+          id: workoutId,
+          date: DateTime(2023, 2, 10),
+          name: 'workout name',
+          stages: const [
+            WorkoutStageCardio(distanceInKm: 10, maxHeartRate: 150),
+          ],
+        ),
+        workoutName: 'workout 1',
+        stages: const [
+          WorkoutStageCardio(distanceInKm: 4, maxHeartRate: 150),
+          WorkoutStageZone3(distanceInKm: 2, maxHeartRate: 180),
+        ],
+      ),
+    ],
+    verify: (_) => verify(
+      () => workoutRepository.updateWorkout(
+        workoutId: workoutId,
+        userId: userId,
+        date: DateTime(2023, 2, 2),
+        workoutName: 'workout 1',
+        stages: const [
+          WorkoutStageCardio(distanceInKm: 4, maxHeartRate: 150),
+          WorkoutStageZone3(distanceInKm: 2, maxHeartRate: 180),
+        ],
+      ),
+    ).called(1),
+  );
+
+  blocTest(
+    'submit, '
+    'workout is not null, '
+    'workout repository method to update workout throws entity exception '
+    'with entityNotFound code'
+    'should emit error status with workoutNoLongerExists error',
+    build: () => createCubit(
+      workoutId: workoutId,
+      date: DateTime(2023, 2, 2),
+      workout: createWorkout(
+        id: workoutId,
+        date: DateTime(2023, 2, 10),
+        name: 'workout name',
+        stages: const [
+          WorkoutStageCardio(distanceInKm: 10, maxHeartRate: 150),
+        ],
+      ),
+      workoutName: 'workout 1',
+      stages: const [
+        WorkoutStageCardio(distanceInKm: 4, maxHeartRate: 150),
+        WorkoutStageZone3(distanceInKm: 2, maxHeartRate: 180),
+      ],
+    ),
+    setUp: () {
+      dateService.mockAreDaysTheSame(expected: false);
+      workoutRepository.mockUpdateWorkout(
+        throwable: const EntityException(
+          code: EntityExceptionCode.entityNotFound,
+        ),
+      );
+    },
+    act: (cubit) => cubit.submit(),
+    expect: () => [
+      createState(
+        status: const CubitStatusLoading(),
+        date: DateTime(2023, 2, 2),
+        workout: createWorkout(
+          id: workoutId,
+          date: DateTime(2023, 2, 10),
+          name: 'workout name',
+          stages: const [
+            WorkoutStageCardio(distanceInKm: 10, maxHeartRate: 150),
+          ],
+        ),
+        workoutName: 'workout 1',
+        stages: const [
+          WorkoutStageCardio(distanceInKm: 4, maxHeartRate: 150),
+          WorkoutStageZone3(distanceInKm: 2, maxHeartRate: 180),
+        ],
+      ),
+      createState(
+        status: const CubitStatusError<WorkoutCreatorCubitError>(
+          error: WorkoutCreatorCubitError.workoutNoLongerExists,
         ),
         date: DateTime(2023, 2, 2),
         workout: createWorkout(

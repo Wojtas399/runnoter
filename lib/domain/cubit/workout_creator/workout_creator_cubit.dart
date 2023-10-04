@@ -8,13 +8,14 @@ import '../../../dependency_injection.dart';
 import '../../additional_model/activity_status.dart';
 import '../../additional_model/cubit_state.dart';
 import '../../additional_model/cubit_with_status.dart';
+import '../../additional_model/custom_exception.dart';
 import '../../additional_model/workout_stage.dart';
 import '../../service/list_service.dart';
 
 part 'workout_creator_state.dart';
 
 class WorkoutCreatorCubit extends CubitWithStatus<WorkoutCreatorState,
-    WorkoutCreatorCubitInfo, dynamic> {
+    WorkoutCreatorCubitInfo, WorkoutCreatorCubitError> {
   final WorkoutRepository _workoutRepository;
   final String userId;
   final String? workoutId;
@@ -95,8 +96,14 @@ class WorkoutCreatorCubit extends CubitWithStatus<WorkoutCreatorState,
     if (!state.canSubmit) return;
     emitLoadingStatus();
     if (state.workout != null) {
-      await _updateWorkout();
-      emitCompleteStatus(info: WorkoutCreatorCubitInfo.workoutUpdated);
+      try {
+        await _updateWorkout();
+        emitCompleteStatus(info: WorkoutCreatorCubitInfo.workoutUpdated);
+      } on EntityException catch (entityException) {
+        if (entityException.code == EntityExceptionCode.entityNotFound) {
+          emitErrorStatus(WorkoutCreatorCubitError.workoutNoLongerExists);
+        }
+      }
     } else if (state.date != null) {
       await _addWorkout();
       emitCompleteStatus(info: WorkoutCreatorCubitInfo.workoutAdded);
@@ -125,3 +132,5 @@ class WorkoutCreatorCubit extends CubitWithStatus<WorkoutCreatorState,
 }
 
 enum WorkoutCreatorCubitInfo { workoutAdded, workoutUpdated }
+
+enum WorkoutCreatorCubitError { workoutNoLongerExists }
