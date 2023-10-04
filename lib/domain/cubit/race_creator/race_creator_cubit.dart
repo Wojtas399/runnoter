@@ -1,15 +1,16 @@
 import '../../../dependency_injection.dart';
 import '../../additional_model/activity_status.dart';
-import '../../additional_model/cubit_status.dart';
 import '../../additional_model/cubit_state.dart';
+import '../../additional_model/cubit_status.dart';
 import '../../additional_model/cubit_with_status.dart';
+import '../../additional_model/custom_exception.dart';
 import '../../entity/race.dart';
 import '../../repository/race_repository.dart';
 
 part 'race_creator_state.dart';
 
-class RaceCreatorCubit
-    extends CubitWithStatus<RaceCreatorState, RaceCreatorCubitInfo, dynamic> {
+class RaceCreatorCubit extends CubitWithStatus<RaceCreatorState,
+    RaceCreatorCubitInfo, RaceCreatorCubitError> {
   final String _userId;
   final String? raceId;
   final RaceRepository _raceRepository;
@@ -76,37 +77,43 @@ class RaceCreatorCubit
     }
     if (state.race == null) {
       await _addNewRace(expectedDuration);
+      emitCompleteStatus(info: RaceCreatorCubitInfo.raceAdded);
     } else {
-      await _updateRace(expectedDuration);
+      try {
+        await _updateRace(expectedDuration);
+        emitCompleteStatus(info: RaceCreatorCubitInfo.raceUpdated);
+      } on EntityException catch (entityException) {
+        if (entityException.code == EntityExceptionCode.entityNotFound) {
+          emitErrorStatus(RaceCreatorCubitError.raceNoLongerExists);
+        }
+      }
     }
   }
 
-  Future<void> _addNewRace(Duration? expectedDuration) async {
-    await _raceRepository.addNewRace(
-      userId: _userId,
-      name: state.name!,
-      date: state.date!,
-      place: state.place!,
-      distance: state.distance!,
-      expectedDuration: expectedDuration,
-      status: const ActivityStatusPending(),
-    );
-    emitCompleteStatus(info: RaceCreatorCubitInfo.raceAdded);
-  }
+  Future<void> _addNewRace(Duration? expectedDuration) async =>
+      await _raceRepository.addNewRace(
+        userId: _userId,
+        name: state.name!,
+        date: state.date!,
+        place: state.place!,
+        distance: state.distance!,
+        expectedDuration: expectedDuration,
+        status: const ActivityStatusPending(),
+      );
 
-  Future<void> _updateRace(Duration? expectedDuration) async {
-    await _raceRepository.updateRace(
-      raceId: state.race!.id,
-      userId: _userId,
-      name: state.name!,
-      date: state.date!,
-      place: state.place!,
-      distance: state.distance!,
-      expectedDuration: expectedDuration,
-      setDurationAsNull: expectedDuration == null,
-    );
-    emitCompleteStatus(info: RaceCreatorCubitInfo.raceUpdated);
-  }
+  Future<void> _updateRace(Duration? expectedDuration) async =>
+      await _raceRepository.updateRace(
+        raceId: state.race!.id,
+        userId: _userId,
+        name: state.name!,
+        date: state.date!,
+        place: state.place!,
+        distance: state.distance!,
+        expectedDuration: expectedDuration,
+        setDurationAsNull: expectedDuration == null,
+      );
 }
 
 enum RaceCreatorCubitInfo { raceAdded, raceUpdated }
+
+enum RaceCreatorCubitError { raceNoLongerExists }

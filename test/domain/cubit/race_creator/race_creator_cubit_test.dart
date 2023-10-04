@@ -4,6 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/domain/additional_model/activity_status.dart';
 import 'package:runnoter/domain/additional_model/cubit_status.dart';
+import 'package:runnoter/domain/additional_model/custom_exception.dart';
 import 'package:runnoter/domain/cubit/race_creator/race_creator_cubit.dart';
 import 'package:runnoter/domain/entity/race.dart';
 import 'package:runnoter/domain/repository/race_repository.dart';
@@ -203,7 +204,7 @@ void main() {
 
   blocTest(
     'submit, '
-    'add mode, '
+    'race is null, '
     'should call method from race repository to add new race with pending status and '
     'should emit info that race has been added',
     build: () => createCubit(
@@ -250,7 +251,7 @@ void main() {
 
   blocTest(
     'submit, '
-    'add mode, '
+    'race is null, '
     'duration is 0, '
     'should call method from race repository to add new race with duration set as null and pending status and '
     'should emit info that race has been added',
@@ -298,7 +299,7 @@ void main() {
 
   blocTest(
     'submit, '
-    'edit mode, '
+    'race is not null, '
     'should call method from race repository to update race and '
     'should emit info that race has been updated',
     build: () => createCubit(
@@ -348,7 +349,7 @@ void main() {
 
   blocTest(
     'submit, '
-    'edit mode, '
+    'race is not null, '
     'duration is 0, '
     'should call method from race repository to update race with duration set as null and '
     'should emit info that race has been updated',
@@ -394,6 +395,61 @@ void main() {
         distance: 21,
         expectedDuration: null,
         setDurationAsNull: true,
+      ),
+    ).called(1),
+  );
+
+  blocTest(
+    'submit, '
+    'race is not null, '
+    'race repository method to update race throws entity exception with '
+    'entityNotFound code, '
+    'should emit error status with raceNoLongerExists error',
+    build: () => createCubit(
+      race: createRace(id: 'c1'),
+      name: 'race name',
+      date: DateTime(2023, 6, 2),
+      place: 'New York',
+      distance: 21,
+      expectedDuration: const Duration(hours: 1, minutes: 45, seconds: 20),
+    ),
+    setUp: () => raceRepository.mockUpdateRace(
+      throwable: const EntityException(
+        code: EntityExceptionCode.entityNotFound,
+      ),
+    ),
+    act: (cubit) => cubit.submit(),
+    expect: () => [
+      RaceCreatorState(
+        status: const CubitStatusLoading(),
+        race: createRace(id: 'c1'),
+        name: 'race name',
+        date: DateTime(2023, 6, 2),
+        place: 'New York',
+        distance: 21,
+        expectedDuration: const Duration(hours: 1, minutes: 45, seconds: 20),
+      ),
+      RaceCreatorState(
+        status: const CubitStatusError<RaceCreatorCubitError>(
+          error: RaceCreatorCubitError.raceNoLongerExists,
+        ),
+        race: createRace(id: 'c1'),
+        name: 'race name',
+        date: DateTime(2023, 6, 2),
+        place: 'New York',
+        distance: 21,
+        expectedDuration: const Duration(hours: 1, minutes: 45, seconds: 20),
+      ),
+    ],
+    verify: (_) => verify(
+      () => raceRepository.updateRace(
+        raceId: 'c1',
+        userId: 'u1',
+        name: 'race name',
+        date: DateTime(2023, 6, 2),
+        place: 'New York',
+        distance: 21,
+        expectedDuration: const Duration(hours: 1, minutes: 45, seconds: 20),
       ),
     ).called(1),
   );
