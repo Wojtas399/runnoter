@@ -8,6 +8,7 @@ import '../../domain/additional_model/state_repository.dart';
 import '../../domain/entity/race.dart';
 import '../../domain/repository/race_repository.dart';
 import '../mapper/activity_status_mapper.dart';
+import '../mapper/custom_exception_mapper.dart';
 import '../mapper/race_mapper.dart';
 
 class RaceRepositoryImpl extends StateRepository<Race>
@@ -162,22 +163,28 @@ class RaceRepositoryImpl extends StateRepository<Race>
     bool setDurationAsNull = false,
     ActivityStatus? status,
   }) async {
-    final RaceDto? updatedRaceDto = await _dbRaceService.updateRace(
-      raceId: raceId,
-      userId: userId,
-      name: name,
-      date: date,
-      place: place,
-      distance: distance,
-      expectedDuration: expectedDuration,
-      setDurationAsNull: setDurationAsNull,
-      statusDto: status != null ? mapActivityStatusToDto(status) : null,
-    );
-    if (updatedRaceDto != null) {
-      final Race race = mapRaceFromDto(
-        updatedRaceDto,
+    try {
+      final RaceDto? updatedRaceDto = await _dbRaceService.updateRace(
+        raceId: raceId,
+        userId: userId,
+        name: name,
+        date: date,
+        place: place,
+        distance: distance,
+        expectedDuration: expectedDuration,
+        setDurationAsNull: setDurationAsNull,
+        statusDto: status != null ? mapActivityStatusToDto(status) : null,
       );
-      updateEntity(race);
+      if (updatedRaceDto != null) {
+        final Race race = mapRaceFromDto(updatedRaceDto);
+        updateEntity(race);
+      }
+    } on FirebaseDocumentException catch (documentException) {
+      if (documentException.code ==
+          FirebaseDocumentExceptionCode.documentNotFound) {
+        removeEntity(raceId);
+      }
+      throw mapExceptionFromDb(documentException);
     }
   }
 

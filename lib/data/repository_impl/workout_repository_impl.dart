@@ -159,8 +159,8 @@ class WorkoutRepositoryImpl extends StateRepository<Workout>
       if (documentException.code ==
           FirebaseDocumentExceptionCode.documentNotFound) {
         removeEntity(workoutId);
-        throw mapExceptionFromDb(documentException);
       }
+      throw mapExceptionFromDb(documentException);
     }
   }
 

@@ -6,6 +6,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:runnoter/common/date_service.dart';
 import 'package:runnoter/data/repository_impl/race_repository_impl.dart';
 import 'package:runnoter/domain/additional_model/activity_status.dart';
+import 'package:runnoter/domain/additional_model/custom_exception.dart';
 import 'package:runnoter/domain/entity/race.dart';
 
 import '../../creators/race_creator.dart';
@@ -444,7 +445,6 @@ void main() {
       dbRaceService.mockUpdateRace(updatedRaceDto: updatedRaceDto);
       repository = RaceRepositoryImpl(initialData: existingRaces);
 
-      final Stream<List<Race>?> repositoryState$ = repository.dataStream$;
       await repository.updateRace(
         raceId: raceId,
         userId: userId,
@@ -458,9 +458,78 @@ void main() {
       );
 
       expect(
-        repositoryState$,
+        repository.dataStream$,
         emits([updatedRace, ...existingRaces.slice(1)]),
       );
+      verify(
+        () => dbRaceService.updateRace(
+          raceId: raceId,
+          userId: userId,
+          name: newName,
+          date: newDate,
+          place: newPlace,
+          distance: newDistance,
+          expectedDuration: newExpectedDuration,
+          setDurationAsNull: true,
+          statusDto: newStatusDto,
+        ),
+      ).called(1);
+    },
+  );
+
+  test(
+    'updateRace, '
+    'db method throws document exception with documentNotFound code, '
+    'should delete race from repo, '
+    'should throw entity exception with entityNotFound code',
+    () async {
+      const String raceId = 'c1';
+      const String newName = 'new race name';
+      final DateTime newDate = DateTime(2023, 5, 20);
+      const String newPlace = 'new race place';
+      const double newDistance = 15.0;
+      const Duration newExpectedDuration = Duration(
+        hours: 1,
+        minutes: 30,
+        seconds: 20,
+      );
+      const ActivityStatus newStatus = ActivityStatusPending();
+      const ActivityStatusDto newStatusDto = ActivityStatusPendingDto();
+      final List<Race> existingRaces = [
+        createRace(id: raceId, userId: userId),
+        createRace(id: 'c2', userId: 'u2'),
+        createRace(id: 'c3', userId: 'u3'),
+        createRace(id: 'c4', userId: userId),
+      ];
+      dbRaceService.mockUpdateRace(
+        throwable: const FirebaseDocumentException(
+          code: FirebaseDocumentExceptionCode.documentNotFound,
+        ),
+      );
+      repository = RaceRepositoryImpl(initialData: existingRaces);
+
+      Object? exception;
+      try {
+        await repository.updateRace(
+          raceId: raceId,
+          userId: userId,
+          name: newName,
+          date: newDate,
+          place: newPlace,
+          distance: newDistance,
+          expectedDuration: newExpectedDuration,
+          setDurationAsNull: true,
+          status: newStatus,
+        );
+      } catch (e) {
+        exception = e;
+      }
+
+      expect(
+        exception,
+        const EntityException(code: EntityExceptionCode.entityNotFound),
+      );
+      expect(repository.dataStream$, emits(existingRaces.slice(1)));
       verify(
         () => dbRaceService.updateRace(
           raceId: raceId,
