@@ -8,8 +8,9 @@ class PageNotFound extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: PageNotFoundInfo(),
+    return Scaffold(
+      appBar: AppBar(),
+      body: const PageNotFoundInfo(),
     );
   }
 }

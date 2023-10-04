@@ -22,8 +22,10 @@ class RacePreviewActions extends StatelessWidget {
   }
 
   void _editRace(BuildContext context) {
+    final RacePreviewCubit cubit = context.read<RacePreviewCubit>();
     navigateTo(RaceCreatorRoute(
-      raceId: context.read<RacePreviewCubit>().raceId,
+      userId: cubit.userId,
+      raceId: cubit.raceId,
     ));
   }
 
