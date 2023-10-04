@@ -3,10 +3,11 @@ import 'package:rxdart/rxdart.dart';
 import '../../../../domain/entity/blood_test.dart';
 import '../../../../domain/repository/blood_test_repository.dart';
 import '../../../dependency_injection.dart';
-import '../../additional_model/cubit_status.dart';
 import '../../additional_model/blood_parameter.dart';
 import '../../additional_model/cubit_state.dart';
+import '../../additional_model/cubit_status.dart';
 import '../../additional_model/cubit_with_status.dart';
+import '../../additional_model/custom_exception.dart';
 import '../../entity/user.dart';
 import '../../repository/user_repository.dart';
 import '../../service/list_service.dart';
@@ -14,7 +15,7 @@ import '../../service/list_service.dart';
 part 'blood_test_creator_state.dart';
 
 class BloodTestCreatorCubit extends CubitWithStatus<BloodTestCreatorState,
-    BloodTestCreatorCubitInfo, dynamic> {
+    BloodTestCreatorCubitInfo, BloodTestCreatorCubitError> {
   final UserRepository _userRepository;
   final BloodTestRepository _bloodTestRepository;
   final String userId;
@@ -95,8 +96,14 @@ class BloodTestCreatorCubit extends CubitWithStatus<BloodTestCreatorState,
     if (!state.canSubmit) return;
     emitLoadingStatus();
     if (state.bloodTest != null) {
-      await _tryToUpdateTest();
-      emitCompleteStatus(info: BloodTestCreatorCubitInfo.bloodTestUpdated);
+      try {
+        await _tryToUpdateTest();
+        emitCompleteStatus(info: BloodTestCreatorCubitInfo.bloodTestUpdated);
+      } on EntityException catch (entityException) {
+        if (entityException.code == EntityExceptionCode.entityNotFound) {
+          emitErrorStatus(BloodTestCreatorCubitError.bloodTestNoLongerExists);
+        }
+      }
     } else {
       await _tryToAddTest();
       emitCompleteStatus(info: BloodTestCreatorCubitInfo.bloodTestAdded);
@@ -114,22 +121,21 @@ class BloodTestCreatorCubit extends CubitWithStatus<BloodTestCreatorState,
       ) ??
       -1;
 
-  Future<void> _tryToUpdateTest() async {
-    await _bloodTestRepository.updateTest(
-      bloodTestId: state.bloodTest!.id,
-      userId: userId,
-      date: state.date!,
-      parameterResults: state.parameterResults!,
-    );
-  }
+  Future<void> _tryToUpdateTest() async =>
+      await _bloodTestRepository.updateTest(
+        bloodTestId: state.bloodTest!.id,
+        userId: userId,
+        date: state.date!,
+        parameterResults: state.parameterResults!,
+      );
 
-  Future<void> _tryToAddTest() async {
-    await _bloodTestRepository.addNewTest(
-      userId: userId,
-      date: state.date!,
-      parameterResults: state.parameterResults!,
-    );
-  }
+  Future<void> _tryToAddTest() async => await _bloodTestRepository.addNewTest(
+        userId: userId,
+        date: state.date!,
+        parameterResults: state.parameterResults!,
+      );
 }
 
 enum BloodTestCreatorCubitInfo { bloodTestAdded, bloodTestUpdated }
+
+enum BloodTestCreatorCubitError { bloodTestNoLongerExists }
